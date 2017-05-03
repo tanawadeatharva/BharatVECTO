@@ -8,7 +8,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
-	public class XMLInputDataProvider : IDeclarationInputDataProvider
+	public class XMLDeclarationInputDataProvider : IDeclarationInputDataProvider
 	{
 		internal XPathDocument Document;
 
@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		private readonly IDeclarationJobInputData XMLJobData;
 		protected internal readonly XMLDeclarationVehicleDataProvider _vehicleInputData;
 
-		public XMLInputDataProvider(XmlReader inputData, bool verifyXml)
+		public XMLDeclarationInputDataProvider(XmlReader inputData, bool verifyXml)
 		{
 			if (verifyXml) {
 				var settings = new XmlReaderSettings {
@@ -37,6 +37,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 			XMLJobData = new XMLDeclarationJobInputDataProvider(this);
 			_vehicleInputData = new XMLDeclarationVehicleDataProvider(this);
+			AirdragInputData = new XMLDeclarationAirdragDataProvider(this);
 			AxleGearInputData = new XMLDeclarationAxlegearDataProvider(this);
 			AngledriveInputData = new XMLDeclarationAngledriveDataProvider(this);
 			EngineInputData = new XMLDeclarationEngineDataProvider(this);
@@ -75,6 +76,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return _vehicleInputData; }
 		}
 
+		public IAirdragDeclarationInputData AirdragInputData { get; private set; }
 
 		public IGearboxDeclarationInputData GearboxInputData { get; private set; }
 

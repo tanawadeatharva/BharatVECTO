@@ -51,16 +51,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Vendor,
-				ModelName = data.ModelName,
+				Vendor = data.Manufacturer,
+				ModelName = data.Model,
 				Creator = data.Creator,
 				Date = data.Date,
-				TypeId = data.TypeId,
+				TypeId = data.TechnicalReportId,
 				DigestValue = data.DigestValue,
 				IntegrityStatus = data.IntegrityStatus,
 				VehicleCategory = data.VehicleCategory,
 				AxleConfiguration = data.AxleConfiguration,
-				CurbWeight = data.CurbWeightChassis,
+				CurbWeight = data.CurbMassChassis,
 				GrossVehicleWeight = data.GrossVehicleMassRating,
 			};
 
@@ -93,11 +93,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					return retarder;
 				}
 				retarder.SavedInDeclarationMode = data.SavedInDeclarationMode;
-				retarder.Vendor = data.Vendor;
-				retarder.ModelName = data.ModelName;
+				retarder.Vendor = data.Manufacturer;
+				retarder.ModelName = data.Model;
 				retarder.Creator = data.Creator;
 				retarder.Date = data.Date;
-				retarder.TypeId = data.TypeId;
+				retarder.TypeId = data.TechnicalReportId;
 				retarder.DigestValue = data.DigestValue;
 				retarder.IntegrityStatus = data.IntegrityStatus;
 
@@ -111,11 +111,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = new CombustionEngineData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Vendor,
-				ModelName = data.ModelName,
+				Vendor = data.Manufacturer,
+				ModelName = data.Model,
 				Creator = data.Creator,
 				Date = data.Date,
-				TypeId = data.TypeId,
+				TypeId = data.TechnicalReportId,
 				DigestValue = data.DigestValue,
 				IntegrityStatus = data.IntegrityStatus,
 				Displacement = data.Displacement,
@@ -129,11 +129,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			return new GearboxData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Vendor,
-				ModelName = data.ModelName,
+				Vendor = data.Manufacturer,
+				ModelName = data.Model,
 				Creator = data.Creator,
 				Date = data.Date,
-				TypeId = data.TypeId,
+				TypeId = data.TechnicalReportId,
 				DigestValue = data.DigestValue,
 				IntegrityStatus = data.IntegrityStatus,
 				Type = data.Type
@@ -157,11 +157,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			return new AxleGearData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Vendor,
-				ModelName = data.ModelName,
+				Vendor = data.Manufacturer,
+				ModelName = data.Model,
 				Creator = data.Creator,
 				Date = data.Date,
-				TypeId = data.TypeId,
+				TypeId = data.TechnicalReportId,
 				DigestValue = data.DigestValue,
 				IntegrityStatus = data.IntegrityStatus,
 				AxleGear = new GearData { LossMap = axleLossMap, Ratio = data.Ratio }
@@ -186,11 +186,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					case AngledriveType.SeparateAngledrive:
 						var angledriveData = new AngledriveData {
 							SavedInDeclarationMode = data.SavedInDeclarationMode,
-							Vendor = data.Vendor,
-							ModelName = data.ModelName,
+							Vendor = data.Manufacturer,
+							ModelName = data.Model,
 							Creator = data.Creator,
 							Date = data.Date,
-							TypeId = data.TypeId,
+							TypeId = data.TechnicalReportId,
 							DigestValue = data.DigestValue,
 							IntegrityStatus = data.IntegrityStatus,
 							Type = type,

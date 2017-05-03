@@ -1,20 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2016 rel. 2 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
-<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v0.6" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v0.6" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.6" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
-	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaLocation="VectoDeclarationDefinitions.0.6.xsd"/>
+<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v0.8" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v0.8" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.6" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" schemaLocation="VectoDeclarationDefinitions.0.8.xsd"/>
 	<xs:element name="VectoInputDeclaration">
 		<xs:annotation>
 			<xs:documentation>Root Node Declaration Data</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:choice>
-				<xs:element name="Engine" type="vdecdef:EngineComponentDeclarationType"/>
-				<xs:element name="Gearbox" type="vdecdef:GearboxComponentDeclarationType"/>
-				<xs:element name="Retarder" type="vdecdef:RetarderComponentDeclarationType"/>
-				<xs:element name="Axlegear" type="vdecdef:AxlegearComponentDeclarationType"/>
-				<xs:element name="AxleWheels" type="vdecdef:AxleWheelsComponentDeclarationType"/>
+				<xs:element name="Engine">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="vdecdef:EngineComponentDeclarationType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
+									<xs:annotation>
+										<xs:documentation>P261 - [-]</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Gearbox">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="vdecdef:GearboxComponentDeclarationType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
+									<xs:annotation>
+										<xs:documentation>P262 - [-]</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Retarder">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="vdecdef:RetarderComponentDeclarationType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
+									<xs:annotation>
+										<xs:documentation>P266 - [-]</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Axlegear">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="vdecdef:AxlegearComponentDeclarationType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
+									<xs:annotation>
+										<xs:documentation>P264 - [-]</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Tyre">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="vdecdef:TyreDeclarationType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
+									<xs:annotation>
+										<xs:documentation>P267 - [-]</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
 				<xs:element name="Auxiliaries" type="vdecdef:AuxiliariesComponentDeclarationType"/>
-				<xs:element name="Angledrive" type="vdecdef:AngledriveComponentDeclarationType"/>
+				<xs:element name="Angledrive">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="vdecdef:AngledriveComponentDeclarationType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
+									<xs:annotation>
+										<xs:documentation>P265 - [-]</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="AirDrag">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="vdecdef:AirDragComponentDeclarationType">
+								<xs:attribute name="certificationNumber" type="vdecdef:CertificationNumberType">
+									<xs:annotation>
+										<xs:documentation>P268 - [-]</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
 			</xs:choice>
 			<xs:attribute name="schemaVersion" use="required">
 				<xs:simpleType>

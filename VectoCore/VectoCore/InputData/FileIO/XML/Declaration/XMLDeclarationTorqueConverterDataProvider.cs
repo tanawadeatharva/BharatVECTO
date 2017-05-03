@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 	public class XMLDeclarationTorqueConverterDataProvider : AbstractDeclarationXMLComponentDataProvider,
 		ITorqueConverterDeclarationInputData
 	{
-		public XMLDeclarationTorqueConverterDataProvider(XMLInputDataProvider xmlInputDataProvider)
+		public XMLDeclarationTorqueConverterDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider)
 			: base(xmlInputDataProvider)
 		{
 			XBasePath = Helper.Query(VehiclePath,

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.IVT.VectoXML.Writer
@@ -17,8 +18,9 @@ namespace TUGraz.IVT.VectoXML.Writer
 
 		protected XNamespace tns;
 		protected XNamespace rootNamespace;
+		protected XNamespace di;
 
-		private const string Creator = "TU Graz, IVT-EM XML Exporter";
+		protected const string Creator = "TU Graz, IVT-EM XML Exporter";
 		protected readonly string Vendor;
 
 		protected readonly string BasePath;
@@ -28,27 +30,23 @@ namespace TUGraz.IVT.VectoXML.Writer
 		{
 			BasePath = basePath;
 			Vendor = vendor;
+
+			di = "http://www.w3.org/2000/09/xmldsig#";
 		}
 
-		protected XElement[] GetDefaultComponentElements(string typeId, string makeAndModel)
-		{
-			return new[] {
-				new XElement(tns + XMLNames.Component_Vendor, String.Format("{0,-5}", Vendor)),
-				new XElement(tns + XMLNames.Component_Creator, String.Format("{0,-10}", Creator)),
-				new XElement(tns + XMLNames.Component_Date, XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
-				new XElement(tns + XMLNames.Component_MakeAndModel, String.Format("{0,-10}", makeAndModel)),
-				new XElement(tns + XMLNames.Component_TypeId, String.Format("{0,-10}", typeId)),
-			};
-		}
-
-		protected object[] EmbedDataTable(DataTable table, Dictionary<string, string> mapping, string tagName = "Entry")
+		protected object[] EmbedDataTable(DataTable table, Dictionary<string, string> mapping, string tagName = "Entry",
+			Dictionary<string, uint> precision = null)
 		{
 			return (from DataRow row in table.Rows
 				select
 					new XElement(tns + tagName,
 						table.Columns.Cast<DataColumn>()
 							.Where(c => mapping.ContainsKey(c.ColumnName))
-							.Select(c => new XAttribute(mapping[c.ColumnName], row[c])))).Cast<object>().ToArray();
+							.Select(c => {
+								var p = precision != null && precision.ContainsKey(c.ColumnName) ? precision[c.ColumnName] : 2;
+								return new XAttribute(mapping[c.ColumnName], row.Field<string>(c).ToDouble().ToXMLFormat(p));
+							})))
+				.Cast<object>().ToArray();
 		}
 
 		protected string GetVehicleCategoryXML(VehicleCategory vehicleCategory)
@@ -81,7 +79,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					return "Declaration Mode Correction";
 				default:
-					throw new ArgumentOutOfRangeException("mode", mode, null);
+					throw new ArgumentOutOfRangeException("CrosswindCorrection", mode, null);
 			}
 		}
 
@@ -99,23 +97,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 				case RetarderType.LossesIncludedInTransmission:
 					return "Losses included in Gearbox";
 				default:
-					throw new ArgumentOutOfRangeException("retarder", type, null);
-			}
-		}
-
-		protected string GearboxtypeToXML(GearboxType type)
-		{
-			switch (type) {
-				case GearboxType.MT:
-				case GearboxType.AMT:
-				case GearboxType.DrivingCycle:
-					return type.ToString();
-				case GearboxType.ATSerial:
-					return "AT - Serial";
-				case GearboxType.ATPowerSplit:
-					return "AT - PowerSplit";
-				default:
-					throw new ArgumentOutOfRangeException("type", type, null);
+					throw new ArgumentOutOfRangeException("RetarderType", type, null);
 			}
 		}
 	}

@@ -208,7 +208,7 @@ Examples:
 									dataProvider = new XMLEngineeringInputDataProvider(file, true);
 									break;
 								case "VectoInputDeclaration":
-									dataProvider = new XMLInputDataProvider(XmlReader.Create(file), true);
+									dataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(file), true);
 									break;
 							}
 							break;

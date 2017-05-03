@@ -260,6 +260,14 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return self.ToString(CultureInfo.InvariantCulture);
 		}
+
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static string ToXMLFormat(this double self, uint? decimals = null)
+		{
+			decimals = decimals ?? 2;
+			return self.ToString("F" + decimals.Value);
+		}
 	}
 
 	public static class FloatExtensionMethods

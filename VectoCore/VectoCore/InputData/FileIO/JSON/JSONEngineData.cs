@@ -86,8 +86,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData FuelConsumptionMap
 		{
-			get
-			{
+			get {
 				try {
 					return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap");
 				} catch (Exception) {
@@ -103,8 +102,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData FullLoadCurve
 		{
-			get
-			{
+			get {
 				try {
 					return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FullLoadCurveFile), "FullLoadCurve");
 				} catch (Exception) {
@@ -125,8 +123,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual double WHTCEngineering
 		{
-			get
-			{
+			get {
 				if (Body["WHTC-Engineering"] == null) {
 					return 1;
 				}
@@ -151,8 +148,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public double ColdHotBalancingFactor
 		{
-			get
-			{
+			get {
 				if (Body["ColdHotBalancingFactor"] == null) {
 					return 1.0;
 				}
@@ -160,12 +156,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public string Vendor
+		public string Manufacturer
 		{
 			get { return "N/A"; }
 		}
 
-		public string ModelName
+		public string Model
 		{
 			get { return Body.GetEx<string>(JsonKeys.Engine_ModelName); }
 		}
@@ -180,7 +176,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N/A"; }
 		}
 
-		public string TypeId
+		public string TechnicalReportId
+		{
+			get { return "N/A"; }
+		}
+
+		public string CertificationNumber
 		{
 			get { return "N/A"; }
 		}

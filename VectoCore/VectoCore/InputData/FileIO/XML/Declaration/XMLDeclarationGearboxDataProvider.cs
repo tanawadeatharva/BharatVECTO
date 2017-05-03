@@ -13,7 +13,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 	public class XMLDeclarationGearboxDataProvider : AbstractDeclarationXMLComponentDataProvider,
 		IGearboxDeclarationInputData
 	{
-		public XMLDeclarationGearboxDataProvider(XMLInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
+		public XMLDeclarationGearboxDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider)
+			: base(xmlInputDataProvider)
 		{
 			XBasePath = Helper.Query(VehiclePath,
 				XMLNames.Vehicle_Components,
@@ -23,27 +24,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public GearboxType Type
 		{
-			get
-			{
+			get {
 				var value = GetElementValue(XMLNames.Gearbox_TransmissionType);
 				switch (value) {
 					case "MT":
+					case "SMT":
 						return GearboxType.MT;
 					case "AMT":
 						return GearboxType.AMT;
+					case "APT-S":
 					case "AT - Serial":
 						return GearboxType.ATSerial;
+					case "APT-P":
 					case "AT - PowerSplit":
 						return GearboxType.ATPowerSplit;
 				}
-				throw new ArgumentOutOfRangeException(value);
+				throw new ArgumentOutOfRangeException("GearboxType", value);
 			}
 		}
 
 		public IList<ITransmissionInputData> Gears
 		{
-			get
-			{
+			get {
 				var retVal = new List<ITransmissionInputData>();
 				var gears = Navigator.Select(
 					Helper.Query(XBasePath, XMLNames.Gearbox_Gears, XMLNames.Gearbox_Gears_Gear),

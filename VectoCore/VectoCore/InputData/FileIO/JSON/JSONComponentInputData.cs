@@ -47,6 +47,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected IVehicleEngineeringInputData VehicleData;
 		protected IRetarderInputData Retarder;
 		protected IPTOTransmissionInputData PTOTransmission;
+		private IAirdragEngineeringInputData AirdragData;
 
 
 		public JSONComponentInputData(string filename, bool tolerateMissing = false)
@@ -66,6 +67,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 			tmp.Switch()
 				.If<IVehicleEngineeringInputData>(c => VehicleData = c)
+				.If<IAirdragEngineeringInputData>(c => AirdragData = c)
 				.If<IEngineEngineeringInputData>(c => Engine = c)
 				.If<IGearboxEngineeringInputData>(c => Gearbox = c)
 				.If<IAxleGearInputData>(c => AxleGear = c)
@@ -85,6 +87,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IVehicleDeclarationInputData IDeclarationInputDataProvider.VehicleInputData
 		{
 			get { return VehicleData; }
+		}
+
+		IAirdragDeclarationInputData IDeclarationInputDataProvider.AirdragInputData
+		{
+			get { return AirdragInputData; }
+		}
+
+		public IAirdragEngineeringInputData AirdragInputData
+		{
+			get { return AirdragData; }
 		}
 
 		IGearboxDeclarationInputData IDeclarationInputDataProvider.GearboxInputData

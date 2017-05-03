@@ -87,7 +87,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading,
+		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, IAirdragDeclarationInputData airdragData,
+			Mission mission, Kilogram loading,
 			Meter vehicleHeight)
 		{
 			if (!data.SavedInDeclarationMode) {
@@ -105,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				DeclarationData.Wheels.Lookup(data.Axles[drivenIndex].Wheels).DynamicTyreRadius;
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
 
-			var aerodynamicDragArea = data.AirDragArea + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
+			var aerodynamicDragArea = airdragData.AirDragArea + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
 
 			retVal.CrossWindCorrectionCurve =
 				new CrosswindCorrectionCdxALookup(aerodynamicDragArea,

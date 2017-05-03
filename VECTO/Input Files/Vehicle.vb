@@ -27,7 +27,7 @@ Imports TUGraz.VectoCore.Utils
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData,
-				IAngledriveInputData
+				IAngledriveInputData, IAirdragEngineeringInputData
 
 	Private _filePath As String
 	Private _path As String
@@ -106,14 +106,14 @@ Public Class Vehicle
 			If mode = ExecutionMode.Declaration Then
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
 				Dim segment As Segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
-																		vehicle.GrossVehicleMassRating, vehicle.CurbWeightChassis)
-				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
+																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis)
+				vehicleData = doa.CreateVehicleData(vehicle, vehicle, segment.Missions.First(),
 													segment.Missions.First().Loadings.First().Value, segment.VehicleHeight)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle, False)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
-				vehicleData = doa.CreateVehicleData(vehicle)
+				vehicleData = doa.CreateVehicleData(vehicle, vehicle)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle, True)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
@@ -209,7 +209,7 @@ Public Class Vehicle
 
 		Try
 			Dim writer As JSONFileWriter = JSONFileWriter.Instance
-			writer.SaveVehicle(Me, Me, Me, Me, _filePath)
+			writer.SaveVehicle(Me, Me, Me, Me, Me, _filePath)
 		Catch ex As Exception
 			MsgBox("Failed to save Vehicle file: " + ex.Message)
 			Return False
@@ -257,13 +257,13 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property Vendor As String Implements IComponentInputData.Vendor
+	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
 			Return "N.A."  ' TODO: MQ  20160908
 		End Get
 	End Property
 
-	Public ReadOnly Property ModelName As String Implements IComponentInputData.ModelName
+	Public ReadOnly Property Model As String Implements IComponentInputData.Model
 		Get
 			Return "N.A."  ' Todo: MQ 20160908
 		End Get
@@ -281,9 +281,15 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property TypeId As String Implements IComponentInputData.TypeId
+	Public ReadOnly Property TechnicalReportId As String Implements IComponentInputData.TechnicalReportId
 		Get
 			Return "N.A."	' ToDo: MQ 20160908
+		End Get
+	End Property
+
+	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
+		Get
+			Return "N.A."	'ToDo
 		End Get
 	End Property
 
@@ -313,36 +319,36 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property CurbWeightChassis As Kilogram Implements IVehicleDeclarationInputData.CurbWeightChassis
+	Public ReadOnly Property CurbMassChassis As Kilogram Implements IVehicleDeclarationInputData.CurbMassChassis
 		Get
-			Return Mass.SI (Of Kilogram)()
+			Return Mass.SI(Of Kilogram)()
 		End Get
 	End Property
 
 	Public ReadOnly Property GrossVehicleMassRating As Kilogram _
 		Implements IVehicleDeclarationInputData.GrossVehicleMassRating
 		Get
-			Return MassMax.SI().Ton.Cast (Of Kilogram)()
+			Return MassMax.SI().Ton.Cast(Of Kilogram)()
 		End Get
 	End Property
 
-	Public ReadOnly Property AirDragArea As SquareMeter Implements IVehicleDeclarationInputData.AirDragArea
+	Public ReadOnly Property AirDragArea As SquareMeter Implements IAirdragEngineeringInputData.AirDragArea
 		Get
-			Return CdA0.SI (Of SquareMeter)()
+			Return CdA0.SI(Of SquareMeter)()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
 		Implements IVehicleEngineeringInputData.Axles
 		Get
-			Return AxleWheels().Cast (Of IAxleEngineeringInputData)().ToList()
+			Return AxleWheels().Cast(Of IAxleEngineeringInputData)().ToList()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleDeclarationInputData_Axles As IList(Of IAxleDeclarationInputData) _
 		Implements IVehicleDeclarationInputData.Axles
 		Get
-			Return AxleWheels().Cast (Of IAxleDeclarationInputData)().ToList()
+			Return AxleWheels().Cast(Of IAxleDeclarationInputData)().ToList()
 		End Get
 	End Property
 
@@ -350,30 +356,30 @@ Public Class Vehicle
 		Return Axles.Select(Function(axle) New AxleInputData With {
 								.SourceType = DataSourceType.JSONFile,
 								.Source = FilePath,
-								.Inertia = axle.Inertia.SI (Of KilogramSquareMeter)(),
+								.Inertia = axle.Inertia.SI(Of KilogramSquareMeter)(),
 								.Wheels = axle.Wheels,
 								.AxleWeightShare = axle.Share,
 								.TwinTyres = axle.TwinTire,
 								.RollResistanceCoefficient = axle.RRC,
-								.TyreTestLoad = axle.FzISO.SI (Of Newton)()
+								.TyreTestLoad = axle.FzISO.SI(Of Newton)()
 								})
 	End Function
 
-	Public ReadOnly Property CurbWeightExtra As Kilogram Implements IVehicleEngineeringInputData.CurbWeightExtra
+	Public ReadOnly Property CurbMassExtra As Kilogram Implements IVehicleEngineeringInputData.CurbMassExtra
 		Get
-			Return MassExtra.SI (Of Kilogram)()
+			Return MassExtra.SI(Of Kilogram)()
 		End Get
 	End Property
 
 	Public ReadOnly Property CrosswindCorrectionMap As TableData _
-		Implements IVehicleEngineeringInputData.CrosswindCorrectionMap
+		Implements IAirdragEngineeringInputData.CrosswindCorrectionMap
 		Get
 			Return VectoCSVFile.Read(CrossWindCorrectionFile.FullPath)
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_CrossWindCorrectionMode As CrossWindCorrectionMode _
-		Implements IVehicleEngineeringInputData.CrossWindCorrectionMode
+		Implements IAirdragEngineeringInputData.CrossWindCorrectionMode
 		Get
 			Return CrossWindCorrectionMode
 		End Get
@@ -382,14 +388,14 @@ Public Class Vehicle
 	Public ReadOnly Property IVehicleEngineeringInputData_DynamicTyreRadius As Meter _
 		Implements IVehicleEngineeringInputData.DynamicTyreRadius
 		Get
-			Return DynamicTyreRadius.SI().Milli.Meter.Cast (Of Meter)()
+			Return DynamicTyreRadius.SI().Milli.Meter.Cast(Of Meter)()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Loading As Kilogram _
 		Implements IVehicleEngineeringInputData.Loading
 		Get
-			Return Loading.SI (Of Kilogram)()
+			Return Loading.SI(Of Kilogram)()
 		End Get
 	End Property
 
@@ -434,7 +440,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property Efficiency As Double Implements IAngledriveInputData.Efficiency
 		Get
-			Return If(IsNumeric(AngledriveLossMapFile.OriginalPath), AngledriveLossMapFile.OriginalPath.ToDouble(), - 1.0)
+			Return If(IsNumeric(AngledriveLossMapFile.OriginalPath), AngledriveLossMapFile.OriginalPath.ToDouble(), -1.0)
 		End Get
 	End Property
 

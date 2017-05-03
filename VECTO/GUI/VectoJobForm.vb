@@ -1168,7 +1168,7 @@ lbDlog:
 
 		If gearbox Is Nothing Then Return
 
-		TbGbxTxt.Text = String.Format("{0}-Speed {1} {2}", gearbox.Gears.Count, gearbox.Type.ShortName(), gearbox.ModelName)
+		TbGbxTxt.Text = String.Format("{0}-Speed {1} {2}", gearbox.Gears.Count, gearbox.Type.ShortName(), gearbox.Model)
 
 		If Cfg.DeclMode Then
 			For i = 1 To gearbox.Gears.Count
@@ -1289,7 +1289,7 @@ lbDlog:
 
 
 		TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value() * 1000).ToString("0.0"),
-									pmax.ToString("#"), engine.ModelName)
+									pmax.ToString("#"), engine.Model)
 
 		Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
 

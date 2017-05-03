@@ -177,7 +177,7 @@ Public Class EngineForm
 		End If
 
 		Dim basePath As String = Path.GetDirectoryName(file)
-		TbName.Text = engine.ModelName
+		TbName.Text = engine.Model
 		TbDispl.Text = (engine.Displacement * 1000 * 1000).ToGUIFormat()
 		TbInertia.Text = engine.Inertia.ToGUIFormat()
 		TbNleerl.Text = engine.IdleSpeed.AsRPM.ToGUIFormat()
@@ -375,14 +375,15 @@ Public Class EngineForm
 		Try
 			Dim fldFile As String =
 					If(Not String.IsNullOrWhiteSpace(_engFile), Path.Combine(Path.GetDirectoryName(_engFile), TbFLD.Text), TbFLD.Text)
-			If File.Exists(fldFile) Then fullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), engineFld:=True)
+			If File.Exists(fldFile) Then _
+				fullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), engineFld:=True)
 		Catch ex As Exception
 		End Try
 
 		Try
 			Dim fcFile As String =
 					If(Not String.IsNullOrWhiteSpace(_engFile), Path.Combine(Path.GetDirectoryName(_engFile), TbMAP.Text), TbMAP.Text)
-			if File.Exists(fcfile) then fcMap = FuelConsumptionMapReader.Create(VectoCSVFile.Read(fcFile))
+			If File.Exists(fcFile) Then fcMap = FuelConsumptionMapReader.Create(VectoCSVFile.Read(fcFile))
 		Catch ex As Exception
 		End Try
 

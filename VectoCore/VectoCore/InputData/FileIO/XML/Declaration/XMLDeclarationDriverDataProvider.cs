@@ -10,37 +10,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 	public class XMLDeclarationDriverDataProvider : AbstractDeclarationXMLComponentDataProvider,
 		IDriverDeclarationInputData
 	{
-		public XMLDeclarationDriverDataProvider(XMLInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
+		public XMLDeclarationDriverDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider)
+			: base(xmlInputDataProvider)
 		{
 			XBasePath = VehiclePath;
 		}
 
 		public IStartStopDeclarationInputData StartStop
 		{
-			get
-			{
-				var node =
-					Navigator.SelectSingleNode(Helper.Query(VehiclePath,
-						XMLNames.Vehicle_AdvancedDriverAssist,
-						XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop,
-						XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop_Enabled), Manager);
+			get {
+				//var node =
+				//	Navigator.SelectSingleNode(Helper.Query(VehiclePath,
+				//		XMLNames.Vehicle_AdvancedDriverAssist,
+				//		XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop,
+				//		XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop_Enabled), Manager);
 				return new StartStopInputData() {
-					Enabled = node != null && XmlConvert.ToBoolean(node.Value)
+					Enabled = false
 				};
 			}
 		}
 
 		public IOverSpeedEcoRollDeclarationInputData OverSpeedEcoRoll
 		{
-			get
-			{
-				var node =
-					Navigator.SelectSingleNode(Helper.Query(VehiclePath,
-						XMLNames.Vehicle_AdvancedDriverAssist,
-						XMLNames.DriverModel_Overspeed,
-						XMLNames.DriverModel_Overspeed_Mode), Manager);
+			get {
+				//var node =
+				//	Navigator.SelectSingleNode(Helper.Query(VehiclePath,
+				//		XMLNames.Vehicle_AdvancedDriverAssist,
+				//		XMLNames.DriverModel_Overspeed,
+				//		XMLNames.DriverModel_Overspeed_Mode), Manager);
 				return new OverSpeedEcoRollInputData() {
-					Mode = node != null ? DriverData.ParseDriverMode(node.Value) : DriverMode.Off
+					Mode = DriverMode.Overspeed
 				};
 			}
 		}

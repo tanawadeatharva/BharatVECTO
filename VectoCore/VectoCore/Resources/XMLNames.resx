@@ -196,7 +196,7 @@
 		<value>WHTCMotorway</value>
 	</data>
 	<data name="Engine_ColdHotBalancingFactor" xml:space="preserve">
-		<value>ColdHotBalancingFactor</value>
+		<value>BFColdHot</value>
 	</data>
 	<data name="Engine_FuelConsumptionMap" xml:space="preserve">
 		<value>FuelConsumptionMap</value>
@@ -433,10 +433,10 @@
 		<value>axleNumber</value>
 	</data>
 	<data name="AxleWheels_Axles_Axle_TwinTyres_Attr" xml:space="preserve">
-		<value>twinTyres</value>
+		<value>TwinTyres</value>
 	</data>
 	<data name="AxleWheels_Axles_Axle_AxleType_Attr" xml:space="preserve">
-		<value>axleType</value>
+		<value>AxleType</value>
 	</data>
 	<data name="Gearbox_Gear_GearNumber_Attr" xml:space="preserve">
 		<value>number</value>
@@ -543,8 +543,8 @@
 	<data name="Driver_CoastingDFVelocityDropLookupMapping_DecisionFactorDrop_Attr" xml:space="preserve">
 		<value>decisionFactorDrop</value>
 	</data>
-	<data name="Component_Vendor" xml:space="preserve">
-		<value>Vendor</value>
+	<data name="Component_Manufacturer" xml:space="preserve">
+		<value>Manufacturer</value>
 	</data>
 	<data name="Component_Creator" xml:space="preserve">
 		<value>Creator</value>
@@ -552,11 +552,11 @@
 	<data name="Component_Date" xml:space="preserve">
 		<value>Date</value>
 	</data>
-	<data name="Component_MakeAndModel" xml:space="preserve">
-		<value>MakeAndModel</value>
+	<data name="Component_Model" xml:space="preserve">
+		<value>Model</value>
 	</data>
-	<data name="Component_TypeId" xml:space="preserve">
-		<value>TypeId</value>
+	<data name="Component_CertificationNumber" xml:space="preserve">
+		<value>CertificationNumber</value>
 	</data>
 	<data name="Angledrive_LossMap_Entry" xml:space="preserve">
 		<value>Entry</value>
@@ -650,5 +650,107 @@
   </data>
 	<data name="Vehicle_PTOCycle_Torque_Attr" xml:space="preserve">
     <value>torque</value>
+  </data>
+	<data name="Vehicle_CurbMassChassis" xml:space="preserve">
+    <value>CurbMassChassis</value>
+  </data>
+	<data name="Vehicle_VIN" xml:space="preserve">
+    <value>VIN</value>
+  </data>
+	<data name="AxleWheels_Axles_Axle_AxleType" xml:space="preserve">
+    <value>AxleType</value>
+  </data>
+	<data name="AxleWheels_Axles_Axle_TwinTyres" xml:space="preserve">
+    <value>TwinTyres</value>
+  </data>
+	<data name="AxleWheels_Axles_Axle_Steered" xml:space="preserve">
+    <value>Steered</value>
+  </data>
+	<data name="AxleWheels_Axles_Axle_Tyre" xml:space="preserve">
+    <value>Tyre</value>
+  </data>
+	<data name="Component_AirDrag" xml:space="preserve">
+    <value>AirDrag</value>
+  </data>
+	<data name="AirDrag_DeclaredCdxA" xml:space="preserve">
+    <value>DeclaredCdxA</value>
+  </data>
+	<data name="Vehicle_CurbMassExtra" xml:space="preserve">
+    <value>CurbMassExtra</value>
+  </data>
+	<data name="Component_TechnicalReportId" xml:space="preserve">
+    <value>TechnicalReportId</value>
+  </data>
+	<data name="AxleWheels_Axles_Axle_RRCDeclared" xml:space="preserve">
+    <value>RRCDeclared</value>
+  </data>
+	<data name="Component_AppVersion" xml:space="preserve">
+    <value>AppVersion</value>
+  </data>
+	<data name="Component_CertificationMethod" xml:space="preserve">
+    <value>CertificationMethod</value>
+  </data>
+	<data name="Component_Gearbox_CertificationMethod" xml:space="preserve">
+    <value>MainCertificationMethod</value>
+  </data>
+	<data name="Engine_RatedSpeed" xml:space="preserve">
+    <value>RatedSpeed</value>
+  </data>
+	<data name="Engine_RatedPower" xml:space="preserve">
+    <value>RatedPower</value>
+  </data>
+	<data name="Engine_MaxTorque" xml:space="preserve">
+    <value>MaxEngineTorque</value>
+  </data>
+	<data name="Engine_FuelType" xml:space="preserve">
+    <value>FuelType</value>
+  </data>
+	<data name="Engine_CorrecionFactor_NCV" xml:space="preserve">
+    <value>CFNCV</value>
+  </data>
+	<data name="Engine_CorrectionFactor_RegPer" xml:space="preserve">
+    <value>CFRegPer</value>
+  </data>
+	<data name="Vehicle_PTO" xml:space="preserve">
+    <value>PTO</value>
+  </data>
+	<data name="Vehicle_PTO_ShaftsGearWheels" xml:space="preserve">
+    <value>PTOShaftsGearWheels</value>
+  </data>
+	<data name="Vehicle_PTO_OtherElements" xml:space="preserve">
+    <value>PTOOtherElements</value>
+  </data>
+	<data name="Vehicle_IdlingSpeed" xml:space="preserve">
+    <value>IdlingSpeed</value>
+  </data>
+	<data name="Vehicle_LegislativeClass" xml:space="preserve">
+    <value>LegislativeClass</value>
+  </data>
+	<data name="DI_Signature" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+	<data name="DI_Signature_Reference" xml:space="preserve">
+    <value>Reference</value>
+  </data>
+	<data name="DI_Signature_Reference_URI_Attr" xml:space="preserve">
+    <value>URI</value>
+  </data>
+	<data name="DI_Signature_Reference_Transforms" xml:space="preserve">
+    <value>Transforms</value>
+  </data>
+	<data name="DI_Signature_Reference_Transforms_Transform" xml:space="preserve">
+    <value>Transform</value>
+  </data>
+	<data name="DI_Signature_Algorithm_Attr" xml:space="preserve">
+    <value>Algorithm</value>
+  </data>
+	<data name="DI_Signature_Reference_DigestMethod" xml:space="preserve">
+    <value>DigestMethod</value>
+  </data>
+	<data name="DI_Signature_Reference_DigestValue" xml:space="preserve">
+    <value>DigestValue</value>
+  </data>
+	<data name="Component_ManufacturerAddress" xml:space="preserve">
+    <value>ManufacturerAddress</value>
   </data>
 </root>

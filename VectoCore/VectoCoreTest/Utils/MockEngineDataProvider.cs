@@ -40,11 +40,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public DataSourceType SourceType { get; set; }
 		public string Source { get; set; }
 		public bool SavedInDeclarationMode { get; set; }
-		public string Vendor { get; set; }
-		public string ModelName { get; set; }
+		public string Manufacturer { get; set; }
+		public string Model { get; set; }
 		public string Creator { get; set; }
 		public string Date { get; set; }
-		public string TypeId { get; set; }
+		public string TechnicalReportId { get; set; }
+		public string CertificationNumber { get; set; }
 		public string DigestValue { get; set; }
 		public IntegrityStatus IntegrityStatus { get; set; }
 		public CubicMeter Displacement { get; set; }

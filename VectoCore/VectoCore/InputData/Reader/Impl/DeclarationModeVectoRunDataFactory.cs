@@ -66,11 +66,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var dao = new DeclarationDataAdapter();
 			var segment = GetVehicleClassification(InputDataProvider.VehicleInputData.VehicleCategory,
 				InputDataProvider.VehicleInputData.AxleConfiguration,
-				InputDataProvider.VehicleInputData.GrossVehicleMassRating, InputDataProvider.VehicleInputData.CurbWeightChassis);
+				InputDataProvider.VehicleInputData.GrossVehicleMassRating, InputDataProvider.VehicleInputData.CurbMassChassis);
 			var driverdata = dao.CreateDriverData(InputDataProvider.DriverInputData);
 			driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
 
-			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData, segment.Missions.First(),
+			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData,
+				segment.Missions.First(),
 				segment.Missions.First().Loadings.First().Value, segment.VehicleHeight);
 			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData.Type);
 			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData, false);
@@ -81,8 +82,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			if (Report != null) {
 				var powertrainConfig = new VectoRunData() {
-					VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData, segment.Missions.First(),
-						segment.Missions.First().Loadings.First().Value, segment.VehicleHeight),
+					VehicleData =
+						dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData,
+							segment.Missions.First(),
+							segment.Missions.First().Loadings.First().Value, segment.VehicleHeight),
 					EngineData = engineData,
 					GearboxData = gearboxData,
 					AxleGearData = axlegearData,
@@ -109,8 +112,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				foreach (var loading in mission.Loadings) {
 					var simulationRunData = new VectoRunData {
 						Loading = loading.Key,
-						VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData, mission, loading.Value,
-							segment.VehicleHeight),
+						VehicleData =
+							dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData, mission,
+								loading.Value,
+								segment.VehicleHeight),
 						EngineData = engineData.Copy(),
 						GearboxData = gearboxData,
 						AxleGearData = axlegearData,

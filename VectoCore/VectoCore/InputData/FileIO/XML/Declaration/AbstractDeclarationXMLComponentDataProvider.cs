@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
 	public abstract class AbstractDeclarationXMLComponentDataProvider
 	{
-		protected readonly XMLInputDataProvider InputData;
+		protected readonly XMLDeclarationInputDataProvider InputData;
 		protected XPathNavigator Navigator;
 
 		protected string XBasePath = "";
@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		protected AbstractDeclarationXMLComponentDataProvider() {}
 
-		protected AbstractDeclarationXMLComponentDataProvider(XMLInputDataProvider xmlInputDataProvider)
+		protected AbstractDeclarationXMLComponentDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider)
 		{
 			InputData = xmlInputDataProvider;
 			Navigator = xmlInputDataProvider.Document.CreateNavigator();
@@ -53,19 +53,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return true; }
 		}
 
-		public virtual string Vendor
+		public virtual string Manufacturer
 		{
-			get { return GetElementValue(XMLNames.Component_Vendor); }
+			get { return GetElementValue(XMLNames.Component_Manufacturer); }
 		}
 
-		public virtual string ModelName
+		public virtual string Model
 		{
-			get { return GetElementValue(XMLNames.Component_MakeAndModel); }
+			get { return GetElementValue(XMLNames.Component_Model); }
 		}
 
 		public virtual string Creator
 		{
-			get { return GetElementValue(XMLNames.Component_Creator); }
+			get { return "N.A."; }
 		}
 
 		public virtual string Date
@@ -73,9 +73,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Component_Date); }
 		}
 
-		public virtual string TypeId
+		public virtual string TechnicalReportId
 		{
-			get { return GetElementValue(XMLNames.Component_TypeId); }
+			get { return GetElementValue(XMLNames.Component_TechnicalReportId); }
+		}
+
+		public string CertificationNumber
+		{
+			get { return GetAttributeValue("../", "certificationNumber"); }
 		}
 
 		public virtual string DigestValue

@@ -58,7 +58,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P039  Curb Weight Extra Trailer/Body
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		Kilogram CurbWeightExtra { get; }
+		Kilogram CurbMassExtra { get; }
 
 		/// <summary>
 		/// P040  Loading
@@ -78,7 +78,10 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Meter DynamicTyreRadius { get; }
+	}
 
+	public interface IAirdragEngineeringInputData : IAirdragDeclarationInputData
+	{
 		/// <summary>
 		/// P050 - Cross Wind Correction Mode
 		/// cf. VECTO Input Parameters.xlsx
