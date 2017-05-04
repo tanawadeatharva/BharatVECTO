@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
-using System.Text;
 using System.Xml;
 
-namespace TUGraz.VectoHashing
+namespace TUGraz.VectoHashing.Impl
 {
-	public class XmlHashTest
+	public class XMLHashProvider
 	{
-		public string ComputeHash(XmlDocument doc)
+		public XmlDocument ComputeHash(XmlDocument doc, string elementId)
 		{
+			if (doc == null || doc.DocumentElement == null) {
+				throw new Exception("Invalid Document");
+			}
 			var signedXml = new SignedXml(doc);
-			var reference = new Reference("#elemID") {
+			var reference = new Reference("#" + elementId) {
 				DigestMethod = "http://www.w3.org/2001/04/xmlenc#sha256"
 			};
+			reference.AddTransform(new XmlDsigVectoTransform());
 			reference.AddTransform(new XmlDsigC14NTransform());
-			//reference.AddTransform(new XmlDsigVectoTransform());
+
 
 			signedXml.AddReference(reference);
 			signedXml.ComputeSignature(HMAC.Create());
@@ -28,11 +31,7 @@ namespace TUGraz.VectoHashing
 			if (doc.FirstChild is XmlDeclaration) {
 				doc.RemoveChild(doc.FirstChild);
 			}
-			var xmltw = new XmlTextWriter("simple_document_hashed.xml", new UTF8Encoding(false));
-			doc.WriteTo(xmltw);
-			xmltw.Close();
-			var references = signedXml.SignedInfo.References;
-			return Convert.ToBase64String(((Reference)references[0]).DigestValue);
+			return doc;
 		}
 	}
 }

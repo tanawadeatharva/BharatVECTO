@@ -40,9 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Impl\XmlDsigVectoTransform.cs" />
+    <Compile Include="IVectoHash.cs" />
+    <Compile Include="Util\XmlDocumentExtensions.cs" />
+    <Compile Include="VectoComponents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XmlHashProvider.cs" />
-    <Compile Include="XmlHashTest.cs" />
+    <Compile Include="VectoHash.cs" />
+    <Compile Include="Impl\XmlHashProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XSLT\SortInputData.xslt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
