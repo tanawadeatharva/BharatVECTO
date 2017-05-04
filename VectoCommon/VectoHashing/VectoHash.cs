@@ -78,26 +78,6 @@ namespace TUGraz.VectoHashing
 			return GetHashValue(hash, toSign);
 		}
 
-		private static string GetComponentQueryString(VectoComponents? component = null)
-		{
-			if (component == null) {
-				return "(//*[@id]/@id)[1]";
-			}
-			return component == VectoComponents.Vehicle
-				? string.Format("//*[local-name()='{0}'/@id", component.Value.XMLElementName())
-				: string.Format("//*[local-name()='{0}']/*[local-name()='Data']/@id", component.Value.XMLElementName());
-		}
-
-		private string GetIdForElement(string query, int index = 0)
-		{
-			var node = document.SelectNodes(query);
-			if (node == null) {
-				return null;
-			}
-			var toSign = node[index].Value;
-			return toSign;
-		}
-
 		public XDocument AddHash()
 		{
 			var toSign = GetIdForElement(GetComponentQueryString());
@@ -127,6 +107,26 @@ namespace TUGraz.VectoHashing
 		{
 			return StructuralComparisons.StructuralEqualityComparer.Equals(ReadHash(component, index),
 				ComputeHash(component, index));
+		}
+
+		private static string GetComponentQueryString(VectoComponents? component = null)
+		{
+			if (component == null) {
+				return "(//*[@id]/@id)[1]";
+			}
+			return component == VectoComponents.Vehicle
+				? string.Format("//*[local-name()='{0}'/@id", component.Value.XMLElementName())
+				: string.Format("//*[local-name()='{0}']/*[local-name()='Data']/@id", component.Value.XMLElementName());
+		}
+
+		private string GetIdForElement(string query, int index = 0)
+		{
+			var node = document.SelectNodes(query);
+			if (node == null) {
+				return null;
+			}
+			var toSign = node[index].Value;
+			return toSign;
 		}
 
 		private static string GetHashValue(XmlDocument hashed, string elementToHash)
