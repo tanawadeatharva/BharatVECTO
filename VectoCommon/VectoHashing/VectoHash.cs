@@ -125,7 +125,8 @@ namespace TUGraz.VectoHashing
 
 		public bool ValidateHash(VectoComponents component, int index = 0)
 		{
-			return StructuralComparisons.StructuralEqualityComparer.Equals(ReadHash(component), ComputeHash(component));
+			return StructuralComparisons.StructuralEqualityComparer.Equals(ReadHash(component, index),
+				ComputeHash(component, index));
 		}
 
 		private static string GetHashValue(XmlDocument hashed, string elementToHash)
