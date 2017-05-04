@@ -7,7 +7,7 @@ namespace TUGraz.VectoHashing.Impl
 {
 	public class XMLHashProvider
 	{
-		public XmlDocument ComputeHash(XmlDocument doc, string elementId)
+		public static XmlDocument ComputeHash(XmlDocument doc, string elementId)
 		{
 			if (doc == null || doc.DocumentElement == null) {
 				throw new Exception("Invalid Document");
@@ -24,14 +24,11 @@ namespace TUGraz.VectoHashing.Impl
 			signedXml.ComputeSignature(HMAC.Create());
 			var xmlDigitalSignature = reference.GetXml();
 
-			var sig = doc.CreateElement("Signature");
-			sig.AppendChild(doc.ImportNode(xmlDigitalSignature, true));
+			var sigdoc = new XmlDocument();
+			sigdoc.CreateElement("Signature");
+			sigdoc.AppendChild(sigdoc.ImportNode(xmlDigitalSignature, true));
 
-			doc.DocumentElement.AppendChild(sig);
-			if (doc.FirstChild is XmlDeclaration) {
-				doc.RemoveChild(doc.FirstChild);
-			}
-			return doc;
+			return sigdoc;
 		}
 	}
 }

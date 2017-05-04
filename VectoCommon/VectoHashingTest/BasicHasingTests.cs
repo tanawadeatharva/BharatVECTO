@@ -18,6 +18,13 @@ namespace VectoHashingTest
 
 		public const string UnorderedXMLVehicle = @"Testdata\XML\Variations\vecto_vehicle-sample_FULL_Entry_Order.xml";
 
+		public const string HashSimpleXML = "U2zic7KOnKw60rzh+KKQ1lwZL6NmXju+DXG7cYYmlxo=";
+		public const string HashEngineXML = "VZ3s5f3JtWTTrEex4uNcwQqh9Nzzdo6gkAQ3vD5qGUo=";
+
+		public const string HashVehicleXML = "EMVWU3nhpMX5g6KGWLaQiRjNnz3WhJS/2TIlyiiV9wE=";
+		//"HhMqWPkLcgxex1qAfBS7e7gopytbW6k8svNyW/B9+iw=";
+
+
 		[TestMethod]
 		public void HashSimpleXml()
 		{
@@ -25,13 +32,13 @@ namespace VectoHashingTest
 			var doc = new XmlDocument();
 			doc.Load(SimpleXML);
 			var hasher = new XMLHashProvider();
-			var hashed = hasher.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "simple_document_hashed.xml");
 
 
-			Assert.AreEqual("U2zic7KOnKw60rzh+KKQ1lwZL6NmXju+DXG7cYYmlxo=", hash);
+			Assert.AreEqual(HashSimpleXML, hash);
 		}
 
 		[TestMethod]
@@ -41,13 +48,13 @@ namespace VectoHashingTest
 			var doc = new XmlDocument();
 			doc.Load(ReferenceXMLEngine);
 			var hasher = new XMLHashProvider();
-			var hashed = hasher.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "reference_engine_hashed.xml");
 
 
-			Assert.AreEqual("VZ3s5f3JtWTTrEex4uNcwQqh9Nzzdo6gkAQ3vD5qGUo=", hash);
+			Assert.AreEqual(HashEngineXML, hash);
 		}
 
 		[TestMethod]
@@ -57,13 +64,13 @@ namespace VectoHashingTest
 			var doc = new XmlDocument();
 			doc.Load(ReferenceXMLVehicle);
 			var hasher = new XMLHashProvider();
-			var hashed = hasher.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "reference_vehicle_hashed.xml");
 
 
-			Assert.AreEqual("HhMqWPkLcgxex1qAfBS7e7gopytbW6k8svNyW/B9+iw=", hash);
+			Assert.AreEqual(HashVehicleXML, hash);
 		}
 
 		[TestMethod]
@@ -73,13 +80,13 @@ namespace VectoHashingTest
 			var doc = new XmlDocument();
 			doc.Load(UnorderedXMLVehicle);
 			var hasher = new XMLHashProvider();
-			var hashed = hasher.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "reference_vehicle_hashed.xml");
 
 
-			Assert.AreEqual("HhMqWPkLcgxex1qAfBS7e7gopytbW6k8svNyW/B9+iw=", hash);
+			Assert.AreEqual(HashVehicleXML, hash);
 		}
 
 		private static string GetHashValue(XmlDocument hashed, string elementToHash)
