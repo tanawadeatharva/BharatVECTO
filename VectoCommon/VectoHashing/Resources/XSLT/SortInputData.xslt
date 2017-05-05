@@ -5,6 +5,12 @@
 			<xsl:apply-templates select="node()|@*"/>
 		</xsl:copy>
 	</xsl:template>
+	<xsl:template match="@*">
+		<xsl:attribute name="{name()}"><xsl:value-of select="normalize-space(.)"/></xsl:attribute>
+	</xsl:template>
+	<xsl:template match="text()">
+         <xsl:value-of select="normalize-space(.)"/>
+    </xsl:template>
 	<xsl:template match="*[name()='FuelConsumptionMap']">
 		<xsl:copy>
 			<xsl:for-each select="*">
@@ -38,7 +44,7 @@
 				<xsl:apply-templates select="."/>
 			</xsl:for-each>
 		</xsl:copy>
-	</xsl:template>	
+	</xsl:template>
 	<xsl:template match="*[name()='TorqueLimits']">
 		<xsl:copy>
 			<xsl:for-each select="*">
