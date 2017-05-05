@@ -1,9 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
 using NUnit.Framework;
 using TUGraz.VectoHashing;
+using VectoHashingTest.Utils;
 using Assert = NUnit.Framework.Assert;
 
 namespace VectoHashingTest
@@ -94,7 +96,41 @@ namespace VectoHashingTest
 		}
 
 
+		[TestCase(@"Testdata\XML\Validation\vecto_engine_valid.xml"),
+		TestCase(@"Testdata\XML\Validation\vecto_gearbox_valid.xml")]
+		public void TestValidation(string file)
+		{
+			var h = VectoHash.Load(file);
+			Assert.IsTrue(h.ValidateHash());
+		}
+
+		[TestCase(@"Testdata\XML\Validation\vecto_engine_invalid.xml"),
+		TestCase(@"Testdata\XML\Validation\vecto_gearbox_invalid.xml")]
+		public void TestValidationInvalid(string file)
+		{
+			var h = VectoHash.Load(file);
+			Assert.IsFalse(h.ValidateHash());
+		}
+
+		[TestCase(VectoComponents.Engine),
+		TestCase(VectoComponents.Gearbox),
+		TestCase(VectoComponents.Axlegear),
+		TestCase(VectoComponents.Angledrive),
+		TestCase(VectoComponents.Retarder),
+		TestCase(VectoComponents.TorqueConverter),
+		TestCase(VectoComponents.Tyre),
+		TestCase(VectoComponents.Airdrag),
+		]
+		public void TestValidationComponentInvalid(VectoComponents component)
+		{
+			var file = @"Testdata\XML\Validation\vecto_vehicle_components_invalid.xml";
+			var h = VectoHash.Load(file);
+
+			Assert.IsFalse(h.ValidateHash(component));
+		}
+
 		[TestCase(@"Testdata\XML\ToHash\vecto_engine-input.xml"),
+		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml"),
 		TestCase(@"Testdata\XML\ToHash\vecto_gearbox-input.xml")]
 		public void TestAddHash(string file)
 		{
@@ -110,6 +146,19 @@ namespace VectoHashingTest
 
 			var h2 = VectoHash.Load(destination);
 			Assert.IsTrue(h2.ValidateHash());
+		}
+
+		[TestCase(@"Testdata\XML\ToHash\vecto_engine_withhash-input.xml", "input data already contains a signature element"),
+		TestCase(@"Testdata\XML\ToHash\vecto_vehicle-sample.xml", "adding hash for Vehicle is not supported"),
+		TestCase(@"Testdata\XML\ToHash\vecto_gearbox-input_nodata.xml", "'Data' element for component 'Gearbox' not found!"),
+		TestCase(@"Testdata\XML\ToHash\multiple_components.xml", "input must not contain multiple components!"),
+		]
+		public void TestAddHashException(string file, string expectedExceptionMsg)
+		{
+			var destination = Path.GetFileNameWithoutExtension(file) + "_hashed.xml";
+
+			var h = VectoHash.Load(file);
+			AssertHelper.Exception<Exception>(() => { var r = h.AddHash(); }, expectedExceptionMsg);
 		}
 	}
 }

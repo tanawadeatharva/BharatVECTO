@@ -80,17 +80,23 @@ namespace TUGraz.VectoHashing
 		public XDocument AddHash()
 		{
 			var components = GetContainigComponents();
-			if (components.Count > 1) {
-				throw new Exception("can only add hash for a single component!");
-			}
-			if (components[0] == VectoComponents.Vehicle) {
+			if (components.Contains(VectoComponents.Vehicle)) {
 				throw new Exception("adding hash for Vehicle is not supported");
+			}
+			if (components.Count > 1) {
+				throw new Exception("input must not contain multiple components!");
 			}
 			var query = string.Format("//*[local-name()='{0}']/*[local-name()='Data']", components[0]);
 			var node = document.SelectSingleNode(query);
 			if (node == null) {
-				throw new Exception(string.Format("'Data' element for component {0} not found!", components[0]));
+				throw new Exception(string.Format("'Data' element for component '{0}' not found!", components[0]));
 			}
+			query = string.Format("//*[local-name()='{0}']/*[local-name()='Signature']", components[0]);
+			var sigNodes = document.SelectNodes(query);
+			if (sigNodes != null && sigNodes.Count > 0) {
+				throw new Exception("input data already contains a signature element");
+			}
+
 			var attributes = node.Attributes;
 			var id = components[0].HashIdPrefix() + Guid.NewGuid().ToString("n").Substring(0, 20);
 			var idSet = false;
