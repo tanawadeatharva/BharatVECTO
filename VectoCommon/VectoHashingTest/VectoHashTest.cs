@@ -27,7 +27,7 @@ namespace VectoHashingTest
 			var h = VectoHash.Load(ReferenceXMLVehicle);
 			var components = h.GetContainigComponents().ToList();
 
-			Assert.AreEqual(9, components.Count);
+			Assert.AreEqual(10, components.Count);
 		}
 
 		[TestCase(ReferenceXMLEngine, VectoComponents.Engine, BasicHasingTests.HashEngineXML)]
