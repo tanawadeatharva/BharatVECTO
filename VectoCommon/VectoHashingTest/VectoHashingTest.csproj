@@ -109,6 +109,9 @@
     <Content Include="Testdata\XML\Validation\vecto_vehicle_components_invalid.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Testdata\XML\Validation\vecto_vehicle_components_valid-engine_gbx.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Testdata\XML\Variations\vecto_engine-sample Encoding ISO 8859-15.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

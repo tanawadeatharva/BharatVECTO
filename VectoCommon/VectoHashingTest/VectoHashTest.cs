@@ -114,6 +114,17 @@ namespace VectoHashingTest
 
 		[TestCase(VectoComponents.Engine),
 		TestCase(VectoComponents.Gearbox),
+		]
+		public void TestValidationComponentValid(VectoComponents component)
+		{
+			var file = @"Testdata\XML\Validation\vecto_vehicle_components_valid-engine_gbx.xml";
+			var h = VectoHash.Load(file);
+
+			Assert.IsFalse(h.ValidateHash(component));
+		}
+
+		[TestCase(VectoComponents.Engine),
+		TestCase(VectoComponents.Gearbox),
 		TestCase(VectoComponents.Axlegear),
 		TestCase(VectoComponents.Angledrive),
 		TestCase(VectoComponents.Retarder),
