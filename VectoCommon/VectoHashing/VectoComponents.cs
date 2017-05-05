@@ -43,5 +43,29 @@ namespace TUGraz.VectoHashing
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}
 		}
+
+		public static string HashIdPrefix(this VectoComponents component)
+		{
+			switch (component) {
+				case VectoComponents.Engine:
+					return "ENG-";
+				case VectoComponents.Gearbox:
+					return "GBX-";
+				case VectoComponents.Axlegear:
+					return "AXL-";
+				case VectoComponents.Retarder:
+					return "RET-";
+				case VectoComponents.TorqueConverter:
+					return "TC-";
+				case VectoComponents.Angledrive:
+					return "ANGL-";
+				case VectoComponents.Airdrag:
+					return "AD-";
+				case VectoComponents.Tyre:
+					return "TYRE-";
+				default:
+					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
+			}
+		}
 	}
 }

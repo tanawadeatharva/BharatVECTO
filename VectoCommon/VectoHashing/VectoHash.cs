@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -50,7 +51,7 @@ namespace TUGraz.VectoHashing
 			Helper.AddNamespaces(Manager);
 		}
 
-		public IEnumerable<VectoComponents> GetContainigComponents()
+		public IList<VectoComponents> GetContainigComponents()
 		{
 			var retVal = new List<VectoComponents>();
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
@@ -78,10 +79,43 @@ namespace TUGraz.VectoHashing
 
 		public XDocument AddHash()
 		{
-			var toSign = GetIdForElement(GetComponentQueryString());
-			var hash = XMLHashProvider.ComputeHash(document, toSign);
+			var components = GetContainigComponents();
+			if (components.Count > 1) {
+				throw new Exception("can only add hash for a single component!");
+			}
+			if (components[0] == VectoComponents.Vehicle) {
+				throw new Exception("adding hash for Vehicle is not supported");
+			}
+			var query = string.Format("//*[local-name()='{0}']/*[local-name()='Data']", components[0]);
+			var node = document.SelectSingleNode(query);
+			if (node == null) {
+				throw new Exception(string.Format("'Data' element for component {0} not found!", components[0]));
+			}
+			var attributes = node.Attributes;
+			var id = components[0].HashIdPrefix() + Guid.NewGuid().ToString("n").Substring(0, 20);
+			var idSet = false;
+			if (attributes != null && attributes[XMLNames.Component_ID_Attr] != null) {
+				attributes[XMLNames.Component_ID_Attr].Value = id;
+				idSet = true;
+			}
+			if (!idSet) {
+				var attr = document.CreateAttribute(XMLNames.Component_ID_Attr);
+				attr.Value = id;
+				if (node.Attributes == null) {
+					throw new Exception("failed to add 'id' attribute");
+				}
+				node.Attributes.Append(attr);
+			}
 
-			return null;
+			var hash = XMLHashProvider.ComputeHash(document, id);
+			var sig = document.CreateElement(XMLNames.DI_Signature, node.NamespaceURI);
+
+			if (node.ParentNode == null || hash.DocumentElement == null) {
+				throw new Exception("Invalid format of document and/or created hash");
+			}
+			sig.AppendChild(document.ImportNode(hash.DocumentElement, true));
+			node.ParentNode.AppendChild(sig);
+			return document.ToXDocument();
 		}
 
 		public string ReadHash()

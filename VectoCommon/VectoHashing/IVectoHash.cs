@@ -5,7 +5,7 @@ namespace TUGraz.VectoHashing
 {
 	public interface IVectoHash
 	{
-		IEnumerable<VectoComponents> GetContainigComponents();
+		IList<VectoComponents> GetContainigComponents();
 
 		string ComputeHash();
 

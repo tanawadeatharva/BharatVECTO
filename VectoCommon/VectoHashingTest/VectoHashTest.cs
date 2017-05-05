@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
+using System.Text;
+using System.Xml;
 using NUnit.Framework;
 using TUGraz.VectoHashing;
 using Assert = NUnit.Framework.Assert;
@@ -88,6 +91,25 @@ namespace VectoHashingTest
 			var hash = h.ComputeHash();
 
 			Assert.AreEqual(expectedHash, hash);
+		}
+
+
+		[TestCase(@"Testdata\XML\ToHash\vecto_engine-input.xml"),
+		TestCase(@"Testdata\XML\ToHash\vecto_gearbox-input.xml")]
+		public void TestAddHash(string file)
+		{
+			var destination = Path.GetFileNameWithoutExtension(file) + "_hashed.xml";
+
+			var h = VectoHash.Load(file);
+			var r = h.AddHash();
+
+			var writer = new XmlTextWriter(destination, Encoding.UTF8);
+			r.WriteTo(writer);
+			writer.Flush();
+			writer.Close();
+
+			var h2 = VectoHash.Load(destination);
+			Assert.IsTrue(h2.ValidateHash());
 		}
 	}
 }
