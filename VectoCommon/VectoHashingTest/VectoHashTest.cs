@@ -68,5 +68,26 @@ namespace VectoHashingTest
 
 			Assert.AreEqual(expectedHash, existingHash);
 		}
+
+		[TestCase("vecto_vehicle-sample_FULL_Comments.xml", BasicHasingTests.HashVehicleXML),
+		TestCase("vecto_vehicle-sample_FULL_Entry_Order.xml", BasicHasingTests.HashVehicleXML),
+		TestCase("vecto_vehicle-sample_FULL_Newlines_Linux_LF.xml", BasicHasingTests.HashVehicleXML),
+		TestCase("vecto_vehicle-sample_FULL_Newlines_Mac_CR.xml", BasicHasingTests.HashVehicleXML),
+		TestCase("vecto_vehicle-sample_FULL_Newlines_Windows_CRLF.xml", BasicHasingTests.HashVehicleXML),
+		TestCase("vecto_engine-sample Encoding ISO 8859-15.xml", BasicHasingTests.HashEngineXML),
+		TestCase("vecto_engine-sample Encoding UTF-8 BOM.xml", BasicHasingTests.HashEngineXML),
+		TestCase("vecto_engine-sample Encoding UTF-8.xml", BasicHasingTests.HashEngineXML),
+		TestCase("vecto_engine-sample Encoding UTF-16 BE BOM.xml", BasicHasingTests.HashEngineXML),
+		TestCase("vecto_engine-sample Encoding UTF-16 LE.xml", BasicHasingTests.HashEngineXML),
+		TestCase("vecto_engine-sample Encoding windows-1292.xml", BasicHasingTests.HashEngineXML),
+		TestCase("vecto_engine-sample_Whitespaces.xml", BasicHasingTests.HashEngineXML),
+		]
+		public void TestHashComputationVariations(string file, string expectedHash)
+		{
+			var h = VectoHash.Load(@"Testdata\XML\Variations\" + file);
+			var hash = h.ComputeHash();
+
+			Assert.AreEqual(expectedHash, hash);
+		}
 	}
 }
