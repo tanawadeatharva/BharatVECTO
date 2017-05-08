@@ -19,9 +19,8 @@ namespace VectoHashingTest
 		public const string UnorderedXMLVehicle = @"Testdata\XML\Variations\vecto_vehicle-sample_FULL_Entry_Order.xml";
 
 		public const string HashSimpleXML = "U2zic7KOnKw60rzh+KKQ1lwZL6NmXju+DXG7cYYmlxo=";
-		public const string HashEngineXML = "rZHmuuC5m7cD/O/2eJ3rikBlJDVe6mNoLksbWauJfrI=";
-
-		public const string HashVehicleXML = "EMVWU3nhpMX5g6KGWLaQiRjNnz3WhJS/2TIlyiiV9wE=";
+		public const string HashEngineXML = "cfPKB2LkHIbznFA9aQwCNfNLSj9V7qNnSskyOxaXB+o=";
+		public const string HashVehicleXML = "yZCH9sF1GUdawVOa1fKQ2zvuUHg5ZthmitTOcWg/s1Y=";
 
 		[TestMethod]
 		public void HashSimpleXml()

@@ -17,7 +17,7 @@ namespace TUGraz.VectoHashing.Impl
 				DigestMethod = "http://www.w3.org/2001/04/xmlenc#sha256"
 			};
 			reference.AddTransform(new XmlDsigVectoTransform());
-			reference.AddTransform(new XmlDsigC14NTransform());
+			reference.AddTransform(new XmlDsigExcC14NTransform());
 
 
 			signedXml.AddReference(reference);

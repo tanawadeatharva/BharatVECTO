@@ -1,9 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
+using System.Xml.XPath;
 using NUnit.Framework;
+using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using VectoHashingTest.Utils;
 using Assert = NUnit.Framework.Assert;
@@ -170,6 +176,93 @@ namespace VectoHashingTest
 
 			var h = VectoHash.Load(file);
 			AssertHelper.Exception<Exception>(() => { var r = h.AddHash(); }, expectedExceptionMsg);
+		}
+
+
+		[TestCase()]
+		public void TestLoadFromStream()
+		{
+			var fs = new FileStream(BasicHasingTests.ReferenceXMLVehicle, FileMode.Open);
+			var h = VectoHash.Load(fs);
+
+			var hash = h.ComputeHash();
+			Assert.AreEqual(BasicHasingTests.HashVehicleXML, hash);
+			fs.Close();
+		}
+
+		[TestCase(WhitespaceHandling.All),
+		TestCase(WhitespaceHandling.None),
+		TestCase(WhitespaceHandling.Significant)]
+		public void TestLoadXmlDocument(WhitespaceHandling whitespace)
+		{
+			var xml = new XmlDocument();
+			var reader = new XmlTextReader(BasicHasingTests.ReferenceXMLVehicle);
+			reader.WhitespaceHandling = whitespace;
+			xml.Load(reader);
+			var h = VectoHash.Load(xml);
+
+			var hash = h.ComputeHash();
+			Assert.AreEqual(BasicHasingTests.HashVehicleXML, hash);
+		}
+
+		[TestCase(@"Testdata\XML\ToHash\vecto_engine-input.xml"),
+		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml"),
+		TestCase(@"Testdata\XML\ToHash\vecto_gearbox-input.xml")]
+		public void TestHashedComponentIsValid(string file)
+		{
+			var destination = Path.GetFileNameWithoutExtension(file) + "_hashed.xml";
+
+			var h = VectoHash.Load(file);
+			var r = h.AddHash();
+
+			var writer = new XmlTextWriter(destination, Encoding.UTF8);
+			r.WriteTo(writer);
+			writer.Flush();
+			writer.Close();
+
+			var h2 = VectoHash.Load(destination);
+			Assert.IsTrue(h2.ValidateHash());
+
+			// re-load generated XML and perform XSD validation
+			var settings = new XmlReaderSettings() {
+				ValidationType = ValidationType.Schema,
+				ValidationFlags = XmlSchemaValidationFlags.ProcessInlineSchema |
+								//XmlSchemaValidationFlags.ProcessSchemaLocation |
+								XmlSchemaValidationFlags.ReportValidationWarnings
+			};
+			settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
+			settings.Schemas.Add(GetXMLSchema(false));
+			var xmlValidator = XmlReader.Create(destination, settings);
+			var xmlDoc = XDocument.Load(xmlValidator);
+		}
+
+
+		[TestCase("vecto_vehicle-namespace_prefix.xml", BasicHasingTests.HashVehicleXML)]
+		public void TestNamespacePrefixVariations(string file, string expectedHash)
+		{
+			var h = VectoHash.Load(@"Testdata\XML\Variations\" + file);
+			var hash = h.ComputeHash();
+
+			Assert.AreEqual(expectedHash, hash);
+		}
+
+		private static XmlSchemaSet GetXMLSchema(bool job)
+		{
+			var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema,
+				job ? "VectoInput.xsd" : "VectoComponent.xsd");
+			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
+			var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
+			xset.Add(XmlSchema.Read(reader, null));
+			xset.Compile();
+			return xset;
+		}
+
+		private static void ValidationCallBack(object sender, ValidationEventArgs args)
+		{
+			if (args.Severity == XmlSeverityType.Error) {
+				throw new Exception(string.Format("Validation error: {0}" + Environment.NewLine +
+												"Line: {1}", args.Message, args.Exception.LineNumber));
+			}
 		}
 	}
 }

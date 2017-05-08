@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using System.Xml.XPath;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Resources;
-using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing.Impl;
 using TUGraz.VectoHashing.Util;
 
@@ -18,10 +13,8 @@ namespace TUGraz.VectoHashing
 {
 	public class VectoHash : IVectoHash
 	{
-		protected XmlDocument document;
-		private XPathNavigator Navigator;
+		protected XmlDocument Document;
 		private XmlNamespaceManager Manager;
-		private XPathHelper Helper;
 
 		public static VectoHash Load(string filename)
 		{
@@ -44,18 +37,16 @@ namespace TUGraz.VectoHashing
 
 		protected VectoHash(XmlDocument doc)
 		{
-			document = doc;
-			Navigator = doc.CreateNavigator();
-			Manager = new XmlNamespaceManager(Navigator.NameTable);
-			Helper = new XPathHelper(ExecutionMode.Declaration);
-			Helper.AddNamespaces(Manager);
+			Document = doc;
+			Manager = new XmlNamespaceManager(doc.NameTable);
 		}
 
 		public IList<VectoComponents> GetContainigComponents()
 		{
 			var retVal = new List<VectoComponents>();
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
-				var count = Navigator.Select(string.Format("//*[local-name()='{0}']", component.XMLElementName()), Manager).Count;
+				var count =
+					Document.SelectNodes(string.Format("//*[local-name()='{0}']", component.XMLElementName()), Manager).Count;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(component);
 				}
@@ -66,14 +57,14 @@ namespace TUGraz.VectoHashing
 		public string ComputeHash()
 		{
 			var toSign = GetIdForElement(GetComponentQueryString());
-			var hash = XMLHashProvider.ComputeHash(document, toSign);
+			var hash = XMLHashProvider.ComputeHash(Document, toSign);
 			return GetHashValue(hash, toSign);
 		}
 
 		public string ComputeHash(VectoComponents component, int index = 0)
 		{
 			var toSign = GetIdForElement(GetComponentQueryString(component), index);
-			var hash = XMLHashProvider.ComputeHash(document, toSign);
+			var hash = XMLHashProvider.ComputeHash(Document, toSign);
 			return GetHashValue(hash, toSign);
 		}
 
@@ -87,12 +78,12 @@ namespace TUGraz.VectoHashing
 				throw new Exception("input must not contain multiple components!");
 			}
 			var query = string.Format("//*[local-name()='{0}']/*[local-name()='Data']", components[0]);
-			var node = document.SelectSingleNode(query);
+			var node = Document.SelectSingleNode(query);
 			if (node == null) {
 				throw new Exception(string.Format("'Data' element for component '{0}' not found!", components[0]));
 			}
 			query = string.Format("//*[local-name()='{0}']/*[local-name()='Signature']", components[0]);
-			var sigNodes = document.SelectNodes(query);
+			var sigNodes = Document.SelectNodes(query);
 			if (sigNodes != null && sigNodes.Count > 0) {
 				throw new Exception("input data already contains a signature element");
 			}
@@ -105,7 +96,7 @@ namespace TUGraz.VectoHashing
 				idSet = true;
 			}
 			if (!idSet) {
-				var attr = document.CreateAttribute(XMLNames.Component_ID_Attr);
+				var attr = Document.CreateAttribute(XMLNames.Component_ID_Attr);
 				attr.Value = id;
 				if (node.Attributes == null) {
 					throw new Exception("failed to add 'id' attribute");
@@ -113,27 +104,27 @@ namespace TUGraz.VectoHashing
 				node.Attributes.Append(attr);
 			}
 
-			var hash = XMLHashProvider.ComputeHash(document, id);
-			var sig = document.CreateElement(XMLNames.DI_Signature, node.NamespaceURI);
+			var hash = XMLHashProvider.ComputeHash(Document, id);
+			var sig = Document.CreateElement(XMLNames.DI_Signature, node.NamespaceURI);
 
 			if (node.ParentNode == null || hash.DocumentElement == null) {
 				throw new Exception("Invalid format of document and/or created hash");
 			}
-			sig.AppendChild(document.ImportNode(hash.DocumentElement, true));
+			sig.AppendChild(Document.ImportNode(hash.DocumentElement, true));
 			node.ParentNode.AppendChild(sig);
-			return document.ToXDocument();
+			return Document.ToXDocument();
 		}
 
 		public string ReadHash()
 		{
 			var toRead = GetIdForElement(GetComponentQueryString());
-			return GetHashValue(document, toRead);
+			return GetHashValue(Document, toRead);
 		}
 
 		public string ReadHash(VectoComponents component, int index = 0)
 		{
 			var toRead = GetIdForElement(GetComponentQueryString(component), index);
-			return GetHashValue(document, toRead);
+			return GetHashValue(Document, toRead);
 		}
 
 		public bool ValidateHash()
@@ -159,7 +150,7 @@ namespace TUGraz.VectoHashing
 
 		private string GetIdForElement(string query, int index = 0)
 		{
-			var node = document.SelectNodes(query);
+			var node = Document.SelectNodes(query);
 			if (node == null) {
 				return null;
 			}
