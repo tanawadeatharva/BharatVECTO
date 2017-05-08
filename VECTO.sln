@@ -60,6 +60,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectoHashing", "VectoCommon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectoHashingTest", "VectoCommon\VectoHashingTest\VectoHashingTest.csproj", "{760C1C5B-A767-463E-BA85-F0BCFC23A550}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashingTool", "HashingTool\HashingTool.csproj", "{E14FC935-30EA-4BE6-AA8A-85CB76FEBA6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -246,6 +248,14 @@ Global
 		{760C1C5B-A767-463E-BA85-F0BCFC23A550}.Release|Any CPU.Build.0 = Release|Any CPU
 		{760C1C5B-A767-463E-BA85-F0BCFC23A550}.Release|x64.ActiveCfg = Release|Any CPU
 		{760C1C5B-A767-463E-BA85-F0BCFC23A550}.Release|x86.ActiveCfg = Release|Any CPU
+		{E14FC935-30EA-4BE6-AA8A-85CB76FEBA6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E14FC935-30EA-4BE6-AA8A-85CB76FEBA6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E14FC935-30EA-4BE6-AA8A-85CB76FEBA6A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E14FC935-30EA-4BE6-AA8A-85CB76FEBA6A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E14FC935-30EA-4BE6-AA8A-85CB76FEBA6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E14FC935-30EA-4BE6-AA8A-85CB76FEBA6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E14FC935-30EA-4BE6-AA8A-85CB76FEBA6A}.Release|x64.ActiveCfg = Release|Any CPU
+		{E14FC935-30EA-4BE6-AA8A-85CB76FEBA6A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -269,5 +279,6 @@ Global
 		{7C364099-9B85-473A-8A42-BBEBE4798FF5} = {CC93EA68-F3FE-4BCB-9292-1101F94A4D09}
 		{B673E12F-D323-4C4C-8805-9915B2C72D3D} = {73A5BF70-6168-456F-95E5-A1402BFA488C}
 		{760C1C5B-A767-463E-BA85-F0BCFC23A550} = {73A5BF70-6168-456F-95E5-A1402BFA488C}
+		{E14FC935-30EA-4BE6-AA8A-85CB76FEBA6A} = {73A5BF70-6168-456F-95E5-A1402BFA488C}
 	EndGlobalSection
 EndGlobal
