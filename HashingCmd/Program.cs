@@ -6,13 +6,14 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using TUGraz.VectoHashing;
 
 namespace HashingCmd
 {
 	class Program
 	{
-		public delegate void HashingAction(VectoHash h);
+		public delegate void HashingAction(string filename, VectoHash h);
 
 		private const string Usage = @"
 hashingcmd.exe -v <file.xml>
@@ -47,11 +48,15 @@ hashingcmd.exe
 				var fileList = args.Except(actions.Keys);
 				foreach (var file in fileList) {
 					WriteLine("processing " + Path.GetFileName(file));
+					if (!File.Exists(Path.GetFullPath(file))) {
+						WriteLine("file " + Path.GetFullPath(file) + " not found!");
+						continue;
+					}
 					foreach (var arg in args) {
 						if (actions.ContainsKey(arg)) {
 							try {
 								var h = VectoHash.Load(file);
-								actions[arg](h);
+								actions[arg](Path.GetFullPath(file), h);
 							} catch (Exception e) {
 								Console.ForegroundColor = ConsoleColor.Red;
 								Console.Error.WriteLine(e.Message);
@@ -75,36 +80,87 @@ hashingcmd.exe
 			return Environment.ExitCode;
 		}
 
-		private static void CreateHashedFileAction(VectoHash h)
+		private static void CreateHashedFileAction(string filename, VectoHash h)
 		{
-			h.AddHash();
+			var destination = Path.Combine(Path.GetDirectoryName(filename),
+				Path.GetFileNameWithoutExtension(filename) + "_hashed.xml");
+			if (File.Exists(destination)) {
+				WriteLine("hashed file already exists. overwrite? (y/n) ");
+				var key = Console.ReadKey(true);
+				while (!(key.KeyChar == 'y' || key.KeyChar == 'n')) {
+					WriteLine("overwrite? (y/n) ");
+					key = Console.ReadKey(true);
+				}
+				if (key.KeyChar == 'n') {
+					return;
+				}
+				WriteLine("overwriting file " + Path.GetFileNameWithoutExtension(filename) + "_hashed.xml");
+			}
+			var result = h.AddHash();
+			var writer = new XmlTextWriter(destination, Encoding.UTF8);
+			result.WriteTo(writer);
+			writer.Flush();
+			writer.Close();
 		}
 
-		private static void ReadHashAction(VectoHash h)
+		private static void ReadHashAction(string filename, VectoHash h)
 		{
-			var components = h.GetContainigComponents();
+			WriteLine("reading hashes");
+			var components = h.GetContainigComponents().GroupBy(s => s)
+				.Select(g => new { Entry = g.Key, Count = g.Count() });
+
 			foreach (var component in components) {
-				var readHash = h.ReadHash();
-				WriteLine("  " + component.XMLElementName() + "\t ... " + readHash);
+				if (component.Entry == VectoComponents.Vehicle) {
+					continue;
+				}
+				for (var i = 0; i < component.Count; i++) {
+					var readHash = h.ReadHash(component.Entry, i);
+					WriteLine("  " + component.Entry.XMLElementName() + "\t ... >" + readHash + "<");
+				}
 			}
 		}
 
-		private static void ComputeHashAction(VectoHash h)
+		private static void ComputeHashAction(string filename, VectoHash h)
 		{
-			var hash = h.ComputeHash();
-			WriteLine("computed hash:  <" + hash + ">");
+			WriteLine("computing hashes");
+			var components = h.GetContainigComponents();
+
+
+			if (components.Count > 1) {
+				var grouped = components.GroupBy(s => s)
+					.Select(g => new { Entry = g.Key, Count = g.Count() });
+				foreach (var component in grouped) {
+					if (component.Entry == VectoComponents.Vehicle) {
+						continue;
+					}
+					for (var i = 0; i < component.Count; i++) {
+						var computedHash = h.ComputeHash(component.Entry, i);
+						WriteLine("  " + component.Entry.XMLElementName() + "\t ... >" + computedHash + "<");
+					}
+				}
+				var jobHash = h.ComputeHash();
+				WriteLine("  job file\t ... >" + jobHash + "<");
+			} else {
+				var hash = h.ComputeHash();
+				WriteLine("  computed hash:  >" + hash + "<");
+			}
 		}
 
-		private static void VerifyHashAction(VectoHash h)
+		private static void VerifyHashAction(string filename, VectoHash h)
 		{
 			WriteLine("validating hashes");
 
-			var components = h.GetContainigComponents();
+			var components = h.GetContainigComponents().GroupBy(s => s)
+				.Select(g => new { Entry = g.Key, Count = g.Count() });
 			foreach (var component in components) {
-				var result = h.ValidateHash(component);
-
-				WriteLine("  " + component.XMLElementName() + "\t ... " + (result ? "valid" : "invalid"),
-					result ? ConsoleColor.Green : ConsoleColor.Red);
+				if (component.Entry == VectoComponents.Vehicle) {
+					continue;
+				}
+				for (var i = 0; i < component.Count; i++) {
+					var result = h.ValidateHash(component.Entry, i);
+					WriteLine("  " + component.Entry.XMLElementName() + "\t ... " + (result ? "valid" : "invalid"),
+						result ? ConsoleColor.Green : ConsoleColor.Red);
+				}
 			}
 		}
 
