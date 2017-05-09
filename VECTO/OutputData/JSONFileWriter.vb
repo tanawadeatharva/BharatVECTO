@@ -288,11 +288,11 @@ Public Class JSONFileWriter
 		If Not job.SavedInDeclarationMode Then
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.Source, basePath))
 		End If
-		body.Add("StartStop", New Dictionary(Of String, Object) From {
-					{"Enabled", driver.StartStop.Enabled},
-					{"MaxSpeed", driver.StartStop.MaxSpeed.AsKmph},
-					{"MinTime", driver.StartStop.MinTime.Value()},
-					{"Delay", driver.StartStop.Delay.Value()}})
+		'body.Add("StartStop", New Dictionary(Of String, Object) From {
+		'			{"Enabled", driver.StartStop.Enabled},
+		'			{"MaxSpeed", driver.StartStop.MaxSpeed.AsKmph},
+		'			{"MinTime", driver.StartStop.MinTime.Value()},
+		'			{"Delay", driver.StartStop.Delay.Value()}})
 		If Not job.SavedInDeclarationMode Then
 			Dim dfTargetSpeed As String = If(
 				Not driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup Is Nothing AndAlso

@@ -364,7 +364,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		bool SavedInDeclarationMode { get; }
 
-		IStartStopDeclarationInputData StartStop { get; }
+		//IStartStopDeclarationInputData StartStop { get; }
 
 		IOverSpeedEcoRollDeclarationInputData OverSpeedEcoRoll { get; }
 	}
@@ -376,15 +376,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DriverMode Mode { get; }
-	}
-
-	public interface IStartStopDeclarationInputData
-	{
-		/// <summary>
-		/// P010  StartStop - enabled
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		bool Enabled { get; }
 	}
 
 	public interface IAuxiliaryDeclarationInputData

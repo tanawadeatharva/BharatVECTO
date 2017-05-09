@@ -44,17 +44,6 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public TableData CycleData { get; internal set; }
 	}
 
-	public class StartStopInputData : IStartStopEngineeringInputData
-	{
-		public bool Enabled { get; internal set; }
-
-		public MeterPerSecond MaxSpeed { get; internal set; }
-
-		public Second MinTime { get; internal set; }
-
-		public Second Delay { get; internal set; }
-	}
-
 	public class LookAheadCoastingInputData : ILookaheadCoastingInputData
 	{
 		public bool Enabled { get; internal set; }

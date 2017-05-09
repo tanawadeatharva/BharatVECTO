@@ -329,17 +329,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				OverSpeed = driver.OverSpeedEcoRoll.OverSpeed,
 				UnderSpeed = driver.OverSpeedEcoRoll.UnderSpeed,
 			};
-			var startstopData = new VectoRunData.StartStopData {
-				Enabled = driver.StartStop.Enabled,
-				Delay = driver.StartStop.Delay,
-				MinTime = driver.StartStop.MinTime,
-				MaxSpeed = driver.StartStop.MaxSpeed,
-			};
 			var retVal = new DriverData {
 				AccelerationCurve = accelerationData,
 				LookAheadCoasting = lookAheadData,
 				OverSpeedEcoRoll = overspeedData,
-				StartStop = startstopData,
 			};
 			return retVal;
 		}

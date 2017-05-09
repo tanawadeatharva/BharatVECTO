@@ -40,8 +40,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class DriverData
 	{
-		[Required, ValidateObject] public VectoRunData.StartStopData StartStop;
-
 		[Required, ValidateObject] public OverSpeedEcoRollData OverSpeedEcoRoll;
 
 		[Required, ValidateObject] public LACData LookAheadCoasting;

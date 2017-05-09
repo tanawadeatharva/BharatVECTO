@@ -497,11 +497,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		IStartStopDeclarationInputData IDriverDeclarationInputData.StartStop
-		{
-			get { return StartStop; }
-		}
-
 		public virtual IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll
 		{
 			get {

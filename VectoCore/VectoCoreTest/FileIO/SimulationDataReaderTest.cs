@@ -92,13 +92,6 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.Value(),
 				runData.DriverData.OverSpeedEcoRoll.UnderSpeed.Value(), Tolerance);
 
-			//Assert.AreEqual(false, runData.DriverData.StartStop.Enabled);
-			Assert.AreEqual(DeclarationData.Driver.StartStop.Delay.Value(), runData.DriverData.StartStop.Delay.Value(), Tolerance);
-			Assert.AreEqual(DeclarationData.Driver.StartStop.MaxSpeed.Value(), runData.DriverData.StartStop.MaxSpeed.Value(),
-				Tolerance);
-			Assert.AreEqual(DeclarationData.Driver.StartStop.MinTime.Value(), runData.DriverData.StartStop.MinTime.Value(),
-				Tolerance);
-
 			Assert.AreEqual(3.7890, runData.EngineData.Inertia.Value());
 
 			var downshiftSpeeds = new[] { 660, 660, 1679.9982 };
