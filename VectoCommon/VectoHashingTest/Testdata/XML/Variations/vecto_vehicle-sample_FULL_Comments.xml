@@ -9,7 +9,7 @@
 		<Date>2017-02-15T11:00:00Z</Date>
 		<LegislativeClass>N3</LegislativeClass>
 		<VehicleCategory>Tractor</VehicleCategory>
-		<AxleConfiguration <!-- comment inside element -->>4x2</AxleConfiguration>
+		<AxleConfiguration ><!-- comment inside element -->4x2</AxleConfiguration>
 		<CurbMassChassis>7100</CurbMassChassis>
 		<GrossVehicleMass>40000</GrossVehicleMass>
 		<IdlingSpeed>600</IdlingSpeed>
@@ -3214,7 +3214,7 @@
 							<TwinTyres>true</TwinTyres>
 							<Steered>false</Steered>
 							<Tyre  certificationNumber="e12*0815/8051*2017/05E0000*00">
-								<Data id="WHL-5432198760-315-70-R22.5">
+								<Data id="WHL-6432198760-315-70-R22.5">
 									<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
 									<Model>Generic Wheel</Model>
 									<TechnicalReportId>WHL-1234567890</TechnicalReportId>
@@ -3225,13 +3225,13 @@
 									<FzISO>31300</FzISO>
 								</Data>
 								<Signature>
-									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
+									<di:Reference URI="#WHL-6432198760-315-70-R22.5">
 										<di:Transforms>
 											<di:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments"/>
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>5074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
+										<di:DigestValue>6074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>

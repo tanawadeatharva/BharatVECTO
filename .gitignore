@@ -194,3 +194,4 @@ Generic Vehicles/**/*.vmod
 Generic Vehicles/**/*.vsum
 Generic Vehicles/**/*.pdf
 VectoCore/VectoCoreTest/TestData/XML/XSD/
+VectoCommon/VectoHashingTest/Testdata/XML/XSD/
