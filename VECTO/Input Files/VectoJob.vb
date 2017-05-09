@@ -593,13 +593,6 @@ Public Class VectoJob
 	End Property
 
 
-	Public ReadOnly Property IDriverDeclarationInputData_StartStop As IStartStopDeclarationInputData _
-		Implements IDriverDeclarationInputData.StartStop
-		Get
-			Return IDriverEngineeringInputData_StartStop
-		End Get
-	End Property
-
 	Public ReadOnly Property IEngineeringJobInputData_Vehicle As IVehicleEngineeringInputData _
 		Implements IEngineeringJobInputData.Vehicle
 		Get

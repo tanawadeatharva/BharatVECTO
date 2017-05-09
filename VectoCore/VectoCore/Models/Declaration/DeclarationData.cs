@@ -139,12 +139,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public static readonly MeterPerSecond UnderSpeed = 5.KMPHtoMeterPerSecond();
 			}
 
-			public static class StartStop
-			{
-				public static readonly MeterPerSecond MaxSpeed = 5.KMPHtoMeterPerSecond();
-				public static readonly Second Delay = 5.SI<Second>();
-				public static readonly Second MinTime = 5.SI<Second>();
-			}
+			//public static class StartStop
+			//{
+			//	public static readonly MeterPerSecond MaxSpeed = 5.KMPHtoMeterPerSecond();
+			//	public static readonly Second Delay = 5.SI<Second>();
+			//	public static readonly Second MinTime = 5.SI<Second>();
+			//}
 		}
 
 		public static class Trailer

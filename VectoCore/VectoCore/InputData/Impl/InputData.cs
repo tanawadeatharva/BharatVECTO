@@ -157,4 +157,10 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public Watt ConstantPowerDemand { get; internal set; }
 	}
+
+	public class TorqueLimitInputData : ITorqueLimitInputData
+	{
+		public int Gear { get; internal set; }
+		public NewtonMeter MaxTorque { get; internal set; }
+	}
 }

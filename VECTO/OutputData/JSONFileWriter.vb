@@ -187,6 +187,11 @@ Public Class JSONFileWriter
 				(angledrive.Type = AngledriveType.SeparateAngledrive AndAlso Not angledrive.LossMap Is Nothing,
 				GetRelativePath(angledrive.LossMap.Source, basePath), "")}}
 
+		Dim torqueLimits As Dictionary(Of String, String) = New Dictionary(Of String, String)
+		For Each entry As ITorqueLimitInputData In vehicle.TorqueLimits
+			torqueLimits.Add(entry.Gear().ToString(), entry.MaxTorque.Value().ToString())
+		Next
+
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
 				{"SavedInDeclMode", Cfg.DeclMode},
 				{"VehCat", vehicle.VehicleCategory.ToString()},
@@ -206,6 +211,7 @@ Public Class JSONFileWriter
 				{"Retarder", retarderOut},
 				{"Angledrive", angledriveOut},
 				{"PTO", ptoOut},
+				{"TorqueLimits", torqueLimits},
 				{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", vehicle.AxleConfiguration.GetName()},
 				{"Axles", From axle In vehicle.Axles Select New Dictionary(Of String, Object) From {

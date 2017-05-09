@@ -415,19 +415,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region DriverInputData
 
-		public virtual IStartStopEngineeringInputData StartStop
-		{
-			get {
-				var startStop = Body.GetEx(JsonKeys.DriverData_StartStop);
-				return new StartStopInputData {
-					Enabled = startStop.GetEx<bool>(JsonKeys.DriverData_StartStop_Enabled),
-					Delay = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_Delay).SI<Second>(),
-					MaxSpeed = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_MaxSpeed).KMPHtoMeterPerSecond(),
-					MinTime = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_MinTime).SI<Second>(),
-				};
-			}
-		}
-
 		IOverSpeedEcoRollDeclarationInputData IDriverDeclarationInputData.OverSpeedEcoRoll
 		{
 			get {

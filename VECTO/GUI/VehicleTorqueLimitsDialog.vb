@@ -27,6 +27,7 @@ Public Class VehicleTorqueLimitDialog
 
 		tbGear.Text = ""
 		tbMaxTorque.Text = ""
+		tbGear.Focus()
 	End Sub
 
 	'Initialise
@@ -35,6 +36,17 @@ Public Class VehicleTorqueLimitDialog
 
 	'Save and close
 	Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
+
+		If Not IsNumeric(tbGear.Text) Then
+			MsgBox("Invalid input for Gear")
+			tbGear.Focus()
+			Return
+		End If
+		If Not IsNumeric(tbMaxTorque.Text) Then
+			MsgBox("Invalid max. torque")
+			tbMaxTorque.Focus()
+			Return
+		End If
 
 		DialogResult = DialogResult.OK
 		Close()

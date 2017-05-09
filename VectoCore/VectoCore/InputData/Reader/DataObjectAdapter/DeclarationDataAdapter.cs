@@ -73,16 +73,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					"Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}",
 					overspeedData.Mode);
 			}
-			var startstopData = new VectoRunData.StartStopData {
-				Enabled = data.StartStop.Enabled,
-				Delay = DeclarationData.Driver.StartStop.Delay,
-				MinTime = DeclarationData.Driver.StartStop.MinTime,
-				MaxSpeed = DeclarationData.Driver.StartStop.MaxSpeed
-			};
 			var retVal = new DriverData {
 				LookAheadCoasting = lookAheadData,
 				OverSpeedEcoRoll = overspeedData,
-				StartStop = startstopData
 			};
 			return retVal;
 		}
