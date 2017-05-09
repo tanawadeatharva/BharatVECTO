@@ -126,7 +126,7 @@ namespace VectoHashingTest
 			var file = @"Testdata\XML\Validation\vecto_vehicle_components_valid-engine_gbx.xml";
 			var h = VectoHash.Load(file);
 
-			Assert.IsFalse(h.ValidateHash(component));
+			Assert.IsTrue(h.ValidateHash(component));
 		}
 
 		[TestCase(VectoComponents.Engine),
