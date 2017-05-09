@@ -41,6 +41,7 @@ Public Class VehicleForm
 
 	Public AutoSendTo As Boolean = False
 	Public JobDir As String = ""
+	Private _torqueLimitDlog As VehicleTorqueLimitDialog
 
 	'Close - Check for unsaved changes
 	Private Sub VehicleFormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -88,6 +89,7 @@ Public Class VehicleForm
 		cbAngledriveType.DataSource = [Enum].GetValues(GetType(AngledriveType)) _
 			.Cast (Of AngledriveType).Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		_axlDlog = New VehicleAxleDialog
+		_torqueLimitDlog = New VehicleTorqueLimitDialog()
 
 		cbPTOType.ValueMember = "Value"
 		cbPTOType.DisplayMember = "Label"
@@ -163,10 +165,10 @@ Public Class VehicleForm
 				Next
 			End If
 
-			PnAll.Enabled = True
+			'PnAll.Enabled = True
 
 		Else
-			PnAll.Enabled = False
+			'PnAll.Enabled = False
 			_hdVclass = "-"
 		End If
 
@@ -827,6 +829,41 @@ Public Class VehicleForm
 		If PTODrivingCycleFileBrowser.OpenDialog(FileRepl(tbPTOCycle.Text, GetPath(_vehFile))) Then
 			tbPTOCycle.Text = GetFilenameWithoutDirectory(PTODrivingCycleFileBrowser.Files(0), GetPath(_vehFile))
 		End If
+	End Sub
+
+	Private Sub btAddMaxTorqueEntry_Click(sender As Object, e As EventArgs) Handles btAddMaxTorqueEntry.Click
+		_torqueLimitDlog.Clear()
+		If _torqueLimitDlog.ShowDialog() = DialogResult.OK Then
+			lvTorqueLimits.Items.Add(CreateMaxTorqueListViewItem(_torqueLimitDlog.tbGear.Text.ToInt(0),
+																_torqueLimitDlog.tbMaxTorque.Text.ToDouble(0)))
+			Change()
+
+		End If
+	End Sub
+
+	Private Function CreateMaxTorqueListViewItem(gear As Integer, maxTorque As Double) As ListViewItem
+		Dim retVal As New ListViewItem
+		retVal.SubItems(0).Text = gear.ToGUIFormat()
+		retVal.SubItems.Add(maxTorque.ToGUIFormat())
+		Return retVal
+	End Function
+
+	Private Sub btDelMaxTorqueEntry_Click(sender As Object, e As EventArgs) Handles btDelMaxTorqueEntry.Click
+		RemoveMaxTorqueItem()
+	End Sub
+
+	Private Sub RemoveMaxTorqueItem()
+		If lvTorqueLimits.SelectedItems.Count = 0 Then
+			If lvTorqueLimits.Items.Count = 0 Then
+				Exit Sub
+			Else
+				lvTorqueLimits.Items(lvTorqueLimits.Items.Count - 1).Selected = True
+			End If
+		End If
+
+		lvTorqueLimits.SelectedItems(0).Remove()
+
+		Change()
 	End Sub
 End Class
 
