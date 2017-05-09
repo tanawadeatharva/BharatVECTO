@@ -144,7 +144,7 @@ namespace TUGraz.VectoHashing
 				return "(//*[@id]/@id)[1]";
 			}
 			return component == VectoComponents.Vehicle
-				? string.Format("//*[local-name()='{0}'/@id", component.Value.XMLElementName())
+				? string.Format("//*[local-name()='{0}']/@id", component.Value.XMLElementName())
 				: string.Format("//*[local-name()='{0}']/*[local-name()='Data']/@id", component.Value.XMLElementName());
 		}
 
