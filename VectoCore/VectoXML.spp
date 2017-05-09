@@ -25,7 +25,7 @@
 	</Folder>
 	<Folder FolderName="XSL Files" ExtStr="xsl;xslt">
 		<File FilePath="E:\QUAM\Workspace\VECTO_API\API\RenderTable.xslt" HomeFolder="Yes"/>
-		<File FilePath="E:\QUAM\Workspace\VECTO_API\API\XSD\SortInputData.xslt" HomeFolder="Yes"/>
+		<File FilePath="E:\QUAM\Workspace\VECTO_quam\VectoCommon\VectoHashing\Resources\XSLT\SortInputData.xslt" HomeFolder="Yes"/>
 	</Folder>
 	<Folder FolderName="XQuery Files" ExtStr="xq;xql;xquery;xqu"/>
 	<Folder FolderName="HTML Files" ExtStr="html;htm;xhtml;asp"/>

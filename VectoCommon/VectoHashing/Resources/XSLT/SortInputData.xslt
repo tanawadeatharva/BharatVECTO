@@ -1,3 +1,21 @@
+<!--
+    This XSL transformation is intended to be applied as first canonicalization step when computing the hash
+    for VECTO component data or VECTO job data.
+
+    The transformation performs the following operations:
+      - strip off namespace prefixes
+         (although namespace prefixes are considered part of the signature for the purpose of hashing VECTO data
+         it does not provide additional semantics because the file has to validate against a XSD schema anyways 
+         and may cause troubles when re-creating the VECTO data from database systems)
+      - normalize the whitespaces of all attribute values and text nodes
+         leading and trailing whitespaces are removed
+         multiple whitespaces are replaced by a single whitespace
+      - sort entries in fuelconsumption map and loss-maps (i.e, transmission, axlegear, angledrive)
+      - sort entries of torque converter characteristics
+      - sort torque limiation entries 
+      - sort gears
+      - sort axles
+-->
 <xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<xsl:output omit-xml-declaration="no" indent="yes"/>
 	<xsl:template match="*">
