@@ -220,7 +220,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					new GearData {
 						LossMap = gearLossMap,
 						ShiftPolygon = shiftPolygon,
-						MaxTorque = gear.MaxTorque,
+						MaxSpeed = gear.MaxInputSpeed,
 						Ratio = gear.Ratio,
 					});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);

@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						dynamicTyreRadius);
 				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,
-					MaxTorque = gear.MaxTorque,
+					MaxSpeed = gear.MaxInputSpeed,
 					Ratio = gear.Ratio,
 					LossMap = lossMap,
 				};

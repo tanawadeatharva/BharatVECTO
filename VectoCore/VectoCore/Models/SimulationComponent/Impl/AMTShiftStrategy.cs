@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
 		{
 			return
-				(outAngularSpeed * ModelData.Gears[gear].Ratio).IsGreaterOrEqual(DataBus.EngineN95hSpeed);
+				(outAngularSpeed * ModelData.Gears[gear].Ratio).IsGreaterOrEqual(ModelData.Gears[gear].MaxSpeed ?? DataBus.EngineN95hSpeed);
 		}
 
 		public override GearInfo NextGear

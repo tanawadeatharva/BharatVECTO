@@ -95,11 +95,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return ModelData.StartAcceleration; }
 		}
 
-		public NewtonMeter GearMaxTorque
-		{
-			get { return Gear == 0 || !ModelData.Gears.ContainsKey(Gear) ? null : ModelData.Gears[Gear].MaxTorque; }
-		}
-
 		public Watt GearboxLoss()
 		{
 			var ratio = ModelData.Gears[PreviousState.Gear].HasLockedGear

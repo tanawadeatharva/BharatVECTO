@@ -150,10 +150,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 						for (var inTorque = engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 3;
 							inTorque < engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
 							inTorque += 2.0 / 3.0 * engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 10.0) {
-							if (gear.Value.MaxTorque != null && inTorque > gear.Value.MaxTorque) {
-								continue;
-							}
-
 							NewtonMeter angledriveTorque;
 							try {
 								angledriveTorque = gear.Value.LossMap.GetOutTorque(angularVelocity, inTorque);

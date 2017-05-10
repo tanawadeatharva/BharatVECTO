@@ -316,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
-							MaxTorque = ratio > 5 ? 2300.SI<NewtonMeter>() : null,
+//							MaxTorque = ratio > 5 ? 2300.SI<NewtonMeter>() : null,
 							LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
@@ -353,7 +353,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				Gears = new Dictionary<uint, GearData> {
 					{
 						1, new GearData {
-							MaxTorque = null,
 							LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, "Gear 1"),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)

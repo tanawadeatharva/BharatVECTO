@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Gears = ratios.Select((ratio, i) =>
 						Tuple.Create((uint)i,
 							new GearData {
-								MaxTorque = 2300.SI<NewtonMeter>(),
+//								MaxTorque = 2300.SI<NewtonMeter>(),
 								LossMap = TransmissionLossMapReader.ReadFromFile(i != 6 ? IndirectLossMap : DirectLossMap, ratio,
 									string.Format("Gear {0}", i)),
 								Ratio = ratio,

@@ -116,11 +116,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public NewtonMeter GearMaxTorque
-		{
-			get { return Gearbox != null ? Gearbox.GearMaxTorque : null; }
-		}
-
 		public Watt GearboxLoss()
 		{
 			return Gearbox.GearboxLoss();

@@ -206,11 +206,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//ValidatePowerDemand(totalTorqueDemand, dynamicFullLoadTorque, fullDragTorque); 
 
 			// get max. torque as limited by gearbox. gearbox only limits torqueOut!
-			var gearboxFullLoad = DataBus.GearMaxTorque;
 
-			var deltaFull = ComputeDelta(torqueOut, totalTorqueDemand, dynamicFullLoadTorque, gearboxFullLoad, true);
-			var deltaDrag = ComputeDelta(torqueOut, totalTorqueDemand, fullDragTorque,
-				gearboxFullLoad != null ? -gearboxFullLoad : null, false);
+			var deltaFull = totalTorqueDemand - dynamicFullLoadTorque;
+			//ComputeDelta(torqueOut, totalTorqueDemand, dynamicFullLoadTorque, gearboxFullLoad, true);
+			var deltaDrag = totalTorqueDemand - fullDragTorque; //ComputeDelta(torqueOut, totalTorqueDemand, fullDragTorque,
+			//gearboxFullLoad != null ? -gearboxFullLoad : null, false);
 
 			if (dryRun) {
 				return new ResponseDryRun {
@@ -231,8 +231,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.DynamicFullLoadTorque = dynamicFullLoadTorque;
 			CurrentState.InertiaTorqueLoss = inertiaTorqueLoss;
 
-			if (
-				(deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance) &&
+			if ((deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance) &&
 				(deltaDrag * avgEngineSpeed).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
 				//throw new VectoSimulationException(
 				Log.Error(
@@ -242,10 +241,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var minTorque = CurrentState.FullDragTorque;
 			var maxTorque = CurrentState.DynamicFullLoadTorque;
-			if (gearboxFullLoad != null) {
-				minTorque = VectoMath.Max(minTorque, -gearboxFullLoad);
-				maxTorque = VectoMath.Min(maxTorque, gearboxFullLoad);
-			}
 
 			CurrentState.EngineTorque = totalTorqueDemand.LimitTo(minTorque, maxTorque);
 			CurrentState.EnginePower = CurrentState.EngineTorque * avgEngineSpeed;
@@ -292,16 +287,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 		}
 
-		private NewtonMeter ComputeDelta(NewtonMeter torqueOut, NewtonMeter totalTorqueDemand, NewtonMeter maxEngineTorque,
-			NewtonMeter maxGbxtorque, bool motoring)
+		private NewtonMeter ComputeDelta(NewtonMeter torqueOut, NewtonMeter totalTorqueDemand, NewtonMeter maxEngineTorque)
 		{
-			var deltaGbx = maxGbxtorque != null ? torqueOut - maxGbxtorque : null;
 			var deltaEngine = totalTorqueDemand - maxEngineTorque;
-
-			if (deltaGbx == null) {
-				return deltaEngine;
-			}
-			return motoring ? VectoMath.Max(deltaGbx, deltaEngine) : VectoMath.Min(deltaGbx, deltaEngine);
+			return deltaEngine;
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
