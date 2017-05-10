@@ -244,6 +244,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		NewtonMeter MaxTorque { get; }
 
+		PerSecond MaxInputSpeed { get; }
+
 		/// <summary>
 		/// P082
 		/// P093, P094, P095

@@ -363,6 +363,50 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1.0, inputDataProvider.RetarderInputData.Ratio);
 		}
 
+		[TestMethod]
+		public void TestFullFeaturedXMLDeclaration_TorqueLimits()
+		{
+			var reader = XmlReader.Create(SampleVehicleFullDecl);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicleDataProvider = inputDataProvider.JobInputData().Vehicle;
+
+			var torqueLimits = vehicleDataProvider.TorqueLimits.OrderBy(x => x.Gear).ToList();
+			Assert.AreEqual(3, torqueLimits.Count);
+			Assert.AreEqual(1, torqueLimits[0].Gear);
+			Assert.AreEqual(2500, torqueLimits[0].MaxTorque.Value());
+			Assert.AreEqual(12, torqueLimits[2].Gear);
+		}
+
+		[TestMethod]
+		public void TestFullFeaturedXMLDeclaration_GbxTorqueLimits()
+		{
+			var reader = XmlReader.Create(SampleVehicleFullDecl);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var gearboxDataProvider = inputDataProvider.GearboxInputData;
+			var gears = gearboxDataProvider.Gears;
+
+			Assert.AreEqual(12, gears.Count);
+			Assert.AreEqual(1900, gears[0].MaxTorque.Value());
+			Assert.AreEqual(1900, gears[1].MaxTorque.Value());
+			Assert.IsNull(gears[11].MaxTorque);
+		}
+
+		[TestMethod]
+		public void TestFullFeaturedXMLDeclaration_GbxSpeedLimits()
+		{
+			var reader = XmlReader.Create(SampleVehicleFullDecl);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var gearboxDataProvider = inputDataProvider.GearboxInputData;
+			var gears = gearboxDataProvider.Gears;
+
+			Assert.AreEqual(12, gears.Count);
+			Assert.AreEqual(2000, gears[0].MaxInputSpeed.AsRPM, 1e-6);
+			Assert.AreEqual(2000, gears[1].MaxInputSpeed.AsRPM, 1e-6);
+			Assert.IsNull(gears[11].MaxInputSpeed);
+		}
 
 		[TestMethod]
 		public void TestElementNotAvailable()

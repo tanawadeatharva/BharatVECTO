@@ -44,6 +44,7 @@ Public Class Gearbox
 	Public GearshiftFiles As List(Of SubPath)
 
 	Public MaxTorque As List(Of String)
+	Public MaxSpeed As List(Of String)
 
 	Public TorqueResv As Double
 	'Public SkipGears As Boolean
@@ -87,6 +88,7 @@ Public Class Gearbox
 		GearLossmaps = New List(Of SubPath)
 		GearshiftFiles = New List(Of SubPath)
 		MaxTorque = New List(Of String)
+		MaxSpeed = New List(Of String)
 
 		TorqueResv = 0
 		'SkipGears = False
@@ -350,6 +352,9 @@ Public Class Gearbox
 				End If
 				If Not String.IsNullOrWhiteSpace(MaxTorque(i)) AndAlso IsNumeric(MaxTorque(i)) Then
 					gearDict.MaxTorque = MaxTorque(i).ToDouble().SI(Of NewtonMeter)()
+				End If
+				If Not String.IsNullOrWhiteSpace(MaxSpeed(i)) AndAlso IsNumeric(MaxSpeed(i)) Then
+					gearDict.MaxInputSpeed = MaxSpeed(i).ToDouble().RPMtoRad()
 				End If
 				If IsNumeric(GearLossMap(i, True)) Then
 					gearDict.Efficiency = GearLossMap(i, True).ToDouble()

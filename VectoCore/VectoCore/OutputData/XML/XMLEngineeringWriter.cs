@@ -203,6 +203,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_AngledriveType, angledrive.Type.ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_PTOType, pto.PTOTransmissionType),
 				GetPTOData(pto),
+				CreateTorqueLimits(vehicle),
 				new XElement(tns + XMLNames.Vehicle_CurbMassExtra, vehicle.CurbMassExtra.Value()),
 				new XElement(tns + XMLNames.Vehicle_Loading, vehicle.Loading.Value()),
 				new XElement(tns + XMLNames.Vehicle_Components,
@@ -418,7 +419,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + XMLNames.Gearbox_Gear_Ratio, gearData.Ratio.ToXMLFormat(3)),
 					gearData.MaxTorque != null
 						? new XElement(tns + XMLNames.Gearbox_Gears_MaxTorque, gearData.MaxTorque.Value())
+						: null,
+					gearData.MaxInputSpeed != null
+						? new XElement(tns + XMLNames.Gearbox_Gear_MaxSpeed, gearData.MaxInputSpeed.AsRPM)
 						: null);
+
 				if (gearData.LossMap != null) {
 					gear.Add(new XElement(tns + XMLNames.Gearbox_Gear_TorqueLossMap, GetTransmissionLossMap(gearData.LossMap)));
 				} else {

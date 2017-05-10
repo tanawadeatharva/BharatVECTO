@@ -71,6 +71,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			if (ElementExists(Helper.Query(gearPath, XMLNames.Gearbox_Gears_MaxTorque))) {
 				retVal.MaxTorque = GetDoubleElementValue(Helper.Query(gearPath, XMLNames.Gearbox_Gears_MaxTorque)).SI<NewtonMeter>();
 			}
+			if (ElementExists(Helper.Query(gearPath, XMLNames.Gearbox_Gear_MaxSpeed))) {
+				retVal.MaxInputSpeed = GetDoubleElementValue(Helper.Query(gearPath, XMLNames.Gearbox_Gear_MaxSpeed)).RPMtoRad();
+			}
 			return retVal;
 		}
 	}

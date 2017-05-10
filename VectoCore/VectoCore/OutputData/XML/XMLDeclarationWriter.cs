@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_PTO,
 					new XElement(tns + XMLNames.Vehicle_PTO_ShaftsGearWheels, "none"),
 					new XElement(tns + XMLNames.Vehicle_PTO_OtherElements, "none")),
-				// ToDo: TorqueLimits
+				CreateTorqueLimits(vehicle),
 				new XElement(tns + XMLNames.Vehicle_Components,
 					CreateEngine(data.EngineInputData),
 					CreateGearbox(gearbox, gearbox.Type.AutomaticTransmission() ? data.TorqueConverterInputData : null),
@@ -126,6 +126,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					)
 				);
 		}
+
 
 		protected XElement CreateEngine(IEngineDeclarationInputData data)
 		{
@@ -169,7 +170,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XAttribute(XMLNames.Gearbox_Gear_GearNumber_Attr, i++),
 					new XElement(tns + XMLNames.Gearbox_Gear_Ratio, gearData.Ratio.ToXMLFormat(3)),
 					gearData.MaxTorque != null
-						? new XElement(tns + XMLNames.Gearbox_Gears_MaxTorque, gearData.MaxTorque.Value())
+						? new XElement(tns + XMLNames.Gearbox_Gears_MaxTorque, gearData.MaxTorque.Value().ToXMLFormat(0))
+						: null,
+					gearData.MaxInputSpeed != null
+						? new XElement(tns + XMLNames.Gearbox_Gear_MaxSpeed, gearData.MaxInputSpeed.AsRPM.ToXMLFormat(0))
 						: null,
 					new XElement(tns + XMLNames.Gearbox_Gear_TorqueLossMap,
 						EmbedDataTable(gearData.LossMap, AttributeMappings.TransmissionLossmapMapping))

@@ -82,6 +82,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public NewtonMeter MaxTorque { get; internal set; }
 
+		public PerSecond MaxInputSpeed { get; internal set; }
+
 		public TableData ShiftPolygon { get; internal set; }
 	}
 

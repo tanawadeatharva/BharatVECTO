@@ -106,6 +106,7 @@ Public Class JSONFileWriter
 							(Not gbx.SavedInDeclarationMode AndAlso Not gear.ShiftPolygon Is Nothing,
 							GetRelativePath(gear.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
 			gearDict.Add("MaxTorque", If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.Value().ToString()))
+			gearDict.Add("MaxSpeed", If(gear.MaxInputSpeed Is Nothing, "", gear.MaxInputSpeed.AsRPM.ToString()))
 
 			ls.Add(gearDict)
 		Next

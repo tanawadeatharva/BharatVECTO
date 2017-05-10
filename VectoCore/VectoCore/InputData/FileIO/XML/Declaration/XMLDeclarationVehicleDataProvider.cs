@@ -44,7 +44,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			get {
 				var retVal = new List<ITorqueLimitInputData>();
-				var limits = Navigator.Select(Helper.Query(VehiclePath, XMLNames.Vehicle_TorqueLimits, "Entry"));
+				var limits =
+					Navigator.Select(Helper.Query(VehiclePath, XMLNames.Vehicle_TorqueLimits, XMLNames.Vehicle_TorqueLimits_Entry),
+						Manager);
 				while (limits.MoveNext()) {
 					retVal.Add(new TorqueLimitInputData() {
 						Gear = limits.Current.GetAttribute(XMLNames.Vehicle_TorqueLimits_Entry_Gear_Attr, "").ToInt(),
