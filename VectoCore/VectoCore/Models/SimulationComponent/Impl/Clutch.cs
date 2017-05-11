@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Clutch(IVehicleContainer container, CombustionEngineData engineData) : base(container)
 		{
 			_idleSpeed = engineData.IdleSpeed;
-			_ratedSpeed = engineData.FullLoadCurve.RatedSpeed;
+			_ratedSpeed = engineData.FullLoadCurves[0].RatedSpeed;
 			_clutchSpeedSlippingFactor = Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed) /
 										(_idleSpeed + Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed));
 		}

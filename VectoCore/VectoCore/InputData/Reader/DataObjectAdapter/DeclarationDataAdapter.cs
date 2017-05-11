@@ -150,7 +150,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return DeclarationData.PoweredAxle();
 		}
 
-		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine, GearboxType gearboxType)
+		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine,
+			IGearboxDeclarationInputData gearbox, IEnumerable<ITorqueLimitInputData> torqueLimits)
 		{
 			if (!engine.SavedInDeclarationMode) {
 				WarnDeclarationMode("EngineData");
@@ -161,10 +162,51 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.WHTCMotorway = engine.WHTCMotorway;
 			retVal.WHTCRural = engine.WHTCRural;
 			retVal.ColdHotCorrectionFactor = engine.ColdHotBalancingFactor;
-			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearboxType);
-			retVal.FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve, true);
-			retVal.FullLoadCurve.EngineData = retVal;
+			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearbox.Type);
+			var limits = torqueLimits.ToDictionary(e => e.Gear);
+			var numGears = gearbox.Gears.Count;
+			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
+			fullLoadCurves[0] = EngineFullLoadCurve.Create(engine.FullLoadCurve, true);
+			fullLoadCurves[0].EngineData = retVal;
+			foreach (var gear in gearbox.Gears) {
+				var maxTorque = VectoMath.Min(
+					GbxMaxTorque(gear, numGears, fullLoadCurves[0].MaxTorque),
+					VehMaxTorque(gear, numGears, limits, fullLoadCurves[0].MaxTorque));
+				fullLoadCurves[(uint)gear.Gear] = IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
+			}
+			retVal.FullLoadCurves = fullLoadCurves;
 			return retVal;
+		}
+
+		private static NewtonMeter VehMaxTorque(ITransmissionInputData gear, int numGears,
+			Dictionary<int, ITorqueLimitInputData> limits,
+			NewtonMeter maxEngineTorque)
+		{
+			if (gear.Gear - 1 >= numGears / 2) {
+				// only upper half of gears can limit if max-torque <= 0.95 of engine max torque
+				if (limits.ContainsKey(gear.Gear) &&
+					limits[gear.Gear].MaxTorque <= DeclarationData.Engine.TorqueLimitVehicleFactor * maxEngineTorque) {
+					return limits[gear.Gear].MaxTorque;
+				}
+			}
+			return null;
+		}
+
+		private static NewtonMeter GbxMaxTorque(ITransmissionInputData gear, int numGears, NewtonMeter maxEngineTorque
+			)
+		{
+			if (gear.Gear - 1 < numGears / 2) {
+				// gears count from 1 to n, -> n entries, lower half can always limit
+				if (gear.MaxTorque != null) {
+					return gear.MaxTorque;
+				}
+			} else {
+				// upper half can only limit if max-torque <= 90% of engine max torque
+				if (gear.MaxTorque != null && gear.MaxTorque <= DeclarationData.Engine.TorqueLimitGearboxFactor * maxEngineTorque) {
+					return gear.MaxTorque;
+				}
+			}
+			return null;
 		}
 
 		internal GearboxData CreateGearboxData(IGearboxDeclarationInputData gearbox, CombustionEngineData engine,
@@ -199,6 +241,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			TransmissionLossMap gearLossMap;
 			retVal.Gears = gears.Select((gear, i) => {
+				uint gearNbr = (uint)(i + 1);
 				try {
 					if (gear.LossMap == null) {
 						throw new InvalidFileFormatException(string.Format("LossMap for Gear {0} is missing.", i + 1));
@@ -212,11 +255,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					}
 				}
 
-				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gear.MaxTorque);
-				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurve, gears, engine, axlegearRatio,
-					dynamicTyreRadius);
+				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(i, engine.FullLoadCurves[gearNbr], gears, engine,
+					axlegearRatio, dynamicTyreRadius);
 
-				return new KeyValuePair<uint, GearData>((uint)i + 1,
+				return new KeyValuePair<uint, GearData>(gearNbr,
 					new GearData {
 						LossMap = gearLossMap,
 						ShiftPolygon = shiftPolygon,

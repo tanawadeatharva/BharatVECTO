@@ -82,9 +82,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 				HasTorqueConverter = true
 			};
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var gearboxData = CreateGearboxData(gbxType); 
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(gbxType);
-			var gearboxData = CreateGearboxData(gbxType);
+			
 			if (gearBoxInertia != null) {
 				gearboxData.Inertia = gearBoxInertia;
 			}

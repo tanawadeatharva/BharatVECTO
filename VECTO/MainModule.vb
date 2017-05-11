@@ -16,6 +16,7 @@ Imports TUGraz.VectoCommon
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports VectoAuxiliaries
@@ -27,10 +28,14 @@ Imports VectoAuxiliaries
 Module MainModule
 	Public JobFileList As List(Of String)
 
-	Public Function ConvertToEngineData(fld As EngineFullLoadCurve, nIdle As PerSecond) As CombustionEngineData
+	Public Function ConvertToEngineData(ByVal fld As EngineFullLoadCurve, ByVal nIdle As PerSecond, ByVal gear As Integer,
+										ByVal maxTorque As NewtonMeter) As CombustionEngineData
 
 		Dim retVal As CombustionEngineData = New CombustionEngineData()
-		retVal.FullLoadCurve = fld
+		Dim fullLoadCurves As Dictionary(Of UInteger, EngineFullLoadCurve) = New Dictionary(Of UInteger, EngineFullLoadCurve)
+		fullLoadCurves(0) = fld
+		fullLoadCurves(CType(gear, UInteger)) = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fld, maxTorque)
+		retVal.FullLoadCurves = fullLoadCurves
 		retVal.IdleSpeed = nIdle
 		Return retVal
 	End Function
@@ -63,6 +68,4 @@ Module MainModule
 		End If
 		Return filePath
 	End Function
-
-	
 End Module

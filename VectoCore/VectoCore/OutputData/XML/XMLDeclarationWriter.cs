@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + XMLNames.Engine_IdlingSpeed, data.IdleSpeed.AsRPM.ToXMLFormat(0)),
 					new XElement(tns + XMLNames.Engine_RatedSpeed, fld.RatedSpeed.AsRPM.ToXMLFormat(0)),
 					new XElement(tns + XMLNames.Engine_RatedPower, fld.FullLoadStationaryPower(fld.RatedSpeed).ToXMLFormat(0)),
-					new XElement(tns + XMLNames.Engine_MaxTorque, fld.MaxLoadTorque.ToXMLFormat(0)),
+					new XElement(tns + XMLNames.Engine_MaxTorque, fld.MaxTorque.ToXMLFormat(0)),
 					new XElement(tns + XMLNames.Engine_WHTCUrban, data.WHTCUrban.ToXMLFormat(4)),
 					new XElement(tns + XMLNames.Engine_WHTCRural, data.WHTCRural.ToXMLFormat(4)),
 					new XElement(tns + XMLNames.Engine_WHTCMotorway, data.WHTCMotorway.ToXMLFormat(4)),

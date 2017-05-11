@@ -90,9 +90,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
+			var axleGearData = CreateAxleGearData();
 			var vehicleData = CreateVehicleData(massExtra, loading);
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
@@ -221,7 +221,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				//AerodynamicDragAera = 6.2985.SI<SquareMeter>(),
 				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(), CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.2985.SI<SquareMeter>()),
+					new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.2985.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7100.SI<Kilogram>() + massExtra,
 				Loading = loading,

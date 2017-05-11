@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void LossMapValid()
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 			var vehicleData = new VehicleData {
 				DynamicTyreRadius = 0.85.SI<Meter>(),
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void LossMapInvalidAxle()
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(GearboxLimited);
 
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void LossMapLimited()
 		{
 			var gearboxData = CreateGearboxData(GearboxLimited, GearboxLimited);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
 			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void LossMapAxleLossMapMissing()
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var vehicleData = new VehicleData {
 				DynamicTyreRadius = 0.85.SI<Meter>(),
 				Loading = 0.SI<Kilogram>(),
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void LossMapGearLossMapMissing()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 0);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 
 			var runData = new VectoRunData {

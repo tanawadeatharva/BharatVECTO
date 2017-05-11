@@ -39,6 +39,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
@@ -163,6 +164,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
 			public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI().Kilo.Gramm.Per.Meter; // [kg/m]
+			
+			public const double TorqueLimitGearboxFactor = 0.9;
+			public const double TorqueLimitVehicleFactor = 0.95;
 
 			public static KilogramSquareMeter EngineInertia(CubicMeter displacement, GearboxType gbxType)
 			{
@@ -196,14 +200,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 			/// <summary>
 			/// computes the shift polygons for a single gear according to the whitebook 2016
 			/// </summary>
-			/// <param name="gear">index of the gear to compute the shift polygons for</param>
+			/// <param name="gearIdx">index of the gear to compute the shift polygons for  -- gear number - 1!</param>
 			/// <param name="fullLoadCurve">engine full load curve, potentially limited by the gearbox</param>
 			/// <param name="gears">list of gears</param>
 			/// <param name="engine">engine data</param>
 			/// <param name="axlegearRatio"></param>
 			/// <param name="dynamicTyreRadius"></param>
 			/// <returns></returns>
-			public static ShiftPolygon ComputeShiftPolygon(int gear, FullLoadCurve fullLoadCurve,
+			public static ShiftPolygon ComputeShiftPolygon(int gearIdx, EngineFullLoadCurve fullLoadCurve,
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
 				if (gears.Count < 2) {
@@ -213,20 +217,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 				// ReSharper disable once InconsistentNaming
 				var engineSpeed85kmhLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 1], axlegearRatio, dynamicTyreRadius);
 
-				var nVHigh = VectoMath.Min(engineSpeed85kmhLastGear, engine.FullLoadCurve.RatedSpeed);
+				var nVHigh = VectoMath.Min(engineSpeed85kmhLastGear, engine.FullLoadCurves[0].RatedSpeed);
 
 				var diffRatio = gears[gears.Count - 2].Ratio / gears[gears.Count - 1].Ratio - 1;
 
-				var maxDragTorque = engine.FullLoadCurve.MaxDragTorque * 1.1;
+				var maxDragTorque = fullLoadCurve.MaxDragTorque * 1.1;
 
 				var p1 = new Point(engine.IdleSpeed.Value() / 2, 0);
 				var p2 = new Point(engine.IdleSpeed.Value() * 1.1, 0);
 				var p3 = new Point(nVHigh.Value() * 0.9,
-					engine.FullLoadCurve.FullLoadStationaryTorque(nVHigh * 0.9).Value());
+					fullLoadCurve.FullLoadStationaryTorque(nVHigh * 0.9).Value());
 
 				var p4 =
 					new Point((nVHigh * (1 + diffRatio / 3)).Value(), 0);
-				var p5 = new Point(engine.FullLoadCurve.N95hSpeed.Value(), engine.FullLoadCurve.MaxTorque.Value());
+				var p5 = new Point(fullLoadCurve.N95hSpeed.Value(), fullLoadCurve.MaxTorque.Value());
 
 				var p6 = new Point(p2.X, VectoMath.Interpolate(p1, p3, p2.X));
 				var p7 = new Point(p4.X, VectoMath.Interpolate(p2, p5, p4.X));
@@ -235,23 +239,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var downshiftCorr = MoveDownshiftBelowFld(Edge.Create(p6, p3), fldMargin, 1.1 * fullLoadCurve.MaxTorque);
 
 				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
-				if (gear > 0) {
+				if (gearIdx > 0) {
 					downShift =
 						new[] { p2, downshiftCorr.P1, downshiftCorr.P2 }.Select(
-								point => new ShiftPolygon.ShiftPolygonEntry() {
-									AngularSpeed = point.X.SI<PerSecond>(),
-									Torque = point.Y.SI<NewtonMeter>()
-								})
+							point => new ShiftPolygon.ShiftPolygonEntry() {
+								AngularSpeed = point.X.SI<PerSecond>(),
+								Torque = point.Y.SI<NewtonMeter>()
+							})
 							.ToList();
 
 					downShift[0].Torque = maxDragTorque;
 				}
 				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
-				if (gear >= gears.Count - 1) {
+				if (gearIdx >= gears.Count - 1) {
 					return new ShiftPolygon(downShift, upShift);
 				}
 
-				var gearRatio = gears[gear].Ratio / gears[gear + 1].Ratio;
+				var gearRatio = gears[gearIdx].Ratio / gears[gearIdx + 1].Ratio;
 				var rpmMarginFactor = 1 + ShiftPolygonRPMMargin / 100.0;
 
 				// ReSharper disable InconsistentNaming
@@ -387,11 +391,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var data = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
 				var characteristicTorque = (from DataRow row in data.Rows
 					select
-					new TorqueConverterEntry() {
-						SpeedRatio = row.ParseDouble(TorqueConverterDataReader.Fields.SpeedRatio),
-						Torque = row.ParseDouble(TorqueConverterDataReader.Fields.CharacteristicTorque).SI<NewtonMeter>(),
-						TorqueRatio = row.ParseDouble(TorqueConverterDataReader.Fields.TorqueRatio)
-					}).ToArray();
+						new TorqueConverterEntry() {
+							SpeedRatio = row.ParseDouble(TorqueConverterDataReader.Fields.SpeedRatio),
+							Torque = row.ParseDouble(TorqueConverterDataReader.Fields.CharacteristicTorque).SI<NewtonMeter>(),
+							TorqueRatio = row.ParseDouble(TorqueConverterDataReader.Fields.TorqueRatio)
+						}).ToArray();
 				foreach (var torqueConverterEntry in characteristicTorque) {
 					torqueConverterEntry.SpeedRatio = torqueConverterEntry.SpeedRatio * ratio;
 					torqueConverterEntry.TorqueRatio = torqueConverterEntry.TorqueRatio / ratio;

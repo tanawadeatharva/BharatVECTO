@@ -112,6 +112,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
+			var oldGear = Gear;
+			Gear = gear;
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear].Ratio;
 			var torqueLossResult = ModelData.Gears[gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 			CurrentState.TorqueLossResult = torqueLossResult;
@@ -139,6 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var fullLoad = DataBus.EngineStationaryFullPower(inAngularVelocity);
 
+			Gear = oldGear;
 			return new ResponseDryRun {
 				Source = this,
 				EnginePowerRequest = response.EnginePowerRequest,

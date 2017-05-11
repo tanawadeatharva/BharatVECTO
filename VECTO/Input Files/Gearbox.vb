@@ -208,9 +208,10 @@ Public Class Gearbox
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
 
 				Try
-					engine = doa.CreateEngineData(inputData.EngineInputData, gearbox.Type)
+
+					engine = doa.CreateEngineData(inputData.EngineInputData, gearbox, New List(Of ITorqueLimitInputData))
 				Catch
-					engine = GetDefaultEngine()
+					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
 
 				axlegearData = doa.CreateAxleGearData(gearbox, False)
@@ -218,9 +219,9 @@ Public Class Gearbox
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Try
-					engine = doa.CreateEngineData(inputData.EngineInputData, gearbox)
+					engine = doa.CreateEngineData(inputData.EngineInputData, gearbox, New List(Of ITorqueLimitInputData))
 				Catch
-					engine = GetDefaultEngine()
+					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
 
 				axlegearData = doa.CreateAxleGearData(gearbox, True)
@@ -250,7 +251,7 @@ Public Class Gearbox
 		End Try
 	End Function
 
-	Private Shared Function GetDefaultEngine() As CombustionEngineData
+	Private Shared Function GetDefaultEngine(gears As IList(Of ITransmissionInputData)) As CombustionEngineData
 		Dim fldData As MemoryStream = New MemoryStream()
 		Dim writer As StreamWriter = New StreamWriter(fldData)
 		writer.WriteLine("engine speed, full load torque, motoring torque")
@@ -258,12 +259,21 @@ Public Class Gearbox
 		writer.WriteLine("2500, 2000, -500")
 		writer.Flush()
 		fldData.Seek(0, SeekOrigin.Begin)
+		Dim retVal As CombustionEngineData = New CombustionEngineData() With {
+				.IdleSpeed = 600.RPMtoRad()
+				}
 
 		Dim fldCurve As EngineFullLoadCurve = EngineFullLoadCurve.Create(VectoCSVFile.ReadStream(fldData))
-		Return New CombustionEngineData() With {
-			.IdleSpeed = 600.RPMtoRad(),
-			.FullLoadCurve = fldCurve
-			}
+		Dim fullLoadCurves As Dictionary(Of UInteger, EngineFullLoadCurve) =
+				New Dictionary(Of UInteger, EngineFullLoadCurve)()
+		fullLoadCurves(0) = EngineFullLoadCurve.Create(VectoCSVFile.ReadStream(fldData))
+		fullLoadCurves(0).EngineData = retVal
+		For i As Integer = 0 To gears.Count - 1
+			fullLoadCurves(CType(i + 1, UInteger)) = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves(0),
+																										gears(i).MaxTorque)
+		Next
+		retVal.FullLoadCurves = fullLoadCurves
+		Return retVal
 	End Function
 
 

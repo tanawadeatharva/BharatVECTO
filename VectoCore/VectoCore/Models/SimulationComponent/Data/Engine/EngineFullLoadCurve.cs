@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return new EngineFullLoadCurve { FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data };
 		}
 
-		public static EngineFullLoadCurve Create(DataTable data, bool declarationMode = false)
+		public static EngineFullLoadCurve Create(DataTable data, bool declarationMode = false, NewtonMeter maxTorque = null)
 		{
 			var curve = FullLoadCurveReader.Create(data, declarationMode, true);
 			return new EngineFullLoadCurve() { FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data };
@@ -141,16 +141,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				}
 				return _engineSpeedHi;
 			}
-		}
-
-		public NewtonMeter MaxLoadTorque
-		{
-			get { return FullLoadEntries.Max(x => x.TorqueFullLoad); }
-		}
-
-		public NewtonMeter MaxDragTorque
-		{
-			get { return FullLoadEntries.Min(x => x.TorqueDrag); }
 		}
 
 		private void ComputePreferredSpeed()

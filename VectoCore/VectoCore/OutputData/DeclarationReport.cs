@@ -38,6 +38,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData.PDF;
 
 namespace TUGraz.VectoCore.OutputData
@@ -105,7 +106,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// <summary>
 		/// The full load curve.
 		/// </summary>
-		internal FullLoadCurve Flc { get; set; }
+		internal  Dictionary<uint, EngineFullLoadCurve> Flc { get; set; }
 
 		/// <summary>
 		/// The declaration segment from the segment table
