@@ -19,14 +19,22 @@ namespace TUGraz.VectoHashing
 		public static VectoHash Load(string filename)
 		{
 			var doc = new XmlDocument();
-			doc.Load(new XmlTextReader(filename));
+			try {
+				doc.Load(new XmlTextReader(filename));
+			} catch (Exception e) {
+				throw new Exception("failed to read XML document", e);
+			}
 			return new VectoHash(doc);
 		}
 
 		public static VectoHash Load(Stream stream)
 		{
 			var doc = new XmlDocument();
-			doc.Load(new XmlTextReader(stream));
+			try {
+				doc.Load(new XmlTextReader(stream));
+			} catch (Exception e) {
+				throw new Exception("failed to read XML document", e);
+			}
 			return new VectoHash(doc);
 		}
 
@@ -77,12 +85,15 @@ namespace TUGraz.VectoHashing
 			if (components.Count > 1) {
 				throw new Exception("input must not contain multiple components!");
 			}
-			var query = string.Format("//*[local-name()='{0}']/*[local-name()='Data']", components[0]);
+			if (components.Count == 0) {
+				throw new Exception("input does not contain a known component!");
+			}
+			var query = string.Format("//*[local-name()='{0}']/*[local-name()='Data']", components[0].XMLElementName());
 			var node = Document.SelectSingleNode(query);
 			if (node == null) {
-				throw new Exception(string.Format("'Data' element for component '{0}' not found!", components[0]));
+				throw new Exception(string.Format("'Data' element for component '{0}' not found!", components[0].XMLElementName()));
 			}
-			query = string.Format("//*[local-name()='{0}']/*[local-name()='Signature']", components[0]);
+			query = string.Format("//*[local-name()='{0}']/*[local-name()='Signature']", components[0].XMLElementName());
 			var sigNodes = Document.SelectNodes(query);
 			if (sigNodes != null && sigNodes.Count > 0) {
 				throw new Exception("input data already contains a signature element");
@@ -160,8 +171,15 @@ namespace TUGraz.VectoHashing
 
 		private static string GetHashValue(XmlDocument hashed, string elementToHash)
 		{
-			var node = hashed.SelectSingleNode("//*[@URI='#" + elementToHash + "']/*[local-name() = 'DigestValue']");
-			return node == null ? null : node.InnerText;
+			//var node = hashed.SelectSingleNode("//*[@URI='#" + elementToHash + "']/*[local-name() = 'DigestValue']");
+			var nodes = hashed.SelectNodes("//*[@URI='#" + elementToHash + "']/*[local-name() = 'DigestValue']");
+			if (nodes == null || nodes.Count == 0) {
+				return null;
+			}
+			if (nodes.Count > 1) {
+				throw new Exception("Multiple DigestValue elements found!");
+			}
+			return nodes[0].InnerText;
 		}
 	}
 }

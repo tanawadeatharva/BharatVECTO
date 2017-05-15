@@ -16,21 +16,24 @@ namespace HashingCmd
 		public delegate void HashingAction(string filename, VectoHash h);
 
 		private const string Usage = @"
-hashingcmd.exe -v <file.xml>
+hashingcmd.exe (-h | [-v] [[-s] -x] [-c] [-r]) <file.xml> <file2.xml> <file3.xml>
 
 ";
 
 		private const string Help = @"
 hashingcmd.exe
 
--h:    help
+-h:    print help
 -v:    verify hashed file
--s:    create hashed file file
+-s:    create hashed file
+-x:    validate generated XML against VECTO XML schema
 -c:    compute hash and write to stdout
 -r:    read hash from file and write to stdout
 ";
 
 		static Dictionary<string, HashingAction> actions = new Dictionary<string, HashingAction>();
+
+		static bool _validateXML = false;
 
 		static int Main(string[] args)
 		{
@@ -45,7 +48,16 @@ hashingcmd.exe
 				actions["-r"] = ReadHashAction;
 				actions["-s"] = CreateHashedFileAction;
 
-				var fileList = args.Except(actions.Keys);
+				if (args.Contains("-x")) {
+					_validateXML = true;
+				}
+
+				var fileList = args.Except(actions.Keys.Concat(new[] { "-x" })).ToArray();
+				if (fileList.Length == 0 || !args.Intersect(actions.Keys.ToArray()).Any()) {
+					ShowVersionInformation();
+					Console.Write(Usage);
+					return 0;
+				}
 				foreach (var file in fileList) {
 					WriteLine("processing " + Path.GetFileName(file));
 					if (!File.Exists(Path.GetFullPath(file))) {
@@ -60,6 +72,9 @@ hashingcmd.exe
 							} catch (Exception e) {
 								Console.ForegroundColor = ConsoleColor.Red;
 								Console.Error.WriteLine(e.Message);
+								if (e.InnerException != null) {
+									Console.Error.WriteLine(e.InnerException.Message);
+								}
 								Console.ResetColor();
 							}
 						}
@@ -115,7 +130,7 @@ hashingcmd.exe
 				}
 				for (var i = 0; i < component.Count; i++) {
 					var readHash = h.ReadHash(component.Entry, i);
-					WriteLine("  " + component.Entry.XMLElementName() + "\t ... >" + readHash + "<");
+					WriteLine("  " + component.Entry.XMLElementName() + "\t ... " + readHash + "");
 				}
 			}
 		}
@@ -135,14 +150,14 @@ hashingcmd.exe
 					}
 					for (var i = 0; i < component.Count; i++) {
 						var computedHash = h.ComputeHash(component.Entry, i);
-						WriteLine("  " + component.Entry.XMLElementName() + "\t ... >" + computedHash + "<");
+						WriteLine("  " + component.Entry.XMLElementName() + "\t ... " + computedHash + "");
 					}
 				}
 				var jobHash = h.ComputeHash();
-				WriteLine("  job file\t ... >" + jobHash + "<");
+				WriteLine("  job file\t ... " + jobHash + "");
 			} else {
 				var hash = h.ComputeHash();
-				WriteLine("  computed hash:  >" + hash + "<");
+				WriteLine("  computed hash:  " + hash + "");
 			}
 		}
 
