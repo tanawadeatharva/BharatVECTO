@@ -1026,11 +1026,11 @@ Partial Class VehicleForm
 		'Label8
 		'
 		Me.Label8.AutoSize = True
-		Me.Label8.Location = New System.Drawing.Point(89, 136)
+		Me.Label8.Location = New System.Drawing.Point(85, 136)
 		Me.Label8.Name = "Label8"
-		Me.Label8.Size = New System.Drawing.Size(58, 13)
+		Me.Label8.Size = New System.Drawing.Size(62, 13)
 		Me.Label8.TabIndex = 10
-		Me.Label8.Text = "HDV Class"
+		Me.Label8.Text = "HDV Group"
 		'
 		'TabControl1
 		'
