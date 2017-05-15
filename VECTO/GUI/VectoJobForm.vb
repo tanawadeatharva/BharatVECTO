@@ -84,7 +84,6 @@ Public Class VectoJobForm
 		CbEngOnly.Enabled = Not Cfg.DeclMode
 		GrCycles.Enabled = Not Cfg.DeclMode
 		GrVACC.Enabled = Not Cfg.DeclMode
-		PnStartStop.Enabled = Not Cfg.DeclMode
 		RdOff.Enabled = Not Cfg.DeclMode
 		GrLAC.Enabled = Not Cfg.DeclMode
 		ButAuxAdd.Enabled = Not Cfg.DeclMode
@@ -116,9 +115,6 @@ Public Class VectoJobForm
 		RdOverspeed.Checked = True
 		CbLookAhead.Checked = True
 
-		TbSSspeed.Text = DeclarationData.Driver.StartStop.MaxSpeed.AsKmph.ToGUIFormat()	'cDeclaration.SSspeed
-		TbSStime.Text = DeclarationData.Driver.StartStop.MinTime.ToGUIFormat()	 'cDeclaration.SStime
-		TbSSdelay.Text = DeclarationData.Driver.StartStop.Delay.ToGUIFormat()	 ' cDeclaration.SSdelay
 		tbLacPreviewFactor.Text = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor.ToGUIFormat()
 		tbLacDfTargetSpeedFile.Text = ""
 		tbLacDfVelocityDropFile.Text = ""
@@ -441,10 +437,6 @@ Public Class VectoJobForm
 
 		'Start/Stop
 		Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
-		ChBStartStop.Checked = driver.StartStop.Enabled
-		TbSSspeed.Text = driver.StartStop.MaxSpeed.AsKmph.ToGUIFormat()
-		TbSStime.Text = driver.StartStop.MinTime.ToGUIFormat()
-		TbSSdelay.Text = driver.StartStop.Delay.ToGUIFormat()
 
 		If (Cfg.DeclMode) Then
 			TbDesMaxFile.Text = ""
@@ -612,12 +604,6 @@ Public Class VectoJobForm
 		vectoJob.PathGbx = TbGBX.Text
 
 
-		'Start/Stop
-		vectoJob.StartStop = ChBStartStop.Checked
-		vectoJob.StartStopMaxSpeed = TbSSspeed.Text.ToDouble()
-		vectoJob.StartStopTime = TbSStime.Text.ToDouble()
-		vectoJob.StartStopDelay = TbSSdelay.Text.ToDouble()
-
 		'a_DesMax
 		vectoJob.DesMaxFile = TbDesMaxFile.Text
 
@@ -693,12 +679,6 @@ Public Class VectoJobForm
 		TbGBX.Text = ""
 		TbDesMaxFile.Text = ""
 
-		'Start/Stop
-		TbSSspeed.Text = DeclarationData.Driver.StartStop.MaxSpeed.AsKmph.ToGUIFormat()
-		TbSStime.Text = DeclarationData.Driver.StartStop.MinTime.ToGUIFormat()
-		TbSSdelay.Text = DeclarationData.Driver.StartStop.Delay.ToGUIFormat()
-		ChBStartStop.Checked = False
-
 		LvAux.Items.Clear()
 
 		CbEngOnly.Checked = False
@@ -760,12 +740,12 @@ Public Class VectoJobForm
 	End Sub
 
 
-	Private Sub TBSSspeed_TextChanged(sender As Object, e As EventArgs) Handles TbSSspeed.TextChanged
+	Private Sub TBSSspeed_TextChanged(sender As Object, e As EventArgs)
 		Change()
 	End Sub
 
-	Private Sub TBSStime_TextChanged(sender As Object, e As EventArgs) _
-		Handles TbSStime.TextChanged, TbSSdelay.TextChanged
+	Private Sub TBSStime_TextChanged(sender As Object, e As EventArgs)
+
 		Change()
 	End Sub
 
@@ -1053,13 +1033,6 @@ lbDlog:
 		TbGBX.Enabled = onOff
 		ButtonGBX.Enabled = onOff
 		GrAux.Enabled = onOff
-	End Sub
-
-	'Start/Stop changed 
-	Private Sub ChBStartStop_CheckedChanged_1(sender As Object, e As EventArgs) _
-		Handles ChBStartStop.CheckedChanged
-		Change()
-		If Not Cfg.DeclMode Then PnStartStop.Enabled = ChBStartStop.Checked
 	End Sub
 
 	'LAC changed
@@ -1526,7 +1499,6 @@ lbDlog:
 	End Sub
 
 	Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
-
 	End Sub
 End Class
 

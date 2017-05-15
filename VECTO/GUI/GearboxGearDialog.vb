@@ -68,9 +68,7 @@ Public Class GearboxGearDialog
 			Dim gearData As GearData = New GearData() With {
 					.Ratio = TbRatio.Text.ToDouble(0),
 					.LossMap = lossmap,
-					.ShiftPolygon = shiftPolygon,
-					.MaxTorque =
-					If(String.IsNullOrWhiteSpace(TbMaxTorque.Text), Nothing, TbMaxTorque.Text.ToDouble().SI(Of NewtonMeter))
+					.ShiftPolygon = shiftPolygon
 					}
 			Dim results As IList(Of ValidationResult) =
 					gearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), GearboxType, False)

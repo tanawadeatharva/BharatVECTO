@@ -101,6 +101,8 @@ namespace TUGraz.VectoCommon.InputData
 		///// </summary>
 		//string Rim { get; }  // deprecated
 
+		IList<ITorqueLimitInputData> TorqueLimits { get; }
+
 		/// <summary>
 		/// parameters for every axle
 		/// P044, P045, P046, P047, P048, P108
@@ -242,6 +244,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		NewtonMeter MaxTorque { get; }
 
+		PerSecond MaxInputSpeed { get; }
+
 		/// <summary>
 		/// P082
 		/// P093, P094, P095
@@ -364,8 +368,6 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		bool SavedInDeclarationMode { get; }
 
-		IStartStopDeclarationInputData StartStop { get; }
-
 		IOverSpeedEcoRollDeclarationInputData OverSpeedEcoRoll { get; }
 	}
 
@@ -376,15 +378,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DriverMode Mode { get; }
-	}
-
-	public interface IStartStopDeclarationInputData
-	{
-		/// <summary>
-		/// P010  StartStop - enabled
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		bool Enabled { get; }
 	}
 
 	public interface IAuxiliaryDeclarationInputData
@@ -400,5 +393,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<string> Technology { get; }
+	}
+
+	public interface ITorqueLimitInputData
+	{
+		int Gear { get; }
+
+		NewtonMeter MaxTorque { get; }
 	}
 }

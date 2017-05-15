@@ -52,10 +52,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			foreach (var cycle in InputDataProvider.JobInputData().Cycles) {
 				var simulationRunData = new VectoRunData {
 					JobName = InputDataProvider.JobInputData().JobName,
-					EngineData = dao.CreateEngineData(InputDataProvider.EngineInputData, null),
-					Cycle =
-						new DrivingCycleProxy(
-							DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, CycleType.EngineOnly, cycle.Name, false), cycle.Name),
+					EngineData = dao.CreateEngineData(InputDataProvider.EngineInputData, null, new List<ITorqueLimitInputData>()),
+					Cycle = new DrivingCycleProxy(
+						DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, CycleType.EngineOnly, cycle.Name, false), cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering
 				};
 				yield return simulationRunData;

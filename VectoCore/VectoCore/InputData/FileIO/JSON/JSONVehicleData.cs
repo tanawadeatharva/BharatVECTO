@@ -72,6 +72,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_GrossVehicleMassRating).SI().Ton.Cast<Kilogram>(); }
 		}
 
+		public IList<ITorqueLimitInputData> TorqueLimits
+		{
+			get {
+				var retVal = new List<ITorqueLimitInputData>();
+				if (Body["TorqueLimits"] == null) {
+					return retVal;
+				}
+				foreach (var entry in (JObject)Body["TorqueLimits"]) {
+					retVal.Add(new TorqueLimitInputData() {
+						Gear = entry.Key.ToInt(),
+						MaxTorque = entry.Value.ToString().ToDouble(0).SI<NewtonMeter>()
+					});
+				}
+				return retVal;
+			}
+		}
+
 		public virtual Kilogram Loading
 		{
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_Loading).SI<Kilogram>(); }

@@ -45,7 +45,7 @@ Public Class Vehicle
 	Public ReadOnly RetarderLossMapFile As SubPath
 
 	Public DynamicTyreRadius As Double
-	Public ReadOnly Axles As List(Of Axle)
+	Public ReadOnly Axles As List(Of AxleInputData)
 
 
 	Public VehicleCategory As VehicleCategory
@@ -61,6 +61,7 @@ Public Class Vehicle
 	Public PtoType As String
 	Public ReadOnly PtoLossMap As SubPath
 	Public ReadOnly PtoCycle As SubPath
+	Public torqueLimitsList As List(Of ITorqueLimitInputData)
 
 	Public Class Axle
 		Public RRC As Double
@@ -80,7 +81,8 @@ Public Class Vehicle
 		RetarderLossMapFile = New SubPath
 		AngledriveLossMapFile = New SubPath()
 
-		Axles = New List(Of Axle)
+		Axles = New List(Of AxleInputData)
+		torqueLimitsList = new List(Of ITorqueLimitInputData)
 		PtoLossMap = New SubPath()
 		PtoCycle = New SubPath()
 		SetDefault()
@@ -96,7 +98,7 @@ Public Class Vehicle
 		Dim angledriveData As AngledriveData
 
 		Dim modeService As VectoValidationModeServiceContainer =
-				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)),
+				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
 						VectoValidationModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
@@ -332,6 +334,13 @@ Public Class Vehicle
 		End Get
 	End Property
 
+	Public ReadOnly Property TorqueLimits As IList(Of ITorqueLimitInputData) _
+		Implements IVehicleDeclarationInputData.TorqueLimits
+		Get
+			Return torqueLimitsList
+		End Get
+	End Property
+
 	Public ReadOnly Property AirDragArea As SquareMeter Implements IAirdragEngineeringInputData.AirDragArea
 		Get
 			Return CdA0.SI(Of SquareMeter)()
@@ -341,29 +350,17 @@ Public Class Vehicle
 	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
 		Implements IVehicleEngineeringInputData.Axles
 		Get
-			Return AxleWheels().Cast(Of IAxleEngineeringInputData)().ToList()
+			Return Axles.Cast(Of IAxleEngineeringInputData)().ToList()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleDeclarationInputData_Axles As IList(Of IAxleDeclarationInputData) _
 		Implements IVehicleDeclarationInputData.Axles
 		Get
-			Return AxleWheels().Cast(Of IAxleDeclarationInputData)().ToList()
+			Return Axles.Cast(Of IAxleDeclarationInputData)().ToList()
 		End Get
 	End Property
 
-	Private Function AxleWheels() As IEnumerable(Of AxleInputData)
-		Return Axles.Select(Function(axle) New AxleInputData With {
-								.SourceType = DataSourceType.JSONFile,
-								.Source = FilePath,
-								.Inertia = axle.Inertia.SI(Of KilogramSquareMeter)(),
-								.Wheels = axle.Wheels,
-								.AxleWeightShare = axle.Share,
-								.TwinTyres = axle.TwinTire,
-								.RollResistanceCoefficient = axle.RRC,
-								.TyreTestLoad = axle.FzISO.SI(Of Newton)()
-								})
-	End Function
 
 	Public ReadOnly Property CurbMassExtra As Kilogram Implements IVehicleEngineeringInputData.CurbMassExtra
 		Get

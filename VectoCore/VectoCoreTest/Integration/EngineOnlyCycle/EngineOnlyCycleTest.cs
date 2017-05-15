@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			// ReSharper disable once ObjectCreationAsStatement
 			new MockDrivingCycle(vehicle, data);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
 
 			var aux = new EngineAuxiliary(vehicle);
 			aux.AddCycle(Constants.Auxiliaries.Cycle);
@@ -114,7 +114,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
 
-			var engine = new CombustionEngine(vehicleContainer, MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile));
+			var engine = new CombustionEngine(vehicleContainer, MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 0));
+			var gbx = new MockGearbox(vehicleContainer) { Gear = 0 };
 
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();

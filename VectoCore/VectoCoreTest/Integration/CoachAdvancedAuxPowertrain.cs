@@ -80,9 +80,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(highEnginePower ? EngineFileHigh : EngineFile);
-			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(highEnginePower ? EngineFileHigh : EngineFile,
+				gearboxData.Gears.Count);
+			var axleGearData = CreateAxleGearData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
@@ -184,7 +185,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				//AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
 				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(), CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 15700.SI<Kilogram>(),
 				Loading = loading,
@@ -214,9 +216,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 					: new DriverData.OverSpeedEcoRollData {
 						Mode = DriverMode.Off
 					},
-				StartStop = new VectoRunData.StartStopData {
-					Enabled = false
-				}
 			};
 		}
 	}

@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var totalTorqueDemand = CurrentState.EngineTorqueOut + auxTorqueDemand + CurrentState.InertiaTorqueLoss;
 			CurrentState.EngineTorque = totalTorqueDemand;
 
-			CurrentState.FullDragTorque = ModelData.FullLoadCurve.DragLoadStationaryTorque(avgEngineSpeed);
+			CurrentState.FullDragTorque = ModelData.FullLoadCurves[0].DragLoadStationaryTorque(avgEngineSpeed);
 			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt, dryRun);
 			CurrentState.DynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
 
@@ -108,6 +108,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return CurrentState.FullDragTorque;
 			}
 			return requestedEngineTorque;
+		}
+
+		protected override PerSecond GetEngineSpeedLimit()
+		{
+			return ModelData.FullLoadCurves[0].N95hSpeed;
 		}
 	}
 }

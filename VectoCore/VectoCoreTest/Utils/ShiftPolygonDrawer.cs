@@ -52,7 +52,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		private static Size _diagramSize = new Size(1000, 800);
 
-		public static void DrawShiftPolygons(string title, List<EngineFullLoadCurve> engineFld, List<ShiftPolygon> polygons,
+		public static void DrawShiftPolygons(string title, Dictionary<uint, EngineFullLoadCurve> engineFld,
+			List<ShiftPolygon> polygons,
 			string imageFileName, PerSecond speed85kmh, List<List<Point>> upshiftOrig = null,
 			List<List<Point>> downshiftTransformed = null, List<List<Point>> downshiftOrig = null)
 		{
@@ -62,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var chart = new Chart() {
 				Size = new Size((int)(_diagramSize.Width * numCols), (int)(_diagramSize.Height * numRows))
 			};
-			var maxX = engineFld.First().FullLoadEntries.Last().EngineSpeed.Value() / Constants.RPMToRad * 1.1;
+			var maxX = engineFld[0].FullLoadEntries.Last().EngineSpeed.Value() / Constants.RPMToRad * 1.1;
 
 			AddLegend(chart);
 
@@ -70,8 +71,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			foreach (var shiftPolygon in polygons) {
 				var chartArea = AddChartArea(chart, "Gear " + (i + 1), "Engine Speed", "Torque", 0, maxX);
 
-				PlotPower(engineFld[i], chartArea, chart, "engine power " + i);
-				PlotFLD(engineFld[i], speed85kmh, chartArea, chart, "Engine Full Load " + i);
+				PlotPower(engineFld[(uint)(i + 1)], chartArea, chart, "engine power " + i);
+				PlotFLD(engineFld[(uint)(i +1)], speed85kmh, chartArea, chart, "Engine Full Load " + i);
 
 				if (upshiftOrig != null && i < upshiftOrig.Count) {
 					PlotShiftLine("UpshiftOrig " + i, chartArea, chart, Color.Gray,
@@ -234,7 +235,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				new[]
 				{ n, n }
 					.ToList();
-			var ypref = new[] { engineFld.MaxDragTorque.Value(), engineFld.MaxLoadTorque.Value() }.ToList();
+			var ypref = new[] { engineFld.MaxDragTorque.Value(), engineFld.MaxTorque.Value() }.ToList();
 			chart.Series[seriesNpref.Name].Points.DataBindXY(xpref, ypref);
 		}
 

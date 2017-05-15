@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get {
 				if (Gearbox == null) {
-					throw new VectoException("no gearbox available!");
+					return 0; // throw new VectoException("no gearbox available!");
 				}
 				return Gearbox.Gear;
 			}
@@ -114,11 +114,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 				return Gearbox.StartAcceleration;
 			}
-		}
-
-		public NewtonMeter GearMaxTorque
-		{
-			get { return Gearbox != null ? Gearbox.GearMaxTorque : null; }
 		}
 
 		public Watt GearboxLoss()

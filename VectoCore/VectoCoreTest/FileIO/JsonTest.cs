@@ -164,7 +164,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
 			}
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
-				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0), 2.1,
+				0.5.SI<Meter>(),
 				true);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
@@ -188,7 +189,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
 			}
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
-				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0), 2.1,
+				0.5.SI<Meter>(),
 				true);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
@@ -214,7 +216,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
 			}
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
-				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0), 2.1,
+				0.5.SI<Meter>(),
 				true);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
@@ -239,7 +242,8 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				Assert.AreEqual(ratios[i], inputProvider.Gears[i].Ratio);
 			}
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
-				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng"), 2.1, 0.5.SI<Meter>(),
+				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0), 2.1,
+				0.5.SI<Meter>(),
 				true);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 

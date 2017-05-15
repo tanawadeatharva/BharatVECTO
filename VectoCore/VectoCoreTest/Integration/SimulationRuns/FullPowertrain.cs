@@ -74,10 +74,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var gearboxData = CreateSimpleGearboxData();
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
 			var axleGearData = CreateAxleGearData();
-			var gearboxData = CreateSimpleGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			var driverData = CreateDriverData(AccelerationFile);
 
@@ -137,10 +137,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var modData = new ModalDataContainer("Coach_FullPowertrain", fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var gearboxData = CreateGearboxData();
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CoachCycleFile, CycleType.DistanceBased, false);
 			var axleGearData = CreateAxleGearData();
-			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			var driverData = CreateDriverData(AccelerationFile);
 
@@ -215,10 +215,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var gearboxData = CreateGearboxData();
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
 			var axleGearData = CreateAxleGearData();
-			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			var driverData = CreateDriverData(AccelerationFile);
 
@@ -316,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
-							MaxTorque = ratio > 5 ? 2300.SI<NewtonMeter>() : null,
+//							MaxTorque = ratio > 5 ? 2300.SI<NewtonMeter>() : null,
 							LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
@@ -353,7 +353,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				Gears = new Dictionary<uint, GearData> {
 					{
 						1, new GearData {
-							MaxTorque = null,
 							LossMap = TransmissionLossMapReader.ReadFromFile(GearboxLossMap, ratio, "Gear 1"),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
@@ -424,9 +423,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverMode.Off
 				},
-				StartStop = new VectoRunData.StartStopData {
-					Enabled = false
-				}
 			};
 		}
 	}

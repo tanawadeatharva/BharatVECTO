@@ -136,6 +136,7 @@ Partial Class GearboxForm
 		Me.lblGbxInfo = New System.Windows.Forms.Label()
 		Me.btnExportXML = New System.Windows.Forms.Button()
 		Me.btnExportAxlGearXML = New System.Windows.Forms.Button()
+		Me.ColumnHeader7 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -277,7 +278,7 @@ Partial Class GearboxForm
 		'
 		'LvGears
 		'
-		Me.LvGears.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader5, Me.ColumnHeader6})
+		Me.LvGears.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader5, Me.ColumnHeader6, Me.ColumnHeader7})
 		Me.LvGears.FullRowSelect = True
 		Me.LvGears.GridLines = True
 		Me.LvGears.HideSelection = False
@@ -293,27 +294,27 @@ Partial Class GearboxForm
 		'ColumnHeader1
 		'
 		Me.ColumnHeader1.Text = "Gear"
-		Me.ColumnHeader1.Width = 46
+		Me.ColumnHeader1.Width = 38
 		'
 		'ColumnHeader2
 		'
 		Me.ColumnHeader2.Text = "Ratio"
-		Me.ColumnHeader2.Width = 50
+		Me.ColumnHeader2.Width = 42
 		'
 		'ColumnHeader3
 		'
 		Me.ColumnHeader3.Text = "Loss Map or Efficiency"
-		Me.ColumnHeader3.Width = 128
+		Me.ColumnHeader3.Width = 111
 		'
 		'ColumnHeader5
 		'
 		Me.ColumnHeader5.Text = "Shift Polygons"
-		Me.ColumnHeader5.Width = 94
+		Me.ColumnHeader5.Width = 79
 		'
 		'ColumnHeader6
 		'
 		Me.ColumnHeader6.Text = "Max Torque"
-		Me.ColumnHeader6.Width = 95
+		Me.ColumnHeader6.Width = 78
 		'
 		'TBI_getr
 		'
@@ -1061,6 +1062,11 @@ Partial Class GearboxForm
 		Me.btnExportAxlGearXML.Text = "Exp. AxlGear as XML"
 		Me.btnExportAxlGearXML.UseVisualStyleBackColor = True
 		'
+		'ColumnHeader7
+		'
+		Me.ColumnHeader7.Text = "Max Speed"
+		Me.ColumnHeader7.Width = 76
+		'
 		'GearboxForm
 		'
 		Me.AcceptButton = Me.ButOK
@@ -1222,4 +1228,5 @@ Partial Class GearboxForm
 	Friend WithEvents lblGbxInfo As System.Windows.Forms.Label
 	Friend WithEvents btnExportXML As System.Windows.Forms.Button
 	Friend WithEvents btnExportAxlGearXML As System.Windows.Forms.Button
+	Friend WithEvents ColumnHeader7 As System.Windows.Forms.ColumnHeader
 End Class

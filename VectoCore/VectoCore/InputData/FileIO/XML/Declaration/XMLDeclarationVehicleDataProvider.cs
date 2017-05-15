@@ -40,6 +40,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetDoubleElementValue(XMLNames.Vehicle_GrossVehicleMass).SI<Kilogram>(); }
 		}
 
+		public IList<ITorqueLimitInputData> TorqueLimits
+		{
+			get {
+				var retVal = new List<ITorqueLimitInputData>();
+				var limits =
+					Navigator.Select(Helper.Query(VehiclePath, XMLNames.Vehicle_TorqueLimits, XMLNames.Vehicle_TorqueLimits_Entry),
+						Manager);
+				while (limits.MoveNext()) {
+					retVal.Add(new TorqueLimitInputData() {
+						Gear = limits.Current.GetAttribute(XMLNames.Vehicle_TorqueLimits_Entry_Gear_Attr, "").ToInt(),
+						MaxTorque =
+							limits.Current.GetAttribute(XMLNames.Vehicle_TorqueLimits_Entry_MaxTorque_Attr, "").ToDouble().SI<NewtonMeter>()
+					});
+				}
+				return retVal;
+			}
+		}
+
 
 		public SquareMeter AirDragArea
 		{

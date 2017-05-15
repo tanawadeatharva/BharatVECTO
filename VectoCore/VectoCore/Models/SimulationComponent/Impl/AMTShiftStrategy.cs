@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var transmissionRatio = runData.AxleGearData.AxleGear.Ratio *
 									(runData.AngledriveData == null ? 1.0 : runData.AngledriveData.Angledrive.Ratio) /
 									runData.VehicleData.DynamicTyreRadius;
-			var minEngineSpeed = (runData.EngineData.FullLoadCurve.RatedSpeed - runData.EngineData.IdleSpeed) *
+			var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
 								Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;
 			foreach (var gearData in ModelData.Gears.Reverse()) {
 				if (ModelData.StartSpeed * transmissionRatio * gearData.Value.Ratio > minEngineSpeed) {
@@ -73,7 +73,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
 		{
 			return
-				(outAngularSpeed * ModelData.Gears[gear].Ratio).IsGreaterOrEqual(DataBus.EngineN95hSpeed);
+				(outAngularSpeed * ModelData.Gears[gear].Ratio).IsGreaterOrEqual(ModelData.Gears[gear].MaxSpeed ??
+																				DataBus.EngineN95hSpeed);
 		}
 
 		public override GearInfo NextGear

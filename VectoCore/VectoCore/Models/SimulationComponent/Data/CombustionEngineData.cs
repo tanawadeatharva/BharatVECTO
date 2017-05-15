@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -63,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public FuelConsumptionMap ConsumptionMap { get; internal set; }
 
 		[Required, ValidateObject]
-		public EngineFullLoadCurve FullLoadCurve { get; internal set; }
+		public Dictionary<uint, EngineFullLoadCurve> FullLoadCurves { get; internal set; }
 
 		[Required, Range(double.MinValue, double.MaxValue)]
 		public double ColdHotCorrectionFactor { get; internal set; }
@@ -87,7 +88,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				WHTCRural = WHTCRural,
 				WHTCMotorway = WHTCMotorway,
 				ConsumptionMap = ConsumptionMap,
-				FullLoadCurve = FullLoadCurve,
+				FullLoadCurves = FullLoadCurves,
 				WHTCCorrectionFactor = WHTCCorrectionFactor,
 			};
 		}

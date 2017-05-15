@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestMethod]
 		public void TestWheelsAndEngineInitialize()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
 
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void TestWheelsAndEngine()
 		{
 			NLog.LogManager.DisableLogging();
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
 
 			var axleGearData = CreateAxleGearData();
@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestMethod]
 		public void TestWheelsAndEngineLookahead()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFileStop, CycleType.DistanceBased, false);
 
 			var axleGearData = CreateAxleGearData();
@@ -299,9 +299,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverMode.Off
 				},
-				StartStop = new VectoRunData.StartStopData {
-					Enabled = false
-				}
 			};
 		}
 	}

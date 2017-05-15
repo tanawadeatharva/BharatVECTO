@@ -228,10 +228,10 @@ namespace TUGraz.VectoCore.OutputData
 
 				row[TOTAL_VEHICLE_MASS] = runData.VehicleData.TotalVehicleWeight;
 				row[ENGINE_RATED_POWER] =
-					runData.EngineData.FullLoadCurve.FullLoadStationaryPower(runData.EngineData.FullLoadCurve.RatedSpeed)
+					runData.EngineData.FullLoadCurves[0].FullLoadStationaryPower(runData.EngineData.FullLoadCurves[0].RatedSpeed)
 						.ConvertTo().Kilo.Watt;
 				row[ENGINE_IDLING_SPEED] = runData.EngineData.IdleSpeed.AsRPM.SI<Scalar>();
-				row[ENGINE_RATED_SPEED] = runData.EngineData.FullLoadCurve.RatedSpeed.AsRPM.SI<Scalar>();
+				row[ENGINE_RATED_SPEED] = runData.EngineData.FullLoadCurves[0].RatedSpeed.AsRPM.SI<Scalar>();
 				row[ENGINE_DISPLACEMENT] = runData.EngineData.Displacement.ConvertTo().Cubic.Centi.Meter;
 				row[CD_x_A] = runData.VehicleData.CrossWindCorrectionCurve.AirDragArea;
 				row[ROLLING_RESISTANCE_COEFFICIENT] = runData.VehicleData.TotalRollResistanceCoefficient.SI<Scalar>();

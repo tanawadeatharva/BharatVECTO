@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
@@ -38,6 +39,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -85,14 +87,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
-						Tuple.Create((uint)i,
-							new GearData {
-								MaxTorque = 2300.SI<NewtonMeter>(),
-								LossMap = TransmissionLossMapReader.ReadFromFile(i != 6 ? IndirectLossMap : DirectLossMap, ratio,
-									string.Format("Gear {0}", i)),
-								Ratio = ratio,
-								ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
-							}))
+					Tuple.Create((uint)i,
+						new GearData {
+//								MaxTorque = 2300.SI<NewtonMeter>(),
+							LossMap = TransmissionLossMapReader.ReadFromFile(i != 6 ? IndirectLossMap : DirectLossMap, ratio,
+								string.Format("Gear {0}", i)),
+							Ratio = ratio,
+							ShiftPolygon = ShiftPolygonReader.ReadFromFile(GearboxShiftPolygonFile)
+						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
@@ -243,6 +245,20 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				"2000.000001,1352,-301,0.25",
 				"2100,1100,-320,0.25	   ",
 			};
+			var engineData = new CombustionEngineData() {
+				IdleSpeed = 600.RPMtoRad(),
+				Inertia = 0.SI<KilogramSquareMeter>(),
+			};
+			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
+			fullLoadCurves[0] = EngineFullLoadCurve.Create(
+				VectoCSVFile.ReadStream(
+					InputDataHelper.InputDataAsStream("engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]",
+						fld)));
+			fullLoadCurves[0].EngineData = engineData;
+			foreach (var gears in gearboxData.Gears) {
+				fullLoadCurves[gears.Key] = fullLoadCurves[0];
+			}
+			engineData.FullLoadCurves = fullLoadCurves;
 			return new VectoRunData() {
 				VehicleData = new VehicleData() {
 					DynamicTyreRadius = 0.492.SI<Meter>()
@@ -252,15 +268,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						Ratio = 2.64
 					}
 				},
-				EngineData = new CombustionEngineData() {
-					IdleSpeed = 600.RPMtoRad(),
-					Inertia = 0.SI<KilogramSquareMeter>(),
-					FullLoadCurve =
-						EngineFullLoadCurve.Create(
-							VectoCSVFile.ReadStream(
-								InputDataHelper.InputDataAsStream("engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]",
-									fld)))
-				},
+				EngineData = engineData,
 				GearboxData = gearboxData
 			};
 		}

@@ -171,8 +171,8 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			EngineModel = modelData.EngineData.ModelName;
 			EngineStr = string.Format("{0} l, {1} kW",
 				modelData.EngineData.Displacement.ConvertTo().Cubic.Dezi.Meter.ToOutputFormat(1),
-				modelData.EngineData.FullLoadCurve.MaxPower.ConvertTo().Kilo.Watt.ToOutputFormat(0));
-			Flc = modelData.EngineData.FullLoadCurve;
+				modelData.EngineData.FullLoadCurves[0].MaxPower.ConvertTo().Kilo.Watt.ToOutputFormat(0));
+			Flc = modelData.EngineData.FullLoadCurves;
 			GearboxModel = modelData.GearboxData.ModelName;
 			GearboxStr = string.Format("{0}-Speed {1}", modelData.GearboxData.Gears.Count, modelData.GearboxData.Type);
 		}
@@ -322,7 +322,7 @@ namespace TUGraz.VectoCore.OutputData.PDF
 			img.SetAbsolutePosition(17, 270);
 			content.AddImage(img);
 
-			img = Image.GetInstance(DrawOperatingPointsChart(results.ModData[LoadingType.ReferenceLoad], Flc), BaseColor.WHITE);
+			img = Image.GetInstance(DrawOperatingPointsChart(results.ModData[LoadingType.ReferenceLoad], Flc[0]), BaseColor.WHITE);
 			img.ScaleAbsolute(420, 178);
 			img.SetAbsolutePosition(375, 75);
 			content.AddImage(img);

@@ -1,4 +1,6 @@
-<!--
+
+<xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<!--
     This XSL transformation is intended to be applied as first canonicalization step when computing the hash
     for VECTO component data or VECTO job data.
 
@@ -15,9 +17,7 @@
       - sort torque limiation entries 
       - sort gears
       - sort axles
--->
-<xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<xsl:output omit-xml-declaration="no" indent="yes"/>
+-->	<xsl:output omit-xml-declaration="no" indent="yes"/>
 	<xsl:template match="*">
 		<xsl:element name="{local-name()}">
 			<xsl:apply-templates select="@*|node()"/>
