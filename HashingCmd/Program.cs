@@ -7,6 +7,12 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
+using System.Xml.XPath;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
 namespace HashingCmd
@@ -16,21 +22,25 @@ namespace HashingCmd
 		public delegate void HashingAction(string filename, VectoHash h);
 
 		private const string Usage = @"
-hashingcmd.exe -v <file.xml>
+hashingcmd.exe (-h | [-v] [[-s] -x] [-c] [-r]) <file.xml> <file2.xml> <file3.xml>
 
 ";
 
 		private const string Help = @"
 hashingcmd.exe
 
--h:    help
+-h:    print help
 -v:    verify hashed file
--s:    create hashed file file
+-s:    create hashed file
+-x:    validate generated XML against VECTO XML schema
 -c:    compute hash and write to stdout
 -r:    read hash from file and write to stdout
 ";
 
 		static Dictionary<string, HashingAction> actions = new Dictionary<string, HashingAction>();
+
+		static bool _validateXML = false;
+		private static bool xmlValid = true;
 
 		static int Main(string[] args)
 		{
@@ -45,7 +55,16 @@ hashingcmd.exe
 				actions["-r"] = ReadHashAction;
 				actions["-s"] = CreateHashedFileAction;
 
-				var fileList = args.Except(actions.Keys);
+				if (args.Contains("-x")) {
+					_validateXML = true;
+				}
+
+				var fileList = args.Except(actions.Keys.Concat(new[] { "-x" })).ToArray();
+				if (fileList.Length == 0 || !args.Intersect(actions.Keys.ToArray()).Any()) {
+					ShowVersionInformation();
+					Console.Write(Usage);
+					return 0;
+				}
 				foreach (var file in fileList) {
 					WriteLine("processing " + Path.GetFileName(file));
 					if (!File.Exists(Path.GetFullPath(file))) {
@@ -60,6 +79,9 @@ hashingcmd.exe
 							} catch (Exception e) {
 								Console.ForegroundColor = ConsoleColor.Red;
 								Console.Error.WriteLine(e.Message);
+								if (e.InnerException != null) {
+									Console.Error.WriteLine(e.InnerException.Message);
+								}
 								Console.ResetColor();
 							}
 						}
@@ -101,6 +123,65 @@ hashingcmd.exe
 			result.WriteTo(writer);
 			writer.Flush();
 			writer.Close();
+
+			if (_validateXML) {
+				ValidateXML(destination);
+			}
+		}
+
+		private static void ValidateXML(string filename)
+		{
+			try {
+				var settings = new XmlReaderSettings {
+					ValidationType = ValidationType.Schema,
+					ValidationFlags = //XmlSchemaValidationFlags.ProcessInlineSchema |
+						//XmlSchemaValidationFlags.ProcessSchemaLocation |
+						XmlSchemaValidationFlags.ReportValidationWarnings
+				};
+				settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
+				settings.Schemas.Add(GetXMLSchema(""));
+
+				var vreader = XmlReader.Create(filename, settings);
+				var doc = new XmlDocument();
+				doc.Load(vreader);
+				doc.Validate(ValidationCallBack);
+				//while (vreader.Read()) {
+				//	Console.WriteLine(vreader.Value);
+				//}
+				if (xmlValid) {
+					WriteLine("Valid", ConsoleColor.Green);
+				}
+			} catch (Exception e) {
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.Error.WriteLine("Failed to validate hashed XML file!");
+				Console.Error.WriteLine(e.Message);
+				if (e.InnerException != null) {
+					Console.Error.WriteLine(e.InnerException.Message);
+				}
+				Console.ResetColor();
+			}
+		}
+
+		private static void ValidationCallBack(object sender, ValidationEventArgs args)
+		{
+			xmlValid = false;
+			if (args.Severity == XmlSeverityType.Error) {
+				throw new Exception(string.Format("Validation error: {0}" + Environment.NewLine +
+												"Line: {1}", args.Message, args.Exception.LineNumber));
+			} else {
+				Console.Error.WriteLine(string.Format("Validation warning: {0}" + Environment.NewLine +
+													"Line: {1}", args.Message, args.Exception.LineNumber));
+			}
+		}
+
+		private static XmlSchemaSet GetXMLSchema(string version)
+		{
+			var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, "VectoComponent.xsd");
+			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
+			var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
+			xset.Add(XmlSchema.Read(reader, null));
+			xset.Compile();
+			return xset;
 		}
 
 		private static void ReadHashAction(string filename, VectoHash h)
@@ -115,7 +196,7 @@ hashingcmd.exe
 				}
 				for (var i = 0; i < component.Count; i++) {
 					var readHash = h.ReadHash(component.Entry, i);
-					WriteLine("  " + component.Entry.XMLElementName() + "\t ... >" + readHash + "<");
+					WriteLine("  " + component.Entry.XMLElementName() + "\t ... " + readHash + "");
 				}
 			}
 		}
@@ -135,14 +216,14 @@ hashingcmd.exe
 					}
 					for (var i = 0; i < component.Count; i++) {
 						var computedHash = h.ComputeHash(component.Entry, i);
-						WriteLine("  " + component.Entry.XMLElementName() + "\t ... >" + computedHash + "<");
+						WriteLine("  " + component.Entry.XMLElementName() + "\t ... " + computedHash + "");
 					}
 				}
 				var jobHash = h.ComputeHash();
-				WriteLine("  job file\t ... >" + jobHash + "<");
+				WriteLine("  job file\t ... " + jobHash + "");
 			} else {
 				var hash = h.ComputeHash();
-				WriteLine("  computed hash:  >" + hash + "<");
+				WriteLine("  computed hash:  " + hash + "");
 			}
 		}
 
