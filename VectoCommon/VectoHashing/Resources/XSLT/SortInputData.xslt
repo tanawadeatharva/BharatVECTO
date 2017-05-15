@@ -30,6 +30,7 @@
          <xsl:value-of select="normalize-space(.)"/>
     </xsl:template>
 	<xsl:template match="*[local-name()='FuelConsumptionMap']">
+		<xsl:apply-templates select="@*"/>
 		<xsl:element name="{local-name()}">
 			<xsl:for-each select="*">
 				<xsl:sort data-type="number" select="@engineSpeed" order="ascending"/>
@@ -40,6 +41,7 @@
 	</xsl:template>
 	<xsl:template match="*[local-name()='FullLoadAndDragCurve']">
 		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
 			<xsl:for-each select="*">
 				<xsl:sort data-type="number" select="@engineSpeed" order="ascending"/>
 				<xsl:apply-templates select="."/>
@@ -48,6 +50,7 @@
 	</xsl:template>
 	<xsl:template match="*[local-name()='TorqueLossMap']">
 		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
 			<xsl:for-each select="*">
 				<xsl:sort data-type="number" select="@inputSpeed" order="ascending"/>
 				<xsl:sort data-type="number" select="@inputTorque" order="ascending"/>
@@ -57,6 +60,7 @@
 	</xsl:template>
 	<xsl:template match="*[local-name()='RetarderLossMap']">
 		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
 			<xsl:for-each select="*">
 				<xsl:sort data-type="number" select="@retarderSpeed" order="ascending"/>
 				<xsl:apply-templates select="."/>
@@ -65,6 +69,7 @@
 	</xsl:template>
 	<xsl:template match="*[local-name()='TorqueLimits']">
 		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
 			<xsl:for-each select="*">
 				<xsl:sort data-type="number" select="@gear" order="ascending"/>
 				<xsl:apply-templates select="."/>
@@ -73,6 +78,7 @@
 	</xsl:template>
 	<xsl:template match="*[local-name()='Gears']">
 		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
 			<xsl:for-each select="*">
 				<xsl:sort data-type="number" select="@number" order="ascending"/>
 				<xsl:apply-templates select="."/>
@@ -81,6 +87,7 @@
 	</xsl:template>
 	<xsl:template match="*[local-name()='Characteristics']">
 		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
 			<xsl:for-each select="*">
 				<xsl:sort data-type="number" select="@speedRatio" order="ascending"/>
 				<xsl:apply-templates select="."/>
@@ -88,6 +95,7 @@
 		</xsl:element>
 	</xsl:template>
 	<xsl:template match="*[local-name()='Axles']">
+		<xsl:apply-templates select="@*"/>
 		<xsl:element name="{local-name()}">
 			<xsl:for-each select="*">
 				<xsl:sort data-type="number" select="@axleNumber" order="ascending"/>
