@@ -181,6 +181,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var avgEngineSpeed = (PreviousState.EngineSpeed + angularVelocity) / 2.0;
 
+			var engineSpeedLimit = VectoMath.Min(DataBus.GetGearData(DataBus.Gear).MaxSpeed,
+				ModelData.FullLoadCurves[0].N95hSpeed);
+			if (!dryRun && avgEngineSpeed.IsGreater(engineSpeedLimit, Constants.SimulationSettings.LineSearchTolerance)) {
+				return new ResponseEngineSpeedTooHigh() { DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit };
+			}
+
 			var fullDragTorque = ModelData.FullLoadCurves[DataBus.Gear].DragLoadStationaryTorque(avgEngineSpeed);
 			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt, dryRun);
 			if (dynamicFullLoadPower < 0) {
@@ -216,6 +222,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseDryRun {
 					DeltaFullLoad = deltaFull * avgEngineSpeed,
 					DeltaDragLoad = deltaDrag * avgEngineSpeed,
+					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
 					EnginePowerRequest = torqueOut * avgEngineSpeed,
 					DynamicFullLoadPower = dynamicFullLoadPower,
 					DragPower = fullDragTorque * avgEngineSpeed,
@@ -565,13 +572,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var nextAngularSpeed = (velocitySlope * dt + _engine.PreviousState.EngineSpeed);
 
+				var engineMaxSpeed = VectoMath.Min(_dataBus.GetGearData(_dataBus.NextGear.Gear).MaxSpeed,
+					_engine.ModelData.FullLoadCurves[0].N95hSpeed);
 				nextAngularSpeed = velocitySlope < 0
-					? VectoMath.Max(_engineTargetSpeed, nextAngularSpeed)
-					: VectoMath.Min(_engineTargetSpeed, nextAngularSpeed);
-				if (nextAngularSpeed < _engine.ModelData.IdleSpeed) {
-					nextAngularSpeed = _engine.ModelData.IdleSpeed;
-				}
-
+					? VectoMath.LimitTo(VectoMath.Max(_engineTargetSpeed, nextAngularSpeed), _engine.EngineIdleSpeed, engineMaxSpeed)
+					: VectoMath.LimitTo(VectoMath.Min(_engineTargetSpeed, nextAngularSpeed), _engine.EngineIdleSpeed, engineMaxSpeed);
+				
 
 				var retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), nextAngularSpeed);
 				retVal.Switch().

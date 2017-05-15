@@ -29,6 +29,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 		const string GearboxSpeedLimitJobDecl =
 			@"Testdata\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Class2_RigidTruck_DECL.vecto";
 
+		const string EngineSpeedLimitJobDecl =
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Class2_RigidTruck_DECL.vecto";
+
 		[TestCase()]
 		public void TestGearboxTorqueLimitsAbove90FLD()
 		{
@@ -174,6 +177,29 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var jobContainer = new JobContainer(sumData);
 			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		[TestCase(EngineSpeedLimitJobDecl)]
+		public void TestRunEngineSpeedLimitedSimulations(string file)
+		{
+			var fileWriter = new FileOutputWriter(file);
+			var sumData = new SummaryDataContainer(fileWriter);
+			var inputDataProvider = JSONInputDataFactory.ReadJsonJob(file);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, fileWriter) {
+				WriteModalResults = true,
+				//ActualModalData = true
+			};
+
+
+			var jobContainer = new JobContainer(sumData);
+			jobContainer.AddRuns(factory);
+
+			//jobContainer.Runs[1].RunWorkerAsync().Wait();
 
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
