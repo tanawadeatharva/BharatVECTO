@@ -893,7 +893,6 @@
 					</xs:complexContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="Signature" type="tns:SignatureType" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="schemaVersion" use="required">
 			<xs:simpleType>
