@@ -35,6 +35,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -117,7 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				debug.Add(response);
 				response.Switch()
 					.Case<ResponseGearShift>(
-						() => response = NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, angularVelocity))
+						() => response = NextComponent.Request(absTime, dt, CurrentState.InTorque, angularVelocity))
 					.Case<ResponseUnderload>(r => {
 						var torqueInterval = -r.Delta / (angularVelocity.IsEqual(0) ? 10.RPMtoRad() : angularVelocity);
 						var torque = SearchAlgorithm.Search(CycleIterator.LeftSample.Torque, r.Delta, torqueInterval,
@@ -134,6 +135,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 						response = NextComponent.Request(absTime, dt, torque, angularVelocity);
 						CurrentState.InAngularVelocity = angularVelocity;
+					})
+					.Case<ResponseEngineSpeedTooHigh>(r => {
+						angularVelocity = SearchAlgorithm.Search(angularVelocity, r.DeltaEngineSpeed,
+							1.RPMtoRad(),
+							getYValue: result => ((ResponseDryRun)result).DeltaEngineSpeed,
+							evaluateFunction: x => NextComponent.Request(absTime, dt, CurrentState.InTorque, x, true),
+							criterion: y => ((ResponseDryRun)y).DeltaEngineSpeed.Value());
 					})
 					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
 					.Case<ResponseSuccess>(() => { })

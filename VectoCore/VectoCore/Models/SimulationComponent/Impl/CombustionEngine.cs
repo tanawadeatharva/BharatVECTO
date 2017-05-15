@@ -181,8 +181,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var avgEngineSpeed = (PreviousState.EngineSpeed + angularVelocity) / 2.0;
 
-			var engineSpeedLimit = VectoMath.Min(DataBus.GetGearData(DataBus.Gear).MaxSpeed,
-				ModelData.FullLoadCurves[0].N95hSpeed);
+			var engineSpeedLimit = GetEngineSpeedLimit();
 			if (!dryRun && avgEngineSpeed.IsGreater(engineSpeedLimit, Constants.SimulationSettings.LineSearchTolerance)) {
 				return new ResponseEngineSpeedTooHigh() { DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit };
 			}
@@ -292,6 +291,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EngineSpeed = angularVelocity,
 				Source = this
 			};
+		}
+
+		protected virtual PerSecond GetEngineSpeedLimit()
+		{
+			return DataBus.Gear == 0
+				? ModelData.FullLoadCurves[0].N95hSpeed
+				: VectoMath.Min(DataBus.GetGearData(DataBus.Gear).MaxSpeed,
+					ModelData.FullLoadCurves[0].N95hSpeed);
 		}
 
 		private NewtonMeter ComputeDelta(NewtonMeter torqueOut, NewtonMeter totalTorqueDemand, NewtonMeter maxEngineTorque)
@@ -577,7 +584,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				nextAngularSpeed = velocitySlope < 0
 					? VectoMath.LimitTo(VectoMath.Max(_engineTargetSpeed, nextAngularSpeed), _engine.EngineIdleSpeed, engineMaxSpeed)
 					: VectoMath.LimitTo(VectoMath.Min(_engineTargetSpeed, nextAngularSpeed), _engine.EngineIdleSpeed, engineMaxSpeed);
-				
+
 
 				var retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), nextAngularSpeed);
 				retVal.Switch().

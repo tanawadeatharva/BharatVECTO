@@ -78,6 +78,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
+			var gearbox = new MockGearbox(vehicle) { Gear = 0 };
 
 			var port = engine.OutPort();
 
@@ -94,8 +95,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestSimpleModalData()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine,0);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
+			var gearbox = new MockGearbox(vehicle) { Gear = 0 };
 			var port = engine.OutPort();
 
 			var absTime = 0.SI<Second>();
@@ -220,6 +222,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
 			var engine = new CombustionEngine(vehicleContainer, engineData);
+			var gearbox = new MockGearbox(vehicleContainer) { Gear = 0 };
 
 			var expectedResults = VectoCSVFile.Read(resultFile);
 

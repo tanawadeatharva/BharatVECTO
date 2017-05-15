@@ -109,5 +109,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			return requestedEngineTorque;
 		}
+
+		protected override PerSecond GetEngineSpeedLimit()
+		{
+			return ModelData.FullLoadCurves[0].N95hSpeed;
+		}
 	}
 }
