@@ -30,8 +30,8 @@
          <xsl:value-of select="normalize-space(.)"/>
     </xsl:template>
 	<xsl:template match="*[local-name()='FuelConsumptionMap']">
-		<xsl:apply-templates select="@*"/>
 		<xsl:element name="{local-name()}">
+			<xsl:apply-templates select="@*"/>
 			<xsl:for-each select="*">
 				<xsl:sort data-type="number" select="@engineSpeed" order="ascending"/>
 				<xsl:sort data-type="number" select="@torque" order="ascending"/>
