@@ -180,6 +180,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="GUI\VehicleTorqueLimitsDialog.Designer.vb">
+      <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\VehicleTorqueLimitsDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GUI\XMLExportJobDialog.Designer.vb">
       <DependentUpon>XMLExportJobDialog.vb</DependentUpon>
     </Compile>
@@ -345,6 +351,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\JiraDialog.resx">
       <DependentUpon>JiraDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\VehicleTorqueLimitsDialog.resx">
+      <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\WelcomeDialog.resx">
       <DependentUpon>WelcomeDialog.vb</DependentUpon>

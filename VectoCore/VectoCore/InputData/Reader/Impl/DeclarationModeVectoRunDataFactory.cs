@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData,
 				segment.Missions.First(),
 				segment.Missions.First().Loadings.First().Value, segment.VehicleHeight);
-			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData.Type);
+			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData, InputDataProvider.VehicleInputData.TorqueLimits);
 			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData, false);
 			var angledriveData = dao.CreateAngledriveData(InputDataProvider.AngledriveInputData, false);
 			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				};
 				Report.InitializeReport(powertrainConfig, segment);
 			}
-			var maxEnginePower = engineData.FullLoadCurve.FullLoadStationaryPower(engineData.FullLoadCurve.PreferredSpeed);
+			var maxEnginePower = engineData.FullLoadCurves[0].FullLoadStationaryPower(engineData.FullLoadCurves[0].PreferredSpeed);
 			foreach (var mission in segment.Missions) {
 				if (mission.MissionType.IsEMS() && maxEnginePower.IsSmaller(DeclarationData.MinEnginePowerForEMS)) {
 					continue;

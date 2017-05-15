@@ -334,7 +334,6 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var adas = inputDataProvider.DriverInputData;
 
-			Assert.AreEqual(false, adas.StartStop.Enabled);
 			Assert.AreEqual(DriverMode.Overspeed, adas.OverSpeedEcoRoll.Mode);
 		}
 
@@ -385,12 +384,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("1", driverAcc.Rows[1][1]);
 			Assert.AreEqual("-1", driverAcc.Rows[1][2]);
 
-			var startstop = driverDataProvider.StartStop;
-			Assert.IsFalse(startstop.Enabled);
-			Assert.AreEqual(DeclarationData.Driver.StartStop.MaxSpeed.AsKmph, startstop.MaxSpeed.AsKmph);
-
 			var declarationDriverDataProvider = (IDriverDeclarationInputData)inputDataProvider.DriverInputData;
-			Assert.IsFalse(declarationDriverDataProvider.StartStop.Enabled);
 
 			Assert.AreEqual(DriverMode.Overspeed, declarationDriverDataProvider.OverSpeedEcoRoll.Mode);
 
@@ -542,12 +536,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("1", driverAcc.Rows[1][1]);
 			Assert.AreEqual("-1", driverAcc.Rows[1][2]);
 
-			var startstop = driverDataProvider.StartStop;
-			Assert.IsFalse(startstop.Enabled);
-			Assert.AreEqual(8, startstop.MaxSpeed.AsKmph);
-
 			var declarationDriverDataProvider = (IDriverDeclarationInputData)inputDataProvider.DriverInputData;
-			Assert.IsFalse(declarationDriverDataProvider.StartStop.Enabled);
 
 			Assert.AreEqual(DriverMode.Overspeed, declarationDriverDataProvider.OverSpeedEcoRoll.Mode);
 

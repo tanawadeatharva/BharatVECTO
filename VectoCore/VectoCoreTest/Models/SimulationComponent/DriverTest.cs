@@ -64,8 +64,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void DriverCoastingTest()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
-
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
+			
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
 			vehicleData.DynamicTyreRadius = 0.026372213.SI<Meter>(); // take into account axle ratio, gear ratio
 
@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void DriverCoastingTest2()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
 			vehicleData.DynamicTyreRadius = 0.026372213.SI<Meter>(); // take into account axle ratio, gear ratio
@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void DriverOverloadTest()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFileHigh);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFileHigh, 1);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
 
@@ -206,6 +206,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
+			gbx.Gear = 1;
 
 			var driverPort = driver.OutPort();
 
@@ -417,9 +418,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverMode.Off
 				},
-				StartStop = new VectoRunData.StartStopData {
-					Enabled = false
-				}
 			};
 		}
 

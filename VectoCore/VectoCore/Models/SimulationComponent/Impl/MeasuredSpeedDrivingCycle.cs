@@ -211,8 +211,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 							Log.Info(
 								"Found operating point for driver acceleration. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}",
-								absTime,
-								dt, acceleration, gradient);
+								absTime, dt, acceleration, gradient);
 						} else {
 							DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, r.Delta, -r.Delta,
 								getYValue: result => DataBus.ClutchClosed(absTime)
@@ -242,6 +241,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							}
 						}
 						response = NextComponent.Request(absTime, dt, acceleration, gradient);
+					})
+					.Case<ResponseEngineSpeedTooHigh>(r => {
+						acceleration = SearchAlgorithm.Search(acceleration, r.DeltaEngineSpeed,
+							Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
+							getYValue: result => ((ResponseDryRun)result).DeltaEngineSpeed,
+							evaluateFunction: x => NextComponent.Request(absTime, dt, x, gradient, true),
+							criterion:
+								y => ((ResponseDryRun)y).DeltaEngineSpeed.Value());
+						Log.Info(
+							"Found operating point for driver acceleration. absTime: {0}, dt: {1}, acceleration: {2}, gradient: {3}",
+							absTime, dt, acceleration, gradient);
 					})
 					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
 					.Case<ResponseSuccess>()

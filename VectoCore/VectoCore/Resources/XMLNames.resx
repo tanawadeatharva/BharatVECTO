@@ -753,4 +753,19 @@
 	<data name="Component_ManufacturerAddress" xml:space="preserve">
     <value>ManufacturerAddress</value>
   </data>
+	<data name="Vehicle_TorqueLimits" xml:space="preserve">
+    <value>TorqueLimits</value>
+  </data>
+	<data name="Vehicle_TorqueLimits_Entry_Gear_Attr" xml:space="preserve">
+    <value>gear</value>
+  </data>
+	<data name="Vehicle_TorqueLimits_Entry_MaxTorque_Attr" xml:space="preserve">
+    <value>maxTorque</value>
+  </data>
+	<data name="Vehicle_TorqueLimits_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+	<data name="Gearbox_Gear_MaxSpeed" xml:space="preserve">
+    <value>MaxSpeed</value>
+  </data>
 </root>

@@ -80,9 +80,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineHighPower ? EngineFileHigh : EngineFile);
-			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineHighPower ? EngineFileHigh : EngineFile, gearboxData.Gears.Count);
+			var axleGearData = CreateAxleGearData();
 			if (gearBoxInertia != null) {
 				gearboxData.Inertia = gearBoxInertia;
 			}
@@ -220,9 +220,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 					: new DriverData.OverSpeedEcoRollData {
 						Mode = DriverMode.Off
 					},
-				StartStop = new VectoRunData.StartStopData {
-					Enabled = false
-				}
 			};
 		}
 	}

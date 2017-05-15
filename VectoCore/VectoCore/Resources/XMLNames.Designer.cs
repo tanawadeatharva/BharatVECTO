@@ -1240,6 +1240,15 @@ namespace TUGraz.VectoCore.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MaxSpeed.
+        /// </summary>
+        public static string Gearbox_Gear_MaxSpeed {
+            get {
+                return ResourceManager.GetString("Gearbox_Gear_MaxSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ratio.
         /// </summary>
         public static string Gearbox_Gear_Ratio {
@@ -1947,6 +1956,42 @@ namespace TUGraz.VectoCore.Resources {
         public static string Vehicle_SteeredAxles {
             get {
                 return ResourceManager.GetString("Vehicle_SteeredAxles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TorqueLimits.
+        /// </summary>
+        public static string Vehicle_TorqueLimits {
+            get {
+                return ResourceManager.GetString("Vehicle_TorqueLimits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entry.
+        /// </summary>
+        public static string Vehicle_TorqueLimits_Entry {
+            get {
+                return ResourceManager.GetString("Vehicle_TorqueLimits_Entry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to gear.
+        /// </summary>
+        public static string Vehicle_TorqueLimits_Entry_Gear_Attr {
+            get {
+                return ResourceManager.GetString("Vehicle_TorqueLimits_Entry_Gear_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to maxTorque.
+        /// </summary>
+        public static string Vehicle_TorqueLimits_Entry_MaxTorque_Attr {
+            get {
+                return ResourceManager.GetString("Vehicle_TorqueLimits_Entry_MaxTorque_Attr", resourceCulture);
             }
         }
         

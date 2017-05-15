@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var sumData = new SummaryDataContainer(null);
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_ModDataIntegrity.vmod");
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(Truck40tPowerTrain.EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(Truck40tPowerTrain.EngineFile, 0);
 
 			// get a reference to the mod-data because the modaldata container clears it after simulation
 			var modData = ((ModalDataContainer)run.GetContainer().ModalData).Data;

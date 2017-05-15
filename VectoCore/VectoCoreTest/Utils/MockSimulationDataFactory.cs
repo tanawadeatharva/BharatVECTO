@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
@@ -53,12 +54,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var engineInput = JSONInputDataFactory.ReadEngine(engineFile);
 			if (declarationMode) {
 				var dao = new DeclarationDataAdapter();
-				var engineData = dao.CreateEngineData(engineInput, gearboxInput.Type);
+				var engineData = dao.CreateEngineData(engineInput, gearboxInput, new List<ITorqueLimitInputData>());
 				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
 					false);
 			} else {
 				var dao = new EngineeringDataAdapter();
-				var engineData = dao.CreateEngineData(engineInput, gearboxInput);
+				var engineData = dao.CreateEngineData(engineInput, gearboxInput, new List<ITorqueLimitInputData>());
 				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
 					true);
 			}
@@ -71,11 +72,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput, false);
 		}
 
-		public static CombustionEngineData CreateEngineDataFromFile(string engineFile)
+		public static CombustionEngineData CreateEngineDataFromFile(string engineFile, int numGears)
 		{
 			var dao = new EngineeringDataAdapter();
 			var engineInput = JSONInputDataFactory.ReadEngine(engineFile);
-			return dao.CreateEngineData(engineInput, null);
+			var engineData = dao.CreateEngineData(engineInput, null, new List<ITorqueLimitInputData>());
+			for (uint i = 1; i <= numGears; i++) {
+				engineData.FullLoadCurves[i] = engineData.FullLoadCurves[0];
+			}
+			return engineData;
 		}
 
 		public static VehicleData CreateVehicleDataFromFile(string vehicleDataFile)

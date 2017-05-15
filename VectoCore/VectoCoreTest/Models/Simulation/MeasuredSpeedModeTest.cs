@@ -243,7 +243,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 							}
 					},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
-				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
+				EngineData =
+					new CombustionEngineData {
+						IdleSpeed = 560.RPMtoRad(),
+						FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fullLoadCurve }, { 1, fullLoadCurve } }
+					},
 				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 6.2 } } } },
 				Retarder = new RetarderData()
 			};
@@ -299,7 +303,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 								CrossWindCorrectionMode.NoCorrection)
 					},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
-				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
+				EngineData = new CombustionEngineData {
+					IdleSpeed = 560.RPMtoRad(),
+					FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve> {
+						{ 0, fullLoadCurve },
+						{ 1, fullLoadCurve },
+						{ 2, fullLoadCurve },
+						{ 3, fullLoadCurve }
+					}
+				},
 				GearboxData = new GearboxData {
 					Gears = new Dictionary<uint, GearData> {
 						{ 1, new GearData { Ratio = 6.696 } },

@@ -262,7 +262,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IDriverEngineeringInputData : IDriverDeclarationInputData
 	{
-		new IStartStopEngineeringInputData StartStop { get; }
+		//new IStartStopEngineeringInputData StartStop { get; }
 
 		new IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll { get; }
 
@@ -294,27 +294,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		MeterPerSecond UnderSpeed { get; }
-	}
-
-	public interface IStartStopEngineeringInputData : IStartStopDeclarationInputData
-	{
-		/// <summary>
-		/// P011  StartStop - Max speed
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		MeterPerSecond MaxSpeed { get; }
-
-		/// <summary>
-		/// P012  StartStop - Min ICE-ON Time
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		Second MinTime { get; }
-
-		/// <summary>
-		/// P013  StartStop - Activation Delay
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		Second Delay { get; }
 	}
 
 	public interface ILookaheadCoastingInputData

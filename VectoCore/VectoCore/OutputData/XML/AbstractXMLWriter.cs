@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Resources;
@@ -32,6 +33,21 @@ namespace TUGraz.IVT.VectoXML.Writer
 			Vendor = vendor;
 
 			di = "http://www.w3.org/2000/09/xmldsig#";
+		}
+
+		protected XElement CreateTorqueLimits(IVehicleDeclarationInputData vehicle)
+		{
+			return vehicle.TorqueLimits.Count == 0
+				? null
+				: new XElement(tns + XMLNames.Vehicle_TorqueLimits,
+					vehicle.TorqueLimits
+						.OrderBy(x => x.Gear)
+						.Select(entry => new XElement(tns + XMLNames.Vehicle_TorqueLimits_Entry,
+							new XAttribute(XMLNames.Vehicle_TorqueLimits_Entry_Gear_Attr, entry.Gear),
+							new XAttribute(XMLNames.Vehicle_TorqueLimits_Entry_MaxTorque_Attr, entry.MaxTorque.ToXMLFormat(0))
+							)
+						)
+					);
 		}
 
 		protected object[] EmbedDataTable(DataTable table, Dictionary<string, string> mapping, string tagName = "Entry",

@@ -46,6 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		private Watt _maxPower;
 		private PerSecond _ratedSpeed;
 		private NewtonMeter _maxTorque;
+		private NewtonMeter _maxDragTorque;
 
 		[Required, ValidateObject] internal List<FullLoadCurveEntry> FullLoadEntries;
 
@@ -76,6 +77,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			get { return _maxTorque ?? FindMaxTorque(); }
 		}
 
+		public NewtonMeter MaxDragTorque
+		{
+			get { return _maxDragTorque ?? FindMaxDragTorque(); }
+		}
+
 		public virtual NewtonMeter FullLoadStationaryTorque(PerSecond angularVelocity)
 		{
 			var idx = FindIndex(angularVelocity);
@@ -96,6 +102,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			_maxTorque = FullLoadEntries.Max(x => x.TorqueFullLoad);
 			return _maxTorque;
+		}
+
+		private NewtonMeter FindMaxDragTorque()
+		{
+			_maxDragTorque = FullLoadEntries.Min(x => x.TorqueDrag);
+			return _maxDragTorque;
 		}
 
 		/// <summary>

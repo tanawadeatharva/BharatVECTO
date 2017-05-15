@@ -280,6 +280,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					gear["MaxTorque"] != null && !string.IsNullOrEmpty(gear["MaxTorque"].ToString())
 						? gear["MaxTorque"].Value<double>().SI<NewtonMeter>()
 						: null,
+				MaxInputSpeed = gear["MaxSpeed"] != null && !string.IsNullOrWhiteSpace(gear["MaxSpeed"].ToString())
+					? gear["MaxSpeed"].Value<double>().RPMtoRad()
+					: null
 			};
 			var lossMap = gear[JsonKeys.Gearbox_Gear_LossMapFile];
 			if (lossMap != null) {

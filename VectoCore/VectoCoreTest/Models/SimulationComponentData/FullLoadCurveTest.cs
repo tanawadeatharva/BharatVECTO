@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.AreRelativeEqual(194.515816596908.SI<PerSecond>(), fldCurve.N95hSpeed);
 			AssertHelper.AreRelativeEqual(83.81645.SI<PerSecond>(), fldCurve.LoSpeed);
 			AssertHelper.AreRelativeEqual(219.084329211505.SI<PerSecond>(), fldCurve.HiSpeed);
-			AssertHelper.AreRelativeEqual(2300.SI<NewtonMeter>(), fldCurve.MaxLoadTorque);
+			AssertHelper.AreRelativeEqual(2300.SI<NewtonMeter>(), fldCurve.MaxTorque);
 			AssertHelper.AreRelativeEqual(-320.SI<NewtonMeter>(), fldCurve.MaxDragTorque);
 		}
 
@@ -244,7 +244,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void FullLoad_LossMap_Test()
 		{
 			var engineData = new CombustionEngineData {
-				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld"),
+				FullLoadCurves =
+					new Dictionary<uint, EngineFullLoadCurve>() {
+						{ 0, EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+						{ 1, EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") }
+					},
 				IdleSpeed = 560.RPMtoRad()
 			};
 

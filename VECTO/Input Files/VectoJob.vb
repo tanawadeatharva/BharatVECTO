@@ -225,17 +225,6 @@ Public Class VectoJob
 		End Get
 	End Property
 
-	Public ReadOnly Property IDriverEngineeringInputData_StartStop As IStartStopEngineeringInputData _
-		Implements IDriverEngineeringInputData.StartStop
-		Get
-			Return New StartStopInputData With {
-				.Enabled = _startStop,
-				.MaxSpeed = StartStopMaxSpeed.KMPHtoMeterPerSecond(),
-				.MinTime = StartStopTime.SI(Of Second)(),
-				.Delay = StartStopDelay.SI(Of Second)()
-				}
-		End Get
-	End Property
 
 	Public ReadOnly Property OverSpeedEcoRoll As IOverSpeedEcoRollDeclarationInputData _
 		Implements IDriverDeclarationInputData.OverSpeedEcoRoll
@@ -603,13 +592,6 @@ Public Class VectoJob
 		End Get
 	End Property
 
-
-	Public ReadOnly Property IDriverDeclarationInputData_StartStop As IStartStopDeclarationInputData _
-		Implements IDriverDeclarationInputData.StartStop
-		Get
-			Return IDriverEngineeringInputData_StartStop
-		End Get
-	End Property
 
 	Public ReadOnly Property IEngineeringJobInputData_Vehicle As IVehicleEngineeringInputData _
 		Implements IEngineeringJobInputData.Vehicle

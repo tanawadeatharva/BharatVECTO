@@ -112,6 +112,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
+			var oldGear = Gear;
+			Gear = gear;
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear].Ratio;
 			var torqueLossResult = ModelData.Gears[gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 			CurrentState.TorqueLossResult = torqueLossResult;
@@ -138,11 +140,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
 
 			var fullLoad = DataBus.EngineStationaryFullPower(inAngularVelocity);
-			if (ModelData.Gears[gear].MaxTorque != null) {
-				var fullLoadGearbox = ModelData.Gears[gear].MaxTorque * inAngularVelocity;
-				fullLoad = VectoMath.Min(fullLoadGearbox, fullLoad);
-			}
 
+			Gear = oldGear;
 			return new ResponseDryRun {
 				Source = this,
 				EnginePowerRequest = response.EnginePowerRequest,
