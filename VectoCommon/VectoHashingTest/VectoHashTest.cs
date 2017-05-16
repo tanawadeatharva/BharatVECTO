@@ -354,6 +354,61 @@ namespace VectoHashingTest
 			AssertHelper.Exception<Exception>(() => VectoHash.Load(stream), "failed to read XML document");
 		}
 
+		[TestCase()]
+		public void TestComputeHashNoComponentInXML()
+		{
+			var xml = @"<VectoInputDeclaration/>";
+			var stream = new MemoryStream();
+			var writer = new StreamWriter(stream);
+			writer.Write(xml);
+			writer.Flush();
+			stream.Seek(0, SeekOrigin.Begin);
+
+			var h = VectoHash.Load(stream);
+			AssertHelper.Exception<Exception>(() => h.ComputeHash(), "No component found");
+		}
+
+		[TestCase()]
+		public void TestReadHashNoComponentInXML()
+		{
+			var xml = @"<VectoInputDeclaration/>";
+			var stream = new MemoryStream();
+			var writer = new StreamWriter(stream);
+			writer.Write(xml);
+			writer.Flush();
+			stream.Seek(0, SeekOrigin.Begin);
+
+			var h = VectoHash.Load(stream);
+			AssertHelper.Exception<Exception>(() => h.ReadHash(), "No component found");
+		}
+
+		[TestCase(VectoComponents.Engine, "ENG-"),
+		TestCase(VectoComponents.Gearbox, "GBX-"),
+		TestCase(VectoComponents.Axlegear, "AXL-"),
+		TestCase(VectoComponents.Retarder, "RET-"),
+		TestCase(VectoComponents.TorqueConverter, "TC-"),
+		TestCase(VectoComponents.Angledrive, "ANGL-"),
+		TestCase(VectoComponents.Airdrag, "AD-"),
+		TestCase(VectoComponents.Tyre, "TYRE-"),
+		
+		]
+		public void TestIdPrefix(VectoComponents component, string expectedPrefix)
+		{
+			Assert.AreEqual(expectedPrefix, component.HashIdPrefix());
+		}
+
+		[TestCase()]
+		public void TestInvalidComponentXMLName()
+		{
+			AssertHelper.Exception<ArgumentOutOfRangeException>(() => ((VectoComponents)9999).XMLElementName());
+		}
+
+		[TestCase()]
+		public void TestInvalidComponentPrefix()
+		{
+			AssertHelper.Exception<ArgumentOutOfRangeException>(() => ((VectoComponents)9999).HashIdPrefix());
+		}
+
 		private static XmlSchemaSet GetXMLSchema(bool job)
 		{
 			var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema,

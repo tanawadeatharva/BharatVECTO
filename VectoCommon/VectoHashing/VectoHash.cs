@@ -19,10 +19,16 @@ namespace TUGraz.VectoHashing
 		public static VectoHash Load(string filename)
 		{
 			var doc = new XmlDocument();
+			XmlTextReader reader = null;
 			try {
-				doc.Load(new XmlTextReader(filename));
+				reader = new XmlTextReader(filename);
+				doc.Load(reader);
 			} catch (Exception e) {
 				throw new Exception("failed to read XML document", e);
+			} finally {
+				if (reader != null) {
+					reader.Close();
+				}
 			}
 			return new VectoHash(doc);
 		}
@@ -156,7 +162,7 @@ namespace TUGraz.VectoHashing
 		{
 			var nodes = Document.SelectNodes(GetComponentQueryString());
 			if (nodes == null || nodes.Count == 0) {
-				throw new Exception(string.Format("Component {0} not found", nodes.Count));
+				throw new Exception("No component found");
 			}
 			return ReadHashValue(nodes[0]);
 		}
