@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.8" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8 ../XSD/VectoInput.xsd" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.8" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8 https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoInput.xsd" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
 	<Vehicle id="VEH-1234567890">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
@@ -3153,7 +3153,7 @@
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>5074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
+										<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>
@@ -3180,7 +3180,7 @@
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>5074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
+										<di:DigestValue>KljvtvGUUQ/L7MiLVAqU+bckL5PNDNNwdeLH9kUVrfM=</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>

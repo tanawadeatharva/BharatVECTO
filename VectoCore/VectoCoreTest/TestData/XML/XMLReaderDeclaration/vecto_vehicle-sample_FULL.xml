@@ -3,7 +3,7 @@
 <tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8"
 													xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.8"
 													xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8"
-													xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8 ../XSD/VectoInput.xsd"
+													xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8 https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoInput.xsd"
 													xmlns:di="http://www.w3.org/2000/09/xmldsig#">
 	<Vehicle id="VEH-1234567890">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
