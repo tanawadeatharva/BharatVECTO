@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Utils;
@@ -14,7 +15,6 @@ namespace TUGraz.VectoHashing
 	public class VectoHash : IVectoHash
 	{
 		protected XmlDocument Document;
-		private XmlNamespaceManager Manager;
 
 		public static VectoHash Load(string filename)
 		{
@@ -46,7 +46,6 @@ namespace TUGraz.VectoHashing
 		protected VectoHash(XmlDocument doc)
 		{
 			Document = doc;
-			Manager = new XmlNamespaceManager(doc.NameTable);
 		}
 
 		public IList<VectoComponents> GetContainigComponents()
@@ -54,7 +53,7 @@ namespace TUGraz.VectoHashing
 			var retVal = new List<VectoComponents>();
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				var count =
-					Document.SelectNodes(string.Format("//*[local-name()='{0}']", component.XMLElementName()), Manager).Count;
+					Document.SelectNodes(string.Format("//*[local-name()='{0}']", component.XMLElementName())).Count;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(component);
 				}
@@ -64,16 +63,43 @@ namespace TUGraz.VectoHashing
 
 		public string ComputeHash()
 		{
-			var toSign = GetIdForElement(GetComponentQueryString());
-			var hash = XMLHashProvider.ComputeHash(Document, toSign);
-			return GetHashValue(hash, toSign);
+			var nodes = Document.SelectNodes(GetComponentQueryString());
+			if (nodes == null || nodes.Count == 0) {
+				throw new Exception("No component found");
+			}
+			return DoComputeHash(nodes[0]);
 		}
 
 		public string ComputeHash(VectoComponents component, int index = 0)
 		{
-			var toSign = GetIdForElement(GetComponentQueryString(component), index);
-			var hash = XMLHashProvider.ComputeHash(Document, toSign);
-			return GetHashValue(hash, toSign);
+			var nodes = Document.SelectNodes(GetComponentQueryString(component));
+
+
+			if (nodes == null || nodes.Count == 0) {
+				throw new Exception(string.Format("Component {0} not found", component.XMLElementName()));
+			}
+			if (index >= nodes.Count) {
+				throw new Exception(string.Format("index exceeds number of components found! index: {0}, #components: {1}", index,
+					nodes.Count));
+			}
+			return DoComputeHash(nodes[index]);
+		}
+
+		private static string DoComputeHash(XmlNode dataNode)
+		{
+			var parent = dataNode.ParentNode;
+			var componentId = dataNode.Attributes[XMLNames.Component_ID_Attr].Value;
+			if (parent == null) {
+				throw new Exception("Invalid structure of input XML!");
+			}
+			var newDoc = new XmlDocument();
+			var node = newDoc.CreateElement("Dummy");
+			newDoc.AppendChild(node);
+			var newNode = newDoc.ImportNode(parent, true);
+			node.AppendChild(newNode);
+
+			var hash = XMLHashProvider.ComputeHash(newDoc, componentId);
+			return GetHashValueFromSig(hash, componentId);
 		}
 
 		public XDocument AddHash()
@@ -128,15 +154,26 @@ namespace TUGraz.VectoHashing
 
 		public string ReadHash()
 		{
-			var toRead = GetIdForElement(GetComponentQueryString());
-			return GetHashValue(Document, toRead);
+			var nodes = Document.SelectNodes(GetComponentQueryString());
+			if (nodes == null || nodes.Count == 0) {
+				throw new Exception(string.Format("Component {0} not found", nodes.Count));
+			}
+			return ReadHashValue(nodes[0]);
 		}
 
 		public string ReadHash(VectoComponents component, int index = 0)
 		{
-			var toRead = GetIdForElement(GetComponentQueryString(component), index);
-			return GetHashValue(Document, toRead);
+			var nodes = Document.SelectNodes(GetComponentQueryString(component));
+			if (nodes == null || nodes.Count == 0) {
+				throw new Exception(string.Format("Component {0} not found", component.XMLElementName()));
+			}
+			if (index >= nodes.Count) {
+				throw new Exception(string.Format("index exceeds number of components found! index: {0}, #components: {1}", index,
+					nodes.Count));
+			}
+			return ReadHashValue(nodes[index]);
 		}
+
 
 		public bool ValidateHash()
 		{
@@ -149,30 +186,37 @@ namespace TUGraz.VectoHashing
 				ComputeHash(component, index));
 		}
 
+
 		private static string GetComponentQueryString(VectoComponents? component = null)
 		{
 			if (component == null) {
-				return "(//*[@id]/@id)[1]";
+				return "(//*[@id])[1]";
 			}
 			return component == VectoComponents.Vehicle
-				? string.Format("//*[local-name()='{0}']/@id", component.Value.XMLElementName())
-				: string.Format("//*[local-name()='{0}']/*[local-name()='Data']/@id", component.Value.XMLElementName());
+				? string.Format("//*[local-name()='{0}']", component.Value.XMLElementName())
+				: string.Format("//*[local-name()='{0}']/*[local-name()='Data']", component.Value.XMLElementName());
 		}
 
-		private string GetIdForElement(string query, int index = 0)
+		private static string GetHashValueFromSig(XmlDocument hashed, string elementId)
 		{
-			var node = Document.SelectNodes(query);
-			if (node == null) {
+			var nodes = hashed.SelectNodes("//*[@URI='#" + elementId + "']/*[local-name() = 'DigestValue']");
+			if (nodes == null || nodes.Count == 0) {
 				return null;
 			}
-			var toSign = node[index].Value;
-			return toSign;
+			if (nodes.Count > 1) {
+				throw new Exception("Multiple DigestValue elements found!");
+			}
+			return nodes[0].InnerText;
 		}
 
-		private static string GetHashValue(XmlDocument hashed, string elementToHash)
+		private static string ReadHashValue(XmlNode dataNode)
 		{
-			//var node = hashed.SelectSingleNode("//*[@URI='#" + elementToHash + "']/*[local-name() = 'DigestValue']");
-			var nodes = hashed.SelectNodes("//*[@URI='#" + elementToHash + "']/*[local-name() = 'DigestValue']");
+			var parent = dataNode.ParentNode;
+			if (parent == null) {
+				throw new Exception("Invalid structure of input XML!");
+			}
+			var elementToHash = dataNode.Attributes[XMLNames.Component_ID_Attr].Value;
+			var nodes = parent.SelectNodes(".//*[@URI='#" + elementToHash + "']/*[local-name() = 'DigestValue']");
 			if (nodes == null || nodes.Count == 0) {
 				return null;
 			}
