@@ -352,19 +352,15 @@
 		<xs:annotation>
 			<xs:documentation>Axles &amp; Wheels Component</xs:documentation>
 		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="tns:VectoSimulationComponent">
-				<xs:sequence>
-					<xs:element name="Axles">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Axle" type="tns:AxleDeclarationType" minOccurs="2" maxOccurs="4"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
+		<xs:sequence>
+			<xs:element name="Axles">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Axle" type="tns:AxleDeclarationType" minOccurs="2" maxOccurs="4"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="DeclarationPowertrainComponentType" abstract="true">
 		<xs:complexContent>

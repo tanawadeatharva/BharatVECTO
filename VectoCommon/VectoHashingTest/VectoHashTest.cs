@@ -60,6 +60,20 @@ namespace VectoHashingTest
 			Assert.AreEqual(expectedHash, hash);
 		}
 
+		[TestCase(ReferenceXMLEngine)]
+		public void TestHashComputationInvalidComponent(string file)
+		{
+			var h = VectoHash.Load(file);
+			AssertHelper.Exception<Exception>(() => h.ComputeHash(VectoComponents.Gearbox), "Component Gearbox not found");
+		}
+
+		[TestCase(ReferenceXMLEngine)]
+		public void TestReadHashInvalidComponent(string file)
+		{
+			var h = VectoHash.Load(file);
+			AssertHelper.Exception<Exception>(() => h.ReadHash(VectoComponents.Gearbox), "Component Gearbox not found");
+		}
+
 		[TestCase(ReferenceXMLVehicle, VectoComponents.Engine, "e0c253b643f7f8f09b963aca4a264d06fbfa599f"),
 		TestCase(ReferenceXMLVehicle, VectoComponents.Gearbox, "d14189366134120e08fa3f2c6e3328dd13c08a23")]
 		public void TestReadHash(string file, VectoComponents component, string expectedHash)
@@ -78,6 +92,75 @@ namespace VectoHashingTest
 			var existingHash = h.ReadHash(component, index);
 
 			Assert.AreEqual(expectedHash, existingHash);
+		}
+
+		[TestCase]
+		public void TestReadTyres1Index()
+		{
+			var file = @"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1.xml";
+			var h = VectoHash.Load(file);
+			var expectedHash = new[] {
+				"5074334bb2c090c5e258e9a664f5d19689a3f13d",
+				"6074334bb2c090c5e258e9a664f5d19689a3f13d",
+				"6074334bb2c090c5e258e9a664f5d19689a3f13d"
+			};
+
+			for (int i = 0; i < expectedHash.Length; i++) {
+				var existingHash = h.ReadHash(VectoComponents.Tyre, i);
+
+				Assert.AreEqual(expectedHash[i], existingHash);
+			}
+		}
+
+		[TestCase]
+		public void TestReadTyres2Index()
+		{
+			var file = @"Testdata\XML\ToHash\vecto_vehicle-sample_3axle2.xml";
+			var h = VectoHash.Load(file);
+			var expectedHash = new[] {
+				"5074334bb2c090c5e258e9a664f5d19689a3f13d",
+				"5074334bb2c090c5e258e9a664f5d19689a3f13d",
+				"6074334bb2c090c5e258e9a664f5d19689a3f13d"
+			};
+
+			for (int i = 0; i < expectedHash.Length; i++) {
+				var existingHash = h.ReadHash(VectoComponents.Tyre, i);
+
+				Assert.AreEqual(expectedHash[i], existingHash);
+			}
+
+			AssertHelper.Exception<Exception>(() => h.ReadHash(VectoComponents.Tyre, 3),
+				"index exceeds number of components found! index: 3, #components: 3");
+		}
+
+		[TestCase]
+		public void TestComputeTyres1Index()
+		{
+			var file = @"Testdata\XML\ToHash\vecto_vehicle-sample_3axle1.xml";
+			var h = VectoHash.Load(file);
+
+			var hash1 = h.ComputeHash(VectoComponents.Tyre, 1);
+			var hash2 = h.ComputeHash(VectoComponents.Tyre, 2);
+
+			Assert.AreEqual(hash1, hash2);
+
+			AssertHelper.Exception<Exception>(() => h.ComputeHash(VectoComponents.Tyre, 3),
+				"index exceeds number of components found! index: 3, #components: 3");
+		}
+
+		[TestCase]
+		public void TestComputeTyres2Index()
+		{
+			var file = @"Testdata\XML\ToHash\vecto_vehicle-sample_3axle2.xml";
+			var h = VectoHash.Load(file);
+
+			var hash1 = h.ComputeHash(VectoComponents.Tyre, 0);
+			var hash2 = h.ComputeHash(VectoComponents.Tyre, 1);
+
+			Assert.AreEqual(hash1, hash2);
+
+			AssertHelper.Exception<Exception>(() => h.ComputeHash(VectoComponents.Tyre, 3),
+				"index exceeds number of components found! index: 3, #components: 3");
 		}
 
 		[TestCase("vecto_vehicle-sample_FULL_Comments.xml", BasicHasingTests.HashVehicleXML),
@@ -178,6 +261,15 @@ namespace VectoHashingTest
 			AssertHelper.Exception<Exception>(() => { var r = h.AddHash(); }, expectedExceptionMsg);
 		}
 
+		[TestCase]
+		public void TestDuplicateSigElement()
+		{
+			var filename = @"Testdata\XML\Invalid\duplicate-sig.xml";
+			var h = VectoHash.Load(filename);
+
+			AssertHelper.Exception<Exception>(() => { var r = h.ReadHash(); }, "Multiple DigestValue elements found!");
+		}
+
 
 		[TestCase()]
 		public void TestLoadFromStream()
@@ -244,6 +336,77 @@ namespace VectoHashingTest
 			var hash = h.ComputeHash();
 
 			Assert.AreEqual(expectedHash, hash);
+		}
+
+		[TestCase()]
+		public void TestInvalidXMLAsFile()
+		{
+			var file = @"Testdata\XML\Invalid\invalid-comp.xml";
+
+			AssertHelper.Exception<Exception>(() => VectoHash.Load(file), "failed to read XML document");
+		}
+
+		[TestCase()]
+		public void TestInvalidXMLAsStream()
+		{
+			var file = @"Testdata\XML\Invalid\invalid-comp.xml";
+			var stream = File.Open(file, FileMode.Open);
+			AssertHelper.Exception<Exception>(() => VectoHash.Load(stream), "failed to read XML document");
+		}
+
+		[TestCase()]
+		public void TestComputeHashNoComponentInXML()
+		{
+			var xml = @"<VectoInputDeclaration/>";
+			var stream = new MemoryStream();
+			var writer = new StreamWriter(stream);
+			writer.Write(xml);
+			writer.Flush();
+			stream.Seek(0, SeekOrigin.Begin);
+
+			var h = VectoHash.Load(stream);
+			AssertHelper.Exception<Exception>(() => h.ComputeHash(), "No component found");
+		}
+
+		[TestCase()]
+		public void TestReadHashNoComponentInXML()
+		{
+			var xml = @"<VectoInputDeclaration/>";
+			var stream = new MemoryStream();
+			var writer = new StreamWriter(stream);
+			writer.Write(xml);
+			writer.Flush();
+			stream.Seek(0, SeekOrigin.Begin);
+
+			var h = VectoHash.Load(stream);
+			AssertHelper.Exception<Exception>(() => h.ReadHash(), "No component found");
+		}
+
+		[TestCase(VectoComponents.Engine, "ENG-"),
+		TestCase(VectoComponents.Gearbox, "GBX-"),
+		TestCase(VectoComponents.Axlegear, "AXL-"),
+		TestCase(VectoComponents.Retarder, "RET-"),
+		TestCase(VectoComponents.TorqueConverter, "TC-"),
+		TestCase(VectoComponents.Angledrive, "ANGL-"),
+		TestCase(VectoComponents.Airdrag, "AD-"),
+		TestCase(VectoComponents.Tyre, "TYRE-"),
+		
+		]
+		public void TestIdPrefix(VectoComponents component, string expectedPrefix)
+		{
+			Assert.AreEqual(expectedPrefix, component.HashIdPrefix());
+		}
+
+		[TestCase()]
+		public void TestInvalidComponentXMLName()
+		{
+			AssertHelper.Exception<ArgumentOutOfRangeException>(() => ((VectoComponents)9999).XMLElementName());
+		}
+
+		[TestCase()]
+		public void TestInvalidComponentPrefix()
+		{
+			AssertHelper.Exception<ArgumentOutOfRangeException>(() => ((VectoComponents)9999).HashIdPrefix());
 		}
 
 		private static XmlSchemaSet GetXMLSchema(bool job)
