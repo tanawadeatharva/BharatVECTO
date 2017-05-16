@@ -9,7 +9,7 @@ namespace TUGraz.VectoHashing.Impl
 	{
 		public static XmlDocument ComputeHash(XmlDocument doc, string elementId)
 		{
-			if (doc == null /*|| doc.DocumentElement == null*/) {
+			if (doc == null) {
 				throw new Exception("Invalid Document");
 			}
 			var signedXml = new SignedXml(doc);
