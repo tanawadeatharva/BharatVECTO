@@ -153,7 +153,7 @@
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 				</di:Transforms>
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-				<di:DigestValue>e0c253b643f7f8f09b963aca4a264d06fbfa599f</di:DigestValue>
+				<di:DigestValue>JWEwzKSP0lXvwRgQZTiWJm9dpdtQ72FOX0CC5Vy6f2Y=</di:DigestValue>
 			</di:Reference>
 		</Signature>
 	</tns:Engine>

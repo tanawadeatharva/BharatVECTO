@@ -24,11 +24,6 @@
 			<PTOShaftsGearWheels>only the drive shaft of the PTO</PTOShaftsGearWheels>
 			<PTOOtherElements>multi-disc clutch</PTOOtherElements>
 		</PTO>
-		<TorqueLimits>
-			<Entry gear="6" maxTorque="1800" />
-			<Entry gear="1" maxTorque="2500" />
-			<Entry gear="12" maxTorque="1900" />
-		</TorqueLimits>
 		<Components>
 			<Engine certificationNumber="e12*0815/8051*2017/05E0000*00">
 				<Data id="ENG-gooZah3D">
@@ -183,7 +178,7 @@
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-						<di:DigestValue>sNtMe9udO39TyKXzgwYEpVKImWizFalaBVqq3jLktuo=</di:DigestValue>
+						<di:DigestValue>e0c253b643f7f8f09b963aca4a264d06fbfa599f</di:DigestValue>
 					</di:Reference>
 				</Signature>
 			</Engine>
@@ -199,8 +194,7 @@
 					<Gears>
 						<Gear number="1">
 							<Ratio>14.930</Ratio>
-							<MaxTorque>1900</MaxTorque>
-							<MaxSpeed>2000</MaxSpeed>
+							<MaxTorque>5000</MaxTorque>
 							<TorqueLossMap>
 								<Entry inputSpeed="0.00" inputTorque="-350.00" torqueLoss="12.06" />
 								<Entry inputSpeed="0.00" inputTorque="-150.00" torqueLoss="8.06" />
@@ -398,8 +392,7 @@
 						</Gear>
 						<Gear number="2">
 							<Ratio>11.640</Ratio>
-							<MaxTorque>1900</MaxTorque>
-							<MaxSpeed>2000</MaxSpeed>
+							<MaxTorque>5000</MaxTorque>
 							<TorqueLossMap>
 								<Entry inputSpeed="0.00" inputTorque="-350.00" torqueLoss="12.06" />
 								<Entry inputSpeed="0.00" inputTorque="-150.00" torqueLoss="8.06" />
@@ -597,7 +590,6 @@
 						</Gear>
 						<Gear number="3">
 							<Ratio>9.020</Ratio>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed="0.00" inputTorque="-350.00" torqueLoss="12.06" />
 								<Entry inputSpeed="0.00" inputTorque="-150.00" torqueLoss="8.06" />
@@ -795,7 +787,6 @@
 						</Gear>
 						<Gear number="4">
 							<Ratio>7.040</Ratio>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed="0.00" inputTorque="-350.00" torqueLoss="12.06" />
 								<Entry inputSpeed="0.00" inputTorque="-150.00" torqueLoss="8.06" />
@@ -993,7 +984,6 @@
 						</Gear>
 						<Gear number="5">
 							<Ratio>5.640</Ratio>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed="0.00" inputTorque="-350.00" torqueLoss="12.06" />
 								<Entry inputSpeed="0.00" inputTorque="-150.00" torqueLoss="8.06" />
@@ -1191,7 +1181,6 @@
 						</Gear>
 						<Gear number="6">
 							<Ratio>4.400</Ratio>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed="0.00" inputTorque="-350.00" torqueLoss="12.06" />
 								<Entry inputSpeed="0.00" inputTorque="-150.00" torqueLoss="8.06" />
@@ -1389,7 +1378,6 @@
 						</Gear>
 						<Gear number="7">
 							<Ratio>3.390</Ratio>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed="0.00" inputTorque="-350.00" torqueLoss="12.06" />
 								<Entry inputSpeed="0.00" inputTorque="-150.00" torqueLoss="8.06" />
@@ -1587,7 +1575,6 @@
 						</Gear>
 						<Gear number="8">
 							<Ratio>2.650</Ratio>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed="0.00" inputTorque="-350.00" torqueLoss="12.06" />
 								<Entry inputSpeed="0.00" inputTorque="-150.00" torqueLoss="8.06" />
@@ -1785,7 +1772,6 @@
 						</Gear>
 						<Gear number="9">
 							<Ratio>2.050</Ratio>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed="0.00" inputTorque="-350.00" torqueLoss="12.06" />
 								<Entry inputSpeed="0.00" inputTorque="-150.00" torqueLoss="8.06" />
@@ -1983,7 +1969,6 @@
 						</Gear>
 						<Gear number="10">
 							<Ratio>1.600</Ratio>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed="0.00" inputTorque="-350.00" torqueLoss="12.06" />
 								<Entry inputSpeed="0.00" inputTorque="-150.00" torqueLoss="8.06" />
@@ -2181,7 +2166,6 @@
 						</Gear>
 						<Gear number="11">
 							<Ratio>1.280</Ratio>
-							<MaxSpeed>2000</MaxSpeed>
 							<TorqueLossMap>
 								<Entry inputSpeed="0.00" inputTorque="-350.00" torqueLoss="12.06" />
 								<Entry inputSpeed="0.00" inputTorque="-150.00" torqueLoss="8.06" />
@@ -2583,7 +2567,7 @@
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-						<di:DigestValue>ieNmjofFObDBGnB7+GX9of3HYe3ydK/ra+YvmULVJIk=</di:DigestValue>
+						<di:DigestValue>d14189366134120e08fa3f2c6e3328dd13c08a23</di:DigestValue>
 					</di:Reference>
 				</Signature>
 				<TorqueConverter certificationNumber="e12*0815/8051*2017/05E0000*00">
@@ -2601,9 +2585,9 @@
 						</Characteristics>
 					</Data>
 					<Signature>
-						<di:Reference URI="#tc-123xyz">
-							<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"></di:DigestMethod>
-							<di:DigestValue>q2sumDwsqQKLw4xwkEllgsygF5bHBwZPSS66UNaXXis=</di:DigestValue>
+						<di:Reference>
+							<di:DigestMethod Algorithm=""></di:DigestMethod>
+							<di:DigestValue></di:DigestValue>
 						</di:Reference>
 					</Signature>
 				</TorqueConverter>
@@ -2633,7 +2617,7 @@
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-						<di:DigestValue>1tuF9SoA8luoUBQGym4bYi1TurDSmcYqBDJ6AP20OSs=</di:DigestValue>
+						<di:DigestValue>d14189366134120e08fa3f2c6e3328dd13c08a23</di:DigestValue>
 					</di:Reference>
 				</Signature>
 			</Angledrive>
@@ -2679,7 +2663,7 @@
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-						<di:DigestValue>fcEtYfDAbfuRq0xpuzapmEj+Py1PIPUZwVmx+amNvcc=</di:DigestValue>
+						<di:DigestValue>da830e08360407c5168f1a37e9760e0cbbf8a17d</di:DigestValue>
 					</di:Reference>
 				</Signature>
 			</Retarder>
@@ -3195,12 +3179,12 @@
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-						<di:DigestValue>o4nYTajmWKaduxys5ShmnfJbYd23rpxZ01JbuG6dmzU=</di:DigestValue>
+						<di:DigestValue>5074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
 					</di:Reference>
 				</Signature>
 			</Axlegear>
 			<AxleWheels>
-				<Data>
+				<Data id="WHL-mi3ooviM">
 					<Axles>
 						<Axle axleNumber="1">
 							<AxleType>VehicleNonDriven</AxleType>
@@ -3224,7 +3208,7 @@
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-										<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+										<di:DigestValue>5074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>
@@ -3234,7 +3218,7 @@
 							<TwinTyres>true</TwinTyres>
 							<Steered>false</Steered>
 							<Tyre certificationNumber="e12*0815/8051*2017/05E0000*00">
-								<Data id="WHL-5432198760-315-70-R22.5">
+								<Data id="WHL-6432198760-315-70-R22.5">
 									<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
 									<Model>Generic Wheel</Model>
 									<TechnicalReportId>WHL-1234567890</TechnicalReportId>
@@ -3245,13 +3229,40 @@
 									<FzISO>31300</FzISO>
 								</Data>
 								<Signature>
-									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
+									<di:Reference URI="#WHL-6432198760-315-70-R22.5">
 										<di:Transforms>
 											<di:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-										<di:DigestValue>KljvtvGUUQ/L7MiLVAqU+bckL5PNDNNwdeLH9kUVrfM=</di:DigestValue>
+										<di:DigestValue>6074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
+									</di:Reference>
+								</Signature>
+							</Tyre>
+						</Axle>
+						<Axle axleNumber="3">
+							<AxleType>VehicleDriven</AxleType>
+							<TwinTyres>true</TwinTyres>
+							<Steered>false</Steered>
+							<Tyre certificationNumber="e12*0815/8051*2017/05E0000*00">
+								<Data id="WHL-6432198760-315-70-R22.5">
+									<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
+									<Model>Generic Wheel</Model>
+									<TechnicalReportId>WHL-1234567890</TechnicalReportId>
+									<Date>2017-01-11T14:00:00Z</Date>
+									<AppVersion>Tyre Generation App 1.0</AppVersion>
+									<Dimension>315/70 R22.5</Dimension>
+									<RRCDeclared>0.0063</RRCDeclared>
+									<FzISO>31300</FzISO>
+								</Data>
+								<Signature>
+									<di:Reference URI="#WHL-6432198760-315-70-R22.5">
+										<di:Transforms>
+											<di:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
+											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+										</di:Transforms>
+										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+										<di:DigestValue>6074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>
@@ -3296,7 +3307,7 @@
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-						<di:DigestValue>b9SHCfOoVrBxFQ8wwDK32OO+9bd85DuaUdgs6j/29N8=</di:DigestValue>
+						<di:DigestValue>5074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
 					</di:Reference>
 				</Signature>
 			</AirDrag>

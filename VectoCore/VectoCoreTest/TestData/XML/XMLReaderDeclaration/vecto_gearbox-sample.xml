@@ -2385,7 +2385,7 @@
 					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 				</di:Transforms>
 				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-				<di:DigestValue>d14189366134120e08fa3f2c6e3328dd13c08a23</di:DigestValue>
+				<di:DigestValue>VwF71HA02YHUeTqOoEGox57pfGXknga9xjNRoWLdejY=</di:DigestValue>
 			</di:Reference>
 		</Signature>
 	</tns:Gearbox>
