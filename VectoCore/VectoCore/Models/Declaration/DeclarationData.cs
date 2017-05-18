@@ -72,19 +72,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// Formula for calculating the payload for a given gross vehicle weight.
 		/// (so called "pc-formula", Whitebook Apr 2016, Part 1, p.187)
 		/// </summary>
-		public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, MissionType missionType)
+		public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, string equationName)
 		{
-			return missionType == MissionType.LongHaul
-				? Payloads.Lookup75Percent(grossVehicleWeight)
-				: Payloads.Lookup50Percent(grossVehicleWeight);
+			if (equationName.ToLower().StartsWith("pc10")) {
+				return Payloads.Lookup10Percent(grossVehicleWeight);
+			}
+			if (equationName.ToLower().StartsWith("pc75")) {
+				return Payloads.Lookup75Percent(grossVehicleWeight);
+			}
+			return Payloads.Lookup50Percent(grossVehicleWeight);
 		}
 
 		/// <summary>
 		/// Returns the payload for a trailer. This is 75% of (GVW-CurbWeight).
 		/// </summary>
-		public static Kilogram GetPayloadForTrailerWeight(Kilogram grossVehicleWeight, Kilogram curbWeight)
+		public static Kilogram GetPayloadForTrailerWeight(Kilogram grossVehicleWeight, Kilogram curbWeight, bool lowLoading)
 		{
-			return Payloads.LookupTrailer(grossVehicleWeight, curbWeight);
+			return Payloads.LookupTrailer(grossVehicleWeight, curbWeight) / (lowLoading ? 7.5 : 1);
 		}
 
 		public static int PoweredAxle()
@@ -164,7 +168,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
 			public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI().Kilo.Gramm.Per.Meter; // [kg/m]
-			
+
 			public const double TorqueLimitGearboxFactor = 0.9;
 			public const double TorqueLimitVehicleFactor = 0.95;
 

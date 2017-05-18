@@ -40,6 +40,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		FullLoading,
 		ReferenceLoad,
+		LowLoading,
 		EmptyLoading,
 	}
 
@@ -52,6 +53,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return "F";
 				case LoadingType.ReferenceLoad:
 					return "R";
+				case LoadingType.LowLoading:
+					return "L";
 				case LoadingType.EmptyLoading:
 					return "E";
 				default:
@@ -73,6 +76,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public List<MissionTrailer> Trailer;
 
 		public Kilogram MinLoad;
+		public Kilogram LowLoad;
 		public Kilogram RefLoad;
 		public Kilogram MaxLoad;
 
@@ -82,9 +86,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			get {
 				return new Dictionary<LoadingType, Kilogram> {
-					{ LoadingType.EmptyLoading, MinLoad },
+					{ LoadingType.LowLoading, LowLoad },
 					{ LoadingType.ReferenceLoad, RefLoad },
-					{ LoadingType.FullLoading, MaxLoad }
 				};
 			}
 		}
