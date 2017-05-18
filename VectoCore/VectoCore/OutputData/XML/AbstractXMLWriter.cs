@@ -14,8 +14,8 @@ namespace TUGraz.IVT.VectoXML.Writer
 	public abstract class AbstractXMLWriter
 	{
 		//protected const string SchemaLocationBaseUrl = "http://markus.quaritsch.at/VECTO/";
-		protected const string SchemaLocationBaseUrl = "http://www.ivt.tugraz.at/VECTO/";
-		protected const string SchemaVersion = "0.6";
+		protected const string SchemaLocationBaseUrl = "https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/";
+		protected const string SchemaVersion = "0.8";
 
 		protected XNamespace tns;
 		protected XNamespace rootNamespace;

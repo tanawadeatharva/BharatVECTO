@@ -286,8 +286,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			return new XElement(tns + XMLNames.Component_AxleWheels,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
-					new XAttribute(XMLNames.Component_ID_Attr,
-						string.Format("AXLWHL-{0}", data.AxleConfiguration.GetName())),
+					//new XAttribute(XMLNames.Component_ID_Attr,
+					//	string.Format("AXLWHL-{0}", data.AxleConfiguration.GetName())),
 					new XElement(tns + XMLNames.AxleWheels_Axles, axles))
 				);
 		}
