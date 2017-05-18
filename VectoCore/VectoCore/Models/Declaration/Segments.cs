@@ -53,8 +53,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ErrorMessage
 		{
-			get
-			{
+			get {
 				return
 					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}";
 			}
@@ -116,8 +115,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return (considerInvalid || isValid == "1")
 							&& category == vehicleCategory.ToString()
 							&& axleConf == axleConfiguration.GetName()
-							// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
-							// in any case ">=" is also correct, because the segment table is sorted by weight.
+						// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
+						// in any case ">=" is also correct, because the segment table is sorted by weight.
 							&& massMin <= grossVehicleMassRating && grossVehicleMassRating <= massMax;
 				});
 			} catch (InvalidOperationException e) {
@@ -145,8 +144,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return new[] { "1", "2", "3", "4" }.Contains(r.Field<string>("hdvclass"))
 							&& massMin <= grossVehicleMassRating && grossVehicleMassRating <= massMax;
 				});
-				if (rigidGVWrow != null)
+				if (rigidGVWrow != null) {
 					vehicleHeight = rigidGVWrow.ParseDouble("height").SI<Meter>();
+				}
 			}
 
 			return vehicleHeight;
@@ -196,17 +196,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var maxLoad = gvw - curbWeight - body.CurbWeight -
 							trailers.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
 
-				var refLoadValue = row.ParseDoubleOrGetDefault(missionType.ToString(), double.NaN);
-				Kilogram refLoad;
-				if (double.IsNaN(refLoadValue)) {
-					refLoad = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, missionType) +
-							trailers.Sum(t => DeclarationData.GetPayloadForTrailerWeight(t.TrailerGrossVehicleWeight, t.TrailerCurbWeight))
-								.DefaultIfNull(0);
+				var payloads = row.Field<string>(missionType.ToString()).Split('/');
+				Kilogram refLoad = null, lowLoad = 0.SI<Kilogram>();
+				if (payloads.Length == 2) {
+					lowLoad = GetLoading(payloads[0], grossVehicleWeight, trailers, true);
+					refLoad = GetLoading(payloads[1], grossVehicleWeight, trailers, false);
 				} else {
-					refLoad = refLoadValue.SI<Kilogram>();
+					refLoad = GetLoading(row.Field<string>(missionType.ToString()), grossVehicleWeight, trailers, false);
 				}
 
-				refLoad = VectoMath.Min(refLoad, maxLoad);
+				refLoad = refLoad.LimitTo(0.SI<Kilogram>(), maxLoad);
+				lowLoad = lowLoad.LimitTo(0.SI<Kilogram>(), maxLoad);
 
 				var mission = new Mission {
 					MissionType = missionType,
@@ -221,11 +221,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 					MinLoad = 0.SI<Kilogram>(),
 					MaxLoad = maxLoad,
 					RefLoad = refLoad,
+					LowLoad = lowLoad,
 					TotalCargoVolume = body.CargoVolume + trailers.Sum(t => t.CargoVolume).DefaultIfNull(0),
 				};
 				missions.Add(mission);
 			}
 			return missions.ToArray();
+		}
+
+		private static Kilogram GetLoading(string payloadStr, Kilogram grossVehicleWeight, IEnumerable<MissionTrailer> trailers, bool lowLoading)
+		{
+			var refLoadValue = payloadStr.ToDouble(double.NaN);
+			if (double.IsNaN(refLoadValue)) {
+				return DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, payloadStr) +
+						trailers.Sum(
+							t => DeclarationData.GetPayloadForTrailerWeight(t.TrailerGrossVehicleWeight, t.TrailerCurbWeight, lowLoading))
+							.DefaultIfNull(0);
+			}
+			return refLoadValue.SI<Kilogram>();
 		}
 
 		/// <summary>
