@@ -183,8 +183,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40t_Mod1Hz_Test()
 		{
-			var modFileName = "40t_Long_Haul_Truck_RegionalDeliveryFullLoading.vmod";
-			var modFileName1Hz = "40t_Long_Haul_Truck_RegionalDeliveryFullLoading_1Hz.vmod";
+			var modFileName = "40t_Long_Haul_Truck_RegionalDeliveryReferenceLoad.vmod";
+			var modFileName1Hz = "40t_Long_Haul_Truck_RegionalDeliveryReferenceLoad_1Hz.vmod";
 
 			if (File.Exists(modFileName)) {
 				File.Delete(modFileName);

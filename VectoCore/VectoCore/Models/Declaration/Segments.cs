@@ -199,10 +199,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var payloads = row.Field<string>(missionType.ToString()).Split('/');
 				Kilogram refLoad = null, lowLoad = 0.SI<Kilogram>();
 				if (payloads.Length == 2) {
-					lowLoad = GetLoading(payloads[0], grossVehicleWeight, missionType, trailers, true);
-					refLoad = GetLoading(payloads[1], grossVehicleWeight, missionType, trailers, false);
+					lowLoad = GetLoading(payloads[0], grossVehicleWeight, trailers, true);
+					refLoad = GetLoading(payloads[1], grossVehicleWeight, trailers, false);
 				} else {
-					refLoad = GetLoading(row.Field<string>(missionType.ToString()), grossVehicleWeight, missionType, trailers, false);
+					refLoad = GetLoading(row.Field<string>(missionType.ToString()), grossVehicleWeight, trailers, false);
 				}
 
 				refLoad = refLoad.LimitTo(0.SI<Kilogram>(), maxLoad);
@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return missions.ToArray();
 		}
 
-		private static Kilogram GetLoading(string payloadStr, Kilogram grossVehicleWeight, MissionType missionType, IEnumerable<MissionTrailer> trailers, bool lowLoading)
+		private static Kilogram GetLoading(string payloadStr, Kilogram grossVehicleWeight, IEnumerable<MissionTrailer> trailers, bool lowLoading)
 		{
 			var refLoadValue = payloadStr.ToDouble(double.NaN);
 			if (double.IsNaN(refLoadValue)) {
