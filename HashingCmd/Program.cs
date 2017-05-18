@@ -116,10 +116,15 @@ hashingcmd.exe
 				if (key.KeyChar == 'n') {
 					return;
 				}
-				WriteLine("overwriting file " + Path.GetFileNameWithoutExtension(filename) + "_hashed.xml");
+				WriteLine("overwriting file " + Path.GetFileName(destination));
+			} else {
+				WriteLine("creating file " + Path.GetFileName(destination));
 			}
 			var result = h.AddHash();
-			var writer = new XmlTextWriter(destination, Encoding.UTF8);
+			var writer = new XmlTextWriter(destination, Encoding.UTF8) {
+				Formatting = Formatting.Indented,
+				Indentation = 4
+			};
 			result.WriteTo(writer);
 			writer.Flush();
 			writer.Close();
