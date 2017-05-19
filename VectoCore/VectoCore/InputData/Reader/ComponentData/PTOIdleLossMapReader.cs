@@ -31,10 +31,12 @@
 
 using System;
 using System.Data;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -51,6 +53,15 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		{
 			try {
 				return Create(VectoCSVFile.Read(fileName));
+			} catch (Exception ex) {
+				throw new VectoException("ERROR while loading PTO Idle LossMap: " + ex.Message);
+			}
+		}
+
+		public static PTOLossMap ReadFromStream(Stream stream)
+		{
+			try {
+				return Create(VectoCSVFile.ReadStream(stream));
 			} catch (Exception ex) {
 				throw new VectoException("ERROR while loading PTO Idle LossMap: " + ex.Message);
 			}
@@ -96,6 +107,14 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			///     [Nm]
 			/// </summary>
 			public const string PTOTorque = "PTO Torque";
+		}
+
+		public static PTOLossMap GetZeroLossMap()
+		{
+			return new PTOLossMap(new[] {
+				new PTOLossMap.Entry { EngineSpeed = 0.RPMtoRad(), PTOTorque = 0.SI<NewtonMeter>() },
+				new PTOLossMap.Entry { EngineSpeed = 10000.RPMtoRad(), PTOTorque = 0.SI<NewtonMeter>() },
+			});
 		}
 	}
 }

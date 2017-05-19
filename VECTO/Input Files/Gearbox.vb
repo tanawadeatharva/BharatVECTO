@@ -270,7 +270,7 @@ Public Class Gearbox
 		fullLoadCurves(0).EngineData = retVal
 		For i As Integer = 0 To gears.Count - 1
 			fullLoadCurves(CType(i + 1, UInteger)) = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves(0),
-																										gears(i).MaxTorque)
+																											gears(i).MaxTorque)
 		Next
 		retVal.FullLoadCurves = fullLoadCurves
 		Return retVal
@@ -355,7 +355,8 @@ Public Class Gearbox
 			Dim i As Integer
 			For i = 1 To GearRatios.Count - 1
 				Dim gearDict As New TransmissionInputData With {
-						.Ratio = GearRatios(i)
+						.Ratio = GearRatios(i),
+						.Gear = i
 						}
 				If File.Exists(GearshiftFiles(i).FullPath) Then
 					gearDict.ShiftPolygon = VectoCSVFile.Read(GearshiftFiles(i).FullPath)

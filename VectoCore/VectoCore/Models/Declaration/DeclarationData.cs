@@ -407,5 +407,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return characteristicTorque.Where(x => x.SpeedRatio >= ratio).ToArray();
 			}
 		}
+
+		public static class PTO
+		{
+			public const string DefaultPTOTechnology =
+				"only the drive shaft of the PTO - shift claw, synchronizer, sliding gearwheel";
+
+			public const string DefaultPTOIdleLosses =
+				DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptol";
+
+			public const string DefaultPTOActivationCycle =
+				DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptoc";
+		}
 	}
 }

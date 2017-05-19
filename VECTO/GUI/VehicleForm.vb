@@ -64,7 +64,8 @@ Public Class VehicleForm
 		ButAxlRem.Enabled = Not Cfg.DeclMode
 		CbCdMode.Enabled = Not Cfg.DeclMode
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
-		gbPTO.Enabled = Not Cfg.DeclMode
+		'gbPTO.Enabled = Not Cfg.DeclMode
+		pnPTO.Enabled = Not Cfg.DeclMode
 
 		CbCdMode.ValueMember = "Value"
 		CbCdMode.DisplayMember = "Label"
@@ -394,8 +395,9 @@ Public Class VehicleForm
 		TBcdA.Text = airdrag.AirDragArea.ToGUIFormat()
 
 		cbPTOType.SelectedValue = pto.PTOTransmissionType
-		tbPTOLossMap.Text = If(pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
-		tbPTOCycle.Text = If(pto.PTOCycle Is Nothing, "", GetRelativePath(pto.PTOCycle.Source, basePath))
+		tbPTOLossMap.Text =
+			If(Cfg.DeclMode OrElse pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
+		tbPTOCycle.Text = If(Cfg.DeclMode OrElse pto.PTOCycle Is Nothing, "", GetRelativePath(pto.PTOCycle.Source, basePath))
 
 		cbAngledriveType.SelectedValue = angledrive.Type
 		tbAngledriveRatio.Text = angledrive.Ratio.ToGUIFormat()

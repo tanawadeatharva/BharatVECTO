@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -9,6 +11,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
@@ -608,20 +611,20 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod]
 		public void TestPTOTypeTypes()
 		{
-			var ptoTypes = new[] {
-				"None",
-				"only the drive shaft of the PTO - shift claw, synchronizer, Schieberad",
-				"only the drive shaft of the PTO - multi-disc clutch",
-				"only the drive shaft of the PTO - multi-disc clutch, oil pump",
-				"drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, Schieberad",
-				"drive shaft and/or up to 2 gear wheels - multi-disc clutch",
-				"drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump",
-				"drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, Schieberad",
-				"drive shaft and/or more than 2 gear wheels - multi-disc clutch",
-				"drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump",
+			var ptoTypes = new string[][] {
+				new[] { "none", "none" },
+				new[] { "only the drive shaft of the PTO", "shift claw, synchronizer, sliding gearwheel" },
+				new[] { "only the drive shaft of the PTO", "multi-disc clutch" },
+				new[] { "only the drive shaft of the PTO", "multi-disc clutch, oil pump" },
+				new[] { "drive shaft and/or up to 2 gear wheels", "shift claw, synchronizer, sliding gearwheel" },
+				new[] { "drive shaft and/or up to 2 gear wheels", "multi-disc clutch" },
+				new[] { "drive shaft and/or up to 2 gear wheels", "multi-disc clutch, oil pump" },
+				new[] { "drive shaft and/or more than 2 gear wheels", "shift claw, synchronizer, sliding gearwheel" },
+				new[] { "drive shaft and/or more than 2 gear wheels", "multi-disc clutch" },
+				new[] { "drive shaft and/or more than 2 gear wheels", "multi-disc clutch, oil pump" },
 			};
 			foreach (var ptoType in ptoTypes) {
 				var reader = XmlReader.Create(SampleVehicleDecl);
@@ -633,20 +636,36 @@ namespace TUGraz.VectoCore.Tests.XML
 				var helper = new XPathHelper(ExecutionMode.Declaration);
 				helper.AddNamespaces(manager);
 
-				var xmlRetarderType = nav.SelectSingleNode(helper.QueryAbs(
+				var ptoGearWheels = nav.SelectSingleNode(helper.QueryAbs(
 					helper.NSPrefix(XMLNames.VectoInputDeclaration,
 						Constants.XML.RootNSPrefix),
 					XMLNames.Component_Vehicle,
-					XMLNames.Vehicle_PTOType),
+					XMLNames.Vehicle_PTO,
+					XMLNames.Vehicle_PTO_ShaftsGearWheels),
 					manager);
-				xmlRetarderType.SetValue(ptoType);
+				ptoGearWheels.SetValue(ptoType[0]);
+				var ptoOther = nav.SelectSingleNode(helper.QueryAbs(
+					helper.NSPrefix(XMLNames.VectoInputDeclaration,
+						Constants.XML.RootNSPrefix),
+					XMLNames.Component_Vehicle,
+					XMLNames.Vehicle_PTO,
+					XMLNames.Vehicle_PTO_OtherElements),
+					manager);
+				ptoOther.SetValue(ptoType[1]);
 
 				var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
 				var inputDataProvider = new XMLDeclarationInputDataProvider(modified,
 					true);
 
-				//Assert.AreEqual(ptoType, inputDataProvider.VehicleInputData.pto);
+				if (ptoType[0] == "none") {
+					Assert.AreEqual("None",
+						inputDataProvider.PTOTransmissionInputData.PTOTransmissionType);
+				} else {
+					Assert.AreEqual(string.Format("{0} - {1}", ptoType[0], ptoType[1]),
+						inputDataProvider.PTOTransmissionInputData.PTOTransmissionType);
+				}
+				DeclarationData.PTOTransmission.Lookup(inputDataProvider.PTOTransmissionInputData.PTOTransmissionType);
 			}
 		}
 
@@ -722,6 +741,30 @@ namespace TUGraz.VectoCore.Tests.XML
 
 				Assert.AreEqual(gearboxType.Value, inputDataProvider.GearboxInputData.Type);
 			}
+		}
+
+		[TestMethod]
+		public void TestPTOInputNone()
+		{
+			var reader = XmlReader.Create(SampleVehicleDecl);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var ptoDataProvider = inputDataProvider.PTOTransmissionInputData;
+
+			Assert.AreEqual("None", ptoDataProvider.PTOTransmissionType);
+		}
+
+		[TestMethod]
+		public void TestPTOInput()
+		{
+			var reader = XmlReader.Create(SampleVehicleFullDecl);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var ptoDataProvider = inputDataProvider.PTOTransmissionInputData;
+			var ptoLosses = DeclarationData.PTOTransmission.Lookup(ptoDataProvider.PTOTransmissionType);
+
+			Assert.AreEqual("only the drive shaft of the PTO - multi-disc clutch", ptoDataProvider.PTOTransmissionType);
+			Assert.AreEqual(1000, ptoLosses.Value());
 		}
 	}
 }

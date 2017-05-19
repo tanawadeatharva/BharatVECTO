@@ -400,5 +400,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			points[0].EffectiveCrossSectionArea = points[1].EffectiveCrossSectionArea;
 			return points;
 		}
+
+		public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
+		{
+			if (pto.PTOTransmissionType != "None") {
+				return new PTOData {
+					TransmissionType = pto.PTOTransmissionType,
+					LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
+				};
+			}
+
+			return null;
+		}
 	}
 }

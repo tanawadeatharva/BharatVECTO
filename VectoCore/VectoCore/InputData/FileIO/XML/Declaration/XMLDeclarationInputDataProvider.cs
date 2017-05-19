@@ -46,6 +46,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			RetarderInputData = new XMLDeclarationRetarderDataProvider(this);
 			XMLDriverData = new XMLDeclarationDriverDataProvider(this);
 			XMLAuxiliaryData = new XMLDeclarationAuxiliaryDataProvider(this);
+			PTOTransmissionInputData = _vehicleInputData.GetPTOData(); 
 		}
 
 		private static void ValidationCallBack(object sender, ValidationEventArgs args)
@@ -99,5 +100,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			get { return XMLDriverData; }
 		}
+
+		public IPTOTransmissionInputData PTOTransmissionInputData { get; private set; }
 	}
 }

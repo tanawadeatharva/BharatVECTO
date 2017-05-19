@@ -58,5 +58,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public MeterPerSecond DesignSpeed { get; internal set; }
 
 		public SquareMeter CdAConstruction { get; internal set; }
+
+		public Kilogram MunicipalBodyWeight { get; internal set; }
 	}
 }
