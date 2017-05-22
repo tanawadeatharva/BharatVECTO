@@ -72,8 +72,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
 
 			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData,
-				segment.Missions.First(),
-				segment.Missions.First().Loadings.First().Value, segment.VehicleHeight);
+				segment.Missions.First(), segment.Missions.First().Loadings.First().Value, segment.VehicleHeight, segment.MunicipalBodyWeight);
 			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData,
 				InputDataProvider.VehicleInputData.TorqueLimits);
 			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData, false);
@@ -88,8 +87,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				var powertrainConfig = new VectoRunData() {
 					VehicleData =
 						dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData,
-							segment.Missions.First(),
-							segment.Missions.First().Loadings.First().Value, segment.VehicleHeight),
+							segment.Missions.First(), segment.Missions.First().Loadings.First().Value, segment.VehicleHeight, segment.MunicipalBodyWeight),
 					EngineData = engineData,
 					GearboxData = gearboxData,
 					AxleGearData = axlegearData,
@@ -118,8 +116,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Loading = loading.Key,
 						VehicleData =
 							dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData, mission,
-								loading.Value,
-								segment.VehicleHeight),
+								loading.Value, segment.VehicleHeight, segment.MunicipalBodyWeight),
 						EngineData = engineData.Copy(),
 						GearboxData = gearboxData,
 						AxleGearData = axlegearData,

@@ -57,6 +57,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string DeliveryTruck8GearDeclarationJob =
 			@"TestData\Integration\DeclarationMode\12t Truck\12t Delivery Truck_8gear.vecto";
 
+		public const string Class9RigidTruckPTOJob =
+			@"TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
+
+
 		[TestMethod]
 		public void Truck40t_LongHaulCycle_RefLoad()
 		{
@@ -312,6 +316,29 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeliveryTruck8GearDeclarationJob);
 			var fileWriter = new FileOutputWriter(DeliveryTruck8GearDeclarationJob);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+				WriteModalResults = true
+			};
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+			jobContainer.AddRuns(factory);
+
+			//var runs = jobContainer.Runs;
+
+			//runs[8].Run.Run();
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+
+		[TestMethod]
+		public void DeclarationClass9PTOTest()
+		{
+			var inputData = JSONInputDataFactory.ReadJsonJob(Class9RigidTruckPTOJob);
+			var fileWriter = new FileOutputWriter(Class9RigidTruckPTOJob);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
 				WriteModalResults = true
 			};

@@ -110,7 +110,7 @@ Public Class Vehicle
 				Dim segment As Segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis)
 				vehicleData = doa.CreateVehicleData(vehicle, vehicle, segment.Missions.First(),
-													segment.Missions.First().Loadings.First().Value, segment.VehicleHeight)
+													segment.Missions.First().Loadings.First().Value, segment.VehicleHeight, segment.MunicipalBodyWeight)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle, False)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
