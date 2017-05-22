@@ -17,6 +17,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto";
 
 		public const int CurbWeight = 4670;
+		public const double CdxA = 4.83;
 
 		[TestCase(Class2RigidTruckNoEMSJob, 0)]
 		public void TestClass2_Vehicle_LongHaul_LowLoad(string file, int runIdx)
@@ -34,7 +35,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 57,
 				totalVehicleWeight: CurbWeight + 1900 + 3400 + 603.917 + 710,
-				totalRollResistance: 0.006954);
+				totalRollResistance: 0.006954, 
+				aerodynamicDragArea: CdxA + 1.3);
 		}
 
 		[TestCase(Class2RigidTruckNoEMSJob, 1)]
@@ -51,7 +53,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 57,
 				totalVehicleWeight: CurbWeight + 1900 + 3400 + 4541.176 + 5325,
-				totalRollResistance: 0.0065733);
+				totalRollResistance: 0.0065733,
+				aerodynamicDragArea: CdxA + 1.3);
 		}
 
 
@@ -69,7 +72,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 39,
 				totalVehicleWeight: CurbWeight + 1900 + 603.917,
-				totalRollResistance: 0.007461);
+				totalRollResistance: 0.007461,
+				aerodynamicDragArea: CdxA);
 		}
 
 		[TestCase(Class2RigidTruckNoEMSJob, 3)]
@@ -86,7 +90,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 39,
 				totalVehicleWeight: CurbWeight + 1900 + 3019.588,
-				totalRollResistance: 0.007248);
+				totalRollResistance: 0.007248, 
+				aerodynamicDragArea: CdxA);
 		}
 
 
@@ -104,7 +109,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 39,
 				totalVehicleWeight: CurbWeight + 1900 + 603.917,
-				totalRollResistance: 0.007461);
+				totalRollResistance: 0.007461,
+				aerodynamicDragArea: CdxA);
 		}
 
 		[TestCase(Class2RigidTruckNoEMSJob, 5)]
@@ -121,7 +127,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 39,
 				totalVehicleWeight: CurbWeight + 1900 + 3019.588,
-				totalRollResistance: 0.007248);
+				totalRollResistance: 0.007248,
+				aerodynamicDragArea: CdxA);
 		}
 	}
 }
