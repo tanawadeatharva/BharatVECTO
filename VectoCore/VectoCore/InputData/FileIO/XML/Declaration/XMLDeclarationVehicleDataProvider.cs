@@ -154,6 +154,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				if ("none".Equals(shaftGearWheels, StringComparison.InvariantCultureIgnoreCase)) {
 					return "None";
 				}
+				if ("only one engaged gearwheel above oil level".Equals(shaftGearWheels, StringComparison.CurrentCultureIgnoreCase)) {
+					return "only one engaged gearwheel above oil level";
+				}
 				var otherElements = GetElementValue(Helper.Query(XMLNames.Vehicle_PTO, XMLNames.Vehicle_PTO_OtherElements));
 				var ptoTech = string.Format("{0} - {1}", shaftGearWheels, otherElements);
 				if (DeclarationData.PTOTransmission.GetTechnologies().Contains(ptoTech)) {
