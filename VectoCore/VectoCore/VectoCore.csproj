@@ -429,6 +429,8 @@
     <EmbeddedResource Include="Resources\XSD\xmldsig-core-schema.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\MunicipalUtility_PTO_generic.vptoc" />
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\MunicipalUtility_PTO_generic.vptol" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />

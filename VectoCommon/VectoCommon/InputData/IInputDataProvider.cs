@@ -56,6 +56,8 @@ namespace TUGraz.VectoCommon.InputData
 		IRetarderInputData RetarderInputData { get; }
 
 		IDriverDeclarationInputData DriverInputData { get; }
+
+		IPTOTransmissionInputData PTOTransmissionInputData { get; }
 	}
 
 	public interface IEngineeringInputDataProvider : IInputDataProvider

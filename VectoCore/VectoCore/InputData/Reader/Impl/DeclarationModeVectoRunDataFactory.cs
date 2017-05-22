@@ -34,13 +34,14 @@ using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
+
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
@@ -71,21 +72,22 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
 
 			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData,
-				segment.Missions.First(),
-				segment.Missions.First().Loadings.First().Value, segment.VehicleHeight);
-			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData, InputDataProvider.VehicleInputData.TorqueLimits);
+				segment.Missions.First(), segment.Missions.First().Loadings.First().Value, segment.VehicleHeight, segment.MunicipalBodyWeight);
+			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData,
+				InputDataProvider.VehicleInputData.TorqueLimits);
 			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData, false);
 			var angledriveData = dao.CreateAngledriveData(InputDataProvider.AngledriveInputData, false);
 			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
 				tempVehicle.DynamicTyreRadius, false);
 			var retarderData = dao.CreateRetarderData(InputDataProvider.RetarderInputData);
 
+			var ptoTransmissionData = dao.CreatePTOTransmissionData(InputDataProvider.PTOTransmissionInputData);
+			var municipalPtoTransmissionData = CreateDefaultPTOData();
 			if (Report != null) {
 				var powertrainConfig = new VectoRunData() {
 					VehicleData =
 						dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData,
-							segment.Missions.First(),
-							segment.Missions.First().Loadings.First().Value, segment.VehicleHeight),
+							segment.Missions.First(), segment.Missions.First().Loadings.First().Value, segment.VehicleHeight, segment.MunicipalBodyWeight),
 					EngineData = engineData,
 					GearboxData = gearboxData,
 					AxleGearData = axlegearData,
@@ -114,8 +116,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Loading = loading.Key,
 						VehicleData =
 							dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData, mission,
-								loading.Value,
-								segment.VehicleHeight),
+								loading.Value, segment.VehicleHeight, segment.MunicipalBodyWeight),
 						EngineData = engineData.Copy(),
 						GearboxData = gearboxData,
 						AxleGearData = axlegearData,
@@ -130,6 +131,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						ModFileSuffix = loading.Key.ToString(),
 						Report = Report,
 						Mission = mission,
+						PTO = mission.MissionType == MissionType.MunicipalUtility
+							? municipalPtoTransmissionData
+							: ptoTransmissionData
 					};
 					simulationRunData.EngineData.WHTCCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
 						mission.MissionType.GetNonEMSMissionType(), engineData.WHTCRural, engineData.WHTCUrban, engineData.WHTCMotorway) *
@@ -139,6 +143,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					yield return simulationRunData;
 				}
 			}
+		}
+
+		private PTOData CreateDefaultPTOData()
+		{
+			return new PTOData() {
+				TransmissionType = DeclarationData.PTO.DefaultPTOTechnology,
+				LossMap = PTOIdleLossMapReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOIdleLosses)),
+				PTOCycle =
+					DrivingCycleDataReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.PTO.DefaultPTOActivationCycle),
+						CycleType.PTO, "PTO", false)
+			};
 		}
 
 		internal Segment GetVehicleClassification(VehicleCategory category, AxleConfiguration axles, Kilogram grossMassRating,

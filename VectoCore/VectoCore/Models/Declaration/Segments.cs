@@ -92,10 +92,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VehicleHeight = LookupHeight(vehicleCategory, axleConfiguration, grossVehicleMassRating),
 				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 				GrossVehicleMassRating = grossVehicleMassRating,
-				CdAConstruction =
-					string.IsNullOrEmpty(row["cdxa_construction"].ToString())
-						? null
-						: row.ParseDouble("cdxa_construction").SI<SquareMeter>()
+				CdAConstruction = string.IsNullOrEmpty(row["cdxa_construction"].ToString())
+					? null
+					: row.ParseDouble("cdxa_construction").SI<SquareMeter>(),
+				MunicipalBodyWeight = string.IsNullOrEmpty(row["bodyweight_municipalutility"].ToString())
+					? null
+					: row.ParseDouble("bodyweight_municipalutility").SI<Kilogram>()
 			};
 
 			return segment;
@@ -229,7 +231,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return missions.ToArray();
 		}
 
-		private static Kilogram GetLoading(string payloadStr, Kilogram grossVehicleWeight, IEnumerable<MissionTrailer> trailers, bool lowLoading)
+		private static Kilogram GetLoading(string payloadStr, Kilogram grossVehicleWeight,
+			IEnumerable<MissionTrailer> trailers, bool lowLoading)
 		{
 			var refLoadValue = payloadStr.ToDouble(double.NaN);
 			if (double.IsNaN(refLoadValue)) {

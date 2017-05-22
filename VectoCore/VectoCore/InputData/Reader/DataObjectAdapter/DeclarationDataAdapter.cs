@@ -81,8 +81,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, IAirdragDeclarationInputData airdragData,
-			Mission mission, Kilogram loading,
-			Meter vehicleHeight)
+			Mission mission, Kilogram loading, Meter vehicleHeight, Kilogram municipalBodyWeight)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("VehicleData");
@@ -90,7 +89,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = SetCommonVehicleData(data);
 			retVal.TrailerGrossVehicleWeight = mission.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0);
-			retVal.BodyAndTrailerWeight = mission.BodyCurbWeight + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
+
+			retVal.BodyAndTrailerWeight = (mission.MissionType == MissionType.MunicipalUtility
+				? municipalBodyWeight
+				: mission.BodyCurbWeight) + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
 			retVal.CurbWeight += retVal.BodyAndTrailerWeight;
 
 			retVal.Loading = loading;
@@ -399,6 +401,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			points[0].EffectiveCrossSectionArea = points[1].EffectiveCrossSectionArea;
 			return points;
+		}
+
+		public PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
+		{
+			if (pto.PTOTransmissionType != "None") {
+				return new PTOData {
+					TransmissionType = pto.PTOTransmissionType,
+					LossMap = PTOIdleLossMapReader.GetZeroLossMap(),
+				};
+			}
+
+			return null;
 		}
 	}
 }

@@ -26,7 +26,7 @@ Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
-	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData,
+	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
 				IAngledriveInputData, IAirdragEngineeringInputData
 
 	Private _filePath As String
@@ -82,7 +82,7 @@ Public Class Vehicle
 		AngledriveLossMapFile = New SubPath()
 
 		Axles = New List(Of AxleInputData)
-		torqueLimitsList = new List(Of ITorqueLimitInputData)
+		torqueLimitsList = New List(Of ITorqueLimitInputData)
 		PtoLossMap = New SubPath()
 		PtoCycle = New SubPath()
 		SetDefault()
@@ -110,9 +110,10 @@ Public Class Vehicle
 				Dim segment As Segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis)
 				vehicleData = doa.CreateVehicleData(vehicle, vehicle, segment.Missions.First(),
-													segment.Missions.First().Loadings.First().Value, segment.VehicleHeight)
+													segment.Missions.First().Loadings.First().Value, segment.VehicleHeight, segment.MunicipalBodyWeight)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle, False)
+				ptoData = doa.CreatePTOTransmissionData(vehicle)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle, vehicle)
@@ -461,6 +462,9 @@ Public Class Vehicle
 	Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
 		Implements IPTOTransmissionInputData.PTOLossMap
 		Get
+			If String.IsNullOrWhiteSpace(PtoCycle.FullPath) Then
+				Return Nothing
+			End If
 			Return VectoCSVFile.Read(PtoLossMap.FullPath)
 		End Get
 	End Property

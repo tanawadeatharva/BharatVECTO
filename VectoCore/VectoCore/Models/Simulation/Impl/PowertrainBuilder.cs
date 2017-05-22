@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var controller = engine.IdleController;
 
-			if (pto != null) {
+			if (pto != null && pto.PTOCycle != null) {
 				var ptoController = new PTOCycleController(pto.PTOCycle);
 				controller = new IdleControllerSwitcher(engine.IdleController, ptoController);
 			}

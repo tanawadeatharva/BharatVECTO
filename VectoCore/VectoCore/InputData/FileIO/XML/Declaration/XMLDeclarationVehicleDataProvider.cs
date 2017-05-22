@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
 	public class XMLDeclarationVehicleDataProvider : AbstractDeclarationXMLComponentDataProvider,
-		IVehicleDeclarationInputData
+		IVehicleDeclarationInputData, IPTOTransmissionInputData
 	{
 		public XMLDeclarationVehicleDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider)
 			: base(xmlInputDataProvider)
@@ -138,6 +140,37 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		public AngledriveType AngulargearType
 		{
 			get { return GetElementValue(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>(); }
+		}
+
+		public IPTOTransmissionInputData GetPTOData()
+		{
+			return this;
+		}
+
+		public string PTOTransmissionType
+		{
+			get {
+				var shaftGearWheels = GetElementValue(Helper.Query(XMLNames.Vehicle_PTO, XMLNames.Vehicle_PTO_ShaftsGearWheels));
+				if ("none".Equals(shaftGearWheels, StringComparison.InvariantCultureIgnoreCase)) {
+					return "None";
+				}
+				var otherElements = GetElementValue(Helper.Query(XMLNames.Vehicle_PTO, XMLNames.Vehicle_PTO_OtherElements));
+				var ptoTech = string.Format("{0} - {1}", shaftGearWheels, otherElements);
+				if (DeclarationData.PTOTransmission.GetTechnologies().Contains(ptoTech)) {
+					return ptoTech;
+				}
+				throw new VectoException("PTO Technology {0} invalid!", ptoTech);
+			}
+		}
+
+		public TableData PTOLossMap
+		{
+			get { return null; }
+		}
+
+		public TableData PTOCycle
+		{
+			get { return null; }
 		}
 	}
 }

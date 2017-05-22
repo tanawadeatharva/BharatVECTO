@@ -577,6 +577,14 @@ Public Class VectoJob
 		End Get
 	End Property
 
+	Public ReadOnly Property IDeclarationInputDataProvider_PTOTransmissionInputData As IPTOTransmissionInputData _
+		Implements IDeclarationInputDataProvider.PTOTransmissionInputData
+		Get
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).PTOTransmissionInputData
+		End Get
+	End Property
+
 	Public ReadOnly Property PTOTransmissionInputData As IPTOTransmissionInputData _
 		Implements IEngineeringInputDataProvider.PTOTransmissionInputData
 		Get
