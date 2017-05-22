@@ -17,13 +17,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto";
 
 		public const int CurbWeight = 4670;
+		public const double CdxA = 4.83;
 
 		[TestCase(Class2RigidTruckNoEMSJob, 0)]
 		public void TestClass2_Vehicle_LongHaul_LowLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			Assert.AreEqual(6, runData.Length);
 
@@ -34,15 +33,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 57,
 				totalVehicleWeight: CurbWeight + 1900 + 3400 + 603.917 + 710,
-				totalRollResistance: 0.006954);
+				totalRollResistance: 0.006954,
+				aerodynamicDragArea: CdxA + 1.3);
 		}
 
 		[TestCase(Class2RigidTruckNoEMSJob, 1)]
 		public void TestClass2_Vehicle_LongHaul_RefLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// long haul, ref load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -51,16 +49,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 57,
 				totalVehicleWeight: CurbWeight + 1900 + 3400 + 4541.176 + 5325,
-				totalRollResistance: 0.0065733);
+				totalRollResistance: 0.0065733,
+				aerodynamicDragArea: CdxA + 1.3);
 		}
 
 
 		[TestCase(Class2RigidTruckNoEMSJob, 2)]
 		public void TestClass2_Vehicle_RegionalDel_LowLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// regional del., min load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -69,15 +66,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 39,
 				totalVehicleWeight: CurbWeight + 1900 + 603.917,
-				totalRollResistance: 0.007461);
+				totalRollResistance: 0.007461,
+				aerodynamicDragArea: CdxA);
 		}
 
 		[TestCase(Class2RigidTruckNoEMSJob, 3)]
 		public void TestClass2_Vehicle_RegionalDel_RefLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// regional del., ref load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -86,17 +82,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 39,
 				totalVehicleWeight: CurbWeight + 1900 + 3019.588,
-				totalRollResistance: 0.007248);
+				totalRollResistance: 0.007248,
+				aerodynamicDragArea: CdxA);
 		}
 
 
 		[TestCase(Class2RigidTruckNoEMSJob, 4)]
 		public void TestClass2_Vehicle_UrbanDel_LowLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
-
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 			// municipal, min load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
 				vehicleCategory: VehicleCategory.RigidTruck,
@@ -104,15 +98,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 39,
 				totalVehicleWeight: CurbWeight + 1900 + 603.917,
-				totalRollResistance: 0.007461);
+				totalRollResistance: 0.007461,
+				aerodynamicDragArea: CdxA);
 		}
 
 		[TestCase(Class2RigidTruckNoEMSJob, 5)]
 		public void TestClass2_Vehicle_UrbanDel_RefLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// municipal, min load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -121,7 +114,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 39,
 				totalVehicleWeight: CurbWeight + 1900 + 3019.588,
-				totalRollResistance: 0.007248);
+				totalRollResistance: 0.007248,
+				aerodynamicDragArea: CdxA);
 		}
 	}
 }
