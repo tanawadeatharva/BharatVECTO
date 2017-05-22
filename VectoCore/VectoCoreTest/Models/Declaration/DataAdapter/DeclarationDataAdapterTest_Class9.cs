@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -22,9 +23,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		[TestCase(Class9RigidTruckJob, 0)]
 		public void TestClass9_Vehicle_LongHaul_LowLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			Assert.AreEqual(10, runData.Length);
 
@@ -39,12 +38,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				aerodynamicDragArea: CdxA + 1.5);
 		}
 
+
 		[TestCase(Class9RigidTruckJob, 1)]
 		public void TestClass9_Vehicle_LongHaul_RefLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// long haul, ref load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -60,9 +58,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		[TestCase(Class9RigidTruckJob, 2)]
 		public void TestClass9_Vehicle_LongHaul_EMS_LowLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// long haul, min load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -78,9 +74,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		[TestCase(Class9RigidTruckJob, 3)]
 		public void TestClass9_Vehicle_LongHaul_EMS_RefLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// long haul, ref load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -96,9 +90,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		[TestCase(Class9RigidTruckJob, 4)]
 		public void TestClass9_Vehicle_RegionalDel_LowLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// regional del., min load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -114,9 +106,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		[TestCase(Class9RigidTruckJob, 5)]
 		public void TestClass9_Vehicle_RegionalDel_RefLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// regional del., ref load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -132,9 +122,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		[TestCase(Class9RigidTruckJob, 6)]
 		public void TestClass9_Vehicle_RegionalDel_EMS_LowLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// regional del., min load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -150,9 +138,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		[TestCase(Class9RigidTruckJob, 7)]
 		public void TestClass9_Vehicle_RegionalDel_EMS_RefLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// regional del., ref load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -168,9 +154,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		[TestCase(Class9RigidTruckJob, 8)]
 		public void TestClass9_Vehicle_Municipal_LowLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// municipal, min load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
@@ -186,9 +170,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		[TestCase(Class9RigidTruckJob, 9)]
 		public void TestClass9_Vehicle_Municipal_RefLoad(string file, int runIdx)
 		{
-			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// municipal, min load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
