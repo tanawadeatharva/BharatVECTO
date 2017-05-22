@@ -616,6 +616,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			var ptoTypes = new string[][] {
 				new[] { "none", "none" },
+				new[] { "only one engaged gearwheel above oil level", "none" },
 				new[] { "only the drive shaft of the PTO", "shift claw, synchronizer, sliding gearwheel" },
 				new[] { "only the drive shaft of the PTO", "multi-disc clutch" },
 				new[] { "only the drive shaft of the PTO", "multi-disc clutch, oil pump" },
@@ -660,6 +661,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
 				if (ptoType[0] == "none") {
 					Assert.AreEqual("None",
+						inputDataProvider.PTOTransmissionInputData.PTOTransmissionType);
+				} else if (ptoType[0] == "only one engaged gearwheel above oil level") {
+					Assert.AreEqual(ptoType[0],
 						inputDataProvider.PTOTransmissionInputData.PTOTransmissionType);
 				} else {
 					Assert.AreEqual(string.Format("{0} - {1}", ptoType[0], ptoType[1]),

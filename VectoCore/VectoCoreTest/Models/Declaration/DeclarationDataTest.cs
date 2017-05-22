@@ -282,7 +282,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase("drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump", 3000),
 		TestCase("drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, sliding gearwheel", 600),
 		TestCase("drive shaft and/or more than 2 gear wheels - multi-disc clutch", 2000),
-		TestCase("drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump", 4000),]
+		TestCase("drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump", 4000),
+		TestCase("only one engaged gearwheel above oil level", 0)]
 		public void AuxPTOTransmissionTest(string technology, double value)
 		{
 			AssertHelper.AreRelativeEqual(value, DeclarationData.PTOTransmission.Lookup(technology));
