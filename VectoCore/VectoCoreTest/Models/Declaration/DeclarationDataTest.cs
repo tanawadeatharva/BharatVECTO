@@ -839,7 +839,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.15, 0.2 },
 				trailerAxleWeightDistribution: new[] { 0.40, 0.25 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
 				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, lowLoad: 3500,
-				refLoad: 26500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
+				refLoad: 26500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 1.5, maxLoad: 39600, ems: true);
 
 			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
 				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.25, 0.25 },
@@ -851,7 +851,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.175, 0.25 },
 				trailerAxleWeightDistribution: new[] { 0.35, 0.225 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
 				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, lowLoad: 3500,
-				refLoad: 17500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
+				refLoad: 17500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 1.5, maxLoad: 39600, ems: true);
 		}
 
 		/// <summary>
@@ -887,7 +887,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.15, 0.2, 0.1 },
 				trailerAxleWeightDistribution: new[] { 0.225, 0.325 }, trailerAxleCount: new[] { 2, 3 }, bodyCurbWeight: 2200,
 				trailerCurbWeight: new[] { 2500, 7500.0 }, trailerType: new[] { TrailerType.Dolly, TrailerType.ST1 }, lowLoad: 3500,
-				refLoad: 26500, trailerGrossVehicleWeight: new[] { 12000.0, 24000 }, deltaCdA: 1.2, maxLoad: 40300, ems: true);
+				refLoad: 26500, trailerGrossVehicleWeight: new[] { 12000.0, 24000 }, deltaCdA: 2.1, maxLoad: 40300, ems: true);
 
 			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
 				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.35, 0.4, 0.25 },
@@ -899,7 +899,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.175, 0.2, 0.1 },
 				trailerAxleWeightDistribution: new[] { 0.225, 0.3 }, trailerAxleCount: new[] { 2, 3 }, bodyCurbWeight: 2200,
 				trailerCurbWeight: new[] { 2500, 7500.0 }, trailerType: new[] { TrailerType.Dolly, TrailerType.ST1 }, lowLoad: 3500,
-				refLoad: 17500, trailerGrossVehicleWeight: new[] { 12000.0, 24000 }, deltaCdA: 1.2, maxLoad: 40300, ems: true);
+				refLoad: 17500, trailerGrossVehicleWeight: new[] { 12000.0, 24000 }, deltaCdA: 2.1, maxLoad: 40300, ems: true);
 
 			AssertMission(segment.Missions[4], vehicleData: vehicleData, missionType: MissionType.MunicipalUtility,
 				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.35, 0.4, 0.25 },
@@ -941,7 +941,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.125, 0.15, 0.1 },
 				trailerAxleWeightDistribution: new[] { 0.375, 0.25 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
 				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, lowLoad: 3500,
-				refLoad: 26500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
+				refLoad: 26500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 1.5, maxLoad: 39600, ems: true);
 
 			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
 				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.2, 0.1, 0.2 },
@@ -953,7 +953,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.15, 0.15, 0.1 },
 				trailerAxleWeightDistribution: new[] { 0.35, 0.25 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
 				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, lowLoad: 3500,
-				refLoad: 17500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
+				refLoad: 17500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 1.5, maxLoad: 39600, ems: true);
 		}
 
 		/// <summary>
@@ -989,7 +989,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.15, 0.2, 0.1 },
 				trailerAxleWeightDistribution: new[] { 0.225, 0.325 }, trailerAxleCount: new[] { 2, 3 }, bodyCurbWeight: 2200,
 				trailerCurbWeight: new[] { 2500, 7500.0 }, trailerType: new[] { TrailerType.Dolly, TrailerType.ST1 }, lowLoad: 3500,
-				refLoad: 26500, trailerGrossVehicleWeight: new[] { 12000.0, 24000 }, deltaCdA: 1.2, maxLoad: 40300, ems: true);
+				refLoad: 26500, trailerGrossVehicleWeight: new[] { 12000.0, 24000 }, deltaCdA: 2.1, maxLoad: 40300, ems: true);
 
 			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
 				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.35, 0.35, 0.3 },
@@ -1001,7 +1001,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.175, 0.2, 0.1 },
 				trailerAxleWeightDistribution: new[] { 0.225, 0.3 }, trailerAxleCount: new[] { 2, 3 }, bodyCurbWeight: 2200,
 				trailerCurbWeight: new[] { 2500, 7500.0 }, trailerType: new[] { TrailerType.Dolly, TrailerType.ST1 }, lowLoad: 3500,
-				refLoad: 17500, trailerGrossVehicleWeight: new[] { 12000.0, 24000 }, deltaCdA: 1.2, maxLoad: 40300, ems: true);
+				refLoad: 17500, trailerGrossVehicleWeight: new[] { 12000.0, 24000 }, deltaCdA: 2.1, maxLoad: 40300, ems: true);
 
 			AssertMission(segment.Missions[4], vehicleData: vehicleData, missionType: MissionType.MunicipalUtility,
 				cosswindCorrection: "RigidSolo", axleWeightDistribution: new[] { 0.35, 0.35, 0.3 },
@@ -1049,7 +1049,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.125, 0.15, 0.1 },
 				trailerAxleWeightDistribution: new[] { 0.375, 0.25 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
 				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, lowLoad: 3500,
-				refLoad: 26500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
+				refLoad: 26500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 1.5, maxLoad: 39600, ems: true);
 
 			AssertMission(segment.Missions[2], vehicleData: vehicleData, missionType: MissionType.RegionalDelivery,
 				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.2, 0.15, 0.15 },
@@ -1061,7 +1061,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cosswindCorrection: "RigidTrailer", axleWeightDistribution: new[] { 0.15, 0.15, 0.1 },
 				trailerAxleWeightDistribution: new[] { 0.35, 0.25 }, trailerAxleCount: new[] { 3, 2 }, bodyCurbWeight: 0,
 				trailerCurbWeight: new[] { 7500.0, 5400 }, trailerType: new[] { TrailerType.ST1, TrailerType.T2 }, lowLoad: 3500,
-				refLoad: 17500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 0.6, maxLoad: 39600, ems: true);
+				refLoad: 17500, trailerGrossVehicleWeight: new[] { 24000.0, 18000 }, deltaCdA: 1.5, maxLoad: 39600, ems: true);
 
 			AssertMission(segment.Missions[4], vehicleData: vehicleData, missionType: MissionType.Construction,
 				cosswindCorrection: "TractorSemitrailer", axleWeightDistribution: new[] { 0.2, 0.15, 0.15 },
