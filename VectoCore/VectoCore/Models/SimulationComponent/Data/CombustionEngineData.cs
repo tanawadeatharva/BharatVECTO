@@ -69,13 +69,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, Range(double.MinValue, double.MaxValue)]
 		public double ColdHotCorrectionFactor { get; internal set; }
 
-		internal double WHTCCorrectionFactor = 1;
+		[Required, Range(double.MinValue, double.MaxValue)]
+		public double CorrectionFactorRegPer { get; internal set; }
+
+		[Required, Range(double.MinValue, double.MaxValue)]
+		public double CorrectionFactorNCV { get; internal set; }
+
+		public double FuelConsumptionCorrectionFactor {get; internal set; }
+
+		public PerSecond RatedSpeedDeclared { get; internal set; }
+
+		public Watt RatedPowerDeclared { get; internal set; }
+
+		public NewtonMeter MaxTorqueDeclared { get; internal set; }
+
+		public FuelType FuelType { get; internal set; }
 
 		public CombustionEngineData()
 		{
 			WHTCUrban = 1;
 			WHTCMotorway = 1;
 			WHTCRural = 1;
+			CorrectionFactorNCV = 1;
+			CorrectionFactorRegPer = 1;
+			FuelConsumptionCorrectionFactor = 1;
 		}
 
 		public CombustionEngineData Copy()
@@ -89,7 +106,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				WHTCMotorway = WHTCMotorway,
 				ConsumptionMap = ConsumptionMap,
 				FullLoadCurves = FullLoadCurves,
-				WHTCCorrectionFactor = WHTCCorrectionFactor,
+				CorrectionFactorRegPer = CorrectionFactorRegPer,
+				CorrectionFactorNCV = CorrectionFactorNCV,
+				FuelConsumptionCorrectionFactor = FuelConsumptionCorrectionFactor,
+				RatedPowerDeclared = RatedPowerDeclared,
+				RatedSpeedDeclared = RatedSpeedDeclared,
+				MaxTorqueDeclared = MaxTorqueDeclared,
 			};
 		}
 

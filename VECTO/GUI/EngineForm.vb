@@ -51,6 +51,13 @@ Public Class EngineForm
 		PnWhtcDeclaration.Enabled = Cfg.DeclMode
 		PnWhtcEngineering.Enabled = Not Cfg.DeclMode
 
+		cbFuelType.Items.Clear()
+		cbFuelType.ValueMember = "Value"
+		cbFuelType.DisplayMember = "Label"
+		cbFuelType.DataSource =
+			[Enum].GetValues(GetType(FuelType)).Cast(Of FuelType).Select(
+				Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
 		_changed = False
 		NewEngine()
 	End Sub
@@ -189,6 +196,13 @@ Public Class EngineForm
 		TbWHTCmw.Text = engine.WHTCMotorway.ToGUIFormat()
 		TbWHTCEngineering.Text = engine.WHTCEngineering.ToGUIFormat()
 		TbColdHotFactor.Text = engine.ColdHotBalancingFactor.ToGUIFormat()
+		tbNCVCorrFactor.Text = engine.CorrectionFactorNCV.ToGUIFormat()
+		tbRegPerCorrFactor.Text = engine.CorrectionFactorRegPer.ToGUIFormat()
+		tbMaxTorque.Text = engine.MaxTorqueDeclared.ToGUIFormat()
+		tbRatedPower.Text = (engine.RatedPowerDeclared.Value() / 1000).ToGUIFormat()
+		tbRatedSpeed.Text = engine.RatedSpeedDeclared.AsRPM.ToGUIFormat()
+
+		cbFuelType.SelectedValue = engine.FuelType
 
 		DeclInit()
 
@@ -234,9 +248,16 @@ Public Class EngineForm
 		engine.WHTCRuralInput = TbWHTCrural.Text.ToDouble(0)
 		engine.WHTCMotorwayInput = TbWHTCmw.Text.ToDouble(0)
 		engine.WHTCEngineeringInput = TbWHTCEngineering.Text.ToDouble(0)
+		engine.correctionFactorNCVInput = tbNCVCorrFactor.Text.ToDouble(0)
+		engine.correctionFactorRegPerInput = tbRegPerCorrFactor.Text.ToDouble(0)
 
 		engine.ColdHotBalancingFactorInput = TbColdHotFactor.Text.ToDouble(0)
 
+		engine.ratedPowerInput = (tbRatedPower.Text.ToDouble(0) * 1000).SI(Of Watt)()
+		engine.ratedSpeedInput = tbRatedSpeed.Text.ToDouble(0).RPMtoRad()
+		engine.maxTorqueInput = tbMaxTorque.Text.ToDouble(0).SI(Of NewtonMeter)()
+
+		engine.FuelTypeInput = CType(cbFuelType.SelectedValue, FuelType)
 
 		If Not engine.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)

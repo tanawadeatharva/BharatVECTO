@@ -62,6 +62,7 @@
     <Compile Include="Models\CrossWindCorrectionMode.cs" />
     <Compile Include="Models\DriverMode.cs" />
     <Compile Include="Models\ExecutionMode.cs" />
+    <Compile Include="Models\FuelType.cs" />
     <Compile Include="Models\GearboxType.cs" />
     <Compile Include="Models\IResponse.cs" />
     <Compile Include="Models\LoggingObject.cs" />

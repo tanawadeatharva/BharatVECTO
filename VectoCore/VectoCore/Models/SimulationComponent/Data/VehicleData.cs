@@ -48,8 +48,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	[CustomValidation(typeof(VehicleData), "ValidateVehicleData")]
 	public class VehicleData : SimulationComponentData
 	{
+		public string VIN { get; internal set; }
+
 		public VehicleCategory VehicleCategory { get; internal set; }
+
 		public VehicleClass VehicleClass { get; internal set; }
+
 		public AxleConfiguration AxleConfiguration { get; internal set; }
 
 		[Required, ValidateObject]
@@ -59,6 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		private KilogramSquareMeter _wheelsInertia;
 		private double? _totalRollResistanceCoefficient;
+		private double? _rollResistanceCoefficientWithoutTrailer;
 
 		public List<Axle> AxleData
 		{
@@ -134,6 +139,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			protected internal set { _totalRollResistanceCoefficient = value; }
 		}
 
+		public double RollResistanceCoefficientWithoutTrailer
+		{
+			get {
+				if (_rollResistanceCoefficientWithoutTrailer == null) {
+					ComputeRollResistanceAndReducedMassWheels();
+				}
+				return _rollResistanceCoefficientWithoutTrailer.GetValueOrDefault();
+			}
+			protected internal set { _rollResistanceCoefficientWithoutTrailer = value; }
+		}
+
 		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
 
 		public Kilogram TotalVehicleWeight
@@ -155,7 +171,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			get { return CurbWeight ?? 0.SI<Kilogram>(); }
 		}
 
-
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{
 			if (TotalVehicleWeight == 0.SI<Kilogram>()) {
@@ -168,7 +183,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var g = Physics.GravityAccelleration;
 
 			var rrc = 0.0.SI<Scalar>();
+			var rrcVehicle = 0.0.SI<Scalar>();
+
 			var wheelsInertia = 0.0.SI<KilogramSquareMeter>();
+			var vehicleWeightShare = 0.0;
 			foreach (var axle in _axleData) {
 				if (axle.AxleWeightShare.IsEqual(0, 1e-12)) {
 					continue;
@@ -176,13 +194,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				var nrWheels = axle.TwinTyres ? 4 : 2;
 				var baseValue = (axle.AxleWeightShare * TotalVehicleWeight * g / axle.TyreTestLoad / nrWheels).Value();
 
-				rrc += axle.AxleWeightShare * axle.RollResistanceCoefficient *
-						Math.Pow(baseValue, Physics.RollResistanceExponent - 1);
+				var rrcShare = axle.AxleWeightShare * axle.RollResistanceCoefficient *
+								Math.Pow(baseValue, Physics.RollResistanceExponent - 1);
+
+				if (axle.AxleType != AxleType.Trailer) {
+					rrcVehicle += rrcShare;
+					vehicleWeightShare += axle.AxleWeightShare;
+				}
+				rrc += rrcShare;
 				wheelsInertia += nrWheels * axle.Inertia;
 			}
+			RollResistanceCoefficientWithoutTrailer = rrcVehicle / vehicleWeightShare;
 			TotalRollResistanceCoefficient = rrc;
 			WheelsInertia = wheelsInertia;
 		}
+
 
 		// ReSharper disable once UnusedMember.Global  -- used via Validation
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)

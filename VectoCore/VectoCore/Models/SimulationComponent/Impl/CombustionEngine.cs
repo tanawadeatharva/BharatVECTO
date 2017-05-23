@@ -392,7 +392,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//TODO mk-2015-11-11: calculate aux start stop correction
 			var fcAux = fc;
 
-			var fcWHTC = fcAux * ModelData.WHTCCorrectionFactor;
+			var fcWHTC = fcAux * ModelData.FuelConsumptionCorrectionFactor;
 			var fcAAUX = fcWHTC;
 			var advancedAux = EngineAux as BusAuxiliariesAdapter;
 			if (advancedAux != null) {

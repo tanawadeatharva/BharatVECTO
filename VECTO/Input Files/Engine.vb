@@ -107,6 +107,12 @@ Public Class Engine
 
 
 	Public ColdHotBalancingFactorInput As Double
+	Public correctionFactorRegPerInput As Double
+	Public correctionFactorNCVInput As Double
+	Public FuelTypeInput As FuelType
+	Public ratedPowerInput As Watt
+	Public ratedSpeedInput As PerSecond
+	Public maxTorqueInput As NewtonMeter
 
 
 	''' <summary>
@@ -242,10 +248,10 @@ Public Class Engine
 			If mode = ExecutionMode.Declaration Then
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
 				Dim dummyGearboxData As IGearboxDeclarationInputData = New Gearbox() With {
-					.Type = GearboxType.AMT,
-					.MaxTorque = New List(Of String),
-					.GearRatios = New List(Of Double)()
-				}
+						.Type = GearboxType.AMT,
+						.MaxTorque = New List(Of String),
+						.GearRatios = New List(Of Double)()
+						}
 				engineData = doa.CreateEngineData(engine, dummyGearboxData, New List(Of ITorqueLimitInputData))
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
@@ -287,12 +293,6 @@ Public Class Engine
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
 			Return "N.A." ' TODO: MQ 20160919
-		End Get
-	End Property
-
-	Public ReadOnly Property Creator As String Implements IComponentInputData.Creator
-		Get
-			Return Lic.LicString
 		End Get
 	End Property
 
@@ -370,6 +370,24 @@ Public Class Engine
 		End Get
 	End Property
 
+	Public ReadOnly Property CorrectionFactorRegPer As Double Implements IEngineDeclarationInputData.CorrectionFactorRegPer
+		Get
+			Return correctionFactorRegPerInput
+		End Get
+	End Property
+
+	Public ReadOnly Property CorrectionFactorNCV As Double Implements IEngineDeclarationInputData.CorrectionFactorNCV
+		Get
+			Return correctionFactorNCVInput
+		End Get
+	End Property
+
+	Public ReadOnly Property FuelType As FuelType Implements IEngineDeclarationInputData.FuelType
+		Get
+			Return FuelTypeInput
+		End Get
+	End Property
+
 	Public ReadOnly Property FuelConsumptionMap As TableData Implements IEngineDeclarationInputData.FuelConsumptionMap
 		Get
 			If Not File.Exists(_fuelConsumptionMapPath.FullPath) Then _
@@ -383,6 +401,24 @@ Public Class Engine
 			If Not File.Exists(_fullLoadCurvePath.FullPath) Then _
 				Throw New VectoException("Full-Load Curve is missing or invalid")
 			Return VectoCSVFile.Read(_fullLoadCurvePath.FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property RatedPowerDeclared As Watt Implements IEngineDeclarationInputData.RatedPowerDeclared
+		Get
+			Return ratedPowerInput
+		End Get
+	End Property
+
+	Public ReadOnly Property RatedSpeedDeclared As PerSecond Implements IEngineDeclarationInputData.RatedSpeedDeclared
+		Get
+			Return ratedSpeedInput
+		End Get
+	End Property
+
+	Public ReadOnly Property MaxTorqueDeclared As NewtonMeter Implements IEngineDeclarationInputData.MaxTorqueDeclared
+		Get
+			Return maxTorqueInput
 		End Get
 	End Property
 

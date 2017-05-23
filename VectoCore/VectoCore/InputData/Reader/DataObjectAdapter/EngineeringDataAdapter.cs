@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 			retVal.FullLoadCurves = fullLoadCurves;
-			retVal.WHTCCorrectionFactor = engine.WHTCEngineering;
+			retVal.FuelConsumptionCorrectionFactor = engine.WHTCEngineering;
 			return retVal;
 		}
 

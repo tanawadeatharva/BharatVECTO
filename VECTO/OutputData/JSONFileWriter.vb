@@ -11,7 +11,7 @@ Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class JSONFileWriter
 	Implements IOutputFileWriter
-	Public Const EngineFormatVersion As Integer = 3
+	Public Const EngineFormatVersion As Integer = 4
 
 	Public Const GearboxFormatVersion As Integer = 6
 
@@ -45,15 +45,21 @@ Public Class JSONFileWriter
 		body.Add("IdlingSpeed", eng.IdleSpeed.AsRPM)
 		body.Add("Inertia", eng.Inertia.Value())
 
-		body.Add("FullLoadCurve", GetRelativePath(eng.FullLoadCurve.Source, Path.GetDirectoryName(filename)))
-
-		body.Add("FuelMap", GetRelativePath(eng.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
-
 		body.Add("WHTC-Urban", eng.WHTCUrban)
 		body.Add("WHTC-Rural", eng.WHTCRural)
 		body.Add("WHTC-Motorway", eng.WHTCMotorway)
 		body.Add("WHTC-Engineering", eng.WHTCEngineering)
 		body.Add("ColdHotBalancingFactor", eng.ColdHotBalancingFactor)
+		body.Add("CFRegPer", eng.CorrectionFactorRegPer)
+		body.Add("CFNCV", eng.CorrectionFactorNCV)
+		body.Add("RatedPower", eng.RatedPowerDeclared.Value())
+		body.Add("RatedSpeed", eng.RatedSpeedDeclared.AsRPM)
+		body.Add("MaxTorque", eng.MaxTorqueDeclared.Value())
+		body.Add("FuelType", eng.FuelType)
+
+		body.Add("FullLoadCurve", GetRelativePath(eng.FullLoadCurve.Source, Path.GetDirectoryName(filename)))
+
+		body.Add("FuelMap", GetRelativePath(eng.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
 
 		WriteFile(header, body, filename)
 	End Sub
