@@ -90,6 +90,21 @@ Partial Class EngineForm
 		Me.Label14 = New System.Windows.Forms.Label()
 		Me.BtFLD = New System.Windows.Forms.Button()
 		Me.BtFLDopen = New System.Windows.Forms.Button()
+		Me.tbRatedSpeed = New System.Windows.Forms.TextBox()
+		Me.Label9 = New System.Windows.Forms.Label()
+		Me.Label10 = New System.Windows.Forms.Label()
+		Me.tbRatedPower = New System.Windows.Forms.TextBox()
+		Me.Label12 = New System.Windows.Forms.Label()
+		Me.Label15 = New System.Windows.Forms.Label()
+		Me.tbMaxTorque = New System.Windows.Forms.TextBox()
+		Me.Label16 = New System.Windows.Forms.Label()
+		Me.Label17 = New System.Windows.Forms.Label()
+		Me.Label18 = New System.Windows.Forms.Label()
+		Me.cbFuelType = New System.Windows.Forms.ComboBox()
+		Me.Label19 = New System.Windows.Forms.Label()
+		Me.tbNCVCorrFactor = New System.Windows.Forms.TextBox()
+		Me.Label20 = New System.Windows.Forms.Label()
+		Me.tbRegPerCorrFactor = New System.Windows.Forms.TextBox()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -119,7 +134,7 @@ Partial Class EngineForm
 		'
 		'TbInertia
 		'
-		Me.TbInertia.Location = New System.Drawing.Point(120, 2)
+		Me.TbInertia.Location = New System.Drawing.Point(122, 4)
 		Me.TbInertia.Name = "TbInertia"
 		Me.TbInertia.Size = New System.Drawing.Size(57, 20)
 		Me.TbInertia.TabIndex = 3
@@ -127,7 +142,7 @@ Partial Class EngineForm
 		'Label41
 		'
 		Me.Label41.AutoSize = True
-		Me.Label41.Location = New System.Drawing.Point(183, 5)
+		Me.Label41.Location = New System.Drawing.Point(185, 7)
 		Me.Label41.Name = "Label41"
 		Me.Label41.Size = New System.Drawing.Size(36, 13)
 		Me.Label41.TabIndex = 24
@@ -145,7 +160,7 @@ Partial Class EngineForm
 		'Label5
 		'
 		Me.Label5.AutoSize = True
-		Me.Label5.Location = New System.Drawing.Point(12, 5)
+		Me.Label5.Location = New System.Drawing.Point(14, 7)
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(102, 13)
 		Me.Label5.TabIndex = 0
@@ -310,7 +325,7 @@ Partial Class EngineForm
 		'
 		'TbMAP
 		'
-		Me.TbMAP.Location = New System.Drawing.Point(12, 259)
+		Me.TbMAP.Location = New System.Drawing.Point(12, 271)
 		Me.TbMAP.Name = "TbMAP"
 		Me.TbMAP.Size = New System.Drawing.Size(434, 20)
 		Me.TbMAP.TabIndex = 5
@@ -318,7 +333,7 @@ Partial Class EngineForm
 		'Label6
 		'
 		Me.Label6.AutoSize = True
-		Me.Label6.Location = New System.Drawing.Point(12, 243)
+		Me.Label6.Location = New System.Drawing.Point(12, 255)
 		Me.Label6.Name = "Label6"
 		Me.Label6.Size = New System.Drawing.Size(115, 13)
 		Me.Label6.TabIndex = 38
@@ -327,7 +342,7 @@ Partial Class EngineForm
 		'BtMAP
 		'
 		Me.BtMAP.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-		Me.BtMAP.Location = New System.Drawing.Point(446, 257)
+		Me.BtMAP.Location = New System.Drawing.Point(446, 269)
 		Me.BtMAP.Name = "BtMAP"
 		Me.BtMAP.Size = New System.Drawing.Size(24, 24)
 		Me.BtMAP.TabIndex = 6
@@ -365,7 +380,7 @@ Partial Class EngineForm
 		'BtMAPopen
 		'
 		Me.BtMAPopen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-		Me.BtMAPopen.Location = New System.Drawing.Point(469, 257)
+		Me.BtMAPopen.Location = New System.Drawing.Point(469, 269)
 		Me.BtMAPopen.Name = "BtMAPopen"
 		Me.BtMAPopen.Size = New System.Drawing.Size(24, 24)
 		Me.BtMAPopen.TabIndex = 7
@@ -377,9 +392,9 @@ Partial Class EngineForm
 		Me.PnInertia.Controls.Add(Me.Label5)
 		Me.PnInertia.Controls.Add(Me.Label41)
 		Me.PnInertia.Controls.Add(Me.TbInertia)
-		Me.PnInertia.Location = New System.Drawing.Point(264, 106)
+		Me.PnInertia.Location = New System.Drawing.Point(258, 184)
 		Me.PnInertia.Name = "PnInertia"
-		Me.PnInertia.Size = New System.Drawing.Size(229, 32)
+		Me.PnInertia.Size = New System.Drawing.Size(229, 30)
 		Me.PnInertia.TabIndex = 3
 		'
 		'GrWHTC
@@ -395,6 +410,10 @@ Partial Class EngineForm
 		'
 		'PnWhtcDeclaration
 		'
+		Me.PnWhtcDeclaration.Controls.Add(Me.Label20)
+		Me.PnWhtcDeclaration.Controls.Add(Me.tbRegPerCorrFactor)
+		Me.PnWhtcDeclaration.Controls.Add(Me.Label19)
+		Me.PnWhtcDeclaration.Controls.Add(Me.tbNCVCorrFactor)
 		Me.PnWhtcDeclaration.Controls.Add(Me.lblColdHotFactor)
 		Me.PnWhtcDeclaration.Controls.Add(Me.TbColdHotFactor)
 		Me.PnWhtcDeclaration.Controls.Add(Me.BtWHTCimport)
@@ -407,13 +426,13 @@ Partial Class EngineForm
 		Me.PnWhtcDeclaration.Controls.Add(Me.TbWHTCrural)
 		Me.PnWhtcDeclaration.Location = New System.Drawing.Point(3, 19)
 		Me.PnWhtcDeclaration.Name = "PnWhtcDeclaration"
-		Me.PnWhtcDeclaration.Size = New System.Drawing.Size(472, 87)
+		Me.PnWhtcDeclaration.Size = New System.Drawing.Size(472, 95)
 		Me.PnWhtcDeclaration.TabIndex = 8
 		'
 		'lblColdHotFactor
 		'
 		Me.lblColdHotFactor.AutoSize = True
-		Me.lblColdHotFactor.Location = New System.Drawing.Point(3, 63)
+		Me.lblColdHotFactor.Location = New System.Drawing.Point(3, 53)
 		Me.lblColdHotFactor.Name = "lblColdHotFactor"
 		Me.lblColdHotFactor.Size = New System.Drawing.Size(177, 13)
 		Me.lblColdHotFactor.TabIndex = 5
@@ -421,7 +440,7 @@ Partial Class EngineForm
 		'
 		'TbColdHotFactor
 		'
-		Me.TbColdHotFactor.Location = New System.Drawing.Point(194, 60)
+		Me.TbColdHotFactor.Location = New System.Drawing.Point(194, 50)
 		Me.TbColdHotFactor.Name = "TbColdHotFactor"
 		Me.TbColdHotFactor.Size = New System.Drawing.Size(57, 20)
 		Me.TbColdHotFactor.TabIndex = 6
@@ -430,15 +449,16 @@ Partial Class EngineForm
 		'
 		Me.BtWHTCimport.Location = New System.Drawing.Point(299, 3)
 		Me.BtWHTCimport.Name = "BtWHTCimport"
-		Me.BtWHTCimport.Size = New System.Drawing.Size(170, 28)
+		Me.BtWHTCimport.Size = New System.Drawing.Size(170, 15)
 		Me.BtWHTCimport.TabIndex = 4
 		Me.BtWHTCimport.Text = "Import from VECTO-Engine"
 		Me.BtWHTCimport.UseVisualStyleBackColor = True
+		Me.BtWHTCimport.Visible = False
 		'
 		'Label4
 		'
 		Me.Label4.AutoSize = True
-		Me.Label4.Location = New System.Drawing.Point(1, 37)
+		Me.Label4.Location = New System.Drawing.Point(1, 27)
 		Me.Label4.Name = "Label4"
 		Me.Label4.Size = New System.Drawing.Size(36, 13)
 		Me.Label4.TabIndex = 0
@@ -447,7 +467,7 @@ Partial Class EngineForm
 		'Label7
 		'
 		Me.Label7.AutoSize = True
-		Me.Label7.Location = New System.Drawing.Point(156, 37)
+		Me.Label7.Location = New System.Drawing.Point(156, 27)
 		Me.Label7.Name = "Label7"
 		Me.Label7.Size = New System.Drawing.Size(32, 13)
 		Me.Label7.TabIndex = 0
@@ -465,7 +485,7 @@ Partial Class EngineForm
 		'Label8
 		'
 		Me.Label8.AutoSize = True
-		Me.Label8.Location = New System.Drawing.Point(284, 37)
+		Me.Label8.Location = New System.Drawing.Point(284, 27)
 		Me.Label8.Name = "Label8"
 		Me.Label8.Size = New System.Drawing.Size(53, 13)
 		Me.Label8.TabIndex = 0
@@ -473,21 +493,21 @@ Partial Class EngineForm
 		'
 		'TbWHTCmw
 		'
-		Me.TbWHTCmw.Location = New System.Drawing.Point(343, 34)
+		Me.TbWHTCmw.Location = New System.Drawing.Point(343, 24)
 		Me.TbWHTCmw.Name = "TbWHTCmw"
 		Me.TbWHTCmw.Size = New System.Drawing.Size(57, 20)
 		Me.TbWHTCmw.TabIndex = 2
 		'
 		'TbWHTCurban
 		'
-		Me.TbWHTCurban.Location = New System.Drawing.Point(43, 34)
+		Me.TbWHTCurban.Location = New System.Drawing.Point(43, 24)
 		Me.TbWHTCurban.Name = "TbWHTCurban"
 		Me.TbWHTCurban.Size = New System.Drawing.Size(57, 20)
 		Me.TbWHTCurban.TabIndex = 0
 		'
 		'TbWHTCrural
 		'
-		Me.TbWHTCrural.Location = New System.Drawing.Point(194, 34)
+		Me.TbWHTCrural.Location = New System.Drawing.Point(194, 24)
 		Me.TbWHTCrural.Name = "TbWHTCrural"
 		Me.TbWHTCrural.Size = New System.Drawing.Size(57, 20)
 		Me.TbWHTCrural.TabIndex = 1
@@ -496,7 +516,7 @@ Partial Class EngineForm
 		'
 		Me.PnWhtcEngineering.Controls.Add(Me.TbWHTCEngineering)
 		Me.PnWhtcEngineering.Controls.Add(Me.lblWhtcEngineering)
-		Me.PnWhtcEngineering.Location = New System.Drawing.Point(3, 112)
+		Me.PnWhtcEngineering.Location = New System.Drawing.Point(3, 117)
 		Me.PnWhtcEngineering.Name = "PnWhtcEngineering"
 		Me.PnWhtcEngineering.Size = New System.Drawing.Size(472, 30)
 		Me.PnWhtcEngineering.TabIndex = 7
@@ -529,7 +549,7 @@ Partial Class EngineForm
 		'
 		'TbFLD
 		'
-		Me.TbFLD.Location = New System.Drawing.Point(12, 202)
+		Me.TbFLD.Location = New System.Drawing.Point(12, 228)
 		Me.TbFLD.Name = "TbFLD"
 		Me.TbFLD.Size = New System.Drawing.Size(434, 20)
 		Me.TbFLD.TabIndex = 5
@@ -537,7 +557,7 @@ Partial Class EngineForm
 		'Label14
 		'
 		Me.Label14.AutoSize = True
-		Me.Label14.Location = New System.Drawing.Point(12, 186)
+		Me.Label14.Location = New System.Drawing.Point(12, 212)
 		Me.Label14.Name = "Label14"
 		Me.Label14.Size = New System.Drawing.Size(128, 13)
 		Me.Label14.TabIndex = 38
@@ -546,7 +566,7 @@ Partial Class EngineForm
 		'BtFLD
 		'
 		Me.BtFLD.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-		Me.BtFLD.Location = New System.Drawing.Point(446, 200)
+		Me.BtFLD.Location = New System.Drawing.Point(446, 226)
 		Me.BtFLD.Name = "BtFLD"
 		Me.BtFLD.Size = New System.Drawing.Size(24, 24)
 		Me.BtFLD.TabIndex = 6
@@ -556,12 +576,136 @@ Partial Class EngineForm
 		'BtFLDopen
 		'
 		Me.BtFLDopen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-		Me.BtFLDopen.Location = New System.Drawing.Point(469, 200)
+		Me.BtFLDopen.Location = New System.Drawing.Point(469, 226)
 		Me.BtFLDopen.Name = "BtFLDopen"
 		Me.BtFLDopen.Size = New System.Drawing.Size(24, 24)
 		Me.BtFLDopen.TabIndex = 7
 		Me.BtFLDopen.TabStop = False
 		Me.BtFLDopen.UseVisualStyleBackColor = True
+		'
+		'tbRatedSpeed
+		'
+		Me.tbRatedSpeed.Location = New System.Drawing.Point(381, 108)
+		Me.tbRatedSpeed.Name = "tbRatedSpeed"
+		Me.tbRatedSpeed.Size = New System.Drawing.Size(57, 20)
+		Me.tbRatedSpeed.TabIndex = 41
+		'
+		'Label9
+		'
+		Me.Label9.AutoSize = True
+		Me.Label9.Location = New System.Drawing.Point(304, 111)
+		Me.Label9.Name = "Label9"
+		Me.Label9.Size = New System.Drawing.Size(70, 13)
+		Me.Label9.TabIndex = 42
+		Me.Label9.Text = "Rated Speed"
+		'
+		'Label10
+		'
+		Me.Label10.AutoSize = True
+		Me.Label10.Location = New System.Drawing.Point(444, 111)
+		Me.Label10.Name = "Label10"
+		Me.Label10.Size = New System.Drawing.Size(30, 13)
+		Me.Label10.TabIndex = 43
+		Me.Label10.Text = "[rpm]"
+		'
+		'tbRatedPower
+		'
+		Me.tbRatedPower.Location = New System.Drawing.Point(381, 134)
+		Me.tbRatedPower.Name = "tbRatedPower"
+		Me.tbRatedPower.Size = New System.Drawing.Size(57, 20)
+		Me.tbRatedPower.TabIndex = 44
+		'
+		'Label12
+		'
+		Me.Label12.AutoSize = True
+		Me.Label12.Location = New System.Drawing.Point(304, 137)
+		Me.Label12.Name = "Label12"
+		Me.Label12.Size = New System.Drawing.Size(69, 13)
+		Me.Label12.TabIndex = 45
+		Me.Label12.Text = "Rated Power"
+		'
+		'Label15
+		'
+		Me.Label15.AutoSize = True
+		Me.Label15.Location = New System.Drawing.Point(444, 137)
+		Me.Label15.Name = "Label15"
+		Me.Label15.Size = New System.Drawing.Size(30, 13)
+		Me.Label15.TabIndex = 46
+		Me.Label15.Text = "[kW]"
+		'
+		'tbMaxTorque
+		'
+		Me.tbMaxTorque.Location = New System.Drawing.Point(381, 158)
+		Me.tbMaxTorque.Name = "tbMaxTorque"
+		Me.tbMaxTorque.Size = New System.Drawing.Size(57, 20)
+		Me.tbMaxTorque.TabIndex = 47
+		'
+		'Label16
+		'
+		Me.Label16.AutoSize = True
+		Me.Label16.Location = New System.Drawing.Point(309, 161)
+		Me.Label16.Name = "Label16"
+		Me.Label16.Size = New System.Drawing.Size(64, 13)
+		Me.Label16.TabIndex = 48
+		Me.Label16.Text = "Max Torque"
+		'
+		'Label17
+		'
+		Me.Label17.AutoSize = True
+		Me.Label17.Location = New System.Drawing.Point(444, 161)
+		Me.Label17.Name = "Label17"
+		Me.Label17.Size = New System.Drawing.Size(29, 13)
+		Me.Label17.TabIndex = 49
+		Me.Label17.Text = "[Nm]"
+		'
+		'Label18
+		'
+		Me.Label18.AutoSize = True
+		Me.Label18.Location = New System.Drawing.Point(63, 164)
+		Me.Label18.Name = "Label18"
+		Me.Label18.Size = New System.Drawing.Size(54, 13)
+		Me.Label18.TabIndex = 50
+		Me.Label18.Text = "Fuel Type"
+		'
+		'cbFuelType
+		'
+		Me.cbFuelType.FormattingEnabled = True
+		Me.cbFuelType.Location = New System.Drawing.Point(123, 161)
+		Me.cbFuelType.Name = "cbFuelType"
+		Me.cbFuelType.Size = New System.Drawing.Size(143, 21)
+		Me.cbFuelType.TabIndex = 51
+		'
+		'Label19
+		'
+		Me.Label19.AutoSize = True
+		Me.Label19.Location = New System.Drawing.Point(274, 53)
+		Me.Label19.Name = "Label19"
+		Me.Label19.Size = New System.Drawing.Size(66, 13)
+		Me.Label19.TabIndex = 7
+		Me.Label19.Text = "NCV Corr. F."
+		'
+		'tbNCVCorrFactor
+		'
+		Me.tbNCVCorrFactor.Location = New System.Drawing.Point(343, 50)
+		Me.tbNCVCorrFactor.Name = "tbNCVCorrFactor"
+		Me.tbNCVCorrFactor.Size = New System.Drawing.Size(57, 20)
+		Me.tbNCVCorrFactor.TabIndex = 8
+		'
+		'Label20
+		'
+		Me.Label20.AutoSize = True
+		Me.Label20.Location = New System.Drawing.Point(99, 76)
+		Me.Label20.Name = "Label20"
+		Me.Label20.Size = New System.Drawing.Size(89, 13)
+		Me.Label20.TabIndex = 9
+		Me.Label20.Text = "Reg. Per. Corr. F."
+		'
+		'tbRegPerCorrFactor
+		'
+		Me.tbRegPerCorrFactor.Location = New System.Drawing.Point(194, 73)
+		Me.tbRegPerCorrFactor.Name = "tbRegPerCorrFactor"
+		Me.tbRegPerCorrFactor.Size = New System.Drawing.Size(57, 20)
+		Me.tbRegPerCorrFactor.TabIndex = 10
 		'
 		'EngineForm
 		'
@@ -570,6 +714,17 @@ Partial Class EngineForm
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
 		Me.ClientSize = New System.Drawing.Size(985, 508)
+		Me.Controls.Add(Me.cbFuelType)
+		Me.Controls.Add(Me.Label18)
+		Me.Controls.Add(Me.tbMaxTorque)
+		Me.Controls.Add(Me.Label16)
+		Me.Controls.Add(Me.Label17)
+		Me.Controls.Add(Me.tbRatedPower)
+		Me.Controls.Add(Me.Label12)
+		Me.Controls.Add(Me.Label15)
+		Me.Controls.Add(Me.tbRatedSpeed)
+		Me.Controls.Add(Me.Label9)
+		Me.Controls.Add(Me.Label10)
 		Me.Controls.Add(Me.PicBox)
 		Me.Controls.Add(Me.GrWHTC)
 		Me.Controls.Add(Me.PnInertia)
@@ -672,4 +827,19 @@ Partial Class EngineForm
 	Friend WithEvents PnWhtcEngineering As System.Windows.Forms.Panel
 	Friend WithEvents lblColdHotFactor As System.Windows.Forms.Label
 	Friend WithEvents TbColdHotFactor As System.Windows.Forms.TextBox
+	Friend WithEvents Label20 As System.Windows.Forms.Label
+	Friend WithEvents tbRegPerCorrFactor As System.Windows.Forms.TextBox
+	Friend WithEvents Label19 As System.Windows.Forms.Label
+	Friend WithEvents tbNCVCorrFactor As System.Windows.Forms.TextBox
+	Friend WithEvents tbRatedSpeed As System.Windows.Forms.TextBox
+	Friend WithEvents Label9 As System.Windows.Forms.Label
+	Friend WithEvents Label10 As System.Windows.Forms.Label
+	Friend WithEvents tbRatedPower As System.Windows.Forms.TextBox
+	Friend WithEvents Label12 As System.Windows.Forms.Label
+	Friend WithEvents Label15 As System.Windows.Forms.Label
+	Friend WithEvents tbMaxTorque As System.Windows.Forms.TextBox
+	Friend WithEvents Label16 As System.Windows.Forms.Label
+	Friend WithEvents Label17 As System.Windows.Forms.Label
+	Friend WithEvents Label18 As System.Windows.Forms.Label
+	Friend WithEvents cbFuelType As System.Windows.Forms.ComboBox
 End Class

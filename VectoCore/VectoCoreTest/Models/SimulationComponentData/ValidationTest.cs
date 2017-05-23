@@ -183,7 +183,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				Creator = "Mr. Test",
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				CrossWindCorrectionCurve =
 					new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),
@@ -250,7 +249,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				Creator = "Mr. Test",
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				CrossWindCorrectionCurve =
 					new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),

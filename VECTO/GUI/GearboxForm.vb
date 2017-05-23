@@ -106,7 +106,7 @@ Public Class GearboxForm
 		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
 		'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()							  ' cDeclaration.TqResv
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()								' cDeclaration.TqResv
 		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
@@ -897,7 +897,8 @@ Public Class GearboxForm
 	Private Function GetShiftLines(ByVal idleSpeed As PerSecond, engineFullLoadCurve As EngineFullLoadCurve,
 									vehicle As IVehicleEngineeringInputData, gears As IList(Of ITransmissionInputData), ByVal gear As Integer) _
 		As ShiftPolygon
-		Dim engine As CombustionEngineData = ConvertToEngineData(engineFullLoadCurve, idleSpeed, gear, LvGears.Items(gear).SubItems(GearboxTbl.MaxTorque).Text.ToDouble(0).SI(Of NewtonMeter))
+		Dim engine As CombustionEngineData = ConvertToEngineData(engineFullLoadCurve, idleSpeed, gear,
+																LvGears.Items(gear).SubItems(GearboxTbl.MaxTorque).Text.ToDouble(0).SI(Of NewtonMeter))
 		If gears.Count <= 1 Then
 			Return Nothing
 		End If
@@ -911,7 +912,8 @@ Public Class GearboxForm
 		If (rDyn.IsEqual(0)) Then
 			Return Nothing
 		End If
-		Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(gear - 1, engine.FullLoadCurves(CType(gear, UInteger)), gears, engine,
+		Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(gear - 1,
+																					engine.FullLoadCurves(CType(gear, UInteger)), gears, engine,
 																					Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
 																					(rDyn))
 		Return shiftLines

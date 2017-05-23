@@ -40,7 +40,7 @@ using TUGraz.VectoCommon.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	[CustomValidation(typeof(TorqueConverterData), "ValidateData")]
-	public class TorqueConverterData : LoggingObject
+	public class TorqueConverterData : SimulationComponentData
 	{
 		protected internal readonly TorqueConverterEntry[] TorqueConverterEntries;
 

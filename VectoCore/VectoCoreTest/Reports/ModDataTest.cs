@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var eAir = ((SI)row[SummaryDataContainer.E_AIR]).Value();
 				var eRoll = ((SI)row[SummaryDataContainer.E_ROLL]).Value();
 				var eGrad = ((SI)row[SummaryDataContainer.E_GRAD]).Value();
-				var cargoVolume = mode == ExecutionMode.Engineering ? 0 : ((SI)row[SummaryDataContainer.VOLUME]).Value();
+				var cargoVolume = mode == ExecutionMode.Engineering ? 0 : ((SI)row[SummaryDataContainer.CARGO_VOLUME]).Value();
 
 				var loadingValue = ((SI)row[SummaryDataContainer.LOADING]).Value() / 1000;
 				var fcPer100km = ((SI)row[SummaryDataContainer.FCFINAL_LITERPER100KM]).Value();

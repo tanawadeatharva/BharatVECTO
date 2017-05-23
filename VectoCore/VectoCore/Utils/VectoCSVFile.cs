@@ -218,6 +218,9 @@ namespace TUGraz.VectoCore.Utils
 					formattedList[i] = si != null
 						? columnFormatter[i](si)
 						: formattedList[i] = string.Format(CultureInfo.InvariantCulture, "{0}", items[i]);
+					if (formattedList[i].Contains(Delimiter)) {
+						formattedList[i] = string.Format("\"{0}\"", formattedList[i]);
+					}
 				}
 				writer.WriteLine(string.Join(Delimiter, formattedList));
 			}

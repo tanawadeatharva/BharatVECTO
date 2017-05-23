@@ -56,8 +56,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		string Model { get; }
 
-		string Creator { get; }
-
 		string Date { get; }
 
 		string TechnicalReportId { get; }
@@ -330,6 +328,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		double ColdHotBalancingFactor { get; }
 
+		double CorrectionFactorRegPer { get; }
+
+		double CorrectionFactorNCV { get; }
+
+		FuelType FuelType { get; }
+
 		/// <summary>
 		/// P067
 		/// P072, P073, P074
@@ -344,6 +348,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		TableData FullLoadCurve { get; }
+
+		Watt RatedPowerDeclared { get; }
+
+		PerSecond RatedSpeedDeclared { get; }
+
+		NewtonMeter MaxTorqueDeclared { get; }
 	}
 
 	public interface IAuxiliariesDeclarationInputData

@@ -1571,25 +1571,24 @@
 			<xs:enumeration value="Trailer"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="TechnicalReportIdType">
+	<xs:simpleType name="CertificationNumberType">
 		<xs:annotation>
 			<xs:appinfo>
 				<vectoParam:description>
-					<vectoParam:parameterId component="Engine">202</vectoParam:parameterId>
-					<vectoParam:parameterId component="Gearbox">207</vectoParam:parameterId>
-					<vectoParam:parameterId component="Torqueconverter">212</vectoParam:parameterId>
-					<vectoParam:parameterId component="Axlegear">217</vectoParam:parameterId>
-					<vectoParam:parameterId component="Angledrive">222</vectoParam:parameterId>
-					<vectoParam:parameterId component="Retarder">227</vectoParam:parameterId>
-					<vectoParam:parameterId component="Tyre">232</vectoParam:parameterId>
-					<vectoParam:parameterId component="Airdrag">242</vectoParam:parameterId>
+					<vectoParam:parameterId component="Engine">261</vectoParam:parameterId>
+					<vectoParam:parameterId component="Gearbox">262</vectoParam:parameterId>
+					<vectoParam:parameterId component="Torqueconverter">263</vectoParam:parameterId>
+					<vectoParam:parameterId component="Axlegear">264</vectoParam:parameterId>
+					<vectoParam:parameterId component="Angledrive">265</vectoParam:parameterId>
+					<vectoParam:parameterId component="Retarder">266</vectoParam:parameterId>
+					<vectoParam:parameterId component="Tyre">267</vectoParam:parameterId>
+					<vectoParam:parameterId component="Airdrag">268</vectoParam:parameterId>
 					<vectoParam:unit>-</vectoParam:unit>
 				</vectoParam:description>
 			</xs:appinfo>
+			<xs:documentation>P261, P262, P263, P264, P265, P266, P267, P268</xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="xs:token">
-			<xs:minLength value="1"/>
-		</xs:restriction>
+		<xs:restriction base="xs:token"/>
 	</xs:simpleType>
 	<xs:simpleType name="DateTimeWithTimezone">
 		<xs:annotation>
@@ -1757,6 +1756,32 @@ ToDo: -0.00
 			<xs:documentation>P073 - [Nm]</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="tns:Double2"/>
+	</xs:simpleType>
+	<xs:simpleType name="EngineMaxTorque">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Engine">259</vectoParam:parameterId>
+					<vectoParam:comment/>
+					<vectoParam:unit>Nm</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P259</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int"/>
+	</xs:simpleType>
+	<xs:simpleType name="EngineNCVCFType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Engine">260</vectoParam:parameterId>
+					<vectoParam:comment/>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P260</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="tns:Double4"/>
 	</xs:simpleType>
 	<xs:simpleType name="EngineRatedPower">
 		<xs:annotation>
@@ -2217,6 +2242,26 @@ ToDo: -0.00
 			<xs:maxInclusive value="4"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="TechnicalReportIdType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Engine">202</vectoParam:parameterId>
+					<vectoParam:parameterId component="Gearbox">207</vectoParam:parameterId>
+					<vectoParam:parameterId component="Torqueconverter">212</vectoParam:parameterId>
+					<vectoParam:parameterId component="Axlegear">217</vectoParam:parameterId>
+					<vectoParam:parameterId component="Angledrive">222</vectoParam:parameterId>
+					<vectoParam:parameterId component="Retarder">227</vectoParam:parameterId>
+					<vectoParam:parameterId component="Tyre">232</vectoParam:parameterId>
+					<vectoParam:parameterId component="Airdrag">242</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="TorqueConverterCertificationOptionType">
 		<xs:annotation>
 			<xs:documentation>P257 - enum</xs:documentation>
@@ -2515,50 +2560,5 @@ ToDo: -0.00
 			<xs:enumeration value="Multipurpose - Radial"/>
 			<xs:enumeration value="Multipurpose - Diagonal"/>
 		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="EngineMaxTorque">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="Engine">259</vectoParam:parameterId>
-					<vectoParam:comment/>
-					<vectoParam:unit>Nm</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-			<xs:documentation>P259</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:int"/>
-	</xs:simpleType>
-	<xs:simpleType name="EngineNCVCFType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="Engine">260</vectoParam:parameterId>
-					<vectoParam:comment/>
-					<vectoParam:unit>-</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-			<xs:documentation>P260</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="tns:Double4"/>
-	</xs:simpleType>
-	<xs:simpleType name="CertificationNumberType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="Engine">261</vectoParam:parameterId>
-					<vectoParam:parameterId component="Gearbox">262</vectoParam:parameterId>
-					<vectoParam:parameterId component="Torqueconverter">263</vectoParam:parameterId>
-					<vectoParam:parameterId component="Axlegear">264</vectoParam:parameterId>
-					<vectoParam:parameterId component="Angledrive">265</vectoParam:parameterId>
-					<vectoParam:parameterId component="Retarder">266</vectoParam:parameterId>
-					<vectoParam:parameterId component="Tyre">267</vectoParam:parameterId>
-					<vectoParam:parameterId component="Airdrag">268</vectoParam:parameterId>
-					<vectoParam:unit>-</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-			<xs:documentation>P261, P262, P263, P264, P265, P266, P267, P268</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:token"/>
 	</xs:simpleType>
 </xs:schema>

@@ -301,11 +301,6 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property Creator As String Implements IComponentInputData.Creator
-		Get
-			Return Lic.LicString
-		End Get
-	End Property
 
 	Public ReadOnly Property [Date] As String Implements IComponentInputData.[Date]
 		Get

@@ -82,10 +82,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 				HasTorqueConverter = true
 			};
 
-			var gearboxData = CreateGearboxData(gbxType); 
+			var gearboxData = CreateGearboxData(gbxType);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(gbxType);
-			
+
 			if (gearBoxInertia != null) {
 				gearboxData.Inertia = gearBoxInertia;
 			}
@@ -100,7 +100,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				EngineData = engineData,
 				JobName = modFileName,
 				Cycle = cycleData,
-				Retarder = new RetarderData() { Type = RetarderType.None }
+				Retarder = new RetarderData() { Type = RetarderType.None },
+				Aux = new List<VectoRunData.AuxData>()
 			};
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = runData,

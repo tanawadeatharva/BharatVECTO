@@ -33,6 +33,7 @@ using System;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
@@ -67,6 +68,44 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	///  }
 	/// }
 	/// </code>
+	public class JSONEngineDataV4 : JSONEngineDataV3
+	{
+		public JSONEngineDataV4(JObject data, string fileName, bool tolerateMissing = false)
+			: base(data, fileName, tolerateMissing) {}
+
+		public override Watt RatedPowerDeclared
+		{
+			get { return Body.GetEx<double>("RatedPower").SI<Watt>(); }
+		}
+
+		public override PerSecond RatedSpeedDeclared
+		{
+			get { return Body.GetEx<double>("RatedSpeed").RPMtoRad(); }
+		}
+
+		public override NewtonMeter MaxTorqueDeclared
+		{
+			get { return Body.GetEx<double>("MaxTorque").SI<NewtonMeter>(); }
+		}
+
+		public override double CorrectionFactorRegPer
+		{
+			get { return Body.GetEx<double>("CFRegPer"); }
+		}
+
+
+		public override double CorrectionFactorNCV
+		{
+			get { return Body.GetEx<double>("CFNCV"); }
+		}
+
+		public override FuelType FuelType
+		{
+			get { return Body.GetEx<string>("FuelType").ParseEnum<FuelType>(); }
+		}
+	}
+
+
 	public class JSONEngineDataV3 : JSONFile, IEngineEngineeringInputData
 	{
 		public JSONEngineDataV3(JObject data, string fileName, bool tolerateMissing = false)
@@ -83,6 +122,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Engine_IdleSpeed).RPMtoRad(); }
 		}
 
+
+		public virtual FuelType FuelType
+		{
+			get { return FuelType.DieselCI; }
+		}
 
 		public virtual TableData FuelConsumptionMap
 		{
@@ -114,6 +158,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						DataSourceType.Missing);
 				}
 			}
+		}
+
+		public virtual Watt RatedPowerDeclared
+		{
+			get { return 0.SI<Watt>(); }
+		}
+
+		public virtual PerSecond RatedSpeedDeclared
+		{
+			get { return 0.RPMtoRad(); }
+		}
+
+		public virtual NewtonMeter MaxTorqueDeclared
+		{
+			get { return 0.SI<NewtonMeter>(); }
 		}
 
 		public virtual KilogramSquareMeter Inertia
@@ -156,6 +215,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public virtual double CorrectionFactorRegPer
+		{
+			get { return 1; }
+		}
+
+		public virtual double CorrectionFactorNCV
+		{
+			get { return 1; }
+		}
+
 		public string Manufacturer
 		{
 			get { return "N/A"; }
@@ -166,10 +235,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<string>(JsonKeys.Engine_ModelName); }
 		}
 
-		public string Creator
-		{
-			get { return "N/A"; }
-		}
 
 		public string Date
 		{

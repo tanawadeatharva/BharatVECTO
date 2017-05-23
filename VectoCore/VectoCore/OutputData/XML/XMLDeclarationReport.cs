@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected override void DoInitializeReport(VectoRunData modelData, Segment segment)
 		{
 			VehicleConfiguration = new XElement("Vehicle",
-				new XAttribute("id", modelData.VehicleData.TypeId),
+				new XAttribute("id", modelData.VehicleData.CertificationNumber),
 				GetComponentAttributes(modelData.VehicleData));
 			var components = new XElement("Components",
 				GetComponentDescription("Engine", modelData.EngineData),
@@ -167,8 +167,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private static XElement GetIntegrityStatus(SimulationComponentData component)
 		{
 			return new XElement("Entry",
-				new XAttribute("ref", component.TypeId),
-				new XAttribute("digest", component.DigestValue),
+				new XAttribute("ref", component.CertificationNumber),
+				new XAttribute("digest", component.DigestValueInput),
 				new XAttribute("check", component.IntegrityStatus));
 		}
 
@@ -207,17 +207,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			return new XElement("Component",
 				new XAttribute("type", type),
-				new XAttribute("id", component.TypeId),
+				new XAttribute("id", component.CertificationNumber),
 				GetComponentAttributes(component));
 		}
 
 		private static XElement[] GetComponentAttributes(SimulationComponentData component)
 		{
 			return new[] {
-				new XElement("Vendor", component.Vendor),
+				new XElement("Vendor", component.Manufacturer),
 				new XElement("MakeAndModel", component.ModelName),
-				new XElement("TypeId", component.TypeId),
-				new XElement("ComponentDataHash", component.DigestValue)
+				new XElement("TypeId", component.CertificationNumber),
+				new XElement("ComponentDataHash", component.DigestValueInput)
 			};
 		}
 	}
