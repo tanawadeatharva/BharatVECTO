@@ -64,13 +64,16 @@ namespace TUGraz.VectoCore.OutputData
 		public bool WriteAdvancedAux { get; set; }
 
 		public ModalDataContainer(string runName, FuelType fuel, IModalDataWriter writer, bool writeEngineOnly = false)
-			: this(runName, "",fuel, "", writer, _ => { }, writeEngineOnly) {}
+			: this(runName, "", fuel, "", writer, _ => { }, writeEngineOnly) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
 			bool writeEngineOnly, params IModalDataFilter[] filter)
-			: this(runData.JobName, runData.Cycle.Name, runData.EngineData.FuelType, runData.ModFileSuffix, writer, addReportResult, writeEngineOnly, filter) {}
+			: this(
+				runData.JobName, runData.Cycle.Name, runData.EngineData.FuelType, runData.ModFileSuffix, writer, addReportResult,
+				writeEngineOnly, filter) {}
 
-		protected ModalDataContainer(string runName, string cycleName, FuelType fuelType, string runSuffix, IModalDataWriter writer,
+		protected ModalDataContainer(string runName, string cycleName, FuelType fuelType, string runSuffix,
+			IModalDataWriter writer,
 			Action<ModalDataContainer> addReportResult, bool writeEngineOnly, params IModalDataFilter[] filters)
 		{
 			HasTorqueConverter = false;
@@ -99,7 +102,7 @@ namespace TUGraz.VectoCore.OutputData
 			CurrentRow = Data.NewRow();
 		}
 
-		public FuelData.Entry FuelData { get; private set; }
+		public FuelData.Entry FuelData { get; internal set; }
 
 		public void Finish(VectoRun.Status runStatus)
 		{

@@ -395,6 +395,15 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * data.FuelData.CO2PerFuelWeight / distance;
 		}
 
+		public static JoulePerMeter EnergyPerMeter(this IModalDataContainer data)
+		{
+			var distance = data.Distance();
+			if (distance == null || distance.IsEqual(0)) {
+				return null;
+			}
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * data.FuelData.LowerHeatingValue / distance;
+		}
+
 		public static KilogramPerSecond FCMapPerSecond(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / data.Duration();
