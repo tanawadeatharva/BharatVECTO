@@ -9,7 +9,13 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="Data" type="VectoOutputDataType"/>
+				<xs:element name="Data">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="VectoOutputDataType"/>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
 				<xs:element name="Signature" type="vdecdef:SignatureType"/>
 			</xs:sequence>
 			<xs:attribute name="schemaVersion" type="xs:decimal" use="required"/>
@@ -26,11 +32,31 @@
 		<xs:complexContent>
 			<xs:extension base="ComponentDescriptionType">
 				<xs:sequence>
-					<xs:element name="RatedPower" type="vdecdef:EngineRatedPower"/>
-					<xs:element name="IdlingSpeed" type="vdecdef:EngineDeclaredSpeedType"/>
-					<xs:element name="RatedSpeed" type="vdecdef:EngineDeclaredSpeedType"/>
-					<xs:element name="Displacement" type="vdecdef:EngineDisplacementType"/>
-					<xs:element name="FuelType" type="vdecdef:FuelTypeType"/>
+					<xs:element name="RatedPower" type="vdecdef:EngineRatedPower">
+						<xs:annotation>
+							<xs:documentation>P250</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IdlingSpeed" type="vdecdef:EngineDeclaredSpeedType">
+						<xs:annotation>
+							<xs:documentation>P063 / P198</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RatedSpeed" type="vdecdef:EngineDeclaredSpeedType">
+						<xs:annotation>
+							<xs:documentation>P249</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Displacement" type="vdecdef:EngineDisplacementType">
+						<xs:annotation>
+							<xs:documentation>P061</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="FuelType" type="vdecdef:FuelTypeType">
+						<xs:annotation>
+							<xs:documentation>P193</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -39,16 +65,31 @@
 		<xs:complexContent>
 			<xs:extension base="ComponentDescriptionType">
 				<xs:sequence>
-					<xs:element name="MainCertificationMethod" type="vdecdef:GearboxCertificationOptionType"/>
-					<xs:element name="TransmissionType" type="vdecdef:GearboxTransmissionTypeType"/>
+					<xs:element name="MainCertificationMethod" type="vdecdef:GearboxCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P154</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="TransmissionType" type="vdecdef:GearboxTransmissionTypeType">
+						<xs:annotation>
+							<xs:documentation>P076</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="GearsCount">
+						<xs:annotation>
+							<xs:documentation>P199</xs:documentation>
+						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="xs:int">
 								<xs:minInclusive value="1"/>
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
-					<xs:element name="TransmissionRatioFinalGear" type="vdecdef:GearboxGearRatioType"/>
+					<xs:element name="TransmissionRatioFinalGear" type="vdecdef:GearboxGearRatioType">
+						<xs:annotation>
+							<xs:documentation>P078</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -57,7 +98,11 @@
 		<xs:complexContent>
 			<xs:extension base="ComponentDescriptionType">
 				<xs:sequence>
-					<xs:element name="CertificationMethod" type="vdecdef:RetarderCertificationOptionType"/>
+					<xs:element name="CertificationMethod" type="vdecdef:RetarderCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P255</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -66,8 +111,16 @@
 		<xs:complexContent>
 			<xs:extension base="ComponentDescriptionType">
 				<xs:sequence>
-					<xs:element name="CertificationMethod" type="vdecdef:AngledriveCertificationOptionType"/>
-					<xs:element name="Ratio" type="vdecdef:AngledriveRatioType"/>
+					<xs:element name="CertificationMethod" type="vdecdef:AngledriveCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P258</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Ratio" type="vdecdef:AngledriveRatioType">
+						<xs:annotation>
+							<xs:documentation>P176</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -76,9 +129,21 @@
 		<xs:complexContent>
 			<xs:extension base="ComponentDescriptionType">
 				<xs:sequence>
-					<xs:element name="CertificationMethod" type="vdecdef:AxlegearCertificationOptionType"/>
-					<xs:element name="LineType" type="vdecdef:AxlegearLineTypeType"/>
-					<xs:element name="Ratio" type="vdecdef:AxlegearRatioType"/>
+					<xs:element name="CertificationMethod" type="vdecdef:AxlegearCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P256</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="LineType" type="vdecdef:AxlegearLineTypeType">
+						<xs:annotation>
+							<xs:documentation>P253</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Ratio" type="vdecdef:AxlegearRatioType">
+						<xs:annotation>
+							<xs:documentation>P150</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -91,7 +156,11 @@
 				<xs:element name="DigestValue"/>
 			</xs:sequence>
 			<xs:element name="CertificationMethod" type="AirdragCertificationOptionType"/>
-			<xs:element name="CdxA" type="vdecdef:AirdragCdxAType"/>
+			<xs:element name="CdxA" type="vdecdef:AirdragCdxAType">
+				<xs:annotation>
+					<xs:documentation>P245</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AxleType">
@@ -168,8 +237,16 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="TorqueLimitsEntryType">
-		<xs:attribute name="gear" type="vdecdef:GearboxGearNumberType" use="required"/>
-		<xs:attribute name="torqueLimit" type="vdecdef:TorqueLimitEntryMaxTorqueType" use="required"/>
+		<xs:attribute name="gear" type="vdecdef:GearboxGearNumberType" use="required">
+			<xs:annotation>
+				<xs:documentation>P196</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="torqueLimit" type="vdecdef:TorqueLimitEntryMaxTorqueType" use="required">
+			<xs:annotation>
+				<xs:documentation>P197 / P194</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="TorqueLimitsType">
 		<xs:sequence>
@@ -224,7 +301,7 @@
 					<xs:sequence>
 						<xs:element name="Engine" type="EngineType"/>
 						<xs:element name="Gearbox" type="GearboxType"/>
-						<xs:element name="Torqueconverter" type="ComponentDescriptionType" minOccurs="0"/>
+						<xs:element name="Torqueconverter" type="TorqueconverterType" minOccurs="0"/>
 						<xs:element name="Retarder" type="RetarderType" minOccurs="0"/>
 						<xs:element name="Angledrive" type="AngledriveType" minOccurs="0"/>
 						<xs:element name="Axlegear" type="AxlegearType"/>
@@ -238,7 +315,7 @@
 	</xs:complexType>
 	<xs:complexType name="SimulationParametersType">
 		<xs:sequence>
-			<xs:element name="Payload">
+			<xs:element name="TotalVehicleMass">
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:double">
@@ -247,7 +324,7 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="TotalVehicleMass">
+			<xs:element name="Payload">
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:double">
@@ -317,40 +394,6 @@
 			<xs:element name="GearShiftCount" type="xs:int"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="ResultType">
-		<xs:sequence>
-			<xs:element name="Mission" type="MissionTypeType"/>
-			<xs:element name="Distance">
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:double">
-							<xs:attribute name="unit" type="DistanceUnitType" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="SimulationParameters" type="SimulationParametersType"/>
-			<xs:element name="VehiclePerformance" type="VehiclePerformanceType"/>
-			<xs:element name="FuelConsumption" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:double">
-							<xs:attribute name="unit" type="FuelConsumptionUnitType" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="CO2" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:double">
-							<xs:attribute name="unit" type="CO2UnitType" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
 	<xs:complexType name="VectoOutputDataType">
 		<xs:sequence>
 			<xs:element name="Vehicle" type="VehicleType"/>
@@ -358,6 +401,14 @@
 			<xs:element name="Results">
 				<xs:complexType>
 					<xs:sequence>
+						<xs:element name="Stauts">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="success"/>
+									<xs:enumeration value="error"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
 						<xs:element name="Result" type="ResultType" maxOccurs="unbounded"/>
 					</xs:sequence>
 				</xs:complexType>
@@ -435,4 +486,65 @@
 			<xs:enumeration value="Construction"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:complexType name="FuelConsumptionType">
+		<xs:simpleContent>
+			<xs:extension base="xs:double">
+				<xs:attribute name="unit" type="FuelConsumptionUnitType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="CO2Type">
+		<xs:simpleContent>
+			<xs:extension base="xs:double">
+				<xs:attribute name="unit" type="CO2UnitType" use="required"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="ResultType">
+		<xs:sequence>
+			<xs:element name="Mission" type="MissionTypeType"/>
+			<xs:choice>
+				<xs:sequence>
+					<xs:element name="Distance">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:double">
+									<xs:attribute name="unit" type="DistanceUnitType" use="required"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="SimulationParameters" type="SimulationParametersType"/>
+					<xs:element name="VehiclePerformance" type="VehiclePerformanceType"/>
+					<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded"/>
+					<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded"/>
+				</xs:sequence>
+				<xs:sequence>
+					<xs:element name="Error" type="xs:string"/>
+					<xs:element name="ErrorDetails" type="xs:string"/>
+				</xs:sequence>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="stauts" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="success"/>
+					<xs:enumeration value="error"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="TorqueconverterType">
+		<xs:complexContent>
+			<xs:extension base="ComponentDescriptionType">
+				<xs:sequence>
+					<xs:element name="CertificationMethod" type="vdecdef:TorqueConverterCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P257</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 </xs:schema>
