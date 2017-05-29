@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace TUGraz.VectoCommon.Models
 {
@@ -11,7 +10,7 @@ namespace TUGraz.VectoCommon.Models
 		PetrolPI,
 		EthanolPI,
 		LPG,
-		NG
+		NG,
 		// ReSharper restore InconsistentNaming
 	}
 

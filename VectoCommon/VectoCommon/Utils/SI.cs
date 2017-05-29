@@ -593,6 +593,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Watt>.Create(joule.Val / s.Value());
 		}
+
+		public static JoulePerMeter operator /(Joule joule, Meter meter)
+		{
+			return SIBase<JoulePerMeter>.Create(joule.Val / meter.Value());
+		}
 	}
 
 	public class JoulePerKilogramm : SIBase<JoulePerKilogramm>
@@ -606,6 +611,18 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Joule>.Create(kg.Value() * jpg.Val);
 		}
+	}
+
+	/// <summary>
+	///  SI Class for KilogramPerMeter [J/m].
+	/// </summary>
+	public class JoulePerMeter : SIBase<JoulePerMeter>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.J };
+		private static readonly Unit[] DenominatorDefault = { Unit.m };
+
+		[DebuggerHidden]
+		private JoulePerMeter(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
 	}
 
 	/// <summary>

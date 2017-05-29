@@ -192,6 +192,7 @@ Partial Class Settings
 		Me.GrCalc.TabIndex = 1
 		Me.GrCalc.TabStop = False
 		Me.GrCalc.Text = "Calculation"
+		Me.GrCalc.Visible = False
 		'
 		'Label11
 		'

@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -69,6 +70,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public MeterPerSecond StartSpeed { get; set; }
 		public MeterPerSquareSecond StartAcceleration { get; set; }
 		public NewtonMeter GearMaxTorque { get; set; }
+
+		public FuelType FuelType
+		{
+			get { return FuelType.DieselCI; }
+		}
 
 		public Second AbsTime { get; set; }
 

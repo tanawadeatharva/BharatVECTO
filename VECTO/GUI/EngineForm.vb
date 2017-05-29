@@ -55,7 +55,7 @@ Public Class EngineForm
 		cbFuelType.ValueMember = "Value"
 		cbFuelType.DisplayMember = "Label"
 		cbFuelType.DataSource =
-			[Enum].GetValues(GetType(FuelType)).Cast(Of FuelType).Select(
+			[Enum].GetValues(GetType(TUGraz.VectoCommon.Models.FuelType)).Cast(Of TUGraz.VectoCommon.Models.FuelType).Select(
 				Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
 		_changed = False
@@ -257,7 +257,7 @@ Public Class EngineForm
 		engine.ratedSpeedInput = tbRatedSpeed.Text.ToDouble(0).RPMtoRad()
 		engine.maxTorqueInput = tbMaxTorque.Text.ToDouble(0).SI(Of NewtonMeter)()
 
-		engine.FuelTypeInput = CType(cbFuelType.SelectedValue, FuelType)
+		engine.FuelTypeInput = CType(cbFuelType.SelectedValue, TUGraz.VectoCommon.Models.FuelType)
 
 		If Not engine.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
