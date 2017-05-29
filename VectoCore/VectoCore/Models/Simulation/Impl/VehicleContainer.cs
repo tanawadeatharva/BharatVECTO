@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -262,6 +263,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return Cycle;
 		}
+
+		public FuelType FuelType { get { return ModData.FuelData.FuelType; } }
 
 		public Second AbsTime { get; set; }
 

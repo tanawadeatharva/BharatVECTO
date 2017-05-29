@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -88,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var modFile = Path.GetFileNameWithoutExtension(modalResultFile);
 			//Path.GetFileNameWithoutExtension(Path.GetRandomFileName()); // + ".vmod";
 			var fileWriter = new FileOutputWriter(modFile);
-			var modData = new ModalDataContainer(modFile, fileWriter, true) { WriteModalResults = true };
+			var modData = new ModalDataContainer(modFile, FuelType.DieselCI, fileWriter, true) { WriteModalResults = true };
 			modData.AddAuxiliary(Constants.Auxiliaries.Cycle);
 			port.Initialize(data.Entries.First().Torque, data.Entries.First().AngularVelocity);
 			foreach (var cycleEntry in data.Entries) {

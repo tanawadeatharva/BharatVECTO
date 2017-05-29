@@ -35,6 +35,7 @@ using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -75,7 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, Range(double.MinValue, double.MaxValue)]
 		public double CorrectionFactorNCV { get; internal set; }
 
-		public double FuelConsumptionCorrectionFactor {get; internal set; }
+		public double FuelConsumptionCorrectionFactor { get; internal set; }
 
 		public PerSecond RatedSpeedDeclared { get; internal set; }
 
@@ -112,6 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				RatedPowerDeclared = RatedPowerDeclared,
 				RatedSpeedDeclared = RatedSpeedDeclared,
 				MaxTorqueDeclared = MaxTorqueDeclared,
+				FuelType = FuelType
 			};
 		}
 

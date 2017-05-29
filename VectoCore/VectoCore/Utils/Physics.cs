@@ -46,10 +46,6 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		public static KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
 
-		/// <summary>
-		/// Density of fuel.
-		/// </summary>
-		public static KilogramPerCubicMeter FuelDensity = 832.SI<KilogramPerCubicMeter>();
 
 		public const double RollResistanceExponent = 0.9;
 
@@ -67,10 +63,5 @@ namespace TUGraz.VectoCore.Utils
 		/// Hellmann Exponent for modelling of wind speed in specific heights.
 		/// </summary>
 		public const double HellmannExponent = 0.2;
-
-		/// <summary>
-		/// fuel[kg] => co2[kg]. Factor to convert from fuel weight to co2 weight.
-		/// </summary>
-		public static double CO2PerFuelWeight = 3.16;
 	}
 }

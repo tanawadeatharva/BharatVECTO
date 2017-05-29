@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// <summary>
 		/// The full load curve.
 		/// </summary>
-		internal  Dictionary<uint, EngineFullLoadCurve> Flc { get; set; }
+		internal Dictionary<uint, EngineFullLoadCurve> Flc { get; set; }
 
 		/// <summary>
 		/// The declaration segment from the segment table

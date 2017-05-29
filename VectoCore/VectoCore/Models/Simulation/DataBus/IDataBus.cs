@@ -31,6 +31,7 @@
 
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
@@ -42,6 +43,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		IBrakes, IWheelsInfo, IDriverInfo, IDrivingCycleInfo
 	{
 		ExecutionMode ExecutionMode { get; }
+
+		FuelType FuelType { get; }
 
 		Second AbsTime { get; set; }
 	}

@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", FuelType.DieselCI, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var driver = new Driver(container, driverData, new DefaultDriverStrategy());
@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain", fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain", FuelType.DieselCI, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile2);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", FuelType.DieselCI, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);

@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -54,6 +53,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly Segments Segments = new Segments();
 		public static readonly Wheels Wheels = new Wheels();
 		public static readonly PT1 PT1 = new PT1();
+		public static readonly FuelData FuelData = FuelData.Instance();
 		public static readonly ElectricSystem ElectricSystem = new ElectricSystem();
 		public static readonly Fan Fan = new Fan();
 
@@ -96,29 +96,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return 1;
 		}
 
-		public static class Physics
-		{
-			/// <summary>
-			/// The standard acceleration for gravity on earth.
-			/// http://physics.nist.gov/Pubs/SP330/sp330.pdf (page 52)
-			/// </summary>
-			public static readonly MeterPerSquareSecond GravityAccelleration = 9.80665.SI<MeterPerSquareSecond>();
-
-			/// <summary>
-			/// Density of air.
-			/// </summary>
-			public static readonly KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
-
-			/// <summary>
-			/// Density of fuel.
-			/// </summary>
-			public static readonly KilogramPerCubicMeter FuelDensity = 832.SI<KilogramPerCubicMeter>();
-
-			/// <summary>
-			/// fuel[kg] => co2[kg]. Factor to convert from fuel weight to co2 weight.
-			/// </summary>
-			public static readonly double CO2PerFuelWeight = 3.16;
-		}
 
 		public static class Driver
 		{

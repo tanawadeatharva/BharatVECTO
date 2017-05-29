@@ -166,6 +166,7 @@
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
     <Compile Include="InputData\Reader\ComponentData\AccelerationCurveReader.cs" />
+    <Compile Include="Models\Declaration\FuelData.cs" />
     <Compile Include="Models\Declaration\PTOTransmission.cs" />
     <Compile Include="Models\Declaration\IDeclarationAuxiliaryTable.cs" />
     <Compile Include="Models\SimulationComponent\Data\AngledriveData.cs" />
@@ -431,6 +432,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\MunicipalUtility_PTO_generic.vptoc" />
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\MunicipalUtility_PTO_generic.vptol" />
+    <EmbeddedResource Include="Resources\Declaration\FuelTypes.csv" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />

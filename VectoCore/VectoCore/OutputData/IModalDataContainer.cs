@@ -35,6 +35,7 @@ using System.Data;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -70,6 +71,8 @@ namespace TUGraz.VectoCore.OutputData
 		/// Commits the data of the current simulation step.
 		/// </summary>
 		void CommitSimulationStep();
+
+		FuelData.Entry FuelData { get; }
 
 		VectoRun.Status RunStatus { get; }
 
@@ -379,7 +382,7 @@ namespace TUGraz.VectoCore.OutputData
 				return null;
 			}
 
-			var fcVolumePerMeter = fuelConsumptionFinal / Physics.FuelDensity;
+			var fcVolumePerMeter = fuelConsumptionFinal / data.FuelData.FuelDensity;
 			return fcVolumePerMeter.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
 		}
 
@@ -389,7 +392,7 @@ namespace TUGraz.VectoCore.OutputData
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * Physics.CO2PerFuelWeight / distance;
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * data.FuelData.CO2PerFuelWeight / distance;
 		}
 
 		public static KilogramPerSecond FCMapPerSecond(this IModalDataContainer data)
