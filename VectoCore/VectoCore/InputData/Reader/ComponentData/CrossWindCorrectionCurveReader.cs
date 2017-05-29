@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					EffectiveCrossSectionArea = aerodynamicDragArea
 				},
 				new CrossWindCorrectionEntry {
-					Velocity = 130.KMPHtoMeterPerSecond(),
+					Velocity = 300.KMPHtoMeterPerSecond(),
 					EffectiveCrossSectionArea = aerodynamicDragArea
 				}
 			}.ToList();
