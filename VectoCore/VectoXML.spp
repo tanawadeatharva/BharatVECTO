@@ -10,22 +10,14 @@
 		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample_ref.xml" HomeFolder="Yes"/>
 		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_retarder-sample_ref.xml" HomeFolder="Yes"/>
 		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_vehicle_ref.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding ISO 8859-15.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-16 BE BOM.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-16 LE.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-8 BOM.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-8.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding windows-1292.xml" HomeFolder="Yes"/>
 		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_engine-sample.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample_Whitespaces.xml" HomeFolder="Yes"/>
 		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_gearbox-sample.xml" HomeFolder="Yes"/>
 		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml" HomeFolder="Yes"/>
 		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_vehicle-sample_FULL_Entry_Order.xml" HomeFolder="Yes"/>
 	</Folder>
 	<Folder FolderName="XSL Files" ExtStr="xsl;xslt">
 		<File FilePath="E:\QUAM\Workspace\VECTO_API\API\RenderTable.xslt" HomeFolder="Yes"/>
-		<File FilePath="E:\QUAM\Workspace\VECTO_quam\VectoCommon\VectoHashing\Resources\XSLT\SortInputData.xslt" HomeFolder="Yes"/>
+		<File FilePath="E:\QUAM\Workspace\VECTO_API\API\XSD\SortInputData.xslt" HomeFolder="Yes"/>
 	</Folder>
 	<Folder FolderName="XQuery Files" ExtStr="xq;xql;xquery;xqu"/>
 	<Folder FolderName="HTML Files" ExtStr="html;htm;xhtml;asp"/>
