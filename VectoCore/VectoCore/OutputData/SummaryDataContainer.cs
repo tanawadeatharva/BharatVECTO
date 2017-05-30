@@ -30,11 +30,9 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Org.BouncyCastle.Asn1;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -316,9 +314,9 @@ namespace TUGraz.VectoCore.OutputData
 				row[ENGINE_MANUFACTURER] = runData.EngineData.Manufacturer;
 				row[ENGINE_MODEL] = runData.EngineData.ModelName;
 				row[ENGINE_FUEL_TYPE] = runData.EngineData.FuelType.GetLabel();
-				row[ENGINE_RATED_POWER] =runData.EngineData.RatedPowerDeclared != null ?
-					runData.EngineData.RatedPowerDeclared.ConvertTo().Kilo.Watt:
-					runData.EngineData.FullLoadCurves[0].MaxPower.ConvertTo().Kilo.Watt;
+				row[ENGINE_RATED_POWER] = runData.EngineData.RatedPowerDeclared != null
+					? runData.EngineData.RatedPowerDeclared.ConvertTo().Kilo.Watt
+					: runData.EngineData.FullLoadCurves[0].MaxPower.ConvertTo().Kilo.Watt;
 				row[ENGINE_IDLING_SPEED] = runData.EngineData.IdleSpeed.AsRPM.SI<Scalar>();
 				row[ENGINE_RATED_SPEED] = runData.EngineData.RatedSpeedDeclared != null
 					? runData.EngineData.RatedSpeedDeclared.AsRPM.SI<Scalar>()

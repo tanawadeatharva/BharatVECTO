@@ -39,14 +39,12 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModFilter;
-using TUGraz.VectoCore.OutputData.PDF;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -79,11 +77,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					if (declDataProvider == null) {
 						throw new VectoException("InputDataProvider does not implement DeclarationData interface");
 					}
-					var report = declarationReport ?? new PDFDeclarationReport(writer);
-					var windowsIdentity = WindowsIdentity.GetCurrent();
-					report.Creator = windowsIdentity.Name;
-					report.JobName = declDataProvider.JobInputData().JobName;
-					DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, report);
+					if (declarationReport != null) {
+						declarationReport.JobName = declDataProvider.JobInputData().JobName;
+					}
+					DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, declarationReport);
 					break;
 				case ExecutionMode.Engineering:
 					var engDataProvider = dataProvider as IEngineeringInputDataProvider;
