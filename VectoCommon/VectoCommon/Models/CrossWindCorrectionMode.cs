@@ -98,5 +98,21 @@ namespace TUGraz.VectoCommon.Models
 					throw new ArgumentOutOfRangeException("CrosswindCorrectionMode", mode, null);
 			}
 		}
+
+		public static string ToXMLFormat(this CrossWindCorrectionMode mode)
+		{
+			switch (mode) {
+				case CrossWindCorrectionMode.NoCorrection:
+					return "No Correction";
+				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
+					return "Speed Dependent Correction Factor";
+				case CrossWindCorrectionMode.VAirBetaLookupTable:
+					return "VAir Beta Lookup Table";
+				case CrossWindCorrectionMode.DeclarationModeCorrection:
+					return "Declaration Mode Correction";
+				default:
+					throw new ArgumentOutOfRangeException("CrosswindCorrection", mode, null);
+			}
+		}
 	}
 }

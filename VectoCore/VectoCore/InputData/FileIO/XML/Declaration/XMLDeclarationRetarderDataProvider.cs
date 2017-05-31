@@ -1,7 +1,7 @@
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Resources;
+using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {

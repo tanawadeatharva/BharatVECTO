@@ -9,10 +9,10 @@ using TUGraz.IVT.VectoXML;
 using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Resources;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData.XML
@@ -191,12 +191,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement(tns + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.Model),
 				GetDefaultComponentElements(vehicle.TechnicalReportId, vehicle.Model),
-				new XElement(tns + XMLNames.Vehicle_VehicleCategory, GetVehicleCategoryXML(vehicle.VehicleCategory)),
+				new XElement(tns + XMLNames.Vehicle_VehicleCategory, vehicle.VehicleCategory.ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, vehicle.CurbMassChassis.Value().ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, vehicle.GrossVehicleMassRating.Value().ToXMLFormat(0)),
 				//new XElement(tns + XMLNames.Vehicle_AirDragArea, airdrag.AirDragArea.Value()),
-				new XElement(tns + XMLNames.Vehicle_RetarderType, GetRetarterTypeXML(retarder.Type)),
+				new XElement(tns + XMLNames.Vehicle_RetarderType, retarder.Type.ToXMLFormat()),
 				retarder.Type.IsDedicatedComponent()
 					? new XElement(tns + XMLNames.Vehicle_RetarderRatio, retarder.Ratio.ToXMLFormat(3))
 					: null,
@@ -514,7 +514,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(data.Model, "N.A."),
-					new XElement(tns + XMLNames.Vehicle_CrossWindCorrectionMode, GetCorrectionModeXML(data.CrossWindCorrectionMode)),
+					new XElement(tns + XMLNames.Vehicle_CrossWindCorrectionMode, data.CrossWindCorrectionMode.ToXMLFormat()),
 					new XElement(tns + XMLNames.Vehicle_AirDragArea, data.AirDragArea.Value().ToXMLFormat(2))),
 				GetCrossWindCorrectionData(data)
 				);

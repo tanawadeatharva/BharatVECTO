@@ -52,18 +52,33 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				VIN = data.VIN,
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
 				Date = data.Date,
-				CertificationNumber = data.TechnicalReportId,
+				//CertificationNumber = data.CertificationNumber,
 				DigestValueInput = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
+				LegislativeClass = data.LegislativeClass,
 				VehicleCategory = data.VehicleCategory,
 				AxleConfiguration = data.AxleConfiguration,
 				CurbWeight = data.CurbMassChassis,
 				GrossVehicleWeight = data.GrossVehicleMassRating,
 			};
 
+			return retVal;
+		}
+
+		internal AirdragData SetCommonAirdragData(IAirdragDeclarationInputData data)
+		{
+			var retVal = new AirdragData() {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				Date = data.Date,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
+			};
 			return retVal;
 		}
 
@@ -96,9 +111,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				retarder.Manufacturer = data.Manufacturer;
 				retarder.ModelName = data.Model;
 				retarder.Date = data.Date;
-				retarder.CertificationNumber = data.TechnicalReportId;
+				retarder.CertificationMethod = data.CertificationMethod;
+				retarder.CertificationNumber = data.CertificationNumber;
 				retarder.DigestValueInput = data.DigestValue;
-				retarder.IntegrityStatus = data.IntegrityStatus;
 
 				return retarder;
 			} catch (Exception e) {
@@ -113,9 +128,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
 				Date = data.Date,
-				CertificationNumber = data.TechnicalReportId,
+				CertificationNumber = data.CertificationNumber,
 				DigestValueInput = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
 				Displacement = data.Displacement,
 				IdleSpeed = data.IdleSpeed,
 				ConsumptionMap = FuelConsumptionMapReader.Create(data.FuelConsumptionMap),
@@ -134,9 +148,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
 				Date = data.Date,
-				CertificationNumber = data.TechnicalReportId,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
 				DigestValueInput = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
 				Type = data.Type
 			};
 		}
@@ -160,10 +174,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
+				LineType = data.LineType,
 				Date = data.Date,
-				CertificationNumber = data.TechnicalReportId,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
 				DigestValueInput = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
 				AxleGear = new GearData { LossMap = axleLossMap, Ratio = data.Ratio }
 			};
 		}
@@ -189,9 +204,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							Manufacturer = data.Manufacturer,
 							ModelName = data.Model,
 							Date = data.Date,
-							CertificationNumber = data.TechnicalReportId,
+							CertificationMethod = data.CertificationMethod,
+							CertificationNumber = data.CertificationNumber,
 							DigestValueInput = data.DigestValue,
-							IntegrityStatus = data.IntegrityStatus,
 							Type = type,
 							Angledrive = new TransmissionData { Ratio = data.Ratio }
 						};

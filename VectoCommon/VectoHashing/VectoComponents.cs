@@ -1,5 +1,5 @@
 ﻿using System;
-using TUGraz.VectoCore.Resources;
+using TUGraz.VectoCommon.Resources;
 
 namespace TUGraz.VectoHashing
 {
@@ -14,6 +14,7 @@ namespace TUGraz.VectoHashing
 		Airdrag,
 		Tyre,
 		Vehicle,
+		VectoOutput
 	}
 
 	public static class VectoComponentsExtensionMethods
@@ -39,6 +40,8 @@ namespace TUGraz.VectoHashing
 					return XMLNames.AxleWheels_Axles_Axle_Tyre;
 				case VectoComponents.Vehicle:
 					return XMLNames.Component_Vehicle;
+				case VectoComponents.VectoOutput:
+					return "VectoOutput";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}
@@ -63,6 +66,8 @@ namespace TUGraz.VectoHashing
 					return "AD-";
 				case VectoComponents.Tyre:
 					return "TYRE-";
+				case VectoComponents.VectoOutput:
+					return "RESULT-";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}

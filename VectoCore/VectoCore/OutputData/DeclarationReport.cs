@@ -43,8 +43,8 @@ namespace TUGraz.VectoCore.OutputData
 {
 	public interface IDeclarationReport
 	{
-		void PrepareResult(LoadingType loading, Mission mission);
-		void AddResult(LoadingType loadingType, Mission mission, IModalDataContainer modData);
+		void PrepareResult(LoadingType loading, Mission mission, VectoRunData runData);
+		void AddResult(LoadingType loadingType, Mission mission, VectoRunData runData, IModalDataContainer modData);
 		void InitializeReport(VectoRunData modelData, Segment segment);
 		string Creator { get; set; }
 		string JobName { get; set; }
@@ -55,45 +55,27 @@ namespace TUGraz.VectoCore.OutputData
 	/// </summary>
 	public abstract class DeclarationReport<T> : IDeclarationReport where T : new()
 	{
-		///// <summary>
-		///// Container class for one mission and the modData for the different loadings.
-		///// </summary>
-		//protected class ResultContainer<TResultEntry>
-		//{
-		//	/// <summary>
-		//	/// The mission
-		//	/// </summary>
-		//	public Mission Mission;
-
-		//	/// <summary>
-		//	/// Dictionary of LoadingTypes and DeclarationResults
-		//	/// </summary>
-		//	public Dictionary<LoadingType, TResultEntry> ModData;
-		//}
 		public class ResultContainer<TEntry>
 		{
-			//public Stream PDFPage;
-			public Mission Mission;
-
-			public MissionProfile MissionProfile;
+			public MissionType Mission;
 
 			public Dictionary<LoadingType, TEntry> ModData;
 		}
 
-		public class MissionProfile
-		{
-			public readonly IList<double> DistanceKm;
-			public readonly IList<double> TargetSpeed;
-			public readonly IList<double> Altitude;
+		//public class MissionProfile
+		//{
+		//	public readonly IList<double> DistanceKm;
+		//	public readonly IList<double> TargetSpeed;
+		//	public readonly IList<double> Altitude;
 
-			public MissionProfile(IModalDataContainer m)
-			{
-				DistanceKm = m.GetValues<Meter>(ModalResultField.dist).Select(v => v.ConvertTo().Kilo.Meter).ToDouble();
-				TargetSpeed =
-					m.GetValues<MeterPerSecond>(ModalResultField.v_targ).Select(v => v.ConvertTo().Kilo.Meter.Per.Hour).ToDouble();
-				Altitude = m.GetValues<Meter>(ModalResultField.altitude).ToDouble();
-			}
-		}
+		//	public MissionProfile(IModalDataContainer m)
+		//	{
+		//		DistanceKm = m.GetValues<Meter>(ModalResultField.dist).Select(v => v.ConvertTo().Kilo.Meter).ToDouble();
+		//		TargetSpeed =
+		//			m.GetValues<MeterPerSecond>(ModalResultField.v_targ).Select(v => v.ConvertTo().Kilo.Meter.Per.Hour).ToDouble();
+		//		Altitude = m.GetValues<Meter>(ModalResultField.altitude).ToDouble();
+		//	}
+		//}
 
 		/// <summary>
 		/// Dictionary of MissionTypes and their corresponding results.
@@ -127,12 +109,12 @@ namespace TUGraz.VectoCore.OutputData
 		private int _resultCount;
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		public void PrepareResult(LoadingType loading, Mission mission)
+		public void PrepareResult(LoadingType loading, Mission mission, VectoRunData runData)
 		{
 			if (!Missions.ContainsKey(mission.MissionType)) {
 				Missions[mission.MissionType] = new ResultContainer<T>() {
-					Mission = mission,
-					ModData = new Dictionary<LoadingType, T>()
+					Mission = mission.MissionType,
+					ModData = new Dictionary<LoadingType, T>(),
 				};
 			}
 			Missions[mission.MissionType].ModData[loading] = new T();
@@ -140,7 +122,8 @@ namespace TUGraz.VectoCore.OutputData
 
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		public void AddResult(LoadingType loadingType, Mission mission, IModalDataContainer modData)
+		public void AddResult(LoadingType loadingType, Mission mission, VectoRunData runData,
+			IModalDataContainer modData)
 		{
 			if (modData.RunStatus != VectoRun.Status.Success) {
 				//Missions.Clear();
@@ -152,12 +135,12 @@ namespace TUGraz.VectoCore.OutputData
 			if (!Missions[mission.MissionType].ModData.ContainsKey(loadingType)) {
 				throw new VectoException("Unknown loading type {0} for mission {1}", loadingType, mission.MissionType);
 			}
-			if (Missions[mission.MissionType].MissionProfile == null) {
-				Missions[mission.MissionType].MissionProfile = new MissionProfile(modData);
-			}
+			//if (Missions[mission.MissionType].MissionProfile == null) {
+			//	Missions[mission.MissionType].MissionProfile = new MissionProfile(modData);
+			//}
 			_resultCount--;
 
-			DoAddResult(Missions[mission.MissionType].ModData[loadingType], loadingType, mission, modData);
+			DoAddResult(Missions[mission.MissionType].ModData[loadingType], runData, modData);
 
 			if (_resultCount == 0) {
 				DoWriteReport();
@@ -170,11 +153,10 @@ namespace TUGraz.VectoCore.OutputData
 		/// Adds the result of one run for the specific mission and loading. If all runs finished (given by the resultCount) the report will be written.
 		/// </summary>
 		/// <param name="entry"></param>
-		/// <param name="loadingType">Type of the loading.</param>
-		/// <param name="mission">The mission.</param>
+		/// <param name="runData"></param>
 		/// <param name="modData">The mod data.</param>
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		protected abstract void DoAddResult(T entry, LoadingType loadingType, Mission mission, IModalDataContainer modData);
+		protected abstract void DoAddResult(T entry, VectoRunData runData, IModalDataContainer modData);
 
 
 		protected internal abstract void DoWriteReport();

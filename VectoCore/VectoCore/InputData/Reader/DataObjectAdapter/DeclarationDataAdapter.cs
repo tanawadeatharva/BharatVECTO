@@ -80,8 +80,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, IAirdragDeclarationInputData airdragData,
-			Mission mission, Kilogram loading, Meter vehicleHeight, Kilogram municipalBodyWeight)
+		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading,
+			Kilogram municipalBodyWeight)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("VehicleData");
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.BodyAndTrailerWeight = (mission.MissionType == MissionType.MunicipalUtility
 				? municipalBodyWeight
 				: mission.BodyCurbWeight) + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
-			retVal.CurbWeight += retVal.BodyAndTrailerWeight;
+			//retVal.CurbWeight += retVal.BodyAndTrailerWeight;
 
 			retVal.Loading = loading;
 			var drivenIndex = DrivenAxleIndex(data.Axles);
@@ -101,12 +101,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				DeclarationData.Wheels.Lookup(data.Axles[drivenIndex].Wheels).DynamicTyreRadius;
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
 
-			var aerodynamicDragArea = airdragData.AirDragArea + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
 
-			retVal.CrossWindCorrectionCurve =
-				new CrosswindCorrectionCdxALookup(aerodynamicDragArea,
-					GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea, vehicleHeight),
-					CrossWindCorrectionMode.DeclarationModeCorrection);
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
@@ -413,6 +408,39 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return null;
+		}
+
+		public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData, Mission mission,
+			Segment segment)
+		{
+			if (airdragInputData == null) {
+				return DefaultAirdragData(mission, segment);
+			}
+
+			var retVal = SetCommonAirdragData(airdragInputData);
+			var aerodynamicDragArea = airdragInputData.AirDragArea + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
+
+			retVal.DeclaredAirdragArea = airdragInputData.AirDragArea;
+			retVal.CrossWindCorrectionCurve =
+				new CrosswindCorrectionCdxALookup(aerodynamicDragArea,
+					GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea, segment.VehicleHeight),
+					CrossWindCorrectionMode.DeclarationModeCorrection);
+			return retVal;
+		}
+
+		private AirdragData DefaultAirdragData(Mission mission, Segment segment)
+		{
+			var aerodynamicDragArea = mission.MissionType == MissionType.Construction
+				? segment.CdAConstruction
+				: segment.CdADefault + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
+
+			return new AirdragData() {
+				CertificationMethod = CertificationMethod.StandardValues,
+				DeclaredAirdragArea = mission.MissionType == MissionType.Construction ? segment.CdAConstruction : segment.CdADefault,
+				CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(aerodynamicDragArea,
+					GetDeclarationAirResistanceCurve(mission.CrossWindCorrectionParameters, aerodynamicDragArea, segment.VehicleHeight),
+					CrossWindCorrectionMode.DeclarationModeCorrection)
+			};
 		}
 	}
 }

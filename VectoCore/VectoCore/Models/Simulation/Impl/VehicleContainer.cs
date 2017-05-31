@@ -264,7 +264,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Cycle;
 		}
 
-		public FuelType FuelType { get { return ModData.FuelData.FuelType; } }
+		public FuelType FuelType
+		{
+			get { return ModData.FuelData.FuelType; }
+		}
 
 		public Second AbsTime { get; set; }
 
@@ -320,15 +323,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public void FinishSimulation()
+		public void FinishSimulationRun(Exception e = null)
 		{
 			Log.Info("VehicleContainer finishing simulation.");
 			ModData.Finish(RunStatus);
 
 			WriteSumData(ModData);
 
-			ModData.FinishSimulation();
+			ModData.FinishSimulation(e);
 			DrivingCycle.FinishSimulation();
+		}
+
+		public void FinishSimulation()
+		{
+			throw new NotImplementedException();
 		}
 
 		public VectoRun.Status RunStatus { get; set; }
@@ -360,6 +368,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return DrivingCycle.LookAhead(time);
 		}
+
 
 		public Watt BrakePower
 		{

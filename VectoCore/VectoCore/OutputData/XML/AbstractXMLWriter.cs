@@ -6,15 +6,15 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.IVT.VectoXML.Writer
 {
 	public abstract class AbstractXMLWriter
 	{
 		//protected const string SchemaLocationBaseUrl = "http://markus.quaritsch.at/VECTO/";
-		protected const string SchemaLocationBaseUrl = "https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/";
+		public const string SchemaLocationBaseUrl = "https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/";
 		protected const string SchemaVersion = "0.8";
 
 		protected XNamespace tns;
@@ -64,57 +64,6 @@ namespace TUGraz.IVT.VectoXML.Writer
 							})))
 				.Cast<object>().ToArray();
 		}
-
-		protected string GetVehicleCategoryXML(VehicleCategory vehicleCategory)
-		{
-			switch (vehicleCategory) {
-				case VehicleCategory.Coach:
-				case VehicleCategory.Tractor:
-					return vehicleCategory.ToString();
-				case VehicleCategory.CityBus:
-					return "City Bus";
-				case VehicleCategory.InterurbanBus:
-					return "Interurban Bus";
-				case VehicleCategory.RigidTruck:
-					return "Rigid Truck";
-
-				default:
-					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
-			}
-		}
-
-		protected string GetCorrectionModeXML(CrossWindCorrectionMode mode)
-		{
-			switch (mode) {
-				case CrossWindCorrectionMode.NoCorrection:
-					return "No Correction";
-				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
-					return "Speed Dependent Correction Factor";
-				case CrossWindCorrectionMode.VAirBetaLookupTable:
-					return "VAir Beta Lookup Table";
-				case CrossWindCorrectionMode.DeclarationModeCorrection:
-					return "Declaration Mode Correction";
-				default:
-					throw new ArgumentOutOfRangeException("CrosswindCorrection", mode, null);
-			}
-		}
-
-		protected string GetRetarterTypeXML(RetarderType type)
-		{
-			switch (type) {
-				case RetarderType.None:
-					return "None";
-				case RetarderType.TransmissionInputRetarder:
-					return "Transmission Input Retarder";
-				case RetarderType.TransmissionOutputRetarder:
-					return "Transmission Output Retarder";
-				case RetarderType.EngineRetarder:
-					return "Engine Retarder";
-				case RetarderType.LossesIncludedInTransmission:
-					return "Losses included in Gearbox";
-				default:
-					throw new ArgumentOutOfRangeException("RetarderType", type, null);
-			}
-		}
+		
 	}
 }

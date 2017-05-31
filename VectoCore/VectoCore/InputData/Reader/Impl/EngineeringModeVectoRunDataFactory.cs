@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData,
 				InputDataProvider.VehicleInputData.TorqueLimits);
 
-			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData);
+			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData);
 
 			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData, useEfficiencyFallback: true);
 			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
@@ -88,7 +88,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					GearboxData = gearboxData,
 					AxleGearData = axlegearData,
 					AngledriveData = angledriveData,
-					VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData, InputDataProvider.AirdragInputData),
+					VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData),
+					AirdragData = dao.CreateAirdragData(InputDataProvider.AirdragInputData, InputDataProvider.VehicleInputData),
 					DriverData = driver,
 					Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData()),
 					AdvancedAux = dao.CreateAdvancedAuxData(InputDataProvider.AuxiliaryInputData()),

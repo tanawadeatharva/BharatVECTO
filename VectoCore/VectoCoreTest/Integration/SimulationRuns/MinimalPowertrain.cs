@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var driver = new Driver(container, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(container, engineData);
-			driver.AddComponent(new Vehicle(container, vehicleData))
+			driver.AddComponent(new Vehicle(container, vehicleData, CreateAirdragData()))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new Clutch(container, engineData))
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Vehicle(container, vehicleData, CreateAirdragData()))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Vehicle(container, vehicleData, CreateAirdragData()))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -275,15 +275,22 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
+				
 				CurbWeight = 15700.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,
 				SavedInDeclarationMode = false
+			};
+		}
+
+		private static AirdragData CreateAirdragData()
+		{
+			return new AirdragData() {
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
 			};
 		}
 

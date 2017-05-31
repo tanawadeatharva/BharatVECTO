@@ -42,6 +42,18 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+
+	public class AirdragData : SimulationComponentData
+	{
+
+		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
+
+		[Required, ValidateObject]
+		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
+
+		public SquareMeter DeclaredAirdragArea { get; internal set; }
+	}
+
 	/// <summary>
 	/// Data Class for the Vehicle
 	/// </summary>
@@ -50,15 +62,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public string VIN { get; internal set; }
 
+		public string LegislativeClass { get; internal set; }
+
 		public VehicleCategory VehicleCategory { get; internal set; }
 
 		public VehicleClass VehicleClass { get; internal set; }
 
 		public AxleConfiguration AxleConfiguration { get; internal set; }
 
-		[Required, ValidateObject]
-		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
-
+		
 		[Required, ValidateObject] private List<Axle> _axleData;
 
 		private KilogramSquareMeter _wheelsInertia;
@@ -150,8 +162,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			protected internal set { _rollResistanceCoefficientWithoutTrailer = value; }
 		}
 
-		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
-
 		public Kilogram TotalVehicleWeight
 		{
 			get {
@@ -168,8 +178,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public Kilogram TotalCurbWeight
 		{
-			get { return CurbWeight ?? 0.SI<Kilogram>(); }
+			get { return (CurbWeight ?? 0.SI<Kilogram>()) + (BodyAndTrailerWeight ?? 0.SI<Kilogram>()); }
 		}
+
 
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{

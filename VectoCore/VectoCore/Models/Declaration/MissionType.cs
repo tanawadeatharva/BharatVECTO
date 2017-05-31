@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+
 namespace TUGraz.VectoCore.Models.Declaration
 {
 	public enum MissionType
@@ -68,6 +70,36 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return MissionType.RegionalDelivery;
 			}
 			return self;
+		}
+
+		public static string ToXMLFormat(this MissionType self)
+		{
+			switch (self) {
+				case MissionType.LongHaul:
+				case MissionType.LongHaulEMS:
+					return "Long Haul";
+				case MissionType.RegionalDelivery:
+				case MissionType.RegionalDeliveryEMS:
+					return "Regional Delivery";
+				case MissionType.UrbanDelivery:
+					return "Urban Delivery";
+				case MissionType.MunicipalUtility:
+					return "Municipal Utility";
+				case MissionType.Construction:
+					return "Construction";
+				//case MissionType.HeavyUrban:
+				//	return "";
+				//case MissionType.Urban:
+				//	return "";
+				//case MissionType.Suburban:
+				//	return "";
+				//case MissionType.Interurban:
+				//	return "";
+				//case MissionType.Coach:
+				//	return "";
+				default:
+					throw new ArgumentOutOfRangeException("MissionType", self, null);
+			}
 		}
 	}
 }

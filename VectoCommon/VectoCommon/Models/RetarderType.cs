@@ -87,6 +87,24 @@ namespace TUGraz.VectoCommon.Models
 			}
 		}
 
+		public static string ToXMLFormat(this RetarderType type)
+		{
+			switch (type) {
+				case RetarderType.None:
+					return "None";
+				case RetarderType.TransmissionInputRetarder:
+					return "Transmission Input Retarder";
+				case RetarderType.TransmissionOutputRetarder:
+					return "Transmission Output Retarder";
+				case RetarderType.EngineRetarder:
+					return "Engine Retarder";
+				case RetarderType.LossesIncludedInTransmission:
+					return "Losses included in Gearbox";
+				default:
+					throw new ArgumentOutOfRangeException("RetarderType", type, null);
+			}
+		}
+
 		public static bool IsDedicatedComponent(this RetarderType retarder)
 		{
 			return retarder == RetarderType.TransmissionInputRetarder || retarder == RetarderType.TransmissionOutputRetarder;

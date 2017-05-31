@@ -57,10 +57,6 @@
     <EmbeddedResource Include="Resources\XSLT\SortInputData.xslt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\VectoCore\VectoCore\VectoCore.csproj">
-      <Project>{CD36938A-ADD9-4C65-96DA-B397CDEEA90A}</Project>
-      <Name>VectoCore</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VectoCommon\VectoCommon.csproj">
       <Project>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</Project>
       <Name>VectoCommon</Name>

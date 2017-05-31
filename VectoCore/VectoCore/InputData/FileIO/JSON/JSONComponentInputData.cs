@@ -31,6 +31,7 @@
 
 using System;
 using System.IO;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
@@ -178,5 +179,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return PTOTransmission; }
 		}
+
+		public XElement XMLHash { get { return null; } }
 	}
 }

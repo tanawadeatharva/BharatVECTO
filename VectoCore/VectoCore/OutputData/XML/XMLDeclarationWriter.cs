@@ -8,11 +8,11 @@ using TUGraz.IVT.VectoXML;
 using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
@@ -100,12 +100,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.Model),
 				GetDefaultComponentElements(vehicle.TechnicalReportId, vehicle.Model, "N.A."),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, "N3"),
-				new XElement(tns + XMLNames.Vehicle_VehicleCategory, GetVehicleCategoryXML(vehicle.VehicleCategory)),
+				new XElement(tns + XMLNames.Vehicle_VehicleCategory, vehicle.VehicleCategory.ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, vehicle.CurbMassChassis.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, vehicle.GrossVehicleMassRating.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Vehicle_IdlingSpeed, data.EngineInputData.IdleSpeed.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Vehicle_RetarderType, GetRetarterTypeXML(retarder.Type)),
+				new XElement(tns + XMLNames.Vehicle_RetarderType, retarder.Type.ToXMLFormat()),
 				retarder.Type.IsDedicatedComponent()
 					? new XElement(tns + XMLNames.Vehicle_RetarderRatio, retarder.Ratio.ToXMLFormat(3))
 					: null,
@@ -341,7 +341,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				AddSignatureDummy(id)
 				);
 		}
-
+		
 		private string AuxTypeToXML(AuxiliaryType type)
 		{
 			return type.ToString();

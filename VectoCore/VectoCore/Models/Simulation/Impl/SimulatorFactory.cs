@@ -45,6 +45,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModFilter;
+using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -77,10 +78,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					if (declDataProvider == null) {
 						throw new VectoException("InputDataProvider does not implement DeclarationData interface");
 					}
+					var report = declarationReport ?? new XMLDeclarationReport(writer);
 					if (declarationReport != null) {
 						declarationReport.JobName = declDataProvider.JobInputData().JobName;
 					}
-					DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, declarationReport);
+					DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, report);
 					break;
 				case ExecutionMode.Engineering:
 					var engDataProvider = dataProvider as IEngineeringInputDataProvider;
@@ -132,11 +134,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			foreach (var data in DataReader.NextRun()) {
 				var d = data;
 				if (d.Report != null) {
-					d.Report.PrepareResult(d.Loading, d.Mission);
+					d.Report.PrepareResult(d.Loading, d.Mission, d);
 				}
 				Action<ModalDataContainer> addReportResult = writer => {
 					if (d.Report != null) {
-						d.Report.AddResult(d.Loading, d.Mission, writer);
+						d.Report.AddResult(d.Loading, d.Mission, d, writer);
 					}
 				};
 				if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {

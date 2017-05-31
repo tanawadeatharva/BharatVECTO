@@ -1,7 +1,9 @@
 ﻿using System.Xml.XPath;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.Resources;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
@@ -30,6 +32,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public double Efficiency
 		{
 			get { return GetDoubleElementValue(Helper.Query(XMLNames.Axlegear_TorqueLossMap, XMLNames.Axlegear_Efficiency)); }
+		}
+
+		public AxleLineType LineType
+		{
+			get { return GetElementValue(XMLNames.Axlegear_LineType).ParseEnum<AxleLineType>(); }
 		}
 	}
 }

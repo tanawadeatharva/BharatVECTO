@@ -306,7 +306,8 @@ namespace TUGraz.VectoCore.OutputData
 				row[VEHICLE_MODEL] = runData.VehicleData.ModelName;
 
 				row[HDV_CO2_VEHICLE_CLASS] = runData.VehicleData.VehicleClass.GetClassNumber();
-				row[CURB_MASS] = runData.VehicleData.CurbWeight - (runData.VehicleData.BodyAndTrailerWeight ?? 0.SI<Kilogram>());
+				row[CURB_MASS] = runData.VehicleData.CurbWeight;
+					// - (runData.VehicleData.BodyAndTrailerWeight ?? 0.SI<Kilogram>());
 				row[LOADING] = runData.VehicleData.Loading;
 				row[CARGO_VOLUME] = runData.VehicleData.CargoVolume;
 
@@ -330,7 +331,7 @@ namespace TUGraz.VectoCore.OutputData
 				row[ENGINE_CF_REG_PER] = runData.EngineData.CorrectionFactorRegPer;
 				row[ENGINE_ACTUAL_CORRECTION_FACTOR] = runData.EngineData.FuelConsumptionCorrectionFactor;
 
-				row[CD_x_A] = runData.VehicleData.CrossWindCorrectionCurve.AirDragArea;
+				row[CD_x_A] = runData.AirdragData.CrossWindCorrectionCurve.AirDragArea;
 
 				row[ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER] =
 					runData.VehicleData.RollResistanceCoefficientWithoutTrailer;
@@ -514,38 +515,33 @@ namespace TUGraz.VectoCore.OutputData
 
 
 			row[ACC] = modData.AccelerationAverage();
-			var modal = modData as ModalDataContainer;
-			if (modal == null) {
-				Log.Error("unknown modal data container!");
-				return;
-			}
-			row[ACC_POS] = modal.AccelerationsPositive();
-			row[ACC_NEG] = modal.AccelerationsNegative();
-			var accTimeShare = modal.AccelerationTimeShare();
+			row[ACC_POS] = modData.AccelerationsPositive();
+			row[ACC_NEG] = modData.AccelerationsNegative();
+			var accTimeShare = modData.AccelerationTimeShare();
 			row[ACC_TIMESHARE] = accTimeShare;
-			var decTimeShare = modal.DecelerationTimeShare();
+			var decTimeShare = modData.DecelerationTimeShare();
 			row[DEC_TIMESHARE] = decTimeShare;
-			var cruiseTimeShare = modal.CruiseTimeShare();
+			var cruiseTimeShare = modData.CruiseTimeShare();
 			row[CRUISE_TIMESHARE] = cruiseTimeShare;
-			var stopTimeShare = modal.StopTimeShare();
+			var stopTimeShare = modData.StopTimeShare();
 			row[STOP_TIMESHARE] = stopTimeShare;
 
-			row[MAX_SPEED] = modal.MaxSpeed().AsKmph.SI<Scalar>();
-			row[MAX_ACCELERATION] = modal.MaxAcceleration();
-			row[MAX_DECELERATION] = modal.MaxDeceleration();
-			row[AVG_ENGINE_SPEED] = modal.AvgEngineSpeed().AsRPM.SI<Scalar>();
+			row[MAX_SPEED] = modData.MaxSpeed().AsKmph.SI<Scalar>();
+			row[MAX_ACCELERATION] = modData.MaxAcceleration();
+			row[MAX_DECELERATION] = modData.MaxDeceleration();
+			row[AVG_ENGINE_SPEED] = modData.AvgEngineSpeed().AsRPM.SI<Scalar>();
 			row[MAX_ENGINE_SPEED] = modData.MaxEngineSpeed().AsRPM.SI<Scalar>();
 
-			row[ENGINE_FULL_LOAD_TIME_SHARE] = modal.EngineMaxLoadTimeShare();
-			row[COASTING_TIME_SHARE] = modal.CoastingTimeShare();
-			row[BRAKING_TIME_SHARE] = modal.BrakingTimeShare();
+			row[ENGINE_FULL_LOAD_TIME_SHARE] = modData.EngineMaxLoadTimeShare();
+			row[COASTING_TIME_SHARE] = modData.CoastingTimeShare();
+			row[BRAKING_TIME_SHARE] = modData.BrakingTimeShare();
 
 			if (gearCount <= 0) {
 				return;
 			}
 
-			row[NUM_GEARSHIFTS] = modal.GearshiftCount();
-			var timeSharePerGear = modal.TimeSharePerGear(gearCount);
+			row[NUM_GEARSHIFTS] = modData.GearshiftCount();
+			var timeSharePerGear = modData.TimeSharePerGear(gearCount);
 
 			for (uint i = 0; i <= gearCount; i++) {
 				var colName = string.Format(TIME_SHARE_PER_GEAR_FORMAT, i);

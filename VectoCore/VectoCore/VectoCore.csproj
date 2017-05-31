@@ -193,11 +193,7 @@
     <Compile Include="OutputData\XML\XMLDeclarationReport.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
     <Compile Include="OutputData\XML\XMLEngineeringWriter.cs" />
-    <Compile Include="Resources\XMLNames.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>XMLNames.resx</DependentUpon>
-    </Compile>
+    <Compile Include="OutputData\XML\XMLFullReport.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
@@ -340,11 +336,6 @@
     <Compile Include="Utils\XPathHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\XMLNames.resx">
-      <SubType>Designer</SubType>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>XMLNames.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="JsonKeys.resx">
@@ -454,6 +445,10 @@
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
       <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
       <Name>VectoCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj">
+      <Project>{B673E12F-D323-4C4C-8805-9915B2C72D3D}</Project>
+      <Name>VectoHashing</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

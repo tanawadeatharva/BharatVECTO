@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return string.Join("/",
 				xpathSections.Select(
-					x => string.IsNullOrWhiteSpace(x) || x.Equals("..") || x.Contains(":") || x.StartsWith("@") ? x : NSPrefix(x)))
+					x => string.IsNullOrWhiteSpace(x) || x.StartsWith("..") || x.Contains(":") || x.StartsWith("@") ? x : NSPrefix(x)))
 				;
 		}
 

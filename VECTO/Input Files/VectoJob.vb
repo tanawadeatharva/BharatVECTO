@@ -17,6 +17,7 @@ Imports System.IO
 Imports System.Linq
 Imports System.Runtime.Remoting.Messaging
 Imports System.Text
+Imports System.Xml.Linq
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
@@ -590,6 +591,12 @@ Public Class VectoJob
 		Get
 			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
 			Return New JSONComponentInputData(_vehicleFile.FullPath).PTOTransmissionInputData
+		End Get
+	End Property
+
+	Public ReadOnly Property XMLHash As XElement Implements IDeclarationInputDataProvider.XMLHash
+		Get
+			Return Nothing
 		End Get
 	End Property
 

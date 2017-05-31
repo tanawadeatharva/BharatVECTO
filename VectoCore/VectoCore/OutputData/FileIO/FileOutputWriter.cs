@@ -52,6 +52,12 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.PDFReport); }
 		}
 
+		public string XMLFullReportName
+		{
+			get { return Path.ChangeExtension(_jobFile, "RESULT.xml"); }
+		}
+
+
 		public string SumFileName
 		{
 			get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile); }
@@ -93,7 +99,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			switch (type) {
 				case ReportType.DeclarationReportPdf:
 					return new FileStream(PDFReportName, FileMode.Create);
+				case ReportType.DeclarationReportXMLFulll:
+					return new FileStream(XMLFullReportName, FileMode.Create);
 				default:
+
 					throw new ArgumentOutOfRangeException("type");
 			}
 		}

@@ -59,6 +59,8 @@
     <Compile Include="Models\AngledriveType.cs" />
     <Compile Include="Models\AuxiliaryModel.cs" />
     <Compile Include="Models\AxleConfiguration.cs" />
+    <Compile Include="Models\AxleLineType.cs" />
+    <Compile Include="Models\CertificationMethod.cs" />
     <Compile Include="Models\CrossWindCorrectionMode.cs" />
     <Compile Include="Models\DriverMode.cs" />
     <Compile Include="Models\ExecutionMode.cs" />
@@ -72,6 +74,11 @@
     <Compile Include="OutputData\IOutputFileWriter.cs" />
     <Compile Include="OutputData\IOutputPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\XMLNames.Designer.cs">
+      <DependentUpon>XMLNames.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Utils\DoubleExtensionMethods.cs" />
     <Compile Include="Utils\EnumerableExtensionMethods.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
@@ -83,6 +90,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\XMLNames.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>XMLNames.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

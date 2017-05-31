@@ -92,6 +92,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VehicleHeight = LookupHeight(vehicleCategory, axleConfiguration, grossVehicleMassRating),
 				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 				GrossVehicleMassRating = grossVehicleMassRating,
+				CdADefault = row.ParseDouble("cdxa_default").SI<SquareMeter>(),
 				CdAConstruction = string.IsNullOrEmpty(row["cdxa_construction"].ToString())
 					? null
 					: row.ParseDouble("cdxa_construction").SI<SquareMeter>(),

@@ -49,6 +49,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IVehicleInputData
 
+		public string VIN
+		{
+			get { return "N.A."; }
+		}
+
+		public string LegislativeClass
+		{
+			get { return "N3"; }
+		}
+
 		public VehicleCategory VehicleCategory
 		{
 			get {
@@ -345,6 +355,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N.A."; }
 		}
 
+		public CertificationMethod CertificationMethod { get {return CertificationMethod.NotCertified;} }
+
 		public string CertificationNumber
 		{
 			get { return "N.A."; }
@@ -353,11 +365,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public string DigestValue
 		{
 			get { return ""; }
-		}
-
-		public IntegrityStatus IntegrityStatus
-		{
-			get { return IntegrityStatus.Unknown; }
 		}
 	}
 }

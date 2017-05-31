@@ -104,17 +104,15 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public string Model { get; internal set; }
 
-		public string Creator { get; internal set; }
-
 		public string Date { get; internal set; }
 
 		public string TechnicalReportId { get; internal set; }
 
+		public CertificationMethod CertificationMethod { get; internal set; }
+
 		public string CertificationNumber { get; internal set; }
 
 		public string DigestValue { get; internal set; }
-
-		public IntegrityStatus IntegrityStatus { get; internal set; }
 
 		public string Wheels { get; internal set; }
 

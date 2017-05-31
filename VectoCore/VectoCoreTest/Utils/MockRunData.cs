@@ -53,6 +53,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Loading = 0.SI<Kilogram>(),
 				TotalRollResistanceCoefficient = 0,
 				DynamicTyreRadius = 1.SI<Meter>(),
+				
+			};
+			AirdragData = new AirdragData() {
 				CrossWindCorrectionCurve =
 					new CrosswindCorrectionCdxALookup(1.SI<SquareMeter>(),
 						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(1.SI<SquareMeter>()), CrossWindCorrectionMode.NoCorrection)
