@@ -52,13 +52,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				VIN = data.VIN,
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
 				Date = data.Date,
 				//CertificationNumber = data.CertificationNumber,
 				DigestValueInput = data.DigestValue,
-				LegislativeClass = data.LegislativeClass,
 				VehicleCategory = data.VehicleCategory,
 				AxleConfiguration = data.AxleConfiguration,
 				CurbWeight = data.CurbMassChassis,
@@ -155,7 +153,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		internal AxleGearData CreateAxleGearData(IAxleGearInputData data, bool useEfficiencyFallback)
+		public AxleGearData CreateAxleGearData(IAxleGearInputData data, bool useEfficiencyFallback)
+		{
+			var retVal = SetCommonAxleGearData(data);
+			retVal.AxleGear.LossMap = ReadAxleLossMap(data, useEfficiencyFallback);
+			return retVal;
+		}
+
+		internal TransmissionLossMap ReadAxleLossMap(IAxleGearInputData data, bool useEfficiencyFallback)
 		{
 			TransmissionLossMap axleLossMap;
 			if (data.LossMap == null && useEfficiencyFallback) {
@@ -169,7 +174,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (axleLossMap == null) {
 				throw new InvalidFileFormatException("LossMap for Axlegear is missing.");
 			}
+			return axleLossMap;
+		}
 
+		internal AxleGearData SetCommonAxleGearData(IAxleGearInputData data)
+		{
 			return new AxleGearData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Manufacturer = data.Manufacturer,
@@ -179,7 +188,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				CertificationMethod = data.CertificationMethod,
 				CertificationNumber = data.CertificationNumber,
 				DigestValueInput = data.DigestValue,
-				AxleGear = new GearData { LossMap = axleLossMap, Ratio = data.Ratio }
+				AxleGear = new GearData { Ratio = data.Ratio }
 			};
 		}
 

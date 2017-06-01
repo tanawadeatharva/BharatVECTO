@@ -63,10 +63,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Component_Model); }
 		}
 
-		public virtual string Creator
-		{
-			get { return "N.A."; }
-		}
+		
 
 		public virtual string Date
 		{
@@ -78,7 +75,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Component_TechnicalReportId); }
 		}
 
-		public CertificationMethod CertificationMethod
+		public virtual CertificationMethod CertificationMethod
 		{
 			get {
 				var value = GetElementValue(XMLNames.Component_CertificationMethod);
@@ -86,7 +83,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			}
 		}
 
-		public string CertificationNumber
+		public virtual string CertificationNumber
 		{
 			get { return GetAttributeValue("..", "certificationNumber"); }
 		}
@@ -96,10 +93,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue("..//*[local-name()='DigestValue']"); }
 		}
 
-		public virtual IntegrityStatus IntegrityStatus
-		{
-			get { return IntegrityStatus.Unknown; }
-		}
+		
 
 		protected bool ElementExists(string relativePath)
 		{

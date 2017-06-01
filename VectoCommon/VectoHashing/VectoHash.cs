@@ -59,8 +59,8 @@ namespace TUGraz.VectoHashing
 			var retVal = new List<VectoComponents>();
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				var count =
-					Document.SelectNodes(string.Format("//*[local-name()='VectoInputDeclaration']/*[local-name()='{0}']",
-						component.XMLElementName())).Count;
+					Document.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']",
+						XMLNames.VectoInputDeclaration,component.XMLElementName())).Count;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(component);
 				}

@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ValidateObject]
 		public VehicleData VehicleData { get; internal set; }
 
-		[Required, ValidateObject]
+		[ValidateObject]
 		public AirdragData AirdragData { get; internal set; }
 
 		[ValidateObject]

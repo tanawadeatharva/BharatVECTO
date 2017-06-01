@@ -53,11 +53,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return GetElementValue(XMLNames.Component_Model); }
 		}
 
-		public override string Creator
-		{
-			get { return GetElementValue(XMLNames.Component_Creator); }
-		}
-
+		
 		public override string Date
 		{
 			get { return GetElementValue(XMLNames.Component_Date); }
@@ -73,12 +69,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return ""; }
 		}
 
-		public override IntegrityStatus IntegrityStatus
+		public override CertificationMethod CertificationMethod
 		{
-			get { return IntegrityStatus.Unknown; }
+			get {  return CertificationMethod.NotCertified;}
 		}
 
-
+		
 		protected TableData ReadCSVResourceFile(string relPath)
 		{
 			if (!ElementExists(Helper.Query(relPath, ExtCsvResourceTag))) {

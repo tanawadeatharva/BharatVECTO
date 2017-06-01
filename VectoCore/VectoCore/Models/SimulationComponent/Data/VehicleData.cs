@@ -42,10 +42,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-
 	public class AirdragData : SimulationComponentData
 	{
-
 		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
 
 		[Required, ValidateObject]
@@ -70,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public AxleConfiguration AxleConfiguration { get; internal set; }
 
-		
+
 		[Required, ValidateObject] private List<Axle> _axleData;
 
 		private KilogramSquareMeter _wheelsInertia;
@@ -165,14 +163,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public Kilogram TotalVehicleWeight
 		{
 			get {
-				var retVal = 0.0;
-				if (CurbWeight != null) {
-					retVal += CurbWeight.Value();
-				}
-				if (Loading != null) {
-					retVal += Loading.Value();
-				}
-				return retVal.SI<Kilogram>();
+				var retVal = 0.0.SI<Kilogram>();
+				retVal += CurbWeight ?? 0.SI<Kilogram>();
+				retVal += BodyAndTrailerWeight ?? 0.SI<Kilogram>();
+				retVal += Loading ?? 0.SI<Kilogram>();
+				return retVal;
 			}
 		}
 

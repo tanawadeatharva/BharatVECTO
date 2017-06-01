@@ -88,6 +88,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var retVal = SetCommonVehicleData(data);
+			retVal.VIN = data.VIN;
+			retVal.LegislativeClass = data.LegislativeClass;
 			retVal.TrailerGrossVehicleWeight = mission.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0);
 
 			retVal.BodyAndTrailerWeight = (mission.MissionType == MissionType.MunicipalUtility

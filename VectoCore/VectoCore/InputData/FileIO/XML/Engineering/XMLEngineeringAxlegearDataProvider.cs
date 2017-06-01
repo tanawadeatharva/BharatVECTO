@@ -36,7 +36,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public AxleLineType LineType
 		{
-			get { return GetElementValue(XMLNames.Axlegear_LineType).ParseEnum<AxleLineType>(); }
+			get {
+				return ElementExists(XMLNames.Axlegear_LineType)
+					? GetElementValue(XMLNames.Axlegear_LineType).ParseEnum<AxleLineType>()
+					: AxleLineType.SinglePortalAxle;
+			}
 		}
 	}
 }
