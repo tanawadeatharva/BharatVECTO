@@ -155,43 +155,44 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var retVal = new List<XElement>();
 			//FC
 			retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/km"),
-				(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter).ToXMLFormat(1)));
+				(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter).Value()
+					.ToMinSignificantDigits(3, 1)));
 			retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/t-km"),
 				(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter /
-				result.Payload.ConvertTo().Ton).ToXMLFormat(1)));
+				result.Payload.ConvertTo().Ton).Value().ToMinSignificantDigits(3, 1)));
 			retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/m³-km"),
-				(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume)
-					.ToXMLFormat(1)));
+				(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume).Value()
+					.ToMinSignificantDigits(3, 1)));
 			if (fullOutput) {
 				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "MJ/km"),
-					(result.EnergyConsumptionTotal / result.Distance.ConvertTo().Kilo.Meter / 1e6)
-						.ToXMLFormat(1)));
+					(result.EnergyConsumptionTotal / result.Distance.ConvertTo().Kilo.Meter / 1e6).Value().ToMinSignificantDigits(3, 1)));
 				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "MJ/t-km"),
 					(result.EnergyConsumptionTotal / result.Distance.ConvertTo().Kilo.Meter / result.Payload.ConvertTo().Ton / 1e6)
-						.ToXMLFormat(1)));
+						.Value().ToMinSignificantDigits(3, 1)));
 				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "MJ/m³-km"),
-					(result.EnergyConsumptionTotal / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume / 1e6).ToXMLFormat(1)));
+					(result.EnergyConsumptionTotal / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume / 1e6).Value()
+						.ToMinSignificantDigits(3, 1)));
 			}
 			if (fuel.FuelDensity != null) {
 				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "l/100km"),
 					(result.FuelConsumptionTotal.ConvertTo().Gramm / fuel.FuelDensity / result.Distance.ConvertTo().Kilo.Meter * 100)
-						.ToXMLFormat(1)));
+						.Value().ToMinSignificantDigits(3, 1)));
 				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "l/t-km"),
 					(result.FuelConsumptionTotal.ConvertTo().Gramm / fuel.FuelDensity / result.Distance.ConvertTo().Kilo.Meter /
-					result.Payload.ConvertTo().Ton).ToXMLFormat(1)));
+					result.Payload.ConvertTo().Ton).Value().ToMinSignificantDigits(3, 1)));
 				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "l/m³-km"),
 					(result.FuelConsumptionTotal.ConvertTo().Gramm / fuel.FuelDensity / result.Distance.ConvertTo().Kilo.Meter /
-					result.CargoVolume).ToXMLFormat(1)));
+					result.CargoVolume).Value().ToMinSignificantDigits(3, 1)));
 			}
 			//CO2
 			retVal.Add(new XElement(tns + "CO2", new XAttribute("unit", "g/km"),
-				(result.CO2Total.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter).ToXMLFormat(1)));
+				(result.CO2Total.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter).Value().ToMinSignificantDigits(3, 1)));
 			retVal.Add(new XElement(tns + "CO2", new XAttribute("unit", "g/t-km"),
 				(result.CO2Total.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter /
-				result.Payload.ConvertTo().Ton).ToXMLFormat(1)));
+				result.Payload.ConvertTo().Ton).Value().ToMinSignificantDigits(3, 1)));
 			retVal.Add(new XElement(tns + "CO2", new XAttribute("unit", "g/m³-km"),
-				(result.CO2Total.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume)
-					.ToXMLFormat(1)));
+				(result.CO2Total.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume).Value()
+					.ToMinSignificantDigits(3, 1)));
 
 			return retVal;
 		}
