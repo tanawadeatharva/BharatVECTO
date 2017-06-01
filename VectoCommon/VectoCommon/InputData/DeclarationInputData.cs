@@ -111,6 +111,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<IAxleDeclarationInputData> Axles { get; }
+
+		string ManufacturerAddress { get; }
 	}
 
 	public interface IAirdragDeclarationInputData : IComponentInputData

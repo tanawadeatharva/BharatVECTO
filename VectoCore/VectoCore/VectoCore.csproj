@@ -190,6 +190,7 @@
     <Compile Include="OutputData\ModFilter\ModalData1HzFilter.cs" />
     <Compile Include="OutputData\XML\AbstractXMLWriter.cs" />
     <Compile Include="OutputData\XML\AttributeMappings.cs" />
+    <Compile Include="OutputData\XML\XMLCustomerReport.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReport.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
     <Compile Include="OutputData\XML\XMLEngineeringWriter.cs" />

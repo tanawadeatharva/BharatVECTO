@@ -68,6 +68,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public AxleConfiguration AxleConfiguration { get; internal set; }
 
+		public string ManufacturerAddress { get; internal set; }
+
 
 		[Required, ValidateObject] private List<Axle> _axleData;
 

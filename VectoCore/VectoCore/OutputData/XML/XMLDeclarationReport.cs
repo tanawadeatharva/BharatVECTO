@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLDeclarationReport : DeclarationReport<XMLDeclarationReport.ResultEntry>
 	{
 		private XMLFullReport _fullReport;
+		private XMLCustomerReport _customerReport;
+
 		private IOutputDataWriter Writer;
 
 		public class ResultEntry
@@ -88,6 +86,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XMLDeclarationReport(IOutputDataWriter writer = null)
 		{
 			_fullReport = new XMLFullReport(); //new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
+			_customerReport = new XMLCustomerReport();
 			//CustomerReport = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
 
 			Writer = writer;
@@ -96,6 +95,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XDocument FullReport
 		{
 			get { return _fullReport.Report; }
+		}
+
+		public XDocument CustomerReport
+		{
+			get { return _customerReport.Report; }
 		}
 
 
@@ -108,96 +112,88 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			foreach (var result in Missions.OrderBy(m => m.Key)) {
 				_fullReport.AddResult(result.Value);
+				_customerReport.AddResult(result.Value);
 			}
+
+			_fullReport.GenerateReport();
+			var fullReportHash = GetSignature(_fullReport.Report);
+			_customerReport.GenerateReport(fullReportHash);
 
 			if (Writer != null) {
-				var xmlWriter = new XmlTextWriter(Writer.WriteStream(ReportType.DeclarationReportXMLFulll), Encoding.UTF8) {
-					Formatting = Formatting.Indented
-				};
-				_fullReport.Report.WriteTo(xmlWriter);
-				xmlWriter.Flush();
-				xmlWriter.Close();
+				using (var xmlWriter = new XmlTextWriter(Writer.WriteStream(ReportType.DeclarationReportXMLFulll), Encoding.UTF8)) {
+					xmlWriter.Formatting = Formatting.Indented;
+					_fullReport.Report.WriteTo(xmlWriter);
+					xmlWriter.Flush();
+					xmlWriter.Close();
+				}
+
+				using (var xmlWriter = new XmlTextWriter(Writer.WriteStream(ReportType.DeclarationReportXMLCOC), Encoding.UTF8)) {
+					xmlWriter.Formatting = Formatting.Indented;
+					_customerReport.Report.WriteTo(xmlWriter);
+					xmlWriter.Flush();
+					xmlWriter.Close();
+				}
 			}
-
-			//var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-			//var xsd = XNamespace.Get("http://www.w3.org/2001/XMLSchema");
-			//XNamespace vectoNs = @"VectoOutput.XSD";
-			//var vectoVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
-
-			//FullReport.Add(new XElement("VectoOutput",
-			//	new XAttribute("schemaVersion", "0.1"),
-			//	new XAttribute("type", "declaration"),
-			//	//new XAttribute("xmlns", vectoNs.NamespaceName),
-			//	new XAttribute(xsi + "noNamespaceSchemaLocation", vectoNs.NamespaceName),
-			//	new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
-			//	new XElement("DeclarationReport",
-			//		new XAttribute("id", GetReportID()),
-			//		new XElement("AppVersion", vectoVersion),
-			//		new XElement("Date", XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
-			//		VehicleConfiguration,
-			//		IntegrityStatus,
-			//		new XElement("SimulationResults",
-			//			Missions.OrderBy(m => m.Key).Select((m, i) => GetResult(m.Value, i))
-			//			)
-			//		),
-			//	new XElement("Signature")
-			//	)
-			//	);
 		}
 
-
-		//private static XElement[] GetResult(ResultContainer<ResultEntry> result, int i)
-		//{
-		//	var retVal = new List<XElement>();
-		//	foreach (var pair in result.ModData) {
-		//		var data = pair.Value;
-		//		var loading = result.Mission.Loadings[pair.Key];
-
-		//		retVal.Add(new XElement("SimulationRun",
-		//			new XElement("DrivingCycle", result.Mission.MissionType.ToString()),
-		//			new XElement("Loading",
-		//				new XAttribute("unit", "kg"),
-		//				loading.ToOutputFormat(1)),
-		//			GetFuelConsumptionReport(data, loading),
-		//			GetCO2Report(data, loading),
-		//			new XElement("AvgSpeed",
-		//				new XAttribute("unit", "km/h"),
-		//				data.AverageSpeed.ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(3)
-		//				)
-		//			)
-		//			);
-		//	}
-		//	return retVal.ToArray();
-		//}
-
-		//private static XElement GetCO2Report(ResultEntry data, Kilogram loading)
-		//{
-		//	var retVal = new XElement("CO2Results",
-		//		new XElement("CO2",
-		//			new XAttribute("unit", "g/km"), data.Co2GramPerKilometer.ToOutputFormat(3)));
-		//	if (!loading.IsEqual(0)) {
-		//		retVal.Add(new XElement("CO2",
-		//			new XAttribute("unit", "g/t.km"), (data.Co2GramPerKilometer / loading.ConvertTo().Ton).ToOutputFormat(3)));
-		//	}
-		//	return retVal;
-		//}
-
-		//private static XElement GetFuelConsumptionReport(ResultEntry data, Kilogram loading)
-		//{
-		//	var retVal = new XElement("FuelConsumptionResults",
-		//		new XElement("FuelConsumption",
-		//			new XAttribute("unit", "l/100km"), data.FcLiterPer100Km.ToOutputFormat(3)));
-		//	if (!loading.IsEqual(0)) {
-		//		retVal.Add(new XElement("FuelConsumption",
-		//			new XAttribute("unit", "l/100t.km"), (data.FcLiterPer100Km / loading.ConvertTo().Ton).ToOutputFormat(3)));
-		//	}
-		//	return retVal;
-		//}
+		private XElement GetSignature(XDocument report)
+		{
+			return report.XPathSelectElement("/*[local-name()='VectoOutput']/*[local-name()='Signature']/*");
+		}
 
 
 		protected override void DoInitializeReport(VectoRunData modelData, Segment segment)
 		{
 			_fullReport.Initialize(modelData, segment);
+			_customerReport.Initialize(modelData, segment);
+		}
+
+
+		public static List<XElement> GetResults(XMLDeclarationReport.ResultEntry result, XNamespace tns, bool fullOutput)
+		{
+			var fuel = FuelData.Instance().Lookup(result.FuelType);
+			var retVal = new List<XElement>();
+			//FC
+			retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/km"),
+				(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter).ToXMLFormat(1)));
+			retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/t-km"),
+				(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter /
+				result.Payload.ConvertTo().Ton).ToXMLFormat(1)));
+			retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/m³-km"),
+				(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume)
+					.ToXMLFormat(1)));
+			if (fullOutput) {
+				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "MJ/km"),
+					(result.EnergyConsumptionTotal / result.Distance.ConvertTo().Kilo.Meter / 1e6)
+						.ToXMLFormat(1)));
+				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "MJ/t-km"),
+					(result.EnergyConsumptionTotal / result.Distance.ConvertTo().Kilo.Meter / result.Payload.ConvertTo().Ton / 1e6)
+						.ToXMLFormat(1)));
+				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "MJ/m³-km"),
+					(result.EnergyConsumptionTotal / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume / 1e6).ToXMLFormat(1)));
+			}
+			if (fuel.FuelDensity != null) {
+				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "l/100km"),
+					(result.FuelConsumptionTotal.ConvertTo().Gramm / fuel.FuelDensity / result.Distance.ConvertTo().Kilo.Meter * 100)
+						.ToXMLFormat(1)));
+				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "l/t-km"),
+					(result.FuelConsumptionTotal.ConvertTo().Gramm / fuel.FuelDensity / result.Distance.ConvertTo().Kilo.Meter /
+					result.Payload.ConvertTo().Ton).ToXMLFormat(1)));
+				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "l/m³-km"),
+					(result.FuelConsumptionTotal.ConvertTo().Gramm / fuel.FuelDensity / result.Distance.ConvertTo().Kilo.Meter /
+					result.CargoVolume).ToXMLFormat(1)));
+			}
+			//CO2
+			retVal.Add(new XElement(tns + "CO2", new XAttribute("unit", "g/km"),
+				(result.CO2Total.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter).ToXMLFormat(1)));
+			retVal.Add(new XElement(tns + "CO2", new XAttribute("unit", "g/t-km"),
+				(result.CO2Total.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter /
+				result.Payload.ConvertTo().Ton).ToXMLFormat(1)));
+			retVal.Add(new XElement(tns + "CO2", new XAttribute("unit", "g/m³-km"),
+				(result.CO2Total.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume)
+					.ToXMLFormat(1)));
+
+			return retVal;
 		}
 	}
 }

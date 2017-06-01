@@ -123,6 +123,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return AxleWheels().Cast<IAxleEngineeringInputData>().ToList(); }
 		}
 
+		public string ManufacturerAddress { get { return "N.A."; } }
+
 		IList<IAxleDeclarationInputData> IVehicleDeclarationInputData.Axles
 		{
 			get { return AxleWheels().Cast<IAxleDeclarationInputData>().ToList(); }

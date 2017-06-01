@@ -79,9 +79,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						throw new VectoException("InputDataProvider does not implement DeclarationData interface");
 					}
 					var report = declarationReport ?? new XMLDeclarationReport(writer);
-					if (declarationReport != null) {
-						declarationReport.JobName = declDataProvider.JobInputData().JobName;
-					}
 					DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, report);
 					break;
 				case ExecutionMode.Engineering:

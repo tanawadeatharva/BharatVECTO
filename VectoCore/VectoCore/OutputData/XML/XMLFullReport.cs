@@ -9,7 +9,6 @@ using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -89,7 +88,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				}
 			}
 
-			return limits.Count == 0 ? null : new XElement(tns + XMLNames.Vehicle_TorqueLimits, limits.Cast<object>().ToArray());
+			return limits.Count == 0
+				? null
+				: new XElement(tns + XMLNames.Vehicle_TorqueLimits, limits.Cast<object>().ToArray());
 		}
 
 		private XElement GetEngineDescription(CombustionEngineData engineData)
@@ -282,25 +283,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + "GearshiftCount", result.GearshiftCount.ToXMLFormat(0))
 					),
 				//FC
-				new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/km"),
-					(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter).ToXMLFormat(1)),
-				new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/t-km"),
-					(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter /
-					result.Payload.ConvertTo().Ton).ToXMLFormat(1)),
-				new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/m³-km"),
-					(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume)
-						.ToXMLFormat(1)),
-				new XElement(tns + "FuelConsumption", new XAttribute("unit", "MJ/km"),
-					(result.EnergyConsumptionTotal / result.Distance.ConvertTo().Kilo.Meter / 1e6).ToXMLFormat(1)),
-				//CO2
-				new XElement(tns + "CO2", new XAttribute("unit", "g/km"),
-					(result.CO2Total.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter).ToXMLFormat(1)),
-				new XElement(tns + "CO2", new XAttribute("unit", "g/t-km"),
-					(result.CO2Total.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter /
-					result.Payload.ConvertTo().Ton).ToXMLFormat(1)),
-				new XElement(tns + "CO2", new XAttribute("unit", "g/m³-km"),
-					(result.CO2Total.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume)
-						.ToXMLFormat(1)),
+				XMLDeclarationReport.GetResults(result, tns, true).Cast<object>().ToArray()
 			};
 		}
 
@@ -312,37 +295,36 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + "Date", XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
 		}
 
-		public XDocument Report
+		public void GenerateReport()
 		{
-			get {
-				var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
-				var retVal = new XDocument();
-				var results = new XElement(Results);
-				results.AddFirst(new XElement(tns + "Status", allSuccess ? "success" : "error"));
-				var vehicle = new XElement(VehiclePart);
-				vehicle.Add(InputDataIntegrity);
-				retVal.Add(new XElement(tns + "VectoOutput",
-					new XAttribute("schemaVersion", "0.4"),
-					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
-					new XAttribute("xmlns", tns),
-					new XAttribute(XNamespace.Xmlns + "di", di),
-					new XAttribute(xsi + "schemaLocation",
-						string.Format("{0} {1}VectoOutput.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl)),
-					new XElement(tns + "Data",
-						vehicle,
-						results,
-						GetApplicationInfo())
-					)
-					);
-				var stream = new MemoryStream();
-				var writer = new StreamWriter(stream);
-				writer.Write(retVal);
-				writer.Flush();
-				stream.Seek(0, SeekOrigin.Begin);
-				var h = VectoHash.Load(stream);
-				return h.AddHash();
-				//return retVal;
-			}
+			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+			var retVal = new XDocument();
+			var results = new XElement(Results);
+			results.AddFirst(new XElement(tns + "Status", allSuccess ? "success" : "error"));
+			var vehicle = new XElement(VehiclePart);
+			vehicle.Add(InputDataIntegrity);
+			retVal.Add(new XElement(tns + "VectoOutput",
+				new XAttribute("schemaVersion", "0.4"),
+				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
+				new XAttribute("xmlns", tns),
+				new XAttribute(XNamespace.Xmlns + "di", di),
+				new XAttribute(xsi + "schemaLocation",
+					string.Format("{0} {1}VectoOutput.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl)),
+				new XElement(tns + "Data",
+					vehicle,
+					results,
+					GetApplicationInfo())
+				)
+				);
+			var stream = new MemoryStream();
+			var writer = new StreamWriter(stream);
+			writer.Write(retVal);
+			writer.Flush();
+			stream.Seek(0, SeekOrigin.Begin);
+			var h = VectoHash.Load(stream);
+			Report = h.AddHash();
 		}
+
+		public XDocument Report { get; private set; }
 	}
 }

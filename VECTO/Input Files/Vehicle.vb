@@ -360,6 +360,12 @@ Public Class Vehicle
 		End Get
 	End Property
 
+	Public ReadOnly Property ManufacturerAddress As String Implements IVehicleDeclarationInputData.ManufacturerAddress
+		Get
+			Return "N.A."
+		End Get
+	End Property
+
 	Public ReadOnly Property AirDragArea As SquareMeter Implements IAirdragEngineeringInputData.AirDragArea
 		Get
 			Return CdA0.SI(Of SquareMeter)()

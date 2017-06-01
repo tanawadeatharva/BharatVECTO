@@ -46,8 +46,6 @@ namespace TUGraz.VectoCore.OutputData
 		void PrepareResult(LoadingType loading, Mission mission, VectoRunData runData);
 		void AddResult(LoadingType loadingType, Mission mission, VectoRunData runData, IModalDataContainer modData);
 		void InitializeReport(VectoRunData modelData, Segment segment);
-		string Creator { get; set; }
-		string JobName { get; set; }
 	}
 
 	/// <summary>
@@ -97,11 +95,6 @@ namespace TUGraz.VectoCore.OutputData
 		/// The creator name for the report.
 		/// </summary>
 		public string Creator { get; set; }
-
-		/// <summary>
-		/// The name of the job file (report name will be the same)
-		/// </summary>
-		public string JobName { get; set; }
 
 		/// <summary>
 		/// The result count determines how many results must be given before the report gets written.

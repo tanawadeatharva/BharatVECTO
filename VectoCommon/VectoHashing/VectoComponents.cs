@@ -14,7 +14,8 @@ namespace TUGraz.VectoHashing
 		Airdrag,
 		Tyre,
 		Vehicle,
-		VectoOutput
+		VectoOutput,
+		VectoCustomerInformation
 	}
 
 	public static class VectoComponentsExtensionMethods
@@ -42,6 +43,8 @@ namespace TUGraz.VectoHashing
 					return XMLNames.Component_Vehicle;
 				case VectoComponents.VectoOutput:
 					return "VectoOutput";
+				case VectoComponents.VectoCustomerInformation:
+					return "VectoCustomerInformation";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}
@@ -68,6 +71,8 @@ namespace TUGraz.VectoHashing
 					return "TYRE-";
 				case VectoComponents.VectoOutput:
 					return "RESULT-";
+				case VectoComponents.VectoCustomerInformation:
+					return "COC-";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}

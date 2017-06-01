@@ -177,16 +177,10 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="Retarder">
+			<xs:element name="Retarder" type="xs:boolean">
 				<xs:annotation>
 					<xs:documentation>P052</xs:documentation>
 				</xs:annotation>
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:enumeration value="yes"/>
-						<xs:enumeration value="no"/>
-					</xs:restriction>
-				</xs:simpleType>
 			</xs:element>
 			<xs:element name="AxleRatio" type="vdecdef:AxlegearRatioType">
 				<xs:annotation>
@@ -240,7 +234,9 @@
 	</xs:simpleType>
 	<xs:simpleType name="MissionTypeType">
 		<xs:restriction base="xs:token">
+			<xs:enumeration value="Long Haul EMS"/>
 			<xs:enumeration value="Long Haul"/>
+			<xs:enumeration value="Regional Delivery EMS"/>
 			<xs:enumeration value="Regional Delivery"/>
 			<xs:enumeration value="Urban Delivery"/>
 			<xs:enumeration value="Municipal Utility"/>

@@ -57,6 +57,11 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			get { return Path.ChangeExtension(_jobFile, "RESULT.xml"); }
 		}
 
+		public string XMLCoCReportName
+		{
+			get { return Path.ChangeExtension(_jobFile, "COC.xml"); }
+		}
+
 
 		public string SumFileName
 		{
@@ -101,6 +106,8 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 					return new FileStream(PDFReportName, FileMode.Create);
 				case ReportType.DeclarationReportXMLFulll:
 					return new FileStream(XMLFullReportName, FileMode.Create);
+				case ReportType.DeclarationReportXMLCOC:
+					return new FileStream(XMLCoCReportName, FileMode.Create);
 				default:
 
 					throw new ArgumentOutOfRangeException("type");

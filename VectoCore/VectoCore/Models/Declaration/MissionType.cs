@@ -76,11 +76,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			switch (self) {
 				case MissionType.LongHaul:
-				case MissionType.LongHaulEMS:
 					return "Long Haul";
+				case MissionType.LongHaulEMS:
+					return "Long Haul EMS";
 				case MissionType.RegionalDelivery:
-				case MissionType.RegionalDeliveryEMS:
 					return "Regional Delivery";
+				case MissionType.RegionalDeliveryEMS:
+					return "Regional Delivery EMS";
 				case MissionType.UrbanDelivery:
 					return "Urban Delivery";
 				case MissionType.MunicipalUtility:
