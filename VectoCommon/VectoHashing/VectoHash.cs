@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Resources;
 using TUGraz.VectoHashing.Impl;
 using TUGraz.VectoHashing.Util;
 
@@ -59,12 +59,24 @@ namespace TUGraz.VectoHashing
 			var retVal = new List<VectoComponents>();
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				var count =
-					Document.SelectNodes(string.Format("//*[local-name()='{0}']", component.XMLElementName())).Count;
+					Document.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']",
+						XMLNames.VectoInputDeclaration,component.XMLElementName())).Count;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(component);
 				}
 			}
 			return retVal;
+		}
+
+		public XElement ComputeXmlHash()
+		{
+			var nodes = Document.SelectNodes(GetComponentQueryString());
+			if (nodes == null || nodes.Count == 0) {
+				throw new Exception("No component found");
+			}
+			var componentId = nodes[0].Attributes[XMLNames.Component_ID_Attr].Value;
+			var hash = DoComputeHash(nodes[0]);
+			return hash.ToXDocument().Root;
 		}
 
 		public string ComputeHash()
@@ -73,13 +85,14 @@ namespace TUGraz.VectoHashing
 			if (nodes == null || nodes.Count == 0) {
 				throw new Exception("No component found");
 			}
-			return DoComputeHash(nodes[0]);
+			var componentId = nodes[0].Attributes[XMLNames.Component_ID_Attr].Value;
+			return GetHashValueFromSig(DoComputeHash(nodes[0]), componentId);
 		}
+
 
 		public string ComputeHash(VectoComponents component, int index = 0)
 		{
 			var nodes = Document.SelectNodes(GetComponentQueryString(component));
-
 
 			if (nodes == null || nodes.Count == 0) {
 				throw new Exception(string.Format("Component {0} not found", component.XMLElementName()));
@@ -88,13 +101,14 @@ namespace TUGraz.VectoHashing
 				throw new Exception(string.Format("index exceeds number of components found! index: {0}, #components: {1}", index,
 					nodes.Count));
 			}
-			return DoComputeHash(nodes[index]);
+			var componentId = nodes[index].Attributes[XMLNames.Component_ID_Attr].Value;
+			return GetHashValueFromSig(DoComputeHash(nodes[index]), componentId);
 		}
 
-		private static string DoComputeHash(XmlNode dataNode)
+		private static XmlDocument DoComputeHash(XmlNode dataNode)
 		{
 			var parent = dataNode.ParentNode;
-			var componentId = dataNode.Attributes[XMLNames.Component_ID_Attr].Value;
+
 			if (parent == null) {
 				throw new Exception("Invalid structure of input XML!");
 			}
@@ -104,21 +118,33 @@ namespace TUGraz.VectoHashing
 			var newNode = newDoc.ImportNode(parent, true);
 			node.AppendChild(newNode);
 
-			var hash = XMLHashProvider.ComputeHash(newDoc, componentId);
-			return GetHashValueFromSig(hash, componentId);
+			var componentId = dataNode.Attributes[XMLNames.Component_ID_Attr].Value;
+			return XMLHashProvider.ComputeHash(newDoc, componentId);
 		}
 
 		public XDocument AddHash()
 		{
-			var components = GetContainigComponents();
-			if (components.Contains(VectoComponents.Vehicle)) {
-				throw new Exception("adding hash for Vehicle is not supported");
+			if (Document.DocumentElement == null) {
+				throw new Exception("invalid input document");
 			}
-			if (components.Count > 1) {
-				throw new Exception("input must not contain multiple components!");
-			}
-			if (components.Count == 0) {
-				throw new Exception("input does not contain a known component!");
+			IList<VectoComponents> components;
+			if (Document.DocumentElement.LocalName.Equals(XMLNames.VectoInputDeclaration)) {
+				components = GetContainigComponents();
+				if (components.Contains(VectoComponents.Vehicle)) {
+					throw new Exception("adding hash for Vehicle is not supported");
+				}
+				if (components.Count > 1) {
+					throw new Exception("input must not contain multiple components!");
+				}
+				if (components.Count == 0) {
+					throw new Exception("input does not contain a known component!");
+				}
+			} else if (Document.DocumentElement.LocalName.Equals("VectoOutput")) {
+				components = new List<VectoComponents>() { VectoComponents.VectoOutput };
+			} else if (Document.DocumentElement.LocalName.Equals("VectoCustomerInformation")) {
+				components = new List<VectoComponents>() { VectoComponents.VectoCustomerInformation };
+			}else {
+				throw new Exception("unknown document structure! neither input data nor output data format");
 			}
 			var query = string.Format("//*[local-name()='{0}']/*[local-name()='Data']", components[0].XMLElementName());
 			var node = Document.SelectSingleNode(query);

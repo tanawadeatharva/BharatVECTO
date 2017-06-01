@@ -31,7 +31,6 @@
 
 using System;
 using System.Data;
-using Org.BouncyCastle.Asn1;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 

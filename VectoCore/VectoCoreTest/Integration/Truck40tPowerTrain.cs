@@ -85,7 +85,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Kilogram massExtra, Kilogram loading, bool overspeed = false, GearboxType gbxType = GearboxType.AMT)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(Path.GetFileName(modFileName), FuelType.DieselCI, fileWriter) { WriteModalResults = true };
+			var modData = new ModalDataContainer(Path.GetFileName(modFileName), FuelType.DieselCI, fileWriter) {
+				WriteModalResults = true
+			};
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
@@ -94,6 +96,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData();
 			var vehicleData = CreateVehicleData(massExtra, loading);
+			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -103,6 +106,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var runData = new VectoRunData() {
 				EngineData = engineData,
 				VehicleData = vehicleData,
+				AirdragData = airdragData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData
 			};
@@ -120,7 +124,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 
 			dynamic tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Vehicle(container, vehicleData, airdragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -218,17 +222,21 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				//AerodynamicDragAera = 6.2985.SI<SquareMeter>(),
-				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.2985.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7100.SI<Kilogram>() + massExtra,
 				Loading = loading,
 				DynamicTyreRadius = 0.4882675.SI<Meter>(),
 				AxleData = axles,
 				SavedInDeclarationMode = false,
+			};
+		}
+
+		private static AirdragData CreateAirdragData()
+		{
+			return new AirdragData() {
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.2985.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
 			};
 		}
 

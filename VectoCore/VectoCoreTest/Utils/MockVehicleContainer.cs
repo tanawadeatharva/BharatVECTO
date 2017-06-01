@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -211,6 +213,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public void FinishSimulation() {}
+
+		public void FinishSimulationRun(Exception e) {}
 
 		public Watt SetAxlegearLoss
 		{

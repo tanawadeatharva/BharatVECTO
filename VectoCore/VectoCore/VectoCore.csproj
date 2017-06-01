@@ -85,9 +85,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="itextsharp">
-      <HintPath>..\..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -193,14 +190,11 @@
     <Compile Include="OutputData\ModFilter\ModalData1HzFilter.cs" />
     <Compile Include="OutputData\XML\AbstractXMLWriter.cs" />
     <Compile Include="OutputData\XML\AttributeMappings.cs" />
+    <Compile Include="OutputData\XML\XMLCustomerReport.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReport.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
     <Compile Include="OutputData\XML\XMLEngineeringWriter.cs" />
-    <Compile Include="Resources\XMLNames.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>XMLNames.resx</DependentUpon>
-    </Compile>
+    <Compile Include="OutputData\XML\XMLFullReport.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
@@ -266,7 +260,6 @@
     <Compile Include="OutputData\IModalDataContainer.cs" />
     <Compile Include="OutputData\IDataWriter.cs" />
     <Compile Include="OutputData\ModalDataContainer.cs" />
-    <Compile Include="OutputData\PDF\PDFDeclarationReport.cs" />
     <Compile Include="OutputData\SummaryDataContainer.cs" />
     <Compile Include="Properties\Version.cs">
       <AutoGen>True</AutoGen>
@@ -344,11 +337,6 @@
     <Compile Include="Utils\XPathHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\XMLNames.resx">
-      <SubType>Designer</SubType>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>XMLNames.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="JsonKeys.resx">
@@ -458,6 +446,10 @@
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
       <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
       <Name>VectoCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj">
+      <Project>{B673E12F-D323-4C4C-8805-9915B2C72D3D}</Project>
+      <Name>VectoHashing</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -31,12 +31,8 @@
 
 using System;
 using System.Linq;
-using System.Windows.Forms.VisualStyles;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
-using Org.BouncyCastle.Asn1;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Utils

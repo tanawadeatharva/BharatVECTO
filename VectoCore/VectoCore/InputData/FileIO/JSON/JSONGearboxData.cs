@@ -172,6 +172,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public AxleLineType LineType
+		{
+			get { return AxleLineType.SingleReductionAxle; }
+		}
+
 		#endregion
 
 		#region IGearboxInputData
@@ -489,6 +494,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N/A"; }
 		}
 
+		public CertificationMethod CertificationMethod { get { return CertificationMethod.NotCertified; } }
+
 		public string CertificationNumber
 		{
 			get { return "N/A"; }
@@ -497,11 +504,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public string DigestValue
 		{
 			get { return ""; }
-		}
-
-		public IntegrityStatus IntegrityStatus
-		{
-			get { return IntegrityStatus.Unknown; }
 		}
 	}
 }

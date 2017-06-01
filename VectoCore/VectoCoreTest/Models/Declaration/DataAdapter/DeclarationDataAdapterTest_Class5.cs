@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			Assert.AreEqual(8, runData.Length);
 
 			// long haul, min load
-			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
+			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData, runData[runIdx].AirdragData,
 				vehicleCategory: VehicleCategory.Tractor,
 				vehicleClass: VehicleClass.Class5,
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// long haul, ref load
-			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
+			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData, runData[runIdx].AirdragData,
 				vehicleCategory: VehicleCategory.Tractor,
 				vehicleClass: VehicleClass.Class5,
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			Assert.AreEqual(8, runData.Length);
 
 			// long haul, min load
-			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
+			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData, runData[runIdx].AirdragData,
 				vehicleCategory: VehicleCategory.Tractor,
 				vehicleClass: VehicleClass.Class5,
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// long haul, ref load
-			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
+			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData, runData[runIdx].AirdragData,
 				vehicleCategory: VehicleCategory.Tractor,
 				vehicleClass: VehicleClass.Class5,
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// regional del., min load
-			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
+			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData, runData[runIdx].AirdragData,
 				vehicleCategory: VehicleCategory.Tractor,
 				vehicleClass: VehicleClass.Class5,
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// regional del., ref load
-			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
+			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData, runData[runIdx].AirdragData,
 				vehicleCategory: VehicleCategory.Tractor,
 				vehicleClass: VehicleClass.Class5,
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// regional del., min load
-			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
+			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData, runData[runIdx].AirdragData,
 				vehicleCategory: VehicleCategory.Tractor,
 				vehicleClass: VehicleClass.Class5,
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			// regional del., ref load
-			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData,
+			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData, runData[runIdx].AirdragData,
 				vehicleCategory: VehicleCategory.Tractor,
 				vehicleClass: VehicleClass.Class5,
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,

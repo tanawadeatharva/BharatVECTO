@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TUGraz.VectoCore.Resources {
+namespace TUGraz.VectoCommon.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TUGraz.VectoCore.Resources.XMLNames", typeof(XMLNames).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TUGraz.VectoCommon.Resources.XMLNames", typeof(XMLNames).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -219,6 +219,15 @@ namespace TUGraz.VectoCore.Resources {
         public static string Axlegear_Efficiency {
             get {
                 return ResourceManager.GetString("Axlegear_Efficiency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LineType.
+        /// </summary>
+        public static string Axlegear_LineType {
+            get {
+                return ResourceManager.GetString("Axlegear_LineType", resourceCulture);
             }
         }
         

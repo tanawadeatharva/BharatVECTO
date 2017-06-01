@@ -308,6 +308,12 @@ Public Class Engine
 		End Get
 	End Property
 
+	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+		Get
+			Return CertificationMethod.NotCertified
+		End Get
+	End Property
+
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
 			Return "N.A."
@@ -317,12 +323,6 @@ Public Class Engine
 	Public ReadOnly Property DigestValue As String Implements IComponentInputData.DigestValue
 		Get
 			Return ""
-		End Get
-	End Property
-
-	Public ReadOnly Property IntegrityStatus As IntegrityStatus Implements IComponentInputData.IntegrityStatus
-		Get
-			Return IntegrityStatus.NotChecked
 		End Get
 	End Property
 

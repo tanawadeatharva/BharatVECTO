@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
-		internal VehicleData CreateVehicleData(IVehicleEngineeringInputData data, IAirdragEngineeringInputData airdragData)
+		internal VehicleData CreateVehicleData(IVehicleEngineeringInputData data)
 		{
 			if (data.SavedInDeclarationMode) {
 				WarnEngineeringMode("VehicleData");
@@ -56,12 +56,30 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = SetCommonVehicleData(data);
 			retVal.BodyAndTrailerWeight = data.CurbMassExtra;
-			retVal.CurbWeight += data.CurbMassExtra;
+			//retVal.CurbWeight += data.CurbMassExtra;
 			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
-			retVal.CrossWindCorrectionMode = airdragData.CrossWindCorrectionMode;
 			var axles = data.Axles;
+
+
+			retVal.AxleData = axles.Select(axle => new Axle {
+				WheelsDimension = axle.Wheels,
+				Inertia = axle.Inertia,
+				TwinTyres = axle.TwinTyres,
+				RollResistanceCoefficient = axle.RollResistanceCoefficient,
+				AxleWeightShare = axle.AxleWeightShare,
+				TyreTestLoad = axle.TyreTestLoad,
+				//Wheels = axle.WheelsStr
+			}).ToList();
+			return retVal;
+		}
+
+		public AirdragData CreateAirdragData(IAirdragEngineeringInputData airdragData, IVehicleEngineeringInputData data)
+		{
+			var retVal = SetCommonAirdragData(airdragData);
+			retVal.CrossWindCorrectionMode = airdragData.CrossWindCorrectionMode;
+
 			switch (airdragData.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
 					retVal.CrossWindCorrectionCurve =
@@ -80,26 +98,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					break;
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					var height = DeclarationData.Segments.LookupHeight(data.VehicleCategory, data.AxleConfiguration,
-						retVal.GrossVehicleWeight);
+						data.GrossVehicleMassRating);
 					retVal.CrossWindCorrectionCurve =
 						new CrosswindCorrectionCdxALookup(airdragData.AirDragArea,
 							DeclarationDataAdapter.GetDeclarationAirResistanceCurve(
-								GetAirdragParameterSet(retVal.VehicleCategory, data.AxleConfiguration, axles.Count),
+								GetAirdragParameterSet(data.VehicleCategory, data.AxleConfiguration, data.Axles.Count),
 								airdragData.AirDragArea, height), CrossWindCorrectionMode.DeclarationModeCorrection);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException("CrosswindCorrection", airdragData.CrossWindCorrectionMode.ToString());
 			}
-
-			retVal.AxleData = axles.Select(axle => new Axle {
-				WheelsDimension = axle.Wheels,
-				Inertia = axle.Inertia,
-				TwinTyres = axle.TwinTyres,
-				RollResistanceCoefficient = axle.RollResistanceCoefficient,
-				AxleWeightShare = axle.AxleWeightShare,
-				TyreTestLoad = axle.TyreTestLoad,
-				//Wheels = axle.WheelsStr
-			}).ToList();
 			return retVal;
 		}
 

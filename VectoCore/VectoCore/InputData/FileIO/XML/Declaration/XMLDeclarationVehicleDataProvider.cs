@@ -5,10 +5,10 @@ using System.Xml;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
@@ -24,6 +24,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		public override string TechnicalReportId
 		{
 			get { return GetElementValue(XMLNames.Vehicle_VIN); }
+		}
+
+		public string VIN
+		{
+			get { return GetElementValue(XMLNames.Vehicle_VIN); }
+		}
+
+		public string LegislativeClass
+		{
+			get { return GetElementValue(XMLNames.Vehicle_LegislativeClass); }
 		}
 
 		public VehicleCategory VehicleCategory
@@ -110,6 +120,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				}
 				return retVal;
 			}
+		}
+
+		public string ManufacturerAddress
+		{
+			get { return GetElementValue(XMLNames.Component_ManufacturerAddress); }
 		}
 
 		public double RetarderRatio

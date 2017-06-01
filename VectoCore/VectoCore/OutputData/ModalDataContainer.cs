@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -53,6 +54,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		private readonly IModalDataWriter _writer;
 		private readonly List<string> _additionalColumns = new List<string>();
+		private Exception SimException;
 		public string RunName { get; private set; }
 		public string CycleName { get; private set; }
 		public string RunSuffix { get; private set; }
@@ -60,6 +62,9 @@ namespace TUGraz.VectoCore.OutputData
 		public bool WriteModalResults { get; set; }
 
 		public VectoRun.Status RunStatus { get; protected set; }
+
+		public string Error { get { return SimException == null ? null : SimException.Message; } }
+		public string StackTrace { get { return SimException == null ? null : SimException.StackTrace; } }
 
 		public bool WriteAdvancedAux { get; set; }
 
@@ -242,6 +247,11 @@ namespace TUGraz.VectoCore.OutputData
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
 		}
 
+		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc)
+		{
+			return from DataRow row in Data.Rows select selectorFunc(row);
+		}
+
 		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
 		{
 			var result = 0.0;
@@ -311,8 +321,9 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public void FinishSimulation()
+		public void FinishSimulation(Exception exception)
 		{
+			SimException = exception;
 			//Data.Clear(); //.Rows.Clear();
 			Data = null;
 			CurrentRow = null;

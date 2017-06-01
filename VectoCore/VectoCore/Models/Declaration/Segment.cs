@@ -37,6 +37,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class Segment
 	{
+		public VehicleClass VehicleClass { get; internal set; }
+
 		public VehicleCategory VehicleCategory { get; set; }
 
 		public AxleConfiguration AxleConfiguration { get; set; }
@@ -47,8 +49,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Kilogram GrossVehicleMassRating { get; set; }
 
-		public VehicleClass VehicleClass { get; internal set; }
-
 		public Stream AccelerationFile { get; internal set; }
 
 		public Mission[] Missions { get; internal set; }
@@ -56,6 +56,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Meter VehicleHeight { get; internal set; }
 
 		public MeterPerSecond DesignSpeed { get; internal set; }
+
+		public SquareMeter CdADefault { get; internal set; }
 
 		public SquareMeter CdAConstruction { get; internal set; }
 

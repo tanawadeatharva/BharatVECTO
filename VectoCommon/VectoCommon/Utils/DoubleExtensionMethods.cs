@@ -268,6 +268,20 @@ namespace TUGraz.VectoCommon.Utils
 			decimals = decimals ?? 2;
 			return self.ToString("F" + decimals.Value);
 		}
+
+		//[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static string ToMinSignificantDigits(this double self, uint? significant = null, uint? decimals = null)
+		{
+			significant = significant ?? 3;
+			decimals = decimals ?? 1;
+			var scale = Math.Ceiling(Math.Log10(Math.Abs(self)));
+
+			if (double.IsInfinity(scale) || double.IsNaN(scale))
+				return self.ToString("F" + decimals.Value);
+
+			return self.ToString("F" + Math.Max(significant.Value - scale, decimals.Value));
+		}
 	}
 
 	public static class FloatExtensionMethods

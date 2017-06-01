@@ -230,10 +230,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				VehicleData =
 					new VehicleData {
 						VehicleCategory = VehicleCategory.RigidTruck,
-						CrossWindCorrectionCurve =
-							new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(),
-								CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
-								CrossWindCorrectionMode.NoCorrection),
 						GrossVehicleWeight = 12000.SI<Kilogram>(),
 						CurbWeight = 3400.SI<Kilogram>(),
 						DynamicTyreRadius = 0.5.SI<Meter>(),
@@ -242,6 +238,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 								new Axle { AxleWeightShare = 1.0, TyreTestLoad = 52532.SI<Newton>(), Inertia = 10.SI<KilogramSquareMeter>() }
 							}
 					},
+				AirdragData = new AirdragData() {
+					CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(),
+							CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
+							CrossWindCorrectionMode.NoCorrection),
+				},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
 				EngineData =
 					new CombustionEngineData {
@@ -297,11 +299,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 						VehicleCategory = VehicleCategory.RigidTruck,
 						WheelsInertia = 2.SI<KilogramSquareMeter>(),
 						DynamicTyreRadius = 0.85.SI<Meter>(),
-						CrossWindCorrectionCurve =
-							new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(),
-								CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
-								CrossWindCorrectionMode.NoCorrection)
 					},
+				AirdragData = new AirdragData() {
+					CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(6.16498344.SI<SquareMeter>(),
+							CrossWindCorrectionCurveReader.GetNoCorrectionCurve(6.16498344.SI<SquareMeter>()),
+							CrossWindCorrectionMode.NoCorrection)
+				},
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
 				EngineData = new CombustionEngineData {
 					IdleSpeed = 560.RPMtoRad(),

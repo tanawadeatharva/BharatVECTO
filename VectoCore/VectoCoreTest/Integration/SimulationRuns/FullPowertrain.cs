@@ -80,6 +80,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var axleGearData = CreateAxleGearData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			var driverData = CreateDriverData(AccelerationFile);
+			var airDragData = CreateAirdragData();
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
@@ -88,11 +89,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				EngineData = engineData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
-				VehicleData = vehicleData
+				VehicleData = vehicleData,
+				AirdragData = airDragData
 			};
 
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Vehicle(container, vehicleData,airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -143,6 +145,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var axleGearData = CreateAxleGearData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 			var driverData = CreateDriverData(AccelerationFile);
+			var airDragData = CreateAirdragData();
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
@@ -150,12 +153,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				EngineData = engineData,
 				VehicleData = vehicleData,
 				AxleGearData = axleGearData,
-				GearboxData = gearboxData
+				GearboxData = gearboxData,
+				AirdragData = airDragData
 			};
 
 			var cyclePort = cycle.OutPort();
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Vehicle(container, vehicleData,airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -220,19 +224,21 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
 			var axleGearData = CreateAxleGearData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+			var airDragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var runData = new VectoRunData() {
 				EngineData = engineData,
 				VehicleData = vehicleData,
 				AxleGearData = axleGearData,
-				GearboxData = gearboxData
+				GearboxData = gearboxData,
+				AirdragData = airDragData
 			};
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -399,16 +405,22 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
+				
 				CurbWeight = 15700.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,
 				SavedInDeclarationMode = false
 			};
+		}
+
+		private static AirdragData CreateAirdragData()
+		{
+			return new AirdragData(){
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),}; 
 		}
 
 		private static DriverData CreateDriverData(string accelerationFile)

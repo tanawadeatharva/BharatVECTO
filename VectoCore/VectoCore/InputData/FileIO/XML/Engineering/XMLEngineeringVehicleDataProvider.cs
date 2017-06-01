@@ -9,11 +9,11 @@ using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
@@ -28,6 +28,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public string GetVehicleID
 		{
 			get { return GetAttributeValue("", XMLNames.Component_ID_Attr); }
+		}
+
+		public string VIN
+		{
+			get { return GetElementValue(XMLNames.Vehicle_VIN); }
+		}
+
+		public string LegislativeClass
+		{
+			get { return GetElementValue(XMLNames.Vehicle_LegislativeClass); }
 		}
 
 		public VehicleCategory VehicleCategory
@@ -99,6 +109,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		{
 			get { return AxleEngineeringInput().Cast<IAxleEngineeringInputData>().ToList(); }
 		}
+
+		public string ManufacturerAddress { get { return "N.A."; } }
 
 		IList<IAxleDeclarationInputData> IVehicleDeclarationInputData.Axles
 		{

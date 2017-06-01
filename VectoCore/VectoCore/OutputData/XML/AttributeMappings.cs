@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.IVT.VectoXML
 {

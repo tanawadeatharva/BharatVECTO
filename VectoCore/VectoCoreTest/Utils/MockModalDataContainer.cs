@@ -82,6 +82,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return VectoRun.Status.Success; }
 		}
 
+		public string Error { get { return null; } }
+		public string StackTrace { get { return null; } }
+
 		public void Finish(VectoRun.Status runStatus) {}
 
 		public bool WriteModalResults { get; set; }
@@ -94,6 +97,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IEnumerable<T> GetValues<T>(DataColumn col)
 		{
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
+		}
+
+		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc)
+		{
+			throw new NotImplementedException();
 		}
 
 		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
@@ -122,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		public void FinishSimulation()
+		public void FinishSimulation(Exception exception)
 		{
 			Data.Rows.Clear();
 		}

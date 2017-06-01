@@ -5,9 +5,9 @@ using System.Xml.XPath;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Resources;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
@@ -63,10 +63,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Component_Model); }
 		}
 
-		public virtual string Creator
-		{
-			get { return "N.A."; }
-		}
+		
 
 		public virtual string Date
 		{
@@ -78,20 +75,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Component_TechnicalReportId); }
 		}
 
-		public string CertificationNumber
+		public virtual CertificationMethod CertificationMethod
 		{
-			get { return GetAttributeValue("../", "certificationNumber"); }
+			get {
+				var value = GetElementValue(XMLNames.Component_CertificationMethod);
+				return value.ParseEnum<CertificationMethod>();
+			}
+		}
+
+		public virtual string CertificationNumber
+		{
+			get { return GetAttributeValue("..", "certificationNumber"); }
 		}
 
 		public virtual string DigestValue
 		{
-			get { return ""; }
+			get { return GetElementValue("..//*[local-name()='DigestValue']"); }
 		}
 
-		public virtual IntegrityStatus IntegrityStatus
-		{
-			get { return IntegrityStatus.Unknown; }
-		}
+		
 
 		protected bool ElementExists(string relativePath)
 		{
@@ -105,8 +107,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		protected string GetElementValue(string relativePath)
 		{
 			var path = Helper.Query(XBasePath, relativePath.Any() ? relativePath : null);
-			//new StringBuilder(XBasePath +
-			//				(relativePath.Any() ? string.Format("/{0}:{1}", Constants.DeclarationNSPrefix, relativePath) : ""));
 
 			var node = Navigator.SelectSingleNode(path.ToString(), Manager);
 			if (node == null) {

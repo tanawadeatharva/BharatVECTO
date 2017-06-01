@@ -67,6 +67,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
 			
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
+			var airdragData = CreateAirdragData();
 			vehicleData.DynamicTyreRadius = 0.026372213.SI<Meter>(); // take into account axle ratio, gear ratio
 
 			var driverData = CreateDriverData();
@@ -79,7 +80,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 			var clutch = new Clutch(vehicleContainer, engineData);
-			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
+			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData, airdragData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = AddComponent(tmp, clutch);
 			AddComponent(tmp, engine);
@@ -125,6 +126,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
 			vehicleData.DynamicTyreRadius = 0.026372213.SI<Meter>(); // take into account axle ratio, gear ratio
+			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
@@ -136,7 +138,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 			var clutch = new Clutch(vehicleContainer, engineData);
 
-			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
+			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData, airdragData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			tmp = AddComponent(tmp, clutch);
 			AddComponent(tmp, engine);
@@ -183,6 +185,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFileHigh, 1);
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
+			var airdragData = CreateAirdragData();
 
 			// take into account the axle ratio and 1st-gear ratio
 			vehicleData.DynamicTyreRadius /= (3.24 * 6.38);
@@ -197,7 +200,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
-			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
+			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData, airdragData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 			var clutch = new Clutch(vehicleContainer, engineData);
@@ -395,15 +398,22 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
+				
 				CurbWeight = 15700.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,
 				SavedInDeclarationMode = false
+			};
+		}
+
+		private static AirdragData CreateAirdragData()
+		{
+			return new AirdragData() {
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
 			};
 		}
 

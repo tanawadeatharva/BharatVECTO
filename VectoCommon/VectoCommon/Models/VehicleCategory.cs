@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+
 namespace TUGraz.VectoCommon.Models
 {
 	public enum VehicleCategory
@@ -75,6 +77,23 @@ namespace TUGraz.VectoCommon.Models
 					return "Coach";
 				default:
 					return category.ToString();
+			}
+		}
+
+		public static string ToXMLFormat(this VehicleCategory vehicleCategory)
+		{
+			switch (vehicleCategory) {
+				case VehicleCategory.Coach:
+				case VehicleCategory.Tractor:
+					return vehicleCategory.ToString();
+				case VehicleCategory.CityBus:
+					return "City Bus";
+				case VehicleCategory.InterurbanBus:
+					return "Interurban Bus";
+				case VehicleCategory.RigidTruck:
+					return "Rigid Truck";
+				default:
+					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
 			}
 		}
 	}

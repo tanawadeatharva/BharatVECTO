@@ -4,9 +4,9 @@ using System.Xml;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
@@ -20,6 +20,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				XMLNames.Vehicle_Components,
 				XMLNames.Component_Gearbox,
 				XMLNames.ComponentDataWrapper);
+		}
+
+		public new CertificationMethod CertificationMethod
+		{
+			get { return GetElementValue(XMLNames.Component_Gearbox_CertificationMethod).ParseEnum<CertificationMethod>(); }
 		}
 
 		public GearboxType Type

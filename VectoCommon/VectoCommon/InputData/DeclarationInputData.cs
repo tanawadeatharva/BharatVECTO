@@ -60,15 +60,19 @@ namespace TUGraz.VectoCommon.InputData
 
 		string TechnicalReportId { get; }
 
+		CertificationMethod CertificationMethod { get; }
+
 		string CertificationNumber { get; }
 
 		string DigestValue { get; }
-
-		IntegrityStatus IntegrityStatus { get; }
 	}
 
 	public interface IVehicleDeclarationInputData : IComponentInputData
 	{
+		string VIN { get; }
+
+		string LegislativeClass { get; }
+
 		/// <summary>
 		/// P036
 		/// cf. VECTO Input Parameters.xlsx
@@ -107,6 +111,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<IAxleDeclarationInputData> Axles { get; }
+
+		string ManufacturerAddress { get; }
 	}
 
 	public interface IAirdragDeclarationInputData : IComponentInputData
@@ -278,6 +284,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		double Efficiency { get; }
+
+		AxleLineType LineType { get; }
 	}
 
 	public interface ITorqueConverterDeclarationInputData : IComponentInputData

@@ -1,7 +1,10 @@
-﻿using TUGraz.IVT.VectoXML;
+﻿using System.ComponentModel.DataAnnotations;
+using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.Resources;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
@@ -32,6 +35,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		public double Efficiency
 		{
 			get { throw new VectoException("Efficiency not supported in Declaration Mode!"); }
+		}
+
+		public AxleLineType LineType
+		{
+			get {
+				var value = GetElementValue(XMLNames.Axlegear_LineType);
+				return value.ParseEnum<AxleLineType>();
+			}
 		}
 	}
 }

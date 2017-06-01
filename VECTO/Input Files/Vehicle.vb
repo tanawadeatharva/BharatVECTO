@@ -93,6 +93,7 @@ Public Class Vehicle
 	Public Shared Function ValidateVehicle(vehicle As Vehicle, validationContext As ValidationContext) As ValidationResult
 
 		Dim vehicleData As VehicleData
+		Dim airdragData As AirdragData
 		Dim retarderData As RetarderData
 		Dim ptoData As PTOData = Nothing
 		Dim angledriveData As AngledriveData
@@ -109,14 +110,16 @@ Public Class Vehicle
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
 				Dim segment As Segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis)
-				vehicleData = doa.CreateVehicleData(vehicle, vehicle, segment.Missions.First(),
-													segment.Missions.First().Loadings.First().Value, segment.VehicleHeight, segment.MunicipalBodyWeight)
+				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
+													segment.Missions.First().Loadings.First().Value, segment.MunicipalBodyWeight)
+				airdragData = doa.CreateAirdragData(vehicle, segment.Missions.First(), segment)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle, False)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
-				vehicleData = doa.CreateVehicleData(vehicle, vehicle)
+				vehicleData = doa.CreateVehicleData(vehicle)
+				airdragData = doa.CreateAirdragData(vehicle, vehicle)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle, True)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
@@ -127,6 +130,14 @@ Public Class Vehicle
 			If result.Any() Then
 				Return _
 					New ValidationResult("Vehicle Configuration is invalid. ",
+										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
+			End If
+
+			result = airdragData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType,
+										emsCycle)
+			If result.Any() Then
+				Return _
+					New ValidationResult("Airdrag Configuration is invalid. ",
 										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
@@ -285,6 +296,12 @@ Public Class Vehicle
 		End Get
 	End Property
 
+	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+		Get
+			Return CertificationMethod.NotCertified
+		End Get
+	End Property
+
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
 			Return "N.A."	'ToDo
@@ -294,12 +311,6 @@ Public Class Vehicle
 	Public ReadOnly Property DigestValue As String Implements IComponentInputData.DigestValue
 		Get
 			Return ""
-		End Get
-	End Property
-
-	Public ReadOnly Property IntegrityStatus As IntegrityStatus Implements IComponentInputData.IntegrityStatus
-		Get
-			Return IntegrityStatus.NotChecked
 		End Get
 	End Property
 
@@ -314,6 +325,18 @@ Public Class Vehicle
 		Implements IVehicleDeclarationInputData.AxleConfiguration
 		Get
 			Return AxleConfiguration
+		End Get
+	End Property
+
+	Public ReadOnly Property VIN As String Implements IVehicleDeclarationInputData.VIN
+		Get
+			Return "N.A."
+		End Get
+	End Property
+
+	Public ReadOnly Property LegislativeClass As String Implements IVehicleDeclarationInputData.LegislativeClass
+		Get
+			Return "N3"
 		End Get
 	End Property
 
@@ -334,6 +357,12 @@ Public Class Vehicle
 		Implements IVehicleDeclarationInputData.TorqueLimits
 		Get
 			Return torqueLimitsList
+		End Get
+	End Property
+
+	Public ReadOnly Property ManufacturerAddress As String Implements IVehicleDeclarationInputData.ManufacturerAddress
+		Get
+			Return "N.A."
 		End Get
 	End Property
 

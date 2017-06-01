@@ -91,11 +91,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
 			var runData = new VectoRunData() {
 				AxleGearData = axleGearData,
 				VehicleData = vehicleData,
+				AirdragData = airdragData,
 				GearboxData = gearboxData,
 				EngineData = engineData,
 				JobName = modFileName,
@@ -109,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Vehicle(container, vehicleData, airdragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -202,12 +204,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				//AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
-				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 11500.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.465.SI<Meter>(),
@@ -215,6 +211,17 @@ namespace TUGraz.VectoCore.Tests.Integration
 				SavedInDeclarationMode = false
 			};
 		}
+
+		private static AirdragData CreateAirdragData()
+		{
+			return new AirdragData() {
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
+			};
+		}
+
 
 		private static DriverData CreateDriverData(string accelerationFile, bool overspeed = false)
 		{

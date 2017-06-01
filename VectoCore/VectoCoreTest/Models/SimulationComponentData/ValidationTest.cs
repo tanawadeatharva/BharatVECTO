@@ -183,11 +183,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
@@ -249,11 +244,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
@@ -280,6 +270,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			container.RunData = new VectoRunData {
 				VehicleData = vehicleData,
+				AirdragData = new AirdragData() {
+					CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+					CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),
+							CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
+							CrossWindCorrectionMode.NoCorrection)
+				},
 				GearboxData = gearboxData,
 				EngineData = engineData,
 				AxleGearData = axleGearData
@@ -625,9 +622,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public string Creator { get; set; }
 		public string Date { get; set; }
 		public string TechnicalReportId { get; set; }
+		public CertificationMethod CertificationMethod { get{return CertificationMethod.NotCertified;}}
 		public string CertificationNumber { get; set; }
 		public string DigestValue { get; set; }
-		public IntegrityStatus IntegrityStatus { get; set; }
 		public GearboxType Type { get; set; }
 		public IList<ITransmissionInputData> Gears { get; set; }
 		public KilogramSquareMeter Inertia { get; set; }

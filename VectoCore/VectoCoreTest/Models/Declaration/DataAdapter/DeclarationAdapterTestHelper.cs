@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			return runData;
 		}
 
-		public static void AssertVehicleData(VehicleData vehicleData, VehicleCategory vehicleCategory,
+		public static void AssertVehicleData(VehicleData vehicleData, AirdragData airdragData, VehicleCategory vehicleCategory,
 			VehicleClass vehicleClass, AxleConfiguration axleConfiguration, double wheelsInertia, double totalVehicleWeight,
 			double totalRollResistance, double aerodynamicDragArea)
 		{
@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 			Assert.AreEqual(wheelsInertia, vehicleData.WheelsInertia.Value(), 1e-6, "WheelsInertia");
 			Assert.AreEqual(totalRollResistance, vehicleData.TotalRollResistanceCoefficient, 1e-6, "TotalRollResistance");
 
-			Assert.AreEqual(aerodynamicDragArea, vehicleData.CrossWindCorrectionCurve.AirDragArea.Value(), 1e-6, "Cd x A");
+			Assert.AreEqual(aerodynamicDragArea, airdragData.CrossWindCorrectionCurve.AirDragArea.Value(), 1e-6, "Cd x A");
 		}
 	}
 }

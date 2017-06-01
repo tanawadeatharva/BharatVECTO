@@ -314,6 +314,12 @@ Public Class Gearbox
 		End Get
 	End Property
 
+	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+		Get
+			Return CertificationMethod.NotCertified
+		End Get
+	End Property
+
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
 			Return "N.A."
@@ -323,12 +329,6 @@ Public Class Gearbox
 	Public ReadOnly Property DigestValue As String Implements IComponentInputData.DigestValue
 		Get
 			Return ""
-		End Get
-	End Property
-
-	Public ReadOnly Property IntegrityStatus As IntegrityStatus Implements IComponentInputData.IntegrityStatus
-		Get
-			Return IntegrityStatus.NotChecked
 		End Get
 	End Property
 
@@ -521,6 +521,12 @@ Public Class Gearbox
 	Public ReadOnly Property Efficiency As Double Implements IAxleGearInputData.Efficiency
 		Get
 			Return GearLossMap(0, True).ToDouble(0)
+		End Get
+	End Property
+
+	Public ReadOnly Property LineType As AxleLineType Implements IAxleGearInputData.LineType
+		Get
+			Return AxleLineType.SinglePortalAxle
 		End Get
 	End Property
 End Class

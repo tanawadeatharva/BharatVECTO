@@ -51,7 +51,6 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Resources;
 using LogManager = NLog.LogManager;
 
 namespace VectoConsole

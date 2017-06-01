@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				t += dt;
 			}
 
-			container.FinishSimulation();
+			container.FinishSimulationRun();
 			sumWriter.Finish();
 
 			var testColumns = new[] { "P_aux_FAN", "P_aux_STP", "P_aux_AC", "P_aux_ES", "P_aux_PS", "P_aux" };
