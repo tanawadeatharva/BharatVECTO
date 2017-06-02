@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected IPTOTransmissionInputData PTOTransmission;
 
 		private readonly string _jobname;
-		private IAirdragEngineeringInputData AirdragData;
+		protected internal IAirdragEngineeringInputData AirdragData;
 
 		public JSONInputDataV2(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing)
@@ -329,7 +329,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return PTOTransmission; }
 		}
 
-		public XElement XMLHash { get { return null; } }
+		public XElement XMLHash
+		{
+			get { return null; }
+		}
 
 		IAuxiliariesDeclarationInputData IDeclarationInputDataProvider.AuxiliaryInputData()
 		{
