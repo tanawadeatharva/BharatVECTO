@@ -1,21 +1,27 @@
 ﻿{
   "Header": {
-    "CreatedBy": " ()",
-    "Date": "2016-10-13T10:08:08.3476564Z",
-    "AppVersion": "3",
-    "FileVersion": 3
+	"CreatedBy": " ()",
+	"Date": "2016-10-13T10:08:08.3476564Z",
+	"AppVersion": "3",
+	"FileVersion": 4
   },
   "Body": {
-    "SavedInDeclMode": true,
-    "ModelName": "325kW 12.7l Engine",
-    "Displacement": "12740",
-    "IdlingSpeed": 600.0,
-    "Inertia": 5.1498,
-    "FullLoadCurve": "325kW.vfld",
-    "FuelMap": "325kW.vmap",
-    "WHTC-Urban": 1.04,
-    "WHTC-Rural": 1.01,
-    "WHTC-Motorway": 1.00,
-    "ColdHotBalancingFactor": 1.0
+	"SavedInDeclMode": true,
+	"ModelName": "325kW 12.7l Engine",
+	"Displacement": "12740",
+	"IdlingSpeed": 600.0,
+	"Inertia": 5.1498,
+	"FullLoadCurve": "325kW.vfld",
+	"FuelMap": "325kW.vmap",
+	"WHTC-Urban": 1.04,
+	"WHTC-Rural": 1.01,
+	"WHTC-Motorway": 1.00,
+	"ColdHotBalancingFactor": 1.0,
+	"CFRegPer": 1.00,
+	"CFNCF": 1.00,
+	"FuelType": "Diesel CI",
+	"RatedPower": 325000,
+	"RatedSpeed": 2400,
+	"MaxTorque":  2300  
   }
 }
