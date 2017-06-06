@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			foreach (var mission in segment.Missions) {
 				if (mission.MissionType.IsEMS() &&
-					engineData.FullLoadCurves[0].MaxPower.IsSmaller(DeclarationData.MinEnginePowerForEMS)) {
+					engineData.RatedPowerDeclared.IsSmaller(DeclarationData.MinEnginePowerForEMS)) {
 					continue;
 				}
 				DrivingCycleData cycle;
