@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				Gears = new List<ITransmissionInputData>()
 			};
 
-			var engineData = dao.CreateEngineData(data, dummyGearbox, new List<ITorqueLimitInputData>());
+			var engineData = dao.CreateEngineData(data, null, dummyGearbox, new List<ITorqueLimitInputData>());
 
 			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));

@@ -113,6 +113,8 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IAxleDeclarationInputData> Axles { get; }
 
 		string ManufacturerAddress { get; }
+
+		PerSecond EngineIdleSpeed { get; }
 	}
 
 	public interface IAirdragDeclarationInputData : IComponentInputData

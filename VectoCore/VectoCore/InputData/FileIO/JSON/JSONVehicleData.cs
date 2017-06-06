@@ -123,7 +123,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return AxleWheels().Cast<IAxleEngineeringInputData>().ToList(); }
 		}
 
-		public string ManufacturerAddress { get { return "N.A."; } }
+		public string ManufacturerAddress
+		{
+			get { return "N.A."; }
+		}
+
+		public PerSecond EngineIdleSpeed
+		{
+			get { return null; }
+		}
 
 		IList<IAxleDeclarationInputData> IVehicleDeclarationInputData.Axles
 		{
@@ -357,7 +365,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N.A."; }
 		}
 
-		public CertificationMethod CertificationMethod { get {return CertificationMethod.NotCertified;} }
+		public CertificationMethod CertificationMethod
+		{
+			get { return CertificationMethod.NotCertified; }
+		}
 
 		public string CertificationNumber
 		{

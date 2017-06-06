@@ -209,7 +209,7 @@ Public Class Gearbox
 
 				Try
 
-					engine = doa.CreateEngineData(inputData.EngineInputData, gearbox, New List(Of ITorqueLimitInputData))
+					engine = doa.CreateEngineData(inputData.EngineInputData, Nothing, gearbox, New List(Of ITorqueLimitInputData))
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try

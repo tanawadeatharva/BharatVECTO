@@ -366,6 +366,12 @@ Public Class Vehicle
 		End Get
 	End Property
 
+	Public ReadOnly Property EngineIdleSpeed As PerSecond Implements IVehicleDeclarationInputData.EngineIdleSpeed
+		Get
+			Return Nothing
+		End Get
+	End Property
+
 	Public ReadOnly Property AirDragArea As SquareMeter Implements IAirdragEngineeringInputData.AirDragArea
 		Get
 			Return CdA0.SI(Of SquareMeter)()

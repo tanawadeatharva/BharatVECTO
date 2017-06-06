@@ -252,7 +252,7 @@ Public Class Engine
 						.MaxTorque = New List(Of String),
 						.GearRatios = New List(Of Double)()
 						}
-				engineData = doa.CreateEngineData(engine, dummyGearboxData, New List(Of ITorqueLimitInputData))
+				engineData = doa.CreateEngineData(engine, Nothing, dummyGearboxData, New List(Of ITorqueLimitInputData))
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				engineData = doa.CreateEngineData(engine, Nothing, New List(Of ITorqueLimitInputData))
