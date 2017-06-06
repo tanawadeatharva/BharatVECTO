@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return DeclarationData.PoweredAxle();
 		}
 
-		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine,
+		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine, PerSecond vehicleEngineIdleSpeed,
 			IGearboxDeclarationInputData gearbox, IEnumerable<ITorqueLimitInputData> torqueLimits)
 		{
 			if (!engine.SavedInDeclarationMode) {
@@ -158,6 +158,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var retVal = SetCommonCombustionEngineData(engine);
+			retVal.IdleSpeed = VectoMath.Max(engine.IdleSpeed, vehicleEngineIdleSpeed);
 			retVal.WHTCUrban = engine.WHTCUrban;
 			retVal.WHTCMotorway = engine.WHTCMotorway;
 			retVal.WHTCRural = engine.WHTCRural;

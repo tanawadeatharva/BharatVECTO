@@ -110,7 +110,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return AxleEngineeringInput().Cast<IAxleEngineeringInputData>().ToList(); }
 		}
 
-		public string ManufacturerAddress { get { return "N.A."; } }
+		public string ManufacturerAddress
+		{
+			get { return "N.A."; }
+		}
+
+		public PerSecond EngineIdleSpeed
+		{
+			get { return null; }
+		}
 
 		IList<IAxleDeclarationInputData> IVehicleDeclarationInputData.Axles
 		{

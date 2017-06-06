@@ -74,8 +74,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData, segment.Missions.First(),
 				segment.Missions.First().Loadings.First().Value, segment.MunicipalBodyWeight);
 			var airdragData = dao.CreateAirdragData(InputDataProvider.AirdragInputData, segment.Missions.First(),segment);
-			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData,
-				InputDataProvider.VehicleInputData.TorqueLimits);
+			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.VehicleInputData.EngineIdleSpeed,
+				InputDataProvider.GearboxInputData, InputDataProvider.VehicleInputData.TorqueLimits);
 			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData, false);
 			var angledriveData = dao.CreateAngledriveData(InputDataProvider.AngledriveInputData, false);
 			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,

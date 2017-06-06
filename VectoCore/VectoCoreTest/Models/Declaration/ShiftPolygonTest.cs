@@ -343,7 +343,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			var dao = new DeclarationDataAdapter();
 			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
-			var engineData = dao.CreateEngineData(new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile),
+			var engineData = dao.CreateEngineData(new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile), null,
 				gearboxData, new List<ITorqueLimitInputData>());
 
 			var shiftPolygons = new List<ShiftPolygon>();

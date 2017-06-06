@@ -127,6 +127,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Component_ManufacturerAddress); }
 		}
 
+		public PerSecond EngineIdleSpeed
+		{
+			get { return GetDoubleElementValue(XMLNames.Vehicle_IdlingSpeed).RPMtoRad(); }
+		}
+
 		public double RetarderRatio
 		{
 			get { return GetDoubleElementValue(XMLNames.Vehicle_RetarderRatio); }
