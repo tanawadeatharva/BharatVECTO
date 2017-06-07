@@ -3,27 +3,6 @@
 <?xml-stylesheet type="text/xsl" href="../RenderTable.xslt"?>
 <xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.8" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
-	<xs:complexType name="ADASOverspeedDeclarationType">
-		<xs:sequence>
-			<xs:element name="Mode" type="tns:ADASOverspeedModeDeclarationType">
-				<xs:annotation>
-					<xs:documentation>P015</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="AirDagBaselineDataDeclarationType">
-		<xs:complexContent>
-			<xs:extension base="tns:DeclarationPowertrainComponentType">
-				<xs:sequence/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="AirDragBaselineType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:AirDagBaselineDataDeclarationType"/>
-		</xs:sequence>
-	</xs:complexType>
 	<xs:complexType name="AirDragComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="tns:AirDragDataDeclarationType"/>
