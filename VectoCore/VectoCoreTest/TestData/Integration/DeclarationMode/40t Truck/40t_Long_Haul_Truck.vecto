@@ -38,7 +38,7 @@
         "ID": "AC",
         "Type": "HVAC",
         "Path": "<NOFILE>",
-        "Technology": []
+        "Technology": ["Default"]
       },
       {
         "ID": "ES",

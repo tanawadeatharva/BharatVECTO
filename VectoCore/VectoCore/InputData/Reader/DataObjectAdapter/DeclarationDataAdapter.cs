@@ -310,7 +310,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						aux.ID = Constants.Auxiliaries.IDs.SteeringPump;
 						break;
 					case AuxiliaryType.HVAC:
-						aux.PowerDemand = DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, hvdClass);
+						aux.PowerDemand = DeclarationData.HeatingVentilationAirConditioning.Lookup(mission,
+							auxData.Technology.FirstOrDefault(), hvdClass);
 						aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
 						break;
 					case AuxiliaryType.PneumaticSystem:

@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					new[] { "Variable displacement mech. controlled" }));
 			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission));
 			aux.AddConstant("AC",
-				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, hdvClass));
+				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default",hdvClass));
 
 			var speed = 1400.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
