@@ -30,15 +30,19 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class HeatingVentilationAirConditioning : LookupData<MissionType, VehicleClass, Watt>,
+	public sealed class HeatingVentilationAirConditioning : LookupData<MissionType, string, VehicleClass, Watt>,
 		IDeclarationAuxiliaryTable
 	{
+		private List<string> Technologies;
+
 		protected override string ResourceId
 		{
 			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.HVAC-Table.csv"; }
@@ -46,25 +50,29 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ErrorMessage
 		{
-			get { return "Auxiliary Lookup Error: No value found for HVAC. Mission: '{0}', HDVClass: '{1}'"; }
+			get {
+				return "Auxiliary Lookup Error: No value found for HVAC. Mission: '{0}', Technology: '{1}' , HDVClass: '{2}'";
+			}
 		}
 
 		protected override void ParseData(DataTable table)
 		{
 			foreach (DataRow row in table.Rows) {
 				var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
+				var technology = row.Field<string>("technology");
 				foreach (DataColumn col in table.Columns) {
 					var value = row.ParseDoubleOrGetDefault(col.Caption, double.NaN);
-					if (col.Caption != "hdvclass" && !double.IsNaN(value)) {
-						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), hdvClass)] = value.SI<Watt>();
+					if (col.Caption != "hdvclass" && col.Caption != "technology" && !double.IsNaN(value)) {
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), technology, hdvClass)] = value.SI<Watt>();
 					}
 				}
 			}
+			Technologies = Data.Select(x => x.Key.Item2).Distinct().ToList();
 		}
 
 		public string[] GetTechnologies()
 		{
-			return new[] { "Default" };
+			return Technologies.ToArray();
 		}
 	}
 }
