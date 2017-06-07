@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			return new XElement(tns + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.Model),
-				GetDefaultComponentElements(vehicle.TechnicalReportId, vehicle.Model),
+				GetDefaultComponentElements(vehicle.CertificationNumber, vehicle.Model),
 				new XElement(tns + XMLNames.Vehicle_VehicleCategory, vehicle.VehicleCategory.ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, vehicle.CurbMassChassis.Value().ToXMLFormat(0)),
@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var angledrive = new XElement(tns + XMLNames.Component_Angledrive,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, "ANGL-" + data.Model),
-					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
+					GetDefaultComponentElements(data.CertificationNumber, data.Model),
 					new XElement(tns + XMLNames.AngleDrive_Ratio, data.Ratio.ToXMLFormat(3)),
 					data.LossMap == null
 						? new XElement(tns + XMLNames.AngleDrive_TorqueLossMap,
@@ -397,7 +397,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var retarder = new XElement(tns + XMLNames.Component_Retarder,
 				new XElement(tns + XMLNames.ComponentDataWrapper, new XAttribute(XMLNames.Component_ID_Attr, "RET-none"),
-					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
+					GetDefaultComponentElements(data.CertificationNumber, data.Model),
 					new XElement(tns + XMLNames.Retarder_RetarderLossMap,
 						_singleFile
 							? EmbedDataTable(data.LossMap, AttributeMappings.RetarderLossmapMapping)

@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			return new XElement(tns + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.Model),
-				GetDefaultComponentElements(vehicle.TechnicalReportId, vehicle.Model, "N.A."),
+				GetDefaultComponentElements(vehicle.CertificationNumber, vehicle.Model, "N.A."),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, "N3"),
 				new XElement(tns + XMLNames.Vehicle_VehicleCategory, vehicle.VehicleCategory.ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.GetName()),
@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, id),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
-					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
+					GetDefaultComponentElements(data.CertificationNumber, data.Model),
 					new XElement(tns + XMLNames.Component_CertificationMethod, "Standard values"),
 					new XElement(tns + XMLNames.TorqueConverter_Characteristics,
 						EmbedDataTable(data.TCData, AttributeMappings.TorqueConverterDataMapping,
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, "ANGL-" + data.Model),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
-					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
+					GetDefaultComponentElements(data.CertificationNumber, data.Model),
 					new XElement(tns + XMLNames.AngleDrive_Ratio, data.Ratio.ToXMLFormat(3)),
 					new XElement(tns + XMLNames.Component_CertificationMethod, "Standard values"),
 					new XElement(tns + XMLNames.AngleDrive_TorqueLossMap,
@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, "RET-none"),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
-					GetDefaultComponentElements(data.TechnicalReportId, data.Model),
+					GetDefaultComponentElements(data.CertificationNumber, data.Model),
 					new XElement(tns + XMLNames.Component_CertificationMethod, "Standard values"),
 					new XElement(tns + XMLNames.Retarder_RetarderLossMap,
 						EmbedDataTable(data.LossMap, AttributeMappings.RetarderLossmapMapping)
@@ -341,7 +341,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				AddSignatureDummy(id)
 				);
 		}
-		
+
 		private string AuxTypeToXML(AuxiliaryType type)
 		{
 			return type.ToString();

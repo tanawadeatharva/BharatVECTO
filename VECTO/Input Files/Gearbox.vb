@@ -308,12 +308,6 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property TechnicalReportId As String Implements IComponentInputData.TechnicalReportId
-		Get
-			Return "N.A." ' todo MQ 20160915
-		End Get
-	End Property
-
 	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 		Get
 			Return CertificationMethod.NotCertified

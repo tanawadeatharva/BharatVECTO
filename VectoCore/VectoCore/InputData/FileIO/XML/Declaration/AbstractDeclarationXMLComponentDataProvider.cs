@@ -69,11 +69,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Component_Date); }
 		}
 
-		public virtual string TechnicalReportId
-		{
-			get { return GetElementValue(XMLNames.Component_TechnicalReportId); }
-		}
-
 		public virtual CertificationMethod CertificationMethod
 		{
 			get {

@@ -58,8 +58,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		string Date { get; }
 
-		string TechnicalReportId { get; }
-
 		CertificationMethod CertificationMethod { get; }
 
 		string CertificationNumber { get; }
