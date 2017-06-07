@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2016 rel. 2 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
 <?xml-stylesheet type="text/xsl" href="../RenderTable.xslt"?>
-<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.8" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
+<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
 	<xs:complexType name="AirDragComponentDeclarationType">
 		<xs:sequence>
@@ -21,9 +21,9 @@
 					<xs:documentation>P241</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="TechnicalReportId" type="tns:TechnicalReportIdType">
+			<xs:element name="CertificationNumber" type="tns:CertificationNumberType">
 				<xs:annotation>
-					<xs:documentation>P242</xs:documentation>
+					<xs:documentation>P268</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="Date" type="tns:DateTimeWithTimezone">
@@ -74,9 +74,9 @@
 							<xs:documentation>P221</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="TechnicalReportId" type="tns:TechnicalReportIdType">
+					<xs:element name="CertificationNumber" type="tns:CertificationNumberType">
 						<xs:annotation>
-							<xs:documentation>P222</xs:documentation>
+							<xs:documentation>P265</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Date" type="tns:DateTimeWithTimezone">
@@ -217,19 +217,7 @@
 					<xs:documentation>P195 - bool</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Tyre">
-				<xs:complexType>
-					<xs:complexContent>
-						<xs:extension base="tns:TyreDeclarationType">
-							<xs:attribute name="certificationNumber" type="tns:CertificationNumberType" use="required">
-								<xs:annotation>
-									<xs:documentation>P267 - [-]</xs:documentation>
-								</xs:annotation>
-							</xs:attribute>
-						</xs:extension>
-					</xs:complexContent>
-				</xs:complexType>
-			</xs:element>
+			<xs:element name="Tyre" type="tns:TyreDeclarationType"/>
 		</xs:sequence>
 		<xs:attribute name="axleNumber" use="required">
 			<xs:simpleType>
@@ -263,9 +251,9 @@
 							<xs:documentation>P216</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="TechnicalReportId" type="tns:TechnicalReportIdType">
+					<xs:element name="CertificationNumber" type="tns:CertificationNumberType">
 						<xs:annotation>
-							<xs:documentation>P217</xs:documentation>
+							<xs:documentation>P264</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Date" type="tns:DateTimeWithTimezone">
@@ -374,9 +362,9 @@
 							<xs:documentation>P201</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="TechnicalReportId" type="tns:TechnicalReportIdType">
+					<xs:element name="CertificationNumber" type="tns:CertificationNumberType">
 						<xs:annotation>
-							<xs:documentation>P202</xs:documentation>
+							<xs:documentation>P261</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Date" type="tns:DateTimeWithTimezone">
@@ -534,13 +522,7 @@
 			<xs:element name="TorqueConverter" minOccurs="0">
 				<xs:complexType>
 					<xs:complexContent>
-						<xs:extension base="tns:TorqueConverterComponentDeclarationType">
-							<xs:attribute name="certificationNumber" type="tns:CertificationNumberType" use="required">
-								<xs:annotation>
-									<xs:documentation>P263 - [-]</xs:documentation>
-								</xs:annotation>
-							</xs:attribute>
-						</xs:extension>
+						<xs:extension base="tns:TorqueConverterComponentDeclarationType"/>
 					</xs:complexContent>
 				</xs:complexType>
 			</xs:element>
@@ -563,9 +545,9 @@
 							<xs:documentation>P206</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="TechnicalReportId" type="tns:TechnicalReportIdType">
+					<xs:element name="CertificationNumber" type="tns:CertificationNumberType">
 						<xs:annotation>
-							<xs:documentation>P207</xs:documentation>
+							<xs:documentation>P262</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Date" type="tns:DateTimeWithTimezone">
@@ -651,9 +633,9 @@
 							<xs:documentation>P226</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="TechnicalReportId" type="tns:TechnicalReportIdType">
+					<xs:element name="CertificationNumber" type="tns:CertificationNumberType">
 						<xs:annotation>
-							<xs:documentation>P227</xs:documentation>
+							<xs:documentation>P266</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Date" type="tns:DateTimeWithTimezone">
@@ -739,9 +721,9 @@
 							<xs:documentation>P211</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="TechnicalReportId" type="tns:TechnicalReportIdType">
+					<xs:element name="CertificationNumber" type="tns:CertificationNumberType">
 						<xs:annotation>
-							<xs:documentation>P212</xs:documentation>
+							<xs:documentation>P263</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Date" type="tns:DateTimeWithTimezone">
@@ -819,9 +801,9 @@
 							<xs:documentation>P231</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="TechnicalReportId" type="tns:TechnicalReportIdType">
+					<xs:element name="CertificationNumber" type="tns:CertificationNumberType">
 						<xs:annotation>
-							<xs:documentation>P232</xs:documentation>
+							<xs:documentation>P267</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Date" type="tns:DateTimeWithTimezone">
@@ -989,86 +971,14 @@
 					<xs:element name="Components">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Engine">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:EngineComponentDeclarationType">
-												<xs:attribute name="certificationNumber" type="tns:CertificationNumberType" use="required">
-													<xs:annotation>
-														<xs:documentation>P261 - [-]</xs:documentation>
-													</xs:annotation>
-												</xs:attribute>
-											</xs:extension>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
-								<xs:element name="Gearbox">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:GearboxComponentDeclarationType">
-												<xs:attribute name="certificationNumber" type="tns:CertificationNumberType" use="required">
-													<xs:annotation>
-														<xs:documentation>P262 - [-]</xs:documentation>
-													</xs:annotation>
-												</xs:attribute>
-											</xs:extension>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
-								<xs:element name="Angledrive" minOccurs="0">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:AngledriveComponentDeclarationType">
-												<xs:attribute name="certificationNumber" type="tns:CertificationNumberType" use="required">
-													<xs:annotation>
-														<xs:documentation>P265 - [-]</xs:documentation>
-													</xs:annotation>
-												</xs:attribute>
-											</xs:extension>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
-								<xs:element name="Retarder" minOccurs="0">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:RetarderComponentDeclarationType">
-												<xs:attribute name="certificationNumber" type="tns:CertificationNumberType" use="required">
-													<xs:annotation>
-														<xs:documentation>P266 - [-]</xs:documentation>
-													</xs:annotation>
-												</xs:attribute>
-											</xs:extension>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
-								<xs:element name="Axlegear">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:AxlegearComponentDeclarationType">
-												<xs:attribute name="certificationNumber" type="tns:CertificationNumberType" use="required">
-													<xs:annotation>
-														<xs:documentation>P264 - [-]</xs:documentation>
-													</xs:annotation>
-												</xs:attribute>
-											</xs:extension>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
+								<xs:element name="Engine" type="tns:EngineComponentDeclarationType"/>
+								<xs:element name="Gearbox" type="tns:GearboxComponentDeclarationType"/>
+								<xs:element name="Angledrive" type="tns:AngledriveComponentDeclarationType" minOccurs="0"/>
+								<xs:element name="Retarder" type="tns:RetarderComponentDeclarationType" minOccurs="0"/>
+								<xs:element name="Axlegear" type="tns:AxlegearComponentDeclarationType"/>
 								<xs:element name="AxleWheels" type="tns:AxleWheelsComponentDeclarationType"/>
 								<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentDeclarationType"/>
-								<xs:element name="AirDrag" minOccurs="0">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:AirDragComponentDeclarationType">
-												<xs:attribute name="certificationNumber" type="tns:CertificationNumberType" use="required">
-													<xs:annotation>
-														<xs:documentation>P268 - [-]</xs:documentation>
-													</xs:annotation>
-												</xs:attribute>
-											</xs:extension>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
+								<xs:element name="AirDrag" type="tns:AirDragComponentDeclarationType" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -1278,6 +1188,7 @@
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="None"/>
 			<xs:enumeration value="Default"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -2219,26 +2130,6 @@ ToDo: -0.00
 		<xs:restriction base="xs:int">
 			<xs:minInclusive value="1"/>
 			<xs:maxInclusive value="4"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="TechnicalReportIdType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="Engine">202</vectoParam:parameterId>
-					<vectoParam:parameterId component="Gearbox">207</vectoParam:parameterId>
-					<vectoParam:parameterId component="Torqueconverter">212</vectoParam:parameterId>
-					<vectoParam:parameterId component="Axlegear">217</vectoParam:parameterId>
-					<vectoParam:parameterId component="Angledrive">222</vectoParam:parameterId>
-					<vectoParam:parameterId component="Retarder">227</vectoParam:parameterId>
-					<vectoParam:parameterId component="Tyre">232</vectoParam:parameterId>
-					<vectoParam:parameterId component="Airdrag">242</vectoParam:parameterId>
-					<vectoParam:unit>-</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:restriction base="xs:token">
-			<xs:minLength value="1"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TorqueConverterCertificationOptionType">

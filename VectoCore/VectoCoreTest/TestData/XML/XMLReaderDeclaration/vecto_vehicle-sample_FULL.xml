@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8"
-													xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.8"
-													xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8"
-													xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8 https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoInput.xsd"
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0"
+													xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="1.0"
+													xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v1.0"
+													xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v1.0 https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoInput.xsd"
 													xmlns:di="http://www.w3.org/2000/09/xmldsig#">
 	<Vehicle id="VEH-1234567890">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
@@ -30,11 +30,11 @@
 			<Entry gear="12" maxTorque="1900" />
 		</TorqueLimits>
 		<Components>
-			<Engine certificationNumber="e12*0815/8051*2017/05E0000*00">
+			<Engine>
 				<Data id="ENG-gooZah3D">
 					<Manufacturer>Generic Engine Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Engine</Model>
-					<TechnicalReportId>ENG-gooZah3D</TechnicalReportId>
+					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-02-15T11:00:00Z</Date>
 					<AppVersion>VectoEngine x.y</AppVersion>
 					<Displacement>12730</Displacement>
@@ -187,11 +187,11 @@
 					</di:Reference>
 				</Signature>
 			</Engine>
-			<Gearbox certificationNumber="e12*0815/8051*2017/05E0000*00">
+			<Gearbox>
 				<Data id="gbx-vi2Oak2N">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Gearbox</Model>
-					<TechnicalReportId>GBX-vi2Oak2N</TechnicalReportId>
+					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-01-11T11:00:00Z</Date>
 					<AppVersion>3.0.1</AppVersion>
 					<TransmissionType>AMT</TransmissionType>
@@ -2586,11 +2586,11 @@
 						<di:DigestValue>ieNmjofFObDBGnB7+GX9of3HYe3ydK/ra+YvmULVJIk=</di:DigestValue>
 					</di:Reference>
 				</Signature>
-				<TorqueConverter certificationNumber="e12*0815/8051*2017/05E0000*00">
+				<TorqueConverter>
 					<Data id="tc-123xyz">
 						<Manufacturer>Some Manufacturer</Manufacturer>
 						<Model>Some Model</Model>
-						<TechnicalReportId>xyz1234</TechnicalReportId>
+						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 						<Date>2017-02-15T11:00:00Z</Date>
 						<AppVersion>TC CalcApp 123</AppVersion>
 						<CertificationMethod>Standard values</CertificationMethod>
@@ -2608,11 +2608,11 @@
 					</Signature>
 				</TorqueConverter>
 			</Gearbox>
-			<Angledrive certificationNumber="e12*0815/8051*2017/05E0000*00">
+			<Angledrive>
 				<Data id="agl-vi2Oak2N">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Gearbox</Model>
-					<TechnicalReportId>AGL-vi2Oak2N</TechnicalReportId>
+					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-01-11T11:00:00Z</Date>
 					<AppVersion>3.0.1</AppVersion>
 					<Ratio>2.345</Ratio>
@@ -2637,11 +2637,11 @@
 					</di:Reference>
 				</Signature>
 			</Angledrive>
-			<Retarder certificationNumber="e12*0815/8051*2017/05E0000*00">
+			<Retarder>
 				<Data id="RET-Shai9imi">
 					<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
 					<Model>Generic Retarder</Model>
-					<TechnicalReportId>RET-Shai9imi</TechnicalReportId>
+					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-01-11T11:00:00Z</Date>
 					<AppVersion>3.0.1</AppVersion>
 					<CertificationMethod>Standard values</CertificationMethod>
@@ -2683,11 +2683,11 @@
 					</di:Reference>
 				</Signature>
 			</Retarder>
-			<Axlegear certificationNumber="e12*0815/8051*2017/05E0000*00">
+			<Axlegear>
 				<Data id="AXL-EC3ohnoh">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck AxleGear</Model>
-					<TechnicalReportId>AXL-EC3ohnoh</TechnicalReportId>
+					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-01-11T11:00:00Z</Date>
 					<AppVersion>3.0.1</AppVersion>
 					<LineType>Single portal axle</LineType>
@@ -3206,11 +3206,11 @@
 							<AxleType>VehicleNonDriven</AxleType>
 							<TwinTyres>false</TwinTyres>
 							<Steered>true</Steered>
-							<Tyre certificationNumber="e12*0815/8051*2017/05E0000*00">
+							<Tyre>
 								<Data id="WHL-5432198760-315-70-R22.5">
 									<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
 									<Model>Generic Wheel</Model>
-									<TechnicalReportId>WHL-5432198760</TechnicalReportId>
+									<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 									<Date>2017-01-11T14:00:00Z</Date>
 									<AppVersion>Tyre Generation App 1.0</AppVersion>
 									<Dimension>315/70 R22.5</Dimension>
@@ -3233,11 +3233,11 @@
 							<AxleType>VehicleDriven</AxleType>
 							<TwinTyres>true</TwinTyres>
 							<Steered>false</Steered>
-							<Tyre certificationNumber="e12*0815/8051*2017/05E0000*00">
+							<Tyre>
 								<Data id="WHL-5432198760-315-70-R22.5">
 									<Manufacturer>Generic Wheels Manufacturer</Manufacturer>
 									<Model>Generic Wheel</Model>
-									<TechnicalReportId>WHL-1234567890</TechnicalReportId>
+									<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 									<Date>2017-01-11T14:00:00Z</Date>
 									<AppVersion>Tyre Generation App 1.0</AppVersion>
 									<Dimension>315/70 R22.5</Dimension>
@@ -3278,11 +3278,11 @@
 					</HVAC>
 				</Data>
 			</Auxiliaries>
-			<AirDrag certificationNumber="e12*0815/8051*2017/05E0000*00">
+			<AirDrag>
 				<Data id="CabinX23h">
 					<Manufacturer>Generic Manufacturer</Manufacturer>
 					<Model>Generic Model</Model>
-					<TechnicalReportId>Cabin ABC X23/h</TechnicalReportId>
+					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 					<Date>2017-03-24T15:00:00Z</Date>
 					<AppVersion>Vect AirDrag x.y</AppVersion>
 					<CdxA_0>6.31</CdxA_0>

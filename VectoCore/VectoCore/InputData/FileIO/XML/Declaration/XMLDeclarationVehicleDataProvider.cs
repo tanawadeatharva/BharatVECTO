@@ -21,11 +21,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			XBasePath = VehiclePath;
 		}
 
-		public override string TechnicalReportId
-		{
-			get { return GetElementValue(XMLNames.Vehicle_VIN); }
-		}
-
 		public string VIN
 		{
 			get { return GetElementValue(XMLNames.Vehicle_VIN); }

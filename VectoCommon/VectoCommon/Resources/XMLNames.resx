@@ -555,9 +555,6 @@
   <data name="Component_Model" xml:space="preserve">
     <value>Model</value>
   </data>
-  <data name="Component_CertificationNumber_Attr" xml:space="preserve">
-    <value>certificationNumber</value>
-  </data>
   <data name="Angledrive_LossMap_Entry" xml:space="preserve">
     <value>Entry</value>
   </data>
@@ -770,5 +767,8 @@
   </data>
   <data name="Axlegear_LineType" xml:space="preserve">
     <value>LineType</value>
+  </data>
+	<data name="Component_CertificationNumber" xml:space="preserve">
+    <value>CertificationNumber</value>
   </data>
 </root>

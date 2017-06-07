@@ -59,14 +59,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return GetElementValue(XMLNames.Component_Date); }
 		}
 
-		public override string TechnicalReportId
-		{
-			get { return "N.A."; }
-		}
-
 		public override string DigestValue
 		{
 			get { return ""; }
+		}
+
+		public override string CertificationNumber
+		{
+			get { return "N.A."; }
 		}
 
 		public override CertificationMethod CertificationMethod

@@ -290,12 +290,6 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property TechnicalReportId As String Implements IComponentInputData.TechnicalReportId
-		Get
-			Return "N.A."	' ToDo: MQ 20160908
-		End Get
-	End Property
-
 	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 		Get
 			Return CertificationMethod.NotCertified
