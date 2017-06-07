@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Configuration
 
 		public static class XML
 		{
-			public const string XSDDeclarationVersion = "0.8";
+			public const string XSDDeclarationVersion = "1.0";
 			public const string XSDEngineeringVersion = "0.7";
 
 			public const string DeclarationNSPrefix = "vdd";

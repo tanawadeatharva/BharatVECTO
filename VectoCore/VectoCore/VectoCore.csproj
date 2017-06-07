@@ -389,10 +389,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.0.6.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.0.6.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -412,15 +408,15 @@
     <EmbeddedResource Include="Resources\XSD\VectoOutput.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.0.8.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\xmldsig-core-schema.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\MunicipalUtility_PTO_generic.vptoc" />
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\MunicipalUtility_PTO_generic.vptol" />
     <EmbeddedResource Include="Resources\Declaration\FuelTypes.csv" />
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.1.0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />

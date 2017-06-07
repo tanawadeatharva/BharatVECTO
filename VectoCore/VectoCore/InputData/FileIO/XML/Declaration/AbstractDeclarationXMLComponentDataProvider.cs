@@ -63,7 +63,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Component_Model); }
 		}
 
-		
 
 		public virtual string Date
 		{
@@ -85,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public virtual string CertificationNumber
 		{
-			get { return GetAttributeValue("..", "certificationNumber"); }
+			get { return GetElementValue(XMLNames.Component_CertificationNumber); }
 		}
 
 		public virtual string DigestValue
@@ -93,7 +92,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue("..//*[local-name()='DigestValue']"); }
 		}
 
-		
 
 		protected bool ElementExists(string relativePath)
 		{
