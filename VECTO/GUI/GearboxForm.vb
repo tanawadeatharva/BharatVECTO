@@ -43,6 +43,7 @@ Public Class GearboxForm
 		LossMapEfficiency = 2
 		ShiftPolygons = 3
 		MaxTorque = 4
+		MaxSpeed = 5
 	End Enum
 
 	Private _gbxFile As String = ""
@@ -105,7 +106,7 @@ Public Class GearboxForm
 		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
 		'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()						' cDeclaration.TqResv
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()								' cDeclaration.TqResv
 		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
@@ -200,7 +201,7 @@ Public Class GearboxForm
 
 		LvGears.Items.Clear()
 
-		LvGears.Items.Add(CreateListviewItem("Axle", 1, "1", "", ""))
+		LvGears.Items.Add(CreateListviewItem("Axle", 1, "1", "", "", ""))
 
 		'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
 		'Me.ChShiftInside.Checked = False       'set by CbGStype.SelectedIndexChanged
@@ -271,7 +272,7 @@ Public Class GearboxForm
 		Catch ex As Exception
 		End Try
 
-		LvGears.Items.Add(CreateListviewItem("Axle", axlegear.Ratio, lossmap, "", ""))
+		LvGears.Items.Add(CreateListviewItem("Axle", axlegear.Ratio, lossmap, "", "", ""))
 
 		For Each gear As ITransmissionInputData In gearbox.Gears
 			lossmap = ""
@@ -283,7 +284,8 @@ Public Class GearboxForm
 			LvGears.Items.Add(CreateListviewItem(gear.Gear.ToString("00"), gear.Ratio,
 												lossmap,
 												If(gear.ShiftPolygon Is Nothing, "", GetRelativePath(gear.ShiftPolygon.Source, basePath)),
-												If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat())))
+												If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.ToGUIFormat()),
+												If(gear.MaxInputSpeed Is Nothing, "", gear.MaxInputSpeed.AsRPM.ToGUIFormat())))
 		Next
 
 		TbTqResv.Text = (gearbox.TorqueReserve * 100).ToGUIFormat()
@@ -341,13 +343,14 @@ Public Class GearboxForm
 	End Sub
 
 	Private Function CreateListviewItem(gear As String, ratio As Double, getrMap As String,
-										shiftPolygon As String, maxTorque As String) As ListViewItem
+										shiftPolygon As String, maxTorque As String, maxSpeed As String) As ListViewItem
 		Dim retVal As ListViewItem = New ListViewItem(gear)
 		'retVal.SubItems.Add(tc)
 		retVal.SubItems.Add(ratio.ToGUIFormat())
 		retVal.SubItems.Add(getrMap)
 		retVal.SubItems.Add(shiftPolygon)
 		retVal.SubItems.Add(maxTorque)
+		retVal.SubItems.Add(maxSpeed)
 		Return retVal
 	End Function
 
@@ -414,6 +417,7 @@ Public Class GearboxForm
 			'GBX0.FldFiles.Add(New cSubPath)
 			'GBX0.FldFile(i) = Me.LvGears.Items(i).SubItems(GearboxTbl.MaxTorque).Text
 			gearbox.MaxTorque.Add(LvGears.Items(i).SubItems(GearboxTbl.MaxTorque).Text)
+			gearbox.MaxSpeed.Add(LvGears.Items(i).SubItems(GearboxTbl.MaxSpeed).Text)
 		Next
 
 		gearbox.TorqueResv = TbTqResv.Text.ToDouble(0)
@@ -588,9 +592,11 @@ Public Class GearboxForm
 			If LvGears.SelectedIndices(0) > 0 Then
 				_gearDialog.TbShiftPolyFile.Text = LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text
 				_gearDialog.TbMaxTorque.Text = LvGears.SelectedItems(0).SubItems(GearboxTbl.MaxTorque).Text
+				_gearDialog.tbMaxSpeed.Text = LvGears.SelectedItems(0).SubItems(GearboxTbl.MaxSpeed).Text
 			Else
 				_gearDialog.TbShiftPolyFile.Text = ""
 				_gearDialog.TbMaxTorque.Text = ""
+				_gearDialog.tbMaxSpeed.Text = ""
 			End If
 
 			If LvGears.SelectedItems(0).Index = 0 Then
@@ -600,14 +606,13 @@ Public Class GearboxForm
 			End If
 
 			If _gearDialog.ShowDialog = DialogResult.OK Then
-
 				'Me.LvGears.SelectedItems(0).SubItems(GearboxTbl.TorqueConverter).Text = "-"
-
-
 				LvGears.SelectedItems(0).SubItems(GearboxTbl.Ratio).Text = _gearDialog.TbRatio.Text
 				LvGears.SelectedItems(0).SubItems(GearboxTbl.LossMapEfficiency).Text = _gearDialog.TbMapPath.Text
 				LvGears.SelectedItems(0).SubItems(GearboxTbl.ShiftPolygons).Text = _gearDialog.TbShiftPolyFile.Text
 				LvGears.SelectedItems(0).SubItems(GearboxTbl.MaxTorque).Text = _gearDialog.TbMaxTorque.Text
+				LvGears.SelectedItems(0).SubItems(GearboxTbl.MaxSpeed).Text = _gearDialog.tbMaxSpeed.Text
+
 				UpdateGearboxInfoText()
 				Try
 					UpdatePic()
@@ -639,7 +644,7 @@ Public Class GearboxForm
 	Private Sub AddGear()
 		Dim lvi As ListViewItem
 
-		lvi = CreateListviewItem(LvGears.Items.Count.ToString("00"), 1, "", "", "")
+		lvi = CreateListviewItem(LvGears.Items.Count.ToString("00"), 1, "", "", "", "")
 
 		LvGears.Items.Add(lvi)
 
@@ -892,7 +897,8 @@ Public Class GearboxForm
 	Private Function GetShiftLines(ByVal idleSpeed As PerSecond, engineFullLoadCurve As EngineFullLoadCurve,
 									vehicle As IVehicleEngineeringInputData, gears As IList(Of ITransmissionInputData), ByVal gear As Integer) _
 		As ShiftPolygon
-		Dim engine As CombustionEngineData = ConvertToEngineData(engineFullLoadCurve, idleSpeed)
+		Dim engine As CombustionEngineData = ConvertToEngineData(engineFullLoadCurve, idleSpeed, gear,
+																LvGears.Items(gear).SubItems(GearboxTbl.MaxTorque).Text.ToDouble(0).SI(Of NewtonMeter))
 		If gears.Count <= 1 Then
 			Return Nothing
 		End If
@@ -906,8 +912,8 @@ Public Class GearboxForm
 		If (rDyn.IsEqual(0)) Then
 			Return Nothing
 		End If
-		Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(gear - 1, engine.FullLoadCurve, gears,
-																					engine,
+		Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(gear - 1,
+																					engine.FullLoadCurves(CType(gear, UInteger)), gears, engine,
 																					Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
 																					(rDyn))
 		Return shiftLines
@@ -978,7 +984,8 @@ Public Class GearboxForm
 			Dim export As XDocument = New XMLDeclarationWriter(data.Manufacturer).GenerateVectoComponent(data, data)
 			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
 		Else
-			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Manufacturer).GenerateVectoComponent(data, data)
+			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Manufacturer).GenerateVectoComponent(data,
+																														data)
 			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
 		End If
 	End Sub

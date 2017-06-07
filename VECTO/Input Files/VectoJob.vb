@@ -17,6 +17,7 @@ Imports System.IO
 Imports System.Linq
 Imports System.Runtime.Remoting.Messaging
 Imports System.Text
+Imports System.Xml.Linq
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
@@ -225,17 +226,6 @@ Public Class VectoJob
 		End Get
 	End Property
 
-	Public ReadOnly Property IDriverEngineeringInputData_StartStop As IStartStopEngineeringInputData _
-		Implements IDriverEngineeringInputData.StartStop
-		Get
-			Return New StartStopInputData With {
-				.Enabled = _startStop,
-				.MaxSpeed = StartStopMaxSpeed.KMPHtoMeterPerSecond(),
-				.MinTime = StartStopTime.SI(Of Second)(),
-				.Delay = StartStopDelay.SI(Of Second)()
-				}
-		End Get
-	End Property
 
 	Public ReadOnly Property OverSpeedEcoRoll As IOverSpeedEcoRollDeclarationInputData _
 		Implements IDriverDeclarationInputData.OverSpeedEcoRoll
@@ -588,11 +578,25 @@ Public Class VectoJob
 		End Get
 	End Property
 
+	Public ReadOnly Property IDeclarationInputDataProvider_PTOTransmissionInputData As IPTOTransmissionInputData _
+		Implements IDeclarationInputDataProvider.PTOTransmissionInputData
+		Get
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).PTOTransmissionInputData
+		End Get
+	End Property
+
 	Public ReadOnly Property PTOTransmissionInputData As IPTOTransmissionInputData _
 		Implements IEngineeringInputDataProvider.PTOTransmissionInputData
 		Get
 			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
 			Return New JSONComponentInputData(_vehicleFile.FullPath).PTOTransmissionInputData
+		End Get
+	End Property
+
+	Public ReadOnly Property XMLHash As XElement Implements IDeclarationInputDataProvider.XMLHash
+		Get
+			Return Nothing
 		End Get
 	End Property
 
@@ -603,13 +607,6 @@ Public Class VectoJob
 		End Get
 	End Property
 
-
-	Public ReadOnly Property IDriverDeclarationInputData_StartStop As IStartStopDeclarationInputData _
-		Implements IDriverDeclarationInputData.StartStop
-		Get
-			Return IDriverEngineeringInputData_StartStop
-		End Get
-	End Property
 
 	Public ReadOnly Property IEngineeringJobInputData_Vehicle As IVehicleEngineeringInputData _
 		Implements IEngineeringJobInputData.Vehicle

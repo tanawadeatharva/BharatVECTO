@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicle.MyVehicleSpeed = 10.KMPHtoMeterPerSecond();
 			driver.DriverBehavior = DrivingBehavior.Driving;
 			var engine = new CombustionEngine(container,
-				MockSimulationDataFactory.CreateEngineDataFromFile(ATPowerTrain.EngineFile));
+				MockSimulationDataFactory.CreateEngineDataFromFile(ATPowerTrain.EngineFile, gearboxData.Gears.Count));
 			container.Engine = engine;
 			var runData = new VectoRunData() {
 				GearboxData = gearboxData,

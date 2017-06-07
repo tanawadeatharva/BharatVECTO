@@ -1,14 +1,16 @@
 ﻿using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
 	public class XMLDeclarationEngineDataProvider : AbstractDeclarationXMLComponentDataProvider,
 		IEngineDeclarationInputData
 	{
-		public XMLDeclarationEngineDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
+		public XMLDeclarationEngineDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider)
+			: base(xmlInputDataProvider)
 		{
 			XBasePath = Helper.Query(VehiclePath,
 				XMLNames.Vehicle_Components,
@@ -26,10 +28,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetDoubleElementValue(XMLNames.Engine_IdlingSpeed).RPMtoRad(); }
 		}
 
+		public FuelType FuelType
+		{
+			get { return GetElementValue(XMLNames.Engine_FuelType).ParseEnum<FuelType>(); }
+		}
+
 		public TableData FuelConsumptionMap
 		{
-			get
-			{
+			get {
 				return ReadTableData(AttributeMappings.FuelConsumptionMapMapping,
 					Helper.Query(XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry));
 			}
@@ -37,11 +43,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public TableData FullLoadCurve
 		{
-			get
-			{
+			get {
 				return ReadTableData(AttributeMappings.EngineFullLoadCurveMapping,
 					Helper.Query(XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FullLoadCurve_Entry));
 			}
+		}
+
+		public Watt RatedPowerDeclared
+		{
+			get { return GetDoubleElementValue(XMLNames.Engine_RatedPower).SI<Watt>(); }
+		}
+
+		public PerSecond RatedSpeedDeclared
+		{
+			get { return GetDoubleElementValue(XMLNames.Engine_RatedSpeed).RPMtoRad(); }
+		}
+
+		public NewtonMeter MaxTorqueDeclared
+		{
+			get { return GetDoubleElementValue(XMLNames.Engine_MaxTorque).SI<NewtonMeter>(); }
 		}
 
 		public double WHTCMotorway
@@ -62,6 +82,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		public double ColdHotBalancingFactor
 		{
 			get { return GetDoubleElementValue(XMLNames.Engine_ColdHotBalancingFactor); }
+		}
+
+		public double CorrectionFactorRegPer
+		{
+			get { return GetDoubleElementValue(XMLNames.Engine_CorrectionFactor_RegPer); }
+		}
+
+		public double CorrectionFactorNCV
+		{
+			get { return GetDoubleElementValue(XMLNames.Engine_CorrecionFactor_NCV); }
 		}
 	}
 }

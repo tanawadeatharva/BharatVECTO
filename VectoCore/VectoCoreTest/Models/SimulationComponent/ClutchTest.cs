@@ -30,9 +30,7 @@
 */
 
 using System.Data;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
-using Org.BouncyCastle.Asn1.Esf;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
@@ -69,8 +67,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			double expectedEngineSpeed)
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 1);
 			var gearbox = new MockGearbox(container);
+			gearbox.Gear = 0;
 			var clutch = new Clutch(container, engineData) { IdleController = new MockIdleController() };
 			var vehicle = new MockVehicle(container);
 			vehicle.MyVehicleSpeed = 50.KMPHtoMeterPerSecond();
@@ -96,8 +95,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void ClutchContinuityTest()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 1);
 			var gearbox = new MockGearbox(container);
+			gearbox.Gear = 1;
 			var engine = new MockEngine(container);
 			var clutch = new Clutch(container, engineData) { IdleController = new MockIdleController() };
 

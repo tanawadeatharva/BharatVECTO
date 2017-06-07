@@ -3,7 +3,6 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
@@ -14,20 +13,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			: base(xmlInputDataProvider)
 		{
 			XBasePath = VehiclePath;
-		}
-
-		public IStartStopDeclarationInputData StartStop
-		{
-			get {
-				//var node =
-				//	Navigator.SelectSingleNode(Helper.Query(VehiclePath,
-				//		XMLNames.Vehicle_AdvancedDriverAssist,
-				//		XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop,
-				//		XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop_Enabled), Manager);
-				return new StartStopInputData() {
-					Enabled = false
-				};
-			}
 		}
 
 		public IOverSpeedEcoRollDeclarationInputData OverSpeedEcoRoll

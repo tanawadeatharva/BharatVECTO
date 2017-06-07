@@ -34,6 +34,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -135,7 +136,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected IPTOTransmissionInputData PTOTransmission;
 
 		private readonly string _jobname;
-		private IAirdragEngineeringInputData AirdragData;
+		protected internal IAirdragEngineeringInputData AirdragData;
 
 		public JSONInputDataV2(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing)
@@ -328,6 +329,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return PTOTransmission; }
 		}
 
+		public XElement XMLHash
+		{
+			get { return null; }
+		}
+
 		IAuxiliariesDeclarationInputData IDeclarationInputDataProvider.AuxiliaryInputData()
 		{
 			return this;
@@ -415,19 +421,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region DriverInputData
 
-		public virtual IStartStopEngineeringInputData StartStop
-		{
-			get {
-				var startStop = Body.GetEx(JsonKeys.DriverData_StartStop);
-				return new StartStopInputData {
-					Enabled = startStop.GetEx<bool>(JsonKeys.DriverData_StartStop_Enabled),
-					Delay = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_Delay).SI<Second>(),
-					MaxSpeed = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_MaxSpeed).KMPHtoMeterPerSecond(),
-					MinTime = startStop.GetEx<double>(JsonKeys.DriverData_StartStop_MinTime).SI<Second>(),
-				};
-			}
-		}
-
 		IOverSpeedEcoRollDeclarationInputData IDriverDeclarationInputData.OverSpeedEcoRoll
 		{
 			get {
@@ -495,11 +488,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					CoastingDecisionFactorVelocityDropLookup = velocityDropLookup
 				};
 			}
-		}
-
-		IStartStopDeclarationInputData IDriverDeclarationInputData.StartStop
-		{
-			get { return StartStop; }
 		}
 
 		public virtual IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll

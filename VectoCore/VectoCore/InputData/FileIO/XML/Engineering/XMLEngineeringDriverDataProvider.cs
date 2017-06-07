@@ -6,12 +6,12 @@ using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Resources;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
@@ -23,15 +23,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			XPathDocument driverDocument, string xmlBasePath, string fsBasePath)
 			: base(xmlEngineeringJobInputDataProvider, driverDocument, xmlBasePath, fsBasePath) {}
 
-		public IStartStopDeclarationInputData StartStop
-		{
-			get { return InputData._vehicleInputData.StartStop; }
-		}
-
 		IOverSpeedEcoRollEngineeringInputData IDriverEngineeringInputData.OverSpeedEcoRoll
 		{
-			get
-			{
+			get {
 				var minSpeedPath = Helper.Query(XMLNames.Component_DriverModel,
 					XMLNames.DriverModel_Overspeed, XMLNames.DriverModel_Overspeed_MinSpeed);
 				var overSpeedPath = Helper.Query(XMLNames.Component_DriverModel,
@@ -58,8 +52,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public TableData AccelerationCurve
 		{
-			get
-			{
+			get {
 				if (ElementExists(Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_DriverAccelerationCurve))) {
 					return
 						ReadTableData(AttributeMappings.DriverAccelerationCurveMapping,
@@ -79,8 +72,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public ILookaheadCoastingInputData Lookahead
 		{
-			get
-			{
+			get {
 				var lookAheadXmlPath = Helper.Query(XMLNames.Component_DriverModel, XMLNames.DriverModel_LookAheadCoasting);
 
 				var retVal = new LookAheadCoastingInputData {
@@ -154,15 +146,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			}
 		}
 
-		IStartStopEngineeringInputData IDriverEngineeringInputData.StartStop
-		{
-			get { return InputData._vehicleInputData.StartStopEngineering; }
-		}
-
 		public IOverSpeedEcoRollDeclarationInputData OverSpeedEcoRoll
 		{
-			get
-			{
+			get {
 				var node =
 					Navigator.SelectSingleNode(Helper.Query(XBasePath, XMLNames.Component_DriverModel, XMLNames.DriverModel_Overspeed,
 						XMLNames.DriverModel_Overspeed_Mode), Manager);

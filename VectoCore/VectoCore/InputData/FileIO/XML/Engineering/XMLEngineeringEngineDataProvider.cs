@@ -3,9 +3,10 @@ using System.Xml.XPath;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
@@ -51,10 +52,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { throw new VectoException("Property not available in Engineering Mode"); }
 		}
 
+		public double CorrectionFactorRegPer
+		{
+			get {
+				return 1;
+				//GetDoubleElementValue(XMLNames.Engine_CorrectionFactor_RegPer); 
+			}
+		}
+
+		public double CorrectionFactorNCV
+		{
+			get { return 1; //GetDoubleElementValue(XMLNames.Engine_CorrecionFactor_NCV); 
+			}
+		}
+
+		public FuelType FuelType
+		{
+			get { return FuelType.DieselCI; //GetElementValue(XMLNames.Engine_FuelType).ParseEnum<FuelType>();
+			}
+		}
+
 		public TableData FuelConsumptionMap
 		{
-			get
-			{
+			get {
 				if (!ElementExists(Helper.Query(XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry))) {
 					return ReadCSVResourceFile(XMLNames.Engine_FuelConsumptionMap);
 				}
@@ -65,19 +85,31 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public TableData FullLoadCurve
 		{
-			get
-			{
+			get {
 				if (!ElementExists(Helper.Query(XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FuelConsumptionMap_Entry))) {
 					return ReadCSVResourceFile(XMLNames.Engine_FullLoadAndDragCurve);
 				}
-				var columnMap = new Dictionary<string, string> {
-					{ XMLNames.Engine_EngineFullLoadCurve_EngineSpeed_Attr, FullLoadCurveReader.Fields.EngineSpeed },
-					{ XMLNames.Engine_FullLoadCurve_MaxTorque_Attr, FullLoadCurveReader.Fields.TorqueFullLoad },
-					{ XMLNames.Engine_FullLoadCurve_DragTorque_Attr, FullLoadCurveReader.Fields.TorqueDrag },
-					{ "PT1", "PT1" }
-				};
+
 				return ReadTableData(AttributeMappings.EngineFullLoadCurveMapping,
 					Helper.Query(XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FuelConsumptionMap_Entry));
+			}
+		}
+
+		public Watt RatedPowerDeclared
+		{
+			get { return null; //GetDoubleElementValue(XMLNames.Engine_RatedPower).SI<Watt>(); 
+			}
+		}
+
+		public PerSecond RatedSpeedDeclared
+		{
+			get { return null; //GetDoubleElementValue(XMLNames.Engine_RatedSpeed).RPMtoRad(); 
+			}
+		}
+
+		public NewtonMeter MaxTorqueDeclared
+		{
+			get { return null; //GetDoubleElementValue(XMLNames.Engine_MaxTorque).SI<NewtonMeter>(); 
 			}
 		}
 

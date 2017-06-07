@@ -411,6 +411,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									second
 								});
 							}
+							if (second is ResponseEngineSpeedTooHigh) {
+								second = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, second);
+								debug.Add(new {
+									action = "second:(EngineSpeedTooHigh|SpeedLimitExceeded) -> Brake with reduced acceleration",
+									second
+								});
+							}
 						} else {
 							second = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
 							debug.Add(new { action = "first:(Underload & !Overspeed) -> Brake", second });

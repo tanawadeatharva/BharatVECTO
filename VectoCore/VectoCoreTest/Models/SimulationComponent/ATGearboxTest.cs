@@ -69,10 +69,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		]
 		public void TestATGearInitialize(double vehicleSpeed, double torque, int expectedGear)
 		{
-			var vehicleContainer = new MockVehicleContainer(); //(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineDataFile);
-			vehicleContainer.Engine = new CombustionEngine(vehicleContainer, engineData);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
+			var vehicleContainer = new MockVehicleContainer(); //(ExecutionMode.Engineering);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineDataFile, gearboxData.Gears.Count);
+			vehicleContainer.Engine = new CombustionEngine(vehicleContainer, engineData);
 			var runData = new VectoRunData() { GearboxData = gearboxData };
 			var gearbox = new ATGearbox(vehicleContainer, new ATShiftStrategy(gearboxData, vehicleContainer), runData);
 

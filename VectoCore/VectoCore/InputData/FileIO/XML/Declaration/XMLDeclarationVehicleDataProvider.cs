@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
-using TUGraz.VectoCore.Resources;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
 	public class XMLDeclarationVehicleDataProvider : AbstractDeclarationXMLComponentDataProvider,
-		IVehicleDeclarationInputData
+		IVehicleDeclarationInputData, IPTOTransmissionInputData
 	{
 		public XMLDeclarationVehicleDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider)
 			: base(xmlInputDataProvider)
@@ -22,6 +24,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		public override string TechnicalReportId
 		{
 			get { return GetElementValue(XMLNames.Vehicle_VIN); }
+		}
+
+		public string VIN
+		{
+			get { return GetElementValue(XMLNames.Vehicle_VIN); }
+		}
+
+		public string LegislativeClass
+		{
+			get { return GetElementValue(XMLNames.Vehicle_LegislativeClass); }
 		}
 
 		public VehicleCategory VehicleCategory
@@ -38,6 +50,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		public Kilogram GrossVehicleMassRating
 		{
 			get { return GetDoubleElementValue(XMLNames.Vehicle_GrossVehicleMass).SI<Kilogram>(); }
+		}
+
+		public IList<ITorqueLimitInputData> TorqueLimits
+		{
+			get {
+				var retVal = new List<ITorqueLimitInputData>();
+				var limits =
+					Navigator.Select(Helper.Query(VehiclePath, XMLNames.Vehicle_TorqueLimits, XMLNames.Vehicle_TorqueLimits_Entry),
+						Manager);
+				while (limits.MoveNext()) {
+					retVal.Add(new TorqueLimitInputData() {
+						Gear = limits.Current.GetAttribute(XMLNames.Vehicle_TorqueLimits_Entry_Gear_Attr, "").ToInt(),
+						MaxTorque =
+							limits.Current.GetAttribute(XMLNames.Vehicle_TorqueLimits_Entry_MaxTorque_Attr, "").ToDouble().SI<NewtonMeter>()
+					});
+				}
+				return retVal;
+			}
 		}
 
 
@@ -92,6 +122,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			}
 		}
 
+		public string ManufacturerAddress
+		{
+			get { return GetElementValue(XMLNames.Component_ManufacturerAddress); }
+		}
+
+		public PerSecond EngineIdleSpeed
+		{
+			get { return GetDoubleElementValue(XMLNames.Vehicle_IdlingSpeed).RPMtoRad(); }
+		}
+
 		public double RetarderRatio
 		{
 			get { return GetDoubleElementValue(XMLNames.Vehicle_RetarderRatio); }
@@ -120,6 +160,40 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		public AngledriveType AngulargearType
 		{
 			get { return GetElementValue(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>(); }
+		}
+
+		public IPTOTransmissionInputData GetPTOData()
+		{
+			return this;
+		}
+
+		public string PTOTransmissionType
+		{
+			get {
+				var shaftGearWheels = GetElementValue(Helper.Query(XMLNames.Vehicle_PTO, XMLNames.Vehicle_PTO_ShaftsGearWheels));
+				if ("none".Equals(shaftGearWheels, StringComparison.InvariantCultureIgnoreCase)) {
+					return "None";
+				}
+				if ("only one engaged gearwheel above oil level".Equals(shaftGearWheels, StringComparison.CurrentCultureIgnoreCase)) {
+					return "only one engaged gearwheel above oil level";
+				}
+				var otherElements = GetElementValue(Helper.Query(XMLNames.Vehicle_PTO, XMLNames.Vehicle_PTO_OtherElements));
+				var ptoTech = string.Format("{0} - {1}", shaftGearWheels, otherElements);
+				if (DeclarationData.PTOTransmission.GetTechnologies().Contains(ptoTech)) {
+					return ptoTech;
+				}
+				throw new VectoException("PTO Technology {0} invalid!", ptoTech);
+			}
+		}
+
+		public TableData PTOLossMap
+		{
+			get { return null; }
+		}
+
+		public TableData PTOCycle
+		{
+			get { return null; }
 		}
 	}
 }

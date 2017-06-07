@@ -32,6 +32,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -48,6 +49,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	{
 		[ValidateObject]
 		public VehicleData VehicleData { get; internal set; }
+
+		[ValidateObject]
+		public AirdragData AirdragData { get; internal set; }
 
 		[ValidateObject]
 		public CombustionEngineData EngineData { get; internal set; }
@@ -81,18 +85,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public ExecutionMode ExecutionMode { get; internal set; }
 
 		[Required, MinLength(1)]
-		public string JobName { get; set; }
+		public string JobName { get; internal set; }
 
-		public string ModFileSuffix { get; set; }
+		public string ModFileSuffix { get; internal set; }
 
 		[ValidateObject]
-		public IDeclarationReport Report { get; set; }
+		public IDeclarationReport Report { get; internal set; }
 
 		[Required, ValidateObject]
-		public LoadingType Loading { get; set; }
+		public LoadingType Loading { get; internal set; }
 
 		[ValidateObject]
-		public Mission Mission { get; set; }
+		public Mission Mission { get; internal set; }
+
+		public XElement InputDataHash { get; internal set; }
 
 		public class AuxData
 		{
@@ -106,14 +112,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			[Required] public AuxiliaryDemandType DemandType;
 
 			[ValidateObject] public AuxiliaryData Data;
-		}
-
-		public class StartStopData
-		{
-			public bool Enabled;
-			[Required, SIRange(0, 120 / Constants.MeterPerSecondToKMH)] public MeterPerSecond MaxSpeed;
-			[Required, SIRange(0, 100)] public Second MinTime;
-			[Required, SIRange(0, 100)] public Second Delay;
 		}
 
 		public static ValidationResult ValidateRunData(VectoRunData runData, ValidationContext validationContext)
@@ -133,10 +131,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				var axlegearRatio = axleGearData != null ? axleGearData.AxleGear.Ratio : 1.0;
 				var dynamicTyreRadius = runData.VehicleData != null ? runData.VehicleData.DynamicTyreRadius : 0.0.SI<Meter>();
 
+				if (gearboxData.Gears.Count + 1 != engineData.FullLoadCurves.Count) {
+					return
+						new ValidationResult(
+							string.Format("number of full-load curves in engine does not match gear count. engine fld: {0}, gears: {1}",
+								engineData.FullLoadCurves.Count, gearboxData.Gears.Count));
+				}
+
 				foreach (var gear in gearboxData.Gears) {
 					for (var angularVelocity = engineData.IdleSpeed;
-						angularVelocity < engineData.FullLoadCurve.RatedSpeed;
-						angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurve.RatedSpeed - engineData.IdleSpeed) / 10.0) {
+						angularVelocity < engineData.FullLoadCurves[gear.Key].RatedSpeed;
+						angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurves[gear.Key].RatedSpeed - engineData.IdleSpeed) / 10.0) {
 						if (!gear.Value.HasLockedGear) {
 							continue;
 						}
@@ -147,13 +152,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 							continue;
 						}
 
-						for (var inTorque = engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 3;
-							inTorque < engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
-							inTorque += 2.0 / 3.0 * engineData.FullLoadCurve.FullLoadStationaryTorque(angularVelocity) / 10.0) {
-							if (gear.Value.MaxTorque != null && inTorque > gear.Value.MaxTorque) {
-								continue;
-							}
-
+						for (var inTorque = engineData.FullLoadCurves[gear.Key].FullLoadStationaryTorque(angularVelocity) / 3;
+							inTorque < engineData.FullLoadCurves[gear.Key].FullLoadStationaryTorque(angularVelocity);
+							inTorque += 2.0 / 3.0 * engineData.FullLoadCurves[gear.Key].FullLoadStationaryTorque(angularVelocity) / 10.0) {
 							NewtonMeter angledriveTorque;
 							try {
 								angledriveTorque = gear.Value.LossMap.GetOutTorque(angularVelocity, inTorque);

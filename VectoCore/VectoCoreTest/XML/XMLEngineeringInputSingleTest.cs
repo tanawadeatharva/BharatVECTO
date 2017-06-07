@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
@@ -15,7 +16,6 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Resources;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -334,7 +334,6 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var adas = inputDataProvider.DriverInputData;
 
-			Assert.AreEqual(false, adas.StartStop.Enabled);
 			Assert.AreEqual(DriverMode.Overspeed, adas.OverSpeedEcoRoll.Mode);
 		}
 
@@ -385,12 +384,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("1", driverAcc.Rows[1][1]);
 			Assert.AreEqual("-1", driverAcc.Rows[1][2]);
 
-			var startstop = driverDataProvider.StartStop;
-			Assert.IsFalse(startstop.Enabled);
-			Assert.AreEqual(DeclarationData.Driver.StartStop.MaxSpeed.AsKmph, startstop.MaxSpeed.AsKmph);
-
 			var declarationDriverDataProvider = (IDriverDeclarationInputData)inputDataProvider.DriverInputData;
-			Assert.IsFalse(declarationDriverDataProvider.StartStop.Enabled);
 
 			Assert.AreEqual(DriverMode.Overspeed, declarationDriverDataProvider.OverSpeedEcoRoll.Mode);
 
@@ -542,12 +536,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("1", driverAcc.Rows[1][1]);
 			Assert.AreEqual("-1", driverAcc.Rows[1][2]);
 
-			var startstop = driverDataProvider.StartStop;
-			Assert.IsFalse(startstop.Enabled);
-			Assert.AreEqual(8, startstop.MaxSpeed.AsKmph);
-
 			var declarationDriverDataProvider = (IDriverDeclarationInputData)inputDataProvider.DriverInputData;
-			Assert.IsFalse(declarationDriverDataProvider.StartStop.Enabled);
 
 			Assert.AreEqual(DriverMode.Overspeed, declarationDriverDataProvider.OverSpeedEcoRoll.Mode);
 

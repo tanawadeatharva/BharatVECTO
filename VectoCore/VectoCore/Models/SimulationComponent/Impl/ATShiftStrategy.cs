@@ -47,8 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override IGearbox Gearbox
 		{
 			get { return _gearbox; }
-			set
-			{
+			set {
 				_gearbox = value as ATGearbox;
 				if (_gearbox == null) {
 					throw new VectoException("AT Shift strategy can only handle AT gearboxes, given: {0}", value.GetType());
@@ -135,7 +134,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// 3) 1C -> 0: disengange when negative T_out and positive T_in
 			var gear1C = gear == 1 && !_gearbox.TorqueConverterLocked;
-			var disengageTOutNegativeAndTInPositive = DataBus.DriverAcceleration <= 0 && gear1C && outTorque.IsSmaller(0) && inTorque.IsGreater(0);
+			var disengageTOutNegativeAndTInPositive = DataBus.DriverAcceleration <= 0 && gear1C && outTorque.IsSmaller(0) &&
+													inTorque.IsGreater(0);
 
 			var disengageTCEngineSpeedLowerIdle = braking && torqueNegative && gear1C &&
 												inAngularVelocity.IsSmallerOrEqual(DataBus.EngineIdleSpeed);
@@ -154,12 +154,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return true;
 			}
 			// Emergency Upshift: if higher than engine rated speed
-			if (inAngularVelocity.IsGreaterOrEqual(DataBus.EngineRatedSpeed)) {
+			if (inAngularVelocity.IsGreaterOrEqual(ModelData.Gears[gear].MaxSpeed ?? DataBus.EngineRatedSpeed)) {
 				// check if upshift is possible
 				if (!ModelData.Gears.ContainsKey(gear + 1)) {
 					return false;
 				}
-				Log.Debug("engine speed would be above rated speed - shift up");
+				Log.Debug("engine speed would be above max speed / rated speed - shift up");
 				Upshift(absTime, gear);
 				return true;
 			}
@@ -184,8 +184,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
-			if (!shiftTimeReached)
+			if (!shiftTimeReached) {
 				return false;
+			}
 
 			var currentGear = ModelData.Gears[gear];
 

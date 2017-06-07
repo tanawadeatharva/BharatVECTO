@@ -131,10 +131,6 @@
     <OptionStrict>On</OptionStrict>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="itextsharp, Version=5.5.9.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -183,7 +179,9 @@
     <Compile Include="GUI\VehicleTorqueLimitsDialog.Designer.vb">
       <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\VehicleTorqueLimitsDialog.vb" />
+    <Compile Include="GUI\VehicleTorqueLimitsDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GUI\XMLExportJobDialog.Designer.vb">
       <DependentUpon>XMLExportJobDialog.vb</DependentUpon>
     </Compile>

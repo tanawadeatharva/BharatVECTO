@@ -1,0 +1,266 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
+using System.Xml.XPath;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.Utils;
+using TUGraz.VectoHashing;
+
+namespace HashingCmd
+{
+	class Program
+	{
+		public delegate void HashingAction(string filename, VectoHash h);
+
+		private const string Usage = @"
+hashingcmd.exe (-h | [-v] [[-s] -x] [-c] [-r]) <file.xml> <file2.xml> <file3.xml>
+
+";
+
+		private const string Help = @"
+hashingcmd.exe
+
+-h:    print help
+-v:    verify hashed file
+-s:    create hashed file
+-x:    validate generated XML against VECTO XML schema
+-c:    compute hash and write to stdout
+-r:    read hash from file and write to stdout
+";
+
+		static Dictionary<string, HashingAction> actions = new Dictionary<string, HashingAction>();
+
+		static bool _validateXML = false;
+		private static bool xmlValid = true;
+
+		static int Main(string[] args)
+		{
+			try {
+				if (args.Contains("-h")) {
+					ShowVersionInformation();
+					Console.Write(Help);
+					return 0;
+				}
+				actions["-v"] = VerifyHashAction;
+				actions["-c"] = ComputeHashAction;
+				actions["-r"] = ReadHashAction;
+				actions["-s"] = CreateHashedFileAction;
+
+				if (args.Contains("-x")) {
+					_validateXML = true;
+				}
+
+				var fileList = args.Except(actions.Keys.Concat(new[] { "-x" })).ToArray();
+				if (fileList.Length == 0 || !args.Intersect(actions.Keys.ToArray()).Any()) {
+					ShowVersionInformation();
+					Console.Write(Usage);
+					return 0;
+				}
+				foreach (var file in fileList) {
+					WriteLine("processing " + Path.GetFileName(file));
+					if (!File.Exists(Path.GetFullPath(file))) {
+						WriteLine("file " + Path.GetFullPath(file) + " not found!");
+						continue;
+					}
+					foreach (var arg in args) {
+						if (actions.ContainsKey(arg)) {
+							try {
+								var h = VectoHash.Load(file);
+								actions[arg](Path.GetFullPath(file), h);
+							} catch (Exception e) {
+								Console.ForegroundColor = ConsoleColor.Red;
+								Console.Error.WriteLine(e.Message);
+								if (e.InnerException != null) {
+									Console.Error.WriteLine(e.InnerException.Message);
+								}
+								Console.ResetColor();
+							}
+						}
+					}
+				}
+			} catch (Exception e) {
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.Error.WriteLine(e.Message);
+				Console.ResetColor();
+
+				//Console.Error.WriteLine("Please see log-file for further details (logs/log.txt)");
+				Environment.ExitCode = Environment.ExitCode != 0 ? Environment.ExitCode : 1;
+			}
+#if DEBUG
+			Console.WriteLine("done.");
+			Console.ReadKey();
+#endif
+			return Environment.ExitCode;
+		}
+
+		private static void CreateHashedFileAction(string filename, VectoHash h)
+		{
+			var destination = Path.Combine(Path.GetDirectoryName(filename),
+				Path.GetFileNameWithoutExtension(filename) + "_hashed.xml");
+			if (File.Exists(destination)) {
+				WriteLine("hashed file already exists. overwrite? (y/n) ");
+				var key = Console.ReadKey(true);
+				while (!(key.KeyChar == 'y' || key.KeyChar == 'n')) {
+					WriteLine("overwrite? (y/n) ");
+					key = Console.ReadKey(true);
+				}
+				if (key.KeyChar == 'n') {
+					return;
+				}
+				WriteLine("overwriting file " + Path.GetFileName(destination));
+			} else {
+				WriteLine("creating file " + Path.GetFileName(destination));
+			}
+			var result = h.AddHash();
+			var writer = new XmlTextWriter(destination, Encoding.UTF8) {
+				Formatting = Formatting.Indented,
+				Indentation = 4
+			};
+			result.WriteTo(writer);
+			writer.Flush();
+			writer.Close();
+
+			if (_validateXML) {
+				ValidateXML(destination);
+			}
+		}
+
+		private static void ValidateXML(string filename)
+		{
+			try {
+				var settings = new XmlReaderSettings {
+					ValidationType = ValidationType.Schema,
+					ValidationFlags = //XmlSchemaValidationFlags.ProcessInlineSchema |
+						//XmlSchemaValidationFlags.ProcessSchemaLocation |
+						XmlSchemaValidationFlags.ReportValidationWarnings
+				};
+				settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
+				settings.Schemas.Add(GetXMLSchema(""));
+
+				var vreader = XmlReader.Create(filename, settings);
+				var doc = new XmlDocument();
+				doc.Load(vreader);
+				doc.Validate(ValidationCallBack);
+				//while (vreader.Read()) {
+				//	Console.WriteLine(vreader.Value);
+				//}
+				if (xmlValid) {
+					WriteLine("Valid", ConsoleColor.Green);
+				}
+			} catch (Exception e) {
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.Error.WriteLine("Failed to validate hashed XML file!");
+				Console.Error.WriteLine(e.Message);
+				if (e.InnerException != null) {
+					Console.Error.WriteLine(e.InnerException.Message);
+				}
+				Console.ResetColor();
+			}
+		}
+
+		private static void ValidationCallBack(object sender, ValidationEventArgs args)
+		{
+			xmlValid = false;
+			if (args.Severity == XmlSeverityType.Error) {
+				throw new Exception(string.Format("Validation error: {0}" + Environment.NewLine +
+												"Line: {1}", args.Message, args.Exception.LineNumber));
+			} else {
+				Console.Error.WriteLine(string.Format("Validation warning: {0}" + Environment.NewLine +
+													"Line: {1}", args.Message, args.Exception.LineNumber));
+			}
+		}
+
+		private static XmlSchemaSet GetXMLSchema(string version)
+		{
+			var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, "VectoComponent.xsd");
+			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
+			var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
+			xset.Add(XmlSchema.Read(reader, null));
+			xset.Compile();
+			return xset;
+		}
+
+		private static void ReadHashAction(string filename, VectoHash h)
+		{
+			WriteLine("reading hashes");
+			var components = h.GetContainigComponents().GroupBy(s => s)
+				.Select(g => new { Entry = g.Key, Count = g.Count() });
+
+			foreach (var component in components) {
+				if (component.Entry == VectoComponents.Vehicle) {
+					continue;
+				}
+				for (var i = 0; i < component.Count; i++) {
+					var readHash = h.ReadHash(component.Entry, i);
+					WriteLine("  " + component.Entry.XMLElementName() + "\t ... " + readHash + "");
+				}
+			}
+		}
+
+		private static void ComputeHashAction(string filename, VectoHash h)
+		{
+			WriteLine("computing hashes");
+			var components = h.GetContainigComponents();
+
+
+			if (components.Count > 1) {
+				var grouped = components.GroupBy(s => s)
+					.Select(g => new { Entry = g.Key, Count = g.Count() });
+				foreach (var component in grouped) {
+					if (component.Entry == VectoComponents.Vehicle) {
+						continue;
+					}
+					for (var i = 0; i < component.Count; i++) {
+						var computedHash = h.ComputeHash(component.Entry, i);
+						WriteLine("  " + component.Entry.XMLElementName() + "\t ... " + computedHash + "");
+					}
+				}
+				var jobHash = h.ComputeHash();
+				WriteLine("  job file\t ... " + jobHash + "");
+			} else {
+				var hash = h.ComputeHash();
+				WriteLine("  computed hash:  " + hash + "");
+			}
+		}
+
+		private static void VerifyHashAction(string filename, VectoHash h)
+		{
+			WriteLine("validating hashes");
+
+			var components = h.GetContainigComponents().GroupBy(s => s)
+				.Select(g => new { Entry = g.Key, Count = g.Count() });
+			foreach (var component in components) {
+				if (component.Entry == VectoComponents.Vehicle) {
+					continue;
+				}
+				for (var i = 0; i < component.Count; i++) {
+					var result = h.ValidateHash(component.Entry, i);
+					WriteLine("  " + component.Entry.XMLElementName() + "\t ... " + (result ? "valid" : "invalid"),
+						result ? ConsoleColor.Green : ConsoleColor.Red);
+				}
+			}
+		}
+
+		private static void WriteLine(string message, ConsoleColor foregroundColor = ConsoleColor.Gray)
+		{
+			Console.ForegroundColor = foregroundColor;
+			Console.WriteLine(message);
+			Console.ResetColor();
+		}
+
+		private static void ShowVersionInformation()
+		{
+			var hashingLib = AssemblyName.GetAssemblyName("VectoHashing.dll");
+			WriteLine(string.Format(@"HashingLibrary: {0}", hashingLib.Version));
+		}
+	}
+}

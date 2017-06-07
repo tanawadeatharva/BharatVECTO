@@ -8,11 +8,11 @@ using TUGraz.IVT.VectoXML;
 using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
@@ -100,12 +100,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.Model),
 				GetDefaultComponentElements(vehicle.TechnicalReportId, vehicle.Model, "N.A."),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, "N3"),
-				new XElement(tns + XMLNames.Vehicle_VehicleCategory, GetVehicleCategoryXML(vehicle.VehicleCategory)),
+				new XElement(tns + XMLNames.Vehicle_VehicleCategory, vehicle.VehicleCategory.ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, vehicle.CurbMassChassis.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, vehicle.GrossVehicleMassRating.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Vehicle_IdlingSpeed, data.EngineInputData.IdleSpeed.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Vehicle_RetarderType, GetRetarterTypeXML(retarder.Type)),
+				new XElement(tns + XMLNames.Vehicle_RetarderType, retarder.Type.ToXMLFormat()),
 				retarder.Type.IsDedicatedComponent()
 					? new XElement(tns + XMLNames.Vehicle_RetarderRatio, retarder.Ratio.ToXMLFormat(3))
 					: null,
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_PTO,
 					new XElement(tns + XMLNames.Vehicle_PTO_ShaftsGearWheels, "none"),
 					new XElement(tns + XMLNames.Vehicle_PTO_OtherElements, "none")),
-				// ToDo: TorqueLimits
+				CreateTorqueLimits(vehicle),
 				new XElement(tns + XMLNames.Vehicle_Components,
 					CreateEngine(data.EngineInputData),
 					CreateGearbox(gearbox, gearbox.Type.AutomaticTransmission() ? data.TorqueConverterInputData : null),
@@ -126,6 +126,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					)
 				);
 		}
+
 
 		protected XElement CreateEngine(IEngineDeclarationInputData data)
 		{
@@ -140,7 +141,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + XMLNames.Engine_IdlingSpeed, data.IdleSpeed.AsRPM.ToXMLFormat(0)),
 					new XElement(tns + XMLNames.Engine_RatedSpeed, fld.RatedSpeed.AsRPM.ToXMLFormat(0)),
 					new XElement(tns + XMLNames.Engine_RatedPower, fld.FullLoadStationaryPower(fld.RatedSpeed).ToXMLFormat(0)),
-					new XElement(tns + XMLNames.Engine_MaxTorque, fld.MaxLoadTorque.ToXMLFormat(0)),
+					new XElement(tns + XMLNames.Engine_MaxTorque, fld.MaxTorque.ToXMLFormat(0)),
 					new XElement(tns + XMLNames.Engine_WHTCUrban, data.WHTCUrban.ToXMLFormat(4)),
 					new XElement(tns + XMLNames.Engine_WHTCRural, data.WHTCRural.ToXMLFormat(4)),
 					new XElement(tns + XMLNames.Engine_WHTCMotorway, data.WHTCMotorway.ToXMLFormat(4)),
@@ -169,7 +170,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XAttribute(XMLNames.Gearbox_Gear_GearNumber_Attr, i++),
 					new XElement(tns + XMLNames.Gearbox_Gear_Ratio, gearData.Ratio.ToXMLFormat(3)),
 					gearData.MaxTorque != null
-						? new XElement(tns + XMLNames.Gearbox_Gears_MaxTorque, gearData.MaxTorque.Value())
+						? new XElement(tns + XMLNames.Gearbox_Gears_MaxTorque, gearData.MaxTorque.Value().ToXMLFormat(0))
+						: null,
+					gearData.MaxInputSpeed != null
+						? new XElement(tns + XMLNames.Gearbox_Gear_MaxSpeed, gearData.MaxInputSpeed.AsRPM.ToXMLFormat(0))
 						: null,
 					new XElement(tns + XMLNames.Gearbox_Gear_TorqueLossMap,
 						EmbedDataTable(gearData.LossMap, AttributeMappings.TransmissionLossmapMapping))
@@ -282,8 +286,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			return new XElement(tns + XMLNames.Component_AxleWheels,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
-					new XAttribute(XMLNames.Component_ID_Attr,
-						string.Format("AXLWHL-{0}", data.AxleConfiguration.GetName())),
+					//new XAttribute(XMLNames.Component_ID_Attr,
+					//	string.Format("AXLWHL-{0}", data.AxleConfiguration.GetName())),
 					new XElement(tns + XMLNames.AxleWheels_Axles, axles))
 				);
 		}
@@ -337,7 +341,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				AddSignatureDummy(id)
 				);
 		}
-
+		
 		private string AuxTypeToXML(AuxiliaryType type)
 		{
 			return type.ToString();

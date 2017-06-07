@@ -1,19 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Resources;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -272,7 +275,6 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var adas = inputDataProvider.DriverInputData;
 
-			Assert.AreEqual(false, adas.StartStop.Enabled);
 			Assert.AreEqual(DriverMode.Overspeed, adas.OverSpeedEcoRoll.Mode);
 		}
 
@@ -311,7 +313,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			jobContainer.AddRuns(runsFactory);
 
-			Assert.AreEqual(12, jobContainer.Runs.Count);
+			Assert.AreEqual(8, jobContainer.Runs.Count);
 		}
 
 		[TestMethod]
@@ -364,6 +366,50 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1.0, inputDataProvider.RetarderInputData.Ratio);
 		}
 
+		[TestMethod]
+		public void TestFullFeaturedXMLDeclaration_TorqueLimits()
+		{
+			var reader = XmlReader.Create(SampleVehicleFullDecl);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicleDataProvider = inputDataProvider.JobInputData().Vehicle;
+
+			var torqueLimits = vehicleDataProvider.TorqueLimits.OrderBy(x => x.Gear).ToList();
+			Assert.AreEqual(3, torqueLimits.Count);
+			Assert.AreEqual(1, torqueLimits[0].Gear);
+			Assert.AreEqual(2500, torqueLimits[0].MaxTorque.Value());
+			Assert.AreEqual(12, torqueLimits[2].Gear);
+		}
+
+		[TestMethod]
+		public void TestFullFeaturedXMLDeclaration_GbxTorqueLimits()
+		{
+			var reader = XmlReader.Create(SampleVehicleFullDecl);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var gearboxDataProvider = inputDataProvider.GearboxInputData;
+			var gears = gearboxDataProvider.Gears;
+
+			Assert.AreEqual(12, gears.Count);
+			Assert.AreEqual(1900, gears[0].MaxTorque.Value());
+			Assert.AreEqual(1900, gears[1].MaxTorque.Value());
+			Assert.IsNull(gears[11].MaxTorque);
+		}
+
+		[TestMethod]
+		public void TestFullFeaturedXMLDeclaration_GbxSpeedLimits()
+		{
+			var reader = XmlReader.Create(SampleVehicleFullDecl);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var gearboxDataProvider = inputDataProvider.GearboxInputData;
+			var gears = gearboxDataProvider.Gears;
+
+			Assert.AreEqual(12, gears.Count);
+			Assert.AreEqual(2000, gears[0].MaxInputSpeed.AsRPM, 1e-6);
+			Assert.AreEqual(2000, gears[1].MaxInputSpeed.AsRPM, 1e-6);
+			Assert.IsNull(gears[11].MaxInputSpeed);
+		}
 
 		[TestMethod]
 		public void TestElementNotAvailable()
@@ -565,20 +611,21 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[TestMethod, Ignore]
+		[TestMethod]
 		public void TestPTOTypeTypes()
 		{
-			var ptoTypes = new[] {
-				"None",
-				"only the drive shaft of the PTO - shift claw, synchronizer, Schieberad",
-				"only the drive shaft of the PTO - multi-disc clutch",
-				"only the drive shaft of the PTO - multi-disc clutch, oil pump",
-				"drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, Schieberad",
-				"drive shaft and/or up to 2 gear wheels - multi-disc clutch",
-				"drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump",
-				"drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, Schieberad",
-				"drive shaft and/or more than 2 gear wheels - multi-disc clutch",
-				"drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump",
+			var ptoTypes = new string[][] {
+				new[] { "none", "none" },
+				new[] { "only one engaged gearwheel above oil level", "none" },
+				new[] { "only the drive shaft of the PTO", "shift claw, synchronizer, sliding gearwheel" },
+				new[] { "only the drive shaft of the PTO", "multi-disc clutch" },
+				new[] { "only the drive shaft of the PTO", "multi-disc clutch, oil pump" },
+				new[] { "drive shaft and/or up to 2 gear wheels", "shift claw, synchronizer, sliding gearwheel" },
+				new[] { "drive shaft and/or up to 2 gear wheels", "multi-disc clutch" },
+				new[] { "drive shaft and/or up to 2 gear wheels", "multi-disc clutch, oil pump" },
+				new[] { "drive shaft and/or more than 2 gear wheels", "shift claw, synchronizer, sliding gearwheel" },
+				new[] { "drive shaft and/or more than 2 gear wheels", "multi-disc clutch" },
+				new[] { "drive shaft and/or more than 2 gear wheels", "multi-disc clutch, oil pump" },
 			};
 			foreach (var ptoType in ptoTypes) {
 				var reader = XmlReader.Create(SampleVehicleDecl);
@@ -590,20 +637,39 @@ namespace TUGraz.VectoCore.Tests.XML
 				var helper = new XPathHelper(ExecutionMode.Declaration);
 				helper.AddNamespaces(manager);
 
-				var xmlRetarderType = nav.SelectSingleNode(helper.QueryAbs(
+				var ptoGearWheels = nav.SelectSingleNode(helper.QueryAbs(
 					helper.NSPrefix(XMLNames.VectoInputDeclaration,
 						Constants.XML.RootNSPrefix),
 					XMLNames.Component_Vehicle,
-					XMLNames.Vehicle_PTOType),
+					XMLNames.Vehicle_PTO,
+					XMLNames.Vehicle_PTO_ShaftsGearWheels),
 					manager);
-				xmlRetarderType.SetValue(ptoType);
+				ptoGearWheels.SetValue(ptoType[0]);
+				var ptoOther = nav.SelectSingleNode(helper.QueryAbs(
+					helper.NSPrefix(XMLNames.VectoInputDeclaration,
+						Constants.XML.RootNSPrefix),
+					XMLNames.Component_Vehicle,
+					XMLNames.Vehicle_PTO,
+					XMLNames.Vehicle_PTO_OtherElements),
+					manager);
+				ptoOther.SetValue(ptoType[1]);
 
 				var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
 				var inputDataProvider = new XMLDeclarationInputDataProvider(modified,
 					true);
 
-				//Assert.AreEqual(ptoType, inputDataProvider.VehicleInputData.pto);
+				if (ptoType[0] == "none") {
+					Assert.AreEqual("None",
+						inputDataProvider.PTOTransmissionInputData.PTOTransmissionType);
+				} else if (ptoType[0] == "only one engaged gearwheel above oil level") {
+					Assert.AreEqual(ptoType[0],
+						inputDataProvider.PTOTransmissionInputData.PTOTransmissionType);
+				} else {
+					Assert.AreEqual(string.Format("{0} - {1}", ptoType[0], ptoType[1]),
+						inputDataProvider.PTOTransmissionInputData.PTOTransmissionType);
+				}
+				DeclarationData.PTOTransmission.Lookup(inputDataProvider.PTOTransmissionInputData.PTOTransmissionType);
 			}
 		}
 
@@ -679,6 +745,30 @@ namespace TUGraz.VectoCore.Tests.XML
 
 				Assert.AreEqual(gearboxType.Value, inputDataProvider.GearboxInputData.Type);
 			}
+		}
+
+		[TestMethod]
+		public void TestPTOInputNone()
+		{
+			var reader = XmlReader.Create(SampleVehicleDecl);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var ptoDataProvider = inputDataProvider.PTOTransmissionInputData;
+
+			Assert.AreEqual("None", ptoDataProvider.PTOTransmissionType);
+		}
+
+		[TestMethod]
+		public void TestPTOInput()
+		{
+			var reader = XmlReader.Create(SampleVehicleFullDecl);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var ptoDataProvider = inputDataProvider.PTOTransmissionInputData;
+			var ptoLosses = DeclarationData.PTOTransmission.Lookup(ptoDataProvider.PTOTransmissionType);
+
+			Assert.AreEqual("only the drive shaft of the PTO - multi-disc clutch", ptoDataProvider.PTOTransmissionType);
+			Assert.AreEqual(1000, ptoLosses.Value());
 		}
 	}
 }

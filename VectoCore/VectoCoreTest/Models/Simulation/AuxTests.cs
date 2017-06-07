@@ -62,7 +62,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		{
 			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile");
-			var modData = new ModalDataContainer("AuxWriteModFileSumFile", fileWriter) { WriteModalResults = true };
+			var modData = new ModalDataContainer("AuxWriteModFileSumFile", FuelType.DieselCI, fileWriter) {
+				WriteModalResults = true
+			};
 			modData.AddAuxiliary("FAN");
 			modData.AddAuxiliary("PS");
 			modData.AddAuxiliary("STP");
@@ -107,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				t += dt;
 			}
 
-			container.FinishSimulation();
+			container.FinishSimulationRun();
 			sumWriter.Finish();
 
 			var testColumns = new[] { "P_aux_FAN", "P_aux_STP", "P_aux_AC", "P_aux_ES", "P_aux_PS", "P_aux" };

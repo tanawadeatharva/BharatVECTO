@@ -49,6 +49,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IVehicleInputData
 
+		public string VIN
+		{
+			get { return "N.A."; }
+		}
+
+		public string LegislativeClass
+		{
+			get { return "N3"; }
+		}
+
 		public VehicleCategory VehicleCategory
 		{
 			get {
@@ -70,6 +80,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual Kilogram GrossVehicleMassRating
 		{
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_GrossVehicleMassRating).SI().Ton.Cast<Kilogram>(); }
+		}
+
+		public IList<ITorqueLimitInputData> TorqueLimits
+		{
+			get {
+				var retVal = new List<ITorqueLimitInputData>();
+				if (Body["TorqueLimits"] == null) {
+					return retVal;
+				}
+				foreach (var entry in (JObject)Body["TorqueLimits"]) {
+					retVal.Add(new TorqueLimitInputData() {
+						Gear = entry.Key.ToInt(),
+						MaxTorque = entry.Value.ToString().ToDouble(0).SI<NewtonMeter>()
+					});
+				}
+				return retVal;
+			}
 		}
 
 		public virtual Kilogram Loading
@@ -94,6 +121,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual IList<IAxleEngineeringInputData> Axles
 		{
 			get { return AxleWheels().Cast<IAxleEngineeringInputData>().ToList(); }
+		}
+
+		public string ManufacturerAddress
+		{
+			get { return "N.A."; }
+		}
+
+		public PerSecond EngineIdleSpeed
+		{
+			get { return null; }
 		}
 
 		IList<IAxleDeclarationInputData> IVehicleDeclarationInputData.Axles
@@ -328,6 +365,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N.A."; }
 		}
 
+		public CertificationMethod CertificationMethod
+		{
+			get { return CertificationMethod.NotCertified; }
+		}
+
 		public string CertificationNumber
 		{
 			get { return "N.A."; }
@@ -336,11 +378,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public string DigestValue
 		{
 			get { return ""; }
-		}
-
-		public IntegrityStatus IntegrityStatus
-		{
-			get { return IntegrityStatus.Unknown; }
 		}
 	}
 }

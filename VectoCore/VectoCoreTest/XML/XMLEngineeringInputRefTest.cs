@@ -210,13 +210,12 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestMethod]
 		public void TestXMLInputADASReferencedFile()
 		{
-			var reader = XmlReader.Create(EngineeringSampleFile);
+			//var reader = XmlReader.Create(EngineeringSampleFile);
 
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
 
 			var adas = inputDataProvider.DriverInputData;
 
-			Assert.AreEqual(false, adas.StartStop.Enabled);
 			Assert.AreEqual(DriverMode.Overspeed, adas.OverSpeedEcoRoll.Mode);
 		}
 

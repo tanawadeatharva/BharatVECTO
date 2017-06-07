@@ -4,9 +4,9 @@ using System.Xml.XPath;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Impl;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {

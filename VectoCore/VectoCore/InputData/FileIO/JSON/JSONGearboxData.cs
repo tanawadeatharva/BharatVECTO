@@ -172,6 +172,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public AxleLineType LineType
+		{
+			get { return AxleLineType.SingleReductionAxle; }
+		}
+
 		#endregion
 
 		#region IGearboxInputData
@@ -280,6 +285,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					gear["MaxTorque"] != null && !string.IsNullOrEmpty(gear["MaxTorque"].ToString())
 						? gear["MaxTorque"].Value<double>().SI<NewtonMeter>()
 						: null,
+				MaxInputSpeed = gear["MaxSpeed"] != null && !string.IsNullOrWhiteSpace(gear["MaxSpeed"].ToString())
+					? gear["MaxSpeed"].Value<double>().RPMtoRad()
+					: null
 			};
 			var lossMap = gear[JsonKeys.Gearbox_Gear_LossMapFile];
 			if (lossMap != null) {
@@ -486,6 +494,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N/A"; }
 		}
 
+		public CertificationMethod CertificationMethod { get { return CertificationMethod.NotCertified; } }
+
 		public string CertificationNumber
 		{
 			get { return "N/A"; }
@@ -494,11 +504,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public string DigestValue
 		{
 			get { return ""; }
-		}
-
-		public IntegrityStatus IntegrityStatus
-		{
-			get { return IntegrityStatus.Unknown; }
 		}
 	}
 }

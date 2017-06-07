@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -86,7 +87,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get {
 				if (Gearbox == null) {
-					throw new VectoException("no gearbox available!");
+					return 0; // throw new VectoException("no gearbox available!");
 				}
 				return Gearbox.Gear;
 			}
@@ -114,11 +115,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 				return Gearbox.StartAcceleration;
 			}
-		}
-
-		public NewtonMeter GearMaxTorque
-		{
-			get { return Gearbox != null ? Gearbox.GearMaxTorque : null; }
 		}
 
 		public Watt GearboxLoss()
@@ -268,6 +264,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Cycle;
 		}
 
+		public FuelType FuelType
+		{
+			get { return ModData.FuelData.FuelType; }
+		}
+
 		public Second AbsTime { get; set; }
 
 		public void AddComponent(VectoSimulationComponent component)
@@ -322,15 +323,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public void FinishSimulation()
+		public void FinishSimulationRun(Exception e = null)
 		{
 			Log.Info("VehicleContainer finishing simulation.");
 			ModData.Finish(RunStatus);
 
 			WriteSumData(ModData);
 
-			ModData.FinishSimulation();
+			ModData.FinishSimulation(e);
 			DrivingCycle.FinishSimulation();
+		}
+
+		public void FinishSimulation()
+		{
+			throw new NotImplementedException();
 		}
 
 		public VectoRun.Status RunStatus { get; set; }
@@ -362,6 +368,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return DrivingCycle.LookAhead(time);
 		}
+
 
 		public Watt BrakePower
 		{

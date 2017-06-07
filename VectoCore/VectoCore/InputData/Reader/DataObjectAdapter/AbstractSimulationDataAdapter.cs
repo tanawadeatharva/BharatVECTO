@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -51,19 +52,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Manufacturer,
+				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
-				Creator = data.Creator,
 				Date = data.Date,
-				TypeId = data.TechnicalReportId,
-				DigestValue = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
+				//CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
 				VehicleCategory = data.VehicleCategory,
 				AxleConfiguration = data.AxleConfiguration,
 				CurbWeight = data.CurbMassChassis,
 				GrossVehicleWeight = data.GrossVehicleMassRating,
 			};
 
+			return retVal;
+		}
+
+		internal AirdragData SetCommonAirdragData(IAirdragDeclarationInputData data)
+		{
+			var retVal = new AirdragData() {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				Date = data.Date,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
+			};
 			return retVal;
 		}
 
@@ -93,13 +106,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					return retarder;
 				}
 				retarder.SavedInDeclarationMode = data.SavedInDeclarationMode;
-				retarder.Vendor = data.Manufacturer;
+				retarder.Manufacturer = data.Manufacturer;
 				retarder.ModelName = data.Model;
-				retarder.Creator = data.Creator;
 				retarder.Date = data.Date;
-				retarder.TypeId = data.TechnicalReportId;
-				retarder.DigestValue = data.DigestValue;
-				retarder.IntegrityStatus = data.IntegrityStatus;
+				retarder.CertificationMethod = data.CertificationMethod;
+				retarder.CertificationNumber = data.CertificationNumber;
+				retarder.DigestValueInput = data.DigestValue;
 
 				return retarder;
 			} catch (Exception e) {
@@ -111,16 +123,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = new CombustionEngineData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Manufacturer,
+				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
-				Creator = data.Creator,
 				Date = data.Date,
-				TypeId = data.TechnicalReportId,
-				DigestValue = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
 				Displacement = data.Displacement,
 				IdleSpeed = data.IdleSpeed,
 				ConsumptionMap = FuelConsumptionMapReader.Create(data.FuelConsumptionMap),
+				RatedPowerDeclared = data.RatedPowerDeclared,
+				RatedSpeedDeclared = data.RatedSpeedDeclared,
+				MaxTorqueDeclared = data.MaxTorqueDeclared,
+				FuelType = data.FuelType
 			};
 			return retVal;
 		}
@@ -129,18 +143,24 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			return new GearboxData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Manufacturer,
+				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
-				Creator = data.Creator,
 				Date = data.Date,
-				TypeId = data.TechnicalReportId,
-				DigestValue = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
 				Type = data.Type
 			};
 		}
 
-		internal AxleGearData CreateAxleGearData(IAxleGearInputData data, bool useEfficiencyFallback)
+		public AxleGearData CreateAxleGearData(IAxleGearInputData data, bool useEfficiencyFallback)
+		{
+			var retVal = SetCommonAxleGearData(data);
+			retVal.AxleGear.LossMap = ReadAxleLossMap(data, useEfficiencyFallback);
+			return retVal;
+		}
+
+		internal TransmissionLossMap ReadAxleLossMap(IAxleGearInputData data, bool useEfficiencyFallback)
 		{
 			TransmissionLossMap axleLossMap;
 			if (data.LossMap == null && useEfficiencyFallback) {
@@ -154,17 +174,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (axleLossMap == null) {
 				throw new InvalidFileFormatException("LossMap for Axlegear is missing.");
 			}
+			return axleLossMap;
+		}
 
+		internal AxleGearData SetCommonAxleGearData(IAxleGearInputData data)
+		{
 			return new AxleGearData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Manufacturer,
+				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
-				Creator = data.Creator,
+				LineType = data.LineType,
 				Date = data.Date,
-				TypeId = data.TechnicalReportId,
-				DigestValue = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
-				AxleGear = new GearData { LossMap = axleLossMap, Ratio = data.Ratio }
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
+				AxleGear = new GearData { Ratio = data.Ratio }
 			};
 		}
 
@@ -186,13 +210,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					case AngledriveType.SeparateAngledrive:
 						var angledriveData = new AngledriveData {
 							SavedInDeclarationMode = data.SavedInDeclarationMode,
-							Vendor = data.Manufacturer,
+							Manufacturer = data.Manufacturer,
 							ModelName = data.Model,
-							Creator = data.Creator,
 							Date = data.Date,
-							TypeId = data.TechnicalReportId,
-							DigestValue = data.DigestValue,
-							IntegrityStatus = data.IntegrityStatus,
+							CertificationMethod = data.CertificationMethod,
+							CertificationNumber = data.CertificationNumber,
+							DigestValueInput = data.DigestValue,
 							Type = type,
 							Angledrive = new TransmissionData { Ratio = data.Ratio }
 						};

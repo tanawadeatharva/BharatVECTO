@@ -9,11 +9,11 @@ using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
@@ -28,6 +28,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public string GetVehicleID
 		{
 			get { return GetAttributeValue("", XMLNames.Component_ID_Attr); }
+		}
+
+		public string VIN
+		{
+			get { return GetElementValue(XMLNames.Vehicle_VIN); }
+		}
+
+		public string LegislativeClass
+		{
+			get { return GetElementValue(XMLNames.Vehicle_LegislativeClass); }
 		}
 
 		public VehicleCategory VehicleCategory
@@ -48,6 +58,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public Kilogram GrossVehicleMassRating
 		{
 			get { return GetDoubleElementValue(XMLNames.Vehicle_GrossVehicleMass).SI<Kilogram>(); }
+		}
+
+		public IList<ITorqueLimitInputData> TorqueLimits
+		{
+			get {
+				var retVal = new List<ITorqueLimitInputData>();
+				var limits =
+					Navigator.Select(Helper.Query(VehiclePath, XMLNames.Vehicle_TorqueLimits, XMLNames.Vehicle_TorqueLimits_Entry),
+						Manager);
+				while (limits.MoveNext()) {
+					retVal.Add(new TorqueLimitInputData() {
+						Gear = limits.Current.GetAttribute(XMLNames.Vehicle_TorqueLimits_Entry_Gear_Attr, "").ToInt(),
+						MaxTorque =
+							limits.Current.GetAttribute(XMLNames.Vehicle_TorqueLimits_Entry_MaxTorque_Attr, "").ToDouble().SI<NewtonMeter>()
+					});
+				}
+				return retVal;
+			}
 		}
 
 		public Kilogram Loading
@@ -80,6 +108,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public IList<IAxleEngineeringInputData> Axles
 		{
 			get { return AxleEngineeringInput().Cast<IAxleEngineeringInputData>().ToList(); }
+		}
+
+		public string ManufacturerAddress
+		{
+			get { return "N.A."; }
+		}
+
+		public PerSecond EngineIdleSpeed
+		{
+			get { return null; }
 		}
 
 		IList<IAxleDeclarationInputData> IVehicleDeclarationInputData.Axles
@@ -263,52 +301,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 					return ReadCSVResourceFile(XMLNames.Vehicle_PTOCycle);
 				}
 				return null;
-			}
-		}
-
-		public IStartStopDeclarationInputData StartStop
-		{
-			get {
-				var node =
-					Navigator.SelectSingleNode(
-						Helper.Query(XBasePath, XMLNames.Vehicle_AdvancedDriverAssist,
-							XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop,
-							XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop_Enabled), Manager);
-				return new StartStopInputData() {
-					Enabled = node != null && XmlConvert.ToBoolean(node.Value)
-				};
-			}
-		}
-
-		public IStartStopEngineeringInputData StartStopEngineering
-		{
-			get {
-				var delayPath = Helper.Query(XMLNames.Vehicle_AdvancedDriverAssist,
-					XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop,
-					XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop_ActivationDelay);
-				var minTimePath = Helper.Query(XMLNames.Vehicle_AdvancedDriverAssist,
-					XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop,
-					XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop_MinOnTime);
-				var maxSpeedPath = Helper.Query(XMLNames.Vehicle_AdvancedDriverAssist,
-					XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop,
-					XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop_MaxSpeed);
-				var retVal = new StartStopInputData {
-					Enabled = XmlConvert.ToBoolean(GetElementValue(
-						Helper.Query(XMLNames.Vehicle_AdvancedDriverAssist,
-							XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop,
-							XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop_Enabled))),
-					Delay = ElementExists(delayPath)
-						? GetDoubleElementValue(delayPath).SI<Second>()
-						: DeclarationData.Driver.StartStop.Delay,
-					MinTime = ElementExists(minTimePath)
-						? GetDoubleElementValue(minTimePath).SI<Second>()
-						: DeclarationData.Driver.StartStop.MinTime,
-					MaxSpeed = ElementExists(maxSpeedPath)
-						? GetDoubleElementValue(maxSpeedPath).KMPHtoMeterPerSecond()
-						: DeclarationData.Driver.StartStop.MaxSpeed
-				};
-
-				return retVal;
 			}
 		}
 

@@ -34,6 +34,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -42,18 +43,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public bool SavedInDeclarationMode { get; internal set; }
 
-		public string Vendor { get; internal set; }
+		public string Manufacturer { get; internal set; }
 
 		public string ModelName { get; internal set; }
 
-		public string Creator { get; internal set; }
 		public string Date { get; internal set; }
 
-		public string TypeId { get; internal set; }
+		public CertificationMethod CertificationMethod { get; internal set; }
 
-		public string DigestValue { get; internal set; }
+		public string CertificationNumber { get; internal set; }
 
-		public IntegrityStatus IntegrityStatus { get; internal set; }
+		public string DigestValueInput { get; internal set; }
 
 		protected static ExecutionMode GetExecutionMode(ValidationContext context)
 		{

@@ -103,5 +103,27 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.IsTrue(0.999.IsSmallerOrEqual(1.0));
 			Assert.IsTrue(0.998.IsSmallerOrEqual(1.0));
 		}
+
+		[TestMethod]
+		public void TestStringFormatting()
+		{
+			Assert.AreEqual("0.452", 0.452345.ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("4.52", 4.52345.ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("45.2", 45.2345.ToMinSignificantDigits(3, 1));
+
+			Assert.AreEqual("0.0452", 0.0452345.ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("0.00452", 0.00452345.ToMinSignificantDigits(3, 1));
+
+
+			Assert.AreEqual("-0.452", (-0.452345).ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("-4.52", (-4.52345).ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("-45.2", (-45.2345).ToMinSignificantDigits(3, 1));
+
+			Assert.AreEqual("-0.0452", (-0.0452345).ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("-0.00452", (-0.00452345).ToMinSignificantDigits(3, 1));
+
+			Assert.AreEqual("0.0", 0.0.ToMinSignificantDigits(3, 1));
+			//Assert.AreEqual("45.2", 45.2345.ToMinSignificantDigits(3, 1));
+		}
 	}
 }

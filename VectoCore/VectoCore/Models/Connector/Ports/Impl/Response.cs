@@ -123,6 +123,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	{
 		public Watt DeltaFullLoad { get; set; }
 		public Watt DeltaDragLoad { get; set; }
+		public PerSecond DeltaEngineSpeed { get; set; }
 	}
 
 	internal class ResponseGearShift : AbstractResponse
@@ -131,4 +132,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	}
 
 	internal class ResponseEngineSpeedTooLow : ResponseDryRun {}
+
+	internal class ResponseEngineSpeedTooHigh : AbstractResponse
+	{
+		public PerSecond DeltaEngineSpeed { get; set; }	
+	}
 }

@@ -42,23 +42,40 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+	public class AirdragData : SimulationComponentData
+	{
+		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
+
+		[Required, ValidateObject]
+		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
+
+		public SquareMeter DeclaredAirdragArea { get; internal set; }
+	}
+
 	/// <summary>
 	/// Data Class for the Vehicle
 	/// </summary>
 	[CustomValidation(typeof(VehicleData), "ValidateVehicleData")]
 	public class VehicleData : SimulationComponentData
 	{
+		public string VIN { get; internal set; }
+
+		public string LegislativeClass { get; internal set; }
+
 		public VehicleCategory VehicleCategory { get; internal set; }
+
 		public VehicleClass VehicleClass { get; internal set; }
+
 		public AxleConfiguration AxleConfiguration { get; internal set; }
 
-		[Required, ValidateObject]
-		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
+		public string ManufacturerAddress { get; internal set; }
+
 
 		[Required, ValidateObject] private List<Axle> _axleData;
 
 		private KilogramSquareMeter _wheelsInertia;
 		private double? _totalRollResistanceCoefficient;
+		private double? _rollResistanceCoefficientWithoutTrailer;
 
 		public List<Axle> AxleData
 		{
@@ -134,25 +151,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			protected internal set { _totalRollResistanceCoefficient = value; }
 		}
 
-		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
+		public double RollResistanceCoefficientWithoutTrailer
+		{
+			get {
+				if (_rollResistanceCoefficientWithoutTrailer == null) {
+					ComputeRollResistanceAndReducedMassWheels();
+				}
+				return _rollResistanceCoefficientWithoutTrailer.GetValueOrDefault();
+			}
+			protected internal set { _rollResistanceCoefficientWithoutTrailer = value; }
+		}
 
 		public Kilogram TotalVehicleWeight
 		{
 			get {
-				var retVal = 0.0;
-				if (CurbWeight != null) {
-					retVal += CurbWeight.Value();
-				}
-				if (Loading != null) {
-					retVal += Loading.Value();
-				}
-				return retVal.SI<Kilogram>();
+				var retVal = 0.0.SI<Kilogram>();
+				retVal += CurbWeight ?? 0.SI<Kilogram>();
+				retVal += BodyAndTrailerWeight ?? 0.SI<Kilogram>();
+				retVal += Loading ?? 0.SI<Kilogram>();
+				return retVal;
 			}
 		}
 
 		public Kilogram TotalCurbWeight
 		{
-			get { return CurbWeight ?? 0.SI<Kilogram>(); }
+			get { return (CurbWeight ?? 0.SI<Kilogram>()) + (BodyAndTrailerWeight ?? 0.SI<Kilogram>()); }
 		}
 
 
@@ -168,7 +191,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var g = Physics.GravityAccelleration;
 
 			var rrc = 0.0.SI<Scalar>();
+			var rrcVehicle = 0.0.SI<Scalar>();
+
 			var wheelsInertia = 0.0.SI<KilogramSquareMeter>();
+			var vehicleWeightShare = 0.0;
 			foreach (var axle in _axleData) {
 				if (axle.AxleWeightShare.IsEqual(0, 1e-12)) {
 					continue;
@@ -176,13 +202,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				var nrWheels = axle.TwinTyres ? 4 : 2;
 				var baseValue = (axle.AxleWeightShare * TotalVehicleWeight * g / axle.TyreTestLoad / nrWheels).Value();
 
-				rrc += axle.AxleWeightShare * axle.RollResistanceCoefficient *
-						Math.Pow(baseValue, Physics.RollResistanceExponent - 1);
+				var rrcShare = axle.AxleWeightShare * axle.RollResistanceCoefficient *
+								Math.Pow(baseValue, Physics.RollResistanceExponent - 1);
+
+				if (axle.AxleType != AxleType.Trailer) {
+					rrcVehicle += rrcShare;
+					vehicleWeightShare += axle.AxleWeightShare;
+				}
+				rrc += rrcShare;
 				wheelsInertia += nrWheels * axle.Inertia;
 			}
+			RollResistanceCoefficientWithoutTrailer = rrcVehicle / vehicleWeightShare;
 			TotalRollResistanceCoefficient = rrc;
 			WheelsInertia = wheelsInertia;
 		}
+
 
 		// ReSharper disable once UnusedMember.Global  -- used via Validation
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)

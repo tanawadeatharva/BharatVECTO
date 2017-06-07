@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.8" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8 ../XSD/VectoInput.xsd" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
+<tns:VectoInputDeclaration xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.8" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v0.8 https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoInput.xsd" xmlns:di="http://www.w3.org/2000/09/xmldsig#">
 	<Vehicle id="VEH-1234567890">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
@@ -173,7 +173,7 @@
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>e0c253b643f7f8f09b963aca4a264d06fbfa599f</di:DigestValue>
+						<di:DigestValue>JWEwzKSP0lXvwRgQZTiWJm9dpdtQ72FOX0CC5Vy6f2Y=</di:DigestValue>
 					</di:Reference>
 				</Signature>
 			</Engine>
@@ -2562,7 +2562,7 @@
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>d14189366134120e08fa3f2c6e3328dd13c08a23</di:DigestValue>
+						<di:DigestValue>VwF71HA02YHUeTqOoEGox57pfGXknga9xjNRoWLdejY=</di:DigestValue>
 					</di:Reference>
 				</Signature>
 			</Gearbox>
@@ -2608,7 +2608,7 @@
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>da830e08360407c5168f1a37e9760e0cbbf8a17d</di:DigestValue>
+						<di:DigestValue>fcEtYfDAbfuRq0xpuzapmEj+Py1PIPUZwVmx+amNvcc=</di:DigestValue>
 					</di:Reference>
 				</Signature>
 			</Retarder>
@@ -3124,12 +3124,12 @@
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>5074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
+						<di:DigestValue>o4nYTajmWKaduxys5ShmnfJbYd23rpxZ01JbuG6dmzU=</di:DigestValue>
 					</di:Reference>
 				</Signature>
 			</Axlegear>
 			<AxleWheels>
-				<Data id="WHL-mi3ooviM">
+				<Data>
 					<Axles>
 						<Axle axleNumber="1">
 							<AxleType>VehicleNonDriven</AxleType>
@@ -3153,7 +3153,7 @@
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>5074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
+										<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>
@@ -3180,7 +3180,7 @@
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-										<di:DigestValue>5074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
+										<di:DigestValue>KljvtvGUUQ/L7MiLVAqU+bckL5PNDNNwdeLH9kUVrfM=</di:DigestValue>
 									</di:Reference>
 								</Signature>
 							</Tyre>
@@ -3225,20 +3225,10 @@
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-						<di:DigestValue>5074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
+						<di:DigestValue>/8o/sm2ZsAFWXF8azJDA7Op8in6DdHr/SMkSSn7voIU=</di:DigestValue>
 					</di:Reference>
 				</Signature>
 			</AirDrag>
 		</Components>
 	</Vehicle>
-	<Signature>
-		<di:Reference URI="#VEH-1234567890">
-			<di:Transforms>
-				<di:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments"/>
-				<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-			</di:Transforms>
-			<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-			<di:DigestValue>5074334bb2c090c5e258e9a664f5d19689a3f13d</di:DigestValue>
-		</di:Reference>
-	</Signature>
 </tns:VectoInputDeclaration>

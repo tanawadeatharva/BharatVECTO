@@ -46,12 +46,12 @@ Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.OutputData
+Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
-Imports TUGraz.VectoCore.Resources
 Imports TUGraz.VectoCore.Utils
 Imports VectoAuxiliaries
 
@@ -983,11 +983,6 @@ lbFound:
 			mode = ExecutionMode.Declaration
 		Else
 			mode = ExecutionMode.Engineering
-			Physics.FuelDensity = Cfg.FuelDens.SI(Of KilogramPerCubicMeter)() _
-			'New SI(Cfg.FuelDens).Kilo.Gramm.Per.Cubic.Dezi.Meter.Cast(Of KilogramPerCubicMeter)()
-			Physics.AirDensity = Cfg.AirDensity.SI(Of KilogramPerCubicMeter)() _
-			'New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter.Cast(Of KilogramPerCubicMeter)()
-			Physics.CO2PerFuelWeight = Cfg.Co2PerFc
 		End If
 
 		'dictionary of run-identifiers to fileWriters (used for output directory of modfile)
@@ -1106,10 +1101,10 @@ lbFound:
 		Next
 
 		For Each job As String In JobFileList
-			Dim report As String = New FileOutputWriter(job).PDFReportName
+			Dim report As String = New FileOutputWriter(job).XMLFullReportName
 			If File.Exists(report) Then
 				sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
-										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report),
+										.Message = String.Format("XML-Report for '{0}' written to {1}", Path.GetFileName(job), report),
 										.Link = "<RUN>" + report})
 			End If
 		Next

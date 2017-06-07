@@ -31,6 +31,7 @@
 
 using System.Data;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -45,17 +46,23 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public string Creator { get; set; }
 		public string Date { get; set; }
 		public string TechnicalReportId { get; set; }
+		public CertificationMethod CertificationMethod { get{return CertificationMethod.NotCertified;} }
 		public string CertificationNumber { get; set; }
 		public string DigestValue { get; set; }
-		public IntegrityStatus IntegrityStatus { get; set; }
 		public CubicMeter Displacement { get; set; }
 		public PerSecond IdleSpeed { get; set; }
 		public double WHTCMotorway { get; set; }
 		public double WHTCRural { get; set; }
 		public double WHTCUrban { get; set; }
 		public double ColdHotBalancingFactor { get; set; }
+		public double CorrectionFactorRegPer { get; set; }
+		public double CorrectionFactorNCV { get; set; }
+		public FuelType FuelType { get; set; }
 		public TableData FuelConsumptionMap { get; set; }
 		public TableData FullLoadCurve { get; set; }
+		public Watt RatedPowerDeclared { get; set; }
+		public PerSecond RatedSpeedDeclared { get; set; }
+		public NewtonMeter MaxTorqueDeclared { get; set; }
 		public KilogramSquareMeter Inertia { get; set; }
 		public double WHTCEngineering { get; set; }
 	}

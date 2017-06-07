@@ -11,7 +11,7 @@ Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class JSONFileWriter
 	Implements IOutputFileWriter
-	Public Const EngineFormatVersion As Integer = 3
+	Public Const EngineFormatVersion As Integer = 4
 
 	Public Const GearboxFormatVersion As Integer = 6
 
@@ -45,15 +45,21 @@ Public Class JSONFileWriter
 		body.Add("IdlingSpeed", eng.IdleSpeed.AsRPM)
 		body.Add("Inertia", eng.Inertia.Value())
 
-		body.Add("FullLoadCurve", GetRelativePath(eng.FullLoadCurve.Source, Path.GetDirectoryName(filename)))
-
-		body.Add("FuelMap", GetRelativePath(eng.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
-
 		body.Add("WHTC-Urban", eng.WHTCUrban)
 		body.Add("WHTC-Rural", eng.WHTCRural)
 		body.Add("WHTC-Motorway", eng.WHTCMotorway)
 		body.Add("WHTC-Engineering", eng.WHTCEngineering)
 		body.Add("ColdHotBalancingFactor", eng.ColdHotBalancingFactor)
+		body.Add("CFRegPer", eng.CorrectionFactorRegPer)
+		body.Add("CFNCV", eng.CorrectionFactorNCV)
+		body.Add("RatedPower", eng.RatedPowerDeclared.Value())
+		body.Add("RatedSpeed", eng.RatedSpeedDeclared.AsRPM)
+		body.Add("MaxTorque", eng.MaxTorqueDeclared.Value())
+		body.Add("FuelType", eng.FuelType)
+
+		body.Add("FullLoadCurve", GetRelativePath(eng.FullLoadCurve.Source, Path.GetDirectoryName(filename)))
+
+		body.Add("FuelMap", GetRelativePath(eng.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
 
 		WriteFile(header, body, filename)
 	End Sub
@@ -106,6 +112,7 @@ Public Class JSONFileWriter
 							(Not gbx.SavedInDeclarationMode AndAlso Not gear.ShiftPolygon Is Nothing,
 							GetRelativePath(gear.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
 			gearDict.Add("MaxTorque", If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.Value().ToString()))
+			gearDict.Add("MaxSpeed", If(gear.MaxInputSpeed Is Nothing, "", gear.MaxInputSpeed.AsRPM.ToString()))
 
 			ls.Add(gearDict)
 		Next
@@ -187,6 +194,11 @@ Public Class JSONFileWriter
 				(angledrive.Type = AngledriveType.SeparateAngledrive AndAlso Not angledrive.LossMap Is Nothing,
 				GetRelativePath(angledrive.LossMap.Source, basePath), "")}}
 
+		Dim torqueLimits As Dictionary(Of String, String) = New Dictionary(Of String, String)
+		For Each entry As ITorqueLimitInputData In vehicle.TorqueLimits
+			torqueLimits.Add(entry.Gear().ToString(), entry.MaxTorque.Value().ToString())
+		Next
+
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
 				{"SavedInDeclMode", Cfg.DeclMode},
 				{"VehCat", vehicle.VehicleCategory.ToString()},
@@ -206,6 +218,7 @@ Public Class JSONFileWriter
 				{"Retarder", retarderOut},
 				{"Angledrive", angledriveOut},
 				{"PTO", ptoOut},
+				{"TorqueLimits", torqueLimits},
 				{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", vehicle.AxleConfiguration.GetName()},
 				{"Axles", From axle In vehicle.Axles Select New Dictionary(Of String, Object) From {
@@ -288,11 +301,11 @@ Public Class JSONFileWriter
 		If Not job.SavedInDeclarationMode Then
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.Source, basePath))
 		End If
-		body.Add("StartStop", New Dictionary(Of String, Object) From {
-					{"Enabled", driver.StartStop.Enabled},
-					{"MaxSpeed", driver.StartStop.MaxSpeed.AsKmph},
-					{"MinTime", driver.StartStop.MinTime.Value()},
-					{"Delay", driver.StartStop.Delay.Value()}})
+		'body.Add("StartStop", New Dictionary(Of String, Object) From {
+		'			{"Enabled", driver.StartStop.Enabled},
+		'			{"MaxSpeed", driver.StartStop.MaxSpeed.AsKmph},
+		'			{"MinTime", driver.StartStop.MinTime.Value()},
+		'			{"Delay", driver.StartStop.Delay.Value()}})
 		If Not job.SavedInDeclarationMode Then
 			Dim dfTargetSpeed As String = If(
 				Not driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup Is Nothing AndAlso

@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Xml.Linq;
+
 namespace TUGraz.VectoCommon.InputData
 {
 	public interface IInputDataProvider {}
@@ -56,6 +58,10 @@ namespace TUGraz.VectoCommon.InputData
 		IRetarderInputData RetarderInputData { get; }
 
 		IDriverDeclarationInputData DriverInputData { get; }
+
+		IPTOTransmissionInputData PTOTransmissionInputData { get; }
+
+		XElement XMLHash { get; }
 	}
 
 	public interface IEngineeringInputDataProvider : IInputDataProvider

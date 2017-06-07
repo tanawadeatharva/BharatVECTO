@@ -12,8 +12,10 @@ Imports System.Collections.Generic
 Imports System.IO
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Utils
 
 Public Class Configuration
 	Public FilePath As String
@@ -28,6 +30,8 @@ Public Class Configuration
 	Public FirstRun As Boolean
 	Public DeclMode As Boolean
 
+	Public Const DefaultFuelType As FuelType = FuelType.DieselCI
+
 	Private Const FormatVersion As Short = 2
 
 	Public Sub New()
@@ -35,9 +39,9 @@ Public Class Configuration
 	End Sub
 
 	Public Sub DeclInit()
-		AirDensity = DeclarationData.Physics.AirDensity.Value()	' cDeclaration.AirDensity
-		FuelDens = DeclarationData.Physics.FuelDensity.Value()	' cDeclaration.FuelDens
-		CO2perFC = DeclarationData.Physics.CO2PerFuelWeight		' cDeclaration.CO2perFC
+		AirDensity = Physics.AirDensity.Value()	' cDeclaration.AirDensity
+		FuelDens = DeclarationData.FuelData.Lookup(DefaultFuelType).FuelDensity.Value()	' cDeclaration.FuelDens
+		Co2PerFc = DeclarationData.FuelData.Lookup(DefaultFuelType).CO2PerFuelWeight		' cDeclaration.CO2perFC
 	End Sub
 
 	Public Sub SetDefault()
@@ -47,8 +51,8 @@ Public Class Configuration
 		AirDensity = 1.2
 		OpenCmd = "notepad"
 		OpenCmdName = "Notepad"
-		FuelDens = DeclarationData.Physics.FuelDensity.Value()
-		CO2perFC = DeclarationData.Physics.CO2PerFuelWeight
+		FuelDens = DeclarationData.FuelData.Lookup(DefaultFuelType).FuelDensity.Value()
+		Co2PerFc = DeclarationData.FuelData.Lookup(DefaultFuelType).CO2PerFuelWeight
 		FirstRun = True
 		DeclMode = True
 	End Sub

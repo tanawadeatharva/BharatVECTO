@@ -59,9 +59,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			//var reader = new EngineeringModeSimulationDataReader();
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileCoach);
+			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileCoach);
 			//VehicleData.ReadFromFile(VehicleDataFile);
 			//vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection;
-			var vehicle = new Vehicle(container, vehicleData);
+			var vehicle = new Vehicle(container, vehicleData, airdragData);
 			var driver = new MockDriver(container) { DriverBehavior = DrivingBehavior.Driving };
 			var mockPort = new MockFvOutPort();
 			vehicle.InPort().Connect(mockPort);
@@ -97,10 +98,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer(ExecutionMode.Declaration);
 
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
-			vehicleData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.46.SI<SquareMeter>(),
+			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
+			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.46.SI<SquareMeter>(),
 				DeclarationDataAdapter.GetDeclarationAirResistanceCurve("TractorSemitrailer",
 					6.46.SI<SquareMeter>(), height.SI<Meter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
-			var vehicle = new Vehicle(container, vehicleData);
+			var vehicle = new Vehicle(container, vehicleData,airdragData);
 
 			var mockPort = new MockFvOutPort();
 			vehicle.InPort().Connect(mockPort);
@@ -120,11 +122,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer(ExecutionMode.Declaration);
 
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
-			vehicleData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
+			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
+			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
 				DeclarationDataAdapter.GetDeclarationAirResistanceCurve("TractorSemitrailer",
 					6.2985.SI<SquareMeter>(), 3.SI<Meter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 
-			var vehicle = new Vehicle(container, vehicleData);
+			var vehicle = new Vehicle(container, vehicleData,airdragData);
 			var driver = new MockDriver(container) { DriverBehavior = DrivingBehavior.Driving };
 			var mockPort = new MockFvOutPort();
 			vehicle.InPort().Connect(mockPort);

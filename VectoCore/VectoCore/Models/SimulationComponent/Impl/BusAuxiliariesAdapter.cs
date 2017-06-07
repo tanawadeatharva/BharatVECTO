@@ -33,6 +33,7 @@ using System;
 using System.IO;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -79,7 +80,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_fcMapAdapter = new FuelConsumptionAdapter() { FcMap = fcMap };
 			tmpAux.VectoInputs.FuelMap = _fcMapAdapter;
-			tmpAux.VectoInputs.FuelDensity = Physics.FuelDensity;
+			tmpAux.VectoInputs.FuelDensity = FuelData.Instance().Lookup(container.FuelType).FuelDensity;
 
 			//'Set Signals
 			tmpAux.Signals.EngineIdleSpeed = engineIdleSpeed;

@@ -89,11 +89,18 @@
     <Compile Include="Integration\CoachAdvancedAuxPowertrain.cs" />
     <Compile Include="Integration\CoachPowerTrain.cs" />
     <Compile Include="Integration\DriverStrategy\SimpleCycles.cs" />
+    <Compile Include="Integration\FuelTypesTest.cs" />
     <Compile Include="Integration\FullCycleDeclarationTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Integration\DeclarationReportTest.cs" />
     <Compile Include="Integration\ShiftStrategy\ShiftStrategyTest.cs" />
+    <Compile Include="Integration\TestVehicleIdlingSpeed.cs" />
+    <Compile Include="Integration\TorqueLimitsTest.cs" />
+    <Compile Include="Models\Declaration\AirdragDefaultValuesTest.cs" />
+    <Compile Include="Models\Declaration\DataAdapter\DeclarationAdapterTestHelper.cs" />
+    <Compile Include="Models\Declaration\DataAdapter\DeclarationDataAdapterTest_Class5.cs" />
+    <Compile Include="Models\Declaration\DataAdapter\DeclarationDataAdapterTest_Class2.cs" />
+    <Compile Include="Models\Declaration\DataAdapter\DeclarationDataAdapterTest_Class9.cs" />
     <Compile Include="Models\Declaration\ShiftPolygonTest.cs" />
     <Compile Include="Models\SimulationComponentData\TorqueConverterDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\ValidationTest.cs" />
@@ -702,6 +709,366 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\MT_6.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\175kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\175kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Axle_4x2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Axle_4x2_orig.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Class2_RigidTruck.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Class2_RigidTruck_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Engine_175kW_6.8l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\MT_6.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\175kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\175kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Axle_4x2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Axle_4x2_orig.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Class2_RigidTruck.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Class2_RigidTruck_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Engine_175kW_6.8l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxSpeedLimits\MT_6.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\175kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\175kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Axle_4x2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Axle_4x2_orig.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Class2_RigidTruck.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Class2_RigidTruck_gbxTqLimit-800_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Class2_RigidTruck_gbxTqLimit-865_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Engine_175kW_6.8l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\MT_6_torqueLimit-800.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_GbxTorqueLimits\MT_6_torqueLimit-865.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\175kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\175kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Axle_4x2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Axle_4x2_orig.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_tqLimit-850.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_tqLimit-910.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-850_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Class2_RigidTruck_vehTqLimit-910_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Engine_175kW_6.8l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_VehTorqueLimits\MT_6.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\325kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\325kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\AMT_12.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Axle_4x2_Tractor.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Default.vrlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Engine_325kW_12.7l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_10.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_11.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_12.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_7.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_8.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Gear_9.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\325kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\325kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\AMT_12_topTorque.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Axle_4x2_Tractor.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Class5_Tractor_topTorque.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Class5_Tractor_TopTorque_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Default.vrlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Engine_325kW_12.7l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_10.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_11.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_12.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_7.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_8.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2_TopTorque\Gear_9.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\324kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\350kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\AMT_12.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Axle_4x2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Engine_324kW_12.7l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_10.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_11.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_12.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_7.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_8.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Gear_9.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Retarder.vrlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\DriverStrategy\Cycles\Cycle_AccelerateAtBrake_80_0_level.vdri" />

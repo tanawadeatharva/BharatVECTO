@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
@@ -31,7 +33,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 				inputData = XmlReader.Create(inputData, settings);
 			}
-			Document = new XPathDocument(inputData);
+			//Document = new XPathDocument(inputData);
+
+			var xmldoc = new XmlDocument();
+			xmldoc.Load(inputData);
+			var h = VectoHash.Load(xmldoc);
+			XMLHash = h.ComputeXmlHash();
+
+			Document = new XPathDocument(new XmlNodeReader(xmldoc));
 
 			//CheckInputDocument();
 
@@ -46,6 +55,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			RetarderInputData = new XMLDeclarationRetarderDataProvider(this);
 			XMLDriverData = new XMLDeclarationDriverDataProvider(this);
 			XMLAuxiliaryData = new XMLDeclarationAuxiliaryDataProvider(this);
+			PTOTransmissionInputData = _vehicleInputData.GetPTOData();
 		}
 
 		private static void ValidationCallBack(object sender, ValidationEventArgs args)
@@ -99,5 +109,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			get { return XMLDriverData; }
 		}
+
+		public IPTOTransmissionInputData PTOTransmissionInputData { get; private set; }
+
+		public XElement XMLHash { get; private set; }
 	}
 }

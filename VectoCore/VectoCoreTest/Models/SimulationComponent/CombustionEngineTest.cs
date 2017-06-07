@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestEngineHasOutPort()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
 
 			var port = engine.OutPort();
@@ -76,8 +76,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestOutPortRequestNotFailing()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
+			var gearbox = new MockGearbox(vehicle) { Gear = 0 };
 
 			var port = engine.OutPort();
 
@@ -94,8 +95,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestSimpleModalData()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
+			var gearbox = new MockGearbox(vehicle) { Gear = 0 };
 			var port = engine.OutPort();
 
 			var absTime = 0.SI<Second>();
@@ -162,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			double finalIdleLoad, string resultFile)
 		{
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
 			var engine = new EngineOnlyCombustionEngine(vehicleContainer, engineData);
 
 			var expectedResults = VectoCSVFile.Read(resultFile);
@@ -187,7 +189,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var i = 0;
 			// dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
 			// dt = TimeSpan.FromSeconds(expectedResults.Rows[i].ParseDouble(0)) - t;
-			var engineLoadPower = engineData.FullLoadCurve.FullLoadStationaryPower(angularSpeed);
+			var engineLoadPower = engineData.FullLoadCurves[0].FullLoadStationaryPower(angularSpeed);
 			idlePower = finalIdleLoad.SI<Watt>();
 			for (; t < 25; t += dt, i++) {
 				dt = (expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0)).SI<Second>();
@@ -218,8 +220,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			double finalIdleLoad, string resultFile)
 		{
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
 			var engine = new CombustionEngine(vehicleContainer, engineData);
+			var gearbox = new MockGearbox(vehicleContainer) { Gear = 0 };
 
 			var expectedResults = VectoCSVFile.Read(resultFile);
 
@@ -243,7 +246,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var i = 0;
 			// dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
 			// dt = TimeSpan.FromSeconds(expectedResults.Rows[i].ParseDouble(0)) - t;
-			var engineLoadPower = engineData.FullLoadCurve.FullLoadStationaryPower(angularSpeed);
+			var engineLoadPower = engineData.FullLoadCurves[0].FullLoadStationaryPower(angularSpeed);
 			idlePower = finalIdleLoad.SI<Watt>();
 			for (; t < 25; t += dt, i++) {
 				dt = (expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0)).SI<Second>();
@@ -267,7 +270,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var gearbox = new MockGearbox(container);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 1);
 			var vehicle = new MockVehicle(container);
 			vehicle.MyVehicleSpeed = 0.SI<MeterPerSecond>();
 			var engine = new CombustionEngine(container, engineData);
@@ -422,7 +425,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				5000, 5000, 5000, 5000, 5000, 5000, 5000
 			};
 
-			var fld = engine.ModelData.FullLoadCurve;
+			var fld = engine.ModelData.FullLoadCurves;
 
 			gearbox.SetClutch(false);
 			var engSpeedResults = new List<dynamic>();
@@ -458,7 +461,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var angularVelocity = 95.5596.SI<PerSecond>();
 
-			var torque = (engine.ModelData.FullLoadCurve.DragLoadStationaryPower(angularVelocity) - 5000.SI<Watt>()) /
+			var torque = (engine.ModelData.FullLoadCurves[0].DragLoadStationaryPower(angularVelocity) - 5000.SI<Watt>()) /
 						angularVelocity;
 
 			var response = (ResponseSuccess)requestPort.Initialize(torque, angularVelocity);
@@ -502,7 +505,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void Test_EngineData()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
 			var motorway = engineData.WHTCMotorway;
 			Assert.AreEqual(motorway, 1);
 
@@ -530,7 +533,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			container = new VehicleContainer(ExecutionMode.Engineering);
 			gearbox = new MockGearbox(container);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 1);
 
 			engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData);

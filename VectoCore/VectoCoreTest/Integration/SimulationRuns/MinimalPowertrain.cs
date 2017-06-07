@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestMethod]
 		public void TestWheelsAndEngineInitialize()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
 
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 
@@ -75,12 +75,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", FuelType.DieselCI, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var driver = new Driver(container, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(container, engineData);
-			driver.AddComponent(new Vehicle(container, vehicleData))
+			driver.AddComponent(new Vehicle(container, vehicleData, CreateAirdragData()))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new Clutch(container, engineData))
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void TestWheelsAndEngine()
 		{
 			NLog.LogManager.DisableLogging();
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
 
 			var axleGearData = CreateAxleGearData();
@@ -121,13 +121,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain", fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain", FuelType.DieselCI, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Vehicle(container, vehicleData, CreateAirdragData()))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestMethod]
 		public void TestWheelsAndEngineLookahead()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFileStop, CycleType.DistanceBased, false);
 
 			var axleGearData = CreateAxleGearData();
@@ -193,12 +193,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile2);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", FuelType.DieselCI, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Vehicle(container, vehicleData, CreateAirdragData()))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -275,15 +275,22 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
+				
 				CurbWeight = 15700.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,
 				SavedInDeclarationMode = false
+			};
+		}
+
+		private static AirdragData CreateAirdragData()
+		{
+			return new AirdragData() {
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
 			};
 		}
 
@@ -299,9 +306,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverMode.Off
 				},
-				StartStop = new VectoRunData.StartStopData {
-					Enabled = false
-				}
 			};
 		}
 	}

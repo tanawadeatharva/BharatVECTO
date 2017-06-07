@@ -32,11 +32,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
-using Org.BouncyCastle.Asn1;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -44,7 +41,6 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -74,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var sumData = new SummaryDataContainer(null);
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_ModDataIntegrity.vmod");
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(Truck40tPowerTrain.EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(Truck40tPowerTrain.EngineFile, 0);
 
 			// get a reference to the mod-data because the modaldata container clears it after simulation
 			var modData = ((ModalDataContainer)run.GetContainer().ModalData).Data;
@@ -170,7 +166,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var eAir = ((SI)row[SummaryDataContainer.E_AIR]).Value();
 				var eRoll = ((SI)row[SummaryDataContainer.E_ROLL]).Value();
 				var eGrad = ((SI)row[SummaryDataContainer.E_GRAD]).Value();
-				var cargoVolume = mode == ExecutionMode.Engineering ? 0 : ((SI)row[SummaryDataContainer.VOLUME]).Value();
+				var cargoVolume = mode == ExecutionMode.Engineering ? 0 : ((SI)row[SummaryDataContainer.CARGO_VOLUME]).Value();
 
 				var loadingValue = ((SI)row[SummaryDataContainer.LOADING]).Value() / 1000;
 				var fcPer100km = ((SI)row[SummaryDataContainer.FCFINAL_LITERPER100KM]).Value();

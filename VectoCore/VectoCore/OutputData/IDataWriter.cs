@@ -53,6 +53,8 @@ namespace TUGraz.VectoCore.OutputData
 
 	public enum ReportType
 	{
-		DeclarationReportPdf
+		DeclarationReportPdf,
+		DeclarationReportXMLFulll,
+		DeclarationReportXMLCOC
 	}
 }

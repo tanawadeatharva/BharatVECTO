@@ -39,14 +39,13 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModFilter;
-using TUGraz.VectoCore.OutputData.PDF;
+using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -79,10 +78,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					if (declDataProvider == null) {
 						throw new VectoException("InputDataProvider does not implement DeclarationData interface");
 					}
-					var report = declarationReport ?? new PDFDeclarationReport(writer);
-					var windowsIdentity = WindowsIdentity.GetCurrent();
-					report.Creator = windowsIdentity.Name;
-					report.JobName = declDataProvider.JobInputData().JobName;
+					var report = declarationReport ?? new XMLDeclarationReport(writer);
 					DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, report);
 					break;
 				case ExecutionMode.Engineering:
@@ -135,11 +131,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			foreach (var data in DataReader.NextRun()) {
 				var d = data;
 				if (d.Report != null) {
-					d.Report.PrepareResult(d.Loading, d.Mission);
+					d.Report.PrepareResult(d.Loading, d.Mission, d);
 				}
 				Action<ModalDataContainer> addReportResult = writer => {
 					if (d.Report != null) {
-						d.Report.AddResult(d.Loading, d.Mission, writer);
+						d.Report.AddResult(d.Loading, d.Mission, d, writer);
 					}
 				};
 				if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
@@ -181,7 +177,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						throw new ArgumentOutOfRangeException("CycleType unknown:" + data.Cycle.CycleType);
 				}
 
-				var validationErrors = run.Validate(_mode, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type, data.Mission != null && data.Mission.MissionType.IsEMS());
+				var validationErrors = run.Validate(_mode, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type,
+					data.Mission != null && data.Mission.MissionType.IsEMS());
 				if (validationErrors.Any()) {
 					throw new VectoException("Validation of Run-Data Failed: " +
 											string.Join("\n", validationErrors.Select(r => r.ErrorMessage + string.Join("; ", r.MemberNames))));

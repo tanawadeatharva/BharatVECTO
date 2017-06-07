@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void VechicleContainerHasEngine()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 0);
 			var engine = new CombustionEngine(vehicle, engineData);
 
 			Assert.IsNotNull(vehicle.EngineSpeed);

@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -122,12 +123,12 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var engineFLDFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vfld";
 			var engineFCMapFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vmap";
 
-			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+			var vehicle = new VehicleContainer(ExecutionMode.Engineering, new MockModalDataContainer());
 			var fcMap = FuelConsumptionMapReader.ReadFromFile(engineFCMapFilePath);
 			var fld = EngineFullLoadCurve.ReadFromFile(engineFLDFilePath);
 			var modelData = new CombustionEngineData() {
 				ConsumptionMap = fcMap,
-				FullLoadCurve = fld,
+				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fld }, { 1, fld } },
 				IdleSpeed = 560.SI<PerSecond>()
 			};
 

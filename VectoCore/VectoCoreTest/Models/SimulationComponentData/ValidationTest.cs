@@ -89,10 +89,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				WHTCUrban = 1,
 				WHTCRural = 1,
 				WHTCMotorway = 1,
-				FullLoadCurve = EngineFullLoadCurve.Create(fullLoad),
+				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, EngineFullLoadCurve.Create(fullLoad) } },
 				ConsumptionMap = FuelConsumptionMapReader.Create(fuelConsumption)
 			};
-			data.FullLoadCurve.EngineData = data;
+			data.FullLoadCurves[0].EngineData = data;
 
 			var results = data.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dao = new EngineeringDataAdapter();
 
-			var engineData = dao.CreateEngineData(data, null);
+			var engineData = dao.CreateEngineData(data, null, new List<ITorqueLimitInputData>());
 
 			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
@@ -165,7 +165,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dao = new DeclarationDataAdapter();
 
-			var engineData = dao.CreateEngineData(data, GearboxType.AMT);
+			var dummyGearbox = new DummyGearboxData() {
+				Type = GearboxType.AMT,
+				Gears = new List<ITransmissionInputData>()
+			};
+
+			var engineData = dao.CreateEngineData(data, null, dummyGearbox, new List<ITorqueLimitInputData>());
 
 			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
@@ -178,12 +183,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				Creator = "Mr. Test",
-				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
@@ -223,7 +222,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var data = new DistanceRun(container);
 			var engineData = new CombustionEngineData {
-				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld"),
+				FullLoadCurves =
+					new Dictionary<uint, EngineFullLoadCurve>() {
+						{ 0, EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+						{ 1, EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+					},
 				IdleSpeed = 560.RPMtoRad()
 			};
 
@@ -241,11 +244,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				Creator = "Mr. Test",
-				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
@@ -272,6 +270,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			container.RunData = new VectoRunData {
 				VehicleData = vehicleData,
+				AirdragData = new AirdragData() {
+					CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+					CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),
+							CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
+							CrossWindCorrectionMode.NoCorrection)
+				},
 				GearboxData = gearboxData,
 				EngineData = engineData,
 				AxleGearData = axleGearData
@@ -293,7 +298,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var data = new DistanceRun(container);
 			var engineData = new CombustionEngineData {
-				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld"),
+				FullLoadCurves =
+					new Dictionary<uint, EngineFullLoadCurve>() {
+						{ 0, EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+						{ 1, EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") }
+					},
 				IdleSpeed = 560.RPMtoRad()
 			};
 
@@ -601,5 +610,34 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				private_field = private_static_field;
 			}
 		}
+	}
+
+	public class DummyGearboxData : IGearboxEngineeringInputData
+	{
+		public DataSourceType SourceType { get; set; }
+		public string Source { get; set; }
+		public bool SavedInDeclarationMode { get; set; }
+		public string Manufacturer { get; set; }
+		public string Model { get; set; }
+		public string Creator { get; set; }
+		public string Date { get; set; }
+		public string TechnicalReportId { get; set; }
+		public CertificationMethod CertificationMethod { get{return CertificationMethod.NotCertified;}}
+		public string CertificationNumber { get; set; }
+		public string DigestValue { get; set; }
+		public GearboxType Type { get; set; }
+		public IList<ITransmissionInputData> Gears { get; set; }
+		public KilogramSquareMeter Inertia { get; set; }
+		public Second TractionInterruption { get; set; }
+		public Second MinTimeBetweenGearshift { get; set; }
+		public double TorqueReserve { get; set; }
+		public MeterPerSecond StartSpeed { get; set; }
+		public MeterPerSquareSecond StartAcceleration { get; set; }
+		public double StartTorqueReserve { get; set; }
+		public ITorqueConverterEngineeringInputData TorqueConverter { get; set; }
+		public Second DownshiftAfterUpshiftDelay { get; set; }
+		public Second UpshiftAfterDownshiftDelay { get; set; }
+		public MeterPerSquareSecond UpshiftMinAcceleration { get; set; }
+		public Second PowershiftShiftTime { get; set; }
 	}
 }

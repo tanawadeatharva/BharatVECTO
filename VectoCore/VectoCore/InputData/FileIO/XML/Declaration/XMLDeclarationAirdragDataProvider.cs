@@ -1,7 +1,8 @@
 ﻿using System;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Resources;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
@@ -15,6 +16,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				XMLNames.Vehicle_Components,
 				XMLNames.Component_AirDrag,
 				XMLNames.ComponentDataWrapper);
+		}
+
+		public new CertificationMethod CertificationMethod
+		{
+			get { return CertificationMethod.Measured; }
 		}
 
 		public SquareMeter AirDragArea
