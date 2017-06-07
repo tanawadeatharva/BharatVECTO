@@ -8,57 +8,15 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:choice>
-				<xs:element name="Engine">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="vdecdef:EngineComponentDeclarationType"/>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="Gearbox">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="vdecdef:GearboxComponentDeclarationType"/>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
+				<xs:element name="Engine" type="vdecdef:EngineComponentDeclarationType"/>
+				<xs:element name="Gearbox" type="vdecdef:GearboxComponentDeclarationType"/>
 				<xs:element name="TorqueConverter" type="vdecdef:TorqueConverterComponentDeclarationType"/>
-				<xs:element name="Retarder">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="vdecdef:RetarderComponentDeclarationType"/>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="Axlegear">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="vdecdef:AxlegearComponentDeclarationType"/>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="Tyre">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="vdecdef:TyreDeclarationType"/>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
+				<xs:element name="Retarder" type="vdecdef:RetarderComponentDeclarationType"/>
+				<xs:element name="Axlegear" type="vdecdef:AxlegearComponentDeclarationType"/>
+				<xs:element name="Tyre" type="vdecdef:TyreDeclarationType"/>
 				<xs:element name="Auxiliaries" type="vdecdef:AuxiliariesComponentDeclarationType"/>
-				<xs:element name="Angledrive">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="vdecdef:AngledriveComponentDeclarationType"/>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="AirDrag">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="vdecdef:AirDragComponentDeclarationType"/>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
+				<xs:element name="Angledrive" type="vdecdef:AngledriveComponentDeclarationType"/>
+				<xs:element name="AirDrag" type="vdecdef:AirDragComponentDeclarationType"/>
 			</xs:choice>
 			<xs:attribute name="schemaVersion" use="required">
 				<xs:simpleType>

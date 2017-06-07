@@ -217,13 +217,7 @@
 					<xs:documentation>P195 - bool</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Tyre">
-				<xs:complexType>
-					<xs:complexContent>
-						<xs:extension base="tns:TyreDeclarationType"/>
-					</xs:complexContent>
-				</xs:complexType>
-			</xs:element>
+			<xs:element name="Tyre" type="tns:TyreDeclarationType"/>
 		</xs:sequence>
 		<xs:attribute name="axleNumber" use="required">
 			<xs:simpleType>
@@ -977,50 +971,14 @@
 					<xs:element name="Components">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Engine">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:EngineComponentDeclarationType"/>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
-								<xs:element name="Gearbox">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:GearboxComponentDeclarationType"/>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
-								<xs:element name="Angledrive" minOccurs="0">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:AngledriveComponentDeclarationType"/>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
-								<xs:element name="Retarder" minOccurs="0">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:RetarderComponentDeclarationType"/>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
-								<xs:element name="Axlegear">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:AxlegearComponentDeclarationType"/>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
+								<xs:element name="Engine" type="tns:EngineComponentDeclarationType"/>
+								<xs:element name="Gearbox" type="tns:GearboxComponentDeclarationType"/>
+								<xs:element name="Angledrive" type="tns:AngledriveComponentDeclarationType" minOccurs="0"/>
+								<xs:element name="Retarder" type="tns:RetarderComponentDeclarationType" minOccurs="0"/>
+								<xs:element name="Axlegear" type="tns:AxlegearComponentDeclarationType"/>
 								<xs:element name="AxleWheels" type="tns:AxleWheelsComponentDeclarationType"/>
 								<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentDeclarationType"/>
-								<xs:element name="AirDrag" minOccurs="0">
-									<xs:complexType>
-										<xs:complexContent>
-											<xs:extension base="tns:AirDragComponentDeclarationType"/>
-										</xs:complexContent>
-									</xs:complexType>
-								</xs:element>
+								<xs:element name="AirDrag" type="tns:AirDragComponentDeclarationType" minOccurs="0"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
