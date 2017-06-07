@@ -1188,6 +1188,7 @@
 			</xs:appinfo>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="None"/>
 			<xs:enumeration value="Default"/>
 		</xs:restriction>
 	</xs:simpleType>
