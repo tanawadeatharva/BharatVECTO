@@ -336,18 +336,45 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(VehicleClass.Class11, new[] { 350, 200, 0, 300, 200 }),
 		TestCase(VehicleClass.Class12, new[] { 350, 200, 0, 0, 200 }),
 		TestCase(VehicleClass.Class16, new[] { 0, 0, 0, 0, 200 })]
-		public void AuxHeatingVentilationAirConditionTest(VehicleClass vehicleClass, int[] expected)
+		public void AuxHeatingVentilationAirConditionTest_Default(VehicleClass vehicleClass, int[] expected)
 		{
 			for (var i = 0; i < expected.Length; i++) {
 				if (expected[i] > 0) {
 					AssertHelper.AreRelativeEqual(expected[i],
-						DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], vehicleClass));
+						DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "Default", vehicleClass));
 				} else {
 					var i1 = i;
 					AssertHelper.Exception<VectoException>(
-						() => DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i1], vehicleClass));
+						() => DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i1], "Default", vehicleClass));
 				}
 			}
+		}
+
+		[TestCase(VehicleClass.Class1, new[] { 0, 0, 0, 0, 0 }),
+		TestCase(VehicleClass.Class2, new[] { 0, 0, 0, 0, 0 }),
+		TestCase(VehicleClass.Class3, new[] { 0, 0, 0, 0, 0 }),
+		TestCase(VehicleClass.Class4, new[] { 0, 0, 0, 0, 0 }),
+		TestCase(VehicleClass.Class5, new[] { 0, 0, 0, 0, 0 }),
+		TestCase(VehicleClass.Class9, new[] { 0, 0, 0, 0, 0 }),
+		TestCase(VehicleClass.Class10, new[] { 0, 0, 0, 0, 0 }),
+		TestCase(VehicleClass.Class11, new[] { 0, 0, 0, 0, 0 }),
+		TestCase(VehicleClass.Class12, new[] { 0, 0, 0, 0, 0 }),
+		TestCase(VehicleClass.Class16, new[] { 0, 0, 0, 0, 0 })]
+		public void AuxHeatingVentilationAirConditionTest_None(VehicleClass vehicleClass, int[] expected)
+		{
+			for (var i = 0; i < expected.Length; i++) {
+				AssertHelper.AreRelativeEqual(expected[i],
+					DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "None", vehicleClass));
+			}
+		}
+
+		[TestCase()]
+		public void AuxHetingVentilationAirConditionTechnologyTest()
+		{
+			var tech = DeclarationData.HeatingVentilationAirConditioning.GetTechnologies();
+			Assert.AreEqual(2, tech.Length);
+			Assert.IsTrue(tech.Contains("Default"));
+			Assert.IsTrue(tech.Contains("None"));
 		}
 
 		[Test,
