@@ -278,7 +278,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_LossMapExtrapolation_Declaration(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
 		{
-			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile);
+			// read gearbox data in engineering mode so that the loss-map is not extrapolated.
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile, false);
 			var container = new VehicleContainer(ExecutionMode.Declaration);
 			var runData = GetDummyRunData(gearboxData);
 			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container), runData);
@@ -312,7 +313,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_LossMapExtrapolation_Engineering(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
 		{
-			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
 			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering);
 			var runData = GetDummyRunData(gearboxData);
 			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container), runData);
@@ -347,7 +348,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_LossMapExtrapolation_DryRun(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, bool extrapolated, double expectedTorque)
 		{
-			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var runData = GetDummyRunData(gearboxData);
 			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container),

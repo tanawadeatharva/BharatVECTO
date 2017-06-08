@@ -333,5 +333,31 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var maxTorque = gbxFld.FullLoadStationaryTorque(800.RPMtoRad());
 			Assert.AreEqual(750, maxTorque.Value());
 		}
+
+		[TestCase()]
+		public void TestLossMapExtension()
+		{
+			var gbxFile = @"TestData\Components\24t Coach.vgbx";
+			var engineFile = @"TestData\Components\24t Coach.veng";
+
+			var gearboxDataOrig = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile, false);
+			// read loss-map in declaration mode to extrapolate on reading.
+			var gearboxDataExt = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile, true);
+
+			var rpm = 100.RPMtoRad();
+			var tq = -3000.SI<NewtonMeter>();
+			var lookupOrig = gearboxDataOrig.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
+			var lookupExt = gearboxDataExt.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
+
+			Assert.IsTrue(lookupOrig.Extrapolated);
+			Assert.IsFalse(lookupExt.Extrapolated);
+
+			rpm = 1200.RPMtoRad();
+			lookupOrig = gearboxDataOrig.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
+			lookupExt = gearboxDataExt.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
+
+			Assert.IsTrue(lookupOrig.Extrapolated);
+			Assert.IsFalse(lookupExt.Extrapolated);
+		}
 	}
 }

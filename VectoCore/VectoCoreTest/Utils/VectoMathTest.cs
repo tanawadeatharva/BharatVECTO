@@ -104,5 +104,46 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Assert.AreEqual(0, cmp, 1e-15);
 			}
 		}
+
+		[TestCase()]
+		public void TestLeastSquaresFittingExact()
+		{
+			var entries = new[] {
+				new { X = 0, Y = 4 },
+				new { X = 10, Y = 8 },
+				new { X = 20, Y = 12 }
+			};
+
+			double k, d, r;
+			VectoMath.LeastSquaresFitting(entries, x => x.X, x => x.Y, out k, out d, out r);
+
+			Assert.AreEqual(4, d, 1e-6);
+			Assert.AreEqual(0.4, k, 1e-6);
+			Assert.AreEqual(1, r, 1e-6);
+		}
+
+		[TestCase()]
+		public void TestLeastSquaresFittingEx1()
+		{
+			var entries = new[] {
+				new { X = 12, Y = 34.12 },
+				new { X = 19, Y = 40.94 },
+				new { X = 23, Y = 33.58 },
+				new { X = 30, Y = 38.95 },
+				new { X = 22, Y = 35.42},
+				new { X = 11, Y = 32.12 },
+				new { X = 13, Y = 28.57 },
+				new { X = 28, Y = 40.97 },
+				new { X = 10, Y = 32.06 },
+				new { X = 11, Y = 30.55 },
+			};
+
+			double k, d, r;
+			VectoMath.LeastSquaresFitting(entries, x => x.X, x => x.Y, out k, out d, out r);
+
+			Assert.AreEqual(27.003529, d, 1e-6);
+			Assert.AreEqual(0.431535, k, 1e-6);
+			//Assert.AreEqual(1, r, 1e-3);
+		}
 	}
 }
