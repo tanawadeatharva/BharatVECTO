@@ -73,17 +73,10 @@ Public Class GearboxForm
 		CbGStype.ValueMember = "Value"
 		CbGStype.DisplayMember = "Label"
 
-		If Cfg.DeclMode Then
-			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-				.Cast(Of GearboxType)() _
-				.Where(Function(type) type.ManualTransmission()) _
-				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
-		Else
-			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-				.Cast(Of GearboxType) _
-				.Where(Function(type) type.AutomaticTransmission() OrElse type.ManualTransmission()) _
-				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
-		End If
+		CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
+			.Cast(Of GearboxType)() _
+			.Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission()) _
+			.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
 		DeclInit()
 
@@ -106,7 +99,7 @@ Public Class GearboxForm
 		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
 		'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()								' cDeclaration.TqResv
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()									' cDeclaration.TqResv
 		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
@@ -480,7 +473,7 @@ Public Class GearboxForm
 	Private Sub TbName_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbName.TextChanged, TBI_getr.TextChanged, TbTracInt.TextChanged, TbTqResv.TextChanged,
 				TbMinTimeBetweenShifts.TextChanged, TbTqResvStart.TextChanged, TbStartSpeed.TextChanged, TbStartAcc.TextChanged,
-				TbTCfile.TextChanged, TbTCrefrpm.TextChanged, TbTCinertia.TextChanged, tbTCmaxSpeed.TextChanged,
+				TbTCfile.TextChanged,
 				tbTCCUpshiftMinAcceleration.TextChanged, tbTCLUpshiftMinAcceleration.TextChanged
 		Change()
 	End Sub
@@ -506,8 +499,9 @@ Public Class GearboxForm
 
 		'ChTCon.Enabled = (GStype.AutomaticTransmission())
 		gbTC.Enabled = gStype.AutomaticTransmission()
-		gbTCAccMin.Enabled = gStype.AutomaticTransmission()
-		gbPowershiftLosses.Enabled = gStype.AutomaticTransmission()
+		pnTcEngineering.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
+		gbTCAccMin.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
+		gbPowershiftLosses.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
 		TbStartAcc.Enabled = Not gStype.AutomaticTransmission()
 		TbStartSpeed.Enabled = Not gStype.AutomaticTransmission()
 		TbTqResv.Enabled = Not gStype.AutomaticTransmission()
@@ -966,7 +960,7 @@ Public Class GearboxForm
 		' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
 	End Sub
 
-	Private Sub BtTCShiftFileBrowse_Click(sender As Object, e As EventArgs) Handles BtTCShiftFileBrowse.Click
+	Private Sub BtTCShiftFileBrowse_Click(sender As Object, e As EventArgs)
 		If TorqueConverterShiftPolygonFileBrowser.OpenDialog(FileRepl(TBTCShiftPolygon.Text, GetPath(_gbxFile))) Then
 			TBTCShiftPolygon.Text = GetFilenameWithoutDirectory(TorqueConverterShiftPolygonFileBrowser.Files(0),
 																GetPath(_gbxFile))
