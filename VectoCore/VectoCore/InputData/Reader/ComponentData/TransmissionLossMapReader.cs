@@ -87,10 +87,16 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				return new TransmissionLossMap(entries, gearRatio, gearName);
 			}
 			var orig = "";
-			entries.ForEach(x =>orig +=string.Format("{0},{1},{2}" + Environment.NewLine, x.InputSpeed.AsRPM, x.InputTorque.Value(), x.TorqueLoss.Value()));
+			entries.ForEach(
+				x =>
+					orig +=
+						string.Format("{0},{1},{2}" + Environment.NewLine, x.InputSpeed.AsRPM, x.InputTorque.Value(), x.TorqueLoss.Value()));
 			entries = ExtendLossMap(entries);
 			var extended = "";
-			entries.ForEach(x => extended += string.Format("{0},{1},{2}" + Environment.NewLine, x.InputSpeed.AsRPM, x.InputTorque.Value(), x.TorqueLoss.Value()));
+			entries.ForEach(
+				x =>
+					extended +=
+						string.Format("{0},{1},{2}" + Environment.NewLine, x.InputSpeed.AsRPM, x.InputTorque.Value(), x.TorqueLoss.Value()));
 			return new TransmissionLossMap(entries, gearRatio, gearName);
 		}
 
@@ -121,12 +127,13 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			}
 			var torqueStep = 500.SI<NewtonMeter>();
 			foreach (var speedBucket in speedBuckets) {
-				if (speedBucket.Value.Count == 0)
+				if (speedBucket.Value.Count < 2) {
 					continue;
+				}
 				double k, d, r;
 				VectoMath.LeastSquaresFitting(speedBucket.Value, x => x.InputTorque.Value(), x => x.TorqueLoss.Value(), out k, out d,
 					out r);
-				
+
 				for (var inTq = speedBucket.Value.Max(x => x.InputTorque) + torqueStep; inTq <= 2 * maxTorque; inTq += torqueStep) {
 					entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, inTq, k * inTq + d.SI<NewtonMeter>()));
 					entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, -inTq, k * inTq + d.SI<NewtonMeter>()));
