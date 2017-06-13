@@ -211,6 +211,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<ITransmissionInputData> Gears { get; }
+
+		/// <summary>
+		/// P090, P091, P092, P127
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		ITorqueConverterDeclarationInputData TorqueConverter { get; }
 	}
 
 

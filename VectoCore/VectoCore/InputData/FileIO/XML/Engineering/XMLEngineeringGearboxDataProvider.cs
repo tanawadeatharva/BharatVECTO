@@ -104,6 +104,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return InputData.XMLEngineeringJobData.StartTorqueReserve; }
 		}
 
+
+		ITorqueConverterDeclarationInputData IGearboxDeclarationInputData.TorqueConverter
+		{
+			get { return TorqueConverter; }
+		}
+
 		public ITorqueConverterEngineeringInputData TorqueConverter
 		{
 			get

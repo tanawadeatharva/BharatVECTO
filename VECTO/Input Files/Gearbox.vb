@@ -368,6 +368,13 @@ Public Class Gearbox
 		End Get
 	End Property
 
+	Public ReadOnly Property IGearboxDeclarationInputData_TorqueConverter As ITorqueConverterDeclarationInputData _
+		Implements IGearboxDeclarationInputData.TorqueConverter
+		Get
+			Return Me
+		End Get
+	End Property
+
 	Public ReadOnly Property ReferenceRPM As PerSecond Implements ITorqueConverterEngineeringInputData.ReferenceRPM
 		Get
 			Return TorqueConverterReferenceRpm.RPMtoRad()

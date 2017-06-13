@@ -73,18 +73,17 @@ Public Class GearboxForm
 		CbGStype.ValueMember = "Value"
 		CbGStype.DisplayMember = "Label"
 
-		If Cfg.DeclMode Then
+		If (Cfg.DeclMode) Then
 			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
 				.Cast(Of GearboxType)() _
-				.Where(Function(type) type.ManualTransmission()) _
+				.Where(Function(type) type.ManualTransmission() OrElse type = GearboxType.ATSerial) _
 				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		Else
 			CbGStype.DataSource = [Enum].GetValues(GetType(GearboxType)) _
-				.Cast(Of GearboxType) _
-				.Where(Function(type) type.AutomaticTransmission() OrElse type.ManualTransmission()) _
+				.Cast(Of GearboxType)() _
+				.Where(Function(type) type.ManualTransmission() OrElse type.AutomaticTransmission()) _
 				.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 		End If
-
 		DeclInit()
 
 		_changed = False
@@ -106,7 +105,7 @@ Public Class GearboxForm
 		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
 		'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()								' cDeclaration.TqResv
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()									  ' cDeclaration.TqResv
 		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
@@ -480,7 +479,7 @@ Public Class GearboxForm
 	Private Sub TbName_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbName.TextChanged, TBI_getr.TextChanged, TbTracInt.TextChanged, TbTqResv.TextChanged,
 				TbMinTimeBetweenShifts.TextChanged, TbTqResvStart.TextChanged, TbStartSpeed.TextChanged, TbStartAcc.TextChanged,
-				TbTCfile.TextChanged, TbTCrefrpm.TextChanged, TbTCinertia.TextChanged, tbTCmaxSpeed.TextChanged,
+				TbTCfile.TextChanged,
 				tbTCCUpshiftMinAcceleration.TextChanged, tbTCLUpshiftMinAcceleration.TextChanged
 		Change()
 	End Sub
@@ -506,8 +505,9 @@ Public Class GearboxForm
 
 		'ChTCon.Enabled = (GStype.AutomaticTransmission())
 		gbTC.Enabled = gStype.AutomaticTransmission()
-		gbTCAccMin.Enabled = gStype.AutomaticTransmission()
-		gbPowershiftLosses.Enabled = gStype.AutomaticTransmission()
+		pnTcEngineering.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
+		gbTCAccMin.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
+		gbPowershiftLosses.Enabled = Not Cfg.DeclMode AndAlso gStype.AutomaticTransmission()
 		TbStartAcc.Enabled = Not gStype.AutomaticTransmission()
 		TbStartSpeed.Enabled = Not gStype.AutomaticTransmission()
 		TbTqResv.Enabled = Not gStype.AutomaticTransmission()
@@ -826,7 +826,7 @@ Public Class GearboxForm
 				'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
 				Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
 				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.IdleSpeed, engineFld, vehicle, gears, gear)
-				If (CType(CbGStype.SelectedValue, GearboxType).ManualTransmission() AndAlso Not IsNothing(shiftLines)) Then
+				If (Not IsNothing(shiftLines)) Then
 
 
 					s = New Series
@@ -897,8 +897,9 @@ Public Class GearboxForm
 	Private Function GetShiftLines(ByVal idleSpeed As PerSecond, engineFullLoadCurve As EngineFullLoadCurve,
 									vehicle As IVehicleEngineeringInputData, gears As IList(Of ITransmissionInputData), ByVal gear As Integer) _
 		As ShiftPolygon
+		Dim maxTqStr As String = LvGears.Items(gear).SubItems(GearboxTbl.MaxTorque).Text
 		Dim engine As CombustionEngineData = ConvertToEngineData(engineFullLoadCurve, idleSpeed, gear,
-																LvGears.Items(gear).SubItems(GearboxTbl.MaxTorque).Text.ToDouble(0).SI(Of NewtonMeter))
+																If(String.IsNullOrWhiteSpace(maxTqStr), Nothing, maxTqStr.ToDouble(0).SI(Of NewtonMeter)))
 		If gears.Count <= 1 Then
 			Return Nothing
 		End If
@@ -912,7 +913,7 @@ Public Class GearboxForm
 		If (rDyn.IsEqual(0)) Then
 			Return Nothing
 		End If
-		Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(gear - 1,
+		Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(CType(CbGStype.SelectedValue, GearboxType), gear - 1,
 																					engine.FullLoadCurves(CType(gear, UInteger)), gears, engine,
 																					Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
 																					(rDyn))
@@ -966,7 +967,7 @@ Public Class GearboxForm
 		' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
 	End Sub
 
-	Private Sub BtTCShiftFileBrowse_Click(sender As Object, e As EventArgs) Handles BtTCShiftFileBrowse.Click
+	Private Sub BtTCShiftFileBrowse_Click(sender As Object, e As EventArgs)
 		If TorqueConverterShiftPolygonFileBrowser.OpenDialog(FileRepl(TBTCShiftPolygon.Text, GetPath(_gbxFile))) Then
 			TBTCShiftPolygon.Text = GetFilenameWithoutDirectory(TorqueConverterShiftPolygonFileBrowser.Files(0),
 																GetPath(_gbxFile))

@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 20),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift.ToList(), transformed.ToList());
+			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 15.6),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift.ToList(), transformed.ToList());
+			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y);
 			}
 
-			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed.ToList(), upShift.ToList());
+			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed, upShift);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 20),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift.ToList(), transformed.ToList());
+			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y);
 			}
 
-			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed.ToList(), upShift.ToList());
+			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed, upShift);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 16.8),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift.ToList(), transformed.ToList());
+			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y, 1e-3);
 			}
 
-			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed.ToList(), upShift.ToList());
+			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed, upShift);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -343,28 +343,81 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			var dao = new DeclarationDataAdapter();
 			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
-			var engineData = dao.CreateEngineData(new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile), null,
+			var engineData = dao.CreateEngineData(new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile),
+				null,
 				gearboxData, new List<ITorqueLimitInputData>());
 
 			var shiftPolygons = new List<ShiftPolygon>();
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
-				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(i, engineData.FullLoadCurves[(uint)(i + 1)],
+				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i,
+					engineData.FullLoadCurves[(uint)(i + 1)],
 					gearboxData.Gears,
 					engineData, axlegearRatio, rdyn));
 			}
 
 			for (var i = 0; i < Math.Min(gearboxData.Gears.Count, expectedDownshift.Length); i++) {
 				foreach (var tuple in expectedDownshift[i].Zip(shiftPolygons[i].Downshift, Tuple.Create)) {
-					Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.Value(), 1e-3, "gear: {0} entry: {1}", i, tuple);
+					Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
 					Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
 				}
 
 				foreach (var tuple in expectedUpshift[i].Zip(shiftPolygons[i].Upshift, Tuple.Create)) {
-					Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.Value(), 1e-3, "gear: {0} entry: {1}", i, tuple);
+					Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
 					Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
 				}
 			}
 
+			Assert.AreEqual(0, shiftPolygons.First().Downshift.Count);
+			Assert.AreEqual(0, shiftPolygons.Last().Upshift.Count);
+		}
+
+
+		[TestCase]
+		public void CompueShiftPolygonATDeclarationTest()
+		{
+			var engineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
+			var gearboxFile = @"TestData\Components\40t_Long_Haul_Truck.vgbx";
+
+			var rdyn = 0.4882675.SI<Meter>();
+			var axlegearRatio = 2.59;
+
+			var expectedDownshift = new[] {
+				new Point(73.3038, -352),
+				new Point(73.3038, 2530),
+			};
+			var expectedUpshift = new[] {
+				new Point(94.2478, -352),
+				new Point(94.2478, 0),
+				new Point(123.0457, 2530),
+			};
+
+			var dao = new DeclarationDataAdapter();
+			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
+			var engineData = dao.CreateEngineData(new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile),
+				null,
+				gearboxData, new List<ITorqueLimitInputData>());
+
+			var shiftPolygons = new List<ShiftPolygon>();
+			for (var i = 0; i < gearboxData.Gears.Count; i++) {
+				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.ATSerial, i,
+					engineData.FullLoadCurves[(uint)(i + 1)],
+					gearboxData.Gears,
+					engineData, axlegearRatio, rdyn));
+			}
+
+			for (var i = 0; i < gearboxData.Gears.Count; i++) {
+				foreach (var tuple in expectedDownshift.Zip(shiftPolygons[i].Downshift, Tuple.Create)) {
+					Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+					Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+				}
+
+				foreach (var tuple in expectedUpshift.Zip(shiftPolygons[i].Upshift, Tuple.Create)) {
+					Assert.AreEqual(tuple.Item1.X, tuple.Item2.AngularSpeed.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+					Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Torque.Value(), 1e-3, "gear: {0} entry: {1}", i + 1, tuple);
+				}
+			}
+
+			Assert.AreEqual(0, shiftPolygons.First().Downshift.Count);
 			Assert.AreEqual(0, shiftPolygons.Last().Upshift.Count);
 		}
 
@@ -405,7 +458,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var downshiftOrig = new List<List<Point>>();
 			var upshiftOrig = new List<List<Point>>();
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
-				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
+				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i, fullLoadCurves[(uint)(i + 1)],
+					gearboxData.Gears,
 					engineData, axlegearRatio, rdyn));
 				List<Point> tmp1, tmp2, tmp3;
 
@@ -491,7 +545,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var upshiftOrig = new List<List<Point>>();
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
 				shiftPolygons.Add(
-					DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
+					DeclarationData.Gearbox.ComputeShiftPolygon(gearboxData.Type, i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
 						engineData, axlegearRatio, rdyn.SI<Meter>())
 					);
 				List<Point> tmp1, tmp2, tmp3;
