@@ -183,12 +183,6 @@ namespace TUGraz.VectoCommon.InputData
 		///// </summary>
 		//bool SkipGears { get; }
 
-		/// <summary>
-		/// P090, P091, P092, P127
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		ITorqueConverterEngineeringInputData TorqueConverter { get; }
-
 		Second DownshiftAfterUpshiftDelay { get; }
 
 		Second UpshiftAfterDownshiftDelay { get; }
@@ -196,6 +190,8 @@ namespace TUGraz.VectoCommon.InputData
 		MeterPerSquareSecond UpshiftMinAcceleration { get; }
 
 		Second PowershiftShiftTime { get; }
+
+		new ITorqueConverterEngineeringInputData TorqueConverter { get; }
 	}
 
 	public interface ITorqueConverterEngineeringInputData : ITorqueConverterDeclarationInputData

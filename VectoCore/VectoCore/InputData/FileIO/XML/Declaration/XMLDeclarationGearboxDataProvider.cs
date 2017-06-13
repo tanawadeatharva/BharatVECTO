@@ -63,6 +63,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			}
 		}
 
+		public ITorqueConverterDeclarationInputData TorqueConverter
+		{
+			get {
+				return new XMLDeclarationTorqueConverterDataProvider(InputData);
+			}
+		}
+
 		protected ITransmissionInputData ReadGear(string gearNr)
 		{
 			var retVal = new TransmissionInputData();

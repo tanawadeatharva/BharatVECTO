@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 20),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift.ToList(), transformed.ToList());
+			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 15.6),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift.ToList(), transformed.ToList());
+			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y);
 			}
 
-			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed.ToList(), upShift.ToList());
+			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed, upShift);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 20),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift.ToList(), transformed.ToList());
+			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y);
 			}
 
-			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed.ToList(), upShift.ToList());
+			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed, upShift);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 16.8),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift.ToList(), transformed.ToList());
+			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y, 1e-3);
 			}
 
-			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed.ToList(), upShift.ToList());
+			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed, upShift);
 
 			Assert.AreEqual(expected.Length, result.Count);
 
@@ -348,7 +348,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			var shiftPolygons = new List<ShiftPolygon>();
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
-				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(i, engineData.FullLoadCurves[(uint)(i + 1)],
+				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i, engineData.FullLoadCurves[(uint)(i + 1)],
 					gearboxData.Gears,
 					engineData, axlegearRatio, rdyn));
 			}
@@ -405,7 +405,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var downshiftOrig = new List<List<Point>>();
 			var upshiftOrig = new List<List<Point>>();
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
-				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
+				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT,i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
 					engineData, axlegearRatio, rdyn));
 				List<Point> tmp1, tmp2, tmp3;
 
@@ -491,7 +491,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var upshiftOrig = new List<List<Point>>();
 			for (var i = 0; i < gearboxData.Gears.Count; i++) {
 				shiftPolygons.Add(
-					DeclarationData.Gearbox.ComputeShiftPolygon(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
+					DeclarationData.Gearbox.ComputeShiftPolygon(gearboxData.Type, i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
 						engineData, axlegearRatio, rdyn.SI<Meter>())
 					);
 				List<Point> tmp1, tmp2, tmp3;

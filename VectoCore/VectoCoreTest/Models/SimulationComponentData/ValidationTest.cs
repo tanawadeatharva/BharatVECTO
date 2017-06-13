@@ -627,6 +627,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public string DigestValue { get; set; }
 		public GearboxType Type { get; set; }
 		public IList<ITransmissionInputData> Gears { get; set; }
+		ITorqueConverterDeclarationInputData IGearboxDeclarationInputData.TorqueConverter { get { return TorqueConverter; }  }
 		public KilogramSquareMeter Inertia { get; set; }
 		public Second TractionInterruption { get; set; }
 		public Second MinTimeBetweenGearshift { get; set; }

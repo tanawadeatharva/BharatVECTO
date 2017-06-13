@@ -153,6 +153,41 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
+		protected TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, bool extendLossMap)
+		{
+			if (gear.LossMap != null) {
+				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), extendLossMap);
+			}
+			if (useEfficiencyFallback) {
+				return TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+			}
+			throw new InvalidFileFormatException("Gear {0} LossMap missing.", i + 1);
+		}
+
+		protected static void CreateTCSecondGearATSerial(IGearboxDeclarationInputData gearbox, GearData gearData,
+			ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = gearData.Ratio;
+			gearData.TorqueConverterGearLossMap = gearData.LossMap;
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		protected static void CreateTCFirstGearATSerial(IGearboxDeclarationInputData gearbox, GearData gearData,
+			ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = gearData.Ratio;
+			gearData.TorqueConverterGearLossMap = gearData.LossMap;
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		protected static void CretateTCFirstGearATPowerSplit(IGearboxDeclarationInputData gearbox, GearData gearData, uint i,
+			ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = 1;
+			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, string.Format("TCGear {0}", i + 1));
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
 		public AxleGearData CreateAxleGearData(IAxleGearInputData data, bool useEfficiencyFallback)
 		{
 			var retVal = SetCommonAxleGearData(data);

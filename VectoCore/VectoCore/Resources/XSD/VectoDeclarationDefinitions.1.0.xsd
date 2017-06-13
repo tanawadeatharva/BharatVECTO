@@ -1511,27 +1511,27 @@ INVALID: 1.2345, .1234, 01.23
 ToDo: -0.00
 			</xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="xs:double">
+		<xs:restriction base="xs:decimal">
 			<xs:pattern value="[-]?([1-9][0-9]*|0)\.[0-9]{2}"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="Double3">
-		<xs:restriction base="xs:double">
+		<xs:restriction base="xs:decimal">
 			<xs:pattern value="[-]?([1-9][0-9]*|0)\.[0-9]{3}"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="Double4">
-		<xs:restriction base="xs:double">
+		<xs:restriction base="xs:decimal">
 			<xs:pattern value="[-]?([1-9][0-9]*|0)\.[0-9]{4}"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="Double5">
-		<xs:restriction base="xs:double">
+		<xs:restriction base="xs:decimal">
 			<xs:pattern value="[-]?([1-9][0-9]*|0)\.[0-9]{5}"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="Double6">
-		<xs:restriction base="xs:double">
+		<xs:restriction base="xs:decimal">
 			<xs:pattern value="[-]?([1-9][0-9]*|0)\.[0-9]{6}"/>
 		</xs:restriction>
 	</xs:simpleType>

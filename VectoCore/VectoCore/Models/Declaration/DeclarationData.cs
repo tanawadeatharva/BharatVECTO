@@ -177,10 +177,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			//public static readonly PerSecond TorqueConverterSpeedLimit = 1600.RPMtoRad();
 			public static readonly double TorqueConverterSecondGearThreshold = 1.8;
+			public static readonly Second PowershiftShiftTime = 0.8.SI<Second>();
 
 			/// <summary>
 			/// computes the shift polygons for a single gear according to the whitebook 2016
 			/// </summary>
+			/// <param name="type"></param>
 			/// <param name="gearIdx">index of the gear to compute the shift polygons for  -- gear number - 1!</param>
 			/// <param name="fullLoadCurve">engine full load curve, potentially limited by the gearbox</param>
 			/// <param name="gears">list of gears</param>
@@ -188,7 +190,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 			/// <param name="axlegearRatio"></param>
 			/// <param name="dynamicTyreRadius"></param>
 			/// <returns></returns>
-			public static ShiftPolygon ComputeShiftPolygon(int gearIdx, EngineFullLoadCurve fullLoadCurve,
+			public static ShiftPolygon ComputeShiftPolygon(GearboxType type, int gearIdx, EngineFullLoadCurve fullLoadCurve,
+				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
+			{
+				return type.AutomaticTransmission()
+					? TorqueConverter.ComputeShiftPolygon(fullLoadCurve) // That's the same for all gears, so call the same method...
+					: ComputeManualTransmissionShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
+			}
+
+			public static ShiftPolygon ComputeManualTransmissionShiftPolygon(int gearIdx, EngineFullLoadCurve fullLoadCurve,
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
 				if (gears.Count < 2) {
@@ -209,8 +219,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var p3 = new Point(nVHigh.Value() * 0.9,
 					fullLoadCurve.FullLoadStationaryTorque(nVHigh * 0.9).Value());
 
-				var p4 =
-					new Point((nVHigh * (1 + diffRatio / 3)).Value(), 0);
+				var p4 = new Point((nVHigh * (1 + diffRatio / 3)).Value(), 0);
 				var p5 = new Point(fullLoadCurve.N95hSpeed.Value(), fullLoadCurve.MaxTorque.Value());
 
 				var p6 = new Point(p2.X, VectoMath.Interpolate(p1, p3, p2.X));
@@ -247,7 +256,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var p3pExt = new Point((1.1 * p5.Y - edgeP6pP3p.OffsetXY) / edgeP6pP3p.SlopeXY, 1.1 * p5.Y);
 				// ReSharper restore InconsistentNaming
 
-				upShift = IntersectShiftPolygon(new[] { p4, p7, p5 }.ToList(), new[] { p2p, p6p, p3pExt }.ToList())
+				upShift = IntersectShiftPolygon(new[] { p4, p7, p5 }, new[] { p2p, p6p, p3pExt })
 					.Select(point => new ShiftPolygon.ShiftPolygonEntry() {
 						AngularSpeed = point.X.SI<PerSecond>(),
 						Torque = point.Y.SI<NewtonMeter>()
@@ -284,12 +293,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			internal static IEnumerable<Point> ShiftPolygonFldMargin(List<FullLoadCurve.FullLoadCurveEntry> fullLoadCurve,
 				PerSecond rpmLimit)
 			{
-				return
-					fullLoadCurve.TakeWhile(fldEntry => fldEntry.EngineSpeed < rpmLimit)
-						.Select(
-							fldEntry =>
-								new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
-						.ToList();
+				return fullLoadCurve.TakeWhile(fldEntry => fldEntry.EngineSpeed < rpmLimit)
+					.Select(fldEntry =>
+						new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
+					.ToList();
 			}
 
 			// ReSharper disable once InconsistentNaming
@@ -300,7 +307,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return engineSpeed;
 			}
 
-			internal static List<Point> IntersectShiftPolygon(List<Point> orig, List<Point> transformedDownshift)
+			internal static List<Point> IntersectShiftPolygon(Point[] orig, Point[] transformedDownshift)
 			{
 				var intersections = new List<Point>();
 				// compute all intersection points between both line segments
@@ -352,7 +359,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return shiftPolygon.OrderBy(pt => pt.X).ThenBy(pt => pt.Y).ToList();
 			}
 
-			private static List<Point> ProjectPointsToLineSegments(List<Point> lineSegments, List<Point> points)
+			private static IEnumerable<Point> ProjectPointsToLineSegments(IEnumerable<Point> lineSegments, Point[] points)
 			{
 				var pointSet = new List<Point>();
 				foreach (var segment in lineSegments.Pairwise(Edge.Create)) {
@@ -364,6 +371,39 @@ namespace TUGraz.VectoCore.Models.Declaration
 					pointSet.AddRange(points.Select(point => new Point(point.X, point.X * k + d)));
 				}
 				return pointSet;
+			}
+		}
+
+		public static class TorqueConverter
+		{
+			public static readonly PerSecond ReferenceRPM = 1000.RPMtoRad();
+			public static readonly PerSecond MaxInputSpeed = 5000.RPMtoRad();
+			public static readonly MeterPerSquareSecond CLUpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
+			public static readonly MeterPerSquareSecond CCUpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
+
+			private static PerSecond DownshiftPRM = 700.RPMtoRad();
+			private static PerSecond UpshiftLowRPM = 900.RPMtoRad();
+			private static PerSecond UpshiftHighRPM = 1150.RPMtoRad();
+
+			public static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve)
+			{
+				var maxDragTorque = fullLoadCurve.MaxDragTorque * 1.1;
+				var maxTorque = fullLoadCurve.MaxTorque * 1.1;
+				var p0 = new Point(UpshiftLowRPM.Value(), maxDragTorque.Value());
+				var p1 = new Point(UpshiftLowRPM.Value(), 0);
+				var p2 = new Point(UpshiftHighRPM.Value(), fullLoadCurve.FullLoadStationaryTorque(UpshiftHighRPM).Value());
+				var edge = new Edge(p1, p2);
+				var p2corr = new Point((maxTorque.Value() - edge.OffsetXY) / edge.SlopeXY, maxTorque.Value());
+
+				return new ShiftPolygon(
+					new[] {
+						new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = DownshiftPRM, Torque = maxDragTorque },
+						new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = DownshiftPRM, Torque = maxTorque }
+					}.ToList(),
+					new[] { p0, p1, p2corr }.Select(
+						pt =>
+							new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = pt.X.SI<PerSecond>(), Torque = pt.Y.SI<NewtonMeter>() })
+						.ToList());
 			}
 
 			public static IEnumerable<TorqueConverterEntry> GetTorqueConverterDragCurve(double ratio)
