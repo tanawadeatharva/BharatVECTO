@@ -194,7 +194,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
 				return type.AutomaticTransmission()
-					? TorqueConverter.ComputeShiftPolygon(fullLoadCurve) // That's the same for all gears, so call the same method...
+					? TorqueConverter.ComputeShiftPolygon(fullLoadCurve, gearIdx == 0, gearIdx >= gears.Count - 1)
+					// That's the same for all gears, so call the same method...
 					: ComputeManualTransmissionShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 			}
 
@@ -385,7 +386,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			private static PerSecond UpshiftLowRPM = 900.RPMtoRad();
 			private static PerSecond UpshiftHighRPM = 1150.RPMtoRad();
 
-			public static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve)
+			public static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve, bool first = false, bool last = false)
 			{
 				var maxDragTorque = fullLoadCurve.MaxDragTorque * 1.1;
 				var maxTorque = fullLoadCurve.MaxTorque * 1.1;
@@ -395,15 +396,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var edge = new Edge(p1, p2);
 				var p2corr = new Point((maxTorque.Value() - edge.OffsetXY) / edge.SlopeXY, maxTorque.Value());
 
-				return new ShiftPolygon(
-					new[] {
-						new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = DownshiftPRM, Torque = maxDragTorque },
-						new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = DownshiftPRM, Torque = maxTorque }
-					}.ToList(),
-					new[] { p0, p1, p2corr }.Select(
-						pt =>
-							new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = pt.X.SI<PerSecond>(), Torque = pt.Y.SI<NewtonMeter>() })
-						.ToList());
+				var downshift = new[] {
+					new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = DownshiftPRM, Torque = maxDragTorque },
+					new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = DownshiftPRM, Torque = maxTorque }
+				};
+				var upshift = new[] { p0, p1, p2corr }.Select(
+					pt =>
+						new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = pt.X.SI<PerSecond>(), Torque = pt.Y.SI<NewtonMeter>() });
+
+				return new ShiftPolygon(first ? new List<ShiftPolygon.ShiftPolygonEntry>() : downshift.ToList(),
+					last ? new List<ShiftPolygon.ShiftPolygonEntry>() : upshift.ToList());
 			}
 
 			public static IEnumerable<TorqueConverterEntry> GetTorqueConverterDragCurve(double ratio)
