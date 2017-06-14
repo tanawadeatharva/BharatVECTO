@@ -57,12 +57,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly bool _engineOnlyMode;
 
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
-			IDeclarationReport declarationReport = null)
+			IDeclarationReport declarationReport = null, bool validate = true)
 		{
 			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
 			_mode = mode;
 			ModWriter = writer;
+			Validate = validate;
 
 			int workerThreads;
 			int completionThreads;
@@ -97,6 +98,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoException("Unkown factory mode in SimulatorFactory: {0}", mode);
 			}
 		}
+
+		public bool Validate { get; set; }
 
 		public IVectoRunDataFactory DataReader { get; private set; }
 
@@ -177,13 +180,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						throw new ArgumentOutOfRangeException("CycleType unknown:" + data.Cycle.CycleType);
 				}
 
-				var validationErrors = run.Validate(_mode, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type,
-					data.Mission != null && data.Mission.MissionType.IsEMS());
-				if (validationErrors.Any()) {
-					throw new VectoException("Validation of Run-Data Failed: " +
-											string.Join("\n", validationErrors.Select(r => r.ErrorMessage + string.Join("; ", r.MemberNames))));
+				if (Validate) {
+					var validationErrors = run.Validate(_mode, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type,
+						data.Mission != null && data.Mission.MissionType.IsEMS());
+					if (validationErrors.Any()) {
+						throw new VectoException("Validation of Run-Data Failed: " +
+												string.Join("\n", validationErrors.Select(r => r.ErrorMessage + string.Join("; ", r.MemberNames))));
+					}
 				}
-
 				yield return run;
 			}
 		}

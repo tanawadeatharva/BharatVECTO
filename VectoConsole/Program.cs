@@ -80,6 +80,7 @@ Description:
 	-1Hz: convert mod-data to 1Hz resolution
 	-eng: switch to engineering mode (implies -mod)
 	-q: quiet - disables console output unless verbose information is enabled
+	-nv: skip validation of internal data structure before simulation
 	-v: Shows verbose information (errors and warnings will be displayed)
 	-vv: Shows more verbose information (infos will be displayed)
 	-vvv: Shows debug messages (slow!)
@@ -156,7 +157,8 @@ Examples:
 				}
 
 				var fileList =
-					args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-mod", "-eng", "-t", "-1Hz", "-q", "-act" }).ToArray();
+					args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-nv", "-mod", "-eng", "-t", "-1Hz", "-q", "-act" })
+						.ToArray();
 				var jobFiles =
 					fileList.Where(
 						f =>
@@ -222,7 +224,8 @@ Examples:
 					var runsFactory = new SimulatorFactory(mode, dataProvider, fileWriter) {
 						ModalResults1Hz = args.Contains("-1Hz"),
 						WriteModalResults = args.Contains("-mod"),
-						ActualModalData = args.Contains("-act")
+						ActualModalData = args.Contains("-act"),
+						Validate = args.Contains("-nv"),
 					};
 
 					_jobContainer.AddRuns(runsFactory);
