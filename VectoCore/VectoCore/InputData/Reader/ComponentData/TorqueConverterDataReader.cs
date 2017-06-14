@@ -92,8 +92,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			if (mode == ExecutionMode.Declaration) {
 				var tcDrag = DeclarationData.TorqueConverter.GetTorqueConverterDragCurve(ratio).Last();
 				characteristicTorque =
-					characteristicTorque.Where(x => x.SpeedRatio < ratio)
-						.Concat(DeclarationData.TorqueConverter.GetTorqueConverterDragCurve(ratio))
+					characteristicTorque.Where(x => x.SpeedRatio < tcDrag.SpeedRatio)
+						.Concat(new[] { tcDrag })
 						.ToArray();
 			} else {
 				if (!characteristicTorque.Any(x => x.SpeedRatio > ratio)) {
