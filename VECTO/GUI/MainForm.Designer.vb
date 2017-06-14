@@ -115,6 +115,8 @@ Partial Class MainForm
 		Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+		Me.cbValidateRunData = New System.Windows.Forms.CheckBox()
+		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
 		Me.StatusBAR.SuspendLayout()
 		Me.TabControl1.SuspendLayout()
 		Me.TabPageGEN.SuspendLayout()
@@ -131,6 +133,7 @@ Partial Class MainForm
 		Me.SplitContainer1.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.CmOpenFile.SuspendLayout()
+		Me.GroupBox3.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'StatusBAR
@@ -373,6 +376,7 @@ Partial Class MainForm
 		'
 		'PanelOptAllg
 		'
+		Me.PanelOptAllg.Controls.Add(Me.GroupBox3)
 		Me.PanelOptAllg.Controls.Add(Me.GroupBox2)
 		Me.PanelOptAllg.Controls.Add(Me.GroupBox1)
 		Me.PanelOptAllg.Location = New System.Drawing.Point(6, 6)
@@ -384,12 +388,12 @@ Partial Class MainForm
 		'
 		Me.GroupBox2.Controls.Add(Me.ChBoxModOut)
 		Me.GroupBox2.Controls.Add(Me.ChBoxMod1Hz)
-		Me.GroupBox2.Location = New System.Drawing.Point(9, 81)
+		Me.GroupBox2.Location = New System.Drawing.Point(3, 82)
 		Me.GroupBox2.Name = "GroupBox2"
-		Me.GroupBox2.Size = New System.Drawing.Size(167, 89)
+		Me.GroupBox2.Size = New System.Drawing.Size(173, 89)
 		Me.GroupBox2.TabIndex = 16
 		Me.GroupBox2.TabStop = False
-		Me.GroupBox2.Text = "Mode"
+		Me.GroupBox2.Text = "Output"
 		'
 		'ChBoxModOut
 		'
@@ -797,6 +801,28 @@ Partial Class MainForm
 		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
+		'cbValidateRunData
+		'
+		Me.cbValidateRunData.AutoSize = True
+		Me.cbValidateRunData.Checked = True
+		Me.cbValidateRunData.CheckState = System.Windows.Forms.CheckState.Checked
+		Me.cbValidateRunData.Location = New System.Drawing.Point(6, 19)
+		Me.cbValidateRunData.Name = "cbValidateRunData"
+		Me.cbValidateRunData.Size = New System.Drawing.Size(90, 17)
+		Me.cbValidateRunData.TabIndex = 17
+		Me.cbValidateRunData.Text = "Validate Data"
+		Me.cbValidateRunData.UseVisualStyleBackColor = True
+		'
+		'GroupBox3
+		'
+		Me.GroupBox3.Controls.Add(Me.cbValidateRunData)
+		Me.GroupBox3.Location = New System.Drawing.Point(3, 177)
+		Me.GroupBox3.Name = "GroupBox3"
+		Me.GroupBox3.Size = New System.Drawing.Size(173, 64)
+		Me.GroupBox3.TabIndex = 18
+		Me.GroupBox3.TabStop = False
+		Me.GroupBox3.Text = "Misc"
+		'
 		'MainForm
 		'
 		Me.AcceptButton = Me.btStartV3
@@ -833,6 +859,8 @@ Partial Class MainForm
 		Me.ToolStrip1.ResumeLayout(False)
 		Me.ToolStrip1.PerformLayout()
 		Me.CmOpenFile.ResumeLayout(False)
+		Me.GroupBox3.ResumeLayout(False)
+		Me.GroupBox3.PerformLayout()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
@@ -925,5 +953,7 @@ Partial Class MainForm
 	Friend WithEvents btnExportXML As System.Windows.Forms.Button
 	Friend WithEvents btnImportXML As System.Windows.Forms.Button
 	Friend WithEvents ShowInFolderMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
+	Friend WithEvents cbValidateRunData As System.Windows.Forms.CheckBox
 
 End Class
