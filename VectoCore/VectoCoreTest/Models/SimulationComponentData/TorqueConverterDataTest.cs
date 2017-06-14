@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
-						tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Declaration, 1, 0.1.SI<MeterPerSquareSecond>(),
+					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Declaration, 1, 0.1.SI<MeterPerSquareSecond>(),
 					0.1.SI<MeterPerSquareSecond>());
 
 			// check input data
@@ -86,13 +86,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(0.9, tqData.TorqueConverterEntries[9].SpeedRatio, 1e-9);
 
 			// check appended data
-			Assert.AreEqual(0.999, tqData.TorqueConverterEntries[10].TorqueRatio, 1e-9);
-			Assert.AreEqual(0, tqData.TorqueConverterEntries[10].Torque.Value(), 1e-9);
-			Assert.AreEqual(1, tqData.TorqueConverterEntries[10].SpeedRatio, 1e-9);
-
-			Assert.AreEqual(0.959, tqData.TorqueConverterEntries[50].TorqueRatio, 1e-9);
-			Assert.AreEqual(-2290, tqData.TorqueConverterEntries[50].Torque.Value(), 1e-9);
-			Assert.AreEqual(5, tqData.TorqueConverterEntries[50].SpeedRatio, 1e-9);
+			
+			Assert.AreEqual(0.959, tqData.TorqueConverterEntries[19].TorqueRatio, 1e-9);
+			Assert.AreEqual(-2290, tqData.TorqueConverterEntries[19].Torque.Value(), 1e-9);
+			Assert.AreEqual(5, tqData.TorqueConverterEntries[19].SpeedRatio, 1e-9);
 		}
 
 		[Test]
@@ -124,7 +121,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var ratio = 0.75;
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
-						tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Declaration, ratio, 0.1.SI<MeterPerSquareSecond>(),
+					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Declaration, ratio, 0.1.SI<MeterPerSquareSecond>(),
 					0.1.SI<MeterPerSquareSecond>());
 
 			// check input data
@@ -137,13 +134,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(0.7, tqData.TorqueConverterEntries[7].SpeedRatio, 1e-9);
 
 			// check appended data
-			Assert.AreEqual(0.999 / ratio, tqData.TorqueConverterEntries[8].TorqueRatio, 1e-9);
-			Assert.AreEqual(0, tqData.TorqueConverterEntries[8].Torque.Value(), 1e-9);
-			Assert.AreEqual(1 * ratio, tqData.TorqueConverterEntries[8].SpeedRatio, 1e-9);
-
-			Assert.AreEqual(0.959 / ratio, tqData.TorqueConverterEntries[48].TorqueRatio, 1e-9);
-			Assert.AreEqual(-2290, tqData.TorqueConverterEntries[48].Torque.Value(), 1e-9);
-			Assert.AreEqual(5 * ratio, tqData.TorqueConverterEntries[48].SpeedRatio, 1e-9);
+			
+			Assert.AreEqual(0.959 / ratio, tqData.TorqueConverterEntries[18].TorqueRatio, 1e-9);
+			Assert.AreEqual(-2290, tqData.TorqueConverterEntries[18].Torque.Value(), 1e-9);
+			Assert.AreEqual(5 * ratio, tqData.TorqueConverterEntries[18].SpeedRatio, 1e-9);
 		}
 
 		[Test]
@@ -163,7 +157,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
-						tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
 					0.1.SI<MeterPerSquareSecond>());
 
 			// check input data
@@ -212,7 +206,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio, MP1000",
-						tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					tqInput), 1000.RPMtoRad(), 1600.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
 					0.1.SI<MeterPerSquareSecond>());
 
 			// check input data
@@ -269,7 +263,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-						tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
 					0.1.SI<MeterPerSquareSecond>());
 
 			var outAngularSpeed = nOut.RPMtoRad();
@@ -306,7 +300,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-						tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
 					0.1.SI<MeterPerSquareSecond>());
 
 			var operatingPoint = tqData.FindOperatingPointForward(tqIn.SI<NewtonMeter>(), nIn.RPMtoRad(), null);
@@ -352,7 +346,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-						tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
 					0.1.SI<MeterPerSquareSecond>());
 
 			foreach (var entry in testData) {
@@ -398,7 +392,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-						tqInput), 1000.RPMtoRad(), tqLimit, ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					tqInput), 1000.RPMtoRad(), tqLimit, ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
 					0.1.SI<MeterPerSquareSecond>());
 
 			var outAngularSpeed = nOut.RPMtoRad();
@@ -458,7 +452,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var tqData =
 				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
-						tqInput), 1000.RPMtoRad(), tqLimit, ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+					tqInput), 1000.RPMtoRad(), tqLimit, ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
 					0.1.SI<MeterPerSquareSecond>());
 
 			var operatingPoint = tqData.FindOperatingPointForPowerDemand(20000.SI<Watt>(), 113.5.SI<PerSecond>(),
