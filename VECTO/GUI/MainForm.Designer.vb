@@ -59,6 +59,8 @@ Partial Class MainForm
 		Me.ButtonGENadd = New System.Windows.Forms.Button()
 		Me.TabPgOptions = New System.Windows.Forms.TabPage()
 		Me.PanelOptAllg = New System.Windows.Forms.Panel()
+		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+		Me.cbValidateRunData = New System.Windows.Forms.CheckBox()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
 		Me.ChBoxModOut = New System.Windows.Forms.CheckBox()
 		Me.ChBoxMod1Hz = New System.Windows.Forms.CheckBox()
@@ -115,14 +117,13 @@ Partial Class MainForm
 		Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.cbValidateRunData = New System.Windows.Forms.CheckBox()
-		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
 		Me.StatusBAR.SuspendLayout()
 		Me.TabControl1.SuspendLayout()
 		Me.TabPageGEN.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.TabPgOptions.SuspendLayout()
 		Me.PanelOptAllg.SuspendLayout()
+		Me.GroupBox3.SuspendLayout()
 		Me.GroupBox2.SuspendLayout()
 		Me.GroupBox1.SuspendLayout()
 		Me.TabPageDEV.SuspendLayout()
@@ -133,7 +134,6 @@ Partial Class MainForm
 		Me.SplitContainer1.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.CmOpenFile.SuspendLayout()
-		Me.GroupBox3.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'StatusBAR
@@ -383,6 +383,28 @@ Partial Class MainForm
 		Me.PanelOptAllg.Name = "PanelOptAllg"
 		Me.PanelOptAllg.Size = New System.Drawing.Size(1022, 290)
 		Me.PanelOptAllg.TabIndex = 0
+		'
+		'GroupBox3
+		'
+		Me.GroupBox3.Controls.Add(Me.cbValidateRunData)
+		Me.GroupBox3.Location = New System.Drawing.Point(3, 177)
+		Me.GroupBox3.Name = "GroupBox3"
+		Me.GroupBox3.Size = New System.Drawing.Size(173, 64)
+		Me.GroupBox3.TabIndex = 18
+		Me.GroupBox3.TabStop = False
+		Me.GroupBox3.Text = "Misc"
+		'
+		'cbValidateRunData
+		'
+		Me.cbValidateRunData.AutoSize = True
+		Me.cbValidateRunData.Checked = True
+		Me.cbValidateRunData.CheckState = System.Windows.Forms.CheckState.Checked
+		Me.cbValidateRunData.Location = New System.Drawing.Point(6, 19)
+		Me.cbValidateRunData.Name = "cbValidateRunData"
+		Me.cbValidateRunData.Size = New System.Drawing.Size(90, 17)
+		Me.cbValidateRunData.TabIndex = 17
+		Me.cbValidateRunData.Text = "Validate Data"
+		Me.cbValidateRunData.UseVisualStyleBackColor = True
 		'
 		'GroupBox2
 		'
@@ -801,28 +823,6 @@ Partial Class MainForm
 		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
-		'cbValidateRunData
-		'
-		Me.cbValidateRunData.AutoSize = True
-		Me.cbValidateRunData.Checked = True
-		Me.cbValidateRunData.CheckState = System.Windows.Forms.CheckState.Checked
-		Me.cbValidateRunData.Location = New System.Drawing.Point(6, 19)
-		Me.cbValidateRunData.Name = "cbValidateRunData"
-		Me.cbValidateRunData.Size = New System.Drawing.Size(90, 17)
-		Me.cbValidateRunData.TabIndex = 17
-		Me.cbValidateRunData.Text = "Validate Data"
-		Me.cbValidateRunData.UseVisualStyleBackColor = True
-		'
-		'GroupBox3
-		'
-		Me.GroupBox3.Controls.Add(Me.cbValidateRunData)
-		Me.GroupBox3.Location = New System.Drawing.Point(3, 177)
-		Me.GroupBox3.Name = "GroupBox3"
-		Me.GroupBox3.Size = New System.Drawing.Size(173, 64)
-		Me.GroupBox3.TabIndex = 18
-		Me.GroupBox3.TabStop = False
-		Me.GroupBox3.Text = "Misc"
-		'
 		'MainForm
 		'
 		Me.AcceptButton = Me.btStartV3
@@ -845,6 +845,8 @@ Partial Class MainForm
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.TabPgOptions.ResumeLayout(False)
 		Me.PanelOptAllg.ResumeLayout(False)
+		Me.GroupBox3.ResumeLayout(False)
+		Me.GroupBox3.PerformLayout()
 		Me.GroupBox2.ResumeLayout(False)
 		Me.GroupBox2.PerformLayout()
 		Me.GroupBox1.ResumeLayout(False)
@@ -859,8 +861,6 @@ Partial Class MainForm
 		Me.ToolStrip1.ResumeLayout(False)
 		Me.ToolStrip1.PerformLayout()
 		Me.CmOpenFile.ResumeLayout(False)
-		Me.GroupBox3.ResumeLayout(False)
-		Me.GroupBox3.PerformLayout()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 

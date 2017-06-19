@@ -111,6 +111,7 @@ namespace TUGraz.VectoCore.OutputData
 				};
 			}
 			Missions[mission.MissionType].ModData[loading] = new T();
+			_resultCount++;
 		}
 
 
@@ -158,7 +159,6 @@ namespace TUGraz.VectoCore.OutputData
 		public void InitializeReport(VectoRunData modelData, Segment segment)
 		{
 			Segment = segment;
-			_resultCount = segment.Missions.Sum(m => m.Loadings.Count);
 
 			DoInitializeReport(modelData, segment);
 		}
