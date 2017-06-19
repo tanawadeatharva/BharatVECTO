@@ -62,6 +62,7 @@ Public Class Vehicle
 	Public ReadOnly PtoLossMap As SubPath
 	Public ReadOnly PtoCycle As SubPath
 	Public torqueLimitsList As List(Of ITorqueLimitInputData)
+	Public VehicleidlingSpeed As PerSecond
 
 
 	Public Sub New()
@@ -353,7 +354,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property EngineIdleSpeed As PerSecond Implements IVehicleDeclarationInputData.EngineIdleSpeed
 		Get
-			Return Nothing
+			Return VehicleidlingSpeed
 		End Get
 	End Property
 
