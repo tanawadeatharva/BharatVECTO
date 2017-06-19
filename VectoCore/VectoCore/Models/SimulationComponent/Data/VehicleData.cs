@@ -240,6 +240,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}
 			}
 
+
 			if (vehicleData.TotalRollResistanceCoefficient <= 0) {
 				return
 					new ValidationResult(string.Format("Total rolling resistance must be greater than 0! {0}",
@@ -268,6 +269,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					string.Format("Total Vehicle Weight is greater than GrossVehicleWeight! Weight: {0},  GVW: {1}",
 						vehicleData.TotalVehicleWeight, gvwTotal));
 			}
+
+			var numDrivenAxles = vehicleData._axleData.Count(x => x.AxleType == AxleType.VehicleDriven);
+			if (numDrivenAxles != 1) {
+				return new ValidationResult("Exactly one axle has to be defined as driven!");
+			}
+
+
 			return ValidationResult.Success;
 		}
 	}

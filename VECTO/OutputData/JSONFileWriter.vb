@@ -206,7 +206,6 @@ Public Class JSONFileWriter
 				{"CurbWeightExtra", vehicle.CurbMassExtra.Value()},
 				{"Loading", vehicle.Loading.Value()},
 				{"MassMax", vehicle.GrossVehicleMassRating.ConvertTo().Ton.Value()},
-				{"CdA", airdrag.AirDragArea.Value()},
 				{"rdyn", vehicle.DynamicTyreRadius.ConvertTo().Milli.Meter.Value()},
 				{"CdCorrMode", airdrag.CrossWindCorrectionMode.GetName()},
 				{"CdCorrFile",
@@ -227,9 +226,13 @@ Public Class JSONFileWriter
 				{"AxleWeightShare", axle.AxleWeightShare},
 				{"TwinTyres", axle.TwinTyres},
 				{"RRCISO", axle.RollResistanceCoefficient},
-				{"FzISO", axle.TyreTestLoad.Value()}
+				{"FzISO", axle.TyreTestLoad.Value()},
+				{"Type", axle.AxleType.ToString()}
 				}}}}}
 
+		If (Not IsNothing(airdrag.AirDragArea)) Then
+			body("CdA") = airdrag.AirDragArea.Value()
+		End If
 		WriteFile(header, body, filename)
 	End Sub
 

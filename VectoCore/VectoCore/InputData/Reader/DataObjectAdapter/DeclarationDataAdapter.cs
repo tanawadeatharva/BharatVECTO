@@ -243,7 +243,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var gear = gearsInput[(int)i];
 				var lossMap = CreateGearLossMap(gear, i, useEfficiencyFallback, true);
 
-				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(gearbox.Type, (int)i, engine.FullLoadCurves[i+1], gearsInput, engine,
+				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(gearbox.Type, (int)i, engine.FullLoadCurves[i + 1],
+					gearsInput, engine,
 					axlegearRatio, dynamicTyreRadius);
 
 				var gearData = new GearData {
@@ -278,7 +279,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = DeclarationData.Gearbox.PowershiftShiftTime;
 				retVal.TorqueConverterData = TorqueConverterDataReader.Create(gearbox.TorqueConverter.TCData,
-					DeclarationData.TorqueConverter.ReferenceRPM, DeclarationData.TorqueConverter.MaxInputSpeed, ExecutionMode.Declaration, ratio,
+					DeclarationData.TorqueConverter.ReferenceRPM, DeclarationData.TorqueConverter.MaxInputSpeed,
+					ExecutionMode.Declaration, ratio,
 					DeclarationData.TorqueConverter.CLUpshiftMinAcceleration, DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
 			}
 
@@ -443,7 +445,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		public AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData, Mission mission,
 			Segment segment)
 		{
-			if (airdragInputData == null) {
+			if (airdragInputData == null || airdragInputData.AirDragArea == null) {
 				return DefaultAirdragData(mission, segment);
 			}
 

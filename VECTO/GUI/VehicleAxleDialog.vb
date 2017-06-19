@@ -30,6 +30,16 @@ Public Class VehicleAxleDialog
 
 		CbWheels.Items.Add("-")
 		CbWheels.Items.AddRange(DeclarationData.Wheels.GetWheelsDimensions())
+
+		cbAxleType.Items.Clear()
+		cbAxleType.ValueMember = "Value"
+		cbAxleType.DisplayMember = "Label"
+
+		cbAxleType.DataSource = [Enum].GetValues(GetType(AxleType)) _
+			.Cast(Of AxleType)() _
+			.Where(Function(type) Not Cfg.DeclMode OrElse type <> AxleType.Trailer) _
+			.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
 	End Sub
 
 	Public Sub Clear()
