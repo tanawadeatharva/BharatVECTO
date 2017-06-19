@@ -218,6 +218,7 @@ Public Class JSONFileWriter
 				{"Angledrive", angledriveOut},
 				{"PTO", ptoOut},
 				{"TorqueLimits", torqueLimits},
+				{"IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM},
 				{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", vehicle.AxleConfiguration.GetName()},
 				{"Axles", From axle In vehicle.Axles Select New Dictionary(Of String, Object) From {

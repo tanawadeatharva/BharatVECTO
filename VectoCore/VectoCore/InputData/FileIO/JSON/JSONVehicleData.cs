@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public PerSecond EngineIdleSpeed
 		{
-			get { return null; }
+			get { return Body["IdlingSpeed"] != null ? Body.GetEx<double>("IdlingSpeed").RPMtoRad() : null; }
 		}
 
 		IList<IAxleDeclarationInputData> IVehicleDeclarationInputData.Axles

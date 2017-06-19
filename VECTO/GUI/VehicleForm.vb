@@ -362,6 +362,7 @@ Public Class VehicleForm
 		TbMassExtra.Text = vehicle.CurbMassExtra.ToGUIFormat()
 		TbLoad.Text = vehicle.Loading.ToGUIFormat()
 		TBrdyn.Text = (vehicle.DynamicTyreRadius.Value() * 1000).ToGUIFormat()
+		tbVehIdlingSpeed.Text = vehicle.EngineIdleSpeed.AsRPM.ToGUIFormat()
 
 		CbCdMode.SelectedValue = airdrag.CrossWindCorrectionMode
 		TbCdFile.Text =
@@ -458,6 +459,8 @@ Public Class VehicleForm
 		veh.RetarderType = CType(CbRtType.SelectedValue, RetarderType)
 		veh.RetarderRatio = TbRtRatio.Text.ToDouble(0)
 		veh.RetarderLossMapFile.Init(GetPath(file), TbRtPath.Text)
+
+		veh.VehicleidlingSpeed = _tbVehIdlingSpeed.Text.ToDouble(0).RPMtoRad()
 
 		veh.AngledriveType = CType(cbAngledriveType.SelectedValue, AngledriveType)
 		veh.AngledriveRatio = tbAngledriveRatio.Text.ToDouble(0)
