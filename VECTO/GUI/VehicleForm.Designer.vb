@@ -139,6 +139,7 @@ Partial Class VehicleForm
 		Me.Label17 = New System.Windows.Forms.Label()
 		Me.btDelMaxTorqueEntry = New System.Windows.Forms.Button()
 		Me.btAddMaxTorqueEntry = New System.Windows.Forms.Button()
+		Me.ColumnHeader10 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.GroupBox6.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.GroupBox7.SuspendLayout()
@@ -169,9 +170,9 @@ Partial Class VehicleForm
 		Me.Label1.AutoSize = True
 		Me.Label1.Location = New System.Drawing.Point(62, 22)
 		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(104, 13)
+		Me.Label1.Size = New System.Drawing.Size(95, 13)
 		Me.Label1.TabIndex = 0
-		Me.Label1.Text = "Curb Weight Vehicle"
+		Me.Label1.Text = "Curb Mass Vehicle"
 		'
 		'TbMass
 		'
@@ -514,9 +515,9 @@ Partial Class VehicleForm
 		Me.Label46.AutoSize = True
 		Me.Label46.Location = New System.Drawing.Point(6, 5)
 		Me.Label46.Name = "Label46"
-		Me.Label46.Size = New System.Drawing.Size(154, 13)
+		Me.Label46.Size = New System.Drawing.Size(145, 13)
 		Me.Label46.TabIndex = 31
-		Me.Label46.Text = "Curb Weight Extra Trailer/Body"
+		Me.Label46.Text = "Curb Mass Extra Trailer/Body"
 		'
 		'Label50
 		'
@@ -569,7 +570,7 @@ Partial Class VehicleForm
 		'
 		Me.LvRRC.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.LvRRC.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader7, Me.ColumnHeader8, Me.ColumnHeader2, Me.ColumnHeader9, Me.ColumnHeader1, Me.ColumnHeader3, Me.ColumnHeader4})
+		Me.LvRRC.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader7, Me.ColumnHeader8, Me.ColumnHeader2, Me.ColumnHeader9, Me.ColumnHeader1, Me.ColumnHeader3, Me.ColumnHeader4, Me.ColumnHeader10})
 		Me.LvRRC.FullRowSelect = True
 		Me.LvRRC.GridLines = True
 		Me.LvRRC.HideSelection = False
@@ -610,7 +611,7 @@ Partial Class VehicleForm
 		'ColumnHeader3
 		'
 		Me.ColumnHeader3.Text = "Wheels"
-		Me.ColumnHeader3.Width = 181
+		Me.ColumnHeader3.Width = 100
 		'
 		'ColumnHeader4
 		'
@@ -923,7 +924,7 @@ Partial Class VehicleForm
 		Me.GroupBox3.Size = New System.Drawing.Size(137, 48)
 		Me.GroupBox3.TabIndex = 6
 		Me.GroupBox3.TabStop = False
-		Me.GroupBox3.Text = "Dynamic Tire Radius"
+		Me.GroupBox3.Text = "Dynamic Tyre Radius"
 		'
 		'GroupBox2
 		'
@@ -1138,6 +1139,11 @@ Partial Class VehicleForm
 		Me.btAddMaxTorqueEntry.TabIndex = 4
 		Me.btAddMaxTorqueEntry.UseVisualStyleBackColor = True
 		'
+		'ColumnHeader10
+		'
+		Me.ColumnHeader10.Text = "Axle Type"
+		Me.ColumnHeader10.Width = 130
+		'
 		'VehicleForm
 		'
 		Me.AcceptButton = Me.ButOK
@@ -1309,4 +1315,5 @@ Partial Class VehicleForm
 	Friend WithEvents lvTorqueLimits As System.Windows.Forms.ListView
 	Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
 	Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader10 As System.Windows.Forms.ColumnHeader
 End Class

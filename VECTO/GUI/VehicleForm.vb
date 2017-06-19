@@ -32,6 +32,7 @@ Public Class VehicleForm
 		FzISO = 4
 		WheelsDimension = 5
 		Inertia = 6
+		AxleType = 7
 	End Enum
 
 	Private Enum TorqueLimitsTbl
@@ -163,7 +164,8 @@ Public Class VehicleForm
 			Dim i As Integer
 			If axleCount > i0 Then
 				For i = 1 To axleCount - LvRRC.Items.Count
-					LvRRC.Items.Add(CreateListViewItem(i + i0, Double.NaN, False, Double.NaN, Double.NaN, "", Double.NaN))
+					LvRRC.Items.Add(CreateListViewItem(i + i0, Double.NaN, False, Double.NaN, Double.NaN, "", Double.NaN,
+														AxleType.VehicleNonDriven))
 				Next
 
 			ElseIf axleCount < LvRRC.Items.Count Then
@@ -377,10 +379,10 @@ Public Class VehicleForm
 			If Cfg.DeclMode Then
 				Dim inertia As Double = DeclarationData.Wheels.Lookup(a0.Wheels).Inertia.Value()
 				LvRRC.Items.Add(CreateListViewItem(i, Double.NaN, a0.TwinTyres, a0.RollResistanceCoefficient,
-													a0.TyreTestLoad.Value(), a0.Wheels, inertia))
+													a0.TyreTestLoad.Value(), a0.Wheels, inertia, a0.AxleType))
 			Else
 				LvRRC.Items.Add(CreateListViewItem(i, a0.AxleWeightShare, a0.TwinTyres, a0.RollResistanceCoefficient,
-													a0.TyreTestLoad.Value(), a0.Wheels, a0.Inertia.Value()))
+													a0.TyreTestLoad.Value(), a0.Wheels, a0.Inertia.Value(), a0.AxleType))
 
 			End If
 		Next
@@ -392,7 +394,7 @@ Public Class VehicleForm
 
 		'TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
 
-		TBcdA.Text = airdrag.AirDragArea.ToGUIFormat()
+		TBcdA.Text = If(airdrag.AirDragArea Is Nothing, "", airdrag.AirDragArea.ToGUIFormat())
 
 		cbPTOType.SelectedValue = pto.PTOTransmissionType
 		tbPTOLossMap.Text =
@@ -416,7 +418,7 @@ Public Class VehicleForm
 	End Sub
 
 	Private Function CreateListViewItem(axleNumber As Integer, share As Double, twinTire As Boolean, rrc As Double,
-										fzIso As Double, wheels As String, inertia As Double) As ListViewItem
+										fzIso As Double, wheels As String, inertia As Double, axletype As AxleType) As ListViewItem
 		Dim retVal As New ListViewItem
 		retVal.SubItems(0).Text = axleNumber.ToGUIFormat()
 		FillDoubleValue(retVal, share, "-")
@@ -425,6 +427,7 @@ Public Class VehicleForm
 		FillDoubleValue(retVal, fzIso)
 		retVal.SubItems.Add(wheels)
 		FillDoubleValue(retVal, inertia)
+		retVal.SubItems.Add(axletype.GetLabel())
 		Return retVal
 	End Function
 
@@ -447,7 +450,7 @@ Public Class VehicleForm
 		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
 		veh.Loading = TbLoad.Text.ToDouble(0)
 
-		veh.CdA0 = TBcdA.Text.ToDouble(0)
+		veh.CdA0 = If(String.IsNullOrWhiteSpace(TBcdA.Text), Double.NaN, TBcdA.Text.ToDouble(0))
 
 		veh.DynamicTyreRadius = TBrdyn.Text.ToDouble(0)
 		veh.CrossWindCorrectionMode = CType(CbCdMode.SelectedValue, CrossWindCorrectionMode)
@@ -470,6 +473,7 @@ Public Class VehicleForm
 			a0.TyreTestLoad = entry.SubItems(AxleTbl.FzISO).Text.ToDouble(0).SI(Of Newton)()
 			a0.Wheels = entry.SubItems(AxleTbl.WheelsDimension).Text
 			a0.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble(0).SI(Of KilogramSquareMeter)()
+			a0.AxleType = entry.SubItems(AxleTbl.AxleType).Text.ParseEnum(Of AxleType)()
 			veh.Axles.Add(a0)
 		Next
 
@@ -683,7 +687,7 @@ Public Class VehicleForm
 		If _axlDlog.ShowDialog = DialogResult.OK Then
 			LvRRC.Items.Add(CreateListViewItem(LvRRC.Items.Count + 1, _axlDlog.TbAxleShare.Text.ToDouble(0),
 												_axlDlog.CbTwinT.Checked, _axlDlog.TbRRC.Text.ToDouble(0), _axlDlog.TbFzISO.Text.ToDouble(0),
-												_axlDlog.CbWheels.Text, _axlDlog.TbI_wheels.Text.ToDouble(0)))
+												_axlDlog.CbWheels.Text, _axlDlog.TbI_wheels.Text.ToDouble(0), AxleType.VehicleNonDriven))
 			Change()
 			DeclInit()
 
@@ -747,6 +751,7 @@ Public Class VehicleForm
 		_axlDlog.TbFzISO.Text = lv0.SubItems(AxleTbl.FzISO).Text
 		_axlDlog.TbI_wheels.Text = lv0.SubItems(AxleTbl.Inertia).Text
 		_axlDlog.CbWheels.Text = lv0.SubItems(AxleTbl.WheelsDimension).Text
+		_axlDlog.cbAxleType.SelectedValue = lv0.SubItems(AxleTbl.AxleType).Text.ParseEnum(Of AxleType)()
 
 		If _axlDlog.ShowDialog = DialogResult.OK Then
 			lv0.SubItems(AxleTbl.RelativeLoad).Text = _axlDlog.TbAxleShare.Text
@@ -759,7 +764,7 @@ Public Class VehicleForm
 			lv0.SubItems(AxleTbl.FzISO).Text = _axlDlog.TbFzISO.Text
 			lv0.SubItems(AxleTbl.WheelsDimension).Text = _axlDlog.CbWheels.Text
 			lv0.SubItems(AxleTbl.Inertia).Text = _axlDlog.TbI_wheels.Text
-
+			lv0.SubItems(AxleTbl.AxleType).Text = CType(_axlDlog.cbAxleType.SelectedValue, AxleType).GetLabel()
 			Change()
 			DeclInit()
 		End If
@@ -824,6 +829,10 @@ Public Class VehicleForm
 #End Region
 
 	Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOType.SelectedIndexChanged
+
+		If (Cfg.DeclMode) Then
+			Exit Sub
+		End If
 
 		If (cbPTOType.SelectedIndex = 0) Then
 			pnPTO.Enabled = False

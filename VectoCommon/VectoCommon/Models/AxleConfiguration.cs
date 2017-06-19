@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using TUGraz.VectoCommon.Utils;
 
@@ -53,6 +55,23 @@ namespace TUGraz.VectoCommon.Models
 		VehicleDriven,
 		VehicleNonDriven,
 		Trailer
+	}
+
+	public static class AxleTypeHelper
+	{
+		public static string GetLabel(this AxleType self)
+		{
+			switch (self) {
+				case AxleType.VehicleDriven:
+					return "Vehicle driven";
+				case AxleType.VehicleNonDriven:
+					return "Vehicle non-driven";
+				case AxleType.Trailer:
+					return "Trailer";
+				default:
+					throw new ArgumentOutOfRangeException("self", self, null);
+			}
+		}
 	}
 
 	public static class AxleConfigurationHelper

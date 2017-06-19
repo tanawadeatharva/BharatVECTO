@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			return
 				Body.GetEx(JsonKeys.Vehicle_AxleConfiguration).GetEx(JsonKeys.Vehicle_AxleConfiguration_Axles).Select(
-					axle => new AxleInputData {
+					(axle, idx) => new AxleInputData {
 						SourceType = DataSourceType.JSONFile,
 						Source = Source,
 						Inertia = axle.GetEx<double>(JsonKeys.Vehicle_Axles_Inertia).SI<KilogramSquareMeter>(),
@@ -150,7 +150,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						TwinTyres = axle.GetEx<bool>(JsonKeys.Vehicle_Axles_TwinTyres),
 						RollResistanceCoefficient = axle.GetEx<double>(JsonKeys.Vehicle_Axles_RollResistanceCoefficient),
 						TyreTestLoad = axle.GetEx<double>(JsonKeys.Vehicle_Axles_TyreTestLoad).SI<Newton>(),
-						AxleWeightShare = axle.GetEx<double>("AxleWeightShare")
+						AxleWeightShare = axle.GetEx<double>("AxleWeightShare"),
+						AxleType =
+							axle["Type"] != null
+								? axle.GetEx<string>("Type").ParseEnum<AxleType>()
+								: (idx == 1 ? AxleType.VehicleDriven : AxleType.VehicleNonDriven)
 					});
 		}
 
@@ -160,7 +164,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual SquareMeter AirDragArea
 		{
-			get { return Body.GetEx<double>(JsonKeys.Vehicle_DragCoefficient).SI<SquareMeter>(); }
+			get {
+				return Body[JsonKeys.Vehicle_DragCoefficient] == null
+					? null
+					: Body.GetEx<double>(JsonKeys.Vehicle_DragCoefficient).SI<SquareMeter>();
+			}
 		}
 
 		public virtual CrossWindCorrectionMode CrossWindCorrectionMode

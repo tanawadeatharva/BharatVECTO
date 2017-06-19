@@ -63,15 +63,6 @@ Public Class Vehicle
 	Public ReadOnly PtoCycle As SubPath
 	Public torqueLimitsList As List(Of ITorqueLimitInputData)
 
-	Public Class Axle
-		Public RRC As Double
-		Public Share As Double
-		Public TwinTire As Boolean
-		Public FzISO As Double
-		Public Wheels As String
-		Public Inertia As Double
-	End Class
-
 
 	Public Sub New()
 		_path = ""
@@ -368,7 +359,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property AirDragArea As SquareMeter Implements IAirdragEngineeringInputData.AirDragArea
 		Get
-			Return CdA0.SI(Of SquareMeter)()
+			Return If(Double.IsNaN(CdA0), Nothing, CdA0.SI(Of SquareMeter)())
 		End Get
 	End Property
 
