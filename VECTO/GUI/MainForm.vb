@@ -1105,8 +1105,14 @@ lbFound:
 			Dim report As String = New FileOutputWriter(job).XMLFullReportName
 			If File.Exists(report) Then
 				sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
-										.Message = String.Format("XML-Report for '{0}' written to {1}", Path.GetFileName(job), report),
-										.Link = "<RUN>" + report})
+										.Message = String.Format("XML Manufacturer Report for '{0}' written to {1}", Path.GetFileName(job), report),
+										.Link = "<XML>" + report})
+			End If
+			report = New FileOutputWriter(job).XMLCustomerReportName
+			If File.Exists(report) Then
+				sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
+										.Message = String.Format("XML Customer Report for '{0}' written to {1}", Path.GetFileName(job), report),
+										.Link = "<XML>" + report})
 			End If
 		Next
 
@@ -1499,6 +1505,11 @@ lbFound:
 					Catch ex As Exception
 						GUIMsg(MessageType.Err, "Could not run '" & txt & "'!")
 					End Try
+				ElseIf _
+					Len(CStr(LvMsg.SelectedItems(0).Tag)) > 5 AndAlso
+					Microsoft.VisualBasic.Left(CStr(LvMsg.SelectedItems(0).Tag), 5) = "<XML>" Then
+					txt = CStr(LvMsg.SelectedItems(0).Tag).Replace("<XML>", "")
+					OpenFiles(txt)
 				Else
 					OpenFiles(CStr(LvMsg.SelectedItems(0).Tag))
 				End If
@@ -1535,7 +1546,6 @@ lbFound:
 		_contextMenuFiles = files
 
 		OpenInGraphWindowToolStripMenuItem.Enabled = (UCase(GetExtension(_contextMenuFiles(0))) = ".VMOD")
-
 
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 

@@ -54,12 +54,12 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public string XMLFullReportName
 		{
-			get { return Path.ChangeExtension(_jobFile, "RESULT.xml"); }
+			get { return Path.ChangeExtension(_jobFile, "RSLT_MANUFACTURER.xml"); }
 		}
 
-		public string XMLCoCReportName
+		public string XMLCustomerReportName
 		{
-			get { return Path.ChangeExtension(_jobFile, "COC.xml"); }
+			get { return Path.ChangeExtension(_jobFile, "RSLT_CUSTOMER.xml"); }
 		}
 
 
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				case ReportType.DeclarationReportXMLFulll:
 					return new FileStream(XMLFullReportName, FileMode.Create);
 				case ReportType.DeclarationReportXMLCOC:
-					return new FileStream(XMLCoCReportName, FileMode.Create);
+					return new FileStream(XMLCustomerReportName, FileMode.Create);
 				default:
 
 					throw new ArgumentOutOfRangeException("type");

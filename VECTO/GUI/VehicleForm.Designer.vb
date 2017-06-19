@@ -168,11 +168,11 @@ Partial Class VehicleForm
 		'Label1
 		'
 		Me.Label1.AutoSize = True
-		Me.Label1.Location = New System.Drawing.Point(62, 22)
+		Me.Label1.Location = New System.Drawing.Point(27, 22)
 		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(95, 13)
+		Me.Label1.Size = New System.Drawing.Size(139, 13)
 		Me.Label1.TabIndex = 0
-		Me.Label1.Text = "Curb Mass Vehicle"
+		Me.Label1.Text = "Corrected Actual Curb Mass"
 		'
 		'TbMass
 		'
@@ -202,9 +202,9 @@ Partial Class VehicleForm
 		Me.Label3.AutoSize = True
 		Me.Label3.Location = New System.Drawing.Point(3, 6)
 		Me.Label3.Name = "Label3"
-		Me.Label3.Size = New System.Drawing.Size(37, 13)
+		Me.Label3.Size = New System.Drawing.Size(38, 13)
 		Me.Label3.TabIndex = 8
-		Me.Label3.Text = "cd x A"
+		Me.Label3.Text = "Cd x A"
 		'
 		'TBcdA
 		'
