@@ -152,11 +152,11 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		{
 			var stream = @"#a,b,c
 						   #21,22,23
-                           #674,95,96
-                           a,b,c
-                           #9,8,7
-                           1,2,3
-                           4,5,6".ToStream();
+						   #674,95,96
+						   a,b,c
+						   #9,8,7
+						   1,2,3
+						   4,5,6".ToStream();
 			var table = VectoCSVFile.ReadStream(stream);
 
 			CollectionAssert.AreEqual(new[] { "a", "b", "c" }, table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
