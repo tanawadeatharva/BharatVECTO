@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Utils
 
 			var lineNumber = 1;
 			do {
-				string[] cells = {};
+				string[] cells = { };
 				if (firstLineIsData) {
 					cells = colsWithoutComment;
 				} else {

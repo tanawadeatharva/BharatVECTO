@@ -128,11 +128,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected readonly IGearboxEngineeringInputData Gearbox;
 		protected readonly IAxleGearInputData AxleGear;
 		protected readonly ITorqueConverterEngineeringInputData TorqueConverter;
-		protected IAngledriveInputData Angledrive;
+		protected readonly IAngledriveInputData Angledrive;
 		protected readonly IEngineEngineeringInputData Engine;
-		protected IVehicleEngineeringInputData VehicleData;
-		protected IRetarderInputData Retarder;
-		protected IPTOTransmissionInputData PTOTransmission;
+		protected readonly IVehicleEngineeringInputData VehicleData;
+		protected readonly IRetarderInputData Retarder;
+		protected readonly IPTOTransmissionInputData PTOTransmission;
 
 		private readonly string _jobname;
 		protected internal IAirdragEngineeringInputData AirdragData;

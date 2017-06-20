@@ -38,7 +38,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.IVT.VectoXML
 {
-	static internal class AttributeMappings
+	internal static class AttributeMappings
 	{
 		public static readonly Dictionary<string, string> FuelConsumptionMapMapping = new Dictionary<string, string> {
 			{ FuelConsumptionMapReader.Fields.EngineSpeed, XMLNames.Engine_FuelConsumptionMap_EngineSpeed_Attr },

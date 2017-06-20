@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		// ReSharper restore InconsistentNaming
 
-		internal readonly DataTable _table;
+		internal readonly DataTable Table;
 		private readonly ISummaryWriter _sumWriter;
 
 
@@ -196,9 +196,9 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			_sumWriter = writer;
 
-			_table = new DataTable();
+			Table = new DataTable();
 
-			_table.Columns.AddRange(new[] {
+			Table.Columns.AddRange(new[] {
 				Tuple.Create(SORT, typeof(int)),
 				Tuple.Create(JOB, typeof(string)),
 				Tuple.Create(INPUTFILE, typeof(string)),
@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.OutputData
 				Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem), typeof(string)),
 			}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
 
-			_table.Columns.AddRange(new[] {
+			Table.Columns.AddRange(new[] {
 				CARGO_VOLUME,
 				TIME, DISTANCE,
 				SPEED, ALTITUDE_DELTA,
@@ -279,7 +279,7 @@ namespace TUGraz.VectoCore.OutputData
 		public virtual void Finish()
 		{
 			if (_sumWriter != null) {
-				var view = new DataView(_table, "", SORT, DataViewRowState.CurrentRows).ToTable();
+				var view = new DataView(Table, "", SORT, DataViewRowState.CurrentRows).ToTable();
 				var toRemove =
 					view.Columns.Cast<DataColumn>().Where(column => column.ColumnName.StartsWith(INTERNAL_PREFIX)).ToList();
 				foreach (var dataColumn in toRemove) {
@@ -297,8 +297,8 @@ namespace TUGraz.VectoCore.OutputData
 		//	Kilogram vehicleMass, Kilogram vehicleLoading, CubicMeter cargoVolume, uint gearCount)
 		public virtual void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData)
 		{
-			var row = _table.NewRow();
-			_table.Rows.Add(row);
+			var row = Table.NewRow();
+			Table.Rows.Add(row);
 
 			row[SORT] = jobNr * 1000 + runNr;
 			row[JOB] = string.Format("{0}-{1}", jobNr, runNr); //ReplaceNotAllowedCharacters(current);
@@ -398,16 +398,15 @@ namespace TUGraz.VectoCore.OutputData
 				row[AXLE_RATIO] = runData.AxleGearData.AxleGear.Ratio.SI<Scalar>();
 
 				foreach (var aux in runData.Aux) {
-					string colName;
 					if (aux.ID == Constants.Auxiliaries.IDs.PTOConsumer || aux.ID == Constants.Auxiliaries.IDs.PTOTransmission) {
 						continue;
 					}
-					colName = string.Format(AUX_TECH_FORMAT, aux.ID);
+					var colName = string.Format(AUX_TECH_FORMAT, aux.ID);
 
-					if (!_table.Columns.Contains(colName)) {
-						var col = _table.Columns.Add(colName, typeof(string));
+					if (!Table.Columns.Contains(colName)) {
+						var col = Table.Columns.Add(colName, typeof(string));
 						// move the new column to correct position
-						col.SetOrdinal(_table.Columns[CARGO_VOLUME].Ordinal);
+						col.SetOrdinal(Table.Columns[CARGO_VOLUME].Ordinal);
 					}
 
 					row[colName] = aux.Technology == null ? "" : string.Join("; ", aux.Technology);
@@ -495,10 +494,10 @@ namespace TUGraz.VectoCore.OutputData
 					colName = string.Format(E_AUX_FORMAT, aux.Key);
 				}
 
-				if (!_table.Columns.Contains(colName)) {
-					var col = _table.Columns.Add(colName, typeof(SI));
+				if (!Table.Columns.Contains(colName)) {
+					var col = Table.Columns.Add(colName, typeof(SI));
 					// move the new column to correct position
-					col.SetOrdinal(_table.Columns[E_AUX].Ordinal);
+					col.SetOrdinal(Table.Columns[E_AUX].Ordinal);
 				}
 
 				row[colName] = modData.AuxiliaryWork(aux.Value).ConvertTo().Kilo.Watt.Hour;
@@ -555,8 +554,8 @@ namespace TUGraz.VectoCore.OutputData
 
 			for (uint i = 0; i <= gearCount; i++) {
 				var colName = string.Format(TIME_SHARE_PER_GEAR_FORMAT, i);
-				if (!_table.Columns.Contains(colName)) {
-					_table.Columns.Add(colName, typeof(SI));
+				if (!Table.Columns.Contains(colName)) {
+					Table.Columns.Add(colName, typeof(SI));
 				}
 				row[colName] = timeSharePerGear[i];
 			}
@@ -586,7 +585,7 @@ namespace TUGraz.VectoCore.OutputData
 		protected void Dispose(bool disposing)
 		{
 			if (disposing) {
-				_table.Dispose();
+				Table.Dispose();
 			}
 		}
 	}

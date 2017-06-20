@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return dryRunResponse;
 			}
 
-			CurrentState.TransmissionTorqueLoss = inTorque * effectiveRatio - (outTorque);
+			CurrentState.TransmissionTorqueLoss = inTorque * effectiveRatio - outTorque;
 
 
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);

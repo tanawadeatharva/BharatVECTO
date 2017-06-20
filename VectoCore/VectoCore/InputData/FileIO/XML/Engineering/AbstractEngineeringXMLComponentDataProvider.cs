@@ -50,9 +50,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		protected readonly XPathDocument XMLDocument;
 
-		//protected const string VehiclePath = "/VectoInputEngineering/Vehicle";
-
-		public AbstractEngineeringXMLComponentDataProvider(XMLEngineeringInputDataProvider xmlEngineeringJobInputDataProvider,
+		protected AbstractEngineeringXMLComponentDataProvider(
+			XMLEngineeringInputDataProvider xmlEngineeringJobInputDataProvider,
 			XPathDocument document, string xmlBasePath, string fsBasePath)
 		{
 			XMLDocument = document;
@@ -60,7 +59,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			FSBasePath = fsBasePath;
 			InputData = xmlEngineeringJobInputDataProvider;
 			Navigator = document.CreateNavigator();
-			Manager = new XmlNamespaceManager(Navigator.NameTable);
+			Manager = new XmlNamespaceManager(Navigator.NameTable ?? new NameTable());
 			Helper = new XPathHelper(ExecutionMode.Engineering);
 			Helper.AddNamespaces(Manager);
 
@@ -84,7 +83,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return GetElementValue(XMLNames.Component_Model); }
 		}
 
-		
+
 		public override string Date
 		{
 			get { return GetElementValue(XMLNames.Component_Date); }
@@ -102,10 +101,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public override CertificationMethod CertificationMethod
 		{
-			get {  return CertificationMethod.NotCertified;}
+			get { return CertificationMethod.NotCertified; }
 		}
 
-		
+
 		protected TableData ReadCSVResourceFile(string relPath)
 		{
 			if (!ElementExists(Helper.Query(relPath, ExtCsvResourceTag))) {

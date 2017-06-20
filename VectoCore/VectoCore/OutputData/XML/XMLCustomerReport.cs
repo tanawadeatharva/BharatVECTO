@@ -49,14 +49,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLCustomerReport
 	{
-		protected XElement VehiclePart;
+		protected readonly XElement VehiclePart;
 
 		protected XElement InputDataIntegrity;
 
-		protected XElement Results;
+		protected readonly XElement Results;
 
-		protected XNamespace tns;
-		protected XNamespace di;
+		protected readonly XNamespace tns;
+		protected readonly XNamespace di;
 		private bool allSuccess = true;
 
 		public XMLCustomerReport()

@@ -258,7 +258,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var max = data.Max<Meter>(ModalResultField.dist);
 			var min = data.Min<Meter>(ModalResultField.dist);
-			return max == null || min == null ? null : (max - min);
+			return max == null || min == null ? null : max - min;
 		}
 
 		public static WattSecond WorkTotalMechanicalBrake(this IModalDataContainer data)

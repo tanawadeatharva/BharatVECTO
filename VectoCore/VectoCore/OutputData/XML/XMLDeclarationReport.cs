@@ -45,10 +45,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLDeclarationReport : DeclarationReport<XMLDeclarationReport.ResultEntry>
 	{
-		private XMLFullReport _fullReport;
-		private XMLCustomerReport _customerReport;
+		private readonly XMLFullReport _fullReport;
+		private readonly XMLCustomerReport _customerReport;
 
-		private IOutputDataWriter Writer;
+		private readonly IOutputDataWriter _writer;
 
 		public class ResultEntry
 		{
@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			_customerReport = new XMLCustomerReport();
 			//CustomerReport = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
 
-			Writer = writer;
+			_writer = writer;
 		}
 
 		public XDocument FullReport
@@ -150,15 +150,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var fullReportHash = GetSignature(_fullReport.Report);
 			_customerReport.GenerateReport(fullReportHash);
 
-			if (Writer != null) {
-				using (var xmlWriter = new XmlTextWriter(Writer.WriteStream(ReportType.DeclarationReportXMLFulll), Encoding.UTF8)) {
+			if (_writer != null) {
+				using (var xmlWriter = new XmlTextWriter(_writer.WriteStream(ReportType.DeclarationReportXMLFulll), Encoding.UTF8)) {
 					xmlWriter.Formatting = Formatting.Indented;
 					_fullReport.Report.WriteTo(xmlWriter);
 					xmlWriter.Flush();
 					xmlWriter.Close();
 				}
 
-				using (var xmlWriter = new XmlTextWriter(Writer.WriteStream(ReportType.DeclarationReportXMLCOC), Encoding.UTF8)) {
+				using (var xmlWriter = new XmlTextWriter(_writer.WriteStream(ReportType.DeclarationReportXMLCOC), Encoding.UTF8)) {
 					xmlWriter.Formatting = Formatting.Indented;
 					_customerReport.Report.WriteTo(xmlWriter);
 					xmlWriter.Flush();

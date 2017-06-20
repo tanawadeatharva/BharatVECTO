@@ -382,9 +382,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly MeterPerSquareSecond CLUpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
 			public static readonly MeterPerSquareSecond CCUpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
 
-			private static PerSecond DownshiftPRM = 700.RPMtoRad();
-			private static PerSecond UpshiftLowRPM = 900.RPMtoRad();
-			private static PerSecond UpshiftHighRPM = 1150.RPMtoRad();
+			private static readonly PerSecond DownshiftPRM = 700.RPMtoRad();
+			private static readonly PerSecond UpshiftLowRPM = 900.RPMtoRad();
+			private static readonly PerSecond UpshiftHighRPM = 1150.RPMtoRad();
 
 			public static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve, bool first = false,
 				bool last = false)
@@ -411,7 +411,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static IEnumerable<TorqueConverterEntry> GetTorqueConverterDragCurve(double ratio)
 			{
-				var resourceId = DeclarationData.DeclarationDataResourcePrefix + ".TorqueConverter.csv";
+				var resourceId = DeclarationDataResourcePrefix + ".TorqueConverter.csv";
 				var data = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
 				var characteristicTorque = (from DataRow row in data.Rows
 					select

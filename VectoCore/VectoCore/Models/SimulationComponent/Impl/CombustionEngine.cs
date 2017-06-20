@@ -436,7 +436,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var powerRatio = (PreviousState.EnginePower / stationaryFullLoadPower).Value();
 					var tStarPrev = pt1 * Math.Log(1.0 / (1 - powerRatio), Math.E).SI<Second>();
 					var tStar = tStarPrev + PreviousState.dt;
-					dynFullPowerCalculated = stationaryFullLoadPower * (pt1.IsEqual(0) ? 1 : (1 - Math.Exp((-tStar / pt1).Value())));
+					dynFullPowerCalculated = stationaryFullLoadPower * (pt1.IsEqual(0) ? 1 : 1 - Math.Exp((-tStar / pt1).Value()));
 				} catch (VectoException e) {
 					Log.Warn("PT1 calculation failed (dryRun: {0}): {1}", dryRun, e.Message);
 					if (dryRun) {
@@ -492,8 +492,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected class CombustionEngineIdleController : LoggingObject, IIdleController
 		{
-			private readonly double PeDropSlope = -5;
-			private readonly double PeDropOffset = 1.0;
+			private const double PeDropSlope = -5;
+			private const double PeDropOffset = 1.0;
 
 			private readonly CombustionEngine _engine;
 			private readonly IDataBus _dataBus;
@@ -550,7 +550,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					: (_engineTargetSpeed - _engine.PreviousState.EngineSpeed) /
 					(_dataBus.TractionInterruption - (absTime - _idleStart));
 
-				var nextAngularSpeed = (velocitySlope * dt + _engine.PreviousState.EngineSpeed);
+				var nextAngularSpeed = velocitySlope * dt + _engine.PreviousState.EngineSpeed;
 
 				var engineMaxSpeed = VectoMath.Min(_dataBus.GetGearData(_dataBus.NextGear.Gear).MaxSpeed,
 					_engine.ModelData.FullLoadCurves[0].N95hSpeed);

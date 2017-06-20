@@ -43,8 +43,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class AMTShiftStrategy : ShiftStrategy
 	{
-		protected uint MaxStartGear;
-		protected uint _nextGear { get; set; }
+		protected readonly uint MaxStartGear;
+		protected uint _nextGear;
 
 		public AMTShiftStrategy(VectoRunData runData, IDataBus dataBus) : base(runData.GearboxData, dataBus)
 		{

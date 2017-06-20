@@ -137,9 +137,9 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly MeterPerSecond ATGearboxDisengageWhenHaltingSpeed = 5.KMPHtoMeterPerSecond();
 
-			public static Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
+			public static readonly Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
 
-			public static MeterPerSecond VehicleSpeedHaltTolerance = 1e-3.SI<MeterPerSecond>();
+			public static readonly MeterPerSecond VehicleSpeedHaltTolerance = 1e-3.SI<MeterPerSecond>();
 
 			/// <summary>
 			/// The initial search interval for the operating point search in the driver.
@@ -153,8 +153,8 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly Meter GearboxLookaheadForAccelerationEstimation = 100.SI<Meter>();
 
-			public static Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
-			public static Kilogram MaximumGrossVehicleWeightEMS = 60000.SI<Kilogram>();
+			public static readonly Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
+			public static readonly Kilogram MaximumGrossVehicleWeightEMS = 60000.SI<Kilogram>();
 		}
 
 		public static class XML

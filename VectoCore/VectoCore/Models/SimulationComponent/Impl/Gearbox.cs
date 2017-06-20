@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var shiftTimeExceeded = absTime.IsSmaller(_engageTime) &&
 									_engageTime.IsSmaller(absTime + dt, Constants.SimulationSettings.LowerBoundTimeInterval);
 			// allow 5% tolerance of shift time
-			if (shiftTimeExceeded && (_engageTime - absTime) > Constants.SimulationSettings.LowerBoundTimeInterval / 2) {
+			if (shiftTimeExceeded && _engageTime - absTime > Constants.SimulationSettings.LowerBoundTimeInterval / 2) {
 				return new ResponseFailTimeInterval {
 					Source = this,
 					DeltaT = _engageTime - absTime,

@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class CrosswindCorrectionCdxALookup : LoggingObject, ICrossWindCorrection
 	{
-		protected List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> Entries;
+		protected readonly List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> Entries;
 
 		public CrosswindCorrectionCdxALookup(SquareMeter airDragArea,
 			List<CrossWindCorrectionCurveReader.CrossWindCorrectionEntry> entries,

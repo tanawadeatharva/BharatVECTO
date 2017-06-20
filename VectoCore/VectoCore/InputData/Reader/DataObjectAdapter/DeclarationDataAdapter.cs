@@ -398,7 +398,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var cdASum = 0.SI<SquareMeter>();
 
 				for (var heightPercent = startHeightPercent; heightPercent < maxHeightPercent; heightPercent += heightPercentStep) {
-					var height = (heightPercent / 100.0) * vehicleHeight;
+					var height = heightPercent / 100.0 * vehicleHeight;
 					var vWind = Physics.BaseWindSpeed * Math.Pow(height / Physics.BaseWindHeight, Physics.HellmannExponent);
 
 					for (var alpha = 0; alpha <= maxAlpha; alpha += alphaStep) {

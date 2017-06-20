@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		private static readonly Dictionary<MissionType, DrivingCycleData> CyclesCache =
 			new Dictionary<MissionType, DrivingCycleData>();
 
-		protected IDeclarationInputDataProvider InputDataProvider;
+		protected readonly IDeclarationInputDataProvider InputDataProvider;
 
 		protected IDeclarationReport Report;
 		private DeclarationDataAdapter _dao;
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				InitializeReport();
 			}
 		}
-		
+
 		private void Initialize()
 		{
 			_dao = new DeclarationDataAdapter();

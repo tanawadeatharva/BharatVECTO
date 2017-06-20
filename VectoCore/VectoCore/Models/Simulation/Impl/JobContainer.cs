@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return
 				Runs.Select(
-						r => new CycleTypeDescription { Name = r.Run.CycleName, CycleType = r.Run.GetContainer().RunData.Cycle.CycleType })
+					r => new CycleTypeDescription { Name = r.Run.CycleName, CycleType = r.Run.GetContainer().RunData.Cycle.CycleType })
 					.Distinct();
 		}
 
@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public bool Canceled;
 			public double ExecTime;
 			public Exception ExecException;
-			public Task RunTask;
+			public readonly Task RunTask;
 
 			public RunEntry()
 			{

@@ -58,11 +58,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		private PerSecond _n95hSpeed; // 95% of Pmax
 		private PerSecond _n80hSpeed; // 80% of Pmax
 
-		[Required, ValidateObject] readonly internal List<FullLoadCurveEntry> FullLoadEntries;
+		[Required, ValidateObject] internal readonly List<FullLoadCurveEntry> FullLoadEntries;
 
 		private SortedList<PerSecond, int> _quickLookup;
 
-		[Required] readonly internal LookupData<PerSecond, PT1.PT1Result> PT1Data;
+		[Required] internal readonly LookupData<PerSecond, PT1.PT1Result> PT1Data;
 
 		internal EngineFullLoadCurve(List<FullLoadCurveEntry> entries, LookupData<PerSecond, PT1.PT1Result> pt1Data)
 		{

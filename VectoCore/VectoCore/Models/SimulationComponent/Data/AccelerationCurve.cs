@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			} else {
 				index = _entries.FindIndex(x => x.Key > key);
 				if (index <= 0) {
-					index = (key > _entries[0].Key) ? _entries.Count - 1 : 1;
+					index = key > _entries[0].Key ? _entries.Count - 1 : 1;
 				}
 			}
 			return index;

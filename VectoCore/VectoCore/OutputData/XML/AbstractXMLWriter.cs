@@ -47,7 +47,7 @@ namespace TUGraz.IVT.VectoXML.Writer
 
 		protected XNamespace tns;
 		protected XNamespace rootNamespace;
-		protected XNamespace di;
+		protected readonly XNamespace di;
 
 		protected const string Creator = "TU Graz, IVT-EM XML Exporter";
 		protected readonly string Vendor;

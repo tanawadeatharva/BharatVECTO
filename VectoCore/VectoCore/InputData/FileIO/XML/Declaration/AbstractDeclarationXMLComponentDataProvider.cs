@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			InputData = xmlInputDataProvider;
 			Navigator = xmlInputDataProvider.Document.CreateNavigator();
-			Manager = new XmlNamespaceManager(Navigator.NameTable);
+			Manager = new XmlNamespaceManager(Navigator.NameTable ?? new NameTable());
 			Helper = new XPathHelper(ExecutionMode.Declaration);
 			Helper.AddNamespaces(Manager);
 

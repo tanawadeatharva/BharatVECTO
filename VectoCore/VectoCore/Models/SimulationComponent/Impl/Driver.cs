@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public DriverData DriverData { get; protected set; }
 
-		protected IDriverStrategy DriverStrategy;
+		protected readonly IDriverStrategy DriverStrategy;
 		public string CurrentAction = "";
 
 		public Driver(IVehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)

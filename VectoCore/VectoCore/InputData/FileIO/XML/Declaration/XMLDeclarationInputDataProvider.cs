@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
 	public class XMLDeclarationInputDataProvider : IDeclarationInputDataProvider
 	{
-		internal XPathDocument Document;
+		internal readonly XPathDocument Document;
 
 		private readonly IAuxiliariesDeclarationInputData XMLAuxiliaryData;
 		private readonly IDriverDeclarationInputData XMLDriverData;

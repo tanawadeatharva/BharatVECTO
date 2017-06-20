@@ -45,11 +45,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class BusAuxiliariesAdapter : LoggingObject, IAuxInProvider, IAuxPort
 	{
-		protected IDataBus DataBus;
+		protected readonly IDataBus DataBus;
 		protected internal BusAuxState CurrentState;
 		protected internal BusAuxState PreviousState;
 
-		protected internal IAuxPort AdditionalAux;
+		protected internal readonly IAuxPort AdditionalAux;
 
 		protected IAdvancedAuxiliaries Auxiliaries;
 		private readonly FuelConsumptionAdapter _fcMapAdapter;
