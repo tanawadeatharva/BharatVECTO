@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
 	public class MockSumWriter : SummaryDataContainer
 	{
-		public override void Write(IModalDataContainer modData, string jobFileName, VectoRunData runData) {}
+		public override void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData) {}
 
 		public override void Finish() {}
 	}

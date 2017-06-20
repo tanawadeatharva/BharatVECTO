@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -52,6 +53,8 @@ namespace TUGraz.VectoCore.OutputData
 	public class SummaryDataContainer : LoggingObject, IDisposable
 	{
 		// ReSharper disable InconsistentNaming
+		public const string INTERNAL_PREFIX = "INTERNAL";
+		public const string SORT = INTERNAL_PREFIX + " Sorting";
 		public const string JOB = "Job [-]";
 		public const string INPUTFILE = "Input File [-]";
 		public const string CYCLE = "Cycle [-]";
@@ -197,6 +200,7 @@ namespace TUGraz.VectoCore.OutputData
 			_table = new DataTable();
 
 			_table.Columns.AddRange(new[] {
+				Tuple.Create(SORT, typeof(int)),
 				Tuple.Create(JOB, typeof(string)),
 				Tuple.Create(INPUTFILE, typeof(string)),
 				Tuple.Create(CYCLE, typeof(string)),
@@ -276,7 +280,13 @@ namespace TUGraz.VectoCore.OutputData
 		public virtual void Finish()
 		{
 			if (_sumWriter != null) {
-				_sumWriter.WriteSumData(new DataView(_table, "", JOB, DataViewRowState.CurrentRows).ToTable());
+				var view = new DataView(_table, "", SORT, DataViewRowState.CurrentRows).ToTable();
+				var toRemove =
+					view.Columns.Cast<DataColumn>().Where(column => column.ColumnName.StartsWith(INTERNAL_PREFIX)).ToList();
+				foreach (var dataColumn in toRemove) {
+					view.Columns.Remove(dataColumn);
+				}
+				_sumWriter.WriteSumData(view);
 			}
 		}
 
@@ -286,12 +296,13 @@ namespace TUGraz.VectoCore.OutputData
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		//public virtual void Write(IModalDataContainer modData, string jobFileName, string jobName, string cycleFileName,
 		//	Kilogram vehicleMass, Kilogram vehicleLoading, CubicMeter cargoVolume, uint gearCount)
-		public virtual void Write(IModalDataContainer modData, string current, VectoRunData runData)
+		public virtual void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData)
 		{
 			var row = _table.NewRow();
 			_table.Rows.Add(row);
 
-			row[JOB] = ReplaceNotAllowedCharacters(current);
+			row[SORT] = jobNr * 1000 + runNr;
+			row[JOB] = string.Format("{0}-{1}", jobNr, runNr); //ReplaceNotAllowedCharacters(current);
 			row[INPUTFILE] = ReplaceNotAllowedCharacters(runData.JobName);
 			row[CYCLE] = ReplaceNotAllowedCharacters(runData.Cycle.Name + Constants.FileExtensions.CycleFile);
 
@@ -307,7 +318,7 @@ namespace TUGraz.VectoCore.OutputData
 
 				row[HDV_CO2_VEHICLE_CLASS] = runData.VehicleData.VehicleClass.GetClassNumber();
 				row[CURB_MASS] = runData.VehicleData.CurbWeight;
-					// - (runData.VehicleData.BodyAndTrailerWeight ?? 0.SI<Kilogram>());
+				// - (runData.VehicleData.BodyAndTrailerWeight ?? 0.SI<Kilogram>());
 				row[LOADING] = runData.VehicleData.Loading;
 				row[CARGO_VOLUME] = runData.VehicleData.CargoVolume;
 
