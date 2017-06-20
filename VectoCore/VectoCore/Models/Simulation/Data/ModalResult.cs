@@ -106,10 +106,5 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			return modalResults;
 		}
-
-		public void WriteToFile(string fileName)
-		{
-			VectoCSVFile.Write(fileName, this);
-		}
 	}
 }
