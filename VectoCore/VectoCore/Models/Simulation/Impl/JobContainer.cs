@@ -190,9 +190,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			public IVectoRun Run;
 			public JobContainer JobContainer;
-			public double Progress;
 			public bool Done;
-			public bool Started;
 			public bool Success;
 			public bool Canceled;
 			public double ExecTime;
@@ -202,7 +200,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public RunEntry()
 			{
 				RunTask = new Task(() => {
-					Started = true;
 					var stopWatch = Stopwatch.StartNew();
 					try {
 						Run.Run();

@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return _instance ?? (_instance = new FuelData());
 		}
 
-		private FuelData() : base() {}
+		private FuelData() {}
 
 		protected override string ResourceId
 		{

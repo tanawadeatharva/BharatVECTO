@@ -49,15 +49,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { throw new InvalidOperationException("ErrorMessage not applicable."); }
 		}
 
-		/// <summary>
-		/// Obsolete. Call Lookup50Percent, Lookup75Percent or LookupTrailer instead!
-		/// </summary>
-		[Obsolete("Call Lookup10Percent, Lookup50Percent, Lookup75Percent or LookupTrailer!", true)]
-		private new PayloadEntry Lookup(Kilogram grossVehicleWeight)
-		{
-			throw new InvalidOperationException("Call Lookup50Percent, Lookup75Percent or LookupTrailer!");
-		}
-
 		public Kilogram Lookup10Percent(Kilogram grossVehicleWeight)
 		{
 			var section = Data.GetSection(d => d.Key > grossVehicleWeight);

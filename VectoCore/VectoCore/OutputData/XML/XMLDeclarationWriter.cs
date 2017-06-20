@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected XElement CreateEngine(IEngineDeclarationInputData data, XNamespace ns = null)
 		{
 			var id = string.Format("ENG-{0}", data.Model.RemoveWhitespace());
-			var fld = EngineFullLoadCurve.Create(data.FullLoadCurve, true);
+			var fld = FullLoadCurveReader.Create(data.FullLoadCurve, true);
 			return new XElement((ns ?? tns) + XMLNames.Component_Engine,
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("ENG-{0}", data.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
