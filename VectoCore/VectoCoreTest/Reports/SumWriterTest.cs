@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(modData, "testSumCalc", new MockRunData());
+			sumWriter.Write(modData, 0, 0, new MockRunData());
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(modData, "testSumCalc", new MockRunData());
+			sumWriter.Write(modData, 0, 0, new MockRunData());
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();

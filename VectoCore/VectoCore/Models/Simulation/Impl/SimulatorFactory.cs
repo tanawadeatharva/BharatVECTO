@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var current = i++;
 				var builder = new PowertrainBuilder(modContainer, (modData) => {
 					if (SumData != null) {
-						SumData.Write(modData, string.Format("{0}-{1}", JobNumber, current), d);
+						SumData.Write(modData, JobNumber, current, d);
 						//SumData.Write(modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, current),
 						//	d.Cycle.Name + Constants.FileExtensions.CycleFile, mass, loading, volume ?? 0.SI<CubicMeter>(), gearCount);
 					}
