@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dataEng =
 				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFldString));
-			var engineFld = EngineFullLoadCurve.Create(dataEng, true);
+			var engineFld = FullLoadCurveReader.Create(dataEng, true);
 
 
 			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFld, 2500.SI<NewtonMeter>());

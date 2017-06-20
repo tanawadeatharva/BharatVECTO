@@ -291,7 +291,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			/// <param name="fullLoadCurve"></param>
 			/// <param name="rpmLimit"></param>
 			/// <returns></returns>
-			internal static IEnumerable<Point> ShiftPolygonFldMargin(List<FullLoadCurve.FullLoadCurveEntry> fullLoadCurve,
+			internal static IEnumerable<Point> ShiftPolygonFldMargin(List<EngineFullLoadCurve.FullLoadCurveEntry> fullLoadCurve,
 				PerSecond rpmLimit)
 			{
 				return fullLoadCurve.TakeWhile(fldEntry => fldEntry.EngineSpeed < rpmLimit)
@@ -386,7 +386,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			private static PerSecond UpshiftLowRPM = 900.RPMtoRad();
 			private static PerSecond UpshiftHighRPM = 1150.RPMtoRad();
 
-			public static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve, bool first = false, bool last = false)
+			public static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve, bool first = false,
+				bool last = false)
 			{
 				var maxDragTorque = fullLoadCurve.MaxDragTorque * 1.1;
 				var maxTorque = fullLoadCurve.MaxTorque * 1.1;

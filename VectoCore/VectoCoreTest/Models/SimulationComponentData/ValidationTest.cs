@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				WHTCUrban = 1,
 				WHTCRural = 1,
 				WHTCMotorway = 1,
-				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, EngineFullLoadCurve.Create(fullLoad) } },
+				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, FullLoadCurveReader.Create(fullLoad) } },
 				ConsumptionMap = FuelConsumptionMapReader.Create(fuelConsumption)
 			};
 			data.FullLoadCurves[0].EngineData = data;
@@ -224,8 +224,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var engineData = new CombustionEngineData {
 				FullLoadCurves =
 					new Dictionary<uint, EngineFullLoadCurve>() {
-						{ 0, EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
-						{ 1, EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
 					},
 				IdleSpeed = 560.RPMtoRad()
 			};
@@ -300,8 +300,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var engineData = new CombustionEngineData {
 				FullLoadCurves =
 					new Dictionary<uint, EngineFullLoadCurve>() {
-						{ 0, EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
-						{ 1, EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") }
+						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") }
 					},
 				IdleSpeed = 560.RPMtoRad()
 			};
@@ -622,12 +622,22 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public string Creator { get; set; }
 		public string Date { get; set; }
 		public string TechnicalReportId { get; set; }
-		public CertificationMethod CertificationMethod { get{return CertificationMethod.NotCertified;}}
+
+		public CertificationMethod CertificationMethod
+		{
+			get { return CertificationMethod.NotCertified; }
+		}
+
 		public string CertificationNumber { get; set; }
 		public string DigestValue { get; set; }
 		public GearboxType Type { get; set; }
 		public IList<ITransmissionInputData> Gears { get; set; }
-		ITorqueConverterDeclarationInputData IGearboxDeclarationInputData.TorqueConverter { get { return TorqueConverter; }  }
+
+		ITorqueConverterDeclarationInputData IGearboxDeclarationInputData.TorqueConverter
+		{
+			get { return TorqueConverter; }
+		}
+
 		public KilogramSquareMeter Inertia { get; set; }
 		public Second TractionInterruption { get; set; }
 		public Second MinTimeBetweenGearshift { get; set; }

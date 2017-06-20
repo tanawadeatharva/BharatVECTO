@@ -45,26 +45,20 @@ namespace TUGraz.VectoCore.InputData.Reader
 {
 	public class FullLoadCurveReader : LoggingObject
 	{
-		public static FullLoadCurve ReadFromFile(string fileName, bool declarationMode = false, bool engineFld = false)
+		public static EngineFullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
 		{
 			try {
 				var data = VectoCSVFile.Read(fileName);
-				return Create(data, declarationMode, engineFld);
+				return Create(data, declarationMode);
 			} catch (Exception ex) {
 				throw new VectoException("ERROR while reading FullLoadCurve File: " + ex.Message, ex);
 			}
 		}
 
-		public static FullLoadCurve Create(DataTable data, bool declarationMode = false, bool engineFld = false)
+		public static EngineFullLoadCurve Create(DataTable data, bool declarationMode = false)
 		{
-			if (engineFld) {
-				if (data.Columns.Count < 3) {
-					throw new VectoException("Engine FullLoadCurve Data File must consist of at least 3 columns.");
-				}
-			} else {
-				if (data.Columns.Count < 2) {
-					throw new VectoException("Gearbox FullLoadCurve Data File must consist of at least 2 columns.");
-				}
+			if (data.Columns.Count < 3) {
+				throw new VectoException("Engine FullLoadCurve Data File must consist of at least 3 columns.");
 			}
 
 			if (data.Rows.Count < 2) {
@@ -72,16 +66,16 @@ namespace TUGraz.VectoCore.InputData.Reader
 					"FullLoadCurve must consist of at least two lines with numeric values (below file header)");
 			}
 
-			List<FullLoadCurve.FullLoadCurveEntry> entriesFld;
-			if (HeaderIsValid(data.Columns, engineFld)) {
-				entriesFld = CreateFromColumnNames(data, engineFld);
+			List<EngineFullLoadCurve.FullLoadCurveEntry> entriesFld;
+			if (HeaderIsValid(data.Columns)) {
+				entriesFld = CreateFromColumnNames(data);
 			} else {
-				Logger<FullLoadCurve>().Warn(
+				Logger<EngineFullLoadCurve>().Warn(
 					"FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index.",
 					Fields.EngineSpeed, Fields.TorqueFullLoad,
 					Fields.TorqueDrag, string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 
-				entriesFld = CreateFromColumnIndizes(data, engineFld);
+				entriesFld = CreateFromColumnIndizes(data);
 			}
 
 			LookupData<PerSecond, PT1.PT1Result> tmp;
@@ -95,33 +89,33 @@ namespace TUGraz.VectoCore.InputData.Reader
 				}
 			}
 			entriesFld.Sort((entry1, entry2) => entry1.EngineSpeed.Value().CompareTo(entry2.EngineSpeed.Value()));
-			return new FullLoadCurve { FullLoadEntries = entriesFld, PT1Data = tmp };
+			return new EngineFullLoadCurve { FullLoadEntries = entriesFld, PT1Data = tmp };
 		}
 
-		private static bool HeaderIsValid(DataColumnCollection columns, bool engineFld)
+		private static bool HeaderIsValid(DataColumnCollection columns)
 		{
 			return columns.Contains(Fields.EngineSpeed)
 					&& columns.Contains(Fields.TorqueFullLoad)
-					&& (!engineFld || columns.Contains(Fields.TorqueDrag));
+					&& columns.Contains(Fields.TorqueDrag);
 		}
 
-		private static List<FullLoadCurve.FullLoadCurveEntry> CreateFromColumnNames(DataTable data, bool engineFld)
+		private static List<EngineFullLoadCurve.FullLoadCurveEntry> CreateFromColumnNames(DataTable data)
 		{
 			return (from DataRow row in data.Rows
-				select new FullLoadCurve.FullLoadCurveEntry {
+				select new EngineFullLoadCurve.FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
-					TorqueDrag = engineFld ? row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>() : null
+					TorqueDrag = row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>()
 				}).ToList();
 		}
 
-		private static List<FullLoadCurve.FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data, bool engineFld)
+		private static List<EngineFullLoadCurve.FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data)
 		{
 			return (from DataRow row in data.Rows
-				select new FullLoadCurve.FullLoadCurveEntry {
+				select new EngineFullLoadCurve.FullLoadCurveEntry {
 					EngineSpeed = row.ParseDouble(0).RPMtoRad(),
 					TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
-					TorqueDrag = engineFld ? row.ParseDouble(2).SI<NewtonMeter>() : null
+					TorqueDrag = row.ParseDouble(2).SI<NewtonMeter>()
 				}).ToList();
 		}
 

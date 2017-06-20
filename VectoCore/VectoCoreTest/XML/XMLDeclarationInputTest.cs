@@ -42,6 +42,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -91,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("engine speed", fldTable.Columns[0].Caption);
 			Assert.AreEqual("full load torque", fldTable.Columns[1].Caption);
 			Assert.AreEqual("motoring torque", fldTable.Columns[2].Caption);
-			var fldMap = EngineFullLoadCurve.Create(fldTable, true);
+			var fldMap = FullLoadCurveReader.Create(fldTable, true);
 		}
 
 		[TestMethod]
