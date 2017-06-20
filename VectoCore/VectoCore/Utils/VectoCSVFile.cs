@@ -35,6 +35,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCommon.Exceptions;
@@ -178,10 +179,11 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="fileName">Path to the file.</param>
 		/// <param name="table">The Datatable.</param>
-		public static void Write(string fileName, DataTable table)
+		/// <param name="addVersionHeader"></param>
+		public static void Write(string fileName, DataTable table, bool addVersionHeader = false)
 		{
 			using (var sw = new StreamWriter(new FileStream(fileName, FileMode.Create), Encoding.UTF8)) {
-				Write(sw, table);
+				Write(sw, table, addVersionHeader);
 			}
 		}
 
@@ -192,10 +194,15 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="writer"></param>
 		/// <param name="table"></param>
-		public static void Write(StreamWriter writer, DataTable table)
+		/// <param name="addVersionHeader"></param>
+		public static void Write(StreamWriter writer, DataTable table, bool addVersionHeader = false)
 		{
 			if (writer == null) {
 				return;
+			}
+			if (addVersionHeader) {
+				var vectodll = AssemblyName.GetAssemblyName("VectoCore.dll");
+				writer.WriteLine("# VECTO {0} - {1}", vectodll.Version, DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
 			writer.WriteLine(string.Join(Delimiter, header));

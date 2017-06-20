@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public void WriteSumData(DataTable data)
 		{
-			VectoCSVFile.Write(SumFileName, data);
+			VectoCSVFile.Write(SumFileName, data, true);
 		}
 
 		public string GetModDataFileName(string runName, string cycleName, string runSuffix)
@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData)
 		{
-			VectoCSVFile.Write(GetModDataFileName(runName, cycleName, runSuffix), modData);
+			VectoCSVFile.Write(GetModDataFileName(runName, cycleName, runSuffix), modData, true);
 		}
 
 		public Stream WriteStream(ReportType type)

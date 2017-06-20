@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(-7108.32, ((SI)dataWriter[ModalResultField.P_eng_inertia]).Value(), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
 
-			dataWriter.Data.WriteToFile(@"test1.csv");
+			VectoCSVFile.Write(@"test1.csv", dataWriter.Data, true);
 		}
 
 		[TestCase("Test1Hz", @"TestData\Components\24t Coach.veng", 1000, 50, 50,
