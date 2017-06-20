@@ -253,30 +253,8 @@ Public Class MainForm
 		VectoWorkerV3.WorkerReportsProgress = True
 		VectoWorkerV3.WorkerSupportsCancellation = True
 
-
 		'Set mode (Batch/Standard)
 		ModeUpdate()
-
-
-#If DEBUG Then
-		Const LicCheck As Boolean = False
-#Else
-		Const LicCheck As Boolean = True
-#End If
-
-		'License check
-		If LicCheck And Not Lic.LICcheck() Then
-			MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
-			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
-				MsgBox("Activation File created.")
-			Else
-				MsgBox("Failed to create Activation File! Is Directory Read-Only?")
-			End If
-			Close()
-		Else
-			GUIMsg(MessageType.Normal, "License File validated.")
-			If Lic.TimeWarn Then GUIMsg(MessageType.Warn, "License expiring date (y/m/d): " & Lic.ExpTime)
-		End If
 
 		DeclOnOff()
 	End Sub
@@ -399,8 +377,6 @@ Public Class MainForm
 					End Try
 				Case ".VECTO"
 					OpenVECTOeditor(file)
-				Case ".VSIG"
-					OpenSigFile(file)
 				Case Else
 					MsgBox("Type '" & GetExtension(file) & "' unknown!", MsgBoxStyle.Critical)
 			End Select
@@ -694,7 +670,7 @@ lbFound:
 	'Open input file
 	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
 
-		If JobfileFileBrowser.OpenDialog("", False, "vecto,vveh,vgbx,veng,vsig") Then
+		If JobfileFileBrowser.OpenDialog("", False, "vecto,vveh,vgbx,veng") Then
 			OpenVectoFile(JobfileFileBrowser.Files(0))
 		End If
 	End Sub
@@ -740,16 +716,6 @@ lbFound:
 		graphForm.Show()
 	End Sub
 
-	Private Sub SignOrVerifyFilesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-		Handles SignOrVerifyFilesToolStripMenuItem.Click
-		If Not FileSignDialog.Visible Then
-			FileSignDialog.Show()
-		Else
-			If FileSignDialog.WindowState = FormWindowState.Minimized Then FileSignDialog.WindowState = FormWindowState.Normal
-			FileSignDialog.BringToFront()
-		End If
-	End Sub
-
 	Private Sub OpenLogToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenLogToolStripMenuItem.Click
 		Process.Start(MyAppPath & "log.txt")
@@ -785,18 +751,6 @@ lbFound:
 	Private Sub ReportBugViaCITnetToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles ReportBugViaCITnetToolStripMenuItem.Click
 		JiraDialog.ShowDialog()
-	End Sub
-
-	Private Sub CreateActivationFileToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-		Handles CreateActivationFileToolStripMenuItem.Click
-		If MsgBox("Create Activation File ?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
-				GUIMsg(MessageType.Normal, "Activation File created.")
-			Else
-				GUIMsg(MessageType.Err, "Failed to create Activation File!")
-				MsgBox("ERROR! Failed to create Activation File!", MsgBoxStyle.Critical)
-			End If
-		End If
 	End Sub
 
 	Private Sub AboutVECTOToolStripMenuItem1_Click(sender As Object, e As EventArgs) _
@@ -1333,18 +1287,6 @@ lbFound:
 		End If
 
 		VectoJobForm.Activate()
-	End Sub
-
-	'Open signature file (.vsig)
-	Friend Sub OpenSigFile(file As String)
-		If Not FileSignDialog.Visible Then
-			FileSignDialog.Show()
-
-		End If
-		FileSignDialog.WindowState = FormWindowState.Normal
-		FileSignDialog.TbSigFile.Text = file
-		FileSignDialog.VerifySigFile()
-		FileSignDialog.Activate()
 	End Sub
 
 	'Save job and cycle file lists

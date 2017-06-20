@@ -67,7 +67,7 @@ Public Class JSONFileWriter
 	Protected Function GetHeader(fileVersion As Integer) As Dictionary(Of String, Object)
 		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
-		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+		header.Add("CreatedBy", "")
 		header.Add("Date", Now.ToUniversalTime().ToString("o"))
 		header.Add("AppVersion", VECTOvers)
 		header.Add("FileVersion", fileVersion)

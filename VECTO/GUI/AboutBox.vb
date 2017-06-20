@@ -18,8 +18,6 @@ Public Class AboutBox
 	'Initialize
 	Private Sub F10_AboutBox_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
 		Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
-		LabelLic.Text = Lic.LicString
-		LabelLicDate.Text = "Expiring date (y/m/d):   " & Lic.ExpTime
 	End Sub
 
 	'e-mail links----------------------------------------------------------------
