@@ -27,10 +27,11 @@
       "LossMap": "Axle_4x2_Tractor.vtlm"
     },
     "PTO": {
-      "Type": "None",
-      "LossMap": "",
-      "Cycle": ""
+        "Type": "None",
+        "LossMap": "",
+        "Cycle": ""
     },
+    "IdlingSpeed": 900.0,
     "AxleConfig": {
       "Type": "4x2",
       "Axles": [
