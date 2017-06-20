@@ -111,13 +111,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			// PWheelCycle --> AxleGear --> Clutch --> Engine <-- Aux
 			var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, data.VehicleData,
-				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
+					gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, container)
 				.AddComponent(new Clutch(container, data.EngineData));
 			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
-			var idleController = GetIdleController(data.PTO, engine);
+			var idleController = GetIdleController(data.PTO, engine, container);
 
 			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var engine = new CombustionEngine(container, data.EngineData);
-			var idleController = GetIdleController(data.PTO, engine);
+			var idleController = GetIdleController(data.PTO, engine, container);
 
 			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var engine = new CombustionEngine(container, data.EngineData);
-			var idleController = GetIdleController(data.PTO, engine);
+			var idleController = GetIdleController(data.PTO, engine, container);
 			cycle.IdleController = idleController as IdleControllerSwitcher;
 
 			powertrain.AddComponent(engine, idleController)
@@ -219,12 +219,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine)
+		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine, IVehicleContainer container)
 		{
 			var controller = engine.IdleController;
 
 			if (pto != null && pto.PTOCycle != null) {
-				var ptoController = new PTOCycleController(pto.PTOCycle);
+				var ptoController = new PTOCycleController(container, pto.PTOCycle);
 				controller = new IdleControllerSwitcher(engine.IdleController, ptoController);
 			}
 

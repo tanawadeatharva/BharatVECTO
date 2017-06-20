@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -37,6 +36,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
@@ -45,7 +45,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class PTOCycleController : PowertrainDrivingCycle, IIdleController
 	{
-		public ITnOutPort RequestPort {
+		public ITnOutPort RequestPort
+		{
 			set { NextComponent = value; }
 		}
 
@@ -53,8 +54,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Second IdleStart;
 
-		public PTOCycleController(DrivingCycleData cycle) : base(null, cycle)
+		public PTOCycleController(IVehicleContainer container, IDrivingCycleData cycle)
+			: base(null, cycle)
 		{
+			DataBus = container;
 			Duration = Data.Entries.Last().Time - Data.Entries.First().Time;
 		}
 
@@ -62,13 +65,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool dryRun = false)
 		{
 			if (outAngularVelocity != null) {
-				throw new VectoException("{0} can only handle idle requests: AngularVelocity has to be null!", GetType().ToString());
+				throw new VectoException("{0} can only handle idle requests: AngularVelocity has to be null!",
+					GetType().ToString());
 			}
 			if (!outTorque.IsEqual(0)) {
 				throw new VectoException("{0} can only handle idle requests: Torque has to be 0!", GetType().ToString());
 			}
 			if (IdleStart == null) {
 				IdleStart = absTime;
+				PreviousState.InAngularVelocity = DataBus.EngineSpeed;
 			}
 			return base.Request(absTime - IdleStart, dt);
 		}
@@ -81,7 +86,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public void Reset()
 		{
 			CycleIterator.Reset();
-			PreviousState.InAngularVelocity = CycleIterator.LeftSample.AngularVelocity;
 			IdleStart = null;
 		}
 
