@@ -29,9 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
@@ -57,15 +55,6 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					EffectiveCrossSectionArea = aerodynamicDragArea
 				}
 			}.ToList();
-		}
-
-		// TODO mk2017-04-24: remove this method? static code analysis says it is not used.
-		[Obsolete("Is this still used? Static Code Analysis says No.", true)]
-		public static List<CrossWindCorrectionEntry> ReadSpeedDependentCorrectionFromFile(string fileName,
-			SquareMeter aerodynamicDragArea)
-		{
-			var data = VectoCSVFile.Read(fileName);
-			return ParseSpeedDependent(data, aerodynamicDragArea);
 		}
 
 		public static List<CrossWindCorrectionEntry> ReadSpeedDependentCorrectionCurveFromStream(Stream inputData,

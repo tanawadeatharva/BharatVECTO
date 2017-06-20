@@ -79,11 +79,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				.ToDictionary(e => e.FuelType);
 		}
 
-		public FuelType[] GetFuelTypes()
-		{
-			return Data.Keys.ToArray();
-		}
-
 		public class Entry
 		{
 			public Entry(FuelType type, KilogramPerCubicMeter density, double weight, JoulePerKilogramm heatingValue)

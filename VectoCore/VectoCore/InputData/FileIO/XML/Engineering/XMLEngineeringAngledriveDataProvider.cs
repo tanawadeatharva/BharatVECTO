@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public AngledriveType Type
 		{
-			get { return InputData._vehicleInputData.AngledriveType; }
+			get { return InputData.VehicleData.AngledriveType; }
 		}
 
 		public double Ratio

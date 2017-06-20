@@ -180,20 +180,21 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 
 
-		public static List<XElement> GetResults(XMLDeclarationReport.ResultEntry result, XNamespace tns, bool fullOutput)
+		public static IEnumerable<XElement> GetResults(ResultEntry result, XNamespace tns, bool fullOutput)
 		{
 			var fuel = FuelData.Instance().Lookup(result.FuelType);
-			var retVal = new List<XElement>();
+			var retVal = new List<XElement> {
+				new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/km"),
+					(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter).Value()
+						.ToMinSignificantDigits(3, 1)),
+				new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/t-km"),
+					(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter /
+					result.Payload.ConvertTo().Ton).Value().ToMinSignificantDigits(3, 1)),
+				new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/m³-km"),
+					(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume).Value
+						().ToMinSignificantDigits(3, 1))
+			};
 			//FC
-			retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/km"),
-				(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter).Value()
-					.ToMinSignificantDigits(3, 1)));
-			retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/t-km"),
-				(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter /
-				result.Payload.ConvertTo().Ton).Value().ToMinSignificantDigits(3, 1)));
-			retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "g/m³-km"),
-				(result.FuelConsumptionTotal.ConvertTo().Gramm / result.Distance.ConvertTo().Kilo.Meter / result.CargoVolume).Value()
-					.ToMinSignificantDigits(3, 1)));
 			if (fullOutput) {
 				retVal.Add(new XElement(tns + "FuelConsumption", new XAttribute("unit", "MJ/km"),
 					(result.EnergyConsumptionTotal / result.Distance.ConvertTo().Kilo.Meter / 1e6).Value().ToMinSignificantDigits(3, 1)));

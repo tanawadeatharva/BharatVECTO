@@ -33,7 +33,6 @@ using System;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -152,8 +151,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
-			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
-
+			
 			return container;
 		}
 
@@ -179,8 +177,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
-
-			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
 			return container;
 		}
@@ -213,8 +209,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
-
-			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
 			return container;
 		}

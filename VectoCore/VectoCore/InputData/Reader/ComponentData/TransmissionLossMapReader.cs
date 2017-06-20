@@ -41,7 +41,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
-	public sealed class TransmissionLossMapReader
+	public static class TransmissionLossMapReader
 	{
 		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
 		{

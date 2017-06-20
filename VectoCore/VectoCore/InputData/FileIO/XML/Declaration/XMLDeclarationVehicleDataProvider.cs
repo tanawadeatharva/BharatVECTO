@@ -96,13 +96,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			}
 		}
 
-
-		public SquareMeter AirDragArea
-		{
-			get { return GetDoubleElementValue(XMLNames.Vehicle_AirDragArea).SI<SquareMeter>(); }
-		}
-
-
 		public AxleConfiguration AxleConfiguration
 		{
 			get { return AxleConfigurationHelper.Parse(GetElementValue(XMLNames.Vehicle_AxleConfiguration)); }

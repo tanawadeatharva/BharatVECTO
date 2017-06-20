@@ -51,8 +51,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		protected internal XMLEngineeringAuxiliaryDataProvider XMLEngineeringAuxiliaryData;
 		protected internal XMLEngineeringDriverDataProvider XMLEngineeringDriverData;
 		protected internal XMLEngineeringJobInputDataProvider XMLEngineeringJobData;
-		protected internal XMLEngineeringVehicleDataProvider _vehicleInputData;
-		protected internal XMLEngineeringAxlegearDataProvider _axleGearInputData;
+		protected internal XMLEngineeringVehicleDataProvider VehicleData;
+		protected internal XMLEngineeringAxlegearDataProvider AxlegearData;
 
 		public XMLEngineeringInputDataProvider(string filename, bool verifyXml)
 		{
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 									//XmlSchemaValidationFlags.ProcessSchemaLocation |
 									XmlSchemaValidationFlags.ReportValidationWarnings
 				};
-				settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
+				settings.ValidationEventHandler += ValidationCallBack;
 				settings.Schemas.Add(GetXMLSchema(""));
 			}
 			try {
@@ -131,16 +131,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			}
 			ReadVehicle(settings);
 
-			XMLEngineeringDriverData = XMLEngineeringJobData.GetDriverData(settings);
-			_axleGearInputData = _vehicleInputData.GetAxleGearInputData(settings);
-			AngledriveInputData = _vehicleInputData.GetAngularGearInputData(settings);
-			EngineInputData = _vehicleInputData.GetEngineInputData(settings);
-			RetarderInputData = _vehicleInputData.GetRetarderInputData(settings);
-			XMLEngineeringAuxiliaryData = _vehicleInputData.GetAuxiliaryData(settings);
-			GearboxInputData = _vehicleInputData.GetGearboxData(settings);
+			XMLEngineeringDriverData = XMLEngineeringJobData.GetDriverData();
+			AxlegearData = VehicleData.GetAxleGearInputData(settings);
+			AngledriveInputData = VehicleData.GetAngularGearInputData();
+			EngineInputData = VehicleData.GetEngineInputData(settings);
+			RetarderInputData = VehicleData.GetRetarderInputData(settings);
+			XMLEngineeringAuxiliaryData = VehicleData.GetAuxiliaryData(settings);
+			GearboxInputData = VehicleData.GetGearboxData(settings);
 			TorqueConverterInputData = GearboxInputData.TorqueConverter;
-			PTOTransmissionInputData = _vehicleInputData.GetPTOData(settings);
-			AirdragInputData = _vehicleInputData.GetAirdragInputData(settings);
+			PTOTransmissionInputData = VehicleData.GetPTOData();
+			AirdragInputData = VehicleData.GetAirdragInputData(settings);
 		}
 
 		private static void ValidationCallBack(object sender, ValidationEventArgs args)
@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			helper.AddNamespaces(manager);
 			var vehicle = nav.SelectSingleNode(vehiclePath, manager);
 			if (vehicle != null) {
-				_vehicleInputData = new XMLEngineeringVehicleDataProvider(this, Document, vehiclePath,
+				VehicleData = new XMLEngineeringVehicleDataProvider(this, Document, vehiclePath,
 					Path.GetDirectoryName(Path.GetFullPath(FileName)));
 				return;
 			}
@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 						helper.QueryAbs(
 							helper.NSPrefix("VectoComponentEngineering", Constants.XML.RootNSPrefix),
 							XMLNames.Component_Vehicle);
-					_vehicleInputData = new XMLEngineeringVehicleDataProvider(this, vehicleDocument, vehicleCompPath,
+					VehicleData = new XMLEngineeringVehicleDataProvider(this, vehicleDocument, vehicleCompPath,
 						Path.GetDirectoryName(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(FileName) ?? "./", vehicleFile))));
 					return;
 				} catch (XmlSchemaValidationException validationException) {
@@ -209,7 +209,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public IVehicleEngineeringInputData VehicleInputData
 		{
-			get { return _vehicleInputData; }
+			get { return VehicleData; }
 		}
 
 		public IAirdragEngineeringInputData AirdragInputData { get; private set; }
@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public IAxleGearInputData AxleGearInputData
 		{
-			get { return _axleGearInputData; }
+			get { return AxlegearData; }
 		}
 
 		public IAngledriveInputData AngledriveInputData { get; private set; }

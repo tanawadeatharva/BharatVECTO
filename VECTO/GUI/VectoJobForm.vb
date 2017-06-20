@@ -1238,7 +1238,7 @@ lbDlog:
 
 		engine.IdleSpeed.Value()
 
-		Dim fullLoadCurve As FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve)
+		Dim fullLoadCurve As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve)
 
 		s = New Series
 		s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),

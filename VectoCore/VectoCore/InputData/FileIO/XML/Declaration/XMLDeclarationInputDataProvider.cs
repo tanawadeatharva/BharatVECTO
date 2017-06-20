@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 									//XmlSchemaValidationFlags.ProcessSchemaLocation |
 									XmlSchemaValidationFlags.ReportValidationWarnings
 				};
-				settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
+				settings.ValidationEventHandler += ValidationCallBack;
 				settings.Schemas.Add(GetXMLSchema(""));
 
 				inputData = XmlReader.Create(inputData, settings);

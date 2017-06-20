@@ -41,7 +41,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader
 {
-	public class ShiftPolygonReader : LoggingObject
+	public static class ShiftPolygonReader
 	{
 		public static ShiftPolygon ReadFromFile(string fileName)
 		{
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				entriesDown = CreateFromColumnNames(data, Fields.AngularSpeedDown);
 				entriesUp = CreateFromColumnNames(data, Fields.AngularSpeedUp);
 			} else {
-				Logger<ShiftPolygon>()
+				LoggingObject.Logger<ShiftPolygon>()
 					.Warn(
 						"ShiftPolygon: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index",
 						Fields.Torque, Fields.AngularSpeedUp, Fields.AngularSpeedDown,

@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			var path = Helper.Query(XBasePath, relativePath.Any() ? relativePath : null);
 
-			var node = Navigator.SelectSingleNode(path.ToString(), Manager);
+			var node = Navigator.SelectSingleNode(path, Manager);
 			if (node == null) {
 				throw new VectoException("Node {0} not found in input data", path);
 			}
@@ -160,6 +160,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			XPathNavigator origin = null)
 		{
 			var startNode = origin ?? Navigator.SelectSingleNode(XBasePath, Manager);
+			if (startNode == null) {
+				throw new VectoException("start node for base-path {0} not found!", XBasePath);
+			}
 			var table = new TableData();
 			foreach (var entry in attributeMapping) {
 				if (startNode.Select(Helper.Query(relativePath, "@" + entry.Value), Manager).Count == 0) {

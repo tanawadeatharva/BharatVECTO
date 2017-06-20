@@ -134,8 +134,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private object[] GetSuccessResultEntry(XMLDeclarationReport.ResultEntry result)
 		{
-			var fuel = FuelData.Instance().Lookup(result.FuelType);
-
 			return new object[] {
 				new XElement(tns + "Payload", new XAttribute("unit", "kg"), result.Payload.ToXMLFormat(0)),
 				new XElement(tns + "FuelType", result.FuelType.ToXMLFormat()),

@@ -32,15 +32,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -66,8 +63,6 @@ namespace TUGraz.VectoCore.OutputData
 		/// <returns></returns>
 		object this[string auxId] { get; set; }
 
-		bool HasTorqueConverter { get; set; }
-
 		/// <summary>
 		/// Commits the data of the current simulation step.
 		/// </summary>
@@ -92,7 +87,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc);
 
-		Dictionary<string, DataColumn> Auxiliaries { get; set; }
+		Dictionary<string, DataColumn> Auxiliaries { get; }
 		
 		T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>;
 
@@ -118,12 +113,6 @@ namespace TUGraz.VectoCore.OutputData
 		public static T Min<T>(this IModalDataContainer data, ModalResultField field)
 		{
 			return data.GetValues<T>(field).Min();
-		}
-
-		public static SI Average(this IEnumerable<SI> self, Func<SI, bool> filter)
-		{
-			var values = self.Where(filter ?? (x => x != null && !double.IsNaN(x.Value()))).ToList();
-			return values.Any() ? values.Sum() / values.Count : null;
 		}
 
 		/// <summary>
@@ -203,11 +192,6 @@ namespace TUGraz.VectoCore.OutputData
 		public static MeterPerSquareSecond AccelerationAverage(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<MeterPerSecond>(ModalResultField.acc) / data.Duration();
-		}
-
-		public static Second[] SimulationIntervals(this IModalDataContainer data)
-		{
-			return data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
 		}
 
 		public static Meter AltitudeDelta(this IModalDataContainer data)

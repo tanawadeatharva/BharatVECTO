@@ -76,12 +76,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			return InputDataProvider.JobInputData().Cycles.Select(cycle => {
 				DrivingCycleData drivingCycle;
-				if (CyclesCache.ContainsKey(cycle.CycleData.Source)) {
-					drivingCycle = CyclesCache[cycle.CycleData.Source];
-				} else {
-					drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
-					//CyclesCache.Add(cycle.CycleData.Source, drivingCycle);
-				}
+				drivingCycle = CyclesCache.ContainsKey(cycle.CycleData.Source)
+					? CyclesCache[cycle.CycleData.Source]
+					: DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
 				return new VectoRunData {
 					JobName = InputDataProvider.JobInputData().JobName,
 					EngineData = engineData,

@@ -53,12 +53,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		private readonly string _sourceFile;
 
-		protected readonly JObject Header;
 		protected readonly JObject Body;
 
 		protected JSONFile(JObject data, string filename, bool tolerateMissing = false)
 		{
-			Header = (JObject)data.GetEx(JsonKeys.JsonHeader);
+			//var header = (JObject)data.GetEx(JsonKeys.JsonHeader);
 			Body = (JObject)data.GetEx(JsonKeys.JsonBody);
 			_sourceFile = Path.GetFullPath(filename);
 			TolerateMissing = tolerateMissing;

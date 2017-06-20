@@ -37,13 +37,12 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader
 {
-	public class FullLoadCurveReader : LoggingObject
+	public static class FullLoadCurveReader
 	{
 		public static EngineFullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
 		{
@@ -70,7 +69,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (HeaderIsValid(data.Columns)) {
 				entriesFld = CreateFromColumnNames(data);
 			} else {
-				Logger<EngineFullLoadCurve>().Warn(
+				LoggingObject.Logger<EngineFullLoadCurve>().Warn(
 					"FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index.",
 					Fields.EngineSpeed, Fields.TorqueFullLoad,
 					Fields.TorqueDrag, string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
@@ -82,14 +81,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (declarationMode) {
 				tmp = new PT1();
 			} else {
-				if (data.Columns.Count > 3) {
-					tmp = new PT1(data);
-				} else {
-					tmp = new PT1();
-				}
+				tmp = data.Columns.Count > 3 ? new PT1(data) : new PT1();
 			}
 			entriesFld.Sort((entry1, entry2) => entry1.EngineSpeed.Value().CompareTo(entry2.EngineSpeed.Value()));
-			return new EngineFullLoadCurve { FullLoadEntries = entriesFld, PT1Data = tmp };
+			return new EngineFullLoadCurve(entriesFld, tmp);
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)

@@ -34,7 +34,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using TUGraz.IVT.VectoXML;
 using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.InputData;
@@ -43,7 +42,6 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
@@ -122,10 +120,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var gearbox = data.GearboxInputData;
 			var vehicle = data.VehicleInputData;
 			var angledrive = data.AngledriveInputData;
-
-			var aux = data.AuxiliaryInputData();
-			var numSteeredaxles = aux.Auxiliaries.First(x => x.Type == AuxiliaryType.SteeringPump).Technology.Count;
-			//var pto = data.PTOTransmissionInputData;
 
 			return new XElement(tns + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.Model),

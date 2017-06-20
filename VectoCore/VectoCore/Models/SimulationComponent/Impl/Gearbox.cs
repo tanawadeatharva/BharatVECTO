@@ -185,15 +185,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			}
 
-			IResponse retVal;
-			// TODO MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
-			if (ClutchClosed(absTime) /* && !angularVelocity.IsEqual(0) */) {
-				retVal = RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			} else {
-				retVal = RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			}
-
-			return retVal;
+			return ClutchClosed(absTime)
+				? RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun)
+				: RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 		}
 
 		/// <summary>

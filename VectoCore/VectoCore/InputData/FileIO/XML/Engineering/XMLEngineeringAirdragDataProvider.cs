@@ -29,7 +29,6 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Xml.XPath;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;

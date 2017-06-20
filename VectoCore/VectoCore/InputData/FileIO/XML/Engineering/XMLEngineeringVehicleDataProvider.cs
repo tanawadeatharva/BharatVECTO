@@ -44,7 +44,6 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
@@ -288,7 +287,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			throw new VectoException("Component {0} not found!", componentName);
 		}
 
-		public XMLEngineeringAngledriveDataProvider GetAngularGearInputData(XmlReaderSettings settings)
+		public XMLEngineeringAngledriveDataProvider GetAngularGearInputData()
 		{
 			return new XMLEngineeringAngledriveDataProvider(InputData, XMLDocument,
 				Helper.Query(XBasePath, XMLNames.Vehicle_Components, XMLNames.Component_Angledrive, XMLNames.ComponentDataWrapper)
@@ -297,7 +296,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		#region "PTO"
 
-		public IPTOTransmissionInputData GetPTOData(XmlReaderSettings settings)
+		public IPTOTransmissionInputData GetPTOData()
 		{
 			return this;
 		}

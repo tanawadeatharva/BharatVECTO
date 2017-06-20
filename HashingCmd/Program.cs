@@ -70,7 +70,7 @@ hashingcmd.exe
 
 		static Dictionary<string, HashingAction> actions = new Dictionary<string, HashingAction>();
 
-		static bool _validateXML = false;
+		static bool _validateXML;
 		private static bool xmlValid = true;
 
 		static int Main(string[] args)

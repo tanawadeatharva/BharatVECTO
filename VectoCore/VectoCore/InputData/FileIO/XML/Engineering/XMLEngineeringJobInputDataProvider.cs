@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get {
 				return InputData.JobInputData().EngineOnlyMode
 					? InputData.EngineInputData.Model
-					: InputData._vehicleInputData.GetVehicleID;
+					: InputData.VehicleData.GetVehicleID;
 			}
 		}
 
@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			}
 		}
 
-		public XMLEngineeringDriverDataProvider GetDriverData(XmlReaderSettings settings)
+		public XMLEngineeringDriverDataProvider GetDriverData()
 		{
 			return new XMLEngineeringDriverDataProvider(InputData, XMLDocument, XBasePath, FSBasePath);
 		}

@@ -11,7 +11,6 @@
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Text
-Imports vectolic
 
 Public Module VECTO_Global
 	Public Const VECTOvers As String = "3"

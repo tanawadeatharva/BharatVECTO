@@ -148,7 +148,6 @@ Public Class Engine
 	End Sub
 
 	''' <summary>
-	''' Save file. <see cref="P:VECTO.cENG.FilePath" /> must be set before calling.
 	''' </summary>
 	''' <returns>True if successful.</returns>
 	''' <remarks></remarks>
@@ -178,7 +177,6 @@ Public Class Engine
 
 
 	''' <summary>
-	''' Get or set Filepath before calling <see cref="M:VECTO.cENG.ReadFile" /> or <see cref="M:VECTO.cENG.SaveFile" />
 	''' </summary>
 	''' <value></value>
 	''' <returns>Full filepath</returns>

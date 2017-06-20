@@ -200,7 +200,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							trailers.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
 
 				var payloads = row.Field<string>(missionType.ToString()).Split('/');
-				Kilogram refLoad = null, lowLoad = 0.SI<Kilogram>();
+				Kilogram refLoad, lowLoad = 0.SI<Kilogram>();
 				if (payloads.Length == 2) {
 					lowLoad = GetLoading(payloads[0], grossVehicleWeight, trailers, true);
 					refLoad = GetLoading(payloads[1], grossVehicleWeight, trailers, false);

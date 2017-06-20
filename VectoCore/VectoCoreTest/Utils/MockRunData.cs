@@ -67,8 +67,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Displacement = 0.SI<CubicMeter>(),
 				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() {
 					{
-						0, new EngineFullLoadCurve() {
-							FullLoadEntries = new List<EngineFullLoadCurve.FullLoadCurveEntry>() {
+						0, new EngineFullLoadCurve(
+							new List<EngineFullLoadCurve.FullLoadCurveEntry>() {
 								new EngineFullLoadCurve.FullLoadCurveEntry() {
 									EngineSpeed = 600.RPMtoRad(),
 									TorqueDrag = -100.SI<NewtonMeter>(),
@@ -84,8 +84,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 									TorqueDrag = -150.SI<NewtonMeter>(),
 									TorqueFullLoad = 400.SI<NewtonMeter>()
 								},
-							}
-						}
+							}, null)
 					}
 				}
 			};

@@ -169,7 +169,7 @@ namespace TUGraz.VectoCommon.InputData
 		double Efficiency { get; }
 	}
 
-	public interface IAxleDeclarationInputData : IComponentInputData
+	public interface IAxleDeclarationInputData
 	{
 		/// <summary>
 		/// P108  

@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		protected readonly IDrivingCycleData Data;
-		private bool _isInitializing;
+
 		protected internal readonly DrivingCycleEnumerator CycleIterator;
 
 		protected Second AbsTime { get; set; }
@@ -99,14 +99,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			AbsTime = first.Time;
 
-			_isInitializing = true;
-
 			var response = NextComponent.Initialize(first.VehicleTargetSpeed, first.RoadGradient);
 			if (!(response is ResponseSuccess)) {
 				throw new UnexpectedResponseException("MeasuredSpeedDrivingCycle: Couldn't find start gear.", response);
 			}
-
-			_isInitializing = false;
 
 			response.AbsTime = AbsTime;
 			return response;
@@ -127,8 +123,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseCycleFinished { AbsTime = absTime, Source = this };
 			}
 
+			if (CycleIterator.RightSample == null) {
+				throw new VectoException("Exceeding cycle!");
+			}
 			// interval exceeded
-			if (CycleIterator.RightSample != null && (absTime + dt).IsGreater(CycleIterator.RightSample.Time)) {
+			if ((absTime + dt).IsGreater(CycleIterator.RightSample.Time)) {
 				return new ResponseFailTimeInterval {
 					AbsTime = absTime,
 					Source = this,
@@ -137,9 +136,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// calc acceleration from speed diff vehicle to cycle
-			var targetSpeed = CycleIterator.RightSample == null
-				? 0.KMPHtoMeterPerSecond()
-				: CycleIterator.RightSample.VehicleTargetSpeed;
+			var targetSpeed = CycleIterator.RightSample.VehicleTargetSpeed;
 			if (targetSpeed.IsEqual(0.KMPHtoMeterPerSecond(), 0.5.KMPHtoMeterPerSecond())) {
 				targetSpeed = 0.KMPHtoMeterPerSecond();
 			}
@@ -172,13 +169,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				response.Switch()
 					.Case<ResponseGearShift>(() => response = NextComponent.Request(absTime, dt, acceleration, gradient))
 					.Case<ResponseUnderload>(r => {
+						var acceleration1 = acceleration;
 						DataBus.BrakePower = SearchAlgorithm.Search(DataBus.BrakePower, r.Delta, -r.Delta,
 							getYValue: result => DataBus.ClutchClosed(absTime)
 								? ((ResponseDryRun)result).DeltaDragLoad
 								: ((ResponseDryRun)result).GearboxPowerRequest,
 							evaluateFunction: x => {
 								DataBus.BrakePower = x;
-								return NextComponent.Request(absTime, dt, acceleration, gradient, true);
+								return NextComponent.Request(absTime, dt, acceleration1, gradient, true);
 							},
 							criterion: y => DataBus.ClutchClosed(absTime)
 								? ((ResponseDryRun)y).DeltaDragLoad.Value()
@@ -295,11 +293,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AdvanceState();
 		}
 
-		public string CycleName
-		{
-			get { return Data.Name; }
-		}
-
 		public double Progress
 		{
 			get { return AbsTime == null ? 0 : AbsTime.Value() / Data.Entries.Last().Time.Value(); }
@@ -358,11 +351,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public void FinishSimulation()
 		{
 			Data.Finish();
-		}
-
-		public bool VehicleStopped
-		{
-			get { return !_isInitializing && CycleIterator.LeftSample.VehicleTargetSpeed.IsEqual(0); }
 		}
 
 		public DrivingBehavior DriverBehavior { get; internal set; }

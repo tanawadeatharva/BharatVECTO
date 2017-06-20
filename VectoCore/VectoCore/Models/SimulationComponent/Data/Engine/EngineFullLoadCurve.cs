@@ -32,13 +32,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
@@ -60,13 +58,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		private PerSecond _n95hSpeed; // 95% of Pmax
 		private PerSecond _n80hSpeed; // 80% of Pmax
 
-		[Required, ValidateObject] internal List<FullLoadCurveEntry> FullLoadEntries;
+		[Required, ValidateObject] readonly internal List<FullLoadCurveEntry> FullLoadEntries;
 
 		private SortedList<PerSecond, int> _quickLookup;
 
-		[Required] internal LookupData<PerSecond, PT1.PT1Result> PT1Data;
+		[Required] readonly internal LookupData<PerSecond, PT1.PT1Result> PT1Data;
 
-		internal EngineFullLoadCurve() {}
+		internal EngineFullLoadCurve(List<FullLoadCurveEntry> entries, LookupData<PerSecond, PT1.PT1Result> pt1Data)
+		{
+			FullLoadEntries = entries;
+			PT1Data = pt1Data;
+		}
 
 		public Watt FullLoadStationaryPower(PerSecond angularVelocity)
 		{
@@ -113,7 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			get { return _maxDragTorque ?? FindMaxDragTorque(); }
 		}
 
-		public virtual NewtonMeter FullLoadStationaryTorque(PerSecond angularVelocity)
+		public NewtonMeter FullLoadStationaryTorque(PerSecond angularVelocity)
 		{
 			var idx = FindIndex(angularVelocity);
 			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,
@@ -121,7 +123,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				angularVelocity);
 		}
 
-		public virtual NewtonMeter DragLoadStationaryTorque(PerSecond angularVelocity)
+		public NewtonMeter DragLoadStationaryTorque(PerSecond angularVelocity)
 		{
 			var idx = FindIndex(angularVelocity);
 			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,
