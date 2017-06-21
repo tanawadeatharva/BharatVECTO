@@ -55,7 +55,7 @@ Public Class EngineForm
 		cbFuelType.ValueMember = "Value"
 		cbFuelType.DisplayMember = "Label"
 		cbFuelType.DataSource =
-			[Enum].GetValues(GetType(TUGraz.VectoCommon.Models.FuelType)).Cast (Of TUGraz.VectoCommon.Models.FuelType).Select(
+			[Enum].GetValues(GetType(TUGraz.VectoCommon.Models.FuelType)).Cast(Of TUGraz.VectoCommon.Models.FuelType).Select(
 				Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
 		_changed = False
@@ -67,7 +67,7 @@ Public Class EngineForm
 
 		If Not Cfg.DeclMode Then Exit Sub
 
-		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble(0.0)/1000.0/1000.0).SI (Of CubicMeter),
+		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble(0.0) / 1000.0 / 1000.0).SI(Of CubicMeter),
 															GearboxType.AMT).ToGUIFormat()
 	End Sub
 
@@ -166,7 +166,7 @@ Public Class EngineForm
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
+		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
 																IEngineeringInputDataProvider)
 
 		engine = inputData.EngineInputData
@@ -178,14 +178,14 @@ Public Class EngineForm
 					Close()
 					MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
 					MainForm.OpenVectoFile(file)
-				Case - 1
+				Case -1
 					Exit Sub
 			End Select
 		End If
 
 		Dim basePath As String = Path.GetDirectoryName(file)
 		TbName.Text = engine.Model
-		TbDispl.Text = (engine.Displacement*1000*1000).ToGUIFormat()
+		TbDispl.Text = (engine.Displacement * 1000 * 1000).ToGUIFormat()
 		TbInertia.Text = engine.Inertia.ToGUIFormat()
 		TbNleerl.Text = engine.IdleSpeed.AsRPM.ToGUIFormat()
 
@@ -199,7 +199,7 @@ Public Class EngineForm
 		tbNCVCorrFactor.Text = engine.CorrectionFactorNCV.ToGUIFormat()
 		tbRegPerCorrFactor.Text = engine.CorrectionFactorRegPer.ToGUIFormat()
 		tbMaxTorque.Text = engine.MaxTorqueDeclared.ToGUIFormat()
-		tbRatedPower.Text = (engine.RatedPowerDeclared.Value()/1000).ToGUIFormat()
+		tbRatedPower.Text = (engine.RatedPowerDeclared.Value() / 1000).ToGUIFormat()
 		tbRatedSpeed.Text = engine.RatedSpeedDeclared.AsRPM.ToGUIFormat()
 
 		cbFuelType.SelectedValue = engine.FuelType
@@ -253,9 +253,9 @@ Public Class EngineForm
 
 		engine.ColdHotBalancingFactorInput = TbColdHotFactor.Text.ToDouble(0)
 
-		engine.ratedPowerInput = (tbRatedPower.Text.ToDouble(0)*1000).SI (Of Watt)()
+		engine.ratedPowerInput = (tbRatedPower.Text.ToDouble(0) * 1000).SI(Of Watt)()
 		engine.ratedSpeedInput = tbRatedSpeed.Text.ToDouble(0).RPMtoRad()
-		engine.maxTorqueInput = tbMaxTorque.Text.ToDouble(0).SI (Of NewtonMeter)()
+		engine.maxTorqueInput = tbMaxTorque.Text.ToDouble(0).SI(Of NewtonMeter)()
 
 		engine.FuelTypeInput = CType(cbFuelType.SelectedValue, TUGraz.VectoCommon.Models.FuelType)
 
