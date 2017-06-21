@@ -63,6 +63,8 @@ namespace TUGraz.VectoCore.OutputData
 		/// <returns></returns>
 		object this[string auxId] { get; set; }
 
+		bool HasTorqueConverter { set; }
+
 		/// <summary>
 		/// Commits the data of the current simulation step.
 		/// </summary>
@@ -88,7 +90,7 @@ namespace TUGraz.VectoCore.OutputData
 		IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc);
 
 		Dictionary<string, DataColumn> Auxiliaries { get; }
-		
+
 		T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>;
 
 		void SetDataValue(string fieldName, object value);
