@@ -573,6 +573,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Case<ResponseUnderload>(r => {
 						response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 							gradient, r);
+						response.Switch().Case<ResponseGearShift>(() => {
+							DataBus.BrakePower = 0.SI<Watt>();
+							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+								gradient, r);
+						});
 					});
 				return response;
 			}
