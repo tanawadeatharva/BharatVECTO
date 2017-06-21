@@ -348,7 +348,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Radian ComputeGradient(Meter ds)
 		{
 			var cycleIterator = CycleIntervalIterator.Clone();
-			while (Right.Distance < PreviousState.Distance + ds && !cycleIterator.LastEntry) {
+			while (cycleIterator.RightSample.Distance < PreviousState.Distance + ds && !cycleIterator.LastEntry) {
 				cycleIterator.MoveNext();
 			}
 			var leftSamplePoint = cycleIterator.LeftSample;
