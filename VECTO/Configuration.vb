@@ -91,7 +91,6 @@ Public Class Configuration
 	Public Sub Save()
 
 		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-		header.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
 		header.Add("Date", Now.ToUniversalTime().ToString("o"))
 		header.Add("AppVersion", VECTOvers)
 		header.Add("FileVersion", FormatVersion)

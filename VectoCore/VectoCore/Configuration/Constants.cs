@@ -40,9 +40,6 @@ namespace TUGraz.VectoCore.Configuration
 		public const double Kilo = 1000;
 		public const double MeterPerSecondToKMH = 3.6;
 
-		// mk-2016-10-11: const never used. Delete?
-		[Obsolete] public const double SecondsPerHour = 3600;
-
 		public static class Auxiliaries
 		{
 			public const string Cycle = "cycle";
@@ -124,10 +121,6 @@ namespace TUGraz.VectoCore.Configuration
 			/// </summary>
 			public static readonly Radian DrivingCycleRoadGradientTolerance = 1E-12.SI<Radian>();
 
-			//VectoMath.InclinationToAngle(0.25 / 100.0).Value();
-
-			public const int DriverSearchLoopThreshold = 200;
-
 			/// <summary>
 			/// Tolerance for searching operating point with line search.
 			/// </summary>
@@ -144,11 +137,9 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly MeterPerSecond ATGearboxDisengageWhenHaltingSpeed = 5.KMPHtoMeterPerSecond();
 
-			public static readonly MeterPerSquareSecond MinimumAcceleration = 0.1.SI<MeterPerSquareSecond>();
+			public static readonly Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
 
-			public static Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
-
-			public static MeterPerSecond VehicleSpeedHaltTolerance = 1e-3.SI<MeterPerSecond>();
+			public static readonly MeterPerSecond VehicleSpeedHaltTolerance = 1e-3.SI<MeterPerSecond>();
 
 			/// <summary>
 			/// The initial search interval for the operating point search in the driver.
@@ -158,19 +149,12 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly PerSecond EngineIdlingSearchInterval = 10.SI<PerSecond>();
 
-			public const int EngineSearchLoopThreshold = 100;
-
 			public const int MaximumIterationCountForSimulationStep = 30;
-
-			public static readonly MeterPerSecond VehicleStopClutchDisengageSpeed = 10.KMPHtoMeterPerSecond();
 
 			public static readonly Meter GearboxLookaheadForAccelerationEstimation = 100.SI<Meter>();
 
-			public static Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
-			public static Kilogram MaximumGrossVehicleWeightEMS = 60000.SI<Kilogram>();
-
-			// the torque converter characteristics curve has to be defined up to this speed ratio
-			public const double RequiredTorqueConverterSpeedRatio = 2.2;
+			public static readonly Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
+			public static readonly Kilogram MaximumGrossVehicleWeightEMS = 60000.SI<Kilogram>();
 		}
 
 		public static class XML

@@ -38,7 +38,6 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.Utils;
 using VectoAuxiliaries;
 using VectoAuxiliaries.Pneumatics;
 
@@ -46,11 +45,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class BusAuxiliariesAdapter : LoggingObject, IAuxInProvider, IAuxPort
 	{
-		protected IDataBus DataBus;
+		protected readonly IDataBus DataBus;
 		protected internal BusAuxState CurrentState;
 		protected internal BusAuxState PreviousState;
 
-		protected internal IAuxPort AdditionalAux;
+		protected internal readonly IAuxPort AdditionalAux;
 
 		protected IAdvancedAuxiliaries Auxiliaries;
 		private readonly FuelConsumptionAdapter _fcMapAdapter;
@@ -61,22 +60,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	mAAUX_Global.advancedAuxModel.Signals.DeclarationMode = Cfg.DeclMode
 			//	mAAUX_Global.advancedAuxModel.Signals.WHTC = Declaration.WHTCcorrFactor
 			CurrentState = new BusAuxState();
-			PreviousState = new BusAuxState();
-			PreviousState.AngularSpeed = engineIdleSpeed;
+			PreviousState = new BusAuxState { AngularSpeed = engineIdleSpeed };
 
 			AdditionalAux = additionalAux;
 
 			DataBus = container;
-			var tmpAux = new AdvancedAuxiliaries();
-
-			//var actuationsMap = new PneumaticActuationsMAP();
-
-
-			// 'Set Statics
-			tmpAux.VectoInputs.Cycle = DetermineCycle(cycleName);
-			tmpAux.VectoInputs.VehicleWeightKG = vehicleWeight;
-			// tmpAux.Signals.TotalCycleTimeSeconds =
-			//	tmpAux.actuationsMap.GetNumActuations(new ActuationsKey("CycleTime", tmpAux.VectoInputs.Cycle));
+			var tmpAux = new AdvancedAuxiliaries {
+				VectoInputs = {
+					Cycle = DetermineCycle(cycleName),
+					VehicleWeightKG = vehicleWeight
+				}
+			};
 
 			_fcMapAdapter = new FuelConsumptionAdapter() { FcMap = fcMap };
 			tmpAux.VectoInputs.FuelMap = _fcMapAdapter;

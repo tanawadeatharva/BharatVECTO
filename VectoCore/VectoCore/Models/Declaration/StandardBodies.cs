@@ -40,12 +40,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class StandardBody
 	{
-		public Kilogram CurbWeight;
-		public Kilogram GrossVehicleWeight;
-		public SquareMeter[] DeltaCrossWindArea;
-		public string Name;
-		public List<Wheels.Entry> Wheels;
-		public CubicMeter CargoVolume;
+		public readonly Kilogram CurbWeight;
+		public readonly Kilogram GrossVehicleWeight;
+		public readonly SquareMeter[] DeltaCrossWindArea;
+		public readonly string Name;
+		public readonly List<Wheels.Entry> Wheels;
+		public readonly CubicMeter CargoVolume;
 
 		public Kilogram MaxPayLoad
 		{

@@ -808,7 +808,7 @@ Public Class GearboxForm
 			Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
 			'inputData = TryCast(JSONInputDataFactory.ReadComponentData(vectoJob.PathEng(False)), IEngineeringInputDataProvider)
 			Dim engine As IEngineEngineeringInputData = inputData.EngineInputData
-			Dim engineFld As EngineFullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve)
+			Dim engineFld As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve)
 
 
 			s = New Series

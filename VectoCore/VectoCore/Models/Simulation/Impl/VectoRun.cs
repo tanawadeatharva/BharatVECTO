@@ -142,6 +142,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				} catch (Exception ve2) {
 					ve = new VectoException("Multiple Exceptions occured.",
 						new AggregateException(ve, new VectoException("Exception during finishing Simulation.", ve2)));
+					throw ve;
 				}
 				throw ex;
 			} catch (Exception e) {

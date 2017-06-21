@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo, IVehicleInfo
 	{
-		private VehicleData _vehicleData;
+		private readonly VehicleData _vehicleData;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PWheelCycle"/> class.
