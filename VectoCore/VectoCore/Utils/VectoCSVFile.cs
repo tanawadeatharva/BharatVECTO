@@ -115,11 +115,12 @@ namespace TUGraz.VectoCore.Utils
 
 			try {
 				var fields = p.ReadFields();
-				if (fields != null) {
-					colsWithoutComment = fields
-						.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment, StringComparison.Ordinal)) : l)
-						.ToArray();
+				if (fields == null) {
+					throw new CSVReadException("CSV Read Error: File was empty.");
 				}
+				colsWithoutComment = fields
+					.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment, StringComparison.Ordinal)) : l)
+					.ToArray();
 			} catch (ArgumentNullException) {
 				throw new CSVReadException("CSV Read Error: File was empty.");
 			}

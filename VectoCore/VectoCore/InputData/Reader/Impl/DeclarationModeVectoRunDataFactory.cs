@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
@@ -66,15 +67,20 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		private RetarderData _retarderData;
 		private PTOData _ptoTransmissionData;
 		private PTOData _municipalPtoTransmissionData;
+		private Exception InitException;
 
 		internal DeclarationModeVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report)
 		{
 			InputDataProvider = dataProvider;
 			Report = report;
 
-			Initialize();
-			if (Report != null) {
-				InitializeReport();
+			try {
+				Initialize();
+				if (Report != null) {
+					InitializeReport();
+				}
+			} catch (Exception e) {
+				InitException = e;
 			}
 		}
 
@@ -124,6 +130,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		public IEnumerable<VectoRunData> NextRun()
 		{
+			if (InitException != null) {
+				throw InitException;
+			}
+
 			foreach (var mission in _segment.Missions) {
 				if (mission.MissionType.IsEMS() &&
 					_engineData.RatedPowerDeclared.IsSmaller(DeclarationData.MinEnginePowerForEMS)) {
