@@ -57,6 +57,16 @@ namespace TUGraz.VectoCore.Utils
 			return row.ParseDouble(row.Table.Columns[columnIndex]);
 		}
 
+		public static T SI<T>(this DataRow row, int columnIndex) where T : SIBase<T>
+		{
+			return row.ParseDouble(row.Table.Columns[columnIndex]).SI<T>();
+		}
+
+		public static T SI<T>(this DataRow row, string columnName) where T : SIBase<T>
+		{
+			return row.ParseDouble(columnName).SI<T>();
+		}
+
 		public static double ParseDouble(this DataRow row, string columnName)
 		{
 			if (!row.Table.Columns.Contains(columnName)) {
@@ -80,7 +90,8 @@ namespace TUGraz.VectoCore.Utils
 				throw new VectoException(string.Format("Field {0} has a value too high or too low: {1}", column,
 					row.Field<string>(column)), e);
 			} catch (ArgumentNullException e) {
-				throw new VectoException(string.Format("Field {0} contains null which cannot be converted to a number.", column), e);
+				throw new VectoException(string.Format("Field {0} contains null which cannot be converted to a number.", column),
+					e);
 			} catch (Exception e) {
 				throw new VectoException(string.Format("Field {0}: {1}", column, e.Message), e);
 			}

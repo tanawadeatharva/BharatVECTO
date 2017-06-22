@@ -96,7 +96,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return 1;
 		}
 
-
 		public static class Driver
 		{
 			public static class LookAhead
@@ -177,6 +176,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			//public static readonly PerSecond TorqueConverterSpeedLimit = 1600.RPMtoRad();
 			public static readonly double TorqueConverterSecondGearThreshold = 1.8;
+
 			public static readonly Second PowershiftShiftTime = 0.8.SI<Second>();
 
 			/// <summary>
@@ -233,11 +233,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				if (gearIdx > 0) {
 					downShift =
 						new[] { p2, downshiftCorr.P1, downshiftCorr.P2 }.Select(
-							point => new ShiftPolygon.ShiftPolygonEntry() {
-								AngularSpeed = point.X.SI<PerSecond>(),
-								Torque = point.Y.SI<NewtonMeter>()
-							})
-							.ToList();
+							point => new ShiftPolygon.ShiftPolygonEntry(point.Y.SI<NewtonMeter>(), point.X.SI<PerSecond>())).ToList();
 
 					downShift[0].Torque = maxDragTorque;
 				}
@@ -258,11 +254,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				// ReSharper restore InconsistentNaming
 
 				upShift = IntersectShiftPolygon(new[] { p4, p7, p5 }, new[] { p2p, p6p, p3pExt })
-					.Select(point => new ShiftPolygon.ShiftPolygonEntry() {
-						AngularSpeed = point.X.SI<PerSecond>(),
-						Torque = point.Y.SI<NewtonMeter>()
-					})
-					.ToList();
+					.Select(point => new ShiftPolygon.ShiftPolygonEntry(point.Y.SI<NewtonMeter>(), point.X.SI<PerSecond>())).ToList();
 				upShift[0].Torque = maxDragTorque;
 				return new ShiftPolygon(downShift, upShift);
 			}
@@ -398,12 +390,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var p2corr = new Point((maxTorque.Value() - edge.OffsetXY) / edge.SlopeXY, maxTorque.Value());
 
 				var downshift = new[] {
-					new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = DownshiftPRM, Torque = maxDragTorque },
-					new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = DownshiftPRM, Torque = maxTorque }
+					new ShiftPolygon.ShiftPolygonEntry(maxDragTorque, DownshiftPRM),
+					new ShiftPolygon.ShiftPolygonEntry(maxTorque, DownshiftPRM)
 				};
 				var upshift = new[] { p0, p1, p2corr }.Select(
-					pt =>
-						new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = pt.X.SI<PerSecond>(), Torque = pt.Y.SI<NewtonMeter>() });
+					pt => new ShiftPolygon.ShiftPolygonEntry(pt.Y.SI<NewtonMeter>(), pt.X.SI<PerSecond>()));
 
 				return new ShiftPolygon(first ? new List<ShiftPolygon.ShiftPolygonEntry>() : downshift.ToList(),
 					last ? new List<ShiftPolygon.ShiftPolygonEntry>() : upshift.ToList());
@@ -415,11 +406,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var data = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
 				var characteristicTorque = (from DataRow row in data.Rows
 					select
-						new TorqueConverterEntry() {
-							SpeedRatio = row.ParseDouble(TorqueConverterDataReader.Fields.SpeedRatio),
-							Torque = row.ParseDouble(TorqueConverterDataReader.Fields.CharacteristicTorque).SI<NewtonMeter>(),
-							TorqueRatio = row.ParseDouble(TorqueConverterDataReader.Fields.TorqueRatio)
-						}).ToArray();
+					new TorqueConverterEntry() {
+						SpeedRatio = row.ParseDouble(TorqueConverterDataReader.Fields.SpeedRatio),
+						Torque = row.ParseDouble(TorqueConverterDataReader.Fields.CharacteristicTorque).SI<NewtonMeter>(),
+						TorqueRatio = row.ParseDouble(TorqueConverterDataReader.Fields.TorqueRatio)
+					}).ToArray();
 				foreach (var torqueConverterEntry in characteristicTorque) {
 					torqueConverterEntry.SpeedRatio = torqueConverterEntry.SpeedRatio * ratio;
 					torqueConverterEntry.TorqueRatio = torqueConverterEntry.TorqueRatio / ratio;
