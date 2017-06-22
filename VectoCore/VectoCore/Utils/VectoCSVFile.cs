@@ -111,11 +111,15 @@ namespace TUGraz.VectoCore.Utils
 				TrimWhiteSpace = true
 			};
 
-			string[] colsWithoutComment;
+			string[] colsWithoutComment = { };
 
 			try {
-				colsWithoutComment = p.ReadFields()
-					.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment)) : l)
+				var fields = p.ReadFields();
+				if (fields == null) {
+					throw new CSVReadException("CSV Read Error: File was empty.");
+				}
+				colsWithoutComment = fields
+					.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment, StringComparison.Ordinal)) : l)
 					.ToArray();
 			} catch (ArgumentNullException) {
 				throw new CSVReadException("CSV Read Error: File was empty.");
@@ -149,12 +153,17 @@ namespace TUGraz.VectoCore.Utils
 
 			var lineNumber = 1;
 			do {
-				var cells = firstLineIsData
-					? colsWithoutComment
-					: p.ReadFields()
-						.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment)) : l)
-						.Select(s => s.Trim())
-						.ToArray();
+				string[] cells = { };
+				if (firstLineIsData) {
+					cells = colsWithoutComment;
+				} else {
+					var fields = p.ReadFields();
+					if (fields != null) {
+						cells = fields.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment, StringComparison.Ordinal)) : l)
+							.Select(s => s.Trim())
+							.ToArray();
+					}
+				}
 				firstLineIsData = false;
 				if (table.Columns.Count != cells.Length && !ignoreEmptyColumns) {
 					throw new CSVReadException(

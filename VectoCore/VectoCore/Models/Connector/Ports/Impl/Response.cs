@@ -85,9 +85,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseOverload : AbstractResponse
 	{
-		public ResponseOverload() {}
 		public Watt Delta { get; set; }
-		public double Gradient { get; set; }
 	}
 
 	/// <summary>
@@ -95,10 +93,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseUnderload : AbstractResponse
 	{
-		public ResponseUnderload() {}
-
 		public Watt Delta { get; set; }
-		public double Gradient { get; set; }
 	}
 
 	/// <summary>
@@ -127,11 +122,11 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	}
 
 	internal class ResponseGearShift : AbstractResponse
-	{
-		public ResponseGearShift() {}
-	}
+	{}
 
+/*
 	internal class ResponseEngineSpeedTooLow : ResponseDryRun {}
+*/
 
 	internal class ResponseEngineSpeedTooHigh : AbstractResponse
 	{

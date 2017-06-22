@@ -59,11 +59,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return LeftSample; }
 		}
 
-		public DrivingCycleData.DrivingCycleEntry Next
-		{
-			get { return RightSample; }
-		}
-
 		public DrivingCycleData.DrivingCycleEntry LeftSample
 		{
 			get { return _data.Entries[_currentCycleIndex]; }

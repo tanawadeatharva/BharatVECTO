@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var limits = torqueLimits.ToDictionary(e => e.Gear);
 			var numGears = gbx == null ? 0 : gbx.Gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
-			fullLoadCurves[0] = EngineFullLoadCurve.Create(engine.FullLoadCurve);
+			fullLoadCurves[0] = FullLoadCurveReader.Create(engine.FullLoadCurve);
 			fullLoadCurves[0].EngineData = retVal;
 			if (gbx != null) {
 				foreach (var gear in gbx.Gears) {
@@ -203,17 +203,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				if (gearbox.Type == GearboxType.ATPowerSplit && i == 0) {
 					// powersplit transmission: torque converter already contains ratio and losses
-					CretateTCFirstGearATPowerSplit(gearbox, gearData, i, tcShiftPolygon);
+					CretateTCFirstGearATPowerSplit(gearData, i, tcShiftPolygon);
 				}
 				if (gearbox.Type == GearboxType.ATSerial) {
 					if (i == 0) {
 						// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
-						CreateTCFirstGearATSerial(gearbox, gearData, tcShiftPolygon);
+						CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
 					}
 					if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold) {
 						// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
 						// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
-						CreateTCSecondGearATSerial(gearbox, gearData, tcShiftPolygon);
+						CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
 						// NOTE: the lower gear in 'gears' dictionary has index i !!
 						gears[i].Ratio = double.NaN;
 						gears[i].LossMap = null;

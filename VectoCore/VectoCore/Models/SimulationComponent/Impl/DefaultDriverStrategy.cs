@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal DrivingMode CurrentDrivingMode;
 
-		protected Dictionary<DrivingMode, IDriverMode> DrivingModes = new Dictionary<DrivingMode, IDriverMode>();
+		protected readonly Dictionary<DrivingMode, IDriverMode> DrivingModes = new Dictionary<DrivingMode, IDriverMode>();
 
 		public DefaultDriverStrategy()
 		{
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void UpdateDrivingAction(Meter currentDistance, Meter ds)
 		{
-			var nextAction = GetNextDrivingAction(currentDistance, ds);
+			var nextAction = GetNextDrivingAction(ds);
 			if (NextDrivingAction == null) {
 				if (nextAction != null) {
 					// take the new action
@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Next Driving Action: {0}", NextDrivingAction);
 		}
 
-		protected internal DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance, Meter ds)
+		protected internal DrivingBehaviorEntry GetNextDrivingAction(Meter ds)
 		{
 			var currentSpeed = Driver.DataBus.VehicleSpeed;
 
@@ -573,6 +573,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Case<ResponseUnderload>(r => {
 						response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 							gradient, r);
+						response.Switch().Case<ResponseGearShift>(() => {
+							DataBus.BrakePower = 0.SI<Watt>();
+							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+								gradient, r);
+						});
 					});
 				return response;
 			}
@@ -582,7 +587,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								DefaultDriverStrategy.BrakingSafetyMargin;
 			DriverStrategy.BrakeTrigger.BrakingStartDistance = DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance;
 			if (Phase == BrakingPhase.Coast) {
-				var nextBrakeAction = DriverStrategy.GetNextDrivingAction(DataBus.Distance, ds);
+				var nextBrakeAction = DriverStrategy.GetNextDrivingAction(ds);
 				if (nextBrakeAction != null && !DriverStrategy.BrakeTrigger.TriggerDistance.IsEqual(nextBrakeAction.TriggerDistance) &&
 					nextBrakeAction.BrakingStartDistance.IsSmaller(DriverStrategy.BrakeTrigger.BrakingStartDistance)) {
 					DriverStrategy.BrakeTrigger = nextBrakeAction;

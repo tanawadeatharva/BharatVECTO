@@ -20,6 +20,7 @@ Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
+Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
@@ -263,10 +264,10 @@ Public Class Gearbox
 				.IdleSpeed = 600.RPMtoRad()
 				}
 
-		Dim fldCurve As EngineFullLoadCurve = EngineFullLoadCurve.Create(VectoCSVFile.ReadStream(fldData))
+		Dim fldCurve As EngineFullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(fldData))
 		Dim fullLoadCurves As Dictionary(Of UInteger, EngineFullLoadCurve) =
 				New Dictionary(Of UInteger, EngineFullLoadCurve)()
-		fullLoadCurves(0) = EngineFullLoadCurve.Create(VectoCSVFile.ReadStream(fldData))
+		fullLoadCurves(0) = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(fldData))
 		fullLoadCurves(0).EngineData = retVal
 		For i As Integer = 0 To gears.Count - 1
 			fullLoadCurves(CType(i + 1, UInteger)) = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves(0),

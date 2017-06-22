@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var modData = new List<Tuple<ModalResults, Meter>>();
 			foreach (var run in jobContainer.Runs) {
 				modData.Add(Tuple.Create(((ModalDataContainer)run.Run.GetContainer().ModalData).Data,
-					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycle)._data.Entries.Last()
+					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycle).Data.Entries.Last()
 						.Distance));
 			}
 			var auxKeys =
@@ -134,19 +134,19 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 		private static void AssertSumDataIntegrity(SummaryDataContainer sumData, ExecutionMode mode)
 		{
-			Assert.IsTrue(sumData._table.Rows.Count > 0);
+			Assert.IsTrue(sumData.Table.Rows.Count > 0);
 
 			var ptoTransmissionColumn =
-				sumData._table.Columns.Contains(string.Format(SummaryDataContainer.E_FORMAT,
+				sumData.Table.Columns.Contains(string.Format(SummaryDataContainer.E_FORMAT,
 					Constants.Auxiliaries.IDs.PTOTransmission))
 					? string.Format(SummaryDataContainer.E_FORMAT, Constants.Auxiliaries.IDs.PTOTransmission)
 					: null;
 			var ptoConsumerColumn =
-				sumData._table.Columns.Contains(string.Format(SummaryDataContainer.E_FORMAT, Constants.Auxiliaries.IDs.PTOConsumer))
+				sumData.Table.Columns.Contains(string.Format(SummaryDataContainer.E_FORMAT, Constants.Auxiliaries.IDs.PTOConsumer))
 					? string.Format(SummaryDataContainer.E_FORMAT, Constants.Auxiliaries.IDs.PTOConsumer)
 					: null;
 
-			foreach (DataRow row in sumData._table.Rows) {
+			foreach (DataRow row in sumData.Table.Rows) {
 				var inputFile = row[SummaryDataContainer.INPUTFILE].ToString();
 				var cycle = row[SummaryDataContainer.CYCLE].ToString();
 				var loading = row[SummaryDataContainer.LOADING].ToString();
@@ -354,7 +354,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var modData = new List<Tuple<ModalResults, Meter>>();
 			foreach (var run in jobContainer.Runs) {
 				modData.Add(Tuple.Create(((ModalDataContainer)run.Run.GetContainer().ModalData).Data,
-					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycle)._data.Entries.Last()
+					((DistanceBasedDrivingCycle)((VehicleContainer)run.Run.GetContainer()).DrivingCycle).Data.Entries.Last()
 						.Distance));
 			}
 			var auxKeys =

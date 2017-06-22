@@ -42,7 +42,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
-	public class TorqueConverterDataReader
+	public static class TorqueConverterDataReader
 	{
 		public static TorqueConverterData ReadFromFile(string filename, PerSecond referenceRpm, PerSecond maxRpm,
 			ExecutionMode mode, double ratio, MeterPerSquareSecond lcMinAcceleration, MeterPerSquareSecond ccMinAcceleration)

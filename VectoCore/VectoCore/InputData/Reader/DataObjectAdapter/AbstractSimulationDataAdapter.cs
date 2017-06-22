@@ -37,7 +37,6 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -153,7 +152,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		protected TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback, bool extendLossMap)
+		protected TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback,
+			bool extendLossMap)
 		{
 			if (gear.LossMap != null) {
 				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), extendLossMap);
@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			throw new InvalidFileFormatException("Gear {0} LossMap missing.", i + 1);
 		}
 
-		protected static void CreateTCSecondGearATSerial(IGearboxDeclarationInputData gearbox, GearData gearData,
+		protected static void CreateTCSecondGearATSerial(GearData gearData,
 			ShiftPolygon shiftPolygon)
 		{
 			gearData.TorqueConverterRatio = gearData.Ratio;
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			gearData.TorqueConverterShiftPolygon = shiftPolygon;
 		}
 
-		protected static void CreateTCFirstGearATSerial(IGearboxDeclarationInputData gearbox, GearData gearData,
+		protected static void CreateTCFirstGearATSerial(GearData gearData,
 			ShiftPolygon shiftPolygon)
 		{
 			gearData.TorqueConverterRatio = gearData.Ratio;
@@ -180,8 +180,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			gearData.TorqueConverterShiftPolygon = shiftPolygon;
 		}
 
-		protected static void CretateTCFirstGearATPowerSplit(IGearboxDeclarationInputData gearbox, GearData gearData, uint i,
-			ShiftPolygon shiftPolygon)
+		protected static void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
 		{
 			gearData.TorqueConverterRatio = 1;
 			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, string.Format("TCGear {0}", i + 1));
@@ -288,12 +287,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				return engineCurve;
 			}
 
-			var entries = new List<FullLoadCurve.FullLoadCurveEntry>();
+			var entries = new List<EngineFullLoadCurve.FullLoadCurveEntry>();
 			var firstEntry = engineCurve.FullLoadEntries.First();
 			if (firstEntry.TorqueFullLoad < maxTorque) {
 				entries.Add(engineCurve.FullLoadEntries.First());
 			} else {
-				entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+				entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
 					EngineSpeed = firstEntry.EngineSpeed,
 					TorqueFullLoad = maxTorque,
 					TorqueDrag = firstEntry.TorqueDrag
@@ -305,7 +304,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					entries.Add(entry.Item2);
 				} else if (entry.Item1.TorqueFullLoad > maxTorque && entry.Item2.TorqueFullLoad > maxTorque) {
 					// segment is above maxTorque line -> add limited entry
-					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+					entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
 						EngineSpeed = entry.Item2.EngineSpeed,
 						TorqueFullLoad = maxTorque,
 						TorqueDrag = entry.Item2.TorqueDrag
@@ -317,12 +316,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					var edgeDrag = Edge.Create(new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueDrag.Value()),
 						new Point(entry.Item2.EngineSpeed.Value(), entry.Item2.TorqueDrag.Value()));
 					var intersectionX = (maxTorque.Value() - edgeFull.OffsetXY) / edgeFull.SlopeXY;
-					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+					entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
 						EngineSpeed = intersectionX.SI<PerSecond>(),
 						TorqueFullLoad = maxTorque,
 						TorqueDrag = VectoMath.Interpolate(edgeDrag.P1, edgeDrag.P2, intersectionX).SI<NewtonMeter>()
 					});
-					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+					entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
 						EngineSpeed = entry.Item2.EngineSpeed,
 						TorqueFullLoad = entry.Item2.TorqueFullLoad > maxTorque ? maxTorque : entry.Item2.TorqueFullLoad,
 						TorqueDrag = entry.Item2.TorqueDrag
@@ -330,10 +329,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 
-			var flc = new EngineFullLoadCurve {
-				FullLoadEntries = entries.ToList(),
+			var flc = new EngineFullLoadCurve(entries.ToList(), engineCurve.PT1Data) {
 				EngineData = engineCurve.EngineData,
-				PT1Data = engineCurve.PT1Data
 			};
 			return flc;
 		}

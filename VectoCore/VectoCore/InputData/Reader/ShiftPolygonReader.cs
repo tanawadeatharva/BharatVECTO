@@ -41,7 +41,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader
 {
-	public class ShiftPolygonReader : LoggingObject
+	public static class ShiftPolygonReader
 	{
 		public static ShiftPolygon ReadFromFile(string fileName)
 		{
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 				entriesDown = CreateFromColumnNames(data, Fields.AngularSpeedDown);
 				entriesUp = CreateFromColumnNames(data, Fields.AngularSpeedUp);
 			} else {
-				Logger<ShiftPolygon>()
+				LoggingObject.Logger<ShiftPolygon>()
 					.Warn(
 						"ShiftPolygon: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index",
 						Fields.Torque, Fields.AngularSpeedUp, Fields.AngularSpeedDown,
@@ -88,37 +88,21 @@ namespace TUGraz.VectoCore.InputData.Reader
 		private static List<ShiftPolygon.ShiftPolygonEntry> CreateFromColumnNames(DataTable data, string columnName)
 		{
 			return (from DataRow row in data.Rows
-				select new ShiftPolygon.ShiftPolygonEntry {
-					Torque = row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
-					AngularSpeed = row.ParseDouble(columnName).RPMtoRad(),
-				}).ToList();
+				select new ShiftPolygon.ShiftPolygonEntry(row.SI<NewtonMeter>(Fields.Torque),
+					row.ParseDouble(columnName).RPMtoRad())).ToList();
 		}
 
 		private static List<ShiftPolygon.ShiftPolygonEntry> CreateFromColumnIndizes(DataTable data, int column)
 		{
 			return (from DataRow row in data.Rows
-				select
-					new ShiftPolygon.ShiftPolygonEntry {
-						Torque = row.ParseDouble(0).SI<NewtonMeter>(),
-						AngularSpeed = row.ParseDouble(column).RPMtoRad(),
-					}).ToList();
+					select new ShiftPolygon.ShiftPolygonEntry(row.SI<NewtonMeter>(0), row.ParseDouble(column).RPMtoRad()))
+				.ToList();
 		}
 
 		public static class Fields
 		{
-			/// <summary>
-			///		[Nm] torque
-			/// </summary>
 			public const string Torque = "engine torque";
-
-			/// <summary>
-			///		[rpm] threshold for upshift
-			/// </summary>
 			public const string AngularSpeedUp = "upshift rpm";
-
-			/// <summary>
-			///		[rpm] threshold for downshift
-			/// </summary>
 			public const string AngularSpeedDown = "downshift rpm";
 		}
 	}

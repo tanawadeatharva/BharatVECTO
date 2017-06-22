@@ -385,7 +385,7 @@ Public Class EngineForm
 	End Sub
 
 	Private Sub UpdatePic()
-		Dim fullLoadCurve As FullLoadCurve = Nothing
+		Dim fullLoadCurve As EngineFullLoadCurve = Nothing
 		Dim fcMap As FuelConsumptionMap = Nothing
 
 
@@ -397,7 +397,7 @@ Public Class EngineForm
 			Dim fldFile As String =
 					If(Not String.IsNullOrWhiteSpace(_engFile), Path.Combine(Path.GetDirectoryName(_engFile), TbFLD.Text), TbFLD.Text)
 			If File.Exists(fldFile) Then _
-				fullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), engineFld:=True)
+				fullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.Read(fldFile))
 		Catch ex As Exception
 		End Try
 

@@ -1,3 +1,34 @@
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2016 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -190,7 +221,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			return new XElement(tns + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.Model),
-				GetDefaultComponentElements(vehicle.CertificationNumber, vehicle.Model),
+				GetDefaultComponentElements(vehicle.Model),
 				new XElement(tns + XMLNames.Vehicle_VehicleCategory, vehicle.VehicleCategory.ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, vehicle.CurbMassChassis.Value().ToXMLFormat(0)),
@@ -229,17 +260,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 				return null;
 			}
 			var ptoLossMap = new XElement(tns + XMLNames.Vehicle_PTOIdleLossMap);
-			if (_singleFile) {
-				ptoLossMap.Add(EmbedDataTable(pto.PTOLossMap, AttributeMappings.PTOLossMap));
-			} else {
-				ptoLossMap.Add(ExtCSVResource(pto.PTOLossMap, "PTO_LossMap.vptol"));
-			}
+			ptoLossMap.Add(_singleFile
+				? EmbedDataTable(pto.PTOLossMap, AttributeMappings.PTOLossMap)
+				: ExtCSVResource(pto.PTOLossMap, "PTO_LossMap.vptol"));
 			var ptoCycle = new XElement(tns + XMLNames.Vehicle_PTOCycle);
-			if (_singleFile) {
-				ptoCycle.Add(EmbedDataTable(pto.PTOCycle, AttributeMappings.PTOCycleMap));
-			} else {
-				ptoCycle.Add(ExtCSVResource(pto.PTOCycle, "PTO_cycle.vptoc"));
-			}
+			ptoCycle.Add(_singleFile
+				? EmbedDataTable(pto.PTOCycle, AttributeMappings.PTOCycleMap)
+				: ExtCSVResource(pto.PTOCycle, "PTO_cycle.vptoc"));
 
 			return new object[] { ptoLossMap, ptoCycle };
 		}
@@ -270,7 +297,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var angledrive = new XElement(tns + XMLNames.Component_Angledrive,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, "ANGL-" + data.Model),
-					GetDefaultComponentElements(data.CertificationNumber, data.Model),
+					GetDefaultComponentElements(data.Model),
 					new XElement(tns + XMLNames.AngleDrive_Ratio, data.Ratio.ToXMLFormat(3)),
 					data.LossMap == null
 						? new XElement(tns + XMLNames.AngleDrive_TorqueLossMap,
@@ -331,7 +358,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				var axle = axleData[i];
 				axles.Add(new XElement(tns + XMLNames.AxleWheels_Axles_Axle,
 					new XAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, i + 1),
-					GetDefaultComponentElements(string.Format("WHEEL-{0}_{1}", i, axle.Wheels), axle.Wheels),
+					GetDefaultComponentElements(axle.Wheels),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_AxleType,
 						i == 1 ? AxleType.VehicleDriven.ToString() : AxleType.VehicleNonDriven.ToString()),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_TwinTyres_Attr, axle.TwinTyres),
@@ -380,7 +407,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var typeId = string.Format("AXLGEAR-{0:0.000}", data.Ratio);
 			var axl = new XElement(tns + XMLNames.Component_Axlegear,
 				new XElement(tns + XMLNames.ComponentDataWrapper, new XAttribute(XMLNames.Component_ID_Attr, typeId),
-					GetDefaultComponentElements(typeId, "N.A."),
+					GetDefaultComponentElements("N.A."),
 					new XElement(tns + XMLNames.Axlegear_Ratio, data.Ratio.ToXMLFormat(3)),
 					data.LossMap == null
 						? new XElement(tns + XMLNames.Axlegear_TorqueLossMap,
@@ -397,7 +424,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var retarder = new XElement(tns + XMLNames.Component_Retarder,
 				new XElement(tns + XMLNames.ComponentDataWrapper, new XAttribute(XMLNames.Component_ID_Attr, "RET-none"),
-					GetDefaultComponentElements(data.CertificationNumber, data.Model),
+					GetDefaultComponentElements(data.Model),
 					new XElement(tns + XMLNames.Retarder_RetarderLossMap,
 						_singleFile
 							? EmbedDataTable(data.LossMap, AttributeMappings.RetarderLossmapMapping)
@@ -439,7 +466,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var gbx = new XElement(tns + XMLNames.Component_Gearbox,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, string.Format("GBX-{0}", data.Model)),
-					GetDefaultComponentElements(string.Format("GBX-{0}", data.Model), data.Model),
+					GetDefaultComponentElements(data.Model),
 					new XElement(tns + XMLNames.Gearbox_TransmissionType, data.Type.ToXMLFormat()),
 					new XElement(tns + XMLNames.Gearbox_Inertia, data.Inertia.Value()),
 					new XElement(tns + XMLNames.Gearbox_TractionInterruption, data.TractionInterruption.Value()), gears),
@@ -456,7 +483,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var tc = new XElement(tns + XMLNames.Component_TorqueConverter,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, string.Format("TC-{0}", torqueConverterData.Model)),
-					GetDefaultComponentElements(string.Format("TC-{0}", torqueConverterData.Model), torqueConverterData.Model),
+					GetDefaultComponentElements(torqueConverterData.Model),
 					new XElement(tns + XMLNames.TorqueConverter_ReferenceRPM, torqueConverterData.ReferenceRPM.AsRPM.ToXMLFormat()),
 					new XElement(tns + XMLNames.TorqueConverter_Characteristics,
 						_singleFile
@@ -494,7 +521,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var engine = new XElement(tns + XMLNames.Component_Engine,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, string.Format("ENG-{0}", data.Model)),
-					GetDefaultComponentElements(string.Format("ENG-{0}", data.Model), data.Model),
+					GetDefaultComponentElements(data.Model),
 					new XElement(tns + XMLNames.Engine_Displacement, (data.Displacement.Value() * 1000 * 1000).ToXMLFormat(0)),
 					new XElement(tns + XMLNames.Engine_IdlingSpeed, data.IdleSpeed.AsRPM.ToXMLFormat(0)),
 					new XElement(tns + XMLNames.Engine_Inertia, data.Inertia.Value()),
@@ -513,7 +540,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement(tns + XMLNames.Component_AirDrag,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
-					GetDefaultComponentElements(data.Model, "N.A."),
+					GetDefaultComponentElements("N.A."),
 					new XElement(tns + XMLNames.Vehicle_CrossWindCorrectionMode, data.CrossWindCorrectionMode.ToXMLFormat()),
 					new XElement(tns + XMLNames.Vehicle_AirDragArea, data.AirDragArea.Value().ToXMLFormat(2))),
 				GetCrossWindCorrectionData(data)
@@ -561,7 +588,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			};
 		}
 
-		protected XElement[] GetDefaultComponentElements(string componentId, string makeAndModel)
+		protected XElement[] GetDefaultComponentElements(string makeAndModel)
 		{
 			return new[] {
 				new XElement(tns + XMLNames.Component_Manufacturer, Vendor),

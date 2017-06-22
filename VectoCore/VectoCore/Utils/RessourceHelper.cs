@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static Stream LoadResourceAsStream(ResourceType type, string resourceName)
 		{
-			var resourceBase = "";
+			string resourceBase;
 			switch (type) {
 				case ResourceType.XMLSchema:
 					resourceBase = "TUGraz.VectoCore.Resources.XSD.";

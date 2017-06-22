@@ -241,11 +241,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N/A"; }
 		}
 
-		public string TechnicalReportId
-		{
-			get { return "N/A"; }
-		}
-
 		public CertificationMethod CertificationMethod
 		{
 			get { return CertificationMethod.NotCertified; }

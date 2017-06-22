@@ -42,7 +42,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
-	public class AccelerationCurveReader
+	public static class AccelerationCurveReader
 	{
 		public static AccelerationCurveData ReadFromStream(Stream stream)
 		{

@@ -53,12 +53,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		private readonly string _sourceFile;
 
-		protected readonly JObject Header;
 		protected readonly JObject Body;
 
 		protected JSONFile(JObject data, string filename, bool tolerateMissing = false)
 		{
-			Header = (JObject)data.GetEx(JsonKeys.JsonHeader);
+			//var header = (JObject)data.GetEx(JsonKeys.JsonHeader);
 			Body = (JObject)data.GetEx(JsonKeys.JsonBody);
 			_sourceFile = Path.GetFullPath(filename);
 			TolerateMissing = tolerateMissing;
@@ -129,11 +128,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected readonly IGearboxEngineeringInputData Gearbox;
 		protected readonly IAxleGearInputData AxleGear;
 		protected readonly ITorqueConverterEngineeringInputData TorqueConverter;
-		protected IAngledriveInputData Angledrive;
+		protected readonly IAngledriveInputData Angledrive;
 		protected readonly IEngineEngineeringInputData Engine;
-		protected IVehicleEngineeringInputData VehicleData;
-		protected IRetarderInputData Retarder;
-		protected IPTOTransmissionInputData PTOTransmission;
+		protected readonly IVehicleEngineeringInputData VehicleData;
+		protected readonly IRetarderInputData Retarder;
+		protected readonly IPTOTransmissionInputData PTOTransmission;
 
 		private readonly string _jobname;
 		protected internal IAirdragEngineeringInputData AirdragData;

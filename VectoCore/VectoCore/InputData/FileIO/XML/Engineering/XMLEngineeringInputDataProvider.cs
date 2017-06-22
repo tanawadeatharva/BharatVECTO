@@ -1,4 +1,35 @@
-﻿using System.IO;
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2016 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
+using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.XPath;
@@ -20,8 +51,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		protected internal XMLEngineeringAuxiliaryDataProvider XMLEngineeringAuxiliaryData;
 		protected internal XMLEngineeringDriverDataProvider XMLEngineeringDriverData;
 		protected internal XMLEngineeringJobInputDataProvider XMLEngineeringJobData;
-		protected internal XMLEngineeringVehicleDataProvider _vehicleInputData;
-		protected internal XMLEngineeringAxlegearDataProvider _axleGearInputData;
+		protected internal XMLEngineeringVehicleDataProvider VehicleData;
+		protected internal XMLEngineeringAxlegearDataProvider AxlegearData;
 
 		public XMLEngineeringInputDataProvider(string filename, bool verifyXml)
 		{
@@ -64,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 									//XmlSchemaValidationFlags.ProcessSchemaLocation |
 									XmlSchemaValidationFlags.ReportValidationWarnings
 				};
-				settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
+				settings.ValidationEventHandler += ValidationCallBack;
 				settings.Schemas.Add(GetXMLSchema(""));
 			}
 			try {
@@ -100,16 +131,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			}
 			ReadVehicle(settings);
 
-			XMLEngineeringDriverData = XMLEngineeringJobData.GetDriverData(settings);
-			_axleGearInputData = _vehicleInputData.GetAxleGearInputData(settings);
-			AngledriveInputData = _vehicleInputData.GetAngularGearInputData(settings);
-			EngineInputData = _vehicleInputData.GetEngineInputData(settings);
-			RetarderInputData = _vehicleInputData.GetRetarderInputData(settings);
-			XMLEngineeringAuxiliaryData = _vehicleInputData.GetAuxiliaryData(settings);
-			GearboxInputData = _vehicleInputData.GetGearboxData(settings);
+			XMLEngineeringDriverData = XMLEngineeringJobData.GetDriverData();
+			AxlegearData = VehicleData.GetAxleGearInputData(settings);
+			AngledriveInputData = VehicleData.GetAngularGearInputData();
+			EngineInputData = VehicleData.GetEngineInputData(settings);
+			RetarderInputData = VehicleData.GetRetarderInputData(settings);
+			XMLEngineeringAuxiliaryData = VehicleData.GetAuxiliaryData(settings);
+			GearboxInputData = VehicleData.GetGearboxData(settings);
 			TorqueConverterInputData = GearboxInputData.TorqueConverter;
-			PTOTransmissionInputData = _vehicleInputData.GetPTOData(settings);
-			AirdragInputData = _vehicleInputData.GetAirdragInputData(settings);
+			PTOTransmissionInputData = VehicleData.GetPTOData();
+			AirdragInputData = VehicleData.GetAirdragInputData(settings);
 		}
 
 		private static void ValidationCallBack(object sender, ValidationEventArgs args)
@@ -131,7 +162,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			helper.AddNamespaces(manager);
 			var vehicle = nav.SelectSingleNode(vehiclePath, manager);
 			if (vehicle != null) {
-				_vehicleInputData = new XMLEngineeringVehicleDataProvider(this, Document, vehiclePath,
+				VehicleData = new XMLEngineeringVehicleDataProvider(this, Document, vehiclePath,
 					Path.GetDirectoryName(Path.GetFullPath(FileName)));
 				return;
 			}
@@ -150,7 +181,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 						helper.QueryAbs(
 							helper.NSPrefix("VectoComponentEngineering", Constants.XML.RootNSPrefix),
 							XMLNames.Component_Vehicle);
-					_vehicleInputData = new XMLEngineeringVehicleDataProvider(this, vehicleDocument, vehicleCompPath,
+					VehicleData = new XMLEngineeringVehicleDataProvider(this, vehicleDocument, vehicleCompPath,
 						Path.GetDirectoryName(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(FileName) ?? "./", vehicleFile))));
 					return;
 				} catch (XmlSchemaValidationException validationException) {
@@ -178,7 +209,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public IVehicleEngineeringInputData VehicleInputData
 		{
-			get { return _vehicleInputData; }
+			get { return VehicleData; }
 		}
 
 		public IAirdragEngineeringInputData AirdragInputData { get; private set; }
@@ -190,7 +221,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public IAxleGearInputData AxleGearInputData
 		{
-			get { return _axleGearInputData; }
+			get { return AxlegearData; }
 		}
 
 		public IAngledriveInputData AngledriveInputData { get; private set; }
