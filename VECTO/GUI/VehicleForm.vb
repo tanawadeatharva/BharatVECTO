@@ -362,7 +362,7 @@ Public Class VehicleForm
 		TbMassExtra.Text = vehicle.CurbMassExtra.ToGUIFormat()
 		TbLoad.Text = vehicle.Loading.ToGUIFormat()
 		TBrdyn.Text = (vehicle.DynamicTyreRadius.Value() * 1000).ToGUIFormat()
-		tbVehIdlingSpeed.Text = vehicle.EngineIdleSpeed.AsRPM.ToGUIFormat()
+		tbVehIdlingSpeed.Text = If(vehicle.EngineIdleSpeed Is Nothing, "", vehicle.EngineIdleSpeed.AsRPM.ToGUIFormat())
 
 		CbCdMode.SelectedValue = airdrag.CrossWindCorrectionMode
 		TbCdFile.Text =
