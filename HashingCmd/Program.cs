@@ -242,7 +242,6 @@ hashingcmd.exe
 			WriteLine("computing hashes");
 			var components = h.GetContainigComponents();
 
-
 			if (components.Count > 1) {
 				var grouped = components.GroupBy(s => s)
 					.Select(g => new { Entry = g.Key, Count = g.Count() });
@@ -290,7 +289,7 @@ hashingcmd.exe
 
 		private static void ShowVersionInformation()
 		{
-			var hashingLib = AssemblyName.GetAssemblyName("VectoHashing.dll");
+			var hashingLib = Assembly.GetExecutingAssembly().GetName();
 			WriteLine(string.Format(@"HashingLibrary: {0}", hashingLib.Version));
 		}
 	}
