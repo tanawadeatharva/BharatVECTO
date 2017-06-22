@@ -32,7 +32,7 @@ The idling losses are a function of speed as determined by the DIN 30752-1 proce
 
 A specific PTO cycle (time-based, engine speed and torque from PTO consumer as determined by the DIN 30752-1 procedure) is simulated during vehicle stops labelled as "with PTO activation". The execution of the driving cycle stops during this time and the pto cycle is executed. Afterwards the normal driving cycle continues.
 
-Power consumption in the PTO transmission part added to power demand from the PTO cycle. The cycle is configurable in the [Vehicle Editor](#vehicle-editor) and follows the file format described in [PTO-Cycle](#pto-cycle).
+Power consumption in the PTO transmission part added to power demand from the PTO cycle. The cycle is configurable in the [Vehicle Editor](#vehicle-editor) and follows the file format described in [PTO-Cycle](#pto-cycle). The timings in the PTO cycle get shifted to start at 0.
 
 
 ### Behavior During PTO Driving Cycles
@@ -44,8 +44,8 @@ The following image shows the behavior of running PTO cycles during a normal dri
 
 ![](pics/pto-behavior.png)
 
-(#) The normal driving cycle is run.
+(#) Normal driving behavior.
 (#) The first half of the stop phase begins, the vehicle stops and the engine speed goes down to idle speed (if there is enough time).
-(#) The pto cycle begins with the last engine speed of the stop phase, and goes up to the engine speed of the first entry in the pto cycle.
-(#) After the pto cycle ends, the second half of the stop phase begins and the engine speed again gets lower (until idle speed if enough time passes).
-(#) After the stop phase the normal driving cycle kicks in again and is executed normally. The vehicle drives off again.
+(#) The PTO cycle continues from the last engine speed in stop phase and sets it to the engine speed of the first entry in the PTO cycle.
+(#) After the PTO cycle ends, the second half of the stop phase begins and the engine speed again goes to idle speed (if enough time passes).
+(#) After the stop phase the normal driving behavior starts again - the vehicle drives off.

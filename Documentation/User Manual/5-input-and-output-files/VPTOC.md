@@ -1,6 +1,6 @@
 ##PTO Cycle (.vptoc)
 
-The PTO cycle defines the power demands during standing still and doing a pto operation. This can only be used in [Engineering Mode](#engineering-mode) when a pto transmission is defined. It can be set in the [Vehicle-Editor](#vehicle-editor). The basic file format is [Vecto-CSV](#csv) and the file type ending is ".vptoc". A PTO cycle is time-based and may have variable time steps.
+The PTO cycle defines the power demands during standing still and doing a pto operation. This can only be used in [Engineering Mode](#engineering-mode) when a pto transmission is defined. It can be set in the [Vehicle-Editor](#vehicle-editor). The basic file format is [Vecto-CSV](#csv) and the file type ending is ".vptoc". A PTO cycle is time-based and may have variable time steps. Regardless of starting time, VECTO shifts it to always begin at 0[s].
 
 Header: **\<t>, \<Engine speed>, \<PTO Torque>**
 
@@ -10,7 +10,7 @@ Units are optional and are enclosed in [square-brackets] after the header-column
 
 |    Identifier    |  Unit |                                                                Description                                                                 |
 |------------------|-------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| **t**            | [s]   | The time during the pto cycle. Must always be increasing.                                                                                  |
+| **t**            | [s]   | The time during the pto cycle. Must always be increasing. Gets shifted to begin with 0 by VECTO (if thats not already the case).                                                                                  |
 | **Engine speed** | [rpm] | Actual engine speed                                                                                                                        |
 | **PTO Torque**   | [Nm]  | The torque at the PTO consumer (including prop-shaft losses if applicable) as measured by the DIN test converted to torque at engine speed |
 
