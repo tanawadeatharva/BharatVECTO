@@ -112,12 +112,6 @@ Namespace My
 
 			'Restart log if log file too large
 			LogFile.SizeCheck()
-
-
-			'License initialization
-			Lic = New vectolic.cLicense
-			Lic.AppVersion = "2.2"	 'VECTOvers
-			Lic.FilePath = MyAppPath & "license.dat"
 		End Sub
 
 		Private Sub MyApplication_UnhandledException(ByVal sender As Object,

@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// True if gearbox is disengaged (no gear is set).
 		/// </summary>
-		protected internal Second Disengaged = null;
+		protected internal Second Disengaged;
 
 		protected bool? TorqueConverterActive;
 
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				inTorque += torqueLossInertia;
 
-				response = (TorqueConverterActive != null && TorqueConverterActive.Value)
+				response = TorqueConverterActive != null && TorqueConverterActive.Value && TorqueConverter != null
 					? TorqueConverter.Initialize(inTorque, inAngularVelocity)
 					: NextComponent.Initialize(inTorque, inAngularVelocity);
 			} else {
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return dryRunResponse;
 			}
 
-			CurrentState.TransmissionTorqueLoss = inTorque * effectiveRatio - (outTorque);
+			CurrentState.TransmissionTorqueLoss = inTorque * effectiveRatio - outTorque;
 
 
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);

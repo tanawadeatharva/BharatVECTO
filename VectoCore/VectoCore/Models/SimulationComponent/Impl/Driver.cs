@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public DriverData DriverData { get; protected set; }
 
-		protected IDriverStrategy DriverStrategy;
+		protected readonly IDriverStrategy DriverStrategy;
 		public string CurrentAction = "";
 
 		public Driver(IVehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
@@ -187,7 +187,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				retVal = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval,
 					limitedOperatingPoint.Acceleration,
 					gradient);
-				retVal.Acceleration = limitedOperatingPoint.Acceleration;
+				if (retVal != null) {
+					retVal.Acceleration = limitedOperatingPoint.Acceleration;
+				}
 				retVal.Switch().
 					Case<ResponseUnderload>(() => operatingPoint = limitedOperatingPoint)
 					. // acceleration is limited by driver model, operating point moves below drag curve

@@ -44,25 +44,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		EmptyLoading,
 	}
 
-	public static class LoadingTypeHelper
-	{
-		public static string GetShortName(this LoadingType loadingType)
-		{
-			switch (loadingType) {
-				case LoadingType.FullLoading:
-					return "F";
-				case LoadingType.ReferenceLoad:
-					return "R";
-				case LoadingType.LowLoading:
-					return "L";
-				case LoadingType.EmptyLoading:
-					return "E";
-				default:
-					throw new ArgumentOutOfRangeException("loadingType", loadingType, null);
-			}
-		}
-	}
-
 	public class Mission
 	{
 		public MissionType MissionType;

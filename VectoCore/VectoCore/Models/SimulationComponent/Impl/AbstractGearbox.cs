@@ -52,14 +52,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		[Required, ValidateObject] internal readonly GearboxData ModelData;
 
-		protected KilogramSquareMeter EngineInertia;
-
 		protected AbstractGearbox(IVehicleContainer container, VectoRunData runData) : base(container)
 		{
 			ModelData = runData.GearboxData;
-			EngineInertia = runData.EngineData != null
-				? runData.EngineData.Inertia
-				: 0.SI<KilogramSquareMeter>();
 		}
 
 		#region ITnOutPort
@@ -148,7 +143,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var torqueGbxIn = outTorque / ModelData.Gears[Gear].Ratio;
-			var deltaEngineSpeed = DataBus.EngineSpeed - outAngularVelocity * ModelData.Gears[Gear].Ratio;
 			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
 			var shiftLossEnergy = torqueGbxIn * deltaClutchSpeed * ModelData.PowershiftShiftTime;
 

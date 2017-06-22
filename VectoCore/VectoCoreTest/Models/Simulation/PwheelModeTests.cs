@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			fullLoad.Rows.Add("0", "5000", "-5000", "0");
 			fullLoad.Rows.Add("3000", "5000", "-5000", "0");
 
-			var fullLoadCurve = EngineFullLoadCurve.Create(fullLoad);
+			var fullLoadCurve = FullLoadCurveReader.Create(fullLoad);
 			var data = new VectoRunData {
 				Cycle = drivingCycle,
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },

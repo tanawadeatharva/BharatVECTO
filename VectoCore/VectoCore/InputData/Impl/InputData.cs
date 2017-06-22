@@ -30,7 +30,6 @@
 */
 
 using System.Collections.Generic;
-using System.Data;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -99,20 +98,6 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public DataSourceType SourceType { get; internal set; }
 
 		public string Source { get; internal set; }
-
-		public string Manufacturer { get; internal set; }
-
-		public string Model { get; internal set; }
-
-		public string Date { get; internal set; }
-
-		public string TechnicalReportId { get; internal set; }
-
-		public CertificationMethod CertificationMethod { get; internal set; }
-
-		public string CertificationNumber { get; internal set; }
-
-		public string DigestValue { get; internal set; }
 
 		public string Wheels { get; internal set; }
 

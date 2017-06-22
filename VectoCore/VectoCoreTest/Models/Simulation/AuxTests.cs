@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Declaration, modData,
-				(modalData) => sumWriter.Write(modalData, "AuxWriteSumFile", new MockRunData()));
+				(modalData) => sumWriter.Write(modalData, 0, 0, new MockRunData()));
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased, false);
 			new MockDrivingCycle(container, data);
 
@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					new[] { "Variable displacement mech. controlled" }));
 			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission));
 			aux.AddConstant("AC",
-				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default",hdvClass));
+				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default", hdvClass));
 
 			var speed = 1400.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();

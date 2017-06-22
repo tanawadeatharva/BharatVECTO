@@ -1,9 +1,39 @@
-﻿using System;
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2016 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using TUGraz.IVT.VectoXML;
 using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.InputData;
@@ -12,7 +42,6 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
@@ -54,12 +83,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XDocument GenerateVectoComponent(IGearboxDeclarationInputData data,
 			ITorqueConverterDeclarationInputData torqueConverter)
 		{
-			return GenerateComponentDocument(CreateGearbox(data, torqueConverter));
+			return GenerateComponentDocument(CreateGearbox(data, torqueConverter, componentNamespace));
 		}
 
 		public XDocument GenerateVectoComponent(IAxleGearInputData data)
 		{
-			return GenerateComponentDocument(CreateAxlegear(data));
+			return GenerateComponentDocument(CreateAxlegear(data, componentNamespace));
 		}
 
 		protected XDocument GenerateComponentDocument(XElement content)
@@ -91,10 +120,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var gearbox = data.GearboxInputData;
 			var vehicle = data.VehicleInputData;
 			var angledrive = data.AngledriveInputData;
-
-			var aux = data.AuxiliaryInputData();
-			var numSteeredaxles = aux.Auxiliaries.First(x => x.Type == AuxiliaryType.SteeringPump).Technology.Count;
-			//var pto = data.PTOTransmissionInputData;
 
 			return new XElement(tns + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.Model),
@@ -128,11 +153,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 
 
-		protected XElement CreateEngine(IEngineDeclarationInputData data)
+		protected XElement CreateEngine(IEngineDeclarationInputData data, XNamespace ns = null)
 		{
 			var id = string.Format("ENG-{0}", data.Model.RemoveWhitespace());
-			var fld = EngineFullLoadCurve.Create(data.FullLoadCurve, true);
-			return new XElement(tns + XMLNames.Component_Engine,
+			var fld = FullLoadCurveReader.Create(data.FullLoadCurve, true);
+			return new XElement((ns ?? tns) + XMLNames.Component_Engine,
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("ENG-{0}", data.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
@@ -161,7 +186,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 
 		protected XElement CreateGearbox(IGearboxDeclarationInputData gbxData,
-			ITorqueConverterDeclarationInputData torqueConverter)
+			ITorqueConverterDeclarationInputData torqueConverter, XNamespace ns = null)
 		{
 			var gears = new XElement(tns + XMLNames.Gearbox_Gears);
 			var i = 1;
@@ -181,7 +206,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				gears.Add(gear);
 			}
 			var id = string.Format("GBX-{0}", gbxData.Model.RemoveWhitespace());
-			return new XElement(tns + XMLNames.Component_Gearbox,
+			return new XElement((ns ?? tns) + XMLNames.Component_Gearbox,
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("GBX-{0}", gbxData.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
@@ -218,10 +243,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 				AddSignatureDummy(id));
 		}
 
-		private XElement CreateAngleDrive(IAngledriveInputData data)
+		private XElement CreateAngleDrive(IAngledriveInputData data, XNamespace ns = null)
 		{
 			var id = string.Format("ANGL-{0}", data.Model.RemoveWhitespace());
-			return new XElement(tns + XMLNames.Component_Angledrive,
+			return new XElement((ns ??tns) + XMLNames.Component_Angledrive,
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, "ANGL-" + data.Model),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
@@ -233,10 +258,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 				AddSignatureDummy(id));
 		}
 
-		public XElement CreateRetarder(IRetarderInputData data)
+		public XElement CreateRetarder(IRetarderInputData data, XNamespace ns = null)
 		{
 			var id = string.Format("RET-{0}", data.Model.RemoveWhitespace());
-			return new XElement(tns + XMLNames.Component_Retarder,
+			return new XElement((ns ?? tns) + XMLNames.Component_Retarder,
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, "RET-none"),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
@@ -250,10 +275,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 				);
 		}
 
-		public XElement CreateAxlegear(IAxleGearInputData data)
+		public XElement CreateAxlegear(IAxleGearInputData data, XNamespace ns = null)
 		{
 			var typeId = string.Format("AXLGEAR-{0:0.000}", data.Ratio);
-			return new XElement(tns + XMLNames.Component_Axlegear,
+			return new XElement((ns ?? tns) + XMLNames.Component_Axlegear,
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("AXL-{0}", data.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, typeId),
@@ -267,7 +292,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				);
 		}
 
-		public XElement CreateAxleWheels(IVehicleDeclarationInputData data)
+		public XElement CreateAxleWheels(IVehicleDeclarationInputData data, XNamespace ns = null)
 		{
 			var axleData = data.Axles;
 			var numAxles = axleData.Count;
@@ -284,7 +309,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					));
 			}
 
-			return new XElement(tns + XMLNames.Component_AxleWheels,
+			return new XElement((ns ??tns) + XMLNames.Component_AxleWheels,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					//new XAttribute(XMLNames.Component_ID_Attr,
 					//	string.Format("AXLWHL-{0}", data.AxleConfiguration.GetName())),
@@ -327,10 +352,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement(tns + XMLNames.Component_Auxiliaries, aux);
 		}
 
-		private XElement CreateAirdrag(IAirdragDeclarationInputData data)
+		private XElement CreateAirdrag(IAirdragDeclarationInputData data, XNamespace ns = null)
 		{
 			var id = string.Format("Airdrag-{0}", data.Model);
-			return new XElement(tns + XMLNames.Component_AirDrag,
+			return new XElement((ns ?? tns) + XMLNames.Component_AirDrag,
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("AD-{0}", data.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),

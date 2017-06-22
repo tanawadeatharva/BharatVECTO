@@ -75,13 +75,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var ptoTransmissionData = dao.CreatePTOTransmissionData(InputDataProvider.PTOTransmissionInputData);
 
 			return InputDataProvider.JobInputData().Cycles.Select(cycle => {
-				DrivingCycleData drivingCycle;
-				if (CyclesCache.ContainsKey(cycle.CycleData.Source)) {
-					drivingCycle = CyclesCache[cycle.CycleData.Source];
-				} else {
-					drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
-					//CyclesCache.Add(cycle.CycleData.Source, drivingCycle);
-				}
+				var drivingCycle = CyclesCache.ContainsKey(cycle.CycleData.Source)
+					? CyclesCache[cycle.CycleData.Source]
+					: DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
 				return new VectoRunData {
 					JobName = InputDataProvider.JobInputData().JobName,
 					EngineData = engineData,

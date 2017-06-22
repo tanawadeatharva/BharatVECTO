@@ -33,7 +33,7 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
 {
-	public class Physics
+	public static class Physics
 	{
 		/// <summary>
 		/// The standard acceleration for gravity on earth.
@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Density of air.
 		/// </summary>
-		public static KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
+		public static readonly KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
 
 
 		public const double RollResistanceExponent = 0.9;

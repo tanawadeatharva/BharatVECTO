@@ -72,6 +72,10 @@ Partial Class EngineForm
 		Me.PnInertia = New System.Windows.Forms.Panel()
 		Me.GrWHTC = New System.Windows.Forms.GroupBox()
 		Me.PnWhtcDeclaration = New System.Windows.Forms.Panel()
+		Me.Label20 = New System.Windows.Forms.Label()
+		Me.tbRegPerCorrFactor = New System.Windows.Forms.TextBox()
+		Me.Label19 = New System.Windows.Forms.Label()
+		Me.tbNCVCorrFactor = New System.Windows.Forms.TextBox()
 		Me.lblColdHotFactor = New System.Windows.Forms.Label()
 		Me.TbColdHotFactor = New System.Windows.Forms.TextBox()
 		Me.BtWHTCimport = New System.Windows.Forms.Button()
@@ -101,10 +105,6 @@ Partial Class EngineForm
 		Me.Label17 = New System.Windows.Forms.Label()
 		Me.Label18 = New System.Windows.Forms.Label()
 		Me.cbFuelType = New System.Windows.Forms.ComboBox()
-		Me.Label19 = New System.Windows.Forms.Label()
-		Me.tbNCVCorrFactor = New System.Windows.Forms.TextBox()
-		Me.Label20 = New System.Windows.Forms.Label()
-		Me.tbRegPerCorrFactor = New System.Windows.Forms.TextBox()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -429,6 +429,38 @@ Partial Class EngineForm
 		Me.PnWhtcDeclaration.Size = New System.Drawing.Size(472, 95)
 		Me.PnWhtcDeclaration.TabIndex = 8
 		'
+		'Label20
+		'
+		Me.Label20.AutoSize = True
+		Me.Label20.Location = New System.Drawing.Point(99, 76)
+		Me.Label20.Name = "Label20"
+		Me.Label20.Size = New System.Drawing.Size(89, 13)
+		Me.Label20.TabIndex = 9
+		Me.Label20.Text = "Reg. Per. Corr. F."
+		'
+		'tbRegPerCorrFactor
+		'
+		Me.tbRegPerCorrFactor.Location = New System.Drawing.Point(194, 73)
+		Me.tbRegPerCorrFactor.Name = "tbRegPerCorrFactor"
+		Me.tbRegPerCorrFactor.Size = New System.Drawing.Size(57, 20)
+		Me.tbRegPerCorrFactor.TabIndex = 10
+		'
+		'Label19
+		'
+		Me.Label19.AutoSize = True
+		Me.Label19.Location = New System.Drawing.Point(274, 53)
+		Me.Label19.Name = "Label19"
+		Me.Label19.Size = New System.Drawing.Size(66, 13)
+		Me.Label19.TabIndex = 7
+		Me.Label19.Text = "NCV Corr. F."
+		'
+		'tbNCVCorrFactor
+		'
+		Me.tbNCVCorrFactor.Location = New System.Drawing.Point(343, 50)
+		Me.tbNCVCorrFactor.Name = "tbNCVCorrFactor"
+		Me.tbNCVCorrFactor.Size = New System.Drawing.Size(57, 20)
+		Me.tbNCVCorrFactor.TabIndex = 8
+		'
 		'lblColdHotFactor
 		'
 		Me.lblColdHotFactor.AutoSize = True
@@ -674,38 +706,6 @@ Partial Class EngineForm
 		Me.cbFuelType.Name = "cbFuelType"
 		Me.cbFuelType.Size = New System.Drawing.Size(143, 21)
 		Me.cbFuelType.TabIndex = 51
-		'
-		'Label19
-		'
-		Me.Label19.AutoSize = True
-		Me.Label19.Location = New System.Drawing.Point(274, 53)
-		Me.Label19.Name = "Label19"
-		Me.Label19.Size = New System.Drawing.Size(66, 13)
-		Me.Label19.TabIndex = 7
-		Me.Label19.Text = "NCV Corr. F."
-		'
-		'tbNCVCorrFactor
-		'
-		Me.tbNCVCorrFactor.Location = New System.Drawing.Point(343, 50)
-		Me.tbNCVCorrFactor.Name = "tbNCVCorrFactor"
-		Me.tbNCVCorrFactor.Size = New System.Drawing.Size(57, 20)
-		Me.tbNCVCorrFactor.TabIndex = 8
-		'
-		'Label20
-		'
-		Me.Label20.AutoSize = True
-		Me.Label20.Location = New System.Drawing.Point(99, 76)
-		Me.Label20.Name = "Label20"
-		Me.Label20.Size = New System.Drawing.Size(89, 13)
-		Me.Label20.TabIndex = 9
-		Me.Label20.Text = "Reg. Per. Corr. F."
-		'
-		'tbRegPerCorrFactor
-		'
-		Me.tbRegPerCorrFactor.Location = New System.Drawing.Point(194, 73)
-		Me.tbRegPerCorrFactor.Name = "tbRegPerCorrFactor"
-		Me.tbRegPerCorrFactor.Size = New System.Drawing.Size(57, 20)
-		Me.tbRegPerCorrFactor.TabIndex = 10
 		'
 		'EngineForm
 		'

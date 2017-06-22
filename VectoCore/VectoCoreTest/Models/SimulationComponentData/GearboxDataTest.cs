@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dataEng =
 				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFldString));
-			var engineFld = EngineFullLoadCurve.Create(dataEng, true);
+			var engineFld = FullLoadCurveReader.Create(dataEng, true);
 
 
 			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFld, 2500.SI<NewtonMeter>());
@@ -322,12 +322,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void TestFullLoadSorting()
 		{
 			var gbxFldString = new[] {
-				"600, 1000",
-				"2400, 2000",
-				"1000, 500"
+				"600, 1000, -100",
+				"2400, 2000, -120",
+				"1000, 500, -110"
 			};
 
-			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFldString));
+			var dataGbx =
+				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm], Mdrag [Nm]", gbxFldString));
 			var gbxFld = FullLoadCurveReader.Create(dataGbx, true);
 
 			var maxTorque = gbxFld.FullLoadStationaryTorque(800.RPMtoRad());

@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		internal readonly VehicleData ModelData;
 
-		public AirdragData AirdragData;
+		public readonly AirdragData AirdragData;
 
 
 		public Vehicle(IVehicleContainer container, VehicleData modelData, AirdragData airdrag) : base(container)

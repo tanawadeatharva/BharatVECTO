@@ -47,7 +47,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		private readonly PerSecond _idleSpeed;
 		private readonly PerSecond _ratedSpeed;
-		private const double ClutchEff = 1;
 
 		public IIdleController IdleController {
 			get { return _idleController; }
@@ -145,13 +144,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//     Reason: if angularVelocity = 0 also the power (torque * angularVelocity) is 0 and then
 				//             the torque demand for the engine is 0. no drag torque although vehicle has to decelerate
 				//             "the clutch" eats up the whole torque
-				var effectiveAngularVelocity = angularVelocity.IsEqual(0.SI<PerSecond>())
-					? (PreviousState.OutAngularVelocity + angularVelocity) / 2
-					: angularVelocity;
 				var engineSpeed = VectoMath.Max(_idleSpeed, angularVelocity);
 
 				angularVelocityIn = _clutchSpeedSlippingFactor * engineSpeed + _idleSpeed;
-				//torqueIn = torque * effectiveAngularVelocity / ClutchEff / angularVelocityIn;
+				
 			}
 		}
 

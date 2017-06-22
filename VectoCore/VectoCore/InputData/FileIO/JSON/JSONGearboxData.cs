@@ -484,17 +484,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<string>(JsonKeys.Gearbox_ModelName); }
 		}
 
-		public string Creator
-		{
-			get { return "N/A"; }
-		}
-
 		public string Date
-		{
-			get { return "N/A"; }
-		}
-
-		public string TechnicalReportId
 		{
 			get { return "N/A"; }
 		}

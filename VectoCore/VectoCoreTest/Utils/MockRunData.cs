@@ -53,7 +53,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Loading = 0.SI<Kilogram>(),
 				TotalRollResistanceCoefficient = 0,
 				DynamicTyreRadius = 1.SI<Meter>(),
-				
 			};
 			AirdragData = new AirdragData() {
 				CrossWindCorrectionCurve =
@@ -68,25 +67,24 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Displacement = 0.SI<CubicMeter>(),
 				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() {
 					{
-						0, new EngineFullLoadCurve() {
-							FullLoadEntries = new List<FullLoadCurve.FullLoadCurveEntry>() {
-								new FullLoadCurve.FullLoadCurveEntry() {
+						0, new EngineFullLoadCurve(
+							new List<EngineFullLoadCurve.FullLoadCurveEntry>() {
+								new EngineFullLoadCurve.FullLoadCurveEntry() {
 									EngineSpeed = 600.RPMtoRad(),
 									TorqueDrag = -100.SI<NewtonMeter>(),
 									TorqueFullLoad = 500.SI<NewtonMeter>()
 								},
-								new FullLoadCurve.FullLoadCurveEntry() {
+								new EngineFullLoadCurve.FullLoadCurveEntry() {
 									EngineSpeed = 1800.RPMtoRad(),
 									TorqueDrag = -120.SI<NewtonMeter>(),
 									TorqueFullLoad = 1200.SI<NewtonMeter>()
 								},
-								new FullLoadCurve.FullLoadCurveEntry() {
+								new EngineFullLoadCurve.FullLoadCurveEntry() {
 									EngineSpeed = 2500.RPMtoRad(),
 									TorqueDrag = -150.SI<NewtonMeter>(),
 									TorqueFullLoad = 400.SI<NewtonMeter>()
 								},
-							}
-						}
+							}, null)
 					}
 				}
 			};
