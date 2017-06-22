@@ -462,13 +462,15 @@ namespace TUGraz.VectoCore.OutputData
 			if (fcfinal != null) {
 				row[FCFINAL_KM] = fcfinal.ConvertTo().Gramm.Per.Kilo.Meter;
 			}
-			row[FCFINAL_LITERPER100KM] = modData.FuelConsumptionFinalLiterPer100Kilometer();
-			if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
-				row[FCFINAL_LITERPER100TKM] = (modData.FuelConsumptionFinalLiterPer100Kilometer() ?? 0.SI()) /
+
+			var fcPer100lkm = modData.FuelConsumptionFinalLiterPer100Kilometer();
+			row[FCFINAL_LITERPER100KM] = fcPer100lkm;
+			if (vehicleLoading != null && !vehicleLoading.IsEqual(0) && fcPer100lkm != null) {
+				row[FCFINAL_LITERPER100TKM] = fcPer100lkm /
 											vehicleLoading.ConvertTo().Ton;
 			}
-			if (cargoVolume > 0) {
-				row[FCFINAL_LiterPer100M3KM] = (modData.FuelConsumptionFinalLiterPer100Kilometer() ?? 0.SI()) / cargoVolume;
+			if (cargoVolume > 0 && fcPer100lkm != null) {
+				row[FCFINAL_LiterPer100M3KM] = fcPer100lkm / cargoVolume;
 			}
 
 			var kilogramPerMeter = modData.CO2PerMeter();
