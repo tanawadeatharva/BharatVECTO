@@ -573,11 +573,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Case<ResponseUnderload>(r => {
 						response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 							gradient, r);
-						response.Switch().Case<ResponseGearShift>(() => {
-							DataBus.BrakePower = 0.SI<Watt>();
-							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-								gradient, r);
-						});
+						response.Switch().
+							Case<ResponseGearShift>(() => {
+								DataBus.BrakePower = 0.SI<Watt>();
+								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+									gradient, r);
+							}).
+							Case<ResponseOverload>(() => {
+								DataBus.BrakePower = 0.SI<Watt>();
+								if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
+									if (DataBus.VehicleSpeed.IsGreater(0)) {
+										response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+									} else {
+										if (RetryDistanceExceeded) {
+											response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+										} else {
+											RetryDistanceExceeded = true;
+											response = new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
+										}
+									}
+								} else {
+									response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+								}
+							});
 					});
 				return response;
 			}
