@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					: Left.StoppingTime;
 			}
 			if (Left.StoppingTime.IsGreater(6 * Constants.SimulationSettings.TargetTimeInterval)) {
-				// 7 pahses
+				// 7 phases
 				return GetStopTimeIntervalSevenPhasesPTO();
 			}
 			if (Left.StoppingTime.IsGreater(0)) {
