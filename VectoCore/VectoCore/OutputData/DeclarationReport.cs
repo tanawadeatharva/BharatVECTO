@@ -30,10 +30,8 @@
 */
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -91,10 +89,6 @@ namespace TUGraz.VectoCore.OutputData
 		/// </summary>
 		internal Segment Segment { get; set; }
 
-		/// <summary>
-		/// The creator name for the report.
-		/// </summary>
-		public string Creator { get; set; }
 
 		/// <summary>
 		/// The result count determines how many results must be given before the report gets written.

@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Inertia = 0.SI<KilogramSquareMeter>(),
 			};
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
-			fullLoadCurves[0] = EngineFullLoadCurve.Create(
+			fullLoadCurves[0] = FullLoadCurveReader.Create(
 				VectoCSVFile.ReadStream(
 					InputDataHelper.InputDataAsStream("engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]",
 						fld)));

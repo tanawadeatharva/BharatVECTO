@@ -35,7 +35,6 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -153,11 +152,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.SimulationInterval = dt;
 			debug.Add(response);
 			return response;
-		}
-
-		public string CycleName
-		{
-			get { return Data.Name; }
 		}
 
 		public double Progress

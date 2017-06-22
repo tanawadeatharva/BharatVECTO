@@ -35,7 +35,6 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -44,8 +43,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class AMTShiftStrategy : ShiftStrategy
 	{
-		protected uint MaxStartGear;
-		protected uint _nextGear { get; set; }
+		protected readonly uint MaxStartGear;
+		protected uint _nextGear;
 
 		public AMTShiftStrategy(VectoRunData runData, IDataBus dataBus) : base(runData.GearboxData, dataBus)
 		{
@@ -111,13 +110,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					var fullLoadPower = response.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
 					var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
-					var inTorque = response.ClutchPowerRequest / inAngularSpeed;
-
-
+					
 					if (response.EngineSpeed > DataBus.EngineIdleSpeed && reserve >= ModelData.StartTorqueReserve) {
 						_nextGear = gear;
-						//_gearbox.LastUpshift = absTime;
-						//_gearbox.LastDownshift = absTime;
 						return gear;
 					}
 				}

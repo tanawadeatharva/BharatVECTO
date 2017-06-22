@@ -99,8 +99,6 @@ Partial Class MainForm
 		Me.GearboxEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.GraphToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
-		Me.SignOrVerifyFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-		Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
 		Me.OpenLogToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.SettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripDrDnBtInfo = New System.Windows.Forms.ToolStripDropDownButton()
@@ -108,7 +106,6 @@ Partial Class MainForm
 		Me.UpdateNotesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ReportBugViaCITnetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
-		Me.CreateActivationFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.AboutVECTOToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
 		Me.CmDEV = New System.Windows.Forms.ContextMenuStrip(Me.components)
 		Me.TmProgSec = New System.Windows.Forms.Timer(Me.components)
@@ -672,7 +669,7 @@ Partial Class MainForm
 		'
 		'ToolStripDrDnBtTools
 		'
-		Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.SignOrVerifyFilesToolStripMenuItem, Me.ToolStripSeparator4, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
+		Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
 		Me.ToolStripDrDnBtTools.Image = Global.TUGraz.VECTO.My.Resources.Resources.Misc_Tools_icon
 		Me.ToolStripDrDnBtTools.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.ToolStripDrDnBtTools.Name = "ToolStripDrDnBtTools"
@@ -719,19 +716,6 @@ Partial Class MainForm
 		Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
 		Me.ToolStripSeparator6.Size = New System.Drawing.Size(167, 6)
 		'
-		'SignOrVerifyFilesToolStripMenuItem
-		'
-		Me.SignOrVerifyFilesToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.Status_dialog_password_icon
-		Me.SignOrVerifyFilesToolStripMenuItem.Name = "SignOrVerifyFilesToolStripMenuItem"
-		Me.SignOrVerifyFilesToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
-		Me.SignOrVerifyFilesToolStripMenuItem.Text = "Sign or Verify Files"
-		'
-		'ToolStripSeparator4
-		'
-		Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-		Me.ToolStripSeparator4.Size = New System.Drawing.Size(167, 6)
-		Me.ToolStripSeparator4.Visible = False
-		'
 		'OpenLogToolStripMenuItem
 		'
 		Me.OpenLogToolStripMenuItem.Name = "OpenLogToolStripMenuItem"
@@ -746,7 +730,7 @@ Partial Class MainForm
 		'
 		'ToolStripDrDnBtInfo
 		'
-		Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.ReportBugViaCITnetToolStripMenuItem, Me.ToolStripSeparator3, Me.CreateActivationFileToolStripMenuItem, Me.AboutVECTOToolStripMenuItem1})
+		Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.ReportBugViaCITnetToolStripMenuItem, Me.ToolStripSeparator3, Me.AboutVECTOToolStripMenuItem1})
 		Me.ToolStripDrDnBtInfo.Image = Global.TUGraz.VECTO.My.Resources.Resources.Help_icon
 		Me.ToolStripDrDnBtInfo.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.ToolStripDrDnBtInfo.Name = "ToolStripDrDnBtInfo"
@@ -775,12 +759,6 @@ Partial Class MainForm
 		'
 		Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
 		Me.ToolStripSeparator3.Size = New System.Drawing.Size(219, 6)
-		'
-		'CreateActivationFileToolStripMenuItem
-		'
-		Me.CreateActivationFileToolStripMenuItem.Name = "CreateActivationFileToolStripMenuItem"
-		Me.CreateActivationFileToolStripMenuItem.Size = New System.Drawing.Size(222, 22)
-		Me.CreateActivationFileToolStripMenuItem.Text = "Create Activation File"
 		'
 		'AboutVECTOToolStripMenuItem1
 		'
@@ -905,11 +883,9 @@ Partial Class MainForm
 	Friend WithEvents ToolStripDrDnBtTools As ToolStripDropDownButton
 	Friend WithEvents GENEditorToolStripMenuItem1 As ToolStripMenuItem
 	Friend WithEvents VEHEditorToolStripMenuItem As ToolStripMenuItem
-	Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
 	Friend WithEvents OpenLogToolStripMenuItem As ToolStripMenuItem
 	Friend WithEvents SettingsToolStripMenuItem As ToolStripMenuItem
 	Friend WithEvents ToolStripDrDnBtInfo As ToolStripDropDownButton
-	Friend WithEvents CreateActivationFileToolStripMenuItem As ToolStripMenuItem
 	Friend WithEvents AboutVECTOToolStripMenuItem1 As ToolStripMenuItem
 	Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
 	Friend WithEvents ToolStripProgBarJob As ToolStripProgressBar
@@ -925,7 +901,6 @@ Partial Class MainForm
 	Friend WithEvents ColumnHeader8 As ColumnHeader
 	Friend WithEvents ColumnHeader9 As ColumnHeader
 	Friend WithEvents UpdateNotesToolStripMenuItem As ToolStripMenuItem
-	Friend WithEvents SignOrVerifyFilesToolStripMenuItem As ToolStripMenuItem
 	Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
 	Friend WithEvents LbDecl As Label
 	Friend WithEvents GraphToolStripMenuItem As ToolStripMenuItem

@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IDrivingCycle, ISimulationOutPort, IDrivingCycleInPort, IDisposable
 	{
 		private const double LookaheadTimeSafetyMargin = 1.5;
-		internal readonly IDrivingCycleData _data;
+		internal readonly IDrivingCycleData Data;
 		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
 		private bool _intervalProlonged;
 		internal IdleControllerSwitcher IdleController;
@@ -71,11 +71,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public DistanceBasedDrivingCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container)
 		{
-			_data = cycle;
-			CycleIntervalIterator = new DrivingCycleEnumerator(_data);
-			CycleStartDistance = _data.Entries.Count > 0 ? _data.Entries.First().Distance : 0.SI<Meter>();
+			Data = cycle;
+			CycleIntervalIterator = new DrivingCycleEnumerator(Data);
+			CycleStartDistance = Data.Entries.Count > 0 ? Data.Entries.First().Distance : 0.SI<Meter>();
 
-			var first = _data.Entries.First();
+			var first = Data.Entries.First();
 			PreviousState = new DrivingCycleState {
 				AbsTime = 0.SI<Second>(),
 				WaitTime = 0.SI<Second>(),
@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return CurrentState.Response;
 				}
 			}
-			if (CycleIntervalIterator.LastEntry && PreviousState.Distance.IsEqual(CycleIntervalIterator.RightSample.Distance)) {
+			if (CycleIntervalIterator.LastEntry && PreviousState.Distance.IsEqual(Right.Distance)) {
 				CurrentState.Response = new ResponseCycleFinished();
 				return CurrentState.Response;
 			}
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			// only drive until next sample point in cycle with speed change
 			Log.Debug("Limiting distance to next sample point {0}",
-				CycleIntervalIterator.RightSample.Distance - PreviousState.Distance);
+				Right.Distance - PreviousState.Distance);
 			CurrentState.Response = new ResponseDrivingCycleDistanceExceeded {
 				Source = this,
 				MaxDistance = nextSpeedChange - PreviousState.Distance
@@ -325,7 +325,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// separately test for equality and greater than to have tolerance for equality comparison
 			if (stopTime.IsEqual(0)) {
-				while (stopTime.IsEqual(0) && CurrentState.Distance.IsGreaterOrEqual(CycleIntervalIterator.RightSample.Distance) &&
+				while (stopTime.IsEqual(0) && CurrentState.Distance.IsGreaterOrEqual(Right.Distance) &&
 						!CycleIntervalIterator.LastEntry) {
 					// we have reached the end of the current interval in the cycle, move on...
 					CycleIntervalIterator.MoveNext();
@@ -347,8 +347,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private Radian ComputeGradient(Meter ds)
 		{
-			//var leftSamplePoint = Left;
-
 			var cycleIterator = CycleIntervalIterator.Clone();
 			while (cycleIterator.RightSample.Distance < PreviousState.Distance + ds && !cycleIterator.LastEntry) {
 				cycleIterator.MoveNext();
@@ -393,9 +391,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public double Progress
 		{
 			get {
-				return _data.Entries.Count > 0
-					? (CurrentState.Distance.Value() - _data.Entries.First().Distance.Value()) /
-					(_data.Entries.Last().Distance.Value() - _data.Entries.First().Distance.Value())
+				return Data.Entries.Count > 0
+					? (CurrentState.Distance.Value() - Data.Entries.First().Distance.Value()) /
+					(Data.Entries.Last().Distance.Value() - Data.Entries.First().Distance.Value())
 					: 0;
 			}
 		}
@@ -444,7 +442,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void FinishSimulation()
 		{
-			_data.Finish();
+			Data.Finish();
 		}
 
 		public CycleData CycleData
@@ -466,8 +464,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var absDistance = CurrentState.Distance + distance;
 			var myIterator = CycleIntervalIterator.Clone();
 
-			if (absDistance > _data.Entries.Last().Distance) {
-				return ExtrapolateCycleEntry(absDistance, _data.Entries.Last());
+			if (absDistance > Data.Entries.Last().Distance) {
+				return ExtrapolateCycleEntry(absDistance, Data.Entries.Last());
 			}
 			while (myIterator.RightSample.Distance < absDistance) {
 				myIterator.MoveNext();
@@ -508,13 +506,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Meter Altitude
 		{
 			get { return PreviousState.Altitude; }
-		}
-
-		internal void SetDriveOffDistance(Meter startDistance)
-		{
-			while (CycleIntervalIterator.MoveNext() && CycleIntervalIterator.RightSample.Distance < startDistance) {}
-			PreviousState.Distance = startDistance;
-			CycleStartDistance = startDistance;
 		}
 
 		public sealed class DrivingCycleState

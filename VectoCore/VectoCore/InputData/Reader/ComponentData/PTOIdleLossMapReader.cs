@@ -36,7 +36,6 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -44,19 +43,6 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public static class PTOIdleLossMapReader
 	{
-		/// <summary>
-		/// Read the retarder loss map from a file.
-		/// </summary>
-		/// <param name="fileName"></param>
-		/// <returns></returns>
-		public static PTOLossMap ReadFromFile(string fileName)
-		{
-			try {
-				return Create(VectoCSVFile.Read(fileName));
-			} catch (Exception ex) {
-				throw new VectoException("ERROR while loading PTO Idle LossMap: " + ex.Message);
-			}
-		}
 
 		public static PTOLossMap ReadFromStream(Stream stream)
 		{

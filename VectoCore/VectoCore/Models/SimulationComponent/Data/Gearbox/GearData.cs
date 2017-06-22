@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				}
 				var result = gearData.TorqueConverterShiftPolygon.Validate(mode, gbxType, emsMission);
 				if (result.Any()) {
-					return new ValidationResult(string.Format("Validation of GearData failed"), result.Select(x => x.ErrorMessage));
+					return new ValidationResult("Validation of GearData failed", result.Select(x => x.ErrorMessage));
 				}
 			}
 			return ValidationResult.Success;

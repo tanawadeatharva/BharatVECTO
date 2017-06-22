@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -248,7 +249,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				DeclarationData.Gearbox.ShiftPolygonFldMargin(
 					engineFld.Select(
 						p =>
-							new FullLoadCurve.FullLoadCurveEntry() {
+							new EngineFullLoadCurve.FullLoadCurveEntry() {
 								EngineSpeed = p.X.SI<PerSecond>(),
 								TorqueFullLoad = p.Y.SI<NewtonMeter>()
 							}).ToList(),
@@ -444,7 +445,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
-			fullLoadCurves[0] = EngineFullLoadCurve.ReadFromFile(engineFldFile, true);
+			fullLoadCurves[0] = FullLoadCurveReader.ReadFromFile(engineFldFile, true);
 			fullLoadCurves[0].EngineData = engineData;
 			for (uint i = 1; i <= gearboxData.Gears.Count; i++) {
 				fullLoadCurves[i] = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves[0],
@@ -531,7 +532,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
-			fullLoadCurves[0] = EngineFullLoadCurve.ReadFromFile(Path.Combine(BasePath, engineFldFile), true);
+			fullLoadCurves[0] = FullLoadCurveReader.ReadFromFile(Path.Combine(BasePath, engineFldFile), true);
 			fullLoadCurves[0].EngineData = engineData;
 			for (uint i = 1; i <= gearboxData.Gears.Count; i++) {
 				fullLoadCurves[i] = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves[0],

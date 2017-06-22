@@ -11,7 +11,6 @@
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Text
-Imports vectolic
 
 Public Module VECTO_Global
 	Public Const VECTOvers As String = "3"
@@ -25,18 +24,11 @@ Public Module VECTO_Global
 	Public LogFile As FileLogger
 
 	'to ensure correct format for backgroundworker thread
-
 	Public VectoWorkerV3 As BackgroundWorker
 
 	Public Cfg As Configuration
 
-	'Public sKey As csKey
-
 	Public ReadOnly FileFormat As Encoding = Encoding.UTF8
-
-	Public Lic As cLicense
-	'Public VSUM As cVSUM
-	'Public DEV As cDEV
 
 
 	Public ProgBarCtrl As ProgressbarControl
@@ -256,28 +248,6 @@ Module Constants
 
 
 	' ReSharper disable once ClassNeverInstantiated.Global
-
 End Module
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

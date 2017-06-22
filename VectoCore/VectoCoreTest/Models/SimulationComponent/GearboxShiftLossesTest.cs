@@ -108,6 +108,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gbx.IdleController = new MockIdleController();
 
 			var init = gbx.Initialize(0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
+			axleGear.Initialize(0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
 
 			gbx.Gear = gear;
 
@@ -115,6 +116,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = 0.5.SI<Second>();
 			var response = gbx.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
 			axleGear.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
+
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			container.CommitSimulationStep(absTime, dt);

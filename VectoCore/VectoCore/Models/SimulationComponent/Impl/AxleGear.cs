@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt AxlegearLoss()
 		{
-			return PreviousState.TorqueLoss * PreviousState.InAngularVelocity;
+			return PreviousState.TorqueLossResult.Value * PreviousState.InAngularVelocity;
 		}
 	}
 }

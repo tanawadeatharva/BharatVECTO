@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IDriverEngineeringInputData DriverInputData
 		{
-			get { return DriverInputData; }
+			get { throw new NotImplementedException(); }
 		}
 
 		public IPTOTransmissionInputData PTOTransmissionInputData
@@ -180,6 +180,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return PTOTransmission; }
 		}
 
-		public XElement XMLHash { get { return null; } }
+		public XElement XMLHash
+		{
+			get { return null; }
+		}
 	}
 }

@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Principal;
 using System.Threading;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -125,7 +124,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				: null;
 
 			if (ActualModalData) {
-				modDataFilter = new[] { new ActualModalDataFilter(), };
+				modDataFilter = new IModalDataFilter[] { new ActualModalDataFilter(), };
 			}
 
 
@@ -154,9 +153,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
 						};
 				var current = i++;
-				var builder = new PowertrainBuilder(modContainer, (modData) => {
+				var builder = new PowertrainBuilder(modContainer, modData => {
 					if (SumData != null) {
-						SumData.Write(modData, string.Format("{0}-{1}", JobNumber, current), d);
+						SumData.Write(modData, JobNumber, current, d);
 						//SumData.Write(modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, current),
 						//	d.Cycle.Name + Constants.FileExtensions.CycleFile, mass, loading, volume ?? 0.SI<CubicMeter>(), gearCount);
 					}

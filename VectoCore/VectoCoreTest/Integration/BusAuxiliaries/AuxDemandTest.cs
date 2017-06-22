@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -125,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering, new MockModalDataContainer());
 			var fcMap = FuelConsumptionMapReader.ReadFromFile(engineFCMapFilePath);
-			var fld = EngineFullLoadCurve.ReadFromFile(engineFLDFilePath);
+			var fld = FullLoadCurveReader.ReadFromFile(engineFLDFilePath);
 			var modelData = new CombustionEngineData() {
 				ConsumptionMap = fcMap,
 				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fld }, { 1, fld } },
