@@ -55,7 +55,7 @@ Public Class JSONFileWriter
 		body.Add("RatedPower", eng.RatedPowerDeclared.Value())
 		body.Add("RatedSpeed", eng.RatedSpeedDeclared.AsRPM)
 		body.Add("MaxTorque", eng.MaxTorqueDeclared.Value())
-		body.Add("FuelType", eng.FuelType)
+		body.Add("FuelType", eng.FuelType.ToString())
 
 		body.Add("FullLoadCurve", GetRelativePath(eng.FullLoadCurve.Source, Path.GetDirectoryName(filename)))
 
