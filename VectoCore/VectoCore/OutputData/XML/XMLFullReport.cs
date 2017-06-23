@@ -298,7 +298,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private object[] GetSuccessResultEntry(XMLDeclarationReport.ResultEntry result)
 		{
 			return new object[] {
-				new XElement(tns + "Distance", new XAttribute("unit", "km"), result.Distance.ToXMLFormat(1)),
+				new XElement(tns + "Distance", new XAttribute("unit", "km"), result.Distance.ConvertTo().Kilo.Meter.ToXMLFormat(3)),
 				new XElement(tns + "SimulationParameters",
 					new XElement(tns + "TotalVehicleMass", new XAttribute("unit", "kg"), result.TotalVehicleWeight.ToXMLFormat(0)),
 					new XElement(tns + "Payload", new XAttribute("unit", "kg"), result.Payload.ToXMLFormat(0)),
