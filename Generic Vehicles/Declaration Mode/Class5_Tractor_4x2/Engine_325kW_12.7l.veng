@@ -19,7 +19,7 @@
     "CFRegPer": 1.0,
     "CFNCV": 1.0,
     "RatedPower": 325000.0,
-    "RatedSpeed": 1600.0,
+    "RatedSpeed": 1800.0,
     "MaxTorque": 2400.0,
     "FuelType": 0,
     "FullLoadCurve": "325kW.vfld",
