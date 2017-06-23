@@ -369,7 +369,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static SI FuelConsumptionFinalLiterPer100Kilometer(this IModalDataContainer data)
 		{
 			var fuelConsumptionFinal = data.FuelConsumptionFinal();
-			if (fuelConsumptionFinal == null) {
+			if (fuelConsumptionFinal == null || data.FuelData.FuelDensity == null) {
 				return null;
 			}
 
@@ -538,11 +538,14 @@ namespace TUGraz.VectoCore.OutputData
 				retVal[i] = 0.SI<Scalar>();
 			}
 
-			data.GetValues(x => {
-				var gear = x.Field<uint>((int)ModalResultField.Gear);
-				retVal[gear] += x.Field<Second>((int)ModalResultField.simulationInterval).Value();
-				return gear; // not used
+			var gearData = data.GetValues(x => new {
+				Gear = x.Field<uint>((int)ModalResultField.Gear),
+				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
 			});
+
+			foreach (var entry in gearData) {
+				retVal[entry.Gear] += entry.dt.Value();
+			}
 
 			var duration = Duration(data).Value();
 			for (uint i = 0; i <= gearCount; i++) {

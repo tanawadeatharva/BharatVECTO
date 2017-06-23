@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inAngularVelocity = outAngularVelocity * effectiveRatio;
 			var torqueLossResult = torqueConverterLocked
 				? ModelData.Gears[gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque)
-				: ModelData.Gears[Gear].TorqueConverterGearLossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+				: ModelData.Gears[gear].TorqueConverterGearLossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 
 			var inTorque = outTorque / effectiveRatio + torqueLossResult.Value;
 

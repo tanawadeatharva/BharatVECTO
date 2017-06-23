@@ -43,16 +43,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 	public class FuelTypesTest
 	{
 		[TestCase(FuelType.DieselCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 0.0006944, 9394.4751,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 0.0006886, 9394.4751,
 			TestName = "Diesel LH Low"),
 		TestCase(FuelType.EthanolCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 0.0004197, 6424.3249,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 0.00040262, 5588.282,
 			TestName = "Ethanol LH Low"),
 		TestCase(FuelType.DieselCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1, 0.0008048, 10875.0171,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1, 0.0007971, 10875.0171,
 			TestName = "Diesel LH Ref"),
 		TestCase(FuelType.EthanolCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1, 0.0004864, 7436.7798,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1, 0.0004660, 6468.9797,
 			TestName = "Ethanol LH Ref"),]
 		public void TestFuelTypesCO2(FuelType fuelType, string jobName, int runIdx, double expectedCo2, double expectedMJ)
 		{

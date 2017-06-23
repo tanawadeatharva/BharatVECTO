@@ -32,13 +32,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using System.Xml.XPath;
 using NUnit.Framework;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
@@ -421,7 +418,6 @@ namespace VectoHashingTest
 		TestCase(VectoComponents.Angledrive, "ANGL-"),
 		TestCase(VectoComponents.Airdrag, "AD-"),
 		TestCase(VectoComponents.Tyre, "TYRE-"),
-		
 		]
 		public void TestIdPrefix(VectoComponents component, string expectedPrefix)
 		{
