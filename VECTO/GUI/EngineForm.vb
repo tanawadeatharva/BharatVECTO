@@ -121,12 +121,9 @@ Public Class EngineForm
 
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim browserRegistryString As String =
-					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim defaultBrowserPath As String =
-					Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#engine-editor"))
+						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#engine-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -550,11 +547,5 @@ Public Class EngineForm
 		Catch ex As Exception
 			MsgBox("Failed to load file! " & ex.Message, MsgBoxStyle.Critical)
 		End Try
-	End Sub
-
-	Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TbWHTCEngineering.TextChanged
-	End Sub
-
-	Private Sub Label9_Click(sender As Object, e As EventArgs) Handles lblWhtcEngineering.Click
 	End Sub
 End Class

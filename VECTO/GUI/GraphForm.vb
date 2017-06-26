@@ -280,17 +280,17 @@ Public Class GraphForm
 		Dim xya(3) As Double
 		Dim i As Int16
 
-		Dim inv As Double = (_xMax - _xMin) / 10
+		Dim inv As Double = (_xMax - _xMin)/10
 
 		Dim grx As Long = 20
-		Do While 10 ^ grx > inv
+		Do While 10^grx > inv
 			grx = grx - 1
 		Loop
 
-		xyd(0) = 1 * 10 ^ grx
-		xyd(1) = 2.5 * 10 ^ grx
-		xyd(2) = 5 * 10 ^ grx
-		xyd(3) = 10 * 10 ^ grx
+		xyd(0) = 1*10^grx
+		xyd(1) = 2.5*10^grx
+		xyd(2) = 5*10^grx
+		xyd(3) = 10*10^grx
 		For i = 0 To 3
 			xya(i) = Math.Abs(inv - xyd(i))
 		Next
@@ -473,13 +473,13 @@ Public Class GraphForm
 	Private Sub BtZoomIn_Click(sender As Object, e As EventArgs) Handles BtZoomIn.Click
 		Dim d As Double
 
-		d = (_xMax - _xMin) / 10
+		d = (_xMax - _xMin)/10
 
-		_xMin += 2 * 0.5 * d
-		_xMax -= 2 * (1 - 0.5) * d
+		_xMin += 2*0.5*d
+		_xMax -= 2*(1 - 0.5)*d
 
 		If _xMin > 1000 Then
-			_xMin = Math.Round(_xMin / 100, 0) * 100
+			_xMin = Math.Round(_xMin/100, 0)*100
 		Else
 			_xMin = Math.Round(_xMin, 0)
 		End If
@@ -491,13 +491,13 @@ Public Class GraphForm
 	Private Sub BtZoomOut_Click(sender As Object, e As EventArgs) Handles BtZoomOut.Click
 		Dim d As Double
 
-		d = (_xMax - _xMin) / 10
+		d = (_xMax - _xMin)/10
 
-		_xMin -= 2 * 0.5 * d
-		_xMax += 2 * (1 - 0.5) * d
+		_xMin -= 2*0.5*d
+		_xMax += 2*(1 - 0.5)*d
 
 		If _xMin > 1000 Then
-			_xMin = Math.Round(_xMin / 100, 0) * 100
+			_xMin = Math.Round(_xMin/100, 0)*100
 		Else
 			_xMin = Math.Round(_xMin, 0)
 		End If
@@ -511,12 +511,12 @@ Public Class GraphForm
 
 		If _xMin <= 0 Then Exit Sub
 
-		d = (_xMax - _xMin) / 3
+		d = (_xMax - _xMin)/3
 		_xMin -= d
 		_xMax -= d
 
 		If _xMin > 1000 Then
-			_xMin = Math.Round(_xMin / 100, 0) * 100
+			_xMin = Math.Round(_xMin/100, 0)*100
 		Else
 			_xMin = Math.Round(_xMin, 0)
 		End If
@@ -530,12 +530,12 @@ Public Class GraphForm
 
 		If _xMax >= _xMax0 Then Exit Sub
 
-		d = (_xMax - _xMin) / 3
+		d = (_xMax - _xMin)/3
 		_xMin += d
 		_xMax += d
 
 		If _xMin > 1000 Then
-			_xMin = Math.Round(_xMin / 100, 0) * 100
+			_xMin = Math.Round(_xMin/100, 0)*100
 		Else
 			_xMin = Math.Round(_xMin, 0)
 		End If
@@ -546,12 +546,9 @@ Public Class GraphForm
 
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim browserRegistryString As String =
-					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim defaultBrowserPath As String =
-					Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#graph-window"))
+						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#graph-window"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
