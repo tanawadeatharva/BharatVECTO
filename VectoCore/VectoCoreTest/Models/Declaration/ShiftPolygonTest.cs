@@ -74,9 +74,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 20),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
+			var result = DeclarationData.Gearbox.IntersectTakeHigherShiftLine(upShift, transformed);
 
-			Assert.AreEqual(expected.Length, result.Count);
+			Assert.AreEqual(expected.Length, result.Length);
 
 			foreach (var tuple in expected.Zip(result, Tuple.Create)) {
 				Assert.AreEqual(tuple.Item1.X, tuple.Item2.X);
@@ -105,18 +105,18 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 15.6),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
+			var result = DeclarationData.Gearbox.IntersectTakeHigherShiftLine(upShift, transformed);
 
-			Assert.AreEqual(expected.Length, result.Count);
+			Assert.AreEqual(expected.Length, result.Length);
 
 			foreach (var tuple in expected.Zip(result, Tuple.Create)) {
 				Assert.AreEqual(tuple.Item1.X, tuple.Item2.X);
 				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y);
 			}
 
-			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed, upShift);
+			result = DeclarationData.Gearbox.IntersectTakeHigherShiftLine(transformed, upShift);
 
-			Assert.AreEqual(expected.Length, result.Count);
+			Assert.AreEqual(expected.Length, result.Length);
 
 			foreach (var tuple in expected.Zip(result, Tuple.Create)) {
 				Assert.AreEqual(tuple.Item1.X, tuple.Item2.X);
@@ -146,18 +146,18 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 20),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
+			var result = DeclarationData.Gearbox.IntersectTakeHigherShiftLine(upShift, transformed);
 
-			Assert.AreEqual(expected.Length, result.Count);
+			Assert.AreEqual(expected.Length, result.Length);
 
 			foreach (var tuple in expected.Zip(result, Tuple.Create)) {
 				Assert.AreEqual(tuple.Item1.X, tuple.Item2.X);
 				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y);
 			}
 
-			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed, upShift);
+			result = DeclarationData.Gearbox.IntersectTakeHigherShiftLine(transformed, upShift);
 
-			Assert.AreEqual(expected.Length, result.Count);
+			Assert.AreEqual(expected.Length, result.Length);
 
 			foreach (var tuple in expected.Zip(result, Tuple.Create)) {
 				Assert.AreEqual(tuple.Item1.X, tuple.Item2.X);
@@ -187,18 +187,108 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(20, 16.8),
 			};
 
-			var result = DeclarationData.Gearbox.IntersectShiftPolygon(upShift, transformed);
+			var result = DeclarationData.Gearbox.IntersectTakeHigherShiftLine(upShift, transformed);
 
-			Assert.AreEqual(expected.Length, result.Count);
+			Assert.AreEqual(expected.Length, result.Length);
 
 			foreach (var tuple in expected.Zip(result, Tuple.Create)) {
 				Assert.AreEqual(tuple.Item1.X, tuple.Item2.X, 1e-3);
 				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y, 1e-3);
 			}
 
-			result = DeclarationData.Gearbox.IntersectShiftPolygon(transformed, upShift);
+			result = DeclarationData.Gearbox.IntersectTakeHigherShiftLine(transformed, upShift);
 
-			Assert.AreEqual(expected.Length, result.Count);
+			Assert.AreEqual(expected.Length, result.Length);
+
+			foreach (var tuple in expected.Zip(result, Tuple.Create)) {
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.X, 1e-3);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y, 1e-3);
+			}
+		}
+
+		[TestCase]
+		public void LimitShiftlines1()
+		{
+			var upShift = new[] {
+				new Point(10, 0),
+				new Point(10, 10),
+				new Point(20, 20),
+			};
+
+			var limit = new[] {
+				new Point(8, 0),
+				new Point(8, 20)
+			};
+
+			var expected = new[] {
+				new Point(8, 0),
+				new Point(8, 20)
+			};
+
+			var result = DeclarationData.Gearbox.IntersectTakeLowerShiftLine(upShift, limit);
+
+			Assert.AreEqual(expected.Length, result.Length);
+
+			foreach (var tuple in expected.Zip(result, Tuple.Create)) {
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.X, 1e-3);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y, 1e-3);
+			}
+		}
+
+		[TestCase]
+		public void LimitShiftlines2()
+		{
+			var upShift = new[] {
+				new Point(10, 0),
+				new Point(10, 10),
+				new Point(20, 20),
+			};
+
+			var limit = new[] {
+				new Point(15, 0),
+				new Point(15, 20)
+			};
+
+			var expected = new[] {
+				new Point(10, 0),
+				new Point(10, 10),
+				new Point(15, 15),
+				new Point(15, 20),
+			};
+
+			var result = DeclarationData.Gearbox.IntersectTakeLowerShiftLine(upShift, limit);
+
+			Assert.AreEqual(expected.Length, result.Length);
+
+			foreach (var tuple in expected.Zip(result, Tuple.Create)) {
+				Assert.AreEqual(tuple.Item1.X, tuple.Item2.X, 1e-3);
+				Assert.AreEqual(tuple.Item1.Y, tuple.Item2.Y, 1e-3);
+			}
+		}
+
+		[TestCase]
+		public void LimitShiftlines3()
+		{
+			var upShift = new[] {
+				new Point(10, 0),
+				new Point(10, 10),
+				new Point(20, 20),
+			};
+
+			var limit = new[] {
+				new Point(25, 0),
+				new Point(25, 20)
+			};
+
+			var expected = new[] {
+				new Point(10, 0),
+				new Point(10, 10),
+				new Point(20, 20),
+			};
+
+			var result = DeclarationData.Gearbox.IntersectTakeLowerShiftLine(upShift, limit);
+
+			Assert.AreEqual(expected.Length, result.Length);
 
 			foreach (var tuple in expected.Zip(result, Tuple.Create)) {
 				Assert.AreEqual(tuple.Item1.X, tuple.Item2.X, 1e-3);
@@ -546,7 +636,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				shiftPolygons.Add(
 					DeclarationData.Gearbox.ComputeShiftPolygon(gearboxData.Type, i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
 						engineData, axlegearRatio, rdyn.SI<Meter>())
-				);
+					);
 				List<Point> tmp1, tmp2, tmp3;
 				ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
 					engineData, axlegearRatio, rdyn.SI<Meter>(), out tmp1, out tmp2, out tmp3);
@@ -669,7 +759,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = Tuple.Create(
 				new ShiftPolygon.ShiftPolygonEntry(550.SI<NewtonMeter>(), 685.RPMtoRad()),
 				new ShiftPolygon.ShiftPolygonEntry(1200.SI<NewtonMeter>(), 1080.RPMtoRad())
-			);
+				);
 
 			Assert.AreEqual(result, ShiftPolygon.IsLeftOf(speed.RPMtoRad(), torque.SI<NewtonMeter>(), segment));
 		}
