@@ -91,7 +91,7 @@ namespace TUGraz.VectoHashing
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				var count =
 					Document.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']",
-						XMLNames.VectoInputDeclaration,component.XMLElementName())).Count;
+						XMLNames.VectoInputDeclaration, component.XMLElementName())).Count;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(component);
 				}
@@ -174,7 +174,7 @@ namespace TUGraz.VectoHashing
 				components = new List<VectoComponents>() { VectoComponents.VectoOutput };
 			} else if (Document.DocumentElement.LocalName.Equals("VectoCustomerInformation")) {
 				components = new List<VectoComponents>() { VectoComponents.VectoCustomerInformation };
-			}else {
+			} else {
 				throw new Exception("unknown document structure! neither input data nor output data format");
 			}
 			var query = string.Format("//*[local-name()='{0}']/*[local-name()='Data']", components[0].XMLElementName());
