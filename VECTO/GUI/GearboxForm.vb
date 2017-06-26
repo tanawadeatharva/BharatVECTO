@@ -928,9 +928,10 @@ Public Class GearboxForm
 			If _
 				gbx(i).SubItems(GearboxTbl.Ratio).Text <> "" AndAlso Double.TryParse(gbx(i).SubItems(GearboxTbl.Ratio).Text, value) _
 				Then
+				Dim maxSpeed As PerSecond = If(String.IsNullOrWhiteSpace(gbx(i).SubItems(GearboxTbl.MaxSpeed).Text), Nothing, gbx(i).SubItems(GearboxTbl.MaxSpeed).Text.ToDouble().RPMtoRad())
 				retVal.Add(
 					New TransmissionInputData() _
-							With {.Ratio = value})
+							With {.Ratio = value, .MaxInputSpeed = maxSpeed})
 
 			End If
 		Next
