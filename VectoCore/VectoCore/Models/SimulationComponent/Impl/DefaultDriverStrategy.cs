@@ -538,66 +538,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			IResponse response = null;
 			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
-				if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
-					if (DataBus.VehicleSpeed.IsGreater(0)) {
-						response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-					} else {
-						if (RetryDistanceExceeded) {
-							response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-						} else {
-							RetryDistanceExceeded = true;
-							return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
-						}
-					}
-				} else {
-					response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-				}
-				response.Switch().
-					Case<ResponseGearShift>(() => {
-						response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
-						response.Switch().
-							Case<ResponseUnderload>(r => {
-								// under-load may happen if driver limits acceleration when rolling downhill
-								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-									gradient, r);
-							}).
-							Case<ResponseSpeedLimitExceeded>(() => {
-								response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
-									gradient);
-							});
-					}).
-					Case<ResponseSpeedLimitExceeded>(() => {
-						response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
-							gradient);
-					}).
-					Case<ResponseUnderload>(r => {
-						response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-							gradient, r);
-						response.Switch().
-							Case<ResponseGearShift>(() => {
-								DataBus.BrakePower = 0.SI<Watt>();
-								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-									gradient, r);
-							}).
-							Case<ResponseOverload>(() => {
-								DataBus.BrakePower = 0.SI<Watt>();
-								if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
-									if (DataBus.VehicleSpeed.IsGreater(0)) {
-										response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-									} else {
-										if (RetryDistanceExceeded) {
-											response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-										} else {
-											RetryDistanceExceeded = true;
-											response = new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
-										}
-									}
-								} else {
-									response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-								}
-							});
-					});
-				return response;
+				return HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
 			}
 			var currentDistance = DataBus.Distance;
 
@@ -665,7 +606,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 							}
 						}).
-						Case<ResponseGearShift>(r => { response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient); });
+						Case<ResponseGearShift>(r => { response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient); }).
+						Case<ResponseEngineSpeedTooHigh>(r => {
+							response = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, r);
+						});
 					// handle the SpeedLimitExceeded Response separately in case it occurs in one of the requests in the second try
 					response.Switch().
 						Case<ResponseSpeedLimitExceeded>(() => {
@@ -729,6 +673,76 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					break;
 			}
 
+			return response;
+		}
+
+		private IResponse HandleTargetspeedReached(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		{
+			IResponse response;
+			if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
+				if (DataBus.VehicleSpeed.IsGreater(0)) {
+					response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+				} else {
+					if (RetryDistanceExceeded) {
+						response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+					} else {
+						RetryDistanceExceeded = true;
+						return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
+					}
+				}
+			} else {
+				response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+			}
+			var i = 0;
+			do {
+				response.Switch().
+					Case<ResponseGearShift>(() => {
+						response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+						response.Switch().
+							Case<ResponseUnderload>(r => {
+								// under-load may happen if driver limits acceleration when rolling downhill
+								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+									gradient, r);
+							}).
+							Case<ResponseSpeedLimitExceeded>(() => {
+								response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
+									gradient);
+							});
+					}).
+					Case<ResponseSpeedLimitExceeded>(() => {
+						response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
+							gradient);
+					}).
+					Case<ResponseUnderload>(r => {
+						//response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+						//	gradient, r);
+						response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed + r.Acceleration * r.SimulationInterval,
+							gradient, r);
+						response.Switch().
+							Case<ResponseGearShift>(() => {
+								DataBus.BrakePower = 0.SI<Watt>();
+								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+									gradient, r);
+							}).
+							Case<ResponseOverload>(() => {
+								DataBus.BrakePower = 0.SI<Watt>();
+								if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
+									if (DataBus.VehicleSpeed.IsGreater(0)) {
+										response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+									} else {
+										if (RetryDistanceExceeded) {
+											response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+										} else {
+											RetryDistanceExceeded = true;
+											response = new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
+										}
+									}
+								} else {
+									response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+								}
+							});
+					});
+			} while (!(response is ResponseSuccess) && i++ < 3); 
 			return response;
 		}
 

@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobContainer = new JobContainer(sumData);
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) { WriteModalResults = true };
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) { WriteModalResults = true, Validate = false};
 
 			jobContainer.AddRuns(runsFactory);
 
