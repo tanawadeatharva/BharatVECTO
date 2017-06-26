@@ -181,9 +181,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var avgEngineSpeed = (PreviousState.EngineSpeed + angularVelocity) / 2.0;
 
-			var engineSpeedLimit = GetEngineSpeedLimit();
+			var engineSpeedLimit = GetEngineSpeedLimit(absTime);
 			if (!dryRun && avgEngineSpeed.IsGreater(engineSpeedLimit, Constants.SimulationSettings.LineSearchTolerance)) {
-				return new ResponseEngineSpeedTooHigh() { DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit };
+				return new ResponseEngineSpeedTooHigh() {
+					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
+					Source = this,
+					EngineSpeed = angularVelocity
+				};
 			}
 
 			var fullDragTorque = ModelData.FullLoadCurves[DataBus.Gear].DragLoadStationaryTorque(avgEngineSpeed);
@@ -293,12 +297,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 		}
 
-		protected virtual PerSecond GetEngineSpeedLimit()
+		protected virtual PerSecond GetEngineSpeedLimit(Second absTime)
 		{
-			return DataBus.Gear == 0
+			return DataBus.Gear == 0 || !DataBus.ClutchClosed(absTime)
 				? ModelData.FullLoadCurves[0].N95hSpeed
-				: VectoMath.Min(DataBus.GetGearData(DataBus.Gear).MaxSpeed,
-					ModelData.FullLoadCurves[0].N95hSpeed);
+				: VectoMath.Min(DataBus.GetGearData(DataBus.Gear).MaxSpeed, ModelData.FullLoadCurves[0].N95hSpeed);
 		}
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
