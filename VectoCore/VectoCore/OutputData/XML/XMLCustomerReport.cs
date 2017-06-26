@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetApplicationInfo()
 		{
-			var vectodll = Assembly.LoadFrom(AppDomain.CurrentDomain.BaseDirectory + "VectoCore.dll").GetName();
+			var vectodll = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoCore.dll")).GetName();
 			return new XElement(tns + "ApplicationInformation",
 				new XElement(tns + "SimulationToolVersion", vectodll.Version),
 				new XElement(tns + "Date", XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));

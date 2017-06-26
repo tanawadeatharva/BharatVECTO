@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.Utils
 				return;
 			}
 			if (addVersionHeader) {
-				var vectodll = Assembly.LoadFrom(AppDomain.CurrentDomain.BaseDirectory + "VectoCore.dll").GetName();
+				var vectodll = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoCore.dll")).GetName();
 				writer.WriteLine("# VECTO {0} - {1}", vectodll.Version, DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);

@@ -290,7 +290,7 @@ Examples:
 			Console.Error.WriteLine("done.");
 
 			if (!Console.IsInputRedirected)
-			Console.ReadKey();
+				Console.ReadKey();
 #endif
 			return Environment.ExitCode;
 		}
@@ -350,7 +350,7 @@ Examples:
 		{
 			WriteLine(string.Format(@"VectoConsole: {0}", Assembly.GetExecutingAssembly().GetName().Version));
 			WriteLine(string.Format(@"VectoCore: {0}",
-				Assembly.LoadFrom(AppDomain.CurrentDomain.BaseDirectory + "VectoCore.dll").GetName().Version));
+				Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoCore.dll")).GetName().Version));
 		}
 
 		private static void PrintProgress(Dictionary<int, JobContainer.ProgressEntry> progessData,
