@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + "GearsCount", modelData.GearboxData.Gears.Count),
 				new XElement(tns + "Retarder", modelData.Retarder.Type.IsDedicatedComponent()),
 				new XElement(tns + "AxleRatio", modelData.AxleGearData.AxleGear.Ratio.ToXMLFormat(3))
-				);
+			);
 			InputDataIntegrity = new XElement(tns + "InputDataSignature",
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
 		}
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(di + XMLNames.DI_Signature_Reference_DigestMethod,
 					new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "null")),
 				new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, "NOT AVAILABLE")
-				);
+			);
 		}
 
 		public void AddResult(
@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetApplicationInfo()
 		{
-			var vectodll = AssemblyName.GetAssemblyName("VectoCore.dll");
+			var vectodll = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoCore.dll")).GetName();
 			return new XElement(tns + "ApplicationInformation",
 				new XElement(tns + "SimulationToolVersion", vectodll.Version),
 				new XElement(tns + "Date", XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
@@ -159,19 +159,19 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
 			retVal.Add(new XElement(tns + "VectoCustomerInformation",
-				new XAttribute("schemaVersion", "0.4"),
-				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
-				new XAttribute("xmlns", tns),
-				new XAttribute(XNamespace.Xmlns + "di", di),
-				new XAttribute(xsi + "schemaLocation",
-					string.Format("{0} {1}VectoCOC.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl)),
-				new XElement(tns + "Data",
-					vehicle,
-					new XElement(tns + "ResultDataSignature", resultSignature),
-					results,
-					GetApplicationInfo())
+					new XAttribute("schemaVersion", "0.4"),
+					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
+					new XAttribute("xmlns", tns),
+					new XAttribute(XNamespace.Xmlns + "di", di),
+					new XAttribute(xsi + "schemaLocation",
+						string.Format("{0} {1}VectoCOC.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl)),
+					new XElement(tns + "Data",
+						vehicle,
+						new XElement(tns + "ResultDataSignature", resultSignature),
+						results,
+						GetApplicationInfo())
 				)
-				);
+			);
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);
 			writer.Write(retVal);

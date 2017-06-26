@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.Utils
 				return;
 			}
 			if (addVersionHeader) {
-				var vectodll = AssemblyName.GetAssemblyName("VectoCore.dll");
+				var vectodll = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoCore.dll")).GetName();
 				writer.WriteLine("# VECTO {0} - {1}", vectodll.Version, DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);

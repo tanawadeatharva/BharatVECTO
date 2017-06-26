@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -34,15 +34,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
-using System.Xml.XPath;
-using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
@@ -68,7 +62,12 @@ hashingcmd.exe
 -r:    read hash from file and write to stdout
 ";
 
-		static Dictionary<string, HashingAction> actions = new Dictionary<string, HashingAction>();
+		private static readonly Dictionary<string, HashingAction> Actions = new Dictionary<string, HashingAction> {
+			{ "-v", VerifyHashAction },
+			{ "-c", ComputeHashAction },
+			{ "-r", ReadHashAction },
+			{ "-s", CreateHashedFileAction }
+		};
 
 		static bool _validateXML;
 		private static bool xmlValid = true;
@@ -81,32 +80,28 @@ hashingcmd.exe
 					Console.Write(Help);
 					return 0;
 				}
-				actions["-v"] = VerifyHashAction;
-				actions["-c"] = ComputeHashAction;
-				actions["-r"] = ReadHashAction;
-				actions["-s"] = CreateHashedFileAction;
 
 				if (args.Contains("-x")) {
 					_validateXML = true;
 				}
 
-				var fileList = args.Except(actions.Keys.Concat(new[] { "-x" })).ToArray();
-				if (fileList.Length == 0 || !args.Intersect(actions.Keys.ToArray()).Any()) {
+				var fileList = args.Except(Actions.Keys.Concat(new[] { "-x" })).ToArray();
+				if (fileList.Length == 0 || !args.Intersect(Actions.Keys.ToArray()).Any()) {
 					ShowVersionInformation();
 					Console.Write(Usage);
 					return 0;
 				}
 				foreach (var file in fileList) {
-					WriteLine("processing " + Path.GetFileName(file));
+					Console.Error.WriteLine("processing " + Path.GetFileName(file));
 					if (!File.Exists(Path.GetFullPath(file))) {
-						WriteLine("file " + Path.GetFullPath(file) + " not found!");
+						Console.Error.WriteLine("file " + Path.GetFullPath(file) + " not found!");
 						continue;
 					}
 					foreach (var arg in args) {
-						if (actions.ContainsKey(arg)) {
+						if (Actions.ContainsKey(arg)) {
 							try {
 								var h = VectoHash.Load(file);
-								actions[arg](Path.GetFullPath(file), h);
+								Actions[arg](Path.GetFullPath(file), h);
 							} catch (Exception e) {
 								Console.ForegroundColor = ConsoleColor.Red;
 								Console.Error.WriteLine(e.Message);
@@ -127,8 +122,10 @@ hashingcmd.exe
 				Environment.ExitCode = Environment.ExitCode != 0 ? Environment.ExitCode : 1;
 			}
 #if DEBUG
-			Console.WriteLine("done.");
-			Console.ReadKey();
+			Console.Error.WriteLine("done.");
+
+			if (!Console.IsInputRedirected)
+				Console.ReadKey();
 #endif
 			return Environment.ExitCode;
 		}
@@ -138,18 +135,18 @@ hashingcmd.exe
 			var destination = Path.Combine(Path.GetDirectoryName(filename),
 				Path.GetFileNameWithoutExtension(filename) + "_hashed.xml");
 			if (File.Exists(destination)) {
-				WriteLine("hashed file already exists. overwrite? (y/n) ");
+				Console.Error.WriteLine("hashed file already exists. overwrite? (y/n) ");
 				var key = Console.ReadKey(true);
 				while (!(key.KeyChar == 'y' || key.KeyChar == 'n')) {
-					WriteLine("overwrite? (y/n) ");
+					Console.Error.WriteLine("overwrite? (y/n) ");
 					key = Console.ReadKey(true);
 				}
 				if (key.KeyChar == 'n') {
 					return;
 				}
-				WriteLine("overwriting file " + Path.GetFileName(destination));
+				Console.Error.WriteLine("overwriting file " + Path.GetFileName(destination));
 			} else {
-				WriteLine("creating file " + Path.GetFileName(destination));
+				Console.Error.WriteLine("creating file " + Path.GetFileName(destination));
 			}
 			var result = h.AddHash();
 			var writer = new XmlTextWriter(destination, Encoding.UTF8) {
@@ -189,7 +186,7 @@ hashingcmd.exe
 				}
 			} catch (Exception e) {
 				Console.ForegroundColor = ConsoleColor.Red;
-				Console.Error.WriteLine("Failed to validate hashed XML file!");
+				Console.WriteLine("Failed to validate hashed XML file!");
 				Console.Error.WriteLine(e.Message);
 				if (e.InnerException != null) {
 					Console.Error.WriteLine(e.InnerException.Message);
@@ -242,7 +239,6 @@ hashingcmd.exe
 			WriteLine("computing hashes");
 			var components = h.GetContainigComponents();
 
-
 			if (components.Count > 1) {
 				var grouped = components.GroupBy(s => s)
 					.Select(g => new { Entry = g.Key, Count = g.Count() });
@@ -290,7 +286,8 @@ hashingcmd.exe
 
 		private static void ShowVersionInformation()
 		{
-			var hashingLib = AssemblyName.GetAssemblyName("VectoHashing.dll");
+			var hashingLib = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoHashing.dll"))
+				.GetName();
 			WriteLine(string.Format(@"HashingLibrary: {0}", hashingLib.Version));
 		}
 	}

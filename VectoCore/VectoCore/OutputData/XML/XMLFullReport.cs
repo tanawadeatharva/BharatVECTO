@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -61,7 +61,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected XNamespace di;
 		private bool allSuccess = true;
 
-
 		public XMLFullReport()
 		{
 			di = "http://www.w3.org/2000/09/xmldsig#";
@@ -91,8 +90,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 					GetAirDragDescription(modelData.AirdragData),
 					GetAxleWheelsDescription(modelData.VehicleData),
 					GetAuxiliariesDescription(modelData.Aux)
-					)
-				);
+				)
+			);
 			InputDataIntegrity = new XElement(tns + "InputDataSignature",
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
 		}
@@ -103,7 +102,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(di + XMLNames.DI_Signature_Reference_DigestMethod,
 					new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "null")),
 				new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, "NOT AVAILABLE")
-				);
+			);
 		}
 
 		private XElement GetTorqueLimits(CombustionEngineData modelData)
@@ -134,7 +133,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Engine_Displacement,
 					engineData.Displacement.ConvertTo().Cubic.Centi.Meter.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelType.ToXMLFormat())
-				);
+			);
 		}
 
 		private XElement GetGearboxDescription(GearboxData gearboxData)
@@ -144,7 +143,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Gearbox_TransmissionType, gearboxData.Type.ToXMLFormat()),
 				new XElement(tns + "GearsCount", gearboxData.Gears.Count),
 				new XElement(tns + "TransmissionRatioFinalGear", gearboxData.Gears.Last().Value.Ratio.ToXMLFormat(3))
-				);
+			);
 		}
 
 		private XElement GetTorqueConverterDescription(TorqueConverterData torqueConverterData)
@@ -187,7 +186,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				return new XElement(tns + XMLNames.Component_AirDrag,
 					new XElement(tns + "CertificationMethod", airdragData.CertificationMethod.ToXMLFormat()),
 					new XElement(tns + "CdxA", airdragData.DeclaredAirdragArea.ToXMLFormat(2))
-					);
+				);
 			}
 			return new XElement(tns + XMLNames.Component_AirDrag,
 				new XElement(tns + XMLNames.Component_Model, airdragData.ModelName),
@@ -195,7 +194,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + "CertificationNumber", airdragData.CertificationNumber),
 				new XElement(tns + XMLNames.DI_Signature_Reference_DigestValue, airdragData.DigestValueInput),
 				new XElement(tns + "CdxA", airdragData.DeclaredAirdragArea.ToXMLFormat(2))
-				);
+			);
 		}
 
 		private XElement GetAxleWheelsDescription(VehicleData vehicleData)
@@ -303,7 +302,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + "TotalVehicleMass", new XAttribute("unit", "kg"), result.TotalVehicleWeight.ToXMLFormat(0)),
 					new XElement(tns + "Payload", new XAttribute("unit", "kg"), result.Payload.ToXMLFormat(0)),
 					new XElement(tns + "FuelType", result.FuelType.ToXMLFormat())
-					),
+				),
 				new XElement(tns + "VehiclePerformance",
 					new XElement(tns + "AverageSpeed", new XAttribute("unit", "km/h"), result.AverageSpeed.AsKmph.ToXMLFormat(1)),
 					new XElement(tns + "MinSpeed", new XAttribute("unit", "km/h"), result.MinSpeed.AsKmph.ToXMLFormat(1)),
@@ -312,7 +311,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + "MaxAcceleration", new XAttribute("unit", "m/s²"), result.MaxAcceleration.ToXMLFormat(2)),
 					new XElement(tns + "FullLoadDrivingtimePercentage", result.FullLoadPercentage.ToXMLFormat(0)),
 					new XElement(tns + "GearshiftCount", result.GearshiftCount.ToXMLFormat(0))
-					),
+				),
 				//FC
 				XMLDeclarationReport.GetResults(result, tns, true).Cast<object>().ToArray()
 			};
@@ -320,7 +319,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetApplicationInfo()
 		{
-			var vectodll = AssemblyName.GetAssemblyName("VectoCore.dll");
+			var vectodll = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoCore.dll")).GetName();
 			return new XElement(tns + "ApplicationInformation",
 				new XElement(tns + "SimulationToolVersion", vectodll.Version),
 				new XElement(tns + "Date", XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
@@ -335,18 +334,18 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
 			retVal.Add(new XElement(tns + "VectoOutput",
-				new XAttribute("schemaVersion", "0.4"),
-				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
-				new XAttribute("xmlns", tns),
-				new XAttribute(XNamespace.Xmlns + "di", di),
-				new XAttribute(xsi + "schemaLocation",
-					string.Format("{0} {1}VectoOutput.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl)),
-				new XElement(tns + "Data",
-					vehicle,
-					results,
-					GetApplicationInfo())
+					new XAttribute("schemaVersion", "0.4"),
+					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
+					new XAttribute("xmlns", tns),
+					new XAttribute(XNamespace.Xmlns + "di", di),
+					new XAttribute(xsi + "schemaLocation",
+						string.Format("{0} {1}VectoOutput.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl)),
+					new XElement(tns + "Data",
+						vehicle,
+						results,
+						GetApplicationInfo())
 				)
-				);
+			);
 			var stream = new MemoryStream();
 			var writer = new StreamWriter(stream);
 			writer.Write(retVal);

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -41,9 +41,9 @@ using System.Xml.Linq;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
@@ -235,14 +235,13 @@ Examples:
 				WriteLine(@"Detected cycles:", ConsoleColor.White);
 
 				foreach (var cycle in _jobContainer.GetCycleTypes()) {
-					WriteLine(string.Format(@"  {0}: {1}", cycle.Name, cycle.CycleType));
+					WriteLineStdOut(string.Format(@"  {0}: {1}", cycle.Name, cycle.CycleType));
 				}
 				WriteLine();
 
 				stopWatch.Stop();
 				timings.Add("Reading input files", stopWatch.Elapsed.TotalMilliseconds);
 				stopWatch.Reset();
-
 
 				WriteLine(@"Starting simulation runs", ConsoleColor.White);
 				if (_debugEnabled) {
@@ -269,7 +268,7 @@ Examples:
 				stopWatch.Stop();
 				timings.Add("Simulation runs", stopWatch.Elapsed.TotalMilliseconds);
 
-				PrintProgress(_jobContainer.GetProgress(), args.Contains("-t"));
+				PrintProgress(_jobContainer.GetProgress(), args.Contains("-t"), force: true);
 
 				if (args.Contains("-t")) {
 					PrintTimings(timings);
@@ -288,8 +287,10 @@ Examples:
 			}
 
 #if DEBUG
-			Console.WriteLine("done.");
-			Console.ReadKey();
+			Console.Error.WriteLine("done.");
+
+			if (!Console.IsInputRedirected)
+				Console.ReadKey();
 #endif
 			return Environment.ExitCode;
 		}
@@ -299,10 +300,20 @@ Examples:
 			if (_quiet && !_debugEnabled) {
 				return;
 			}
-			Console.WriteLine();
+			Console.Error.WriteLine();
 		}
 
 		private static void WriteLine(string message, ConsoleColor foregroundColor = ConsoleColor.Gray)
+		{
+			if (_quiet && !_debugEnabled) {
+				return;
+			}
+			Console.ForegroundColor = foregroundColor;
+			Console.Error.WriteLine(message);
+			Console.ResetColor();
+		}
+
+		private static void WriteLineStdOut(string message, ConsoleColor foregroundColor = ConsoleColor.Gray)
 		{
 			if (_quiet && !_debugEnabled) {
 				return;
@@ -337,60 +348,67 @@ Examples:
 
 		private static void ShowVersionInformation()
 		{
-			var vectodll = AssemblyName.GetAssemblyName("VectoCore.dll");
 			WriteLine(string.Format(@"VectoConsole: {0}", Assembly.GetExecutingAssembly().GetName().Version));
-			WriteLine(string.Format(@"VectoCore: {0}", vectodll.Version));
+			WriteLine(string.Format(@"VectoCore: {0}",
+				Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoCore.dll")).GetName().Version));
 		}
 
 		private static void PrintProgress(Dictionary<int, JobContainer.ProgressEntry> progessData,
-			bool showTiming = true)
+			bool showTiming = true, bool force = false)
 		{
-			if (_quiet) {
-				return;
-			}
-
-			Console.SetCursorPosition(0, Console.CursorTop - _numLines);
-			_numLines = 0;
-			var sumProgress = 0.0;
-			foreach (var progressEntry in progessData) {
-				if (progressEntry.Value.Success) {
-					Console.ForegroundColor = ConsoleColor.Green;
-				} else if (progressEntry.Value.Error != null) {
-					Console.ForegroundColor = ConsoleColor.Red;
+			try {
+				if (_quiet || (Console.IsOutputRedirected && !force)) {
+					return;
 				}
-				var timingString = "";
-				if (showTiming && progressEntry.Value.ExecTime > 0) {
-					timingString = string.Format("{0,9:F2}s", progressEntry.Value.ExecTime / 1000.0);
+
+				if (!Console.IsOutputRedirected) {
+					Console.SetCursorPosition(0, Console.CursorTop - _numLines);
 				}
-				var runName = string.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName,
-					progressEntry.Value.RunSuffix);
-				Console.WriteLine(@"{0,-60} {1,8:P}{2}", runName, progressEntry.Value.Progress, timingString);
-				Console.ResetColor();
-				sumProgress += progressEntry.Value.Progress;
-				_numLines++;
-			}
-			sumProgress /= _numLines;
-			var spinner = "/-\\|"[ProgessCounter++ % 4];
-			var bar = new string('#', (int)(sumProgress * 100.0 / 2));
-			Console.WriteLine(@"   {2}   [{1,-50}]  [{0,7:P}]", sumProgress, bar, spinner);
 
-			if (WarningMessages.Any()) {
-				Console.ForegroundColor = ConsoleColor.Yellow;
-				Console.WriteLine(@"Warnings: {0,5}", WarningMessages.Count);
-				Console.ResetColor();
-			} else {
-				Console.WriteLine("");
-			}
+				_numLines = 0;
+				var sumProgress = 0.0;
+				foreach (var progressEntry in progessData) {
+					if (progressEntry.Value.Success) {
+						Console.ForegroundColor = ConsoleColor.Green;
+					} else if (progressEntry.Value.Error != null) {
+						Console.ForegroundColor = ConsoleColor.Red;
+					}
+					var timingString = "";
+					if (showTiming && progressEntry.Value.ExecTime > 0) {
+						timingString = string.Format("{0,9:F2}s", progressEntry.Value.ExecTime / 1000.0);
+					}
+					var runName = string.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName,
+						progressEntry.Value.RunSuffix);
+					Console.WriteLine(@"{0,-60} {1,8:P}{2}", runName, progressEntry.Value.Progress, timingString);
+					Console.ResetColor();
+					sumProgress += progressEntry.Value.Progress;
+					_numLines++;
+				}
+				sumProgress /= _numLines;
+				var spinner = "/-\\|"[ProgessCounter++ % 4];
+				var bar = new string('#', (int)(sumProgress * 100.0 / 2));
+				Console.WriteLine(@"   {2}   [{1,-50}]  [{0,7:P}]", sumProgress, bar, spinner);
 
-			_numLines += 2;
+				if (WarningMessages.Any()) {
+					Console.ForegroundColor = ConsoleColor.Yellow;
+					Console.Error.WriteLine(@"Warnings: {0,5}", WarningMessages.Count);
+					Console.ResetColor();
+				} else {
+					Console.WriteLine("");
+				}
+
+				_numLines += 2;
+			} catch (Exception e) {
+				throw new VectoException("Error during writing progress to output: " + e.Message);
+			}
 		}
 
 		private static void PrintTimings(Dictionary<string, double> timings)
 		{
-			Console.WriteLine();
-			Console.WriteLine(@"---- timing information ----");
+			Console.Error.WriteLine();
+			Console.Error.WriteLine(@"---- timing information ----");
 			foreach (var timing in timings) {
-				Console.WriteLine(@"{0,-20}: {1:F2}s", timing.Key, timing.Value / 1000);
+				Console.Error.WriteLine(@"{0,-20}: {1:F2}s", timing.Key, timing.Value / 1000);
 			}
 		}
 	}

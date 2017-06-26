@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inAngularVelocity = outAngularVelocity * effectiveRatio;
 			var torqueLossResult = torqueConverterLocked
 				? ModelData.Gears[gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque)
-				: ModelData.Gears[Gear].TorqueConverterGearLossMap.GetTorqueLoss(outAngularVelocity, outTorque);
+				: ModelData.Gears[gear].TorqueConverterGearLossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 
 			var inTorque = outTorque / effectiveRatio + torqueLossResult.Value;
 
