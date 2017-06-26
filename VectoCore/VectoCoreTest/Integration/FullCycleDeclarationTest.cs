@@ -168,7 +168,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var inputData = JSONInputDataFactory.ReadJsonJob(LongHaulTruckDeclarationJob);
 			var fileWriter = new FileOutputWriter(LongHaulTruckDeclarationJob);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
-				WriteModalResults = true
+				WriteModalResults = true,
+				Validate = false
 			};
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
@@ -286,7 +287,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeliveryTruckDeclarationJob);
 			var fileWriter = new FileOutputWriter(DeliveryTruckDeclarationJob);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
-				WriteModalResults = true
+				WriteModalResults = true,
+				Validate = false
 			};
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
@@ -317,7 +319,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeliveryTruck8GearDeclarationJob);
 			var fileWriter = new FileOutputWriter(DeliveryTruck8GearDeclarationJob);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
-				WriteModalResults = true
+				WriteModalResults = true,
+				Validate = false
 			};
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
