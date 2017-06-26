@@ -47,13 +47,13 @@ namespace LicenceHeader
 		private static void Main()
 		{
 			Console.ForegroundColor = ConsoleColor.White;
-			Console.WriteLine("Updating Licence-Headers in Sourcefiles.");
+			Console.Error.WriteLine("Updating Licence-Headers in Sourcefiles.");
 			Console.ResetColor();
-			Console.WriteLine();
-			Console.WriteLine("Search Directory: {0}", Path.GetFullPath(SolutionRootDirectory));
-			Console.WriteLine("Filter: *.cs");
-			Console.WriteLine("Excluded Dirs: \\obj, \\bin");
-			Console.WriteLine("Header-File: {0}", Path.GetFullPath("header.txt"));
+			Console.Error.WriteLine();
+			Console.Error.WriteLine("Search Directory: {0}", Path.GetFullPath(SolutionRootDirectory));
+			Console.Error.WriteLine("Filter: *.cs");
+			Console.Error.WriteLine("Excluded Dirs: \\obj, \\bin");
+			Console.Error.WriteLine("Header-File: {0}", Path.GetFullPath("header.txt"));
 
 			var licence = File.ReadAllText("header.txt", Encoding.UTF8);
 			var re = new Regex("^.*?(?=using|namespace)", RegexOptions.Singleline);
@@ -74,14 +74,15 @@ namespace LicenceHeader
 			var count = 0;
 			foreach (var f in updatedFiles) {
 				count++;
-				Console.WriteLine(f.Substring(SolutionRootDirectory.Length - 1));
+				Console.Error.WriteLine(f.Substring(SolutionRootDirectory.Length - 1));
 			}
 
-			Console.WriteLine();
+			Console.Error.WriteLine();
 			Console.ForegroundColor = ConsoleColor.White;
 			Console.WriteLine("Finished. Updated {0} files.", count);
 			Console.ResetColor();
 
+			if (!Console.IsInputRedirected)
 			Console.ReadKey();
 		}
 	}

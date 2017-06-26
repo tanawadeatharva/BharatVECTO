@@ -44,7 +44,6 @@ using NLog.Targets;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
@@ -236,7 +235,7 @@ Examples:
 				WriteLine(@"Detected cycles:", ConsoleColor.White);
 
 				foreach (var cycle in _jobContainer.GetCycleTypes()) {
-					WriteLine(string.Format(@"  {0}: {1}", cycle.Name, cycle.CycleType));
+					WriteLineStdOut(string.Format(@"  {0}: {1}", cycle.Name, cycle.CycleType));
 				}
 				WriteLine();
 
@@ -288,7 +287,9 @@ Examples:
 			}
 
 #if DEBUG
-			Console.WriteLine("done.");
+			Console.Error.WriteLine("done.");
+
+			if (!Console.IsInputRedirected)
 			Console.ReadKey();
 #endif
 			return Environment.ExitCode;
@@ -299,10 +300,20 @@ Examples:
 			if (_quiet && !_debugEnabled) {
 				return;
 			}
-			Console.WriteLine();
+			Console.Error.WriteLine();
 		}
 
 		private static void WriteLine(string message, ConsoleColor foregroundColor = ConsoleColor.Gray)
+		{
+			if (_quiet && !_debugEnabled) {
+				return;
+			}
+			Console.ForegroundColor = foregroundColor;
+			Console.Error.WriteLine(message);
+			Console.ResetColor();
+		}
+
+		private static void WriteLineStdOut(string message, ConsoleColor foregroundColor = ConsoleColor.Gray)
 		{
 			if (_quiet && !_debugEnabled) {
 				return;
@@ -380,7 +391,7 @@ Examples:
 
 				if (WarningMessages.Any()) {
 					Console.ForegroundColor = ConsoleColor.Yellow;
-					Console.WriteLine(@"Warnings: {0,5}", WarningMessages.Count);
+					Console.Error.WriteLine(@"Warnings: {0,5}", WarningMessages.Count);
 					Console.ResetColor();
 				} else {
 					Console.WriteLine("");
@@ -394,10 +405,10 @@ Examples:
 
 		private static void PrintTimings(Dictionary<string, double> timings)
 		{
-			Console.WriteLine();
-			Console.WriteLine(@"---- timing information ----");
+			Console.Error.WriteLine();
+			Console.Error.WriteLine(@"---- timing information ----");
 			foreach (var timing in timings) {
-				Console.WriteLine(@"{0,-20}: {1:F2}s", timing.Key, timing.Value / 1000);
+				Console.Error.WriteLine(@"{0,-20}: {1:F2}s", timing.Key, timing.Value / 1000);
 			}
 		}
 	}
