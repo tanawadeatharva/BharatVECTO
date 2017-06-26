@@ -85,8 +85,8 @@ hashingcmd.exe
 					_validateXML = true;
 				}
 
-				var fileList = args.Except(actions.Keys.Concat(new[] { "-x" })).ToArray();
-				if (fileList.Length == 0 || !args.Intersect(actions.Keys.ToArray()).Any()) {
+				var fileList = args.Except(Actions.Keys.Concat(new[] { "-x" })).ToArray();
+				if (fileList.Length == 0 || !args.Intersect(Actions.Keys.ToArray()).Any()) {
 					ShowVersionInformation();
 					Console.Write(Usage);
 					return 0;
@@ -125,7 +125,7 @@ hashingcmd.exe
 			Console.Error.WriteLine("done.");
 
 			if (!Console.IsInputRedirected)
-			Console.ReadKey();
+				Console.ReadKey();
 #endif
 			return Environment.ExitCode;
 		}
