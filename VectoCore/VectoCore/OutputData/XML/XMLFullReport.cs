@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -297,7 +297,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private object[] GetSuccessResultEntry(XMLDeclarationReport.ResultEntry result)
 		{
 			return new object[] {
-				new XElement(tns + "Distance", new XAttribute("unit", "km"), result.Distance.ToXMLFormat(1)),
+				new XElement(tns + "Distance", new XAttribute("unit", "km"), result.Distance.ConvertTo().Kilo.Meter.ToXMLFormat(3)),
 				new XElement(tns + "SimulationParameters",
 					new XElement(tns + "TotalVehicleMass", new XAttribute("unit", "kg"), result.TotalVehicleWeight.ToXMLFormat(0)),
 					new XElement(tns + "Payload", new XAttribute("unit", "kg"), result.Payload.ToXMLFormat(0)),
@@ -319,7 +319,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetApplicationInfo()
 		{
-			var vectodll = Assembly.LoadFrom(AppDomain.CurrentDomain.BaseDirectory + "VectoCore.dll").GetName();
+			var vectodll = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoCore.dll")).GetName();
 			return new XElement(tns + "ApplicationInformation",
 				new XElement(tns + "SimulationToolVersion", vectodll.Version),
 				new XElement(tns + "Date", XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));

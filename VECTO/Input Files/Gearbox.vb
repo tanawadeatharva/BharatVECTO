@@ -1,4 +1,4 @@
-﻿' Copyright 2014 European Union.
+﻿' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -258,6 +258,7 @@ Public Class Gearbox
 		writer.WriteLine("engine speed, full load torque, motoring torque")
 		writer.WriteLine(" 500, 2000, -500")
 		writer.WriteLine("2500, 2000, -500")
+		writer.WriteLine("3000,    0, -500")
 		writer.Flush()
 		fldData.Seek(0, SeekOrigin.Begin)
 		Dim retVal As CombustionEngineData = New CombustionEngineData() With {
@@ -267,7 +268,7 @@ Public Class Gearbox
 		Dim fldCurve As EngineFullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(fldData))
 		Dim fullLoadCurves As Dictionary(Of UInteger, EngineFullLoadCurve) =
 				New Dictionary(Of UInteger, EngineFullLoadCurve)()
-		fullLoadCurves(0) = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(fldData))
+		fullLoadCurves(0) = fldCurve
 		fullLoadCurves(0).EngineData = retVal
 		For i As Integer = 0 To gears.Count - 1
 			fullLoadCurves(CType(i + 1, UInteger)) = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves(0),
