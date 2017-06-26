@@ -253,8 +253,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var p3pExt = new Point((1.1 * p5.Y - edgeP6pP3p.OffsetXY) / edgeP6pP3p.SlopeXY, 1.1 * p5.Y);
 				// ReSharper restore InconsistentNaming
 
-				upShift = IntersectShiftPolygon(new[] { p4, p7, p5 }, new[] { p2p, p6p, p3pExt })
-					.Select(point => new ShiftPolygon.ShiftPolygonEntry(point.Y.SI<NewtonMeter>(), point.X.SI<PerSecond>())).ToList();
+				var upShiftPts = IntersectTakeHigherShiftLine(new[] { p4, p7, p5 }, new[] { p2p, p6p, p3pExt });
+				if (gears[gearIdx].MaxInputSpeed != null) {
+					var maxSpeed = gears[gearIdx].MaxInputSpeed.Value();
+					upShiftPts = IntersectTakeLowerShiftLine(upShiftPts,
+						new[] { new Point(maxSpeed, 0), new Point(maxSpeed, upShiftPts.Max(pt => pt.Y)) });
+				}
+				upShift =
+					upShiftPts.Select(point => new ShiftPolygon.ShiftPolygonEntry(point.Y.SI<NewtonMeter>(), point.X.SI<PerSecond>()))
+						.ToList();
 				upShift[0].Torque = maxDragTorque;
 				return new ShiftPolygon(downShift, upShift);
 			}
@@ -300,20 +307,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return engineSpeed;
 			}
 
-			internal static List<Point> IntersectShiftPolygon(Point[] orig, Point[] transformedDownshift)
+			internal static Point[] IntersectTakeHigherShiftLine(Point[] orig, Point[] transformedDownshift)
 			{
-				var intersections = new List<Point>();
-				// compute all intersection points between both line segments
-				// ReSharper disable once LoopCanBeConvertedToQuery
-				foreach (var origLine in orig.Pairwise(Edge.Create)) {
-					// ReSharper disable once LoopCanBeConvertedToQuery
-					foreach (var transformedLine in transformedDownshift.Pairwise(Edge.Create)) {
-						var isect = VectoMath.Intersect(origLine, transformedLine);
-						if (isect != null) {
-							intersections.Add(isect);
-						}
-					}
-				}
+				var intersections = Intersect(orig, transformedDownshift);
 
 				// add all points (i.e. intersecting points and both line segments) to a single list
 				var pointSet = new List<Point>(orig);
@@ -349,14 +345,70 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 
 				// order points first by x coordinate and the by Y coordinate ASC
-				return shiftPolygon.OrderBy(pt => pt.X).ThenBy(pt => pt.Y).ToList();
+				return shiftPolygon.OrderBy(pt => pt.X).ThenBy(pt => pt.Y).ToArray();
 			}
 
-			private static IEnumerable<Point> ProjectPointsToLineSegments(IEnumerable<Point> lineSegments, Point[] points)
+			internal static Point[] IntersectTakeLowerShiftLine(Point[] upShiftPts, Point[] upperLimit)
+			{
+				var intersections = Intersect(upShiftPts, upperLimit);
+				if (!intersections.Any()) {
+					return upShiftPts[0].X < upperLimit[0].X ? upShiftPts : upperLimit;
+				}
+				var pointSet = new List<Point>(upShiftPts);
+				pointSet.AddRange(upperLimit);
+				pointSet.AddRange(intersections);
+				pointSet.AddRange(ProjectPointsToLineSegments(upShiftPts, upperLimit, true));
+				pointSet.AddRange(ProjectPointsToLineSegments(upperLimit, upShiftPts, true));
+
+				var shiftPolygon = new List<Point>();
+				foreach (var yCoord in pointSet.Select(pt => pt.Y).Distinct().OrderBy(y => y).Reverse()) {
+					var yPoints = pointSet.Where(pt => pt.Y.IsEqual(yCoord)).ToList();
+					shiftPolygon.Add(yPoints.MinBy(pt => pt.X));
+				}
+
+				// find and remove colinear points
+				var toRemove = new List<Point>();
+				for (var i = 0; i < shiftPolygon.Count - 2; i++) {
+					var edge = new Edge(shiftPolygon[i], shiftPolygon[i + 2]);
+					if (edge.ContainsXY(shiftPolygon[i + 1])) {
+						toRemove.Add(shiftPolygon[i + 1]);
+					}
+				}
+				foreach (var point in toRemove) {
+					shiftPolygon.Remove(point);
+				}
+
+				// order points first by x coordinate and the by Y coordinate ASC
+				return shiftPolygon.OrderBy(pt => pt.X).ThenBy(pt => pt.Y).ToArray();
+			}
+
+			private static Point[] Intersect(Point[] orig, Point[] transformedDownshift)
+			{
+				var intersections = new List<Point>();
+				// compute all intersection points between both line segments
+				// ReSharper disable once LoopCanBeConvertedToQuery
+				foreach (var origLine in orig.Pairwise(Edge.Create)) {
+					// ReSharper disable once LoopCanBeConvertedToQuery
+					foreach (var transformedLine in transformedDownshift.Pairwise(Edge.Create)) {
+						var isect = VectoMath.Intersect(origLine, transformedLine);
+						if (isect != null) {
+							intersections.Add(isect);
+						}
+					}
+				}
+				return intersections.ToArray();
+			}
+
+			private static IEnumerable<Point> ProjectPointsToLineSegments(IEnumerable<Point> lineSegments, Point[] points,
+				bool projectToVertical = false)
 			{
 				var pointSet = new List<Point>();
 				foreach (var segment in lineSegments.Pairwise(Edge.Create)) {
 					if (segment.P1.X.IsEqual(segment.P2.X)) {
+						if (projectToVertical) {
+							pointSet.AddRange(
+								points.Select(point => new Point(segment.P1.X, point.Y)).Where(pt => pt.Y.IsBetween(segment.P1.Y, segment.P2.Y)));
+						}
 						continue;
 					}
 					var k = segment.SlopeXY;
@@ -406,11 +458,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var data = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
 				var characteristicTorque = (from DataRow row in data.Rows
 					select
-					new TorqueConverterEntry() {
-						SpeedRatio = row.ParseDouble(TorqueConverterDataReader.Fields.SpeedRatio),
-						Torque = row.ParseDouble(TorqueConverterDataReader.Fields.CharacteristicTorque).SI<NewtonMeter>(),
-						TorqueRatio = row.ParseDouble(TorqueConverterDataReader.Fields.TorqueRatio)
-					}).ToArray();
+						new TorqueConverterEntry() {
+							SpeedRatio = row.ParseDouble(TorqueConverterDataReader.Fields.SpeedRatio),
+							Torque = row.ParseDouble(TorqueConverterDataReader.Fields.CharacteristicTorque).SI<NewtonMeter>(),
+							TorqueRatio = row.ParseDouble(TorqueConverterDataReader.Fields.TorqueRatio)
+						}).ToArray();
 				foreach (var torqueConverterEntry in characteristicTorque) {
 					torqueConverterEntry.SpeedRatio = torqueConverterEntry.SpeedRatio * ratio;
 					torqueConverterEntry.TorqueRatio = torqueConverterEntry.TorqueRatio / ratio;
