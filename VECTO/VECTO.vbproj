@@ -173,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="Input Files\BrowserUtils.vb" />
     <Compile Include="GUI\VehicleTorqueLimitsDialog.Designer.vb">
       <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
     </Compile>

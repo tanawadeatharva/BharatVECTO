@@ -255,10 +255,9 @@ Public Class VehicleForm
 	'Help
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim registryString As String =
-					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim defaultBrowserPath As String = Regex.Match(registryString, "(\"".*?\"")").Captures(0).ToString
-			Process.Start(defaultBrowserPath, String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#vehicle-editor"))
+			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
+			Process.Start(defaultBrowserPath,
+						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#vehicle-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
