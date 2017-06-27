@@ -249,7 +249,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				}
 				_n80hSpeed = FindEngineSpeedForPower(0.8 * MaxPower).Last();
 				if (_n80hSpeed <= RatedSpeed) {
-					throw new VectoException("failed to compute N80h speed. Preferred speed: {0}, n80h speed: {1}", PreferredSpeed,
+					throw new VectoException(
+						"failed to compute N80h speed - must be higher than rated speed. rated speed: {0}, n80h speed: {1}", RatedSpeed,
 						_n80hSpeed);
 				}
 				return _n80hSpeed;
@@ -264,7 +265,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				}
 				_n95hSpeed = FindEngineSpeedForPower(0.95 * MaxPower).Last();
 				if (_n95hSpeed <= RatedSpeed) {
-					throw new VectoException("failed to compute N95h speed. Preferred speed: {0}, n95h speed: {1}", PreferredSpeed,
+					throw new VectoException(
+						"failed to compute N95h speed - must be higher than rated speed. rated speed: {0}, n95h speed: {1}", RatedSpeed,
 						_n95hSpeed);
 				}
 				return _n95hSpeed;
@@ -284,7 +286,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				}
 				_engineSpeedHi = FindEngineSpeedForPower(0.7 * MaxPower).Last();
 				if (_engineSpeedHi <= RatedSpeed) {
-					throw new VectoException("failed to compute n70h speed. Preferred speed: {0}, n70h speed: {1}", PreferredSpeed,
+					throw new VectoException(
+						"failed to compute n70h speed - must be higher than rated speed. rated speed: {0}, n70h speed: {1}", RatedSpeed,
 						_engineSpeedHi);
 				}
 				return _engineSpeedHi;
@@ -338,7 +341,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				retVal.AddRange(solutions);
 			}
 			retVal.Sort();
-			return retVal;
+			return retVal.Distinct(new SI.EqualityComparer<PerSecond>()).ToList();
 		}
 
 		private IEnumerable<PerSecond> FindEngineSpeedForPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2, Watt power)
@@ -361,7 +364,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (retVal.Length == 0) {
 				Log.Info("No real solution found for requested power demand: P: {0}, p1: {1}, p2: {2}", power, p1, p2);
 			}
-			return retVal.Where(x => x >= p1.EngineSpeed && x <= p2.EngineSpeed).Select(x => x.SI<PerSecond>());
+			return retVal.Where(x => x.IsGreaterOrEqual(p1.EngineSpeed.Value()) && x.IsSmallerOrEqual(p2.EngineSpeed.Value())).Select(x => Math.Round(x, 6).SI<PerSecond>());
 		}
 
 		protected internal Watt ComputeArea(PerSecond lowEngineSpeed, PerSecond highEngineSpeed)
