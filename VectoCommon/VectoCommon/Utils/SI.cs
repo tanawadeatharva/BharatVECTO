@@ -2297,5 +2297,24 @@ namespace TUGraz.VectoCommon.Utils
 			decimals = decimals ?? 2;
 			return Val.ToString("F" + decimals.Value);
 		}
+
+		public class EqualityComparer<T> : IEqualityComparer<T> where T : SI
+		{
+			private readonly double _precision;
+
+			public EqualityComparer(double precision = DoubleExtensionMethods.Tolerance)
+			{
+				_precision = precision;
+			}
+			public bool Equals(T x, T y)
+			{
+				return x.IsEqual(y.Value(), _precision);
+			}
+
+			public int GetHashCode(T obj)
+			{
+				return obj.Value().GetHashCode();
+			}
+		}
 	}
 }
