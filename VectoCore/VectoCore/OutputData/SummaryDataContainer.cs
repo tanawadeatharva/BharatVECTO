@@ -355,15 +355,11 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteWorkEntries(modData, row);
 
-			//var acc = modData.AccelerationPer3Seconds();
-
-
 			WritePerformanceEntries(modData, row);
 
 			row[ENGINE_FULL_LOAD_TIME_SHARE] = modData.EngineMaxLoadTimeShare();
 			row[COASTING_TIME_SHARE] = modData.CoastingTimeShare();
 			row[BRAKING_TIME_SHARE] = modData.BrakingTimeShare();
-
 
 			if (gearCount <= 0) {
 				return;
@@ -383,27 +379,19 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[FCAUXC_H] = modData.FuelConsumptionAuxStartStopPerSecond().ConvertTo().Gramm.Per.Hour;
 			var fuelConsumptionAuxStartStopCorrected = modData.FuelConsumptionAuxStartStop();
-			if (fuelConsumptionAuxStartStopCorrected != null) {
-				row[FCAUXC_KM] = fuelConsumptionAuxStartStopCorrected.ConvertTo().Gramm.Per.Kilo.Meter;
-			}
+			row[FCAUXC_KM] = FuelConsumptionAsGrammPerKiloMeter(fuelConsumptionAuxStartStopCorrected);
 
 			row[FCWHTCC_H] = modData.FuelConsumptionWHTCPerSecond().ConvertTo().Gramm.Per.Hour;
 			var fuelConsumptionWHTCCorrected = modData.FuelConsumptionWHTC();
-			if (fuelConsumptionWHTCCorrected != null) {
-				row[FCWHTCC_KM] = fuelConsumptionWHTCCorrected.ConvertTo().Gramm.Per.Kilo.Meter;
-			}
+			row[FCWHTCC_KM] = FuelConsumptionAsGrammPerKiloMeter(fuelConsumptionWHTCCorrected);
 
 			row[FCAAUX_H] = modData.FuelConsumptionAAUXPerSecond().ConvertTo().Gramm.Per.Hour;
 			var fuelConsumptionAaux = modData.FuelConsumptionAAUX();
-			if (fuelConsumptionAaux != null) {
-				row[FCAAUX_KM] = fuelConsumptionAaux.ConvertTo().Gramm.Per.Kilo.Meter;
-			}
+			row[FCAAUX_KM] = FuelConsumptionAsGrammPerKiloMeter(fuelConsumptionAaux);
 
 			row[FCFINAL_H] = modData.FuelConsumptionFinalPerSecond().ConvertTo().Gramm.Per.Hour;
 			var fcfinal = modData.FuelConsumptionFinal();
-			if (fcfinal != null) {
-				row[FCFINAL_KM] = fcfinal.ConvertTo().Gramm.Per.Kilo.Meter;
-			}
+			row[FCFINAL_KM] = FuelConsumptionAsGrammPerKiloMeter(fcfinal);
 
 			var fcPer100lkm = modData.FuelConsumptionFinalLiterPer100Kilometer();
 			row[FCFINAL_LITERPER100KM] = fcPer100lkm;
@@ -414,6 +402,14 @@ namespace TUGraz.VectoCore.OutputData
 			if (cargoVolume > 0 && fcPer100lkm != null) {
 				row[FCFINAL_LiterPer100M3KM] = fcPer100lkm / cargoVolume;
 			}
+		}
+
+		private static SI FuelConsumptionAsGrammPerKiloMeter(SI fc)
+		{
+			if (fc == null) {
+				return null;
+			}
+			return fc.ConvertTo().Gramm.Per.Kilo.Meter;
 		}
 
 		private void WriteAuxiliaries(IModalDataContainer modData, DataRow row)
@@ -545,6 +541,64 @@ namespace TUGraz.VectoCore.OutputData
 			row[GEARBOX_MANUFACTURER] = runData.GearboxData.Manufacturer;
 			row[GEARBOX_MODEL] = runData.GearboxData.ModelName;
 			row[GEARBOX_TYPE] = runData.GearboxData.Type;
+			WriteGearboxData(runData, row);
+
+			row[RETARDER_TYPE] = runData.Retarder.Type.GetLabel();
+			WriteRetarderData(runData, row);
+
+			WriteAngledriveData(runData, row);
+
+			row[AXLE_MANUFACTURER] = runData.AxleGearData.Manufacturer;
+			row[AXLE_MODEL] = runData.AxleGearData.ModelName;
+			row[AXLE_RATIO] = runData.AxleGearData.AxleGear.Ratio.SI<Scalar>();
+
+			WriteAuxTechnologies(runData, row);
+		}
+
+		private void WriteAuxTechnologies(VectoRunData runData, DataRow row)
+		{
+			foreach (var aux in runData.Aux) {
+				if (aux.ID == Constants.Auxiliaries.IDs.PTOConsumer || aux.ID == Constants.Auxiliaries.IDs.PTOTransmission) {
+					continue;
+				}
+				var colName = string.Format(AUX_TECH_FORMAT, aux.ID);
+
+				if (!Table.Columns.Contains(colName)) {
+					var col = Table.Columns.Add(colName, typeof(string));
+					// move the new column to correct position
+					col.SetOrdinal(Table.Columns[CARGO_VOLUME].Ordinal);
+				}
+
+				row[colName] = aux.Technology == null ? "" : string.Join("; ", aux.Technology);
+			}
+		}
+
+		private static void WriteAngledriveData(VectoRunData runData, DataRow row)
+		{
+			if (runData.AngledriveData != null) {
+				row[ANGLEDRIVE_MANUFACTURER] = runData.AngledriveData.Manufacturer;
+				row[ANGLEDRIVE_MODEL] = runData.AngledriveData.ModelName;
+				row[ANGLEDRIVE_RATIO] = runData.AngledriveData.Angledrive.Ratio;
+			} else {
+				row[ANGLEDRIVE_MANUFACTURER] = "n.a.";
+				row[ANGLEDRIVE_MODEL] = "n.a.";
+				row[ANGLEDRIVE_RATIO] = "n.a.";
+			}
+		}
+
+		private static void WriteRetarderData(VectoRunData runData, DataRow row)
+		{
+			if (runData.Retarder.Type.IsDedicatedComponent()) {
+				row[RETARDER_MANUFACTURER] = runData.Retarder.Manufacturer;
+				row[RETARDER_MODEL] = runData.Retarder.ModelName;
+			} else {
+				row[RETARDER_MANUFACTURER] = "n.a.";
+				row[RETARDER_MODEL] = "n.a.";
+			}
+		}
+
+		private static void WriteGearboxData(VectoRunData runData, DataRow row)
+		{
 			if (runData.GearboxData.Type.AutomaticTransmission()) {
 				row[GEAR_RATIO_FIRST_GEAR] = runData.GearboxData.Gears.Count > 0
 					? (double.IsNaN(runData.GearboxData.Gears.First().Value.Ratio)
@@ -565,43 +619,6 @@ namespace TUGraz.VectoCore.OutputData
 					: 0.SI<Scalar>();
 				row[TORQUECONVERTER_MANUFACTURER] = "n.a.";
 				row[TORQUECONVERTER_MODEL] = "n.a.";
-			}
-			row[RETARDER_TYPE] = runData.Retarder.Type.GetLabel();
-			if (runData.Retarder.Type.IsDedicatedComponent()) {
-				row[RETARDER_MANUFACTURER] = runData.Retarder.Manufacturer;
-				row[RETARDER_MODEL] = runData.Retarder.ModelName;
-			} else {
-				row[RETARDER_MANUFACTURER] = "n.a.";
-				row[RETARDER_MODEL] = "n.a.";
-			}
-
-			if (runData.AngledriveData != null) {
-				row[ANGLEDRIVE_MANUFACTURER] = runData.AngledriveData.Manufacturer;
-				row[ANGLEDRIVE_MODEL] = runData.AngledriveData.ModelName;
-				row[ANGLEDRIVE_RATIO] = runData.AngledriveData.Angledrive.Ratio;
-			} else {
-				row[ANGLEDRIVE_MANUFACTURER] = "n.a.";
-				row[ANGLEDRIVE_MODEL] = "n.a.";
-				row[ANGLEDRIVE_RATIO] = "n.a.";
-			}
-
-			row[AXLE_MANUFACTURER] = runData.AxleGearData.Manufacturer;
-			row[AXLE_MODEL] = runData.AxleGearData.ModelName;
-			row[AXLE_RATIO] = runData.AxleGearData.AxleGear.Ratio.SI<Scalar>();
-
-			foreach (var aux in runData.Aux) {
-				if (aux.ID == Constants.Auxiliaries.IDs.PTOConsumer || aux.ID == Constants.Auxiliaries.IDs.PTOTransmission) {
-					continue;
-				}
-				var colName = string.Format(AUX_TECH_FORMAT, aux.ID);
-
-				if (!Table.Columns.Contains(colName)) {
-					var col = Table.Columns.Add(colName, typeof(string));
-					// move the new column to correct position
-					col.SetOrdinal(Table.Columns[CARGO_VOLUME].Ordinal);
-				}
-
-				row[colName] = aux.Technology == null ? "" : string.Join("; ", aux.Technology);
 			}
 		}
 

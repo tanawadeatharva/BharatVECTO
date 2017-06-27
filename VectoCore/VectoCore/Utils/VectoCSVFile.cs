@@ -147,12 +147,8 @@ namespace TUGraz.VectoCore.Utils
 				table.Columns.Add(col);
 			}
 
-			if (p.EndOfData) {
-				return;
-			}
-
 			var lineNumber = 1;
-			do {
+			while (!p.EndOfData) {
 				string[] cells = { };
 				if (firstLineIsData) {
 					cells = colsWithoutComment;
@@ -179,7 +175,7 @@ namespace TUGraz.VectoCore.Utils
 						string.Format("Line {0}: The data format of a value is not correct. {1}", lineNumber, e.Message), e);
 				}
 				lineNumber++;
-			} while (!p.EndOfData);
+			}
 		}
 
 		/// <summary>

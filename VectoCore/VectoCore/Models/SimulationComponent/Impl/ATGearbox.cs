@@ -70,7 +70,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IIdleController IdleController
 		{
 			get { return _idleController; }
-			set {
+			set
+			{
 				_idleController = value;
 				_idleController.RequestPort = NextComponent;
 			}
@@ -172,7 +173,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseSuccess>(). // accept
 				Case<ResponseUnderload>(). // accept
 				Case<ResponseOverload>(). // accept
-				Default(r => { throw new UnexpectedResponseException("AT-Gearbox.Initialize", r); });
+				Default(r => {
+					throw new UnexpectedResponseException("AT-Gearbox.Initialize", r);
+				});
 
 			return new ResponseDryRun {
 				Source = this,
@@ -189,9 +192,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.Debug("AT-Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 
-			if (!dryRun &&
-				((DataBus.VehicleStopped && outAngularVelocity > 0) ||
-				(CurrentState.Disengaged && outTorque.IsGreater(0, 1e-3)))) {
+			var driveOffSpeed = DataBus.VehicleStopped && outAngularVelocity > 0;
+			var driveOffTorque = CurrentState.Disengaged && outTorque.IsGreater(0, 1e-3);
+			if (!dryRun && (driveOffSpeed || driveOffTorque)) {
 				Gear = 1;
 				CurrentState.TorqueConverterLocked = false;
 				LastShift = absTime;
@@ -201,15 +204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse retVal;
 			var count = 0;
 			var loop = false;
-			if (RequestAfterGearshift) {
-				LastShift = absTime;
-				Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
-				CurrentState.PowershiftLossEnergy = ComputeShiftLosses(outTorque, outAngularVelocity);
-			} else {
-				if (PreviousState.PowershiftLossEnergy != null && PreviousState.PowershiftLossEnergy.IsGreater(0)) {
-					CurrentState.PowershiftLossEnergy = PreviousState.PowershiftLossEnergy;
-				}
-			}
+			SetPowershiftLossEnergy(absTime, dt, outTorque, outAngularVelocity);
 			do {
 				if (CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted)) {
 					// only when vehicle is halted or close before halting
@@ -219,26 +214,40 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					retVal = RequestEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 					IdleController.Reset();
 				}
-				if (retVal is ResponseGearShift) {
-					if (ConsiderShiftLosses(_strategy.NextGear, outTorque)) {
-						retVal = new ResponseFailTimeInterval {
-							Source = this,
-							DeltaT = ModelData.PowershiftShiftTime,
-							GearboxPowerRequest =
-								outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
-						};
-						RequestAfterGearshift = true;
-						LastShift = absTime;
-					} else {
-						loop = true;
-						Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
-						LastShift = absTime;
-					}
+				if (!(retVal is ResponseGearShift)) {
+					continue;
+				}
+				if (ConsiderShiftLosses(_strategy.NextGear, outTorque)) {
+					retVal = new ResponseFailTimeInterval {
+						Source = this,
+						DeltaT = ModelData.PowershiftShiftTime,
+						GearboxPowerRequest =
+							outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
+					};
+					RequestAfterGearshift = true;
+					LastShift = absTime;
+				} else {
+					loop = true;
+					Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+					LastShift = absTime;
 				}
 			} while (loop && ++count < 2);
 
 			retVal.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			return retVal;
+		}
+
+		private void SetPowershiftLossEnergy(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			if (RequestAfterGearshift) {
+				LastShift = absTime;
+				Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+				CurrentState.PowershiftLossEnergy = ComputeShiftLosses(outTorque, outAngularVelocity);
+			} else {
+				if (PreviousState.PowershiftLossEnergy != null && PreviousState.PowershiftLossEnergy.IsGreater(0)) {
+					CurrentState.PowershiftLossEnergy = PreviousState.PowershiftLossEnergy;
+				}
+			}
 		}
 
 		private IResponse RequestEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
