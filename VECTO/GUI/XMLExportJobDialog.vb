@@ -1,11 +1,8 @@
 ﻿Imports System.IO
 Imports System.Xml.Linq
-Imports Microsoft.WindowsAPICodePack.Dialogs
-Imports TUGraz.IVT.VectoXML.Writer
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
-Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.OutputData.XML
 
 Public Class XMLExportJobDialog
@@ -37,12 +34,13 @@ Public Class XMLExportJobDialog
 		cbSingleFile.Enabled = allowSingleFile
 	End Sub
 
-	Private Sub btnBrowseOutputDir_Click(sender As Object, e As EventArgs) Handles btnBrowseOutputDir.Click
-		Dim dialog As CommonOpenFileDialog = New CommonOpenFileDialog()
-		dialog.IsFolderPicker = True
-		If (dialog.ShowDialog() = CommonFileDialogResult.Ok) Then
-			tbDestination.Text = Path.GetFullPath(dialog.FileName)
+	Private Sub btnBrowseOutputDir_Click(sender As Object, e As EventArgs) Handles BtTCfileBrowse.Click
+		If Not FolderFileBrowser.OpenDialog("") Then
+			Exit Sub
 		End If
+
+		Dim filePath As String = FolderFileBrowser.Files(0)
+		tbDestination.Text = Path.GetFullPath(filePath)
 	End Sub
 
 	Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click

@@ -21,7 +21,7 @@ The Input Torque at  reference engine speed is needed to calculate the actual e
 
 $T_{in} = T_{ref}(v) \cdot ( \frac{n_{in}}{n_{ref}} )^{2}$
 
-$μ(ν) = \frac{T_{out}}{T_{in}}$
+$\mu(\nu) = \frac{T_{out}}{T_{in}}$
 
 with:
 
@@ -39,9 +39,9 @@ In declaration mode, the torque converter for drag points is automatically appen
 
 For Power Split transmissions, where the torque converter characteristics already contains the gearbox losses and transmission ratio, the generic drag points are adapted according to the following equations:
 
-$ν_{PS} = ν / ratio_i$
+$\nu_{PS} = \nu / ratio_i$
 
-$μ_{PS} = μ \cdot ratio_i$
+$\mu_{PS} = \mu \cdot ratio_i$
 </div>
 
 <div class="engineering">

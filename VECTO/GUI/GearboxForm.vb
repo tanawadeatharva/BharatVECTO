@@ -13,11 +13,8 @@ Imports System.Drawing.Imaging
 Imports System.Globalization
 Imports System.IO
 Imports System.Linq
-Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports System.Xml.Linq
-Imports Microsoft.WindowsAPICodePack.Dialogs
-Imports TUGraz.IVT.VectoXML.Writer
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
@@ -965,7 +962,7 @@ Public Class GearboxForm
 		' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
 	End Sub
 
-	Private Sub BtTCShiftFileBrowse_Click(sender As Object, e As EventArgs)
+	Private Sub BtTCShiftFileBrowse_Click(sender As Object, e As EventArgs) Handles BtTCShiftFileBrowse.Click
 		If TorqueConverterShiftPolygonFileBrowser.OpenDialog(FileRepl(TBTCShiftPolygon.Text, GetPath(_gbxFile))) Then
 			TBTCShiftPolygon.Text = GetFilenameWithoutDirectory(TorqueConverterShiftPolygonFileBrowser.Files(0),
 																GetPath(_gbxFile))
@@ -973,35 +970,35 @@ Public Class GearboxForm
 	End Sub
 
 	Private Sub btnExportXML_Click(sender As Object, e As EventArgs) Handles btnExportXML.Click
-		Dim dialog As CommonOpenFileDialog = New CommonOpenFileDialog()
-		dialog.IsFolderPicker = True
-		If (dialog.ShowDialog() = CommonFileDialogResult.Cancel) Then
+		If Not FolderFileBrowser.OpenDialog("") Then
 			Exit Sub
 		End If
+		Dim filePath As String = FolderFileBrowser.Files(0)
+
 		Dim data As Gearbox = FillGearboxData(_gbxFile)
 		If (Cfg.DeclMode) Then
 			Dim export As XDocument = New XMLDeclarationWriter(data.Manufacturer).GenerateVectoComponent(data, data)
-			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
+			export.Save(Path.Combine(filePath, data.ModelName + ".xml"))
 		Else
 			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Manufacturer).GenerateVectoComponent(data,
 																														data)
-			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
+			export.Save(Path.Combine(filePath, data.ModelName + ".xml"))
 		End If
 	End Sub
 
 	Private Sub btnExportAxlGearXML_Click(sender As Object, e As EventArgs) Handles btnExportAxlGearXML.Click
-		Dim dialog As CommonOpenFileDialog = New CommonOpenFileDialog()
-		dialog.IsFolderPicker = True
-		If (dialog.ShowDialog() = CommonFileDialogResult.Cancel) Then
+		If Not FolderFileBrowser.OpenDialog("") Then
 			Exit Sub
 		End If
+		Dim filePath As String = FolderFileBrowser.Files(0)
+
 		Dim data As Gearbox = FillGearboxData(_gbxFile)
 		If (Cfg.DeclMode) Then
 			Dim export As XDocument = New XMLDeclarationWriter(data.Manufacturer).GenerateVectoComponent(data)
-			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
+			export.Save(Path.Combine(filePath, data.ModelName + ".xml"))
 		Else
 			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Manufacturer).GenerateVectoComponent(data)
-			export.Save(Path.Combine(dialog.FileName, data.ModelName + ".xml"))
+			export.Save(Path.Combine(filePath, data.ModelName + ".xml"))
 		End If
 	End Sub
 End Class

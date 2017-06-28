@@ -22,12 +22,15 @@ $(function(){
         showContent($("#user-manual"));
     }
     
+    $("#TOC").resizable();
+
     $("#TOC").resizable({
         handles: "e",
         resize: function(event, ui) {
             $("body > div:not(#TOC):not(#HEADER):not(#FOOTER)").css("padding-left", ui.size.width);
         }
     });
+    
     $("#TOC").scroll(function() {
         $(".ui-resizable-handle").css('top', $("#TOC").scrollTop());
     });
