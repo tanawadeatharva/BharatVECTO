@@ -493,21 +493,21 @@ namespace TUGraz.VectoCore.OutputData
 			var prevGear = data.GetValues<uint>(ModalResultField.Gear).First();
 			var gearCount = 0;
 
-			data.GetValues(x => {
-				var gear = x.Field<uint>((int)ModalResultField.Gear);
-				var speed = x.Field<MeterPerSecond>((int)ModalResultField.v_act);
-				if (speed != null && speed.IsSmallerOrEqual(0.1)) {
+			var shifts = data.GetValues(x => new {
+				Gear = x.Field<uint>((int)ModalResultField.Gear),
+				Speed = x.Field<MeterPerSecond>((int)ModalResultField.v_act)
+			});
+			foreach (var entry in shifts) {
+				if (entry.Speed != null && entry.Speed.IsSmallerOrEqual(0.1)) {
 					prevGear = 0;
 					gearCount++;
-					return gear; // not used
 				}
-				if (gear == 0 || gear == prevGear) {
-					return gear; // not used
+				if (entry.Gear == 0 || entry.Gear == prevGear) {
+					continue;
 				}
 				gearCount++;
-				prevGear = gear;
-				return gear; // not used
-			});
+				prevGear = entry.Gear;
+			}
 			return gearCount.SI<Scalar>();
 		}
 

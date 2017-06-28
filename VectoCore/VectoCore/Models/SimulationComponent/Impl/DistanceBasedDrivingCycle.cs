@@ -309,19 +309,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState = CurrentState.Clone();
 			_intervalProlonged = false;
 
+			//var stopTime = Left.PTOActive && IdleController != null
+			//	? Left.StoppingTime + IdleController.Duration
+			//	: Left.StoppingTime;
+
+			//if (!stopTime.IsEqual(0) && stopTime.IsEqual(PreviousState.WaitTime)) {
+			//	// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
+			//	if (IdleController != null) {
+			//		IdleController.ActivateIdle();
+			//	}
+			//	CycleIntervalIterator.MoveNext();
+			//}
+
 			var stopTime = Left.PTOActive && IdleController != null
 				? Left.StoppingTime + IdleController.Duration
 				: Left.StoppingTime;
-
-			if (!stopTime.IsEqual(0) && stopTime.IsEqual(PreviousState.WaitTime)) {
-				// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
-				if (IdleController != null) {
-					IdleController.ActivateIdle();
-				}
-				CycleIntervalIterator.MoveNext();
-			}
-
-			stopTime = Left.PTOActive && IdleController != null ? Left.StoppingTime + IdleController.Duration : Left.StoppingTime;
 
 			// separately test for equality and greater than to have tolerance for equality comparison
 			if (stopTime.IsEqual(0)) {
