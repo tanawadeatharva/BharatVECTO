@@ -4,6 +4,8 @@ body {
   font-family: Calibri, sans-serif;
 }
 
+.section.level1 {padding-left:336px}
+
 nav, #TOC {
   position: fixed;
   width: 21em;
