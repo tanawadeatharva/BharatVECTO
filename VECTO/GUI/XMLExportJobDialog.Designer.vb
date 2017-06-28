@@ -28,7 +28,6 @@ Partial Class XMLExportJobDialog
 		Me.btnExport = New System.Windows.Forms.Button()
 		Me.cbSingleFile = New System.Windows.Forms.CheckBox()
 		Me.label1 = New System.Windows.Forms.Label()
-		Me.btnBrowseOutputDir = New System.Windows.Forms.Button()
 		Me.tbJobfile = New System.Windows.Forms.TextBox()
 		Me.tbMode = New System.Windows.Forms.TextBox()
 		Me.lblJobfile = New System.Windows.Forms.Label()
@@ -36,6 +35,7 @@ Partial Class XMLExportJobDialog
 		Me.tbDestination = New System.Windows.Forms.TextBox()
 		Me.lblMode = New System.Windows.Forms.Label()
 		Me.btnCancel = New System.Windows.Forms.Button()
+		Me.BtTCfileBrowse = New System.Windows.Forms.Button()
 		Me.SuspendLayout()
 		'
 		'lbVendor
@@ -49,14 +49,14 @@ Partial Class XMLExportJobDialog
 		'
 		'tbVendor
 		'
-		Me.tbVendor.Location = New System.Drawing.Point(120, 94)
+		Me.tbVendor.Location = New System.Drawing.Point(131, 94)
 		Me.tbVendor.Name = "tbVendor"
 		Me.tbVendor.Size = New System.Drawing.Size(231, 20)
 		Me.tbVendor.TabIndex = 24
 		'
 		'btnExport
 		'
-		Me.btnExport.Location = New System.Drawing.Point(276, 150)
+		Me.btnExport.Location = New System.Drawing.Point(224, 150)
 		Me.btnExport.Name = "btnExport"
 		Me.btnExport.Size = New System.Drawing.Size(75, 23)
 		Me.btnExport.TabIndex = 23
@@ -81,18 +81,9 @@ Partial Class XMLExportJobDialog
 		Me.label1.TabIndex = 21
 		Me.label1.Text = "Output single XML File:"
 		'
-		'btnBrowseOutputDir
-		'
-		Me.btnBrowseOutputDir.Location = New System.Drawing.Point(357, 65)
-		Me.btnBrowseOutputDir.Name = "btnBrowseOutputDir"
-		Me.btnBrowseOutputDir.Size = New System.Drawing.Size(75, 23)
-		Me.btnBrowseOutputDir.TabIndex = 20
-		Me.btnBrowseOutputDir.Text = "Browse"
-		Me.btnBrowseOutputDir.UseVisualStyleBackColor = True
-		'
 		'tbJobfile
 		'
-		Me.tbJobfile.Location = New System.Drawing.Point(120, 20)
+		Me.tbJobfile.Location = New System.Drawing.Point(131, 20)
 		Me.tbJobfile.Name = "tbJobfile"
 		Me.tbJobfile.ReadOnly = True
 		Me.tbJobfile.Size = New System.Drawing.Size(231, 20)
@@ -100,7 +91,7 @@ Partial Class XMLExportJobDialog
 		'
 		'tbMode
 		'
-		Me.tbMode.Location = New System.Drawing.Point(120, 43)
+		Me.tbMode.Location = New System.Drawing.Point(131, 43)
 		Me.tbMode.Name = "tbMode"
 		Me.tbMode.ReadOnly = True
 		Me.tbMode.Size = New System.Drawing.Size(231, 20)
@@ -126,7 +117,7 @@ Partial Class XMLExportJobDialog
 		'
 		'tbDestination
 		'
-		Me.tbDestination.Location = New System.Drawing.Point(120, 68)
+		Me.tbDestination.Location = New System.Drawing.Point(131, 68)
 		Me.tbDestination.Name = "tbDestination"
 		Me.tbDestination.Size = New System.Drawing.Size(231, 20)
 		Me.tbDestination.TabIndex = 15
@@ -142,24 +133,34 @@ Partial Class XMLExportJobDialog
 		'
 		'btnCancel
 		'
-		Me.btnCancel.Location = New System.Drawing.Point(357, 150)
+		Me.btnCancel.Location = New System.Drawing.Point(305, 150)
 		Me.btnCancel.Name = "btnCancel"
 		Me.btnCancel.Size = New System.Drawing.Size(75, 23)
 		Me.btnCancel.TabIndex = 13
 		Me.btnCancel.Text = "Cancel"
 		Me.btnCancel.UseVisualStyleBackColor = True
 		'
+		'BtTCfileBrowse
+		'
+		Me.BtTCfileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+		Me.BtTCfileBrowse.Location = New System.Drawing.Point(362, 66)
+		Me.BtTCfileBrowse.Name = "BtTCfileBrowse"
+		Me.BtTCfileBrowse.Size = New System.Drawing.Size(24, 24)
+		Me.BtTCfileBrowse.TabIndex = 26
+		Me.BtTCfileBrowse.TabStop = False
+		Me.BtTCfileBrowse.UseVisualStyleBackColor = True
+		'
 		'XMLExportJobDialog
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-		Me.ClientSize = New System.Drawing.Size(449, 185)
+		Me.ClientSize = New System.Drawing.Size(392, 185)
+		Me.Controls.Add(Me.BtTCfileBrowse)
 		Me.Controls.Add(Me.lbVendor)
 		Me.Controls.Add(Me.tbVendor)
 		Me.Controls.Add(Me.btnExport)
 		Me.Controls.Add(Me.cbSingleFile)
 		Me.Controls.Add(Me.label1)
-		Me.Controls.Add(Me.btnBrowseOutputDir)
 		Me.Controls.Add(Me.tbJobfile)
 		Me.Controls.Add(Me.tbMode)
 		Me.Controls.Add(Me.lblJobfile)
@@ -179,7 +180,6 @@ Partial Class XMLExportJobDialog
 	Private WithEvents btnExport As System.Windows.Forms.Button
 	Private WithEvents cbSingleFile As System.Windows.Forms.CheckBox
 	Private WithEvents label1 As System.Windows.Forms.Label
-	Private WithEvents btnBrowseOutputDir As System.Windows.Forms.Button
 	Private WithEvents tbJobfile As System.Windows.Forms.TextBox
 	Private WithEvents tbMode As System.Windows.Forms.TextBox
 	Private WithEvents lblJobfile As System.Windows.Forms.Label
@@ -187,4 +187,5 @@ Partial Class XMLExportJobDialog
 	Private WithEvents tbDestination As System.Windows.Forms.TextBox
 	Private WithEvents lblMode As System.Windows.Forms.Label
 	Private WithEvents btnCancel As System.Windows.Forms.Button
+	Friend WithEvents BtTCfileBrowse As System.Windows.Forms.Button
 End Class
