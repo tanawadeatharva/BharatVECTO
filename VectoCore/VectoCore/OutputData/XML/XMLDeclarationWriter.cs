@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -267,7 +268,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public XElement CreateAxlegear(IAxleGearInputData data, XNamespace ns = null)
 		{
-			var typeId = string.Format("AXLGEAR-{0:0.000}", data.Ratio);
+			var typeId = string.Format("AXLGEAR-{0}", data.Ratio.ToString("F3", CultureInfo.InvariantCulture));
 			return new XElement((ns ?? tns) + XMLNames.Component_Axlegear,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, typeId),

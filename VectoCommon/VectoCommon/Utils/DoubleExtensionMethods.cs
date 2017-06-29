@@ -266,7 +266,7 @@ namespace TUGraz.VectoCommon.Utils
 		public static string ToXMLFormat(this double self, uint? decimals = null)
 		{
 			decimals = decimals ?? 2;
-			return self.ToString("F" + decimals.Value);
+			return self.ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
 		}
 
 		//[DebuggerStepThrough]
@@ -277,10 +277,11 @@ namespace TUGraz.VectoCommon.Utils
 			decimals = decimals ?? 1;
 			var scale = Math.Ceiling(Math.Log10(Math.Abs(self)));
 
-			if (double.IsInfinity(scale) || double.IsNaN(scale))
-				return self.ToString("F" + decimals.Value);
+			if (double.IsInfinity(scale) || double.IsNaN(scale)) {
+				return self.ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
+			}
 
-			return self.ToString("F" + Math.Max(significant.Value - scale, decimals.Value));
+			return self.ToString("F" + Math.Max(significant.Value - scale, decimals.Value), CultureInfo.InvariantCulture);
 		}
 	}
 
