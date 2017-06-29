@@ -360,8 +360,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(data.Model, "N.A."),
-					new XElement(tns + "CdxA_0", data.AirDragArea.Value().ToXMLFormat(2)), // TODO
-					new XElement(tns + "TransferredCdxA", data.AirDragArea.Value().ToXMLFormat(2)), // TODO
+					new XElement(tns + "CdxA_0", data.AirDragArea.Value().ToXMLFormat(2)), // TODO MQ
+					new XElement(tns + "TransferredCdxA", data.AirDragArea.Value().ToXMLFormat(2)), // TODO MQ
 					new XElement(tns + XMLNames.AirDrag_DeclaredCdxA, data.AirDragArea.Value().ToXMLFormat(2))),
 				AddSignatureDummy(id)
 				);

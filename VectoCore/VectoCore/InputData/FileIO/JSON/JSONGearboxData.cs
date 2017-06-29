@@ -389,7 +389,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get {
 				return Body["PowershiftShiftTime"] == null
-					? 0.8.SI<Second>()
+					? Constants.DefaultPowerShiftTime
 					: Body.GetEx<double>("PowershiftShiftTime").SI<Second>();
 			}
 		}

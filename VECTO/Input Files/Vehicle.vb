@@ -290,7 +290,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
-			Return "N.A."	'ToDo
+			Return "N.A."	' Todo: MQ 20160908
 		End Get
 	End Property
 

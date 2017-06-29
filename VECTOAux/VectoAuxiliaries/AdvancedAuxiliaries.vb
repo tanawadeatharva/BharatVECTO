@@ -476,7 +476,7 @@ Public Class AdvancedAuxiliaries
 	End Property
 
 
-	'TODO:REMOVE WHEN TESTING IS COMPLETE
+	'TODO:REMOVE WHEN TESTING IS COMPLETE - MK2017-06-26: what should be removed? I can't see the "pure-diagnostics"
 	'PURE DIAGNOSTICS SHOULD ONLY BE USED IN  MOD FOR ENGINEERING TESTS
 
 	Public ReadOnly Property AA_D_M12_INTERP1 As Kilogram Implements IAdvancedAuxiliaries.AA_D_M12_INTERP1
