@@ -132,7 +132,7 @@ Public Class GearboxForm
 	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
 		If GearboxFileBrowser.OpenDialog(_gbxFile) Then
 			Try
-				OpenGbx(GearboxFileBrowser.Files(0))
+				OpenGbx(GearboxFileBrowser.Files(0), VehicleCategory.RigidTruck)
 			Catch ex As Exception
 				MsgBox("Failed to open Gearbox File: " + ex.Message)
 			End Try
@@ -234,7 +234,7 @@ Public Class GearboxForm
 	End Sub
 
 	'Open file
-	Public Sub OpenGbx(file As String)
+	Public Sub OpenGbx(file As String, vehicleCategory As VehicleCategory)
 
 		If ChangeCheckCancel() Then Exit Sub
 
@@ -242,6 +242,8 @@ Public Class GearboxForm
 																IEngineeringInputDataProvider)
 		Dim gearbox As IGearboxEngineeringInputData = inputData.GearboxInputData
 		Dim axlegear As IAxleGearInputData = inputData.AxleGearInputData
+
+		_vehicleCategory = vehicleCategory
 
 		If Cfg.DeclMode <> gearbox.SavedInDeclarationMode Then
 			Select Case WrongMode()
@@ -524,7 +526,8 @@ Public Class GearboxForm
 			If LvGears.Items.Count > 2 Then
 				Dim ratio1 As Double = LvGears.Items.Item(1).SubItems(GearboxTbl.Ratio).Text.ToDouble(0)
 				Dim ratio2 As Double = LvGears.Items.Item(2).SubItems(GearboxTbl.Ratio).Text.ToDouble(0)
-				If ratio1 / ratio2 >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold Then
+
+				If ratio1 / ratio2 >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(_vehicleCategory) Then
 					text = "Torque converter is used in 1st and 2nd gear"
 				Else
 					text = "Torque converter is used in 1st gear only"
@@ -696,6 +699,7 @@ Public Class GearboxForm
 #Region "Open File Context Menu"
 
 	Private _contextMenuFiles As String()
+	Private _vehicleCategory As VehicleCategory
 
 	Private Sub OpenFiles(ParamArray files() As String)
 
