@@ -155,6 +155,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return vehicleHeight;
 		}
 
+		/// <summary>
+		/// Looks up the default CdxA value for the cross wind correction.
+		/// </summary>
+		public SquareMeter LookupCdA(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
+			Kilogram grossVehicleMassRating)
+		{
+			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, true);
+			return row.SI<SquareMeter>("cdxa_default");
+		}
+
 		private static Mission[] CreateMissions(ref Kilogram grossVehicleWeight, Kilogram curbWeight, DataRow row)
 		{
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
