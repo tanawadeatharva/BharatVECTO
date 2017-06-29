@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (airDragData.CrossWindCorrectionMode != CrossWindCorrectionMode.DeclarationModeCorrection &&
 				airDragData.CrossWindCorrectionCurve.AirDragArea == null)
 				return new ValidationResult(
-					"AirDrag Area (CdxA) must not be empty when the cross wind correction mode is not \"Speed dependent\"");
+					"AirDrag Area (CdxA) must not be empty when the cross wind correction mode is not \"Speed dependent (Declaration Mode)\"");
 
 			return ValidationResult.Success;
 		}
