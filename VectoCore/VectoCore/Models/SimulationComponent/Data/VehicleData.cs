@@ -42,6 +42,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+	[CustomValidation(typeof(AirdragData), "ValidateAirDragData")]
 	public class AirdragData : SimulationComponentData
 	{
 		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
@@ -50,6 +51,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
 
 		public SquareMeter DeclaredAirdragArea { get; internal set; }
+
+		// ReSharper disable once UnusedMember.Global  -- used via Validation
+		public static ValidationResult ValidateAirDragData(AirdragData airDragData, ValidationContext validationContext)
+		{
+			if (airDragData.CrossWindCorrectionMode != CrossWindCorrectionMode.DeclarationModeCorrection &&
+				airDragData.CrossWindCorrectionCurve.AirDragArea == null)
+				return new ValidationResult(
+					"AirDrag Area (CdxA) must not be empty when the cross wind correction mode is not \"Speed dependent\"");
+
+			return ValidationResult.Success;
+		}
 	}
 
 	/// <summary>
@@ -178,7 +190,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			get { return (CurbWeight ?? 0.SI<Kilogram>()) + (BodyAndTrailerWeight ?? 0.SI<Kilogram>()); }
 		}
 
-
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{
 			if (TotalVehicleWeight == 0.SI<Kilogram>()) {
@@ -217,7 +228,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			WheelsInertia = wheelsInertia;
 		}
 
-
 		// ReSharper disable once UnusedMember.Global  -- used via Validation
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
@@ -239,7 +249,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					return new ValidationResult(string.Format("Tyre test load (FzISO) for axle {0} must be greater than 0.", i));
 				}
 			}
-
 
 			if (vehicleData.TotalRollResistanceCoefficient <= 0) {
 				return
@@ -274,7 +283,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (numDrivenAxles != 1) {
 				return new ValidationResult("Exactly one axle has to be defined as driven!");
 			}
-
 
 			return ValidationResult.Success;
 		}

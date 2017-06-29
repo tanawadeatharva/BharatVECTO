@@ -252,6 +252,37 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				crossWindCorrectionCurve.EffectiveAirDragArea(kmph.KMPHtoMeterPerSecond()));
 		}
 
+		[TestCase]
+		public void CrossWindAreaCdxANotSet_DeclarationMode()
+		{
+			var airDrag = new AirdragData() {
+				CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection,
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(null, null, CrossWindCorrectionMode.DeclarationModeCorrection)
+			};
+
+			Assert.IsTrue(airDrag.IsValid(),
+				"In Speed Dependent (Declaration Mode) Crosswind Correction the CdxA Value can be empty.");
+		}
+
+		[TestCase]
+		public void CrossWindAreaCdxANotSet_Other()
+		{
+			foreach (var correctionMode in EnumHelper.GetValues<CrossWindCorrectionMode>()) {
+				if (correctionMode == CrossWindCorrectionMode.DeclarationModeCorrection)
+					continue;
+
+				var airDrag = new AirdragData {
+					CrossWindCorrectionMode = correctionMode,
+					CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(null, null, correctionMode)
+				};
+
+				Assert.IsFalse(airDrag.IsValid(),
+					"Only in Speed Dependent (Declaration Mode) Crosswind Correction the CdxA Value can be empty.");
+			}
+		}
+
 		[TestCase(MissionType.LongHaul, "Standard technology", 1200, 0.7),
 		TestCase(MissionType.RegionalDelivery, "Standard technology", 1000, 0.7),
 		TestCase(MissionType.UrbanDelivery, "Standard technology", 1000, 0.7),
@@ -495,11 +526,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X2(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-				DeclarationData.Segments.Lookup(
-					VehicleCategory.RigidTruck,
-					AxleConfiguration.AxleConfig_4x2,
-					weight.SI<Kilogram>(),
-					0.SI<Kilogram>()),
+					DeclarationData.Segments.Lookup(
+						VehicleCategory.RigidTruck,
+						AxleConfiguration.AxleConfig_4x2,
+						weight.SI<Kilogram>(),
+						0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -512,11 +543,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X4(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-				DeclarationData.Segments.Lookup(
-					VehicleCategory.RigidTruck,
-					AxleConfiguration.AxleConfig_4x4,
-					weight.SI<Kilogram>(),
-					0.SI<Kilogram>()),
+					DeclarationData.Segments.Lookup(
+						VehicleCategory.RigidTruck,
+						AxleConfiguration.AxleConfig_4x4,
+						weight.SI<Kilogram>(),
+						0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
