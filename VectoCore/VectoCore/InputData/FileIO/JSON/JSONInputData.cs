@@ -596,21 +596,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 
 				if (auxData.Type == AuxiliaryType.Fan) {
-					DeclarationData.Fan.GetTechnologies();
-					switch (tech) {
-						case "Crankshaft mounted - Electronically controlled visco clutch (Default)":
-							auxData.Technology.Add("Crankshaft mounted - Electronically controlled visco clutch");
-							break;
-						case "Crankshaft mounted - On/Off clutch":
-							auxData.Technology.Add("Crankshaft mounted - On/off clutch");
-							break;
-						case "Belt driven or driven via transm. - On/Off clutch":
-							auxData.Technology.Add("Belt driven or driven via transm. - On/off clutch");
-							break;
-						default:
-							auxData.Technology.Add(tech);
-							break;
-					}
+					auxData.Technology.Add(MapLegacyFanTechnologies(tech));
 				}
 
 				var auxFile = aux["Path"];
@@ -623,6 +609,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxData, Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 			return retVal;
+		}
+
+		private static string MapLegacyFanTechnologies(string tech)
+		{
+			string newTech;
+			switch (tech) {
+				case "Crankshaft mounted - Electronically controlled visco clutch (Default)":
+					newTech = "Crankshaft mounted - Electronically controlled visco clutch";
+					break;
+				case "Crankshaft mounted - On/Off clutch":
+					newTech = "Crankshaft mounted - On/off clutch";
+					break;
+				case "Belt driven or driven via transm. - On/Off clutch":
+					newTech = "Belt driven or driven via transm. - On/off clutch";
+					break;
+				default:
+					newTech = tech;
+					break;
+			}
+			return newTech;
 		}
 
 		#endregion

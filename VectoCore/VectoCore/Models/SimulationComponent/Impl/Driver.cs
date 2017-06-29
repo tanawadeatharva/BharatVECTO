@@ -715,28 +715,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retVal = new OperatingPoint { Acceleration = acceleration, SimulationDistance = ds };
 
 			var actionRoll = !DataBus.ClutchClosed(absTime);
-			var searchEngineSpeed = false;
 
-			Watt origDelta = null;
-			if (actionRoll) {
-				initialResponse.Switch().
-					Case<ResponseDryRun>(r => origDelta = r.GearboxPowerRequest).
-					Case<ResponseFailTimeInterval>(r => origDelta = r.GearboxPowerRequest).
-					Default(r => {
-						throw new UnexpectedResponseException("SearchOperatingPoint: Unknown response type.", r);
-					});
-			} else {
-				initialResponse.Switch().
-					Case<ResponseOverload>(r => origDelta = r.Delta).
-					Case<ResponseEngineSpeedTooHigh>(r => {
-						searchEngineSpeed = true;
-						origDelta = r.DeltaEngineSpeed * 1.SI<NewtonMeter>();
-					}). // search operating point in drive action after overload
-					Case<ResponseDryRun>(r => origDelta = coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad).
-					Default(r => {
-						throw new UnexpectedResponseException("SearchOperatingPoint: Unknown response type.", r);
-					});
-			}
+			var origDelta = GetOrigDelta(initialResponse, coastingOrRoll, actionRoll);
+
+			var searchEngineSpeed = initialResponse is ResponseEngineSpeedTooHigh;
+
 			var delta = origDelta;
 			try {
 				retVal.Acceleration = SearchAlgorithm.Search(acceleration, delta,
@@ -752,7 +735,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						acc => {
 							// calculate new time interval only when vehiclespeed and acceleration are != 0
 							// else: use same timeinterval as before.
-							if (!(acc.IsEqual(0) && DataBus.VehicleSpeed.IsEqual(0))) {
+							var vehicleDrivesAndAccelerates = !(acc.IsEqual(0) && DataBus.VehicleSpeed.IsEqual(0));
+							if (vehicleDrivesAndAccelerates) {
 								var tmp = ComputeTimeInterval(acc, ds);
 								if (tmp.SimulationInterval.IsEqual(0.SI<Second>(), 1e-9.SI<Second>())) {
 									throw new VectoSearchAbortedException(
@@ -782,11 +766,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					abortCriterion:
 						(response, cnt) => {
 							var r = (ResponseDryRun)response;
-							if (r == null) {
-								return false;
-							}
-
-							return !actionRoll && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
+							return r != null && !actionRoll && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
 						});
 			} catch (VectoSearchAbortedException) {
 				// search aborted, try to go ahead with the last acceleration
@@ -800,6 +780,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Info("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
 			}
 			return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
+		}
+
+		private static Watt GetOrigDelta(IResponse initialResponse, bool coastingOrRoll, bool actionRoll)
+		{
+			Watt origDelta = null;
+			if (actionRoll) {
+				initialResponse.Switch().
+					Case<ResponseDryRun>(r => origDelta = r.GearboxPowerRequest).
+					Case<ResponseFailTimeInterval>(r => origDelta = r.GearboxPowerRequest).
+					Default(r => {
+						throw new UnexpectedResponseException("SearchOperatingPoint: Unknown response type.", r);
+					});
+			} else {
+				initialResponse.Switch().
+					Case<ResponseOverload>(r => origDelta = r.Delta).
+					Case<ResponseEngineSpeedTooHigh>(r => {
+						origDelta = r.DeltaEngineSpeed * 1.SI<NewtonMeter>();
+					}). // search operating point in drive action after overload
+					Case<ResponseDryRun>(r => origDelta = coastingOrRoll ? r.DeltaDragLoad : r.DeltaFullLoad).
+					Default(r => {
+						throw new UnexpectedResponseException("SearchOperatingPoint: Unknown response type.", r);
+					});
+			}
+			return origDelta;
 		}
 
 		/// <summary>
