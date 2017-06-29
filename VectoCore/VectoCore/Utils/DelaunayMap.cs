@@ -68,7 +68,8 @@ namespace TUGraz.VectoCore.Utils
 
 		public IReadOnlyCollection<Point> Entries
 		{
-			get {
+			get
+			{
 				var retVal = new Point[_points.Count];
 				var i = 0;
 				foreach (var pt in _points) {
