@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -246,7 +247,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private XElement CreateAngleDrive(IAngledriveInputData data, XNamespace ns = null)
 		{
 			var id = string.Format("ANGL-{0}", data.Model.RemoveWhitespace());
-			return new XElement((ns ??tns) + XMLNames.Component_Angledrive,
+			return new XElement((ns ?? tns) + XMLNames.Component_Angledrive,
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, "ANGL-" + data.Model),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
@@ -277,7 +278,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public XElement CreateAxlegear(IAxleGearInputData data, XNamespace ns = null)
 		{
-			var typeId = string.Format("AXLGEAR-{0:0.000}", data.Ratio);
+			var typeId = string.Format("AXLGEAR-{0}", data.Ratio.ToString("F3", CultureInfo.InvariantCulture));
 			return new XElement((ns ?? tns) + XMLNames.Component_Axlegear,
 				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("AXL-{0}", data.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
@@ -309,7 +310,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					));
 			}
 
-			return new XElement((ns ??tns) + XMLNames.Component_AxleWheels,
+			return new XElement((ns ?? tns) + XMLNames.Component_AxleWheels,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					//new XAttribute(XMLNames.Component_ID_Attr,
 					//	string.Format("AXLWHL-{0}", data.AxleConfiguration.GetName())),
