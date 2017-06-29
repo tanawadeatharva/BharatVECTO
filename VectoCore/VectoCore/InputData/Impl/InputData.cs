@@ -90,11 +90,6 @@ namespace TUGraz.VectoCore.InputData.Impl
 	{
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 			"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-		public bool SavedInDeclarationMode
-		{
-			get { throw new System.NotImplementedException(); }
-		}
-
 		public DataSourceType SourceType { get; internal set; }
 
 		public string Source { get; internal set; }

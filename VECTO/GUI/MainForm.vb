@@ -341,7 +341,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 						GearboxForm.BringToFront()
 					End If
 					Try
-						GearboxForm.OpenGbx(file)
+						GearboxForm.OpenGbx(file, VehicleCategory.RigidTruck)
 					Catch ex As Exception
 						MsgBox("Failed to open Gearbox File: " + ex.Message)
 					End Try

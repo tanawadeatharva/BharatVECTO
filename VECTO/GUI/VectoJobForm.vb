@@ -296,8 +296,20 @@ Public Class VectoJobForm
 			If GearboxForm.WindowState = FormWindowState.Minimized Then GearboxForm.WindowState = FormWindowState.Normal
 			GearboxForm.BringToFront()
 		End If
+		Dim vehicleType As VehicleCategory
 		Try
-			If Not Trim(f) = "" Then GearboxForm.OpenGbx(f)
+			If Not Trim(f) = "" Then
+				Dim vehInput As IVehicleDeclarationInputData =
+						CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))), 
+							IEngineeringInputDataProvider).VehicleInputData
+				vehicleType = vehInput.VehicleCategory
+			End If
+
+		Catch ex As Exception
+			vehicleType = VehicleCategory.RigidTruck
+		End Try
+		Try
+			If Not Trim(f) = "" Then GearboxForm.OpenGbx(f, vehicleType)
 		Catch ex As Exception
 			MsgBox("Failed to open Gearbox File: " + ex.Message)
 		End Try
@@ -680,7 +692,8 @@ Public Class VectoJobForm
 
 		CbEngOnly.Checked = False
 
-		RdOff.Checked = True
+		'RdOff.Checked = True
+		RdOverspeed.Checked = True
 		CbLookAhead.Checked = True
 		'TbAlookahead.Text = "-0.5"
 		TbOverspeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.AsKmph.ToGUIFormat()
