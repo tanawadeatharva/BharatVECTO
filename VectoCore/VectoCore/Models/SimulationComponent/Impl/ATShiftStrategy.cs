@@ -36,7 +36,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -48,8 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override IGearbox Gearbox
 		{
 			get { return _gearbox; }
-			set
-			{
+			set {
 				_gearbox = value as ATGearbox;
 				if (_gearbox == null) {
 					throw new VectoException("AT Shift strategy can only handle AT gearboxes, given: {0}", value.GetType());
@@ -193,61 +191,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentGear = ModelData.Gears[gear];
 
 			if (_gearbox.TorqueConverterLocked || currentGear.HasLockedGear) {
-				if (CheckUpshiftToLocked(absTime, outAngularVelocity, inTorque, inAngularVelocity, gear)) {
-					return true;
-				}
-			}
-
-			// UPSHIFT - Special rule for 1C -> 2C
-			if (!_gearbox.TorqueConverterLocked && ModelData.Gears.ContainsKey(gear + 1) &&
-				ModelData.Gears[gear + 1].HasTorqueConverter && outAngularVelocity.IsGreater(0)) {
-				if (CheckUpshiftTcTc(absTime, outTorque, outAngularVelocity, gear, currentGear)) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		private bool CheckUpshiftTcTc(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity, uint gear,
-			GearData currentGear)
-		{
-// C -> C+1
-			var nextGear = ModelData.Gears[gear + 1];
-			var gearRatio = nextGear.TorqueConverterRatio / currentGear.TorqueConverterRatio;
-			var minEngineSpeed = VectoMath.Min(700.RPMtoRad(), gearRatio * (DataBus.EngineN80hSpeed - 150.RPMtoRad()));
-
-			var nextGearboxInSpeed = outAngularVelocity * nextGear.TorqueConverterRatio;
-			var nextGearboxInTorque = outTorque / nextGear.TorqueConverterRatio;
-			var tcOperatingPoint = _gearbox.TorqueConverter.FindOperatingPoint(nextGearboxInTorque, nextGearboxInSpeed);
-
-			var engineSpeedOverMin = tcOperatingPoint.InAngularVelocity.IsGreater(minEngineSpeed);
-
-			var reachableAcceleration = EstimateAccelerationForGear(gear + 1, outAngularVelocity);
-			var minAcceleration = VectoMath.Min(ModelData.TorqueConverterData.CCUpshiftMinAcceleration,
-				DataBus.DriverAcceleration);
-			var minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
-
-			if (engineSpeedOverMin && minAccelerationReachable) {
-				Upshift(absTime, gear);
-				return true;
-			}
-			return false;
-		}
-
-		private bool CheckUpshiftToLocked(Second absTime, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear)
-		{
 // UPSHIFT - General Rule
 			// L -> L+1 
 			// C -> L
 			var nextGear = _gearbox.TorqueConverterLocked ? gear + 1 : gear;
 			if (!ModelData.Gears.ContainsKey(nextGear)) {
-				return true;
+					return false;
 			}
 
 			var nextEngineSpeed = outAngularVelocity * ModelData.Gears[nextGear].Ratio;
 			if (nextEngineSpeed.IsEqual(0)) {
-				return true;
+					return false;
 			}
 
 			var currentEnginePower = inTorque * inAngularVelocity;
@@ -267,6 +221,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (isAboveUpShift && minAccelerationReachable) {
 				Upshift(absTime, gear);
 				return true;
+			}
+			}
+
+			// UPSHIFT - Special rule for 1C -> 2C
+			if (!_gearbox.TorqueConverterLocked && ModelData.Gears.ContainsKey(gear + 1) &&
+				ModelData.Gears[gear + 1].HasTorqueConverter && outAngularVelocity.IsGreater(0)) {
+				// C -> C+1
+				var nextGear = ModelData.Gears[gear + 1];
+				var gearRatio = nextGear.TorqueConverterRatio / currentGear.TorqueConverterRatio;
+				var minEngineSpeed = VectoMath.Min(700.RPMtoRad(), gearRatio * (DataBus.EngineN80hSpeed - 150.RPMtoRad()));
+
+				var nextGearboxInSpeed = outAngularVelocity * nextGear.TorqueConverterRatio;
+				var nextGearboxInTorque = outTorque / nextGear.TorqueConverterRatio;
+				var tcOperatingPoint = _gearbox.TorqueConverter.FindOperatingPoint(nextGearboxInTorque, nextGearboxInSpeed);
+
+				var engineSpeedOverMin = tcOperatingPoint.InAngularVelocity.IsGreater(minEngineSpeed);
+
+				var reachableAcceleration = EstimateAccelerationForGear(gear + 1, outAngularVelocity);
+				var minAcceleration = VectoMath.Min(ModelData.TorqueConverterData.CCUpshiftMinAcceleration,
+					DataBus.DriverAcceleration);
+				var minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
+
+				if (engineSpeedOverMin && minAccelerationReachable) {
+					Upshift(absTime, gear);
+					return true;
+				}
 			}
 			return false;
 		}
