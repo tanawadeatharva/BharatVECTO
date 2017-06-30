@@ -419,10 +419,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// only use the one with min. speed
 					if (cycleIterator.RightSample.VehicleTargetSpeed < lookaheadEntry.VehicleTargetSpeed) {
 						retVal.Remove(lookaheadEntry);
-						retVal.Add(cycleIterator.RightSample); // TODO: MQ 2016-05-13: use clone of iterator here?
+						retVal.Add(cycleIterator.RightSample);
 					}
 				} else {
-					retVal.Add(cycleIterator.RightSample); // TODO: MQ 2016-05-13: use clone of iterator here?
+					retVal.Add(cycleIterator.RightSample);
 				}
 				velocity = cycleIterator.RightSample.VehicleTargetSpeed;
 				if (velocity.IsEqual(0.KMPHtoMeterPerSecond())) {

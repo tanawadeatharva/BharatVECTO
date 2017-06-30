@@ -290,7 +290,8 @@ Public Class Engine
 
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
-			Return "N.A." ' TODO: MQ 20160919
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
@@ -308,6 +309,7 @@ Public Class Engine
 
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
+			' Just for the interface. Value is not available in GUI yet.
 			Return "N.A."
 		End Get
 	End Property

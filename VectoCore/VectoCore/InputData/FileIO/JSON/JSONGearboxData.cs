@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 
@@ -389,7 +390,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get {
 				return Body["PowershiftShiftTime"] == null
-					? 0.8.SI<Second>()
+					? Constants.DefaultPowerShiftTime
 					: Body.GetEx<double>("PowershiftShiftTime").SI<Second>();
 			}
 		}

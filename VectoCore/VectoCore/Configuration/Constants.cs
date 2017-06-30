@@ -36,6 +36,7 @@ namespace TUGraz.VectoCore.Configuration
 {
 	public static class Constants
 	{
+		public static Second DefaultPowerShiftTime = 0.8.SI<Second>();
 		public const double RPMToRad = 2 * Math.PI / 60;
 		public const double Kilo = 1000;
 		public const double MeterPerSecondToKMH = 3.6;

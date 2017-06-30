@@ -450,7 +450,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				if (DataBus.VehicleSpeed.IsSmallerOrEqual(0.SI<MeterPerSecond>())) {
 					// the clutch is disengaged, and the vehicle stopped - we can't perform a roll action. wait for the clutch to be engaged
-					// todo mk 2016-08-23: is this still needed?
 					var remainingShiftTime = Constants.SimulationSettings.TargetTimeInterval;
 					while (!DataBus.ClutchClosed(absTime + remainingShiftTime)) {
 						remainingShiftTime += Constants.SimulationSettings.TargetTimeInterval;
@@ -602,7 +601,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Case<ResponseDrivingCycleDistanceExceeded>(r => {
 							if (!ds.IsEqual(r.MaxDistance)) {
 								// distance has been reduced due to vehicle stop in coast/roll action => use brake action to get exactly to the stop-distance
-								// TODO what if no gear is enaged (and we need driveline power to get to the stop-distance?
 								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 							}
 						}).

@@ -533,9 +533,7 @@ Public Class VehicleForm
 
 			Case CrossWindCorrectionMode.SpeedDependentCorrectionFactor
 				bEnabled = True
-				LbCdMode.Text = "Input file: Vehicle Speed [km/h], Cd Scaling Factor [-]" _
-				'TODO: MQ 20160901: check if scaling factor or absolue value!
-
+				LbCdMode.Text = "Input file: Vehicle Speed [km/h], Cd Scaling Factor [-]"
 			Case Else ' tCdMode.ConstCd0, tCdMode.CdOfVdecl
 				bEnabled = False
 				LbCdMode.Text = ""

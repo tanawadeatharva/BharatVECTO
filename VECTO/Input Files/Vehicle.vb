@@ -265,13 +265,15 @@ Public Class Vehicle
 
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
-			Return "N.A."  ' TODO: MQ  20160908
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
 	Public ReadOnly Property Model As String Implements IComponentInputData.Model
 		Get
-			Return "N.A."  ' Todo: MQ 20160908
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
@@ -290,7 +292,8 @@ Public Class Vehicle
 
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
-			Return "N.A."	'ToDo
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
