@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData,
-			double axlegearRatio, Meter dynamicTyreRadius, bool useEfficiencyFallback)
+			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory, bool useEfficiencyFallback)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
@@ -209,7 +209,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
 						CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
 					}
-					if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold) {
+					if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory)) {
 						// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
 						// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
 						CreateTCSecondGearATSerial(gearData, tcShiftPolygon);

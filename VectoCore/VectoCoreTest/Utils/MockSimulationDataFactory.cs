@@ -32,6 +32,7 @@
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -56,11 +57,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var dao = new DeclarationDataAdapter();
 				var engineData = dao.CreateEngineData(engineInput, null, gearboxInput, new List<ITorqueLimitInputData>());
 				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
+					VehicleCategory.RigidTruck,
 					false);
 			} else {
 				var dao = new EngineeringDataAdapter();
 				var engineData = dao.CreateEngineData(engineInput, gearboxInput, new List<ITorqueLimitInputData>());
 				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
+					VehicleCategory.RigidTruck,
 					true);
 			}
 		}
