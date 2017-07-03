@@ -970,6 +970,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 				runsFactory.WriteModalResults = Cfg.ModOut
 				runsFactory.ModalResults1Hz = Cfg.Mod1Hz
 				runsFactory.Validate = cbValidateRunData.Checked
+				runsFactory.ActualModalData = cbActVmod.Checked
 
 				For Each runId As Integer In jobContainer.AddRuns(runsFactory)
 					fileWriters.Add(runId, fileWriter)
