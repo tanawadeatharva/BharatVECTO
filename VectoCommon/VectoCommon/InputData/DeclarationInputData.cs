@@ -69,7 +69,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		string VIN { get; }
 
-		string LegislativeClass { get; }
+		LegislativeClass LegislativeClass { get; }
 
 		/// <summary>
 		/// P036

@@ -54,6 +54,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
 	{
+		
 		/// <summary>
 		/// P039  Curb Weight Extra Trailer/Body
 		/// cf. VECTO Input Parameters.xlsx

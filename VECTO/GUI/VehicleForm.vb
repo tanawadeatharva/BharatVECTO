@@ -102,6 +102,11 @@ Public Class VehicleForm
 		cbPTOType.DisplayMember = "Label"
 		cbPTOType.DataSource = DeclarationData.PTOTransmission.GetTechnologies.Select(
 			Function(technology) New With {Key .Value = technology, .Label = technology}).ToList()
+
+		cbLegislativeClass.ValueMember = "Value"
+		cbLegislativeClass.DisplayMember = "Label"
+		cbLegislativeClass.DataSource = [Enum].GetValues(GetType(LegislativeClass)) _
+			.Cast(Of LegislativeClass).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).Tolist()
 		'Items.AddRange(PtoTypeStrings.Values.Cast(Of Object).ToArray())
 
 		_changed = False
@@ -366,6 +371,7 @@ Public Class VehicleForm
 		TbCdFile.Text =
 			If(airdrag.CrosswindCorrectionMap Is Nothing, "", GetRelativePath(airdrag.CrosswindCorrectionMap.Source, basePath))
 
+		cbLegislativeClass.SelectedValue = vehicle.LegislativeClass
 		CbRtType.SelectedValue = retarder.Type
 		TbRtRatio.Text = retarder.Ratio.ToGUIFormat()
 		TbRtPath.Text = If(retarder.LossMap Is Nothing, "", GetRelativePath(retarder.LossMap.Source, basePath))
@@ -450,7 +456,7 @@ Public Class VehicleForm
 		veh.Loading = TbLoad.Text.ToDouble(0)
 
 		veh.CdA0 = If(String.IsNullOrWhiteSpace(TBcdA.Text), Double.NaN, TBcdA.Text.ToDouble(0))
-
+		veh.legClass = CType(cbLegislativeClass.SelectedValue, LegislativeClass)
 		veh.DynamicTyreRadius = TBrdyn.Text.ToDouble(0)
 		veh.CrossWindCorrectionMode = CType(CbCdMode.SelectedValue, CrossWindCorrectionMode)
 		veh.CrossWindCorrectionFile.Init(GetPath(file), TbCdFile.Text)

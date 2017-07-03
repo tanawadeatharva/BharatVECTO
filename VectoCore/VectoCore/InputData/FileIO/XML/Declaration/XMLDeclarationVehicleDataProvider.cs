@@ -57,9 +57,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Vehicle_VIN); }
 		}
 
-		public string LegislativeClass
+		public LegislativeClass LegislativeClass
 		{
-			get { return GetElementValue(XMLNames.Vehicle_LegislativeClass); }
+			get { return GetElementValue(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>(); }
 		}
 
 		public VehicleCategory VehicleCategory

@@ -1910,6 +1910,7 @@ ToDo: -0.00
 			<xs:documentation>P251 - enum</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="N2"/>
 			<xs:enumeration value="N3"/>
 		</xs:restriction>
 	</xs:simpleType>
