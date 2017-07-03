@@ -59,7 +59,6 @@ Public Class VehicleForm
 
 	'Initialise form
 	Private Sub VehicleFormLoad(sender As Object, e As EventArgs) Handles MyBase.Load
-		TbLoadingMax.Text = "-"
 		PnLoad.Enabled = Not Cfg.DeclMode
 		ButAxlAdd.Enabled = Not Cfg.DeclMode
 		ButAxlRem.Enabled = Not Cfg.DeclMode
@@ -631,7 +630,6 @@ Public Class VehicleForm
 	End Function
 
 	Private Sub TBmass_TextChanged(sender As Object, e As EventArgs) Handles TbMass.TextChanged
-		SetMaxLoad()
 		Change()
 	End Sub
 
@@ -649,12 +647,10 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub TbMassTrailer_TextChanged(sender As Object, e As EventArgs) Handles TbMassExtra.TextChanged
-		SetMaxLoad()
 		Change()
 	End Sub
 
 	Private Sub TbMassMax_TextChanged(sender As Object, e As EventArgs) Handles TbMassMass.TextChanged
-		SetMaxLoad()
 		Change()
 		SetHdVclass()
 		DeclInit()
@@ -668,17 +664,6 @@ Public Class VehicleForm
 	End Sub
 
 #End Region
-
-	'Update maximum load when truck/trailer mass was changed
-	Private Sub SetMaxLoad()
-		If Not Cfg.DeclMode Then
-			If IsNumeric(TbMass.Text) And IsNumeric(TbMassExtra.Text) And IsNumeric(TbMassMass.Text) Then
-				TbLoadingMax.Text = CStr(CSng(TbMassMass.Text) * 1000 - CSng(TbMass.Text) - CSng(TbMassExtra.Text))
-			Else
-				TbLoadingMax.Text = ""
-			End If
-		End If
-	End Sub
 
 #Region "Axle Configuration"
 
