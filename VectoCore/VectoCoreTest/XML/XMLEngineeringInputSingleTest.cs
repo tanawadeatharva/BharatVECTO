@@ -436,13 +436,14 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(DeclarationData.Gearbox.StartAcceleration.Value(), shiftStrategy.StartAcceleration.Value(), 1e-6);
 			Assert.AreEqual(DeclarationData.Gearbox.TorqueReserveStart, shiftStrategy.StartTorqueReserve, 1e-6);
 
-			// TODO: MQ 2017-01-16: introduce constants, use also in input data provider!
-			Assert.AreEqual(0.8, shiftStrategy.PowershiftShiftTime.Value(), 1e-6);
+			AssertHelper.AreRelativeEqual(Constants.DefaultPowerShiftTime, shiftStrategy.PowershiftShiftTime);
 
 			var tcShiftStrategy = inputDataProvider.GearboxInputData.TorqueConverter;
 
-			Assert.AreEqual(0.1, tcShiftStrategy.CCUpshiftMinAcceleration.Value(), 1e-6);
-			Assert.AreEqual(0.1, tcShiftStrategy.CLUpshiftMinAcceleration.Value(), 1e-6);
+			AssertHelper.AreRelativeEqual(DeclarationData.TorqueConverter.CCUpshiftMinAcceleration,
+				tcShiftStrategy.CCUpshiftMinAcceleration);
+			AssertHelper.AreRelativeEqual(DeclarationData.TorqueConverter.CLUpshiftMinAcceleration,
+				tcShiftStrategy.CLUpshiftMinAcceleration);
 		}
 
 		[TestMethod]

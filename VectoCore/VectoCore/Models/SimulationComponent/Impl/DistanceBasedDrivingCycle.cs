@@ -318,18 +318,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState = CurrentState.Clone();
 			_intervalProlonged = false;
 
-			// @@@quam TODO: duplicate code  - same as below!
-			//var stopTime = Left.PTOActive && IdleController != null
-			//	? Left.StoppingTime + IdleController.Duration
-			//	: Left.StoppingTime;
-
-			//if (!stopTime.IsEqual(0) && stopTime.IsEqual(PreviousState.WaitTime)) {
-			//	// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
-			//	if (IdleController != null) {
-			//		IdleController.ActivateIdle();
-			//	}
-			//	CycleIntervalIterator.MoveNext();
-			//}
 
 			var stopTime = Left.PTOActive && IdleController != null
 				? Left.StoppingTime + IdleController.Duration
@@ -430,10 +418,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// only use the one with min. speed
 					if (cycleIterator.RightSample.VehicleTargetSpeed < lookaheadEntry.VehicleTargetSpeed) {
 						retVal.Remove(lookaheadEntry);
-						retVal.Add(cycleIterator.RightSample); // TODO: MQ 2016-05-13: use clone of iterator here?
+						retVal.Add(cycleIterator.RightSample);
 					}
 				} else {
-					retVal.Add(cycleIterator.RightSample); // TODO: MQ 2016-05-13: use clone of iterator here?
+					retVal.Add(cycleIterator.RightSample);
 				}
 				velocity = cycleIterator.RightSample.VehicleTargetSpeed;
 				if (velocity.IsEqual(0.KMPHtoMeterPerSecond())) {

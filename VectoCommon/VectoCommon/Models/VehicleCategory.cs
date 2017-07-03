@@ -46,8 +46,7 @@ namespace TUGraz.VectoCommon.Models
 	{
 		public static string GetLabel(this VehicleCategory category)
 		{
-			switch (category)
-			{
+			switch (category) {
 				case VehicleCategory.RigidTruck:
 					return "Rigid Truck";
 				case VehicleCategory.Tractor:
@@ -62,6 +61,7 @@ namespace TUGraz.VectoCommon.Models
 					return category.ToString();
 			}
 		}
+
 		public static string GetCategoryName(this VehicleCategory category)
 		{
 			switch (category) {
@@ -94,6 +94,21 @@ namespace TUGraz.VectoCommon.Models
 					return "Rigid Truck";
 				default:
 					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
+			}
+		}
+
+		public static bool IsTruck(this VehicleCategory category)
+		{
+			switch (category) {
+				case VehicleCategory.RigidTruck:
+				case VehicleCategory.Tractor:
+					return true;
+				case VehicleCategory.CityBus:
+				case VehicleCategory.InterurbanBus:
+				case VehicleCategory.Coach:
+					return false;
+				default:
+					throw new ArgumentOutOfRangeException("VehicleCategory", category, null);
 			}
 		}
 	}

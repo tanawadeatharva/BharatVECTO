@@ -62,7 +62,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 			var axles = data.Axles;
 
-
 			retVal.AxleData = axles.Select(axle => new Axle {
 				WheelsDimension = axle.Wheels,
 				Inertia = axle.Inertia,
@@ -82,8 +81,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			switch (airdragData.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
-					retVal.CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(airdragData.AirDragArea,
+					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(airdragData.AirDragArea,
 							CrossWindCorrectionCurveReader.GetNoCorrectionCurve(airdragData.AirDragArea),
 							CrossWindCorrectionMode.NoCorrection);
 					break;
@@ -97,13 +95,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						CrossWindCorrectionCurveReader.ReadCdxABetaTable(airdragData.CrosswindCorrectionMap));
 					break;
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
+					var airDragArea = airdragData.AirDragArea ??
+									DeclarationData.Segments.LookupCdA(data.VehicleCategory, data.AxleConfiguration, data.GrossVehicleMassRating);
 					var height = DeclarationData.Segments.LookupHeight(data.VehicleCategory, data.AxleConfiguration,
 						data.GrossVehicleMassRating);
-					retVal.CrossWindCorrectionCurve =
-						new CrosswindCorrectionCdxALookup(airdragData.AirDragArea,
+					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(airDragArea,
 							DeclarationDataAdapter.GetDeclarationAirResistanceCurve(
-								GetAirdragParameterSet(data.VehicleCategory, data.AxleConfiguration, data.Axles.Count),
-								airdragData.AirDragArea, height), CrossWindCorrectionMode.DeclarationModeCorrection);
+							GetAirdragParameterSet(data.VehicleCategory, data.AxleConfiguration, data.Axles.Count), airDragArea, height),
+						CrossWindCorrectionMode.DeclarationModeCorrection);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException("CrosswindCorrection", airdragData.CrossWindCorrectionMode.ToString());
@@ -159,7 +158,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData,
-			double axlegearRatio, Meter dynamicTyreRadius, bool useEfficiencyFallback)
+			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory, bool useEfficiencyFallback)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
@@ -230,7 +229,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
 					CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
 				}
-				if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold) {
+					if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory)) {
 					// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
 					// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
 					CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
@@ -254,7 +253,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.UpshiftAfterDownshiftDelay = gearbox.UpshiftAfterDownshiftDelay;
 			retVal.UpshiftMinAcceleration = gearbox.UpshiftMinAcceleration;
 		}
-
 
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData)
 		{

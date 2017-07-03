@@ -22,6 +22,7 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Utils
@@ -204,7 +205,13 @@ Public Class Gearbox
 							IEngineeringInputDataProvider)
 			'Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
 			Dim engine As CombustionEngineData
+			Dim vehiclecategory As VehicleCategory
 			Dim rdyn As Meter = 0.5.SI(Of Meter)()
+			Try
+				vehiclecategory = inputData.VehicleInputData.VehicleCategory
+			Catch ex As Exception
+				vehiclecategory = vehiclecategory.RigidTruck
+			End Try
 			If mode = ExecutionMode.Declaration Then
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
 
@@ -214,9 +221,9 @@ Public Class Gearbox
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
-
+				
 				axlegearData = doa.CreateAxleGearData(gearbox, False)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, False)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, False)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Try
@@ -226,7 +233,7 @@ Public Class Gearbox
 				End Try
 
 				axlegearData = doa.CreateAxleGearData(gearbox, True)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, True)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, True)
 			End If
 
 			Dim result As IList(Of ValidationResult) =
@@ -299,7 +306,8 @@ Public Class Gearbox
 
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
-			Return "N.A."  ' Todo MQ 20160915
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
@@ -318,6 +326,7 @@ Public Class Gearbox
 
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
+			' Just for the interface. Value is not available in GUI yet.
 			Return "N.A."
 		End Get
 	End Property

@@ -100,6 +100,19 @@ Partial Class GearboxForm
 		Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.gbTC = New System.Windows.Forms.GroupBox()
+		Me.pnTcEngineering = New System.Windows.Forms.Panel()
+		Me.Label26 = New System.Windows.Forms.Label()
+		Me.TBTCShiftPolygon = New System.Windows.Forms.TextBox()
+		Me.tbTCmaxSpeed = New System.Windows.Forms.TextBox()
+		Me.TbTCrefrpm = New System.Windows.Forms.TextBox()
+		Me.Label27 = New System.Windows.Forms.Label()
+		Me.Label14 = New System.Windows.Forms.Label()
+		Me.BtTCShiftFileBrowse = New System.Windows.Forms.Button()
+		Me.Label1 = New System.Windows.Forms.Label()
+		Me.TbTCinertia = New System.Windows.Forms.TextBox()
+		Me.Label15 = New System.Windows.Forms.Label()
+		Me.Label18 = New System.Windows.Forms.Label()
+		Me.LblTCShiftFile = New System.Windows.Forms.Label()
 		Me.BtTCfileOpen = New System.Windows.Forms.Button()
 		Me.TbTCfile = New System.Windows.Forms.TextBox()
 		Me.BtTCfileBrowse = New System.Windows.Forms.Button()
@@ -125,19 +138,6 @@ Partial Class GearboxForm
 		Me.lblGbxInfo = New System.Windows.Forms.Label()
 		Me.btnExportXML = New System.Windows.Forms.Button()
 		Me.btnExportAxlGearXML = New System.Windows.Forms.Button()
-		Me.pnTcEngineering = New System.Windows.Forms.Panel()
-		Me.Label26 = New System.Windows.Forms.Label()
-		Me.TBTCShiftPolygon = New System.Windows.Forms.TextBox()
-		Me.tbTCmaxSpeed = New System.Windows.Forms.TextBox()
-		Me.TbTCrefrpm = New System.Windows.Forms.TextBox()
-		Me.Label27 = New System.Windows.Forms.Label()
-		Me.Label14 = New System.Windows.Forms.Label()
-		Me.BtTCShiftFileBrowse = New System.Windows.Forms.Button()
-		Me.Label1 = New System.Windows.Forms.Label()
-		Me.TbTCinertia = New System.Windows.Forms.TextBox()
-		Me.Label15 = New System.Windows.Forms.Label()
-		Me.Label18 = New System.Windows.Forms.Label()
-		Me.LblTCShiftFile = New System.Windows.Forms.Label()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -147,12 +147,12 @@ Partial Class GearboxForm
 		Me.GroupBox2.SuspendLayout()
 		Me.CmOpenFile.SuspendLayout()
 		Me.gbTC.SuspendLayout()
+		Me.pnTcEngineering.SuspendLayout()
 		Me.GroupBox4.SuspendLayout()
 		Me.PnInertiaTI.SuspendLayout()
 		CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.gbPowershiftLosses.SuspendLayout()
 		Me.gbTCAccMin.SuspendLayout()
-		Me.pnTcEngineering.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'ToolStrip1
@@ -711,6 +711,132 @@ Partial Class GearboxForm
 		Me.gbTC.TabStop = False
 		Me.gbTC.Text = "Torque Converter"
 		'
+		'pnTcEngineering
+		'
+		Me.pnTcEngineering.Controls.Add(Me.Label26)
+		Me.pnTcEngineering.Controls.Add(Me.TBTCShiftPolygon)
+		Me.pnTcEngineering.Controls.Add(Me.tbTCmaxSpeed)
+		Me.pnTcEngineering.Controls.Add(Me.TbTCrefrpm)
+		Me.pnTcEngineering.Controls.Add(Me.Label27)
+		Me.pnTcEngineering.Controls.Add(Me.Label14)
+		Me.pnTcEngineering.Controls.Add(Me.BtTCShiftFileBrowse)
+		Me.pnTcEngineering.Controls.Add(Me.Label1)
+		Me.pnTcEngineering.Controls.Add(Me.TbTCinertia)
+		Me.pnTcEngineering.Controls.Add(Me.Label15)
+		Me.pnTcEngineering.Controls.Add(Me.Label18)
+		Me.pnTcEngineering.Controls.Add(Me.LblTCShiftFile)
+		Me.pnTcEngineering.Location = New System.Drawing.Point(7, 63)
+		Me.pnTcEngineering.Name = "pnTcEngineering"
+		Me.pnTcEngineering.Size = New System.Drawing.Size(399, 93)
+		Me.pnTcEngineering.TabIndex = 3
+		'
+		'Label26
+		'
+		Me.Label26.AutoSize = True
+		Me.Label26.Location = New System.Drawing.Point(1, 29)
+		Me.Label26.Name = "Label26"
+		Me.Label26.Size = New System.Drawing.Size(64, 13)
+		Me.Label26.TabIndex = 50
+		Me.Label26.Text = "Max. Speed"
+		'
+		'TBTCShiftPolygon
+		'
+		Me.TBTCShiftPolygon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.TBTCShiftPolygon.Location = New System.Drawing.Point(4, 70)
+		Me.TBTCShiftPolygon.Name = "TBTCShiftPolygon"
+		Me.TBTCShiftPolygon.Size = New System.Drawing.Size(349, 20)
+		Me.TBTCShiftPolygon.TabIndex = 49
+		'
+		'tbTCmaxSpeed
+		'
+		Me.tbTCmaxSpeed.Location = New System.Drawing.Point(75, 26)
+		Me.tbTCmaxSpeed.Name = "tbTCmaxSpeed"
+		Me.tbTCmaxSpeed.Size = New System.Drawing.Size(57, 20)
+		Me.tbTCmaxSpeed.TabIndex = 52
+		'
+		'TbTCrefrpm
+		'
+		Me.TbTCrefrpm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.TbTCrefrpm.Location = New System.Drawing.Point(296, 0)
+		Me.TbTCrefrpm.Name = "TbTCrefrpm"
+		Me.TbTCrefrpm.Size = New System.Drawing.Size(57, 20)
+		Me.TbTCrefrpm.TabIndex = 46
+		'
+		'Label27
+		'
+		Me.Label27.AutoSize = True
+		Me.Label27.Location = New System.Drawing.Point(138, 29)
+		Me.Label27.Name = "Label27"
+		Me.Label27.Size = New System.Drawing.Size(30, 13)
+		Me.Label27.TabIndex = 51
+		Me.Label27.Text = "[rpm]"
+		'
+		'Label14
+		'
+		Me.Label14.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.Label14.AutoSize = True
+		Me.Label14.Location = New System.Drawing.Point(357, 3)
+		Me.Label14.Name = "Label14"
+		Me.Label14.Size = New System.Drawing.Size(40, 13)
+		Me.Label14.TabIndex = 41
+		Me.Label14.Text = "[1/min]"
+		'
+		'BtTCShiftFileBrowse
+		'
+		Me.BtTCShiftFileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.BtTCShiftFileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+		Me.BtTCShiftFileBrowse.Location = New System.Drawing.Point(354, 68)
+		Me.BtTCShiftFileBrowse.Name = "BtTCShiftFileBrowse"
+		Me.BtTCShiftFileBrowse.Size = New System.Drawing.Size(24, 24)
+		Me.BtTCShiftFileBrowse.TabIndex = 47
+		Me.BtTCShiftFileBrowse.TabStop = False
+		Me.BtTCShiftFileBrowse.UseVisualStyleBackColor = True
+		'
+		'Label1
+		'
+		Me.Label1.AutoSize = True
+		Me.Label1.Location = New System.Drawing.Point(138, 3)
+		Me.Label1.Name = "Label1"
+		Me.Label1.Size = New System.Drawing.Size(36, 13)
+		Me.Label1.TabIndex = 43
+		Me.Label1.Text = "[kgm²]"
+		'
+		'TbTCinertia
+		'
+		Me.TbTCinertia.Location = New System.Drawing.Point(75, 0)
+		Me.TbTCinertia.Name = "TbTCinertia"
+		Me.TbTCinertia.Size = New System.Drawing.Size(57, 20)
+		Me.TbTCinertia.TabIndex = 45
+		'
+		'Label15
+		'
+		Me.Label15.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.Label15.AutoSize = True
+		Me.Label15.Location = New System.Drawing.Point(213, 3)
+		Me.Label15.Name = "Label15"
+		Me.Label15.Size = New System.Drawing.Size(77, 13)
+		Me.Label15.TabIndex = 42
+		Me.Label15.Text = "Reference rpm"
+		'
+		'Label18
+		'
+		Me.Label18.AutoSize = True
+		Me.Label18.Location = New System.Drawing.Point(1, 3)
+		Me.Label18.Name = "Label18"
+		Me.Label18.Size = New System.Drawing.Size(36, 13)
+		Me.Label18.TabIndex = 44
+		Me.Label18.Text = "Inertia"
+		'
+		'LblTCShiftFile
+		'
+		Me.LblTCShiftFile.AutoSize = True
+		Me.LblTCShiftFile.Location = New System.Drawing.Point(1, 55)
+		Me.LblTCShiftFile.Name = "LblTCShiftFile"
+		Me.LblTCShiftFile.Size = New System.Drawing.Size(207, 13)
+		Me.LblTCShiftFile.TabIndex = 48
+		Me.LblTCShiftFile.Text = "Torque converter shift polygons file (.vgbs)"
+		'
 		'BtTCfileOpen
 		'
 		Me.BtTCfileOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -951,132 +1077,6 @@ Partial Class GearboxForm
 		Me.btnExportAxlGearXML.Text = "Exp. AxlGear as XML"
 		Me.btnExportAxlGearXML.UseVisualStyleBackColor = True
 		'
-		'pnTcEngineering
-		'
-		Me.pnTcEngineering.Controls.Add(Me.Label26)
-		Me.pnTcEngineering.Controls.Add(Me.TBTCShiftPolygon)
-		Me.pnTcEngineering.Controls.Add(Me.tbTCmaxSpeed)
-		Me.pnTcEngineering.Controls.Add(Me.TbTCrefrpm)
-		Me.pnTcEngineering.Controls.Add(Me.Label27)
-		Me.pnTcEngineering.Controls.Add(Me.Label14)
-		Me.pnTcEngineering.Controls.Add(Me.BtTCShiftFileBrowse)
-		Me.pnTcEngineering.Controls.Add(Me.Label1)
-		Me.pnTcEngineering.Controls.Add(Me.TbTCinertia)
-		Me.pnTcEngineering.Controls.Add(Me.Label15)
-		Me.pnTcEngineering.Controls.Add(Me.Label18)
-		Me.pnTcEngineering.Controls.Add(Me.LblTCShiftFile)
-		Me.pnTcEngineering.Location = New System.Drawing.Point(7, 63)
-		Me.pnTcEngineering.Name = "pnTcEngineering"
-		Me.pnTcEngineering.Size = New System.Drawing.Size(399, 93)
-		Me.pnTcEngineering.TabIndex = 3
-		'
-		'Label26
-		'
-		Me.Label26.AutoSize = True
-		Me.Label26.Location = New System.Drawing.Point(1, 29)
-		Me.Label26.Name = "Label26"
-		Me.Label26.Size = New System.Drawing.Size(64, 13)
-		Me.Label26.TabIndex = 50
-		Me.Label26.Text = "Max. Speed"
-		'
-		'TBTCShiftPolygon
-		'
-		Me.TBTCShiftPolygon.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TBTCShiftPolygon.Location = New System.Drawing.Point(4, 70)
-		Me.TBTCShiftPolygon.Name = "TBTCShiftPolygon"
-		Me.TBTCShiftPolygon.Size = New System.Drawing.Size(349, 20)
-		Me.TBTCShiftPolygon.TabIndex = 49
-		'
-		'tbTCmaxSpeed
-		'
-		Me.tbTCmaxSpeed.Location = New System.Drawing.Point(75, 26)
-		Me.tbTCmaxSpeed.Name = "tbTCmaxSpeed"
-		Me.tbTCmaxSpeed.Size = New System.Drawing.Size(57, 20)
-		Me.tbTCmaxSpeed.TabIndex = 52
-		'
-		'TbTCrefrpm
-		'
-		Me.TbTCrefrpm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TbTCrefrpm.Location = New System.Drawing.Point(296, 0)
-		Me.TbTCrefrpm.Name = "TbTCrefrpm"
-		Me.TbTCrefrpm.Size = New System.Drawing.Size(57, 20)
-		Me.TbTCrefrpm.TabIndex = 46
-		'
-		'Label27
-		'
-		Me.Label27.AutoSize = True
-		Me.Label27.Location = New System.Drawing.Point(138, 29)
-		Me.Label27.Name = "Label27"
-		Me.Label27.Size = New System.Drawing.Size(30, 13)
-		Me.Label27.TabIndex = 51
-		Me.Label27.Text = "[rpm]"
-		'
-		'Label14
-		'
-		Me.Label14.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.Label14.AutoSize = True
-		Me.Label14.Location = New System.Drawing.Point(357, 3)
-		Me.Label14.Name = "Label14"
-		Me.Label14.Size = New System.Drawing.Size(40, 13)
-		Me.Label14.TabIndex = 41
-		Me.Label14.Text = "[1/min]"
-		'
-		'BtTCShiftFileBrowse
-		'
-		Me.BtTCShiftFileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.BtTCShiftFileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-		Me.BtTCShiftFileBrowse.Location = New System.Drawing.Point(354, 68)
-		Me.BtTCShiftFileBrowse.Name = "BtTCShiftFileBrowse"
-		Me.BtTCShiftFileBrowse.Size = New System.Drawing.Size(24, 24)
-		Me.BtTCShiftFileBrowse.TabIndex = 47
-		Me.BtTCShiftFileBrowse.TabStop = False
-		Me.BtTCShiftFileBrowse.UseVisualStyleBackColor = True
-		'
-		'Label1
-		'
-		Me.Label1.AutoSize = True
-		Me.Label1.Location = New System.Drawing.Point(138, 3)
-		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(36, 13)
-		Me.Label1.TabIndex = 43
-		Me.Label1.Text = "[kgm²]"
-		'
-		'TbTCinertia
-		'
-		Me.TbTCinertia.Location = New System.Drawing.Point(75, 0)
-		Me.TbTCinertia.Name = "TbTCinertia"
-		Me.TbTCinertia.Size = New System.Drawing.Size(57, 20)
-		Me.TbTCinertia.TabIndex = 45
-		'
-		'Label15
-		'
-		Me.Label15.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.Label15.AutoSize = True
-		Me.Label15.Location = New System.Drawing.Point(213, 3)
-		Me.Label15.Name = "Label15"
-		Me.Label15.Size = New System.Drawing.Size(77, 13)
-		Me.Label15.TabIndex = 42
-		Me.Label15.Text = "Reference rpm"
-		'
-		'Label18
-		'
-		Me.Label18.AutoSize = True
-		Me.Label18.Location = New System.Drawing.Point(1, 3)
-		Me.Label18.Name = "Label18"
-		Me.Label18.Size = New System.Drawing.Size(36, 13)
-		Me.Label18.TabIndex = 44
-		Me.Label18.Text = "Inertia"
-		'
-		'LblTCShiftFile
-		'
-		Me.LblTCShiftFile.AutoSize = True
-		Me.LblTCShiftFile.Location = New System.Drawing.Point(1, 55)
-		Me.LblTCShiftFile.Name = "LblTCShiftFile"
-		Me.LblTCShiftFile.Size = New System.Drawing.Size(207, 13)
-		Me.LblTCShiftFile.TabIndex = 48
-		Me.LblTCShiftFile.Text = "Torque converter shift polygons file (.vgbs)"
-		'
 		'GearboxForm
 		'
 		Me.AcceptButton = Me.ButOK
@@ -1125,6 +1125,8 @@ Partial Class GearboxForm
 		Me.CmOpenFile.ResumeLayout(False)
 		Me.gbTC.ResumeLayout(False)
 		Me.gbTC.PerformLayout()
+		Me.pnTcEngineering.ResumeLayout(False)
+		Me.pnTcEngineering.PerformLayout()
 		Me.GroupBox4.ResumeLayout(False)
 		Me.GroupBox4.PerformLayout()
 		Me.PnInertiaTI.ResumeLayout(False)
@@ -1134,8 +1136,6 @@ Partial Class GearboxForm
 		Me.gbPowershiftLosses.PerformLayout()
 		Me.gbTCAccMin.ResumeLayout(False)
 		Me.gbTCAccMin.PerformLayout()
-		Me.pnTcEngineering.ResumeLayout(False)
-		Me.pnTcEngineering.PerformLayout()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 

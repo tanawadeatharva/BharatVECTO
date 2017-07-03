@@ -228,13 +228,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.TorqueConverterActive = true;
 				return TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity);
 			}
-			// mk 2016-12-13
-			//if (outTorque.IsSmaller(0) && inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
-			//	Log.Warn("engine speed would fall below idle speed - disengage! gear from cycle: {0}, vehicle speed: {1}", Gear,
-			//		DataBus.VehicleSpeed);
-			//	Gear = 0;
-			//	return RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			//}
+
 			if (TorqueConverter != null) {
 				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity, CurrentState.InTorque,
 					CurrentState.InAngularVelocity);
@@ -315,26 +309,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-
-			//var motoringSpeed = DataBus.EngineIdleSpeed;
-			//var disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
-			//if (!(disengagedResponse is ResponseSuccess)) {
-			//	motoringSpeed = DataBus.EngineSpeed;
-			//	if (motoringSpeed.IsGreater(DataBus.EngineIdleSpeed)) {
-			//		var first = (ResponseDryRun)NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed, true);
-			//		try {
-			//			motoringSpeed = SearchAlgorithm.Search(motoringSpeed, first.DeltaDragLoad,
-			//				Constants.SimulationSettings.EngineIdlingSearchInterval,
-			//				getYValue: result => ((ResponseDryRun)result).DeltaDragLoad,
-			//				evaluateFunction: n => NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
-			//				criterion: result => ((ResponseDryRun)result).DeltaDragLoad.Value());
-			//		} catch (VectoException) {
-			//			Log.Warn("CycleGearbox could not find motoring speed for disengaged state.");
-			//		}
-			//		motoringSpeed = motoringSpeed.LimitTo(DataBus.EngineIdleSpeed, DataBus.EngineSpeed);
-			//	}
-			//	disengagedResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), motoringSpeed);
-			//}
 			IResponse disengagedResponse;
 			if (GearboxType.AutomaticTransmission()) {
 				disengagedResponse = EngineIdleRequest(absTime, dt);

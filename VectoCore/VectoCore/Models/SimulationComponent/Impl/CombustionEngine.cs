@@ -384,7 +384,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var fc = result.Value;
-			//TODO mk-2015-11-11: calculate aux start stop correction
 			var fcAux = fc;
 
 			var fcWHTC = fcAux * ModelData.FuelConsumptionCorrectionFactor;

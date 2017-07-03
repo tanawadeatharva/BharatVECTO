@@ -49,8 +49,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 	public class XMLDeclarationWriter : AbstractXMLWriter
 	{
 		private XNamespace componentNamespace;
-		//private readonly XNamespace _vectoNs = @"../../../API/VectoInput.xsd";
-
 
 		public XMLDeclarationWriter(string vendor) : base(null, vendor)
 		{
@@ -77,7 +75,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute(xsi + "schemaLocation",
 					string.Format("{0} {1}VectoInput.xsd", rootNamespace, SchemaLocationBaseUrl)),
 				CreateDeclarationJob(data))
-				);
+			);
 			return job;
 		}
 
@@ -104,7 +102,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute(xsi + "schemaLocation",
 					string.Format("{0} {1}VectoComponent.xsd", componentNamespace, SchemaLocationBaseUrl)),
 				content)
-				);
+			);
 			return component;
 		}
 
@@ -149,17 +147,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 					CreateAxleWheels(data.VehicleInputData),
 					CreateAuxiliaries(data.AuxiliaryInputData()),
 					CreateAirdrag(data.AirdragInputData)
-					)
-				);
+				)
+			);
 		}
-
 
 		protected XElement CreateEngine(IEngineDeclarationInputData data, XNamespace ns = null)
 		{
 			var id = string.Format("ENG-{0}", data.Model.RemoveWhitespace());
 			var fld = FullLoadCurveReader.Create(data.FullLoadCurve, true);
 			return new XElement((ns ?? tns) + XMLNames.Component_Engine,
-				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("ENG-{0}", data.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(string.Format("ENG-{0}", data.Model), data.Model),
@@ -179,12 +175,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 						EmbedDataTable(data.FuelConsumptionMap, AttributeMappings.FuelConsumptionMapMapping)),
 					new XElement(tns + XMLNames.Engine_FullLoadAndDragCurve,
 						EmbedDataTable(data.FullLoadCurve, AttributeMappings.EngineFullLoadCurveMapping)
-						)
-					),
+					)
+				),
 				AddSignatureDummy(id)
-				);
+			);
 		}
-
 
 		protected XElement CreateGearbox(IGearboxDeclarationInputData gbxData,
 			ITorqueConverterDeclarationInputData torqueConverter, XNamespace ns = null)
@@ -203,24 +198,22 @@ namespace TUGraz.VectoCore.OutputData.XML
 						: null,
 					new XElement(tns + XMLNames.Gearbox_Gear_TorqueLossMap,
 						EmbedDataTable(gearData.LossMap, AttributeMappings.TransmissionLossmapMapping))
-					);
+				);
 				gears.Add(gear);
 			}
 			var id = string.Format("GBX-{0}", gbxData.Model.RemoveWhitespace());
 			return new XElement((ns ?? tns) + XMLNames.Component_Gearbox,
-				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("GBX-{0}", gbxData.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(string.Format("GBX-{0}", gbxData.Model), gbxData.Model),
 					new XElement(tns + XMLNames.Gearbox_TransmissionType, gbxData.Type.ToXMLFormat()),
 					new XElement(tns + XMLNames.Component_Gearbox_CertificationMethod, "Standard values"),
 					gears
-					),
+				),
 				AddSignatureDummy(id),
 				gbxData.Type.AutomaticTransmission() ? CreateTorqueConverter(torqueConverter) : null
-				);
+			);
 		}
-
 
 		private XElement CreateTorqueConverter(ITorqueConverterDeclarationInputData data)
 		{
@@ -229,7 +222,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 			var id = string.Format("TC-{0}", data.Model.RemoveWhitespace());
 			return new XElement(tns + XMLNames.Component_TorqueConverter,
-				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, id),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(data.CertificationNumber, data.Model),
@@ -239,8 +231,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 							precision: new Dictionary<string, uint>() {
 								{ TorqueConverterDataReader.Fields.SpeedRatio, 4 }
 							})
-						)
-					),
+					)
+				),
 				AddSignatureDummy(id));
 		}
 
@@ -248,7 +240,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var id = string.Format("ANGL-{0}", data.Model.RemoveWhitespace());
 			return new XElement((ns ?? tns) + XMLNames.Component_Angledrive,
-				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, "ANGL-" + data.Model),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(data.CertificationNumber, data.Model),
@@ -263,24 +254,22 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var id = string.Format("RET-{0}", data.Model.RemoveWhitespace());
 			return new XElement((ns ?? tns) + XMLNames.Component_Retarder,
-				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, "RET-none"),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(data.CertificationNumber, data.Model),
 					new XElement(tns + XMLNames.Component_CertificationMethod, "Standard values"),
 					new XElement(tns + XMLNames.Retarder_RetarderLossMap,
 						EmbedDataTable(data.LossMap, AttributeMappings.RetarderLossmapMapping)
-						)
-					),
+					)
+				),
 				AddSignatureDummy(id)
-				);
+			);
 		}
 
 		public XElement CreateAxlegear(IAxleGearInputData data, XNamespace ns = null)
 		{
 			var typeId = string.Format("AXLGEAR-{0}", data.Ratio.ToString("F3", CultureInfo.InvariantCulture));
 			return new XElement((ns ?? tns) + XMLNames.Component_Axlegear,
-				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("AXL-{0}", data.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, typeId),
 					GetDefaultComponentElements(typeId, "N.A."),
@@ -290,7 +279,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + XMLNames.Axlegear_TorqueLossMap,
 						EmbedDataTable(data.LossMap, AttributeMappings.TransmissionLossmapMapping))),
 				AddSignatureDummy(typeId)
-				);
+			);
 		}
 
 		public XElement CreateAxleWheels(IVehicleDeclarationInputData data, XNamespace ns = null)
@@ -307,29 +296,26 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_TwinTyres_Attr, axle.TwinTyres),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_Steered, i == 0),
 					CreateTyre(axle)
-					));
+				));
 			}
 
 			return new XElement((ns ?? tns) + XMLNames.Component_AxleWheels,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
-					//new XAttribute(XMLNames.Component_ID_Attr,
-					//	string.Format("AXLWHL-{0}", data.AxleConfiguration.GetName())),
 					new XElement(tns + XMLNames.AxleWheels_Axles, axles))
-				);
+			);
 		}
 
 		private XElement CreateTyre(IAxleDeclarationInputData axle)
 		{
 			var id = string.Format("TYRE-{0}", axle.Wheels).RemoveWhitespace().Replace("/", "_");
 			return new XElement(tns + "Tyre",
-				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, id),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(string.Format("TYRE-{0}", axle.Wheels), axle.Wheels),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_Dimension, axle.Wheels),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_RRCDeclared, axle.RollResistanceCoefficient.ToXMLFormat(4)),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_FzISO, axle.TyreTestLoad.Value().ToXMLFormat(0))
-					),
+				),
 				AddSignatureDummy(id));
 		}
 
@@ -344,10 +330,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var aux = new XElement(tns + XMLNames.ComponentDataWrapper);
 			foreach (
 				var key in
-					new[] {
-						AuxiliaryType.Fan, AuxiliaryType.SteeringPump, AuxiliaryType.ElectricSystem, AuxiliaryType.PneumaticSystem,
-						AuxiliaryType.HVAC
-					}) {
+				new[] {
+					AuxiliaryType.Fan, AuxiliaryType.SteeringPump, AuxiliaryType.ElectricSystem, AuxiliaryType.PneumaticSystem,
+					AuxiliaryType.HVAC
+				}) {
 				aux.Add(auxList[key]);
 			}
 			return new XElement(tns + XMLNames.Component_Auxiliaries, aux);
@@ -357,22 +343,20 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			var id = string.Format("Airdrag-{0}", data.Model);
 			return new XElement((ns ?? tns) + XMLNames.Component_AirDrag,
-				//new XAttribute(XMLNames.Component_CertificationNumber_Attr, string.Format("AD-{0}", data.Model)),
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
 					GetDefaultComponentElements(data.Model, "N.A."),
-					new XElement(tns + "CdxA_0", data.AirDragArea.Value().ToXMLFormat(2)), // TODO
-					new XElement(tns + "TransferredCdxA", data.AirDragArea.Value().ToXMLFormat(2)), // TODO
+					new XElement(tns + "CdxA_0", data.AirDragArea.Value().ToXMLFormat(2)),
+					new XElement(tns + "TransferredCdxA", data.AirDragArea.Value().ToXMLFormat(2)),
 					new XElement(tns + XMLNames.AirDrag_DeclaredCdxA, data.AirDragArea.Value().ToXMLFormat(2))),
 				AddSignatureDummy(id)
-				);
+			);
 		}
 
 		private string AuxTypeToXML(AuxiliaryType type)
 		{
 			return type.ToString();
 		}
-
 
 		private XElement AddSignatureDummy(string id)
 		{
@@ -385,12 +369,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 								"http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments")),
 						new XElement(di + XMLNames.DI_Signature_Reference_Transforms_Transform,
 							new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "urn:vecto:xml:2017:canonicalization"))
-						),
+					),
 					new XElement(di + XMLNames.DI_Signature_Reference_DigestMethod,
 						new XAttribute(XMLNames.DI_Signature_Algorithm_Attr, "http://www.w3.org/2001/04/xmlenc#sha256")),
 					new XElement(di + XMLNames.DI_Signature_Reference_DigestValue, "")
-					)
-				);
+				)
+			);
 		}
 
 		protected XElement[] GetDefaultComponentElements(string componentId, string makeAndModel)

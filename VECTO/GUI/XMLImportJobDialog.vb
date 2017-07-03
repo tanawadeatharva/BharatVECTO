@@ -1,5 +1,4 @@
 ﻿Imports System.IO
-Imports Microsoft.WindowsAPICodePack.Dialogs
 
 Public Class XMLImportJobDialog
 	Private Sub btnBrowseJob_Click(sender As Object, e As EventArgs) Handles btnBrowseJob.Click
@@ -10,11 +9,12 @@ Public Class XMLImportJobDialog
 	End Sub
 
 	Private Sub btnBrowseOutput_Click(sender As Object, e As EventArgs) Handles btnBrowseOutput.Click
-		Dim dialog As CommonOpenFileDialog = New CommonOpenFileDialog()
-		dialog.IsFolderPicker = True
-		If (dialog.ShowDialog() = CommonFileDialogResult.Ok) Then
-			tbDestination.Text = Path.GetFullPath(dialog.FileName)
+		If Not FolderFileBrowser.OpenDialog("") Then
+			Exit Sub
 		End If
+
+		Dim filePath As String = FolderFileBrowser.Files(0)
+		tbDestination.Text = Path.GetFullPath(filePath)
 	End Sub
 
 	Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
