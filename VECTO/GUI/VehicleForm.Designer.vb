@@ -142,6 +142,7 @@ Partial Class VehicleForm
 		Me.Label17 = New System.Windows.Forms.Label()
 		Me.btDelMaxTorqueEntry = New System.Windows.Forms.Button()
 		Me.btAddMaxTorqueEntry = New System.Windows.Forms.Button()
+		Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
 		Me.GroupBox6.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.GroupBox7.SuspendLayout()
@@ -1093,7 +1094,7 @@ Partial Class VehicleForm
 		Me.TabPage2.Location = New System.Drawing.Point(4, 22)
 		Me.TabPage2.Name = "TabPage2"
 		Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPage2.Size = New System.Drawing.Size(579, 350)
+		Me.TabPage2.Size = New System.Drawing.Size(579, 329)
 		Me.TabPage2.TabIndex = 1
 		Me.TabPage2.Text = "Powertrain"
 		Me.TabPage2.UseVisualStyleBackColor = True
@@ -1106,7 +1107,7 @@ Partial Class VehicleForm
 		Me.TabPage3.Controls.Add(Me.btAddMaxTorqueEntry)
 		Me.TabPage3.Location = New System.Drawing.Point(4, 22)
 		Me.TabPage3.Name = "TabPage3"
-		Me.TabPage3.Size = New System.Drawing.Size(579, 350)
+		Me.TabPage3.Size = New System.Drawing.Size(579, 329)
 		Me.TabPage3.TabIndex = 2
 		Me.TabPage3.Text = "Torque Limits"
 		Me.TabPage3.UseVisualStyleBackColor = True
@@ -1165,6 +1166,15 @@ Partial Class VehicleForm
 		Me.btAddMaxTorqueEntry.TabIndex = 4
 		Me.btAddMaxTorqueEntry.UseVisualStyleBackColor = True
 		'
+		'cbLegislativeClass
+		'
+		Me.cbLegislativeClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.cbLegislativeClass.FormattingEnabled = True
+		Me.cbLegislativeClass.Location = New System.Drawing.Point(219, 106)
+		Me.cbLegislativeClass.Name = "cbLegislativeClass"
+		Me.cbLegislativeClass.Size = New System.Drawing.Size(52, 21)
+		Me.cbLegislativeClass.TabIndex = 41
+		'
 		'VehicleForm
 		'
 		Me.AcceptButton = Me.ButOK
@@ -1172,6 +1182,7 @@ Partial Class VehicleForm
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
 		Me.ClientSize = New System.Drawing.Size(599, 580)
+		Me.Controls.Add(Me.cbLegislativeClass)
 		Me.Controls.Add(Me.TabControl1)
 		Me.Controls.Add(Me.ButCancel)
 		Me.Controls.Add(Me.ButOK)
@@ -1342,4 +1353,5 @@ Partial Class VehicleForm
 	Friend WithEvents tbVehIdlingSpeed As System.Windows.Forms.TextBox
 	Friend WithEvents Label18 As System.Windows.Forms.Label
 	Friend WithEvents Label19 As System.Windows.Forms.Label
+	Friend WithEvents cbLegislativeClass As System.Windows.Forms.ComboBox
 End Class

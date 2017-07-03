@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public string VIN { get; internal set; }
 
-		public string LegislativeClass { get; internal set; }
+		public LegislativeClass LegislativeClass { get; internal set; }
 
 		public VehicleCategory VehicleCategory { get; internal set; }
 

@@ -63,6 +63,7 @@ Public Class Vehicle
 	Public ReadOnly PtoCycle As SubPath
 	Public torqueLimitsList As List(Of ITorqueLimitInputData)
 	Public VehicleidlingSpeed As PerSecond
+	Public legClass As LegislativeClass
 
 
 	Public Sub New()
@@ -323,9 +324,9 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property LegislativeClass As String Implements IVehicleDeclarationInputData.LegislativeClass
+	Public ReadOnly Property LegislativeClass As LegislativeClass Implements IVehicleEngineeringInputData.LegislativeClass
 		Get
-			Return "N3"
+			Return legClass
 		End Get
 	End Property
 

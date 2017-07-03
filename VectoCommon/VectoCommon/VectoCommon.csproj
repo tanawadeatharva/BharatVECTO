@@ -67,6 +67,7 @@
     <Compile Include="Models\FuelType.cs" />
     <Compile Include="Models\GearboxType.cs" />
     <Compile Include="Models\IResponse.cs" />
+    <Compile Include="Models\LegislativeClass.cs" />
     <Compile Include="Models\LoggingObject.cs" />
     <Compile Include="Models\OperatingPoint.cs" />
     <Compile Include="Models\RetarderType.cs" />
