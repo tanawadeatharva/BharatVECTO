@@ -48,9 +48,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly PerSecond _idleSpeed;
 		private readonly PerSecond _ratedSpeed;
 
-		public IIdleController IdleController {
+		public IIdleController IdleController
+		{
 			get { return _idleController; }
-			set {
+			set
+			{
 				_idleController = value;
 				_idleController.RequestPort = NextComponent;
 			}
@@ -105,12 +107,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			NewtonMeter torqueIn;
 			PerSecond angularVelocityIn;
-			if (DataBus.DriverBehavior == DrivingBehavior.Halted /*DataBus.VehicleStopped*/) {
-				angularVelocityIn = _idleSpeed;
-				torqueIn = 0.SI<NewtonMeter>();
-			} else {
-				AddClutchLoss(outTorque, outAngularVelocity, (DataBus.Gear == 1 && outTorque > 0) ||startClutch || outAngularVelocity.IsEqual(0), out torqueIn, out angularVelocityIn);
-			}
+
+			AddClutchLoss(outTorque, outAngularVelocity,
+				(DataBus.Gear == 1 && outTorque > 0) || startClutch || outAngularVelocity.IsEqual(0), out torqueIn,
+				out angularVelocityIn);
+
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
 				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
 
@@ -132,8 +133,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, bool startClutch, out NewtonMeter torqueIn, out PerSecond angularVelocityIn)
+		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, bool startClutch, out NewtonMeter torqueIn,
+			out PerSecond angularVelocityIn)
 		{
+			if (DataBus.DriverBehavior == DrivingBehavior.Halted) {
+				angularVelocityIn = _idleSpeed;
+				torqueIn = 0.SI<NewtonMeter>();
+				return;
+			}
+
 			torqueIn = torque;
 			angularVelocityIn = angularVelocity;
 
@@ -147,7 +155,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var engineSpeed = VectoMath.Max(_idleSpeed, angularVelocity);
 
 				angularVelocityIn = _clutchSpeedSlippingFactor * engineSpeed + _idleSpeed;
-				
 			}
 		}
 
