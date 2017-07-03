@@ -114,6 +114,7 @@ Partial Class MainForm
 		Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+		Me.cbActVmod = New System.Windows.Forms.CheckBox()
 		Me.StatusBAR.SuspendLayout()
 		Me.TabControl1.SuspendLayout()
 		Me.TabPageGEN.SuspendLayout()
@@ -383,10 +384,11 @@ Partial Class MainForm
 		'
 		'GroupBox3
 		'
+		Me.GroupBox3.Controls.Add(Me.cbActVmod)
 		Me.GroupBox3.Controls.Add(Me.cbValidateRunData)
 		Me.GroupBox3.Location = New System.Drawing.Point(3, 177)
 		Me.GroupBox3.Name = "GroupBox3"
-		Me.GroupBox3.Size = New System.Drawing.Size(173, 64)
+		Me.GroupBox3.Size = New System.Drawing.Size(173, 110)
 		Me.GroupBox3.TabIndex = 18
 		Me.GroupBox3.TabStop = False
 		Me.GroupBox3.Text = "Misc"
@@ -680,52 +682,52 @@ Partial Class MainForm
 		'
 		Me.GENEditorToolStripMenuItem1.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
 		Me.GENEditorToolStripMenuItem1.Name = "GENEditorToolStripMenuItem1"
-		Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(170, 22)
+		Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(151, 22)
 		Me.GENEditorToolStripMenuItem1.Text = "Job Editor"
 		'
 		'VEHEditorToolStripMenuItem
 		'
 		Me.VEHEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VEH
 		Me.VEHEditorToolStripMenuItem.Name = "VEHEditorToolStripMenuItem"
-		Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.VEHEditorToolStripMenuItem.Text = "Vehicle Editor"
 		'
 		'EngineEditorToolStripMenuItem
 		'
 		Me.EngineEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_ENG
 		Me.EngineEditorToolStripMenuItem.Name = "EngineEditorToolStripMenuItem"
-		Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.EngineEditorToolStripMenuItem.Text = "Engine Editor"
 		'
 		'GearboxEditorToolStripMenuItem
 		'
 		Me.GearboxEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_GBX
 		Me.GearboxEditorToolStripMenuItem.Name = "GearboxEditorToolStripMenuItem"
-		Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.GearboxEditorToolStripMenuItem.Text = "Gearbox Editor"
 		'
 		'GraphToolStripMenuItem
 		'
 		Me.GraphToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_Graph
 		Me.GraphToolStripMenuItem.Name = "GraphToolStripMenuItem"
-		Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.GraphToolStripMenuItem.Text = "Graph"
 		'
 		'ToolStripSeparator6
 		'
 		Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-		Me.ToolStripSeparator6.Size = New System.Drawing.Size(167, 6)
+		Me.ToolStripSeparator6.Size = New System.Drawing.Size(148, 6)
 		'
 		'OpenLogToolStripMenuItem
 		'
 		Me.OpenLogToolStripMenuItem.Name = "OpenLogToolStripMenuItem"
-		Me.OpenLogToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.OpenLogToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.OpenLogToolStripMenuItem.Text = "Open Log"
 		'
 		'SettingsToolStripMenuItem
 		'
 		Me.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem"
-		Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.SettingsToolStripMenuItem.Text = "Settings"
 		'
 		'ToolStripDrDnBtInfo
@@ -800,6 +802,15 @@ Partial Class MainForm
 		Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
 		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
+		'
+		'cbActVmod
+		'
+		Me.cbActVmod.Location = New System.Drawing.Point(6, 41)
+		Me.cbActVmod.Name = "cbActVmod"
+		Me.cbActVmod.Size = New System.Drawing.Size(161, 63)
+		Me.cbActVmod.TabIndex = 18
+		Me.cbActVmod.Text = "Output values in vmod at beginning and end of simulation interval (EXPERT!)"
+		Me.cbActVmod.UseVisualStyleBackColor = True
 		'
 		'MainForm
 		'
@@ -930,5 +941,6 @@ Partial Class MainForm
 	Friend WithEvents ShowInFolderMenuItem As System.Windows.Forms.ToolStripMenuItem
 	Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
 	Friend WithEvents cbValidateRunData As System.Windows.Forms.CheckBox
+	Friend WithEvents cbActVmod As System.Windows.Forms.CheckBox
 
 End Class
