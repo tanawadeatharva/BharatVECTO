@@ -107,27 +107,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Meter ds)
 		{
 			if (Left.Distance.IsEqual(PreviousState.Distance.Value())) {
-				// we are exactly on an entry in the cycle.
-				var stopTime = Left.PTOActive && IdleController != null
-					? Left.StoppingTime + IdleController.Duration
-					: Left.StoppingTime;
-
-				if (stopTime.IsGreater(0) && PreviousState.WaitTime.IsSmaller(stopTime)) {
-					// stop for certain time unless we've already waited long enough ...
-
-					// we are stopping: ensure that velocity is 0.
-					if (!Left.VehicleTargetSpeed.IsEqual(0)) {
-						Log.Warn("Stopping Time requested in cycle but target-velocity not zero. distance: {0}, target speed: {1}",
-							Left.StoppingTime, Left.VehicleTargetSpeed);
-						throw new VectoSimulationException("Stopping Time only allowed when target speed is zero!");
-					}
-					var dt = GetStopTimeInterval();
-					if (dt == null) {
-						CurrentState.WaitPhase++;
-						dt = GetStopTimeInterval();
-					}
-					CurrentState.Response = DriveTimeInterval(absTime, dt);
-					return CurrentState.Response;
+				var response = DoFirstSimulationInterval(absTime);
+				if (response != null) {
+					return response;
 				}
 			}
 			if (CycleIntervalIterator.LastEntry && PreviousState.Distance.IsEqual(Right.Distance)) {
@@ -165,6 +147,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				MaxDistance = nextSpeedChange - PreviousState.Distance
 			};
 			return CurrentState.Response;
+		}
+
+		private IResponse DoFirstSimulationInterval(Second absTime)
+		{
+// we are exactly on an entry in the cycle.
+			var stopTime = Left.PTOActive && IdleController != null
+				? Left.StoppingTime + IdleController.Duration
+				: Left.StoppingTime;
+
+			if (stopTime.IsGreater(0) && PreviousState.WaitTime.IsSmaller(stopTime)) {
+				// stop for certain time unless we've already waited long enough ...
+
+				// we are stopping: ensure that velocity is 0.
+				if (!Left.VehicleTargetSpeed.IsEqual(0)) {
+					Log.Warn("Stopping Time requested in cycle but target-velocity not zero. distance: {0}, target speed: {1}",
+						Left.StoppingTime, Left.VehicleTargetSpeed);
+					throw new VectoSimulationException("Stopping Time only allowed when target speed is zero!");
+				}
+				var dt = GetStopTimeInterval();
+				if (dt == null) {
+					CurrentState.WaitPhase++;
+					dt = GetStopTimeInterval();
+				}
+				CurrentState.Response = DriveTimeInterval(absTime, dt);
+				return CurrentState.Response;
+			}
+			return null;
 		}
 
 		private Second GetStopTimeInterval()
@@ -309,17 +318,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState = CurrentState.Clone();
 			_intervalProlonged = false;
 
-			//var stopTime = Left.PTOActive && IdleController != null
-			//	? Left.StoppingTime + IdleController.Duration
-			//	: Left.StoppingTime;
-
-			//if (!stopTime.IsEqual(0) && stopTime.IsEqual(PreviousState.WaitTime)) {
-			//	// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
-			//	if (IdleController != null) {
-			//		IdleController.ActivateIdle();
-			//	}
-			//	CycleIntervalIterator.MoveNext();
-			//}
 
 			var stopTime = Left.PTOActive && IdleController != null
 				? Left.StoppingTime + IdleController.Duration
@@ -392,7 +390,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		public double Progress
 		{
-			get {
+			get
+			{
 				return Data.Entries.Count > 0
 					? (CurrentState.Distance.Value() - Data.Entries.First().Distance.Value()) /
 					(Data.Entries.Last().Distance.Value() - Data.Entries.First().Distance.Value())
@@ -449,7 +448,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public CycleData CycleData
 		{
-			get {
+			get
+			{
 				return new CycleData {
 					AbsTime = CurrentState.AbsTime,
 					AbsDistance = CurrentState.Distance,

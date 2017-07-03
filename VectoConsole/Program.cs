@@ -289,8 +289,9 @@ Examples:
 #if DEBUG
 			Console.Error.WriteLine("done.");
 
-			if (!Console.IsInputRedirected)
+			if (!Console.IsInputRedirected) {
 				Console.ReadKey();
+			}
 #endif
 			return Environment.ExitCode;
 		}

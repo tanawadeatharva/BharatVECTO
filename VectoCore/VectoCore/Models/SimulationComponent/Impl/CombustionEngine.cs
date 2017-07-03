@@ -175,9 +175,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// if the clutch disengages the idle controller should take over!
 				throw new VectoSimulationException("angular velocity is null! Clutch open without IdleController?");
 			}
-			if (angularVelocity < ModelData.IdleSpeed.Value() - EngineIdleSpeedStopThreshold) {
-				CurrentState.OperationMode = EngineOperationMode.Stopped;
-			}
+			//if (angularVelocity < ModelData.IdleSpeed.Value() - EngineIdleSpeedStopThreshold) {
+			//	CurrentState.OperationMode = EngineOperationMode.Stopped;
+			//}
 
 			var avgEngineSpeed = (PreviousState.EngineSpeed + angularVelocity) / 2.0;
 
@@ -192,9 +192,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var fullDragTorque = ModelData.FullLoadCurves[DataBus.Gear].DragLoadStationaryTorque(avgEngineSpeed);
 			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt, dryRun);
-			if (dynamicFullLoadPower < 0) {
-				dynamicFullLoadPower = 0.SI<Watt>();
-			}
+
 			var dynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
 			var inertiaTorqueLoss =
 				Formulas.InertiaPower(angularVelocity, PreviousState.EngineSpeed, ModelData.Inertia, dt) /
@@ -459,6 +457,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				dynFullPowerCalculated = stationaryFullLoadPower;
 			}
 
+			if (dynFullPowerCalculated < 0) {
+				return 0.SI<Watt>();
+			}
 			return dynFullPowerCalculated;
 		}
 
@@ -589,7 +590,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						angularSpeed = angularSpeed.LimitTo(_engine.ModelData.IdleSpeed, _engine.EngineRatedSpeed);
 						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 					}).
-					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });
+					Default(r => {
+						throw new UnexpectedResponseException("searching Idling point", r);
+					});
 
 				return retVal;
 			}
@@ -646,7 +649,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							0.SI<NewtonMeter>(), angularSpeed);
 						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 					}).
-					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });
+					Default(r => {
+						throw new UnexpectedResponseException("searching Idling point", r);
+					});
 
 				return retVal;
 			}

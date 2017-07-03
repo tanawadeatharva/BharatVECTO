@@ -98,26 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			if (DataBus.VehicleSpeed.IsEqual(0)) {
-				for (var gear = MaxStartGear; gear > 1; gear--) {
-					var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
-
-					var ratedSpeed = DataBus.EngineRatedSpeed;
-					if (inAngularSpeed > ratedSpeed || inAngularSpeed.IsEqual(0)) {
-						continue;
-					}
-
-					var response = _gearbox.Initialize(gear, outTorque, outAngularVelocity);
-
-					var fullLoadPower = response.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
-					var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
-					
-					if (response.EngineSpeed > DataBus.EngineIdleSpeed && reserve >= ModelData.StartTorqueReserve) {
-						_nextGear = gear;
-						return gear;
-					}
-				}
-				_nextGear = 1;
-				return 1;
+				return InitStartGear(outTorque, outAngularVelocity);
 			}
 			for (var gear = (uint)ModelData.Gears.Count; gear > 1; gear--) {
 				var response = _gearbox.Initialize(gear, outTorque, outAngularVelocity);
@@ -146,6 +127,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// fallback: return first gear
+			_nextGear = 1;
+			return 1;
+		}
+
+		private uint InitStartGear(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			for (var gear = MaxStartGear; gear > 1; gear--) {
+				var inAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
+
+				var ratedSpeed = DataBus.EngineRatedSpeed;
+				if (inAngularSpeed > ratedSpeed || inAngularSpeed.IsEqual(0)) {
+					continue;
+				}
+
+				var response = _gearbox.Initialize(gear, outTorque, outAngularVelocity);
+
+				var fullLoadPower = response.DynamicFullLoadPower; //EnginePowerRequest - response.DeltaFullLoad;
+				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+
+				if (response.EngineSpeed > DataBus.EngineIdleSpeed && reserve >= ModelData.StartTorqueReserve) {
+					_nextGear = gear;
+					return gear;
+				}
+			}
 			_nextGear = 1;
 			return 1;
 		}
