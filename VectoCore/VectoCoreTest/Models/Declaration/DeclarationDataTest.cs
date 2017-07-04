@@ -269,8 +269,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindAreaCdxANotSet_Other()
 		{
 			foreach (var correctionMode in EnumHelper.GetValues<CrossWindCorrectionMode>()) {
-				if (correctionMode == CrossWindCorrectionMode.DeclarationModeCorrection)
+				if (correctionMode == CrossWindCorrectionMode.DeclarationModeCorrection) {
 					continue;
+				}
 
 				var airDrag = new AirdragData {
 					CrossWindCorrectionMode = correctionMode,
@@ -526,11 +527,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X2(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-					DeclarationData.Segments.Lookup(
-						VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x2,
-						weight.SI<Kilogram>(),
-						0.SI<Kilogram>()),
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x2,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -543,11 +544,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X4(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-					DeclarationData.Segments.Lookup(
-						VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x4,
-						weight.SI<Kilogram>(),
-						0.SI<Kilogram>()),
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x4,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -812,6 +813,80 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				deltaCdA: 0,
 				maxLoad: 4150);
 		}
+
+
+		/// <summary>
+		/// trailer in longhaul, always pc formula
+		/// </summary>
+		[TestCase]
+		public void Segment2TestHeavy()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.RigidTruck,
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				GrossVehicleMassRating = 11990.SI<Kilogram>(),
+				CurbWeight = 9500.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+
+			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(3, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0],
+				vehicleData: vehicleData,
+				missionType: MissionType.LongHaul,
+				cosswindCorrection: "RigidTrailer",
+				axleWeightDistribution: new[] { 0.225, 0.325 },
+				trailerAxleWeightDistribution: new[] { 0.45 },
+				trailerAxleCount: new[] { 2 },
+				bodyCurbWeight: 1900,
+				trailerCurbWeight: new[] { 3400.0 },
+				trailerType: new[] { TrailerType.T1 },
+				lowLoad: 1313.918,
+				refLoad: 7815,
+				trailerGrossVehicleWeight: new[] { 10500.0 },
+				deltaCdA: 1.3,
+				maxLoad: 11250);
+
+			AssertMission(segment.Missions[1],
+				vehicleData: vehicleData,
+				missionType: MissionType.RegionalDelivery,
+				cosswindCorrection: "RigidSolo",
+				axleWeightDistribution: new[] { 0.45, 0.55 },
+				trailerAxleWeightDistribution: new double[] { },
+				trailerAxleCount: new int[] { },
+				bodyCurbWeight: 1900,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { },
+				lowLoad: 603.918,
+				refLoad: 2490,
+				trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
+				maxLoad: 4150);
+
+			AssertMission(segment.Missions[2],
+				vehicleData: vehicleData,
+				missionType: MissionType.UrbanDelivery,
+				cosswindCorrection: "RigidSolo",
+				axleWeightDistribution: new[] { 0.45, 0.55 },
+				trailerAxleWeightDistribution: new double[] { },
+				trailerAxleCount: new int[] { },
+				bodyCurbWeight: 1900,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { },
+				lowLoad: 603.918,
+				refLoad: 2490,
+				trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
+				maxLoad: 4150);
+		}
+
 
 		/// <summary>
 		/// normal pc formula, no trailer
