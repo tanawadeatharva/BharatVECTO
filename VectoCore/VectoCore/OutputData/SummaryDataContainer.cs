@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string INPUTFILE = "Input File [-]";
 		public const string CYCLE = "Cycle [-]";
 		public const string STATUS = "Status";
-		public const string CURB_MASS = "Chassis curb mass [kg]";
+		public const string CURB_MASS = "Corrected Actual Curb Mass [kg]";
 		public const string LOADING = "Loading [kg]";
 
 		public const string VEHICLE_MANUFACTURER = "Vehicle manufacturer [-]";
@@ -180,6 +180,10 @@ namespace TUGraz.VectoCore.OutputData
 
 		public const string TIME_SHARE_PER_GEAR_FORMAT = "Gear {0} TimeShare [%]";
 
+		public const string NUM_AXLES_DRIVEN = "Number axles vehicle driven [-]";
+		public const string NUM_AXLES_NON_DRIVEN = "Number axles vehicle non-driven [-]";
+		public const string NUM_AXLES_TRAILER = "Number axles trailer [-]";
+
 		// ReSharper restore InconsistentNaming
 
 		internal readonly DataTable Table;
@@ -228,6 +232,9 @@ namespace TUGraz.VectoCore.OutputData
 				Tuple.Create(ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER, typeof(double)),
 				Tuple.Create(ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER, typeof(double)),
 				Tuple.Create(R_DYN, typeof(SI)),
+				Tuple.Create(NUM_AXLES_DRIVEN, typeof(int)),
+				Tuple.Create(NUM_AXLES_NON_DRIVEN, typeof(int)),
+				Tuple.Create(NUM_AXLES_TRAILER, typeof(int)),
 				Tuple.Create(GEARBOX_MANUFACTURER, typeof(string)),
 				Tuple.Create(GEARBOX_MODEL, typeof(string)),
 				Tuple.Create(GEARBOX_TYPE, typeof(string)),
@@ -267,9 +274,9 @@ namespace TUGraz.VectoCore.OutputData
 				E_FCMAP_POS, E_FCMAP_NEG, E_POWERTRAIN_INERTIA,
 				E_AUX, E_CLUTCH_LOSS, E_TC_LOSS, E_SHIFT_LOSS, E_GBX_LOSS,
 				E_RET_LOSS, E_ANGLE_LOSS, E_AXL_LOSS, E_BRAKE, E_VEHICLE_INERTIA, E_AIR, E_ROLL, E_GRAD,
-				ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE, STOP_TIMESHARE,
+				ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE,
 				MAX_SPEED, MAX_ACCELERATION, MAX_DECELERATION, AVG_ENGINE_SPEED, MAX_ENGINE_SPEED, NUM_GEARSHIFTS,
-				ENGINE_FULL_LOAD_TIME_SHARE, COASTING_TIME_SHARE, BRAKING_TIME_SHARE
+				STOP_TIMESHARE, ENGINE_FULL_LOAD_TIME_SHARE, COASTING_TIME_SHARE, BRAKING_TIME_SHARE
 			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
 		}
 
@@ -537,6 +544,10 @@ namespace TUGraz.VectoCore.OutputData
 				runData.VehicleData.TotalRollResistanceCoefficient;
 
 			row[R_DYN] = runData.VehicleData.DynamicTyreRadius;
+
+			row[NUM_AXLES_DRIVEN] = runData.VehicleData.AxleData.Count(x => x.AxleType == AxleType.VehicleDriven);
+			row[NUM_AXLES_NON_DRIVEN] = runData.VehicleData.AxleData.Count(x => x.AxleType == AxleType.VehicleNonDriven);
+			row[NUM_AXLES_TRAILER] = runData.VehicleData.AxleData.Count(x => x.AxleType == AxleType.Trailer);
 
 			row[GEARBOX_MANUFACTURER] = runData.GearboxData.Manufacturer;
 			row[GEARBOX_MODEL] = runData.GearboxData.ModelName;

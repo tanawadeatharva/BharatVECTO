@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
-    "CreatedBy": " ()",
-    "Date": "2016-10-13T10:08:21.7776564Z",
+    "CreatedBy": "",
+    "Date": "2017-07-03T14:47:43.6586880Z",
     "AppVersion": "3",
     "FileVersion": 3
   },
@@ -51,12 +51,6 @@
         ]
       }
     ],
-    "StartStop": {
-      "Enabled": false,
-      "MaxSpeed": 5.0,
-      "MinTime": 5.0,
-      "Delay": 5.0
-    },
     "OverSpeedEcoRoll": {
       "Mode": "Overspeed",
       "MinSpeed": 50.0,

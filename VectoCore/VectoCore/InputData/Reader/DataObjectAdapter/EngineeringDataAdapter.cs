@@ -69,6 +69,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				RollResistanceCoefficient = axle.RollResistanceCoefficient,
 				AxleWeightShare = axle.AxleWeightShare,
 				TyreTestLoad = axle.TyreTestLoad,
+				AxleType = axle.AxleType,
 				//Wheels = axle.WheelsStr
 			}).ToList();
 			return retVal;
