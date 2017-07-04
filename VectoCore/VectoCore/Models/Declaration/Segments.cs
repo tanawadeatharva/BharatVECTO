@@ -210,12 +210,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 							trailers.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
 
 				var payloads = row.Field<string>(missionType.ToString()).Split('/');
+				var vehicleWeight = curbWeight + body.CurbWeight;
 				Kilogram refLoad, lowLoad = 0.SI<Kilogram>();
 				if (payloads.Length == 2) {
-					lowLoad = GetLoading(payloads[0], grossVehicleWeight, trailers, true);
-					refLoad = GetLoading(payloads[1], grossVehicleWeight, trailers, false);
+					lowLoad = GetLoading(payloads[0], grossVehicleWeight, vehicleWeight, trailers, true);
+					refLoad = GetLoading(payloads[1], grossVehicleWeight, vehicleWeight, trailers, false);
 				} else {
-					refLoad = GetLoading(row.Field<string>(missionType.ToString()), grossVehicleWeight, trailers, false);
+					refLoad = GetLoading(row.Field<string>(missionType.ToString()), grossVehicleWeight, vehicleWeight, trailers, false);
 				}
 
 				refLoad = refLoad.LimitTo(0.SI<Kilogram>(), maxLoad);
@@ -242,15 +243,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return missions.ToArray();
 		}
 
-		private static Kilogram GetLoading(string payloadStr, Kilogram grossVehicleWeight,
+		private static Kilogram GetLoading(string payloadStr, Kilogram grossVehicleWeight, Kilogram vehicleWeight,
 			IEnumerable<MissionTrailer> trailers, bool lowLoading)
 		{
 			var refLoadValue = payloadStr.ToDouble(double.NaN);
 			if (double.IsNaN(refLoadValue)) {
-				return DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, payloadStr) +
-						trailers.Sum(
-							t => DeclarationData.GetPayloadForTrailerWeight(t.TrailerGrossVehicleWeight, t.TrailerCurbWeight, lowLoading))
-							.DefaultIfNull(0);
+				var vehiclePayload = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, payloadStr)
+					.LimitTo(0.SI<Kilogram>(), grossVehicleWeight - vehicleWeight);
+				var trailerPayload = trailers.Sum(
+					t => DeclarationData.GetPayloadForTrailerWeight(t.TrailerGrossVehicleWeight, t.TrailerCurbWeight, lowLoading))
+					.DefaultIfNull(0);
+				return vehiclePayload + trailerPayload;
 			}
 			return refLoadValue.SI<Kilogram>();
 		}
