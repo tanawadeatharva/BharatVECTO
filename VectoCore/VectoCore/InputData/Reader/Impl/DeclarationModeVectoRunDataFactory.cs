@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -90,9 +91,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_segment = GetVehicleClassification(InputDataProvider.VehicleInputData.VehicleCategory,
 				InputDataProvider.VehicleInputData.AxleConfiguration,
 				InputDataProvider.VehicleInputData.GrossVehicleMassRating, InputDataProvider.VehicleInputData.CurbMassChassis);
+			if (!_segment.Found) {
+				throw new VectoException(
+					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
+					InputDataProvider.VehicleInputData.VehicleCategory, InputDataProvider.VehicleInputData.AxleConfiguration,
+					InputDataProvider.VehicleInputData.GrossVehicleMassRating);
+			}
 			_driverdata = _dao.CreateDriverData(InputDataProvider.DriverInputData);
 			_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
-
 			var tempVehicle = _dao.CreateVehicleData(InputDataProvider.VehicleInputData, _segment.Missions.First(),
 				_segment.Missions.First().Loadings.First().Value, _segment.MunicipalBodyWeight);
 			_airdragData = _dao.CreateAirdragData(InputDataProvider.AirdragInputData, _segment.Missions.First(), _segment);

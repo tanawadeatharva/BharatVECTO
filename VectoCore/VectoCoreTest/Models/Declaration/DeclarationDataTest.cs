@@ -296,7 +296,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(MissionType.Construction, "Standard technology - LED headlights, all", 950, 0.7),]
 		public void AuxElectricSystemTest(MissionType mission, string technology, double value, double efficiency)
 		{
-			AssertHelper.AreRelativeEqual(value / efficiency, DeclarationData.ElectricSystem.Lookup(mission, technology));
+			AssertHelper.AreRelativeEqual(value / efficiency, DeclarationData.ElectricSystem.Lookup(mission, technology).PowerDemand.Value());
 		}
 
 		[TestCase(MissionType.Interurban, "Standard technology"),
@@ -318,7 +318,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase("only one engaged gearwheel above oil level", 0)]
 		public void AuxPTOTransmissionTest(string technology, double value)
 		{
-			AssertHelper.AreRelativeEqual(value, DeclarationData.PTOTransmission.Lookup(technology));
+			AssertHelper.AreRelativeEqual(value, DeclarationData.PTOTransmission.Lookup(technology).PowerDemand.Value());
 		}
 
 		[TestCase("Superfluid")]
@@ -344,8 +344,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void AuxFanTechTest(string technology, int[] expected)
 		{
 			for (var i = 0; i < _missions.Length; i++) {
-				var value = DeclarationData.Fan.Lookup(_missions[i], technology);
-				Assert.AreEqual(expected[i], value.Value(), Tolerance);
+				var lookup = DeclarationData.Fan.Lookup(_missions[i], technology);
+				Assert.AreEqual(expected[i], lookup.PowerDemand.Value(), Tolerance);
 			}
 		}
 
@@ -373,7 +373,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			for (var i = 0; i < expected.Length; i++) {
 				if (expected[i] > 0) {
 					AssertHelper.AreRelativeEqual(expected[i],
-						DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "Default", vehicleClass));
+						DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "Default", vehicleClass).PowerDemand.Value());
 				} else {
 					var i1 = i;
 					AssertHelper.Exception<VectoException>(
@@ -396,7 +396,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			for (var i = 0; i < expected.Length; i++) {
 				AssertHelper.AreRelativeEqual(expected[i],
-					DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "None", vehicleClass));
+					DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "None", vehicleClass).PowerDemand.Value());
 			}
 		}
 
@@ -443,8 +443,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void AuxPneumaticSystemTest(string technology, int[] expected)
 		{
 			for (var i = 0; i < _missions.Length; i++) {
-				var value = DeclarationData.PneumaticSystem.Lookup(_missions[i], technology);
-				AssertHelper.AreRelativeEqual(expected[i], value);
+				var lookup = DeclarationData.PneumaticSystem.Lookup(_missions[i], technology);
+				AssertHelper.AreRelativeEqual(expected[i], lookup.PowerDemand.Value());
 			}
 		}
 
@@ -501,6 +501,27 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertHelper.AreRelativeEqual(expected,
 				DeclarationData.SteeringPump.Lookup(mission, hdvClass,
 					new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray()));
+		}
+
+		[TestCase]
+		public void Aux_SteeringpumpMultipleLookups()
+		{
+			// testcase to illustrate modification of lookup-data for steering pump
+			const string axle1 = "Electric";
+			const MissionType mission = MissionType.LongHaul;
+			const VehicleClass hdvClass = VehicleClass.Class5;
+			var first = DeclarationData.SteeringPump.Lookup(mission, hdvClass,
+				new[] { axle1 }.TakeWhile(a => a != null).ToArray());
+
+			for (var i = 0; i < 10; i++) {
+				DeclarationData.SteeringPump.Lookup(mission, hdvClass,
+					new[] { axle1 }.TakeWhile(a => a != null).ToArray());
+			}
+
+			var last = DeclarationData.SteeringPump.Lookup(mission, hdvClass,
+				new[] { axle1 }.TakeWhile(a => a != null).ToArray());
+
+			Assert.AreEqual(first.Value(), last.Value(), 1e-3);
 		}
 
 		[TestCase(MissionType.LongHaul, VehicleClass.Class1, "Dual displacement",

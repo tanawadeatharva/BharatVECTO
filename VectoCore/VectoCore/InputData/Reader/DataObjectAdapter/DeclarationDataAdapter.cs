@@ -271,7 +271,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		private static void CreateATGearData(IGearboxDeclarationInputData gearbox, uint i, GearData gearData,
-			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears, VehicleCategory vehicleCategory)
+			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
+			VehicleCategory vehicleCategory)
 		{
 			if (gearbox.Type == GearboxType.ATPowerSplit && i == 0) {
 				// powersplit transmission: torque converter already contains ratio and losses
@@ -282,7 +283,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
 					CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
 				}
-					if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory)) {
+				if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory)) {
 					// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
 					// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
 					CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
@@ -335,7 +336,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				mission = mission.GetNonEMSMissionType();
 				switch (auxType) {
 					case AuxiliaryType.Fan:
-						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology.FirstOrDefault());
+						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
 						break;
 					case AuxiliaryType.SteeringPump:
@@ -344,15 +345,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						break;
 					case AuxiliaryType.HVAC:
 						aux.PowerDemand = DeclarationData.HeatingVentilationAirConditioning.Lookup(mission,
-							auxData.Technology.FirstOrDefault(), hvdClass);
+							auxData.Technology.FirstOrDefault(), hvdClass).PowerDemand;
 						aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
 						break;
 					case AuxiliaryType.PneumaticSystem:
-						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.FirstOrDefault());
+						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
 						break;
 					case AuxiliaryType.ElectricSystem:
-						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault());
+						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
 						break;
 					default:

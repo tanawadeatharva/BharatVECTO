@@ -78,8 +78,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, considerInvalid);
+			if (row == null) {
+				return new Segment() { Found = false };
+			}
 
 			var segment = new Segment {
+				Found = true,
 				GrossVehicleWeightMin = row.ParseDouble("gvw_min").SI().Ton.Cast<Kilogram>(),
 				GrossVehicleWeightMax = row.ParseDouble("gvw_max").SI().Ton.Cast<Kilogram>(),
 				VehicleCategory = vehicleCategory,

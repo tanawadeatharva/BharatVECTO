@@ -132,13 +132,13 @@ Public Class VehicleForm
 		Catch
 			' no segment found - ignore
 		End Try
-		If Not s0 Is Nothing Then
+		If s0.Found Then
 			_hdVclass = s0.VehicleClass.GetClassNumber()
 		End If
 
 
 		TbHDVclass.Text = _hdVclass
-		PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, -1, _hdVclass.ToInt()), False)
+		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, _hdVclass.ToInt()), False)
 	End Sub
 
 
@@ -160,7 +160,7 @@ Public Class VehicleForm
 		Catch
 			' no segment found - ignore
 		End Try
-		If Not s0 Is Nothing Then
+		If s0.found Then
 			_hdVclass = s0.VehicleClass.GetClassNumber()
 			Dim axleCount As Integer = s0.Missions(0).AxleWeightDistribution.Count()
 			Dim i0 As Integer = LvRRC.Items.Count

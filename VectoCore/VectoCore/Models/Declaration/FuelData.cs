@@ -79,9 +79,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				.ToDictionary(e => e.FuelType);
 		}
 
-		public class Entry
+		public struct Entry
 		{
-			public Entry(FuelType type, KilogramPerCubicMeter density, double weight, JoulePerKilogramm heatingValue)
+			public Entry(FuelType type, KilogramPerCubicMeter density, double weight, JoulePerKilogramm heatingValue) : this()
 			{
 				FuelType = type;
 				FuelDensity = density;
