@@ -797,7 +797,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				trailerCurbWeight: new[] { 3400.0 },
 				trailerType: new[] { TrailerType.T1 },
 				lowLoad: 1306.8235,
-				refLoad: 9813.2353,
+				refLoad: 9475,
 				trailerGrossVehicleWeight: new[] { 10500.0 },
 				deltaCdA: 1.3,
 				maxLoad: 11250);
@@ -834,6 +834,80 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				deltaCdA: 0,
 				maxLoad: 4150);
 		}
+
+
+		/// <summary>
+		/// trailer in longhaul, always pc formula
+		/// </summary>
+		[TestCase]
+		public void Segment2TestHeavy()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.RigidTruck,
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				GrossVehicleMassRating = 11990.SI<Kilogram>(),
+				CurbWeight = 9500.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+
+			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(3, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0],
+				vehicleData: vehicleData,
+				missionType: MissionType.LongHaul,
+				cosswindCorrection: "RigidTrailer",
+				axleWeightDistribution: new[] { 0.225, 0.325 },
+				trailerAxleWeightDistribution: new[] { 0.45 },
+				trailerAxleCount: new[] { 2 },
+				bodyCurbWeight: 1900,
+				trailerCurbWeight: new[] { 3400.0 },
+				trailerType: new[] { TrailerType.T1 },
+				lowLoad: 1300,
+				refLoad: 5915,
+				trailerGrossVehicleWeight: new[] { 10500.0 },
+				deltaCdA: 1.3,
+				maxLoad: 7690);
+
+			AssertMission(segment.Missions[1],
+				vehicleData: vehicleData,
+				missionType: MissionType.RegionalDelivery,
+				cosswindCorrection: "RigidSolo",
+				axleWeightDistribution: new[] { 0.45, 0.55 },
+				trailerAxleWeightDistribution: new double[] { },
+				trailerAxleCount: new int[] { },
+				bodyCurbWeight: 1900,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { },
+				lowLoad: 590,
+				refLoad: 590,
+				trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
+				maxLoad: 590);
+
+			AssertMission(segment.Missions[2],
+				vehicleData: vehicleData,
+				missionType: MissionType.UrbanDelivery,
+				cosswindCorrection: "RigidSolo",
+				axleWeightDistribution: new[] { 0.45, 0.55 },
+				trailerAxleWeightDistribution: new double[] { },
+				trailerAxleCount: new int[] { },
+				bodyCurbWeight: 1900,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { },
+				lowLoad: 590,
+				refLoad: 590,
+				trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
+				maxLoad: 590);
+		}
+
 
 		/// <summary>
 		/// normal pc formula, no trailer
