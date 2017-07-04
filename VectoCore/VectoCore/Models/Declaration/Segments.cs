@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var errorMessage = string.Format(ErrorMessage, vehicleCategory, axleConfiguration.GetName(),
 					grossVehicleMassRating);
 				Log.Fatal(errorMessage);
-				throw new VectoException(errorMessage, e);
+				throw new VectoException(errorMessage, e); 
 			}
 			return row;
 		}
