@@ -283,6 +283,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// <summary>
 		/// Finishes the summary data container (writes the data to the sumWriter).
 		/// </summary>
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public virtual void Finish()
 		{
 			if (_sumWriter != null) {
@@ -300,8 +301,6 @@ namespace TUGraz.VectoCore.OutputData
 		/// Writes the result of one run into the summary data container.
 		/// </summary>
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		//public virtual void Write(IModalDataContainer modData, string jobFileName, string jobName, string cycleFileName,
-		//	Kilogram vehicleMass, Kilogram vehicleLoading, CubicMeter cargoVolume, uint gearCount)
 		public virtual void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData)
 		{
 			var row = Table.NewRow();
