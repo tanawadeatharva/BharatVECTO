@@ -502,6 +502,27 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					new[] { axle1, axle2, axle3, axle4 }.TakeWhile(a => a != null).ToArray()));
 		}
 
+		[TestCase]
+		public void Aux_SteeringpumpMultipleLookups()
+		{
+			// testcase to illustrate modification of lookup-data for steering pump
+			const string axle1 = "Electric";
+			const MissionType mission = MissionType.LongHaul;
+			const VehicleClass hdvClass = VehicleClass.Class5;
+			var first = DeclarationData.SteeringPump.Lookup(mission, hdvClass,
+				new[] { axle1 }.TakeWhile(a => a != null).ToArray());
+
+			for (var i = 0; i < 10; i++) {
+				DeclarationData.SteeringPump.Lookup(mission, hdvClass,
+					new[] { axle1 }.TakeWhile(a => a != null).ToArray());
+			}
+
+			var last = DeclarationData.SteeringPump.Lookup(mission, hdvClass,
+				new[] { axle1 }.TakeWhile(a => a != null).ToArray());
+
+			Assert.AreEqual(first.Value(), last.Value(), 1e-3);
+		}
+
 		[TestCase(MissionType.LongHaul, VehicleClass.Class1, "Dual displacement",
 			TestName = "Aux_SteeringPumpLookupFail( No Value )"),
 		TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, "Super displacement",
