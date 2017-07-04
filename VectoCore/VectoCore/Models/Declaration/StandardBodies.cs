@@ -38,7 +38,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class StandardBody
+	public struct StandardBody
 	{
 		public readonly Kilogram CurbWeight;
 		public readonly Kilogram GrossVehicleWeight;
@@ -53,9 +53,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		public StandardBody(string name, Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter[] deltaCrossWindArea,
-			Wheels.Entry wheels, int axleCount, CubicMeter volume) :
+			Wheels.Entry? wheels, int axleCount, CubicMeter volume) :
 				this(name, curbWeight, grossVehicleWeight, deltaCrossWindArea,
-					wheels == null ? new List<Wheels.Entry>() : Enumerable.Repeat(wheels, axleCount).ToList(), volume) {}
+					!wheels.HasValue ? new List<Wheels.Entry>() : Enumerable.Repeat(wheels.Value, axleCount).ToList(), volume) {}
 
 		private StandardBody(string name, Kilogram curbWeight, Kilogram grossVehicleWeight, SquareMeter[] deltaCrossWindArea,
 			List<Wheels.Entry> wheels, CubicMeter volume)
@@ -123,8 +123,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					deltaCdxA,
 					!string.IsNullOrWhiteSpace(k.Field<string>("wheels"))
 						? DeclarationData.Wheels.Lookup(k.Field<string>("wheels"))
-						: null,
-					Int32.Parse(k.Field<string>("axlecount")),
+						: (Wheels.Entry?)null,
+					int.Parse(k.Field<string>("axlecount")),
 					k.ParseDouble("cargovolume").SI<CubicMeter>());
 			})
 				.ToDictionary(kv => kv.Name);

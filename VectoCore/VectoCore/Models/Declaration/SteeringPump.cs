@@ -178,7 +178,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		private class SteeringPumpValues<T>
+		private struct SteeringPumpValues<T>
 		{
 			public T UnloadedFriction;
 			public T Banking;

@@ -83,14 +83,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var mission = MissionType.LongHaul;
 
 			aux.AddConstant("FAN",
-				DeclarationData.Fan.Lookup(MissionType.LongHaul, "Hydraulic driven - Constant displacement pump"));
-			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, "Medium Supply 1-stage"));
+				DeclarationData.Fan.Lookup(MissionType.LongHaul, "Hydraulic driven - Constant displacement pump").PowerDemand);
+			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, "Medium Supply 1-stage").PowerDemand);
 			aux.AddConstant("STP",
 				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass,
 					new[] { "Variable displacement mech. controlled" }));
-			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission));
+			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission).PowerDemand);
 			aux.AddConstant("AC",
-				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default", hdvClass));
+				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default", hdvClass).PowerDemand);
 
 			var speed = 1400.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();

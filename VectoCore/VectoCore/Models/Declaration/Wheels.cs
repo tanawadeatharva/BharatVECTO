@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			_dimensions = table.Rows.Cast<DataRow>().Select(row => row.Field<string>(0)).ToArray();
 		}
 
-		public class Entry
+		public struct Entry
 		{
 			public string WheelType;
 			public KilogramSquareMeter Inertia;

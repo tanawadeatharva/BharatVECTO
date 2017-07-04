@@ -269,8 +269,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindAreaCdxANotSet_Other()
 		{
 			foreach (var correctionMode in EnumHelper.GetValues<CrossWindCorrectionMode>()) {
-				if (correctionMode == CrossWindCorrectionMode.DeclarationModeCorrection)
+				if (correctionMode == CrossWindCorrectionMode.DeclarationModeCorrection) {
 					continue;
+				}
 
 				var airDrag = new AirdragData {
 					CrossWindCorrectionMode = correctionMode,
@@ -295,7 +296,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(MissionType.Construction, "Standard technology - LED headlights, all", 950, 0.7),]
 		public void AuxElectricSystemTest(MissionType mission, string technology, double value, double efficiency)
 		{
-			AssertHelper.AreRelativeEqual(value / efficiency, DeclarationData.ElectricSystem.Lookup(mission, technology));
+			AssertHelper.AreRelativeEqual(value / efficiency, DeclarationData.ElectricSystem.Lookup(mission, technology).PowerDemand.Value());
 		}
 
 		[TestCase(MissionType.Interurban, "Standard technology"),
@@ -317,7 +318,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase("only one engaged gearwheel above oil level", 0)]
 		public void AuxPTOTransmissionTest(string technology, double value)
 		{
-			AssertHelper.AreRelativeEqual(value, DeclarationData.PTOTransmission.Lookup(technology));
+			AssertHelper.AreRelativeEqual(value, DeclarationData.PTOTransmission.Lookup(technology).PowerDemand.Value());
 		}
 
 		[TestCase("Superfluid")]
@@ -343,8 +344,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void AuxFanTechTest(string technology, int[] expected)
 		{
 			for (var i = 0; i < _missions.Length; i++) {
-				var value = DeclarationData.Fan.Lookup(_missions[i], technology);
-				Assert.AreEqual(expected[i], value.Value(), Tolerance);
+				var lookup = DeclarationData.Fan.Lookup(_missions[i], technology);
+				Assert.AreEqual(expected[i], lookup.PowerDemand.Value(), Tolerance);
 			}
 		}
 
@@ -372,7 +373,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			for (var i = 0; i < expected.Length; i++) {
 				if (expected[i] > 0) {
 					AssertHelper.AreRelativeEqual(expected[i],
-						DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "Default", vehicleClass));
+						DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "Default", vehicleClass).PowerDemand.Value());
 				} else {
 					var i1 = i;
 					AssertHelper.Exception<VectoException>(
@@ -395,7 +396,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			for (var i = 0; i < expected.Length; i++) {
 				AssertHelper.AreRelativeEqual(expected[i],
-					DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "None", vehicleClass));
+					DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "None", vehicleClass).PowerDemand.Value());
 			}
 		}
 
@@ -442,8 +443,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void AuxPneumaticSystemTest(string technology, int[] expected)
 		{
 			for (var i = 0; i < _missions.Length; i++) {
-				var value = DeclarationData.PneumaticSystem.Lookup(_missions[i], technology);
-				AssertHelper.AreRelativeEqual(expected[i], value);
+				var lookup = DeclarationData.PneumaticSystem.Lookup(_missions[i], technology);
+				AssertHelper.AreRelativeEqual(expected[i], lookup.PowerDemand.Value());
 			}
 		}
 
@@ -547,11 +548,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X2(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-					DeclarationData.Segments.Lookup(
-						VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x2,
-						weight.SI<Kilogram>(),
-						0.SI<Kilogram>()),
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x2,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 
@@ -564,11 +565,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X4(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-					DeclarationData.Segments.Lookup(
-						VehicleCategory.RigidTruck,
-						AxleConfiguration.AxleConfig_4x4,
-						weight.SI<Kilogram>(),
-						0.SI<Kilogram>()),
+				DeclarationData.Segments.Lookup(
+					VehicleCategory.RigidTruck,
+					AxleConfiguration.AxleConfig_4x4,
+					weight.SI<Kilogram>(),
+					0.SI<Kilogram>()),
 				"Gross vehicle mass must be greater than 7.5 tons");
 		}
 

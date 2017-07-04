@@ -35,8 +35,10 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class Segment
+	public struct Segment
 	{
+		public bool Found;
+		
 		public VehicleClass VehicleClass { get; internal set; }
 
 		public VehicleCategory VehicleCategory { get; set; }

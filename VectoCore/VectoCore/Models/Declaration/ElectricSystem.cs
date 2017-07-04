@@ -37,7 +37,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class ElectricSystem : LookupData<MissionType, string, Watt>, IDeclarationAuxiliaryTable
+	public sealed class ElectricSystem : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable
 	{
 		private readonly Alternator _alternator = new Alternator();
 
@@ -58,19 +58,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				foreach (DataColumn col in table.Columns) {
 					if (col.Caption != "technology") {
 						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] =
-							row.ParseDouble(col).SI<Watt>();
+							new AuxDemandEntry() { PowerDemand = row.ParseDouble(col).SI<Watt>() };
 					}
 				}
 			}
 		}
 
-		public override Watt Lookup(MissionType missionType, string technology = null)
+		public override AuxDemandEntry Lookup(MissionType missionType, string technology = null)
 		{
 			if (string.IsNullOrWhiteSpace(technology)) {
 				technology = "Standard technology";
 			}
 			var value = base.Lookup(missionType, technology);
-			return value / _alternator.Lookup(missionType);
+			return new AuxDemandEntry() { PowerDemand = value.PowerDemand / _alternator.Lookup(missionType) };
 		}
 
 		internal sealed class Alternator : LookupData<MissionType, string, double>
