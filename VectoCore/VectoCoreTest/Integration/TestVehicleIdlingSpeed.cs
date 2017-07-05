@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 
-		[TestMethod]
+		[TestMethod, TestCategory("LongRunning")]
 		public void VehicleIdlingSpeedTest()
 		{
 			var VehicleEngineIdleSpeed = 900.RPMtoRad();
