@@ -56,9 +56,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public static ValidationResult ValidateAirDragData(AirdragData airDragData, ValidationContext validationContext)
 		{
 			if (airDragData.CrossWindCorrectionMode != CrossWindCorrectionMode.DeclarationModeCorrection &&
-				airDragData.CrossWindCorrectionCurve.AirDragArea == null)
+				airDragData.CrossWindCorrectionCurve.AirDragArea == null) {
 				return new ValidationResult(
 					"AirDrag Area (CdxA) must not be empty when the cross wind correction mode is not \"Speed dependent (Declaration Mode)\"");
+			}
 
 			return ValidationResult.Success;
 		}
@@ -280,8 +281,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 
 			var numDrivenAxles = vehicleData._axleData.Count(x => x.AxleType == AxleType.VehicleDriven);
-			if (numDrivenAxles != 1) {
-				return new ValidationResult("Exactly one axle has to be defined as driven!");
+			if (numDrivenAxles != vehicleData.AxleConfiguration.NumDrivenAxles()) {
+				return
+					new ValidationResult(string.Format(
+						vehicleData.AxleConfiguration.NumAxles() == 1
+							? "Exactly {0} axle has to be defined as driven, given {1}!"
+							: "Exactly {0} axles have to be defined as driven, given {1}!", vehicleData.AxleConfiguration.NumDrivenAxles(),
+						numDrivenAxles));
 			}
 
 			return ValidationResult.Success;
