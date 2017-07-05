@@ -43,16 +43,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 	public class FuelTypesTest
 	{
 		[TestCase(FuelType.DieselCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 0.0006886, 9394.4751,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 0.0006886, 9392.6020,
 			TestName = "Diesel LH Low"),
 		TestCase(FuelType.EthanolCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 0.00040262, 5588.282,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 0.00040262, 5587.1684,
 			TestName = "Ethanol LH Low"),
 		TestCase(FuelType.DieselCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1, 0.0007971, 10875.0171,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1, 0.0007971, 10871.1489,
 			TestName = "Diesel LH Ref"),
 		TestCase(FuelType.EthanolCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1, 0.0004660, 6468.9797,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1, 0.0004660, 6466.6787,
 			TestName = "Ethanol LH Ref"),]
 		public void TestFuelTypesCO2(FuelType fuelType, string jobName, int runIdx, double expectedCo2, double expectedMJ)
 		{
@@ -63,7 +63,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobContainer = new JobContainer(sumData);
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 
-			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) { WriteModalResults = true, Validate = false};
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+				WriteModalResults = true,
+				Validate = false
+			};
 
 			jobContainer.AddRuns(runsFactory);
 

@@ -296,7 +296,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(MissionType.Construction, "Standard technology - LED headlights, all", 950, 0.7),]
 		public void AuxElectricSystemTest(MissionType mission, string technology, double value, double efficiency)
 		{
-			AssertHelper.AreRelativeEqual(value / efficiency, DeclarationData.ElectricSystem.Lookup(mission, technology).PowerDemand.Value());
+			AssertHelper.AreRelativeEqual(value / efficiency,
+				DeclarationData.ElectricSystem.Lookup(mission, technology).PowerDemand.Value());
 		}
 
 		[TestCase(MissionType.Interurban, "Standard technology"),
@@ -373,7 +374,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			for (var i = 0; i < expected.Length; i++) {
 				if (expected[i] > 0) {
 					AssertHelper.AreRelativeEqual(expected[i],
-						DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "Default", vehicleClass).PowerDemand.Value());
+						DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "Default", vehicleClass)
+							.PowerDemand.Value());
 				} else {
 					var i1 = i;
 					AssertHelper.Exception<VectoException>(
@@ -796,8 +798,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				bodyCurbWeight: 1900,
 				trailerCurbWeight: new[] { 3400.0 },
 				trailerType: new[] { TrailerType.T1 },
-				lowLoad: 1306.8235,
-				refLoad: 9475,
+				lowLoad: 1296.8235,
+				refLoad: 9450,
 				trailerGrossVehicleWeight: new[] { 10500.0 },
 				deltaCdA: 1.3,
 				maxLoad: 11250);
@@ -869,8 +871,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				bodyCurbWeight: 1900,
 				trailerCurbWeight: new[] { 3400.0 },
 				trailerType: new[] { TrailerType.T1 },
-				lowLoad: 1300,
-				refLoad: 5915,
+				lowLoad: 1290,
+				refLoad: 5890,
 				trailerGrossVehicleWeight: new[] { 10500.0 },
 				deltaCdA: 1.3,
 				maxLoad: 7690);
