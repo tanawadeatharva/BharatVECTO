@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestCase(GearboxSpeedLimitJobDecl)]
+		[TestCategory("LongRunning"), TestCase(GearboxSpeedLimitJobDecl)]
 		public void TestRunGbxSpeedLimitedSimulations(string file)
 		{
 			var fileWriter = new FileOutputWriter(file);
