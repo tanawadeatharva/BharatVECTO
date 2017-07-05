@@ -63,8 +63,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				vehicleClass: VehicleClass.Class2,
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 57,
-				totalVehicleWeight: CurbWeight + 1900 + 3400 + 603.917 + 710,
-				totalRollResistance: 0.006954,
+				totalVehicleWeight: CurbWeight + 1900 + 3400 + 603.917 + 700,
+				totalRollResistance: 0.0069554,
 				aerodynamicDragArea: CdxA + 1.3);
 		}
 
@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 				vehicleClass: VehicleClass.Class2,
 				axleConfiguration: AxleConfiguration.AxleConfig_4x2,
 				wheelsInertia: 57,
-				totalVehicleWeight: CurbWeight + 1900 + 3400 + 4541.176 + 5325,
+				totalVehicleWeight: CurbWeight + 1900 + 3400 + 4541.176 + 5300,
 				totalRollResistance: 0.0065733,
 				aerodynamicDragArea: CdxA + 1.3);
 		}
