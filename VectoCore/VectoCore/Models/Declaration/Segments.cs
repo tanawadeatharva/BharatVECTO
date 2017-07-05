@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VehicleHeight = LookupHeight(vehicleCategory, axleConfiguration, grossVehicleMassRating),
 				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 				GrossVehicleMassRating = grossVehicleMassRating,
-				CdADefault = row.ParseDouble("cdxa_default").SI<SquareMeter>(),
+				CdADefault = string.IsNullOrEmpty(row["cdxa_default"].ToString()) ? null : row.ParseDouble("cdxa_default").SI<SquareMeter>(),
 				CdAConstruction = string.IsNullOrEmpty(row["cdxa_construction"].ToString())
 					? null
 					: row.ParseDouble("cdxa_construction").SI<SquareMeter>(),
@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var trailerPayload = trailers.Sum(
 					t => DeclarationData.GetPayloadForTrailerWeight(t.TrailerGrossVehicleWeight, t.TrailerCurbWeight, lowLoading))
 					.DefaultIfNull(0);
-				return vehiclePayload + trailerPayload;
+					return vehiclePayload + trailerPayload;
 			}
 			return refLoadValue.SI<Kilogram>();
 		}
@@ -282,9 +282,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private static double[] GetAxleWeightDistribution(DataRow row, MissionType missionType)
 		{
-			return
-				row.Field<string>("truckaxles" + GetMissionSuffix(missionType))
-					.Split('/').ToDouble().Select(x => x / 100.0).ToArray();
+			var axleDistribution = row.Field<string>("truckaxles" + GetMissionSuffix(missionType));
+			if (string.IsNullOrWhiteSpace(axleDistribution)) {
+				return new double[]{};
+			}
+			return axleDistribution.Split('/').ToDouble().Select(x => x / 100.0).ToArray();
 		}
 
 		private static string GetMissionSuffix(MissionType missionType, bool ignoreEMS = false)
