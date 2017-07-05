@@ -105,5 +105,25 @@ namespace TUGraz.VectoCommon.Models
 			}
 			return 0;
 		}
+
+		public static int NumDrivenAxles(this AxleConfiguration self)
+		{
+			switch (self) {
+				case AxleConfiguration.AxleConfig_4x2:
+				case AxleConfiguration.AxleConfig_6x2:
+				case AxleConfiguration.AxleConfig_8x2:
+					return 1;
+				case AxleConfiguration.AxleConfig_4x4:
+				case AxleConfiguration.AxleConfig_6x4:
+				case AxleConfiguration.AxleConfig_8x4:
+					return 2;
+				case AxleConfiguration.AxleConfig_6x6:
+				case AxleConfiguration.AxleConfig_8x6:
+					return 3;
+				case AxleConfiguration.AxleConfig_8x8:
+					return 4;
+			}
+			return 0;
+		}
 	}
 }

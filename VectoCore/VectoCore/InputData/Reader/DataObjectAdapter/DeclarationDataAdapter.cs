@@ -96,12 +96,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.BodyAndTrailerWeight = (mission.MissionType == MissionType.MunicipalUtility
 				? municipalBodyWeight
 				: mission.BodyCurbWeight) + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
-			//retVal.CurbWeight += retVal.BodyAndTrailerWeight;
 
 			retVal.Loading = loading;
-			var drivenIndex = DrivenAxleIndex(data.Axles);
 			retVal.DynamicTyreRadius =
-				DeclarationData.Wheels.Lookup(data.Axles[drivenIndex].Wheels).DynamicTyreRadius;
+				data.Axles.Where(axle => axle.AxleType == AxleType.VehicleDriven)
+					.Select(da => DeclarationData.Wheels.Lookup(da.Wheels).DynamicTyreRadius)
+					.Average();
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
 
 
@@ -139,16 +139,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private static int DrivenAxleIndex(IList<IAxleDeclarationInputData> axles)
-		{
-			for (var i = 0; i < axles.Count; i++) {
-				if (axles[i].AxleType != AxleType.VehicleDriven) {
-					continue;
-				}
-				return i;
-			}
-			return DeclarationData.PoweredAxle();
-		}
 
 		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine, PerSecond vehicleEngineIdleSpeed,
 			IGearboxDeclarationInputData gearbox, IEnumerable<ITorqueLimitInputData> torqueLimits)

@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string CRUISE_TIMESHARE = "CruiseTimeShare [%]";
 		public const string STOP_TIMESHARE = "StopTimeShare [%]";
 
-		public const string MAX_SPEED = "max. speed [km/h";
+		public const string MAX_SPEED = "max. speed [km/h]";
 		public const string MAX_ACCELERATION = "max. acc [m/s²]";
 		public const string MAX_DECELERATION = "max. dec [m/s²]";
 		public const string AVG_ENGINE_SPEED = "n_eng_avg [rpm]";
