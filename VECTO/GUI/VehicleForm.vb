@@ -59,7 +59,6 @@ Public Class VehicleForm
 
 	'Initialise form
 	Private Sub VehicleFormLoad(sender As Object, e As EventArgs) Handles MyBase.Load
-		TbLoadingMax.Text = "-"
 		PnLoad.Enabled = Not Cfg.DeclMode
 		ButAxlAdd.Enabled = Not Cfg.DeclMode
 		ButAxlRem.Enabled = Not Cfg.DeclMode
@@ -103,6 +102,11 @@ Public Class VehicleForm
 		cbPTOType.DisplayMember = "Label"
 		cbPTOType.DataSource = DeclarationData.PTOTransmission.GetTechnologies.Select(
 			Function(technology) New With {Key .Value = technology, .Label = technology}).ToList()
+
+		cbLegislativeClass.ValueMember = "Value"
+		cbLegislativeClass.DisplayMember = "Label"
+		cbLegislativeClass.DataSource = [Enum].GetValues(GetType(LegislativeClass)) _
+			.Cast(Of LegislativeClass).Select(Function(x) New With {Key .Value = x, .Label = x.GetLabel()}).Tolist()
 		'Items.AddRange(PtoTypeStrings.Values.Cast(Of Object).ToArray())
 
 		_changed = False
@@ -128,13 +132,13 @@ Public Class VehicleForm
 		Catch
 			' no segment found - ignore
 		End Try
-		If Not s0 Is Nothing Then
+		If s0.Found Then
 			_hdVclass = s0.VehicleClass.GetClassNumber()
 		End If
 
 
 		TbHDVclass.Text = _hdVclass
-		PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, -1, _hdVclass.ToInt()), False)
+		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, _hdVclass.ToInt()), False)
 	End Sub
 
 
@@ -156,7 +160,7 @@ Public Class VehicleForm
 		Catch
 			' no segment found - ignore
 		End Try
-		If Not s0 Is Nothing Then
+		If s0.found Then
 			_hdVclass = s0.VehicleClass.GetClassNumber()
 			Dim axleCount As Integer = s0.Missions(0).AxleWeightDistribution.Count()
 			Dim i0 As Integer = LvRRC.Items.Count
@@ -367,6 +371,7 @@ Public Class VehicleForm
 		TbCdFile.Text =
 			If(airdrag.CrosswindCorrectionMap Is Nothing, "", GetRelativePath(airdrag.CrosswindCorrectionMap.Source, basePath))
 
+		cbLegislativeClass.SelectedValue = vehicle.LegislativeClass
 		CbRtType.SelectedValue = retarder.Type
 		TbRtRatio.Text = retarder.Ratio.ToGUIFormat()
 		TbRtPath.Text = If(retarder.LossMap Is Nothing, "", GetRelativePath(retarder.LossMap.Source, basePath))
@@ -451,7 +456,7 @@ Public Class VehicleForm
 		veh.Loading = TbLoad.Text.ToDouble(0)
 
 		veh.CdA0 = If(String.IsNullOrWhiteSpace(TBcdA.Text), Double.NaN, TBcdA.Text.ToDouble(0))
-
+		veh.legClass = CType(cbLegislativeClass.SelectedValue, LegislativeClass)
 		veh.DynamicTyreRadius = TBrdyn.Text.ToDouble(0)
 		veh.CrossWindCorrectionMode = CType(CbCdMode.SelectedValue, CrossWindCorrectionMode)
 		veh.CrossWindCorrectionFile.Init(GetPath(file), TbCdFile.Text)
@@ -631,7 +636,6 @@ Public Class VehicleForm
 	End Function
 
 	Private Sub TBmass_TextChanged(sender As Object, e As EventArgs) Handles TbMass.TextChanged
-		SetMaxLoad()
 		Change()
 	End Sub
 
@@ -649,12 +653,10 @@ Public Class VehicleForm
 	End Sub
 
 	Private Sub TbMassTrailer_TextChanged(sender As Object, e As EventArgs) Handles TbMassExtra.TextChanged
-		SetMaxLoad()
 		Change()
 	End Sub
 
 	Private Sub TbMassMax_TextChanged(sender As Object, e As EventArgs) Handles TbMassMass.TextChanged
-		SetMaxLoad()
 		Change()
 		SetHdVclass()
 		DeclInit()
@@ -668,17 +670,6 @@ Public Class VehicleForm
 	End Sub
 
 #End Region
-
-	'Update maximum load when truck/trailer mass was changed
-	Private Sub SetMaxLoad()
-		If Not Cfg.DeclMode Then
-			If IsNumeric(TbMass.Text) And IsNumeric(TbMassExtra.Text) And IsNumeric(TbMassMass.Text) Then
-				TbLoadingMax.Text = CStr(CSng(TbMassMass.Text) * 1000 - CSng(TbMass.Text) - CSng(TbMassExtra.Text))
-			Else
-				TbLoadingMax.Text = ""
-			End If
-		End If
-	End Sub
 
 #Region "Axle Configuration"
 

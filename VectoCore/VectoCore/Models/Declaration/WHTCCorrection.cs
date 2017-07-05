@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		private class Entry
+		private struct Entry
 		{
 			public double Rural;
 			public double Urban;

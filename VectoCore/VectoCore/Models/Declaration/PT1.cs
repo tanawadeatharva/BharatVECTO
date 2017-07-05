@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const string EngineSpeed = "engine speed";
 		}
 
-		public class PT1Result
+		public struct PT1Result
 		{
 			public Second Value;
 			public bool Extrapolated;

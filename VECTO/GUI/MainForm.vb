@@ -341,7 +341,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 						GearboxForm.BringToFront()
 					End If
 					Try
-						GearboxForm.OpenGbx(file)
+						GearboxForm.OpenGbx(file, VehicleCategory.RigidTruck)
 					Catch ex As Exception
 						MsgBox("Failed to open Gearbox File: " + ex.Message)
 					End Try
@@ -970,6 +970,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 				runsFactory.WriteModalResults = Cfg.ModOut
 				runsFactory.ModalResults1Hz = Cfg.Mod1Hz
 				runsFactory.Validate = cbValidateRunData.Checked
+				runsFactory.ActualModalData = cbActVmod.Checked
 
 				For Each runId As Integer In jobContainer.AddRuns(runsFactory)
 					fileWriters.Add(runId, fileWriter)

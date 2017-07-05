@@ -69,6 +69,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				RollResistanceCoefficient = axle.RollResistanceCoefficient,
 				AxleWeightShare = axle.AxleWeightShare,
 				TyreTestLoad = axle.TyreTestLoad,
+				AxleType = axle.AxleType,
 				//Wheels = axle.WheelsStr
 			}).ToList();
 			return retVal;
@@ -82,8 +83,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			switch (airdragData.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(airdragData.AirDragArea,
-							CrossWindCorrectionCurveReader.GetNoCorrectionCurve(airdragData.AirDragArea),
-							CrossWindCorrectionMode.NoCorrection);
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(airdragData.AirDragArea),
+						CrossWindCorrectionMode.NoCorrection);
 					break;
 				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(airdragData.AirDragArea,
@@ -100,7 +101,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					var height = DeclarationData.Segments.LookupHeight(data.VehicleCategory, data.AxleConfiguration,
 						data.GrossVehicleMassRating);
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(airDragArea,
-							DeclarationDataAdapter.GetDeclarationAirResistanceCurve(
+						DeclarationDataAdapter.GetDeclarationAirResistanceCurve(
 							GetAirdragParameterSet(data.VehicleCategory, data.AxleConfiguration, data.Axles.Count), airDragArea, height),
 						CrossWindCorrectionMode.DeclarationModeCorrection);
 					break;
@@ -158,7 +159,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData,
-			double axlegearRatio, Meter dynamicTyreRadius, bool useEfficiencyFallback)
+			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory, bool useEfficiencyFallback)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
@@ -200,24 +201,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					LossMap = lossMap,
 				};
 
-				if (gearbox.Type == GearboxType.ATPowerSplit && i == 0) {
-					// powersplit transmission: torque converter already contains ratio and losses
-					CretateTCFirstGearATPowerSplit(gearData, i, tcShiftPolygon);
-				}
-				if (gearbox.Type == GearboxType.ATSerial) {
-					if (i == 0) {
-						// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
-						CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
-					}
-					if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold) {
-						// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
-						// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
-						CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
-						// NOTE: the lower gear in 'gears' dictionary has index i !!
-						gears[i].Ratio = double.NaN;
-						gears[i].LossMap = null;
-					}
-				}
+				CreateATGearData(gearbox, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears, vehicleCategory);
 				gears.Add(i + 1, gearData);
 			}
 			retVal.Gears = gears;
@@ -230,7 +214,32 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					gearbox.TorqueConverter.CLUpshiftMinAcceleration, gearbox.TorqueConverter.CCUpshiftMinAcceleration);
 			}
 
+
 			return retVal;
+		}
+
+		private static void CreateATGearData(IGearboxEngineeringInputData gearbox, uint i, GearData gearData,
+			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
+			VehicleCategory vehicleCategory)
+		{
+			if (gearbox.Type == GearboxType.ATPowerSplit && i == 0) {
+				// powersplit transmission: torque converter already contains ratio and losses
+				CretateTCFirstGearATPowerSplit(gearData, i, tcShiftPolygon);
+			}
+			if (gearbox.Type == GearboxType.ATSerial) {
+				if (i == 0) {
+					// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
+					CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
+				}
+				if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory)) {
+					// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
+					// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
+					CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
+					// NOTE: the lower gear in 'gears' dictionary has index i !!
+					gears[i].Ratio = double.NaN;
+					gears[i].LossMap = null;
+				}
+			}
 		}
 
 		private static void SetEngineeringData(IGearboxEngineeringInputData gearbox, GearboxData retVal)

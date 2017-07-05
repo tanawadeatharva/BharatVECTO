@@ -85,6 +85,7 @@ Partial Class VehicleForm
 		Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColumnHeader10 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ButAxlAdd = New System.Windows.Forms.Button()
 		Me.PnWheelDiam = New System.Windows.Forms.Panel()
 		Me.CbAxleConfig = New System.Windows.Forms.ComboBox()
@@ -95,9 +96,6 @@ Partial Class VehicleForm
 		Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
 		Me.LbStatus = New System.Windows.Forms.ToolStripStatusLabel()
 		Me.TbHDVclass = New System.Windows.Forms.TextBox()
-		Me.Label11 = New System.Windows.Forms.Label()
-		Me.TbLoadingMax = New System.Windows.Forms.TextBox()
-		Me.Label22 = New System.Windows.Forms.Label()
 		Me.GroupBox1 = New System.Windows.Forms.GroupBox()
 		Me.PnLoad = New System.Windows.Forms.Panel()
 		Me.GrAirRes = New System.Windows.Forms.GroupBox()
@@ -131,6 +129,11 @@ Partial Class VehicleForm
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
 		Me.TabControl1 = New System.Windows.Forms.TabControl()
 		Me.TabPage1 = New System.Windows.Forms.TabPage()
+		Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+		Me.Panel1 = New System.Windows.Forms.Panel()
+		Me.tbVehIdlingSpeed = New System.Windows.Forms.TextBox()
+		Me.Label18 = New System.Windows.Forms.Label()
+		Me.Label19 = New System.Windows.Forms.Label()
 		Me.TabPage2 = New System.Windows.Forms.TabPage()
 		Me.TabPage3 = New System.Windows.Forms.TabPage()
 		Me.lvTorqueLimits = New System.Windows.Forms.ListView()
@@ -139,12 +142,7 @@ Partial Class VehicleForm
 		Me.Label17 = New System.Windows.Forms.Label()
 		Me.btDelMaxTorqueEntry = New System.Windows.Forms.Button()
 		Me.btAddMaxTorqueEntry = New System.Windows.Forms.Button()
-		Me.ColumnHeader10 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-		Me.GroupBox4 = New System.Windows.Forms.GroupBox()
-		Me.Panel1 = New System.Windows.Forms.Panel()
-		Me.tbVehIdlingSpeed = New System.Windows.Forms.TextBox()
-		Me.Label18 = New System.Windows.Forms.Label()
-		Me.Label19 = New System.Windows.Forms.Label()
+		Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
 		Me.GroupBox6.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.GroupBox7.SuspendLayout()
@@ -166,10 +164,10 @@ Partial Class VehicleForm
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.TabControl1.SuspendLayout()
 		Me.TabPage1.SuspendLayout()
-		Me.TabPage2.SuspendLayout()
-		Me.TabPage3.SuspendLayout()
 		Me.GroupBox4.SuspendLayout()
 		Me.Panel1.SuspendLayout()
+		Me.TabPage2.SuspendLayout()
+		Me.TabPage3.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'Label1
@@ -239,7 +237,7 @@ Partial Class VehicleForm
 		'ButOK
 		'
 		Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.ButOK.Location = New System.Drawing.Point(431, 557)
+		Me.ButOK.Location = New System.Drawing.Point(431, 532)
 		Me.ButOK.Name = "ButOK"
 		Me.ButOK.Size = New System.Drawing.Size(75, 23)
 		Me.ButOK.TabIndex = 5
@@ -250,7 +248,7 @@ Partial Class VehicleForm
 		'
 		Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-		Me.ButCancel.Location = New System.Drawing.Point(512, 557)
+		Me.ButCancel.Location = New System.Drawing.Point(512, 532)
 		Me.ButCancel.Name = "ButCancel"
 		Me.ButCancel.Size = New System.Drawing.Size(75, 23)
 		Me.ButCancel.TabIndex = 6
@@ -298,7 +296,7 @@ Partial Class VehicleForm
 		'
 		Me.TbCdFile.Anchor = System.Windows.Forms.AnchorStyles.None
 		Me.TbCdFile.Enabled = False
-		Me.TbCdFile.Location = New System.Drawing.Point(6, 68)
+		Me.TbCdFile.Location = New System.Drawing.Point(9, 65)
 		Me.TbCdFile.Name = "TbCdFile"
 		Me.TbCdFile.Size = New System.Drawing.Size(210, 20)
 		Me.TbCdFile.TabIndex = 1
@@ -308,7 +306,7 @@ Partial Class VehicleForm
 		Me.BtCdFileBrowse.Anchor = System.Windows.Forms.AnchorStyles.None
 		Me.BtCdFileBrowse.Enabled = False
 		Me.BtCdFileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-		Me.BtCdFileBrowse.Location = New System.Drawing.Point(222, 65)
+		Me.BtCdFileBrowse.Location = New System.Drawing.Point(225, 62)
 		Me.BtCdFileBrowse.Name = "BtCdFileBrowse"
 		Me.BtCdFileBrowse.Size = New System.Drawing.Size(24, 24)
 		Me.BtCdFileBrowse.TabIndex = 2
@@ -323,7 +321,7 @@ Partial Class VehicleForm
 		Me.GroupBox6.Controls.Add(Me.TbCdFile)
 		Me.GroupBox6.Location = New System.Drawing.Point(290, 70)
 		Me.GroupBox6.Name = "GroupBox6"
-		Me.GroupBox6.Size = New System.Drawing.Size(281, 109)
+		Me.GroupBox6.Size = New System.Drawing.Size(281, 96)
 		Me.GroupBox6.TabIndex = 5
 		Me.GroupBox6.TabStop = False
 		Me.GroupBox6.Text = "Cross Wind Correction"
@@ -333,7 +331,7 @@ Partial Class VehicleForm
 		Me.BtCdFileOpen.Anchor = System.Windows.Forms.AnchorStyles.None
 		Me.BtCdFileOpen.Enabled = False
 		Me.BtCdFileOpen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-		Me.BtCdFileOpen.Location = New System.Drawing.Point(246, 65)
+		Me.BtCdFileOpen.Location = New System.Drawing.Point(249, 62)
 		Me.BtCdFileOpen.Name = "BtCdFileOpen"
 		Me.BtCdFileOpen.Size = New System.Drawing.Size(24, 24)
 		Me.BtCdFileOpen.TabIndex = 3
@@ -343,7 +341,7 @@ Partial Class VehicleForm
 		'LbCdMode
 		'
 		Me.LbCdMode.AutoSize = True
-		Me.LbCdMode.Location = New System.Drawing.Point(6, 48)
+		Me.LbCdMode.Location = New System.Drawing.Point(6, 47)
 		Me.LbCdMode.Name = "LbCdMode"
 		Me.LbCdMode.Size = New System.Drawing.Size(59, 13)
 		Me.LbCdMode.TabIndex = 28
@@ -548,7 +546,7 @@ Partial Class VehicleForm
 		Me.GroupBox8.Controls.Add(Me.ButAxlRem)
 		Me.GroupBox8.Controls.Add(Me.LvRRC)
 		Me.GroupBox8.Controls.Add(Me.ButAxlAdd)
-		Me.GroupBox8.Location = New System.Drawing.Point(7, 185)
+		Me.GroupBox8.Location = New System.Drawing.Point(6, 172)
 		Me.GroupBox8.Name = "GroupBox8"
 		Me.GroupBox8.Size = New System.Drawing.Size(564, 151)
 		Me.GroupBox8.TabIndex = 2
@@ -624,6 +622,11 @@ Partial Class VehicleForm
 		'
 		Me.ColumnHeader4.Text = "Inertia"
 		'
+		'ColumnHeader10
+		'
+		Me.ColumnHeader10.Text = "Axle Type"
+		Me.ColumnHeader10.Width = 130
+		'
 		'ButAxlAdd
 		'
 		Me.ButAxlAdd.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
@@ -693,7 +696,7 @@ Partial Class VehicleForm
 		'StatusStrip1
 		'
 		Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-		Me.StatusStrip1.Location = New System.Drawing.Point(0, 583)
+		Me.StatusStrip1.Location = New System.Drawing.Point(0, 558)
 		Me.StatusStrip1.Name = "StatusStrip1"
 		Me.StatusStrip1.Size = New System.Drawing.Size(599, 22)
 		Me.StatusStrip1.SizingGrip = False
@@ -716,33 +719,6 @@ Partial Class VehicleForm
 		Me.TbHDVclass.TabStop = False
 		Me.TbHDVclass.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
 		'
-		'Label11
-		'
-		Me.Label11.AutoSize = True
-		Me.Label11.Location = New System.Drawing.Point(89, 57)
-		Me.Label11.Name = "Label11"
-		Me.Label11.Size = New System.Drawing.Size(71, 13)
-		Me.Label11.TabIndex = 31
-		Me.Label11.Text = "Max. Loading"
-		'
-		'TbLoadingMax
-		'
-		Me.TbLoadingMax.Location = New System.Drawing.Point(166, 54)
-		Me.TbLoadingMax.Name = "TbLoadingMax"
-		Me.TbLoadingMax.ReadOnly = True
-		Me.TbLoadingMax.Size = New System.Drawing.Size(57, 20)
-		Me.TbLoadingMax.TabIndex = 2
-		Me.TbLoadingMax.TabStop = False
-		'
-		'Label22
-		'
-		Me.Label22.AutoSize = True
-		Me.Label22.Location = New System.Drawing.Point(225, 57)
-		Me.Label22.Name = "Label22"
-		Me.Label22.Size = New System.Drawing.Size(25, 13)
-		Me.Label22.TabIndex = 24
-		Me.Label22.Text = "[kg]"
-		'
 		'GroupBox1
 		'
 		Me.GroupBox1.Controls.Add(Me.PnLoad)
@@ -751,7 +727,7 @@ Partial Class VehicleForm
 		Me.GroupBox1.Controls.Add(Me.Label14)
 		Me.GroupBox1.Location = New System.Drawing.Point(6, 6)
 		Me.GroupBox1.Name = "GroupBox1"
-		Me.GroupBox1.Size = New System.Drawing.Size(278, 120)
+		Me.GroupBox1.Size = New System.Drawing.Size(278, 104)
 		Me.GroupBox1.TabIndex = 0
 		Me.GroupBox1.TabStop = False
 		Me.GroupBox1.Text = "Weight / Loading"
@@ -762,11 +738,8 @@ Partial Class VehicleForm
 		Me.PnLoad.Controls.Add(Me.Label31)
 		Me.PnLoad.Controls.Add(Me.TbLoad)
 		Me.PnLoad.Controls.Add(Me.TbMassExtra)
-		Me.PnLoad.Controls.Add(Me.TbLoadingMax)
 		Me.PnLoad.Controls.Add(Me.Label50)
 		Me.PnLoad.Controls.Add(Me.Label46)
-		Me.PnLoad.Controls.Add(Me.Label22)
-		Me.PnLoad.Controls.Add(Me.Label11)
 		Me.PnLoad.Location = New System.Drawing.Point(6, 43)
 		Me.PnLoad.Name = "PnLoad"
 		Me.PnLoad.Size = New System.Drawing.Size(256, 75)
@@ -1048,7 +1021,7 @@ Partial Class VehicleForm
 		Me.TabControl1.Location = New System.Drawing.Point(6, 173)
 		Me.TabControl1.Name = "TabControl1"
 		Me.TabControl1.SelectedIndex = 0
-		Me.TabControl1.Size = New System.Drawing.Size(587, 376)
+		Me.TabControl1.Size = New System.Drawing.Size(587, 355)
 		Me.TabControl1.TabIndex = 40
 		'
 		'TabPage1
@@ -1062,10 +1035,56 @@ Partial Class VehicleForm
 		Me.TabPage1.Location = New System.Drawing.Point(4, 22)
 		Me.TabPage1.Name = "TabPage1"
 		Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPage1.Size = New System.Drawing.Size(579, 350)
+		Me.TabPage1.Size = New System.Drawing.Size(579, 329)
 		Me.TabPage1.TabIndex = 0
 		Me.TabPage1.Text = "General"
 		Me.TabPage1.UseVisualStyleBackColor = True
+		'
+		'GroupBox4
+		'
+		Me.GroupBox4.Controls.Add(Me.Panel1)
+		Me.GroupBox4.Location = New System.Drawing.Point(6, 116)
+		Me.GroupBox4.Name = "GroupBox4"
+		Me.GroupBox4.Size = New System.Drawing.Size(278, 50)
+		Me.GroupBox4.TabIndex = 2
+		Me.GroupBox4.TabStop = False
+		Me.GroupBox4.Text = "Vehicle Idling Speed"
+		'
+		'Panel1
+		'
+		Me.Panel1.Controls.Add(Me.tbVehIdlingSpeed)
+		Me.Panel1.Controls.Add(Me.Label18)
+		Me.Panel1.Controls.Add(Me.Label19)
+		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.Panel1.Location = New System.Drawing.Point(3, 16)
+		Me.Panel1.Name = "Panel1"
+		Me.Panel1.Size = New System.Drawing.Size(272, 31)
+		Me.Panel1.TabIndex = 0
+		'
+		'tbVehIdlingSpeed
+		'
+		Me.tbVehIdlingSpeed.Location = New System.Drawing.Point(169, 3)
+		Me.tbVehIdlingSpeed.Name = "tbVehIdlingSpeed"
+		Me.tbVehIdlingSpeed.Size = New System.Drawing.Size(57, 20)
+		Me.tbVehIdlingSpeed.TabIndex = 0
+		'
+		'Label18
+		'
+		Me.Label18.AutoSize = True
+		Me.Label18.Location = New System.Drawing.Point(229, 6)
+		Me.Label18.Name = "Label18"
+		Me.Label18.Size = New System.Drawing.Size(30, 13)
+		Me.Label18.TabIndex = 24
+		Me.Label18.Text = "[rpm]"
+		'
+		'Label19
+		'
+		Me.Label19.AutoSize = True
+		Me.Label19.Location = New System.Drawing.Point(69, 6)
+		Me.Label19.Name = "Label19"
+		Me.Label19.Size = New System.Drawing.Size(94, 13)
+		Me.Label19.TabIndex = 8
+		Me.Label19.Text = "Engine Idle Speed"
 		'
 		'TabPage2
 		'
@@ -1075,7 +1094,7 @@ Partial Class VehicleForm
 		Me.TabPage2.Location = New System.Drawing.Point(4, 22)
 		Me.TabPage2.Name = "TabPage2"
 		Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-		Me.TabPage2.Size = New System.Drawing.Size(579, 350)
+		Me.TabPage2.Size = New System.Drawing.Size(579, 329)
 		Me.TabPage2.TabIndex = 1
 		Me.TabPage2.Text = "Powertrain"
 		Me.TabPage2.UseVisualStyleBackColor = True
@@ -1088,7 +1107,7 @@ Partial Class VehicleForm
 		Me.TabPage3.Controls.Add(Me.btAddMaxTorqueEntry)
 		Me.TabPage3.Location = New System.Drawing.Point(4, 22)
 		Me.TabPage3.Name = "TabPage3"
-		Me.TabPage3.Size = New System.Drawing.Size(579, 350)
+		Me.TabPage3.Size = New System.Drawing.Size(579, 329)
 		Me.TabPage3.TabIndex = 2
 		Me.TabPage3.Text = "Torque Limits"
 		Me.TabPage3.UseVisualStyleBackColor = True
@@ -1147,56 +1166,14 @@ Partial Class VehicleForm
 		Me.btAddMaxTorqueEntry.TabIndex = 4
 		Me.btAddMaxTorqueEntry.UseVisualStyleBackColor = True
 		'
-		'ColumnHeader10
+		'cbLegislativeClass
 		'
-		Me.ColumnHeader10.Text = "Axle Type"
-		Me.ColumnHeader10.Width = 130
-		'
-		'GroupBox4
-		'
-		Me.GroupBox4.Controls.Add(Me.Panel1)
-		Me.GroupBox4.Location = New System.Drawing.Point(6, 129)
-		Me.GroupBox4.Name = "GroupBox4"
-		Me.GroupBox4.Size = New System.Drawing.Size(278, 50)
-		Me.GroupBox4.TabIndex = 2
-		Me.GroupBox4.TabStop = False
-		Me.GroupBox4.Text = "Vehicle Idling Speed"
-		'
-		'Panel1
-		'
-		Me.Panel1.Controls.Add(Me.tbVehIdlingSpeed)
-		Me.Panel1.Controls.Add(Me.Label18)
-		Me.Panel1.Controls.Add(Me.Label19)
-		Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.Panel1.Location = New System.Drawing.Point(3, 16)
-		Me.Panel1.Name = "Panel1"
-		Me.Panel1.Size = New System.Drawing.Size(272, 31)
-		Me.Panel1.TabIndex = 0
-		'
-		'tbVehIdlingSpeed
-		'
-		Me.tbVehIdlingSpeed.Location = New System.Drawing.Point(169, 3)
-		Me.tbVehIdlingSpeed.Name = "tbVehIdlingSpeed"
-		Me.tbVehIdlingSpeed.Size = New System.Drawing.Size(57, 20)
-		Me.tbVehIdlingSpeed.TabIndex = 0
-		'
-		'Label18
-		'
-		Me.Label18.AutoSize = True
-		Me.Label18.Location = New System.Drawing.Point(229, 6)
-		Me.Label18.Name = "Label18"
-		Me.Label18.Size = New System.Drawing.Size(30, 13)
-		Me.Label18.TabIndex = 24
-		Me.Label18.Text = "[rpm]"
-		'
-		'Label19
-		'
-		Me.Label19.AutoSize = True
-		Me.Label19.Location = New System.Drawing.Point(69, 6)
-		Me.Label19.Name = "Label19"
-		Me.Label19.Size = New System.Drawing.Size(94, 13)
-		Me.Label19.TabIndex = 8
-		Me.Label19.Text = "Engine Idle Speed"
+		Me.cbLegislativeClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.cbLegislativeClass.FormattingEnabled = True
+		Me.cbLegislativeClass.Location = New System.Drawing.Point(219, 106)
+		Me.cbLegislativeClass.Name = "cbLegislativeClass"
+		Me.cbLegislativeClass.Size = New System.Drawing.Size(52, 21)
+		Me.cbLegislativeClass.TabIndex = 41
 		'
 		'VehicleForm
 		'
@@ -1204,7 +1181,8 @@ Partial Class VehicleForm
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
-		Me.ClientSize = New System.Drawing.Size(599, 605)
+		Me.ClientSize = New System.Drawing.Size(599, 580)
+		Me.Controls.Add(Me.cbLegislativeClass)
 		Me.Controls.Add(Me.TabControl1)
 		Me.Controls.Add(Me.ButCancel)
 		Me.Controls.Add(Me.ButOK)
@@ -1257,12 +1235,12 @@ Partial Class VehicleForm
 		CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.TabControl1.ResumeLayout(False)
 		Me.TabPage1.ResumeLayout(False)
-		Me.TabPage2.ResumeLayout(False)
-		Me.TabPage3.ResumeLayout(False)
-		Me.TabPage3.PerformLayout()
 		Me.GroupBox4.ResumeLayout(False)
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
+		Me.TabPage2.ResumeLayout(False)
+		Me.TabPage3.ResumeLayout(False)
+		Me.TabPage3.PerformLayout()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
@@ -1316,9 +1294,6 @@ Partial Class VehicleForm
 	Friend WithEvents LbStatus As System.Windows.Forms.ToolStripStatusLabel
 	Friend WithEvents CbAxleConfig As System.Windows.Forms.ComboBox
 	Friend WithEvents TbHDVclass As System.Windows.Forms.TextBox
-	Friend WithEvents Label11 As System.Windows.Forms.Label
-	Friend WithEvents TbLoadingMax As System.Windows.Forms.TextBox
-	Friend WithEvents Label22 As System.Windows.Forms.Label
 	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
 	Friend WithEvents GrAirRes As System.Windows.Forms.GroupBox
 	Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
@@ -1378,4 +1353,5 @@ Partial Class VehicleForm
 	Friend WithEvents tbVehIdlingSpeed As System.Windows.Forms.TextBox
 	Friend WithEvents Label18 As System.Windows.Forms.Label
 	Friend WithEvents Label19 As System.Windows.Forms.Label
+	Friend WithEvents cbLegislativeClass As System.Windows.Forms.ComboBox
 End Class

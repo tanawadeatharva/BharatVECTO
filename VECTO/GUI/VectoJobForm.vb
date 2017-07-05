@@ -296,8 +296,20 @@ Public Class VectoJobForm
 			If GearboxForm.WindowState = FormWindowState.Minimized Then GearboxForm.WindowState = FormWindowState.Normal
 			GearboxForm.BringToFront()
 		End If
+		Dim vehicleType As VehicleCategory
 		Try
-			If Not Trim(f) = "" Then GearboxForm.OpenGbx(f)
+			If Not Trim(f) = "" Then
+				Dim vehInput As IVehicleDeclarationInputData =
+						CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))), 
+							IEngineeringInputDataProvider).VehicleInputData
+				vehicleType = vehInput.VehicleCategory
+			End If
+
+		Catch ex As Exception
+			vehicleType = VehicleCategory.RigidTruck
+		End Try
+		Try
+			If Not Trim(f) = "" Then GearboxForm.OpenGbx(f, vehicleType)
 		Catch ex As Exception
 			MsgBox("Failed to open Gearbox File: " + ex.Message)
 		End Try
@@ -680,7 +692,8 @@ Public Class VectoJobForm
 
 		CbEngOnly.Checked = False
 
-		RdOff.Checked = True
+		'RdOff.Checked = True
+		RdOverspeed.Checked = True
 		CbLookAhead.Checked = True
 		'TbAlookahead.Text = "-0.5"
 		TbOverspeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.AsKmph.ToGUIFormat()
@@ -1299,7 +1312,7 @@ lbDlog:
 												True)
 		Catch
 		End Try
-		If s0 Is Nothing Then
+		If Not s0.Found Then
 			HDVclass = "-"
 		Else
 			HDVclass = s0.VehicleClass.GetClassNumber()
@@ -1314,7 +1327,7 @@ lbDlog:
 
 		End If
 
-		PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, -1, HDVclass.ToInt()), False) _
+		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _
 		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
 		TbHVCclass.Text = String.Format("HDV Class {0}", HDVclass)

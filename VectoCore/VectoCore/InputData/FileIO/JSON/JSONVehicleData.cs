@@ -54,9 +54,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N.A."; }
 		}
 
-		public string LegislativeClass
+		public LegislativeClass LegislativeClass
 		{
-			get { return "N3"; }
+			get {
+				return Body["LegislativeClass"] != null
+					? Body["LegislativeClass"].Value<string>().ParseEnum<LegislativeClass>()
+					: LegislativeClass.Unknown;
+			}
 		}
 
 		public VehicleCategory VehicleCategory

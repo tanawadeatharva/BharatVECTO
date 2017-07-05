@@ -299,19 +299,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 			//}
 			if (Disengaged && !outAngularVelocity.IsEqual(0)) {
-				Disengaged = false;
-				var lastGear = Gear;
-				Gear = DataBus.VehicleStopped
-					? _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity)
-					: _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
-				if (!DataBus.VehicleStopped) {
-					if (Gear > lastGear) {
-						LastUpshift = absTime;
-					}
-					if (Gear < lastGear) {
-						LastDownshift = absTime;
-					}
-				}
+				ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
 				Log.Debug("Gearbox engaged gear {0}", Gear);
 			}
 
@@ -383,6 +371,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 
 			return response;
+		}
+
+		private void ReEngageGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			Disengaged = false;
+			var lastGear = Gear;
+			Gear = DataBus.VehicleStopped
+				? _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity)
+				: _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+			if (!DataBus.VehicleStopped) {
+				if (Gear > lastGear) {
+					LastUpshift = absTime;
+				}
+				if (Gear < lastGear) {
+					LastDownshift = absTime;
+				}
+			}
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)

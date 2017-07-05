@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -130,42 +131,52 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} else {
 				// update action distance for current 'next action'
-				if (Driver.DataBus.VehicleSpeed > NextDrivingAction.NextTargetSpeed) {
-					var brakingDistance = Driver.ComputeDecelerationDistance(NextDrivingAction.NextTargetSpeed) + BrakingSafetyMargin;
-					switch (NextDrivingAction.Action) {
-						case DrivingBehavior.Coasting:
-							//var coastingDistance = ComputeCoastingDistance(Driver.DataBus.VehicleSpeed, NextDrivingAction.NextTargetSpeed);
-							var coastingDistance = ComputeCoastingDistance(Driver.DataBus.VehicleSpeed, NextDrivingAction.CycleEntry);
-							NextDrivingAction.CoastingStartDistance = NextDrivingAction.TriggerDistance - coastingDistance;
-							NextDrivingAction.BrakingStartDistance = NextDrivingAction.TriggerDistance - brakingDistance;
-							break;
-						case DrivingBehavior.Braking:
-							NextDrivingAction.BrakingStartDistance = NextDrivingAction.TriggerDistance - brakingDistance;
-							NextDrivingAction.CoastingStartDistance = double.MaxValue.SI<Meter>();
-							break;
-						default:
-							throw new ArgumentOutOfRangeException();
-					}
-				}
+				UpdateDistancesForCurrentNextAction();
 
-				if (nextAction != null) {
-					if (nextAction.HasEqualTrigger(NextDrivingAction)) {
-						// if the action changes and the vehicle has not yet exceeded the action distance => update the action
-						// otherwise do nothing, NextDrivingAction's action distance has already been updated
-						if (nextAction.Action != NextDrivingAction.Action && nextAction.ActionDistance > currentDistance) {
-							NextDrivingAction = nextAction;
-						}
-					} else {
-						// hmm, we've got a new action that is closer to what we got before?
-						if (nextAction.ActionDistance < NextDrivingAction.ActionDistance) {
-							NextDrivingAction = nextAction;
-						}
-					}
-				} else {
-					NextDrivingAction = null;
-				}
+				SetNextDrivingAction(currentDistance, nextAction);
 			}
 			Log.Debug("Next Driving Action: {0}", NextDrivingAction);
+		}
+
+		private void SetNextDrivingAction(Meter currentDistance, DrivingBehaviorEntry nextAction)
+		{
+			if (nextAction != null) {
+				if (nextAction.HasEqualTrigger(NextDrivingAction)) {
+					// if the action changes and the vehicle has not yet exceeded the action distance => update the action
+					// otherwise do nothing, NextDrivingAction's action distance has already been updated
+					if (nextAction.Action != NextDrivingAction.Action && nextAction.ActionDistance > currentDistance) {
+						NextDrivingAction = nextAction;
+					}
+				} else {
+					// hmm, we've got a new action that is closer to what we got before?
+					if (nextAction.ActionDistance < NextDrivingAction.ActionDistance) {
+						NextDrivingAction = nextAction;
+					}
+				}
+			} else {
+				NextDrivingAction = null;
+			}
+		}
+
+		private void UpdateDistancesForCurrentNextAction()
+		{
+			if (Driver.DataBus.VehicleSpeed > NextDrivingAction.NextTargetSpeed) {
+				var brakingDistance = Driver.ComputeDecelerationDistance(NextDrivingAction.NextTargetSpeed) + BrakingSafetyMargin;
+				switch (NextDrivingAction.Action) {
+					case DrivingBehavior.Coasting:
+						//var coastingDistance = ComputeCoastingDistance(Driver.DataBus.VehicleSpeed, NextDrivingAction.NextTargetSpeed);
+						var coastingDistance = ComputeCoastingDistance(Driver.DataBus.VehicleSpeed, NextDrivingAction.CycleEntry);
+						NextDrivingAction.CoastingStartDistance = NextDrivingAction.TriggerDistance - coastingDistance;
+						NextDrivingAction.BrakingStartDistance = NextDrivingAction.TriggerDistance - brakingDistance;
+						break;
+					case DrivingBehavior.Braking:
+						NextDrivingAction.BrakingStartDistance = NextDrivingAction.TriggerDistance - brakingDistance;
+						NextDrivingAction.CoastingStartDistance = double.MaxValue.SI<Meter>();
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
 		}
 
 		protected internal DrivingBehaviorEntry GetNextDrivingAction(Meter ds)
@@ -184,51 +195,58 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var nextTargetSpeed = OverspeedAllowed(entry.VehicleTargetSpeed)
 					? entry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
 					: entry.VehicleTargetSpeed;
-				if (nextTargetSpeed < currentSpeed) {
-					var action = DrivingBehavior.Braking;
-					var coastingDistance = ComputeCoastingDistance(currentSpeed, entry);
-					var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed) + BrakingSafetyMargin;
-
-					if (!Driver.DriverData.LookAheadCoasting.Enabled || coastingDistance < 0) {
-						Log.Debug(
-							"adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
-							entry.Distance - brakingDistance, brakingDistance, entry.Distance, nextTargetSpeed);
-						coastingDistance = brakingDistance;
-					} else {
-						//var coastingDistance = ComputeCoastingDistance(currentSpeed, nextTargetSpeed);
-						if (currentSpeed > Driver.DriverData.LookAheadCoasting.MinSpeed) {
-							action = DrivingBehavior.Coasting;
-
-							Log.Debug(
-								"adding 'Coasting' starting at distance {0}. coastingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
-								entry.Distance - coastingDistance, coastingDistance, entry.Distance, nextTargetSpeed);
-						} else {
-							coastingDistance = -1.SI<Meter>();
-						}
-					}
-					nextActions.Add(
-						new DrivingBehaviorEntry {
-							Action = action,
-							CoastingStartDistance = entry.Distance - coastingDistance,
-							BrakingStartDistance = entry.Distance - brakingDistance,
-							TriggerDistance = entry.Distance,
-							NextTargetSpeed = nextTargetSpeed,
-							CycleEntry = entry,
-						});
+				if (nextTargetSpeed >= currentSpeed) {
+					// acceleration is not relevant
+					continue;
 				}
+				nextActions.Add(GetDrivingBehaviorEntry(nextTargetSpeed, currentSpeed, entry));
 			}
 			if (!nextActions.Any()) {
 				return null;
 			}
 			var nextBrakingAction = nextActions.OrderBy(x => x.BrakingStartDistance).First();
 			var nextCoastingAction = nextActions.OrderBy(x => x.CoastingStartDistance).First();
-			if (nextBrakingAction.TriggerDistance.IsEqual(nextCoastingAction.TriggerDistance)) {
-				// its the same trigger, use it
-				return nextCoastingAction;
-			}
+
+			return nextBrakingAction.TriggerDistance.IsEqual(nextCoastingAction.TriggerDistance)
+				? nextCoastingAction
+				: nextBrakingAction;
 
 			// MQ: 27.5.2016 remark: one could set the coasting distance to the closest coasting distance as found above to start coasting a little bit earlier.
-			return nextBrakingAction;
+		}
+
+		private DrivingBehaviorEntry GetDrivingBehaviorEntry(MeterPerSecond nextTargetSpeed, MeterPerSecond currentSpeed,
+			DrivingCycleData.DrivingCycleEntry entry)
+		{
+			var action = DrivingBehavior.Braking;
+
+			var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed) + BrakingSafetyMargin;
+			var coastingDistance = ComputeCoastingDistance(currentSpeed, entry);
+			if (!Driver.DriverData.LookAheadCoasting.Enabled || coastingDistance < 0) {
+				Log.Debug(
+					"adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
+					entry.Distance - brakingDistance, brakingDistance, entry.Distance, nextTargetSpeed);
+				coastingDistance = brakingDistance;
+			} else {
+				//var coastingDistance = ComputeCoastingDistance(currentSpeed, nextTargetSpeed);
+				if (currentSpeed > Driver.DriverData.LookAheadCoasting.MinSpeed) {
+					action = DrivingBehavior.Coasting;
+
+					Log.Debug(
+						"adding 'Coasting' starting at distance {0}. coastingDistance: {1}, triggerDistance: {2}, nextTargetSpeed: {3}",
+						entry.Distance - coastingDistance, coastingDistance, entry.Distance, nextTargetSpeed);
+				} else {
+					coastingDistance = -1.SI<Meter>();
+				}
+			}
+			var nextEntry = new DrivingBehaviorEntry {
+				Action = action,
+				CoastingStartDistance = entry.Distance - coastingDistance,
+				BrakingStartDistance = entry.Distance - brakingDistance,
+				TriggerDistance = entry.Distance,
+				NextTargetSpeed = nextTargetSpeed,
+				CycleEntry = entry,
+			};
+			return nextEntry;
 		}
 
 		protected internal virtual Meter ComputeCoastingDistance(MeterPerSecond vehicleSpeed,
@@ -383,95 +401,122 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				velocity += DriverData.OverSpeedEcoRoll.OverSpeed;
 			}
 			if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
-				// drive along
-				IResponse first;
-				if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed) &&
-					DataBus.VehicleSpeed.IsEqual(targetVelocity)) {
-					first = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
-					debug.Add(new { action = "Coast", first });
-					if (first is ResponseSuccess && first.Acceleration < 0) {
-						first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-						debug.Add(new { action = "Coast:(Success & Acc<0) -> Accelerate", first });
-					}
-				} else {
-					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-					debug.Add(new { action = "Accelerate", first });
-				}
-
-				var second = first;
-				first.Switch().
-					Case<ResponseUnderload>(r => {
-						if (DataBus.VehicleSpeed.IsGreater(0) && DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
-							second = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
-							debug.Add(new { action = "first:(Underload & Overspeed)-> Coast", second });
-							if (second is ResponseUnderload || second is ResponseSpeedLimitExceeded) {
-								second = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
-								debug.Add(new {
-									action = "second:(Underload|SpeedLimitExceeded) -> Brake",
-									second
-								});
-							}
-							if (second is ResponseEngineSpeedTooHigh) {
-								second = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, second);
-								debug.Add(new {
-									action = "second:(EngineSpeedTooHigh|SpeedLimitExceeded) -> Brake with reduced acceleration",
-									second
-								});
-							}
-						} else {
-							second = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
-							debug.Add(new { action = "first:(Underload & !Overspeed) -> Brake", second });
-						}
-					});
-
-				var third = second;
-
-				second.Switch().
-					Case<ResponseGearShift>(r => {
-						third = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
-						debug.Add(new { action = "second: GearShift -> Roll", third });
-						third.Switch().
-							Case<ResponseUnderload>(() => {
-								// overload may happen if driver limits acceleration when rolling downhill
-								third = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
-								debug.Add(new { action = "third:Underload -> Brake", third });
-							}).
-							Case<ResponseSpeedLimitExceeded>(() => {
-								third = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
-								debug.Add(new { action = "third:SpeedLimitExceeded -> Brake", third });
-							});
-					}).
-					Case<ResponseOverload>(r => {
-						third = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
-						debug.Add(new { action = "second:Overload -> Coast", third });
-					});
-
-				return third;
+				return HandleRequestEngaged(absTime, ds, targetVelocity, gradient, prohibitOverspeed, velocity, debug);
 			} else {
-				if (DataBus.VehicleSpeed.IsSmallerOrEqual(0.SI<MeterPerSecond>())) {
-					// the clutch is disengaged, and the vehicle stopped - we can't perform a roll action. wait for the clutch to be engaged
-					var remainingShiftTime = Constants.SimulationSettings.TargetTimeInterval;
-					while (!DataBus.ClutchClosed(absTime + remainingShiftTime)) {
-						remainingShiftTime += Constants.SimulationSettings.TargetTimeInterval;
-					}
-					return new ResponseFailTimeInterval {
-						Source = this,
-						DeltaT = remainingShiftTime,
-					};
-				}
-				var response = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
-				debug.Add(new { action = "ClutchOpen -> Roll", response });
-				response.Switch().
-					Case<ResponseUnderload>(r => {
-						response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, r);
-						debug.Add(new { action = "Roll:Underload -> Brake", response });
-					})
-					.Case<ResponseSpeedLimitExceeded>(() => {
-						response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
-						debug.Add(new { action = "Roll:SpeedLimitExceeded -> Brake", response });
-					});
-				return response;
+				return HandleRequestDisengaged(absTime, ds, gradient, velocity, debug);
 			}
+		}
+
+		private IResponse HandleRequestDisengaged(Second absTime, Meter ds, Radian gradient, MeterPerSecond velocity,
+			DebugData debug)
+		{
+			if (DataBus.VehicleSpeed.IsSmallerOrEqual(0.SI<MeterPerSecond>())) {
+				// the clutch is disengaged, and the vehicle stopped - we can't perform a roll action. wait for the clutch to be engaged
+				// todo mk 2016-08-23: is this still needed?
+				var remainingShiftTime = Constants.SimulationSettings.TargetTimeInterval;
+				while (!DataBus.ClutchClosed(absTime + remainingShiftTime)) {
+					remainingShiftTime += Constants.SimulationSettings.TargetTimeInterval;
+				}
+				return new ResponseFailTimeInterval {
+					Source = this,
+					DeltaT = remainingShiftTime,
+				};
+			}
+			var response = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
+			debug.Add(new { action = "ClutchOpen -> Roll", response });
+			response.Switch().
+				Case<ResponseUnderload>(r => {
+					response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, r);
+					debug.Add(new { action = "Roll:Underload -> Brake", response });
+				})
+				.Case<ResponseSpeedLimitExceeded>(() => {
+					response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
+					debug.Add(new { action = "Roll:SpeedLimitExceeded -> Brake", response });
+				});
+			return response;
+		}
+
+		private IResponse HandleRequestEngaged(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
+			bool prohibitOverspeed, MeterPerSecond velocity, DebugData debug)
+		{
+			// drive along
+			var first = FirstAccelerateOrCoast(absTime, ds, targetVelocity, gradient, prohibitOverspeed, velocity, debug);
+
+			var second = first;
+			first.Switch().
+				Case<ResponseUnderload>(r => {
+					if (DataBus.VehicleSpeed.IsGreater(0) && DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
+						second = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
+						debug.Add(new { action = "first:(Underload & Overspeed)-> Coast", second });
+						second = HandleCoastAfterUnderloadWithOverspeed(absTime, ds, gradient, velocity, debug, second);
+					} else {
+						second = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
+						debug.Add(new { action = "first:(Underload & !Overspeed) -> Brake", second });
+					}
+				});
+
+			var third = second;
+
+			second.Switch().
+				Case<ResponseGearShift>(r => {
+					third = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
+					debug.Add(new { action = "second: GearShift -> Roll", third });
+					third.Switch().
+						Case<ResponseUnderload>(() => {
+							// overload may happen if driver limits acceleration when rolling downhill
+							third = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
+							debug.Add(new { action = "third:Underload -> Brake", third });
+						}).
+						Case<ResponseSpeedLimitExceeded>(() => {
+							third = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
+							debug.Add(new { action = "third:SpeedLimitExceeded -> Brake", third });
+						});
+				}).
+				Case<ResponseOverload>(r => {
+					third = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
+					debug.Add(new { action = "second:Overload -> Coast", third });
+				});
+
+			return third;
+		}
+
+		private IResponse HandleCoastAfterUnderloadWithOverspeed(Second absTime, Meter ds, Radian gradient,
+			MeterPerSecond velocity, DebugData debug, IResponse second)
+		{
+			if (second is ResponseUnderload || second is ResponseSpeedLimitExceeded) {
+				second = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
+				debug.Add(new {
+					action = "second:(Underload|SpeedLimitExceeded) -> Brake",
+					second
+				});
+			}
+			if (second is ResponseEngineSpeedTooHigh) {
+				second = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, second);
+				debug.Add(new {
+					action = "second:(EngineSpeedTooHigh|SpeedLimitExceeded) -> Brake with reduced acceleration",
+					second
+				});
+			}
+			return second;
+		}
+
+		private IResponse FirstAccelerateOrCoast(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
+			bool prohibitOverspeed, MeterPerSecond velocity, DebugData debug)
+		{
+			IResponse first;
+			if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed) &&
+				DataBus.VehicleSpeed.IsEqual(targetVelocity)) {
+				first = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
+				debug.Add(new { action = "Coast", first });
+				if (first is ResponseSuccess && first.Acceleration < 0) {
+					first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+					debug.Add(new { action = "Coast:(Success & Acc<0) -> Accelerate", first });
+				}
+			} else {
+				first = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+				debug.Add(new { action = "Accelerate", first });
+			}
+			return first;
 		}
 
 		protected override IResponse CheckRequestDoesNotExceedNextAction(Second absTime, Meter ds,
@@ -535,7 +580,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed = false)
 		{
-			IResponse response = null;
 			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
 				return HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
 			}
@@ -545,136 +589,218 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								DefaultDriverStrategy.BrakingSafetyMargin;
 			DriverStrategy.BrakeTrigger.BrakingStartDistance = DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance;
 			if (Phase == BrakingPhase.Coast) {
-				var nextBrakeAction = DriverStrategy.GetNextDrivingAction(ds);
-				if (nextBrakeAction != null && !DriverStrategy.BrakeTrigger.TriggerDistance.IsEqual(nextBrakeAction.TriggerDistance) &&
-					nextBrakeAction.BrakingStartDistance.IsSmaller(DriverStrategy.BrakeTrigger.BrakingStartDistance)) {
-					DriverStrategy.BrakeTrigger = nextBrakeAction;
-					Log.Debug("setting brake trigger to new trigger: trigger distance: {0}, start braking @ {1}",
-						nextBrakeAction.TriggerDistance, nextBrakeAction.BrakingStartDistance);
-				}
-
-				Log.Debug("start braking @ {0}", DriverStrategy.BrakeTrigger.BrakingStartDistance);
-				var remainingDistanceToBrake = DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance;
-				var estimatedTimeInterval = remainingDistanceToBrake / DataBus.VehicleSpeed;
-				if (estimatedTimeInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval) ||
-					currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance >
-					DriverStrategy.BrakeTrigger.BrakingStartDistance) {
-					Phase = BrakingPhase.Brake;
-					Log.Debug("Switching to BRAKE Phase. currentDistance: {0}", currentDistance);
-				} else {
-					if ((currentDistance + ds).IsGreater(DriverStrategy.BrakeTrigger.BrakingStartDistance)) {
-						return new ResponseDrivingCycleDistanceExceeded() {
-							//Source = this,
-							MaxDistance = DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance
-						};
-					}
-				}
-				if (DataBus.VehicleSpeed < Constants.SimulationSettings.MinVelocityForCoast) {
-					Phase = BrakingPhase.Brake;
-					Log.Debug("Switching to BRAKE Phase. currentDistance: {0}  v: {1}", currentDistance,
-						DataBus.VehicleSpeed);
+				var resp = CheckSwitchingToBraking(ds, currentDistance);
+				if (resp != null) {
+					return resp;
 				}
 			}
 			switch (Phase) {
 				case BrakingPhase.Coast:
-					Driver.DriverBehavior = DrivingBehavior.Coasting;
-					response = DataBus.ClutchClosed(absTime)
-						? Driver.DrivingActionCoast(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleSpeed), gradient)
-						: Driver.DrivingActionRoll(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleSpeed), gradient);
-					response.Switch().
-						Case<ResponseUnderload>(r => {
-							// coast would decelerate more than driver's max deceleration => issue brakes to decelerate with driver's max deceleration
-							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-								gradient, r);
-							if ((DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance).IsSmallerOrEqual(
-								Constants.SimulationSettings.DriverActionDistanceTolerance)) {
-								Phase = BrakingPhase.Brake;
-							}
-						}).
-						Case<ResponseOverload>(r => {
-							// limiting deceleration while coast may result in an overload => issue brakes to decelerate with driver's max deceleration
-							response = DataBus.ClutchClosed(absTime)
-								? Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient)
-								: Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
-							//Phase = BrakingPhase.Brake;
-						}).
-						Case<ResponseDrivingCycleDistanceExceeded>(r => {
-							if (!ds.IsEqual(r.MaxDistance)) {
-								// distance has been reduced due to vehicle stop in coast/roll action => use brake action to get exactly to the stop-distance
-								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-							}
-						}).
-						Case<ResponseGearShift>(r => { response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient); }).
-						Case<ResponseEngineSpeedTooHigh>(r => {
-							response = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, r);
-						});
-					// handle the SpeedLimitExceeded Response separately in case it occurs in one of the requests in the second try
-					response.Switch().
-						Case<ResponseSpeedLimitExceeded>(() => {
-							response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
-								gradient);
-							if (response is ResponseOverload && !DataBus.ClutchClosed(absTime)) {
-								response = Driver.DrivingActionRoll(absTime, ds, DataBus.VehicleSpeed, gradient);
-							}
-						});
-					break;
+					return DoCoast(absTime, ds, targetVelocity, gradient, currentDistance);
 				case BrakingPhase.Brake:
+					return DoBrake(absTime, ds, targetVelocity, gradient, brakingDistance, currentDistance);
+				default:
+					throw new VectoException("Invalid Phase in DriverModeBrake");
+			}
+		}
 
-					Log.Debug("Phase: BRAKE. breaking distance: {0} start braking @ {1}", brakingDistance,
-						DriverStrategy.BrakeTrigger.BrakingStartDistance);
-					if (DriverStrategy.BrakeTrigger.BrakingStartDistance.IsSmaller(currentDistance,
-						Constants.SimulationSettings.DriverActionDistanceTolerance / 2)) {
-						Log.Info("Expected Braking Deceleration could not be reached! {0}",
-							DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance);
+		private IResponse DoBrake(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
+			Meter brakingDistance, Meter currentDistance)
+		{
+			IResponse response;
+			Log.Debug("Phase: BRAKE. breaking distance: {0} start braking @ {1}", brakingDistance,
+				DriverStrategy.BrakeTrigger.BrakingStartDistance);
+			if (DriverStrategy.BrakeTrigger.BrakingStartDistance.IsSmaller(currentDistance,
+				Constants.SimulationSettings.DriverActionDistanceTolerance / 2)) {
+				Log.Info("Expected Braking Deceleration could not be reached! {0}",
+					DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance);
+			}
+			var targetDistance = DataBus.VehicleSpeed < Constants.SimulationSettings.MinVelocityForCoast
+				? DriverStrategy.BrakeTrigger.TriggerDistance
+				: null;
+			if (targetDistance == null && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0.SI<MeterPerSecond>())) {
+				targetDistance = DriverStrategy.BrakeTrigger.TriggerDistance - DefaultDriverStrategy.BrakingSafetyMargin;
+			}
+			Driver.DriverBehavior = DrivingBehavior.Braking;
+			response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+				gradient, targetDistance: targetDistance);
+			response.Switch().
+				Case<ResponseOverload>(r => {
+					Log.Info(
+						"Brake -> Got OverloadResponse during brake action - desired deceleration could not be reached! response: {0}",
+						r);
+					if (!DataBus.ClutchClosed(absTime)) {
+						Log.Info("Brake -> Overload -> Clutch is open - Trying roll action");
+						response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+					} else {
+						Log.Info("Brake -> Overload -> Clutch is closed - Trying brake action again");
+						DataBus.BrakePower = 0.SI<Watt>();
+						response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient,
+							targetDistance: targetDistance);
+						response.Switch().
+							Case<ResponseOverload>(r1 => {
+								Log.Info("Brake -> Overload -> 2nd Brake -> Overload -> Trying accelerate action");
+								response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+								response.Switch().Case<ResponseGearShift>(
+									rs => {
+										Log.Info("Brake -> Overload -> 2nd Brake -> Accelerate -> Got GearShift response, performing roll action");
+										response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+									});
+							});
 					}
-					var targetDistance = DataBus.VehicleSpeed < Constants.SimulationSettings.MinVelocityForCoast
-						? DriverStrategy.BrakeTrigger.TriggerDistance
-						: null;
-					if (targetDistance == null && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0.SI<MeterPerSecond>())) {
-						targetDistance = DriverStrategy.BrakeTrigger.TriggerDistance - DefaultDriverStrategy.BrakingSafetyMargin;
-					}
-					Driver.DriverBehavior = DrivingBehavior.Braking;
+				}).
+				Case<ResponseGearShift>(r => {
+					Log.Info("Brake -> Got GearShift response, performing roll action + brakes");
+					//response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+					DataBus.BrakePower = 0.SI<Watt>();
 					response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 						gradient, targetDistance: targetDistance);
-					response.Switch().
-						Case<ResponseOverload>(r => {
-							Log.Info(
-								"Brake -> Got OverloadResponse during brake action - desired deceleration could not be reached! response: {0}",
-								r);
-							if (!DataBus.ClutchClosed(absTime)) {
-								Log.Info("Brake -> Overload -> Clutch is open - Trying roll action");
-								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
-							} else {
-								Log.Info("Brake -> Overload -> Clutch is closed - Trying brake action again");
-								DataBus.BrakePower = 0.SI<Watt>();
-								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient,
-									targetDistance: targetDistance);
-								response.Switch().
-									Case<ResponseOverload>(r1 => {
-										Log.Info("Brake -> Overload -> 2nd Brake -> Overload -> Trying accelerate action");
-										response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-										response.Switch().Case<ResponseGearShift>(
-											rs => {
-												Log.Info("Brake -> Overload -> 2nd Brake -> Accelerate -> Got GearShift response, performing roll action");
-												response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-											});
-									});
-							}
-						}).
-						Case<ResponseGearShift>(r => {
-							Log.Info("Brake -> Got GearShift response, performing roll action + brakes");
-							//response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-							DataBus.BrakePower = 0.SI<Watt>();
-							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-								gradient, targetDistance: targetDistance);
-						});
-					break;
-			}
-
+				});
 			return response;
 		}
 
+		private IResponse DoCoast(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
+			Meter currentDistance)
+		{
+			IResponse response;
+			Driver.DriverBehavior = DrivingBehavior.Coasting;
+			response = DataBus.ClutchClosed(absTime)
+				? Driver.DrivingActionCoast(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleSpeed), gradient)
+				: Driver.DrivingActionRoll(absTime, ds, VectoMath.Max(targetVelocity, DataBus.VehicleSpeed), gradient);
+			response.Switch().
+				Case<ResponseUnderload>(r => {
+					// coast would decelerate more than driver's max deceleration => issue brakes to decelerate with driver's max deceleration
+					response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+						gradient, r);
+					if ((DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance).IsSmallerOrEqual(
+						Constants.SimulationSettings.DriverActionDistanceTolerance)) {
+						Phase = BrakingPhase.Brake;
+					}
+				}).
+				Case<ResponseOverload>(r => {
+					// limiting deceleration while coast may result in an overload => issue brakes to decelerate with driver's max deceleration
+					response = DataBus.ClutchClosed(absTime)
+						? Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient)
+						: Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+					//Phase = BrakingPhase.Brake;
+				}).
+				Case<ResponseDrivingCycleDistanceExceeded>(r => {
+					if (!ds.IsEqual(r.MaxDistance)) {
+						// distance has been reduced due to vehicle stop in coast/roll action => use brake action to get exactly to the stop-distance
+						// TODO what if no gear is enaged (and we need driveline power to get to the stop-distance?
+						response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+					}
+				}).
+				Case<ResponseGearShift>(r => {
+					response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+				}).
+				Case<ResponseEngineSpeedTooHigh>(r => {
+					response = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, r);
+				});
+			// handle the SpeedLimitExceeded Response separately in case it occurs in one of the requests in the second try
+			response.Switch().
+				Case<ResponseSpeedLimitExceeded>(() => {
+					response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
+						gradient);
+					if (response is ResponseOverload && !DataBus.ClutchClosed(absTime)) {
+						response = Driver.DrivingActionRoll(absTime, ds, DataBus.VehicleSpeed, gradient);
+					}
+				});
+			return response;
+		}
+
+		private IResponse CheckSwitchingToBraking(Meter ds, Meter currentDistance)
+		{
+			var nextBrakeAction = DriverStrategy.GetNextDrivingAction(ds);
+			if (nextBrakeAction != null && !DriverStrategy.BrakeTrigger.TriggerDistance.IsEqual(nextBrakeAction.TriggerDistance) &&
+				nextBrakeAction.BrakingStartDistance.IsSmaller(DriverStrategy.BrakeTrigger.BrakingStartDistance)) {
+				DriverStrategy.BrakeTrigger = nextBrakeAction;
+				Log.Debug("setting brake trigger to new trigger: trigger distance: {0}, start braking @ {1}",
+					nextBrakeAction.TriggerDistance, nextBrakeAction.BrakingStartDistance);
+			}
+
+			Log.Debug("start braking @ {0}", DriverStrategy.BrakeTrigger.BrakingStartDistance);
+			var remainingDistanceToBrake = DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance;
+			var estimatedTimeInterval = remainingDistanceToBrake / DataBus.VehicleSpeed;
+			if (estimatedTimeInterval.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval) ||
+				currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance >
+				DriverStrategy.BrakeTrigger.BrakingStartDistance) {
+				Phase = BrakingPhase.Brake;
+				Log.Debug("Switching to BRAKE Phase. currentDistance: {0}", currentDistance);
+			} else {
+				if ((currentDistance + ds).IsGreater(DriverStrategy.BrakeTrigger.BrakingStartDistance)) {
+					return new ResponseDrivingCycleDistanceExceeded() {
+						//Source = this,
+						MaxDistance = DriverStrategy.BrakeTrigger.BrakingStartDistance - currentDistance
+					};
+				}
+			}
+			if (DataBus.VehicleSpeed < Constants.SimulationSettings.MinVelocityForCoast) {
+				Phase = BrakingPhase.Brake;
+				Log.Debug("Switching to BRAKE Phase. currentDistance: {0}  v: {1}", currentDistance,
+					DataBus.VehicleSpeed);
+			}
+			return null;
+		}
+
 		private IResponse HandleTargetspeedReached(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		{
+			var response = TargetSpeedReachedDriveAlong(absTime, ds, targetVelocity, gradient);
+			//var i = 0;
+			//do {
+			response.Switch().
+				Case<ResponseGearShift>(() => {
+					response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+					response.Switch().
+						Case<ResponseUnderload>(r => {
+							// under-load may happen if driver limits acceleration when rolling downhill
+							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+								gradient, r);
+						}).
+						Case<ResponseSpeedLimitExceeded>(() => {
+							response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
+								gradient);
+						});
+				}).
+				Case<ResponseSpeedLimitExceeded>(() => {
+					response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
+						gradient);
+				}).
+				Case<ResponseUnderload>(r => {
+					//response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+					//	gradient, r);
+					response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed + r.Acceleration * r.SimulationInterval,
+						gradient, r);
+					response.Switch().
+						Case<ResponseGearShift>(() => {
+							DataBus.BrakePower = 0.SI<Watt>();
+							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+								gradient, r);
+						}).
+						Case<ResponseOverload>(() => {
+							DataBus.BrakePower = 0.SI<Watt>();
+							if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
+								if (DataBus.VehicleSpeed.IsGreater(0)) {
+									response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+								} else {
+									if (RetryDistanceExceeded) {
+										response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+									} else {
+										RetryDistanceExceeded = true;
+										response = new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
+									}
+								}
+							} else {
+								response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+							}
+						});
+				});
+			//} while (!(response is ResponseSuccess) && i++ < 3);
+			return response;
+		}
+
+		private IResponse TargetSpeedReachedDriveAlong(Second absTime, Meter ds, MeterPerSecond targetVelocity,
+			Radian gradient)
 		{
 			IResponse response;
 			if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
@@ -685,62 +811,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 					} else {
 						RetryDistanceExceeded = true;
-						return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
+						response = new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
 					}
 				}
 			} else {
 				response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 			}
-			var i = 0;
-			do {
-				response.Switch().
-					Case<ResponseGearShift>(() => {
-						response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
-						response.Switch().
-							Case<ResponseUnderload>(r => {
-								// under-load may happen if driver limits acceleration when rolling downhill
-								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-									gradient, r);
-							}).
-							Case<ResponseSpeedLimitExceeded>(() => {
-								response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
-									gradient);
-							});
-					}).
-					Case<ResponseSpeedLimitExceeded>(() => {
-						response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
-							gradient);
-					}).
-					Case<ResponseUnderload>(r => {
-						//response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-						//	gradient, r);
-						response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed + r.Acceleration * r.SimulationInterval,
-							gradient, r);
-						response.Switch().
-							Case<ResponseGearShift>(() => {
-								DataBus.BrakePower = 0.SI<Watt>();
-								response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-									gradient, r);
-							}).
-							Case<ResponseOverload>(() => {
-								DataBus.BrakePower = 0.SI<Watt>();
-								if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
-									if (DataBus.VehicleSpeed.IsGreater(0)) {
-										response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-									} else {
-										if (RetryDistanceExceeded) {
-											response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-										} else {
-											RetryDistanceExceeded = true;
-											response = new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
-										}
-									}
-								} else {
-									response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-								}
-							});
-					});
-			} while (!(response is ResponseSuccess) && i++ < 3); 
 			return response;
 		}
 
@@ -788,7 +864,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Meter ActionDistance
 		{
-			get {
+			get
+			{
 				return VectoMath.Min(CoastingStartDistance ?? double.MaxValue.SI<Meter>(),
 					BrakingStartDistance ?? double.MaxValue.SI<Meter>());
 			}

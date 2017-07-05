@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					});
 		}
 
-		public sealed class PayloadEntry
+		public struct PayloadEntry
 		{
 			public Kilogram Payload10Percent;
 			public Kilogram Payload50Percent;

@@ -35,7 +35,7 @@ using TUGraz.VectoCommon.Utils;
 namespace TUGraz.VectoCommon.Models
 {
 	[DebuggerDisplay("a: {Acceleration}, dt: {SimulationInterval}, ds: {SimulationDistance}")]
-	public struct OperatingPoint
+	public class OperatingPoint
 	{
 		public MeterPerSquareSecond Acceleration;
 		public Meter SimulationDistance;

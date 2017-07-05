@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType));
+					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
 				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 

@@ -58,6 +58,7 @@ Partial Class VehicleAxleDialog
 		Me.CbWheels = New System.Windows.Forms.ComboBox()
 		Me.cbAxleType = New System.Windows.Forms.ComboBox()
 		Me.Label11 = New System.Windows.Forms.Label()
+		Me.Label12 = New System.Windows.Forms.Label()
 		Me.TableLayoutPanel1.SuspendLayout()
 		Me.PnAxle.SuspendLayout()
 		Me.SuspendLayout()
@@ -149,7 +150,7 @@ Partial Class VehicleAxleDialog
 		'Label5
 		'
 		Me.Label5.AutoSize = True
-		Me.Label5.Location = New System.Drawing.Point(67, 119)
+		Me.Label5.Location = New System.Drawing.Point(67, 120)
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(39, 13)
 		Me.Label5.TabIndex = 1
@@ -158,7 +159,7 @@ Partial Class VehicleAxleDialog
 		'Label6
 		'
 		Me.Label6.AutoSize = True
-		Me.Label6.Location = New System.Drawing.Point(202, 91)
+		Me.Label6.Location = New System.Drawing.Point(202, 120)
 		Me.Label6.Name = "Label6"
 		Me.Label6.Size = New System.Drawing.Size(21, 13)
 		Me.Label6.TabIndex = 1
@@ -273,6 +274,15 @@ Partial Class VehicleAxleDialog
 		Me.Label11.TabIndex = 9
 		Me.Label11.Text = "Configuration"
 		'
+		'Label12
+		'
+		Me.Label12.AutoSize = True
+		Me.Label12.Location = New System.Drawing.Point(202, 94)
+		Me.Label12.Name = "Label12"
+		Me.Label12.Size = New System.Drawing.Size(16, 13)
+		Me.Label12.TabIndex = 10
+		Me.Label12.Text = "[-]"
+		'
 		'VehicleAxleDialog
 		'
 		Me.AcceptButton = Me.OK_Button
@@ -280,6 +290,7 @@ Partial Class VehicleAxleDialog
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.Cancel_Button
 		Me.ClientSize = New System.Drawing.Size(467, 202)
+		Me.Controls.Add(Me.Label12)
 		Me.Controls.Add(Me.Label11)
 		Me.Controls.Add(Me.cbAxleType)
 		Me.Controls.Add(Me.CbWheels)
@@ -332,5 +343,6 @@ Partial Class VehicleAxleDialog
 	Friend WithEvents CbWheels As ComboBox
 	Friend WithEvents cbAxleType As System.Windows.Forms.ComboBox
 	Friend WithEvents Label11 As System.Windows.Forms.Label
+	Friend WithEvents Label12 As System.Windows.Forms.Label
 
 End Class

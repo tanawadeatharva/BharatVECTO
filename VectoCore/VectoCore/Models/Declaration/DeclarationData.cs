@@ -88,7 +88,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// </summary>
 		public static Kilogram GetPayloadForTrailerWeight(Kilogram grossVehicleWeight, Kilogram curbWeight, bool lowLoading)
 		{
-			return Payloads.LookupTrailer(grossVehicleWeight, curbWeight) / (lowLoading ? 7.5 : 1);
+			return (Payloads.LookupTrailer(grossVehicleWeight, curbWeight) / (lowLoading ? 7.5 : 1)).LimitTo(0.SI<Kilogram>(),
+				grossVehicleWeight - curbWeight);
 		}
 
 		public static int PoweredAxle()
@@ -175,7 +176,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly MeterPerSquareSecond UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
 
 			//public static readonly PerSecond TorqueConverterSpeedLimit = 1600.RPMtoRad();
-			public static readonly double TorqueConverterSecondGearThreshold = 1.8;
+			public static double TorqueConverterSecondGearThreshold(VehicleCategory category)
+			{
+				return category.IsTruck() ? 1.8 : 1.85;
+			}
 
 			public static readonly Second PowershiftShiftTime = 0.8.SI<Second>();
 

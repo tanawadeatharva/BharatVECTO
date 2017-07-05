@@ -38,7 +38,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class HeatingVentilationAirConditioning : LookupData<MissionType, string, VehicleClass, Watt>,
+	public sealed class HeatingVentilationAirConditioning : LookupData<MissionType, string, VehicleClass, AuxDemandEntry>,
 		IDeclarationAuxiliaryTable
 	{
 		private List<string> Technologies;
@@ -63,7 +63,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				foreach (DataColumn col in table.Columns) {
 					var value = row.ParseDoubleOrGetDefault(col.Caption, double.NaN);
 					if (col.Caption != "hdvclass" && col.Caption != "technology" && !double.IsNaN(value)) {
-						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), technology, hdvClass)] = value.SI<Watt>();
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), technology, hdvClass)] = new AuxDemandEntry() {
+							PowerDemand = value.SI<Watt>()
+						};
 					}
 				}
 			}
