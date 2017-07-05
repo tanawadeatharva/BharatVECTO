@@ -25,19 +25,19 @@ This is considered by constant power consumption as a function of the PTO type. 
 
 #### Idling losses of the PTO "Consumer" (red)
 
-The idling losses are a function of speed as determined by the DIN 30752-1 procedure. If the PTO transmission includes a shifting element (i.e. declutching of consumer part possible) the torque losses of the consumer in VECTO input shall be defined with zero. This is only used outside of PTO cycles, since the PTO cycles already include these losses. The idling losses are defined as a lossmap dependend on speed which is configurable in the [Vehicle Editor](#vehicle-editor). The file format is described in [PTO-Consumer](#pto-consumer).
+The idling losses are a function of speed as determined by the DIN 30752-1 procedure. If the PTO transmission includes a shifting element (i.e. declutching of consumer part possible) the torque losses of the consumer in VECTO input shall be defined with zero. This is only used outside of PTO cycles, since the PTO cycles already include these losses. The idling losses are defined as a lossmap dependend on speed which is configurable in the [Vehicle Editor](#vehicle-editor). The file format is described in [PTO Idle Consumption Map](#pto-idle-consumption-map-.vptoi).
 
 
 #### Cycle losses during the PTO cycle of the PTO "Consumer" (red)
 
 A specific PTO cycle (time-based, engine speed and torque from PTO consumer as determined by the DIN 30752-1 procedure) is simulated during vehicle stops labelled as "with PTO activation". The execution of the driving cycle stops during this time and the pto cycle is executed. Afterwards the normal driving cycle continues.
 
-Power consumption in the PTO transmission part added to power demand from the PTO cycle. The cycle is configurable in the [Vehicle Editor](#vehicle-editor) and follows the file format described in [PTO-Cycle](#pto-cycle). The timings in the PTO cycle get shifted to start at 0.
+Power consumption in the PTO transmission part added to power demand from the PTO cycle. The cycle is configurable in the [Vehicle Editor](#vehicle-editor) and follows the file format described in [PTO-Cycle](#pto-cycle-.vptoc). The timings in the PTO cycle get shifted to start at 0.
 
 
 ### Behavior During PTO Driving Cycles
 
-A PTO cycle can only be activated during a stop phase in the driving cycle. When the PTO cycle is activated VECTO exhibits the following behavior: Half of the stop time is added before the pto cycle, and the other half is added afterwards. If the halved stop times are still longer than 3 seconds, they get divided even further to 3 intervals in order to achieve a more appealing visualization in the output (falling down, low baseline, rising again).
+A PTO cycle can only be activated during a stop phase in the driving cycle. When the PTO cycle is activated VECTO exhibits the following behavior: Half of the stop time is added before the pto cycle, and the other half is added afterwards. If the halved stop times are still longer than 3 seconds, they get divided even further to 3 intervals in order to achieve a more appealing visualization in the output (falling down, low baseline, rising again). It is recommended to have a stop time of at least 2 seconds.
 
 The following image shows the behavior of running PTO cycles during a normal driving cycle:
 
