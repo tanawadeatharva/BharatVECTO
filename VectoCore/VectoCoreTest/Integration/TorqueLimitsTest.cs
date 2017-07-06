@@ -171,10 +171,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.AreEqual(-115, engineData.FullLoadCurves[6].MaxDragTorque.Value());
 		}
 
-		[TestCase(GearboxLimitJobDecl_800, "LongRunning"),
-		TestCase(GearboxLimitJobDecl_865, "LongRunning"),
-		TestCase(VehicleLimitJobDecl_850, "LongRunning"),
-		TestCase(VehicleLimitJobDecl_910, "LongRunning")]
+		[TestCase(GearboxLimitJobDecl_800),
+		TestCase(GearboxLimitJobDecl_865),
+		TestCase(VehicleLimitJobDecl_850),
+		TestCase(VehicleLimitJobDecl_910), Category("LongRunning")]
 		public void TestRunTorqueLimitedSimulations(string file)
 		{
 			var fileWriter = new FileOutputWriter(file);
@@ -215,7 +215,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestCase(EngineSpeedLimitJobDecl, "LongRunning")]
+		[TestCase(EngineSpeedLimitJobDecl), Category("LongRunning")]
 		public void TestRunEngineSpeedLimitedSimulations(string file)
 		{
 			var fileWriter = new FileOutputWriter(file);
