@@ -117,7 +117,7 @@
 					<xs:documentation>P238</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="VehicleCategory" type="vdecdef:LegislativeClassDeclarationType">
+			<xs:element name="LegislativeClass" type="vdecdef:LegislativeClassDeclarationType">
 				<xs:annotation>
 					<xs:documentation>P251</xs:documentation>
 				</xs:annotation>
