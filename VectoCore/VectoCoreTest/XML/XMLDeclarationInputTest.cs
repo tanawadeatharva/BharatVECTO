@@ -797,10 +797,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
 			var ptoDataProvider = inputDataProvider.PTOTransmissionInputData;
-			var ptoLosses = DeclarationData.PTOTransmission.Lookup(ptoDataProvider.PTOTransmissionType);
+			var lookup = DeclarationData.PTOTransmission.Lookup(ptoDataProvider.PTOTransmissionType);
 
 			Assert.AreEqual("only the drive shaft of the PTO - multi-disc clutch", ptoDataProvider.PTOTransmissionType);
-			Assert.AreEqual(1000, ptoLosses.Value());
+			Assert.AreEqual(1000, lookup.PowerDemand.Value());
 		}
 	}
 }

@@ -564,10 +564,12 @@ namespace TUGraz.VectoCommon.Utils
 			var smallerX = x - DoubleExtensionMethods.Tolerance;
 			var biggerX = x + DoubleExtensionMethods.Tolerance;
 
-			if ((P1.Y < smallerY && P2.Y < smallerY && P3.Y < smallerY)
-				|| (P1.X < smallerX && P2.X < smallerX && P3.X < smallerX)
-				|| (P1.X > biggerX && P2.X > biggerX && P3.X > biggerX)
-				|| (P1.Y > biggerY && P2.Y > biggerY && P3.Y > biggerY)) {
+			var aboveTriangle = P1.Y < smallerY && P2.Y < smallerY && P3.Y < smallerY;
+			var belowTriangle = P1.Y > biggerY && P2.Y > biggerY && P3.Y > biggerY;
+			var leftOfTriangle = P1.X > biggerX && P2.X > biggerX && P3.X > biggerX;
+			var rightOfTriangle = P1.X < smallerX && P2.X < smallerX && P3.X < smallerX;
+
+			if (aboveTriangle || rightOfTriangle || leftOfTriangle || belowTriangle) {
 				return false;
 			}
 

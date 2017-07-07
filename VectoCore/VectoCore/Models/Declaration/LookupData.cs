@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 	}
 
-	public abstract class LookupData<TKey, TValue> : LookupData
+	public abstract class LookupData<TKey, TValue> : LookupData where TValue : struct
 	{
 		protected Dictionary<TKey, TValue> Data = new Dictionary<TKey, TValue>();
 
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 	}
 
-	public abstract class LookupData<TKey1, TKey2, TValue> : LookupData
+	public abstract class LookupData<TKey1, TKey2, TValue> : LookupData where TValue : struct
 	{
 		protected readonly Dictionary<Tuple<TKey1, TKey2>, TValue> Data = new Dictionary<Tuple<TKey1, TKey2>, TValue>();
 
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 	}
 
-	public abstract class LookupData<TKey1, TKey2, TKey3, TValue> : LookupData
+	public abstract class LookupData<TKey1, TKey2, TKey3, TValue> : LookupData where TValue : struct
 	{
 		protected readonly Dictionary<Tuple<TKey1, TKey2, TKey3>, TValue> Data =
 			new Dictionary<Tuple<TKey1, TKey2, TKey3>, TValue>();
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		//public abstract TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3);
 	}
 
-	public abstract class LookupData<TKey1, TKey2, TKey3, TKey4, TValue> : LookupData
+	public abstract class LookupData<TKey1, TKey2, TKey3, TKey4, TValue> : LookupData where TValue : struct
 	{
 		public abstract TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4);
 	}

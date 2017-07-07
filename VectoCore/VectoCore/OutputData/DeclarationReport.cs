@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// <summary>
 		/// The declaration segment from the segment table
 		/// </summary>
-		internal Segment Segment { get; set; }
+		internal Segment? Segment { get; set; }
 
 
 		/// <summary>

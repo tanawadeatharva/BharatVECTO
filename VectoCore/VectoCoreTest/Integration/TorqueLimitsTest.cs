@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestCase(GearboxLimitJobDecl_800),
 		TestCase(GearboxLimitJobDecl_865),
 		TestCase(VehicleLimitJobDecl_850),
-		TestCase(VehicleLimitJobDecl_910)]
+		TestCase(VehicleLimitJobDecl_910), Category("LongRunning")]
 		public void TestRunTorqueLimitedSimulations(string file)
 		{
 			var fileWriter = new FileOutputWriter(file);
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestCase(GearboxSpeedLimitJobDecl)]
+		[TestCategory("LongRunning"), TestCase(GearboxSpeedLimitJobDecl)]
 		public void TestRunGbxSpeedLimitedSimulations(string file)
 		{
 			var fileWriter = new FileOutputWriter(file);
@@ -215,7 +215,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestCase(EngineSpeedLimitJobDecl)]
+		[TestCase(EngineSpeedLimitJobDecl), Category("LongRunning")]
 		public void TestRunEngineSpeedLimitedSimulations(string file)
 		{
 			var fileWriter = new FileOutputWriter(file);

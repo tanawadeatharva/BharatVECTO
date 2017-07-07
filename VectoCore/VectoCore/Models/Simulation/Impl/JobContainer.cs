@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.Models;
@@ -143,6 +144,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		private void JobCompleted()
 		{
 			if (AllCompleted) {

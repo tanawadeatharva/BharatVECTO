@@ -242,7 +242,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public ITorqueConverterEngineeringInputData TorqueConverterInputData
 		{
-			get {
+			get
+			{
 				if (TorqueConverter == null) {
 					throw new InvalidFileFormatException("TorqueConverterData not found");
 				}
@@ -259,7 +260,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
+			get
+			{
 				if (VehicleData == null) {
 					throw new InvalidFileFormatException("VehicleData not found ");
 				}
@@ -271,7 +273,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
+			get
+			{
 				if (Gearbox == null) {
 					throw new InvalidFileFormatException("GearboxData not found");
 				}
@@ -283,7 +286,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
+			get
+			{
 				if (AxleGear == null) {
 					throw new InvalidFileFormatException("AxleGearData not found");
 				}
@@ -305,7 +309,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
+			get
+			{
 				if (Engine == null) {
 					throw new InvalidFileFormatException("EngineData not found");
 				}
@@ -342,7 +347,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
+			get
+			{
 				if (Retarder == null) {
 					throw new InvalidFileFormatException("RetarderData not found");
 				}
@@ -368,7 +374,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
+			get
+			{
 				var retVal = new List<ICycleData>();
 				if (Body[JsonKeys.Job_Cycles] == null) {
 					return retVal;
@@ -422,7 +429,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IOverSpeedEcoRollDeclarationInputData IDriverDeclarationInputData.OverSpeedEcoRoll
 		{
-			get {
+			get
+			{
 				var overspeed = Body.GetEx(JsonKeys.DriverData_OverspeedEcoRoll);
 				return new OverSpeedEcoRollInputData() {
 					Mode = DriverData.ParseDriverMode(overspeed.GetEx<string>(JsonKeys.DriverData_OverspeedEcoRoll_Mode))
@@ -432,7 +440,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual ILookaheadCoastingInputData Lookahead
 		{
-			get {
+			get
+			{
 				if (Body[JsonKeys.DriverData_LookaheadCoasting] == null) {
 					return null;
 				}
@@ -447,32 +456,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				var lacDfScaling = lac["DF_scaling"] != null
 					? lac.GetEx<double>("DF_scaling")
 					: DeclarationData.Driver.LookAhead.DecisionFactorCoastingScaling;
-				TableData speedDependentLookup = null;
-				if (lac["DF_targetSpeedLookup"] != null && !string.IsNullOrWhiteSpace(lac["DF_targetSpeedLookup"].Value<string>())) {
-					try {
-						speedDependentLookup = ReadTableData(lac.GetEx<string>("DF_targetSpeedLookup"),
-							"Lookahead Coasting Decisionfactor - Target speed");
-					} catch (Exception) {
-						if (TolerateMissing) {
-							speedDependentLookup =
-								new TableData(Path.Combine(BasePath, lac["DF_targetSpeedLookup"].Value<string>()) + MissingFileSuffix,
-									DataSourceType.Missing);
-						}
-					}
-				}
-				TableData velocityDropLookup = null;
-				if (lac["Df_velocityDropLookup"] != null && !string.IsNullOrWhiteSpace(lac["Df_velocityDropLookup"].Value<string>())) {
-					try {
-						velocityDropLookup = ReadTableData(lac.GetEx<string>("Df_velocityDropLookup"),
-							"Lookahead Coasting Decisionfactor - Velocity drop");
-					} catch (Exception) {
-						if (TolerateMissing) {
-							velocityDropLookup =
-								new TableData(Path.Combine(BasePath, lac["Df_velocityDropLookup"].Value<string>()) + MissingFileSuffix,
-									DataSourceType.Missing);
-						}
-					}
-				}
+				var speedDependentLookup = GetSpeedDependentLookupTable(lac);
+				var velocityDropLookup = GetVelocityDropLookupTable(lac);
 				var minSpeed = lac["MinSpeed"] != null
 					? lac.GetEx<double>(JsonKeys.DriverData_Lookahead_MinSpeed).KMPHtoMeterPerSecond()
 					: DeclarationData.Driver.LookAhead.MinimumSpeed;
@@ -489,9 +474,46 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		private TableData GetVelocityDropLookupTable(JToken lac)
+		{
+			if (lac["Df_velocityDropLookup"] == null || string.IsNullOrWhiteSpace(lac["Df_velocityDropLookup"].Value<string>())) {
+				return null;
+			}
+			try {
+				return ReadTableData(lac.GetEx<string>("Df_velocityDropLookup"),
+					"Lookahead Coasting Decisionfactor - Velocity drop");
+			} catch (Exception) {
+				if (TolerateMissing) {
+					return
+						new TableData(Path.Combine(BasePath, lac["Df_velocityDropLookup"].Value<string>()) + MissingFileSuffix,
+							DataSourceType.Missing);
+				}
+			}
+			return null;
+		}
+
+		private TableData GetSpeedDependentLookupTable(JToken lac)
+		{
+			if (lac["DF_targetSpeedLookup"] == null || string.IsNullOrWhiteSpace(lac["DF_targetSpeedLookup"].Value<string>())) {
+				return null;
+			}
+			try {
+				return ReadTableData(lac.GetEx<string>("DF_targetSpeedLookup"),
+					"Lookahead Coasting Decisionfactor - Target speed");
+			} catch (Exception) {
+				if (TolerateMissing) {
+					return
+						new TableData(Path.Combine(BasePath, lac["DF_targetSpeedLookup"].Value<string>()) + MissingFileSuffix,
+							DataSourceType.Missing);
+				}
+			}
+			return null;
+		}
+
 		public virtual IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll
 		{
-			get {
+			get
+			{
 				var overspeed = Body.GetEx(JsonKeys.DriverData_OverspeedEcoRoll);
 				return new OverSpeedEcoRollInputData() {
 					Mode = DriverData.ParseDriverMode(overspeed.GetEx<string>(JsonKeys.DriverData_OverspeedEcoRoll_Mode)),
@@ -507,7 +529,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get {
+			get
+			{
 				var acceleration = Body[JsonKeys.DriverData_AccelerationCurve];
 				if (acceleration == null || EmptyOrInvalidFileName(acceleration.Value<string>())) {
 					return null;
@@ -573,20 +596,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 
 				if (auxData.Type == AuxiliaryType.Fan) {
-					switch (tech) {
-						case "Crankshaft mounted - Electronically controlled visco clutch (Default)":
-							auxData.Technology.Add("Crankshaft mounted - Electronically controlled visco clutch");
-							break;
-						case "Crankshaft mounted - On/Off clutch":
-							auxData.Technology.Add("Crankshaft mounted - On/off clutch");
-							break;
-						case "Belt driven or driven via transm. - On/Off clutch":
-							auxData.Technology.Add("Belt driven or driven via transm. - On/off clutch");
-							break;
-						default:
-							auxData.Technology.Add(tech);
-							break;
-					}
+					auxData.Technology.Add(MapLegacyFanTechnologies(tech));
 				}
 
 				var auxFile = aux["Path"];
@@ -601,13 +611,34 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return retVal;
 		}
 
+		private static string MapLegacyFanTechnologies(string tech)
+		{
+			string newTech;
+			switch (tech) {
+				case "Crankshaft mounted - Electronically controlled visco clutch (Default)":
+					newTech = "Crankshaft mounted - Electronically controlled visco clutch";
+					break;
+				case "Crankshaft mounted - On/Off clutch":
+					newTech = "Crankshaft mounted - On/off clutch";
+					break;
+				case "Belt driven or driven via transm. - On/Off clutch":
+					newTech = "Belt driven or driven via transm. - On/off clutch";
+					break;
+				default:
+					newTech = tech;
+					break;
+			}
+			return newTech;
+		}
+
 		#endregion
 
 		#region AdvancedAuxiliaries
 
 		public AuxiliaryModel AuxiliaryAssembly
 		{
-			get {
+			get
+			{
 				return AuxiliaryModelHelper.Parse(Body["AuxiliaryAssembly"] == null ? "" : Body["AuxiliaryAssembly"].ToString());
 			}
 		}
@@ -619,7 +650,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string AdvancedAuxiliaryFilePath
 		{
-			get {
+			get
+			{
 				return Body["AdvancedAuxiliaryFilePath"] != null
 					? Path.Combine(Path.GetFullPath(BasePath), Body["AdvancedAuxiliaryFilePath"].Value<string>())
 					: "";

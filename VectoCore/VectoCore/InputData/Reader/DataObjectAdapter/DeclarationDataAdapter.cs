@@ -96,12 +96,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.BodyAndTrailerWeight = (mission.MissionType == MissionType.MunicipalUtility
 				? municipalBodyWeight
 				: mission.BodyCurbWeight) + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
-			//retVal.CurbWeight += retVal.BodyAndTrailerWeight;
 
 			retVal.Loading = loading;
-			var drivenIndex = DrivenAxleIndex(data.Axles);
 			retVal.DynamicTyreRadius =
-				DeclarationData.Wheels.Lookup(data.Axles[drivenIndex].Wheels).DynamicTyreRadius;
+				data.Axles.Where(axle => axle.AxleType == AxleType.VehicleDriven)
+					.Select(da => DeclarationData.Wheels.Lookup(da.Wheels).DynamicTyreRadius)
+					.Average();
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
 
 
@@ -139,16 +139,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private static int DrivenAxleIndex(IList<IAxleDeclarationInputData> axles)
-		{
-			for (var i = 0; i < axles.Count; i++) {
-				if (axles[i].AxleType != AxleType.VehicleDriven) {
-					continue;
-				}
-				return i;
-			}
-			return DeclarationData.PoweredAxle();
-		}
 
 		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine, PerSecond vehicleEngineIdleSpeed,
 			IGearboxDeclarationInputData gearbox, IEnumerable<ITorqueLimitInputData> torqueLimits)
@@ -254,24 +244,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					LossMap = lossMap,
 				};
 
-				if (gearbox.Type == GearboxType.ATPowerSplit && i == 0) {
-					// powersplit transmission: torque converter already contains ratio and losses
-					CretateTCFirstGearATPowerSplit(gearData, i, tcShiftPolygon);
-				}
-				if (gearbox.Type == GearboxType.ATSerial) {
-					if (i == 0) {
-						// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
-						CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
-					}
-					if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory)) {
-						// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
-						// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
-						CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
-						// NOTE: the lower gear in 'gears' dictionary has index i !!
-						gears[i].Ratio = double.NaN;
-						gears[i].LossMap = null;
-					}
-				}
+				CreateATGearData(gearbox, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears, vehicleCategory);
 				gears.Add(i + 1, gearData);
 			}
 			retVal.Gears = gears;
@@ -285,6 +258,30 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return retVal;
+		}
+
+		private static void CreateATGearData(IGearboxDeclarationInputData gearbox, uint i, GearData gearData,
+			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
+			VehicleCategory vehicleCategory)
+		{
+			if (gearbox.Type == GearboxType.ATPowerSplit && i == 0) {
+				// powersplit transmission: torque converter already contains ratio and losses
+				CretateTCFirstGearATPowerSplit(gearData, i, tcShiftPolygon);
+			}
+			if (gearbox.Type == GearboxType.ATSerial) {
+				if (i == 0) {
+					// torqueconverter is active in first gear - duplicate ratio and lossmap for torque converter mode
+					CreateTCFirstGearATSerial(gearData, tcShiftPolygon);
+				}
+				if (i == 1 && gearDifferenceRatio >= DeclarationData.Gearbox.TorqueConverterSecondGearThreshold(vehicleCategory)) {
+					// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
+					// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
+					CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
+					// NOTE: the lower gear in 'gears' dictionary has index i !!
+					gears[i].Ratio = double.NaN;
+					gears[i].LossMap = null;
+				}
+			}
 		}
 
 		private static void SetDeclarationData(GearboxData retVal)
@@ -329,7 +326,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				mission = mission.GetNonEMSMissionType();
 				switch (auxType) {
 					case AuxiliaryType.Fan:
-						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology.FirstOrDefault());
+						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
 						break;
 					case AuxiliaryType.SteeringPump:
@@ -338,15 +335,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						break;
 					case AuxiliaryType.HVAC:
 						aux.PowerDemand = DeclarationData.HeatingVentilationAirConditioning.Lookup(mission,
-							auxData.Technology.FirstOrDefault(), hvdClass);
+							auxData.Technology.FirstOrDefault(), hvdClass).PowerDemand;
 						aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
 						break;
 					case AuxiliaryType.PneumaticSystem:
-						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.FirstOrDefault());
+						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
 						break;
 					case AuxiliaryType.ElectricSystem:
-						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault());
+						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
 						break;
 					default:

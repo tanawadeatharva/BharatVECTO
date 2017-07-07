@@ -41,6 +41,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.ModFilter;
@@ -53,7 +54,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private static int _jobNumberCounter;
 
 		private readonly ExecutionMode _mode;
-		private readonly bool _engineOnlyMode;
+		private bool _engineOnlyMode;
 
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
 			IDeclarationReport declarationReport = null, bool validate = true)
@@ -74,28 +75,45 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			switch (mode) {
 				case ExecutionMode.Declaration:
-					var declDataProvider = dataProvider as IDeclarationInputDataProvider;
-					if (declDataProvider == null) {
-						throw new VectoException("InputDataProvider does not implement DeclarationData interface");
-					}
+					var declDataProvider = ToDeclarationInputDataProvider(dataProvider);
 					var report = declarationReport ?? new XMLDeclarationReport(writer);
 					DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, report);
 					break;
 				case ExecutionMode.Engineering:
-					var engDataProvider = dataProvider as IEngineeringInputDataProvider;
-					if (engDataProvider == null) {
-						throw new VectoException("InputDataProvider does not implement Engineering interface");
-					}
-					if (engDataProvider.JobInputData().EngineOnlyMode) {
-						DataReader = new EngineOnlyVectoRunDataFactory(engDataProvider);
-						_engineOnlyMode = true;
-					} else {
-						DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
-					}
+					CreateEngineeringDataReader(dataProvider);
 					break;
 				default:
 					throw new VectoException("Unkown factory mode in SimulatorFactory: {0}", mode);
 			}
+		}
+
+		private void CreateEngineeringDataReader(IInputDataProvider dataProvider)
+		{
+			var engDataProvider = ToEngineeringInputDataProvider(dataProvider);
+			if (engDataProvider.JobInputData().EngineOnlyMode) {
+				DataReader = new EngineOnlyVectoRunDataFactory(engDataProvider);
+				_engineOnlyMode = true;
+			} else {
+				DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
+			}
+		}
+
+		private static IDeclarationInputDataProvider ToDeclarationInputDataProvider(IInputDataProvider dataProvider)
+		{
+			var declDataProvider = dataProvider as IDeclarationInputDataProvider;
+			if (declDataProvider == null) {
+				throw new VectoException("InputDataProvider does not implement DeclarationData interface");
+			}
+			return declDataProvider;
+		}
+
+		private static IEngineeringInputDataProvider ToEngineeringInputDataProvider(IInputDataProvider dataProvider)
+		{
+			var engDataProvider = dataProvider as IEngineeringInputDataProvider;
+			if (engDataProvider == null) {
+				throw new VectoException("InputDataProvider does not implement Engineering interface");
+			}
+			return engDataProvider;
 		}
 
 		public bool Validate { get; set; }
@@ -119,27 +137,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public IEnumerable<IVectoRun> SimulationRuns()
 		{
 			var i = 0;
-			var modDataFilter = ModalResults1Hz
-				? new IModalDataFilter[] { new ModalData1HzFilter() }
-				: null;
-
-			if (ActualModalData) {
-				modDataFilter = new IModalDataFilter[] { new ActualModalDataFilter(), };
-			}
 
 
 			var warning1Hz = false;
 
 			foreach (var data in DataReader.NextRun()) {
 				var d = data;
-				if (d.Report != null) {
-					d.Report.PrepareResult(d.Loading, d.Mission, d);
-				}
-				Action<ModalDataContainer> addReportResult = writer => {
-					if (d.Report != null) {
-						d.Report.AddResult(d.Loading, d.Mission, d, writer);
-					}
-				};
+				var addReportResult = PrepareReport(data);
 				if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
 					Log.Error("Output filter for 1Hz results is only available for distance-based cycles!");
 					warning1Hz = true;
@@ -148,7 +152,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					new ModalDataContainer(data, ModWriter,
 						addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
 						writeEngineOnly: _engineOnlyMode,
-						filter: data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz || ActualModalData ? modDataFilter : null) {
+						filter: GetModDataFilter(data)) {
 							WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
 							WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
 						};
@@ -156,39 +160,72 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var builder = new PowertrainBuilder(modContainer, modData => {
 					if (SumData != null) {
 						SumData.Write(modData, JobNumber, current, d);
-						//SumData.Write(modContainer, d.JobName, string.Format("{0}-{1}", JobNumber, current),
-						//	d.Cycle.Name + Constants.FileExtensions.CycleFile, mass, loading, volume ?? 0.SI<CubicMeter>(), gearCount);
 					}
 				});
 
-				VectoRun run;
-
-				switch (data.Cycle.CycleType) {
-					case CycleType.DistanceBased:
-						run = new DistanceRun(builder.Build(data));
-						break;
-					case CycleType.EngineOnly:
-					case CycleType.PWheel:
-					case CycleType.MeasuredSpeed:
-					case CycleType.MeasuredSpeedGear:
-						run = new TimeRun(builder.Build(data));
-						break;
-					case CycleType.PTO:
-						throw new VectoException("PTO Cycle can not be used as main cycle!");
-					default:
-						throw new ArgumentOutOfRangeException("CycleType unknown:" + data.Cycle.CycleType);
-				}
+				var run = GetVectoRun(data, builder);
 
 				if (Validate) {
-					var validationErrors = run.Validate(_mode, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type,
+					ValidateVectoRunData(run, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type,
 						data.Mission != null && data.Mission.MissionType.IsEMS());
-					if (validationErrors.Any()) {
-						throw new VectoException("Validation of Run-Data Failed: " +
-												string.Join("\n", validationErrors.Select(r => r.ErrorMessage + string.Join("; ", r.MemberNames))));
-					}
 				}
 				yield return run;
 			}
+		}
+
+		private IModalDataFilter[] GetModDataFilter(VectoRunData data)
+		{
+			var modDataFilter = ModalResults1Hz
+				? new IModalDataFilter[] { new ModalData1HzFilter() }
+				: null;
+
+			if (ActualModalData) {
+				modDataFilter = new IModalDataFilter[] { new ActualModalDataFilter(), };
+			}
+			return data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz || ActualModalData ? modDataFilter : null;
+		}
+
+		private void ValidateVectoRunData(VectoRun run, GearboxType? gearboxtype, bool isEms)
+		{
+			var validationErrors = run.Validate(_mode, gearboxtype, isEms);
+			if (validationErrors.Any()) {
+				throw new VectoException("Validation of Run-Data Failed: " +
+										string.Join("\n", validationErrors.Select(r => r.ErrorMessage + string.Join("; ", r.MemberNames))));
+			}
+		}
+
+		private static VectoRun GetVectoRun(VectoRunData data, PowertrainBuilder builder)
+		{
+			VectoRun run;
+			switch (data.Cycle.CycleType) {
+				case CycleType.DistanceBased:
+					run = new DistanceRun(builder.Build(data));
+					break;
+				case CycleType.EngineOnly:
+				case CycleType.PWheel:
+				case CycleType.MeasuredSpeed:
+				case CycleType.MeasuredSpeedGear:
+					run = new TimeRun(builder.Build(data));
+					break;
+				case CycleType.PTO:
+					throw new VectoException("PTO Cycle can not be used as main cycle!");
+				default:
+					throw new ArgumentOutOfRangeException("CycleType unknown:" + data.Cycle.CycleType);
+			}
+			return run;
+		}
+
+		private static Action<ModalDataContainer> PrepareReport(VectoRunData data)
+		{
+			if (data.Report != null) {
+				data.Report.PrepareResult(data.Loading, data.Mission, data);
+			}
+			Action<ModalDataContainer> addReportResult = writer => {
+				if (data.Report != null) {
+					data.Report.AddResult(data.Loading, data.Mission, data, writer);
+				}
+			};
+			return addReportResult;
 		}
 	}
 }

@@ -1312,7 +1312,7 @@ lbDlog:
 												True)
 		Catch
 		End Try
-		If s0 Is Nothing Then
+		If Not s0.Found Then
 			HDVclass = "-"
 		Else
 			HDVclass = s0.VehicleClass.GetClassNumber()
@@ -1327,7 +1327,7 @@ lbDlog:
 
 		End If
 
-		PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, -1, HDVclass.ToInt()), False) _
+		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _
 		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
 		TbHVCclass.Text = String.Format("HDV Class {0}", HDVclass)

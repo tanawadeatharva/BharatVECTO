@@ -202,6 +202,7 @@ Public Class JSONFileWriter
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
 				{"SavedInDeclMode", Cfg.DeclMode},
 				{"VehCat", vehicle.VehicleCategory.ToString()},
+				{"LegislativeClass", vehicle.LegislativeClass.ToString()},
 				{"CurbWeight", vehicle.CurbMassChassis.Value()},
 				{"CurbWeightExtra", vehicle.CurbMassExtra.Value()},
 				{"Loading", vehicle.Loading.Value()},

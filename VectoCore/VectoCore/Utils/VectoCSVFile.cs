@@ -38,6 +38,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using DocumentFormat.OpenXml.Spreadsheet;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -111,19 +112,13 @@ namespace TUGraz.VectoCore.Utils
 				TrimWhiteSpace = true
 			};
 
-			string[] colsWithoutComment = { };
-
-			try {
-				var fields = p.ReadFields();
-				if (fields == null) {
-					throw new CSVReadException("CSV Read Error: File was empty.");
-				}
-				colsWithoutComment = fields
-					.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment, StringComparison.Ordinal)) : l)
-					.ToArray();
-			} catch (ArgumentNullException) {
+			var hdrFields = p.ReadFields();
+			if (hdrFields == null) {
 				throw new CSVReadException("CSV Read Error: File was empty.");
 			}
+			var colsWithoutComment = hdrFields
+				.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment, StringComparison.Ordinal)) : l)
+				.ToArray();
 
 			double tmp;
 			var columns = colsWithoutComment
@@ -142,17 +137,10 @@ namespace TUGraz.VectoCore.Utils
 				columns = colsWithoutComment.Select((_, i) => i.ToString()).ToList();
 			}
 
-			//var table = new DataTable();
-			foreach (var col in columns) {
-				table.Columns.Add(col);
-			}
-
-			if (p.EndOfData) {
-				return;
-			}
+			columns.ForEach(col => table.Columns.Add(col));
 
 			var lineNumber = 1;
-			do {
+			while (!p.EndOfData) {
 				string[] cells = { };
 				if (firstLineIsData) {
 					cells = colsWithoutComment;
@@ -179,7 +167,7 @@ namespace TUGraz.VectoCore.Utils
 						string.Format("Line {0}: The data format of a value is not correct. {1}", lineNumber, e.Message), e);
 				}
 				lineNumber++;
-			} while (!p.EndOfData);
+			}
 		}
 
 		/// <summary>
