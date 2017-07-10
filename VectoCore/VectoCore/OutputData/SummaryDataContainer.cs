@@ -107,6 +107,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public const string HDV_CO2_VEHICLE_CLASS = "HDV CO2 vehicle class [-]";
 		public const string TOTAL_VEHICLE_MASS = "Total vehicle mass [kg]";
+		public const string CD_x_A_DECLARED = "Declared CdxA [m²]";
 		public const string CD_x_A = "CdxA [m²]";
 		//public const string ROLLING_RESISTANCE_COEFFICIENT = "weighed RRC [-]";
 		public const string R_DYN = "r_dyn [m]";
@@ -228,6 +229,7 @@ namespace TUGraz.VectoCore.OutputData
 				Tuple.Create(ENGINE_BF_COLD_HOT, typeof(double)),
 				Tuple.Create(ENGINE_CF_REG_PER, typeof(double)),
 				Tuple.Create(ENGINE_ACTUAL_CORRECTION_FACTOR, typeof(double)),
+				Tuple.Create(CD_x_A_DECLARED, typeof(SI)),
 				Tuple.Create(CD_x_A, typeof(SI)),
 				Tuple.Create(ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER, typeof(double)),
 				Tuple.Create(ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER, typeof(double)),
@@ -535,6 +537,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[ENGINE_CF_REG_PER] = runData.EngineData.CorrectionFactorRegPer;
 			row[ENGINE_ACTUAL_CORRECTION_FACTOR] = runData.EngineData.FuelConsumptionCorrectionFactor;
 
+			row[CD_x_A_DECLARED] = runData.AirdragData.DeclaredAirdragArea;
 			row[CD_x_A] = runData.AirdragData.CrossWindCorrectionCurve.AirDragArea;
 
 			row[ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER] =
