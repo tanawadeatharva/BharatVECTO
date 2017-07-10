@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		[TestCase(200),
 		TestCase(0),
-		TestCase(3000),]
+		TestCase(13000),]
 		public void PT1ExceptionsTest(double rpm)
 		{
 			// EXTRAPOLATE 
