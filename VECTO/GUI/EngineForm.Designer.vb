@@ -105,6 +105,7 @@ Partial Class EngineForm
 		Me.Label17 = New System.Windows.Forms.Label()
 		Me.Label18 = New System.Windows.Forms.Label()
 		Me.cbFuelType = New System.Windows.Forms.ComboBox()
+		Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -575,7 +576,7 @@ Partial Class EngineForm
 		Me.PicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
 		Me.PicBox.Location = New System.Drawing.Point(499, 28)
 		Me.PicBox.Name = "PicBox"
-		Me.PicBox.Size = New System.Drawing.Size(474, 425)
+		Me.PicBox.Size = New System.Drawing.Size(474, 392)
 		Me.PicBox.TabIndex = 40
 		Me.PicBox.TabStop = False
 		'
@@ -707,6 +708,14 @@ Partial Class EngineForm
 		Me.cbFuelType.Size = New System.Drawing.Size(143, 21)
 		Me.cbFuelType.TabIndex = 51
 		'
+		'lblEngineCharacteristics
+		'
+		Me.lblEngineCharacteristics.AutoSize = True
+		Me.lblEngineCharacteristics.Location = New System.Drawing.Point(500, 433)
+		Me.lblEngineCharacteristics.Name = "lblEngineCharacteristics"
+		Me.lblEngineCharacteristics.Size = New System.Drawing.Size(0, 13)
+		Me.lblEngineCharacteristics.TabIndex = 52
+		'
 		'EngineForm
 		'
 		Me.AcceptButton = Me.ButOK
@@ -714,6 +723,7 @@ Partial Class EngineForm
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
 		Me.ClientSize = New System.Drawing.Size(985, 508)
+		Me.Controls.Add(Me.lblEngineCharacteristics)
 		Me.Controls.Add(Me.cbFuelType)
 		Me.Controls.Add(Me.Label18)
 		Me.Controls.Add(Me.tbMaxTorque)
@@ -842,4 +852,5 @@ Partial Class EngineForm
 	Friend WithEvents Label17 As System.Windows.Forms.Label
 	Friend WithEvents Label18 As System.Windows.Forms.Label
 	Friend WithEvents cbFuelType As System.Windows.Forms.ComboBox
+	Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
 End Class
