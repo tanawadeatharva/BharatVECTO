@@ -128,6 +128,7 @@ Partial Class VectoJobForm
 		Me.TbGbxTxt = New System.Windows.Forms.TextBox()
 		Me.TbMass = New System.Windows.Forms.TextBox()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+		Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
 		Me.TabPgGen.SuspendLayout()
 		Me.GrCycles.SuspendLayout()
 		Me.GrAux.SuspendLayout()
@@ -1093,7 +1094,7 @@ Partial Class VectoJobForm
 		Me.PicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
 		Me.PicBox.Location = New System.Drawing.Point(542, 266)
 		Me.PicBox.Name = "PicBox"
-		Me.PicBox.Size = New System.Drawing.Size(390, 327)
+		Me.PicBox.Size = New System.Drawing.Size(390, 296)
 		Me.PicBox.TabIndex = 36
 		Me.PicBox.TabStop = False
 		'
@@ -1145,6 +1146,14 @@ Partial Class VectoJobForm
 		Me.TbMass.Size = New System.Drawing.Size(50, 20)
 		Me.TbMass.TabIndex = 3
 		'
+		'lblEngineCharacteristics
+		'
+		Me.lblEngineCharacteristics.AutoSize = True
+		Me.lblEngineCharacteristics.Location = New System.Drawing.Point(542, 565)
+		Me.lblEngineCharacteristics.Name = "lblEngineCharacteristics"
+		Me.lblEngineCharacteristics.Size = New System.Drawing.Size(0, 13)
+		Me.lblEngineCharacteristics.TabIndex = 37
+		'
 		'VectoJobForm
 		'
 		Me.AcceptButton = Me.ButOK
@@ -1152,6 +1161,7 @@ Partial Class VectoJobForm
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.ButCancel
 		Me.ClientSize = New System.Drawing.Size(944, 646)
+		Me.Controls.Add(Me.lblEngineCharacteristics)
 		Me.Controls.Add(Me.TbHVCclass)
 		Me.Controls.Add(Me.TbMass)
 		Me.Controls.Add(Me.TbAxleConf)
@@ -1307,4 +1317,5 @@ Partial Class VectoJobForm
 	Friend WithEvents Label8 As System.Windows.Forms.Label
 	Friend WithEvents Label15 As System.Windows.Forms.Label
 	Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+	Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
 End Class

@@ -1221,6 +1221,7 @@ lbDlog:
 		Dim pmax As Double
 
 		Dim engine As IEngineEngineeringInputData = Nothing
+		lblEngineCharacteristics.Text = ""
 		Dim engineFile As String =
 				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbENG.Text), TbENG.Text)
 		If File.Exists(engineFile) Then
@@ -1284,6 +1285,12 @@ lbDlog:
 		s.Color = Color.Red
 		s.Name = "Map"
 		chart.Series.Add(s)
+
+		Dim engineCharacteristics As String =
+				String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",
+							fullLoadCurve.MaxTorque.Value(), fullLoadCurve.MaxPower.Value() / 1000, fullLoadCurve.RatedSpeed.AsRPM,
+							fullLoadCurve.N95hSpeed.AsRPM)
+		lblEngineCharacteristics.Text = engineCharacteristics
 	End Sub
 
 	Private Sub UpdateVehiclePic()

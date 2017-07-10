@@ -385,6 +385,7 @@ Public Class EngineForm
 		Dim fullLoadCurve As EngineFullLoadCurve = Nothing
 		Dim fcMap As FuelConsumptionMap = Nothing
 
+		Dim engineCharacteristics As String = ""
 
 		PicBox.Image = Nothing
 
@@ -433,6 +434,11 @@ Public Class EngineForm
 			series.Color = Color.Blue
 			series.Name = "Motoring (" & Path.GetFileNameWithoutExtension(TbMAP.Text) & ")"
 			chart.Series.Add(series)
+
+			engineCharacteristics +=
+				String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",
+							fullLoadCurve.MaxTorque.Value(), fullLoadCurve.MaxPower.Value() / 1000, fullLoadCurve.RatedSpeed.AsRPM,
+							fullLoadCurve.N95hSpeed.AsRPM)
 		End If
 
 		If Not fcMap Is Nothing Then
@@ -475,6 +481,7 @@ Public Class EngineForm
 
 
 		PicBox.Image = img
+		lblEngineCharacteristics.Text = engineCharacteristics
 	End Sub
 
 
