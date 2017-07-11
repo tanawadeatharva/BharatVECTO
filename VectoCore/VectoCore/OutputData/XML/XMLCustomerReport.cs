@@ -62,12 +62,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XMLCustomerReport()
 		{
 			di = "http://www.w3.org/2000/09/xmldsig#";
-			tns = "urn:tugraz:ivt:VectoAPI:COCOutput:v0.4";
+			tns = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.4";
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			Results = new XElement(tns + "Results");
 		}
 
-		public void Initialize(VectoRunData modelData, Segment segment)
+		public void Initialize(VectoRunData modelData)
 		{
 			VehiclePart.Add(
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
-				new XElement(tns + "VehicleGroup", segment.VehicleClass.GetClassNumber()),
+				new XElement(tns + "VehicleGroup", modelData.VehicleData.VehicleClass.GetClassNumber()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, modelData.VehicleData.GrossVehicleWeight.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, modelData.VehicleData.CurbWeight.ToXMLFormat(0)),
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			foreach (var resultEntry in entry.ModData) {
 				allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
 				Results.Add(new XElement(tns + "Result",
-					new XAttribute("status", resultEntry.Value.Status.ToString().ToLower()),
+					new XAttribute("status", resultEntry.Value.Status == VectoRun.Status.Success ? "success" : "error"),
 					new XElement(tns + "Mission", entry.Mission.ToXMLFormat()),
 					GetResults(resultEntry)));
 			}
@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				case VectoRun.Status.Canceled:
 				case VectoRun.Status.Aborted:
 					return new object[] {
-						new XElement("Error", resultEntry.Value.Error)
+						new XElement(tns + "Error", resultEntry.Value.Error)
 					};
 				default:
 					throw new ArgumentOutOfRangeException();
@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute("xmlns", tns),
 				new XAttribute(XNamespace.Xmlns + "di", di),
 				new XAttribute(xsi + "schemaLocation",
-					string.Format("{0} {1}VectoCOC.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl)),
+					string.Format("{0} {1}VectoOutputCustomer.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl)),
 				new XElement(tns + "Data",
 					vehicle,
 					new XElement(tns + "ResultDataSignature", resultSignature),

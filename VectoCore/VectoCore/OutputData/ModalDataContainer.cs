@@ -63,8 +63,19 @@ namespace TUGraz.VectoCore.OutputData
 
 		public VectoRun.Status RunStatus { get; protected set; }
 
-		public string Error { get { return SimException == null ? null : SimException.Message; } }
-		public string StackTrace { get { return SimException == null ? null : SimException.StackTrace; } }
+		public string Error
+		{
+			get { return SimException == null ? null : SimException.Message; }
+		}
+
+		public string StackTrace
+		{
+			get {
+				return SimException == null
+					? null
+					: (SimException.StackTrace ?? (SimException.InnerException != null ? SimException.InnerException.StackTrace : null));
+			}
+		}
 
 		public bool WriteAdvancedAux { get; set; }
 
@@ -74,7 +85,8 @@ namespace TUGraz.VectoCore.OutputData
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
 			bool writeEngineOnly, params IModalDataFilter[] filter)
 			: this(
-				runData.JobRunId, runData.JobName, runData.Cycle.Name, runData.EngineData.FuelType, runData.ModFileSuffix, writer, addReportResult,
+				runData.JobRunId, runData.JobName, runData.Cycle.Name, runData.EngineData.FuelType, runData.ModFileSuffix, writer,
+				addReportResult,
 				writeEngineOnly, filter) {}
 
 		protected ModalDataContainer(int jobRunId, string runName, string cycleName, FuelType fuelType, string runSuffix,
@@ -111,11 +123,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public FuelData.Entry FuelData { get; internal set; }
 
-		public void Finish(VectoRun.Status runStatus)
+		public void Finish(VectoRun.Status runStatus, Exception exception = null)
 		{
 			var dataColumns = new List<ModalResultField> { ModalResultField.time };
 
 			RunStatus = runStatus;
+			SimException = exception;
 
 			if (!_writeEngineOnly) {
 				dataColumns.AddRange(new[] {
@@ -238,7 +251,8 @@ namespace TUGraz.VectoCore.OutputData
 					RunSuffix += "_" + filter.ID;
 					filteredData = filter.Filter(filteredData);
 				}
-				_writer.WriteModData(JobRunId, RunName, CycleName, RunSuffix, new DataView(filteredData).ToTable(false, strCols.ToArray()));
+				_writer.WriteModData(JobRunId, RunName, CycleName, RunSuffix,
+					new DataView(filteredData).ToTable(false, strCols.ToArray()));
 			}
 
 			_addReportResult(this);
@@ -323,9 +337,8 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public void FinishSimulation(Exception exception)
+		public void FinishSimulation()
 		{
-			SimException = exception;
 			//Data.Clear(); //.Rows.Clear();
 			Data = null;
 			CurrentRow = null;

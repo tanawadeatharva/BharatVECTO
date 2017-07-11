@@ -75,17 +75,27 @@ namespace TUGraz.VectoCore.Tests.Utils
 			CurrentRow = Data.NewRow();
 		}
 
-		public FuelData.Entry FuelData { get { return VectoCore.Models.Declaration.FuelData.Diesel; } }
+		public FuelData.Entry FuelData
+		{
+			get { return VectoCore.Models.Declaration.FuelData.Diesel; }
+		}
 
 		public VectoRun.Status RunStatus
 		{
 			get { return VectoRun.Status.Success; }
 		}
 
-		public string Error { get { return null; } }
-		public string StackTrace { get { return null; } }
+		public string Error
+		{
+			get { return null; }
+		}
 
-		public void Finish(VectoRun.Status runStatus) {}
+		public string StackTrace
+		{
+			get { return null; }
+		}
+
+		public void Finish(VectoRun.Status runStatus, Exception exception = null) {}
 
 		public bool WriteModalResults { get; set; }
 
@@ -130,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		public void FinishSimulation(Exception exception)
+		public void FinishSimulation()
 		{
 			Data.Rows.Clear();
 		}

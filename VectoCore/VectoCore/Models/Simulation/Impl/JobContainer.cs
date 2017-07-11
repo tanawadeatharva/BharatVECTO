@@ -137,11 +137,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void WaitFinished()
 		{
-			try {
-				Task.WaitAll(Runs.Select(r => r.RunTask).ToArray());
-			} catch (Exception) {
-				// ignored
-			}
+			Task.WaitAll(Runs.Select(r => r.RunTask).ToArray());
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
@@ -178,16 +174,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public class ProgressEntry
 		{
+			// unique identifier of the simulation run
 			public int RunId;
+			// job-local identifier of the simulation run
 			public int JobRunId;
+
 			public string RunName;
+
 			public double Progress;
+
 			public double ExecTime;
+
 			public Exception Error;
+
 			public bool Canceled;
+
 			public bool Success;
+
 			public bool Done;
+
 			public string CycleName;
+
 			public string RunSuffix;
 		}
 
@@ -214,11 +221,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						ExecException = ex;
 						throw;
 					} finally {
-					stopWatch.Stop();
-					Success = Run.FinishedWithoutErrors && ExecException == null;
-					Done = true;
-					ExecTime = stopWatch.Elapsed.TotalMilliseconds;
-					JobContainer.JobCompleted();
+						stopWatch.Stop();
+						Success = Run.FinishedWithoutErrors && ExecException == null;
+						Done = true;
+						ExecTime = stopWatch.Elapsed.TotalMilliseconds;
+						JobContainer.JobCompleted();
 					}
 				});
 			}

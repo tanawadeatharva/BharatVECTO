@@ -162,10 +162,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 
 
-		protected override void DoInitializeReport(VectoRunData modelData, Segment segment)
+		public override void InitializeReport(VectoRunData modelData)
 		{
-			_manufacturerReport.Initialize(modelData, segment);
-			_customerReport.Initialize(modelData, segment);
+			_manufacturerReport.Initialize(modelData);
+			_customerReport.Initialize(modelData);
 		}
 
 
