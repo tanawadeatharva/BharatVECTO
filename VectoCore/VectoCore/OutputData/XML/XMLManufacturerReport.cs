@@ -49,7 +49,7 @@ using TUGraz.VectoHashing;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
-	public class XMLFullReport
+	public class XMLManufacturerReport
 	{
 		protected XElement VehiclePart;
 
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected XNamespace di;
 		private bool allSuccess = true;
 
-		public XMLFullReport()
+		public XMLManufacturerReport()
 		{
 			di = "http://www.w3.org/2000/09/xmldsig#";
 			tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.4";
