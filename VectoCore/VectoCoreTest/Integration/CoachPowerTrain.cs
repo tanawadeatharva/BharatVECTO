@@ -96,6 +96,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var airDragData = CreateAirdragData();
 
 			var runData = new VectoRunData() {
+				JobRunId = 0,
 				VehicleData = vehicleData,
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,

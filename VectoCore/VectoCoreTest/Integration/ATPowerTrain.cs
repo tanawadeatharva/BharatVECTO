@@ -95,6 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
 			var runData = new VectoRunData() {
+				JobRunId = 0,
 				AxleGearData = axleGearData,
 				VehicleData = vehicleData,
 				AirdragData = airdragData,

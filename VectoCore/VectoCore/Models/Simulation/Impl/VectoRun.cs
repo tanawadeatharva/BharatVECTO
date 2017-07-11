@@ -76,6 +76,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Container.RunData.ModFileSuffix; }
 		}
 
+		public int JobRunIdentifier
+		{
+			get { return Container.RunData.JobRunId; }
+		}
+
 		public double Progress
 		{
 			get { return CyclePort.Progress; }

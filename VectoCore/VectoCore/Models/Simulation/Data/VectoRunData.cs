@@ -101,6 +101,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public XElement InputDataHash { get; internal set; }
 
+		public int JobRunId { get; internal set; }
+
 		public class AuxData
 		{
 			// ReSharper disable once InconsistentNaming

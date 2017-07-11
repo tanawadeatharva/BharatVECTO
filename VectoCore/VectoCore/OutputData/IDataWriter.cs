@@ -31,6 +31,7 @@
 
 using System.Data;
 using System.IO;
+using System.Xml.Linq;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -38,9 +39,9 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IModalDataWriter
 	{
-		void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData);
+		void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData);
 	}
-	
+
 	public interface ISummaryWriter
 	{
 		void WriteSumData(DataTable sortedAndFilteredTable);
@@ -48,13 +49,15 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IReportWriter
 	{
-		Stream WriteStream(ReportType type);
+		void WriteReport(ReportType type, XDocument data);
+
+		void WriteReport(ReportType type, Stream data);
 	}
 
 	public enum ReportType
 	{
 		DeclarationReportPdf,
-		DeclarationReportXMLFulll,
-		DeclarationReportXMLCOC
+		DeclarationReportManufacturerXML,
+		DeclarationReportCustomerXML
 	}
 }

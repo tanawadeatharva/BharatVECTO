@@ -162,6 +162,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Runs.ToDictionary(
 				r => r.Run.RunIdentifier,
 				r => new ProgressEntry {
+					RunId = r.Run.RunIdentifier,
+					JobRunId = r.Run.JobRunIdentifier,
 					RunName = r.Run.RunName,
 					CycleName = r.Run.CycleName,
 					RunSuffix = r.Run.RunSuffix,
@@ -176,6 +178,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public class ProgressEntry
 		{
+			public int RunId;
+			public int JobRunId;
 			public string RunName;
 			public double Progress;
 			public double ExecTime;
@@ -208,12 +212,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					} catch (Exception ex) {
 						Log.Error(ex, "Error during simulation run!");
 						ExecException = ex;
-					}
+						throw;
+					} finally {
 					stopWatch.Stop();
 					Success = Run.FinishedWithoutErrors && ExecException == null;
 					Done = true;
 					ExecTime = stopWatch.Elapsed.TotalMilliseconds;
 					JobContainer.JobCompleted();
+					}
 				});
 			}
 
