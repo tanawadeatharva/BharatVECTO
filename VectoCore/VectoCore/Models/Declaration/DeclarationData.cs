@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				};
 
 				public static readonly MeterPerSecond MinSpeed = 50.KMPHtoMeterPerSecond();
-				public static readonly MeterPerSecond OverSpeed = 5.KMPHtoMeterPerSecond();
+				public static readonly MeterPerSecond OverSpeed = 2.5.KMPHtoMeterPerSecond();
 				public static readonly MeterPerSecond UnderSpeed = 5.KMPHtoMeterPerSecond();
 			}
 
