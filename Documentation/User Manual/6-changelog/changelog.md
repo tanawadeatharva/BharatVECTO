@@ -1,10 +1,69 @@
 #Changelog
 
+**VECTO 3.2.0**
+
+***Build 925 (2017-07-13)***
+
+- Improvements
+    + [VECTO-366] added EMS vehicle configuration, EMS is only simulated when engine rated power > 300kW
+    + [VECTO-463] add pneumatic system technology 'vacuum pump'
+    + [VECTO-465] change RRC value of trailers (declaration mode) from 0.00555 to 0.0055 (due to limits in user interface)
+    + [VECTO-477] AT Gearbox, powershift losses: remove inertia factor
+    + [VECTO-471] update cross-wind correction model: height-dependent wind speed (see Excel spreadsheet in User Manual folder for details)
+    + [VECTO-367] Add Vehicle Design Speed to segmentation table
+    + [VECTO-470] Add XML reading and export functionality
+    + [VECTO-486] Adding hashing library
+    + [VECTO-469] Limit engine max torque (either due to vehicle or gearbox limits), limit gearbox input speed
+    + [VECTO-466] Update vehicle payloads: 10% loaded and reference load are simulated
+    + [VECTO-467] Add generic PTO activation in municipal cycle
+    + [VECTO-468] Add PTO losses (idle) in declaration mode
+    + [VECTO-479] Added PTO option 'only one engaged gearwheel above oil level' with 0 losses
+    + [VECTO-483] Adapt CdxA supplement for additional EMS trailers
+    + [VECTO-494] Implementation of different fuel types
+    + [VECTO-502] Implementing standard values for air-drag area (if not measured)
+    + [VECTO-501] Implement engine idle speed set in vehicle (must be higher than engine's idle speed value)
+    + [VECTO-504] Adding HVAC technology 'none'
+    + [VECTO-489] Extrapolate gearbox lossmaps (required when torque limitation by gearbox is ignored)
+    + [VECTO-505] Implement AT transmissions in declaration mode
+    + [VECTO-507] Allow to ignore validation of model data when starting a simulation (significant improvement on simulation startup time - about 10s)
+    + [VECTO-506] modified method how torque-converter characteristics in drag is extended. allow drag-values in the input, only add one point at a high speed ratio
+    + [VECTO-509] Add axle-type (vehicle driven, vehicle non-driven, trailer) to GUI
+    + [VECTO-511] Add engine idle speed to Vehicle input form (GUI)
+    + [VECTO-510] Write XML reports (manufacturer, customer information) in declaration mode
+    + [VECTO-474] new driving cycles for Municipal and Regional Delivery
+    + [VECTO-522] step-up ratio for using torque converter in second gear set to 1.85 for busses (still 1.8 for trucks)
+    + [VECTO-525] remove info-box with max loading in GUI
+    + [VECTO-531] Payload calculation: limit truck payload to the truck's max payload. (earlier versions only limited the total payload of truc + trailer to the total max. payload, i.e. allowed to shifted loading from truck to the trailer)
+    + [VECTO-533] allow second driven axle, rdyn is calculated as average of both driven axles
+    + [VECTO-537] new Suburban driving cycles
+    + [VECTO-541] increase declaration mode PT1 curve to higher speeds (2500 is too low for some engines)
+
+
+
+- Bugfixes:
+    + [VECTO-462] fix: decision if PTO cycle is simulated
+    + [VECTO-473] fix: adapt range for validation of torque converter characteristics
+    + [VECTO-464] fix: extrapolation of engine full-load curve gives neg. max. torque. Limit engine speed to n95h
+    + [VECTO-480] fix: a_pos in .vsum was less than zero
+    + [VECTO-487] fix: Duration of PTO cycle was computed incorrectly if PTO cycle does not start at t=0
+    + [VECTO-514] fix: sort entries in .vsum numerically, not lexically
+    + [VECTO-516] fix: consider axlegear losses for estimation of acceleration after gearshifts
+    + [VECTO-517] fix: valid shift polygon was considered invalid when extended to very high torque ranges
+    + [VECTO-424] fix: VectoCore.dll could not be found when the current working directory is different to the directory of the vectocmd.exe
+    + [VECTO-425] fix: vectocmd.exe - check if the output is redirected, and skip updating of the progress bar when this is the case
+    + [VECTO-426] fix: vectocmd.exe - log errors to STDERR
+    + [VECTO-519] fix: computation of n95h fails for a valid full-load curve due to numerical inaccuracy. add tolerance when searching for solutions
+    + [VECTO-520] fix: gearashift count in vsum is 0
+
+
+
+
+
 **VECTO 3.1.2**
 
 ***Build 810 (2017-03-21)***
 
-- Improvements
+- Improvements:
     + [VECTO-445] Additional columns in vsum file
     + Allow splitting shift losses among multiple simulation intervals
     + Allow coasting overspeed only if vehicle speed > 0
