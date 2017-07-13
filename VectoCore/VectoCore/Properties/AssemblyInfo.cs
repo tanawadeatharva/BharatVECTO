@@ -37,7 +37,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("European Union")]
 [assembly: AssemblyProduct("VectoCore")]
-[assembly: AssemblyCopyright("Copyright © 2012 - 2016")]
+[assembly: AssemblyCopyright("Copyright © 2012 - 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

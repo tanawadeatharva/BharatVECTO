@@ -38,9 +38,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("VectoCommon")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Europan Union")]
 [assembly: AssemblyProduct("VectoCommon")]
-[assembly: AssemblyCopyright("Copyright ©  2016")]
+[assembly: AssemblyCopyright("Copyright ©  2012-2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
