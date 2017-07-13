@@ -1,9 +1,22 @@
 
+Platform Requirements
+=====================
+
+Hardware Requirements
+
+   + Microsoft Windows PC running Microsoft Windows 7 or later
+
+Software Requirements
+
+   + Microsoft .NET Framework 4.5
+
+
+
 User Manual
 ====================================
 ![](pics/VECTOlarge.png)\
 \
-Version: VECTO 3.1 / VectoCore 3.1.0 / VectoCmd 3.1.0
+Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0
 
 ---
 
@@ -21,6 +34,6 @@ This User Manual consists of 4 Parts:
 - [Input and Output](#input-and-output):
     : Describes the input and output file formats.
 
-This user manual describes verson 3.1.x of Vecto. 
+This user manual describes verson 3.2.x of Vecto. 
 
 
