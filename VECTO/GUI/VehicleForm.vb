@@ -160,7 +160,7 @@ Public Class VehicleForm
 		Catch
 			' no segment found - ignore
 		End Try
-		If s0.found Then
+		If s0.Found Then
 			_hdVclass = s0.VehicleClass.GetClassNumber()
 			Dim axleCount As Integer = s0.Missions(0).AxleWeightDistribution.Count()
 			Dim i0 As Integer = LvRRC.Items.Count
@@ -454,7 +454,7 @@ Public Class VehicleForm
 		veh.Mass = TbMass.Text.ToDouble(0)
 		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
 		veh.Loading = TbLoad.Text.ToDouble(0)
-
+		veh.VehicleHeight = tbVehicleHeight.Text.ToDouble(0)
 		veh.CdA0 = If(String.IsNullOrWhiteSpace(TBcdA.Text), Double.NaN, TBcdA.Text.ToDouble(0))
 		veh.legClass = CType(cbLegislativeClass.SelectedValue, LegislativeClass)
 		veh.DynamicTyreRadius = TBrdyn.Text.ToDouble(0)
@@ -544,6 +544,9 @@ Public Class VehicleForm
 				LbCdMode.Text = ""
 
 		End Select
+
+		tbVehicleHeight.Enabled = Not Cfg.DeclMode AndAlso
+								CType(CbCdMode.SelectedValue, CrossWindCorrectionMode) = CrossWindCorrectionMode.DeclarationModeCorrection
 
 		If Not Cfg.DeclMode Then
 			TbCdFile.Enabled = bEnabled

@@ -129,6 +129,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			}
 		}
 
+		public Meter Height
+		{
+			get {
+				if (ElementExists(Helper.Query("VehicleHeight"))) {
+					return GetDoubleElementValue("VehicleHeight").SI<Meter>();
+				}
+				return null;
+			}
+		}
+
 
 		public AxleConfiguration AxleConfiguration
 		{
