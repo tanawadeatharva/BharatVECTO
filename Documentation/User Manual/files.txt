@@ -31,6 +31,7 @@
 3-simulation-models/Transmission_Losses.md
 3-simulation-models/Gearbox_AT.md
 3-simulation-models/GearShift.md
+3-simulation-models/Gearshift_AMT.md
 3-simulation-models/Gearshift_AT.md
 3-simulation-models/Engine_Speed_Torque_limitations.md
 3-simulation-models/TC.md

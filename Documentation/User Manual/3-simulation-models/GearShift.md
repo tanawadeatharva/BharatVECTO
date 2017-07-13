@@ -1,4 +1,4 @@
-##Gear Shift Model (MT, AMT)
+##Gear Shift Model
 
 
 The Gear Shift Model is based on shift curves that define the engine speed for up- and down- shifting as a function of engine torque. As soon as the engine operation point passes one of the shift curves a gear change is initiated.

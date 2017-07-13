@@ -1,4 +1,4 @@
-##Gear shift rules for AT Gearbox
+##Gear Shift Rules for AT Gearbox
 
 The gear shift rules for automatic gearboxes differ from AMT and MT.
 
