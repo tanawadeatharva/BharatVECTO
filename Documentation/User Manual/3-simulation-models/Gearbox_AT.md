@@ -31,9 +31,7 @@ Model parameters: shift time ($t_s$), inertia factor ($f_I$)
 
 ![Engine speed, clutch speed during power-shift](pics/powershiftlosses.png)
 
-$T_{PS,loss} = |(T_{GBX,in} + T_{inertia}) * \Delta\omega_F| * t_s / dt$
-
-$T_{inertia} = f_I * I_{engine} * \Delta\omega_I / dt$
+$T_{PS,loss} = |T_{GBX,in}  * \Delta\omega_F| * t_s / dt$
 
 $\Delta\omega_I = \omega_{engine,1} - \omega_{engine,2}$
 

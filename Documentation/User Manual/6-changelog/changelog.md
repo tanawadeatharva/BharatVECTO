@@ -18,7 +18,7 @@
     + [VECTO-467] Add generic PTO activation in municipal cycle
     + [VECTO-468] Add PTO losses (idle) in declaration mode
     + [VECTO-479] Added PTO option 'only one engaged gearwheel above oil level' with 0 losses
-    + [VECTO-483] Adapt CdxA supplement for additional EMS trailers
+    + [VECTO-483] Adapt CdxA supplement for additional trailers
     + [VECTO-494] Implementation of different fuel types
     + [VECTO-502] Implementing standard values for air-drag area (if not measured)
     + [VECTO-501] Implement engine idle speed set in vehicle (must be higher than engine's idle speed value)
