@@ -60,6 +60,7 @@ Partial Class MainForm
 		Me.TabPgOptions = New System.Windows.Forms.TabPage()
 		Me.PanelOptAllg = New System.Windows.Forms.Panel()
 		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+		Me.cbActVmod = New System.Windows.Forms.CheckBox()
 		Me.cbValidateRunData = New System.Windows.Forms.CheckBox()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
 		Me.ChBoxModOut = New System.Windows.Forms.CheckBox()
@@ -114,7 +115,6 @@ Partial Class MainForm
 		Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-		Me.cbActVmod = New System.Windows.Forms.CheckBox()
 		Me.StatusBAR.SuspendLayout()
 		Me.TabControl1.SuspendLayout()
 		Me.TabPageGEN.SuspendLayout()
@@ -392,6 +392,15 @@ Partial Class MainForm
 		Me.GroupBox3.TabIndex = 18
 		Me.GroupBox3.TabStop = False
 		Me.GroupBox3.Text = "Misc"
+		'
+		'cbActVmod
+		'
+		Me.cbActVmod.Location = New System.Drawing.Point(6, 41)
+		Me.cbActVmod.Name = "cbActVmod"
+		Me.cbActVmod.Size = New System.Drawing.Size(161, 63)
+		Me.cbActVmod.TabIndex = 18
+		Me.cbActVmod.Text = "Output values in vmod at beginning and end of simulation interval (EXPERT!)"
+		Me.cbActVmod.UseVisualStyleBackColor = True
 		'
 		'cbValidateRunData
 		'
@@ -802,15 +811,6 @@ Partial Class MainForm
 		Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
 		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
-		'
-		'cbActVmod
-		'
-		Me.cbActVmod.Location = New System.Drawing.Point(6, 41)
-		Me.cbActVmod.Name = "cbActVmod"
-		Me.cbActVmod.Size = New System.Drawing.Size(161, 63)
-		Me.cbActVmod.TabIndex = 18
-		Me.cbActVmod.Text = "Output values in vmod at beginning and end of simulation interval (EXPERT!)"
-		Me.cbActVmod.UseVisualStyleBackColor = True
 		'
 		'MainForm
 		'

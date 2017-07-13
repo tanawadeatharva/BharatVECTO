@@ -102,7 +102,7 @@ Public Class GearboxForm
 		TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
 		'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()									  ' cDeclaration.TqResv
+		TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()										  ' cDeclaration.TqResv
 		TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
 		TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
 		TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
@@ -911,10 +911,11 @@ Public Class GearboxForm
 		If (rDyn.IsEqual(0)) Then
 			Return Nothing
 		End If
-		Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(CType(CbGStype.SelectedValue, GearboxType), gear - 1,
-																					engine.FullLoadCurves(CType(gear, UInteger)), gears, engine,
-																					Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
-																					(rDyn))
+		Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(
+			CType(CbGStype.SelectedValue, GearboxType), gear - 1,
+			engine.FullLoadCurves(CType(gear, UInteger)), gears, engine,
+			Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
+			(rDyn))
 		Return shiftLines
 	End Function
 
@@ -926,7 +927,10 @@ Public Class GearboxForm
 			If _
 				gbx(i).SubItems(GearboxTbl.Ratio).Text <> "" AndAlso Double.TryParse(gbx(i).SubItems(GearboxTbl.Ratio).Text, value) _
 				Then
-				Dim maxSpeed As PerSecond = If(String.IsNullOrWhiteSpace(gbx(i).SubItems(GearboxTbl.MaxSpeed).Text), Nothing, gbx(i).SubItems(GearboxTbl.MaxSpeed).Text.ToDouble().RPMtoRad())
+				Dim maxSpeed As PerSecond =
+						If _
+						(String.IsNullOrWhiteSpace(gbx(i).SubItems(GearboxTbl.MaxSpeed).Text), Nothing,
+						gbx(i).SubItems(GearboxTbl.MaxSpeed).Text.ToDouble().RPMtoRad())
 				retVal.Add(
 					New TransmissionInputData() _
 							With {.Ratio = value, .MaxInputSpeed = maxSpeed})
@@ -974,6 +978,10 @@ Public Class GearboxForm
 	End Sub
 
 	Private Sub btnExportXML_Click(sender As Object, e As EventArgs) Handles btnExportXML.Click
+		If Not Cfg.DeclMode Then
+			MsgBox("XML Export is only supported in Declaration Mode")
+			Exit Sub
+		End If
 		If Not FolderFileBrowser.OpenDialog("") Then
 			Exit Sub
 		End If
@@ -991,6 +999,10 @@ Public Class GearboxForm
 	End Sub
 
 	Private Sub btnExportAxlGearXML_Click(sender As Object, e As EventArgs) Handles btnExportAxlGearXML.Click
+		If Not Cfg.DeclMode Then
+			MsgBox("XML Export is only supported in Declaration Mode")
+			Exit Sub
+		End If
 		If Not FolderFileBrowser.OpenDialog("") Then
 			Exit Sub
 		End If

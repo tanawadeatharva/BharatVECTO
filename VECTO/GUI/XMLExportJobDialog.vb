@@ -12,13 +12,13 @@ Public Class XMLExportJobDialog
 	Public Sub Initialize(data As IInputDataProvider)
 		Dim source As String
 		Dim allowSingleFile As Boolean
-		Dim eng As IEngineeringInputDataProvider = CType(data, IEngineeringInputDataProvider)
+		Dim eng As IEngineeringInputDataProvider = TryCast(data, IEngineeringInputDataProvider)
 		If (Not eng Is Nothing AndAlso Not eng.JobInputData().SavedInDeclarationMode) Then
 			source = eng.JobInputData().JobName
 			_mode = ExecutionMode.Engineering
 			allowSingleFile = True
 		Else
-			Dim decl As IDeclarationInputDataProvider = CType(data, IDeclarationInputDataProvider)
+			Dim decl As IDeclarationInputDataProvider = TryCast(data, IDeclarationInputDataProvider)
 			If (Not decl Is Nothing AndAlso decl.JobInputData().SavedInDeclarationMode) Then
 				source = decl.JobInputData().JobName
 				_mode = ExecutionMode.Declaration
