@@ -236,7 +236,7 @@ Public Class JSONFileWriter
 			body("CdA") = airdrag.AirDragArea.Value()
 		End If
 		If (Not IsNothing(vehicle.Height)) Then
-			body("VehicleHeight") = vehicle.Height
+			body("VehicleHeight") = vehicle.Height.Value()
 		End If
 		WriteFile(header, body, filename)
 	End Sub
