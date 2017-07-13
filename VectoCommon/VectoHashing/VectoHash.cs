@@ -189,7 +189,7 @@ namespace TUGraz.VectoHashing
 
 			query = component == VectoComponents.VectoCustomerInformation || component == VectoComponents.VectoOutput
 				? string.Format("*/*[local-name()='Data']/*[local-name()='ApplicationInformation']/*[local-name()='Date']")
-				: string.Format("*/*[local-name()='{0}']/*/*[local-name()='Date']", component);
+				: string.Format("*/*[local-name()='{0}']/*/*[local-name()='Date']", component.XMLElementName());
 			var dateNode = Document.SelectSingleNode(query);
 			if (dateNode == null) {
 				throw new Exception("Date-Element not found in input!");
