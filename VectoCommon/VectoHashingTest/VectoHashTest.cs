@@ -36,6 +36,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using System.Xml.XPath;
 using NUnit.Framework;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
@@ -274,6 +275,67 @@ namespace VectoHashingTest
 
 			var h2 = VectoHash.Load(destination);
 			Assert.IsTrue(h2.ValidateHash());
+		}
+
+		[TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 5),
+		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 10),
+		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 15),
+		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 20),
+		]
+		public void TestAddHashoDoNotOverwriteID(string file, int idLength)
+		{
+			var newid = "x" + Guid.NewGuid().ToString("n").Substring(0, idLength - 1);
+			var input = new XmlDocument();
+			input.Load(file);
+			var data = input.SelectSingleNode("//*[local-name()='Data']");
+			data.Attributes["id"].Value = newid;
+
+			var h = VectoHash.Load(input);
+			var r = h.AddHash();
+
+			var id = r.XPathSelectElement("//*[local-name()='Data']");
+			Assert.IsNotNull(id.Attribute("id"));
+			Assert.AreEqual(newid, id.Attribute("id").Value);
+		}
+
+		[TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 2),
+		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 3),
+		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml", 4)]
+		public void TestAddHashoDoOverwriteID(string file, int idLength)
+		{
+			var newid = "x" + Guid.NewGuid().ToString("n").Substring(0, idLength - 1);
+			var input = new XmlDocument();
+			input.Load(file);
+			var data = input.SelectSingleNode("//*[local-name()='Data']");
+			data.Attributes["id"].Value = newid;
+
+			var h = VectoHash.Load(input);
+			var r = h.AddHash();
+
+			var id = r.XPathSelectElement("//*[local-name()='Data']");
+			Assert.IsNotNull(id.Attribute("id"));
+			Assert.AreNotEqual(newid, id.Attribute("id").Value);
+		}
+
+		[TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml")]
+		public void TestReplaceDate(string file)
+		{
+			var input = new XmlDocument();
+			input.Load(file);
+			var dateNode = input.SelectSingleNode("//*[local-name()='Date']");
+			var date = XmlConvert.ToDateTime(dateNode.FirstChild.Value);
+
+			var h = VectoHash.Load(input);
+			var r = h.AddHash();
+
+			var newDateNode = r.XPathSelectElement("//*[local-name()='Date']");
+			var newDate = XmlConvert.ToDateTime(newDateNode.Value);
+
+			var now = DateTime.Now;
+
+			Assert.AreNotEqual(date.ToString(), newDate.ToString());
+			Assert.IsTrue(now - date > new TimeSpan(0, 0, 0, 1));
+			Assert.IsTrue(now - newDate < new TimeSpan(0, 0, 0, 1));
 		}
 
 		[TestCase(@"Testdata\XML\ToHash\vecto_engine_withhash-input.xml", "input data already contains a signature element"),

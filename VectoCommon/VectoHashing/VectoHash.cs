@@ -155,44 +155,27 @@ namespace TUGraz.VectoHashing
 
 		public XDocument AddHash()
 		{
-			if (Document.DocumentElement == null) {
-				throw new Exception("invalid input document");
-			}
-			IList<VectoComponents> components;
-			if (Document.DocumentElement.LocalName.Equals(XMLNames.VectoInputDeclaration)) {
-				components = GetContainigComponents();
-				if (components.Contains(VectoComponents.Vehicle)) {
-					throw new Exception("adding hash for Vehicle is not supported");
-				}
-				if (components.Count > 1) {
-					throw new Exception("input must not contain multiple components!");
-				}
-				if (components.Count == 0) {
-					throw new Exception("input does not contain a known component!");
-				}
-			} else if (Document.DocumentElement.LocalName.Equals("VectoOutput")) {
-				components = new List<VectoComponents>() { VectoComponents.VectoOutput };
-			} else if (Document.DocumentElement.LocalName.Equals("VectoCustomerInformation")) {
-				components = new List<VectoComponents>() { VectoComponents.VectoCustomerInformation };
-			} else {
-				throw new Exception("unknown document structure! neither input data nor output data format");
-			}
-			var query = string.Format("//*[local-name()='{0}']/*[local-name()='Data']", components[0].XMLElementName());
+			var component = GetComponentToHash();
+			var query = string.Format("//*[local-name()='{0}']/*[local-name()='Data']", component.XMLElementName());
 			var node = Document.SelectSingleNode(query);
 			if (node == null) {
-				throw new Exception(string.Format("'Data' element for component '{0}' not found!", components[0].XMLElementName()));
+				throw new Exception(string.Format("'Data' element for component '{0}' not found!", component.XMLElementName()));
 			}
-			query = string.Format("//*[local-name()='{0}']/*[local-name()='Signature']", components[0].XMLElementName());
+			query = string.Format("//*[local-name()='{0}']/*[local-name()='Signature']", component.XMLElementName());
 			var sigNodes = Document.SelectNodes(query);
 			if (sigNodes != null && sigNodes.Count > 0) {
 				throw new Exception("input data already contains a signature element");
 			}
 
 			var attributes = node.Attributes;
-			var id = components[0].HashIdPrefix() + Guid.NewGuid().ToString("n").Substring(0, 20);
+			var id = component.HashIdPrefix() + Guid.NewGuid().ToString("n").Substring(0, 20);
 			var idSet = false;
 			if (attributes != null && attributes[XMLNames.Component_ID_Attr] != null) {
-				attributes[XMLNames.Component_ID_Attr].Value = id;
+				if (attributes[XMLNames.Component_ID_Attr].Value.Length < 5) {
+					attributes[XMLNames.Component_ID_Attr].Value = id;
+				} else {
+					id = attributes[XMLNames.Component_ID_Attr].Value;
+				}
 				idSet = true;
 			}
 			if (!idSet) {
@@ -204,6 +187,16 @@ namespace TUGraz.VectoHashing
 				node.Attributes.Append(attr);
 			}
 
+			query = component == VectoComponents.VectoCustomerInformation || component == VectoComponents.VectoOutput
+				? string.Format("*/*[local-name()='Data']/*[local-name()='ApplicationInformation']/*[local-name()='Date']")
+				: string.Format("*/*[local-name()='{0}']/*/*[local-name()='Date']", component);
+			var dateNode = Document.SelectSingleNode(query);
+			if (dateNode == null) {
+				throw new Exception("Date-Element not found in input!");
+			}
+			dateNode.FirstChild.Value = XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc);
+
+
 			var hash = XMLHashProvider.ComputeHash(Document, id);
 			var sig = Document.CreateElement(XMLNames.DI_Signature, node.NamespaceURI);
 
@@ -213,6 +206,33 @@ namespace TUGraz.VectoHashing
 			sig.AppendChild(Document.ImportNode(hash.DocumentElement, true));
 			node.ParentNode.AppendChild(sig);
 			return Document.ToXDocument();
+		}
+
+		private VectoComponents GetComponentToHash()
+		{
+			if (Document.DocumentElement == null) {
+				throw new Exception("invalid input document");
+			}
+			if (Document.DocumentElement.LocalName.Equals(XMLNames.VectoInputDeclaration)) {
+				var components = GetContainigComponents();
+				if (components.Contains(VectoComponents.Vehicle)) {
+					throw new Exception("adding hash for Vehicle is not supported");
+				}
+				if (components.Count > 1) {
+					throw new Exception("input must not contain multiple components!");
+				}
+				if (components.Count == 0) {
+					throw new Exception("input does not contain a known component!");
+				}
+				return components.First();
+			}
+			if (Document.DocumentElement.LocalName.Equals("VectoOutput")) {
+				return VectoComponents.VectoOutput;
+			}
+			if (Document.DocumentElement.LocalName.Equals("VectoCustomerInformation")) {
+				return VectoComponents.VectoCustomerInformation;
+			}
+			throw new Exception("unknown document structure! neither input data nor output data format");
 		}
 
 		public string ReadHash()

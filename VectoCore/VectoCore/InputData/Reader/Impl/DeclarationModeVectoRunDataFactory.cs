@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					_segment.VehicleClass),
 				InputDataHash = InputDataProvider.XMLHash
 			};
-			Report.InitializeReport(powertrainConfig, _segment);
+			Report.InitializeReport(powertrainConfig);
 		}
 
 		public IEnumerable<VectoRunData> NextRun()

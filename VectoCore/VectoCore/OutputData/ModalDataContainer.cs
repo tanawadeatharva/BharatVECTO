@@ -54,6 +54,7 @@ namespace TUGraz.VectoCore.OutputData
 		private readonly IModalDataWriter _writer;
 		private readonly List<string> _additionalColumns = new List<string>();
 		private Exception SimException;
+		public int JobRunId { get; private set; }
 		public string RunName { get; private set; }
 		public string CycleName { get; private set; }
 		public string RunSuffix { get; private set; }
@@ -62,21 +63,33 @@ namespace TUGraz.VectoCore.OutputData
 
 		public VectoRun.Status RunStatus { get; protected set; }
 
-		public string Error { get { return SimException == null ? null : SimException.Message; } }
-		public string StackTrace { get { return SimException == null ? null : SimException.StackTrace; } }
+		public string Error
+		{
+			get { return SimException == null ? null : SimException.Message; }
+		}
+
+		public string StackTrace
+		{
+			get {
+				return SimException == null
+					? null
+					: (SimException.StackTrace ?? (SimException.InnerException != null ? SimException.InnerException.StackTrace : null));
+			}
+		}
 
 		public bool WriteAdvancedAux { get; set; }
 
 		public ModalDataContainer(string runName, FuelType fuel, IModalDataWriter writer, bool writeEngineOnly = false)
-			: this(runName, "", fuel, "", writer, _ => { }, writeEngineOnly) {}
+			: this(0, runName, "", fuel, "", writer, _ => { }, writeEngineOnly) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
 			bool writeEngineOnly, params IModalDataFilter[] filter)
 			: this(
-				runData.JobName, runData.Cycle.Name, runData.EngineData.FuelType, runData.ModFileSuffix, writer, addReportResult,
+				runData.JobRunId, runData.JobName, runData.Cycle.Name, runData.EngineData.FuelType, runData.ModFileSuffix, writer,
+				addReportResult,
 				writeEngineOnly, filter) {}
 
-		protected ModalDataContainer(string runName, string cycleName, FuelType fuelType, string runSuffix,
+		protected ModalDataContainer(int jobRunId, string runName, string cycleName, FuelType fuelType, string runSuffix,
 			IModalDataWriter writer,
 			Action<ModalDataContainer> addReportResult, bool writeEngineOnly, params IModalDataFilter[] filters)
 		{
@@ -84,6 +97,7 @@ namespace TUGraz.VectoCore.OutputData
 			RunName = runName;
 			CycleName = cycleName;
 			RunSuffix = runSuffix;
+			JobRunId = jobRunId;
 			_writer = writer;
 
 			FuelData = Models.Declaration.FuelData.Instance().Lookup(fuelType);
@@ -98,6 +112,7 @@ namespace TUGraz.VectoCore.OutputData
 			WriteAdvancedAux = false;
 		}
 
+
 		public bool HasTorqueConverter { get; set; }
 
 		public void CommitSimulationStep()
@@ -108,11 +123,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public FuelData.Entry FuelData { get; internal set; }
 
-		public void Finish(VectoRun.Status runStatus)
+		public void Finish(VectoRun.Status runStatus, Exception exception = null)
 		{
 			var dataColumns = new List<ModalResultField> { ModalResultField.time };
 
 			RunStatus = runStatus;
+			SimException = exception;
 
 			if (!_writeEngineOnly) {
 				dataColumns.AddRange(new[] {
@@ -235,7 +251,8 @@ namespace TUGraz.VectoCore.OutputData
 					RunSuffix += "_" + filter.ID;
 					filteredData = filter.Filter(filteredData);
 				}
-				_writer.WriteModData(RunName, CycleName, RunSuffix, new DataView(filteredData).ToTable(false, strCols.ToArray()));
+				_writer.WriteModData(JobRunId, RunName, CycleName, RunSuffix,
+					new DataView(filteredData).ToTable(false, strCols.ToArray()));
 			}
 
 			_addReportResult(this);
@@ -320,9 +337,8 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		public void FinishSimulation(Exception exception)
+		public void FinishSimulation()
 		{
-			SimException = exception;
 			//Data.Clear(); //.Rows.Clear();
 			Data = null;
 			CurrentRow = null;

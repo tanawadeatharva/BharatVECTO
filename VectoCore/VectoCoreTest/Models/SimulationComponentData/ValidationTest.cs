@@ -269,6 +269,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 
 			container.RunData = new VectoRunData {
+				JobRunId = 0,
 				VehicleData = vehicleData,
 				AirdragData = new AirdragData() {
 					CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
@@ -320,6 +321,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 
 			container.RunData = new VectoRunData {
+				JobRunId = 0,
 				GearboxData = gearboxData,
 				EngineData = engineData,
 				AxleGearData = axleGearData

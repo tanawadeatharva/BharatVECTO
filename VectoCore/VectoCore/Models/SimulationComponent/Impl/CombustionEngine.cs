@@ -590,9 +590,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						angularSpeed = angularSpeed.LimitTo(_engine.ModelData.IdleSpeed, _engine.EngineRatedSpeed);
 						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 					}).
-					Default(r => {
-						throw new UnexpectedResponseException("searching Idling point", r);
-					});
+					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });
 
 				return retVal;
 			}
@@ -649,9 +647,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							0.SI<NewtonMeter>(), angularSpeed);
 						retVal = RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), angularSpeed);
 					}).
-					Default(r => {
-						throw new UnexpectedResponseException("searching Idling point", r);
-					});
+					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });
 
 				return retVal;
 			}

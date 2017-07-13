@@ -137,8 +137,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public IEnumerable<IVectoRun> SimulationRuns()
 		{
 			var i = 0;
-
-
 			var warning1Hz = false;
 
 			foreach (var data in DataReader.NextRun()) {
@@ -148,6 +146,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Log.Error("Output filter for 1Hz results is only available for distance-based cycles!");
 					warning1Hz = true;
 				}
+				var current = i++;
+				data.JobRunId = current;
 				IModalDataContainer modContainer =
 					new ModalDataContainer(data, ModWriter,
 						addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
 							WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
 						};
-				var current = i++;
+				
 				var builder = new PowertrainBuilder(modContainer, modData => {
 					if (SumData != null) {
 						SumData.Write(modData, JobNumber, current, d);

@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLDeclarationReport : DeclarationReport<XMLDeclarationReport.ResultEntry>
 	{
-		private readonly XMLFullReport _fullReport;
+		private readonly XMLManufacturerReport _manufacturerReport;
 		private readonly XMLCustomerReport _customerReport;
 
 		private readonly IOutputDataWriter _writer;
@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public XMLDeclarationReport(IOutputDataWriter writer = null)
 		{
-			_fullReport = new XMLFullReport(); //new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
+			_manufacturerReport = new XMLManufacturerReport(); //new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
 			_customerReport = new XMLCustomerReport();
 			//CustomerReport = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
 
@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public XDocument FullReport
 		{
-			get { return _fullReport.Report; }
+			get { return _manufacturerReport.Report; }
 		}
 
 		public XDocument CustomerReport
@@ -142,28 +142,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected internal override void DoWriteReport()
 		{
 			foreach (var result in Missions.OrderBy(m => m.Key)) {
-				_fullReport.AddResult(result.Value);
+				_manufacturerReport.AddResult(result.Value);
 				_customerReport.AddResult(result.Value);
 			}
 
-			_fullReport.GenerateReport();
-			var fullReportHash = GetSignature(_fullReport.Report);
+			_manufacturerReport.GenerateReport();
+			var fullReportHash = GetSignature(_manufacturerReport.Report);
 			_customerReport.GenerateReport(fullReportHash);
 
 			if (_writer != null) {
-				using (var xmlWriter = new XmlTextWriter(_writer.WriteStream(ReportType.DeclarationReportXMLFulll), Encoding.UTF8)) {
-					xmlWriter.Formatting = Formatting.Indented;
-					_fullReport.Report.WriteTo(xmlWriter);
-					xmlWriter.Flush();
-					xmlWriter.Close();
-				}
-
-				using (var xmlWriter = new XmlTextWriter(_writer.WriteStream(ReportType.DeclarationReportXMLCOC), Encoding.UTF8)) {
-					xmlWriter.Formatting = Formatting.Indented;
-					_customerReport.Report.WriteTo(xmlWriter);
-					xmlWriter.Flush();
-					xmlWriter.Close();
-				}
+				_writer.WriteReport(ReportType.DeclarationReportCustomerXML, _customerReport.Report);
+				_writer.WriteReport(ReportType.DeclarationReportManufacturerXML, _manufacturerReport.Report);
 			}
 		}
 
@@ -173,10 +162,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 
 
-		protected override void DoInitializeReport(VectoRunData modelData, Segment segment)
+		public override void InitializeReport(VectoRunData modelData)
 		{
-			_fullReport.Initialize(modelData, segment);
-			_customerReport.Initialize(modelData, segment);
+			_manufacturerReport.Initialize(modelData);
+			_customerReport.Initialize(modelData);
 		}
 
 

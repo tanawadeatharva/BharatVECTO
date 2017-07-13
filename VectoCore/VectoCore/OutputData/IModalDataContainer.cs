@@ -78,11 +78,6 @@ namespace TUGraz.VectoCore.OutputData
 
 		string StackTrace { get; }
 
-		/// <summary>
-		/// Finishes the writing of the DataWriter.
-		/// </summary>
-		void Finish(VectoRun.Status runStatus);
-
 		IEnumerable<T> GetValues<T>(ModalResultField key);
 
 		IEnumerable<T> GetValues<T>(DataColumn col);
@@ -98,11 +93,15 @@ namespace TUGraz.VectoCore.OutputData
 		void AddAuxiliary(string id, string columnName = null);
 
 		/// <summary>
+		/// Finishes the writing of the DataWriter.
+		/// </summary>
+		void Finish(VectoRun.Status runStatus, Exception exception = null);
+
+		/// <summary>
 		/// clear the modal data after the simulation
 		/// called after the simulation is finished and the sum-entries have been written
 		/// </summary>
-		/// <param name="exception"></param>
-		void FinishSimulation(Exception exception = null);
+		void FinishSimulation();
 	}
 
 	public static class ModalDataContainerExtensions

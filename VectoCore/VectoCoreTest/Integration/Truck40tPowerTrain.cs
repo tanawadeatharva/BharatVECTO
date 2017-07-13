@@ -104,6 +104,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var clutch = new Clutch(container, engineData);
 
 			var runData = new VectoRunData() {
+				JobRunId = 0,
 				EngineData = engineData,
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
