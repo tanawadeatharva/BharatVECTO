@@ -1,4 +1,4 @@
-##Cross Wind Correction
+##Vehicle: Cross Wind Correction
 
 
 VECTO offers three different modes to consider cross wind influence on the drag coefficient. It is configured in the [Vehicle File](#vehicle-file).

@@ -1,15 +1,20 @@
-##Gear Shift Rules for AT Gearbox
+##Gearbox: AT Gearshift Rules
 
-The gear shift rules for automatic gearboxes differ from AMT and MT.
-
-Gears are shifted sequentially:
+For AT gearboxes neither Skip Gears nor Early upshift (see [Gearbox: Gear Shift Model](#gearbox-gear-shift-model)) are enabled. Moreover, the gears are shifted strictly sequentially:
 
 - 1C -> 1L -> 2L -> ...  (torque converter only in 1st gear)
 - 1C -> 2C -> 2L -> ...  (torque converter in 1st and 2nd gear)
 
+###Shift Polygons in Declaration Mode
+
+* Downshift line: 700 rpm (torque independent, vertical line)
+* Upshift line: 900 rpm for torque <= 0; 1150 rpm @ Engine's maximum torque
+
+![](pics/at_gearbox_shiftlines.PNG)
+
 ###Upshift rules
 
-+ If engine speed and engine torque in the next gear (see shift sequence) is above the upshift line AND
++ If engine speed and engine torque in the *next gear* (see shift sequence) is above the upshift line AND
 + the acceleration in the next gear is above a certain threshold if the driver is accelerating, i.e., acceleration_nextGear > min(Min. acceleration threshold, Driver acceleration)
 
 The user interface allows to enter two acceleration thresholds, one for locked gear to locked gear shifts and another vor converter to locked gear shifts. For converter to converter shifts the latter threshold applies.
@@ -27,4 +32,7 @@ The user interface allows to enter two acceleration thresholds, one for locked g
 
 - Min. time between two consecutive gearshifts.
 - Min. acceleration after gearshift for L to L gear shifts
-- Min. acceleration after gearhsift for C to L (and C to C) gear shifts
+- Min. acceleration after gearhsift for C to L gear shifts
+- Min. acceleration after gearshift for C to C geear shifts
+
+

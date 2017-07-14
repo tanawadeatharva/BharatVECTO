@@ -1,4 +1,4 @@
-##AT Gearbox Model
+##Gearbox: AT Gearbox Model
 
 Vecto supports both, AT gearboxes with serial torque converter and AT gearboxes with power split. Internally, both gearbox types are simulated using a power train architecture with the torque converter in series.
 

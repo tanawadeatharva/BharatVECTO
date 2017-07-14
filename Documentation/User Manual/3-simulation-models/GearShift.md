@@ -1,4 +1,4 @@
-##Gear Shift Model
+##Gearbox: Gear Shift Model
 
 
 The Gear Shift Model is based on shift curves that define the engine speed for up- and down- shifting as a function of engine torque. As soon as the engine operation point passes one of the shift curves a gear change is initiated.
@@ -45,13 +45,4 @@ Early Upshift (allow upshifts inside the shift polygons) is enabled for AMT only
 ![](pics/GBX-Editor-shift2.svg)
 
 
-###Generic shift conditions
 
-- Only allow upshifts if the vehicle is not decelerating **and** the estimated acceleration in the next gear is higher than a certain threshold (default: 0.1 m/s²)
-- Do not allow downshifts with less time than a certain amount after an upshift (default 10 s)
-- Do not allow upshifts with less time than a certain amount after an downshift (default 10 s)
-
-Parameters in [Gearbox File](#gearbox-file):
-: - **DownshiftAferUpshiftDelay**
-- **UpshiftAfterDownshiftDelay**
-- **UpshiftMinAcceleration**
