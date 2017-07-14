@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.IO
+Imports TUGraz.VectoCommon.Utils
 
 ''' <summary>
 ''' Welcome screen. Shows only on the first time application start
@@ -38,9 +39,10 @@ Public Class WelcomeDialog
 	'Open Quick Start Guide
 	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Process.Start(MyAppPath & "User Manual\help.html")
+			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
+			Process.Start(defaultBrowserPath, String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html"))
 		Else
-			MsgBox("User manual not found!", MsgBoxStyle.Critical)
+			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
 	End Sub
 End Class

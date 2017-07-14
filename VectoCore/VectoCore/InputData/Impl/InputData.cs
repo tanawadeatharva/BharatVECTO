@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -30,7 +30,6 @@
 */
 
 using System.Collections.Generic;
-using System.Data;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -42,17 +41,6 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public string Name { get; internal set; }
 
 		public TableData CycleData { get; internal set; }
-	}
-
-	public class StartStopInputData : IStartStopEngineeringInputData
-	{
-		public bool Enabled { get; internal set; }
-
-		public MeterPerSecond MaxSpeed { get; internal set; }
-
-		public Second MinTime { get; internal set; }
-
-		public Second Delay { get; internal set; }
 	}
 
 	public class LookAheadCoastingInputData : ILookaheadCoastingInputData
@@ -93,6 +81,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public NewtonMeter MaxTorque { get; internal set; }
 
+		public PerSecond MaxInputSpeed { get; internal set; }
+
 		public TableData ShiftPolygon { get; internal set; }
 	}
 
@@ -100,32 +90,15 @@ namespace TUGraz.VectoCore.InputData.Impl
 	{
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 			"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-		public bool SavedInDeclarationMode
-		{
-			get { throw new System.NotImplementedException(); }
-		}
-
 		public DataSourceType SourceType { get; internal set; }
 
 		public string Source { get; internal set; }
 
-		public string Vendor { get; internal set; }
-
-		public string ModelName { get; internal set; }
-
-		public string Creator { get; internal set; }
-
-		public string Date { get; internal set; }
-
-		public string TypeId { get; internal set; }
-
-		public string DigestValue { get; internal set; }
-
-		public IntegrityStatus IntegrityStatus { get; internal set; }
-
 		public string Wheels { get; internal set; }
 
 		public bool TwinTyres { get; internal set; }
+
+		public bool Steered { get; internal set; }
 
 		public AxleType AxleType { get; internal set; }
 
@@ -163,5 +136,11 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public TableData DemandMap { get; internal set; }
 
 		public Watt ConstantPowerDemand { get; internal set; }
+	}
+
+	public class TorqueLimitInputData : ITorqueLimitInputData
+	{
+		public int Gear { get; internal set; }
+		public NewtonMeter MaxTorque { get; internal set; }
 	}
 }

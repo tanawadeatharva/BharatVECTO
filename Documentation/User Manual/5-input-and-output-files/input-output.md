@@ -7,10 +7,10 @@ Vecto uses data files for input and output of data. These are stored in differen
 
 - [JSON](#json)
 - [Vecto CSV](#csv)
-
+- [XML](#xml-job-file-declaration-mode)
 
 **Output:**
 
 - [JSON](#json)
 - [Vecto CSV](#csv)
-- PDF (for Declaration Report)
+- [XML Declaration Report](#xml-declaration-report)

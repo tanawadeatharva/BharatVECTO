@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -34,14 +34,11 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class DriverData
 	{
-		[Required, ValidateObject] public VectoRunData.StartStopData StartStop;
-
 		[Required, ValidateObject] public OverSpeedEcoRollData OverSpeedEcoRoll;
 
 		[Required, ValidateObject] public LACData LookAheadCoasting;

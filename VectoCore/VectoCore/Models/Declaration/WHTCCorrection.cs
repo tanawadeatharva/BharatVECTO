@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -62,13 +62,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 			protected override void ParseData(DataTable table)
 			{
 				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
+					if (mission.IsEMS()) {
+						continue;
+					}
 					var values = table.Columns[mission.ToString().ToLower()].Values<string>().ToDouble().ToArray();
 					Data[mission] = new Entry { Urban = values[0], Rural = values[1], Motorway = values[2] };
 				}
 			}
 		}
 
-		private class Entry
+		private struct Entry
 		{
 			public double Rural;
 			public double Urban;

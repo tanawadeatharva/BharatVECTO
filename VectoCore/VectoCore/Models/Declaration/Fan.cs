@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -37,7 +37,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class Fan : LookupData<MissionType, string, Watt>, IDeclarationAuxiliaryTable
+	public sealed class Fan : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable
 	{
 		protected override string ResourceId
 		{
@@ -56,13 +56,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				foreach (DataColumn col in table.Columns) {
 					if (col.Caption != "technology") {
-						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = row.ParseDouble(col).SI<Watt>();
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = new AuxDemandEntry(){PowerDemand = row.ParseDouble(col).SI<Watt>()};
 					}
 				}
 			}
 		}
 
-		public override Watt Lookup(MissionType mission, string technology = null)
+		public override AuxDemandEntry Lookup(MissionType mission, string technology = null)
 		{
 			if (string.IsNullOrWhiteSpace(technology)) {
 				technology = "Crankshaft mounted - Electronically controlled visco clutch";

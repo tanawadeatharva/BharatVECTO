@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -35,7 +35,9 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 
@@ -51,6 +53,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		private readonly IModalDataWriter _writer;
 		private readonly List<string> _additionalColumns = new List<string>();
+		private Exception SimException;
+		public int JobRunId { get; private set; }
 		public string RunName { get; private set; }
 		public string CycleName { get; private set; }
 		public string RunSuffix { get; private set; }
@@ -59,23 +63,44 @@ namespace TUGraz.VectoCore.OutputData
 
 		public VectoRun.Status RunStatus { get; protected set; }
 
+		public string Error
+		{
+			get { return SimException == null ? null : SimException.Message; }
+		}
+
+		public string StackTrace
+		{
+			get {
+				return SimException == null
+					? null
+					: (SimException.StackTrace ?? (SimException.InnerException != null ? SimException.InnerException.StackTrace : null));
+			}
+		}
+
 		public bool WriteAdvancedAux { get; set; }
 
-		public ModalDataContainer(string runName, IModalDataWriter writer, bool writeEngineOnly = false)
-			: this(runName, "", "", writer, _ => { }, writeEngineOnly) {}
+		public ModalDataContainer(string runName, FuelType fuel, IModalDataWriter writer, bool writeEngineOnly = false)
+			: this(0, runName, "", fuel, "", writer, _ => { }, writeEngineOnly) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
 			bool writeEngineOnly, params IModalDataFilter[] filter)
-			: this(runData.JobName, runData.Cycle.Name, runData.ModFileSuffix, writer, addReportResult, writeEngineOnly, filter) {}
+			: this(
+				runData.JobRunId, runData.JobName, runData.Cycle.Name, runData.EngineData.FuelType, runData.ModFileSuffix, writer,
+				addReportResult,
+				writeEngineOnly, filter) {}
 
-		protected ModalDataContainer(string runName, string cycleName, string runSuffix, IModalDataWriter writer,
+		protected ModalDataContainer(int jobRunId, string runName, string cycleName, FuelType fuelType, string runSuffix,
+			IModalDataWriter writer,
 			Action<ModalDataContainer> addReportResult, bool writeEngineOnly, params IModalDataFilter[] filters)
 		{
 			HasTorqueConverter = false;
 			RunName = runName;
 			CycleName = cycleName;
 			RunSuffix = runSuffix;
+			JobRunId = jobRunId;
 			_writer = writer;
+
+			FuelData = Models.Declaration.FuelData.Instance().Lookup(fuelType);
 
 			_writeEngineOnly = writeEngineOnly;
 			_filters = filters ?? new IModalDataFilter[0];
@@ -87,6 +112,7 @@ namespace TUGraz.VectoCore.OutputData
 			WriteAdvancedAux = false;
 		}
 
+
 		public bool HasTorqueConverter { get; set; }
 
 		public void CommitSimulationStep()
@@ -95,11 +121,14 @@ namespace TUGraz.VectoCore.OutputData
 			CurrentRow = Data.NewRow();
 		}
 
-		public void Finish(VectoRun.Status runStatus)
+		public FuelData.Entry FuelData { get; internal set; }
+
+		public void Finish(VectoRun.Status runStatus, Exception exception = null)
 		{
 			var dataColumns = new List<ModalResultField> { ModalResultField.time };
 
 			RunStatus = runStatus;
+			SimException = exception;
 
 			if (!_writeEngineOnly) {
 				dataColumns.AddRange(new[] {
@@ -222,7 +251,8 @@ namespace TUGraz.VectoCore.OutputData
 					RunSuffix += "_" + filter.ID;
 					filteredData = filter.Filter(filteredData);
 				}
-				_writer.WriteModData(RunName, CycleName, RunSuffix, new DataView(filteredData).ToTable(false, strCols.ToArray()));
+				_writer.WriteModData(JobRunId, RunName, CycleName, RunSuffix,
+					new DataView(filteredData).ToTable(false, strCols.ToArray()));
 			}
 
 			_addReportResult(this);
@@ -231,6 +261,11 @@ namespace TUGraz.VectoCore.OutputData
 		public IEnumerable<T> GetValues<T>(DataColumn col)
 		{
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
+		}
+
+		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc)
+		{
+			return from DataRow row in Data.Rows select selectorFunc(row);
 		}
 
 		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>

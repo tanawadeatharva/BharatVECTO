@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -97,8 +97,14 @@ namespace TUGraz.VectoCore.Utils
 					ref iterationCount);
 			} catch (VectoException ex) {
 				var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
-				log.Debug("Falling back to LineSearch. InterpolationSearch failed: " + ex.Message);
-				result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount);
+				log.Debug("Falling back to InterpolationSearch in reverse. Normal InterpolationSearch failed: " + ex.Message);
+				try {
+					result = InterpolateSearch(x, y, -interval, getYValue, evaluateFunction, criterion, abortCriterion,
+						ref iterationCount);
+				} catch (VectoException ex1) {
+					log.Debug("Falling back to LineSearch. Reverse InterpolationSearch failed: " + ex1.Message);
+					result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount);
+				}
 			}
 			return result;
 		}

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -62,7 +62,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		{
 			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile");
-			var modData = new ModalDataContainer("AuxWriteModFileSumFile", fileWriter) { WriteModalResults = true };
+			var modData = new ModalDataContainer("AuxWriteModFileSumFile", FuelType.DieselCI, fileWriter) {
+				WriteModalResults = true
+			};
 			modData.AddAuxiliary("FAN");
 			modData.AddAuxiliary("PS");
 			modData.AddAuxiliary("STP");
@@ -71,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Declaration, modData,
-				(modalData) => sumWriter.Write(modalData, "AuxWriteSumFile", new MockRunData()));
+				(modalData) => sumWriter.Write(modalData, 0, 0, new MockRunData()));
 			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\LongHaul_short.vdri", CycleType.DistanceBased, false);
 			new MockDrivingCycle(container, data);
 
@@ -81,14 +83,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var mission = MissionType.LongHaul;
 
 			aux.AddConstant("FAN",
-				DeclarationData.Fan.Lookup(MissionType.LongHaul, "Hydraulic driven - Constant displacement pump"));
-			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, "Medium Supply 1-stage"));
+				DeclarationData.Fan.Lookup(MissionType.LongHaul, "Hydraulic driven - Constant displacement pump").PowerDemand);
+			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, "Medium Supply 1-stage").PowerDemand);
 			aux.AddConstant("STP",
 				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass,
 					new[] { "Variable displacement mech. controlled" }));
-			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission));
+			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission).PowerDemand);
 			aux.AddConstant("AC",
-				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, hdvClass));
+				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, "Default", hdvClass).PowerDemand);
 
 			var speed = 1400.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
@@ -107,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				t += dt;
 			}
 
-			container.FinishSimulation();
+			container.FinishSimulationRun();
 			sumWriter.Finish();
 
 			var testColumns = new[] { "P_aux_FAN", "P_aux_STP", "P_aux_AC", "P_aux_ES", "P_aux_PS", "P_aux" };

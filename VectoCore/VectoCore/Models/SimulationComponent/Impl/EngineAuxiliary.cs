@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
 		{
-			var avgAngularSpeed = (PreviousState.AngularSpeed != null)
+			var avgAngularSpeed = PreviousState.AngularSpeed != null
 				? (angularSpeed + PreviousState.AngularSpeed) / 2.0
 				: angularSpeed;
 			if (!dryRun) {

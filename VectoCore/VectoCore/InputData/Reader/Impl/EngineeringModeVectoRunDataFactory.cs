@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -61,33 +61,31 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			var dao = new EngineeringDataAdapter();
 			var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
-			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData);
+			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData,
+				InputDataProvider.VehicleInputData.TorqueLimits);
 
 			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData);
 
-			var vehicleInputData = InputDataProvider.VehicleInputData;
 			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData, useEfficiencyFallback: true);
 			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius, useEfficiencyFallback: true);
-			var crossWindRequired = vehicleInputData.CrossWindCorrectionMode == CrossWindCorrectionMode.VAirBetaLookupTable;
+				tempVehicle.DynamicTyreRadius,tempVehicle.VehicleCategory, useEfficiencyFallback: true);
+			var crossWindRequired = InputDataProvider.AirdragInputData.CrossWindCorrectionMode ==
+									CrossWindCorrectionMode.VAirBetaLookupTable;
 			var angledriveData = dao.CreateAngledriveData(InputDataProvider.AngledriveInputData, useEfficiencyFallback: true);
 			var ptoTransmissionData = dao.CreatePTOTransmissionData(InputDataProvider.PTOTransmissionInputData);
 
 			return InputDataProvider.JobInputData().Cycles.Select(cycle => {
-				DrivingCycleData drivingCycle;
-				if (CyclesCache.ContainsKey(cycle.CycleData.Source)) {
-					drivingCycle = CyclesCache[cycle.CycleData.Source];
-				} else {
-					drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
-					//CyclesCache.Add(cycle.CycleData.Source, drivingCycle);
-				}
+				var drivingCycle = CyclesCache.ContainsKey(cycle.CycleData.Source)
+					? CyclesCache[cycle.CycleData.Source]
+					: DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
 				return new VectoRunData {
 					JobName = InputDataProvider.JobInputData().JobName,
 					EngineData = engineData,
 					GearboxData = gearboxData,
 					AxleGearData = axlegearData,
 					AngledriveData = angledriveData,
-					VehicleData = dao.CreateVehicleData(vehicleInputData),
+					VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData),
+					AirdragData = dao.CreateAirdragData(InputDataProvider.AirdragInputData, InputDataProvider.VehicleInputData),
 					DriverData = driver,
 					Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData()),
 					AdvancedAux = dao.CreateAdvancedAuxData(InputDataProvider.AuxiliaryInputData()),

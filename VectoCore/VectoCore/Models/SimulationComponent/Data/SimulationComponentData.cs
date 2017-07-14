@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -30,11 +30,8 @@
 */
 
 using System.ComponentModel.DataAnnotations;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -42,24 +39,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public bool SavedInDeclarationMode { get; internal set; }
 
-		public string Vendor { get; internal set; }
+		public string Manufacturer { get; internal set; }
 
 		public string ModelName { get; internal set; }
 
-		public string Creator { get; internal set; }
 		public string Date { get; internal set; }
 
-		public string TypeId { get; internal set; }
+		public CertificationMethod CertificationMethod { get; internal set; }
 
-		public string DigestValue { get; internal set; }
+		public string CertificationNumber { get; internal set; }
 
-		public IntegrityStatus IntegrityStatus { get; internal set; }
+		public string DigestValueInput { get; internal set; }
 
 		protected static ExecutionMode GetExecutionMode(ValidationContext context)
 		{
-			var modeService = context.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
-			return modeService == null ? ExecutionMode.Declaration : modeService.Mode;
+			var validationService =
+				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			return validationService == null ? ExecutionMode.Declaration : validationService.Mode;
 		}
 
+		protected static bool GetEmsMode(ValidationContext context)
+		{
+			var validationService =
+				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			return validationService != null && validationService.IsEMSCycle;
+		}
 	}
 }

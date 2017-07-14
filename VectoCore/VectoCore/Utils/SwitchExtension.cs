@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,7 +31,6 @@
 
 using System;
 using System.Diagnostics;
-using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -79,7 +78,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public Switch<T> Case<TFilter>() where TFilter : T
 		{
-			return Case<TFilter>(() => {});
+			return Case<TFilter>(() => { });
 		}
 
 
@@ -120,11 +119,6 @@ namespace TUGraz.VectoCore.Utils
 			if (!_handled) {
 				action(_value);
 			}
-		}
-
-		public Switch<T> Case(Func<object, bool> action, Func<object, SI> func)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

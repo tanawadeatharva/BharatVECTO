@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dataEng =
 				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm]", engineFldString));
-			var engineFld = EngineFullLoadCurve.Create(dataEng, true);
+			var engineFld = FullLoadCurveReader.Create(dataEng, true);
 
 
 			var fullLoadCurve = AbstractSimulationDataAdapter.IntersectFullLoadCurves(engineFld, 2500.SI<NewtonMeter>());
@@ -322,16 +322,43 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void TestFullLoadSorting()
 		{
 			var gbxFldString = new[] {
-				"600, 1000",
-				"2400, 2000",
-				"1000, 500"
+				"600, 1000, -100",
+				"2400, 2000, -120",
+				"1000, 500, -110"
 			};
 
-			var dataGbx = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm]", gbxFldString));
+			var dataGbx =
+				VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm], Mdrag [Nm]", gbxFldString));
 			var gbxFld = FullLoadCurveReader.Create(dataGbx, true);
 
 			var maxTorque = gbxFld.FullLoadStationaryTorque(800.RPMtoRad());
 			Assert.AreEqual(750, maxTorque.Value());
+		}
+
+		[TestCase()]
+		public void TestLossMapExtension()
+		{
+			var gbxFile = @"TestData\Components\24t Coach.vgbx";
+			var engineFile = @"TestData\Components\24t Coach.veng";
+
+			var gearboxDataOrig = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile, false);
+			// read loss-map in declaration mode to extrapolate on reading.
+			var gearboxDataExt = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile, true);
+
+			var rpm = 100.RPMtoRad();
+			var tq = -3000.SI<NewtonMeter>();
+			var lookupOrig = gearboxDataOrig.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
+			var lookupExt = gearboxDataExt.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
+
+			Assert.IsTrue(lookupOrig.Extrapolated);
+			Assert.IsFalse(lookupExt.Extrapolated);
+
+			rpm = 1200.RPMtoRad();
+			lookupOrig = gearboxDataOrig.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
+			lookupExt = gearboxDataExt.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
+
+			Assert.IsTrue(lookupOrig.Extrapolated);
+			Assert.IsFalse(lookupExt.Extrapolated);
 		}
 	}
 }

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -36,12 +36,10 @@ namespace TUGraz.VectoCore.Configuration
 {
 	public static class Constants
 	{
+		public static Second DefaultPowerShiftTime = 0.8.SI<Second>();
 		public const double RPMToRad = 2 * Math.PI / 60;
 		public const double Kilo = 1000;
 		public const double MeterPerSecondToKMH = 3.6;
-
-		// mk-2016-10-11: const never used. Delete?
-		[Obsolete] public const double SecondsPerHour = 3600;
 
 		public static class Auxiliaries
 		{
@@ -124,10 +122,6 @@ namespace TUGraz.VectoCore.Configuration
 			/// </summary>
 			public static readonly Radian DrivingCycleRoadGradientTolerance = 1E-12.SI<Radian>();
 
-			//VectoMath.InclinationToAngle(0.25 / 100.0).Value();
-
-			public const int DriverSearchLoopThreshold = 200;
-
 			/// <summary>
 			/// Tolerance for searching operating point with line search.
 			/// </summary>
@@ -144,11 +138,9 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly MeterPerSecond ATGearboxDisengageWhenHaltingSpeed = 5.KMPHtoMeterPerSecond();
 
-			public static readonly MeterPerSquareSecond MinimumAcceleration = 0.1.SI<MeterPerSquareSecond>();
+			public static readonly Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
 
-			public static Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
-
-			public static MeterPerSecond VehicleSpeedHaltTolerance = 1e-3.SI<MeterPerSecond>();
+			public static readonly MeterPerSecond VehicleSpeedHaltTolerance = 1e-3.SI<MeterPerSecond>();
 
 			/// <summary>
 			/// The initial search interval for the operating point search in the driver.
@@ -158,18 +150,34 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly PerSecond EngineIdlingSearchInterval = 10.SI<PerSecond>();
 
-			public const int EngineSearchLoopThreshold = 100;
-
 			public const int MaximumIterationCountForSimulationStep = 30;
-
-			public static readonly MeterPerSecond VehicleStopClutchDisengageSpeed = 10.KMPHtoMeterPerSecond();
 
 			public static readonly Meter GearboxLookaheadForAccelerationEstimation = 100.SI<Meter>();
 
-			public static Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
+			public static readonly Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
+			public static readonly Kilogram MaximumGrossVehicleWeightEMS = 60000.SI<Kilogram>();
+		}
 
-			// the torque converter characteristics curve has to be defined up to this speed ratio
-			public const double RequiredTorqueConverterSpeedRatio = 2.2;
+		public static class XML
+		{
+			public const string XSDDeclarationVersion = "1.0";
+			public const string XSDEngineeringVersion = "0.7";
+
+			public const string DeclarationNSPrefix = "vdd";
+
+			public const string EngineeringNSPrefix = "ved";
+
+			public const string RootNSPrefix = "tns";
+
+			public const string VectoDeclarationDefinitionsNS =
+				"urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v" + XSDDeclarationVersion;
+
+			public const string VectoEngineeringDefinitionsNS =
+				"urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v" + XSDEngineeringVersion;
+
+			public const string VectoDeclarationInputNS = "urn:tugraz:ivt:VectoAPI:DeclarationInput:v" + XSDDeclarationVersion;
+
+			public const string VectoEngineeringInputNS = "urn:tugraz:ivt:VectoAPI:EngineeringInput:v" + XSDEngineeringVersion;
 		}
 	}
 }

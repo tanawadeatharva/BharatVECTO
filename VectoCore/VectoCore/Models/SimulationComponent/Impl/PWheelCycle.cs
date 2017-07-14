@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// </summary>
 	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo, IVehicleInfo
 	{
-		private VehicleData _vehicleData;
+		private readonly VehicleData _vehicleData;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PWheelCycle"/> class.

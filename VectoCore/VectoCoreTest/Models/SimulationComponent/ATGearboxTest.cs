@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -69,10 +69,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		]
 		public void TestATGearInitialize(double vehicleSpeed, double torque, int expectedGear)
 		{
-			var vehicleContainer = new MockVehicleContainer(); //(ExecutionMode.Engineering);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineDataFile);
-			vehicleContainer.Engine = new CombustionEngine(vehicleContainer, engineData);
 			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
+			var vehicleContainer = new MockVehicleContainer(); //(ExecutionMode.Engineering);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineDataFile, gearboxData.Gears.Count);
+			vehicleContainer.Engine = new CombustionEngine(vehicleContainer, engineData);
 			var runData = new VectoRunData() { GearboxData = gearboxData };
 			var gearbox = new ATGearbox(vehicleContainer, new ATShiftStrategy(gearboxData, vehicleContainer), runData);
 
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					new FileOutputWriter(string.Format("AT_Vehicle_Drive-TC_{0}-{1}", cycleName,
 						gbxType == GearboxType.ATSerial ? "ser" : "ps")));
 			((VehicleContainer)run.GetContainer()).WriteSumData = (modData) =>
-				sumWriter.Write(run.GetContainer().ModalData, string.Format("{0}-{1}", 0, 0), run.GetContainer().RunData);
+				sumWriter.Write(run.GetContainer().ModalData, 0, 0, run.GetContainer().RunData);
 			run.Run();
 			sumWriter.Finish();
 			Assert.IsTrue(run.FinishedWithoutErrors);

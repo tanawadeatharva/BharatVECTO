@@ -1,4 +1,4 @@
-﻿' Copyright 2015 European Union.
+﻿' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -21,18 +21,6 @@ Public Interface IAdvancedAuxiliaries
 
 	ReadOnly Property AuxiliaryName As String
 	ReadOnly Property AuxiliaryVersion As String
-
-
-	'Diagnostic Only - Remove when beta over.
-	ReadOnly Property AA_D_M12_P1X As Joule
-	ReadOnly Property AA_D_M12_P1Y As Kilogram
-	ReadOnly Property AA_D_M12_P2X As Joule
-	ReadOnly Property AA_D_M12_P2Y As Kilogram
-	ReadOnly Property AA_D_M12_P3X As Joule
-	ReadOnly Property AA_D_M12_P3Y As Kilogram
-	ReadOnly Property AA_D_M12_XTAIN As Joule
-	ReadOnly Property AA_D_M12_INTERP1 As Kilogram
-	ReadOnly Property AA_D_M12_INTERP2 As Kilogram
 
 	'Additional Permenent Monitoring Signals - Required by engineering
 	ReadOnly Property AA_NonSmartAlternatorsEfficiency As Double

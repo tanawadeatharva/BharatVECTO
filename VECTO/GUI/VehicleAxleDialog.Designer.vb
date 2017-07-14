@@ -1,4 +1,4 @@
-﻿' Copyright 2014 European Union.
+﻿' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -56,6 +56,9 @@ Partial Class VehicleAxleDialog
 		Me.Label32 = New System.Windows.Forms.Label()
 		Me.Label8 = New System.Windows.Forms.Label()
 		Me.CbWheels = New System.Windows.Forms.ComboBox()
+		Me.cbAxleType = New System.Windows.Forms.ComboBox()
+		Me.Label11 = New System.Windows.Forms.Label()
+		Me.Label12 = New System.Windows.Forms.Label()
 		Me.TableLayoutPanel1.SuspendLayout()
 		Me.PnAxle.SuspendLayout()
 		Me.SuspendLayout()
@@ -68,7 +71,7 @@ Partial Class VehicleAxleDialog
 		Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
 		Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
 		Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-		Me.TableLayoutPanel1.Location = New System.Drawing.Point(303, 124)
+		Me.TableLayoutPanel1.Location = New System.Drawing.Point(309, 161)
 		Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
 		Me.TableLayoutPanel1.RowCount = 1
 		Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -122,7 +125,7 @@ Partial Class VehicleAxleDialog
 		'Label3
 		'
 		Me.Label3.AutoSize = True
-		Me.Label3.Location = New System.Drawing.Point(55, 66)
+		Me.Label3.Location = New System.Drawing.Point(55, 94)
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(51, 13)
 		Me.Label3.TabIndex = 1
@@ -139,7 +142,7 @@ Partial Class VehicleAxleDialog
 		'
 		'TbRRC
 		'
-		Me.TbRRC.Location = New System.Drawing.Point(112, 63)
+		Me.TbRRC.Location = New System.Drawing.Point(112, 91)
 		Me.TbRRC.Name = "TbRRC"
 		Me.TbRRC.Size = New System.Drawing.Size(84, 20)
 		Me.TbRRC.TabIndex = 2
@@ -147,7 +150,7 @@ Partial Class VehicleAxleDialog
 		'Label5
 		'
 		Me.Label5.AutoSize = True
-		Me.Label5.Location = New System.Drawing.Point(67, 91)
+		Me.Label5.Location = New System.Drawing.Point(67, 120)
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(39, 13)
 		Me.Label5.TabIndex = 1
@@ -156,7 +159,7 @@ Partial Class VehicleAxleDialog
 		'Label6
 		'
 		Me.Label6.AutoSize = True
-		Me.Label6.Location = New System.Drawing.Point(202, 91)
+		Me.Label6.Location = New System.Drawing.Point(202, 120)
 		Me.Label6.Name = "Label6"
 		Me.Label6.Size = New System.Drawing.Size(21, 13)
 		Me.Label6.TabIndex = 1
@@ -164,7 +167,7 @@ Partial Class VehicleAxleDialog
 		'
 		'TbFzISO
 		'
-		Me.TbFzISO.Location = New System.Drawing.Point(112, 89)
+		Me.TbFzISO.Location = New System.Drawing.Point(112, 117)
 		Me.TbFzISO.Name = "TbFzISO"
 		Me.TbFzISO.Size = New System.Drawing.Size(84, 20)
 		Me.TbFzISO.TabIndex = 3
@@ -172,7 +175,7 @@ Partial Class VehicleAxleDialog
 		'Label9
 		'
 		Me.Label9.AutoSize = True
-		Me.Label9.Location = New System.Drawing.Point(248, 66)
+		Me.Label9.Location = New System.Drawing.Point(248, 94)
 		Me.Label9.Name = "Label9"
 		Me.Label9.Size = New System.Drawing.Size(146, 13)
 		Me.Label9.TabIndex = 1
@@ -181,7 +184,7 @@ Partial Class VehicleAxleDialog
 		'Label10
 		'
 		Me.Label10.AutoSize = True
-		Me.Label10.Location = New System.Drawing.Point(248, 89)
+		Me.Label10.Location = New System.Drawing.Point(248, 117)
 		Me.Label10.Name = "Label10"
 		Me.Label10.Size = New System.Drawing.Size(167, 26)
 		Me.Label10.TabIndex = 1
@@ -190,7 +193,7 @@ Partial Class VehicleAxleDialog
 		'CbTwinT
 		'
 		Me.CbTwinT.AutoSize = True
-		Me.CbTwinT.Location = New System.Drawing.Point(253, 12)
+		Me.CbTwinT.Location = New System.Drawing.Point(285, 39)
 		Me.CbTwinT.Name = "CbTwinT"
 		Me.CbTwinT.Size = New System.Drawing.Size(78, 17)
 		Me.CbTwinT.TabIndex = 1
@@ -205,7 +208,7 @@ Partial Class VehicleAxleDialog
 		Me.PnAxle.Controls.Add(Me.Label2)
 		Me.PnAxle.Controls.Add(Me.Label32)
 		Me.PnAxle.Controls.Add(Me.TbAxleShare)
-		Me.PnAxle.Location = New System.Drawing.Point(7, 37)
+		Me.PnAxle.Location = New System.Drawing.Point(7, 65)
 		Me.PnAxle.Name = "PnAxle"
 		Me.PnAxle.Size = New System.Drawing.Size(450, 23)
 		Me.PnAxle.TabIndex = 5
@@ -240,18 +243,45 @@ Partial Class VehicleAxleDialog
 		Me.Label8.AutoSize = True
 		Me.Label8.Location = New System.Drawing.Point(4, 13)
 		Me.Label8.Name = "Label8"
-		Me.Label8.Size = New System.Drawing.Size(43, 13)
+		Me.Label8.Size = New System.Drawing.Size(80, 13)
 		Me.Label8.TabIndex = 6
-		Me.Label8.Text = "Wheels"
+		Me.Label8.Text = "Tyre Dimension"
 		'
 		'CbWheels
 		'
 		Me.CbWheels.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.CbWheels.FormattingEnabled = True
-		Me.CbWheels.Location = New System.Drawing.Point(53, 10)
+		Me.CbWheels.Location = New System.Drawing.Point(90, 10)
 		Me.CbWheels.Name = "CbWheels"
 		Me.CbWheels.Size = New System.Drawing.Size(176, 21)
 		Me.CbWheels.TabIndex = 7
+		'
+		'cbAxleType
+		'
+		Me.cbAxleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+		Me.cbAxleType.FormattingEnabled = True
+		Me.cbAxleType.Location = New System.Drawing.Point(90, 37)
+		Me.cbAxleType.Name = "cbAxleType"
+		Me.cbAxleType.Size = New System.Drawing.Size(176, 21)
+		Me.cbAxleType.TabIndex = 8
+		'
+		'Label11
+		'
+		Me.Label11.AutoSize = True
+		Me.Label11.Location = New System.Drawing.Point(4, 40)
+		Me.Label11.Name = "Label11"
+		Me.Label11.Size = New System.Drawing.Size(69, 13)
+		Me.Label11.TabIndex = 9
+		Me.Label11.Text = "Configuration"
+		'
+		'Label12
+		'
+		Me.Label12.AutoSize = True
+		Me.Label12.Location = New System.Drawing.Point(202, 94)
+		Me.Label12.Name = "Label12"
+		Me.Label12.Size = New System.Drawing.Size(16, 13)
+		Me.Label12.TabIndex = 10
+		Me.Label12.Text = "[-]"
 		'
 		'VehicleAxleDialog
 		'
@@ -259,7 +289,10 @@ Partial Class VehicleAxleDialog
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.Cancel_Button
-		Me.ClientSize = New System.Drawing.Size(461, 165)
+		Me.ClientSize = New System.Drawing.Size(467, 202)
+		Me.Controls.Add(Me.Label12)
+		Me.Controls.Add(Me.Label11)
+		Me.Controls.Add(Me.cbAxleType)
 		Me.Controls.Add(Me.CbWheels)
 		Me.Controls.Add(Me.Label8)
 		Me.Controls.Add(Me.PnAxle)
@@ -308,5 +341,8 @@ Partial Class VehicleAxleDialog
 	Friend WithEvents Label32 As Label
 	Friend WithEvents Label8 As Label
 	Friend WithEvents CbWheels As ComboBox
+	Friend WithEvents cbAxleType As System.Windows.Forms.ComboBox
+	Friend WithEvents Label11 As System.Windows.Forms.Label
+	Friend WithEvents Label12 As System.Windows.Forms.Label
 
 End Class

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -259,6 +259,29 @@ namespace TUGraz.VectoCommon.Utils
 		public static string ToGUIFormat(this double self)
 		{
 			return self.ToString(CultureInfo.InvariantCulture);
+		}
+
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static string ToXMLFormat(this double self, uint? decimals = null)
+		{
+			decimals = decimals ?? 2;
+			return self.ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
+		}
+
+		//[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static string ToMinSignificantDigits(this double self, uint? significant = null, uint? decimals = null)
+		{
+			significant = significant ?? 3;
+			decimals = decimals ?? 1;
+			var scale = Math.Ceiling(Math.Log10(Math.Abs(self)));
+
+			if (double.IsInfinity(scale) || double.IsNaN(scale)) {
+				return self.ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
+			}
+
+			return self.ToString("F" + Math.Max(significant.Value - scale, decimals.Value), CultureInfo.InvariantCulture);
 		}
 	}
 

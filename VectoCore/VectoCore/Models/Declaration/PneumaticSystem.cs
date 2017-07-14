@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -37,7 +37,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class PneumaticSystem : LookupData<MissionType, string, Watt>, IDeclarationAuxiliaryTable
+	public sealed class PneumaticSystem : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable
 	{
 		protected override string ResourceId
 		{
@@ -55,7 +55,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var technology = row.Field<string>("technology");
 				foreach (DataColumn col in table.Columns) {
 					if (col.Caption != "technology") {
-						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), technology)] = row.ParseDouble(col.Caption).SI<Watt>();
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), technology)] = new AuxDemandEntry() {
+							PowerDemand = row.ParseDouble(col.Caption).SI<Watt>()
+						};
 					}
 				}
 			}

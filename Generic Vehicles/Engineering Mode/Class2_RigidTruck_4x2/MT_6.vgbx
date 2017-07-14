@@ -52,9 +52,9 @@
         "MaxTorque": ""
       }
     ],
-    "TqReserve": 0.002,
+    "TqReserve": 20.0,
     "ShiftTime": 2.0,
-    "StartTqReserve": 0.002,
+    "StartTqReserve": 20.0,
     "StartSpeed": 2.0,
     "StartAcc": 0.6,
     "GearboxType": "MT",

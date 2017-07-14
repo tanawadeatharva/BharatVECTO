@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void LossMapValid()
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 			var vehicleData = new VehicleData {
 				DynamicTyreRadius = 0.85.SI<Meter>(),
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void LossMapInvalidAxle()
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(GearboxLimited);
 
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void LossMapLimited()
 		{
 			var gearboxData = CreateGearboxData(GearboxLimited, GearboxLimited);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 			var runData = new VectoRunData { GearboxData = gearboxData, EngineData = engineData, AxleGearData = axleGearData };
 			var result = VectoRunData.ValidateRunData(runData, new ValidationContext(runData));
@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void LossMapAxleLossMapMissing()
 		{
 			var gearboxData = CreateGearboxData(GearboxDirectLoss, GearboxIndirectLoss);
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
 			var vehicleData = new VehicleData {
 				DynamicTyreRadius = 0.85.SI<Meter>(),
 				Loading = 0.SI<Kilogram>(),
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void LossMapGearLossMapMissing()
 		{
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 0);
 			var axleGearData = CreateAxleGearData(AxleGearLossMap);
 
 			var runData = new VectoRunData {
@@ -185,14 +185,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var ratios = new[] { 14.93, 11.64, 9.02, 7.04, 5.64, 4.4, 3.39, 2.65, 2.05, 1.6, 1.28, 1.0 };
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>
-						Tuple.Create((uint)i,
-							new GearData {
-								MaxTorque = 2300.SI<NewtonMeter>(),
-								LossMap = TransmissionLossMapReader.ReadFromFile(!ratio.IsEqual(1.0) ? directlossMap : indirectLossMap, ratio,
-									string.Format("Gear {0}", i)),
-								Ratio = ratio,
-								ShiftPolygon = ShiftPolygonReader.ReadFromFile(ShiftPolygonFile)
-							}))
+					Tuple.Create((uint)i,
+						new GearData {
+//								MaxTorque = 2300.SI<NewtonMeter>(),
+							LossMap = TransmissionLossMapReader.ReadFromFile(!ratio.IsEqual(1.0) ? directlossMap : indirectLossMap, ratio,
+								string.Format("Gear {0}", i)),
+							Ratio = ratio,
+							ShiftPolygon = ShiftPolygonReader.ReadFromFile(ShiftPolygonFile)
+						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2)
 			};
 		}

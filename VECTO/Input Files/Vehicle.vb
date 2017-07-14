@@ -1,4 +1,4 @@
-﻿' Copyright 2014 European Union.
+﻿' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -27,7 +27,7 @@ Imports TUGraz.VectoCore.Utils
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
-				IAngledriveInputData
+				IAngledriveInputData, IAirdragEngineeringInputData
 
 	Private _filePath As String
 	Private _path As String
@@ -45,7 +45,7 @@ Public Class Vehicle
 	Public ReadOnly RetarderLossMapFile As SubPath
 
 	Public DynamicTyreRadius As Double
-	Public ReadOnly Axles As List(Of Axle)
+	Public ReadOnly Axles As List(Of AxleInputData)
 
 
 	Public VehicleCategory As VehicleCategory
@@ -61,15 +61,10 @@ Public Class Vehicle
 	Public PtoType As String
 	Public ReadOnly PtoLossMap As SubPath
 	Public ReadOnly PtoCycle As SubPath
-
-	Public Class Axle
-		Public RRC As Double
-		Public Share As Double
-		Public TwinTire As Boolean
-		Public FzISO As Double
-		Public Wheels As String
-		Public Inertia As Double
-	End Class
+	Public torqueLimitsList As List(Of ITorqueLimitInputData)
+	Public VehicleidlingSpeed As PerSecond
+	Public legClass As LegislativeClass
+	Public VehicleHeight As Double
 
 
 	Public Sub New()
@@ -80,7 +75,8 @@ Public Class Vehicle
 		RetarderLossMapFile = New SubPath
 		AngledriveLossMapFile = New SubPath()
 
-		Axles = New List(Of Axle)
+		Axles = New List(Of AxleInputData)
+		torqueLimitsList = New List(Of ITorqueLimitInputData)
 		PtoLossMap = New SubPath()
 		PtoCycle = New SubPath()
 		SetDefault()
@@ -91,43 +87,56 @@ Public Class Vehicle
 	Public Shared Function ValidateVehicle(vehicle As Vehicle, validationContext As ValidationContext) As ValidationResult
 
 		Dim vehicleData As VehicleData
+		Dim airdragData As AirdragData
 		Dim retarderData As RetarderData
 		Dim ptoData As PTOData = Nothing
 		Dim angledriveData As AngledriveData
 
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
-																	ExecutionModeServiceContainer)
+		Dim modeService As VectoValidationModeServiceContainer =
+				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
+						VectoValidationModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
-		Dim gbxtypeService As GearboxTypeServiceContainer =
-				TryCast(validationContext.GetService(GetType(GearboxTypeServiceContainer)), GearboxTypeServiceContainer)
-		Dim gbxType As GearboxType? = If(gbxtypeService Is Nothing, Nothing, gbxtypeService.Type)
+		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
+		Dim gbxType As GearboxType? = If(modeService Is Nothing, Nothing, modeService.GearboxType)
 
 		Try
 			If mode = ExecutionMode.Declaration Then
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
 				Dim segment As Segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
-																		vehicle.GrossVehicleMassRating, vehicle.CurbWeightChassis)
+																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis)
 				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
-													segment.Missions.First().Loadings.First().Value)
+													segment.Missions.First().Loadings.First().Value, segment.MunicipalBodyWeight)
+				airdragData = doa.CreateAirdragData(vehicle, segment.Missions.First(), segment)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle, False)
+				ptoData = doa.CreatePTOTransmissionData(vehicle)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
+				airdragData = doa.CreateAirdragData(vehicle, vehicle)
 				retarderData = doa.CreateRetarderData(vehicle)
 				angledriveData = doa.CreateAngledriveData(vehicle, True)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
 			End If
 
 			Dim result As IList(Of ValidationResult) =
-					vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType)
+					vehicleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType, emsCycle)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Vehicle Configuration is invalid. ",
 										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
-			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType)
+			result = airdragData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType,
+										emsCycle)
+			If result.Any() Then
+				Return _
+					New ValidationResult("Airdrag Configuration is invalid. ",
+										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
+			End If
+
+			result = retarderData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType,
+											emsCycle)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Retarder Configuration is invalid. ",
@@ -135,7 +144,8 @@ Public Class Vehicle
 			End If
 
 			If vehicle.AngledriveType = AngledriveType.SeparateAngledrive Then
-				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType)
+				result = angledriveData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType,
+												emsCycle)
 				If result.Any() Then
 					Return _
 						New ValidationResult("AngleDrive Configuration is invalid. ",
@@ -144,7 +154,7 @@ Public Class Vehicle
 			End If
 
 			If Not vehicle.PTOTransmissionType = "None" Then
-				result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType)
+				result = ptoData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType, emsCycle)
 				If result.Any() Then
 					Return _
 						New ValidationResult("PTO Configuration is invalid. ",
@@ -195,7 +205,7 @@ Public Class Vehicle
 		SavedInDeclMode = Cfg.DeclMode
 
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing)
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing, False)
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -207,7 +217,7 @@ Public Class Vehicle
 
 		Try
 			Dim writer As JSONFileWriter = JSONFileWriter.Instance
-			writer.SaveVehicle(Me, Me, Me, Me, _filePath)
+			writer.SaveVehicle(Me, Me, Me, Me, Me, _filePath)
 		Catch ex As Exception
 			MsgBox("Failed to save Vehicle file: " + ex.Message)
 			Return False
@@ -255,23 +265,20 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property Vendor As String Implements IComponentInputData.Vendor
+	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
-			Return "N.A."  ' TODO: MQ  20160908
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
-	Public ReadOnly Property ModelName As String Implements IComponentInputData.ModelName
+	Public ReadOnly Property Model As String Implements IComponentInputData.Model
 		Get
-			Return "N.A."  ' Todo: MQ 20160908
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
-	Public ReadOnly Property Creator As String Implements IComponentInputData.Creator
-		Get
-			Return Lic.LicString
-		End Get
-	End Property
 
 	Public ReadOnly Property [Date] As String Implements IComponentInputData.[Date]
 		Get
@@ -279,21 +286,22 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property TypeId As String Implements IComponentInputData.TypeId
+	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 		Get
-			Return "N.A."	' ToDo: MQ 20160908
+			Return CertificationMethod.NotCertified
+		End Get
+	End Property
+
+	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
+		Get
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
 	Public ReadOnly Property DigestValue As String Implements IComponentInputData.DigestValue
 		Get
 			Return ""
-		End Get
-	End Property
-
-	Public ReadOnly Property IntegrityStatus As IntegrityStatus Implements IComponentInputData.IntegrityStatus
-		Get
-			Return IntegrityStatus.NotChecked
 		End Get
 	End Property
 
@@ -311,7 +319,19 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property CurbWeightChassis As Kilogram Implements IVehicleDeclarationInputData.CurbWeightChassis
+	Public ReadOnly Property VIN As String Implements IVehicleDeclarationInputData.VIN
+		Get
+			Return "N.A."
+		End Get
+	End Property
+
+	Public ReadOnly Property LegislativeClass As LegislativeClass Implements IVehicleEngineeringInputData.LegislativeClass
+		Get
+			Return legClass
+		End Get
+	End Property
+
+	Public ReadOnly Property CurbMassChassis As Kilogram Implements IVehicleDeclarationInputData.CurbMassChassis
 		Get
 			Return Mass.SI(Of Kilogram)()
 		End Get
@@ -324,54 +344,67 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property AirDragArea As SquareMeter Implements IVehicleDeclarationInputData.AirDragArea
+	Public ReadOnly Property TorqueLimits As IList(Of ITorqueLimitInputData) _
+		Implements IVehicleDeclarationInputData.TorqueLimits
 		Get
-			Return CdA0.SI(Of SquareMeter)()
+			Return torqueLimitsList
+		End Get
+	End Property
+
+	Public ReadOnly Property ManufacturerAddress As String Implements IVehicleDeclarationInputData.ManufacturerAddress
+		Get
+			Return "N.A."
+		End Get
+	End Property
+
+	Public ReadOnly Property EngineIdleSpeed As PerSecond Implements IVehicleDeclarationInputData.EngineIdleSpeed
+		Get
+			Return VehicleidlingSpeed
+		End Get
+	End Property
+
+	Public ReadOnly Property AirDragArea As SquareMeter Implements IAirdragEngineeringInputData.AirDragArea
+		Get
+			Return If(Double.IsNaN(CdA0), Nothing, CdA0.SI(Of SquareMeter)())
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
 		Implements IVehicleEngineeringInputData.Axles
 		Get
-			Return AxleWheels().Cast(Of IAxleEngineeringInputData)().ToList()
+			Return Axles.Cast(Of IAxleEngineeringInputData)().ToList()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleDeclarationInputData_Axles As IList(Of IAxleDeclarationInputData) _
 		Implements IVehicleDeclarationInputData.Axles
 		Get
-			Return AxleWheels().Cast(Of IAxleDeclarationInputData)().ToList()
+			Return Axles.Cast(Of IAxleDeclarationInputData)().ToList()
 		End Get
 	End Property
 
-	Private Function AxleWheels() As IEnumerable(Of AxleInputData)
-		Return Axles.Select(Function(axle) New AxleInputData With {
-								.SourceType = DataSourceType.JSONFile,
-								.Source = FilePath,
-								.Inertia = axle.Inertia.SI(Of KilogramSquareMeter)(),
-								.Wheels = axle.Wheels,
-								.AxleWeightShare = axle.Share,
-								.TwinTyres = axle.TwinTire,
-								.RollResistanceCoefficient = axle.RRC,
-								.TyreTestLoad = axle.FzISO.SI(Of Newton)()
-								})
-	End Function
 
-	Public ReadOnly Property CurbWeightExtra As Kilogram Implements IVehicleEngineeringInputData.CurbWeightExtra
+	Public ReadOnly Property CurbMassExtra As Kilogram Implements IVehicleEngineeringInputData.CurbMassExtra
 		Get
 			Return MassExtra.SI(Of Kilogram)()
 		End Get
 	End Property
 
+	Public ReadOnly Property Height As Meter Implements IVehicleEngineeringInputData.Height
+		Get
+			Return VehicleHeight.SI(Of Meter)()
+		End Get
+	End Property
+
 	Public ReadOnly Property CrosswindCorrectionMap As TableData _
-		Implements IVehicleEngineeringInputData.CrosswindCorrectionMap
+		Implements IAirdragEngineeringInputData.CrosswindCorrectionMap
 		Get
 			Return VectoCSVFile.Read(CrossWindCorrectionFile.FullPath)
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_CrossWindCorrectionMode As CrossWindCorrectionMode _
-		Implements IVehicleEngineeringInputData.CrossWindCorrectionMode
+		Implements IAirdragEngineeringInputData.CrossWindCorrectionMode
 		Get
 			Return CrossWindCorrectionMode
 		End Get
@@ -456,6 +489,9 @@ Public Class Vehicle
 	Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
 		Implements IPTOTransmissionInputData.PTOLossMap
 		Get
+			If String.IsNullOrWhiteSpace(PtoCycle.FullPath) Then
+				Return Nothing
+			End If
 			Return VectoCSVFile.Read(PtoLossMap.FullPath)
 		End Get
 	End Property

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -50,13 +50,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		internal readonly VehicleData ModelData;
 
-		public Vehicle(IVehicleContainer container, VehicleData modelData) : base(container)
+		public readonly AirdragData AirdragData;
+
+
+		public Vehicle(IVehicleContainer container, VehicleData modelData, AirdragData airdrag) : base(container)
 		{
 			ModelData = modelData;
-			if (modelData.CrossWindCorrectionCurve != null) {
-				modelData.CrossWindCorrectionCurve.SetDataBus(container);
+			AirdragData = airdrag;
+			if (AirdragData.CrossWindCorrectionCurve != null) {
+				AirdragData.CrossWindCorrectionCurve.SetDataBus(container);
 			}
 		}
+
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
@@ -187,7 +192,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private Watt ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2)
 		{
-			return ModelData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2);
+			return AirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2);
 		}
 
 		public Meter Distance

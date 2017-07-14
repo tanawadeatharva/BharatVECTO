@@ -1,4 +1,4 @@
-﻿' Copyright 2014 European Union.
+﻿' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -68,12 +68,10 @@ Public Class GearboxGearDialog
 			Dim gearData As GearData = New GearData() With {
 					.Ratio = TbRatio.Text.ToDouble(0),
 					.LossMap = lossmap,
-					.ShiftPolygon = shiftPolygon,
-					.MaxTorque =
-					If(String.IsNullOrWhiteSpace(TbMaxTorque.Text), Nothing, TbMaxTorque.Text.ToDouble().SI(Of NewtonMeter))
+					.ShiftPolygon = shiftPolygon
 					}
 			Dim results As IList(Of ValidationResult) =
-					gearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), GearboxType)
+					gearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), GearboxType, False)
 
 			If (results.Any()) Then
 				Return results.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct())).ToList()

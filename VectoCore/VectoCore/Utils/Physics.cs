@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -33,7 +33,7 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
 {
-	public class Physics
+	public static class Physics
 	{
 		/// <summary>
 		/// The standard acceleration for gravity on earth.
@@ -44,21 +44,24 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Density of air.
 		/// </summary>
-		public static KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
+		public static readonly KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
+
+
+		public const double RollResistanceExponent = 0.9;
 
 		/// <summary>
-		/// Density of fuel.
+		/// Base Wind Speed.
 		/// </summary>
-		public static KilogramPerCubicMeter FuelDensity = 832.SI<KilogramPerCubicMeter>();
-
-		public static readonly double RollResistanceExponent = 0.9;
-
 		public static readonly MeterPerSecond BaseWindSpeed = 3.SI<MeterPerSecond>();
 
+		/// <summary>
+		/// Base Height for Wind Speed.
+		/// </summary>
+		public static readonly Meter BaseWindHeight = 4.SI<Meter>();
 
 		/// <summary>
-		/// fuel[kg] => co2[kg]. Factor to convert from fuel weight to co2 weight.
+		/// Hellmann Exponent for modelling of wind speed in specific heights.
 		/// </summary>
-		public static double CO2PerFuelWeight = 3.16;
+		public const double HellmannExponent = 0.2;
 	}
 }

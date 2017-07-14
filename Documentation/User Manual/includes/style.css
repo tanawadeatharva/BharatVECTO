@@ -4,6 +4,8 @@ body {
   font-family: Calibri, sans-serif;
 }
 
+.section.level1 {padding-left:336px}
+
 nav, #TOC {
   position: fixed;
   width: 21em;
@@ -20,7 +22,7 @@ nav, #TOC {
   border-bottom-style: solid;
   border-bottom-width: thin;
   border-bottom-color: #aaa;
-  height: 3.5em-5px;
+  height: 2.5em;
 }
 
 #FOOTER {

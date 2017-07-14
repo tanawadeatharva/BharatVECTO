@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 	}
 
-	public abstract class LookupData<TKey, TValue> : LookupData
+	public abstract class LookupData<TKey, TValue> : LookupData where TValue : struct
 	{
 		protected Dictionary<TKey, TValue> Data = new Dictionary<TKey, TValue>();
 
@@ -81,21 +81,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 	}
 
-	public abstract class LookupData<TKey1, TKey2, TValue> : LookupData
+	public abstract class LookupData<TKey1, TKey2, TValue> : LookupData where TValue : struct
 	{
 		protected readonly Dictionary<Tuple<TKey1, TKey2>, TValue> Data = new Dictionary<Tuple<TKey1, TKey2>, TValue>();
 
 		public virtual TValue Lookup(TKey1 key1, TKey2 key2)
 		{
 			try {
-				return Data[new Tuple<TKey1, TKey2>(key1, key2)];
+				return Data[Tuple.Create(key1, key2)];
 			} catch (KeyNotFoundException) {
 				throw new VectoException(string.Format(ErrorMessage, key1, key2));
 			}
 		}
 	}
 
-	public abstract class LookupData<TKey1, TKey2, TKey3, TKey4, TValue> : LookupData
+	public abstract class LookupData<TKey1, TKey2, TKey3, TValue> : LookupData where TValue : struct
+	{
+		protected readonly Dictionary<Tuple<TKey1, TKey2, TKey3>, TValue> Data =
+			new Dictionary<Tuple<TKey1, TKey2, TKey3>, TValue>();
+
+		public virtual TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3)
+		{
+			try {
+				return Data[Tuple.Create(key1, key2, key3)];
+			} catch (KeyNotFoundException) {
+				throw new VectoException(string.Format(ErrorMessage, key1, key2, key3));
+			}
+		}
+
+		//public abstract TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3);
+	}
+
+	public abstract class LookupData<TKey1, TKey2, TKey3, TKey4, TValue> : LookupData where TValue : struct
 	{
 		public abstract TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4);
 	}

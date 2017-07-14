@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using TUGraz.VectoCommon.Models;
@@ -76,7 +77,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return
 				Runs.Select(
-						r => new CycleTypeDescription { Name = r.Run.CycleName, CycleType = r.Run.GetContainer().RunData.Cycle.CycleType })
+					r => new CycleTypeDescription { Name = r.Run.CycleName, CycleType = r.Run.GetContainer().RunData.Cycle.CycleType })
 					.Distinct();
 		}
 
@@ -136,13 +137,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void WaitFinished()
 		{
-			try {
-				Task.WaitAll(Runs.Select(r => r.RunTask).ToArray());
-			} catch (Exception) {
-				// ignored
-			}
+			Task.WaitAll(Runs.Select(r => r.RunTask).ToArray());
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		private void JobCompleted()
 		{
 			if (AllCompleted) {
@@ -160,6 +158,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Runs.ToDictionary(
 				r => r.Run.RunIdentifier,
 				r => new ProgressEntry {
+					RunId = r.Run.RunIdentifier,
+					JobRunId = r.Run.JobRunIdentifier,
 					RunName = r.Run.RunName,
 					CycleName = r.Run.CycleName,
 					RunSuffix = r.Run.RunSuffix,
@@ -174,14 +174,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public class ProgressEntry
 		{
+			// unique identifier of the simulation run
+			public int RunId;
+			// job-local identifier of the simulation run
+			public int JobRunId;
+
 			public string RunName;
+
 			public double Progress;
+
 			public double ExecTime;
+
 			public Exception Error;
+
 			public bool Canceled;
+
 			public bool Success;
+
 			public bool Done;
+
 			public string CycleName;
+
 			public string RunSuffix;
 		}
 
@@ -190,31 +203,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			public IVectoRun Run;
 			public JobContainer JobContainer;
-			public double Progress;
 			public bool Done;
-			public bool Started;
 			public bool Success;
 			public bool Canceled;
 			public double ExecTime;
 			public Exception ExecException;
-			public Task RunTask;
+			public readonly Task RunTask;
 
 			public RunEntry()
 			{
 				RunTask = new Task(() => {
-					Started = true;
 					var stopWatch = Stopwatch.StartNew();
 					try {
 						Run.Run();
 					} catch (Exception ex) {
 						Log.Error(ex, "Error during simulation run!");
 						ExecException = ex;
+						throw;
+					} finally {
+						stopWatch.Stop();
+						Success = Run.FinishedWithoutErrors && ExecException == null;
+						Done = true;
+						ExecTime = stopWatch.Elapsed.TotalMilliseconds;
+						JobContainer.JobCompleted();
 					}
-					stopWatch.Stop();
-					Success = Run.FinishedWithoutErrors && ExecException == null;
-					Done = true;
-					ExecTime = stopWatch.Elapsed.TotalMilliseconds;
-					JobContainer.JobCompleted();
 				});
 			}
 

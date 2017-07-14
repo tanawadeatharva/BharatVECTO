@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,7 +31,6 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
@@ -62,11 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				return value.Value.SI<Watt>();
 			}
 			value = _map.Extrapolate(nAuxiliary.Value(), powerAuxOut.Value());
-			if (value.HasValue) {
-				return value.Value.SI<Watt>();
-			}
-			throw new VectoException("AuxiliaryData {2}: Interpolation failed. nAux: {0}, powerOut:{1}", nAuxiliary.AsRPM,
-				powerAuxOut, auxId);
+			return value.Value.SI<Watt>();
 		}
 
 		internal AuxiliaryData(string id, double transmissionRatio, double efficiencyToEngine, double efficiencyToSupply,

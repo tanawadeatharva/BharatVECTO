@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
@@ -69,7 +68,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			_dimensions = table.Rows.Cast<DataRow>().Select(row => row.Field<string>(0)).ToArray();
 		}
 
-		public class Entry
+		public struct Entry
 		{
 			public string WheelType;
 			public KilogramSquareMeter Inertia;

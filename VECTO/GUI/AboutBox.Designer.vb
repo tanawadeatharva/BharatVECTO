@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -36,59 +36,23 @@ Partial Class AboutBox
 	'Das Bearbeiten mit dem Code-Editor ist nicht mÃ¶glich.
 	<DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
-		Me.Label10 = New System.Windows.Forms.Label()
-		Me.LabelLic = New System.Windows.Forms.Label()
-		Me.LabelLicDate = New System.Windows.Forms.Label()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.Label8 = New System.Windows.Forms.Label()
-		Me.Panel1 = New System.Windows.Forms.Panel()
 		Me.PictureBox1 = New System.Windows.Forms.PictureBox()
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
 		Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.PictureBoxJRC = New System.Windows.Forms.PictureBox()
-		Me.Panel1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
 		CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SuspendLayout()
-		'
-		'Label10
-		'
-		Me.Label10.AutoSize = True
-		Me.Label10.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.Label10.Location = New System.Drawing.Point(9, 250)
-		Me.Label10.Name = "Label10"
-		Me.Label10.Size = New System.Drawing.Size(75, 13)
-		Me.Label10.TabIndex = 11
-		Me.Label10.Text = "License file:"
-		'
-		'LabelLic
-		'
-		Me.LabelLic.AutoSize = True
-		Me.LabelLic.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.LabelLic.Location = New System.Drawing.Point(3, 0)
-		Me.LabelLic.Name = "LabelLic"
-		Me.LabelLic.Size = New System.Drawing.Size(22, 13)
-		Me.LabelLic.TabIndex = 12
-		Me.LabelLic.Text = "Lic"
-		'
-		'LabelLicDate
-		'
-		Me.LabelLicDate.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.LabelLicDate.AutoSize = True
-		Me.LabelLicDate.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.LabelLicDate.Location = New System.Drawing.Point(3, 26)
-		Me.LabelLicDate.Name = "LabelLicDate"
-		Me.LabelLicDate.Size = New System.Drawing.Size(12, 13)
-		Me.LabelLicDate.TabIndex = 13
-		Me.LabelLicDate.Text = "-"
 		'
 		'Label2
 		'
 		Me.Label2.AutoSize = True
 		Me.Label2.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.Label2.Location = New System.Drawing.Point(9, 346)
+		Me.Label2.Location = New System.Drawing.Point(12, 241)
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(162, 13)
 		Me.Label2.TabIndex = 7
@@ -98,21 +62,11 @@ Partial Class AboutBox
 		'
 		Me.Label8.AutoSize = True
 		Me.Label8.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.Label8.Location = New System.Drawing.Point(24, 368)
+		Me.Label8.Location = New System.Drawing.Point(27, 263)
 		Me.Label8.Name = "Label8"
 		Me.Label8.Size = New System.Drawing.Size(158, 39)
 		Me.Label8.TabIndex = 3
 		Me.Label8.Text = "Joint Research Centre" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Sustainable Transport Unit" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "European Commission"
-		'
-		'Panel1
-		'
-		Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-		Me.Panel1.Controls.Add(Me.LabelLic)
-		Me.Panel1.Controls.Add(Me.LabelLicDate)
-		Me.Panel1.Location = New System.Drawing.Point(12, 266)
-		Me.Panel1.Name = "Panel1"
-		Me.Panel1.Size = New System.Drawing.Size(464, 52)
-		Me.Panel1.TabIndex = 16
 		'
 		'PictureBox1
 		'
@@ -127,7 +81,7 @@ Partial Class AboutBox
 		'
 		Me.Label1.AutoSize = True
 		Me.Label1.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.Label1.Location = New System.Drawing.Point(9, 436)
+		Me.Label1.Location = New System.Drawing.Point(12, 331)
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(105, 13)
 		Me.Label1.TabIndex = 7
@@ -136,7 +90,7 @@ Partial Class AboutBox
 		'LinkLabel1
 		'
 		Me.LinkLabel1.AutoSize = True
-		Me.LinkLabel1.Location = New System.Drawing.Point(120, 436)
+		Me.LinkLabel1.Location = New System.Drawing.Point(123, 331)
 		Me.LinkLabel1.Name = "LinkLabel1"
 		Me.LinkLabel1.Size = New System.Drawing.Size(122, 13)
 		Me.LinkLabel1.TabIndex = 17
@@ -168,7 +122,7 @@ Partial Class AboutBox
 		'
 		Me.PictureBoxJRC.Cursor = System.Windows.Forms.Cursors.Hand
 		Me.PictureBoxJRC.Image = Global.TUGraz.VECTO.My.Resources.Resources.JRC_About
-		Me.PictureBoxJRC.Location = New System.Drawing.Point(216, 353)
+		Me.PictureBoxJRC.Location = New System.Drawing.Point(219, 248)
 		Me.PictureBoxJRC.Name = "PictureBoxJRC"
 		Me.PictureBoxJRC.Size = New System.Drawing.Size(260, 54)
 		Me.PictureBoxJRC.TabIndex = 15
@@ -177,14 +131,12 @@ Partial Class AboutBox
 		'AboutBox
 		'
 		Me.BackColor = System.Drawing.Color.White
-		Me.ClientSize = New System.Drawing.Size(491, 474)
+		Me.ClientSize = New System.Drawing.Size(491, 356)
 		Me.Controls.Add(Me.Label3)
 		Me.Controls.Add(Me.LinkLabel2)
 		Me.Controls.Add(Me.LinkLabel1)
-		Me.Controls.Add(Me.Panel1)
 		Me.Controls.Add(Me.PictureBoxJRC)
 		Me.Controls.Add(Me.PictureBox1)
-		Me.Controls.Add(Me.Label10)
 		Me.Controls.Add(Me.Label1)
 		Me.Controls.Add(Me.Label2)
 		Me.Controls.Add(Me.Label8)
@@ -192,21 +144,15 @@ Partial Class AboutBox
 		Me.Name = "AboutBox"
 		Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
 		Me.Text = "About VECTO"
-		Me.Panel1.ResumeLayout(False)
-		Me.Panel1.PerformLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
 		CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
 	End Sub
-	Friend WithEvents Label10 As Label
-	Friend WithEvents LabelLic As Label
-	Friend WithEvents LabelLicDate As Label
 	Friend WithEvents PictureBox1 As PictureBox
 	Friend WithEvents Label2 As Label
 	Friend WithEvents Label8 As Label
-	Friend WithEvents Panel1 As Panel
 	Friend WithEvents Label1 As Label
 	Friend WithEvents LinkLabel1 As LinkLabel
 	Friend WithEvents LinkLabel2 As LinkLabel

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -74,12 +75,27 @@ namespace TUGraz.VectoCore.Tests.Utils
 			CurrentRow = Data.NewRow();
 		}
 
+		public FuelData.Entry FuelData
+		{
+			get { return VectoCore.Models.Declaration.FuelData.Diesel; }
+		}
+
 		public VectoRun.Status RunStatus
 		{
 			get { return VectoRun.Status.Success; }
 		}
 
-		public void Finish(VectoRun.Status runStatus) {}
+		public string Error
+		{
+			get { return null; }
+		}
+
+		public string StackTrace
+		{
+			get { return null; }
+		}
+
+		public void Finish(VectoRun.Status runStatus, Exception exception = null) {}
 
 		public bool WriteModalResults { get; set; }
 
@@ -91,6 +107,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IEnumerable<T> GetValues<T>(DataColumn col)
 		{
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
+		}
+
+		public IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc)
+		{
+			throw new NotImplementedException();
 		}
 
 		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>

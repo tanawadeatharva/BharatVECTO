@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P039  Curb Weight Extra Trailer/Body
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		Kilogram CurbWeightExtra { get; }
+		Kilogram CurbMassExtra { get; }
 
 		/// <summary>
 		/// P040  Loading
@@ -79,6 +79,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		Meter DynamicTyreRadius { get; }
 
+		Meter Height { get; }
+	}
+
+	public interface IAirdragEngineeringInputData : IAirdragDeclarationInputData
+	{
 		/// <summary>
 		/// P050 - Cross Wind Correction Mode
 		/// cf. VECTO Input Parameters.xlsx
@@ -180,12 +185,6 @@ namespace TUGraz.VectoCommon.InputData
 		///// </summary>
 		//bool SkipGears { get; }
 
-		/// <summary>
-		/// P090, P091, P092, P127
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		ITorqueConverterEngineeringInputData TorqueConverter { get; }
-
 		Second DownshiftAfterUpshiftDelay { get; }
 
 		Second UpshiftAfterDownshiftDelay { get; }
@@ -194,7 +193,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		Second PowershiftShiftTime { get; }
 
-		double PowerShiftInertiaFactor { get; }
+		new ITorqueConverterEngineeringInputData TorqueConverter { get; }
 	}
 
 	public interface ITorqueConverterEngineeringInputData : ITorqueConverterDeclarationInputData
@@ -261,7 +260,7 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IDriverEngineeringInputData : IDriverDeclarationInputData
 	{
-		new IStartStopEngineeringInputData StartStop { get; }
+		//new IStartStopEngineeringInputData StartStop { get; }
 
 		new IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll { get; }
 
@@ -293,27 +292,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		MeterPerSecond UnderSpeed { get; }
-	}
-
-	public interface IStartStopEngineeringInputData : IStartStopDeclarationInputData
-	{
-		/// <summary>
-		/// P011  StartStop - Max speed
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		MeterPerSecond MaxSpeed { get; }
-
-		/// <summary>
-		/// P012  StartStop - Min ICE-ON Time
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		Second MinTime { get; }
-
-		/// <summary>
-		/// P013  StartStop - Activation Delay
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		Second Delay { get; }
 	}
 
 	public interface ILookaheadCoastingInputData

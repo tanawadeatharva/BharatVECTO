@@ -1,6 +1,6 @@
 ##Transmission Losses
 
-Every transmission component uses the following formula for calculating the torques at input and output side of the component:
+Every transmission component (gearbox, angledrive, axlegear, ...) uses the following formula for calculating the torques at input and output side of the component:
 
 $T_{output} = (T_{input} - T_{loss}) * r_{gear}$
 

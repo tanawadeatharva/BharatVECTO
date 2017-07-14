@@ -1,4 +1,4 @@
-' Copyright 2015 European Union.
+' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -28,7 +28,7 @@ Public Class cMAP
 		lFC = Nothing
 		LTq = Nothing
 		LnU = Nothing
-		iMapDim = -1
+		iMapDim = - 1
 		FuelMap = New cDelaunayMap
 	End Sub
 
@@ -46,7 +46,6 @@ Public Class cMAP
 
 		'Stop if there's no file
 		If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
-			'If ShowMsg Then WorkerMsg(tMsgID.Err, "Map file not found! (" & sFilePath & ")", MsgSrc)
 			Return False
 		End If
 
@@ -54,7 +53,6 @@ Public Class cMAP
 		file = New cFile_V3
 		If Not file.OpenRead(sFilePath) Then
 			file = Nothing
-			'TODO:WORKERMESSAGE If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
 			Return False
 		End If
 
@@ -87,7 +85,7 @@ Public Class cMAP
 				'Check sign
 				If CSng(line(2)) < 0 Then
 					file.Close()
-					'TODO:WORKERMESSAGEIf ShowMsg Then WorkerMsg(tMsgID.Err, "FC < 0 in map at " & nU & " [1/min], " & line(1) & " [Nm]", MsgSrc)
+
 					Return False
 				End If
 
@@ -97,7 +95,7 @@ Public Class cMAP
 			Loop
 		Catch ex As Exception
 
-			'TODO:WORKERMESSAGE If ShowMsg Then WorkerMsg(tMsgID.Err, "Error during file read! Line number " & iMapDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
+
 			GoTo lbEr
 
 		End Try
@@ -111,7 +109,7 @@ Public Class cMAP
 
 
 		'ERROR-label for clean Abort
-lbEr:
+		lbEr:
 		file.Close()
 		file = Nothing
 
@@ -140,8 +138,8 @@ lbEr:
 		val = CType(FuelMap.Intpol(nU, Tq), Single)
 
 		If FuelMap.ExtrapolError Then
-			'TODO:WORKERMESSAGE WorkerMsg(tMsgID.Err, "Cannot extrapolate FC map! n= " & nU.ToString("0.0") & " [1/min], Me= " & Tq.ToString("0.0") & " [Nm]", "MAP/FC_Intp")
-			Return -10000
+
+			Return - 10000
 		Else
 			Return val
 		End If

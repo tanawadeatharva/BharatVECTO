@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:VectoComponentEngineering xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaVersion="0.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 ../XSD/VectoEngineeringInput.xsd">
+	<Gearbox>
+		<Data id="gbx-vi2Oak2N">
+			<Manufacturer>Generic Gearbox Vendor</Manufacturer>
+			<Model>Generic 40t Long Haul Truck Gearbox</Model>
+			<Creator>Markus Quaritsch, TUG ITI</Creator>
+			<Date>2017-01-11T11:00:00Z</Date>
+			<AppVersion>3.0.1</AppVersion>
+			<TransmissionType>AMT</TransmissionType>
+			<Inertia>0.6</Inertia>
+			<TractionInterruption>1.5</TractionInterruption>
+			<Gears>
+				<Gear number="1">
+					<Ratio>14.930</Ratio>
+					<MaxTorque>2500</MaxTorque>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_IndirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+				<Gear number="2">
+					<Ratio>11.640</Ratio>
+					<MaxTorque>2500</MaxTorque>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_IndirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+				<Gear number="3">
+					<Ratio>9.020</Ratio>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_IndirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+				<Gear number="4">
+					<Ratio>7.040</Ratio>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_IndirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+				<Gear number="5">
+					<Ratio>5.640</Ratio>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_IndirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+				<Gear number="6">
+					<Ratio>4.400</Ratio>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_IndirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+				<Gear number="7">
+					<Ratio>3.390</Ratio>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_IndirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+				<Gear number="8">
+					<Ratio>2.650</Ratio>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_IndirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+				<Gear number="9">
+					<Ratio>2.050</Ratio>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_IndirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+				<Gear number="10">
+					<Ratio>1.600</Ratio>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_IndirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+				<Gear number="11">
+					<Ratio>1.280</Ratio>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_IndirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+				<Gear number="12">
+					<Ratio>1.000</Ratio>
+					<TorqueLossMap>
+						<Resource type="csv" file="GBX_DirectGear.vtlm"/>
+					</TorqueLossMap>
+					<ShiftPolygon>
+						<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+					</ShiftPolygon>
+				</Gear>
+			</Gears>
+		</Data>
+		<Signature>
+			<ComponentDataHash>d14189366134120e08fa3f2c6e3328dd13c08a23</ComponentDataHash>
+		</Signature>
+		<TorqueConverter>
+			<Data>
+				<Manufacturer>Generic Torqueconverter Manufacturer</Manufacturer>
+						<Model>Generic Torqueconverter</Model>
+						<Creator>Markus Quaritsch, TUG ITI</Creator>
+						<Date>2017-01-11T11:00:00Z</Date>
+				<ReferenceRPM>1000</ReferenceRPM>
+				<Characteristics>
+					<Resource type="csv" file="tc_data.vtcc"/>
+				</Characteristics>
+				<Inertia>1.234</Inertia>
+				<ShiftPolygon>
+					<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+				</ShiftPolygon>
+			</Data>
+		</TorqueConverter>
+	</Gearbox>
+</tns:VectoComponentEngineering>

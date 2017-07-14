@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -45,6 +45,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// Returns the data samples for the current position in the cycle.
 		/// </summary>
 		CycleData CycleData { get; }
+
+		bool PTOActive { get; }
 
 		/// <summary>
 		/// get a single driving-cycle entry at a certain distance ahead

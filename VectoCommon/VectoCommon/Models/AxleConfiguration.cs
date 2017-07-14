@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using TUGraz.VectoCommon.Utils;
 
@@ -53,6 +54,23 @@ namespace TUGraz.VectoCommon.Models
 		VehicleDriven,
 		VehicleNonDriven,
 		Trailer
+	}
+
+	public static class AxleTypeHelper
+	{
+		public static string GetLabel(this AxleType self)
+		{
+			switch (self) {
+				case AxleType.VehicleDriven:
+					return "Vehicle driven";
+				case AxleType.VehicleNonDriven:
+					return "Vehicle non-driven";
+				case AxleType.Trailer:
+					return "Trailer";
+				default:
+					throw new ArgumentOutOfRangeException("self", self, null);
+			}
+		}
 	}
 
 	public static class AxleConfigurationHelper
@@ -82,6 +100,26 @@ namespace TUGraz.VectoCommon.Models
 				case AxleConfiguration.AxleConfig_8x2:
 				case AxleConfiguration.AxleConfig_8x4:
 				case AxleConfiguration.AxleConfig_8x6:
+				case AxleConfiguration.AxleConfig_8x8:
+					return 4;
+			}
+			return 0;
+		}
+
+		public static int NumDrivenAxles(this AxleConfiguration self)
+		{
+			switch (self) {
+				case AxleConfiguration.AxleConfig_4x2:
+				case AxleConfiguration.AxleConfig_6x2:
+				case AxleConfiguration.AxleConfig_8x2:
+					return 1;
+				case AxleConfiguration.AxleConfig_4x4:
+				case AxleConfiguration.AxleConfig_6x4:
+				case AxleConfiguration.AxleConfig_8x4:
+					return 2;
+				case AxleConfiguration.AxleConfig_6x6:
+				case AxleConfiguration.AxleConfig_8x6:
+					return 3;
 				case AxleConfiguration.AxleConfig_8x8:
 					return 4;
 			}

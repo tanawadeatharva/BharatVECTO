@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -33,12 +33,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -64,30 +63,39 @@ namespace TUGraz.VectoCore.OutputData
 		/// <returns></returns>
 		object this[string auxId] { get; set; }
 
-		bool HasTorqueConverter { get; set; }
+		bool HasTorqueConverter { set; }
 
 		/// <summary>
 		/// Commits the data of the current simulation step.
 		/// </summary>
 		void CommitSimulationStep();
 
+		FuelData.Entry FuelData { get; }
+
 		VectoRun.Status RunStatus { get; }
 
-		/// <summary>
-		/// Finishes the writing of the DataWriter.
-		/// </summary>
-		void Finish(VectoRun.Status runStatus);
+		string Error { get; }
+
+		string StackTrace { get; }
 
 		IEnumerable<T> GetValues<T>(ModalResultField key);
 
 		IEnumerable<T> GetValues<T>(DataColumn col);
 
-		Dictionary<string, DataColumn> Auxiliaries { get; set; }
+		IEnumerable<T> GetValues<T>(Func<DataRow, T> selectorFunc);
+
+		Dictionary<string, DataColumn> Auxiliaries { get; }
+
 		T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>;
 
 		void SetDataValue(string fieldName, object value);
 
 		void AddAuxiliary(string id, string columnName = null);
+
+		/// <summary>
+		/// Finishes the writing of the DataWriter.
+		/// </summary>
+		void Finish(VectoRun.Status runStatus, Exception exception = null);
 
 		/// <summary>
 		/// clear the modal data after the simulation
@@ -108,12 +116,6 @@ namespace TUGraz.VectoCore.OutputData
 			return data.GetValues<T>(field).Min();
 		}
 
-		public static SI Average(this IEnumerable<SI> self, Func<SI, bool> filter)
-		{
-			var values = self.Where(filter ?? (x => x != null && !double.IsNaN(x.Value()))).ToList();
-			return values.Any() ? values.Sum() / values.Count : null;
-		}
-
 		/// <summary>
 		/// Returns a default value if the SI object is null.
 		/// </summary>
@@ -130,66 +132,60 @@ namespace TUGraz.VectoCore.OutputData
 			return self ?? defaultValue.SI<T>();
 		}
 
-		public static MeterPerSquareSecond AccelerationsPositive(this ModalDataContainer data)
+		public static MeterPerSquareSecond AccelerationsPositive(this IModalDataContainer data)
 		{
-			return
-				data.GetValues<MeterPerSquareSecond>(ModalResultField.acc)
-					.Where(x => x < -0.125)
-					.DefaultIfEmpty(0.SI<MeterPerSquareSecond>())
-					.Average();
+			return data.GetValues<MeterPerSquareSecond>(ModalResultField.acc)
+				.Where(x => x > 0.125)
+				.DefaultIfEmpty(0.SI<MeterPerSquareSecond>())
+				.Average();
 		}
 
-		public static MeterPerSquareSecond AccelerationsNegative(this ModalDataContainer data)
+		public static MeterPerSquareSecond AccelerationsNegative(this IModalDataContainer data)
 		{
-			return
-				data.GetValues<MeterPerSquareSecond>(ModalResultField.acc)
-					.Where(x => x < -0.125)
-					.DefaultIfEmpty(0.SI<MeterPerSquareSecond>())
-					.Average();
+			return data.GetValues<MeterPerSquareSecond>(ModalResultField.acc)
+				.Where(x => x < -0.125)
+				.DefaultIfEmpty(0.SI<MeterPerSquareSecond>())
+				.Average();
 		}
 
-		public static Scalar AccelerationTimeShare(this ModalDataContainer data)
+		public static Scalar AccelerationTimeShare(this IModalDataContainer data)
 		{
-			var accelerationTimeShare = data.Data.Rows.Cast<DataRow>()
-				.Select(x => new {
-					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
-					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
-				})
+			var accelerationTimeShare = data.GetValues(x => new {
+				a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
+				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+			})
 				.Sum(x => x.a > 0.125 ? x.dt : 0.SI<Second>()).DefaultIfNull(0);
 			return 100 * (accelerationTimeShare / data.Duration()).Cast<Scalar>();
 		}
 
-		public static Scalar DecelerationTimeShare(this ModalDataContainer data)
+		public static Scalar DecelerationTimeShare(this IModalDataContainer data)
 		{
-			var decelerationTimeShare = data.Data.Rows.Cast<DataRow>()
-				.Select(x => new {
-					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
-					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
-				})
+			var decelerationTimeShare = data.GetValues(x => new {
+				a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
+				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+			})
 				.Sum(x => x.a < -0.125 ? x.dt : 0.SI<Second>()).DefaultIfNull(0);
 			return 100 * (decelerationTimeShare / data.Duration()).Cast<Scalar>();
 		}
 
-		public static Scalar CruiseTimeShare(this ModalDataContainer data)
+		public static Scalar CruiseTimeShare(this IModalDataContainer data)
 		{
-			var cruiseTime = data.Data.Rows.Cast<DataRow>()
-				.Select(x => new {
-					v = x.Field<MeterPerSecond>((int)ModalResultField.v_act).DefaultIfNull(0),
-					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
-					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
-				})
+			var cruiseTime = data.GetValues(x => new {
+				v = x.Field<MeterPerSecond>((int)ModalResultField.v_act).DefaultIfNull(0),
+				a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
+				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+			})
 				.Sum(x => x.v >= 0.1.KMPHtoMeterPerSecond() && x.a.IsBetween(-0.125, 0.125) ? x.dt : 0.SI<Second>())
 				.DefaultIfNull(0);
 			return 100 * (cruiseTime / data.Duration()).Cast<Scalar>();
 		}
 
-		public static Scalar StopTimeShare(this ModalDataContainer data)
+		public static Scalar StopTimeShare(this IModalDataContainer data)
 		{
-			var stopTime = data.Data.Rows.Cast<DataRow>()
-				.Select(x => new {
-					v = x.Field<MeterPerSecond>((int)ModalResultField.v_act).DefaultIfNull(0),
-					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
-				})
+			var stopTime = data.GetValues(x => new {
+				v = x.Field<MeterPerSecond>((int)ModalResultField.v_act).DefaultIfNull(0),
+				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+			})
 				.Sum(x => x.v < 0.1.KMPHtoMeterPerSecond() ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
 		}
@@ -197,11 +193,6 @@ namespace TUGraz.VectoCore.OutputData
 		public static MeterPerSquareSecond AccelerationAverage(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<MeterPerSecond>(ModalResultField.acc) / data.Duration();
-		}
-
-		public static Second[] SimulationIntervals(this IModalDataContainer data)
-		{
-			return data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
 		}
 
 		public static Meter AltitudeDelta(this IModalDataContainer data)
@@ -268,7 +259,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var max = data.Max<Meter>(ModalResultField.dist);
 			var min = data.Min<Meter>(ModalResultField.dist);
-			return max == null || min == null ? null : (max - min);
+			return max == null || min == null ? null : max - min;
 		}
 
 		public static WattSecond WorkTotalMechanicalBrake(this IModalDataContainer data)
@@ -377,11 +368,11 @@ namespace TUGraz.VectoCore.OutputData
 		public static SI FuelConsumptionFinalLiterPer100Kilometer(this IModalDataContainer data)
 		{
 			var fuelConsumptionFinal = data.FuelConsumptionFinal();
-			if (fuelConsumptionFinal == null) {
+			if (fuelConsumptionFinal == null || data.FuelData.FuelDensity == null) {
 				return null;
 			}
 
-			var fcVolumePerMeter = fuelConsumptionFinal / Physics.FuelDensity;
+			var fcVolumePerMeter = fuelConsumptionFinal / data.FuelData.FuelDensity;
 			return fcVolumePerMeter.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
 		}
 
@@ -391,7 +382,16 @@ namespace TUGraz.VectoCore.OutputData
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * Physics.CO2PerFuelWeight / distance;
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * data.FuelData.CO2PerFuelWeight / distance;
+		}
+
+		public static JoulePerMeter EnergyPerMeter(this IModalDataContainer data)
+		{
+			var distance = data.Distance();
+			if (distance == null || distance.IsEqual(0)) {
+				return null;
+			}
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * data.FuelData.LowerHeatingValue / distance;
 		}
 
 		public static KilogramPerSecond FCMapPerSecond(this IModalDataContainer data)
@@ -445,26 +445,30 @@ namespace TUGraz.VectoCore.OutputData
 		}
 
 
-		public static MeterPerSecond MaxSpeed(this ModalDataContainer data)
+		public static MeterPerSecond MaxSpeed(this IModalDataContainer data)
 		{
 			return data.Max<MeterPerSecond>(ModalResultField.v_act).DefaultIfNull(0);
 		}
 
-		public static MeterPerSquareSecond MaxAcceleration(this ModalDataContainer data)
+		public static MeterPerSecond MinSpeed(this IModalDataContainer data)
+		{
+			return data.Min<MeterPerSecond>(ModalResultField.v_act).DefaultIfNull(0);
+		}
+
+		public static MeterPerSquareSecond MaxAcceleration(this IModalDataContainer data)
 		{
 			return data.Max<MeterPerSquareSecond>(ModalResultField.acc).DefaultIfNull(0);
 		}
 
-		public static MeterPerSquareSecond MaxDeceleration(this ModalDataContainer data)
+		public static MeterPerSquareSecond MaxDeceleration(this IModalDataContainer data)
 		{
 			return -data.Min<MeterPerSquareSecond>(ModalResultField.acc).DefaultIfNull(0);
 		}
 
-		public static PerSecond AvgEngineSpeed(this ModalDataContainer data)
+		public static PerSecond AvgEngineSpeed(this IModalDataContainer data)
 		{
-			var integral = data.Data.Rows.Cast<DataRow>()
-				.Sum(x => x.Field<PerSecond>((int)ModalResultField.n_eng_avg).Value() *
-						x.Field<Second>((int)ModalResultField.simulationInterval).Value());
+			var integral = data.GetValues(x => x.Field<PerSecond>((int)ModalResultField.n_eng_avg).Value() *
+												x.Field<Second>((int)ModalResultField.simulationInterval).Value()).Sum();
 			return (integral / Duration(data).Value()).SI<PerSecond>();
 		}
 
@@ -473,71 +477,73 @@ namespace TUGraz.VectoCore.OutputData
 			return data.Max<PerSecond>(ModalResultField.n_eng_avg);
 		}
 
-		public static Scalar EngineMaxLoadTimeShare(this ModalDataContainer data)
+		public static Scalar EngineMaxLoadTimeShare(this IModalDataContainer data)
 		{
-			var sum = data.Data.Rows.Cast<DataRow>()
-				.Select(x => new {
-					tMax = x.Field<NewtonMeter>((int)ModalResultField.Tq_full).DefaultIfNull(-1),
-					tEng = x.Field<NewtonMeter>((int)ModalResultField.T_eng_fcmap).DefaultIfNull(0),
-					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
-				})
-				.Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
+			var sum = data.GetValues(x => new {
+				tMax = x.Field<NewtonMeter>((int)ModalResultField.Tq_full).DefaultIfNull(-1),
+				tEng = x.Field<NewtonMeter>((int)ModalResultField.T_eng_fcmap).DefaultIfNull(0),
+				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+			}).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * sum / Duration(data);
 		}
 
-		public static Scalar GearshiftCount(this ModalDataContainer data)
+		public static Scalar GearshiftCount(this IModalDataContainer data)
 		{
 			var prevGear = data.GetValues<uint>(ModalResultField.Gear).First();
 			var gearCount = 0;
-			foreach (DataRow row in data.Data.Rows) {
-				var gear = row.Field<uint>((int)ModalResultField.Gear);
-				var speed = row.Field<MeterPerSecond>((int)ModalResultField.v_act);
-				if (speed != null && speed.IsSmallerOrEqual(0.1)) {
+
+			var shifts = data.GetValues(x => new {
+				Gear = x.Field<uint>((int)ModalResultField.Gear),
+				Speed = x.Field<MeterPerSecond>((int)ModalResultField.v_act)
+			});
+			foreach (var entry in shifts) {
+				if (entry.Speed != null && entry.Speed.IsSmallerOrEqual(0.1)) {
 					prevGear = 0;
 					gearCount++;
-					continue;
 				}
-				if (gear == 0 || gear == prevGear) {
+				if (entry.Gear == 0 || entry.Gear == prevGear) {
 					continue;
 				}
 				gearCount++;
-				prevGear = gear;
+				prevGear = entry.Gear;
 			}
 			return gearCount.SI<Scalar>();
 		}
 
-		public static Scalar CoastingTimeShare(this ModalDataContainer data)
+		public static Scalar CoastingTimeShare(this IModalDataContainer data)
 		{
-			var sum = data.Data.Rows.Cast<DataRow>()
-				.Select(x => new {
-					DrivingBehavior = x.Field<DrivingBehavior>((int)ModalResultField.drivingBehavior),
-					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
-				})
+			var sum = data.GetValues(x => new {
+				DrivingBehavior = x.Field<DrivingBehavior>((int)ModalResultField.drivingBehavior),
+				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+			})
 				.Sum(x => x.DrivingBehavior == DrivingBehavior.Coasting ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * sum / Duration(data);
 		}
 
-		public static Scalar BrakingTimeShare(this ModalDataContainer data)
+		public static Scalar BrakingTimeShare(this IModalDataContainer data)
 		{
-			var sum = data.Data.Rows.Cast<DataRow>()
-				.Select(x => new {
-					DrivingBehavior = x.Field<DrivingBehavior>((int)ModalResultField.drivingBehavior),
-					dt = x.Field<Second>((int)ModalResultField.simulationInterval)
-				})
+			var sum = data.GetValues(x => new {
+				DrivingBehavior = x.Field<DrivingBehavior>((int)ModalResultField.drivingBehavior),
+				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+			})
 				.Sum(x => x.DrivingBehavior == DrivingBehavior.Braking ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * sum / Duration(data);
 		}
 
-		public static Dictionary<uint, Scalar> TimeSharePerGear(this ModalDataContainer data, uint gearCount)
+		public static Dictionary<uint, Scalar> TimeSharePerGear(this IModalDataContainer data, uint gearCount)
 		{
 			var retVal = new Dictionary<uint, Scalar>();
 			for (uint i = 0; i <= gearCount; i++) {
 				retVal[i] = 0.SI<Scalar>();
 			}
 
-			foreach (var dataRow in data.Data.Rows.Cast<DataRow>()) {
-				var gear = dataRow.Field<uint>((int)ModalResultField.Gear);
-				retVal[gear] += dataRow.Field<Second>((int)ModalResultField.simulationInterval).Value();
+			var gearData = data.GetValues(x => new {
+				Gear = x.Field<uint>((int)ModalResultField.Gear),
+				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+			});
+
+			foreach (var entry in gearData) {
+				retVal[entry.Gear] += entry.dt.Value();
 			}
 
 			var duration = Duration(data).Value();

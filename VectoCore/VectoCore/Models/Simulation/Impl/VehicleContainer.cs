@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			get {
 				if (Gearbox == null) {
-					throw new VectoException("no gearbox available!");
+					return 0; // throw new VectoException("no gearbox available!");
 				}
 				return Gearbox.Gear;
 			}
@@ -114,11 +114,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 				return Gearbox.StartAcceleration;
 			}
-		}
-
-		public NewtonMeter GearMaxTorque
-		{
-			get { return Gearbox != null ? Gearbox.GearMaxTorque : null; }
 		}
 
 		public Watt GearboxLoss()
@@ -268,6 +263,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Cycle;
 		}
 
+		public FuelType FuelType
+		{
+			get { return ModData.FuelData.FuelType; }
+		}
+
 		public Second AbsTime { get; set; }
 
 		public void AddComponent(VectoSimulationComponent component)
@@ -322,15 +322,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public void FinishSimulation()
+		public void FinishSimulationRun(Exception e = null)
 		{
 			Log.Info("VehicleContainer finishing simulation.");
-			ModData.Finish(RunStatus);
+			ModData.Finish(RunStatus, e);
 
 			WriteSumData(ModData);
 
 			ModData.FinishSimulation();
 			DrivingCycle.FinishSimulation();
+		}
+
+		public void FinishSimulation()
+		{
+			throw new NotImplementedException();
 		}
 
 		public VectoRun.Status RunStatus { get; set; }
@@ -362,6 +367,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return DrivingCycle.LookAhead(time);
 		}
+
 
 		public Watt BrakePower
 		{
@@ -404,6 +410,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public CycleData CycleData
 		{
 			get { return DrivingCycle.CycleData; }
+		}
+
+		public bool PTOActive
+		{
+			get { return DrivingCycle.PTOActive; }
 		}
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)

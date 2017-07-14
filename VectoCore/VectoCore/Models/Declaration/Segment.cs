@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -35,10 +35,13 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class Segment
+	public struct Segment
 	{
-		public VehicleCategory VehicleCategory { get; set; }
+		public bool Found;
+		
+		public VehicleClass VehicleClass { get; internal set; }
 
+		public VehicleCategory VehicleCategory { get; set; }
 
 		public AxleConfiguration AxleConfiguration { get; set; }
 
@@ -48,12 +51,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Kilogram GrossVehicleMassRating { get; set; }
 
-		public VehicleClass VehicleClass { get; internal set; }
-
 		public Stream AccelerationFile { get; internal set; }
 
 		public Mission[] Missions { get; internal set; }
 
+		public Meter VehicleHeight { get; internal set; }
+
+		public MeterPerSecond DesignSpeed { get; internal set; }
+
+		public SquareMeter CdADefault { get; internal set; }
+
 		public SquareMeter CdAConstruction { get; internal set; }
+
+		public Kilogram MunicipalBodyWeight { get; internal set; }
 	}
 }

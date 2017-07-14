@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public class TransmissionState : SimpleComponentState
 		{
 			public TransmissionLossMap.LossMapResult TorqueLossResult;
-			public NewtonMeter TorqueLoss = 0.SI<NewtonMeter>();
+			//public NewtonMeter TorqueLoss = 0.SI<NewtonMeter>();
 		}
 
 		protected TransmissionComponent(IVehicleContainer container, TransmissionData modelData) : base(container)

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -51,7 +51,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_upShiftPolygon = upShift;
 			_downShiftPolygon = downshift;
 		}
-
 
 		public ReadOnlyCollection<ShiftPolygonEntry> Upshift
 		{
@@ -110,9 +109,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <returns><c>true</c> if current power request is on the left side of the shiftpolygon segment; otherwise, <c>false</c>.</returns>
 		/// <remarks>Computes a simplified cross product for the vectors: from--X, from--to and checks
 		/// if the z-component is positive (which means that X was on the right side of from--to).</remarks>
-		protected static bool IsLeftOf(PerSecond angularSpeed, NewtonMeter torque,
+		public static bool IsLeftOf(PerSecond angularSpeed, NewtonMeter torque,
 			Tuple<ShiftPolygonEntry, ShiftPolygonEntry> segment)
 		{
+			if (segment.Item1.AngularSpeed < angularSpeed && segment.Item2.AngularSpeed < angularSpeed)
+				return false;
+
 			var abX = segment.Item2.AngularSpeed.Value() - segment.Item1.AngularSpeed.Value();
 			var abY = segment.Item2.Torque.Value() - segment.Item1.Torque.Value();
 			var acX = angularSpeed.Value() - segment.Item1.AngularSpeed.Value();
@@ -130,9 +132,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <returns><c>true</c> if current power request is on the left side of the shiftpolygon segment; otherwise, <c>false</c>.</returns>
 		/// <remarks>Computes a simplified cross product for the vectors: from--X, from--to and checks
 		/// if the z-component is negative (which means that X was on the left side of from--to).</remarks>
-		protected static bool IsRightOf(PerSecond angularSpeed, NewtonMeter torque,
+		public static bool IsRightOf(PerSecond angularSpeed, NewtonMeter torque,
 			Tuple<ShiftPolygonEntry, ShiftPolygonEntry> segment)
 		{
+			if (segment.Item1.AngularSpeed > angularSpeed && segment.Item2.AngularSpeed > angularSpeed)
+				return false;
+
 			var abX = segment.Item2.AngularSpeed.Value() - segment.Item1.AngularSpeed.Value();
 			var abY = segment.Item2.Torque.Value() - segment.Item1.Torque.Value();
 			var acX = angularSpeed.Value() - segment.Item1.AngularSpeed.Value();
@@ -141,28 +146,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			return z.IsSmaller(0);
 		}
 
-
 		// ReSharper disable once UnusedMember.Global -- used via validation
 		public static ValidationResult ValidateShiftPolygon(ShiftPolygon shiftPolygon, ValidationContext validationContext)
 		{
-			var gbxTypeService = validationContext.GetService(typeof(GearboxTypeServiceContainer)) as GearboxTypeServiceContainer;
-			var gbxType = gbxTypeService == null ? null : gbxTypeService.Type;
+			var validationService =
+				validationContext.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			var gbxType = validationService != null ? validationService.GearboxType : null;
 
-			if (gbxType == null || gbxType.Value.AutomaticTransmission())
+			if (gbxType == null || gbxType.Value.AutomaticTransmission()) {
 				return ValidationResult.Success;
+			}
 
-			return shiftPolygon.Downshift.Pairwise(Tuple.Create)
-				.Any(
-					downshiftLine =>
-						shiftPolygon.Upshift.Any(upshiftEntry => IsLeftOf(upshiftEntry.AngularSpeed, upshiftEntry.Torque, downshiftLine)))
+			return shiftPolygon.Downshift.Pairwise(Tuple.Create).Any(downshiftLine =>
+				shiftPolygon.Upshift.Any(upshiftEntry => IsLeftOf(upshiftEntry.AngularSpeed, upshiftEntry.Torque, downshiftLine)))
 				? new ValidationResult("upshift line has to be right of the downshift line!")
 				: ValidationResult.Success;
 		}
 
-
 		[DebuggerDisplay("{Torque}, {AngularSpeed}")]
 		public class ShiftPolygonEntry
 		{
+			public ShiftPolygonEntry(NewtonMeter torque, PerSecond angularSpeed)
+			{
+				Torque = torque;
+				AngularSpeed = angularSpeed;
+			}
+
 			/// <summary>
 			///		[Nm] engine torque
 			/// </summary>
@@ -182,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				// vertical line
 				return double.MaxValue.SI<NewtonMeter>();
 			}
-			return VectoMath.Interpolate(section.Item1.AngularSpeed, section.Item2.AngularSpeed, section.Item1.Torque, 
+			return VectoMath.Interpolate(section.Item1.AngularSpeed, section.Item2.AngularSpeed, section.Item1.Torque,
 				section.Item2.Torque, inAngularVelocity);
 		}
 	}

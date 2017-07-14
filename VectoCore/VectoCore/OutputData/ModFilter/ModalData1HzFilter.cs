@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -157,6 +157,10 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 				var dt = remainingDt;
 				var a = (MeterPerSquareSecond)last[(int)ModalResultField.acc];
 				var ds = v * dt + a / 2 * dt * dt;
+				if (v.IsEqual(0)) {
+					ds = 0.SI<Meter>();
+					a = 0.SI<MeterPerSquareSecond>();
+				}
 				if (ds.IsSmaller(0)) {
 					throw new VectoSimulationException("1Hz-Filter: simulation distance must not be negative. ds: {0}  {1}", ds, "4");
 				}

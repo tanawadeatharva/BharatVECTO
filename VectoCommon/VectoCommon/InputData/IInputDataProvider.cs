@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Xml.Linq;
+
 namespace TUGraz.VectoCommon.InputData
 {
 	public interface IInputDataProvider {}
@@ -38,6 +40,8 @@ namespace TUGraz.VectoCommon.InputData
 		IDeclarationJobInputData JobInputData();
 
 		IVehicleDeclarationInputData VehicleInputData { get; }
+
+		IAirdragDeclarationInputData AirdragInputData { get; }
 
 		IGearboxDeclarationInputData GearboxInputData { get; }
 
@@ -54,6 +58,10 @@ namespace TUGraz.VectoCommon.InputData
 		IRetarderInputData RetarderInputData { get; }
 
 		IDriverDeclarationInputData DriverInputData { get; }
+
+		IPTOTransmissionInputData PTOTransmissionInputData { get; }
+
+		XElement XMLHash { get; }
 	}
 
 	public interface IEngineeringInputDataProvider : IInputDataProvider
@@ -61,6 +69,8 @@ namespace TUGraz.VectoCommon.InputData
 		IEngineeringJobInputData JobInputData();
 
 		IVehicleEngineeringInputData VehicleInputData { get; }
+
+		IAirdragEngineeringInputData AirdragInputData { get; }
 
 		IGearboxEngineeringInputData GearboxInputData { get; }
 

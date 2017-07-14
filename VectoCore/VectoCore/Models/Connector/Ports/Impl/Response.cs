@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -85,9 +85,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseOverload : AbstractResponse
 	{
-		public ResponseOverload() {}
 		public Watt Delta { get; set; }
-		public double Gradient { get; set; }
 	}
 
 	/// <summary>
@@ -95,10 +93,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseUnderload : AbstractResponse
 	{
-		public ResponseUnderload() {}
-
 		public Watt Delta { get; set; }
-		public double Gradient { get; set; }
 	}
 
 	/// <summary>
@@ -123,12 +118,18 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	{
 		public Watt DeltaFullLoad { get; set; }
 		public Watt DeltaDragLoad { get; set; }
+		public PerSecond DeltaEngineSpeed { get; set; }
 	}
 
 	internal class ResponseGearShift : AbstractResponse
-	{
-		public ResponseGearShift() {}
-	}
+	{}
 
+/*
 	internal class ResponseEngineSpeedTooLow : ResponseDryRun {}
+*/
+
+	internal class ResponseEngineSpeedTooHigh : AbstractResponse
+	{
+		public PerSecond DeltaEngineSpeed { get; set; }	
+	}
 }

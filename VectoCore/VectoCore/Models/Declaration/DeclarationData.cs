@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -39,149 +39,63 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class DeclarationData
+	public static class DeclarationData
 	{
 		public const string DeclarationDataResourcePrefix = "TUGraz.VectoCore.Resources.Declaration";
 
-		private static DeclarationData _instance;
-		private Segments _segments;
-		private Wheels _wheels;
-		private PT1 _pt1;
-		private ElectricSystem _electricSystem;
-		private Fan _fan;
-		private HeatingVentilationAirConditioning _heatingVentilationAirConditioning;
-		private PneumaticSystem _pneumaticSystem;
-		private SteeringPump _steeringPump;
-		private WHTCCorrection _whtcCorrection;
-		private AirDrag _airDrag;
-		private StandardBodies _standardBodies;
-		private Payloads _payloads;
-		private PTOTransmission _pto;
+		public static readonly Watt MinEnginePowerForEMS = 300e3.SI<Watt>();
 
-		public static PTOTransmission PTOTransmission
-		{
-			get { return Instance()._pto ?? (Instance()._pto = new PTOTransmission()); }
-		}
+		public static readonly Segments Segments = new Segments();
+		public static readonly Wheels Wheels = new Wheels();
+		public static readonly PT1 PT1 = new PT1();
+		public static readonly FuelData FuelData = FuelData.Instance();
+		public static readonly ElectricSystem ElectricSystem = new ElectricSystem();
+		public static readonly Fan Fan = new Fan();
 
-		public static Wheels Wheels
-		{
-			get { return Instance()._wheels ?? (Instance()._wheels = new Wheels()); }
-		}
+		public static readonly HeatingVentilationAirConditioning HeatingVentilationAirConditioning =
+			new HeatingVentilationAirConditioning();
 
-		public static Segments Segments
-		{
-			get { return Instance()._segments ?? (Instance()._segments = new Segments()); }
-		}
-
-		public static PT1 PT1
-		{
-			get { return Instance()._pt1 ?? (Instance()._pt1 = new PT1()); }
-		}
-
-		public static Payloads Payloads
-		{
-			get { return Instance()._payloads ?? (Instance()._payloads = new Payloads()); }
-		}
-
-		public static ElectricSystem ElectricSystem
-		{
-			get { return Instance()._electricSystem ?? (Instance()._electricSystem = new ElectricSystem()); }
-		}
+		public static readonly PneumaticSystem PneumaticSystem = new PneumaticSystem();
+		public static readonly SteeringPump SteeringPump = new SteeringPump();
+		public static readonly WHTCCorrection WHTCCorrection = new WHTCCorrection();
+		public static readonly AirDrag AirDrag = new AirDrag();
+		public static readonly StandardBodies StandardBodies = new StandardBodies();
+		public static readonly Payloads Payloads = new Payloads();
+		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.
 		/// (so called "pc-formula", Whitebook Apr 2016, Part 1, p.187)
 		/// </summary>
-		public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, MissionType missionType)
+		public static Kilogram GetPayloadForGrossVehicleWeight(Kilogram grossVehicleWeight, string equationName)
 		{
-			return missionType == MissionType.LongHaul
-				? Payloads.Lookup75Percent(grossVehicleWeight)
-				: Payloads.Lookup50Percent(grossVehicleWeight);
+			if (equationName.ToLower().StartsWith("pc10")) {
+				return Payloads.Lookup10Percent(grossVehicleWeight);
+			}
+			if (equationName.ToLower().StartsWith("pc75")) {
+				return Payloads.Lookup75Percent(grossVehicleWeight);
+			}
+			return Payloads.Lookup50Percent(grossVehicleWeight);
 		}
 
 		/// <summary>
 		/// Returns the payload for a trailer. This is 75% of (GVW-CurbWeight).
 		/// </summary>
-		public static Kilogram GetPayloadForTrailerWeight(Kilogram grossVehicleWeight, Kilogram curbWeight)
+		public static Kilogram GetPayloadForTrailerWeight(Kilogram grossVehicleWeight, Kilogram curbWeight, bool lowLoading)
 		{
-			return Payloads.LookupTrailer(grossVehicleWeight, curbWeight);
-		}
-
-		public static Fan Fan
-		{
-			get { return Instance()._fan ?? (Instance()._fan = new Fan()); }
-		}
-
-		public static HeatingVentilationAirConditioning HeatingVentilationAirConditioning
-		{
-			get {
-				return Instance()._heatingVentilationAirConditioning ??
-						(Instance()._heatingVentilationAirConditioning = new HeatingVentilationAirConditioning());
-			}
-		}
-
-		public static StandardBodies StandardBodies
-		{
-			get { return Instance()._standardBodies ?? (Instance()._standardBodies = new StandardBodies()); }
-		}
-
-		public static PneumaticSystem PneumaticSystem
-		{
-			get { return Instance()._pneumaticSystem ?? (Instance()._pneumaticSystem = new PneumaticSystem()); }
-		}
-
-		public static SteeringPump SteeringPump
-		{
-			get { return Instance()._steeringPump ?? (Instance()._steeringPump = new SteeringPump()); }
-		}
-
-		public static WHTCCorrection WHTCCorrection
-		{
-			get { return Instance()._whtcCorrection ?? (Instance()._whtcCorrection = new WHTCCorrection()); }
-		}
-
-		public static AirDrag AirDrag
-		{
-			get { return Instance()._airDrag ?? (Instance()._airDrag = new AirDrag()); }
+			return (Math.Round((Payloads.LookupTrailer(grossVehicleWeight, curbWeight) / (lowLoading ? 7.5 : 1)).LimitTo(0.SI<Kilogram>(),
+				grossVehicleWeight - curbWeight).Value() / 100, 0) * 100).SI<Kilogram>();
 		}
 
 		public static int PoweredAxle()
 		{
 			return 1;
-		}
-
-		private static DeclarationData Instance()
-		{
-			return _instance ?? (_instance = new DeclarationData());
-		}
-
-		public static class Physics
-		{
-			/// <summary>
-			/// The standard acceleration for gravity on earth.
-			/// http://physics.nist.gov/Pubs/SP330/sp330.pdf (page 52)
-			/// </summary>
-			public static readonly MeterPerSquareSecond GravityAccelleration = 9.80665.SI<MeterPerSquareSecond>();
-
-			/// <summary>
-			/// Density of air.
-			/// </summary>
-			public static readonly KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
-
-			/// <summary>
-			/// Density of fuel.
-			/// </summary>
-			public static readonly KilogramPerCubicMeter FuelDensity = 832.SI<KilogramPerCubicMeter>();
-
-			/// <summary>
-			/// fuel[kg] => co2[kg]. Factor to convert from fuel weight to co2 weight.
-			/// </summary>
-			public static readonly double CO2PerFuelWeight = 3.16;
 		}
 
 		public static class Driver
@@ -204,24 +118,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 				};
 
 				public static readonly MeterPerSecond MinSpeed = 50.KMPHtoMeterPerSecond();
-				public static readonly MeterPerSecond OverSpeed = 5.KMPHtoMeterPerSecond();
+				public static readonly MeterPerSecond OverSpeed = 2.5.KMPHtoMeterPerSecond();
 				public static readonly MeterPerSecond UnderSpeed = 5.KMPHtoMeterPerSecond();
 			}
 
-			public static class StartStop
-			{
-				public static readonly MeterPerSecond MaxSpeed = 5.KMPHtoMeterPerSecond();
-				public static readonly Second Delay = 5.SI<Second>();
-				public static readonly Second MinTime = 5.SI<Second>();
-			}
+			//public static class StartStop
+			//{
+			//	public static readonly MeterPerSecond MaxSpeed = 5.KMPHtoMeterPerSecond();
+			//	public static readonly Second Delay = 5.SI<Second>();
+			//	public static readonly Second MinTime = 5.SI<Second>();
+			//}
 		}
 
 		public static class Trailer
 		{
-			public const double RollResistanceCoefficient = 0.00555;
+			public const double RollResistanceCoefficient = 0.0055;
 			public const double TyreTestLoad = 37500;
+
 			public const bool TwinTyres = false;
-			public const string WheelsType = "385/65 R 22.5";
+			//public const string WheelsType = "385/65 R 22.5";
 		}
 
 		public static class Engine
@@ -231,6 +146,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
 			public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI().Kilo.Gramm.Per.Meter; // [kg/m]
+
+			public const double TorqueLimitGearboxFactor = 0.9;
+			public const double TorqueLimitVehicleFactor = 0.95;
 
 			public static KilogramSquareMeter EngineInertia(CubicMeter displacement, GearboxType gbxType)
 			{
@@ -255,21 +173,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly Second MinTimeBetweenGearshifts = 1.5.SI<Second>();
 			public static readonly Second DownshiftAfterUpshiftDelay = 10.SI<Second>();
 			public static readonly Second UpshiftAfterDownshiftDelay = 10.SI<Second>();
+
 			public static readonly MeterPerSquareSecond UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
+
 			//public static readonly PerSecond TorqueConverterSpeedLimit = 1600.RPMtoRad();
-			public static readonly double TorqueConverterSecondGearThreshold = 1.8;
+			public static double TorqueConverterSecondGearThreshold(VehicleCategory category)
+			{
+				return category.IsTruck() ? 1.8 : 1.85;
+			}
+
+			public static readonly Second PowershiftShiftTime = 0.8.SI<Second>();
 
 			/// <summary>
 			/// computes the shift polygons for a single gear according to the whitebook 2016
 			/// </summary>
-			/// <param name="gear">index of the gear to compute the shift polygons for</param>
+			/// <param name="type"></param>
+			/// <param name="gearIdx">index of the gear to compute the shift polygons for  -- gear number - 1!</param>
 			/// <param name="fullLoadCurve">engine full load curve, potentially limited by the gearbox</param>
 			/// <param name="gears">list of gears</param>
 			/// <param name="engine">engine data</param>
 			/// <param name="axlegearRatio"></param>
 			/// <param name="dynamicTyreRadius"></param>
 			/// <returns></returns>
-			public static ShiftPolygon ComputeShiftPolygon(int gear, FullLoadCurve fullLoadCurve,
+			public static ShiftPolygon ComputeShiftPolygon(GearboxType type, int gearIdx, EngineFullLoadCurve fullLoadCurve,
+				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
+			{
+				return type.AutomaticTransmission()
+					? TorqueConverter.ComputeShiftPolygon(fullLoadCurve, gearIdx == 0, gearIdx >= gears.Count - 1)
+					// That's the same for all gears, so call the same method...
+					: ComputeManualTransmissionShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
+			}
+
+			public static ShiftPolygon ComputeManualTransmissionShiftPolygon(int gearIdx, EngineFullLoadCurve fullLoadCurve,
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
 				if (gears.Count < 2) {
@@ -279,20 +214,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				// ReSharper disable once InconsistentNaming
 				var engineSpeed85kmhLastGear = ComputeEngineSpeed85kmh(gears[gears.Count - 1], axlegearRatio, dynamicTyreRadius);
 
-				var nVHigh = VectoMath.Min(engineSpeed85kmhLastGear, engine.FullLoadCurve.RatedSpeed);
+				var nVHigh = VectoMath.Min(engineSpeed85kmhLastGear, engine.FullLoadCurves[0].RatedSpeed);
 
 				var diffRatio = gears[gears.Count - 2].Ratio / gears[gears.Count - 1].Ratio - 1;
 
-				var maxDragTorque = engine.FullLoadCurve.MaxDragTorque * 1.1;
+				var maxDragTorque = fullLoadCurve.MaxDragTorque * 1.1;
 
 				var p1 = new Point(engine.IdleSpeed.Value() / 2, 0);
 				var p2 = new Point(engine.IdleSpeed.Value() * 1.1, 0);
 				var p3 = new Point(nVHigh.Value() * 0.9,
-					engine.FullLoadCurve.FullLoadStationaryTorque(nVHigh * 0.9).Value());
+					fullLoadCurve.FullLoadStationaryTorque(nVHigh * 0.9).Value());
 
-				var p4 =
-					new Point((nVHigh * (1 + diffRatio / 3)).Value(), 0);
-				var p5 = new Point(engine.FullLoadCurve.N95hSpeed.Value(), engine.FullLoadCurve.MaxTorque.Value());
+				var p4 = new Point((nVHigh * (1 + diffRatio / 3)).Value(), 0);
+				var p5 = new Point(fullLoadCurve.N95hSpeed.Value(), fullLoadCurve.MaxTorque.Value());
 
 				var p6 = new Point(p2.X, VectoMath.Interpolate(p1, p3, p2.X));
 				var p7 = new Point(p4.X, VectoMath.Interpolate(p2, p5, p4.X));
@@ -301,22 +235,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var downshiftCorr = MoveDownshiftBelowFld(Edge.Create(p6, p3), fldMargin, 1.1 * fullLoadCurve.MaxTorque);
 
 				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
-				if (gear > 0) {
+				if (gearIdx > 0) {
 					downShift =
 						new[] { p2, downshiftCorr.P1, downshiftCorr.P2 }.Select(
-							point => new ShiftPolygon.ShiftPolygonEntry() {
-								AngularSpeed = point.X.SI<PerSecond>(),
-								Torque = point.Y.SI<NewtonMeter>()
-							}).ToList();
+							point => new ShiftPolygon.ShiftPolygonEntry(point.Y.SI<NewtonMeter>(), point.X.SI<PerSecond>())).ToList();
 
 					downShift[0].Torque = maxDragTorque;
 				}
 				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
-				if (gear >= gears.Count - 1) {
+				if (gearIdx >= gears.Count - 1) {
 					return new ShiftPolygon(downShift, upShift);
 				}
 
-				var gearRatio = gears[gear].Ratio / gears[gear + 1].Ratio;
+				var gearRatio = gears[gearIdx].Ratio / gears[gearIdx + 1].Ratio;
 				var rpmMarginFactor = 1 + ShiftPolygonRPMMargin / 100.0;
 
 				// ReSharper disable InconsistentNaming
@@ -327,11 +258,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var p3pExt = new Point((1.1 * p5.Y - edgeP6pP3p.OffsetXY) / edgeP6pP3p.SlopeXY, 1.1 * p5.Y);
 				// ReSharper restore InconsistentNaming
 
-				upShift = IntersectShiftPolygon(new[] { p4, p7, p5 }.ToList(), new[] { p2p, p6p, p3pExt }.ToList())
-					.Select(point => new ShiftPolygon.ShiftPolygonEntry() {
-						AngularSpeed = point.X.SI<PerSecond>(),
-						Torque = point.Y.SI<NewtonMeter>()
-					}).ToList();
+				var upShiftPts = IntersectTakeHigherShiftLine(new[] { p4, p7, p5 }, new[] { p2p, p6p, p3pExt });
+				if (gears[gearIdx].MaxInputSpeed != null) {
+					var maxSpeed = gears[gearIdx].MaxInputSpeed.Value();
+					upShiftPts = IntersectTakeLowerShiftLine(upShiftPts,
+						new[] { new Point(maxSpeed, 0), new Point(maxSpeed, upShiftPts.Max(pt => pt.Y)) });
+				}
+				upShift =
+					upShiftPts.Select(point => new ShiftPolygon.ShiftPolygonEntry(point.Y.SI<NewtonMeter>(), point.X.SI<PerSecond>()))
+						.ToList();
 				upShift[0].Torque = maxDragTorque;
 				return new ShiftPolygon(downShift, upShift);
 			}
@@ -360,15 +295,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			/// <param name="fullLoadCurve"></param>
 			/// <param name="rpmLimit"></param>
 			/// <returns></returns>
-			internal static IEnumerable<Point> ShiftPolygonFldMargin(List<FullLoadCurve.FullLoadCurveEntry> fullLoadCurve,
+			internal static IEnumerable<Point> ShiftPolygonFldMargin(List<EngineFullLoadCurve.FullLoadCurveEntry> fullLoadCurve,
 				PerSecond rpmLimit)
 			{
-				return
-					fullLoadCurve.TakeWhile(fldEntry => fldEntry.EngineSpeed < rpmLimit)
-						.Select(
-							fldEntry =>
-								new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
-						.ToList();
+				return fullLoadCurve.TakeWhile(fldEntry => fldEntry.EngineSpeed < rpmLimit)
+					.Select(fldEntry =>
+						new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
+					.ToList();
 			}
 
 			// ReSharper disable once InconsistentNaming
@@ -379,20 +312,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return engineSpeed;
 			}
 
-			internal static List<Point> IntersectShiftPolygon(List<Point> orig, List<Point> transformedDownshift)
+			internal static Point[] IntersectTakeHigherShiftLine(Point[] orig, Point[] transformedDownshift)
 			{
-				var intersections = new List<Point>();
-				// compute all intersection points between both line segments
-				// ReSharper disable once LoopCanBeConvertedToQuery
-				foreach (var origLine in orig.Pairwise(Edge.Create)) {
-					// ReSharper disable once LoopCanBeConvertedToQuery
-					foreach (var transformedLine in transformedDownshift.Pairwise(Edge.Create)) {
-						var isect = VectoMath.Intersect(origLine, transformedLine);
-						if (isect != null) {
-							intersections.Add(isect);
-						}
-					}
-				}
+				var intersections = Intersect(orig, transformedDownshift);
 
 				// add all points (i.e. intersecting points and both line segments) to a single list
 				var pointSet = new List<Point>(orig);
@@ -428,14 +350,70 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 
 				// order points first by x coordinate and the by Y coordinate ASC
-				return shiftPolygon.OrderBy(pt => pt.X).ThenBy(pt => pt.Y).ToList();
+				return shiftPolygon.OrderBy(pt => pt.X).ThenBy(pt => pt.Y).ToArray();
 			}
 
-			private static List<Point> ProjectPointsToLineSegments(List<Point> lineSegments, List<Point> points)
+			internal static Point[] IntersectTakeLowerShiftLine(Point[] upShiftPts, Point[] upperLimit)
+			{
+				var intersections = Intersect(upShiftPts, upperLimit);
+				if (!intersections.Any()) {
+					return upShiftPts[0].X < upperLimit[0].X ? upShiftPts : upperLimit;
+				}
+				var pointSet = new List<Point>(upShiftPts);
+				pointSet.AddRange(upperLimit);
+				pointSet.AddRange(intersections);
+				pointSet.AddRange(ProjectPointsToLineSegments(upShiftPts, upperLimit, true));
+				pointSet.AddRange(ProjectPointsToLineSegments(upperLimit, upShiftPts, true));
+
+				var shiftPolygon = new List<Point>();
+				foreach (var yCoord in pointSet.Select(pt => pt.Y).Distinct().OrderBy(y => y).Reverse()) {
+					var yPoints = pointSet.Where(pt => pt.Y.IsEqual(yCoord)).ToList();
+					shiftPolygon.Add(yPoints.MinBy(pt => pt.X));
+				}
+
+				// find and remove colinear points
+				var toRemove = new List<Point>();
+				for (var i = 0; i < shiftPolygon.Count - 2; i++) {
+					var edge = new Edge(shiftPolygon[i], shiftPolygon[i + 2]);
+					if (edge.ContainsXY(shiftPolygon[i + 1])) {
+						toRemove.Add(shiftPolygon[i + 1]);
+					}
+				}
+				foreach (var point in toRemove) {
+					shiftPolygon.Remove(point);
+				}
+
+				// order points first by x coordinate and the by Y coordinate ASC
+				return shiftPolygon.OrderBy(pt => pt.X).ThenBy(pt => pt.Y).ToArray();
+			}
+
+			private static Point[] Intersect(Point[] orig, Point[] transformedDownshift)
+			{
+				var intersections = new List<Point>();
+				// compute all intersection points between both line segments
+				// ReSharper disable once LoopCanBeConvertedToQuery
+				foreach (var origLine in orig.Pairwise(Edge.Create)) {
+					// ReSharper disable once LoopCanBeConvertedToQuery
+					foreach (var transformedLine in transformedDownshift.Pairwise(Edge.Create)) {
+						var isect = VectoMath.Intersect(origLine, transformedLine);
+						if (isect != null) {
+							intersections.Add(isect);
+						}
+					}
+				}
+				return intersections.ToArray();
+			}
+
+			private static IEnumerable<Point> ProjectPointsToLineSegments(IEnumerable<Point> lineSegments, Point[] points,
+				bool projectToVertical = false)
 			{
 				var pointSet = new List<Point>();
 				foreach (var segment in lineSegments.Pairwise(Edge.Create)) {
 					if (segment.P1.X.IsEqual(segment.P2.X)) {
+						if (projectToVertical) {
+							pointSet.AddRange(
+								points.Select(point => new Point(segment.P1.X, point.Y)).Where(pt => pt.Y.IsBetween(segment.P1.Y, segment.P2.Y)));
+						}
 						continue;
 					}
 					var k = segment.SlopeXY;
@@ -444,10 +422,44 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 				return pointSet;
 			}
+		}
+
+		public static class TorqueConverter
+		{
+			public static readonly PerSecond ReferenceRPM = 1000.RPMtoRad();
+			public static readonly PerSecond MaxInputSpeed = 5000.RPMtoRad();
+			public static readonly MeterPerSquareSecond CLUpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
+			public static readonly MeterPerSquareSecond CCUpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
+
+			private static readonly PerSecond DownshiftPRM = 700.RPMtoRad();
+			private static readonly PerSecond UpshiftLowRPM = 900.RPMtoRad();
+			private static readonly PerSecond UpshiftHighRPM = 1150.RPMtoRad();
+
+			public static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve, bool first = false,
+				bool last = false)
+			{
+				var maxDragTorque = fullLoadCurve.MaxDragTorque * 1.1;
+				var maxTorque = fullLoadCurve.MaxTorque * 1.1;
+				var p0 = new Point(UpshiftLowRPM.Value(), maxDragTorque.Value());
+				var p1 = new Point(UpshiftLowRPM.Value(), 0);
+				var p2 = new Point(UpshiftHighRPM.Value(), fullLoadCurve.FullLoadStationaryTorque(UpshiftHighRPM).Value());
+				var edge = new Edge(p1, p2);
+				var p2corr = new Point((maxTorque.Value() - edge.OffsetXY) / edge.SlopeXY, maxTorque.Value());
+
+				var downshift = new[] {
+					new ShiftPolygon.ShiftPolygonEntry(maxDragTorque, DownshiftPRM),
+					new ShiftPolygon.ShiftPolygonEntry(maxTorque, DownshiftPRM)
+				};
+				var upshift = new[] { p0, p1, p2corr }.Select(
+					pt => new ShiftPolygon.ShiftPolygonEntry(pt.Y.SI<NewtonMeter>(), pt.X.SI<PerSecond>()));
+
+				return new ShiftPolygon(first ? new List<ShiftPolygon.ShiftPolygonEntry>() : downshift.ToList(),
+					last ? new List<ShiftPolygon.ShiftPolygonEntry>() : upshift.ToList());
+			}
 
 			public static IEnumerable<TorqueConverterEntry> GetTorqueConverterDragCurve(double ratio)
 			{
-				var resourceId = DeclarationData.DeclarationDataResourcePrefix + ".TorqueConverter.csv";
+				var resourceId = DeclarationDataResourcePrefix + ".TorqueConverter.csv";
 				var data = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
 				var characteristicTorque = (from DataRow row in data.Rows
 					select
@@ -462,6 +474,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 				return characteristicTorque.Where(x => x.SpeedRatio >= ratio).ToArray();
 			}
+		}
+
+		public static class PTO
+		{
+			public const string DefaultPTOTechnology =
+				"only the drive shaft of the PTO - shift claw, synchronizer, sliding gearwheel";
+
+			public const string DefaultPTOIdleLosses =
+				DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptol";
+
+			public const string DefaultPTOActivationCycle =
+				DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptoc";
 		}
 	}
 }

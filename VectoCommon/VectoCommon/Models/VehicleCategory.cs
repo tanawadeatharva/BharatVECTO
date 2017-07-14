@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+
 namespace TUGraz.VectoCommon.Models
 {
 	public enum VehicleCategory
@@ -44,8 +46,7 @@ namespace TUGraz.VectoCommon.Models
 	{
 		public static string GetLabel(this VehicleCategory category)
 		{
-			switch (category)
-			{
+			switch (category) {
 				case VehicleCategory.RigidTruck:
 					return "Rigid Truck";
 				case VehicleCategory.Tractor:
@@ -60,6 +61,7 @@ namespace TUGraz.VectoCommon.Models
 					return category.ToString();
 			}
 		}
+
 		public static string GetCategoryName(this VehicleCategory category)
 		{
 			switch (category) {
@@ -75,6 +77,38 @@ namespace TUGraz.VectoCommon.Models
 					return "Coach";
 				default:
 					return category.ToString();
+			}
+		}
+
+		public static string ToXMLFormat(this VehicleCategory vehicleCategory)
+		{
+			switch (vehicleCategory) {
+				case VehicleCategory.Coach:
+				case VehicleCategory.Tractor:
+					return vehicleCategory.ToString();
+				case VehicleCategory.CityBus:
+					return "City Bus";
+				case VehicleCategory.InterurbanBus:
+					return "Interurban Bus";
+				case VehicleCategory.RigidTruck:
+					return "Rigid Truck";
+				default:
+					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
+			}
+		}
+
+		public static bool IsTruck(this VehicleCategory category)
+		{
+			switch (category) {
+				case VehicleCategory.RigidTruck:
+				case VehicleCategory.Tractor:
+					return true;
+				case VehicleCategory.CityBus:
+				case VehicleCategory.InterurbanBus:
+				case VehicleCategory.Coach:
+					return false;
+				default:
+					throw new ArgumentOutOfRangeException("VehicleCategory", category, null);
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.IO;
 using System.Reflection;
 using TUGraz.VectoCommon.Exceptions;
@@ -45,6 +46,24 @@ namespace TUGraz.VectoCore.Utils
 				throw new VectoException("Resource file not found: " + resourceName);
 			}
 			return resource;
+		}
+
+		public enum ResourceType
+		{
+			XMLSchema = 1,
+		}
+
+		public static Stream LoadResourceAsStream(ResourceType type, string resourceName)
+		{
+			string resourceBase;
+			switch (type) {
+				case ResourceType.XMLSchema:
+					resourceBase = "TUGraz.VectoCore.Resources.XSD.";
+					break;
+				default:
+					throw new ArgumentOutOfRangeException("type", type, null);
+			}
+			return ReadStream(resourceBase + resourceName);
 		}
 	}
 }

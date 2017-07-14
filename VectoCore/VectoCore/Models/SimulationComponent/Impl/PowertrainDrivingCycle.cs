@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				debug.Add(response);
 				response.Switch()
 					.Case<ResponseGearShift>(
-						() => response = NextComponent.Request(absTime, dt, CycleIterator.LeftSample.Torque, angularVelocity))
+						() => response = NextComponent.Request(absTime, dt, CurrentState.InTorque, angularVelocity))
 					.Case<ResponseUnderload>(r => {
 						var torqueInterval = -r.Delta / (angularVelocity.IsEqual(0) ? 10.RPMtoRad() : angularVelocity);
 						var torque = SearchAlgorithm.Search(CycleIterator.LeftSample.Torque, r.Delta, torqueInterval,
@@ -135,6 +135,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response = NextComponent.Request(absTime, dt, torque, angularVelocity);
 						CurrentState.InAngularVelocity = angularVelocity;
 					})
+					.Case<ResponseEngineSpeedTooHigh>(r => {
+						angularVelocity = SearchAlgorithm.Search(angularVelocity, r.DeltaEngineSpeed,
+							1.RPMtoRad(),
+							getYValue: result => ((ResponseDryRun)result).DeltaEngineSpeed,
+							evaluateFunction: x => NextComponent.Request(absTime, dt, CurrentState.InTorque, x, true),
+							criterion: y => ((ResponseDryRun)y).DeltaEngineSpeed.Value());
+					})
 					.Case<ResponseFailTimeInterval>(r => { dt = r.DeltaT; })
 					.Case<ResponseSuccess>(() => { })
 					.Default(
@@ -145,11 +152,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.SimulationInterval = dt;
 			debug.Add(response);
 			return response;
-		}
-
-		public string CycleName
-		{
-			get { return Data.Name; }
 		}
 
 		public double Progress
@@ -181,6 +183,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					RightSample = CycleIterator.RightSample,
 				};
 			}
+		}
+
+		public bool PTOActive
+		{
+			get { return true; }
 		}
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)

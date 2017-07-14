@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -29,10 +29,13 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -69,6 +72,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public MeterPerSecond StartSpeed { get; set; }
 		public MeterPerSquareSecond StartAcceleration { get; set; }
 		public NewtonMeter GearMaxTorque { get; set; }
+
+		public FuelType FuelType
+		{
+			get { return FuelType.DieselCI; }
+		}
 
 		public Second AbsTime { get; set; }
 
@@ -190,6 +198,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public VectoRun.Status RunStatus { get; set; }
 
+		public bool PTOActive { get; private set; }
+
 		public void AddComponent(VectoSimulationComponent component)
 		{
 			Components.Add(component);
@@ -203,6 +213,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public void FinishSimulation() {}
+
+		public void FinishSimulationRun(Exception e) {}
 
 		public Watt SetAxlegearLoss
 		{

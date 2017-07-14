@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -35,8 +35,10 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using DocumentFormat.OpenXml.Spreadsheet;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -110,15 +112,13 @@ namespace TUGraz.VectoCore.Utils
 				TrimWhiteSpace = true
 			};
 
-			string[] colsWithoutComment;
-
-			try {
-				colsWithoutComment = p.ReadFields()
-					.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment)) : l)
-					.ToArray();
-			} catch (ArgumentNullException) {
+			var hdrFields = p.ReadFields();
+			if (hdrFields == null) {
 				throw new CSVReadException("CSV Read Error: File was empty.");
 			}
+			var colsWithoutComment = hdrFields
+				.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment, StringComparison.Ordinal)) : l)
+				.ToArray();
 
 			double tmp;
 			var columns = colsWithoutComment
@@ -137,23 +137,21 @@ namespace TUGraz.VectoCore.Utils
 				columns = colsWithoutComment.Select((_, i) => i.ToString()).ToList();
 			}
 
-			//var table = new DataTable();
-			foreach (var col in columns) {
-				table.Columns.Add(col);
-			}
-
-			if (p.EndOfData) {
-				return;
-			}
+			columns.ForEach(col => table.Columns.Add(col));
 
 			var lineNumber = 1;
-			do {
-				var cells = firstLineIsData
-					? colsWithoutComment
-					: p.ReadFields()
-						.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment)) : l)
-						.Select(s => s.Trim())
-						.ToArray();
+			while (!p.EndOfData) {
+				string[] cells = { };
+				if (firstLineIsData) {
+					cells = colsWithoutComment;
+				} else {
+					var fields = p.ReadFields();
+					if (fields != null) {
+						cells = fields.Select(l => l.Contains(Comment) ? l.Substring(0, l.IndexOf(Comment, StringComparison.Ordinal)) : l)
+							.Select(s => s.Trim())
+							.ToArray();
+					}
+				}
 				firstLineIsData = false;
 				if (table.Columns.Count != cells.Length && !ignoreEmptyColumns) {
 					throw new CSVReadException(
@@ -169,7 +167,7 @@ namespace TUGraz.VectoCore.Utils
 						string.Format("Line {0}: The data format of a value is not correct. {1}", lineNumber, e.Message), e);
 				}
 				lineNumber++;
-			} while (!p.EndOfData);
+			}
 		}
 
 		/// <summary>
@@ -178,10 +176,11 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="fileName">Path to the file.</param>
 		/// <param name="table">The Datatable.</param>
-		public static void Write(string fileName, DataTable table)
+		/// <param name="addVersionHeader"></param>
+		public static void Write(string fileName, DataTable table, bool addVersionHeader = false)
 		{
 			using (var sw = new StreamWriter(new FileStream(fileName, FileMode.Create), Encoding.UTF8)) {
-				Write(sw, table);
+				Write(sw, table, addVersionHeader);
 			}
 		}
 
@@ -192,10 +191,19 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="writer"></param>
 		/// <param name="table"></param>
-		public static void Write(StreamWriter writer, DataTable table)
+		/// <param name="addVersionHeader"></param>
+		public static void Write(StreamWriter writer, DataTable table, bool addVersionHeader = false)
 		{
 			if (writer == null) {
 				return;
+			}
+			if (addVersionHeader) {
+				try {
+					var vectodll = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoCore.dll")).GetName();
+					writer.WriteLine("# VECTO {0} - {1}", vectodll.Version, DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
+				} catch (Exception) {
+					writer.WriteLine("# VECTO {0} - {1}", "Unknown", DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
+				}
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
 			writer.WriteLine(string.Join(Delimiter, header));
@@ -218,6 +226,9 @@ namespace TUGraz.VectoCore.Utils
 					formattedList[i] = si != null
 						? columnFormatter[i](si)
 						: formattedList[i] = string.Format(CultureInfo.InvariantCulture, "{0}", items[i]);
+					if (formattedList[i].Contains(Delimiter)) {
+						formattedList[i] = string.Format("\"{0}\"", formattedList[i]);
+					}
 				}
 				writer.WriteLine(string.Join(Delimiter, formattedList));
 			}

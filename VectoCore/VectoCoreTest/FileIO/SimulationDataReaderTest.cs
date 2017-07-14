@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -68,14 +68,14 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(Path.GetFileNameWithoutExtension(DeclarationJob), runData.JobName);
 
 			// curbweight + bodyCurbWeight + trailerCurbWeight (for Long Haul only)
-			Assert.AreEqual(5850 + 1900 + 3400, runData.VehicleData.CurbWeight.Value());
+			Assert.AreEqual(5850 + 1900 + 3400, runData.VehicleData.TotalCurbWeight.Value());
 
 			Assert.AreEqual(11900, runData.VehicleData.GrossVehicleWeight.Value());
 			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, runData.VehicleData.AxleConfiguration);
 			AssertHelper.AreRelativeEqual(0.40726954, runData.VehicleData.DynamicTyreRadius);
 
 			Assert.AreEqual(VehicleClass.Class2, runData.VehicleData.VehicleClass);
-			Assert.AreEqual(3, runData.VehicleData.AxleData.Count);
+			Assert.AreEqual(4, runData.VehicleData.AxleData.Count);
 			Assert.AreEqual(6, runData.VehicleData.AxleData[0].Inertia.Value(), Tolerance);
 
 			Assert.AreEqual(true, runData.DriverData.LookAheadCoasting.Enabled);
@@ -91,13 +91,6 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				runData.DriverData.OverSpeedEcoRoll.OverSpeed.Value(), Tolerance);
 			Assert.AreEqual(DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.Value(),
 				runData.DriverData.OverSpeedEcoRoll.UnderSpeed.Value(), Tolerance);
-
-			//Assert.AreEqual(false, runData.DriverData.StartStop.Enabled);
-			Assert.AreEqual(DeclarationData.Driver.StartStop.Delay.Value(), runData.DriverData.StartStop.Delay.Value(), Tolerance);
-			Assert.AreEqual(DeclarationData.Driver.StartStop.MaxSpeed.Value(), runData.DriverData.StartStop.MaxSpeed.Value(),
-				Tolerance);
-			Assert.AreEqual(DeclarationData.Driver.StartStop.MinTime.Value(), runData.DriverData.StartStop.MinTime.Value(),
-				Tolerance);
 
 			Assert.AreEqual(3.7890, runData.EngineData.Inertia.Value());
 

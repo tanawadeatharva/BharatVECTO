@@ -1,4 +1,4 @@
-﻿' Copyright 2014 European Union.
+﻿' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -20,7 +20,9 @@ Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
+Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Utils
@@ -44,6 +46,7 @@ Public Class Gearbox
 	Public GearshiftFiles As List(Of SubPath)
 
 	Public MaxTorque As List(Of String)
+	Public MaxSpeed As List(Of String)
 
 	Public TorqueResv As Double
 	'Public SkipGears As Boolean
@@ -68,8 +71,6 @@ Public Class Gearbox
 	Public UpshiftAfterDownshift As Double
 	Public TorqueConverterMaxSpeed As Double
 
-	Public PSInertiaFactor As Double
-
 	Public PSShiftTime As Double
 
 
@@ -89,6 +90,7 @@ Public Class Gearbox
 		GearLossmaps = New List(Of SubPath)
 		GearshiftFiles = New List(Of SubPath)
 		MaxTorque = New List(Of String)
+		MaxSpeed = New List(Of String)
 
 		TorqueResv = 0
 		'SkipGears = False
@@ -109,7 +111,7 @@ Public Class Gearbox
 	Public Function SaveFile() As Boolean
 
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Type)
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Type, False)
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -186,9 +188,11 @@ Public Class Gearbox
 
 	' ReSharper disable once UnusedMember.Global -- used by Validation
 	Public Shared Function ValidateGearbox(gearbox As Gearbox, validationContext As ValidationContext) As ValidationResult
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
-																	ExecutionModeServiceContainer)
+		Dim modeService As VectoValidationModeServiceContainer =
+				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
+						VectoValidationModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
+		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
 
 		Dim axlegearData As AxleGearData
 		Dim gearboxData As GearboxData
@@ -201,39 +205,47 @@ Public Class Gearbox
 							IEngineeringInputDataProvider)
 			'Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
 			Dim engine As CombustionEngineData
+			Dim vehiclecategory As VehicleCategory
 			Dim rdyn As Meter = 0.5.SI(Of Meter)()
+			Try
+				vehiclecategory = inputData.VehicleInputData.VehicleCategory
+			Catch ex As Exception
+				vehiclecategory = vehiclecategory.RigidTruck
+			End Try
 			If mode = ExecutionMode.Declaration Then
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
 
 				Try
-					engine = doa.CreateEngineData(inputData.EngineInputData, gearbox.Type)
-				Catch
-					engine = GetDefaultEngine()
-				End Try
 
+					engine = doa.CreateEngineData(inputData.EngineInputData, Nothing, gearbox, New List(Of ITorqueLimitInputData))
+				Catch
+					engine = GetDefaultEngine(gearbox.Gears)
+				End Try
+				
 				axlegearData = doa.CreateAxleGearData(gearbox, False)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, False)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, False)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Try
-					engine = doa.CreateEngineData(inputData.EngineInputData, gearbox)
+					engine = doa.CreateEngineData(inputData.EngineInputData, gearbox, New List(Of ITorqueLimitInputData))
 				Catch
-					engine = GetDefaultEngine()
+					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
 
 				axlegearData = doa.CreateAxleGearData(gearbox, True)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, True)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, True)
 			End If
 
 			Dim result As IList(Of ValidationResult) =
-					gearboxData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type)
+					gearboxData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type, emsCycle)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Gearbox Configuration is invalid. ",
 										result.Select(Function(r) r.ErrorMessage + String.Join(Environment.NewLine, r.MemberNames)).ToList())
 			End If
 
-			result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type)
+			result = axlegearData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gearbox.Type,
+											emsCycle)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Axlegear Configuration is invalid. ",
@@ -247,20 +259,30 @@ Public Class Gearbox
 		End Try
 	End Function
 
-	Private Shared Function GetDefaultEngine() As CombustionEngineData
+	Private Shared Function GetDefaultEngine(gears As IList(Of ITransmissionInputData)) As CombustionEngineData
 		Dim fldData As MemoryStream = New MemoryStream()
 		Dim writer As StreamWriter = New StreamWriter(fldData)
 		writer.WriteLine("engine speed, full load torque, motoring torque")
 		writer.WriteLine(" 500, 2000, -500")
 		writer.WriteLine("2500, 2000, -500")
+		writer.WriteLine("3000,    0, -500")
 		writer.Flush()
 		fldData.Seek(0, SeekOrigin.Begin)
+		Dim retVal As CombustionEngineData = New CombustionEngineData() With {
+				.IdleSpeed = 600.RPMtoRad()
+				}
 
-		Dim fldCurve As EngineFullLoadCurve = EngineFullLoadCurve.Create(VectoCSVFile.ReadStream(fldData))
-		Return New CombustionEngineData() With {
-			.IdleSpeed = 600.RPMtoRad(),
-			.FullLoadCurve = fldCurve
-			}
+		Dim fldCurve As EngineFullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(fldData))
+		Dim fullLoadCurves As Dictionary(Of UInteger, EngineFullLoadCurve) =
+				New Dictionary(Of UInteger, EngineFullLoadCurve)()
+		fullLoadCurves(0) = fldCurve
+		fullLoadCurves(0).EngineData = retVal
+		For i As Integer = 0 To gears.Count - 1
+			fullLoadCurves(CType(i + 1, UInteger)) = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fullLoadCurves(0),
+																											gears(i).MaxTorque)
+		Next
+		retVal.FullLoadCurves = fullLoadCurves
+		Return retVal
 	End Function
 
 
@@ -282,17 +304,13 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property Vendor As String Implements IComponentInputData.Vendor
+	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
-			Return "N.A."  ' Todo MQ 20160915
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
-	Public ReadOnly Property Creator As String Implements IComponentInputData.Creator
-		Get
-			Return Lic.LicString
-		End Get
-	End Property
 
 	Public ReadOnly Property [Date] As String Implements IComponentInputData.[Date]
 		Get
@@ -300,9 +318,16 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property TypeId As String Implements IComponentInputData.TypeId
+	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 		Get
-			Return "N.A." ' todo MQ 20160915
+			Return CertificationMethod.NotCertified
+		End Get
+	End Property
+
+	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
+		Get
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
@@ -312,13 +337,7 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property IntegrityStatus As IntegrityStatus Implements IComponentInputData.IntegrityStatus
-		Get
-			Return IntegrityStatus.NotChecked
-		End Get
-	End Property
-
-	Public ReadOnly Property IComponentInputData_ModelName As String Implements IComponentInputData.ModelName
+	Public ReadOnly Property Model As String Implements IComponentInputData.Model
 		Get
 			Return ModelName
 		End Get
@@ -336,13 +355,17 @@ Public Class Gearbox
 			Dim i As Integer
 			For i = 1 To GearRatios.Count - 1
 				Dim gearDict As New TransmissionInputData With {
-						.Ratio = GearRatios(i)
+						.Ratio = GearRatios(i),
+						.Gear = i
 						}
 				If File.Exists(GearshiftFiles(i).FullPath) Then
 					gearDict.ShiftPolygon = VectoCSVFile.Read(GearshiftFiles(i).FullPath)
 				End If
 				If Not String.IsNullOrWhiteSpace(MaxTorque(i)) AndAlso IsNumeric(MaxTorque(i)) Then
 					gearDict.MaxTorque = MaxTorque(i).ToDouble().SI(Of NewtonMeter)()
+				End If
+				If Not String.IsNullOrWhiteSpace(MaxSpeed(i)) AndAlso IsNumeric(MaxSpeed(i)) Then
+					gearDict.MaxInputSpeed = MaxSpeed(i).ToDouble().RPMtoRad()
 				End If
 				If IsNumeric(GearLossMap(i, True)) Then
 					gearDict.Efficiency = GearLossMap(i, True).ToDouble()
@@ -353,6 +376,13 @@ Public Class Gearbox
 				ls.Add(gearDict)
 			Next
 			Return ls
+		End Get
+	End Property
+
+	Public ReadOnly Property IGearboxDeclarationInputData_TorqueConverter As ITorqueConverterDeclarationInputData _
+		Implements IGearboxDeclarationInputData.TorqueConverter
+		Get
+			Return Me
 		End Get
 	End Property
 
@@ -456,12 +486,6 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property PowerShiftInertiaFactor As Double _
-		Implements IGearboxEngineeringInputData.PowerShiftInertiaFactor
-		Get
-			Return PSInertiaFactor
-		End Get
-	End Property
 
 	Public ReadOnly Property IGearboxEngineeringInputData_UpshiftMinAcceleration As MeterPerSquareSecond _
 		Implements IGearboxEngineeringInputData.UpshiftMinAcceleration
@@ -509,6 +533,12 @@ Public Class Gearbox
 	Public ReadOnly Property Efficiency As Double Implements IAxleGearInputData.Efficiency
 		Get
 			Return GearLossMap(0, True).ToDouble(0)
+		End Get
+	End Property
+
+	Public ReadOnly Property LineType As AxleLineType Implements IAxleGearInputData.LineType
+		Get
+			Return AxleLineType.SinglePortalAxle
 		End Get
 	End Property
 End Class

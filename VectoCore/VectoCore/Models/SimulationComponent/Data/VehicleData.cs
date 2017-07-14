@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -42,23 +42,53 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+	[CustomValidation(typeof(AirdragData), "ValidateAirDragData")]
+	public class AirdragData : SimulationComponentData
+	{
+		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
+
+		[Required, ValidateObject]
+		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
+
+		public SquareMeter DeclaredAirdragArea { get; internal set; }
+
+		// ReSharper disable once UnusedMember.Global  -- used via Validation
+		public static ValidationResult ValidateAirDragData(AirdragData airDragData, ValidationContext validationContext)
+		{
+			if (airDragData.CrossWindCorrectionMode != CrossWindCorrectionMode.DeclarationModeCorrection &&
+				airDragData.CrossWindCorrectionCurve.AirDragArea == null) {
+				return new ValidationResult(
+					"AirDrag Area (CdxA) must not be empty when the cross wind correction mode is not \"Speed dependent (Declaration Mode)\"");
+			}
+
+			return ValidationResult.Success;
+		}
+	}
+
 	/// <summary>
 	/// Data Class for the Vehicle
 	/// </summary>
 	[CustomValidation(typeof(VehicleData), "ValidateVehicleData")]
 	public class VehicleData : SimulationComponentData
 	{
+		public string VIN { get; internal set; }
+
+		public LegislativeClass LegislativeClass { get; internal set; }
+
 		public VehicleCategory VehicleCategory { get; internal set; }
+
 		public VehicleClass VehicleClass { get; internal set; }
+
 		public AxleConfiguration AxleConfiguration { get; internal set; }
 
-		[Required, ValidateObject]
-		public ICrossWindCorrection CrossWindCorrectionCurve { get; internal set; }
+		public string ManufacturerAddress { get; internal set; }
+
 
 		[Required, ValidateObject] private List<Axle> _axleData;
 
 		private KilogramSquareMeter _wheelsInertia;
 		private double? _totalRollResistanceCoefficient;
+		private double? _rollResistanceCoefficientWithoutTrailer;
 
 		public List<Axle> AxleData
 		{
@@ -75,9 +105,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// (+ Curb Weight of Standard-Body if it has one)
 		/// (+ Curb Weight of Trailer if it has one)
 		/// </summary>
-		[Required, SIRange(500, 40000)]
+		[Required, SIRange(500, 40000, emsMission: false),
+		SIRange(0, 60000, emsMission: true)]
 		public Kilogram CurbWeight { get; internal set; }
-
 
 		/// <summary>
 		/// Curb Weight of Standard-Body (if it has one)
@@ -85,7 +115,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// </summary>
 		public Kilogram BodyAndTrailerWeight { get; internal set; }
 
-		[Required, SIRange(0, 40000)]
+		[Required, SIRange(0, 40000, emsMission: false),
+		SIRange(0, 60000, emsMission: true)]
 		public Kilogram Loading { get; internal set; }
 
 		[SIRange(0, 500)]
@@ -95,14 +126,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// The Gross Vehicle Weight of the Vehicle.
 		/// </summary>
 		[Required,
-		SIRange(3500, 40000, ExecutionMode.Declaration),
+		SIRange(3500, 40000, ExecutionMode.Declaration, emsMission: false),
+		SIRange(0, 60000, ExecutionMode.Declaration, emsMission: true),
 		SIRange(0, 1000000, ExecutionMode.Engineering)]
 		public Kilogram GrossVehicleWeight { get; internal set; }
 
 		/// <summary>
 		/// The Gross Vehicle Weight of the Trailer (if the vehicle has one).
 		/// </summary>
-		[Required, SIRange(0, 40000)]
+		[Required, SIRange(0, 40000, emsMission: false),
+		SIRange(0, 60000, emsMission: true)]
 		public Kilogram TrailerGrossVehicleWeight { get; internal set; }
 
 		[Required, SIRange(0.1, 0.7)]
@@ -131,27 +164,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			protected internal set { _totalRollResistanceCoefficient = value; }
 		}
 
-		public CrossWindCorrectionMode CrossWindCorrectionMode { get; set; }
+		public double RollResistanceCoefficientWithoutTrailer
+		{
+			get {
+				if (_rollResistanceCoefficientWithoutTrailer == null) {
+					ComputeRollResistanceAndReducedMassWheels();
+				}
+				return _rollResistanceCoefficientWithoutTrailer.GetValueOrDefault();
+			}
+			protected internal set { _rollResistanceCoefficientWithoutTrailer = value; }
+		}
 
 		public Kilogram TotalVehicleWeight
 		{
 			get {
-				var retVal = 0.0;
-				if (CurbWeight != null) {
-					retVal += CurbWeight.Value();
-				}
-				if (Loading != null) {
-					retVal += Loading.Value();
-				}
-				return retVal.SI<Kilogram>();
+				var retVal = 0.0.SI<Kilogram>();
+				retVal += CurbWeight ?? 0.SI<Kilogram>();
+				retVal += BodyAndTrailerWeight ?? 0.SI<Kilogram>();
+				retVal += Loading ?? 0.SI<Kilogram>();
+				return retVal;
 			}
 		}
 
 		public Kilogram TotalCurbWeight
 		{
-			get { return CurbWeight ?? 0.SI<Kilogram>(); }
+			get { return (CurbWeight ?? 0.SI<Kilogram>()) + (BodyAndTrailerWeight ?? 0.SI<Kilogram>()); }
 		}
-
 
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{
@@ -165,7 +203,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var g = Physics.GravityAccelleration;
 
 			var rrc = 0.0.SI<Scalar>();
+			var rrcVehicle = 0.0.SI<Scalar>();
+
 			var wheelsInertia = 0.0.SI<KilogramSquareMeter>();
+			var vehicleWeightShare = 0.0;
 			foreach (var axle in _axleData) {
 				if (axle.AxleWeightShare.IsEqual(0, 1e-12)) {
 					continue;
@@ -173,10 +214,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				var nrWheels = axle.TwinTyres ? 4 : 2;
 				var baseValue = (axle.AxleWeightShare * TotalVehicleWeight * g / axle.TyreTestLoad / nrWheels).Value();
 
-				rrc += axle.AxleWeightShare * axle.RollResistanceCoefficient *
-						Math.Pow(baseValue, Physics.RollResistanceExponent - 1);
+				var rrcShare = axle.AxleWeightShare * axle.RollResistanceCoefficient *
+								Math.Pow(baseValue, Physics.RollResistanceExponent - 1);
+
+				if (axle.AxleType != AxleType.Trailer) {
+					rrcVehicle += rrcShare;
+					vehicleWeightShare += axle.AxleWeightShare;
+				}
+				rrc += rrcShare;
 				wheelsInertia += nrWheels * axle.Inertia;
 			}
+			RollResistanceCoefficientWithoutTrailer = rrcVehicle / vehicleWeightShare;
 			TotalRollResistanceCoefficient = rrc;
 			WheelsInertia = wheelsInertia;
 		}
@@ -185,6 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public static ValidationResult ValidateVehicleData(VehicleData vehicleData, ValidationContext validationContext)
 		{
 			var mode = GetExecutionMode(validationContext);
+			var emsCycle = GetEmsMode(validationContext);
 
 			if (vehicleData.AxleData.Count < 1) {
 				return new ValidationResult("At least two axles need to be specified");
@@ -210,7 +259,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			// total gvw is limited by max gvw (40t)
 			var gvwTotal = VectoMath.Min(vehicleData.GrossVehicleWeight + vehicleData.TrailerGrossVehicleWeight,
-				Constants.SimulationSettings.MaximumGrossVehicleWeight);
+				emsCycle
+					? Constants.SimulationSettings.MaximumGrossVehicleWeightEMS
+					: Constants.SimulationSettings.MaximumGrossVehicleWeight);
 			if (mode != ExecutionMode.Declaration) {
 				return ValidationResult.Success;
 			}
@@ -228,6 +279,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					string.Format("Total Vehicle Weight is greater than GrossVehicleWeight! Weight: {0},  GVW: {1}",
 						vehicleData.TotalVehicleWeight, gvwTotal));
 			}
+
+			var numDrivenAxles = vehicleData._axleData.Count(x => x.AxleType == AxleType.VehicleDriven);
+			if (numDrivenAxles != vehicleData.AxleConfiguration.NumDrivenAxles()) {
+				return
+					new ValidationResult(string.Format(
+						vehicleData.AxleConfiguration.NumAxles() == 1
+							? "Exactly {0} axle has to be defined as driven, given {1}!"
+							: "Exactly {0} axles have to be defined as driven, given {1}!", vehicleData.AxleConfiguration.NumDrivenAxles(),
+						numDrivenAxles));
+			}
+
 			return ValidationResult.Success;
 		}
 	}

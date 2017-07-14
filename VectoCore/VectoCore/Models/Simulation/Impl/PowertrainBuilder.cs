@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -33,7 +33,6 @@ using System;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -111,13 +110,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			// PWheelCycle --> AxleGear --> Clutch --> Engine <-- Aux
 			var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, data.VehicleData,
-				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
+					gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, container)
 				.AddComponent(new Clutch(container, data.EngineData));
 			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
-			var idleController = GetIdleController(data.PTO, engine);
+			var idleController = GetIdleController(data.PTO, engine, container);
 
 			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
@@ -137,7 +136,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// --> axleGear --> (retarder) --> GearBox --> (retarder) --> Clutch --> engine <-- Aux
 			var cycle = new MeasuredSpeedDrivingCycle(container, data.Cycle);
 			var powertrain = cycle
-				.AddComponent(new Vehicle(container, data.VehicleData))
+				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
@@ -148,7 +147,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var engine = new CombustionEngine(container, data.EngineData);
-			var idleController = GetIdleController(data.PTO, engine);
+			var idleController = GetIdleController(data.PTO, engine, container);
 
 			powertrain.AddComponent(engine, idleController)
 				.AddAuxiliaries(container, data);
@@ -168,7 +167,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// MeasuredSpeedDrivingCycle --> vehicle --> wheels --> brakes 
 			// --> axleGear --> (retarder) --> CycleGearBox --> (retarder) --> CycleClutch --> engine <-- Aux
 			var powertrain = new MeasuredSpeedDrivingCycle(container, data.Cycle)
-				.AddComponent(new Vehicle(container, data.VehicleData))
+				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
@@ -197,7 +196,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
 			var powertrain = cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, data.VehicleData))
+				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
@@ -208,7 +207,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var engine = new CombustionEngine(container, data.EngineData);
-			var idleController = GetIdleController(data.PTO, engine);
+			var idleController = GetIdleController(data.PTO, engine, container);
 			cycle.IdleController = idleController as IdleControllerSwitcher;
 
 			powertrain.AddComponent(engine, idleController)
@@ -219,12 +218,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine)
+		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine, IVehicleContainer container)
 		{
 			var controller = engine.IdleController;
 
-			if (pto != null) {
-				var ptoController = new PTOCycleController(pto.PTOCycle);
+			if (pto != null && pto.PTOCycle != null) {
+				var ptoController = new PTOCycleController(container, pto.PTOCycle);
 				controller = new IdleControllerSwitcher(engine.IdleController, ptoController);
 			}
 
@@ -264,12 +263,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
-					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType));
+					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
 				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
-					n => container.CycleData.LeftSample.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
+					n => container.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
 				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}

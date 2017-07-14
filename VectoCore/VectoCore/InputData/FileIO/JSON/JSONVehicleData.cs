@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,7 +31,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
@@ -43,28 +42,41 @@ using TUGraz.VectoCore.InputData.Impl;
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngledriveInputData,
-		IPTOTransmissionInputData
+		IPTOTransmissionInputData, IAirdragEngineeringInputData
 	{
 		public JSONVehicleDataV7(JObject data, string fileName, bool tolerateMissing = false)
 			: base(data, fileName, tolerateMissing) {}
 
 		#region IVehicleInputData
 
+		public string VIN
+		{
+			get { return "N.A."; }
+		}
+
+		public LegislativeClass LegislativeClass
+		{
+			get {
+				return Body["LegislativeClass"] != null
+					? Body["LegislativeClass"].Value<string>().ParseEnum<LegislativeClass>()
+					: LegislativeClass.Unknown;
+			}
+		}
+
 		public VehicleCategory VehicleCategory
 		{
-			get
-			{
+			get {
 				return
 					(VehicleCategory)Enum.Parse(typeof(VehicleCategory), Body[JsonKeys.Vehicle_VehicleCategory].Value<string>(), true);
 			}
 		}
 
-		public virtual Kilogram CurbWeightChassis
+		public virtual Kilogram CurbMassChassis
 		{
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_CurbWeight).SI<Kilogram>(); }
 		}
 
-		public virtual Kilogram CurbWeightExtra
+		public virtual Kilogram CurbMassExtra
 		{
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_CurbWeightExtra).SI<Kilogram>(); }
 		}
@@ -72,6 +84,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual Kilogram GrossVehicleMassRating
 		{
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_GrossVehicleMassRating).SI().Ton.Cast<Kilogram>(); }
+		}
+
+		public IList<ITorqueLimitInputData> TorqueLimits
+		{
+			get {
+				var retVal = new List<ITorqueLimitInputData>();
+				if (Body["TorqueLimits"] == null) {
+					return retVal;
+				}
+				foreach (var entry in (JObject)Body["TorqueLimits"]) {
+					retVal.Add(new TorqueLimitInputData() {
+						Gear = entry.Key.ToInt(),
+						MaxTorque = entry.Value.ToString().ToDouble(0).SI<NewtonMeter>()
+					});
+				}
+				return retVal;
+			}
 		}
 
 		public virtual Kilogram Loading
@@ -84,20 +113,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_DynamicTyreRadius).SI().Milli.Meter.Cast<Meter>(); }
 		}
 
-		public virtual SquareMeter AirDragArea
+		public Meter Height
 		{
-			get { return Body.GetEx<double>(JsonKeys.Vehicle_DragCoefficient).SI<SquareMeter>(); }
-		}
-
-		public virtual CrossWindCorrectionMode CrossWindCorrectionMode
-		{
-			get { return CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode")); }
+			get { return Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>(); }
 		}
 
 		public virtual AxleConfiguration AxleConfiguration
 		{
-			get
-			{
+			get {
 				return
 					AxleConfigurationHelper.Parse(
 						Body.GetEx(JsonKeys.Vehicle_AxleConfiguration).GetEx<string>(JsonKeys.Vehicle_AxleConfiguration_Type));
@@ -109,6 +132,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return AxleWheels().Cast<IAxleEngineeringInputData>().ToList(); }
 		}
 
+		public string ManufacturerAddress
+		{
+			get { return "N.A."; }
+		}
+
+		public PerSecond EngineIdleSpeed
+		{
+			get { return Body["IdlingSpeed"] != null ? Body.GetEx<double>("IdlingSpeed").RPMtoRad() : null; }
+		}
+
 		IList<IAxleDeclarationInputData> IVehicleDeclarationInputData.Axles
 		{
 			get { return AxleWheels().Cast<IAxleDeclarationInputData>().ToList(); }
@@ -118,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			return
 				Body.GetEx(JsonKeys.Vehicle_AxleConfiguration).GetEx(JsonKeys.Vehicle_AxleConfiguration_Axles).Select(
-					axle => new AxleInputData {
+					(axle, idx) => new AxleInputData {
 						SourceType = DataSourceType.JSONFile,
 						Source = Source,
 						Inertia = axle.GetEx<double>(JsonKeys.Vehicle_Axles_Inertia).SI<KilogramSquareMeter>(),
@@ -126,21 +159,43 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						TwinTyres = axle.GetEx<bool>(JsonKeys.Vehicle_Axles_TwinTyres),
 						RollResistanceCoefficient = axle.GetEx<double>(JsonKeys.Vehicle_Axles_RollResistanceCoefficient),
 						TyreTestLoad = axle.GetEx<double>(JsonKeys.Vehicle_Axles_TyreTestLoad).SI<Newton>(),
-						AxleWeightShare = axle.GetEx<double>("AxleWeightShare")
+						AxleWeightShare = axle.GetEx<double>("AxleWeightShare"),
+						AxleType =
+							axle["Type"] != null
+								? axle.GetEx<string>("Type").ParseEnum<AxleType>()
+								: (idx == 1 ? AxleType.VehicleDriven : AxleType.VehicleNonDriven)
 					});
+		}
+
+		#endregion
+
+		#region Airdrag
+
+		public virtual SquareMeter AirDragArea
+		{
+			get {
+				return Body[JsonKeys.Vehicle_DragCoefficient] == null
+					? null
+					: Body.GetEx<double>(JsonKeys.Vehicle_DragCoefficient).SI<SquareMeter>();
+			}
+		}
+
+		public virtual CrossWindCorrectionMode CrossWindCorrectionMode
+		{
+			get { return CrossWindCorrectionModeHelper.Parse(Body.GetEx<string>("CdCorrMode")); }
 		}
 
 		public virtual TableData CrosswindCorrectionMap
 		{
-			get
-			{
+			get {
 				try {
 					return ReadTableData(Body.GetEx<string>("CdCorrFile"), "CrosswindCorrection File");
 				} catch (Exception) {
 					if (!TolerateMissing) {
 						throw;
 					}
-					return new TableData(Path.Combine(BasePath, Body["CdCorrFile"].ToString()) + MissingFileSuffix, DataSourceType.Missing);
+					return new TableData(Path.Combine(BasePath, Body["CdCorrFile"].ToString()) + MissingFileSuffix,
+						DataSourceType.Missing);
 				}
 			}
 		}
@@ -151,8 +206,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		RetarderType IRetarderInputData.Type
 		{
-			get
-			{
+			get {
 				var retarderType = Body.GetEx(JsonKeys.Vehicle_Retarder).GetEx<string>(JsonKeys.Vehicle_Retarder_Type);
 				return RetarderTypeHelper.Parse(retarderType);
 			}
@@ -165,8 +219,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		TableData IRetarderInputData.LossMap
 		{
-			get
-			{
+			get {
 				if (Body[JsonKeys.Vehicle_Retarder] != null &&
 					Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile] != null) {
 					var lossmapFile = Body.GetEx(JsonKeys.Vehicle_Retarder)[JsonKeys.Vehicle_Retarder_LossMapFile];
@@ -179,7 +232,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						if (!TolerateMissing) {
 							throw;
 						}
-						return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+						return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix,
+							DataSourceType.Missing);
 					}
 				}
 				return null;
@@ -192,8 +246,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		AngledriveType IAngledriveInputData.Type
 		{
-			get
-			{
+			get {
 				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
 				if (angleDrive == null) {
 					return AngledriveType.None;
@@ -205,8 +258,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		double IAngledriveInputData.Ratio
 		{
-			get
-			{
+			get {
 				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
 				if (angleDrive == null) {
 					return double.NaN;
@@ -217,8 +269,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		TableData IAngledriveInputData.LossMap
 		{
-			get
-			{
+			get {
 				var angleDrive = Body[JsonKeys.Vehicle_Angledrive];
 				if (angleDrive == null || angleDrive[JsonKeys.Vehicle_Angledrive_LossMapFile] == null) {
 					return null;
@@ -233,7 +284,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					if (!TolerateMissing) {
 						throw;
 					}
-					return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+					return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix,
+						DataSourceType.Missing);
 				}
 			}
 		}
@@ -249,8 +301,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		string IPTOTransmissionInputData.PTOTransmissionType
 		{
-			get
-			{
+			get {
 				var pto = Body[JsonKeys.Vehicle_PTO];
 				if (pto == null) {
 					return "None";
@@ -261,8 +312,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		TableData IPTOTransmissionInputData.PTOLossMap
 		{
-			get
-			{
+			get {
 				var pto = Body[JsonKeys.Vehicle_PTO];
 				if (pto == null || pto[JsonKeys.Vehicle_PTO_LossMapFile] == null) {
 					return null;
@@ -277,15 +327,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					if (!TolerateMissing) {
 						throw;
 					}
-					return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix, DataSourceType.Missing);
+					return new TableData(Path.Combine(BasePath, lossmapFile.Value<string>()) + MissingFileSuffix,
+						DataSourceType.Missing);
 				}
 			}
 		}
 
 		public TableData PTOCycle
 		{
-			get
-			{
+			get {
 				var pto = Body[JsonKeys.Vehicle_PTO];
 				if (pto == null || pto[JsonKeys.Vehicle_PTO_Cycle] == null) {
 					return null;
@@ -307,19 +357,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-		public string Vendor
+		public string Manufacturer
 		{
 			get { return "N/A"; }
 		}
 
-		public string ModelName
+		public string Model
 		{
-			get { return "N/A"; }
-		}
-
-		public string Creator
-		{
-			get { return "N/A"; }
+			get { return "N.A."; }
 		}
 
 		public string Date
@@ -327,19 +372,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N/A"; }
 		}
 
-		public string TypeId
+		public CertificationMethod CertificationMethod
 		{
-			get { return "N/A"; }
+			get { return CertificationMethod.NotCertified; }
+		}
+
+		public string CertificationNumber
+		{
+			get { return "N.A."; }
 		}
 
 		public string DigestValue
 		{
 			get { return ""; }
-		}
-
-		public IntegrityStatus IntegrityStatus
-		{
-			get { return IntegrityStatus.Unknown; }
 		}
 	}
 }

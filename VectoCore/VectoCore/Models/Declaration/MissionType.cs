@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -29,12 +29,16 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+
 namespace TUGraz.VectoCore.Models.Declaration
 {
 	public enum MissionType
 	{
 		LongHaul,
+		LongHaulEMS,
 		RegionalDelivery,
+		RegionalDeliveryEMS,
 		UrbanDelivery,
 		MunicipalUtility,
 		Construction,
@@ -50,6 +54,54 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static string GetName(this MissionType self)
 		{
 			return self.ToString().ToLowerInvariant();
+		}
+
+		public static bool IsEMS(this MissionType self)
+		{
+			return self == MissionType.LongHaulEMS || self == MissionType.RegionalDeliveryEMS;
+		}
+
+		public static MissionType GetNonEMSMissionType(this MissionType self)
+		{
+			if (self == MissionType.LongHaulEMS) {
+				return MissionType.LongHaul;
+			}
+			if (self == MissionType.RegionalDeliveryEMS) {
+				return MissionType.RegionalDelivery;
+			}
+			return self;
+		}
+
+		public static string ToXMLFormat(this MissionType self)
+		{
+			switch (self) {
+				case MissionType.LongHaul:
+					return "Long Haul";
+				case MissionType.LongHaulEMS:
+					return "Long Haul EMS";
+				case MissionType.RegionalDelivery:
+					return "Regional Delivery";
+				case MissionType.RegionalDeliveryEMS:
+					return "Regional Delivery EMS";
+				case MissionType.UrbanDelivery:
+					return "Urban Delivery";
+				case MissionType.MunicipalUtility:
+					return "Municipal Utility";
+				case MissionType.Construction:
+					return "Construction";
+				//case MissionType.HeavyUrban:
+				//	return "";
+				//case MissionType.Urban:
+				//	return "";
+				//case MissionType.Suburban:
+				//	return "";
+				//case MissionType.Interurban:
+				//	return "";
+				//case MissionType.Coach:
+				//	return "";
+				default:
+					throw new ArgumentOutOfRangeException("MissionType", self, null);
+			}
 		}
 	}
 }

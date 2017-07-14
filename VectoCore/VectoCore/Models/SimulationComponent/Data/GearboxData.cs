@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -37,9 +37,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -101,25 +99,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[SIRange(0.5, 1)]
 		public Second PowershiftShiftTime { get; internal set; }
 
-		[Range(0, 1)]
-		public double PowershiftInertiaFactor { get; internal set; }
-
 		// ReSharper disable once UnusedMember.Global -- used via Validation
 		public static ValidationResult ValidateGearboxData(GearboxData gearboxData, ValidationContext validationContext)
 		{
 			var mode = GetExecutionMode(validationContext);
 			//var gbxType = GetGearboxType(validationContext);
+			var emsMission = GetEmsMode(validationContext);
 
 			var result = new List<ValidationResult>();
+
+			if (gearboxData.Gears.Any(g => g.Value.HasTorqueConverter)) {
+				if (!gearboxData.Type.AutomaticTransmission()) {
+					return new ValidationResult("Torque Converter can only be used with AT gearbox model");
+				}
+			} else {
+				if (gearboxData.Type.AutomaticTransmission()) {
+					return new ValidationResult("AT gearbox model requires torque converter");
+				}
+			}
 			if (gearboxData.Type.AutomaticTransmission()) {
 				gearboxData.TorqueConverterData.RequiredSpeedRatio =
-					Math.Round(Constants.SimulationSettings.RequiredTorqueConverterSpeedRatio / gearboxData.Gears[1].Ratio *
-								gearboxData.Gears[1].TorqueConverterRatio, 4);
-				result.AddRange(gearboxData.TorqueConverterData.Validate(mode, gearboxData.Type));
+					Math.Round(gearboxData.Gears[1].TorqueConverterRatio / gearboxData.Gears[1].Ratio, 4) * 0.95;
+				result.AddRange(gearboxData.TorqueConverterData.Validate(mode, gearboxData.Type, emsMission));
 				//result.AddRange(gearboxData.PowershiftShiftTime.Validate(mode, gearboxData.Type));
 				//result.AddRange(gearboxData.PowershiftInertiaFactor.Validate(mode, gearboxData.Type));
-				validationContext.MemberName = "PowershiftInertiaFactor";
-				Validator.TryValidateProperty(gearboxData.PowershiftInertiaFactor, validationContext, result);
 				validationContext.MemberName = "PowershiftShiftTime";
 				Validator.TryValidateProperty(gearboxData.PowershiftShiftTime, validationContext, result);
 			}

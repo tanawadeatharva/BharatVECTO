@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -28,8 +28,6 @@
 *   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
-
-using System;
 
 namespace TUGraz.VectoCommon.Models
 {

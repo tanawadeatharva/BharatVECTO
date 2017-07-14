@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,6 +31,7 @@
 
 using System.Data;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -40,21 +41,28 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public DataSourceType SourceType { get; set; }
 		public string Source { get; set; }
 		public bool SavedInDeclarationMode { get; set; }
-		public string Vendor { get; set; }
-		public string ModelName { get; set; }
+		public string Manufacturer { get; set; }
+		public string Model { get; set; }
 		public string Creator { get; set; }
 		public string Date { get; set; }
-		public string TypeId { get; set; }
+		public string TechnicalReportId { get; set; }
+		public CertificationMethod CertificationMethod { get{return CertificationMethod.NotCertified;} }
+		public string CertificationNumber { get; set; }
 		public string DigestValue { get; set; }
-		public IntegrityStatus IntegrityStatus { get; set; }
 		public CubicMeter Displacement { get; set; }
 		public PerSecond IdleSpeed { get; set; }
 		public double WHTCMotorway { get; set; }
 		public double WHTCRural { get; set; }
 		public double WHTCUrban { get; set; }
 		public double ColdHotBalancingFactor { get; set; }
+		public double CorrectionFactorRegPer { get; set; }
+		public double CorrectionFactorNCV { get; set; }
+		public FuelType FuelType { get; set; }
 		public TableData FuelConsumptionMap { get; set; }
 		public TableData FullLoadCurve { get; set; }
+		public Watt RatedPowerDeclared { get; set; }
+		public PerSecond RatedSpeedDeclared { get; set; }
+		public NewtonMeter MaxTorqueDeclared { get; set; }
 		public KilogramSquareMeter Inertia { get; set; }
 		public double WHTCEngineering { get; set; }
 	}

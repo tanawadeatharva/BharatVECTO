@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,6 +31,7 @@
 
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -40,7 +41,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
-	public class CrossWindCorrectionCurveReader : LoggingObject
+	public static class CrossWindCorrectionCurveReader
 	{
 		public static List<CrossWindCorrectionEntry> GetNoCorrectionCurve(SquareMeter aerodynamicDragArea)
 		{
@@ -50,17 +51,10 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					EffectiveCrossSectionArea = aerodynamicDragArea
 				},
 				new CrossWindCorrectionEntry {
-					Velocity = 130.KMPHtoMeterPerSecond(),
+					Velocity = 300.KMPHtoMeterPerSecond(),
 					EffectiveCrossSectionArea = aerodynamicDragArea
 				}
 			}.ToList();
-		}
-
-		public static List<CrossWindCorrectionEntry> ReadSpeedDependentCorrectionFromFile(string fileName,
-			SquareMeter aerodynamicDragArea)
-		{
-			var data = VectoCSVFile.Read(fileName);
-			return ParseSpeedDependent(data, aerodynamicDragArea);
 		}
 
 		public static List<CrossWindCorrectionEntry> ReadSpeedDependentCorrectionCurveFromStream(Stream inputData,
@@ -87,11 +81,12 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			if (HeaderIsValid(betaTable.Columns)) {
 				return ParseCdxABetaFromColumnNames(betaTable);
 			}
-			Logger<CrossWindCorrectionCurveReader>().Warn("VAir/Beta Crosswind Correction header Line is not valid");
+			LogManager.GetLogger(typeof(CrossWindCorrectionCurveReader).FullName)
+				.Warn("VAir/Beta Crosswind Correction header Line is not valid");
 			return ParseCdxABetaFromColumnIndices(betaTable);
 		}
 
-		protected static List<CrossWindCorrectionEntry> ParseSpeedDependent(DataTable data, SquareMeter aerodynamicDragArea)
+		private static List<CrossWindCorrectionEntry> ParseSpeedDependent(DataTable data, SquareMeter aerodynamicDragArea)
 		{
 			if (data.Columns.Count != 2) {
 				throw new VectoException("Crosswind correction file must consist of 2 columns.");
@@ -103,15 +98,14 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			if (SpeedDependentHeaderIsValid(data.Columns)) {
 				return ParseSpeedDependentFromColumnNames(data, aerodynamicDragArea);
 			}
-			Logger<CrossWindCorrectionCurveReader>()
-				.Warn(
-					"Crosswind correction file: Header line is not valid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
-					FieldsSpeedDependent.Velocity, FieldsSpeedDependent.Cd,
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
+			LogManager.GetLogger(typeof(CrossWindCorrectionCurveReader).FullName).Warn(
+				"Crosswind correction file: Header line is not valid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
+				FieldsSpeedDependent.Velocity, FieldsSpeedDependent.Cd,
+				string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
 			return ParseSpeedDependentFromColumnIndizes(data, aerodynamicDragArea);
 		}
 
-		protected static List<CrossWindCorrectionEntry> ParseSpeedDependentFromColumnIndizes(DataTable data,
+		private static List<CrossWindCorrectionEntry> ParseSpeedDependentFromColumnIndizes(DataTable data,
 			SquareMeter aerodynamicDragArea)
 		{
 			return (from DataRow row in data.Rows
@@ -121,7 +115,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				}).ToList();
 		}
 
-		protected static List<CrossWindCorrectionEntry> ParseSpeedDependentFromColumnNames(DataTable data,
+		private static List<CrossWindCorrectionEntry> ParseSpeedDependentFromColumnNames(DataTable data,
 			SquareMeter aerodynamicDragArea)
 		{
 			return (from DataRow row in data.Rows
@@ -140,7 +134,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		{
 			return (from DataRow row in betaTable.Rows
 				select
-					new AirDragBetaEntry() {
+					new AirDragBetaEntry {
 						Beta = row.ParseDouble(0),
 						DeltaCdA = row.ParseDouble(1).SI<SquareMeter>()
 					}).ToList();
@@ -150,7 +144,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		{
 			return (from DataRow row in betaTable.Rows
 				select
-					new AirDragBetaEntry() {
+					new AirDragBetaEntry {
 						Beta = row.ParseDouble(FieldsCdxABeta.Beta),
 						DeltaCdA = row.ParseDouble(FieldsCdxABeta.DeltaCdxA).SI<SquareMeter>()
 					}).ToList();
@@ -164,22 +158,23 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		public static class FieldsCdxABeta
 		{
 			public const string Beta = "beta";
-
 			public const string DeltaCdxA = "delta CdA";
 		}
 
+		public static class FieldsSpeedDependent
+		{
+			public const string Velocity = "v_veh";
+			public const string Cd = "Cd";
+		}
+
+		[DebuggerDisplay("beta: {Beta}, deltaCdxA: {DeltaCdA}")]
 		public class AirDragBetaEntry
 		{
 			public double Beta;
 			public SquareMeter DeltaCdA;
 		}
 
-		public class FieldsSpeedDependent
-		{
-			public static readonly string Velocity = "v_veh";
-			public static readonly string Cd = "Cd";
-		}
-
+		[DebuggerDisplay("v: {Velocity}, CdxA: {EffectiveCrossSectionArea}")]
 		public class CrossWindCorrectionEntry
 		{
 			public SquareMeter EffectiveCrossSectionArea;

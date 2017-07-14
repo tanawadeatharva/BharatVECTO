@@ -2,7 +2,7 @@
 
 
 
-![](pics/GBX-Editor.png)
+![](pics/GBX-Editor.PNG)
 
 
 ###Description

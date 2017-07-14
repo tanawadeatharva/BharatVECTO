@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -128,11 +128,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			fullLoad.Rows.Add("0", "5000", "-5000", "0");
 			fullLoad.Rows.Add("3000", "5000", "-5000", "0");
 
-			var fullLoadCurve = EngineFullLoadCurve.Create(fullLoad);
+			var fullLoadCurve = FullLoadCurveReader.Create(fullLoad);
 			var data = new VectoRunData {
 				Cycle = drivingCycle,
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
-				EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad(), FullLoadCurve = fullLoadCurve },
+				EngineData =
+					new CombustionEngineData {
+						IdleSpeed = 560.RPMtoRad(),
+						FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fullLoadCurve }, { 1, fullLoadCurve } }
+					},
 				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 2, new GearData { Ratio = 3.5 } } } },
 				Retarder = new RetarderData()
 			};

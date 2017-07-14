@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -89,12 +89,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				WHTCUrban = 1,
 				WHTCRural = 1,
 				WHTCMotorway = 1,
-				FullLoadCurve = EngineFullLoadCurve.Create(fullLoad),
+				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, FullLoadCurveReader.Create(fullLoad) } },
 				ConsumptionMap = FuelConsumptionMapReader.Create(fuelConsumption)
 			};
-			data.FullLoadCurve.EngineData = data;
+			data.FullLoadCurves[0].EngineData = data;
 
-			var results = data.Validate(ExecutionMode.Declaration, null);
+			var results = data.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(data.IsValid());
 		}
@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 			var data = new MockEngineDataProvider {
-				ModelName = "asdf",
+				Model = "asdf",
 				Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
 				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
@@ -127,9 +127,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dao = new EngineeringDataAdapter();
 
-			var engineData = dao.CreateEngineData(data, null);
+			var engineData = dao.CreateEngineData(data, null, new List<ITorqueLimitInputData>());
 
-			var results = engineData.Validate(ExecutionMode.Declaration, null);
+			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(engineData.IsValid());
 		}
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 			var data = new MockEngineDataProvider {
-				ModelName = "asdf",
+				Model = "asdf",
 				Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
 				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
@@ -165,9 +165,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dao = new DeclarationDataAdapter();
 
-			var engineData = dao.CreateEngineData(data, GearboxType.AMT);
+			var dummyGearbox = new DummyGearboxData() {
+				Type = GearboxType.AMT,
+				Gears = new List<ITransmissionInputData>()
+			};
 
-			var results = engineData.Validate(ExecutionMode.Declaration, null);
+			var engineData = dao.CreateEngineData(data, null, dummyGearbox, new List<ITorqueLimitInputData>());
+
+			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 
 			Assert.IsTrue(engineData.IsValid());
@@ -178,12 +183,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				Creator = "Mr. Test",
-				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),
-						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
@@ -207,10 +206,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					},
 				}
 			};
-			var result = vehicleData.Validate(ExecutionMode.Engineering, null);
+			var result = vehicleData.Validate(ExecutionMode.Engineering, null, false);
 			Assert.IsTrue(!result.Any(), "validation should have succeded but failed." + string.Concat(result));
 
-			result = vehicleData.Validate(ExecutionMode.Declaration, null);
+			result = vehicleData.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsTrue(result.Any(), "validation should have failed, but succeeded.");
 		}
 
@@ -223,7 +222,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var data = new DistanceRun(container);
 			var engineData = new CombustionEngineData {
-				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld"),
+				FullLoadCurves =
+					new Dictionary<uint, EngineFullLoadCurve>() {
+						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+					},
 				IdleSpeed = 560.RPMtoRad()
 			};
 
@@ -241,11 +244,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				Creator = "Mr. Test",
-				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
@@ -271,16 +269,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 
 			container.RunData = new VectoRunData {
+				JobRunId = 0,
 				VehicleData = vehicleData,
+				AirdragData = new AirdragData() {
+					CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+					CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),
+							CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
+							CrossWindCorrectionMode.NoCorrection)
+				},
 				GearboxData = gearboxData,
 				EngineData = engineData,
 				AxleGearData = axleGearData
 			};
 
-			var results = data.Validate(ExecutionMode.Declaration, null);
+			var results = data.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
 
-			results = vehicleData.Validate(ExecutionMode.Engineering, null);
+			results = vehicleData.Validate(ExecutionMode.Engineering, null, false);
 			Assert.IsTrue(!results.Any());
 		}
 
@@ -293,7 +299,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var data = new DistanceRun(container);
 			var engineData = new CombustionEngineData {
-				FullLoadCurve = EngineFullLoadCurve.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld"),
+				FullLoadCurves =
+					new Dictionary<uint, EngineFullLoadCurve>() {
+						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") }
+					},
 				IdleSpeed = 560.RPMtoRad()
 			};
 
@@ -311,12 +321,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 
 			container.RunData = new VectoRunData {
+				JobRunId = 0,
 				GearboxData = gearboxData,
 				EngineData = engineData,
 				AxleGearData = axleGearData
 			};
 
-			var results = data.Validate(ExecutionMode.Declaration, null);
+			var results = data.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
 		}
 
@@ -326,7 +337,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void Validation_Test()
 		{
-			var results = new DataObject().Validate(ExecutionMode.Declaration, null);
+			var results = new DataObject().Validate(ExecutionMode.Declaration, null, false);
 
 			// every field and property should be tested except private parent fields and properties and 
 			// (4*4+1) * 2 = 17*2= 34 - 4 private parent fields (+2 public field and property which are tested twice) = 32
@@ -344,7 +355,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				}
 			};
 
-			var results = container.Validate(ExecutionMode.Declaration, null);
+			var results = container.Validate(ExecutionMode.Declaration, null, false);
 			Assert.AreEqual(1, results.Count);
 		}
 
@@ -367,7 +378,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
 
-			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT);
+			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT, false);
 			Assert.IsFalse(results.Any());
 
 			// change columns
@@ -376,7 +387,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
 
-			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT);
+			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT, false);
 			Assert.IsTrue(results.Any());
 		}
 
@@ -396,7 +407,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
 
-			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial);
+			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial, false);
 			Assert.IsFalse(results.Any());
 
 			// change columns
@@ -405,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 					VectoCSVFile.ReadStream(
 						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
 
-			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial);
+			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial, false);
 			Assert.IsFalse(results.Any());
 		}
 
@@ -601,5 +612,45 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				private_field = private_static_field;
 			}
 		}
+	}
+
+	public class DummyGearboxData : IGearboxEngineeringInputData
+	{
+		public DataSourceType SourceType { get; set; }
+		public string Source { get; set; }
+		public bool SavedInDeclarationMode { get; set; }
+		public string Manufacturer { get; set; }
+		public string Model { get; set; }
+		public string Creator { get; set; }
+		public string Date { get; set; }
+		public string TechnicalReportId { get; set; }
+
+		public CertificationMethod CertificationMethod
+		{
+			get { return CertificationMethod.NotCertified; }
+		}
+
+		public string CertificationNumber { get; set; }
+		public string DigestValue { get; set; }
+		public GearboxType Type { get; set; }
+		public IList<ITransmissionInputData> Gears { get; set; }
+
+		ITorqueConverterDeclarationInputData IGearboxDeclarationInputData.TorqueConverter
+		{
+			get { return TorqueConverter; }
+		}
+
+		public KilogramSquareMeter Inertia { get; set; }
+		public Second TractionInterruption { get; set; }
+		public Second MinTimeBetweenGearshift { get; set; }
+		public double TorqueReserve { get; set; }
+		public MeterPerSecond StartSpeed { get; set; }
+		public MeterPerSquareSecond StartAcceleration { get; set; }
+		public double StartTorqueReserve { get; set; }
+		public ITorqueConverterEngineeringInputData TorqueConverter { get; set; }
+		public Second DownshiftAfterUpshiftDelay { get; set; }
+		public Second UpshiftAfterDownshiftDelay { get; set; }
+		public MeterPerSquareSecond UpshiftMinAcceleration { get; set; }
+		public Second PowershiftShiftTime { get; set; }
 	}
 }

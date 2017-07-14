@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -75,29 +75,36 @@ namespace TUGraz.VectoCore.Tests.Integration
 			bool highEnginePower = true)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, fileWriter) { WriteAdvancedAux = true, WriteModalResults = true };
+			var modData = new ModalDataContainer(modFileName, FuelType.DieselCI, fileWriter) {
+				WriteAdvancedAux = true,
+				WriteModalResults = true
+			};
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
 			};
 
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(highEnginePower ? EngineFileHigh : EngineFile);
-			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(highEnginePower ? EngineFileHigh : EngineFile,
+				gearboxData.Gears.Count);
+			var axleGearData = CreateAxleGearData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+			var airdragData = CreateAirdragData();
 			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 
 			var runData = new VectoRunData() {
+				JobRunId = 0,
 				AxleGearData = axleGearData,
 				VehicleData = vehicleData,
+				AirdragData = airdragData,
 				GearboxData = gearboxData,
 				EngineData = engineData
 			};
 
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData))
+				.AddComponent(new Vehicle(container, vehicleData, airdragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -181,16 +188,21 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
-				//AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
-				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
-				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(), CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),
 				CurbWeight = 15700.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,
 				SavedInDeclarationMode = false
+			};
+		}
+
+		private static AirdragData CreateAirdragData()
+		{
+			return new AirdragData() {
+				CrossWindCorrectionCurve =
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+						CrossWindCorrectionMode.NoCorrection),
 			};
 		}
 
@@ -214,9 +226,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 					: new DriverData.OverSpeedEcoRollData {
 						Mode = DriverMode.Off
 					},
-				StartStop = new VectoRunData.StartStopData {
-					Enabled = false
-				}
 			};
 		}
 	}

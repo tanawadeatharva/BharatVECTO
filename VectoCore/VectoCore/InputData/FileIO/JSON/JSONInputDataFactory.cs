@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -108,6 +108,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (version) {
 				case 3:
 					return new JSONEngineDataV3(json, filename, tolerateMissing);
+				case 4:
+					return new JSONEngineDataV4(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Engine-File: Unsupported FileVersion. Got {0}", version);
 			}

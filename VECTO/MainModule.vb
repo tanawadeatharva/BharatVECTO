@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -16,6 +16,7 @@ Imports TUGraz.VectoCommon
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports VectoAuxiliaries
@@ -27,10 +28,14 @@ Imports VectoAuxiliaries
 Module MainModule
 	Public JobFileList As List(Of String)
 
-	Public Function ConvertToEngineData(fld As EngineFullLoadCurve, nIdle As PerSecond) As CombustionEngineData
+	Public Function ConvertToEngineData(ByVal fld As EngineFullLoadCurve, ByVal nIdle As PerSecond, ByVal gear As Integer,
+										ByVal maxTorque As NewtonMeter) As CombustionEngineData
 
 		Dim retVal As CombustionEngineData = New CombustionEngineData()
-		retVal.FullLoadCurve = fld
+		Dim fullLoadCurves As Dictionary(Of UInteger, EngineFullLoadCurve) = New Dictionary(Of UInteger, EngineFullLoadCurve)
+		fullLoadCurves(0) = fld
+		fullLoadCurves(CType(gear, UInteger)) = AbstractSimulationDataAdapter.IntersectFullLoadCurves(fld, maxTorque)
+		retVal.FullLoadCurves = fullLoadCurves
 		retVal.IdleSpeed = nIdle
 		Return retVal
 	End Function
@@ -63,56 +68,4 @@ Module MainModule
 		End If
 		Return filePath
 	End Function
-
-	Public Sub DetectPlugins()
-
-		Dim dllFileNames As String()
-		Dim Path As String = "."
-		'If Directory.Exists(Path) Then
-		dllFileNames = Directory.GetFiles(Path, "*.dll")
-
-		Dim assemblies As ICollection(Of Assembly) = New List(Of Assembly)(dllFileNames.Length)
-		For Each dllFile As String In dllFileNames
-			Dim an As AssemblyName = AssemblyName.GetAssemblyName(dllFile)
-			Dim assembly As Assembly = assembly.Load(an)
-			assemblies.Add(assembly)
-		Next
-
-		Dim exportPluginType As Type = GetType(IExportPlugin)
-		Dim importPluginType As Type = GetType(IImportPlugin)
-		Dim inputDataPluginType As Type = GetType(IInputDataPlugin)
-
-		For Each assembly As Assembly In assemblies
-			If assembly <> Nothing Then
-				Dim types As Type() = assembly.GetTypes()
-
-				For Each type As Type In types
-					If type.IsInterface Or type.IsAbstract Then
-						Continue For
-					Else
-						If type.GetInterface(exportPluginType.FullName) <> Nothing Then
-							Dim plugin As IExportPlugin = TryCast(Activator.CreateInstance(type), IExportPlugin)
-							If Not plugin Is Nothing Then
-								PluginRegistry.Instance.RegisterPlugin(plugin)
-							End If
-						End If
-						If type.GetInterface(importPluginType.FullName) <> Nothing Then
-							Dim plugin As IImportPlugin = TryCast(Activator.CreateInstance(type), IImportPlugin)
-							If Not plugin Is Nothing Then
-								PluginRegistry.Instance.RegisterPlugin(plugin)
-							End If
-						End If
-						If type.GetInterface(inputDataPluginType.FullName) <> Nothing Then
-							Dim plugin As IInputDataPlugin = TryCast(Activator.CreateInstance(type), IInputDataPlugin)
-							If Not plugin Is Nothing Then
-								PluginRegistry.Instance.RegisterPlugin(plugin)
-							End If
-						End If
-					End If
-				Next
-			End If
-		Next
-
-		'End If
-	End Sub
 End Module

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -102,6 +102,28 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.IsFalse(1.001.IsSmallerOrEqual(1.0));
 			Assert.IsTrue(0.999.IsSmallerOrEqual(1.0));
 			Assert.IsTrue(0.998.IsSmallerOrEqual(1.0));
+		}
+
+		[TestMethod]
+		public void TestStringFormatting()
+		{
+			Assert.AreEqual("0.452", 0.452345.ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("4.52", 4.52345.ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("45.2", 45.2345.ToMinSignificantDigits(3, 1));
+
+			Assert.AreEqual("0.0452", 0.0452345.ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("0.00452", 0.00452345.ToMinSignificantDigits(3, 1));
+
+
+			Assert.AreEqual("-0.452", (-0.452345).ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("-4.52", (-4.52345).ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("-45.2", (-45.2345).ToMinSignificantDigits(3, 1));
+
+			Assert.AreEqual("-0.0452", (-0.0452345).ToMinSignificantDigits(3, 1));
+			Assert.AreEqual("-0.00452", (-0.00452345).ToMinSignificantDigits(3, 1));
+
+			Assert.AreEqual("0.0", 0.0.ToMinSignificantDigits(3, 1));
+			//Assert.AreEqual("45.2", 45.2345.ToMinSignificantDigits(3, 1));
 		}
 	}
 }

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -53,6 +53,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Loading = 0.SI<Kilogram>(),
 				TotalRollResistanceCoefficient = 0,
 				DynamicTyreRadius = 1.SI<Meter>(),
+			};
+			AirdragData = new AirdragData() {
 				CrossWindCorrectionCurve =
 					new CrosswindCorrectionCdxALookup(1.SI<SquareMeter>(),
 						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(1.SI<SquareMeter>()), CrossWindCorrectionMode.NoCorrection)
@@ -63,23 +65,26 @@ namespace TUGraz.VectoCore.Tests.Utils
 			EngineData = new CombustionEngineData() {
 				IdleSpeed = 600.RPMtoRad(),
 				Displacement = 0.SI<CubicMeter>(),
-				FullLoadCurve = new EngineFullLoadCurve() {
-					FullLoadEntries = new List<FullLoadCurve.FullLoadCurveEntry>() {
-						new FullLoadCurve.FullLoadCurveEntry() {
-							EngineSpeed = 600.RPMtoRad(),
-							TorqueDrag = -100.SI<NewtonMeter>(),
-							TorqueFullLoad = 500.SI<NewtonMeter>()
-						},
-						new FullLoadCurve.FullLoadCurveEntry() {
-							EngineSpeed = 1800.RPMtoRad(),
-							TorqueDrag = -120.SI<NewtonMeter>(),
-							TorqueFullLoad = 1200.SI<NewtonMeter>()
-						},
-						new FullLoadCurve.FullLoadCurveEntry() {
-							EngineSpeed = 2500.RPMtoRad(),
-							TorqueDrag = -150.SI<NewtonMeter>(),
-							TorqueFullLoad = 400.SI<NewtonMeter>()
-						},
+				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() {
+					{
+						0, new EngineFullLoadCurve(
+							new List<EngineFullLoadCurve.FullLoadCurveEntry>() {
+								new EngineFullLoadCurve.FullLoadCurveEntry() {
+									EngineSpeed = 600.RPMtoRad(),
+									TorqueDrag = -100.SI<NewtonMeter>(),
+									TorqueFullLoad = 500.SI<NewtonMeter>()
+								},
+								new EngineFullLoadCurve.FullLoadCurveEntry() {
+									EngineSpeed = 1800.RPMtoRad(),
+									TorqueDrag = -120.SI<NewtonMeter>(),
+									TorqueFullLoad = 1200.SI<NewtonMeter>()
+								},
+								new EngineFullLoadCurve.FullLoadCurveEntry() {
+									EngineSpeed = 2500.RPMtoRad(),
+									TorqueDrag = -150.SI<NewtonMeter>(),
+									TorqueFullLoad = 400.SI<NewtonMeter>()
+								},
+							}, null)
 					}
 				}
 			};

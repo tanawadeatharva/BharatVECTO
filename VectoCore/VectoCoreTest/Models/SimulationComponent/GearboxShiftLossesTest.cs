@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -61,39 +61,26 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[Test,
-		TestCase(200, 2u, 1, 562, 620, 36.4855),
-		TestCase(400, 2u, 1, 562, 620, 55.9878),
-		TestCase(600, 2u, 1, 562, 620, 75.4901),
-		TestCase(800, 2u, 1, 562, 620, 94.9924),
-		TestCase(200, 2u, 1, 562, 600, 39.6371),
-		TestCase(400, 2u, 1, 562, 600, 59.4279),
-		TestCase(600, 2u, 1, 562, 600, 79.218),
-		TestCase(800, 2u, 1, 562, 600, 99.0095),
-		TestCase(400, 3u, 1, 500, 490, 9.6354),
-		TestCase(400, 3u, 1, 550, 490, 17.325),
-		TestCase(600, 3u, 1, 550, 490, 33.5574),
-		TestCase(200, 2u, 0.7, 562, 620, 31.3906),
-		TestCase(400, 2u, 0.7, 562, 620, 50.8929),
-		TestCase(600, 2u, 0.7, 562, 620, 70.3952),
-		TestCase(800, 2u, 0.7, 562, 620, 89.8975),
-		TestCase(200, 2u, 0.7, 562, 600, 33.6832),
-		TestCase(400, 2u, 0.7, 562, 600, 53.4741),
-		TestCase(600, 2u, 0.7, 562, 600, 73.2648),
-		TestCase(800, 2u, 0.7, 562, 600, 93.0557),
-		TestCase(400, 3u, 0.7, 500, 490, 15.9818),
-		TestCase(400, 3u, 0.7, 550, 490, 21.8670),
-		TestCase(600, 3u, 0.7, 550, 490, 38.0991),
+		TestCase(200, 2u, 562, 620, 19.5023),
+		TestCase(400, 2u, 562, 620, 39.0046),
+		TestCase(600, 2u, 562, 620, 58.5069),
+		TestCase(800, 2u, 562, 620, 78.0092),
+		TestCase(200, 2u, 562, 600, 19.7908),
+		TestCase(400, 2u, 562, 600, 39.5816),
+		TestCase(600, 2u, 562, 600, 59.3723),
+		TestCase(800, 2u, 562, 600, 79.1632),
+		TestCase(400, 3u, 500, 490, 30.7900),
+		TestCase(400, 3u, 550, 490, 32.4643),
+		TestCase(600, 3u, 550, 490, 48.6965),
 		]
-		public void TestShiftLossComputation(double torqueDemand, uint gear, double inertiaFactor, double preShiftRpm,
-			double postShiftRpm,
-			double expectedShiftLoss)
+		public void TestShiftLossComputation(double torqueDemand, uint gear, double preShiftRpm,
+			double postShiftRpm, double expectedShiftLoss)
 		{
 			var engineInertia = 5.SI<KilogramSquareMeter>();
 
 			var gearboxData = ATPowerTrain.CreateGearboxData(GearboxType.ATSerial);
 
 			var container = new VehicleContainer(ExecutionMode.Engineering);
-			gearboxData.PowershiftInertiaFactor = inertiaFactor;
 			gearboxData.PowershiftShiftTime = 0.8.SI<Second>();
 
 			var cycleDataStr = "0, 0, 0, 2\n100, 20, 0, 0\n1000, 50, 0, 0";
@@ -106,11 +93,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var wheels = new Wheels(container, 0.5.SI<Meter>(), 9.5.SI<KilogramSquareMeter>());
 
 			var vehicle = new MockVehicle(container);
+			container.AbsTime = 100.SI<Second>();
 			var driver = new MockDriver(container);
 			vehicle.MyVehicleSpeed = 10.KMPHtoMeterPerSecond();
 			driver.DriverBehavior = DrivingBehavior.Driving;
 			var engine = new CombustionEngine(container,
-				MockSimulationDataFactory.CreateEngineDataFromFile(ATPowerTrain.EngineFile));
+				MockSimulationDataFactory.CreateEngineDataFromFile(ATPowerTrain.EngineFile, gearboxData.Gears.Count));
 			container.Engine = engine;
 			var runData = new VectoRunData() {
 				GearboxData = gearboxData,
@@ -121,6 +109,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gbx.IdleController = new MockIdleController();
 
 			var init = gbx.Initialize(0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
+			axleGear.Initialize(0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
 
 			gbx.Gear = gear;
 
@@ -128,6 +117,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = 0.5.SI<Second>();
 			var response = gbx.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
 			axleGear.Request(absTime, dt, 0.SI<NewtonMeter>(), preShiftRpm.RPMtoRad());
+
 
 			Assert.IsInstanceOf<ResponseSuccess>(response);
 			container.CommitSimulationStep(absTime, dt);

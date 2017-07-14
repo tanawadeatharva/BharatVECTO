@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -51,19 +51,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Vendor,
-				ModelName = data.ModelName,
-				Creator = data.Creator,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
 				Date = data.Date,
-				TypeId = data.TypeId,
-				DigestValue = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
+				//CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
 				VehicleCategory = data.VehicleCategory,
 				AxleConfiguration = data.AxleConfiguration,
-				CurbWeight = data.CurbWeightChassis,
+				CurbWeight = data.CurbMassChassis,
 				GrossVehicleWeight = data.GrossVehicleMassRating,
 			};
 
+			return retVal;
+		}
+
+		internal AirdragData SetCommonAirdragData(IAirdragDeclarationInputData data)
+		{
+			var retVal = new AirdragData() {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				Date = data.Date,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
+			};
 			return retVal;
 		}
 
@@ -93,13 +105,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					return retarder;
 				}
 				retarder.SavedInDeclarationMode = data.SavedInDeclarationMode;
-				retarder.Vendor = data.Vendor;
-				retarder.ModelName = data.ModelName;
-				retarder.Creator = data.Creator;
+				retarder.Manufacturer = data.Manufacturer;
+				retarder.ModelName = data.Model;
 				retarder.Date = data.Date;
-				retarder.TypeId = data.TypeId;
-				retarder.DigestValue = data.DigestValue;
-				retarder.IntegrityStatus = data.IntegrityStatus;
+				retarder.CertificationMethod = data.CertificationMethod;
+				retarder.CertificationNumber = data.CertificationNumber;
+				retarder.DigestValueInput = data.DigestValue;
 
 				return retarder;
 			} catch (Exception e) {
@@ -111,16 +122,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = new CombustionEngineData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Vendor,
-				ModelName = data.ModelName,
-				Creator = data.Creator,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
 				Date = data.Date,
-				TypeId = data.TypeId,
-				DigestValue = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
 				Displacement = data.Displacement,
 				IdleSpeed = data.IdleSpeed,
 				ConsumptionMap = FuelConsumptionMapReader.Create(data.FuelConsumptionMap),
+				RatedPowerDeclared = data.RatedPowerDeclared,
+				RatedSpeedDeclared = data.RatedSpeedDeclared,
+				MaxTorqueDeclared = data.MaxTorqueDeclared,
+				FuelType = data.FuelType
 			};
 			return retVal;
 		}
@@ -129,18 +142,59 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			return new GearboxData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Vendor,
-				ModelName = data.ModelName,
-				Creator = data.Creator,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
 				Date = data.Date,
-				TypeId = data.TypeId,
-				DigestValue = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
 				Type = data.Type
 			};
 		}
 
-		internal AxleGearData CreateAxleGearData(IAxleGearInputData data, bool useEfficiencyFallback)
+		protected TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback,
+			bool extendLossMap)
+		{
+			if (gear.LossMap != null) {
+				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), extendLossMap);
+			}
+			if (useEfficiencyFallback) {
+				return TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+			}
+			throw new InvalidFileFormatException("Gear {0} LossMap missing.", i + 1);
+		}
+
+		protected static void CreateTCSecondGearATSerial(GearData gearData,
+			ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = gearData.Ratio;
+			gearData.TorqueConverterGearLossMap = gearData.LossMap;
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		protected static void CreateTCFirstGearATSerial(GearData gearData,
+			ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = gearData.Ratio;
+			gearData.TorqueConverterGearLossMap = gearData.LossMap;
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		protected static void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = 1;
+			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, string.Format("TCGear {0}", i + 1));
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		public AxleGearData CreateAxleGearData(IAxleGearInputData data, bool useEfficiencyFallback)
+		{
+			var retVal = SetCommonAxleGearData(data);
+			retVal.AxleGear.LossMap = ReadAxleLossMap(data, useEfficiencyFallback);
+			return retVal;
+		}
+
+		internal TransmissionLossMap ReadAxleLossMap(IAxleGearInputData data, bool useEfficiencyFallback)
 		{
 			TransmissionLossMap axleLossMap;
 			if (data.LossMap == null && useEfficiencyFallback) {
@@ -154,17 +208,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (axleLossMap == null) {
 				throw new InvalidFileFormatException("LossMap for Axlegear is missing.");
 			}
+			return axleLossMap;
+		}
 
+		internal AxleGearData SetCommonAxleGearData(IAxleGearInputData data)
+		{
 			return new AxleGearData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				Vendor = data.Vendor,
-				ModelName = data.ModelName,
-				Creator = data.Creator,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				LineType = data.LineType,
 				Date = data.Date,
-				TypeId = data.TypeId,
-				DigestValue = data.DigestValue,
-				IntegrityStatus = data.IntegrityStatus,
-				AxleGear = new GearData { LossMap = axleLossMap, Ratio = data.Ratio }
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
+				AxleGear = new GearData { Ratio = data.Ratio }
 			};
 		}
 
@@ -186,13 +244,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					case AngledriveType.SeparateAngledrive:
 						var angledriveData = new AngledriveData {
 							SavedInDeclarationMode = data.SavedInDeclarationMode,
-							Vendor = data.Vendor,
-							ModelName = data.ModelName,
-							Creator = data.Creator,
+							Manufacturer = data.Manufacturer,
+							ModelName = data.Model,
 							Date = data.Date,
-							TypeId = data.TypeId,
-							DigestValue = data.DigestValue,
-							IntegrityStatus = data.IntegrityStatus,
+							CertificationMethod = data.CertificationMethod,
+							CertificationNumber = data.CertificationNumber,
+							DigestValueInput = data.DigestValue,
 							Type = type,
 							Angledrive = new TransmissionData { Ratio = data.Ratio }
 						};
@@ -230,12 +287,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				return engineCurve;
 			}
 
-			var entries = new List<FullLoadCurve.FullLoadCurveEntry>();
+			var entries = new List<EngineFullLoadCurve.FullLoadCurveEntry>();
 			var firstEntry = engineCurve.FullLoadEntries.First();
 			if (firstEntry.TorqueFullLoad < maxTorque) {
 				entries.Add(engineCurve.FullLoadEntries.First());
 			} else {
-				entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+				entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
 					EngineSpeed = firstEntry.EngineSpeed,
 					TorqueFullLoad = maxTorque,
 					TorqueDrag = firstEntry.TorqueDrag
@@ -247,7 +304,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					entries.Add(entry.Item2);
 				} else if (entry.Item1.TorqueFullLoad > maxTorque && entry.Item2.TorqueFullLoad > maxTorque) {
 					// segment is above maxTorque line -> add limited entry
-					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+					entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
 						EngineSpeed = entry.Item2.EngineSpeed,
 						TorqueFullLoad = maxTorque,
 						TorqueDrag = entry.Item2.TorqueDrag
@@ -259,12 +316,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					var edgeDrag = Edge.Create(new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueDrag.Value()),
 						new Point(entry.Item2.EngineSpeed.Value(), entry.Item2.TorqueDrag.Value()));
 					var intersectionX = (maxTorque.Value() - edgeFull.OffsetXY) / edgeFull.SlopeXY;
-					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+					entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
 						EngineSpeed = intersectionX.SI<PerSecond>(),
 						TorqueFullLoad = maxTorque,
 						TorqueDrag = VectoMath.Interpolate(edgeDrag.P1, edgeDrag.P2, intersectionX).SI<NewtonMeter>()
 					});
-					entries.Add(new FullLoadCurve.FullLoadCurveEntry {
+					entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
 						EngineSpeed = entry.Item2.EngineSpeed,
 						TorqueFullLoad = entry.Item2.TorqueFullLoad > maxTorque ? maxTorque : entry.Item2.TorqueFullLoad,
 						TorqueDrag = entry.Item2.TorqueDrag
@@ -272,10 +329,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 
-			var flc = new EngineFullLoadCurve {
-				FullLoadEntries = entries.ToList(),
+			var flc = new EngineFullLoadCurve(entries.ToList(), engineCurve.PT1Data) {
 				EngineData = engineCurve.EngineData,
-				PT1Data = engineCurve.PT1Data
 			};
 			return flc;
 		}

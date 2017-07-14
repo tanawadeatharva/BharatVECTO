@@ -1,4 +1,4 @@
-﻿' Copyright 2014 European Union.
+﻿' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -84,7 +84,6 @@ Public Class VectoJobForm
 		CbEngOnly.Enabled = Not Cfg.DeclMode
 		GrCycles.Enabled = Not Cfg.DeclMode
 		GrVACC.Enabled = Not Cfg.DeclMode
-		PnStartStop.Enabled = Not Cfg.DeclMode
 		RdOff.Enabled = Not Cfg.DeclMode
 		GrLAC.Enabled = Not Cfg.DeclMode
 		ButAuxAdd.Enabled = Not Cfg.DeclMode
@@ -116,9 +115,6 @@ Public Class VectoJobForm
 		RdOverspeed.Checked = True
 		CbLookAhead.Checked = True
 
-		TbSSspeed.Text = DeclarationData.Driver.StartStop.MaxSpeed.AsKmph.ToGUIFormat()	'cDeclaration.SSspeed
-		TbSStime.Text = DeclarationData.Driver.StartStop.MinTime.ToGUIFormat()	 'cDeclaration.SStime
-		TbSSdelay.Text = DeclarationData.Driver.StartStop.Delay.ToGUIFormat()	 ' cDeclaration.SSdelay
 		tbLacPreviewFactor.Text = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor.ToGUIFormat()
 		tbLacDfTargetSpeedFile.Text = ""
 		tbLacDfVelocityDropFile.Text = ""
@@ -300,8 +296,20 @@ Public Class VectoJobForm
 			If GearboxForm.WindowState = FormWindowState.Minimized Then GearboxForm.WindowState = FormWindowState.Normal
 			GearboxForm.BringToFront()
 		End If
+		Dim vehicleType As VehicleCategory
 		Try
-			If Not Trim(f) = "" Then GearboxForm.OpenGbx(f)
+			If Not Trim(f) = "" Then
+				Dim vehInput As IVehicleDeclarationInputData =
+						CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))), 
+							IEngineeringInputDataProvider).VehicleInputData
+				vehicleType = vehInput.VehicleCategory
+			End If
+
+		Catch ex As Exception
+			vehicleType = VehicleCategory.RigidTruck
+		End Try
+		Try
+			If Not Trim(f) = "" Then GearboxForm.OpenGbx(f, vehicleType)
 		Catch ex As Exception
 			MsgBox("Failed to open Gearbox File: " + ex.Message)
 		End Try
@@ -351,12 +359,9 @@ Public Class VectoJobForm
 	'Help
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim browserRegistryString As String =
-					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim defaultBrowserPath As String =
-					Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#job-editor"))
+						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#job-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -441,10 +446,6 @@ Public Class VectoJobForm
 
 		'Start/Stop
 		Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
-		ChBStartStop.Checked = driver.StartStop.Enabled
-		TbSSspeed.Text = driver.StartStop.MaxSpeed.AsKmph.ToGUIFormat()
-		TbSStime.Text = driver.StartStop.MinTime.ToGUIFormat()
-		TbSSdelay.Text = driver.StartStop.Delay.ToGUIFormat()
 
 		If (Cfg.DeclMode) Then
 			TbDesMaxFile.Text = ""
@@ -612,12 +613,6 @@ Public Class VectoJobForm
 		vectoJob.PathGbx = TbGBX.Text
 
 
-		'Start/Stop
-		vectoJob.StartStop = ChBStartStop.Checked
-		vectoJob.StartStopMaxSpeed = TbSSspeed.Text.ToDouble()
-		vectoJob.StartStopTime = TbSStime.Text.ToDouble()
-		vectoJob.StartStopDelay = TbSSdelay.Text.ToDouble()
-
 		'a_DesMax
 		vectoJob.DesMaxFile = TbDesMaxFile.Text
 
@@ -693,17 +688,12 @@ Public Class VectoJobForm
 		TbGBX.Text = ""
 		TbDesMaxFile.Text = ""
 
-		'Start/Stop
-		TbSSspeed.Text = DeclarationData.Driver.StartStop.MaxSpeed.AsKmph.ToGUIFormat()
-		TbSStime.Text = DeclarationData.Driver.StartStop.MinTime.ToGUIFormat()
-		TbSSdelay.Text = DeclarationData.Driver.StartStop.Delay.ToGUIFormat()
-		ChBStartStop.Checked = False
-
 		LvAux.Items.Clear()
 
 		CbEngOnly.Checked = False
 
-		RdOff.Checked = True
+		'RdOff.Checked = True
+		RdOverspeed.Checked = True
 		CbLookAhead.Checked = True
 		'TbAlookahead.Text = "-0.5"
 		TbOverspeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.AsKmph.ToGUIFormat()
@@ -760,12 +750,12 @@ Public Class VectoJobForm
 	End Sub
 
 
-	Private Sub TBSSspeed_TextChanged(sender As Object, e As EventArgs) Handles TbSSspeed.TextChanged
+	Private Sub TBSSspeed_TextChanged(sender As Object, e As EventArgs)
 		Change()
 	End Sub
 
-	Private Sub TBSStime_TextChanged(sender As Object, e As EventArgs) _
-		Handles TbSStime.TextChanged, TbSSdelay.TextChanged
+	Private Sub TBSStime_TextChanged(sender As Object, e As EventArgs)
+
 		Change()
 	End Sub
 
@@ -1055,13 +1045,6 @@ lbDlog:
 		GrAux.Enabled = onOff
 	End Sub
 
-	'Start/Stop changed 
-	Private Sub ChBStartStop_CheckedChanged_1(sender As Object, e As EventArgs) _
-		Handles ChBStartStop.CheckedChanged
-		Change()
-		If Not Cfg.DeclMode Then PnStartStop.Enabled = ChBStartStop.Checked
-	End Sub
-
 	'LAC changed
 	Private Sub CbLookAhead_CheckedChanged(sender As Object, e As EventArgs) _
 		Handles CbLookAhead.CheckedChanged
@@ -1168,7 +1151,7 @@ lbDlog:
 
 		If gearbox Is Nothing Then Return
 
-		TbGbxTxt.Text = String.Format("{0}-Speed {1} {2}", gearbox.Gears.Count, gearbox.Type.ShortName(), gearbox.ModelName)
+		TbGbxTxt.Text = String.Format("{0}-Speed {1} {2}", gearbox.Gears.Count, gearbox.Type.ShortName(), gearbox.Model)
 
 		If Cfg.DeclMode Then
 			For i = 1 To gearbox.Gears.Count
@@ -1238,6 +1221,7 @@ lbDlog:
 		Dim pmax As Double
 
 		Dim engine As IEngineEngineeringInputData = Nothing
+		lblEngineCharacteristics.Text = ""
 		Dim engineFile As String =
 				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbENG.Text), TbENG.Text)
 		If File.Exists(engineFile) Then
@@ -1265,7 +1249,7 @@ lbDlog:
 
 		engine.IdleSpeed.Value()
 
-		Dim fullLoadCurve As FullLoadCurve = EngineFullLoadCurve.Create(engine.FullLoadCurve)
+		Dim fullLoadCurve As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve)
 
 		s = New Series
 		s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
@@ -1289,7 +1273,7 @@ lbDlog:
 
 
 		TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value() * 1000).ToString("0.0"),
-									pmax.ToString("#"), engine.ModelName)
+									pmax.ToString("#"), engine.Model)
 
 		Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
 
@@ -1301,6 +1285,12 @@ lbDlog:
 		s.Color = Color.Red
 		s.Name = "Map"
 		chart.Series.Add(s)
+
+		Dim engineCharacteristics As String =
+				String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",
+							fullLoadCurve.MaxTorque.Value(), fullLoadCurve.MaxPower.Value() / 1000, fullLoadCurve.RatedSpeed.AsRPM,
+							fullLoadCurve.N95hSpeed.AsRPM)
+		lblEngineCharacteristics.Text = engineCharacteristics
 	End Sub
 
 	Private Sub UpdateVehiclePic()
@@ -1329,7 +1319,7 @@ lbDlog:
 												True)
 		Catch
 		End Try
-		If s0 Is Nothing Then
+		If Not s0.Found Then
 			HDVclass = "-"
 		Else
 			HDVclass = s0.VehicleClass.GetClassNumber()
@@ -1344,7 +1334,7 @@ lbDlog:
 
 		End If
 
-		PicVehicle.Image = ConvPicPath(If(s0 Is Nothing, -1, HDVclass.ToInt()), False) _
+		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _
 		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
 		TbHVCclass.Text = String.Format("HDV Class {0}", HDVclass)
@@ -1526,7 +1516,6 @@ lbDlog:
 	End Sub
 
 	Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
-
 	End Sub
 End Class
 

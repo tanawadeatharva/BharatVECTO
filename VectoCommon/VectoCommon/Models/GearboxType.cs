@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -97,6 +97,24 @@ namespace TUGraz.VectoCommon.Models
 					return 0.0.SI<Second>();
 			}
 			return 0.SI<Second>();
+		}
+
+		public static string ToXMLFormat(this GearboxType type)
+		{
+			switch (type) {
+				case GearboxType.MT:
+					return "SMT";
+				case GearboxType.AMT:
+					return "AMT";
+				case GearboxType.DrivingCycle:
+					return type.ToString();
+				case GearboxType.ATSerial:
+					return "APT-S";
+				case GearboxType.ATPowerSplit:
+					return "APT-P";
+				default:
+					throw new ArgumentOutOfRangeException("GearboxType", type, null);
+			}
 		}
 	}
 }

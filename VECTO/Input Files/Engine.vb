@@ -1,4 +1,4 @@
-﻿' Copyright 2014 European Union.
+﻿' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -107,6 +107,12 @@ Public Class Engine
 
 
 	Public ColdHotBalancingFactorInput As Double
+	Public correctionFactorRegPerInput As Double
+	Public correctionFactorNCVInput As Double
+	Public FuelTypeInput As FuelType
+	Public ratedPowerInput As Watt
+	Public ratedSpeedInput As PerSecond
+	Public maxTorqueInput As NewtonMeter
 
 
 	''' <summary>
@@ -142,14 +148,13 @@ Public Class Engine
 	End Sub
 
 	''' <summary>
-	''' Save file. <see cref="P:VECTO.cENG.FilePath" /> must be set before calling.
 	''' </summary>
 	''' <returns>True if successful.</returns>
 	''' <remarks></remarks>
 	Public Function SaveFile() As Boolean
 
 		Dim validationResults As IList(Of ValidationResult) =
-				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing)
+				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing, False)
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -172,7 +177,6 @@ Public Class Engine
 
 
 	''' <summary>
-	''' Get or set Filepath before calling <see cref="M:VECTO.cENG.ReadFile" /> or <see cref="M:VECTO.cENG.SaveFile" />
 	''' </summary>
 	''' <value></value>
 	''' <returns>Full filepath</returns>
@@ -229,26 +233,31 @@ Public Class Engine
 	' ReSharper disable once UnusedMember.Global  -- used for Validation
 	Public Shared Function ValidateEngine(engine As Engine, validationContext As ValidationContext) As ValidationResult
 		Dim engineData As CombustionEngineData
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
-																	ExecutionModeServiceContainer)
-		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
-		Dim gbxtypeService As GearboxTypeServiceContainer =
-				TryCast(validationContext.GetService(GetType(GearboxTypeServiceContainer)), GearboxTypeServiceContainer)
-		Dim gbxType As GearboxType? = If(gbxtypeService Is Nothing, GearboxType.MT, gbxtypeService.Type)
+
+		Dim modeService As VectoValidationModeServiceContainer =
+				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
+						VectoValidationModeServiceContainer)
+		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
+		Dim emsCycle As Boolean = (modeService IsNot Nothing) AndAlso modeService.IsEMSCycle
+		Dim gbxType As GearboxType? = If(modeService Is Nothing, GearboxType.MT, modeService.GearboxType)
 
 		Try
 			If mode = ExecutionMode.Declaration Then
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
-
-				engineData = doa.CreateEngineData(engine, GearboxType.AMT)
+				Dim dummyGearboxData As IGearboxDeclarationInputData = New Gearbox() With {
+						.Type = GearboxType.AMT,
+						.MaxTorque = New List(Of String),
+						.GearRatios = New List(Of Double)()
+						}
+				engineData = doa.CreateEngineData(engine, Nothing, dummyGearboxData, New List(Of ITorqueLimitInputData))
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
-				engineData = doa.CreateEngineData(engine, Nothing)
+				engineData = doa.CreateEngineData(engine, Nothing, New List(Of ITorqueLimitInputData))
 			End If
 
 			Dim result As IList(Of ValidationResult) =
-					engineData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType)
+					engineData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), gbxType, emsCycle)
 
 			If Not result.Any() Then Return ValidationResult.Success
 
@@ -279,15 +288,10 @@ Public Class Engine
 		End Get
 	End Property
 
-	Public ReadOnly Property Vendor As String Implements IComponentInputData.Vendor
+	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
-			Return "N.A." ' TODO: MQ 20160919
-		End Get
-	End Property
-
-	Public ReadOnly Property Creator As String Implements IComponentInputData.Creator
-		Get
-			Return Lic.LicString
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
@@ -297,9 +301,16 @@ Public Class Engine
 		End Get
 	End Property
 
-	Public ReadOnly Property TypeId As String Implements IComponentInputData.TypeId
+	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 		Get
-			Return "N.A." ' Todo: MQ 20160919
+			Return CertificationMethod.NotCertified
+		End Get
+	End Property
+
+	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
+		Get
+			' Just for the interface. Value is not available in GUI yet.
+			Return "N.A."
 		End Get
 	End Property
 
@@ -309,13 +320,7 @@ Public Class Engine
 		End Get
 	End Property
 
-	Public ReadOnly Property IntegrityStatus As IntegrityStatus Implements IComponentInputData.IntegrityStatus
-		Get
-			Return IntegrityStatus.NotChecked
-		End Get
-	End Property
-
-	Public ReadOnly Property IComponentInputData_ModelName As String Implements IComponentInputData.ModelName
+	Public ReadOnly Property Model As String Implements IComponentInputData.Model
 		Get
 			Return ModelName
 		End Get
@@ -359,6 +364,24 @@ Public Class Engine
 		End Get
 	End Property
 
+	Public ReadOnly Property CorrectionFactorRegPer As Double Implements IEngineDeclarationInputData.CorrectionFactorRegPer
+		Get
+			Return correctionFactorRegPerInput
+		End Get
+	End Property
+
+	Public ReadOnly Property CorrectionFactorNCV As Double Implements IEngineDeclarationInputData.CorrectionFactorNCV
+		Get
+			Return correctionFactorNCVInput
+		End Get
+	End Property
+
+	Public ReadOnly Property FuelType As FuelType Implements IEngineDeclarationInputData.FuelType
+		Get
+			Return FuelTypeInput
+		End Get
+	End Property
+
 	Public ReadOnly Property FuelConsumptionMap As TableData Implements IEngineDeclarationInputData.FuelConsumptionMap
 		Get
 			If Not File.Exists(_fuelConsumptionMapPath.FullPath) Then _
@@ -372,6 +395,24 @@ Public Class Engine
 			If Not File.Exists(_fullLoadCurvePath.FullPath) Then _
 				Throw New VectoException("Full-Load Curve is missing or invalid")
 			Return VectoCSVFile.Read(_fullLoadCurvePath.FullPath)
+		End Get
+	End Property
+
+	Public ReadOnly Property RatedPowerDeclared As Watt Implements IEngineDeclarationInputData.RatedPowerDeclared
+		Get
+			Return ratedPowerInput
+		End Get
+	End Property
+
+	Public ReadOnly Property RatedSpeedDeclared As PerSecond Implements IEngineDeclarationInputData.RatedSpeedDeclared
+		Get
+			Return ratedSpeedInput
+		End Get
+	End Property
+
+	Public ReadOnly Property MaxTorqueDeclared As NewtonMeter Implements IEngineDeclarationInputData.MaxTorqueDeclared
+		Get
+			Return maxTorqueInput
 		End Get
 	End Property
 

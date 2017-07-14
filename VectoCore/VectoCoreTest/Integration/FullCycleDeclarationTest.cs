@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -56,6 +56,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		public const string DeliveryTruck8GearDeclarationJob =
 			@"TestData\Integration\DeclarationMode\12t Truck\12t Delivery Truck_8gear.vecto";
+
+		public const string Class9RigidTruckPTOJob =
+			@"TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
+
 
 		[TestMethod]
 		public void Truck40t_LongHaulCycle_RefLoad()
@@ -164,7 +168,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var inputData = JSONInputDataFactory.ReadJsonJob(LongHaulTruckDeclarationJob);
 			var fileWriter = new FileOutputWriter(LongHaulTruckDeclarationJob);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
-				WriteModalResults = true
+				WriteModalResults = true,
+				Validate = false
 			};
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
@@ -183,8 +188,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestMethod, TestCategory("LongRunning")]
 		public void Truck40t_Mod1Hz_Test()
 		{
-			var modFileName = "40t_Long_Haul_Truck_RegionalDeliveryFullLoading.vmod";
-			var modFileName1Hz = "40t_Long_Haul_Truck_RegionalDeliveryFullLoading_1Hz.vmod";
+			var modFileName = "40t_Long_Haul_Truck_RegionalDeliveryReferenceLoad.vmod";
+			var modFileName1Hz = "40t_Long_Haul_Truck_RegionalDeliveryReferenceLoad_1Hz.vmod";
 
 			if (File.Exists(modFileName)) {
 				File.Delete(modFileName);
@@ -273,7 +278,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// last v_act entry must be the same as original
 			var vAct = modFile.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
 			var vAct1Hz = modFile1Hz.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
-			AssertHelper.AreRelativeEqual(vAct, vAct1Hz, "end velocity is not equal", 1e-4);
+			AssertHelper.AreRelativeEqual(vAct, vAct1Hz, 1e-4, "end velocity is not equal");
 		}
 
 		[TestMethod, TestCategory("LongRunning")]
@@ -282,7 +287,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeliveryTruckDeclarationJob);
 			var fileWriter = new FileOutputWriter(DeliveryTruckDeclarationJob);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
-				WriteModalResults = true
+				WriteModalResults = true,
+				Validate = false
 			};
 			var sumData = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumData);
@@ -312,6 +318,30 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeliveryTruck8GearDeclarationJob);
 			var fileWriter = new FileOutputWriter(DeliveryTruck8GearDeclarationJob);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+				WriteModalResults = true,
+				Validate = false
+			};
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+			jobContainer.AddRuns(factory);
+
+			//var runs = jobContainer.Runs;
+
+			//runs[8].Run.Run();
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+
+		[TestMethod]
+		public void DeclarationClass9PTOTest()
+		{
+			var inputData = JSONInputDataFactory.ReadJsonJob(Class9RigidTruckPTOJob);
+			var fileWriter = new FileOutputWriter(Class9RigidTruckPTOJob);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
 				WriteModalResults = true
 			};

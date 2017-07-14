@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -35,7 +35,7 @@ using TUGraz.VectoCommon.Utils;
 namespace TUGraz.VectoCommon.Models
 {
 	[DebuggerDisplay("a: {Acceleration}, dt: {SimulationInterval}, ds: {SimulationDistance}")]
-	public struct OperatingPoint
+	public class OperatingPoint
 	{
 		public MeterPerSquareSecond Acceleration;
 		public Meter SimulationDistance;

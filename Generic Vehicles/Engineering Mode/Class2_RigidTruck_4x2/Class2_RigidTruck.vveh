@@ -1,18 +1,18 @@
 ﻿{
   "Header": {
-    "CreatedBy": " ()",
-    "Date": "2016-10-13T08:54:12.1194612Z",
+    "CreatedBy": "",
+    "Date": "2017-07-13T14:14:29.3226830Z",
     "AppVersion": "3",
     "FileVersion": 7
   },
   "Body": {
     "SavedInDeclMode": false,
     "VehCat": "RigidTruck",
+    "LegislativeClass": "Unknown",
     "CurbWeight": 4670.0,
     "CurbWeightExtra": 1900.0,
     "Loading": 3020.0,
     "MassMax": 11.99,
-    "CdA": 4.83,
     "rdyn": 421.0,
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
@@ -31,6 +31,8 @@
       "LossMap": "",
       "Cycle": ""
     },
+    "TorqueLimits": {},
+    "IdlingSpeed": 0.0,
     "AxleConfig": {
       "Type": "4x2",
       "Axles": [
@@ -40,7 +42,8 @@
           "AxleWeightShare": 0.2,
           "TwinTyres": false,
           "RRCISO": 0.0065,
-          "FzISO": 20850.0
+          "FzISO": 20850.0,
+          "Type": "VehicleNonDriven"
         },
         {
           "Inertia": 6.5,
@@ -48,7 +51,8 @@
           "AxleWeightShare": 0.3,
           "TwinTyres": true,
           "RRCISO": 0.0075,
-          "FzISO": 20850.0
+          "FzISO": 20850.0,
+          "Type": "VehicleDriven"
         },
         {
           "Inertia": 4.5,
@@ -56,7 +60,8 @@
           "AxleWeightShare": 0.25,
           "TwinTyres": false,
           "RRCISO": 0.0055,
-          "FzISO": 16680.0
+          "FzISO": 16680.0,
+          "Type": "VehicleNonDriven"
         },
         {
           "Inertia": 4.5,
@@ -64,9 +69,12 @@
           "AxleWeightShare": 0.25,
           "TwinTyres": false,
           "RRCISO": 0.0055,
-          "FzISO": 16680.0
+          "FzISO": 16680.0,
+          "Type": "VehicleNonDriven"
         }
       ]
-    }
+    },
+    "CdA": 4.83,
+    "VehicleHeight": 3.0
   }
 }

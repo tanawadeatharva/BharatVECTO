@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -36,7 +36,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class PTOTransmission : LookupData<string, Watt>, IDeclarationAuxiliaryTable
+	public sealed class PTOTransmission : LookupData<string, AuxDemandEntry>, IDeclarationAuxiliaryTable
 	{
 		public const string NoPTO = "None";
 
@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			Data = table.Rows.Cast<DataRow>().ToDictionary(
 				r => r.Field<string>("technology"),
-				r => r.ParseDouble("powerloss").SI<Watt>());
+				r => new AuxDemandEntry { PowerDemand = r.ParseDouble("powerloss").SI<Watt>() });
 		}
 
 		public string[] GetTechnologies()

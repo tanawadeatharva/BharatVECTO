@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -52,23 +52,25 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool SavedInDeclarationMode { get; }
 
-		string Vendor { get; }
+		string Manufacturer { get; }
 
-		string ModelName { get; }
-
-		string Creator { get; }
+		string Model { get; }
 
 		string Date { get; }
 
-		string TypeId { get; }
+		CertificationMethod CertificationMethod { get; }
+
+		string CertificationNumber { get; }
 
 		string DigestValue { get; }
-
-		IntegrityStatus IntegrityStatus { get; }
 	}
 
 	public interface IVehicleDeclarationInputData : IComponentInputData
 	{
+		string VIN { get; }
+
+		LegislativeClass LegislativeClass { get; }
+
 		/// <summary>
 		/// P036
 		/// cf. VECTO Input Parameters.xlsx
@@ -85,7 +87,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P038  Curb Weight Vehicle
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		Kilogram CurbWeightChassis { get; }
+		Kilogram CurbMassChassis { get; }
 
 		/// <summary>
 		/// P041  Max. vehicle weight
@@ -93,17 +95,13 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		Kilogram GrossVehicleMassRating { get; }
 
-		/// <summary>
-		/// P146, P147  DragCoefficient * Cross Section Area - Rigid
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		SquareMeter AirDragArea { get; } // without trailer
-
 		///// <summary>
 		///// P117  Powered axle tyres/rims
 		///// cf. VECTO Input Parameters.xlsx
 		///// </summary>
 		//string Rim { get; }  // deprecated
+
+		IList<ITorqueLimitInputData> TorqueLimits { get; }
 
 		/// <summary>
 		/// parameters for every axle
@@ -111,6 +109,19 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<IAxleDeclarationInputData> Axles { get; }
+
+		string ManufacturerAddress { get; }
+
+		PerSecond EngineIdleSpeed { get; }
+	}
+
+	public interface IAirdragDeclarationInputData : IComponentInputData
+	{
+		/// <summary>
+		/// P146, P147  DragCoefficient * Cross Section Area - Rigid
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		SquareMeter AirDragArea { get; } // without trailer
 	}
 
 	public interface IRetarderInputData : IComponentInputData
@@ -158,7 +169,7 @@ namespace TUGraz.VectoCommon.InputData
 		double Efficiency { get; }
 	}
 
-	public interface IAxleDeclarationInputData : IComponentInputData
+	public interface IAxleDeclarationInputData
 	{
 		/// <summary>
 		/// P108  
@@ -200,6 +211,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<ITransmissionInputData> Gears { get; }
+
+		/// <summary>
+		/// P090, P091, P092, P127
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		ITorqueConverterDeclarationInputData TorqueConverter { get; }
 	}
 
 
@@ -237,6 +254,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		NewtonMeter MaxTorque { get; }
 
+		PerSecond MaxInputSpeed { get; }
+
 		/// <summary>
 		/// P082
 		/// P093, P094, P095
@@ -271,9 +290,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		double Efficiency { get; }
+
+		AxleLineType LineType { get; }
 	}
 
-	public interface ITorqueConverterDeclarationInputData
+	public interface ITorqueConverterDeclarationInputData : IComponentInputData
 	{
 		/// <summary>
 		/// P091
@@ -321,6 +342,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		double ColdHotBalancingFactor { get; }
 
+		double CorrectionFactorRegPer { get; }
+
+		double CorrectionFactorNCV { get; }
+
+		FuelType FuelType { get; }
+
 		/// <summary>
 		/// P067
 		/// P072, P073, P074
@@ -335,6 +362,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		TableData FullLoadCurve { get; }
+
+		Watt RatedPowerDeclared { get; }
+
+		PerSecond RatedSpeedDeclared { get; }
+
+		NewtonMeter MaxTorqueDeclared { get; }
 	}
 
 	public interface IAuxiliariesDeclarationInputData
@@ -359,8 +392,6 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		bool SavedInDeclarationMode { get; }
 
-		IStartStopDeclarationInputData StartStop { get; }
-
 		IOverSpeedEcoRollDeclarationInputData OverSpeedEcoRoll { get; }
 	}
 
@@ -371,15 +402,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		DriverMode Mode { get; }
-	}
-
-	public interface IStartStopDeclarationInputData
-	{
-		/// <summary>
-		/// P010  StartStop - enabled
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		bool Enabled { get; }
 	}
 
 	public interface IAuxiliaryDeclarationInputData
@@ -395,5 +417,12 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<string> Technology { get; }
+	}
+
+	public interface ITorqueLimitInputData
+	{
+		int Gear { get; }
+
+		NewtonMeter MaxTorque { get; }
 	}
 }

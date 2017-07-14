@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -56,8 +56,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		[DebuggerHidden]
-		public static void AreRelativeEqual(SI expected, SI actual, string message = null,
-			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
+		public static void AreRelativeEqual(SI expected, SI actual,
+			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor, string message = null)
 		{
 			Assert.IsTrue(actual.HasEqualUnit(expected),
 				string.Format("Wrong SI Units: expected: {0}, actual: {1}", expected.ToBasicUnits(), actual.ToBasicUnits()));

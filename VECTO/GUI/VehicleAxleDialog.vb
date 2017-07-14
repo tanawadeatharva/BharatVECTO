@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -30,6 +30,16 @@ Public Class VehicleAxleDialog
 
 		CbWheels.Items.Add("-")
 		CbWheels.Items.AddRange(DeclarationData.Wheels.GetWheelsDimensions())
+
+		cbAxleType.Items.Clear()
+		cbAxleType.ValueMember = "Value"
+		cbAxleType.DisplayMember = "Label"
+
+		cbAxleType.DataSource = [Enum].GetValues(GetType(AxleType)) _
+			.Cast(Of AxleType)() _
+			.Where(Function(type) Not Cfg.DeclMode OrElse type <> AxleType.Trailer) _
+			.Select(Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
 	End Sub
 
 	Public Sub Clear()
@@ -59,7 +69,7 @@ Public Class VehicleAxleDialog
 				}
 
 		Dim results As IList(Of ValidationResult) =
-				axleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing)
+				axleData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering), Nothing, False)
 
 		If results.Any() Then
 			Dim messages As IEnumerable(Of String) =

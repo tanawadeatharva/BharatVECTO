@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -59,6 +59,9 @@ Partial Class MainForm
 		Me.ButtonGENadd = New System.Windows.Forms.Button()
 		Me.TabPgOptions = New System.Windows.Forms.TabPage()
 		Me.PanelOptAllg = New System.Windows.Forms.Panel()
+		Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+		Me.cbActVmod = New System.Windows.Forms.CheckBox()
+		Me.cbValidateRunData = New System.Windows.Forms.CheckBox()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
 		Me.ChBoxModOut = New System.Windows.Forms.CheckBox()
 		Me.ChBoxMod1Hz = New System.Windows.Forms.CheckBox()
@@ -97,8 +100,6 @@ Partial Class MainForm
 		Me.GearboxEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.GraphToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
-		Me.SignOrVerifyFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-		Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
 		Me.OpenLogToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.SettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripDrDnBtInfo = New System.Windows.Forms.ToolStripDropDownButton()
@@ -106,7 +107,6 @@ Partial Class MainForm
 		Me.UpdateNotesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ReportBugViaCITnetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
-		Me.CreateActivationFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.AboutVECTOToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
 		Me.CmDEV = New System.Windows.Forms.ContextMenuStrip(Me.components)
 		Me.TmProgSec = New System.Windows.Forms.Timer(Me.components)
@@ -121,6 +121,7 @@ Partial Class MainForm
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.TabPgOptions.SuspendLayout()
 		Me.PanelOptAllg.SuspendLayout()
+		Me.GroupBox3.SuspendLayout()
 		Me.GroupBox2.SuspendLayout()
 		Me.GroupBox1.SuspendLayout()
 		Me.TabPageDEV.SuspendLayout()
@@ -227,7 +228,6 @@ Partial Class MainForm
 		Me.btnExportXML.TabIndex = 22
 		Me.btnExportXML.Text = "Export as XML"
 		Me.btnExportXML.UseVisualStyleBackColor = True
-		Me.btnExportXML.Visible = False
 		'
 		'Label6
 		'
@@ -374,6 +374,7 @@ Partial Class MainForm
 		'
 		'PanelOptAllg
 		'
+		Me.PanelOptAllg.Controls.Add(Me.GroupBox3)
 		Me.PanelOptAllg.Controls.Add(Me.GroupBox2)
 		Me.PanelOptAllg.Controls.Add(Me.GroupBox1)
 		Me.PanelOptAllg.Location = New System.Drawing.Point(6, 6)
@@ -381,16 +382,48 @@ Partial Class MainForm
 		Me.PanelOptAllg.Size = New System.Drawing.Size(1022, 290)
 		Me.PanelOptAllg.TabIndex = 0
 		'
+		'GroupBox3
+		'
+		Me.GroupBox3.Controls.Add(Me.cbActVmod)
+		Me.GroupBox3.Controls.Add(Me.cbValidateRunData)
+		Me.GroupBox3.Location = New System.Drawing.Point(3, 177)
+		Me.GroupBox3.Name = "GroupBox3"
+		Me.GroupBox3.Size = New System.Drawing.Size(173, 110)
+		Me.GroupBox3.TabIndex = 18
+		Me.GroupBox3.TabStop = False
+		Me.GroupBox3.Text = "Misc"
+		'
+		'cbActVmod
+		'
+		Me.cbActVmod.Location = New System.Drawing.Point(6, 41)
+		Me.cbActVmod.Name = "cbActVmod"
+		Me.cbActVmod.Size = New System.Drawing.Size(161, 63)
+		Me.cbActVmod.TabIndex = 18
+		Me.cbActVmod.Text = "Output values in vmod at beginning and end of simulation interval (EXPERT!)"
+		Me.cbActVmod.UseVisualStyleBackColor = True
+		'
+		'cbValidateRunData
+		'
+		Me.cbValidateRunData.AutoSize = True
+		Me.cbValidateRunData.Checked = True
+		Me.cbValidateRunData.CheckState = System.Windows.Forms.CheckState.Checked
+		Me.cbValidateRunData.Location = New System.Drawing.Point(6, 19)
+		Me.cbValidateRunData.Name = "cbValidateRunData"
+		Me.cbValidateRunData.Size = New System.Drawing.Size(90, 17)
+		Me.cbValidateRunData.TabIndex = 17
+		Me.cbValidateRunData.Text = "Validate Data"
+		Me.cbValidateRunData.UseVisualStyleBackColor = True
+		'
 		'GroupBox2
 		'
 		Me.GroupBox2.Controls.Add(Me.ChBoxModOut)
 		Me.GroupBox2.Controls.Add(Me.ChBoxMod1Hz)
-		Me.GroupBox2.Location = New System.Drawing.Point(9, 81)
+		Me.GroupBox2.Location = New System.Drawing.Point(3, 82)
 		Me.GroupBox2.Name = "GroupBox2"
-		Me.GroupBox2.Size = New System.Drawing.Size(167, 89)
+		Me.GroupBox2.Size = New System.Drawing.Size(173, 89)
 		Me.GroupBox2.TabIndex = 16
 		Me.GroupBox2.TabStop = False
-		Me.GroupBox2.Text = "Mode"
+		Me.GroupBox2.Text = "Output"
 		'
 		'ChBoxModOut
 		'
@@ -647,7 +680,7 @@ Partial Class MainForm
 		'
 		'ToolStripDrDnBtTools
 		'
-		Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.SignOrVerifyFilesToolStripMenuItem, Me.ToolStripSeparator4, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
+		Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
 		Me.ToolStripDrDnBtTools.Image = Global.TUGraz.VECTO.My.Resources.Resources.Misc_Tools_icon
 		Me.ToolStripDrDnBtTools.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.ToolStripDrDnBtTools.Name = "ToolStripDrDnBtTools"
@@ -658,70 +691,57 @@ Partial Class MainForm
 		'
 		Me.GENEditorToolStripMenuItem1.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
 		Me.GENEditorToolStripMenuItem1.Name = "GENEditorToolStripMenuItem1"
-		Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(170, 22)
+		Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(151, 22)
 		Me.GENEditorToolStripMenuItem1.Text = "Job Editor"
 		'
 		'VEHEditorToolStripMenuItem
 		'
 		Me.VEHEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VEH
 		Me.VEHEditorToolStripMenuItem.Name = "VEHEditorToolStripMenuItem"
-		Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.VEHEditorToolStripMenuItem.Text = "Vehicle Editor"
 		'
 		'EngineEditorToolStripMenuItem
 		'
 		Me.EngineEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_ENG
 		Me.EngineEditorToolStripMenuItem.Name = "EngineEditorToolStripMenuItem"
-		Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.EngineEditorToolStripMenuItem.Text = "Engine Editor"
 		'
 		'GearboxEditorToolStripMenuItem
 		'
 		Me.GearboxEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_GBX
 		Me.GearboxEditorToolStripMenuItem.Name = "GearboxEditorToolStripMenuItem"
-		Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.GearboxEditorToolStripMenuItem.Text = "Gearbox Editor"
 		'
 		'GraphToolStripMenuItem
 		'
 		Me.GraphToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_Graph
 		Me.GraphToolStripMenuItem.Name = "GraphToolStripMenuItem"
-		Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.GraphToolStripMenuItem.Text = "Graph"
 		'
 		'ToolStripSeparator6
 		'
 		Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-		Me.ToolStripSeparator6.Size = New System.Drawing.Size(167, 6)
-		'
-		'SignOrVerifyFilesToolStripMenuItem
-		'
-		Me.SignOrVerifyFilesToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.Status_dialog_password_icon
-		Me.SignOrVerifyFilesToolStripMenuItem.Name = "SignOrVerifyFilesToolStripMenuItem"
-		Me.SignOrVerifyFilesToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
-		Me.SignOrVerifyFilesToolStripMenuItem.Text = "Sign or Verify Files"
-		'
-		'ToolStripSeparator4
-		'
-		Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-		Me.ToolStripSeparator4.Size = New System.Drawing.Size(167, 6)
-		Me.ToolStripSeparator4.Visible = False
+		Me.ToolStripSeparator6.Size = New System.Drawing.Size(148, 6)
 		'
 		'OpenLogToolStripMenuItem
 		'
 		Me.OpenLogToolStripMenuItem.Name = "OpenLogToolStripMenuItem"
-		Me.OpenLogToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.OpenLogToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.OpenLogToolStripMenuItem.Text = "Open Log"
 		'
 		'SettingsToolStripMenuItem
 		'
 		Me.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem"
-		Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+		Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(151, 22)
 		Me.SettingsToolStripMenuItem.Text = "Settings"
 		'
 		'ToolStripDrDnBtInfo
 		'
-		Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.ReportBugViaCITnetToolStripMenuItem, Me.ToolStripSeparator3, Me.CreateActivationFileToolStripMenuItem, Me.AboutVECTOToolStripMenuItem1})
+		Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.ReportBugViaCITnetToolStripMenuItem, Me.ToolStripSeparator3, Me.AboutVECTOToolStripMenuItem1})
 		Me.ToolStripDrDnBtInfo.Image = Global.TUGraz.VECTO.My.Resources.Resources.Help_icon
 		Me.ToolStripDrDnBtInfo.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.ToolStripDrDnBtInfo.Name = "ToolStripDrDnBtInfo"
@@ -750,12 +770,6 @@ Partial Class MainForm
 		'
 		Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
 		Me.ToolStripSeparator3.Size = New System.Drawing.Size(219, 6)
-		'
-		'CreateActivationFileToolStripMenuItem
-		'
-		Me.CreateActivationFileToolStripMenuItem.Name = "CreateActivationFileToolStripMenuItem"
-		Me.CreateActivationFileToolStripMenuItem.Size = New System.Drawing.Size(222, 22)
-		Me.CreateActivationFileToolStripMenuItem.Text = "Create Activation File"
 		'
 		'AboutVECTOToolStripMenuItem1
 		'
@@ -820,6 +834,8 @@ Partial Class MainForm
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.TabPgOptions.ResumeLayout(False)
 		Me.PanelOptAllg.ResumeLayout(False)
+		Me.GroupBox3.ResumeLayout(False)
+		Me.GroupBox3.PerformLayout()
 		Me.GroupBox2.ResumeLayout(False)
 		Me.GroupBox2.PerformLayout()
 		Me.GroupBox1.ResumeLayout(False)
@@ -878,11 +894,9 @@ Partial Class MainForm
 	Friend WithEvents ToolStripDrDnBtTools As ToolStripDropDownButton
 	Friend WithEvents GENEditorToolStripMenuItem1 As ToolStripMenuItem
 	Friend WithEvents VEHEditorToolStripMenuItem As ToolStripMenuItem
-	Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
 	Friend WithEvents OpenLogToolStripMenuItem As ToolStripMenuItem
 	Friend WithEvents SettingsToolStripMenuItem As ToolStripMenuItem
 	Friend WithEvents ToolStripDrDnBtInfo As ToolStripDropDownButton
-	Friend WithEvents CreateActivationFileToolStripMenuItem As ToolStripMenuItem
 	Friend WithEvents AboutVECTOToolStripMenuItem1 As ToolStripMenuItem
 	Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
 	Friend WithEvents ToolStripProgBarJob As ToolStripProgressBar
@@ -898,7 +912,6 @@ Partial Class MainForm
 	Friend WithEvents ColumnHeader8 As ColumnHeader
 	Friend WithEvents ColumnHeader9 As ColumnHeader
 	Friend WithEvents UpdateNotesToolStripMenuItem As ToolStripMenuItem
-	Friend WithEvents SignOrVerifyFilesToolStripMenuItem As ToolStripMenuItem
 	Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
 	Friend WithEvents LbDecl As Label
 	Friend WithEvents GraphToolStripMenuItem As ToolStripMenuItem
@@ -926,5 +939,8 @@ Partial Class MainForm
 	Friend WithEvents btnExportXML As System.Windows.Forms.Button
 	Friend WithEvents btnImportXML As System.Windows.Forms.Button
 	Friend WithEvents ShowInFolderMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
+	Friend WithEvents cbValidateRunData As System.Windows.Forms.CheckBox
+	Friend WithEvents cbActVmod As System.Windows.Forms.CheckBox
 
 End Class

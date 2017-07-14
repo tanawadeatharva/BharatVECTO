@@ -15,7 +15,7 @@ Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Utils
 Imports VectoAuxiliaries
-' Copyright 2014 European Union.
+' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -51,6 +51,13 @@ Public Class EngineForm
 		PnWhtcDeclaration.Enabled = Cfg.DeclMode
 		PnWhtcEngineering.Enabled = Not Cfg.DeclMode
 
+		cbFuelType.Items.Clear()
+		cbFuelType.ValueMember = "Value"
+		cbFuelType.DisplayMember = "Label"
+		cbFuelType.DataSource =
+			[Enum].GetValues(GetType(TUGraz.VectoCommon.Models.FuelType)).Cast (Of TUGraz.VectoCommon.Models.FuelType).Select(
+				Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
 		_changed = False
 		NewEngine()
 	End Sub
@@ -60,7 +67,7 @@ Public Class EngineForm
 
 		If Not Cfg.DeclMode Then Exit Sub
 
-		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble(0.0) / 1000.0 / 1000.0).SI(Of CubicMeter),
+		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble(0.0)/1000.0/1000.0).SI (Of CubicMeter),
 															GearboxType.AMT).ToGUIFormat()
 	End Sub
 
@@ -114,12 +121,9 @@ Public Class EngineForm
 
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim browserRegistryString As String =
-					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim defaultBrowserPath As String =
-					Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
+			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""{0}{1}""", MyAppPath, "User Manual\help.html#engine-editor"))
+						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#engine-editor"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -159,7 +163,7 @@ Public Class EngineForm
 
 		If ChangeCheckCancel() Then Exit Sub
 
-		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
+		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
 																IEngineeringInputDataProvider)
 
 		engine = inputData.EngineInputData
@@ -171,14 +175,14 @@ Public Class EngineForm
 					Close()
 					MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
 					MainForm.OpenVectoFile(file)
-				Case -1
+				Case - 1
 					Exit Sub
 			End Select
 		End If
 
 		Dim basePath As String = Path.GetDirectoryName(file)
-		TbName.Text = engine.ModelName
-		TbDispl.Text = (engine.Displacement * 1000 * 1000).ToGUIFormat()
+		TbName.Text = engine.Model
+		TbDispl.Text = (engine.Displacement*1000*1000).ToGUIFormat()
 		TbInertia.Text = engine.Inertia.ToGUIFormat()
 		TbNleerl.Text = engine.IdleSpeed.AsRPM.ToGUIFormat()
 
@@ -189,6 +193,13 @@ Public Class EngineForm
 		TbWHTCmw.Text = engine.WHTCMotorway.ToGUIFormat()
 		TbWHTCEngineering.Text = engine.WHTCEngineering.ToGUIFormat()
 		TbColdHotFactor.Text = engine.ColdHotBalancingFactor.ToGUIFormat()
+		tbNCVCorrFactor.Text = engine.CorrectionFactorNCV.ToGUIFormat()
+		tbRegPerCorrFactor.Text = engine.CorrectionFactorRegPer.ToGUIFormat()
+		tbMaxTorque.Text = engine.MaxTorqueDeclared.ToGUIFormat()
+		tbRatedPower.Text = (engine.RatedPowerDeclared.Value()/1000).ToGUIFormat()
+		tbRatedSpeed.Text = engine.RatedSpeedDeclared.AsRPM.ToGUIFormat()
+
+		cbFuelType.SelectedValue = engine.FuelType
 
 		DeclInit()
 
@@ -234,9 +245,16 @@ Public Class EngineForm
 		engine.WHTCRuralInput = TbWHTCrural.Text.ToDouble(0)
 		engine.WHTCMotorwayInput = TbWHTCmw.Text.ToDouble(0)
 		engine.WHTCEngineeringInput = TbWHTCEngineering.Text.ToDouble(0)
+		engine.correctionFactorNCVInput = tbNCVCorrFactor.Text.ToDouble(0)
+		engine.correctionFactorRegPerInput = tbRegPerCorrFactor.Text.ToDouble(0)
 
 		engine.ColdHotBalancingFactorInput = TbColdHotFactor.Text.ToDouble(0)
 
+		engine.ratedPowerInput = (tbRatedPower.Text.ToDouble(0)*1000).SI (Of Watt)()
+		engine.ratedSpeedInput = tbRatedSpeed.Text.ToDouble(0).RPMtoRad()
+		engine.maxTorqueInput = tbMaxTorque.Text.ToDouble(0).SI (Of NewtonMeter)()
+
+		engine.FuelTypeInput = CType(cbFuelType.SelectedValue, TUGraz.VectoCommon.Models.FuelType)
 
 		If Not engine.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
@@ -364,9 +382,10 @@ Public Class EngineForm
 	End Sub
 
 	Private Sub UpdatePic()
-		Dim fullLoadCurve As FullLoadCurve = Nothing
+		Dim fullLoadCurve As EngineFullLoadCurve = Nothing
 		Dim fcMap As FuelConsumptionMap = Nothing
 
+		Dim engineCharacteristics As String = ""
 
 		PicBox.Image = Nothing
 
@@ -375,14 +394,15 @@ Public Class EngineForm
 		Try
 			Dim fldFile As String =
 					If(Not String.IsNullOrWhiteSpace(_engFile), Path.Combine(Path.GetDirectoryName(_engFile), TbFLD.Text), TbFLD.Text)
-			If File.Exists(fldFile) Then fullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.Read(fldFile), engineFld:=True)
+			If File.Exists(fldFile) Then _
+				fullLoadCurve = FullLoadCurveReader.Create(VectoCSVFile.Read(fldFile))
 		Catch ex As Exception
 		End Try
 
 		Try
 			Dim fcFile As String =
 					If(Not String.IsNullOrWhiteSpace(_engFile), Path.Combine(Path.GetDirectoryName(_engFile), TbMAP.Text), TbMAP.Text)
-			if File.Exists(fcfile) then fcMap = FuelConsumptionMapReader.Create(VectoCSVFile.Read(fcFile))
+			If File.Exists(fcFile) Then fcMap = FuelConsumptionMapReader.Create(VectoCSVFile.Read(fcFile))
 		Catch ex As Exception
 		End Try
 
@@ -414,6 +434,11 @@ Public Class EngineForm
 			series.Color = Color.Blue
 			series.Name = "Motoring (" & Path.GetFileNameWithoutExtension(TbMAP.Text) & ")"
 			chart.Series.Add(series)
+
+			engineCharacteristics +=
+				String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",
+							fullLoadCurve.MaxTorque.Value(), fullLoadCurve.MaxPower.Value() / 1000, fullLoadCurve.RatedSpeed.AsRPM,
+							fullLoadCurve.N95hSpeed.AsRPM)
 		End If
 
 		If Not fcMap Is Nothing Then
@@ -456,6 +481,7 @@ Public Class EngineForm
 
 
 		PicBox.Image = img
+		lblEngineCharacteristics.Text = engineCharacteristics
 	End Sub
 
 
@@ -528,11 +554,5 @@ Public Class EngineForm
 		Catch ex As Exception
 			MsgBox("Failed to load file! " & ex.Message, MsgBoxStyle.Critical)
 		End Try
-	End Sub
-
-	Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TbWHTCEngineering.TextChanged
-	End Sub
-
-	Private Sub Label9_Click(sender As Object, e As EventArgs) Handles lblWhtcEngineering.Click
 	End Sub
 End Class

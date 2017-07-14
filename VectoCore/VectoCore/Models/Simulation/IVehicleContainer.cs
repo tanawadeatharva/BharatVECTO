@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -69,6 +70,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// <summary>
 		/// Finishes the simulation.
 		/// </summary>
-		new void FinishSimulation();
+		/// <param name="exception"></param>
+		void FinishSimulationRun(Exception exception = null);
 	}
 }

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -32,12 +32,8 @@
 using System;
 using System.ComponentModel;
 using System.Data;
-using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text.RegularExpressions;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Utils;
 
 // ReSharper disable InconsistentNaming
 
@@ -65,51 +61,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				col.ExtendedProperties[ExtendedPropertyNames.ShowUnit] = value.GetAttribute().ShowUnit;
 				Columns.Add(col);
 			}
-		}
-
-		public static ModalResults ReadFromFile(string fileName)
-		{
-			var modalResults = new ModalResults();
-			var data = VectoCSVFile.Read(fileName);
-
-			foreach (DataRow row in data.Rows) {
-				try {
-					var newRow = modalResults.NewRow();
-					foreach (DataColumn col in row.Table.Columns) {
-						// In cols FC-AUXc and FC-WHTCc can be a "-"
-						if (row.Field<string>(col) == "-"
-							&& (col.ColumnName == ModalResultField.FCAUXc.GetName() || col.ColumnName == ModalResultField.FCWHTCc.GetName())) {
-							continue;
-						}
-
-						// In col FC can sometimes be a "ERROR"
-						if (row.Field<string>(col) == "ERROR" && col.ColumnName == ModalResultField.FCMap.GetName()) {
-							continue;
-						}
-
-						if (col.ColumnName.StartsWith(ModalResultField.P_aux_.ToString()) &&
-							!modalResults.Columns.Contains(col.ColumnName)) {
-							modalResults.Columns.Add(col.ColumnName, typeof(SI));
-						}
-
-						if (typeof(SI).IsAssignableFrom(modalResults.Columns[col.ColumnName].DataType)) {
-							newRow.SetField(col.ColumnName, row.ParseDoubleOrGetDefault(col.ColumnName).SI());
-						} else {
-							newRow.SetField(col.ColumnName, row.ParseDoubleOrGetDefault(col.ColumnName));
-						}
-					}
-					modalResults.Rows.Add(newRow);
-				} catch (VectoException ex) {
-					throw new VectoException(string.Format("Row {0}: {1}", data.Rows.IndexOf(row), ex.Message), ex);
-				}
-			}
-
-			return modalResults;
-		}
-
-		public void WriteToFile(string fileName)
-		{
-			VectoCSVFile.Write(fileName, this);
 		}
 	}
 }

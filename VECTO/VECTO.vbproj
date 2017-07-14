@@ -131,10 +131,6 @@
     <OptionStrict>On</OptionStrict>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="itextsharp, Version=5.5.9.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -157,9 +153,6 @@
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="vectolic">
-      <HintPath>.\vectolic.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -172,13 +165,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
-    <Compile Include="Input Files\AdvancedAuxiliary.vb" />
-    <Compile Include="GUI\FileSignDialog.Designer.vb">
-      <DependentUpon>FileSignDialog.vb</DependentUpon>
+    <Compile Include="Input Files\BrowserUtils.vb" />
+    <Compile Include="GUI\VehicleTorqueLimitsDialog.Designer.vb">
+      <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\FileSignDialog.vb">
+    <Compile Include="GUI\VehicleTorqueLimitsDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GUI\XMLExportJobDialog.Designer.vb">
+      <DependentUpon>XMLExportJobDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\XMLExportJobDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\XMLImportJobDialog.Designer.vb">
+      <DependentUpon>XMLImportJobDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\XMLImportJobDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Input Files\AdvancedAuxiliary.vb" />
     <Compile Include="GUI\GraphForm.Designer.vb">
       <DependentUpon>GraphForm.vb</DependentUpon>
     </Compile>
@@ -314,9 +320,6 @@
     <EmbeddedResource Include="File Browser\FileBrowserFavoritesDialog.resx">
       <DependentUpon>FileBrowserFavoritesDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\FileSignDialog.resx">
-      <DependentUpon>FileSignDialog.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GUI\GraphForm.resx">
       <DependentUpon>GraphForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -325,6 +328,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\JiraDialog.resx">
       <DependentUpon>JiraDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\VehicleTorqueLimitsDialog.resx">
+      <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\WelcomeDialog.resx">
       <DependentUpon>WelcomeDialog.vb</DependentUpon>
@@ -363,6 +369,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\GearboxGearDialog.resx">
       <DependentUpon>GearboxGearDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\XMLExportJobDialog.resx">
+      <DependentUpon>XMLExportJobDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\XMLImportJobDialog.resx">
+      <DependentUpon>XMLImportJobDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

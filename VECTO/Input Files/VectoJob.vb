@@ -1,4 +1,4 @@
-﻿' Copyright 2014 European Union.
+﻿' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -17,6 +17,7 @@ Imports System.IO
 Imports System.Linq
 Imports System.Runtime.Remoting.Messaging
 Imports System.Text
+Imports System.Xml.Linq
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
@@ -32,8 +33,8 @@ Imports TUGraz.VectoCore.Utils
 
 <CustomValidation(GetType(VectoJob), "ValidateJob")>
 Public Class VectoJob
-	Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData,
-				IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData,
+	Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData, 
+				IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData, 
 				IAuxiliariesDeclarationInputData
 
 	'AA-TB
@@ -109,7 +110,7 @@ Public Class VectoJob
 	Public Function SaveFile() As Boolean
 		Dim validationResults As IList(Of ValidationResult) =
 				Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering),
-						If(GearboxInputData Is Nothing, GearboxType.MT, GearboxInputData.Type))
+						If(GearboxInputData Is Nothing, GearboxType.MT, GearboxInputData.Type), False)
 
 		If validationResults.Count > 0 Then
 			Dim messages As IEnumerable(Of String) =
@@ -225,17 +226,6 @@ Public Class VectoJob
 		End Get
 	End Property
 
-	Public ReadOnly Property IDriverEngineeringInputData_StartStop As IStartStopEngineeringInputData _
-		Implements IDriverEngineeringInputData.StartStop
-		Get
-			Return New StartStopInputData With {
-				.Enabled = _startStop,
-				.MaxSpeed = StartStopMaxSpeed.KMPHtoMeterPerSecond(),
-				.MinTime = StartStopTime.SI(Of Second)(),
-				.Delay = StartStopDelay.SI(Of Second)()
-				}
-		End Get
-	End Property
 
 	Public ReadOnly Property OverSpeedEcoRoll As IOverSpeedEcoRollDeclarationInputData _
 		Implements IDriverDeclarationInputData.OverSpeedEcoRoll
@@ -308,8 +298,9 @@ Public Class VectoJob
 
 	' ReSharper disable once UnusedMember.Global -- used by Validation
 	Public Shared Function ValidateJob(vectoJob As VectoJob, validationContext As ValidationContext) As ValidationResult
-		Dim modeService As ExecutionModeServiceContainer = TryCast(validationContext.GetService(GetType(ExecutionMode)), 
-																	ExecutionModeServiceContainer)
+		Dim modeService As VectoValidationModeServiceContainer =
+				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
+						VectoValidationModeServiceContainer)
 		Dim mode As ExecutionMode = If(modeService Is Nothing, ExecutionMode.Declaration, modeService.Mode)
 
 		If mode = ExecutionMode.Engineering AndAlso vectoJob.EngineOnly Then
@@ -402,7 +393,7 @@ Public Class VectoJob
 
 
 			result = jobData.Validate(If(Cfg.DeclMode, ExecutionMode.Declaration, ExecutionMode.Engineering),
-									jobData.GearboxData.Type)
+									jobData.GearboxData.Type, False)
 			If result.Any() Then
 				Return _
 					New ValidationResult("Vecto Job Configuration is invalid. ", result.Select(Function(r) r.ErrorMessage).ToList())
@@ -440,6 +431,21 @@ Public Class VectoJob
 		Get
 			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
 			Return New JSONComponentInputData(_vehicleFile.FullPath).VehicleInputData
+		End Get
+	End Property
+
+	Public ReadOnly Property IDeclarationInputDataProvider_AirdragInputData As IAirdragDeclarationInputData _
+		Implements IDeclarationInputDataProvider.AirdragInputData
+		Get
+			Return AirdragInputData
+		End Get
+	End Property
+
+	Public ReadOnly Property AirdragInputData As IAirdragEngineeringInputData _
+		Implements IEngineeringInputDataProvider.AirdragInputData
+		Get
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).AirdragInputData
 		End Get
 	End Property
 
@@ -572,11 +578,25 @@ Public Class VectoJob
 		End Get
 	End Property
 
+	Public ReadOnly Property IDeclarationInputDataProvider_PTOTransmissionInputData As IPTOTransmissionInputData _
+		Implements IDeclarationInputDataProvider.PTOTransmissionInputData
+		Get
+			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
+			Return New JSONComponentInputData(_vehicleFile.FullPath).PTOTransmissionInputData
+		End Get
+	End Property
+
 	Public ReadOnly Property PTOTransmissionInputData As IPTOTransmissionInputData _
 		Implements IEngineeringInputDataProvider.PTOTransmissionInputData
 		Get
 			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
 			Return New JSONComponentInputData(_vehicleFile.FullPath).PTOTransmissionInputData
+		End Get
+	End Property
+
+	Public ReadOnly Property XMLHash As XElement Implements IDeclarationInputDataProvider.XMLHash
+		Get
+			Return Nothing
 		End Get
 	End Property
 
@@ -587,13 +607,6 @@ Public Class VectoJob
 		End Get
 	End Property
 
-
-	Public ReadOnly Property IDriverDeclarationInputData_StartStop As IStartStopDeclarationInputData _
-		Implements IDriverDeclarationInputData.StartStop
-		Get
-			Return IDriverEngineeringInputData_StartStop
-		End Get
-	End Property
 
 	Public ReadOnly Property IEngineeringJobInputData_Vehicle As IVehicleEngineeringInputData _
 		Implements IEngineeringJobInputData.Vehicle

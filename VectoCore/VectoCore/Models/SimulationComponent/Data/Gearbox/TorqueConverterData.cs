@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -34,13 +34,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	[CustomValidation(typeof(TorqueConverterData), "ValidateData")]
-	public class TorqueConverterData : LoggingObject
+	public class TorqueConverterData : SimulationComponentData
 	{
 		protected internal readonly TorqueConverterEntry[] TorqueConverterEntries;
 

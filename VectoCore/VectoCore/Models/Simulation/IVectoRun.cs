@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -51,6 +51,11 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// </summary>
 		int RunIdentifier { get; }
 
+		/// <summary>
+		/// identifier of a simulation run within a job
+		/// </summary>
+		int JobRunIdentifier { get; }
+		
 		string RunName { get; }
 		string CycleName { get; }
 

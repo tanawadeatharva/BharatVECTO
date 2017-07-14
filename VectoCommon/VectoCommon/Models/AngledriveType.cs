@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -53,6 +53,20 @@ namespace TUGraz.VectoCommon.Models
 					return "Included in Transmission Loss Maps";
 				default:
 					throw new ArgumentOutOfRangeException("AngledriveType", type, null);
+			}
+		}
+
+		public static string ToXMLFormat(this AngledriveType type)
+		{
+			switch (type) {
+				case AngledriveType.None:
+					return "None";
+				case AngledriveType.SeparateAngledrive:
+					return "Separate Angledrive";
+				case AngledriveType.LossesIncludedInGearbox:
+					return "Losses included in Gearbox";
+				default:
+					throw new ArgumentOutOfRangeException("Angledrive Type", type, null);
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
@@ -38,6 +39,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -70,6 +72,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		public const string IndirectLossMap = @"TestData\Components\Indirect Gear.vtlm";
 		public const string DirectLossMap = @"TestData\Components\Direct Gear.vtlm";
+
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
@@ -86,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
-							MaxTorque = 2300.SI<NewtonMeter>(),
+//								MaxTorque = 2300.SI<NewtonMeter>(),
 							LossMap = TransmissionLossMapReader.ReadFromFile(i != 6 ? IndirectLossMap : DirectLossMap, ratio,
 								string.Format("Gear {0}", i)),
 							Ratio = ratio,
@@ -141,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(AxleGearValidRangeDataFile);
 			var axleGear = new AxleGear(vehicle, axleGearData);
-			Assert.AreEqual(0, axleGear.Validate(ExecutionMode.Declaration, null).Count);
+			Assert.AreEqual(0, axleGear.Validate(ExecutionMode.Declaration, null, false).Count);
 		}
 
 		[TestCase]
@@ -150,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var axleGearData = MockSimulationDataFactory.CreateAxleGearDataFromFile(AxleGearInvalidRangeDataFile);
 			var axleGear = new AxleGear(vehicle, axleGearData);
-			var errors = axleGear.Validate(ExecutionMode.Declaration, null);
+			var errors = axleGear.Validate(ExecutionMode.Declaration, null, false);
 			Assert.AreEqual(1, errors.Count);
 		}
 
@@ -180,10 +183,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			// test
 			AssertHelper.AreRelativeEqual(angSpeed * angledriveData.Angledrive.Ratio, mockPort.AngularVelocity,
-				"AngularVelocity Engine Side");
+				message: "AngularVelocity Engine Side");
 
 			AssertHelper.AreRelativeEqual((PvD + loss) / (angSpeed * angledriveData.Angledrive.Ratio), mockPort.Torque,
-				"Torque Engine Side");
+				message: "Torque Engine Side");
 		}
 
 		[TestCase(@"TestData\Components\24t Coach LessThanTwoGears.vgbx")]
@@ -242,6 +245,20 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				"2000.000001,1352,-301,0.25",
 				"2100,1100,-320,0.25	   ",
 			};
+			var engineData = new CombustionEngineData() {
+				IdleSpeed = 600.RPMtoRad(),
+				Inertia = 0.SI<KilogramSquareMeter>(),
+			};
+			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
+			fullLoadCurves[0] = FullLoadCurveReader.Create(
+				VectoCSVFile.ReadStream(
+					InputDataHelper.InputDataAsStream("engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]",
+						fld)));
+			fullLoadCurves[0].EngineData = engineData;
+			foreach (var gears in gearboxData.Gears) {
+				fullLoadCurves[gears.Key] = fullLoadCurves[0];
+			}
+			engineData.FullLoadCurves = fullLoadCurves;
 			return new VectoRunData() {
 				VehicleData = new VehicleData() {
 					DynamicTyreRadius = 0.492.SI<Meter>()
@@ -251,14 +268,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 						Ratio = 2.64
 					}
 				},
-				EngineData = new CombustionEngineData() {
-					IdleSpeed = 600.RPMtoRad(),
-					Inertia = 0.SI<KilogramSquareMeter>(),
-					FullLoadCurve =
-						EngineFullLoadCurve.Create(
-							VectoCSVFile.ReadStream(
-								InputDataHelper.InputDataAsStream("engine speed [1/min],full load torque [Nm],motoring torque [Nm],PT1 [s]", fld)))
-				},
+				EngineData = engineData,
 				GearboxData = gearboxData
 			};
 		}
@@ -268,7 +278,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_LossMapExtrapolation_Declaration(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
 		{
-			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile);
+			// read gearbox data in engineering mode so that the loss-map is not extrapolated.
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile, false);
 			var container = new VehicleContainer(ExecutionMode.Declaration);
 			var runData = GetDummyRunData(gearboxData);
 			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container), runData);
@@ -302,7 +313,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_LossMapExtrapolation_Engineering(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
 		{
-			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
 			var container = new VehicleContainer(executionMode: ExecutionMode.Engineering);
 			var runData = GetDummyRunData(gearboxData);
 			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container), runData);
@@ -337,7 +348,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_LossMapExtrapolation_DryRun(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, bool extrapolated, double expectedTorque)
 		{
-			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = MockSimulationDataFactory.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile, false);
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var runData = GetDummyRunData(gearboxData);
 			var gearbox = new Gearbox(container, new AMTShiftStrategy(runData, container),
@@ -413,7 +424,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 		}
 
-
 		[TestCase(1, -1000, 600, 28.096, typeof(ResponseSuccess)),
 		TestCase(2, -1000, 600, 28.096, typeof(ResponseSuccess)),
 		TestCase(1, 50, 600, 9.096, typeof(ResponseSuccess)),
@@ -422,9 +432,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(1, 850, 200, 23.07, typeof(ResponseSuccess)),
 		TestCase(2, 50, 600, 9.096, typeof(ResponseSuccess)),
 		TestCase(2, 2050, 1200, 52.132, typeof(ResponseSuccess)),
-		TestCase(2, 850, 800, 26.11, typeof(ResponseSuccess)),
 		TestCase(2, 850, 600, 25.096, typeof(ResponseSuccess)),
-		TestCase(1, 850, 0, 22.06, typeof(ResponseSuccess)),
 		TestCase(1, 850, 0, 22.06, typeof(ResponseSuccess)),
 		]
 		public void Gearbox_Request_engaged(int gear, double t, double n, double loss, Type responseType)

@@ -1,0 +1,7 @@
+FuelType   , FuelDensity [kg/m3] , CO2 per FuelWeight [kgCo2/kgFuel] , Lower Heating Value [kJ/kg]
+Diesel CI  , 836                 , 3.13                              , 42700
+Ethanol CI , 820                 , 1.83                              , 25700
+Petrol PI  , 750                 , 3.04                              , 41500
+Ethanol PI , 786                 , 2.09                              , 29100
+LPG        ,                     , 3.02                              , 46000
+NG         ,                     , 2.54                              , 45100

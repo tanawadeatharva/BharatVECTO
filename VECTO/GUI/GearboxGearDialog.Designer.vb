@@ -48,6 +48,9 @@ Partial Class GearboxGearDialog
 		Me.PnFld = New System.Windows.Forms.Panel()
 		Me.Label6 = New System.Windows.Forms.Label()
 		Me.BtPrevious = New System.Windows.Forms.Button()
+		Me.Label7 = New System.Windows.Forms.Label()
+		Me.tbMaxSpeed = New System.Windows.Forms.TextBox()
+		Me.Label8 = New System.Windows.Forms.Label()
 		Me.TableLayoutPanel1.SuspendLayout()
 		Me.PnShiftPoly.SuspendLayout()
 		Me.PnFld.SuspendLayout()
@@ -212,6 +215,9 @@ Partial Class GearboxGearDialog
 		'
 		'PnFld
 		'
+		Me.PnFld.Controls.Add(Me.Label7)
+		Me.PnFld.Controls.Add(Me.tbMaxSpeed)
+		Me.PnFld.Controls.Add(Me.Label8)
 		Me.PnFld.Controls.Add(Me.Label6)
 		Me.PnFld.Controls.Add(Me.TbMaxTorque)
 		Me.PnFld.Controls.Add(Me.Label5)
@@ -238,6 +244,31 @@ Partial Class GearboxGearDialog
 		Me.BtPrevious.TabIndex = 10
 		Me.BtPrevious.Text = "< &Previous"
 		Me.BtPrevious.UseVisualStyleBackColor = True
+		'
+		'Label7
+		'
+		Me.Label7.AutoSize = True
+		Me.Label7.Location = New System.Drawing.Point(360, 22)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(30, 13)
+		Me.Label7.TabIndex = 5
+		Me.Label7.Text = "[rpm]"
+		'
+		'tbMaxSpeed
+		'
+		Me.tbMaxSpeed.Location = New System.Drawing.Point(266, 19)
+		Me.tbMaxSpeed.Name = "tbMaxSpeed"
+		Me.tbMaxSpeed.Size = New System.Drawing.Size(88, 20)
+		Me.tbMaxSpeed.TabIndex = 4
+		'
+		'Label8
+		'
+		Me.Label8.AutoSize = True
+		Me.Label8.Location = New System.Drawing.Point(265, 5)
+		Me.Label8.Name = "Label8"
+		Me.Label8.Size = New System.Drawing.Size(122, 13)
+		Me.Label8.TabIndex = 3
+		Me.Label8.Text = "Maximum allowed speed"
 		'
 		'GearboxGearDialog
 		'
@@ -294,5 +325,8 @@ Partial Class GearboxGearDialog
 	Friend WithEvents PnFld As Panel
 	Friend WithEvents BtPrevious As Button
 	Friend WithEvents Label6 As Label
+	Friend WithEvents Label7 As System.Windows.Forms.Label
+	Friend WithEvents tbMaxSpeed As System.Windows.Forms.TextBox
+	Friend WithEvents Label8 As System.Windows.Forms.Label
 
 End Class

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -112,6 +112,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
+			var oldGear = Gear;
+			Gear = gear;
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear].Ratio;
 			var torqueLossResult = ModelData.Gears[gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 			CurrentState.TorqueLossResult = torqueLossResult;
@@ -138,11 +140,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	Default(r => { throw new UnexpectedResponseException("Gearbox.Initialize", r); });
 
 			var fullLoad = DataBus.EngineStationaryFullPower(inAngularVelocity);
-			if (ModelData.Gears[gear].MaxTorque != null) {
-				var fullLoadGearbox = ModelData.Gears[gear].MaxTorque * inAngularVelocity;
-				fullLoad = VectoMath.Min(fullLoadGearbox, fullLoad);
-			}
 
+			Gear = oldGear;
 			return new ResponseDryRun {
 				Source = this,
 				EnginePowerRequest = response.EnginePowerRequest,
@@ -186,15 +185,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			}
 
-			IResponse retVal;
-			// TODO MQ 2016/03/10: investigate further the effects of having the condition angularvelocity != 0
-			if (ClutchClosed(absTime) /* && !angularVelocity.IsEqual(0) */) {
-				retVal = RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			} else {
-				retVal = RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
-			}
-
-			return retVal;
+			return ClutchClosed(absTime)
+				? RequestGearEngaged(absTime, dt, outTorque, outAngularVelocity, dryRun)
+				: RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 		}
 
 		/// <summary>
@@ -245,7 +238,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var shiftTimeExceeded = absTime.IsSmaller(_engageTime) &&
 									_engageTime.IsSmaller(absTime + dt, Constants.SimulationSettings.LowerBoundTimeInterval);
 			// allow 5% tolerance of shift time
-			if (shiftTimeExceeded && (_engageTime - absTime) > Constants.SimulationSettings.LowerBoundTimeInterval / 2) {
+			if (shiftTimeExceeded && _engageTime - absTime > Constants.SimulationSettings.LowerBoundTimeInterval / 2) {
 				return new ResponseFailTimeInterval {
 					Source = this,
 					DeltaT = _engageTime - absTime,
@@ -306,19 +299,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 			//}
 			if (Disengaged && !outAngularVelocity.IsEqual(0)) {
-				Disengaged = false;
-				var lastGear = Gear;
-				Gear = DataBus.VehicleStopped
-					? _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity)
-					: _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
-				if (!DataBus.VehicleStopped) {
-					if (Gear > lastGear) {
-						LastUpshift = absTime;
-					}
-					if (Gear < lastGear) {
-						LastDownshift = absTime;
-					}
-				}
+				ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
 				Log.Debug("Gearbox engaged gear {0}", Gear);
 			}
 
@@ -390,6 +371,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 
 			return response;
+		}
+
+		private void ReEngageGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			Disengaged = false;
+			var lastGear = Gear;
+			Gear = DataBus.VehicleStopped
+				? _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity)
+				: _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+			if (!DataBus.VehicleStopped) {
+				if (Gear > lastGear) {
+					LastUpshift = absTime;
+				}
+				if (Gear < lastGear) {
+					LastDownshift = absTime;
+				}
+			}
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)

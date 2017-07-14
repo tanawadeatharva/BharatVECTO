@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -32,6 +32,9 @@
 using System;
 using System.Data;
 using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
@@ -52,6 +55,17 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.PDFReport); }
 		}
 
+		public string XMLFullReportName
+		{
+			get { return Path.ChangeExtension(_jobFile, "RSLT_MANUFACTURER.xml"); }
+		}
+
+		public string XMLCustomerReportName
+		{
+			get { return Path.ChangeExtension(_jobFile, "RSLT_CUSTOMER.xml"); }
+		}
+
+
 		public string SumFileName
 		{
 			get { return Path.ChangeExtension(_jobFile, Constants.FileExtensions.SumFile); }
@@ -68,7 +82,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public void WriteSumData(DataTable data)
 		{
-			VectoCSVFile.Write(SumFileName, data);
+			VectoCSVFile.Write(SumFileName, data, true);
 		}
 
 		public string GetModDataFileName(string runName, string cycleName, string runSuffix)
@@ -83,19 +97,47 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			return Path.Combine(BasePath, modFileName);
 		}
 
-		public void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData)
+		public void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData)
 		{
-			VectoCSVFile.Write(GetModDataFileName(runName, cycleName, runSuffix), modData);
+			VectoCSVFile.Write(GetModDataFileName(runName, cycleName, runSuffix), modData, true);
 		}
 
-		public Stream WriteStream(ReportType type)
+		public virtual void WriteReport(ReportType type, XDocument data)
 		{
+			string fileName = null;
 			switch (type) {
-				case ReportType.DeclarationReportPdf:
-					return new FileStream(PDFReportName, FileMode.Create);
+				case ReportType.DeclarationReportManufacturerXML:
+					fileName = XMLFullReportName;
+					break;
+				case ReportType.DeclarationReportCustomerXML:
+					fileName = XMLCustomerReportName;
+					break;
 				default:
 					throw new ArgumentOutOfRangeException("type");
 			}
+			using (var writer = new FileStream(fileName, FileMode.Create)) {
+				using (var xmlWriter = new XmlTextWriter(writer, Encoding.UTF8)) {
+					xmlWriter.Formatting = Formatting.Indented;
+					data.WriteTo(xmlWriter);
+					xmlWriter.Flush();
+					xmlWriter.Close();
+				}
+			}
+		}
+
+		public virtual void WriteReport(ReportType type, Stream data)
+		{
+			Stream stream = null;
+			switch (type) {
+				case ReportType.DeclarationReportPdf:
+					stream = new FileStream(PDFReportName, FileMode.Create);
+					break;
+				default:
+
+					throw new ArgumentOutOfRangeException("type");
+			}
+			data.CopyToAsync(stream);
+			//stream.Write(data);
 		}
 	}
 }

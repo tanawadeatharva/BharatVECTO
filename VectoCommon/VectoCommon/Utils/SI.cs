@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -593,6 +593,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Watt>.Create(joule.Val / s.Value());
 		}
+
+		public static JoulePerMeter operator /(Joule joule, Meter meter)
+		{
+			return SIBase<JoulePerMeter>.Create(joule.Val / meter.Value());
+		}
 	}
 
 	public class JoulePerKilogramm : SIBase<JoulePerKilogramm>
@@ -606,6 +611,18 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Joule>.Create(kg.Value() * jpg.Val);
 		}
+	}
+
+	/// <summary>
+	///  SI Class for KilogramPerMeter [J/m].
+	/// </summary>
+	public class JoulePerMeter : SIBase<JoulePerMeter>
+	{
+		private static readonly Unit[] NumeratorDefault = { Unit.J };
+		private static readonly Unit[] DenominatorDefault = { Unit.m };
+
+		[DebuggerHidden]
+		private JoulePerMeter(double val) : base(val, NumeratorDefault, DenominatorDefault) {}
 	}
 
 	/// <summary>
@@ -2273,6 +2290,31 @@ namespace TUGraz.VectoCommon.Utils
 		public string ToGUIFormat()
 		{
 			return Val.ToGUIFormat();
+		}
+
+		public string ToXMLFormat(uint? decimals = null)
+		{
+			decimals = decimals ?? 2;
+			return Val.ToString("F" + decimals.Value);
+		}
+
+		public class EqualityComparer<T> : IEqualityComparer<T> where T : SI
+		{
+			private readonly double _precision;
+
+			public EqualityComparer(double precision = DoubleExtensionMethods.Tolerance)
+			{
+				_precision = precision;
+			}
+			public bool Equals(T x, T y)
+			{
+				return x.IsEqual(y.Value(), _precision);
+			}
+
+			public int GetHashCode(T obj)
+			{
+				return obj.Value().GetHashCode();
+			}
 		}
 	}
 }

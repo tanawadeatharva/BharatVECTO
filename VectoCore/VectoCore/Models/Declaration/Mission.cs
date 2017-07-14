@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -40,24 +40,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		FullLoading,
 		ReferenceLoad,
+		LowLoading,
 		EmptyLoading,
-	}
-
-	public static class LoadingTypeHelper
-	{
-		public static string GetShortName(this LoadingType loadingType)
-		{
-			switch (loadingType) {
-				case LoadingType.FullLoading:
-					return "F";
-				case LoadingType.ReferenceLoad:
-					return "R";
-				case LoadingType.EmptyLoading:
-					return "E";
-				default:
-					throw new ArgumentOutOfRangeException("loadingType", loadingType, null);
-			}
-		}
 	}
 
 	public class Mission
@@ -65,39 +49,59 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public MissionType MissionType;
 		public string CrossWindCorrectionParameters;
 		public double[] AxleWeightDistribution;
-		public double[] TrailerAxleWeightDistribution;
 
-		public Kilogram CurbWeight;
 		public Kilogram BodyCurbWeight;
-		public Kilogram BodyGrossVehicleWeight;
-		public TrailerType TrailerType;
-		public Kilogram TrailerCurbWeight;
-		public Kilogram TrailerGrossVehicleWeight;
+
 		public Stream CycleFile;
-		public SquareMeter DeltaCdA;
+
+		public List<MissionTrailer> Trailer;
 
 		public Kilogram MinLoad;
+		public Kilogram LowLoad;
 		public Kilogram RefLoad;
 		public Kilogram MaxLoad;
 
-		public CubicMeter CargoVolume;
+		public CubicMeter TotalCargoVolume;
 
 		public Dictionary<LoadingType, Kilogram> Loadings
 		{
 			get {
 				return new Dictionary<LoadingType, Kilogram> {
-					{ LoadingType.EmptyLoading, MinLoad },
+					{ LoadingType.LowLoading, LowLoad },
 					{ LoadingType.ReferenceLoad, RefLoad },
-					{ LoadingType.FullLoading, MaxLoad }
 				};
 			}
 		}
 	}
 
+	public class MissionTrailer
+	{
+		public TrailerType TrailerType;
+		public Kilogram TrailerCurbWeight;
+		public Kilogram TrailerGrossVehicleWeight;
+		public List<Wheels.Entry> TrailerWheels;
+		public double TrailerAxleWeightShare;
+		public SquareMeter DeltaCdA;
+		public CubicMeter CargoVolume;
+	}
+
 	public enum TrailerType
 	{
-		None,
+		//None,
 		T1,
-		T2
+		T2,
+		ST1,
+		Dolly
+	}
+
+	public static class TrailterTypeHelper
+	{
+		public static TrailerType Parse(string trailer)
+		{
+			if ("d".Equals(trailer, StringComparison.InvariantCultureIgnoreCase)) {
+				return TrailerType.Dolly;
+			}
+			return trailer.ParseEnum<TrailerType>();
+		}
 	}
 }

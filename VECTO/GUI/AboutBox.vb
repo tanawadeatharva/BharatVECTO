@@ -1,4 +1,4 @@
-' Copyright 2014 European Union.
+' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
 ' * You may not use this work except in compliance with the Licence.
@@ -18,8 +18,6 @@ Public Class AboutBox
 	'Initialize
 	Private Sub F10_AboutBox_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
 		Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
-		LabelLic.Text = Lic.LicString
-		LabelLicDate.Text = "Expiring date (y/m/d):   " & Lic.ExpTime
 	End Sub
 
 	'e-mail links----------------------------------------------------------------

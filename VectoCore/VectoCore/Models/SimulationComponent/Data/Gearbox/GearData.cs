@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -70,26 +70,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public TransmissionLossMap TorqueConverterGearLossMap { get; internal set; }
 
-		public NewtonMeter MaxTorque { get; internal set; }
+		public PerSecond MaxSpeed { get; internal set; }
 
 		public ShiftPolygon TorqueConverterShiftPolygon { get; set; }
 
 		// ReSharper disable once UnusedMember.Global -- used via validation
 		public static ValidationResult ValidateGearData(GearData gearData, ValidationContext context)
 		{
-			var modeService = context.GetService(typeof(ExecutionMode)) as ExecutionModeServiceContainer;
-			var mode = modeService == null ? ExecutionMode.Declaration : modeService.Mode;
-
-			var gbxTypeService = context.GetService(typeof(GearboxTypeServiceContainer)) as GearboxTypeServiceContainer;
-			var gbxType = gbxTypeService == null ? GearboxType.MT : gbxTypeService.Type;
+			var validationService =
+				context.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;
+			var mode = validationService != null ? validationService.Mode : ExecutionMode.Declaration;
+			var gbxType = validationService != null ? validationService.GearboxType : GearboxType.MT;
+			var emsMission = validationService != null && validationService.IsEMSCycle;
 
 			if (gearData.HasTorqueConverter) {
 				if (gearData.TorqueConverterShiftPolygon == null) {
 					return new ValidationResult("Shift Polygon for Torque Converter Gear required!");
 				}
-				var result = gearData.TorqueConverterShiftPolygon.Validate(mode, gbxType);
+				var result = gearData.TorqueConverterShiftPolygon.Validate(mode, gbxType, emsMission);
 				if (result.Any()) {
-					return new ValidationResult(string.Format("Validation of GearData failed"), result.Select(x => x.ErrorMessage));
+					return new ValidationResult("Validation of GearData failed", result.Select(x => x.ErrorMessage));
 				}
 			}
 			return ValidationResult.Success;

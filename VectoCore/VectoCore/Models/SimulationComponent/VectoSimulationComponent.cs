@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// </summary>
 	public abstract class VectoSimulationComponent : LoggingObject
 	{
-		[NonSerialized] protected readonly IDataBus DataBus;
+		[NonSerialized] protected IDataBus DataBus;
 
 		/// <summary>
 		/// Constructor. Registers the component in the cockpit.
@@ -54,12 +54,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			DataBus = dataBus;
 
 			// if a component doesn't want to be registered in DataBus, it supplies null to the constructor
-			// (mk 2016-08-31: currently the only example is PTOCycleController, to not interfere with the real DrivingCycle)
+			// (mk 2016-08-31: currently the only example is PTOCycleController, in order to not interfere with the real DrivingCycle)
 			if (dataBus != null)
 				dataBus.AddComponent(this);
 		}
 
-		public virtual void CommitSimulationStep(IModalDataContainer container)
+		public void CommitSimulationStep(IModalDataContainer container)
 		{
 			if (container != null) {
 				DoWriteModalResults(container);
@@ -97,14 +97,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	}
 
 	public abstract class StatefulProviderComponent<TStateType, TProviderOutPort, TProviderInPort, TOutPort> :
-			StatefulVectoSimulationComponent<TStateType>
+		StatefulVectoSimulationComponent<TStateType>
 		where TStateType : new()
 		where TProviderOutPort : class
 		where TProviderInPort : class
 	{
 		protected TOutPort NextComponent;
 
-		protected StatefulProviderComponent(IVehicleContainer container) : base(container) {}
+		protected StatefulProviderComponent(IVehicleContainer container) : base(container) { }
 
 		public TProviderOutPort OutPort()
 		{

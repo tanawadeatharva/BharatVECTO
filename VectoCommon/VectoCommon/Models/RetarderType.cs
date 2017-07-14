@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -84,6 +84,24 @@ namespace TUGraz.VectoCommon.Models
 					return "Included in Transmission Loss Maps";
 				default:
 					throw new ArgumentOutOfRangeException("RetarderType", retarder, null);
+			}
+		}
+
+		public static string ToXMLFormat(this RetarderType type)
+		{
+			switch (type) {
+				case RetarderType.None:
+					return "None";
+				case RetarderType.TransmissionInputRetarder:
+					return "Transmission Input Retarder";
+				case RetarderType.TransmissionOutputRetarder:
+					return "Transmission Output Retarder";
+				case RetarderType.EngineRetarder:
+					return "Engine Retarder";
+				case RetarderType.LossesIncludedInTransmission:
+					return "Losses included in Gearbox";
+				default:
+					throw new ArgumentOutOfRangeException("RetarderType", type, null);
 			}
 		}
 

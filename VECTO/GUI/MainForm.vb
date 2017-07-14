@@ -37,18 +37,19 @@ Imports System.Reflection
 Imports TUGraz.VectoCore.Models.Simulation.Impl
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports System.Text
-Imports System.Text.RegularExpressions
 Imports System.Threading
+Imports System.Xml
+Imports System.Xml.Linq
 Imports Microsoft.VisualBasic.FileIO
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
-Imports TUGraz.VectoCommon.OutputData
+Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
+Imports TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
-Imports TUGraz.VectoCore.Utils
-Imports VectoAuxiliaries
 
 ''' <summary>
 ''' Main application form. Loads at application start. Closing form ends application.
@@ -248,40 +249,8 @@ Imports VectoAuxiliaries
 		VectoWorkerV3.WorkerReportsProgress = True
 		VectoWorkerV3.WorkerSupportsCancellation = True
 
-
 		'Set mode (Batch/Standard)
 		ModeUpdate()
-
-		DetectPlugins()
-
-		'Dim exportPlugins As Dictionary(Of String, String) = PluginRegistry.Instance.GetExportPluginList()
-		Dim exportPlugin As IExportPlugin = PluginRegistry.Instance.GetExportPlugin("TUG.IVT.Vecto.XMLExport")
-		btnExportXML.Visible = Not exportPlugin Is Nothing
-
-
-		Dim importPlugin As IImportPlugin = PluginRegistry.Instance.GetImportPlugin("TUG.IVT.Vecto.XMLImport")
-		btnImportXML.Visible = Not importPlugin Is Nothing
-
-
-#If DEBUG Then
-		Const LicCheck As Boolean = False
-#Else
-		Const LicCheck As Boolean = True
-#End If
-
-		'License check
-		If LicCheck And Not Lic.LICcheck() Then
-			MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
-			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
-				MsgBox("Activation File created.")
-			Else
-				MsgBox("Failed to create Activation File! Is Directory Read-Only?")
-			End If
-			Close()
-		Else
-			GUIMsg(MessageType.Normal, "License File validated.")
-			If Lic.TimeWarn Then GUIMsg(MessageType.Warn, "License expiring date (y/m/d): " & Lic.ExpTime)
-		End If
 
 		DeclOnOff()
 	End Sub
@@ -372,7 +341,7 @@ Imports VectoAuxiliaries
 						GearboxForm.BringToFront()
 					End If
 					Try
-						GearboxForm.OpenGbx(file)
+						GearboxForm.OpenGbx(file, VehicleCategory.RigidTruck)
 					Catch ex As Exception
 						MsgBox("Failed to open Gearbox File: " + ex.Message)
 					End Try
@@ -404,8 +373,6 @@ Imports VectoAuxiliaries
 					End Try
 				Case ".VECTO"
 					OpenVECTOeditor(file)
-				Case ".VSIG"
-					OpenSigFile(file)
 				Case Else
 					MsgBox("Type '" & GetExtension(file) & "' unknown!", MsgBoxStyle.Critical)
 			End Select
@@ -552,8 +519,7 @@ Imports VectoAuxiliaries
 		x = New String() {""}
 
 		Dim extensions As String = "vecto"
-		Dim inputDataExtensions As String() =
-				PluginRegistry.Instance.GetKnownInputExtensions().Select(Function(e) e.Substring(1)).ToArray()
+		Dim inputDataExtensions As String() = New String() {"xml"}
 		If (inputDataExtensions.Any()) Then extensions = String.Join(",", extensions, String.Join(",", inputDataExtensions))
 
 		'STANDARD/BATCH
@@ -700,7 +666,7 @@ Imports VectoAuxiliaries
 	'Open input file
 	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
 
-		If JobfileFileBrowser.OpenDialog("", False, "vecto,vveh,vgbx,veng,vsig") Then
+		If JobfileFileBrowser.OpenDialog("", False, "vecto,vveh,vgbx,veng") Then
 			OpenVectoFile(JobfileFileBrowser.Files(0))
 		End If
 	End Sub
@@ -746,16 +712,6 @@ Imports VectoAuxiliaries
 		graphForm.Show()
 	End Sub
 
-	Private Sub SignOrVerifyFilesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-		Handles SignOrVerifyFilesToolStripMenuItem.Click
-		If Not FileSignDialog.Visible Then
-			FileSignDialog.Show()
-		Else
-			If FileSignDialog.WindowState = FormWindowState.Minimized Then FileSignDialog.WindowState = FormWindowState.Normal
-			FileSignDialog.BringToFront()
-		End If
-	End Sub
-
 	Private Sub OpenLogToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles OpenLogToolStripMenuItem.Click
 		Process.Start(MyAppPath & "log.txt")
@@ -769,11 +725,8 @@ Imports VectoAuxiliaries
 	Private Sub UserManualToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles UserManualToolStripMenuItem.Click
 		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim browserRegistryString As String =
-					My.Computer.Registry.ClassesRoot.OpenSubKey("\http\shell\open\command\").GetValue("").ToString
-			Dim defaultBrowserPath As String =
-					Regex.Match(browserRegistryString, "(\"".*?\"")").Captures(0).ToString
-			Process.Start(defaultBrowserPath, Uri.EscapeDataString(MyAppPath & "User Manual\help.html"))
+			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
+			Process.Start(defaultBrowserPath, String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html"))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -791,18 +744,6 @@ Imports VectoAuxiliaries
 	Private Sub ReportBugViaCITnetToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles ReportBugViaCITnetToolStripMenuItem.Click
 		JiraDialog.ShowDialog()
-	End Sub
-
-	Private Sub CreateActivationFileToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-		Handles CreateActivationFileToolStripMenuItem.Click
-		If MsgBox("Create Activation File ?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
-				GUIMsg(MessageType.Normal, "Activation File created.")
-			Else
-				GUIMsg(MessageType.Err, "Failed to create Activation File!")
-				MsgBox("ERROR! Failed to create Activation File!", MsgBoxStyle.Critical)
-			End If
-		End If
 	End Sub
 
 	Private Sub AboutVECTOToolStripMenuItem1_Click(sender As Object, e As EventArgs) _
@@ -989,11 +930,6 @@ Imports VectoAuxiliaries
 			mode = ExecutionMode.Declaration
 		Else
 			mode = ExecutionMode.Engineering
-			Physics.FuelDensity = Cfg.FuelDens.SI (Of KilogramPerCubicMeter)() _
-			'New SI(Cfg.FuelDens).Kilo.Gramm.Per.Cubic.Dezi.Meter.Cast(Of KilogramPerCubicMeter)()
-			Physics.AirDensity = Cfg.AirDensity.SI (Of KilogramPerCubicMeter)() _
-			'New SI(Cfg.AirDensity).Kilo.Gramm.Per.Cubic.Meter.Cast(Of KilogramPerCubicMeter)()
-			Physics.CO2PerFuelWeight = Cfg.Co2PerFc
 		End If
 
 		'dictionary of run-identifiers to fileWriters (used for output directory of modfile)
@@ -1001,45 +937,46 @@ Imports VectoAuxiliaries
 
 		'list of finished runs
 		Dim finishedRuns As List(Of Integer) = New List(Of Integer)
-		Dim plugins As KeyValuePair(Of String, IInputDataPlugin)() = PluginRegistry.Instance.GetInputDataPlugins().ToArray()
 		For Each jobFile As String In JobFileList
 			Try
 				sender.ReportProgress(0,
 									New VectoProgress With {.Target = "ListBox", .Message = "Reading File " + jobFile, .Link = jobFile})
 
-				If (Path.GetExtension(jobFile) = VectoCore.Configuration.Constants.FileExtensions.VectoJobFile) Then
-					Dim dataProvider As IInputDataProvider = JSONInputDataFactory.ReadJsonJob(jobFile)
-					Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
+				Dim extension As String = Path.GetExtension(jobFile)
+				Dim input As IInputDataProvider = Nothing
+				Select Case extension
+					Case VectoCore.Configuration.Constants.FileExtensions.VectoJobFile
+						input = JSONInputDataFactory.ReadJsonJob(jobFile)
+					Case ".xml"
+						Dim xDocument As XDocument = xDocument.Load(jobFile)
+						Dim rootNode As String = If(xDocument Is Nothing, "", xDocument.Root.Name.LocalName)
+						Select Case rootNode
+							Case XMLNames.VectoInputEngineering
+								input = New XMLEngineeringInputDataProvider(jobFile, True)
+							Case XMLNames.VectoInputDeclaration
+								input = New XMLDeclarationInputDataProvider(XmlReader.Create(jobFile), True)
+						End Select
+				End Select
 
-					Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, dataProvider, fileWriter)
-					runsFactory.WriteModalResults = Cfg.ModOut
-					runsFactory.ModalResults1Hz = Cfg.Mod1Hz
-
-					For Each runId As Integer In jobContainer.AddRuns(runsFactory)
-						fileWriters.Add(runId, fileWriter)
-					Next
-				Else
-					Dim handled As Boolean = False
-					For Each entry As KeyValuePair(Of String, IInputDataPlugin) In plugins
-						If Not handled AndAlso entry.Value.CanHandleJob(jobFile) Then
-							Dim dataprovider As IInputDataProvider = entry.Value.ReadVectoJob(jobFile)
-							Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
-
-							Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, dataprovider, fileWriter)
-							runsFactory.WriteModalResults = Cfg.ModOut
-							runsFactory.ModalResults1Hz = Cfg.Mod1Hz
-
-							For Each runId As Integer In jobContainer.AddRuns(runsFactory)
-								fileWriters.Add(runId, fileWriter)
-							Next
-							handled = True
-						End If
-					Next
-					If Not handled Then
-						sender.ReportProgress(0,
-											New VectoProgress With {.Target = "ListBoxError", .Message = "No Input Provider for job: " + jobFile})
-					End If
+				If input Is Nothing Then
+					sender.ReportProgress(0,
+										New VectoProgress With {.Target = "ListBoxError", .Message = "No Input Provider for job: " + jobFile})
+					Continue For
 				End If
+
+				Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
+
+				Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, input, fileWriter)
+				runsFactory.WriteModalResults = Cfg.ModOut
+				runsFactory.ModalResults1Hz = Cfg.Mod1Hz
+				runsFactory.Validate = cbValidateRunData.Checked
+				runsFactory.ActualModalData = cbActVmod.Checked
+
+				For Each runId As Integer In jobContainer.AddRuns(runsFactory)
+					fileWriters.Add(runId, fileWriter)
+				Next
+
+
 				sender.ReportProgress(0,
 									New VectoProgress With {.Target = "ListBox", .Message = "Finished Reading Data for job: " + jobFile})
 
@@ -1113,11 +1050,17 @@ Imports VectoAuxiliaries
 		Next
 
 		For Each job As String In JobFileList
-			Dim report As String = New FileOutputWriter(job).PDFReportName
+			Dim report As String = New FileOutputWriter(job).XMLFullReportName
 			If File.Exists(report) Then
 				sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
-										.Message = String.Format("PDF-Report for '{0}' written to {1}", Path.GetFileName(job), report),
-										.Link = "<RUN>" + report})
+										.Message = String.Format("XML Manufacturer Report for '{0}' written to {1}", Path.GetFileName(job), report),
+										.Link = "<XML>" + report})
+			End If
+			report = New FileOutputWriter(job).XMLCustomerReportName
+			If File.Exists(report) Then
+				sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
+										.Message = String.Format("XML Customer Report for '{0}' written to {1}", Path.GetFileName(job), report),
+										.Link = "<XML>" + report})
 			End If
 		Next
 
@@ -1340,18 +1283,6 @@ Imports VectoAuxiliaries
 		VectoJobForm.Activate()
 	End Sub
 
-	'Open signature file (.vsig)
-	Friend Sub OpenSigFile(file As String)
-		If Not FileSignDialog.Visible Then
-			FileSignDialog.Show()
-
-		End If
-		FileSignDialog.WindowState = FormWindowState.Normal
-		FileSignDialog.TbSigFile.Text = file
-		FileSignDialog.VerifySigFile()
-		FileSignDialog.Activate()
-	End Sub
-
 	'Save job and cycle file lists
 	Private Sub SaveFileLists()
 		_jobListView.SaveList()
@@ -1510,6 +1441,11 @@ Imports VectoAuxiliaries
 					Catch ex As Exception
 						GUIMsg(MessageType.Err, "Could not run '" & txt & "'!")
 					End Try
+				ElseIf _
+					Len(CStr(LvMsg.SelectedItems(0).Tag)) > 5 AndAlso
+					Microsoft.VisualBasic.Left(CStr(LvMsg.SelectedItems(0).Tag), 5) = "<XML>" Then
+					txt = CStr(LvMsg.SelectedItems(0).Tag).Replace("<XML>", "")
+					OpenFiles(txt)
 				Else
 					OpenFiles(CStr(LvMsg.SelectedItems(0).Tag))
 				End If
@@ -1546,7 +1482,6 @@ Imports VectoAuxiliaries
 		_contextMenuFiles = files
 
 		OpenInGraphWindowToolStripMenuItem.Enabled = (UCase(GetExtension(_contextMenuFiles(0))) = ".VMOD")
-
 
 		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 
@@ -1998,19 +1933,25 @@ Imports VectoAuxiliaries
 		End If
 		Try
 			Dim input As IInputDataProvider = Nothing
-			If Path.GetExtension(f) = ".vecto" Then
-				input = JSONInputDataFactory.ReadJsonJob(f)
-			Else
-				For Each plugin As KeyValuePair(Of String, IInputDataPlugin) In PluginRegistry.Instance.GetInputDataPlugins()
+			Dim extension As String = Path.GetExtension(f)
+			Select Case extension
+				Case ".vecto"
+					input = JSONInputDataFactory.ReadJsonJob(f)
+				Case ".xml"
+					Dim xDocument As XDocument = xDocument.Load(f)
+					Dim rootNode As String = If(xDocument Is Nothing, "", xDocument.Root.Name.LocalName)
+					Select Case rootNode
+						Case XMLNames.VectoInputEngineering
+							input = New XMLEngineeringInputDataProvider(f, True)
+						Case XMLNames.VectoInputDeclaration
+							input = New XMLDeclarationInputDataProvider(XmlReader.Create(f), True)
+					End Select
+			End Select
 
-					If plugin.Value.CanHandleJob(f) Then
-						input = plugin.Value.ReadVectoJob(f)
-						Exit For
-					End If
-				Next
-			End If
 			If input Is Nothing Then Throw New VectoException("No InputDataProvider for file {0} found!", f)
-			PluginRegistry.Instance.GetExportPlugin("TUG.IVT.Vecto.XMLExport").ExportJob(input)
+
+			XMLExportJobDialog.Initialize(input)
+			XMLExportJobDialog.ShowDialog()
 		Catch ex As Exception
 			MsgBox("Exporting job failed: " + ex.Message)
 		End Try
@@ -2021,12 +1962,12 @@ Imports VectoAuxiliaries
 	End Sub
 
 	Private Sub btnImportXML_Click(sender As Object, e As EventArgs) Handles btnImportXML.Click
-		Try
-			Dim jobFile As String = PluginRegistry.Instance.GetImportPlugin("TUG.IVT.Vecto.XMLImport").ImportJob()
-			AddToJobListView(jobFile)
-		Catch ex As Exception
-			MsgBox("Importing job failed: " + ex.Message)
-		End Try
+		'Try
+		'	Dim jobFile As String = PluginRegistry.Instance.GetImportPlugin("TUG.IVT.Vecto.XMLImport").ImportJob()
+		'	AddToJobListView(jobFile)
+		'Catch ex As Exception
+		'	MsgBox("Importing job failed: " + ex.Message)
+		'End Try
 	End Sub
 
 	Private Sub LvGEN_MouseClick(sender As Object, e As MouseEventArgs) Handles LvGEN.MouseClick

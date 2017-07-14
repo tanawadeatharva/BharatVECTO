@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,6 +31,7 @@
 
 using System;
 using System.IO;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
@@ -47,6 +48,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected IVehicleEngineeringInputData VehicleData;
 		protected IRetarderInputData Retarder;
 		protected IPTOTransmissionInputData PTOTransmission;
+		private IAirdragEngineeringInputData AirdragData;
 
 
 		public JSONComponentInputData(string filename, bool tolerateMissing = false)
@@ -66,6 +68,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 			tmp.Switch()
 				.If<IVehicleEngineeringInputData>(c => VehicleData = c)
+				.If<IAirdragEngineeringInputData>(c => AirdragData = c)
 				.If<IEngineEngineeringInputData>(c => Engine = c)
 				.If<IGearboxEngineeringInputData>(c => Gearbox = c)
 				.If<IAxleGearInputData>(c => AxleGear = c)
@@ -85,6 +88,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IVehicleDeclarationInputData IDeclarationInputDataProvider.VehicleInputData
 		{
 			get { return VehicleData; }
+		}
+
+		IAirdragDeclarationInputData IDeclarationInputDataProvider.AirdragInputData
+		{
+			get { return AirdragInputData; }
+		}
+
+		public IAirdragEngineeringInputData AirdragInputData
+		{
+			get { return AirdragData; }
 		}
 
 		IGearboxDeclarationInputData IDeclarationInputDataProvider.GearboxInputData
@@ -159,12 +172,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IDriverEngineeringInputData DriverInputData
 		{
-			get { return DriverInputData; }
+			get { throw new NotImplementedException(); }
 		}
 
 		public IPTOTransmissionInputData PTOTransmissionInputData
 		{
 			get { return PTOTransmission; }
+		}
+
+		public XElement XMLHash
+		{
+			get { return null; }
 		}
 	}
 }

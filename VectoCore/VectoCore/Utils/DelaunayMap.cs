@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Utils
 {
 	public sealed class DelaunayMap : LoggingObject
 	{
-		private ICollection<Point> Points = new HashSet<Point>();
+		private ICollection<Point> _points = new HashSet<Point>();
 		private Triangle[] _triangles;
 		private Edge[] _convexHull;
 
@@ -63,16 +63,16 @@ namespace TUGraz.VectoCore.Utils
 
 		public void AddPoint(double x, double y, double z)
 		{
-			Points.Add(new Point(x, y, z));
+			_points.Add(new Point(x, y, z));
 		}
 
 		public IReadOnlyCollection<Point> Entries
 		{
 			get
 			{
-				var retVal = new Point[Points.Count];
+				var retVal = new Point[_points.Count];
 				var i = 0;
-				foreach (var pt in Points) {
+				foreach (var pt in _points) {
 					retVal[i++] = new Point(pt.X * (_maxX - _minX) + _minX, pt.Y * (_maxY - _minY) + _minY, pt.Z);
 				}
 				return retVal;
@@ -88,27 +88,27 @@ namespace TUGraz.VectoCore.Utils
 		/// </remarks>
 		public void Triangulate()
 		{
-			if (Points.Count < 3) {
+			if (_points.Count < 3) {
 				throw new ArgumentException(string.Format("{0}: Triangulation needs at least 3 Points. Got {1} Points.", _mapName,
-					Points.Count));
+					_points.Count));
 			}
 
 			SanitycheckInputPoints();
 
 			// The "supertriangle" encompasses all triangulation points.
 			// This is just a helper triangle which initializes the algorithm and will be removed in the end of the algorithm.
-			_maxX = Points.Max(p => p.X);
-			_maxY = Points.Max(p => p.Y);
-			_minX = Points.Min(p => p.X);
-			_minY = Points.Min(p => p.Y);
-			Points =
-				Points.Select(p => new Point((p.X - _minX) / (_maxX - _minX), (p.Y - _minY) / (_maxY - _minY), p.Z)).ToList();
+			_maxX = _points.Max(p => p.X);
+			_maxY = _points.Max(p => p.Y);
+			_minX = _points.Min(p => p.X);
+			_minY = _points.Min(p => p.Y);
+			_points =
+				_points.Select(p => new Point((p.X - _minX) / (_maxX - _minX), (p.Y - _minY) / (_maxY - _minY), p.Z)).ToList();
 			var superTriangle = new Triangle(new Point(-1, -1), new Point(4, -1), new Point(-1, 4));
 			var triangles = new List<Triangle> { superTriangle };
 
 			var pointCount = 0;
 
-			var points = Points.ToArray();
+			var points = _points.ToArray();
 
 			// iteratively add each point into the correct triangle and split up the triangle
 			foreach (var point in points) {
@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Utils
 
 		private void SanitycheckInputPoints()
 		{
-			var duplicates = Points.GroupBy(pt => new { pt.X, pt.Y }, x => x).Where(g => g.Count() > 1).ToList();
+			var duplicates = _points.GroupBy(pt => new { pt.X, pt.Y }, x => x).Where(g => g.Count() > 1).ToList();
 
 			foreach (var duplicate in duplicates) {
 				Log.Error("{0}: Input Point appears twice: x: {1}, y: {2}", duplicate.Key.X, duplicate.Key.Y);
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Utils
 		public void DrawGraph()
 		{
 			var superTriangle = new Triangle(new Point(-1, -1), new Point(4, -1), new Point(-1, 4));
-			DrawGraph(0, _triangles, superTriangle, Points.ToArray());
+			DrawGraph(0, _triangles, superTriangle, _points.ToArray());
 		}
 
 		/// <summary>

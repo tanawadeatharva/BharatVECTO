@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,6 +31,7 @@
 
 using System;
 using System.Data;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -42,15 +43,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public static class PTOIdleLossMapReader
 	{
-		/// <summary>
-		/// Read the retarder loss map from a file.
-		/// </summary>
-		/// <param name="fileName"></param>
-		/// <returns></returns>
-		public static PTOLossMap ReadFromFile(string fileName)
+
+		public static PTOLossMap ReadFromStream(Stream stream)
 		{
 			try {
-				return Create(VectoCSVFile.Read(fileName));
+				return Create(VectoCSVFile.ReadStream(stream));
 			} catch (Exception ex) {
 				throw new VectoException("ERROR while loading PTO Idle LossMap: " + ex.Message);
 			}
@@ -96,6 +93,14 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			///     [Nm]
 			/// </summary>
 			public const string PTOTorque = "PTO Torque";
+		}
+
+		public static PTOLossMap GetZeroLossMap()
+		{
+			return new PTOLossMap(new[] {
+				new PTOLossMap.Entry { EngineSpeed = 0.RPMtoRad(), PTOTorque = 0.SI<NewtonMeter>() },
+				new PTOLossMap.Entry { EngineSpeed = 10000.RPMtoRad(), PTOTorque = 0.SI<NewtonMeter>() },
+			});
 		}
 	}
 }

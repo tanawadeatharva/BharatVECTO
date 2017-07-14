@@ -1,11 +1,22 @@
-HDV Class,Long haul,Regional delivery,Urban delivery,Municipal utility,Construction
-1,,150,150,,
-2,200,200,150,,
-3,,200,150,,
-4,350,200,,300,
-5,350,200,,,
-9,350,200,,300,
-10,350,200,,,
-11,350,200,,300,200
-12,350,200,,,200
-16,,,,,200
+Technology , HDV Class , Long haul , Regional delivery , Urban delivery , Municipal utility , Construction
+None       , 1         , 0         , 0                 , 0              , 0                 , 0
+None       , 2         , 0         , 0                 , 0              , 0                 , 0
+None       , 3         , 0         , 0                 , 0              , 0                 , 0
+None       , 4         , 0         , 0                 , 0              , 0                 , 0
+None       , 5         , 0         , 0                 , 0              , 0                 , 0
+None       , 9         , 0         , 0                 , 0              , 0                 , 0
+None       , 10        , 0         , 0                 , 0              , 0                 , 0
+None       , 11        , 0         , 0                 , 0              , 0                 , 0  
+None       , 12        , 0         , 0                 , 0              , 0                 , 0
+None       , 16        , 0         , 0                 , 0              , 0                 , 0
+#
+Default    , 1         ,           , 150               , 150            ,                   ,
+Default    , 2         , 200       , 200               , 150            ,                   ,
+Default    , 3         ,           , 200               , 150            ,                   ,
+Default    , 4         , 350       , 200               ,                , 300               ,
+Default    , 5         , 350       , 200               ,                ,                   ,
+Default    , 9         , 350       , 200               ,                , 300               ,
+Default    , 10        , 350       , 200               ,                ,                   ,
+Default    , 11        , 350       , 200               ,                , 300               , 200
+Default    , 12        , 350       , 200               ,                ,                   , 200
+Default    , 16        ,           ,                   ,                ,                   , 200

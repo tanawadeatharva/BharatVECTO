@@ -1,0 +1,1836 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2016 rel. 2 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.6" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" targetNamespace="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.6" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.6" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaLocation="VectoDeclarationDefinitions.0.6.xsd"/>
+	<xs:complexType name="ADASOverspeedEngineeringType">
+		<xs:sequence>
+			<xs:element name="Mode" type="tns:ADASOverspeedModeType"/>
+			<xs:element name="MinSpeed" type="tns:ADASOverspeedEcorollMinSpeedType" minOccurs="0"/>
+			<xs:element name="AllowedOverspeed" type="tns:ADASOverspeedEcorollAllowedOverspeedType" minOccurs="0"/>
+			<xs:element name="AllowedUnderspeed" type="tns:ADASOverspeedEcorollAllowedUnderspeedType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AngledriveComponentEngineeringType">
+		<xs:sequence>
+			<xs:element name="Data" type="tns:AngledriveDataEngineeringType"/>
+			<xs:element name="Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AngledriveDataEngineeringType">
+		<xs:complexContent>
+			<xs:extension base="tns:EngineeringPowertrainComponentType">
+				<xs:sequence>
+					<xs:element name="Ratio" type="vdecdef:AngledriveRatioType"/>
+					<xs:choice>
+						<xs:element name="TorqueLossMap">
+							<xs:complexType>
+								<xs:choice>
+									<xs:sequence minOccurs="4" maxOccurs="unbounded">
+										<xs:element name="Entry" type="vdecdef:AngledriveLossMapEntryType"/>
+									</xs:sequence>
+									<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+								</xs:choice>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Efficiency" type="tns:AngulargearEfficiencyType"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AuxiliariesComponentEngineeringType">
+		<xs:sequence>
+			<xs:element name="Data" type="tns:AuxiliariesDataEngineeringType"/>
+			<xs:element name="Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AuxiliariesDataEngineeringType">
+		<xs:complexContent>
+			<xs:extension base="vdecdef:AuxiliariesBaseType">
+				<xs:sequence>
+					<xs:element name="Auxiliary" type="tns:AuxiliaryEntryEngineeringType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AuxiliaryEntryAuxMapType">
+		<xs:attribute name="auxiliarySpeed" type="tns:AuxiliaryEntryAuxMapEntryAuxiliarySpeedType" use="required"/>
+		<xs:attribute name="mechanicalPower" type="tns:AuxiliaryEntryAuxMapEntryMechanicalPowerType" use="required"/>
+		<xs:attribute name="supplyPower" type="tns:AuxiliaryEntryAuxMapEntrySupplyPowerType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="AuxiliaryEntryEngineeringType">
+		<xs:choice>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+				<xs:annotation>
+					<xs:documentation>P007 - ext. Resource</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:sequence>
+				<xs:element name="TransmissionRatioToEngine" type="tns:AuxiliaryEntryAuxMapTransmissionRatioToEngineType"/>
+				<xs:element name="EfficiencyToEngine" type="tns:AuxiliaryEntryAuxMapEfficiencyToEngineType"/>
+				<xs:element name="EfficiencyAuxSupply" type="tns:AuxiliaryEntryAuxMapEfficiencyAuxSupplyType"/>
+				<xs:element name="AuxMap">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Entry" type="tns:AuxiliaryEntryAuxMapType" minOccurs="4" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:element name="ConstantAuxLoad" type="tns:ConstantAuxLoadType">
+				<xs:annotation>
+					<xs:documentation>P178 - [W]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+		<xs:attribute name="id" type="tns:AuxiliaryIdType">
+			<xs:annotation>
+				<xs:documentation>P006 - string</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="AxleComponentEngineeringType">
+		<xs:complexContent>
+			<xs:extension base="vdecdef:VectoSimulationComponent">
+				<xs:sequence>
+					<xs:element name="Axles">
+						<xs:complexType>
+							<xs:sequence minOccurs="2" maxOccurs="unbounded">
+								<xs:element name="Axle" type="tns:AxleDataEngineeringType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AxleDataEngineeringType">
+		<xs:sequence>
+			<xs:group ref="tns:GeneralComponentDataElements"/>
+			<xs:element name="Dimension" type="vdecdef:WheelsDimensionType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P108 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RRCISO" type="vdecdef:WheelsRRCISOType">
+				<xs:annotation>
+					<xs:documentation>P046 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FzISO" type="vdecdef:WheelsFzISOType">
+				<xs:annotation>
+					<xs:documentation>P047 - [N]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WeightShare" type="tns:AxleWeightShareType"/>
+			<xs:element name="Inertia" type="tns:WheelsInertiaType"/>
+			<xs:element name="DynamicTyreRadius" type="tns:DynamicTyreRadiusType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="axleNumber" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="axleType" type="vdecdef:AxleTypeType" use="required">
+			<xs:annotation>
+				<xs:documentation>P154 - enum</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="twinTyres" type="vdecdef:AxleTwinTyresType" use="required">
+			<xs:annotation>
+				<xs:documentation>P045 - bool</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="AxlegearComponentEngineeringType">
+		<xs:sequence>
+			<xs:element name="Data" type="tns:AxlegearDataEngineeringType"/>
+			<xs:element name="Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AxlegearDataEngineeringType">
+		<xs:complexContent>
+			<xs:extension base="tns:EngineeringPowertrainComponentType">
+				<xs:sequence>
+					<xs:element name="Ratio" type="vdecdef:AxlegearRatioType">
+						<xs:annotation>
+							<xs:documentation>P150 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:choice>
+						<xs:element name="TorqueLossMap">
+							<xs:complexType>
+								<xs:choice>
+									<xs:sequence minOccurs="4" maxOccurs="unbounded">
+										<xs:element name="Entry" type="vdecdef:AxlegearTorqueLossMapEntryType"/>
+									</xs:sequence>
+									<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+								</xs:choice>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Efficiency" type="tns:AxlegearEfficiencyType">
+							<xs:annotation>
+								<xs:documentation>P172 - [-]</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AxleWheelsComponentEngineeringType">
+		<xs:sequence>
+			<xs:element name="Data" type="tns:AxleComponentEngineeringType"/>
+			<xs:element name="Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ComponentResourceType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId usage="VehicleFile">002</vectoParam:parameterId>
+					<vectoParam:parameterId usage="EngineFile">003</vectoParam:parameterId>
+					<vectoParam:parameterId usage="GearboxFile">004</vectoParam:parameterId>
+					<vectoParam:parameterId usage="AuxMapFile">007</vectoParam:parameterId>
+					<vectoParam:parameterId usage="DrivingCycleFiles">008</vectoParam:parameterId>
+					<vectoParam:parameterId usage="DriverAccelerationFile">009</vectoParam:parameterId>
+					<vectoParam:parameterId usage="RetarderLossmapFile">054</vectoParam:parameterId>
+					<vectoParam:parameterId usage="EngineFullLoadCurveFile">144</vectoParam:parameterId>
+					<vectoParam:parameterId usage="EngineFuelMap">067</vectoParam:parameterId>
+					<vectoParam:parameterId usage="GearboxGearLossmapFile">079</vectoParam:parameterId>
+					<vectoParam:parameterId usage="GearboxGearShiftPolygonFile">082</vectoParam:parameterId>
+					<vectoParam:comment>Only for file-based input data</vectoParam:comment>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component usage="VehicleFile">Job</vectoParam:component>
+					<vectoParam:component usage="EngineFile">Vehicle</vectoParam:component>
+					<vectoParam:component usage="GearboxFile">Vehicle</vectoParam:component>
+					<vectoParam:component usage="AuxMapFile">Vehicle</vectoParam:component>
+					<vectoParam:component usage="DrivingCycleFiles">Job</vectoParam:component>
+					<vectoParam:component usage="DriverAccelerationFile">Driver</vectoParam:component>
+					<vectoParam:component usage="RetarderLossmapFile">Vehicle</vectoParam:component>
+					<vectoParam:component usage="EngineFullLoadCurveFile">Engine</vectoParam:component>
+					<vectoParam:component usage="EngineFuelMap">Engine</vectoParam:component>
+					<vectoParam:component usage="GearboxGearLossmapFile">Gearbox</vectoParam:component>
+					<vectoParam:component usage="GearboxGearShiftPolygonFile">Gearbox</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:attribute name="component" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="Engine"/>
+					<xs:enumeration value="Gearbox"/>
+					<xs:enumeration value="Retarder"/>
+					<xs:enumeration value="Axlegear"/>
+					<xs:enumeration value="AxleWheels"/>
+					<xs:enumeration value="Auxiliaries"/>
+					<xs:enumeration value="Vehicle"/>
+					<xs:enumeration value="TorqueConverter"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="xml"/>
+					<xs:enumeration value="json"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="file" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="CrossWindCorrectionEntryType">
+		<xs:attribute name="vehicleSpeed" type="tns:CrosswindCorrectionVehicleSpeedType"/>
+		<xs:attribute name="beta" type="tns:CrosswindCorrectionBetaType"/>
+		<xs:attribute name="deltaCdxA" type="tns:CrosswindCorrectionDeltaCdxAType"/>
+		<xs:attribute name="CdScalingFactor" type="tns:CrosswindCorrectionCdScalingFactorType"/>
+	</xs:complexType>
+	<xs:complexType name="DriverAccelerationCurveEntryType">
+		<xs:attribute name="vehicleSpeed" type="tns:DriverAccelerationCurveVehicleSpeedType" use="required"/>
+		<xs:attribute name="maxAcceleration" type="tns:DriverAccelerationCurveMaxAccelerationType" use="required"/>
+		<xs:attribute name="maxDeceleration" type="tns:DriverAccelerationCurveMaxDecelerationType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="EngineComponentEngineeringType">
+		<xs:sequence>
+			<xs:element name="Data" type="tns:EngineDataEngineeringType"/>
+			<xs:element name="Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EngineDataEngineeringType">
+		<xs:complexContent>
+			<xs:extension base="tns:EngineeringPowertrainComponentType">
+				<xs:sequence>
+					<xs:element name="Displacement" type="vdecdef:EngineDisplacementType"/>
+					<xs:element name="IdlingSpeed" type="vdecdef:EngineIdlingSpeedType"/>
+					<xs:element name="Inertia" type="tns:EngineInertiaType"/>
+					<xs:element name="WHTCEngineering" type="tns:WHTCEngineeringType">
+						<xs:annotation>
+							<xs:documentation>P170 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="FuelConsumptionMap">
+						<xs:complexType>
+							<xs:choice>
+								<xs:sequence>
+									<xs:element name="Entry" type="vdecdef:FuelConsumptionEntryType" minOccurs="4" maxOccurs="unbounded"/>
+								</xs:sequence>
+								<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+									<xs:annotation>
+										<xs:documentation>P067 - ext. Resource</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="FullLoadAndDragCurve">
+						<xs:complexType>
+							<xs:choice>
+								<xs:sequence>
+									<xs:element name="Entry" minOccurs="2" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:complexContent>
+												<xs:extension base="vdecdef:FullLoadAndDragCurveEntryType">
+													<xs:attribute name="PT1" type="tns:EngineFLDEntryPT1Type"/>
+												</xs:extension>
+											</xs:complexContent>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+									<xs:annotation>
+										<xs:documentation>P144 - ext. Resource</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="EngineeringPowertrainComponentType" abstract="true">
+		<xs:sequence>
+			<xs:group ref="tns:GeneralComponentDataElements"/>
+		</xs:sequence>
+		<xs:attribute name="id">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="5"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="EngineStartStopEngineeringType">
+		<xs:sequence>
+			<xs:element name="Enabled" type="vdecdef:ADASEngineStartStopEnabled"/>
+			<xs:element name="MaxSpeed" type="tns:EngineStartStopMaxSpeedType" minOccurs="0"/>
+			<xs:element name="MinOnTime" type="tns:EngineStartStopMinOnTimeType" minOccurs="0"/>
+			<xs:element name="ActivationDelay" type="tns:EngineStartStopActivationDelayType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ExtResourceEngineeringType">
+		<xs:attribute name="type" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="csv"/>
+					<xs:enumeration value="xml"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="file" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="GearboxComponentEngineeringType">
+		<xs:sequence>
+			<xs:element name="Data" type="tns:GearboxDataEngineeringType"/>
+			<xs:element name="Signature" minOccurs="0"/>
+			<xs:element name="TorqueConverter" minOccurs="0">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="tns:TorqueConverterComponentEngineeringType">
+							<xs:choice>
+								<xs:sequence>
+									<xs:element name="Data" type="tns:TorqueConverterEngineeringDataType"/>
+									<xs:element name="Signature" minOccurs="0"/>
+								</xs:sequence>
+								<xs:element name="Resource" type="tns:ComponentResourceType"/>
+							</xs:choice>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GearboxDataEngineeringType">
+		<xs:complexContent>
+			<xs:extension base="tns:EngineeringPowertrainComponentType">
+				<xs:sequence>
+					<xs:element name="TransmissionType" type="vdecdef:GearboxTransmissionTypeType">
+						<xs:annotation>
+							<xs:documentation>P076 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Inertia" type="tns:GearboxInertiaType"/>
+					<xs:element name="TractionInterruption" type="tns:GearboxTractionInterruptionType"/>
+					<xs:element name="Gears">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Gear" type="tns:GearEngineeringType" maxOccurs="99"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GearEngineeringType">
+		<xs:sequence>
+			<xs:element name="Ratio" type="vdecdef:GearboxGearRatioType"/>
+			<xs:element name="MaxTorque" type="vdecdef:GearboxGearMaxTorqueType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P157 - [Nm]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="TorqueLossMap">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="vdecdef:TorqueLossMapType">
+								<xs:choice>
+									<xs:element name="Entry" type="vdecdef:TorqueLossMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
+									<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+										<xs:annotation>
+											<xs:documentation>P079 - ext. Resource</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:choice>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Efficiency" type="tns:GearEfficiencyType">
+					<xs:annotation>
+						<xs:documentation>P171 - [-]</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="ShiftPolygon" minOccurs="0">
+				<xs:complexType>
+					<xs:choice>
+						<xs:element name="Entry" type="tns:ShiftPolygonEntryType" minOccurs="2" maxOccurs="unbounded"/>
+						<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+							<xs:annotation>
+								<xs:documentation>P082 - ext. Resource</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="number">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="LookAheadCoastingType">
+		<xs:sequence>
+			<xs:element name="Enabled" type="tns:LookAheadCoastingEnabledType"/>
+			<xs:element name="MinSpeed" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="tns:LookAheadCoastingMinSpeedType"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PreviewDistanceFactor" type="tns:LookaheadCoastingPreviewFactorType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P160 [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DecisionFactorOffset" type="tns:LookaheadDecisionFactorType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P161 [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DecisionFactorScaling" type="tns:LookaheadDecisionFactorType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P162 [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SpeedDependentDecisionFactor" minOccurs="0">
+				<xs:complexType>
+					<xs:choice>
+						<xs:element name="Entry" minOccurs="2" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="targetVelocity" type="tns:LookaheadCoastingVehicleSpeedType">
+									<xs:annotation>
+										<xs:documentation>P163 [km/h]</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+								<xs:attribute name="decisionFactorVel" type="tns:LookaheadDecisionFactorType">
+									<xs:annotation>
+										<xs:documentation>P164 - [-]</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="VelocityDropDecisionFactor" minOccurs="0">
+				<xs:complexType>
+					<xs:choice>
+						<xs:element name="Entry" minOccurs="2" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="velocityDrop" type="tns:LookaheadCoastingVehicleSpeedType">
+									<xs:annotation>
+										<xs:documentation>P165 - [km/h]</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+								<xs:attribute name="decisionFactorDrop" type="tns:LookaheadDecisionFactorType">
+									<xs:annotation>
+										<xs:documentation>P166 - [-]</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PTOCycleEngineeringType">
+		<xs:choice>
+			<xs:element name="Entry" type="tns:PTOCycleEntryType" maxOccurs="unbounded"/>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+				<xs:annotation>
+					<xs:documentation>P003 - ext. Resource</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="PTOCycleEntryType">
+		<xs:attribute name="time" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:double">
+					<xs:minInclusive value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="engineSpeed" type="vdecdef:EngineSpeedType" use="required"/>
+		<xs:attribute name="torque" type="vdecdef:EngineFLDMaxTorqueType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="PTOIdleLossMapEngineeringType">
+		<xs:choice>
+			<xs:element name="Entry" type="tns:PTOLossMapEntryType" minOccurs="2" maxOccurs="unbounded"/>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+				<xs:annotation>
+					<xs:documentation>P003 - ext. Resource</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="PTOLossMapEntryType">
+		<xs:attribute name="engineSpeed" type="vdecdef:EngineSpeedType" use="required"/>
+		<xs:attribute name="ptoTorqueLoss" type="vdecdef:PTOTorqueLossType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="RetarderComponentEngineeringType">
+		<xs:sequence>
+			<xs:element name="Data" type="tns:RetarderDataEngineeringType"/>
+			<xs:element name="Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RetarderDataEngineeringType">
+		<xs:complexContent>
+			<xs:extension base="tns:EngineeringPowertrainComponentType">
+				<xs:sequence>
+					<xs:element name="RetarderLossMap" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P054 - ext. Resource</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:choice>
+								<xs:sequence>
+									<xs:element name="Entry" type="vdecdef:RetarderLossmapEntryType" minOccurs="2" maxOccurs="unbounded"/>
+								</xs:sequence>
+								<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ShiftPolygonEntryType">
+		<xs:attribute name="engineTorque" type="tns:GearboxShiftpolygonEntryEngineTorqueType" use="required"/>
+		<xs:attribute name="downshiftSpeed" type="tns:GearboxShiftpolygonEntryDownshiftSpeedType" use="required"/>
+		<xs:attribute name="upshiftSpeed" type="tns:GearboxShiftpolygonEntryUpshiftSpeedType" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="TorqueConverterComponentEngineeringType"/>
+	<xs:complexType name="TorqueConverterEngineeringDataType">
+		<xs:sequence>
+			<xs:element name="ReferenceRPM" type="tns:TorqueConverterReferenceRPMType">
+				<xs:annotation>
+					<xs:documentation>P092 - [1/min]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Characteristics">
+				<xs:complexType>
+					<xs:choice>
+						<xs:element name="Entry" type="vdecdef:TorqueConverterCharacteristicsEntryType" minOccurs="2" maxOccurs="unbounded"/>
+						<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+							<xs:annotation>
+								<xs:documentation>P091</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Inertia" type="tns:TorqueConverterInertiaType">
+				<xs:annotation>
+					<xs:documentation>P127 - [kgm²]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ShiftPolygon" minOccurs="0">
+				<xs:complexType>
+					<xs:choice>
+						<xs:element name="Entry" type="tns:ShiftPolygonEntryType" minOccurs="2" maxOccurs="unbounded"/>
+						<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+							<xs:annotation>
+								<xs:documentation>P091</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VectoComponentEngineeringType">
+		<xs:choice>
+			<xs:element name="Engine" type="tns:EngineComponentEngineeringType"/>
+			<xs:element name="Gearbox" type="tns:GearboxComponentEngineeringType"/>
+			<xs:element name="Angledrive" type="tns:AngledriveComponentEngineeringType"/>
+			<xs:element name="Retarder" type="tns:RetarderComponentEngineeringType"/>
+			<xs:element name="Axlegear" type="tns:AxlegearComponentEngineeringType"/>
+			<xs:element name="AxleWheels" type="tns:AxleWheelsComponentEngineeringType"/>
+			<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentEngineeringType"/>
+			<xs:element name="Vehicle" type="tns:VehicleEngineeringType"/>
+		</xs:choice>
+		<xs:attribute name="schemaVersion" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="VectoJobEngineeringType">
+		<xs:sequence>
+			<xs:element name="EngineOnlyMode" type="tns:EngineOnlyModeType"/>
+			<xs:choice>
+				<xs:sequence>
+					<xs:choice>
+						<xs:element name="Vehicle" type="tns:VehicleEngineeringType"/>
+						<xs:element name="Resource" type="tns:ComponentResourceType">
+							<xs:annotation>
+								<xs:documentation>P002 - ext. Resource</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:choice>
+					<xs:element name="Signature" minOccurs="0"/>
+					<xs:element name="DriverModel">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="LookAheadCoasting" type="tns:LookAheadCoastingType"/>
+								<xs:element name="Overspeed" type="tns:ADASOverspeedEngineeringType"/>
+								<xs:element name="DriverAccelerationCurve" minOccurs="0">
+									<xs:complexType>
+										<xs:choice>
+											<xs:element name="Entry" type="tns:DriverAccelerationCurveEntryType" minOccurs="2" maxOccurs="unbounded"/>
+											<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+												<xs:annotation>
+													<xs:documentation>P009 - ext. Resource</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:choice>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="ShiftStrategyParameters" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="UpshiftMinAcceleration" type="tns:ShiftStrategyMinAccelerationUpshiftType">
+												<xs:annotation>
+													<xs:documentation>P167 - [m/s²]</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="DownshiftAfterUpshiftDelay" type="tns:ShiftDelayType">
+												<xs:annotation>
+													<xs:documentation>P168 - [s]</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="UpshiftAfterDownshiftDelay" type="tns:ShiftDelayType">
+												<xs:annotation>
+													<xs:documentation>P169 - [s]</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="TorqueReserve" type="tns:GearboxTorqueReserveType" minOccurs="0"/>
+											<xs:element name="TimeBetweenGearshift" type="tns:GearboxTimeBetweenGearshiftType" minOccurs="0"/>
+											<xs:element name="StartSpeed" type="tns:GearboxStartSpeedType" minOccurs="0"/>
+											<xs:element name="StartAcceleration" type="tns:GearboxStartAccelerationType" minOccurs="0"/>
+											<xs:element name="StartTorqueReserve" type="tns:GearboxStartTorqueReserveType" minOccurs="0"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+				<xs:sequence>
+					<xs:element name="Engine" type="tns:EngineComponentEngineeringType"/>
+					<xs:element name="Signature" minOccurs="0"/>
+				</xs:sequence>
+			</xs:choice>
+			<xs:element name="MissionCycles">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Cycle" type="tns:ExtResourceEngineeringType" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>P008 - ext. Resource</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="schemaVersion" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="VehicleEngineeringType">
+		<xs:complexContent>
+			<xs:extension base="tns:EngineeringPowertrainComponentType">
+				<xs:sequence>
+					<xs:element name="VehicleCategory" type="vdecdef:VehicleCategoryType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P036 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AxleConfiguration" type="vdecdef:VehicleAxleConfigurationType">
+						<xs:annotation>
+							<xs:documentation>P037 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CurbWeightChassis" type="vdecdef:VehicleCurbWeightChassisType">
+						<xs:annotation>
+							<xs:documentation>P038 - [kg]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="GrossVehicleMass" type="vdecdef:VehicleGrossVehicleMassType">
+						<xs:annotation>
+							<xs:documentation>P041 - [kg]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CdxA" type="vdecdef:VehicleCdxAType">
+						<xs:annotation>
+							<xs:documentation>P146 - [m²]  Drag coefficient * Cross Sectional Area (Truck &amp; Trailer)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RetarderType" type="vdecdef:RetarderTypeType">
+						<xs:annotation>
+							<xs:documentation>P052 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RetarderRatio" type="vdecdef:RetarderRatioType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P053 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AngledriveType" type="vdecdef:AngledriveTypeType"/>
+					<xs:element name="PTOType" type="vdecdef:PTOTypeType">
+						<xs:annotation>
+							<xs:documentation>P186 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="PTOIdleLossMap" type="tns:PTOIdleLossMapEngineeringType" minOccurs="0"/>
+					<xs:element name="PTOCycle" type="tns:PTOCycleEngineeringType" minOccurs="0"/>
+					<xs:element name="CurbWeightExtra" type="tns:VehicleCurbWeightExtraType"/>
+					<xs:element name="Loading" type="tns:VehicleLoadingType"/>
+					<xs:element name="CrossWindCorrectionMode" type="tns:CrossWindCorrectionModeType"/>
+					<xs:element name="CrossWindCorrectionData" minOccurs="0">
+						<xs:complexType>
+							<xs:choice>
+								<xs:sequence maxOccurs="unbounded">
+									<xs:element name="Entry" type="tns:CrossWindCorrectionEntryType"/>
+								</xs:sequence>
+								<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+									<xs:annotation>
+										<xs:documentation>P051 - ext. Resource</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Components">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:choice>
+									<xs:element name="Engine" type="tns:EngineComponentEngineeringType"/>
+									<xs:element name="Resource" type="tns:ComponentResourceType">
+										<xs:annotation>
+											<xs:documentation>P003 - ext. Resource</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:choice>
+								<xs:choice>
+									<xs:element name="Gearbox" type="tns:GearboxComponentEngineeringType"/>
+									<xs:element name="Resource" type="tns:ComponentResourceType">
+										<xs:annotation>
+											<xs:documentation>P004 - ext. Resource</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:choice>
+								<xs:element name="Angledrive" type="tns:AngledriveComponentEngineeringType" minOccurs="0"/>
+								<xs:element name="Retarder" type="tns:RetarderComponentEngineeringType" minOccurs="0"/>
+								<xs:choice>
+									<xs:element name="Axlegear" type="tns:AxlegearComponentEngineeringType"/>
+									<xs:element name="Resource" type="tns:ComponentResourceType"/>
+								</xs:choice>
+								<xs:choice>
+									<xs:element name="AxleWheels">
+										<xs:complexType>
+											<xs:complexContent>
+												<xs:extension base="tns:AxleWheelsComponentEngineeringType"/>
+											</xs:complexContent>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="Resource" type="tns:ComponentResourceType"/>
+								</xs:choice>
+								<xs:choice>
+									<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentEngineeringType"/>
+									<xs:element name="Resource" type="tns:ComponentResourceType"/>
+								</xs:choice>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="AdvancedDriverAssist">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="EngineStartStop" type="tns:EngineStartStopEngineeringType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="ADASOverspeedEcorollAllowedOverspeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="AllowedOverspeed">017</vectoParam:parameterId>
+					<vectoParam:unit>km/h</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>5</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P017</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ADASOverspeedEcorollAllowedUnderspeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="AllowedUnderspeed">018</vectoParam:parameterId>
+					<vectoParam:unit>km/h</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>5</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P018</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ADASOverspeedEcorollMinSpeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="MinSpeed">016</vectoParam:parameterId>
+					<vectoParam:unit>km/h</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>50</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P016</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ADASOverspeedModeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="Mode">015</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P015 - enum</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Off"/>
+			<xs:enumeration value="OverSpeed"/>
+			<xs:enumeration value="EcoRoll"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AngulargearEfficiencyType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId>177</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Angulargear</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P177</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxiliaryEntryAuxMapEfficiencyAuxSupplyType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="EfficiencyAuxSupply">024</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Auxiliaries</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P024</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0"/>
+			<xs:maxInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxiliaryEntryAuxMapEfficiencyToEngineType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="EfficiencyToEngine">023</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Auxiliaries</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P023</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0"/>
+			<xs:maxInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxiliaryEntryAuxMapEntryAuxiliarySpeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="auxiliarySpeed">025</vectoParam:parameterId>
+					<vectoParam:unit>1/min</vectoParam:unit>
+					<vectoParam:component>Auxiliaries</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P025</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxiliaryEntryAuxMapEntryMechanicalPowerType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="mechanicalPower">026</vectoParam:parameterId>
+					<vectoParam:unit>W</vectoParam:unit>
+					<vectoParam:component>Auxiliaries</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P026</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxiliaryEntryAuxMapEntrySupplyPowerType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="supplyPower">027</vectoParam:parameterId>
+					<vectoParam:unit>W</vectoParam:unit>
+					<vectoParam:component>Auxiliaries</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P027</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxiliaryEntryAuxMapTransmissionRatioToEngineType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="TransmissionRatioToEngine">022</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Auxiliaries</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P022</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AuxiliaryIdType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="id">006</vectoParam:parameterId>
+					<vectoParam:comment>the ID has to match a column in the driving cycle (power demand of the auxiliary)</vectoParam:comment>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Auxiliaries</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P006 - string</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AxlegearEfficiencyType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId>172</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Axlegear</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P172</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AxleWeightShareType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="WeightShare">044</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Axle</vectoParam:component>
+					<vectoParam:genericValueType>generic lookup data</vectoParam:genericValueType>
+					<vectoParam:genericValueSource>P107, P008</vectoParam:genericValueSource>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P044</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:maxInclusive value="1"/>
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ComputationModeType" final="restriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="declaration"/>
+			<xs:enumeration value="engineering"/>
+			<xs:enumeration value="engineering"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ConstantAuxLoadType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId>178</vectoParam:parameterId>
+					<vectoParam:unit>W</vectoParam:unit>
+					<vectoParam:component>Auxiliaries</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CrosswindCorrectionBetaType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="beta">155</vectoParam:parameterId>
+					<vectoParam:unit>°</vectoParam:unit>
+					<vectoParam:component>Vehicle</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P155</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="180"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CrosswindCorrectionCdScalingFactorType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="cdScalingFactor">056</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Vehicle</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P056</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0"/>
+			<xs:maxInclusive value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CrosswindCorrectionDeltaCdxAType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="deltaCdxA">156</vectoParam:parameterId>
+					<vectoParam:unit>m²</vectoParam:unit>
+					<vectoParam:component>Vehicle</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P156</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-100"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CrossWindCorrectionModeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="CrossWindCorrectionMode">050</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Vehicle</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>Speed dependent (Declaration Mode)</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P050</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="No Correction"/>
+			<xs:enumeration value="Speed Dependent Correction Factor"/>
+			<xs:enumeration value="Declaration Mode Correction"/>
+			<xs:enumeration value="VAir Beta Lookup Table"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CrosswindCorrectionVehicleSpeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="vehicleSpeed">055</vectoParam:parameterId>
+					<vectoParam:unit>km/h</vectoParam:unit>
+					<vectoParam:component>Vehicle</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P055</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DriverAccelerationCurveMaxAccelerationType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="MaxAcceleration">034</vectoParam:parameterId>
+					<vectoParam:unit>m/s²</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+					<vectoParam:genericValueType>generic lookup data</vectoParam:genericValueType>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P034</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0.05"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DriverAccelerationCurveMaxDecelerationType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="MaxDeceleration">035</vectoParam:parameterId>
+					<vectoParam:unit>m/s²</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+					<vectoParam:genericValueType>generic lookup data</vectoParam:genericValueType>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P035</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:maxInclusive value="-0.05"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DriverAccelerationCurveVehicleSpeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="vehicleSpeed">033</vectoParam:parameterId>
+					<vectoParam:unit>km/h</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+					<vectoParam:genericValueType>generic lookup data</vectoParam:genericValueType>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P033</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DynamicTyreRadiusType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="DynamicTyreRadius">049</vectoParam:parameterId>
+					<vectoParam:unit>mm</vectoParam:unit>
+					<vectoParam:component>Wheels</vectoParam:component>
+					<vectoParam:genericValueType>generic lookup data</vectoParam:genericValueType>
+					<vectoParam:genericValueSource>P108, P117</vectoParam:genericValueSource>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P049</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="100"/>
+			<xs:maxInclusive value="700"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EngineFLDEntryPT1Type">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="PT1">071</vectoParam:parameterId>
+					<vectoParam:unit>s</vectoParam:unit>
+					<vectoParam:component>Engine</vectoParam:component>
+					<vectoParam:genericValueType>generic lookup data</vectoParam:genericValueType>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P071</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EngineInertiaType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="Inertia">62</vectoParam:parameterId>
+					<vectoParam:unit>kgm²</vectoParam:unit>
+					<vectoParam:component>Engine</vectoParam:component>
+					<vectoParam:genericValueType>derived from other parameters</vectoParam:genericValueType>
+					<vectoParam:genericValueSource>P061</vectoParam:genericValueSource>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P062</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EngineOnlyModeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="EngineOnlyMode">001</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Job</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValueSource/>
+					<vectoParam:genericValue>false</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P001 - bool</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="EngineStartStopActivationDelayType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="ActivationDelay">013</vectoParam:parameterId>
+					<vectoParam:unit>s</vectoParam:unit>
+					<vectoParam:component>ADAS</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>5</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P013</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EngineStartStopMaxSpeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="MaxSpeed">011</vectoParam:parameterId>
+					<vectoParam:unit>km/h</vectoParam:unit>
+					<vectoParam:component>ADAS</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>5</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P011</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EngineStartStopMinOnTimeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="MinOnTime">012</vectoParam:parameterId>
+					<vectoParam:unit>s</vectoParam:unit>
+					<vectoParam:component>ADAS</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>5</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P012</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxEarlyShiftUpType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="EarlyShiftUp">083</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>derived from other parameters</vectoParam:genericValueType>
+					<vectoParam:genericValueSource>P076</vectoParam:genericValueSource>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P083</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxInertiaType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="Inertia">080</vectoParam:parameterId>
+					<vectoParam:unit>kgm²</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>0</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P080</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxShiftpolygonEntryDownshiftSpeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="downshiftSpeed">094</vectoParam:parameterId>
+					<vectoParam:comment>Calculated from full-load curve</vectoParam:comment>
+					<vectoParam:unit>1/min</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>derived from other parameters</vectoParam:genericValueType>
+					<vectoParam:genericValue>P068, P069</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P094</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="5000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxShiftpolygonEntryEngineTorqueType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="engineTorque">093</vectoParam:parameterId>
+					<vectoParam:comment>Calculated from full-load curve</vectoParam:comment>
+					<vectoParam:unit>Nm</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>derived from other parameters</vectoParam:genericValueType>
+					<vectoParam:genericValue>P068, P069</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P093</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-10000"/>
+			<xs:maxInclusive value="10000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxShiftpolygonEntryUpshiftSpeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="upshiftSpeed">095</vectoParam:parameterId>
+					<vectoParam:comment>Calculated from full-load curve</vectoParam:comment>
+					<vectoParam:unit>1/min</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>derived from other parameters</vectoParam:genericValueType>
+					<vectoParam:genericValue>P068, P069</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P095</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="5000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxSkipGearsType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="SkipGears">084</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>derived from other parameters</vectoParam:genericValueType>
+					<vectoParam:genericValueSource>P076</vectoParam:genericValueSource>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P084</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxStartAccelerationType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="StartAcceleration">088</vectoParam:parameterId>
+					<vectoParam:unit>m/s²</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>0.6</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P088</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:maxInclusive value="2"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxStartSpeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="StartSpeed">087</vectoParam:parameterId>
+					<vectoParam:unit>m/s</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>2</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P087</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0"/>
+			<xs:maxInclusive value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxStartTorqueReserveType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="StartTorqueReserve">089</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>0.2</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P089</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:maxInclusive value="0.5"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxTimeBetweenGearshiftType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="TimeBetweenGearshift">086</vectoParam:parameterId>
+					<vectoParam:unit>s</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>2</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P086</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:maxInclusive value="50"/>
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxTorqueReserveType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="TorqueReserve">085</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>0.2</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P085</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="0.5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GearboxTractionInterruptionType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="TractionInterruption">081</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+					<vectoParam:genericValueType>derived from other parameters</vectoParam:genericValueType>
+					<vectoParam:genericValueSource>P067</vectoParam:genericValueSource>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P081</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GearEfficiencyType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="GearEfficiency" usage="Gearbox">171</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Gearbox</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P171</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LookAheadCoastingDecelerationType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description status="deprecated">
+					<vectoParam:parameterId name="Deceleration">020</vectoParam:parameterId>
+					<vectoParam:unit>m/s²</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>-0.5</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P020</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="-5"/>
+			<xs:maxInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LookAheadCoastingEnabledType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="Enabled">019</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValueSource/>
+					<vectoParam:genericValue>true</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P019 - bool</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="LookAheadCoastingMinSpeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description status="deprecated">
+					<vectoParam:parameterId name="MinSpeed">021</vectoParam:parameterId>
+					<vectoParam:unit>km/h</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+					<vectoParam:genericValueType>constant value</vectoParam:genericValueType>
+					<vectoParam:genericValue>50</vectoParam:genericValue>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P021</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LookaheadCoastingPreviewFactorType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="previewFactor">160</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:double"/>
+	</xs:simpleType>
+	<xs:simpleType name="LookaheadCoastingVehicleSpeedType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="targetVelocity" usage="targetSpeed">163</vectoParam:parameterId>
+					<vectoParam:parameterId name="velocityDrop" usage="velocityDrop">165</vectoParam:parameterId>
+					<vectoParam:unit>km/h</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="LookaheadDecisionFactorType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="DecisionFactorOffset" usage="DecisionFactorOffset">161</vectoParam:parameterId>
+					<vectoParam:parameterId name="DecisionFactorScaling" usage="DecisionFactorScaling">162</vectoParam:parameterId>
+					<vectoParam:parameterId name="decisionFactorDrop" usage="TargetSpeed DF">164</vectoParam:parameterId>
+					<vectoParam:parameterId name="decisionFactorVel" usage="VelocityDropDF">166</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P017</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double"/>
+	</xs:simpleType>
+	<xs:simpleType name="ShiftDelayType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="DownshiftAferUpshiftDelay" usage="downshift after upshift delay">168</vectoParam:parameterId>
+					<vectoParam:parameterId name="UpshiftAfterDownshiftDelay" usage="upshift after downshift delay">169</vectoParam:parameterId>
+					<vectoParam:unit>s</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ShiftStrategyMinAccelerationUpshiftType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="UpshiftMinAcceleration">167</vectoParam:parameterId>
+					<vectoParam:unit>m/s²</vectoParam:unit>
+					<vectoParam:component>Driver</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TorqueConverterInertiaType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId>127</vectoParam:parameterId>
+					<vectoParam:unit>kgm²</vectoParam:unit>
+					<vectoParam:component>TorqueConverter</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P127</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TorqueConverterReferenceRPMType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId>092</vectoParam:parameterId>
+					<vectoParam:unit>1/min</vectoParam:unit>
+					<vectoParam:component>TorqueConverter</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P092</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VehicleCurbWeightExtraType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="CurbWeightExtra">039</vectoParam:parameterId>
+					<vectoParam:unit>kg</vectoParam:unit>
+					<vectoParam:component>Vehicle</vectoParam:component>
+					<vectoParam:genericValueType>generic lookup data</vectoParam:genericValueType>
+					<vectoParam:genericValueSource>P107, P008</vectoParam:genericValueSource>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P039</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="40000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VehicleLoadingType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="Loading">040</vectoParam:parameterId>
+					<vectoParam:unit>kg</vectoParam:unit>
+					<vectoParam:component>Vehicle</vectoParam:component>
+					<vectoParam:genericValueType>generic lookup data</vectoParam:genericValueType>
+					<vectoParam:genericValueSource>P107, P008</vectoParam:genericValueSource>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P040</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="40000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="WheelsInertiaType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId name="Inertia">048</vectoParam:parameterId>
+					<vectoParam:unit>kgm²</vectoParam:unit>
+					<vectoParam:component>Wheels</vectoParam:component>
+					<vectoParam:genericValueType>generic lookup data</vectoParam:genericValueType>
+					<vectoParam:genericValueSource>P108</vectoParam:genericValueSource>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P048</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="WHTCEngineeringType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId>170</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+					<vectoParam:component>Engine</vectoParam:component>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:group name="GeneralComponentDataElements">
+		<xs:sequence>
+			<xs:element name="Vendor">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="5"/>
+						<xs:whiteSpace value="preserve"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Creator">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="10"/>
+						<xs:whiteSpace value="preserve"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Date" type="vdecdef:DateTimeWithTimezone"/>
+			<xs:element name="MakeAndModel">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="10"/>
+						<xs:whiteSpace value="preserve"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="TypeId">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="AppVersion" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="5"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+</xs:schema>

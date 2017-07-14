@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -49,13 +49,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { throw new InvalidOperationException("ErrorMessage not applicable."); }
 		}
 
-		/// <summary>
-		/// Obsolete. Call Lookup50Percent, Lookup75Percent or LookupTrailer instead!
-		/// </summary>
-		[Obsolete("Call Lookup50Percent, Lookup75Percent or LookupTrailer!", true)]
-		private new PayloadEntry Lookup(Kilogram grossVehicleWeight)
+		public Kilogram Lookup10Percent(Kilogram grossVehicleWeight)
 		{
-			throw new InvalidOperationException("Call Lookup50Percent, Lookup75Percent or LookupTrailer!");
+			var section = Data.GetSection(d => d.Key > grossVehicleWeight);
+			return VectoMath.Interpolate(section.Item1.Key, section.Item2.Key,
+				section.Item1.Value.Payload10Percent, section.Item2.Value.Payload10Percent,
+				grossVehicleWeight);
 		}
 
 		public Kilogram Lookup50Percent(Kilogram grossVehicleWeight)
@@ -85,13 +84,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 				.ToDictionary(
 					kv => kv.ParseDouble("grossvehicleweight").SI<Kilogram>(),
 					kv => new PayloadEntry {
+						Payload10Percent = kv.ParseDouble("payload10%").SI<Kilogram>(),
 						Payload50Percent = kv.ParseDouble("payload50%").SI<Kilogram>(),
 						Payload75Percent = kv.ParseDouble("payload75%").SI<Kilogram>()
 					});
 		}
 
-		public sealed class PayloadEntry
+		public struct PayloadEntry
 		{
+			public Kilogram Payload10Percent;
 			public Kilogram Payload50Percent;
 			public Kilogram Payload75Percent;
 		}

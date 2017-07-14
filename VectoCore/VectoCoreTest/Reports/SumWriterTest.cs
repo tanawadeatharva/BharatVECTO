@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -32,6 +32,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -52,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var writer = new FileOutputWriter("testsumcalc_fixed");
 			var sumWriter = new SummaryDataContainer(writer);
 
-			var modData = new ModalDataContainer("testsumcalc_fixed", writer);
+			var modData = new ModalDataContainer("testsumcalc_fixed", FuelType.DieselCI, writer);
 
 			modData.AddAuxiliary("FAN");
 
@@ -81,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(modData, "testSumCalc", new MockRunData());
+			sumWriter.Write(modData, 0, 0, new MockRunData());
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();
@@ -108,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var writer = new FileOutputWriter("testsumcalc_var");
 			var sumWriter = new SummaryDataContainer(writer);
 
-			var modData = new ModalDataContainer("testsumcalc_var", writer);
+			var modData = new ModalDataContainer("testsumcalc_var", FuelType.DieselCI, writer);
 			modData.AddAuxiliary("FAN");
 
 			var timeSteps = new[]
@@ -139,7 +140,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData.CommitSimulationStep();
 			}
 
-			sumWriter.Write(modData, "testSumCalc", new MockRunData());
+			sumWriter.Write(modData, 0, 0, new MockRunData());
 
 			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();

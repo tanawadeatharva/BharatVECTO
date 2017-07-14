@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -80,25 +80,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			} else {
 				index = _entries.FindIndex(x => x.Key > key);
 				if (index <= 0) {
-					index = (key > _entries[0].Key) ? _entries.Count - 1 : 1;
+					index = key > _entries[0].Key ? _entries.Count - 1 : 1;
 				}
 			}
 			return index;
 		}
 
-		public MeterPerSquareSecond MinDeceleration()
-		{
-			return _entries.Max(x => x.Value.Deceleration);
-		}
-
 		public MeterPerSquareSecond MaxDeceleration()
 		{
 			return _entries.Min(x => x.Value.Deceleration);
-		}
-
-		public MeterPerSquareSecond MinAcceleration()
-		{
-			return _entries.Min(x => x.Value.Acceleration);
 		}
 
 		public MeterPerSquareSecond MaxAcceleration()

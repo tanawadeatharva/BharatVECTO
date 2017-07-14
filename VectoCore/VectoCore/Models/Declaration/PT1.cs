@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -34,9 +34,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -87,8 +85,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			if (data.Columns.Contains(Fields.EngineSpeed) && data.Columns.Contains(Fields.PT1)) {
 				_entries = data.Rows.Cast<DataRow>()
 					.Select(
-						r => new KeyValuePair<PerSecond, Second>(DataTableExtensionMethods.ParseDouble(r, Fields.EngineSpeed).RPMtoRad(),
-							DataTableExtensionMethods.ParseDouble(r, Fields.PT1).SI<Second>()))
+						r => new KeyValuePair<PerSecond, Second>(r.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
+							r.ParseDouble(Fields.PT1).SI<Second>()))
 					.OrderBy(x => x.Key).ToList();
 			} else {
 				_entries = data.Rows.Cast<DataRow>()
@@ -99,10 +97,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public override PT1Result Lookup(PerSecond key)
 		{
-			var index = 1;
-			bool extrapolated = key.IsSmaller(_entries[0].Key) || key.IsGreater(_entries.Last().Key);
+			var extrapolated = key.IsSmaller(_entries[0].Key) || key.IsGreater(_entries.Last().Key);
 
-			index = _entries.FindIndex(x => x.Key.IsGreater(key));
+			var index = _entries.FindIndex(x => x.Key.IsGreater(key));
 			if (index <= 0) {
 				index = key.IsGreater(_entries[0].Key) ? _entries.Count - 1 : 1;
 			}
@@ -123,7 +120,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const string EngineSpeed = "engine speed";
 		}
 
-		public class PT1Result
+		public struct PT1Result
 		{
 			public Second Value;
 			public bool Extrapolated;

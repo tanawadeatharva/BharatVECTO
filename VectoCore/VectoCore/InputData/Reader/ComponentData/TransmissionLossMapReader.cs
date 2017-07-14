@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -41,7 +41,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
-	public sealed class TransmissionLossMapReader
+	public static class TransmissionLossMapReader
 	{
 		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
 		{
@@ -59,8 +59,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		/// <param name="data"></param>
 		/// <param name="gearRatio"></param>
 		/// <param name="gearName"></param>
+		/// <param name="extendLossMap"></param>
 		/// <returns></returns>
-		public static TransmissionLossMap Create(DataTable data, double gearRatio, string gearName)
+		public static TransmissionLossMap Create(DataTable data, double gearRatio, string gearName, bool extendLossMap = false)
 		{
 			if (data == null || data.Columns.Count < 3) {
 				throw new VectoException("TransmissionLossMap Data File for {0} must consist of 3 columns.", gearName);
@@ -82,8 +83,64 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 				entries = CreateFromColumIndizes(data);
 			}
-
+			if (!extendLossMap) {
+				return new TransmissionLossMap(entries, gearRatio, gearName);
+			}
+			var orig = "";
+			entries.ForEach(
+				x =>
+					orig +=
+						string.Format("{0},{1},{2}" + Environment.NewLine, x.InputSpeed.AsRPM, x.InputTorque.Value(), x.TorqueLoss.Value()));
+			entries = ExtendLossMap(entries);
+			var extended = "";
+			entries.ForEach(
+				x =>
+					extended +=
+						string.Format("{0},{1},{2}" + Environment.NewLine, x.InputSpeed.AsRPM, x.InputTorque.Value(), x.TorqueLoss.Value()));
 			return new TransmissionLossMap(entries, gearRatio, gearName);
+		}
+
+		private static List<TransmissionLossMap.GearLossMapEntry> ExtendLossMap(
+			List<TransmissionLossMap.GearLossMapEntry> entries)
+		{
+			var maxRpm = entries.Max(x => x.InputSpeed);
+			var maxTorque = entries.Max(x => x.InputTorque);
+			var speedBuckets = new Dictionary<PerSecond, List<TransmissionLossMap.GearLossMapEntry>>() {
+				{ 0.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() },
+				{ 600.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() },
+				{ 900.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() },
+				{ 1200.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() },
+				{ 1600.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() },
+				{ 2000.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() }
+			};
+			for (var i = 2500; i < maxRpm.AsRPM; i += 500) {
+				speedBuckets.Add(i.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>());
+			}
+			speedBuckets.Add(maxRpm, new List<TransmissionLossMap.GearLossMapEntry>());
+			var keys = speedBuckets.Keys.ToArray();
+			foreach (var entry in entries) {
+				foreach (var speed in keys) {
+					if (entry.InputTorque.IsGreaterOrEqual(0) && Math.Abs(speed.AsRPM - entry.InputSpeed.AsRPM) < 150) {
+						speedBuckets[speed].Add(entry);
+					}
+				}
+			}
+			var torqueStep = 500.SI<NewtonMeter>();
+			foreach (var speedBucket in speedBuckets) {
+				if (speedBucket.Value.Count < 2) {
+					continue;
+				}
+				double k, d, r;
+				VectoMath.LeastSquaresFitting(speedBucket.Value, x => x.InputTorque.Value(), x => x.TorqueLoss.Value(), out k, out d,
+					out r);
+
+				for (var inTq = speedBucket.Value.Max(x => x.InputTorque) + torqueStep; inTq <= 2 * maxTorque; inTq += torqueStep) {
+					entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, inTq, k * inTq + d.SI<NewtonMeter>()));
+					entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, -inTq, k * inTq + d.SI<NewtonMeter>()));
+				}
+			}
+
+			return entries;
 		}
 
 		/// <summary>

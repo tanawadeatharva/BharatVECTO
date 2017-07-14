@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,6 +31,7 @@
 
 using System.Data;
 using System.IO;
+using System.Xml.Linq;
 
 namespace TUGraz.VectoCore.OutputData
 {
@@ -38,9 +39,9 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IModalDataWriter
 	{
-		void WriteModData(string runName, string cycleName, string runSuffix, DataTable modData);
+		void WriteModData(int jobRunId, string runName, string cycleName, string runSuffix, DataTable modData);
 	}
-	
+
 	public interface ISummaryWriter
 	{
 		void WriteSumData(DataTable sortedAndFilteredTable);
@@ -48,11 +49,15 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IReportWriter
 	{
-		Stream WriteStream(ReportType type);
+		void WriteReport(ReportType type, XDocument data);
+
+		void WriteReport(ReportType type, Stream data);
 	}
 
 	public enum ReportType
 	{
-		DeclarationReportPdf
+		DeclarationReportPdf,
+		DeclarationReportManufacturerXML,
+		DeclarationReportCustomerXML
 	}
 }

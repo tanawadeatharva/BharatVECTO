@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
@@ -37,5 +38,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	public class AxleGearData : SimulationComponentData
 	{
 		[ValidateObject] public TransmissionData AxleGear;
+
+		public AxleLineType LineType;
 	}
+
+	
 }

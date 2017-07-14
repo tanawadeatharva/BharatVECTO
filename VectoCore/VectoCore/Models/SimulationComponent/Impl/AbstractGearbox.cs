@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -52,14 +52,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		[Required, ValidateObject] internal readonly GearboxData ModelData;
 
-		protected KilogramSquareMeter EngineInertia;
-
 		protected AbstractGearbox(IVehicleContainer container, VectoRunData runData) : base(container)
 		{
 			ModelData = runData.GearboxData;
-			EngineInertia = runData.EngineData != null
-				? runData.EngineData.Inertia
-				: 0.SI<KilogramSquareMeter>();
 		}
 
 		#region ITnOutPort
@@ -93,11 +88,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public MeterPerSquareSecond StartAcceleration
 		{
 			get { return ModelData.StartAcceleration; }
-		}
-
-		public NewtonMeter GearMaxTorque
-		{
-			get { return Gear == 0 || !ModelData.Gears.ContainsKey(Gear) ? null : ModelData.Gears[Gear].MaxTorque; }
 		}
 
 		public Watt GearboxLoss()
@@ -153,11 +143,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			var torqueGbxIn = outTorque / ModelData.Gears[Gear].Ratio;
-			var deltaEngineSpeed = DataBus.EngineSpeed - outAngularVelocity * ModelData.Gears[Gear].Ratio;
 			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
-			var torqueInertia = ModelData.PowershiftInertiaFactor * EngineInertia * deltaEngineSpeed /
-								ModelData.PowershiftShiftTime;
-			var shiftLossEnergy = (torqueGbxIn + torqueInertia) * deltaClutchSpeed * ModelData.PowershiftShiftTime;
+			var shiftLossEnergy = torqueGbxIn * deltaClutchSpeed * ModelData.PowershiftShiftTime;
 
 			return shiftLossEnergy.Abs();
 		}

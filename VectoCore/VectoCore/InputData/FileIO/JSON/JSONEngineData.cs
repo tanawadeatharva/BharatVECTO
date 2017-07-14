@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -30,10 +30,10 @@
 */
 
 using System;
-using System.Data;
 using System.IO;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
@@ -68,6 +68,44 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	///  }
 	/// }
 	/// </code>
+	public class JSONEngineDataV4 : JSONEngineDataV3
+	{
+		public JSONEngineDataV4(JObject data, string fileName, bool tolerateMissing = false)
+			: base(data, fileName, tolerateMissing) {}
+
+		public override Watt RatedPowerDeclared
+		{
+			get { return Body.GetEx<double>("RatedPower").SI<Watt>(); }
+		}
+
+		public override PerSecond RatedSpeedDeclared
+		{
+			get { return Body.GetEx<double>("RatedSpeed").RPMtoRad(); }
+		}
+
+		public override NewtonMeter MaxTorqueDeclared
+		{
+			get { return Body.GetEx<double>("MaxTorque").SI<NewtonMeter>(); }
+		}
+
+		public override double CorrectionFactorRegPer
+		{
+			get { return Body.GetEx<double>("CFRegPer"); }
+		}
+
+
+		public override double CorrectionFactorNCV
+		{
+			get { return Body.GetEx<double>("CFNCV"); }
+		}
+
+		public override FuelType FuelType
+		{
+			get { return Body.GetEx<string>("FuelType").ParseEnum<FuelType>(); }
+		}
+	}
+
+
 	public class JSONEngineDataV3 : JSONFile, IEngineEngineeringInputData
 	{
 		public JSONEngineDataV3(JObject data, string fileName, bool tolerateMissing = false)
@@ -85,10 +123,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 
+		public virtual FuelType FuelType
+		{
+			get { return FuelType.DieselCI; }
+		}
+
 		public virtual TableData FuelConsumptionMap
 		{
-			get
-			{
+			get {
 				try {
 					return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap");
 				} catch (Exception) {
@@ -104,8 +146,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual TableData FullLoadCurve
 		{
-			get
-			{
+			get {
 				try {
 					return ReadTableData(Body.GetEx<string>(JsonKeys.Engine_FullLoadCurveFile), "FullLoadCurve");
 				} catch (Exception) {
@@ -119,6 +160,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public virtual Watt RatedPowerDeclared
+		{
+			get { return 0.SI<Watt>(); }
+		}
+
+		public virtual PerSecond RatedSpeedDeclared
+		{
+			get { return 0.RPMtoRad(); }
+		}
+
+		public virtual NewtonMeter MaxTorqueDeclared
+		{
+			get { return 0.SI<NewtonMeter>(); }
+		}
+
 		public virtual KilogramSquareMeter Inertia
 		{
 			get { return Body.GetEx<double>(JsonKeys.Engine_Inertia).SI<KilogramSquareMeter>(); }
@@ -126,8 +182,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual double WHTCEngineering
 		{
-			get
-			{
+			get {
 				if (Body["WHTC-Engineering"] == null) {
 					return 1;
 				}
@@ -152,8 +207,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public double ColdHotBalancingFactor
 		{
-			get
-			{
+			get {
 				if (Body["ColdHotBalancingFactor"] == null) {
 					return 1.0;
 				}
@@ -161,27 +215,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public string Vendor
+		public virtual double CorrectionFactorRegPer
+		{
+			get { return 1; }
+		}
+
+		public virtual double CorrectionFactorNCV
+		{
+			get { return 1; }
+		}
+
+		public string Manufacturer
 		{
 			get { return "N/A"; }
 		}
 
-		public string ModelName
+		public string Model
 		{
 			get { return Body.GetEx<string>(JsonKeys.Engine_ModelName); }
 		}
 
-		public string Creator
-		{
-			get { return "N/A"; }
-		}
 
 		public string Date
 		{
 			get { return "N/A"; }
 		}
 
-		public string TypeId
+		public CertificationMethod CertificationMethod
+		{
+			get { return CertificationMethod.NotCertified; }
+		}
+
+		public string CertificationNumber
 		{
 			get { return "N/A"; }
 		}
@@ -189,11 +254,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public string DigestValue
 		{
 			get { return "N/A"; }
-		}
-
-		public IntegrityStatus IntegrityStatus
-		{
-			get { return IntegrityStatus.Unknown; }
 		}
 	}
 }

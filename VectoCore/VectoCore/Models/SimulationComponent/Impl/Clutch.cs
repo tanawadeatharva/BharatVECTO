@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -47,11 +47,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		private readonly PerSecond _idleSpeed;
 		private readonly PerSecond _ratedSpeed;
-		private const double ClutchEff = 1;
 
-		public IIdleController IdleController {
+		public IIdleController IdleController
+		{
 			get { return _idleController; }
-			set {
+			set
+			{
 				_idleController = value;
 				_idleController.RequestPort = NextComponent;
 			}
@@ -63,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Clutch(IVehicleContainer container, CombustionEngineData engineData) : base(container)
 		{
 			_idleSpeed = engineData.IdleSpeed;
-			_ratedSpeed = engineData.FullLoadCurve.RatedSpeed;
+			_ratedSpeed = engineData.FullLoadCurves[0].RatedSpeed;
 			_clutchSpeedSlippingFactor = Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed) /
 										(_idleSpeed + Constants.SimulationSettings.ClutchClosingSpeedNorm * (_ratedSpeed - _idleSpeed));
 		}
@@ -106,12 +107,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			NewtonMeter torqueIn;
 			PerSecond angularVelocityIn;
-			if (DataBus.DriverBehavior == DrivingBehavior.Halted /*DataBus.VehicleStopped*/) {
-				angularVelocityIn = _idleSpeed;
-				torqueIn = 0.SI<NewtonMeter>();
-			} else {
-				AddClutchLoss(outTorque, outAngularVelocity, (DataBus.Gear == 1 && outTorque > 0) ||startClutch || outAngularVelocity.IsEqual(0), out torqueIn, out angularVelocityIn);
-			}
+
+			AddClutchLoss(outTorque, outAngularVelocity,
+				(DataBus.Gear == 1 && outTorque > 0) || startClutch || outAngularVelocity.IsEqual(0), out torqueIn,
+				out angularVelocityIn);
+
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
 				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
 
@@ -133,8 +133,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, bool startClutch, out NewtonMeter torqueIn, out PerSecond angularVelocityIn)
+		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, bool startClutch, out NewtonMeter torqueIn,
+			out PerSecond angularVelocityIn)
 		{
+			if (DataBus.DriverBehavior == DrivingBehavior.Halted) {
+				angularVelocityIn = _idleSpeed;
+				torqueIn = 0.SI<NewtonMeter>();
+				return;
+			}
+
 			torqueIn = torque;
 			angularVelocityIn = angularVelocity;
 
@@ -145,13 +152,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//     Reason: if angularVelocity = 0 also the power (torque * angularVelocity) is 0 and then
 				//             the torque demand for the engine is 0. no drag torque although vehicle has to decelerate
 				//             "the clutch" eats up the whole torque
-				var effectiveAngularVelocity = angularVelocity.IsEqual(0.SI<PerSecond>())
-					? (PreviousState.OutAngularVelocity + angularVelocity) / 2
-					: angularVelocity;
 				var engineSpeed = VectoMath.Max(_idleSpeed, angularVelocity);
 
 				angularVelocityIn = _clutchSpeedSlippingFactor * engineSpeed + _idleSpeed;
-				//torqueIn = torque * effectiveAngularVelocity / ClutchEff / angularVelocityIn;
 			}
 		}
 
