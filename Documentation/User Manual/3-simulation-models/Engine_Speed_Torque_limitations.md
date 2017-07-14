@@ -1,8 +1,10 @@
 
 ##Engine Torque and Engine Speed Limitations
 
-The engine's maximum speed and maximum torque may be limited by either the gearbox (due to mechanical constraints) or the vehicle configuration.
-Engine torque limitations are modeled by limiting the engine full-load curve to the defined maximum torque, i.e., the orignial engine full-load curve is cropped at the defined maximum torque for a certain gear. Limits regarding the gearbox' maximum input speed are modeled by intersecting (and limiting) the upshift line with the max. input speed. In the last gear, where no upshifts are possible, the engine speed is limited to the gearbox' maximum input speed.
+The engine's maximum speed and maximum torque may be limited by either the gearbox (due to mechanical constraints) or the vehicle control.
+Engine torque limitations are modeled by limiting the engine full-load curve to the defined maximum torque, i.e., the original engine full-load curve is cropped at the defined maximum torque for a certain gear. Limits regarding the gearbox' maximum input speed are modeled by intersecting (and limiting) the upshift line with the max. input speed. In the last gear, where no upshifts are possible, the engine speed is limited to the gearbox' maximum input speed.
+
+Gear shift polygons are calculated by VECTO based on the overall (i.e. from gearbox and vehicle control) cropped engine fullload curve.
 
 
 <div class="engineering">

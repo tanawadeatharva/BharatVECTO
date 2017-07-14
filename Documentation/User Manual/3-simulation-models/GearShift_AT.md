@@ -7,6 +7,8 @@ For AT gearboxes neither Skip Gears nor Early upshift (see [Gearbox: Gear Shift 
 
 ###Shift Polygons in Declaration Mode
 
+The shift lines in Declaration Mode only apply for trucks and gearboxes with serial torque converter (AT-S).
+
 * Downshift line: 700 rpm (torque independent, vertical line)
 * Upshift line: 900 rpm for torque <= 0; 1150 rpm @ Engine's maximum torque
 
