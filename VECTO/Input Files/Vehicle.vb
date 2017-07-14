@@ -64,6 +64,7 @@ Public Class Vehicle
 	Public torqueLimitsList As List(Of ITorqueLimitInputData)
 	Public VehicleidlingSpeed As PerSecond
 	Public legClass As LegislativeClass
+	Public VehicleHeight As Double
 
 
 	Public Sub New()
@@ -386,6 +387,12 @@ Public Class Vehicle
 	Public ReadOnly Property CurbMassExtra As Kilogram Implements IVehicleEngineeringInputData.CurbMassExtra
 		Get
 			Return MassExtra.SI(Of Kilogram)()
+		End Get
+	End Property
+
+	Public ReadOnly Property Height As Meter Implements IVehicleEngineeringInputData.Height
+		Get
+			Return VehicleHeight.SI(Of Meter)()
 		End Get
 	End Property
 

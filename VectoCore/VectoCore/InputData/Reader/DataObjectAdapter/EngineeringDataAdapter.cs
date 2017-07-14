@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					var airDragArea = airdragData.AirDragArea ??
 									DeclarationData.Segments.LookupCdA(data.VehicleCategory, data.AxleConfiguration, data.GrossVehicleMassRating);
-					var height = DeclarationData.Segments.LookupHeight(data.VehicleCategory, data.AxleConfiguration,
+					var height = data.Height ?? DeclarationData.Segments.LookupHeight(data.VehicleCategory, data.AxleConfiguration,
 						data.GrossVehicleMassRating);
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(airDragArea,
 						DeclarationDataAdapter.GetDeclarationAirResistanceCurve(

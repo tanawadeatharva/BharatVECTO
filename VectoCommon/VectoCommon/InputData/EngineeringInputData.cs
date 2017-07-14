@@ -54,7 +54,6 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
 	{
-		
 		/// <summary>
 		/// P039  Curb Weight Extra Trailer/Body
 		/// cf. VECTO Input Parameters.xlsx
@@ -79,6 +78,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		Meter DynamicTyreRadius { get; }
+
+		Meter Height { get; }
 	}
 
 	public interface IAirdragEngineeringInputData : IAirdragDeclarationInputData

@@ -113,6 +113,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_DynamicTyreRadius).SI().Milli.Meter.Cast<Meter>(); }
 		}
 
+		public Meter Height
+		{
+			get { return Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>(); }
+		}
+
 		public virtual AxleConfiguration AxleConfiguration
 		{
 			get {

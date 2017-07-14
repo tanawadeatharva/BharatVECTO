@@ -1,10 +1,12 @@
 ##Vehicle Editor
 
-![](pics/VEH-Editor.jpg)
+![](pics/VEH-Editor.PNG)
 
 ###Description
 
 The [Vehicle File (.vveh)](#vehicle-file) defines the main vehicle/chassis parameters like axles including [RRC](#rolling-resistance-coefficient)s, air resistance and weight.
+
+The Vehicle Editor contains 3 tabs to edit all vehicle-related parameters. The 'General' tab allows to input mass, loading, air resistance, vehicle axles, etc. The 'Powertrain' allows to define the retarder, an optional angle drive, or PTO consumer. In the third tab the engine torque can be limited to a maximum for individual gears.
 
 ###Relative File Paths
 
