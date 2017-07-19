@@ -97,6 +97,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public CombustionEngineData Copy()
 		{
 			return new CombustionEngineData {
+				Manufacturer = Manufacturer,
+				ModelName = ModelName,
 				Displacement = Displacement,
 				IdleSpeed = IdleSpeed,
 				Inertia = Inertia,

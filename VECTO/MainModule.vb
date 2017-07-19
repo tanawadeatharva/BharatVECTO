@@ -42,20 +42,20 @@ Module MainModule
 
 	Public Function ConvPicPath(hdVclass As Integer, isLongHaul As Boolean) As Bitmap
 		Select Case hdVclass
-			Case 1, 2, 3
-				Return My.Resources._4x2r ' resourcePath & "4x2r.png"
+			Case 1, 2, 3, 6, 7
+				Return My.Resources._4x2r
 			Case 4
 				If isLongHaul Then Return My.Resources._4x2rt
-				Return My.Resources._4x2r 'resourcePath & "4x2r" & longHaulFlag & ".png"
-			Case 5
-				Return My.Resources._4x2tt ' resourcePath & "4x2tt.png"
-			Case 9
+				Return My.Resources._4x2r
+			Case 5, 8
+				Return My.Resources._4x2tt
+			Case 9, 11, 13
 				If isLongHaul Then Return My.Resources._6x2rt
-				Return My.Resources._6x2r ' resourcePath & "6x2r" & longHaulFlag & ".png"
-			Case 10
-				Return My.Resources._6x2tt ' resourcePath & "6x2tt.png"
+				Return My.Resources._6x2r
+			Case 10, 12, 14
+				Return My.Resources._6x2tt
 			Case Else
-				Return My.Resources.Undef  ' resourcePath & "Undef.png"
+				Return My.Resources.Undef
 		End Select
 	End Function
 

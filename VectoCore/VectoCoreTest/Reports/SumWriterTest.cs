@@ -29,15 +29,19 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.IO;
+using System.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -154,6 +158,47 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_grad [kWh]"), 1e-3);
 			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_aux_sum [kWh]"), 1e-3);
 			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_brake [kWh]"), 1e-3);
+		}
+
+		[TestMethod]
+		public void TestSumDataMetaInformation()
+		{
+			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
+			var dataProvider = new XMLDeclarationInputDataProvider(XmlTextReader.Create(jobfile), true);
+			var writer = new FileOutputWriter(jobfile);
+			var xmlReport = new XMLDeclarationReport(writer);
+			var sumData = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumData);
+
+			if (File.Exists(writer.SumFileName)) {
+				File.Delete(writer.SumFileName);
+			}
+
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
+				WriteModalResults = false,
+				Validate = false,
+			};
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			var sumRow = sumData.Table.Rows[1];
+			Assert.AreEqual(dataProvider.VehicleInputData.Manufacturer, sumRow[SummaryDataContainer.VEHICLE_MANUFACTURER]);
+			Assert.AreEqual(dataProvider.VehicleInputData.Model, sumRow[SummaryDataContainer.VEHICLE_MODEL]);
+			Assert.AreEqual(dataProvider.VehicleInputData.VIN, sumRow[SummaryDataContainer.VIN_NUMBER]);
+			Assert.AreEqual(dataProvider.EngineInputData.Manufacturer, sumRow[SummaryDataContainer.ENGINE_MANUFACTURER]);
+			Assert.AreEqual(dataProvider.EngineInputData.Model, sumRow[SummaryDataContainer.ENGINE_MODEL]);
+			Assert.AreEqual(dataProvider.EngineInputData.FuelType.GetLabel(), sumRow[SummaryDataContainer.ENGINE_FUEL_TYPE]);
+			Assert.AreEqual((dataProvider.EngineInputData.RatedPowerDeclared.ConvertTo().Kilo.Watt.Value()),
+				((SI)sumRow[SummaryDataContainer.ENGINE_RATED_POWER]).Value());
+			Assert.AreEqual(dataProvider.EngineInputData.RatedSpeedDeclared.AsRPM,
+				((SI)sumRow[SummaryDataContainer.ENGINE_RATED_SPEED]).Value());
+			Assert.AreEqual(dataProvider.EngineInputData.Displacement.ConvertTo().Cubic.Centi.Meter.Value(),
+				((SI)sumRow[SummaryDataContainer.ENGINE_DISPLACEMENT]).Value());
+			Assert.AreEqual(dataProvider.GearboxInputData.Manufacturer, sumRow[SummaryDataContainer.GEARBOX_MANUFACTURER]);
+			Assert.AreEqual(dataProvider.GearboxInputData.Model, sumRow[SummaryDataContainer.GEARBOX_MODEL]);
+			Assert.AreEqual(dataProvider.AxleGearInputData.Manufacturer, sumRow[SummaryDataContainer.AXLE_MANUFACTURER]);
+			Assert.AreEqual(dataProvider.AxleGearInputData.Model, sumRow[SummaryDataContainer.AXLE_MODEL]);
 		}
 	}
 }
