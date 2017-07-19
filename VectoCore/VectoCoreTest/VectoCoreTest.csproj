@@ -2543,7 +2543,12 @@
     <Folder Include="Integration\FullPowertrain\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestData\XML\XMLReaderDeclaration\vecto_engine-sample.xml" />
+    <Content Include="TestData\XML\XMLReaderDeclaration\vecto_gearbox-sample.xml" />
     <Content Include="TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_certificationOptions.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL.xml">
