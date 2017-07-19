@@ -37,6 +37,9 @@ namespace TUGraz.VectoCommon.Models
 	{
 		StandardValues,
 		Measured,
+		Option1,
+		Option2,
+		Option3,
 		NotCertified
 	}
 
@@ -49,6 +52,12 @@ namespace TUGraz.VectoCommon.Models
 					return "Standard values";
 				case CertificationMethod.Measured:
 					return "Measured";
+				case CertificationMethod.Option1:
+					return "Option 1";
+				case CertificationMethod.Option2:
+					return "Option 2";
+				case CertificationMethod.Option3:
+					return "Option 3";
 				case CertificationMethod.NotCertified:
 					return "NOT CERTIFIED";
 				default:

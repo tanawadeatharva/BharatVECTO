@@ -813,7 +813,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
 
-			Assert.AreEqual(CertificationMethod.Measured, inputDataProvider.GearboxInputData.CertificationMethod);
+			Assert.AreEqual(CertificationMethod.Option2, inputDataProvider.GearboxInputData.CertificationMethod);
 			Assert.AreEqual(CertificationMethod.Measured, inputDataProvider.AxleGearInputData.CertificationMethod);
 			Assert.AreEqual(CertificationMethod.Measured, inputDataProvider.RetarderInputData.CertificationMethod);
 			Assert.AreEqual(CertificationMethod.Measured, inputDataProvider.AirdragInputData.CertificationMethod);
