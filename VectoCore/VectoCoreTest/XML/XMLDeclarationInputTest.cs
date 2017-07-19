@@ -60,6 +60,9 @@ namespace TUGraz.VectoCore.Tests.XML
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 		const string SampleVehicleFullDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_FULL.xml";
 
+		const string SampleVehicleFullDeclCertificationOptions =
+			"TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_certificationOptions.xml";
+
 		[TestMethod]
 		public void TestXMLInputEng()
 		{
@@ -801,6 +804,19 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			Assert.AreEqual("only the drive shaft of the PTO - multi-disc clutch", ptoDataProvider.PTOTransmissionType);
 			Assert.AreEqual(1000, lookup.PowerDemand.Value());
+		}
+
+		[TestMethod]
+		public void TestCertificationMethodInput()
+		{
+			var reader = XmlReader.Create(SampleVehicleFullDeclCertificationOptions);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+
+			Assert.AreEqual(CertificationMethod.Option2, inputDataProvider.GearboxInputData.CertificationMethod);
+			Assert.AreEqual(CertificationMethod.Measured, inputDataProvider.AxleGearInputData.CertificationMethod);
+			Assert.AreEqual(CertificationMethod.Measured, inputDataProvider.RetarderInputData.CertificationMethod);
+			Assert.AreEqual(CertificationMethod.Measured, inputDataProvider.AirdragInputData.CertificationMethod);
 		}
 	}
 }
