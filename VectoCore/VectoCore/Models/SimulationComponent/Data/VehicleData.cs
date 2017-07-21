@@ -138,9 +138,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		SIRange(0, 60000, emsMission: true)]
 		public Kilogram TrailerGrossVehicleWeight { get; internal set; }
 
-		[Required, SIRange(0.1, 0.7)]
+		[Required, SIRange(0.1, 2)]
 		public Meter DynamicTyreRadius { get; internal set; }
 
+		[Required, SIRange(0.1, 100)]
 		public KilogramPerCubicMeter AirDensity { get; internal set; }
 
 		public KilogramSquareMeter WheelsInertia
