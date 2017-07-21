@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData,airDragData))
+				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cyclePort = cycle.OutPort();
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
-				.AddComponent(new Vehicle(container, vehicleData,airDragData))
+				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
@@ -405,7 +405,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
-				
+				AirDensity = DeclarationData.AirDensity,
 				CurbWeight = 15700.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
@@ -416,11 +416,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 		private static AirdragData CreateAirdragData()
 		{
-			return new AirdragData(){
+			return new AirdragData() {
 				CrossWindCorrectionCurve =
 					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
 						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
-						CrossWindCorrectionMode.NoCorrection),}; 
+						CrossWindCorrectionMode.NoCorrection),
+			};
 		}
 
 		private static DriverData CreateDriverData(string accelerationFile)

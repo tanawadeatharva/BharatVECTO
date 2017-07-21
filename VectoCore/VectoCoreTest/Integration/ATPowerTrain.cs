@@ -204,6 +204,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				},
 			};
 			return new VehicleData {
+				AirDensity = DeclarationData.AirDensity,
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				CurbWeight = 11500.SI<Kilogram>(),
 				Loading = loading,

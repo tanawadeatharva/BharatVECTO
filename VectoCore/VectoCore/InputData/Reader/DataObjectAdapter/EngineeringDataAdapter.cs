@@ -53,7 +53,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (data.SavedInDeclarationMode) {
 				WarnEngineeringMode("VehicleData");
 			}
-
 			var retVal = SetCommonVehicleData(data);
 			retVal.BodyAndTrailerWeight = data.CurbMassExtra;
 			//retVal.CurbWeight += data.CurbMassExtra;

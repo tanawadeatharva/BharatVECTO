@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void DriverCoastingTest()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
-			
+
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
 			var airdragData = CreateAirdragData();
 			vehicleData.DynamicTyreRadius = 0.026372213.SI<Meter>(); // take into account axle ratio, gear ratio
@@ -398,7 +398,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				
+				AirDensity = DeclarationData.AirDensity,
 				CurbWeight = 15700.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),

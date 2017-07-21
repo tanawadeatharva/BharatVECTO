@@ -192,7 +192,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private Watt ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2)
 		{
-			return AirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2);
+			return AirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(v1, v2, ModelData.AirDensity);
 		}
 
 		public Meter Distance

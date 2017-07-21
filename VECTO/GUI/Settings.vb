@@ -32,7 +32,7 @@ Public Class Settings
 		TbFuelDens.Text = Cfg.FuelDens.ToString
 		TbCO2toFC.Text = Cfg.CO2perFC.ToString
 
-		GrCalc.Enabled = Not Cfg.DeclMode
+		'GrCalc.Enabled = Not Cfg.DeclMode
 	End Sub
 
 
