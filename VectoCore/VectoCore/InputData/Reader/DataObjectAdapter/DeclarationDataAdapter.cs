@@ -88,6 +88,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var retVal = SetCommonVehicleData(data);
+			retVal.AirDensity = DeclarationData.AirDensity;
 			retVal.VIN = data.VIN;
 			retVal.ManufacturerAddress = data.ManufacturerAddress;
 			retVal.LegislativeClass = data.LegislativeClass;

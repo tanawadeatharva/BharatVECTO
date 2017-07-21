@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			get { return CrossWindCorrectionMode.VAirBetaLookupTable; }
 		}
 
-		public Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2)
+		public Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity)
 		{
 			if (DataBus == null) {
 				throw new VectoException("Databus is not set - can't access vAir, beta!");

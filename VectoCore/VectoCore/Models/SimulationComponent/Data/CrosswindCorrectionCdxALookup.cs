@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public void SetDataBus(IDataBus dataBus) {}
 
-		public Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2)
+		public Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity)
 		{
 			var vAverage = (v1 + v2) / 2;
 			var cdA = EffectiveAirDragArea(vAverage);
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			// P(t) = k * CdA * v(t)^3  , v(t) = v0 + a * t  // P_avg = 1/T * Integral P(t) dt
 			// => P_avg = (CdA * rho/2)/(4*a * dt) * (v2^4 - v1^4) // a = (v2-v1)/dt
 			// -> P_avg = (CdA * rho/2) * (v2^4 - v1^4) / (v2 - v1) = (CdA * rho/2) * (v1 + v2) * (v1^2 + v2^2)
-			return (Physics.AirDensity / (2.0 * 4) * cdA * (v1 + v2) * (v1 * v1 + v2 * v2)).Cast<Watt>();
+			return (airDensity / (2.0 * 4) * cdA * (v1 + v2) * (v1 * v1 + v2 * v2)).Cast<Watt>();
 		}
 
 		protected internal SquareMeter EffectiveAirDragArea(MeterPerSecond x)

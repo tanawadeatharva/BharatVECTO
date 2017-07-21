@@ -141,6 +141,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, SIRange(0.1, 0.7)]
 		public Meter DynamicTyreRadius { get; internal set; }
 
+		public KilogramPerCubicMeter AirDensity { get; internal set; }
+
 		public KilogramSquareMeter WheelsInertia
 		{
 			get {
