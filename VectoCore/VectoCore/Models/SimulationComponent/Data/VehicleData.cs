@@ -89,6 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		private KilogramSquareMeter _wheelsInertia;
 		private double? _totalRollResistanceCoefficient;
 		private double? _rollResistanceCoefficientWithoutTrailer;
+		private double? _averageRollingResistanceTruck;
 
 		public List<Axle> AxleData
 		{
@@ -138,8 +139,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		SIRange(0, 60000, emsMission: true)]
 		public Kilogram TrailerGrossVehicleWeight { get; internal set; }
 
-		[Required, SIRange(0.1, 0.7)]
+		[Required, SIRange(0.1, 2)]
 		public Meter DynamicTyreRadius { get; internal set; }
+
+		[Required, SIRange(0.1, 100)]
+		public KilogramPerCubicMeter AirDensity { get; internal set; }
 
 		public KilogramSquareMeter WheelsInertia
 		{
@@ -191,6 +195,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			get { return (CurbWeight ?? 0.SI<Kilogram>()) + (BodyAndTrailerWeight ?? 0.SI<Kilogram>()); }
 		}
 
+		public double AverageRollingResistanceTruck
+		{
+			get {
+				if (_averageRollingResistanceTruck == null) {
+					ComputeRollResistanceAndReducedMassWheels();
+				}
+				return _averageRollingResistanceTruck.GetValueOrDefault();
+			}
+		}
+
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{
 			if (TotalVehicleWeight == 0.SI<Kilogram>()) {
@@ -204,7 +218,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			var rrc = 0.0.SI<Scalar>();
 			var rrcVehicle = 0.0.SI<Scalar>();
-
+			var averageRRC = 0.0;
+			var vehicleWheels = 0;
 			var wheelsInertia = 0.0.SI<KilogramSquareMeter>();
 			var vehicleWeightShare = 0.0;
 			foreach (var axle in _axleData) {
@@ -216,16 +231,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 				var rrcShare = axle.AxleWeightShare * axle.RollResistanceCoefficient *
 								Math.Pow(baseValue, Physics.RollResistanceExponent - 1);
-
 				if (axle.AxleType != AxleType.Trailer) {
 					rrcVehicle += rrcShare;
 					vehicleWeightShare += axle.AxleWeightShare;
+					averageRRC += axle.RollResistanceCoefficient * nrWheels;
+					vehicleWheels += nrWheels;
 				}
 				rrc += rrcShare;
 				wheelsInertia += nrWheels * axle.Inertia;
 			}
 			RollResistanceCoefficientWithoutTrailer = rrcVehicle / vehicleWeightShare;
 			TotalRollResistanceCoefficient = rrc;
+			_averageRollingResistanceTruck = averageRRC / vehicleWheels;
 			WheelsInertia = wheelsInertia;
 		}
 

@@ -47,6 +47,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public static class DeclarationData
 	{
+		/// <summary>
+		/// The standard acceleration for gravity on earth.
+		/// http://physics.nist.gov/Pubs/SP330/sp330.pdf (page 52)
+		/// </summary>
+		public static readonly MeterPerSquareSecond GravityAccelleration = 9.80665.SI<MeterPerSquareSecond>();
+
+		public static readonly KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
+
+
 		public const string DeclarationDataResourcePrefix = "TUGraz.VectoCore.Resources.Declaration";
 
 		public static readonly Watt MinEnginePowerForEMS = 300e3.SI<Watt>();
@@ -69,6 +78,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly Payloads Payloads = new Payloads();
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
+
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.
 		/// (so called "pc-formula", Whitebook Apr 2016, Part 1, p.187)
@@ -89,8 +99,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// </summary>
 		public static Kilogram GetPayloadForTrailerWeight(Kilogram grossVehicleWeight, Kilogram curbWeight, bool lowLoading)
 		{
-			return (Math.Round((Payloads.LookupTrailer(grossVehicleWeight, curbWeight) / (lowLoading ? 7.5 : 1)).LimitTo(0.SI<Kilogram>(),
-				grossVehicleWeight - curbWeight).Value() / 100, 0) * 100).SI<Kilogram>();
+			return
+				(Math.Round(
+					(Payloads.LookupTrailer(grossVehicleWeight, curbWeight) / (lowLoading ? 7.5 : 1)).LimitTo(0.SI<Kilogram>(),
+						grossVehicleWeight - curbWeight).Value() / 100, 0) * 100).SI<Kilogram>();
 		}
 
 		public static int PoweredAxle()

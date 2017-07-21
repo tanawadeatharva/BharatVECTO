@@ -45,6 +45,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		SquareMeter AirDragArea { get; }
 
-		Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2);
+		Watt AverageAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, KilogramPerCubicMeter airDensity);
 	}
 }

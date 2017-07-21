@@ -2295,7 +2295,7 @@ namespace TUGraz.VectoCommon.Utils
 		public string ToXMLFormat(uint? decimals = null)
 		{
 			decimals = decimals ?? 2;
-			return Val.ToString("F" + decimals.Value);
+			return Val.ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
 		}
 
 		public class EqualityComparer<T> : IEqualityComparer<T> where T : SI
@@ -2306,6 +2306,7 @@ namespace TUGraz.VectoCommon.Utils
 			{
 				_precision = precision;
 			}
+
 			public bool Equals(T x, T y)
 			{
 				return x.IsEqual(y.Value(), _precision);

@@ -50,6 +50,7 @@ Partial Class Settings
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.ButReset = New System.Windows.Forms.Button()
 		Me.BtHelp = New System.Windows.Forms.Button()
+		Me.Label1 = New System.Windows.Forms.Label()
 		Me.GroupBox3.SuspendLayout()
 		Me.GroupBox5.SuspendLayout()
 		Me.TabControl1.SuspendLayout()
@@ -177,6 +178,7 @@ Partial Class Settings
 		'
 		'GrCalc
 		'
+		Me.GrCalc.Controls.Add(Me.Label1)
 		Me.GrCalc.Controls.Add(Me.Label11)
 		Me.GrCalc.Controls.Add(Me.Label9)
 		Me.GrCalc.Controls.Add(Me.Label3)
@@ -192,7 +194,6 @@ Partial Class Settings
 		Me.GrCalc.TabIndex = 1
 		Me.GrCalc.TabStop = False
 		Me.GrCalc.Text = "Calculation"
-		Me.GrCalc.Visible = False
 		'
 		'Label11
 		'
@@ -202,6 +203,7 @@ Partial Class Settings
 		Me.Label11.Size = New System.Drawing.Size(77, 13)
 		Me.Label11.TabIndex = 16
 		Me.Label11.Text = "[kgCO2/KgFC]"
+		Me.Label11.Visible = False
 		'
 		'Label9
 		'
@@ -211,6 +213,7 @@ Partial Class Settings
 		Me.Label9.Size = New System.Drawing.Size(41, 13)
 		Me.Label9.TabIndex = 16
 		Me.Label9.Text = "[kg/m³]"
+		Me.Label9.Visible = False
 		'
 		'Label3
 		'
@@ -227,6 +230,7 @@ Partial Class Settings
 		Me.TbCO2toFC.Name = "TbCO2toFC"
 		Me.TbCO2toFC.Size = New System.Drawing.Size(50, 20)
 		Me.TbCO2toFC.TabIndex = 2
+		Me.TbCO2toFC.Visible = False
 		'
 		'Label10
 		'
@@ -236,6 +240,7 @@ Partial Class Settings
 		Me.Label10.Size = New System.Drawing.Size(91, 13)
 		Me.Label10.TabIndex = 14
 		Me.Label10.Text = "CO2-to-Fuel Ratio"
+		Me.Label10.Visible = False
 		'
 		'TbFuelDens
 		'
@@ -243,6 +248,7 @@ Partial Class Settings
 		Me.TbFuelDens.Name = "TbFuelDens"
 		Me.TbFuelDens.Size = New System.Drawing.Size(50, 20)
 		Me.TbFuelDens.TabIndex = 1
+		Me.TbFuelDens.Visible = False
 		'
 		'Label8
 		'
@@ -252,6 +258,7 @@ Partial Class Settings
 		Me.Label8.Size = New System.Drawing.Size(63, 13)
 		Me.Label8.TabIndex = 14
 		Me.Label8.Text = "Fuel density"
+		Me.Label8.Visible = False
 		'
 		'TbAirDensity
 		'
@@ -288,6 +295,15 @@ Partial Class Settings
 		Me.BtHelp.Size = New System.Drawing.Size(24, 24)
 		Me.BtHelp.TabIndex = 0
 		Me.BtHelp.UseVisualStyleBackColor = True
+		'
+		'Label1
+		'
+		Me.Label1.AutoSize = True
+		Me.Label1.Location = New System.Drawing.Point(206, 25)
+		Me.Label1.Name = "Label1"
+		Me.Label1.Size = New System.Drawing.Size(65, 13)
+		Me.Label1.TabIndex = 17
+		Me.Label1.Text = "(Eng, Mode)"
 		'
 		'Settings
 		'
@@ -342,4 +358,5 @@ Partial Class Settings
 	Friend WithEvents GroupBox5 As GroupBox
 	Friend WithEvents TbOpenCmdName As TextBox
 	Friend WithEvents Label12 As Label
+	Friend WithEvents Label1 As System.Windows.Forms.Label
 End Class

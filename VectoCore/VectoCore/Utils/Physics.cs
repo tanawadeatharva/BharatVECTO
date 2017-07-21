@@ -30,6 +30,7 @@
 */
 
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -39,12 +40,12 @@ namespace TUGraz.VectoCore.Utils
 		/// The standard acceleration for gravity on earth.
 		/// http://physics.nist.gov/Pubs/SP330/sp330.pdf (page 52)
 		/// </summary>
-		public static readonly MeterPerSquareSecond GravityAccelleration = 9.80665.SI<MeterPerSquareSecond>();
+		public static MeterPerSquareSecond GravityAccelleration = DeclarationData.GravityAccelleration;
 
 		/// <summary>
 		/// Density of air.
 		/// </summary>
-		public static readonly KilogramPerCubicMeter AirDensity = 1.188.SI<KilogramPerCubicMeter>();
+		public static KilogramPerCubicMeter AirDensity = DeclarationData.AirDensity; // 1.188.SI<KilogramPerCubicMeter>();
 
 
 		public const double RollResistanceExponent = 0.9;

@@ -81,7 +81,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 
 			var gearboxData = CreateGearboxData();
-			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineHighPower ? EngineFileHigh : EngineFile, gearboxData.Gears.Count);
+			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineHighPower ? EngineFileHigh : EngineFile,
+				gearboxData.Gears.Count);
 			var axleGearData = CreateAxleGearData();
 			if (gearBoxInertia != null) {
 				gearboxData.Inertia = gearBoxInertia;
@@ -189,6 +190,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				}
 			};
 			return new VehicleData {
+				AirDensity = DeclarationData.AirDensity,
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
 				//AerodynamicDragAera = 3.2634.SI<SquareMeter>(),
 				//CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
@@ -205,7 +207,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			return new AirdragData() {
 				CrossWindCorrectionCurve =
-					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(), CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
+					new CrosswindCorrectionCdxALookup(3.2634.SI<SquareMeter>(),
+						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(3.2634.SI<SquareMeter>()),
 						CrossWindCorrectionMode.NoCorrection),
 			};
 		}

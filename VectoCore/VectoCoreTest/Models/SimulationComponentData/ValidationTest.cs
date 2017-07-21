@@ -183,6 +183,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				AirDensity = DeclarationData.AirDensity,
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
@@ -244,6 +245,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var vehicleData = new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				AirDensity = DeclarationData.AirDensity,
 				CurbWeight = 7500.SI<Kilogram>(),
 				DynamicTyreRadius = 0.5.SI<Meter>(),
 				//CurbWeigthExtra = 0.SI<Kilogram>(),
