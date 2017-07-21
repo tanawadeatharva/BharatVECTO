@@ -75,19 +75,22 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
-				new XElement(tns + "VehicleGroup", modelData.VehicleData.VehicleClass.GetClassNumber()),
+				new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, modelData.VehicleData.GrossVehicleWeight.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, modelData.VehicleData.CurbWeight.ToXMLFormat(0)),
-				new XElement(tns + "EngineRatedPower", modelData.EngineData.RatedPowerDeclared.ToXMLFormat(0)),
-				new XElement(tns + "EngineDisplacement",
+				new XElement(tns + XMLNames.Report_Vehicle_EngineRatedPower, modelData.EngineData.RatedPowerDeclared.ToXMLFormat(0)),
+				new XElement(tns + XMLNames.Report_Vehicle_EngineDisplacement,
 					modelData.EngineData.Displacement.ConvertTo().Cubic.Centi.Meter.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Engine_FuelType, modelData.EngineData.FuelType.ToXMLFormat()),
-				new XElement(tns + "TransmissionMainCertificationMethod", modelData.GearboxData.CertificationMethod.ToXMLFormat()),
+				new XElement(tns + XMLNames.Report_Vehicle_TransmissionCertificationMethod,
+					modelData.GearboxData.CertificationMethod.ToXMLFormat()),
 				new XElement(tns + XMLNames.Gearbox_TransmissionType, modelData.GearboxData.Type.ToXMLFormat()),
-				new XElement(tns + "GearsCount", modelData.GearboxData.Gears.Count),
-				new XElement(tns + "Retarder", modelData.Retarder.Type.IsDedicatedComponent()),
-				new XElement(tns + "AxleRatio", modelData.AxleGearData.AxleGear.Ratio.ToXMLFormat(3))
+				new XElement(tns + XMLNames.Report_GetGearbox_GearsCount, modelData.GearboxData.Gears.Count),
+				new XElement(tns + XMLNames.Report_Vehicle_Retarder, modelData.Retarder.Type.IsDedicatedComponent()),
+				new XElement(tns + XMLNames.Report_Vehicle_AxleRatio, modelData.AxleGearData.AxleGear.Ratio.ToXMLFormat(3)),
+				new XElement(tns + XMLNames.Report_Vehicle_AverageRRC,
+					modelData.VehicleData.AverageRollingResistanceTruck.ToXMLFormat(6))
 				);
 			InputDataIntegrity = new XElement(tns + "InputDataSignature",
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
@@ -107,9 +110,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			foreach (var resultEntry in entry.ModData) {
 				allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
-				Results.Add(new XElement(tns + "Result",
-					new XAttribute("status", resultEntry.Value.Status == VectoRun.Status.Success ? "success" : "error"),
-					new XElement(tns + "Mission", entry.Mission.ToXMLFormat()),
+				Results.Add(new XElement(tns + XMLNames.Report_Result_Result,
+					new XAttribute(XMLNames.Report_Result_Status_Attr,
+						resultEntry.Value.Status == VectoRun.Status.Success ? "success" : "error"),
+					new XElement(tns + XMLNames.Report_Result_Mission, entry.Mission.ToXMLFormat()),
 					GetResults(resultEntry)));
 			}
 		}
@@ -145,9 +149,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private XElement GetApplicationInfo()
 		{
 			var vectodll = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoCore.dll")).GetName();
-			return new XElement(tns + "ApplicationInformation",
-				new XElement(tns + "SimulationToolVersion", vectodll.Version),
-				new XElement(tns + "Date", XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
+			return new XElement(tns + XMLNames.Report_ApplicationInfo_ApplicationInformation,
+				new XElement(tns + XMLNames.Report_ApplicationInfo_SimulationToolVersion, vectodll.Version),
+				new XElement(tns + XMLNames.Report_ApplicationInfo_Date,
+					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
 		}
 
 		public void GenerateReport(XElement resultSignature)
@@ -155,7 +160,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 			var retVal = new XDocument();
 			var results = new XElement(Results);
-			results.AddFirst(new XElement(tns + "Status", allSuccess ? "success" : "error"));
+			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, allSuccess ? "success" : "error"));
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
 			retVal.Add(new XElement(tns + "VectoCustomerInformation",
