@@ -56,7 +56,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 ''' </summary>
 ''' <remarks></remarks>
 
-	Public Class MainForm
+Public Class MainForm
 	Private _jobListView As FileListView
 	Private _cycleListView As FileListView
 
@@ -74,7 +74,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 
 #Region "SLEEP Control - Prevent sleep while VECTO is running"
 
-	Private Declare Function SetThreadExecutionState Lib "kernel32"(esFlags As Long) As Long
+	Private Declare Function SetThreadExecutionState Lib "kernel32" (esFlags As Long) As Long
 
 	Private Shared Sub AllowSleepOff()
 #If Not PLATFORM = "x86" Then
@@ -236,8 +236,8 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 		LoadOptions()
 
 		'Resize columns ... after Loading the @file-lists
-		LvGEN.Columns(1).Width = - 2
-		LvMsg.Columns(2).Width = - 2
+		LvGEN.Columns(1).Width = -2
+		LvMsg.Columns(2).Width = -2
 
 		'Initialize BackgroundWorker
 
@@ -494,7 +494,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 
 		lastindx = LvGEN.SelectedIndices(LvGEN.SelectedItems.Count - 1)
 
-		For i = UBound(selIx) To 0 Step - 1
+		For i = UBound(selIx) To 0 Step -1
 			LvGEN.Items.RemoveAt(selIx(i))
 		Next
 
@@ -562,7 +562,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 		Dim p As Integer
 		Dim f As Integer
 		Dim fList As String()
-		Dim fListDim As Integer = - 1
+		Dim fListDim As Integer = -1
 		Dim listViewItem As ListViewItem
 
 		'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
@@ -617,7 +617,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 			listViewItem.Selected = True
 			LvGEN.Items.Add(listViewItem)
 			listViewItem.EnsureVisible()
-			lbFound:
+lbFound:
 		Next
 
 		LvGEN.EndUpdate()
@@ -889,7 +889,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 			Status("Launching VECTO ...")
 			JobFileList.Clear()
 			JobFileList.AddRange(
-				From listViewItem As ListViewItem In LvGEN.CheckedItems.Cast (Of ListViewItem)()
+				From listViewItem As ListViewItem In LvGEN.CheckedItems.Cast(Of ListViewItem)()
 									Select fFileRepl = FileRepl(listViewItem.SubItems(0).Text))
 
 			SetOptions()
@@ -1013,10 +1013,10 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
-			sender.ReportProgress(Convert.ToInt32((sumProgress*100.0)/progress.Count),
+			sender.ReportProgress(Convert.ToInt32((sumProgress * 100.0) / progress.Count),
 								New VectoProgress With {.Target = "Status",
 									.Message = _
-									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress/progress.Count,
+									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
 												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 
 			Dim justFinished As Dictionary(Of Integer, JobContainer.ProgressEntry) =
@@ -1040,7 +1040,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 									.Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}",
 															String.Format("{0} {1} {2}", progressEntry.Value.RunName, progressEntry.Value.CycleName,
 																		progressEntry.Value.RunSuffix),
-															progressEntry.Value.Progress, progressEntry.Value.ExecTime/1000.0,
+															progressEntry.Value.Progress, progressEntry.Value.ExecTime / 1000.0,
 															IIf(progressEntry.Value.Success, "Success", "Aborted"))})
 			If (Not progressEntry.Value.Success) Then
 				sender.ReportProgress(100,
@@ -1328,9 +1328,9 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 
 			ToolStripProgBarJob.Value = .ProgJobInt
 
-			If .ProgOverallStartInt > - 1 Then
+			If .ProgOverallStartInt > -1 Then
 				ToolStripProgBarOverall.Value =
-					CInt(.ProgOverallStartInt + (.PgroOverallEndInt - .ProgOverallStartInt)*.ProgJobInt/100)
+					CInt(.ProgOverallStartInt + (.PgroOverallEndInt - .ProgOverallStartInt) * .ProgJobInt / 100)
 			End If
 
 		End With
@@ -1651,7 +1651,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 					_mainForm.LvMsg.Items.Insert(RowLim - 4, Space(ColLim - 30) & "         " & Space(10) & "*|       |*")
 			End Select
 			Exit Sub
-			LbRace:
+LbRace:
 
 			_pRbAlt = Not _pRbAlt
 
@@ -1679,17 +1679,17 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 					Abort()
 					Exit Sub
 				End If
-				_scr += 5*_diffLvl
+				_scr += 5 * _diffLvl
 			End If
 
 			_scr += _diffLvl
 			_diffC += 1
 
 			'Erhöhe Schwierigkeitsgrad
-			If _diffC = (_diffLvl + 3)*4 Then
+			If _diffC = (_diffLvl + 3) * 4 Then
 				_diffC = 0
 				_diffLvl += 1
-				If _diffLvl > 2 And _diffLvl < 7 Then _mainForm.TmProgSec.Interval = 300 - (_diffLvl)*30
+				If _diffLvl > 2 And _diffLvl < 7 Then _mainForm.TmProgSec.Interval = 300 - (_diffLvl) * 30
 				_scr += 100
 				Select Case _diffLvl
 					Case 3
@@ -1773,10 +1773,10 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 			_ctrls(RowLim + 1) = 0
 			_ctrlC += 1
 			If _ctrlC < _ctrlCl Then Exit Sub
-			Select Case CInt(Int((_ctrlRnd*Rnd()) + 1))
+			Select Case CInt(Int((_ctrlRnd * Rnd()) + 1))
 				Case 1, 2
 					_ctrlC = 0
-					x = CInt(Int((7*Rnd()) + 1))
+					x = CInt(Int((7 * Rnd()) + 1))
 					_ctrls(RowLim + 1) = x
 			End Select
 		End Sub
@@ -1819,7 +1819,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 				s = s.Insert(_ctrls(RowLim + 1) + 1, "X")
 			End If
 			Select Case _xPanel - _pnls(RowLim)
-				Case - 1
+				Case -1
 					s = Replace(s, "|", "\")
 				Case 1
 					s = Replace(s, "|", "/")
@@ -1831,15 +1831,15 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 			_pnDirC += 1
 			If _pnDirC < _pnDirCl Then GoTo Lb1
 			_pnDirC = 0
-			Select Case CInt(Int((_pnDirRnd*Rnd()) + 1))
+			Select Case CInt(Int((_pnDirRnd * Rnd()) + 1))
 				Case 1
 					_pnDir = 1
 				Case 2
-					_pnDir = - 1
+					_pnDir = -1
 				Case Else
 					_pnDir = 0
 			End Select
-			Lb1:
+Lb1:
 			_xPanel += _pnDir
 			If _xPanel > ColLim Then
 				_xPanel = ColLim
@@ -1890,7 +1890,7 @@ Imports TUGraz.VectoCore.OutputData.FileIO
 			Dim builder As StringBuilder = New StringBuilder()
 			For Each selectedItem As ListViewItem In LvMsg.SelectedItems
 				builder.AppendLine(String.Join(", ",
-												selectedItem.SubItems.Cast (Of ListViewItem.ListViewSubItem).Select(
+												selectedItem.SubItems.Cast(Of ListViewItem.ListViewSubItem).Select(
 													Function(item) item.Text)))
 			Next
 			Clipboard.SetText(builder.ToString())
