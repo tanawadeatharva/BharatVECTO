@@ -4,7 +4,7 @@
 
 ###Description
 
-The [Engine File (.veng)](#engine-file) defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curve.
+The [Engine File (.veng)](#engine-file-.veng) defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curve.
 
 ###Relative File Paths
 
@@ -35,14 +35,14 @@ The [Engine's Full Load and Drag Curves (.vfld)](#full-load-and-drag-curves-.vfl
 ###Fuel Consumption Map
 
 
-The [Fuel Consumption Map](#fuel-consumption-map-.vmap) is used to calculate the base FC value. See [Fuel Consumption Calculation](#fuel-consumption-calculation) for details.
+The [Fuel Consumption Map](#fuel-consumption-map-.vmap) is used to calculate the base FC value. See [Fuel Consumption Calculation](#engine-fuel-consumption-calculation) for details.
 
 The input file (.vmap) file format is described [here](#fuel-consumption-map-.vmap).
 
 ###WHTC Correction Factors
 
 <div class="declaration">
-The WHTC Correction Factors are required in [Declaration Mode](#declaration-mode) for the [WHTC FC Correction](#fuel-consumption-calculation).
+The WHTC Correction Factors are required in [Declaration Mode](#declaration-mode) for the [WHTC FC Correction](#engine-fuel-consumption-calculation).
 
 The Cold/Hot Emission Balancing Factor is an additional correction factor that is used to correct the fuel consumption.
 </div>

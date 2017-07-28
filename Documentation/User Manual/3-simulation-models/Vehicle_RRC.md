@@ -11,10 +11,10 @@ with:
 |             |        |                                                                                                                  |                            |
 | ----------- | ------ | ---------------------------------------------------------------------------------------------------------------- | -------------------------- |
 | RRC         | [-]    | Total rolling resistance coefficient used for calculation                                                        | [calculated]               |
-| s~(i)~      | [-]    | Relative axle load. Defined in the [Vehicle File](#vehicle-file).                                                | [user input]               |
-| RRC~ISO(i)~ | [-]    | ...Tyre RRC according to ISO 28580. Defined in the [Vehicle File](#vehicle-file).                                | [user input]               |
-| w~(i)~      | [-]    | Number of tyres (4 if Twin Tyres, else 2). Defined in the [Vehicle File](#vehicle-file).                         | [user input]               |
-| F~zISO(i)~  | [N]    | Tyre test load according to ISO 28580 (85% of max. load capacity). Defined in the [Vehicle File](#vehicle-file). | [user input]               |
+| s~(i)~      | [-]    | Relative axle load. Defined in the [Vehicle File](#vehicle-file-.vveh).                                                | [user input]               |
+| RRC~ISO(i)~ | [-]    | ...Tyre RRC according to ISO 28580. Defined in the [Vehicle File](#vehicle-file-.vveh).                                | [user input]               |
+| w~(i)~      | [-]    | Number of tyres (4 if Twin Tyres, else 2). Defined in the [Vehicle File](#vehicle-file-.vveh).                         | [user input]               |
+| F~zISO(i)~  | [N]    | Tyre test load according to ISO 28580 (85% of max. load capacity). Defined in the [Vehicle File](#vehicle-file-.vveh). | [user input]               |
 | m           | [kg]   | Vehicle mass plus loading.                                                                                       | [calculated]               |
 | g           | [m/s²] | Earth gravity acceleration (constant = 9.81, Vecto 3.x: 9.80665)                                                 | [constant model parameter] |
 | β           | [-]    | Constant parameter = 0.9                                                                                         | [constant model parameter] |

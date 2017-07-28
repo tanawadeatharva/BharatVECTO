@@ -30,7 +30,7 @@ VECTO automatically uses relative paths if the input file (e.g. Vehicle File) is
 :	Enables [Engine Only Mode](#engine-only-mode) (Engineering mode only). The following parameters are needed for this mode:
 
 -   Filepath to the [Engine File (.veng)](#engine-editor)
--   [Driving Cycles](#driving-cycles) including engine torque (or power) and engine speed
+-   [Driving Cycles](#driving-cycles-.vdri) including engine torque (or power) and engine speed
 
 
 Filepath to the Vehicle File (.vveh)
@@ -56,7 +56,7 @@ Auxiliaries
 First, the Auxiliary Type can be selected. If the Bus Auxiliaries are selected a configuration file for the Advanced Auxiliaries has to be specified. When using the Bus Auxiliaries, the standard auxiliaries can  be added as well in the list below to take into account the steering pump, etc.
 The 'Constant Aux Load' can be used to define a constant power demand from the auxiliaries (similar to P_add in the driving cycle, but constant over the whole cycle).
 The following list can be used to define the auxiliary load in more detail via a separate input file. The auxiliaries are configured using the [Auxiliary Dialog](#auxiliary-dialog). 
- For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycles) must include the corresponding supply power.
+ For each auxiliary an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux) must be provided and the [driving cycle](#driving-cycles-.vdri) must include the corresponding supply power.
 **Double-click** entries to edit with the [Auxiliary Dialog](#auxiliary-dialog).
 : ![addaux](pics/plus-circle-icon.png) Add new Auxiliary
 : ![remaux](pics/minus-circle-icon.png) Remove the selected Auxiliary from the list
@@ -65,7 +65,7 @@ The following list can be used to define the auxiliary load in more detail via a
 See [Auxiliaries](#auxiliaries) for details.
 
 Cycles
-:	List of cycles used for calculation. The .vdri format is described [here](#driving-cycles).
+:	List of cycles used for calculation. The .vdri format is described [here](#driving-cycles-.vdri).
 **Double-click** an entry to open the file (see [File Open Command](#settings)).
 **Click** selected items to edit file paths.
 
@@ -80,22 +80,19 @@ Cycles
 
 In this tab the driver assistance functions are enabled and parameterised.
 
-Engine Start/Stop
-:	See [Engine Start/Stop](#engine-startstop) for details.
-
 Overspeed
 :	See [Overspeed](#overspeed) for details.
 
 Look-Ahead Coasting
-:	See [Look-Ahead Coasting](#look-ahead-coasting) for details.
+:	See [Look-Ahead Coasting](#driver-look-ahead-coasting) for details.
 
 Acceleration Limiting
-:	See [Acceleration Limiting](#acceleration-limiting) for details.
+:	See [Acceleration Limiting](#driver-acceleration-limiting) for details.
 
 
 ###Chart Area
 
-If a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-file) and [Gearbox File](#gearbox-file) is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and sampling points of the fuel consumption map. 
+If a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-file-.veng) and [Gearbox File](#gearbox-file-.vgbx) is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and sampling points of the fuel consumption map. 
 
 ###Controls
 

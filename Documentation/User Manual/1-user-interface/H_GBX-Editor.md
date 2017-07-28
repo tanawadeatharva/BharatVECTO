@@ -9,7 +9,7 @@
 
 
 
-The [Gearbox File (.vgbx)](#gearbox-file) defines alls gearbox-related input parameters like gear ratios and transmission loss maps. See [Gear Shift Model](#gear-shift-model) for details.
+The [Gearbox File (.vgbx)](#gearbox-file-.vgbx) defines alls gearbox-related input parameters like gear ratios and transmission loss maps. See [Gear Shift Model](#gearbox-gear-shift-model) for details.
 
 
 ###Relative File Paths
@@ -35,7 +35,7 @@ Transmission Type
 :	Note: The types AT and Custom are not available in [Declaration Mode](#declaration-mode).
 
 
-For more details on the automatic transmission please see the [AT-Model](#at-gearbox-model)
+For more details on the automatic transmission please see the [AT-Model](#gearbox-at-gearbox-model)
 
 Inertia \[kgm²\]
 :   Rotational inertia of the gearbox (constant for all gears). (Engineering mode only)
@@ -51,9 +51,9 @@ Use the ![add](pics/plus-circle-icon.png) and ![remove](pics/minus-circle-icon.p
 
 -   Gear **"Axle"** defines the ratio of the axle transmission / differential.
 -    **"Ratio"** defines the ratio between the output speed and input speed for the current gear. Must be greater than 0.
--    **"Loss Map or Efficiency"** allows to define either a constant efficiency value or a [loss map (.vtlm)](#transmission-loss-map). <span class="engineering">Note: efficiency values are only allowed in engineering mode</span>
--    **"Shift polygons"** defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) for each gear. Not allowed in [Declaration Mode](#declaration-mode). See [GearShift Model](#gear-shift-model) for details.
--	 **"Max Torque"** defines the maximum allowed torque (if applicable) for ah gear. It is used for limiting the engine's torque in certain gear. Note: in Declaration mode the [generic shift polygons](#gear-shift-model) are computed from the engine's full-load curve. If the maximum torque is limited by the gearbox, the minimum of the gearbox and engine maximum torque will be used to compute the [generic shift polygons](#gear-shift-model)!
+-    **"Loss Map or Efficiency"** allows to define either a constant efficiency value or a [loss map (.vtlm)](#transmission-loss-map-.vtlm). <span class="engineering">Note: efficiency values are only allowed in engineering mode</span>
+-    **"Shift polygons"** defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) for each gear. Not allowed in [Declaration Mode](#declaration-mode). See [GearShift Model](#gearbox-gear-shift-model) for details.
+-	 **"Max Torque"** defines the maximum allowed torque (if applicable) for ah gear. It is used for limiting the engine's torque in certain gear. Note: in Declaration mode the [generic shift polygons](#gearbox-gear-shift-model) are computed from the engine's full-load curve. If the maximum torque is limited by the gearbox, the minimum of the gearbox and engine maximum torque will be used to compute the [generic shift polygons](#gearbox-gear-shift-model)!
 
 
 ###Gear shift strategy parameters
@@ -118,7 +118,7 @@ Max. Speed
 :   Defines the maximum input speed the torque converter can handle.
 
 Torque converter shift polygon
-:   Defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) separately for the torque converter. For details on shifting from/to the torque converter gear please see [AT Gear Shift Strategy](#gear-shift-rules-for-at-gearbox).
+:   Defines the [Shift Polygons InputFile (.vgbs)](#shift-polygons-input-file-.vgbs) separately for the torque converter. For details on shifting from/to the torque converter gear please see [AT Gear Shift Strategy](#gearbox-at-gearshift-rules).
 
 
 ###Torque Converter: Minimal acceleration after upshift
