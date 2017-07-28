@@ -58,13 +58,14 @@ function CheckGeneratedLinks() {
 		var link=jQuery(elem).attr("href"); 
 		if(link.startsWith("javascript:")) {return true} 
 		if (!link.startsWith("#")) { content.append("ignoring: " + link +"<br/>"); return true; } 
-		var node=jQuery(link); 
+		var node=jQuery("*[id='" + link.replace("#", "") + "']"); 
 		if (node.length) {
 			content.append("found: " + link)
 		} else {
 			content.append("missing: " + link) 
 		}; 
-		content.append("<br/>"); });
+		content.append("<br/>"); 
+	});
 }
 
 </script>
