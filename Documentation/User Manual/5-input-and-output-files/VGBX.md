@@ -1,4 +1,4 @@
-##Gearbox File
+##Gearbox File (.vgbx)
 
 File for the definition of a gearbox in Vecto. Can be created with the [Gearbox Editor](#gearbox-editor).
 
@@ -8,7 +8,7 @@ File for the definition of a gearbox in Vecto. Can be created with the [Gearbox 
 Refers to other files:
 
 * [Shift Polygon (VGBS)](#shift-polygons-input-file-.vgbs)
-* [Loss Map (VTLM)](#transmission-loss-map)
+* [Loss Map (VTLM)](#transmission-loss-map-.vtlm)
 * [Torque Converter (VTCC)](#torque-converter-characteristics-.vtcc)
 
 

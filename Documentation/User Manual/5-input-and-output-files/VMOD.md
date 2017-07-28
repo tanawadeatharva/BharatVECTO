@@ -79,8 +79,8 @@ $P_{avg} = \frac{1}{simulation interval} \int{P(t) dt}$.
 | T_TC_in           |   [Nm]    |   Torque converter operating point:  input torque    |    
 | n_TC_in           |   [rpm]   |   Torque converter operating point:  input speed    |     
 | FC-Map			|	[g/h]	|	Fuel consumption interpolated from FC map. |
-| FC-AUXc			|	[g/h]	|	Fuel consumption after [Auxiliary-Start/Stop Correction](#fuel-consumption-calculation) (based on FC) |
-| FC-WHTCc			|	[g/h]	|	Fuel consumption after [WHTC Correction](#fuel-consumption-calculation) (based on FC-AUXc) |
+| FC-AUXc			|	[g/h]	|	Fuel consumption after [Auxiliary-Start/Stop Correction](#engine-fuel-consumption-calculation) (based on FC) |
+| FC-WHTCc			|	[g/h]	|	Fuel consumption after [WHTC Correction](#engine-fuel-consumption-calculation) (based on FC-AUXc) |
 | FC-AAUX			|	[g/h]	|	Fuel consumption computed by the AAUX module considering smart auxiliaries |
 | FC-Final			|	[g/h]	|	Final fuel consumption value after all applicable corrections |
 

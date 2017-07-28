@@ -4,7 +4,7 @@
 
 ###Description
 
-The [Vehicle File (.vveh)](#vehicle-file) defines the main vehicle/chassis parameters like axles including [RRC](#rolling-resistance-coefficient)s, air resistance and weight.
+The [Vehicle File (.vveh)](#vehicle-file-.vveh) defines the main vehicle/chassis parameters like axles including [RRC](#vehicle-rolling-resistance-coefficient)s, air resistance and weight.
 
 The Vehicle Editor contains 3 tabs to edit all vehicle-related parameters. The 'General' tab allows to input mass, loading, air resistance, vehicle axles, etc. The 'Powertrain' allows to define the retarder, an optional angle drive, or PTO consumer. In the third tab the engine torque can be limited to a maximum for individual gears.
 
@@ -53,7 +53,7 @@ In Declaration Mode only the vehicle itself needs to be specified. Depending on 
 ###Air Resistance and Corss Wind Correction Options
 
 The product of Drag Coefficient [-] and Cross Sectional Area [m²] (**c~d~ x A**) and **Air Density** [kg/m³] (see [Settings](#settings)) together with the vehicle speed defines the Air Resistance. Vecto uses the combined value **c~d x A** as input. 
-**Note that the Air Drag depends on the chosen [**Cross Wind Correction**](#cross-wind-correction).**
+**Note that the Air Drag depends on the chosen [**Cross Wind Correction**](#vehicle-cross-wind-correction).**
 
 <div class="declaration">
 If the vehicle has attached a trailer for simulating certain missions the given **c~d~ x A** value is increased by a fixed amount depending on the trailer used for the given vehicle category.
@@ -69,7 +69,7 @@ For cross wind correction four different options are available:
 In delcaration mode the 'Speed dependent (Declaration Mode)' cross-wind correction is used.
 </div>
 
-Depending on the chosen mode either a [Speed Dependent Cross Wind Correction Input File (.vcdv)](#speed-dependent-cross-wind-correction-input-file-.vcdv) or a [Vair & Beta Cross Wind Correction Input File (.vcdb)](#speed-dependent-cross-wind-correction-input-file-.vcdv) must be defined. For details see [Cross Wind Correction](#cross-wind-correction).
+Depending on the chosen mode either a [Speed Dependent Cross Wind Correction Input File (.vcdv)](#speed-dependent-cross-wind-correction-input-file-.vcdv) or a [Vair & Beta Cross Wind Correction Input File (.vcdb)](#speed-dependent-cross-wind-correction-input-file-.vcdv) must be defined. For details see [Cross Wind Correction](#vehicle-cross-wind-correction).
 
 ###Dynamic Tyre Radius
 
@@ -78,7 +78,7 @@ In [Engineering Mode](#engineering-mode) this defines the effective (dynamic) wh
 
 ###Axles/Wheels
 
-For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be given in order to calculate the total [Rolling Resistance Coefficient](#rolling-resistance-coefficient).
+For each axle the parameters **Relative axle load, RRC~ISO~** and **F~zISO~** have to be given in order to calculate the total [Rolling Resistance Coefficient](#vehicle-rolling-resistance-coefficient).
 
 <div class="engineering">
 In Engineering mode, the **Wheels Inertia [kgm²]** has to be set per wheel for each axle.
@@ -103,7 +103,7 @@ If a separate retarder is used in the vehicle a **Retarder Torque Loss Map** can
 
 Four options are available:
 : -   No retarder
--	Included in Transmission Loss Maps: Use this if the [Transmission Loss Maps](#transmission-loss-map) already include retarder losses.
+-	Included in Transmission Loss Maps: Use this if the [Transmission Loss Maps](#transmission-loss-map-.vtlm) already include retarder losses.
 -   Primary Retarder (before gearbox): The rpm ratio is relative to the engine speed
 -   Secondary Retarder (after gearbox): The rpm ratio is relative to the cardan shaft speed
 
@@ -117,7 +117,7 @@ If an angledrive is used in the vehicle, it can be defined here.
 Three options are available:
 
 - None (**default**)
-- Separate Angledrive: Use this if the angledrive is measured separately. In this case the ratio must be set and the [Transmission Loss Map](#transmission-loss-map) (or an Efficiency value in Engineering mode) must also be given.
+- Separate Angledrive: Use this if the angledrive is measured separately. In this case the ratio must be set and the [Transmission Loss Map](#transmission-loss-map-.vtlm) (or an Efficiency value in Engineering mode) must also be given.
 - Included in transmission: Use this if the gearbox already includes the transmission losses for the angledrive in the respective transmission loss maps.
 
 

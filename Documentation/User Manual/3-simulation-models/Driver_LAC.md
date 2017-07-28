@@ -1,11 +1,11 @@
 ##Driver: Look-Ahead Coasting
 
-Look-Ahead Coasting is a function that aims on modelling real driver behaviour. It is a forward-looking function that detects forthcoming reductions in target speed in the mission profile (e.g. speed limit, etc.) and induces an early deceleration using engine braking before applying mechanical brakes according to the [deceleration limit](#acceleration-limiting).
+Look-Ahead Coasting is a function that aims on modelling real driver behaviour. It is a forward-looking function that detects forthcoming reductions in target speed in the mission profile (e.g. speed limit, etc.) and induces an early deceleration using engine braking before applying mechanical brakes according to the [deceleration limit](#driver-acceleration-limiting).
 
  ![](pics/LookAheadCoasting.svg)
 
 At the resulting deceleration start point the model calculates the
-coasting trajectory until it meets the brake deceleration trajectory. The resulting deceleration consists of a coasting phase followed by combined mechanical/engine braking. If Look-Ahead Coasting is disabled only the braking phase according to the [deceleration limit](#acceleration-limiting) will be applied.
+coasting trajectory until it meets the brake deceleration trajectory. The resulting deceleration consists of a coasting phase followed by combined mechanical/engine braking. If Look-Ahead Coasting is disabled only the braking phase according to the [deceleration limit](#driver-acceleration-limiting) will be applied.
 
 Since Vecto 3.0.4 the coasting strategy according to the ACEA White Book 2016 is implemented. 
 

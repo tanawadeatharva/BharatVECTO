@@ -1,4 +1,5 @@
-##Transmission Loss Map
+##Transmission Loss Map (.vtlm)
+
 This file defines losses in transmission components, i.e. every gear, axlegear, angledrive. See [Transmission Losses] (#transmission-losses) for the formula how the losses are accounted in the components. The file uses the [VECTO CSV format](#csv).
 
 - Filetype: .vtlm

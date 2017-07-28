@@ -1,4 +1,4 @@
-## Engine File
+## Engine File (.veng)
 
 File for the definition of an engine in Vecto. Can be created with the [Engine Editor](#engine-editor).
 
