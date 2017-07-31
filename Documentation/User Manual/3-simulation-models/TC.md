@@ -50,6 +50,6 @@ In engineering mode the drag points for the torque converter can be specified. I
 If the torque converter characteristics for drag are not specified, the generic points are appended as described above for declaration mode.
 </div>
 
-The torque converter has a separate [Shift Polygon](#shift-polygon-file-.vgbs) which defines the conditions for switching from torque converter gear to locked gear.
+The torque converter has a separate [Shift Polygon](#shift-polygons-input-file-.vgbs) which defines the conditions for switching from torque converter gear to locked gear.
 
 

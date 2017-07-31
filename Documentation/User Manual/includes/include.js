@@ -46,4 +46,26 @@ $("#TOC li a[href='#hvac-auxiliaries-editor']").parent().hide()
 
     $("td[align=left").filter(function() {return $(this).text().indexOf("Locked default")===0 || $(this).text().indexOf("Locked Calc") === 0; }).addClass("aaux_locked")
 });
+
+/*
+javascript to check if all links are valid:
+*/
+
+function CheckGeneratedLinks() {
+	var content = jQuery("#CONTENT");
+	content.html("");
+	jQuery("a[href]").each(function(idx, elem) { 
+		var link=jQuery(elem).attr("href"); 
+		if(link.startsWith("javascript:")) {return true} 
+		if (!link.startsWith("#")) { content.append("ignoring: " + link +"<br/>"); return true; } 
+		var node=jQuery("*[id='" + link.replace("#", "") + "']"); 
+		if (node.length) {
+			content.append("found: " + link)
+		} else {
+			content.append("missing: " + link) 
+		}; 
+		content.append("<br/>"); 
+	});
+}
+
 </script>

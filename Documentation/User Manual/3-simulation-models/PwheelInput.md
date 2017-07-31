@@ -4,7 +4,7 @@ For verification tasks it is possible to manually input the power at wheels (P~w
 
 ###Requirements
 
-- Driving Cycle must include t, P~wheel~ (Pwheel), Gear (Gear) and Engine Speed (n), see [Driving Cycle (.vdri) format](#driving-cycles).
+- Driving Cycle must include t, P~wheel~ (Pwheel), Gear (Gear) and Engine Speed (n), see [Driving Cycle (.vdri) format](#driving-cycles-.vdri).
 - The driving cycle must be time-based.
 
 

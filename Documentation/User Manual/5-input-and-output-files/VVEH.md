@@ -1,4 +1,4 @@
-##Vehicle File
+##Vehicle File (.vveh)
 
 File for the definition of a vehicle in vecto. Can be created with the [Vehicle Editor](#vehicle-editor).
 
@@ -7,9 +7,9 @@ File for the definition of a vehicle in vecto. Can be created with the [Vehicle 
 
 Refers to other files:
 
-* [Cross Wind Correction (VCDV, VCDB)](#cross-wind-correction)
+* [Cross Wind Correction (VCDV, VCDB)](#vehicle-cross-wind-correction)
 * [Retarder Loss Map (VRLM)](#retarder-loss-torque-input-file-.vrlm)
-* [Transmission Loss Map (for Angular Gear) (VTLM)](#transmission-loss-map)
+* [Transmission Loss Map (for Angular Gear) (VTLM)](#transmission-loss-map-.vtlm)
 
 **Example:**
 

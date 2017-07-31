@@ -7,10 +7,10 @@ File for the definition of an job in vecto. A job contains everything what is ne
 
 Refers to other files:
 
-* [Vehicle (VVEH)](#vehicle-file)
-* [Engine (VENG)](#engine-file)
-* [Gearbox (VGBX)](#gearbox-file)
-* [Driving Cycle (VDRI)](#driving-cycles)
+* [Vehicle (VVEH)](#vehicle-file-.vveh)
+* [Engine (VENG)](#engine-file-.veng)
+* [Gearbox (VGBX)](#gearbox-file-.vgbx)
+* [Driving Cycle (VDRI)](#driving-cycles-.vdri)
 * [Auxiliary Input File (VAUX)](#auxiliary-input-file-.vaux)
 * [Acceleration Limiting (VACC)](#acceleration-limiting-input-file-.vacc)
 
