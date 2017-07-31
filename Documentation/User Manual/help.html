@@ -110,6 +110,28 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   
       $("td[align=left").filter(function() {return $(this).text().indexOf("Locked default")===0 || $(this).text().indexOf("Locked Calc") === 0; }).addClass("aaux_locked")
   });
+  
+  /*
+  javascript to check if all links are valid:
+  */
+  
+  function CheckGeneratedLinks() {
+  	var content = jQuery("#CONTENT");
+  	content.html("");
+  	jQuery("a[href]").each(function(idx, elem) { 
+  		var link=jQuery(elem).attr("href"); 
+  		if(link.startsWith("javascript:")) {return true} 
+  		if (!link.startsWith("#")) { content.append("ignoring: " + link +"<br/>"); return true; } 
+  		var node=jQuery("*[id='" + link.replace("#", "") + "']"); 
+  		if (node.length) {
+  			content.append("found: " + link)
+  		} else {
+  			content.append("missing: " + link) 
+  		}; 
+  		content.append("<br/>"); 
+  	});
+  }
+  
   </script>
 </head>
 <body>
@@ -178,16 +200,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#csv">CSV</a></li>
 <li><a href="#json">JSON</a></li>
 <li><a href="#job-file">Job File</a></li>
-<li><a href="#vehicle-file">Vehicle File</a></li>
+<li><a href="#vehicle-file-.vveh">Vehicle File (.vveh)</a></li>
 <li><a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">Speed Dependent Cross Wind Correction Input File (.vcdv)</a></li>
 <li><a href="#vair-beta-cross-wind-correction-input-file-.vcdb">Vair &amp; Beta Cross Wind Correction Input File (.vcdb)</a></li>
 <li><a href="#retarder-loss-torque-input-file-.vrlm">Retarder Loss Torque Input File (.vrlm)</a></li>
-<li><a href="#engine-file">Engine File</a></li>
+<li><a href="#engine-file-.veng">Engine File (.veng)</a></li>
 <li><a href="#full-load-and-drag-curves-.vfld">Full Load and Drag Curves (.vfld)</a></li>
 <li><a href="#fuel-consumption-map-.vmap">Fuel Consumption Map (.vmap)</a></li>
-<li><a href="#gearbox-file">Gearbox File</a></li>
+<li><a href="#gearbox-file-.vgbx">Gearbox File (.vgbx)</a></li>
 <li><a href="#shift-polygons-input-file-.vgbs">Shift Polygons Input File (.vgbs)</a></li>
-<li><a href="#transmission-loss-map">Transmission Loss Map</a></li>
+<li><a href="#transmission-loss-map-.vtlm">Transmission Loss Map (.vtlm)</a></li>
 <li><a href="#torque-converter-characteristics-.vtcc">Torque Converter Characteristics (.vtcc)</a></li>
 <li><a href="#pto-cycle-.vptoc">PTO Cycle (.vptoc)</a></li>
 <li><a href="#pto-idle-consumption-map-.vptoi">PTO Idle Consumption Map (.vptoi)</a></li>
@@ -197,7 +219,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="#advanced-compressor-map-.acmp">Advanced Compressor Map (.acmp)</a></li>
 <li><a href="#pneumatic-actuations-map-.apac">Pneumatic Actuations Map (.apac)</a></li>
 <li><a href="#environmental-conditions-batch-input-file-.aenv">Environmental Conditions Batch Input File (.aenv)</a></li>
-<li><a href="#driving-cycles">Driving Cycles</a></li>
+<li><a href="#driving-cycles-.vdri">Driving Cycles (.vdri)</a></li>
 <li><a href="#acceleration-limiting-input-file-.vacc">Acceleration Limiting Input File (.vacc)</a></li>
 <li><a href="#modal-results-.vmod">Modal Results (.vmod)</a></li>
 <li><a href="#summary-results-.vsum">Summary Results (.vsum)</a></li>
@@ -486,7 +508,7 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 </dl>
 <ul>
 <li>Filepath to the <a href="#engine-editor">Engine File (.veng)</a></li>
-<li><a href="#driving-cycles">Driving Cycles</a> including engine torque (or power) and engine speed</li>
+<li><a href="#driving-cycles-.vdri">Driving Cycles</a> including engine torque (or power) and engine speed</li>
 </ul>
 <dl>
 <dt>Filepath to the Vehicle File (.vveh)</dt>
@@ -509,7 +531,7 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 <div class="engineering">
 <dl>
 <dt>Auxiliaries</dt>
-<dd>In Engineering Mode the set of auxiliaries can be freely defined. First, the Auxiliary Type can be selected. If the Bus Auxiliaries are selected a configuration file for the Advanced Auxiliaries has to be specified. When using the Bus Auxiliaries, the standard auxiliaries can be added as well in the list below to take into account the steering pump, etc. The ‘Constant Aux Load’ can be used to define a constant power demand from the auxiliaries (similar to P_add in the driving cycle, but constant over the whole cycle). The following list can be used to define the auxiliary load in more detail via a separate input file. The auxiliaries are configured using the <a href="#auxiliary-dialog">Auxiliary Dialog</a>. For each auxiliary an <a href="#auxiliary-input-file-.vaux">Auxiliary Input File (.vaux)</a> must be provided and the <a href="#driving-cycles">driving cycle</a> must include the corresponding supply power. <strong>Double-click</strong> entries to edit with the <a href="#auxiliary-dialog">Auxiliary Dialog</a>.
+<dd>In Engineering Mode the set of auxiliaries can be freely defined. First, the Auxiliary Type can be selected. If the Bus Auxiliaries are selected a configuration file for the Advanced Auxiliaries has to be specified. When using the Bus Auxiliaries, the standard auxiliaries can be added as well in the list below to take into account the steering pump, etc. The ‘Constant Aux Load’ can be used to define a constant power demand from the auxiliaries (similar to P_add in the driving cycle, but constant over the whole cycle). The following list can be used to define the auxiliary load in more detail via a separate input file. The auxiliaries are configured using the <a href="#auxiliary-dialog">Auxiliary Dialog</a>. For each auxiliary an <a href="#auxiliary-input-file-.vaux">Auxiliary Input File (.vaux)</a> must be provided and the <a href="#driving-cycles-.vdri">driving cycle</a> must include the corresponding supply power. <strong>Double-click</strong> entries to edit with the <a href="#auxiliary-dialog">Auxiliary Dialog</a>.
 </dd>
 <dd><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAmlJREFUeNqkk89OE1EUxr87nf6ZWkBKNYhWQiiplbggMUrAEhPjEhe49iX6BDxBV76Be1ywMdEYItEYg7oRCaaJUkNLmaFp7PzvzFzvmTpO1aU3+Sb33jm/b845cy/jnON/hkwP9qQAJJgQLdgMGDbEbEXo6q+4ptAbcGyB8xZ8sfI5+CNtaDAy1jNyqla+XC7NFor5XDqXofwMW1/6pjWrh60vD52BUxdb239kEMHj6bHNu4trFRmy4rkejtXj8MXExER2Pj+XLeavTL3a393sWzoiEymM4JhJS6la9dpqxTEcRdd1qKqKneWnoWhuGAY8c6Asl25XUixZIyY28PnGwvR8ydZtxTRNWJYF13V/p0Zz2qN3njVQZqeKJWLiEjy+WsgV8v1+Pwyk4TgONE0L10fNIwRBMKxZljE2OZYnRiwfRwZFCVKG0nx//wU6nQ6oDDJIJpPYu/c8BEmVZyuwXTtDzGgG8H0flmeh0WiAzgYFExyBkZAS4bIXMrHBgH/XDHWpl+xlq58eDAsXMR/vvAyhGztr8f8aFz0ZODYxcRM9/vpEbXcTOXGSLmKoScRfnUS8nwXsH2aXmFGDrV7zrCGBWSzLwiCkRwzSQ5AUBL7lnJgNYmKDgLd8w6ufvW0fcC+wmCJMLgCVDytYeHcrnEMRYa5n6Xvdg8AM6sSE14AaxpgAZkX6N6V1aS5RS1XOlVLlbD5xXs6Ex6Tn2e6h2XUPjEbw1a9jL9jGkR82OzKgFk0JFTDDpnGdVUW9i+JyXRoeNLRxin185rto8VOxowppgvUiAymu8p8L9vegu2gImYINfgowAEn+MSKoXqcnAAAAAElFTkSuQmCC" alt="addaux" /> Add new Auxiliary
 </dd>
@@ -520,7 +542,7 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 <p>See <a href="#auxiliaries">Auxiliaries</a> for details.</p>
 <dl>
 <dt>Cycles</dt>
-<dd>List of cycles used for calculation. The .vdri format is described <a href="#driving-cycles">here</a>. <strong>Double-click</strong> an entry to open the file (see <a href="#settings">File Open Command</a>). <strong>Click</strong> selected items to edit file paths.
+<dd>List of cycles used for calculation. The .vdri format is described <a href="#driving-cycles-.vdri">here</a>. <strong>Double-click</strong> an entry to open the file (see <a href="#settings">File Open Command</a>). <strong>Click</strong> selected items to edit file paths.
 </dd>
 <dd><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAmlJREFUeNqkk89OE1EUxr87nf6ZWkBKNYhWQiiplbggMUrAEhPjEhe49iX6BDxBV76Be1ywMdEYItEYg7oRCaaJUkNLmaFp7PzvzFzvmTpO1aU3+Sb33jm/b845cy/jnON/hkwP9qQAJJgQLdgMGDbEbEXo6q+4ptAbcGyB8xZ8sfI5+CNtaDAy1jNyqla+XC7NFor5XDqXofwMW1/6pjWrh60vD52BUxdb239kEMHj6bHNu4trFRmy4rkejtXj8MXExER2Pj+XLeavTL3a393sWzoiEymM4JhJS6la9dpqxTEcRdd1qKqKneWnoWhuGAY8c6Asl25XUixZIyY28PnGwvR8ydZtxTRNWJYF13V/p0Zz2qN3njVQZqeKJWLiEjy+WsgV8v1+Pwyk4TgONE0L10fNIwRBMKxZljE2OZYnRiwfRwZFCVKG0nx//wU6nQ6oDDJIJpPYu/c8BEmVZyuwXTtDzGgG8H0flmeh0WiAzgYFExyBkZAS4bIXMrHBgH/XDHWpl+xlq58eDAsXMR/vvAyhGztr8f8aFz0ZODYxcRM9/vpEbXcTOXGSLmKoScRfnUS8nwXsH2aXmFGDrV7zrCGBWSzLwiCkRwzSQ5AUBL7lnJgNYmKDgLd8w6ufvW0fcC+wmCJMLgCVDytYeHcrnEMRYa5n6Xvdg8AM6sSE14AaxpgAZkX6N6V1aS5RS1XOlVLlbD5xXs6Ex6Tn2e6h2XUPjEbw1a9jL9jGkR82OzKgFk0JFTDDpnGdVUW9i+JyXRoeNLRxin185rto8VOxowppgvUiAymu8p8L9vegu2gImYINfgowAEn+MSKoXqcnAAAAAElFTkSuQmCC" alt="addcycle" /> Add cycle (.vdri)</p>
 </dd>
@@ -536,23 +558,20 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 </div>
 <p>In this tab the driver assistance functions are enabled and parameterised.</p>
 <dl>
-<dt>Engine Start/Stop</dt>
-<dd>See <a href="#engine-startstop">Engine Start/Stop</a> for details.
-</dd>
 <dt>Overspeed</dt>
 <dd>See <a href="#overspeed">Overspeed</a> for details.
 </dd>
 <dt>Look-Ahead Coasting</dt>
-<dd>See <a href="#look-ahead-coasting">Look-Ahead Coasting</a> for details.
+<dd>See <a href="#driver-look-ahead-coasting">Look-Ahead Coasting</a> for details.
 </dd>
 <dt>Acceleration Limiting</dt>
-<dd>See <a href="#acceleration-limiting">Acceleration Limiting</a> for details.
+<dd>See <a href="#driver-acceleration-limiting">Acceleration Limiting</a> for details.
 </dd>
 </dl>
 </div>
 <div id="chart-area" class="section level3">
 <h3>Chart Area</h3>
-<p>If a valid <a href="#vehicle-editor">Vehicle File</a>, <a href="#engine-file">Engine File</a> and <a href="#gearbox-file">Gearbox File</a> is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and sampling points of the fuel consumption map.</p>
+<p>If a valid <a href="#vehicle-editor">Vehicle File</a>, <a href="#engine-file-.veng">Engine File</a> and <a href="#gearbox-file-.vgbx">Gearbox File</a> is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and sampling points of the fuel consumption map.</p>
 </div>
 <div id="controls-2" class="section level3">
 <h3>Controls</h3>
@@ -2095,7 +2114,7 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 </div>
 <div id="description-8" class="section level3">
 <h3>Description</h3>
-<p>The <a href="#vehicle-file">Vehicle File (.vveh)</a> defines the main vehicle/chassis parameters like axles including <a href="#rolling-resistance-coefficient">RRC</a>s, air resistance and weight.</p>
+<p>The <a href="#vehicle-file-.vveh">Vehicle File (.vveh)</a> defines the main vehicle/chassis parameters like axles including <a href="#vehicle-rolling-resistance-coefficient">RRC</a>s, air resistance and weight.</p>
 <p>The Vehicle Editor contains 3 tabs to edit all vehicle-related parameters. The ‘General’ tab allows to input mass, loading, air resistance, vehicle axles, etc. The ‘Powertrain’ allows to define the retarder, an optional angle drive, or PTO consumer. In the third tab the engine torque can be limited to a maximum for individual gears.</p>
 </div>
 <div id="relative-file-paths-1" class="section level3">
@@ -2145,7 +2164,7 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 </div>
 <div id="air-resistance-and-corss-wind-correction-options" class="section level3">
 <h3>Air Resistance and Corss Wind Correction Options</h3>
-<p>The product of Drag Coefficient [-] and Cross Sectional Area [m²] (<strong>c<sub>d</sub> x A</strong>) and <strong>Air Density</strong> [kg/m³] (see <a href="#settings">Settings</a>) together with the vehicle speed defines the Air Resistance. Vecto uses the combined value <strong>c~d x A</strong> as input. <strong>Note that the Air Drag depends on the chosen <a href="#cross-wind-correction"><strong>Cross Wind Correction</strong></a>.</strong></p>
+<p>The product of Drag Coefficient [-] and Cross Sectional Area [m²] (<strong>c<sub>d</sub> x A</strong>) and <strong>Air Density</strong> [kg/m³] (see <a href="#settings">Settings</a>) together with the vehicle speed defines the Air Resistance. Vecto uses the combined value <strong>c~d x A</strong> as input. <strong>Note that the Air Drag depends on the chosen <a href="#vehicle-cross-wind-correction"><strong>Cross Wind Correction</strong></a>.</strong></p>
 <div class="declaration">
 <p>If the vehicle has attached a trailer for simulating certain missions the given <strong>c<sub>d</sub> x A</strong> value is increased by a fixed amount depending on the trailer used for the given vehicle category.</p>
 </div>
@@ -2162,7 +2181,7 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 <div class="declaration">
 <p>In delcaration mode the ‘Speed dependent (Declaration Mode)’ cross-wind correction is used.</p>
 </div>
-<p>Depending on the chosen mode either a <a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">Speed Dependent Cross Wind Correction Input File (.vcdv)</a> or a <a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">Vair &amp; Beta Cross Wind Correction Input File (.vcdb)</a> must be defined. For details see <a href="#cross-wind-correction">Cross Wind Correction</a>.</p>
+<p>Depending on the chosen mode either a <a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">Speed Dependent Cross Wind Correction Input File (.vcdv)</a> or a <a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">Vair &amp; Beta Cross Wind Correction Input File (.vcdb)</a> must be defined. For details see <a href="#vehicle-cross-wind-correction">Cross Wind Correction</a>.</p>
 </div>
 <div id="dynamic-tyre-radius" class="section level3">
 <h3>Dynamic Tyre Radius</h3>
@@ -2170,7 +2189,7 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 </div>
 <div id="axleswheels" class="section level3">
 <h3>Axles/Wheels</h3>
-<p>For each axle the parameters <strong>Relative axle load, RRC<sub>ISO</sub></strong> and <strong>F<sub>zISO</sub></strong> have to be given in order to calculate the total <a href="#rolling-resistance-coefficient">Rolling Resistance Coefficient</a>.</p>
+<p>For each axle the parameters <strong>Relative axle load, RRC<sub>ISO</sub></strong> and <strong>F<sub>zISO</sub></strong> have to be given in order to calculate the total <a href="#vehicle-rolling-resistance-coefficient">Rolling Resistance Coefficient</a>.</p>
 <div class="engineering">
 <p>In Engineering mode, the <strong>Wheels Inertia [kgm²]</strong> has to be set per wheel for each axle. The axles, for both truck and trailer, have to be given.</p>
 <p>Use the <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAmlJREFUeNqkk89OE1EUxr87nf6ZWkBKNYhWQiiplbggMUrAEhPjEhe49iX6BDxBV76Be1ywMdEYItEYg7oRCaaJUkNLmaFp7PzvzFzvmTpO1aU3+Sb33jm/b845cy/jnON/hkwP9qQAJJgQLdgMGDbEbEXo6q+4ptAbcGyB8xZ8sfI5+CNtaDAy1jNyqla+XC7NFor5XDqXofwMW1/6pjWrh60vD52BUxdb239kEMHj6bHNu4trFRmy4rkejtXj8MXExER2Pj+XLeavTL3a393sWzoiEymM4JhJS6la9dpqxTEcRdd1qKqKneWnoWhuGAY8c6Asl25XUixZIyY28PnGwvR8ydZtxTRNWJYF13V/p0Zz2qN3njVQZqeKJWLiEjy+WsgV8v1+Pwyk4TgONE0L10fNIwRBMKxZljE2OZYnRiwfRwZFCVKG0nx//wU6nQ6oDDJIJpPYu/c8BEmVZyuwXTtDzGgG8H0flmeh0WiAzgYFExyBkZAS4bIXMrHBgH/XDHWpl+xlq58eDAsXMR/vvAyhGztr8f8aFz0ZODYxcRM9/vpEbXcTOXGSLmKoScRfnUS8nwXsH2aXmFGDrV7zrCGBWSzLwiCkRwzSQ5AUBL7lnJgNYmKDgLd8w6ufvW0fcC+wmCJMLgCVDytYeHcrnEMRYa5n6Xvdg8AM6sSE14AaxpgAZkX6N6V1aS5RS1XOlVLlbD5xXs6Ex6Tn2e6h2XUPjEbw1a9jL9jGkR82OzKgFk0JFTDDpnGdVUW9i+JyXRoeNLRxin185rto8VOxowppgvUiAymu8p8L9vegu2gImYINfgowAEn+MSKoXqcnAAAAAElFTkSuQmCC" /> and <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAjFJREFUeNqkU0tPE1EUPvPoOHdaSSkUsYkY2xLTmpCQmJBAumBNZIFLoz+CX8Av6MpfoHHLhgXsTTWE7ohtDRhEkrGpQy0M7e3ceXnO2Db1BQtv8s3cx/m+87pXCsMQ/meo9HktSaDgnyABZBAbOF1GzA3sviDeoatthOnjgvAcnau/CT6JMbaZXVjIZ+bnU2xiQqcI+eXlonl0VDo5PHwqOC+j3c4vEQzJLJncWlpbK4SqyhzPA+fiYnhmzBYKRjqbnaru7m51f+5HIhJ5eCVJmVu6/mZ5fX2Juy4LguCv+UqYqhqG/GBvb184zrMXYWhGEWA+G3PFYv67bTPHca4tWiwWYzO5XP60VqM6vYwEPICV2+l0ymq3R4au60Kv240ghAAPU4pyVlWYnpxMEWdc4F4gyzoZlSoVME0TOp0OKIoC8XgcEokEaJoWCezkctDv9XTijIpI2h56FLYNjUYj8oah/kGmwajdaOuNd8EFOLNbrcXQsozG6uq1NUiQvRB94oxHUGk1myt3VNUwUP2mccZ5mzg0lwcC25/Pzz+BLHMDW2VQ4/8BbDFvOs4xcUYC2HWz6/vl95ZVxwPOUIQN8h2HQHL16qreC4IycUYXiS7IfVw8xtv4QJY3C5qWf6hpqaSi6GTU8f3+RyHadSGOT5BcxWac4n7EHQhQLaYQ0xmA2SJAaQbgET6uu4OL9rUF8KEG8Bbd4hS+ISzkekMBeSxN9YYa0kPsInrIDX4IMADJaAE/Me2jPAAAAABJRU5ErkJggg==" /> buttons to add or remove axles form the vehicle.</p>
@@ -2187,7 +2206,7 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 <dt>Four options are available:</dt>
 <dd><ul>
 <li>No retarder</li>
-<li>Included in Transmission Loss Maps: Use this if the <a href="#transmission-loss-map">Transmission Loss Maps</a> already include retarder losses.</li>
+<li>Included in Transmission Loss Maps: Use this if the <a href="#transmission-loss-map-.vtlm">Transmission Loss Maps</a> already include retarder losses.</li>
 <li>Primary Retarder (before gearbox): The rpm ratio is relative to the engine speed</li>
 <li>Secondary Retarder (after gearbox): The rpm ratio is relative to the cardan shaft speed</li>
 </ul>
@@ -2201,7 +2220,7 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 <p>If an angledrive is used in the vehicle, it can be defined here. Three options are available:</p>
 <ul>
 <li>None (<strong>default</strong>)</li>
-<li>Separate Angledrive: Use this if the angledrive is measured separately. In this case the ratio must be set and the <a href="#transmission-loss-map">Transmission Loss Map</a> (or an Efficiency value in Engineering mode) must also be given.</li>
+<li>Separate Angledrive: Use this if the angledrive is measured separately. In this case the ratio must be set and the <a href="#transmission-loss-map-.vtlm">Transmission Loss Map</a> (or an Efficiency value in Engineering mode) must also be given.</li>
 <li>Included in transmission: Use this if the gearbox already includes the transmission losses for the angledrive in the respective transmission loss maps.</li>
 </ul>
 </div>
@@ -2246,7 +2265,7 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 </div>
 <div id="description-9" class="section level3">
 <h3>Description</h3>
-<p>The <a href="#engine-file">Engine File (.veng)</a> defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curve.</p>
+<p>The <a href="#engine-file-.veng">Engine File (.veng)</a> defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curve.</p>
 </div>
 <div id="relative-file-paths-2" class="section level3">
 <h3>Relative File Paths</h3>
@@ -2276,13 +2295,13 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 </div>
 <div id="fuel-consumption-map" class="section level3">
 <h3>Fuel Consumption Map</h3>
-<p>The <a href="#fuel-consumption-map-.vmap">Fuel Consumption Map</a> is used to calculate the base FC value. See <a href="#fuel-consumption-calculation">Fuel Consumption Calculation</a> for details.</p>
+<p>The <a href="#fuel-consumption-map-.vmap">Fuel Consumption Map</a> is used to calculate the base FC value. See <a href="#engine-fuel-consumption-calculation">Fuel Consumption Calculation</a> for details.</p>
 <p>The input file (.vmap) file format is described <a href="#fuel-consumption-map-.vmap">here</a>.</p>
 </div>
 <div id="whtc-correction-factors" class="section level3">
 <h3>WHTC Correction Factors</h3>
 <div class="declaration">
-<p>The WHTC Correction Factors are required in <a href="#declaration-mode">Declaration Mode</a> for the <a href="#fuel-consumption-calculation">WHTC FC Correction</a>.</p>
+<p>The WHTC Correction Factors are required in <a href="#declaration-mode">Declaration Mode</a> for the <a href="#engine-fuel-consumption-calculation">WHTC FC Correction</a>.</p>
 <p>The Cold/Hot Emission Balancing Factor is an additional correction factor that is used to correct the fuel consumption.</p>
 </div>
 <div class="engineering">
@@ -2330,7 +2349,7 @@ Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0</p>
 </div>
 <div id="description-10" class="section level3">
 <h3>Description</h3>
-<p>The <a href="#gearbox-file">Gearbox File (.vgbx)</a> defines alls gearbox-related input parameters like gear ratios and transmission loss maps. See <a href="#gear-shift-model">Gear Shift Model</a> for details.</p>
+<p>The <a href="#gearbox-file-.vgbx">Gearbox File (.vgbx)</a> defines alls gearbox-related input parameters like gear ratios and transmission loss maps. See <a href="#gearbox-gear-shift-model">Gear Shift Model</a> for details.</p>
 </div>
 <div id="relative-file-paths-3" class="section level3">
 <h3>Relative File Paths</h3>
@@ -2357,7 +2376,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>Note: The types AT and Custom are not available in <a href="#declaration-mode">Declaration Mode</a>.
 </dd>
 </dl>
-<p>For more details on the automatic transmission please see the <a href="#at-gearbox-model">AT-Model</a></p>
+<p>For more details on the automatic transmission please see the <a href="#gearbox-at-gearbox-model">AT-Model</a></p>
 <dl>
 <dt>Inertia [kgm²]</dt>
 <dd>Rotational inertia of the gearbox (constant for all gears). (Engineering mode only)
@@ -2373,9 +2392,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <ul>
 <li>Gear <strong>“Axle”</strong> defines the ratio of the axle transmission / differential.</li>
 <li><strong>“Ratio”</strong> defines the ratio between the output speed and input speed for the current gear. Must be greater than 0.</li>
-<li><strong>“Loss Map or Efficiency”</strong> allows to define either a constant efficiency value or a <a href="#transmission-loss-map">loss map (.vtlm)</a>. <span class="engineering">Note: efficiency values are only allowed in engineering mode</span></li>
-<li><strong>“Shift polygons”</strong> defines the <a href="#shift-polygons-input-file-.vgbs">Shift Polygons InputFile (.vgbs)</a> for each gear. Not allowed in <a href="#declaration-mode">Declaration Mode</a>. See <a href="#gear-shift-model">GearShift Model</a> for details.</li>
-<li><strong>“Max Torque”</strong> defines the maximum allowed torque (if applicable) for ah gear. It is used for limiting the engine’s torque in certain gear. Note: in Declaration mode the <a href="#gear-shift-model">generic shift polygons</a> are computed from the engine’s full-load curve. If the maximum torque is limited by the gearbox, the minimum of the gearbox and engine maximum torque will be used to compute the <a href="#gear-shift-model">generic shift polygons</a>!</li>
+<li><strong>“Loss Map or Efficiency”</strong> allows to define either a constant efficiency value or a <a href="#transmission-loss-map-.vtlm">loss map (.vtlm)</a>. <span class="engineering">Note: efficiency values are only allowed in engineering mode</span></li>
+<li><strong>“Shift polygons”</strong> defines the <a href="#shift-polygons-input-file-.vgbs">Shift Polygons InputFile (.vgbs)</a> for each gear. Not allowed in <a href="#declaration-mode">Declaration Mode</a>. See <a href="#gearbox-gear-shift-model">GearShift Model</a> for details.</li>
+<li><strong>“Max Torque”</strong> defines the maximum allowed torque (if applicable) for ah gear. It is used for limiting the engine’s torque in certain gear. Note: in Declaration mode the <a href="#gearbox-gear-shift-model">generic shift polygons</a> are computed from the engine’s full-load curve. If the maximum torque is limited by the gearbox, the minimum of the gearbox and engine maximum torque will be used to compute the <a href="#gearbox-gear-shift-model">generic shift polygons</a>!</li>
 </ul>
 </div>
 <div id="gear-shift-strategy-parameters" class="section level3">
@@ -2444,7 +2463,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>Defines the maximum input speed the torque converter can handle.
 </dd>
 <dt>Torque converter shift polygon</dt>
-<dd>Defines the <a href="#shift-polygons-input-file-.vgbs">Shift Polygons InputFile (.vgbs)</a> separately for the torque converter. For details on shifting from/to the torque converter gear please see <a href="#gear-shift-rules-for-at-gearbox">AT Gear Shift Strategy</a>.
+<dd>Defines the <a href="#shift-polygons-input-file-.vgbs">Shift Polygons InputFile (.vgbs)</a> separately for the torque converter. For details on shifting from/to the torque converter gear please see <a href="#gearbox-at-gearshift-rules">AT Gear Shift Strategy</a>.
 </dd>
 </dl>
 </div>
@@ -2621,7 +2640,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="options" class="section level3">
 <h3>Options</h3>
-<p>The Driving Cycle determines the simulation method in engineering mode. The option depends directly on the driving cycle input and cannot be set explicitely. For more information about the formats see <a href="#driving-cycles">Driving Cycles</a>.</p>
+<p>The Driving Cycle determines the simulation method in engineering mode. The option depends directly on the driving cycle input and cannot be set explicitely. For more information about the formats see <a href="#driving-cycles-.vdri">Driving Cycles</a>.</p>
 <ul>
 <li><dl>
 <dt><a href="#engineering-mode-target-speed-distance-based-cycle">Target speed, distance-based</a></dt>
@@ -2687,14 +2706,13 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li><a href="#driver-overspeed">ADAS: Overspeed</a></li>
 <li><a href="#vehicle-cross-wind-correction">Vehicle: Cross Wind Correction</a></li>
 <li><a href="#vehicle-rolling-resistance-coefficient">Vehicle: Rolling Resistance Coefficient</a></li>
-<li><a href="#engine-startstop">Engine Start/Stop</a></li>
 <li><a href="#engine-fuel-consumption-calculation">Engine: Fuel Consumption Calculation</a></li>
 <li><a href="#engine-transient-full-load">Engine: Transient Full Load</a></li>
 <li><a href="#engine-correction-factors">Engine: WHTC Correction Factors</a></li>
 <li><a href="#engine-torque-and-engine-speed-limitations">Engine Torque and Engine Speed Limitations</a></li>
 <li><a href="#gearbox-gear-shift-model">Gearbox: Gear Shift Model</a></li>
-<li><a href="#gearbox-mt-and-amt-gear-shift-rules">Gearbox: MT and AMT Gearshift Rules</a></li>
-<li><a href="#gearbox-at-gear-shift-rules">Gearbox: AT Gearshift Rules</a></li>
+<li><a href="#gearbox-mt-and-amt-gearshift-rules">Gearbox: MT and AMT Gearshift Rules</a></li>
+<li><a href="#gearbox-at-gearshift-rules">Gearbox: AT Gearshift Rules</a></li>
 <li><a href="#torque-converter-model">Torque Converter Model</a></li>
 <li><a href="#auxiliaries">Auxiliaries</a></li>
 <li><a href="#engine-only-mode">Engine Only Mode</a></li>
@@ -2770,12 +2788,12 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="driver-look-ahead-coasting" class="section level2">
 <h2>Driver: Look-Ahead Coasting</h2>
-<p>Look-Ahead Coasting is a function that aims on modelling real driver behaviour. It is a forward-looking function that detects forthcoming reductions in target speed in the mission profile (e.g. speed limit, etc.) and induces an early deceleration using engine braking before applying mechanical brakes according to the <a href="#acceleration-limiting">deceleration limit</a>.</p>
+<p>Look-Ahead Coasting is a function that aims on modelling real driver behaviour. It is a forward-looking function that detects forthcoming reductions in target speed in the mission profile (e.g. speed limit, etc.) and induces an early deceleration using engine braking before applying mechanical brakes according to the <a href="#driver-acceleration-limiting">deceleration limit</a>.</p>
 <div class="figure">
 <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8IS0tIENyZWF0ZWQgd2l0aCBJbmtzY2FwZSAoaHR0cDovL3d3dy5pbmtzY2FwZS5vcmcvKSAtLT4NCg0KPHN2Zw0KICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIg0KICAgeG1sbnM6Y2M9Imh0dHA6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL25zIyINCiAgIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyINCiAgIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciDQogICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciDQogICB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiDQogICB4bWxuczppbmtzY2FwZT0iaHR0cDovL3d3dy5pbmtzY2FwZS5vcmcvbmFtZXNwYWNlcy9pbmtzY2FwZSINCiAgIHdpZHRoPSI4MG1tIg0KICAgaGVpZ2h0PSI2MG1tIg0KICAgdmlld0JveD0iMCAwIDI4My40NjQ1NyAyMTIuNTk4NDIiDQogICBpZD0ic3ZnNTk1NiINCiAgIHZlcnNpb249IjEuMSINCiAgIGlua3NjYXBlOnZlcnNpb249IjAuOTEgcjEzNzI1Ig0KICAgc29kaXBvZGk6ZG9jbmFtZT0iTG9va0FoZWFkQ29hc3Rpbmcuc3ZnIj4NCiAgPGRlZnMNCiAgICAgaWQ9ImRlZnM1OTU4Ij4NCiAgICA8bWFya2VyDQogICAgICAgaW5rc2NhcGU6aXNzdG9jaz0idHJ1ZSINCiAgICAgICBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTsiDQogICAgICAgaWQ9Im1hcmtlcjgxNDciDQogICAgICAgcmVmWD0iMC4wIg0KICAgICAgIHJlZlk9IjAuMCINCiAgICAgICBvcmllbnQ9ImF1dG8iDQogICAgICAgaW5rc2NhcGU6c3RvY2tpZD0iQXJyb3cxTWVuZCI+DQogICAgICA8cGF0aA0KICAgICAgICAgdHJhbnNmb3JtPSJzY2FsZSgwLjQpIHJvdGF0ZSgxODApIHRyYW5zbGF0ZSgxMCwwKSINCiAgICAgICAgIHN0eWxlPSJmaWxsLXJ1bGU6ZXZlbm9kZDtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MXB0O3N0cm9rZS1vcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxIg0KICAgICAgICAgZD0iTSAwLjAsMC4wIEwgNS4wLC01LjAgTCAtMTIuNSwwLjAgTCA1LjAsNS4wIEwgMC4wLDAuMCB6ICINCiAgICAgICAgIGlkPSJwYXRoODE0OSIgLz4NCiAgICA8L21hcmtlcj4NCiAgICA8bWFya2VyDQogICAgICAgaW5rc2NhcGU6aXNzdG9jaz0idHJ1ZSINCiAgICAgICBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTsiDQogICAgICAgaWQ9Im1hcmtlcjgwMjkiDQogICAgICAgcmVmWD0iMC4wIg0KICAgICAgIHJlZlk9IjAuMCINCiAgICAgICBvcmllbnQ9ImF1dG8iDQogICAgICAgaW5rc2NhcGU6c3RvY2tpZD0iQXJyb3cyTWVuZCI+DQogICAgICA8cGF0aA0KICAgICAgICAgdHJhbnNmb3JtPSJzY2FsZSgwLjYpIHJvdGF0ZSgxODApIHRyYW5zbGF0ZSgwLDApIg0KICAgICAgICAgZD0iTSA4LjcxODU4NzgsNC4wMzM3MzUyIEwgLTIuMjA3Mjg5NSwwLjAxNjAxMzI1NiBMIDguNzE4NTg4NCwtNC4wMDE3MDc4IEMgNi45NzMwOTAwLC0xLjYyOTY0NjkgNi45ODMxNDc2LDEuNjE1NzQ0MSA4LjcxODU4NzgsNC4wMzM3MzUyIHogIg0KICAgICAgICAgc3R5bGU9ImZpbGwtcnVsZTpldmVub2RkO3N0cm9rZS13aWR0aDowLjYyNTtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW9wYWNpdHk6MTtmaWxsOiMwMDAwMDA7ZmlsbC1vcGFjaXR5OjEiDQogICAgICAgICBpZD0icGF0aDgwMzEiIC8+DQogICAgPC9tYXJrZXI+DQogICAgPG1hcmtlcg0KICAgICAgIGlua3NjYXBlOmlzc3RvY2s9InRydWUiDQogICAgICAgc3R5bGU9Im92ZXJmbG93OnZpc2libGU7Ig0KICAgICAgIGlkPSJtYXJrZXI3OTE3Ig0KICAgICAgIHJlZlg9IjAuMCINCiAgICAgICByZWZZPSIwLjAiDQogICAgICAgb3JpZW50PSJhdXRvIg0KICAgICAgIGlua3NjYXBlOnN0b2NraWQ9IkFycm93Mk1lbmQiPg0KICAgICAgPHBhdGgNCiAgICAgICAgIHRyYW5zZm9ybT0ic2NhbGUoMC42KSByb3RhdGUoMTgwKSB0cmFuc2xhdGUoMCwwKSINCiAgICAgICAgIGQ9Ik0gOC43MTg1ODc4LDQuMDMzNzM1MiBMIC0yLjIwNzI4OTUsMC4wMTYwMTMyNTYgTCA4LjcxODU4ODQsLTQuMDAxNzA3OCBDIDYuOTczMDkwMCwtMS42Mjk2NDY5IDYuOTgzMTQ3NiwxLjYxNTc0NDEgOC43MTg1ODc4LDQuMDMzNzM1MiB6ICINCiAgICAgICAgIHN0eWxlPSJmaWxsLXJ1bGU6ZXZlbm9kZDtzdHJva2Utd2lkdGg6MC42MjU7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZTojMDAwMDAwO3N0cm9rZS1vcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxIg0KICAgICAgICAgaWQ9InBhdGg3OTE5IiAvPg0KICAgIDwvbWFya2VyPg0KICAgIDxtYXJrZXINCiAgICAgICBpbmtzY2FwZTpzdG9ja2lkPSJBcnJvdzFNc3RhcnQiDQogICAgICAgb3JpZW50PSJhdXRvIg0KICAgICAgIHJlZlk9IjAuMCINCiAgICAgICByZWZYPSIwLjAiDQogICAgICAgaWQ9Im1hcmtlcjc4MTciDQogICAgICAgc3R5bGU9Im92ZXJmbG93OnZpc2libGUiDQogICAgICAgaW5rc2NhcGU6aXNzdG9jaz0idHJ1ZSI+DQogICAgICA8cGF0aA0KICAgICAgICAgaWQ9InBhdGg3ODE5Ig0KICAgICAgICAgZD0iTSAwLjAsMC4wIEwgNS4wLC01LjAgTCAtMTIuNSwwLjAgTCA1LjAsNS4wIEwgMC4wLDAuMCB6ICINCiAgICAgICAgIHN0eWxlPSJmaWxsLXJ1bGU6ZXZlbm9kZDtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MXB0O3N0cm9rZS1vcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxIg0KICAgICAgICAgdHJhbnNmb3JtPSJzY2FsZSgwLjQpIHRyYW5zbGF0ZSgxMCwwKSIgLz4NCiAgICA8L21hcmtlcj4NCiAgICA8bWFya2VyDQogICAgICAgaW5rc2NhcGU6c3RvY2tpZD0iQXJyb3cxTWVuZCINCiAgICAgICBvcmllbnQ9ImF1dG8iDQogICAgICAgcmVmWT0iMC4wIg0KICAgICAgIHJlZlg9IjAuMCINCiAgICAgICBpZD0iQXJyb3cxTWVuZCINCiAgICAgICBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTsiDQogICAgICAgaW5rc2NhcGU6aXNzdG9jaz0idHJ1ZSINCiAgICAgICBpbmtzY2FwZTpjb2xsZWN0PSJhbHdheXMiPg0KICAgICAgPHBhdGgNCiAgICAgICAgIGlkPSJwYXRoNjUzMiINCiAgICAgICAgIGQ9Ik0gMC4wLDAuMCBMIDUuMCwtNS4wIEwgLTEyLjUsMC4wIEwgNS4wLDUuMCBMIDAuMCwwLjAgeiAiDQogICAgICAgICBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjFwdDtzdHJva2Utb3BhY2l0eToxO2ZpbGw6IzAwMDAwMDtmaWxsLW9wYWNpdHk6MSINCiAgICAgICAgIHRyYW5zZm9ybT0ic2NhbGUoMC40KSByb3RhdGUoMTgwKSB0cmFuc2xhdGUoMTAsMCkiIC8+DQogICAgPC9tYXJrZXI+DQogICAgPG1hcmtlcg0KICAgICAgIGlua3NjYXBlOnN0b2NraWQ9IkFycm93MVNlbmQiDQogICAgICAgb3JpZW50PSJhdXRvIg0KICAgICAgIHJlZlk9IjAuMCINCiAgICAgICByZWZYPSIwLjAiDQogICAgICAgaWQ9IkFycm93MVNlbmQiDQogICAgICAgc3R5bGU9Im92ZXJmbG93OnZpc2libGU7Ig0KICAgICAgIGlua3NjYXBlOmlzc3RvY2s9InRydWUiPg0KICAgICAgPHBhdGgNCiAgICAgICAgIGlkPSJwYXRoNjUzOCINCiAgICAgICAgIGQ9Ik0gMC4wLDAuMCBMIDUuMCwtNS4wIEwgLTEyLjUsMC4wIEwgNS4wLDUuMCBMIDAuMCwwLjAgeiAiDQogICAgICAgICBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjFwdDtzdHJva2Utb3BhY2l0eToxO2ZpbGw6IzAwMDAwMDtmaWxsLW9wYWNpdHk6MSINCiAgICAgICAgIHRyYW5zZm9ybT0ic2NhbGUoMC4yKSByb3RhdGUoMTgwKSB0cmFuc2xhdGUoNiwwKSIgLz4NCiAgICA8L21hcmtlcj4NCiAgICA8bWFya2VyDQogICAgICAgaW5rc2NhcGU6c3RvY2tpZD0iQXJyb3cyTWVuZCINCiAgICAgICBvcmllbnQ9ImF1dG8iDQogICAgICAgcmVmWT0iMC4wIg0KICAgICAgIHJlZlg9IjAuMCINCiAgICAgICBpZD0ibWFya2VyNzU2OSINCiAgICAgICBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTsiDQogICAgICAgaW5rc2NhcGU6aXNzdG9jaz0idHJ1ZSI+DQogICAgICA8cGF0aA0KICAgICAgICAgaWQ9InBhdGg3NTcxIg0KICAgICAgICAgc3R5bGU9ImZpbGwtcnVsZTpldmVub2RkO3N0cm9rZS13aWR0aDowLjYyNTtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW9wYWNpdHk6MTtmaWxsOiMwMDAwMDA7ZmlsbC1vcGFjaXR5OjEiDQogICAgICAgICBkPSJNIDguNzE4NTg3OCw0LjAzMzczNTIgTCAtMi4yMDcyODk1LDAuMDE2MDEzMjU2IEwgOC43MTg1ODg0LC00LjAwMTcwNzggQyA2Ljk3MzA5MDAsLTEuNjI5NjQ2OSA2Ljk4MzE0NzYsMS42MTU3NDQxIDguNzE4NTg3OCw0LjAzMzczNTIgeiAiDQogICAgICAgICB0cmFuc2Zvcm09InNjYWxlKDAuNikgcm90YXRlKDE4MCkgdHJhbnNsYXRlKDAsMCkiIC8+DQogICAgPC9tYXJrZXI+DQogICAgPG1hcmtlcg0KICAgICAgIGlua3NjYXBlOmlzc3RvY2s9InRydWUiDQogICAgICAgc3R5bGU9Im92ZXJmbG93OnZpc2libGU7Ig0KICAgICAgIGlkPSJtYXJrZXI3MTg3Ig0KICAgICAgIHJlZlg9IjAuMCINCiAgICAgICByZWZZPSIwLjAiDQogICAgICAgb3JpZW50PSJhdXRvIg0KICAgICAgIGlua3NjYXBlOnN0b2NraWQ9IkFycm93Mk1lbmQiPg0KICAgICAgPHBhdGgNCiAgICAgICAgIHRyYW5zZm9ybT0ic2NhbGUoMC42KSByb3RhdGUoMTgwKSB0cmFuc2xhdGUoMCwwKSINCiAgICAgICAgIGQ9Ik0gOC43MTg1ODc4LDQuMDMzNzM1MiBMIC0yLjIwNzI4OTUsMC4wMTYwMTMyNTYgTCA4LjcxODU4ODQsLTQuMDAxNzA3OCBDIDYuOTczMDkwMCwtMS42Mjk2NDY5IDYuOTgzMTQ3NiwxLjYxNTc0NDEgOC43MTg1ODc4LDQuMDMzNzM1MiB6ICINCiAgICAgICAgIHN0eWxlPSJmaWxsLXJ1bGU6ZXZlbm9kZDtzdHJva2Utd2lkdGg6MC42MjU7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZTojMDAwMDAwO3N0cm9rZS1vcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxIg0KICAgICAgICAgaWQ9InBhdGg3MTg5IiAvPg0KICAgIDwvbWFya2VyPg0KICAgIDxtYXJrZXINCiAgICAgICBpbmtzY2FwZTppc3N0b2NrPSJ0cnVlIg0KICAgICAgIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlIg0KICAgICAgIGlkPSJtYXJrZXI3MTE3Ig0KICAgICAgIHJlZlg9IjAuMCINCiAgICAgICByZWZZPSIwLjAiDQogICAgICAgb3JpZW50PSJhdXRvIg0KICAgICAgIGlua3NjYXBlOnN0b2NraWQ9IkFycm93MU1zdGFydCINCiAgICAgICBpbmtzY2FwZTpjb2xsZWN0PSJhbHdheXMiPg0KICAgICAgPHBhdGgNCiAgICAgICAgIHRyYW5zZm9ybT0ic2NhbGUoMC40KSB0cmFuc2xhdGUoMTAsMCkiDQogICAgICAgICBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjFwdDtzdHJva2Utb3BhY2l0eToxO2ZpbGw6IzAwMDAwMDtmaWxsLW9wYWNpdHk6MSINCiAgICAgICAgIGQ9Ik0gMC4wLDAuMCBMIDUuMCwtNS4wIEwgLTEyLjUsMC4wIEwgNS4wLDUuMCBMIDAuMCwwLjAgeiAiDQogICAgICAgICBpZD0icGF0aDcxMTkiIC8+DQogICAgPC9tYXJrZXI+DQogICAgPG1hcmtlcg0KICAgICAgIGlua3NjYXBlOnN0b2NraWQ9IkFycm93Mk1lbmQiDQogICAgICAgb3JpZW50PSJhdXRvIg0KICAgICAgIHJlZlk9IjAuMCINCiAgICAgICByZWZYPSIwLjAiDQogICAgICAgaWQ9IkFycm93Mk1lbmQiDQogICAgICAgc3R5bGU9Im92ZXJmbG93OnZpc2libGU7Ig0KICAgICAgIGlua3NjYXBlOmlzc3RvY2s9InRydWUiDQogICAgICAgaW5rc2NhcGU6Y29sbGVjdD0iYWx3YXlzIj4NCiAgICAgIDxwYXRoDQogICAgICAgICBpZD0icGF0aDY1NTAiDQogICAgICAgICBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLXdpZHRoOjAuNjI1O3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2U6IzAwMDAwMDtzdHJva2Utb3BhY2l0eToxO2ZpbGw6IzAwMDAwMDtmaWxsLW9wYWNpdHk6MSINCiAgICAgICAgIGQ9Ik0gOC43MTg1ODc4LDQuMDMzNzM1MiBMIC0yLjIwNzI4OTUsMC4wMTYwMTMyNTYgTCA4LjcxODU4ODQsLTQuMDAxNzA3OCBDIDYuOTczMDkwMCwtMS42Mjk2NDY5IDYuOTgzMTQ3NiwxLjYxNTc0NDEgOC43MTg1ODc4LDQuMDMzNzM1MiB6ICINCiAgICAgICAgIHRyYW5zZm9ybT0ic2NhbGUoMC42KSByb3RhdGUoMTgwKSB0cmFuc2xhdGUoMCwwKSIgLz4NCiAgICA8L21hcmtlcj4NCiAgICA8bWFya2VyDQogICAgICAgaW5rc2NhcGU6c3RvY2tpZD0iQXJyb3cyTGVuZCINCiAgICAgICBvcmllbnQ9ImF1dG8iDQogICAgICAgcmVmWT0iMC4wIg0KICAgICAgIHJlZlg9IjAuMCINCiAgICAgICBpZD0ibWFya2VyNjg5NyINCiAgICAgICBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTsiDQogICAgICAgaW5rc2NhcGU6aXNzdG9jaz0idHJ1ZSI+DQogICAgICA8cGF0aA0KICAgICAgICAgaWQ9InBhdGg2ODk5Ig0KICAgICAgICAgc3R5bGU9ImZpbGwtcnVsZTpldmVub2RkO3N0cm9rZS13aWR0aDowLjYyNTtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW9wYWNpdHk6MTtmaWxsOiMwMDAwMDA7ZmlsbC1vcGFjaXR5OjEiDQogICAgICAgICBkPSJNIDguNzE4NTg3OCw0LjAzMzczNTIgTCAtMi4yMDcyODk1LDAuMDE2MDEzMjU2IEwgOC43MTg1ODg0LC00LjAwMTcwNzggQyA2Ljk3MzA5MDAsLTEuNjI5NjQ2OSA2Ljk4MzE0NzYsMS42MTU3NDQxIDguNzE4NTg3OCw0LjAzMzczNTIgeiAiDQogICAgICAgICB0cmFuc2Zvcm09InNjYWxlKDEuMSkgcm90YXRlKDE4MCkgdHJhbnNsYXRlKDEsMCkiIC8+DQogICAgPC9tYXJrZXI+DQogICAgPG1hcmtlcg0KICAgICAgIGlua3NjYXBlOnN0b2NraWQ9IkFycm93MU1zdGFydCINCiAgICAgICBvcmllbnQ9ImF1dG8iDQogICAgICAgcmVmWT0iMC4wIg0KICAgICAgIHJlZlg9IjAuMCINCiAgICAgICBpZD0ibWFya2VyNjg1NyINCiAgICAgICBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZSINCiAgICAgICBpbmtzY2FwZTppc3N0b2NrPSJ0cnVlIg0KICAgICAgIGlua3NjYXBlOmNvbGxlY3Q9ImFsd2F5cyI+DQogICAgICA8cGF0aA0KICAgICAgICAgaWQ9InBhdGg2ODU5Ig0KICAgICAgICAgZD0iTSAwLjAsMC4wIEwgNS4wLC01LjAgTCAtMTIuNSwwLjAgTCA1LjAsNS4wIEwgMC4wLDAuMCB6ICINCiAgICAgICAgIHN0eWxlPSJmaWxsLXJ1bGU6ZXZlbm9kZDtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MXB0O3N0cm9rZS1vcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxIg0KICAgICAgICAgdHJhbnNmb3JtPSJzY2FsZSgwLjQpIHRyYW5zbGF0ZSgxMCwwKSIgLz4NCiAgICA8L21hcmtlcj4NCiAgICA8bWFya2VyDQogICAgICAgaW5rc2NhcGU6c3RvY2tpZD0iQXJyb3cyTGVuZCINCiAgICAgICBvcmllbnQ9ImF1dG8iDQogICAgICAgcmVmWT0iMC4wIg0KICAgICAgIHJlZlg9IjAuMCINCiAgICAgICBpZD0iQXJyb3cyTGVuZCINCiAgICAgICBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZTsiDQogICAgICAgaW5rc2NhcGU6aXNzdG9jaz0idHJ1ZSI+DQogICAgICA8cGF0aA0KICAgICAgICAgaWQ9InBhdGg2NTQ0Ig0KICAgICAgICAgc3R5bGU9ImZpbGwtcnVsZTpldmVub2RkO3N0cm9rZS13aWR0aDowLjYyNTtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW9wYWNpdHk6MTtmaWxsOiMwMDAwMDA7ZmlsbC1vcGFjaXR5OjEiDQogICAgICAgICBkPSJNIDguNzE4NTg3OCw0LjAzMzczNTIgTCAtMi4yMDcyODk1LDAuMDE2MDEzMjU2IEwgOC43MTg1ODg0LC00LjAwMTcwNzggQyA2Ljk3MzA5MDAsLTEuNjI5NjQ2OSA2Ljk4MzE0NzYsMS42MTU3NDQxIDguNzE4NTg3OCw0LjAzMzczNTIgeiAiDQogICAgICAgICB0cmFuc2Zvcm09InNjYWxlKDEuMSkgcm90YXRlKDE4MCkgdHJhbnNsYXRlKDEsMCkiIC8+DQogICAgPC9tYXJrZXI+DQogICAgPG1hcmtlcg0KICAgICAgIGlua3NjYXBlOnN0b2NraWQ9IkFycm93MUxzdGFydCINCiAgICAgICBvcmllbnQ9ImF1dG8iDQogICAgICAgcmVmWT0iMC4wIg0KICAgICAgIHJlZlg9IjAuMCINCiAgICAgICBpZD0iQXJyb3cxTHN0YXJ0Ig0KICAgICAgIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlIg0KICAgICAgIGlua3NjYXBlOmlzc3RvY2s9InRydWUiPg0KICAgICAgPHBhdGgNCiAgICAgICAgIGlkPSJwYXRoNjUyMyINCiAgICAgICAgIGQ9Ik0gMC4wLDAuMCBMIDUuMCwtNS4wIEwgLTEyLjUsMC4wIEwgNS4wLDUuMCBMIDAuMCwwLjAgeiAiDQogICAgICAgICBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjFwdDtzdHJva2Utb3BhY2l0eToxO2ZpbGw6IzAwMDAwMDtmaWxsLW9wYWNpdHk6MSINCiAgICAgICAgIHRyYW5zZm9ybT0ic2NhbGUoMC44KSB0cmFuc2xhdGUoMTIuNSwwKSIgLz4NCiAgICA8L21hcmtlcj4NCiAgICA8bWFya2VyDQogICAgICAgaW5rc2NhcGU6c3RvY2tpZD0iQXJyb3cxTXN0YXJ0Ig0KICAgICAgIG9yaWVudD0iYXV0byINCiAgICAgICByZWZZPSIwLjAiDQogICAgICAgcmVmWD0iMC4wIg0KICAgICAgIGlkPSJBcnJvdzFNc3RhcnQiDQogICAgICAgc3R5bGU9Im92ZXJmbG93OnZpc2libGUiDQogICAgICAgaW5rc2NhcGU6aXNzdG9jaz0idHJ1ZSI+DQogICAgICA8cGF0aA0KICAgICAgICAgaWQ9InBhdGg2NTI5Ig0KICAgICAgICAgZD0iTSAwLjAsMC4wIEwgNS4wLC01LjAgTCAtMTIuNSwwLjAgTCA1LjAsNS4wIEwgMC4wLDAuMCB6ICINCiAgICAgICAgIHN0eWxlPSJmaWxsLXJ1bGU6ZXZlbm9kZDtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MXB0O3N0cm9rZS1vcGFjaXR5OjE7ZmlsbDojMDAwMDAwO2ZpbGwtb3BhY2l0eToxIg0KICAgICAgICAgdHJhbnNmb3JtPSJzY2FsZSgwLjQpIHRyYW5zbGF0ZSgxMCwwKSIgLz4NCiAgICA8L21hcmtlcj4NCiAgPC9kZWZzPg0KICA8c29kaXBvZGk6bmFtZWR2aWV3DQogICAgIGlkPSJiYXNlIg0KICAgICBwYWdlY29sb3I9IiNmZmZmZmYiDQogICAgIGJvcmRlcmNvbG9yPSIjNjY2NjY2Ig0KICAgICBib3JkZXJvcGFjaXR5PSIxLjAiDQogICAgIGlua3NjYXBlOnBhZ2VvcGFjaXR5PSIwLjAiDQogICAgIGlua3NjYXBlOnBhZ2VzaGFkb3c9IjIiDQogICAgIGlua3NjYXBlOnpvb209IjIuOCINCiAgICAgaW5rc2NhcGU6Y3g9IjExNi4wNzk5Ig0KICAgICBpbmtzY2FwZTpjeT0iMTE5Ljk4ODAyIg0KICAgICBpbmtzY2FwZTpkb2N1bWVudC11bml0cz0icHgiDQogICAgIGlua3NjYXBlOmN1cnJlbnQtbGF5ZXI9ImxheWVyMSINCiAgICAgc2hvd2dyaWQ9InRydWUiDQogICAgIGZpdC1tYXJnaW4tdG9wPSIwIg0KICAgICBmaXQtbWFyZ2luLWxlZnQ9IjAiDQogICAgIGZpdC1tYXJnaW4tcmlnaHQ9IjAiDQogICAgIGZpdC1tYXJnaW4tYm90dG9tPSIwIg0KICAgICBpbmtzY2FwZTpzbmFwLXBhZ2U9ImZhbHNlIg0KICAgICBpbmtzY2FwZTpzbmFwLWdyaWRzPSJmYWxzZSINCiAgICAgaW5rc2NhcGU6d2luZG93LXdpZHRoPSIxOTIwIg0KICAgICBpbmtzY2FwZTp3aW5kb3ctaGVpZ2h0PSIxMTM4Ig0KICAgICBpbmtzY2FwZTp3aW5kb3cteD0iLTgiDQogICAgIGlua3NjYXBlOndpbmRvdy15PSItOCINCiAgICAgaW5rc2NhcGU6d2luZG93LW1heGltaXplZD0iMSI+DQogICAgPGlua3NjYXBlOmdyaWQNCiAgICAgICB0eXBlPSJ4eWdyaWQiDQogICAgICAgaWQ9ImdyaWQ1OTc1Ig0KICAgICAgIGVtcHNwYWNpbmc9IjUiDQogICAgICAgZG90dGVkPSJ0cnVlIiAvPg0KICA8L3NvZGlwb2RpOm5hbWVkdmlldz4NCiAgPG1ldGFkYXRhDQogICAgIGlkPSJtZXRhZGF0YTU5NjEiPg0KICAgIDxyZGY6UkRGPg0KICAgICAgPGNjOldvcmsNCiAgICAgICAgIHJkZjphYm91dD0iIj4NCiAgICAgICAgPGRjOmZvcm1hdD5pbWFnZS9zdmcreG1sPC9kYzpmb3JtYXQ+DQogICAgICAgIDxkYzp0eXBlDQogICAgICAgICAgIHJkZjpyZXNvdXJjZT0iaHR0cDovL3B1cmwub3JnL2RjL2RjbWl0eXBlL1N0aWxsSW1hZ2UiIC8+DQogICAgICAgIDxkYzp0aXRsZSAvPg0KICAgICAgPC9jYzpXb3JrPg0KICAgIDwvcmRmOlJERj4NCiAgPC9tZXRhZGF0YT4NCiAgPGcNCiAgICAgaW5rc2NhcGU6bGFiZWw9IkxheWVyIDEiDQogICAgIGlua3NjYXBlOmdyb3VwbW9kZT0ibGF5ZXIiDQogICAgIGlkPSJsYXllcjEiDQogICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNTIuMDUwOTIsLTkxNi4yMDg1NCkiPg0KICAgIDxwYXRoDQogICAgICAgc3R5bGU9ImZpbGw6bm9uZTtmaWxsLXJ1bGU6ZXZlbm9kZDtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MXB4O3N0cm9rZS1saW5lY2FwOmJ1dHQ7c3Ryb2tlLWxpbmVqb2luOm1pdGVyO3N0cm9rZS1vcGFjaXR5OjE7bWFya2VyLXN0YXJ0OnVybCgjbWFya2VyNjg1Nyk7bWFya2VyLWVuZDp1cmwoI0Fycm93Mk1lbmQpIg0KICAgICAgIGQ9Im0gMTY3LjA1MDkyLDkyNS45NDk4MiAwLDE4NS4wMDAwOCAyNTAsMCINCiAgICAgICBpZD0icGF0aDU5NzciDQogICAgICAgaW5rc2NhcGU6Y29ubmVjdG9yLWN1cnZhdHVyZT0iMCIgLz4NCiAgICA8cGF0aA0KICAgICAgIHN0eWxlPSJmaWxsOm5vbmU7ZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjE7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6NDtzdHJva2UtZGFzaGFycmF5OjIsIDE7c3Ryb2tlLWRhc2hvZmZzZXQ6MDtzdHJva2Utb3BhY2l0eToxIg0KICAgICAgIGQ9Ik0gMzQ3LjA1MDkyLDEwNzAuOTQ5OSAyOTguNDc5NDksOTU1LjU5MjY4Ig0KICAgICAgIGlkPSJwYXRoNzAwNyINCiAgICAgICBpbmtzY2FwZTpjb25uZWN0b3ItY3VydmF0dXJlPSIwIiAvPg0KICAgIDxwYXRoDQogICAgICAgc3R5bGU9ImZpbGw6bm9uZTtmaWxsLXJ1bGU6ZXZlbm9kZDtzdHJva2U6I2ZmMDAwMDtzdHJva2Utd2lkdGg6MXB4O3N0cm9rZS1saW5lY2FwOmJ1dHQ7c3Ryb2tlLWxpbmVqb2luOm1pdGVyO3N0cm9rZS1vcGFjaXR5OjEiDQogICAgICAgZD0ibSAxNjcuMDUwOTIsOTU1Ljk0OTgyIDE4MCwwIDAsMTE1LjAwMDA4IDU1LDAiDQogICAgICAgaWQ9InBhdGg3MDA5Ig0KICAgICAgIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiIC8+DQogICAgPHBhdGgNCiAgICAgICBzdHlsZT0iZmlsbDpub25lO2ZpbGwtcnVsZTpldmVub2RkO3N0cm9rZTojMDUwZGZmO3N0cm9rZS13aWR0aDoxcHg7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW9wYWNpdHk6MSINCiAgICAgICBkPSJtIDE2Ny4wNTA5Miw5NTYuNjY0MSA1NSwwIDg1LDIwIDQwLDk1LjAwMDEgNTUsMCINCiAgICAgICBpZD0icGF0aDcwMTEiDQogICAgICAgaW5rc2NhcGU6Y29ubmVjdG9yLWN1cnZhdHVyZT0iMCIgLz4NCiAgICA8dGV4dA0KICAgICAgIHhtbDpzcGFjZT0icHJlc2VydmUiDQogICAgICAgc3R5bGU9ImZvbnQtc3R5bGU6bm9ybWFsO2ZvbnQtdmFyaWFudDpub3JtYWw7Zm9udC13ZWlnaHQ6bm9ybWFsO2ZvbnQtc3RyZXRjaDpub3JtYWw7Zm9udC1zaXplOjExLjI1cHg7bGluZS1oZWlnaHQ6MTI1JTtmb250LWZhbWlseTpBcmlhbDstaW5rc2NhcGUtZm9udC1zcGVjaWZpY2F0aW9uOidBcmlhbCwgTm9ybWFsJzt0ZXh0LWFsaWduOmNlbnRlcjtsZXR0ZXItc3BhY2luZzowcHg7d29yZC1zcGFjaW5nOjBweDt3cml0aW5nLW1vZGU6bHI7dGV4dC1hbmNob3I6bWlkZGxlO2ZpbGw6IzAwMDAwMDtmaWxsLW9wYWNpdHk6MTtzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6MXB4O3N0cm9rZS1saW5lY2FwOmJ1dHQ7c3Ryb2tlLWxpbmVqb2luOm1pdGVyO3N0cm9rZS1vcGFjaXR5OjE7Ig0KICAgICAgIHg9IjM5Ny43NjUyMyINCiAgICAgICB5PSIxMTI1LjIzNTYiDQogICAgICAgaWQ9InRleHQ3MDEzIg0KICAgICAgIHNvZGlwb2RpOmxpbmVzcGFjaW5nPSIxMjUlIj48dHNwYW4NCiAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiDQogICAgICAgICBpZD0idHNwYW43MDE1Ig0KICAgICAgICAgeD0iMzk3Ljc2NTIzIg0KICAgICAgICAgeT0iMTEyNS4yMzU2Ij50aW1lPC90c3Bhbj48L3RleHQ+DQogICAgPHRleHQNCiAgICAgICB4bWw6c3BhY2U9InByZXNlcnZlIg0KICAgICAgIHN0eWxlPSJmb250LXN0eWxlOm5vcm1hbDtmb250LXZhcmlhbnQ6bm9ybWFsO2ZvbnQtd2VpZ2h0Om5vcm1hbDtmb250LXN0cmV0Y2g6bm9ybWFsO2ZvbnQtc2l6ZToxMS4yNXB4O2xpbmUtaGVpZ2h0OjEyNSU7Zm9udC1mYW1pbHk6QXJpYWw7LWlua3NjYXBlLWZvbnQtc3BlY2lmaWNhdGlvbjonQXJpYWwsIE5vcm1hbCc7dGV4dC1hbGlnbjpjZW50ZXI7bGV0dGVyLXNwYWNpbmc6MHB4O3dvcmQtc3BhY2luZzowcHg7d3JpdGluZy1tb2RlOmxyLXRiO3RleHQtYW5jaG9yOm1pZGRsZTtmaWxsOiMwMDAwMDA7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOm5vbmU7c3Ryb2tlLXdpZHRoOjFweDtzdHJva2UtbGluZWNhcDpidXR0O3N0cm9rZS1saW5lam9pbjptaXRlcjtzdHJva2Utb3BhY2l0eToxIg0KICAgICAgIHg9IjE1OS45MDgwOCINCiAgICAgICB5PSI5MzguNDQ5ODkiDQogICAgICAgaWQ9InRleHQ3MDEzLTQiDQogICAgICAgc29kaXBvZGk6bGluZXNwYWNpbmc9IjEyNSUiPjx0c3Bhbg0KICAgICAgICAgc29kaXBvZGk6cm9sZT0ibGluZSINCiAgICAgICAgIGlkPSJ0c3BhbjcwMzkiDQogICAgICAgICB4PSIxNTkuOTA4MDgiDQogICAgICAgICB5PSI5MzguNDQ5ODkiPnY8L3RzcGFuPjwvdGV4dD4NCiAgICA8dGV4dA0KICAgICAgIHhtbDpzcGFjZT0icHJlc2VydmUiDQogICAgICAgc3R5bGU9ImZvbnQtc3R5bGU6bm9ybWFsO2ZvbnQtdmFyaWFudDpub3JtYWw7Zm9udC13ZWlnaHQ6bm9ybWFsO2ZvbnQtc3RyZXRjaDpub3JtYWw7Zm9udC1zaXplOjExLjI1cHg7bGluZS1oZWlnaHQ6MTI1JTtmb250LWZhbWlseTpBcmlhbDstaW5rc2NhcGUtZm9udC1zcGVjaWZpY2F0aW9uOidBcmlhbCwgTm9ybWFsJzt0ZXh0LWFsaWduOmNlbnRlcjtsZXR0ZXItc3BhY2luZzowcHg7d29yZC1zcGFjaW5nOjBweDt3cml0aW5nLW1vZGU6bHItdGI7dGV4dC1hbmNob3I6bWlkZGxlO2ZpbGw6IzAwMDAwMDtmaWxsLW9wYWNpdHk6MTtzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6MXB4O3N0cm9rZS1saW5lY2FwOmJ1dHQ7c3Ryb2tlLWxpbmVqb2luOm1pdGVyO3N0cm9rZS1vcGFjaXR5OjEiDQogICAgICAgeD0iMjY0LjE5Mzc5Ig0KICAgICAgIHk9IjEwODkuNTIxNCINCiAgICAgICBpZD0idGV4dDcwMTMtNC0xIg0KICAgICAgIHNvZGlwb2RpOmxpbmVzcGFjaW5nPSIxMjUlIj48dHNwYW4NCiAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiDQogICAgICAgICBpZD0idHNwYW43MDU5Ig0KICAgICAgICAgeD0iMjY0LjE5Mzc5Ig0KICAgICAgICAgeT0iMTA4OS41MjE0Ij5jb2FzdGluZzwvdHNwYW4+PHRzcGFuDQogICAgICAgICBzb2RpcG9kaTpyb2xlPSJsaW5lIg0KICAgICAgICAgaWQ9InRzcGFuNzA2MSINCiAgICAgICAgIHg9IjI2NC4xOTM3OSINCiAgICAgICAgIHk9IjExMDMuNTgzOSI+cGhhc2U8L3RzcGFuPjwvdGV4dD4NCiAgICA8dGV4dA0KICAgICAgIHhtbDpzcGFjZT0icHJlc2VydmUiDQogICAgICAgc3R5bGU9ImZvbnQtc3R5bGU6bm9ybWFsO2ZvbnQtdmFyaWFudDpub3JtYWw7Zm9udC13ZWlnaHQ6bm9ybWFsO2ZvbnQtc3RyZXRjaDpub3JtYWw7Zm9udC1zaXplOjExLjI1cHg7bGluZS1oZWlnaHQ6MTI1JTtmb250LWZhbWlseTpBcmlhbDstaW5rc2NhcGUtZm9udC1zcGVjaWZpY2F0aW9uOidBcmlhbCwgTm9ybWFsJzt0ZXh0LWFsaWduOmNlbnRlcjtsZXR0ZXItc3BhY2luZzowcHg7d29yZC1zcGFjaW5nOjBweDt3cml0aW5nLW1vZGU6bHItdGI7dGV4dC1hbmNob3I6bWlkZGxlO2ZpbGw6IzAwMDAwMDtmaWxsLW9wYWNpdHk6MTtzdHJva2U6bm9uZTtzdHJva2Utd2lkdGg6MXB4O3N0cm9rZS1saW5lY2FwOmJ1dHQ7c3Ryb2tlLWxpbmVqb2luOm1pdGVyO3N0cm9rZS1vcGFjaXR5OjEiDQogICAgICAgeD0iMzI5LjE5MzgyIg0KICAgICAgIHk9IjEwOTEuMzA3Ig0KICAgICAgIGlkPSJ0ZXh0NzAxMy00LTEtMiINCiAgICAgICBzb2RpcG9kaTpsaW5lc3BhY2luZz0iMTI1JSI+PHRzcGFuDQogICAgICAgICBzb2RpcG9kaTpyb2xlPSJsaW5lIg0KICAgICAgICAgaWQ9InRzcGFuNzA4NCINCiAgICAgICAgIHg9IjMyOS4xOTM4MiINCiAgICAgICAgIHk9IjEwOTEuMzA3Ij5icmFraW5nPC90c3Bhbj48dHNwYW4NCiAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiDQogICAgICAgICBpZD0idHNwYW43MDg2Ig0KICAgICAgICAgeD0iMzI5LjE5MzgyIg0KICAgICAgICAgeT0iMTEwNS4zNjk1Ij5waGFzZTwvdHNwYW4+PC90ZXh0Pg0KICAgIDxwYXRoDQogICAgICAgc3R5bGU9ImZpbGw6bm9uZTtmaWxsLXJ1bGU6ZXZlbm9kZDtzdHJva2U6Izc4Nzg3ODtzdHJva2Utd2lkdGg6MXB4O3N0cm9rZS1saW5lY2FwOmJ1dHQ7c3Ryb2tlLWxpbmVqb2luOm1pdGVyO3N0cm9rZS1vcGFjaXR5OjEiDQogICAgICAgZD0ibSAyMjIuMDUwOTIsOTU3LjgwNjk2IDAsMTIwLjAwMDA0Ig0KICAgICAgIGlkPSJwYXRoNzA4OCINCiAgICAgICBpbmtzY2FwZTpjb25uZWN0b3ItY3VydmF0dXJlPSIwIiAvPg0KICAgIDxwYXRoDQogICAgICAgc3R5bGU9ImZpbGw6bm9uZTtmaWxsLXJ1bGU6ZXZlbm9kZDtzdHJva2U6Izc4Nzg3ODtzdHJva2Utd2lkdGg6MS4wMTA2NTc1NXB4O3N0cm9rZS1saW5lY2FwOmJ1dHQ7c3Ryb2tlLWxpbmVqb2luOm1pdGVyO3N0cm9rZS1vcGFjaXR5OjEiDQogICAgICAgZD0ibSAzMDYuMzM2NjMsMTA3OC40NDk5IDAsLTEwMi4xNDI5NCINCiAgICAgICBpZD0icGF0aDcwOTAiDQogICAgICAgaW5rc2NhcGU6Y29ubmVjdG9yLWN1cnZhdHVyZT0iMCIgLz4NCiAgICA8cGF0aA0KICAgICAgIHN0eWxlPSJmaWxsOm5vbmU7ZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlOiM3ODc4Nzg7c3Ryb2tlLXdpZHRoOjAuNztzdHJva2UtbGluZWNhcDpidXR0O3N0cm9rZS1saW5lam9pbjptaXRlcjtzdHJva2Utb3BhY2l0eToxO3N0cm9rZS1taXRlcmxpbWl0OjQ7c3Ryb2tlLWRhc2hhcnJheTpub25lIg0KICAgICAgIGQ9Im0gMzQ2Ljg3MjM1LDEwNzcuMzc4NiAwLC01LjM1NzIiDQogICAgICAgaWQ9InBhdGg3MDkwLTIiDQogICAgICAgaW5rc2NhcGU6Y29ubmVjdG9yLWN1cnZhdHVyZT0iMCIgLz4NCiAgICA8cGF0aA0KICAgICAgIHN0eWxlPSJmaWxsOm5vbmU7ZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuOTk1MjkwMjJweDtzdHJva2UtbGluZWNhcDpidXR0O3N0cm9rZS1saW5lam9pbjptaXRlcjtzdHJva2Utb3BhY2l0eToxO21hcmtlci1zdGFydDp1cmwoI21hcmtlcjc4MTcpO21hcmtlci1lbmQ6dXJsKCNtYXJrZXI4MTQ3KSINCiAgICAgICBkPSJtIDIyNC4xMzA3OSwxMDc0LjUyNzEgODAuMTM3NzQsLTAuMzY4OSINCiAgICAgICBpZD0icGF0aDcxMDciDQogICAgICAgaW5rc2NhcGU6Y29ubmVjdG9yLWN1cnZhdHVyZT0iMCIgLz4NCiAgICA8cGF0aA0KICAgICAgIHN0eWxlPSJmaWxsOm5vbmU7ZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjAuOTU2MTYxOTJweDtzdHJva2UtbGluZWNhcDpidXR0O3N0cm9rZS1saW5lam9pbjptaXRlcjtzdHJva2Utb3BhY2l0eToxO21hcmtlci1zdGFydDp1cmwoI21hcmtlcjcxMTcpO21hcmtlci1lbmQ6dXJsKCNBcnJvdzFNZW5kKSINCiAgICAgICBkPSJtIDMwOC4xNjk3LDEwNzQuMTY0MSAzNy4yMjI4NCwwIg0KICAgICAgIGlkPSJwYXRoNzEwOSINCiAgICAgICBpbmtzY2FwZTpjb25uZWN0b3ItY3VydmF0dXJlPSIwIiAvPg0KICAgIDx0ZXh0DQogICAgICAgeG1sOnNwYWNlPSJwcmVzZXJ2ZSINCiAgICAgICBzdHlsZT0iZm9udC1zdHlsZTpub3JtYWw7Zm9udC12YXJpYW50Om5vcm1hbDtmb250LXdlaWdodDpub3JtYWw7Zm9udC1zdHJldGNoOm5vcm1hbDtmb250LXNpemU6MTEuMjVweDtsaW5lLWhlaWdodDoxMjUlO2ZvbnQtZmFtaWx5OkFyaWFsOy1pbmtzY2FwZS1mb250LXNwZWNpZmljYXRpb246J0FyaWFsLCBOb3JtYWwnO3RleHQtYWxpZ246Y2VudGVyO2xldHRlci1zcGFjaW5nOjBweDt3b3JkLXNwYWNpbmc6MHB4O3dyaXRpbmctbW9kZTpsci10Yjt0ZXh0LWFuY2hvcjptaWRkbGU7ZmlsbDojZmYwMDAwO2ZpbGwtb3BhY2l0eToxO3N0cm9rZTpub25lO3N0cm9rZS13aWR0aDoxcHg7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW9wYWNpdHk6MTsiDQogICAgICAgeD0iMzM5LjM1MzA2Ig0KICAgICAgIHk9Ijk0OS42ODQzOSINCiAgICAgICBpZD0idGV4dDcwMTMtNC0xLTYiDQogICAgICAgc29kaXBvZGk6bGluZXNwYWNpbmc9IjEyNSUiPjx0c3Bhbg0KICAgICAgICAgc29kaXBvZGk6cm9sZT0ibGluZSINCiAgICAgICAgIGlkPSJ0c3BhbjM0MTIiDQogICAgICAgICB4PSIzMzkuMzUzMDYiDQogICAgICAgICB5PSI5NDkuNjg0MzkiPnRhcmdldCBzcGVlZDwvdHNwYW4+PC90ZXh0Pg0KICAgIDx0ZXh0DQogICAgICAgeG1sOnNwYWNlPSJwcmVzZXJ2ZSINCiAgICAgICBzdHlsZT0iZm9udC1zdHlsZTpub3JtYWw7Zm9udC12YXJpYW50Om5vcm1hbDtmb250LXdlaWdodDpub3JtYWw7Zm9udC1zdHJldGNoOm5vcm1hbDtmb250LXNpemU6MTEuMjVweDtsaW5lLWhlaWdodDoxMjUlO2ZvbnQtZmFtaWx5OkFyaWFsOy1pbmtzY2FwZS1mb250LXNwZWNpZmljYXRpb246J0FyaWFsLCBOb3JtYWwnO3RleHQtYWxpZ246Y2VudGVyO2xldHRlci1zcGFjaW5nOjBweDt3b3JkLXNwYWNpbmc6MHB4O3dyaXRpbmctbW9kZTpsci10Yjt0ZXh0LWFuY2hvcjptaWRkbGU7ZmlsbDojMGMwMGZmO2ZpbGwtb3BhY2l0eToxO3N0cm9rZTpub25lO3N0cm9rZS13aWR0aDoxcHg7c3Ryb2tlLWxpbmVjYXA6YnV0dDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW9wYWNpdHk6MSINCiAgICAgICB4PSIyMzQuODYxMjgiDQogICAgICAgeT0iOTgyLjAwNjg0Ig0KICAgICAgIGlkPSJ0ZXh0NzAxMy00LTEtNi0zIg0KICAgICAgIHNvZGlwb2RpOmxpbmVzcGFjaW5nPSIxMjUlIj48dHNwYW4NCiAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiDQogICAgICAgICBpZD0idHNwYW4zNDMyIg0KICAgICAgICAgeD0iMjM0Ljg2MTI4Ig0KICAgICAgICAgeT0iOTgyLjAwNjg0Ij5yZXN1bHRpbmcgdmVoaWNsZSBzcGVlZDwvdHNwYW4+PC90ZXh0Pg0KICA8L2c+DQo8L3N2Zz4NCg==" />
 
 </div>
-<p>At the resulting deceleration start point the model calculates the coasting trajectory until it meets the brake deceleration trajectory. The resulting deceleration consists of a coasting phase followed by combined mechanical/engine braking. If Look-Ahead Coasting is disabled only the braking phase according to the <a href="#acceleration-limiting">deceleration limit</a> will be applied.</p>
+<p>At the resulting deceleration start point the model calculates the coasting trajectory until it meets the brake deceleration trajectory. The resulting deceleration consists of a coasting phase followed by combined mechanical/engine braking. If Look-Ahead Coasting is disabled only the braking phase according to the <a href="#driver-acceleration-limiting">deceleration limit</a> will be applied.</p>
 <p>Since Vecto 3.0.4 the coasting strategy according to the ACEA White Book 2016 is implemented.</p>
 <p>The look ahead coasting functionality represents the driver behavior prior to a deceleration event. Due to information of the route ahead the driver is able to anticipate on the deceleration event by releasing the accelerator pedal.</p>
 <p>This pedal release decision is based on an estimation of kinetical and potential (height) energy gain versus the expected dissipated energy tue to vehicle resistances during the route section ahead.</p>
@@ -2851,7 +2869,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="vehicle-cross-wind-correction" class="section level2">
 <h2>Vehicle: Cross Wind Correction</h2>
-<p>VECTO offers three different modes to consider cross wind influence on the drag coefficient. It is configured in the <a href="#vehicle-file">Vehicle File</a>. The aerodymanic force is calculated according to the following equation:</p>
+<p>VECTO offers three different modes to consider cross wind influence on the drag coefficient. It is configured in the <a href="#vehicle-file-.vveh">Vehicle File</a>. The aerodymanic force is calculated according to the following equation:</p>
 <p><img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPcAAAAWBAMAAADuuhdHAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAEJndu3bNq1REMolmIu/6EsjwAAAACXBIWXMAAA7EAAAOxAGVKw4bAAADyUlEQVRIDb1W32sUVxT+7s5OsjM7m2wl2tCmMtpA69vmpRTxIRT7oNKytGxjJA/7BxQMLaWJfRkClUheNg8iiph5qOiLukRTwS50KoiiCy4K+iSODz4WouKPCpKec+/szJ3NJiJCDpl7z/m+795z77l3ZgNsuP2+uOEp44Si3FuPg/dwhtYaK4IOxikC/yjMqjrVDvZtodtN0BVkYaZTLVxgUwS28hREJj59un34eTta1Ys9DBXquDZc6yBNn4CPf6oUyjqRIdkBHZD+UcBqy4xWQvdMAvuTMO0VGv8xkG85xcKrNIUeJnYCFyldYgsBUE3CyGNtG53W2H4POKHFHa5MnoXh4+cOpknxbnoupPDbZThBCuHA9OIdmr6284WijflV6hiQyY+iL8DfMaacb+hwH5Gb1XHHcJHVZo84m8p7Rvmzn5STAX8inwSrPZl8G+O0c3tCekoVAgseuTkVqvZcdhR9dMBXsTW1hBAEM/pgZaWeDPji8trXjVQyOa0bgs78GK4nA0Pg2ySKPC9T4uRDfX5PTSeXgf7VqHiNm7pK+p/9SvabdDl5zqMmWwYe4RSDuTo1hRLwkiOyAeKk5WCGuAvUHsJsKUhxI4BR1NBIvoya8rq3nLyXqQrgjOJ7dgU3nFzWjJL0tqe489elZU6Oy3BYRKY4mVxDFZepqn6tlpN/SE+uTJv38BW5ykQIPCbX8vk4I/NgvcFWCr6MkxuSCqUoQVU9jDqTje0wKx8sXgvMW7yJjrKPE3QSJvpb4l+WjglSIgSGidhMo3+gfkyU+O7Zr+VSnuAcI2aleLfpEhvK5IwqU/V4yMmyfgV7c2f7B70plCI66njnozTnjuMzWGhlA5I6xiApQa+aUYZdptHf0ZEYxSqtkO8lv2pPEDCyN+cf5sTRq0YoTccm65E/uI/c85i2dx3BH7BLWJZk1IhLL66g4NKyV1ZeYnF2nKW4R0qgSc/YEn1Kz2OK3C0I7r8o4tizgD8yM8RuwU2a9HOqCExPfmQY1etBw0Av0EjO5TvluFaVgZTl/Sj8kXqSosG3DwMRKiFgLt6VGFXMHG64UDP3EFKVqF4PCWDOHjkxKWqHYLlZX0FaG3/C3hBI0tpIcIi8eE0MzWPCKrbHXFHOhPXRpJgv9dJh0J8VKFSrhwIyN35Bo8lrW4oGKly1p6PACslh6VKrypDLDRlDX+MOX0tlGdUR0mjadWccwk1+UrV6KNn67baIdupp3ZAWpr6xItAYdrV/JqhCcT06VF1DtyuaBgfT4TpRUo91RO9Gee8ml+r/AZzm8vuTJB/fAAAAAElFTkSuQmCC" alt="F_{aero}=1/2 \rho_{air}(C_{d,v}A(v_{veh})) v_{veh}^2" title="F_{aero}=1/2 \rho_{air}(C_{d,v}A(v_{veh})) v_{veh}^2" /></p>
 <p>The speed dependecy of the <img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAPBAMAAACYbLsaAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAEImrmXYi3TJEu+9UZs34ZVP9AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAwUlEQVQYGWNgYGBUdg1IZYAAlgkgWr2BgakSKjL/ApDBtYCBgeMDVOR+AJDhLQAkgKIgwMvuwMDA+QfEPAAiGBjaQBq4NoDZEOIASwEDA78BhMO4lIGBh4EVKM8fABRhA2JLBoYUJa0PDAzcIJEZQAyUPcDA+Y2BgWUB0I0BDExXHwA1MXD8AMqVMjC0MjCsYHVgmAuUA9nMahTawMCxgflA8j8BhsnfLwCFQIDXgF0AwoKRPArtkjA2lPY9DLITBAAC3CSY/anAYAAAAABJRU5ErkJggg==" alt="C_dA" title="C_dA" /> value allows for consideration of average cross widn conditions.</p>
 <div id="speed-dependent-correction-declaration-mode" class="section level3">
@@ -2912,7 +2930,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="speed-dependent-correction-user-defined" class="section level3">
 <h3>Speed dependent correction (User-defined)</h3>
-<p>The base C<sub>d</sub>A value (see <a href="#vehicle-file">Vehicle File</a>) is corrected with a user-defined speed dependent scaling function. A <a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">vcdv-File</a> is needed for this calculation.</p>
+<p>The base C<sub>d</sub>A value (see <a href="#vehicle-file-.vveh">Vehicle File</a>) is corrected with a user-defined speed dependent scaling function. A <a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">vcdv-File</a> is needed for this calculation.</p>
 <p>The C<sub>d</sub>A value given in the vehicle configuration is corrected depending on the vehicle’s speed and the C<sub>d</sub> scaling factor from the input file as follows:</p>
 <p><img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOAAAAASBAMAAACwWc/AAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAEImrmXYi3TJEu+9UZs34ZVP9AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAC6UlEQVQ4Ea1VTWsTURQ9k0yayTSTDIKUWtRoKRVBCa1dFFxkoQgVYaRGK6gEbHHhoulCUFAZ/GgRQUdEdCMJgiC6iQv3Q+1CXA3YoosG8wfEFL+6KOK982aS6SQpWXgh991z7jvnZt68tEBLSE6I0vQQ0S3s0kkO+0m5MNMl7uAkDR41ZjwL2QKmWuyehJlth/I9RkDi96VjP49M/PJRJ6dhE5Fr3qYSHWetIfCLlF94a+QqMExfzQ2WNCKVBc41UK1R+QU7qWVAqXvMVwNa0EDQMdtre8trWh/6FEmakbaBZz7s4HRcpw1lsUmL56AWRB3ISjYAAPktQdWjWEIREbCkK3gkStpS8KvGSk6JDUa2oObpcXuBxDIGCoIRuRIEKNkEkx7FEoq4gAf9yQzbO6lBM1su8radvWbKEg4i14MAb4KIJcBIVCsze3OweWU6OKWzvBGQXvK3jlVwCbBmESu4rEsDcwTkUY4MVT9ECzsMTwLERsd0YqV1fKE8lJ8Bdds7pUmFHvqMA9N799d5IAahUXaDaDFQQM7uQxSAqOVJiDuzhzvJOoj7WMA37rZ36uWBfLEq/CYTvzFA9fXmwCJB7gXiHdUJ031HQgJ8vvMgQ6xco6SQ5DR32zvJZToDA5GVGt8DZZ1PHmuYx6RURP5kz41lwjyweaQThLYDBy7wibKEXkKKHw3xDCcbMLnbwekKcBd4FcvhOY3ecC/zGhwtrtdU80OyRrLQzyJuQDGgmqfgSWgKmwOzPHU3V9zln0Ubp9hI3oRSidoX/+p4/MfRHGCpCuyCs7BqyXYfXQmbPZoxOTQF3MdheBLqSNyNfH9B+Sl9dO5u5aRl4zpLKKSyu2ARzhKdj04p/KfN3fDJvbti76Z8mU5a5+5WTsnMQr+v2ieK8wn9Nvr7MO7wwbXGojLHB9gaqoV7cLtbOZ14b/hSWRTTZxGpOrewYkk5vxVc5dWxIAzUQ1UTbrdLJ4le4qb4r/+A/wH8tMmmOEVVNQAAAABJRU5ErkJggg==" alt="C_dA(v_{veh}) = C_dA * F_C_d(v_{veh})" title="C_dA(v_{veh}) = C_dA * F_C_d(v_{veh})" /></p>
 <div class="figure">
@@ -2922,7 +2940,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="correction-using-vair-beta-input" class="section level3">
 <h3>Correction using Vair &amp; Beta Input</h3>
-<p>The actual (measured) air speed and direction can be used to correct cross-wid influence if available. A <a href="#vair-beta-cross-wind-correction-input-file-.vcdb">vcdb-File</a> is needed for this calculation. This file defines a ΔC<sub>d</sub>A value in [m²] depending on the wind angle. The <a href="#driving-cycles">driving cycle</a> must include the air speed relative to the vehicle v<sub>air</sub> (&lt;vair_res&gt;) and the wind yaw angle (&lt;vair_beta&gt;).</p>
+<p>The actual (measured) air speed and direction can be used to correct cross-wid influence if available. A <a href="#vair-beta-cross-wind-correction-input-file-.vcdb">vcdb-File</a> is needed for this calculation. This file defines a ΔC<sub>d</sub>A value in [m²] depending on the wind angle. The <a href="#driving-cycles-.vdri">driving cycle</a> must include the air speed relative to the vehicle v<sub>air</sub> (&lt;vair_res&gt;) and the wind yaw angle (&lt;vair_beta&gt;).</p>
 <p>The C<sub>d</sub>A value given in the vehicle configuration is corrected depending on the wind speed and wind angle (given in the driving cycle) using the input file as follows:</p>
 <p><img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN0AAAASBAMAAAAtVMZIAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAEImrmXYi3TJEu+9UZs34ZVP9AAAACXBIWXMAAA7EAAAOxAGVKw4bAAADQklEQVQ4EZVVXUgUURT+Rmd3Z2Z32kGKSLEWJZSgkH4egkIJJCqCAROMfhjI6AcihYoEg4XIHnrYiQjyIdyHgkiiDSp83LSXHoK19CFQGh8LCiXSHuznnDu/+/OQB+bec7773e/ce+69u0CVSaUqCNPV0BoQX7G2ilyhdNEA1ldgawt9RVdFau02z3oCsg30lYsp4xSrZjkINOzujfvgoYrBjW4cUFhRmpv1VNqyqBvyZoyVAMfz/W6KHcePvL7uOtBGi2NTf7t90DZm2A0pDkWXoGWFipYHlEVC2D6b0Cllme3n6GQZBDylOOdh+k/X+eTFkrLEXkARiiYSWaFyxKCxPBMAPdEFzRJu2Lxm92YYsye/oEbzsNIV1/HzKXhURmFFNYsZoaKuMrnIDTBCm03S4AyaLAHMf0B84n0HGI3aWJGilIsoFu+EzM9nIWcBIYXnxrSvGaGiFSjyrSgPsHJzMrvOZkwrKbY+gWdA2qe4/XgkTOGgG/n5bGi0wpBCitCBBaGSpiE26TEvOFbAOcC+jJjF4A40GFoGw0DCoFDexZYh7wd9bI0m1+aEG3j5VAPKryiFFHEB2CpU0jQDcfr2Av0t2xY5H1p5PWQv56eRtkDHL/IJTDTihlhAvY34gZbnhNFavrtr4TJThUMKK5aAbqGS5HwP6CvwStVlNJE/7OaTlsm/g5RTdX6vaICuABef5McsCoPze0NuzkZIYUXKNyTocp5qaaJu1uGZVAiu9hJG0CMNSLQxoweaaQs0Us/DRNoAbD/Ni0QuS2GQj6ShOQgprJiBMuCu+ipwC3gS68JDyrwq3sMSSnrCcPAFevYb0uftyveQMKGY9IKPQSX5LUVS9PPF3o2Ojt5fRUih96Bk0Gi5ryq2szcLpVBfPPPHwL2Vkk4Cb+eBzVSDBjq/a6ijqPK992zt41Lvi3cuQO28EcmX/Mu2AvgU/gVJNc+ZxAlU9I7gQkh5MRmTXPPAnMCLOB8xGImC9xfFmEKK7vWD4w+lMrc3+X6765yiex0YV63aJpVBO4JG+AEqKO18NcgiKkenTJ/j/Xv0H/cB6mv/H8lzeyKcmq6gyLgrBmurSDX2Ml1T7H9BqeRunVT+Afw9yeQVck32AAAAAElFTkSuQmCC" alt="C_dA(v_veh) = C_dA + {\Delta}C_d(\beta)" title="C_dA(v_veh) = C_dA + {\Delta}C_d(\beta)" /></p>
 <div class="figure">
@@ -2953,25 +2971,25 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <tr class="even">
 <td>s<sub>(i)</sub></td>
 <td>[-]</td>
-<td>Relative axle load. Defined in the <a href="#vehicle-file">Vehicle File</a>.</td>
+<td>Relative axle load. Defined in the <a href="#vehicle-file-.vveh">Vehicle File</a>.</td>
 <td>[user input]</td>
 </tr>
 <tr class="odd">
 <td>RRC<sub>ISO(i)</sub></td>
 <td>[-]</td>
-<td>…Tyre RRC according to ISO 28580. Defined in the <a href="#vehicle-file">Vehicle File</a>.</td>
+<td>…Tyre RRC according to ISO 28580. Defined in the <a href="#vehicle-file-.vveh">Vehicle File</a>.</td>
 <td>[user input]</td>
 </tr>
 <tr class="even">
 <td>w<sub>(i)</sub></td>
 <td>[-]</td>
-<td>Number of tyres (4 if Twin Tyres, else 2). Defined in the <a href="#vehicle-file">Vehicle File</a>.</td>
+<td>Number of tyres (4 if Twin Tyres, else 2). Defined in the <a href="#vehicle-file-.vveh">Vehicle File</a>.</td>
 <td>[user input]</td>
 </tr>
 <tr class="odd">
 <td>F<sub>zISO(i)</sub></td>
 <td>[N]</td>
-<td>Tyre test load according to ISO 28580 (85% of max. load capacity). Defined in the <a href="#vehicle-file">Vehicle File</a>.</td>
+<td>Tyre test load according to ISO 28580 (85% of max. load capacity). Defined in the <a href="#vehicle-file-.vveh">Vehicle File</a>.</td>
 <td>[user input]</td>
 </tr>
 <tr class="even">
@@ -3041,7 +3059,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <p>All calculations regarding the brake specific fuel consumption from the interpolation as well as from the measurement and the three correction factors CF<sub>urb</sub>, CF<sub>rur</sub>, CF<sub>mot</sub> are fully implemented in the VECTO-Engine evaluation tool.</p>
 <p>The total correction factor CF<sub>total</sub> depends on the mission profile and is produced in VECTO by mission profile specific weighting factors listed in the table below.</p>
 <p><img style="vertical-align:middle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcoAAAAPBAMAAACW4JJcAAAAMFBMVEX///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv3aB7AAAAD3RSTlMAEImrmXYi3TJEu+9UzWb0kky/AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEVElEQVRIDYVVXYgbVRT+MpufmUl2EqqlL1s2UJda2ura9a+gdMEthbotEQkIljZIfaiI3RUEBcUpokL7sKlIUYTuID6UipiCvo99ljZY7JsY2i20oGy2W3Wrgp5z753kzuRmctg5OT/f/fY7995MAGS27a+9isyBe3MH/8Bw2/R4PV/Dg+/PzX1bS6Cs/57M7PsO3l+hua/gKQx4dL3xwD+zWH03VUiqVE2FYZjtPqx3gPFp4EhCvpZabwPbm8A1IBdqdRF+A5SrAP2Z+wKUyuC2gbuARcgUIelSNRUDHG4A2F2SGQKfCTlGd5GqS/T8Czh+EnEAmJyF0zD2PdobtlSG7AIy94BzhDMIuSMIMEKqpmKA4/kKUQTAcsXGWclm8NlLVHRpwjX4Dq+I2U7g92l4VDP01ZTpDFYLHl2TDlEYhKgpR0jtqxjgcOhwgBDYLa4LJyZbDqlaoivVFvcyATkG57VASDT01ZTpDLkuzl0U+2QSIqccJbWvYoDDbSnF721Le/d8rVCFn/bVEiNSugpvbCHfpMjQV1OmM3hddJ7CCaY2CJFTjpLaVzHAUZ5mZnrTbuA2cIpDu8L+iwaQnWGrUrZOD9uk7/kiIPcyBx/75JYbHavFF3awD6gpTQy8QjI4f3rYKW6DFCI6PSenjEuNmkJtQkWcgxBlPpo83cYu6Cyu89rxBvsiu56Jc24AV+H0ah9wdIZWYemjZq77A6cD/edmnr02s4c6JgZeIRnsjRM4VuLtlUJERzra6l/EVselRgihNqEizkGIIk9J79Zsm5e12Mn5xAycCvuePL9bD8lU+KO9+OR5eGshp4a+OksTQ48A+fsdrE5wLoX0OxzJs4xLjRD90+iriHMQIhvQbaVJC1Va9unPldyNzw+9gEfmUKe8f2MPUraZnjfpwYvYsenwUXy1wgnb5GMo0a8dmaGvptQZMg/d6igSsYokrFdwtcqJEEL0uWnrLMG4pKaMSd284+YbK5BqBUZXIThiiLeADwl2skkuV8MzWKjD9eu4oNbKj0INNu1F/j6lXqFyPVz7EZfGfIWhu2RvcGzqqyl1hlJ54ooiUQx8oZd8ToQQou8sjr9engi5pKaELjXcyAVFqVZAyPVUKA4dkdtT9+kX4tcvCef69gK6F3AGe+XljQjo/KZeomT331XyW9GyA9iByzvDRj+k+SoHpr6aMsZwOiLhRcIC4BUOpBCiz7SLIJgweWOhS7WDsXCLVKtAfRURxwBCIovwZp12CzexSP9nqF22Azr1UrVYMUPi/WhKHVsHJEgvarGgPy2+NVxVU2oAunaFyopUq5e1eChiq+fMuqfancv24vld2oJEuMs6Qpe1VLuRqEdpvJ+Jytrn04AEaTU9JHornAoJJsywm66/BXvvCLX6Qi0eisjextTDOOxnf3siP68tSITHr8yPU2k/fVGNNqoPtAEFMhKA6PPzKyHBhpmLT3CrKdQOgWiI/wE7Mobhh8rNSQAAAABJRU5ErkJggg==" alt="CF_{total} = CF_{urb} \cdot WF_{urb} + CF_{rur} \cdot WF_{rur} + CF_{mot} \cdot WF_{mot}" title="CF_{total} = CF_{urb} \cdot WF_{urb} + CF_{rur} \cdot WF_{rur} + CF_{mot} \cdot WF_{mot}" /></p>
-<p>with the correction factor CF<sub>urb</sub>, CF<sub>rur</sub>, CF<sub>mot</sub> coming from the <a href="#engine-file">Engine</a>, and weighting factors WF<sub>urb</sub>, WF<sub>rur</sub>, WF<sub>mot</sub> predefined in the declaration data:</p>
+<p>with the correction factor CF<sub>urb</sub>, CF<sub>rur</sub>, CF<sub>mot</sub> coming from the <a href="#engine-file-.veng">Engine</a>, and weighting factors WF<sub>urb</sub>, WF<sub>rur</sub>, WF<sub>mot</sub> predefined in the declaration data:</p>
 <table>
 <thead>
 <tr class="header">
@@ -3225,8 +3243,8 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li>AT transmissions: Up-shift is initiated when the next-gear engine speed is above the up-shift curve</li>
 </ul></li>
 </ul>
-<p>The shift polygons are saved in the <a href="#shift-polygons-input-file-.vgbs">Shift Polygons Input File (.vgbs)</a> and have to be added to the <a href="#gearbox-file">Gearbox File</a> when not in <a href="#declaration-mode">Declaration Mode</a>.</p>
-<p>In <a href="#declaration-mode">Declaration Mode</a> the generic shift polygons are computed from the engine’s full-load curve. If the maximum torque is limited by the gearbox, the minimum of the current gear and engine maximum torque will be used to compute the <a href="#gear-shift-model">generic shift polygons</a>. Note: the computation of the shift polygons uses characteristic values from the engine such as n<sub>95h</sub>, n<sub>pref</sub>, etc. which are also derived from the full-load curve.</p>
+<p>The shift polygons are saved in the <a href="#shift-polygons-input-file-.vgbs">Shift Polygons Input File (.vgbs)</a> and have to be added to the <a href="#gearbox-file-.vgbx">Gearbox File</a> when not in <a href="#declaration-mode">Declaration Mode</a>.</p>
+<p>In <a href="#declaration-mode">Declaration Mode</a> the generic shift polygons are computed from the engine’s full-load curve. If the maximum torque is limited by the gearbox, the minimum of the current gear and engine maximum torque will be used to compute the <a href="#gearbox-gear-shift-model">generic shift polygons</a>. Note: the computation of the shift polygons uses characteristic values from the engine such as n<sub>95h</sub>, n<sub>pref</sub>, etc. which are also derived from the full-load curve.</p>
 <p>In the Gearbox File two additional parameters are defined:</p>
 <ul>
 <li><strong>Torque Reserve</strong> [%] - Required for the “<strong>Early Upshift</strong>” and “<strong>Skip Gears</strong>” options, see below.</li>
@@ -3437,7 +3455,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <p>In engineering mode the drag points for the torque converter can be specified. If so, the input data has to cover at least the speed ratio up to 2.2.</p>
 <p>If the torque converter characteristics for drag are not specified, the generic points are appended as described above for declaration mode.</p>
 </div>
-<p>The torque converter has a separate <a href="#shift-polygon-file-.vgbs">Shift Polygon</a> which defines the conditions for switching from torque converter gear to locked gear.</p>
+<p>The torque converter has a separate <a href="#shift-polygons-input-file-.vgbs">Shift Polygon</a> which defines the conditions for switching from torque converter gear to locked gear.</p>
 </div>
 </div>
 <div id="auxiliaries" class="section level2">
@@ -3484,7 +3502,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 <tr class="even">
 <td>P<sub>supply</sub></td>
-<td>Effective supply power demand. <a href="#driving-cycles">Defined in the driving cycle</a>.</td>
+<td>Effective supply power demand. <a href="#driving-cycles-.vdri">Defined in the driving cycle</a>.</td>
 <td>[kW]</td>
 </tr>
 <tr class="odd">
@@ -3519,7 +3537,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<p>Each auxiliary must be defined in the <a href="#job-file">Job File</a> and each <a href="#driving-cycles">driving cycle</a> used with this vehicle/auxiliary must include supply power for each auxiliary. To link the supply power in the driving cycle to the correct auxiliary in the Job File an ID is used. The corresponding supply power is then named <em>“&lt;Aux_ID&gt;”</em>.</p>
+<p>Each auxiliary must be defined in the <a href="#job-file">Job File</a> and each <a href="#driving-cycles-.vdri">driving cycle</a> used with this vehicle/auxiliary must include supply power for each auxiliary. To link the supply power in the driving cycle to the correct auxiliary in the Job File an ID is used. The corresponding supply power is then named <em>“&lt;Aux_ID&gt;”</em>.</p>
 <p><strong><em>Example:</em></strong> <em>The Auxiliary with the ID “ALT” (in the Job File) is linked to the supply power in the column “&lt;Aux_ALT&gt;” in the driving cylce.</em></p>
 <p>In addition to the generic map-based auxiliaries approach it is also possible to specify a constant load applied to the engine during the whole mission.</p>
 </div>
@@ -3530,7 +3548,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <div id="requirements-2" class="section level3">
 <h3>Requirements</h3>
 <ul>
-<li>Driving Cycle must include t, P<sub>wheel</sub> (Pwheel), Gear (Gear) and Engine Speed (n), see <a href="#driving-cycles">Driving Cycle (.vdri) format</a>.</li>
+<li>Driving Cycle must include t, P<sub>wheel</sub> (Pwheel), Gear (Gear) and Engine Speed (n), see <a href="#driving-cycles-.vdri">Driving Cycle (.vdri) format</a>.</li>
 <li>The driving cycle must be time-based.</li>
 </ul>
 <p><strong>Example driving cycle with P<sub>wheel</sub> input.</strong></p>
@@ -3765,10 +3783,10 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li><a href="#full-load-and-drag-curves-.vfld">Full Load and Drag Curves (.vfld)</a></li>
 <li><a href="#fuel-consumption-map-.vmap">Fuel Consumption Map (.vmap)</a></li>
 <li><a href="#shift-polygons-input-file-.vgbs">Shift Polygons Input File (.vgbs)</a></li>
-<li><a href="#transmission-loss-map">Transmission Loss Map (.vtlm)</a></li>
+<li><a href="#transmission-loss-map-.vtlm">Transmission Loss Map (.vtlm)</a></li>
 <li><a href="#torque-converter-characteristics-.vtcc">Torque Converter Characteristics (.vtcc)</a></li>
 <li><a href="#auxiliary-input-file-.vaux">Auxiliary Input File (.vaux)</a></li>
-<li><a href="#driving-cycles">Driving Cycles (.vdri)</a></li>
+<li><a href="#driving-cycles-.vdri">Driving Cycles (.vdri)</a></li>
 <li><a href="#acceleration-limiting-input-file-.vacc">Acceleration Limiting Input File (.vacc)</a></li>
 <li><a href="#modal-results-.vmod">Modal Results (.vmod)</a></li>
 <li><a href="#summary-results-.vsum">Summary Results (.vsum)</a></li>
@@ -3809,9 +3827,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <p>Following files use JSON:</p>
 <ul>
 <li><a href="#job-file">Job</a></li>
-<li><a href="#vehicle-file">Vehicle</a></li>
-<li><a href="#engine-file">Engine</a></li>
-<li><a href="#gearbox-file">Gearbox</a></li>
+<li><a href="#vehicle-file-.vveh">Vehicle</a></li>
+<li><a href="#engine-file-.veng">Engine</a></li>
+<li><a href="#gearbox-file-.vgbx">Gearbox</a></li>
 </ul>
 </div>
 <div id="job-file" class="section level2">
@@ -3823,10 +3841,10 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </ul>
 <p>Refers to other files:</p>
 <ul>
-<li><a href="#vehicle-file">Vehicle (VVEH)</a></li>
-<li><a href="#engine-file">Engine (VENG)</a></li>
-<li><a href="#gearbox-file">Gearbox (VGBX)</a></li>
-<li><a href="#driving-cycles">Driving Cycle (VDRI)</a></li>
+<li><a href="#vehicle-file-.vveh">Vehicle (VVEH)</a></li>
+<li><a href="#engine-file-.veng">Engine (VENG)</a></li>
+<li><a href="#gearbox-file-.vgbx">Gearbox (VGBX)</a></li>
+<li><a href="#driving-cycles-.vdri">Driving Cycle (VDRI)</a></li>
 <li><a href="#auxiliary-input-file-.vaux">Auxiliary Input File (VAUX)</a></li>
 <li><a href="#acceleration-limiting-input-file-.vacc">Acceleration Limiting (VACC)</a></li>
 </ul>
@@ -3889,8 +3907,8 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
   <span class="fu">}</span>
 <span class="fu">}</span></code></pre></div>
 </div>
-<div id="vehicle-file" class="section level2">
-<h2>Vehicle File</h2>
+<div id="vehicle-file-.vveh" class="section level2">
+<h2>Vehicle File (.vveh)</h2>
 <p>File for the definition of a vehicle in vecto. Can be created with the <a href="#vehicle-editor">Vehicle Editor</a>.</p>
 <ul>
 <li>File format is <a href="#json">JSON</a>.</li>
@@ -3898,9 +3916,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </ul>
 <p>Refers to other files:</p>
 <ul>
-<li><a href="#cross-wind-correction">Cross Wind Correction (VCDV, VCDB)</a></li>
+<li><a href="#vehicle-cross-wind-correction">Cross Wind Correction (VCDV, VCDB)</a></li>
 <li><a href="#retarder-loss-torque-input-file-.vrlm">Retarder Loss Map (VRLM)</a></li>
-<li><a href="#transmission-loss-map">Transmission Loss Map (for Angular Gear) (VTLM)</a></li>
+<li><a href="#transmission-loss-map-.vtlm">Transmission Loss Map (for Angular Gear) (VTLM)</a></li>
 </ul>
 <p><strong>Example:</strong></p>
 <div class="sourceCode"><pre class="sourceCode json"><code class="sourceCode json"><span class="fu">{</span>
@@ -3958,7 +3976,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="speed-dependent-cross-wind-correction-input-file-.vcdv" class="section level2">
 <h2>Speed Dependent Cross Wind Correction Input File (.vcdv)</h2>
-<p>The file is needed for speed dependent <a href="#cross-wind-correction">Cross Wind Correction</a>. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
+<p>The file is needed for speed dependent <a href="#vehicle-cross-wind-correction">Cross Wind Correction</a>. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
 <ul>
 <li>Filetype: .vcdv</li>
 <li>Header: <strong>v_veh [km/h], Cd [-]</strong>
@@ -3994,7 +4012,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="vair-beta-cross-wind-correction-input-file-.vcdb" class="section level2">
 <h2>Vair &amp; Beta Cross Wind Correction Input File (.vcdb)</h2>
-<p>The file is needed for Vair &amp; Beta <a href="#cross-wind-correction">Cross Wind Correction</a>. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
+<p>The file is needed for Vair &amp; Beta <a href="#vehicle-cross-wind-correction">Cross Wind Correction</a>. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
 <ul>
 <li>Filetype: .vcdb</li>
 <li>Header: <strong>beta [°], delta CdA [m^2]</strong>
@@ -4043,8 +4061,8 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 300                   ,10.18
 ...</code></pre>
 </div>
-<div id="engine-file" class="section level2">
-<h2>Engine File</h2>
+<div id="engine-file-.veng" class="section level2">
+<h2>Engine File (.veng)</h2>
 <p>File for the definition of an engine in Vecto. Can be created with the <a href="#engine-editor">Engine Editor</a>.</p>
 <ul>
 <li>File format is <a href="#json">JSON</a>.</li>
@@ -4099,7 +4117,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="fuel-consumption-map-.vmap" class="section level2">
 <h2>Fuel Consumption Map (.vmap)</h2>
-<p>The FC map is used to interpolate the base fuel consumption before corrections are applied. For details see <a href="#fuel-consumption-calculation">Fuel Consumption Calculation</a>. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
+<p>The FC map is used to interpolate the base fuel consumption before corrections are applied. For details see <a href="#engine-fuel-consumption-calculation">Fuel Consumption Calculation</a>. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
 <ul>
 <li>Filetype: .vmap</li>
 <li>Header: <strong>engine speed [rpm], torque [Nm], fuel consumption [g/h]</strong></li>
@@ -4119,8 +4137,8 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 600               ,600        ,7578
 ...</code></pre>
 </div>
-<div id="gearbox-file" class="section level2">
-<h2>Gearbox File</h2>
+<div id="gearbox-file-.vgbx" class="section level2">
+<h2>Gearbox File (.vgbx)</h2>
 <p>File for the definition of a gearbox in Vecto. Can be created with the <a href="#gearbox-editor">Gearbox Editor</a>.</p>
 <ul>
 <li>File format is <a href="#json">JSON</a>.</li>
@@ -4129,7 +4147,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <p>Refers to other files:</p>
 <ul>
 <li><a href="#shift-polygons-input-file-.vgbs">Shift Polygon (VGBS)</a></li>
-<li><a href="#transmission-loss-map">Loss Map (VTLM)</a></li>
+<li><a href="#transmission-loss-map-.vtlm">Loss Map (VTLM)</a></li>
 <li><a href="#torque-converter-characteristics-.vtcc">Torque Converter (VTCC)</a></li>
 </ul>
 <p><strong>Example:</strong></p>
@@ -4229,7 +4247,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="shift-polygons-input-file-.vgbs" class="section level2">
 <h2>Shift Polygons Input File (.vgbs)</h2>
-<p>Defines up- and down-shift curves. See <a href="#gear-shift-model">Gear Shift Model</a> for details. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
+<p>Defines up- and down-shift curves. See <a href="#gearbox-gear-shift-model">Gear Shift Model</a> for details. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
 <ul>
 <li>Filetype: .vgbs</li>
 <li>Header: <strong>engine torque [Nm], downshift rpm [1/min], upshift rpm [1/min]</strong></li>
@@ -4248,8 +4266,8 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <p class="caption">A typical shift curve.</p>
 </div>
 </div>
-<div id="transmission-loss-map" class="section level2">
-<h2>Transmission Loss Map</h2>
+<div id="transmission-loss-map-.vtlm" class="section level2">
+<h2>Transmission Loss Map (.vtlm)</h2>
 <p>This file defines losses in transmission components, i.e. every gear, axlegear, angledrive. See <a href="#transmission-losses">Transmission Losses</a> (#transmission-losses) for the formula how the losses are accounted in the components. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
 <ul>
 <li>Filetype: .vtlm</li>
@@ -4345,7 +4363,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <div id="pto-idle-consumption-map-.vptoi" class="section level2">
 <h2>PTO Idle Consumption Map (.vptoi)</h2>
-<p>The pto idle consumption map defines the speed-dependent power demand when the pto cycle is not active. This is only be used in <a href="#engineering-mode">Engineering Mode</a> when a pto transmission is defined. The exact demand is interpolated based on the engine speed. PTO consumer idling losses are added to engine loads during any parts of the vehicle operation except the “PTO cycle”. It can be defined in the <a href="#vehicle-file">Vehicle-File</a> and set via the <a href="#vehicle-editor">Vehicle-Editor</a>. The basic file format is <a href="#csv">Vecto-CSV</a> and the file type ending is “.vptoi”.</p>
+<p>The pto idle consumption map defines the speed-dependent power demand when the pto cycle is not active. This is only be used in <a href="#engineering-mode">Engineering Mode</a> when a pto transmission is defined. The exact demand is interpolated based on the engine speed. PTO consumer idling losses are added to engine loads during any parts of the vehicle operation except the “PTO cycle”. It can be defined in the <a href="#vehicle-file-.vveh">Vehicle-File</a> and set via the <a href="#vehicle-editor">Vehicle-Editor</a>. The basic file format is <a href="#csv">Vecto-CSV</a> and the file type ending is “.vptoi”.</p>
 <p>Header: <strong>&lt;Engine speed&gt;, &lt;PTO Torque&gt;</strong></p>
 <p><strong>Bold columns</strong> are mandatory. Only the listed columns are allowed (no other columns!).<br /> The order is not important when the headers are annotated with &lt;angle-brackets&gt; (less-than-sign “&lt;” and greater-than-sign “&gt;”).<br /> Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign “#”.</p>
 <table>
@@ -4991,8 +5009,8 @@ CycleTime,UnknownCycleName,3600</code></pre>
 11, 33, 150, 0.0427</code></pre>
 </div>
 </div>
-<div id="driving-cycles" class="section level2">
-<h2>Driving Cycles</h2>
+<div id="driving-cycles-.vdri" class="section level2">
+<h2>Driving Cycles (.vdri)</h2>
 <p>A Driving Cycle defines the parameters of a simulated route in Vecto. It is either time-based or distance-based and has different fields depending on the driving cycle type. The basic file format is <a href="#csv">Vecto-CSV</a> and the file type ending is “.vdri”. A Job must have at least one driving cycle (except in Declaration mode, where the driving cycles are predefined).</p>
 <div id="driving-cycle-types" class="section level3">
 <h3>Driving Cycle Types</h3>
@@ -5078,12 +5096,12 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <tr class="odd">
 <td><em>vair_res</em></td>
 <td>[km/h]</td>
-<td>Air speed relative to vehicle for cross wind correction. Only required if <a href="#cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
+<td>Air speed relative to vehicle for cross wind correction. Only required if <a href="#vehicle-cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
 </tr>
 <tr class="even">
 <td><em>vair_beta</em></td>
 <td>[°]</td>
-<td>Wind Yaw Angle for cross wind correction. Only required if <a href="#cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
+<td>Wind Yaw Angle for cross wind correction. Only required if <a href="#vehicle-cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
 </tr>
 <tr class="odd">
 <td><em>Aux_ID</em></td>
@@ -5177,12 +5195,12 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <tr class="odd">
 <td><em>vair_res</em></td>
 <td>[km/h]</td>
-<td>Air speed relative to vehicle for cross wind correction. Only required if <a href="#cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
+<td>Air speed relative to vehicle for cross wind correction. Only required if <a href="#vehicle-cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
 </tr>
 <tr class="even">
 <td><em>vair_beta</em></td>
 <td>[°]</td>
-<td>Wind Yaw Angle for cross wind correction. Only required if <a href="#cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
+<td>Wind Yaw Angle for cross wind correction. Only required if <a href="#vehicle-cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
 </tr>
 <tr class="odd">
 <td><em>Aux_ID</em></td>
@@ -5281,12 +5299,12 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <tr class="odd">
 <td><em>vair_res</em></td>
 <td>[km/h]</td>
-<td>Air speed relative to vehicle for cross wind correction. Only required if <a href="#cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
+<td>Air speed relative to vehicle for cross wind correction. Only required if <a href="#vehicle-cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
 </tr>
 <tr class="even">
 <td><em>vair_beta</em></td>
 <td>[°]</td>
-<td>Wind Yaw Angle for cross wind correction. Only required if <a href="#cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
+<td>Wind Yaw Angle for cross wind correction. Only required if <a href="#vehicle-cross-wind-correction"><strong>Cross Wind Correction</strong></a> is set to <strong>Vair &amp; Beta Input</strong>.</td>
 </tr>
 <tr class="odd">
 <td><em>Aux_ID</em></td>
@@ -5514,7 +5532,7 @@ CycleTime,UnknownCycleName,3600</code></pre>
 </div>
 <div id="acceleration-limiting-input-file-.vacc" class="section level2">
 <h2>Acceleration Limiting Input File (.vacc)</h2>
-<p>The file is used for <a href="#acceleration-limiting">Acceleration Limiting</a>. It defines the acceleration and deceleration limits as function of vehicle speed. The filepath has to be defined in the <a href="#job-file">Job File</a>. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
+<p>The file is used for <a href="#driver-acceleration-limiting">Acceleration Limiting</a>. It defines the acceleration and deceleration limits as function of vehicle speed. The filepath has to be defined in the <a href="#job-file">Job File</a>. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
 <ul>
 <li>Filetype: .vacc</li>
 <li>Header: <strong>v [km/h], acc [m/s^2], dec [m/s^2]</strong>
@@ -5889,12 +5907,12 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <tr class="even">
 <td>FC-AUXc</td>
 <td>[g/h]</td>
-<td>Fuel consumption after <a href="#fuel-consumption-calculation">Auxiliary-Start/Stop Correction</a> (based on FC)</td>
+<td>Fuel consumption after <a href="#engine-fuel-consumption-calculation">Auxiliary-Start/Stop Correction</a> (based on FC)</td>
 </tr>
 <tr class="odd">
 <td>FC-WHTCc</td>
 <td>[g/h]</td>
-<td>Fuel consumption after <a href="#fuel-consumption-calculation">WHTC Correction</a> (based on FC-AUXc)</td>
+<td>Fuel consumption after <a href="#engine-fuel-consumption-calculation">WHTC Correction</a> (based on FC-AUXc)</td>
 </tr>
 <tr class="even">
 <td>FC-AAUX</td>
@@ -5989,17 +6007,17 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <tr class="even">
 <td>FC-Map</td>
 <td>[g/h], [g/km]</td>
-<td>Average fuel consumption before all corrections, interpolated from <a href="#fuel-consumption-calculation">Fuel Map</a>, based on torque and engine speed.</td>
+<td>Average fuel consumption before all corrections, interpolated from <a href="#engine-fuel-consumption-calculation">Fuel Map</a>, based on torque and engine speed.</td>
 </tr>
 <tr class="odd">
 <td>FC-AUXc</td>
 <td>[g/h], [g/km]</td>
-<td>Average fuel consumption after <a href="#fuel-consumption-calculation">Auxiliary-Start/Stop Correction</a> (Based on FC-Map)</td>
+<td>Average fuel consumption after <a href="#engine-fuel-consumption-calculation">Auxiliary-Start/Stop Correction</a> (Based on FC-Map)</td>
 </tr>
 <tr class="even">
 <td>FC-WHTCc</td>
 <td>[g/h], [g/km]</td>
-<td>Average fuel consumption after <a href="#fuel-consumption-calculation">WHTC Correction</a> (Based on FC-AUXc)</td>
+<td>Average fuel consumption after <a href="#engine-fuel-consumption-calculation">WHTC Correction</a> (Based on FC-AUXc)</td>
 </tr>
 <tr class="odd">
 <td>FC-AAUX</td>
@@ -6044,7 +6062,7 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <tr class="odd">
 <td>E_aux_xxx</td>
 <td>[kWh]</td>
-<td>Energy demand of auxiliary with ID xxx. See also <a href="#auxiliary-dialog">Aux Dialog</a> and <a href="#driving-cycles">Driving Cycle</a>. In Declaration Mode the following auxiliaries always exists: E_aux_FAN (Fan), E_aux_PS (Pneumatic System), E_aux_STP (Steering Pump), E_aux_ES (Electrical System), E_aux_AC (Air Condition)</td>
+<td>Energy demand of auxiliary with ID xxx. See also <a href="#auxiliary-dialog">Aux Dialog</a> and <a href="#driving-cycles-.vdri">Driving Cycle</a>. In Declaration Mode the following auxiliaries always exists: E_aux_FAN (Fan), E_aux_PS (Pneumatic System), E_aux_STP (Steering Pump), E_aux_ES (Electrical System), E_aux_AC (Air Condition)</td>
 </tr>
 <tr class="even">
 <td>E_aux_sum</td>
@@ -6192,6 +6210,20 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <div id="changelog" class="section level1">
 <h1>Changelog</h1>
 <p><strong>VECTO 3.2.0</strong></p>
+<p><strong><em>Build 940 (2017-07-28)</em></strong></p>
+<ul>
+<li>Bugfixes:
+<ul>
+<li>[VECTO-546] - GearboxCertificationOptionType Option 2 not accepted by VECTO</li>
+<li>[VECTO-547] - Engine Manufacturer and Engine Model are empty in .vsum</li>
+<li>[VECTO-548] - online user manual</li>
+<li>[VECTO-549] - Inconsistent (and wrong) decimal separator in XML output (manufacturer report)</li>
+<li>[VECTO-551] - Average Tyre RRC not in Customer Information File output</li>
+<li>[VECTO-536] - GUI: improvements vehicle dialog (add missing pictures for vehicle categories)</li>
+<li>[VECTO-550] - Allow custom settings for AirDensity in Engineering mode</li>
+<li>[VECTO-552] - set engine rated power, rated speed to computed values from FLD if not provided as input</li>
+</ul></li>
+</ul>
 <p><strong><em>Build 925 (2017-07-13)</em></strong></p>
 <ul>
 <li>Improvements

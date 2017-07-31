@@ -2,6 +2,19 @@
 
 **VECTO 3.2.0**
 
+***Build 940 (2017-07-28)***
+
+- Bugfixes:
+    + [VECTO-546] - GearboxCertificationOptionType Option 2 not accepted by VECTO
+    + [VECTO-547] - Engine Manufacturer and Engine Model are empty in .vsum 
+    + [VECTO-548] - online user manual
+    + [VECTO-549] - Inconsistent (and wrong) decimal separator in XML output (manufacturer report)
+    + [VECTO-551] - Average Tyre RRC not in Customer Information File output
+    + [VECTO-536] - GUI: improvements vehicle dialog (add missing pictures for vehicle categories)
+    + [VECTO-550] - Allow custom settings for AirDensity in Engineering mode
+    + [VECTO-552] - set engine rated power, rated speed to computed values from FLD if not provided as input
+
+
 ***Build 925 (2017-07-13)***
 
 - Improvements
