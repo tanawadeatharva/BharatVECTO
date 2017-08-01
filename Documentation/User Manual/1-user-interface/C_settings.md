@@ -1,7 +1,7 @@
 ##Settings
 
 
-![](pics/Settings.svg)
+![](pics/Settings.PNG)
 
 
 ###Description
@@ -20,16 +20,12 @@ File Open Command
 
 ###Calculation Settings
 
+<div class="engineering">
 Air Density \[kg/m³\]
 :	The Air Density is needed to calculate the air resistance together with the **Drag Coefficient** and the **Cross Sectional Area** (see [Vehicle Editor](#vehicle-editor)).
 
-Fuel Density \[kg/l\]
-:	The Fuel Density is used to calculate the l/km results.
-
-CO~2~ -to-Fuel Ratio\[-\]
-:	Mass ratio (kg~CO2~ / kg~FC~) used to calculate CO~2~ emissions.
-
-These  settings are only used in Engineering mode. In Declaration mode the default values are used.
+This  setting is only used in Engineering mode. In Declaration mode the default value of 1.188 \[kg/m³\] is used.
+</div>
 
 ###Controls
 
