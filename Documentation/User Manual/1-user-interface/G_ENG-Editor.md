@@ -24,6 +24,9 @@ Idling Engine Speed \[rpm\]
 Displacement \[ccm\]
 :   Used in [Declaration Mode](#declaration-mode) to calculate inertia.
 
+Fuel Type
+:   Used to compute derived results such as fuel consumption in liters and CO2 values. This parameter influences the CO2-to-fuel ratio and fuel density. The actual values can be looked up in [FuelTypes.csv](../Declaration/FuelTypes.csv).
+
 Inertia including Flywheel \[kgm²\]
 :   Inertia for rotating parts including engine flywheel. In [Declaration Mode](#declaration-mode) the inertia is calculated  depending on the engine's displacement and also accounts for the clutch's inertia.
 
