@@ -199,6 +199,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(dataProvider.GearboxInputData.Model, sumRow[SummaryDataContainer.GEARBOX_MODEL]);
 			Assert.AreEqual(dataProvider.AxleGearInputData.Manufacturer, sumRow[SummaryDataContainer.AXLE_MANUFACTURER]);
 			Assert.AreEqual(dataProvider.AxleGearInputData.Model, sumRow[SummaryDataContainer.AXLE_MODEL]);
+
+			Assert.AreEqual(dataProvider.EngineInputData.ColdHotBalancingFactor, sumRow[SummaryDataContainer.ENGINE_BF_COLD_HOT]);
+			Assert.AreEqual(dataProvider.EngineInputData.CorrectionFactorRegPer, sumRow[SummaryDataContainer.ENGINE_CF_REG_PER]);
+			Assert.AreEqual(dataProvider.EngineInputData.WHTCRural, sumRow[SummaryDataContainer.ENGINE_WHTC_RURAL]);
+			Assert.AreEqual(dataProvider.EngineInputData.WHTCUrban, sumRow[SummaryDataContainer.ENGINE_WHTC_URBAN]);
+			Assert.AreEqual(dataProvider.EngineInputData.WHTCMotorway, sumRow[SummaryDataContainer.ENGINE_WHTC_MOTORWAY]);
 		}
 	}
 }
