@@ -109,6 +109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				FullLoadCurves = FullLoadCurves,
 				CorrectionFactorRegPer = CorrectionFactorRegPer,
 				CorrectionFactorNCV = CorrectionFactorNCV,
+				ColdHotCorrectionFactor = ColdHotCorrectionFactor,
 				FuelConsumptionCorrectionFactor = FuelConsumptionCorrectionFactor,
 				RatedPowerDeclared = RatedPowerDeclared,
 				RatedSpeedDeclared = RatedSpeedDeclared,
