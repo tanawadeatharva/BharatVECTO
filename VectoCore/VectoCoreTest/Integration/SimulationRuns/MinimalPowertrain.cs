@@ -48,6 +48,7 @@ using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
+using System.IO;
 
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 {
@@ -63,7 +64,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public const string AccelerationFile2 = @"TestData\Components\Truck.vacc";
 		public const double Tolerance = 0.001;
 
-		[TestCase]
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        [TestCase]
 		public void TestWheelsAndEngineInitialize()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
@@ -173,7 +180,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			}
 
-			Assert.IsInstanceOf<ResponseSuccess>(response);
+			Assert.IsInstanceOf<ResponseCycleFinished>(response);
 
 			modData.Finish(VectoRun.Status.Success);
 

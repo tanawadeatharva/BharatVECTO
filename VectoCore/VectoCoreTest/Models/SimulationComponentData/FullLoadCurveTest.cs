@@ -44,6 +44,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
+using System.IO;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
@@ -55,7 +56,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 		public static List<string> LogList = new List<string>();
 
-		[TestCase]
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        [TestCase]
 		public void TestFullLoadStaticTorque()
 		{
 			var fldCurve = FullLoadCurveReader.ReadFromFile(CoachEngineFLD);

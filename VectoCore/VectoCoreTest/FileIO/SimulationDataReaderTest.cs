@@ -50,7 +50,13 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		protected const string DeclarationJob = @"TestData\Jobs\12t Delivery Truck.vecto";
 		protected const double Tolerance = 0.0001;
 
-		[TestCase]
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        [TestCase]
 		public void ReadDeclarationJobFile()
 		{
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(DeclarationJob);

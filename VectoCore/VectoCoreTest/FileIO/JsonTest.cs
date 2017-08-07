@@ -43,13 +43,20 @@ using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
-	[TestFixture]
+
+    [TestFixture]
 	public class JsonTest
 	{
 		private const string TestJobFile = @"Testdata\Jobs\40t_Long_Haul_Truck.vecto";
 		private const string TestVehicleFile = @"Testdata\Components\24t Coach.vveh";
 
-		[TestCase]
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        [TestCase]
 		public void ReadJobTest()
 		{
 			var job = JSONInputDataFactory.ReadJsonJob(TestJobFile);
