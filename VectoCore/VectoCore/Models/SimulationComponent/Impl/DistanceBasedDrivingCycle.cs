@@ -179,9 +179,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Second GetStopTimeInterval()
 		{
 			if (!Left.PTOActive || IdleController == null) {
-				return Left.StoppingTime.IsGreater(3 * Constants.SimulationSettings.TargetTimeInterval)
-					? GetStopTimeIntervalThreePhases()
-					: Left.StoppingTime;
+				if ((Left.StoppingTime - CurrentState.WaitTime).IsGreater(2 * Constants.SimulationSettings.TargetTimeInterval,
+					0.1 * Constants.SimulationSettings.TargetTimeInterval)) {
+					return 2 * Constants.SimulationSettings.TargetTimeInterval;
+				}
+				return Left.StoppingTime - CurrentState.WaitTime;
 			}
 			if (Left.StoppingTime.IsGreater(6 * Constants.SimulationSettings.TargetTimeInterval)) {
 				// 7 phases
@@ -194,20 +196,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// we have a pto cycle without stopping time.
 			IdleController.ActivatePTO();
 			return IdleController.GetNextCycleTime();
-		}
-
-		private Second GetStopTimeIntervalThreePhases()
-		{
-			switch (CurrentState.WaitPhase) {
-				case 1:
-				case 3:
-					CurrentState.WaitPhase++;
-					return Constants.SimulationSettings.TargetTimeInterval;
-				case 2:
-					CurrentState.WaitPhase++;
-					return Left.StoppingTime - 2 * Constants.SimulationSettings.TargetTimeInterval;
-			}
-			return null;
 		}
 
 		private Second GetStopTimeIntervalThreePhasesPTO()
@@ -390,8 +378,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		public double Progress
 		{
-			get
-			{
+			get {
 				return Data.Entries.Count > 0
 					? (CurrentState.Distance.Value() - Data.Entries.First().Distance.Value()) /
 					(Data.Entries.Last().Distance.Value() - Data.Entries.First().Distance.Value())
@@ -448,8 +435,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public CycleData CycleData
 		{
-			get
-			{
+			get {
 				return new CycleData {
 					AbsTime = CurrentState.AbsTime,
 					AbsDistance = CurrentState.Distance,
