@@ -32,7 +32,6 @@
 using System.Data;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -42,10 +41,11 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
-	[TestClass]
+	[TestFixture]
 	public class FullCycleDeclarationTest
 	{
 		public const string LongHaulTruckDeclarationJob =
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			@"TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
 
 
-		[TestMethod]
+		[TestCase]
 		public void Truck40t_LongHaulCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("LongHaul");
@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Truck40t_RegionalDeliveryCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("RegionalDelivery");
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Truck40t_UrbanDeliveryCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("UrbanDelivery");
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Truck40t_MunicipalCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("MunicipalUtility");
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Truck40t_ConstructionCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Construction");
@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Truck40t_HeavyUrbanCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("HeavyUrban");
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Truck40t_SubUrbanCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Suburban");
@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestCase, Category("LongRunning")]
 		public void Truck40t_InterUrbanCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Interurban");
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestCase, Category("LongRunning")]
 		public void Truck40t_CoachCycle_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Coach");
@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestCase, Category("LongRunning")]
 		public void Truck40t_DeclarationTest()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(LongHaulTruckDeclarationJob);
@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestCase, Category("LongRunning")]
 		public void Truck40t_Mod1Hz_Test()
 		{
 			var modFileName = "40t_Long_Haul_Truck_RegionalDeliveryReferenceLoad.vmod";
@@ -281,7 +281,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			AssertHelper.AreRelativeEqual(vAct, vAct1Hz, 1e-4, "end velocity is not equal");
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestCase, Category("LongRunning")]
 		public void Truck12t_DeclarationTest()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeliveryTruckDeclarationJob);
@@ -313,7 +313,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 					string.Concat(jobContainer.Runs.Select(r => r.ExecException))));
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestCase, Category("LongRunning")]
 		public void Truck12t8Gear_DeclarationTest()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(DeliveryTruck8GearDeclarationJob);
@@ -337,7 +337,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 
-		[TestMethod]
+		[TestCase]
 		public void DeclarationClass9PTOTest()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(Class9RigidTruckPTOJob);

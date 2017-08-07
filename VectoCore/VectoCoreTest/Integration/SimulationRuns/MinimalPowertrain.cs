@@ -30,7 +30,6 @@
 */
 
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -48,10 +47,11 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 {
-	[TestClass]
+	[TestFixture]
 	public class MinimalPowertrain
 	{
 		public const string CycleFile = @"TestData\Integration\MinimalPowerTrain\1-Gear-Test-dist.vdri";
@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public const string AccelerationFile2 = @"TestData\Components\Truck.vacc";
 		public const double Tolerance = 0.001;
 
-		[TestMethod]
+		[TestCase]
 		public void TestWheelsAndEngineInitialize()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var response = driverPort.Initialize(18.KMPHtoMeterPerSecond(),
 				VectoMath.InclinationToAngle(2.842372037 / 100));
 
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 
 			//			time [s] , dist [m] , v_act [km/h] , v_targ [km/h] , acc [m/s²] , grad [%] , n_eng_avg [1/min] , T_eng_fcmap [Nm] , Tq_clutch [Nm] , Tq_full [Nm] , Tq_drag [Nm] , P_eng_out [kW] , P_eng_full [kW] , P_eng_drag [kW] , P_clutch_out [kW] , Pa Eng [kW] , P_aux [kW] , Gear [-] , Ploss GB [kW] , Ploss Diff [kW] , Ploss Retarder [kW] , Pa GB [kW] , Pa Veh [kW] , P_roll [kW] , P_air [kW] , P_slope [kW] , P_wheel_in [kW] , P_brake_loss [kW] , FC-Map [g/h] , FC-AUXc [g/h] , FC-WHTCc [g/h]
 			//			1.5      , 5        , 18           , 18            , 0          , 2.842372 , 964.1117  , 323.7562    , 323.7562       , 2208.664     , -158.0261    , 32.68693    , 222.9902     , -15.95456    , 32.68693       , 0           , 0         , 1        , 0             , 0               , 0                   , 0          , 0           , 5.965827   , 0.2423075 , 26.47879   , 32.68693    , 0           , 7574.113     , -             , -
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.AreEqual(323.6485, engine.PreviousState.EngineTorque.Value(), Tolerance);
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestCase, Category("LongRunning")]
 		public void TestWheelsAndEngine()
 		{
 			NLog.LogManager.DisableLogging();
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
 			var response = cyclePort.Request(absTime, ds);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
@@ -173,14 +173,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			}
 
-			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 
 			modData.Finish(VectoRun.Status.Success);
 
 			NLog.LogManager.EnableLogging();
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestWheelsAndEngineLookahead()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);

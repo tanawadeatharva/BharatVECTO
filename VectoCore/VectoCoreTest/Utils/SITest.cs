@@ -31,17 +31,17 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	[TestClass]
+	[TestFixture]
 	public class SITest
 	{
-		[TestMethod]
+		[TestCase]
 		[SuppressMessage("ReSharper", "UnusedVariable")]
 		public void SI_TypicalUsageTest()
 		{
@@ -49,26 +49,26 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var angularVelocity = 600.RPMtoRad();
 			var torque = 1500.SI<NewtonMeter>();
 			var power = angularVelocity * torque;
-			Assert.IsInstanceOfType(power, typeof(Watt));
+			Assert.IsInstanceOf<Watt>(power);
 			Assert.AreEqual(600.0 / 60 * 2 * Math.PI * 1500, power.Value());
 
 			var siStandardMult = power * torque;
-			Assert.IsInstanceOfType(siStandardMult, typeof(SI));
+			Assert.IsInstanceOf<SI>(siStandardMult);
 			Assert.AreEqual(600.0 / 60 * 2 * Math.PI * 1500 * 1500, siStandardMult.Value());
 			Assert.IsTrue(siStandardMult.HasEqualUnit(new SI().Watt.Newton.Meter));
 
 			//div
 			var torque2 = power / angularVelocity;
-			Assert.IsInstanceOfType(torque2, typeof(NewtonMeter));
+			Assert.IsInstanceOf<NewtonMeter>(torque2);
 			Assert.AreEqual(1500, torque2.Value());
 
 			var siStandardDiv = power / power;
-			Assert.IsInstanceOfType(siStandardMult, typeof(SI));
+			Assert.IsInstanceOf<SI>(siStandardMult);
 			Assert.IsTrue(siStandardDiv.HasEqualUnit(new SI()));
 			Assert.AreEqual(600.0 / 60 * 2 * Math.PI * 1500 * 1500, siStandardMult.Value());
 
 			var force = torque / 100.SI<Meter>();
-			Assert.IsInstanceOfType(force, typeof(Newton));
+			Assert.IsInstanceOf<Newton>(force);
 			Assert.AreEqual(15, force.Value());
 
 			var test = 2.0.SI<PerSecond>();
@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			//general si unit
 			var generalSIUnit = 3600000000.0.SI().Gramm.Per.Kilo.Watt.Hour.ConvertTo().Kilo.Gramm.Per.Watt.Second;
-			Assert.IsInstanceOfType(generalSIUnit, typeof(SI));
+			Assert.IsInstanceOf<SI>(generalSIUnit);
 			Assert.AreEqual(1, generalSIUnit.Value());
 
 			//type conversion
@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			// convert between units measures
 			var angularVelocity4 = engineSpeed.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second;
-			Assert.IsInstanceOfType(angularVelocity4, typeof(SI));
+			Assert.IsInstanceOf<SI>(angularVelocity4);
 
 			// cast SI to specialized unit classes.
 			PerSecond angularVelocity5 = angularVelocity4.Cast<PerSecond>();
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var res2 = 40.SI().Newton.Cast<Newton>();
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void SI_Test()
 		{
 			var si = new SI();
@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual(45.0 / 180.0 * Math.PI, VectoMath.InclinationToAngle(1).Value(), 0.000001);
 		}
 
-		[TestMethod]
+		[TestCase]
 		[SuppressMessage("ReSharper", "UnusedVariable")]
 		public void SI_Comparison_Operators()
 		{
@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual(1, 2.SI().CompareTo(1.SI()));
 		}
 
-		[TestMethod]
+		[TestCase]
 		[SuppressMessage("ReSharper", "UnusedVariable")]
 		public void SI_Test_Addition_Subtraction()
 		{
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				"Operator '-' can only operate on SI Objects with the same unit. Got: 1.0000 [s] - 1.0000 [m]");
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void SI_SpecialUnits()
 		{
 			Scalar scalar = 3.SI<Scalar>();
@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		/// <summary>
 		/// VECTO-111
 		/// </summary>
-		[TestMethod]
+		[TestCase]
 		public void SI_ReziprokDivision()
 		{
 			var test = 2.0.SI<Second>();
@@ -320,7 +320,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.AreRelativeEqual(expected, actual);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void SI_Multiplication_Division()
 		{
 			AssertHelper.AreRelativeEqual(12.SI(), 3.SI() * 4.SI());
@@ -353,14 +353,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.AreRelativeEqual(second, newtonMeter / watt);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void SI_MeterPerSecond_Div_Meter()
 		{
 			PerSecond actual = 6.SI<MeterPerSecond>() / 2.SI<Meter>();
 			AssertHelper.AreRelativeEqual(3.SI().Per.Second, actual);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void SI_SimplifyUnits()
 		{
 			AssertHelper.AreRelativeEqual(3.SI(), 18.SI().Kilo.Gramm / 6.SI().Kilo.Gramm);
@@ -382,14 +382,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.AreRelativeEqual(3.SI().Meter.Per.Second, 3.SI<Newton>().Second.Per.Kilo.Gramm);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void SI_Math()
 		{
 			AssertHelper.AreRelativeEqual(-3, -3.SI().Value());
 			AssertHelper.AreRelativeEqual(3.SI(), (-3).SI().Abs());
 		}
 
-		[TestMethod]
+		[TestCase]
 		[SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
 		public void SI_Equality()
 		{
@@ -427,7 +427,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			4.SI<NewtonMeter>().GetHashCode();
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void SI_Output()
 		{
 			Assert.AreEqual("3.0000", 3.SI().ToOutputFormat());

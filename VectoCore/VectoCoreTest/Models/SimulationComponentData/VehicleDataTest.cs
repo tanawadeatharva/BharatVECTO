@@ -29,16 +29,16 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
-	[TestClass]
+	[TestFixture]
 	public class VehicleDataTest
 	{
 		private const string VehicleDataFile = @"TestData\Components\24t Coach.vveh";
 
-		[TestMethod]
+		[TestCase]
 		public void ReadVehicleFileTest()
 		{
 			//IDataFileReader reader = new EngineeringModeSimulationDataReader();

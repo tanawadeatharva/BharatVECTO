@@ -38,7 +38,7 @@ using TUGraz.VECTO;
 
 namespace VectoLegacyTests
 {
-	[TestClass]
+	[TestFixture]
 	public class TorqueConverterTest
 	{
 		[ClassInitialize]

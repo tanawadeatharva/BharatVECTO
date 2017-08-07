@@ -49,15 +49,16 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 using TUGraz.VectoCore.Tests.Utils;
+using NUnit.Framework;
 
 // ReSharper disable ObjectCreationAsStatement
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-	[TestClass]
+	[TestFixture]
 	public class AuxTests
 	{
-		[TestMethod]
+		[TestCase]
 		public void AuxWriteModFileSumFile()
 
 		{
@@ -120,7 +121,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"AuxWriteModFileSumFile.vsum");
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void AuxConstant()
 		{
 			var dataWriter = new MockModalDataContainer();
@@ -152,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			AssertHelper.AreRelativeEqual(constPower / speed, auxDemand);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void AuxDirect()
 		{
 			var dataWriter = new MockModalDataContainer();
@@ -181,7 +182,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void AuxAllCombined()
 		{
 			var dataWriter = new MockModalDataContainer();
@@ -246,7 +247,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void AuxMapping()
 		{
 			var auxId = "ALT1";
@@ -307,7 +308,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void AuxColumnMissing()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
@@ -320,7 +321,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				"driving cycle does not contain column for auxiliary: AUX_NONEXISTING_AUX");
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void AuxFileMissing()
 		{
 			AssertHelper.Exception<VectoException>(() => {
@@ -329,7 +330,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}, "Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void AuxReadJobFileDeclarationMode()
 		{
 			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode");
@@ -343,7 +344,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			jobContainer.AddRuns(runsFactory);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void AuxReadJobFileEngineeringMode()
 		{
 			var fileWriter = new FileOutputWriter("AuxReadJobFileEngineeringMode");
@@ -357,7 +358,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			jobContainer.AddRuns(runsFactory);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void AuxDeclarationWrongConfiguration()
 		{
 			var fileWriter = new FileOutputWriter("AuxReadJobFileDeclarationMode");
