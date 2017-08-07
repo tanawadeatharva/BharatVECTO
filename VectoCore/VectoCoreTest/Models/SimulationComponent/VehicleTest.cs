@@ -52,7 +52,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		private const string VehicleDataFileTruck = @"TestData\Components\40t_Long_Haul_Truck.vveh";
 		public static readonly double Tolerance = 0.001;
 
-		[Test]
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+
+        [Test]
 		public void VehiclePortTest()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);

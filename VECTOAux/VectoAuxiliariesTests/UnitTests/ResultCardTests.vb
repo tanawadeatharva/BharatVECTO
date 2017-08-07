@@ -39,17 +39,16 @@ Public Class ResultCardTests
 		Assert.IsNotNull(target)
 	End Sub
 
-	<Test()>
-	<ExpectedException("System.ArgumentException")>
-	Public Sub CreateNewBanResultsNullTest()
+    <Test()>
+    Public Sub CreateNewBanResultsNullTest()
 
-		Dim target As New ResultCard(Nothing)
+        Dim target As ResultCard
+        Assert.That(Sub() target = New ResultCard(Nothing), Throws.InstanceOf(Of ArgumentException))
 
-		Assert.IsNotNull(target)
-	End Sub
+    End Sub
 
 
-	<Test()>
+    <Test()>
 	Public Sub GetBotomBoundryValueTest()
 
 		Dim expected As Single = 18

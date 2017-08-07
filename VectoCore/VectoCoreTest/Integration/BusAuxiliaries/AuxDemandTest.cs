@@ -42,13 +42,21 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using System.IO;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {
-	[TestFixture]
+    
+    [TestFixture]
 	public class AuxDemandTest
 	{
-		[Test]
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        [Test]
 		[TestCase(12000, 1256, 148, 148, 6086.9321)]
 		[TestCase(12000, 1256, -15, -50, 8954.1396)]
 		[TestCase(15700, 1319, -35.79263, -144.0441, 9093.9473)]

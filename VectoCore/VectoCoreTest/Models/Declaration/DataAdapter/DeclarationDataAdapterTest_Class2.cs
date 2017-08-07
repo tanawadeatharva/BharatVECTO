@@ -38,6 +38,7 @@ using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using System.IO;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 {
@@ -50,7 +51,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		public const int CurbWeight = 4670;
 		public const double CdxA = 4.83;
 
-		[TestCase(Class2RigidTruckNoEMSJob, 0)]
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        [TestCase(Class2RigidTruckNoEMSJob, 0)]
 		public void TestClass2_Vehicle_LongHaul_LowLoad(string file, int runIdx)
 		{
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);

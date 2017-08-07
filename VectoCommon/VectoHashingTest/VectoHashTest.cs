@@ -45,13 +45,21 @@ using Assert = NUnit.Framework.Assert;
 
 namespace VectoHashingTest
 {
-	[TestFixture]
+    
+
+    [TestFixture]
 	public class VectoHashTest
 	{
 		public const string ReferenceXMLEngine = @"Testdata\XML\Reference\vecto_engine-sample.xml";
 		public const string ReferenceXMLVehicle = @"Testdata\XML\Reference\vecto_vehicle-sample_FULL.xml";
 
-		[TestCase]
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        [TestCase]
 		public void TestComponentsEngineFile()
 		{
 			var h = VectoHash.Load(ReferenceXMLEngine);
@@ -334,8 +342,8 @@ namespace VectoHashingTest
 			var now = DateTime.Now;
 
 			Assert.AreNotEqual(date.ToString(), newDate.ToString());
-			Assert.IsTrue(now - date > new TimeSpan(0, 0, 0, 1));
-			Assert.IsTrue(now - newDate < new TimeSpan(0, 0, 0, 1));
+			Assert.IsTrue(now.ToUniversalTime() - date > new TimeSpan(0, 0, 0, 1));
+			Assert.IsTrue(now.ToUniversalTime() - newDate < new TimeSpan(0, 0, 0, 1));
 		}
 
 		[TestCase(@"Testdata\XML\ToHash\vecto_engine_withhash-input.xml", "input data already contains a signature element"),

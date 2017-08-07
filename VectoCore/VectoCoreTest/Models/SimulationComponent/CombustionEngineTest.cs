@@ -44,6 +44,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using System.IO;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable NotAccessedVariable
@@ -61,7 +62,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		private const string TruckEngine = @"TestData\Components\40t_Long_Haul_Truck.veng";
 
-		[TestCase]
+
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        [TestCase]
 		public void TestEngineHasOutPort()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);

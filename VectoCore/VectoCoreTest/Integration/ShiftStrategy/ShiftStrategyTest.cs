@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 	[TestFixture]
 	public class ShiftStrategyTest
 	{
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void DisableLogging()
 		{
 			//LogManager.DisableLogging();

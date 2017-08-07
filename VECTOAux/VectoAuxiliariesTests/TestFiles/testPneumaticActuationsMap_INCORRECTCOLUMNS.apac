@@ -1,6 +1,5 @@
 ﻿ConsumerName, CycleName, Actuations
-Brakes,Heavy urban,191
-Brakes,Urban,153
+Brakes,Heavy urban
 Brakes,Suburban,49
 Brakes,Interurban,190
 Brakes,Coach,27

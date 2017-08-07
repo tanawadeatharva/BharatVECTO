@@ -34,60 +34,53 @@ Public Sub BusCreateTest()
 
         End Sub
 
-        <Test()> _
-        <ExpectedException("System.ArgumentException")>
+        <Test()>
         Public Sub IllegalFloorTypeTest()
 
-            Dim target As IBus = New Bus(2, "", "raised floor", "diesel", 10.655, 2.55, 2.275, 47, False)
-
+            Dim target As IBus
+            Assert.That(Sub() target = New Bus(2, "", "raised floor", "diesel", 10.655, 2.55, 2.275, 47, False), Throws.InstanceOf(Of ArgumentException))
         End Sub
 
-        <Test()> _
-        <ExpectedException("System.ArgumentException")>
+        <Test()>
         Public Sub IllegalModelTest()
 
-            Dim target As IBus = New Bus(3, "ABC", "raised", "diesel", 10.655, 2.55, 2.275, 47, False)
-
+            Dim target As IBus
+            Assert.That(Sub() target = New Bus(3, "ABC", "raised", "diesel", 10.655, 2.55, 2.275, 47, False), Throws.InstanceOf(Of ArgumentException))
         End Sub
 
-        <Test()> _
-        <ExpectedException("System.ArgumentException")>
+        <Test()>
         Public Sub IllegalEngineTypeTest()
 
-            Dim target As IBus = New Bus(4, "ABC", "raised floor", "vapour", 10.655, 2.55, 2.275, 47, False)
-
+            Dim target As IBus
+            Assert.That(Sub() target = New Bus(4, "ABC", "raised floor", "vapour", 10.655, 2.55, 2.275, 47, False), Throws.InstanceOf(Of ArgumentException))
         End Sub
 
-        <Test()> _
-        <ExpectedException("System.ArgumentException")>
+        <Test()>
         Public Sub IllegalWidthTest()
 
-            Dim target As IBus = New Bus(5, "IVECO - Arway Intercity 10.6m", "raised floor", "diesel", 10.655, 0, 2.275, 47, False)
-
+            Dim target As IBus
+            Assert.That(Sub() target = New Bus(5, "IVECO - Arway Intercity 10.6m", "raised floor", "diesel", 10.655, 0, 2.275, 47, False), Throws.InstanceOf(Of ArgumentException))
         End Sub
 
-        <Test()> _
-        <ExpectedException("System.ArgumentException")>
+        <Test()>
         Public Sub IllegalHeightTest()
 
-            Dim target As IBus = New Bus(6, "IVECO - Arway Intercity 10.6m", "raised floor", "diesel", 10.655, 2.55, 0, 47, False)
-
+            Dim target As IBus
+            Assert.That(Sub() target = New Bus(6, "IVECO - Arway Intercity 10.6m", "raised floor", "diesel", 10.655, 2.55, 0, 47, False), Throws.InstanceOf(Of ArgumentException))
         End Sub
 
-        <Test()> _
-        <ExpectedException("System.ArgumentException")>
+        <Test()>
         Public Sub IllegalLengthTest()
 
-            Dim target As IBus = New Bus(7, "IVECO - Arway Intercity 10.6m", "raised floor", "diesel", 0, 2.55, 2.275, 47, False)
-
+            Dim target As IBus
+            Assert.That(Sub() target = New Bus(7, "IVECO - Arway Intercity 10.6m", "raised floor", "diesel", 0, 2.55, 2.275, 47, False), Throws.InstanceOf(Of ArgumentException))
         End Sub
 
-        <Test()> _
-        <ExpectedException("System.ArgumentException")>
+        <Test()>
         Public Sub IllegalPassengersTest()
 
-            Dim target As IBus = New Bus(8, "IVECO - Arway Intercity 10.6m", "raised floor", "diesel", 10.655, 2.55, 2.275, 1, False)
-
+            Dim target As IBus
+            Assert.That(Sub() target = New Bus(8, "IVECO - Arway Intercity 10.6m", "raised floor", "diesel", 10.655, 2.55, 2.275, 1, False), Throws.InstanceOf(Of ArgumentException))
         End Sub
 
         <Test()>

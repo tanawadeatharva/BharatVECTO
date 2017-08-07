@@ -30,6 +30,7 @@
 */
 
 using NUnit.Framework;
+using System.IO;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -51,7 +52,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public const string EngineDataFile = @"TestData\Components\AT_GBX\Engine.veng";
 		public const string GearboxDataFile = @"TestData\Components\AT_GBX\GearboxSerial.vgbx";
 
-		[Test,
+
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        [Test,
 		TestCase(0, 100, 1),
 		TestCase(0, 200, 1),
 		TestCase(5, 100, 1),
