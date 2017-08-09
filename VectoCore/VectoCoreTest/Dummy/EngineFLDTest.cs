@@ -41,6 +41,12 @@ namespace TUGraz.VectoCore.Tests.Dummy
 	[TestFixture]
 	public class EngineFLDTest
 	{
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 		[TestCase]
 		public void CompareFLDLookupPerformance()
 		{
