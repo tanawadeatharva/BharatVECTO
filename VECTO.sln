@@ -43,8 +43,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectoCommon", "VectoCommon\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelbasedTests", "VectoCore\ModelbasedTests\ModelbasedTests.csproj", "{A0256B2A-09F8-45AD-B46A-FD98D7AAAA0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectoLegacyTests", "Tools\VectoLegacyTests\VectoLegacyTests.csproj", "{49F0275A-4517-49FA-859E-77279B9C8B18}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{D29E62A2-CF08-469F-B29F-1B25DCB35386}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectoAPI", "..\VECTO_API\VectoAPI\VectoAPI.csproj", "{512C2CD1-E5BE-4F6B-943B-2BFA7E0CBD64}"
@@ -335,23 +333,6 @@ Global
 		{A0256B2A-09F8-45AD-B46A-FD98D7AAAA0C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A0256B2A-09F8-45AD-B46A-FD98D7AAAA0C}.Release|x64.ActiveCfg = Release|Any CPU
 		{A0256B2A-09F8-45AD-B46A-FD98D7AAAA0C}.Release|x86.ActiveCfg = Release|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Debug PerformanceStats|Any CPU.ActiveCfg = Debug|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Debug PerformanceStats|x64.ActiveCfg = Debug|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Debug PerformanceStats|x86.ActiveCfg = Debug|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Debug PerformanceTrace|Any CPU.ActiveCfg = Debug|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Debug PerformanceTrace|x64.ActiveCfg = Debug|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Debug PerformanceTrace|x86.ActiveCfg = Debug|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Deploy|Any CPU.ActiveCfg = Deploy|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Deploy|x64.ActiveCfg = Deploy|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Deploy|x86.ActiveCfg = Deploy|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Release|x64.ActiveCfg = Release|Any CPU
-		{49F0275A-4517-49FA-859E-77279B9C8B18}.Release|x86.ActiveCfg = Release|Any CPU
 		{512C2CD1-E5BE-4F6B-943B-2BFA7E0CBD64}.Debug PerformanceStats|Any CPU.ActiveCfg = Debug|Any CPU
 		{512C2CD1-E5BE-4F6B-943B-2BFA7E0CBD64}.Debug PerformanceStats|x64.ActiveCfg = Debug|Any CPU
 		{512C2CD1-E5BE-4F6B-943B-2BFA7E0CBD64}.Debug PerformanceStats|x86.ActiveCfg = Debug|Any CPU
