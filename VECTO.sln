@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VECTO", "VECTO\VECTO.vbproj", "{AAC0F132-0A9F-45B3-B682-77AC9B24B352}"
+	ProjectSection(ProjectDependencies) = postProject
+		{60AD4DF0-6648-4374-83CB-C7A162EFB391} = {60AD4DF0-6648-4374-83CB-C7A162EFB391}
+	EndProjectSection
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VectoAuxiliaries", "VECTOAux\VectoAuxiliaries\VectoAuxiliaries.vbproj", "{FDEEE460-0B8A-4EF6-8D9E-72F203A50F65}"
 EndProject

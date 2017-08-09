@@ -60,13 +60,14 @@
 <Target Name="AfterBuild" Condition="$(Configuration) == 'Deploy'">
 	<ItemGroup>  
 		<VectoCoreAssembly Include="$(OutputPath)VectoCore.dll" />  
-
-		<GenericVehicles Include="$(SolutionDir)\Generic Vehicles\**\*.*" Exclude="$(SolutionDir)\**\*.vmod;$(SolutionDir)\**\*.vsum;$(SolutionDir)\**\*RSLT_*.xml"/>
-		<MissionProfiles Include="$(SolutionDir)\VectoCore\VectoCore\Resources\Declaration\MissionCycles\**\*.*"/>
-		<DeclarationData Include="$(SolutionDir)\VectoCore\VectoCore\Resources\Declaration\**/*.csv" Exclude="$(SolutionDir)\**\MissionCycles\**\*.*"/>
-		<DeclarationData Include="$(SolutionDir)\VectoCore\VectoCore\Resources\Declaration\**/*.vacc" Exclude="$(SolutionDir)\**\MissionCycles\**\*.*"/>
-		<VectoXSD Include="$(SolutionDir)\VectoCore\VectoCore\Resources\XSD\**\*.*" Exclude="$(SolutionDir)\**\*Engineering*"/>
-		<VectoXMLExamples Include="$(SolutionDir)\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\*-sample.xml"/>
+		<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Deploy\vectocmd.exe*"/>
+		
+		<GenericVehicles Include="$(SolutionDir)Generic Vehicles\**\*.*" Exclude="$(SolutionDir)**\*.vmod;$(SolutionDir)**\*.vsum;$(SolutionDir)**\*RSLT_*.xml;$(SolutionDir)**\*.pdf"/>
+		<MissionProfiles Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\MissionCycles\**\*.*"/>
+		<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**/*.csv" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
+		<DeclarationData Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\**/*.vacc" Exclude="$(SolutionDir)**\MissionCycles\**\*.*"/>
+		<VectoXSD Include="$(SolutionDir)VectoCore\VectoCore\Resources\XSD\**\*.*" Exclude="$(SolutionDir)**\*Engineering*"/>
+		<VectoXMLExamples Include="$(SolutionDir)VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\*-sample.xml"/>
 		<UserManual Include="$(SolutionDir)Documentation\User Manual\help.html"/>
 		<UserManual Include="$(SolutionDir)Documentation\XML\*.pdf"/>
 		<UserManual Include="$(SolutionDir)Documentation\XML\VectoParameters.html"/>
@@ -75,6 +76,8 @@
 		<ReleaseNotes Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
 	</ItemGroup>
 	
+	<Message Text="@(VectoCommandLine)"/>
+	<Copy SourceFiles="@(VectoCommandLine)" DestinationFolder="$(OutputPath)"/>
 	<Copy SourceFiles="@(GenericVehicles)" DestinationFiles="@(GenericVehicles->'$(OutputPath)\Generic Vehicles\%(RecursiveDir)%(Filename)%(Extension)')" />
 	<Copy SourceFiles="@(DeclarationData)" DestinationFolder="$(OutputPath)\Declaration" />
 	<Copy SourceFiles="@(MissionProfiles)" DestinationFolder="$(OutputPath)\Mission Profiles" />
@@ -98,6 +101,7 @@
 	<ItemGroup>
 		<ZipFiles Include="$(OutputPath)*.dll" />
 		<ZipFiles Include="$(OutputPath)VECTO.exe*" />
+		<ZipFiles Include="$(OutputPath)vectocmd.exe*"/>
 	</ItemGroup>
 	<Zip OutputFilename="$(OutputPath)Vecto_%(VectoAssemblyIdentities.Version).zip" Files="@(ZipFiles)" SourcePath="$(OutputPath)" DestinationPath="VECTO_%(VectoAssemblyIdentities.Version)\"/>
 </Target>
@@ -111,8 +115,8 @@
 		<CustomFilesToClean Include="$(OutputPath)XML\**\*.*" />
 		<CustomFoldersToClean Include="%(CustomFilesToClean.RootDir)%(CustomFilesToClean.Directory)"/>
 	</ItemGroup>
-	<Message Text="@(CustomFilesToClean)" Importance="normal"/>
-	<Message Text="@(CustomFoldersToClean)" Importance="normal"/>
+	<!-- <Message Text="@(CustomFilesToClean)" Importance="normal"/> -->
+	<!-- <Message Text="@(CustomFoldersToClean)" Importance="normal"/> -->
 	<Delete Files="@CustomFilesToClean"/>
 	<RemoveDir Directories="@(CustomFoldersToClean)"/>
 </Target>
