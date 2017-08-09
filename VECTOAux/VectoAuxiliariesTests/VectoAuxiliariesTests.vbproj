@@ -389,9 +389,6 @@
     <Content Include="TestFiles\testPneumaticActuationsMap_INVALIDCONSUMERNAME.apac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestFiles\testPneumaticActuationsMap_GOODMAP - Copy.apac">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="TestFiles\Integration\testFuelGoodMap.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
