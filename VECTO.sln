@@ -67,6 +67,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashingTool", "HashingTool\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashingCmd", "HashingCmd\HashingCmd.csproj", "{33F9848E-9257-4BE2-915F-68E748AEB204}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B5A298FD-8117-4443-9419-66BADA094716}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug PerformanceStats|Any CPU = Debug PerformanceStats|Any CPU
