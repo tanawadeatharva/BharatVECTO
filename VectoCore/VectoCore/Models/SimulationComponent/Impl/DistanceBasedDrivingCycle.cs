@@ -179,11 +179,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Second GetStopTimeInterval()
 		{
 			if (!Left.PTOActive || IdleController == null) {
-				if ((Left.StoppingTime - CurrentState.WaitTime).IsGreater(2 * Constants.SimulationSettings.TargetTimeInterval,
+				if ((Left.StoppingTime - PreviousState.WaitTime).IsGreater(2 * Constants.SimulationSettings.TargetTimeInterval,
 					0.1 * Constants.SimulationSettings.TargetTimeInterval)) {
 					return 2 * Constants.SimulationSettings.TargetTimeInterval;
 				}
-				return Left.StoppingTime - CurrentState.WaitTime;
+				return Left.StoppingTime - PreviousState.WaitTime;
 			}
 			if (Left.StoppingTime.IsGreater(6 * Constants.SimulationSettings.TargetTimeInterval)) {
 				// 7 phases
