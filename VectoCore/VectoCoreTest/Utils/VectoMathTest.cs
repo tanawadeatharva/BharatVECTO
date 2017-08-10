@@ -33,7 +33,6 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -130,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				new { X = 19, Y = 40.94 },
 				new { X = 23, Y = 33.58 },
 				new { X = 30, Y = 38.95 },
-				new { X = 22, Y = 35.42},
+				new { X = 22, Y = 35.42 },
 				new { X = 11, Y = 32.12 },
 				new { X = 13, Y = 28.57 },
 				new { X = 28, Y = 40.97 },
