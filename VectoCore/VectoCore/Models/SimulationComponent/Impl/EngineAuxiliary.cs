@@ -1,0 +1,191 @@
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2017 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
+using System;
+using System.Collections.Generic;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
+
+namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+{
+	/// <summary>
+	/// Container Class for Auxiliaries which are connected to the Engine.
+	/// </summary>
+	public class EngineAuxiliary : StatefulVectoSimulationComponent<EngineAuxiliary.State>, IAuxInProvider,
+		IAuxPort
+	{
+		protected readonly Dictionary<string, Func<PerSecond, Watt>> Auxiliaries =
+			new Dictionary<string, Func<PerSecond, Watt>>();
+
+		public EngineAuxiliary(IVehicleContainer container) : base(container) {}
+
+		public IAuxPort Port()
+		{
+			return this;
+		}
+
+		/// <summary>
+		/// Adds a constant power demand auxiliary.
+		/// </summary>
+		/// <param name="auxId"></param>
+		/// <param name="powerDemand"></param>
+		public void AddConstant(string auxId, Watt powerDemand)
+		{
+			Add(auxId, _ => powerDemand);
+		}
+
+		/// <summary>
+		/// Adds an auxiliary which gets its power demand from the driving cycle.
+		/// </summary>
+		/// <param name="auxId"></param>
+		public void AddCycle(string auxId)
+		{
+			Add(auxId, _ => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand);
+		}
+
+		/// <summary>
+		/// Adds an auxiliary which calculates the demand based on a aux-map and the engine speed.
+		/// </summary>
+		/// <param name="auxId"></param>
+		/// <param name="data"></param>
+		public void AddMapping(string auxId, AuxiliaryData data)
+		{
+			if (!DataBus.CycleData.LeftSample.AuxiliarySupplyPower.ContainsKey(auxId)) {
+				var error = string.Format("driving cycle does not contain column for auxiliary: {0}",
+					Constants.Auxiliaries.Prefix + auxId);
+				Log.Error(error);
+				throw new VectoException(error);
+			}
+
+			Add(auxId, speed => {
+				var powerSupply = DataBus.CycleData.LeftSample.AuxiliarySupplyPower[auxId];
+				var nAuxiliary = speed * data.TransmissionRatio;
+				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
+				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);
+				return powerAuxIn / data.EfficiencyToEngine;
+			});
+		}
+
+		/// <summary>
+		/// Adds an auxiliary with a function returning the power demand based on the engine speed.
+		/// </summary>
+		/// <param name="auxId"></param>
+		/// <param name="powerLossFunction"></param>
+		public void Add(string auxId, Func<PerSecond, Watt> powerLossFunction)
+		{
+			Auxiliaries[auxId] = powerLossFunction;
+		}
+
+		public NewtonMeter Initialize(NewtonMeter torque, PerSecond angularSpeed)
+		{
+			PreviousState.AngularSpeed = angularSpeed;
+			if (angularSpeed.IsEqual(0)) {
+				return 0.SI<NewtonMeter>();
+			}
+
+			return ComputePowerDemand(angularSpeed, false) / angularSpeed;
+		}
+
+		/// <summary>
+		/// Calculates the torque demand for all registered auxiliaries for the the current engine 
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="dt"></param>
+		/// <param name="torquePowerTrain"></param>
+		/// <param name="torqueEngine"></param>
+		/// <param name="angularSpeed"></param>
+		/// <param name="dryRun"></param>
+		/// <returns></returns>
+		public NewtonMeter TorqueDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
+			PerSecond angularSpeed, bool dryRun = false)
+		{
+			var avgAngularSpeed = PreviousState.AngularSpeed != null
+				? (angularSpeed + PreviousState.AngularSpeed) / 2.0
+				: angularSpeed;
+			if (!dryRun) {
+				CurrentState.AngularSpeed = angularSpeed;
+			}
+			if (avgAngularSpeed.IsGreater(0)) {
+				return ComputePowerDemand(avgAngularSpeed, dryRun) / avgAngularSpeed;
+			}
+			return 0.SI<NewtonMeter>();
+		}
+
+		protected Watt ComputePowerDemand(PerSecond engineSpeed, bool dryRun)
+		{
+			var powerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
+			foreach (var item in Auxiliaries) {
+				var value = item.Value(engineSpeed);
+				if (value != null) {
+					powerDemands[item.Key] = value;
+				}
+			}
+			if (!dryRun) {
+				CurrentState.PowerDemands = powerDemands;
+			}
+			return powerDemands.Sum(kv => kv.Value);
+		}
+
+		protected override void DoWriteModalResults(IModalDataContainer container)
+		{
+			var auxPowerDemand = 0.SI<Watt>();
+			if (CurrentState.PowerDemands != null) {
+				foreach (var kv in CurrentState.PowerDemands) {
+					container[kv.Key] = kv.Value;
+					// mk 2016-10-11: pto's should not be counted in sum auxiliary power demand
+					if (kv.Key != Constants.Auxiliaries.IDs.PTOTransmission && kv.Key != Constants.Auxiliaries.IDs.PTOConsumer) {
+						auxPowerDemand += kv.Value;
+					}
+				}
+			}
+			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
+				// only overwrite if nobody else already wrote the total aux power
+				container[ModalResultField.P_aux] = auxPowerDemand;
+			}
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			AdvanceState();
+		}
+
+		public class State
+		{
+			public PerSecond AngularSpeed;
+			public Dictionary<string, Watt> PowerDemands;
+		}
+	}
+}

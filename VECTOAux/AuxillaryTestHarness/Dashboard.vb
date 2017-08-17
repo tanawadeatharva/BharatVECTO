@@ -1,0 +1,1313 @@
+﻿Imports VectoAuxiliaries
+Imports VectoAuxiliaries.Electrics
+Imports VectoAuxiliaries.Pneumatics
+Imports System.ComponentModel
+
+Public Class Dashboard
+
+#Region "Fields"
+
+Public auxEnvironment As New AuxillaryEnvironment("")
+private TabColors As Dictionary( Of TabPage, Color)  = new   Dictionary( Of TabPage, Color) ()
+Private processing As Boolean = False
+Private SecondsIntoCycle As Integer=0
+
+Private vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
+
+#End Region
+
+
+Private Sub SetupControls()
+
+
+      Dim cIndex As Integer = 0
+
+      gvElectricalConsumables.AutoGenerateColumns=false
+
+     'ElectricalConsumerGrid 
+     'Columns
+     cIndex = gvElectricalConsumables.Columns.Add("Category", "Category")
+     gvElectricalConsumables.Columns(cIndex).DataPropertyName = "Category"
+     gvElectricalConsumables.Columns(cIndex).MinimumWidth = 150
+     gvElectricalConsumables.Columns(cIndex).ReadOnly = True
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopCenter
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Padding = New Padding(1,2,1,1)
+
+     cIndex = gvElectricalConsumables.Columns.Add("ConsumerName", "Name")
+
+     gvElectricalConsumables.Columns(cIndex).DataPropertyName = "ConsumerName"
+     gvElectricalConsumables.Columns(cIndex).MinimumWidth = 308
+     gvElectricalConsumables.Columns(cIndex).ReadOnly = True
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopCenter
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Padding = New Padding(1,2,1,1)
+
+     Dim baseVehicle As New DataGridViewCheckBoxColumn(False)
+     baseVehicle.HeaderText = "Base Vehicle"
+     cIndex = gvElectricalConsumables.Columns.Add(baseVehicle)
+     gvElectricalConsumables.Columns(cIndex).DataPropertyName = "BaseVehicle"
+     gvElectricalConsumables.Columns(cIndex).Width = 75
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopCenter
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Padding = New Padding(1,2,1,1)
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.ToolTipText="Energy included in the calculations of base vehicle"
+
+     cIndex = gvElectricalConsumables.Columns.Add("NominalConsumptionAmps", "Nominal Amps")
+     gvElectricalConsumables.Columns(cIndex).DataPropertyName = "NominalConsumptionAmps"
+     gvElectricalConsumables.Columns(cIndex).Width = 70
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopCenter
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Padding = New Padding(1,2,1,1)
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.ToolTipText="Nominal consumption in AMPS"
+
+     cIndex = gvElectricalConsumables.Columns.Add("PhaseIdle_TractionOn", "PhaseIdle/ TractionOn")
+     gvElectricalConsumables.Columns(cIndex).DataPropertyName = "PhaseIdle_TractionOn"
+     gvElectricalConsumables.Columns(cIndex).Width = 70
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopCenter
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Padding = New Padding(1,2,1,1)
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.ToolTipText="Represents the amount of time (during engine fueling) as " & vbCrLf & "percentage that the consumer is active during the cycle."
+
+     cIndex = gvElectricalConsumables.Columns.Add("NumberInActualVehicle", "Num in Vehicle")
+     gvElectricalConsumables.Columns(cIndex).DataPropertyName = "NumberInActualVehicle"
+     gvElectricalConsumables.Columns(cIndex).Width = 70
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Alignment = DataGridViewContentAlignment.TopCenter
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.Style.Padding = New Padding(1,2,1,1)
+     gvElectricalConsumables.Columns(cIndex).HeaderCell.ToolTipText="Number of consumables of this" & vbCrLf & "type installed on the vehicle."
+
+     'ResultCard Grids
+
+     'Handler for deleting rows.
+
+
+     'IDLE
+
+     cIndex = gvResultsCardIdle.Columns.Add("Amps", "Amps")
+     gvResultsCardIdle.Columns(cIndex).DataPropertyName = "Amps"
+     gvResultsCardIdle.Columns(cIndex).Width = 65
+
+     cIndex = gvResultsCardIdle.Columns.Add("SmartAmps", "SmartAmps")
+     gvResultsCardIdle.Columns(cIndex).DataPropertyName = "SmartAmps"
+     gvResultsCardIdle.Columns(cIndex).Width = 65
+
+     'TRACTION
+     cIndex = gvResultsCardTraction.Columns.Add("Amps", "Amps")
+     gvResultsCardTraction.Columns(cIndex).DataPropertyName = "Amps"
+     gvResultsCardTraction.Columns(cIndex).Width = 65
+
+     cIndex = gvResultsCardTraction.Columns.Add("SmartAmps", "SmartAmps")
+     gvResultsCardTraction.Columns(cIndex).DataPropertyName = "SmartAmps"
+     gvResultsCardTraction.Columns(cIndex).Width = 65
+
+     'OVERRUN
+     cIndex = gvResultsCardOverrun.Columns.Add("Amps", "Amps")
+     gvResultsCardOverrun.Columns(cIndex).DataPropertyName = "Amps"
+     gvResultsCardOverrun.Columns(cIndex).Width = 65
+
+     cIndex = gvResultsCardOverrun.Columns.Add("SmartAmps", "SmartAmps")
+     gvResultsCardOverrun.Columns(cIndex).DataPropertyName = "SmartAmps"
+     gvResultsCardOverrun.Columns(cIndex).Width = 65
+
+
+
+
+End Sub
+#Region "Binding Control"
+
+
+Private Sub CreateBindings()
+
+     'AuxEnvironment.Vecto Bindings
+     txtPowernetVoltage.DataBindings.Add("Text", auxEnvironment.ElectricalUserInputsConfig, "PowerNetVoltage")
+     txtVehicleWeightKG.DataBindings.Add("Text", auxEnvironment.VectoInputs, "VehicleWeightKG")
+     cboCycle.DataBindings.Add("Text", auxEnvironment.VectoInputs, "Cycle")
+     txtFuelMap.DataBindings.Add("Text",auxEnvironment.VectoInputs,"FuelMap")
+
+     'Electricals General
+     txtAlternatorMapPath.DataBindings.Add("Text", auxEnvironment.ElectricalUserInputsConfig, "AlternatorMap")
+     txtAlternatorGearEfficiency.DataBindings.Add("Text", auxEnvironment.ElectricalUserInputsConfig, "AlternatorGearEfficiency")
+     txtDoorActuationTimeSeconds.DataBindings.Add("Text", auxEnvironment.ElectricalUserInputsConfig, "DoorActuationTimeSecond")
+     chkSmartElectricals.DataBindings.Add("Checked", auxEnvironment.ElectricalUserInputsConfig, "SmartElectrical",False,DataSourceUpdateMode.OnPropertyChanged)
+
+     'TODO:NOT NEEDED IN NORMAL OPS ONLY FOR TEST HARNESS
+     chkSignalsSmartElectrics.DataBindings.Add("Checked", auxEnvironment.Signals, "SmartElectrics",False,DataSourceUpdateMode.OnPropertyChanged)
+
+     'Electrical ConsumablesGrid
+     Dim electricalConsumerBinding  As New BindingList(Of IElectricalConsumer)(auxEnvironment.ElectricalUserInputsConfig.ElectricalConsumers.Items ) 
+     gvElectricalConsumables.DataSource = electricalConsumerBinding
+
+
+
+     'ResultCards
+
+         'IDLE
+         Dim idleBinding = new BindingList(Of SmartResult)
+         idleBinding = New BindingList(Of SmartResult)(auxEnvironment.ElectricalUserInputsConfig.ResultCardIdle.Results)
+         idleBinding.AllowNew=true   
+         idleBinding.AllowRemove=True
+         gvResultsCardIdle.DataSource=idleBinding 
+             
+         'TRACTION
+         Dim tractionBinding As BindingList(Of SmartResult)
+         tractionBinding = New BindingList(Of SmartResult)(auxEnvironment.ElectricalUserInputsConfig.ResultCardTraction.Results)
+         tractionBinding.AllowNew=true   
+         tractionBinding.AllowRemove=true           
+         gvResultsCardTraction.DataSource = tractionBinding
+        
+         'OVERRUN
+         Dim overrunBinding As BindingList(Of SmartResult)
+         overrunBinding = New BindingList(Of SmartResult)(auxEnvironment.ElectricalUserInputsConfig.ResultCardOverrun.Results)
+         overrunBinding.AllowNew=true   
+         overrunBinding.AllowRemove=true   
+         gvResultsCardOverrun.DataSource=overrunBinding
+
+
+        'Pneumatic Auxillaries Binding
+        txtAdBlueNIperMinute.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"AdBlueNIperMinute")     
+
+        txtOverrunUtilisationForCompressionFraction.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"OverrunUtilisationForCompressionFraction")
+        txtBrakingWithRetarderNIperKG.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"BrakingWithRetarderNIperKG")
+        txtBrakingNoRetarderNIperKG.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"BrakingNoRetarderNIperKG")
+        txtBreakingPerKneelingNIperKGinMM.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"BreakingPerKneelingNIperKGinMM",true,DataSourceUpdateMode.OnPropertyChanged,nothing,"0.########")
+        txtPerDoorOpeningNI.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"PerDoorOpeningNI")
+        txtPerStopBrakeActuationNIperKG.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"PerStopBrakeActuationNIperKG")
+        txtAirControlledSuspensionNIperMinute.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"AirControlledSuspensionNIperMinute")
+        txtNonSmartRegenFractionTotalAirDemand.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"NonSmartRegenFractionTotalAirDemand")
+        txtSmartRegenFractionTotalAirDemand.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"SmartRegenFractionTotalAirDemand")
+        txtDeadVolumeLitres.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"DeadVolumeLitres")
+        txtDeadVolBlowOutsPerLitresperHour.DataBindings.Add("Text",auxEnvironment.PneumaticAuxillariesConfig,"DeadVolBlowOutsPerLitresperHour")
+
+        'Pneumatic UserInputsConfig Binding    
+        txtCompressorMap.DataBindings.Add("Text",auxEnvironment.PneumaticUserInputsConfig,"CompressorMap")             
+        txtCompressorGearEfficiency.DataBindings.Add("Text",auxEnvironment.PneumaticUserInputsConfig,"CompressorGearEfficiency") 
+        txtCompressorGearRatio.DataBindings.Add("Text",auxEnvironment.PneumaticUserInputsConfig,"CompressorGearRatio")      
+        txtActuationsMap.DataBindings.Add("Text",auxEnvironment.PneumaticUserInputsConfig,"ActuationsMap")      
+        chkSmartAirCompression.DataBindings.Add("Checked",auxEnvironment.PneumaticUserInputsConfig,"SmartAirCompression", False,DataSourceUpdateMode.OnPropertyChanged)  
+         
+        'TODO:NOT NEEDED IN NORMAL OPS ONLY FOR TEST HARNESS     
+        chkSignalsSmartAirCompression.DataBindings.Add("Checked",auxEnvironment.Signals,"SmartPneumatics",False,DataSourceUpdateMode.OnPropertyChanged)
+        Me.chkEngineStopped.DataBindings.Add("Checked",auxEnvironment.Signals,"EngineStopped",False,DataSourceUpdateMode.OnPropertyChanged)
+
+        chkSmartRegeneration.DataBindings.Add("Checked",auxEnvironment.PneumaticUserInputsConfig,"SmartRegeneration",False,DataSourceUpdateMode.OnPropertyChanged)         
+        chkRetarderBrake.DataBindings.Add("Checked",auxEnvironment.PneumaticUserInputsConfig,"RetarderBrake")          
+        txtKneelingHeightMillimeters.DataBindings.Add("Text",auxEnvironment.PneumaticUserInputsConfig,"KneelingHeightMillimeters")  
+        cboAirSuspensionControl.DataBindings.Add("Text",auxEnvironment.PneumaticUserInputsConfig,"AirSuspensionControl",False)       
+        cboAdBlueDosing.DataBindings.Add("Text",auxEnvironment.PneumaticUserInputsConfig,"AdBlueDosing")             
+        cboDoors.DataBindings.Add("Text",auxEnvironment.PneumaticUserInputsConfig,"Doors")    
+        
+        'HVAC Bindings     
+        txtHVACElectricalLoadPowerWatts.DataBindings.Add("Text", auxEnvironment.HvacUserInputsConfig.SteadyStateModel,"HVACElectricalLoadPowerWatts")
+        txtHVACFuellingLitresPerHour.DataBindings.Add("Text", auxEnvironment.HvacUserInputsConfig.SteadyStateModel,"HVACFuellingLitresPerHour")
+        txtHVACMechanicalLoadPowerWatts.DataBindings.Add("Text", auxEnvironment.HvacUserInputsConfig.SteadyStateModel,"HVACMechanicalLoadPowerWatts")
+
+        txtSSMFilePath.DataBindings.Add("Text", auxEnvironment.HvacUserInputsConfig,"SSMFilePath")
+
+
+        'Signals
+        chkInNeutral.DataBindings.Add("Checked",auxEnvironment.Signals,"InNeutral",False,DataSourceUpdateMode.OnPropertyChanged)
+        chkIdle.DataBindings.Add("Checked",auxEnvironment.Signals,"Idle",False,DataSourceUpdateMode.OnPropertyChanged)
+        chkClutchEngaged.DataBindings.Add("Checked", auxEnvironment.Signals,"ClutchEngaged",False,DataSourceUpdateMode.OnPropertyChanged)
+        txtPreExistingAuxPower.DataBindings.Add("Text",auxEnvironment.Signals,"PreExistingAuxPower")
+        txtEngineDrivelinePower.DataBindings.Add("Text", auxEnvironment.Signals,"EngineDrivelinePower")
+        txtEngineDrivelineTorque.DataBindings.Add("Text", auxEnvironment.Signals,"EngineDrivelineTorque")
+        txtEngineMotoringPower.DataBindings.Add("Text", auxEnvironment.Signals,"EngineMotoringPower")
+        txtEngineSpeed.DataBindings.Add("Text", auxEnvironment.Signals,"EngineSpeed")
+        txtTotalCycleTimeSeconds.DataBindings.Add("Text",auxEnvironment.Signals,"TotalCycleTimeSeconds")
+                
+
+End Sub
+
+Private Sub EnsureBinding()
+        With tabMain
+            Dim lastSelectedTabIndex As Integer = .SelectedIndex
+            If lastSelectedTabIndex < 0 OrElse lastSelectedTabIndex > .TabCount Then lastSelectedTabIndex = 0
+            For currentTab As Integer = 0 To .TabCount - 1
+                .SelectedIndex = currentTab
+            Next
+            .SelectedIndex = 0
+        End With
+    End Sub
+
+
+#End Region
+
+
+'Validation
+#Region "Validation Helpers"
+
+
+Public Function IsPostiveNumber(byval test As string)As boolean
+
+     'Is this numeric sanity check.
+     If Not IsNumeric(test) then Return False
+
+     Dim number As Single
+
+     If Not Single.TryParse( test,  number)  then Return false
+
+     If number<=0 then Return False
+     
+
+     Return true
+  
+End Function
+
+Public Function IsZeroOrPostiveNumber(byval test As string)As boolean
+
+     'Is this numeric sanity check.
+     If Not IsNumeric(test) then Return False
+
+     Dim number As Single
+
+     If Not Single.TryParse( test,  number)  then Return false
+
+     If number<0 then Return False
+     
+
+     Return true
+  
+End Function
+
+Public Function IsNumberBetweenZeroandOne( test As String )
+
+     'Is this numeric sanity check.
+     If Not IsNumeric(test) then Return False
+
+     Dim number As Single
+
+     If Not Single.TryParse( test,  number)  then Return false
+
+     If number<0 orelse number >1  then Return False
+
+     Return True
+     
+End Function
+
+Public Function IsIntegerZeroOrPositiveNumber( test As string)
+
+     'Is this numeric sanity check.
+     If Not IsNumeric(test) then Return False
+
+     'if not integer then return false
+
+     Dim number As integer
+
+     If Not integer.TryParse( test,  number)  then Return false
+
+     If number<0   then Return False
+
+     Return True
+
+
+End Function
+
+#End Region
+#REgion "Validation Control"
+
+
+'****** PNEUMATIC VALIDATION
+public sub Validating_PneumaticHandler( sender as Object, e As CancelEventArgs  )   Handles  txtAdBlueNIperMinute.Validating,  txtBrakingWithRetarderNIperKG.Validating, txtBrakingNoRetarderNIperKG.Validating, txtAirControlledSuspensionNIperMinute.Validating, txtBreakingPerKneelingNIperKGinMM.Validating, txtSmartRegenFractionTotalAirDemand.Validating, txtPerStopBrakeActuationNIperKG.Validating, txtPerDoorOpeningNI.Validating, txtOverrunUtilisationForCompressionFraction.Validating, txtNonSmartRegenFractionTotalAirDemand.Validating, txtDeadVolumeLitres.Validating, txtDeadVolBlowOutsPerLitresperHour.Validating, txtKneelingHeightMillimeters.Validating, txtCompressorMap.Validating, txtCompressorGearRatio.Validating, txtCompressorGearEfficiency.Validating, txtActuationsMap.Validating, cboDoors.Validating,  cboAirSuspensionControl.Validating, cboAdBlueDosing.Validating                
+
+    e.Cancel= Not Validate_Pneumatics()
+
+End Sub
+Public function Validate_Pneumatics(  ) As boolean
+
+       Dim result As Boolean = true
+
+       'PNEUMATIC AUXILLARIES PART
+       '***************************
+
+
+       'AdBlue NI per Minute : txtAdBlueNIperMinute
+       If Not IsZeroOrPostiveNumber(txtAdBlueNIperMinute.Text) then 
+         errorProvider.SetError(txtAdBlueNIperMinute ,"Please provide a non negative number.") 
+         result= false
+       Else
+          errorProvider.SetError(txtAdBlueNIperMinute ,String.Empty) 
+       End if
+
+       'Overrun Utilisation For Compression Fraction : txtOverrunUtilisationForCompressionFraction
+       If Not IsNumberBetweenZeroandOne(txtOverrunUtilisationForCompressionFraction.Text) then 
+         errorProvider.SetError(txtOverrunUtilisationForCompressionFraction ,"Please provide a non negative between 0 and 1.")    
+         result = false
+         Else
+         errorProvider.SetError(txtOverrunUtilisationForCompressionFraction ,String.Empty)           
+       End if
+
+       'Braking With Retarder NI per KG : txtBrakingWithRetarderNIperKG
+       If Not IsZeroOrPostiveNumber(txtBrakingWithRetarderNIperKG.Text) then 
+         errorProvider.SetError(txtBrakingWithRetarderNIperKG ,"Please provide a non negative number.") 
+         result = false
+        Else
+         errorProvider.SetError(txtBrakingWithRetarderNIperKG ,String.Empty)         
+       End if
+
+       'Braking No Retarder NI per KG : txtBrakingNoRetarderNIperKG
+       If Not IsZeroOrPostiveNumber(txtBrakingNoRetarderNIperKG.Text) then 
+         errorProvider.SetError(txtBrakingNoRetarderNIperKG ,"Please provide a non negative number.") 
+         result=false
+       Else
+         errorProvider.SetError(txtBrakingNoRetarderNIperKG ,String.Empty)        
+       End if
+
+       'Breaking Per Kneeling NI per KG in MM : txtBreakingPerKneelingNIperKGinMM
+       If Not IsZeroOrPostiveNumber(txtBreakingPerKneelingNIperKGinMM.Text) then 
+         errorProvider.SetError(txtBreakingPerKneelingNIperKGinMM ,"Please provide a non negative number.")    
+         result=false
+       Else
+         errorProvider.SetError(txtBreakingPerKneelingNIperKGinMM ,String.Empty)     
+       End if
+
+       'Per Door Opening NI : txtPerDoorOpeningNI
+       If Not IsZeroOrPostiveNumber(txtPerDoorOpeningNI.Text) then 
+         errorProvider.SetError(txtPerDoorOpeningNI ,"Please provide a non negative number.")    
+         result=false
+       Else
+         errorProvider.SetError(txtPerDoorOpeningNI ,String.Empty)          
+       End if
+
+       'Per Stop Brake Actuation NI per KG : txtPerStopBrakeActuationNIperKG
+       If Not IsZeroOrPostiveNumber(txtPerStopBrakeActuationNIperKG.Text) then 
+         errorProvider.SetError(txtPerStopBrakeActuationNIperKG ,"Please provide a non negative number.")  
+         result=false  
+       Else
+         errorProvider.SetError(txtPerStopBrakeActuationNIperKG ,String.Empty)         
+       End if
+
+       'Air Controlled Suspension NI per Minute : txtAirControlledSuspensionNIperMinute
+       If Not IsZeroOrPostiveNumber(txtAirControlledSuspensionNIperMinute.Text) then 
+         errorProvider.SetError(txtAirControlledSuspensionNIperMinute ,"Please provide a non negative number.")
+         result=false    
+       Else
+         errorProvider.SetError(txtAirControlledSuspensionNIperMinute ,String.Empty)       
+       End if
+
+       'Non Smart Regen Fraction Total Air Demand : txtNonSmartRegenFractionTotalAirDemand
+       If Not IsZeroOrPostiveNumber(txtNonSmartRegenFractionTotalAirDemand.Text) then 
+         errorProvider.SetError(txtNonSmartRegenFractionTotalAirDemand ,"Please provide a non negative number.")  
+         result=false    
+       Else
+         errorProvider.SetError(txtNonSmartRegenFractionTotalAirDemand ,String.Empty)         
+       End if
+
+       'Smart Regen Fraction Total Air Demand : txtSmartRegenFractionTotalAirDemand
+       If Not IsNumberBetweenZeroandOne(txtSmartRegenFractionTotalAirDemand.Text) then 
+         errorProvider.SetError(txtSmartRegenFractionTotalAirDemand ,"Please provide a non negative between 0 and 1.")    
+         result=False
+       Else
+         errorProvider.SetError(txtSmartRegenFractionTotalAirDemand ,String.Empty)       
+       End if
+
+
+       'Dead Volume Litres : txtDeadVolumeLitres
+       If Not IsZeroOrPostiveNumber(txtDeadVolumeLitres.Text) then 
+         errorProvider.SetError(txtDeadVolumeLitres ,"Please provide a non negative number.")    
+         result=False
+       Else
+         errorProvider.SetError(txtDeadVolumeLitres ,String.Empty)           
+       End if
+
+
+       'Dead Vol BlowOuts Per Litresper Hour : txtDeadVolBlowOutsPerLitresperHour
+       If Not IsZeroOrPostiveNumber(txtDeadVolBlowOutsPerLitresperHour.Text) then 
+         errorProvider.SetError(txtDeadVolBlowOutsPerLitresperHour ,"Please provide a non negative number.")
+         result=false    
+        Else
+         errorProvider.SetError(txtDeadVolBlowOutsPerLitresperHour ,String.Empty)        
+       End if
+
+
+       'USER CONFIG PART 
+       '*****************************************************************************************
+        'Compressor Map path : txtCompressorMap
+        'Test for empty after trim
+        If txtCompressorMap.Text.Trim.Length=0 then
+         errorProvider.SetError(txtCompressorMap ,"Please enter the localtion of a valid compressor map.") 
+         result=false   
+        else
+         errorProvider.SetError(txtCompressorMap ,String.Empty) 
+        End if
+        'Test File is valid
+        Dim comp As CompressorMap
+        Try
+
+        comp = New CompressorMap( txtCompressorMap.Text)
+        comp.Initialise()
+         errorProvider.SetError(txtCompressorMap ,String.Empty) 
+        Catch ex As Exception
+         errorProvider.SetError(txtCompressorMap ,"Error : map is invalid or cannot be found, please select a Cvalid compressor map")  
+         result=false
+        End Try
+
+        'Compressor Gear Efficiency : txtCompressorGearEfficiency"
+        If NOT  IsNumberBetweenZeroandOne(txtCompressorGearEfficiency.Text) then
+          errorProvider.SetError(txtCompressorGearEfficiency ,"Please enter a number between 0 and 1") 
+          result=false
+        else
+          errorProvider.SetError(txtCompressorGearEfficiency ,String.Empty) 
+        End If
+
+        'Compressor Gear Ratio : txtCompressorGearRatio
+        If NOT  IsPostiveNumber(txtCompressorGearRatio.Text) then
+          errorProvider.SetError(txtCompressorGearRatio ,"Please enter a number greater than 0.") 
+          result=false
+        else
+          errorProvider.SetError(txtCompressorGearRatio ,String.Empty) 
+        End If
+
+
+        'Actuations Map : txtActuationsMap
+        If txtActuationsMap.Text.Trim.Length=0 then
+         errorProvider.SetError(txtActuationsMap ,"Please enter the localtion of a valid Pneumatic Actuations map.") 
+         result=false   
+        else
+         errorProvider.SetError(txtActuationsMap ,String.Empty) 
+        End if
+        'Test File is valid
+        Dim actuations As PneumaticActuationsMAP
+        Try
+
+        actuations = New PneumaticActuationsMap( txtActuationsMap.Text)
+         actuations.Initialise()
+         errorProvider.SetError(txtActuationsMap ,String.Empty) 
+        Catch ex As Exception
+         errorProvider.SetError(txtActuationsMap ,"Error : Pneumatic Actuations map is invalid or cannot be found, please select a valid map")  
+         result=false
+        End Try
+
+
+
+        'NOT Required but included here so readers can see this is a positive ommission
+        '******************************************************************************
+        'Smart Air Compression : chkSmartAirCompression
+        'Smart Regeneration : chkSmartRegeneration
+        'Retarder Brake : chkRetarderBrake
+
+        'txtKneelingHeightMillimeters : txtKneelingHeightMillimeters
+        If NOT  IsPostiveNumber(txtKneelingHeightMillimeters.Text) then
+          errorProvider.SetError(txtKneelingHeightMillimeters ,"Please enter a number greater than 0.") 
+          result=false
+        else
+          errorProvider.SetError(txtKneelingHeightMillimeters ,String.Empty) 
+        End If
+
+        'cboAirSuspensionControl : cboAirSuspensionControl
+        If cboAirSuspensionControl.SelectedIndex<1  then
+          errorProvider.SetError(cboAirSuspensionControl ,"Please make a selection.") 
+          result=false
+        else
+          errorProvider.SetError(cboAirSuspensionControl ,String.Empty) 
+        End If
+
+        'cboAdBlueDosing : cboAdBlueDosing
+        If cboAdBlueDosing.SelectedIndex<1  then
+          errorProvider.SetError(cboAdBlueDosing ,"Please make a selection.") 
+          result=false
+        else
+          errorProvider.SetError(cboAdBlueDosing ,String.Empty) 
+        End if
+
+        'cboDoors : cboDoors
+        If cboDoors.SelectedIndex<1  then
+          errorProvider.SetError(cboDoors ,"Please make a selection.") 
+          result=false
+        else
+          errorProvider.SetError(cboDoors ,String.Empty) 
+        End if
+
+
+        'Set Tab Color
+
+        UpdateTabStatus("tabPneumaticConfig",result)
+
+
+
+
+Return result
+
+
+End function
+
+'*****  ELECTRICAL VALIDATION
+public sub Validating_ElectricsHandler( sender as Object, e As CancelEventArgs  ) Handles txtPowernetVoltage.Validating,  txtAlternatorMapPath.Validating, txtAlternatorGearEfficiency.Validating, txtDoorActuationTimeSeconds.Validating 
+
+    e.Cancel= Not Validate_Electrics()
+
+End Sub
+Public function Validate_Electrics() As boolean
+
+Dim result As Boolean = true
+
+  
+       'Powernet Voltage : txtPowernetVoltage
+       If Not IsPostiveNumber(txtPowernetVoltage.Text) then 
+         errorProvider.SetError(txtPowernetVoltage ,"Please provide a non negative number.") 
+         result= false
+       Else
+          errorProvider.SetError(txtPowernetVoltage ,String.Empty) 
+       End if
+
+
+        'Alternator Map  path : txtAlternatorMapPath
+        'Test for empty after trim
+        If txtAlternatorMapPath.Text.Trim.Length=0 then
+         errorProvider.SetError(txtAlternatorMapPath ,"Please enter the localtion of a valid alternator map.") 
+         result=false   
+        else
+         errorProvider.SetError(txtAlternatorMapPath ,String.Empty) 
+        End if
+
+        'Test File is valid
+        Dim alt As AlternatorMap
+        Try
+        alt = New AlternatorMap( txtAlternatorMapPath.Text)
+        alt.Initialise()
+         errorProvider.SetError(txtAlternatorMapPath ,String.Empty) 
+        Catch ex As Exception
+         errorProvider.SetError(txtAlternatorMapPath ,"Error : map is invalid or cannot be found, please select a valid alternator map")  
+         result=false
+        End Try
+
+
+        'Alternator Gear Efficiency : txtAlternatorGearEfficiency
+        If Not IsNumberBetweenZeroandOne( txtAlternatorGearEfficiency.Text) then
+         ErrorProvider.SetError( txtAlternatorGearEfficiency, "Please enter a number between 0 an 1")
+         result = false
+        Else
+         ErrorProvider.SetError( txtAlternatorGearEfficiency,String.Empty)        
+        End If
+
+
+       'Door Action Time : txtDoorActuationTimeSeconds
+       If Not IsPostiveNumber(txtDoorActuationTimeSeconds.Text) then 
+         errorProvider.SetError(txtDoorActuationTimeSeconds ,"Please provide a non negative number.") 
+         result= false
+       Else
+          errorProvider.SetError(txtDoorActuationTimeSeconds ,String.Empty) 
+       End if
+
+
+               UpdateTabStatus("tabElectricalConfig",result)
+
+
+       Return result
+
+
+End Function 
+
+'****** HVAC VALIDATION
+public sub Validating_HVACHandler( sender as Object, e As CancelEventArgs  ) Handles txtHVACMechanicalLoadPowerWatts.Validating, txtHVACFuellingLitresPerHour.Validating, txtHVACElectricalLoadPowerWatts.Validating 
+
+    e.Cancel= Not Validate_HVAC()
+
+End Sub
+Public function Validate_HVAC() As boolean
+
+Dim result As Boolean = true
+
+  
+       'HVAC Electrical Load Power Watts : txtHVACElectricalLoadPowerWatts
+       If Not IsZeroOrPostiveNumber(txtHVACElectricalLoadPowerWatts.Text) then 
+         errorProvider.SetError(txtHVACElectricalLoadPowerWatts ,"Please provide a non negative number.") 
+         result= false
+       Else
+          errorProvider.SetError(txtHVACElectricalLoadPowerWatts ,String.Empty) 
+       End if
+
+       'HVAC Mechanical Load Power Watts : txtHVACMechanicalLoadPowerWatts
+       If Not IsZeroOrPostiveNumber(txtHVACMechanicalLoadPowerWatts.Text) then 
+         errorProvider.SetError(txtHVACMechanicalLoadPowerWatts ,"Please provide a non negative number.") 
+         result= false
+       Else
+          errorProvider.SetError(txtHVACMechanicalLoadPowerWatts ,String.Empty) 
+       End if
+
+
+       'HVAC Fuelling Litres Per Hour : txtHVACFuellingLitresPerHour
+       If Not IsZeroOrPostiveNumber(txtHVACFuellingLitresPerHour.Text) then 
+         errorProvider.SetError(txtHVACFuellingLitresPerHour ,"Please provide a non negative number.") 
+         result= false
+       Else
+          errorProvider.SetError(txtHVACFuellingLitresPerHour ,String.Empty) 
+       End if
+
+       UpdateTabStatus("tabHVACConfig",result)
+
+
+   Return result
+
+
+End Function
+
+
+Public Function ValidateAll() As Boolean
+
+  If Validate_Pneumatics=False Orelse Validate_Electrics=false Orelse Validate_Pneumatics=False
+
+  Return False
+  
+  End If
+
+  Return true
+
+End Function
+
+'*****  IMPUTS VALIDATION
+
+#End Region
+
+
+'Form Controls & Events
+Private Sub Dashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load 
+
+  'Required for OwnerDraw, this is required in order to color the tabs when a validation error occurs to draw
+  'The attention of the user to the fact that attention is required on a particlar tab.
+  TabColors.Add(tabGeneralConfig,Control.DefaultBackColor)
+  TabColors.Add(tabElectricalConfig,Control.DefaultBackColor)
+  TabColors.Add(tabPneumaticConfig,Control.DefaultBackColor)
+  TabColors.Add(tabHVACConfig,Control.DefaultBackColor)
+  TabColors.Add(tabPlayground,Control.DefaultBackColor)
+
+  'This is here only for testing purposes, the actual cycle will be a result of Vecto input.
+  cboCycle.SelectedIndex = 0
+
+  'General Setup of all controls 
+  SetupControls()
+
+  'Binding Values in Aux environment to the input controls on relevent tabs in the form.
+  CreateBindings()
+
+  'This function is neccesary because binding does not occur when the page is invisible, so a track across all of them
+  'Is required in order to set the binding. This only needs to be done once at at setup time. after values are set in the
+  'Aux environment either by setting defaults of reading and setting from the Auxillaries persistance file.
+  EnsureBinding()
+
+
+  'Additional atatched events
+  'For Tab Coloring, this is the place where the background will get filled on the tab when attention is required.
+  AddHandler tabMain.DrawItem , new System.Windows.Forms.DrawItemEventHandler(addressof tabMain_DrawItem)
+
+
+  'Finally Initialise Environment.
+  'auxEnvironment.Initialise()
+  SetProcessingStatus()
+
+End Sub
+
+#Region "Tab Header Color Change"
+
+Private sub UpdateTabStatus( pageName as string, resultGood As Boolean)
+
+
+       Dim page As TabPage = tabMain.TabPages(pageName)
+
+           If Not resultGood
+
+       SetTabHeader( page, Color.Red)
+
+       Else
+              SetTabHeader( page, Control.DefaultBackColor)
+
+       End If
+
+
+
+
+End Sub
+
+private sub SetTabHeader( page as TabPage,  color As Color)
+
+    TabColors(page) = color
+    tabMain.Invalidate()
+
+End Sub
+
+private sub tabMain_DrawItem( sender As object,  e As DrawItemEventArgs) 
+
+    dim br as Brush = New SolidBrush(TabColors(tabMain.TabPages(e.Index)))
+
+
+    using ( br  ) 
+    
+        e.Graphics.FillRectangle(br, e.Bounds)
+        dim sz as SizeF= e.Graphics.MeasureString(tabMain.TabPages(e.Index).Text, e.Font)
+        e.Graphics.DrawString(tabMain.TabPages(e.Index).Text, e.Font, Brushes.Black, e.Bounds.Left + (e.Bounds.Width - sz.Width) / 2, e.Bounds.Top + (e.Bounds.Height - sz.Height) / 2 + 1)
+
+        Dim  rect As Rectangle = e.Bounds
+        rect.Offset(-1,-1)
+        rect.Inflate(1, 1)
+       ' e.Graphics.DrawRectangle(Pens.DarkGray, rect)
+        'e.DrawFocusRectangle()
+
+    End using
+
+
+
+
+End Sub
+
+
+#End Region 
+
+#Region "GridHandlers"
+
+Private Sub gvElectricalConsumables_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles gvElectricalConsumables.CellValidating 
+
+   Dim column As DataGridViewColumn = gvElectricalConsumables.Columns(e.ColumnIndex)
+   Dim s As Single
+
+
+   If e.ColumnIndex=-1 then 
+
+   e.Cancel=true 
+   Exit sub
+   
+   End If
+
+
+
+   If  column.ReadOnly  Then return
+
+
+
+
+    Select Case column.Name
+
+     Case "NominalConsumptionAmps"
+           If Not IsNumeric(e.FormattedValue) Then
+             MessageBox.Show("This value must be numeric")
+             e.Cancel=true
+          End if
+
+     Case "NumberInActualVehicle"
+           If Not IsNumeric(e.FormattedValue) Then
+             MessageBox.Show("This value must be numeric")
+            e.Cancel=true
+          Else
+            s = Single.Parse(e.FormattedValue)
+           End If
+           If s Mod 1 > 0 OrElse s < 0 Then
+              MessageBox.Show("This value must be a positive whole number ( Integer ) ")
+             e.Cancel=true
+           End If
+
+
+     Case "PhaseIdle_TractionOn"
+           If Not IsNumeric(e.FormattedValue) Then
+             MessageBox.Show("This value must be numeric")
+             e.Cancel=true
+           Else
+            s = Single.Parse(e.FormattedValue)
+           End If
+           If s < 0 OrElse s > 1 Then
+              MessageBox.Show("This must be a value between 0 and 1 ")
+              e.Cancel=true
+           End If
+
+
+    End Select
+
+End Sub
+Private Sub SmartResult_CellValidating( sender As Object,  e As DataGridViewCellValidatingEventArgs) Handles gvResultsCardIdle.CellValidating, gvResultsCardTraction.CellValidating, gvResultsCardOverrun.CellValidating 
+
+   Dim column As DataGridViewColumn = gvElectricalConsumables.Columns(e.ColumnIndex)
+
+   If Not IsNumeric(e.FormattedValue) Then
+       MessageBox.Show("This value must be numeric")
+       e.Cancel=true      
+   End If
+
+End Sub
+private sub resultCard_CellMouseUp( sender As Object,  e as DataGridViewCellMouseEventArgs) Handles gvResultsCardIdle.CellMouseUp, gvResultsCardTraction.CellMouseUp, gvResultsCardOverrun.CellMouseUp  
+    
+      Dim dgv As DataGridView = CType( sender, DataGridView)
+
+
+        if e.Button = MouseButtons.Right then
+
+            resultCardContextMenu.Show(dgv, e.Location)
+            resultCardContextMenu.Show(Cursor.Position)
+
+        End if
+
+
+    end sub
+Private Sub resultCardContextMenu_ItemClicked( sender As Object,  e As ToolStripItemClickedEventArgs) Handles resultCardContextMenu.ItemClicked 
+
+      Dim menu As ContextMenuStrip = CType( sender, ContextMenuStrip)
+
+      Dim grid as DataGridView  = DirectCast( menu.SourceControl, DataGridView)
+
+      Select Case e.ClickedItem.Text
+
+
+      Case "Delete"
+
+         For Each selectedRow As datagridviewrow In grid.SelectedRows
+
+            If Not selectedRow.IsNewRow then
+            
+                grid.Rows.RemoveAt(selectedRow.Index)
+           
+            End if
+           
+         Next
+
+      case "Insert"
+
+
+      End Select
+    
+
+
+
+
+
+
+
+
+End Sub
+Private Sub gvElectricalConsumables_CellFormatting( sender As Object,  e As DataGridViewCellFormattingEventArgs) Handles gvElectricalConsumables.CellFormatting
+
+
+    If e.ColumnIndex=4 andalso e.RowIndex=0 then
+
+       e.CellStyle.BackColor = Color.LightGray
+       e.CellStyle.ForeColor=color.LightGray
+      
+
+    End If
+
+
+
+End Sub
+Private Sub gvElectricalConsumables_CellBeginEdit( sender As Object,  e As DataGridViewCellCancelEventArgs) Handles gvElectricalConsumables.CellBeginEdit
+
+    If e.ColumnIndex=4 andalso e.RowIndex=0 then
+
+     MessageBox.Show("This cell is calculated and cannot be edited")
+     e.Cancel=true
+
+    End If
+
+ 
+
+
+End Sub
+
+#End Region
+
+#Region "Button Handlers"
+
+Private Sub btnStart_Click( sender As Object,  e As EventArgs) Handles btnStart.Click 
+
+
+If Not ValidateAll then 
+
+MessageBox.Show("There are validation errors, please fix before trying again")
+Exit sub
+
+End If
+
+If processing then 
+
+auxEnvironment.M9.CycleStep(1)
+auxEnvironment.M10.CycleStep(1)
+auxEnvironment.M11.CycleStep(1)
+
+
+
+RefreshDisplays()
+SecondsIntoCycle+=1
+
+return
+
+End If
+
+
+
+try
+   SecondsIntoCycle=0
+    auxEnvironment.Initialise()
+    processing=true
+    SetProcessingStatus
+    'Timer1.Start
+
+    Catch ex As Exception
+
+     MessageBox.Show("Unable to initialise :" & ex.Message)
+
+    End Try
+    
+
+End Sub
+Private Sub btnFinish_Click( sender As Object,  e As EventArgs) Handles btnFinish.Click
+
+    processing=False
+    SetProcessingStatus
+
+ Timer1.Stop
+
+End Sub
+
+
+Private Sub btnSave_Click( sender As Object,  e As EventArgs) Handles btnSave.Click
+
+  auxEnvironment.ClearDown()
+
+  auxEnvironment.Save("TESTHARNESCONFIG.Json")
+
+
+
+End Sub
+Private Sub btnLoad_Click( sender As Object,  e As EventArgs) Handles btnLoad.Click
+
+  'JSON METHOD
+  'Release existing databindings
+  UnbindAllControls( Me)
+
+
+  auxEnvironment.Load("TESTHARNESCONFIG.Json")
+
+  ''Only required for Harness environment
+  auxEnvironment.Initialise()
+
+  CreateBindings()
+
+End Sub
+
+
+
+Private Sub btnFuelMap_Click( sender As Object,  e As EventArgs) Handles btnFuelMap.Click
+
+               Dim fbAux As New cFileBrowser(True,false)
+
+               
+
+              ' Dim vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
+               Dim fname As String = fFILE( vectoFile,true)    
+
+                fbAux.Extensions = New String() {"vmap"}
+              '  If fbAux.OpenDialog(fFileRepl(fname, fPATH(VECTOfile))) Then 
+               If fbAux.OpenDialog( fPATH(VECTOfile)) Then 
+
+                 txtFuelMap.Text = fFileWoDir(fbAux.Files(0), fPATH(VECTOfile))
+
+                End If
+
+        'fbFileLists.Extensions = New String() {"txt"}
+        'fbVECTO.Extensions = New String() {"vecto"}
+        'fbVEH.Extensions = New String() {"vveh"} - Vehicle FIle
+        'fbMAP.Extensions = New String() {"vmap"} - Fuel Map
+        'fbDRI.Extensions = New String() {"vdri"} - Diving Cycle
+        'fbFLD.Extensions = New String() {"vfld"} - Full Load & Drag Toque
+        'fbENG.Extensions = New String() {"veng"} - Vehicle Engine
+        'fbGBX.Extensions = New String() {"vgbx"} - Vehicle Gearbox
+        'fbACC.Extensions = New String() {"vacc"} - Acceleration Limiting Input File
+        'fbAUX.Extensions = New String() {"vaux"} - Vehicle Auxiliaries
+        'fbGBS.Extensions = New String() {"vgbs"} - Shift Polygons
+        'fbRLM.Extensions = New String() {"vrlm"} - Retarder Loss Input
+        'fbTLM.Extensions = New String() {"vtlm"} - Tranmission Loss Map
+        'fbTCC.Extensions = New String() {"vtcc"} - Torque Converter Characteristics
+        'fbCDx.Extensions = New String() {"vcdv", "vcdb"} -  Cross Wind Correction Speed types
+
+        'fbVMOD.Extensions = New String() {"vmod"} - Modal Results.
+
+        
+
+
+End Sub
+Private Sub btnAlternatorMapPath_Click( sender As Object,  e As EventArgs) Handles btnAlternatorMapPath.Click
+
+        
+
+               Dim fbAux As New cFileBrowser(True,false)
+
+               
+
+              ' Dim vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
+               Dim fname As String = fFILE( vectoFile,true)    
+
+                fbAux.Extensions = New String() {"AALT"}
+                If fbAux.OpenDialog(fPATH(VECTOfile)) Then 
+
+                 txtAlternatorMapPath.Text = fFileWoDir(fbAux.Files(0), fPATH(VECTOfile))
+
+               End If
+
+               Validate_Electrics
+
+               'Causes Binding to fire
+               txtAlternatorMapPath.Focus
+
+End Sub
+Private Sub btnCompressorMap_Click( sender As Object,  e As EventArgs) Handles btnCompressorMap.Click
+
+
+               Dim fbAux As New cFileBrowser(True,false)
+
+               
+
+              ' Dim vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
+               Dim fname As String = fFILE( vectoFile,true)    
+
+                fbAux.Extensions = New String() {"ACMP"}
+                If fbAux.OpenDialog(fPATH(VECTOfile)) Then 
+
+                 txtCompressorMap.Text = fFileWoDir(fbAux.Files(0), fPATH(VECTOfile))
+
+               End If
+
+               Validate_Pneumatics
+
+               'Causes binding to fire
+               txtCompressorMap.Focus
+
+
+End Sub
+Private Sub btnActuationsMap_Click( sender As Object,  e As EventArgs) Handles btnActuationsMap.Click
+
+               Dim fbAux As New cFileBrowser(True,false)              
+
+              ' Dim vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
+               Dim fname As String = fFILE( vectoFile,true)    
+
+                fbAux.Extensions = New String() {"APAC"}
+                If fbAux.OpenDialog(fPATH(VECTOfile)) Then 
+
+                 txtActuationsMap.Text = fFileWoDir(fbAux.Files(0), fPATH(VECTOfile))
+
+                End If
+
+                Validate_Pneumatics
+
+                'Causes Binding to fire.
+                txtActuationsMap.Focus
+
+End Sub
+
+
+
+#End Region
+
+Private sub RefreshDisplays()
+
+    'M0 Refresh Output Displays
+    txtM0_Out_AlternatorsEfficiency.Text= auxEnvironment.M0.AlternatorsEfficiency
+    txtM0_Out_HVacElectricalCurrentDemand.Text=auxEnvironment.M0.GetHVACElectricalPowerDemandAmps
+
+    'M05
+     txtM05_OutSmartIdleCurrent.Text= auxEnvironment.M05.SmartIdleCurrent
+     txtM05_Out_AlternatorsEfficiencyIdle.Text=auxEnvironment.M05.AlternatorsEfficiencyIdleResultCard
+     txtM05_out_SmartTractionCurrent.Text = auxEnvironment.M05.SmartTractionCurrent
+     txtM05_out_AlternatorsEfficiencyTraction.Text=auxEnvironment.M05.AlternatorsEfficiencyTractionOnResultCard
+     txtM05_out_SmartOverrunCurrent.Text= auxEnvironment.M05.SmartOverrunCurrent
+     txtM05_out_AlternatorsEfficiencyOverrun.Text = auxEnvironment.M05.AlternatorsEfficiencyOverrunResultCard
+
+     'M1
+     txtM1_out_AvgPowerDemandAtAlternatorHvacElectrics.Text= auxEnvironment.M1.AveragePowerDemandAtAlternatorFromHVACElectricsWatts
+     txtM1_out_AvgPowerDemandAtCrankMech.Text= auxEnvironment.M1.AveragePowerDemandAtCrankFromHVACMechanicalsWatts
+     txtM1_out_AvgPwrAtCrankFromHVACElec.Text=auxEnvironment.M1.AveragePowerDemandAtCrankFromHVACElectricsWatts
+     txtM1_out_HVACFuelling.Text=auxEnvironment.M1.HVACFuelingLitresPerHour
+
+     'M2
+     txtM2_out_AvgPowerAtAltFromElectrics.Text=auxEnvironment.M2.GetAveragePowerDemandAtAlternator
+     txtM2_out_AvgPowerAtCrankFromElectrics.Text=auxEnvironment.M2.GetAveragePowerAtCrankFromElectrics()
+
+     'M3
+     txtM3_out_AveragePowerAtCrankFromPneumatics.Text=auxEnvironment.M3.GetAveragePowerDemandAtCrankFromPneumatics
+     txtM3_out_TotalAirConsumedPerCycleInLitres.Text=auxEnvironment.M3.AverageAirConsumedPerSecondLitre
+
+     'M4
+      txtM4_out_CompressorFlowRate.Text = auxEnvironment.M4.GetFlowRate
+      txtM4_out_CompresssorPwrOnMinusPwrOff.Text=auxEnvironment.M4.GetPowerDifference
+      txtM4_out_PowerAtCrankFromPneumaticsCompressorOFF.Text= auxEnvironment.M4.GetPowerCompressorOff
+      txtM4_out_PowerAtCrankFromPneumaticsCompressorON.Text= auxEnvironment.M4.GetPowerCompressorOn
+
+      'M5
+      txtM5_out_AltRegenPowerAtCrankIdleWatts.text= auxEnvironment.m5.AlternatorsGenerationPowerAtCrankIdleWatts
+      txtM5_out_AltRegenPowerAtCrankOverrunWatts.text= auxEnvironment.m5.AlternatorsGenerationPowerAtCrankOverrunWatts
+      txtM5_out_AltRegenPowerAtCrankTractionWatts.text= auxEnvironment.m5.AlternatorsGenerationPowerAtCrankTractionOnWatts
+
+      'M6
+      txtM6_out_OverrunFlag.Text= auxEnvironment.M6.OverrunFlag
+      txtM6_out_SmartElectricalAndPneumaticsCompressorFlag.Text= auxEnvironment.M6.SmartElecAndPneumaticsCompressorFlag
+      txtM6_out_SmartElectriclAndPneumaticsAltPowerGenAtCrank.Text= auxEnvironment.M6.SmartElecAndPneumaticAltPowerGenAtCrank
+      txtM6_out_SmartElectricalAndPneumaticAirCompPowerGenAtCrank.Text= auxEnvironment.M6.SmartElecAndPneumaticAirCompPowerGenAtCrank
+      txtM6_out_SmarElectricalOnlyAltPowerGenAtCrank.Text=auxEnvironment.M6.SmartElecOnlyAltPowerGenAtCrank
+      txtM6_out_AveragePowerDemandAtCrankFromPneumatics.Text= auxEnvironment.M6.AveragePowerDemandAtCrankFromPneumatics
+      txtM6_out_SmartPneumaticOnlyAirCompPowerGenAtCrank.Text=auxEnvironment.M6.SmartPneumaticOnlyAirCompPowerGenAtCrank
+      txtM6_out_AveragePowerDemandAtCrankFromElectricsIncHVAC.Text= auxEnvironment.M6.AvgPowerDemandAtCrankFromElectricsIncHVAC
+      txtM6_out_SmartPneumaticsOnlyCompressorFlag.Text= auxEnvironment.M6.SmartPneumaticsOnlyCompressorFlag
+
+      'M7
+      txtM7_out_SmartElectricalAndPneumaticsAux_AltPowerGenAtCrank.Text= auxEnvironment.M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
+      txtM7_out_SmartElectricalAndPneumaticAux_AirCompPowerGenAtCrank.Text = auxEnvironment.M7.SmartElectricalAndPneumaticAuxAirCompPowerGenAtCrank
+      txtM7_out_SmartElecOnlyAux_AltPwrGenAtCrank.Text = auxEnvironment.M7.SmartElectricalOnlyAuxAltPowerGenAtCrank
+      txtM7_out_SmartPneumaticsOnlyAux_AirCompPwrRegenAtCrank.Text=auxEnvironment.M7.SmartPneumaticOnlyAuxAirCompPowerGenAtCrank
+
+
+      'M8
+      txtM8_out_AuxPowerAtCrankFromAllAncillaries.Text = auxEnvironment.M8.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries
+      txtM8_out_SmartElectricalAltPwrGenAtCrank.Text = auxEnvironment.M8.SmartElectricalAlternatorPowerGenAtCrank
+      txtM8_out_CompressorFlag.Text= auxEnvironment.M8.CompressorFlag
+
+      'M9
+      txtM9_out_LitresOfAirConsumptionCompressorONContinuously.Text= auxEnvironment.M9.LitresOfAirCompressorOnContinually
+      txtM9_out_LitresOfAirCompressorOnlyOnInOverrun.Text=auxEnvironment.M9.LitresOfAirCompressorOnOnlyInOverrun
+      txtM9_out_TotalCycleFuelConsumptionCompressorOnContinuously.Text=auxEnvironment.M9.TotalCycleFuelConsumptionCompressorOnContinuously
+      txtM9_out_TotalCycleFuelConsumptionCompressorOFFContinuously.Text=auxEnvironment.M9.TotalCycleFuelConsumptionCompressorOffContinuously
+
+
+      'M10
+      txtM10_out_BaseFCWithAvgAuxLoads.Text = auxEnvironment.M10.AverageLoadsFuelConsumptionInterpolatedForPneumatics
+      txtM10_out_FCWithSmartPSAndAvgElecPowerDemand.Text = auxEnvironment.M10.FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand
+
+
+      'M11
+      txtM11_out_TotalCycleElectricalEnergyGenOverrunOnly.Text = auxEnvironment.M11.SmartElectricalTotalCycleElectricalEnergyGeneratedDuringOverrunOnly
+      txtM11_out_SmartElectricalTotalCycleElectricalEnergyGenerated.Text = auxEnvironment.M11.SmartElectricalTotalCycleEletricalEnergyGenerated
+      txtM11_out_TotalCycleElectricalDemand.Text = auxEnvironment.M11.TotalCycleElectricalDemand
+      txtM11_out_TotalCycleFuelConsumptionSmartElectricalLoad.Text = auxEnvironment.M11.TotalCycleFuelConsumptionSmartElectricalLoad
+      txtM11_out_TotalCycleFuelConsumptionZeroElectricalLoad.Text = auxEnvironment.M11.TotalCycleFuelConsumptionZeroElectricalLoad
+ 
+      'M12
+      txtM12_out_FuelConsumptionWithSmartElectricsAndAveragePneumaticPowerDemand.Text = auxEnvironment.M12.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand
+
+
+      'M13
+      txtM13_out_TotalCycleFuelCalculationGramsGRAMS.Text = auxEnvironment.M13.TotalCycleFuelConsumptionGrams
+      txtM13_out_TotalCycleFuelCalculationGramsLitres.Text = auxEnvironment.M13.TotalCycleFuelConsumptionLitres
+
+End Sub
+
+Private sub SetProcessingStatus()
+
+Dim thisExe As System.Reflection.Assembly 
+Dim file as System.IO.Stream 
+thisExe = System.Reflection.Assembly.GetExecutingAssembly()
+
+If processing then
+
+file  = thisExe.GetManifestResourceStream("AuxiliaryTestHarness.greenLight.jpg")
+
+Else
+
+file  = thisExe.GetManifestResourceStream("AuxiliaryTestHarness.amberLight.jpg")
+
+End If
+
+me.pictureBox1.Image = Image.FromStream(file)
+
+
+End Sub
+
+Private Sub RefreshDisplayValues_Timed( sender As Object,  e As EventArgs) Handles Timer1.Tick
+
+
+  If SecondsIntoCycle=0 then 
+   
+  auxEnvironment.M9.CycleStep( auxEnvironment.Signals.TotalCycleTimeSeconds)  
+
+  auxEnvironment.M11.CycleStep( auxEnvironment.Signals.TotalCycleTimeSeconds)
+  End If
+
+
+  SecondsIntoCycle+=1
+
+  SetProcessingStatus()
+
+  RefreshDisplays()
+
+
+End Sub
+
+'Form Overrides
+Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
+
+        if keyData = Keys.Enter andalso me.AcceptButton is nothing   then
+        dim box As TextBoxBase = CType( me.ActiveControl ,TextBoxBase)
+
+        if box is nothing orelse not box.Multiline then
+          
+          me.SelectNextControl(me.ActiveControl, true, true, true, true)
+          return true
+        
+       End If
+      
+       End If
+       
+
+       Return MyBase.ProcessCmdKey(msg, keyData)
+
+
+
+    End Function
+
+
+
+public sub UnbindAllControls(ByRef container As Control)   
+  'Clear all of the controls within the container object
+  'If "Recurse" is true, then also clear controls within any sub-containers
+  Dim ctrl As Control = Nothing
+ 
+  For Each ctrl In container.Controls
+
+           ctrl.DataBindings.Clear()
+
+           If ctrl.HasChildren then
+              UnbindAllControls(ctrl)
+           End If
+
+  next
+
+End Sub
+
+
+Private Sub btnSSMBSource_Click( sender As Object,  e As EventArgs) Handles btnSSMBSource.Click
+
+
+               Dim fbAux As New cFileBrowser(True, False)
+               Dim ssmMap As New Hvac.HVACSteadyStateModel()
+               Dim message As String = String.Empty
+
+
+               fbAux.Extensions = New String() {"ahsm"}
+
+               If fbAux.OpenDialog(fPATH(vectoFile)) Then
+
+                 txtSSMFilePath.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+
+                 
+                 Try
+
+                 If Not ssmMap.SetValuesFromMap(txtSSMFilePath.Text, message) then
+
+                 txtHVACElectricalLoadPowerWatts.Text =  string.empty
+                 txtHVACMechanicalLoadPowerWatts.Text =  string.empty
+                 txtHVACFuellingLitresPerHour.Text    =  string.empty
+                 messagebox.Show("Unable to load")
+
+                 else
+
+                 'Populate boxes
+
+                 txtHVACElectricalLoadPowerWatts.Text = ssmMap.HVACElectricalLoadPowerWatts.ToString()
+                 txtHVACMechanicalLoadPowerWatts.Text = ssmMap.HVACMechanicalLoadPowerWatts.ToString()
+                 txtHVACFuellingLitresPerHour.Text    = ssmMap.HVACFuellingLitresPerHour.ToString()
+
+                 End If
+
+                 
+                 Catch ex As Exception
+
+                                messagebox.Show("Unable to load")
+
+                 End Try
+
+                 
+
+
+               End If
+
+End Sub
+
+
+End Class

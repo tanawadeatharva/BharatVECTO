@@ -1,0 +1,40 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "15.06.2016 14:59:16",
+    "AppVersion": "2.2",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehicleFile": "../Components/12t Delivery Truck.vveh",
+    "EngineFile": "../Components/12t Delivery Truck.veng",
+    "GearboxFile": "../Components/12t Delivery Truck Efficiency.vgbx",
+    "Cycles": [
+      "../Cycles/Regional_Delivery.vdri"
+    ],
+    "AuxiliaryAssembly": "CLASSIC",
+    "AuxiliaryVersion": "CLASSIC",
+    "AdvancedAuxiliaryFilePath": "",
+    "Aux": [],
+    "VACC": "../Components/Truck.vacc",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": true,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 5
+    },
+    "LAC": {
+      "Enabled": true,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "OverSpeed",
+      "MinSpeed": 50.0,
+      "OverSpeed": 5.0,
+      "UnderSpeed": 5.0
+    }
+  }
+}

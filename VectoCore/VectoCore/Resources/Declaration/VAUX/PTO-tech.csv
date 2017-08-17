@@ -1,0 +1,12 @@
+Technology, Power Loss
+None,0
+"only one engaged gearwheel above oil level", 0
+"only the drive shaft of the PTO - shift claw, synchronizer, sliding gearwheel",50
+only the drive shaft of the PTO - multi-disc clutch,1000
+"only the drive shaft of the PTO - multi-disc clutch, oil pump",2000
+"drive shaft and/or up to 2 gear wheels - shift claw, synchronizer, sliding gearwheel",300
+drive shaft and/or up to 2 gear wheels - multi-disc clutch,1500
+"drive shaft and/or up to 2 gear wheels - multi-disc clutch, oil pump",3000
+"drive shaft and/or more than 2 gear wheels - shift claw, synchronizer, sliding gearwheel",600
+drive shaft and/or more than 2 gear wheels - multi-disc clutch,2000
+"drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump",4000

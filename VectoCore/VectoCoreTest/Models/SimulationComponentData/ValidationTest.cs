@@ -1,0 +1,658 @@
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2017 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
+
+#pragma warning disable 169
+
+namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
+{
+	[TestClass]
+	[SuppressMessage("ReSharper", "InconsistentNaming")]
+	[SuppressMessage("ReSharper", "UnusedMember.Local")]
+	public class ValidationTestClass
+	{
+		/// <summary>
+		/// VECTO-107 Check valid range of input parameters
+		/// </summary>
+		[TestMethod]
+		public void Validation_CombustionEngineData()
+		{
+			var fuelConsumption = new DataTable();
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Rows.Add("1", "1", "1");
+			fuelConsumption.Rows.Add("2", "2", "2");
+			fuelConsumption.Rows.Add("3", "3", "3");
+
+			var fullLoad = new DataTable();
+			fullLoad.Columns.Add("Engine speed");
+			fullLoad.Columns.Add("max torque");
+			fullLoad.Columns.Add("drag torque");
+			fullLoad.Columns.Add("PT1");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
+
+			var data = new CombustionEngineData {
+				ModelName = "asdf",
+				Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
+				IdleSpeed = 560.RPMtoRad(),
+				Inertia = 1.SI<KilogramSquareMeter>(),
+				WHTCUrban = 1,
+				WHTCRural = 1,
+				WHTCMotorway = 1,
+				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, FullLoadCurveReader.Create(fullLoad) } },
+				ConsumptionMap = FuelConsumptionMapReader.Create(fuelConsumption)
+			};
+			data.FullLoadCurves[0].EngineData = data;
+
+			var results = data.Validate(ExecutionMode.Declaration, null, false);
+			Assert.IsFalse(results.Any(), "Validation Failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
+			Assert.IsTrue(data.IsValid());
+		}
+
+		[TestMethod]
+		public void Validation_CombustionEngineData_Engineering()
+		{
+			var fuelConsumption = new TableData();
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Rows.Add("1", "1", "1");
+			fuelConsumption.Rows.Add("2", "2", "2");
+			fuelConsumption.Rows.Add("3", "3", "3");
+
+			var fullLoad = new TableData();
+			fullLoad.Columns.Add("Engine speed");
+			fullLoad.Columns.Add("max torque");
+			fullLoad.Columns.Add("drag torque");
+			fullLoad.Columns.Add("PT1");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
+			var data = new MockEngineDataProvider {
+				Model = "asdf",
+				Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
+				IdleSpeed = 560.RPMtoRad(),
+				Inertia = 1.SI<KilogramSquareMeter>(),
+				FullLoadCurve = fullLoad,
+				FuelConsumptionMap = fuelConsumption
+			};
+			var dao = new EngineeringDataAdapter();
+
+			var engineData = dao.CreateEngineData(data, null, new List<ITorqueLimitInputData>());
+
+			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
+			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
+			Assert.IsTrue(engineData.IsValid());
+		}
+
+		[TestMethod]
+		public void Validation_CombustionEngineData_Declaration()
+		{
+			var fuelConsumption = new TableData();
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Columns.Add("");
+			fuelConsumption.Rows.Add("1", "1", "1");
+			fuelConsumption.Rows.Add("2", "2", "2");
+			fuelConsumption.Rows.Add("3", "3", "3");
+
+			var fullLoad = new TableData();
+			fullLoad.Columns.Add("Engine speed");
+			fullLoad.Columns.Add("max torque");
+			fullLoad.Columns.Add("drag torque");
+			fullLoad.Columns.Add("PT1");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
+			fullLoad.Rows.Add("3", "3", "-3", "3");
+			var data = new MockEngineDataProvider {
+				Model = "asdf",
+				Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
+				IdleSpeed = 560.RPMtoRad(),
+				Inertia = 1.SI<KilogramSquareMeter>(),
+				FullLoadCurve = fullLoad,
+				FuelConsumptionMap = fuelConsumption,
+				WHTCMotorway = 1.1,
+				WHTCRural = 1.1,
+				WHTCUrban = 1.1
+			};
+			var dao = new DeclarationDataAdapter();
+
+			var dummyGearbox = new DummyGearboxData() {
+				Type = GearboxType.AMT,
+				Gears = new List<ITransmissionInputData>()
+			};
+
+			var engineData = dao.CreateEngineData(data, null, dummyGearbox, new List<ITorqueLimitInputData>());
+
+			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
+			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
+
+			Assert.IsTrue(engineData.IsValid());
+		}
+
+		[TestMethod]
+		public void ValidationModeVehicleDataTest()
+		{
+			var vehicleData = new VehicleData {
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				AirDensity = DeclarationData.AirDensity,
+				CurbWeight = 7500.SI<Kilogram>(),
+				DynamicTyreRadius = 0.5.SI<Meter>(),
+				//CurbWeigthExtra = 0.SI<Kilogram>(),
+				Loading = 12000.SI<Kilogram>(),
+				GrossVehicleWeight = 16000.SI<Kilogram>(),
+				TrailerGrossVehicleWeight = 0.SI<Kilogram>(),
+				AxleData = new List<Axle> {
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.4,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.6,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+				}
+			};
+			var result = vehicleData.Validate(ExecutionMode.Engineering, null, false);
+			Assert.IsTrue(!result.Any(), "validation should have succeded but failed." + string.Concat(result));
+
+			result = vehicleData.Validate(ExecutionMode.Declaration, null, false);
+			Assert.IsTrue(result.Any(), "validation should have failed, but succeeded.");
+		}
+
+		/// <summary>
+		/// VECTO-107 Check valid range of input parameters
+		/// </summary>
+		[TestMethod]
+		public void ValidationModeVectoRunDataTest()
+		{
+			var container = new VehicleContainer(ExecutionMode.Engineering);
+			var data = new DistanceRun(container);
+			var engineData = new CombustionEngineData {
+				FullLoadCurves =
+					new Dictionary<uint, EngineFullLoadCurve>() {
+						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+					},
+				IdleSpeed = 560.RPMtoRad()
+			};
+
+			var gearboxData = new GearboxData();
+			gearboxData.Gears[1] = new GearData {
+				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
+				Ratio = 1
+			};
+
+			var axleGearData = new AxleGearData {
+				AxleGear = new GearData {
+					Ratio = 1,
+					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+				}
+			};
+			var vehicleData = new VehicleData {
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				AirDensity = DeclarationData.AirDensity,
+				CurbWeight = 7500.SI<Kilogram>(),
+				DynamicTyreRadius = 0.5.SI<Meter>(),
+				//CurbWeigthExtra = 0.SI<Kilogram>(),
+				Loading = 12000.SI<Kilogram>(),
+				GrossVehicleWeight = 16000.SI<Kilogram>(),
+				TrailerGrossVehicleWeight = 0.SI<Kilogram>(),
+				AxleData = new List<Axle> {
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.4,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+					new Axle {
+						AxleType = AxleType.VehicleNonDriven,
+						AxleWeightShare = 0.6,
+						Inertia = 0.5.SI<KilogramSquareMeter>(),
+						RollResistanceCoefficient = 0.00555,
+						TyreTestLoad = 33000.SI<Newton>()
+					},
+				}
+			};
+
+			container.RunData = new VectoRunData {
+				JobRunId = 0,
+				VehicleData = vehicleData,
+				AirdragData = new AirdragData() {
+					CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+					CrossWindCorrectionCurve =
+						new CrosswindCorrectionCdxALookup(5.SI<SquareMeter>(),
+							CrossWindCorrectionCurveReader.GetNoCorrectionCurve(5.SI<SquareMeter>()),
+							CrossWindCorrectionMode.NoCorrection)
+				},
+				GearboxData = gearboxData,
+				EngineData = engineData,
+				AxleGearData = axleGearData
+			};
+
+			var results = data.Validate(ExecutionMode.Declaration, null, false);
+			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
+
+			results = vehicleData.Validate(ExecutionMode.Engineering, null, false);
+			Assert.IsTrue(!results.Any());
+		}
+
+		/// <summary>
+		/// VECTO-107 Check valid range of input parameters
+		/// </summary>
+		[TestMethod]
+		public void Validation_VectoRun()
+		{
+			var container = new VehicleContainer(ExecutionMode.Engineering);
+			var data = new DistanceRun(container);
+			var engineData = new CombustionEngineData {
+				FullLoadCurves =
+					new Dictionary<uint, EngineFullLoadCurve>() {
+						{ 0, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") },
+						{ 1, FullLoadCurveReader.ReadFromFile(@"TestData\Components\12t Delivery Truck.vfld") }
+					},
+				IdleSpeed = 560.RPMtoRad()
+			};
+
+			var gearboxData = new GearboxData();
+			gearboxData.Gears[1] = new GearData {
+				LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\Direct Gear.vtlm", 1, "1"),
+				Ratio = 1,
+			};
+
+			var axleGearData = new AxleGearData {
+				AxleGear = new GearData {
+					LossMap = TransmissionLossMapReader.ReadFromFile(@"TestData\Components\limited.vtlm", 1, "1"),
+					Ratio = 1,
+				}
+			};
+
+			container.RunData = new VectoRunData {
+				JobRunId = 0,
+				GearboxData = gearboxData,
+				EngineData = engineData,
+				AxleGearData = axleGearData
+			};
+
+			var results = data.Validate(ExecutionMode.Declaration, null, false);
+			Assert.IsTrue(results.Any(), "Validation should have failed, but succeded.");
+		}
+
+		/// <summary>
+		/// VECTO-107 Check valid range of input parameters
+		/// </summary>
+		[TestMethod]
+		public void Validation_Test()
+		{
+			var results = new DataObject().Validate(ExecutionMode.Declaration, null, false);
+
+			// every field and property should be tested except private parent fields and properties and 
+			// (4*4+1) * 2 = 17*2= 34 - 4 private parent fields (+2 public field and property which are tested twice) = 32
+			Assert.AreEqual(32, results.Count,
+				"Validation Error: " + string.Join("\n_eng_avg", results.Select(r => r.ErrorMessage)));
+		}
+
+		[TestMethod]
+		public void ValidateDictionaryTest()
+		{
+			var container = new ContainerObject() {
+				Elements = new Dictionary<int, WrapperObject>() {
+					{ 2, new WrapperObject() { Value = 41 } },
+					{ 4, new WrapperObject() { Value = -30 } }
+				}
+			};
+
+			var results = container.Validate(ExecutionMode.Declaration, null, false);
+			Assert.AreEqual(1, results.Count);
+		}
+
+		/// <summary>
+		/// VECTO-249: check upshift is above downshift
+		/// </summary>
+		[TestMethod]
+		public void ShiftPolygonValidationTest()
+		{
+			var vgbs = new[] {
+				"-116,600,1508						",
+				"0,600,1508							",
+				"293,600,1508						",
+				"494,806,1508						",
+				"956,1278,2355						",
+			};
+
+			var shiftPolygon =
+				ShiftPolygonReader.Create(
+					VectoCSVFile.ReadStream(
+						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
+
+			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT, false);
+			Assert.IsFalse(results.Any());
+
+			// change columns
+			shiftPolygon =
+				ShiftPolygonReader.Create(
+					VectoCSVFile.ReadStream(
+						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
+
+			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.MT, false);
+			Assert.IsTrue(results.Any());
+		}
+
+		[TestMethod]
+		public void ShiftPolygonValidationATTest()
+		{
+			var vgbs = new[] {
+				"-116,600,1508						",
+				"0,600,1508							",
+				"293,600,1508						",
+				"494,806,1508						",
+				"956,1278,2355						",
+			};
+
+			var shiftPolygon =
+				ShiftPolygonReader.Create(
+					VectoCSVFile.ReadStream(
+						InputDataHelper.InputDataAsStream("engine torque,downshift rpm [rpm],upshift rpm [rpm]	", vgbs)));
+
+			var results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial, false);
+			Assert.IsFalse(results.Any());
+
+			// change columns
+			shiftPolygon =
+				ShiftPolygonReader.Create(
+					VectoCSVFile.ReadStream(
+						InputDataHelper.InputDataAsStream("engine torque,upshift rpm [rpm], downshift rpm [rpm]	", vgbs)));
+
+			results = shiftPolygon.Validate(ExecutionMode.Declaration, GearboxType.ATSerial, false);
+			Assert.IsFalse(results.Any());
+		}
+
+		public class ContainerObject
+		{
+			[Required, ValidateObject] public Dictionary<int, WrapperObject> Elements;
+		}
+
+		public class WrapperObject
+		{
+			[Required, Range(0, 100)] public int Value = 0;
+		}
+
+		public class DeepDataObject
+		{
+			[Required, Range(41, 42)] protected int public_field = 5;
+		}
+
+		public abstract class ParentDataObject
+		{
+			#region 4 parent instance fields
+
+			// ReSharper disable once NotAccessedField.Local
+			[Required, Range(1, 2)] private int private_parent_field = 7;
+			[Required, Range(3, 4)] protected int protected_parent_field = 7;
+			[Required, Range(5, 6)] internal int internal_parent_field = 7;
+			[Required, Range(7, 8)] public int public_parent_field = 5;
+
+			#endregion
+
+			#region 4 parent static field
+
+			[Required, Range(43, 44)] private static int private_static_parent_field = 7;
+			[Required, Range(43, 44)] protected static int protected_static_parent_field = 7;
+			[Required, Range(50, 51)] internal static int internal_static_parent_field = 7;
+			[Required, Range(45, 46)] public static int public_static_parent_field = 7;
+
+			#endregion
+
+			#region 4 parent instance properties
+
+			[Required, Range(11, 12)]
+			private int private_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(13, 14)]
+			protected int protected_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(15, 16)]
+			internal int internal_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(17, 18)]
+			public int public_parent_property
+			{
+				get { return 7; }
+			}
+
+			#endregion
+
+			#region 4 parent static properties
+
+			[Required, Range(19, 20)]
+			private static int private_static_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			protected static int protected_static_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			internal static int internal_static_parent_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			public static int public_static_parent_property
+			{
+				get { return 7; }
+			}
+
+			#endregion
+
+			#region 1 parent sub objects
+
+			[Required, ValidateObject] public DeepDataObject parent_sub_object = new DeepDataObject();
+
+			#endregion
+
+			private void just_to_remove_compiler_warnings()
+			{
+				private_parent_field = private_static_parent_field;
+			}
+		}
+
+		public class DataObject : ParentDataObject
+		{
+			#region 4 instance fields
+
+			// ReSharper disable once NotAccessedField.Local
+			[Required, Range(1, 2)] private int private_field = 7;
+			[Required, Range(3, 4)] protected int protected_field = 7;
+			[Required, Range(5, 6)] internal int internal_field = 7;
+			[Required, Range(7, 8)] public int public_field = 5;
+
+			#endregion
+
+			#region 4 static field
+
+			[Required, Range(43, 44)] private static int private_static_field = 7;
+			[Required, Range(43, 44)] protected static int protected_static_field = 7;
+			[Required, Range(50, 51)] internal static int internal_static_field = 7;
+			[Required, Range(45, 46)] public static int public_static_field = 7;
+
+			#endregion
+
+			#region 4 instance properties
+
+			[Required, Range(11, 12)]
+			private int private_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(13, 14)]
+			protected int protected_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(15, 16)]
+			internal int internal_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(17, 18)]
+			public int public_property
+			{
+				get { return 7; }
+			}
+
+			#endregion
+
+			#region 4 static properties
+
+			[Required, Range(19, 20)]
+			private static int private_static_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			protected static int protected_static_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			internal static int internal_static_property
+			{
+				get { return 7; }
+			}
+
+			[Required, Range(19, 20)]
+			public static int public_static_property
+			{
+				get { return 7; }
+			}
+
+			#endregion
+
+			#region 1 sub objects
+
+			[Required, ValidateObject] public DeepDataObject sub_object = new DeepDataObject();
+
+			#endregion
+
+			private void just_to_remove_compiler_warnings()
+			{
+				private_field = private_static_field;
+			}
+		}
+	}
+
+	public class DummyGearboxData : IGearboxEngineeringInputData
+	{
+		public DataSourceType SourceType { get; set; }
+		public string Source { get; set; }
+		public bool SavedInDeclarationMode { get; set; }
+		public string Manufacturer { get; set; }
+		public string Model { get; set; }
+		public string Creator { get; set; }
+		public string Date { get; set; }
+		public string TechnicalReportId { get; set; }
+
+		public CertificationMethod CertificationMethod
+		{
+			get { return CertificationMethod.NotCertified; }
+		}
+
+		public string CertificationNumber { get; set; }
+		public string DigestValue { get; set; }
+		public GearboxType Type { get; set; }
+		public IList<ITransmissionInputData> Gears { get; set; }
+
+		ITorqueConverterDeclarationInputData IGearboxDeclarationInputData.TorqueConverter
+		{
+			get { return TorqueConverter; }
+		}
+
+		public KilogramSquareMeter Inertia { get; set; }
+		public Second TractionInterruption { get; set; }
+		public Second MinTimeBetweenGearshift { get; set; }
+		public double TorqueReserve { get; set; }
+		public MeterPerSecond StartSpeed { get; set; }
+		public MeterPerSquareSecond StartAcceleration { get; set; }
+		public double StartTorqueReserve { get; set; }
+		public ITorqueConverterEngineeringInputData TorqueConverter { get; set; }
+		public Second DownshiftAfterUpshiftDelay { get; set; }
+		public Second UpshiftAfterDownshiftDelay { get; set; }
+		public MeterPerSquareSecond UpshiftMinAcceleration { get; set; }
+		public Second PowershiftShiftTime { get; set; }
+	}
+}

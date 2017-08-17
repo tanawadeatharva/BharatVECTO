@@ -1,0 +1,340 @@
+﻿/*
+* This file is part of VECTO.
+*
+* Copyright © 2012-2017 European Union
+*
+* Developed by Graz University of Technology,
+*              Institute of Internal Combustion Engines and Thermodynamics,
+*              Institute of Technical Informatics
+*
+* VECTO is licensed under the EUPL, Version 1.1 or - as soon they will be approved
+* by the European Commission - subsequent versions of the EUPL (the "Licence");
+* You may not use VECTO except in compliance with the Licence.
+* You may obtain a copy of the Licence at:
+*
+* https://joinup.ec.europa.eu/community/eupl/og_page/eupl
+*
+* Unless required by applicable law or agreed to in writing, VECTO
+* distributed under the Licence is distributed on an "AS IS" basis,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the Licence for the specific language governing permissions and
+* limitations under the Licence.
+*
+* Authors:
+*   Stefan Hausberger, hausberger@ivt.tugraz.at, IVT, Graz University of Technology
+*   Christian Kreiner, christian.kreiner@tugraz.at, ITI, Graz University of Technology
+*   Michael Krisper, michael.krisper@tugraz.at, ITI, Graz University of Technology
+*   Raphael Luz, luz@ivt.tugraz.at, IVT, Graz University of Technology
+*   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
+*   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
+{
+	public abstract class AbstractSimulationDataAdapter : LoggingObject
+	{
+		// =========================
+
+		internal VehicleData SetCommonVehicleData(IVehicleDeclarationInputData data)
+		{
+			var retVal = new VehicleData {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				Date = data.Date,
+				//CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
+				VehicleCategory = data.VehicleCategory,
+				AxleConfiguration = data.AxleConfiguration,
+				CurbWeight = data.CurbMassChassis,
+				GrossVehicleWeight = data.GrossVehicleMassRating,
+				AirDensity = Physics.AirDensity,
+			};
+
+			return retVal;
+		}
+
+		internal AirdragData SetCommonAirdragData(IAirdragDeclarationInputData data)
+		{
+			var retVal = new AirdragData() {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				Date = data.Date,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
+			};
+			return retVal;
+		}
+
+		internal RetarderData SetCommonRetarderData(IRetarderInputData data)
+		{
+			try {
+				var retarder = new RetarderData { Type = data.Type };
+
+				switch (retarder.Type) {
+					//case RetarderType.EngineRetarder:
+					case RetarderType.TransmissionInputRetarder:
+					case RetarderType.TransmissionOutputRetarder:
+						retarder.LossMap = RetarderLossMapReader.Create(data.LossMap);
+						retarder.Ratio = data.Ratio;
+						break;
+					case RetarderType.None:
+					case RetarderType.LossesIncludedInTransmission:
+						retarder.Ratio = 1;
+						break;
+					default:
+						// ReSharper disable once NotResolvedInText
+						// ReSharper disable once LocalizableElement
+						throw new ArgumentOutOfRangeException("retarder.Type", "RetarderType unknown");
+				}
+
+				if (!retarder.Type.IsDedicatedComponent()) {
+					return retarder;
+				}
+				retarder.SavedInDeclarationMode = data.SavedInDeclarationMode;
+				retarder.Manufacturer = data.Manufacturer;
+				retarder.ModelName = data.Model;
+				retarder.Date = data.Date;
+				retarder.CertificationMethod = data.CertificationMethod;
+				retarder.CertificationNumber = data.CertificationNumber;
+				retarder.DigestValueInput = data.DigestValue;
+
+				return retarder;
+			} catch (Exception e) {
+				throw new VectoException("Error while Reading Retarder Data: {0}", e.Message);
+			}
+		}
+
+		internal CombustionEngineData SetCommonCombustionEngineData(IEngineDeclarationInputData data)
+		{
+			var retVal = new CombustionEngineData {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				Date = data.Date,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
+				Displacement = data.Displacement,
+				IdleSpeed = data.IdleSpeed,
+				ConsumptionMap = FuelConsumptionMapReader.Create(data.FuelConsumptionMap),
+				RatedPowerDeclared = data.RatedPowerDeclared,
+				RatedSpeedDeclared = data.RatedSpeedDeclared,
+				MaxTorqueDeclared = data.MaxTorqueDeclared,
+				FuelType = data.FuelType
+			};
+			return retVal;
+		}
+
+		internal GearboxData SetCommonGearboxData(IGearboxDeclarationInputData data)
+		{
+			return new GearboxData {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				Date = data.Date,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
+				Type = data.Type
+			};
+		}
+
+		protected TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback,
+			bool extendLossMap)
+		{
+			if (gear.LossMap != null) {
+				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), extendLossMap);
+			}
+			if (useEfficiencyFallback) {
+				return TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
+			}
+			throw new InvalidFileFormatException("Gear {0} LossMap missing.", i + 1);
+		}
+
+		protected static void CreateTCSecondGearATSerial(GearData gearData,
+			ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = gearData.Ratio;
+			gearData.TorqueConverterGearLossMap = gearData.LossMap;
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		protected static void CreateTCFirstGearATSerial(GearData gearData,
+			ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = gearData.Ratio;
+			gearData.TorqueConverterGearLossMap = gearData.LossMap;
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		protected static void CretateTCFirstGearATPowerSplit(GearData gearData, uint i, ShiftPolygon shiftPolygon)
+		{
+			gearData.TorqueConverterRatio = 1;
+			gearData.TorqueConverterGearLossMap = TransmissionLossMapReader.Create(1, 1, string.Format("TCGear {0}", i + 1));
+			gearData.TorqueConverterShiftPolygon = shiftPolygon;
+		}
+
+		public AxleGearData CreateAxleGearData(IAxleGearInputData data, bool useEfficiencyFallback)
+		{
+			var retVal = SetCommonAxleGearData(data);
+			retVal.AxleGear.LossMap = ReadAxleLossMap(data, useEfficiencyFallback);
+			return retVal;
+		}
+
+		internal TransmissionLossMap ReadAxleLossMap(IAxleGearInputData data, bool useEfficiencyFallback)
+		{
+			TransmissionLossMap axleLossMap;
+			if (data.LossMap == null && useEfficiencyFallback) {
+				axleLossMap = TransmissionLossMapReader.Create(data.Efficiency, data.Ratio, "Axlegear");
+			} else {
+				if (data.LossMap == null) {
+					throw new InvalidFileFormatException("LossMap for Axlegear is missing.");
+				}
+				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "Axlegear");
+			}
+			if (axleLossMap == null) {
+				throw new InvalidFileFormatException("LossMap for Axlegear is missing.");
+			}
+			return axleLossMap;
+		}
+
+		internal AxleGearData SetCommonAxleGearData(IAxleGearInputData data)
+		{
+			return new AxleGearData {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				Manufacturer = data.Manufacturer,
+				ModelName = data.Model,
+				LineType = data.LineType,
+				Date = data.Date,
+				CertificationMethod = data.CertificationMethod,
+				CertificationNumber = data.CertificationNumber,
+				DigestValueInput = data.DigestValue,
+				AxleGear = new GearData { Ratio = data.Ratio }
+			};
+		}
+
+		/// <summary>
+		/// Creates an AngledriveData or returns null if there is no anglegear.
+		/// </summary>
+		/// <param name="data"></param>
+		/// <param name="useEfficiencyFallback">if true, the Efficiency value is used if no LossMap is found.</param>
+		/// <returns></returns>
+		internal AngledriveData CreateAngledriveData(IAngledriveInputData data, bool useEfficiencyFallback)
+		{
+			try {
+				var type = data.Type;
+
+				switch (type) {
+					case AngledriveType.LossesIncludedInGearbox:
+					case AngledriveType.None:
+						return null;
+					case AngledriveType.SeparateAngledrive:
+						var angledriveData = new AngledriveData {
+							SavedInDeclarationMode = data.SavedInDeclarationMode,
+							Manufacturer = data.Manufacturer,
+							ModelName = data.Model,
+							Date = data.Date,
+							CertificationMethod = data.CertificationMethod,
+							CertificationNumber = data.CertificationNumber,
+							DigestValueInput = data.DigestValue,
+							Type = type,
+							Angledrive = new TransmissionData { Ratio = data.Ratio }
+						};
+						try {
+							angledriveData.Angledrive.LossMap = TransmissionLossMapReader.Create(data.LossMap,
+								data.Ratio, "Angledrive");
+						} catch (VectoException ex) {
+							Log.Info("Angledrive Loss Map not found.");
+							if (useEfficiencyFallback) {
+								Log.Info("Angledrive Trying with Efficiency instead of Loss Map.");
+								angledriveData.Angledrive.LossMap = TransmissionLossMapReader.Create(data.Efficiency,
+									data.Ratio, "Angledrive");
+							} else {
+								throw new VectoException("Angledrive: LossMap not found.", ex);
+							}
+						}
+						return angledriveData;
+					default:
+						throw new ArgumentOutOfRangeException("data", "Unknown Angledrive Type.");
+				}
+			} catch (Exception e) {
+				throw new VectoException("Error while reading Angledrive data: {0}", e.Message, e);
+			}
+		}
+
+		/// <summary>
+		/// Intersects full load curves.
+		/// </summary>
+		/// <param name="engineCurve"></param>
+		/// <param name="maxTorque"></param>
+		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
+		internal static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, NewtonMeter maxTorque)
+		{
+			if (maxTorque == null) {
+				return engineCurve;
+			}
+
+			var entries = new List<EngineFullLoadCurve.FullLoadCurveEntry>();
+			var firstEntry = engineCurve.FullLoadEntries.First();
+			if (firstEntry.TorqueFullLoad < maxTorque) {
+				entries.Add(engineCurve.FullLoadEntries.First());
+			} else {
+				entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
+					EngineSpeed = firstEntry.EngineSpeed,
+					TorqueFullLoad = maxTorque,
+					TorqueDrag = firstEntry.TorqueDrag
+				});
+			}
+			foreach (var entry in engineCurve.FullLoadEntries.Pairwise(Tuple.Create)) {
+				if (entry.Item1.TorqueFullLoad <= maxTorque && entry.Item2.TorqueFullLoad <= maxTorque) {
+					// segment is below maxTorque line -> use directly
+					entries.Add(entry.Item2);
+				} else if (entry.Item1.TorqueFullLoad > maxTorque && entry.Item2.TorqueFullLoad > maxTorque) {
+					// segment is above maxTorque line -> add limited entry
+					entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
+						EngineSpeed = entry.Item2.EngineSpeed,
+						TorqueFullLoad = maxTorque,
+						TorqueDrag = entry.Item2.TorqueDrag
+					});
+				} else {
+					// segment intersects maxTorque line -> add new entry at intersection
+					var edgeFull = Edge.Create(new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueFullLoad.Value()),
+						new Point(entry.Item2.EngineSpeed.Value(), entry.Item2.TorqueFullLoad.Value()));
+					var edgeDrag = Edge.Create(new Point(entry.Item1.EngineSpeed.Value(), entry.Item1.TorqueDrag.Value()),
+						new Point(entry.Item2.EngineSpeed.Value(), entry.Item2.TorqueDrag.Value()));
+					var intersectionX = (maxTorque.Value() - edgeFull.OffsetXY) / edgeFull.SlopeXY;
+					entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
+						EngineSpeed = intersectionX.SI<PerSecond>(),
+						TorqueFullLoad = maxTorque,
+						TorqueDrag = VectoMath.Interpolate(edgeDrag.P1, edgeDrag.P2, intersectionX).SI<NewtonMeter>()
+					});
+					entries.Add(new EngineFullLoadCurve.FullLoadCurveEntry {
+						EngineSpeed = entry.Item2.EngineSpeed,
+						TorqueFullLoad = entry.Item2.TorqueFullLoad > maxTorque ? maxTorque : entry.Item2.TorqueFullLoad,
+						TorqueDrag = entry.Item2.TorqueDrag
+					});
+				}
+			}
+
+			var flc = new EngineFullLoadCurve(entries.ToList(), engineCurve.PT1Data) {
+				EngineData = engineCurve.EngineData,
+			};
+			return flc;
+		}
+	}
+}
