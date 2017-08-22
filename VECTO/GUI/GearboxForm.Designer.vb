@@ -138,6 +138,7 @@ Partial Class GearboxForm
 		Me.lblGbxInfo = New System.Windows.Forms.Label()
 		Me.btnExportXML = New System.Windows.Forms.Button()
 		Me.btnExportAxlGearXML = New System.Windows.Forms.Button()
+		Me.btExportVGBS = New System.Windows.Forms.Button()
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -931,6 +932,7 @@ Partial Class GearboxForm
 		'
 		'GroupBox4
 		'
+		Me.GroupBox4.Controls.Add(Me.btExportVGBS)
 		Me.GroupBox4.Controls.Add(Me.Label32)
 		Me.GroupBox4.Controls.Add(Me.LvGears)
 		Me.GroupBox4.Controls.Add(Me.BtRemGear)
@@ -1076,6 +1078,16 @@ Partial Class GearboxForm
 		Me.btnExportAxlGearXML.TabIndex = 53
 		Me.btnExportAxlGearXML.Text = "Exp. AxlGear as XML"
 		Me.btnExportAxlGearXML.UseVisualStyleBackColor = True
+		'
+		'btExportVGBS
+		'
+		Me.btExportVGBS.Enabled = False
+		Me.btExportVGBS.Location = New System.Drawing.Point(55, 202)
+		Me.btExportVGBS.Name = "btExportVGBS"
+		Me.btExportVGBS.Size = New System.Drawing.Size(153, 24)
+		Me.btExportVGBS.TabIndex = 4
+		Me.btExportVGBS.Text = "Export Shiftcurve as VGBS"
+		Me.btExportVGBS.UseVisualStyleBackColor = True
 		'
 		'GearboxForm
 		'
@@ -1242,4 +1254,5 @@ Partial Class GearboxForm
 	Friend WithEvents Label15 As System.Windows.Forms.Label
 	Friend WithEvents Label18 As System.Windows.Forms.Label
 	Friend WithEvents LblTCShiftFile As System.Windows.Forms.Label
+	Friend WithEvents btExportVGBS As System.Windows.Forms.Button
 End Class
