@@ -46,8 +46,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			Assert.IsTrue(0.SI<PerSecond>().HasEqualUnit(val));
 
-			var val2 = 1200.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
-			val = val * 2;
+            //var val2 = 1200.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
+		    var val2 = 1200.SI().Rounds.Per.Minute.ConvertTo(Unit.SI.Radian.Per.Second).Cast<PerSecond>();
+            val = val * 2;
 			Assert.AreEqual(val, val2);
 
 			val2 = val2 / 2;

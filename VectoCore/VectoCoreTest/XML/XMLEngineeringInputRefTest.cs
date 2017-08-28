@@ -87,10 +87,12 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			Assert.AreEqual("560", fcMapTable.Rows[0][0]);
 			var fcMap = FuelConsumptionMapReader.Create(fcMapTable);
-			Assert.AreEqual(1256.SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Value(),
-				fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
+            //Assert.AreEqual(1256.SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Value(),
+            //	fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
+		    Assert.AreEqual(1256.SI().Gramm.Per.Hour.ConvertTo(Unit.SI.Kilo.Gramm.Per.Second).Value(),
+		    	fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
 
-			var fldTable = engineDataProvider.FullLoadCurve;
+            var fldTable = engineDataProvider.FullLoadCurve;
 			Assert.AreEqual(10, fldTable.Rows.Count);
 			Assert.AreEqual("engine speed", fldTable.Columns[0].Caption);
 			Assert.AreEqual("full load torque", fldTable.Columns[1].Caption);

@@ -39,7 +39,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Gets the unit-less SI representation of the number.
 		/// </summary>
-		[DebuggerHidden]
+		//[DebuggerHidden]
 		public static SI SI(this int value)
 		{
 			return new SI(value);
