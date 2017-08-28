@@ -1176,13 +1176,16 @@ namespace TUGraz.VectoCommon.Utils
 
             if (_reciproc)
             {
-                siUnitsParm = SIUtils.SIUnitsMultFactor(siUnitsParm, -1); //ChangeNumeratorAndDenominator(siUnitsParm);
+                siUnitsParm = SIUtils.SIUnitsMultFactor(siUnitsParm, -1); 
             }
 
             if (_reverse)
             {
-
-                factor = 1 / factor;
+                if (_reciproc)
+                {
+                    //factor = 1 / factor;
+                    factor = 1 / factor;
+                }
 
                 if (!SIUtils.CompareSIUnits(siUnitsParm, si.SIUnits))
                 {
@@ -1210,7 +1213,8 @@ namespace TUGraz.VectoCommon.Utils
             {
                 if (factor.HasValue)
                 {
-                    Val /= (factor.Value * _exponent);
+                    //Val /= (factor.Value * _exponent);
+                    Val /= Math.Pow(factor.Value, (double)_exponent);
                 }
 
             }
@@ -1218,7 +1222,8 @@ namespace TUGraz.VectoCommon.Utils
             {
                 if (factor.HasValue)
                 {
-                    Val *= (factor.Value * _exponent);
+                    //Val *= (factor.Value * _exponent);
+                    Val *= Math.Pow(factor.Value,(double)_exponent);
                 }
             }
 

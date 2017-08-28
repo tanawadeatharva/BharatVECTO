@@ -575,9 +575,20 @@ namespace TUGraz.VectoCore.Tests.Utils
         [TestMethod]
         public void SI_NewTests()
         {
-            var val1 = 5.SI().Cubic.Centi.Meter;
-            Assert.AreEqual("0.000005 [m^3]", val1);
+            var val1 = 5.SI().Cubic.Dezi.Meter;
+            Assert.AreEqual("m^3", val1.GetUnitString());
+            AssertHelper.AreRelativeEqual(0.005, val1);
 
+
+            var uni = Unit.SI.Cubic.Dezi.Meter;
+            Assert.AreEqual(3, uni.GetSIUnits()[1]); //cubic meter
+            AssertHelper.AreRelativeEqual(0.001, uni.Getfactor());
+
+
+
+            var val2 = 7.SI().Cubic.Dezi.Meter.ConvertTo(Unit.SI.Cubic.Dezi.Meter);
+            Assert.AreEqual("m^3", val2.GetUnitString());
+            Assert.AreEqual(0.0007, val2.Value());
         }
     }
 

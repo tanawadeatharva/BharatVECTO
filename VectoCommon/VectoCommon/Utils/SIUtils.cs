@@ -73,7 +73,7 @@ namespace TUGraz.VectoCommon.Utils
         private int[] units;
         private double factorValue;
 
-        private double exponent;
+        private short exponent;
         private short reciproc;
 
         public enum GrammMode
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCommon.Utils
         private GrammMode grammMode;
 
         public UnitInstance(int[] param_units,
-            double param_factor, double param_exponent, short param_reciproc,
+            double param_factor, short param_exponent, short param_reciproc,
             GrammMode param_grammMode)
         {
             units = param_units;
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCommon.Utils
                 {
                     grammMode = GrammMode.KiloGramm;
                 }
-                units[0] += 1 * reciproc;
+                units[0] += 1 * reciproc * exponent;
                 CalcFactorValue(Op.Div, 1000);
                 //factorValue /= 1000;
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
@@ -178,7 +178,7 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                units[2] += 1 * reciproc;
+                units[2] += 1 * reciproc * exponent;
                 CalcFactorValue(Op.Mult, 3600);
                 //factorValue *= 3600;
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
@@ -213,7 +213,8 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                units[1] += 1 * reciproc;
+                //units[1] += 1 * reciproc;
+                units[1] += 1 * reciproc * exponent;
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
             }
         }
@@ -221,8 +222,9 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                CalcFactorValue(Op.Div, 1000);
+                //CalcFactorValue(Op.Div, 1000);
                 //factorValue /= 1000;
+                CalcFactorValue(Op.Mult, Math.Pow(factorValue / 1000, exponent));
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
             }
         }
@@ -230,7 +232,9 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                CalcFactorValue(Op.Div, 100);
+                //CalcFactorValue(Op.Div, 100);
+                //Val *= Math.Pow(factor.Value, (double)_exponent);
+                CalcFactorValue(Op.Mult, Math.Pow(factorValue/100, exponent));
                 //factorValue /= 100;
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
             }
@@ -239,8 +243,9 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                CalcFactorValue(Op.Div, 10);
+                //CalcFactorValue(Op.Div, 10);
                 //factorValue /= 10;
+                CalcFactorValue(Op.Mult, Math.Pow(factorValue / 10, exponent));
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
             }
         }
@@ -248,7 +253,7 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                units[2] += 1 * reciproc;
+                units[2] += 1 * reciproc * exponent;
                 CalcFactorValue(Op.Mult, 60);
                 //factorValue *= 60;
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
@@ -258,9 +263,9 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                units[0] += 1 * reciproc;
-                units[1] += 1 * reciproc;
-                units[2] -= 2 * reciproc;
+                units[0] += 1 * reciproc * exponent;
+                units[1] += 1 * reciproc * exponent;
+                units[2] -= 2 * reciproc * exponent;
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
             }
         }
@@ -302,7 +307,7 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                units[2] += 1 * reciproc;
+                units[2] += 1 * reciproc * exponent;
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
             }
         }
@@ -310,7 +315,7 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                exponent = 2 * reciproc;
+                exponent = (short)(2 * reciproc);
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
             }
         }
@@ -318,7 +323,7 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                units[0] += 1 * reciproc;
+                units[0] += 1 * reciproc * exponent;
                 CalcFactorValue(Op.Mult, 1000);
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
             }
@@ -327,9 +332,9 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                units[0] += 1 * reciproc;
-                units[1] += 2 * reciproc;
-                units[2] -= 3 * reciproc;
+                units[0] += 1 * reciproc * exponent;
+                units[1] += 2 * reciproc * exponent;
+                units[2] -= 3 * reciproc * exponent;
                 return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
             }
         }
