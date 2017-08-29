@@ -602,9 +602,29 @@ namespace TUGraz.VectoCore.Tests.Utils
             NewtonMeter newtonMeter = 5.SI<NewtonMeter>();
             AssertHelper.AreRelativeEqual(5.SI(Unit.SI.Newton.Meter), newtonMeter);
             AssertHelper.AreRelativeEqual(5.SI(Unit.SI.Meter.Newton), newtonMeter);
+        }
 
+        [TestMethod]
+        public void SI_ConstructorPerformance_OtherSIInterface()
+        {
+            for (var i = 0; i < 5e5; i++)
+                //for (var i = 0; i < 0.05e5; i++)
+            {
+                var si = i.SI();
+                var meter = i.SI<Meter>();
+                var watt = i.SI<Watt>();
+                var perSecond = i.SI<PerSecond>();
+                var meterPerSecond = i.SI<MeterPerSecond>();
+                var second = i.SI<Second>();
+                var newton = i.SI<Newton>();
+                var kilogram = i.SI<Kilogram>();
+                var squareMeter = i.SI<SquareMeter>();
+                var scalar = i.SI<Scalar>();
+                var compound = i.SI(Unit.SI.Kilo.Gramm.Square.Meter.Per.Cubic.Second).Cast<Watt>();
+            }
 
         }
+
     }
 
 }

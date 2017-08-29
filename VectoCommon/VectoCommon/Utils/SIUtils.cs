@@ -127,8 +127,8 @@ namespace TUGraz.VectoCommon.Utils
                 units[0] += 1 * reciproc * exponent;
 
                 factorValue /= Math.Pow(1000, exponent * reciproc);
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
-                //return this; // not work
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this; // not work
             }
         }
         public UnitInstance Cubic
@@ -136,7 +136,8 @@ namespace TUGraz.VectoCommon.Utils
             get
             {
                 exponent = 3;
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Hour
@@ -147,7 +148,8 @@ namespace TUGraz.VectoCommon.Utils
                 units[2] += 1 * ReciprocAndExponent;
 
                 factorValue *= Math.Pow(3600, ReciprocAndExponent);
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Kilo
@@ -164,7 +166,8 @@ namespace TUGraz.VectoCommon.Utils
                 }
 
                 factorValue *= Math.Pow(1000, exponent * reciproc);
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Linear
@@ -172,7 +175,8 @@ namespace TUGraz.VectoCommon.Utils
             get
             {
                 exponent = 1;
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Meter
@@ -180,7 +184,8 @@ namespace TUGraz.VectoCommon.Utils
             get
             {
                 units[1] += 1 * reciproc * exponent;
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Milli
@@ -189,7 +194,8 @@ namespace TUGraz.VectoCommon.Utils
             {
 
                 factorValue /= Math.Pow(1000, exponent * reciproc);
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Centi
@@ -197,7 +203,8 @@ namespace TUGraz.VectoCommon.Utils
             get
             {
                 factorValue /= Math.Pow(100, exponent * reciproc);
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Dezi
@@ -205,7 +212,8 @@ namespace TUGraz.VectoCommon.Utils
             get
             {
                 factorValue /= Math.Pow(10, exponent * reciproc);
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Minute
@@ -216,7 +224,8 @@ namespace TUGraz.VectoCommon.Utils
                 units[2] += 1 * ReciprocAndExponent;
 
                 factorValue *= Math.Pow(60, ReciprocAndExponent);
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Newton
@@ -227,7 +236,8 @@ namespace TUGraz.VectoCommon.Utils
                 units[0] += 1 * ReciprocAndExponent;
                 units[1] += 1 * ReciprocAndExponent;
                 units[2] -= 2 * ReciprocAndExponent;
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Per
@@ -237,15 +247,16 @@ namespace TUGraz.VectoCommon.Utils
                 exponent = 1;
                 reciproc = reciproc * (-1);
 
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
-                //return this;
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Radian
         {
             get
             {
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Rounds
@@ -253,7 +264,8 @@ namespace TUGraz.VectoCommon.Utils
             get
             {
                 factorValue *= Math.Pow(2 * Math.PI, exponent * reciproc);
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Second
@@ -261,7 +273,8 @@ namespace TUGraz.VectoCommon.Utils
             get
             {
                 units[2] += 1 * reciproc * exponent;
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Square
@@ -269,7 +282,8 @@ namespace TUGraz.VectoCommon.Utils
             get
             {
                 exponent = 2 * reciproc;
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Ton
@@ -279,7 +293,8 @@ namespace TUGraz.VectoCommon.Utils
                 int ReciprocAndExponent = reciproc * exponent;
                 units[0] += 1 * ReciprocAndExponent;
                 factorValue *= Math.Pow(1000, ReciprocAndExponent);
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
         public UnitInstance Watt
@@ -290,7 +305,8 @@ namespace TUGraz.VectoCommon.Utils
                 units[0] += 1 * ReciprocAndExponent;
                 units[1] += 2 * ReciprocAndExponent;
                 units[2] -= 3 * ReciprocAndExponent;
-                return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
             }
         }
 
