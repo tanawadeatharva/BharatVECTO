@@ -46,7 +46,7 @@ using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
-    [TestFixture]
+	[TestFixture]
 	public class SumWriterTest
 	{
 		[TestCase]
@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		public void TestSumDataMetaInformation()
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
-			var dataProvider = new XMLDeclarationInputDataProvider(XmlTextReader.Create(jobfile), true);
+			var dataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(jobfile), true);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
