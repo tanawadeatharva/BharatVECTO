@@ -31,17 +31,16 @@
 
 using System.IO;
 using System.Xml;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
 using TUGraz.VectoCore.OutputData.XML;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
-	[TestClass]
+	[TestFixture]
 	public class XMLWritingTests
 	{
 		const string EngineOnlyJob = @"TestData\XML\EngineOnlyJob\EngineOnly.vecto";
@@ -56,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			@"TestData\XML\XMLWriter\DeclarationJob\Class5_Tractor_4x2\Class5_Tractor_DECL-FULL.vecto";
 
 
-		[TestMethod]
+		[TestCase]
 		public void TestWriteEngineOnlySingleFile()
 		{
 			var outFile = "EngineOnlyJobSingleFile.xml";
@@ -77,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("175kW 6.8l Engine", xml.JobInputData().JobName);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestWriteEngineeringSingleFile()
 		{
 			var outFile = "EngineeringJobSingleFile.xml";
@@ -93,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestWriteEngineeringSingleFileFull()
 		{
 			var outFile = "EngineeringJobSingleFileFull.xml";
@@ -109,7 +108,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestWriteEngineeringMultipleFilesFull()
 		{
 			var outFile = "EngineeringJobMultipleFilesFull.xml";
@@ -127,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestWriteEngineeringMultipleFiles()
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineeringJob);
@@ -143,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//Assert.AreEqual("VEH-N/A", xml.JobInputData().JobName);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestWriteDeclarationJob()
 		{
 			var outputFile = "DeclarationJobSingleFile.xml";
@@ -165,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestWriteDeclarationJobFull()
 		{
 			var outputFile = "DeclarationJobFullSingleFile.xml";

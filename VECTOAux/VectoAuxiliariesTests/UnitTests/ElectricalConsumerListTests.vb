@@ -45,13 +45,14 @@ Public Class ElectricalConsumerListTests
 	End Sub
 
 
-	<Test()>
-	<ExpectedException("System.ArgumentException")>
-	Public Sub DuplicateConsumersTest_ThrowsArgumentException()
+    <Test()>
+    Public Sub DuplicateConsumersTest_ThrowsArgumentException()
 
-		Dim target As New ElectricalConsumerList(0.096, 26.3)
-		'Add two OnBaseVehicle consumers
-		target.AddConsumer(New ElectricalConsumer(True, "TEST", "Exclude1", 10, 1, 26.3, 1, ""))
-		target.AddConsumer(New ElectricalConsumer(True, "TEST", "Exclude1", 10, 1, 26.3, 1, ""))
-	End Sub
+        Dim target As New ElectricalConsumerList(0.096, 26.3)
+        'Add two OnBaseVehicle consumers
+        target.AddConsumer(New ElectricalConsumer(True, "TEST", "Exclude1", 10, 1, 26.3, 1, ""))
+        Assert.That(Sub() target.AddConsumer(New ElectricalConsumer(True, "TEST", "Exclude1", 10, 1, 26.3, 1, "")), Throws.InstanceOf(Of System.ArgumentException))
+
+
+    End Sub
 End Class

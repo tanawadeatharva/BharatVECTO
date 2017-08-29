@@ -30,18 +30,17 @@
 */
 
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
-	[TestClass]
+	[TestFixture]
 	public class AirdragDefaultValuesTest
 	{
-		[TestMethod]
+		[TestCase]
 		public void TestClass2()
 		{
 			var file = @"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto";
@@ -57,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(7.2, runData[0].AirdragData.DeclaredAirdragArea.Value());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestClass5()
 		{
 			var file = @"TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_DECL.vecto";
@@ -72,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(8.7, runData[0].AirdragData.DeclaredAirdragArea.Value());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestClass9()
 		{
 			var file = @"TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";

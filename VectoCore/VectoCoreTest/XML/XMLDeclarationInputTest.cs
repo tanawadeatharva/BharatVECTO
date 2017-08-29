@@ -32,10 +32,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -51,10 +48,11 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
-	[TestClass]
+    [TestFixture]
 	public class XMLDeclarationInputTest
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
@@ -63,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		const string SampleVehicleFullDeclCertificationOptions =
 			"TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_certificationOptions.xml";
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputEng()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -98,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var fldMap = FullLoadCurveReader.Create(fldTable, true);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputGbx()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -123,7 +121,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(5000, gears.First().MaxTorque.Value());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputAxlG()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -145,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			AssertHelper.Exception<VectoException>(() => { var tmp = axlegearDataProvider.Efficiency; });
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputRetarder()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -166,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(lossMap);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputAxleWheels()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -185,7 +183,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(31300, axles[1].TyreTestLoad.Value());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputAxleWheelsDuplicates()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -218,7 +216,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			AssertHelper.Exception<VectoException>(() => { var axles = vehicleDataProvider.Axles; });
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputAxleWheelsAxleNumTooLow()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -249,7 +247,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				() => { var inputDataProvider = new XMLDeclarationInputDataProvider(modified, true); });
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputAxleWheelsAxleNumTooHigh()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -282,7 +280,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			AssertHelper.Exception<VectoException>(() => { var axles = vehicleDataProvider.Axles; });
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputAuxiliaries()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -301,7 +299,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("Standard technology - LED headlights, all", aux3.Technology.First());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputADAS()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -313,7 +311,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(DriverMode.Overspeed, adas.OverSpeedEcoRoll.Mode);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestVehicleInput()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -332,7 +330,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1.0, inputDataProvider.RetarderInputData.Ratio);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLPowertrainGeneration()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -351,7 +349,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(8, jobContainer.Runs.Count);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestFullFeaturedXMEngineering_TorqueConverter()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -366,7 +364,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("0.90", tcDataProvider.TCData.Rows[2][1]);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestFullFeaturedXMLDeclaration_AngleDrive()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -383,7 +381,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			AssertHelper.Exception<VectoException>(() => { var tmp = angledriveDataProvider.Efficiency; });
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestVehicleInputData()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -401,7 +399,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1.0, inputDataProvider.RetarderInputData.Ratio);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestFullFeaturedXMLDeclaration_TorqueLimits()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -416,7 +414,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(12, torqueLimits[2].Gear);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestFullFeaturedXMLDeclaration_GbxTorqueLimits()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -431,7 +429,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(gears[11].MaxTorque);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestFullFeaturedXMLDeclaration_GbxSpeedLimits()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -446,7 +444,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(gears[11].MaxInputSpeed);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestElementNotAvailable()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -471,7 +469,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			AssertHelper.Exception<VectoException>(() => { var tmp = inputDataProvider.RetarderInputData.Ratio; });
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestRetarderTypeNone()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -506,7 +504,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			jobContainer.Execute();
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestRetarderTypes()
 		{
 			var retarderTypes = new Dictionary<string, RetarderType>() {
@@ -541,7 +539,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestAxleConfigurationTypes()
 		{
 			var axleConfigurations = new Dictionary<string, AxleConfiguration>() {
@@ -579,7 +577,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestVehicleCategoryTypes()
 		{
 			var vehicleCategories = new Dictionary<string, VehicleCategory>() {
@@ -614,7 +612,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestMethod]
+		[TestCase]
 		public void TestWheelsTypes()
 		{
 			var retarderTypes = new Dictionary<string, RetarderType>() { };
@@ -646,7 +644,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestPTOTypeTypes()
 		{
 			var ptoTypes = new string[][] {
@@ -708,7 +706,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestAngledriveTypes()
 		{
 			var angledriveTypes = new Dictionary<string, AngledriveType>() {
@@ -743,7 +741,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestGearboxTypes()
 		{
 			var gearboxTypes = new Dictionary<string, GearboxType>() {
@@ -782,7 +780,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestPTOInputNone()
 		{
 			var reader = XmlReader.Create(SampleVehicleDecl);
@@ -793,7 +791,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("None", ptoDataProvider.PTOTransmissionType);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestPTOInput()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDecl);
@@ -806,7 +804,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1000, lookup.PowerDemand.Value());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestCertificationMethodInput()
 		{
 			var reader = XmlReader.Create(SampleVehicleFullDeclCertificationOptions);

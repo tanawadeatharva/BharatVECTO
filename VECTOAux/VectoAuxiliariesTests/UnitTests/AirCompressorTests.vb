@@ -72,13 +72,13 @@ Namespace UnitTests
 			Assert.IsTrue(target.Initialise())
 		End Sub
 
-		<Test(), ExpectedException("System.ArgumentException")>
-		Public Sub InitialiseInvalidMapTest()
+        <Test()>
+        Public Sub InitialiseInvalidMapTest()
 			Dim map As ICompressorMap = GetFailingCompressorMapMock()
 			_signals.EngineSpeed = 100.RPMtoRad()
 			Dim target As M4_AirCompressor = New M4_AirCompressor(map, 2, 0.8, _signals)
-			target.Initialise()
-		End Sub
+            Assert.That(Sub() target.Initialise(), Throws.InstanceOf(Of System.ArgumentException))
+        End Sub
 
 		<Test()>
 		Public Sub GetEfficiencyTest()
@@ -96,16 +96,16 @@ Namespace UnitTests
 			Assert.AreEqual(target, actual)
 		End Sub
 
-		<TestCase(TooLowEfficiency)> _
-		<TestCase(TooHighEfficiency)> _
-		<ExpectedException("System.ArgumentOutOfRangeException")>
-		Public Sub SetEfficiencyOutOfRangeTest(ByVal efficiency As Single)
-			Dim comp As M4_AirCompressor = GetGoodCompressor()
-			comp.PulleyGearEfficiency = efficiency
-		End Sub
+		<TestCase(TooLowEfficiency)>
+        <TestCase(TooHighEfficiency)>
+        Public Sub SetEfficiencyOutOfRangeTest(ByVal efficiency As Single)
+            Dim comp As M4_AirCompressor = GetGoodCompressor()
+
+            Assert.That(Sub() comp.PulleyGearEfficiency = efficiency, Throws.InstanceOf(Of ArgumentException))
+        End Sub
 
 
-		<Test()>
+        <Test()>
 		Public Sub GetRatioTest()
 			Dim comp As M4_AirCompressor = GetGoodCompressor()
 			Dim target = comp.PulleyGearRatio
@@ -121,15 +121,15 @@ Namespace UnitTests
 			Assert.AreEqual(target, actual)
 		End Sub
 
-		<TestCase(TooLowRatio)> _
-		<TestCase(TooHighRatio)> _
-		<ExpectedException("System.ArgumentOutOfRangeException")>
-		Public Sub SetRatioOutOfRangeTest(ByVal ratio As Single)
-			Dim comp As M4_AirCompressor = GetGoodCompressor()
-			comp.PulleyGearRatio = ratio
-		End Sub
+		<TestCase(TooLowRatio)>
+        <TestCase(TooHighRatio)>
+        Public Sub SetRatioOutOfRangeTest(ByVal ratio As Single)
+            Dim comp As M4_AirCompressor = GetGoodCompressor()
 
-		<Test()>
+            Assert.That(Sub() comp.PulleyGearRatio = ratio, Throws.InstanceOf(Of ArgumentException))
+        End Sub
+
+        <Test()>
 		Public Sub GetCompressorFlowRateTest()
 			Dim comp As M4_AirCompressor = GetGoodCompressor()
 			Dim expected As Double = 0.0333333351

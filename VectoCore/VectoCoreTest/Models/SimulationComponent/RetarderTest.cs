@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -41,13 +41,13 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
-	[TestClass]
+	[TestFixture]
 	public class RetarderTest
 	{
 		private const string RetarderLossMapFile = @"TestData\Components\Retarder.vrlm";
 		private const double Delta = 0.0001;
 
-		[TestMethod]
+		[TestCase]
 		public void RetarderBasicTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Declaration);
@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(50 + 12, nextRequest.Torque.Value(), Delta);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void RetarderRatioTest()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(50 + 13.89, nextRequest.Torque.Value(), Delta); // extrapolated
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void RetarderDeclarationTest()
 		{
 			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				"Retarder LossMap data was extrapolated in Declaration mode: range for loss map is not sufficient: n:2550 (min:0, max:2300), ratio:2");
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void RetarderDataSorting()
 		{
 			var retarderEntries = new[] {

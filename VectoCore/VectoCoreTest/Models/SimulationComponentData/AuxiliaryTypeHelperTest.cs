@@ -29,19 +29,17 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
-	[TestClass]
+    [TestFixture]
 	public class AuxiliaryTypeHelperTest
 	{
-		[TestMethod]
+		[TestCase]
 		public void TestParseAuxiliaryType()
 		{
 			Assert.AreEqual(AuxiliaryType.Fan, AuxiliaryTypeHelper.Parse("Fan"));
@@ -51,7 +49,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(AuxiliaryType.PneumaticSystem, AuxiliaryTypeHelper.Parse("Pneumatic System"));
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestToString()
 		{
 			Assert.AreEqual(Constants.Auxiliaries.Names.Fan, AuxiliaryTypeHelper.ToString(AuxiliaryType.Fan));

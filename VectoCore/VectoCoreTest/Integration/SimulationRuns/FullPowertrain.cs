@@ -32,7 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -51,10 +50,11 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 {
-	[TestClass]
+	[TestFixture]
 	public class FullPowerTrain
 	{
 		public const string CycleFile = @"TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri";
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 		private static readonly LoggingObject Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestCase, Category("LongRunning")]
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
@@ -129,10 +129,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			} while (!(response is ResponseCycleFinished));
 			modData.Finish(VectoRun.Status.Success);
-			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
+			Assert.IsInstanceOf<ResponseCycleFinished>(response);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Test_FullPowertrain()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
 			var response = cyclePort.Request(absTime, ds);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
@@ -209,10 +209,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			}
 			modData.Finish(VectoRun.Status.Success);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 		}
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestCase, Category("LongRunning")]
 		public void Test_FullPowertrain_LowSpeed()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
 			var response = cyclePort.Request(absTime, ds);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
@@ -290,10 +290,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					});
 			}
 			modData.Finish(VectoRun.Status.Success);
-			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
+			Assert.IsInstanceOf<ResponseCycleFinished>(response);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Test_FullPowerTrain_JobFile()
 		{
 			const string jobFile = @"TestData\job.vecto";

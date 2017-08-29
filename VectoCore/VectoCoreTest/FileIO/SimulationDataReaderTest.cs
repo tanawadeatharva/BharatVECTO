@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
@@ -44,13 +44,19 @@ using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
-	[TestClass]
+	[TestFixture]
 	public class SimulationDataReaderTest
 	{
 		protected const string DeclarationJob = @"TestData\Jobs\12t Delivery Truck.vecto";
 		protected const double Tolerance = 0.0001;
 
-		[TestMethod]
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        [TestCase]
 		public void ReadDeclarationJobFile()
 		{
 			var dataProvider = JSONInputDataFactory.ReadJsonJob(DeclarationJob);

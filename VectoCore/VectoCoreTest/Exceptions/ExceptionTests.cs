@@ -30,17 +30,17 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
+using NUnit.Framework;
 
 // ReSharper disable ObjectCreationAsStatement
 
 namespace TUGraz.VectoCore.Tests.Exceptions
 {
-	[TestClass]
+	[TestFixture]
 	public class ExceptionTests
 	{
-		[TestMethod]
+		[TestCase]
 		public void Test_VectoExceptions()
 		{
 			new CSVReadException("Test");

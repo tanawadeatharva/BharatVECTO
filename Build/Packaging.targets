@@ -43,10 +43,10 @@
   </Task>
 </UsingTask>
 
-<Target Name="GenerateReleasenotesPDF" BeforeTargets="AfterBuild">  
+<Target Name="GenerateReleasenotesPDF" BeforeTargets="AfterBuild"  Condition="$(Configuration) == 'Deploy'">  
 	<Exec Command="cscript &quot;$(solutiondir)documentation\user manual source\convertpptxtopdf.vbs&quot; &quot;$(solutiondir)documentation\user manual source\release notes vecto3.x.pptx&quot; &quot;$(solutiondir)documentation\user manual source\release notes vecto3.x.pdf&quot;"/>  
 </Target>  
-<Target Name="GenerateHelpHTML" BeforeTargets="AfterBuild">  
+<Target Name="GenerateHelpHTML" BeforeTargets="AfterBuild"  Condition="$(Configuration) == 'Deploy'">  
 	<Exec Command="&quot;$(solutiondir)documentation\user manual\convert.bat&quot;" WorkingDirectory="$(solutiondir)documentation\user manual"/>  
 </Target>  
 

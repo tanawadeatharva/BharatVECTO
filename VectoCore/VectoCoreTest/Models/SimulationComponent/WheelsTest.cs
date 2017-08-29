@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -39,12 +39,12 @@ using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
-	[TestClass]
+	[TestFixture]
 	public class WheelsTest
 	{
 		private const string VehicleDataFile = @"TestData\Components\24t Coach.vveh";
 
-		[TestMethod]
+		[TestCase]
 		public void WheelsRequestTest()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);

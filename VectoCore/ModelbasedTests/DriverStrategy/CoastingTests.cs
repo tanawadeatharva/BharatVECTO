@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 	[TestFixture]
 	public class CoastingTests
 	{
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void DisableLogging()
 		{
 			//LogManager.DisableLogging();
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 			GraphWriter.Write(modFile);
 		}
 
-		[Ignore, Test,
+		[Ignore("no longer relevant"), Test,
 		TestCase(40),
 		TestCase(45),
 		TestCase(50),
