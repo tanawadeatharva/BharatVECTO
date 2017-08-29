@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Utils
             //add
             PerSecond angVeloSum = 600.RPMtoRad() + 400.SI<PerSecond>();
             AssertHelper.AreRelativeEqual(600 * 2 * Math.PI / 60 + 400, angVeloSum);
-            AssertHelper.Exception<VectoException>(() => { var x = 500.SI().Watt + 300.SI().Newton; });
+            AssertHelper.Exception<VectoException>(() => { var x = 500.SI().Watt + 300.SI().Newton;});
 
             //subtract
             PerSecond angVeloDiff = 600.RPMtoRad() - 400.SI<PerSecond>();
@@ -109,7 +109,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
             // ConvertTo only allows conversion if the units are correct.
             //AssertHelper.Exception<VectoException>(() => { var x = 40.SI<Newton>().ConvertTo().Watt; });
-            AssertHelper.Exception<VectoException>(() => { var x = 40.SI<Newton>().ConvertTo(Unit.SI.Watt); });
+            AssertHelper.Exception<VectoException>(() => {
+                var x = 40.SI<Newton>().ConvertTo(Unit.SI.Watt);
+            });
             //var res1 = 40.SI<Newton>().ConvertTo().Newton;
             var res1 = 40.SI<Newton>().ConvertTo(Unit.SI.Newton);
 
@@ -576,19 +578,32 @@ namespace TUGraz.VectoCore.Tests.Utils
         public void SI_NewTests()
         {
             var val1 = 5.SI().Cubic.Dezi.Meter;
-            Assert.AreEqual("m^3", val1.GetUnitString());
-            AssertHelper.AreRelativeEqual(0.005, val1);
-
+            Assert.AreEqual("0.0050 [m^3]", val1.ToOutputFormat(showUnit: true));
 
             var uni = Unit.SI.Cubic.Dezi.Meter;
-            Assert.AreEqual(3, uni.GetSIUnits()[1]); //cubic meter
+            Assert.AreEqual("m^3", 1.SI().GetUnitString(uni.GetSIUnits())); 
             AssertHelper.AreRelativeEqual(0.001, uni.Getfactor());
 
-
-
             var val2 = 7.SI().Cubic.Dezi.Meter.ConvertTo(Unit.SI.Cubic.Dezi.Meter);
-            Assert.AreEqual("m^3", val2.GetUnitString());
-            Assert.AreEqual(0.0007, val2.Value());
+            Assert.AreEqual("0.0070 [m^3]", val2.ToOutputFormat(showUnit: true));
+
+            var val3 = 5.SI().Cubic.Dezi.Meter.ConvertTo(Unit.SI.Cubic.Centi.Meter);
+            Assert.AreEqual("0.0050 [m^3]", val3.ToOutputFormat(showUnit: true));
+
+            var val4 = 5.SI().Cubic.Centi.Meter.ConvertTo(Unit.SI.Cubic.Dezi.Meter);
+            Assert.AreEqual("0.000005 [m^3]", val4.ToOutputFormat(6,showUnit: true));
+
+
+            var uni1 = Unit.SI.Kilo.Meter.Per.Hour;
+            Assert.AreEqual("m/s", 1.SI().GetUnitString(uni1.GetSIUnits()));
+            AssertHelper.AreRelativeEqual(0.2777777777, uni1.Getfactor());
+
+
+            NewtonMeter newtonMeter = 5.SI<NewtonMeter>();
+            AssertHelper.AreRelativeEqual(5.SI(Unit.SI.Newton.Meter), newtonMeter);
+            AssertHelper.AreRelativeEqual(5.SI(Unit.SI.Meter.Newton), newtonMeter);
+
+
         }
     }
 

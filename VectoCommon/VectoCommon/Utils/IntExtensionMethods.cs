@@ -45,12 +45,18 @@ namespace TUGraz.VectoCommon.Utils
 			return new SI(value);
 		}
 
-		/// <summary>
-		/// Gets the special SI class of the number.
-		/// </summary>
-		/// <param name="d"></param>
-		/// <returns></returns>
-		[DebuggerHidden]
+
+        public static SI SI(this int value, UnitInstance si)
+        {
+            return new SI(value, si);
+        }
+
+        /// <summary>
+        /// Gets the special SI class of the number.
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        [DebuggerHidden]
 		public static T SI<T>(this int d) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(d);
