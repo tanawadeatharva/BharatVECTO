@@ -400,6 +400,7 @@ Public Class VehicleForm
 		'TbMassExtra.Text = veh.MassExtra.ToGUIFormat()
 
 		TBcdA.Text = If(airdrag.AirDragArea Is Nothing, "", airdrag.AirDragArea.ToGUIFormat())
+		tbVehicleHeight.Text = If(vehicle.Height Is Nothing, "", vehicle.Height.ToGUIFormat())
 
 		cbPTOType.SelectedValue = pto.PTOTransmissionType
 		tbPTOLossMap.Text =
