@@ -1214,7 +1214,7 @@ namespace TUGraz.VectoCommon.Utils
                 if (factor.HasValue)
                 {
                     //Val /= (factor.Value * _exponent);
-                    Val /= Math.Pow(factor.Value, (double)_exponent);
+                    Val /= Math.Pow(factor.Value, _exponent);
                 }
 
             }
@@ -1223,7 +1223,7 @@ namespace TUGraz.VectoCommon.Utils
                 if (factor.HasValue)
                 {
                     //Val *= (factor.Value * _exponent);
-                    Val *= Math.Pow(factor.Value,(double)_exponent);
+                    Val *= Math.Pow(factor.Value,_exponent);
                 }
             }
 
