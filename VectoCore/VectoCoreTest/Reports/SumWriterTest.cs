@@ -31,27 +31,25 @@
 
 using System.IO;
 using System.Xml;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
-using TUGraz.VectoCore.Tests.Models.SimulationComponent;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
-	[TestClass]
+	[TestFixture]
 	public class SumWriterTest
 	{
-		[TestMethod]
+		[TestCase]
 		public void TestSumCalcFixedTime()
 		{
 			var writer = new FileOutputWriter("testsumcalc_fixed");
@@ -107,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual((500.0 * 1e-4) * 1000 * 1000 / 499.0, sumData.Rows[0].ParseDouble("FC-Map [g/km]"), 1e-3);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestSumCalcVariableTime()
 		{
 			var writer = new FileOutputWriter("testsumcalc_var");
@@ -160,11 +158,11 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_brake [kWh]"), 1e-3);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestSumDataMetaInformation()
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
-			var dataProvider = new XMLDeclarationInputDataProvider(XmlTextReader.Create(jobfile), true);
+			var dataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(jobfile), true);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
@@ -203,6 +201,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(dataProvider.GearboxInputData.Model, sumRow[SummaryDataContainer.GEARBOX_MODEL]);
 			Assert.AreEqual(dataProvider.AxleGearInputData.Manufacturer, sumRow[SummaryDataContainer.AXLE_MANUFACTURER]);
 			Assert.AreEqual(dataProvider.AxleGearInputData.Model, sumRow[SummaryDataContainer.AXLE_MODEL]);
+
+			Assert.AreEqual(dataProvider.EngineInputData.ColdHotBalancingFactor, sumRow[SummaryDataContainer.ENGINE_BF_COLD_HOT]);
+			Assert.AreEqual(dataProvider.EngineInputData.CorrectionFactorRegPer, sumRow[SummaryDataContainer.ENGINE_CF_REG_PER]);
+			Assert.AreEqual(dataProvider.EngineInputData.WHTCRural, sumRow[SummaryDataContainer.ENGINE_WHTC_RURAL]);
+			Assert.AreEqual(dataProvider.EngineInputData.WHTCUrban, sumRow[SummaryDataContainer.ENGINE_WHTC_URBAN]);
+			Assert.AreEqual(dataProvider.EngineInputData.WHTCMotorway, sumRow[SummaryDataContainer.ENGINE_WHTC_MOTORWAY]);
 		}
 	}
 }

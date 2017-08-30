@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using System.IO;
 
 // ReSharper disable RedundantAssignment
 // ReSharper disable UnusedVariable
@@ -81,7 +82,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		public const string AngledriveLossMap = @"TestData\Components\AngleGear.vtlm";
 
-		private static GearboxData CreateGearboxData()
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        private static GearboxData CreateGearboxData()
 		{
 			var ratios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 

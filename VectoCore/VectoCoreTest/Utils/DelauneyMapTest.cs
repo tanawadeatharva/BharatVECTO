@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.IO;
 using System.Linq;
@@ -39,10 +39,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	[TestClass]
+	[TestFixture]
 	public class DelaunayMapTest
 	{
-		[TestMethod]
+		[TestCase]
 		public void Test_Simple_DelaunayMap()
 		{
 			var map = new DelaunayMap("TEST");
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.AreRelativeEqual(0, result);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Test_DelaunayMapTriangle()
 		{
 			var map = new DelaunayMap("TEST");
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.Exception<VectoException>(() => map.Interpolate(-1.5, -0.5), "Interpolation failed.");
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Test_Delaunay_LessThan3Points()
 		{
 			AssertHelper.Exception<ArgumentException>(() => new DelaunayMap("TEST").Triangulate(),
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			map.Triangulate();
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Test_Delaunay_DuplicatePoints()
 		{
 			var map = new DelaunayMap("TEST");
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				"TEST: Input Data for Delaunay map contains duplicates! \n1 / 1");
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Test_Delaunay_NormalOperation()
 		{
 			foreach (var factors in	new[] {

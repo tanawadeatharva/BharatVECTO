@@ -40,7 +40,6 @@ using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -48,17 +47,18 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-	[TestClass]
+	[TestFixture]
 	public class PwheelModeTests
 	{
 		/// <summary>
 		/// Test if the cycle file can be read.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
-		[TestMethod]
+		[TestCase]
 		public void Pwheel_ReadCycle_Test()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Tests if the powertrain can be created in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
-		[TestMethod]
+		[TestCase]
 		public void Pwheel_CreatePowertrain_Test()
 		{
 			// prepare input data
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Tests if the simulation works and the modfile and sumfile are correct in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
-		[TestMethod]
+		[TestCase]
 		public void Pwheel_Run_Test()
 		{
 			var jobFile = @"TestData\Pwheel\Pwheel.vecto";
@@ -178,7 +178,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Tests if the simulation works and the modfile and sumfile are correct in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
-		[TestMethod]
+		[TestCase]
 		public void Pwheel_ultimate_Run_Test()
 		{
 			var jobFile = @"TestData\Pwheel\Pwheel_ultimate.vecto";

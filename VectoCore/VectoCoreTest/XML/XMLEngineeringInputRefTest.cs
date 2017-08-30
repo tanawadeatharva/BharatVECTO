@@ -31,8 +31,6 @@
 
 using System.IO;
 using System.Linq;
-using System.Xml;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -45,15 +43,16 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
-	[TestClass]
+	[TestFixture]
 	public class XMLEngineeringInputRefTest
 	{
 		public const string EngineeringSampleFile = "TestData/XML/XMLReaderEngineering/engineering_job-sample_ref.xml";
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputEngineeringReferencedFileAsStream()
 		{
 			AssertHelper.Exception<VectoException>(() => {
@@ -62,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			});
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputEngReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
@@ -100,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var fldMap = FullLoadCurveReader.Create(fldTable, true);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputGbxReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
@@ -130,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//var fldMap = FullLoadCurveReader.Create(gears.First().FullLoadCurve, true);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputGbxTCReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
@@ -148,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("0.9", tcInputDataProvider.TCData.Rows[2][2]);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputAngledriveReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
@@ -165,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = TransmissionLossMapReader.Create(lossMapData, angledriveInputData.Ratio, "Angledrive");
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputAxlGReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
@@ -182,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = TransmissionLossMapReader.Create(lossMapData, axlegearDataProvider.Ratio, "AxleGear");
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputRetarderReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
@@ -200,7 +199,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var lossMap = RetarderLossMapReader.Create(lossMapData);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputAxleWheelsReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
@@ -220,7 +219,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(0.488822, vehicleDataProvider.DynamicTyreRadius.Value());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputAuxiliariesReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
@@ -241,7 +240,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(3190, aux2.DemandMap.Rows[113].ParseDouble(AuxiliaryDataReader.Fields.SupplyPower));
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLInputADASReferencedFile()
 		{
 			//var reader = XmlReader.Create(EngineeringSampleFile);
@@ -253,7 +252,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(DriverMode.Overspeed, adas.OverSpeedEcoRoll.Mode);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestVehicleInputReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
@@ -273,7 +272,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1.0, inputDataProvider.RetarderInputData.Ratio);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMLPowertrainGenerationReferencedFile()
 		{
 			var fileWriter = new FileOutputWriter("foo");
@@ -291,7 +290,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMEngineering_DriverModelLACExt()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
@@ -305,7 +304,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("lac_velocityDrop.csv", Path.GetFileName(lac.CoastingDecisionFactorVelocityDropLookup.Source));
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestXMEngineering_PTO()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);

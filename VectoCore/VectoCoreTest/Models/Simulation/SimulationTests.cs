@@ -30,7 +30,6 @@
 */
 
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -39,15 +38,16 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-	[TestClass]
+	[TestFixture]
 	public class SimulationTests
 	{
 		private const string EngineOnlyJob = @"TestData\Jobs\EngineOnlyJob.vecto";
 
-		[TestMethod]
+		[TestCase]
 		public void TestSimulationEngineOnly()
 		{
 			var resultFileName = "TestEngineOnly-result.vmod";
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(560.RPMtoRad(), container.EngineSpeed);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestEngineOnly_JobRun()
 		{
 			var actual = @"TestData\Jobs\EngineOnlyJob_Coach Engine Only short.vmod";
@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			ResultFileHelper.TestModFile(expected, actual);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestEngineOnly_SimulatorRun()
 		{
 			var actual = @"TestData\Jobs\EngineOnlyJob_Coach Engine Only short.vmod";
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			return factory.SimulationRuns().First();
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Test_VectoJob()
 		{
 			var jobFile = @"TestData\Jobs\24t Coach EngineOnly.vecto";

@@ -29,18 +29,17 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
+using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoHashing;
 using TUGraz.VectoHashing.Impl;
 using TUGraz.VectoHashing.Util;
+using NUnit.Framework;
 
 namespace VectoHashingTest
 {
-	[TestClass]
+	[TestFixture]
 	public class BasicHasingTests
 	{
 		public const string SimpleXML = @"Testdata\XML\simple_document.xml";
@@ -53,7 +52,13 @@ namespace VectoHashingTest
 		public const string HashEngineXML = "cfPKB2LkHIbznFA9aQwCNfNLSj9V7qNnSskyOxaXB+o=";
 		public const string HashVehicleXML = "yZCH9sF1GUdawVOa1fKQ2zvuUHg5ZthmitTOcWg/s1Y=";
 
-		[TestMethod]
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+		[TestCase]
 		public void HashSimpleXml()
 		{
 			var elementToHash = "elemID";
@@ -69,7 +74,7 @@ namespace VectoHashingTest
 			Assert.AreEqual(HashSimpleXML, hash);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void HashReferenceEngineXML()
 		{
 			var elementToHash = "ENG-gooZah3D";
@@ -85,7 +90,7 @@ namespace VectoHashingTest
 			Assert.AreEqual(HashEngineXML, hash);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void HashReferenceVehicleXML()
 		{
 			var elementToHash = "VEH-1234567890";
@@ -101,7 +106,7 @@ namespace VectoHashingTest
 			Assert.AreEqual(HashVehicleXML, hash);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void HashUnorderedVehicleXML()
 		{
 			var elementToHash = "VEH-1234567890";

@@ -33,18 +33,18 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
-	[TestClass]
+	[TestFixture]
 	public class FuelConsumptionMapTest
 	{
 		private const double Tolerance = 0.0001;
 
-		[TestMethod]
+		[TestCase]
 		public void TestFuelConsumption_FixedPoints()
 		{
 			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertMapValuesEqual(lines, map);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestFuelConsumption_InterpolatedPoints()
 		{
 			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");

@@ -30,24 +30,24 @@
 */
 
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.FileIO;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-	[TestClass]
+	[TestFixture]
 	public class FactoryTest
 	{
 		public const string DeclarationJobFile = @"Testdata\Jobs\12t Delivery Truck.vecto";
 
 		public const string EngineeringJobFile = @"Testdata\Jobs\24t Coach.vecto";
 
-		[TestMethod]
+		[TestCase]
 		public void CreateDeclarationSimulationRun()
 		{
 			var fileWriter = new FileOutputWriter(DeclarationJobFile);
@@ -62,9 +62,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.AreEqual(11, vehicleContainer.SimulationComponents().Count);
 
-			Assert.IsInstanceOfType(vehicleContainer.Gearbox, typeof(Gearbox), "gearbox not installed");
-			Assert.IsInstanceOfType(vehicleContainer.Engine, typeof(CombustionEngine), "engine not installed");
-			Assert.IsInstanceOfType(vehicleContainer.Vehicle, typeof(Vehicle), "vehicle not installed");
+			Assert.IsInstanceOf<Gearbox>(vehicleContainer.Gearbox, "gearbox not installed");
+			Assert.IsInstanceOf<CombustionEngine>(vehicleContainer.Engine, "engine not installed");
+			Assert.IsInstanceOf<Vehicle>(vehicleContainer.Vehicle, "vehicle not installed");
 
 			var gearbox = vehicleContainer.Gearbox as Gearbox;
 			Assert.IsNotNull(gearbox);
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(988.9, gearbox.ModelData.Gears[1].ShiftPolygon.Upshift[2].Torque.Value(), 0.1);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void CreateEngineeringSimulationRun()
 		{
 			var fileWriter = new FileOutputWriter(EngineeringJobFile);
@@ -115,9 +115,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var vehicleContainer = (VehicleContainer)run.GetContainer();
 			Assert.AreEqual(12, vehicleContainer.SimulationComponents().Count);
 
-			Assert.IsInstanceOfType(vehicleContainer.Gearbox, typeof(Gearbox), "gearbox not installed");
-			Assert.IsInstanceOfType(vehicleContainer.Engine, typeof(CombustionEngine), "engine not installed");
-			Assert.IsInstanceOfType(vehicleContainer.Vehicle, typeof(Vehicle), "vehicle not installed");
+			Assert.IsInstanceOf<Gearbox>(vehicleContainer.Gearbox, "gearbox not installed");
+			Assert.IsInstanceOf<CombustionEngine>(vehicleContainer.Engine,  "engine not installed");
+			Assert.IsInstanceOf<Vehicle>(vehicleContainer.Vehicle,  "vehicle not installed");
 		}
 	}
 }

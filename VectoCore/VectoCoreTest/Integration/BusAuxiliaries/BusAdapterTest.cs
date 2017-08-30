@@ -34,16 +34,21 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using System.IO;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {
 	[TestFixture]
 	public class BusAdapterTest
 	{
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+
 		[Test]
 		[TestCase(12000, 1256, 148, 148, 6086.9321)]
 		[TestCase(12000, 1256, -48, -148, 6086.9321)]
