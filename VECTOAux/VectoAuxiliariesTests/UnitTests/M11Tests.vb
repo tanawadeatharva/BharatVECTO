@@ -64,8 +64,8 @@ Namespace UnitTests
 			Assert.AreEqual(target.SmartElectricalTotalCycleElectricalEnergyGeneratedDuringOverrunOnly.Value(), OUT1, 0.00001)
 			Assert.AreEqual(target.SmartElectricalTotalCycleEletricalEnergyGenerated.Value(), OUT2, 0.00001)
 			Assert.AreEqual(target.TotalCycleElectricalDemand.Value(), OUT3, 0.00001)
-			Assert.AreEqual(target.TotalCycleFuelConsumptionSmartElectricalLoad.ConvertTo().Gramm.Value(), OUT4, 0.00001)
-			Assert.AreEqual(target.TotalCycleFuelConsumptionZeroElectricalLoad.Value(), OUT5.SI().Gramm.Value(), 0.00001)
+            Assert.AreEqual(target.TotalCycleFuelConsumptionSmartElectricalLoad.ConvertTo(Unit.SI.Gramm), OUT4, 0.00001)
+            Assert.AreEqual(target.TotalCycleFuelConsumptionZeroElectricalLoad.Value(), OUT5.SI().Gramm.Value(), 0.00001)
 			Assert.AreEqual(target.StopStartSensitiveTotalCycleElectricalDemand.Value(), OUT6, 0.00001)
 		End Sub
 

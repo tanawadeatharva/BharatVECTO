@@ -416,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.Utils
             AssertHelper.AreRelativeEqual(3.SI(), (-3).SI().Abs());
         }
 
-        [TestMethod]
+        [TestCase]
         public void SI_Hash()
         {
             3.SI().GetHashCode();
