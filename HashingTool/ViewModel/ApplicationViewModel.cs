@@ -7,30 +7,31 @@ using HashingTool.Views;
 
 namespace HashingTool.ViewModel
 {
-	public class MainWindowViewModel : ObservableObject
+	public class ApplicationViewModel : ObservableObject
 	{
 		private ICommand _changeViewCommand;
+		public static ICommand HomeView;
 
 		private IMainView _currentView;
-		private List<IMainView> _availableViews;
-		private ICommand _homeView;
+		public static List<IMainView> AvailableViews;
+		
 
-		public MainWindowViewModel()
+		public ApplicationViewModel()
 		{
-			//var homeView = new HomeViewModel();
-			_availableViews = new List<IMainView> {
+			var homeView = new HomeViewModel(this);
+			AvailableViews = new List<IMainView> {
 				new HashComponentDataViewModel(this),
 				new VerifyInputDataViewModel(this)
 			};
 
-			CurrentViewModel = _availableViews[0];
+			CurrentViewModel = homeView;
 
-			_homeView = new RelayCommand(() => CurrentViewModel = _availableViews[0]);
+			HomeView = new RelayCommand(() => CurrentViewModel = homeView);
 		}
 
 		public List<IMainView> MainViewModels
 		{
-			get { return _availableViews ?? (_availableViews = new List<IMainView>()); }
+			get { return AvailableViews ?? (AvailableViews = new List<IMainView>()); }
 		}
 
 		public IMainView CurrentViewModel
@@ -50,9 +51,9 @@ namespace HashingTool.ViewModel
 			get { return _changeViewCommand ?? (_changeViewCommand = new RelayCommand<IMainView>(ChangeViewModel)); }
 		}
 
-		public ICommand ShowHomeView
+		public ICommand ShowHomeViewCommand
 		{
-			get { return _homeView; }
+			get { return HomeView; }
 		}
 
 		private void ChangeViewModel(IMainView mainView)

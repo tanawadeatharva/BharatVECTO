@@ -70,14 +70,18 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\IMainView.cs" />
-    <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\ApplicationViewModel.cs" />
     <Compile Include="ViewModel\ObservableObject.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\HashComponentDataViewModel.cs" />
     <Compile Include="ViewModel\VerifyInputDataViewModel.cs" />
     <Compile Include="Views\HashComponentData.xaml.cs">
       <DependentUpon>HashComponentData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HomeView.xaml.cs">
+      <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VerifyInputData.xaml.cs">
       <DependentUpon>VerifyInputData.xaml</DependentUpon>
@@ -95,6 +99,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\HashComponentData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
