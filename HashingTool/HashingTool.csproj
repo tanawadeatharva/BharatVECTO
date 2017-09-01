@@ -63,6 +63,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\BoolViewConverter.cs" />
+    <Compile Include="Helper\IOService.cs" />
     <Compile Include="Model\TestModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Version.cs">
@@ -77,6 +79,7 @@
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\HashComponentDataViewModel.cs" />
     <Compile Include="ViewModel\VerifyInputDataViewModel.cs" />
+    <Compile Include="ViewModel\XMLValidator.cs" />
     <Compile Include="Views\HashComponentData.xaml.cs">
       <DependentUpon>HashComponentData.xaml</DependentUpon>
     </Compile>
@@ -144,6 +147,16 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VectoCommon\VectoHashing\VectoHashing.csproj">
+      <Project>{B673E12F-D323-4C4C-8805-9915B2C72D3D}</Project>
+      <Name>VectoHashing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj">
+      <Project>{CD36938A-ADD9-4C65-96DA-B397CDEEA90A}</Project>
+      <Name>VectoCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

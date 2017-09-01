@@ -41,14 +41,14 @@ namespace HashingTool
 	/// </summary>
 	public partial class App : Application
 	{
-		//protected override void OnStartup(StartupEventArgs e)
-		//{
-		//	base.OnStartup(e);
+		protected override void OnStartup(StartupEventArgs e)
+		{
+			base.OnStartup(e);
 
-		//	var app = new MainWindow();
-		//	var context = new MainWindowViewModel();
-		//	app.DataContext = context;
-		//	//app.Show();
-		//}
+			var app = new MainWindow();
+			var context = new ApplicationViewModel();
+			app.DataContext = context;
+			app.Show();
+		}
 	}
 }

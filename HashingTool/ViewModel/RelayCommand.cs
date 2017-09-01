@@ -52,6 +52,12 @@ namespace HashingTool.ViewModel
 			}
 		}
 
+		public void RaiseCanExecuteChanged()
+		{
+			CommandManager.InvalidateRequerySuggested();
+		}
+
+
 		[DebuggerStepThrough]
 		public Boolean CanExecute(Object parameter)
 		{
@@ -110,6 +116,11 @@ namespace HashingTool.ViewModel
 					CommandManager.RequerySuggested -= value;
 				}
 			}
+		}
+
+		public void RaiseCanExecuteChanged()
+		{
+			CommandManager.InvalidateRequerySuggested();
 		}
 
 		[DebuggerStepThrough]

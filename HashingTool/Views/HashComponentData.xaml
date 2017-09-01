@@ -3,16 +3,31 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:ViewModel="clr-namespace:HashingTool.ViewModel" x:Class="HashingTool.Views.HashComponentData"
+	xmlns:ViewModel="clr-namespace:HashingTool.ViewModel" xmlns:Helper="clr-namespace:HashingTool.Helper"
+	x:Class="HashingTool.Views.HashComponentData"
 	mc:Ignorable="d"
-	d:DesignHeight="300" d:DesignWidth="300">
+	d:DesignHeight="501.425" d:DesignWidth="548">
+	<UserControl.Resources>
+		<Helper:BoolViewConverter x:Key="BoolViewConverter" />
+	</UserControl.Resources>
 	<UserControl.DataContext>
 		<ViewModel:HashComponentDataViewModel />
 	</UserControl.DataContext>
 	<Grid>
-		<Label HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"
-				Content="{Binding Name}" />
-		<Button Content="Home" Command="{Binding ShowHomeViewCommand}" HorizontalAlignment="Left" Margin="201,194,0,0" VerticalAlignment="Top" Width="75"/>
+		<Label HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Top"
+				Content="{Binding Name}" FontWeight="Bold" FontSize="18" />
+		<Button Content="Back" Command="{Binding ShowHomeViewCommand}" Margin="0,0,10,10" HorizontalAlignment="Right"
+				Width="75" Height="22" VerticalAlignment="Bottom" />
+		<Button x:Name="btSelectComponentFile" Content="Browse ..." HorizontalAlignment="Left" Margin="300,79,0,0"
+				VerticalAlignment="Top" Width="75" Command="{Binding SetComponentData, Mode=OneWay}" />
+		<TextBox x:Name="tbComponentFile" HorizontalAlignment="Left" Height="23" Margin="10,79,0,0" TextWrapping="Wrap"
+				VerticalAlignment="Top" Width="285" IsReadOnly="True" Text="{Binding Source, Mode=OneWay}" />
+		<Label Content="{Binding ComponentDataValid, Converter={StaticResource BoolViewConverter}, Mode=OneWay}"
+				HorizontalAlignment="Left" Margin="10,141,0,0" VerticalAlignment="Top" Height="26" Width="154" />
+		<Label Content="{Binding DigestValue}" HorizontalAlignment="Left" Margin="10,172,0,0" VerticalAlignment="Top" />
+		<Button Content="Save" HorizontalAlignment="Right" Margin="0,0,90,10" Width="75" Height="22"
+				VerticalAlignment="Bottom" Command="{Binding SaveHashedDocument, Mode=OneWay}" />
+		<ListBox HorizontalAlignment="Left" Height="214" Margin="71,230,0,0" VerticalAlignment="Top" Width="436" IsSynchronizedWithCurrentItem="False" ItemsSource="{Binding XMLValidationErrors}"/>
 
 	</Grid>
 </UserControl>

@@ -4,7 +4,7 @@
 	xmlns:viewModel="clr-namespace:HashingTool.ViewModel"
 	xmlns:views="clr-namespace:HashingTool.Views"
 	x:Class="HashingTool.MainWindow"
-	Title="VECTO Hashing Tool" Height="243" Width="593">
+	Title="VECTO Hashing Tool" Height="534" Width="665" ResizeMode="NoResize">
 	<Window.DataContext>
 		<viewModel:ApplicationViewModel />
 	</Window.DataContext>
@@ -18,11 +18,11 @@
 		<DataTemplate DataType="{x:Type viewModel:VerifyInputDataViewModel}">
 			<views:VerifyInputData />
 		</DataTemplate>
-		
+
 	</Window.Resources>
 	<Grid Margin="10">
-		
-			<ContentControl Content="{Binding CurrentViewModel}" />
-	
+
+		<ContentControl Content="{Binding CurrentViewModel}" />
+
 	</Grid>
 </Window>

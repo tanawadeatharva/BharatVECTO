@@ -14,7 +14,7 @@ namespace HashingTool.ViewModel
 
 		private IMainView _currentView;
 		public static List<IMainView> AvailableViews;
-		
+
 
 		public ApplicationViewModel()
 		{
