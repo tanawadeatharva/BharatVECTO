@@ -95,12 +95,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						break;
 					case RetarderType.None:
 					case RetarderType.LossesIncludedInTransmission:
+					case RetarderType.EngineRetarder:
 						retarder.Ratio = 1;
 						break;
 					default:
 						// ReSharper disable once NotResolvedInText
 						// ReSharper disable once LocalizableElement
-						throw new ArgumentOutOfRangeException("retarder.Type", "RetarderType unknown");
+						throw new ArgumentOutOfRangeException("retarder", retarder.Type, "RetarderType unknown");
 				}
 
 				if (!retarder.Type.IsDedicatedComponent()) {

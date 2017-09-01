@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Xml;
 using NUnit.Framework;
@@ -44,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var inputDataProvider = new XMLDeclarationInputDataProvider(modified, true);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null) {Validate = false};
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null) { Validate = false };
 
 			var runs = factory.SimulationRuns().ToArray();
 			Assert.AreEqual(8, runs.Length);
