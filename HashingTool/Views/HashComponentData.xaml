@@ -4,30 +4,94 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:ViewModel="clr-namespace:HashingTool.ViewModel" xmlns:Helper="clr-namespace:HashingTool.Helper"
+	xmlns:local="clr-namespace:HashingTool.Views"
 	x:Class="HashingTool.Views.HashComponentData"
 	mc:Ignorable="d"
-	d:DesignHeight="501.425" d:DesignWidth="548">
+	d:DesignHeight="603.125" d:DesignWidth="666">
 	<UserControl.Resources>
-		<Helper:BoolViewConverter x:Key="BoolViewConverter" />
+		<Helper:CollectionConverter x:Key="CollectionConverter" />
 	</UserControl.Resources>
+
 	<UserControl.DataContext>
 		<ViewModel:HashComponentDataViewModel />
 	</UserControl.DataContext>
 	<Grid>
-		<Label HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Top"
+		<Label Name="lblHeader" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Top"
 				Content="{Binding Name}" FontWeight="Bold" FontSize="18" />
-		<Button Content="Back" Command="{Binding ShowHomeViewCommand}" Margin="0,0,10,10" HorizontalAlignment="Right"
+		<Button Name="btnBack" Content="Back" Command="{Binding ShowHomeViewCommand}" Margin="0,0,10,10"
+				HorizontalAlignment="Right"
 				Width="75" Height="22" VerticalAlignment="Bottom" />
-		<Button x:Name="btSelectComponentFile" Content="Browse ..." HorizontalAlignment="Left" Margin="300,79,0,0"
-				VerticalAlignment="Top" Width="75" Command="{Binding SetComponentData, Mode=OneWay}" />
-		<TextBox x:Name="tbComponentFile" HorizontalAlignment="Left" Height="23" Margin="10,79,0,0" TextWrapping="Wrap"
-				VerticalAlignment="Top" Width="285" IsReadOnly="True" Text="{Binding Source, Mode=OneWay}" />
-		<Label Content="{Binding ComponentDataValid, Converter={StaticResource BoolViewConverter}, Mode=OneWay}"
-				HorizontalAlignment="Left" Margin="10,141,0,0" VerticalAlignment="Top" Height="26" Width="154" />
-		<Label Content="{Binding DigestValue}" HorizontalAlignment="Left" Margin="10,172,0,0" VerticalAlignment="Top" />
-		<Button Content="Save" HorizontalAlignment="Right" Margin="0,0,90,10" Width="75" Height="22"
+		<Button Content="Save Component Data" HorizontalAlignment="Right" Margin="0,0,90,10" Width="143" Height="22"
 				VerticalAlignment="Bottom" Command="{Binding SaveHashedDocument, Mode=OneWay}" />
-		<ListBox HorizontalAlignment="Left" Height="214" Margin="71,230,0,0" VerticalAlignment="Top" Width="436" IsSynchronizedWithCurrentItem="False" ItemsSource="{Binding XMLValidationErrors}"/>
+
+		<local:VectoXMLFileSelector Margin="0,93,0,0" VerticalAlignment="Top" XMLFile="{Binding ComponentFile}" />
+
+		<Grid Height="425" VerticalAlignment="Top" Margin="15,141,5,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Expander Grid.Row="0">
+				<Expander.Style>
+					<Style TargetType="Expander">
+						<Setter Property="IsEnabled" Value="True" />
+						<Setter Property="Foreground" Value="Red" />
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding XMLValidationErrors.Count}" Value="0">
+								<Setter Property="IsExpanded" Value="False" />
+								<Setter Property="IsEnabled" Value="False" />
+								<Setter Property="Foreground" Value="Black" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Expander.Style>
+				<Expander.Header>
+					<TextBlock Text="{Binding XMLValidationErrors.Count, StringFormat='{}{0} Warnings/Errors'}" />
+				</Expander.Header>
+
+				<Grid Background="#FFE5E5E5" Margin="10,0,8,0">
+					<ListBox Height="185" VerticalAlignment="Top" IsSynchronizedWithCurrentItem="False"
+							ItemsSource="{Binding XMLValidationErrors}" />
+				</Grid>
+
+			</Expander>
+			<Grid Grid.Row="1" Margin="0,10,0,0">
+				<Label x:Name="lblDigestValue" Content="Digest Value:" HorizontalAlignment="Left" Margin="10,38,0,0"
+						VerticalAlignment="Top" RenderTransformOrigin="0.57,0.5" FontSize="16" />
+				<TextBox x:Name="tbDigestValue" Text="{Binding DigestValue}" HorizontalAlignment="Left" Margin="117,41,0,0"
+						VerticalAlignment="Top" RenderTransformOrigin="4.1,-2.1" Width="454" FontFamily="Courier New" FontWeight="Bold"
+						FontSize="16" Foreground="#FF03932B" />
+				<Label Name="lblC14N" Content="Canonicalization:" HorizontalAlignment="Left" Margin="10,10,0,0"
+						VerticalAlignment="Top" />
+				<Label Name="lblC14NList"
+						Content="{Binding CanonicalizaitionMethods, Converter={StaticResource CollectionConverter}}"
+						HorizontalAlignment="Left" Margin="117,10,0,0" VerticalAlignment="Top"
+						Width="454" />
+			</Grid>
+			<Grid Grid.Row="2" Margin="0,10,0,0">
+				<ContentControl HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" Width="66" Height="64">
+					<ContentControl.RenderTransform>
+						<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+					</ContentControl.RenderTransform>
+					<ContentControl.Style>
+						<Style TargetType="ContentControl">
+							<Setter Property="Content" Value="" />
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
+									<Setter Property="Content" Value="{StaticResource Icon_OK}" />
+								</DataTrigger>
+								<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
+									<Setter Property="Content" Value="{StaticResource Icon_NOK}" />
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</ContentControl.Style>
+				</ContentControl>
+
+			</Grid>
+		</Grid>
+		<Label x:Name="lblFileSelect" Content="Component data:" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top"/>
 
 	</Grid>
 </UserControl>

@@ -63,9 +63,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Helper\BoolViewConverter.cs" />
+    <Compile Include="Helper\CollectionConverter.cs" />
     <Compile Include="Helper\IOService.cs" />
-    <Compile Include="Model\TestModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Version.cs">
       <DependentUpon>Version.tt</DependentUpon>
@@ -79,12 +78,16 @@
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\HashComponentDataViewModel.cs" />
     <Compile Include="ViewModel\VerifyInputDataViewModel.cs" />
-    <Compile Include="ViewModel\XMLValidator.cs" />
+    <Compile Include="ViewModel\UserControl\XMLFile.cs" />
+    <Compile Include="Util\XMLValidator.cs" />
     <Compile Include="Views\HashComponentData.xaml.cs">
       <DependentUpon>HashComponentData.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\UserControl\VectoXMLFileSelector.xaml.cs">
+      <DependentUpon>VectoXMLFileSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\VerifyInputData.xaml.cs">
       <DependentUpon>VerifyInputData.xaml</DependentUpon>
@@ -101,11 +104,35 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\Icon_NOK.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icon_OK.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icon_XML_NOK.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icon_XML_OK.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Icon_XML_unknown.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\HashComponentData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HomeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UserControl\VectoXMLFileSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

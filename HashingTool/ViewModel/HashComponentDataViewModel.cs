@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using HashingTool.Helper;
+using HashingTool.Util;
+using HashingTool.ViewModel.UserControl;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
@@ -18,23 +21,36 @@ namespace HashingTool.ViewModel
 	public class HashComponentDataViewModel : ObservableObject, IMainView
 	{
 		private readonly ApplicationViewModel _applicationViewModel;
-		private bool? _componentDataValid;
 		private string _digestValue;
-		//private ObservableCollection<string> _xmlValidationErrors = new ObservableCollection<string>();
-		private Stream _stream;
+
 		private XDocument _result;
 
-		private IOService _ioService = new WPFIoService();
-		private RelayCommand _saveCommand;
+		private readonly IOService _ioService = new WPFIoService();
+		private readonly RelayCommand _saveCommand;
 		private bool _busy;
-		private string _source;
+		private XMLFile _sourceFile;
+		private bool? _componentDataValid;
 
 		public HashComponentDataViewModel()
 		{
 			XMLValidationErrors = new ObservableCollection<string>();
+			_sourceFile = new XMLFile(_ioService, false);
+			_sourceFile.PropertyChanged += SourceChanged;
 			_saveCommand = new RelayCommand(SaveDocument,
 				() => !_busy && ComponentDataValid != null && ComponentDataValid.Value && _result != null);
 			_busy = false;
+
+			CanonicalizaitionMethods = new ObservableCollection<string>() {
+				"urn:vecto:xml:2017:canonicalization",
+				"http://www.w3.org/2001/10/xml-exc-c14n#"
+			};
+		}
+
+		private void SourceChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Document") {
+				DoComputeHash();
+			}
 		}
 
 		public HashComponentDataViewModel(ApplicationViewModel applicationViewModel) : this()
@@ -52,38 +68,15 @@ namespace HashingTool.ViewModel
 			get { return ApplicationViewModel.HomeView; }
 		}
 
-		public string Source
+		public XMLFile ComponentFile
 		{
-			get { return _source; }
-			private set {
-				if (_source == value) {
-					return;
-				}
-				_source = value;
-				RaisePropertyChanged("Source");
-			}
+			get { return _sourceFile; }
+			private set { _sourceFile = value; }
 		}
 
-		public bool? ComponentDataValid
-		{
-			get { return _componentDataValid; }
-			private set {
-				if (_componentDataValid == value) {
-					return;
-				}
-				_componentDataValid = value;
-				RaisePropertyChanged("ComponentDataValid");
-			}
-		}
 
 		public ObservableCollection<string> XMLValidationErrors { get; set; }
-		//{
-		//	get { return _xmlValidationErrors; }
-		//	private set {
-		//		_xmlValidationErrors = value;
-		//		RaisePropertyChanged("XMLValidationErrors");
-		//	}
-		//}
+
 
 		public string DigestValue
 		{
@@ -95,11 +88,6 @@ namespace HashingTool.ViewModel
 				_digestValue = value;
 				RaisePropertyChanged("DigestValue");
 			}
-		}
-
-		public ICommand SetComponentData
-		{
-			get { return new RelayCommand(HashComponentData, () => !_busy); }
 		}
 
 		public ICommand SaveHashedDocument
@@ -124,28 +112,29 @@ namespace HashingTool.ViewModel
 			}
 		}
 
-		private void HashComponentData()
+		public bool? ComponentDataValid
 		{
-			string filename;
-
-			var xml = _ioService.OpenFileDialog(null, ".xml", "VECTO XML file|*.xml", out filename);
-			if (xml == null) {
-				return;
+			get { return _componentDataValid; }
+			private set {
+				if (_componentDataValid == value) {
+					return;
+				}
+				_componentDataValid = value;
+				RaisePropertyChanged("ComponentDataValid");
 			}
-
-			_busy = true;
-			ComponentDataValid = null;
-			XMLValidationErrors.Clear();
-			DigestValue = "";
-			Source = filename;
-			_stream = xml;
-			DoComputeHash();
 		}
+
+		public ObservableCollection<string> CanonicalizaitionMethods { get; private set; }
 
 		private async void DoComputeHash()
 		{
 			try {
-				var h = VectoHash.Load(_stream);
+				_busy = true;
+				ComponentDataValid = false;
+				DigestValue = "";
+				XMLValidationErrors.Clear();
+
+				var h = VectoHash.Load(_sourceFile.Document);
 
 				_result = h.AddHash();
 
@@ -167,7 +156,7 @@ namespace HashingTool.ViewModel
 										: e.ValidationEventArgs.Message,
 									e.ValidationEventArgs == null ? 0 : e.ValidationEventArgs.Exception.LineNumber)));
 						});
-					await validator.ValidateXML(ms);
+					await validator.ValidateXML(XmlReader.Create(ms));
 				}
 				if (ComponentDataValid != null && ComponentDataValid.Value) {
 					DigestValue = h.ComputeHash();
