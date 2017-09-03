@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
                 //Assert.AreEqual(entry[2].SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Value(),
                 //	map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad(), true).Value.Value(), Tolerance);
-			    Assert.AreEqual(entry[2].SI().Gramm.Per.Hour.ConvertTo(Unit.SI.Kilo.Gramm.Per.Second).Value(),
+			    Assert.AreEqual(entry[2].SI(Unit.SI.Gramm.Per.Hour).ConvertTo(Unit.SI.Kilo.Gramm.Per.Second).Value(),
 			        map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad(), true).Value.Value(), Tolerance);
             }
 		}

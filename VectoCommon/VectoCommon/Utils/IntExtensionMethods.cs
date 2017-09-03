@@ -48,7 +48,7 @@ namespace TUGraz.VectoCommon.Utils
 
         public static SI SI(this int value, UnitInstance si)
         {
-            return new SI(value, si);
+            return new SI(si,value*si.Getfactor());
         }
 
         /// <summary>
@@ -62,7 +62,8 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<T>.Create(d);
 		}
 
-		public static double ToRadian(this int self)
+
+        public static double ToRadian(this int self)
 		{
 			return self * Math.PI / 180.0;
 		}

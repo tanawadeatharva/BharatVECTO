@@ -236,11 +236,15 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return new SI(value);
 		}
+	    public static SI SI(this double value, UnitInstance si)
+	    {
+	        return new SI(si, value);
+	    }
 
-		/// <summary>
-		/// Creates an templated SI object for the number.
-		/// </summary>
-		[DebuggerStepThrough]
+        /// <summary>
+        /// Creates an templated SI object for the number.
+        /// </summary>
+        [DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T SI<T>(this double value) where T : SIBase<T>
 		{

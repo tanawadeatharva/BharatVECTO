@@ -30,7 +30,8 @@ Namespace Hvac
 		<JsonIgnore>
 		Public ReadOnly Property DieselGCVJperGram As JoulePerKilogramm Implements IHVACConstants.DieselGCVJperGram
 			Get
-				Return _dieselGcvJperGram.SI().Joule.Per.Gramm.Cast(Of JoulePerKilogramm)()
+			    Return _dieselGcvJperGram.SI(Unit.SI.Joule.Per.Gramm).Cast(Of JoulePerKilogramm)()
+				'Return _dieselGcvJperGram.SI().Joule.Per.Gramm.Cast(Of JoulePerKilogramm)()
 			End Get
 		End Property
 

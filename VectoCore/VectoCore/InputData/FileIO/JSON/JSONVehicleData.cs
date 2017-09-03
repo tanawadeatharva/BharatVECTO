@@ -83,10 +83,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual Kilogram GrossVehicleMassRating
 		{
-			get { return Body.GetEx<double>(JsonKeys.Vehicle_GrossVehicleMassRating).SI().Ton.Cast<Kilogram>(); }
-		}
+            //get { return Body.GetEx<double>(JsonKeys.Vehicle_GrossVehicleMassRating).SI().Ton.Cast<Kilogram>(); }
+		    get { return Body.GetEx<double>(JsonKeys.Vehicle_GrossVehicleMassRating).SI(Unit.SI.Ton).Cast<Kilogram>(); }
+        }
 
-		public IList<ITorqueLimitInputData> TorqueLimits
+        public IList<ITorqueLimitInputData> TorqueLimits
 		{
 			get {
 				var retVal = new List<ITorqueLimitInputData>();
@@ -110,8 +111,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual Meter DynamicTyreRadius
 		{
-			get { return Body.GetEx<double>(JsonKeys.Vehicle_DynamicTyreRadius).SI().Milli.Meter.Cast<Meter>(); }
-		}
+            //get { return Body.GetEx<double>(JsonKeys.Vehicle_DynamicTyreRadius).SI().Milli.Meter.Cast<Meter>(); }
+		    get { return Body.GetEx<double>(JsonKeys.Vehicle_DynamicTyreRadius).SI(Unit.SI.Milli.Meter).Cast<Meter>(); }
+        }
 
 		public Meter Height
 		{

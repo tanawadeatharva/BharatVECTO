@@ -62,8 +62,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				.Select(row => new Entry {
 					WheelType = row.Field<string>(0).RemoveWhitespace(),
 					Inertia = row.ParseDouble("inertia").SI<KilogramSquareMeter>(),
-					WheelsDiameter = row.ParseDouble("d").SI().Milli.Meter.Cast<Meter>(),
-					CircumferenceFactor = row.ParseDouble("f")
+                    //WheelsDiameter = row.ParseDouble("d").SI().Milli.Meter.Cast<Meter>(),
+			        WheelsDiameter = row.ParseDouble("d").SI(Unit.SI.Milli.Meter).Cast<Meter>(),
+                    CircumferenceFactor = row.ParseDouble("f")
 				}).ToDictionary(e => e.WheelType);
 			_dimensions = table.Rows.Cast<DataRow>().Select(row => row.Field<string>(0)).ToArray();
 		}

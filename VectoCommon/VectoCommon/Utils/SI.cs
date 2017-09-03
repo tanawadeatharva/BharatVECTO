@@ -1150,7 +1150,7 @@ namespace TUGraz.VectoCommon.Utils
             }
         }
 
-	    public SI(double val, UnitInstance si) : this(val, si.GetSIUnits()){}
+	    public SI(UnitInstance si, double val = 0) : this(val, si.GetSIUnits()){}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SI"/> class which copies the units from an already existing SI.
@@ -1330,249 +1330,252 @@ namespace TUGraz.VectoCommon.Utils
 
 		#region Unit Definitions
 
-		/// <summary>
-		/// Defines the denominator by the terms following after the Per.
-		/// </summary>
-		[DebuggerHidden]
-		public SI Per
-		{
-			[DebuggerHidden] get { return new SI(Linear, reciproc: !_reciproc); }
-		}
-
-		/// <summary>
-		/// Takes all following terms as cubic terms (=to the power of 3).
-		/// </summary>
+		///// <summary>
+		///// Defines the denominator by the terms following after the Per.
+		///// </summary>
 		//[DebuggerHidden]
-		public SI Cubic
-		{
-			//[DebuggerHidden]
-            get { return new SI(this, exponent: 3); }
-		}
+		//public SI Per
+		//{
+		//	[DebuggerHidden] get { return new SI(Linear, reciproc: !_reciproc); }
+		//}
 
-		/// <summary>
-		/// Takes all following terms as quadratic terms (=to the power of 2).
-		/// </summary>
-		[DebuggerHidden]
-		public SI Square
-		{
-			[DebuggerHidden] get { return new SI(this, exponent: 2); }
-		}
+		///// <summary>
+		///// Takes all following terms as cubic terms (=to the power of 3).
+		///// </summary>
+		////[DebuggerHidden]
+		//public SI Cubic
+		//{
+		//	//[DebuggerHidden]
+  //          get { return new SI(this, exponent: 3); }
+		//}
 
-		/// <summary>
-		/// Takes all following terms as linear terms (=to the power of 1).
-		/// </summary>
-		[DebuggerHidden]
-		public SI Linear
-		{
-			[DebuggerHidden] get { return new SI(this, exponent: 1); }
-		}
+		///// <summary>
+		///// Takes all following terms as quadratic terms (=to the power of 2).
+		///// </summary>
+		//[DebuggerHidden]
+		//public SI Square
+		//{
+		//	[DebuggerHidden] get { return new SI(this, exponent: 2); }
+		//}
 
-		/// <summary>
-		/// [g] (to basic unit: [kg])
-		/// </summary>
-		[DebuggerHidden]
-		public SI Gramm
-        {
-            [DebuggerHidden]
-		    get
-            {
-                return new SI(this, 0.001, new int[] { 1, 0, 0, 0, 0, 0, 0 });
-            }
+		///// <summary>
+		///// Takes all following terms as linear terms (=to the power of 1).
+		///// </summary>
+		//[DebuggerHidden]
+		//public SI Linear
+		//{
+		//	[DebuggerHidden] get { return new SI(this, exponent: 1); }
+		//}
+
+		///// <summary>
+		///// [g] (to basic unit: [kg])
+		///// </summary>
+		//[DebuggerHidden]
+		//public SI Gramm
+  //      {
+  //          [DebuggerHidden]
+		//    get
+  //          {
+  //              return new SI(this, 0.001, new int[] { 1, 0, 0, 0, 0, 0, 0 });
+  //          }
             
-		}
+		//}
 
-		[DebuggerHidden]
-		public SI Liter
-		{
-            [DebuggerHidden]
-		    get
-		    {
-		        return new SI(this, 0.001, new int[] { 0, 3, 0, 0, 0, 0, 0 });
-		    }
-        }
-
-		[DebuggerHidden]
-		public SI Joule
-		{
-            [DebuggerHidden]
-		    get
-		    {
-		        return new SI(this, 0.001, new int[] { 1, 2, -2, 0, 0, 0, 0 });
-		    }
-        }
-
-		/// <summary>
-		/// [t] (to basic unit: [kg])
-		/// </summary>
-		[DebuggerHidden]
-		public SI Ton
-		{
-            [DebuggerHidden]
-		    get
-		    {
-		        return new SI(this, 1000, new int[] { 1, 0, 0, 0, 0, 0, 0 });
-		    }
-        }
-
-		/// <summary>
-		/// [N]
-		/// </summary>
-		[DebuggerHidden]
-		public SI Newton
-        {
-            [DebuggerHidden]
-		    get
-            {
-                return new SI(this, siUnitsParam: new int[] { 1, 1, -2, 0, 0, 0, 0 });
-            }
-		}
-
-		/// <summary>
-		/// [W]
-		/// </summary>
-		[DebuggerHidden]
-        public SI Watt
-        {
-            [DebuggerHidden]
-            get
-            {
-                return new SI(this, siUnitsParam: new int[] { 1, 2, -3, 0, 0, 0, 0 });
-            }
-        }
-		/// <summary>
-		/// [m]
-		/// </summary>
 		//[DebuggerHidden]
-        public SI Meter
-        {
-            //[DebuggerHidden]
-            get
-            {
-                return new SI(this, siUnitsParam: new int[] { 0, 1, 0, 0, 0, 0, 0 });
-            }
-        }
-		/// <summary>
-		/// [s]
-		/// </summary>
-		[DebuggerHidden]
-        public SI Second
-        {
-            [DebuggerHidden]
-            get
-            {
-                return new SI(this, siUnitsParam: new int[] { 0, 0, 1, 0, 0, 0, 0 });
-            }
-        }
-		/// <summary>
-		/// [-]. Defines radian. Only virtual. Has no real SI unit.
-		/// </summary>
-		[DebuggerHidden]
-        public SI Radian
-        {
-            [DebuggerHidden]
-            get
-            {
-                return new SI(this);
-            }
-        }
-		/// <summary>
-		/// [-]. Converts to/from Radiant. Internally everything is stored in radian.
-		/// </summary>
-		[DebuggerHidden]
-		public SI Rounds
-		{
-            [DebuggerHidden]
-		    get
-            {
-                return new SI(this, 2 * Math.PI);
-            }
-		}
+		//public SI Liter
+		//{
+  //          [DebuggerHidden]
+		//    get
+		//    {
+		//        return new SI(this, 0.001, new int[] { 0, 3, 0, 0, 0, 0, 0 });
+		//    }
+  //      }
 
-		/// <summary>
-		/// [s] Converts to/from Second. Internally everything is stored in seconds.
-		/// </summary>
-		[DebuggerHidden]
-        public SI Hour
-        {
-            [DebuggerHidden]
-            get
-            {
-                return new SI(this, 3600, new[] { 0, 0, 1, 0, 0, 0, 0 });
-            }
-        }
-		/// <summary>
-		/// [s] Converts to/from Second. Internally everything is stored in seconds.
-		/// </summary>
-		[DebuggerHidden]
-        public SI Minute
-        {
-            [DebuggerHidden]
-            get
-            {
-                return new SI(this, 60.0, new[] { 0, 0, 1, 0, 0, 0, 0 });
-            }
-        }
-		/// <summary>
-		/// Quantifier for milli (1/1000).
-		/// </summary>
-		[DebuggerHidden]
-        public SI Milli
-        {
-            [DebuggerHidden]
-            get
-            {
-                return new SI(this, 0.001);
-            }
-        }
-		/// <summary>
-		/// Quantifier for Kilo (1000).
-		/// </summary>
-		[DebuggerHidden]
-        public SI Kilo
-        {
-            [DebuggerHidden]
-            get
-            {
-                return new SI(this, 1000.0);
-            }
-        }
-
-		public SI Ampere
-        {
-            [DebuggerHidden]
-		    get
-		    {
-                return new SI(this, siUnitsParam: new int[] { 0, 0, 0, 1, 0, 0, 0 });
-            }
-		}
-
-		/// <summary>
-		/// Quantifier for Dezi (1/10)
-		/// </summary>
-		[DebuggerHidden]
-        public SI Dezi
-        {
-		    [DebuggerHidden]
-		    get
-		    {
-		        return new SI(this, 0.1);
-            }
-		}
-
-		/// <summary>
-		/// Quantifier for Centi (1/100)
-		/// </summary>
 		//[DebuggerHidden]
-        public SI Centi
-        {
-		    //[DebuggerHidden]
-		    get
-		    {
-		        return new SI(this, 0.01);
-            }
-		}
+		//public SI Joule
+		//{
+  //          [DebuggerHidden]
+		//    get
+		//    {
+		//        return new SI(this, 0.001, new int[] { 1, 2, -2, 0, 0, 0, 0 });
+		//    }
+  //      }
+
+		///// <summary>
+		///// [t] (to basic unit: [kg])
+		///// </summary>
+		//[DebuggerHidden]
+		//public SI Ton
+		//{
+  //          [DebuggerHidden]
+		//    get
+		//    {
+		//        return new SI(this, 1000, new int[] { 1, 0, 0, 0, 0, 0, 0 });
+		//    }
+  //      }
+
+		///// <summary>
+		///// [N]
+		///// </summary>
+		//[DebuggerHidden]
+		//public SI Newton
+  //      {
+  //          [DebuggerHidden]
+		//    get
+  //          {
+  //              return new SI(this, siUnitsParam: new int[] { 1, 1, -2, 0, 0, 0, 0 });
+  //          }
+		//}
+
+		///// <summary>
+		///// [W]
+		///// </summary>
+		//[DebuggerHidden]
+  //      public SI Watt
+  //      {
+  //          [DebuggerHidden]
+  //          get
+  //          {
+  //              return new SI(this, siUnitsParam: new int[] { 1, 2, -3, 0, 0, 0, 0 });
+  //          }
+  //      }
+		///// <summary>
+		///// [m]
+		///// </summary>
+		////[DebuggerHidden]
+  //      public SI Meter
+  //      {
+  //          //[DebuggerHidden]
+  //          get
+  //          {
+  //              return new SI(this, siUnitsParam: new int[] { 0, 1, 0, 0, 0, 0, 0 });
+  //          }
+  //      }
+		///// <summary>
+		///// [s]
+		///// </summary>
+		//[DebuggerHidden]
+  //      public SI Second
+  //      {
+  //          [DebuggerHidden]
+  //          get
+  //          {
+  //              return new SI(this, siUnitsParam: new int[] { 0, 0, 1, 0, 0, 0, 0 });
+  //          }
+  //      }
+		///// <summary>
+		///// [-]. Defines radian. Only virtual. Has no real SI unit.
+		///// </summary>
+		//[DebuggerHidden]
+  //      public SI Radian
+  //      {
+  //          [DebuggerHidden]
+  //          get
+  //          {
+  //              return new SI(this);
+  //          }
+  //      }
+		///// <summary>
+		///// [-]. Converts to/from Radiant. Internally everything is stored in radian.
+		///// </summary>
+		//[DebuggerHidden]
+		//public SI Rounds
+		//{
+  //          [DebuggerHidden]
+		//    get
+  //          {
+  //              return new SI(this, 2 * Math.PI);
+  //          }
+		//}
+
+		///// <summary>
+		///// [s] Converts to/from Second. Internally everything is stored in seconds.
+		///// </summary>
+		//[DebuggerHidden]
+  //      public SI Hour
+  //      {
+  //          [DebuggerHidden]
+  //          get
+  //          {
+  //              return new SI(this, 3600, new[] { 0, 0, 1, 0, 0, 0, 0 });
+  //          }
+  //      }
+		///// <summary>
+		///// [s] Converts to/from Second. Internally everything is stored in seconds.
+		///// </summary>
+		//[DebuggerHidden]
+  //      public SI Minute
+  //      {
+  //          [DebuggerHidden]
+  //          get
+  //          {
+  //              return new SI(this, 60.0, new[] { 0, 0, 1, 0, 0, 0, 0 });
+  //          }
+  //      }
+		///// <summary>
+		///// Quantifier for milli (1/1000).
+		///// </summary>
+		//[DebuggerHidden]
+  //      public SI Milli
+  //      {
+  //          [DebuggerHidden]
+  //          get
+  //          {
+  //              return new SI(this, 0.001);
+  //          }
+  //      }
+		///// <summary>
+		///// Quantifier for Kilo (1000).
+		///// </summary>
+		//[DebuggerHidden]
+  //      public SI Kilo
+  //      {
+  //          [DebuggerHidden]
+  //          get
+  //          {
+  //              return new SI(this, 1000.0);
+  //          }
+  //      }
+
+		//public SI Ampere
+  //      {
+  //          [DebuggerHidden]
+		//    get
+		//    {
+  //              return new SI(this, siUnitsParam: new int[] { 0, 0, 0, 1, 0, 0, 0 });
+  //          }
+		//}
+
+		///// <summary>
+		///// Quantifier for Dezi (1/10)
+		///// </summary>
+		//[DebuggerHidden]
+  //      public SI Dezi
+  //      {
+		//    [DebuggerHidden]
+		//    get
+		//    {
+		//        return new SI(this, 0.1);
+  //          }
+		//}
+
+		///// <summary>
+		///// Quantifier for Centi (1/100)
+		///// </summary>
+		////[DebuggerHidden]
+  //      public SI Centi
+  //      {
+		//    //[DebuggerHidden]
+		//    get
+		//    {
+		//        return new SI(this, 0.01);
+  //          }
+		//}
 
 		#endregion
+
+
+
 
 		#region Operators
 

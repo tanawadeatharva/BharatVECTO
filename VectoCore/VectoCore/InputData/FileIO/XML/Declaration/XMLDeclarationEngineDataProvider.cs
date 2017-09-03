@@ -51,8 +51,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public CubicMeter Displacement
 		{
-			get { return GetDoubleElementValue(XMLNames.Engine_Displacement).SI().Cubic.Centi.Meter.Cast<CubicMeter>(); }
-		}
+            //get { return GetDoubleElementValue(XMLNames.Engine_Displacement).SI().Cubic.Centi.Meter.Cast<CubicMeter>(); }
+		    get { return GetDoubleElementValue(XMLNames.Engine_Displacement).SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(); }
+        }
 
 		public PerSecond IdleSpeed
 		{

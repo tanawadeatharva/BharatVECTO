@@ -281,7 +281,7 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                exponent = 2 * reciproc;
+                exponent = 2;
                 //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
                 return this;
             }
@@ -309,7 +309,29 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+        public UnitInstance Joule
+        {
+            get
+            {
+                int ReciprocAndExponent = reciproc * exponent;
+                units[0] += 1 * ReciprocAndExponent;
+                units[1] += 2 * ReciprocAndExponent;
+                units[2] -= 2 * ReciprocAndExponent;
+                //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
+                return this;
+            }
+        }
 
+        public UnitInstance Liter
+        {
+            get
+            {
+                int ReciprocAndExponent = reciproc * exponent;
+                units[2] += 3 * ReciprocAndExponent;
+                factorValue /= Math.Pow(1000, ReciprocAndExponent);
+                return this;
+            }
+        }
 
     }
 

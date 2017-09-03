@@ -47,16 +47,18 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.IsTrue(0.SI<PerSecond>().HasEqualUnit(val));
 
             //var val2 = 1200.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
-		    var val2 = 1200.SI().Rounds.Per.Minute.ConvertTo(Unit.SI.Radian.Per.Second).Cast<PerSecond>();
+		    var val2 = 1200.SI(Unit.SI.Rounds.Per.Minute).ConvertTo(Unit.SI.Radian.Per.Second).Cast<PerSecond>();
             val = val * 2;
 			Assert.AreEqual(val, val2);
 
 			val2 = val2 / 2;
 			val = val / 2;
 			Assert.AreEqual(val, val2);
-			Assert.AreEqual(600.SI().Rounds.Per.Minute.Cast<PerSecond>(), val2);
-			Assert.AreEqual(600.SI().Rounds.Per.Minute.Cast<PerSecond>().Value(), val2.Value());
-		}
+            //Assert.AreEqual(600.SI().Rounds.Per.Minute.Cast<PerSecond>(), val2);
+		    Assert.AreEqual(600.SI(Unit.SI.Rounds.Per.Minute).Cast<PerSecond>(), val2);
+            //Assert.AreEqual(600.SI().Rounds.Per.Minute.Cast<PerSecond>().Value(), val2.Value());
+		    Assert.AreEqual(600.SI(Unit.SI.Rounds.Per.Minute).Cast<PerSecond>().Value(), val2.Value());
+        }
 
 		[TestCase]
 		public void DoubleExtension_ComparisonOperators()
