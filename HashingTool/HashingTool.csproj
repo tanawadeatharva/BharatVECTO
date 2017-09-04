@@ -92,6 +92,9 @@
     <Compile Include="Views\VerifyInputData.xaml.cs">
       <DependentUpon>VerifyInputData.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialog\XMLValidationErrorsDialog.xaml.cs">
+      <DependentUpon>XMLValidationErrorsDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -137,6 +140,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\VerifyInputData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialog\XMLValidationErrorsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
