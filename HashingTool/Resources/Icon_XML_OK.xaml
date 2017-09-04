@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-	<Canvas x:Key="Icon_XML_OK">
+<DataTemplate x:Key="Icon_XML_OK">
+	<Canvas>
 		<Canvas.RenderTransform>
 			<TranslateTransform X="-59.285156" Y="-215.2361" />
 		</Canvas.RenderTransform>
@@ -17,4 +17,5 @@
 				Data="m 122.42969 243.86892 0 -28.39844 5.78125 0 0 23.57422 14.375 0 0 4.82422 -20.15625 0 z" />
 		</Canvas>
 	</Canvas>
+</DataTemplate>
 </ResourceDictionary>

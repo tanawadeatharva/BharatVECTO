@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml;
@@ -16,7 +17,6 @@ namespace HashingTool.ViewModel.UserControl
 
 		private bool _busy;
 
-		private readonly IOService _ioService;
 		private readonly bool _validate;
 		private XmlDocument _document;
 
@@ -78,7 +78,7 @@ namespace HashingTool.ViewModel.UserControl
 		}
 
 
-		private void ReadXMLFile()
+		private async void ReadXMLFile()
 		{
 			string filename;
 
@@ -91,12 +91,17 @@ namespace HashingTool.ViewModel.UserControl
 			IsValid = null;
 			XMLValidationErrors.Clear();
 			Source = filename;
-			var reader = XmlReader.Create(stream);
-			var document = new XmlDocument();
-			document.Load(reader);
+
 			if (_validate) {
-				Validate(reader);
+				var ms = new MemoryStream();
+				await stream.CopyToAsync(ms);
+				ms.Seek(0, SeekOrigin.Begin);
+				stream.Seek(0, SeekOrigin.Begin);
+				Validate(XmlReader.Create(ms));
 			}
+			var document = new XmlDocument();
+			var reader = XmlReader.Create(stream);
+			document.Load(reader);
 			Document = document;
 			_busy = false;
 		}

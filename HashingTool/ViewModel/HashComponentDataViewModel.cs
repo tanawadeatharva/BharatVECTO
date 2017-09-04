@@ -25,7 +25,6 @@ namespace HashingTool.ViewModel
 
 		private XDocument _result;
 
-		private readonly IOService _ioService = new WPFIoService();
 		private readonly RelayCommand _saveCommand;
 		private bool _busy;
 		private XMLFile _sourceFile;
@@ -40,17 +39,11 @@ namespace HashingTool.ViewModel
 				() => !_busy && ComponentDataValid != null && ComponentDataValid.Value && _result != null);
 			_busy = false;
 
+			// TODO!
 			CanonicalizaitionMethods = new ObservableCollection<string>() {
 				"urn:vecto:xml:2017:canonicalization",
 				"http://www.w3.org/2001/10/xml-exc-c14n#"
 			};
-		}
-
-		private void SourceChanged(object sender, PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName == "Document") {
-				DoComputeHash();
-			}
 		}
 
 		public HashComponentDataViewModel(ApplicationViewModel applicationViewModel) : this()
@@ -71,7 +64,6 @@ namespace HashingTool.ViewModel
 		public XMLFile ComponentFile
 		{
 			get { return _sourceFile; }
-			private set { _sourceFile = value; }
 		}
 
 
@@ -93,6 +85,13 @@ namespace HashingTool.ViewModel
 		public ICommand SaveHashedDocument
 		{
 			get { return _saveCommand; }
+		}
+
+		private void SourceChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Document") {
+				DoComputeHash();
+			}
 		}
 
 		private void SaveDocument()
@@ -138,6 +137,7 @@ namespace HashingTool.ViewModel
 
 				_result = h.AddHash();
 
+				// validate generated component file
 				using (MemoryStream ms = new MemoryStream()) {
 					using (XmlWriter xw = XmlWriter.Create(ms, new XmlWriterSettings { Indent = true })) {
 						_result.WriteTo(xw);

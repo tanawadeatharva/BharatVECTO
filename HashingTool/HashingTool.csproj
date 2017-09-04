@@ -77,9 +77,11 @@
     <Compile Include="ViewModel\ObservableObject.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\HashComponentDataViewModel.cs" />
-    <Compile Include="ViewModel\VerifyInputDataViewModel.cs" />
+    <Compile Include="ViewModel\VerifyJobInputDataViewModel.cs" />
+    <Compile Include="ViewModel\VerifyComponentInputDataViewModel.cs" />
     <Compile Include="ViewModel\UserControl\XMLFile.cs" />
     <Compile Include="Util\XMLValidator.cs" />
+    <Compile Include="ViewModel\VerifyResultDataViewModel.cs" />
     <Compile Include="Views\HashComponentData.xaml.cs">
       <DependentUpon>HashComponentData.xaml</DependentUpon>
     </Compile>
@@ -89,11 +91,14 @@
     <Compile Include="Views\UserControl\VectoXMLFileSelector.xaml.cs">
       <DependentUpon>VectoXMLFileSelector.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\VerifyInputData.xaml.cs">
-      <DependentUpon>VerifyInputData.xaml</DependentUpon>
+    <Compile Include="Views\VerifyComponentInputData.xaml.cs">
+      <DependentUpon>VerifyComponentInputData.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialog\XMLValidationErrorsDialog.xaml.cs">
       <DependentUpon>XMLValidationErrorsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VerifyJobInputData.xaml.cs">
+      <DependentUpon>VerifyJobInputData.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -139,11 +144,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\VerifyInputData.xaml">
+    <Page Include="Views\VerifyComponentInputData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialog\XMLValidationErrorsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VerifyJobInputData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

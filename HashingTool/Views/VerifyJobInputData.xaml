@@ -1,0 +1,141 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:ViewModel="clr-namespace:HashingTool.ViewModel"
+	xmlns:views="clr-namespace:HashingTool.Views"
+	xmlns:helper="clr-namespace:HashingTool.Helper"
+	x:Class="HashingTool.Views.VerifyJobInputData"
+	mc:Ignorable="d"
+	d:DesignHeight="555" d:DesignWidth="534">
+	<UserControl.Resources>
+		<helper:CollectionConverter x:Key="CollectionConverter" />
+		<BooleanToVisibilityConverter x:Key="Bool2Vis" />
+	</UserControl.Resources>
+	<UserControl.DataContext>
+		<ViewModel:VerifyJobInputDataViewModel />
+	</UserControl.DataContext>
+	<Grid>
+		<Label x:Name="lblFileSelect" Content="Job data:" HorizontalAlignment="Left" Margin="10,75,0,0"
+				VerticalAlignment="Top" />
+		<Label Name="lblHeader" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Top"
+				Content="{Binding Name}" FontWeight="Bold" FontSize="18" />
+		<Button Name="btnBack" Content="Back" Command="{Binding ShowHomeViewCommand}" Margin="0,0,10,10"
+				HorizontalAlignment="Right"
+				Width="75" Height="22" VerticalAlignment="Bottom" />
+		<views:VectoXMLFileSelector Margin="0,93,0,0" VerticalAlignment="Top" XMLFile="{Binding JobFile}" Height="80" />
+		<Grid Margin="0,178,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*" MaxHeight="300" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid Grid.Row="1" Margin="0,5">
+				<Label Content="Canonicalization methods:" />
+				<TextBox Text="{Binding CanonicalizaitionMethods , Converter={StaticResource CollectionConverter}}"
+						Margin="155,0,10,0" IsReadOnly="True" />
+			</Grid>
+			<Grid Grid.Row="2" Margin="0,5">
+				<Label Content="Digest Value computed:" />
+				<TextBox Text="{Binding DigestValueComputed}" Margin="155,0,10,0"
+						IsReadOnly="True" />
+			</Grid>
+			<Grid Grid.Row="3" Margin="0,10,0,0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="29*" />
+					<ColumnDefinition Width="60*" />
+				</Grid.ColumnDefinitions>
+				<ContentControl HorizontalAlignment="Center" Margin="60,0,234,0" VerticalAlignment="Top" Width="66" Height="64"
+								Grid.Column="1">
+					<ContentControl.RenderTransform>
+						<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+					</ContentControl.RenderTransform>
+					<ContentControl.Style>
+						<Style TargetType="ContentControl">
+							<Setter Property="Content" Value="" />
+							<Setter Property="ToolTip" Value="" />
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding JobDataValid}" Value="True">
+									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
+									<Setter Property="ToolTip" Value="Component data validates against schema" />
+								</DataTrigger>
+								<DataTrigger Binding="{Binding JobDataValid}" Value="False">
+									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
+									<Setter Property="ToolTip" Value="Component data does NOT validat against schema" />
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</ContentControl.Style>
+				</ContentControl>
+
+			</Grid>
+			<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Background="{x:Static SystemColors.ControlLightBrush}"
+						Margin="10,0">
+				<ItemsControl Margin="0,0,0,20" x:Name="ComponentListing" ItemsSource="{Binding Components}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Expander Margin="4" Header="{Binding}">
+								<Expander.HeaderTemplate>
+									<DataTemplate>
+										<Grid
+											HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}">
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition MinWidth="150" />
+												<ColumnDefinition Width="100" />
+											</Grid.ColumnDefinitions>
+											<TextBlock Grid.Column="0" Text="{Binding Component}" Margin="4,0" />
+											<StackPanel Grid.Column="1" VerticalAlignment="Top" Width="16" Height="16" HorizontalAlignment="Left">
+												<ContentControl ContentTemplate="{StaticResource Icon_OK}" Visibility="{Binding Valid, Converter={StaticResource Bool2Vis}}">
+													<ContentControl.RenderTransform>
+														<ScaleTransform ScaleX=".4" ScaleY=".4" />
+													</ContentControl.RenderTransform>
+												</ContentControl>
+												<ContentControl ContentTemplate="{StaticResource Icon_NOK}" Visibility="{Binding Path=InValid, Converter={StaticResource Bool2Vis}}">
+													<ContentControl.RenderTransform>
+														<ScaleTransform ScaleX=".4" ScaleY=".4" />
+													</ContentControl.RenderTransform>
+												</ContentControl>
+											</StackPanel>
+										</Grid>
+									</DataTemplate>
+								</Expander.HeaderTemplate>
+								<Expander.Content>
+									<Border BorderBrush="{x:Static SystemColors.ControlDarkDarkBrush}" BorderThickness="0,0,0,1" Margin="0,0,0,3">
+										<Grid>
+											<Grid.RowDefinitions>
+												<RowDefinition />
+												<RowDefinition />
+												<RowDefinition />
+											</Grid.RowDefinitions>
+											<Grid Row="0" Margin="10,13,0,3">
+												<Label Content="Canonicalization methods:" />
+												<TextBox Text="{Binding CanonicalizationMethod , Converter={StaticResource CollectionConverter}}"
+														Margin="155,0,10,0" IsReadOnly="True" />
+											</Grid>
+											<Grid Row="1" Margin="10,2,0,3">
+												<Label Content="Digest Value read:" />
+												<TextBox Text="{Binding DigestValueRead}"
+														Margin="155,0,10,0" IsReadOnly="True" />
+											</Grid>
+											<Grid Row="2" Margin="10,2,0,3">
+												<Label Content="Digest Value computed:" />
+												<TextBox Text="{Binding DigestValueComputed}"
+														Margin="155,0,10,0" IsReadOnly="True" />
+											</Grid>
+										</Grid>
+									</Border>
+								</Expander.Content>
+							</Expander>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</ScrollViewer>
+
+		</Grid>
+
+
+	</Grid>
+</UserControl>

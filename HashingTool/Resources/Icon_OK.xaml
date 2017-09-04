@@ -1,17 +1,18 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Canvas x:Key="Icon_OK" Name="layer1">
-		<Canvas.RenderTransform>
-			<TranslateTransform X="-55.706613" Y="-712.36918" />
-		</Canvas.RenderTransform>
-
-		<Canvas Name="flowRoot48069" Opacity="1">
+	<DataTemplate x:Key="Icon_OK">
+		<Canvas Name="layer1">
 			<Canvas.RenderTransform>
-				<TranslateTransform X="-5.7972934" Y="86.067101" />
+				<TranslateTransform X="-55.706613" Y="-712.36918" />
 			</Canvas.RenderTransform>
-			<Path Name="path4844" Fill="#FF00A500" StrokeThickness="1"
-				StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat"
-				Data="m 119.33594 626.30208 1.31836 2.28515 q -12.87598 9.09668 -23.862308 23.02735 -10.986328 13.93066 -15.864258 27.29004 l -1.933593 1.27441 q -2.504883 1.62598 -4.306641 3.25195 -0.307617 -1.58203 -1.713867 -5.09765 l -1.010742 -2.50488 q -3.295899 -8.12989 -5.581055 -11.33789 -2.241211 -3.25196 -4.87793 -3.51563 3.559571 -3.25195 6.196289 -3.25195 3.647461 0 7.998047 9.7998 l 1.582031 3.51563 q 7.778321 -13.93067 18.764649 -25.66407 11.030278 -11.73339 23.291018 -19.07226 z" />
+			<Canvas Name="flowRoot48069" Opacity="1">
+				<Canvas.RenderTransform>
+					<TranslateTransform X="-5.7972934" Y="86.067101" />
+				</Canvas.RenderTransform>
+				<Path Name="path4844" Fill="#FF00A500" StrokeThickness="1"
+					StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat"
+					Data="m 119.33594 626.30208 1.31836 2.28515 q -12.87598 9.09668 -23.862308 23.02735 -10.986328 13.93066 -15.864258 27.29004 l -1.933593 1.27441 q -2.504883 1.62598 -4.306641 3.25195 -0.307617 -1.58203 -1.713867 -5.09765 l -1.010742 -2.50488 q -3.295899 -8.12989 -5.581055 -11.33789 -2.241211 -3.25196 -4.87793 -3.51563 3.559571 -3.25195 6.196289 -3.25195 3.647461 0 7.998047 9.7998 l 1.582031 3.51563 q 7.778321 -13.93067 18.764649 -25.66407 11.030278 -11.73339 23.291018 -19.07226 z" />
+			</Canvas>
 		</Canvas>
-	</Canvas>
+	</DataTemplate>
 </ResourceDictionary>

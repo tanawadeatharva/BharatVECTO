@@ -12,7 +12,7 @@ namespace HashingTool.Views
 	/// <summary>
 	/// Interaction logic for HashComponentData.xaml
 	/// </summary>
-	public partial class HashComponentData : UserControl
+	public partial class HashComponentData
 	{
 		public HashComponentData()
 		{

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows;
 using Microsoft.Win32;
 
 namespace HashingTool.Helper
@@ -8,6 +9,7 @@ namespace HashingTool.Helper
 		Stream OpenFileDialog(string defaultPath, string defaultExt, string filter, out string location);
 
 		Stream SaveData(string defaultPath, string defaultExt, string filter, out string location);
+		MessageBoxResult Messagebox(string msg, string caption, MessageBoxButton buttons);
 	}
 
 	public class WPFIoService : IOService
@@ -40,6 +42,11 @@ namespace HashingTool.Helper
 			}
 			location = dlg.FileName;
 			return new FileStream(dlg.FileName, FileMode.Create);
+		}
+
+		public MessageBoxResult Messagebox(string msg, string caption, MessageBoxButton buttons)
+		{
+			return MessageBox.Show(msg, caption, buttons);
 		}
 	}
 }

@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace HashingTool.Views
 {
 	/// <summary>
-	/// Interaction logic for VerifyInputData.xaml
+	/// Interaction logic for VerifyJobInputData.xaml
 	/// </summary>
-	public partial class VerifyInputData : UserControl
+	public partial class VerifyJobInputData : System.Windows.Controls.UserControl
 	{
-		public VerifyInputData()
+		public VerifyJobInputData()
 		{
 			InitializeComponent();
 		}

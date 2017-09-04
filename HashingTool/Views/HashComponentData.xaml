@@ -94,14 +94,14 @@
 					<ContentControl.Style>
 						<Style TargetType="ContentControl">
 							<Setter Property="Content" Value="" />
-							<Setter Property="ToolTip" Value=""/>
+							<Setter Property="ToolTip" Value="X"/>
 							<Style.Triggers>
 								<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
-									<Setter Property="Content" Value="{StaticResource Icon_OK}" />
+									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
 									<Setter Property="ToolTip" Value="Component data validates against schema"/>
 								</DataTrigger>
 								<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
-									<Setter Property="Content" Value="{StaticResource Icon_NOK}" />
+									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
 									<Setter Property="ToolTip" Value="Component data does NOT validat against schema"/>
 								</DataTrigger>
 							</Style.Triggers>

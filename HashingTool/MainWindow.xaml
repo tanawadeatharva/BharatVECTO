@@ -15,10 +15,12 @@
 		<DataTemplate DataType="{x:Type viewModel:HashComponentDataViewModel}">
 			<views:HashComponentData />
 		</DataTemplate>
-		<DataTemplate DataType="{x:Type viewModel:VerifyInputDataViewModel}">
-			<views:VerifyInputData />
+		<DataTemplate DataType="{x:Type viewModel:VerifyComponentInputDataViewModel}">
+			<views:VerifyComponentInputData />
 		</DataTemplate>
-
+		<DataTemplate DataType="{x:Type viewModel:VerifyJobInputDataViewModel}">
+			<views:VerifyJobInputData />
+		</DataTemplate>
 	</Window.Resources>
 	<Grid Margin="10">
 

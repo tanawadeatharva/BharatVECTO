@@ -1,0 +1,79 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:ViewModel="clr-namespace:HashingTool.ViewModel"
+	xmlns:views="clr-namespace:HashingTool.Views"
+	xmlns:helper="clr-namespace:HashingTool.Helper"
+	x:Class="HashingTool.Views.VerifyComponentInputData"
+	mc:Ignorable="d"
+	d:DesignHeight="422" d:DesignWidth="534">
+	<UserControl.Resources>
+		<helper:CollectionConverter x:Key="CollectionConverter" />
+	</UserControl.Resources>
+	<UserControl.DataContext>
+		<ViewModel:VerifyComponentInputDataViewModel/>
+	</UserControl.DataContext>
+	<Grid>
+		<Label x:Name="lblFileSelect" Content="Component data:" HorizontalAlignment="Left" Margin="10,75,0,0"
+				VerticalAlignment="Top" />
+		<Label Name="lblHeader" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Top"
+				Content="{Binding Name}" FontWeight="Bold" FontSize="18" />
+		<Button Name="btnBack" Content="Back" Command="{Binding ShowHomeViewCommand}" Margin="0,0,10,10"
+				HorizontalAlignment="Right"
+				Width="75" Height="22" VerticalAlignment="Bottom" />
+		<views:VectoXMLFileSelector Margin="0,93,0,0" VerticalAlignment="Top" XMLFile="{Binding ComponentFile}" Height="80"/>
+		<Grid Margin="0,178,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<Grid Grid.Row="0" Margin="0,5">
+				<Label Content="Component:"/>
+				<TextBox Text="{Binding Component}" Margin="155,0,10,0" IsReadOnly="True"/>
+			</Grid>
+			<Grid Grid.Row="1" Margin="0,5">
+				<Label Content="Canonicalization methods:"/>
+				<TextBox Text="{Binding CanonicalizaitionMethods , Converter={StaticResource CollectionConverter}}" Margin="155,0,10,0" IsReadOnly="True"/>
+			</Grid>
+			<Grid Grid.Row="2" Margin="0,5">
+				<Label Content="Digest Value read:"/>
+				<TextBox Text="{Binding DigestValueRead}" Margin="155,0,10,0" IsReadOnly="True"/>
+			</Grid>
+			<Grid Grid.Row="3" Margin="0,5">
+				<Label Content="Digest Value computed:"/>
+				<TextBox Text="{Binding DigestValueComputed}" Margin="155,0,10,0" IsReadOnly="True"/>
+			</Grid>
+			<Grid Grid.Row="4" Margin="0,10,0,0">
+				<ContentControl HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" Width="66" Height="64">
+					<ContentControl.RenderTransform>
+						<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+					</ContentControl.RenderTransform>
+					<ContentControl.Style>
+						<Style TargetType="ContentControl">
+							<Setter Property="Content" Value="" />
+							<Setter Property="ToolTip" Value=""/>
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
+									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
+									<Setter Property="ToolTip" Value="Component data validates against schema"/>
+								</DataTrigger>
+								<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
+									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
+									<Setter Property="ToolTip" Value="Component data does NOT validat against schema"/>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</ContentControl.Style>
+				</ContentControl>
+
+			</Grid>
+		</Grid>
+
+
+	</Grid>
+</UserControl>
