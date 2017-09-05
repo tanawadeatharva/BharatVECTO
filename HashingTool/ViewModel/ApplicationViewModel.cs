@@ -23,6 +23,7 @@ namespace HashingTool.ViewModel
 				new HashComponentDataViewModel(this),
 				new VerifyComponentInputDataViewModel(this),
 				new VerifyJobInputDataViewModel(this),
+				new VerifyResultDataViewModel(this),
 			};
 
 			CurrentViewModel = homeView;

@@ -24,7 +24,7 @@ namespace HashingTool.ViewModel
 			_jobFile.PropertyChanged += JobFilechanged;
 
 			// TODO!
-			CanonicalizaitionMethods = new ObservableCollection<string>() {
+			CanonicalizationMethods = new ObservableCollection<string>() {
 				"urn:vecto:xml:2017:canonicalization",
 				"http://www.w3.org/2001/10/xml-exc-c14n#"
 			};
@@ -54,7 +54,7 @@ namespace HashingTool.ViewModel
 
 		public ObservableCollection<ComponentEntry> Components { get; private set; }
 
-		public ObservableCollection<string> CanonicalizaitionMethods { get; private set; }
+		public ObservableCollection<string> CanonicalizationMethods { get; private set; }
 
 		public string DigestValueComputed
 		{

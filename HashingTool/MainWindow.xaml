@@ -21,6 +21,9 @@
 		<DataTemplate DataType="{x:Type viewModel:VerifyJobInputDataViewModel}">
 			<views:VerifyJobInputData />
 		</DataTemplate>
+		<DataTemplate DataType="{x:Type viewModel:VerifyResultDataViewModel}">
+			<views:VerifyResults />
+		</DataTemplate>
 	</Window.Resources>
 	<Grid Margin="10">
 

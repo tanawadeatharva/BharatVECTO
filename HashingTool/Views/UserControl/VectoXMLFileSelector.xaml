@@ -22,12 +22,15 @@
 			<ContentControl.Style>
 				<Style TargetType="ContentControl">
 					<Setter Property="ContentTemplate" Value="{StaticResource ICON_XML_unknown}" />
+					<Setter Property="ToolTip" Value="Not validated" />
 					<Style.Triggers>
 						<DataTrigger Binding="{Binding XMLFile.IsValid}" Value="True">
 							<Setter Property="ContentTemplate" Value="{StaticResource Icon_XML_OK}" />
+							<Setter Property="ToolTip" Value="Valid XML" />
 						</DataTrigger>
 						<DataTrigger Binding="{Binding XMLFile.IsValid}" Value="False">
 							<Setter Property="ContentTemplate" Value="{StaticResource Icon_XML_NOK}" />
+							<Setter Property="ToolTip" Value="Invalid XML" />
 						</DataTrigger>
 					</Style.Triggers>
 				</Style>
@@ -37,10 +40,11 @@
 		<StackPanel Orientation="Horizontal" Margin="10,44,0,10">
 			<StackPanel.Style>
 				<Style TargetType="StackPanel">
-					<Setter Property="Visibility" Value="{Binding XMLFile.ValidateInput, Converter={StaticResource BoolToVis}}"/>
+					<Setter Property="Visibility" Value="{Binding XMLFile.ValidateInput, Converter={StaticResource BoolToVis}}" />
 				</Style>
 			</StackPanel.Style>
-			<Label Content="{Binding XMLFile.XMLValidationErrors.Count}" ContentStringFormat="{}{0} Warnings/Errors" MinWidth="80">
+			<Label Content="{Binding XMLFile.XMLValidationErrors.Count}" ContentStringFormat="{}{0} Warnings/Errors"
+					MinWidth="80">
 				<Label.Style>
 					<Style TargetType="Label">
 						<Setter Property="Foreground" Value="Red" />
@@ -52,7 +56,8 @@
 					</Style>
 				</Label.Style>
 			</Label>
-			<Button x:Name="btnDetails" Margin="10,0,0,0" Content="Details..." HorizontalAlignment="Left" Width="91" Click="btnDetails_Click">
+			<Button x:Name="btnDetails" Margin="10,0,0,0" Content="Details..." HorizontalAlignment="Left" Width="91"
+					Click="btnDetails_Click">
 				<Button.Style>
 					<Style TargetType="Button">
 						<Setter Property="IsEnabled" Value="True" />

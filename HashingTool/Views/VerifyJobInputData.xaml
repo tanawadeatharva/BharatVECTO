@@ -35,7 +35,7 @@
 			</Grid.RowDefinitions>
 			<Grid Grid.Row="1" Margin="0,5">
 				<Label Content="Canonicalization methods:" />
-				<TextBox Text="{Binding CanonicalizaitionMethods , Converter={StaticResource CollectionConverter}}"
+				<TextBox Text="{Binding CanonicalizationMethods , Converter={StaticResource CollectionConverter}}"
 						Margin="155,0,10,0" IsReadOnly="True" />
 			</Grid>
 			<Grid Grid.Row="2" Margin="0,5">
