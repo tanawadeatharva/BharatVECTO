@@ -1054,43 +1054,45 @@ namespace TUGraz.VectoCommon.Utils
 		protected readonly double Val;
 
 
-	    /// <summary>
-	    /// The array of the SI units.
-	    /// </summary>
-	    protected int[] SIUnits;
+        /// <summary>
+        /// The array of the SI units.
+        /// </summary>
+        protected int[] SIUnits;
+
+        protected UnitInstance.IsMass isMass;
 
 
         /// <summary>
         /// The current exponent for conversion operations (Square, Cubic, Linear, e.g. new SI(3).Square.Meter).
         /// Can be reseted with Reset, Per, Cast.
         /// </summary>
-        private readonly int _exponent;
+        //private readonly int _exponent;
 
-		/// <summary>
-		/// A flag indicating if the current SI is in reciprocal mode (used in the <see cref="Per"/> method for reciprocal units: e.g. new SI(2).Meter.Per.Second) ==> [m/s]
-		/// Can be reseted with Reset, Per, Cast.
-		/// </summary>
-		private readonly bool _reciproc;
+        /// <summary>
+        /// A flag indicating if the current SI is in reciprocal mode (used in the <see cref="Per"/> method for reciprocal units: e.g. new SI(2).Meter.Per.Second) ==> [m/s]
+        /// Can be reseted with Reset, Per, Cast.
+        /// </summary>
+        //private readonly bool _reciproc;
 
-		/// <summary>
-		/// A flag indicating if the current SI is in reverse mode (used for conversions: e.g. new SI(2).Rounds.Per.Minute.ConverTo.Radian.Per.Second ==> [rpm/min] => [rad/s]).
-		/// </summary>
-		private readonly bool _reverse;
+        /// <summary>
+        /// A flag indicating if the current SI is in reverse mode (used for conversions: e.g. new SI(2).Rounds.Per.Minute.ConverTo.Radian.Per.Second ==> [rpm/min] => [rad/s]).
+        /// </summary>
+        //private readonly bool _reverse;
 
-		/// <summary>
-		/// Enum for defining the Units.
-		/// </summary>
-		[SuppressMessage("ReSharper", "InconsistentNaming")]
-		protected enum Unit
-		{
-		    kg,
-		    m,
-		    s,
-		    A,
-		    K,
-		    mol,
-		    cd,
-		}
+        ///// <summary>
+        ///// Enum for defining the Units.
+        ///// </summary>
+        //[SuppressMessage("ReSharper", "InconsistentNaming")]
+        //protected enum Unit
+        //{
+        //    kg,
+        //    m,
+        //    s,
+        //    A,
+        //    K,
+        //    mol,
+        //    cd,
+        //}
 
 
         /// <summary>
@@ -1101,12 +1103,13 @@ namespace TUGraz.VectoCommon.Utils
         public SI(double val = 0.0)
         {
             Val = val;
-            _reciproc = false;
-            _reverse = false;
+
+            //_reciproc = false;
+            //_reverse = false;
 
             SIUnits = new int[7] { 0, 0, 0, 0, 0, 0, 0 };
 
-            _exponent = 1;
+            //_exponent = 1;
 
             if (double.IsNaN(val))
             {
@@ -1128,13 +1131,15 @@ namespace TUGraz.VectoCommon.Utils
         /// <param name="reciproc">if set to <c>true</c> then the object is in reciproc mode (1/...)</param>
         /// <param name="reverse">if set to <c>true</c> then the object is in reverse convertion mode (e.g. rpm/min => rad/s).</param>
         /// <param name="exponent">The exponent for further conversions (e.g. Square.Meter).</param>
-        protected SI(double val, int[] siunits, bool reciproc = false,
-            bool reverse = false, int exponent = 1)
+        //protected SI(double val, int[] siunits, bool reciproc = false,
+        //    bool reverse = false, int exponent = 1)
+        protected SI(double val, int[] siunits, UnitInstance.IsMass isMassParam)
         {
             Val = val;
-            _reciproc = reciproc;
-            _reverse = reverse;
-            _exponent = exponent;
+            isMass = isMassParam;
+            //_reciproc = reciproc;
+            //_reverse = reverse;
+            //_exponent = exponent;
 
             SIUnits = siunits;
 
@@ -1150,7 +1155,9 @@ namespace TUGraz.VectoCommon.Utils
             }
         }
 
-	    public SI(UnitInstance si, double val = 0) : this(val, si.GetSIUnits()){}
+	    public SI(UnitInstance si, double val = 0) : this(val * si.Getfactor, si.GetSIUnits(),si.GetGrammMode()){
+       
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SI"/> class which copies the units from an already existing SI.
@@ -1158,75 +1165,87 @@ namespace TUGraz.VectoCommon.Utils
         /// <param name="val">The value.</param>
         /// <param name="unit">The unit.</param>
         [DebuggerHidden]
-        private SI(double val, SI unit) : this(val, unit.SIUnits){}
+        private SI(double val, SI unit) : this(val, unit.SIUnits, unit.isMass) {}
 
         //[DebuggerHidden]
-        protected SI(SI si, double? factor = null, int[] siUnitsParam = null,
-            bool? reciproc = null, bool? reverse = null, int? exponent = null)
+        //protected SI(SI si, double? factor = null, int[] siUnitsParam = null,
+        //    bool? reciproc = null, bool? reverse = null, int? exponent = null)
+	    protected SI(SI si, double factor , int[] siUnitsParam, int exponent, bool reverse, UnitInstance.IsMass isMassParam)
         {
 
-            Val = si.Val;
-            _reciproc = reciproc ?? si._reciproc;
-            _reverse = reverse ?? si._reverse;
-            _exponent = exponent ?? si._exponent;
+            // Val = si.Val;
+            Val = si.Val * factor;
+            isMass = isMassParam;
+            SIUnits = siUnitsParam;
+            //_reciproc = reciproc ?? si._reciproc;
+            //_reverse = reverse ?? si._reverse;
+            //_exponent = exponent ?? si._exponent;
 
 
-            if (siUnitsParam == null) //////////////????
-            {
-                siUnitsParam = new int[] { 0, 0, 0, 0, 0, 0, 0 };
-            }
-
-            if (_reciproc)
-            {
-                siUnitsParam = SIUtils.SIUnitsMultFactor(siUnitsParam, -1); 
-            }
-
-            if (_reverse)
-            {
-                // compare the si Units
-                if (!SIUtils.CompareSIUnits(siUnitsParam, si.SIUnits))
-                {
-                    throw new VectoException(
-                        "Unit missing. Conversion not possible. [{0}] does not contain a [{1}].",
-                        GetUnitString(siUnitsParam), si.GetUnitString());
-                }
-
-                SIUnits = si.SIUnits;
-
-                factor = 1 / factor;
-
-                //_reverse = false;
-
-            }
-            else
-            {
-                SIUnits = SIUtils.AdditionTheSIUnits(si.SIUnits, SIUtils.SIUnitsMultFactor(siUnitsParam, _exponent));
-            }
+            //if (siUnitsParam == null) //////////////????
+            //{
+            //    siUnitsParam = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+            //}
 
 
-            if (_reciproc)
-            {
-                if (factor.HasValue)
-                {
-                    //Val /= (factor.Value * _exponent);
-                    Val /= Math.Pow(factor.Value, _exponent);
-                }
+            ////if (_reciproc)
+            ////{
+            ////siUnitsParam = SIUtils.SIUnitsMultFactor(siUnitsParam, -1); 
+            ////}
 
-            }
-            else
-            {
-                if (factor.HasValue)
-                {
-                    //Val *= (factor.Value * _exponent);
-                    Val *= Math.Pow(factor.Value, _exponent);
-                }
-            }
+            ////if (_reverse)
+            //if (reverse)
+            //{
+            //    // compare the si Units
+            //    if (!SIUtils.CompareSIUnits(siUnitsParam, si.SIUnits))
+            //    {
+            //        throw new VectoException(
+            //            "Unit missing. Conversion not possible. [{0}] does not contain a [{1}].",
+            //            GetUnitString(siUnitsParam), si.GetUnitString());
+            //    }
 
-            if (_reverse)
-            {
-                Val /= factor.Value;
-                _reverse = false;
-            }
+            //    SIUnits = si.SIUnits;
+
+            //    factor = 1 / factor;
+
+            //    ////_reverse = false;
+
+            //}
+            //else
+            //{
+            //SIUnits = SIUtils.AdditionTheSIUnits(si.SIUnits, siUnitsParam);
+
+            //    //SIUnits = SIUtils.AdditionTheSIUnits(si.SIUnits, SIUtils.SIUnitsMultFactor(siUnitsParam, _exponent));
+            //}
+
+
+            //if (_reciproc)
+            //{
+            //    if (factor.HasValue)
+            //    {
+            //        //Val /= (factor.Value * _exponent);
+            //        Val /= Math.Pow(factor.Value, _exponent);
+            //    }
+
+            //}
+            //else
+            //{
+            //    if (factor.HasValue)
+            //    {
+            //        //Val *= (factor.Value * _exponent);
+            //   Val *= Math.Pow(factor, exponent);
+            //    }
+            //}
+
+            //if (_reverse)
+            //if (reverse)
+            //{
+            //   // Val /= factor;
+            //    //Val /= factor.Value;
+            //    //_reverse = false;
+            //}
+
+
 
             if (double.IsNaN(Val))
             {
@@ -1258,14 +1277,41 @@ namespace TUGraz.VectoCommon.Utils
 	    public SI ConvertTo(UnitInstance si)
 	    {
 
-	        double factorValue = si.Getfactor();
-	        if (si.GetGrammMode() == UnitInstance.GrammMode.Gramm)
+	        if (!SIUtils.CompareSIUnits(SIUnits, si.GetSIUnits()))
 	        {
-	            factorValue *= 1000.0;
+	            throw new VectoException(
+	                "Unit missing. Conversion not possible. [{0}] does not contain a [{1}].",
+	                GetUnitString(SIUnits), si.GetSIUnits());
 	        }
-	        return new SI(this, siUnitsParam: si.GetSIUnits(), factor: factorValue,
-	            exponent: 1, reciproc: false, reverse: true);
-	    }
+
+            double factorValue = si.Getfactor;
+            int exp = si.GetExponent;
+
+
+	        if ((isMass & UnitInstance.IsMass.IsGramm) == UnitInstance.IsMass.IsGramm)
+	        {
+	            factorValue /= 1000;
+	        }
+
+	        if((si.GetGrammMode() & UnitInstance.IsMass.IsGramm) == UnitInstance.IsMass.IsGramm)
+            {
+                factorValue *= 1000;
+                isMass |= UnitInstance.IsMass.IsGramm;
+            }
+
+            //if (si.GetGrammMode() == UnitInstance.GrammMode.Gramm)
+            //{
+            //    factorValue *= 1000.0;
+            //}
+            //if ((si.GetGrammMode() & UnitInstance.IsMass.IsGramm) == UnitInstance.IsMass.IsGramm)
+            //{
+            //    factorValue *= 1000.0;
+            //}
+            //return new SI(this, siUnitsParam: si.GetSIUnits(), factor: factorValue,
+            // exponent: 1, reciproc: false, reverse: true);
+            return new SI(this, siUnitsParam: si.GetSIUnits(), factor: factorValue, exponent: exp,
+                reverse: true, isMassParam: isMass);
+        }
 
         /// <summary>
         /// Casts the SI Unit to the concrete unit type (if the units allow such an cast).
@@ -1289,7 +1335,7 @@ namespace TUGraz.VectoCommon.Utils
         /// </summary>
         public SI ToBasicUnits()
 		{
-		    return new SI(Val, SIUnits);
+		    return new SI(Val, SIUnits,isMass);
 		}
 
 
@@ -1307,7 +1353,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 		public SI Clone()
 		{
-		    return new SI(Val, SIUnits);
+		    return new SI(Val, SIUnits,isMass);
         }
 
 		/// <summary>
@@ -1653,7 +1699,7 @@ namespace TUGraz.VectoCommon.Utils
             int[] unitArray = new int[7];
             unitArray = SIUtils.AdditionTheSIUnits(si1.SIUnits, si2.SIUnits);
 
-            return new SI(si1.Val * si2.Val, unitArray);
+            return new SI(si1.Val * si2.Val, unitArray, si1.isMass);
         }
 
         /// <summary>
@@ -1721,7 +1767,7 @@ namespace TUGraz.VectoCommon.Utils
 	        unitArray = SIUtils.AdditionTheSIUnits(
 	            si1.SIUnits, SIUtils.SIUnitsMultFactor(si2.SIUnits, -1));
 
-	        return new SI(result, unitArray);
+	        return new SI(result, unitArray, si1.isMass);
 	    }
 
         /// <summary>
@@ -1988,68 +2034,75 @@ namespace TUGraz.VectoCommon.Utils
 		/// </summary>
 	    public string GetUnitString(int[] SIUnitParam = null)
 	    {
-	        Array unitnames = Enum.GetNames(typeof(Unit));
-	        string numerator = "";
-	        string denominator = "";
-	        int potent = 0;
-	        string potentStr = "";
-
             if (SIUnitParam == null)
             {
                 SIUnitParam = SIUnits;
             }
-	        for (var i = 0; i < SIUnitParam.Length; i++)
-	        {
-	            int currentValue = SIUnitParam[i];
-	            potent = Math.Abs(currentValue);
-	            potentStr = "";
-	            if (currentValue != 0)
-	            {
-	                string currentUnit = (string)unitnames.GetValue(i);
+	        return Unit.GetUnitString(SIUnitParam,
+                ((isMass & UnitInstance.IsMass.IsGramm) == UnitInstance.IsMass.IsGramm));
+            //return Unit.GetUnitString(SIUnitParam);
+            //Array unitnames = Enum.GetNames(typeof(Unit));
+            //string numerator = "";
+            //string denominator = "";
+            //int potent = 0;
+            //string potentStr = "";
 
-	                if (potent > 1)
-	                {
-	                    potentStr = "^" + potent;
-	                }
+            //   if (SIUnitParam == null)
+            //   {
+            //       SIUnitParam = SIUnits;
+            //   }
+            //for (var i = 0; i < SIUnitParam.Length; i++)
+            //{
+            //    int currentValue = SIUnitParam[i];
+            //    potent = Math.Abs(currentValue);
+            //    potentStr = "";
+            //    if (currentValue != 0)
+            //    {
+            //        string currentUnit = (string)unitnames.GetValue(i);
 
-	                if (currentValue > 0)
-	                {
-	                    numerator += currentUnit + potentStr;
+            //        if (potent > 1)
+            //        {
+            //            potentStr = "^" + potent;
+            //        }
 
-	                }
-	                else if (currentValue < 0)
-	                {
-	                    denominator += currentUnit + potentStr;
-	                }
-	            }
-	        }
-	        string result = "";
+            //        if (currentValue > 0)
+            //        {
+            //            numerator += currentUnit + potentStr;
 
-	        if (numerator == "")
-	        {
-	            if (denominator == "")
-	            {
-	                result = "-";
-	            }
-	            else
-	            {
-	                result = "1/" + denominator;
-	            }
-	        }
-	        else
-	        {
-	            if (denominator == "")
-	            {
-	                result = numerator;
-	            }
-	            else
-	            {
-	                result = numerator + "/" + denominator;
-	            }
-	        }
+            //        }
+            //        else if (currentValue < 0)
+            //        {
+            //            denominator += currentUnit + potentStr;
+            //        }
+            //    }
+            //}
+            //string result = "";
 
-	        return result;
-	    }
+            //if (numerator == "")
+            //{
+            //    if (denominator == "")
+            //    {
+            //        result = "-";
+            //    }
+            //    else
+            //    {
+            //        result = "1/" + denominator;
+            //    }
+            //}
+            //else
+            //{
+            //    if (denominator == "")
+            //    {
+            //        result = numerator;
+            //    }
+            //    else
+            //    {
+            //        result = numerator + "/" + denominator;
+            //    }
+            //}
+
+            //return result;
+        }
 
 
 
@@ -2321,8 +2374,9 @@ namespace TUGraz.VectoCommon.Utils
 
 	        if (!HasEqualUnit(si))
 	        {
-	            if (SIUtils.GetnumberofSIUnits(si.SIUnits) >= SIUtils.GetnumberofSIUnits(SIUnits))
-	            {
+                //if (SIUtils.GetnumberofSIUnits(si.SIUnits) >= SIUtils.GetnumberofSIUnits(SIUnits))
+	            if (si.SIUnits.Sum<int>(n => Math.Abs(n)) >= SIUnits.Sum<int>(n => Math.Abs(n)))
+                {
 	                return -1;
 	            }
 	            return 1;

@@ -48,7 +48,7 @@ namespace TUGraz.VectoCommon.Utils
 
         public static SI SI(this int value, UnitInstance si)
         {
-            return new SI(si,value*si.Getfactor());
+            return new SI(si,value);
         }
 
         /// <summary>
