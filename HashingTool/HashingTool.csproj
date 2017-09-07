@@ -71,6 +71,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="ViewModel\HashedXMLFile.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\IMainView.cs" />
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
@@ -87,9 +88,6 @@
     </Compile>
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Test.xaml.cs">
-      <DependentUpon>Test.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserControl\VectoXMLFileSelector.xaml.cs">
       <DependentUpon>VectoXMLFileSelector.xaml</DependentUpon>
@@ -143,10 +141,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HomeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Test.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -206,6 +200,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj">
+      <Project>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</Project>
+      <Name>VectoCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VectoCommon\VectoHashing\VectoHashing.csproj">
       <Project>{B673E12F-D323-4C4C-8805-9915B2C72D3D}</Project>
       <Name>VectoHashing</Name>

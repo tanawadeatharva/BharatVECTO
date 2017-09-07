@@ -27,13 +27,13 @@ namespace HashingTool.ViewModel
 
 		private readonly RelayCommand _saveCommand;
 		private bool _busy;
-		private XMLFile _sourceFile;
+		private readonly XMLFile _sourceFile;
 		private bool? _componentDataValid;
 
 		public HashComponentDataViewModel()
 		{
 			XMLValidationErrors = new ObservableCollection<string>();
-			_sourceFile = new XMLFile(_ioService, false);
+			_sourceFile = new XMLFile(IoService, false, IsComponentFile);
 			_sourceFile.PropertyChanged += SourceChanged;
 			_saveCommand = new RelayCommand(SaveDocument,
 				() => !_busy && ComponentDataValid != null && ComponentDataValid.Value && _result != null);
@@ -97,7 +97,7 @@ namespace HashingTool.ViewModel
 		private void SaveDocument()
 		{
 			string filename;
-			var stream = _ioService.SaveData(null, ".xml", "VECTO XML file|*.xml", out filename);
+			var stream = IoService.SaveData(null, ".xml", "VECTO XML file|*.xml", out filename);
 			if (stream == null) {
 				return;
 			}
@@ -127,6 +127,11 @@ namespace HashingTool.ViewModel
 
 		private async void DoComputeHash()
 		{
+			if (_sourceFile.Document == null) {
+				ComponentDataValid = false;
+				DigestValue = "";
+				return;
+			}
 			try {
 				_busy = true;
 				ComponentDataValid = false;

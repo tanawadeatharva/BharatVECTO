@@ -58,10 +58,13 @@ namespace HashingTool.Util
 
 		private static XmlSchemaSet GetXMLSchema(string version)
 		{
-			var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, "VectoComponent.xsd");
 			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
-			var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
-			xset.Add(XmlSchema.Read(reader, null));
+			foreach (var schema in new[] {"VectoComponent.xsd", "VectoInput.xsd", "VectoOutputManufacturer.xsd", "VectoOutputCustomer.xsd"}) {
+				var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schema);
+
+				var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
+				xset.Add(XmlSchema.Read(reader, null));				
+			}
 			xset.Compile();
 			return xset;
 		}

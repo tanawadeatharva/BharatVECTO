@@ -24,7 +24,7 @@
 		<Button Content="Save Component Data" HorizontalAlignment="Right" Margin="0,0,90,10" Width="143" Height="22"
 				VerticalAlignment="Bottom" Command="{Binding SaveHashedDocument, Mode=OneWay}" />
 
-		<local:VectoXMLFileSelector Margin="0,93,0,0" VerticalAlignment="Top" XMLFile="{Binding ComponentFile}" />
+		<local:VectoXMLFileSelector Margin="10,93,10,0" VerticalAlignment="Top" XMLFile="{Binding ComponentFile}" />
 
 		<Grid Margin="15,141,5,37">
 			<Grid.RowDefinitions>
@@ -94,15 +94,15 @@
 					<ContentControl.Style>
 						<Style TargetType="ContentControl">
 							<Setter Property="Content" Value="" />
-							<Setter Property="ToolTip" Value="X"/>
+							<Setter Property="ToolTip" Value="X" />
 							<Style.Triggers>
 								<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
 									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
-									<Setter Property="ToolTip" Value="Component data validates against schema"/>
+									<Setter Property="ToolTip" Value="Component data validates against schema" />
 								</DataTrigger>
 								<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
 									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
-									<Setter Property="ToolTip" Value="Component data does NOT validat against schema"/>
+									<Setter Property="ToolTip" Value="Component data does NOT validat against schema" />
 								</DataTrigger>
 							</Style.Triggers>
 						</Style>

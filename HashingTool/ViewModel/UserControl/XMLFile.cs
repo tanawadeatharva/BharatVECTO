@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Schema;
 using HashingTool.Helper;
 using HashingTool.Util;
@@ -19,14 +21,20 @@ namespace HashingTool.ViewModel.UserControl
 
 		private readonly bool _validate;
 		private XmlDocument _document;
+		private readonly Func<XmlDocument, bool?> _postVerification;
+		private bool? _contentValid;
+		private bool _hasContentValidation;
 
-		public XMLFile(IOService ioservice, bool validate = false)
+		public XMLFile(IOService ioservice, bool validate = false, Func<XmlDocument, bool?> contentCheck = null)
 		{
-			_ioService = ioservice;
+			IoService = ioservice;
 			_validate = validate;
 			XMLValidationErrors = new ObservableCollection<string>();
+			HasContentValidation = contentCheck != null;
+			_postVerification = contentCheck ?? (x => null);
 			Source = "";
 			RaisePropertyChanged("ValidateInput");
+			RaisePropertyChanged("HasContentValidation");
 		}
 
 		public XmlDocument Document
@@ -48,6 +56,7 @@ namespace HashingTool.ViewModel.UserControl
 				if (_source == value) {
 					return;
 				}
+				SetXMLFile(value);
 				_source = value;
 				RaisePropertyChanged("Source");
 			}
@@ -74,23 +83,49 @@ namespace HashingTool.ViewModel.UserControl
 
 		public ICommand BrowseFileCommand
 		{
-			get { return new RelayCommand(ReadXMLFile, () => !_busy); }
+			get { return new RelayCommand(BrowseXMLFile, () => !_busy); }
+		}
+
+		public ICommand SetXMLFileCommnd
+		{
+			get {  return new RelayCommand<string>(SetXMLFile, (f)=> !_busy);}
+		}
+		
+		private async void SetXMLFile(string fileName)
+		{
+			if (!File.Exists(fileName)) {
+				Document = null;
+				XMLValidationErrors.Clear();
+				ContentValid = null;
+				IsValid = null;
+				return;
+			}
+			var stream = File.OpenRead(fileName);
+
+			await LoadXMLFile(stream);
 		}
 
 
-		private async void ReadXMLFile()
+		private async void BrowseXMLFile()
 		{
 			string filename;
 
-			var stream = _ioService.OpenFileDialog(null, ".xml", "VECTO XML file|*.xml", out filename);
+			var stream = IoService.OpenFileDialog(null, ".xml", "VECTO XML file|*.xml", out filename);
 			if (stream == null) {
 				return;
 			}
 
+			await LoadXMLFile(stream);
+			Source = filename;
+		}
+
+		private async Task LoadXMLFile(Stream stream)
+		{
 			_busy = true;
 			IsValid = null;
+			ContentValid = null;
 			XMLValidationErrors.Clear();
-			Source = filename;
+			
 
 			if (_validate) {
 				var ms = new MemoryStream();
@@ -102,15 +137,31 @@ namespace HashingTool.ViewModel.UserControl
 			var document = new XmlDocument();
 			var reader = XmlReader.Create(stream);
 			document.Load(reader);
+			ContentValid = _postVerification(document);
 			Document = document;
 			_busy = false;
 		}
 
+		public bool HasContentValidation { get; private set; }
+
+		public bool? ContentValid
+		{
+			get { return _contentValid; }
+			set {
+				if (_contentValid == value) {
+					return;
+				}
+				_contentValid = value;
+				RaisePropertyChanged("ContentValid");
+			}
+		}
+
 		private async void Validate(XmlReader xml)
 		{
+			var valid = true;
 			try {
-				IsValid = true;
-				var validator = new XMLValidator(r => { IsValid = r; },
+
+				var validator = new XMLValidator(r => { valid = r; },
 					(s, e) => {
 						Application.Current.Dispatcher.Invoke(() => XMLValidationErrors.Add(
 							string.Format("Validation {0} Line {2}: {1}", s == XmlSeverityType.Warning ? "WARNING" : "ERROR",
@@ -122,8 +173,9 @@ namespace HashingTool.ViewModel.UserControl
 					});
 				await validator.ValidateXML(xml);
 			} catch (Exception e) {
-				IsValid = false;
 				XMLValidationErrors.Add(e.Message);
+			} finally {
+				IsValid = valid;
 			}
 		}
 	}

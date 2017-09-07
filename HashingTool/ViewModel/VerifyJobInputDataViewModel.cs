@@ -20,7 +20,7 @@ namespace HashingTool.ViewModel
 
 		public VerifyJobInputDataViewModel()
 		{
-			_jobFile = new XMLFile(_ioService, true);
+			_jobFile = new XMLFile(IoService, true, IsJobFile);
 			_jobFile.PropertyChanged += JobFilechanged;
 
 			// TODO!
@@ -89,6 +89,8 @@ namespace HashingTool.ViewModel
 
 		private void DoValidateHash()
 		{
+			if (_jobFile.ContentValid == null || !_jobFile.ContentValid.Value)
+				return;
 			try {
 				Components.Clear();
 				var h = VectoHash.Load(_jobFile.Document);
@@ -132,6 +134,5 @@ namespace HashingTool.ViewModel
 		public string DigestValueComputed { get; set; }
 		public string[] CanonicalizationMethod { get; set; }
 		public bool Valid { get; set; }
-		public bool InValid { get { return !Valid; } }
 	}
 }

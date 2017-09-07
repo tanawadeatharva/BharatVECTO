@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Automation.Peers;
 using HashingTool.ViewModel.UserControl;
 
 namespace HashingTool.Views
@@ -31,5 +32,6 @@ namespace HashingTool.Views
 
 			dialog.ShowDialog();
 		}
+
 	}
 }

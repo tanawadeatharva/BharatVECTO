@@ -88,12 +88,14 @@
 											</Grid.ColumnDefinitions>
 											<TextBlock Grid.Column="0" Text="{Binding Component}" Margin="4,0" />
 											<StackPanel Grid.Column="1" VerticalAlignment="Top" Width="16" Height="16" HorizontalAlignment="Left">
-												<ContentControl ContentTemplate="{StaticResource Icon_OK}" Visibility="{Binding Valid, Converter={StaticResource Bool2Vis}}">
+												<ContentControl ContentTemplate="{StaticResource Icon_OK}"
+																Visibility="{Binding Valid, Converter={StaticResource Bool2Vis}}">
 													<ContentControl.RenderTransform>
 														<ScaleTransform ScaleX=".4" ScaleY=".4" />
 													</ContentControl.RenderTransform>
 												</ContentControl>
-												<ContentControl ContentTemplate="{StaticResource Icon_NOK}" Visibility="{Binding Path=InValid, Converter={StaticResource Bool2Vis}}">
+												<ContentControl ContentTemplate="{StaticResource Icon_NOK}"
+																Visibility="{Binding Path=InValid, Converter={StaticResource Bool2Vis}}">
 													<ContentControl.RenderTransform>
 														<ScaleTransform ScaleX=".4" ScaleY=".4" />
 													</ContentControl.RenderTransform>

@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using HashingTool.ViewModel.UserControl;
+using HashingTool.ViewModel;
 
 namespace HashingTool.Views
 {
@@ -28,6 +16,22 @@ namespace HashingTool.Views
 		public VerifyResults()
 		{
 			InitializeComponent();
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			var ui = sender as FrameworkElement;
+			if (ui == null)
+				return;
+			var context = ui.DataContext as HashedXMLFile;
+			if (context == null)
+				return;
+
+			var dialog = new XMLValidationErrorsDialog();
+			dialog.XMLErrors = context.XMLFile.XMLValidationErrors;
+			dialog.ShowDialog();
+
+			//MessageBox.Show("Hello World", "test", MessageBoxButton.OK);
 		}
 	}
 }

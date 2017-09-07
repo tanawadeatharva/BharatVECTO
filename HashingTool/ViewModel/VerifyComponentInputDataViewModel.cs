@@ -17,12 +17,12 @@ namespace HashingTool.ViewModel
 		private string _digestValueRead;
 		private bool _componentDataValid;
 		private string _componentType;
-		private XMLFile _componentFile;
+		private readonly XMLFile _componentFile;
 
 
 		public VerifyComponentInputDataViewModel()
 		{
-			_componentFile = new XMLFile(_ioService, true);
+			_componentFile = new XMLFile(IoService, true, IsComponentFile);
 			_componentFile.PropertyChanged += ComponentFilechanged;
 
 			// TODO!
@@ -111,11 +111,18 @@ namespace HashingTool.ViewModel
 
 		private void DoValidateHash()
 		{
+			if (_componentFile.ContentValid == null || !_componentFile.ContentValid.Value || _componentFile.Document == null) {
+				ComponentDataValid = false;
+				DigestValueComputed = "";
+				DigestValueRead = "";
+				Component = ""; 
+				return;
+			} 
 			try {
 				var h = VectoHash.Load(_componentFile.Document);
 
 				if (h.GetContainigComponents().Count != 1) {
-					_ioService.Messagebox("Selected file is not a component file!", "Error reading XML File", MessageBoxButton.OK);
+					IoService.Messagebox("Selected file is not a component file!", "Error reading XML File", MessageBoxButton.OK);
 					throw new InvalidDataException();
 				}
 				Component = h.GetContainigComponents().First().XMLElementName();
