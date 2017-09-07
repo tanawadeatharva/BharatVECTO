@@ -1906,6 +1906,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VectoCustomerInformation.
+        /// </summary>
+        public static string VectoCustomerReport {
+            get {
+                return ResourceManager.GetString("VectoCustomerReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VectoInputDeclaration.
         /// </summary>
         public static string VectoInputDeclaration {
@@ -1938,6 +1947,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string VectoJob_MissionCycles {
             get {
                 return ResourceManager.GetString("VectoJob_MissionCycles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VectoOutput.
+        /// </summary>
+        public static string VectoManufacturerReport {
+            get {
+                return ResourceManager.GetString("VectoManufacturerReport", resourceCulture);
             }
         }
         
