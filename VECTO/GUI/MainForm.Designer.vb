@@ -123,6 +123,13 @@ Partial Class MainForm
         Me.TabPgOptions.SuspendLayout
         Me.PanelOptAllg.SuspendLayout
         Me.GroupBox3.SuspendLayout
+		Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+		Me.Label2 = New System.Windows.Forms.Label()
+		Me.tbTrailerRRC = New System.Windows.Forms.TextBox()
+		Me.Label3 = New System.Windows.Forms.Label()
+		Me.Label4 = New System.Windows.Forms.Label()
+		Me.tbCycleSpeedLimit = New System.Windows.Forms.TextBox()
+		Me.Label5 = New System.Windows.Forms.Label()
         Me.GroupBox2.SuspendLayout
         Me.GroupBox1.SuspendLayout
         Me.TabPageDEV.SuspendLayout
@@ -134,6 +141,7 @@ Partial Class MainForm
         Me.ToolStrip1.SuspendLayout
         Me.CmOpenFile.SuspendLayout
         Me.SuspendLayout
+		Me.GroupBox4.SuspendLayout()
         '
         'StatusBAR
         '
@@ -375,6 +383,7 @@ Partial Class MainForm
         '
         'PanelOptAllg
         '
+		Me.PanelOptAllg.Controls.Add(Me.GroupBox4)
         Me.PanelOptAllg.Controls.Add(Me.GroupBox3)
         Me.PanelOptAllg.Controls.Add(Me.GroupBox2)
         Me.PanelOptAllg.Controls.Add(Me.GroupBox1)
@@ -820,6 +829,71 @@ Partial Class MainForm
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
+		'GroupBox4
+		'
+		Me.GroupBox4.Controls.Add(Me.Label4)
+		Me.GroupBox4.Controls.Add(Me.tbCycleSpeedLimit)
+		Me.GroupBox4.Controls.Add(Me.Label5)
+		Me.GroupBox4.Controls.Add(Me.Label3)
+		Me.GroupBox4.Controls.Add(Me.tbTrailerRRC)
+		Me.GroupBox4.Controls.Add(Me.Label2)
+		Me.GroupBox4.Location = New System.Drawing.Point(200, 4)
+		Me.GroupBox4.Name = "GroupBox4"
+		Me.GroupBox4.Size = New System.Drawing.Size(281, 100)
+		Me.GroupBox4.TabIndex = 19
+		Me.GroupBox4.TabStop = False
+		Me.GroupBox4.Text = "Custom Declaration Values"
+		'
+		'Label2
+		'
+		Me.Label2.AutoSize = True
+		Me.Label2.Location = New System.Drawing.Point(7, 20)
+		Me.Label2.Name = "Label2"
+		Me.Label2.Size = New System.Drawing.Size(65, 13)
+		Me.Label2.TabIndex = 0
+		Me.Label2.Text = "RRC Trailer:"
+		'
+		'tbTrailerRRC
+		'
+		Me.tbTrailerRRC.Location = New System.Drawing.Point(105, 17)
+		Me.tbTrailerRRC.Name = "tbTrailerRRC"
+		Me.tbTrailerRRC.Size = New System.Drawing.Size(59, 20)
+		Me.tbTrailerRRC.TabIndex = 1
+		'
+		'Label3
+		'
+		Me.Label3.AutoSize = True
+		Me.Label3.Location = New System.Drawing.Point(170, 20)
+		Me.Label3.Name = "Label3"
+		Me.Label3.Size = New System.Drawing.Size(34, 13)
+		Me.Label3.TabIndex = 2
+		Me.Label3.Text = "[N/N]"
+		'
+		'Label4
+		'
+		Me.Label4.AutoSize = True
+		Me.Label4.Location = New System.Drawing.Point(170, 46)
+		Me.Label4.Name = "Label4"
+		Me.Label4.Size = New System.Drawing.Size(38, 13)
+		Me.Label4.TabIndex = 5
+		Me.Label4.Text = "[km/h]"
+		'
+		'tbCycleSpeedLimit
+		'
+		Me.tbCycleSpeedLimit.Location = New System.Drawing.Point(105, 43)
+		Me.tbCycleSpeedLimit.Name = "tbCycleSpeedLimit"
+		Me.tbCycleSpeedLimit.Size = New System.Drawing.Size(59, 20)
+		Me.tbCycleSpeedLimit.TabIndex = 4
+		'
+		'Label5
+		'
+		Me.Label5.AutoSize = True
+		Me.Label5.Location = New System.Drawing.Point(7, 46)
+		Me.Label5.Name = "Label5"
+		Me.Label5.Size = New System.Drawing.Size(94, 13)
+		Me.Label5.TabIndex = 3
+		Me.Label5.Text = "Cycle Speed Limit:"
+		'
         'MainForm
         '
         Me.AcceptButton = Me.btStartV3
@@ -860,6 +934,8 @@ Partial Class MainForm
         Me.CmOpenFile.ResumeLayout(false)
         Me.ResumeLayout(false)
         Me.PerformLayout
+		Me.GroupBox4.ResumeLayout(False)
+		Me.GroupBox4.PerformLayout()
 
 End Sub
     Friend WithEvents StatusBAR As StatusStrip
@@ -951,5 +1027,12 @@ End Sub
 	Friend WithEvents cbValidateRunData As System.Windows.Forms.CheckBox
 	Friend WithEvents cbActVmod As System.Windows.Forms.CheckBox
 	Friend WithEvents EPTPJobEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
+	Friend WithEvents Label3 As System.Windows.Forms.Label
+	Friend WithEvents tbTrailerRRC As System.Windows.Forms.TextBox
+	Friend WithEvents Label2 As System.Windows.Forms.Label
+	Friend WithEvents Label4 As System.Windows.Forms.Label
+	Friend WithEvents tbCycleSpeedLimit As System.Windows.Forms.TextBox
+	Friend WithEvents Label5 As System.Windows.Forms.Label
 
 End Class
