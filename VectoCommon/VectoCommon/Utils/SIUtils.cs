@@ -63,7 +63,7 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-                return new UnitInstance(new int[7] { 0, 0, 0, 0, 0, 0, 0 }, 1, 1, 1);//, UnitInstance.GrammMode.NoMass);
+                return new UnitInstance(new int[7] { 0, 0, 0, 0, 0, 0, 0 }, 1, 1, 1);
             }
         }
 
@@ -159,8 +159,9 @@ namespace TUGraz.VectoCommon.Utils
 
     public struct UnitInstance
     {
-        private int[] units;
+        // kg, m, s, A, K, mol, cd
 
+        private int[] units;
         private double factorValue;
         private int exponent;
         private int reciproc;
@@ -175,32 +176,19 @@ namespace TUGraz.VectoCommon.Utils
         }
         private IsMass isMassOption;
 
-        //public enum GrammMode
-        //{
-        //    NoMass,
-        //    Gramm,
-        //    Kilo,
-        //    KiloGramm
-        //}
-        //private GrammMode grammMode;
 
 
         public UnitInstance(int[] param_units,
-            double param_factor, int param_exponent, int param_reciproc)//,
-            //GrammMode param_grammMode)
+            double param_factor, int param_exponent, int param_reciproc)
         {
             units = param_units;
             factorValue = param_factor;
             exponent = param_exponent;
             reciproc = param_reciproc;
-            //grammMode = param_grammMode;
             isMassOption = IsMass.IsKiloGramm;
         }
 
-        //public GrammMode GetGrammMode()
-        //{
-        //    return grammMode;
-        //}
+
 
         public IsMass GetGrammMode()
         {
@@ -217,28 +205,13 @@ namespace TUGraz.VectoCommon.Utils
             {
                 return factorValue;
             }
-            //return factorValue;
         }
-        public int GetExponent
-        {
-            get
-            {
-                return exponent;
-            }
-        }
+
 
         public UnitInstance Gramm
         {
             get
             {
-                //if (grammMode == GrammMode.NoMass)
-                //{
-                //    grammMode = GrammMode.Gramm;
-                //}
-                //else if (grammMode == GrammMode.Kilo)
-                //{
-                //    grammMode = GrammMode.KiloGramm;
-                //}
 
                 units[0] += 1 * reciproc * exponent;
 
@@ -298,15 +271,6 @@ namespace TUGraz.VectoCommon.Utils
             get
             {
                 isMassOption = (isMassOption | IsMass.IsKilo);
-
-                //if (grammMode == GrammMode.NoMass)
-                //{
-                //    grammMode = GrammMode.Kilo;
-                //}
-                //else if (grammMode == GrammMode.Gramm)
-                //{
-                //    grammMode = GrammMode.KiloGramm;
-                //}
 
                 factorValue *= Math.Pow(1000, exponent * reciproc);
                 //return new UnitInstance(units, factorValue, exponent, reciproc, grammMode);
@@ -504,7 +468,7 @@ namespace TUGraz.VectoCommon.Utils
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
 
                 int ReciprocAndExponent = reciproc * exponent;
-                units[2] += 3 * ReciprocAndExponent;
+                units[1] += 3 * ReciprocAndExponent;
                 factorValue /= Math.Pow(1000, ReciprocAndExponent);
                 return this;
             }

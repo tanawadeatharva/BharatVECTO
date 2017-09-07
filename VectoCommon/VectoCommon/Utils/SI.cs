@@ -1104,12 +1104,8 @@ namespace TUGraz.VectoCommon.Utils
         {
             Val = val;
 
-            //_reciproc = false;
-            //_reverse = false;
-
             SIUnits = new int[7] { 0, 0, 0, 0, 0, 0, 0 };
 
-            //_exponent = 1;
 
             if (double.IsNaN(val))
             {
@@ -1137,9 +1133,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             Val = val;
             isMass = isMassParam;
-            //_reciproc = reciproc;
-            //_reverse = reverse;
-            //_exponent = exponent;
 
             SIUnits = siunits;
 
@@ -1170,81 +1163,12 @@ namespace TUGraz.VectoCommon.Utils
         //[DebuggerHidden]
         //protected SI(SI si, double? factor = null, int[] siUnitsParam = null,
         //    bool? reciproc = null, bool? reverse = null, int? exponent = null)
-	    protected SI(SI si, double factor , int[] siUnitsParam, int exponent, bool reverse, UnitInstance.IsMass isMassParam)
+	    protected SI(SI si, double factor , int[] siUnitsParam, UnitInstance.IsMass isMassParam)
         {
 
-            // Val = si.Val;
-            Val = si.Val * factor;
+            Val = si.Val / factor;
             isMass = isMassParam;
             SIUnits = siUnitsParam;
-            //_reciproc = reciproc ?? si._reciproc;
-            //_reverse = reverse ?? si._reverse;
-            //_exponent = exponent ?? si._exponent;
-
-
-            //if (siUnitsParam == null) //////////////????
-            //{
-            //    siUnitsParam = new int[] { 0, 0, 0, 0, 0, 0, 0 };
-            //}
-
-
-            ////if (_reciproc)
-            ////{
-            ////siUnitsParam = SIUtils.SIUnitsMultFactor(siUnitsParam, -1); 
-            ////}
-
-            ////if (_reverse)
-            //if (reverse)
-            //{
-            //    // compare the si Units
-            //    if (!SIUtils.CompareSIUnits(siUnitsParam, si.SIUnits))
-            //    {
-            //        throw new VectoException(
-            //            "Unit missing. Conversion not possible. [{0}] does not contain a [{1}].",
-            //            GetUnitString(siUnitsParam), si.GetUnitString());
-            //    }
-
-            //    SIUnits = si.SIUnits;
-
-            //    factor = 1 / factor;
-
-            //    ////_reverse = false;
-
-            //}
-            //else
-            //{
-            //SIUnits = SIUtils.AdditionTheSIUnits(si.SIUnits, siUnitsParam);
-
-            //    //SIUnits = SIUtils.AdditionTheSIUnits(si.SIUnits, SIUtils.SIUnitsMultFactor(siUnitsParam, _exponent));
-            //}
-
-
-            //if (_reciproc)
-            //{
-            //    if (factor.HasValue)
-            //    {
-            //        //Val /= (factor.Value * _exponent);
-            //        Val /= Math.Pow(factor.Value, _exponent);
-            //    }
-
-            //}
-            //else
-            //{
-            //    if (factor.HasValue)
-            //    {
-            //        //Val *= (factor.Value * _exponent);
-            //   Val *= Math.Pow(factor, exponent);
-            //    }
-            //}
-
-            //if (_reverse)
-            //if (reverse)
-            //{
-            //   // Val /= factor;
-            //    //Val /= factor.Value;
-            //    //_reverse = false;
-            //}
-
 
 
             if (double.IsNaN(Val))
@@ -1285,32 +1209,22 @@ namespace TUGraz.VectoCommon.Utils
 	        }
 
             double factorValue = si.Getfactor;
-            int exp = si.GetExponent;
 
 
 	        if ((isMass & UnitInstance.IsMass.IsGramm) == UnitInstance.IsMass.IsGramm)
 	        {
-	            factorValue /= 1000;
+	            factorValue *= 1000;
 	        }
 
 	        if((si.GetGrammMode() & UnitInstance.IsMass.IsGramm) == UnitInstance.IsMass.IsGramm)
             {
-                factorValue *= 1000;
+                factorValue /= 1000;
                 isMass |= UnitInstance.IsMass.IsGramm;
             }
 
-            //if (si.GetGrammMode() == UnitInstance.GrammMode.Gramm)
-            //{
-            //    factorValue *= 1000.0;
-            //}
-            //if ((si.GetGrammMode() & UnitInstance.IsMass.IsGramm) == UnitInstance.IsMass.IsGramm)
-            //{
-            //    factorValue *= 1000.0;
-            //}
-            //return new SI(this, siUnitsParam: si.GetSIUnits(), factor: factorValue,
-            // exponent: 1, reciproc: false, reverse: true);
-            return new SI(this, siUnitsParam: si.GetSIUnits(), factor: factorValue, exponent: exp,
-                reverse: true, isMassParam: isMass);
+
+            return new SI(this, siUnitsParam: si.GetSIUnits(), factor: factorValue,
+                isMassParam: isMass);
         }
 
         /// <summary>
@@ -1619,7 +1533,6 @@ namespace TUGraz.VectoCommon.Utils
 		//}
 
 		#endregion
-
 
 
 

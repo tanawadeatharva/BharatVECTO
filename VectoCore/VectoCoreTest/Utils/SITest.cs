@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Utils
             //kg = kg.ConvertTo().Gramm.Clone();
             kg = kg.ConvertTo(Unit.SI.Gramm).Clone();
             Assert.AreEqual(5000, kg.Value());
-            Assert.AreEqual("5000.0000 [g]", kg.ToString()); //not tested
+            Assert.AreEqual("5000.0000 [g]", kg.ToString());
 
             var x = 5.SI();
             Assert.AreEqual((2.0 / 5.0).SI(), 2 / x);
@@ -638,18 +638,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 
             var sig1 = 5.SI(Unit.SI.Gramm);
             Assert.AreEqual(5, sig1.Value());
+            Assert.AreEqual("5.0000 [g]", sig1.ToString());
 
 
             UnitInstance sikg = Unit.SI.Kilo.Gramm;
             Assert.AreEqual("kg", 1.SI().GetUnitString(sikg.GetSIUnits()));
-
-            UnitInstance sig = Unit.SI.Gramm;
-            //Assert.AreEqual("g", 1.SI().GetUnitString(sig.GetSIUnits()));
-
-            //Assert.AreEqual(5000, kg.Value());         //not tested
-            // Assert.AreEqual("5000.0000 [g]", kg.ToString()); //not tested
-
-
 
 
             UnitInstance ui1 = Unit.SI.Kilo.Gramm.Meter.Per.Square.Second;
@@ -684,13 +677,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 
             var val2 = 7.SI(Unit.SI.Cubic.Dezi.Meter).ConvertTo(Unit.SI.Cubic.Dezi.Meter);
-            Assert.AreEqual("0.0070 [m^3]", val2.ToOutputFormat(showUnit: true));
+            Assert.AreEqual(7,val2.Value()); // 7 dm^3
+
 
             var val3 = 5.SI(Unit.SI.Cubic.Dezi.Meter).ConvertTo(Unit.SI.Cubic.Centi.Meter);
-            Assert.AreEqual("0.0050 [m^3]", val3.ToOutputFormat(showUnit: true));
+            Assert.AreEqual(5000, val3.Value()); // 5000 cm^3
 
             var val4 = 5.SI(Unit.SI.Cubic.Centi.Meter).ConvertTo(Unit.SI.Cubic.Dezi.Meter);
-            Assert.AreEqual("0.000005 [m^3]", val4.ToOutputFormat(6, showUnit: true));
+            AssertHelper.AreRelativeEqual(0.005, val4.Value()); // 0.005 dm^3
 
 
             var uni1 = Unit.SI.Kilo.Meter.Per.Hour;
