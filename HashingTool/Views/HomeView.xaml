@@ -10,7 +10,7 @@
 	<Grid x:Name="MainGrid">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="Auto" MinWidth="30" />
 			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>
 		<Grid.DataContext>

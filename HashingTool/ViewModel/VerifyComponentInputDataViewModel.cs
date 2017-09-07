@@ -12,7 +12,6 @@ namespace HashingTool.ViewModel
 {
 	public class VerifyComponentInputDataViewModel : ObservableObject, IMainView
 	{
-		private readonly ApplicationViewModel _applicationViewModel;
 		private string _digestValueComputed;
 		private string _digestValueRead;
 		private bool _componentDataValid;
@@ -30,11 +29,6 @@ namespace HashingTool.ViewModel
 				"urn:vecto:xml:2017:canonicalization",
 				"http://www.w3.org/2001/10/xml-exc-c14n#"
 			};
-		}
-
-		public VerifyComponentInputDataViewModel(ApplicationViewModel applicationViewModel) : this()
-		{
-			_applicationViewModel = applicationViewModel;
 		}
 
 		public string Name
@@ -115,9 +109,9 @@ namespace HashingTool.ViewModel
 				ComponentDataValid = false;
 				DigestValueComputed = "";
 				DigestValueRead = "";
-				Component = ""; 
+				Component = "";
 				return;
-			} 
+			}
 			try {
 				var h = VectoHash.Load(_componentFile.Document);
 
@@ -135,6 +129,7 @@ namespace HashingTool.ViewModel
 				DigestValueComputed = "";
 				DigestValueRead = "";
 				Component = "";
+				_componentFile.XMLValidationErrors.Add(e.Message);
 			}
 		}
 	}

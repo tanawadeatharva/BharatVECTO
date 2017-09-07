@@ -5,16 +5,8 @@ namespace HashingTool.ViewModel
 {
 	public class HomeViewModel : ObservableObject, IMainView
 	{
-		private readonly ApplicationViewModel _applicationViewModel;
-
-		public HomeViewModel() {}
-
-		public HomeViewModel(ApplicationViewModel applicationViewModel)
-		{
-			_applicationViewModel = applicationViewModel;
-		}
-
-
+		
+		
 		public string Name
 		{
 			get { return "Home"; }
@@ -25,10 +17,7 @@ namespace HashingTool.ViewModel
 			get { return ApplicationViewModel.AvailableViews; }
 		}
 
-		public ICommand ChangeViewCommand
-		{
-			get { return _applicationViewModel == null ? null : _applicationViewModel.ChangeViewCommand; }
-		}
+		
 
 		public ICommand ShowHomeViewCommand
 		{

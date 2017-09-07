@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:ViewModel="clr-namespace:HashingTool.ViewModel"
+	xmlns:viewModel="clr-namespace:HashingTool.ViewModel"
 	xmlns:views="clr-namespace:HashingTool.Views"
 	xmlns:helper="clr-namespace:HashingTool.Helper"
 	x:Class="HashingTool.Views.VerifyJobInputData"
@@ -11,126 +11,160 @@
 	d:DesignHeight="555" d:DesignWidth="534">
 	<UserControl.Resources>
 		<helper:CollectionConverter x:Key="CollectionConverter" />
-		<BooleanToVisibilityConverter x:Key="Bool2Vis" />
 	</UserControl.Resources>
 	<UserControl.DataContext>
-		<ViewModel:VerifyJobInputDataViewModel />
+		<viewModel:VerifyJobInputDataViewModel />
 	</UserControl.DataContext>
-	<Grid>
-		<Label x:Name="lblFileSelect" Content="Job data:" HorizontalAlignment="Left" Margin="10,75,0,0"
-				VerticalAlignment="Top" />
-		<Label Name="lblHeader" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Top"
+	<DockPanel>
+
+		<Label DockPanel.Dock="Top" Name="lblHeader" HorizontalAlignment="Center" Margin="0,10" VerticalAlignment="Top"
 				Content="{Binding Name}" FontWeight="Bold" FontSize="18" />
-		<Button Name="btnBack" Content="Back" Command="{Binding ShowHomeViewCommand}" Margin="0,0,10,10"
+		<Button DockPanel.Dock="Bottom" Name="btnBack" Content="Back" Command="{Binding ShowHomeViewCommand}"
+				Margin="0,0,10,10"
 				HorizontalAlignment="Right"
 				Width="75" Height="22" VerticalAlignment="Bottom" />
-		<views:VectoXMLFileSelector Margin="0,93,0,0" VerticalAlignment="Top" XMLFile="{Binding JobFile}" Height="80" />
-		<Grid Margin="0,178,0,0">
+		<Label x:Name="lblFileSelect" DockPanel.Dock="Top" Content="Job data:" HorizontalAlignment="Left" Margin="10,0,0,0"
+				VerticalAlignment="Top" />
+		<views:VectoXMLFileSelector Margin="0,0,0,0" DockPanel.Dock="Top" VerticalAlignment="Top" XMLFile="{Binding JobFile}"
+									Height="80" />
+		<Grid DockPanel.Dock="Top" Margin="0,0,0,0">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="*" MaxHeight="300" />
+				<RowDefinition Height="*"/>
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
-			<Grid Grid.Row="1" Margin="0,5">
-				<Label Content="Canonicalization methods:" />
-				<TextBox Text="{Binding CanonicalizationMethods , Converter={StaticResource CollectionConverter}}"
-						Margin="155,0,10,0" IsReadOnly="True" />
-			</Grid>
-			<Grid Grid.Row="2" Margin="0,5">
-				<Label Content="Digest Value computed:" />
-				<TextBox Text="{Binding DigestValueComputed}" Margin="155,0,10,0"
-						IsReadOnly="True" />
-			</Grid>
-			<Grid Grid.Row="3" Margin="0,10,0,0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="29*" />
-					<ColumnDefinition Width="60*" />
-				</Grid.ColumnDefinitions>
-				<ContentControl HorizontalAlignment="Center" Margin="60,0,234,0" VerticalAlignment="Top" Width="66" Height="64"
-								Grid.Column="1">
-					<ContentControl.RenderTransform>
-						<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
-					</ContentControl.RenderTransform>
-					<ContentControl.Style>
-						<Style TargetType="ContentControl">
-							<Setter Property="Content" Value="" />
-							<Setter Property="ToolTip" Value="" />
-							<Style.Triggers>
-								<DataTrigger Binding="{Binding JobDataValid}" Value="True">
-									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
-									<Setter Property="ToolTip" Value="Component data validates against schema" />
-								</DataTrigger>
-								<DataTrigger Binding="{Binding JobDataValid}" Value="False">
-									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
-									<Setter Property="ToolTip" Value="Component data does NOT validat against schema" />
-								</DataTrigger>
-							</Style.Triggers>
-						</Style>
-					</ContentControl.Style>
-				</ContentControl>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
 
-			</Grid>
-			<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Background="{x:Static SystemColors.ControlLightBrush}"
-						Margin="10,0">
-				<ItemsControl Margin="0,0,0,20" x:Name="ComponentListing" ItemsSource="{Binding Components}">
+			<Label Grid.Row="1" Grid.Column="0" Content="Canonicalization methods:" />
+			<TextBox Grid.Row="1" Grid.Column="1"
+					Text="{Binding CanonicalizationMethods , Converter={StaticResource CollectionConverter}}"
+					Margin="10,2" IsReadOnly="True" />
+
+			<Label Grid.Row="2" Grid.Column="0" Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}" />
+			<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DigestValueComputed}" Margin="10,2"
+					IsReadOnly="True" Style="{StaticResource DigestValueTextboxStyle}" />
+			<ContentControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,10,0,0"
+							VerticalAlignment="Top" Width="50" Height="50">
+				<ContentControl.LayoutTransform>
+					<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+				</ContentControl.LayoutTransform>
+				<ContentControl.Style>
+					<Style TargetType="ContentControl">
+						<Setter Property="Content" Value="" />
+						<Setter Property="ToolTip" Value="" />
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding JobDataValid}" Value="True">
+								<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
+								<Setter Property="ToolTip" Value="Component data validates against schema" />
+							</DataTrigger>
+							<DataTrigger Binding="{Binding JobDataValid}" Value="False">
+								<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
+								<Setter Property="ToolTip" Value="Component data does NOT validat against schema" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</ContentControl.Style>
+			</ContentControl>
+
+
+			<ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto"
+						Background="{x:Static SystemColors.ControlLightBrush}"
+						Margin="10,0,10,10">
+				<ItemsControl Margin="3" x:Name="ComponentListing" ItemsSource="{Binding Components}">
+					<ItemsControl.ItemContainerStyle>
+						<Style>
+							<Setter Property="FrameworkElement.Margin" Value="0,2" />
+						</Style>
+					</ItemsControl.ItemContainerStyle>
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
-							<Expander Margin="4" Header="{Binding}">
-								<Expander.HeaderTemplate>
-									<DataTemplate>
-										<Grid
-											HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}">
-											<Grid.ColumnDefinitions>
-												<ColumnDefinition MinWidth="150" />
-												<ColumnDefinition Width="100" />
-											</Grid.ColumnDefinitions>
-											<TextBlock Grid.Column="0" Text="{Binding Component}" Margin="4,0" />
-											<StackPanel Grid.Column="1" VerticalAlignment="Top" Width="16" Height="16" HorizontalAlignment="Left">
-												<ContentControl ContentTemplate="{StaticResource Icon_OK}"
-																Visibility="{Binding Valid, Converter={StaticResource Bool2Vis}}">
-													<ContentControl.RenderTransform>
+							<Border BorderBrush="White" BorderThickness="1" CornerRadius="2">
+								<Expander Margin="4" Header="{Binding}" Style="{DynamicResource HeaderStretchExpanderStyle}">
+									<Expander.HeaderTemplate>
+										<DataTemplate>
+											<DockPanel HorizontalAlignment="Stretch">
+												<ContentControl DockPanel.Dock="Right" Width="35" Height="35" Margin="0,0,10,0">
+													<ContentControl.LayoutTransform>
 														<ScaleTransform ScaleX=".4" ScaleY=".4" />
-													</ContentControl.RenderTransform>
+													</ContentControl.LayoutTransform>
+													<ContentControl.Style>
+														<Style TargetType="ContentControl">
+															<Setter Property="Content" Value="" />
+															<Style.Triggers>
+																<DataTrigger Binding="{Binding Valid}" Value="True">
+																	<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
+																</DataTrigger>
+																<DataTrigger Binding="{Binding Valid}" Value="False">
+																	<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
+																</DataTrigger>
+															</Style.Triggers>
+														</Style>
+													</ContentControl.Style>
 												</ContentControl>
-												<ContentControl ContentTemplate="{StaticResource Icon_NOK}"
-																Visibility="{Binding Path=InValid, Converter={StaticResource Bool2Vis}}">
-													<ContentControl.RenderTransform>
-														<ScaleTransform ScaleX=".4" ScaleY=".4" />
-													</ContentControl.RenderTransform>
-												</ContentControl>
-											</StackPanel>
-										</Grid>
-									</DataTemplate>
-								</Expander.HeaderTemplate>
-								<Expander.Content>
-									<Border BorderBrush="{x:Static SystemColors.ControlDarkDarkBrush}" BorderThickness="0,0,0,1" Margin="0,0,0,3">
-										<Grid>
+												<TextBlock DockPanel.Dock="Left" Text="{Binding Component}" Margin="4,0" FontSize="16" FontWeight="Bold" />
+											</DockPanel>
+										</DataTemplate>
+									</Expander.HeaderTemplate>
+									<Expander.Content>
+										<Grid Margin="0,5,0,0">
 											<Grid.RowDefinitions>
 												<RowDefinition />
 												<RowDefinition />
 												<RowDefinition />
 											</Grid.RowDefinitions>
-											<Grid Row="0" Margin="10,13,0,3">
-												<Label Content="Canonicalization methods:" />
-												<TextBox Text="{Binding CanonicalizationMethod , Converter={StaticResource CollectionConverter}}"
-														Margin="155,0,10,0" IsReadOnly="True" />
-											</Grid>
-											<Grid Row="1" Margin="10,2,0,3">
-												<Label Content="Digest Value read:" />
-												<TextBox Text="{Binding DigestValueRead}"
-														Margin="155,0,10,0" IsReadOnly="True" />
-											</Grid>
-											<Grid Row="2" Margin="10,2,0,3">
-												<Label Content="Digest Value computed:" />
-												<TextBox Text="{Binding DigestValueComputed}"
-														Margin="155,0,10,0" IsReadOnly="True" />
-											</Grid>
+											<Grid.ColumnDefinitions>
+												<ColumnDefinition Width="Auto"/>
+												<ColumnDefinition Width="*"/>
+											</Grid.ColumnDefinitions>
+											
+												<Label Grid.Row="0" Grid.Column="0" Content="Canonicalization methods:" />
+											<TextBox Grid.Row="0" Grid.Column="1"  Text="{Binding CanonicalizationMethod , Converter={StaticResource CollectionConverter}}"
+														Margin="10,2" IsReadOnly="True" />
+
+											<Label Grid.Row="1" Grid.Column="0"  Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" />
+											<TextBox Grid.Row="1" Grid.Column="1"  Text="{Binding DigestValueRead}"
+														Margin="10,2" IsReadOnly="True">
+												<TextBox.Style>
+													<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+														<Style.Triggers>
+															<DataTrigger Binding="{Binding Valid}" Value="True">
+																<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}"/>
+															</DataTrigger>
+															<DataTrigger Binding="{Binding Valid}" Value="False">
+																<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}"/>
+															</DataTrigger>
+														</Style.Triggers>
+													</Style>
+												</TextBox.Style>
+												</TextBox>
+
+												<Label Grid.Row="2" Grid.Column="0"  Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}" />
+											<TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding DigestValueComputed}"
+														Margin="10,2" IsReadOnly="True" >
+												<TextBox.Style>
+													<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+														<Style.Triggers>
+															<DataTrigger Binding="{Binding Valid}" Value="True">
+																<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}"/>
+															</DataTrigger>
+															<DataTrigger Binding="{Binding Valid}" Value="False">
+																<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}"/>
+															</DataTrigger>
+														</Style.Triggers>
+													</Style>
+												</TextBox.Style>
+												</TextBox>
+
 										</Grid>
-									</Border>
-								</Expander.Content>
-							</Expander>
+
+									</Expander.Content>
+								</Expander>
+							</Border>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>
@@ -138,6 +172,5 @@
 
 		</Grid>
 
-
-	</Grid>
+	</DockPanel>
 </UserControl>

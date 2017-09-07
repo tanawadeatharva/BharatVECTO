@@ -18,12 +18,12 @@ namespace HashingTool.ViewModel
 
 		public ApplicationViewModel()
 		{
-			var homeView = new HomeViewModel(this);
+			var homeView = new HomeViewModel();
 			AvailableViews = new List<IMainView> {
-				new HashComponentDataViewModel(this),
-				new VerifyComponentInputDataViewModel(this),
-				new VerifyJobInputDataViewModel(this),
-				new VerifyResultDataViewModel(this),
+				new HashComponentDataViewModel(),
+				new VerifyComponentInputDataViewModel(),
+				new VerifyJobInputDataViewModel(),
+				new VerifyResultDataViewModel(),
 			};
 
 			CurrentViewModel = homeView;

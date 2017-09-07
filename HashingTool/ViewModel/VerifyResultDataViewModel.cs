@@ -48,11 +48,6 @@ namespace HashingTool.ViewModel
 		}
 
 
-		public VerifyResultDataViewModel(ApplicationViewModel applicationViewModel) : this()
-		{
-			_applicationViewModel = applicationViewModel;
-		}
-
 		public ObservableCollection<string> CanonicalizationMethods { get; private set; }
 
 		public string Name

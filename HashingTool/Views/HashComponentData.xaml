@@ -7,7 +7,7 @@
 	xmlns:local="clr-namespace:HashingTool.Views"
 	x:Class="HashingTool.Views.HashComponentData"
 	mc:Ignorable="d"
-	d:DesignHeight="603.125" d:DesignWidth="666">
+	d:DesignHeight="368.125" d:DesignWidth="666">
 	<UserControl.Resources>
 		<Helper:CollectionConverter x:Key="CollectionConverter" />
 	</UserControl.Resources>
@@ -15,24 +15,37 @@
 	<UserControl.DataContext>
 		<ViewModel:HashComponentDataViewModel />
 	</UserControl.DataContext>
-	<Grid>
-		<Label Name="lblHeader" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Top"
+	<DockPanel>
+		<Label DockPanel.Dock="Top" Name="lblHeader" HorizontalAlignment="Center" Margin="10,10,0,0" VerticalAlignment="Top"
 				Content="{Binding Name}" FontWeight="Bold" FontSize="18" />
-		<Button Name="btnBack" Content="Back" Command="{Binding ShowHomeViewCommand}" Margin="0,0,10,10"
-				HorizontalAlignment="Right"
-				Width="75" Height="22" VerticalAlignment="Bottom" />
-		<Button Content="Save Component Data" HorizontalAlignment="Right" Margin="0,0,90,10" Width="143" Height="22"
-				VerticalAlignment="Bottom" Command="{Binding SaveHashedDocument, Mode=OneWay}" />
 
-		<local:VectoXMLFileSelector Margin="10,93,10,0" VerticalAlignment="Top" XMLFile="{Binding ComponentFile}" />
+		<Label DockPanel.Dock="Top" x:Name="lblFileSelect" Content="Component data:" HorizontalAlignment="Left" Margin="10,0"
+				VerticalAlignment="Top" />
 
-		<Grid Margin="15,141,5,37">
+		<local:VectoXMLFileSelector DockPanel.Dock="Top" Margin="10,0" VerticalAlignment="Top"
+									XMLFile="{Binding ComponentFile}" />
+
+		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+			<Button Content="Save Component Data" HorizontalAlignment="Right" Margin="0,0,15,10" Width="143" Height="22"
+					VerticalAlignment="Bottom" Command="{Binding SaveHashedDocument, Mode=OneWay}" />
+			<Button Name="btnBack" Content="Back" Command="{Binding ShowHomeViewCommand}" Margin="0,0,10,10"
+					HorizontalAlignment="Right"
+					Width="75" Height="22" VerticalAlignment="Bottom" />
+		</StackPanel>
+
+		<Grid DockPanel.Dock="Top" Margin="10,0,1,0">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
-			<StackPanel Orientation="Horizontal" Grid.Row="0">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,5">
 				<Label>
 					<Label.Content>
 						<TextBlock Text="{Binding XMLValidationErrors.Count, StringFormat='{}{0} Warnings/Errors'}" />
@@ -61,58 +74,54 @@
 					</Button.Style>
 				</Button>
 			</StackPanel>
-			<Grid Grid.Row="1" Margin="0,10,0,0">
-				<Label x:Name="lblDigestValue" Content="Digest Value:" HorizontalAlignment="Left" Margin="10,38,0,0"
-						VerticalAlignment="Top" RenderTransformOrigin="0.57,0.5" FontSize="16" />
-				<TextBox x:Name="tbDigestValue" Text="{Binding DigestValue}" Margin="117,41,100,0"
-						VerticalAlignment="Top" RenderTransformOrigin="4.1,-2.1" FontFamily="Courier New" FontWeight="Bold"
-						FontSize="16" Foreground="#FF03932B" />
-				<Label Name="lblC14N" Content="Canonicalization:" HorizontalAlignment="Left" Margin="10,10,0,0"
-						VerticalAlignment="Top" />
-				<Label Name="lblC14NList"
-						Content="{Binding CanonicalizaitionMethods, Converter={StaticResource CollectionConverter}}"
-						Margin="117,10,100,0" VerticalAlignment="Top" />
-				<Button Content="Copy" Margin="0,41,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"
-						Click="Button_Click_1">
-					<Button.Style>
-						<Style TargetType="Button">
-							<Setter Property="IsEnabled" Value="false" />
-							<Style.Triggers>
-								<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
-									<Setter Property="IsEnabled" Value="True" />
-								</DataTrigger>
-							</Style.Triggers>
-						</Style>
-					</Button.Style>
-				</Button>
-			</Grid>
-			<Grid Grid.Row="2" Margin="0,10,0,0">
-				<ContentControl HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" Width="66" Height="64">
-					<ContentControl.RenderTransform>
-						<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
-					</ContentControl.RenderTransform>
-					<ContentControl.Style>
-						<Style TargetType="ContentControl">
-							<Setter Property="Content" Value="" />
-							<Setter Property="ToolTip" Value="X" />
-							<Style.Triggers>
-								<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
-									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
-									<Setter Property="ToolTip" Value="Component data validates against schema" />
-								</DataTrigger>
-								<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
-									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
-									<Setter Property="ToolTip" Value="Component data does NOT validat against schema" />
-								</DataTrigger>
-							</Style.Triggers>
-						</Style>
-					</ContentControl.Style>
-				</ContentControl>
 
-			</Grid>
+			<Label Grid.Row="1" Grid.Column="0" Name="lblC14N" Content="Canonicalization:" HorizontalAlignment="Left"
+					Margin="0" />
+			<TextBox Grid.Row="1" Grid.Column="1" Name="lblC14NList"
+					Text="{Binding CanonicalizaitionMethods, Converter={StaticResource CollectionConverter}}"
+					Margin="10,2" />
+			<Button Grid.Row="1" Grid.Column="2" Content="Copy" Margin="10,2,0,2" HorizontalAlignment="Right" Width="75"
+					Click="Button_Click_1">
+				<Button.Style>
+					<Style TargetType="Button">
+						<Setter Property="IsEnabled" Value="false" />
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
+								<Setter Property="IsEnabled" Value="True" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+			</Button>
+			<Label Grid.Row="2" Grid.Column="0" x:Name="lblDigestValue" Content="Digest Value:" HorizontalAlignment="Left"
+					Margin="0" Style="{StaticResource DigestValueLabelStyle}" />
+			<TextBox Grid.Row="2" Grid.Column="1" x:Name="tbDigestValue" Text="{Binding DigestValue}" Margin="10,2"
+					VerticalAlignment="Top" RenderTransformOrigin="4.1,-2.1" Style="{StaticResource DigestValueTextboxStyle}"
+					Foreground="{StaticResource Color.SuccessGreen}" />
+			<ContentControl Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,0,0,0"
+							VerticalAlignment="Top" Width="66" Height="64">
+				<ContentControl.LayoutTransform>
+					<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+				</ContentControl.LayoutTransform>
+				<ContentControl.Style>
+					<Style TargetType="ContentControl">
+						<Setter Property="Content" Value="" />
+						<Setter Property="ToolTip" Value="X" />
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
+								<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
+								<Setter Property="ToolTip" Value="Component data validates against schema" />
+							</DataTrigger>
+							<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
+								<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
+								<Setter Property="ToolTip" Value="Component data does NOT validat against schema" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</ContentControl.Style>
+			</ContentControl>
+
 		</Grid>
-		<Label x:Name="lblFileSelect" Content="Component data:" HorizontalAlignment="Left" Margin="10,75,0,0"
-				VerticalAlignment="Top" />
 
-	</Grid>
+	</DockPanel>
 </UserControl>

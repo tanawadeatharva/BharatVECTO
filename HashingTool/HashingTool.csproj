@@ -136,6 +136,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\UserInterfaceResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\HashComponentData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

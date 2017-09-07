@@ -88,9 +88,9 @@ namespace HashingTool.ViewModel.UserControl
 
 		public ICommand SetXMLFileCommnd
 		{
-			get {  return new RelayCommand<string>(SetXMLFile, (f)=> !_busy);}
+			get { return new RelayCommand<string>(SetXMLFile, (f) => !_busy); }
 		}
-		
+
 		private async void SetXMLFile(string fileName)
 		{
 			if (!File.Exists(fileName)) {
@@ -100,9 +100,9 @@ namespace HashingTool.ViewModel.UserControl
 				IsValid = null;
 				return;
 			}
-			var stream = File.OpenRead(fileName);
-
-			await LoadXMLFile(stream);
+			using (var stream = File.OpenRead(fileName)) {
+				await LoadXMLFile(stream);
+			}
 		}
 
 
@@ -110,13 +110,14 @@ namespace HashingTool.ViewModel.UserControl
 		{
 			string filename;
 
-			var stream = IoService.OpenFileDialog(null, ".xml", "VECTO XML file|*.xml", out filename);
-			if (stream == null) {
-				return;
-			}
+			using (var stream = IoService.OpenFileDialog(null, ".xml", "VECTO XML file|*.xml", out filename)) {
+				if (stream == null) {
+					return;
+				}
 
-			await LoadXMLFile(stream);
-			Source = filename;
+				await LoadXMLFile(stream);
+				Source = filename;
+			}
 		}
 
 		private async Task LoadXMLFile(Stream stream)
@@ -125,7 +126,7 @@ namespace HashingTool.ViewModel.UserControl
 			IsValid = null;
 			ContentValid = null;
 			XMLValidationErrors.Clear();
-			
+
 
 			if (_validate) {
 				var ms = new MemoryStream();
@@ -160,7 +161,6 @@ namespace HashingTool.ViewModel.UserControl
 		{
 			var valid = true;
 			try {
-
 				var validator = new XMLValidator(r => { valid = r; },
 					(s, e) => {
 						Application.Current.Dispatcher.Invoke(() => XMLValidationErrors.Add(

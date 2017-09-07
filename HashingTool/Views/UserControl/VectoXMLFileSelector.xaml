@@ -83,7 +83,7 @@
 				</Style>
 			</StackPanel.Style>
 			<Label Content="{Binding XMLFile.XMLValidationErrors.Count}"
-					ContentStringFormat="XML Validation: {0} Warnings/Errors"
+					ContentStringFormat="{}{0} Warnings/Errors"
 					MinWidth="80">
 				<Label.Style>
 					<Style TargetType="Label">

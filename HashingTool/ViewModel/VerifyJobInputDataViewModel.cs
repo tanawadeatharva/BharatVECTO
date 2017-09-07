@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using HashingTool.ViewModel.UserControl;
 using TUGraz.VectoHashing;
@@ -12,7 +10,6 @@ namespace HashingTool.ViewModel
 {
 	public class VerifyJobInputDataViewModel : ObservableObject, IMainView
 	{
-		private readonly ApplicationViewModel _applicationViewModel;
 		private string _digestValueComputed;
 		private bool _componentDataValid;
 		private readonly XMLFile _jobFile;
@@ -31,12 +28,7 @@ namespace HashingTool.ViewModel
 			Components = new ObservableCollection<ComponentEntry>();
 		}
 
-		public VerifyJobInputDataViewModel(ApplicationViewModel applicationViewModel)
-			: this()
-		{
-			_applicationViewModel = applicationViewModel;
-		}
-
+		
 		public string Name
 		{
 			get { return "Verify Job"; }
@@ -89,8 +81,9 @@ namespace HashingTool.ViewModel
 
 		private void DoValidateHash()
 		{
-			if (_jobFile.ContentValid == null || !_jobFile.ContentValid.Value)
+			if (_jobFile.ContentValid == null || !_jobFile.ContentValid.Value) {
 				return;
+			}
 			try {
 				Components.Clear();
 				var h = VectoHash.Load(_jobFile.Document);
@@ -123,6 +116,7 @@ namespace HashingTool.ViewModel
 			} catch (Exception e) {
 				DigestValueComputed = "";
 				JobDataValid = false;
+				_jobFile.XMLValidationErrors.Add(e.Message);
 			}
 		}
 	}

@@ -46,11 +46,7 @@ namespace HashingTool.ViewModel
 			};
 		}
 
-		public HashComponentDataViewModel(ApplicationViewModel applicationViewModel) : this()
-		{
-			_applicationViewModel = applicationViewModel;
-		}
-
+		
 		public string Name
 		{
 			get { return "Hash Component Data"; }
