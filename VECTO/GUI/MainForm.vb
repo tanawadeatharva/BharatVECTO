@@ -48,6 +48,7 @@ Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Engineering
+Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
@@ -946,6 +947,9 @@ Imports TUGraz.VectoCore.Utils
             mode = ExecutionMode.Engineering
             Physics.AirDensity = Cfg.AirDensity.SI (Of KilogramPerCubicMeter)()
         End If
+
+		DeclarationData.Trailer.RollResistanceCoefficient = tbTrailerRRC.Text.ToDouble(0.0055)
+		DeclarationData.CycleSpeedLimit = _tbCycleSpeedLimit.Text.ToDouble(200).KMPHtoMeterPerSecond()
 
         'dictionary of run-identifiers to fileWriters (used for output directory of modfile)
         Dim fileWriters As Dictionary(Of Integer, FileOutputWriter) = New Dictionary(Of Integer, FileOutputWriter)
