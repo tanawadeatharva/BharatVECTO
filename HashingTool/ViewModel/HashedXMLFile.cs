@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Xml;
 using HashingTool.Helper;
@@ -14,12 +15,12 @@ namespace HashingTool.ViewModel
 		protected bool? _valid;
 		protected string _name;
 		protected string _tooltip;
-		protected readonly Func<XmlDocument, bool?> _contentCheck;
+		protected readonly Func<XmlDocument, Collection<string>, bool?> _contentCheck;
 		protected string _componentType;
 		protected readonly Action<XmlDocument, VectoXMLFile> _validateHashes;
 
 
-		public VectoXMLFile(IOService ioService, string name, Func<XmlDocument, bool?> contentCheck,
+		public VectoXMLFile(IOService ioService, string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null)
 		{
 			IoService = ioService;
@@ -34,36 +35,25 @@ namespace HashingTool.ViewModel
 				"http://www.w3.org/2001/10/xml-exc-c14n#"
 			};
 			Valid = null;
-			ValidTooltip = VerifyResultDataViewModel.ToolTip_None;
+			ValidTooltip = VerifyResultDataViewModel.ToolTipNone;
 		}
 
 		protected virtual void FileChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (_xmlFile.IsValid != null && XMLFile.IsValid.HasValue && _xmlFile.IsValid.Value) {
-				Valid = _contentCheck(_xmlFile.Document);
+				Valid = _contentCheck(_xmlFile.Document, XMLFile.XMLValidationErrors);
 				if (Valid != null && Valid.Value) {
-					ValidTooltip = VerifyResultDataViewModel.ToolTip_OK;
+					ValidTooltip = VerifyResultDataViewModel.ToolTipOk;
 				} else {
-					ValidTooltip = VerifyResultDataViewModel.ToolTip_InvalidFileType;
+					ValidTooltip = VerifyResultDataViewModel.ToolTipInvalidFileType;
 				}
 			} else {
 				Valid = false;
-				ValidTooltip = VerifyResultDataViewModel.ToolTip_XMLValidationFailed;
+				ValidTooltip = VerifyResultDataViewModel.ToolTipXMLValidationFailed;
 			}
 
 			if (Valid != null && Valid.Value && _validateHashes != null) {
 				_validateHashes(_xmlFile.Document, this);
-				//try {
-				//	_validateHashes(_xmlFile.Document, this);
-				//	Valid = result.Valid;
-				//	ValidTooltip = result.Valid ? VerifyResultDataViewModel.ToolTip_OK : VerifyResultDataViewModel.ToolTip_HashInvalid;
-				//	DigestValueComputed = result.DigestComputed;
-				//	DigestValueRead = result.DigestRead;
-				//} catch (Exception ex) {
-				//	Valid = false;
-				//	DigestValueComputed = "";
-				//	DigestValueRead = "";
-				//}
 			}
 		}
 
@@ -142,7 +132,7 @@ namespace HashingTool.ViewModel
 	{
 		protected string _manufacturerDigestRead;
 
-		public HashedXMLFile(IOService ioService, string name, Func<XmlDocument, bool?> contentCheck,
+		public HashedXMLFile(IOService ioService, string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(ioService, name, contentCheck, hashValidation) {}
 
 		public string DigestValueRead
@@ -162,7 +152,7 @@ namespace HashingTool.ViewModel
 	{
 		private string _jobDigestRead;
 
-		public ReportXMLFile(IOService ioService, string name, Func<XmlDocument, bool?> contentCheck,
+		public ReportXMLFile(IOService ioService, string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null)
 			: base(ioService, name, contentCheck, hashValidation)
 		{

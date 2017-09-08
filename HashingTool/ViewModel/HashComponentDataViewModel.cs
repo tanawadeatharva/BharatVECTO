@@ -1,26 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using HashingTool.Helper;
 using HashingTool.Util;
 using HashingTool.ViewModel.UserControl;
-using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel
 {
 	public class HashComponentDataViewModel : ObservableObject, IMainView
 	{
-		private readonly ApplicationViewModel _applicationViewModel;
 		private string _digestValue;
 
 		private XDocument _result;
@@ -46,7 +41,7 @@ namespace HashingTool.ViewModel
 			};
 		}
 
-		
+
 		public string Name
 		{
 			get { return "Hash Component Data"; }

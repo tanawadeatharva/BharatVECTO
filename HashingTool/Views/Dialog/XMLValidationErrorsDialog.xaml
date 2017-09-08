@@ -6,7 +6,7 @@
 		mc:Ignorable="d"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:views="clr-namespace:HashingTool.Views"
-		d:DataContext="{d:DesignInstance views:XMLValidationErrorsDialog}">
+		d:DataContext="{d:DesignInstance views:XMLValidationErrorsDialog}" Icon="/HashingTool;component/Resources/HashingIcon.ico">
 	<Grid>
 		<ListBox x:Name="lbErrors" Margin="10,10,10,62" ItemsSource="{Binding XMLErrors}" />
 		<Button IsCancel="True" x:Name="btnClose" Content="Close" Margin="0,0,10,10" Height="22" VerticalAlignment="Bottom"

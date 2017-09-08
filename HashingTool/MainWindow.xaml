@@ -4,7 +4,7 @@
 	xmlns:viewModel="clr-namespace:HashingTool.ViewModel"
 	xmlns:views="clr-namespace:HashingTool.Views"
 	x:Class="HashingTool.MainWindow"
-	Title="VECTO Hashing Tool" Height="534" Width="665" MinWidth="600" MinHeight="500">
+	Title="VECTO Hashing Tool" Height="590" Width="800" MinWidth="800" MinHeight="600" Icon="Resources/HashingIcon.ico">
 	<Window.DataContext>
 		<viewModel:ApplicationViewModel />
 	</Window.DataContext>
@@ -25,9 +25,37 @@
 			<views:VerifyResults />
 		</DataTemplate>
 	</Window.Resources>
-	<Grid Margin="10">
-
-		<ContentControl Content="{Binding CurrentViewModel}" />
-
-	</Grid>
+	<DockPanel>
+		<Grid DockPanel.Dock="Top" Height="100">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="256"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.Background>
+				<ImageBrush ImageSource="Resources/VECTO_Hashing.png" Stretch="None" AlignmentX="Left" AlignmentY="Center"/>
+			</Grid.Background>
+			<TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="VECTO Hashing Tool" FontSize="38" FontWeight="Bold" Margin="30,20,0,0"/>
+		</Grid>
+		<Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{x:Static SystemColors.ControlDarkDarkBrush}"
+				Margin="2,0">
+			<Grid Background="White" Margin="0,10">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Image Grid.Column="0" HorizontalAlignment="Center" Height="44" VerticalAlignment="Center" Width="auto"
+						Source="Resources/IVT_91x44.png" />
+				<Image Grid.Column="1" HorizontalAlignment="Center" Height="34" VerticalAlignment="Center" Width="auto"
+						Source="Resources/TUG_91x34.png" />
+				<Image Grid.Column="2" HorizontalAlignment="Center" Height="44" VerticalAlignment="Center" Width="auto"
+						Source="Resources/JRC-About.png" />
+			</Grid>
+		</Border>
+		<!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
+			<Grid Margin="10">
+				<ContentControl Content="{Binding CurrentViewModel}" />
+			</Grid>
+		<!--</ScrollViewer>-->
+	</DockPanel>
 </Window>

@@ -33,7 +33,7 @@ namespace HashingTool.ViewModel
 
 		public string Name
 		{
-			get { return "Verify Input Data"; }
+			get { return "Verify Component Data"; }
 		}
 
 		public ICommand ShowHomeViewCommand

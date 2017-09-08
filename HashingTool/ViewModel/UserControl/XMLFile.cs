@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
 using HashingTool.Helper;
 using HashingTool.Util;
@@ -21,17 +20,16 @@ namespace HashingTool.ViewModel.UserControl
 
 		private readonly bool _validate;
 		private XmlDocument _document;
-		private readonly Func<XmlDocument, bool?> _postVerification;
+		private readonly Func<XmlDocument, Collection<string>, bool?> _postVerification;
 		private bool? _contentValid;
-		private bool _hasContentValidation;
 
-		public XMLFile(IOService ioservice, bool validate = false, Func<XmlDocument, bool?> contentCheck = null)
+		public XMLFile(IOService ioservice, bool validate = false, Func<XmlDocument, Collection<string>, bool?> contentCheck = null)
 		{
 			IoService = ioservice;
 			_validate = validate;
 			XMLValidationErrors = new ObservableCollection<string>();
 			HasContentValidation = contentCheck != null;
-			_postVerification = contentCheck ?? (x => null);
+			_postVerification = contentCheck ?? ((x,c) => null);
 			Source = "";
 			RaisePropertyChanged("ValidateInput");
 			RaisePropertyChanged("HasContentValidation");
@@ -88,7 +86,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		public ICommand SetXMLFileCommnd
 		{
-			get { return new RelayCommand<string>(SetXMLFile, (f) => !_busy); }
+			get { return new RelayCommand<string>(SetXMLFile, f => !_busy); }
 		}
 
 		private async void SetXMLFile(string fileName)
@@ -138,7 +136,7 @@ namespace HashingTool.ViewModel.UserControl
 			var document = new XmlDocument();
 			var reader = XmlReader.Create(stream);
 			document.Load(reader);
-			ContentValid = _postVerification(document);
+			ContentValid = _postVerification(document, XMLValidationErrors);
 			Document = document;
 			_busy = false;
 		}

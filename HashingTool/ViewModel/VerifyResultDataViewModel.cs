@@ -1,31 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using System.Xml;
-using System.Xml.Linq;
-using HashingTool.ViewModel.UserControl;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel
 {
 	public class VerifyResultDataViewModel : ObservableObject, IMainView
 	{
-		private ApplicationViewModel _applicationViewModel;
-		private VectoXMLFile _jobFile;
-		private ReportXMLFile _customerReport;
-		private ReportXMLFile _manufacturerReport;
+		private readonly VectoXMLFile _jobFile;
+		private readonly ReportXMLFile _customerReport;
+		private readonly ReportXMLFile _manufacturerReport;
 
-		public const string ToolTip_InvalidFileType = "Invalid File type!";
-		public const string ToolTip_XMLValidationFailed = "XML validation failed!";
-		public const string ToolTip_OK = "Correct file selected";
-		public const string ToolTip_HashInvalid = "Incorrect digest value!";
-		public const string ToolTip_None = "";
+		public const string ToolTipInvalidFileType = "Invalid File type!";
+		public const string ToolTipXMLValidationFailed = "XML validation failed!";
+		public const string ToolTipOk = "Correct file selected";
+		public const string ToolTipHashInvalid = "Incorrect digest value!";
+		public const string ToolTipNone = "";
 
 
 		public VerifyResultDataViewModel()
@@ -35,7 +27,6 @@ namespace HashingTool.ViewModel
 			_customerReport = new ReportXMLFile(IoService, "Customer Report", IsCustomerReport, ValidateDocumentHash);
 			Files = new ObservableCollection<VectoXMLFile> { _jobFile, _manufacturerReport, _customerReport };
 
-			CanonicalizationMethods = new ObservableCollection<string>() { "urn:vecto:xml:2017:canonicalization" };
 			RaisePropertyChanged("CanonicalizationMethods");
 			_customerReport.PropertyChanged += Update;
 			_manufacturerReport.PropertyChanged += Update;
@@ -47,8 +38,6 @@ namespace HashingTool.ViewModel
 			RaisePropertyChanged("CustomerReportReportValid");
 		}
 
-
-		public ObservableCollection<string> CanonicalizationMethods { get; private set; }
 
 		public string Name
 		{
@@ -100,6 +89,7 @@ namespace HashingTool.ViewModel
 				var h = VectoHash.Load(xml);
 				xmlViewModel.DigestValueComputed = h.ComputeHash();
 			} catch (Exception e) {
+				xmlViewModel.XMLFile.XMLValidationErrors.Add(e.Message);
 				xmlViewModel.DigestValueComputed = "";
 			}
 		}
@@ -122,8 +112,11 @@ namespace HashingTool.ViewModel
 				} catch {
 					report.DigestValueComputed = "";
 				}
-				report.Valid = h.ValidateHash();
+				var valid = h.ValidateHash();
+				report.ValidTooltip = valid ? ToolTipOk : ToolTipHashInvalid;
+				report.Valid = valid;
 			} catch (Exception e) {
+				report.XMLFile.XMLValidationErrors.Add(e.Message);
 				report.Valid = false;
 			}
 		}

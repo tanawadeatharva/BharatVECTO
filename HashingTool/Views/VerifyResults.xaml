@@ -190,7 +190,7 @@
 				Margin="0,0,10,10"
 				HorizontalAlignment="Right"
 				Width="75" Height="22" VerticalAlignment="Bottom" />
-		<Label DockPanel.Dock="Top" x:Name="lblHeader" HorizontalAlignment="Center" Margin="10,10,0,0"
+		<Label DockPanel.Dock="Top" x:Name="lblHeader" HorizontalAlignment="Center" Margin="0"
 				VerticalAlignment="Top"
 				Content="{Binding Name}" FontWeight="Bold" FontSize="18" />
 		<Grid Margin="0,0,0,0" HorizontalAlignment="Stretch">

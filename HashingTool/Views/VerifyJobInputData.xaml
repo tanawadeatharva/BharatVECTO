@@ -15,14 +15,17 @@
 	<UserControl.DataContext>
 		<viewModel:VerifyJobInputDataViewModel />
 	</UserControl.DataContext>
+	
 	<DockPanel>
 
-		<Label DockPanel.Dock="Top" Name="lblHeader" HorizontalAlignment="Center" Margin="0,10" VerticalAlignment="Top"
+		<Label DockPanel.Dock="Top" Name="lblHeader" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top"
 				Content="{Binding Name}" FontWeight="Bold" FontSize="18" />
 		<Button DockPanel.Dock="Bottom" Name="btnBack" Content="Back" Command="{Binding ShowHomeViewCommand}"
-				Margin="0,0,10,10"
+				Margin="0,10,10,5"
 				HorizontalAlignment="Right"
 				Width="75" Height="22" VerticalAlignment="Bottom" />
+		<ScrollViewer>
+			<DockPanel>
 		<Label x:Name="lblFileSelect" DockPanel.Dock="Top" Content="Job data:" HorizontalAlignment="Left" Margin="10,0,0,0"
 				VerticalAlignment="Top" />
 		<views:VectoXMLFileSelector Margin="0,0,0,0" DockPanel.Dock="Top" VerticalAlignment="Top" XMLFile="{Binding JobFile}"
@@ -75,7 +78,7 @@
 			<ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Auto"
 						Background="{x:Static SystemColors.ControlLightBrush}"
 						Margin="10,0,10,10">
-				<ItemsControl Margin="3" x:Name="ComponentListing" ItemsSource="{Binding Components}">
+				<ItemsControl Margin="3" x:Name="ComponentListing" ItemsSource="{Binding Components}" MinHeight="300">
 					<ItemsControl.ItemContainerStyle>
 						<Style>
 							<Setter Property="FrameworkElement.Margin" Value="0,2" />
@@ -171,6 +174,7 @@
 			</ScrollViewer>
 
 		</Grid>
-
+			</DockPanel>
+		</ScrollViewer>
 	</DockPanel>
 </UserControl>

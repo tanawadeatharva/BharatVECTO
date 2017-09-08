@@ -31,7 +31,7 @@ namespace HashingTool.ViewModel
 		
 		public string Name
 		{
-			get { return "Verify Job"; }
+			get { return "Verify VECTO Job"; }
 		}
 
 		public ICommand ShowHomeViewCommand
