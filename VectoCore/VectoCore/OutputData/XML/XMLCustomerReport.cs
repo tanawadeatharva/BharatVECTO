@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Report_Vehicle_Retarder, modelData.Retarder.Type.IsDedicatedComponent()),
 				new XElement(tns + XMLNames.Report_Vehicle_AxleRatio, modelData.AxleGearData.AxleGear.Ratio.ToXMLFormat(3)),
 				new XElement(tns + XMLNames.Report_Vehicle_AverageRRC,
-					modelData.VehicleData.AverageRollingResistanceTruck.ToXMLFormat(6))
+					modelData.VehicleData.AverageRollingResistanceTruck.ToXMLFormat(4))
 				);
 			InputDataIntegrity = new XElement(tns + "InputDataSignature",
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
