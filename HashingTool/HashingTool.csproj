@@ -44,8 +44,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>HashingIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -227,6 +226,9 @@
     <Resource Include="Resources\JRC-About.png" />
     <Resource Include="Resources\TUG_91x34.png" />
     <Resource Include="Resources\VECTO_Hashing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="HashingIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
