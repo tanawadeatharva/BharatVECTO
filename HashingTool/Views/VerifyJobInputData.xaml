@@ -28,7 +28,7 @@
 			<DockPanel>
 		<Label x:Name="lblFileSelect" DockPanel.Dock="Top" Content="Job data:" HorizontalAlignment="Left" Margin="10,0,0,0"
 				VerticalAlignment="Top" />
-		<views:VectoXMLFileSelector Margin="0,0,0,0" DockPanel.Dock="Top" VerticalAlignment="Top" XMLFile="{Binding JobFile}"
+		<views:VectoXMLFileSelector Margin="10,0,10,0" DockPanel.Dock="Top" VerticalAlignment="Top" XMLFile="{Binding JobFile}"
 									Height="80" />
 		<Grid DockPanel.Dock="Top" Margin="0,0,0,0">
 			<Grid.RowDefinitions>
@@ -45,7 +45,7 @@
 
 			<Label Grid.Row="1" Grid.Column="0" Content="Canonicalization methods:" />
 			<TextBox Grid.Row="1" Grid.Column="1"
-					Text="{Binding CanonicalizationMethods , Converter={StaticResource CollectionConverter}}"
+					Text="{Binding CanonicalizationMethods , Converter={StaticResource CollectionConverter}, Mode=OneWay}"
 					Margin="10,2" IsReadOnly="True" />
 
 			<Label Grid.Row="2" Grid.Column="0" Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}" />

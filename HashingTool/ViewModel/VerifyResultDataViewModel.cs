@@ -3,28 +3,25 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Xml;
+using HashingTool.Helper;
 using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel
 {
 	public class VerifyResultDataViewModel : ObservableObject, IMainView
 	{
-		private readonly VectoXMLFile _jobFile;
+		private readonly VectoJobFile _jobFile;
 		private readonly ReportXMLFile _customerReport;
 		private readonly ReportXMLFile _manufacturerReport;
-
-		public const string ToolTipInvalidFileType = "Invalid File type!";
-		public const string ToolTipXMLValidationFailed = "XML validation failed!";
-		public const string ToolTipOk = "Correct file selected";
-		public const string ToolTipHashInvalid = "Incorrect digest value!";
-		public const string ToolTipNone = "";
 
 
 		public VerifyResultDataViewModel()
 		{
-			_jobFile = new VectoXMLFile(IoService, "Job File", IsJobFile, HashJobFile);
-			_manufacturerReport = new ReportXMLFile(IoService, "Manufacturer Report", IsManufacturerReport, ValidateDocumentHash);
-			_customerReport = new ReportXMLFile(IoService, "Customer Report", IsCustomerReport, ValidateDocumentHash);
+			_jobFile = new VectoJobFile("Job File", HashingHelper.IsJobFile, HashingHelper.HashJobFile);
+			_manufacturerReport = new ReportXMLFile(IoService, "Manufacturer Report", HashingHelper.IsManufacturerReport,
+				HashingHelper.ValidateDocumentHash);
+			_customerReport = new ReportXMLFile(IoService, "Customer Report", HashingHelper.IsCustomerReport,
+				HashingHelper.ValidateDocumentHash);
 			Files = new ObservableCollection<VectoXMLFile> { _jobFile, _manufacturerReport, _customerReport };
 
 			RaisePropertyChanged("CanonicalizationMethods");
@@ -49,18 +46,18 @@ namespace HashingTool.ViewModel
 			get { return ApplicationViewModel.HomeView; }
 		}
 
-		public VectoXMLFile JobFile
+		public VectoJobFile JobFile
 		{
 			get { return _jobFile; }
 		}
 
 
-		public HashedXMLFile CustomerReport
+		public ReportXMLFile CustomerReport
 		{
 			get { return _customerReport; }
 		}
 
-		public HashedXMLFile ManufacturerReport
+		public ReportXMLFile ManufacturerReport
 		{
 			get { return _manufacturerReport; }
 		}
@@ -80,44 +77,6 @@ namespace HashingTool.ViewModel
 			get {
 				return _customerReport.Valid != null && _customerReport.Valid.Value &&
 						_customerReport.JobDigest == _jobFile.DigestValueComputed;
-			}
-		}
-
-		private void HashJobFile(XmlDocument xml, VectoXMLFile xmlViewModel)
-		{
-			try {
-				var h = VectoHash.Load(xml);
-				xmlViewModel.DigestValueComputed = h.ComputeHash();
-			} catch (Exception e) {
-				xmlViewModel.XMLFile.XMLValidationErrors.Add(e.Message);
-				xmlViewModel.DigestValueComputed = "";
-			}
-		}
-
-		private void ValidateDocumentHash(XmlDocument xml, VectoXMLFile xmlViewModel)
-		{
-			var report = xmlViewModel as ReportXMLFile;
-			if (report == null) {
-				return;
-			}
-			try {
-				var h = VectoHash.Load(xml);
-				try {
-					report.DigestValueRead = h.ReadHash();
-				} catch {
-					report.DigestValueRead = "";
-				}
-				try {
-					report.DigestValueComputed = h.ComputeHash();
-				} catch {
-					report.DigestValueComputed = "";
-				}
-				var valid = h.ValidateHash();
-				report.ValidTooltip = valid ? ToolTipOk : ToolTipHashInvalid;
-				report.Valid = valid;
-			} catch (Exception e) {
-				report.XMLFile.XMLValidationErrors.Add(e.Message);
-				report.Valid = false;
 			}
 		}
 	}

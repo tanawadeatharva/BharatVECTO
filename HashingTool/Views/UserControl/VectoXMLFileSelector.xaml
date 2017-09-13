@@ -15,7 +15,7 @@
 
 			<ContentControl DockPanel.Dock="Right"
 							Visibility="{Binding XMLFile.HasContentValidation, Converter={StaticResource BoolToVis}}" Width="40" Height="40"
-							Margin="10,0,0,0">
+							Margin="10,-5,5,0">
 				<ContentControl.LayoutTransform>
 					<ScaleTransform ScaleX=".4" ScaleY=".4" />
 				</ContentControl.LayoutTransform>

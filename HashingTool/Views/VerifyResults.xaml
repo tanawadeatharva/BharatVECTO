@@ -16,10 +16,20 @@
 
 		<DataTemplate x:Key="ExpanderHeader" DataType="viewModel:VectoXMLFile">
 			<DockPanel HorizontalAlignment="Stretch" VerticalAlignment="top" MinWidth="450">
-				<TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold"/>
+				<TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold" />
+
+				<views:VectoXMLFileSelector DockPanel.Dock="Left" Margin="0,0,35,0" VerticalAlignment="Top"
+											XMLFile="{Binding XMLFile}" Height="1" />
+
+			</DockPanel>
+		</DataTemplate>
+
+		<DataTemplate x:Key="ExpanderHeaderJobFile" DataType="viewModel:VectoJobFile">
+			<DockPanel HorizontalAlignment="Stretch" VerticalAlignment="top" MinWidth="450">
+				<TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold" />
 
 				<ContentControl DockPanel.Dock="Right" Width="35" Height="35" Margin="10,-10,10,0"
-								ToolTip="{Binding ValidTooltip}">
+								ToolTip="{Binding JobValidToolTip}">
 					<ContentControl.LayoutTransform>
 						<ScaleTransform ScaleX=".4" ScaleY=".4" />
 					</ContentControl.LayoutTransform>
@@ -27,10 +37,10 @@
 						<Style TargetType="ContentControl">
 							<Setter Property="Content" Value="" />
 							<Style.Triggers>
-								<DataTrigger Binding="{Binding Valid}" Value="True">
+								<DataTrigger Binding="{Binding JobDataValid}" Value="True">
 									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
 								</DataTrigger>
-								<DataTrigger Binding="{Binding Valid}" Value="False">
+								<DataTrigger Binding="{Binding JobDataValid}" Value="False">
 									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
 								</DataTrigger>
 							</Style.Triggers>
@@ -52,8 +62,8 @@
 					<RowDefinition />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
 				<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
 					<Label>
@@ -91,9 +101,9 @@
 						Text="{Binding CanonicalizationMethods, Mode=OneWay , Converter={StaticResource CollectionConverter}}"
 						Margin="10,2" IsReadOnly="True" />
 
-				<Label Grid.Row="2" Grid.Column="0" Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}"/>
+				<Label Grid.Row="2" Grid.Column="0" Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}" />
 				<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DigestValueComputed}"
-							Margin="10,2" IsReadOnly="True" Style="{StaticResource DigestValueTextboxStyle}"/>
+						Margin="10,2" IsReadOnly="True" Style="{StaticResource DigestValueTextboxStyle}" />
 			</Grid>
 		</DataTemplate>
 
@@ -107,8 +117,8 @@
 					<RowDefinition />
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
 				<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
 					<Label>
@@ -139,47 +149,49 @@
 						</Button.Style>
 					</Button>
 				</StackPanel>
-				
-				<Label Grid.Row="1" Grid.Column="0" Content="Job Digest Value from file:" Style="{StaticResource DigestValueLabelStyle}"/>
-				<TextBox Grid.Row="1" Grid.Column="1"  Text="{Binding JobDigest, Mode=OneWay}"
-							Margin="10,2" IsReadOnly="True" Style="{StaticResource DigestValueTextboxStyle}"/>
 
-				<Label Grid.Row="2" Grid.Column="0"  Content="Canonicalization methods:" />
-				<TextBox Grid.Row="2" Grid.Column="1"  Text="{Binding CanonicalizationMethods, Mode=OneWay , Converter={StaticResource CollectionConverter}}"
-							Margin="10,2" IsReadOnly="True" />
+				<Label Grid.Row="1" Grid.Column="0" Content="Job Digest Value from file:"
+						Style="{StaticResource DigestValueLabelStyle}" />
+				<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding JobDigest, Mode=OneWay}"
+						Margin="10,2" IsReadOnly="True" Style="{StaticResource DigestValueTextboxStyle}" />
 
-				<Label Grid.Row="3" Grid.Column="0"  Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" />
-				<TextBox Grid.Row="3" Grid.Column="1"  Text="{Binding DigestValueRead}" Margin="10,2" IsReadOnly="True" >
+				<Label Grid.Row="2" Grid.Column="0" Content="Canonicalization methods:" />
+				<TextBox Grid.Row="2" Grid.Column="1"
+						Text="{Binding CanonicalizationMethods, Mode=OneWay , Converter={StaticResource CollectionConverter}}"
+						Margin="10,2" IsReadOnly="True" />
+
+				<Label Grid.Row="3" Grid.Column="0" Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" />
+				<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DigestValueRead}" Margin="10,2" IsReadOnly="True">
 					<TextBox.Style>
 						<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 							<Style.Triggers>
 								<DataTrigger Binding="{Binding Valid}" Value="True">
-									<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}"/>
+									<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
 								</DataTrigger>
 								<DataTrigger Binding="{Binding Valid}" Value="False">
-									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}"/>
+									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
 								</DataTrigger>
 							</Style.Triggers>
 						</Style>
 					</TextBox.Style>
 				</TextBox>
 
-				<Label Grid.Row="4" Grid.Column="0"  Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}" />
-				<TextBox Grid.Row="4" Grid.Column="1"  Text="{Binding DigestValueComputed}" Margin="10,2" IsReadOnly="True" >
+				<Label Grid.Row="4" Grid.Column="0" Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}" />
+				<TextBox Grid.Row="4" Grid.Column="1" Text="{Binding DigestValueComputed}" Margin="10,2" IsReadOnly="True">
 					<TextBox.Style>
 						<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 							<Style.Triggers>
 								<DataTrigger Binding="{Binding Valid}" Value="True">
-									<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}"/>
+									<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
 								</DataTrigger>
 								<DataTrigger Binding="{Binding Valid}" Value="False">
-									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}"/>
+									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
 								</DataTrigger>
 							</Style.Triggers>
 						</Style>
 					</TextBox.Style>
-					</TextBox>
-				
+				</TextBox>
+
 			</Grid>
 		</DataTemplate>
 
@@ -209,12 +221,12 @@
 						</Style>
 					</ItemsControl.ItemContainerStyle>
 					<ItemsControl.Resources>
-						<DataTemplate DataType="{x:Type viewModel:VectoXMLFile}">
+						<DataTemplate DataType="{x:Type viewModel:VectoJobFile}">
 
-							<Border BorderBrush="White" BorderThickness="1" CornerRadius="2">
+							<Border BorderBrush="White" BorderThickness="1" CornerRadius="2" Margin="0,0,3,0">
 								<Expander Margin="2" Header="{Binding}" HorizontalAlignment="Stretch"
 										Style="{DynamicResource HeaderStretchExpanderStyle}"
-										HeaderTemplate="{DynamicResource ExpanderHeader}"
+										HeaderTemplate="{DynamicResource ExpanderHeaderJobFile}"
 										ContentTemplate="{DynamicResource ExpanderContentJobFile}"
 										Content="{Binding}" />
 							</Border>
@@ -240,17 +252,41 @@
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="50" />
 					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="50" />
+					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
 					<RowDefinition />
 					<RowDefinition />
 				</Grid.RowDefinitions>
 
-				<TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" TextAlignment="Center" Margin="5"
+				<TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"
+							TextAlignment="Center" Margin="5"
+							FontSize="14" FontWeight="Bold">
+					Job-File valid
+				</TextBlock>
+				<ContentControl Grid.Row="1" Grid.Column="0" Width="50" Height="50" Margin="10,10,10,0">
+					<ContentControl.LayoutTransform>
+						<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+					</ContentControl.LayoutTransform>
+					<ContentControl.Style>
+						<Style TargetType="ContentControl">
+							<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding JobFile.JobDataValid}" Value="True">
+									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</ContentControl.Style>
+				</ContentControl>
+
+				<TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
+							TextAlignment="Center" Margin="5"
 							FontSize="14" FontWeight="Bold">
 					Job-File digest <LineBreak /> matches<LineBreak /> Manufacturer Report
 				</TextBlock>
-				<ContentControl Grid.Row="1" Grid.Column="0" Width="50" Height="50" Margin="10,10,10,0">
+				<ContentControl Grid.Row="1" Grid.Column="2" Width="50" Height="50" Margin="10,10,10,0">
 					<ContentControl.LayoutTransform>
 						<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
 					</ContentControl.LayoutTransform>
@@ -265,11 +301,13 @@
 						</Style>
 					</ContentControl.Style>
 				</ContentControl>
-				<TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" TextAlignment="Center" Margin="5"
+
+				<TextBlock Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center"
+							TextAlignment="Center" Margin="5"
 							FontSize="14" FontWeight="Bold">
 					Job-File digest <LineBreak /> matches<LineBreak /> Customer Report
 				</TextBlock>
-				<ContentControl Grid.Row="1" Grid.Column="2" Width="50" Height="50" Margin="10,10,10,0">
+				<ContentControl Grid.Row="1" Grid.Column="4" Width="50" Height="50" Margin="10,10,10,0">
 					<ContentControl.LayoutTransform>
 						<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
 					</ContentControl.LayoutTransform>
@@ -284,7 +322,6 @@
 						</Style>
 					</ContentControl.Style>
 				</ContentControl>
-
 
 			</Grid>
 		</Grid>

@@ -23,13 +23,14 @@ namespace HashingTool.ViewModel.UserControl
 		private readonly Func<XmlDocument, Collection<string>, bool?> _postVerification;
 		private bool? _contentValid;
 
-		public XMLFile(IOService ioservice, bool validate = false, Func<XmlDocument, Collection<string>, bool?> contentCheck = null)
+		public XMLFile(IOService ioservice, bool validate = false,
+			Func<XmlDocument, Collection<string>, bool?> contentCheck = null)
 		{
 			IoService = ioservice;
 			_validate = validate;
 			XMLValidationErrors = new ObservableCollection<string>();
 			HasContentValidation = contentCheck != null;
-			_postVerification = contentCheck ?? ((x,c) => null);
+			_postVerification = contentCheck ?? ((x, c) => null);
 			Source = "";
 			RaisePropertyChanged("ValidateInput");
 			RaisePropertyChanged("HasContentValidation");
@@ -136,8 +137,8 @@ namespace HashingTool.ViewModel.UserControl
 			var document = new XmlDocument();
 			var reader = XmlReader.Create(stream);
 			document.Load(reader);
-			ContentValid = _postVerification(document, XMLValidationErrors);
 			Document = document;
+			ContentValid = _postVerification(document, XMLValidationErrors);
 			_busy = false;
 		}
 

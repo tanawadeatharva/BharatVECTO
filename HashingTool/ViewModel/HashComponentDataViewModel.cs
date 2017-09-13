@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using HashingTool.Helper;
 using HashingTool.Util;
 using HashingTool.ViewModel.UserControl;
 using TUGraz.VectoHashing;
@@ -28,7 +29,7 @@ namespace HashingTool.ViewModel
 		public HashComponentDataViewModel()
 		{
 			XMLValidationErrors = new ObservableCollection<string>();
-			_sourceFile = new XMLFile(IoService, false, IsComponentFile);
+			_sourceFile = new XMLFile(IoService, false, HashingHelper.IsComponentFile);
 			_sourceFile.PropertyChanged += SourceChanged;
 			_saveCommand = new RelayCommand(SaveDocument,
 				() => !_busy && ComponentDataValid != null && ComponentDataValid.Value && _result != null);

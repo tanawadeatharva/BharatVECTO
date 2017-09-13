@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using HashingTool.Helper;
 using HashingTool.ViewModel.UserControl;
 using TUGraz.VectoHashing;
 
@@ -21,7 +22,7 @@ namespace HashingTool.ViewModel
 
 		public VerifyComponentInputDataViewModel()
 		{
-			_componentFile = new XMLFile(IoService, true, IsComponentFile);
+			_componentFile = new XMLFile(IoService, true, HashingHelper.IsComponentFile);
 			_componentFile.PropertyChanged += ComponentFilechanged;
 
 			// TODO!

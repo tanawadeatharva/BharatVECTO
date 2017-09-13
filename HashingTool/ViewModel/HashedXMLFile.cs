@@ -1,9 +1,11 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Xml;
 using HashingTool.Helper;
 using HashingTool.ViewModel.UserControl;
+using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel
 {
@@ -20,36 +22,39 @@ namespace HashingTool.ViewModel
 		protected readonly Action<XmlDocument, VectoXMLFile> _validateHashes;
 
 
-		public VectoXMLFile(IOService ioService, string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
+		public VectoXMLFile(string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null)
 		{
-			IoService = ioService;
 			_validateHashes = hashValidation;
-			_xmlFile = new XMLFile(IoService, true);
+			_xmlFile = new XMLFile(IoService, true, contentCheck);
 			_xmlFile.PropertyChanged += FileChanged;
 			Name = name;
-			_contentCheck = contentCheck;
+
 			// TODO
 			CanonicalizationMethods = new[] {
 				"urn:vecto:xml:2017:canonicalization",
 				"http://www.w3.org/2001/10/xml-exc-c14n#"
 			};
 			Valid = null;
-			ValidTooltip = VerifyResultDataViewModel.ToolTipNone;
+			ValidTooltip = HashingHelper.ToolTipNone;
 		}
 
 		protected virtual void FileChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (_xmlFile.IsValid != null && XMLFile.IsValid.HasValue && _xmlFile.IsValid.Value) {
-				Valid = _contentCheck(_xmlFile.Document, XMLFile.XMLValidationErrors);
-				if (Valid != null && Valid.Value) {
-					ValidTooltip = VerifyResultDataViewModel.ToolTipOk;
+				if (_xmlFile.HasContentValidation) {
+					Valid = _xmlFile.ContentValid;
+					if (Valid != null && Valid.Value) {
+						ValidTooltip = HashingHelper.ToolTipOk;
+					} else {
+						ValidTooltip = HashingHelper.ToolTipInvalidFileType;
+					}
 				} else {
-					ValidTooltip = VerifyResultDataViewModel.ToolTipInvalidFileType;
+					ValidTooltip = HashingHelper.ToolTipOk;
 				}
 			} else {
 				Valid = false;
-				ValidTooltip = VerifyResultDataViewModel.ToolTipXMLValidationFailed;
+				ValidTooltip = HashingHelper.ToolTipXMLValidationFailed;
 			}
 
 			if (Valid != null && Valid.Value && _validateHashes != null) {
@@ -133,7 +138,7 @@ namespace HashingTool.ViewModel
 		protected string _manufacturerDigestRead;
 
 		public HashedXMLFile(IOService ioService, string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
-			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(ioService, name, contentCheck, hashValidation) {}
+			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, contentCheck, hashValidation) {}
 
 		public string DigestValueRead
 		{
@@ -184,6 +189,102 @@ namespace HashingTool.ViewModel
 				}
 				_jobDigestRead = value;
 				RaisePropertyChanged("JobDigest");
+			}
+		}
+	}
+
+	public class VectoJobFile : VectoXMLFile
+	{
+		private bool _componentDataValid;
+		private string _jobValidToolTip;
+
+
+		public VectoJobFile(string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
+			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, contentCheck, hashValidation)
+		{
+			_xmlFile.PropertyChanged += JobFilechanged;
+			Components = new ObservableCollection<ComponentEntry>();
+		}
+
+		public ObservableCollection<ComponentEntry> Components { get; private set; }
+
+		public bool JobDataValid
+		{
+			get { return _componentDataValid; }
+			set {
+				if (_componentDataValid == value) {
+					return;
+				}
+				_componentDataValid = value;
+				JobValidToolTip = value ? HashingHelper.ToolTipComponentHashInvalid : HashingHelper.ToolTipOk;
+				RaisePropertyChanged("JobDataValid");
+			}
+		}
+
+		public string JobValidToolTip
+		{
+			get { return _jobValidToolTip; }
+			set {
+				if (_jobValidToolTip == value) {
+					return;
+				}
+				_jobValidToolTip = value;
+				RaisePropertyChanged("JobValidToolTip");
+			}
+		}
+
+		private void JobFilechanged(object sender, PropertyChangedEventArgs e)
+		{
+			DoValidateHash();
+		}
+
+		private void DoValidateHash()
+		{
+			if (_xmlFile.Document == null || _xmlFile.ContentValid == null || !_xmlFile.ContentValid.Value) {
+				Components.Clear();
+				DigestValueComputed = "";
+				JobDataValid = false;
+				return;
+			}
+			try {
+				Components.Clear();
+				_xmlFile.XMLValidationErrors.Clear();
+				var h = VectoHash.Load(_xmlFile.Document);
+				var allValid = true;
+				var components = h.GetContainigComponents().GroupBy(s => s)
+					.Select(g => new { Entry = g.Key, Count = g.Count() });
+				foreach (var component in components) {
+					if (component.Entry == VectoComponents.Vehicle) {
+						continue;
+					}
+					for (var i = 0; i < component.Count; i++) {
+						var entry = new ComponentEntry();
+						entry.Component = component.Count == 1
+							? component.Entry.XMLElementName()
+							: string.Format("{0} ({1})", component.Entry.XMLElementName(), i + 1);
+						entry.Valid = h.ValidateHash(component.Entry, i);
+						entry.CanonicalizationMethod = new[] {
+							"urn:vecto:xml:2017:canonicalization",
+							"http://www.w3.org/2001/10/xml-exc-c14n#"
+						};
+						entry.DigestValueRead = h.ReadHash(component.Entry, i);
+						entry.DigestValueComputed = h.ComputeHash(component.Entry, i);
+						if (!entry.Valid) {
+							_xmlFile.XMLValidationErrors.Add(
+								string.Format("Digest Value mismatch for component \"{0}\". Read digest value: \"{1}\", computed digest value \"{2}\"",
+									entry.Component, entry.DigestValueRead, entry.DigestValueComputed));
+						}
+						Components.Add(entry);
+						allValid &= entry.Valid;
+					}
+				}
+
+				DigestValueComputed = h.ComputeHash();
+				JobDataValid = allValid;
+			} catch (Exception e) {
+				DigestValueComputed = "";
+				JobDataValid = false;
+				_xmlFile.XMLValidationErrors.Add(e.Message);
 			}
 		}
 	}
