@@ -546,7 +546,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns>
 		/// The result of the operator.
 		/// </returns>
-		[DebuggerHidden]
+		//[DebuggerHidden]
 		public static NewtonMeter operator /(Watt watt, PerSecond perSecond)
 		{
 			return SIBase<NewtonMeter>.Create(watt.Val / perSecond.Value());
@@ -733,7 +733,7 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
 		private NewtonMeter(double val) : base(val, SIDefault) {}
 
-		[DebuggerHidden]
+		//[DebuggerHidden]
 		public static Watt operator *(NewtonMeter newtonMeter, PerSecond perSecond)
 		{
 			return SIBase<Watt>.Create(newtonMeter.Val * perSecond.Value());
@@ -1062,38 +1062,6 @@ namespace TUGraz.VectoCommon.Utils
         protected UnitInstance.IsMass isMass;
 
 
-        /// <summary>
-        /// The current exponent for conversion operations (Square, Cubic, Linear, e.g. new SI(3).Square.Meter).
-        /// Can be reseted with Reset, Per, Cast.
-        /// </summary>
-        //private readonly int _exponent;
-
-        /// <summary>
-        /// A flag indicating if the current SI is in reciprocal mode (used in the <see cref="Per"/> method for reciprocal units: e.g. new SI(2).Meter.Per.Second) ==> [m/s]
-        /// Can be reseted with Reset, Per, Cast.
-        /// </summary>
-        //private readonly bool _reciproc;
-
-        /// <summary>
-        /// A flag indicating if the current SI is in reverse mode (used for conversions: e.g. new SI(2).Rounds.Per.Minute.ConverTo.Radian.Per.Second ==> [rpm/min] => [rad/s]).
-        /// </summary>
-        //private readonly bool _reverse;
-
-        ///// <summary>
-        ///// Enum for defining the Units.
-        ///// </summary>
-        //[SuppressMessage("ReSharper", "InconsistentNaming")]
-        //protected enum Unit
-        //{
-        //    kg,
-        //    m,
-        //    s,
-        //    A,
-        //    K,
-        //    mol,
-        //    cd,
-        //}
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SI"/> class without any units (dimensionless, scalar) [-].
@@ -1105,7 +1073,7 @@ namespace TUGraz.VectoCommon.Utils
             Val = val;
 
             SIUnits = new int[7] { 0, 0, 0, 0, 0, 0, 0 };
-
+            isMass = UnitInstance.IsMass.IsKiloGramm;
 
             if (double.IsNaN(val))
             {
@@ -1201,7 +1169,7 @@ namespace TUGraz.VectoCommon.Utils
 	    public SI ConvertTo(UnitInstance si)
 	    {
 
-	        if (!SIUtils.CompareSIUnits(SIUnits, si.GetSIUnits()))
+	        if (!SIUtils.CompareUnits(SIUnits, si.GetSIUnits()))
 	        {
 	            throw new VectoException(
 	                "Unit missing. Conversion not possible. [{0}] does not contain a [{1}].",
@@ -1287,267 +1255,31 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return Math.Sign(Val);
 		}
+   
+        private static double GToKG(SI si)
+        {
+            double result = 1.0;
 
-		#region Unit Definitions
+            if ((si.isMass & UnitInstance.IsMass.IsGramm) == UnitInstance.IsMass.IsGramm)
+            {
+                result = 0.001;
+            }
 
-		///// <summary>
-		///// Defines the denominator by the terms following after the Per.
-		///// </summary>
-		//[DebuggerHidden]
-		//public SI Per
-		//{
-		//	[DebuggerHidden] get { return new SI(Linear, reciproc: !_reciproc); }
-		//}
+            return result;
+        }
 
-		///// <summary>
-		///// Takes all following terms as cubic terms (=to the power of 3).
-		///// </summary>
-		////[DebuggerHidden]
-		//public SI Cubic
-		//{
-		//	//[DebuggerHidden]
-  //          get { return new SI(this, exponent: 3); }
-		//}
+        #region Operators
 
-		///// <summary>
-		///// Takes all following terms as quadratic terms (=to the power of 2).
-		///// </summary>
-		//[DebuggerHidden]
-		//public SI Square
-		//{
-		//	[DebuggerHidden] get { return new SI(this, exponent: 2); }
-		//}
-
-		///// <summary>
-		///// Takes all following terms as linear terms (=to the power of 1).
-		///// </summary>
-		//[DebuggerHidden]
-		//public SI Linear
-		//{
-		//	[DebuggerHidden] get { return new SI(this, exponent: 1); }
-		//}
-
-		///// <summary>
-		///// [g] (to basic unit: [kg])
-		///// </summary>
-		//[DebuggerHidden]
-		//public SI Gramm
-  //      {
-  //          [DebuggerHidden]
-		//    get
-  //          {
-  //              return new SI(this, 0.001, new int[] { 1, 0, 0, 0, 0, 0, 0 });
-  //          }
-            
-		//}
-
-		//[DebuggerHidden]
-		//public SI Liter
-		//{
-  //          [DebuggerHidden]
-		//    get
-		//    {
-		//        return new SI(this, 0.001, new int[] { 0, 3, 0, 0, 0, 0, 0 });
-		//    }
-  //      }
-
-		//[DebuggerHidden]
-		//public SI Joule
-		//{
-  //          [DebuggerHidden]
-		//    get
-		//    {
-		//        return new SI(this, 0.001, new int[] { 1, 2, -2, 0, 0, 0, 0 });
-		//    }
-  //      }
-
-		///// <summary>
-		///// [t] (to basic unit: [kg])
-		///// </summary>
-		//[DebuggerHidden]
-		//public SI Ton
-		//{
-  //          [DebuggerHidden]
-		//    get
-		//    {
-		//        return new SI(this, 1000, new int[] { 1, 0, 0, 0, 0, 0, 0 });
-		//    }
-  //      }
-
-		///// <summary>
-		///// [N]
-		///// </summary>
-		//[DebuggerHidden]
-		//public SI Newton
-  //      {
-  //          [DebuggerHidden]
-		//    get
-  //          {
-  //              return new SI(this, siUnitsParam: new int[] { 1, 1, -2, 0, 0, 0, 0 });
-  //          }
-		//}
-
-		///// <summary>
-		///// [W]
-		///// </summary>
-		//[DebuggerHidden]
-  //      public SI Watt
-  //      {
-  //          [DebuggerHidden]
-  //          get
-  //          {
-  //              return new SI(this, siUnitsParam: new int[] { 1, 2, -3, 0, 0, 0, 0 });
-  //          }
-  //      }
-		///// <summary>
-		///// [m]
-		///// </summary>
-		////[DebuggerHidden]
-  //      public SI Meter
-  //      {
-  //          //[DebuggerHidden]
-  //          get
-  //          {
-  //              return new SI(this, siUnitsParam: new int[] { 0, 1, 0, 0, 0, 0, 0 });
-  //          }
-  //      }
-		///// <summary>
-		///// [s]
-		///// </summary>
-		//[DebuggerHidden]
-  //      public SI Second
-  //      {
-  //          [DebuggerHidden]
-  //          get
-  //          {
-  //              return new SI(this, siUnitsParam: new int[] { 0, 0, 1, 0, 0, 0, 0 });
-  //          }
-  //      }
-		///// <summary>
-		///// [-]. Defines radian. Only virtual. Has no real SI unit.
-		///// </summary>
-		//[DebuggerHidden]
-  //      public SI Radian
-  //      {
-  //          [DebuggerHidden]
-  //          get
-  //          {
-  //              return new SI(this);
-  //          }
-  //      }
-		///// <summary>
-		///// [-]. Converts to/from Radiant. Internally everything is stored in radian.
-		///// </summary>
-		//[DebuggerHidden]
-		//public SI Rounds
-		//{
-  //          [DebuggerHidden]
-		//    get
-  //          {
-  //              return new SI(this, 2 * Math.PI);
-  //          }
-		//}
-
-		///// <summary>
-		///// [s] Converts to/from Second. Internally everything is stored in seconds.
-		///// </summary>
-		//[DebuggerHidden]
-  //      public SI Hour
-  //      {
-  //          [DebuggerHidden]
-  //          get
-  //          {
-  //              return new SI(this, 3600, new[] { 0, 0, 1, 0, 0, 0, 0 });
-  //          }
-  //      }
-		///// <summary>
-		///// [s] Converts to/from Second. Internally everything is stored in seconds.
-		///// </summary>
-		//[DebuggerHidden]
-  //      public SI Minute
-  //      {
-  //          [DebuggerHidden]
-  //          get
-  //          {
-  //              return new SI(this, 60.0, new[] { 0, 0, 1, 0, 0, 0, 0 });
-  //          }
-  //      }
-		///// <summary>
-		///// Quantifier for milli (1/1000).
-		///// </summary>
-		//[DebuggerHidden]
-  //      public SI Milli
-  //      {
-  //          [DebuggerHidden]
-  //          get
-  //          {
-  //              return new SI(this, 0.001);
-  //          }
-  //      }
-		///// <summary>
-		///// Quantifier for Kilo (1000).
-		///// </summary>
-		//[DebuggerHidden]
-  //      public SI Kilo
-  //      {
-  //          [DebuggerHidden]
-  //          get
-  //          {
-  //              return new SI(this, 1000.0);
-  //          }
-  //      }
-
-		//public SI Ampere
-  //      {
-  //          [DebuggerHidden]
-		//    get
-		//    {
-  //              return new SI(this, siUnitsParam: new int[] { 0, 0, 0, 1, 0, 0, 0 });
-  //          }
-		//}
-
-		///// <summary>
-		///// Quantifier for Dezi (1/10)
-		///// </summary>
-		//[DebuggerHidden]
-  //      public SI Dezi
-  //      {
-		//    [DebuggerHidden]
-		//    get
-		//    {
-		//        return new SI(this, 0.1);
-  //          }
-		//}
-
-		///// <summary>
-		///// Quantifier for Centi (1/100)
-		///// </summary>
-		////[DebuggerHidden]
-  //      public SI Centi
-  //      {
-		//    //[DebuggerHidden]
-		//    get
-		//    {
-		//        return new SI(this, 0.01);
-  //          }
-		//}
-
-		#endregion
-
-
-
-		#region Operators
-
-		/// <summary>
-		/// Implements the operator +.
-		/// </summary>
-		/// <param name="si1">The si1.</param>
-		/// <param name="si2">The si2.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
-		/// <exception cref="VectoException"></exception>
-		[DebuggerHidden]
+        /// <summary>
+        /// Implements the operator +.
+        /// </summary>
+        /// <param name="si1">The si1.</param>
+        /// <param name="si2">The si2.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
+        /// <exception cref="VectoException"></exception>
+        [DebuggerHidden]
 	    public static SI operator +(SI si1, SI si2)
 	    {
 	        if (!si1.HasEqualUnit(si2))
@@ -1555,7 +1287,8 @@ namespace TUGraz.VectoCommon.Utils
 	            throw new VectoException("Operator '+' can only operate on SI Objects with the same unit. Got: {0} + {1}", si1, si2);
 	        }
 
-	        return new SI(si1.Val + si2.Val)
+
+            return new SI(si1.Val * GToKG(si1) + ( si2.Val * GToKG(si2)) )
 	        {
 	            SIUnits = si1.SIUnits
 	        };
@@ -1577,7 +1310,7 @@ namespace TUGraz.VectoCommon.Utils
 	        {
 	            throw new VectoException("Operator '-' can only operate on SI Objects with the same unit. Got: {0} - {1}", si1, si2);
 	        }
-	        return new SI(si1.Val - si2.Val)
+	        return new SI(si1.Val * GToKG(si1) - (si2.Val * GToKG(si2)))
 	        {
 	            SIUnits = si1.SIUnits
 	        };
@@ -1593,7 +1326,7 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
 	    public static SI operator -(SI si1)
 	    {
-	        return new SI(-si1.Val)
+	        return new SI(-si1.Val * GToKG(si1))
 	        {
 	            SIUnits = si1.SIUnits
 	        };
@@ -1610,9 +1343,10 @@ namespace TUGraz.VectoCommon.Utils
         public static SI operator *(SI si1, SI si2)
         {
             int[] unitArray = new int[7];
-            unitArray = SIUtils.AdditionTheSIUnits(si1.SIUnits, si2.SIUnits);
+            unitArray = SIUtils.CombineUnits(si1.SIUnits, si2.SIUnits);
 
-            return new SI(si1.Val * si2.Val, unitArray, si1.isMass);
+            //return new SI(si1.Val * si2.Val , unitArray, si1.isMass);
+            return new SI(si1.Val * GToKG(si1) * (si2.Val * GToKG(si2)), unitArray, UnitInstance.IsMass.IsKiloGramm);
         }
 
         /// <summary>
@@ -1626,7 +1360,7 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
 	    public static SI operator *(SI si1, double d)
 	    {
-	        return new SI(si1.Val * d)
+	        return new SI(si1.Val * GToKG(si1) * d)
 	        {
 	            SIUnits = si1.SIUnits
 	        };
@@ -1643,7 +1377,7 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
 	    public static SI operator *(double d, SI si1)
 	    {
-	        return new SI(d * si1.Val)
+	        return new SI(d * si1.Val * GToKG(si1))
 	        {
 	            SIUnits = si1.SIUnits
 	        };
@@ -1662,7 +1396,7 @@ namespace TUGraz.VectoCommon.Utils
 	        double result;
 	        try
 	        {
-	            result = si1.Val / si2.Val;
+	            result = si1.Val * GToKG(si1) / (si2.Val * GToKG(si2));
 
 	            // bad cases: Infinity = x / 0.0  (for x != 0), NaN = 0.0 / 0.0
 	            if (double.IsInfinity(result) || double.IsNaN(result))
@@ -1677,10 +1411,10 @@ namespace TUGraz.VectoCommon.Utils
 	        }
 
 	        int[] unitArray = new int[7];
-	        unitArray = SIUtils.AdditionTheSIUnits(
-	            si1.SIUnits, SIUtils.SIUnitsMultFactor(si2.SIUnits, -1));
+	        unitArray = SIUtils.CombineUnits(
+	            si1.SIUnits, SIUtils.MultiplyUnits(si2.SIUnits, -1));
 
-	        return new SI(result, unitArray, si1.isMass);
+	        return new SI(result, unitArray, UnitInstance.IsMass.IsKiloGramm);
 	    }
 
         /// <summary>
@@ -1700,7 +1434,7 @@ namespace TUGraz.VectoCommon.Utils
 	                new DivideByZeroException());
 	        }
 
-	        return new SI(si1.Val / d)
+	        return new SI((si1.Val * GToKG(si1)) / d)
 	        {
 	            SIUnits = si1.SIUnits
 	        };
@@ -1723,9 +1457,9 @@ namespace TUGraz.VectoCommon.Utils
 	                new DivideByZeroException());
 	        }
 
-	        return new SI(d / si1.Val)
+	        return new SI(d / (si1.Val * GToKG(si1)))
 	        {
-	            SIUnits = SIUtils.SIUnitsMultFactor(si1.SIUnits, -1)
+	            SIUnits = SIUtils.MultiplyUnits(si1.SIUnits, -1)
 	        };
 	    }
 
@@ -1745,7 +1479,7 @@ namespace TUGraz.VectoCommon.Utils
 			if (!si1.HasEqualUnit(si2)) {
 				throw new VectoException("Operator '<' can only operate on SI Objects with the same unit. Got: {0} < {1}", si1, si2);
 			}
-			return si1.Val < si2.Val;
+			return si1.Val * GToKG(si1) < si2.Val * GToKG(si2);
 		}
 
 		/// <summary>
@@ -1759,7 +1493,7 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		public static bool operator <(SI si1, double d)
 		{
-			return si1 != null && si1.Val < d;
+			return si1 != null && si1.Val * GToKG(si1) < d;
 		}
 
 		/// <summary>
@@ -1778,7 +1512,7 @@ namespace TUGraz.VectoCommon.Utils
 			if (!si1.HasEqualUnit(si2)) {
 				throw new VectoException("Operator '>' can only operate on SI Objects with the same unit. Got: {0} > {1}", si1, si2);
 			}
-			return si1.Val > si2.Val;
+			return si1.Val * GToKG(si1) > si2.Val * GToKG(si2);
 		}
 
 		/// <summary>
@@ -1792,7 +1526,7 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		public static bool operator >(SI si1, double d)
 		{
-			return si1 != null && si1.Val > d;
+			return si1 != null && si1.Val * GToKG(si1) > d;
 		}
 
 		/// <summary>
@@ -1806,7 +1540,7 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		public static bool operator >(double d, SI si1)
 		{
-			return si1 != null && d > si1.Val;
+			return si1 != null && d > si1.Val * GToKG(si1);
 		}
 
 		/// <summary>
@@ -1820,7 +1554,7 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		public static bool operator <(double d, SI si1)
 		{
-			return si1 != null && d < si1.Val;
+			return si1 != null && d < si1.Val * GToKG(si1);
 		}
 
 		/// <summary>
@@ -1839,7 +1573,7 @@ namespace TUGraz.VectoCommon.Utils
 				throw new VectoException("Operator '<=' can only operate on SI Objects with the same unit. Got: {0} <= {1}", si1,
 					si2);
 			}
-			return si1.Val <= si2.Val;
+			return si1.Val * GToKG(si1) <= si2.Val * GToKG(si2);
 		}
 
 		/// <summary>
@@ -1853,7 +1587,7 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		public static bool operator <=(SI si1, double d)
 		{
-			return si1 != null && si1.Val <= d;
+			return si1 != null && si1.Val * GToKG(si1) <= d;
 		}
 
 		/// <summary>
@@ -1872,7 +1606,7 @@ namespace TUGraz.VectoCommon.Utils
 				throw new VectoException("Operator '>=' can only operate on SI Objects with the same unit. Got: {0} >= {1}", si1,
 					si2);
 			}
-			return si1.Val >= si2.Val;
+			return si1.Val * GToKG(si1) >= si2.Val * GToKG(si2);
 		}
 
 		/// <summary>
@@ -1886,7 +1620,7 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		public static bool operator >=(SI si1, double d)
 		{
-			return si1 != null && si1.Val >= d;
+			return si1 != null && si1.Val * GToKG(si1) >= d;
 		}
 
 		/// <summary>
@@ -1900,7 +1634,7 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		public static bool operator >=(double d, SI si1)
 		{
-			return si1 != null && d >= si1.Val;
+			return si1 != null && d >= si1.Val * GToKG(si1);
 		}
 
 		/// <summary>
@@ -1913,7 +1647,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// </returns>
 		public static bool operator <=(double d, SI si1)
 		{
-			return si1 != null && d <= si1.Val;
+			return si1 != null && d <= si1.Val * GToKG(si1);
 		}
 
 		/// <summary>
@@ -1924,7 +1658,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns></returns>
 		public bool IsBetween(SI lower, SI upper)
 		{
-			return lower <= Val && Val <= upper;
+			return lower <= Val * GToKG(this) && Val * GToKG(this) <= upper;
 		}
 
 		/// <summary>
@@ -1935,7 +1669,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns></returns>
 		public bool IsBetween(double lower, double upper)
 		{
-			return lower <= Val && Val <= upper;
+			return lower <= Val * GToKG(this) && Val * GToKG(this) <= upper;
 		}
 
 		#endregion
@@ -1953,68 +1687,6 @@ namespace TUGraz.VectoCommon.Utils
             }
 	        return Unit.GetUnitString(SIUnitParam,
                 ((isMass & UnitInstance.IsMass.IsGramm) == UnitInstance.IsMass.IsGramm));
-            //return Unit.GetUnitString(SIUnitParam);
-            //Array unitnames = Enum.GetNames(typeof(Unit));
-            //string numerator = "";
-            //string denominator = "";
-            //int potent = 0;
-            //string potentStr = "";
-
-            //   if (SIUnitParam == null)
-            //   {
-            //       SIUnitParam = SIUnits;
-            //   }
-            //for (var i = 0; i < SIUnitParam.Length; i++)
-            //{
-            //    int currentValue = SIUnitParam[i];
-            //    potent = Math.Abs(currentValue);
-            //    potentStr = "";
-            //    if (currentValue != 0)
-            //    {
-            //        string currentUnit = (string)unitnames.GetValue(i);
-
-            //        if (potent > 1)
-            //        {
-            //            potentStr = "^" + potent;
-            //        }
-
-            //        if (currentValue > 0)
-            //        {
-            //            numerator += currentUnit + potentStr;
-
-            //        }
-            //        else if (currentValue < 0)
-            //        {
-            //            denominator += currentUnit + potentStr;
-            //        }
-            //    }
-            //}
-            //string result = "";
-
-            //if (numerator == "")
-            //{
-            //    if (denominator == "")
-            //    {
-            //        result = "-";
-            //    }
-            //    else
-            //    {
-            //        result = "1/" + denominator;
-            //    }
-            //}
-            //else
-            //{
-            //    if (denominator == "")
-            //    {
-            //        result = numerator;
-            //    }
-            //    else
-            //    {
-            //        result = numerator + "/" + denominator;
-            //    }
-            //}
-
-            //return result;
         }
 
 
@@ -2045,6 +1717,8 @@ namespace TUGraz.VectoCommon.Utils
 
 		#endregion
 
+
+
 		#region Equality members
 
 		/// <summary>
@@ -2056,7 +1730,7 @@ namespace TUGraz.VectoCommon.Utils
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool HasEqualUnit(SI si)
 		{
-		    return SIUtils.CompareSIUnits(SIUnits, si.SIUnits);
+		    return SIUtils.CompareUnits(SIUnits, si.SIUnits);
     	}
 
 		/// <summary>
@@ -2075,8 +1749,11 @@ namespace TUGraz.VectoCommon.Utils
 				return true;
 			}
 			var other = obj as SI;
-			return other != null && Val.Equals(other.Val) && HasEqualUnit(other);
-		}
+
+            double ValFac = Val * GToKG(this);
+            return other != null && ValFac.Equals(other.Val * GToKG(other)) && HasEqualUnit(other);
+            //return other != null && Val.Equals(other.Val )  && HasEqualUnit(other);
+        }
 
 		/// <summary>
 		/// Determines whether the specified si is equal.
@@ -2086,9 +1763,12 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns></returns>
 		public bool IsEqual(SI si, SI tolerance = null)
 		{
-			return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
-					Val.IsEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
-		}
+            double ValFac = Val * GToKG(this);
+            return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
+                   ValFac.IsEqual(si.Val * GToKG(si), tolerance == null ? DoubleExtensionMethods.Tolerance : (tolerance.Value() * GToKG(tolerance)));
+            //return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
+            //       Val.IsEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance :( tolerance.Value()));
+        }
 
 		/// <summary>
 		/// Determines whether the specified value is equal.
@@ -2099,8 +1779,10 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		public bool IsEqual(double val, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
-			return Val.IsEqual(val, tolerance);
-		}
+            double ValFac = Val * GToKG(this);
+            return ValFac.IsEqual(val, tolerance);
+            //return Val.IsEqual(val, tolerance);
+        }
 
 		/// <summary>
 		/// Determines whether the specified si is smaller.
@@ -2117,8 +1799,10 @@ namespace TUGraz.VectoCommon.Utils
 				throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
 			}
 
-			return Val.IsSmaller(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
-		}
+            double ValFac = Val * GToKG(this);
+            return ValFac.IsSmaller(si.Val * GToKG(si), tolerance == null ? DoubleExtensionMethods.Tolerance :( tolerance.Value() * GToKG(tolerance)));
+            //return Val.IsSmaller(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+        }
 
 		/// <summary>
 		/// Determines whether the specified si is smaller.
@@ -2132,8 +1816,10 @@ namespace TUGraz.VectoCommon.Utils
 				throw new VectoException("compared value has to be the same unit. Got: {0} <=> {1}", this, si);
 			}
 
-			return Val.IsSmaller(si.Val, tolerance);
-		}
+            double ValFac = Val * GToKG(this);
+            return ValFac.IsSmaller(si.Val * GToKG(si), tolerance);
+            //return Val.IsSmaller(si.Val, tolerance);
+        }
 
 		/// <summary>
 		/// Determines whether [is smaller or equal] [the specified si].
@@ -2150,8 +1836,11 @@ namespace TUGraz.VectoCommon.Utils
 				throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
 			}
 
-			return Val.IsSmallerOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
-		}
+            double ValFac = Val * GToKG(this);
+
+            return ValFac.IsSmallerOrEqual(si.Val * GToKG(si), tolerance == null ? DoubleExtensionMethods.Tolerance : (tolerance.Value() * GToKG(tolerance)));
+            //return Val.IsSmallerOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+        }
 
 		/// <summary>
 		/// Determines whether the specified si is greater.
@@ -2168,8 +1857,10 @@ namespace TUGraz.VectoCommon.Utils
 				throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
 			}
 
-			return Val.IsGreater(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
-		}
+            double ValFac = Val * GToKG(this);
+            return ValFac.IsGreater(si.Val * GToKG(si), tolerance == null ? DoubleExtensionMethods.Tolerance :( tolerance.Value() * GToKG(tolerance)));
+            //return Val.IsGreater(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+        }
 
 		/// <summary>
 		/// Determines whether the specified si is greater.
@@ -2184,8 +1875,11 @@ namespace TUGraz.VectoCommon.Utils
 				throw new VectoException("compared value has to be the same unit. Got: {0} <=> {1}", this, si);
 			}
 
-			return Val.IsGreater(si.Val, tolerance);
-		}
+            double ValFac = Val * GToKG(this);
+
+            return ValFac.IsGreater(si.Val * GToKG(si), tolerance);
+            //return Val.IsGreater(si.Val, tolerance);
+        }
 
 		/// <summary>
 		/// Determines whether [is greater or equal] [the specified si].
@@ -2203,8 +1897,10 @@ namespace TUGraz.VectoCommon.Utils
 				throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
 			}
 
-			return Val.IsGreaterOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
-		}
+            double ValFac = Val * GToKG(this);
+            return ValFac.IsGreaterOrEqual(si.Val * GToKG(si), tolerance == null ? DoubleExtensionMethods.Tolerance : ( tolerance.Value() * GToKG(tolerance)));
+            //return Val.IsGreaterOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+        }
 
 		/// <summary>
 		/// Determines whether the specified value is smaller.
@@ -2215,8 +1911,8 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerStepThrough]
 		public bool IsSmaller(double val, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
-			return Val.IsSmaller(val, tolerance);
-		}
+            return Val.IsSmaller(val, tolerance);
+        }
 
 		/// <summary>
 		/// Determines whether [is smaller or equal] [the specified value].

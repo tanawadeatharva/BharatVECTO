@@ -5,7 +5,7 @@ namespace TUGraz.VectoCommon.Utils
     public struct SIUtils
     {
         //new method
-        public static bool CompareSIUnits(int[] array1, int[] array2)
+        public static bool CompareUnits(int[] array1, int[] array2)
         {
             for (int count = 0; count < array1.Length; count++)
             {
@@ -18,7 +18,7 @@ namespace TUGraz.VectoCommon.Utils
         }
 
         //new method
-        public static int[] AdditionTheSIUnits(int[] array1, int[] array2)
+        public static int[] CombineUnits(int[] array1, int[] array2)
         {
             int[] resultarray = new int[array1.Length];
             for (int count = 0; count < array1.Length; count++)
@@ -30,7 +30,7 @@ namespace TUGraz.VectoCommon.Utils
         }
 
         //new method
-        public static int[] SIUnitsMultFactor(int[] array1, int factor)
+        public static int[] MultiplyUnits(int[] array1, int factor)
         {
             int[] resultarray = new int[array1.Length];
             for (int count = 0; count < array1.Length; count++)
@@ -66,7 +66,6 @@ namespace TUGraz.VectoCommon.Utils
                 return new UnitInstance(new int[7] { 0, 0, 0, 0, 0, 0, 0 }, 1, 1, 1);
             }
         }
-
 
         /// <summary>
         /// Enum for defining the Units.
@@ -162,8 +161,20 @@ namespace TUGraz.VectoCommon.Utils
         // kg, m, s, A, K, mol, cd
 
         private int[] units;
+
+
         private double factorValue;
+
+        /// <summary>
+        /// The current exponent for conversion operations (Square, Cubic, Linear, e.g. new SI(3).Square.Meter).
+        /// Can be reseted with Reset, Per, Cast.
+        /// </summary>
         private int exponent;
+
+        /// <summary>
+        /// A flag indicating if the current SI is in reciprocal mode (used in the <see cref="Per"/> method for reciprocal units: e.g. new SI(2).Meter.Per.Second) ==> [m/s]
+        /// Can be reseted with Reset, Per, Cast.
+        /// </summary>
         private int reciproc;
 
 
@@ -207,9 +218,13 @@ namespace TUGraz.VectoCommon.Utils
             }
         }
 
-
+        ///// <summary>
+        ///// [g] (to basic unit: [kg])
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Gramm
         {
+            //[DebuggerHidden]
             get
             {
 
@@ -241,8 +256,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this; // not work
             }
         }
+
+        ///// <summary>
+        ///// Takes all following terms as cubic terms (=to the power of 3).
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Cubic
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -252,8 +273,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// [s] Converts to/from Second. Internally everything is stored in seconds.
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Hour
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -266,8 +293,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// Quantifier for Kilo (1000).
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Kilo
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption | IsMass.IsKilo);
@@ -277,8 +310,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// Takes all following terms as linear terms (=to the power of 1).
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Linear
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -288,8 +327,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// [m]
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Meter
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -299,8 +344,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// Quantifier for milli (1/1000).
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Milli
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -310,8 +361,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// Quantifier for Centi (1/100)
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Centi
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -321,8 +378,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// Quantifier for Dezi (1/10)
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Dezi
         {
+            //[DebuggerHidden]
             get
             {                
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -332,8 +395,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// [s] Converts to/from Second. Internally everything is stored in seconds.
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Minute
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -346,8 +415,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// [N]
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Newton
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -360,8 +435,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// Defines the denominator by the terms following after the Per.
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Per
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -373,8 +454,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// [-]. Defines radian. Only virtual. Has no real SI unit.
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Radian
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -383,8 +470,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// [-]. Converts to/from Radiant. Internally everything is stored in radian.
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Rounds
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -394,8 +487,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// [s]
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Second
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -405,8 +504,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// Takes all following terms as quadratic terms (=to the power of 2).
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Square
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -416,8 +521,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// [t] (to basic unit: [kg])
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Ton
         {
+            //[DebuggerHidden]
             get
             {
                 // remove Gramm and Kilo and KiloGramm is selected.
@@ -432,8 +543,14 @@ namespace TUGraz.VectoCommon.Utils
                 return this;
             }
         }
+
+        ///// <summary>
+        ///// [W]
+        ///// </summary>
+        //[DebuggerHidden]
         public UnitInstance Watt
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -448,6 +565,7 @@ namespace TUGraz.VectoCommon.Utils
         }
         public UnitInstance Joule
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
@@ -463,6 +581,7 @@ namespace TUGraz.VectoCommon.Utils
 
         public UnitInstance Liter
         {
+            //[DebuggerHidden]
             get
             {
                 isMassOption = (isMassOption & ~IsMass.IsKilo);
