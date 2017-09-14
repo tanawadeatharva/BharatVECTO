@@ -105,7 +105,7 @@ Namespace IntegrationTests
                 Debug.Print("{0}", aux.AA_TotalCycleFC_Grams)
             Next
 
-            Assert.AreEqual(79.303.SI().Gramm.Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
+            Assert.AreEqual(79.303.SI(Unit.SI.Gramm).Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
 
             aux.Signals.EngineDrivelinePower = (-15 * 1000).SI(Of Watt)()
             aux.Signals.EngineDrivelineTorque = aux.Signals.EngineDrivelinePower / (1256.RPMtoRad())
@@ -117,7 +117,7 @@ Namespace IntegrationTests
                 Debug.Print("{0}", aux.AA_TotalCycleFC_Grams)
             Next
 
-            Assert.AreEqual(82.5783.SI().Gramm.Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
+            Assert.AreEqual(82.5783.SI(Unit.SI.Gramm).Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
 
             aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()
             aux.Signals.EngineDrivelineTorque = aux.Signals.EngineDrivelinePower / (1256.RPMtoRad())
@@ -128,7 +128,7 @@ Namespace IntegrationTests
                 aux.CycleStep(1.SI(Of Second), msg)
             Next
 
-            Assert.AreEqual(162.4655.SI().Gramm.Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
+            Assert.AreEqual(162.4655.SI(Unit.SI.Gramm).Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
         End Sub
     End Class
 End Namespace
