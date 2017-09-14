@@ -4,6 +4,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:views="clr-namespace:HashingTool.Views"
+	xmlns:userControl="clr-namespace:HashingTool.ViewModel.UserControl"
 	x:Class="HashingTool.Views.VectoXMLFileSelector"
 	mc:Ignorable="d" d:DesignWidth="456" MinHeight="32"
 	d:DataContext="{d:DesignInstance views:VectoXMLFileSelector}">
@@ -13,7 +14,7 @@
 	<StackPanel Margin="0,5" HorizontalAlignment="Stretch">
 		<DockPanel HorizontalAlignment="Stretch" Height="Auto" Margin="0" VerticalAlignment="Top">
 
-			<ContentControl DockPanel.Dock="Right"
+			<!--<ContentControl DockPanel.Dock="Right"
 							Visibility="{Binding XMLFile.HasContentValidation, Converter={StaticResource BoolToVis}}" Width="40" Height="40"
 							Margin="10,-5,5,0">
 				<ContentControl.LayoutTransform>
@@ -35,27 +36,33 @@
 						</Style.Triggers>
 					</Style>
 				</ContentControl.Style>
-			</ContentControl>
+			</ContentControl>-->
 
 
-			<ContentControl DockPanel.Dock="Right"
-							Visibility="{Binding XMLFile.ValidateInput, Converter={StaticResource BoolToVis}}" Height="33"
-							Margin="0,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="90">
+			<ContentControl DockPanel.Dock="Right" Height="33" Margin="0,5,5,0" VerticalAlignment="Top"
+							HorizontalAlignment="Right" Width="90" ToolTip="{Binding XMLFile.ToolTip}">
 				<ContentControl.LayoutTransform>
 					<ScaleTransform ScaleX="0.5" ScaleY="0.5" />
 				</ContentControl.LayoutTransform>
 				<ContentControl.Style>
 					<Style TargetType="ContentControl">
-						<Setter Property="ContentTemplate" Value="{StaticResource ICON_XML_unknown}" />
+						<Setter Property="ContentTemplate" Value="{StaticResource ICON_XML_outline}" />
 						<Setter Property="ToolTip" Value="Not validated" />
 						<Style.Triggers>
-							<DataTrigger Binding="{Binding XMLFile.IsValid}" Value="True">
-								<Setter Property="ContentTemplate" Value="{StaticResource Icon_XML_OK}" />
-								<Setter Property="ToolTip" Value="Valid XML" />
+							<DataTrigger Binding="{Binding XMLFile.IsValid}" Value="{x:Static userControl:XmlFileStatus.ValidXML}">
+								<Setter Property="ContentTemplate" Value="{StaticResource Icon_XML_green}" />
 							</DataTrigger>
-							<DataTrigger Binding="{Binding XMLFile.IsValid}" Value="False">
-								<Setter Property="ContentTemplate" Value="{StaticResource Icon_XML_NOK}" />
-								<Setter Property="ToolTip" Value="Invalid XML" />
+							<DataTrigger Binding="{Binding XMLFile.IsValid}" Value="{x:Static userControl:XmlFileStatus.IncorrectContent}">
+								<Setter Property="ContentTemplate" Value="{StaticResource Icon_XML_green2}" />
+
+							</DataTrigger>
+							<DataTrigger Binding="{Binding XMLFile.IsValid}" Value="{x:Static userControl:XmlFileStatus.InvalidXML}">
+								<Setter Property="ContentTemplate" Value="{StaticResource Icon_XML_green1}" />
+
+							</DataTrigger>
+							<DataTrigger Binding="{Binding XMLFile.IsValid}" Value="{x:Static userControl:XmlFileStatus.Invalid}">
+								<Setter Property="ContentTemplate" Value="{StaticResource Icon_XML_red}" />
+
 							</DataTrigger>
 						</Style.Triggers>
 					</Style>
@@ -70,9 +77,9 @@
 			<TextBox DockPanel.Dock="Left" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="23"
 					Margin="0,0,10,0" TextWrapping="NoWrap" Text="{Binding XMLFile.Source, UpdateSourceTrigger=PropertyChanged}">
 				<TextBox.InputBindings>
-					<KeyBinding Command="{Binding XMLFile.SetXMLFileCommnd}" Key="Return"/>
+					<KeyBinding Command="{Binding XMLFile.SetXMLFileCommnd}" Key="Return" />
 				</TextBox.InputBindings>
-				</TextBox>
+			</TextBox>
 
 		</DockPanel>
 

@@ -90,6 +90,11 @@ namespace HashingTool.Helper
 			try {
 				var h = VectoHash.Load(xml);
 				xmlViewModel.DigestValueComputed = h.ComputeHash();
+				xmlViewModel.DigestMethod = h.GetDigestMethod();
+				var c14N = h.GetCanonicalizationMethods().ToArray();
+				foreach (var c in c14N) {
+					xmlViewModel.CanonicalizationMethods.Add(c);
+				}
 			} catch (Exception e) {
 				xmlViewModel.XMLFile.XMLValidationErrors.Add(e.Message);
 				xmlViewModel.DigestValueComputed = "";
@@ -104,6 +109,11 @@ namespace HashingTool.Helper
 			}
 			try {
 				var h = VectoHash.Load(xml);
+				report.DigestMethod = h.GetDigestMethod();
+				var c14N = h.GetCanonicalizationMethods().ToArray();
+				foreach (var c in c14N) {
+					report.CanonicalizationMethods.Add(c);
+				}
 				try {
 					report.DigestValueRead = h.ReadHash();
 				} catch {

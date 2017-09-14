@@ -12,7 +12,7 @@ namespace HashingTool.Helper
 		{
 			var val = value as ICollection;
 			if (val == null) {
-				throw new ArgumentException("can only convert collections!");
+				return null;
 			}
 			if (targetType == typeof(object) || targetType == typeof(string)) {
 				var tmp = new string[val.Count];
@@ -20,7 +20,7 @@ namespace HashingTool.Helper
 				foreach (var entry in val) {
 					tmp[i++] = entry.ToString();
 				}
-				return string.Join(", ", tmp);
+				return string.Join("; ", tmp);
 			}
 			throw new ArgumentException("Unhandled target type");
 		}

@@ -8,10 +8,10 @@
 	xmlns:helper="clr-namespace:HashingTool.Helper"
 	x:Class="HashingTool.Views.VerifyComponentInputData"
 	mc:Ignorable="d"
-	d:DesignHeight="380" d:DesignWidth="534">
+	d:DesignHeight="415" d:DesignWidth="534">
 	<UserControl.Resources>
 		<helper:CollectionConverter x:Key="CollectionConverter" />
-		
+
 	</UserControl.Resources>
 	<UserControl.DataContext>
 		<viewModel:VerifyComponentInputDataViewModel />
@@ -25,89 +25,98 @@
 				HorizontalAlignment="Right"
 				Width="75" Height="22" VerticalAlignment="Bottom" />
 		<ScrollViewer VerticalScrollBarVisibility="Auto">
-		<DockPanel>
-			<Label DockPanel.Dock="Top" x:Name="lblFileSelect" Content="Component data:" HorizontalAlignment="Left"
-					Margin="10,2,0,2"
-					VerticalAlignment="Top" />
-			<views:VectoXMLFileSelector DockPanel.Dock="Top" Margin="10,0,0,0" VerticalAlignment="Top"
-										XMLFile="{Binding ComponentFile}" Height="80" />
-			<Grid Margin="0,0,0,0" DockPanel.Dock="Bottom">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"></ColumnDefinition>
-					<ColumnDefinition Width="*"></ColumnDefinition>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="*"  />
-				</Grid.RowDefinitions>
+			<DockPanel>
+				<Label DockPanel.Dock="Top" x:Name="lblFileSelect" Content="Component data:" HorizontalAlignment="Left"
+						Margin="10,2,0,2"
+						VerticalAlignment="Top" />
+				<views:VectoXMLFileSelector DockPanel.Dock="Top" Margin="10,0,0,0" VerticalAlignment="Top"
+											XMLFile="{Binding XMLFile}" Height="80" />
+				<Grid Margin="0,0,0,0" DockPanel.Dock="Bottom">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*" />
+					</Grid.RowDefinitions>
 
-				<Label Grid.Row="0" Grid.Column="0" Content="Component:" />
-				<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Component}" Margin="10,2" IsReadOnly="True" />
+					<Label Grid.Row="0" Grid.Column="0" Content="Component:" />
+					<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Component}" Margin="10,2" IsReadOnly="True" />
 
-				<Label Grid.Row="1" Grid.Column="0" Content="Canonicalization methods:" />
-				<TextBox  Grid.Row="1" Grid.Column="1" Text="{Binding CanonicalizaitionMethods , Converter={StaticResource CollectionConverter}}"
+					<Label Grid.Row="1" Grid.Column="0" Content="Canonicalization methods:" />
+					<TextBox Grid.Row="1" Grid.Column="1"
+							Text="{Binding CanonicalizationMethods ,Mode=OneWay, Converter={StaticResource CollectionConverter}}"
 							Margin="10,2" IsReadOnly="True" />
-
-				<Label Grid.Row="2" Grid.Column="0" Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" Template="{DynamicResource LabelControlTemplate1}"/>
-				<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DigestValueRead}" Margin="10,2" IsReadOnly="True">
-					<TextBox.Style>
-						<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
-							<Style.Triggers>
-								<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
-									<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}"/>
-								</DataTrigger>
-								<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
-									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}"/>
-								</DataTrigger>
-							</Style.Triggers>
-						</Style>
-					</TextBox.Style>
-				</TextBox>
-
-				<Label Grid.Row="3" Grid.Column="0" Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}"/>
-				<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DigestValueComputed}" Margin="10,2" IsReadOnly="True" >
-					<TextBox.Style>
-						<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
-							<Style.Triggers>
-								<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
-									<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}"/>
-								</DataTrigger>
-								<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
-									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}"/>
-								</DataTrigger>
-							</Style.Triggers>
-						</Style>
-					</TextBox.Style>
+					
+					<Label Grid.Row="2" Grid.Column="0" Content="Digest method:" />
+					<TextBox Grid.Row="2" Grid.Column="1"
+							Text="{Binding DigestMethod ,Mode=OneWay}"
+							Margin="10,2" IsReadOnly="True" />
+					
+					<Label Grid.Row="3" Grid.Column="0" Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" />
+					<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DigestValueRead}" Margin="10,2" IsReadOnly="True">
+						<TextBox.Style>
+							<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
+										<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
+									</DataTrigger>
+									<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
+										<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</TextBox.Style>
 					</TextBox>
 
-				<ContentControl Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Top" Width="66" Height="30">
-					<ContentControl.LayoutTransform>
-						<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
-					</ContentControl.LayoutTransform>
-					<ContentControl.Style>
-						<Style TargetType="ContentControl">
-							<Setter Property="Content" Value="" />
-							<Setter Property="ToolTip" Value="" />
-							<Style.Triggers>
-								<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
-									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
-									<Setter Property="ToolTip" Value="Component data validates against schema" />
-								</DataTrigger>
-								<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
-									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
-									<Setter Property="ToolTip" Value="Component data does NOT validat against schema" />
-								</DataTrigger>
-							</Style.Triggers>
-						</Style>
-					</ContentControl.Style>
-				</ContentControl>
-			</Grid>
+					<Label Grid.Row="4" Grid.Column="0" Content="Digest Value computed:"
+							Style="{StaticResource DigestValueLabelStyle}" />
+					<TextBox Grid.Row="4" Grid.Column="1" Text="{Binding DigestValueComputed}" Margin="10,2" IsReadOnly="True">
+						<TextBox.Style>
+							<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
+										<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
+									</DataTrigger>
+									<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
+										<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</TextBox.Style>
+					</TextBox>
+
+					<ContentControl Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,20,0,0"
+									VerticalAlignment="Top" Width="66" Height="45">
+						<ContentControl.LayoutTransform>
+							<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+						</ContentControl.LayoutTransform>
+						<ContentControl.Style>
+							<Style TargetType="ContentControl">
+								<Setter Property="Content" Value="" />
+								<Setter Property="ToolTip" Value="" />
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding ComponentDataValid}" Value="True">
+										<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
+										<Setter Property="ToolTip" Value="Component data validates against schema" />
+									</DataTrigger>
+									<DataTrigger Binding="{Binding ComponentDataValid}" Value="False">
+										<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
+										<Setter Property="ToolTip" Value="Component data does NOT validat against schema" />
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</ContentControl.Style>
+					</ContentControl>
+				</Grid>
 
 
-		</DockPanel>
+			</DockPanel>
 		</ScrollViewer>
 	</DockPanel>
 </UserControl>

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using HashingTool.Helper;
 using HashingTool.ViewModel.UserControl;
-using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel
 {

@@ -18,9 +18,9 @@ namespace HashingTool.ViewModel
 		public VerifyResultDataViewModel()
 		{
 			_jobFile = new VectoJobFile("Job File", HashingHelper.IsJobFile, HashingHelper.HashJobFile);
-			_manufacturerReport = new ReportXMLFile(IoService, "Manufacturer Report", HashingHelper.IsManufacturerReport,
+			_manufacturerReport = new ReportXMLFile("Manufacturer Report", HashingHelper.IsManufacturerReport,
 				HashingHelper.ValidateDocumentHash);
-			_customerReport = new ReportXMLFile(IoService, "Customer Report", HashingHelper.IsCustomerReport,
+			_customerReport = new ReportXMLFile("Customer Report", HashingHelper.IsCustomerReport,
 				HashingHelper.ValidateDocumentHash);
 			Files = new ObservableCollection<VectoXMLFile> { _jobFile, _manufacturerReport, _customerReport };
 
@@ -68,7 +68,7 @@ namespace HashingTool.ViewModel
 		{
 			get {
 				return _manufacturerReport.Valid != null && _manufacturerReport.Valid.Value &&
-						_manufacturerReport.JobDigest == _jobFile.DigestValueComputed;
+						_manufacturerReport.JobDigestValue == _jobFile.DigestValueComputed;
 			}
 		}
 
@@ -76,8 +76,9 @@ namespace HashingTool.ViewModel
 		{
 			get {
 				return _customerReport.Valid != null && _customerReport.Valid.Value &&
-						_customerReport.JobDigest == _jobFile.DigestValueComputed;
+						_customerReport.JobDigestValue == _jobFile.DigestValueComputed;
 			}
 		}
+
 	}
 }

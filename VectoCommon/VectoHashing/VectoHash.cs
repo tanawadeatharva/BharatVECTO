@@ -285,7 +285,9 @@ namespace TUGraz.VectoHashing
 		private string DoGetDigestMethod(VectoComponents? component, int index)
 		{
 			var nodes = GetNodes(component, index);
-			return ReadDigestMethod(nodes[index].ParentNode);
+			var digestmethod = ReadDigestMethod(nodes[index].ParentNode);
+			digestmethod = digestmethod ?? XMLHashProvider.DefaultDigestMethod;
+			return digestmethod;
 		}
 
 		public IEnumerable<string> GetCanonicalizationMethods()
@@ -301,7 +303,9 @@ namespace TUGraz.VectoHashing
 		private IEnumerable<string> DoGetCanonicalizationMethods(VectoComponents? component, int index)
 		{
 			var nodes = GetNodes(component, index);
-			return ReadCanonicalizationMethods(nodes[index].ParentNode);
+			var c14N = ReadCanonicalizationMethods(nodes[index].ParentNode);
+			c14N = c14N ?? XMLHashProvider.DefaultCanonicalizationMethod;
+			return c14N;
 		}
 
 		public string ReadHash()

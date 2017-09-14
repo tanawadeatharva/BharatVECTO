@@ -1,40 +1,22 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using HashingTool.Helper;
-using HashingTool.ViewModel.UserControl;
 using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel
 {
-	public class VerifyComponentInputDataViewModel : ObservableObject, IMainView
+	public class VerifyComponentInputDataViewModel : HashedXMLFile, IMainView
 	{
-		private string _digestValueComputed;
-		private string _digestValueRead;
 		private bool _componentDataValid;
-		private string _componentType;
-		private readonly XMLFile _componentFile;
-
 
 		public VerifyComponentInputDataViewModel()
+			: base("Verify Component Data", HashingHelper.IsComponentFile)
 		{
-			_componentFile = new XMLFile(IoService, true, HashingHelper.IsComponentFile);
-			_componentFile.PropertyChanged += ComponentFilechanged;
-
-			// TODO!
-			CanonicalizaitionMethods = new ObservableCollection<string>() {
-				"urn:vecto:xml:2017:canonicalization",
-				"http://www.w3.org/2001/10/xml-exc-c14n#"
-			};
-		}
-
-		public string Name
-		{
-			get { return "Verify Component Data"; }
+			_xmlFile.PropertyChanged += ComponentFilechanged;
 		}
 
 		public ICommand ShowHomeViewCommand
@@ -42,48 +24,6 @@ namespace HashingTool.ViewModel
 			get { return ApplicationViewModel.HomeView; }
 		}
 
-		public XMLFile ComponentFile
-		{
-			get { return _componentFile; }
-		}
-
-		public string Component
-		{
-			get { return _componentType; }
-			set {
-				if (_componentType == value) {
-					return;
-				}
-				_componentType = value;
-				RaisePropertyChanged("Component");
-			}
-		}
-
-		public ObservableCollection<string> CanonicalizaitionMethods { get; private set; }
-
-		public string DigestValueComputed
-		{
-			get { return _digestValueComputed; }
-			set {
-				if (_digestValueComputed == value) {
-					return;
-				}
-				_digestValueComputed = value;
-				RaisePropertyChanged("DigestValueComputed");
-			}
-		}
-
-		public string DigestValueRead
-		{
-			get { return _digestValueRead; }
-			set {
-				if (_digestValueRead == value) {
-					return;
-				}
-				_digestValueRead = value;
-				RaisePropertyChanged("DigestValueRead");
-			}
-		}
 
 		public bool ComponentDataValid
 		{
@@ -99,14 +39,14 @@ namespace HashingTool.ViewModel
 
 		private void ComponentFilechanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == "Document") {
+			if (e.PropertyName == "Document" || e.PropertyName == "ContentValid") {
 				DoValidateHash();
 			}
 		}
 
 		private void DoValidateHash()
 		{
-			if (_componentFile.ContentValid == null || !_componentFile.ContentValid.Value || _componentFile.Document == null) {
+			if (_xmlFile.ContentValid == null || !_xmlFile.ContentValid.Value || _xmlFile.Document == null) {
 				ComponentDataValid = false;
 				DigestValueComputed = "";
 				DigestValueRead = "";
@@ -114,7 +54,7 @@ namespace HashingTool.ViewModel
 				return;
 			}
 			try {
-				var h = VectoHash.Load(_componentFile.Document);
+				var h = VectoHash.Load(_xmlFile.Document);
 
 				if (h.GetContainigComponents().Count != 1) {
 					IoService.Messagebox("Selected file is not a component file!", "Error reading XML File", MessageBoxButton.OK);
@@ -125,12 +65,19 @@ namespace HashingTool.ViewModel
 				DigestValueRead = h.ReadHash();
 				DigestValueComputed = h.ComputeHash();
 				ComponentDataValid = h.ValidateHash();
+				DigestMethod = h.GetDigestMethod();
+				CanonicalizationMethods.Clear();
+				foreach (var c in h.GetCanonicalizationMethods().ToArray()) {
+					CanonicalizationMethods.Add(c);
+				}
 			} catch (Exception e) {
 				ComponentDataValid = false;
 				DigestValueComputed = "";
 				DigestValueRead = "";
 				Component = "";
-				_componentFile.XMLValidationErrors.Add(e.Message);
+				CanonicalizationMethods.Clear();
+				DigestMethod = "";
+				_xmlFile.XMLValidationErrors.Add(e.Message);
 			}
 		}
 	}

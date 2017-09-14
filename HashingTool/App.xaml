@@ -4,9 +4,11 @@
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="Resources/Icon_XML_unknown.xaml" />
-				<ResourceDictionary Source="Resources/Icon_XML_OK.xaml" />
-				<ResourceDictionary Source="Resources/Icon_XML_NOK.xaml" />
+				<ResourceDictionary Source="Resources/Icon_XML_outline.xaml" />
+				<ResourceDictionary Source="Resources/Icon_XML_red.xaml" />
+				<ResourceDictionary Source="Resources/Icon_XML_green1.xaml" />
+				<ResourceDictionary Source="Resources/Icon_XML_green2.xaml" />
+				<ResourceDictionary Source="Resources/Icon_XML_green.xaml" />
 				<ResourceDictionary Source="Resources/Icon_OK.xaml" />
 				<ResourceDictionary Source="Resources/Icon_NOK.xaml" />
 				<ResourceDictionary Source="Resources/UserInterfaceResources.xaml" />

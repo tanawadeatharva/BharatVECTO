@@ -13,35 +13,31 @@ namespace HashingTool.ViewModel
 	{
 		protected readonly XMLFile _xmlFile;
 
-		protected string _manufacturerDigestComputed;
+		protected string _digestValueComputed;
 		protected bool? _valid;
 		protected string _name;
 		protected string _tooltip;
-		protected readonly Func<XmlDocument, Collection<string>, bool?> _contentCheck;
 		protected string _componentType;
 		protected readonly Action<XmlDocument, VectoXMLFile> _validateHashes;
+		private string _digestMethod;
 
 
-		public VectoXMLFile(string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
+		public VectoXMLFile(string name, bool validate, Func<XmlDocument, Collection<string>, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null)
 		{
 			_validateHashes = hashValidation;
-			_xmlFile = new XMLFile(IoService, true, contentCheck);
+			_xmlFile = new XMLFile(IoService, validate, contentCheck);
 			_xmlFile.PropertyChanged += FileChanged;
 			Name = name;
+			CanonicalizationMethods = new ObservableCollection<string>();
 
-			// TODO
-			CanonicalizationMethods = new[] {
-				"urn:vecto:xml:2017:canonicalization",
-				"http://www.w3.org/2001/10/xml-exc-c14n#"
-			};
 			Valid = null;
 			ValidTooltip = HashingHelper.ToolTipNone;
 		}
 
 		protected virtual void FileChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (_xmlFile.IsValid != null && XMLFile.IsValid.HasValue && _xmlFile.IsValid.Value) {
+			if (_xmlFile.IsValid == XmlFileStatus.ValidXML) {
 				if (_xmlFile.HasContentValidation) {
 					Valid = _xmlFile.ContentValid;
 					if (Valid != null && Valid.Value) {
@@ -80,17 +76,29 @@ namespace HashingTool.ViewModel
 			}
 		}
 
-		public string[] CanonicalizationMethods { get; private set; }
+		public ObservableCollection<string> CanonicalizationMethods { get; private set; }
+
+		public string DigestMethod
+		{
+			get { return _digestMethod; }
+			set {
+				if (_digestMethod == value) {
+					return;
+				}
+				_digestMethod = value;
+				RaisePropertyChanged("DigestMethod");
+			}
+		}
 
 
 		public string DigestValueComputed
 		{
-			get { return _manufacturerDigestComputed; }
+			get { return _digestValueComputed; }
 			internal set {
-				if (_manufacturerDigestComputed == value) {
+				if (_digestValueComputed == value) {
 					return;
 				}
-				_manufacturerDigestComputed = value;
+				_digestValueComputed = value;
 				RaisePropertyChanged("DigestValueComputed");
 			}
 		}
@@ -135,19 +143,19 @@ namespace HashingTool.ViewModel
 
 	public class HashedXMLFile : VectoXMLFile
 	{
-		protected string _manufacturerDigestRead;
+		protected string _digestValueRead;
 
-		public HashedXMLFile(IOService ioService, string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
-			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, contentCheck, hashValidation) {}
+		public HashedXMLFile(string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
+			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, true, contentCheck, hashValidation) {}
 
 		public string DigestValueRead
 		{
-			get { return _manufacturerDigestRead; }
+			get { return _digestValueRead; }
 			internal set {
-				if (_manufacturerDigestRead == value) {
+				if (_digestValueRead == value) {
 					return;
 				}
-				_manufacturerDigestRead = value;
+				_digestValueRead = value;
 				RaisePropertyChanged("DigestValueRead");
 			}
 		}
@@ -155,11 +163,13 @@ namespace HashingTool.ViewModel
 
 	public class ReportXMLFile : HashedXMLFile
 	{
-		private string _jobDigestRead;
+		private string _jobDigestValueRead;
+		private string _jobDigestMethod;
+		private string[] _jobCanonicalizationMethod;
 
-		public ReportXMLFile(IOService ioService, string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
+		public ReportXMLFile(string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null)
-			: base(ioService, name, contentCheck, hashValidation)
+			: base(name, contentCheck, hashValidation)
 		{
 			_xmlFile.PropertyChanged += ReadJobDigest;
 		}
@@ -167,28 +177,69 @@ namespace HashingTool.ViewModel
 		private void ReadJobDigest(object sender, PropertyChangedEventArgs e)
 		{
 			var jobDigest = "";
+			var jobDigestMethod = "";
+			var jobc14NMethod = new string[] { };
+
 			if (e.PropertyName != "Document") {
 				return;
 			}
 			if (_xmlFile.Document != null && _xmlFile.Document.DocumentElement != null) {
-				var node =
+				var digestValueNode =
 					_xmlFile.Document.SelectSingleNode("//*[local-name()='InputDataSignature']//*[local-name()='DigestValue']");
-				if (node != null) {
-					jobDigest = node.InnerText;
+				if (digestValueNode != null) {
+					jobDigest = digestValueNode.InnerText;
+				}
+				var digestMethodNode =
+					_xmlFile.Document.SelectSingleNode(
+						"//*[local-name()='InputDataSignature']//*[local-name()='DigestMethod']/@Algorithm");
+				if (digestMethodNode != null) {
+					jobDigestMethod = digestMethodNode.InnerText;
+				}
+
+				var c14NtMethodNodes =
+					_xmlFile.Document.SelectNodes("//*[local-name()='InputDataSignature']//*[local-name()='Transform']/@Algorithm");
+				if (c14NtMethodNodes != null) {
+					jobc14NMethod = (from XmlNode node in c14NtMethodNodes select node.InnerText).ToArray();
 				}
 			}
-			JobDigest = jobDigest;
+			JobCanonicalizationMethod = jobc14NMethod;
+			JobDigestMethod = jobDigestMethod;
+			JobDigestValue = jobDigest;
 		}
 
-		public string JobDigest
+		public string JobDigestMethod
 		{
-			get { return _jobDigestRead; }
-			internal set {
-				if (_jobDigestRead == value) {
+			get { return _jobDigestMethod; }
+			set {
+				if (_jobDigestMethod == value) {
 					return;
 				}
-				_jobDigestRead = value;
-				RaisePropertyChanged("JobDigest");
+				_jobDigestMethod = value;
+				RaisePropertyChanged("JobDigestMethod");
+			}
+		}
+
+		public string[] JobCanonicalizationMethod
+		{
+			get { return _jobCanonicalizationMethod; }
+			set {
+				if (_jobCanonicalizationMethod == value) {
+					return;
+				}
+				_jobCanonicalizationMethod = value;
+				RaisePropertyChanged("JobCanonicalizationMethod");
+			}
+		}
+
+		public string JobDigestValue
+		{
+			get { return _jobDigestValueRead; }
+			internal set {
+				if (_jobDigestValueRead == value) {
+					return;
+				}
+				_jobDigestValueRead = value;
+				RaisePropertyChanged("JobDigestValue");
 			}
 		}
 	}
@@ -200,7 +251,7 @@ namespace HashingTool.ViewModel
 
 
 		public VectoJobFile(string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
-			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, contentCheck, hashValidation)
+			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, true, contentCheck, hashValidation)
 		{
 			_xmlFile.PropertyChanged += JobFilechanged;
 			Components = new ObservableCollection<ComponentEntry>();
@@ -240,9 +291,12 @@ namespace HashingTool.ViewModel
 
 		private void DoValidateHash()
 		{
-			if (_xmlFile.Document == null || _xmlFile.ContentValid == null || !_xmlFile.ContentValid.Value) {
+			if (_xmlFile.Document == null || _xmlFile.IsValid != XmlFileStatus.ValidXML || _xmlFile.ContentValid == null ||
+				!_xmlFile.ContentValid.Value) {
 				Components.Clear();
 				DigestValueComputed = "";
+				DigestMethod = "";
+				CanonicalizationMethods.Clear();
 				JobDataValid = false;
 				return;
 			}
@@ -263,15 +317,14 @@ namespace HashingTool.ViewModel
 							? component.Entry.XMLElementName()
 							: string.Format("{0} ({1})", component.Entry.XMLElementName(), i + 1);
 						entry.Valid = h.ValidateHash(component.Entry, i);
-						entry.CanonicalizationMethod = new[] {
-							"urn:vecto:xml:2017:canonicalization",
-							"http://www.w3.org/2001/10/xml-exc-c14n#"
-						};
+						entry.CanonicalizationMethod = h.GetCanonicalizationMethods(component.Entry, i).ToArray();
+						entry.DigestMethod = h.GetDigestMethod(component.Entry, i);
 						entry.DigestValueRead = h.ReadHash(component.Entry, i);
 						entry.DigestValueComputed = h.ComputeHash(component.Entry, i);
 						if (!entry.Valid) {
 							_xmlFile.XMLValidationErrors.Add(
-								string.Format("Digest Value mismatch for component \"{0}\". Read digest value: \"{1}\", computed digest value \"{2}\"",
+								string.Format(
+									"Digest Value mismatch for component \"{0}\". Read digest value: \"{1}\", computed digest value \"{2}\"",
 									entry.Component, entry.DigestValueRead, entry.DigestValueComputed));
 						}
 						Components.Add(entry);

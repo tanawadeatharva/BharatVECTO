@@ -6,6 +6,7 @@ namespace HashingTool.ViewModel
 		public string DigestValueRead { get; set; }
 		public string DigestValueComputed { get; set; }
 		public string[] CanonicalizationMethod { get; set; }
+		public string DigestMethod { get; set; }
 		public bool Valid { get; set; }
 	}
 }

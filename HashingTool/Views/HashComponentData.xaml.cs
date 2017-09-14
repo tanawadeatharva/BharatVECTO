@@ -22,7 +22,7 @@ namespace HashingTool.Views
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
 			var dialog = new XMLValidationErrorsDialog();
-			dialog.XMLErrors = (DataContext as HashComponentDataViewModel).XMLValidationErrors;
+			dialog.XMLErrors = (DataContext as HashComponentDataViewModel).XMLFile.XMLValidationErrors;
 
 			dialog.ShowDialog();
 		}

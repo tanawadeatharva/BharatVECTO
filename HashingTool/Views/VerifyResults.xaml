@@ -17,8 +17,26 @@
 		<DataTemplate x:Key="ExpanderHeader" DataType="viewModel:VectoXMLFile">
 			<DockPanel HorizontalAlignment="Stretch" VerticalAlignment="top" MinWidth="450">
 				<TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold" />
-
-				<views:VectoXMLFileSelector DockPanel.Dock="Left" Margin="0,0,35,0" VerticalAlignment="Top"
+				<ContentControl DockPanel.Dock="Right" Width="35" Height="35" Margin="10,-10,10,0"
+								ToolTip="{Binding JobValidToolTip}">
+					<ContentControl.LayoutTransform>
+						<ScaleTransform ScaleX=".4" ScaleY=".4" />
+					</ContentControl.LayoutTransform>
+					<ContentControl.Style>
+						<Style TargetType="ContentControl">
+							<Setter Property="Content" Value="" />
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding Valid}" Value="True">
+									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
+								</DataTrigger>
+								<DataTrigger Binding="{Binding Valid}" Value="False">
+									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</ContentControl.Style>
+				</ContentControl>
+				<views:VectoXMLFileSelector DockPanel.Dock="Left" Margin="0,0,0,0" VerticalAlignment="Top"
 											XMLFile="{Binding XMLFile}" Height="1" />
 
 			</DockPanel>
@@ -60,6 +78,7 @@
 					<RowDefinition />
 					<RowDefinition />
 					<RowDefinition />
+					<RowDefinition/>
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />
@@ -101,8 +120,13 @@
 						Text="{Binding CanonicalizationMethods, Mode=OneWay , Converter={StaticResource CollectionConverter}}"
 						Margin="10,2" IsReadOnly="True" />
 
-				<Label Grid.Row="2" Grid.Column="0" Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}" />
-				<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DigestValueComputed}"
+				<Label Grid.Row="2" Grid.Column="0" Content="Digest method:" />
+				<TextBox Grid.Row="2" Grid.Column="1"
+						Text="{Binding DigestMethod, Mode=OneWay}"
+						Margin="10,2" IsReadOnly="True" />
+
+				<Label Grid.Row="3" Grid.Column="0" Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}" />
+				<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DigestValueComputed}"
 						Margin="10,2" IsReadOnly="True" Style="{StaticResource DigestValueTextboxStyle}" />
 			</Grid>
 		</DataTemplate>
@@ -115,6 +139,8 @@
 					<RowDefinition />
 					<RowDefinition />
 					<RowDefinition />
+					<RowDefinition/>
+					<RowDefinition/>
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />
@@ -150,18 +176,26 @@
 					</Button>
 				</StackPanel>
 
-				<Label Grid.Row="1" Grid.Column="0" Content="Job Digest Value from file:"
+				<Label Grid.Row="1" Grid.Column="0" Content="Job CanonicalizationMethod:" />
+				<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding JobCanonicalizationMethod, Mode=OneWay, Converter={StaticResource CollectionConverter}}"
+						Margin="10,2" IsReadOnly="True" />
+
+				<Label Grid.Row="2" Grid.Column="0" Content="Job Digest Method:" />
+				<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding JobDigestMethod, Mode=OneWay}"
+						Margin="10,2" IsReadOnly="True" />
+				
+				<Label Grid.Row="3" Grid.Column="0" Content="Job Digest Value:"
 						Style="{StaticResource DigestValueLabelStyle}" />
-				<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding JobDigest, Mode=OneWay}"
+				<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding JobDigestValue, Mode=OneWay}"
 						Margin="10,2" IsReadOnly="True" Style="{StaticResource DigestValueTextboxStyle}" />
 
-				<Label Grid.Row="2" Grid.Column="0" Content="Canonicalization methods:" />
-				<TextBox Grid.Row="2" Grid.Column="1"
+				<Label Grid.Row="4" Grid.Column="0" Content="Canonicalization methods:" />
+				<TextBox Grid.Row="4" Grid.Column="1"
 						Text="{Binding CanonicalizationMethods, Mode=OneWay , Converter={StaticResource CollectionConverter}}"
 						Margin="10,2" IsReadOnly="True" />
 
-				<Label Grid.Row="3" Grid.Column="0" Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" />
-				<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DigestValueRead}" Margin="10,2" IsReadOnly="True">
+				<Label Grid.Row="5" Grid.Column="0" Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" />
+				<TextBox Grid.Row="5" Grid.Column="1" Text="{Binding DigestValueRead}" Margin="10,2" IsReadOnly="True">
 					<TextBox.Style>
 						<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 							<Style.Triggers>
@@ -176,8 +210,8 @@
 					</TextBox.Style>
 				</TextBox>
 
-				<Label Grid.Row="4" Grid.Column="0" Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}" />
-				<TextBox Grid.Row="4" Grid.Column="1" Text="{Binding DigestValueComputed}" Margin="10,2" IsReadOnly="True">
+				<Label Grid.Row="6" Grid.Column="0" Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}" />
+				<TextBox Grid.Row="6" Grid.Column="1" Text="{Binding DigestValueComputed}" Margin="10,2" IsReadOnly="True">
 					<TextBox.Style>
 						<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 							<Style.Triggers>
