@@ -68,7 +68,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public static void AreRelativeEqual(Scalar expected, Scalar actual,
 			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
-			Assert.IsTrue(expected.HasEqualUnit(new SI()) && actual.HasEqualUnit(new SI()), "Units of Scalars must be empty.");
 			AreRelativeEqual(expected.Value(), actual.Value(), toleranceFactor: toleranceFactor);
 		}
 

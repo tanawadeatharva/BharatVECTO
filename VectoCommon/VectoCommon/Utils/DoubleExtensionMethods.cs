@@ -76,8 +76,7 @@ namespace TUGraz.VectoCommon.Utils
 
 		[DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool IsRelativeEqual(this double expected, double actual,
-			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
+		public static bool IsRelativeEqual(this double expected, double actual, double toleranceFactor = ToleranceFactor)
 		{
 			if (double.IsNaN(expected)) {
 				return double.IsNaN(actual);
@@ -234,8 +233,9 @@ namespace TUGraz.VectoCommon.Utils
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static SI SI(this double value)
 		{
-			return new SI(value);
+			return SIBase<Scalar>.Create(value);
 		}
+
 	    public static SI SI(this double value, UnitInstance si)
 	    {
 	        return new SI(si, value);
