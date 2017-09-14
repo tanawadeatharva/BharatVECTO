@@ -99,29 +99,30 @@ namespace TUGraz.VectoHashing
 			return retVal;
 		}
 
-		public XElement ComputeXmlHash()
+		public XElement ComputeXmlHash(IEnumerable<string> canonicalization = null, string digestMethod = null)
 		{
 			var nodes = Document.SelectNodes(GetComponentQueryString());
 			if (nodes == null || nodes.Count == 0) {
 				throw new Exception("No component found");
 			}
 			var componentId = nodes[0].Attributes[XMLNames.Component_ID_Attr].Value;
-			var hash = DoComputeHash(nodes[0]);
+			var hash = DoComputeHash(nodes[0], canonicalization, digestMethod);
 			return hash.ToXDocument().Root;
 		}
 
-		public string ComputeHash()
+		public string ComputeHash(IEnumerable<string> canonicalization = null, string digestMethod = null)
 		{
 			var nodes = Document.SelectNodes(GetComponentQueryString());
 			if (nodes == null || nodes.Count == 0) {
 				throw new Exception("No component found");
 			}
 			var componentId = nodes[0].Attributes[XMLNames.Component_ID_Attr].Value;
-			return GetHashValueFromSig(DoComputeHash(nodes[0]), componentId);
+			return GetHashValueFromSig(DoComputeHash(nodes[0], canonicalization, digestMethod), componentId);
 		}
 
 
-		public string ComputeHash(VectoComponents component, int index = 0)
+		public string ComputeHash(VectoComponents component, int index = 0, IEnumerable<string> canonicalization = null,
+			string digestMethod = null)
 		{
 			var nodes = Document.SelectNodes(GetComponentQueryString(component));
 
@@ -133,16 +134,29 @@ namespace TUGraz.VectoHashing
 					nodes.Count));
 			}
 			var componentId = nodes[index].Attributes[XMLNames.Component_ID_Attr].Value;
-			return GetHashValueFromSig(DoComputeHash(nodes[index]), componentId);
+			return GetHashValueFromSig(DoComputeHash(nodes[index], canonicalization, digestMethod), componentId);
 		}
 
-		private static XmlDocument DoComputeHash(XmlNode dataNode)
+		private static XmlDocument DoComputeHash(XmlNode dataNode, IEnumerable<string> canonicalization, string digestMethod)
 		{
 			var parent = dataNode.ParentNode;
 
 			if (parent == null) {
 				throw new Exception("Invalid structure of input XML!");
 			}
+
+			if (canonicalization == null) {
+				canonicalization = ReadCanonicalizationMethods(parent);
+			}
+			if (digestMethod == null) {
+				digestMethod = ReadDigestMethod(parent);
+			}
+
+			canonicalization = canonicalization ?? XMLHashProvider.DefaultCanonicalizationMethod;
+			digestMethod = digestMethod ?? XMLHashProvider.DefaultDigestMethod;
+
+			// copy the provided data Node to a new document before computing the hash
+			// required if the same component (e.g. tire) is used multiple times
 			var newDoc = new XmlDocument();
 			var node = newDoc.CreateElement("Dummy");
 			newDoc.AppendChild(node);
@@ -150,7 +164,28 @@ namespace TUGraz.VectoHashing
 			node.AppendChild(newNode);
 
 			var componentId = dataNode.Attributes[XMLNames.Component_ID_Attr].Value;
-			return XMLHashProvider.ComputeHash(newDoc, componentId);
+			return XMLHashProvider.ComputeHash(newDoc, componentId, canonicalization, digestMethod);
+		}
+
+		private static string ReadDigestMethod(XmlNode rootNode)
+		{
+			var nodes = rootNode.SelectNodes("./*[local-name()='Signature']//*[local-name() = 'DigestMethod']/@Algorithm");
+			if (nodes == null || nodes.Count == 0) {
+				return null;
+			}
+			if (nodes.Count > 1) {
+				throw new Exception("Multiple DigestValue elements found!");
+			}
+			return nodes[0].InnerText;
+		}
+
+		private static IEnumerable<string> ReadCanonicalizationMethods(XmlNode rootNode)
+		{
+			var nodes = rootNode.SelectNodes("./*[local-name()='Signature']//*[local-name() = 'Transform']/@Algorithm");
+			if (nodes == null || nodes.Count == 0) {
+				return null;
+			}
+			return (from XmlNode node in nodes select node.InnerText).ToArray();
 		}
 
 		public XDocument AddHash()
@@ -197,7 +232,8 @@ namespace TUGraz.VectoHashing
 			dateNode.FirstChild.Value = XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc);
 
 
-			var hash = XMLHashProvider.ComputeHash(Document, id);
+			var hash = XMLHashProvider.ComputeHash(Document, id, XMLHashProvider.DefaultCanonicalizationMethod,
+				XMLHashProvider.DefaultDigestMethod);
 			var sig = Document.CreateElement(XMLNames.DI_Signature, node.NamespaceURI);
 
 			if (node.ParentNode == null || hash.DocumentElement == null) {
@@ -235,26 +271,68 @@ namespace TUGraz.VectoHashing
 			throw new Exception("unknown document structure! neither input data nor output data format");
 		}
 
+		public string GetDigestMethod()
+		{
+			return DoGetDigestMethod(null, 0);
+		}
+
+
+		public string GetDigestMethod(VectoComponents component, int index = 0)
+		{
+			return DoGetDigestMethod(component, index);
+		}
+
+		private string DoGetDigestMethod(VectoComponents? component, int index)
+		{
+			var nodes = GetNodes(component, index);
+			return ReadDigestMethod(nodes[index].ParentNode);
+		}
+
+		public IEnumerable<string> GetCanonicalizationMethods()
+		{
+			return DoGetCanonicalizationMethods(null, 0);
+		}
+
+		public IEnumerable<string> GetCanonicalizationMethods(VectoComponents component, int index = 0)
+		{
+			return DoGetCanonicalizationMethods(component, index);
+		}
+
+		private IEnumerable<string> DoGetCanonicalizationMethods(VectoComponents? component, int index)
+		{
+			var nodes = GetNodes(component, index);
+			return ReadCanonicalizationMethods(nodes[index].ParentNode);
+		}
+
 		public string ReadHash()
 		{
-			var nodes = Document.SelectNodes(GetComponentQueryString());
-			if (nodes == null || nodes.Count == 0) {
-				throw new Exception("No component found");
-			}
-			return ReadHashValue(nodes[0]);
+			return DoReadHash(null, 0);
 		}
 
 		public string ReadHash(VectoComponents component, int index = 0)
 		{
+			return DoReadHash(component, index);
+		}
+
+		private string DoReadHash(VectoComponents? component, int index)
+		{
+			var nodes = GetNodes(component, index);
+			return ReadHashValue(nodes[index]);
+		}
+
+		private XmlNodeList GetNodes(VectoComponents? component, int index)
+		{
 			var nodes = Document.SelectNodes(GetComponentQueryString(component));
 			if (nodes == null || nodes.Count == 0) {
-				throw new Exception(string.Format("Component {0} not found", component.XMLElementName()));
+				throw new Exception(component == null
+					? "No component found"
+					: string.Format("Component {0} not found", component.Value.XMLElementName()));
 			}
 			if (index >= nodes.Count) {
 				throw new Exception(string.Format("index exceeds number of components found! index: {0}, #components: {1}", index,
 					nodes.Count));
 			}
-			return ReadHashValue(nodes[index]);
+			return nodes;
 		}
 
 
