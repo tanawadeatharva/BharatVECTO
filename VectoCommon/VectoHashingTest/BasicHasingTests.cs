@@ -49,13 +49,20 @@ namespace VectoHashingTest
 		public const string UnorderedXMLVehicle = @"Testdata\XML\Variations\vecto_vehicle-sample_FULL_Entry_Order.xml";
 
 		public const string HashSimpleXML = "U2zic7KOnKw60rzh+KKQ1lwZL6NmXju+DXG7cYYmlxo=";
+
 		public const string HashEngineXML = "cfPKB2LkHIbznFA9aQwCNfNLSj9V7qNnSskyOxaXB+o=";
-		public const string HashVehicleXML = "yZCH9sF1GUdawVOa1fKQ2zvuUHg5ZthmitTOcWg/s1Y=";
+		public const string HashVehicleXML = "k029AO90zxKbTybDrvUlCFszdynJot8S1Y+U5lVUG18=";
+
+		public string[] Canonicalization;
+		public string DigestAlgorithm;
+
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+			Canonicalization = new[] { XMLHashProvider.VectoDsigTransform, XMLHashProvider.DsigExcC14NTransform };
+			DigestAlgorithm = XMLHashProvider.DigestMethodSha256;
 		}
 
 		[TestCase]
@@ -65,7 +72,7 @@ namespace VectoHashingTest
 			var doc = new XmlDocument();
 			doc.Load(SimpleXML);
 			var hasher = new XMLHashProvider();
-			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash, Canonicalization, DigestAlgorithm);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "simple_document_hashed.xml");
@@ -81,7 +88,7 @@ namespace VectoHashingTest
 			var doc = new XmlDocument();
 			doc.Load(ReferenceXMLEngine);
 			var hasher = new XMLHashProvider();
-			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash, Canonicalization, DigestAlgorithm);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "reference_engine_hashed.xml");
@@ -97,7 +104,7 @@ namespace VectoHashingTest
 			var doc = new XmlDocument();
 			doc.Load(ReferenceXMLVehicle);
 			var hasher = new XMLHashProvider();
-			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash, Canonicalization, DigestAlgorithm);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "reference_vehicle_hashed.xml");
@@ -113,7 +120,7 @@ namespace VectoHashingTest
 			var doc = new XmlDocument();
 			doc.Load(UnorderedXMLVehicle);
 			var hasher = new XMLHashProvider();
-			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash, Canonicalization, DigestAlgorithm);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "reference_vehicle_hashed.xml");
