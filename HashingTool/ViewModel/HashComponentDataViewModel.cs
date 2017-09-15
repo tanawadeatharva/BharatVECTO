@@ -62,8 +62,9 @@ namespace HashingTool.ViewModel
 
 		private void SourceChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == "Document" || e.PropertyName == "IsValid")
-			DoComputeHash();
+			if (e.PropertyName == "Document" || e.PropertyName == "IsValid") {
+				DoComputeHash();
+			}
 		}
 
 		private void SaveDocument()
@@ -104,7 +105,7 @@ namespace HashingTool.ViewModel
 				ComponentDataValid = false;
 				DigestValue = "";
 				DigestMethod = "";
-				CanonicalizationMethods.Clear();
+				SetCanonicalizationMethod(new string[] { });
 				return;
 			}
 
@@ -113,7 +114,7 @@ namespace HashingTool.ViewModel
 				ComponentDataValid = false;
 				DigestValue = "";
 				_xmlFile.XMLValidationErrors.Clear();
-				CanonicalizationMethods.Clear();
+				SetCanonicalizationMethod(new string[] { });
 
 				var h = VectoHash.Load(_xmlFile.Document);
 
@@ -152,21 +153,17 @@ namespace HashingTool.ViewModel
 						ms.Flush();
 						ms.Seek(0, SeekOrigin.Begin);
 						var h2 = VectoHash.Load(ms);
-						var c14N = h2.GetCanonicalizationMethods().ToArray();
-						var digestMethod = h2.GetDigestMethod();
-						DigestValue = h.ReadHash();
-						foreach (var c in c14N) {
-							CanonicalizationMethods.Add(c);
-						}
-						RaisePropertyChanged("CanonicalizationMethods");
-						DigestMethod = digestMethod;
+						DigestMethod = h2.GetDigestMethod();
+						DigestValue = h2.ReadHash();
+						SetCanonicalizationMethod(h2.GetCanonicalizationMethods());
 					}
 				}
 			} catch (Exception e) {
 				ComponentDataValid = false;
 				DigestValue = "";
 				_xmlFile.XMLValidationErrors.Add(e.Message);
-				CanonicalizationMethods.Clear();
+				SetCanonicalizationMethod(new string[] { });
+				DigestMethod = "";
 			} finally {
 				_busy = false;
 				_saveCommand.RaiseCanExecuteChanged();

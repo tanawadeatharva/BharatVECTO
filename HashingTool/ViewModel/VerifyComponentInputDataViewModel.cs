@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -9,7 +10,7 @@ using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel
 {
-	public class VerifyComponentInputDataViewModel : HashedXMLFile, IMainView
+	public class VerifyComponentInputDataViewModel : HashedXMLFile, IMainView, INotifyPropertyChanged
 	{
 		private bool _componentDataValid;
 
@@ -66,19 +67,18 @@ namespace HashingTool.ViewModel
 				DigestValueComputed = h.ComputeHash();
 				ComponentDataValid = h.ValidateHash();
 				DigestMethod = h.GetDigestMethod();
-				CanonicalizationMethods.Clear();
-				foreach (var c in h.GetCanonicalizationMethods().ToArray()) {
-					CanonicalizationMethods.Add(c);
-				}
+				SetCanonicalizationMethod(h.GetCanonicalizationMethods());
+				
 			} catch (Exception e) {
 				ComponentDataValid = false;
 				DigestValueComputed = "";
 				DigestValueRead = "";
 				Component = "";
-				CanonicalizationMethods.Clear();
+				SetCanonicalizationMethod(new string[] { });
 				DigestMethod = "";
 				_xmlFile.XMLValidationErrors.Add(e.Message);
 			}
 		}
+
 	}
 }

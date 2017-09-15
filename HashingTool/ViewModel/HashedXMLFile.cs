@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -77,6 +78,15 @@ namespace HashingTool.ViewModel
 		}
 
 		public ObservableCollection<string> CanonicalizationMethods { get; private set; }
+
+		public void SetCanonicalizationMethod(IEnumerable<string> c14NMethods)
+		{
+			CanonicalizationMethods.Clear();
+			foreach (var c14N in c14NMethods) {
+				CanonicalizationMethods.Add(c14N);
+			}
+			RaisePropertyChanged("CanonicalizationMethods");
+		}
 
 		public string DigestMethod
 		{
@@ -163,9 +173,11 @@ namespace HashingTool.ViewModel
 
 	public class ReportXMLFile : HashedXMLFile
 	{
-		private string _jobDigestValueRead;
-		private string _jobDigestMethod;
-		private string[] _jobCanonicalizationMethod;
+		private string _jobDigestValueReadRead;
+		private string _jobDigestMethodRead;
+		private string[] _jobCanonicalizationMethodRead;
+		private string _jobDigestComputed;
+		private bool _jobDigestValid;
 
 		public ReportXMLFile(string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null)
@@ -202,44 +214,69 @@ namespace HashingTool.ViewModel
 					jobc14NMethod = (from XmlNode node in c14NtMethodNodes select node.InnerText).ToArray();
 				}
 			}
-			JobCanonicalizationMethod = jobc14NMethod;
-			JobDigestMethod = jobDigestMethod;
-			JobDigestValue = jobDigest;
+			JobCanonicalizationMethodRead = jobc14NMethod;
+			JobDigestMethodRead = jobDigestMethod;
+			JobDigestValueRead = jobDigest;
 		}
 
-		public string JobDigestMethod
+		public string JobDigestMethodRead
 		{
-			get { return _jobDigestMethod; }
+			get { return _jobDigestMethodRead; }
 			set {
-				if (_jobDigestMethod == value) {
+				if (_jobDigestMethodRead == value) {
 					return;
 				}
-				_jobDigestMethod = value;
-				RaisePropertyChanged("JobDigestMethod");
+				_jobDigestMethodRead = value;
+				RaisePropertyChanged("JobDigestMethodRead");
 			}
 		}
 
-		public string[] JobCanonicalizationMethod
+		public string[] JobCanonicalizationMethodRead
 		{
-			get { return _jobCanonicalizationMethod; }
+			get { return _jobCanonicalizationMethodRead; }
 			set {
-				if (_jobCanonicalizationMethod == value) {
+				if (_jobCanonicalizationMethodRead == value) {
 					return;
 				}
-				_jobCanonicalizationMethod = value;
-				RaisePropertyChanged("JobCanonicalizationMethod");
+				_jobCanonicalizationMethodRead = value;
+				RaisePropertyChanged("JobCanonicalizationMethodRead");
 			}
 		}
 
-		public string JobDigestValue
+		public string JobDigestValueRead
 		{
-			get { return _jobDigestValueRead; }
+			get { return _jobDigestValueReadRead; }
 			internal set {
-				if (_jobDigestValueRead == value) {
+				if (_jobDigestValueReadRead == value) {
 					return;
 				}
-				_jobDigestValueRead = value;
-				RaisePropertyChanged("JobDigestValue");
+				_jobDigestValueReadRead = value;
+				RaisePropertyChanged("JobDigestValueRead");
+			}
+		}
+
+		public string JobDigestValueComputed
+		{
+			get { return _jobDigestComputed; }
+			set {
+				if (_jobDigestComputed == value) {
+					return;
+				}
+				_jobDigestComputed = value;
+				RaisePropertyChanged("JobDigestValueComputed");
+				JobDigestValid = JobDigestValueComputed == JobDigestValueRead;
+			}
+		}
+
+		public bool JobDigestValid
+		{
+			get { return _jobDigestValid; }
+			set {
+				if (_jobDigestValid == value) {
+					return;
+				}
+				_jobDigestValid = value;
+				RaisePropertyChanged("JobDigestValid");
 			}
 		}
 	}
@@ -296,7 +333,7 @@ namespace HashingTool.ViewModel
 				Components.Clear();
 				DigestValueComputed = "";
 				DigestMethod = "";
-				CanonicalizationMethods.Clear();
+				SetCanonicalizationMethod(new string[] { });
 				JobDataValid = false;
 				return;
 			}

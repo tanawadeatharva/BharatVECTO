@@ -31,8 +31,10 @@ namespace HashingTool.ViewModel
 
 		private void Update(object sender, PropertyChangedEventArgs e)
 		{
-			RaisePropertyChanged("ManufacturerReportValid");
-			RaisePropertyChanged("CustomerReportReportValid");
+			//RaisePropertyChanged("ManufacturerReportValid");
+			//RaisePropertyChanged("CustomerReportReportValid");
+			UpdateReportJobDigest(_manufacturerReport);
+			UpdateReportJobDigest(_customerReport);
 		}
 
 
@@ -64,21 +66,43 @@ namespace HashingTool.ViewModel
 
 		public ObservableCollection<VectoXMLFile> Files { get; private set; }
 
-		public bool ManufacturerReportValid
+		//public bool ManufacturerReportValid
+		//{
+		//	get {
+		private void UpdateReportJobDigest(ReportXMLFile reportXML)
 		{
-			get {
-				return _manufacturerReport.Valid != null && _manufacturerReport.Valid.Value &&
-						_manufacturerReport.JobDigestValue == _jobFile.DigestValueComputed;
+			if (reportXML.Valid == null || !reportXML.Valid.Value) {
+				reportXML.JobDigestValueComputed = "";
+				return;
+			}
+			try {
+				var h = VectoHash.Load(_jobFile.XMLFile.Document);
+				var jobDigest = h.ComputeHash(reportXML.JobCanonicalizationMethodRead,
+					reportXML.JobDigestMethodRead);
+				reportXML.JobDigestValueComputed = jobDigest;
+			} catch (Exception e) {
+				reportXML.JobDigestValueComputed = "";
 			}
 		}
 
-		public bool CustomerReportReportValid
-		{
-			get {
-				return _customerReport.Valid != null && _customerReport.Valid.Value &&
-						_customerReport.JobDigestValue == _jobFile.DigestValueComputed;
-			}
-		}
+		//	}
+		//}
 
+		//public bool CustomerReportReportValid
+		//{
+		//	get {
+		//		if (_customerReport.Valid == null || !_customerReport.Valid.Value) {
+		//			return false;
+		//		}
+		//		try {
+		//			var h = VectoHash.Load(_jobFile.XMLFile.Document);
+		//			var jobDigest = h.ComputeHash(_customerReport.JobCanonicalizationMethodRead, _customerReport.JobDigestMethodRead);
+		//			_customerReport.JobDigestValueComputed = jobDigest;
+		//			return _customerReport.JobDigestValueRead == jobDigest;
+		//		} catch (Exception e) {
+		//			return false;
+		//		}
+		//	}
+		//}
 	}
 }

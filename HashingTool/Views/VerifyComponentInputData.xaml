@@ -50,7 +50,7 @@
 
 					<Label Grid.Row="1" Grid.Column="0" Content="Canonicalization methods:" />
 					<TextBox Grid.Row="1" Grid.Column="1"
-							Text="{Binding CanonicalizationMethods ,Mode=OneWay, Converter={StaticResource CollectionConverter}}"
+							Text="{Binding CanonicalizationMethods, Mode=OneWay, Converter={StaticResource CollectionConverter}}"
 							Margin="10,2" IsReadOnly="True" />
 					
 					<Label Grid.Row="2" Grid.Column="0" Content="Digest method:" />
