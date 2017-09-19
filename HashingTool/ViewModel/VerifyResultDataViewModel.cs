@@ -27,6 +27,7 @@ namespace HashingTool.ViewModel
 			RaisePropertyChanged("CanonicalizationMethods");
 			_customerReport.PropertyChanged += Update;
 			_manufacturerReport.PropertyChanged += Update;
+			_jobFile.PropertyChanged += Update;
 		}
 
 		private void Update(object sender, PropertyChangedEventArgs e)
@@ -71,7 +72,7 @@ namespace HashingTool.ViewModel
 		//	get {
 		private void UpdateReportJobDigest(ReportXMLFile reportXML)
 		{
-			if (reportXML.Valid == null || !reportXML.Valid.Value) {
+			if (reportXML.Valid == null || !reportXML.Valid.Value || _jobFile.XMLFile.Document == null) {
 				reportXML.JobDigestValueComputed = "";
 				return;
 			}
