@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using HashingTool.Views;
 
@@ -14,7 +15,6 @@ namespace HashingTool.ViewModel
 
 		private IMainView _currentView;
 		public static List<IMainView> AvailableViews;
-
 
 		public ApplicationViewModel()
 		{
@@ -57,6 +57,7 @@ namespace HashingTool.ViewModel
 		{
 			get { return HomeView; }
 		}
+
 
 		private void ChangeViewModel(IMainView mainView)
 		{

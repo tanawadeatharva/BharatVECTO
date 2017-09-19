@@ -88,6 +88,9 @@
     <Compile Include="ViewModel\UserControl\XMLFile.cs" />
     <Compile Include="Util\XMLValidator.cs" />
     <Compile Include="ViewModel\VerifyResultDataViewModel.cs" />
+    <Compile Include="Views\AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HashComponentData.xaml.cs">
       <DependentUpon>HashComponentData.xaml</DependentUpon>
     </Compile>
@@ -150,6 +153,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\UserInterfaceResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AboutDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

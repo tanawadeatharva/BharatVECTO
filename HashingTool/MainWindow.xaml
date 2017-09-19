@@ -28,13 +28,15 @@
 	<DockPanel>
 		<Grid DockPanel.Dock="Top" Height="100">
 			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="256"/>
-				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="256" />
+				<ColumnDefinition Width="*" />
 			</Grid.ColumnDefinitions>
 			<Grid.Background>
-				<ImageBrush ImageSource="Resources/VECTO_Hashing.png" Stretch="None" AlignmentX="Left" AlignmentY="Center"/>
+				<ImageBrush ImageSource="Resources/VECTO_Hashing.png" Stretch="None" AlignmentX="Left" AlignmentY="Center" />
 			</Grid.Background>
-			<TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="VECTO Hashing Tool" FontSize="38" FontWeight="Bold" Margin="30,20,0,0"/>
+			<TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="VECTO Hashing Tool"
+						FontSize="38" FontWeight="Bold" Margin="30,20,0,0" />
+			
 		</Grid>
 		<Border DockPanel.Dock="Bottom" BorderThickness="0,1,0,0" BorderBrush="{x:Static SystemColors.ControlDarkDarkBrush}"
 				Margin="2,0">
@@ -52,10 +54,40 @@
 						Source="Resources/JRC-About.png" />
 			</Grid>
 		</Border>
+		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,10,0">
+			<TextBlock Text="User Manual" HorizontalAlignment="Center" Margin="5" Foreground="Blue"
+							MouseLeftButtonUp="Help_OnMouseLeftButtonUp">
+				<TextBlock.Style>
+					<Style>
+						<Setter Property="TextBlock.TextDecorations" Value="" />
+						<Style.Triggers>
+							<Trigger Property="TextBlock.IsMouseOver" Value="True">
+								<Setter Property="TextBlock.TextDecorations" Value="Underline" />
+								<Setter Property="TextBlock.Cursor" Value="Hand" />
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</TextBlock.Style>
+			</TextBlock>
+			<TextBlock Text="About" HorizontalAlignment="Center" Margin="5" Foreground="Blue"
+							MouseLeftButtonUp="About_OnMouseLeftButtonUp">
+				<TextBlock.Style>
+					<Style>
+						<Setter Property="TextBlock.TextDecorations" Value="" />
+						<Style.Triggers>
+							<Trigger Property="TextBlock.IsMouseOver" Value="True">
+								<Setter Property="TextBlock.TextDecorations" Value="Underline" />
+								<Setter Property="TextBlock.Cursor" Value="Hand" />
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</TextBlock.Style>
+			</TextBlock>
+		</StackPanel>
 		<!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
-			<Grid Margin="10">
-				<ContentControl Content="{Binding CurrentViewModel}" />
-			</Grid>
+		<Grid Margin="10">
+			<ContentControl Content="{Binding CurrentViewModel}" />
+		</Grid>
 		<!--</ScrollViewer>-->
 	</DockPanel>
 </Window>
