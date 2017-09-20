@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using HashingTool.ViewModel;
+using HashingTool.ViewModel.UserControl;
 
 namespace HashingTool.Views
 {

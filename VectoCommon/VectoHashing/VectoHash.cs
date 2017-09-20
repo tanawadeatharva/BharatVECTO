@@ -34,6 +34,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Resources;
@@ -89,9 +90,9 @@ namespace TUGraz.VectoHashing
 		{
 			var retVal = new List<VectoComponents>();
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
-				var count =
-					Document.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']",
-						XMLNames.VectoInputDeclaration, component.XMLElementName())).Count;
+				var nodes = Document.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']",
+						XMLNames.VectoInputDeclaration, component.XMLElementName()));
+				var count = nodes == null ? 0 : nodes.Count;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(component);
 				}
@@ -318,6 +319,27 @@ namespace TUGraz.VectoHashing
 			return DoReadHash(component, index);
 		}
 
+		public string GetCertificationNumber(VectoComponents component, int idx)
+		{
+			var nodes = GetNodes(component, idx);
+			return ReadElementValue(nodes[idx], XMLNames.Component_CertificationNumber);
+		}
+
+		public DateTime GetCertificationDate(VectoComponents component, int idx)
+		{
+			var nodes = GetNodes(component, idx);
+			return XmlConvert.ToDateTime(ReadElementValue(nodes[idx], XMLNames.Component_Date), XmlDateTimeSerializationMode.RoundtripKind);
+		}
+
+		private string ReadElementValue(XmlNode xmlNode, string elementName)
+		{
+			var node = xmlNode.SelectSingleNode(string.Format("./*[local-name()='{0}']", elementName));
+			if (node == null) {
+				throw new Exception(string.Format("Node '{0}' not found!", elementName));
+			}
+			return node.InnerText;
+		}
+
 		private string DoReadHash(VectoComponents? component, int index)
 		{
 			var nodes = GetNodes(component, index);
@@ -352,7 +374,7 @@ namespace TUGraz.VectoHashing
 		}
 
 
-		private static string GetComponentQueryString(VectoComponents? component = null)
+		protected static string GetComponentQueryString(VectoComponents? component = null)
 		{
 			if (component == null) {
 				return "(//*[@id])[1]";
@@ -390,5 +412,7 @@ namespace TUGraz.VectoHashing
 			}
 			return nodes[0].InnerText;
 		}
+
+		
 	}
 }

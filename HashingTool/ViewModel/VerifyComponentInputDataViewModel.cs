@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using HashingTool.Helper;
+using HashingTool.ViewModel.UserControl;
 using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel
@@ -40,7 +41,7 @@ namespace HashingTool.ViewModel
 
 		private void ComponentFilechanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == "Document" || e.PropertyName == "ContentValid") {
+			if (e.PropertyName == "UPDATED") {
 				DoValidateHash();
 			}
 		}

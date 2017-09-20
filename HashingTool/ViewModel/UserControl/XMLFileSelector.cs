@@ -21,7 +21,7 @@ namespace HashingTool.ViewModel.UserControl
 		ValidXML //									green
 	}
 
-	public class XMLFile : ObservableObject
+	public class XMLFileSelector : ObservableObject
 	{
 		private string _source;
 		private XmlFileStatus _isValid;
@@ -34,7 +34,7 @@ namespace HashingTool.ViewModel.UserControl
 		private bool? _contentValid;
 		private RelayCommand _browseFileCommand;
 
-		public XMLFile(IOService ioservice, bool validate = false,
+		public XMLFileSelector(IOService ioservice, bool validate = false,
 			Func<XmlDocument, Collection<string>, bool?> contentCheck = null)
 		{
 			IoService = ioservice;
@@ -199,11 +199,12 @@ namespace HashingTool.ViewModel.UserControl
 				XMLValidationErrors.Add(e.Message);
 				fileValid = XmlFileStatus.Invalid;
 			} finally {
-				
 				IsValid = fileValid;
 				ContentValid = contentValid;
 				_busy = false;
 				_browseFileCommand.RaiseCanExecuteChanged();
+
+				RaisePropertyChanged("UPDATED");
 			}
 		}
 

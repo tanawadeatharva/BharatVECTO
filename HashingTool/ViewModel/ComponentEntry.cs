@@ -1,3 +1,5 @@
+using System;
+
 namespace HashingTool.ViewModel
 {
 	public class ComponentEntry
@@ -8,5 +10,7 @@ namespace HashingTool.ViewModel
 		public string[] CanonicalizationMethod { get; set; }
 		public string DigestMethod { get; set; }
 		public bool Valid { get; set; }
+		public string CertificationNumber { get; set; }
+		public DateTime CertificationDate { get; set; }
 	}
 }

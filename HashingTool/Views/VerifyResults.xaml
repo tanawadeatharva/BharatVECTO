@@ -6,6 +6,7 @@
 	xmlns:viewModel="clr-namespace:HashingTool.ViewModel"
 	xmlns:views="clr-namespace:HashingTool.Views"
 	xmlns:helper="clr-namespace:HashingTool.Helper"
+	xmlns:userControl="clr-namespace:HashingTool.ViewModel.UserControl"
 	x:Class="HashingTool.Views.VerifyResults"
 	mc:Ignorable="d">
 	<UserControl.DataContext>
@@ -14,11 +15,10 @@
 	<UserControl.Resources>
 		<helper:CollectionConverter x:Key="CollectionConverter" />
 
-		<DataTemplate x:Key="ExpanderHeader" DataType="viewModel:VectoXMLFile">
+		<DataTemplate x:Key="ExpanderHeader" DataType="userControl:VectoXMLFile">
 			<DockPanel HorizontalAlignment="Stretch" VerticalAlignment="top" MinWidth="450">
 				<TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold" />
-				<ContentControl DockPanel.Dock="Right" Width="35" Height="35" Margin="10,-10,10,0"
-								ToolTip="{Binding JobValidToolTip}">
+				<ContentControl DockPanel.Dock="Right" Width="35" Height="35" Margin="10,-10,10,0">
 					<ContentControl.LayoutTransform>
 						<ScaleTransform ScaleX=".4" ScaleY=".4" />
 					</ContentControl.LayoutTransform>
@@ -42,7 +42,7 @@
 			</DockPanel>
 		</DataTemplate>
 
-		<DataTemplate x:Key="ExpanderHeaderJobFile" DataType="viewModel:VectoJobFile">
+		<DataTemplate x:Key="ExpanderHeaderJobFile" DataType="userControl:VectoJobFile">
 			<DockPanel HorizontalAlignment="Stretch" VerticalAlignment="top" MinWidth="450">
 				<TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold" />
 
@@ -67,11 +67,38 @@
 				</ContentControl>
 				<views:VectoXMLFileSelector DockPanel.Dock="Left" Margin="0,0,0,0" VerticalAlignment="Top"
 											XMLFile="{Binding XMLFile}" Height="1" />
+			</DockPanel>
+		</DataTemplate>
+
+		<DataTemplate x:Key="ExpanderHeaderManufacturerReport" DataType="userControl:ManufacturerReportXMLFile">
+			<DockPanel HorizontalAlignment="Stretch" VerticalAlignment="top" MinWidth="450">
+				<TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold" />
+				<ContentControl DockPanel.Dock="Right" Width="35" Height="35" Margin="10,-10,10,0">
+					<ContentControl.LayoutTransform>
+						<ScaleTransform ScaleX=".4" ScaleY=".4" />
+					</ContentControl.LayoutTransform>
+					<ContentControl.Style>
+						<Style TargetType="ContentControl">
+							<Setter Property="Content" Value="" />
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding ManufacturerReportValid}" Value="True">
+									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
+								</DataTrigger>
+								<DataTrigger Binding="{Binding ManufacturerReportValid}" Value="False">
+									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</ContentControl.Style>
+				</ContentControl>
+				<views:VectoXMLFileSelector DockPanel.Dock="Left" Margin="0,0,0,0" VerticalAlignment="Top"
+											XMLFile="{Binding XMLFile}" Height="1" />
 
 			</DockPanel>
 		</DataTemplate>
 
-		<DataTemplate x:Key="ExpanderContentJobFile" DataType="viewModel:VectoXMLFile">
+
+		<DataTemplate x:Key="ExpanderContentJobFile" DataType="userControl:VectoJobFile">
 			<Grid Grid.IsSharedSizeScope="True">
 				<Grid.RowDefinitions>
 					<RowDefinition />
@@ -128,19 +155,104 @@
 				<Label Grid.Row="3" Grid.Column="0" Content="Digest Value computed:" Style="{StaticResource DigestValueLabelStyle}" />
 				<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DigestValueComputed}"
 						Margin="10,2" IsReadOnly="True" Style="{StaticResource DigestValueTextboxStyle}" />
+
+				<!--<Expander Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="4" Header="Components">-->
+				<GroupBox Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Header="Vehicle Components"
+						Style="{DynamicResource CustomGroupboxStyle}">
+					<Grid IsSharedSizeScope="True" Margin="10,10,0,0">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" SharedSizeGroup="ComponentLabel" />
+							<ColumnDefinition Width="Auto" SharedSizeGroup="certificationNbrLabel" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" SharedSizeGroup="dateLabel" />
+							<ColumnDefinition Width="Auto" SharedSizeGroup="dateField" MinWidth="150" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+
+						<Label Grid.Row="0" Grid.Column="0" Content="Vehicle" FontWeight="Bold" Margin="0,0,10,0" />
+						<Label Grid.Row="0" Grid.Column="1" Content="VIN:" />
+						<TextBox Grid.Row="0" Grid.Column="2" Text="{Binding VehicleIdentificationNumber, Mode=OneWay}"
+								Margin="10,2" IsReadOnly="True" />
+
+						<Label Grid.Row="0" Grid.Column="3" Content="Date:" />
+						<TextBox Grid.Row="0" Grid.Column="4"
+								Text="{helper:CultureAwareBinding Path=JobCreationDate, StringFormat='g', Mode=OneWay}"
+								Margin="10,2" IsReadOnly="True" />
+
+
+						<ItemsControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" DockPanel.Dock="Bottom"
+									ItemsSource="{Binding Components}" Margin="0,5,0,0">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Grid Margin="0, 5">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="Auto" SharedSizeGroup="ComponentLabel" />
+											<ColumnDefinition Width="Auto" SharedSizeGroup="certificationNbrLabel" />
+											<ColumnDefinition Width="*" />
+											<ColumnDefinition Width="Auto" SharedSizeGroup="dateLabel" />
+											<ColumnDefinition Width="Auto" SharedSizeGroup="dateField" />
+										</Grid.ColumnDefinitions>
+										<Grid.RowDefinitions>
+											<RowDefinition />
+											<RowDefinition />
+										</Grid.RowDefinitions>
+
+										<Label Grid.Row="0" Grid.Column="0" Content="{Binding Component}" FontWeight="Bold" Margin="0,0,10,0" />
+										<Label Grid.Row="0" Grid.Column="1" Content="Certification Number:" />
+										<TextBox Grid.Row="0" Grid.Column="2" Text="{Binding CertificationNumber}"
+												Margin="10,2" IsReadOnly="True" />
+										<Label Grid.Row="0" Grid.Column="3" Content="Date:" />
+										<TextBox Grid.Row="0" Grid.Column="4"
+												Text="{helper:CultureAwareBinding Path=CertificationDate, StringFormat='g'}"
+												Margin="10,2" IsReadOnly="True" />
+
+										<Label Grid.Row="1" Grid.Column="1" Content="Digest Value:" />
+										<TextBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="3" Text="{Binding DigestValueRead}"
+												 Margin="10,2" >
+											<TextBox.Style>
+												<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+													<Style.Triggers>
+														<DataTrigger Binding="{Binding Valid}" Value="True">
+															<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}"/>
+														</DataTrigger>
+														<DataTrigger Binding="{Binding Valid}" Value="False">
+															<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}"/>
+															<Setter Property="ToolTip">
+																<Setter.Value>
+																	<TextBlock Text="{Binding DigestValueComputed, StringFormat='{}Computed digest value: {0}'}"></TextBlock>
+																</Setter.Value>
+															</Setter>
+														</DataTrigger>
+													</Style.Triggers>
+												</Style>
+											</TextBox.Style>
+											</TextBox>
+									</Grid>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+
+						</ItemsControl>
+						<!--</Expander>-->
+					</Grid>
+				</GroupBox>
 			</Grid>
 		</DataTemplate>
 
-		<DataTemplate x:Key="ExpanderContentReport" DataType="viewModel:ReportXMLFile">
+		<DataTemplate x:Key="ExpanderContentReport" DataType="userControl:ReportXMLFile">
 			<Grid Grid.IsSharedSizeScope="True">
 				<Grid.RowDefinitions>
 					<RowDefinition />
 					<RowDefinition />
 					<RowDefinition />
+					<RowDefinition />
 				</Grid.RowDefinitions>
 
-				<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-					<Label>
+				<DockPanel Grid.Row="0" Grid.Column="0">
+
+					<Label DockPanel.Dock="Left">
 						<Label.Content>
 							<TextBlock Text="{Binding XMLFile.XMLValidationErrors.Count, StringFormat='{}{0} Warnings/Errors'}" />
 						</Label.Content>
@@ -155,7 +267,8 @@
 							</Style>
 						</Label.Style>
 					</Label>
-					<Button Margin="10,0,0,0" Content="Details..." HorizontalAlignment="Left" Width="91" Click="Button_Click">
+					<Button DockPanel.Dock="Left" Margin="10,0,0,0" Content="Details..." HorizontalAlignment="Left" Width="91"
+							Click="Button_Click">
 						<Button.Style>
 							<Style TargetType="Button">
 								<Setter Property="IsEnabled" Value="True" />
@@ -167,9 +280,14 @@
 							</Style>
 						</Button.Style>
 					</Button>
-				</StackPanel>
 
-				<GroupBox Grid.Row="1" Header="Report Integrity" Margin="0,0,0,5" Style="{DynamicResource CustomGroupboxStyle}">
+					<TextBox DockPanel.Dock="Right" Text="{helper:CultureAwareBinding Path=CreationDate, StringFormat='g'}"
+							Margin="10,2,20,2" IsReadOnly="True" MinWidth="150" />
+					<Label DockPanel.Dock="Right" Content="Creation Date:" HorizontalAlignment="Right" />
+
+				</DockPanel>
+
+				<GroupBox Grid.Row="2" Header="Report Integrity" Margin="0,0,0,5" Style="{DynamicResource CustomGroupboxStyle}">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto" SharedSizeGroup="LabelsShareGroup" />
@@ -224,7 +342,8 @@
 						</TextBox>
 					</Grid>
 				</GroupBox>
-				<GroupBox Grid.Row="2" Header="Job Integrity" Style="{DynamicResource CustomGroupboxStyle}">
+
+				<GroupBox Grid.Row="3" Header="Job Integrity" Style="{DynamicResource CustomGroupboxStyle}">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto" SharedSizeGroup="LabelsShareGroup" />
@@ -280,6 +399,256 @@
 				</GroupBox>
 			</Grid>
 		</DataTemplate>
+
+		<DataTemplate x:Key="ExpanderContentManufacturerReport" DataType="userControl:ManufacturerReportXMLFile">
+			<Grid Grid.IsSharedSizeScope="True">
+				<Grid.RowDefinitions>
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+
+				<DockPanel Grid.Row="0" Grid.Column="0">
+
+					<Label DockPanel.Dock="Left">
+						<Label.Content>
+							<TextBlock Text="{Binding XMLFile.XMLValidationErrors.Count, StringFormat='{}{0} Warnings/Errors'}" />
+						</Label.Content>
+						<Label.Style>
+							<Style TargetType="Label">
+								<Setter Property="Foreground" Value="Red" />
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding XMLFile.XMLValidationErrors.Count}" Value="0">
+										<Setter Property="Foreground" Value="Black" />
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Label.Style>
+					</Label>
+					<Button DockPanel.Dock="Left" Margin="10,0,0,0" Content="Details..." HorizontalAlignment="Left" Width="91"
+							Click="Button_Click">
+						<Button.Style>
+							<Style TargetType="Button">
+								<Setter Property="IsEnabled" Value="True" />
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding XMLFile.XMLValidationErrors.Count}" Value="0">
+										<Setter Property="IsEnabled" Value="False" />
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Button.Style>
+					</Button>
+
+					<TextBox DockPanel.Dock="Right" Text="{helper:CultureAwareBinding Path=CreationDate, StringFormat='g'}"
+							Margin="10,2,20,2" MinWidth="150" />
+					<Label DockPanel.Dock="Right" Content="Creation Date:" HorizontalAlignment="Right" />
+
+				</DockPanel>
+				<GroupBox Grid.Row="2" Header="Report Integrity" Margin="0,0,0,5" Style="{DynamicResource CustomGroupboxStyle}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" SharedSizeGroup="LabelsShareGroup" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition />
+							<RowDefinition />
+							<RowDefinition />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+
+						<Label Grid.Row="0" Grid.Column="0" Content="Canonicalization methods:" />
+						<TextBox Grid.Row="0" Grid.Column="1"
+								Text="{Binding CanonicalizationMethods, Mode=OneWay , Converter={StaticResource CollectionConverter}}"
+								Margin="10,2" IsReadOnly="True" />
+
+						<Label Grid.Row="1" Grid.Column="0" Content="Digest method:" />
+						<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DigestMethod, Mode=OneWay}" Margin="10,2" IsReadOnly="True" />
+
+						<Label Grid.Row="2" Grid.Column="0" Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" />
+						<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DigestValueRead}" Margin="10,2" IsReadOnly="True">
+							<TextBox.Style>
+								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding Valid}" Value="True">
+											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
+										</DataTrigger>
+										<DataTrigger Binding="{Binding Valid}" Value="False">
+											<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</TextBox.Style>
+						</TextBox>
+
+						<Label Grid.Row="3" Grid.Column="0" Content="Digest Value computed:"
+								Style="{StaticResource DigestValueLabelStyle}" />
+						<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DigestValueComputed}" Margin="10,2" IsReadOnly="True">
+							<TextBox.Style>
+								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding Valid}" Value="True">
+											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
+										</DataTrigger>
+										<DataTrigger Binding="{Binding Valid}" Value="False">
+											<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</TextBox.Style>
+						</TextBox>
+					</Grid>
+				</GroupBox>
+
+				<GroupBox Grid.Row="3" Header="Job Integrity" Style="{DynamicResource CustomGroupboxStyle}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" SharedSizeGroup="LabelsShareGroup" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition />
+							<RowDefinition />
+							<RowDefinition />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+						<Label Grid.Row="0" Grid.Column="0" Content="Job CanonicalizationMethod:" />
+						<TextBox Grid.Row="0" Grid.Column="1"
+								Text="{Binding JobCanonicalizationMethodRead, Mode=OneWay, Converter={StaticResource CollectionConverter}}"
+								Margin="10,2" IsReadOnly="True" />
+
+						<Label Grid.Row="1" Grid.Column="0" Content="Job Digest Method:" />
+						<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding JobDigestMethodRead, Mode=OneWay}"
+								Margin="10,2" IsReadOnly="True" />
+
+						<Label Grid.Row="2" Grid.Column="0" Content="Job Digest Value Read:"
+								Style="{StaticResource DigestValueLabelStyle}" />
+						<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding JobDigestValueRead, Mode=OneWay}"
+								Margin="10,2" IsReadOnly="True">
+							<TextBox.Style>
+								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding JobDigestValid}" Value="True">
+											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</TextBox.Style>
+						</TextBox>
+
+						<Label Grid.Row="3" Grid.Column="0" Content="Job Digest Value Computed:"
+								Style="{StaticResource DigestValueLabelStyle}" />
+						<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding JobDigestValueComputed, Mode=OneWay}"
+								Margin="10,2" IsReadOnly="True">
+							<TextBox.Style>
+								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding JobDigestValid}" Value="True">
+											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</TextBox.Style>
+						</TextBox>
+					</Grid>
+				</GroupBox>
+
+				<GroupBox Grid.Row="4" Header="Vehicle Components" Style="{DynamicResource CustomGroupboxStyle}">
+					<Grid Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" IsSharedSizeScope="True" Margin="10,10,0,0">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" SharedSizeGroup="ComponentLabel" />
+							<ColumnDefinition Width="Auto" SharedSizeGroup="certificationNbrLabel" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="Auto" SharedSizeGroup="dateLabel" />
+							<ColumnDefinition Width="Auto" SharedSizeGroup="dateField" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+
+						<Label Grid.Row="0" Grid.Column="0" Content="Vehicle" FontWeight="Bold" Margin="0,0,10,0" />
+						<Label Grid.Row="0" Grid.Column="1" Content="VIN:" />
+						<TextBox Grid.Row="0" Grid.Column="2" Text="{Binding VehicleIdentificationNumber, Mode=OneWay}"
+								Margin="10,2" IsReadOnly="True" />
+
+						<ItemsControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" DockPanel.Dock="Bottom"
+									ItemsSource="{Binding Components}" Margin="0,5,0,0">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<Grid Margin="0,5">
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition Width="Auto" SharedSizeGroup="ComponentLabel" />
+											<ColumnDefinition Width="Auto" SharedSizeGroup="certificationNbrLabel" />
+											<ColumnDefinition Width="*" />
+										</Grid.ColumnDefinitions>
+										<Grid.RowDefinitions>
+											<RowDefinition />
+											<RowDefinition />
+										</Grid.RowDefinitions>
+
+										<Label Grid.Row="0" Grid.Column="0" Content="{Binding Component}" FontWeight="Bold" Margin="0,0,10,0" />
+										<Label Grid.Row="0" Grid.Column="1" Content="Certification Number:" />
+										<TextBox Grid.Row="0" Grid.Column="2" Text="{Binding CertificationNumber}"
+												Margin="10,2" IsReadOnly="True">
+											<TextBox.Style>
+												<Style TargetType="TextBox">
+													<Setter Property="IsEnabled" Value="True" />
+													<Style.Triggers>
+														<DataTrigger Binding="{Binding CertificationMethod}" Value="Standard values">
+															<Setter Property="IsEnabled" Value="False" />
+														</DataTrigger>
+														<DataTrigger Binding="{Binding CertificationNumberMatchesJobComponent}" Value="False">
+															<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
+															<Setter Property="ToolTip">
+																<Setter.Value>
+																	<TextBlock
+																		Text="{Binding CertificationNumberExpected, StringFormat='{}Expected Certification Number: {0}'}" />
+																</Setter.Value>
+															</Setter>
+														</DataTrigger>
+													</Style.Triggers>
+												</Style>
+											</TextBox.Style>
+										</TextBox>
+
+										<Label Grid.Row="1" Grid.Column="1" Content="Digest Value:" />
+										<TextBox Grid.Row="1" Grid.Column="2" Text="{Binding DigestValue}"
+												Margin="10,2">
+											<TextBox.Style>
+												<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+													<Style.Triggers>
+														<DataTrigger Binding="{Binding DigestValueMatchesJobComponent}" Value="True">
+															<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
+														</DataTrigger>
+														<DataTrigger Binding="{Binding DigestValueMatchesJobComponent}" Value="False">
+															<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
+															<Setter Property="ToolTip">
+																<Setter.Value>
+																	<TextBlock Text="{Binding DigestValueExpected, StringFormat='{}Expected Digest Value: {0}'}" />
+																</Setter.Value>
+															</Setter>
+														</DataTrigger>
+													</Style.Triggers>
+												</Style>
+											</TextBox.Style>
+										</TextBox>
+
+									</Grid>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+
+						</ItemsControl>
+						<!--</Expander>-->
+					</Grid>
+				</GroupBox>
+			</Grid>
+		</DataTemplate>
+
 
 		<BorderGapMaskConverter x:Key="BorderGapMaskConverter" />
 
@@ -353,7 +722,7 @@
 						</Style>
 					</ItemsControl.ItemContainerStyle>
 					<ItemsControl.Resources>
-						<DataTemplate DataType="{x:Type viewModel:VectoJobFile}">
+						<DataTemplate DataType="{x:Type userControl:VectoJobFile}">
 
 							<Border BorderBrush="White" BorderThickness="1" CornerRadius="2" Margin="0,0,3,0">
 								<Expander Margin="2" Header="{Binding}" HorizontalAlignment="Stretch"
@@ -364,11 +733,21 @@
 							</Border>
 
 						</DataTemplate>
-						<DataTemplate DataType="{x:Type viewModel:ReportXMLFile}">
+						<DataTemplate DataType="{x:Type userControl:ReportXMLFile}">
 							<Border BorderBrush="White" BorderThickness="1" CornerRadius="2" Margin="0,0,3,0">
 								<Expander Margin="2" Header="{Binding}" HorizontalAlignment="Stretch"
 										Style="{DynamicResource HeaderStretchExpanderStyle}"
 										HeaderTemplate="{DynamicResource ExpanderHeader}" ContentTemplate="{DynamicResource ExpanderContentReport}"
+										Content="{Binding}" />
+							</Border>
+
+						</DataTemplate>
+						<DataTemplate DataType="{x:Type userControl:ManufacturerReportXMLFile}">
+							<Border BorderBrush="White" BorderThickness="1" CornerRadius="2" Margin="0,0,3,0">
+								<Expander Margin="2" Header="{Binding}" HorizontalAlignment="Stretch"
+										Style="{DynamicResource HeaderStretchExpanderStyle}"
+										HeaderTemplate="{DynamicResource ExpanderHeaderManufacturerReport}"
+										ContentTemplate="{DynamicResource ExpanderContentManufacturerReport}"
 										Content="{Binding}" />
 							</Border>
 
@@ -426,7 +805,7 @@
 						<Style TargetType="ContentControl">
 							<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
 							<Style.Triggers>
-								<DataTrigger Binding="{Binding ManufacturerReport.JobDigestValid}" Value="True">
+								<DataTrigger Binding="{Binding ManufacturerReport.ManufacturerReportValid}" Value="True">
 									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
 								</DataTrigger>
 							</Style.Triggers>

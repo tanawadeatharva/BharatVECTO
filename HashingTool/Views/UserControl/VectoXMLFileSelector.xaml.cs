@@ -7,9 +7,10 @@ namespace HashingTool.Views
 	/// <summary>
 	/// Interaction logic for VectoXMLFileSelector.xaml
 	/// </summary>	
-	public partial class VectoXMLFileSelector 
+	public partial class VectoXMLFileSelector
 	{
-		public static readonly DependencyProperty XMLFileProperty = DependencyProperty.Register("XMLFile", typeof(XMLFile),
+		public static readonly DependencyProperty XMLFileProperty = DependencyProperty.Register("XMLFile",
+			typeof(XMLFileSelector),
 			typeof(VectoXMLFileSelector));
 
 
@@ -19,9 +20,9 @@ namespace HashingTool.Views
 			(Content as FrameworkElement).DataContext = this;
 		}
 
-		public XMLFile XMLFile
+		public XMLFileSelector XMLFile
 		{
-			get { return (XMLFile)GetValue(XMLFileProperty); }
+			get { return (XMLFileSelector)GetValue(XMLFileProperty); }
 			set { SetValue(XMLFileProperty, value); }
 		}
 
@@ -32,6 +33,5 @@ namespace HashingTool.Views
 
 			dialog.ShowDialog();
 		}
-
 	}
 }

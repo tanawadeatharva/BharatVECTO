@@ -14,7 +14,7 @@ namespace HashingTool.ViewModel
 			get { return ApplicationViewModel.HomeView; }
 		}
 
-		public XMLFile JobFile
+		public XMLFileSelector JobFile
 		{
 			get { return _xmlFile; }
 		}
