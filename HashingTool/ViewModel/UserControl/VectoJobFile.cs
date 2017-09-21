@@ -11,22 +11,23 @@ namespace HashingTool.ViewModel.UserControl
 {
 	public class VectoJobFile : VectoXMLFile
 	{
-		private bool _componentDataValid;
+		private bool? _componentDataValid;
 		private string _jobValidToolTip;
 		private string _vin;
 		private DateTime? _jobDate;
 
 
-		public VectoJobFile(string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
+		public VectoJobFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, true, contentCheck, hashValidation)
 		{
 			_xmlFile.PropertyChanged += JobFilechanged;
 			Components = new ObservableCollection<ComponentEntry>();
+			JobDataValid = null;
 		}
 
 		public ObservableCollection<ComponentEntry> Components { get; private set; }
 
-		public bool JobDataValid
+		public bool? JobDataValid
 		{
 			get { return _componentDataValid; }
 			set {
@@ -34,7 +35,7 @@ namespace HashingTool.ViewModel.UserControl
 					return;
 				}
 				_componentDataValid = value;
-				JobValidToolTip = value ? HashingHelper.ToolTipComponentHashInvalid : HashingHelper.ToolTipOk;
+				JobValidToolTip = value != null && !value.Value ? HashingHelper.ToolTipComponentHashInvalid : HashingHelper.ToolTipOk;
 				RaisePropertyChanged("JobDataValid");
 			}
 		}
@@ -121,7 +122,7 @@ namespace HashingTool.ViewModel.UserControl
 				DigestValueComputed = "";
 				DigestMethod = "";
 				SetCanonicalizationMethod(new string[] { });
-				JobDataValid = false;
+				JobDataValid = null;
 				return;
 			}
 			try {
@@ -148,7 +149,7 @@ namespace HashingTool.ViewModel.UserControl
 						entry.CertificationNumber = h.GetCertificationNumber(component.Entry, i);
 						entry.CertificationDate = h.GetCertificationDate(component.Entry, i);
 						if (!entry.Valid) {
-							_xmlFile.XMLValidationErrors.Add(
+							_xmlFile.LogError(
 								string.Format(
 									"Digest Value mismatch for component \"{0}\". Read digest value: \"{1}\", computed digest value \"{2}\"",
 									entry.Component, entry.DigestValueRead, entry.DigestValueComputed));
@@ -163,7 +164,7 @@ namespace HashingTool.ViewModel.UserControl
 			} catch (Exception e) {
 				DigestValueComputed = "";
 				JobDataValid = false;
-				_xmlFile.XMLValidationErrors.Add(e.Message);
+				_xmlFile.LogError(e.Message);
 			}
 		}
 	}

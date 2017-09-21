@@ -23,6 +23,7 @@ namespace HashingTool.Views
 		{
 			var dialog = new XMLValidationErrorsDialog();
 			dialog.XMLErrors = (DataContext as HashComponentDataViewModel).XMLFile.XMLValidationErrors;
+			dialog.ErrorCount = (DataContext as HashComponentDataViewModel).XMLFile.XMLValidationErrors.Count;
 
 			dialog.ShowDialog();
 		}

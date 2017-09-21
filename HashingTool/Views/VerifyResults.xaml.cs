@@ -31,5 +31,14 @@ namespace HashingTool.Views
 			dialog.XMLErrors = context.XMLFile.XMLValidationErrors;
 			dialog.ShowDialog();
 		}
+
+		private void Button_Click_1(object sender, RoutedEventArgs e)
+		{
+			var dialog = new XMLValidationErrorsDialog();
+			dialog.XMLErrors = (DataContext as VerifyResultDataViewModel).ErrorsAndWarnings;
+			dialog.ErrorCount = (DataContext as VerifyResultDataViewModel).ErrorCount;
+
+			dialog.ShowDialog();
+		}
 	}
 }

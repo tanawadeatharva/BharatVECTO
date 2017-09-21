@@ -21,7 +21,12 @@ namespace HashingTool.ViewModel.UserControl
 		ValidXML //									green
 	}
 
-	public class XMLFileSelector : ObservableObject
+	public interface IErrorLogger
+	{
+		void LogError(string message);
+	}
+
+	public class XMLFileSelector : ObservableObject, IErrorLogger
 	{
 		private string _source;
 		private XmlFileStatus _isValid;
@@ -30,19 +35,21 @@ namespace HashingTool.ViewModel.UserControl
 
 		private readonly bool _validate;
 		private XmlDocument _document;
-		private readonly Func<XmlDocument, Collection<string>, bool?> _postVerification;
+		private readonly Func<XmlDocument, IErrorLogger, bool?> _contentVerification;
 		private bool? _contentValid;
 		private RelayCommand _browseFileCommand;
+		private string _prefix;
 
-		public XMLFileSelector(IOService ioservice, bool validate = false,
-			Func<XmlDocument, Collection<string>, bool?> contentCheck = null)
+		public XMLFileSelector(IOService ioservice, string prefix, bool validate = false,
+			Func<XmlDocument, IErrorLogger, bool?> contentCheck = null)
 		{
 			IoService = ioservice;
 			_validate = validate;
+			_prefix = prefix;
 			_browseFileCommand = new RelayCommand(BrowseXMLFile, () => !_busy);
 			XMLValidationErrors = new ObservableCollection<string>();
 			HasContentValidation = contentCheck != null;
-			_postVerification = contentCheck ?? ((x, c) => null);
+			_contentVerification = contentCheck ?? ((x, c) => null);
 			Source = "";
 			RaisePropertyChanged("ValidateInput");
 			RaisePropertyChanged("HasContentValidation");
@@ -190,13 +197,13 @@ namespace HashingTool.ViewModel.UserControl
 					}
 				}
 				if (HasContentValidation) {
-					contentValid = _postVerification(document, XMLValidationErrors);
+					contentValid = _contentVerification(document, this);
 					if (xmlValid && (contentValid == null || !contentValid.Value)) {
 						fileValid = XmlFileStatus.IncorrectContent;
 					}
 				}
 			} catch (Exception e) {
-				XMLValidationErrors.Add(e.Message);
+				LogError(e.Message);
 				fileValid = XmlFileStatus.Invalid;
 			} finally {
 				IsValid = fileValid;
@@ -206,6 +213,11 @@ namespace HashingTool.ViewModel.UserControl
 
 				RaisePropertyChanged("UPDATED");
 			}
+		}
+
+		public void LogError(string message) 
+		{
+			XMLValidationErrors.Add(String.Format("{0}: {1}", _prefix, message));
 		}
 
 		public bool HasContentValidation { get; private set; }
@@ -230,7 +242,7 @@ namespace HashingTool.ViewModel.UserControl
 					(s, e) => {
 						Application.Current.Dispatcher.Invoke(
 							() =>
-								XMLValidationErrors.Add(string.Format("Validation {0} Line {2}: {1}",
+								LogError(string.Format("Validation {0} Line {2}: {1}",
 									s == XmlSeverityType.Warning ? "WARNING" : "ERROR",
 									e.ValidationEventArgs == null
 										? e.Exception.Message +
@@ -240,7 +252,7 @@ namespace HashingTool.ViewModel.UserControl
 					});
 				await validator.ValidateXML(xml);
 			} catch (Exception e) {
-				XMLValidationErrors.Add(e.Message);
+				LogError(e.Message);
 			}
 			return valid;
 		}

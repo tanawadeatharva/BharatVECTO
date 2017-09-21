@@ -8,19 +8,21 @@
 		xmlns:views="clr-namespace:HashingTool.Views"
 		d:DataContext="{d:DesignInstance views:XMLValidationErrorsDialog}" Icon="/HashingTool;component/Resources/HashingIcon.ico">
 	<Grid>
-		<ListBox x:Name="lbErrors" Margin="10,10,10,62" ItemsSource="{Binding XMLErrors}" />
+		<ListBox x:Name="lbErrors" Margin="10,10,10,62" ItemsSource="{Binding XMLErrors}" FontFamily="Courier New" />
+		<Button x:Name="btnCopy" Content="Copy Errors" Margin="0,0,100,10" Height="22" VerticalAlignment="Bottom"
+				HorizontalAlignment="Right" Width="100" Click="btnCopy_Click" />
 		<Button IsCancel="True" x:Name="btnClose" Content="Close" Margin="0,0,10,10" Height="22" VerticalAlignment="Bottom"
 				HorizontalAlignment="Right" Width="75" />
 		<Label x:Name="lblCount" HorizontalAlignment="Left" Margin="10,0,0,31" Width="340" Height="26"
 				VerticalAlignment="Bottom">
 			<Label.Content>
-				<TextBlock Text="{Binding XMLErrors.Count, StringFormat='{}{0} Warnings/Errors'}" />
+				<TextBlock Text="{Binding ErrorCount, StringFormat='{}{0} Warnings/Errors'}" />
 			</Label.Content>
 			<Label.Style>
 				<Style TargetType="Label">
 					<Setter Property="Foreground" Value="Red" />
 					<Style.Triggers>
-						<DataTrigger Binding="{Binding XMLErrors.Count}" Value="0">
+						<DataTrigger Binding="{Binding ErrorCount}" Value="0">
 							<Setter Property="Foreground" Value="Black" />
 						</DataTrigger>
 					</Style.Triggers>

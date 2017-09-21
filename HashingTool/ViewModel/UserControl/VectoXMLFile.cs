@@ -12,7 +12,7 @@ namespace HashingTool.ViewModel.UserControl
 		protected readonly XMLFileSelector _xmlFile;
 
 		protected string _digestValueComputed;
-		protected bool? _valid;
+		protected bool? _fileIntegrityValid;
 		protected string _name;
 		protected string _tooltip;
 		protected string _componentType;
@@ -20,17 +20,17 @@ namespace HashingTool.ViewModel.UserControl
 		private string _digestMethod;
 
 
-		public VectoXMLFile(string name, bool validate, Func<XmlDocument, Collection<string>, bool?> contentCheck,
+		public VectoXMLFile(string name, bool validate, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null)
 		{
 			_validateHashes = hashValidation;
-			_xmlFile = new XMLFileSelector(IoService, validate, contentCheck);
+			_xmlFile = new XMLFileSelector(IoService, name, validate, contentCheck);
 			_xmlFile.PropertyChanged += FileChanged;
 			Name = name;
 			CanonicalizationMethods = new ObservableCollection<string>();
 
-			Valid = null;
-			ValidTooltip = HashingHelper.ToolTipNone;
+			FileIntegrityValid = null;
+			FileIntegrityTooltip = HashingHelper.ToolTipNone;
 		}
 
 		protected virtual void FileChanged(object sender, PropertyChangedEventArgs e)
@@ -39,24 +39,10 @@ namespace HashingTool.ViewModel.UserControl
 				return;
 			}
 
-			if (_xmlFile.IsValid == XmlFileStatus.ValidXML) {
-				if (_xmlFile.HasContentValidation) {
-					Valid = _xmlFile.ContentValid;
-					if (Valid != null && Valid.Value) {
-						ValidTooltip = HashingHelper.ToolTipOk;
-					} else {
-						ValidTooltip = HashingHelper.ToolTipInvalidFileType;
-					}
-				} else {
-					ValidTooltip = HashingHelper.ToolTipOk;
-				}
-			} else {
-				Valid = false;
-				ValidTooltip = HashingHelper.ToolTipXMLValidationFailed;
-			}
-
-			if (Valid != null && Valid.Value && _validateHashes != null) {
+			if (_xmlFile.IsValid == XmlFileStatus.ValidXML && _validateHashes != null) {
 				_validateHashes(_xmlFile.Document, this);
+			} else {
+				FileIntegrityValid = null;
 			}
 			RaisePropertyChanged("UPDATED");
 		}
@@ -116,19 +102,19 @@ namespace HashingTool.ViewModel.UserControl
 		}
 
 
-		public bool? Valid
+		public bool? FileIntegrityValid
 		{
-			get { return _valid; }
+			get { return _fileIntegrityValid; }
 			internal set {
-				if (_valid == value) {
+				if (_fileIntegrityValid == value) {
 					return;
 				}
-				_valid = value;
-				RaisePropertyChanged("Valid");
+				_fileIntegrityValid = value;
+				RaisePropertyChanged("FileIntegrityValid");
 			}
 		}
 
-		public string ValidTooltip
+		public string FileIntegrityTooltip
 		{
 			get { return _tooltip; }
 			set {
@@ -136,7 +122,7 @@ namespace HashingTool.ViewModel.UserControl
 					return;
 				}
 				_tooltip = value;
-				RaisePropertyChanged("ValidTooltip");
+				RaisePropertyChanged("FileIntegrityTooltip");
 			}
 		}
 

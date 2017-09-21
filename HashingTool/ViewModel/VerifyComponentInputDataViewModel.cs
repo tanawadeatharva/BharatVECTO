@@ -77,7 +77,7 @@ namespace HashingTool.ViewModel
 				Component = "";
 				SetCanonicalizationMethod(new string[] { });
 				DigestMethod = "";
-				_xmlFile.XMLValidationErrors.Add(e.Message);
+				_xmlFile.LogError(e.Message);
 			}
 		}
 

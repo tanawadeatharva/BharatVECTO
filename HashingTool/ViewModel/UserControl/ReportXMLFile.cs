@@ -15,7 +15,7 @@ namespace HashingTool.ViewModel.UserControl
 		private bool _jobDigestValid;
 		private DateTime? _creationDate;
 
-		public ReportXMLFile(string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
+		public ReportXMLFile(string name, Func<XmlDocument,IErrorLogger, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null)
 			: base(name, contentCheck, hashValidation)
 		{

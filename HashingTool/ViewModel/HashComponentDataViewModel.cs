@@ -131,7 +131,7 @@ namespace HashingTool.ViewModel
 					ComponentDataValid = true;
 					var validator = new XMLValidator(r => { ComponentDataValid = r; },
 						(s, e) => {
-							Application.Current.Dispatcher.Invoke(() => _xmlFile.XMLValidationErrors.Add(
+							Application.Current.Dispatcher.Invoke(() => _xmlFile.LogError(
 								string.Format("Validation {0} Line {2}: {1}", s == XmlSeverityType.Warning ? "WARNING" : "ERROR",
 									e.ValidationEventArgs == null
 										? e.Exception.Message +
@@ -161,7 +161,7 @@ namespace HashingTool.ViewModel
 			} catch (Exception e) {
 				ComponentDataValid = false;
 				DigestValue = "";
-				_xmlFile.XMLValidationErrors.Add(e.Message);
+				_xmlFile.LogError(e.Message);
 				SetCanonicalizationMethod(new string[] { });
 				DigestMethod = "";
 			} finally {

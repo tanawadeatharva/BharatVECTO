@@ -8,7 +8,7 @@ namespace HashingTool.ViewModel.UserControl
 	{
 		protected string _digestValueRead;
 
-		public HashedXMLFile(string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
+		public HashedXMLFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, true, contentCheck, hashValidation) {}
 
 		public string DigestValueRead

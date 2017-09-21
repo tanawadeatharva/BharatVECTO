@@ -26,10 +26,10 @@
 						<Style TargetType="ContentControl">
 							<Setter Property="Content" Value="" />
 							<Style.Triggers>
-								<DataTrigger Binding="{Binding Valid}" Value="True">
+								<DataTrigger Binding="{Binding FileIntegrityValid}" Value="True">
 									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
 								</DataTrigger>
-								<DataTrigger Binding="{Binding Valid}" Value="False">
+								<DataTrigger Binding="{Binding FileIntegrityValid}" Value="False">
 									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
 								</DataTrigger>
 							</Style.Triggers>
@@ -73,7 +73,7 @@
 		<DataTemplate x:Key="ExpanderHeaderManufacturerReport" DataType="userControl:ManufacturerReportXMLFile">
 			<DockPanel HorizontalAlignment="Stretch" VerticalAlignment="top" MinWidth="450">
 				<TextBlock DockPanel.Dock="Top" Text="{Binding Name}" FontWeight="Bold" />
-				<ContentControl DockPanel.Dock="Right" Width="35" Height="35" Margin="10,-10,10,0">
+				<ContentControl DockPanel.Dock="Right" Width="35" Height="35" Margin="10,-10,10,0" ToolTip="{Binding FileIntegrityTooltip}">
 					<ContentControl.LayoutTransform>
 						<ScaleTransform ScaleX=".4" ScaleY=".4" />
 					</ContentControl.LayoutTransform>
@@ -81,10 +81,10 @@
 						<Style TargetType="ContentControl">
 							<Setter Property="Content" Value="" />
 							<Style.Triggers>
-								<DataTrigger Binding="{Binding ManufacturerReportValid}" Value="True">
+								<DataTrigger Binding="{Binding FileIntegrityValid}" Value="True">
 									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
 								</DataTrigger>
-								<DataTrigger Binding="{Binding ManufacturerReportValid}" Value="False">
+								<DataTrigger Binding="{Binding FileIntegrityValid}" Value="False">
 									<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
 								</DataTrigger>
 							</Style.Triggers>
@@ -111,37 +111,7 @@
 					<ColumnDefinition Width="Auto" SharedSizeGroup="LabelsShareGroup" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-					<Label>
-						<Label.Content>
-							<TextBlock
-								Text="{Binding XMLFile.XMLValidationErrors.Count, StringFormat='{}XML Validation: {0} Warnings/Errors'}" />
-						</Label.Content>
-						<Label.Style>
-							<Style TargetType="Label">
-								<Setter Property="Foreground" Value="Red" />
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding XMLFile.XMLValidationErrors.Count}" Value="0">
-										<Setter Property="Foreground" Value="Black" />
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</Label.Style>
-					</Label>
-					<Button Margin="10,0,0,0" Content="Details..." HorizontalAlignment="Left" Width="91" Click="Button_Click">
-						<Button.Style>
-							<Style TargetType="Button">
-								<Setter Property="IsEnabled" Value="True" />
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding XMLFile.XMLValidationErrors.Count}" Value="0">
-										<Setter Property="IsEnabled" Value="False" />
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</Button.Style>
-					</Button>
-				</StackPanel>
-
+				
 				<Label Grid.Row="1" Grid.Column="0" Content="Canonicalization methods:" />
 				<TextBox Grid.Row="1" Grid.Column="1"
 						Text="{Binding CanonicalizationMethods, Mode=OneWay , Converter={StaticResource CollectionConverter}}"
@@ -250,43 +220,6 @@
 					<RowDefinition />
 				</Grid.RowDefinitions>
 
-				<DockPanel Grid.Row="0" Grid.Column="0">
-
-					<Label DockPanel.Dock="Left">
-						<Label.Content>
-							<TextBlock Text="{Binding XMLFile.XMLValidationErrors.Count, StringFormat='{}{0} Warnings/Errors'}" />
-						</Label.Content>
-						<Label.Style>
-							<Style TargetType="Label">
-								<Setter Property="Foreground" Value="Red" />
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding XMLFile.XMLValidationErrors.Count}" Value="0">
-										<Setter Property="Foreground" Value="Black" />
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</Label.Style>
-					</Label>
-					<Button DockPanel.Dock="Left" Margin="10,0,0,0" Content="Details..." HorizontalAlignment="Left" Width="91"
-							Click="Button_Click">
-						<Button.Style>
-							<Style TargetType="Button">
-								<Setter Property="IsEnabled" Value="True" />
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding XMLFile.XMLValidationErrors.Count}" Value="0">
-										<Setter Property="IsEnabled" Value="False" />
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</Button.Style>
-					</Button>
-
-					<TextBox DockPanel.Dock="Right" Text="{helper:CultureAwareBinding Path=CreationDate, StringFormat='g'}"
-							Margin="10,2,20,2" IsReadOnly="True" MinWidth="150" />
-					<Label DockPanel.Dock="Right" Content="Creation Date:" HorizontalAlignment="Right" />
-
-				</DockPanel>
-
 				<GroupBox Grid.Row="2" Header="Report Integrity" Margin="0,0,0,5" Style="{DynamicResource CustomGroupboxStyle}">
 					<Grid>
 						<Grid.ColumnDefinitions>
@@ -298,25 +231,30 @@
 							<RowDefinition />
 							<RowDefinition />
 							<RowDefinition />
+							<RowDefinition/>
 						</Grid.RowDefinitions>
 
-						<Label Grid.Row="0" Grid.Column="0" Content="Canonicalization methods:" />
-						<TextBox Grid.Row="0" Grid.Column="1"
+						<Label Grid.Row="0" Grid.Column="0" Content="Creation Date:" />
+						<TextBox Grid.Row="0" Grid.Column="1" Text="{helper:CultureAwareBinding Path=CreationDate, StringFormat='g'}"
+							Margin="10,2" MinWidth="150" />
+						
+						<Label Grid.Row="1" Grid.Column="0" Content="Canonicalization methods:" />
+						<TextBox Grid.Row="1" Grid.Column="1"
 								Text="{Binding CanonicalizationMethods, Mode=OneWay , Converter={StaticResource CollectionConverter}}"
 								Margin="10,2" IsReadOnly="True" />
 
-						<Label Grid.Row="1" Grid.Column="0" Content="Digest method:" />
-						<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DigestMethod, Mode=OneWay}" Margin="10,2" IsReadOnly="True" />
+						<Label Grid.Row="2" Grid.Column="0" Content="Digest method:" />
+						<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DigestMethod, Mode=OneWay}" Margin="10,2" IsReadOnly="True" />
 
-						<Label Grid.Row="2" Grid.Column="0" Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" />
-						<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DigestValueRead}" Margin="10,2" IsReadOnly="True">
+						<Label Grid.Row="3" Grid.Column="0" Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" />
+						<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DigestValueRead}" Margin="10,2" IsReadOnly="True">
 							<TextBox.Style>
 								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 									<Style.Triggers>
-										<DataTrigger Binding="{Binding Valid}" Value="True">
+										<DataTrigger Binding="{Binding FileIntegrityValid}" Value="True">
 											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
 										</DataTrigger>
-										<DataTrigger Binding="{Binding Valid}" Value="False">
+										<DataTrigger Binding="{Binding FileIntegrityValid}" Value="False">
 											<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
 										</DataTrigger>
 									</Style.Triggers>
@@ -324,16 +262,16 @@
 							</TextBox.Style>
 						</TextBox>
 
-						<Label Grid.Row="3" Grid.Column="0" Content="Digest Value computed:"
+						<Label Grid.Row="4" Grid.Column="0" Content="Digest Value computed:"
 								Style="{StaticResource DigestValueLabelStyle}" />
-						<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DigestValueComputed}" Margin="10,2" IsReadOnly="True">
+						<TextBox Grid.Row="4" Grid.Column="1" Text="{Binding DigestValueComputed}" Margin="10,2" IsReadOnly="True">
 							<TextBox.Style>
 								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 									<Style.Triggers>
-										<DataTrigger Binding="{Binding Valid}" Value="True">
+										<DataTrigger Binding="{Binding FileIntegrityValid}" Value="True">
 											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
 										</DataTrigger>
-										<DataTrigger Binding="{Binding Valid}" Value="False">
+										<DataTrigger Binding="{Binding FileIntegrityValid}" Value="False">
 											<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
 										</DataTrigger>
 									</Style.Triggers>
@@ -410,42 +348,6 @@
 					<RowDefinition />
 				</Grid.RowDefinitions>
 
-				<DockPanel Grid.Row="0" Grid.Column="0">
-
-					<Label DockPanel.Dock="Left">
-						<Label.Content>
-							<TextBlock Text="{Binding XMLFile.XMLValidationErrors.Count, StringFormat='{}{0} Warnings/Errors'}" />
-						</Label.Content>
-						<Label.Style>
-							<Style TargetType="Label">
-								<Setter Property="Foreground" Value="Red" />
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding XMLFile.XMLValidationErrors.Count}" Value="0">
-										<Setter Property="Foreground" Value="Black" />
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</Label.Style>
-					</Label>
-					<Button DockPanel.Dock="Left" Margin="10,0,0,0" Content="Details..." HorizontalAlignment="Left" Width="91"
-							Click="Button_Click">
-						<Button.Style>
-							<Style TargetType="Button">
-								<Setter Property="IsEnabled" Value="True" />
-								<Style.Triggers>
-									<DataTrigger Binding="{Binding XMLFile.XMLValidationErrors.Count}" Value="0">
-										<Setter Property="IsEnabled" Value="False" />
-									</DataTrigger>
-								</Style.Triggers>
-							</Style>
-						</Button.Style>
-					</Button>
-
-					<TextBox DockPanel.Dock="Right" Text="{helper:CultureAwareBinding Path=CreationDate, StringFormat='g'}"
-							Margin="10,2,20,2" MinWidth="150" />
-					<Label DockPanel.Dock="Right" Content="Creation Date:" HorizontalAlignment="Right" />
-
-				</DockPanel>
 				<GroupBox Grid.Row="2" Header="Report Integrity" Margin="0,0,0,5" Style="{DynamicResource CustomGroupboxStyle}">
 					<Grid>
 						<Grid.ColumnDefinitions>
@@ -457,25 +359,30 @@
 							<RowDefinition />
 							<RowDefinition />
 							<RowDefinition />
+							<RowDefinition/>
 						</Grid.RowDefinitions>
-
-						<Label Grid.Row="0" Grid.Column="0" Content="Canonicalization methods:" />
-						<TextBox Grid.Row="0" Grid.Column="1"
+						
+						<Label Grid.Row="0" Grid.Column="0" Content="Creation Date:" />
+						<TextBox Grid.Row="0" Grid.Column="1" Text="{helper:CultureAwareBinding Path=CreationDate, StringFormat='g'}"
+							Margin="10,2" MinWidth="150" />
+						
+						<Label Grid.Row="1" Grid.Column="0" Content="Canonicalization methods:" />
+						<TextBox Grid.Row="1" Grid.Column="1"
 								Text="{Binding CanonicalizationMethods, Mode=OneWay , Converter={StaticResource CollectionConverter}}"
 								Margin="10,2" IsReadOnly="True" />
 
-						<Label Grid.Row="1" Grid.Column="0" Content="Digest method:" />
-						<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DigestMethod, Mode=OneWay}" Margin="10,2" IsReadOnly="True" />
+						<Label Grid.Row="2" Grid.Column="0" Content="Digest method:" />
+						<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DigestMethod, Mode=OneWay}" Margin="10,2" IsReadOnly="True" />
 
-						<Label Grid.Row="2" Grid.Column="0" Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" />
-						<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DigestValueRead}" Margin="10,2" IsReadOnly="True">
+						<Label Grid.Row="3" Grid.Column="0" Content="Digest Value read:" Style="{StaticResource DigestValueLabelStyle}" />
+						<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DigestValueRead}" Margin="10,2" IsReadOnly="True">
 							<TextBox.Style>
 								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 									<Style.Triggers>
-										<DataTrigger Binding="{Binding Valid}" Value="True">
+										<DataTrigger Binding="{Binding FileIntegrityValid}" Value="True">
 											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
 										</DataTrigger>
-										<DataTrigger Binding="{Binding Valid}" Value="False">
+										<DataTrigger Binding="{Binding FileIntegrityValid}" Value="False">
 											<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
 										</DataTrigger>
 									</Style.Triggers>
@@ -483,16 +390,16 @@
 							</TextBox.Style>
 						</TextBox>
 
-						<Label Grid.Row="3" Grid.Column="0" Content="Digest Value computed:"
+						<Label Grid.Row="4" Grid.Column="0" Content="Digest Value computed:"
 								Style="{StaticResource DigestValueLabelStyle}" />
-						<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DigestValueComputed}" Margin="10,2" IsReadOnly="True">
+						<TextBox Grid.Row="4" Grid.Column="1" Text="{Binding DigestValueComputed}" Margin="10,2" IsReadOnly="True">
 							<TextBox.Style>
 								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 									<Style.Triggers>
-										<DataTrigger Binding="{Binding Valid}" Value="True">
+										<DataTrigger Binding="{Binding FileIntegrityValid}" Value="True">
 											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
 										</DataTrigger>
-										<DataTrigger Binding="{Binding Valid}" Value="False">
+										<DataTrigger Binding="{Binding FileIntegrityValid}" Value="False">
 											<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
 										</DataTrigger>
 									</Style.Triggers>
@@ -710,6 +617,7 @@
 			<Grid.RowDefinitions>
 				<RowDefinition Height="*" />
 				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
 
 			<ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch"
@@ -757,8 +665,38 @@
 				</ItemsControl>
 
 			</ScrollViewer>
+			<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,5">
+				<Label>
+						<Label.Content>
+						<TextBlock Text="{Binding ErrorCount, StringFormat='{}{0} Warnings/Errors'}" />
+						</Label.Content>
+						<Label.Style>
+							<Style TargetType="Label">
+								<Setter Property="Foreground" Value="Red" />
+								<Style.Triggers>
+								<DataTrigger Binding="{Binding ErrorCount}" Value="0">
+										<Setter Property="Foreground" Value="Black" />
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Label.Style>
+					</Label>
+					<Button Margin="10,0,0,0" Content="Details..." HorizontalAlignment="Left" Width="91" Click="Button_Click_1">
+						<Button.Style>
+							<Style TargetType="Button">
+								<Setter Property="IsEnabled" Value="True" />
+								<Style.Triggers>
+								<DataTrigger Binding="{Binding ErrorCount}" Value="0">
+										<Setter Property="IsEnabled" Value="False" />
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</Button.Style>
+					</Button>
+				
+			</StackPanel>
 
-			<Grid Grid.Row="1" Margin="10,3,10,30" HorizontalAlignment="Center">
+			<Grid Grid.Row="2" Margin="10,3,10,30" HorizontalAlignment="Center">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="50" />

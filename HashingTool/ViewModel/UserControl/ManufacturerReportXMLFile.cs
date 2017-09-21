@@ -15,7 +15,9 @@ namespace HashingTool.ViewModel.UserControl
 	{
 		private ViewModel.ComponentEntry[] _jobComponents;
 
-		public ManufacturerReportXMLFile(string name, Func<XmlDocument, Collection<string>, bool?> contentCheck,
+		private readonly ObservableCollection<string> _validationErrors = new ObservableCollection<string>();
+
+		public ManufacturerReportXMLFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, contentCheck, hashValidation)
 		{
 			_xmlFile.PropertyChanged += UpdateComponents;
@@ -33,6 +35,11 @@ namespace HashingTool.ViewModel.UserControl
 				RaisePropertyChanged("ManufacturerReportValid");
 			}
 			private get { return _jobComponents; }
+		}
+
+		public ObservableCollection<string> ValidationErrors
+		{
+			get { return _validationErrors; }
 		}
 
 		private void UpdateComponents(object sender, PropertyChangedEventArgs e)
@@ -119,6 +126,7 @@ namespace HashingTool.ViewModel.UserControl
 		public bool ManufacturerReportValid
 		{
 			get {
+				_validationErrors.Clear();
 				var componentsValid = JobComponents != null && JobComponents.Length > 0;
 				if (Components == null || JobComponents == null || JobComponents.Length == 0) {
 					return false;
@@ -129,11 +137,11 @@ namespace HashingTool.ViewModel.UserControl
 					var entryCertificationNbr = entry.CertificationNumberMatchesJobComponent == null ||
 												entry.CertificationNumberMatchesJobComponent.Value;
 					if (!entryCertificationNbr) {
-						var msg = string.Format("Certification number for component {0} does not match! Job-File: {1}, Report: {2}",
-							entry.Component, entry.CertificationNumberExpected, entry.CertificationNumber);
-						if (!_xmlFile.XMLValidationErrors.Contains(msg)) {
-							_xmlFile.XMLValidationErrors.Add(msg);
-						}
+						var msg =
+							string.Format(
+								"Verifying Manufacturer Report: Certification number for component '{0}' does not match! Job-File: '{1}', Report: '{2}'",
+								entry.Component, entry.CertificationNumberExpected, entry.CertificationNumber);
+						_validationErrors.Add(msg);
 					}
 					componentsValid &= entryCertificationNbr;
 					// digest value is mandatory (except for tires)
@@ -143,11 +151,11 @@ namespace HashingTool.ViewModel.UserControl
 
 					var entryDigest = entry.DigestValueMatchesJobComponent != null && entry.DigestValueMatchesJobComponent.Value;
 					if (!entryDigest) {
-						var msg = string.Format("Digest value for component {0} does not match! Job-File: {1}, Report: {2}",
-							entry.Component, entry.DigestValueExpected, entry.DigestValue);
-						if (!_xmlFile.XMLValidationErrors.Contains(msg)) {
-							_xmlFile.XMLValidationErrors.Add(msg);
-						}
+						var msg =
+							string.Format(
+								"Verifying Manufacturer Report: Digest value for component '{0}' does not match! Job-File: '{1}', Report: '{2}'",
+								entry.Component, entry.DigestValueExpected, entry.DigestValue);
+						_validationErrors.Add(msg);
 					}
 					componentsValid &= entryDigest;
 				}

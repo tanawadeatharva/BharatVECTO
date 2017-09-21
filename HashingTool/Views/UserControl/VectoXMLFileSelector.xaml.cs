@@ -30,7 +30,7 @@ namespace HashingTool.Views
 		{
 			var dialog = new XMLValidationErrorsDialog();
 			dialog.XMLErrors = XMLFile.XMLValidationErrors;
-
+			dialog.ErrorCount = XMLFile.XMLValidationErrors.Count;
 			dialog.ShowDialog();
 		}
 	}

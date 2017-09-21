@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -22,8 +23,10 @@ namespace HashingTool.Views
 	public partial class XMLValidationErrorsDialog : Window
 	{
 		public static readonly DependencyProperty XMLErrorsProperty = DependencyProperty.Register("XMLErrors",
-			typeof(ObservableCollection<string>),
-			typeof(XMLValidationErrorsDialog));
+			typeof(ICollection), typeof(XMLValidationErrorsDialog));
+
+		public static readonly DependencyProperty ErrorCountProperty = DependencyProperty.Register("ErrorCount",
+			typeof(int), typeof(XMLValidationErrorsDialog));
 
 		public XMLValidationErrorsDialog()
 		{
@@ -31,10 +34,29 @@ namespace HashingTool.Views
 			(Content as FrameworkElement).DataContext = this;
 		}
 
-		public ObservableCollection<string> XMLErrors
+		public ICollection XMLErrors
 		{
-			get { return (ObservableCollection<string>)GetValue(XMLErrorsProperty); }
+			get { return (ICollection)GetValue(XMLErrorsProperty); }
 			set { SetValue(XMLErrorsProperty, value); }
+		}
+
+		public int ErrorCount
+		{
+			get {
+				var value = GetValue(ErrorCountProperty);
+				if (value != null) {
+					return (int)value;
+				}
+				return 0;
+			}
+			set { SetValue(ErrorCountProperty, value); }
+		}
+
+		private void btnCopy_Click(object sender, RoutedEventArgs e)
+		{
+			var errors = string.Join(Environment.NewLine,(from object item in lbErrors.Items select item.ToString()).ToList());
+
+			Clipboard.SetText( errors);
 		}
 	}
 }
