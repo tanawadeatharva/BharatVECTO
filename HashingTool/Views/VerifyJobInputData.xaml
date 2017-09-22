@@ -6,7 +6,6 @@
 	xmlns:viewModel="clr-namespace:HashingTool.ViewModel"
 	xmlns:views="clr-namespace:HashingTool.Views"
 	xmlns:helper="clr-namespace:HashingTool.Helper"
-	xmlns:globalization="clr-namespace:System.Globalization;assembly=mscorlib"
 	x:Class="HashingTool.Views.VerifyJobInputData"
 	mc:Ignorable="d"
 	d:DesignHeight="657" d:DesignWidth="534">
@@ -25,7 +24,7 @@
 				Margin="0,10,10,5"
 				HorizontalAlignment="Right"
 				Width="75" Height="22" VerticalAlignment="Bottom" />
-		<ScrollViewer>
+		<ScrollViewer VerticalScrollBarVisibility="Auto">
 			<DockPanel>
 				<Label x:Name="lblFileSelect" DockPanel.Dock="Top" Content="Job data:" HorizontalAlignment="Left" Margin="10,0,0,0"
 						VerticalAlignment="Top" />

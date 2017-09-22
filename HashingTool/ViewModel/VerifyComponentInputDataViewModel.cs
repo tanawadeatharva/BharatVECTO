@@ -13,10 +13,10 @@ namespace HashingTool.ViewModel
 {
 	public class VerifyComponentInputDataViewModel : HashedXMLFile, IMainView, INotifyPropertyChanged
 	{
-		private bool _componentDataValid;
+		//private bool _componentDataValid;
 
 		public VerifyComponentInputDataViewModel()
-			: base("Verify Component Data", HashingHelper.IsComponentFile)
+			: base("Verify Component Data", HashingHelper.IsComponentFile, HashingHelper.ValidateDocumentHash)
 		{
 			_xmlFile.PropertyChanged += ComponentFilechanged;
 		}
@@ -26,32 +26,16 @@ namespace HashingTool.ViewModel
 			get { return ApplicationViewModel.HomeView; }
 		}
 
-
-		public bool ComponentDataValid
-		{
-			get { return _componentDataValid; }
-			set {
-				if (_componentDataValid == value) {
-					return;
-				}
-				_componentDataValid = value;
-				RaisePropertyChanged("ComponentDataValid");
-			}
-		}
-
 		private void ComponentFilechanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "UPDATED") {
-				DoValidateHash();
+				ReadComponentName();
 			}
 		}
 
-		private void DoValidateHash()
+		private void ReadComponentName()
 		{
 			if (_xmlFile.ContentValid == null || !_xmlFile.ContentValid.Value || _xmlFile.Document == null) {
-				ComponentDataValid = false;
-				DigestValueComputed = "";
-				DigestValueRead = "";
 				Component = "";
 				return;
 			}
@@ -63,23 +47,10 @@ namespace HashingTool.ViewModel
 					throw new InvalidDataException();
 				}
 				Component = h.GetContainigComponents().First().XMLElementName();
-
-				DigestValueRead = h.ReadHash();
-				DigestValueComputed = h.ComputeHash();
-				ComponentDataValid = h.ValidateHash();
-				DigestMethod = h.GetDigestMethod();
-				SetCanonicalizationMethod(h.GetCanonicalizationMethods());
-				
 			} catch (Exception e) {
-				ComponentDataValid = false;
-				DigestValueComputed = "";
-				DigestValueRead = "";
 				Component = "";
-				SetCanonicalizationMethod(new string[] { });
-				DigestMethod = "";
 				_xmlFile.LogError(e.Message);
 			}
 		}
-
 	}
 }

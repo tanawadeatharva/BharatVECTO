@@ -52,11 +52,19 @@ Computing the digest value of an XML document in the VECTO context is done apply
 
 Currently, only two canonicalization methods, namely http://www.w3.org/2001/10/xml-exc-c14n#, and urn:vecto:xml:2017:canonicalization, and one digest method, namely http://www.w3.org/2001/04/xmlenc#sha256 are supported. Both canonicalization methods are mandatory (as described above). Further methods may be added later.
 
+## Main Screen
+
+![](images/VectoHashingTool_Start.PNG)
+
+The main screen allows to select from the four main functionalities the VECTO Hashing Tool provides.
+
 ## Hashing Component Data
+
+### Functionality
 
 The "Hash Component Data" window allows to compute the digest value and adds the Signature element to an XML component file.
 
-The selected component data file has to contain the structure of an XML component file as described in the XML schema, *except* it *must not* contain the Signature element following the Data element. Moreover, the selected file has to be a component file (engine, gearbox, axlegear, angledrive, tyre, retarder, torque converter), other file types such as job files and report files are *not supported*!.
+The selected component data file has to be in the form of an XML component file as described in the XML schema, *except* it *must not* contain the Signature element following the Data element. Moreover, the selected file has to be a component file (engine, gearbox, axlegear, angledrive, tyre, retarder, torque converter), other file types such as job files and report files are *not supported*!.
 
 The component data may already contain an id-attribute in the Data element. However, if the length of the id value is less than 5 characters it will be overwritten by the hashing tool in order to guarantee sufficient uniqueness.
 
@@ -66,13 +74,76 @@ As a refeence for the user, the GUI shows the canonicalization method and digest
 
 If the generated component file validates against the XML schema it can be saved to disk. Otherwise, the error messges and warnings can be inspected via the /Details.../ button.
 
+### UI Elements
+
+![](images/VectoHashingTool_HashComponentData_ann.svg)
+
+
+1 ... File selection dialog, see [here fore more details](#file-selection-dialog)
+2 ... Error indicator. Shows more details in case the selected file could not be read correctly (see [error dialgo](#error-dialog)).
+3 ... Information area. If the generated component file is valid this area shows the canonicalization methods and digest method used to compute the digest value shown below. The digest value can be copied to tye clipboard using the 'Copy' button next to the textbox showing the digest value.
+4 ... Status indicator. Either shows a green checkmark in case the generated component file is valid or a red cross if the component file is not valid. More details can be found in the [error dialgo](#error-dialog).
+5 ... Allows to save the component file if it is valid.
+6 ... Go back to the main screen
+
+
 ## Verifying Integrity Component Data
+
+### Functionality
+
+The 'Verify Component Data' screen allows to verify the integrity of a component file. The canonicalization methods and digest method as well as the digest value are read from the selected XML file and displayed. Using the same canonicalization methods and digest method the digest value is re-computed. If the computed digest value equals the digest value read from the file the component file is valid.
+
+In case the computed digest value does not equal the digest value read from the file the component file is invalid and may not be used further.
+
+### UI Elements
+
+![](images/VectoHashingTool_VerifyComponentData_ann.svg)
+
+
+1 ... File selection dialog, see [here fore more details](#file-selection-dialog)
+2 ... Error indicator. Shows more details in case the selected file could not be read correctly (see [error dialgo](#error-dialog)).
+3 ... Information area. Displays the VECTO component identified in the file, its certification date, the canonicalization methods and digest method as well as the digest value contained in the selected file. The VECTO Hashing Tool re-computes the digest value using the same methods as specified in the file and shows it in the informaiton area. 
+4 ... Status indicator. If the digest values match (i.e., the component file is valid)  a green checkmark is shown or a red cross if the component file is not valid. More details can be found in the [error dialgo](#error-dialog).
+5 ... Go back to the main screen
 
 
 ## Verifying Integrity VECTO Job Data
 
+### Functionality
+
+The 'Verify VECTO Job' screen allows to verify the integrity of all components in a VECTO Job file. 
+
+ToDo: - File Dialog + Status
+      - General Info output
+      - Components list
+      - Status indicator
 
 ## Verifying Integrity VECTO Results
 
 
 ## Using the Hashing Library
+
+
+## General UI Elements
+
+### File Selection Dialog
+
+ToDo: Image
+
+The file selection dialog allows to browse for a file in the VECTO Hashing Tool via the 'Browse...' button. Alternatively, the path to an XML file can be entered into the textfield. Next to the 'Browse...' button is a status indicator showing the status of the selected file. 
+
+![](images/Icon_XML_outline.svg) No file has been selected
+
+![](images/Icon_XML_red.svg) Failed to read the file. Check that the file exists and is an XML file.
+
+![](images/Icon_XML_green1.svg) Failed to validate the selected XML file against a known XML schema. Check that the selected file is a valid VECTO XML file
+
+![](images/Icon_XML_green2.svg) The selected file is a valid VECTO XML file but has the wrong contents. Check that the selected file contains the expected data (e.g., component data, job data, report, etc.)
+
+![](images/Icon_XML_green.svg)  The selected file is a valid VECTO XML file and has the correct contents.
+
+### Error Dialog
+
+ToDo: Image
+
+This dialog shows more details about errors during loading a VECTO XML file and validating its contents. The error messages can be copied to the clipboard using the 'Copy Errors' button.

@@ -19,7 +19,7 @@ namespace HashingTool.Helper
 		public const string ToolTipNone = "";
 		public static string ToolTipComponentHashInvalid = "Job-Data validation failed!";
 
-		public static bool? IsManufacturerReport(XmlDocument x,IErrorLogger errorLog)
+		public static bool? IsManufacturerReport(XmlDocument x, IErrorLogger errorLog)
 		{
 			if (x == null || x.DocumentElement == null) {
 				return null;
@@ -100,32 +100,37 @@ namespace HashingTool.Helper
 			}
 		}
 
-		public static void ValidateDocumentHash(XmlDocument xml, VectoXMLFile xmlViewModel)
+		public static void ValidateDocumentHash(XmlDocument xml, VectoXMLFile xmlFileModel)
 		{
-			var report = xmlViewModel as ReportXMLFile;
-			if (report == null) {
+			var hashedXML = xmlFileModel as HashedXMLFile;
+			if (hashedXML == null) {
 				return;
 			}
+
 			try {
 				var h = VectoHash.Load(xml);
-				report.DigestMethod = h.GetDigestMethod();
-				report.SetCanonicalizationMethod(h.GetCanonicalizationMethods());
+				hashedXML.DigestMethod = h.GetDigestMethod();
+				hashedXML.SetCanonicalizationMethod(h.GetCanonicalizationMethods());
 				try {
-					report.DigestValueRead = h.ReadHash();
+					hashedXML.DigestValueRead = h.ReadHash();
+					var dateNode = xml.SelectSingleNode("//*[local-name()='Date']");
+					hashedXML.Date = dateNode != null
+						? XmlConvert.ToDateTime(dateNode.InnerText, XmlDateTimeSerializationMode.RoundtripKind)
+						: (DateTime?)null;
 				} catch {
-					report.DigestValueRead = "";
+					hashedXML.DigestValueRead = "";
 				}
 				try {
-					report.DigestValueComputed = h.ComputeHash();
+					hashedXML.DigestValueComputed = h.ComputeHash();
 				} catch {
-					report.DigestValueComputed = "";
+					hashedXML.DigestValueComputed = "";
 				}
 				var valid = h.ValidateHash();
-				report.FileIntegrityTooltip = valid ? ToolTipHashValid : ToolTipHashInvalid;
-				report.FileIntegrityValid = valid;
+				hashedXML.FileIntegrityTooltip = valid ? ToolTipHashValid : ToolTipHashInvalid;
+				hashedXML.FileIntegrityValid = valid;
 			} catch (Exception e) {
-				report.XMLFile.LogError(e.Message);
-				report.FileIntegrityValid = false;
+				hashedXML.XMLFile.LogError(e.Message);
+				hashedXML.FileIntegrityValid = false;
 			}
 		}
 	}

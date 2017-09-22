@@ -13,9 +13,8 @@ namespace HashingTool.ViewModel.UserControl
 		private string[] _jobCanonicalizationMethodRead;
 		private string _jobDigestComputed;
 		private bool _jobDigestValid;
-		private DateTime? _creationDate;
 
-		public ReportXMLFile(string name, Func<XmlDocument,IErrorLogger, bool?> contentCheck,
+		public ReportXMLFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null)
 			: base(name, contentCheck, hashValidation)
 		{
@@ -24,14 +23,14 @@ namespace HashingTool.ViewModel.UserControl
 
 		private void ReadJobDigest(object sender, PropertyChangedEventArgs e)
 		{
-			var jobDigest = "";
-			var jobDigestMethod = "";
-			var jobc14NMethod = new string[] { };
-			DateTime? creationDate = null;
-
 			if (e.PropertyName != "UPDATED") {
 				return;
 			}
+
+			var jobDigest = "";
+			var jobDigestMethod = "";
+			var jobc14NMethod = new string[] { };
+
 			if (_xmlFile.Document != null && _xmlFile.Document.DocumentElement != null) {
 				var digestValueNode =
 					_xmlFile.Document.SelectSingleNode("//*[local-name()='InputDataSignature']//*[local-name()='DigestValue']");
@@ -50,16 +49,10 @@ namespace HashingTool.ViewModel.UserControl
 				if (c14NtMethodNodes != null) {
 					jobc14NMethod = (from XmlNode node in c14NtMethodNodes select node.InnerText).ToArray();
 				}
-				var dateNode =
-					_xmlFile.Document.SelectSingleNode("//*[local-name()='ApplicationInformation']/*[local-name()='Date']");
-				creationDate = dateNode != null
-					? XmlConvert.ToDateTime(dateNode.InnerText, XmlDateTimeSerializationMode.RoundtripKind)
-					: (DateTime?)null;
 			}
 			JobCanonicalizationMethodRead = jobc14NMethod;
 			JobDigestMethodRead = jobDigestMethod;
 			JobDigestValueRead = jobDigest;
-			CreationDate = creationDate;
 			RaisePropertyChanged("UPDATED");
 		}
 
@@ -122,18 +115,6 @@ namespace HashingTool.ViewModel.UserControl
 				}
 				_jobDigestValid = value;
 				RaisePropertyChanged("JobDigestValid");
-			}
-		}
-
-		public DateTime? CreationDate
-		{
-			get { return _creationDate; }
-			set {
-				if (_creationDate == value) {
-					return;
-				}
-				_creationDate = value;
-				RaisePropertyChanged("CreationDate");
 			}
 		}
 	}

@@ -35,7 +35,9 @@ namespace HashingTool.ViewModel.UserControl
 					return;
 				}
 				_componentDataValid = value;
-				JobValidToolTip = value != null && !value.Value ? HashingHelper.ToolTipComponentHashInvalid : HashingHelper.ToolTipOk;
+				JobValidToolTip = value != null && !value.Value
+					? HashingHelper.ToolTipComponentHashInvalid
+					: HashingHelper.ToolTipOk;
 				RaisePropertyChanged("JobDataValid");
 			}
 		}

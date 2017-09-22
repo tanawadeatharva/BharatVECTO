@@ -5,7 +5,7 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:viewModel="clr-namespace:HashingTool.ViewModel" x:Class="HashingTool.Views.HomeView"
 	mc:Ignorable="d"
-	d:DesignHeight="382" d:DesignWidth="532">
+	d:DesignHeight="374" d:DesignWidth="687">
 
 	<Grid x:Name="MainGrid" Margin="0,0,0,0">
 		<Grid.ColumnDefinitions>
@@ -26,7 +26,7 @@
 					Grid.Row="1" Grid.Column="1">
 			<ItemsControl.ItemsPanel>
 				<ItemsPanelTemplate>
-					<UniformGrid  Rows="2" Columns="2" Height="300" Width="500"/>
+					<UniformGrid  Rows="2" Columns="2" Height="300" Width="600"/>
 				</ItemsPanelTemplate>
 			</ItemsControl.ItemsPanel>
 			<ItemsControl.ItemTemplate>
