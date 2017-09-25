@@ -48,7 +48,7 @@
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
-				<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,5">
+				<!--<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,5">
 					<Label>
 						<Label.Content>
 							<TextBlock Text="{Binding XMLFile.XMLValidationErrors.Count, StringFormat='{}{0} Warnings/Errors'}" />
@@ -76,7 +76,7 @@
 							</Style>
 						</Button.Style>
 					</Button>
-				</StackPanel>
+				</StackPanel>-->
 
 				<Label Grid.Row="1" Grid.Column="0" Name="lblC14N" Content="Canonicalization:" HorizontalAlignment="Left"
 						Margin="0" />

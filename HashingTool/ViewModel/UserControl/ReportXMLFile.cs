@@ -3,32 +3,104 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml;
+using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel.UserControl
 {
 	public class ReportXMLFile : HashedXMLFile
 	{
+		protected readonly ObservableCollection<string> _validationErrors = new ObservableCollection<string>();
+
 		private string _jobDigestValueReadRead;
 		private string _jobDigestMethodRead;
 		private string[] _jobCanonicalizationMethodRead;
 		private string _jobDigestComputed;
-		private bool _jobDigestValid;
+		private bool _jobDigestMatchesReport;
+		protected VectoJobFile _jobData;
+		private string _reportVin;
 
 		public ReportXMLFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null)
 			: base(name, contentCheck, hashValidation)
 		{
-			_xmlFile.PropertyChanged += ReadJobDigest;
+			_xmlFile.PropertyChanged += ReportChanged;
 		}
 
-		private void ReadJobDigest(object sender, PropertyChangedEventArgs e)
+		public ObservableCollection<string> ValidationErrors
 		{
-			if (e.PropertyName != "UPDATED") {
+			get { return _validationErrors; }
+		}
+
+		public VectoJobFile JobData
+		{
+			private get { return _jobData; }
+			set {
+				if (_jobData == value) {
+					return;
+				}
+				_jobData = value;
+				_jobData.PropertyChanged += JobDataChanged;
+			}
+		}
+
+		private void ReportChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (sender == _xmlFile && e.PropertyName == "UPDATED") {
+				ReadReportData();
+				VerifyJobDataMatchesReport();
+			}
+		}
+
+
+		protected virtual void JobDataChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (sender == _jobData && e.PropertyName == "UPDATED") {
+				VerifyJobDataMatchesReport();
+			}
+		}
+
+
+		// check digest value and vin of report against given job
+		protected virtual void VerifyJobDataMatchesReport()
+		{
+			if (_xmlFile.IsValid != XmlFileStatus.ValidXML || _jobData == null ||
+				_jobData.XMLFile.IsValid != XmlFileStatus.ValidXML) {
+				JobDigestValueComputed = "";
+				JobDigestMatchesReport = false;
 				return;
 			}
+			try {
+				var h = VectoHash.Load(_jobData.XMLFile.Document);
+				var jobDigest = h.ComputeHash(JobCanonicalizationMethodRead,
+					JobDigestMethodRead);
+				JobDigestValueComputed = jobDigest;
+				var digestMatch = _jobDigestComputed == JobDigestValueRead;
+				var vinMatch = _jobData.VehicleIdentificationNumber == ReportVIN;
 
+				if (!digestMatch) {
+					_validationErrors.Add(string.Format("Job Digest Value mismatch! Computed job digest: '{0}', digest read: '{1}'",
+						_jobDigestComputed, JobDigestValueRead));
+				}
+
+				if (!vinMatch) {
+					_validationErrors.Add(string.Format("VIN mismatch! VIN from job data: '{0}', VIN from report: '{1}'",
+						_jobData.VehicleIdentificationNumber, ReportVIN));
+				}
+
+				JobDigestMatchesReport = vinMatch
+										&& digestMatch;
+			} catch (Exception) {
+				JobDigestValueComputed = "";
+				JobDigestMatchesReport = false;
+			}
+		}
+
+		// readout all required fields from the report xml: c14n, digest method, digest value of job, VIN, ...
+		protected virtual void ReadReportData()
+		{
 			var jobDigest = "";
 			var jobDigestMethod = "";
+			var vin = "";
 			var jobc14NMethod = new string[] { };
 
 			if (_xmlFile.Document != null && _xmlFile.Document.DocumentElement != null) {
@@ -49,11 +121,28 @@ namespace HashingTool.ViewModel.UserControl
 				if (c14NtMethodNodes != null) {
 					jobc14NMethod = (from XmlNode node in c14NtMethodNodes select node.InnerText).ToArray();
 				}
+				var vinNode = _xmlFile.Document.SelectSingleNode("//*[local-name()='VIN']");
+				if (vinNode != null) {
+					vin = vinNode.InnerText;
+				}
 			}
 			JobCanonicalizationMethodRead = jobc14NMethod;
 			JobDigestMethodRead = jobDigestMethod;
 			JobDigestValueRead = jobDigest;
+			ReportVIN = vin;
 			RaisePropertyChanged("UPDATED");
+		}
+
+		public string ReportVIN
+		{
+			get { return _reportVin; }
+			set {
+				if (_reportVin == value) {
+					return;
+				}
+				_reportVin = value;
+				RaisePropertyChanged("ReportVIN");
+			}
 		}
 
 		public string JobDigestMethodRead
@@ -95,26 +184,24 @@ namespace HashingTool.ViewModel.UserControl
 		public string JobDigestValueComputed
 		{
 			get { return _jobDigestComputed; }
-			set {
+			protected set {
 				if (_jobDigestComputed == value) {
-					JobDigestValid = _jobDigestComputed == JobDigestValueRead;
 					return;
 				}
 				_jobDigestComputed = value;
 				RaisePropertyChanged("JobDigestValueComputed");
-				JobDigestValid = _jobDigestComputed == JobDigestValueRead;
 			}
 		}
 
-		public bool JobDigestValid
+		public bool JobDigestMatchesReport
 		{
-			get { return _jobDigestValid; }
-			set {
-				if (_jobDigestValid == value) {
+			get { return _jobDigestMatchesReport; }
+			protected set {
+				if (_jobDigestMatchesReport == value) {
 					return;
 				}
-				_jobDigestValid = value;
-				RaisePropertyChanged("JobDigestValid");
+				_jobDigestMatchesReport = value;
+				RaisePropertyChanged("JobDigestMatchesReport");
 			}
 		}
 	}

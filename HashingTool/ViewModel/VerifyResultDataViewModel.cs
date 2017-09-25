@@ -24,8 +24,10 @@ namespace HashingTool.ViewModel
 			_jobFile = new VectoJobFile("Job File", HashingHelper.IsJobFile, HashingHelper.HashJobFile);
 			_manufacturerReport = new ManufacturerReportXMLFile("Manufacturer Report", HashingHelper.IsManufacturerReport,
 				HashingHelper.ValidateDocumentHash);
+			_manufacturerReport.JobData = _jobFile;
 			_customerReport = new ReportXMLFile("Customer Report", HashingHelper.IsCustomerReport,
 				HashingHelper.ValidateDocumentHash);
+			_customerReport.JobData = _jobFile;
 			Files = new ObservableCollection<VectoXMLFile> { _jobFile, _manufacturerReport, _customerReport };
 
 			ErrorsAndWarnings = new CompositeCollection();
@@ -34,11 +36,9 @@ namespace HashingTool.ViewModel
 			AddErrorCollection(_manufacturerReport.XMLFile.XMLValidationErrors);
 			AddErrorCollection(_customerReport.XMLFile.XMLValidationErrors);
 			AddErrorCollection(_manufacturerReport.ValidationErrors);
+			AddErrorCollection(_customerReport.ValidationErrors);
 
 			RaisePropertyChanged("CanonicalizationMethods");
-			_customerReport.PropertyChanged += Update;
-			_manufacturerReport.PropertyChanged += Update;
-			_jobFile.PropertyChanged += Update;
 		}
 
 		private void AddErrorCollection(ObservableCollection<string> errorCollection)
@@ -55,17 +55,6 @@ namespace HashingTool.ViewModel
 		public int ErrorCount
 		{
 			get { return ErrorsAndWarnings.Cast<CollectionContainer>().Sum(entry => (entry.Collection as ICollection).Count); }
-		}
-
-		private void Update(object sender, PropertyChangedEventArgs e)
-		{
-			if (e.PropertyName != "UPDATED") {
-				return;
-			}
-			UpdateReportJobDigest(_manufacturerReport);
-			UpdateReportJobDigest(_customerReport);
-
-			_manufacturerReport.JobComponents = _jobFile.Components.ToArray();
 		}
 
 
@@ -98,21 +87,5 @@ namespace HashingTool.ViewModel
 		public ObservableCollection<VectoXMLFile> Files { get; private set; }
 
 		public CompositeCollection ErrorsAndWarnings { get; private set; }
-
-		private void UpdateReportJobDigest(ReportXMLFile reportXML)
-		{
-			if (reportXML.FileIntegrityValid == null || !reportXML.FileIntegrityValid.Value || _jobFile.XMLFile.Document == null) {
-				reportXML.JobDigestValueComputed = "";
-				return;
-			}
-			try {
-				var h = VectoHash.Load(_jobFile.XMLFile.Document);
-				var jobDigest = h.ComputeHash(reportXML.JobCanonicalizationMethodRead,
-					reportXML.JobDigestMethodRead);
-				reportXML.JobDigestValueComputed = jobDigest;
-			} catch (Exception) {
-				reportXML.JobDigestValueComputed = "";
-			}
-		}
 	}
 }

@@ -17,7 +17,7 @@ using TUGraz.VectoHashing.Impl;
 
 namespace HashingTool.ViewModel
 {
-	public class HashComponentDataViewModel : HashedXMLFile, IMainView
+	public class HashComponentDataViewModel : VectoXMLFile, IMainView
 	{
 		private string _digestValue;
 
@@ -30,7 +30,7 @@ namespace HashingTool.ViewModel
 		private bool _busy;
 
 		public HashComponentDataViewModel()
-			: base("Hash Component Data", HashingHelper.IsComponentFile)
+			: base("Hash Component Data", false, HashingHelper.IsComponentFile)
 		{
 			_xmlFile.PropertyChanged += SourceChanged;
 			_saveCommand = new RelayCommand(SaveDocument,

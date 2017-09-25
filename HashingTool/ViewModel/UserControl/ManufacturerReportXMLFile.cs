@@ -15,7 +15,7 @@ namespace HashingTool.ViewModel.UserControl
 	{
 		private ViewModel.ComponentEntry[] _jobComponents;
 
-		private readonly ObservableCollection<string> _validationErrors = new ObservableCollection<string>();
+		private bool _manufacturerReportValid;
 
 		public ManufacturerReportXMLFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, contentCheck, hashValidation)
@@ -23,23 +23,11 @@ namespace HashingTool.ViewModel.UserControl
 			_xmlFile.PropertyChanged += UpdateComponents;
 		}
 
-		public ViewModel.ComponentEntry[] JobComponents
+		protected override void VerifyJobDataMatchesReport()
 		{
-			set {
-				if (_jobComponents == value) {
-					return;
-				}
-				_jobComponents = value;
-				DoUpdateComponents();
-				RaisePropertyChanged("JobComponents");
-				RaisePropertyChanged("ManufacturerReportValid");
-			}
-			private get { return _jobComponents; }
-		}
+			base.VerifyJobDataMatchesReport();
 
-		public ObservableCollection<string> ValidationErrors
-		{
-			get { return _validationErrors; }
+			DoUpdateComponentData();
 		}
 
 		private void UpdateComponents(object sender, PropertyChangedEventArgs e)
@@ -47,22 +35,27 @@ namespace HashingTool.ViewModel.UserControl
 			if (e.PropertyName != "UPDATED") {
 				return;
 			}
-			DoUpdateComponents();
-			RaisePropertyChanged("ManufacturerReportValid");
+			DoUpdateComponentData();
 			RaisePropertyChanged("UPDATED");
 		}
 
-		private void DoUpdateComponents()
+		private void DoUpdateComponentData()
 		{
-			if (_xmlFile.Document == null || _xmlFile.Document.DocumentElement == null) {
+			if (_xmlFile.Document == null || _xmlFile.Document.DocumentElement == null ||
+				_xmlFile.IsValid != XmlFileStatus.ValidXML) {
 				Components = new ComponentEntry[] { };
-				VehicleIdentificationNumber = "";
 				RaisePropertyChanged("Components");
-				RaisePropertyChanged("VehicleIdentificationNumber");
 				return;
 			}
 			var components = GetContainigComponents().GroupBy(s => s)
 				.Select(g => new { Entry = g.Key, Count = g.Count() });
+			var jobComponents = _jobData == null  ? new ViewModel.ComponentEntry[]{} : _jobData.Components.ToArray();
+			_validationErrors.Clear();
+
+			var hasComponentsFromJob = _jobData != null && _jobData.JobDataValid != null && _jobData.JobDataValid.Value && jobComponents.Any();
+
+			// iterate over components in manufacturer report, read out c14n, digest method, digest;
+			// collect c14n, digest method, digest value read, certification nr., digest value from job (re-computed)
 			var componentData = new List<ComponentEntry>();
 			foreach (var component in components) {
 				if (component.Entry == XMLNames.Component_Vehicle) {
@@ -77,6 +70,7 @@ namespace HashingTool.ViewModel.UserControl
 						DigestValue = ReadElementValue(node, XMLNames.DI_Signature_Reference_DigestValue),
 						CertificationMethod = ReadElementValue(node, XMLNames.Report_Component_CertificationMethod),
 					};
+					// rename 'Axle' from report to 'Tyre' as in job
 					if (entry.Component.StartsWith("Axle ")) {
 						entry.Component = entry.Component.Replace("Axle", "Tyre");
 						entry.CertificationNumber = ReadElementValue(node, XMLNames.Report_Tyre_TyreCertificationNumber);
@@ -85,81 +79,62 @@ namespace HashingTool.ViewModel.UserControl
 						entry.CertificationNumber = ReadElementValue(node, XMLNames.Report_Component_CertificationNumber) ??
 													ReadElementValue(node, XMLNames.Report_Component_CertificationMethod);
 					}
-					if (JobComponents != null) {
-						var jobComponent = JobComponents.Where(
-							x => x.Component == entry.Component).ToArray();
-						if (jobComponent.Any()) {
-							entry.DigestValueMatchesJobComponent = entry.Component.StartsWith("Tyre ")
-								? (bool?)null
-								: (jobComponent.First().DigestValueRead == entry.DigestValue);
-							entry.DigestValueExpected = jobComponent.First().DigestValueRead;
-							if (entry.CertificationMethod != CertificationMethod.StandardValues.ToXMLFormat()) {
-								entry.CertificationNumberMatchesJobComponent = jobComponent.First().CertificationNumber ==
-																				entry.CertificationNumber;
-								entry.CertificationNumberExpected = jobComponent.First().CertificationNumber;
-							}
-						}
-					}
 					componentData.Add(entry);
+					if (!hasComponentsFromJob) {
+						continue;
+					}
+					var jobComponent = jobComponents.Where(x => x.Component == entry.Component).ToArray();
+					if (!jobComponent.Any()) {
+						continue;
+					}
+					entry.DigestValueMatchesJobComponent = entry.Component.StartsWith("Tyre ")
+						? (bool?)null
+						: (jobComponent.First().DigestValueComputed == entry.DigestValue);
+					entry.DigestValueExpected = jobComponent.First().DigestValueComputed;
+
+					if (entry.CertificationMethod == CertificationMethod.StandardValues.ToXMLFormat()) {
+						continue;
+					}
+					entry.CertificationNumberMatchesJobComponent = jobComponent.First().CertificationNumber ==
+																	entry.CertificationNumber;
+					entry.CertificationNumberExpected = jobComponent.First().CertificationNumber;
 				}
 			}
 			Components = componentData.ToArray();
-			VehicleIdentificationNumber = GetVehicleIdentificationNumber();
-
 			RaisePropertyChanged("Components");
-			RaisePropertyChanged("VehicleIdentificationNumber");
-		}
+			var certificationNumberMismatch =
+				componentData.Where(
+					x => x.CertificationNumberMatchesJobComponent != null && !x.CertificationNumberMatchesJobComponent.Value).ToArray();
+			var digestMismatch =
+				componentData.Where(x => !x.Component.StartsWith("Tyre "))
+					.Where(x => x.DigestValueMatchesJobComponent == null || !x.DigestValueMatchesJobComponent.Value).ToArray();
+			if (jobComponents.Any()) {
+				foreach (var entry in certificationNumberMismatch) {
+					_validationErrors.Add(
+						string.Format(
+							"Verifying Manufacturer Report: Certification number for component '{0}' does not match! Job-file: '{1}', Report: '{2}'",
+							entry.Component, entry.CertificationNumberExpected, entry.CertificationNumber));
+				}
+				foreach (var entry in digestMismatch) {
+					_validationErrors.Add(
+						string.Format(
+							"Verifying Manufacturer Report: Digest Value for component '{0}' does not match! Job-file: '{1}', Report: '{2}'",
+							entry.Component, entry.DigestValueExpected, entry.DigestValue));
+				}
+			}
 
-		private string GetVehicleIdentificationNumber()
-		{
-			if (_xmlFile.Document == null || _xmlFile.IsValid != XmlFileStatus.ValidXML || _xmlFile.ContentValid == null ||
-				!_xmlFile.ContentValid.Value) {
-				return "";
-			}
-			var node = _xmlFile.Document.SelectSingleNode(string.Format("//*[local-name()='{0}']", XMLNames.Vehicle_VIN));
-			if (node == null) {
-				return "";
-			}
-			return node.InnerText;
+			ManufacturerReportValid = hasComponentsFromJob && !certificationNumberMismatch.Any() && !digestMismatch.Any();
 		}
 
 		public bool ManufacturerReportValid
 		{
-			get {
-				_validationErrors.Clear();
-				var componentsValid = JobComponents != null && JobComponents.Length > 0;
-				if (Components == null || JobComponents == null || JobComponents.Length == 0) {
-					return false;
+			get { return _manufacturerReportValid; }
+			set {
+				if (_manufacturerReportValid == value) {
+					return;
 				}
-
-				foreach (var entry in Components) {
-					// certification number is optional (iff standard values are used)
-					var entryCertificationNbr = entry.CertificationNumberMatchesJobComponent == null ||
-												entry.CertificationNumberMatchesJobComponent.Value;
-					if (!entryCertificationNbr) {
-						var msg =
-							string.Format(
-								"Verifying Manufacturer Report: Certification number for component '{0}' does not match! Job-File: '{1}', Report: '{2}'",
-								entry.Component, entry.CertificationNumberExpected, entry.CertificationNumber);
-						_validationErrors.Add(msg);
-					}
-					componentsValid &= entryCertificationNbr;
-					// digest value is mandatory (except for tires)
-					if (entry.Component.StartsWith("Tyre ")) {
-						continue;
-					}
-
-					var entryDigest = entry.DigestValueMatchesJobComponent != null && entry.DigestValueMatchesJobComponent.Value;
-					if (!entryDigest) {
-						var msg =
-							string.Format(
-								"Verifying Manufacturer Report: Digest value for component '{0}' does not match! Job-File: '{1}', Report: '{2}'",
-								entry.Component, entry.DigestValueExpected, entry.DigestValue);
-						_validationErrors.Add(msg);
-					}
-					componentsValid &= entryDigest;
-				}
-				return JobDigestValid && componentsValid;
+				_manufacturerReportValid = value;
+				RaisePropertyChanged("ManufacturerReportValid");
 			}
 		}
 
@@ -217,7 +192,6 @@ namespace HashingTool.ViewModel.UserControl
 			return retVal;
 		}
 
-		public string VehicleIdentificationNumber { get; private set; }
 
 		public ComponentEntry[] Components { get; private set; }
 
@@ -232,8 +206,11 @@ namespace HashingTool.ViewModel.UserControl
 			public string CertificationMethod { get; set; }
 
 			public bool? DigestValueMatchesJobComponent { get; set; }
+
 			public bool? CertificationNumberMatchesJobComponent { get; set; }
+
 			public string DigestValueExpected { get; set; }
+
 			public string CertificationNumberExpected { get; set; }
 		}
 	}

@@ -311,7 +311,7 @@
 								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
 									<Style.Triggers>
-										<DataTrigger Binding="{Binding JobDigestValid}" Value="True">
+										<DataTrigger Binding="{Binding JobDigestMatchesReport}" Value="True">
 											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
 										</DataTrigger>
 									</Style.Triggers>
@@ -327,7 +327,7 @@
 								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
 									<Style.Triggers>
-										<DataTrigger Binding="{Binding JobDigestValid}" Value="True">
+										<DataTrigger Binding="{Binding JobDigestMatchesReport}" Value="True">
 											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
 										</DataTrigger>
 									</Style.Triggers>
@@ -439,7 +439,7 @@
 								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
 									<Style.Triggers>
-										<DataTrigger Binding="{Binding JobDigestValid}" Value="True">
+										<DataTrigger Binding="{Binding JobDigestMatchesReport}" Value="True">
 											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
 										</DataTrigger>
 									</Style.Triggers>
@@ -455,7 +455,7 @@
 								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
 									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
 									<Style.Triggers>
-										<DataTrigger Binding="{Binding JobDigestValid}" Value="True">
+										<DataTrigger Binding="{Binding JobDigestMatchesReport}" Value="True">
 											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
 										</DataTrigger>
 									</Style.Triggers>
@@ -481,7 +481,7 @@
 
 						<Label Grid.Row="0" Grid.Column="0" Content="Vehicle" FontWeight="Bold" Margin="0,0,10,0" />
 						<Label Grid.Row="0" Grid.Column="1" Content="VIN:" />
-						<TextBox Grid.Row="0" Grid.Column="2" Text="{Binding VehicleIdentificationNumber, Mode=OneWay}"
+						<TextBox Grid.Row="0" Grid.Column="2" Text="{Binding ReportVIN, Mode=OneWay}"
 								Margin="10,2" IsReadOnly="True" />
 
 						<ItemsControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" DockPanel.Dock="Bottom"
@@ -763,7 +763,7 @@
 						<Style TargetType="ContentControl">
 							<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
 							<Style.Triggers>
-								<DataTrigger Binding="{Binding CustomerReport.JobDigestValid}" Value="True">
+								<DataTrigger Binding="{Binding CustomerReport.JobDigestMatchesReport}" Value="True">
 									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
 								</DataTrigger>
 							</Style.Triggers>
