@@ -64,7 +64,7 @@ Public Class VehicleAxleDialog
 				.RollResistanceCoefficient = TbRRC.Text.ToDouble(0),
 				.TyreTestLoad = TbFzISO.Text.ToDouble(0).SI(Of Newton)(),
 				.TwinTyres = CbTwinT.Checked,
-				.WheelsDimension = CbWheels.SelectedItem.ToString(),
+				.WheelsDimension = If(IsNothing(CbWheels.SelectedItem), "", CbWheels.SelectedItem.ToString()),
 				.Inertia = TbI_wheels.Text.ToDouble(0).SI(Of KilogramSquareMeter)()
 				}
 

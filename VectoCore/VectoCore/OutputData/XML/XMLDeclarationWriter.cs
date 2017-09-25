@@ -419,7 +419,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private string CreateIdString(string id)
 		{
-			var regexp = new Regex("[^a-zA-Z0-9_-]");
+			var regexp = new Regex("[^a-zA-Z0-9_.-]");
 			return regexp.Replace(id, "");
 		}
 	}

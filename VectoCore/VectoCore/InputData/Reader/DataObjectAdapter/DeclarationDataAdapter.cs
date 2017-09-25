@@ -133,7 +133,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					TwinTyres = DeclarationData.Trailer.TwinTyres,
 					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
 					TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
-					Inertia = trailerWheel.Inertia
+					Inertia = trailerWheel.Inertia,
+					WheelsDimension = trailerWheel.WheelType
 				}));
 			}
 			retVal.AxleData = axleData;
