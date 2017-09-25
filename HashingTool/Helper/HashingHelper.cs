@@ -115,7 +115,7 @@ namespace HashingTool.Helper
 					hashedXML.DigestValueRead = h.ReadHash();
 					var dateNode = xml.SelectSingleNode("//*[local-name()='Date']");
 					hashedXML.Date = dateNode != null
-						? XmlConvert.ToDateTime(dateNode.InnerText, XmlDateTimeSerializationMode.RoundtripKind)
+						? XmlConvert.ToDateTime(dateNode.InnerText, XmlDateTimeSerializationMode.Local)
 						: (DateTime?)null;
 				} catch {
 					hashedXML.DigestValueRead = "";

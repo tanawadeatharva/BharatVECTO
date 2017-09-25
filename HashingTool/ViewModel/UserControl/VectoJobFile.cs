@@ -100,7 +100,7 @@ namespace HashingTool.ViewModel.UserControl
 			if (nodes == null || nodes.Count == 0) {
 				return null;
 			}
-			return XmlConvert.ToDateTime(nodes[0].InnerText, XmlDateTimeSerializationMode.RoundtripKind);
+			return XmlConvert.ToDateTime(nodes[0].InnerText, XmlDateTimeSerializationMode.Local);
 		}
 
 		private string DoReadVIN()

@@ -328,7 +328,7 @@ namespace TUGraz.VectoHashing
 		public DateTime GetCertificationDate(VectoComponents component, int idx)
 		{
 			var nodes = GetNodes(component, idx);
-			return XmlConvert.ToDateTime(ReadElementValue(nodes[idx], XMLNames.Component_Date), XmlDateTimeSerializationMode.RoundtripKind);
+			return XmlConvert.ToDateTime(ReadElementValue(nodes[idx], XMLNames.Component_Date), XmlDateTimeSerializationMode.Local);
 		}
 
 		private string ReadElementValue(XmlNode xmlNode, string elementName)
