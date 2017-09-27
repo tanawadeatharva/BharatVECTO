@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml;
@@ -13,8 +12,6 @@ namespace HashingTool.ViewModel.UserControl
 {
 	public class ManufacturerReportXMLFile : ReportXMLFile
 	{
-		private ViewModel.ComponentEntry[] _jobComponents;
-
 		private bool _manufacturerReportValid;
 
 		public ManufacturerReportXMLFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
@@ -32,11 +29,11 @@ namespace HashingTool.ViewModel.UserControl
 
 		private void UpdateComponents(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName != "UPDATED") {
+			if (e.PropertyName != GeneralUpdate) {
 				return;
 			}
 			DoUpdateComponentData();
-			RaisePropertyChanged("UPDATED");
+			RaisePropertyChanged(GeneralUpdate);
 		}
 
 		private void DoUpdateComponentData()
@@ -49,10 +46,11 @@ namespace HashingTool.ViewModel.UserControl
 			}
 			var components = GetContainigComponents().GroupBy(s => s)
 				.Select(g => new { Entry = g.Key, Count = g.Count() });
-			var jobComponents = _jobData == null  ? new ViewModel.ComponentEntry[]{} : _jobData.Components.ToArray();
+			var jobComponents = _jobData == null ? new ViewModel.ComponentEntry[] { } : _jobData.Components.ToArray();
 			_validationErrors.Clear();
 
-			var hasComponentsFromJob = _jobData != null && _jobData.JobDataValid != null && _jobData.JobDataValid.Value && jobComponents.Any();
+			var hasComponentsFromJob = _jobData != null && _jobData.JobDataValid != null && _jobData.JobDataValid.Value &&
+										jobComponents.Any();
 
 			// iterate over components in manufacturer report, read out c14n, digest method, digest;
 			// collect c14n, digest method, digest value read, certification nr., digest value from job (re-computed)
@@ -123,7 +121,7 @@ namespace HashingTool.ViewModel.UserControl
 				}
 			}
 
-			ManufacturerReportValid = hasComponentsFromJob && !certificationNumberMismatch.Any() && !digestMismatch.Any();
+			ManufacturerReportValid = JobDigestMatchesReport && hasComponentsFromJob && !certificationNumberMismatch.Any() && !digestMismatch.Any();
 		}
 
 		public bool ManufacturerReportValid

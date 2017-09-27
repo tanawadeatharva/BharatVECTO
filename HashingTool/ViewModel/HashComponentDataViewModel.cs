@@ -62,7 +62,7 @@ namespace HashingTool.ViewModel
 
 		private void SourceChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == "UPDATED") {
+			if (e.PropertyName == GeneralUpdate) {
 				DoComputeHash();
 			}
 		}

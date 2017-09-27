@@ -28,7 +28,7 @@ namespace HashingTool.ViewModel
 
 		private void ComponentFilechanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == "UPDATED") {
+			if (e.PropertyName == GeneralUpdate) {
 				ReadComponentName();
 			}
 		}

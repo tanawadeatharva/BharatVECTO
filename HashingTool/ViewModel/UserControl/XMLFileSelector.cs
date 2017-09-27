@@ -211,7 +211,7 @@ namespace HashingTool.ViewModel.UserControl
 				_busy = false;
 				_browseFileCommand.RaiseCanExecuteChanged();
 
-				RaisePropertyChanged("UPDATED");
+				RaisePropertyChanged(GeneralUpdate);
 			}
 		}
 

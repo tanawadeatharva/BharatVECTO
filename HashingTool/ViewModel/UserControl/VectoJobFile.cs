@@ -80,14 +80,14 @@ namespace HashingTool.ViewModel.UserControl
 
 		private void JobFilechanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName != "UPDATED") {
+			if (e.PropertyName != GeneralUpdate) {
 				return;
 			}
 			DoValidateHash();
 			VehicleIdentificationNumber = DoReadVIN();
 			JobCreationDate = DoReadJobDate();
 
-			RaisePropertyChanged("UPDATED");
+			RaisePropertyChanged(GeneralUpdate);
 		}
 
 		private DateTime? DoReadJobDate()

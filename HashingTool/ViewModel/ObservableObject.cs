@@ -5,6 +5,8 @@ namespace HashingTool.ViewModel
 {
 	public abstract class ObservableObject : INotifyPropertyChanged
 	{
+		public const string GeneralUpdate = "UPDATE";
+
 		protected IOService IoService = new WPFIoService();
 
 		public event PropertyChangedEventHandler PropertyChanged;

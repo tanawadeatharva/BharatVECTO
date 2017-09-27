@@ -28,7 +28,7 @@ namespace HashingTool.ViewModel.UserControl
 		protected override void FileChanged(object sender, PropertyChangedEventArgs e)
 		{
 			base.FileChanged(sender, e);
-			if (e.PropertyName != "UPDATED") {
+			if (e.PropertyName != GeneralUpdate) {
 				return;
 			}
 
@@ -40,7 +40,7 @@ namespace HashingTool.ViewModel.UserControl
 				DigestMethod = "";
 				Component = "";
 			}
-			RaisePropertyChanged("UPDATED");
+			RaisePropertyChanged(GeneralUpdate);
 		}
 
 		public DateTime? Date

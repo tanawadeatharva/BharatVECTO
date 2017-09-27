@@ -48,7 +48,7 @@
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
-				<!--<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,5">
+				<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,5">
 					<Label>
 						<Label.Content>
 							<TextBlock Text="{Binding XMLFile.XMLValidationErrors.Count, StringFormat='{}{0} Warnings/Errors'}" />
@@ -76,16 +76,16 @@
 							</Style>
 						</Button.Style>
 					</Button>
-				</StackPanel>-->
+				</StackPanel>
 
 				<Label Grid.Row="1" Grid.Column="0" Name="lblC14N" Content="Canonicalization:" HorizontalAlignment="Left"
 						Margin="0" />
-				<TextBox Grid.Row="1" Grid.Column="1" Name="lblC14NList"
+				<TextBox Grid.Row="1" Grid.Column="1" Name="lblC14NList" IsReadOnly="True"
 						Text="{Binding CanonicalizationMethods, Mode=OneWay, Converter={StaticResource CollectionConverter}}"
 						Margin="10,2" />
 				<Label Grid.Row="2" Grid.Column="0" Name="lblDigestMethod" Content="Digest Method:" HorizontalAlignment="Left"
 						Margin="0" />
-				<TextBox Grid.Row="2" Grid.Column="1" Name="tbDigestMethod"
+				<TextBox Grid.Row="2" Grid.Column="1" Name="tbDigestMethod" IsReadOnly="True"
 						Text="{Binding DigestMethod}"
 						Margin="10,2" />
 				<Button Grid.Row="3" Grid.Column="2" Content="Copy" Margin="10,2,0,2" HorizontalAlignment="Right" Width="75"
@@ -104,6 +104,7 @@
 				<Label Grid.Row="3" Grid.Column="0" x:Name="lblDigestValue" Content="Digest Value:" HorizontalAlignment="Left"
 						Margin="0" Style="{StaticResource DigestValueLabelStyle}" />
 				<TextBox Grid.Row="3" Grid.Column="1" x:Name="tbDigestValue" Text="{Binding DigestValue}" Margin="10,2"
+						IsReadOnly="True"
 						VerticalAlignment="Top" RenderTransformOrigin="4.1,-2.1" Style="{StaticResource DigestValueTextboxStyle}"
 						Foreground="{StaticResource Color.SuccessGreen}" />
 				<ContentControl Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,0,0,0"

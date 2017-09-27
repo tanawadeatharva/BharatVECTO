@@ -45,7 +45,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		private void ReportChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (sender == _xmlFile && e.PropertyName == "UPDATED") {
+			if (sender == _xmlFile && e.PropertyName == GeneralUpdate) {
 				ReadReportData();
 				VerifyJobDataMatchesReport();
 			}
@@ -54,7 +54,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		protected virtual void JobDataChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (sender == _jobData && e.PropertyName == "UPDATED") {
+			if (sender == _jobData && e.PropertyName == GeneralUpdate) {
 				VerifyJobDataMatchesReport();
 			}
 		}
@@ -63,6 +63,7 @@ namespace HashingTool.ViewModel.UserControl
 		// check digest value and vin of report against given job
 		protected virtual void VerifyJobDataMatchesReport()
 		{
+			_validationErrors.Clear();
 			if (_xmlFile.IsValid != XmlFileStatus.ValidXML || _jobData == null ||
 				_jobData.XMLFile.IsValid != XmlFileStatus.ValidXML) {
 				JobDigestValueComputed = "";
@@ -130,7 +131,7 @@ namespace HashingTool.ViewModel.UserControl
 			JobDigestMethodRead = jobDigestMethod;
 			JobDigestValueRead = jobDigest;
 			ReportVIN = vin;
-			RaisePropertyChanged("UPDATED");
+			RaisePropertyChanged(GeneralUpdate);
 		}
 
 		public string ReportVIN

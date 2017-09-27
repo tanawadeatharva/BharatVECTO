@@ -35,7 +35,7 @@ namespace HashingTool.ViewModel.UserControl
 
 		protected virtual void FileChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName != "UPDATED") {
+			if (e.PropertyName != GeneralUpdate) {
 				return;
 			}
 
@@ -44,7 +44,7 @@ namespace HashingTool.ViewModel.UserControl
 			} else {
 				FileIntegrityValid = null;
 			}
-			RaisePropertyChanged("UPDATED");
+			RaisePropertyChanged(GeneralUpdate);
 		}
 
 

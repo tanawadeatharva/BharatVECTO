@@ -732,7 +732,7 @@
 				<TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"
 							TextAlignment="Center" Margin="5"
 							FontSize="14" FontWeight="Bold">
-					Job-File digest <LineBreak /> matches<LineBreak /> Manufacturer Report
+					Job-Data matches<LineBreak /> Manufacturer Report
 				</TextBlock>
 				<ContentControl Grid.Row="1" Grid.Column="2" Width="50" Height="50" Margin="10,10,10,0">
 					<ContentControl.LayoutTransform>
@@ -753,7 +753,7 @@
 				<TextBlock Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center"
 							TextAlignment="Center" Margin="5"
 							FontSize="14" FontWeight="Bold">
-					Job-File digest <LineBreak /> matches<LineBreak /> Customer Report
+					Job-Data matches<LineBreak /> Customer Report
 				</TextBlock>
 				<ContentControl Grid.Row="1" Grid.Column="4" Width="50" Height="50" Margin="10,10,10,0">
 					<ContentControl.LayoutTransform>

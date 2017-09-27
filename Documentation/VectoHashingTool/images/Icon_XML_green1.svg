@@ -38,8 +38,8 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="857"
-     inkscape:window-height="480"
+     inkscape:window-width="1157"
+     inkscape:window-height="583"
      id="namedview5592"
      showgrid="false"
      fit-margin-top="0"
@@ -47,50 +47,31 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:zoom="2.36"
-     inkscape:cx="50"
-     inkscape:cy="-21.36718"
+     inkscape:cx="-63.522444"
+     inkscape:cy="41.326547"
      inkscape:window-x="2106"
      inkscape:window-y="118"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg5582" />
-  <svg
-     id="svg5584"
-     version="1.1"
-     inkscape:version="0.91 r13725"
-     width="100%"
-     height="100%">
-    <g
-       transform="translate(-59.285156,-215.2361)"
-       id="g5586">
-      <svg
-         id="flowRoot4136"
-         version="1.1"
-         inkscape:version="0.91 r13725"
-         width="100%"
-         height="100%"
-         style="fill-opacity:1">
-        <path
-           d="m 59.285156,243.86892 9.785156,-14.94141 -8.867187,-13.69141 6.757812,0 5.742188,9.19922 5.625,-9.19922 6.699219,0 -8.90625,13.90625 9.785156,14.72657 -6.972656,0 -6.347657,-9.90235 -6.367187,9.90235 -6.933594,0 z"
-           id="path4145"
-           stroke-linejoin="Miter"
-           stroke-linecap="Flat"
-           inkscape:connector-curvature="0"
-           style="fill:#00c000;stroke-width:1" />
-        <path
-           d="m 88.835937,243.86892 0,-28.63282 8.652344,0 5.195309,19.53125 5.13672,-19.53125 8.67188,0 0,28.63282 -5.3711,0 0,-22.53907 -5.68359,22.53907 -5.566406,0 -5.664063,-22.53907 0,22.53907 -5.371094,0 z"
-           id="path4147"
-           stroke-linejoin="Miter"
-           stroke-linecap="Flat"
-           inkscape:connector-curvature="0"
-           style="fill:#ff0000;stroke-width:1" />
-        <path
-           d="m 122.42969,243.86892 0,-28.39844 5.78125,0 0,23.57422 14.375,0 0,4.82422 -20.15625,0 z"
-           id="path4149"
-           stroke-linejoin="Miter"
-           stroke-linecap="Flat"
-           inkscape:connector-curvature="0"
-           style="fill:#ff0000;stroke-width:1" />
-      </svg>
-    </g>
-  </svg>
+  <path
+     style="fill:#00c000;fill-opacity:1;stroke-width:1"
+     inkscape:connector-curvature="0"
+     stroke-linecap="Flat"
+     stroke-linejoin="Miter"
+     id="path4145"
+     d="M 0,28.63282 9.785156,13.69141 0.917969,0 7.675781,0 13.417969,9.19922 19.042969,0 l 6.699219,0 -8.90625,13.90625 9.785156,14.72657 -6.972656,0 -6.347657,-9.90235 -6.367187,9.90235 -6.933594,0 z" />
+  <path
+     style="fill:#ff0000;fill-opacity:1;stroke-width:1"
+     inkscape:connector-curvature="0"
+     stroke-linecap="Flat"
+     stroke-linejoin="Miter"
+     id="path4147"
+     d="M 29.550781,28.63282 29.550781,0 38.203125,0 43.398434,19.53125 48.535154,0 l 8.67188,0 0,28.63282 -5.3711,0 0,-22.53907 -5.68359,22.53907 -5.566406,0 -5.664063,-22.53907 0,22.53907 -5.371094,0 z" />
+  <path
+     style="fill:#ff0000;fill-opacity:1;stroke-width:1"
+     inkscape:connector-curvature="0"
+     stroke-linecap="Flat"
+     stroke-linejoin="Miter"
+     id="path4149"
+     d="m 63.144534,28.63282 0,-28.39844 5.78125,0 0,23.57422 14.375,0 0,4.82422 -20.15625,0 z" />
 </svg>
