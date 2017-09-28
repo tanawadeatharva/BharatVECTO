@@ -13,6 +13,7 @@ namespace HashingTool.ViewModel
 {
 	public class VerifyComponentInputDataViewModel : HashedXMLFile, IMainView, INotifyPropertyChanged
 	{
+		private string _certificationNumber;
 		//private bool _componentDataValid;
 
 		public VerifyComponentInputDataViewModel()
@@ -24,6 +25,17 @@ namespace HashingTool.ViewModel
 		public ICommand ShowHomeViewCommand
 		{
 			get { return ApplicationViewModel.HomeView; }
+		}
+
+		public string CertificationNumber
+		{
+			get { return _certificationNumber; }
+			private set {
+				if (_certificationNumber == value)
+					return;
+				_certificationNumber = value;
+				RaisePropertyChanged("CertificationNumber");
+			}
 		}
 
 		private void ComponentFilechanged(object sender, PropertyChangedEventArgs e)
@@ -47,6 +59,7 @@ namespace HashingTool.ViewModel
 					throw new InvalidDataException();
 				}
 				Component = h.GetContainigComponents().First().XMLElementName();
+				CertificationNumber = h.GetCertificationNumber(h.GetContainigComponents().First(), 0);
 			} catch (Exception e) {
 				Component = "";
 				_xmlFile.LogError(e.Message);
