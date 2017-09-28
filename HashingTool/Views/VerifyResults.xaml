@@ -220,8 +220,16 @@
 					<RowDefinition />
 					<RowDefinition />
 				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"  SharedSizeGroup="LabelsShareGroup"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
 
-				<GroupBox Grid.Row="2" Header="Report Integrity" Margin="0,0,0,5" Style="{DynamicResource CustomGroupboxStyle}">
+				<Label Grid.Row="0" Grid.Column="0" Content="VIN:" Margin="8,0,0,0"/>
+				<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ReportVIN, Mode=OneWay}"
+								Margin="16,2,16,2" IsReadOnly="True" />
+
+				<GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Header="Report Integrity" Margin="0,0,0,5" Style="{DynamicResource CustomGroupboxStyle}">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto" SharedSizeGroup="LabelsShareGroup" />
@@ -282,7 +290,7 @@
 					</Grid>
 				</GroupBox>
 
-				<GroupBox Grid.Row="3" Header="Job Integrity" Style="{DynamicResource CustomGroupboxStyle}">
+				<GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Header="Job Integrity" Style="{DynamicResource CustomGroupboxStyle}">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto" SharedSizeGroup="LabelsShareGroup" />
