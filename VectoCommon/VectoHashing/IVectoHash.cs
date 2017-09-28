@@ -34,106 +34,133 @@ using System.Xml.Linq;
 
 namespace TUGraz.VectoHashing
 {
+	/// <summary>
+	/// Interface definition for hashing and verifying VECTO XML files
+	/// </summary>
 	public interface IVectoHash
 	{
-		/**
-		 * Get a list of all vecto components contained in the XML file. If a certain
-		 * component appears multiple times (e.g. tires) it is provided multiple times 
-		 * in the returned list.
-		 * to get a list with unique entries (and the number of occurences) use e.g.
-		 * GetContainigComponents().GroupBy(s => s).Select(g => new { Entry = g.Key, Count = g.Count() })
-		 */
+		/// <summary>
+		/// Get a list of all vecto components contained in the XML file. If a certain
+		/// component appears multiple times (e.g. tires) it is provided multiple times 
+		/// in the returned list.
+		/// to get a list with unique entries (and the number of occurences) use e.g.
+		/// GetContainigComponents().GroupBy(s => s).Select(g => new { Entry = g.Key, Count = g.Count() })
+		/// </summary>
+		/// <returns>List of components contained in the current XML document</returns>
 		IList<VectoComponents> GetContainigComponents();
 
-		/**
-		 * Get the digest method used to compute the digest value of the top-level Signature element
-		 * if there is no top-level Signature element, the default digest method is returned (see XMLHashProvider.DefaultDigestMethod)
-		 * @return identifier (urn) of the digest method
-		 */
+
+		/// <summary>
+		/// Get the digest method used to compute the digest value of the top-level Signature element
+		/// if there is no top-level Signature element, the default digest method is returned (see XMLHashProvider.DefaultDigestMethod)
+		/// </summary>
+		/// <returns>identifier (urn) of the digest method</returns>
 		string GetDigestMethod();
 
-		/**
-		 * Get the digest method of the Signature element for the given component. If a component exists 
-		 * multiple times (e.g., tires), the index specifies for which component the digest method is returned
-		 * @param component 
-		 * @param index
-		 * @return identifier (urn) of the digest method
-		 */
+
+		/// <summary>
+		/// Get the digest method of the Signature element for the given component. If a component exists 
+		/// multiple times (e.g., tires), the index specifies for which component the digest method is returned
+		/// </summary>
+		/// <param name="component">VectoComponent to get the digest method for</param>
+		/// <param name="index">index of the component to use if a component may exist multiple times. Default: 0</param>
+		/// <returns>identifier (urn) of the digest method</returns>
 		string GetDigestMethod(VectoComponents component, int index = 0);
 
-		/**
-		 * Get the list of canonicalization methods used to compute the digest value of the top-level Signature element
-		 * If there is no top-level Signature element, the default digest method is returned (see XMLHashProvider.DefaulCanonicalizationMethod)
-		 * @return returns a list of identifiers (urns) of the canonicalization methods
-		 */
+
+		/// <summary>
+		/// Get the list of canonicalization methods used to compute the digest value of the top-level Signature element
+		/// If there is no top-level Signature element, the default digest method is returned (see XMLHashProvider.DefaulCanonicalizationMethod)
+		/// </summary>
+		/// <returns>returns a list of identifiers (urns) of the canonicalization methods</returns>
 		IEnumerable<string> GetCanonicalizationMethods();
 
-		/**
-		 * Get the list of canonicalization methods used to compute the digest value of the Signature element 
-		 * for the given component. If a component exists multiple times (e.g., tires) the indes specifies for which
-		 * component the canonicalization method is returned
-		 * If there is no top-level Signature element, the default digest method is returned (see XMLHashProvider.DefaulCanonicalizationMethod)
-		 * @return returns a list of identifiers (urns) of the canonicalization methods
-		 */
+
+		/// <summary>
+		/// Get the list of canonicalization methods used to compute the digest value of the Signature element 
+		/// for the given component. If a component exists multiple times (e.g., tires) the indes specifies for which
+		/// component the canonicalization method is returned
+		/// If there is no top-level Signature element, the default digest method is returned (see XMLHashProvider.DefaulCanonicalizationMethod)
+		/// </summary>
+		/// <param name="component">VectoComponent to get the canonicalization methods for</param>
+		/// <param name="index">index of the component to use if a component may exist multiple times. Default: 0</param>
+		/// <returns>returns a list of identifiers (urns) of the canonicalization methods</returns>
 		IEnumerable<string> GetCanonicalizationMethods(VectoComponents component, int index = 0);
 
-		/**
-		 * Reads the hash-value of the top-level Signature element
-		 * @return base64 encoded hash value
-		 */
+
+		/// <summary>
+		/// Reads the hash-value of the top-level Signature element
+		/// </summary>
+		/// <returns>base64 encoded hash value</returns>
 		string ReadHash();
 
-		/**
-		 * Reads the hash-value of the Signature element for the given component. If a component can exist 
-		 * multiple times (i.e., tires), the index specifies for which component the hash is computed
-		 * @return base64 encoded hash value
-		 */
+
+		/// <summary>
+		/// Reads the hash-value of the Signature element for the given component. If a component can exist 
+		/// multiple times (i.e., tires), the index specifies for which component the hash is computed
+		/// </summary>
+		/// <param name="component">VectoComponent to get the canonicalization methods for</param>
+		/// <param name="index">index of the component to use if a component may exist multiple times. Default: 0</param>
+		/// <returns>base64 encoded hash value</returns>
 		string ReadHash(VectoComponents component, int index = 0);
 
 
-		/**
-		 * Computes the hash-value of the top-level Data element (or vehicle)
-		 * If the canoonicalizationMethods is null the canonicalizationMethods from 
-		 * the signature element are read if available or the default canonicalization is applied
-		 * If the digestMethod is null the digestMethod from the signature element is read if 
-		 * available or the default digestMethod is used
-		 * Note: the top-level Data element is required to have an id attribute!
-		 * @return base64 encoded hash value
-		 */
+		/// <summary>
+		// Computes the hash-value of the top-level Data element (or vehicle)
+		/// If the canoonicalizationMethods is null the canonicalizationMethods from 
+		/// the signature element are read if available or the default canonicalization is applied
+		/// If the digestMethod is null the digestMethod from the signature element is read if 
+		/// available or the default digestMethod is used
+		/// Note: the top-level Data element is required to have an id attribute!
+		/// </summary>
+		/// <param name="canonicalizationMethods">Canonicalization methods to use. If null the default methods are applied</param>
+		/// <param name="digestMethod">Digest method to use. If null, the default digest method is used.</param>
+		/// <returns>base64 encoded hash value</returns>
 		string ComputeHash(IEnumerable<string> canonicalizationMethods = null, string digestMethod = null);
 
-		/**
-		 * Computes the hash-value for the given component. If a component can exist multiple times
-		 * (i.e., Tyres) the index specifies for which component the hash is computed
-		 * If the canoonicalizationMethods is null the canonicalizationMethods from 
-		 * the signature element are read if available or the default canonicalization is applied
-		 * If the digestMethod is null the digestMethod from the signature element is read if 
-		 * available or the default digestMethod is used
-		 * Note: the Data element is required to have an id attribute!
-		 * @return base64 encoded hash value
-		 */
 
+		/// <summary>
+		/// Computes the hash-value for the given component. If a component can exist multiple times
+		/// (i.e., Tyres) the index specifies for which component the hash is computed
+		/// If the canoonicalizationMethods is null the canonicalizationMethods from 
+		/// the signature element are read if available or the default canonicalization is applied
+		/// If the digestMethod is null the digestMethod from the signature element is read if 
+		/// available or the default digestMethod is used
+		/// Note: the Data element is required to have an id attribute!
+		/// </summary>
+		/// <param name="component">VectoComponent to get the canonicalization methods for</param>
+		/// <param name="index">index of the component to use if a component may exist multiple times. Default: 0</param>
+		/// <param name="canonicalizationMethods">list of identifiers (urn) of the canonicalization methods to apply. If null, the default canonicalization methods are used</param>
+		/// <param name="digestMethod">identifier (urn) of the digest method to use. If null, the default digest method is used</param>
+		/// <returns></returns>
 		string ComputeHash(VectoComponents component, int index = 0, IEnumerable<string> canonicalizationMethods = null,
 			string digestMethod = null);
 
-		/**
-		 * Validates the hash of the top-level component (or vehicle)
-		 */
+
+		/// <summary>
+		/// Validates the hash of the top-level component (or vehicle)
+		/// </summary>
+		/// <returns>true, if the re-computed digest value matches the document's digest value, false otherwise</returns>
 		bool ValidateHash();
 
-		/**
-		 * Validates the hash for the given component.
-		 */
+
+		/// <summary>
+		/// Validates the hash for the given component.
+		/// </summary>
+		/// <param name="component">VectoComponent to get the canonicalization methods for</param>
+		/// <param name="index">index of the component to use if a component may exist multiple times. Default: 0</param>
+		/// <returns>true, if the re-computed digest value matches the document's digest value, false otherwise</returns>
 		bool ValidateHash(VectoComponents component, int index = 0);
 
-		/**
-		 * Computes the hash-value of the outer Data element and adds the according Signature element 
-		 * after the Data element.
-		 * The default CaonocalizationMethods and DigestMethod are used.
-		 * Note: the id attribute is added to the Data element automatically. if an id attribute is already
-		 * present its value is overwritten.
-		 * @return returns the document including the Signature element with the hash of the Data block
-		 */
+
+		/// <summary>
+		/// Computes the hash-value of the outer Data element and adds the according Signature element 
+		/// after the Data element.
+		/// The default CaonocalizationMethods and DigestMethod are used.
+		/// Note: the id attribute is added to the Data element automatically. if an id attribute is already
+		/// present its value is overwritten unless its lenth is more than 5 characters.
+		/// </summary>
+		/// <returns>returns the given document including the Signature element with the hash of the Data block</returns>
 		XDocument AddHash();
 	}
 }

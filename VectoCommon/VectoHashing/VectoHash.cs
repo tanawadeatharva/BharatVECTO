@@ -86,12 +86,45 @@ namespace TUGraz.VectoHashing
 			Document = doc;
 		}
 
+
+		/// <summary>
+		/// Get a list of all supported digest methods
+		/// </summary>
+		public static ICollection<string> SupportedDigestMehods
+		{
+			get { return XMLHashProvider.SupportedDigestMethods; }
+		}
+
+		/// <summary>
+		/// get the identifier of the default digest method
+		/// </summary>
+		public static string DefaultDigestMethod
+		{
+			get { return XMLHashProvider.DefaultDigestMethod; }
+		}
+
+		/// <summary>
+		/// get a list of all supported canonicalization methods
+		/// </summary>
+		public static ICollection<string> SupportedCanonicalizationMethods
+		{
+			get { return XMLHashProvider.SupportedCanonicalizationMethods; }
+		}
+
+		/// <summary>
+		/// get the sequence of the default canonicalization methods
+		/// </summary>
+		public static IEnumerable<string> DefaultCanonicalizationMethod
+		{
+			get { return XMLHashProvider.DefaultCanonicalizationMethod; }
+		}
+
 		public IList<VectoComponents> GetContainigComponents()
 		{
 			var retVal = new List<VectoComponents>();
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
 				var nodes = Document.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']",
-						XMLNames.VectoInputDeclaration, component.XMLElementName()));
+					XMLNames.VectoInputDeclaration, component.XMLElementName()));
 				var count = nodes == null ? 0 : nodes.Count;
 				for (var i = 0; i < count; i++) {
 					retVal.Add(component);
@@ -328,7 +361,8 @@ namespace TUGraz.VectoHashing
 		public DateTime GetCertificationDate(VectoComponents component, int idx)
 		{
 			var nodes = GetNodes(component, idx);
-			return XmlConvert.ToDateTime(ReadElementValue(nodes[idx], XMLNames.Component_Date), XmlDateTimeSerializationMode.Local);
+			return XmlConvert.ToDateTime(ReadElementValue(nodes[idx], XMLNames.Component_Date),
+				XmlDateTimeSerializationMode.Local);
 		}
 
 		private string ReadElementValue(XmlNode xmlNode, string elementName)
@@ -412,7 +446,5 @@ namespace TUGraz.VectoHashing
 			}
 			return nodes[0].InnerText;
 		}
-
-		
 	}
 }
