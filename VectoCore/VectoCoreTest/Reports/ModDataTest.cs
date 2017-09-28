@@ -47,13 +47,19 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using System.IO;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
 	[TestFixture]
 	public class ModDataTest
 	{
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 		[TestCase()]
 		public void ModDataIntegritySimpleTest()
 		{

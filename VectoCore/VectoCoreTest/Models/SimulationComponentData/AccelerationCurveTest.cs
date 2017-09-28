@@ -29,14 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
-	[TestClass]
+	[TestFixture]
 	public class AccelerationCurveTest
 	{
 		public const double Tolerance = 0.0001;
@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(entry.Deceleration.Value(), deceleration, Tolerance);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void AccelerationTest()
 		{
 			Data = AccelerationCurveReader.ReadFromFile(@"TestData\Components\Coach.vacc");
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			EqualAcceleration(130, 0.16, -0.103);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void ComputeAccelerationDistanceTest()
 		{
 			Data = AccelerationCurveReader.ReadFromFile(@"TestData\Components\Truck.vacc");

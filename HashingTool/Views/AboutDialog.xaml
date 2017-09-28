@@ -1,0 +1,57 @@
+﻿<Window x:Class="HashingTool.Views.AboutDialog"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		Height="355" Width="700" Icon="/HashingTool;component/HashingIcon.ico" ResizeMode="NoResize">
+	<DockPanel>
+		<Grid DockPanel.Dock="Top" Height="100">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="256" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.Background>
+				<ImageBrush ImageSource="../Resources/VECTO_Hashing.png" Stretch="None" AlignmentX="Left" AlignmentY="Center" />
+			</Grid.Background>
+			<TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Text="VECTO Hashing Tool"
+						FontSize="38" FontWeight="Bold" Margin="30,20,0,0" />
+
+		</Grid>
+		<Grid DockPanel.Dock="Bottom" Margin="15, 30, 15, 15">
+			<TextBlock Text="VECTO Hashing Tool is licensed under EUPL 1.1+" Foreground="Blue" TextDecorations="Underline" MouseLeftButtonUp="EUPL_Link">
+				<TextBlock.Style>
+					<Style>
+						<Style.Triggers>
+							<Trigger Property="TextBlock.IsMouseOver" Value="True">
+								<Setter Property="TextBlock.Cursor" Value="Hand" />
+							</Trigger>
+						</Style.Triggers>
+					</Style>
+				</TextBlock.Style>
+			</TextBlock>
+			<TextBlock Text="Copyright © 2017 European Union" Margin="0, 20, 0, 0"/>
+			<TextBlock Text="Developed on behalf of the" Margin="0, 50, 0, 0"/>
+			<StackPanel Orientation="Horizontal" Margin="20,70,20,0" HorizontalAlignment="Center" Height="80" VerticalAlignment="Top">
+				<TextBlock VerticalAlignment="Center" Margin="0,0,60,0">
+					Joint Research Centre<LineBreak/>
+					Sustainable Transport Unit<LineBreak/>
+					European Commission
+				</TextBlock>
+				<Image Source="../Resources/JRC-About.png" Stretch="Uniform" Width="240"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="0, 155, 0,0">
+				<TextBlock Text="Support Contact:" Margin="0,0,30,0"/>
+				<TextBlock Text="vecto@jrc.ec.europa.com" Foreground="Blue" TextDecorations="Underline" MouseLeftButtonUp="Supportmail">
+					<TextBlock.Style>
+						<Style>
+							<Style.Triggers>
+								<Trigger Property="TextBlock.IsMouseOver" Value="True">
+									<Setter Property="TextBlock.Cursor" Value="Hand" />
+								</Trigger>
+							</Style.Triggers>
+						</Style>
+					</TextBlock.Style>
+
+				</TextBlock>
+			</StackPanel>
+		</Grid>
+	</DockPanel>
+</Window>

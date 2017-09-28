@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		protected override string ResourceId
 		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".VCDV.parameters.csv"; }
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".VCDV.VCDV_parameters.csv"; }
 		}
 
 		protected override string ErrorMessage

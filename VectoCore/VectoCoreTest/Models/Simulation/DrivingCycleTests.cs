@@ -30,7 +30,6 @@
 */
 
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -42,7 +41,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -69,7 +67,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dt = 1.SI<Second>();
 
 			var response = cycleOut.Request(absTime, dt);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 
 			var time = absTime + dt / 2;
 			var simulationInterval = dt;
@@ -100,14 +98,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var response = cycle.OutPort().Request(absTime, dt);
 			var timeFail = (response as ResponseFailTimeInterval);
-			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
+			Assert.IsInstanceOf<ResponseFailTimeInterval>(response);
 			// ReSharper disable once PossibleNullReferenceException
 			Assert.AreEqual(0.25.SI<Second>(), timeFail.DeltaT);
 
 			dt = timeFail.DeltaT;
 
 			response = cycle.OutPort().Request(absTime, dt);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 
 			container.CommitSimulationStep(absTime, dt);
 
@@ -121,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			dt = 1.SI<Second>();
 
 			response = cycle.OutPort().Request(absTime, dt);
-			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
+			Assert.IsInstanceOf<ResponseFailTimeInterval>(response);
 
 			dt = ((ResponseFailTimeInterval)response).DeltaT;
 			Assert.AreEqual(0.5.SI<Second>(), dt);

@@ -30,15 +30,15 @@
 */
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Utils;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	[TestClass]
+	[TestFixture]
 	public class DoubleExtensionMethodTest
 	{
-		[TestMethod]
+		[TestCase]
 		public void DoubleExtensions_SI()
 		{
 			var val = 600.RPMtoRad();
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual(600.SI().Rounds.Per.Minute.Cast<PerSecond>().Value(), val2.Value());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void DoubleExtension_ComparisonOperators()
 		{
 			Assert.IsTrue(0.0.IsEqual(0.0));
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.IsTrue(0.998.IsSmallerOrEqual(1.0));
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void TestStringFormatting()
 		{
 			Assert.AreEqual("0.452", 0.452345.ToMinSignificantDigits(3, 1));

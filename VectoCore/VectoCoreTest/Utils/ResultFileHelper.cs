@@ -33,7 +33,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
@@ -63,12 +63,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 					!double.IsNaN(actual.Rows[0].Field<string>(ModalResultField.v_act.GetShortCaption()).ToDouble(double.NaN))) {
 					// test v_act >= 0
 					Assert.IsTrue(actual.Rows.Cast<DataRow>()
-							.All(r => r.ParseDouble(ModalResultField.v_act.GetShortCaption()).IsGreaterOrEqual(0)),
+						.All(r => r.ParseDouble(ModalResultField.v_act.GetShortCaption()).IsGreaterOrEqual(0)),
 						"v_act must not be negative.");
 
 					// test v_targ >= 0
 					Assert.IsTrue(actual.Rows.Cast<DataRow>()
-							.All(r => r.ParseDouble(ModalResultField.v_targ.GetShortCaption()).IsGreaterOrEqual(0)),
+						.All(r => r.ParseDouble(ModalResultField.v_targ.GetShortCaption()).IsGreaterOrEqual(0)),
 						"v_targ must not be negative.");
 				}
 

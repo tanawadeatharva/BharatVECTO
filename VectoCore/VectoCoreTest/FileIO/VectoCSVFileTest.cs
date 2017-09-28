@@ -40,10 +40,17 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
-	[TestFixture]
+
+    [TestFixture]
 	public class VectoCSVFileTest
 	{
-		[Test]
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
+        {
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+        }
+
+        [Test]
 		public void VectoCSVFile_Read()
 		{
 			var table = VectoCSVFile.Read(@"TestData\test.csv");

@@ -31,7 +31,6 @@
 
 using System.IO;
 using System.Xml;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -42,15 +41,16 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
-	[TestClass]
+	[TestFixture]
 	public class TestVehicleIdlingSpeed
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 
-		[TestMethod, TestCategory("LongRunning")]
+		[TestCase, Category("LongRunning")]
 		public void VehicleIdlingSpeedTest()
 		{
 			var VehicleEngineIdleSpeed = 900.RPMtoRad();

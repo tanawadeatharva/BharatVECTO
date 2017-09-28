@@ -40,7 +40,6 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -73,13 +72,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var powerTrain = builder.Build(runData);
 
-			Assert.IsInstanceOfType(powerTrain, typeof(IVehicleContainer));
+			Assert.IsInstanceOf<IVehicleContainer>(powerTrain);
 			Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
 
-			Assert.IsInstanceOfType(powerTrain.Engine, typeof(CombustionEngine));
-			Assert.IsInstanceOfType(powerTrain.Gearbox, typeof(Gearbox));
-			Assert.IsInstanceOfType(powerTrain.Cycle, typeof(ISimulationOutPort));
-			Assert.IsInstanceOfType(powerTrain.Vehicle, typeof(Vehicle));
+			Assert.IsInstanceOf<CombustionEngine>(powerTrain.Engine);
+			Assert.IsInstanceOf<Gearbox>(powerTrain.Gearbox);
+			Assert.IsInstanceOf<ISimulationOutPort>(powerTrain.Cycle);
+			Assert.IsInstanceOf<Vehicle>(powerTrain.Vehicle);
 		}
 
 		[TestCase(JobFileDeclNoAngular, 11, false),
@@ -102,13 +101,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 				var powerTrain = builder.Build(runData);
 
-				Assert.IsInstanceOfType(powerTrain, typeof(IVehicleContainer));
+				Assert.IsInstanceOf<IVehicleContainer>(powerTrain);
 				Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
 
-				Assert.IsInstanceOfType(powerTrain.Engine, typeof(CombustionEngine));
-				Assert.IsInstanceOfType(powerTrain.Gearbox, typeof(Gearbox));
-				Assert.IsInstanceOfType(powerTrain.Cycle, typeof(ISimulationOutPort));
-				Assert.IsInstanceOfType(powerTrain.Vehicle, typeof(Vehicle));
+				Assert.IsInstanceOf<CombustionEngine>(powerTrain.Engine);
+				Assert.IsInstanceOf<Gearbox>(powerTrain.Gearbox);
+				Assert.IsInstanceOf<ISimulationOutPort>(powerTrain.Cycle);
+				Assert.IsInstanceOf<Vehicle>(powerTrain.Vehicle);
 			} else {
 				AssertHelper.Exception<VectoException>(() => { reader.NextRun().ToList(); });
 			}

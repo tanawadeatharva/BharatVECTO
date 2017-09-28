@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Tests.Integration;
@@ -37,10 +37,10 @@ using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
-	[TestClass]
+	[TestFixture]
 	public class GearboxPowertrainTest
 	{
-		[TestMethod]
+		[TestCase]
 		public void Gearbox_Initialize_Empty()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(new[] {
@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				0.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
 			Assert.AreEqual(4u, container.Gear);
-			Assert.IsInstanceOfType(retVal, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(retVal);
 
 			AssertHelper.AreRelativeEqual(560.RPMtoRad(), container.EngineSpeed);
 
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.AreRelativeEqual(65.6890, container.EngineSpeed);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Gearbox_Initialize_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(new[] {
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				19300.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
 			Assert.AreEqual(4u, container.Gear);
-			Assert.IsInstanceOfType(retVal, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(retVal);
 
 			AssertHelper.AreRelativeEqual(560.RPMtoRad(), container.EngineSpeed);
 
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.AreRelativeEqual(87.3192, container.EngineSpeed);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Gearbox_Initialize_85_RefLoad()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(new[] {
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				19300.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
 			Assert.AreEqual(12u, container.Gear);
-			Assert.IsInstanceOfType(retVal, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(retVal);
 
 			AssertHelper.AreRelativeEqual(1195.996.RPMtoRad(), container.EngineSpeed, toleranceFactor: 1e-3);
 
