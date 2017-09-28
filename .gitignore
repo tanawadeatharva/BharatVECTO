@@ -198,3 +198,7 @@ VectoCommon/VectoHashingTest/Testdata/XML/XSD/
 VectoCore/VectoCoreTest/TestData/Integration/DeclarationMode/**.vmod
 VectoCore/VectoCoreTest/TestData/Integration/DeclarationMode/**.vsum
 Coverage/
+**/*.RSLT_*.xml
+Documentation/VehiclesReleaseComparisonDeclarationMode/*.vmod
+Documentation/VehiclesReleaseComparisonDeclarationMode/*.vsum
+
