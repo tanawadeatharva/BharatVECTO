@@ -32,7 +32,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 using HashingTool.Views;
@@ -46,6 +48,8 @@ namespace HashingTool.ViewModel
 
 		private IMainView _currentView;
 		public static List<IMainView> AvailableViews;
+		private string _hashingLib;
+		private string _myVersion;
 
 		public ApplicationViewModel()
 		{
@@ -60,6 +64,18 @@ namespace HashingTool.ViewModel
 			CurrentViewModel = homeView;
 
 			HomeView = new RelayCommand(() => CurrentViewModel = homeView);
+
+			try {
+				_hashingLib = Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VectoHashing.dll"))
+					.GetName().Version.ToString();
+			} catch (Exception) {
+				_hashingLib = "NOT FOUND";
+			}
+			try {
+				_myVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+			} catch (Exception) {
+				_myVersion = "NOT FOUND";
+			}
 		}
 
 		public List<IMainView> MainViewModels
@@ -97,6 +113,11 @@ namespace HashingTool.ViewModel
 			}
 
 			CurrentViewModel = MainViewModels.FirstOrDefault(mv => mv == mainView);
+		}
+
+		public string VersionInformation
+		{
+			get { return string.Format("Vecto Hashing Tool {0} / Hashing Library {1}", _myVersion, _hashingLib); }
 		}
 	}
 }
