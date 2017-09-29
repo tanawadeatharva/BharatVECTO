@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
@@ -54,7 +54,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
-	[TestClass]
+	[TestFixture]
 	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	[SuppressMessage("ReSharper", "UnusedMember.Local")]
 	public class ValidationTestClass
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		/// VECTO-107 Check valid range of input parameters
 		/// </summary>
-		[TestMethod]
+		[TestCase]
 		public void Validation_CombustionEngineData()
 		{
 			var fuelConsumption = new DataTable();
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsTrue(data.IsValid());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Validation_CombustionEngineData_Engineering()
 		{
 			var fuelConsumption = new TableData();
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsTrue(engineData.IsValid());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void Validation_CombustionEngineData_Declaration()
 		{
 			var fuelConsumption = new TableData();
@@ -178,7 +178,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsTrue(engineData.IsValid());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void ValidationModeVehicleDataTest()
 		{
 			var vehicleData = new VehicleData {
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		/// VECTO-107 Check valid range of input parameters
 		/// </summary>
-		[TestMethod]
+		[TestCase]
 		public void ValidationModeVectoRunDataTest()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
@@ -295,7 +295,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		/// VECTO-107 Check valid range of input parameters
 		/// </summary>
-		[TestMethod]
+		[TestCase]
 		public void Validation_VectoRun()
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
@@ -336,7 +336,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		/// VECTO-107 Check valid range of input parameters
 		/// </summary>
-		[TestMethod]
+		[TestCase]
 		public void Validation_Test()
 		{
 			var results = new DataObject().Validate(ExecutionMode.Declaration, null, false);
@@ -347,7 +347,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				"Validation Error: " + string.Join("\n_eng_avg", results.Select(r => r.ErrorMessage)));
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void ValidateDictionaryTest()
 		{
 			var container = new ContainerObject() {
@@ -364,7 +364,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		/// <summary>
 		/// VECTO-249: check upshift is above downshift
 		/// </summary>
-		[TestMethod]
+		[TestCase]
 		public void ShiftPolygonValidationTest()
 		{
 			var vgbs = new[] {
@@ -393,7 +393,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsTrue(results.Any());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void ShiftPolygonValidationATTest()
 		{
 			var vgbs = new[] {
@@ -429,12 +429,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 		public class WrapperObject
 		{
-			[Required, Range(0, 100)] public int Value = 0;
+			[Required, System.ComponentModel.DataAnnotations.Range(0, 100)] public int Value = 0;
 		}
 
 		public class DeepDataObject
 		{
-			[Required, Range(41, 42)] protected int public_field = 5;
+			[Required, System.ComponentModel.DataAnnotations.Range(41, 42)] protected int public_field = 5;
 		}
 
 		public abstract class ParentDataObject
@@ -442,43 +442,43 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			#region 4 parent instance fields
 
 			// ReSharper disable once NotAccessedField.Local
-			[Required, Range(1, 2)] private int private_parent_field = 7;
-			[Required, Range(3, 4)] protected int protected_parent_field = 7;
-			[Required, Range(5, 6)] internal int internal_parent_field = 7;
-			[Required, Range(7, 8)] public int public_parent_field = 5;
+			[Required, System.ComponentModel.DataAnnotations.Range(1, 2)] private int private_parent_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(3, 4)] protected int protected_parent_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(5, 6)] internal int internal_parent_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(7, 8)] public int public_parent_field = 5;
 
 			#endregion
 
 			#region 4 parent static field
 
-			[Required, Range(43, 44)] private static int private_static_parent_field = 7;
-			[Required, Range(43, 44)] protected static int protected_static_parent_field = 7;
-			[Required, Range(50, 51)] internal static int internal_static_parent_field = 7;
-			[Required, Range(45, 46)] public static int public_static_parent_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(43, 44)] private static int private_static_parent_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(43, 44)] protected static int protected_static_parent_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(50, 51)] internal static int internal_static_parent_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(45, 46)] public static int public_static_parent_field = 7;
 
 			#endregion
 
 			#region 4 parent instance properties
 
-			[Required, Range(11, 12)]
+			[Required, System.ComponentModel.DataAnnotations.Range(11, 12)]
 			private int private_parent_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(13, 14)]
+			[Required, System.ComponentModel.DataAnnotations.Range(13, 14)]
 			protected int protected_parent_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(15, 16)]
+			[Required, System.ComponentModel.DataAnnotations.Range(15, 16)]
 			internal int internal_parent_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(17, 18)]
+			[Required, System.ComponentModel.DataAnnotations.Range(17, 18)]
 			public int public_parent_property
 			{
 				get { return 7; }
@@ -488,25 +488,25 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			#region 4 parent static properties
 
-			[Required, Range(19, 20)]
+			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
 			private static int private_static_parent_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(19, 20)]
+			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
 			protected static int protected_static_parent_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(19, 20)]
+			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
 			internal static int internal_static_parent_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(19, 20)]
+			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
 			public static int public_static_parent_property
 			{
 				get { return 7; }
@@ -531,43 +531,43 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			#region 4 instance fields
 
 			// ReSharper disable once NotAccessedField.Local
-			[Required, Range(1, 2)] private int private_field = 7;
-			[Required, Range(3, 4)] protected int protected_field = 7;
-			[Required, Range(5, 6)] internal int internal_field = 7;
-			[Required, Range(7, 8)] public int public_field = 5;
+			[Required, System.ComponentModel.DataAnnotations.Range(1, 2)] private int private_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(3, 4)] protected int protected_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(5, 6)] internal int internal_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(7, 8)] public int public_field = 5;
 
 			#endregion
 
 			#region 4 static field
 
-			[Required, Range(43, 44)] private static int private_static_field = 7;
-			[Required, Range(43, 44)] protected static int protected_static_field = 7;
-			[Required, Range(50, 51)] internal static int internal_static_field = 7;
-			[Required, Range(45, 46)] public static int public_static_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(43, 44)] private static int private_static_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(43, 44)] protected static int protected_static_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(50, 51)] internal static int internal_static_field = 7;
+			[Required, System.ComponentModel.DataAnnotations.Range(45, 46)] public static int public_static_field = 7;
 
 			#endregion
 
 			#region 4 instance properties
 
-			[Required, Range(11, 12)]
+			[Required, System.ComponentModel.DataAnnotations.Range(11, 12)]
 			private int private_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(13, 14)]
+			[Required, System.ComponentModel.DataAnnotations.Range(13, 14)]
 			protected int protected_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(15, 16)]
+			[Required, System.ComponentModel.DataAnnotations.Range(15, 16)]
 			internal int internal_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(17, 18)]
+			[Required, System.ComponentModel.DataAnnotations.Range(17, 18)]
 			public int public_property
 			{
 				get { return 7; }
@@ -577,25 +577,25 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			#region 4 static properties
 
-			[Required, Range(19, 20)]
+			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
 			private static int private_static_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(19, 20)]
+			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
 			protected static int protected_static_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(19, 20)]
+			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
 			internal static int internal_static_property
 			{
 				get { return 7; }
 			}
 
-			[Required, Range(19, 20)]
+			[Required, System.ComponentModel.DataAnnotations.Range(19, 20)]
 			public static int public_static_property
 			{
 				get { return 7; }

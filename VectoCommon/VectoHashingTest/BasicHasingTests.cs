@@ -29,18 +29,17 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
+using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoHashing;
 using TUGraz.VectoHashing.Impl;
 using TUGraz.VectoHashing.Util;
+using NUnit.Framework;
 
 namespace VectoHashingTest
 {
-	[TestClass]
+	[TestFixture]
 	public class BasicHasingTests
 	{
 		public const string SimpleXML = @"Testdata\XML\simple_document.xml";
@@ -50,17 +49,30 @@ namespace VectoHashingTest
 		public const string UnorderedXMLVehicle = @"Testdata\XML\Variations\vecto_vehicle-sample_FULL_Entry_Order.xml";
 
 		public const string HashSimpleXML = "U2zic7KOnKw60rzh+KKQ1lwZL6NmXju+DXG7cYYmlxo=";
-		public const string HashEngineXML = "cfPKB2LkHIbznFA9aQwCNfNLSj9V7qNnSskyOxaXB+o=";
-		public const string HashVehicleXML = "yZCH9sF1GUdawVOa1fKQ2zvuUHg5ZthmitTOcWg/s1Y=";
 
-		[TestMethod]
+		public const string HashEngineXML = "cfPKB2LkHIbznFA9aQwCNfNLSj9V7qNnSskyOxaXB+o=";
+		public const string HashVehicleXML = "k029AO90zxKbTybDrvUlCFszdynJot8S1Y+U5lVUG18=";
+
+		public string[] Canonicalization;
+		public string DigestAlgorithm;
+
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+			Canonicalization = new[] { XMLHashProvider.VectoDsigTransform, XMLHashProvider.DsigExcC14NTransform };
+			DigestAlgorithm = XMLHashProvider.DigestMethodSha256;
+		}
+
+		[TestCase]
 		public void HashSimpleXml()
 		{
 			var elementToHash = "elemID";
 			var doc = new XmlDocument();
 			doc.Load(SimpleXML);
 			var hasher = new XMLHashProvider();
-			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash, Canonicalization, DigestAlgorithm);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "simple_document_hashed.xml");
@@ -69,14 +81,14 @@ namespace VectoHashingTest
 			Assert.AreEqual(HashSimpleXML, hash);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void HashReferenceEngineXML()
 		{
 			var elementToHash = "ENG-gooZah3D";
 			var doc = new XmlDocument();
 			doc.Load(ReferenceXMLEngine);
 			var hasher = new XMLHashProvider();
-			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash, Canonicalization, DigestAlgorithm);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "reference_engine_hashed.xml");
@@ -85,14 +97,14 @@ namespace VectoHashingTest
 			Assert.AreEqual(HashEngineXML, hash);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void HashReferenceVehicleXML()
 		{
 			var elementToHash = "VEH-1234567890";
 			var doc = new XmlDocument();
 			doc.Load(ReferenceXMLVehicle);
 			var hasher = new XMLHashProvider();
-			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash, Canonicalization, DigestAlgorithm);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "reference_vehicle_hashed.xml");
@@ -101,14 +113,14 @@ namespace VectoHashingTest
 			Assert.AreEqual(HashVehicleXML, hash);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void HashUnorderedVehicleXML()
 		{
 			var elementToHash = "VEH-1234567890";
 			var doc = new XmlDocument();
 			doc.Load(UnorderedXMLVehicle);
 			var hasher = new XMLHashProvider();
-			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash);
+			var hashed = XMLHashProvider.ComputeHash(doc, elementToHash, Canonicalization, DigestAlgorithm);
 
 			var hash = GetHashValue(hashed, elementToHash);
 			WriteSignedXML(doc, "reference_vehicle_hashed.xml");

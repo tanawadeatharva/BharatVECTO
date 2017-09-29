@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.ModelbasedTests.DriverStrategy
 	[TestFixture]
 	public class SimpleCycles
 	{
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init()
 		{
 			//LogManager.DisableLogging();

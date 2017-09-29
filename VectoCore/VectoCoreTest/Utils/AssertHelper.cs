@@ -29,11 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using TUGraz.VectoCommon.Utils;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {

@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
@@ -40,14 +40,14 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
-	[TestClass]
+	[TestFixture]
 	public class DistanceCycleDataTest
 	{
 //		public readonly string CycleFile = @"TestData\Cycles\";
 		private const string ResourceNamespace = "TUGraz.VectoCore.Resources.Declaration.";
 
 
-		[TestMethod]
+		[TestCase]
 		public void FilterRedundantEntries()
 		{
 			var data = new[] {
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(9, cycleData.Entries[2].Distance.Value());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void HandleStopTimes()
 		{
 			var data = new[] {
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(5, cycleData.Entries[1].StoppingTime.Value());
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void StopTimeWhenVehicleSpeedIsNotZero()
 		{
 			var data = new[] {
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.Exception<VectoException>(() => SimpleDrivingCycles.CreateCycleData(data));
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void DistanceNotStrictlyIncreasing()
 		{
 			var data = new[] {
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			AssertHelper.Exception<VectoException>(() => SimpleDrivingCycles.CreateCycleData(data));
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void CycleAltitudeTest()
 		{
 			var missionType = "LongHaul";

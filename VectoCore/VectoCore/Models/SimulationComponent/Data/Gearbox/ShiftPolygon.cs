@@ -194,5 +194,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			return VectoMath.Interpolate(section.Item1.AngularSpeed, section.Item2.AngularSpeed, section.Item1.Torque,
 				section.Item2.Torque, inAngularVelocity);
 		}
+
+		public PerSecond InterpolateDownshiftSpeed(NewtonMeter torque)
+		{
+			var section = Downshift.GetSection(entry => entry.Torque < torque);
+
+			if (section.Item1.Torque.IsEqual(section.Item2.Torque)) {
+				// vertical line
+				return double.MaxValue.SI<PerSecond>();
+			}
+			return VectoMath.Interpolate(section.Item1.Torque, section.Item2.Torque, section.Item1.AngularSpeed,
+				section.Item2.AngularSpeed, torque);
+		}
+
+		public PerSecond InterpolateUpshiftSpeed(NewtonMeter torque)
+		{
+			var section = Upshift.GetSection(entry => entry.Torque < torque);
+
+			if (section.Item1.Torque.IsEqual(section.Item2.Torque)) {
+				// vertical line
+				return double.MaxValue.SI<PerSecond>();
+			}
+			return VectoMath.Interpolate(section.Item1.Torque, section.Item2.Torque, section.Item1.AngularSpeed,
+				section.Item2.AngularSpeed, torque);
+		}
 	}
 }

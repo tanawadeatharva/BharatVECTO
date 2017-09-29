@@ -29,6 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Windows;
+using System.Windows.Input;
+using HashingTool.Views;
+
 namespace HashingTool
 {
 	/// <summary>
@@ -39,6 +43,18 @@ namespace HashingTool
 		public MainWindow()
 		{
 			InitializeComponent();
+		}
+
+		private void About_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			var dialog = new AboutDialog();
+
+			dialog.ShowDialog();
+		}
+
+		private void Help_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 }

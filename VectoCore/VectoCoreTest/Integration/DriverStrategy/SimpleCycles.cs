@@ -37,13 +37,14 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
+using System.IO;
 
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 {
 	[TestFixture]
 	public class SimpleCycles
 	{
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init()
 		{
 			//LogManager.DisableLogging();
@@ -60,7 +61,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			};
 			GraphWriter.Series1Label = "Vecto 3";
 			GraphWriter.Series2Label = "Vecto 2.2";
-		}
+
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+    }
 
 		private static string GetSlopeString(double slope)
 		{

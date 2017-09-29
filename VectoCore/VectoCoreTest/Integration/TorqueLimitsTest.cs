@@ -30,7 +30,6 @@
 */
 
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -194,7 +193,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
-		[TestCategory("LongRunning"), TestCase(GearboxSpeedLimitJobDecl)]
+		[Category("LongRunning"), TestCase(GearboxSpeedLimitJobDecl)]
 		public void TestRunGbxSpeedLimitedSimulations(string file)
 		{
 			var fileWriter = new FileOutputWriter(file);

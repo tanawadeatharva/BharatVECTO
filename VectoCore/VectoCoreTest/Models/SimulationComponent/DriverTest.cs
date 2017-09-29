@@ -31,7 +31,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -49,10 +48,11 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
+using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
-	[TestClass]
+	[TestFixture]
 	public class DriverTest
 	{
 		public const string JobFile = @"TestData\Jobs\24t Coach EngineOnly.vecto";
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 		public const double Tolerance = 0.001;
 
-		[TestMethod]
+		[TestCase]
 		public void DriverCoastingTest()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
 
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			while (vehicleContainer.VehicleSpeed > 1.7) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
 
-				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+				Assert.IsInstanceOf<ResponseSuccess>(response);
 
 				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 				absTime += response.SimulationInterval;
@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modData.Finish(VectoRun.Status.Success);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void DriverCoastingTest2()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
 
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			while (vehicleContainer.VehicleSpeed > 1.7) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
 
-				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+				Assert.IsInstanceOf<ResponseSuccess>(response);
 
 				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 				absTime += response.SimulationInterval;
@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modData.Finish(VectoRun.Status.Success);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void DriverOverloadTest()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFileHigh, 1);
@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var response = driverPort.Request(absTime, 1.SI<Meter>(), 20.SI<MeterPerSecond>(), 0.SI<Radian>());
 
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			response = driverPort.Request(absTime, 1.SI<Meter>(), 20.SI<MeterPerSecond>(), 0.SI<Radian>());
 
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
@@ -236,7 +236,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0.2900, modData.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void DriverAccelerationTest()
 		{
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			for (var i = 0; i < accelerations.Length; i++) {
 				var tmpResponse = driver.OutPort().Request(absTime, ds, targetVelocity, gradient);
 
-				Assert.IsInstanceOfType(tmpResponse, typeof(ResponseSuccess));
+				Assert.IsInstanceOf<ResponseSuccess>(tmpResponse);
 				Assert.AreEqual(accelerations[i], vehicle.LastRequest.acceleration.Value(), Tolerance);
 				Assert.AreEqual(simulationIntervals[i], tmpResponse.SimulationInterval.Value(), Tolerance);
 
@@ -284,7 +284,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// full acceleration would exceed target velocity, driver should limit acceleration such that target velocity is reached...
 			var response = driver.OutPort().Request(absTime, ds, targetVelocity, gradient);
 
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 			Assert.AreEqual(0.899715479, vehicle.LastRequest.acceleration.Value(), Tolerance);
 			Assert.AreEqual(0.203734517, response.SimulationInterval.Value(), Tolerance);
 
@@ -299,12 +299,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			response = driver.OutPort().Request(absTime, ds, targetVelocity, gradient);
 
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 			Assert.AreEqual(0, vehicle.LastRequest.acceleration.Value(), Tolerance);
 			Assert.AreEqual(0.2, response.SimulationInterval.Value(), Tolerance);
 		}
 
-		[TestMethod]
+		[TestCase]
 		public void DriverDecelerationTest()
 		{
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
@@ -345,7 +345,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			for (var i = 0; i < accelerations.Length; i++) {
 				var tmpResponse = driver.OutPort().Request(absTime, ds, targetVelocity, gradient);
 
-				Assert.IsInstanceOfType(tmpResponse, typeof(ResponseSuccess));
+				Assert.IsInstanceOf<ResponseSuccess>(tmpResponse);
 				Assert.AreEqual(accelerations[i], vehicle.LastRequest.acceleration.Value(), Tolerance);
 				Assert.AreEqual(simulationIntervals[i], tmpResponse.SimulationInterval.Value(), Tolerance);
 
@@ -357,7 +357,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var response = driver.OutPort().Request(absTime, ds, targetVelocity, gradient);
 
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.IsInstanceOf<ResponseSuccess>(response);
 			Assert.AreEqual(-0.308576594, vehicle.LastRequest.acceleration.Value(), Tolerance);
 			Assert.AreEqual(2.545854078, response.SimulationInterval.Value(), Tolerance);
 

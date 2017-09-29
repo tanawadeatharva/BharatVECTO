@@ -35,13 +35,14 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Tests.Utils;
+using System.IO;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {
 	[TestFixture]
 	public class DriverStrategyTestCoachAux
 	{
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init()
 		{
 			//LogManager.DisableLogging();
@@ -58,7 +59,9 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			};
 			GraphWriter.Series1Label = "Vecto 3";
 			GraphWriter.Series2Label = "Vecto 2.0_aux";
-		}
+
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+    }
 
 		private static string GetSlopeString(double slope)
 		{
