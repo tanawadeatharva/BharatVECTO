@@ -2,6 +2,24 @@
 
 **VECTO 3.2.0**
 
+***Build 1005 (2017-10-01)***
+
+- Improvements
+    + Release of *VECTO Hashing Tool*
+
+- Bugfixes
+    + [VECTO-569] - ‘Engine Retarder’ not correctly recognized as input
+    + [VECTO-571] - Customer Report – wrong output format of average RRC
+    + [VECTO-573] - Correction of displayed units in graph window
+    + [VECTO-575] - Correction of simulation aborts (due to gearbox inertia, engineering mode)
+    + [VECTO-577] - Correction of XML export functionality
+    + [VECTO-579] - Bug fix GUI crashes on invalid input
+    + [VECTO-558] - Correction of output in .vsum file – BFColdHot always 0
+    + [VECTO-564] - Bug fix: correct output of vehicle group in XML report
+    + [VECTO-566] - Vehicle height not correctly read (engineering mode)
+    + [VECTO-545] - Update documentation on Settings dialog
+
+	
 ***Build 940 (2017-07-28)***
 
 - Bugfixes:
