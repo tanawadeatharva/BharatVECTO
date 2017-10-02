@@ -13,11 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VECTO 3", "VECTO 3", "{CC93
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{D29E62A2-CF08-469F-B29F-1B25DCB35386}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B5A298FD-8117-4443-9419-66BADA094716}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VECTO", "VECTO\VECTO.vbproj", "{AAC0F132-0A9F-45B3-B682-77AC9B24B352}"
 	ProjectSection(ProjectDependencies) = postProject
 		{60AD4DF0-6648-4374-83CB-C7A162EFB391} = {60AD4DF0-6648-4374-83CB-C7A162EFB391}

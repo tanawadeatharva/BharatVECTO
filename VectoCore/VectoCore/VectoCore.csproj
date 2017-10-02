@@ -321,9 +321,7 @@
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
     <Compile Include="Models\SimulationComponent\VectoSimulationComponent.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PowertrainDrivingCycle.cs" />
-    <Compile Include="Models\Simulation\Data\ModalResult.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Models\Simulation\Data\ModalResult.cs" />
     <Compile Include="Models\Simulation\IVectoRun.cs" />
     <Compile Include="Models\Simulation\Impl\SimulatorFactory.cs" />
     <Compile Include="Models\Simulation\Impl\VectoRun.cs" />
@@ -460,7 +458,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>if $(ConfigurationName) == Release  forfiles /p "$(ProjectDir)." /m "*.tt" /s /c "cmd /c echo Transforming @path &amp;&amp; \"%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\12.0\TextTransform.exe\" @file"</PreBuildEvent>
+    <PreBuildEvent>if $(ConfigurationName) == Release  forfiles /p "$(ProjectDir)." /m "*.tt" /s /c "cmd /c echo Transforming @path &amp;&amp; \"C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\TextTransform.exe\" @file"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

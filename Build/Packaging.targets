@@ -57,7 +57,7 @@
 	<ItemGroup>
 		<VersionTemplates Include="$(SolutionDir)**\Version.tt"/>
 	</ItemGroup>
-	<Exec Command="&quot;%CommonProgramFiles(x86)%\Microsoft Shared\TextTemplating\14.0\TextTransform.exe&quot; &quot;%(VersionTemplates.Identity)&quot;"/>
+	<Exec Command="&quot;C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\TextTransform.exe&quot; &quot;%(VersionTemplates.Identity)&quot;"/>
 </Target>
 
 <Target Name="AfterBuild" Condition="$(Configuration) == 'Deploy'">
