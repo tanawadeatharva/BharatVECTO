@@ -347,7 +347,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, allSuccess ? "success" : "error"));
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
-			retVal.Add(new XElement(tns + "VectoOutput",
+			retVal.Add(new XElement(tns + XMLNames.VectoManufacturerReport,
 				new XAttribute("schemaVersion", "0.4"),
 				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 				new XAttribute("xmlns", tns),

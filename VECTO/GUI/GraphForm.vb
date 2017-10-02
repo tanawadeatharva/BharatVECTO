@@ -195,7 +195,7 @@ Public Class GraphForm
 		chartArea.Name = "main"
 
 		If overDist Then
-			chartArea.AxisX.Title = "distance [km]"
+			chartArea.AxisX.Title = "distance [m]"
 		Else
 			chartArea.AxisX.Title = "time [s]"
 		End If

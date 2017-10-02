@@ -30,6 +30,8 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Xml;
@@ -38,18 +40,69 @@ namespace TUGraz.VectoHashing.Impl
 {
 	public class XMLHashProvider
 	{
-		public static XmlDocument ComputeHash(XmlDocument doc, string elementId)
+		public const string DigestMethodSha256 = "http://www.w3.org/2001/04/xmlenc#sha256";
+
+		public const string VectoDsigTransform = "urn:vecto:xml:2017:canonicalization";
+		public const string DsigExcC14NTransform = "http://www.w3.org/2001/10/xml-exc-c14n#";
+
+
+		public static ICollection<string> SupportedDigestMethods
+		{
+			get {
+				return new[] {
+					DigestMethodSha256
+				};
+			}
+		}
+
+		public static string DefaultDigestMethod
+		{
+			get { return DigestMethodSha256; }
+		}
+
+		public static ICollection<string> SupportedCanonicalizationMethods
+		{
+			get {
+				return new[] {
+					VectoDsigTransform,
+					DsigExcC14NTransform,
+				};
+			}
+		}
+
+		public static IEnumerable<string> DefaultCanonicalizationMethod
+		{
+			get {
+				return new[] {
+					VectoDsigTransform,
+					DsigExcC14NTransform
+				};
+			}
+		}
+
+		public static XmlDocument ComputeHash(XmlDocument doc, string elementId, IEnumerable<string> canonicalization,
+			string digestMethod)
 		{
 			if (doc == null) {
 				throw new Exception("Invalid Document");
 			}
+			var c14N = (canonicalization ?? DefaultCanonicalizationMethod).ToArray();
+			digestMethod = digestMethod ?? DefaultDigestMethod;
+			if (!SupportedDigestMethods.Contains(digestMethod)) {
+				throw new Exception(string.Format("DigestMethod '{0}' not supported.", digestMethod));
+			}
+			var unsupported = c14N.Where(c => !SupportedCanonicalizationMethods.Contains(c)).ToArray();
+			if (unsupported.Any()) {
+				throw new Exception(string.Format("CanonicalizationMethod(s) {0} not supported!", string.Join(", ", unsupported)));
+			}
+
 			var signedXml = new SignedXml(doc);
 			var reference = new Reference("#" + elementId) {
-				DigestMethod = "http://www.w3.org/2001/04/xmlenc#sha256"
+				DigestMethod = digestMethod
 			};
-			reference.AddTransform(new XmlDsigVectoTransform());
-			reference.AddTransform(new XmlDsigExcC14NTransform());
-
+			foreach (var c in c14N) {
+				reference.AddTransform(GetTransform(c));
+			}
 
 			signedXml.AddReference(reference);
 			signedXml.ComputeSignature(HMAC.Create());
@@ -60,6 +113,17 @@ namespace TUGraz.VectoHashing.Impl
 			sigdoc.AppendChild(sigdoc.ImportNode(xmlDigitalSignature, true));
 
 			return sigdoc;
+		}
+
+		private static Transform GetTransform(string transformUrn)
+		{
+			switch (transformUrn) {
+				case VectoDsigTransform:
+					return new XmlDsigVectoTransform();
+				case DsigExcC14NTransform:
+					return new XmlDsigExcC14NTransform();
+			}
+			throw new Exception(string.Format("Unsupported CanonicalizationMethod {0}", transformUrn));
 		}
 	}
 }

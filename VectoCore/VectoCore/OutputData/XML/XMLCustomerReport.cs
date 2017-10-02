@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Report_Vehicle_Retarder, modelData.Retarder.Type.IsDedicatedComponent()),
 				new XElement(tns + XMLNames.Report_Vehicle_AxleRatio, modelData.AxleGearData.AxleGear.Ratio.ToXMLFormat(3)),
 				new XElement(tns + XMLNames.Report_Vehicle_AverageRRC,
-					modelData.VehicleData.AverageRollingResistanceTruck.ToXMLFormat(6))
+					modelData.VehicleData.AverageRollingResistanceTruck.ToXMLFormat(4))
 				);
 			InputDataIntegrity = new XElement(tns + "InputDataSignature",
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, allSuccess ? "success" : "error"));
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
-			retVal.Add(new XElement(tns + "VectoCustomerInformation",
+			retVal.Add(new XElement(tns + XMLNames.VectoCustomerReport,
 				new XAttribute("schemaVersion", "0.4"),
 				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 				new XAttribute("xmlns", tns),

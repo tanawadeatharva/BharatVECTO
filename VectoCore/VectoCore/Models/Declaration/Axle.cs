@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -36,6 +37,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
+	[CustomValidation(typeof(Axle), "ValidateAxleData")]
 	public class Axle : SimulationComponentData
 	{
 		public string WheelsDimension { get; internal set; }
@@ -55,5 +57,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public bool TwinTyres { get; internal set; }
 
 		public AxleType AxleType { get; internal set; }
+
+		public static ValidationResult ValidateAxleData(Axle axle, ValidationContext validationContext)
+		{
+			var execMode = GetExecutionMode(validationContext);
+			if (execMode == ExecutionMode.Engineering)
+				return ValidationResult.Success;
+			try {
+				DeclarationData.Wheels.Lookup(axle.WheelsDimension);
+			} catch (Exception) {
+				return new ValidationResult(string.Format("Unknown Tyre dimenstion '{0}'", axle.WheelsDimension));
+			}
+			return ValidationResult.Success;
+		}
 	}
 }

@@ -120,11 +120,13 @@ namespace TUGraz.VectoCore.Utils
 				case RetarderType.TransmissionInputRetarder:
 					return prev.AddComponent(gearbox).AddComponent(new Retarder(container, data.LossMap, data.Ratio));
 				case RetarderType.None:
-					return prev.AddComponent(new DummyRetarder(container)).AddComponent(gearbox);
 				case RetarderType.LossesIncludedInTransmission:
+				case RetarderType.EngineRetarder:
 					return prev.AddComponent(new DummyRetarder(container)).AddComponent(gearbox);
 				default:
-					throw new ArgumentOutOfRangeException(data.Type.ToString());
+					// ReSharper disable once NotResolvedInText
+					// ReSharper disable once LocalizableElement
+					throw new ArgumentOutOfRangeException("retarderdata.Type", data.Type.ToString(), "Retardertype unknown");
 			}
 		}
 	}

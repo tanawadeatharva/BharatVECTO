@@ -319,11 +319,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			inTorque += inertiaTorqueLossOut / ModelData.Gears[Gear].Ratio;
 
 			if (dryRun) {
-				var inertiaTorqueLossIn = avgOutAngularVelocity.IsEqual(0, 1e-9)
-					? 0.SI<NewtonMeter>()
-					: Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
-					avgOutAngularVelocity / ModelData.Gears[Gear].Ratio;
-				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque + inertiaTorqueLossIn, inAngularVelocity, true);
+				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 				return dryRunResponse;
 			}

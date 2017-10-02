@@ -29,12 +29,26 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Runtime.Remoting.Contexts;
+using System.Windows;
+using HashingTool.ViewModel;
+using HashingTool.Views;
+
 namespace HashingTool
 {
 	/// <summary>
 	/// Interaction logic for App.xaml
 	/// </summary>
-	public partial class App
+	public partial class App : Application
 	{
+		protected override void OnStartup(StartupEventArgs e)
+		{
+			base.OnStartup(e);
+
+			var app = new MainWindow();
+			var context = new ApplicationViewModel();
+			app.DataContext = context;
+			app.Show();
+		}
 	}
 }

@@ -1,0 +1,21 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<DataTemplate x:Key="Icon_XML_green1">
+		<Canvas>
+			<Canvas.RenderTransform>
+				<TranslateTransform X="-59.285156" Y="-215.2361" />
+			</Canvas.RenderTransform>
+			<Canvas Name="flowRoot4136" Opacity="1">
+				<Path Name="path4145" Fill="#FF00C000" StrokeThickness="1" StrokeLineJoin="Miter" StrokeStartLineCap="Flat"
+					StrokeEndLineCap="Flat"
+					Data="m 59.285156 243.86892 9.785156 -14.94141 -8.867187 -13.69141 6.757812 0 5.742188 9.19922 5.625 -9.19922 6.699219 0 -8.90625 13.90625 9.785156 14.72657 -6.972656 0 -6.347657 -9.90235 -6.367187 9.90235 -6.933594 0 z" />
+				<Path Name="path4147" Fill="#FFFF0000" StrokeThickness="1" StrokeLineJoin="Miter" StrokeStartLineCap="Flat"
+					StrokeEndLineCap="Flat"
+					Data="m 88.835937 243.86892 0 -28.63282 8.652344 0 5.195309 19.53125 5.13672 -19.53125 8.67188 0 0 28.63282 -5.3711 0 0 -22.53907 -5.68359 22.53907 -5.566406 0 -5.664063 -22.53907 0 22.53907 -5.371094 0 z" />
+				<Path Name="path4149" Fill="#FFFF0000" StrokeThickness="1" StrokeLineJoin="Miter" StrokeStartLineCap="Flat"
+					StrokeEndLineCap="Flat"
+					Data="m 122.42969 243.86892 0 -28.39844 5.78125 0 0 23.57422 14.375 0 0 4.82422 -20.15625 0 z" />
+			</Canvas>
+		</Canvas>
+	</DataTemplate>
+</ResourceDictionary>
