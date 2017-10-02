@@ -4,7 +4,7 @@
 	xmlns:viewModel="clr-namespace:HashingTool.ViewModel"
 	xmlns:views="clr-namespace:HashingTool.Views"
 	x:Class="HashingTool.MainWindow"
-	Title="VECTO Hashing Tool" Height="590" Width="800" MinWidth="800" MinHeight="600" Icon="Resources/HashingIcon.ico">
+	Title="{Binding VersionInformation}" Height="590" Width="800" MinWidth="800" MinHeight="600" Icon="Resources/HashingIcon.ico">
 	<Window.DataContext>
 		<viewModel:ApplicationViewModel />
 	</Window.DataContext>

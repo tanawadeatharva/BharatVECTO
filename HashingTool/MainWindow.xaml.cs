@@ -29,8 +29,13 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using HashingTool.Helper;
+using HashingTool.ViewModel;
 using HashingTool.Views;
 
 namespace HashingTool
@@ -48,13 +53,22 @@ namespace HashingTool
 		private void About_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			var dialog = new AboutDialog();
-
+			var applicationViewModel = DataContext as ApplicationViewModel;
+			if (applicationViewModel != null) {
+				dialog.Title = applicationViewModel.VersionInformation;
+			}
 			dialog.ShowDialog();
 		}
 
 		private void Help_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
-			throw new System.NotImplementedException();
+			var myAppPath = AppDomain.CurrentDomain.BaseDirectory;
+			if (File.Exists(myAppPath + @"User Manual\HashingToolHelp.html")) {
+				var defaultBrowserPath = BrowserHelper.GetDefaultBrowserPath();
+				Process.Start(defaultBrowserPath, string.Format("\"file://{0}{1}\"", myAppPath, @"User Manual\HashingToolHelp.html"));
+			} else {
+				MessageBox.Show("User Manual not found!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 		}
 	}
 }
