@@ -418,11 +418,14 @@ namespace TUGraz.VectoCore.OutputData
 			if (vehicleLoading != null && !vehicleLoading.IsEqual(0) && fcPer100lkm != null) {
                 //row[FCFINAL_LITERPER100TKM] = fcPer100lkm /
                 //							vehicleLoading.ConvertTo().Ton;
-			    row[FCFINAL_LITERPER100TKM] = fcPer100lkm /
-			                                  vehicleLoading.ConvertTo(Unit.SI.Ton);
+			    row[FCFINAL_LITERPER100TKM] = fcPer100lkm / vehicleLoading.ConvertTo(Unit.SI.Ton);
             }
 			if (cargoVolume > 0 && fcPer100lkm != null) {
 				row[FCFINAL_LiterPer100M3KM] = fcPer100lkm / cargoVolume;
+
+
+
+
 			}
 		}
 
