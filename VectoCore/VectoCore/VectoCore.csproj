@@ -423,9 +423,9 @@
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.1.0.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Resources\XSD\VectoOutputCustomer.xsd">
+    <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.xsd">
       <SubType>Designer</SubType>
-    </None>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />

@@ -1,8 +1,19 @@
 ﻿<Application x:Class="HashingTool.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="MainWindow.xaml">
-    <Application.Resources>
-         
-    </Application.Resources>
+			xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Resources/Icon_XML_outline.xaml" />
+				<ResourceDictionary Source="Resources/Icon_XML_red.xaml" />
+				<ResourceDictionary Source="Resources/Icon_XML_green1.xaml" />
+				<ResourceDictionary Source="Resources/Icon_XML_green2.xaml" />
+				<ResourceDictionary Source="Resources/Icon_XML_green.xaml" />
+				<ResourceDictionary Source="Resources/Icon_OK.xaml" />
+				<ResourceDictionary Source="Resources/Icon_NOK.xaml" />
+				<ResourceDictionary Source="Resources/UserInterfaceResources.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+
+	</Application.Resources>
 </Application>
