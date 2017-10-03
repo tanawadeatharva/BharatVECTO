@@ -894,4 +894,10 @@
 	<data name="Report_Result_Status" xml:space="preserve">
     <value>Status</value>
   </data>
+	<data name="VectoManufacturerReport" xml:space="preserve">
+    <value>VectoOutput</value>
+  </data>
+	<data name="VectoCustomerReport" xml:space="preserve">
+    <value>VectoCustomerInformation</value>
+  </data>
 </root>

@@ -82,8 +82,9 @@ namespace LicenceHeader
 			Console.WriteLine("Finished. Updated {0} files.", count);
 			Console.ResetColor();
 
-			if (!Console.IsInputRedirected)
-			Console.ReadKey();
+			if (!Console.IsInputRedirected) {
+				Console.ReadKey();
+			}
 		}
 	}
 }

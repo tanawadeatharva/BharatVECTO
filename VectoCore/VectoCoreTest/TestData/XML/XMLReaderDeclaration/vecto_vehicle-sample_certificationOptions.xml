@@ -174,8 +174,8 @@
 				<Signature>
 					<di:Reference URI="#ENG-gooZah3D">
 						<di:Transforms>
-							<di:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
 						<di:DigestValue>JWEwzKSP0lXvwRgQZTiWJm9dpdtQ72FOX0CC5Vy6f2Y=</di:DigestValue>
@@ -2563,8 +2563,8 @@
 				<Signature>
 					<di:Reference URI="#gbx-vi2Oak2N">
 						<di:Transforms>
-							<di:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
 						<di:DigestValue>VwF71HA02YHUeTqOoEGox57pfGXknga9xjNRoWLdejY=</di:DigestValue>
@@ -2609,8 +2609,8 @@
 				<Signature>
 					<di:Reference URI="#RET-Shai9imi">
 						<di:Transforms>
-							<di:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
 						<di:DigestValue>fcEtYfDAbfuRq0xpuzapmEj+Py1PIPUZwVmx+amNvcc=</di:DigestValue>
@@ -3125,8 +3125,8 @@
 				<Signature>
 					<di:Reference URI="#AXL-EC3ohnoh">
 						<di:Transforms>
-							<di:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
 						<di:DigestValue>o4nYTajmWKaduxys5ShmnfJbYd23rpxZ01JbuG6dmzU=</di:DigestValue>
@@ -3154,8 +3154,8 @@
 								<Signature>
 									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
 										<di:Transforms>
-											<di:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+											<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
 										<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
@@ -3181,8 +3181,8 @@
 								<Signature>
 									<di:Reference URI="#WHL-5432198760-315-70-R22.5">
 										<di:Transforms>
-											<di:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
 											<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+											<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
 										</di:Transforms>
 										<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
 										<di:DigestValue>KljvtvGUUQ/L7MiLVAqU+bckL5PNDNNwdeLH9kUVrfM=</di:DigestValue>
@@ -3226,8 +3226,8 @@
 				<Signature>
 					<di:Reference URI="#CabinX23h">
 						<di:Transforms>
-							<di:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
 							<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+							<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
 						</di:Transforms>
 						<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
 						<di:DigestValue>/8o/sm2ZsAFWXF8azJDA7Op8in6DdHr/SMkSSn7voIU=</di:DigestValue>

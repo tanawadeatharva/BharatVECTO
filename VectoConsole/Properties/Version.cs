@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2016 European Union
+* Copyright © 2012-2017 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -30,5 +30,5 @@
 */
 
 using System.Reflection;
-[assembly: AssemblyVersion("3.1.1.939")]
-[assembly: AssemblyFileVersion("3.1.1.939")]
+[assembly: AssemblyVersion("3.1.1.1005")]
+[assembly: AssemblyFileVersion("3.1.1.1005")]

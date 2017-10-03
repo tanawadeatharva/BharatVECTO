@@ -45,21 +45,21 @@ using Assert = NUnit.Framework.Assert;
 
 namespace VectoHashingTest
 {
-    
+	
 
-    [TestFixture]
+	[TestFixture]
 	public class VectoHashTest
 	{
 		public const string ReferenceXMLEngine = @"Testdata\XML\Reference\vecto_engine-sample.xml";
 		public const string ReferenceXMLVehicle = @"Testdata\XML\Reference\vecto_vehicle-sample_FULL.xml";
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
-        [TestCase]
+		[TestCase]
 		public void TestComponentsEngineFile()
 		{
 			var h = VectoHash.Load(ReferenceXMLEngine);
