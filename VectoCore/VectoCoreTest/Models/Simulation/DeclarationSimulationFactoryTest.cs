@@ -8,7 +8,6 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
