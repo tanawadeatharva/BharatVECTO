@@ -1,15 +1,10 @@
 ﻿Option Strict On
 
-Imports VectoAuxiliaries.Electrics
 Imports System
 Imports System.Collections.Generic
 Imports System.Linq
 Imports System.Text
 Imports System.IO
-Imports DocumentFormat.OpenXml
-Imports DocumentFormat.OpenXml.Spreadsheet
-Imports Newtonsoft.Json
-Imports VectoAuxiliaries
 Imports System.Globalization
 Imports TUGraz.VectoCommon.Utils
 
@@ -48,7 +43,6 @@ Namespace Electrics
 			End If
 
 			Return alternatorMapValues
-
 		End Function
 
 		Public Function Initialise() As Boolean Implements IAlternatorMap.Initialise
