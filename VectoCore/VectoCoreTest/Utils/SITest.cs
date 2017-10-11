@@ -89,34 +89,43 @@ namespace TUGraz.VectoCore.Tests.Utils
             PerSecond angVeloDiff = 600.RPMtoRad() - 400.SI<PerSecond>();
             AssertHelper.AreRelativeEqual(600 * 2 * Math.PI / 60 - 400, angVeloDiff);
 
-            //general si unit
-            //var generalSIUnit = 3600000000.0.SI().Gramm.Per.Kilo.Watt.Hour.ConvertTo().Kilo.Gramm.Per.Watt.Second;
-            var generalSIUnit = 3600000000.0.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).ConvertTo(Unit.SI.Kilo.Gramm.Per.Watt.Second);
-			Assert.IsInstanceOf<SI>(generalSIUnit);
-            //Assert.AreEqual(1, generalSIUnit.Value());
-            AssertHelper.AreRelativeEqual(1, generalSIUnit.Value()); ////////////////
+            //<begin> sennless testcase
+            ////general si unit
+            ////var generalSIUnit = 3600000000.0.SI().Gramm.Per.Kilo.Watt.Hour.ConvertTo().Kilo.Gramm.Per.Watt.Second;
+            //var generalSIUnit = 3600000000.0.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).ConvertTo(Unit.SI.Kilo.Gramm.Per.Watt.Second);
+            //Assert.IsInstanceOf<SI>(generalSIUnit);
+            ////Assert.AreEqual(1, generalSIUnit.Value());
+            //AssertHelper.AreRelativeEqual(1, generalSIUnit.Value()); ////////////////
+            //<end> sennless testcase
 
             //type conversion
             var engineSpeed = 600.0;
             PerSecond angularVelocity3 = engineSpeed.RPMtoRad();
 
-            // convert between units measures
-            //var angularVelocity4 = engineSpeed.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second;
-            var angularVelocity4 = engineSpeed.SI(Unit.SI.Rounds.Per.Minute).ConvertTo(Unit.SI.Radian.Per.Second);
-			Assert.IsInstanceOf<SI>(angularVelocity4);
+            //<beinn> senless testcase
+            //// convert between units measures
+            ////var angularVelocity4 = engineSpeed.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second;
+            ////var angularVelocity4 = engineSpeed.SI(Unit.SI.Rounds.Per.Minute).ConvertTo(Unit.SI.Radian.Per.Second);
+            //var angularVelocity4 = engineSpeed.SI(Unit.SI.Rounds.Per.Minute).ConvertToRadianPerSecond();
+            //<end> senless testcase
+
+            var angularVelocity4 = engineSpeed.SI(Unit.SI.Rounds.Per.Minute);   /////////////////////
+            Assert.IsInstanceOf<SI>(angularVelocity4);
 
             // cast SI to specialized unit classes.
             PerSecond angularVelocity5 = angularVelocity4.Cast<PerSecond>();
             Assert.AreEqual(angularVelocity3, angularVelocity5);
             Assert.AreEqual(angularVelocity3.Value(), angularVelocity4.Value());
 
-            // ConvertTo only allows conversion if the units are correct.
-            //AssertHelper.Exception<VectoException>(() => { var x = 40.SI<Newton>().ConvertTo().Watt; });
-            AssertHelper.Exception<VectoException>(() => {
-                var x = 40.SI<Newton>().ConvertTo(Unit.SI.Watt);
-            });
-            //var res1 = 40.SI<Newton>().ConvertTo().Newton;
-            var res1 = 40.SI<Newton>().ConvertTo(Unit.SI.Newton);
+            //<beinn> senless testcase
+            //// ConvertTo only allows conversion if the units are correct.
+            ////AssertHelper.Exception<VectoException>(() => { var x = 40.SI<Newton>().ConvertTo().Watt; });
+            //AssertHelper.Exception<VectoException>(() => {
+            //    var x = 40.SI<Newton>().ConvertTo(Unit.SI.Watt);
+            //});
+            ////var res1 = 40.SI<Newton>().ConvertTo().Newton;
+            //var res1 = 40.SI<Newton>().ConvertTo(Unit.SI.Newton);
+            //<end> senless testcase
 
             // Cast only allows the cast if the units are correct.
             //AssertHelper.Exception<VectoException>(() => { var x = 40.SI().Newton.Cast<Watt>(); });
@@ -149,20 +158,22 @@ namespace TUGraz.VectoCore.Tests.Utils
             Assert.IsTrue(si4.HasEqualUnit(new SI(Unit.SI.Watt.Per.Second)));
             Assert.AreEqual("10.0000 [kgm^2/s^4]", si4.ToBasicUnits().ToString());
 
-            //var kg = 5.SI().Kilo.Gramm;
-            var kg = 5.SI(Unit.SI.Kilo.Gramm);
-            Assert.AreEqual(5.0, kg.Value());
-            Assert.AreEqual("5.0000 [kg]", kg.ToString());
+            //<begin> senseless testcase
+            ////var kg = 5.SI().Kilo.Gramm;
+            //var kg = 5.SI(Unit.SI.Kilo.Gramm);
+            //Assert.AreEqual(5.0, kg.Value());
+            //Assert.AreEqual("5.0000 [kg]", kg.ToString());
 
-            //kg = kg.ConvertTo().Kilo.Gramm.Clone();
-            kg = kg.ConvertTo(Unit.SI.Kilo.Gramm).Clone();
-            Assert.AreEqual(5.0, kg.Value());
-            Assert.AreEqual("5.0000 [kg]", kg.ToString());
+            ////kg = kg.ConvertTo().Kilo.Gramm.Clone();
+            //kg = kg.ConvertTo(Unit.SI.Kilo.Gramm).Clone();
+            //Assert.AreEqual(5.0, kg.Value());
+            //Assert.AreEqual("5.0000 [kg]", kg.ToString());
 
-            //kg = kg.ConvertTo().Gramm.Clone();
-            kg = kg.ConvertTo(Unit.SI.Gramm).Clone();
-            Assert.AreEqual(5000, kg.Value());
-            Assert.AreEqual("5000.0000 [g]", kg.ToString());
+            ////kg = kg.ConvertTo().Gramm.Clone();
+            //kg = kg.ConvertTo(Unit.SI.Gramm).Clone();
+            //Assert.AreEqual(5000, kg.Value());
+            ////Assert.AreEqual("5000.0000 [g]", kg.ToString());
+            //<end> senseless testcase
 
             var x = 5.SI();
             Assert.AreEqual((2.0 / 5.0).SI(), 2 / x);
@@ -454,7 +465,8 @@ namespace TUGraz.VectoCore.Tests.Utils
             AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Kilo.Gramm.Meter.Per.Square.Second), 3.SI<Newton>());
             AssertHelper.AreRelativeEqual(3000.SI(Unit.SI.Kilo.Gramm), 3.SI(Unit.SI.Ton));
             //AssertHelper.AreRelativeEqual(3.SI().Kilo.Kilo.Gramm.ConvertTo().Ton, 3000.SI().Kilo.Gramm.ConvertTo().Ton);
-            AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Kilo.Kilo.Gramm).ConvertTo(Unit.SI.Ton), 3000.SI(Unit.SI.Kilo.Gramm).ConvertTo(Unit.SI.Ton));
+            //AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Kilo.Kilo.Gramm).ConvertTo(Unit.SI.Ton), 3000.SI(Unit.SI.Kilo.Gramm).ConvertTo(Unit.SI.Ton));
+            AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Kilo.Kilo.Gramm).ConvertToTon(), 3000.SI(Unit.SI.Kilo.Gramm).ConvertToTon());
 
             AssertHelper.AreRelativeEqual(3.SI<Meter>(), 3000.SI(Unit.SI.Milli.Meter));
 
@@ -462,7 +474,7 @@ namespace TUGraz.VectoCore.Tests.Utils
             AssertHelper.AreRelativeEqual(36.SI(Unit.SI.Newton.Newton.Meter.Meter), 6.SI<NewtonMeter>() * 6.SI<NewtonMeter>());
 
             //not testable !!!
-            /////AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Meter.Per.Second), 3.SI<Newton>(Unit.SI.Second.Per.Kilo.Gramm));
+            /////////AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Meter.Per.Second), 3.SI<Newton>(Unit.SI.Second.Per.Kilo.Gramm));
         }
 
 		[TestCase]
@@ -636,9 +648,9 @@ namespace TUGraz.VectoCore.Tests.Utils
         public void SI_NewTests()
         {
 
-            var sig1 = 5.SI(Unit.SI.Gramm);
-            Assert.AreEqual(5, sig1.Value());
-            Assert.AreEqual("5.0000 [g]", sig1.ToString());
+            //var sig1 = 5.SI(Unit.SI.Gramm);
+            //Assert.AreEqual(5, sig1.Value());
+            //Assert.AreEqual("5.0000 [g]", sig1.ToString());
 
 
             UnitInstance sikg = Unit.SI.Kilo.Gramm;
@@ -676,15 +688,19 @@ namespace TUGraz.VectoCore.Tests.Utils
             AssertHelper.AreRelativeEqual(0.000001, uni2.Factor);
 
 
-            var val2 = 7.SI(Unit.SI.Cubic.Dezi.Meter).ConvertTo(Unit.SI.Cubic.Dezi.Meter);
-            Assert.AreEqual(7,val2.Value()); // 7 dm^3
+            //var val2 = 7.SI(Unit.SI.Cubic.Dezi.Meter).ConvertTo(Unit.SI.Cubic.Dezi.Meter);
+            var val2 = 7.SI(Unit.SI.Cubic.Dezi.Meter).ConvertToCubicDeziMeter();
+            AssertHelper.AreRelativeEqual(0.007, val2.Value());
 
 
-            var val3 = 5.SI(Unit.SI.Cubic.Dezi.Meter).ConvertTo(Unit.SI.Cubic.Centi.Meter);
-            Assert.AreEqual(5000, val3.Value()); // 5000 cm^3
 
-            var val4 = 5.SI(Unit.SI.Cubic.Centi.Meter).ConvertTo(Unit.SI.Cubic.Dezi.Meter);
-            AssertHelper.AreRelativeEqual(0.005, val4.Value()); // 0.005 dm^3
+            //var val3 = 5.SI(Unit.SI.Cubic.Dezi.Meter).ConvertTo(Unit.SI.Cubic.Centi.Meter);
+            var val3 = 5.SI(Unit.SI.Cubic.Dezi.Meter).ConvertToCubicCentiMeter();
+            AssertHelper.AreRelativeEqual(0.005, val3.Value()); // 5000 cm^3
+
+            //var val4 = 5.SI(Unit.SI.Cubic.Centi.Meter).ConvertTo(Unit.SI.Cubic.Dezi.Meter);
+            var val4 = 5.SI(Unit.SI.Cubic.Centi.Meter).ConvertToCubicDeziMeter();
+            AssertHelper.AreRelativeEqual(0.000005, val4.Value()); // 0.005 dm^3
 
 
             var uni1 = Unit.SI.Kilo.Meter.Per.Hour;
@@ -697,6 +713,13 @@ namespace TUGraz.VectoCore.Tests.Utils
             AssertHelper.AreRelativeEqual(5.SI(Unit.SI.Meter.Newton), newtonMeter);
         }
 
+        [TestCase]
+        public void SI_ConvertValues()
+        {
+            var sig1 = 5.SI(Unit.SI.Gramm);
+            Assert.AreEqual(0.005, sig1.Value());
+            
+        }
 
     }
 

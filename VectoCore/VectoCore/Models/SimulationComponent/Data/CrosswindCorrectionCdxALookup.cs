@@ -77,9 +77,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (!x.IsBetween(p.Item1.Velocity, p.Item2.Velocity)) {
                 //throw new VectoException("CrossWindCorrection Extrapolation: v = {0} (max = {1})", x.ConvertTo().Kilo.Meter.Per.Hour,
                 //	p.Item2.Velocity.ConvertTo().Kilo.Meter.Per.Hour);
-			    throw new VectoException("CrossWindCorrection Extrapolation: v = {0} (max = {1})", x.ConvertTo(Unit.SI.Kilo.Meter.Per.Hour),
-			    	p.Item2.Velocity.ConvertTo(Unit.SI.Kilo.Meter.Per.Hour));
-                
+                //throw new VectoException("CrossWindCorrection Extrapolation: v = {0} (max = {1})", x.ConvertTo(Unit.SI.Kilo.Meter.Per.Hour),
+                //	p.Item2.Velocity.ConvertTo(Unit.SI.Kilo.Meter.Per.Hour));
+                throw new VectoException("CrossWindCorrection Extrapolation: v = {0} (max = {1})", x.ConvertToKiloMeterPerHour(),
+                    p.Item2.Velocity.ConvertToKiloMeterPerHour());
+
 
             }
 

@@ -374,7 +374,9 @@ namespace TUGraz.VectoCore.OutputData
 
 			var fcVolumePerMeter = fuelConsumptionFinal / data.FuelData.FuelDensity;
             // fcVolumePerMeter = [m^2]
-            return fcVolumePerMeter.ConvertTo(Unit.SI.Square.Dezi.Meter) * 100.SI(Unit.SI.Kilo.Meter);
+            //return fcVolumePerMeter.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
+            //return fcVolumePerMeter.ConvertTo(Unit.SI.Cubic.Dezi.Meter) * 100.SI(Unit.SI.Kilo.Meter);
+            return fcVolumePerMeter.ConvertToCubicDeziMeter() * 100.SI(Unit.SI.Kilo.Meter);
         }
 
 		public static KilogramPerMeter CO2PerMeter(this IModalDataContainer data)

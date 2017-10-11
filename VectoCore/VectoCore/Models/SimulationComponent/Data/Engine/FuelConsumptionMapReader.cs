@@ -90,7 +90,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				torque: row.ParseDouble(1).SI<NewtonMeter>(),
 				fuelConsumption:
                     //row.ParseDouble(2).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>()
-				    row.ParseDouble(2).SI(Unit.SI.Gramm.Per.Hour).ConvertTo(Unit.SI.Kilo.Gramm.Per.Second).Cast<KilogramPerSecond>()
+				    //row.ParseDouble(2).SI(Unit.SI.Gramm.Per.Hour).ConvertTo(Unit.SI.Kilo.Gramm.Per.Second).Cast<KilogramPerSecond>()
+                    row.ParseDouble(2).SI(Unit.SI.Gramm.Per.Hour).ConvertToKiloGrammPerSecond().Cast<KilogramPerSecond>()
                 );
 		}
 
@@ -102,8 +103,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                 torque: row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
 				fuelConsumption:
                     row.ParseDouble(Fields.FuelConsumption)
-                        .SI(Unit.SI.Gramm.Per.Hour).ConvertTo(Unit.SI
-                        .Kilo.Gramm.Per.Second).Cast<KilogramPerSecond>()
+                    .SI(Unit.SI.Gramm.Per.Hour).ConvertToKiloGrammPerSecond()
+                    .Cast<KilogramPerSecond>()
+                //row.ParseDouble(Fields.FuelConsumption)
+                //    .SI(Unit.SI.Gramm.Per.Hour).ConvertTo(Unit.SI
+                //    .Kilo.Gramm.Per.Second).Cast<KilogramPerSecond>()
                     //row.ParseDouble(Fields.FuelConsumption)
                     //	.SI()
                     //	.Gramm.Per.Hour.ConvertTo()

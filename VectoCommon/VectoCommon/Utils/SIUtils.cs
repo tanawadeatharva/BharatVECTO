@@ -164,7 +164,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 _exponent = 3;
                 return this;
             }
@@ -177,8 +176,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
-
                 var reciprocAndExponent = _reciproc * _exponent;
                 _units[2] += 1 * reciprocAndExponent;
 
@@ -208,7 +205,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 _units[1] += 1 * _reciproc * _exponent;
                 return this;
             }
@@ -221,7 +217,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 Factor /= Math.Pow(1000, _exponent * _reciproc);
                 return this;
             }
@@ -234,7 +229,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 Factor /= Math.Pow(100, _exponent * _reciproc);
                 return this;
             }
@@ -247,7 +241,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 Factor /= Math.Pow(10, _exponent * _reciproc);
                 return this;
             }
@@ -260,7 +253,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 var reciprocAndExponent = _reciproc * _exponent;
                 _units[2] += 1 * reciprocAndExponent;
                 Factor *= Math.Pow(60, reciprocAndExponent);
@@ -275,7 +267,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 var reciprocAndExponent = _reciproc * _exponent;
                 _units[0] += 1 * reciprocAndExponent;
                 _units[1] += 1 * reciprocAndExponent;
@@ -292,7 +283,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 _exponent = 1;
                 _reciproc = _reciproc * -1;
                 return this;
@@ -306,7 +296,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 return this;
             }
         }
@@ -318,7 +307,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 Factor *= Math.Pow(2 * Math.PI, _exponent * _reciproc);
                 return this;
             }
@@ -331,7 +319,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 _units[2] += 1 * _reciproc * _exponent;
                 return this;
             }
@@ -344,7 +331,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
                 _exponent = 2;
                 return this;
             }
@@ -372,8 +358,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
-
                 var reciprocAndExponent = _reciproc * _exponent;
                 _units[0] += 1 * reciprocAndExponent;
                 _units[1] += 2 * reciprocAndExponent;
@@ -386,8 +370,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
-
                 var reciprocAndExponent = _reciproc * _exponent;
                 _units[0] += 1 * reciprocAndExponent;
                 _units[1] += 2 * reciprocAndExponent;
@@ -401,7 +383,6 @@ namespace TUGraz.VectoCommon.Utils
         {
             get
             {
-
 
                 var reciprocAndExponent = _reciproc * _exponent;
                 _units[1] += 3 * reciprocAndExponent;

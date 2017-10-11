@@ -43,8 +43,9 @@ Public Class JSONFileWriter
 		body.Add("ModelName", eng.Model)
 
 		'body.Add("Displacement", eng.Displacement.ConvertTo().Cubic.Centi.Meter.Value().ToString())
-	    body.Add("Displacement", eng.Displacement.ConvertTo(Unit.SI.Cubic.Centi.Meter).Value().ToString())
-		body.Add("IdlingSpeed", eng.IdleSpeed.AsRPM)
+	    'body.Add("Displacement", eng.Displacement.ConvertTo(Unit.SI.Cubic.Centi.Meter).Value().ToString())
+	    body.Add("Displacement", eng.Displacement.ConvertToCubicCentiMeter().Value().ToString())
+        body.Add("IdlingSpeed", eng.IdleSpeed.AsRPM)
 		body.Add("Inertia", eng.Inertia.Value())
 
 		body.Add("WHTC-Urban", eng.WHTCUrban)
@@ -202,7 +203,9 @@ Public Class JSONFileWriter
 		Next
 
 				'{"MassMax", vehicle.GrossVehicleMassRating.ConvertTo().Ton.Value()},
+                '{"MassMax", vehicle.GrossVehicleMassRating.ConvertTo(Unit.SI.Ton).Value()},
 				'{"rdyn", vehicle.DynamicTyreRadius.ConvertTo().Milli.Meter.Value()},
+                '{"rdyn", vehicle.DynamicTyreRadius.ConvertTo(Unit.SI.Milli.Meter).Value()},
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
 				{"SavedInDeclMode", Cfg.DeclMode},
 				{"VehCat", vehicle.VehicleCategory.ToString()},
@@ -210,8 +213,8 @@ Public Class JSONFileWriter
 				{"CurbWeight", vehicle.CurbMassChassis.Value()},
 				{"CurbWeightExtra", vehicle.CurbMassExtra.Value()},
 				{"Loading", vehicle.Loading.Value()},
-		        {"MassMax", vehicle.GrossVehicleMassRating.ConvertTo(Unit.SI.Ton).Value()},
-	            {"rdyn", vehicle.DynamicTyreRadius.ConvertTo(Unit.SI.Milli.Meter).Value()},
+		        {"MassMax", vehicle.GrossVehicleMassRating.ConvertToTon().Value()},
+	            {"rdyn", vehicle.DynamicTyreRadius.ConvertToMilliMeter().Value()},
 				{"CdCorrMode", airdrag.CrossWindCorrectionMode.GetName()},
 				{"CdCorrFile",
 				If((airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse

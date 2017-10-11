@@ -1045,17 +1045,22 @@ namespace TUGraz.VectoCommon.Utils
             }
         }
 
-        public SI ConvertTo(UnitInstance si)
-        {
+		//public SI ConvertTo(UnitInstance si)
+		//{
 
-            if (!SIUtils.CompareUnits(_units, si.GetSIUnits()))
-            {
-                throw new VectoException("Unit missing. Conversion not possible. [{0}] does not contain a [{1}].", GetUnitString(_units), si.GetSIUnits());
-            }
+		//	if (!SIUtils.CompareUnits(_units, si.GetSIUnits()))
+		//	{
+		//		throw new VectoException(
+		//			"Unit missing. Conversion not possible. [{0}] does not contain a [{1}].",
+		//			GetUnitString(_units), si.GetSIUnits());
+		//	}
 
-            var factorValue = si.Factor;
-            return new SI(this, unitsParam: si.GetSIUnits(), factor: factorValue);
-        }
+		//	var factorValue = si.Factor;
+
+
+
+		//	return new SI(this, unitsParam: si.GetSIUnits(), factor: factorValue);
+		//}
 
         /// <summary>
         /// Casts the SI Unit to the concrete unit type (if the units allow such an cast).
@@ -1389,8 +1394,7 @@ namespace TUGraz.VectoCommon.Utils
             }
             var other = obj as SI;
 
-            var valFac = Val;
-            return other != null && valFac.Equals(other.Val) && HasEqualUnit(other);
+			return other != null && Val.Equals(other.Val ) && HasEqualUnit(other);
         }
 
         /// <summary>
@@ -1401,8 +1405,7 @@ namespace TUGraz.VectoCommon.Utils
         /// <returns></returns>
         public bool IsEqual(SI si, SI tolerance = null)
         {
-            var valFac = Val;
-            return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) && valFac.IsEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+			return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) && Val.IsEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : (tolerance.Value() ));
         }
 
         /// <summary>
@@ -1414,8 +1417,7 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
         public bool IsEqual(double val, double tolerance = DoubleExtensionMethods.Tolerance)
         {
-            var valFac = Val;
-            return valFac.IsEqual(val, tolerance);
+			return Val.IsEqual(val, tolerance);
         }
 
         /// <summary>
@@ -1435,8 +1437,7 @@ namespace TUGraz.VectoCommon.Utils
                 throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
             }
 
-            var valFac = Val;
-            return valFac.IsSmaller(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+			return Val.IsSmaller(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : (tolerance.Value() ));
         }
 
         /// <summary>
@@ -1452,8 +1453,7 @@ namespace TUGraz.VectoCommon.Utils
                 throw new VectoException("compared value has to be the same unit. Got: {0} <=> {1}", this, si);
             }
 
-            var valFac = Val;
-            return valFac.IsSmaller(si.Val, tolerance);
+			return Val.IsSmaller(si.Val, tolerance);
         }
 
         /// <summary>
@@ -1473,9 +1473,7 @@ namespace TUGraz.VectoCommon.Utils
                 throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
             }
 
-            var valFac = Val;
-
-            return valFac.IsSmallerOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+			return Val.IsSmallerOrEqual(si.Val , tolerance == null ? DoubleExtensionMethods.Tolerance : (tolerance.Value()));
         }
 
         /// <summary>
@@ -1495,8 +1493,7 @@ namespace TUGraz.VectoCommon.Utils
                 throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
             }
 
-            var valFac = Val;
-            return valFac.IsGreater(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+			return Val.IsGreater(si.Val , tolerance == null ? DoubleExtensionMethods.Tolerance : (tolerance.Value() ));
         }
 
         /// <summary>
@@ -1513,9 +1510,7 @@ namespace TUGraz.VectoCommon.Utils
                 throw new VectoException("compared value has to be the same unit. Got: {0} <=> {1}", this, si);
             }
 
-            var valFac = Val;
-
-            return valFac.IsGreater(si.Val, tolerance);
+			return Val.IsGreater(si.Val , tolerance);
         }
 
         /// <summary>
@@ -1536,8 +1531,7 @@ namespace TUGraz.VectoCommon.Utils
                 throw new VectoException("tolerance has to be the same unit. Got: {0} <=> {1}", this, tolerance);
             }
 
-            var valFac = Val;
-            return valFac.IsGreaterOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
+			return Val.IsGreaterOrEqual(si.Val , tolerance == null ? DoubleExtensionMethods.Tolerance : (tolerance.Value() ));
         }
 
         /// <summary>

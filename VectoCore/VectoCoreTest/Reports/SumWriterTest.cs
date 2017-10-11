@@ -189,14 +189,18 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(dataProvider.EngineInputData.FuelType.GetLabel(), sumRow[SummaryDataContainer.ENGINE_FUEL_TYPE]);
             //Assert.AreEqual((dataProvider.EngineInputData.RatedPowerDeclared.ConvertTo().Kilo.Watt.Value()),
             //	((SI)sumRow[SummaryDataContainer.ENGINE_RATED_POWER]).Value());
-		    Assert.AreEqual((dataProvider.EngineInputData.RatedPowerDeclared.ConvertTo(Unit.SI.Kilo.Watt).Value()),
-		        ((SI)sumRow[SummaryDataContainer.ENGINE_RATED_POWER]).Value());
+            //Assert.AreEqual((dataProvider.EngineInputData.RatedPowerDeclared.ConvertTo(Unit.SI.Kilo.Watt).Value()),
+            //    ((SI)sumRow[SummaryDataContainer.ENGINE_RATED_POWER]).Value());
+            Assert.AreEqual((dataProvider.EngineInputData.RatedPowerDeclared.ConvertToKiloWatt().Value()),
+                ((SI)sumRow[SummaryDataContainer.ENGINE_RATED_POWER]).Value());
             Assert.AreEqual(dataProvider.EngineInputData.RatedSpeedDeclared.AsRPM,
 				((SI)sumRow[SummaryDataContainer.ENGINE_RATED_SPEED]).Value());
             //Assert.AreEqual(dataProvider.EngineInputData.Displacement.ConvertTo().Cubic.Centi.Meter.Value(),
             //	((SI)sumRow[SummaryDataContainer.ENGINE_DISPLACEMENT]).Value());
-		    Assert.AreEqual(dataProvider.EngineInputData.Displacement.ConvertTo(Unit.SI.Cubic.Centi.Meter).Value(),
-		        ((SI)sumRow[SummaryDataContainer.ENGINE_DISPLACEMENT]).Value());
+            //Assert.AreEqual(dataProvider.EngineInputData.Displacement.ConvertTo(Unit.SI.Cubic.Centi.Meter).Value(),
+            //    ((SI)sumRow[SummaryDataContainer.ENGINE_DISPLACEMENT]).Value());
+            Assert.AreEqual(dataProvider.EngineInputData.Displacement.ConvertToCubicCentiMeter().Value(),
+                ((SI)sumRow[SummaryDataContainer.ENGINE_DISPLACEMENT]).Value());
             Assert.AreEqual(dataProvider.GearboxInputData.Manufacturer, sumRow[SummaryDataContainer.GEARBOX_MANUFACTURER]);
 			Assert.AreEqual(dataProvider.GearboxInputData.Model, sumRow[SummaryDataContainer.GEARBOX_MODEL]);
 			Assert.AreEqual(dataProvider.AxleGearInputData.Manufacturer, sumRow[SummaryDataContainer.AXLE_MANUFACTURER]);

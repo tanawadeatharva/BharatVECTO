@@ -132,7 +132,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Engine_RatedSpeed, engineData.RatedSpeedDeclared.AsRPM.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Engine_Displacement,
                     //engineData.Displacement.ConvertTo().Cubic.Centi.Meter.ToXMLFormat(0)),
-			        engineData.Displacement.ConvertTo(Unit.SI.Cubic.Centi.Meter).ToXMLFormat(0)),
+                    //engineData.Displacement.ConvertTo(Unit.SI.Cubic.Centi.Meter).ToXMLFormat(0)),
+                    engineData.Displacement.ConvertToCubicCentiMeter().ToXMLFormat(0)),
                 new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelType.ToXMLFormat())
 				);
 		}
@@ -302,7 +303,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new object[] {
 				new XElement(tns + XMLNames.Report_ResultEntry_Distance, new XAttribute(XMLNames.Report_Results_Unit_Attr, "km"),
 					//result.Distance.ConvertTo().Kilo.Meter.ToXMLFormat(3)),
-			        result.Distance.ConvertTo(Unit.SI.Kilo.Meter).ToXMLFormat(3)),
+			        //result.Distance.ConvertTo(Unit.SI.Kilo.Meter).ToXMLFormat(3)),
+                    result.Distance.ConvertToKiloMeter().ToXMLFormat(3)),
+                    
                 new XElement(tns + XMLNames.Report_ResultEntry_SimulationParameters,
 					new XElement(tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "kg"), result.TotalVehicleWeight.ToXMLFormat(0)),
