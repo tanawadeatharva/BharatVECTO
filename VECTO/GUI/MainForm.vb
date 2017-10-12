@@ -105,7 +105,7 @@ Public Class MainForm
 	Private Sub FB_Initialize()
 		FileBrowserFolderHistoryIninialized = False
 		Try
-			COREvers = Assembly.LoadFrom("VectoCore.dll").GetName().Version.ToString()
+			COREvers = VectoSimulationCore.VersionNumber()
 		Catch ex As Exception
 			LogFile.WriteToLog(MessageType.Err, ex.StackTrace)
 		End Try

@@ -331,6 +331,11 @@
     <Compile Include="Utils\SwitchExtension.cs" />
     <Compile Include="Utils\VectoCSVFile.cs" />
     <Compile Include="Utils\DelaunayMap.cs" />
+    <Compile Include="Utils\VectoVersionCore.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VectoVersionCore.tt</DependentUpon>
+    </Compile>
     <Compile Include="Utils\XmlResourceResolver.cs" />
     <Compile Include="Utils\XPathHelper.cs" />
   </ItemGroup>
@@ -418,6 +423,14 @@
     <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Utils\VectoVersionCore.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>VectoVersionCore.cs</LastGenOutput>
+    </None>
+    <None Include="VersionNumber.t4">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>VersionNumber1.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />
@@ -449,11 +462,8 @@
       <Name>VectoHashing</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>if $(ConfigurationName) == Release  forfiles /p "$(ProjectDir)." /m "*.tt" /s /c "cmd /c echo Transforming @path &amp;&amp; \"%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\12.0\TextTransform.exe\" @file"</PreBuildEvent>
-  </PropertyGroup>
+    
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -461,4 +471,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  
+  <Import Project="$(SolutionDir)Build\TextPreProcessing.targets" />
 </Project>

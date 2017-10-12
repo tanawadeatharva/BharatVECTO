@@ -28,9 +28,26 @@
 *   Markus Quaritsch, markus.quaritsch@tugraz.at, IVT, Graz University of Technology
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ include file="../VersionNumber.t4" onnce="true" #>
+<#@ output extension=".cs" #>
 
-<#@ output extension=".cs"#>
-<#@ include file="../VersionNumber.t4" once="true" #>
-using System.Reflection;
-[assembly: AssemblyVersion("<#= GetVectoCoreVersionNumber() #>")]
-[assembly: AssemblyFileVersion("<#= GetVectoCoreVersionNumber() #>")]
+namespace TUGraz.VectoCore.Utils
+{
+	public static class VectoSimulationCore
+	{
+		public static string VersionNumber
+		{
+			get {
+				return "<#= GetVectoCoreVersionNumber() #>";
+			}
+		}
+
+		public static string FullVersion
+		{
+			get {
+				return string.Format("VectoCore {0}", VersionNumber);
+			}
+		}
+	}
+}
