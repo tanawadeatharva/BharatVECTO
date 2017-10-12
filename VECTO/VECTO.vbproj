@@ -536,6 +536,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
@@ -547,7 +548,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  
-	<Import Project="$(SolutionDir)Build\Packaging.targets"/>
-  
+  <Import Project="$(SolutionDir)Build\TextPreProcessing.targets" />
+  <Import Project="$(SolutionDir)Build\Packaging.targets" />
 </Project>

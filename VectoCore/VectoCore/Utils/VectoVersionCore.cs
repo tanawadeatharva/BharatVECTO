@@ -29,8 +29,22 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-<#@ output extension=".cs"#>
-<#@ include file="../VersionNumber.t4" once="true" #>
-using System.Reflection;
-[assembly: AssemblyVersion("<#= GetVectoCoreVersionNumber() #>")]
-[assembly: AssemblyFileVersion("<#= GetVectoCoreVersionNumber() #>")]
+namespace TUGraz.VectoCore.Utils
+{
+	public static class VectoSimulationCore
+	{
+		public static string VersionNumber
+		{
+			get {
+				return "3.2.0.1015";
+			}
+		}
+
+		public static string FullVersion
+		{
+			get {
+				return string.Format("VectoCore {0}", VersionNumber);
+			}
+		}
+	}
+}

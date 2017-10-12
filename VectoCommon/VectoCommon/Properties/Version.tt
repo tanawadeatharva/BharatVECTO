@@ -29,11 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-<#@ template language="C#" #>
 <#@ output extension=".cs"#>
+<#@ include file="../../../VectoCore/VectoCore/VersionNumber.t4" once="true" #>
 using System.Reflection;
-[assembly: AssemblyVersion("3.2.0.<#= this.RevisionNumber #>")]
-[assembly: AssemblyFileVersion("3.2.0.<#= this.RevisionNumber #>")]
-<#+ 
-	int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2015, 1, 1)).TotalDays; 
-#>
+[assembly: AssemblyVersion("<#= GetVectoCoreVersionNumber() #>")]
+[assembly: AssemblyFileVersion("<#= GetVectoCoreVersionNumber() #>")]
