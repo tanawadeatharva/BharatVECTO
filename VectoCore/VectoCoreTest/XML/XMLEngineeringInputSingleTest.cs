@@ -92,8 +92,7 @@ namespace TUGraz.VectoCore.Tests.XML
             //	fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
 		    //Assert.AreEqual(1256.SI(Unit.SI.Gramm.Per.Hour).ConvertTo(Unit.SI.Kilo.Gramm.Per.Second).Value(),
 		    //	fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
-            Assert.AreEqual(1256.SI(Unit.SI.Gramm.Per.Hour).ConvertToKiloGrammPerSecond().Value(),
-                fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
+            Assert.AreEqual(1256.SI(Unit.SI.Gramm.Per.Hour).Value(), fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
 
             var fldTable = engineDataProvider.FullLoadCurve;
 			Assert.AreEqual(10, fldTable.Rows.Count);

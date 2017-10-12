@@ -690,17 +690,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 
             //var val2 = 7.SI(Unit.SI.Cubic.Dezi.Meter).ConvertTo(Unit.SI.Cubic.Dezi.Meter);
             var val2 = 7.SI(Unit.SI.Cubic.Dezi.Meter).ConvertToCubicDeziMeter();
-            AssertHelper.AreRelativeEqual(0.007, val2.Value());
+            AssertHelper.AreRelativeEqual(0.007, val2);
 
 
 
             //var val3 = 5.SI(Unit.SI.Cubic.Dezi.Meter).ConvertTo(Unit.SI.Cubic.Centi.Meter);
             var val3 = 5.SI(Unit.SI.Cubic.Dezi.Meter).ConvertToCubicCentiMeter();
-            AssertHelper.AreRelativeEqual(0.005, val3.Value()); // 5000 cm^3
+            AssertHelper.AreRelativeEqual(0.005, val3); // 5000 cm^3
 
             //var val4 = 5.SI(Unit.SI.Cubic.Centi.Meter).ConvertTo(Unit.SI.Cubic.Dezi.Meter);
             var val4 = 5.SI(Unit.SI.Cubic.Centi.Meter).ConvertToCubicDeziMeter();
-            AssertHelper.AreRelativeEqual(0.000005, val4.Value()); // 0.005 dm^3
+            AssertHelper.AreRelativeEqual(0.000005, val4); // 0.005 dm^3
 
 
             var uni1 = Unit.SI.Kilo.Meter.Per.Hour;

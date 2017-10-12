@@ -273,8 +273,19 @@ namespace TUGraz.VectoCommon.Utils
 			return self.ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
 		}
 
-		//[DebuggerStepThrough]
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string ToXMLFormat(this ConvertedSI self, uint? decimals = null)
+        {
+            decimals = decimals ?? 2;
+            return ((double)self).ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string ToMinSignificantDigits(this ConvertedSI self, uint? significant = null, uint? decimals = null)
+        {
+            return ToMinSignificantDigits((double)self, significant, decimals);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static string ToMinSignificantDigits(this double self, uint? significant = null, uint? decimals = null)
 		{
 			significant = significant ?? 3;

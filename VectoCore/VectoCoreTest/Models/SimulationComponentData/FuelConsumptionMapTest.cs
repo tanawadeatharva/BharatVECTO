@@ -39,39 +39,38 @@ using NUnit.Framework;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
-	[TestFixture]
-	public class FuelConsumptionMapTest
-	{
-		private const double Tolerance = 0.0001;
+    [TestFixture]
+    public class FuelConsumptionMapTest
+    {
+        private const double Tolerance = 0.0001;
 
-		[TestCase]
-		public void TestFuelConsumption_FixedPoints()
-		{
-			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
-			var lines = File.ReadAllLines(@"TestData\Components\24t Coach.vmap").Skip(1).ToArray();
-			AssertMapValuesEqual(lines, map);
-		}
+        [TestCase]
+        public void TestFuelConsumption_FixedPoints()
+        {
+            var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
+            var lines = File.ReadAllLines(@"TestData\Components\24t Coach.vmap").Skip(1).ToArray();
+            AssertMapValuesEqual(lines, map);
+        }
 
-		[TestCase]
-		public void TestFuelConsumption_InterpolatedPoints()
-		{
-			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
-			var lines = File.ReadAllLines(@"TestData\Components\24t CoachInterpolated.vmap").Skip(1).ToArray();
-			AssertMapValuesEqual(lines, map);
-		}
+        [TestCase]
+        public void TestFuelConsumption_InterpolatedPoints()
+        {
+            var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
+            var lines = File.ReadAllLines(@"TestData\Components\24t CoachInterpolated.vmap").Skip(1).ToArray();
+            AssertMapValuesEqual(lines, map);
+        }
 
-		private static void AssertMapValuesEqual(IReadOnlyList<string> lines, FuelConsumptionMap map)
-		{
+        private static void AssertMapValuesEqual(IReadOnlyList<string> lines, FuelConsumptionMap map)
+        {
 			for (var i = 1; i < lines.Count; i++) {
-				var entry = lines[i].Split(',').Select(x => double.Parse(x, CultureInfo.InvariantCulture)).ToArray();
+                var entry = lines[i].Split(',').Select(x => double.Parse(x, CultureInfo.InvariantCulture)).ToArray();
 
                 //Assert.AreEqual(entry[2].SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Value(),
                 //	map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad(), true).Value.Value(), Tolerance);
                 //Assert.AreEqual(entry[2].SI(Unit.SI.Gramm.Per.Hour).ConvertTo(Unit.SI.Kilo.Gramm.Per.Second).Value(),
                 //    map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad(), true).Value.Value(), Tolerance);
-                Assert.AreEqual(entry[2].SI(Unit.SI.Gramm.Per.Hour).ConvertToKiloGrammPerSecond().Value(),
-                    map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad(), true).Value.Value(), Tolerance);
+                Assert.AreEqual(entry[2].SI(Unit.SI.Gramm.Per.Hour).Value(), map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad(), true).Value.Value(), Tolerance);
             }
-		}
-	}
+        }
+    }
 }

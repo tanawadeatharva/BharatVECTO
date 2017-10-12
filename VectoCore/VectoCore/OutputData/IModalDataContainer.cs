@@ -365,7 +365,7 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / distance;
 		}
 
-		public static SI FuelConsumptionFinalLiterPer100Kilometer(this IModalDataContainer data)
+        public static SquareMeter FuelConsumptionFinalVolumePerMeter(this IModalDataContainer data)
 		{
 			var fuelConsumptionFinal = data.FuelConsumptionFinal();
 			if (fuelConsumptionFinal == null || data.FuelData.FuelDensity == null) {
@@ -373,10 +373,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			var fcVolumePerMeter = fuelConsumptionFinal / data.FuelData.FuelDensity;
-            // fcVolumePerMeter = [m^2]
-            //return fcVolumePerMeter.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
-            //return fcVolumePerMeter.ConvertTo(Unit.SI.Cubic.Dezi.Meter) * 100.SI(Unit.SI.Kilo.Meter);
-            return fcVolumePerMeter.ConvertToCubicDeziMeter() * 100.SI(Unit.SI.Kilo.Meter);
+            return fcVolumePerMeter.Cast<SquareMeter>();
         }
 
 		public static KilogramPerMeter CO2PerMeter(this IModalDataContainer data)
