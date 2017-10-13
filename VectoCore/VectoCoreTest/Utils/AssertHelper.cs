@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
-		//[DebuggerHidden]
+		[DebuggerHidden]
 		public static void AreRelativeEqual(double? expected, double? actual, string message = null,
 			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{

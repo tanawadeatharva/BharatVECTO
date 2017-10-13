@@ -39,7 +39,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <summary>
 		/// Gets the unit-less SI representation of the number.
 		/// </summary>
-		//[DebuggerHidden]
+		[DebuggerHidden]
 		public static SI SI(this int value)
 		{
 			return SIBase<Scalar>.Create(value);
@@ -48,21 +48,20 @@ namespace TUGraz.VectoCommon.Utils
         public static SI SI(this int value, UnitInstance si)
         {
             return new SI(si,value);
-        }
+		}
 
-        /// <summary>
-        /// Gets the special SI class of the number.
-        /// </summary>
-        /// <param name="d"></param>
-        /// <returns></returns>
-        [DebuggerHidden]
+		/// <summary>
+		/// Gets the special SI class of the number.
+		/// </summary>
+		/// <param name="d"></param>
+		/// <returns></returns>
+		[DebuggerHidden]
 		public static T SI<T>(this int d) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(d);
 		}
 
-
-        public static double ToRadian(this int self)
+		public static double ToRadian(this int self)
 		{
 			return self * Math.PI / 180.0;
 		}

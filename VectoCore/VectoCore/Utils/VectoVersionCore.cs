@@ -29,44 +29,21 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using NUnit.Framework;
-
-namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
+namespace TUGraz.VectoCore.Utils
 {
-	[TestFixture]
-	public class FuelConsumptionMapTest
+	public static class VectoSimulationCore
 	{
-		private const double Tolerance = 0.0001;
-
-		[TestCase]
-		public void TestFuelConsumption_FixedPoints()
+		public static string VersionNumber
 		{
-			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
-			var lines = File.ReadAllLines(@"TestData\Components\24t Coach.vmap").Skip(1).ToArray();
-			AssertMapValuesEqual(lines, map);
+			get {
+				return "3.2.0.1015";
+			}
 		}
 
-		[TestCase]
-		public void TestFuelConsumption_InterpolatedPoints()
+		public static string FullVersion
 		{
-			var map = FuelConsumptionMapReader.ReadFromFile(@"TestData\Components\24t Coach.vmap");
-			var lines = File.ReadAllLines(@"TestData\Components\24t CoachInterpolated.vmap").Skip(1).ToArray();
-			AssertMapValuesEqual(lines, map);
-		}
-
-		private static void AssertMapValuesEqual(IReadOnlyList<string> lines, FuelConsumptionMap map)
-		{
-			for (var i = 1; i < lines.Count; i++) {
-				var entry = lines[i].Split(',').Select(x => double.Parse(x, CultureInfo.InvariantCulture)).ToArray();
-
-                Assert.AreEqual(entry[2].SI(Unit.SI.Gramm.Per.Hour).Value(), 
-					map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad(), true).Value.Value(), Tolerance);
+			get {
+				return string.Format("VectoCore {0}", VersionNumber);
 			}
 		}
 	}

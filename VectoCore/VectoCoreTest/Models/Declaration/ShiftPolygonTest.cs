@@ -520,7 +520,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			//@"TestData\Components\40t_Long_Haul_Truck.vgbx";
 
 			if (!File.Exists(engineFldFile)) {
-				Assert.Ignore("Confidential File not found. Test cannot run without file.");
+				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
 			}
 
 			var rdyn = 0.4882675.SI<Meter>();
@@ -611,7 +611,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			double idlingSpeed)
 		{
 			if (!Directory.Exists(BasePath)) {
-				Assert.Ignore("Confidential File not found. Test cannot run without file.");
+				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
 			}
 
 			var gearboxData = new JSONGearboxDataV6(JSONInputDataFactory.ReadFile(Path.Combine(BasePath, gearboxFile)),

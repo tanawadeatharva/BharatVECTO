@@ -26,7 +26,13 @@ namespace TUGraz.VectoCommon.Utils
 
         public override string ToString()
         {
+            // todo mk2017-10-13: decimal places?
             return _value.ToString(CultureInfo.InvariantCulture); // + " [" + _units + "]";
+        }
+
+        public object ToString(CultureInfo invariantCulture)
+        {
+            throw new NotImplementedException();
         }
     }
 

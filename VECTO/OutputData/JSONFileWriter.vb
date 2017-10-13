@@ -42,10 +42,8 @@ Public Class JSONFileWriter
 
 		body.Add("ModelName", eng.Model)
 
-        'body.Add("Displacement", eng.Displacement.ConvertTo().Cubic.Centi.Meter.Value().ToString())
-        'body.Add("Displacement", eng.Displacement.ConvertTo(Unit.SI.Cubic.Centi.Meter).Value().ToString())
-        body.Add("Displacement", eng.Displacement.ConvertToCubicCentiMeter().ToString())
-        body.Add("IdlingSpeed", eng.IdleSpeed.AsRPM)
+        	body.Add("Displacement", eng.Displacement.ConvertToCubicCentiMeter().ToString())
+		body.Add("IdlingSpeed", eng.IdleSpeed.AsRPM)
 		body.Add("Inertia", eng.Inertia.Value())
 
 		body.Add("WHTC-Urban", eng.WHTCUrban)
@@ -202,44 +200,40 @@ Public Class JSONFileWriter
 			torqueLimits.Add(entry.Gear().ToString(), entry.MaxTorque.Value().ToString())
 		Next
 
-        '{"MassMax", vehicle.GrossVehicleMassRating.ConvertTo().Ton.Value()},
-        '{"MassMax", vehicle.GrossVehicleMassRating.ConvertTo(Unit.SI.Ton).Value()},
-        '{"rdyn", vehicle.DynamicTyreRadius.ConvertTo().Milli.Meter.Value()},
-        '{"rdyn", vehicle.DynamicTyreRadius.ConvertTo(Unit.SI.Milli.Meter).Value()},
-        Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
-                {"SavedInDeclMode", Cfg.DeclMode},
-                {"VehCat", vehicle.VehicleCategory.ToString()},
-                {"LegislativeClass", vehicle.LegislativeClass.ToString()},
-                {"CurbWeight", vehicle.CurbMassChassis.Value()},
-                {"CurbWeightExtra", vehicle.CurbMassExtra.Value()},
-                {"Loading", vehicle.Loading.Value()},
-                {"MassMax", vehicle.GrossVehicleMassRating.ConvertToTon()},
-                {"rdyn", vehicle.DynamicTyreRadius.ConvertToMilliMeter()},
-                {"CdCorrMode", airdrag.CrossWindCorrectionMode.GetName()},
-                {"CdCorrFile",
-                If((airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse
-                    airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.VAirBetaLookupTable) AndAlso
-                    Not airdrag.CrosswindCorrectionMap Is Nothing, GetRelativePath(airdrag.CrosswindCorrectionMap.Source, basePath),
-                    "")
-                },
-                {"Retarder", retarderOut},
-                {"Angledrive", angledriveOut},
-                {"PTO", ptoOut},
-                {"TorqueLimits", torqueLimits},
-                {"IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM},
-                {"AxleConfig", New Dictionary(Of String, Object) From {
-                {"Type", vehicle.AxleConfiguration.GetName()},
-                {"Axles", From axle In vehicle.Axles Select New Dictionary(Of String, Object) From {
-                {"Inertia", axle.Inertia.Value()},
-                {"Wheels", axle.Wheels},
-                {"AxleWeightShare", axle.AxleWeightShare},
-                {"TwinTyres", axle.TwinTyres},
-                {"RRCISO", axle.RollResistanceCoefficient},
-                {"FzISO", axle.TyreTestLoad.Value()},
-                {"Type", axle.AxleType.ToString()}
-                }}}}}
+		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
+				{"SavedInDeclMode", Cfg.DeclMode},
+				{"VehCat", vehicle.VehicleCategory.ToString()},
+				{"LegislativeClass", vehicle.LegislativeClass.ToString()},
+				{"CurbWeight", vehicle.CurbMassChassis.Value()},
+				{"CurbWeightExtra", vehicle.CurbMassExtra.Value()},
+				{"Loading", vehicle.Loading.Value()},
+                		{"MassMax", vehicle.GrossVehicleMassRating.ConvertToTon()},
+		                {"rdyn", vehicle.DynamicTyreRadius.ConvertToMilliMeter()},
+				{"CdCorrMode", airdrag.CrossWindCorrectionMode.GetName()},
+				{"CdCorrFile",
+				If((airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse
+					airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.VAirBetaLookupTable) AndAlso
+					Not airdrag.CrosswindCorrectionMap Is Nothing, GetRelativePath(airdrag.CrosswindCorrectionMap.Source, basePath),
+					"")
+				},
+				{"Retarder", retarderOut},
+				{"Angledrive", angledriveOut},
+				{"PTO", ptoOut},
+				{"TorqueLimits", torqueLimits},
+				{"IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM},
+				{"AxleConfig", New Dictionary(Of String, Object) From {
+				{"Type", vehicle.AxleConfiguration.GetName()},
+				{"Axles", From axle In vehicle.Axles Select New Dictionary(Of String, Object) From {
+				{"Inertia", axle.Inertia.Value()},
+				{"Wheels", axle.Wheels},
+				{"AxleWeightShare", axle.AxleWeightShare},
+				{"TwinTyres", axle.TwinTyres},
+				{"RRCISO", axle.RollResistanceCoefficient},
+				{"FzISO", axle.TyreTestLoad.Value()},
+				{"Type", axle.AxleType.ToString()}
+				}}}}}
 
-        If (Not IsNothing(airdrag.AirDragArea)) Then
+		If (Not IsNothing(airdrag.AirDragArea)) Then
 			body("CdA") = airdrag.AirDragArea.Value()
 		End If
 		If (Not IsNothing(vehicle.Height)) Then

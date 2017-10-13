@@ -83,9 +83,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var data = new CombustionEngineData {
 				ModelName = "asdf",
-                //Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
 			    Displacement = 6374.SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(),
-                IdleSpeed = 560.RPMtoRad(),
+				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
 				WHTCUrban = 1,
 				WHTCRural = 1,
@@ -120,9 +119,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 			var data = new MockEngineDataProvider {
 				Model = "asdf",
-                //Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
 			    Displacement = 6374.SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(),
-                IdleSpeed = 560.RPMtoRad(),
+				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
 				FullLoadCurve = fullLoad,
 				FuelConsumptionMap = fuelConsumption
@@ -156,9 +154,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 			var data = new MockEngineDataProvider {
 				Model = "asdf",
-                //Displacement = 6374.SI().Cubic.Centi.Meter.Cast<CubicMeter>(),
 			    Displacement = 6374.SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(),
-                IdleSpeed = 560.RPMtoRad(),
+				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
 				FullLoadCurve = fullLoad,
 				FuelConsumptionMap = fuelConsumption,

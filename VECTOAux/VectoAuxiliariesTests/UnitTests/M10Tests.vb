@@ -32,9 +32,9 @@ Namespace UnitTests
 
 			target.CycleStep(1.SI(Of Second))
 
-            Assert.AreEqual(out1.SI(Unit.SI.Gramm).Value(), target.AverageLoadsFuelConsumptionInterpolatedForPneumatics.Value(), 0.001)
-            Assert.AreEqual(out2.SI(Unit.SI.Gramm).Value(), target.FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand.Value(), 0.001)
-        End Sub
+            		Assert.AreEqual(out1.SI(Unit.SI.Gramm).Value(), target.AverageLoadsFuelConsumptionInterpolatedForPneumatics.Value(), 0.001)
+            		Assert.AreEqual(out2.SI(Unit.SI.Gramm).Value(), target.FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand.Value(), 0.001)
+		End Sub
 	End Class
 End Namespace
 

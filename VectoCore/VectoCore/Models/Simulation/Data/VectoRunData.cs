@@ -198,10 +198,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			} catch (VectoException) {
 				return new ValidationResult(
 					string.Format("Interpolation of Gear-{0}-LossMap failed with torque={1} and angularSpeed={2}", gear.Key,
-                        //inTorque, angularVelocity.ConvertTo().Rounds.Per.Minute));
-                        //inTorque, angularVelocity.ConvertTo(Unit.SI.Rounds.Per.Minute)));
                         inTorque, angularVelocity.ConvertToRoundsPerMinute()));
-            }
+			}
 			var axlegearTorque = angledriveTorque;
 			try {
 				if (hasAngleDrive) {
@@ -211,10 +209,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			} catch (VectoException) {
 				return new ValidationResult(
 					string.Format("Interpolation of Angledrive-LossMap failed with torque={0} and angularSpeed={1}",
-                        //angledriveTorque, (angularVelocity / gear.Value.Ratio).ConvertTo().Rounds.Per.Minute));
-                        //angledriveTorque, (angularVelocity / gear.Value.Ratio).ConvertTo(Unit.SI.Rounds.Per.Minute)));
                         angledriveTorque, (angularVelocity / gear.Value.Ratio).ConvertToRoundsPerMinute()));
-            }
+			}
 
 			if (axleGearData != null) {
 				var axleAngularVelocity = angularVelocity / gear.Value.Ratio / angledriveRatio;
@@ -225,11 +221,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 						new ValidationResult(
 							string.Format(
 								"Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1} (gear={2}, velocity={3})",
-                                //axlegearTorque, axleAngularVelocity.ConvertTo().Rounds.Per.Minute, gear.Key, velocity));
-					            //axlegearTorque, axleAngularVelocity.ConvertTo(Unit.SI.Rounds.Per.Minute), gear.Key, velocity));
                                 axlegearTorque, axleAngularVelocity.ConvertToRoundsPerMinute(), gear.Key, velocity));
-
-                }
+				}
 			}
 			return null;
 		}

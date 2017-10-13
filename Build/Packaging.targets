@@ -53,13 +53,6 @@
 	<Exec Command="&quot;$(solutiondir)documentation\VectoHashingTool\convert.bat&quot;" WorkingDirectory="$(solutiondir)documentation\VectoHashingTool"/>  
 </Target>  
 
-<Target Name="BeforeBuild" Condition="$(Configuration) == 'Deploy' OR $(Configuration) == 'Release'">
-	<ItemGroup>
-		<VersionTemplates Include="$(SolutionDir)**\Version.tt"/>
-	</ItemGroup>
-	<Exec Command="&quot;C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\TextTransform.exe&quot; &quot;%(VersionTemplates.Identity)&quot;"/>
-</Target>
-
 <Target Name="AfterBuild" Condition="$(Configuration) == 'Deploy'">
 	<ItemGroup>  
 		<VectoCoreAssembly Include="$(OutputPath)VectoCore.dll" />  

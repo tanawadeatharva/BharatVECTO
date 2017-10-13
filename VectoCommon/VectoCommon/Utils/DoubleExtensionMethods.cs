@@ -76,7 +76,8 @@ namespace TUGraz.VectoCommon.Utils
 
 		[DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool IsRelativeEqual(this double expected, double actual, double toleranceFactor = ToleranceFactor)
+		public static bool IsRelativeEqual(this double expected, double actual,
+			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
 			if (double.IsNaN(expected)) {
 				return double.IsNaN(actual);
@@ -239,12 +240,12 @@ namespace TUGraz.VectoCommon.Utils
 	    public static SI SI(this double value, UnitInstance si)
 	    {
 	        return new SI(si, value);
-	    }
+		}
 
-        /// <summary>
-        /// Creates an templated SI object for the number.
-        /// </summary>
-        [DebuggerStepThrough]
+		/// <summary>
+		/// Creates an templated SI object for the number.
+		/// </summary>
+		[DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T SI<T>(this double value) where T : SIBase<T>
 		{
@@ -285,7 +286,7 @@ namespace TUGraz.VectoCommon.Utils
             return ToMinSignificantDigits((double)self, significant, decimals);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static string ToMinSignificantDigits(this double self, uint? significant = null, uint? decimals = null)
 		{
 			significant = significant ?? 3;

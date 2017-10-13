@@ -374,7 +374,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			var fcVolumePerMeter = fuelConsumptionFinal / data.FuelData.FuelDensity;
             return fcVolumePerMeter.Cast<SquareMeter>();
-        }
+		}
 
 		public static KilogramPerMeter CO2PerMeter(this IModalDataContainer data)
 		{

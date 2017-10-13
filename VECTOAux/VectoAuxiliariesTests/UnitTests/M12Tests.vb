@@ -41,11 +41,11 @@ Namespace UnitTests
 			'Act
 			Dim target = New M12(M10Mock.Object, m11Mock.Object, sgnlsMock.Object)
 
-            'Assert
-            Assert.AreEqual(target.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand().Value(),
+			'Assert
+			Assert.AreEqual(target.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand().Value(),
                             OUT1.SI(Unit.SI.Gramm).Value(), 0.001)
             Assert.AreEqual(target.BaseFuelConsumptionWithTrueAuxiliaryLoads().Value(), OUT2.SI(Unit.SI.Gramm).Value(), 0.001)
-        End Sub
+		End Sub
 	End Class
 End Namespace
 

@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				engineSpeed: row.ParseDouble(0).RPMtoRad(),
 				torque: row.ParseDouble(1).SI<NewtonMeter>(),
 				fuelConsumption: row.ParseDouble(2).SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>()
-                );
+				);
 		}
 
 		private static FuelConsumptionMap.Entry CreateFromColumNames(DataRow row)
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			    engineSpeed: row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
                 torque: row.SI<NewtonMeter>(Fields.Torque),
 				fuelConsumption: row.ParseDouble(Fields.FuelConsumption).SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>()
-                );
+				);
 		}
 
 		public static class Fields

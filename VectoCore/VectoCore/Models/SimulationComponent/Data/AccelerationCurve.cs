@@ -75,14 +75,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			var index = 1;
 			if (key < _entries[0].Key) {
-                //Log.Error("requested velocity below minimum - extrapolating. velocity: {0}, min: {1}",
-                //	key.ConvertTo().Kilo.Meter.Per.Hour, _entries[0].Key.ConvertTo().Kilo.Meter.Per.Hour);
-                //Log.Error("requested velocity below minimum - extrapolating. velocity: {0}, min: {1}",
-                //	key.ConvertTo(Unit.SI.Kilo.Meter.Per.Hour), _entries[0].Key.ConvertTo(Unit.SI.Kilo.Meter.Per.Hour));
-			    Log.Error("requested velocity below minimum - extrapolating. velocity: {0}, min: {1}",
+				Log.Error("requested velocity below minimum - extrapolating. velocity: {0}, min: {1}",
                     key.ConvertToKiloMeterPerHour(), _entries[0].Key.ConvertToKiloMeterPerHour());
-            }
-            else {
+			} else {
 				index = _entries.FindIndex(x => x.Key > key);
 				if (index <= 0) {
 					index = key > _entries[0].Key ? _entries.Count - 1 : 1;

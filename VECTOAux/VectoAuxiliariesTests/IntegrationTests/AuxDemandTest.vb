@@ -17,7 +17,7 @@ Namespace IntegrationTests
         <TestCase(12000, 1256, 148, 148, 6087.0317)>
         <TestCase(12000, 1256, -15, -50, 8954.1435)>
         <TestCase(15700, 1319, -35.79263, -144.0441, 9093.9511)>
-        Public Sub AuxDemnadTest(vehicleWeight As Double, engineSpeed As Double, driveLinePower As Double,
+        Public Sub AuxDemandTest(vehicleWeight As Double, engineSpeed As Double, driveLinePower As Double,
                                 internalPower As Double, expectedPowerDemand As Double)
             Dim engineFCMapFilePath = "TestFiles\Integration\24t Coach.vmap"
             Dim auxFilePath = "TestFiles\Integration\AdvAuxTest.aaux"

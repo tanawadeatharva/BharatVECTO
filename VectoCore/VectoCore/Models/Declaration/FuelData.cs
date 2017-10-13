@@ -73,9 +73,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 						r.Field<string>(0).ParseEnum<FuelType>(),
 						string.IsNullOrWhiteSpace(density) ? null : density.ToDouble(0).SI<KilogramPerCubicMeter>(),
 						r.ParseDouble("co2perfuelweight"),
-                        //r.ParseDouble("lowerheatingvalue").SI().Kilo.Joule.Per.Kilo.Gramm.Cast<JoulePerKilogramm>()
 						r.ParseDouble("lowerheatingvalue").SI(Unit.SI.Kilo.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>()
-                        );
+						);
 				})
 				.ToDictionary(e => e.FuelType);
 		}

@@ -340,8 +340,8 @@ Public Class Vehicle
 	Public ReadOnly Property GrossVehicleMassRating As Kilogram _
 		Implements IVehicleDeclarationInputData.GrossVehicleMassRating
 		Get
-            Return MassMax.SI(Unit.SI.Ton).Cast(Of Kilogram)()
-        End Get
+            		Return MassMax.SI(Unit.SI.Ton).Cast(Of Kilogram)()
+		End Get
 	End Property
 
 	Public ReadOnly Property TorqueLimits As IList(Of ITorqueLimitInputData) _
@@ -413,8 +413,8 @@ Public Class Vehicle
 	Public ReadOnly Property IVehicleEngineeringInputData_DynamicTyreRadius As Meter _
 		Implements IVehicleEngineeringInputData.DynamicTyreRadius
 		Get
-            Return DynamicTyreRadius.SI(Unit.SI.Milli.Meter).Cast(Of Meter)()
-        End Get
+           		Return DynamicTyreRadius.SI(Unit.SI.Milli.Meter).Cast(Of Meter)()
+		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Loading As Kilogram _

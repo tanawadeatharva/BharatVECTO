@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestCase, Category("LongRunning")]
 		public void TestWheelsAndEngine()
 		{
-			LogManager.DisableLogging();
+			NLog.LogManager.DisableLogging();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
 			var cycleData = DrivingCycleDataReader.ReadFromFile(CycleFile, CycleType.DistanceBased, false);
 
@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			modData.Finish(VectoRun.Status.Success);
 
-			LogManager.EnableLogging();
+			NLog.LogManager.EnableLogging();
 		}
 
 		[TestCase]

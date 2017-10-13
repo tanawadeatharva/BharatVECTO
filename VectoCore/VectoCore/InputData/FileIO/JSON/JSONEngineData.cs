@@ -113,10 +113,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual CubicMeter Displacement
 		{
-            //get { return Body.GetEx<double>(JsonKeys.Engine_Displacement).SI().Cubic.Centi.Meter.Cast<CubicMeter>(); }
 		    get { return Body.GetEx<double>(JsonKeys.Engine_Displacement).SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(); }
-            // convert vom ccm to m^3}
-        }
+			// convert vom ccm to m^3}
+		}
 
 		public virtual PerSecond IdleSpeed
 		{
