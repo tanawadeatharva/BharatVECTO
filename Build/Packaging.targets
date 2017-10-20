@@ -111,7 +111,7 @@
 		<CurrentDate>$([System.DateTime]::Now.ToString(yyy_MM_dd))</CurrentDate>
 	</PropertyGroup>
 	<Message Text="Creating ZIP, CurrentDate: $(CurrentDate)"/>
-	<Zip OutputFilename="$(OutputPath)$(CurrentDate)-VECTO-%(VectoAssemblyIdentities.Version).zip" Files="@(ZipFiles)" SourcePath="$(OutputPath)" DestinationPath="$(CurrentDate)-VECTO-%(VectoAssemblyIdentities.Version)\"/>
+	<Zip OutputFilename="$(SolutionDir)$(CurrentDate)-VECTO-%(VectoAssemblyIdentities.Version).zip" Files="@(ZipFiles)" SourcePath="$(OutputPath)" DestinationPath="$(CurrentDate)-VECTO-%(VectoAssemblyIdentities.Version)\"/>
 </Target>
 
 <Target Name="CleanVectoDeploy" Condition="$(Configuration) == 'Deploy'">
