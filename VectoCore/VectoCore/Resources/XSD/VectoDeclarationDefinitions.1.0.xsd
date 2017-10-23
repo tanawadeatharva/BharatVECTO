@@ -1085,7 +1085,7 @@
 			<xs:documentation>P176</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="tns:Double3">
-			<xs:minExclusive value="0"/>
+			<xs:minExclusive value="0.000"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="AngledriveTorqueLossType">
