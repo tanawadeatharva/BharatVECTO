@@ -38,14 +38,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|AnyCPU'">
-    <OutputPath>bin\Deploy\</OutputPath>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -118,6 +110,7 @@
     <Compile Include="Models\Simulation\GetSectionTest.cs" />
     <Compile Include="Models\Simulation\DeclarationSimulationFactoryTest.cs" />
     <Compile Include="Reports\ActualModalSimulationDataTest.cs" />
+    <Compile Include="Reports\GearshiftCountTest.cs" />
     <Compile Include="Reports\ModDataTest.cs" />
     <Compile Include="Models\Simulation\MeasuredSpeedModeTest.cs" />
     <Compile Include="Models\Simulation\PwheelModeTests.cs" />

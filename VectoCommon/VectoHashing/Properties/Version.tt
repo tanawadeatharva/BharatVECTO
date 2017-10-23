@@ -31,9 +31,10 @@
 
 <#@ template language="C#" #>
 <#@ output extension=".cs"#>
+<#@ include file="../../../VectoCore/VectoCore/VersionNumber.t4" once="true" #>
 using System.Reflection;
-[assembly: AssemblyVersion("1.2.0.<#= this.RevisionNumber #>")]
-[assembly: AssemblyFileVersion("1.2.0.<#= this.RevisionNumber #>")]
+[assembly: AssemblyVersion("1.2.0.<#= GetBuildNumber() #>")]
+[assembly: AssemblyFileVersion("1.2.0.<#= GetBuildNumber() #>")]
 <#+ 
 	int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2015, 1, 1)).TotalDays; 
 #>

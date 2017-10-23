@@ -1,0 +1,177 @@
+﻿using NUnit.Framework;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.OutputData;
+
+namespace TUGraz.VectoCore.Tests.Reports
+{
+	[TestFixture]
+	public class GearshiftCountTest
+	{
+		[TestCase()]
+		public void TestGearshiftCountTractionInterruptionShiftup()
+		{
+			var modData = new ModalDataContainer("GearshiftRun", FuelType.DieselCI, null);
+
+			var entries = new[] {
+				new DummyEntry { v = 34, gear = 4u },
+				new DummyEntry { v = 34.5, gear = 4u },
+				new DummyEntry { v = 33.3, gear = 0 },
+				new DummyEntry { v = 33.2, gear = 0 },
+				new DummyEntry { v = 32, gear = 5 }
+			};
+			foreach (var dummyEntry in entries) {
+				modData[ModalResultField.v_act] = dummyEntry.v.KMPHtoMeterPerSecond();
+				modData[ModalResultField.Gear] = dummyEntry.gear;
+				modData.CommitSimulationStep();
+			}
+
+			var gearshifts = modData.GearshiftCount();
+			Assert.AreEqual(1, gearshifts.Value());
+		}
+
+		[TestCase()]
+		public void TestGearshiftCountTractionInterruption()
+		{
+			var modData = new ModalDataContainer("GearshiftRun", FuelType.DieselCI, null);
+
+			var entries = new[] {
+				new DummyEntry { v = 34, gear = 4u },
+				new DummyEntry { v = 34.5, gear = 4u },
+				new DummyEntry { v = 33.3, gear = 0 },
+				new DummyEntry { v = 33.2, gear = 0 },
+				new DummyEntry { v = 32, gear = 4 }
+			};
+			foreach (var dummyEntry in entries) {
+				modData[ModalResultField.v_act] = dummyEntry.v.KMPHtoMeterPerSecond();
+				modData[ModalResultField.Gear] = dummyEntry.gear;
+				modData.CommitSimulationStep();
+			}
+
+			var gearshifts = modData.GearshiftCount();
+			Assert.AreEqual(0, gearshifts.Value());
+		}
+
+		[TestCase()]
+		public void TestGearshiftCountTractionInterruptionShiftDown()
+		{
+			var modData = new ModalDataContainer("GearshiftRun", FuelType.DieselCI, null);
+
+			var entries = new[] {
+				new DummyEntry { v = 34, gear = 4u },
+				new DummyEntry { v = 34.5, gear = 4u },
+				new DummyEntry { v = 33.3, gear = 0 },
+				new DummyEntry { v = 33.2, gear = 0 },
+				new DummyEntry { v = 32, gear = 3 }
+			};
+			foreach (var dummyEntry in entries) {
+				modData[ModalResultField.v_act] = dummyEntry.v.KMPHtoMeterPerSecond();
+				modData[ModalResultField.Gear] = dummyEntry.gear;
+				modData.CommitSimulationStep();
+			}
+
+			var gearshifts = modData.GearshiftCount();
+			Assert.AreEqual(1, gearshifts.Value());
+		}
+
+
+		[TestCase()]
+		public void TestGearshiftCountTractionInterruptionStop()
+		{
+			var modData = new ModalDataContainer("GearshiftRun", FuelType.DieselCI, null);
+
+			var entries = new[] {
+				new DummyEntry { v = 4, gear = 4u },
+				new DummyEntry { v = 3.5, gear = 4u },
+				new DummyEntry { v = 0, gear = 0 },
+				new DummyEntry { v = 0, gear = 0 },
+				new DummyEntry { v = 0, gear = 0 }
+			};
+			foreach (var dummyEntry in entries) {
+				modData[ModalResultField.v_act] = dummyEntry.v.KMPHtoMeterPerSecond();
+				modData[ModalResultField.Gear] = dummyEntry.gear;
+				modData.CommitSimulationStep();
+			}
+
+			var gearshifts = modData.GearshiftCount();
+			Assert.AreEqual(1, gearshifts.Value());
+		}
+
+		[TestCase()]
+		public void TestGearshiftCountTractionInterruptionStopDriveOff()
+		{
+			var modData = new ModalDataContainer("GearshiftRun", FuelType.DieselCI, null);
+
+			var entries = new[] {
+				new DummyEntry { v = 4, gear = 4u },
+				new DummyEntry { v = 3.5, gear = 4u },
+				new DummyEntry { v = 0, gear = 0 },
+				new DummyEntry { v = 0, gear = 0 },
+				new DummyEntry { v = 0, gear = 0 },
+				new DummyEntry { v = 3, gear = 2 }
+			};
+			foreach (var dummyEntry in entries) {
+				modData[ModalResultField.v_act] = dummyEntry.v.KMPHtoMeterPerSecond();
+				modData[ModalResultField.Gear] = dummyEntry.gear;
+				modData.CommitSimulationStep();
+			}
+
+			var gearshifts = modData.GearshiftCount();
+			Assert.AreEqual(2, gearshifts.Value());
+		}
+
+
+		[TestCase()]
+		public void TestGearshiftCountTractionInterruptionShiftupAT()
+		{
+			var modData = new ModalDataContainer("GearshiftRun", FuelType.DieselCI, null);
+
+			var entries = new[] {
+				new DummyEntry { v = 34, gear = 4u },
+				new DummyEntry { v = 34.5, gear = 4u },
+				new DummyEntry { v = 33.3, gear = 5 },
+				new DummyEntry { v = 33.2, gear = 5 },
+				new DummyEntry { v = 32, gear = 5 }
+			};
+			foreach (var dummyEntry in entries) {
+				modData[ModalResultField.v_act] = dummyEntry.v.KMPHtoMeterPerSecond();
+				modData[ModalResultField.Gear] = dummyEntry.gear;
+				modData.CommitSimulationStep();
+			}
+
+			var gearshifts = modData.GearshiftCount();
+			Assert.AreEqual(1, gearshifts.Value());
+		}
+
+
+		[TestCase()]
+		public void TestGearshiftCountTractionInterruptionShiftDownAT()
+		{
+			var modData = new ModalDataContainer("GearshiftRun", FuelType.DieselCI, null);
+
+			var entries = new[] {
+				new DummyEntry { v = 34, gear = 4u },
+				new DummyEntry { v = 34.5, gear = 4u },
+				new DummyEntry { v = 33.3, gear = 4 },
+				new DummyEntry { v = 33.2, gear = 3 },
+				new DummyEntry { v = 32, gear = 3 }
+			};
+			foreach (var dummyEntry in entries) {
+				modData[ModalResultField.v_act] = dummyEntry.v.KMPHtoMeterPerSecond();
+				modData[ModalResultField.Gear] = dummyEntry.gear;
+				modData.CommitSimulationStep();
+			}
+
+			var gearshifts = modData.GearshiftCount();
+			Assert.AreEqual(1, gearshifts.Value());
+		}
+
+
+		public class DummyEntry
+		{
+			public double v;
+			public uint gear;
+		}
+	}
+}

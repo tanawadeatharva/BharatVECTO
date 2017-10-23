@@ -40,17 +40,16 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
-
-    [TestFixture]
+	[TestFixture]
 	public class VectoCSVFileTest
 	{
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
-        [Test]
+		[Test]
 		public void VectoCSVFile_Read()
 		{
 			var table = VectoCSVFile.Read(@"TestData\test.csv");
@@ -178,8 +177,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 		{
 			const string fileName = "out_test.csv";
 
-			if (File.Exists(fileName))
+			if (File.Exists(fileName)) {
 				File.Delete(fileName);
+			}
 
 			var table = new DataTable();
 			table.Columns.Add("a");
@@ -209,8 +209,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 					stream.Position = 0;
 
-					using (var sr = new StreamReader(stream))
+					using (var sr = new StreamReader(stream)) {
 						Assert.AreEqual("a,b\r\n1,2\r\n", sr.ReadToEnd());
+					}
 				}
 			}
 		}
