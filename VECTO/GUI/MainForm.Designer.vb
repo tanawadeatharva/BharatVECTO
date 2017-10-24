@@ -115,6 +115,7 @@ Partial Class MainForm
 		Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
+		Me.EPTPJobEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.StatusBAR.SuspendLayout()
 		Me.TabControl1.SuspendLayout()
 		Me.TabPageGEN.SuspendLayout()
@@ -680,7 +681,7 @@ Partial Class MainForm
 		'
 		'ToolStripDrDnBtTools
 		'
-		Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
+		Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.EPTPJobEditorToolStripMenuItem, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
 		Me.ToolStripDrDnBtTools.Image = Global.TUGraz.VECTO.My.Resources.Resources.Misc_Tools_icon
 		Me.ToolStripDrDnBtTools.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.ToolStripDrDnBtTools.Name = "ToolStripDrDnBtTools"
@@ -812,6 +813,13 @@ Partial Class MainForm
 		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
 		'
+		'EPTPJobEditorToolStripMenuItem
+		'
+		Me.EPTPJobEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
+		Me.EPTPJobEditorToolStripMenuItem.Name = "EPTPJobEditorToolStripMenuItem"
+		Me.EPTPJobEditorToolStripMenuItem.Size = New System.Drawing.Size(156, 22)
+		Me.EPTPJobEditorToolStripMenuItem.Text = "EPTP Job Editor"
+		'
 		'MainForm
 		'
 		Me.AcceptButton = Me.btStartV3
@@ -942,5 +950,6 @@ Partial Class MainForm
 	Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
 	Friend WithEvents cbValidateRunData As System.Windows.Forms.CheckBox
 	Friend WithEvents cbActVmod As System.Windows.Forms.CheckBox
+	Friend WithEvents EPTPJobEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

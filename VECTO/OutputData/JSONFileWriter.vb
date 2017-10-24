@@ -17,7 +17,7 @@ Public Class JSONFileWriter
 
 	Public Const VehicleFormatVersion As Integer = 7
 
-	Private Const VectoJobFormatVersion As Integer = 3
+	Private Const VectoJobFormatVersion As Integer = 4
 
 	Private Shared _instance As JSONFileWriter
 
@@ -348,6 +348,21 @@ Public Class JSONFileWriter
 			body.Add("Cycles",
 					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 		End If
+
+		WriteFile(header, body, filename)
+	End Sub
+
+	Public Sub Save(job As IEPTPInputDataProvider, filename As String) Implements IOutputFileWriter.SaveJob
+		Dim basePath As String = Path.GetDirectoryName(filename)
+		'Header
+		Dim header As Dictionary(Of String, Object) = GetHeader(VectoJobFormatVersion)
+
+		'Body
+		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+
+		body.Add("DeclarationVehicle", job.Vehicle.VehicleInputData.Source)
+		body.Add("FanPowerCoefficients", job.FanPowerCoefficents)
+		body.Add("Cycles", job.Cycles)
 
 		WriteFile(header, body, filename)
 	End Sub
