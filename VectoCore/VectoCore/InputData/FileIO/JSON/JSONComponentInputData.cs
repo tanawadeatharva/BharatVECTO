@@ -85,106 +85,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { throw new NotImplementedException(); }
 		}
 
-		public XElement XMLHash { get { return new XElement(XMLNames.DI_Signature); } }
+		public XElement XMLHash
+		{
+			get { return new XElement(XMLNames.DI_Signature); }
+		}
 
-
-		//IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
-		//{
-		//	get { return VehicleData; }
-		//}
-
-		//IAirdragDeclarationInputData IDeclarationInputDataProvider.AirdragInputData
-		//{
-		//	get { return AirdragInputData; }
-		//}
-
-		//public IAirdragEngineeringInputData AirdragInputData
-		//{
-		//	get { return AirdragData; }
-		//}
-
-		//IGearboxDeclarationInputData IDeclarationInputDataProvider.GearboxInputData
-		//{
-		//	get { return GearboxInputData; }
-		//}
-
-		//ITorqueConverterDeclarationInputData IDeclarationInputDataProvider.TorqueConverterInputData
-		//{
-		//	get { return TorqueConverterInputData; }
-		//}
 
 		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData
 		{
-			get {
-				throw new NotImplementedException();
-			}
+			get { throw new NotImplementedException(); }
 		}
-
-		//public IVehicleEngineeringInputData VehicleInputData
-		//{
-		//	get { return VehicleData; }
-		//}
-
-		//public IGearboxEngineeringInputData GearboxInputData
-		//{
-		//	get { return Gearbox; }
-		//}
-
-		//public ITorqueConverterEngineeringInputData TorqueConverterInputData
-		//{
-		//	get { return TorqueConverter; }
-		//}
-
-		//public IAxleGearInputData AxleGearInputData
-		//{
-		//	get { return AxleGear; }
-		//}
-
-		//public IAngledriveInputData AngledriveInputData
-		//{
-		//	get { return Angledrive; }
-		//}
-
-		//IEngineDeclarationInputData IDeclarationInputDataProvider.EngineInputData
-		//{
-		//	get { return EngineInputData; }
-		//}
-
-		//public IEngineEngineeringInputData EngineInputData
-		//{
-		//	get { return Engine; }
-		//}
-
-		//public IAuxiliariesEngineeringInputData AuxiliaryInputData()
-		//{
-		//	throw new NotImplementedException();
-		//}
-
-		//IAuxiliariesDeclarationInputData IDeclarationInputDataProvider.AuxiliaryInputData()
-		//{
-		//	throw new NotImplementedException();
-		//}
-
-		//public IRetarderInputData RetarderInputData
-		//{
-		//	get { return Retarder; }
-		//}
-
-		//IDriverDeclarationInputData IDeclarationInputDataProvider.DriverInputData
-		//{
-		//	get { throw new NotImplementedException(); }
-		//}
 
 		public IDriverEngineeringInputData DriverInputData
 		{
 			get { throw new NotImplementedException(); }
 		}
-
-		//public IPTOTransmissionInputData PTOTransmissionInputData
-		//{
-		//	get { return PTOTransmission; }
-		//}
-
-		
 	}
 }

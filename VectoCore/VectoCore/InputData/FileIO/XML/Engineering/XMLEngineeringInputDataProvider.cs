@@ -55,9 +55,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public XmlReaderSettings Settings { get; private set; }
 
-		//protected internal XMLEngineeringAuxiliaryDataProvider XMLEngineeringAuxiliaryData;
-		//protected internal XMLEngineeringAxlegearDataProvider AxlegearData;
-
 		public XMLEngineeringInputDataProvider(string filename, bool verifyXml)
 		{
 			FileName = filename;
@@ -136,15 +133,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			ReadVehicle(Settings);
 
 			XMLEngineeringDriverData = XMLEngineeringJobData.GetDriverData();
-			//AxlegearData = VehicleData.GetAxleGearInputData(settings);
-			//AngledriveInputData = VehicleData.GetAngularGearInputData();
-			//EngineInputData = VehicleData.GetEngineInputData(settings);
-			//RetarderInputData = VehicleData.GetRetarderInputData(settings);
-			//XMLEngineeringAuxiliaryData = VehicleData.GetAuxiliaryData(settings);
-			//GearboxInputData = VehicleData.GetGearboxData(settings);
-			//TorqueConverterInputData = GearboxInputData.TorqueConverter;
-			//PTOTransmissionInputData = VehicleData.GetPTOData();
-			//AirdragInputData = VehicleData.GetAirdragInputData(settings);
 		}
 
 		private static void ValidationCallBack(object sender, ValidationEventArgs args)
@@ -216,34 +204,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return VehicleData; }
 		}
 
-		//public IAirdragEngineeringInputData AirdragInputData { get; private set; }
-
-
-		//public IGearboxEngineeringInputData GearboxInputData { get; private set; }
-
-		//public ITorqueConverterEngineeringInputData TorqueConverterInputData { get; private set; }
-
-		//public IAxleGearInputData AxleGearInputData
-		//{
-		//	get { return AxlegearData; }
-		//}
-
-		//public IAngledriveInputData AngledriveInputData { get; private set; }
-
 		public IEngineEngineeringInputData EngineOnlyInputData { get; private set; }
-
-		//public IAuxiliariesEngineeringInputData AuxiliaryInputData()
-		//{
-		//	return XMLEngineeringAuxiliaryData;
-		//}
-
-		//public IRetarderInputData RetarderInputData { get; private set; }
 
 		public IDriverEngineeringInputData DriverInputData
 		{
 			get { return XMLEngineeringDriverData; }
 		}
-
-		//public IPTOTransmissionInputData PTOTransmissionInputData { get; private set; }
 	}
 }

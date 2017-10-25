@@ -261,11 +261,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		double Efficiency { get; }
 
-		///// <summary>
-		///// P145
-		///// cf. VECTO Input Parameters.xlsx
-		///// </summary>
-		//DataTable FullLoadCurve { get; } // deprecated
 
 		/// <summary>
 		/// P157
@@ -280,12 +275,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		TableData ShiftPolygon { get; }
-
-		///// <summary>
-		///// P077
-		///// cf. VECTO Input Parameters.xlsx
-		///// </summary>
-		//bool HasTorqueConverter { get; }     // DEPRECATED
 	}
 
 	public interface IAxleGearInputData : IComponentInputData
@@ -409,8 +398,6 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IDriverDeclarationInputData
 	{
 		bool SavedInDeclarationMode { get; }
-
-		//IOverSpeedEcoRollDeclarationInputData OverSpeedEcoRoll { get; }
 	}
 
 	public interface IOverSpeedEcoRollDeclarationInputData

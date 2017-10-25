@@ -129,11 +129,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public IGearboxEngineeringInputData Gearbox { get; internal set; }
 		public IAxleGearInputData AxleGear { get; internal set; }
 		public ITorqueConverterEngineeringInputData TorqueConverter { get; internal set; }
-		//public IAngledriveInputData Angledrive { get; internal set; }
 		public IEngineEngineeringInputData Engine { get; internal set; }
-		//public IRetarderInputData Retarder { get; internal set; }
-		//public IPTOTransmissionInputData PTOTransmission { get; internal set; }
-		//public IAirdragEngineeringInputData AirdragData { get; internal set; }
+
 
 		protected readonly IVehicleEngineeringInputData VehicleData;
 
@@ -156,10 +153,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
 
 			VehicleData = ReadVehicle();
-			//Angledrive = VehicleData as IAngledriveInputData;
-			//Retarder = VehicleData as IRetarderInputData;
-			//PTOTransmission = VehicleData as IPTOTransmissionInputData;
-			//AirdragData = VehicleData as IAirdragEngineeringInputData;
 		}
 
 		private IVehicleEngineeringInputData ReadVehicle()
@@ -204,7 +197,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					throw new VectoException("JobFile: Failed to read Engine file '{0}': {1}", e, Body[JsonKeys.Vehicle_EngineFile],
 						e.Message);
 				}
-				//JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
+
 				return
 					new JSONEngineDataV3(GetDummyJSONStructure(),
 						Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()) + MissingFileSuffix);
@@ -217,37 +210,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return VehicleInputData; }
 		}
-
-		//IAirdragDeclarationInputData IDeclarationInputDataProvider.AirdragInputData
-		//{
-		//	get { return AirdragInputData; }
-		//}
-
-		//public IAirdragEngineeringInputData AirdragInputData
-		//{
-		//	get { return AirdragData; }
-		//}
-
-		//IGearboxDeclarationInputData IDeclarationInputDataProvider.GearboxInputData
-		//{
-		//	get { return GearboxInputData; }
-		//}
-
-		//ITorqueConverterDeclarationInputData IDeclarationInputDataProvider.TorqueConverterInputData
-		//{
-		//	get { return TorqueConverterInputData; }
-		//}
-
-		//public ITorqueConverterEngineeringInputData TorqueConverterInputData
-		//{
-		//	get
-		//	{
-		//		if (TorqueConverter == null) {
-		//			throw new InvalidFileFormatException("TorqueConverterData not found");
-		//		}
-		//		return TorqueConverter;
-		//	}
-		//}
 
 		public virtual IEngineeringJobInputData JobInputData
 		{
@@ -276,42 +238,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		//public virtual IGearboxEngineeringInputData GearboxInputData
-		//{
-		//	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-		//		"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-		//	get
-		//	{
-		//		if (Gearbox == null) {
-		//			throw new InvalidFileFormatException("GearboxData not found");
-		//		}
-		//		return Gearbox;
-		//	}
-		//}
-
-		//public virtual IAxleGearInputData AxleGearInputData
-		//{
-		//	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-		//		"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-		//	get
-		//	{
-		//		if (AxleGear == null) {
-		//			throw new InvalidFileFormatException("AxleGearData not found");
-		//		}
-		//		return AxleGear;
-		//	}
-		//}
-
-		//public IAngledriveInputData AngledriveInputData
-		//{
-		//	get { return Angledrive; }
-		//}
-
-		//IEngineDeclarationInputData IDeclarationInputDataProvider.EngineInputData
-		//{
-		//	get { return EngineInputData; }
-		//}
-
 		public virtual IEngineEngineeringInputData EngineOnly
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
@@ -324,48 +250,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		//public virtual IAuxiliariesEngineeringInputData AuxiliaryInputData()
-		//{
-		//	return this;
-		//}
-
 		IDriverEngineeringInputData IEngineeringInputDataProvider.DriverInputData
 		{
 			get { return this; }
 		}
-
-		//public IPTOTransmissionInputData PTOTransmissionInputData
-		//{
-		//	get { return PTOTransmission; }
-		//}
-
-		//public XElement XMLHash
-		//{
-		//	get { return null; }
-		//}
-
-		//IAuxiliariesDeclarationInputData IDeclarationInputDataProvider.AuxiliaryInputData()
-		//{
-		//	return this;
-		//}
-
-		//public virtual IRetarderInputData RetarderInputData
-		//{
-		//	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-		//		"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-		//	get
-		//	{
-		//		if (Retarder == null) {
-		//			throw new InvalidFileFormatException("RetarderData not found");
-		//		}
-		//		return Retarder;
-		//	}
-		//}
-
-		//public virtual IDriverDeclarationInputData DriverInputData
-		//{
-		//	get { return this; }
-		//}
 
 		#endregion
 
@@ -418,11 +306,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>(); }
 		}
 
-		//IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
-		//{
-		//	get { return Vehicle; }
-		//}
-
 		public virtual string JobName
 		{
 			get { return _jobname; }
@@ -431,17 +314,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 
 		#region DriverInputData
-
-		//IOverSpeedEcoRollDeclarationInputData IDriverDeclarationInputData.OverSpeedEcoRoll
-		//{
-		//	get
-		//	{
-		//		var overspeed = Body.GetEx(JsonKeys.DriverData_OverspeedEcoRoll);
-		//		return new OverSpeedEcoRollInputData() {
-		//			Mode = DriverData.ParseDriverMode(overspeed.GetEx<string>(JsonKeys.DriverData_OverspeedEcoRoll_Mode))
-		//		};
-		//	}
-		//}
 
 		public virtual ILookaheadCoastingInputData Lookahead
 		{

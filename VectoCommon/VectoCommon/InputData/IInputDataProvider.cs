@@ -40,28 +40,6 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		IDeclarationJobInputData JobInputData { get; }
 
-		//IVehicleDeclarationInputData VehicleInputData { get; }
-
-		//IAirdragDeclarationInputData AirdragInputData { get; }
-
-		//IGearboxDeclarationInputData GearboxInputData { get; }
-
-		//ITorqueConverterDeclarationInputData TorqueConverterInputData { get; }
-
-		//IAxleGearInputData AxleGearInputData { get; }
-
-		//IAngledriveInputData AngledriveInputData { get; }
-
-		//IEngineDeclarationInputData EngineInputData { get; }
-
-		//IAuxiliariesDeclarationInputData AuxiliaryInputData();
-
-		//IRetarderInputData RetarderInputData { get; }
-
-		//IDriverDeclarationInputData DriverInputData { get; }
-
-		//IPTOTransmissionInputData PTOTransmissionInputData { get; }
-
 		XElement XMLHash { get; }
 	}
 
@@ -69,27 +47,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		IEngineeringJobInputData JobInputData { get; }
 
-		//IVehicleEngineeringInputData VehicleInputData { get; }
-
-		//IAirdragEngineeringInputData AirdragInputData { get; }
-
-		//IGearboxEngineeringInputData GearboxInputData { get; }
-
-		//ITorqueConverterEngineeringInputData TorqueConverterInputData { get; }
-
-		//IAxleGearInputData AxleGearInputData { get; }
-
-		//IAngledriveInputData AngledriveInputData { get; }
-
-		//IEngineEngineeringInputData EngineInputData { get; }
-
-		//IAuxiliariesEngineeringInputData AuxiliaryInputData();
-
-		//IRetarderInputData RetarderInputData { get; }
-
 		IDriverEngineeringInputData DriverInputData { get; }
-
-		//IPTOTransmissionInputData PTOTransmissionInputData { get; }
 	}
 
 	public interface IEPTPInputDataProvider : IInputDataProvider
