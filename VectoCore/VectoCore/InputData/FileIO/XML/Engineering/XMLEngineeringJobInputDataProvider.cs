@@ -108,6 +108,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			}
 		}
 
+		public IEngineEngineeringInputData EngineOnly
+		{
+			get { return InputData.EngineOnlyInputData; }
+		}
+
 		protected internal Second DownshiftAfterUpshiftDelay
 		{
 			get {
@@ -149,8 +154,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public string JobName
 		{
 			get {
-				return InputData.JobInputData().EngineOnlyMode
-					? InputData.EngineInputData.Model
+				return InputData.JobInputData.EngineOnlyMode
+					? InputData.JobInputData.EngineOnly.Model
 					: InputData.VehicleData.GetVehicleID;
 			}
 		}

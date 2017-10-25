@@ -253,7 +253,7 @@ Public Class JSONFileWriter
 		'SavedInDeclMode = Cfg.DeclMode
 
 		Dim job As IEngineeringJobInputData = input.JobInputData()
-		Dim aux As IAuxiliariesEngineeringInputData = input.AuxiliaryInputData()
+		Dim aux As IAuxiliariesEngineeringInputData = input.JobInputData.Vehicle.AuxiliaryInputData()
 		Dim driver As IDriverEngineeringInputData = input.DriverInputData
 
 		body.Add("SavedInDeclMode", job.SavedInDeclarationMode)
@@ -261,7 +261,7 @@ Public Class JSONFileWriter
 		body.Add("EngineOnlyMode", job.EngineOnlyMode)
 
 		If job.EngineOnlyMode Then
-			body.Add("EngineFile", GetRelativePath(input.EngineInputData.Source, basePath))
+			body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.EngineInputData.Source, basePath))
 			body.Add("Cycles",
 					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 			WriteFile(header, body, filename)
@@ -270,8 +270,8 @@ Public Class JSONFileWriter
 
 		'Main Files
 		body.Add("VehicleFile", GetRelativePath(job.Vehicle.Source, basePath))
-		body.Add("EngineFile", GetRelativePath(input.EngineInputData.Source, basePath))
-		body.Add("GearboxFile", GetRelativePath(input.GearboxInputData.Source, basePath))
+		body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.EngineInputData.Source, basePath))
+		body.Add("GearboxFile", GetRelativePath(input.JobInputData.Vehicle.GearboxInputData.Source, basePath))
 
 		'AA-TB
 		'ADVANCED AUXILIARIES 
@@ -352,15 +352,15 @@ Public Class JSONFileWriter
 		WriteFile(header, body, filename)
 	End Sub
 
-	Public Sub Save(job As IEPTPInputDataProvider, filename As String) Implements IOutputFileWriter.SaveJob
+	Public Sub SaveJob(input As IEPTPInputDataProvider, filename As String) Implements IOutputFileWriter.SaveJob
 		Dim basePath As String = Path.GetDirectoryName(filename)
 		'Header
 		Dim header As Dictionary(Of String, Object) = GetHeader(VectoJobFormatVersion)
 
 		'Body
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-
-		body.Add("DeclarationVehicle", job.Vehicle.VehicleInputData.Source)
+		Dim job As IEPTPJobInputData = input.JobInputData
+		body.Add("DeclarationVehicle", job.Vehicle.Source)
 		body.Add("FanPowerCoefficients", job.FanPowerCoefficents)
 		body.Add("Cycles", job.Cycles)
 

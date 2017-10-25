@@ -48,11 +48,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		internal XPathDocument Document;
 
-		protected internal XMLEngineeringAuxiliaryDataProvider XMLEngineeringAuxiliaryData;
-		protected internal XMLEngineeringDriverDataProvider XMLEngineeringDriverData;
 		protected internal XMLEngineeringJobInputDataProvider XMLEngineeringJobData;
+
 		protected internal XMLEngineeringVehicleDataProvider VehicleData;
-		protected internal XMLEngineeringAxlegearDataProvider AxlegearData;
+		protected internal XMLEngineeringDriverDataProvider XMLEngineeringDriverData;
+
+		public XmlReaderSettings Settings { get; private set; }
+
+		//protected internal XMLEngineeringAuxiliaryDataProvider XMLEngineeringAuxiliaryData;
+		//protected internal XMLEngineeringAxlegearDataProvider AxlegearData;
 
 		public XMLEngineeringInputDataProvider(string filename, bool verifyXml)
 		{
@@ -107,15 +111,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		private void InitializeComponentDataProvider(bool verifyXml)
 		{
-			XmlReaderSettings settings = null;
+			Settings = null;
 			if (verifyXml) {
-				settings = new XmlReaderSettings {
+				Settings = new XmlReaderSettings {
 					ValidationType = ValidationType.Schema,
 					ValidationFlags = XmlSchemaValidationFlags.ProcessInlineSchema |
 									//XmlSchemaValidationFlags.ProcessSchemaLocation |
 									XmlSchemaValidationFlags.ReportValidationWarnings
 				};
-				settings.Schemas.Add(GetXMLSchema(""));
+				Settings.Schemas.Add(GetXMLSchema(""));
 			}
 
 			var helper = new XPathHelper(ExecutionMode.Engineering);
@@ -123,24 +127,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 				helper.QueryAbs(helper.NSPrefix(XMLNames.VectoInputEngineering, Constants.XML.RootNSPrefix)),
 				Path.GetDirectoryName(Path.GetFullPath(FileName)));
 			if (XMLEngineeringJobData.EngineOnlyMode) {
-				EngineInputData = new XMLEngineeringEngineDataProvider(this, Document,
+				EngineOnlyInputData = new XMLEngineeringEngineDataProvider(this, Document,
 					helper.QueryAbs(helper.NSPrefix(XMLNames.VectoInputEngineering, Constants.XML.RootNSPrefix),
 						XMLNames.Component_Engine,
 						XMLNames.ComponentDataWrapper), Path.GetDirectoryName(Path.GetFullPath(FileName)));
 				return;
 			}
-			ReadVehicle(settings);
+			ReadVehicle(Settings);
 
 			XMLEngineeringDriverData = XMLEngineeringJobData.GetDriverData();
-			AxlegearData = VehicleData.GetAxleGearInputData(settings);
-			AngledriveInputData = VehicleData.GetAngularGearInputData();
-			EngineInputData = VehicleData.GetEngineInputData(settings);
-			RetarderInputData = VehicleData.GetRetarderInputData(settings);
-			XMLEngineeringAuxiliaryData = VehicleData.GetAuxiliaryData(settings);
-			GearboxInputData = VehicleData.GetGearboxData(settings);
-			TorqueConverterInputData = GearboxInputData.TorqueConverter;
-			PTOTransmissionInputData = VehicleData.GetPTOData();
-			AirdragInputData = VehicleData.GetAirdragInputData(settings);
+			//AxlegearData = VehicleData.GetAxleGearInputData(settings);
+			//AngledriveInputData = VehicleData.GetAngularGearInputData();
+			//EngineInputData = VehicleData.GetEngineInputData(settings);
+			//RetarderInputData = VehicleData.GetRetarderInputData(settings);
+			//XMLEngineeringAuxiliaryData = VehicleData.GetAuxiliaryData(settings);
+			//GearboxInputData = VehicleData.GetGearboxData(settings);
+			//TorqueConverterInputData = GearboxInputData.TorqueConverter;
+			//PTOTransmissionInputData = VehicleData.GetPTOData();
+			//AirdragInputData = VehicleData.GetAirdragInputData(settings);
 		}
 
 		private static void ValidationCallBack(object sender, ValidationEventArgs args)
@@ -202,9 +206,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			return xset;
 		}
 
-		public IEngineeringJobInputData JobInputData()
+		public IEngineeringJobInputData JobInputData
 		{
-			return XMLEngineeringJobData;
+			get { return XMLEngineeringJobData; }
 		}
 
 		public IVehicleEngineeringInputData VehicleInputData
@@ -212,34 +216,34 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return VehicleData; }
 		}
 
-		public IAirdragEngineeringInputData AirdragInputData { get; private set; }
+		//public IAirdragEngineeringInputData AirdragInputData { get; private set; }
 
 
-		public IGearboxEngineeringInputData GearboxInputData { get; private set; }
+		//public IGearboxEngineeringInputData GearboxInputData { get; private set; }
 
-		public ITorqueConverterEngineeringInputData TorqueConverterInputData { get; private set; }
+		//public ITorqueConverterEngineeringInputData TorqueConverterInputData { get; private set; }
 
-		public IAxleGearInputData AxleGearInputData
-		{
-			get { return AxlegearData; }
-		}
+		//public IAxleGearInputData AxleGearInputData
+		//{
+		//	get { return AxlegearData; }
+		//}
 
-		public IAngledriveInputData AngledriveInputData { get; private set; }
+		//public IAngledriveInputData AngledriveInputData { get; private set; }
 
-		public IEngineEngineeringInputData EngineInputData { get; private set; }
+		public IEngineEngineeringInputData EngineOnlyInputData { get; private set; }
 
-		public IAuxiliariesEngineeringInputData AuxiliaryInputData()
-		{
-			return XMLEngineeringAuxiliaryData;
-		}
+		//public IAuxiliariesEngineeringInputData AuxiliaryInputData()
+		//{
+		//	return XMLEngineeringAuxiliaryData;
+		//}
 
-		public IRetarderInputData RetarderInputData { get; private set; }
+		//public IRetarderInputData RetarderInputData { get; private set; }
 
 		public IDriverEngineeringInputData DriverInputData
 		{
 			get { return XMLEngineeringDriverData; }
 		}
 
-		public IPTOTransmissionInputData PTOTransmissionInputData { get; private set; }
+		//public IPTOTransmissionInputData PTOTransmissionInputData { get; private set; }
 	}
 }

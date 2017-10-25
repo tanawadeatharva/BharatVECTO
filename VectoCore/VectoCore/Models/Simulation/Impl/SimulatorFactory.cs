@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private void CreateEngineeringDataReader(IInputDataProvider dataProvider)
 		{
 			var engDataProvider = ToEngineeringInputDataProvider(dataProvider);
-			if (engDataProvider.JobInputData().EngineOnlyMode) {
+			if (engDataProvider.JobInputData.EngineOnlyMode) {
 				DataReader = new EngineOnlyVectoRunDataFactory(engDataProvider);
 				_engineOnlyMode = true;
 			} else {

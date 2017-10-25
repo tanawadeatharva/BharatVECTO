@@ -70,18 +70,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONInputDataV2(json, filename, tolerateMissing);
 				case 3:
 					return new JSONInputDataV3(json, filename, tolerateMissing);
+				case 4:
+					return new JSONInputDataV4(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
 			}
 		}
 
-		public static IVehicleEngineeringInputData ReadJsonVehicle(string filename, bool tolerateMissing = false)
+		public static IVehicleEngineeringInputData ReadJsonVehicle(string filename, JSONInputDataV2 job,  bool tolerateMissing = false)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);
 			switch (version) {
 				case 7:
-					return new JSONVehicleDataV7(json, filename, tolerateMissing);
+					return new JSONVehicleDataV7(json, filename, job,tolerateMissing);
 				default:
 					throw new VectoException("Vehicle-File: Unsupported FileVersion. Got {0}", version);
 			}

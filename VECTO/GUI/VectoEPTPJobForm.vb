@@ -52,8 +52,7 @@ Public Class VectoEPTPJobForm
 
 	'Initialise form
 	Private Sub F02_GEN_Load(sender As Object, e As EventArgs) Handles Me.Load
-		Dim x As Integer
-
+		
 		_auxDialog = New VehicleAuxiliariesDialog
 
 
@@ -195,14 +194,14 @@ Public Class VectoEPTPJobForm
 
 		
 		'Files -----------------------------
-		TbVEH.Text = GetRelativePath(inputData.VehicleInputData.Source, _basePath)
+		TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.Source, _basePath)
 
 		'Start/Stop
 		Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
 
 
 		Dim declarationInput As IDeclarationInputDataProvider = CType(inputData, IDeclarationInputDataProvider)
-		Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.AuxiliaryInputData()
+		Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.JobInputData.Vehicle.AuxiliaryInputData()
 
 		LvAux.Items.Clear()
 		Dim entry As IAuxiliaryDeclarationInputData
@@ -255,7 +254,7 @@ Public Class VectoEPTPJobForm
 		Dim message As String = String.Empty
 
 		
-		Dim vectoJob As VectoJob = New VectoJob
+		Dim vectoJob As VectoEPTPJob = New VectoEPTPJob
 		vectoJob.FilePath = file
 
 		'Files ------------------------------------------------- -----------------
@@ -268,24 +267,7 @@ Public Class VectoEPTPJobForm
 			vectoJob.CycleFiles.Add(sb)
 		Next
 
-		For Each lv0 As ListViewItem In LvAux.Items
-			Dim auxEntry As VectoJob.AuxEntry = New VectoJob.AuxEntry
-
-			If Cfg.DeclMode Then
-				auxEntry.TechnologyList.Clear()
-				auxEntry.TechnologyList.AddRange(
-					lv0.SubItems(AuxViewColumns.AuxInputOrTech).Text.Split(";"c).Select(
-						Function(x) Trim(x)))
-			Else
-				auxEntry.Path.Init(GetPath(file), lv0.SubItems(AuxViewColumns.AuxInputOrTech).Text)
-			End If
-
-			auxEntry.Type = AuxiliaryTypeHelper.ParseKey(lv0.SubItems(AuxViewColumns.AuxID).Text)
-			vectoJob.AuxPaths.Add(lv0.SubItems(AuxViewColumns.AuxID).Text, auxEntry)
-		Next
 		
-		'------------------------------------------------------------
-
 		'SAVE
 		If Not vectoJob.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
@@ -504,9 +486,7 @@ Public Class VectoEPTPJobForm
 	End Sub
 
 	Private Sub UpdateGearboxPic(ByRef chartArea As Chart)
-		Dim s As Series
-		Dim i As Integer
-
+		
 		Dim gearbox As IGearboxEngineeringInputData = Nothing
 		Dim vehicleFile As String =
 				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
@@ -514,7 +494,7 @@ Public Class VectoEPTPJobForm
 			Try
 				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(vehicleFile), 
 																		IEngineeringInputDataProvider)
-				gearbox = inputData.GearboxInputData
+				gearbox = inputData.JobInputData.Vehicle.GearboxInputData
 			Catch
 			End Try
 		End If
@@ -537,7 +517,7 @@ Public Class VectoEPTPJobForm
 			Try
 				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(vehicleFile), 
 																		IEngineeringInputDataProvider)
-				engine = inputData.EngineInputData
+				engine = inputData.JobInputData.Vehicle.EngineInputData
 			Catch
 				Return
 			End Try
@@ -613,7 +593,7 @@ Public Class VectoEPTPJobForm
 			Try
 				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(vehicleFile), 
 																		IEngineeringInputDataProvider)
-				vehicle = inputData.VehicleInputData
+				vehicle = inputData.JobInputData.Vehicle
 			Catch
 			End Try
 		End If

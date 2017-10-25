@@ -61,35 +61,35 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			var dao = new EngineeringDataAdapter();
 			var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
-			var engineData = dao.CreateEngineData(InputDataProvider.EngineInputData, InputDataProvider.GearboxInputData,
-				InputDataProvider.VehicleInputData.TorqueLimits);
+			var engineData = dao.CreateEngineData(InputDataProvider.JobInputData.Vehicle.EngineInputData, InputDataProvider.JobInputData.Vehicle.GearboxInputData,
+				InputDataProvider.JobInputData.Vehicle.TorqueLimits);
 
-			var tempVehicle = dao.CreateVehicleData(InputDataProvider.VehicleInputData);
+			var tempVehicle = dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle);
 
-			var axlegearData = dao.CreateAxleGearData(InputDataProvider.AxleGearInputData, useEfficiencyFallback: true);
-			var gearboxData = dao.CreateGearboxData(InputDataProvider.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
+			var axlegearData = dao.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.AxleGearInputData, useEfficiencyFallback: true);
+			var gearboxData = dao.CreateGearboxData(InputDataProvider.JobInputData.Vehicle.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
 				tempVehicle.DynamicTyreRadius,tempVehicle.VehicleCategory, useEfficiencyFallback: true);
-			var crossWindRequired = InputDataProvider.AirdragInputData.CrossWindCorrectionMode ==
+			var crossWindRequired = InputDataProvider.JobInputData.Vehicle.AirdragInputData.CrossWindCorrectionMode ==
 									CrossWindCorrectionMode.VAirBetaLookupTable;
-			var angledriveData = dao.CreateAngledriveData(InputDataProvider.AngledriveInputData, useEfficiencyFallback: true);
-			var ptoTransmissionData = dao.CreatePTOTransmissionData(InputDataProvider.PTOTransmissionInputData);
+			var angledriveData = dao.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.AngledriveInputData, useEfficiencyFallback: true);
+			var ptoTransmissionData = dao.CreatePTOTransmissionData(InputDataProvider.JobInputData.Vehicle.PTOTransmissionInputData);
 
-			return InputDataProvider.JobInputData().Cycles.Select(cycle => {
+			return InputDataProvider.JobInputData.Cycles.Select(cycle => {
 				var drivingCycle = CyclesCache.ContainsKey(cycle.CycleData.Source)
 					? CyclesCache[cycle.CycleData.Source]
 					: DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
 				return new VectoRunData {
-					JobName = InputDataProvider.JobInputData().JobName,
+					JobName = InputDataProvider.JobInputData.JobName,
 					EngineData = engineData,
 					GearboxData = gearboxData,
 					AxleGearData = axlegearData,
 					AngledriveData = angledriveData,
-					VehicleData = dao.CreateVehicleData(InputDataProvider.VehicleInputData),
-					AirdragData = dao.CreateAirdragData(InputDataProvider.AirdragInputData, InputDataProvider.VehicleInputData),
+					VehicleData = dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle),
+					AirdragData = dao.CreateAirdragData(InputDataProvider.JobInputData.Vehicle.AirdragInputData, InputDataProvider.JobInputData.Vehicle),
 					DriverData = driver,
-					Aux = dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData()),
-					AdvancedAux = dao.CreateAdvancedAuxData(InputDataProvider.AuxiliaryInputData()),
-					Retarder = dao.CreateRetarderData(InputDataProvider.RetarderInputData),
+					Aux = dao.CreateAuxiliaryData(InputDataProvider.JobInputData.Vehicle.AuxiliaryInputData()),
+					AdvancedAux = dao.CreateAdvancedAuxData(InputDataProvider.JobInputData.Vehicle.AuxiliaryInputData()),
+					Retarder = dao.CreateRetarderData(InputDataProvider.JobInputData.Vehicle.RetarderInputData),
 					PTO = ptoTransmissionData,
 					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering

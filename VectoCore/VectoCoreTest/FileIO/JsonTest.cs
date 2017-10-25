@@ -43,20 +43,19 @@ using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.FileIO
 {
-
-    [TestFixture]
+	[TestFixture]
 	public class JsonTest
 	{
 		private const string TestJobFile = @"Testdata\Jobs\40t_Long_Haul_Truck.vecto";
 		private const string TestVehicleFile = @"Testdata\Components\24t Coach.vveh";
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
-        [TestCase]
+		[TestCase]
 		public void ReadJobTest()
 		{
 			var job = JSONInputDataFactory.ReadJsonJob(TestJobFile);
@@ -112,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("Aux").Remove();
 
 			// MK,2016-01-20: Changed for PWheel: aux entry may be missing, and that is ok.
-			var tmp = new JSONInputDataV2(json, TestJobFile).AuxiliaryInputData().Auxiliaries;
+			var tmp = new JSONInputDataV2(json, TestJobFile).JobInputData.Vehicle.AuxiliaryInputData().Auxiliaries;
 			Assert.IsTrue(tmp.Count == 0);
 		}
 
@@ -156,7 +155,9 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("OverSpeedEcoRoll").Remove();
 
 			AssertHelper.Exception<VectoException>(
-				() => { var tmp = new JSONInputDataV2(json, TestJobFile).DriverInputData.OverSpeedEcoRoll; },
+				() => {
+					var tmp = ((IEngineeringInputDataProvider)new JSONInputDataV2(json, TestJobFile)).DriverInputData.OverSpeedEcoRoll;
+				},
 				"Key OverSpeedEcoRoll not found");
 		}
 

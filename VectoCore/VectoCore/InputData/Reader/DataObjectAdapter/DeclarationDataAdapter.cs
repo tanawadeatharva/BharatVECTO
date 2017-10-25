@@ -50,11 +50,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class DeclarationDataAdapter : AbstractSimulationDataAdapter
 	{
-		public DriverData CreateDriverData(IDriverDeclarationInputData data)
+		public DriverData CreateDriverData()
 		{
-			if (!data.SavedInDeclarationMode) {
-				WarnDeclarationMode("DriverData");
-			}
 			var lookAheadData = new DriverData.LACData {
 				Enabled = DeclarationData.Driver.LookAhead.Enabled,
 				//Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
@@ -63,7 +60,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData {
-				Mode = data.OverSpeedEcoRoll.Mode,
+				Mode = DriverMode.Overspeed,
 				MinSpeed = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed,
 				OverSpeed = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed,
 				UnderSpeed = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed

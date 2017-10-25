@@ -113,6 +113,24 @@ namespace TUGraz.VectoCommon.InputData
 		string ManufacturerAddress { get; }
 
 		PerSecond EngineIdleSpeed { get; }
+
+		IAirdragDeclarationInputData AirdragInputData { get; }
+
+		IGearboxDeclarationInputData GearboxInputData { get; }
+
+		ITorqueConverterDeclarationInputData TorqueConverterInputData { get; }
+
+		IAxleGearInputData AxleGearInputData { get; }
+
+		IAngledriveInputData AngledriveInputData { get; }
+
+		IEngineDeclarationInputData EngineInputData { get; }
+
+		IAuxiliariesDeclarationInputData AuxiliaryInputData();
+
+		IRetarderInputData RetarderInputData { get; }
+
+		IPTOTransmissionInputData PTOTransmissionInputData { get; }
 	}
 
 	public interface IAirdragDeclarationInputData : IComponentInputData
@@ -392,7 +410,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		bool SavedInDeclarationMode { get; }
 
-		IOverSpeedEcoRollDeclarationInputData OverSpeedEcoRoll { get; }
+		//IOverSpeedEcoRollDeclarationInputData OverSpeedEcoRoll { get; }
 	}
 
 	public interface IOverSpeedEcoRollDeclarationInputData
