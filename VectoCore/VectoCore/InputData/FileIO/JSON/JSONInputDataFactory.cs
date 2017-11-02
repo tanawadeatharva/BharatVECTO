@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			if (Constants.FileExtensions.VectoJobFile.Equals(Path.GetExtension(filename), StringComparison.OrdinalIgnoreCase)) {
 				return ReadJsonJob(filename, true);
 			}
-			return new JSONComponentInputData(filename, true);
+			return new JSONComponentInputData(filename, null, true);
 		}
 
 		public static IInputDataProvider ReadJsonJob(string filename, bool tolerateMissing = false)
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public static IVehicleEngineeringInputData ReadJsonVehicle(string filename, JSONInputDataV2 job,  bool tolerateMissing = false)
+		public static IVehicleEngineeringInputData ReadJsonVehicle(string filename, IJSONVehicleComponents job,  bool tolerateMissing = false)
 		{
 			var json = ReadFile(filename);
 			var version = ReadVersion(json);

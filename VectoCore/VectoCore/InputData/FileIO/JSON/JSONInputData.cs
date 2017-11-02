@@ -124,38 +124,50 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	/// </summary>
 	public class JSONInputDataV2 : JSONFile, IEngineeringInputDataProvider, IDeclarationInputDataProvider,
 		IEngineeringJobInputData, IDriverEngineeringInputData, IAuxiliariesEngineeringInputData,
-		IAuxiliariesDeclarationInputData
+		IAuxiliariesDeclarationInputData, IJSONVehicleComponents
 	{
-		public IGearboxEngineeringInputData Gearbox { get; internal set; }
+
+        public JSONInputDataV2(JObject data, string filename, bool tolerateMissing = false)
+            : base(data, filename, tolerateMissing)
+        {
+            _jobname = Path.GetFileNameWithoutExtension(filename);
+
+            Engine = ReadEngine();
+
+            if (Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>())
+            {
+                return;
+            }
+
+            Gearbox = ReadGearbox();
+            AxleGear = Gearbox as IAxleGearInputData;
+            TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
+
+            VehicleData = ReadVehicle();
+        }
+
+        public IGearboxEngineeringInputData Gearbox { get; internal set; }
 		public IAxleGearInputData AxleGear { get; internal set; }
 		public ITorqueConverterEngineeringInputData TorqueConverter { get; internal set; }
 		public IEngineEngineeringInputData Engine { get; internal set; }
 
 
-		protected readonly IVehicleEngineeringInputData VehicleData;
+        protected readonly IVehicleEngineeringInputData VehicleData;
 
 		private readonly string _jobname;
 
 
-		public JSONInputDataV2(JObject data, string filename, bool tolerateMissing = false)
-			: base(data, filename, tolerateMissing)
-		{
-			_jobname = Path.GetFileNameWithoutExtension(filename);
+        public IAuxiliariesEngineeringInputData EngineeringAuxiliaries
+        {
+            get { return this; }
+        }
 
-			Engine = ReadEngine();
+        public IAuxiliariesDeclarationInputData DeclarationAuxiliaries
+        {
+            get { return this; }
+        }
 
-			if (Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>()) {
-				return;
-			}
-
-			Gearbox = ReadGearbox();
-			AxleGear = Gearbox as IAxleGearInputData;
-			TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
-
-			VehicleData = ReadVehicle();
-		}
-
-		private IVehicleEngineeringInputData ReadVehicle()
+        private IVehicleEngineeringInputData ReadVehicle()
 		{
 			try {
 				var vehicleFile = Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>();

@@ -58,13 +58,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private string _filename;
 
 
-		public JSONComponentInputData(string filename, bool tolerateMissing = false)
+		public JSONComponentInputData(string filename, IJSONVehicleComponents job, bool tolerateMissing = false)
 		{
 			var extension = Path.GetExtension(filename);
 			object tmp = null;
 			switch (extension) {
 				case Constants.FileExtensions.VehicleDataFile:
-					tmp = JSONInputDataFactory.ReadJsonVehicle(filename, null, tolerateMissing);
+					tmp = JSONInputDataFactory.ReadJsonVehicle(filename, job, tolerateMissing);
 					break;
 				case Constants.FileExtensions.EngineDataFile:
 					tmp = JSONInputDataFactory.ReadEngine(filename, tolerateMissing);

@@ -45,13 +45,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngledriveInputData,
 		IPTOTransmissionInputData, IAirdragEngineeringInputData
 	{
-		public JSONVehicleDataV7(JObject data, string fileName, JSONInputDataV2 job, bool tolerateMissing = false)
+		public JSONVehicleDataV7(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false)
 			: base(data, fileName, tolerateMissing)
 		{
 			Job = job;
 		}
 
-		private JSONInputDataV2 Job;
+		private IJSONVehicleComponents Job;
 
 		#region IVehicleInputData
 
@@ -239,7 +239,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IAuxiliariesDeclarationInputData IVehicleDeclarationInputData.AuxiliaryInputData()
 		{
-			return Job;
+			return Job.DeclarationAuxiliaries;
 		}
 
 		IRetarderInputData IVehicleEngineeringInputData.RetarderInputData
@@ -254,7 +254,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IAuxiliariesEngineeringInputData IVehicleEngineeringInputData.AuxiliaryInputData()
 		{
-			return Job;
+			return Job.EngineeringAuxiliaries;
 		}
 
 		IRetarderInputData IVehicleDeclarationInputData.RetarderInputData
