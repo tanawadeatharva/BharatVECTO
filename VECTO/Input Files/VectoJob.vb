@@ -15,11 +15,8 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
-Imports System.Runtime.InteropServices
-Imports System.Runtime.Remoting.Messaging
 Imports System.Text
 Imports System.Xml.Linq
-Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
@@ -323,11 +320,6 @@ Public Class VectoJob
 
         Dim jobData As VectoRunData
 
-        'vectoJob._vehicleInputData = New JSONComponentInputData(vectoJob._vehicleFile.FullPath)
-        'vectoJob._engineInputData = New JSONComponentInputData(vectoJob._engineFile.FullPath)
-        'vectoJob._gearboxInputData = New JSONComponentInputData(vectoJob._gearboxFile.FullPath)
-
-
         Dim result As IList(Of ValidationResult) = New List(Of ValidationResult)
 
         Dim vehicleInputData As IVehicleEngineeringInputData = vectoJob.JobInputData.Vehicle
@@ -421,168 +413,12 @@ Public Class VectoJob
         End Get
     End Property
 
-    'Public ReadOnly Property IDeclarationInputDataProvider_VehicleInputData As IVehicleDeclarationInputData _
-    '	Implements IDeclarationInputDataProvider.VehicleInputData
-    '	Get
-    '		If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_vehicleFile.FullPath).VehicleInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property VehicleInputData As IVehicleEngineeringInputData _
-    '	Implements IEngineeringInputDataProvider.VehicleInputData
-    '	Get
-    '		If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_vehicleFile.FullPath).VehicleInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property IDeclarationInputDataProvider_AirdragInputData As IAirdragDeclarationInputData _
-    '	Implements IVehicleDeclarationInputData.AirdragInputData
-    '	Get
-    '		Return AirdragInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property AirdragInputData As IAirdragEngineeringInputData _
-    '	Implements IVehicleEngineeringInputData.AirdragInputData
-    '	Get
-    '		If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle.AirdragInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property IDeclarationInputDataProvider_GearboxInputData As IGearboxDeclarationInputData _
-    '	Implements IVehicleDeclarationInputData.GearboxInputData
-    '	Get
-    '		If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_gearboxFile.FullPath).JobInputData.Vehicle.GearboxInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property GearboxInputData As IGearboxEngineeringInputData _
-    '	Implements IVehicleEngineeringInputData.GearboxInputData
-    '	Get
-    '		If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_gearboxFile.FullPath).JobInputData.Vehicle.GearboxInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property IDeclarationInputDataProvider_TorqueConverterInputData As ITorqueConverterDeclarationInputData _
-    '	Implements IVehicleDeclarationInputData.TorqueConverterInputData
-    '	Get
-    '		If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_gearboxFile.FullPath).JobInputData.Vehicle.TorqueConverterInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property TorqueConverterInputData As ITorqueConverterEngineeringInputData _
-    '	Implements IVehicleEngineeringInputData.TorqueConverterInputData
-    '	Get
-    '		If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_gearboxFile.FullPath).JobInputData.Vehicle.TorqueConverterInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property IDeclarationInputDataProvider_AxleGearInputData As IAxleGearInputData _
-    '	Implements IVehicleDeclarationInputData.AxleGearInputData
-    '	Get
-    '		If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_gearboxFile.FullPath).JobInputData.Vehicle.AxleGearInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property AxleGearInputData As IAxleGearInputData _
-    '	Implements IVehicleEngineeringInputData.AxleGearInputData
-    '	Get
-    '		If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_gearboxFile.FullPath).JobInputData.Vehicle.AxleGearInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property DeclarationInputDataProviderAngledriveInputData As IAngledriveInputData _
-    '	Implements IVehicleDeclarationInputData.AngledriveInputData
-    '	Get
-    '		If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle.AngledriveInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property AngledriveInputData As IAngledriveInputData _
-    '	Implements IVehicleEngineeringInputData.AngledriveInputData
-    '	Get
-    '		If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle.AngledriveInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property IDeclarationInputDataProvider_EngineInputData As IEngineDeclarationInputData _
-    '	Implements IVehicleDeclarationInputData.EngineInputData
-    '	Get
-    '		If Not File.Exists(_engineFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_engineFile.FullPath).JobInputData.Vehicle.EngineInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property EngineInputData As IEngineEngineeringInputData _
-    '	Implements IVehicleEngineeringInputData.EngineInputData
-    '	Get
-    '		If Not File.Exists(_engineFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_engineFile.FullPath).JobInputData.Vehicle.EngineInputData
-    '	End Get
-    'End Property
-
-    'Public Function AuxiliaryInputData() As IAuxiliariesEngineeringInputData _
-    '	Implements IVehicleEngineeringInputData.AuxiliaryInputData
-
-    '	Return Me
-    'End Function
-
-    'Public Function IDeclarationInputDataProvider_AuxiliaryInputData() As IAuxiliariesDeclarationInputData _
-    '	Implements IVehicleDeclarationInputData.AuxiliaryInputData
-
-    '	Return Me
-    'End Function
-
-    'Public ReadOnly Property IDeclarationInputDataProvider_RetarderInputData As IRetarderInputData _
-    '	Implements IVehicleDeclarationInputData.RetarderInputData
-    '	Get
-    '		If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle.RetarderInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property RetarderInputData As IRetarderInputData _
-    '	Implements IVehicleEngineeringInputData.RetarderInputData
-    '	Get
-    '		If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle.RetarderInputData
-    '	End Get
-    'End Property
-
-
     Public ReadOnly Property DriverInputData As IDriverEngineeringInputData _
         Implements IEngineeringInputDataProvider.DriverInputData
         Get
             Return Me
         End Get
     End Property
-
-    'Public ReadOnly Property IDeclarationInputDataProvider_PTOTransmissionInputData As IPTOTransmissionInputData _
-    '	Implements IVehicleDeclarationInputData.PTOTransmissionInputData
-    '	Get
-    '		If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle.PTOTransmissionInputData
-    '	End Get
-    'End Property
-
-    'Public ReadOnly Property PTOTransmissionInputData As IPTOTransmissionInputData _
-    '	Implements IVehicleEngineeringInputData.PTOTransmissionInputData
-    '	Get
-    '		If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
-    '		Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle.PTOTransmissionInputData
-    '	End Get
-    'End Property
 
     Public ReadOnly Property XMLHash As XElement Implements IDeclarationInputDataProvider.XMLHash
         Get

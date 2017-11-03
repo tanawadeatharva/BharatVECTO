@@ -63,10 +63,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			Helper = new XPathHelper(ExecutionMode.Engineering);
 			Helper.AddNamespaces(Manager);
 
-			Source = fsBasePath;
 			SourceType = DataSourceType.Embedded;
 		}
 
+        public new string Source { get { return FSBasePath; } }
 
 		public override bool SavedInDeclarationMode
 		{

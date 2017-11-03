@@ -47,8 +47,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		private readonly XMLDeclarationJobInputDataProvider _xmlJobData;
 
-		public XMLDeclarationInputDataProvider(XmlReader inputData, bool verifyXml)
-		{
+
+        public XMLDeclarationInputDataProvider(string filename, bool verifyXml) :
+            this(XmlReader.Create(filename), filename, verifyXml)
+        {
+        }
+
+        public XMLDeclarationInputDataProvider(XmlReader inputData, bool verifyXml) : this(inputData, "", verifyXml)
+        {
+            
+        }
+
+        protected XMLDeclarationInputDataProvider(XmlReader inputData, string source, bool verifyXml)
+        {
+            Source = source;
 			if (verifyXml) {
 				var settings = new XmlReaderSettings {
 					ValidationType = ValidationType.Schema,
@@ -61,21 +73,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 				inputData = XmlReader.Create(inputData, settings);
 			}
-			//Document = new XPathDocument(inputData);
-
+			
 			var xmldoc = new XmlDocument();
 			xmldoc.Load(inputData);
 			var h = VectoHash.Load(xmldoc);
 			XMLHash = h.ComputeXmlHash();
-
 			Document = new XPathDocument(new XmlNodeReader(xmldoc));
-
-			//CheckInputDocument();
-
+            
 			_xmlJobData = new XMLDeclarationJobInputDataProvider(this);
 		}
 
-		private static void ValidationCallBack(object sender, ValidationEventArgs args)
+        public string Source { get; protected set; }
+
+        private static void ValidationCallBack(object sender, ValidationEventArgs args)
 		{
 			if (args.Severity == XmlSeverityType.Error) {
 				throw new VectoException("Validation error: {0}" + Environment.NewLine +

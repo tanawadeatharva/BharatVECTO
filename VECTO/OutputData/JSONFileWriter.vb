@@ -359,12 +359,14 @@ Public Class JSONFileWriter
 
 		'Body
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-		Dim job As IEPTPJobInputData = input.JobInputData
-		body.Add("DeclarationVehicle", job.Vehicle.Source)
-		body.Add("FanPowerCoefficients", job.FanPowerCoefficents)
-		body.Add("Cycles", job.Cycles)
+        Dim job As IEPTPJobInputData = input.JobInputData
+        body.Add("SavedInDeclMode", False)
+        body.Add("DeclarationVehicle", GetRelativePath(job.Vehicle.Source, Path.GetDirectoryName(filename)))
+        body.Add("FanPowerCoefficients", job.FanPowerCoefficents)
+        body.Add("Cycles",
+                 job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 
-		WriteFile(header, body, filename)
+        WriteFile(header, body, filename)
 	End Sub
 
 	Public Sub ExportJob(input As IEngineeringInputDataProvider, filename As String, separateFiles As Boolean) _

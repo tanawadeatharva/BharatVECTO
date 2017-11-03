@@ -17,11 +17,13 @@ Imports System.Linq
 Imports System.Runtime.CompilerServices
 Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
+Imports System.Xml
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -33,55 +35,55 @@ Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 ''' </summary>
 ''' <remarks></remarks>
 Public Class VectoEPTPJobForm
-	Public VectoFile As String
-	Private _changed As Boolean = False
+    Public VectoFile As String
+    Private _changed As Boolean = False
 
-	Private _pgDriver As TabPage
+    Private _pgDriver As TabPage
 
-	Private _pgDriverOn As Boolean = True
+    Private _pgDriverOn As Boolean = True
 
-	Private _auxDialog As VehicleAuxiliariesDialog
+    Private _auxDialog As VehicleAuxiliariesDialog
 
-	Enum AuxViewColumns
-		AuxID = 0
-		AuxType = 1
-		AuxInputOrTech = 2
-	End Enum
-
-
-
-	'Initialise form
-	Private Sub F02_GEN_Load(sender As Object, e As EventArgs) Handles Me.Load
-		
-		_auxDialog = New VehicleAuxiliariesDialog
+    Enum AuxViewColumns
+        AuxID = 0
+        AuxType = 1
+        AuxInputOrTech = 2
+    End Enum
 
 
-		LvAux.Columns(AuxViewColumns.AuxInputOrTech).Width = -2
 
-		LvAux.Columns(AuxViewColumns.AuxInputOrTech).Text = "Technology"
+    'Initialise form
+    Private Sub F02_GEN_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-		GrCycles.Enabled = True
+        _auxDialog = New VehicleAuxiliariesDialog
 
-		_changed = False
-	End Sub
 
-	'Close - Check for unsaved changes
-	Private Sub F02_GEN_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-		If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
-			e.Cancel = ChangeCheckCancel()
-		End If
-	End Sub
+        LvAux.Columns(AuxViewColumns.AuxInputOrTech).Width = -2
 
-	
+        LvAux.Columns(AuxViewColumns.AuxInputOrTech).Text = "Technology"
 
-	
+        GrCycles.Enabled = True
+
+        _changed = False
+    End Sub
+
+    'Close - Check for unsaved changes
+    Private Sub F02_GEN_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
+            e.Cancel = ChangeCheckCancel()
+        End If
+    End Sub
+
+
+
+
 #Region "Browse Buttons"
 
-	Private Sub ButtonVEH_Click(sender As Object, e As EventArgs) Handles ButtonVEH.Click
-		If VehicleXMLFileBrowser.OpenDialog(FileRepl(TbVEH.Text, GetPath(VectoFile))) Then
-			TbVEH.Text = GetFilenameWithoutDirectory(VehicleXMLFileBrowser.Files(0), GetPath(VectoFile))
-		End If
-	End Sub
+    Private Sub ButtonVEH_Click(sender As Object, e As EventArgs) Handles ButtonVEH.Click
+        If VehicleXMLFileBrowser.OpenDialog(FileRepl(TbVEH.Text, GetPath(VectoFile))) Then
+            TbVEH.Text = GetFilenameWithoutDirectory(VehicleXMLFileBrowser.Files(0), GetPath(VectoFile))
+        End If
+    End Sub
 
 
 #End Region
@@ -89,511 +91,538 @@ Public Class VectoEPTPJobForm
 
 #Region "Toolbar"
 
-	'New
-	Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
-		VectoNew()
-	End Sub
+    'New
+    Private Sub ToolStripBtNew_Click(sender As Object, e As EventArgs) Handles ToolStripBtNew.Click
+        VectoNew()
+    End Sub
 
-	'Open
-	Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
-		If JobfileFileBrowser.OpenDialog(VectoFile, False, "vecto") Then
-			Try
-				VECTOload2Form(JobfileFileBrowser.Files(0))
-			Catch ex As Exception
-				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vecto Job File")
-			End Try
+    'Open
+    Private Sub ToolStripBtOpen_Click(sender As Object, e As EventArgs) Handles ToolStripBtOpen.Click
+        If JobfileFileBrowser.OpenDialog(VectoFile, False, "vecto") Then
+            Try
+                VECTOload2Form(JobfileFileBrowser.Files(0))
+            Catch ex As Exception
+                MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vecto Job File")
+            End Try
 
-		End If
-	End Sub
+        End If
+    End Sub
 
-	'Save
-	Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click
-		Save()
-	End Sub
+    'Save
+    Private Sub ToolStripBtSave_Click(sender As Object, e As EventArgs) Handles ToolStripBtSave.Click
+        Save()
+    End Sub
 
-	'Save As
-	Private Sub ToolStripBtSaveAs_Click(sender As Object, e As EventArgs) Handles ToolStripBtSaveAs.Click
-		If JobfileFileBrowser.SaveDialog(VectoFile) Then Call VECTOsave(JobfileFileBrowser.Files(0))
-	End Sub
+    'Save As
+    Private Sub ToolStripBtSaveAs_Click(sender As Object, e As EventArgs) Handles ToolStripBtSaveAs.Click
+        If JobfileFileBrowser.SaveDialog(VectoFile) Then Call VECTOsave(JobfileFileBrowser.Files(0))
+    End Sub
 
-	'Send to Job file list in main form
-	Private Sub ToolStripBtSendTo_Click(sender As Object, e As EventArgs) Handles ToolStripBtSendTo.Click
-		If ChangeCheckCancel() Then Exit Sub
-		If VectoFile = "" Then
-			MsgBox("File not found!" & ChrW(10) & ChrW(10) & "Save file and try again.")
-		Else
-			MainForm.AddToJobListView(VectoFile)
-		End If
-	End Sub
+    'Send to Job file list in main form
+    Private Sub ToolStripBtSendTo_Click(sender As Object, e As EventArgs) Handles ToolStripBtSendTo.Click
+        If ChangeCheckCancel() Then Exit Sub
+        If VectoFile = "" Then
+            MsgBox("File not found!" & ChrW(10) & ChrW(10) & "Save file and try again.")
+        Else
+            MainForm.AddToJobListView(VectoFile)
+        End If
+    End Sub
 
-	'Help
-	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-		If File.Exists(MyAppPath & "User Manual\help.html") Then
-			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
-			Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#job-editor"))
-		Else
-			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
-		End If
-	End Sub
+    'Help
+    Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+        If File.Exists(MyAppPath & "User Manual\help.html") Then
+            Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
+            Process.Start(defaultBrowserPath,
+                        String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#job-editor"))
+        Else
+            MsgBox("User Manual not found!", MsgBoxStyle.Critical)
+        End If
+    End Sub
 
 
 #End Region
 
-	'Save ("Save" or "Save As" when new file)
-	Private Function Save() As Boolean
-		If VectoFile = "" Then
-			If JobfileFileBrowser.SaveDialog("") Then
-				VectoFile = JobfileFileBrowser.Files(0)
-			Else
-				Return False
-			End If
-		End If
-		Try
-			Return VECTOsave(VectoFile)
-		Catch ex As Exception
-			MsgBox("Error when saving file" + Environment.NewLine + ex.Message)
-			Return False
-		End Try
-	End Function
+    'Save ("Save" or "Save As" when new file)
+    Private Function Save() As Boolean
+        If VectoFile = "" Then
+            If JobfileFileBrowser.SaveDialog("") Then
+                VectoFile = JobfileFileBrowser.Files(0)
+            Else
+                Return False
+            End If
+        End If
+        Try
+            Return VECTOsave(VectoFile)
+        Catch ex As Exception
+            MsgBox("Error when saving file" + Environment.NewLine + ex.Message)
+            Return False
+        End Try
+    End Function
 
-	'Open file
-	Public Sub VECTOload2Form(file As String)
+    'Open file
+    Public Sub VECTOload2Form(file As String)
 
-		If ChangeCheckCancel() Then Exit Sub
+        If ChangeCheckCancel() Then Exit Sub
 
-		VectoNew()
+        VectoNew()
 
-		'Read GEN
-		Dim vectoJob As IEngineeringJobInputData = Nothing
-		Dim inputData As IEngineeringInputDataProvider = Nothing
-		Try
-			inputData = TryCast(JSONInputDataFactory.ReadComponentData(file), 
-								IEngineeringInputDataProvider)
-			vectoJob = inputData.JobInputData()
-		Catch ex As Exception
-			MsgBox("Failed to read Job-File" + Environment.NewLine + ex.Message)
-			Return
-		End Try
-
-
-		If Cfg.DeclMode <> vectoJob.SavedInDeclarationMode Then
-			Select Case WrongMode()
-				Case 1
-					Close()
-					MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
-					MainForm.OpenVectoFile(file)
-				Case -1
-					Exit Sub
-			End Select
-		End If
-
-		VectoFile = file
-		_basePath = Path.GetDirectoryName(file)
-		'Update Form
-
-		
-		'Files -----------------------------
-		TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.Source, _basePath)
-
-		'Start/Stop
-		Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
+        'Read GEN
+        Dim vectoJob As IEPTPJobInputData = Nothing
+        Dim inputData As IEPTPInputDataProvider = Nothing
+        Try
+            inputData = TryCast(JSONInputDataFactory.ReadComponentData(file),
+                                IEPTPInputDataProvider)
+            vectoJob = inputData.JobInputData()
+        Catch ex As Exception
+            MsgBox("Failed to read Job-File" + Environment.NewLine + ex.Message)
+            Return
+        End Try
 
 
-		Dim declarationInput As IDeclarationInputDataProvider = CType(inputData, IDeclarationInputDataProvider)
-		Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.JobInputData.Vehicle.AuxiliaryInputData()
+        If Cfg.DeclMode <> vectoJob.SavedInDeclarationMode Then
+            Select Case WrongMode()
+                Case 1
+                    Close()
+                    MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
+                    MainForm.OpenVectoFile(file)
+                Case -1
+                    Exit Sub
+            End Select
+        End If
 
-		LvAux.Items.Clear()
-		Dim entry As IAuxiliaryDeclarationInputData
-		For Each entry In auxInput.Auxiliaries
-			'If entry.AuxiliaryType = AuxiliaryDemandType.Constant Then Continue For
-			Try
-				LvAux.Items.Add(CreateAuxListEntry(AuxiliaryTypeHelper.GetAuxKey(entry.Type),
-													AuxiliaryTypeHelper.ToString(entry.Type), String.Join("; ", entry.Technology)))
-			Catch ex As Exception
-			End Try
-		Next
-
-		Try
-			Dim sb As ICycleData
-			For Each sb In vectoJob.Cycles
-				Dim lv0 As ListViewItem = New ListViewItem
-				lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
-				LvCycles.Items.Add(lv0)
-			Next
-		Catch ex As Exception
-		End Try
-
-		VehicleForm.AutoSendTo = False
+        VectoFile = file
+        _basePath = Path.GetDirectoryName(file)
+        'Update Form
 
 
-		Dim x As Integer = Len(file)
-		While Mid(file, x, 1) <> "\" And x > 0
-			x = x - 1
-		End While
-		Text = Mid(file, x + 1, Len(file) - x)
-		_changed = False
-		ToolStripStatusLabelGEN.Text = ""	'file & " opened."
+        'Files -----------------------------
+        TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.Source, _basePath)
 
-		UpdatePic()
+        Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.AuxiliaryInputData()
 
-		'-------------------------------------------------------------
-	End Sub
+        PopulateAuxiliaryList(auxInput)
 
-	Private Function CreateAuxListEntry(auxKey As String, type As String, technology As String) As ListViewItem
-		Dim lv0 As ListViewItem = New ListViewItem
-		lv0.SubItems(AuxViewColumns.AuxID).Text = auxKey
-		lv0.SubItems.Add(type)
-		lv0.SubItems.Add(technology)
-		Return lv0
-	End Function
+        Dim coefficients As Double() = vectoJob.FanPowerCoefficents.ToArray()
+        If (coefficients.Length >= 1) Then
+            tbC1.Text = coefficients(0).ToGUIFormat()
+        End If
+        If (coefficients.Length >= 2) Then
+            tbC2.Text = coefficients(1).ToGUIFormat()
+        End If
+        If (coefficients.Length >= 3) Then
+            tbC3.Text = coefficients(2).ToGUIFormat()
+        End If
+        Try
+            Dim sb As ICycleData
+            For Each sb In vectoJob.Cycles
+                Dim lv0 As ListViewItem = New ListViewItem
+                lv0.Text = GetRelativePath(sb.CycleData.Source, Path.GetDirectoryName(Path.GetFullPath(file))) 'sb.Name
+                LvCycles.Items.Add(lv0)
+            Next
+        Catch ex As Exception
+        End Try
+
+        VehicleForm.AutoSendTo = False
 
 
-	'Save file
-	Private Function VECTOsave(file As String) As Boolean
-		Dim message As String = String.Empty
+        Dim x As Integer = Len(file)
+        While Mid(file, x, 1) <> "\" And x > 0
+            x = x - 1
+        End While
+        Text = Mid(file, x + 1, Len(file) - x)
+        _changed = False
+        ToolStripStatusLabelGEN.Text = ""   'file & " opened."
 
-		
-		Dim vectoJob As VectoEPTPJob = New VectoEPTPJob
-		vectoJob.FilePath = file
+        UpdatePic()
 
-		'Files ------------------------------------------------- -----------------
+        '-------------------------------------------------------------
+    End Sub
 
-		vectoJob.PathVeh = TbVEH.Text
-		
-		For Each lv0 As ListViewItem In LvCycles.Items
-			Dim sb As SubPath = New SubPath
-			sb.Init(GetPath(file), lv0.Text)
-			vectoJob.CycleFiles.Add(sb)
-		Next
+    Private Sub PopulateAuxiliaryList(auxInput As IAuxiliariesDeclarationInputData)
 
-		
-		'SAVE
-		If Not vectoJob.SaveFile Then
-			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
-			Return False
-		End If
+        LvAux.Items.Clear()
+        Dim entry As IAuxiliaryDeclarationInputData
+        For Each entry In auxInput.Auxiliaries
+            'If entry.AuxiliaryType = AuxiliaryDemandType.Constant Then Continue For
+            Try
+                LvAux.Items.Add(CreateAuxListEntry(AuxiliaryTypeHelper.GetAuxKey(entry.Type),
+                                                   AuxiliaryTypeHelper.ToString(entry.Type), String.Join("; ", entry.Technology)))
+            Catch ex As Exception
+            End Try
+        Next
+    End Sub
 
-		VectoFile = file
+    Private Function CreateAuxListEntry(auxKey As String, type As String, technology As String) As ListViewItem
+        Dim lv0 As ListViewItem = New ListViewItem
+        lv0.SubItems(AuxViewColumns.AuxID).Text = auxKey
+        lv0.SubItems.Add(type)
+        lv0.SubItems.Add(technology)
+        Return lv0
+    End Function
 
-		file = GetFilenameWithoutPath(VectoFile, True)
 
-		Text = file
-		ToolStripStatusLabelGEN.Text = ""
+    'Save file
+    Private Function VECTOsave(file As String) As Boolean
+        Dim message As String = String.Empty
 
-		MainForm.AddToJobListView(VectoFile)
 
-		_changed = False
+        Dim vectoJob As VectoEPTPJob = New VectoEPTPJob
+        vectoJob.FilePath = file
 
-		Return True
-	End Function
+        'Files ------------------------------------------------- -----------------
 
-	'New file
-	Public Sub VectoNew()
+        vectoJob.PathVeh = TbVEH.Text
 
-		If ChangeCheckCancel() Then Exit Sub
+        For Each lv0 As ListViewItem In LvCycles.Items
+            Dim sb As SubPath = New SubPath
+            sb.Init(GetPath(file), lv0.Text)
+            vectoJob.CycleFiles.Add(sb)
+        Next
 
-		'Files
-		TbVEH.Text = ""
-		LvCycles.Items.Clear()
-		
+        vectoJob.FanCoefficients = New Double() {
+            tbC1.Text.ToDouble(0),
+            tbC2.Text.ToDouble(0),
+            tbC3.Text.ToDouble(0)    
+        }
 
-		LvAux.Items.Clear()
+        'SAVE
+        If Not vectoJob.SaveFile Then
+            MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
+            Return False
+        End If
 
-		EngineForm.AutoSendTo = False
+        VectoFile = file
 
-		VectoFile = ""
-		Text = "Job Editor"
-		ToolStripStatusLabelGEN.Text = ""
-		_changed = False
-		UpdatePic()
-	End Sub
+        file = GetFilenameWithoutPath(VectoFile, True)
+
+        Text = file
+        ToolStripStatusLabelGEN.Text = ""
+
+        MainForm.AddToJobListView(VectoFile)
+
+        _changed = False
+
+        Return True
+    End Function
+
+    'New file
+    Public Sub VectoNew()
+
+        If ChangeCheckCancel() Then Exit Sub
+
+        'Files
+        TbVEH.Text = ""
+        LvCycles.Items.Clear()
+
+
+        LvAux.Items.Clear()
+
+        EngineForm.AutoSendTo = False
+
+        VectoFile = ""
+        Text = "Job Editor"
+        ToolStripStatusLabelGEN.Text = ""
+        _changed = False
+        UpdatePic()
+    End Sub
 
 
 #Region "Track changes"
 
 #Region "'Change' Events"
 
-	Private Sub TextBoxVEH_TextChanged(sender As Object, e As EventArgs) _
-		Handles TbVEH.TextChanged
-		UpdatePic()
-		Change()
-	End Sub
+    Private Sub TextBoxVEH_TextChanged(sender As Object, e As EventArgs) _
+        Handles TbVEH.TextChanged
+        UpdateAuxList()
+        UpdatePic()
+        Change()
+    End Sub
 
-	
-	Private Sub LvCycles_AfterLabelEdit(sender As Object, e As LabelEditEventArgs) _
-		Handles LvCycles.AfterLabelEdit
-		Change()
-	End Sub
+    Private Sub UpdateAuxList()
+        Dim vehicleFile As String =
+                If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
+        If File.Exists(vehicleFile) Then
+            Try
+                Dim inputData As XMLDeclarationInputDataProvider = New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
+                Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.AuxiliaryInputData()
+                PopulateAuxiliaryList(auxInput)
+            Catch
+            End Try
+        End If
+
+    End Sub
+
+
+    Private Sub LvCycles_AfterLabelEdit(sender As Object, e As LabelEditEventArgs) _
+        Handles LvCycles.AfterLabelEdit
+        Change()
+    End Sub
 
 
 #End Region
 
-	Private Sub Change()
-		If Not _changed Then
-			ToolStripStatusLabelGEN.Text = "Unsaved changes in current file"
-			_changed = True
-		End If
-	End Sub
+    Private Sub Change()
+        If Not _changed Then
+            ToolStripStatusLabelGEN.Text = "Unsaved changes in current file"
+            _changed = True
+        End If
+    End Sub
 
-	' "Save changes? "... Returns True if User aborts
-	Private Function ChangeCheckCancel() As Boolean
+    ' "Save changes? "... Returns True if User aborts
+    Private Function ChangeCheckCancel() As Boolean
 
-		If _changed Then
+        If _changed Then
 
-			Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
-				Case MsgBoxResult.Yes
-					Return Not Save()
-				Case MsgBoxResult.Cancel
-					Return True
-				Case Else 'MsgBoxResult.No
-					_changed = False
-					Return False
-			End Select
+            Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
+                Case MsgBoxResult.Yes
+                    Return Not Save()
+                Case MsgBoxResult.Cancel
+                    Return True
+                Case Else 'MsgBoxResult.No
+                    _changed = False
+                    Return False
+            End Select
 
-		Else
+        Else
 
-			Return False
+            Return False
 
-		End If
-	End Function
+        End If
+    End Function
 
 #End Region
 
 
-	'OK (Save & Close)
-	Private Sub ButSave_Click(sender As Object, e As EventArgs) Handles ButOK.Click
-		If Not Save() Then Exit Sub
-		Close()
-	End Sub
+    'OK (Save & Close)
+    Private Sub ButSave_Click(sender As Object, e As EventArgs) Handles ButOK.Click
+        If Not Save() Then Exit Sub
+        Close()
+    End Sub
 
-	'Cancel
-	Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
-		Close()
-	End Sub
+    'Cancel
+    Private Sub ButCancel_Click(sender As Object, e As EventArgs) Handles ButCancel.Click
+        Close()
+    End Sub
 
 #Region "Cycle list"
 
-	Private Sub LvCycles_KeyDown(sender As Object, e As KeyEventArgs) Handles LvCycles.KeyDown
-		Select Case e.KeyCode
-			Case Keys.Delete, Keys.Back
-				RemoveCycle()
-			Case Keys.Enter
-				If LvCycles.SelectedItems.Count > 0 Then LvCycles.SelectedItems(0).BeginEdit()
-		End Select
-	End Sub
+    Private Sub LvCycles_KeyDown(sender As Object, e As KeyEventArgs) Handles LvCycles.KeyDown
+        Select Case e.KeyCode
+            Case Keys.Delete, Keys.Back
+                RemoveCycle()
+            Case Keys.Enter
+                If LvCycles.SelectedItems.Count > 0 Then LvCycles.SelectedItems(0).BeginEdit()
+        End Select
+    End Sub
 
-	Private Sub BtDRIadd_Click(sender As Object, e As EventArgs) Handles BtDRIadd.Click
-		Dim genDir As String = GetPath(VectoFile)
+    Private Sub BtDRIadd_Click(sender As Object, e As EventArgs) Handles BtDRIadd.Click
+        Dim genDir As String = GetPath(VectoFile)
 
-		If DrivingCycleFileBrowser.OpenDialog("", True) Then
-			Dim s As String
-			For Each s In DrivingCycleFileBrowser.Files
-				LvCycles.Items.Add(GetFilenameWithoutDirectory(s, genDir))
-			Next
-			Change()
-		End If
-	End Sub
+        If DrivingCycleFileBrowser.OpenDialog("", True) Then
+            Dim s As String
+            For Each s In DrivingCycleFileBrowser.Files
+                LvCycles.Items.Add(GetFilenameWithoutDirectory(s, genDir))
+            Next
+            Change()
+        End If
+    End Sub
 
-	Private Sub BtDRIrem_Click(sender As Object, e As EventArgs) Handles BtDRIrem.Click
-		RemoveCycle()
-	End Sub
+    Private Sub BtDRIrem_Click(sender As Object, e As EventArgs) Handles BtDRIrem.Click
+        RemoveCycle()
+    End Sub
 
-	Private Sub RemoveCycle()
-		Dim i As Integer
+    Private Sub RemoveCycle()
+        Dim i As Integer
 
-		If LvCycles.SelectedItems.Count = 0 Then
-			If LvCycles.Items.Count = 0 Then
-				Exit Sub
-			Else
-				LvCycles.Items(LvCycles.Items.Count - 1).Selected = True
-			End If
-		End If
+        If LvCycles.SelectedItems.Count = 0 Then
+            If LvCycles.Items.Count = 0 Then
+                Exit Sub
+            Else
+                LvCycles.Items(LvCycles.Items.Count - 1).Selected = True
+            End If
+        End If
 
-		i = LvCycles.SelectedItems(0).Index
+        i = LvCycles.SelectedItems(0).Index
 
-		LvCycles.SelectedItems(0).Remove()
+        LvCycles.SelectedItems(0).Remove()
 
-		If LvCycles.Items.Count > 0 Then
-			If i < LvCycles.Items.Count Then
-				LvCycles.Items(i).Selected = True
-			Else
-				LvCycles.Items(LvCycles.Items.Count - 1).Selected = True
-			End If
+        If LvCycles.Items.Count > 0 Then
+            If i < LvCycles.Items.Count Then
+                LvCycles.Items(i).Selected = True
+            Else
+                LvCycles.Items(LvCycles.Items.Count - 1).Selected = True
+            End If
 
-			LvCycles.Focus()
-		End If
+            LvCycles.Focus()
+        End If
 
-		Change()
-	End Sub
+        Change()
+    End Sub
 
 #End Region
 
 
-	Public Sub UpdatePic()
+    Public Sub UpdatePic()
 
 
-		TbHVCclass.Text = ""
-		TbVehCat.Text = ""
-		TbMass.Text = ""
-		TbAxleConf.Text = ""
-		TbEngTxt.Text = ""
-		TbGbxTxt.Text = ""
-		PicVehicle.Image = Nothing
-		PicBox.Image = Nothing
+        TbHVCclass.Text = ""
+        TbVehCat.Text = ""
+        TbMass.Text = ""
+        TbAxleConf.Text = ""
+        TbEngTxt.Text = ""
+        TbGbxTxt.Text = ""
+        PicVehicle.Image = Nothing
+        PicBox.Image = Nothing
 
-		Try
-			UpdateVehiclePic()
+        Try
+            UpdateVehiclePic()
 
-			Dim chart As Chart = Nothing
-			UpdateEnginePic(chart)
-
-
-			UpdateGearboxPic(chart)
-
-			If chart Is Nothing Then Return
-
-			Dim chartArea As ChartArea = New ChartArea()
-			chartArea.Name = "main"
-
-			chartArea.AxisX.Title = "engine speed [1/min]"
-			chartArea.AxisX.TitleFont = New Font("Helvetica", 10)
-			chartArea.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
-			chartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
-			chartArea.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
-
-			chartArea.AxisY.Title = "engine torque [Nm]"
-			chartArea.AxisY.TitleFont = New Font("Helvetica", 10)
-			chartArea.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
-			chartArea.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
-			chartArea.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
-
-			chartArea.AxisX.Minimum = 300
-			chartArea.BorderDashStyle = ChartDashStyle.Solid
-			chartArea.BorderWidth = 1
-
-			chartArea.BackColor = Color.GhostWhite
-
-			chart.ChartAreas.Add(chartArea)
-			chart.Update()
-
-			Dim img As Bitmap = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
-			chart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
-
-			PicBox.Image = img
-		Catch
-		End Try
-	End Sub
-
-	Private Sub UpdateGearboxPic(ByRef chartArea As Chart)
-		
-		Dim gearbox As IGearboxEngineeringInputData = Nothing
-		Dim vehicleFile As String =
-				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
-		If File.Exists(vehicleFile) Then
-			Try
-				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(vehicleFile), 
-																		IEngineeringInputDataProvider)
-				gearbox = inputData.JobInputData.Vehicle.GearboxInputData
-			Catch
-			End Try
-		End If
-
-		If gearbox Is Nothing Then Return
-
-		TbGbxTxt.Text = String.Format("{0}-Speed {1} {2}", gearbox.Gears.Count, gearbox.Type.ShortName(), gearbox.Model)
-
-	End Sub
-
-	Private Sub UpdateEnginePic(ByRef chart As Chart)
-		Dim s As Series
-		Dim pmax As Double
-
-		Dim engine As IEngineEngineeringInputData = Nothing
-		lblEngineCharacteristics.Text = ""
-		Dim vehicleFile As String =
-				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
-		If File.Exists(vehicleFile) Then
-			Try
-				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(vehicleFile), 
-																		IEngineeringInputDataProvider)
-				engine = inputData.JobInputData.Vehicle.EngineInputData
-			Catch
-				Return
-			End Try
-		End If
-
-		'engine.FilePath = fFileRepl(TbENG.Text, GetPath(VECTOfile))
-
-		'Create plot
-		chart = New Chart
-		chart.Width = PicBox.Width
-		chart.Height = PicBox.Height
+            Dim chart As Chart = Nothing
+            UpdateEnginePic(chart)
 
 
-		'Dim FLD0 As EngineFullLoadCurve = New EngineFullLoadCurve
+            UpdateGearboxPic(chart)
 
-		If engine Is Nothing Then Return
+            If chart Is Nothing Then Return
+
+            Dim chartArea As ChartArea = New ChartArea()
+            chartArea.Name = "main"
+
+            chartArea.AxisX.Title = "engine speed [1/min]"
+            chartArea.AxisX.TitleFont = New Font("Helvetica", 10)
+            chartArea.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
+            chartArea.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None
+            chartArea.AxisX.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+
+            chartArea.AxisY.Title = "engine torque [Nm]"
+            chartArea.AxisY.TitleFont = New Font("Helvetica", 10)
+            chartArea.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
+            chartArea.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None
+            chartArea.AxisY.MajorGrid.LineDashStyle = ChartDashStyle.Dot
+
+            chartArea.AxisX.Minimum = 300
+            chartArea.BorderDashStyle = ChartDashStyle.Solid
+            chartArea.BorderWidth = 1
+
+            chartArea.BackColor = Color.GhostWhite
+
+            chart.ChartAreas.Add(chartArea)
+            chart.Update()
+
+            Dim img As Bitmap = New Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb)
+            chart.DrawToBitmap(img, New Rectangle(0, 0, PicBox.Width, PicBox.Height))
+
+            PicBox.Image = img
+        Catch
+        End Try
+    End Sub
+
+    Private Sub UpdateGearboxPic(ByRef chartArea As Chart)
+
+        Dim gearbox As IGearboxDeclarationInputData = Nothing
+        Dim vehicleFile As String =
+                If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
+        If File.Exists(vehicleFile) Then
+            Try
+                Dim inputData As XMLDeclarationInputDataProvider = New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
+                gearbox = inputData.JobInputData.Vehicle.GearboxInputData
+            Catch
+            End Try
+        End If
+
+        If gearbox Is Nothing Then Return
+
+        TbGbxTxt.Text = String.Format("{0}-Speed {1} {2}", gearbox.Gears.Count, gearbox.Type.ShortName(), gearbox.Model)
+
+    End Sub
+
+    Private Sub UpdateEnginePic(ByRef chart As Chart)
+        Dim s As Series
+        Dim pmax As Double
+
+        Dim engine As IEngineDeclarationInputData = Nothing
+        lblEngineCharacteristics.Text = ""
+        Dim vehicleFile As String =
+                If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
+        If File.Exists(vehicleFile) Then
+            Try
+                Dim inputData As XMLDeclarationInputDataProvider = New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
+                engine = inputData.JobInputData.Vehicle.EngineInputData
+            Catch
+                Return
+            End Try
+        End If
+
+        'engine.FilePath = fFileRepl(TbENG.Text, GetPath(VECTOfile))
+
+        'Create plot
+        chart = New Chart
+        chart.Width = PicBox.Width
+        chart.Height = PicBox.Height
 
 
-		engine.IdleSpeed.Value()
+        'Dim FLD0 As EngineFullLoadCurve = New EngineFullLoadCurve
 
-		Dim fullLoadCurve As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve)
-
-		s = New Series
-		s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-							fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
-		s.ChartType = SeriesChartType.FastLine
-		s.BorderWidth = 2
-		s.Color = Color.DarkBlue
-		s.Name = "Full load"
-		chart.Series.Add(s)
-
-		s = New Series
-		s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-							fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueDrag.Value()).ToArray())
-		s.ChartType = SeriesChartType.FastLine
-		s.BorderWidth = 2
-		s.Color = Color.Blue
-		s.Name = "Motoring"
-		chart.Series.Add(s)
-
-		pmax = fullLoadCurve.MaxPower.Value() / 1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
+        If engine Is Nothing Then Return
 
 
-		TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value() * 1000).ToString("0.0"),
-									pmax.ToString("#"), engine.Model)
+        engine.IdleSpeed.Value()
 
-		Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
+        Dim fullLoadCurve As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve)
 
-		s = New Series
-		s.Points.DataBindXY(fuelConsumptionMap.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
-							fuelConsumptionMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
-		s.ChartType = SeriesChartType.Point
-		s.MarkerSize = 3
-		s.Color = Color.Red
-		s.Name = "Map"
-		chart.Series.Add(s)
+        s = New Series
+        s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+                            fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueFullLoad.Value()).ToArray())
+        s.ChartType = SeriesChartType.FastLine
+        s.BorderWidth = 2
+        s.Color = Color.DarkBlue
+        s.Name = "Full load"
+        chart.Series.Add(s)
 
-		Dim engineCharacteristics As String =
-				String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",
-							fullLoadCurve.MaxTorque.Value(), fullLoadCurve.MaxPower.Value() / 1000, fullLoadCurve.RatedSpeed.AsRPM,
-							fullLoadCurve.N95hSpeed.AsRPM)
-		lblEngineCharacteristics.Text = engineCharacteristics
-	End Sub
+        s = New Series
+        s.Points.DataBindXY(fullLoadCurve.FullLoadEntries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+                            fullLoadCurve.FullLoadEntries.Select(Function(x) x.TorqueDrag.Value()).ToArray())
+        s.ChartType = SeriesChartType.FastLine
+        s.BorderWidth = 2
+        s.Color = Color.Blue
+        s.Name = "Motoring"
+        chart.Series.Add(s)
 
-	Private Sub UpdateVehiclePic()
-		Dim HDVclass As String
+        pmax = fullLoadCurve.MaxPower.Value() / 1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
 
-		Dim vehicle As IVehicleEngineeringInputData = Nothing
 
-		Dim vehicleFile As String =
-				If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
-		If File.Exists(vehicleFile) Then
-			Try
-				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(vehicleFile), 
-																		IEngineeringInputDataProvider)
-				vehicle = inputData.JobInputData.Vehicle
+        TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value() * 1000).ToString("0.0"),
+                                    pmax.ToString("#"), engine.Model)
+
+        Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
+
+        s = New Series
+        s.Points.DataBindXY(fuelConsumptionMap.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+                            fuelConsumptionMap.Entries.Select(Function(x) x.Torque.Value()).ToArray())
+        s.ChartType = SeriesChartType.Point
+        s.MarkerSize = 3
+        s.Color = Color.Red
+        s.Name = "Map"
+        chart.Series.Add(s)
+
+        Dim engineCharacteristics As String =
+                String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",
+                            fullLoadCurve.MaxTorque.Value(), fullLoadCurve.MaxPower.Value() / 1000, fullLoadCurve.RatedSpeed.AsRPM,
+                            fullLoadCurve.N95hSpeed.AsRPM)
+        lblEngineCharacteristics.Text = engineCharacteristics
+    End Sub
+
+    Private Sub UpdateVehiclePic()
+        Dim HDVclass As String
+
+        Dim vehicle As IVehicleDeclarationInputData = Nothing
+
+        Dim vehicleFile As String =
+                If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
+        If File.Exists(vehicleFile) Then
+            Try
+                Dim inputData As XMLDeclarationInputDataProvider = New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
+                vehicle = inputData.JobInputData.Vehicle
 			Catch
 			End Try
 		End If

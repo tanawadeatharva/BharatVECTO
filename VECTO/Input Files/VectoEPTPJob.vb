@@ -15,23 +15,25 @@ Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Utils
 
-<CustomValidation(GetType(VectoJob), "ValidateJob")>
+<CustomValidation(GetType(VectoEPTPJob), "ValidateJob")>
 Public Class VectoEPTPJob
 	Implements IEPTPInputDataProvider, IEPTPJobInputData
 
 	Private _sFilePath As String
 	Private _myPath As String
 
-	Private ReadOnly _vehicleFile As SubPath
+    Private ReadOnly _vehicleFile As SubPath
 
-	Public ReadOnly CycleFiles As List(Of SubPath)
+    Public ReadOnly CycleFiles As List(Of SubPath)
+    Public FanCoefficients As Double()
 
 
-	Public Sub New()
-		CycleFiles = New List(Of SubPath)
-	End Sub
+    Public Sub New()
+        CycleFiles = New List(Of SubPath)
+        _vehicleFile = New SubPath
+    End Sub
 
-	Public Property FilePath As String
+    Public Property FilePath As String
 		Get
 			Return _sFilePath
 		End Get
@@ -94,15 +96,16 @@ Public Class VectoEPTPJob
 
 	Private Shared Function ValidateVehicleJob(vectoJob As VectoEPTPJob, mode As ExecutionMode) As ValidationResult
 
+        ' TODO!!
 
-	End Function
+    End Function
 
 	Public ReadOnly Property Vehicle As IVehicleDeclarationInputData Implements IEPTPJobInputData.Vehicle
 		Get
 			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
-			'Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle
-			Return New XMLDeclarationInputDataProvider(XmlReader.Create(_vehicleFile.FullPath), True).JobInputData.Vehicle
-		End Get
+            'Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle
+            Return New XMLDeclarationInputDataProvider(_vehicleFile.FullPath, True).JobInputData.Vehicle
+        End Get
 	End Property
 
 	Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IEPTPJobInputData.Cycles
@@ -134,15 +137,21 @@ Public Class VectoEPTPJob
 		End Get
 	End Property
 
-	Public ReadOnly Property FanPowerCoefficents As IEnumerable(Of Double) Implements IEPTPJobInputData.FanPowerCoefficents
-		Get
-			Return New Double() {0, 0, 0}
-		End Get
-	End Property
+    Public ReadOnly Property FanPowerCoefficents As IEnumerable(Of Double) Implements IEPTPJobInputData.FanPowerCoefficents
+        Get
+            Return FanCoefficients
+        End Get
+    End Property
 
-	Public ReadOnly Property JobInputData As IEPTPJobInputData Implements IEPTPInputDataProvider.JobInputData
-		Get
-			Return Me
-		End Get
-	End Property
+    Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IEPTPJobInputData.SavedInDeclarationMode
+        Get
+            Return False
+        End Get
+    End Property
+
+    Public ReadOnly Property JobInputData As IEPTPJobInputData Implements IEPTPInputDataProvider.JobInputData
+        Get
+            Return Me
+        End Get
+    End Property
 End Class

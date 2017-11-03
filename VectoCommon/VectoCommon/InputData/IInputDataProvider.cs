@@ -62,5 +62,6 @@ namespace TUGraz.VectoCommon.InputData
 		IList<ICycleData> Cycles { get; }
 
 		IEnumerable<double> FanPowerCoefficents { get; }
-	}
+        bool SavedInDeclarationMode { get; }
+    }
 }

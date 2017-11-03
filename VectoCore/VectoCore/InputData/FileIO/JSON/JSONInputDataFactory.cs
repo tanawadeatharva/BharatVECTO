@@ -71,6 +71,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case 3:
 					return new JSONInputDataV3(json, filename, tolerateMissing);
 				case 4:
+                    if (json["Body"]["DeclarationVehicle"] != null) {
+                        return new JSONEPTPInputDataV4(json, filename, tolerateMissing);
+                    }
 					return new JSONInputDataV4(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
