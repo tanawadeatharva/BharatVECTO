@@ -74,6 +74,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (DistanceBasedCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.DistanceBased;
 			}
+            if (EPTPCycleDataParser.ValidateHeader(cols, false)) {
+                return CycleType.EPTP;
+            }
 			throw new VectoException("CycleFile format is unknown.");
 		}
 
@@ -92,7 +95,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 					return new MeasuredSpeedDataParser();
 				case CycleType.PTO:
 					return new PTOCycleDataParser();
-				default:
+                case CycleType.EPTP:
+                    return new EPTPCycleDataParser();
+
+                default:
 					throw new ArgumentOutOfRangeException("Cycle Type", type.ToString());
 			}
 		}
@@ -311,6 +317,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 			public const string RoadGradient = "grad";
 			public const string StoppingTime = "stop";
 			public const string EngineSpeed = "n";
+            public const string EngineSpeedSuffix = "n_eng";
+            public const string FanSpeed = "n_fan";
 			public const string Gear = "gear";
 			public const string AdditionalAuxPowerDemand = "Padd";
 			public const string AirSpeedRelativeToVehicle = "vair_res";
@@ -698,7 +706,56 @@ namespace TUGraz.VectoCore.InputData.Reader
 				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux);
 			}
 		}
-	}
+
+        /// <summary>
+        /// Parser for PTO Cycles.
+        /// </summary>
+        // <t>,<v> [km/h],<Pwheel> [kW],<n_eng> [rpm],<n_fan> [rpm], <Padd> [kW]
+        private class EPTPCycleDataParser : AbstractCycleDataParser
+        {
+            public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
+            {
+                ValidateHeader(table.Columns);
+
+                var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
+                    Time = row.ParseDouble(Fields.Time).SI<Second>(),
+                    VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
+                    AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
+                   PWheel = row.ParseDouble(Fields.PWheel).SI().Kilo.Watt.Cast<Watt>(),
+                   EngineSpeed = row.ParseDouble(Fields.EngineSpeedSuffix).RPMtoRad(),
+                   FanSpeed = row.ParseDouble(Fields.FanSpeed).RPMtoRad()
+                }).ToArray();
+
+                return entries;
+            }
+
+            public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
+            {
+                var requiredCols = new[] {
+                    Fields.Time,
+                    Fields.VehicleSpeed,
+                    Fields.PWheel,
+                    Fields.EngineSpeedSuffix,
+                    Fields.FanSpeed
+                };
+
+                var allowedCols = new[] {
+                    Fields.Time,
+                    Fields.VehicleSpeed,
+                    Fields.AdditionalAuxPowerDemand,
+                    Fields.PWheel,
+                    Fields.EngineSpeedSuffix,
+                    Fields.FanSpeed
+                };
+
+                const bool allowAux = true;
+
+                return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux) &&
+                       CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
+            }
+        }
+
+    }
 
 	#endregion
 }

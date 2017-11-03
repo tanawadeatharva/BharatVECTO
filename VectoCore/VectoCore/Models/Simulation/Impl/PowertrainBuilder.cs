@@ -33,6 +33,7 @@ using System;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -69,6 +70,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return BuildEngineOnly(data);
 				case CycleType.PWheel:
 					return BuildPWheel(data);
+                case CycleType.EPTP:
+                    return BuildEPTP(data);
 				case CycleType.MeasuredSpeed:
 					return BuildMeasuredSpeed(data);
 				case CycleType.MeasuredSpeedGear:
@@ -124,7 +127,40 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
+        private VehicleContainer BuildEPTP(VectoRunData data)
+        {
+            if (data.Cycle.CycleType != CycleType.PWheel) {
+                throw new VectoException("CycleType must be PWheel.");
+            }
+
+            var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
+            var gearbox = new CycleGearbox(container, data);
+
+            // PWheelCycle --> AxleGear --> Clutch --> Engine <-- Aux
+            var powertrain = new EPTPCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, data.VehicleData,
+                    gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
+                .AddComponent(new AxleGear(container, data.AxleGearData))
+                .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+                .AddComponent(gearbox, data.Retarder, container)
+                .AddComponent(new Clutch(container, data.EngineData));
+            var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
+
+            var aux = CreateAuxiliaries(data, container);
+            aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => {
+                var fanSpeed = cycleEntry.FanSpeed.AsRPM;
+                return (c1 * Math.Pow(fanSpeed / c2, 3) * Math.Pow(fanSpeed / c3, 5)*1000).SI<Watt>();
+            });
+
+            engine.Connect(aux.Port());
+            var idleController = GetIdleController(data.PTO, engine, container);
+
+            powertrain.AddComponent(engine, idleController);
+                //.AddAuxiliaries(container, data);
+
+            return container;
+        }
+
+        private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
 		{
 			if (data.Cycle.CycleType != CycleType.MeasuredSpeed) {
 				throw new VectoException("CycleType must be MeasuredSpeed.");
@@ -272,7 +308,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
-
 			return aux;
 		}
 
