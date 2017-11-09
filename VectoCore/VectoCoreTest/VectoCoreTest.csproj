@@ -110,6 +110,7 @@
     <Compile Include="Models\Simulation\GetSectionTest.cs" />
     <Compile Include="Models\Simulation\DeclarationSimulationFactoryTest.cs" />
     <Compile Include="Reports\ActualModalSimulationDataTest.cs" />
+    <Compile Include="Reports\GearshiftCountTest.cs" />
     <Compile Include="Reports\ModDataTest.cs" />
     <Compile Include="Models\Simulation\MeasuredSpeedModeTest.cs" />
     <Compile Include="Models\Simulation\PwheelModeTests.cs" />

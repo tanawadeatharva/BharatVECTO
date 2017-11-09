@@ -2,6 +2,14 @@
 
 **VECTO 3.2.0**
 
+***Build 1022 (2017-10-19)***
+
+- Bugfixes
+    + [VECTO-585, VECTO-587] – VECTO Simulation aborts when run as WCF Service
+    + [VECTO-586] – Gearshiftcout in reports too high
+    + [VECTO-573] – Use of old library references .net framework 2.0
+
+
 ***Build 1005 (2017-10-01)***
 
 - Improvements

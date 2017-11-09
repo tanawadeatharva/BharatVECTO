@@ -487,9 +487,17 @@ namespace TUGraz.VectoCore.OutputData
 			return 100 * sum / Duration(data);
 		}
 
+		/// <summary>
+		/// The following logic applies:
+		/// - shifting from gear A to gear B counts as gearshift (with or without traction interruption)
+		/// - shifting from gear A to neutral couts as gearshift if the vehicle stopped
+		/// </summary>
+		/// <param name="data"></param>
+		/// <returns></returns>
 		public static Scalar GearshiftCount(this IModalDataContainer data)
 		{
 			var prevGear = data.GetValues<uint>(ModalResultField.Gear).First();
+			var lastGear = prevGear;
 			var gearCount = 0;
 
 			var shifts = data.GetValues(x => new {
@@ -498,13 +506,17 @@ namespace TUGraz.VectoCore.OutputData
 			});
 			foreach (var entry in shifts) {
 				if (entry.Speed != null && entry.Speed.IsSmallerOrEqual(0.1)) {
-					prevGear = 0;
-					gearCount++;
+					if (prevGear != entry.Gear) {
+						gearCount++;
+					}
 				}
-				if (entry.Gear == 0 || entry.Gear == prevGear) {
-					continue;
+				if (entry.Gear != 0 && entry.Gear != prevGear) {
+					if (lastGear != entry.Gear) {
+						gearCount++;
+					}
+					lastGear = entry.Gear;
 				}
-				gearCount++;
+
 				prevGear = entry.Gear;
 			}
 			return gearCount.SI<Scalar>();
