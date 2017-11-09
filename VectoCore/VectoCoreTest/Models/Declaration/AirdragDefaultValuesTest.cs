@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -40,15 +41,20 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	[TestFixture]
 	public class AirdragDefaultValuesTest
 	{
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 		[TestCase]
 		public void TestClass2()
 		{
 			var file = @"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto";
-			var inputData = (JSONInputDataV3)JSONInputDataFactory.ReadJsonJob(file);
-			inputData.AirdragData = null; // force use of standard values
+			var fileNoAirdrag =
+				@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_NoAirdrag_DECL.vecto";
 
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(fileNoAirdrag);
 			var runDataOrig = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			Assert.AreEqual(4.83, runDataOrig[0].AirdragData.DeclaredAirdragArea.Value());
@@ -60,11 +66,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void TestClass5()
 		{
 			var file = @"TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_DECL.vecto";
-			var inputData = (JSONInputDataV3)JSONInputDataFactory.ReadJsonJob(file);
-			inputData.AirdragData = null; // force use of standard values
+			var fileNoAirdrag = @"TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_NoAirdrag_DECL.vecto";
 
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(fileNoAirdrag);
 			var runDataOrig = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			Assert.AreEqual(5.3, runDataOrig[0].AirdragData.DeclaredAirdragArea.Value());
@@ -75,11 +79,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void TestClass9()
 		{
 			var file = @"TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
-			var inputData = (JSONInputDataV3)JSONInputDataFactory.ReadJsonJob(file);
-			inputData.AirdragData = null; // force use of standard values
+			var fileNoAirdrag =
+				@"TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck_NoAirdrag_DECL.vecto";
 
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
-			var runData = dataReader.NextRun().ToArray();
+			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(fileNoAirdrag);
 			var runDataOrig = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
 			Assert.AreEqual(5.2, runDataOrig[0].AirdragData.DeclaredAirdragArea.Value());

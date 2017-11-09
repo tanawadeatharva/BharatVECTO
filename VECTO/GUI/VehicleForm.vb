@@ -338,11 +338,11 @@ Public Class VehicleForm
 
 		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
 																IEngineeringInputDataProvider)
-		Dim vehicle As IVehicleEngineeringInputData = inputData.VehicleInputData
-		Dim airdrag As IAirdragEngineeringInputData = inputData.AirdragInputData
-		Dim retarder As IRetarderInputData = inputData.RetarderInputData
-		Dim angledrive As IAngledriveInputData = inputData.AngledriveInputData
-		Dim pto As IPTOTransmissionInputData = inputData.PTOTransmissionInputData
+		Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
+		Dim airdrag As IAirdragEngineeringInputData = inputData.JobInputData.Vehicle.AirdragInputData
+		Dim retarder As IRetarderInputData = inputData.JobInputData.Vehicle.RetarderInputData
+		Dim angledrive As IAngledriveInputData = inputData.JobInputData.Vehicle.AngledriveInputData
+		Dim pto As IPTOTransmissionInputData = inputData.JobInputData.Vehicle.PTOTransmissionInputData
 
 		If Cfg.DeclMode <> vehicle.SavedInDeclarationMode Then
 			Select Case WrongMode()

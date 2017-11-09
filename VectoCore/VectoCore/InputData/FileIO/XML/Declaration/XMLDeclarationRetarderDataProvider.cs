@@ -54,12 +54,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public RetarderType Type
 		{
-			get { return InputData._vehicleInputData.RetarderType; }
+			get { return InputData.XMLJob.XMLVehicle.RetarderType; }
 		}
 
 		public double Ratio
 		{
-			get { return InputData._vehicleInputData.RetarderRatio; }
+			get { return InputData.XMLJob.XMLVehicle.RetarderRatio; }
 		}
 
 		public TableData LossMap

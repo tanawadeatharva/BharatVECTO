@@ -23,6 +23,7 @@ Public Module FileBrowserModule
 	Public JobfileFileBrowser As FileBrowser
 	Public TextFileBrowser As FileBrowser
 	Public VehicleFileBrowser As FileBrowser
+	Public VehicleXMLFileBrowser As FileBrowser
 	Public DrivingCycleFileBrowser As FileBrowser
 	Public PTODrivingCycleFileBrowser As FileBrowser
 	Public FuelConsumptionMapFileBrowser As FileBrowser

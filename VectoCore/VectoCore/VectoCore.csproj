@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="Configuration\Constants.cs" />
     <Compile Include="InputData\AuxiliaryFileHelper.cs" />
+    <Compile Include="InputData\FileIO\JSON\IJSONVehicleComponents.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\AbstractDeclarationXMLComponentDataProvider.cs" />
@@ -116,7 +117,6 @@
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAngledriveDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAuxiliaryDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAxlegearDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationDriverDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationEngineDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationGearboxDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationJobInputDataProvider.cs" />
@@ -186,6 +186,7 @@
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\IdleControllerSwitcher.cs" />
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
+    <Compile Include="InputData\Reader\Impl\EngineeringEPTPModeVectoRunDataFactory.cs" />
     <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
     <Compile Include="OutputData\ModFilter\ModalData1HzFilter.cs" />
     <Compile Include="OutputData\XML\AbstractXMLWriter.cs" />
@@ -313,9 +314,7 @@
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
     <Compile Include="Models\SimulationComponent\VectoSimulationComponent.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PowertrainDrivingCycle.cs" />
-    <Compile Include="Models\Simulation\Data\ModalResult.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Models\Simulation\Data\ModalResult.cs" />
     <Compile Include="Models\Simulation\IVectoRun.cs" />
     <Compile Include="Models\Simulation\Impl\SimulatorFactory.cs" />
     <Compile Include="Models\Simulation\Impl\VectoRun.cs" />
@@ -463,7 +462,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -471,6 +469,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  
   <Import Project="$(SolutionDir)Build\TextPreProcessing.targets" />
 </Project>

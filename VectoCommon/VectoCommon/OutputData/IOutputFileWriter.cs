@@ -45,6 +45,8 @@ namespace TUGraz.VectoCommon.OutputData
 
 		void SaveJob(IEngineeringInputDataProvider input, string filename);
 
+		void SaveJob(IEPTPInputDataProvider input, string filename);
+
 		void ExportJob(IEngineeringInputDataProvider input, string filename, bool separateFiles);
 	}
 }

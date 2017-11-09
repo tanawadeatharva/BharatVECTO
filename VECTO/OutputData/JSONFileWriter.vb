@@ -18,7 +18,7 @@ Public Class JSONFileWriter
 
 	Public Const VehicleFormatVersion As Integer = 7
 
-	Private Const VectoJobFormatVersion As Integer = 3
+	Private Const VectoJobFormatVersion As Integer = 4
 
 	Private Shared _instance As JSONFileWriter
 
@@ -254,7 +254,7 @@ Public Class JSONFileWriter
 		'SavedInDeclMode = Cfg.DeclMode
 
 		Dim job As IEngineeringJobInputData = input.JobInputData()
-		Dim aux As IAuxiliariesEngineeringInputData = input.AuxiliaryInputData()
+		Dim aux As IAuxiliariesEngineeringInputData = input.JobInputData.Vehicle.AuxiliaryInputData()
 		Dim driver As IDriverEngineeringInputData = input.DriverInputData
 
 		body.Add("SavedInDeclMode", job.SavedInDeclarationMode)
@@ -262,7 +262,7 @@ Public Class JSONFileWriter
 		body.Add("EngineOnlyMode", job.EngineOnlyMode)
 
 		If job.EngineOnlyMode Then
-			body.Add("EngineFile", GetRelativePath(input.EngineInputData.Source, basePath))
+			body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.EngineInputData.Source, basePath))
 			body.Add("Cycles",
 					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 			WriteFile(header, body, filename)
@@ -271,8 +271,8 @@ Public Class JSONFileWriter
 
 		'Main Files
 		body.Add("VehicleFile", GetRelativePath(job.Vehicle.Source, basePath))
-		body.Add("EngineFile", GetRelativePath(input.EngineInputData.Source, basePath))
-		body.Add("GearboxFile", GetRelativePath(input.GearboxInputData.Source, basePath))
+		body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.EngineInputData.Source, basePath))
+		body.Add("GearboxFile", GetRelativePath(input.JobInputData.Vehicle.GearboxInputData.Source, basePath))
 
 		'AA-TB
 		'ADVANCED AUXILIARIES 
@@ -351,6 +351,23 @@ Public Class JSONFileWriter
 		End If
 
 		WriteFile(header, body, filename)
+	End Sub
+
+	Public Sub SaveJob(input As IEPTPInputDataProvider, filename As String) Implements IOutputFileWriter.SaveJob
+		Dim basePath As String = Path.GetDirectoryName(filename)
+		'Header
+		Dim header As Dictionary(Of String, Object) = GetHeader(VectoJobFormatVersion)
+
+		'Body
+		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+        Dim job As IEPTPJobInputData = input.JobInputData
+        body.Add("SavedInDeclMode", False)
+        body.Add("DeclarationVehicle", GetRelativePath(job.Vehicle.Source, Path.GetDirectoryName(filename)))
+        body.Add("FanPowerCoefficients", job.FanPowerCoefficents)
+        body.Add("Cycles",
+                 job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
+
+        WriteFile(header, body, filename)
 	End Sub
 
 	Public Sub ExportJob(input As IEngineeringInputDataProvider, filename As String, separateFiles As Boolean) _

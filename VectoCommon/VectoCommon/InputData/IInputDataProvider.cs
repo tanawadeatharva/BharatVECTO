@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace TUGraz.VectoCommon.InputData
@@ -37,57 +38,30 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IDeclarationInputDataProvider : IInputDataProvider
 	{
-		IDeclarationJobInputData JobInputData();
-
-		IVehicleDeclarationInputData VehicleInputData { get; }
-
-		IAirdragDeclarationInputData AirdragInputData { get; }
-
-		IGearboxDeclarationInputData GearboxInputData { get; }
-
-		ITorqueConverterDeclarationInputData TorqueConverterInputData { get; }
-
-		IAxleGearInputData AxleGearInputData { get; }
-
-		IAngledriveInputData AngledriveInputData { get; }
-
-		IEngineDeclarationInputData EngineInputData { get; }
-
-		IAuxiliariesDeclarationInputData AuxiliaryInputData();
-
-		IRetarderInputData RetarderInputData { get; }
-
-		IDriverDeclarationInputData DriverInputData { get; }
-
-		IPTOTransmissionInputData PTOTransmissionInputData { get; }
+		IDeclarationJobInputData JobInputData { get; }
 
 		XElement XMLHash { get; }
 	}
 
 	public interface IEngineeringInputDataProvider : IInputDataProvider
 	{
-		IEngineeringJobInputData JobInputData();
-
-		IVehicleEngineeringInputData VehicleInputData { get; }
-
-		IAirdragEngineeringInputData AirdragInputData { get; }
-
-		IGearboxEngineeringInputData GearboxInputData { get; }
-
-		ITorqueConverterEngineeringInputData TorqueConverterInputData { get; }
-
-		IAxleGearInputData AxleGearInputData { get; }
-
-		IAngledriveInputData AngledriveInputData { get; }
-
-		IEngineEngineeringInputData EngineInputData { get; }
-
-		IAuxiliariesEngineeringInputData AuxiliaryInputData();
-
-		IRetarderInputData RetarderInputData { get; }
+		IEngineeringJobInputData JobInputData { get; }
 
 		IDriverEngineeringInputData DriverInputData { get; }
-
-		IPTOTransmissionInputData PTOTransmissionInputData { get; }
 	}
+
+	public interface IEPTPInputDataProvider : IInputDataProvider
+	{
+		IEPTPJobInputData JobInputData { get; }
+	}
+
+	public interface IEPTPJobInputData
+	{
+		IVehicleDeclarationInputData Vehicle { get; }
+
+		IList<ICycleData> Cycles { get; }
+
+		IEnumerable<double> FanPowerCoefficents { get; }
+        bool SavedInDeclarationMode { get; }
+    }
 }

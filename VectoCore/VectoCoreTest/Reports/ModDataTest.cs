@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			foreach (var modalResults in modData) {
 				AssertModDataIntegrity(modalResults.Item1, auxKeys, modalResults.Item2,
-					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).EngineInputData.FuelConsumptionMap));
+					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).JobInputData.Vehicle.EngineInputData.FuelConsumptionMap));
 			}
 
 			AssertSumDataIntegrity(sumData, mode);
@@ -392,7 +392,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			foreach (var modalResults in modData) {
 				AssertModDataIntegrityAT(modalResults.Item1, auxKeys, modalResults.Item2,
-					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).EngineInputData.FuelConsumptionMap));
+					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).JobInputData.Vehicle.EngineInputData.FuelConsumptionMap));
 			}
 
 			AssertSumDataIntegrity(sumData, ExecutionMode.Engineering);

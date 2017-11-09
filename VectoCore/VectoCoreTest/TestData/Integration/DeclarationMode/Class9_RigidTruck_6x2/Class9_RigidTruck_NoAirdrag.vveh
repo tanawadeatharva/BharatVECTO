@@ -1,0 +1,64 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "2017-05-19T08:36:54.5380903Z",
+    "AppVersion": "3",
+    "FileVersion": 7
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "VehCat": "RigidTruck",
+    "CurbWeight": 9300.0,
+    "CurbWeightExtra": 0.0,
+    "Loading": 0.0,
+    "MassMax": 26.0,
+    "rdyn": 0.0,
+    "CdCorrMode": "CdofVdecl",
+    "CdCorrFile": "",
+    "Retarder": {
+      "Type": "secondary",
+      "Ratio": 1.0,
+      "File": "Retarder.vrlm"
+    },
+    "Angledrive": {
+      "Type": "None",
+      "Ratio": "NaN",
+      "LossMap": ""
+    },
+    "PTO": {
+      "Type": "drive shaft and/or more than 2 gear wheels - multi-disc clutch, oil pump",
+      "LossMap": "",
+      "Cycle": ""
+    },
+    "TorqueLimits": {},
+    "AxleConfig": {
+      "Type": "6x2",
+      "Axles": [
+        {
+          "Inertia": 14.9,
+          "Wheels": "315/70 R22.5",
+          "AxleWeightShare": 0.0,
+          "TwinTyres": false,
+          "RRCISO": 0.0055,
+          "FzISO": 33350.0
+        },
+        {
+          "Inertia": 14.9,
+          "Wheels": "315/70 R22.5",
+          "AxleWeightShare": 0.0,
+          "TwinTyres": true,
+          "RRCISO": 0.0055,
+          "FzISO": 33350.0
+        },
+        {
+          "Inertia": 14.9,
+          "Wheels": "315/70 R22.5",
+          "AxleWeightShare": 0.0,
+          "TwinTyres": false,
+          "RRCISO": 0.0055,
+          "FzISO": 33350.0
+        }
+      ]
+    }
+  }
+}

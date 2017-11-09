@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public AngledriveType Type
 		{
-			get { return InputData._vehicleInputData.AngulargearType; }
+			get { return InputData.XMLJob.XMLVehicle.AngulargearType; }
 		}
 
 		public double Ratio

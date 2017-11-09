@@ -67,15 +67,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			Helper.AddNamespaces(Manager);
 
 			SourceType = DataSourceType.Embedded;
-			Source = "";
-
+			
 			VehiclePath = Helper.QueryAbs(
 				Helper.NSPrefix(XMLNames.VectoInputDeclaration, Constants.XML.RootNSPrefix),
 				XMLNames.Component_Vehicle
 				);
 		}
 
-		public string Source { get; protected set; }
+		public string Source { get { return InputData.Source; } }
 
 		public DataSourceType SourceType { get; protected set; }
 

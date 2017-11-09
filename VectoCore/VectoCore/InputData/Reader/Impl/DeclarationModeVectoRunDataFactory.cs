@@ -88,30 +88,33 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		private void Initialize()
 		{
 			_dao = new DeclarationDataAdapter();
-			_segment = GetVehicleClassification(InputDataProvider.VehicleInputData.VehicleCategory,
-				InputDataProvider.VehicleInputData.AxleConfiguration,
-				InputDataProvider.VehicleInputData.GrossVehicleMassRating, InputDataProvider.VehicleInputData.CurbMassChassis);
+			_segment = GetVehicleClassification(InputDataProvider.JobInputData.Vehicle.VehicleCategory,
+				InputDataProvider.JobInputData.Vehicle.AxleConfiguration,
+				InputDataProvider.JobInputData.Vehicle.GrossVehicleMassRating,
+				InputDataProvider.JobInputData.Vehicle.CurbMassChassis);
 			if (!_segment.Found) {
 				throw new VectoException(
 					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
-					InputDataProvider.VehicleInputData.VehicleCategory, InputDataProvider.VehicleInputData.AxleConfiguration,
-					InputDataProvider.VehicleInputData.GrossVehicleMassRating);
+					InputDataProvider.JobInputData.Vehicle.VehicleCategory, InputDataProvider.JobInputData.Vehicle.AxleConfiguration,
+					InputDataProvider.JobInputData.Vehicle.GrossVehicleMassRating);
 			}
-			_driverdata = _dao.CreateDriverData(InputDataProvider.DriverInputData);
+			_driverdata = _dao.CreateDriverData();
 			_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
-			var tempVehicle = _dao.CreateVehicleData(InputDataProvider.VehicleInputData, _segment.Missions.First(),
+			var tempVehicle = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, _segment.Missions.First(),
 				_segment.Missions.First().Loadings.First().Value, _segment.MunicipalBodyWeight);
-			_airdragData = _dao.CreateAirdragData(InputDataProvider.AirdragInputData, _segment.Missions.First(), _segment);
-			_engineData = _dao.CreateEngineData(InputDataProvider.EngineInputData,
-				InputDataProvider.VehicleInputData.EngineIdleSpeed,
-				InputDataProvider.GearboxInputData, InputDataProvider.VehicleInputData.TorqueLimits);
-			_axlegearData = _dao.CreateAxleGearData(InputDataProvider.AxleGearInputData, false);
-			_angledriveData = _dao.CreateAngledriveData(InputDataProvider.AngledriveInputData, false);
-			_gearboxData = _dao.CreateGearboxData(InputDataProvider.GearboxInputData, _engineData, _axlegearData.AxleGear.Ratio,
+			_airdragData = _dao.CreateAirdragData(InputDataProvider.JobInputData.Vehicle.AirdragInputData,
+				_segment.Missions.First(), _segment);
+			_engineData = _dao.CreateEngineData(InputDataProvider.JobInputData.Vehicle.EngineInputData,
+				InputDataProvider.JobInputData.Vehicle.EngineIdleSpeed,
+				InputDataProvider.JobInputData.Vehicle.GearboxInputData, InputDataProvider.JobInputData.Vehicle.TorqueLimits);
+			_axlegearData = _dao.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.AxleGearInputData, false);
+			_angledriveData = _dao.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.AngledriveInputData, false);
+			_gearboxData = _dao.CreateGearboxData(InputDataProvider.JobInputData.Vehicle.GearboxInputData, _engineData,
+				_axlegearData.AxleGear.Ratio,
 				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, false);
-			_retarderData = _dao.CreateRetarderData(InputDataProvider.RetarderInputData);
+			_retarderData = _dao.CreateRetarderData(InputDataProvider.JobInputData.Vehicle.RetarderInputData);
 
-			_ptoTransmissionData = _dao.CreatePTOTransmissionData(InputDataProvider.PTOTransmissionInputData);
+			_ptoTransmissionData = _dao.CreatePTOTransmissionData(InputDataProvider.JobInputData.Vehicle.PTOTransmissionInputData);
 
 			_municipalPtoTransmissionData = CreateDefaultPTOData();
 		}
@@ -120,15 +123,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			var powertrainConfig = new VectoRunData() {
 				VehicleData =
-					_dao.CreateVehicleData(InputDataProvider.VehicleInputData, _segment.Missions.First(),
+					_dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, _segment.Missions.First(),
 						_segment.Missions.First().Loadings.First().Value, _segment.MunicipalBodyWeight),
 				AirdragData = _airdragData,
 				EngineData = _engineData,
 				GearboxData = _gearboxData,
 				AxleGearData = _axlegearData,
 				Retarder = _retarderData,
-				Aux = _dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), _segment.Missions.First().MissionType,
-					_segment.VehicleClass),
+				Aux =
+					_dao.CreateAuxiliaryData(InputDataProvider.JobInputData.Vehicle.AuxiliaryInputData(),
+						_segment.Missions.First().MissionType,
+						_segment.VehicleClass),
 				InputDataHash = InputDataProvider.XMLHash
 			};
 			powertrainConfig.VehicleData.VehicleClass = _segment.VehicleClass;
@@ -159,19 +164,20 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var simulationRunData = new VectoRunData {
 						Loading = loading.Key,
 						VehicleData =
-							_dao.CreateVehicleData(InputDataProvider.VehicleInputData, mission, loading.Value, _segment.MunicipalBodyWeight),
-						AirdragData = _dao.CreateAirdragData(InputDataProvider.AirdragInputData, mission, _segment),
+							_dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, mission, loading.Value,
+								_segment.MunicipalBodyWeight),
+						AirdragData = _dao.CreateAirdragData(InputDataProvider.JobInputData.Vehicle.AirdragInputData, mission, _segment),
 						EngineData = _engineData.Copy(),
 						GearboxData = _gearboxData,
 						AxleGearData = _axlegearData,
 						AngledriveData = _angledriveData,
-						Aux = _dao.CreateAuxiliaryData(InputDataProvider.AuxiliaryInputData(), mission.MissionType,
+						Aux = _dao.CreateAuxiliaryData(InputDataProvider.JobInputData.Vehicle.AuxiliaryInputData(), mission.MissionType,
 							_segment.VehicleClass),
 						Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 						Retarder = _retarderData,
 						DriverData = _driverdata,
 						ExecutionMode = ExecutionMode.Declaration,
-						JobName = InputDataProvider.JobInputData().JobName,
+						JobName = InputDataProvider.JobInputData.JobName,
 						ModFileSuffix = loading.Key.ToString(),
 						Report = Report,
 						Mission = mission,

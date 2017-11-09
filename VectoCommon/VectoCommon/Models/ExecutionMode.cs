@@ -35,5 +35,6 @@ namespace TUGraz.VectoCommon.Models
 	{
 		Engineering,
 		Declaration,
+//		ExPostTest,
 	}
 }

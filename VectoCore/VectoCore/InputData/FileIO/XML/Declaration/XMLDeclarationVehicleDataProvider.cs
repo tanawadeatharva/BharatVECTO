@@ -46,10 +46,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 	public class XMLDeclarationVehicleDataProvider : AbstractDeclarationXMLComponentDataProvider,
 		IVehicleDeclarationInputData, IPTOTransmissionInputData
 	{
+		private readonly IAuxiliariesDeclarationInputData XMLAuxiliaryData;
+
 		public XMLDeclarationVehicleDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider)
 			: base(xmlInputDataProvider)
 		{
 			XBasePath = VehiclePath;
+			AirdragInputData = new XMLDeclarationAirdragDataProvider(xmlInputDataProvider);
+			AxleGearInputData = new XMLDeclarationAxlegearDataProvider(xmlInputDataProvider);
+			AngledriveInputData = new XMLDeclarationAngledriveDataProvider(xmlInputDataProvider);
+			EngineInputData = new XMLDeclarationEngineDataProvider(xmlInputDataProvider);
+			GearboxInputData = new XMLDeclarationGearboxDataProvider(xmlInputDataProvider);
+			TorqueConverterInputData = new XMLDeclarationTorqueConverterDataProvider(xmlInputDataProvider);
+			RetarderInputData = new XMLDeclarationRetarderDataProvider(xmlInputDataProvider);
+			XMLAuxiliaryData = new XMLDeclarationAuxiliaryDataProvider(xmlInputDataProvider);
 		}
 
 		public string VIN
@@ -181,11 +191,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>(); }
 		}
 
-		public IPTOTransmissionInputData GetPTOData()
-		{
-			return this;
-		}
-
 		public string PTOTransmissionType
 		{
 			get {
@@ -213,6 +218,30 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		public TableData PTOCycle
 		{
 			get { return null; }
+		}
+
+		public IAirdragDeclarationInputData AirdragInputData { get; private set; }
+
+		public IGearboxDeclarationInputData GearboxInputData { get; private set; }
+
+		public ITorqueConverterDeclarationInputData TorqueConverterInputData { get; private set; }
+
+		public IAxleGearInputData AxleGearInputData { get; private set; }
+
+		public IAngledriveInputData AngledriveInputData { get; private set; }
+
+		public IEngineDeclarationInputData EngineInputData { get; private set; }
+
+		public IAuxiliariesDeclarationInputData AuxiliaryInputData()
+		{
+			return XMLAuxiliaryData;
+		}
+
+		public IRetarderInputData RetarderInputData { get; private set; }
+
+		public IPTOTransmissionInputData PTOTransmissionInputData
+		{
+			get { return this; }
 		}
 	}
 }
