@@ -103,7 +103,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public int JobRunId { get; internal set; }
 
-		public class AuxData
+        public double[] AuxFanParameters { get; internal set; }
+
+        public class AuxData
 		{
 			// ReSharper disable once InconsistentNaming
 			public string ID;

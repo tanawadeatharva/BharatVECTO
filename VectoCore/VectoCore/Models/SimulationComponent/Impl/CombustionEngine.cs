@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	CurrentState.OperationMode = EngineOperationMode.Stopped;
 			//}
 
-			var avgEngineSpeed = (PreviousState.EngineSpeed + angularVelocity) / 2.0;
+			var avgEngineSpeed = GetEngineSpeed(angularVelocity);
 
 			var engineSpeedLimit = GetEngineSpeedLimit(absTime);
 			if (!dryRun && avgEngineSpeed.IsGreater(engineSpeedLimit, Constants.SimulationSettings.LineSearchTolerance)) {
@@ -295,6 +295,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 		}
 
+		protected virtual PerSecond GetEngineSpeed(PerSecond angularVelocity)
+		{
+			return (PreviousState.EngineSpeed + angularVelocity) / 2.0;
+		}
+
 		protected virtual PerSecond GetEngineSpeedLimit(Second absTime)
 		{
 			return DataBus.Gear == 0 || !DataBus.ClutchClosed(absTime)
@@ -351,7 +356,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			ValidatePowerDemand(CurrentState.EngineTorque, CurrentState.DynamicFullLoadTorque, CurrentState.FullDragTorque);
 
-			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
+			var avgEngineSpeed = GetEngineSpeed(CurrentState.EngineSpeed);
 			if (avgEngineSpeed.IsSmaller(EngineIdleSpeed,
 				DataBus.ExecutionMode == ExecutionMode.Engineering ? 20.RPMtoRad() : 1e-3.RPMtoRad())) {
 				Log.Warn("EngineSpeed below idling speed! n_eng_avg: {0}, n_idle: {1}", avgEngineSpeed, EngineIdleSpeed);
@@ -493,7 +498,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public NewtonMeter FullDragTorque { get; set; }
 		}
 
-		protected class CombustionEngineIdleController : LoggingObject, IIdleController
+		protected internal class CombustionEngineIdleController : LoggingObject, IIdleController
 		{
 			private const double PeDropSlope = -5;
 			private const double PeDropOffset = 1.0;
@@ -523,7 +528,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_idleStart = null;
 			}
 
-			public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 				bool dryRun = false)
 			{
 				if (!_dataBus.VehicleStopped && _dataBus.Gear != _dataBus.NextGear.Gear && _dataBus.Gear != 0 &&
@@ -595,7 +600,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return retVal;
 			}
 
-			private IResponse RequestIdling(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+			protected IResponse RequestIdling(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
 				if (outAngularVelocity != null) {
 					throw new VectoException("IdleController can only handle idle requests, i.e. angularVelocity == null!");
@@ -650,6 +655,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });
 
 				return retVal;
+			}
+		}
+
+		protected internal class CombustionEngineNoDubleclutchIdleController : CombustionEngineIdleController
+		{
+			public CombustionEngineNoDubleclutchIdleController(CombustionEngine combustionEngine, IDataBus dataBus) : base(combustionEngine, dataBus)
+			{
+			}
+
+			public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+				bool dryRun = false)
+			{
+				
+				return RequestIdling(absTime, dt, outTorque, outAngularVelocity);
 			}
 		}
 	}

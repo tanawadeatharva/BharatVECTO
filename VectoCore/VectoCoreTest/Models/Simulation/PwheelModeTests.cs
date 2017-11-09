@@ -60,8 +60,26 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <remarks>VECTO-177</remarks>
 		[TestCase]
 		public void Pwheel_ReadCycle_Test()
-		{
-			var container = new VehicleContainer(ExecutionMode.Engineering);
+        {
+            var runData = new VectoRunData() {
+                GearboxData = new GearboxData {
+                    Gears = new Dictionary<uint, GearData> {
+                        { 1, new GearData { Ratio = 2.0 } },
+                        { 2, new GearData { Ratio = 3.5 } }
+                    }
+                },
+                VehicleData = new VehicleData {
+                    //DynamicTyreRadius = 
+                },
+                AxleGearData = new AxleGearData {
+                    AxleGear = new TransmissionData {
+                        Ratio = 2.3
+                    }
+                }
+            };
+
+            var container = new VehicleContainer(ExecutionMode.Engineering);
+            container.RunData = runData;
 			var inputData = @"<t>,<Pwheel>,<gear>,<n>,<Padd>
 							   1,89,2,1748,1.300
 							   2,120,2,1400,0.4";
@@ -69,15 +87,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var cycleFile = new MemoryStream(Encoding.UTF8.GetBytes(inputData));
 			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycleFile, CycleType.PWheel, "", false);
 
-			var gearbox = new CycleGearbox(container, new VectoRunData() {
-				GearboxData = new GearboxData {
-					Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 2.0 } }, { 2, new GearData { Ratio = 3.5 } } }
-				}
-			});
+			var gearbox = new CycleGearbox(container, runData);
 
-			var cycle = new PWheelCycle(container, drivingCycle, 2.3, null,
-				gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio));
 
+			var cycle = new PWheelCycle(container, drivingCycle);
+            cycle.Connect(new MockTnOutPort());
+
+            cycle.Initialize();
+            
 			Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());
 			Assert.AreEqual(container.CycleData.RightSample.Time, 2.SI<Second>());
 

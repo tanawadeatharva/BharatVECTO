@@ -67,10 +67,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
                     DriverData = null,
                     Aux = aux,
                     AdvancedAux = null,
-                    Retarder = dao.CreateRetarderData(InputDataProvider.JobInputData.Vehicle.RetarderInputData),
+                    Retarder = retarderData,
                     PTO = ptoTransmissionData,
                     Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
-                    ExecutionMode = ExecutionMode.Engineering
+                    ExecutionMode = ExecutionMode.Engineering,
+                    AuxFanParameters = InputDataProvider.JobInputData.FanPowerCoefficents.ToArray()
                 };
             });
         }
