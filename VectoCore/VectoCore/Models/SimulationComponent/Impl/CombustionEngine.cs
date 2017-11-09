@@ -498,7 +498,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public NewtonMeter FullDragTorque { get; set; }
 		}
 
-		protected class CombustionEngineIdleController : LoggingObject, IIdleController
+		protected internal class CombustionEngineIdleController : LoggingObject, IIdleController
 		{
 			private const double PeDropSlope = -5;
 			private const double PeDropOffset = 1.0;
@@ -528,7 +528,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_idleStart = null;
 			}
 
-			public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 				bool dryRun = false)
 			{
 				if (!_dataBus.VehicleStopped && _dataBus.Gear != _dataBus.NextGear.Gear && _dataBus.Gear != 0 &&
@@ -600,7 +600,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return retVal;
 			}
 
-			private IResponse RequestIdling(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+			protected IResponse RequestIdling(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 			{
 				if (outAngularVelocity != null) {
 					throw new VectoException("IdleController can only handle idle requests, i.e. angularVelocity == null!");
@@ -655,6 +655,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Default(r => { throw new UnexpectedResponseException("searching Idling point", r); });
 
 				return retVal;
+			}
+		}
+
+		protected internal class CombustionEngineNoDubleclutchIdleController : CombustionEngineIdleController
+		{
+			public CombustionEngineNoDubleclutchIdleController(CombustionEngine combustionEngine, IDataBus dataBus) : base(combustionEngine, dataBus)
+			{
+			}
+
+			public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+				bool dryRun = false)
+			{
+				
+				return RequestIdling(absTime, dt, outTorque, outAngularVelocity);
 			}
 		}
 	}

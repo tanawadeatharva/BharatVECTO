@@ -73,8 +73,8 @@
 		<ReleaseNotes Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
 		
 		<HashingTool Include="$(SolutionDir)HashingTool\bin\Deploy\HashingTool.exe"/>
-		<HashingTool Include="$(SolutionDir)VectoCommon\VectoHashing\bin\Deploy\VectoHashing.XML"/>
-		<HashingTool Include="$(SolutionDir)HashingCmd\bin\Deploy\hashingcmd.exe"/>
+		<HashingTool Include="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\VectoHashing.XML"/>
+		<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\hashingcmd.exe"/>
 	</ItemGroup>
 	
 	<Message Text="@(VectoCommandLine)"/>
