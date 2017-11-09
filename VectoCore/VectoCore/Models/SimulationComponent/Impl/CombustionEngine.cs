@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	CurrentState.OperationMode = EngineOperationMode.Stopped;
 			//}
 
-			var avgEngineSpeed = (PreviousState.EngineSpeed + angularVelocity) / 2.0;
+			var avgEngineSpeed = GetEngineSpeed(angularVelocity);
 
 			var engineSpeedLimit = GetEngineSpeedLimit(absTime);
 			if (!dryRun && avgEngineSpeed.IsGreater(engineSpeedLimit, Constants.SimulationSettings.LineSearchTolerance)) {
@@ -295,6 +295,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 		}
 
+		protected virtual PerSecond GetEngineSpeed(PerSecond angularVelocity)
+		{
+			return (PreviousState.EngineSpeed + angularVelocity) / 2.0;
+		}
+
 		protected virtual PerSecond GetEngineSpeedLimit(Second absTime)
 		{
 			return DataBus.Gear == 0 || !DataBus.ClutchClosed(absTime)
@@ -351,7 +356,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			ValidatePowerDemand(CurrentState.EngineTorque, CurrentState.DynamicFullLoadTorque, CurrentState.FullDragTorque);
 
-			var avgEngineSpeed = (PreviousState.EngineSpeed + CurrentState.EngineSpeed) / 2.0;
+			var avgEngineSpeed = GetEngineSpeed(CurrentState.EngineSpeed);
 			if (avgEngineSpeed.IsSmaller(EngineIdleSpeed,
 				DataBus.ExecutionMode == ExecutionMode.Engineering ? 20.RPMtoRad() : 1e-3.RPMtoRad())) {
 				Log.Warn("EngineSpeed below idling speed! n_eng_avg: {0}, n_idle: {1}", avgEngineSpeed, EngineIdleSpeed);

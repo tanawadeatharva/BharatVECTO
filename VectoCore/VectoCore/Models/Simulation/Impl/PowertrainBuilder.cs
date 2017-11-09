@@ -112,8 +112,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var gearbox = new CycleGearbox(container, data);
 
 			// PWheelCycle --> AxleGear --> Clutch --> Engine <-- Aux
-			var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, data.VehicleData,
-					gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
+			var powertrain = new PWheelCycle(container, data.Cycle)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, container)
@@ -129,8 +128,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
         private VehicleContainer BuildEPTP(VectoRunData data)
         {
-            if (data.Cycle.CycleType != CycleType.PWheel) {
-                throw new VectoException("CycleType must be PWheel.");
+            if (data.Cycle.CycleType != CycleType.EPTP) {
+                throw new VectoException("CycleType must be EPTP.");
             }
 
             var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
@@ -143,16 +142,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
                 .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
                 .AddComponent(gearbox, data.Retarder, container)
                 .AddComponent(new Clutch(container, data.EngineData));
-            var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
+            var engine = new EPTPCombustionEngine(container, data.EngineData, pt1Disabled: true);
 
             var aux = CreateAuxiliaries(data, container);
             aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => {
                 var fanSpeed = cycleEntry.FanSpeed.AsRPM;
-                return (c1 * Math.Pow(fanSpeed / c2, 3) * Math.Pow(fanSpeed / c3, 5)*1000).SI<Watt>();
+                var c1 = data.AuxFanParameters.Length > 0 ? data.AuxFanParameters[0] : 0;
+                var c2 = data.AuxFanParameters.Length > 1 ? data.AuxFanParameters[1] : 1;
+                var c3 = data.AuxFanParameters.Length > 2 ? data.AuxFanParameters[2] : 1;
+                return (c1 * Math.Pow(fanSpeed / c2, 3) * Math.Pow(fanSpeed / c3, 5) * 1000).SI<Watt>();
             });
+            container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
 
             engine.Connect(aux.Port());
-            var idleController = GetIdleController(data.PTO, engine, container);
+
+            var idleController = new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container);
+            //if (data.PTO != null && data.PTO.PTOCycle != null) {
+            //    var ptoController = new PTOCycleController(container, data.PTO.PTOCycle);
+            //    idleController = new IdleControllerSwitcher(engine.IdleController, ptoController);
+            //}
 
             powertrain.AddComponent(engine, idleController);
                 //.AddAuxiliaries(container, data);
