@@ -203,7 +203,6 @@ namespace TUGraz.VectoCore.OutputData.XML
                         (result.EnergyConsumptionTotal / result.Distance.ConvertToKiloMeter() / result.CargoVolume / 1e6).Value()
 							.ToMinSignificantDigits(3, 1)));
 				}
-			}
 			if (fuel.FuelDensity != null) {
 				retVal.Add(new XElement(tns + XMLNames.Report_Results_FuelConsumption,
 					new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/100km"),
@@ -219,7 +218,6 @@ namespace TUGraz.VectoCore.OutputData.XML
                         (result.FuelConsumptionTotal.ConvertToGramm() / fuel.FuelDensity / result.Distance.ConvertToKiloMeter() /
 						result.CargoVolume).Value().ToMinSignificantDigits(3, 1)));
 				}
-			}
 			//CO2
 			retVal.Add(new XElement(tns + XMLNames.Report_Results_CO2, new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
                 (result.CO2Total.ConvertToGramm() / result.Distance.ConvertToKiloMeter()).ToMinSignificantDigits(3, 1)));
@@ -232,7 +230,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/m³-km"),
                     (result.CO2Total.ConvertToGramm() / result.Distance.ConvertToKiloMeter() / result.CargoVolume).Value()
 						.ToMinSignificantDigits(3, 1)));
-			}
+			
 
 			return retVal;
 		}
