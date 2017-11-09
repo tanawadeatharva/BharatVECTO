@@ -720,8 +720,8 @@ namespace TUGraz.VectoCore.InputData.Reader
                 var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
                     Time = row.ParseDouble(Fields.Time).SI<Second>(),
                     VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
-                    AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
-                   PWheel = row.ParseDouble(Fields.PWheel).SI().Kilo.Watt.Cast<Watt>(),
+                    AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+                   PWheel = row.ParseDouble(Fields.PWheel).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
                    EngineSpeed = row.ParseDouble(Fields.EngineSpeedSuffix).RPMtoRad(),
                    FanSpeed = row.ParseDouble(Fields.FanSpeed).RPMtoRad()
                 }).ToArray();
