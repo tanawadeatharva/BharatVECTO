@@ -74,7 +74,7 @@ Namespace DownstreamModules
 
 		Private ReadOnly Property S8 As Liter
 			Get
-				Return (S7 / (constants.FuelDensity))
+				Return (S7 / (constants.FuelDensity)).Cast(Of Liter)
 			End Get
 		End Property
 

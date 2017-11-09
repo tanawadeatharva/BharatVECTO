@@ -119,7 +119,7 @@ Namespace UnitTests
 
 			'Assert
             Assert.AreEqual(expectedOut1.SI(Unit.SI.Gramm).Value(), m14.TotalCycleFCGrams.Value(), 0.1)
-            Assert.AreEqual(expectedOut2.SI(Unit.SI.Liter).Value(), m14.TotalCycleFCLitres.Value(), 0.00001)
+            Assert.AreEqual(expectedOut2.SI(Of Liter).Value(), m14.TotalCycleFCLitres.Value(), 0.00001)
 		End Sub
 	End Class
 End Namespace
