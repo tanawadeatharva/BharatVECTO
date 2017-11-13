@@ -57,7 +57,21 @@ namespace TUGraz.VectoCommon.Utils
         {
             throw new NotImplementedException();
         }
-    }
+
+		public string ToOutputFormat(uint? decimals = null, double? outputFactor = null, bool? showUnit = null)
+		{
+			decimals = decimals ?? 4;
+			outputFactor = outputFactor ?? 1.0;
+			showUnit = showUnit ?? false;
+
+			if (showUnit.Value) {
+				return (_value * outputFactor.Value).ToString("F" + decimals.Value, CultureInfo.InvariantCulture) + " [" +
+						_units + "]";
+			}
+
+			return (_value * outputFactor.Value).ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
+		}
+	}
 
     public static class SIConvertExtensionMethods
     {
@@ -83,7 +97,7 @@ namespace TUGraz.VectoCommon.Utils
 
         public static ConvertedSI ConvertToLiterPer100Kilometer(this SI value)
         {
-            return value == null ? null : new ConvertedSI(value.Value() * (10*10*10) / (100*1000), "l/100km");
+            return value == null ? null : new ConvertedSI(value.Value() * (10*10*10) * (100*1000), "l/100km");
         }
         
         public static ConvertedSI ConvertToLiterPer100TonKiloMeter(this SI value)
@@ -92,14 +106,14 @@ namespace TUGraz.VectoCommon.Utils
             const int MeterTo100KiloMeter = 100 * Kilo;
             const int KilogrammToTon = Kilo;
 
-            return value == null ? null  : new ConvertedSI(value.Value() * CubicMeterToLiter / (MeterTo100KiloMeter * KilogrammToTon), "l/100tkm");
+            return value == null ? null  : new ConvertedSI(value.Value() * CubicMeterToLiter * (MeterTo100KiloMeter * KilogrammToTon), "l/100tkm");
         }
 
 		public static ConvertedSI ConvertToLiterPerCubicMeter100KiloMeter(this SI value)
         {
             const int CubicMeterToLiter = 10 * 10 * 10;
             const int MeterTo100KiloMeter = 100 * Kilo;
-            return new ConvertedSI(value.Value() * CubicMeterToLiter / MeterTo100KiloMeter, "l/100m^3km");
+            return new ConvertedSI(value.Value() * CubicMeterToLiter * MeterTo100KiloMeter, "l/100m^3km");
         }
 
         public static ConvertedSI ConvertToGrammPerHour(this KilogramPerSecond value)

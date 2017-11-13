@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.Utils
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
 			writer.WriteLine(string.Join(Delimiter, header));
 
-			var columnFormatter = new Func<SI, string>[table.Columns.Count];
+			var columnFormatter = new Func<ConvertedSI, string>[table.Columns.Count];
 			for (var i = 0; i < table.Columns.Count; i++) {
 				var col = table.Columns[i];
 				var decimals = (uint?)col.ExtendedProperties["decimals"];
@@ -223,12 +223,10 @@ namespace TUGraz.VectoCore.Utils
 
                     if (items[i] is SI) {
                         formattedList[i] = columnFormatter[i]((SI)items[i]);
-                    //}
-                    //else if (items[i] is ConvertedSI)
-                    //{
-                    //    // todo mk-2017-10-02: maybe we also have to use decimals and showUnit from columnFormatter here?
-                    //    formattedList[i] = items[i].ToString();
-                    } else {
+					} else if (items[i] is ConvertedSI) {
+						// todo mk-2017-10-02: maybe we also have to use decimals and showUnit from columnFormatter here?
+						formattedList[i] = columnFormatter[i]((ConvertedSI)items[i]);
+					} else {
                         formattedList[i] = string.Format(CultureInfo.InvariantCulture, "{0}", items[i]);
                     }
 
