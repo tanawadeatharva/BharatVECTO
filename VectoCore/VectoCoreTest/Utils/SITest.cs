@@ -195,8 +195,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
             Assert.AreEqual(1, 0.SI().CompareTo(null));
             Assert.AreEqual(1, 0.SI().CompareTo("not an SI"));
-            Assert.AreEqual(-1, new SI(Unit.SI.Meter).CompareTo(new SI(Unit.SI.Kilo.Meter.Per.Hour)));
-            Assert.AreEqual(1, new SI(Unit.SI.Newton.Meter).CompareTo(new SI(Unit.SI.Meter)));
+			Assert.AreEqual(-1, new SI(Unit.SI.Meter).CompareTo(new SI(Unit.SI.Kilo.Meter.Per.Hour)));
+			Assert.AreEqual(1, new SI(Unit.SI.Newton.Meter).CompareTo(new SI(Unit.SI.Meter)));
 
 			Assert.AreEqual(0, 1.SI().CompareTo(1.SI()));
 			Assert.AreEqual(-1, 1.SI().CompareTo(2.SI()));
@@ -331,6 +331,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.AreRelativeEqual(perSecond, watt / newtonMeter);
 
 			AssertHelper.AreRelativeEqual(second, newtonMeter / watt);
+
+
+			AssertHelper.AreRelativeEqual(2.SI<NormLiterPerSecond>(), 2.SI<NormLiterPerSecond>() / 1);
+
+			AssertHelper.AreRelativeEqual(2.SI<NormLiterPerSecond>(), 2.SI<NormLiterPerSecond>() * 1);
 		}
 
 		[TestCase]
@@ -352,7 +357,7 @@ namespace TUGraz.VectoCore.Tests.Utils
             AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Kilo.Gramm.Square.Meter.Per.Cubic.Second), 3.SI<Watt>());
             AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Kilo.Gramm.Meter.Per.Square.Second), 3.SI<Newton>());
             AssertHelper.AreRelativeEqual(3000.SI(Unit.SI.Kilo.Gramm), 3.SI(Unit.SI.Ton));
-            AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Kilo.Kilo.Gramm).ConvertToTon(), 3000.SI(Unit.SI.Kilo.Gramm).ConvertToTon());
+            AssertHelper.AreRelativeEqual(3.SI(Unit.SI.Kilo.Kilo.Gramm).Cast<Kilogram>().ConvertToTon(), 3000.SI(Unit.SI.Kilo.Gramm).Cast<Kilogram>().ConvertToTon());
 
             AssertHelper.AreRelativeEqual(3.SI<Meter>(), 3000.SI(Unit.SI.Milli.Meter));
 
@@ -550,31 +555,37 @@ namespace TUGraz.VectoCore.Tests.Utils
             Assert.AreEqual("m^3", 1.SI().GetUnitString(uni2.GetSIUnits()));
             AssertHelper.AreRelativeEqual(0.000001, uni2.Factor);
 
-            var val2 = 7.SI(Unit.SI.Cubic.Dezi.Meter).ConvertToCubicDeziMeter();
-            AssertHelper.AreRelativeEqual(0.007, val2);
-
-            var val3 = 5.SI(Unit.SI.Cubic.Dezi.Meter).ConvertToCubicCentiMeter();
-            AssertHelper.AreRelativeEqual(0.005, val3); // 5000 cm^3
-
-            var val4 = 5.SI(Unit.SI.Cubic.Centi.Meter).ConvertToCubicDeziMeter();
-            AssertHelper.AreRelativeEqual(0.000005, val4); // 0.005 dm^3
-
-            var uni1 = Unit.SI.Kilo.Meter.Per.Hour;
+           var uni1 = Unit.SI.Kilo.Meter.Per.Hour;
             Assert.AreEqual("m/s", 1.SI().GetUnitString(uni1.GetSIUnits()));
             AssertHelper.AreRelativeEqual(0.2777777777, uni1.Factor);
 
             NewtonMeter newtonMeter = 5.SI<NewtonMeter>();
             AssertHelper.AreRelativeEqual(5.SI(Unit.SI.Newton.Meter), newtonMeter);
             AssertHelper.AreRelativeEqual(5.SI(Unit.SI.Meter.Newton), newtonMeter);
-        }
 
-        [TestCase]
+			AssertHelper.AreRelativeEqual(5.SI<Liter>(), 1.SI<Second>() * 5.SI<LiterPerSecond>());
+
+			AssertHelper.AreRelativeEqual((6.0/3600).SI<Liter>(), (2.SI<Second>() * 3.SI(Unit.SI.Liter.Per.Hour)).Cast<Liter>());
+
+			AssertHelper.AreRelativeEqual(2.13093, 2.13093.SI(Unit.SI.Liter).Cast<Liter>().Value());
+			Assert.AreEqual("m^3", 2.13093.SI(Unit.SI.Liter).GetUnitString());
+		}
+
+		[TestCase]
         public void SI_ConvertValues()
         {
             var sig1 = 5.SI(Unit.SI.Gramm);
             Assert.AreEqual(0.005, sig1.Value());
-            
-        }
+
+			var val2 = 7.SI(Unit.SI.Cubic.Dezi.Meter).Cast<CubicMeter>().ConvertToCubicDeziMeter();
+			AssertHelper.AreRelativeEqual(7, val2);
+
+			var val3 = 5.SI(Unit.SI.Cubic.Dezi.Meter).Cast<CubicMeter>().ConvertToCubicCentiMeter();
+			AssertHelper.AreRelativeEqual(5000, val3); // 5000 cm^3
+
+			var val4 = 5.SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>().ConvertToCubicDeziMeter();
+			AssertHelper.AreRelativeEqual(0.005, val4); // 0.005 dm^3
+		}
 
     }
 

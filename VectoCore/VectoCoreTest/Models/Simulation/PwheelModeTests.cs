@@ -54,6 +54,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[TestFixture]
 	public class PwheelModeTests
 	{
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+
 		/// <summary>
 		/// Test if the cycle file can be read.
 		/// </summary>
