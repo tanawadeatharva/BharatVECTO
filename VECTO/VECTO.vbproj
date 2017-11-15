@@ -540,8 +540,6 @@
     <Content Include="Resources\F_VECTO.ico" />
     <Content Include="Resources\F_VEH.ico" />
     <Content Include="Resources\Graph.ico" />
-    <None Include="Resources\P_fan_Equation.bmp" />
-    <None Include="Resources\P_fan_units.png" />
     <None Include="Resources\P_fan_eqn.png" />
     <Content Include="Resources\Status-dialog-password-icon.ico" />
     <EmbeddedResource Include="Resources\Undef.png" />

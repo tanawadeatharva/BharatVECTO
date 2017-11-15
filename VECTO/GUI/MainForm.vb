@@ -1271,12 +1271,12 @@ lbFound:
 		If x = "<New>" Then
 			ShowVectoJobForm()
 			VectoJobForm.VectoNew()
-		ElseIf x = "<EPTP>" Then
+		ElseIf x = "<VTP>" Then
 			ShowVectoEPTPJobForm()
 			VectoEPTPJobForm.VectoNew()
 		Else
 			Try
-				Dim job As IEPTPInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x), IEPTPInputDataProvider)
+				Dim job As IVTPInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x), IVTPInputDataProvider)
 				If job Is Nothing Then
 					ShowVectoJobForm()
 					VectoJobForm.VECTOload2Form(x)
@@ -2030,7 +2030,7 @@ Lb1:
 
 	Private Sub EPTPJobEditorToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles EPTPJobEditorToolStripMenuItem.Click
-		OpenVECTOeditor("<EPTP>")
+		OpenVECTOeditor("<VTP>")
 	End Sub
 End Class
 
