@@ -6,17 +6,17 @@ namespace TUGraz.VectoCommon.Utils
     public class ConvertedSI
     {
         private readonly double _value;
-        private readonly string _units;
+        public string Units { get; }
 
         public ConvertedSI(double value, string units)
         {
             _value = value;
-            _units = units;
+            Units = units;
         }
 
 		protected bool Equals(ConvertedSI other)
 		{
-			return _value.Equals(other._value) && string.Equals(_units, other._units);
+			return _value.Equals(other._value) && string.Equals(Units, other.Units);
 		}
 
 		public override bool Equals(object obj)
@@ -33,7 +33,7 @@ namespace TUGraz.VectoCommon.Utils
 		public override int GetHashCode()
 		{
 			unchecked {
-				return (_value.GetHashCode() * 397) ^ (_units != null ? _units.GetHashCode() : 0);
+				return (_value.GetHashCode() * 397) ^ (Units != null ? Units.GetHashCode() : 0);
 			}
 		}
 
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCommon.Utils
 
 			if (showUnit.Value) {
 				return (_value * outputFactor.Value).ToString("F" + decimals.Value, CultureInfo.InvariantCulture) + " [" +
-						_units + "]";
+						Units + "]";
 			}
 
 			return (_value * outputFactor.Value).ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
@@ -84,7 +84,7 @@ namespace TUGraz.VectoCommon.Utils
         }
         public static ConvertedSI ConvertToTon(this Kilogram value)
         {
-            return new ConvertedSI(value.Value() / Kilo, "Ton");
+            return new ConvertedSI(value.Value() / Kilo, "t");
         }
         public static ConvertedSI ConvertToKiloMeterPerHour(this MeterPerSecond value)
         {
@@ -95,12 +95,12 @@ namespace TUGraz.VectoCommon.Utils
             return value == null ? null : new ConvertedSI(value.Value() * Kilo * Kilo, "g/km");
         }
 
-        public static ConvertedSI ConvertToLiterPer100Kilometer(this SI value)
+        public static ConvertedSI ConvertToLiterPer100Kilometer(this VolumePerMeter value)
         {
             return value == null ? null : new ConvertedSI(value.Value() * (10*10*10) * (100*1000), "l/100km");
         }
         
-        public static ConvertedSI ConvertToLiterPer100TonKiloMeter(this SI value)
+        public static ConvertedSI ConvertToLiterPer100TonKiloMeter(this VolumePerMeterMass value)
         {
             const int CubicMeterToLiter = 10 * 10 * 10;
             const int MeterTo100KiloMeter = 100 * Kilo;
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCommon.Utils
             return value == null ? null  : new ConvertedSI(value.Value() * CubicMeterToLiter * (MeterTo100KiloMeter * KilogrammToTon), "l/100tkm");
         }
 
-		public static ConvertedSI ConvertToLiterPerCubicMeter100KiloMeter(this SI value)
+		public static ConvertedSI ConvertToLiterPerCubicMeter100KiloMeter(this VolumePerMeterVolume value)
         {
             const int CubicMeterToLiter = 10 * 10 * 10;
             const int MeterTo100KiloMeter = 100 * Kilo;
@@ -131,19 +131,14 @@ namespace TUGraz.VectoCommon.Utils
             return new ConvertedSI(value.Value() * 100 * 100 * 100, "cm^3");
         }
 
-        public static ConvertedSI ConvertToGrammPerCubicMeterKiloMeter(this SI value)
+        public static ConvertedSI ConvertToGrammPerCubicMeterKiloMeter(this KilogramPerMeterCubicMeter value)
         {
             return new ConvertedSI(value.Value()  * Kilo * Kilo, "g/m^3km");
         }
 
-        public static ConvertedSI ConvertToGrammPerTonKilometer(this SI value)
+        public static ConvertedSI ConvertToGrammPerTonKilometer(this KilogramPerMeterMass value)
         {
             return new ConvertedSI(value.Value() * Kilo * Kilo * Kilo, "g/tkm");
-        }
-		
-        public static ConvertedSI ConvertToLiterPer100KiloMeter(this SI value)
-        {
-            return new ConvertedSI(value.Value() * 10 * 10 * 10 * 100 * Kilo, "l/100km");
         }
 
         public static ConvertedSI ConvertToKiloWattHour(this WattSecond value)
@@ -157,7 +152,7 @@ namespace TUGraz.VectoCommon.Utils
 
         public static ConvertedSI ConvertToRoundsPerMinute(this PerSecond value)
         {
-            return new ConvertedSI(value.Value() * 2 * Math.PI / 60, "rpm");
+            return new ConvertedSI(value.AsRPM, "rpm");
         }
         public static ConvertedSI ConvertToCubicDeziMeter(this CubicMeter value)
         {

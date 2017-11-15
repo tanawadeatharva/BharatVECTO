@@ -223,7 +223,17 @@ namespace TUGraz.VectoCommon.Utils
 
         [DebuggerHidden]
         private KilogramPerMeter(double val) : base(val, Units) { }
-    }
+
+		public static KilogramPerMeterMass operator /(KilogramPerMeter kpm, Kilogram kg)
+		{
+			return SIBase<KilogramPerMeterMass>.Create(kpm.Val / kg.Value());
+		}
+
+		public static KilogramPerMeterCubicMeter operator /(KilogramPerMeter kpm, CubicMeter vol)
+		{
+			return SIBase<KilogramPerMeterCubicMeter>.Create(kpm.Val / vol.Value());
+		}
+	}
 
     /// <summary>
     /// SI Class for Liter per Second [l/s].
@@ -787,12 +797,57 @@ namespace TUGraz.VectoCommon.Utils
         }
     }
 
-    /// <summary>
-    /// Base Class for all special SI Classes. Not intended to be used directly.
-    /// Implements templated operators for type safety and convenience.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class SIBase<T> : SI where T : SIBase<T>
+	public class VolumePerMeter : SIBase<VolumePerMeter>
+	{
+		private static readonly int[] Units = { 0, 2, 0, 0, 0, 0, 0 };
+		private VolumePerMeter(double val) : base(val, Units) { }
+
+		public static VolumePerMeterMass operator /(VolumePerMeter vpm, Kilogram kg)
+		{
+			return SIBase<VolumePerMeterMass>.Create(vpm.Val / kg.Value());
+		}
+
+		public static VolumePerMeterVolume operator /(VolumePerMeter vpm, CubicMeter vol)
+		{
+			return SIBase<VolumePerMeterVolume>.Create(vpm.Val / vol.Value());
+		}
+
+	}
+
+	public class VolumePerMeterMass : SIBase<VolumePerMeterMass>
+	{
+		private static readonly int[] Units = { -1, 2, 0, 0, 0, 0, 0 };
+
+		private VolumePerMeterMass(double val) : base (val, Units) { }
+	}
+
+	public class VolumePerMeterVolume : SIBase<VolumePerMeterVolume>
+	{
+		private static readonly int[] Units = { 0, -1, 0, 0, 0, 0, 0 };
+
+		private VolumePerMeterVolume(double val) : base (val, Units) { }
+	}
+
+	public class KilogramPerMeterCubicMeter : SIBase<KilogramPerMeterCubicMeter>
+	{
+		private static readonly int[] Units = { 1, -4, 0, 0, 0, 0, 0 };
+
+		private KilogramPerMeterCubicMeter(double val) : base(val, Units) { }
+	}
+
+	public class KilogramPerMeterMass : SIBase<KilogramPerMeterMass>
+	{
+		private static readonly int[] Units = { 0, -1, 0, 0, 0, 0, 0 };
+
+		private KilogramPerMeterMass(double val) : base(val, Units) { }
+	}
+
+	/// <summary>
+	/// Base Class for all special SI Classes. Not intended to be used directly.
+	/// Implements templated operators for type safety and convenience.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	public abstract class SIBase<T> : SI where T : SIBase<T>
     {
         private static readonly T ZeroPrototype;
 
