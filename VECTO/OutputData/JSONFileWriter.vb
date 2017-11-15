@@ -352,17 +352,18 @@ Public Class JSONFileWriter
 		WriteFile(header, body, filename)
 	End Sub
 
-	Public Sub SaveJob(input As IEPTPInputDataProvider, filename As String) Implements IOutputFileWriter.SaveJob
+	Public Sub SaveJob(input As IVTPInputDataProvider, filename As String) Implements IOutputFileWriter.SaveJob
 		Dim basePath As String = Path.GetDirectoryName(filename)
 		'Header
 		Dim header As Dictionary(Of String, Object) = GetHeader(VectoJobFormatVersion)
 
 		'Body
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-        Dim job As IEPTPJobInputData = input.JobInputData
+        Dim job As IVTPJobInputData = input.JobInputData
         body.Add("SavedInDeclMode", False)
         body.Add("DeclarationVehicle", GetRelativePath(job.Vehicle.Source, Path.GetDirectoryName(filename)))
         body.Add("FanPowerCoefficients", job.FanPowerCoefficents)
+        body.Add("FanDiameter", job.FanDiameter.Value())
         body.Add("Cycles",
                  job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 

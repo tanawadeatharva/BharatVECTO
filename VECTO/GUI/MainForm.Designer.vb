@@ -700,7 +700,7 @@ Partial Class MainForm
         Me.EPTPJobEditorToolStripMenuItem.Image = Global.TUGraz.VECTO.My.Resources.Resources.F_VECTO
         Me.EPTPJobEditorToolStripMenuItem.Name = "EPTPJobEditorToolStripMenuItem"
         Me.EPTPJobEditorToolStripMenuItem.Size = New System.Drawing.Size(156, 22)
-        Me.EPTPJobEditorToolStripMenuItem.Text = "EPTP Job Editor"
+        Me.EPTPJobEditorToolStripMenuItem.Text = "VTP Job Editor"
         '
         'VEHEditorToolStripMenuItem
         '

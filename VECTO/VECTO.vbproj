@@ -187,10 +187,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
-    <Compile Include="GUI\VectoEPTPJobForm.Designer.vb">
-      <DependentUpon>VectoEPTPJobForm.vb</DependentUpon>
+    <Compile Include="GUI\VectoVTPJobForm.Designer.vb">
+      <DependentUpon>VectoVTPJobForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\VectoEPTPJobForm.vb">
+    <Compile Include="GUI\VectoVTPJobForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Input Files\BrowserUtils.vb" />
@@ -358,8 +358,8 @@
     <EmbeddedResource Include="GUI\JiraDialog.resx">
       <DependentUpon>JiraDialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\VectoEPTPJobForm.resx">
-      <DependentUpon>VectoEPTPJobForm.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\VectoVTPJobForm.resx">
+      <DependentUpon>VectoVTPJobForm.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\VehicleTorqueLimitsDialog.resx">
@@ -540,8 +540,6 @@
     <Content Include="Resources\F_VECTO.ico" />
     <Content Include="Resources\F_VEH.ico" />
     <Content Include="Resources\Graph.ico" />
-    <None Include="Resources\P_fan_Equation.bmp" />
-    <None Include="Resources\P_fan_units.png" />
     <None Include="Resources\P_fan_eqn.png" />
     <Content Include="Resources\Status-dialog-password-icon.ico" />
     <EmbeddedResource Include="Resources\Undef.png" />

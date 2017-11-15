@@ -11,13 +11,13 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl {
-    internal class EngineeringEPTPModeVectoRunDataFactory : IVectoRunDataFactory
+    internal class EngineeringVTPModeVectoRunDataFactory : IVectoRunDataFactory
     {
-        protected IEPTPInputDataProvider InputDataProvider;
+        protected IVTPInputDataProvider InputDataProvider;
 
-        public EngineeringEPTPModeVectoRunDataFactory(IEPTPInputDataProvider eptpProvider)
+        public EngineeringVTPModeVectoRunDataFactory(IVTPInputDataProvider ivtpProvider)
         {
-            InputDataProvider = eptpProvider;
+            InputDataProvider = ivtpProvider;
         }
 
         public IEnumerable<VectoRunData> NextRun()
@@ -46,8 +46,25 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
             var ptoTransmissionData = dao.CreatePTOTransmissionData(InputDataProvider.JobInputData.Vehicle.PTOTransmissionInputData);
 
 
-            var aux = dao.CreateAuxiliaryData(InputDataProvider.JobInputData.Vehicle.AuxiliaryInputData(), MissionType.RegionalDelivery, segment.VehicleClass).ToList();
-            aux.RemoveAll(x => x.ID == Constants.Auxiliaries.IDs.Fan);
+            var auxRD = dao.CreateAuxiliaryData(InputDataProvider.JobInputData.Vehicle.AuxiliaryInputData(), MissionType.RegionalDelivery, segment.VehicleClass).ToList();
+			foreach (var entry in auxRD) {
+				entry.MissionType = MissionType.RegionalDelivery;
+			}
+			var auxLH = dao.CreateAuxiliaryData(InputDataProvider.JobInputData.Vehicle.AuxiliaryInputData(), MissionType.LongHaul, segment.VehicleClass).ToList();
+			foreach (var entry in auxLH) {
+				entry.MissionType = MissionType.LongHaul;
+			}
+			var auxUD = dao.CreateAuxiliaryData(InputDataProvider.JobInputData.Vehicle.AuxiliaryInputData(), MissionType.UrbanDelivery, segment.VehicleClass).ToList();
+			foreach (var entry in auxUD) {
+				entry.MissionType = MissionType.UrbanDelivery;
+			}
+
+			var aux = new List<VectoRunData.AuxData>();
+			aux.AddRange(auxRD);
+			aux.AddRange(auxLH);
+			aux.AddRange(auxUD);
+
+			aux.RemoveAll(x => x.ID == Constants.Auxiliaries.IDs.Fan);
             aux.Add(new VectoRunData.AuxData {
                 DemandType = AuxiliaryDemandType.Direct,
                 ID = DrivingCycleDataReader.Fields.AdditionalAuxPowerDemand
@@ -71,7 +88,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
                     PTO = ptoTransmissionData,
                     Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
                     ExecutionMode = ExecutionMode.Engineering,
-                    AuxFanParameters = InputDataProvider.JobInputData.FanPowerCoefficents.ToArray()
+                    FanData = new AuxFanData() {
+						FanCoefficients = InputDataProvider.JobInputData.FanPowerCoefficents.ToArray(),
+						FanDiameter = InputDataProvider.JobInputData.FanDiameter,
+						}
                 };
             });
         }

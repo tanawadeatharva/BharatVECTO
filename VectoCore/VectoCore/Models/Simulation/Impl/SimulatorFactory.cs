@@ -89,9 +89,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private void CreateEngineeringDataReader(IInputDataProvider dataProvider)
 		{
-            if (dataProvider is IEPTPInputDataProvider) {
-                var eptpProvider = dataProvider as IEPTPInputDataProvider;
-                DataReader = new EngineeringEPTPModeVectoRunDataFactory(eptpProvider);
+            if (dataProvider is IVTPInputDataProvider) {
+                var eptpProvider = dataProvider as IVTPInputDataProvider;
+                DataReader = new EngineeringVTPModeVectoRunDataFactory(eptpProvider);
                 return;
             }
             if (dataProvider is IEngineeringInputDataProvider) {
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 				case CycleType.EngineOnly:
 				case CycleType.PWheel:
-                case CycleType.EPTP:
+                case CycleType.VTP:
 				case CycleType.MeasuredSpeed:
 				case CycleType.MeasuredSpeedGear:
 					run = new TimeRun(builder.Build(data));

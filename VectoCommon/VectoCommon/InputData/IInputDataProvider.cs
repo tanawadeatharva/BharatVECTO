@@ -31,6 +31,7 @@
 
 using System.Collections.Generic;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.InputData
 {
@@ -50,12 +51,12 @@ namespace TUGraz.VectoCommon.InputData
 		IDriverEngineeringInputData DriverInputData { get; }
 	}
 
-	public interface IEPTPInputDataProvider : IInputDataProvider
+	public interface IVTPInputDataProvider : IInputDataProvider
 	{
-		IEPTPJobInputData JobInputData { get; }
+		IVTPJobInputData JobInputData { get; }
 	}
 
-	public interface IEPTPJobInputData
+	public interface IVTPJobInputData
 	{
 		IVehicleDeclarationInputData Vehicle { get; }
 
@@ -63,5 +64,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		IEnumerable<double> FanPowerCoefficents { get; }
         bool SavedInDeclarationMode { get; }
-    }
+		Meter FanDiameter { get; }
+	}
 }

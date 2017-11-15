@@ -1271,18 +1271,18 @@ lbFound:
 		If x = "<New>" Then
 			ShowVectoJobForm()
 			VectoJobForm.VectoNew()
-		ElseIf x = "<EPTP>" Then
+		ElseIf x = "<VTP>" Then
 			ShowVectoEPTPJobForm()
-			VectoEPTPJobForm.VectoNew()
+			VectoVTPJobForm.VectoNew()
 		Else
 			Try
-				Dim job As IEPTPInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x), IEPTPInputDataProvider)
+				Dim job As IVTPInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x), IVTPInputDataProvider)
 				If job Is Nothing Then
 					ShowVectoJobForm()
 					VectoJobForm.VECTOload2Form(x)
 				Else
 					ShowVectoEPTPJobForm()
-					VectoEPTPJobForm.VECTOload2Form(x)
+					VectoVTPJobForm.VECTOload2Form(x)
 				End If
 			Catch ex As Exception
 				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vecto Job File")
@@ -1302,12 +1302,12 @@ lbFound:
 	End Sub
 
 	Private Sub ShowVectoEPTPJobForm()
-		If Not VectoEPTPJobForm.Visible Then
-			VectoEPTPJobForm.Show()
+		If Not VectoVTPJobForm.Visible Then
+			VectoVTPJobForm.Show()
 		Else
-			If VectoEPTPJobForm.WindowState = FormWindowState.Minimized Then _
-				VectoEPTPJobForm.WindowState = FormWindowState.Normal
-			VectoEPTPJobForm.BringToFront()
+			If VectoVTPJobForm.WindowState = FormWindowState.Minimized Then _
+				VectoVTPJobForm.WindowState = FormWindowState.Normal
+			VectoVTPJobForm.BringToFront()
 		End If
 	End Sub
 
@@ -2030,7 +2030,7 @@ Lb1:
 
 	Private Sub EPTPJobEditorToolStripMenuItem_Click(sender As Object, e As EventArgs) _
 		Handles EPTPJobEditorToolStripMenuItem.Click
-		OpenVECTOeditor("<EPTP>")
+		OpenVECTOeditor("<VTP>")
 	End Sub
 End Class
 

@@ -34,7 +34,7 @@ Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 ''' Job Editor. Create/Edit VECTO job files (.vecto)
 ''' </summary>
 ''' <remarks></remarks>
-Public Class VectoEPTPJobForm
+Public Class VectoVTPJobForm
     Public VectoFile As String
     Private _changed As Boolean = False
 
@@ -167,11 +167,11 @@ Public Class VectoEPTPJobForm
         VectoNew()
 
         'Read GEN
-        Dim vectoJob As IEPTPJobInputData = Nothing
-        Dim inputData As IEPTPInputDataProvider = Nothing
+        Dim vectoJob As IVTPJobInputData = Nothing
+        Dim inputData As IVTPInputDataProvider = Nothing
         Try
             inputData = TryCast(JSONInputDataFactory.ReadComponentData(file),
-                                IEPTPInputDataProvider)
+                                IVTPInputDataProvider)
             vectoJob = inputData.JobInputData()
         Catch ex As Exception
             MsgBox("Failed to read Job-File" + Environment.NewLine + ex.Message)
@@ -212,6 +212,7 @@ Public Class VectoEPTPJobForm
         If (coefficients.Length >= 3) Then
             tbC3.Text = coefficients(2).ToGUIFormat()
         End If
+        tbFanDiameter.Text = (vectoJob.FanDiameter.Value() * 1000).ToGUIFormat()
         Try
             Dim sb As ICycleData
             For Each sb In vectoJob.Cycles
@@ -266,7 +267,7 @@ Public Class VectoEPTPJobForm
         Dim message As String = String.Empty
 
 
-        Dim vectoJob As VectoEPTPJob = New VectoEPTPJob
+        Dim vectoJob As VectoVTPJob = New VectoVTPJob
         vectoJob.FilePath = file
 
         'Files ------------------------------------------------- -----------------
@@ -284,6 +285,7 @@ Public Class VectoEPTPJobForm
             tbC2.Text.ToDouble(0),
             tbC3.Text.ToDouble(0)    
         }
+        vectoJob.FanDiameter = (tbFanDiameter.Text.ToDouble(0) / 1000).SI(of Meter)
 
         'SAVE
         If Not vectoJob.SaveFile Then
@@ -704,6 +706,8 @@ Public Class VectoEPTPJobForm
 
 	Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
 	End Sub
+
+   
 End Class
 
 

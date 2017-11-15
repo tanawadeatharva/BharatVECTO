@@ -106,7 +106,7 @@ namespace TUGraz.VectoHashing
 
 
 		/// <summary>
-		// Computes the hash-value of the top-level Data element (or vehicle)
+		/// Computes the hash-value of the top-level Data element (or vehicle)
 		/// If the canoonicalizationMethods is null the canonicalizationMethods from 
 		/// the signature element are read if available or the default canonicalization is applied
 		/// If the digestMethod is null the digestMethod from the signature element is read if 
