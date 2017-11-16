@@ -28,11 +28,11 @@ namespace TUGraz.VectoCore.Tests.Integration.EPTP
             
             jobContainer.AddRuns(runsFactory);
 
-            //var i = 0;
-            //jobContainer.Runs[i].Run.Run();
-            //Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
+			//var i = 0;
+			//jobContainer.Runs[i].Run.Run();
+			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
 
-            jobContainer.Execute();
+			jobContainer.Execute();
             jobContainer.WaitFinished();
 
             Assert.AreEqual(true, jobContainer.AllCompleted);
