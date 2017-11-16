@@ -56,10 +56,17 @@ namespace TUGraz.VectoCore.Tests.XML
 	public class XMLDeclarationInputTest
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
+		const string SampleVehicleDeclNoAirdrag = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_noAirdrag.xml";
 		const string SampleVehicleFullDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_FULL.xml";
 
 		const string SampleVehicleFullDeclCertificationOptions =
 			"TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_certificationOptions.xml";
+
+		[OneTimeSetUp]
+		public void Init()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 		[TestCase]
 		public void TestXMLInputEng()
@@ -328,6 +335,16 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(6.34, inputDataProvider.AirdragInputData.AirDragArea.Value());
 
 			Assert.AreEqual(1.0, inputDataProvider.RetarderInputData.Ratio);
+		}
+
+		[TestCase]
+		public void TestVehicleInputNoAirdrag()
+		{
+			var reader = XmlReader.Create(SampleVehicleDeclNoAirdrag);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+
+			Assert.IsNull(inputDataProvider.AirdragInputData.AirDragArea);
 		}
 
 		[TestCase]
