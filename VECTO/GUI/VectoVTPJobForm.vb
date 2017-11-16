@@ -10,12 +10,9 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 'Option Infer On
 
-Imports System.Collections.Generic
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Linq
-Imports System.Runtime.CompilerServices
-Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports System.Xml
 Imports TUGraz.VECTO.Input_Files
@@ -26,9 +23,7 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.Models.Declaration
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 ''' <summary>
 ''' Job Editor. Create/Edit VECTO job files (.vecto)
@@ -283,7 +278,7 @@ Public Class VectoVTPJobForm
         vectoJob.FanCoefficients = New Double() {
             tbC1.Text.ToDouble(0),
             tbC2.Text.ToDouble(0),
-            tbC3.Text.ToDouble(0)    
+            tbC3.Text.ToDouble(0)
         }
         vectoJob.FanDiameter = (tbFanDiameter.Text.ToDouble(0) / 1000).SI(of Meter)
 
@@ -625,89 +620,89 @@ Public Class VectoVTPJobForm
             Try
                 Dim inputData As XMLDeclarationInputDataProvider = New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
                 vehicle = inputData.JobInputData.Vehicle
-			Catch
-			End Try
-		End If
+            Catch
+            End Try
+        End If
 
-		If vehicle Is Nothing Then Return
+        If vehicle Is Nothing Then Return
 
-		Dim maxMass As Kilogram = vehicle.GrossVehicleMassRating					'CSng(fTextboxToNumString(TbMassMass.Text))
+        Dim maxMass As Kilogram = vehicle.GrossVehicleMassRating                    'CSng(fTextboxToNumString(TbMassMass.Text))
 
-		Dim s0 As Segment = Nothing
-		Try
-			s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram),
-												True)
-		Catch
-		End Try
-		If Not s0.Found Then
-			HDVclass = "-"
-		Else
-			HDVclass = s0.VehicleClass.GetClassNumber()
+        Dim s0 As Segment = Nothing
+        Try
+            s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram),
+                                                True)
+        Catch
+        End Try
+        If Not s0.Found Then
+            HDVclass = "-"
+        Else
+            HDVclass = s0.VehicleClass.GetClassNumber()
 
-			If Cfg.DeclMode Then
-				LvCycles.Items.Clear()
-				Dim m0 As Mission
-				For Each m0 In s0.Missions
-					LvCycles.Items.Add(m0.MissionType.ToString())
-				Next
-			End If
+            If Cfg.DeclMode Then
+                LvCycles.Items.Clear()
+                Dim m0 As Mission
+                For Each m0 In s0.Missions
+                    LvCycles.Items.Add(m0.MissionType.ToString())
+                Next
+            End If
 
-		End If
+        End If
 
-		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _
-		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
+        PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _
+        'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
-		TbHVCclass.Text = String.Format("HDV Class {0}", HDVclass)
-		TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
-		TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
-		TbAxleConf.Text = vehicle.AxleConfiguration.GetName()	'ConvAxleConf(VEH0.AxleConf)
-	End Sub
+        TbHVCclass.Text = String.Format("HDV Class {0}", HDVclass)
+        TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()   'ConvVehCat(VEH0.VehCat, True)
+        TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
+        TbAxleConf.Text = vehicle.AxleConfiguration.GetName()   'ConvAxleConf(VEH0.AxleConf)
+    End Sub
 
 
 #Region "Open File Context Menu"
 
-	Private _contextMenuFiles As String()
-	Private _basePath As String = ""
+    Private _contextMenuFiles As String()
+    Private _basePath As String = ""
 
-	Private Sub OpenFiles(ParamArray files() As String)
-		If files.Length = 0 Then Exit Sub
+    Private Sub OpenFiles(ParamArray files() As String)
+        If files.Length = 0 Then Exit Sub
 
-		_contextMenuFiles = files
-		OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
-		CmOpenFile.Show(Windows.Forms.Cursor.Position)
-	End Sub
+        _contextMenuFiles = files
+        OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
+        CmOpenFile.Show(Windows.Forms.Cursor.Position)
+    End Sub
 
-	Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-		Handles OpenWithToolStripMenuItem.Click
-		If Not FileOpenAlt(_contextMenuFiles(0)) Then MsgBox("Failed to open file!")
-	End Sub
+    Private Sub OpenWithToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles OpenWithToolStripMenuItem.Click
+        If Not FileOpenAlt(_contextMenuFiles(0)) Then MsgBox("Failed to open file!")
+    End Sub
 
-	Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-		Handles ShowInFolderToolStripMenuItem.Click
-		If File.Exists(_contextMenuFiles(0)) Then
-			Try
-				Process.Start("explorer", "/select,""" & _contextMenuFiles(0) & "")
-			Catch ex As Exception
-				MsgBox("Failed to open file!")
-			End Try
-		Else
-			MsgBox("File not found!")
-		End If
-	End Sub
+    Private Sub ShowInFolderToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles ShowInFolderToolStripMenuItem.Click
+        If File.Exists(_contextMenuFiles(0)) Then
+            Try
+                Process.Start("explorer", "/select,""" & _contextMenuFiles(0) & "")
+            Catch ex As Exception
+                MsgBox("Failed to open file!")
+            End Try
+        Else
+            MsgBox("File not found!")
+        End If
+    End Sub
 
 #End Region
 
 
-	Private Sub LvCycles_MouseClick(sender As Object, e As MouseEventArgs) Handles LvCycles.MouseClick
-		If e.Button = MouseButtons.Right AndAlso LvCycles.SelectedItems.Count > 0 Then
-			OpenFiles(FileRepl(LvCycles.SelectedItems(0).SubItems(0).Text, GetPath(VectoFile)))
-		End If
-	End Sub
+    Private Sub LvCycles_MouseClick(sender As Object, e As MouseEventArgs) Handles LvCycles.MouseClick
+        If e.Button = MouseButtons.Right AndAlso LvCycles.SelectedItems.Count > 0 Then
+            OpenFiles(FileRepl(LvCycles.SelectedItems(0).SubItems(0).Text, GetPath(VectoFile)))
+        End If
+    End Sub
 
-	Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
-	End Sub
+    Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
+    End Sub
 
-   
+
 End Class
 
 

@@ -729,13 +729,13 @@ namespace TUGraz.VectoCore.InputData.Reader
 						Time = row.ParseDouble(Fields.Time).SI<Second>(),
 						VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 						AdditionalAuxPowerDemand =
-							row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
+							row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 						EngineSpeed = row.ParseDouble(Fields.EngineSpeedSuffix).RPMtoRad(),
 						WheelAngularVelocity = wheelSpeed,
 						Torque = (row.ParseDouble(Fields.WheelTorqueLeft).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedLeft).RPMtoRad() + row.ParseDouble(Fields.WheelTorqueRight).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedRight).RPMtoRad()) / wheelSpeed, 
 						FanSpeed = row.ParseDouble(Fields.FanSpeed).RPMtoRad(),
 						Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
-						Fuelconsumption = row.ParseDoubleOrGetDefault(Fields.FuelConsumption).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>(),
+						Fuelconsumption = row.ParseDoubleOrGetDefault(Fields.FuelConsumption).SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>(),
 					};
 				}).ToArray();
 
