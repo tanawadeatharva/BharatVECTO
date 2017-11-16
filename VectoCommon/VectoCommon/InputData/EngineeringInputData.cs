@@ -283,7 +283,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		//new IStartStopEngineeringInputData StartStop { get; }
 
-		new IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll { get; }
+		IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll { get; }
 
 		/// <summary>
 		/// P009; P033, P034, P035

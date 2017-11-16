@@ -15,9 +15,9 @@ Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Utils
 
-<CustomValidation(GetType(VectoEPTPJob), "ValidateJob")>
-Public Class VectoEPTPJob
-	Implements IEPTPInputDataProvider, IEPTPJobInputData
+<CustomValidation(GetType(VectoVTPJob), "ValidateJob")>
+Public Class VectoVTPJob
+	Implements IVTPInputDataProvider, IVTPJobInputData
 
 	Private _sFilePath As String
 	Private _myPath As String
@@ -26,6 +26,7 @@ Public Class VectoEPTPJob
 
     Public ReadOnly CycleFiles As List(Of SubPath)
     Public FanCoefficients As Double()
+    Private _fanDiameter As Meter
 
 
     Public Sub New()
@@ -85,7 +86,7 @@ Public Class VectoEPTPJob
 	End Function
 
 	' ReSharper disable once UnusedMember.Global -- used by Validation
-	Public Shared Function ValidateJob(vectoJob As VectoEPTPJob, validationContext As ValidationContext) As ValidationResult
+	Public Shared Function ValidateJob(vectoJob As VectoVTPJob, validationContext As ValidationContext) As ValidationResult
 		Dim modeService As VectoValidationModeServiceContainer =
 				TryCast(validationContext.GetService(GetType(VectoValidationModeServiceContainer)), 
 						VectoValidationModeServiceContainer)
@@ -94,13 +95,13 @@ Public Class VectoEPTPJob
 		Return ValidateVehicleJob(vectoJob, mode)
 	End Function
 
-	Private Shared Function ValidateVehicleJob(vectoJob As VectoEPTPJob, mode As ExecutionMode) As ValidationResult
+	Private Shared Function ValidateVehicleJob(vectoJob As VectoVTPJob, mode As ExecutionMode) As ValidationResult
 
         ' TODO!!
 
     End Function
 
-	Public ReadOnly Property Vehicle As IVehicleDeclarationInputData Implements IEPTPJobInputData.Vehicle
+	Public ReadOnly Property Vehicle As IVehicleDeclarationInputData Implements IVTPJobInputData.Vehicle
 		Get
 			If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
             'Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle
@@ -108,7 +109,7 @@ Public Class VectoEPTPJob
         End Get
 	End Property
 
-	Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IEPTPJobInputData.Cycles
+	Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IVTPJobInputData.Cycles
 		Get
 			Dim retVal As ICycleData() = New ICycleData(CycleFiles.Count - 1) {}
 			Dim i As Integer = 0
@@ -137,19 +138,28 @@ Public Class VectoEPTPJob
 		End Get
 	End Property
 
-    Public ReadOnly Property FanPowerCoefficents As IEnumerable(Of Double) Implements IEPTPJobInputData.FanPowerCoefficents
+    Public ReadOnly Property FanPowerCoefficents As IEnumerable(Of Double) Implements IVTPJobInputData.FanPowerCoefficents
         Get
             Return FanCoefficients
         End Get
     End Property
 
-    Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IEPTPJobInputData.SavedInDeclarationMode
+    Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IVTPJobInputData.SavedInDeclarationMode
         Get
             Return False
         End Get
     End Property
 
-    Public ReadOnly Property JobInputData As IEPTPJobInputData Implements IEPTPInputDataProvider.JobInputData
+    Public Property FanDiameter As Meter Implements IVTPJobInputData.FanDiameter
+        Get
+            Return _fanDiameter
+        End Get
+        Set
+            _fanDiameter = value
+        End Set
+    End Property
+
+    Public ReadOnly Property JobInputData As IVTPJobInputData Implements IVTPInputDataProvider.JobInputData
         Get
             Return Me
         End Get

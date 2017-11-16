@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public int JobRunId { get; internal set; }
 
-        public double[] AuxFanParameters { get; internal set; }
+        public AuxFanData FanData { get; internal set; }
 
         public class AuxData
 		{
@@ -117,6 +117,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			[Required] public AuxiliaryDemandType DemandType;
 
 			[ValidateObject] public AuxiliaryData Data;
+
+			public MissionType? MissionType;
 		}
 
 		public static ValidationResult ValidateRunData(VectoRunData runData, ValidationContext validationContext)
@@ -228,5 +230,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 			return null;
 		}
+	}
+
+	public class AuxFanData
+	{
+		public double[] FanCoefficients;
+
+		public Meter FanDiameter;
 	}
 }

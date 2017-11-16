@@ -13,11 +13,11 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    internal class EPTPCycle : PWheelCycle
+    internal class VTPCycle : PWheelCycle
     {
         private uint StartGear;
 
-        public EPTPCycle(VehicleContainer container, IDrivingCycleData cycle, double axleGearRatio,
+        public VTPCycle(VehicleContainer container, IDrivingCycleData cycle, double axleGearRatio,
             VehicleData vehicleData, Dictionary<uint, double> gearRatios) : base(container, cycle) { }
 
         public override IResponse Initialize()
@@ -97,22 +97,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         protected override void InitializeCycleData()
         {
             FirstRun = false;
-            var gearRatios = RunData.GearboxData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio);
+			var minEngineSpeed = (RunData.EngineData.FullLoadCurves[0].RatedSpeed - RunData.EngineData.IdleSpeed) *
+								Constants.SimulationSettings.ClutchClosingSpeedNorm + RunData.EngineData.IdleSpeed;
+
+			var gearRatios = RunData.GearboxData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio);
 
             var stopped = false;
            
             foreach (var entry in Data.Entries) {
                 stopped = stopped || entry.VehicleTargetSpeed.IsEqual(0.KMPHtoMeterPerSecond(),
                               0.3.KMPHtoMeterPerSecond());
-                entry.WheelAngularVelocity =
+                entry.AngularVelocity =
                     entry.VehicleTargetSpeed.IsEqual(0.KMPHtoMeterPerSecond(), 0.3.KMPHtoMeterPerSecond())
                         ? 0.RPMtoRad()
-                        : entry.VehicleTargetSpeed / RunData.VehicleData.DynamicTyreRadius;
-                entry.Torque = entry.VehicleTargetSpeed.IsEqual(0, 0.1)
-                    ? 0.SI<NewtonMeter>()
-                    : entry.PWheel / entry.WheelAngularVelocity;
+                        : entry.WheelAngularVelocity;
 
-                var cardanSpeed = entry.VehicleTargetSpeed / RunData.VehicleData.DynamicTyreRadius *
+				var cardanSpeed = entry.WheelAngularVelocity *
                                   RunData.AxleGearData.AxleGear.Ratio * (RunData.AngledriveData?.Angledrive.Ratio ?? 1);
                 if (cardanSpeed.IsEqual(0, 1)) {
                     entry.Gear = 0;
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 if (stopped && gear < StartGear)
                     entry.Gear = StartGear;
                 else
-                    entry.Gear = gear == 1 && cardanSpeed * gearRatios[1] < RunData.EngineData.IdleSpeed ? 0 : gear;
+                    entry.Gear = gear == 1 && cardanSpeed * gearRatios[1] <= minEngineSpeed ? 0 : gear;
                 if (gear > StartGear)
                     stopped = false;
             }

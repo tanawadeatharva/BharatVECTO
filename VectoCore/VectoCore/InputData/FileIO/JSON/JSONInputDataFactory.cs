@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					return new JSONInputDataV3(json, filename, tolerateMissing);
 				case 4:
                     if (json["Body"]["DeclarationVehicle"] != null) {
-                        return new JSONEPTPInputDataV4(json, filename, tolerateMissing);
+                        return new JSONVTPInputDataV4(json, filename, tolerateMissing);
                     }
 					return new JSONInputDataV4(json, filename, tolerateMissing);
 				default:

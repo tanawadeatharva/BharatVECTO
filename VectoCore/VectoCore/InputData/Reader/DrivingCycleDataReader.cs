@@ -74,8 +74,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (DistanceBasedCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.DistanceBased;
 			}
-            if (EPTPCycleDataParser.ValidateHeader(cols, false)) {
-                return CycleType.EPTP;
+            if (VTPCycleDataParser.ValidateHeader(cols, false)) {
+                return CycleType.VTP;
             }
 			throw new VectoException("CycleFile format is unknown.");
 		}
@@ -95,8 +95,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 					return new MeasuredSpeedDataParser();
 				case CycleType.PTO:
 					return new PTOCycleDataParser();
-                case CycleType.EPTP:
-                    return new EPTPCycleDataParser();
+                case CycleType.VTP:
+                    return new VTPCycleDataParser();
 
                 default:
 					throw new ArgumentOutOfRangeException("Cycle Type", type.ToString());
@@ -319,6 +319,11 @@ namespace TUGraz.VectoCore.InputData.Reader
 			public const string EngineSpeed = "n";
             public const string EngineSpeedSuffix = "n_eng";
             public const string FanSpeed = "n_fan";
+			public const string WheelTorqueLeft = "tq_left";
+			public const string WheelTorqueRight = "tq_right";
+			public const string WheelSpeedLeft = "n_wh_left";
+			public const string WheelSpeedRight = "n_wh_right";
+			public const string FuelConsumption = "fc";
 			public const string Gear = "gear";
 			public const string AdditionalAuxPowerDemand = "Padd";
 			public const string AirSpeedRelativeToVehicle = "vair_res";
@@ -711,20 +716,28 @@ namespace TUGraz.VectoCore.InputData.Reader
         /// Parser for PTO Cycles.
         /// </summary>
         // <t>,<v> [km/h],<Pwheel> [kW],<n_eng> [rpm],<n_fan> [rpm], <Padd> [kW]
-        private class EPTPCycleDataParser : AbstractCycleDataParser
+        private class VTPCycleDataParser : AbstractCycleDataParser
         {
             public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
             {
                 ValidateHeader(table.Columns);
 
-                var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
-                    Time = row.ParseDouble(Fields.Time).SI<Second>(),
-                    VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
-                    AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
-                   PWheel = row.ParseDouble(Fields.PWheel).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
-                   EngineSpeed = row.ParseDouble(Fields.EngineSpeedSuffix).RPMtoRad(),
-                   FanSpeed = row.ParseDouble(Fields.FanSpeed).RPMtoRad()
-                }).ToArray();
+                var entries = table.Rows.Cast<DataRow>().Select(row => {
+					var wheelSpeed =
+						((row.ParseDouble(Fields.WheelSpeedLeft) + row.ParseDouble(Fields.WheelSpeedRight)) / 2).RPMtoRad();
+					return new DrivingCycleData.DrivingCycleEntry {
+						Time = row.ParseDouble(Fields.Time).SI<Second>(),
+						VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
+						AdditionalAuxPowerDemand =
+							row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
+						EngineSpeed = row.ParseDouble(Fields.EngineSpeedSuffix).RPMtoRad(),
+						WheelAngularVelocity = wheelSpeed,
+						Torque = (row.ParseDouble(Fields.WheelTorqueLeft).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedLeft).RPMtoRad() + row.ParseDouble(Fields.WheelTorqueRight).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedRight).RPMtoRad()) / wheelSpeed, 
+						FanSpeed = row.ParseDouble(Fields.FanSpeed).RPMtoRad(),
+						Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
+						Fuelconsumption = row.ParseDoubleOrGetDefault(Fields.FuelConsumption).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>(),
+					};
+				}).ToArray();
 
                 return entries;
             }
@@ -734,19 +747,26 @@ namespace TUGraz.VectoCore.InputData.Reader
                 var requiredCols = new[] {
                     Fields.Time,
                     Fields.VehicleSpeed,
-                    Fields.PWheel,
                     Fields.EngineSpeedSuffix,
-                    Fields.FanSpeed
+                    Fields.FanSpeed,
+					Fields.WheelSpeedLeft,
+					Fields.WheelSpeedRight,
+					Fields.WheelTorqueLeft,
+					Fields.WheelTorqueRight,
                 };
 
                 var allowedCols = new[] {
-                    Fields.Time,
-                    Fields.VehicleSpeed,
-                    Fields.AdditionalAuxPowerDemand,
-                    Fields.PWheel,
-                    Fields.EngineSpeedSuffix,
-                    Fields.FanSpeed
-                };
+					Fields.Time,
+					Fields.VehicleSpeed,
+					Fields.EngineSpeedSuffix,
+					Fields.FanSpeed,
+					Fields.WheelSpeedLeft,
+					Fields.WheelSpeedRight,
+					Fields.WheelTorqueLeft,
+					Fields.WheelTorqueRight,
+					Fields.Gear,
+					Fields.FuelConsumption
+				};
 
                 const bool allowAux = true;
 
