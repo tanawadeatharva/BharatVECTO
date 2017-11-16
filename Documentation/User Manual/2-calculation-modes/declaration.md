@@ -14,5 +14,5 @@ Declaration Mode can be activated in the [Options Tab](#main-form).
 
 -   Modal results (.vmod). One file for each vehicle/cycle/loading combination. Modal results are only written if the modal output is enabled in the 'Options' tab on the [Main Window](#main-form)
 -   Sum results (.vsum). One file for each invocation of VECTO.
--   Results overview (.pdf). One file for each job.
+-   Results (.xml). One file for each job.
 
