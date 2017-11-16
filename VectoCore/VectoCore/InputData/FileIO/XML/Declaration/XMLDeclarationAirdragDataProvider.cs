@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public SquareMeter AirDragArea
 		{
-			get { return GetDoubleElementValue(XMLNames.AirDrag_DeclaredCdxA).SI<SquareMeter>(); }
+			get { return ElementExists(XMLNames.AirDrag_DeclaredCdxA) ? GetDoubleElementValue(XMLNames.AirDrag_DeclaredCdxA).SI<SquareMeter>() : null; }
 		}
 	}
 }
