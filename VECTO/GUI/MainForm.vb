@@ -115,6 +115,7 @@ Public Class MainForm
 		TextFileBrowser = New FileBrowser("FileLists")
 		JobfileFileBrowser = New FileBrowser("vecto")
 		VehicleFileBrowser = New FileBrowser("vveh")
+		VehicleXMLFileBrowser = New FileBrowser("vveh_xml")
 		FuelConsumptionMapFileBrowser = New FileBrowser("vmap")
 		DrivingCycleFileBrowser = New FileBrowser("vdri")
 		FullLoadCurveFileBrowser = New FileBrowser("vfld")
@@ -142,6 +143,7 @@ Public Class MainForm
 		TextFileBrowser.Extensions = New String() {"txt"}
 		JobfileFileBrowser.Extensions = New String() {"vecto"}
 		VehicleFileBrowser.Extensions = New String() {"vveh"}
+		VehicleXMLFileBrowser.Extensions = New String() {"xml"}
 		FuelConsumptionMapFileBrowser.Extensions = New String() {"vmap"}
 		DrivingCycleFileBrowser.Extensions = New String() {"vdri"}
 		FullLoadCurveFileBrowser.Extensions = New String() {"vfld"}
@@ -166,6 +168,7 @@ Public Class MainForm
 		TextFileBrowser.Close()
 		JobfileFileBrowser.Close()
 		VehicleFileBrowser.Close()
+		VehicleXMLFileBrowser.Close()
 		FuelConsumptionMapFileBrowser.Close()
 		DrivingCycleFileBrowser.Close()
 		FullLoadCurveFileBrowser.Close()
@@ -1265,24 +1268,47 @@ lbFound:
 	'Open Job Editor and open file (or new file)
 	Friend Sub OpenVECTOeditor(x As String)
 
-		If Not VectoJobForm.Visible Then
-			VectoJobForm.Show()
-		Else
-			If VectoJobForm.WindowState = FormWindowState.Minimized Then VectoJobForm.WindowState = FormWindowState.Normal
-			VectoJobForm.BringToFront()
-		End If
-
 		If x = "<New>" Then
+			ShowVectoJobForm()
 			VectoJobForm.VectoNew()
+		ElseIf x = "<VTP>" Then
+			ShowVectoEPTPJobForm()
+			VectoVTPJobForm.VectoNew()
 		Else
 			Try
-				VectoJobForm.VECTOload2Form(x)
+				Dim job As IVTPInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x), IVTPInputDataProvider)
+				If job Is Nothing Then
+					ShowVectoJobForm()
+					VectoJobForm.VECTOload2Form(x)
+				Else
+					ShowVectoEPTPJobForm()
+					VectoVTPJobForm.VECTOload2Form(x)
+				End If
 			Catch ex As Exception
 				MsgBox(ex.Message, MsgBoxStyle.OkOnly, "Error loading Vecto Job File")
 			End Try
 		End If
 
 		VectoJobForm.Activate()
+	End Sub
+
+	Private Sub ShowVectoJobForm()
+		If Not VectoJobForm.Visible Then
+			VectoJobForm.Show()
+		Else
+			If VectoJobForm.WindowState = FormWindowState.Minimized Then VectoJobForm.WindowState = FormWindowState.Normal
+			VectoJobForm.BringToFront()
+		End If
+	End Sub
+
+	Private Sub ShowVectoEPTPJobForm()
+		If Not VectoVTPJobForm.Visible Then
+			VectoVTPJobForm.Show()
+		Else
+			If VectoVTPJobForm.WindowState = FormWindowState.Minimized Then _
+				VectoVTPJobForm.WindowState = FormWindowState.Normal
+			VectoVTPJobForm.BringToFront()
+		End If
 	End Sub
 
 	'Save job and cycle file lists
@@ -2000,6 +2026,11 @@ Lb1:
 				MsgBox("File not found: " & fileName)
 			End If
 		Next
+	End Sub
+
+	Private Sub EPTPJobEditorToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+		Handles EPTPJobEditorToolStripMenuItem.Click
+		OpenVECTOeditor("<VTP>")
 	End Sub
 End Class
 

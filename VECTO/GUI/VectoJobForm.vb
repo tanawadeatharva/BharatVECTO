@@ -301,7 +301,7 @@ Public Class VectoJobForm
 			If Not Trim(f) = "" Then
 				Dim vehInput As IVehicleDeclarationInputData =
 						CType(JSONInputDataFactory.ReadComponentData(FileRepl(TbVEH.Text, GetPath(VectoFile))), 
-							IEngineeringInputDataProvider).VehicleInputData
+							IEngineeringInputDataProvider).JobInputData.Vehicle
 				vehicleType = vehInput.VehicleCategory
 			End If
 
@@ -423,7 +423,7 @@ Public Class VectoJobForm
 		'Update Form
 
 		If inputData.JobInputData().EngineOnlyMode Then
-			TbENG.Text = GetRelativePath(inputData.EngineInputData.Source, _basePath)
+			TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.EngineInputData.Source, _basePath)
 			CbEngOnly.Checked = True
 			Try
 				Dim sb As ICycleData
@@ -440,9 +440,9 @@ Public Class VectoJobForm
 		CbEngOnly.Checked = False
 		CheckEngOnly()
 		'Files -----------------------------
-		TbVEH.Text = GetRelativePath(inputData.VehicleInputData.Source, _basePath)
-		TbENG.Text = GetRelativePath(inputData.EngineInputData.Source, _basePath)
-		TbGBX.Text = GetRelativePath(inputData.GearboxInputData.Source, _basePath)
+		TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.Source, _basePath)
+		TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.EngineInputData.Source, _basePath)
+		TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.GearboxInputData.Source, _basePath)
 
 		'Start/Stop
 		Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
@@ -452,7 +452,7 @@ Public Class VectoJobForm
 			'AA-TB
 			'Try and Select any previously selected Auxiliary Type
 			Dim declarationInput As IDeclarationInputDataProvider = CType(inputData, IDeclarationInputDataProvider)
-			Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.AuxiliaryInputData()
+			Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.JobInputData.Vehicle.AuxiliaryInputData()
 
 			cboAdvancedAuxiliaries.SelectedIndex = 0
 			cboAdvancedAuxiliaries.Enabled = False
@@ -472,7 +472,7 @@ Public Class VectoJobForm
 				If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.Source, _basePath))
 
 			cboAdvancedAuxiliaries.Enabled = True
-			Dim auxInput As IAuxiliariesEngineeringInputData = inputData.AuxiliaryInputData()
+			Dim auxInput As IAuxiliariesEngineeringInputData = inputData.JobInputData.Vehicle.AuxiliaryInputData()
 			For Each item As AdvancedAuxiliary In cboAdvancedAuxiliaries.Items
 				If _
 					AuxiliaryModelHelper.Parse(item.AssemblyName) = auxInput.AuxiliaryAssembly AndAlso
@@ -1144,7 +1144,7 @@ lbDlog:
 			Try
 				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(gearboxFile), 
 																		IEngineeringInputDataProvider)
-				gearbox = inputData.GearboxInputData
+				gearbox = inputData.JobInputData.Vehicle.GearboxInputData
 			Catch
 			End Try
 		End If
@@ -1228,7 +1228,7 @@ lbDlog:
 			Try
 				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(engineFile), 
 																		IEngineeringInputDataProvider)
-				engine = inputData.EngineInputData
+				engine = inputData.JobInputData.Vehicle.EngineInputData
 			Catch
 				Return
 			End Try
@@ -1304,7 +1304,7 @@ lbDlog:
 			Try
 				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(vehicleFile), 
 																		IEngineeringInputDataProvider)
-				vehicle = inputData.VehicleInputData
+				vehicle = inputData.JobInputData.Vehicle
 			Catch
 			End Try
 		End If

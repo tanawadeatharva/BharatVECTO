@@ -47,6 +47,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 		[TestCase("None", RetarderType.None),
 		TestCase("Losses included in Gearbox", RetarderType.LossesIncludedInTransmission),
 		TestCase("Engine Retarder", RetarderType.EngineRetarder),

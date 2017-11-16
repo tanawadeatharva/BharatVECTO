@@ -50,6 +50,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 		[TestCase, Category("LongRunning")]
 		public void VehicleIdlingSpeedTest()
 		{

@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public static VehicleData CreateVehicleDataFromFile(string vehicleDataFile)
 		{
 			var dao = new EngineeringDataAdapter();
-			var vehicleInput = JSONInputDataFactory.ReadJsonVehicle(vehicleDataFile);
+			var vehicleInput = JSONInputDataFactory.ReadJsonVehicle(vehicleDataFile, null);
 			var airdragData = vehicleInput as IAirdragEngineeringInputData;
 			return dao.CreateVehicleData(vehicleInput);
 		}
@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public static AirdragData CreateAirdragDataFromFile(string vehicleDataFile)
 		{
 			var dao = new EngineeringDataAdapter();
-			var vehicleInput = JSONInputDataFactory.ReadJsonVehicle(vehicleDataFile);
+			var vehicleInput = JSONInputDataFactory.ReadJsonVehicle(vehicleDataFile, null);
 			var airdragData = vehicleInput as IAirdragEngineeringInputData;
 			return dao.CreateAirdragData(airdragData, vehicleInput);
 		}

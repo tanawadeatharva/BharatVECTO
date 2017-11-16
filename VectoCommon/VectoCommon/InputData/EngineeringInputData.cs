@@ -50,6 +50,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		bool EngineOnlyMode { get; }
+
+		IEngineEngineeringInputData EngineOnly { get; }
 	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
@@ -80,6 +82,25 @@ namespace TUGraz.VectoCommon.InputData
 		Meter DynamicTyreRadius { get; }
 
 		Meter Height { get; }
+
+
+		new IAirdragEngineeringInputData AirdragInputData { get; }
+
+		new IGearboxEngineeringInputData GearboxInputData { get; }
+
+		new ITorqueConverterEngineeringInputData TorqueConverterInputData { get; }
+
+		new IAxleGearInputData AxleGearInputData { get; }
+
+		new IAngledriveInputData AngledriveInputData { get; }
+
+		new IEngineEngineeringInputData EngineInputData { get; }
+
+		new IAuxiliariesEngineeringInputData AuxiliaryInputData();
+
+		new IRetarderInputData RetarderInputData { get; }
+
+		new IPTOTransmissionInputData PTOTransmissionInputData { get; }
 	}
 
 	public interface IAirdragEngineeringInputData : IAirdragDeclarationInputData
@@ -262,7 +283,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		//new IStartStopEngineeringInputData StartStop { get; }
 
-		new IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll { get; }
+		IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll { get; }
 
 		/// <summary>
 		/// P009; P033, P034, P035

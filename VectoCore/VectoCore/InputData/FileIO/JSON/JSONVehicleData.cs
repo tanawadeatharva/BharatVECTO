@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -44,8 +45,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngledriveInputData,
 		IPTOTransmissionInputData, IAirdragEngineeringInputData
 	{
-		public JSONVehicleDataV7(JObject data, string fileName, bool tolerateMissing = false)
-			: base(data, fileName, tolerateMissing) {}
+		public JSONVehicleDataV7(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false)
+			: base(data, fileName, tolerateMissing)
+		{
+			Job = job;
+		}
+
+		private IJSONVehicleComponents Job;
 
 		#region IVehicleInputData
 
@@ -166,6 +172,103 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 								: (idx == 1 ? AxleType.VehicleDriven : AxleType.VehicleNonDriven)
 					});
 		}
+
+		#endregion
+
+		#region "VehicleComponents"
+
+		IAirdragDeclarationInputData IVehicleDeclarationInputData.AirdragInputData
+		{
+			get { return this; }
+		}
+
+		IAirdragEngineeringInputData IVehicleEngineeringInputData.AirdragInputData
+		{
+			get { return this; }
+		}
+
+		IGearboxDeclarationInputData IVehicleDeclarationInputData.GearboxInputData
+		{
+			get { return Job.Gearbox; }
+		}
+
+		IGearboxEngineeringInputData IVehicleEngineeringInputData.GearboxInputData
+		{
+			get { return Job.Gearbox; }
+		}
+
+		ITorqueConverterDeclarationInputData IVehicleDeclarationInputData.TorqueConverterInputData
+		{
+			get { return Job.TorqueConverter; }
+		}
+
+		ITorqueConverterEngineeringInputData IVehicleEngineeringInputData.TorqueConverterInputData
+		{
+			get { return Job.TorqueConverter; }
+		}
+
+		IAxleGearInputData IVehicleEngineeringInputData.AxleGearInputData
+		{
+			get { return Job.AxleGear; }
+		}
+
+		IAngledriveInputData IVehicleEngineeringInputData.AngledriveInputData
+		{
+			get { return this; }
+		}
+
+		public IEngineEngineeringInputData EngineInputData
+		{
+			get { return Job.Engine; }
+		}
+
+		IAxleGearInputData IVehicleDeclarationInputData.AxleGearInputData
+		{
+			get { return Job.AxleGear; }
+		}
+
+		IAngledriveInputData IVehicleDeclarationInputData.AngledriveInputData
+		{
+			get { return this; }
+		}
+
+		IEngineDeclarationInputData IVehicleDeclarationInputData.EngineInputData
+		{
+			get { return Job.Engine; }
+		}
+
+		IAuxiliariesDeclarationInputData IVehicleDeclarationInputData.AuxiliaryInputData()
+		{
+			return Job.DeclarationAuxiliaries;
+		}
+
+		IRetarderInputData IVehicleEngineeringInputData.RetarderInputData
+		{
+			get { return this; }
+		}
+
+		IPTOTransmissionInputData IVehicleEngineeringInputData.PTOTransmissionInputData
+		{
+			get { return this; }
+		}
+
+		IAuxiliariesEngineeringInputData IVehicleEngineeringInputData.AuxiliaryInputData()
+		{
+			return Job.EngineeringAuxiliaries;
+		}
+
+		IRetarderInputData IVehicleDeclarationInputData.RetarderInputData
+		{
+			get { return this; }
+		}
+
+
+		IPTOTransmissionInputData IVehicleDeclarationInputData.PTOTransmissionInputData
+		{
+			get { return this; }
+		}
+
+
 
 		#endregion
 

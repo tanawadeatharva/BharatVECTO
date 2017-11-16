@@ -116,10 +116,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected XElement CreateVehicle(IDeclarationInputDataProvider data)
 		{
-			var retarder = data.RetarderInputData;
-			var gearbox = data.GearboxInputData;
-			var vehicle = data.VehicleInputData;
-			var angledrive = data.AngledriveInputData;
+			var retarder = data.JobInputData.Vehicle.RetarderInputData;
+			var gearbox = data.JobInputData.Vehicle.GearboxInputData;
+			var vehicle = data.JobInputData.Vehicle;
+			var engine = data.JobInputData.Vehicle.EngineInputData;
+			var angledrive = data.JobInputData.Vehicle.AngledriveInputData;
 
 
 			var id = CreateIdString("VEH-" + vehicle.Model);
@@ -135,7 +136,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_IdlingSpeed,
 					vehicle.EngineIdleSpeed != null
 						? vehicle.EngineIdleSpeed.AsRPM.ToXMLFormat(0)
-						: data.EngineInputData.IdleSpeed.AsRPM.ToXMLFormat(0)),
+						: engine.IdleSpeed.AsRPM.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Vehicle_RetarderType, retarder.Type.ToXMLFormat()),
 				retarder.Type.IsDedicatedComponent()
 					? new XElement(tns + XMLNames.Vehicle_RetarderRatio, retarder.Ratio.ToXMLFormat(3))
@@ -146,14 +147,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + XMLNames.Vehicle_PTO_OtherElements, "none")),
 				CreateTorqueLimits(vehicle),
 				new XElement(tns + XMLNames.Vehicle_Components,
-					CreateEngine(data.EngineInputData),
-					CreateGearbox(gearbox, gearbox.Type.AutomaticTransmission() ? data.TorqueConverterInputData : null),
+					CreateEngine(engine),
+					CreateGearbox(gearbox, gearbox.Type.AutomaticTransmission() ? vehicle.TorqueConverterInputData : null),
 					angledrive.Type == AngledriveType.SeparateAngledrive ? CreateAngleDrive(angledrive) : null,
 					retarder.Type.IsDedicatedComponent() ? CreateRetarder(retarder) : null,
-					CreateAxlegear(data.AxleGearInputData),
-					CreateAxleWheels(data.VehicleInputData),
-					CreateAuxiliaries(data.AuxiliaryInputData()),
-					CreateAirdrag(data.AirdragInputData)
+					CreateAxlegear(vehicle.AxleGearInputData),
+					CreateAxleWheels(vehicle),
+					CreateAuxiliaries(vehicle.AuxiliaryInputData()),
+					CreateAirdrag(vehicle.AirdragInputData)
 					)
 				);
 		}

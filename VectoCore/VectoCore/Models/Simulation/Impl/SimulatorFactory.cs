@@ -89,14 +89,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private void CreateEngineeringDataReader(IInputDataProvider dataProvider)
 		{
-			var engDataProvider = ToEngineeringInputDataProvider(dataProvider);
-			if (engDataProvider.JobInputData().EngineOnlyMode) {
-				DataReader = new EngineOnlyVectoRunDataFactory(engDataProvider);
-				_engineOnlyMode = true;
-			} else {
-				DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
-			}
-		}
+            if (dataProvider is IVTPInputDataProvider) {
+                var eptpProvider = dataProvider as IVTPInputDataProvider;
+                DataReader = new EngineeringVTPModeVectoRunDataFactory(eptpProvider);
+                return;
+            }
+            if (dataProvider is IEngineeringInputDataProvider) {
+                var engDataProvider = dataProvider as IEngineeringInputDataProvider;
+                if (engDataProvider.JobInputData.EngineOnlyMode) {
+                    DataReader = new EngineOnlyVectoRunDataFactory(engDataProvider);
+                    _engineOnlyMode = true;
+                } else {
+                    DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
+                }
+                return;
+            }
+            throw  new VectoException("Unknown InputData for Engineering Mode!");
+        }
 
 		private static IDeclarationInputDataProvider ToDeclarationInputDataProvider(IInputDataProvider dataProvider)
 		{
@@ -105,15 +114,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				throw new VectoException("InputDataProvider does not implement DeclarationData interface");
 			}
 			return declDataProvider;
-		}
-
-		private static IEngineeringInputDataProvider ToEngineeringInputDataProvider(IInputDataProvider dataProvider)
-		{
-			var engDataProvider = dataProvider as IEngineeringInputDataProvider;
-			if (engDataProvider == null) {
-				throw new VectoException("InputDataProvider does not implement Engineering interface");
-			}
-			return engDataProvider;
 		}
 
 		public bool Validate { get; set; }
@@ -203,6 +203,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 				case CycleType.EngineOnly:
 				case CycleType.PWheel:
+                case CycleType.VTP:
 				case CycleType.MeasuredSpeed:
 				case CycleType.MeasuredSpeedGear:
 					run = new TimeRun(builder.Build(data));
