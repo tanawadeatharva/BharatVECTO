@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.Value(),
 				runData.DriverData.OverSpeedEcoRoll.UnderSpeed.Value(), Tolerance);
 
-			Assert.AreEqual(3.7890, runData.EngineData.Inertia.Value());
+			Assert.AreEqual(3.7890, runData.EngineData.Inertia.Value(), 1e-6);
 
 			var downshiftSpeeds = new[] { 660, 660, 1679.9982 };
 			var downshiftTorque = new[] { -163.9, 257.9742, 988.9 };

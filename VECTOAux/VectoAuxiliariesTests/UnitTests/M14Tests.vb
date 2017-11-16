@@ -118,8 +118,8 @@ Namespace UnitTests
 			Dim m14 As New M14(m13.Object, ssmMock, constants, signals.Object)
 
 			'Assert
-			Assert.AreEqual(expectedOut1.SI().Gramm.Value(), m14.TotalCycleFCGrams.Value(), 0.1)
-			Assert.AreEqual(expectedOut2.SI().Liter.Value(), m14.TotalCycleFCLitres.Value(), 0.00001)
+            Assert.AreEqual(expectedOut1.SI(Unit.SI.Gramm).Value(), m14.TotalCycleFCGrams.Value(), 0.1)
+            Assert.AreEqual(expectedOut2.SI(Of Liter).Value(), m14.TotalCycleFCLitres.Value(), 0.00001)
 		End Sub
 	End Class
 End Namespace

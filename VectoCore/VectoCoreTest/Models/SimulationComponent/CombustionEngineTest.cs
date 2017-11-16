@@ -525,11 +525,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var displace = engineData.Displacement;
 			Assert.AreEqual(0.01273, displace.Value());
-			Assert.IsTrue(displace.HasEqualUnit(new SI().Cubic.Meter));
+		    Assert.IsTrue(displace.HasEqualUnit(new SI(Unit.SI.Cubic.Meter)));
 
 			var inert = engineData.Inertia;
 			Assert.AreEqual(3.8, inert.Value(), 0.00001);
-			Assert.IsTrue(inert.HasEqualUnit(new SI().Kilo.Gramm.Square.Meter));
+		    Assert.IsTrue(inert.HasEqualUnit(new SI(Unit.SI.Kilo.Gramm.Square.Meter)));
 
 			var idle = engineData.IdleSpeed;
 			Assert.AreEqual(58.6430628670095, idle.Value(), 0.000001);

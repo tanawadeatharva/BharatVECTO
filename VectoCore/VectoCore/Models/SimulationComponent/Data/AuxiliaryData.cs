@@ -84,8 +84,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public static ValidationResult ValidateAuxMap(AuxiliaryData data, ValidationContext context)
 		{
 			var xValidationRules = new[] { new RangeAttribute(0, double.MaxValue) };
-			var yValidationRules = new[] { new RangeAttribute(0, 100.SI().Kilo.Watt.Value()) };
-			var zValidationRules = new[] { new RangeAttribute(0, 100.SI().Kilo.Watt.Value()) };
+		    var yValidationRules = new[] { new RangeAttribute(0, 100.SI(Unit.SI.Kilo.Watt).Value()) };
+		    var zValidationRules = new[] { new RangeAttribute(0, 100.SI(Unit.SI.Kilo.Watt).Value()) };
 
 			var results = new List<ValidationResult>();
 			foreach (var entry in data._map.Entries) {

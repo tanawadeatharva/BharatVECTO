@@ -67,7 +67,7 @@ Namespace Hvac
 
 			_ElectricalPowerW = ssm.ElectricalWAdjusted.SI(Of Watt)()
 			_MechanicalPowerW = ssm.MechanicalWBaseAdjusted.SI(Of Watt)()
-			_FuelingLPerH = ssm.FuelPerHBaseAdjusted.SI().Liter.Per.Hour.Cast(Of LiterPerSecond)() ' SI(Of LiterPerHour)()
+		   	_FuelingLPerH = ssm.FuelPerHBaseAdjusted.SI(Unit.SI.Liter.Per.Hour).Cast(Of LiterPerSecond)() ' SI(Of LiterPerHour)()
 		End Sub
 
 		'Public Methods - Implementation

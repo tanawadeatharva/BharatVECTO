@@ -48,7 +48,7 @@ Public Class M1_Mock
 			AveragePowerDemandAtAlternatorFromHVACElectricsWatts.SI(Of Watt)()
 		_AveragePowerDemandAtCrankFromHVACElectricsWatts = AveragePowerDemandAtCrankFromHVACElectricsWatts.SI(Of Watt)()
 		_AveragePowerDemandAtCrankFromHVACMechanicalsWatts = AveragePowerDemandAtCrankFromHVACMechanicalsWatts.SI(Of Watt)()
-		_HVACFuelingLitresPerHour = HVACFuelingLitresPerHour.SI().Liter.Per.Hour.Cast(Of LiterPerSecond)() _
+       		_HVACFuelingLitresPerHour = HVACFuelingLitresPerHour.SI(Unit.SI.Liter.Per.Hour).Cast(Of LiterPerSecond)() _
 		'(Of LiterPerHour)()
 	End Sub
 End Class

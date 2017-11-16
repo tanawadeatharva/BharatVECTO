@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new ArgumentException("Three fan parameters are required!");
 			}
 			FanCoefficients = fanParameters;
-			FanDiameter = fanDiameter.ConvertTo().Milli.Meter.Value();
+			FanDiameter = fanDiameter.ConvertToMilliMeter();
 		}
 
 		public Watt PowerDemand(PerSecond fanSpeed)
