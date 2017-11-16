@@ -732,7 +732,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 							row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 						EngineSpeed = row.ParseDouble(Fields.EngineSpeedSuffix).RPMtoRad(),
 						WheelAngularVelocity = wheelSpeed,
-						Torque = (row.ParseDouble(Fields.WheelTorqueLeft).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedLeft).RPMtoRad() + row.ParseDouble(Fields.WheelTorqueRight).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedRight).RPMtoRad()) / wheelSpeed, 
+						Torque = wheelSpeed.IsEqual(0, 1e-3) ? 0.SI<NewtonMeter>() : (row.ParseDouble(Fields.WheelTorqueLeft).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedLeft).RPMtoRad() + row.ParseDouble(Fields.WheelTorqueRight).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedRight).RPMtoRad()) / wheelSpeed, 
 						FanSpeed = row.ParseDouble(Fields.FanSpeed).RPMtoRad(),
 						Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
 						Fuelconsumption = row.ParseDoubleOrGetDefault(Fields.FuelConsumption).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>(),
