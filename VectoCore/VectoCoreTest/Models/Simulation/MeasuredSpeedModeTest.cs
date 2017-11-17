@@ -32,6 +32,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -60,6 +61,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[TestFixture]
 	public class MeasuredSpeedModeTest
 	{
+
+		[OneTimeSetUp]
+		public void Init()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 		/// <summary>
 		/// Test if the cycle file can be read.
 		/// </summary>
