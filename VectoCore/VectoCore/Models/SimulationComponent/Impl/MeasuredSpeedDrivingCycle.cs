@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				targetSpeed = 0.KMPHtoMeterPerSecond();
 			}
 			var deltaV = targetSpeed - DataBus.VehicleSpeed;
-			var deltaT = CycleIterator.RightSample.Time - CycleIterator.LeftSample.Time;
+			var deltaT = CycleIterator.RightSample.Time - absTime;
 
 			if (DataBus.VehicleSpeed.IsSmaller(0)) {
 				throw new VectoSimulationException("vehicle velocity is smaller than zero");
