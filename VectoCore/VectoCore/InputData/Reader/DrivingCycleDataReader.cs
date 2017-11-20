@@ -725,6 +725,8 @@ namespace TUGraz.VectoCore.InputData.Reader
                 var entries = table.Rows.Cast<DataRow>().Select(row => {
 					var wheelSpeed =
 						((row.ParseDouble(Fields.WheelSpeedLeft) + row.ParseDouble(Fields.WheelSpeedRight)) / 2).RPMtoRad();
+					var wheelPower = row.ParseDouble(Fields.WheelTorqueLeft).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedLeft).RPMtoRad() +
+						row.ParseDouble(Fields.WheelTorqueRight).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedRight).RPMtoRad();
 					return new DrivingCycleData.DrivingCycleEntry {
 						Time = row.ParseDouble(Fields.Time).SI<Second>(),
 						VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
@@ -732,7 +734,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 							row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 						EngineSpeed = row.ParseDouble(Fields.EngineSpeedSuffix).RPMtoRad(),
 						WheelAngularVelocity = wheelSpeed,
-						Torque = wheelSpeed.IsEqual(0, 1e-3) ? 0.SI<NewtonMeter>() : (row.ParseDouble(Fields.WheelTorqueLeft).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedLeft).RPMtoRad() + row.ParseDouble(Fields.WheelTorqueRight).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedRight).RPMtoRad()) / wheelSpeed, 
+						Torque = wheelSpeed.IsEqual(0, 1e-3) ? 0.SI<NewtonMeter>() : wheelPower / wheelSpeed, 
+						PWheel = wheelPower,
 						FanSpeed = row.ParseDouble(Fields.FanSpeed).RPMtoRad(),
 						Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
 						Fuelconsumption = row.ParseDoubleOrGetDefault(Fields.FuelConsumption).SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>(),
