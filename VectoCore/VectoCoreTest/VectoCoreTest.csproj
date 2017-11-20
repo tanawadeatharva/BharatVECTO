@@ -175,6 +175,7 @@
     <Compile Include="XML\XMLDeclarationInputTest.cs" />
     <Compile Include="XML\XMLEngineeringInputRefTest.cs" />
     <Compile Include="XML\XMLEngineeringInputSingleTest.cs" />
+    <Compile Include="XML\XMLReportTest.cs" />
     <Compile Include="XML\XMLWritingTest.cs" />
   </ItemGroup>
   <ItemGroup>
