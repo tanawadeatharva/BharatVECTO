@@ -33,9 +33,9 @@ namespace TUGraz.VectoCore.Tests.Integration.EPTP
 			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
 
 			jobContainer.Execute();
-            jobContainer.WaitFinished();
+			jobContainer.WaitFinished();
 
-            Assert.AreEqual(true, jobContainer.AllCompleted);
+			Assert.AreEqual(true, jobContainer.AllCompleted);
             
         }
 
