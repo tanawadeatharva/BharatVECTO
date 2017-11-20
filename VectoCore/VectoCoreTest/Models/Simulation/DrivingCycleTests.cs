@@ -203,6 +203,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			TestCase("<t>,<v>,<grad>,<n>,<gear>", CycleType.MeasuredSpeedGear),
 			TestCase("<n>,<Padd>,<gear>,<v>,<grad>,<t>", CycleType.MeasuredSpeedGear),
 			TestCase("t,v,grad,Padd,n,gear", CycleType.MeasuredSpeedGear),
+
+			// Verification test simulation
+			TestCase("<t>,<v>,<n_eng>,<n_fan>,<tq_left>,<tq_right>,<n_wh_left>,<n_wh_right>", CycleType.VTP),
+			TestCase("<t>,<v>,<n_eng>,<n_fan>,<tq_left>,<tq_right>,<n_wh_left>,<n_wh_right>,<gear>", CycleType.VTP),
+			TestCase("<t>,<v>,<n_eng>,<n_fan>,<tq_left>,<tq_right>,<n_wh_left>,<n_wh_right>,<fc>,<gear>", CycleType.VTP),
 		]
 		public void DrivingCycle_AutoDetect(string cycle, CycleType type)
 		{
