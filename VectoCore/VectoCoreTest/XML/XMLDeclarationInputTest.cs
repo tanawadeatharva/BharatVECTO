@@ -333,7 +333,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
 
-			Assert.IsNull(inputDataProvider.AirdragInputData.AirDragArea);
+			Assert.IsNull(inputDataProvider.JobInputData.Vehicle.AirdragInputData.AirDragArea);
 		}
 
 		[TestCase]
