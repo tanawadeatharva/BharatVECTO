@@ -62,7 +62,7 @@ Namespace DownstreamModules
 			Get
 				'Return (S5.Value() * ssm.FuelPerHBaseAsjusted(S4.Value() / 1000) / 3600 * (constants.FuelDensity)).SI(Of Kilogram)()
 				Return _
-					(S5 * ssm.FuelPerHBaseAsjusted(S4.Value() / 1000).SI().Liter.Per.Hour).Cast(Of Liter)() * constants.FuelDensity
+				    (S5 * ssm.FuelPerHBaseAsjusted(S4.Value() / 1000).SI(Unit.SI.Liter.Per.Hour)).Cast(Of Liter)() * constants.FuelDensity
 			End Get
 		End Property
 
@@ -74,7 +74,7 @@ Namespace DownstreamModules
 
 		Private ReadOnly Property S8 As Liter
 			Get
-				Return (S7 / (constants.FuelDensity))
+				Return (S7 / (constants.FuelDensity)).Cast(Of Liter)
 			End Get
 		End Property
 

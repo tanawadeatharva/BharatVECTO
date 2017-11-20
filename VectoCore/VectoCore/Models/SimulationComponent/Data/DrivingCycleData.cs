@@ -46,7 +46,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		PWheel,
 		MeasuredSpeed,
 		MeasuredSpeedGear,
-		PTO
+		PTO,
+        VTP
 	}
 
 	public static class CycleTypeHelper
@@ -137,7 +138,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				Drag = entry.Drag;
 				PTOActive = entry.PTOActive;
 				AuxiliarySupplyPower = new Dictionary<string, Watt>(entry.AuxiliarySupplyPower);
-			}
+                EngineSpeed = entry.EngineSpeed;
+                FanSpeed = entry.FanSpeed;
+            }
 
 			/// <summary>
 			/// Travelled distance used for distance-based cycles. If "t" is also defined this column will be ignored.
@@ -166,6 +169,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			{
 				get { return (Math.Tan(RoadGradient.Value()) * 100).SI<Scalar>(); }
 			}
+
+			public KilogramPerSecond Fuelconsumption;
 
 			/// <summary>
 			/// relative altitude of the driving cycle over distance
@@ -220,7 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// </summary>
 			public Watt PWheel;
 
-			public bool? TorqueConverterActive { get; set; }
+            public bool? TorqueConverterActive;
 
 			/// <summary>
 			/// The angular velocity at the wheel. only used in PWheelCycle.
@@ -231,6 +236,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// Flag if PTO Cycle is active or not.
 			/// </summary>
 			public bool PTOActive;
-		}
+
+            public PerSecond EngineSpeed;
+
+            public PerSecond FanSpeed;
+        }
 	}
 }

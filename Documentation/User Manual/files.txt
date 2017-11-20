@@ -2,7 +2,8 @@
 1-user-interface/A_index.md
 1-user-interface/B_mainform.md
 1-user-interface/C_settings.md
-1-user-interface/D_VECTO-Job-Editor.md
+1-user-interface/D1_VECTO-Job-Editor.md
+1-user-interface/D2_VTP-Job-Editor.md
 1-user-interface/E_VECTO-Editor_Aux.md
 1-user-interface/K0_VECTO-AdvancedAux.md
 1-user-interface/K1_VECTO-AdvancedAux_EL.md
@@ -17,6 +18,7 @@
 2-calculation-modes/calculation-modes.md
 2-calculation-modes/engineering.md
 2-calculation-modes/declaration.md
+2-calculation-modes/verification-test.md
 2-calculation-modes/engine-only.md
 3-simulation-models/simulation-models.md
 3-simulation-models/powertrain.md
@@ -44,6 +46,7 @@
 5-input-and-output-files/CSV.md
 5-input-and-output-files/JSON.md
 5-input-and-output-files/VECTO.md
+5-input-and-output-files/VECTO-VTP.md
 5-input-and-output-files/VVEH.md
 5-input-and-output-files/VCDV.md
 5-input-and-output-files/VCDB.md

@@ -43,8 +43,8 @@ Namespace UnitTests
 
 			'Assert
 			Assert.AreEqual(target.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand().Value(),
-							OUT1.SI().Gramm.Value(), 0.001)
-			Assert.AreEqual(target.BaseFuelConsumptionWithTrueAuxiliaryLoads().Value(), OUT2.SI().Gramm.Value(), 0.001)
+                            OUT1.SI(Unit.SI.Gramm).Value(), 0.001)
+            Assert.AreEqual(target.BaseFuelConsumptionWithTrueAuxiliaryLoads().Value(), OUT2.SI(Unit.SI.Gramm).Value(), 0.001)
 		End Sub
 	End Class
 End Namespace

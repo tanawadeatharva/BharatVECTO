@@ -37,15 +37,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 	// ReSharper disable once InconsistentNaming
 	public class XMLDeclarationJobInputDataProvider : AbstractDeclarationXMLComponentDataProvider, IDeclarationJobInputData
 	{
-		public XMLDeclarationJobInputDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
+		private readonly XMLDeclarationVehicleDataProvider _vehicle;
+
+		public XMLDeclarationJobInputDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider)
+			: base(xmlInputDataProvider)
 		{
 			XBasePath = VehiclePath;
+			_vehicle = new XMLDeclarationVehicleDataProvider(xmlInputDataProvider);
 		}
 
 
 		public IVehicleDeclarationInputData Vehicle
 		{
-			get { return InputData.VehicleInputData; }
+			get { return _vehicle; }
+		}
+
+		public XMLDeclarationVehicleDataProvider XMLVehicle
+		{
+			get { return _vehicle; }
 		}
 
 		public string JobName

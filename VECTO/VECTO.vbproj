@@ -187,6 +187,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="GUI\VectoVTPJobForm.Designer.vb">
+      <DependentUpon>VectoVTPJobForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\VectoVTPJobForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Input Files\BrowserUtils.vb" />
     <Compile Include="GUI\VehicleTorqueLimitsDialog.Designer.vb">
       <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
@@ -272,6 +278,7 @@
     <Compile Include="File Browser\FileBrowserFavoritesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Input Files\VectoEPTPJob.vb" />
     <Compile Include="Input Files\VectoJob.vb" />
     <Compile Include="Input Files\Vehicle.vb" />
     <Compile Include="GUI\GearboxGearDialog.Designer.vb">
@@ -350,6 +357,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\JiraDialog.resx">
       <DependentUpon>JiraDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\VectoVTPJobForm.resx">
+      <DependentUpon>VectoVTPJobForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\VehicleTorqueLimitsDialog.resx">
       <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>
@@ -529,6 +539,7 @@
     <Content Include="Resources\F_VECTO.ico" />
     <Content Include="Resources\F_VEH.ico" />
     <Content Include="Resources\Graph.ico" />
+    <None Include="Resources\P_fan_eqn.png" />
     <Content Include="Resources\Status-dialog-password-icon.ico" />
     <EmbeddedResource Include="Resources\Undef.png" />
     <Content Include="Resources\up.ico" />
@@ -536,7 +547,6 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>

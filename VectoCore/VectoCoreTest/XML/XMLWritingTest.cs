@@ -55,6 +55,12 @@ namespace TUGraz.VectoCore.Tests.XML
 			@"TestData\XML\XMLWriter\DeclarationJob\Class5_Tractor_4x2\Class5_Tractor_DECL-FULL.vecto";
 
 
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 		[TestCase]
 		public void TestWriteEngineOnlySingleFile()
 		{
@@ -73,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLEngineeringInputDataProvider(outFile, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("175kW 6.8l Engine", xml.JobInputData().JobName);
+			Assert.AreEqual("175kW 6.8l Engine", xml.JobInputData.JobName);
 		}
 
 		[TestCase]
@@ -89,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLEngineeringInputDataProvider(outFile, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
+			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
 		}
 
 		[TestCase]
@@ -105,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLEngineeringInputDataProvider(outFile, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
+			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
 		}
 
 		[TestCase]
@@ -123,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLEngineeringInputDataProvider(Path.Combine(outDir, outFile), true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
+			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
 		}
 
 		[TestCase]
@@ -161,7 +167,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLDeclarationInputDataProvider(reader, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
+			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
 		}
 
 		[TestCase]
@@ -183,7 +189,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLDeclarationInputDataProvider(reader, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData().JobName);
+			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
 		}
 	}
 }

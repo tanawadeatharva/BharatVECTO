@@ -298,7 +298,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					DrivingCycle = c;
 					commitPriority = 6;
 				})
-				.If<PTOCycleController>(c => { commitPriority = 99; });
+				.If<PTOCycleController>(c => { commitPriority = 99; })
+                .If<VTPCycle>(_ => { commitPriority = 0; });
 
 			_components.Add(Tuple.Create(commitPriority, component));
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();

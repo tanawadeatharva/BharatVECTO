@@ -34,12 +34,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -123,20 +126,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	/// </summary>
 	public class JSONInputDataV2 : JSONFile, IEngineeringInputDataProvider, IDeclarationInputDataProvider,
 		IEngineeringJobInputData, IDriverEngineeringInputData, IAuxiliariesEngineeringInputData,
-		IAuxiliariesDeclarationInputData
+		IAuxiliariesDeclarationInputData, IJSONVehicleComponents
 	{
-		protected readonly IGearboxEngineeringInputData Gearbox;
-		protected readonly IAxleGearInputData AxleGear;
-		protected readonly ITorqueConverterEngineeringInputData TorqueConverter;
-		protected readonly IAngledriveInputData Angledrive;
-		protected readonly IEngineEngineeringInputData Engine;
-		protected readonly IVehicleEngineeringInputData VehicleData;
-		protected readonly IRetarderInputData Retarder;
-		protected readonly IPTOTransmissionInputData PTOTransmission;
-
-		private readonly string _jobname;
-		protected internal IAirdragEngineeringInputData AirdragData;
-
 		public JSONInputDataV2(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing)
 		{
@@ -153,10 +144,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
 
 			VehicleData = ReadVehicle();
-			Angledrive = VehicleData as IAngledriveInputData;
-			Retarder = VehicleData as IRetarderInputData;
-			PTOTransmission = VehicleData as IPTOTransmissionInputData;
-			AirdragData = VehicleData as IAirdragEngineeringInputData;
+		}
+
+		public IGearboxEngineeringInputData Gearbox { get; internal set; }
+		public IAxleGearInputData AxleGear { get; internal set; }
+		public ITorqueConverterEngineeringInputData TorqueConverter { get; internal set; }
+		public IEngineEngineeringInputData Engine { get; internal set; }
+
+
+		protected readonly IVehicleEngineeringInputData VehicleData;
+
+		private readonly string _jobname;
+
+
+		public IAuxiliariesEngineeringInputData EngineeringAuxiliaries
+		{
+			get { return this; }
+		}
+
+		public IAuxiliariesDeclarationInputData DeclarationAuxiliaries
+		{
+			get { return this; }
 		}
 
 		private IVehicleEngineeringInputData ReadVehicle()
@@ -164,14 +172,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			try {
 				var vehicleFile = Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>();
 				return JSONInputDataFactory.ReadJsonVehicle(
-					Path.Combine(BasePath, vehicleFile));
+					Path.Combine(BasePath, vehicleFile), this);
 			} catch (Exception e) {
 				if (!TolerateMissing) {
-					throw new VectoException("JobFile: Failed to read Vehicle file '{0}': {1}", e, Body[JsonKeys.Vehicle_VehicleFile],
+					throw new VectoException("JobFile: Failed to read Vehicle file '{0}': {1}", e,
+						Body[JsonKeys.Vehicle_VehicleFile],
 						e.Message);
 				}
 				return new JSONVehicleDataV7(GetDummyJSONStructure(),
-					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>()) + MissingFileSuffix);
+					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_VehicleFile).Value<string>()) +
+					MissingFileSuffix, this);
 			}
 		}
 
@@ -183,11 +193,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				return JSONInputDataFactory.ReadGearbox(Path.Combine(BasePath, gearboxFile));
 			} catch (Exception e) {
 				if (!TolerateMissing) {
-					throw new VectoException("JobFile: Failed to read Gearbox file '{0}': {1}", e, Body[JsonKeys.Vehicle_GearboxFile],
+					throw new VectoException("JobFile: Failed to read Gearbox file '{0}': {1}", e,
+						Body[JsonKeys.Vehicle_GearboxFile],
 						e.Message);
 				}
 				return new JSONGearboxDataV6(GetDummyJSONStructure(),
-					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>()) + MissingFileSuffix);
+					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_GearboxFile).Value<string>()) +
+					MissingFileSuffix);
 			}
 		}
 
@@ -198,62 +210,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()));
 			} catch (Exception e) {
 				if (!TolerateMissing) {
-					throw new VectoException("JobFile: Failed to read Engine file '{0}': {1}", e, Body[JsonKeys.Vehicle_EngineFile],
+					throw new VectoException("JobFile: Failed to read Engine file '{0}': {1}", e,
+						Body[JsonKeys.Vehicle_EngineFile],
 						e.Message);
 				}
-				//JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}})
+
 				return
 					new JSONEngineDataV3(GetDummyJSONStructure(),
-						Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()) + MissingFileSuffix);
+						Path.Combine(BasePath, Body.GetEx(JsonKeys.Vehicle_EngineFile).Value<string>()) +
+						MissingFileSuffix);
 			}
 		}
 
 		#region IInputDataProvider
 
-		public virtual IEngineeringJobInputData JobInputData()
-		{
-			return this;
-		}
-
-		IVehicleDeclarationInputData IDeclarationInputDataProvider.VehicleInputData
+		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
 		{
 			get { return VehicleInputData; }
 		}
 
-		IAirdragDeclarationInputData IDeclarationInputDataProvider.AirdragInputData
+		public virtual IEngineeringJobInputData JobInputData
 		{
-			get { return AirdragInputData; }
+			get { return this; }
 		}
 
-		public IAirdragEngineeringInputData AirdragInputData
+		public XElement XMLHash
 		{
-			get { return AirdragData; }
+			get { return new XElement(XMLNames.DI_Signature); }
 		}
 
-		IGearboxDeclarationInputData IDeclarationInputDataProvider.GearboxInputData
+		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData
 		{
-			get { return GearboxInputData; }
-		}
-
-		ITorqueConverterDeclarationInputData IDeclarationInputDataProvider.TorqueConverterInputData
-		{
-			get { return TorqueConverterInputData; }
-		}
-
-		public ITorqueConverterEngineeringInputData TorqueConverterInputData
-		{
-			get
-			{
-				if (TorqueConverter == null) {
-					throw new InvalidFileFormatException("TorqueConverterData not found");
-				}
-				return TorqueConverter;
-			}
-		}
-
-		IDeclarationJobInputData IDeclarationInputDataProvider.JobInputData()
-		{
-			return JobInputData();
+			get { return this; }
 		}
 
 		public virtual IVehicleEngineeringInputData VehicleInputData
@@ -269,43 +257,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual IGearboxEngineeringInputData GearboxInputData
-		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
-				if (Gearbox == null) {
-					throw new InvalidFileFormatException("GearboxData not found");
-				}
-				return Gearbox;
-			}
-		}
-
-		public virtual IAxleGearInputData AxleGearInputData
-		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
-				if (AxleGear == null) {
-					throw new InvalidFileFormatException("AxleGearData not found");
-				}
-				return AxleGear;
-			}
-		}
-
-		public IAngledriveInputData AngledriveInputData
-		{
-			get { return Angledrive; }
-		}
-
-		IEngineDeclarationInputData IDeclarationInputDataProvider.EngineInputData
-		{
-			get { return EngineInputData; }
-		}
-
-		public virtual IEngineEngineeringInputData EngineInputData
+		public virtual IEngineEngineeringInputData EngineOnly
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
@@ -318,45 +270,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual IAuxiliariesEngineeringInputData AuxiliaryInputData()
-		{
-			return this;
-		}
-
 		IDriverEngineeringInputData IEngineeringInputDataProvider.DriverInputData
-		{
-			get { return this; }
-		}
-
-		public IPTOTransmissionInputData PTOTransmissionInputData
-		{
-			get { return PTOTransmission; }
-		}
-
-		public XElement XMLHash
-		{
-			get { return null; }
-		}
-
-		IAuxiliariesDeclarationInputData IDeclarationInputDataProvider.AuxiliaryInputData()
-		{
-			return this;
-		}
-
-		public virtual IRetarderInputData RetarderInputData
-		{
-			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-				"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-			get
-			{
-				if (Retarder == null) {
-					throw new InvalidFileFormatException("RetarderData not found");
-				}
-				return Retarder;
-			}
-		}
-
-		public virtual IDriverDeclarationInputData DriverInputData
 		{
 			get { return this; }
 		}
@@ -390,7 +304,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						try {
 							var resourceName = DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
 												cycle.Value<string>() + Constants.FileExtensions.CycleFile;
-							cycleData = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceName), source: resourceName);
+							cycleData = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceName),
+								source: resourceName);
 						} catch (Exception e) {
 							Log.Debug("Driving Cycle could not be read: " + cycleFile);
 							if (!TolerateMissing) {
@@ -413,11 +328,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx(JsonKeys.Job_EngineOnlyMode).Value<bool>(); }
 		}
 
-		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
-		{
-			get { return Vehicle; }
-		}
-
 		public virtual string JobName
 		{
 			get { return _jobname; }
@@ -426,17 +336,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 
 		#region DriverInputData
-
-		IOverSpeedEcoRollDeclarationInputData IDriverDeclarationInputData.OverSpeedEcoRoll
-		{
-			get
-			{
-				var overspeed = Body.GetEx(JsonKeys.DriverData_OverspeedEcoRoll);
-				return new OverSpeedEcoRollInputData() {
-					Mode = DriverData.ParseDriverMode(overspeed.GetEx<string>(JsonKeys.DriverData_OverspeedEcoRoll_Mode))
-				};
-			}
-		}
 
 		public virtual ILookaheadCoastingInputData Lookahead
 		{
@@ -476,7 +375,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		private TableData GetVelocityDropLookupTable(JToken lac)
 		{
-			if (lac["Df_velocityDropLookup"] == null || string.IsNullOrWhiteSpace(lac["Df_velocityDropLookup"].Value<string>())) {
+			if (lac["Df_velocityDropLookup"] == null ||
+				string.IsNullOrWhiteSpace(lac["Df_velocityDropLookup"].Value<string>())) {
 				return null;
 			}
 			try {
@@ -485,7 +385,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			} catch (Exception) {
 				if (TolerateMissing) {
 					return
-						new TableData(Path.Combine(BasePath, lac["Df_velocityDropLookup"].Value<string>()) + MissingFileSuffix,
+						new TableData(
+							Path.Combine(BasePath, lac["Df_velocityDropLookup"].Value<string>()) + MissingFileSuffix,
 							DataSourceType.Missing);
 				}
 			}
@@ -494,7 +395,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		private TableData GetSpeedDependentLookupTable(JToken lac)
 		{
-			if (lac["DF_targetSpeedLookup"] == null || string.IsNullOrWhiteSpace(lac["DF_targetSpeedLookup"].Value<string>())) {
+			if (lac["DF_targetSpeedLookup"] == null ||
+				string.IsNullOrWhiteSpace(lac["DF_targetSpeedLookup"].Value<string>())) {
 				return null;
 			}
 			try {
@@ -503,7 +405,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			} catch (Exception) {
 				if (TolerateMissing) {
 					return
-						new TableData(Path.Combine(BasePath, lac["DF_targetSpeedLookup"].Value<string>()) + MissingFileSuffix,
+						new TableData(
+							Path.Combine(BasePath, lac["DF_targetSpeedLookup"].Value<string>()) + MissingFileSuffix,
 							DataSourceType.Missing);
 				}
 			}
@@ -516,9 +419,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			{
 				var overspeed = Body.GetEx(JsonKeys.DriverData_OverspeedEcoRoll);
 				return new OverSpeedEcoRollInputData() {
-					Mode = DriverData.ParseDriverMode(overspeed.GetEx<string>(JsonKeys.DriverData_OverspeedEcoRoll_Mode)),
-					MinSpeed = overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_MinSpeed).KMPHtoMeterPerSecond(),
-					OverSpeed = overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_OverSpeed).KMPHtoMeterPerSecond(),
+					Mode = DriverData.ParseDriverMode(
+						overspeed.GetEx<string>(JsonKeys.DriverData_OverspeedEcoRoll_Mode)),
+					MinSpeed = overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_MinSpeed)
+						.KMPHtoMeterPerSecond(),
+					OverSpeed = overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_OverSpeed)
+						.KMPHtoMeterPerSecond(),
 					UnderSpeed =
 						overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_UnderSpeed).KMPHtoMeterPerSecond()
 				};
@@ -606,7 +512,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					continue;
 				}
 
-				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxData, Path.Combine(BasePath, auxFile.Value<string>()));
+				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxData,
+					Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 			return retVal;
 		}
@@ -639,7 +546,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get
 			{
-				return AuxiliaryModelHelper.Parse(Body["AuxiliaryAssembly"] == null ? "" : Body["AuxiliaryAssembly"].ToString());
+				return AuxiliaryModelHelper.Parse(Body["AuxiliaryAssembly"] == null
+					? ""
+					: Body["AuxiliaryAssembly"].ToString());
 			}
 		}
 
@@ -664,7 +573,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONInputDataV3 : JSONInputDataV2
 	{
 		public JSONInputDataV3(JObject data, string filename, bool tolerateMissing = false)
-			: base(data, filename, tolerateMissing) {}
+			: base(data, filename, tolerateMissing) { }
 
 		protected override IList<AuxiliaryDataInputData> AuxData()
 		{
@@ -699,9 +608,70 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				if (auxFile == null || EmptyOrInvalidFileName(auxFile.Value<string>())) {
 					continue;
 				}
-				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxData, Path.Combine(BasePath, auxFile.Value<string>()));
+				AuxiliaryFileHelper.FillAuxiliaryDataInputData(auxData,
+					Path.Combine(BasePath, auxFile.Value<string>()));
 			}
 			return retVal;
+		}
+	}
+
+
+	public class JSONInputDataV4 : JSONInputDataV3
+	{
+		public JSONInputDataV4(JObject data, string filename, bool tolerateMissing = false)
+			: base(data, filename, tolerateMissing) { }
+	}
+
+	public class JSONVTPInputDataV4 : JSONFile, IVTPInputDataProvider, IVTPJobInputData
+	{
+		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
+			tolerateMissing) { }
+
+		public IVTPJobInputData JobInputData
+		{
+			get { return this; }
+		}
+
+		public IVehicleDeclarationInputData Vehicle
+		{
+			get
+			{
+				return new XMLDeclarationInputDataProvider(
+					Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>()),
+					true).JobInputData.Vehicle;
+			}
+		}
+
+		public IList<ICycleData> Cycles
+		{
+			get
+			{
+				var retVal = new List<ICycleData>();
+				if (Body[JsonKeys.Job_Cycles] == null) {
+					return retVal;
+				}
+				foreach (var cycle in Body.GetEx(JsonKeys.Job_Cycles)) {
+					var cycleFile = Path.Combine(BasePath, cycle.Value<string>());
+					if (File.Exists(cycleFile)) {
+						var cycleData = VectoCSVFile.Read(cycleFile);
+						retVal.Add(new CycleInputData() {
+							Name = Path.GetFileNameWithoutExtension(cycle.Value<string>()),
+							CycleData = cycleData
+						});
+					}
+				}
+				return retVal;
+			}
+		}
+
+		public IEnumerable<double> FanPowerCoefficents
+		{
+			get { return Body.GetEx("FanPowerCoefficients").Select(entry => entry.ToString().ToDouble()).ToList(); }
+		}
+
+		public Meter FanDiameter
+		{
+			get { return Body.GetEx<double>("FanDiameter").SI<Meter>(); }
 		}
 	}
 }

@@ -5,6 +5,7 @@ The basic file format is [Vecto-CSV](#csv) and the file type ending is ".vdri". 
 
 ###Driving Cycle Types
 - **Declaration Mode**: [Target speed, distance-based](#declaration-mode-cycles)
+- **Verification Test Mode**: [Measured driving cycle, time-based](#verification-test-cycle)
 - **Engineering Mode**:
 	- [Target speed, distance-based](#engineering-mode-target-speed-distance-based-cycle)
 	- [Measured speed, time-based](#engineering-mode-measured-speed-time-based-cycle)
@@ -29,6 +30,45 @@ In Declaration Mode driving cycles are automatically chosen depending on vehicle
 - Sub Urban: 23km
 - Urban: 40km
 - Urban Delivery: 28km
+
+###Verification Test Cycle
+This kind of cycle is used for simulating vehicles defined in declaration mode (xml) on a real driving cycle.
+
+Header: **\<t>, \<v>, \<n\_eng>,\<n\_fan>, \<tq\_left>, \<tq\_right>, \<n\_wh\_left>, \<n\_wh\_right>***, \<fc>, \<gear>*
+
+**Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
+Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
+
+| Identifier     | Unit     | Description                                                                                                                                                                                                                                                                                            |
+| -------------  | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **t**          | [s]      | The absolute time. Must always be increasing.                                                                                                                                                                                                                                                          |
+| **v**          | [km/h]   | The actual velocity of the vehicle. Must be >= 0 km/h.                                                                                                                                                                                                                                                 |
+| **n_eng**      | [rpm]    | The actual engine speed. Must be >= 0 rpm.                                                                                                                                                                                                                                                             |
+| **n_fan**      | [rpm]    | The actual engine-fan speed. Must be >= 0 rpm.                                                                                                                                                                                                                                                         |
+| **tq_left**    | [Nm]     | The actual torque at the driven wheel (left side)                                                                                                                                                                                                                                                      |
+| **tq_right**   | [Nm]     | The actual torque at the driven wheel (left side)                                                                                                                                                                                                                                                      |
+| **n_wh_left**  | [rpm]    | The actual wheel speed of the driven wheel (left side). Must be >= 0 rpm.                                                                                                                                                                                                                              |
+| **n_wh_right** | [rpm]    | The actual wheel speed of the driven wheel (right side). Must be >= 0 rpm.                                                                                                                                                                                                                             |
+| *fc*           | [g/h]    | Fuel consumption                                                                                                                                                                                                                                                                                       |
+| *gear*         | [-]      | The actual gear                                                                                                                                                                                                                                                                                        |
+
+**Example:**
+
+| \<t> [s]  | \<v> [km/h]  | \<n_eng> [rpm]  | \<n_fan> [rpm]  | \<tq_left> [Nm]  | \<tq_right> [Nm]  | \<n_wh_left> [rpm]  | \<n_wh_right> [rpm]  | \<fc> [g/h]  | \<gear>  |
+| --------- | ------------ | --------------- | --------------- | ---------------- | ----------------- | ------------------- | -------------------- | ------------ | -------- | 	
+| 0         | 0            | 599.7           | 727.3           | 319.1            | 429.8             | 0.78                | 0.78                 | 836          | 3        |
+| 0.5       | 0            | 600.2           | 727.3           | 316.7            | 430.0             | 0.78                | 0.78                 | 836          | 3        |
+| 1         | 0            | 600.1           | 726.9           | 319.9            | 430.8             | 0.78                | 0.78                 | 836          | 3        |
+| 1.5       | 0            | 599.9           | 726.6           | 317.4            | 431.1             | 0.78                | 0.79                 | 836          | 3        |
+| 2         | 0            | 600.1           | 726.2           | 319.5            | 421.7             | 0.78                | 0.78                 | 836          | 3        |
+| 2.5       | 0            | 599.7           | 726             | 319.0            | 434.1             | 0.78                | 0.78                 | 836          | 3        |
+| 3         | 0            | 600.2           | 725.4           | 322.2            | 428.5             | 0.78                | 0.78                 | 836          | 3        |
+| 3.5       | 0            | 599.9           | 724.7           | 317.3            | 430.4             | 0.78                | 0.78                 | 836          | 3        |
+| 4         | 0            | 599.5           | 724.0           | 320.9            | 428.0             | 0.78                | 0.78                 | 836          | 3        |
+| 4.5       | 0            | 599.9           | 723.4           | 187.0            | 247.6             | 0.78                | 0.78                 | 836          | 3        |
+| 5         | 0            | 598.7           | 722.5           | 156.9            | 171.5             | 0.78                | 0.78                 | 1003.2       | 3        |
+
+
 
 ###Engineering Mode: Target-Speed, Distance-Based Cycle
 This driving cycle defines the target speed over distance. Vecto tries to achieve and maintain this target speed.

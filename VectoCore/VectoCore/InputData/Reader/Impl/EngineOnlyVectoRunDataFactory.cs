@@ -49,10 +49,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				yield break;
 			}
 			var dao = new EngineeringDataAdapter();
-			foreach (var cycle in InputDataProvider.JobInputData().Cycles) {
+			foreach (var cycle in InputDataProvider.JobInputData.Cycles) {
 				var simulationRunData = new VectoRunData {
-					JobName = InputDataProvider.JobInputData().JobName,
-					EngineData = dao.CreateEngineData(InputDataProvider.EngineInputData, null, new List<ITorqueLimitInputData>()),
+					JobName = InputDataProvider.JobInputData.JobName,
+					EngineData = dao.CreateEngineData(InputDataProvider.JobInputData.EngineOnly, null, new List<ITorqueLimitInputData>()),
 					Cycle = new DrivingCycleProxy(
 						DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, CycleType.EngineOnly, cycle.Name, false), cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering

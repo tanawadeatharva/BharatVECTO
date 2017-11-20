@@ -208,7 +208,7 @@ Public Class Gearbox
 			Dim vehiclecategory As VehicleCategory
 			Dim rdyn As Meter = 0.5.SI(Of Meter)()
 			Try
-				vehiclecategory = inputData.VehicleInputData.VehicleCategory
+				vehiclecategory = inputData.JobInputData.Vehicle.VehicleCategory
 			Catch ex As Exception
 				vehiclecategory = vehiclecategory.RigidTruck
 			End Try
@@ -217,7 +217,7 @@ Public Class Gearbox
 
 				Try
 
-					engine = doa.CreateEngineData(inputData.EngineInputData, Nothing, gearbox, New List(Of ITorqueLimitInputData))
+					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.EngineInputData, Nothing, gearbox, New List(Of ITorqueLimitInputData))
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
@@ -227,7 +227,7 @@ Public Class Gearbox
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Try
-					engine = doa.CreateEngineData(inputData.EngineInputData, gearbox, New List(Of ITorqueLimitInputData))
+					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.EngineInputData, gearbox, New List(Of ITorqueLimitInputData))
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try

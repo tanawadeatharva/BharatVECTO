@@ -76,6 +76,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Add(auxId, _ => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand);
 		}
 
+        public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc)
+        {
+            Add(auxId, _ => powerLossFunc(DataBus.CycleData.LeftSample));
+        }
+
 		/// <summary>
 		/// Adds an auxiliary which calculates the demand based on a aux-map and the engine speed.
 		/// </summary>

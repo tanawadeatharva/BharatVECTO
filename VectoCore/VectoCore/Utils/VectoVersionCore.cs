@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Utils
 		public static string VersionNumber
 		{
 			get {
-				return "3.2.0.1022";
+				return "3.2.0.1015";
 			}
 		}
 

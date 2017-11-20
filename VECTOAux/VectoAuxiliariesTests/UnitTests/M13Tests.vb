@@ -56,7 +56,7 @@ Namespace UnitTests
 			Dim target = New M13(m10.Object, m11.Object, m12.Object, Signals.Object)
 
 			'Assert
-			Assert.AreEqual(OUT1.SI().Gramm.Value(), target.WHTCTotalCycleFuelConsumptionGrams.Value(), 0.001)
+            		Assert.AreEqual(OUT1.SI(Unit.SI.Gramm).Value(), target.WHTCTotalCycleFuelConsumptionGrams.Value(), 0.001)
 		End Sub
 	End Class
 End Namespace

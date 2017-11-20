@@ -94,12 +94,70 @@ namespace TUGraz.VectoCore.Tests.Reports
 			RunSimulation(jobName, ExecutionMode.Declaration);
 		}
 
+		[TestCase(@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto")]
+		public void TestVSUM_VMOD_FormatDecl(string jobName)
+		{
+			RunSimulation(jobName, ExecutionMode.Declaration);
+
+			var tmpWriter = new FileOutputWriter(jobName);
+
+			AssertModDataFormat(tmpWriter.GetModDataFileName(Path.GetFileNameWithoutExtension(jobName), "LongHaul", "ReferenceLoad"));
+			AssertSumDataFormat(tmpWriter.SumFileName);
+		}
+
 		[TestCase(@"TestData\Integration\EngineeringMode\Class2_RigidTruck_4x2\Class2_RigidTruck_ENG.vecto"),
 		TestCase(@"TestData\Integration\EngineeringMode\Class5_Tractor_4x2\Class5_Tractor_ENG.vecto"),
 		TestCase(@"TestData\Integration\EngineeringMode\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO.vecto"),]
 		public void TestFullCycleModDataIntegrityMT(string jobName)
 		{
-			RunSimulation(jobName, ExecutionMode.Engineering);
+			RunSimulation(jobName, ExecutionMode.Engineering);	
+		}
+
+		private void AssertModDataFormat(string modFilename)
+		{
+			var lineCnt = 0;
+			var gearColumn = -1;
+			foreach (var line in File.ReadLines(modFilename)) {
+				lineCnt++;
+				if (lineCnt == 2) {
+					var header = line.Split(',').ToList();
+					gearColumn = header.FindIndex(x => x.StartsWith("Gear"));
+				}
+				if (lineCnt <= 2) {
+					continue;
+				}
+				var parts = line.Split(',');
+				for (var i = 0; i < 53; i++) {
+					if (i == gearColumn || i >= parts.Length || string.IsNullOrWhiteSpace(parts[i])) {
+						continue;
+					}
+					var numParts = parts[i].Split('.');
+					Assert.AreEqual(2, numParts.Length, string.Format("Line {0}: column {1}: value {2}", lineCnt, i, parts[i]));
+					Assert.IsTrue(numParts[0].Length > 0);
+					Assert.AreEqual(4, numParts[1].Length);
+				} 
+			}
+		}
+
+		private void AssertSumDataFormat(string sumFilename)
+		{
+			var first = 2;
+			foreach (var line in File.ReadLines(sumFilename)) {
+				if (first > 0) {
+					first--;
+					continue;
+				}
+				var parts = line.Split(',');
+				for (var i = 56; i < 128; i++) {
+					if (i >= parts.Length || string.IsNullOrWhiteSpace(parts[i])) {
+						continue;
+					}
+					var numParts = parts[i].Split('.');
+					Assert.AreEqual(2, numParts.Length);
+					Assert.IsTrue(numParts[0].Length > 0);
+					Assert.AreEqual(4, numParts[1].Length);
+				}
+			}
 		}
 
 		private static void RunSimulation(string jobName, ExecutionMode mode)
@@ -132,7 +190,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			foreach (var modalResults in modData) {
 				AssertModDataIntegrity(modalResults.Item1, auxKeys, modalResults.Item2,
-					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).EngineInputData.FuelConsumptionMap));
+					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).JobInputData.Vehicle.EngineInputData.FuelConsumptionMap));
 			}
 
 			AssertSumDataIntegrity(sumData, mode);
@@ -156,36 +214,36 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var inputFile = row[SummaryDataContainer.INPUTFILE].ToString();
 				var cycle = row[SummaryDataContainer.CYCLE].ToString();
 				var loading = row[SummaryDataContainer.LOADING].ToString();
-				var eFcMapPos = ((SI)row[SummaryDataContainer.E_FCMAP_POS]).Value();
-				var eFcMapNeg = ((SI)row[SummaryDataContainer.E_FCMAP_NEG]).Value();
-				var ePowertrainInertia = ((SI)row[SummaryDataContainer.E_POWERTRAIN_INERTIA]).Value();
-				var eAux = ((SI)row[SummaryDataContainer.E_AUX]).Value();
-				var eClutchLoss = ((SI)row[SummaryDataContainer.E_CLUTCH_LOSS]).Value();
-				var eTcLoss = ((SI)row[SummaryDataContainer.E_TC_LOSS]).Value();
-				//var eShiftLoss = ((SI)row[SummaryDataContainer.E_SHIFT_LOSS]).Value();
-				var eGbxLoss = ((SI)row[SummaryDataContainer.E_GBX_LOSS]).Value();
-				var eRetLoss = ((SI)row[SummaryDataContainer.E_RET_LOSS]).Value();
-				var eAngleLoss = ((SI)row[SummaryDataContainer.E_ANGLE_LOSS]).Value();
-				var eAxlLoss = ((SI)row[SummaryDataContainer.E_AXL_LOSS]).Value();
-				var eBrakeLoss = ((SI)row[SummaryDataContainer.E_BRAKE]).Value();
-				var eVehInertia = ((SI)row[SummaryDataContainer.E_VEHICLE_INERTIA]).Value();
-				var eAir = ((SI)row[SummaryDataContainer.E_AIR]).Value();
-				var eRoll = ((SI)row[SummaryDataContainer.E_ROLL]).Value();
-				var eGrad = ((SI)row[SummaryDataContainer.E_GRAD]).Value();
-				var cargoVolume = mode == ExecutionMode.Engineering ? 0 : ((SI)row[SummaryDataContainer.CARGO_VOLUME]).Value();
+				var eFcMapPos = ((ConvertedSI)row[SummaryDataContainer.E_FCMAP_POS]);
+				var eFcMapNeg = ((ConvertedSI)row[SummaryDataContainer.E_FCMAP_NEG]);
+				var ePowertrainInertia = ((ConvertedSI)row[SummaryDataContainer.E_POWERTRAIN_INERTIA]);
+				var eAux = ((ConvertedSI)row[SummaryDataContainer.E_AUX]);
+				var eClutchLoss = ((ConvertedSI)row[SummaryDataContainer.E_CLUTCH_LOSS]);
+				var eTcLoss = ((ConvertedSI)row[SummaryDataContainer.E_TC_LOSS]);
+				//var eShiftLoss = ((SI)row[SummaryDataContainer.E_SHIFT_LOSS]);
+				var eGbxLoss = ((ConvertedSI)row[SummaryDataContainer.E_GBX_LOSS]);
+				var eRetLoss = ((ConvertedSI)row[SummaryDataContainer.E_RET_LOSS]);
+				var eAngleLoss = ((ConvertedSI)row[SummaryDataContainer.E_ANGLE_LOSS]);
+				var eAxlLoss = ((ConvertedSI)row[SummaryDataContainer.E_AXL_LOSS]);
+				var eBrakeLoss = ((ConvertedSI)row[SummaryDataContainer.E_BRAKE]);
+				var eVehInertia = ((ConvertedSI)row[SummaryDataContainer.E_VEHICLE_INERTIA]);
+				var eAir = ((ConvertedSI)row[SummaryDataContainer.E_AIR]);
+				var eRoll = ((ConvertedSI)row[SummaryDataContainer.E_ROLL]);
+				var eGrad = ((ConvertedSI)row[SummaryDataContainer.E_GRAD]);
+				var cargoVolume = mode == ExecutionMode.Engineering ? 0.0 : ((ConvertedSI)row[SummaryDataContainer.CARGO_VOLUME]);
 
-				var loadingValue = ((SI)row[SummaryDataContainer.LOADING]).Value() / 1000;
-				var fcPer100km = ((SI)row[SummaryDataContainer.FCFINAL_LITERPER100KM]).Value();
+				var loadingValue = ((ConvertedSI)row[SummaryDataContainer.LOADING]) / 1000;
+				var fcPer100km = ((ConvertedSI)row[SummaryDataContainer.FCFINAL_LITERPER100KM]);
 				var fcPerVolume = mode == ExecutionMode.Engineering
-					? 0
-					: ((SI)row[SummaryDataContainer.FCFINAL_LiterPer100M3KM]).Value();
-				var fcPerLoad = loadingValue > 0 ? ((SI)row[SummaryDataContainer.FCFINAL_LITERPER100TKM]).Value() : 0;
-				var co2Per100km = ((SI)row[SummaryDataContainer.CO2_KM]).Value();
-				var co2PerVolume = mode == ExecutionMode.Engineering ? 0 : ((SI)row[SummaryDataContainer.CO2_M3KM]).Value();
-				var co2PerLoad = loadingValue > 0 ? ((SI)row[SummaryDataContainer.CO2_TKM]).Value() : 0;
+					? 0.0
+					: ((ConvertedSI)row[SummaryDataContainer.FCFINAL_LiterPer100M3KM]);
+				var fcPerLoad = loadingValue > 0 ? ((ConvertedSI)row[SummaryDataContainer.FCFINAL_LITERPER100TKM]) : 0.0;
+				var co2PerKm = ((ConvertedSI)row[SummaryDataContainer.CO2_KM]);
+				var co2PerVolume = mode == ExecutionMode.Engineering ? 0.0 : ((ConvertedSI)row[SummaryDataContainer.CO2_M3KM]);
+				var co2PerLoad = loadingValue > 0 ? ((ConvertedSI)row[SummaryDataContainer.CO2_TKM]) : 0.0;
 
-				var ePTOtransm = ptoTransmissionColumn != null ? ((SI)row[ptoTransmissionColumn]).Value() : 0;
-				var ePTOconsumer = ptoConsumerColumn != null ? ((SI)row[ptoConsumerColumn]).Value() : 0;
+				var ePTOtransm = ptoTransmissionColumn != null ? ((ConvertedSI)row[ptoTransmissionColumn]) : 0.0;
+				var ePTOconsumer = ptoConsumerColumn != null ? ((ConvertedSI)row[ptoConsumerColumn]) : 0.0;
 
 				// E_fcmap_pos = E_fcmap_neg + E_powertrain_inertia + E_aux_xxx + E_aux_sum + E_clutch_loss + E_tc_loss + E_gbx_loss + E_shift_loss + E_ret_loss + E_angle_loss + E_axl_loss + E_brake + E_vehicle_inertia + E_air + E_roll + E_grad + E_PTO_CONSUM + E_PTO_TRANSM
 				Assert.AreEqual(eFcMapPos,
@@ -194,8 +252,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 					"input file: {0}  cycle: {1} loading: {2}",
 					inputFile, cycle, loading);
 
-				var pFcmapPos = ((SI)row[SummaryDataContainer.P_FCMAP_POS]).Value();
-				var time = ((SI)row[SummaryDataContainer.TIME]).Value();
+				var pFcmapPos = ((ConvertedSI)row[SummaryDataContainer.P_FCMAP_POS]);
+				var time = ((ConvertedSI)row[SummaryDataContainer.TIME]);
 
 				// E_fcmap_pos = P_fcmap_pos * t
 				Assert.AreEqual(eFcMapPos, pFcmapPos * (time / 3600), 1e-3, "input file: {0}  cycle: {1} loading: {2}", inputFile,
@@ -205,30 +263,30 @@ namespace TUGraz.VectoCore.Tests.Reports
 					Assert.AreEqual(fcPerVolume, fcPer100km / cargoVolume, 1e-3, "input file: {0}  cycle: {1} loading: {2}", inputFile,
 						cycle, loading);
 
-					Assert.AreEqual(co2PerVolume, co2Per100km / cargoVolume, 1e-3, "input file: {0}  cycle: {1} loading: {2}",
+					Assert.AreEqual(co2PerVolume, co2PerKm / cargoVolume, 1e-3, "input file: {0}  cycle: {1} loading: {2}",
 						inputFile,
 						cycle, loading);
 				}
 
 				if (loadingValue > 0) {
-					Assert.AreEqual(co2PerLoad, co2Per100km / loadingValue, 1e-3, "input file: {0}  cycle: {1} loading: {2}",
+					Assert.AreEqual(co2PerLoad, co2PerKm / loadingValue, 1e-3, "input file: {0}  cycle: {1} loading: {2}",
 						inputFile, cycle, loading);
 					Assert.AreEqual(fcPerLoad, fcPer100km / loadingValue, 1e-3, "input file: {0}  cycle: {1} loading: {2}",
 						inputFile, cycle, loading);
 				}
 
-				var stopTimeShare = ((SI)row[SummaryDataContainer.STOP_TIMESHARE]).Value();
-				var accTimeShare = ((SI)row[SummaryDataContainer.ACC_TIMESHARE]).Value();
-				var decTimeShare = ((SI)row[SummaryDataContainer.DEC_TIMESHARE]).Value();
-				var cruiseTimeShare = ((SI)row[SummaryDataContainer.CRUISE_TIMESHARE]).Value();
+				var stopTimeShare = ((ConvertedSI)row[SummaryDataContainer.STOP_TIMESHARE]);
+				var accTimeShare = ((ConvertedSI)row[SummaryDataContainer.ACC_TIMESHARE]);
+				var decTimeShare = ((ConvertedSI)row[SummaryDataContainer.DEC_TIMESHARE]);
+				var cruiseTimeShare = ((ConvertedSI)row[SummaryDataContainer.CRUISE_TIMESHARE]);
 
 				Assert.AreEqual(100, stopTimeShare + accTimeShare + decTimeShare + cruiseTimeShare, 1e-3,
 					"input file: {0}  cycle: {1} loading: {2}", inputFile, cycle, loading);
 
-				Assert.IsTrue(((SI)row[SummaryDataContainer.ACC_POS]).Value() > 0);
-				Assert.IsTrue(((SI)row[SummaryDataContainer.ACC_NEG]).Value() < 0);
+				Assert.IsTrue(((ConvertedSI)row[SummaryDataContainer.ACC_POS]) > 0);
+				Assert.IsTrue(((ConvertedSI)row[SummaryDataContainer.ACC_NEG]) < 0);
 
-				var gearshifts = ((SI)row[SummaryDataContainer.NUM_GEARSHIFTS]).Value();
+				var gearshifts = ((ConvertedSI)row[SummaryDataContainer.NUM_GEARSHIFTS]);
 				Assert.IsTrue(gearshifts > 0);
 
 				//var acc = ((SI)row[SummaryDataContainer.ACC]).Value();
@@ -392,7 +450,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			foreach (var modalResults in modData) {
 				AssertModDataIntegrityAT(modalResults.Item1, auxKeys, modalResults.Item2,
-					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).EngineInputData.FuelConsumptionMap));
+					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).JobInputData.Vehicle.EngineInputData.FuelConsumptionMap));
 			}
 
 			AssertSumDataIntegrity(sumData, ExecutionMode.Engineering);

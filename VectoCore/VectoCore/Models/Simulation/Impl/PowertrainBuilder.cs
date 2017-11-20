@@ -30,9 +30,11 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -69,6 +71,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return BuildEngineOnly(data);
 				case CycleType.PWheel:
 					return BuildPWheel(data);
+                case CycleType.VTP:
+                    return BuildVTP(data);
 				case CycleType.MeasuredSpeed:
 					return BuildMeasuredSpeed(data);
 				case CycleType.MeasuredSpeedGear:
@@ -109,8 +113,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var gearbox = new CycleGearbox(container, data);
 
 			// PWheelCycle --> AxleGear --> Clutch --> Engine <-- Aux
-			var powertrain = new PWheelCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, data.VehicleData,
-					gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
+			var powertrain = new PWheelCycle(container, data.Cycle)
 				.AddComponent(new AxleGear(container, data.AxleGearData))
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, container)
@@ -123,6 +126,45 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			return container;
 		}
+
+        private VehicleContainer BuildVTP(VectoRunData data)
+        {
+            if (data.Cycle.CycleType != CycleType.VTP) {
+                throw new VectoException("CycleType must be VTP.");
+            }
+
+            var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
+            var gearbox = new CycleGearbox(container, data);
+
+            // VTPCycle --> AxleGear --> Clutch --> Engine <-- Aux
+            var powertrain = new VTPCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, data.VehicleData,
+                    gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
+                .AddComponent(new AxleGear(container, data.AxleGearData))
+                .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+                .AddComponent(gearbox, data.Retarder, container)
+                .AddComponent(new Clutch(container, data.EngineData));
+            var engine = new VTPCombustionEngine(container, data.EngineData, pt1Disabled: true);
+
+            var aux = CreateSpeedDependentAuxiliaries(data, container);
+			var engineFan = new EngineFanAuxiliary(data.FanData.FanCoefficients, data.FanData.FanDiameter);
+            aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed));
+            container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
+
+            engine.Connect(aux.Port());
+
+            var idleController = new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container);
+            //if (data.PTO != null && data.PTO.PTOCycle != null) {
+            //    var ptoController = new PTOCycleController(container, data.PTO.PTOCycle);
+            //    idleController = new IdleControllerSwitcher(engine.IdleController, ptoController);
+            //}
+
+            powertrain.AddComponent(engine, idleController);
+                //.AddAuxiliaries(container, data);
+
+            return container;
+        }
+
+
 
 		private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
 		{
@@ -272,9 +314,40 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
-
 			return aux;
 		}
+
+		private EngineAuxiliary CreateSpeedDependentAuxiliaries(VectoRunData data, IVehicleContainer container)
+		{
+			var aux = new EngineAuxiliary(container);
+ 
+			var auxData = data.Aux.ToArray();
+			AddSwitchingAux(aux,container.ModalData,Constants.Auxiliaries.IDs.HeatingVentilationAirCondition, auxData);
+			AddSwitchingAux(aux,container.ModalData,Constants.Auxiliaries.IDs.SteeringPump, auxData);
+			AddSwitchingAux(aux,container.ModalData,Constants.Auxiliaries.IDs.ElectricSystem, auxData);
+			AddSwitchingAux(aux, container.ModalData, Constants.Auxiliaries.IDs.PneumaticSystem, auxData);
+			
+			return aux;
+		}
+
+		private void AddSwitchingAux(EngineAuxiliary aux, IModalDataContainer modData, string auxId, VectoRunData.AuxData[] auxData)
+		{
+			var urban = auxData.First(x => x.ID == auxId && x.MissionType == MissionType.UrbanDelivery);
+			var rural = auxData.First(x => x.ID == auxId && x.MissionType == MissionType.RegionalDelivery);
+			var motorway = auxData.First(x => x.ID == auxId && x.MissionType == MissionType.LongHaul);
+
+			aux.AddCycle(auxId, entry => {
+				if (entry.VehicleTargetSpeed >= 70.KMPHtoMeterPerSecond()) {
+					return motorway.PowerDemand;
+				}
+				if (entry.VehicleTargetSpeed >= 50.KMPHtoMeterPerSecond()) {
+					return rural.PowerDemand;
+				}
+				return urban.PowerDemand;
+			});
+			modData.AddAuxiliary(auxId);
+		}
+
 
 		private static IGearbox GetGearbox(IVehicleContainer container, VectoRunData runData)
 		{

@@ -234,7 +234,12 @@ namespace TUGraz.VectoCommon.Utils
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static SI SI(this double value)
 		{
-			return new SI(value);
+			return SIBase<Scalar>.Create(value);
+		}
+
+	    public static SI SI(this double value, UnitInstance si)
+	    {
+	        return new SI(si, value);
 		}
 
 		/// <summary>
@@ -269,7 +274,18 @@ namespace TUGraz.VectoCommon.Utils
 			return self.ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
 		}
 
-		//[DebuggerStepThrough]
+        public static string ToXMLFormat(this ConvertedSI self, uint? decimals = null)
+        {
+            decimals = decimals ?? 2;
+            return ((double)self).ToString("F" + decimals.Value, CultureInfo.InvariantCulture);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string ToMinSignificantDigits(this ConvertedSI self, uint? significant = null, uint? decimals = null)
+        {
+            return ToMinSignificantDigits((double)self, significant, decimals);
+        }
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static string ToMinSignificantDigits(this double self, uint? significant = null, uint? decimals = null)
 		{

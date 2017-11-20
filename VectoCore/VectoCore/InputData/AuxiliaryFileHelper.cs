@@ -57,12 +57,12 @@ namespace TUGraz.VectoCore.InputData
 				foreach (DataRow row in table.Rows) {
 					if (AuxiliaryDataReader.HeaderIsValid(table.Columns)) {
 						row[AuxiliaryDataReader.Fields.MechPower] =
-							row.ParseDouble(AuxiliaryDataReader.Fields.MechPower).SI().Kilo.Watt.Value();
+						    row.ParseDouble(AuxiliaryDataReader.Fields.MechPower).SI(Unit.SI.Kilo.Watt).Value();
 						row[AuxiliaryDataReader.Fields.SupplyPower] =
-							row.ParseDouble(AuxiliaryDataReader.Fields.SupplyPower).SI().Kilo.Watt.Value();
+                            row.ParseDouble(AuxiliaryDataReader.Fields.SupplyPower).SI(Unit.SI.Kilo.Watt).Value();
 					} else {
-						row[1] = row.ParseDouble(1).SI().Kilo.Watt.Value();
-						row[2] = row.ParseDouble(2).SI().Kilo.Watt.Value();
+					    row[1] = row.ParseDouble(1).SI(Unit.SI.Kilo.Watt).Value();
+					    row[2] = row.ParseDouble(2).SI(Unit.SI.Kilo.Watt).Value();
 					}
 				}
 				auxData.DemandMap = table;

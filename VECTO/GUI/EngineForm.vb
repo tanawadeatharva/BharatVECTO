@@ -166,7 +166,7 @@ Public Class EngineForm
 		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
 																IEngineeringInputDataProvider)
 
-		engine = inputData.EngineInputData
+		engine = inputData.JobInputData.Vehicle.EngineInputData
 
 
 		If Cfg.DeclMode <> engine.SavedInDeclarationMode Then

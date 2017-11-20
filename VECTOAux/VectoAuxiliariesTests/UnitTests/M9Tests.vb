@@ -61,8 +61,8 @@ Namespace UnitTests
 
 			Assert.AreEqual(target.LitresOfAirCompressorOnContinually.Value(), AG1, 0.000001)
 			Assert.AreEqual(target.LitresOfAirCompressorOnOnlyInOverrun.Value(), AG2, 0.000001)
-			Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOnContinuously.Value(), AG3.SI().Gramm.Value(), 0.000001)
-			Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOffContinuously.Value(), AG4.SI().Gramm.Value(), 0.000001)
+            		Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOnContinuously.Value(), AG3.SI(Unit.SI.Gramm).Value(), 0.000001)
+            		Assert.AreEqual(target.TotalCycleFuelConsumptionCompressorOffContinuously.Value(), AG4.SI(Unit.SI.Gramm).Value(), 0.000001)
 		End Sub
 
 
