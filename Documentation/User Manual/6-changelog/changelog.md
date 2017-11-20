@@ -1,5 +1,19 @@
 #Changelog
 
+
+**VECTO 3.2.1**
+
+***Build 1054 (2017-11-20)***
+
+- Improvements
+    + [VECTO-592] - NEW VTP Simulation Mode
+    + [VECTO-605] - Improve simulation speed
+
+- Bugfixes
+    + [VECTO-602] - Error in simulation without airdrag component
+    + [VECTO-589] - Scheme .xml error
+
+
 **VECTO 3.2.0**
 
 ***Build 1022 (2017-10-19)***
