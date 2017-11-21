@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.IO;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -41,10 +42,16 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
     [TestFixture]
     public class VTPTest
     {
-        [TestCase()]
+		[OneTimeSetUp]
+		public void Init()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+		[TestCase()]
         public void RunVTP()
         {
-            var jobFile = @"TestData\Integration\VTPMode\GenericVehicle\class_5_generic_vehicle.vecto";
+            var jobFile = @"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle.vecto";
 
             var fileWriter = new FileOutputWriter(jobFile);
             var sumWriter = new SummaryDataContainer(fileWriter);

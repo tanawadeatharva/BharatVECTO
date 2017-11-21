@@ -156,6 +156,9 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
 			public static readonly Kilogram MaximumGrossVehicleWeightEMS = 60000.SI<Kilogram>();
+
+			public static readonly MeterPerSecond HighwaySpeedThreshold = 70.KMPHtoMeterPerSecond();
+			public static readonly MeterPerSecond RuralSpeedThreshold = 50.KMPHtoMeterPerSecond();
 		}
 
 		public static class XML
