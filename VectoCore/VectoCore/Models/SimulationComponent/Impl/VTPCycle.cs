@@ -183,5 +183,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//    0.3.KMPHtoMeterPerSecond());
 			}
 		}
+
+		protected override void DoWriteModalResults(IModalDataContainer container)
+		{
+			base.DoWriteModalResults(container);
+			container[ModalResultField.v_act] = CycleIterator.LeftSample.VehicleTargetSpeed;
+		}
 	}
 }

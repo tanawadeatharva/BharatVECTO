@@ -391,7 +391,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var fc = result.Value;
 			var fcAux = fc;
 
-			var fcWHTC = fcAux * ModelData.FuelConsumptionCorrectionFactor;
+			var fcWHTC = fcAux * WHTCCorrectionFactor;
 			var fcAAUX = fcWHTC;
 			var advancedAux = EngineAux as BusAuxiliariesAdapter;
 			if (advancedAux != null) {
@@ -405,6 +405,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.FCWHTCc] = fcWHTC;
 			container[ModalResultField.FCAAUX] = fcAAUX;
 			container[ModalResultField.FCFinal] = fcFinal;
+		}
+
+		protected virtual double WHTCCorrectionFactor
+		{
+			get { return ModelData.FuelConsumptionCorrectionFactor; }
 		}
 
 		protected override void DoCommitSimulationStep()
