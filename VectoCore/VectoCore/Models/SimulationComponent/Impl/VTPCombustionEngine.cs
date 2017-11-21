@@ -157,5 +157,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         {
             return DataBus.CycleData.LeftSample.EngineSpeed;
         }
-    }
+
+		protected override double WHTCCorrectionFactor
+		{
+			get {
+				if (DataBus.CycleData.LeftSample.VehicleTargetSpeed >= Constants.SimulationSettings.HighwaySpeedThreshold) {
+					return ModelData.WHTCMotorway;
+				}
+				if (DataBus.CycleData.LeftSample.VehicleTargetSpeed >= Constants.SimulationSettings.RuralSpeedThreshold) {
+					return ModelData.WHTCRural;
+				}
+				return ModelData.WHTCUrban;
+			}
+		}
+	}
 }
