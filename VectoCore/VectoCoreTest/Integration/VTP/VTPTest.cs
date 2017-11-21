@@ -36,15 +36,15 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 
-namespace TUGraz.VectoCore.Tests.Integration.EPTP
+namespace TUGraz.VectoCore.Tests.Integration.VTP
 {
     [TestFixture]
-    public class EPTPTest
+    public class VTPTest
     {
         [TestCase()]
-        public void RunEPTP()
+        public void RunVTP()
         {
-            var jobFile = @"E:\QUAM\Workspace\VECTO_quam\EPTP\MAN_EPTP.vecto";
+            var jobFile = @"TestData\Integration\VTPMode\GenericVehicle\class_5_generic_vehicle.vecto";
 
             var fileWriter = new FileOutputWriter(jobFile);
             var sumWriter = new SummaryDataContainer(fileWriter);
