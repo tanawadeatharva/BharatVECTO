@@ -29,22 +29,46 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-namespace TUGraz.VectoCore.Utils
-{
-	public static class VectoSimulationCore
-	{
-		public static string VersionNumber
-		{
-			get {
-				return "3.2.1.1054";
-			}
-		}
+using NUnit.Framework;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 
-		public static string FullVersion
-		{
-			get {
-				return string.Format("VectoCore {0}", VersionNumber);
-			}
-		}
-	}
+namespace TUGraz.VectoCore.Tests.Integration.VTP
+{
+    [TestFixture]
+    public class VTPTest
+    {
+        [TestCase()]
+        public void RunVTP()
+        {
+            var jobFile = @"TestData\Integration\VTPMode\GenericVehicle\class_5_generic_vehicle.vecto";
+
+            var fileWriter = new FileOutputWriter(jobFile);
+            var sumWriter = new SummaryDataContainer(fileWriter);
+            var jobContainer = new JobContainer(sumWriter);
+            var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+            var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, dataProvider, fileWriter) {
+                ModalResults1Hz = false,
+                WriteModalResults = true,
+                ActualModalData = false,
+                Validate = false,
+            };
+            
+            jobContainer.AddRuns(runsFactory);
+
+			//var i = 0;
+			//jobContainer.Runs[i].Run.Run();
+			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(true, jobContainer.AllCompleted);
+            
+        }
+
+    }
 }

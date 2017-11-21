@@ -94,12 +94,70 @@ namespace TUGraz.VectoCore.Tests.Reports
 			RunSimulation(jobName, ExecutionMode.Declaration);
 		}
 
+		[TestCase(@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto")]
+		public void TestVSUM_VMOD_FormatDecl(string jobName)
+		{
+			RunSimulation(jobName, ExecutionMode.Declaration);
+
+			var tmpWriter = new FileOutputWriter(jobName);
+
+			AssertModDataFormat(tmpWriter.GetModDataFileName(Path.GetFileNameWithoutExtension(jobName), "LongHaul", "ReferenceLoad"));
+			AssertSumDataFormat(tmpWriter.SumFileName);
+		}
+
 		[TestCase(@"TestData\Integration\EngineeringMode\Class2_RigidTruck_4x2\Class2_RigidTruck_ENG.vecto"),
 		TestCase(@"TestData\Integration\EngineeringMode\Class5_Tractor_4x2\Class5_Tractor_ENG.vecto"),
 		TestCase(@"TestData\Integration\EngineeringMode\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO.vecto"),]
 		public void TestFullCycleModDataIntegrityMT(string jobName)
 		{
-			RunSimulation(jobName, ExecutionMode.Engineering);
+			RunSimulation(jobName, ExecutionMode.Engineering);	
+		}
+
+		private void AssertModDataFormat(string modFilename)
+		{
+			var lineCnt = 0;
+			var gearColumn = -1;
+			foreach (var line in File.ReadLines(modFilename)) {
+				lineCnt++;
+				if (lineCnt == 2) {
+					var header = line.Split(',').ToList();
+					gearColumn = header.FindIndex(x => x.StartsWith("Gear"));
+				}
+				if (lineCnt <= 2) {
+					continue;
+				}
+				var parts = line.Split(',');
+				for (var i = 0; i < 53; i++) {
+					if (i == gearColumn || i >= parts.Length || string.IsNullOrWhiteSpace(parts[i])) {
+						continue;
+					}
+					var numParts = parts[i].Split('.');
+					Assert.AreEqual(2, numParts.Length, string.Format("Line {0}: column {1}: value {2}", lineCnt, i, parts[i]));
+					Assert.IsTrue(numParts[0].Length > 0);
+					Assert.AreEqual(4, numParts[1].Length);
+				} 
+			}
+		}
+
+		private void AssertSumDataFormat(string sumFilename)
+		{
+			var first = 2;
+			foreach (var line in File.ReadLines(sumFilename)) {
+				if (first > 0) {
+					first--;
+					continue;
+				}
+				var parts = line.Split(',');
+				for (var i = 56; i < 128; i++) {
+					if (i >= parts.Length || string.IsNullOrWhiteSpace(parts[i])) {
+						continue;
+					}
+					var numParts = parts[i].Split('.');
+					Assert.AreEqual(2, numParts.Length);
+					Assert.IsTrue(numParts[0].Length > 0);
+					Assert.AreEqual(4, numParts[1].Length);
+				}
+			}
 		}
 
 		private static void RunSimulation(string jobName, ExecutionMode mode)

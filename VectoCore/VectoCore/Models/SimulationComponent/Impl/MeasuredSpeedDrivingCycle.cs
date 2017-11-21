@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -134,6 +135,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaT = CycleIterator.RightSample.Time - absTime
 				};
 			}
+			if (Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval.IsEqual(dt)) {
+				if ((CycleIterator.RightSample.Time - (absTime + dt)) > 0 && (CycleIterator.RightSample.Time - (absTime + dt)) /
+					Constants.SimulationSettings.MeasuredSpeedTargetTimeInterval < 0.5) {
+					// the remaining simulation interval would be below 0.5 seconds (i.e., half of MeasuredSpeedTargetTimeInterval)
+					// reduce the current simulation interval to extend the remaining interval
+					return new ResponseFailTimeInterval {
+						AbsTime = absTime,
+						Source = this,
+						DeltaT = (CycleIterator.RightSample.Time - absTime)/2
+					};
+				}
+			}
 
 			// calc acceleration from speed diff vehicle to cycle
 			var targetSpeed = CycleIterator.RightSample.VehicleTargetSpeed;
@@ -141,7 +154,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				targetSpeed = 0.KMPHtoMeterPerSecond();
 			}
 			var deltaV = targetSpeed - DataBus.VehicleSpeed;
-			var deltaT = CycleIterator.RightSample.Time - CycleIterator.LeftSample.Time;
+			var deltaT = CycleIterator.RightSample.Time - absTime;
 
 			if (DataBus.VehicleSpeed.IsSmaller(0)) {
 				throw new VectoSimulationException("vehicle velocity is smaller than zero");
