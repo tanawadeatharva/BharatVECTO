@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -250,7 +251,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var minTorque = CurrentState.FullDragTorque;
 			var maxTorque = CurrentState.DynamicFullLoadTorque;
 
-			CurrentState.EngineTorque = totalTorqueDemand.LimitTo(minTorque, maxTorque);
+			try {
+				CurrentState.EngineTorque = totalTorqueDemand.LimitTo(minTorque, maxTorque);
+			} catch (Exception) {
+				var extrapolated = avgEngineSpeed > ModelData.FullLoadCurves[0].FullLoadEntries.Last().EngineSpeed;
+				Log.Error("Engine full-load torque is below drag torque. max_torque: {0}, drag_torque: {1}, extrapolated: {2}", maxTorque, minTorque, extrapolated);
+				throw;
+			}
 			CurrentState.EnginePower = CurrentState.EngineTorque * avgEngineSpeed;
 
 			if (totalTorqueDemand.IsGreater(0) &&
