@@ -42,7 +42,12 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		public static SI SI(this int value)
 		{
-			return new SI(value);
+			return SIBase<Scalar>.Create(value);
+		}
+		
+        public static SI SI(this int value, UnitInstance si)
+        {
+            return new SI(si,value);
 		}
 
 		/// <summary>

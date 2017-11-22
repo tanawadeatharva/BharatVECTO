@@ -8,6 +8,7 @@ Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.OutputData
 Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCommon.Utils
 
 Public Class JSONFileWriter
 	Implements IOutputFileWriter
@@ -41,7 +42,7 @@ Public Class JSONFileWriter
 
 		body.Add("ModelName", eng.Model)
 
-		body.Add("Displacement", eng.Displacement.ConvertTo().Cubic.Centi.Meter.Value().ToString())
+        	body.Add("Displacement", eng.Displacement.ConvertToCubicCentiMeter().ToString())
 		body.Add("IdlingSpeed", eng.IdleSpeed.AsRPM)
 		body.Add("Inertia", eng.Inertia.Value())
 
@@ -206,8 +207,8 @@ Public Class JSONFileWriter
 				{"CurbWeight", vehicle.CurbMassChassis.Value()},
 				{"CurbWeightExtra", vehicle.CurbMassExtra.Value()},
 				{"Loading", vehicle.Loading.Value()},
-				{"MassMax", vehicle.GrossVehicleMassRating.ConvertTo().Ton.Value()},
-				{"rdyn", vehicle.DynamicTyreRadius.ConvertTo().Milli.Meter.Value()},
+                		{"MassMax", vehicle.GrossVehicleMassRating.ConvertToTon()},
+		                {"rdyn", vehicle.DynamicTyreRadius.ConvertToMilliMeter()},
 				{"CdCorrMode", airdrag.CrossWindCorrectionMode.GetName()},
 				{"CdCorrFile",
 				If((airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse

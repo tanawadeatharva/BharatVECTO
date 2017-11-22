@@ -337,10 +337,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var motorway = auxData.First(x => x.ID == auxId && x.MissionType == MissionType.LongHaul);
 
 			aux.AddCycle(auxId, entry => {
-				if (entry.VehicleTargetSpeed >= 70.KMPHtoMeterPerSecond()) {
+				if (entry.VehicleTargetSpeed >= Constants.SimulationSettings.HighwaySpeedThreshold) {
 					return motorway.PowerDemand;
 				}
-				if (entry.VehicleTargetSpeed >= 50.KMPHtoMeterPerSecond()) {
+				if (entry.VehicleTargetSpeed >= Constants.SimulationSettings.RuralSpeedThreshold) {
 					return rural.PowerDemand;
 				}
 				return urban.PowerDemand;

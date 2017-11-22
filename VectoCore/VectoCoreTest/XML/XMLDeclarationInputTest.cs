@@ -56,6 +56,7 @@ namespace TUGraz.VectoCore.Tests.XML
 	public class XMLDeclarationInputTest
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
+		const string SampleVehicleDeclNoAirdrag = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_noAirdrag.xml";
 		const string SampleVehicleFullDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_FULL.xml";
 
 		const string SampleVehicleFullDeclCertificationOptions =
@@ -91,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			Assert.AreEqual("560.00", fcMapTable.Rows[0][0]);
 			var fcMap = FuelConsumptionMapReader.Create(fcMapTable);
-			Assert.AreEqual(1256.SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second.Value(),
+            Assert.AreEqual(1256.SI(Unit.SI.Gramm.Per.Hour).Value(),
 				fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
 
 			var fldTable = engineDataProvider.FullLoadCurve;
@@ -323,6 +324,16 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(6.34, inputDataProvider.JobInputData.Vehicle.AirdragInputData.AirDragArea.Value());
 
 			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.RetarderInputData.Ratio);
+		}
+
+		[TestCase]
+		public void TestVehicleInputNoAirdrag()
+		{
+			var reader = XmlReader.Create(SampleVehicleDeclNoAirdrag);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+
+			Assert.IsNull(inputDataProvider.JobInputData.Vehicle.AirdragInputData.AirDragArea);
 		}
 
 		[TestCase]

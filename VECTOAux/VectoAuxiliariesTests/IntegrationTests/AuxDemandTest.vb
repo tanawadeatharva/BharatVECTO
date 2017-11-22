@@ -17,7 +17,7 @@ Namespace IntegrationTests
         <TestCase(12000, 1256, 148, 148, 6087.0317)>
         <TestCase(12000, 1256, -15, -50, 8954.1435)>
         <TestCase(15700, 1319, -35.79263, -144.0441, 9093.9511)>
-        Public Sub AuxDemnadTest(vehicleWeight As Double, engineSpeed As Double, driveLinePower As Double,
+        Public Sub AuxDemandTest(vehicleWeight As Double, engineSpeed As Double, driveLinePower As Double,
                                 internalPower As Double, expectedPowerDemand As Double)
             Dim engineFCMapFilePath = "TestFiles\Integration\24t Coach.vmap"
             Dim auxFilePath = "TestFiles\Integration\AdvAuxTest.aaux"
@@ -105,7 +105,7 @@ Namespace IntegrationTests
                 Debug.Print("{0}", aux.AA_TotalCycleFC_Grams)
             Next
 
-            Assert.AreEqual(79.303.SI().Gramm.Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
+            Assert.AreEqual(79.303.SI(Unit.SI.Gramm).Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
 
             aux.Signals.EngineDrivelinePower = (-15 * 1000).SI(Of Watt)()
             aux.Signals.EngineDrivelineTorque = aux.Signals.EngineDrivelinePower / (1256.RPMtoRad())
@@ -117,7 +117,7 @@ Namespace IntegrationTests
                 Debug.Print("{0}", aux.AA_TotalCycleFC_Grams)
             Next
 
-            Assert.AreEqual(82.5783.SI().Gramm.Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
+            Assert.AreEqual(82.5783.SI(Unit.SI.Gramm).Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
 
             aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()
             aux.Signals.EngineDrivelineTorque = aux.Signals.EngineDrivelinePower / (1256.RPMtoRad())
@@ -128,7 +128,7 @@ Namespace IntegrationTests
                 aux.CycleStep(1.SI(Of Second), msg)
             Next
 
-            Assert.AreEqual(162.4655.SI().Gramm.Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
+            Assert.AreEqual(162.4655.SI(Unit.SI.Gramm).Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
         End Sub
     End Class
 End Namespace

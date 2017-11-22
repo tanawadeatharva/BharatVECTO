@@ -360,7 +360,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\VectoVTPJobForm.resx">
       <DependentUpon>VectoVTPJobForm.vb</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\VehicleTorqueLimitsDialog.resx">
       <DependentUpon>VehicleTorqueLimitsDialog.vb</DependentUpon>

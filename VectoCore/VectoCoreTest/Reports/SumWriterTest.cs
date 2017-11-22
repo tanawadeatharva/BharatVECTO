@@ -193,14 +193,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.Manufacturer,
 				sumRow[SummaryDataContainer.ENGINE_MANUFACTURER]);
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.Model, sumRow[SummaryDataContainer.ENGINE_MODEL]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.FuelType.GetLabel(),
+            Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.FuelType.ToXMLFormat(),
 				sumRow[SummaryDataContainer.ENGINE_FUEL_TYPE]);
-			Assert.AreEqual((dataProvider.JobInputData.Vehicle.EngineInputData.RatedPowerDeclared.ConvertTo().Kilo.Watt.Value()),
-				((SI)sumRow[SummaryDataContainer.ENGINE_RATED_POWER]).Value());
+			Assert.AreEqual((dataProvider.JobInputData.Vehicle.EngineInputData.RatedPowerDeclared.ConvertToKiloWatt()),
+				((ConvertedSI)sumRow[SummaryDataContainer.ENGINE_RATED_POWER]));
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.RatedSpeedDeclared.AsRPM,
-				((SI)sumRow[SummaryDataContainer.ENGINE_RATED_SPEED]).Value());
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.Displacement.ConvertTo().Cubic.Centi.Meter.Value(),
-				((SI)sumRow[SummaryDataContainer.ENGINE_DISPLACEMENT]).Value());
+				(double)((ConvertedSI)sumRow[SummaryDataContainer.ENGINE_RATED_SPEED]));
+            Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.Displacement.ConvertToCubicCentiMeter(),
+				((ConvertedSI)sumRow[SummaryDataContainer.ENGINE_DISPLACEMENT]));
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.GearboxInputData.Manufacturer,
 				sumRow[SummaryDataContainer.GEARBOX_MANUFACTURER]);
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.GearboxInputData.Model, sumRow[SummaryDataContainer.GEARBOX_MODEL]);

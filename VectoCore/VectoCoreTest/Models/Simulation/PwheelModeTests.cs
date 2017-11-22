@@ -54,6 +54,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[TestFixture]
 	public class PwheelModeTests
 	{
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+
 		/// <summary>
 		/// Test if the cycle file can be read.
 		/// </summary>
@@ -101,8 +109,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(1748.RPMtoRad() / (2.3 * 3.5), container.CycleData.LeftSample.WheelAngularVelocity);
 			Assert.AreEqual(1400.RPMtoRad() / (2.3 * 3.5), container.CycleData.RightSample.WheelAngularVelocity);
 
-			Assert.AreEqual(89.SI().Kilo.Watt, container.CycleData.LeftSample.PWheel);
-			Assert.AreEqual(120.SI().Kilo.Watt, container.CycleData.RightSample.PWheel);
+		    Assert.AreEqual(89.SI(Unit.SI.Kilo.Watt), container.CycleData.LeftSample.PWheel);
+		    Assert.AreEqual(120.SI(Unit.SI.Kilo.Watt), container.CycleData.RightSample.PWheel);
 
 			Assert.AreEqual(2u, container.CycleData.LeftSample.Gear);
 			Assert.AreEqual(2u, container.CycleData.RightSample.Gear);
@@ -110,8 +118,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(1300.SI<Watt>(), container.CycleData.LeftSample.AdditionalAuxPowerDemand);
 			Assert.AreEqual(400.SI<Watt>(), container.CycleData.RightSample.AdditionalAuxPowerDemand);
 
-			Assert.AreEqual(89.SI().Kilo.Watt / (1748.RPMtoRad() / (2.3 * 3.5)), container.CycleData.LeftSample.Torque);
-			Assert.AreEqual(120.SI().Kilo.Watt / (1400.RPMtoRad() / (2.3 * 3.5)), container.CycleData.RightSample.Torque);
+		    Assert.AreEqual(89.SI(Unit.SI.Kilo.Watt) / (1748.RPMtoRad() / (2.3 * 3.5)), container.CycleData.LeftSample.Torque);
+		    Assert.AreEqual(120.SI(Unit.SI.Kilo.Watt) / (1400.RPMtoRad() / (2.3 * 3.5)), container.CycleData.RightSample.Torque);
 		}
 
 		/// <summary>

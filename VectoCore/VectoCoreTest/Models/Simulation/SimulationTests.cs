@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -46,6 +47,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	public class SimulationTests
 	{
 		private const string EngineOnlyJob = @"TestData\Jobs\EngineOnlyJob.vecto";
+
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 
 		[TestCase]
 		public void TestSimulationEngineOnly()
