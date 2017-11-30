@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		StatefulProviderComponent<SimpleComponentState, ISimulationOutPort, ITnInPort, ITnOutPort>,
 		IDrivingCycleInfo, ISimulationOutPort, ITnInProvider, ITnInPort
 	{
-		protected readonly IDrivingCycleData Data;
+		internal readonly IDrivingCycleData Data;
 		protected internal readonly DrivingCycleEnumerator CycleIterator;
 
 		protected Second AbsTime { get; set; }
