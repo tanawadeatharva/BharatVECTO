@@ -119,6 +119,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					RollResistanceCoefficient = axleInput.Tyre.RollResistanceCoefficient,
 					TyreTestLoad = axleInput.Tyre.TyreTestLoad,
 					Inertia = DeclarationData.Wheels.Lookup(axleInput.Tyre.Dimension.RemoveWhitespace()).Inertia,
+					CertificationNumber = axleInput.Tyre.CertificationNumber
 				};
 				axleData.Add(axle);
 			}
