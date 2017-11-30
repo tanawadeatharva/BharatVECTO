@@ -224,12 +224,12 @@ Public Class JSONFileWriter
 				{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", vehicle.AxleConfiguration.GetName()},
 				{"Axles", From axle In vehicle.Axles Select New Dictionary(Of String, Object) From {
-				{"Inertia", axle.Inertia.Value()},
-				{"Wheels", axle.Wheels},
+				{"Inertia", axle.Tyre.Inertia.Value()},
+				{"Wheels", axle.Tyre.Dimension},
 				{"AxleWeightShare", axle.AxleWeightShare},
 				{"TwinTyres", axle.TwinTyres},
-				{"RRCISO", axle.RollResistanceCoefficient},
-				{"FzISO", axle.TyreTestLoad.Value()},
+				{"RRCISO", axle.Tyre.RollResistanceCoefficient},
+				{"FzISO", axle.Tyre.TyreTestLoad.Value()},
 				{"Type", axle.AxleType.ToString()}
 				}}}}}
 

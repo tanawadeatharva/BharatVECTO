@@ -312,7 +312,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						i == 1 ? AxleType.VehicleDriven.ToString() : AxleType.VehicleNonDriven.ToString()),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_TwinTyres_Attr, axle.TwinTyres),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_Steered, i == 0),
-					CreateTyre(axle)
+					CreateTyre(axle.Tyre)
 					));
 			}
 
@@ -322,17 +322,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 				);
 		}
 
-		private XElement CreateTyre(IAxleDeclarationInputData axle)
+		private XElement CreateTyre(ITyreDeclarationInputData tyre)
 		{
-			var id = CreateIdString(string.Format("TYRE-{0}", axle.Wheels).Replace("/", "_"));
+			var id = CreateIdString(string.Format("TYRE-{0}", tyre.Dimension).Replace("/", "_"));
 
 			return new XElement(tns + "Tyre",
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
-					GetDefaultComponentElements(string.Format("TYRE-{0}", axle.Wheels), axle.Wheels),
-					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_Dimension, axle.Wheels),
-					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_RRCDeclared, axle.RollResistanceCoefficient.ToXMLFormat(4)),
-					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_FzISO, axle.TyreTestLoad.Value().ToXMLFormat(0))
+					GetDefaultComponentElements(string.Format("TYRE-{0}", tyre.Dimension), tyre.Dimension),
+					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_Dimension, tyre.Dimension),
+					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_RRCDeclared, tyre.RollResistanceCoefficient.ToXMLFormat(4)),
+					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_FzISO, tyre.TyreTestLoad.Value().ToXMLFormat(0))
 					),
 				AddSignatureDummy(id));
 		}

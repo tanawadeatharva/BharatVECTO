@@ -138,13 +138,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 					var dimension = tyre.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_Dimension), Manager);
 					var rollResistance = tyre.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_RRCDeclared), Manager);
 					var tyreTestLoad = tyre.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_FzISO), Manager);
+					var certirficationNumber = tyre.SelectSingleNode(Helper.NSPrefix(XMLNames.Component_CertificationNumber), Manager);
 					retVal[axleNumber - 1] = new AxleInputData {
 						AxleType = axleType == null ? AxleType.VehicleNonDriven : axleType.Value.ParseEnum<AxleType>(),
 						TwinTyres = twinTyres != null && XmlConvert.ToBoolean(twinTyres.Value),
 						Steered = steered != null && XmlConvert.ToBoolean(steered.Value),
-						TyreTestLoad = tyreTestLoad == null ? null : tyreTestLoad.Value.ToDouble().SI<Newton>(),
-						RollResistanceCoefficient = rollResistance == null ? double.NaN : rollResistance.Value.ToDouble(),
-						Wheels = dimension == null ? null : dimension.Value,
+						Tyre = new TyreInputData() { 
+							TyreTestLoad = tyreTestLoad == null ? null : tyreTestLoad.Value.ToDouble().SI<Newton>(),
+							RollResistanceCoefficient = rollResistance == null ? double.NaN : rollResistance.Value.ToDouble(),
+							Dimension = dimension == null ? null : dimension.Value,
+							CertificationNumber = certirficationNumber == null ? null : certirficationNumber.Value,
+							CertificationMethod = CertificationMethod.Measured
+						}
 					};
 				}
 				return retVal;

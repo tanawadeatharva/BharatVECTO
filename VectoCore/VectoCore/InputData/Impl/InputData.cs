@@ -88,25 +88,50 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 	public class AxleInputData : IAxleEngineeringInputData
 	{
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
-			"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-		public DataSourceType SourceType { get; internal set; }
-
-		public string Source { get; internal set; }
-
-		public string Wheels { get; internal set; }
-
 		public bool TwinTyres { get; internal set; }
 
 		public bool Steered { get; internal set; }
 
 		public AxleType AxleType { get; internal set; }
 
+		ITyreDeclarationInputData IAxleDeclarationInputData.Tyre
+		{
+			get { return Tyre; }
+		}
+
+		public ITyreEngineeringInputData Tyre { get; internal set; }
+
+
+		public double AxleWeightShare { get; internal set; }
+	}
+
+	public class TyreInputData : ITyreEngineeringInputData
+	{
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
+			"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
+		public DataSourceType SourceType { get; internal set; }
+
+		public string Source { get; internal set; }
+
+		public bool SavedInDeclarationMode { get; internal set; }
+
+		public string Manufacturer { get; internal set; }
+
+		public string Model { get; internal set; }
+
+		public string Date { get; internal set; }
+
+		public CertificationMethod CertificationMethod { get; internal set; }
+
+		public string CertificationNumber { get; internal set; }
+
+		public string DigestValue { get; internal set; }
+
+		public string Dimension { get; internal set; }
+
 		public double RollResistanceCoefficient { get; internal set; }
 
 		public Newton TyreTestLoad { get; internal set; }
-
-		public double AxleWeightShare { get; internal set; }
 
 		public KilogramSquareMeter Inertia { get; internal set; }
 	}

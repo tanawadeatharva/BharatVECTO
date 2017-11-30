@@ -216,13 +216,15 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var axles = vehicleDataProvider.Axles;
 
-			Assert.AreEqual("315/70 R22.5", axles[0].Wheels);
-			Assert.AreEqual(0.0055, axles[0].RollResistanceCoefficient);
-			Assert.AreEqual(31300, axles[0].TyreTestLoad.Value());
+			var tyre = axles[0].Tyre;
+			Assert.AreEqual("315/70 R22.5", tyre.Dimension);
+			Assert.AreEqual(0.0055,tyre.RollResistanceCoefficient);
+			Assert.AreEqual(31300,tyre.TyreTestLoad.Value());
 
-			Assert.AreEqual("315/70 R22.5", axles[1].Wheels);
-			Assert.AreEqual(0.0063, axles[1].RollResistanceCoefficient);
-			Assert.AreEqual(31300, axles[1].TyreTestLoad.Value());
+			tyre = axles[1].Tyre;
+			Assert.AreEqual("315/70 R22.5", tyre.Dimension);
+			Assert.AreEqual(0.0063, tyre.RollResistanceCoefficient);
+			Assert.AreEqual(31300, tyre.TyreTestLoad.Value());
 
 			//AssertHelper.Exception<VectoException>(() => { var tmp = vehicleDataProvider.Rim; });
 			Assert.AreEqual(0.488822, vehicleDataProvider.DynamicTyreRadius.Value());

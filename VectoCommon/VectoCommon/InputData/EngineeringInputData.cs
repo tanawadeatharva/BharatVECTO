@@ -142,6 +142,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		double AxleWeightShare { get; }
 
+		new ITyreEngineeringInputData Tyre { get; }
+	}
+
+	public interface ITyreEngineeringInputData : ITyreDeclarationInputData
+	{
 		/// <summary>
 		/// P048
 		/// cf. VECTO Input Parameters.xlsx

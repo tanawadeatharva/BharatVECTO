@@ -190,18 +190,23 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IAxleDeclarationInputData
 	{
 		/// <summary>
-		/// P108  
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		string Wheels { get; }
-
-		/// <summary>
 		/// P045
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		bool TwinTyres { get; }
 
 		AxleType AxleType { get; }
+
+		ITyreDeclarationInputData Tyre { get; }
+	}
+
+	public interface ITyreDeclarationInputData : IComponentInputData
+	{
+		/// <summary>
+		/// P108  
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		string Dimension { get; }
 
 		/// <summary>
 		/// P046
