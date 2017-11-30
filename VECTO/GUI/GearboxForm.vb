@@ -911,8 +911,9 @@ Public Class GearboxForm
 			If (vehicle.Axles.Count < 2) Then
 				Return Nothing
 			End If
-             'TODO: 
-			rDyn = DeclarationData.Wheels.Lookup(vehicle.Axles(1).Tyre.Dimension).DynamicTyreRadius
+            rdyn = vehicle.Axles.Where(Function(axle)  axle.AxleType = AxleType.VehicleDriven) _
+                .Select(Function(da) DeclarationData.Wheels.Lookup(da.Tyre.Dimension).DynamicTyreRadius) _
+		        .Average()
 		End If
 		If (rDyn.IsEqual(0)) Then
 			Return Nothing
