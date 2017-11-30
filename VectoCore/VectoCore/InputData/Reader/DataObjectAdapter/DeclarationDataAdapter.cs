@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
 				data.Axles.Where(axle => axle.AxleType == AxleType.VehicleDriven)
-					.Select(da => DeclarationData.Wheels.Lookup(da.Wheels).DynamicTyreRadius)
+					.Select(da => DeclarationData.Wheels.Lookup(da.Tyre.Dimension).DynamicTyreRadius)
 					.Average();
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
 
@@ -112,13 +112,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			for (var i = 0; i < mission.AxleWeightDistribution.Length; i++) {
 				var axleInput = axles[i];
 				var axle = new Axle {
-					WheelsDimension = axleInput.Wheels,
+					WheelsDimension = axleInput.Tyre.Dimension,
 					AxleType = axleInput.AxleType,
 					AxleWeightShare = mission.AxleWeightDistribution[i],
 					TwinTyres = axleInput.TwinTyres,
-					RollResistanceCoefficient = axleInput.RollResistanceCoefficient,
-					TyreTestLoad = axleInput.TyreTestLoad,
-					Inertia = DeclarationData.Wheels.Lookup(axleInput.Wheels.RemoveWhitespace()).Inertia,
+					RollResistanceCoefficient = axleInput.Tyre.RollResistanceCoefficient,
+					TyreTestLoad = axleInput.Tyre.TyreTestLoad,
+					Inertia = DeclarationData.Wheels.Lookup(axleInput.Tyre.Dimension.RemoveWhitespace()).Inertia,
+					CertificationNumber = axleInput.Tyre.CertificationNumber
 				};
 				axleData.Add(axle);
 			}
