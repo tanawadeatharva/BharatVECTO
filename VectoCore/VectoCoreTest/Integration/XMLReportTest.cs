@@ -30,6 +30,7 @@
 */
 
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
 using NUnit.Framework;
@@ -78,6 +79,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var manufacturerReport = xmlReport.FullReport;
 
 			Assert.AreEqual(5, manufacturerReport.XPathSelectElement("//*[local-name()='VehicleGroup']").Value.ToInt());
+
+			var reportWheels = manufacturerReport.XPathSelectElements("//*[local-name()='TyreCertificationNumber']").ToList();
+			var i = 0;
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Axles.Count, reportWheels.Count);
+			foreach (var axleDeclarationInputData in dataProvider.JobInputData.Vehicle.Axles) {
+				Assert.AreEqual(axleDeclarationInputData.Tyre.CertificationNumber, reportWheels[i++].Value);
+			}
 		}
 	}
 }
