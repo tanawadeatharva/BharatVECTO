@@ -62,12 +62,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var axles = data.Axles;
 
 			retVal.AxleData = axles.Select(axle => new Axle {
-				WheelsDimension = axle.Wheels,
-				Inertia = axle.Inertia,
+				WheelsDimension = axle.Tyre.Dimension,
+				Inertia = axle.Tyre.Inertia,
 				TwinTyres = axle.TwinTyres,
-				RollResistanceCoefficient = axle.RollResistanceCoefficient,
+				RollResistanceCoefficient = axle.Tyre.RollResistanceCoefficient,
 				AxleWeightShare = axle.AxleWeightShare,
-				TyreTestLoad = axle.TyreTestLoad,
+				TyreTestLoad = axle.Tyre.TyreTestLoad,
 				AxleType = axle.AxleType,
 				//Wheels = axle.WheelsStr
 			}).ToList();

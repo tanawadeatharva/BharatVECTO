@@ -213,11 +213,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 					AxleType = axleType == null ? AxleType.VehicleNonDriven : axleType.Value.ParseEnum<AxleType>(),
 					TwinTyres = twinTyres != null && XmlConvert.ToBoolean(twinTyres.Value),
 					Steered = steered != null && XmlConvert.ToBoolean(steered.Value),
-					TyreTestLoad = tyreTestLoad == null ? null : tyreTestLoad.ValueAsDouble.SI<Newton>(),
-					RollResistanceCoefficient = rollResistance == null ? double.NaN : rollResistance.ValueAsDouble,
-					Wheels = dimension == null ? null : dimension.Value,
 					AxleWeightShare = weightShare == null ? 0 : weightShare.ValueAsDouble,
-					Inertia = inertia == null ? null : inertia.ValueAsDouble.SI<KilogramSquareMeter>()
+					Tyre = new TyreInputData() {
+						TyreTestLoad = tyreTestLoad == null ? null : tyreTestLoad.ValueAsDouble.SI<Newton>(),
+						RollResistanceCoefficient = rollResistance == null ? double.NaN : rollResistance.ValueAsDouble,
+						Dimension = dimension == null ? null : dimension.Value,
+						Inertia = inertia == null ? null : inertia.ValueAsDouble.SI<KilogramSquareMeter>(),
+					}
 				};
 			}
 			return retVal;

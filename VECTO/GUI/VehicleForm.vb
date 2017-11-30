@@ -382,12 +382,12 @@ Public Class VehicleForm
 		For Each a0 In vehicle.Axles
 			i += 1
 			If Cfg.DeclMode Then
-				Dim inertia As Double = DeclarationData.Wheels.Lookup(a0.Wheels).Inertia.Value()
-				LvRRC.Items.Add(CreateListViewItem(i, Double.NaN, a0.TwinTyres, a0.RollResistanceCoefficient,
-													a0.TyreTestLoad.Value(), a0.Wheels, inertia, a0.AxleType))
+				Dim inertia As Double = DeclarationData.Wheels.Lookup(a0.Tyre.Dimension).Inertia.Value()
+				LvRRC.Items.Add(CreateListViewItem(i, Double.NaN, a0.TwinTyres, a0.Tyre.RollResistanceCoefficient,
+													a0.Tyre.TyreTestLoad.Value(), a0.Tyre.Dimension, inertia, a0.AxleType))
 			Else
-				LvRRC.Items.Add(CreateListViewItem(i, a0.AxleWeightShare, a0.TwinTyres, a0.RollResistanceCoefficient,
-													a0.TyreTestLoad.Value(), a0.Wheels, a0.Inertia.Value(), a0.AxleType))
+				LvRRC.Items.Add(CreateListViewItem(i, a0.AxleWeightShare, a0.TwinTyres, a0.Tyre.RollResistanceCoefficient,
+													a0.Tyre.TyreTestLoad.Value(), a0.Tyre.Dimension, a0.Tyre.Inertia.Value(), a0.AxleType))
 
 			End If
 		Next
@@ -477,11 +477,13 @@ Public Class VehicleForm
 			Dim a0 As AxleInputData = New AxleInputData()
 			a0.AxleWeightShare = entry.SubItems(AxleTbl.RelativeLoad).Text.ToDouble(0)
 			a0.TwinTyres = (entry.SubItems(AxleTbl.TwinTyres).Text = "yes")
-			a0.RollResistanceCoefficient = entry.SubItems(AxleTbl.RRC).Text.ToDouble(0)
-			a0.TyreTestLoad = entry.SubItems(AxleTbl.FzISO).Text.ToDouble(0).SI(Of Newton)()
-			a0.Wheels = entry.SubItems(AxleTbl.WheelsDimension).Text
-			a0.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble(0).SI(Of KilogramSquareMeter)()
-			a0.AxleType = entry.SubItems(AxleTbl.AxleType).Text.ParseEnum(Of AxleType)()
+		    a0.AxleType = entry.SubItems(AxleTbl.AxleType).Text.ParseEnum(Of AxleType)()
+            dim tyre as TyreInputData = New TyreInputData()
+		    tyre.RollResistanceCoefficient = entry.SubItems(AxleTbl.RRC).Text.ToDouble(0)
+		    tyre.TyreTestLoad = entry.SubItems(AxleTbl.FzISO).Text.ToDouble(0).SI(Of Newton)()
+		    tyre.Dimension = entry.SubItems(AxleTbl.WheelsDimension).Text
+		    tyre.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble(0).SI(Of KilogramSquareMeter)()
+			a0.Tyre = tyre
 			veh.Axles.Add(a0)
 		Next
 

@@ -358,18 +358,18 @@ namespace TUGraz.VectoCore.OutputData.XML
 				var axle = axleData[i];
 				axles.Add(new XElement(tns + XMLNames.AxleWheels_Axles_Axle,
 					new XAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, i + 1),
-					GetDefaultComponentElements(axle.Wheels),
+					GetDefaultComponentElements(axle.Tyre.Dimension),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_AxleType,
 						i == 1 ? AxleType.VehicleDriven.ToString() : AxleType.VehicleNonDriven.ToString()),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_TwinTyres_Attr, axle.TwinTyres),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_Steered, i == 0),
-					string.IsNullOrWhiteSpace(axle.Wheels)
+					string.IsNullOrWhiteSpace(axle.Tyre.Dimension)
 						? null
-						: new XElement(tns + XMLNames.AxleWheels_Axles_Axle_Dimension, axle.Wheels),
-					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_RRCISO, axle.RollResistanceCoefficient),
-					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_FzISO, axle.TyreTestLoad.Value()),
+						: new XElement(tns + XMLNames.AxleWheels_Axles_Axle_Dimension, axle.Tyre.Dimension),
+					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_RRCISO, axle.Tyre.RollResistanceCoefficient),
+					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_FzISO, axle.Tyre.TyreTestLoad.Value()),
 					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_WeightShare, axle.AxleWeightShare),
-					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_Inertia, axle.Inertia.Value()),
+					new XElement(tns + XMLNames.AxleWheels_Axles_Axle_Inertia, axle.Tyre.Inertia.Value()),
 					i == 1
 						? new XElement(tns + XMLNames.AxleWheels_Axles_Axle_DynamicTyreRadius, data.DynamicTyreRadius.Value() * 1000)
 						: null));
