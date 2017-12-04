@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
@@ -44,6 +45,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentCycleIndex = 0;
 			_data = data;
 			LastEntry = false;
+		}
+
+		public DrivingCycleEnumerator Previous()
+		{
+			var retVal = new DrivingCycleEnumerator(_data);
+			retVal._currentCycleIndex = Math.Max(0, _currentCycleIndex - 1);
+			return retVal;
 		}
 
 		public DrivingCycleEnumerator Clone()

@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -66,6 +67,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 		private static readonly LoggingObject Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
+
+		[OneTimeSetUp]
+		public void Init()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 		[TestCase, Category("LongRunning")]
 		public void Test_FullPowertrain_SimpleGearbox()

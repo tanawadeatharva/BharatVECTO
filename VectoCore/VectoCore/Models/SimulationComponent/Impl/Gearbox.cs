@@ -390,13 +390,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var avgInAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			var avgOutAngularSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
-			// (PreviousState.OutAngularVelocity +
-			//CurrentState.OutAngularVelocity) / 2.0 * ModelData.Gears[Gear].Ratio;
 			var inPower = CurrentState.InTorque * avgInAngularSpeed;
 			var outPower = CurrentState.OutTorque * avgOutAngularSpeed;
 			container[ModalResultField.Gear] = Disengaged || DataBus.VehicleStopped ? 0 : Gear;
 			container[ModalResultField.P_gbx_loss] = inPower - outPower;
-			//CurrentState.TransmissionTorqueLoss * avgOutAngularSpeed;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgOutAngularSpeed;
 			container[ModalResultField.P_gbx_in] = inPower;
 			container[ModalResultField.n_gbx_out_avg] = (PreviousState.OutAngularVelocity +

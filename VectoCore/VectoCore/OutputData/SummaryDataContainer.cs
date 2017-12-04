@@ -149,6 +149,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_GRAD = "E_grad [kWh]";
 		public const string E_VEHICLE_INERTIA = "E_vehi_inertia [kWh]";
 		public const string E_POWERTRAIN_INERTIA = "E_powertrain_inertia [kWh]";
+		public const string E_WHEEL = "E_wheel [kWh]";
 		public const string E_BRAKE = "E_brake [kWh]";
 		public const string E_GBX_LOSS = "E_gbx_loss [kWh]";
 		public const string E_SHIFT_LOSS = "E_shift_loss [kWh]";
@@ -159,6 +160,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_CLUTCH_LOSS = "E_clutch_loss [kWh]";
 		public const string E_FCMAP_POS = "E_fcmap_pos [kWh]";
 		public const string E_FCMAP_NEG = "E_fcmap_neg [kWh]";
+
+		public const string SPECIFIC_FC = "Specific FC [g/kWh] wheel pos.";
 
 		public const string ACC = "a [m/s^2]";
 		public const string ACC_POS = "a_pos [m/s^2]";
@@ -190,17 +193,17 @@ namespace TUGraz.VectoCore.OutputData
 		internal readonly DataTable Table;
 		private readonly ISummaryWriter _sumWriter;
 
-
 		protected SummaryDataContainer() {}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SummaryDataContainer"/> class.
 		/// </summary>
 		/// <param name="writer"></param>
+		
 		public SummaryDataContainer(ISummaryWriter writer)
 		{
 			_sumWriter = writer;
-
+			
 			Table = new DataTable();
 
 			Table.Columns.AddRange(new[] {
@@ -270,12 +273,12 @@ namespace TUGraz.VectoCore.OutputData
 				FCWHTCC_H, FCWHTCC_KM,
 				FCAAUX_H, FCAAUX_KM,
 				FCFINAL_H, FCFINAL_KM,
-				FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, FCFINAL_LiterPer100M3KM,
+				FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, FCFINAL_LiterPer100M3KM,SPECIFIC_FC,
 				CO2_KM, CO2_TKM, CO2_M3KM,
 				P_WHEEL_POS, P_FCMAP_POS,
 				E_FCMAP_POS, E_FCMAP_NEG, E_POWERTRAIN_INERTIA,
 				E_AUX, E_CLUTCH_LOSS, E_TC_LOSS, E_SHIFT_LOSS, E_GBX_LOSS,
-				E_RET_LOSS, E_ANGLE_LOSS, E_AXL_LOSS, E_BRAKE, E_VEHICLE_INERTIA, E_AIR, E_ROLL, E_GRAD,
+				E_RET_LOSS, E_ANGLE_LOSS, E_AXL_LOSS, E_BRAKE, E_VEHICLE_INERTIA, E_WHEEL , E_AIR, E_ROLL, E_GRAD ,
 				ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE,
 				MAX_SPEED, MAX_ACCELERATION, MAX_DECELERATION, AVG_ENGINE_SPEED, MAX_ENGINE_SPEED, NUM_GEARSHIFTS,
 				STOP_TIMESHARE, ENGINE_FULL_LOAD_TIME_SHARE, COASTING_TIME_SHARE, BRAKING_TIME_SHARE
@@ -292,6 +295,12 @@ namespace TUGraz.VectoCore.OutputData
 				var view = new DataView(Table, "", SORT, DataViewRowState.CurrentRows).ToTable();
 				var toRemove =
 					view.Columns.Cast<DataColumn>().Where(column => column.ColumnName.StartsWith(INTERNAL_PREFIX)).ToList();
+				foreach (var colName in new[] { E_WHEEL, SPECIFIC_FC }) {
+					var column = view.Columns[colName];
+					if (view.AsEnumerable().All(dr => dr.IsNull(column))) {
+						toRemove.Add(column);
+					}
+				}
 				foreach (var dataColumn in toRemove) {
 					view.Columns.Remove(dataColumn);
 				}
@@ -342,7 +351,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[ALTITUDE_DELTA] = (ConvertedSI)modData.AltitudeDelta();
 
-			WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume);
+			WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, runData.Cycle.CycleType == CycleType.VTP);
 
 			var kilogramPerMeter = modData.CO2PerMeter();
 			if (kilogramPerMeter != null) {
@@ -361,7 +370,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteAuxiliaries(modData, row);
 
-			WriteWorkEntries(modData, row);
+			WriteWorkEntries(modData, row, runData.Cycle.CycleType == CycleType.VTP);
 
 			WritePerformanceEntries(modData, row);
 
@@ -377,7 +386,7 @@ namespace TUGraz.VectoCore.OutputData
 		}
 
 		private static void WriteFuelconsumptionEntries(IModalDataContainer modData, DataRow row, Kilogram vehicleLoading,
-			CubicMeter cargoVolume)
+			CubicMeter cargoVolume, bool vtpCycle)
 		{
 			var tmp = modData.FCMapPerSecond();
 			row[FCMAP_H] = tmp.ConvertToGrammPerHour();
@@ -409,6 +418,10 @@ namespace TUGraz.VectoCore.OutputData
 			}
             if (cargoVolume > 0 && fcFinal != null) {
                 row[FCFINAL_LiterPer100M3KM] = (fcFinal / cargoVolume).ConvertToLiterPerCubicMeter100KiloMeter();
+			}
+
+			if (vtpCycle) {
+				row[SPECIFIC_FC] = (modData.TotalFuelConsumption() / modData.WorkWheelsPos()).ConvertToGramPerKiloWattHour();
 			}
 		}
 
@@ -478,7 +491,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private static void WriteWorkEntries(IModalDataContainer modData, DataRow row)
+		private static void WriteWorkEntries(IModalDataContainer modData, DataRow row, bool vtpMode)
 		{
             row[E_FCMAP_POS] = modData.TotalEngineWorkPositive().ConvertToKiloWattHour();
             row[E_FCMAP_NEG] = (-modData.TotalEngineWorkNegative()).ConvertToKiloWattHour();
@@ -496,6 +509,9 @@ namespace TUGraz.VectoCore.OutputData
             row[E_AIR] = modData.WorkAirResistance().ConvertToKiloWattHour();
             row[E_ROLL] = modData.WorkRollingResistance().ConvertToKiloWattHour();
             row[E_GRAD] = modData.WorkRoadGradientResistance().ConvertToKiloWattHour();
+			if (vtpMode) {
+				row[E_WHEEL] = modData.WorkWheels().ConvertToKiloWattHour();
+			}
 		}
 
 		private void WriteFullPowertrain(VectoRunData runData, DataRow row)

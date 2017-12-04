@@ -134,6 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 						response = NextComponent.Request(absTime, dt, torque, angularVelocity);
 						CurrentState.InAngularVelocity = angularVelocity;
+						CurrentState.InTorque = torque;
 					})
 					.Case<ResponseEngineSpeedTooHigh>(r => {
 						angularVelocity = SearchAlgorithm.Search(angularVelocity, r.DeltaEngineSpeed,

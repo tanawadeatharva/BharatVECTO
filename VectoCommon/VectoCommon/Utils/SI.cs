@@ -273,11 +273,11 @@ namespace TUGraz.VectoCommon.Utils
             return SIBase<KilogramPerSecond>.Create(kg.Val / second.Value());
         }
 
-        [DebuggerHidden]
-        public static SI operator /(Kilogram kg, Joule j)
-        {
-            return (kg as SI) / j;
-        }
+        //[DebuggerHidden]
+        //public static SI operator /(Kilogram kg, Joule j)
+        //{
+        //    return (kg as SI) / j;
+        //}
 
         [DebuggerHidden]
         public static Scalar operator /(Kilogram kg, Kilogram kg2)
@@ -291,7 +291,13 @@ namespace TUGraz.VectoCommon.Utils
             return SIBase<KilogramPerMeter>.Create(kg.Val / m.Value());
         }
 
-        [DebuggerHidden]
+		[DebuggerHidden]
+		public static SpecificFuelConsumption operator /(Kilogram kg, WattSecond ws)
+		{
+			return SIBase<SpecificFuelConsumption>.Create(kg.Val / ws.Value());
+		}
+
+		[DebuggerHidden]
         public static Newton operator *(Kilogram kg, MeterPerSquareSecond m)
         {
             return SIBase<Newton>.Create(kg.Val * m.Value());
@@ -840,6 +846,13 @@ namespace TUGraz.VectoCommon.Utils
 		private static readonly int[] Units = { 0, -1, 0, 0, 0, 0, 0 };
 
 		private KilogramPerMeterMass(double val) : base(val, Units) { }
+	}
+
+	public class SpecificFuelConsumption : SIBase<SpecificFuelConsumption>
+	{
+		private static readonly int[] Units = { 0, -2,2, 0, 0, 0, 0 };
+
+		private SpecificFuelConsumption(double val) : base(val, Units) { }
 	}
 
 	/// <summary>

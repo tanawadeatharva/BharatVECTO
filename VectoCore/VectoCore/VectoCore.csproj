@@ -188,6 +188,7 @@
     <Compile Include="Models\SimulationComponent\Impl\PWheelCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\IdleControllerSwitcher.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\VTPGearbox.cs" />
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
