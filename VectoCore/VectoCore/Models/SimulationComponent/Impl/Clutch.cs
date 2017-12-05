@@ -48,6 +48,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly PerSecond _idleSpeed;
 		private readonly PerSecond _ratedSpeed;
 
+		private bool firstInitialize = true;
+
 		public IIdleController IdleController
 		{
 			get { return _idleController; }
@@ -77,9 +79,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				engineSpeedIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
-				AddClutchLoss(outTorque, outAngularVelocity, true, out torqueIn, out engineSpeedIn);
+				AddClutchLoss(outTorque, outAngularVelocity, firstInitialize || DataBus.VehicleStopped, out torqueIn, out engineSpeedIn);
 			}
-			PreviousState.SetState(torqueIn, outAngularVelocity, outTorque, outAngularVelocity);
+			PreviousState.SetState(torqueIn, engineSpeedIn, outTorque, outAngularVelocity);
+			//if (!firstInitialize) {
+			//	PreviousState.
+			//}
 
 			var retVal = NextComponent.Initialize(torqueIn, engineSpeedIn);
 			retVal.ClutchPowerRequest = outTorque * outAngularVelocity;
@@ -89,6 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
+			firstInitialize = false;
 			var startClutch = DataBus.VehicleStopped || !PreviousState.ClutchLoss.IsEqual(0);
 			if (!DataBus.ClutchClosed(absTime) && !dryRun) {
 				Log.Debug("Invoking IdleController...");

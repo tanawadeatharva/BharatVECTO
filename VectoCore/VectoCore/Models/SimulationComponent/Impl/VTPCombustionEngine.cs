@@ -45,11 +45,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
     public class VTPCombustionEngine : CombustionEngine
     {
+		private bool firstInit = true;
+
         public VTPCombustionEngine(IVehicleContainer container, CombustionEngineData modelData, bool pt1Disabled = false) : base(container, modelData, pt1Disabled) { }
+
+		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			if (outAngularVelocity == null) {
+				outAngularVelocity = EngineIdleSpeed;
+			}
+			var auxDemand = EngineAux == null ? 0.SI<NewtonMeter>() : EngineAux.Initialize(outTorque, outAngularVelocity);
+			if (firstInit) {
+				PreviousState = new EngineState {
+					EngineSpeed = outAngularVelocity,
+					dt = 1.SI<Second>(),
+					InertiaTorqueLoss = 0.SI<NewtonMeter>(),
+					StationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(outAngularVelocity),
+					FullDragTorque = ModelData.FullLoadCurves[DataBus.Gear].DragLoadStationaryTorque(outAngularVelocity),
+					EngineTorque = outTorque + auxDemand,
+					EnginePower = (outTorque + auxDemand) * outAngularVelocity,
+				};
+				PreviousState.DynamicFullLoadTorque = PreviousState.StationaryFullLoadTorque;
+			}
+			return new ResponseSuccess {
+				Source = this,
+				EnginePowerRequest = PreviousState.EnginePower,
+				EngineSpeed = outAngularVelocity
+			};
+		}
 
 		protected override IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter torqueReq,
 			PerSecond angularVelocity, bool dryRun)
 		{
+			firstInit = false;
 			var powerDemand = angularVelocity * torqueReq;
 
 			var avgEngineSpeed = GetEngineSpeed(angularVelocity);
@@ -63,10 +91,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Formulas.InertiaPower(angularVelocity, PreviousState.EngineSpeed, ModelData.Inertia, dt) /
 				avgEngineSpeed;
 
+			if (EngineAux != null) {
+				EngineAux.Initialize(0.SI<NewtonMeter>(), avgEngineSpeed);
+			}
 			var auxTorqueDemand = EngineAux == null
 				? 0.SI<NewtonMeter>()
 				: EngineAux.TorqueDemand(absTime, dt, torqueOut,
-					torqueOut + inertiaTorqueLoss, angularVelocity, dryRun);
+					torqueOut + inertiaTorqueLoss, avgEngineSpeed, dryRun);
 			// compute the torque the engine has to provide. powertrain + aux + its own inertia
 			var totalTorqueDemand = torqueOut + auxTorqueDemand + inertiaTorqueLoss;
 
