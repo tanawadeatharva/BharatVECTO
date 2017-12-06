@@ -207,8 +207,8 @@ Public Class JSONFileWriter
 				{"CurbWeight", vehicle.CurbMassChassis.Value()},
 				{"CurbWeightExtra", vehicle.CurbMassExtra.Value()},
 				{"Loading", vehicle.Loading.Value()},
-                		{"MassMax", vehicle.GrossVehicleMassRating.ConvertToTon()},
-		                {"rdyn", vehicle.DynamicTyreRadius.ConvertToMilliMeter()},
+           		{"MassMax", vehicle.GrossVehicleMassRating.ConvertToTon().Value},
+                {"rdyn", vehicle.DynamicTyreRadius.ConvertToMilliMeter().Value},
 				{"CdCorrMode", airdrag.CrossWindCorrectionMode.GetName()},
 				{"CdCorrFile",
 				If((airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse

@@ -30,10 +30,16 @@
 */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using TUGraz.VectoCommon.Utils;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -104,6 +110,94 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.IsTrue(ratio < toleranceFactor, string.Format(CultureInfo.InvariantCulture,
 				"Given values are not equal. Expected: {0}, Actual: {1}, Difference: {3} (Tolerance Factor: {2}){4}",
 				expected, actual, toleranceFactor, expected - actual, message));
+		}
+
+		public static void PublicPropertiesEqual(Type t, object expected, object actual, string[] ignoredProperties = null)
+		{
+			const BindingFlags flags =
+				BindingFlags.Instance | BindingFlags.Public |
+				BindingFlags.FlattenHierarchy;
+			var properties = t.GetProperties(flags);
+			
+			foreach (var prop in properties) {
+				if (ignoredProperties != null && ignoredProperties.Contains(prop.Name)) {
+					continue;
+				}
+				object expectedVal = null;
+				try {
+					expectedVal = prop.GetValue(expected);
+				} catch (Exception) {
+					try {
+						prop.GetValue(actual);
+						Assert.Fail("expected value thew exception, but actual value not!");
+					} catch (Exception) {
+						// both getters threw an exception - at least its the same...
+						continue;
+					}
+				}
+				var actualVal = prop.GetValue(actual);
+				var propertyType = prop.PropertyType;
+				if (expectedVal == null && actualVal == null) {
+					continue;
+				}
+				if (propertyType.IsPrimitive || propertyType == typeof(string)) {
+					Assert.AreEqual(expectedVal, actualVal);
+				} else if (propertyType == typeof(SI)) {
+					Assert.AreEqual((expectedVal as SI).Value(), (actualVal as SI).Value());
+					Assert.AreEqual((expectedVal as SI).GetUnitString(), (actualVal as SI).GetUnitString());
+				} else if (expectedVal is IEnumerable<object>) {
+					Assert.IsTrue(actualVal is IList);
+					var expectedEnumerable = (expectedVal as IEnumerable<object>).ToArray();
+					Assert.IsTrue(actualVal is IEnumerable<object>);
+					var actualEnumerable = (actualVal as IEnumerable<object>).ToArray();
+					Assert.AreEqual(expectedEnumerable.Length, actualEnumerable.Length);
+					if (expectedEnumerable.Length > 0) {
+						IterateElements(expectedEnumerable, actualEnumerable, ignoredProperties);
+					}
+				} else if(propertyType == typeof(TableData)) {
+					TableDataEquals(expectedVal as TableData, actualVal as TableData);
+				} else {
+					PublicPropertiesEqual(propertyType, expectedVal, actualVal, ignoredProperties);
+				}
+			}
+
+		}
+
+		private static void TableDataEquals(TableData expected, TableData actual)
+		{
+			Assert.NotNull(expected);
+			Assert.NotNull(actual);
+
+			Assert.AreEqual(expected.Columns.Count, actual.Columns.Count);
+			Assert.AreEqual(expected.Rows.Count, actual.Rows.Count);
+
+			foreach (DataColumn expectedCol in expected.Columns) {
+				Assert.NotNull(actual.Columns[expectedCol.ColumnName]);
+			}
+
+			//foreach (DataRow row in expected.Rows) {
+			for (var i = 0 ; i< expected.Rows.Count; i++) {
+				var expectedRow = expected.Rows[i];
+				var actualRow = actual.Rows[i];
+				foreach (DataColumn col in expected.Columns) {
+					var value = expectedRow[col];
+					if (value is ConvertedSI) {
+						Assert.AreEqual((value as ConvertedSI).Value, (actualRow[col] as ConvertedSI).Value);
+					}
+					if (value.GetType().IsPrimitive) {
+						Assert.AreEqual(value, actualRow[col]);
+					}
+				}
+			}
+			//CollectionAssert.AreEqual(expected.Rows, actual.Rows);
+
+		}
+
+		private static void IterateElements(IEnumerable<object> expected, IEnumerable<object> actual, string[] ignoredProperties = null)
+		{
+			foreach (var entry in expected.Zip(actual, Tuple.Create)) {
+				PublicPropertiesEqual(entry.Item1.GetType() ,entry.Item1, entry.Item2, ignoredProperties);
+			}
 		}
 	}
 }

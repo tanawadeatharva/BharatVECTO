@@ -45,6 +45,8 @@ namespace TUGraz.VectoCommon.Utils
             Units = units;
         }
 
+		public double Value { get { return _value; } }
+
 		protected bool Equals(ConvertedSI other)
 		{
 			return _value.Equals(other._value) && string.Equals(Units, other.Units);
