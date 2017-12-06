@@ -60,9 +60,12 @@ Module MainModule
 	End Function
 
 	Public Function GetRelativePath(filePath As String, basePath As String) As String
-		If (String.IsNullOrEmpty(filePath) OrElse String.IsNullOrEmpty(basePath)) Then
+		If (String.IsNullOrEmpty(filePath)) then
 			Return ""
 		End If
+        If (string.isnullOrempty(basePath)) Then
+            Return filePath
+        End If
 		If (Path.GetDirectoryName(filePath).StartsWith(basePath, StringComparison.OrdinalIgnoreCase)) Then
 			Return Path.GetFullPath(filePath).Substring(basePath.Length + If(basePath.EndsWith("\"), 0, 1))
 		End If

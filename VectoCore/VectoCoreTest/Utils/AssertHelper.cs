@@ -32,6 +32,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -153,12 +154,42 @@ namespace TUGraz.VectoCore.Tests.Utils
 					if (expectedEnumerable.Length > 0) {
 						IterateElements(expectedEnumerable, actualEnumerable, ignoredProperties);
 					}
-				} else if(propertyType == typeof(TableData)) { 
-					// todo!
+				} else if(propertyType == typeof(TableData)) {
+					TableDataEquals(expectedVal as TableData, actualVal as TableData);
 				} else {
 					PublicPropertiesEqual(propertyType, expectedVal, actualVal, ignoredProperties);
 				}
 			}
+
+		}
+
+		private static void TableDataEquals(TableData expected, TableData actual)
+		{
+			Assert.NotNull(expected);
+			Assert.NotNull(actual);
+
+			Assert.AreEqual(expected.Columns.Count, actual.Columns.Count);
+			Assert.AreEqual(expected.Rows.Count, actual.Rows.Count);
+
+			foreach (DataColumn expectedCol in expected.Columns) {
+				Assert.NotNull(actual.Columns[expectedCol.ColumnName]);
+			}
+
+			//foreach (DataRow row in expected.Rows) {
+			for (var i = 0 ; i< expected.Rows.Count; i++) {
+				var expectedRow = expected.Rows[i];
+				var actualRow = actual.Rows[i];
+				foreach (DataColumn col in expected.Columns) {
+					var value = expectedRow[col];
+					if (value is ConvertedSI) {
+						Assert.AreEqual((value as ConvertedSI).Value, (actualRow[col] as ConvertedSI).Value);
+					}
+					if (value.GetType().IsPrimitive) {
+						Assert.AreEqual(value, actualRow[col]);
+					}
+				}
+			}
+			//CollectionAssert.AreEqual(expected.Rows, actual.Rows);
 
 		}
 
