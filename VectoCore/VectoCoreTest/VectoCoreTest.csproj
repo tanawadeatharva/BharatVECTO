@@ -72,8 +72,9 @@
   <ItemGroup>
     <Compile Include="Dummy\EngineFLDTest.cs" />
     <Compile Include="Exceptions\ExceptionTests.cs" />
+    <Compile Include="FileIO\JsonWriteTest.cs" />
     <Compile Include="FileIO\VectoCSVFileTest.cs" />
-    <Compile Include="FileIO\JsonTest.cs" />
+    <Compile Include="FileIO\JsonReadTest.cs" />
     <Compile Include="FileIO\SimulationDataReaderTest.cs" />
     <Compile Include="GraphProgram.cs" />
     <Compile Include="Integration\ATPowerTrain.cs" />
@@ -182,6 +183,10 @@
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
       <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
       <Name>VectoCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VECTO\VECTO.vbproj">
+      <Project>{AAC0F132-0A9F-45B3-B682-77AC9B24B352}</Project>
+      <Name>VECTO</Name>
     </ProjectReference>
     <ProjectReference Include="..\VectoCore\VectoCore.csproj">
       <Project>{cd36938a-add9-4c65-96da-b397cdeea90a}</Project>
@@ -471,6 +476,66 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Generic Vehicles\Declaration Mode\40t Long Haul Truck\Retarder.vrlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\324kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\350kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\AMT_12.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Axle_4x2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Class9_RigidTruck.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Engine_324kW_12.7l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_10.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_11.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_12.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_7.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_8.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Gear_9.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Retarder.vrlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Generic Vehicles\Engineering Mode\24t Coach\24t Coach.vcdv">
