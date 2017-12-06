@@ -23,7 +23,7 @@ Public Class AboutBox
 	'e-mail links----------------------------------------------------------------
 	Private Sub LinkLabel1_LinkClicked_1(sender As Object, e As LinkLabelLinkClickedEventArgs) _
 		Handles LinkLabel1.LinkClicked
-		Process.Start("mailto:vecto@jrc.ec.europa.eu")
+		Process.Start("mailto:jrc-vecto@ec.europa.eu")
 	End Sub
 
 	'----------------------------------------------------------------------------
