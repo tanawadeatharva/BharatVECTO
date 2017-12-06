@@ -189,8 +189,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 					}
 				}
 			}
-			//CollectionAssert.AreEqual(expected.Rows, actual.Rows);
-
 		}
 
 		private static void IterateElements(IEnumerable<object> expected, IEnumerable<object> actual, string[] ignoredProperties = null)
