@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Xml.XPath;
+using System.Xml;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
 	public class XMLEngineeringAngledriveDataProvider : AbstractEngineeringXMLComponentDataProvider, IAngledriveInputData
 	{
-		public XMLEngineeringAngledriveDataProvider(XMLEngineeringInputDataProvider jobInputData, XPathDocument xmlDocument,
+		public XMLEngineeringAngledriveDataProvider(XMLEngineeringInputDataProvider jobInputData, XmlDocument xmlDocument,
 			string xBasePath, string fsBasePath) : base(jobInputData, xmlDocument, xBasePath, fsBasePath) {}
 
 		public AngledriveType Type

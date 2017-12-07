@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Xml.XPath;
+using System.Xml;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		IEngineEngineeringInputData
 	{
 		public XMLEngineeringEngineDataProvider(XMLEngineeringInputDataProvider xmlEngineeringJobInputDataProvider,
-			XPathDocument engineDocument, string xmlBasePath, string fsBasePath)
+			XmlDocument engineDocument, string xmlBasePath, string fsBasePath)
 			: base(xmlEngineeringJobInputDataProvider, engineDocument, xmlBasePath, fsBasePath) {}
 
 		public CubicMeter Displacement

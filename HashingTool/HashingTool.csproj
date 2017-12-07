@@ -92,7 +92,7 @@
     <Compile Include="ViewModel\VerifyJobInputDataViewModel.cs" />
     <Compile Include="ViewModel\VerifyComponentInputDataViewModel.cs" />
     <Compile Include="ViewModel\UserControl\XMLFileSelector.cs" />
-    <Compile Include="Util\XMLValidator.cs" />
+    <Compile Include="Util\AsyncXMLValidator.cs" />
     <Compile Include="ViewModel\VerifyResultDataViewModel.cs" />
     <Compile Include="Views\AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>

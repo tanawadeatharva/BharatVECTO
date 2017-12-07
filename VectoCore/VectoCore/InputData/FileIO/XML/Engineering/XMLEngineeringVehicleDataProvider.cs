@@ -44,6 +44,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
@@ -55,18 +56,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		protected internal XMLEngineeringAxlegearDataProvider AxlegearData;
 
 		public XMLEngineeringVehicleDataProvider(XMLEngineeringInputDataProvider jobProvider,
-			XPathDocument vehicleDocument, string xmlBasePath, string fsBasePath)
+			XmlDocument vehicleDocument, string xmlBasePath, string fsBasePath)
 			: base(jobProvider, vehicleDocument, xmlBasePath, fsBasePath)
 		{
-			AxlegearData = GetAxleGearInputData(jobProvider.Settings);
+			AxlegearData = GetAxleGearInputData(jobProvider.VerifyXml);
 			AngledriveInputData = GetAngularGearInputData();
-			EngineInputData = GetEngineInputData(jobProvider.Settings);
-			RetarderInputData = GetRetarderInputData(jobProvider.Settings);
-			XMLEngineeringAuxiliaryData = GetAuxiliaryData(jobProvider.Settings);
-			GearboxInputData = GetGearboxData(jobProvider.Settings);
+			EngineInputData = GetEngineInputData(jobProvider.VerifyXml);
+			RetarderInputData = GetRetarderInputData(jobProvider.VerifyXml);
+			XMLEngineeringAuxiliaryData = GetAuxiliaryData(jobProvider.VerifyXml);
+			GearboxInputData = GetGearboxData(jobProvider.VerifyXml);
 			TorqueConverterInputData = GearboxInputData.TorqueConverter;
 			PTOTransmissionInputData = GetPTOData();
-			AirdragInputData = GetAirdragInputData(jobProvider.Settings);
+			AirdragInputData = GetAirdragInputData(jobProvider.VerifyXml);
 		}
 
 		public string GetVehicleID
@@ -215,8 +216,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 					Steered = steered != null && XmlConvert.ToBoolean(steered.Value),
 					AxleWeightShare = weightShare == null ? 0 : weightShare.ValueAsDouble,
 					Tyre = new TyreInputData() {
-						TyreTestLoad = tyreTestLoad == null ? null : tyreTestLoad.ValueAsDouble.SI<Newton>(),
-						RollResistanceCoefficient = rollResistance == null ? double.NaN : rollResistance.ValueAsDouble,
+						TyreTestLoad = tyreTestLoad == null ? null : tyreTestLoad.Value.ToDouble().SI<Newton>(),
+						RollResistanceCoefficient = rollResistance == null ? double.NaN : rollResistance.Value.ToDouble(),
 						Dimension = dimension == null ? null : dimension.Value,
 						Inertia = inertia == null ? null : inertia.ValueAsDouble.SI<KilogramSquareMeter>(),
 					}
@@ -291,25 +292,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		#region "FactoryMethods"
 
-		private IAirdragEngineeringInputData GetAirdragInputData(XmlReaderSettings settings)
+		private IAirdragEngineeringInputData GetAirdragInputData(bool verifyXml)
 		{
-			return CreateComponentInput(XMLNames.Component_AirDrag, settings,
+			return CreateComponentInput(XMLNames.Component_AirDrag, verifyXml,
 				(a, b, c, d) => new XMLEngineeringAirdragDataProvider(a, b, c, d));
 		}
 
-		private XMLEngineeringAxlegearDataProvider GetAxleGearInputData(XmlReaderSettings settings)
+		private XMLEngineeringAxlegearDataProvider GetAxleGearInputData(bool verifyXml)
 		{
-			return CreateComponentInput(XMLNames.Component_Axlegear, settings,
+			return CreateComponentInput(XMLNames.Component_Axlegear, verifyXml,
 				(a, b, c, d) => new XMLEngineeringAxlegearDataProvider(a, b, c, d));
 		}
 
-		private XMLEngineeringEngineDataProvider GetEngineInputData(XmlReaderSettings settings)
+		private XMLEngineeringEngineDataProvider GetEngineInputData(bool verifyXml)
 		{
-			return CreateComponentInput(XMLNames.Component_Engine, settings,
+			return CreateComponentInput(XMLNames.Component_Engine, verifyXml,
 				(a, b, c, d) => new XMLEngineeringEngineDataProvider(a, b, c, d));
 		}
 
-		private XMLEngineeringRetarderDataProvider GetRetarderInputData(XmlReaderSettings settings)
+		private XMLEngineeringRetarderDataProvider GetRetarderInputData(bool verifyXml)
 		{
 			if (!RetarderType.IsDedicatedComponent()) {
 				return new XMLEngineeringRetarderDataProvider(InputData, XMLDocument,
@@ -317,25 +318,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 					FSBasePath);
 			}
 
-			return CreateComponentInput(XMLNames.Component_Retarder, settings,
+			return CreateComponentInput(XMLNames.Component_Retarder, verifyXml,
 				(a, b, c, d) => new XMLEngineeringRetarderDataProvider(a, b, c, d));
 		}
 
-		private XMLEngineeringGearboxDataProvider GetGearboxData(XmlReaderSettings settings)
+		private XMLEngineeringGearboxDataProvider GetGearboxData(bool verifyXml)
 		{
-			return CreateComponentInput(XMLNames.Component_Gearbox, settings,
+			return CreateComponentInput(XMLNames.Component_Gearbox, verifyXml,
 				(a, b, c, d) => new XMLEngineeringGearboxDataProvider(a, b, c, d));
 		}
 
-		private XMLEngineeringAuxiliaryDataProvider GetAuxiliaryData(XmlReaderSettings settings)
+		private XMLEngineeringAuxiliaryDataProvider GetAuxiliaryData(bool verifyXml)
 		{
-			return CreateComponentInput(XMLNames.Component_Auxiliaries, settings,
+			return CreateComponentInput(XMLNames.Component_Auxiliaries, verifyXml,
 				(a, b, c, d) => new XMLEngineeringAuxiliaryDataProvider(a, b, c, d));
 		}
 
 
-		private T CreateComponentInput<T>(string componentName, XmlReaderSettings settings,
-			Func<XMLEngineeringInputDataProvider, XPathDocument, string, string, T> creator)
+		private T CreateComponentInput<T>(string componentName, bool verifyXml,
+			Func<XMLEngineeringInputDataProvider, XmlDocument, string, string, T> creator)
 		{
 			if (ElementExists(Helper.Query(XMLNames.Vehicle_Components, componentName))) {
 				return creator(InputData, XMLDocument,
@@ -352,7 +353,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			if (componentNode != null) {
 				try {
 					var componentFile = componentNode.GetAttribute(XMLNames.ExtResource_File_Attr, "");
-					var componentDocument = new XPathDocument(XmlReader.Create(Path.Combine(FSBasePath, componentFile), settings));
+					var componentDocument = new XmlDocument();
+					componentDocument.Load(XmlReader.Create(Path.Combine(FSBasePath, componentFile)));
+					if (verifyXml) {
+						new XMLValidator(componentDocument, null, XMLEngineeringInputDataProvider.ValidationCallBack).ValidateXML(XMLValidator.XmlDocumentType
+							.EngineeringData);
+					}
 					return creator(InputData, componentDocument,
 						Helper.QueryAbs(Helper.NSPrefix(XMLNames.VectoComponentEngineering, Constants.XML.RootNSPrefix), componentName,
 							XMLNames.ComponentDataWrapper),
