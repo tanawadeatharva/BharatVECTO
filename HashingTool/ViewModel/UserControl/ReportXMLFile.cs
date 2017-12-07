@@ -74,7 +74,7 @@ namespace HashingTool.ViewModel.UserControl
 			}
 		}
 
-		private void ReportChanged(object sender, PropertyChangedEventArgs e)
+		protected virtual void ReportChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (sender == _xmlFile && e.PropertyName == GeneralUpdate) {
 				ReadReportData();

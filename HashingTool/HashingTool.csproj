@@ -84,6 +84,7 @@
     <Compile Include="ViewModel\ObservableObject.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
     <Compile Include="ViewModel\HashComponentDataViewModel.cs" />
+    <Compile Include="ViewModel\UserControl\CustomerReportXMLFile.cs" />
     <Compile Include="ViewModel\UserControl\HashedXMLFile.cs" />
     <Compile Include="ViewModel\UserControl\ManufacturerReportXMLFile.cs" />
     <Compile Include="ViewModel\UserControl\ReportXMLFile.cs" />
