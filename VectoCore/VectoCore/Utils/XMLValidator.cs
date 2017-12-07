@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
@@ -46,12 +47,12 @@ namespace TUGraz.VectoCore.Utils
 		private bool _valid;
 		private readonly XmlDocument _doc;
 
-		private static Dictionary<XmlDocumentType, string> schemaFilenames = new Dictionary<XmlDocumentType, string>() {
-			{XmlDocumentType.DeclarationJobData, "VectoInput{0}.xsd" },
-			{XmlDocumentType.DeclarationComponentData, "VectoComponent{0}.xsd" },
-			{XmlDocumentType.EngineeringData, "VectoEngineeringInput{0}.xsd" },
-			{XmlDocumentType.ManufacturerReport, "VectoOutputManufacturer{0}.xsd" },
-			{ XmlDocumentType.CustomerReport , "VectoOutputCustomer{0}.xsd"},
+		private static Dictionary<XmlDocumentType, Tuple<string, string[]> > schemaFilenames = new Dictionary<XmlDocumentType, Tuple<string, string[]>>() {
+			{XmlDocumentType.DeclarationJobData, Tuple.Create("VectoInput{0}.xsd", new [] {"1.0"}) },
+			{XmlDocumentType.DeclarationComponentData, Tuple.Create("VectoComponent{0}.xsd", new [] {"1.0"}) },
+			{XmlDocumentType.EngineeringData, Tuple.Create("VectoEngineeringInput{0}.xsd", new [] {"0.7"}) },
+			{XmlDocumentType.ManufacturerReport, Tuple.Create("VectoOutputManufacturer{0}.xsd", new [] {"0.4"}) },
+			{ XmlDocumentType.CustomerReport , Tuple.Create("VectoOutputCustomer{0}.xsd", new [] {"0.4"})},
 		};
 
 		private XMLValidator(Action<bool> resultaction, Action<XmlSeverityType, ValidationEvent> validationErrorAction)
@@ -108,7 +109,10 @@ namespace TUGraz.VectoCore.Utils
 					continue;
 				}
 				Stream resource;
-				var schemaFile = GetSchemaFilename(entry, string.IsNullOrWhiteSpace(version) ? "" : "."+ version);
+				var schemaFile = GetSchemaFilename(entry,  version);
+				if (schemaFile == null) {
+					continue;
+				}
 				try {
 					resource= RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schemaFile);
 				} catch (Exception e) {
@@ -126,7 +130,8 @@ namespace TUGraz.VectoCore.Utils
 			if (!schemaFilenames.ContainsKey(type)) {
 				throw new Exception(string.Format("Invalid argument {0} - only use single flags", type));
 			}
-			return string.Format(schemaFilenames[type], version);
+			var entry = schemaFilenames[type];
+			return !entry.Item2.Contains(version) ? null : string.Format(entry.Item1, string.IsNullOrWhiteSpace(version) ? "" : "." + version);
 		} 
 
 		[Flags]
