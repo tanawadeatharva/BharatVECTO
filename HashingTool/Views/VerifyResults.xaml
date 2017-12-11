@@ -321,7 +321,7 @@
                                 <Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
                                     <Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ManufacturerReportMatchesReport}" Value="True">
+                                        <DataTrigger Binding="{Binding ManufacturerReportDigestValid}" Value="True">
                                             <Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -337,7 +337,7 @@
                                 <Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
                                     <Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ManufacturerReportMatchesReport}" Value="True">
+                                        <DataTrigger Binding="{Binding ManufacturerReportDigestValid}" Value="True">
                                             <Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
                                         </DataTrigger>
                                     </Style.Triggers>

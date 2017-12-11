@@ -14,6 +14,7 @@ namespace HashingTool.ViewModel.UserControl
 		private string _manufacturerReportDigestValueRead;
 		private bool _manufacturerReportMatchesReport;
 		private string _manufacturerReportDigestValueComputed;
+		private bool _manufacturerReportDigestValid;
 
 		public CustomerReportXMLFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
 			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, contentCheck, hashValidation)
@@ -98,6 +99,18 @@ namespace HashingTool.ViewModel.UserControl
 				RaisePropertyChanged("ManufacturerReportDigestValueComputed");
 			}
 		}
+		
+		public bool ManufacturerReportDigestValid
+		{
+			get { return _manufacturerReportDigestValid; }
+			set {
+				if (_manufacturerReportDigestValid == value) {
+					return;
+				}
+				_manufacturerReportDigestValid = value;
+				RaisePropertyChanged("ManufacturerReportDigestValid");
+			}
+		}
 
 		protected virtual void ManufacturerReportChanged(object sender, PropertyChangedEventArgs e)
 		{
@@ -108,8 +121,8 @@ namespace HashingTool.ViewModel.UserControl
 
 		protected override void ReportChanged(object sender, PropertyChangedEventArgs e)
 		{
+			base.ReportChanged(sender, e);
 			if (sender == _xmlFile && e.PropertyName == GeneralUpdate) {
-				ReadReportData();
 				VerifyManufacturerReport();
 			}
 		}
@@ -155,7 +168,10 @@ namespace HashingTool.ViewModel.UserControl
 			ManufacturerReportDigestValueRead = manufacturerReportDigestValueRead;
 			ManufacturerReportDigestValueComputed = manufacturerReportDigestValueComputed;
 
-			ManufacturerReportMatchesReport = digestMatch;
+			ManufacturerReportMatchesReport = FileIntegrityValid != null && FileIntegrityValid.Value && digestMatch;
+
+			ManufacturerReportDigestValid = digestMatch;
 		}
+
 	}
 }

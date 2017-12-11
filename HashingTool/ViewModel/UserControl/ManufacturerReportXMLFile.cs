@@ -152,7 +152,7 @@ namespace HashingTool.ViewModel.UserControl
 				}
 			}
 
-			ManufacturerReportValid = JobDigestMatchesReport && hasComponentsFromJob && !certificationNumberMismatch.Any() && !digestMismatch.Any();
+			ManufacturerReportValid = FileIntegrityValid != null && FileIntegrityValid.Value && hasComponentsFromJob && !certificationNumberMismatch.Any() && !digestMismatch.Any();
 		}
 
 		public bool ManufacturerReportValid
