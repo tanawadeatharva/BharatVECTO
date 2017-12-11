@@ -60,6 +60,7 @@ namespace HashingTool.ViewModel
 		private bool? _componentDataValid;
 
 		private bool _busy;
+		private DateTime? _date;
 
 		public HashComponentDataViewModel()
 			: base("Hash Component Data", false, HashingHelper.IsComponentFile)
@@ -151,7 +152,7 @@ namespace HashingTool.ViewModel
 				var h = VectoHash.Load(_xmlFile.Document);
 
 				_result = h.AddHash();
-
+				Date = h.GetCertificationDate(h.GetContainigComponents().First(), 0);
 				// validate generated component file
 				using (MemoryStream ms = new MemoryStream()) {
 					using (XmlWriter xw = XmlWriter.Create(ms, new XmlWriterSettings { Indent = true })) {
@@ -196,9 +197,23 @@ namespace HashingTool.ViewModel
 				_xmlFile.LogError(e.Message);
 				SetCanonicalizationMethod(new string[] { });
 				DigestMethod = "";
+				Date = null;
 			} finally {
 				_busy = false;
 				_saveCommand.RaiseCanExecuteChanged();
+			}
+		}
+
+		public DateTime? Date
+		{
+			get { return _date; }
+			set
+			{
+				if (_date == value) {
+					return;
+				}
+				_date = value;
+				RaisePropertyChanged("Date");
 			}
 		}
 	}
