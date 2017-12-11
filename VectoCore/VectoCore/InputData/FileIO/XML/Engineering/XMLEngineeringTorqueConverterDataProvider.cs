@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Xml.XPath;
+using System.Xml;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		ITorqueConverterEngineeringInputData
 	{
 		public XMLEngineeringTorqueConverterDataProvider(XMLEngineeringInputDataProvider jobInputData,
-			XPathDocument xmlDocument,
+			XmlDocument xmlDocument,
 			string xBasePath, string fsBasePath)
 			: base(jobInputData, xmlDocument, xBasePath, fsBasePath) {}
 

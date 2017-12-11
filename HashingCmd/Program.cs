@@ -57,7 +57,7 @@ hashingcmd.exe
 -h:    print help
 -v:    verify hashed file
 -s:    create hashed file
--x:    validate generated XML against VECTO XML schema
+-x:    validate XML file against VECTO XML schema
 -c:    compute hash and write to stdout
 -r:    read hash from file and write to stdout
 ";
@@ -70,7 +70,7 @@ hashingcmd.exe
 		};
 
 		static bool _validateXML;
-		private static bool xmlValid = true;
+		
 
 		static int Main(string[] args)
 		{
@@ -158,68 +158,36 @@ hashingcmd.exe
 			writer.Close();
 
 			if (_validateXML) {
-				ValidateXML(destination);
+				new XMLValidator(XmlReader.Create(destination), null, ValidationCallBack).ValidateXML(XMLValidator.XmlDocumentType
+					.DeclarationComponentData);
+				WriteLine("Valid", ConsoleColor.Green);
+				 
 			}
 		}
 
-		private static void ValidateXML(string filename)
+		private static void ValidationCallBack(XmlSeverityType severity, ValidationEvent evt)
 		{
-			try {
-				var settings = new XmlReaderSettings {
-					ValidationType = ValidationType.Schema,
-					ValidationFlags = //XmlSchemaValidationFlags.ProcessInlineSchema |
-						//XmlSchemaValidationFlags.ProcessSchemaLocation |
-						XmlSchemaValidationFlags.ReportValidationWarnings
-				};
-				settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
-				settings.Schemas.Add(GetXMLSchema(""));
-
-				var vreader = XmlReader.Create(filename, settings);
-				var doc = new XmlDocument();
-				doc.Load(vreader);
-				doc.Validate(ValidationCallBack);
-				//while (vreader.Read()) {
-				//	Console.WriteLine(vreader.Value);
-				//}
-				if (xmlValid) {
-					WriteLine("Valid", ConsoleColor.Green);
-				}
-			} catch (Exception e) {
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine("Failed to validate hashed XML file!");
-				Console.Error.WriteLine(e.Message);
-				if (e.InnerException != null) {
-					Console.Error.WriteLine(e.InnerException.Message);
-				}
-				Console.ResetColor();
-			}
-		}
-
-		private static void ValidationCallBack(object sender, ValidationEventArgs args)
-		{
-			xmlValid = false;
-			if (args.Severity == XmlSeverityType.Error) {
+			var args = evt.ValidationEventArgs;
+			if (severity == XmlSeverityType.Error) {
 				throw new Exception(string.Format("Validation error: {0}" + Environment.NewLine +
-												"Line: {1}", args.Message, args.Exception.LineNumber));
+										"Line: {1}", args.Message, args.Exception.LineNumber), evt.Exception);
 			} else {
-				Console.Error.WriteLine(string.Format("Validation warning: {0}" + Environment.NewLine +
-													"Line: {1}", args.Message, args.Exception.LineNumber));
+				Console.Error.WriteLine("Validation warning: {0}" + Environment.NewLine +
+										"Line: {1}", args.Message, args.Exception.LineNumber);
 			}
 		}
 
-		private static XmlSchemaSet GetXMLSchema(string version)
+		private static void ValidateFile(string filename)
 		{
-			var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, "VectoComponent.xsd");
-			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
-			var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
-			xset.Add(XmlSchema.Read(reader, null));
-			xset.Compile();
-			return xset;
+			new XMLValidator(XmlReader.Create(filename),null, ValidationCallBack).ValidateXML(
+				XMLValidator.XmlDocumentType.DeclarationJobData | XMLValidator.XmlDocumentType.CustomerReport |
+				XMLValidator.XmlDocumentType.ManufacturerReport | XMLValidator.XmlDocumentType.DeclarationComponentData);
 		}
-
+		
 		private static void ReadHashAction(string filename, VectoHash h)
 		{
 			WriteLine("reading hashes");
+			ValidateFile(filename);
 			var components = h.GetContainigComponents().GroupBy(s => s)
 				.Select(g => new { Entry = g.Key, Count = g.Count() });
 
@@ -237,6 +205,7 @@ hashingcmd.exe
 		private static void ComputeHashAction(string filename, VectoHash h)
 		{
 			WriteLine("computing hashes");
+			ValidateFile(filename);
 			var components = h.GetContainigComponents();
 
 			if (components.Count > 1) {
@@ -262,7 +231,7 @@ hashingcmd.exe
 		private static void VerifyHashAction(string filename, VectoHash h)
 		{
 			WriteLine("validating hashes");
-
+			ValidateFile(filename);
 			var components = h.GetContainigComponents().GroupBy(s => s)
 				.Select(g => new { Entry = g.Key, Count = g.Count() });
 			foreach (var component in components) {

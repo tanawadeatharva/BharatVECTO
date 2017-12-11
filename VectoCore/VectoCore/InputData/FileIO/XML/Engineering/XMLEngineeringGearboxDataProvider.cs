@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		IGearboxEngineeringInputData
 	{
 		public XMLEngineeringGearboxDataProvider(XMLEngineeringInputDataProvider xmlEngineeringJobInputDataProvider,
-			XPathDocument gbxDocument, string xmlBasePath, string fsBasePath)
+			XmlDocument gbxDocument, string xmlBasePath, string fsBasePath)
 			: base(xmlEngineeringJobInputDataProvider, gbxDocument, xmlBasePath, fsBasePath) {}
 
 		public GearboxType Type

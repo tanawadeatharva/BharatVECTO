@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoComponentEngineering xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaVersion="0.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 ../XSD/VectoEngineeringInput.xsd">
+<tns:VectoComponentEngineering xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaVersion="0.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 ../XSD/VectoEngineeringInput.xsd">
 	<Retarder>
 		<Data id="RET-Shai9imi">
 			<Manufacturer>Generic Retarder Vendor</Manufacturer>

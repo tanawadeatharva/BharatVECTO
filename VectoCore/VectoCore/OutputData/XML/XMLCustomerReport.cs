@@ -50,6 +50,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLCustomerReport
 	{
+		public const string CURRENT_SCHEMA_VERSION = "0.4";
+
 		protected readonly XElement VehiclePart;
 
 		protected XElement InputDataIntegrity;
@@ -63,7 +65,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XMLCustomerReport()
 		{
 			di = "http://www.w3.org/2000/09/xmldsig#";
-			tns = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.4";
+			tns = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v" + CURRENT_SCHEMA_VERSION;
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			Results = new XElement(tns + "Results");
 		}
@@ -164,12 +166,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
 			retVal.Add(new XElement(tns + XMLNames.VectoCustomerReport,
-				new XAttribute("schemaVersion", "0.4"),
+				new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
 				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 				new XAttribute("xmlns", tns),
 				new XAttribute(XNamespace.Xmlns + "di", di),
 				new XAttribute(xsi + "schemaLocation",
-					string.Format("{0} {1}VectoOutputCustomer.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl)),
+					string.Format("{0} {1}VectoOutputCustomer.{2}.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl, CURRENT_SCHEMA_VERSION)),
 				new XElement(tns + "Data",
 					vehicle,
 					new XElement(tns + "ResultDataSignature", resultSignature),

@@ -56,6 +56,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			tns = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
 			rootNamespace = "urn:tugraz:ivt:VectoAPI:DeclarationInput:v1.0";
 			componentNamespace = "urn:tugraz:ivt:VectoAPI:DeclarationComponent:v1.0";
+			SchemaVersion = "1.0";
 		}
 
 		public XDocument GenerateVectoJob(IDeclarationInputDataProvider data)

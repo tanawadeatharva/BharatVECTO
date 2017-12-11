@@ -46,28 +46,30 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 	{
 		public readonly string FileName;
 
-		internal XPathDocument Document;
+		internal XmlDocument Document;
 
 		protected internal XMLEngineeringJobInputDataProvider XMLEngineeringJobData;
 
 		protected internal XMLEngineeringVehicleDataProvider VehicleData;
 		protected internal XMLEngineeringDriverDataProvider XMLEngineeringDriverData;
 
-		public XmlReaderSettings Settings { get; private set; }
+		public bool VerifyXml { get; protected set; }
 
 		public XMLEngineeringInputDataProvider(string filename, bool verifyXml)
 		{
+			VerifyXml = verifyXml;
 			FileName = filename;
-			ReadXMLDocument(File.OpenRead(filename), verifyXml);
+			ReadXMLDocument(File.OpenRead(filename));
 
-			InitializeComponentDataProvider(verifyXml);
+			InitializeComponentDataProvider();
 		}
 
 
 		public XMLEngineeringInputDataProvider(Stream inputData, bool verifyXml)
 		{
 			FileName = ".";
-			ReadXMLDocument(inputData, verifyXml);
+			VerifyXml = verifyXml;
+			ReadXMLDocument(inputData);
 
 			var nav = Document.CreateNavigator();
 			var manager = new XmlNamespaceManager(nav.NameTable);
@@ -82,43 +84,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 				throw new VectoException("XML input data with file references can not be read via stream!");
 			}
 
-			InitializeComponentDataProvider(verifyXml);
+			InitializeComponentDataProvider();
 		}
 
 
-		private void ReadXMLDocument(Stream inputData, bool verifyXml)
+		private void ReadXMLDocument(Stream inputData)
 		{
-			XmlReaderSettings settings = null;
-			if (verifyXml) {
-				settings = new XmlReaderSettings {
-					ValidationType = ValidationType.Schema,
-					ValidationFlags = XmlSchemaValidationFlags.ProcessInlineSchema |
-									//XmlSchemaValidationFlags.ProcessSchemaLocation |
-									XmlSchemaValidationFlags.ReportValidationWarnings
-				};
-				settings.ValidationEventHandler += ValidationCallBack;
-				settings.Schemas.Add(GetXMLSchema(""));
+
+			var xmldoc = new XmlDocument();
+			xmldoc.Load(inputData);
+			if (VerifyXml) {
+				new XMLValidator(xmldoc, null, ValidationCallBack).ValidateXML(XMLValidator.XmlDocumentType.EngineeringData);
 			}
-			try {
-				Document = new XPathDocument(XmlReader.Create(inputData, settings));
-			} catch (XmlSchemaValidationException validationException) {
-				throw new VectoException("Validation of input data failed", validationException);
-			}
+			Document = xmldoc;
 		}
 
-		private void InitializeComponentDataProvider(bool verifyXml)
+		private void InitializeComponentDataProvider()
 		{
-			Settings = null;
-			if (verifyXml) {
-				Settings = new XmlReaderSettings {
-					ValidationType = ValidationType.Schema,
-					ValidationFlags = XmlSchemaValidationFlags.ProcessInlineSchema |
-									//XmlSchemaValidationFlags.ProcessSchemaLocation |
-									XmlSchemaValidationFlags.ReportValidationWarnings
-				};
-				Settings.Schemas.Add(GetXMLSchema(""));
-			}
-
 			var helper = new XPathHelper(ExecutionMode.Engineering);
 			XMLEngineeringJobData = new XMLEngineeringJobInputDataProvider(this, Document,
 				helper.QueryAbs(helper.NSPrefix(XMLNames.VectoInputEngineering, Constants.XML.RootNSPrefix)),
@@ -130,19 +112,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 						XMLNames.ComponentDataWrapper), Path.GetDirectoryName(Path.GetFullPath(FileName)));
 				return;
 			}
-			ReadVehicle(Settings);
+			ReadVehicle();
 
 			XMLEngineeringDriverData = XMLEngineeringJobData.GetDriverData();
 		}
 
-		private static void ValidationCallBack(object sender, ValidationEventArgs args)
+		internal static void ValidationCallBack(XmlSeverityType severity, ValidationEvent evt)
 		{
-			if (args.Severity == XmlSeverityType.Error) {
-				throw new VectoException("Validation error: {0}", args.Message);
+			if (severity == XmlSeverityType.Error) {
+				throw new VectoException("Validation error: {0}", evt.ValidationEventArgs.Message);
 			}
 		}
 
-		private void ReadVehicle(XmlReaderSettings settings)
+		private void ReadVehicle()
 		{
 			var helper = new XPathHelper(ExecutionMode.Engineering);
 
@@ -166,9 +148,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			if (extVehicle != null) {
 				try {
 					var vehicleFile = extVehicle.GetAttribute(XMLNames.ExtResource_File_Attr, "");
-					var vehicleDocument = new XPathDocument(
-						XmlReader.Create(Path.Combine(Path.GetDirectoryName(FileName) ?? "./", vehicleFile),
-							settings));
+					var vehicleDocument = new XmlDocument();
+					vehicleDocument.Load(XmlReader.Create(Path.Combine(Path.GetDirectoryName(FileName) ?? "./", vehicleFile)));
+					if (VerifyXml) {
+						new XMLValidator(vehicleDocument, null, ValidationCallBack).ValidateXML(XMLValidator.XmlDocumentType
+							.EngineeringData);
+					}
 					var vehicleCompPath =
 						helper.QueryAbs(
 							helper.NSPrefix("VectoComponentEngineering", Constants.XML.RootNSPrefix),

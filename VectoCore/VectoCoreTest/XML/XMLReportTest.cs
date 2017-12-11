@@ -73,44 +73,11 @@ namespace TUGraz.VectoCore.Tests.XML
 			var customerRecord = fileWriter.XMLCustomerReportName;
 			var manufacturerRecord = fileWriter.XMLFullReportName;
 
-			Assert.IsTrue(DoValidation(XmlReader.Create(customerRecord)));
-			Assert.IsTrue(DoValidation(XmlReader.Create(manufacturerRecord)));
-		}
+			var validator1 = new XMLValidator(XmlReader.Create(customerRecord));
+			Assert.IsTrue(validator1.ValidateXML(XMLValidator.XmlDocumentType.CustomerReport));
 
-		private bool DoValidation(XmlReader hashedComponent)
-		{
-			var settings = new XmlReaderSettings {
-				ValidationType = ValidationType.Schema,
-				ValidationFlags = //XmlSchemaValidationFlags.ProcessInlineSchema |
-					//XmlSchemaValidationFlags.ProcessSchemaLocation |
-					XmlSchemaValidationFlags.ReportValidationWarnings
-			};
-			//settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
-			settings.Schemas.Add(GetXMLSchema(""));
-
-			var vreader = XmlReader.Create(hashedComponent, settings);
-			var doc = new XmlDocument();
-			doc.Load(vreader);
-			doc.Validate(ValidationCallBack);
-			return true;
-		}
-
-		private void ValidationCallBack(object sender, ValidationEventArgs args)
-		{
-			throw new Exception("Validation failed");
-		}
-
-		private static XmlSchemaSet GetXMLSchema(string version)
-		{
-			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
-			foreach (var schema in new[] { "VectoComponent.xsd", "VectoInput.xsd", "VectoOutputManufacturer.xsd", "VectoOutputCustomer.xsd" }) {
-				var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schema);
-
-				var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
-				xset.Add(XmlSchema.Read(reader, null));
-			}
-			xset.Compile();
-			return xset;
+			var validator2 = new XMLValidator(XmlReader.Create(manufacturerRecord));
+			Assert.IsTrue(validator2.ValidateXML(XMLValidator.XmlDocumentType.ManufacturerReport));
 		}
 	}
 }
