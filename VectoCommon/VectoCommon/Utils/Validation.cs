@@ -395,7 +395,7 @@ namespace TUGraz.VectoCommon.Utils
 			var si = value as SI;
 
 			if (si != null) {
-				_unit = si.GetUnitString();
+				_unit = si.UnitString;
 			}
 			var validationService =
 				validationContext.GetService(typeof(VectoValidationModeServiceContainer)) as VectoValidationModeServiceContainer;

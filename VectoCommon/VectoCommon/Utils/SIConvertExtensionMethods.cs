@@ -77,7 +77,7 @@ namespace TUGraz.VectoCommon.Utils
 
         public static implicit operator ConvertedSI(SI self)
         {
-            return self == null ? null : new ConvertedSI(self.Value(), self.GetUnitString());
+            return self == null ? null : new ConvertedSI(self.Value(), self.UnitString);
         }
 
         public override string ToString()

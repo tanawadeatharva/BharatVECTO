@@ -104,7 +104,9 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
         private Newton(double val) : base(val, Units) { }
 
-        [DebuggerHidden]
+		public override string UnitString { get { return "N"; } }
+
+		[DebuggerHidden]
         public static NewtonMeter operator *(Newton newton, Meter meter)
         {
             return SIBase<NewtonMeter>.Create(newton.Val * meter.Value());
@@ -224,6 +226,8 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
         private KilogramPerMeter(double val) : base(val, Units) { }
 
+		public override string UnitString { get { return "kg/m"; } }
+
 		public static KilogramPerMeterMass operator /(KilogramPerMeter kpm, Kilogram kg)
 		{
 			return SIBase<KilogramPerMeterMass>.Create(kpm.Val / kg.Value());
@@ -243,6 +247,8 @@ namespace TUGraz.VectoCommon.Utils
         private static readonly int[] Units = { 0, 3, -1, 0, 0, 0, 0 };
 
         private LiterPerSecond(double val) : base(val, 0.001, Units) { }
+
+		public override string UnitString { get { return "l/s"; } }
 
 		[DebuggerHidden]
 		public static Liter operator *(LiterPerSecond l, Second second)
@@ -329,7 +335,9 @@ namespace TUGraz.VectoCommon.Utils
         //[DebuggerHidden]
         private Liter(double val) : base(val , 0.001, Units) { }
 
-        public static Kilogram operator *(Liter liter, KilogramPerCubicMeter kilogramPerCubicMeter)
+		public override string UnitString { get { return "l"; } }
+
+		public static Kilogram operator *(Liter liter, KilogramPerCubicMeter kilogramPerCubicMeter)
         {
             return SIBase<Kilogram>.Create(liter.AsBasicUnit * kilogramPerCubicMeter.Value());
         }
@@ -345,7 +353,9 @@ namespace TUGraz.VectoCommon.Utils
         //[DebuggerHidden]
         private NormLiter(double val) : base(val , 0.001, Units) { }
 
-        public static NormLiterPerSecond operator /(NormLiter nl, Second s)
+		public override string UnitString { get { return "Nl"; } }
+
+		public static NormLiterPerSecond operator /(NormLiter nl, Second s)
         {
             return SIBase<NormLiterPerSecond>.Create(nl.Val / s.Value());
         }
@@ -361,7 +371,9 @@ namespace TUGraz.VectoCommon.Utils
 		//[DebuggerHidden]
 		private NormLiterPerSecond(double val) : base(val, 0.001, Units) { }
 
-        public static NormLiter operator *(NormLiterPerSecond nips, Second s)
+		public override string UnitString { get { return "Nl/s"; } }
+
+		public static NormLiter operator *(NormLiterPerSecond nips, Second s)
         {
             return SIBase<NormLiter>.Create(nips.Val * s.Value());
         }
@@ -387,7 +399,7 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
         private KilogramPerSecond(double value) : base(value, Units) { }
 
-        [DebuggerHidden]
+		[DebuggerHidden]
         public static Kilogram operator *(KilogramPerSecond kilogramPerSecond, Second second)
         {
             return SIBase<Kilogram>.Create(kilogramPerSecond.Val * second.Value());
@@ -435,7 +447,7 @@ namespace TUGraz.VectoCommon.Utils
     }
 
     /// <summary>
-    /// SI Class for Kilogram Square Meter [kgm^2].
+    /// SI Class for Kilogram per Cubic Meter [kg/m^3].
     /// </summary>
     public class KilogramPerCubicMeter : SIBase<KilogramPerCubicMeter>
     {
@@ -444,7 +456,9 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
         private KilogramPerCubicMeter(double value) : base(value, Units) { }
 
-        [DebuggerHidden]
+		public override string UnitString { get { return "kg/m^3"; } }
+
+		[DebuggerHidden]
         public static Kilogram operator *(KilogramPerCubicMeter kilogramPerCubicMeter, CubicMeter cubicMeter)
         {
             return SIBase<Kilogram>.Create(kilogramPerCubicMeter.Val * cubicMeter.Value());
@@ -462,7 +476,9 @@ namespace TUGraz.VectoCommon.Utils
 
         [DebuggerHidden]
         private KilogramPerWattSecond(double val) : base(val, Units) { }
-    }
+
+		public override string UnitString { get { return "kg/Ws"; } }
+	}
 
     /// <summary>
     /// SI Class for watt second [Ws].
@@ -475,7 +491,9 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
         private WattSecond(double val) : base(val, Units) { }
 
-        [DebuggerHidden]
+		public override string UnitString { get { return "Ws"; } }
+
+		[DebuggerHidden]
         public static Watt operator /(WattSecond wattSecond, Second second)
         {
             return SIBase<Watt>.Create(wattSecond.Val / second.Value());
@@ -492,15 +510,17 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
         private Watt(double val) : base(val, Units) { }
 
-        /// <summary>
-        /// Implements the operator /.
-        /// </summary>
-        /// <param name="watt">The watt.</param>
-        /// <param name="newtonMeter">The newton meter.</param>
-        /// <returns>
-        /// The result of the operator.
-        /// </returns>
-        [DebuggerHidden]
+		public override string UnitString { get { return "W"; } }
+
+		/// <summary>
+		/// Implements the operator /.
+		/// </summary>
+		/// <param name="watt">The watt.</param>
+		/// <param name="newtonMeter">The newton meter.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
         public static PerSecond operator /(Watt watt, NewtonMeter newtonMeter)
         {
             return SIBase<PerSecond>.Create(watt.Val / newtonMeter.Value());
@@ -550,6 +570,8 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
         private Joule(double val) : base(val, Units) { }
 
+		public override string UnitString { get { return "J"; } }
+
         public static implicit operator Joule(WattSecond self)
         {
             return Create(self.Value());
@@ -572,9 +594,7 @@ namespace TUGraz.VectoCommon.Utils
     }
 
     /// <summary>
-    /// SI Class for Watt [W].
-    /// J = Ws
-    /// W = kgm^2/s^3
+    /// SI Class for Joule / kg.
     /// </summary>
     public class JoulePerKilogramm : SIBase<JoulePerKilogramm>
     {
@@ -582,7 +602,9 @@ namespace TUGraz.VectoCommon.Utils
 
         private JoulePerKilogramm(double val) : base(val, Units) { }
 
-        public static Joule operator *(Kilogram kg, JoulePerKilogramm jpg)
+		public override string UnitString { get { return "J/kg"; } }
+
+		public static Joule operator *(Kilogram kg, JoulePerKilogramm jpg)
         {
             return SIBase<Joule>.Create(kg.Value() * jpg.Val);
         }
@@ -599,7 +621,9 @@ namespace TUGraz.VectoCommon.Utils
 
         [DebuggerHidden]
         private JoulePerMeter(double val) : base(val, Units) { }
-    }
+
+		public override string UnitString { get { return "J/m"; } }
+	}
 
     /// <summary>
     /// SI Class for one per second [1/s].
@@ -706,7 +730,9 @@ namespace TUGraz.VectoCommon.Utils
         [DebuggerHidden]
         private NewtonMeter(double val) : base(val, Units) { }
 
-        [DebuggerHidden]
+		public override string UnitString { get { return "Nm"; } }
+
+		[DebuggerHidden]
         public static Watt operator *(NewtonMeter newtonMeter, PerSecond perSecond)
         {
             return SIBase<Watt>.Create(newtonMeter.Val * perSecond.Value());
@@ -757,7 +783,9 @@ namespace TUGraz.VectoCommon.Utils
     {
         private static readonly int[] Units = { 1, 2, -1, 0, 0, 0, 0 };
         private NewtonMeterSecond(double val) : base(val, Units) { }
-    }
+
+		public override string UnitString { get { return "Nms"; } }
+	}
 
     /// <summary>
     /// SI Class for Amperer [A].
@@ -792,7 +820,9 @@ namespace TUGraz.VectoCommon.Utils
         private static readonly int[] Units = { 1, 2, -2, -1, 0, 0, 0 };
         private Volt(double val) : base(val, Units) { }
 
-        public static Watt operator *(Volt volt, Ampere ampere)
+		public override string UnitString { get { return "V"; } }
+
+		public static Watt operator *(Volt volt, Ampere ampere)
         {
             return SIBase<Watt>.Create(volt.Val * ampere.Value());
         }
@@ -807,6 +837,8 @@ namespace TUGraz.VectoCommon.Utils
 	{
 		private static readonly int[] Units = { 0, 2, 0, 0, 0, 0, 0 };
 		private VolumePerMeter(double val) : base(val, Units) { }
+
+		public override string UnitString { get { return "m^3/m"; } }
 
 		public static VolumePerMeterMass operator /(VolumePerMeter vpm, Kilogram kg)
 		{
@@ -825,6 +857,8 @@ namespace TUGraz.VectoCommon.Utils
 		private static readonly int[] Units = { -1, 2, 0, 0, 0, 0, 0 };
 
 		private VolumePerMeterMass(double val) : base (val, Units) { }
+
+		public override string UnitString { get { return "m^3/kgm"; } }
 	}
 
 	public class VolumePerMeterVolume : SIBase<VolumePerMeterVolume>
@@ -832,6 +866,8 @@ namespace TUGraz.VectoCommon.Utils
 		private static readonly int[] Units = { 0, -1, 0, 0, 0, 0, 0 };
 
 		private VolumePerMeterVolume(double val) : base (val, Units) { }
+
+		public override string UnitString { get { return "m^3/kgm^3"; } }
 	}
 
 	public class KilogramPerMeterCubicMeter : SIBase<KilogramPerMeterCubicMeter>
@@ -839,13 +875,18 @@ namespace TUGraz.VectoCommon.Utils
 		private static readonly int[] Units = { 1, -4, 0, 0, 0, 0, 0 };
 
 		private KilogramPerMeterCubicMeter(double val) : base(val, Units) { }
+
+		public override string UnitString { get { return "kg/(m m^3)"; } }
 	}
+
 
 	public class KilogramPerMeterMass : SIBase<KilogramPerMeterMass>
 	{
 		private static readonly int[] Units = { 0, -1, 0, 0, 0, 0, 0 };
 
 		private KilogramPerMeterMass(double val) : base(val, Units) { }
+
+		public override string UnitString { get { return "kg/(m kg)"; } }
 	}
 
 	public class SpecificFuelConsumption : SIBase<SpecificFuelConsumption>
@@ -1060,7 +1101,7 @@ namespace TUGraz.VectoCommon.Utils
     /// <remarks>
     /// Usage: new SI(1.0).Newton.Meter, new SI(2.3).Rounds.Per.Minute
     /// </remarks>
-    [DebuggerDisplay("{Val}")]
+    [DebuggerDisplay("{Val} [{UnitString}]")]
     public class SI : IComparable
     {
         /// <summary>
@@ -1232,7 +1273,7 @@ namespace TUGraz.VectoCommon.Utils
                 }
             } catch (DivideByZeroException ex) {
                 throw new VectoException(
-                    string.Format("Can not compute division by zero ([{0}] / 0[{1}])", si1.GetUnitString(), si2.GetUnitString()), ex);
+                    string.Format("Can not compute division by zero ([{0}] / 0[{1}])", si1.UnitString, si2.UnitString), ex);
             }
 
             var unitArray = SIUtils.CombineUnits(si1._units, SIUtils.MultiplyUnits(si2._units, -1));
@@ -1244,7 +1285,7 @@ namespace TUGraz.VectoCommon.Utils
         public static SI operator /(SI si1, double d)
         {
             if (d.IsEqual(0)) {
-                throw new VectoException(string.Format("Can not compute division by zero ([{0}] / 0)", si1.GetUnitString()), new DivideByZeroException());
+                throw new VectoException(string.Format("Can not compute division by zero ([{0}] / 0)", si1.UnitString), new DivideByZeroException());
             }
 
             return new SI(si1.Val / d, si1);
@@ -1254,7 +1295,7 @@ namespace TUGraz.VectoCommon.Utils
         public static SI operator /(double d, SI si1)
         {
             if (si1.IsEqual(0)) {
-                throw new VectoException(string.Format("Can not compute division by zero (x / 0[{0}])", si1.GetUnitString()),
+                throw new VectoException(string.Format("Can not compute division by zero (x / 0[{0}])", si1.UnitString),
                     new DivideByZeroException());
             }
 
@@ -1376,11 +1417,11 @@ namespace TUGraz.VectoCommon.Utils
         /// <summary>
         ///     Returns the Unit Part of the SI Unit Expression.
         /// </summary>
-        public string GetUnitString(int[] units = null)
+        public static string GetUnitString(int[] units = null)
         {
             if (units == null) {
-                units = _units;
-            }
+				return "";
+			}
             return Unit.GetUnitString(units);
         }
 
@@ -1389,13 +1430,18 @@ namespace TUGraz.VectoCommon.Utils
             return ToString(null);
         }
 
+		public virtual string UnitString
+		{
+			get { return GetUnitString(_units); }
+		}
+
         private string ToString(string format)
         {
             if (string.IsNullOrEmpty(format)) {
                 format = "F4";
             }
 
-            return string.Format(CultureInfo.InvariantCulture, "{0:" + format + "} [{2}]", Val, format, GetUnitString());
+            return string.Format(CultureInfo.InvariantCulture, "{0:" + format + "} [{2}]", Val, format, UnitString);
         }
 
         #endregion
@@ -1675,7 +1721,7 @@ namespace TUGraz.VectoCommon.Utils
 
             if (showUnit.Value) {
                 return (Val * outputFactor.Value).ToString("F" + decimals.Value, CultureInfo.InvariantCulture) + " [" +
-                       GetUnitString() + "]";
+                       UnitString + "]";
             }
 
             return (Val * outputFactor.Value).ToString("F" + decimals.Value, CultureInfo.InvariantCulture);

@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 					Assert.AreEqual(expectedVal, actualVal);
 				} else if (propertyType == typeof(SI)) {
 					Assert.AreEqual((expectedVal as SI).Value(), (actualVal as SI).Value());
-					Assert.AreEqual((expectedVal as SI).GetUnitString(), (actualVal as SI).GetUnitString());
+					Assert.AreEqual((expectedVal as SI).UnitString, (actualVal as SI).UnitString);
 				} else if (expectedVal is IEnumerable<object>) {
 					Assert.IsTrue(actualVal is IList);
 					var expectedEnumerable = (expectedVal as IEnumerable<object>).ToArray();

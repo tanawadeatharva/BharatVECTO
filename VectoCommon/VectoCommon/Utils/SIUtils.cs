@@ -102,7 +102,9 @@ namespace TUGraz.VectoCommon.Utils
 				}
 			}
 			string result;
-
+			if (numerator == "" && denominator == "") {
+				return "-";
+			}
 			if (numerator == "") {
 				if (denominator == "") {
 					result = "-";
