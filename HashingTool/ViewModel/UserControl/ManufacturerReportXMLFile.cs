@@ -103,7 +103,6 @@ namespace HashingTool.ViewModel.UserControl
 					if (entry.Component.StartsWith("Axle ")) {
 						entry.Component = entry.Component.Replace("Axle", "Tyre");
 						entry.CertificationNumber = ReadElementValue(node, XMLNames.Report_Tyre_TyreCertificationNumber);
-						entry.DigestValue = "Not Available";
 					} else {
 						entry.CertificationNumber = ReadElementValue(node, XMLNames.Report_Component_CertificationNumber) ??
 													ReadElementValue(node, XMLNames.Report_Component_CertificationMethod);
@@ -116,9 +115,7 @@ namespace HashingTool.ViewModel.UserControl
 					if (!jobComponent.Any()) {
 						continue;
 					}
-					entry.DigestValueMatchesJobComponent = entry.Component.StartsWith("Tyre ")
-						? (bool?)null
-						: (jobComponent.First().DigestValueComputed == entry.DigestValue);
+					entry.DigestValueMatchesJobComponent = jobComponent.First().DigestValueComputed == entry.DigestValue;
 					entry.DigestValueExpected = jobComponent.First().DigestValueComputed;
 
 					if (entry.CertificationMethod == CertificationMethod.StandardValues.ToXMLFormat()) {
@@ -134,9 +131,7 @@ namespace HashingTool.ViewModel.UserControl
 			var certificationNumberMismatch =
 				componentData.Where(
 					x => x.CertificationNumberMatchesJobComponent != null && !x.CertificationNumberMatchesJobComponent.Value).ToArray();
-			var digestMismatch =
-				componentData.Where(x => !x.Component.StartsWith("Tyre "))
-					.Where(x => x.DigestValueMatchesJobComponent == null || !x.DigestValueMatchesJobComponent.Value).ToArray();
+			var digestMismatch = componentData.Where(x => x.DigestValueMatchesJobComponent == null || !x.DigestValueMatchesJobComponent.Value).ToArray();
 			if (jobComponents.Any()) {
 				foreach (var entry in certificationNumberMismatch) {
 					_validationErrors.Add(
