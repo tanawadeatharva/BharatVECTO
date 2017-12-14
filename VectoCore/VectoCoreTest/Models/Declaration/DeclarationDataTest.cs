@@ -341,7 +341,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase("Belt driven or driven via transm. - On/off clutch", new[] { 1089, 1144, 1033, 1033, 1678 }),
 		TestCase("Hydraulic driven - Variable displacement pump", new[] { 938, 1155, 832, 917, 1872 }),
 		TestCase("Hydraulic driven - Constant displacement pump", new[] { 1200, 1400, 1000, 1100, 2300 }),
-		TestCase("Hydraulic driven - Electronically controlled", new[] { 700, 800, 600, 600, 1400 }),]
+		TestCase("Electrically driven - Electronically controlled", new[] {700, 800, 600, 600, 1400})]
+
 		public void AuxFanTechTest(string technology, int[] expected)
 		{
 			for (var i = 0; i < _missions.Length; i++) {
