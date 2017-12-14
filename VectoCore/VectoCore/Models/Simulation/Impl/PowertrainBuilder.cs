@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             }
 
             var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
-            var gearbox = new CycleGearbox(container, data);
+            var gearbox = new VTPGearbox(container, data);
 
             // VTPCycle --> AxleGear --> Clutch --> Engine <-- Aux
             var powertrain = new VTPCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, data.VehicleData,

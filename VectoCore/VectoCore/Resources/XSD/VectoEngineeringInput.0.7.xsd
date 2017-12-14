@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2016 rel. 2 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:vengdef="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" targetNamespace="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.7" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" schemaLocation="VectoEngineeringDefinitions.0.7.xsd"/>
+	<xs:element name="VectoComponentEngineering" type="vengdef:VectoComponentEngineeringType">
+		<xs:annotation>
+			<xs:documentation>Root Node Engineering Component Data</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="VectoInputEngineering" type="vengdef:VectoJobEngineeringType">
+		<xs:annotation>
+			<xs:documentation>Root Node Engineering Job</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

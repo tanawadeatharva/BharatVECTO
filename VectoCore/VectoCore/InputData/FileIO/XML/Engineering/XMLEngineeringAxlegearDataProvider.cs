@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Xml.XPath;
+using System.Xml;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 	public class XMLEngineeringAxlegearDataProvider : AbstractEngineeringXMLComponentDataProvider, IAxleGearInputData
 	{
 		public XMLEngineeringAxlegearDataProvider(XMLEngineeringInputDataProvider xmlEngineeringJobInputDataProvider,
-			XPathDocument axlegearDocument, string xmlBasePath, string fsBasePath)
+			XmlDocument axlegearDocument, string xmlBasePath, string fsBasePath)
 			: base(xmlEngineeringJobInputDataProvider, axlegearDocument, xmlBasePath, fsBasePath) {}
 
 		public double Ratio

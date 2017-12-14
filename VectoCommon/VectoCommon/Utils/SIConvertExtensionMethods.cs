@@ -77,7 +77,7 @@ namespace TUGraz.VectoCommon.Utils
 
         public static implicit operator ConvertedSI(SI self)
         {
-            return self == null ? null : new ConvertedSI(self.Value(), self.GetUnitString());
+            return self == null ? null : new ConvertedSI(self.Value(), self.UnitString);
         }
 
         public override string ToString()
@@ -128,7 +128,13 @@ namespace TUGraz.VectoCommon.Utils
             return value == null ? null : new ConvertedSI(value.Value() * Kilo * Kilo, "g/km");
         }
 
-        public static ConvertedSI ConvertToLiterPer100Kilometer(this VolumePerMeter value)
+		public static ConvertedSI ConvertToGramPerKiloWattHour(this SpecificFuelConsumption value)
+		{
+			return new ConvertedSI(value.Value() * 3600e6, "g/kWh");
+		}
+
+
+		public static ConvertedSI ConvertToLiterPer100Kilometer(this VolumePerMeter value)
         {
             return value == null ? null : new ConvertedSI(value.Value() * (10*10*10) * (100*1000), "l/100km");
         }

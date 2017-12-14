@@ -46,7 +46,7 @@ namespace HashingTool.ViewModel
 	public class VerifyResultDataViewModel : ObservableObject, IMainView
 	{
 		private readonly VectoJobFile _jobFile;
-		private readonly ReportXMLFile _customerReport;
+		private readonly CustomerReportXMLFile _customerReport;
 		private readonly ManufacturerReportXMLFile _manufacturerReport;
 
 
@@ -56,9 +56,10 @@ namespace HashingTool.ViewModel
 			_manufacturerReport = new ManufacturerReportXMLFile("Manufacturer Report", HashingHelper.IsManufacturerReport,
 				HashingHelper.ValidateDocumentHash);
 			_manufacturerReport.JobData = _jobFile;
-			_customerReport = new ReportXMLFile("Customer Report", HashingHelper.IsCustomerReport,
+			_customerReport = new CustomerReportXMLFile("Customer Report", HashingHelper.IsCustomerReport,
 				HashingHelper.ValidateDocumentHash);
 			_customerReport.JobData = _jobFile;
+			_customerReport.ManufacturerReport = _manufacturerReport;
 			Files = new ObservableCollection<VectoXMLFile> { _jobFile, _manufacturerReport, _customerReport };
 
 			ErrorsAndWarnings = new CompositeCollection();
@@ -105,7 +106,7 @@ namespace HashingTool.ViewModel
 		}
 
 
-		public ReportXMLFile CustomerReport
+		public CustomerReportXMLFile CustomerReport
 		{
 			get { return _customerReport; }
 		}

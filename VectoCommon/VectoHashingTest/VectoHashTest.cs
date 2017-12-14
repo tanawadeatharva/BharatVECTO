@@ -414,16 +414,8 @@ namespace VectoHashingTest
 			Assert.IsTrue(h2.ValidateHash());
 
 			// re-load generated XML and perform XSD validation
-			var settings = new XmlReaderSettings() {
-				ValidationType = ValidationType.Schema,
-				ValidationFlags = XmlSchemaValidationFlags.ProcessInlineSchema |
-								//XmlSchemaValidationFlags.ProcessSchemaLocation |
-								XmlSchemaValidationFlags.ReportValidationWarnings
-			};
-			settings.ValidationEventHandler += new ValidationEventHandler(ValidationCallBack);
-			settings.Schemas.Add(GetXMLSchema(false));
-			var xmlValidator = XmlReader.Create(destination, settings);
-			var xmlDoc = XDocument.Load(xmlValidator);
+			var validator = new XMLValidator(XmlReader.Create(destination));
+			Assert.IsTrue(validator.ValidateXML(XMLValidator.XmlDocumentType.DeclarationComponentData));
 		}
 
 
@@ -504,25 +496,6 @@ namespace VectoHashingTest
 		public void TestInvalidComponentPrefix()
 		{
 			AssertHelper.Exception<ArgumentOutOfRangeException>(() => ((VectoComponents)9999).HashIdPrefix());
-		}
-
-		private static XmlSchemaSet GetXMLSchema(bool job)
-		{
-			var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema,
-				job ? "VectoInput.xsd" : "VectoComponent.xsd");
-			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
-			var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
-			xset.Add(XmlSchema.Read(reader, null));
-			xset.Compile();
-			return xset;
-		}
-
-		private static void ValidationCallBack(object sender, ValidationEventArgs args)
-		{
-			if (args.Severity == XmlSeverityType.Error) {
-				throw new Exception(string.Format("Validation error: {0}" + Environment.NewLine +
-												"Line: {1}", args.Message, args.Exception.LineNumber));
-			}
 		}
 	}
 }

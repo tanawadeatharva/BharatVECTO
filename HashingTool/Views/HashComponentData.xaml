@@ -7,7 +7,7 @@
 	xmlns:local="clr-namespace:HashingTool.Views"
 	x:Class="HashingTool.Views.HashComponentData"
 	mc:Ignorable="d"
-	d:DesignHeight="368.125" d:DesignWidth="666">
+	d:DesignHeight="445.581" d:DesignWidth="666">
 	<UserControl.Resources>
 		<Helper:CollectionConverter x:Key="CollectionConverter" />
 	</UserControl.Resources>
@@ -18,14 +18,18 @@
 	<DockPanel>
 		<Label DockPanel.Dock="Top" Name="lblHeader" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top"
 				Content="{Binding Name}" FontWeight="Bold" FontSize="18" />
-		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-			<Button Content="Save Component Data" HorizontalAlignment="Right" Margin="0,0,15,10" Width="143" Height="22"
+		<DockPanel DockPanel.Dock="Bottom" Margin="0,10,0,0">
+            <Button DockPanel.Dock="Right" Name="btnBack" Content="Back" Command="{Binding ShowHomeViewCommand}" Margin="0,0,10,10"
+                    HorizontalAlignment="Right"
+                    Width="75" Height="22" VerticalAlignment="Bottom" />
+			<Button DockPanel.Dock="Right" Content="Save Component Data" HorizontalAlignment="Right" Margin="0,0,15,10" Width="143" Height="22"
 					VerticalAlignment="Bottom" Command="{Binding SaveHashedDocument, Mode=OneWay}" />
-			<Button Name="btnBack" Content="Back" Command="{Binding ShowHomeViewCommand}" Margin="0,0,10,10"
-					HorizontalAlignment="Right"
-					Width="75" Height="22" VerticalAlignment="Bottom" />
-		</StackPanel>
+            <TextBlock DockPanel.Dock="Left" Text="Note: " HorizontalAlignment="Right" VerticalAlignment="Top"  FontWeight="Bold" Margin="10,2,5,2"/>
+            <TextBlock DockPanel.Dock="Left" TextWrapping="WrapWithOverflow" Text="The generated component file contains the current date (and in most cases a random identifier). Thus, the digest value is different every time the file is hashed!" Margin="5,2,20,2"/>
 
+        </DockPanel>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
 		<DockPanel DockPanel.Dock="Bottom">
 			<Label DockPanel.Dock="Top" x:Name="lblFileSelect" Content="Component data:" HorizontalAlignment="Left"
 					Margin="10,0"
@@ -41,8 +45,9 @@
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-				</Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
@@ -78,17 +83,22 @@
 					</Button>
 				</StackPanel>
 
-				<Label Grid.Row="1" Grid.Column="0" Name="lblC14N" Content="Canonicalization:" HorizontalAlignment="Left"
+                <Label Grid.Row="1" Grid.Column="0" Name="lblDate" Content="Date:" HorizontalAlignment="Left"
+                       Margin="0" />
+                <TextBox Grid.Row="1" Grid.Column="1" Name="tbDate" IsReadOnly="True"
+                         Text="{Helper:CultureAwareBinding Path=Date, StringFormat='g'}"
+                         Margin="10,2" />
+                <Label Grid.Row="2" Grid.Column="0" Name="lblC14N" Content="Canonicalization:" HorizontalAlignment="Left"
 						Margin="0" />
-				<TextBox Grid.Row="1" Grid.Column="1" Name="lblC14NList" IsReadOnly="True"
+				<TextBox Grid.Row="2" Grid.Column="1" Name="lblC14NList" IsReadOnly="True"
 						Text="{Binding CanonicalizationMethods, Mode=OneWay, Converter={StaticResource CollectionConverter}}"
 						Margin="10,2" />
-				<Label Grid.Row="2" Grid.Column="0" Name="lblDigestMethod" Content="Digest Method:" HorizontalAlignment="Left"
+				<Label Grid.Row="3" Grid.Column="0" Name="lblDigestMethod" Content="Digest Method:" HorizontalAlignment="Left"
 						Margin="0" />
-				<TextBox Grid.Row="2" Grid.Column="1" Name="tbDigestMethod" IsReadOnly="True"
+				<TextBox Grid.Row="3" Grid.Column="1" Name="tbDigestMethod" IsReadOnly="True"
 						Text="{Binding DigestMethod}"
 						Margin="10,2" />
-				<Button Grid.Row="3" Grid.Column="2" Content="Copy" Margin="10,2,0,2" HorizontalAlignment="Right" Width="75"
+				<Button Grid.Row="4" Grid.Column="2" Content="Copy" Margin="10,2,0,2" HorizontalAlignment="Right" Width="75"
 						Click="Button_Click_1">
 					<Button.Style>
 						<Style TargetType="Button">
@@ -101,13 +111,13 @@
 						</Style>
 					</Button.Style>
 				</Button>
-				<Label Grid.Row="3" Grid.Column="0" x:Name="lblDigestValue" Content="Digest Value:" HorizontalAlignment="Left"
+				<Label Grid.Row="4" Grid.Column="0" x:Name="lblDigestValue" Content="Digest Value:" HorizontalAlignment="Left"
 						Margin="0" Style="{StaticResource DigestValueLabelStyle}" />
-				<TextBox Grid.Row="3" Grid.Column="1" x:Name="tbDigestValue" Text="{Binding DigestValue}" Margin="10,2"
+				<TextBox Grid.Row="4" Grid.Column="1" x:Name="tbDigestValue" Text="{Binding DigestValue}" Margin="10,2"
 						IsReadOnly="True"
 						VerticalAlignment="Top" RenderTransformOrigin="4.1,-2.1" Style="{StaticResource DigestValueTextboxStyle}"
 						Foreground="{StaticResource Color.SuccessGreen}" />
-				<ContentControl Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,0,0,0"
+				<ContentControl Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="0,0,0,0"
 								VerticalAlignment="Top" Width="66" Height="64">
 					<ContentControl.LayoutTransform>
 						<ScaleTransform ScaleX="1.5" ScaleY="1.5" />
@@ -132,5 +142,6 @@
 
 			</Grid>
 		</DockPanel>
+        </ScrollViewer>
 	</DockPanel>
 </UserControl>

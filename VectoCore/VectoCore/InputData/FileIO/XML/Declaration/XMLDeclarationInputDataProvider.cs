@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -61,21 +62,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
         protected XMLDeclarationInputDataProvider(XmlReader inputData, string source, bool verifyXml)
         {
             Source = source;
-			if (verifyXml) {
-				var settings = new XmlReaderSettings {
-					ValidationType = ValidationType.Schema,
-					ValidationFlags = XmlSchemaValidationFlags.ProcessInlineSchema |
-									//XmlSchemaValidationFlags.ProcessSchemaLocation |
-									XmlSchemaValidationFlags.ReportValidationWarnings
-				};
-				settings.ValidationEventHandler += ValidationCallBack;
-				settings.Schemas.Add(GetXMLSchema(""));
-
-				inputData = XmlReader.Create(inputData, settings);
-			}
-			
 			var xmldoc = new XmlDocument();
 			xmldoc.Load(inputData);
+
+			if (verifyXml) {
+				new XMLValidator(xmldoc, null, ValidationCallBack).ValidateXML(XMLValidator.XmlDocumentType.DeclarationJobData);
+			}
+			
 			var h = VectoHash.Load(xmldoc);
 			XMLHash = h.ComputeXmlHash();
 			Document = new XPathDocument(new XmlNodeReader(xmldoc));
@@ -85,22 +78,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
         public string Source { get; protected set; }
 
-        private static void ValidationCallBack(object sender, ValidationEventArgs args)
+        private static void ValidationCallBack(XmlSeverityType severity, ValidationEvent evt)
 		{
-			if (args.Severity == XmlSeverityType.Error) {
+			if (severity == XmlSeverityType.Error) {
+				var args = evt.ValidationEventArgs;
 				throw new VectoException("Validation error: {0}" + Environment.NewLine +
 										"Line: {1}", args.Message, args.Exception.LineNumber);
 			}
-		}
-
-		private static XmlSchemaSet GetXMLSchema(string version)
-		{
-			var resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, "VectoInput.xsd");
-			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
-			var reader = XmlReader.Create(resource, new XmlReaderSettings(), XmlResourceResolver.BaseUri);
-			xset.Add(XmlSchema.Read(reader, null));
-			xset.Compile();
-			return xset;
 		}
 
 		public IDeclarationJobInputData JobInputData

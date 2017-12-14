@@ -52,8 +52,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLManufacturerReport
 	{
+		public const string CURRENT_SCHEMA_VERSION = "0.4";
+		
 		protected XElement VehiclePart;
-
+		
 		protected XElement InputDataIntegrity;
 
 		protected XElement Results;
@@ -65,7 +67,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XMLManufacturerReport()
 		{
 			di = "http://www.w3.org/2000/09/xmldsig#";
-			tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.4";
+			tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v" + CURRENT_SCHEMA_VERSION;
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			Results = new XElement(tns + "Results");
 		}
@@ -219,6 +221,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, i),
 				new XElement(tns + XMLNames.Report_Tyre_TyreDimension, axle.WheelsDimension),
 				new XElement(tns + XMLNames.Report_Tyre_TyreCertificationNumber, axle.CertificationNumber),
+				new XElement(tns+XMLNames.DI_Signature_Reference_DigestValue, axle.DigestValueInput),
 				new XElement(tns + XMLNames.Report_Tyre_TyreRRCDeclared, axle.RollResistanceCoefficient.ToXMLFormat(4)),
 				new XElement(tns + XMLNames.AxleWheels_Axles_Axle_TwinTyres, axle.TwinTyres));
 		}
@@ -346,12 +349,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
 			retVal.Add(new XElement(tns + XMLNames.VectoManufacturerReport,
-				new XAttribute("schemaVersion", "0.4"),
+				new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
 				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 				new XAttribute("xmlns", tns),
 				new XAttribute(XNamespace.Xmlns + "di", di),
 				new XAttribute(xsi + "schemaLocation",
-					string.Format("{0} {1}VectoOutputManufacturer.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl)),
+					string.Format("{0} {1}VectoOutputManufacturer.{2}.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl, CURRENT_SCHEMA_VERSION)),
 				new XElement(tns + "Data",
 					vehicle,
 					results,

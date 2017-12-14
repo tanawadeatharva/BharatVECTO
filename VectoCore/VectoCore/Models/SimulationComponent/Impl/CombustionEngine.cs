@@ -314,7 +314,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				: VectoMath.Min(DataBus.GetGearData(DataBus.Gear).MaxSpeed, ModelData.FullLoadCurves[0].N95hSpeed);
 		}
 
-		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		public virtual IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			if (outAngularVelocity == null) {
 				outAngularVelocity = EngineIdleSpeed;

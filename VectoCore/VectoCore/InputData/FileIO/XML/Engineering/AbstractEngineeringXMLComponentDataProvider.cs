@@ -48,11 +48,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		protected readonly string FSBasePath;
 
 
-		protected readonly XPathDocument XMLDocument;
+		protected readonly XmlDocument XMLDocument;
 
 		protected AbstractEngineeringXMLComponentDataProvider(
 			XMLEngineeringInputDataProvider xmlEngineeringJobInputDataProvider,
-			XPathDocument document, string xmlBasePath, string fsBasePath)
+			XmlDocument document, string xmlBasePath, string fsBasePath)
 		{
 			XMLDocument = document;
 			XBasePath = xmlBasePath;

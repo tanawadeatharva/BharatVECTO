@@ -225,6 +225,16 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_loss);
 		}
 
+		public static WattSecond WorkWheels(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in);
+		}
+
+		public static WattSecond WorkWheelsPos(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in, x => x > 0);
+		}
+
 		public static WattSecond WorkAxlegear(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_axle_loss);
@@ -306,7 +316,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Watt PowerWheelPositive(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_wheel_in, x => x > 0) / data.Duration();
+			return data.WorkWheelsPos() / data.Duration();
 		}
 
 		public static KilogramPerMeter FuelConsumptionWHTC(this IModalDataContainer data)
@@ -394,9 +404,14 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * data.FuelData.LowerHeatingValue / distance;
 		}
 
+		public static Kilogram TotalFuelConsumption(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap);
+		}
+
 		public static KilogramPerSecond FCMapPerSecond(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / data.Duration();
+			return data.TotalFuelConsumption() / data.Duration();
 		}
 
 		public static KilogramPerMeter FCMapPerMeter(this IModalDataContainer data)
@@ -405,7 +420,7 @@ namespace TUGraz.VectoCore.OutputData
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / distance;
+			return data.TotalFuelConsumption() / distance;
 		}
 
 

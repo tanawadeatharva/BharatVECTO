@@ -32,6 +32,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.XPath;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
@@ -47,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		IAuxiliariesEngineeringInputData
 	{
 		public XMLEngineeringAuxiliaryDataProvider(XMLEngineeringInputDataProvider xmlEngineeringJobInputDataProvider,
-			XPathDocument auxDocument, string xmlBasePath, string fsBasePath)
+			XmlDocument auxDocument, string xmlBasePath, string fsBasePath)
 			: base(xmlEngineeringJobInputDataProvider, auxDocument, xmlBasePath, fsBasePath) {}
 
 

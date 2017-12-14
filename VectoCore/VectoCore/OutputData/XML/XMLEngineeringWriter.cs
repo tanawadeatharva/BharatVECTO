@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XMLEngineeringWriter(string basePath, bool singleFile, string vendor) : base(basePath, vendor)
 		{
 			_singleFile = singleFile;
-
+			SchemaVersion = "0.7";
 			tns = Constants.XML.VectoEngineeringDefinitionsNS; // "urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.6";
 			rootNamespace = Constants.XML.VectoEngineeringInputNS; // "urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.6";
 			_declarationNamespace = Constants.XML.VectoDeclarationDefinitionsNS;

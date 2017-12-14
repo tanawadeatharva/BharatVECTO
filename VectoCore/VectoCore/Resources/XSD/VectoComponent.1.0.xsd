@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2016 rel. 2 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
+	<xs:element name="VectoInputDeclaration">
+		<xs:annotation>
+			<xs:documentation>Root Node Declaration Data</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="Engine" type="vdecdef:EngineComponentDeclarationType"/>
+				<xs:element name="Gearbox" type="vdecdef:GearboxComponentDeclarationType"/>
+				<xs:element name="TorqueConverter" type="vdecdef:TorqueConverterComponentDeclarationType"/>
+				<xs:element name="Retarder" type="vdecdef:RetarderComponentDeclarationType"/>
+				<xs:element name="Axlegear" type="vdecdef:AxlegearComponentDeclarationType"/>
+				<xs:element name="Tyre" type="vdecdef:TyreDeclarationType"/>
+				<xs:element name="Auxiliaries" type="vdecdef:AuxiliariesComponentDeclarationType"/>
+				<xs:element name="Angledrive" type="vdecdef:AngledriveComponentDeclarationType"/>
+				<xs:element name="AirDrag" type="vdecdef:AirDragComponentDeclarationType"/>
+			</xs:choice>
+			<xs:attribute name="schemaVersion" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:minExclusive value="0"/>
+						<xs:fractionDigits value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

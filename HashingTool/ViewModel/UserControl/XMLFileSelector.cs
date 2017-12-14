@@ -40,6 +40,7 @@ using System.Xml;
 using System.Xml.Schema;
 using HashingTool.Helper;
 using HashingTool.Util;
+using TUGraz.VectoCore.Utils;
 
 namespace HashingTool.ViewModel.UserControl
 {
@@ -269,7 +270,7 @@ namespace HashingTool.ViewModel.UserControl
 		{
 			var valid = true;
 			try {
-				var validator = new XMLValidator(r => { valid = r; },
+				var validator = new AsyncXMLValidator(xml, r => { valid = r; },
 					(s, e) => {
 						Application.Current.Dispatcher.Invoke(
 							() =>
@@ -281,7 +282,7 @@ namespace HashingTool.ViewModel.UserControl
 										: e.ValidationEventArgs.Message,
 									e.ValidationEventArgs == null ? 0 : e.ValidationEventArgs.Exception.LineNumber)));
 					});
-				await validator.ValidateXML(xml);
+				await validator.ValidateXML(XMLValidator.XmlDocumentType.DeclarationComponentData | XMLValidator.XmlDocumentType.DeclarationJobData | XMLValidator.XmlDocumentType.CustomerReport | XMLValidator.XmlDocumentType.ManufacturerReport);
 			} catch (Exception e) {
 				LogError(e.Message);
 			}

@@ -143,14 +143,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var cardanSpeed = entry.WheelAngularVelocity *
 								RunData.AxleGearData.AxleGear.Ratio * (RunData.AngledriveData?.Angledrive.Ratio ?? 1);
-				if (cardanSpeed.IsEqual(0.RPMtoRad(), 1.RPMtoRad())) {
+				if (cardanSpeed.IsEqual(0.RPMtoRad(), 1.RPMtoRad()) || entry.AngularVelocity.IsEqual(0.RPMtoRad(), 1.RPMtoRad())) {
 					entry.Gear = 0;
 					continue;
 				}
 				var ratio = (entry.EngineSpeed / cardanSpeed).Value();
 				var gear = gearRatios.Aggregate((x, y) =>
-					Math.Abs(x.Value / ratio - 1) < Math.Abs(y.Value / ratio - 1) ? x : y).Key;
-
+					Math.Abs(ratio/x.Value   - 1) < Math.Abs(ratio/y.Value - 1) ? x : y).Key;
+				while (gear > 0 && cardanSpeed * gearRatios[gear] < RunData.EngineData.IdleSpeed)
+					gear--;
 
 				//entry.Gear = entry.EngineSpeed < (RunData.EngineData.IdleSpeed + 50.RPMtoRad()) && entry.VehicleTargetSpeed < 5.KMPHtoMeterPerSecond() ? 0 :  gear;
 				if (stopped && gear <= StartGear) {
@@ -166,27 +167,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public override IResponse Request(Second absTime, Second dt)
+		{
+			if (CycleIterator.LastEntry && CycleIterator.RightSample.Time == absTime) {
+				return new ResponseCycleFinished { Source = this };
+			}
+
+			// interval exceeded
+			if (CycleIterator.RightSample != null && (absTime + dt).IsGreater(CycleIterator.RightSample.Time)) {
+				return new ResponseFailTimeInterval {
+					AbsTime = absTime,
+					Source = this,
+					DeltaT = CycleIterator.RightSample.Time - absTime
+				};
+			}
+			var tmp = NextComponent.Initialize(CycleIterator.LeftSample.Torque, CycleIterator.LeftSample.WheelAngularVelocity);
+
+			return DoHandleRequest(absTime, dt, CycleIterator.LeftSample.WheelAngularVelocity);
+		}
+
 		public override bool VehicleStopped
 		{
 			get
 			{
-				if (CycleIterator.LeftSample.Gear == 0)
-					return true;
-				if (CycleIterator.LeftSample.Gear != StartGear)
-					return false;
-
-				var transmissionRatio = RunData.AxleGearData.AxleGear.Ratio *
-										(RunData.AngledriveData?.Angledrive.Ratio ?? 1.0);
-				return CycleIterator.LeftSample.WheelAngularVelocity * transmissionRatio *
-						RunData.GearboxData.Gears[CycleIterator.LeftSample.Gear].Ratio < DataBus.EngineIdleSpeed;
-				//return CycleIterator.LeftSample.VehicleTargetSpeed.IsEqual(0.KMPHtoMeterPerSecond(),
-				//    0.3.KMPHtoMeterPerSecond());
+				return CycleIterator.Previous().LeftSample.VehicleTargetSpeed
+					.IsEqual(0.KMPHtoMeterPerSecond(), 0.3.KMPHtoMeterPerSecond());
 			}
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			base.DoWriteModalResults(container);
+			container[ModalResultField.P_wheel_in] = CurrentState.InTorque * CurrentState.InAngularVelocity;
 			container[ModalResultField.v_act] = CycleIterator.LeftSample.VehicleTargetSpeed;
 		}
 	}

@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		IDriverEngineeringInputData
 	{
 		public XMLEngineeringDriverDataProvider(XMLEngineeringInputDataProvider xmlEngineeringJobInputDataProvider,
-			XPathDocument driverDocument, string xmlBasePath, string fsBasePath)
+			XmlDocument driverDocument, string xmlBasePath, string fsBasePath)
 			: base(xmlEngineeringJobInputDataProvider, driverDocument, xmlBasePath, fsBasePath) {}
 
 		IOverSpeedEcoRollEngineeringInputData IDriverEngineeringInputData.OverSpeedEcoRoll

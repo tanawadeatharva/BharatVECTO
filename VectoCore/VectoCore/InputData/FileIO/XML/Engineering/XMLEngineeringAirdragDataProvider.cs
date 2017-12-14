@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Xml;
 using System.Xml.XPath;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
@@ -42,7 +43,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		IAirdragEngineeringInputData
 	{
 		public XMLEngineeringAirdragDataProvider(XMLEngineeringInputDataProvider xmlEngineeringJobInputDataProvider,
-			XPathDocument axlegearDocument, string xmlBasePath, string fsBasePath)
+			XmlDocument axlegearDocument, string xmlBasePath, string fsBasePath)
 			: base(xmlEngineeringJobInputDataProvider, axlegearDocument, xmlBasePath, fsBasePath) {}
 
 		public SquareMeter AirDragArea

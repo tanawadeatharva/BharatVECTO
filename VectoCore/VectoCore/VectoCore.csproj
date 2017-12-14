@@ -188,6 +188,7 @@
     <Compile Include="Models\SimulationComponent\Impl\PWheelCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\IdleControllerSwitcher.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\VTPGearbox.cs" />
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
@@ -339,6 +340,7 @@
       <DependentUpon>VectoVersionCore.tt</DependentUpon>
     </Compile>
     <Compile Include="Utils\XmlResourceResolver.cs" />
+    <Compile Include="Utils\XMLValidator.cs" />
     <Compile Include="Utils\XPathHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -423,6 +425,21 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoInput.1.0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.4.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.4.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringInput.0.7.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoComponent.1.0.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">

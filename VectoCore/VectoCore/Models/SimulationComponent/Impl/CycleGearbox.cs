@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
-			Gear = DataBus.CycleData.LeftSample.Gear;
+			Gear = GetGearFromCycle();
 			TorqueConverterActive = DataBus.CycleData.LeftSample.TorqueConverterActive;
 
 			if (TorqueConverter != null && TorqueConverterActive == null) {
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		private uint GetGearFromCycle()
+		protected virtual uint GetGearFromCycle()
 		{
 			return DataBus.DriverBehavior == DrivingBehavior.Braking
 				? DataBus.CycleData.LeftSample.Gear
@@ -362,10 +362,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var avgInAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			var avgOutAngularSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
+			var inPower = CurrentState.InTorque * avgInAngularSpeed;
+			var outPower = CurrentState.OutTorque * avgOutAngularSpeed;
 			container[ModalResultField.Gear] = Disengaged != null ? 0 : Gear;
-			container[ModalResultField.P_gbx_loss] = CurrentState.TransmissionTorqueLoss * avgOutAngularSpeed;
+			container[ModalResultField.P_gbx_loss] = inPower - outPower;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgOutAngularSpeed;
-			container[ModalResultField.P_gbx_in] = CurrentState.InTorque * avgInAngularSpeed;
+			container[ModalResultField.P_gbx_in] = inPower;
 			container[ModalResultField.n_gbx_out_avg] = (PreviousState.OutAngularVelocity +
 														CurrentState.OutAngularVelocity) / 2.0;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;

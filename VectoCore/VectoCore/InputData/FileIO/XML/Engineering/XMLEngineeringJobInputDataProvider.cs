@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 	public class XMLEngineeringJobInputDataProvider : AbstractEngineeringXMLComponentDataProvider, IEngineeringJobInputData
 	{
 		public XMLEngineeringJobInputDataProvider(XMLEngineeringInputDataProvider xmlEngineeringJobInputDataProvider,
-			XPathDocument jobDocument, string xmlBasePath, string fsBasePath)
+			XmlDocument jobDocument, string xmlBasePath, string fsBasePath)
 			: base(xmlEngineeringJobInputDataProvider, jobDocument, xmlBasePath, fsBasePath) {}
 
 
@@ -61,11 +61,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		{
 			get { return InputData.VehicleInputData; }
 		}
-
-		//IEngineEngineeringInputData EngineInputData
-		//{
-		//	get { return new XMLEngineeringEngineDataProvider(InputData, XMLDocument, Helper.Query(XBasePath, XMLNames.Component_Engine, XMLNames.ComponentDataWrapper) ,FSBasePath); } 
-		//}
 
 		public IList<ICycleData> Cycles
 		{

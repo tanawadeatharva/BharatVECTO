@@ -29,7 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System.Xml.XPath;
+using System.Xml;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 	public class XMLEngineeringRetarderDataProvider : AbstractEngineeringXMLComponentDataProvider, IRetarderInputData
 	{
 		public XMLEngineeringRetarderDataProvider(XMLEngineeringInputDataProvider xmlEngineeringJobInputDataProvider,
-			XPathDocument retarderDocument, string xmlBasePath, string fsBasePath)
+			XmlDocument retarderDocument, string xmlBasePath, string fsBasePath)
 			: base(xmlEngineeringJobInputDataProvider, retarderDocument, xmlBasePath, fsBasePath) {}
 
 		public RetarderType Type

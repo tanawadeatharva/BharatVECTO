@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		StatefulProviderComponent<SimpleComponentState, ISimulationOutPort, ITnInPort, ITnOutPort>,
 		IDrivingCycleInfo, ISimulationOutPort, ITnInProvider, ITnInPort
 	{
-		protected readonly IDrivingCycleData Data;
+		internal readonly IDrivingCycleData Data;
 		protected internal readonly DrivingCycleEnumerator CycleIterator;
 
 		protected Second AbsTime { get; set; }
@@ -134,6 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							criterion: y => ((ResponseDryRun)y).DeltaFullLoad.Value());
 						response = NextComponent.Request(absTime, dt, torque, angularVelocity);
 						CurrentState.InAngularVelocity = angularVelocity;
+						CurrentState.InTorque = torque;
 					})
 					.Case<ResponseEngineSpeedTooHigh>(r => {
 						angularVelocity = SearchAlgorithm.Search(angularVelocity, r.DeltaEngineSpeed,
