@@ -221,6 +221,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, i),
 				new XElement(tns + XMLNames.Report_Tyre_TyreDimension, axle.WheelsDimension),
 				new XElement(tns + XMLNames.Report_Tyre_TyreCertificationNumber, axle.CertificationNumber),
+				new XElement(tns+XMLNames.DI_Signature_Reference_DigestValue, axle.DigestValueInput),
 				new XElement(tns + XMLNames.Report_Tyre_TyreRRCDeclared, axle.RollResistanceCoefficient.ToXMLFormat(4)),
 				new XElement(tns + XMLNames.AxleWheels_Axles_Axle_TwinTyres, axle.TwinTyres));
 		}

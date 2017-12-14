@@ -86,6 +86,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			foreach (var axleDeclarationInputData in dataProvider.JobInputData.Vehicle.Axles) {
 				Assert.AreEqual(axleDeclarationInputData.Tyre.CertificationNumber, reportWheels[i++].Value);
 			}
+
+			var digestWheels = manufacturerReport.XPathSelectElements("//*[local-name()='Axle']/*[local-name()='DigestValue']").ToArray();
+			Assert.NotNull(digestWheels);
+			Assert.AreEqual(2, digestWheels.Count());
+			foreach (var digestWheel in digestWheels) {
+				Assert.IsFalse(string.IsNullOrWhiteSpace(digestWheel.Value));
+			}
 		}
 	}
 }
