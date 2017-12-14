@@ -29,10 +29,12 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using System.Xml.XPath;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -826,5 +828,88 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(CertificationMethod.Measured, inputDataProvider.JobInputData.Vehicle.RetarderInputData.CertificationMethod);
 			Assert.AreEqual(CertificationMethod.Measured, inputDataProvider.JobInputData.Vehicle.AirdragInputData.CertificationMethod);
 		}
+
+		[TestCase]
+		public void TestAuxFanTechTypes()
+		{
+			TestAuxTech(AuxiliaryType.Fan, GetEnumOptions("AuxFanTechnologyType", "1.0"), DeclarationData.Fan);
+		}
+
+		[TestCase]
+		public void TestAuxElectricSystemTechTypes()
+		{
+			TestAuxTech(AuxiliaryType.ElectricSystem, GetEnumOptions("AuxESTechnologyType", "1.0"), DeclarationData.ElectricSystem);
+		}
+
+		[TestCase]
+		public void TestAuxSteeringPumpTechTypes()
+		{
+			TestAuxTech(AuxiliaryType.SteeringPump, GetEnumOptions("AuxSPTechnologyType", "1.0"), DeclarationData.SteeringPump);
+		}
+
+		[TestCase]
+		public void TestAuxPneumaticSystemTechTypes()
+		{
+			TestAuxTech(AuxiliaryType.PneumaticSystem, GetEnumOptions("AuxPSTechnologyType", "1.0"), DeclarationData.PneumaticSystem);
+		}
+
+		[TestCase]
+		public void TestAuxHVACTechTypes()
+		{
+			TestAuxTech(AuxiliaryType.HVAC, GetEnumOptions("AuxHVACTechnologyType", "1.0"), DeclarationData.HeatingVentilationAirConditioning);
+		}
+
+		private string[] GetEnumOptions(string xmlType, string schemaVersion)
+		{
+			Stream resource;
+			var schemaFile = string.Format("VectoDeclarationDefinitions{0}.xsd", "." + schemaVersion);
+			try {
+				resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schemaFile);
+			} catch (Exception e) {
+				throw new Exception(string.Format("Unknown XML schema! version: {0}, xsd: {1}", schemaVersion, schemaFile), e);
+			}
+			var reader = new XPathDocument(resource);
+			var nav = reader.CreateNavigator();
+			var nodes = nav.Select(string.Format("//*[local-name()='simpleType' and @name='{0}']//*[local-name()='enumeration']/@value", xmlType));
+			var retVal = new List<string>();
+			foreach (var node in nodes) {
+				retVal.Add(node.ToString());
+			}
+			return retVal.ToArray();
+		}
+
+		private void TestAuxTech(AuxiliaryType aux, string[] techs, IDeclarationAuxiliaryTable auxLookup)
+		{ 
+			foreach (var tech in techs) {
+				var reader = XmlReader.Create(SampleVehicleDecl);
+
+				var doc = new XmlDocument();
+				doc.Load(reader);
+				var nav = doc.CreateNavigator();
+				var manager = new XmlNamespaceManager(nav.NameTable);
+				var helper = new XPathHelper(ExecutionMode.Declaration);
+				helper.AddNamespaces(manager);
+
+				var technology = nav.SelectSingleNode(helper.QueryAbs(
+						helper.NSPrefix(XMLNames.VectoInputDeclaration,
+							Constants.XML.RootNSPrefix),
+						XMLNames.Component_Vehicle,
+						XMLNames.Vehicle_Components,
+						XMLNames.Component_Auxiliaries, XMLNames.ComponentDataWrapper, aux.ToString(), XMLNames.Auxiliaries_Auxiliary_Technology),
+					manager);
+				technology.SetValue(tech);
+				var modified = XmlReader.Create(new StringReader(nav.OuterXml));
+
+				var inputDataProvider = new XMLDeclarationInputDataProvider(modified,
+					true);
+				var techInput = inputDataProvider.JobInputData.Vehicle.AuxiliaryInputData().Auxiliaries.Where(x => x.Type == aux)
+					.First().Technology.First();
+				Assert.AreEqual(tech, techInput);
+
+				Assert.IsTrue(auxLookup.GetTechnologies().Contains(techInput), "technology '{0}' for aux type '{1}' not known!", techInput, aux);
+			}
+		}
+
+		
 	}
 }
