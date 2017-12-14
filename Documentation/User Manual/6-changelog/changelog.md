@@ -1,5 +1,26 @@
 #Changelog
 
+**VECTO 3.2.2**
+
+***Build  1078 (2017-12-14)***
+
+- Improvements
+    * [VECTO-618] - Add Hash value of tyres to manufacturer's record file
+    * [VECTO-590] - Handling of hash values: customer's record contains hash of manufacturer's record
+    * [VECTO-612] - Continuously changing hashes: Info in GUI of HashingTool
+    * [VECTO-560] - Change Mail-Address of general VECTO contact
+    * [VECTO-616] - SI-Unit - display derived unit instead of base units
+
+- Bugfixes
+    * [VECTO-608] - Power balance in EPT-mode not closed
+    * [VECTO-611] - Invalid input. Cannot cast Newtonsoft.Json.Linq.JObject to Newtonsoft.Json.Linq.JToken
+    * [VECTO-610] - TyreCertificationNumber missing in Manufacturer Report
+    * [VECTO-613] - Incomplete description of allowed values of LegislativeClass (p251) in VECTO parameter documentation
+
+- Support
+    * [VECTO-615] - Error torque interpolation in declaration jobs exported to XML
+
+
 
 **VECTO 3.2.1**
 
