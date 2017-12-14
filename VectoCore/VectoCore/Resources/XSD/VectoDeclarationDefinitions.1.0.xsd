@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2016 rel. 2 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
 <?xml-stylesheet type="text/xsl" href="../RenderTable.xslt"?>
 <xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
@@ -518,7 +518,7 @@
 	<xs:complexType name="GearboxComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="tns:GearboxDataDeclarationType"/>
-			<xs:element name="Signature" type="tns:SignatureType" minOccurs="0"/>
+			<xs:element name="Signature" type="tns:SignatureType"/>
 			<xs:element name="TorqueConverter" minOccurs="0">
 				<xs:complexType>
 					<xs:complexContent>
