@@ -70,6 +70,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return Lookup(vehicleCategory, axleConfiguration, grossVehicleMassRating, curbWeight, false);
 		}
 
+		public VehicleCategory[] GetVehicleCategories(bool declarationOnly = true)
+		{
+			return _segmentTable.AsEnumerable().Where(r => !declarationOnly || r.Field<string>("valid") == "1").Select(r => EnumHelper.ParseEnum<VehicleCategory>(r.Field<string>("vehiclecategory"))).Distinct().ToArray();
+		}
+
 		public Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool considerInvalid)
 		{

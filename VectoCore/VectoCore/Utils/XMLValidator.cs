@@ -76,20 +76,12 @@ namespace TUGraz.VectoCore.Utils
 		public bool ValidateXML(XmlDocumentType docType)
 		{ 
 			_valid = true;
-			//try {
-				if (_doc.DocumentElement == null) {
-					throw new Exception("empty XML document");
-				}
-				var version = _doc.DocumentElement.GetAttribute("schemaVersion");
-				_doc.Schemas = GetXMLSchema(docType, version);
-				_doc.Validate(ValidationCallBack);
-			//} catch (Exception e) {
-			//	_valid = false;
-			//	_validationErrorAction(XmlSeverityType.Error, new ValidationEvent() {
-					
-			//		Exception = e
-			//	});
-			//}
+			if (_doc.DocumentElement == null) {
+				throw new Exception("empty XML document");
+			}
+			var version = _doc.DocumentElement.GetAttribute("schemaVersion");
+			_doc.Schemas = GetXMLSchema(docType, version);
+			_doc.Validate(ValidationCallBack);
 			return _valid;
 		}
 
