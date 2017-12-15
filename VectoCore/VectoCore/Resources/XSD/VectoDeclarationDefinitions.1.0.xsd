@@ -2221,7 +2221,6 @@ ToDo: -0.00
 			<xs:enumeration value="10.00 R20"/>
 			<xs:enumeration value="11 R22.5"/>
 			<xs:enumeration value="11.00 R20"/>
-			<xs:enumeration value="11.00 R22"/>
 			<xs:enumeration value="12 R22.5"/>
 			<xs:enumeration value="12.00 R20"/>
 			<xs:enumeration value="12.00 R24"/>
@@ -2269,7 +2268,7 @@ ToDo: -0.00
 			<xs:enumeration value="395/85 R20"/>
 			<xs:enumeration value="425/65 R22.5"/>
 			<xs:enumeration value="495/45 R22.5"/>
-			<xs:enumeration value="525/65 R22.5"/>
+			<xs:enumeration value="525/65 R20.5"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TyreFzISOType">
