@@ -50,6 +50,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class DeclarationDataAdapter : AbstractSimulationDataAdapter
 	{
+		public static readonly GearboxType[] SupportedGearboxTypes = {GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial};
+
 		public DriverData CreateDriverData()
 		{
 			var lookAheadData = new DriverData.LACData {
@@ -208,13 +210,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				WarnDeclarationMode("GearboxData");
 			}
 			var retVal = SetCommonGearboxData(gearbox);
-			switch (gearbox.Type) {
-				case GearboxType.DrivingCycle:
-				case GearboxType.ATPowerSplit:
-					throw new VectoSimulationException(
-						"Unsupported gearbox type: {0}!", retVal.Type);
-				//case GearboxType.Custom:
-				//	throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
+
+			if (!SupportedGearboxTypes.Contains(gearbox.Type)) {
+				throw new VectoSimulationException("Unsupported gearbox type: {0}!", retVal.Type);
 			}
 			var gearsInput = gearbox.Gears;
 			if (gearsInput.Count < 1) {
