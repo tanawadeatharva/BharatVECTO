@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2016 rel. 2 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
-<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:ParameterDefinitions" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" xmlns:vengdef="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.6" xmlns:ns1="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:ns2="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:ParameterDefinitions" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:vengdef="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.6" xmlns:ns1="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:ns2="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v1.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" schemaLocation="VectoEngineeringDefinitions.0.7.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationComponent:v1.0" schemaLocation="VectoComponent.xsd"/>
