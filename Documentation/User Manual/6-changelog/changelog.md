@@ -2,7 +2,7 @@
 
 **VECTO 3.2.2**
 
-***Build  1078 (2017-12-14)***
+***Build  1079 (2017-12-15)***
 
 - Improvements
     * [VECTO-618] - Add Hash value of tyres to manufacturer's record file
