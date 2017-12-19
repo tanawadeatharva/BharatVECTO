@@ -150,52 +150,52 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string VIN
 		{
-			get { return Vehicle.VIN; }
+			get { return VehicleData.VIN; }
 		}
 
 		public LegislativeClass LegislativeClass
 		{
-			get { return Vehicle.LegislativeClass; }
+			get { return VehicleData.LegislativeClass; }
 		}
 
 		public VehicleCategory VehicleCategory
 		{
-			get { return Vehicle.VehicleCategory; }
+			get { return VehicleData.VehicleCategory; }
 		}
 
 		public AxleConfiguration AxleConfiguration
 		{
-			get { return Vehicle.AxleConfiguration; }
+			get { return VehicleData.AxleConfiguration; }
 		}
 
 		public Kilogram CurbMassChassis
 		{
-			get { return Vehicle.CurbMassChassis; }
+			get { return VehicleData.CurbMassChassis; }
 		}
 
 		public Kilogram GrossVehicleMassRating
 		{
-			get { return Vehicle.GrossVehicleMassRating; }
+			get { return VehicleData.GrossVehicleMassRating; }
 		}
 
 		public IList<ITorqueLimitInputData> TorqueLimits
 		{
-			get { return Vehicle.TorqueLimits; }
+			get { return VehicleData.TorqueLimits; }
 		}
 
 		IList<IAxleEngineeringInputData> IVehicleEngineeringInputData.Axles
 		{
-			get { return Vehicle.Axles; }
+			get { return VehicleData.Axles; }
 		}
 
 		public Meter DynamicTyreRadius
 		{
-			get { return Vehicle.DynamicTyreRadius; }
+			get { return VehicleData.DynamicTyreRadius; }
 		}
 
 		public Meter Height
 		{
-			get { return Vehicle.Height; }
+			get { return VehicleData.Height; }
 		}
 
 		public IAirdragEngineeringInputData AirdragInputData
@@ -240,12 +240,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string ManufacturerAddress
 		{
-			get { return Vehicle.ManufacturerAddress; }
+			get { return VehicleData.ManufacturerAddress; }
 		}
 
 		public PerSecond EngineIdleSpeed
 		{
-			get { return Vehicle.EngineIdleSpeed; }
+			get { return VehicleData.EngineIdleSpeed; }
 		}
 
 		IAirdragDeclarationInputData IVehicleDeclarationInputData.AirdragInputData
