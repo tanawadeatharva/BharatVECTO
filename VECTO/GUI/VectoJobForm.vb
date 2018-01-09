@@ -423,7 +423,7 @@ Public Class VectoJobForm
 		'Update Form
 
 		If inputData.JobInputData().EngineOnlyMode Then
-			TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.EngineInputData.Source, _basePath)
+			TbENG.Text = GetRelativePath(inputData.JobInputData.EngineOnly.Source, _basePath)
 			CbEngOnly.Checked = True
 			Try
 				Dim sb As ICycleData
