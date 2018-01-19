@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			CycleIterator.RightSample.Gear = gear;
+			CycleIterator.LeftSample.Gear = gear;
 			//var inAngularVelocity = outAngularVelocity * RunData.GearboxData.Gears[gear].Ratio;
 			//var torqueLossResult = RunData.GearboxData.Gears[gear].LossMap.GetTorqueLoss(outAngularVelocity, outTorque);
 			//var inTorque = outTorque / RunData.GearboxData.Gears[gear].Ratio + torqueLossResult.Value;
