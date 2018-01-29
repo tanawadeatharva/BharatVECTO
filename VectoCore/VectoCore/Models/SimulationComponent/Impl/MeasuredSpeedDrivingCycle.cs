@@ -389,6 +389,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public DrivingBehavior DriverBehavior { get; internal set; }
 
+		public DrivingAction DrivingAction
+		{
+			get { return DrivingAction.Accelerate; }
+		}
+
 		public MeterPerSquareSecond DriverAcceleration { get; protected set; }
 
 		public Meter Distance

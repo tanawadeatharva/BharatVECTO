@@ -299,7 +299,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					commitPriority = 6;
 				})
 				.If<PTOCycleController>(c => { commitPriority = 99; })
-                .If<VTPCycle>(_ => { commitPriority = 0; });
+				.If<VTPCycle>(_ => { commitPriority = 0; });
 
 			_components.Add(Tuple.Create(commitPriority, component));
 			_components = _components.OrderBy(x => x.Item1).Reverse().ToList();
@@ -393,6 +393,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public DrivingBehavior DriverBehavior
 		{
 			get { return Driver != null ? Driver.DriverBehavior : DrivingBehavior.Driving; }
+		}
+
+		public DrivingAction DrivingAction
+		{
+			get { return Driver.DrivingAction; }
 		}
 
 		public MeterPerSquareSecond DriverAcceleration

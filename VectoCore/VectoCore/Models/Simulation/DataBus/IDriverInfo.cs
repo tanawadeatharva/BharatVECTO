@@ -30,6 +30,7 @@
 */
 
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
@@ -45,6 +46,9 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 	public interface IDriverInfo
 	{
 		DrivingBehavior DriverBehavior { get; }
+
+		DrivingAction DrivingAction { get; }
+
 		MeterPerSquareSecond DriverAcceleration { get; }
 	}
 }
