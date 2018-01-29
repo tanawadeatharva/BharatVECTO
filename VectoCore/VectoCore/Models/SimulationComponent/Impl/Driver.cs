@@ -181,6 +181,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response);
 				}
 
+				if (nextOperatingPoint == null && absTime > 0 && DataBus.VehicleStopped) {
+					Log.Info(
+						"No operating point found! Vehicle stopped! trying HALT action");
+					DataBus.BrakePower = 1.SI<Watt>();
+					retVal = DrivingActionHalt(absTime, operatingPoint.SimulationInterval, 0.SI<MeterPerSecond>(), gradient);
+
+					retVal.SimulationDistance = 0.SI<Meter>();
+					retVal.Acceleration = 0.SI<MeterPerSquareSecond>();
+					retVal.SimulationInterval = operatingPoint.SimulationInterval;
+					retVal.OperatingPoint = new OperatingPoint() {
+						Acceleration = retVal.Acceleration,
+						SimulationDistance = retVal.SimulationDistance,
+						SimulationInterval = operatingPoint.SimulationInterval
+					};
+					return retVal;
+				} 
+
 				var limitedOperatingPoint = nextOperatingPoint;
 				if (!(retVal is ResponseEngineSpeedTooHigh || DataBus.ClutchClosed(absTime))) {
 					limitedOperatingPoint = LimitAccelerationByDriverModel(nextOperatingPoint,
@@ -746,12 +763,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								retVal.Acceleration = tmp.Acceleration;
 								retVal.SimulationInterval = tmp.SimulationInterval;
 								retVal.SimulationDistance = tmp.SimulationDistance;
+
+
+							} else {
+								retVal.Acceleration = acc;
+								retVal.SimulationDistance = 0.SI<Meter>();
 							}
 							IterationStatistics.Increment(this, "SearchOperatingPoint");
 							DriverAcceleration = acc;
 							var response = NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient, true);
 							response.OperatingPoint = retVal;
 							return response;
+							
 						},
 					criterion: response => {
 						var r = (ResponseDryRun)response;
@@ -768,6 +791,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							var r = (ResponseDryRun)response;
 							return r != null && !actionRoll && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
 						});
+				return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
 			} catch (VectoSearchAbortedException) {
 				// search aborted, try to go ahead with the last acceleration
 			} catch (Exception) {
@@ -779,7 +803,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DriverData.AccelerationCurve.MaxAcceleration())) {
 				Log.Info("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
 			}
-			return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
+			return null;
 		}
 
 		private static Watt GetOrigDelta(IResponse initialResponse, bool coastingOrRoll, bool actionRoll)
