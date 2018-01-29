@@ -43,6 +43,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -174,6 +175,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool VehicleStopped { get; set; }
 
 		public DrivingBehavior DriverBehavior { get; set; }
+
+		public DrivingAction DrivingAction { get; set; }
+
 		public MeterPerSquareSecond DriverAcceleration { get; set; }
 
 		public CycleData CycleData { get; set; }
