@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			var avgInAngularVelocity = (PreviousState.InAngularVelocity + angularVelocityIn) / 2.0;
 			var clutchLoss = torqueIn * avgInAngularVelocity - outTorque * avgOutAngularVelocity;
-			if (!startClutch && !clutchLoss.IsEqual(0)) {
+			if (!startClutch && !clutchLoss.IsEqual(0) && (DataBus.Gear != 1 || clutchLoss.IsSmaller(0))) {
 				// we don't want to have negative clutch losses, so adapt input torque to match the average output power
 				torqueIn = outTorque * avgOutAngularVelocity / avgInAngularVelocity;
 			}
