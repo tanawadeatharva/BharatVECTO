@@ -114,9 +114,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NewtonMeter torqueIn;
 			PerSecond angularVelocityIn;
 
+			var slippingClutchWhenDriving = (DataBus.Gear == 1 && DataBus.DriverBehavior != DrivingBehavior.Braking);
+			var slippingClutchDuringBraking = DataBus.Gear == 1 && DataBus.DriverBehavior == DrivingBehavior.Braking && outTorque > 0;
+			//var slippingClutchWhenDriving = (DataBus.Gear == 1 && outTorque > 0);
 			AddClutchLoss(outTorque, outAngularVelocity,
-				(DataBus.Gear == 1 && outTorque > 0) || startClutch || outAngularVelocity.IsEqual(0), out torqueIn,
-				out angularVelocityIn);
+				slippingClutchWhenDriving || slippingClutchDuringBraking || startClutch || outAngularVelocity.IsEqual(0),
+				out torqueIn, out angularVelocityIn);
 
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, angularVelocityIn,
 				Formulas.TorqueToPower(torqueIn, angularVelocityIn));
@@ -139,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, bool startClutch, out NewtonMeter torqueIn,
+		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, bool allowSlipping, out NewtonMeter torqueIn,
 			out PerSecond angularVelocityIn)
 		{
 			if (DataBus.DriverBehavior == DrivingBehavior.Halted) {
@@ -152,14 +155,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			angularVelocityIn = angularVelocity;
 
 			var engineSpeedNorm = (angularVelocity - _idleSpeed) / (_ratedSpeed - _idleSpeed);
-			if (startClutch && engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm) {
-				// MQ: 27.5.2016: when angularVelocity is 0 (at the end of the simulation interval) don't use the 
-				//     angularVelocity but average angular velocity
-				//     Reason: if angularVelocity = 0 also the power (torque * angularVelocity) is 0 and then
-				//             the torque demand for the engine is 0. no drag torque although vehicle has to decelerate
-				//             "the clutch" eats up the whole torque
+			if (allowSlipping && engineSpeedNorm < Constants.SimulationSettings.ClutchClosingSpeedNorm) {
 				var engineSpeed = VectoMath.Max(_idleSpeed, angularVelocity);
-
 				angularVelocityIn = _clutchSpeedSlippingFactor * engineSpeed + _idleSpeed;
 			}
 		}

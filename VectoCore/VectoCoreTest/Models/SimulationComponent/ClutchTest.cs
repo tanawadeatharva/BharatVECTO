@@ -30,6 +30,7 @@
 */
 
 using System.Data;
+using System.IO;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -49,26 +50,33 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	public class ClutchTest
 	{
 		private const string CoachEngine = @"TestData\Components\24t Coach.veng";
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 		[Test,
 		// clutch slipping
-		TestCase(DrivingBehavior.Driving, 100, 0, 0, 65.6889),
+		TestCase(DrivingBehavior.Driving, 100, 0, 3, 0, 65.6889),
+		TestCase(DrivingBehavior.Driving, 100, 5, 1, 7.6116, 65.6889),
+		TestCase(DrivingBehavior.Braking, 100, 80, 1, 100, 80),
 		// clutch opened - would cause neg. clutch losses (which is not possible), torque is adapted
-		TestCase(DrivingBehavior.Halted, 100, 30, 51.1569, 58.643062),
+		TestCase(DrivingBehavior.Halted, 100, 30, 0, 51.1569, 58.643062),
 		// clutch closed
-		TestCase(DrivingBehavior.Driving, 100, 80, 100, 80),
-		TestCase(DrivingBehavior.Braking, 100, 80, 100, 80),
-		TestCase(DrivingBehavior.Driving, 100, 30, 100, 30),
+		TestCase(DrivingBehavior.Driving, 100, 80, 3, 100, 80),
+		TestCase(DrivingBehavior.Braking, 100, 80, 3, 100, 80),
+		TestCase(DrivingBehavior.Driving, 100, 30, 3, 100, 30),
 			// clutch opened due to braking
 			//TestCase(DrivingBehavior.Braking, 0, 55, null, null),
 		]
-		public void TestClutch(DrivingBehavior drivingBehavior, double torque, double angularSpeed, double expectedTorque,
+		public void TestClutch(DrivingBehavior drivingBehavior, double torque, double angularSpeed, int gear, double expectedTorque,
 			double expectedEngineSpeed)
 		{
 			var container = new VehicleContainer(ExecutionMode.Engineering);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 1);
 			var gearbox = new MockGearbox(container);
-			gearbox.Gear = 0;
+			gearbox.Gear = (uint)gear;
 			var clutch = new Clutch(container, engineData) { IdleController = new MockIdleController() };
 			var vehicle = new MockVehicle(container);
 			vehicle.MyVehicleSpeed = 50.KMPHtoMeterPerSecond();
