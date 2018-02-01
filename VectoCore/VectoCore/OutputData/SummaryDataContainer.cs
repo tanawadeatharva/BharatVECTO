@@ -421,7 +421,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			if (vtpCycle) {
-				row[SPECIFIC_FC] = (modData.TotalFuelConsumption() / modData.WorkWheelsPos()).ConvertToGramPerKiloWattHour();
+				row[SPECIFIC_FC] = (modData.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / modData.WorkWheelsPos()).ConvertToGramPerKiloWattHour();
 			}
 		}
 
