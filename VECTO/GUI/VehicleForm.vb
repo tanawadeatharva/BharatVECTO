@@ -81,9 +81,17 @@ Public Class VehicleForm
 
 		CbAxleConfig.ValueMember = "Value"
 		CbAxleConfig.DisplayMember = "Label"
-		CbAxleConfig.DataSource = [Enum].GetValues(GetType(AxleConfiguration)) _
-			.Cast(Of AxleConfiguration) _
-			.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
+		If (cfg.DeclMode) Then
+			CbAxleConfig.DataSource = DeclarationData.Segments.GetAxleConfigurations() _
+			    .Cast(Of AxleConfiguration) _
+				.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
+		else
+				CbAxleConfig.DataSource = [Enum].GetValues(GetType(AxleConfiguration)) _
+					.Cast(Of AxleConfiguration) _
+					.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
+		End If
+
+		
 
 		CbCat.ValueMember = "Value"
 		CbCat.DisplayMember = "Label"
@@ -477,12 +485,12 @@ Public Class VehicleForm
 			Dim a0 As AxleInputData = New AxleInputData()
 			a0.AxleWeightShare = entry.SubItems(AxleTbl.RelativeLoad).Text.ToDouble(0)
 			a0.TwinTyres = (entry.SubItems(AxleTbl.TwinTyres).Text = "yes")
-		    a0.AxleType = entry.SubItems(AxleTbl.AxleType).Text.ParseEnum(Of AxleType)()
-            dim tyre as TyreInputData = New TyreInputData()
-		    tyre.RollResistanceCoefficient = entry.SubItems(AxleTbl.RRC).Text.ToDouble(0)
-		    tyre.TyreTestLoad = entry.SubItems(AxleTbl.FzISO).Text.ToDouble(0).SI(Of Newton)()
-		    tyre.Dimension = entry.SubItems(AxleTbl.WheelsDimension).Text
-		    tyre.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble(0).SI(Of KilogramSquareMeter)()
+			a0.AxleType = entry.SubItems(AxleTbl.AxleType).Text.ParseEnum(Of AxleType)()
+			dim tyre as TyreInputData = New TyreInputData()
+			tyre.RollResistanceCoefficient = entry.SubItems(AxleTbl.RRC).Text.ToDouble(0)
+			tyre.TyreTestLoad = entry.SubItems(AxleTbl.FzISO).Text.ToDouble(0).SI(Of Newton)()
+			tyre.Dimension = entry.SubItems(AxleTbl.WheelsDimension).Text
+			tyre.Inertia = entry.SubItems(AxleTbl.Inertia).Text.ToDouble(0).SI(Of KilogramSquareMeter)()
 			a0.Tyre = tyre
 			veh.Axles.Add(a0)
 		Next
