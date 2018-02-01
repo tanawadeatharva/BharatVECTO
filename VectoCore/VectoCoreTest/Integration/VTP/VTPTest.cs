@@ -39,32 +39,31 @@ using TUGraz.VectoCore.OutputData.FileIO;
 
 namespace TUGraz.VectoCore.Tests.Integration.VTP
 {
-    [TestFixture]
-    public class VTPTest
-    {
+	[TestFixture]
+	public class VTPTest
+	{
 		[OneTimeSetUp]
 		public void Init()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase()]
-        public void RunVTP()
-        {
-            var jobFile = @"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle.vecto";
-
-            var fileWriter = new FileOutputWriter(jobFile);
-            var sumWriter = new SummaryDataContainer(fileWriter);
-            var jobContainer = new JobContainer(sumWriter);
-            var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
-            var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, dataProvider, fileWriter) {
-                ModalResults1Hz = false,
-                WriteModalResults = true,
-                ActualModalData = false,
-                Validate = false,
-            };
-            
-            jobContainer.AddRuns(runsFactory);
+		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle.vecto"),
+		 TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_noGear.vecto")]
+		public void RunVTP(string jobFile)
+		{
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, dataProvider, fileWriter) {
+				ModalResults1Hz = false,
+				WriteModalResults = true,
+				ActualModalData = false,
+				Validate = false,
+			};
+			
+			jobContainer.AddRuns(runsFactory);
 
 			//var i = 0;
 			//jobContainer.Runs[i].Run.Run();
@@ -74,8 +73,8 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			jobContainer.WaitFinished();
 
 			Assert.AreEqual(true, jobContainer.AllCompleted);
-            
-        }
+			
+		}
 
-    }
+	}
 }
