@@ -198,7 +198,7 @@ namespace HashingTool.ViewModel.UserControl
 		{
 			var retVal = new List<string>();
 			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
-				var nodes = _xmlFile.Document.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']",
+				var nodes = _xmlFile.Document.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']/*[local-name()='Model']",
 					XMLNames.VectoManufacturerReport, component.XMLElementName()));
 				var count = nodes == null ? 0 : nodes.Count;
 				for (var i = 0; i < count; i++) {
