@@ -56,11 +56,11 @@ Namespace DownstreamModules
 					.Y = M11.TotalCycleFuelConsumptionSmartElectricalLoad}
 
 			Dim IP5x As Joule = M11.TotalCycleElectricalDemand
-			Dim IP5y As Kilogram
+			
 
-			Dim TanTeta As SI = (P2.Y - P1.Y) / (P2.X - P1.X)
+			Dim TanTeta As double = ((P2.Y - P1.Y).Value() / (P2.X - P1.X).Value())
 
-			IP5y = P1.Y + (TanTeta * IP5x)
+		    Dim IP5y As Kilogram = (P1.Y.Value() + (TanTeta * IP5x.Value())).SI(of Kilogram)
 
 			_INTERP1 = IP5y
 
