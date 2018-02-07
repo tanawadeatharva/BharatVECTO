@@ -82,13 +82,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		public const string AngledriveLossMap = @"TestData\Components\AngleGear.vtlm";
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
-        private static GearboxData CreateGearboxData()
+		private static GearboxData CreateGearboxData()
 		{
 			var ratios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 
@@ -548,6 +548,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new MockVehicleContainer() {
 				VehicleSpeed = 10.SI<MeterPerSecond>(),
 				DriverBehavior = DrivingBehavior.Driving,
+				DrivingAction = DrivingAction.Accelerate,
 				Altitude = 0.SI<Meter>(),
 				VehicleMass = 10000.SI<Kilogram>(),
 				ReducedMassWheels = 100.SI<Kilogram>(),

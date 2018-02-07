@@ -6565,7 +6565,24 @@ CycleTime,UnknownCycleName,3600</code></pre>
 </div>
 <div id="changelog" class="section level1">
 <h1>Changelog</h1>
-<p><strong>VECTO 3.2.2</strong></p>
+<p><strong>VECTO 3.2.1</strong></p>
+<p><strong><em>Build 1133 (2018-02-07)</em></strong></p>
+<ul>
+<li>Improvement
+<ul>
+<li>[VECTO-634] - VTP Mode: specific fuel consumption</li>
+</ul></li>
+<li>Bugfixes
+<ul>
+<li>[VECTO-642] - VECTO BUG – secondary retarder losses: <strong>IMPORTANT:</strong> Fuel-consumption relevant bug! wrong calculation of retarder losses for retarder ratio not equal to 1</li>
+<li>[VECTO-624] - Crash w/o comment: Infinite recursion</li>
+<li>[VECTO-627] - Cannot open Engine-Only Job</li>
+<li>[VECTO-629] - Vecto crashes without errror message (same issue as VECTO-624)</li>
+<li>[VECTO-639] - Failed to find operating point for braking power: cycle with low target speed (3km/h). allow driving with slipping clutch</li>
+<li>[VECTO-640] - Exceeded max. iterations: driving fully-loaded vehicle steep uphill. fixed by allowing full-stop and drive off again</li>
+<li>[VECTO-633] - unable to start VTP Mode simulation</li>
+</ul></li>
+</ul>
 <p><strong><em>Build 1079 (2017-12-15)</em></strong></p>
 <ul>
 <li>Improvements
@@ -6582,13 +6599,13 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <li>[VECTO-611] - Invalid input. Cannot cast Newtonsoft.Json.Linq.JObject to Newtonsoft.Json.Linq.JToken</li>
 <li>[VECTO-610] - TyreCertificationNumber missing in Manufacturer Report</li>
 <li>[VECTO-613] - Incomplete description of allowed values of LegislativeClass (p251) in VECTO parameter documentation</li>
+<li>[VECTO-625] - Update XML Schema: Tyre dimensions according to Technicall Annex, trailing spaces in enums</li>
 </ul></li>
 <li>Support
 <ul>
 <li>[VECTO-615] - Error torque interpolation in declaration jobs exported to XML</li>
 </ul></li>
 </ul>
-<p><strong>VECTO 3.2.1</strong></p>
 <p><strong><em>Build 1054 (2017-11-20)</em></strong></p>
 <ul>
 <li>Improvements

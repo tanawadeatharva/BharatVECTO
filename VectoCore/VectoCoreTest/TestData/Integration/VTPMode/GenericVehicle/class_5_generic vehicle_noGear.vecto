@@ -1,0 +1,21 @@
+﻿{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2017-11-20T13:22:33.6138904Z",
+    "AppVersion": "3",
+    "FileVersion": 4
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "DeclarationVehicle": "Tractor_4x2_vehicle-class-5_Generic vehicle.xml",
+    "FanPowerCoefficients": [
+      5.5E-07,
+      15.0,
+      108.5
+    ],
+    "FanDiameter": 0.225,
+    "Cycles": [
+      "VTP_rural_2Hz_noGear.vdri"
+    ]
+  }
+}

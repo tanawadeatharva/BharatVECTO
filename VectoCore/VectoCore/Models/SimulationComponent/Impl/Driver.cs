@@ -45,6 +45,14 @@ using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+	public enum DrivingAction
+	{
+		Halt = 0,
+		Roll = 2,
+		Coast = 4,
+		Accelerate = 6,
+		Brake = -5,
+	}
 	public class Driver :
 		StatefulProviderComponent<Driver.DriverState, IDrivingCycleOutPort, IDriverDemandInPort, IDriverDemandOutPort>,
 		IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverActions, IDriverInfo
@@ -52,7 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DriverData DriverData { get; protected set; }
 
 		protected readonly IDriverStrategy DriverStrategy;
-		public string CurrentAction = "";
+		
+		public DrivingAction DrivingAction { get; private set; }
 
 		public Driver(IVehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
 		{
@@ -132,7 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Radian gradient,
 			IResponse previousResponse = null)
 		{
-			CurrentAction = "ACCELERATE";
+			DrivingAction = DrivingAction.Accelerate;
 			IterationStatistics.Increment(this, "Accelerate");
 			Log.Debug("DrivingAction Accelerate");
 			var operatingPoint = ComputeAcceleration(ds, targetVelocity);
@@ -180,6 +189,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration,
 						response);
 				}
+
+				if (nextOperatingPoint == null && absTime > 0 && DataBus.VehicleStopped) {
+					Log.Info(
+						"No operating point found! Vehicle stopped! trying HALT action");
+					DataBus.BrakePower = 1.SI<Watt>();
+					retVal = DrivingActionHalt(absTime, operatingPoint.SimulationInterval, 0.SI<MeterPerSecond>(), gradient);
+					
+					retVal.SimulationDistance = 0.SI<Meter>();
+					retVal.Acceleration = 0.SI<MeterPerSquareSecond>();
+					retVal.SimulationInterval = operatingPoint.SimulationInterval;
+					retVal.OperatingPoint = new OperatingPoint() {
+						Acceleration = retVal.Acceleration,
+						SimulationDistance = retVal.SimulationDistance,
+						SimulationInterval = operatingPoint.SimulationInterval
+					};
+					return retVal;
+				} 
 
 				var limitedOperatingPoint = nextOperatingPoint;
 				if (!(retVal is ResponseEngineSpeedTooHigh || DataBus.ClutchClosed(absTime))) {
@@ -283,7 +309,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionCoast(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
-			CurrentAction = "COAST";
+			DrivingAction = DrivingAction.Coast;
 			IterationStatistics.Increment(this, "Coast");
 			Log.Debug("DrivingAction Coast");
 
@@ -300,7 +326,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionRoll(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
-			CurrentAction = "ROLL";
+			DrivingAction = DrivingAction.Roll;
 			IterationStatistics.Increment(this, "Roll");
 
 			Log.Debug("DrivingAction Roll");
@@ -419,7 +445,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient,
 			IResponse previousResponse = null, Meter targetDistance = null)
 		{
-			CurrentAction = "BRAKE";
+			DrivingAction = DrivingAction.Brake;
 			IterationStatistics.Increment(this, "Brake");
 			Log.Debug("DrivingAction Brake");
 
@@ -746,12 +772,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								retVal.Acceleration = tmp.Acceleration;
 								retVal.SimulationInterval = tmp.SimulationInterval;
 								retVal.SimulationDistance = tmp.SimulationDistance;
+
+
+							} else {
+								retVal.Acceleration = acc;
+								retVal.SimulationDistance = 0.SI<Meter>();
 							}
 							IterationStatistics.Increment(this, "SearchOperatingPoint");
 							DriverAcceleration = acc;
 							var response = NextComponent.Request(absTime, retVal.SimulationInterval, acc, gradient, true);
 							response.OperatingPoint = retVal;
 							return response;
+							
 						},
 					criterion: response => {
 						var r = (ResponseDryRun)response;
@@ -768,6 +800,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							var r = (ResponseDryRun)response;
 							return r != null && !actionRoll && !ds.IsEqual(r.OperatingPoint.SimulationDistance);
 						});
+				return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
 			} catch (VectoSearchAbortedException) {
 				// search aborted, try to go ahead with the last acceleration
 			} catch (Exception) {
@@ -779,7 +812,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DriverData.AccelerationCurve.MaxAcceleration())) {
 				Log.Info("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
 			}
-			return ComputeTimeInterval(retVal.Acceleration, retVal.SimulationDistance);
+			return null;
 		}
 
 		private static Watt GetOrigDelta(IResponse initialResponse, bool coastingOrRoll, bool actionRoll)
@@ -892,7 +925,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			CurrentAction = "HALT";
+			DrivingAction = DrivingAction.Halt;
 			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleStopped) {
 				Log.Error("TargetVelocity ({0}) and VehicleVelocity ({1}) must be zero when vehicle is halting!",
 					targetVelocity,
@@ -919,27 +952,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.acc] = CurrentState.Acceleration;
-			container.SetDataValue("DriverAction", ActionToNumber(CurrentAction));
+			container.SetDataValue("DriverAction", (int)DrivingAction);
 		}
 
-		private int ActionToNumber(string currentAction)
-		{
-			switch (currentAction.ToUpper()) {
-				case "HALT":
-					return 0;
-				case "ROLL":
-					return 2;
-				case "COAST":
-					return 4;
-				case "ACCELERATE":
-					return 6;
-				case "BRAKE":
-					return -5;
-				default:
-					return -10;
-			}
-		}
-
+		
 		protected override void DoCommitSimulationStep()
 		{
 			if (!(CurrentState.Response is ResponseSuccess)) {

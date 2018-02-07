@@ -53,6 +53,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	[TestFixture]
 	public class ShiftPolygonTest
 	{
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+
 		[TestCase]
 		public void IntersectShiftLines1()
 		{
@@ -515,21 +521,26 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void ComputeShiftPolygonDeclarationTestConfidentialEngine()
 		{
 			//var engineFldFile = @"E:\QUAM\Downloads\EngineFLD\Map_375c_BB1390_modTUG_R49_375c_BB1386.vfld";
-			var engineFldFile = @"E:\QUAM\tmp\scania_fullload_shiftpolygon-test.csv";
-			var gearboxFile = @"E:\QUAM\Downloads\TUG_dev_gbx\TUG_dev\GRS905R.vgbx";
+			//var engineFldFile = @"E:\QUAM\tmp\scania_fullload_shiftpolygon-test.csv";
+			//var gearboxFile = @"E:\QUAM\Downloads\TUG_dev_gbx\TUG_dev\GRS905R.vgbx";
+			var engineFldFile = @"E:\QUAM\Downloads\attachment\Models_Declaration-mode\Overdrive\text\VENG_330kW_GENERIC.vfld";
+			var gearboxFile = @"E:\QUAM\Downloads\attachment\Models_Declaration-mode\Overdrive\text\VGBX_AMT_12_overdr_DECL.vgbx";
+
 			//@"TestData\Components\40t_Long_Haul_Truck.vgbx";
 
 			if (!File.Exists(engineFldFile)) {
 				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
 			}
 
-			var rdyn = 0.4882675.SI<Meter>();
-			var axlegearRatio = 3.71; //2.31; // 3.71; //2.59;
+			var rdyn = DeclarationData.Wheels.Lookup("315/70 R22.5").DynamicTyreRadius; //0.4882675.SI<Meter>();
+			//var axlegearRatio = 3.71; //2.31; // 3.71; //2.59;
 
 			var gearboxData = new JSONGearboxDataV6(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
 
+			var axlegearRatio = gearboxData.Ratio;
+
 			var engineData = new CombustionEngineData() {
-				IdleSpeed = 509.RPMtoRad(),
+				IdleSpeed = 600.RPMtoRad(),
 			};
 
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
@@ -559,7 +570,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 
 			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(gearboxFile), fullLoadCurves, shiftPolygons,
-				"Generic_Class5-shiftlines.png",
+				Path.Combine(Path.GetDirectoryName(gearboxFile), "Shiftlines.png"),
 				DeclarationData.Gearbox.TruckMaxAllowedSpeed / rdyn * axlegearRatio * gearboxData.Gears.Last().Ratio, upshiftOrig,
 				downshiftTransformed, downshiftOrig);
 

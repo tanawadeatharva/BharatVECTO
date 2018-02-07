@@ -178,8 +178,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_engageTime = absTime + dt;
 			}
 
-			if (DataBus.DriverBehavior == DrivingBehavior.Braking && (DataBus.BrakePower.IsGreater(0) || outTorque < 0) &&
-				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed)) {
+			var halted = DataBus.DrivingAction == DrivingAction.Halt;
+			var driverDeceleratingNegTorque = DataBus.DriverBehavior == DrivingBehavior.Braking &&
+											(DataBus.BrakePower.IsGreater(0) || outTorque < 0);
+			var vehiclespeedBelowThreshold =
+				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed);
+			if (halted || (driverDeceleratingNegTorque && vehiclespeedBelowThreshold)) {
 				_engageTime = VectoMath.Max(_engageTime, absTime + dt);
 
 				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);

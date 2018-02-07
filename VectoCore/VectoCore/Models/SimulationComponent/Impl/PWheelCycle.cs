@@ -47,38 +47,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class PWheelCycle : PowertrainDrivingCycle, IDriverInfo, IVehicleInfo
 	{
 		protected bool FirstRun = true;
-        protected readonly VectoRunData RunData;
+		protected readonly VectoRunData RunData;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PWheelCycle"/> class.
-        /// </summary>
-        /// <param name="container">The container.</param>
-        /// <param name="cycle">The cycle.</param>
-        public PWheelCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container, cycle)
-        {
-            RunData = container.RunData;
-        }
-
-        protected virtual void InitializeCycleData()
-        {
-            FirstRun = false;
-            var gearRatios = RunData.GearboxData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio);
-            // just to ensure that null-gear has ratio 1
-            gearRatios[0] = 1;
-            var axleRatio = RunData.AxleGearData.AxleGear.Ratio;
-
-            foreach (var entry in Data.Entries) {
-                entry.WheelAngularVelocity = entry.AngularVelocity / (axleRatio * gearRatios[entry.Gear]);
-                entry.Torque = entry.PWheel / entry.WheelAngularVelocity;
-            }
-        }
-
-        public override IResponse Initialize()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PWheelCycle"/> class.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <param name="cycle">The cycle.</param>
+		public PWheelCycle(IVehicleContainer container, IDrivingCycleData cycle) : base(container, cycle)
 		{
-            if (FirstRun) {
-                InitializeCycleData();
-               
-            }
+			RunData = container.RunData;
+		}
+
+		protected virtual void InitializeCycleData()
+		{
+			FirstRun = false;
+			var gearRatios = RunData.GearboxData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio);
+			// just to ensure that null-gear has ratio 1
+			gearRatios[0] = 1;
+			var axleRatio = RunData.AxleGearData.AxleGear.Ratio;
+
+			foreach (var entry in Data.Entries) {
+				entry.WheelAngularVelocity = entry.AngularVelocity / (axleRatio * gearRatios[entry.Gear]);
+				entry.Torque = entry.PWheel / entry.WheelAngularVelocity;
+			}
+		}
+
+		public override IResponse Initialize()
+		{
+			if (FirstRun) {
+				InitializeCycleData();
+			   
+			}
 			var first = Data.Entries[0];
 			AbsTime = first.Time;
 			var response = NextComponent.Initialize(first.Torque, first.WheelAngularVelocity);
@@ -163,6 +163,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DrivingBehavior DriverBehavior
 		{
 			get { return DrivingBehavior.Driving; }
+		}
+
+		public DrivingAction DrivingAction
+		{
+			get { return DrivingAction.Accelerate; }
 		}
 
 		public MeterPerSquareSecond DriverAcceleration

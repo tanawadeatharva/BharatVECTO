@@ -36,6 +36,7 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -49,6 +50,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public MockDriver(IVehicleContainer container) : base(container)
 		{
 			DriverBehavior = DrivingBehavior.Accelerating;
+			DrivingAction = DrivingAction.Accelerate;
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container) {}
@@ -117,6 +119,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool VehicleStopped { get; set; }
 
 		public DrivingBehavior DriverBehavior { get; set; }
+
+		public DrivingAction DrivingAction { get; set; }
+
 		public MeterPerSquareSecond DriverAcceleration { get; set; }
 	}
 }

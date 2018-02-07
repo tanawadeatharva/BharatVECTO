@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.IO;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -47,8 +48,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		private const string RetarderLossMapFile = @"TestData\Components\Retarder.vrlm";
 		private const double Delta = 0.0001;
 
-		[TestCase]
-		public void RetarderBasicTest()
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+		[TestCase(0, 10, 10.002),
+		 TestCase(100, 1000, 12)
+			]
+		public void RetarderBasicTest(double cardanTorque, double cardanSpeed, double expectedRetarderLoss)
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Declaration);
 			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
@@ -63,19 +72,34 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = 0.SI<Second>();
 
 			// --------
-			outPort.Initialize(0.SI<NewtonMeter>(), 10.RPMtoRad());
-			outPort.Request(absTime, dt, 0.SI<NewtonMeter>(), 10.RPMtoRad());
+			outPort.Initialize(cardanTorque.SI<NewtonMeter>(), cardanSpeed.RPMtoRad());
+			outPort.Request(absTime, dt, cardanTorque.SI<NewtonMeter>(), cardanSpeed.RPMtoRad());
 
-			Assert.AreEqual(10.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
-			Assert.AreEqual(10.002, nextRequest.Torque.Value(), Delta);
+			Assert.AreEqual(cardanSpeed.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
+			Assert.AreEqual(cardanTorque + expectedRetarderLoss, nextRequest.Torque.Value(), Delta);
 
-			// --------
-			outPort.Initialize(100.SI<NewtonMeter>(), 1000.RPMtoRad());
-			outPort.Request(absTime, dt, 100.SI<NewtonMeter>(), 1000.RPMtoRad());
+			//// --------
+			//outPort.Initialize(100.SI<NewtonMeter>(), 1000.RPMtoRad());
+			//outPort.Request(absTime, dt, 100.SI<NewtonMeter>(), 1000.RPMtoRad());
 
-			Assert.AreEqual(1000.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
-			Assert.AreEqual(112, nextRequest.Torque.Value(), Delta);
+			//Assert.AreEqual(1000.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
+			//Assert.AreEqual(112, nextRequest.Torque.Value(), Delta);
+		}
 
+		[TestCase]
+		public void RetarderSubsequentRequestTest()
+		{
+			var vehicle = new VehicleContainer(ExecutionMode.Declaration);
+			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
+			var retarder = new Retarder(vehicle, retarderData, 1.0);
+
+			var nextRequest = new MockTnOutPort();
+
+			retarder.InPort().Connect(nextRequest);
+			var outPort = retarder.OutPort();
+
+			var absTime = 0.SI<Second>();
+			var dt = 0.SI<Second>();
 			// --------
 			outPort.Initialize(50.SI<NewtonMeter>(), 650.RPMtoRad());
 			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 1550.RPMtoRad());
@@ -92,8 +116,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(50 + 12, nextRequest.Torque.Value(), Delta);
 		}
 
-		[TestCase]
-		public void RetarderRatioTest()
+		[TestCase(0, 10, 20.008),
+		 TestCase(100, 1000, 36),
+		 TestCase(50, 1550, 55.56) // extrapolated
+		]
+		public void RetarderRatioTest(double cardanTorque, double cardanSpeed, double expectedRetarderLoss)
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
 			var retarderData = RetarderLossMapReader.ReadFromFile(RetarderLossMapFile);
@@ -107,26 +134,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 0.SI<Second>();
 			var dt = 0.SI<Second>();
 
-			// --------
-			outPort.Initialize(0.SI<NewtonMeter>(), 10.RPMtoRad());
-			outPort.Request(absTime, dt, 0.SI<NewtonMeter>(), 10.RPMtoRad());
+			outPort.Initialize(cardanTorque.SI<NewtonMeter>(), cardanSpeed.RPMtoRad());
+			outPort.Request(absTime, dt, cardanTorque.SI<NewtonMeter>(), cardanSpeed.RPMtoRad());
 
-			Assert.AreEqual(10.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
-			Assert.AreEqual(5.002, nextRequest.Torque.Value(), Delta);
+			Assert.AreEqual(cardanSpeed.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
+			Assert.AreEqual(cardanTorque + expectedRetarderLoss, nextRequest.Torque.Value(), Delta);
 
-			// --------
-			outPort.Initialize(100.SI<NewtonMeter>(), 1000.RPMtoRad());
-			outPort.Request(absTime, dt, 100.SI<NewtonMeter>(), 1000.RPMtoRad());
-
-			Assert.AreEqual(1000.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
-			Assert.AreEqual(109, nextRequest.Torque.Value(), Delta);
-
-			// --------
-			outPort.Initialize(50.SI<NewtonMeter>(), 1550.RPMtoRad());
-			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 1550.RPMtoRad());
-
-			Assert.AreEqual(1550.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
-			Assert.AreEqual(50 + 13.89, nextRequest.Torque.Value(), Delta); // extrapolated
 		}
 
 		[TestCase]
@@ -177,7 +190,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			outPort.Request(absTime, dt, 100.SI<NewtonMeter>(), 125.RPMtoRad());
 
 			Assert.AreEqual(125.RPMtoRad().Value(), nextRequest.AngularVelocity.Value(), Delta);
-			Assert.AreEqual(100 + 5.065, nextRequest.Torque.Value(), Delta);
+			Assert.AreEqual(100 + 20.26, nextRequest.Torque.Value(), Delta);
 		}
 	}
 }
