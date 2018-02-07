@@ -1,8 +1,24 @@
 #Changelog
 
-**VECTO 3.2.2**
+**VECTO 3.2.1**
 
-***Build  1079 (2017-12-15)***
+***Build 1133 (2018-02-07)***
+
+- Improvement
+    * [VECTO-634] - VTP Mode: specific fuel consumption
+
+- Bugfixes
+    * [VECTO-642] - VECTO BUG – secondary retarder losses: **IMPORTANT:** Fuel-consumption relevant bug! wrong calculation of retarder losses for retarder ratio not equal to 1
+    * [VECTO-624] - Crash w/o comment: Infinite recursion
+    * [VECTO-627] - Cannot open Engine-Only Job
+    * [VECTO-629] - Vecto crashes without errror message (same issue as VECTO-624)
+    * [VECTO-639] - Failed to find operating point for braking power: cycle with low target speed (3km/h). allow driving with slipping clutch
+    * [VECTO-640] - Exceeded max. iterations: driving fully-loaded vehicle steep uphill. fixed by allowing full-stop and drive off again
+    * [VECTO-633] - unable to start VTP Mode simulation
+   
+
+
+***Build 1079 (2017-12-15)***
 
 - Improvements
     * [VECTO-618] - Add Hash value of tyres to manufacturer's record file
@@ -16,13 +32,11 @@
     * [VECTO-611] - Invalid input. Cannot cast Newtonsoft.Json.Linq.JObject to Newtonsoft.Json.Linq.JToken
     * [VECTO-610] - TyreCertificationNumber missing in Manufacturer Report
     * [VECTO-613] - Incomplete description of allowed values of LegislativeClass (p251) in VECTO parameter documentation
+    * [VECTO-625] - Update XML Schema: Tyre dimensions according to Technicall Annex, trailing spaces in enums
 
 - Support
     * [VECTO-615] - Error torque interpolation in declaration jobs exported to XML
 
-
-
-**VECTO 3.2.1**
 
 ***Build 1054 (2017-11-20)***
 
