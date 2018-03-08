@@ -267,8 +267,19 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Meter Distance(this IModalDataContainer data)
 		{
-			var max = data.Max<Meter>(ModalResultField.dist);
-			var min = data.Min<Meter>(ModalResultField.dist);
+			var max = data.GetValues<Meter>(ModalResultField.dist).LastOrDefault() ?? 0.SI<Meter>();
+			var first = data.GetValues(
+				r => new {
+					dist = r.Field<Meter>((int)ModalResultField.dist),
+					vact = r.Field<MeterPerSecond>((int)ModalResultField.v_act),
+					acc = r.Field<MeterPerSquareSecond>((int)ModalResultField.acc),
+					dt = r.Field<Second>((int)ModalResultField.simulationInterval)
+				}).First();
+			var min = 0.SI<Meter>();
+			if (first != null && first.vact != null && first.acc != null && first.dt != null) {
+				min = first.dist - first.vact * first.dt - first.acc * first.dt * first.dt / 2.0;
+			}
+			
 			return max == null || min == null ? null : max - min;
 		}
 

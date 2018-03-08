@@ -60,6 +60,35 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
+		[TestCase(80, 0),
+			TestCase(80, -0.1),
+			TestCase(10, 0.1)]
+		public void SumDataTest(double initialSpeedVal, double accVal)
+		{
+			var modData = new ModalDataContainer("sumDataTest", FuelType.DieselCI, null, false);
+			var initalSpeed = initialSpeedVal.KMPHtoMeterPerSecond();
+			var speed = initalSpeed;
+			var dist = 0.SI<Meter>();
+			var dt = 0.5.SI<Second>();
+			var acc = accVal.SI<MeterPerSquareSecond>();
+			for (var i = 0; i < 100; i++) {
+				modData[ModalResultField.v_act] = speed;
+				modData[ModalResultField.simulationInterval] = dt;
+				modData[ModalResultField.acc] = acc;
+				dist += speed * dt + acc * dt * dt / 2.0;
+				speed += acc * dt;
+				modData[ModalResultField.dist] = dist;
+				modData.CommitSimulationStep();
+			}
+
+			// distance = 80km/h * 50s + acc/2 * 50s * 50s
+			var totalTime = 50.SI<Second>();
+			var expected = initalSpeed * totalTime + acc / 2.0 * totalTime * totalTime;
+
+			Assert.AreEqual(expected.Value(), modData.Distance().Value(), 1e-6);
+		}
+
+
 		[TestCase()]
 		public void ModDataIntegritySimpleTest()
 		{
