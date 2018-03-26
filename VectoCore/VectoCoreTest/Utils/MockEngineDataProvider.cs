@@ -56,7 +56,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public double WHTCUrban { get; set; }
 		public double ColdHotBalancingFactor { get; set; }
 		public double CorrectionFactorRegPer { get; set; }
-		public double CorrectionFactorNCV { get; set; }
 		public FuelType FuelType { get; set; }
 		public TableData FuelConsumptionMap { get; set; }
 		public TableData FullLoadCurve { get; set; }

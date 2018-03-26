@@ -356,8 +356,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		double CorrectionFactorRegPer { get; }
 
-		double CorrectionFactorNCV { get; }
-
 		FuelType FuelType { get; }
 
 		/// <summary>

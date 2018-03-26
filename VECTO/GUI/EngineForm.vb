@@ -193,7 +193,6 @@ Public Class EngineForm
 		TbWHTCmw.Text = engine.WHTCMotorway.ToGUIFormat()
 		TbWHTCEngineering.Text = engine.WHTCEngineering.ToGUIFormat()
 		TbColdHotFactor.Text = engine.ColdHotBalancingFactor.ToGUIFormat()
-		tbNCVCorrFactor.Text = engine.CorrectionFactorNCV.ToGUIFormat()
 		tbRegPerCorrFactor.Text = engine.CorrectionFactorRegPer.ToGUIFormat()
 		tbMaxTorque.Text = engine.MaxTorqueDeclared.ToGUIFormat()
 		tbRatedPower.Text = (engine.RatedPowerDeclared.Value()/1000).ToGUIFormat()
@@ -245,7 +244,6 @@ Public Class EngineForm
 		engine.WHTCRuralInput = TbWHTCrural.Text.ToDouble(0)
 		engine.WHTCMotorwayInput = TbWHTCmw.Text.ToDouble(0)
 		engine.WHTCEngineeringInput = TbWHTCEngineering.Text.ToDouble(0)
-		engine.correctionFactorNCVInput = tbNCVCorrFactor.Text.ToDouble(0)
 		engine.correctionFactorRegPerInput = tbRegPerCorrFactor.Text.ToDouble(0)
 
 		engine.ColdHotBalancingFactorInput = TbColdHotFactor.Text.ToDouble(0)
