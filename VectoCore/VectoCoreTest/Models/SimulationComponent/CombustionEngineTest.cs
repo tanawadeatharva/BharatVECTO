@@ -45,6 +45,9 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using System.IO;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable NotAccessedVariable
@@ -63,13 +66,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		private const string TruckEngine = @"TestData\Components\40t_Long_Haul_Truck.veng";
 
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
-        [TestCase]
+		[TestCase]
 		public void TestEngineHasOutPort()
 		{
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
@@ -525,17 +528,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var displace = engineData.Displacement;
 			Assert.AreEqual(0.01273, displace.Value());
-		    Assert.IsTrue(displace.HasEqualUnit(new SI(Unit.SI.Cubic.Meter)));
+			Assert.IsTrue(displace.HasEqualUnit(new SI(Unit.SI.Cubic.Meter)));
 
 			var inert = engineData.Inertia;
 			Assert.AreEqual(3.8, inert.Value(), 0.00001);
-		    Assert.IsTrue(inert.HasEqualUnit(new SI(Unit.SI.Kilo.Gramm.Square.Meter)));
+			Assert.IsTrue(inert.HasEqualUnit(new SI(Unit.SI.Kilo.Gramm.Square.Meter)));
 
 			var idle = engineData.IdleSpeed;
 			Assert.AreEqual(58.6430628670095, idle.Value(), 0.000001);
 			Assert.IsTrue(idle.HasEqualUnit(0.SI<PerSecond>()));
 		}
 
+		
 		private static void VehicleContainer(string engineFile, out VehicleContainer container, out CombustionEngine engine,
 			out ITnOutPort requestPort, out MockGearbox gearbox)
 		{
