@@ -94,11 +94,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 
-		public override double CorrectionFactorNCV
-		{
-			get { return Body.GetEx<double>("CFNCV"); }
-		}
-
 		public override FuelType FuelType
 		{
 			get { return Body.GetEx<string>("FuelType").ParseEnum<FuelType>(); }
@@ -216,11 +211,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public virtual double CorrectionFactorRegPer
-		{
-			get { return 1; }
-		}
-
-		public virtual double CorrectionFactorNCV
 		{
 			get { return 1; }
 		}

@@ -89,12 +89,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			}
 		}
 
-		public double CorrectionFactorNCV
-		{
-			get { return 1; //GetDoubleElementValue(XMLNames.Engine_CorrecionFactor_NCV); 
-			}
-		}
-
 		public FuelType FuelType
 		{
 			get { return FuelType.DieselCI; //GetElementValue(XMLNames.Engine_FuelType).ParseEnum<FuelType>();

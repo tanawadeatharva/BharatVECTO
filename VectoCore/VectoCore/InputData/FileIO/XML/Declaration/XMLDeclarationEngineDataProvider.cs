@@ -119,10 +119,5 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			get { return GetDoubleElementValue(XMLNames.Engine_CorrectionFactor_RegPer); }
 		}
-
-		public double CorrectionFactorNCV
-		{
-			get { return GetDoubleElementValue(XMLNames.Engine_CorrecionFactor_NCV); }
-		}
 	}
 }
