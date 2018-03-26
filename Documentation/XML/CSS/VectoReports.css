@@ -206,6 +206,7 @@ Vehicle InputDataSignature {
 	display: flex;
 	flex-flow: column;
 	flex-basis: calc(50% - 20px);
+	width: calc(50% - 20px);
 	margin-bottom: 20px;
 	padding-left: 20px;
 	border-top: 2px solid #1f6032;
@@ -294,7 +295,13 @@ Vehicle Retarder RetarderType { order: 3; }
 
 Vehicle CertificationMethod { order: 97; }
 Vehicle CertificationNumber { order: 98; }
-Vehicle DigestValue { order: 99; }
+Vehicle DigestValue { 
+	order: 99;
+    overflow: hidden;
+    margin-right: 2em;
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+}
 
 
 
