@@ -84,9 +84,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool considerInvalid)
 		{
-		    if (grossVehicleMassRating == null || grossVehicleMassRating < 7.5.SI(Unit.SI.Ton)){
-				throw new VectoException("Gross vehicle mass must be greater than 7.5 tons");
-			}
 
 			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, considerInvalid);
 			if (row == null) {
