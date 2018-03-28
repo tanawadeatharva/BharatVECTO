@@ -205,13 +205,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 					}
 				}
 
-				//var semiTrailerField = row.Field<string>("semitrailer");
-				//var semiTrailer = !string.IsNullOrWhiteSpace(semiTrailerField)
-				//	? DeclarationData.StandardBodies.Lookup(semiTrailerField)
-				//	: StandardBodies.Empty;
-
-				//trailer += semiTrailer;
-
 				// limit gvw to MaxGVW (40t)
 				var gvw =
 					VectoMath.Min(
