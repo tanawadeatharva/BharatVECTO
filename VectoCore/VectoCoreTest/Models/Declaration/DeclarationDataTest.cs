@@ -622,12 +622,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
 		}
 
-		[TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7500, 0, VehicleClass.Class1, 85),
+		[TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7501, 0, VehicleClass.Class1, 85),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10001, 0, VehicleClass.Class2, 85),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12001, 0, VehicleClass.Class3, 85),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class4, 85),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class5, 85),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class9, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7501, 0, VehicleClass.Class9, 85),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class10, 85),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 7500, 0, VehicleClass.Class11, 85),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 7500, 0, VehicleClass.Class12, 85),
@@ -732,9 +732,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[Test,
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7500, 0, VehicleClass.Class1,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7501, 0, VehicleClass.Class1,
 			new[] { 36.5, 36.5 }),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7500, 0, VehicleClass.Class1,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7501, 0, VehicleClass.Class1,
 			new[] { 36.5, 36.5 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2,
 			new[] { 85.0, 45.2, 45.2 }),
