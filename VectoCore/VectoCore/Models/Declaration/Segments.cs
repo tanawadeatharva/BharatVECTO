@@ -130,9 +130,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return (considerInvalid || isValid == "1")
 							&& category == vehicleCategory.ToString()
 							&& axleConf == axleConfiguration.GetName()
-						// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
-						// in any case ">=" is also correct, because the segment table is sorted by weight.
-							&& massMin <= grossVehicleMassRating && grossVehicleMassRating <= massMax;
+							&& grossVehicleMassRating > massMin && grossVehicleMassRating <= massMax;
+
 				});
 			} catch (InvalidOperationException e) {
 				var errorMessage = string.Format(ErrorMessage, vehicleCategory, axleConfiguration.GetName(),
