@@ -355,7 +355,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				if (d.IsEqual(0, 0.0001)) {
 					return new List<PerSecond>();
 				}
-				return (power / d).ToEnumerable();
+				return  FilterSolutions((power / d).ToEnumerable(), p1, p2);
 			}
 
 			// non-constant torque: solve quadratic equation for engine speed (n_eng_avg)
@@ -364,7 +364,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (retVal.Length == 0) {
 				Log.Info("No real solution found for requested power demand: P: {0}, p1: {1}, p2: {2}", power, p1, p2);
 			}
-			return retVal.Where(x => x.IsGreaterOrEqual(p1.EngineSpeed.Value()) && x.IsSmallerOrEqual(p2.EngineSpeed.Value())).Select(x => Math.Round(x, 6).SI<PerSecond>());
+			return FilterSolutions(retVal.Select(x => Math.Round(x, 6).SI<PerSecond>()), p1, p2);
+		}
+
+		private IEnumerable<PerSecond> FilterSolutions(IEnumerable<PerSecond> solutions, FullLoadCurveEntry p1, FullLoadCurveEntry p2)
+		{
+			return solutions.Where(
+				x => x.IsGreaterOrEqual(p1.EngineSpeed.Value()) && x.IsSmallerOrEqual(p2.EngineSpeed.Value()));
 		}
 
 		protected internal Watt ComputeArea(PerSecond lowEngineSpeed, PerSecond highEngineSpeed)

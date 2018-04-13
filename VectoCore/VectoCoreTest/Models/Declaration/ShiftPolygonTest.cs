@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
@@ -588,6 +589,69 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				}
 			}
 		}
+
+		[TestCase]
+		public void ComputeShiftPolygonDeclarationTestConfidentialXMLJob()
+		{
+			var jobFile = @"E:\QUAM\Downloads\upshifts-missing_over-revving\FL_curve_orig.xml";
+
+			if (!File.Exists(jobFile)) {
+				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
+			}
+
+			var job = new XMLDeclarationInputDataProvider(jobFile, true);
+
+			var gearboxData = job.JobInputData.Vehicle.GearboxInputData;
+			var idlespeed = VectoMath.Max(
+				job.JobInputData.Vehicle.EngineIdleSpeed, job.JobInputData.Vehicle.EngineInputData.IdleSpeed);
+			var dao = new DeclarationDataAdapter();
+			var engineData = dao.CreateEngineData(
+				job.JobInputData.Vehicle.EngineInputData, idlespeed, gearboxData, job.JobInputData.Vehicle.TorqueLimits);
+			var axlegearRatio = job.JobInputData.Vehicle.AxleGearInputData.Ratio;
+			var rdyn = job.JobInputData.Vehicle.Axles.Where(x => x.AxleType == AxleType.VehicleDriven)
+						.Select(x => DeclarationData.Wheels.Lookup(x.Tyre.Dimension)).Average(x => x.DynamicTyreRadius.Value())
+						.SI<Meter>();
+
+			var fullLoadCurves = engineData.FullLoadCurves;
+			var gearboxFile = jobFile;
+
+			var shiftPolygons = new List<ShiftPolygon>();
+			var downshiftTransformed = new List<List<Point>>();
+			var downshiftOrig = new List<List<Point>>();
+			var upshiftOrig = new List<List<Point>>();
+			for (var i = 0; i < gearboxData.Gears.Count; i++) {
+				shiftPolygons.Add(DeclarationData.Gearbox.ComputeShiftPolygon(GearboxType.AMT, i, fullLoadCurves[(uint)(i + 1)],
+					gearboxData.Gears,
+					engineData, axlegearRatio, rdyn));
+				List<Point> tmp1, tmp2, tmp3;
+
+				ShiftPolygonComparison.ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
+					engineData, axlegearRatio, rdyn, out tmp1, out tmp2, out tmp3);
+				upshiftOrig.Add(tmp1);
+				downshiftTransformed.Add(tmp2);
+				downshiftOrig.Add(tmp3);
+			}
+
+			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(gearboxFile), fullLoadCurves, shiftPolygons,
+				Path.Combine(Path.GetDirectoryName(gearboxFile), "Shiftlines.png"),
+				DeclarationData.Gearbox.TruckMaxAllowedSpeed / rdyn * axlegearRatio * gearboxData.Gears.Last().Ratio, upshiftOrig,
+				downshiftTransformed, downshiftOrig);
+
+			var shiftLines = "";
+			var gear = 1;
+			foreach (var shiftPolygon in shiftPolygons) {
+				shiftLines += "Gear " + gear + "\n";
+				shiftLines += "Upshift\n";
+				foreach (var shiftPolygonEntry in shiftPolygon.Upshift) {
+					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+				}
+				shiftLines += "Downshift\n";
+				foreach (var shiftPolygonEntry in shiftPolygon.Downshift) {
+					shiftLines += string.Format("{0} {1}\n", shiftPolygonEntry.AngularSpeed.AsRPM, shiftPolygonEntry.Torque.Value());
+				}
+			}
+		}
+
 	}
 
 	[TestFixture]
