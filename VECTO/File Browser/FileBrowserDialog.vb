@@ -788,14 +788,17 @@ Public Class FileBrowserDialog
 			Dim di As New DirectoryInfo(_myFolder)
 			Dim aryFi = di.GetDirectories(searchPat)
 			ImageList1.Images.Clear()
-			Dim shinfo = New SHFILEINFO()
-			shinfo.szDisplayName = New String(Chr(0), 260)
-			shinfo.szTypeName = New String(Chr(0), 80)
-			SHGetFileInfo(_myFolder, 0, shinfo, Marshal.SizeOf(shinfo), SHGFI_ICON Or SHGFI_SMALLICON)
-			Dim myIcon = Icon.FromHandle(shinfo.hIcon)
-			ImageList1.Images.Add(myIcon)
+			Dim x = ImageList1.Images.Count - 1
 			For Each fi In aryFi
-				ListViewFolder.Items.Add(fi.ToString, 0)
+				x += 1
+				Dim shinfo = New SHFILEINFO()
+				shinfo.szDisplayName = New String(Chr(0), 260)
+				shinfo.szTypeName = New String(Chr(0), 80)
+				SHGetFileInfo(Path.Combine(_myFolder, fi.ToString()), 0, shinfo, Marshal.SizeOf(shinfo), SHGFI_ICON Or SHGFI_SMALLICON)
+				Dim myIcon = Icon.FromHandle(shinfo.hIcon)
+				ImageList1.Images.Add(myIcon)
+				'For Each fi In aryFi
+				ListViewFolder.Items.Add(fi.ToString, x)
 			Next
 		Catch ex As Exception
 			ListViewFolder.Items.Add("<ERROR: " & ex.Message.ToString & ">")
