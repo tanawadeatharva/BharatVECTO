@@ -11,6 +11,7 @@
 Option Infer On
 
 Imports System.IO
+Imports System.Linq
 Imports System.Text
 Imports Microsoft.VisualBasic.FileIO
 Imports System.Runtime.InteropServices
@@ -290,6 +291,9 @@ Public Class FileBrowserDialog
 	End Function
 
 	Private _title As String
+
+	Private _filesSortColumn As Integer
+	Private _directorySortColumn As Integer
 
 	'Close and save File / Folder History
 	Public Sub SaveAndClose()
@@ -803,6 +807,11 @@ Public Class FileBrowserDialog
 		Catch ex As Exception
 			ListViewFolder.Items.Add("<ERROR: " & ex.Message.ToString & ">")
 		End Try
+		_directorySortColumn = 0
+	    
+	    ListViewFolder.Sorting = SortOrder.Ascending
+	    ListViewFolder.ListViewItemSorter = new ListViewFilesItemComparer(_directorySortColumn, ListViewFolder.Sorting)
+
 	End Sub
 
 	'Load File-list
@@ -850,6 +859,9 @@ Public Class FileBrowserDialog
 		End Try
 
 		ListViewFiles.EndUpdate()
+		_filesSortColumn = 0
+	    ListViewFiles.Sorting = SortOrder.Ascending
+        ListViewFiles.ListViewItemSorter = new ListViewFilesItemComparer(_filesSortColumn, ListViewFiles.Sorting)
 	End Sub
 
 	'Rename File
@@ -950,6 +962,69 @@ lb10:
 			_noExt = False
 		End Set
 	End Property
+
+	Private Sub ListViewFiles_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles ListViewFiles.ColumnClick
+		If e.Column <> _filesSortColumn Then
+			_filesSortColumn = e.Column
+			ListViewFiles.Sorting = SortOrder.Ascending
+		Else
+			If ListViewFiles.Sorting = SortOrder.Ascending Then
+				ListViewFiles.Sorting = SortOrder.Descending
+			Else
+				ListViewFiles.Sorting = SortOrder.Ascending
+			End If
+		End If 
+
+		ListViewFiles.ListViewItemSorter = new ListViewFilesItemComparer(e.Column, ListViewFiles.Sorting)
+		ListViewFiles.Sort()
+	End Sub
+
+	Private Sub ListViewFolder_ColumnClick(sender As Object, e As ColumnClickEventArgs) Handles ListViewFolder.ColumnClick
+		if e.Column <> _directorySortColumn Then
+			_directorySortColumn = e.Column
+			ListViewFolder.Sorting = SortOrder.Ascending
+		Else 
+			if ListViewFolder.Sorting = SortOrder.Ascending Then
+				ListViewFolder.Sorting = SortOrder.Descending
+			Else 
+				ListViewFolder.Sorting=SortOrder.Ascending
+			End If
+		End If
+		ListViewFolder.ListViewItemSorter = new ListViewFilesItemComparer(e.Column, ListViewFolder.Sorting)
+		ListViewFolder.Sort()
+	End Sub
+
+	Private Class ListViewFilesItemComparer
+		Implements IComparer
+
+		Private _col As Integer
+		Private _order As SortOrder
+
+		Public Sub New()
+			_col = 0
+		End Sub
+
+		Public Sub New(column As Integer, sortOrder As SortOrder)
+			_col = column
+			_order = sortOrder
+		End Sub
+
+		Public Function Compare(x As Object, y As Object) As Integer _ 
+			Implements IComparer.Compare
+			Dim returnVal as Integer = -1
+			returnVal = [String].Compare(CType(x, ListViewItem).SubItems(_col).Text, _
+										 CType(y, ListViewItem).SubItems(_col).Text)
+			' Determine whether the sort order is descending.
+			If _order = SortOrder.Descending Then
+				' Invert the value returned by String.Compare.
+				returnVal *= -1
+			End If
+
+			Return returnVal
+		End Function
+	End Class
+
+
 End Class
 
 
