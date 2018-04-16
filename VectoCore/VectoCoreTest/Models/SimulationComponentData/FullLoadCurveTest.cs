@@ -56,13 +56,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 		public static List<string> LogList = new List<string>();
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
-        [TestCase]
+		[TestCase]
 		public void TestFullLoadStaticTorque()
 		{
 			var fldCurve = FullLoadCurveReader.ReadFromFile(CoachEngineFLD);
