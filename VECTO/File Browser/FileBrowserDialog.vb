@@ -842,7 +842,7 @@ Public Class FileBrowserDialog
 								SHGFI_ICON Or SHGFI_SMALLICON)
 					Dim myIcon = Icon.FromHandle(shinfo.hIcon)
 					ImageList1.Images.Add(myIcon)
-					ListViewFiles.Items.Add(fi.ToString, x + 1)
+					ListViewFiles.Items.Add(fi.ToString, x)
 				Next
 			Next
 		Catch ex As Exception
