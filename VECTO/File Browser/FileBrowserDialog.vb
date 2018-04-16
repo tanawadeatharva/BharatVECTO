@@ -827,12 +827,12 @@ Public Class FileBrowserDialog
 		Try
 			'Add Folder
 			Dim di As New DirectoryInfo(_myFolder)
-			Dim aryFi As FileInfo()
+			'Dim aryFi As FileInfo()
 			Dim fi As FileInfo
-			Dim x = -1
+			Dim x = ImageList1.Images.Count - 1
 			For Each SearchExt In extStr
 				Dim searchPat = "*" & Trim(searchFile) & "*." & Trim(SearchExt)
-				aryFi = di.GetFiles(searchPat)
+				Dim aryFi = di.GetFiles(searchPat)
 				For Each fi In aryFi
 					x += 1
 					Dim shinfo = New SHFILEINFO()
