@@ -1375,12 +1375,14 @@ lbFound:
 		ChBoxMod1Hz.Checked = Cfg.Mod1Hz
 
 		RbDecl.Checked = Cfg.DeclMode
+        cbValidateRunData.Checked = cfg.ValidateRunData
 	End Sub
 
 	'Update config class from options in GUI, e.g. before running calculations 
 	Private Sub SetOptions()
 		Cfg.ModOut = ChBoxModOut.Checked
 		Cfg.Mod1Hz = ChBoxMod1Hz.Checked
+        Cfg.ValidateRunData = cbValidateRunData.Checked
 	End Sub
 
 #End Region
