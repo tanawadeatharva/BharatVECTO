@@ -78,6 +78,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				var drivingCycle = CyclesCache.ContainsKey(cycle.CycleData.Source)
 					? CyclesCache[cycle.CycleData.Source]
 					: DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, crossWindRequired);
+
 				return new VectoRunData {
 					JobName = InputDataProvider.JobInputData.JobName,
 					EngineData = engineData,
@@ -92,7 +93,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					Retarder = dao.CreateRetarderData(InputDataProvider.JobInputData.Vehicle.RetarderInputData),
 					PTO = ptoTransmissionData,
 					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
-					ExecutionMode = ExecutionMode.Engineering
+					ExecutionMode = ExecutionMode.Engineering,
+					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel
 				};
 			});
 		}
