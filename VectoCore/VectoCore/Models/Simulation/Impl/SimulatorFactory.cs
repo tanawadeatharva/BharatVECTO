@@ -200,19 +200,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			switch (data.Cycle.CycleType) {
 				case CycleType.DistanceBased:
 					if ((data.SimulationType & SimulationType.DistanceCycle) == 0) {
-						throw new VectoException("Distance-based cycle can not be simulated in {0} Mode", data.SimulationType);
+						throw new VectoException("Distance-based cycle can not be simulated in {0} mode", data.SimulationType);
 					}
 					run = new DistanceRun(builder.Build(data));
 					break;
 				case CycleType.EngineOnly:
 					if ((data.SimulationType & SimulationType.EngineOnly) == 0) {
-						throw new VectoException("Engine-only cycle can not be simulated in {0} Mode", data.SimulationType);
+						throw new VectoException("Engine-only cycle can not be simulated in {0} mode", data.SimulationType);
 					}
 					run = new TimeRun(builder.Build(data));
 					break;
 				case CycleType.VTP:
 					if ((data.SimulationType & SimulationType.VerificationTest) == 0) {
-						throw new VectoException("VTP-cycle can not be simulated in {0} Mode", data.SimulationType);
+						throw new VectoException("VTP-cycle can not be simulated in {0} mode", data.SimulationType);
 					}
 					run = new TimeRun(builder.Build(data));
 					break;
@@ -221,7 +221,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case CycleType.MeasuredSpeed:
 				case CycleType.MeasuredSpeedGear:
 					if ((data.SimulationType & (SimulationType.PWheel | SimulationType.MeasuredSpeedCycle)) == 0) {
-						throw new VectoException("{1}-cycle can not be simulated in {0} Mode", data.SimulationType, data.Cycle.CycleType);
+						throw new VectoException("{1}-cycle can not be simulated in {0} mode", data.SimulationType, data.Cycle.CycleType);
 					}
 					run = new TimeRun(builder.Build(data));
 					break;

@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var inputData = JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\EngineOnlyJobWithDistanceCycle.vecto");
 			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, null);
 
-			AssertHelper.Exception<VectoException>(() => factory.SimulationRuns().ToArray(), "Distance-based cycle can not be simulated in EngineOnly Mode");
+			AssertHelper.Exception<VectoException>(() => factory.SimulationRuns().ToArray(), "Distance-based cycle can not be simulated in EngineOnly mode");
 		}
 
 		[TestCase]
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				container.AddRuns(factory);
 				container.Execute();
 				//factory.SimulationRuns().ToArray();
-			}, "MeasuredSpeed-cycle can not be simulated in EngineOnly Mode");
+			}, "MeasuredSpeed-cycle can not be simulated in EngineOnly mode");
 		}
 	}
 }
