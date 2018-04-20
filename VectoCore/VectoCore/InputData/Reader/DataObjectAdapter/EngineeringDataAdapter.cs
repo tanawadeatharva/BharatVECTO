@@ -353,7 +353,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					LossMap = PTOIdleLossMapReader.Create(pto.PTOLossMap),
 				};
 				if (pto.PTOCycle != null) {
-					ptoData.PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.PTOCycle, CycleType.PTO, "PTO", false);
+					ptoData.PTOCycle = DrivingCycleDataReader.ReadFromDataTable(pto.PTOCycle, "PTO", false);
 				}
 				return ptoData;
 			}
