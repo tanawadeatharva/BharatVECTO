@@ -1,7 +1,7 @@
 ##Engine: Fuel Consumption Calculation
 
 
-The base FC value is interpolated from the stationary [FC map](#fuel-consumption-map-.vmap). If necessary the base value is corrected to compensate for unconsidered auxiliary energy consumption for vehicles with Start/Stop. In Declaration Mode additionally the WHTC correction is applied, see below.
+The base FC value is interpolated from the stationary [FC map](#fuel-consumption-map-.vmap). If necessary the base value is corrected to compensate for unconsidered auxiliary energy consumption for vehicles with Start/Stop. In Declaration Mode [additional correction factors are applied](#engine-correction-factors).
 
 The CO~2~ result for the actual mission profile is directly derived from the fuel consumption using a gravimetric [CO~2~/FC factor](#settings).
 
@@ -23,7 +23,6 @@ The interpolation is based on [Delaunay Triangulation ![](pics/external-icon%20
 ![](pics/FCmap.png)
 
 *Delaunay Triangulation Example*
-
 
 
 

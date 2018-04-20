@@ -184,11 +184,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						PTO = mission.MissionType == MissionType.MunicipalUtility
 							? _municipalPtoTransmissionData
 							: _ptoTransmissionData,
-						InputDataHash = InputDataProvider.XMLHash
+						InputDataHash = InputDataProvider.XMLHash,
+						SimulationType = SimulationType.DistanceCycle
+
 					};
 					simulationRunData.EngineData.FuelConsumptionCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
 						mission.MissionType.GetNonEMSMissionType(), _engineData.WHTCRural, _engineData.WHTCUrban, _engineData.WHTCMotorway) *
-																					_engineData.ColdHotCorrectionFactor;
+						_engineData.ColdHotCorrectionFactor * _engineData.CorrectionFactorRegPer;
 					simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
 					yield return simulationRunData;
 				}

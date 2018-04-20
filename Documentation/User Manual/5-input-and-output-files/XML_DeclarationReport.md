@@ -15,4 +15,6 @@ Both reports are in XML format and contain a description of the simulated vehicl
 
 Sample reports are distributed with the generic vehicles.
 
+**Note: ** For better readability and improved presentation, the XML has attached a stylesheet that allows nice rendering in web-browsers. If you open an XML report in your browser, you may be asked the credentials for the CITnet SVN server (same credentials as you need for downloading VECTO) as the CSS is hosted on CITnet.
+
 </div>

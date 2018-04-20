@@ -71,9 +71,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, Range(double.MinValue, double.MaxValue)]
 		public double CorrectionFactorRegPer { get; internal set; }
 
-		[Required, Range(double.MinValue, double.MaxValue)]
-		public double CorrectionFactorNCV { get; internal set; }
-
 		public double FuelConsumptionCorrectionFactor { get; internal set; }
 
 		public PerSecond RatedSpeedDeclared { get; internal set; }
@@ -89,7 +86,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			WHTCUrban = 1;
 			WHTCMotorway = 1;
 			WHTCRural = 1;
-			CorrectionFactorNCV = 1;
 			CorrectionFactorRegPer = 1;
 			FuelConsumptionCorrectionFactor = 1;
 		}
@@ -108,7 +104,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				ConsumptionMap = ConsumptionMap,
 				FullLoadCurves = FullLoadCurves,
 				CorrectionFactorRegPer = CorrectionFactorRegPer,
-				CorrectionFactorNCV = CorrectionFactorNCV,
 				ColdHotCorrectionFactor = ColdHotCorrectionFactor,
 				FuelConsumptionCorrectionFactor = FuelConsumptionCorrectionFactor,
 				RatedPowerDeclared = RatedPowerDeclared,

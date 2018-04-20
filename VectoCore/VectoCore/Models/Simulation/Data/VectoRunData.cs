@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -105,7 +106,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
         public AuxFanData FanData { get; internal set; }
 
-        public class AuxData
+		public SimulationType SimulationType { get; set; }
+
+		public class AuxData
 		{
 			// ReSharper disable once InconsistentNaming
 			public string ID;

@@ -84,9 +84,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool considerInvalid)
 		{
-		    if (grossVehicleMassRating == null || grossVehicleMassRating < 7.5.SI(Unit.SI.Ton)){
-				throw new VectoException("Gross vehicle mass must be greater than 7.5 tons");
-			}
 
 			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, considerInvalid);
 			if (row == null) {
@@ -133,9 +130,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return (considerInvalid || isValid == "1")
 							&& category == vehicleCategory.ToString()
 							&& axleConf == axleConfiguration.GetName()
-						// MK 2016-06-07: normally the next condition should be "mass > massMin", except for 7.5t where is should be ">="
-						// in any case ">=" is also correct, because the segment table is sorted by weight.
-							&& massMin <= grossVehicleMassRating && grossVehicleMassRating <= massMax;
+							&& grossVehicleMassRating > massMin && grossVehicleMassRating <= massMax;
+
 				});
 			} catch (InvalidOperationException e) {
 				var errorMessage = string.Format(ErrorMessage, vehicleCategory, axleConfiguration.GetName(),
@@ -208,13 +204,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 						trailers.Add(CreateTrailer(trailerValue, GetTrailerAxleWeightDistribution(row, missionType), true));
 					}
 				}
-
-				//var semiTrailerField = row.Field<string>("semitrailer");
-				//var semiTrailer = !string.IsNullOrWhiteSpace(semiTrailerField)
-				//	? DeclarationData.StandardBodies.Lookup(semiTrailerField)
-				//	: StandardBodies.Empty;
-
-				//trailer += semiTrailer;
 
 				// limit gvw to MaxGVW (40t)
 				var gvw =

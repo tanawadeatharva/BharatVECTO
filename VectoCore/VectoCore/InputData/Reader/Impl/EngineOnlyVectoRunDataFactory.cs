@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -54,8 +55,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					JobName = InputDataProvider.JobInputData.JobName,
 					EngineData = dao.CreateEngineData(InputDataProvider.JobInputData.EngineOnly, null, new List<ITorqueLimitInputData>()),
 					Cycle = new DrivingCycleProxy(
-						DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, CycleType.EngineOnly, cycle.Name, false), cycle.Name),
-					ExecutionMode = ExecutionMode.Engineering
+						DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false), cycle.Name),
+					ExecutionMode = ExecutionMode.Engineering,
+					SimulationType = SimulationType.EngineOnly
 				};
 				yield return simulationRunData;
 			}

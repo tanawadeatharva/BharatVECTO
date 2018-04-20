@@ -28,11 +28,11 @@ with the correction factor CF~urb~, CF~rur~, CF~mot~ coming from the [Engine](#e
 
 In order to balance the trade-off between emissions and fuel consumption during cold and hot starting conditions an additional balancing factor $CF_{C/H}$ is determined from the overall specific fuel consumption over the cold start and hot start WHTC test. Additional correction factors considered are regarding the net calorific value of the fuel ($CF_{NCV}$) and exhaust after-treatment systems ($CF_{RegPer}$). This values are part of the output from the engine component tool.
 
-The WHTC-corrected fuel consumption is then calculated with: $FC_{whtc} = FC \cdot CF_{total} \cdot CF_{C/H} \cdot CF_{RegPer} \cdot CF_{NCV}$
+The WHTC-corrected fuel consumption is then calculated with: $FC_{final} = FC \cdot CF_{total} \cdot CF_{C/H} \cdot CF_{RegPer}$
 </div>
 
 <div class="engineering">
 In engineering mode a single correction is applied by Vecto. The fuel consumption interpolated from the FC map is multiplied by the engineering correction factor. 
 
-$FC_{whtc} = FC \cdot CF_{Engineering}$
+$FC_{final} = FC \cdot CF_{Engineering}$
 </div>

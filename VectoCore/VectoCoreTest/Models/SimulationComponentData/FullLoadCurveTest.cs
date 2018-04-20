@@ -56,13 +56,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 		public static List<string> LogList = new List<string>();
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
-        [TestCase]
+		[TestCase]
 		public void TestFullLoadStaticTorque()
 		{
 			var fldCurve = FullLoadCurveReader.ReadFromFile(CoachEngineFLD);
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual((0.51 * totalArea).Value(),
 				fldCurve.ComputeArea(fldCurve.EngineData.IdleSpeed, fldCurve.PreferredSpeed).Value(), 1E-3);
 			AssertHelper.AreRelativeEqual(194.515816596908.SI<PerSecond>(), fldCurve.N95hSpeed);
-			AssertHelper.AreRelativeEqual(83.81645.SI<PerSecond>(), fldCurve.LoSpeed);
+			AssertHelper.AreRelativeEqual(94.24639.SI<PerSecond>(), fldCurve.LoSpeed);
 			AssertHelper.AreRelativeEqual(219.084329211505.SI<PerSecond>(), fldCurve.HiSpeed);
 			AssertHelper.AreRelativeEqual(2300.SI<NewtonMeter>(), fldCurve.MaxTorque);
 			AssertHelper.AreRelativeEqual(-320.SI<NewtonMeter>(), fldCurve.MaxDragTorque);
@@ -186,6 +186,43 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			//Assert.AreEqual((0.51 * totalArea).Value(),
 			//	fldCurve.ComputeArea(fldCurve.EngineData.IdleSpeed, fldCurve.PreferredSpeed).Value(), 1E-3);
 			//AssertHelper.AreRelativeEqual(130.691151551712.SI<PerSecond>(), fldCurve.PreferredSpeed);
+		}
+
+		/// <summary>
+		///		[VECTO-679]
+		/// </summary>
+		[TestCase]
+		public void TestN95hComputation()
+		{
+			var fldData = new[] {
+				"590,486,-44,0.60	",
+				"600,486,-44,0.60	",
+				"800,755,-54,0.60	",
+				"1000,883,-62,0.60	",
+				"1200,899,-74,0.60	",
+				"1300,899,-80,0.60	",
+				"1400,899,-87,0.60	",
+				"1500,899,-92,0.60	",
+				"1600,899,-97,0.60	",
+				"1700,890,-100,0.60	",
+				"1800,881,-103,0.60	",
+				"1900,867,-107,0.60	",
+				"2000,853,-111,0.43	",
+				"2150,811,-118,0.29	",
+				"2200,802,-125,0.25	",
+				"2300,755,-130,0.25	",
+				"2400,705,-135,0.25	",
+				"2500,644,-140,0.25	",
+				"2600,479,-145,0.25	",
+				"2700,0,-149,0.25	",
+			};
+			var fldEntries = InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm],<PT1> [s] ", fldData);
+			var fldCurve = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(fldEntries));
+			fldCurve.EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad() };
+
+			Assert.AreEqual(2420.5, fldCurve.N95hSpeed.AsRPM, 1);
+
+			
 		}
 
 		/// <summary>

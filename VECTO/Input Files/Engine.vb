@@ -108,7 +108,6 @@ Public Class Engine
 
 	Public ColdHotBalancingFactorInput As Double
 	Public correctionFactorRegPerInput As Double
-	Public correctionFactorNCVInput As Double
 	Public FuelTypeInput As FuelType
 	Public ratedPowerInput As Watt
 	Public ratedSpeedInput As PerSecond
@@ -367,12 +366,6 @@ Public Class Engine
 	Public ReadOnly Property CorrectionFactorRegPer As Double Implements IEngineDeclarationInputData.CorrectionFactorRegPer
 		Get
 			Return correctionFactorRegPerInput
-		End Get
-	End Property
-
-	Public ReadOnly Property CorrectionFactorNCV As Double Implements IEngineDeclarationInputData.CorrectionFactorNCV
-		Get
-			Return correctionFactorNCVInput
 		End Get
 	End Property
 

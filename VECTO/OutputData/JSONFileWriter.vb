@@ -52,7 +52,6 @@ Public Class JSONFileWriter
 		body.Add("WHTC-Engineering", eng.WHTCEngineering)
 		body.Add("ColdHotBalancingFactor", eng.ColdHotBalancingFactor)
 		body.Add("CFRegPer", eng.CorrectionFactorRegPer)
-		body.Add("CFNCV", eng.CorrectionFactorNCV)
 		body.Add("RatedPower", eng.RatedPowerDeclared.Value())
 		body.Add("RatedSpeed", eng.RatedSpeedDeclared.AsRPM)
 		body.Add("MaxTorque", eng.MaxTorqueDeclared.Value())

@@ -156,6 +156,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.WHTCMotorway = engine.WHTCMotorway;
 			retVal.WHTCRural = engine.WHTCRural;
 			retVal.ColdHotCorrectionFactor = engine.ColdHotBalancingFactor;
+			retVal.CorrectionFactorRegPer = engine.CorrectionFactorRegPer;
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearbox.Type);
 			var limits = torqueLimits.ToDictionary(e => e.Gear);
 			var numGears = gearbox.Gears.Count;
