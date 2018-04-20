@@ -122,7 +122,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
                     FanData = new AuxFanData() {
 						FanCoefficients = InputDataProvider.JobInputData.FanPowerCoefficents.ToArray(),
 						FanDiameter = InputDataProvider.JobInputData.FanDiameter,
-						}
+						},
+					SimulationType = SimulationType.VerificationTest
                 };
             });
         }

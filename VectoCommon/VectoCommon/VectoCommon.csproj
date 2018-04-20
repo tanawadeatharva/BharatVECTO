@@ -71,6 +71,7 @@
     <Compile Include="Models\LoggingObject.cs" />
     <Compile Include="Models\OperatingPoint.cs" />
     <Compile Include="Models\RetarderType.cs" />
+    <Compile Include="Models\SimulationType.cs" />
     <Compile Include="Models\VehicleCategory.cs" />
     <Compile Include="OutputData\IOutputFileWriter.cs" />
     <Compile Include="OutputData\IOutputPlugin.cs" />
@@ -121,5 +122,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-    <Import Project="$(SolutionDir)Build\TextPreProcessing.targets" />
+  <Import Project="$(SolutionDir)Build\TextPreProcessing.targets" />
 </Project>

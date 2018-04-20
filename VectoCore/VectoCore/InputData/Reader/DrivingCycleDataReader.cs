@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 		/// <param name="name">The name.</param>
 		/// <param name="crossWindRequired"></param>
 		/// <returns></returns>
-		public static DrivingCycleData ReadFromDataTable(DataTable data, CycleType type, string name, bool crossWindRequired)
+		private static DrivingCycleData ReadFromDataTable(DataTable data, CycleType type, string name, bool crossWindRequired)
 		{
 			if (data == null) {
 				LogManager.GetLogger(typeof(DrivingCycleDataReader).FullName)

@@ -89,23 +89,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private void CreateEngineeringDataReader(IInputDataProvider dataProvider)
 		{
-            if (dataProvider is IVTPInputDataProvider) {
-                var eptpProvider = dataProvider as IVTPInputDataProvider;
-                DataReader = new EngineeringVTPModeVectoRunDataFactory(eptpProvider);
-                return;
-            }
-            if (dataProvider is IEngineeringInputDataProvider) {
-                var engDataProvider = dataProvider as IEngineeringInputDataProvider;
-                if (engDataProvider.JobInputData.EngineOnlyMode) {
-                    DataReader = new EngineOnlyVectoRunDataFactory(engDataProvider);
-                    _engineOnlyMode = true;
-                } else {
-                    DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
-                }
-                return;
-            }
-            throw  new VectoException("Unknown InputData for Engineering Mode!");
-        }
+			if (dataProvider is IVTPInputDataProvider) {
+				var eptpProvider = dataProvider as IVTPInputDataProvider;
+				DataReader = new EngineeringVTPModeVectoRunDataFactory(eptpProvider);
+				return;
+			}
+			if (dataProvider is IEngineeringInputDataProvider) {
+				var engDataProvider = dataProvider as IEngineeringInputDataProvider;
+				if (engDataProvider.JobInputData.EngineOnlyMode) {
+					DataReader = new EngineOnlyVectoRunDataFactory(engDataProvider);
+					_engineOnlyMode = true;
+				} else {
+					DataReader = new EngineeringModeVectoRunDataFactory(engDataProvider);
+				}
+				return;
+			}
+			throw  new VectoException("Unknown InputData for Engineering Mode!");
+		}
 
 		private static IDeclarationInputDataProvider ToDeclarationInputDataProvider(IInputDataProvider dataProvider)
 		{
@@ -199,13 +199,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			VectoRun run;
 			switch (data.Cycle.CycleType) {
 				case CycleType.DistanceBased:
+					if ((data.SimulationType & SimulationType.DistanceCycle) == 0) {
+						throw new VectoException("Distance-based cycle can not be simulated in {0} mode", data.SimulationType);
+					}
 					run = new DistanceRun(builder.Build(data));
 					break;
 				case CycleType.EngineOnly:
+					if ((data.SimulationType & SimulationType.EngineOnly) == 0) {
+						throw new VectoException("Engine-only cycle can not be simulated in {0} mode", data.SimulationType);
+					}
+					run = new TimeRun(builder.Build(data));
+					break;
+				case CycleType.VTP:
+					if ((data.SimulationType & SimulationType.VerificationTest) == 0) {
+						throw new VectoException("VTP-cycle can not be simulated in {0} mode", data.SimulationType);
+					}
+					run = new TimeRun(builder.Build(data));
+					break;
+
 				case CycleType.PWheel:
-                case CycleType.VTP:
 				case CycleType.MeasuredSpeed:
 				case CycleType.MeasuredSpeedGear:
+					if ((data.SimulationType & (SimulationType.PWheel | SimulationType.MeasuredSpeedCycle)) == 0) {
+						throw new VectoException("{1}-cycle can not be simulated in {0} mode", data.SimulationType, data.Cycle.CycleType);
+					}
 					run = new TimeRun(builder.Build(data));
 					break;
 				case CycleType.PTO:
