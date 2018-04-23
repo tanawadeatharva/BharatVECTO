@@ -1733,6 +1733,9 @@
     <None Include="TestData\Integration\FullPowerTrain\unlimited.vacc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_noGear.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

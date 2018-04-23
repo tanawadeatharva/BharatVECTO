@@ -42,7 +42,7 @@ Public Class JSONFileWriter
 
 		body.Add("ModelName", eng.Model)
 
-        	body.Add("Displacement", eng.Displacement.ConvertToCubicCentiMeter().ToString())
+			body.Add("Displacement", eng.Displacement.ConvertToCubicCentiMeter().ToString())
 		body.Add("IdlingSpeed", eng.IdleSpeed.AsRPM)
 		body.Add("Inertia", eng.Inertia.Value())
 
@@ -206,8 +206,8 @@ Public Class JSONFileWriter
 				{"CurbWeight", vehicle.CurbMassChassis.Value()},
 				{"CurbWeightExtra", vehicle.CurbMassExtra.Value()},
 				{"Loading", vehicle.Loading.Value()},
-           		{"MassMax", vehicle.GrossVehicleMassRating.ConvertToTon().Value},
-                {"rdyn", vehicle.DynamicTyreRadius.ConvertToMilliMeter().Value},
+				{"MassMax", vehicle.GrossVehicleMassRating.ConvertToTon().Value},
+				{"rdyn", vehicle.DynamicTyreRadius.ConvertToMilliMeter().Value},
 				{"CdCorrMode", airdrag.CrossWindCorrectionMode.GetName()},
 				{"CdCorrFile",
 				If((airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse
@@ -254,8 +254,8 @@ Public Class JSONFileWriter
 
 		Dim job As IEngineeringJobInputData = input.JobInputData()
 
-        body.Add("SavedInDeclMode", job.SavedInDeclarationMode)
-        body.Add("EngineOnlyMode", job.EngineOnlyMode)
+		body.Add("SavedInDeclMode", job.SavedInDeclarationMode)
+		body.Add("EngineOnlyMode", job.EngineOnlyMode)
 
 		If job.EngineOnlyMode Then
 			body.Add("EngineFile", GetRelativePath(job.EngineOnly.Source, basePath))
@@ -270,8 +270,8 @@ Public Class JSONFileWriter
 		body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.EngineInputData.Source, basePath))
 		body.Add("GearboxFile", GetRelativePath(input.JobInputData.Vehicle.GearboxInputData.Source, basePath))
 
-        
-	    Dim aux As IAuxiliariesEngineeringInputData = job.Vehicle.AuxiliaryInputData()
+		
+		Dim aux As IAuxiliariesEngineeringInputData = job.Vehicle.AuxiliaryInputData()
 		'AA-TB
 		'ADVANCED AUXILIARIES 
 		body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.GetName())
@@ -301,12 +301,12 @@ Public Class JSONFileWriter
 		Next
 
 		body.Add("Aux", auxList)
-        If Not job.SavedInDeclarationMode Then
-            body.Add("Padd", pAdd)
-        End If
-       
-	    Dim driver As IDriverEngineeringInputData =  input.DriverInputData
-        
+		If Not job.SavedInDeclarationMode Then
+			body.Add("Padd", pAdd)
+		End If
+	   
+		Dim driver As IDriverEngineeringInputData =  input.DriverInputData
+		
 		If Not job.SavedInDeclarationMode Then
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.Source, basePath))
 		End If
@@ -353,23 +353,29 @@ Public Class JSONFileWriter
 		WriteFile(header, body, filename)
 	End Sub
 
-	Public Sub SaveJob(input As IVTPInputDataProvider, filename As String) Implements IOutputFileWriter.SaveJob
-		Dim basePath As String = Path.GetDirectoryName(filename)
-		'Header
+	Public Sub SaveJob(input As IVTPDeclarationInputDataProvider, filename As String) Implements IOutputFileWriter.SaveJob
 		Dim header As Dictionary(Of String, Object) = GetHeader(VectoJobFormatVersion)
+		Dim body As Dictionary(Of string, Object) =  SaveVTPJob(input.JobInputData, filename, true) 
+		WriteFile(header, body, filename)
+	end Sub
+	Public Sub SaveJob(input As IVTPEngineeringInputDataProvider, filename As String) Implements IOutputFileWriter.SaveJob
+		Dim header As Dictionary(Of String, Object) = GetHeader(VectoJobFormatVersion)
+		Dim body As Dictionary(Of string, Object) =  SaveVTPJob(input.JobInputData, filename, False) 
+		WriteFile(header, body, filename)
+	End Sub
 
+	Private Function SaveVTPJob(job As IVTPDeclarationJobInputData, filename As String, declarationmode As Boolean) As Dictionary(Of String,Object)
+	   
 		'Body
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-        Dim job As IVTPJobInputData = input.JobInputData
-        body.Add("SavedInDeclMode", False)
-        body.Add("DeclarationVehicle", GetRelativePath(job.Vehicle.Source, Path.GetDirectoryName(filename)))
-        body.Add("FanPowerCoefficients", job.FanPowerCoefficents)
-        body.Add("FanDiameter", job.FanDiameter.Value())
-        body.Add("Cycles",
-                 job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
-
-        WriteFile(header, body, filename)
-	End Sub
+		body.Add("SavedInDeclMode", declarationmode)
+		body.Add("DeclarationVehicle", GetRelativePath(job.Vehicle.Source, Path.GetDirectoryName(filename)))
+		body.Add("FanPowerCoefficients", job.FanPowerCoefficents)
+		body.Add("FanDiameter", job.FanDiameter.Value())
+		body.Add("Cycles",
+				 job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
+		return body
+	End Function
 
 	Public Sub ExportJob(input As IEngineeringInputDataProvider, filename As String, separateFiles As Boolean) _
 		Implements IOutputFileWriter.ExportJob
@@ -409,3 +415,4 @@ Public Class JSONFileWriter
 		WriteFile(JToken.FromObject(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}}), path)
 	End Sub
 End Class
+

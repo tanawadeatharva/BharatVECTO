@@ -29,48 +29,26 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Data;
 
-namespace TUGraz.VectoCore.InputData.Reader.Impl
+namespace TUGraz.VectoCommon.InputData
 {
-	internal class EngineeringVTPModeVectoRunDataFactory : DeclarationVTPModeVectoRunDataFactory
+	public interface IVTPDeclarationInputDataProvider : IInputDataProvider
 	{
-		
-		public EngineeringVTPModeVectoRunDataFactory(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData)
-		{
-			
-		}
+		IVTPDeclarationJobInputData JobInputData { get; }
+	}
 
-		public override IEnumerable<VectoRunData> NextRun()
-		{
-			if (_initException != null) {
-				throw _initException;
-			}
-			return JobInputData.Cycles.Select(
-				cycle => {
-					var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false);
-					// TODO: MQ 2018-04-23: use correct loading here!?
-					var runData = CreateVectoRunData(_segment, _segment.Missions.First(), 0.SI<Kilogram>());
-					runData.Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name);
-					runData.Aux = _auxVTP;
-					runData.FanData = new AuxFanData() {
-						FanCoefficients = JobInputData.FanPowerCoefficents.ToArray(),
-						FanDiameter = JobInputData.FanDiameter,
-					};
-					runData.ExecutionMode = ExecutionMode.Engineering;
-					runData.SimulationType = SimulationType.VerificationTest;
-					return runData;
-				});
-		}
+	public interface IVTPDeclarationJobInputData
+	{
+		IVehicleDeclarationInputData Vehicle { get; }
+
+		IList<ICycleData> Cycles { get; }
+
+		IEnumerable<double> FanPowerCoefficents { get; }
+
+		bool SavedInDeclarationMode { get; }
+
+		Meter FanDiameter { get; }
 	}
 }
