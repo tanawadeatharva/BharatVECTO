@@ -306,7 +306,7 @@ Public Class VectoJob
 
         'vectoJob._engineInputData = New JSONComponentInputData(vectoJob._engineFile.FullPath)
 
-        If vectoJob.Vehicle.EngineInputData Is Nothing Then _
+        If vectoJob.JobInputData.EngineOnly Is Nothing Then _
             result.Add(New ValidationResult("Engine File is missing or invalid"))
         If result.Any() Then
             Return _
