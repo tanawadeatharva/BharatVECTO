@@ -253,15 +253,12 @@ Public Class JSONFileWriter
 		'SavedInDeclMode = Cfg.DeclMode
 
 		Dim job As IEngineeringJobInputData = input.JobInputData()
-		Dim aux As IAuxiliariesEngineeringInputData = input.JobInputData.Vehicle.AuxiliaryInputData()
-		Dim driver As IDriverEngineeringInputData = input.DriverInputData
 
-		body.Add("SavedInDeclMode", job.SavedInDeclarationMode)
-
-		body.Add("EngineOnlyMode", job.EngineOnlyMode)
+        body.Add("SavedInDeclMode", job.SavedInDeclarationMode)
+        body.Add("EngineOnlyMode", job.EngineOnlyMode)
 
 		If job.EngineOnlyMode Then
-			body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.EngineInputData.Source, basePath))
+			body.Add("EngineFile", GetRelativePath(job.EngineOnly.Source, basePath))
 			body.Add("Cycles",
 					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 			WriteFile(header, body, filename)
@@ -273,6 +270,8 @@ Public Class JSONFileWriter
 		body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.EngineInputData.Source, basePath))
 		body.Add("GearboxFile", GetRelativePath(input.JobInputData.Vehicle.GearboxInputData.Source, basePath))
 
+        
+	    Dim aux As IAuxiliariesEngineeringInputData = job.Vehicle.AuxiliaryInputData()
 		'AA-TB
 		'ADVANCED AUXILIARIES 
 		body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.GetName())
@@ -302,10 +301,12 @@ Public Class JSONFileWriter
 		Next
 
 		body.Add("Aux", auxList)
-
-		If Not job.SavedInDeclarationMode Then
-			body.Add("Padd", pAdd)
-		End If
+        If Not job.SavedInDeclarationMode Then
+            body.Add("Padd", pAdd)
+        End If
+       
+	    Dim driver As IDriverEngineeringInputData =  input.DriverInputData
+        
 		If Not job.SavedInDeclarationMode Then
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.Source, basePath))
 		End If
