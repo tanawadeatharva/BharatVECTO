@@ -1276,8 +1276,9 @@ lbFound:
 			VectoVTPJobForm.VectoNew()
 		Else
 			Try
-				Dim job As IVTPInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x), IVTPInputDataProvider)
-				If job Is Nothing Then
+				Dim engJob As IVTPEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x), IVTPEngineeringInputDataProvider)
+			    Dim declJob As IVTPDeclarationInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(x), IVTPDeclarationInputDataProvider)
+				If engJob Is Nothing AndAlso declJob is Nothing Then
 					ShowVectoJobForm()
 					VectoJobForm.VECTOload2Form(x)
 				Else

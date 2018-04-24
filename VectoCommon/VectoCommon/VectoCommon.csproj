@@ -48,6 +48,8 @@
     <Compile Include="InputData\TableData.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="InputData\VTPDeclarationInputData.cs" />
+    <Compile Include="InputData\VTPEngineeringInputData.cs" />
     <Compile Include="Models\AuxiliaryType.cs" />
     <Compile Include="Exceptions\VectoExceptions.cs" />
     <Compile Include="Exceptions\VectoSimulationException.cs" />

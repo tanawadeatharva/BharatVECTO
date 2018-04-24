@@ -75,9 +75,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			switch (mode) {
 				case ExecutionMode.Declaration:
-					var declDataProvider = ToDeclarationInputDataProvider(dataProvider);
-					var report = declarationReport ?? new XMLDeclarationReport(writer);
-					DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, report);
+					CreateDeclarationDataReader(dataProvider, declarationReport);
 					break;
 				case ExecutionMode.Engineering:
 					CreateEngineeringDataReader(dataProvider);
@@ -87,11 +85,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
+		private void CreateDeclarationDataReader(IInputDataProvider dataProvider, IDeclarationReport declarationReport)
+		{
+			if (dataProvider is IVTPDeclarationInputDataProvider) {
+				var vtpProvider = dataProvider as IVTPDeclarationInputDataProvider;
+				DataReader = new DeclarationVTPModeVectoRunDataFactory(vtpProvider);
+				return;
+			}
+			if (dataProvider is IDeclarationInputDataProvider) {
+				var declDataProvider = dataProvider as IDeclarationInputDataProvider;
+				var report = declarationReport ?? new XMLDeclarationReport(ModWriter);
+				DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, report);
+				return;
+			}
+			throw new VectoException("Unknown InputData for Declaration Mode!");
+		}
+
 		private void CreateEngineeringDataReader(IInputDataProvider dataProvider)
 		{
-			if (dataProvider is IVTPInputDataProvider) {
-				var eptpProvider = dataProvider as IVTPInputDataProvider;
-				DataReader = new EngineeringVTPModeVectoRunDataFactory(eptpProvider);
+			if (dataProvider is IVTPEngineeringInputDataProvider) {
+				var vtpProvider = dataProvider as IVTPEngineeringInputDataProvider;
+				DataReader = new EngineeringVTPModeVectoRunDataFactory(vtpProvider);
 				return;
 			}
 			if (dataProvider is IEngineeringInputDataProvider) {
@@ -105,15 +119,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				return;
 			}
 			throw  new VectoException("Unknown InputData for Engineering Mode!");
-		}
-
-		private static IDeclarationInputDataProvider ToDeclarationInputDataProvider(IInputDataProvider dataProvider)
-		{
-			var declDataProvider = dataProvider as IDeclarationInputDataProvider;
-			if (declDataProvider == null) {
-				throw new VectoException("InputDataProvider does not implement DeclarationData interface");
-			}
-			return declDataProvider;
 		}
 
 		public bool Validate { get; set; }

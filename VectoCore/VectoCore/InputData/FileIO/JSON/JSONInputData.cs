@@ -622,12 +622,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			: base(data, filename, tolerateMissing) { }
 	}
 
-	public class JSONVTPInputDataV4 : JSONFile, IVTPInputDataProvider, IVTPJobInputData
+	public class JSONVTPInputDataV4 : JSONFile, IVTPEngineeringInputDataProvider, IVTPEngineeringJobInputData, IVTPDeclarationInputDataProvider
 	{
 		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false) : base(data, filename,
 			tolerateMissing) { }
 
-		public IVTPJobInputData JobInputData
+		public IVTPEngineeringJobInputData JobInputData
 		{
 			get { return this; }
 		}
@@ -673,5 +673,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return Body.GetEx<double>("FanDiameter").SI<Meter>(); }
 		}
+
+		#region Implementation of IVTPDeclarationInputDataProvider
+
+		IVTPDeclarationJobInputData IVTPDeclarationInputDataProvider.JobInputData
+		{
+			get { return JobInputData; }
+		}
+
+		#endregion
 	}
 }
