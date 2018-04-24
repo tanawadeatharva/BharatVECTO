@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 	internal class EngineeringVTPModeVectoRunDataFactory : DeclarationVTPModeVectoRunDataFactory
 	{
 		
-		public EngineeringVTPModeVectoRunDataFactory(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData)
+		public EngineeringVTPModeVectoRunDataFactory(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData, null)
 		{
 			
 		}

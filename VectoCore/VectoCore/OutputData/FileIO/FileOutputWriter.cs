@@ -65,6 +65,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			get { return Path.ChangeExtension(_jobFile, "RSLT_CUSTOMER.xml"); }
 		}
 
+		public string XMLVTPReportName
+		{
+			get { return Path.ChangeExtension(_jobFile, "VTP_Report.xml"); }
+		}
 
 		public string SumFileName
 		{
@@ -112,8 +116,11 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				case ReportType.DeclarationReportCustomerXML:
 					fileName = XMLCustomerReportName;
 					break;
+				case ReportType.DeclarationVTPReportXML:
+					fileName = XMLVTPReportName;
+					break;
 				default:
-					throw new ArgumentOutOfRangeException("type");
+					throw new ArgumentOutOfRangeException("ReportType");
 			}
 			using (var writer = new FileStream(fileName, FileMode.Create)) {
 				using (var xmlWriter = new XmlTextWriter(writer, Encoding.UTF8)) {
@@ -124,6 +131,8 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				}
 			}
 		}
+
+		
 
 		public virtual void WriteReport(ReportType type, Stream data)
 		{

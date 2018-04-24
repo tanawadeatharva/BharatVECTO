@@ -193,6 +193,8 @@
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
+    <Compile Include="OutputData\XML\XMLVTPReport.cs" />
+    <Compile Include="OutputData\VTPReport.cs" />
     <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
     <Compile Include="OutputData\ModFilter\ModalData1HzFilter.cs" />
     <Compile Include="OutputData\XML\AbstractXMLWriter.cs" />
