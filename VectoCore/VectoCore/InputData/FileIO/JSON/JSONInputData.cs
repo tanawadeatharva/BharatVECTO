@@ -667,10 +667,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
 		{
-			VectoJobHash = VectoHashing.VectoHash.Load(
+			VectoJobHash = VectoHash.Load(
 				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>()));
-			VectoManufacturerReportHash = VectoHashing.VectoHash.Load(
-				Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()));
+			VectoManufacturerReportHash = Body["ManufacturerRecord"] != null ? VectoHash.Load(
+				Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>())) : null;
 		}
 
 		public IVTPEngineeringJobInputData JobInputData

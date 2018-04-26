@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				ModelName = data.Model,
 				Date = data.Date,
 				//CertificationNumber = data.CertificationNumber,
-				DigestValueInput = data.DigestValue.DigestValue,
+				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 				VehicleCategory = data.VehicleCategory,
 				AxleConfiguration = data.AxleConfiguration,
 				CurbWeight = data.CurbMassChassis,
@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				Date = data.Date,
 				CertificationMethod = data.CertificationMethod,
 				CertificationNumber = data.CertificationNumber,
-				DigestValueInput = data.DigestValue.DigestValue,
+				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 			};
 			return retVal;
 		}
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				retarder.Date = data.Date;
 				retarder.CertificationMethod = data.CertificationMethod;
 				retarder.CertificationNumber = data.CertificationNumber;
-				retarder.DigestValueInput = data.DigestValue.DigestValue;
+				retarder.DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "";
 
 				return retarder;
 			} catch (Exception e) {
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				ModelName = data.Model,
 				Date = data.Date,
 				CertificationNumber = data.CertificationNumber,
-				DigestValueInput = data.DigestValue.DigestValue,
+				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 				Displacement = data.Displacement,
 				IdleSpeed = data.IdleSpeed,
 				ConsumptionMap = FuelConsumptionMapReader.Create(data.FuelConsumptionMap),
@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				Date = data.Date,
 				CertificationMethod = data.CertificationMethod,
 				CertificationNumber = data.CertificationNumber,
-				DigestValueInput = data.DigestValue.DigestValue,
+				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 				Type = data.Type
 			};
 		}
@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				Date = data.Date,
 				CertificationMethod = data.CertificationMethod,
 				CertificationNumber = data.CertificationNumber,
-				DigestValueInput = data.DigestValue.DigestValue,
+				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 				AxleGear = new GearData { Ratio = data.Ratio }
 			};
 		}
@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 							Date = data.Date,
 							CertificationMethod = data.CertificationMethod,
 							CertificationNumber = data.CertificationNumber,
-							DigestValueInput = data.DigestValue.DigestValue,
+							DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 							Type = type,
 							Angledrive = new TransmissionData { Ratio = data.Ratio }
 						};
