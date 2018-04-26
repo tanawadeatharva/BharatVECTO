@@ -230,19 +230,23 @@
 		<xs:attribute name="status" type="DataIntegrityStatusType" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="DataIntegrityResultType">
-		<xs:sequence>
-			<xs:element name="DigestValueRecomputed" type="xs:token"/>
-			<xs:element name="DigestValueRead" maxOccurs="unbounded">
-				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:token">
-							<xs:attribute name="source" type="xs:token" use="required"/>
-						</xs:extension>
-					</xs:simpleContent>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="Error" type="xs:string" minOccurs="0"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="DigestValueRecomputed" type="xs:token"/>
+				<xs:element name="DigestValueRead" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:token">
+								<xs:attribute name="source" type="xs:token" use="required"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:element name="Error" type="xs:string"/>
+			</xs:sequence>
+		</xs:choice>
 		<xs:attribute name="status" type="DataIntegrityStatusType" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="EngineType">
