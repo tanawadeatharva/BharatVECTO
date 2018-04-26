@@ -180,6 +180,13 @@
 	</xs:complexType>
 	<xs:complexType name="CO2ResultType">
 		<xs:sequence>
+			<xs:element name="Mission">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
 			<xs:element name="Declared">
 				<xs:complexType>
 					<xs:simpleContent>
@@ -205,7 +212,7 @@
 			<xs:element name="Components">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="Component" maxOccurs="unbounded">
+						<xs:element name="Component" minOccurs="0" maxOccurs="unbounded">
 							<xs:complexType>
 								<xs:complexContent>
 									<xs:extension base="DataIntegrityResultType">
@@ -224,8 +231,17 @@
 	</xs:complexType>
 	<xs:complexType name="DataIntegrityResultType">
 		<xs:sequence>
-			<xs:element name="DigestValueRead"/>
-			<xs:element name="DigestValueRecomputed"/>
+			<xs:element name="DigestValueRecomputed" type="xs:token"/>
+			<xs:element name="DigestValueRead" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:token">
+							<xs:attribute name="source" type="xs:token" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Error" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="status" type="DataIntegrityStatusType" use="required"/>
 	</xs:complexType>
@@ -462,7 +478,7 @@
 						<xs:element name="Gearbox" type="GearboxType"/>
 						<xs:element name="TorqueConverter" type="TorqueConverterType" minOccurs="0"/>
 						<xs:element name="Retarder" type="RetarderType"/>
-						<xs:element name="AngleDrive" type="AngleDriveType"/>
+						<xs:element name="AngleDrive" type="AngleDriveType" minOccurs="0"/>
 						<xs:element name="Axlegear" type="AxlegearType"/>
 						<xs:element name="AirDrag" type="AirDragType"/>
 						<xs:element name="AxleWheels" type="AxleWheelsType"/>

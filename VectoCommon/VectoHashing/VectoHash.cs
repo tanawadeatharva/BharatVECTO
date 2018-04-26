@@ -37,6 +37,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoHashing.Impl;

@@ -35,6 +35,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Xml;
 using HashingTool.Helper;
+using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoHashing;
 

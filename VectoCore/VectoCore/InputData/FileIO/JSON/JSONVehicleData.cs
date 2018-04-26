@@ -486,9 +486,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return "N.A."; }
 		}
 
-		public string DigestValue
+		public DigestData DigestValue
 		{
-			get { return ""; }
+			get { return null; }
 		}
 	}
 }

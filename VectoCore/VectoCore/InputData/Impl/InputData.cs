@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public string CertificationNumber { get; internal set; }
 
-		public string DigestValue { get; internal set; }
+		public DigestData DigestValue { get; internal set; }
 
 		public string Dimension { get; internal set; }
 

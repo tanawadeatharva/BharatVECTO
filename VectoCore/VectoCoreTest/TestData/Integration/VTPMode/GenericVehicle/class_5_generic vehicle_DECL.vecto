@@ -8,6 +8,7 @@
   "Body": {
     "SavedInDeclMode": true,
     "DeclarationVehicle": "Tractor_4x2_vehicle-class-5_Generic vehicle.xml",
+	"ManufacturerRecord": "Tractor_4x2_vehicle-class-5_Generic vehicle.RSLT_MANUFACTURER.xml",
     "FanPowerCoefficients": [
       5.5E-07,
       15.0,

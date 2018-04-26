@@ -1,22 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML.Writer;
+using TUGraz.VectoCommon.Hashing;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Utils;
+using TUGraz.VectoHashing;
 
-namespace TUGraz.VectoCore.OutputData.XML {
-	internal class XMLVTPReport : DeclarationReport<XMLDeclarationReport.ResultEntry>, IVTPReport
+namespace TUGraz.VectoCore.OutputData.XML
+{
+	internal class XMLVTPReport : DeclarationReport<XMLVTPReport.ResultEntry>, IVTPReport
 	{
 		public const string CURRENT_SCHEMA_VERSION = "0.1";
 
 		protected XElement VehiclePart;
+		protected XElement GeneralPart;
+		protected XElement DataIntegrityPart;
+		protected XElement TestConditionsPart;
 
 		protected XElement Results;
 
@@ -27,11 +38,47 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		//protected XNamespace di;
 		//private bool allSuccess = true;
 
+		public class ResultEntry : XMLDeclarationReport.ResultEntry
+		{
+			public Watt AverageFanPower;
+			public Kilogram VTPFcFinalSimulated;
+			public WattSecond VTPWorkPWheelPos;
+			public double VTPFcCorrectionFactor;
+			public JoulePerKilogramm VTPNCV;
+			public Kilogram VTPFcMeasured;
+
+			#region Overrides of ResultEntry
+
+			public override void SetResultData(VectoRunData runData, IModalDataContainer data)
+			{
+				base.SetResultData(runData, data);
+
+				if (runData.SimulationType != SimulationType.VerificationTest) {
+					return;
+				}
+
+				var aux = data.Auxiliaries.FirstOrDefault(x => x.Key == Constants.Auxiliaries.IDs.Fan);
+				AverageFanPower = data.AuxiliaryWork(aux.Value) / data.Duration();
+				VTPWorkPWheelPos = runData.Cycle.Entries.Select(x => x.PWheel > 0 ? x.PWheel : 0.SI<Watt>()).Sum().Cast<Watt>() *
+									data.Duration();
+
+				VTPFcMeasured = runData.Cycle.Entries.Sum(x => x.Fuelconsumption) * data.Duration();
+				VTPFcFinalSimulated = data.TimeIntegral<Kilogram>(ModalResultField.FCFinal);
+				VTPFcCorrectionFactor = runData.VTPData.CorrectionFactor;
+				VTPNCV = runData.VTPData.FuelNetCalorificValue;
+			}
+
+			#endregion
+		}
+
 		public XMLVTPReport(IOutputDataWriter writer)
 		{
 			//di = "http://www.w3.org/2000/09/xmldsig#";
 			tns = "urn:tugraz:ivt:VectoAPI:VTPReport:v" + CURRENT_SCHEMA_VERSION;
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
+			GeneralPart = new XElement(tns + "General");
+			DataIntegrityPart = new XElement(tns + "DataIntegrityCheck");
+			TestConditionsPart = new XElement(tns + "TestConditions");
 			Results = new XElement(tns + "Results");
 
 			_writer = writer;
@@ -40,37 +87,114 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		#region Overrides of DeclarationReport<ResultEntry>
 
-		protected override void DoAddResult(XMLDeclarationReport.ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
+		protected override void DoAddResult(
+			ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
 			entry.SetResultData(runData, modData);
 		}
 
 		protected internal override void DoWriteReport()
 		{
+			GenerateResults();
+
 			var report = GenerateReport();
 			if (_writer != null) {
 				_writer.WriteReport(ReportType.DeclarationVTPReportXML, report);
 			}
 		}
 
+		private void GenerateResults()
+		{
+			var vtpResult = Missions.FirstOrDefault(x => x.Key == MissionType.VerificationTest).Value.ResultEntry
+									.FirstOrDefault().Value;
+
+			const MissionType selectedMission = DeclarationData.VTPMode.SelectedMission;
+			const LoadingType selectedLoading = DeclarationData.VTPMode.SelectedLoading;
+			var result = Missions.FirstOrDefault(x => x.Key == selectedMission).Value.ResultEntry
+								.FirstOrDefault(x => x.Key == selectedLoading).Value;
+			var vtpFcMeasured = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos;
+			var vtpFcMeasuredCorr = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos * vtpResult.VTPFcCorrectionFactor;
+			var vtpFcSimulated = vtpResult.VTPFcFinalSimulated / vtpResult.VTPWorkPWheelPos;
+			var cVtp = vtpFcMeasuredCorr / vtpFcSimulated;
+			var declaredCO2 = result.FuelConsumptionTotal / result.Distance / result.Payload;
+			var verifiedCO2 = declaredCO2 * cVtp;
+
+			Results.Add(
+				new XElement(tns + "Status", cVtp < 1.075 ? "Passed" : "Failed"),
+				new XElement(
+					tns + "AverageFanPower",
+					new XAttribute(XMLNames.Report_Results_Unit_Attr, "kW"),
+					vtpResult.AverageFanPower.ConvertToKiloWatt().ToXMLFormat(3)),
+				new XElement(
+					tns + "WorkPosVT", new XAttribute(XMLNames.Report_Results_Unit_Attr, "kWh"),
+					vtpResult.VTPWorkPWheelPos.ConvertToKiloWattHour().ToXMLFormat(3)),
+				new XElement(
+					tns + "TestFuelNCV", new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/kg"),
+					(vtpResult.VTPNCV / 1e6).ToXMLFormat(3)),
+				new XElement(
+					tns + "FuelConsumption",
+					new XElement(
+						tns + "Measured",
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/kWh"),
+						vtpFcMeasured.ConvertToGramPerKiloWattHour().ToXMLFormat(3)
+					),
+					new XElement(
+						tns + "MeasuredCorrected",
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/kWh"),
+						vtpFcMeasuredCorr.ConvertToGramPerKiloWattHour().ToXMLFormat(3)
+					),
+					new XElement(
+						tns + "Simulated",
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/kWh"),
+						vtpFcSimulated.ConvertToGramPerKiloWattHour().ToXMLFormat(3)
+					)
+				),
+				new XElement(
+					tns + "CO2",
+					new XElement(
+						tns + "Mission",
+						string.Format("{0}, {1}", selectedMission.ToXMLFormat(), selectedLoading.ToString())
+					),
+					new XElement(
+						tns + "Declared", new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
+						declaredCO2.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)
+					),
+					new XElement(
+						tns + "Verified", new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
+						verifiedCO2.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)
+					)
+				),
+				new XElement(tns + "VTRatio", cVtp.ToXMLFormat(4)));
+		}
+
 		private XDocument GenerateReport()
 		{
 			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 			var retVal = new XDocument();
-			retVal.Add(new XProcessingInstruction("xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
-			retVal.Add(new XElement(tns + XMLNames.VectoManufacturerReport,
-									new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
-									new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
-									new XAttribute("xmlns", tns),
-									//new XAttribute(XNamespace.Xmlns + "di", di),
-									new XAttribute(xsi + "schemaLocation",
-													string.Format("{0} {1}VTPReport.{2}.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl, CURRENT_SCHEMA_VERSION)),
-									new XElement(tns + "Data",
-												new XElement(VehiclePart)
-												//results,
-												//GetApplicationInfo()
-											)
-						)
+			retVal.Add(
+				new XProcessingInstruction(
+					"xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
+			retVal.Add(
+				new XElement(
+					tns + "VectoVTPReport",
+					new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
+					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
+					new XAttribute("xmlns", tns),
+
+					//new XAttribute(XNamespace.Xmlns + "di", di),
+					new XAttribute(
+						xsi + "schemaLocation",
+						string.Format("{0} {1}VTPReport.{2}.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl, CURRENT_SCHEMA_VERSION)),
+					new XElement(
+						tns + "Data",
+						new XElement(GeneralPart),
+						new XElement(VehiclePart),
+						new XElement(DataIntegrityPart),
+						new XElement(TestConditionsPart),
+						new XElement(Results),
+						GetApplicationInfo()
+					)
+				)
 			);
 
 			return retVal;
@@ -78,53 +202,184 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		public override void InitializeReport(VectoRunData modelData)
 		{
+			GeneralPart.Add(
+				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
+				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress));
 			VehiclePart.Add(
+				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, modelData.VehicleData.GrossVehicleWeight.ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, modelData.VehicleData.CurbWeight.ToXMLFormat(0)),
+				modelData.Retarder.Type.IsDedicatedComponent()
+					? new XElement(tns + XMLNames.Vehicle_RetarderRatio, modelData.Retarder.Ratio.ToXMLFormat(3))
+					: null,
 				new XElement(tns + XMLNames.Vehicle_PTO, modelData.PTO != null),
-				
-				new XElement(tns + XMLNames.Vehicle_Components,
-							GetEngineDescription(modelData.EngineData),
-							GetGearboxDescription(modelData.GearboxData),
-							GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
-							GetRetarderDescription(modelData.Retarder),
-							GetAngledriveDescription(modelData.AngledriveData),
-							GetAxlegearDescription(modelData.AxleGearData),
-							GetAirDragDescription(modelData.AirdragData),
-							GetAxleWheelsDescription(modelData.VehicleData),
-							GetAuxiliariesDescription(modelData.Aux)
+				new XElement(
+					tns + XMLNames.Vehicle_Components,
+					GetEngineDescription(modelData.EngineData),
+					GetGearboxDescription(modelData.GearboxData),
+					GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
+					GetRetarderDescription(modelData.Retarder),
+					GetAngledriveDescription(modelData.AngledriveData),
+					GetAxlegearDescription(modelData.AxleGearData),
+					GetAirDragDescription(modelData.AirdragData),
+					GetAxleWheelsDescription(modelData.VehicleData),
+					GetAuxiliariesDescription(modelData.Aux)
+				)
+			);
+
+			var componentChecks = new List<object>();
+
+			if (InputDataHash == null) {
+				return;
+			}
+
+			var allSuccess = true;
+			var components = InputDataHash.GetContainigComponents().GroupBy(s => s)
+										.Select(g => new { Entry = g.Key, Count = g.Count() });
+			foreach (var component in components) {
+				if (component.Entry == VectoComponents.Vehicle) {
+					continue;
+				}
+
+				for (var i = 0; i < component.Count; i++) {
+					var recomputed = "";
+					var read = "";
+					var readJob = "";
+					var error = "";
+					bool status;
+					try {
+						recomputed = InputDataHash.ComputeHash(component.Entry, i);
+						readJob = InputDataHash.ReadHash(component.Entry, i);
+						read = ManufacturerRecord.ComponentDigests[component.Entry][i];
+						status = string.Equals(readJob, recomputed) && string.Equals(recomputed, read);
+					} catch (Exception e) {
+						status = false;
+						error = e.Message;
+					}
+
+					allSuccess = allSuccess && status;
+					componentChecks.Add(
+						new XElement(
+							tns + "Component",
+							new XAttribute(
+								"componentName", component.Count == 1
+									? component.Entry.XMLElementName()
+									: string.Format("{0} ({1})", component.Entry.XMLElementName(), i + 1)),
+							new XAttribute("status", status ? "success" : "failed"),
+							new XElement(tns + "DigestValueRecomputed", recomputed),
+							new XElement(
+								tns + "DigestValueRead",
+								new XAttribute("source", "JobData"),
+								readJob
+							),
+							new XElement(
+								tns + "DigestValueRead",
+								new XAttribute("source", "ManufacturerRecord"),
+								read
+							),
+							status ? null : new XElement(tns + "Error", error)
+						));
+				}
+			}
+
+			string jobHashRecomputed = null;
+			string jobHashRead = null;
+			bool jobStatus;
+			string jobError = null;
+			try {
+				var jobHashMethods = ManufacturerRecord.JobDigest;
+				jobHashRecomputed = InputDataHash.ComputeHash(jobHashMethods.CanonicalizationMethods, jobHashMethods.DigestMethod);
+				jobHashRead = jobHashMethods.DigestValue;
+				jobStatus = string.Equals(jobHashRecomputed, jobHashRead);
+			} catch (Exception e) {
+				jobStatus = false;
+				jobError = e.Message;
+			}
+
+			allSuccess = allSuccess && jobStatus;
+			string mrHashRead = null;
+			string mrHashRecomputed = null;
+			bool mrStatus;
+			string mrError = null;
+			try {
+				mrHashRead = ManufacturerRecordHash.ReadHash();
+				mrHashRecomputed = ManufacturerRecordHash.ComputeHash();
+				mrStatus = ManufacturerRecordHash.ValidateHash();
+			} catch (Exception e) {
+				mrStatus = false;
+				mrError = e.Message;
+			}
+			allSuccess = allSuccess && mrStatus;
+			DataIntegrityPart.Add(
+				new XAttribute("status", allSuccess ? "success" : "failed"),
+				new XElement(
+					tns + "Components",
+					componentChecks.ToArray()
+				),
+				new XElement(
+					tns + "ManufacturerReport",
+					new XAttribute("status", mrStatus ? "success" : "failed"),
+					new XElement(tns + "DigestValueRecomputed", mrHashRecomputed),
+					new XElement(
+						tns + "DigestValueRead",
+						new XAttribute("source", "ManufacturerRecord"), mrHashRead),
+					mrStatus ? null : new XElement(tns + "Error", mrError)
+				),
+				new XElement(
+					tns + "JobData",
+					new XAttribute("status", jobStatus ? "success" : "failed"),
+					new XElement(
+						tns + "DigestValueRecomputed",
+						jobHashRecomputed),
+					new XElement(
+						tns + "DigestValueRead",
+						new XAttribute("source", "ManufacturerRecord"),
+						jobHashRead),
+					jobStatus ? null : new XElement(tns + "Error", jobError)
 				)
 			);
 		}
 
 		#endregion
 
+		private XElement GetApplicationInfo()
+		{
+			return new XElement(
+				tns + XMLNames.Report_ApplicationInfo_ApplicationInformation,
+				new XElement(tns + XMLNames.Report_ApplicationInfo_SimulationToolVersion, VectoSimulationCore.VersionNumber),
+				new XElement(
+					tns + XMLNames.Report_ApplicationInfo_Date,
+					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
+		}
+
 		private XElement GetEngineDescription(CombustionEngineData engineData)
 		{
-			return new XElement(tns + XMLNames.Component_Engine,
+			return new XElement(
+				tns + XMLNames.Component_Engine,
 				GetCommonDescription(engineData),
 				new XElement(tns + XMLNames.Engine_RatedPower, engineData.RatedPowerDeclared.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Engine_IdlingSpeed, engineData.IdleSpeed.AsRPM.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Engine_RatedSpeed, engineData.RatedSpeedDeclared.AsRPM.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Engine_Displacement,
+				new XElement(
+					tns + XMLNames.Engine_Displacement,
 					engineData.Displacement.ConvertToCubicCentiMeter().ToXMLFormat(0)),
 				new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelType.ToXMLFormat())
-				);
+			);
 		}
 
 		private XElement GetGearboxDescription(GearboxData gearboxData)
 		{
-			return new XElement(tns + XMLNames.Component_Gearbox,
+			return new XElement(
+				tns + XMLNames.Component_Gearbox,
 				GetCommonDescription(gearboxData),
 				new XElement(tns + XMLNames.Gearbox_TransmissionType, gearboxData.Type.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_GetGearbox_GearsCount, gearboxData.Gears.Count),
-				new XElement(tns + XMLNames.Report_Gearbox_TransmissionRatioFinalGear,
+				new XElement(
+					tns + XMLNames.Report_Gearbox_TransmissionRatioFinalGear,
 					gearboxData.Gears.Last().Value.Ratio.ToXMLFormat(3))
-				);
+			);
 		}
 
 		private XElement GetTorqueConverterDescription(TorqueConverterData torqueConverterData)
@@ -132,13 +387,16 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			if (torqueConverterData == null) {
 				return null;
 			}
-			return new XElement(tns + XMLNames.Component_TorqueConverter,
+
+			return new XElement(
+				tns + XMLNames.Component_TorqueConverter,
 				GetCommonDescription(torqueConverterData));
 		}
 
 		private XElement GetRetarderDescription(RetarderData retarder)
 		{
-			return new XElement(tns + XMLNames.Component_Retarder,
+			return new XElement(
+				tns + XMLNames.Component_Retarder,
 				new XElement(tns + XMLNames.Vehicle_RetarderType, retarder.Type.ToXMLFormat()),
 				retarder.Type.IsDedicatedComponent() ? GetCommonDescription(retarder) : null);
 		}
@@ -148,14 +406,17 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			if (angledriveData == null) {
 				return null;
 			}
-			return new XElement(tns + XMLNames.Component_Angledrive,
+
+			return new XElement(
+				tns + XMLNames.Component_Angledrive,
 				GetCommonDescription(angledriveData),
 				new XElement(tns + XMLNames.AngleDrive_Ratio, angledriveData.Angledrive.Ratio));
 		}
 
 		private XElement GetAxlegearDescription(AxleGearData axleGearData)
 		{
-			return new XElement(tns + XMLNames.Component_Axlegear,
+			return new XElement(
+				tns + XMLNames.Component_Axlegear,
 				GetCommonDescription(axleGearData),
 				new XElement(tns + XMLNames.Axlegear_LineType, axleGearData.LineType.ToXMLFormat()),
 				new XElement(tns + XMLNames.Axlegear_Ratio, axleGearData.AxleGear.Ratio.ToXMLFormat(3)));
@@ -164,18 +425,20 @@ namespace TUGraz.VectoCore.OutputData.XML {
 		private XElement GetAirDragDescription(AirdragData airdragData)
 		{
 			if (airdragData.CertificationMethod == CertificationMethod.StandardValues) {
-				return new XElement(tns + XMLNames.Component_AirDrag,
+				return new XElement(
+					tns + XMLNames.Component_AirDrag,
 					new XElement(tns + XMLNames.Report_Component_CertificationMethod, airdragData.CertificationMethod.ToXMLFormat()),
 					new XElement(tns + XMLNames.Report_AirDrag_CdxA, airdragData.DeclaredAirdragArea.ToXMLFormat(2))
-					);
+				);
 			}
-			return new XElement(tns + XMLNames.Component_AirDrag,
+
+			return new XElement(
+				tns + XMLNames.Component_AirDrag,
 				new XElement(tns + XMLNames.Component_Model, airdragData.ModelName),
 				new XElement(tns + XMLNames.Report_Component_CertificationMethod, airdragData.CertificationMethod.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_Component_CertificationNumber, airdragData.CertificationNumber),
-				new XElement(tns + XMLNames.DI_Signature_Reference_DigestValue, airdragData.DigestValueInput),
 				new XElement(tns + XMLNames.Report_AirDrag_CdxA, airdragData.DeclaredAirdragArea.ToXMLFormat(2))
-				);
+			);
 		}
 
 		private XElement GetAxleWheelsDescription(VehicleData vehicleData)
@@ -186,6 +449,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				if (axleData[i].AxleType == AxleType.Trailer) {
 					continue;
 				}
+
 				retVal.Add(GetAxleDescription(i + 1, axleData[i]));
 			}
 
@@ -194,11 +458,11 @@ namespace TUGraz.VectoCore.OutputData.XML {
 
 		private XElement GetAxleDescription(int i, Axle axle)
 		{
-			return new XElement(tns + XMLNames.AxleWheels_Axles_Axle,
+			return new XElement(
+				tns + XMLNames.AxleWheels_Axles_Axle,
 				new XAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, i),
 				new XElement(tns + XMLNames.Report_Tyre_TyreDimension, axle.WheelsDimension),
-				new XElement(tns + XMLNames.Report_Tyre_TyreCertificationNumber, axle.CertificationNumber),
-				new XElement(tns + XMLNames.DI_Signature_Reference_DigestValue, axle.DigestValueInput),
+				new XElement(tns + XMLNames.Component_CertificationNumber, axle.CertificationNumber),
 				new XElement(tns + XMLNames.Report_Tyre_TyreRRCDeclared, axle.RollResistanceCoefficient.ToXMLFormat(4)),
 				new XElement(tns + XMLNames.AxleWheels_Axles_Axle_TwinTyres, axle.TwinTyres));
 		}
@@ -216,6 +480,7 @@ namespace TUGraz.VectoCore.OutputData.XML {
 					retVal.Add(new XElement(tns + GetTagName(auxId), entry));
 				}
 			}
+
 			return retVal;
 		}
 
@@ -229,7 +494,6 @@ namespace TUGraz.VectoCore.OutputData.XML {
 			return new object[] {
 				new XElement(tns + XMLNames.Component_Model, data.ModelName),
 				new XElement(tns + XMLNames.Report_Component_CertificationNumber, data.CertificationNumber),
-				new XElement(tns + XMLNames.DI_Signature_Reference_DigestValue, data.DigestValueInput)
 			};
 		}
 
@@ -241,8 +505,17 @@ namespace TUGraz.VectoCore.OutputData.XML {
 				data.CertificationMethod == CertificationMethod.StandardValues
 					? null
 					: new XElement(tns + XMLNames.Report_Component_CertificationNumber, data.CertificationNumber),
-				new XElement(tns + XMLNames.DI_Signature_Reference_DigestValue, data.DigestValueInput)
 			};
 		}
+
+		#region Implementation of IVTPReport
+
+		public IVectoHash InputDataHash { protected get; set; }
+
+		public IManufacturerReport ManufacturerRecord { protected get; set; }
+
+		public IVectoHash ManufacturerRecordHash { protected get; set; }
+
+		#endregion
 	}
 }

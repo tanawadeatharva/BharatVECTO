@@ -29,6 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoHashing;
+
 namespace TUGraz.VectoCore.OutputData {
-	public interface IVTPReport : IDeclarationReport { }
+	public interface IVTPReport : IDeclarationReport {
+		IVectoHash InputDataHash { set; }
+
+		IManufacturerReport ManufacturerRecord { set; }
+		IVectoHash ManufacturerRecordHash { set; }
+	}
 }

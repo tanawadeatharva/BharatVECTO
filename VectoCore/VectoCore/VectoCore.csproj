@@ -124,6 +124,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationTorqueConverterDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationVehicleDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLManufacturerReportReader.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\AbstractEngineeringXMLComponentDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAirdragDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAngledriveDataProvider.cs" />

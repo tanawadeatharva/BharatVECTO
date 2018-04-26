@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public void AddResult(
 			DeclarationReport<XMLDeclarationReport.ResultEntry>.ResultContainer<XMLDeclarationReport.ResultEntry> entry)
 		{
-			foreach (var resultEntry in entry.ModData) {
+			foreach (var resultEntry in entry.ResultEntry) {
 				_allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
 				Results.Add(new XElement(tns + XMLNames.Report_Result_Result,
 					new XAttribute(XMLNames.Report_Result_Status_Attr,

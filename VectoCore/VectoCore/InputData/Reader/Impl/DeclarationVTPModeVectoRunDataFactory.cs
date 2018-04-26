@@ -67,6 +67,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 											_segment.VehicleClass),
 			};
 			powertrainConfig.VehicleData.VehicleClass = _segment.VehicleClass;
+			Report.InputDataHash = JobInputData.VectoJobHash;
+			Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
+			Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
 			Report.InitializeReport(powertrainConfig);
 		}
 
@@ -115,8 +118,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 
 			// simulate the LongHaul cycle with RefLoad
-			foreach (var mission in _segment.Missions.Where(m => m.MissionType == MissionType.LongHaul)) {
-				foreach (var loading in mission.Loadings.Where(l => l.Key == LoadingType.ReferenceLoad)) {
+			foreach (var mission in _segment.Missions.Where(m => m.MissionType == DeclarationData.VTPMode.SelectedMission)) {
+				foreach (var loading in mission.Loadings.Where(l => l.Key == DeclarationData.VTPMode.SelectedLoading)) {
 					var runData = CreateVectoRunData(_segment, mission, loading.Value);
 					runData.ModFileSuffix = loading.Key.ToString();
 					var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
@@ -127,6 +130,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					runData.ExecutionMode = ExecutionMode.Declaration;
 					runData.SimulationType = SimulationType.DistanceCycle;
 					runData.Mission = mission;
+					runData.Loading = loading.Key;
 					yield return runData;
 				}
 			}
@@ -146,6 +150,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				runData.SimulationType = SimulationType.VerificationTest;
 				runData.Mission = new Mission() {
 					MissionType = MissionType.VerificationTest
+				};
+				runData.VTPData = new VTPData() {
+					CorrectionFactor = 1,
+					FuelNetCalorificValue = 0.SI<JoulePerKilogramm>()
 				};
 				yield return runData;
 			}

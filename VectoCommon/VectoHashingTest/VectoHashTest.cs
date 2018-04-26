@@ -38,6 +38,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Xml.XPath;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using VectoHashingTest.Utils;
