@@ -231,13 +231,30 @@ namespace TUGraz.VectoCore.OutputData.XML
 				)
 			);
 
-			var componentChecks = new List<object>();
-
 			if (InputDataHash == null) {
 				return;
 			}
 
 			var allSuccess = true;
+
+			var componentChecks = ComponentIntegrityChecks(ref allSuccess);
+			var jobIntegrity = JobIntegrityChecks(ref allSuccess);
+			var manufacturerReportIntegrity = ManufacturerReportIntegrityChecks(ref allSuccess);
+
+			DataIntegrityPart.Add(
+				new XAttribute("status", allSuccess ? "success" : "failed"),
+				new XElement(
+					tns + "Components",
+					componentChecks.ToArray()
+				),
+				manufacturerReportIntegrity,
+				jobIntegrity
+			);
+		}
+
+		private List<object> ComponentIntegrityChecks(ref bool allSuccess)
+		{
+			var componentChecks = new List<object>();
 			var components = InputDataHash.GetContainigComponents().GroupBy(s => s)
 										.Select(g => new { Entry = g.Key, Count = g.Count() });
 			foreach (var component in components) {
@@ -246,90 +263,93 @@ namespace TUGraz.VectoCore.OutputData.XML
 				}
 
 				for (var i = 0; i < component.Count; i++) {
-					var recomputed = "";
-					var read = "";
-					var readJob = "";
-					var error = "";
-					bool status;
-					try {
-						recomputed = InputDataHash.ComputeHash(component.Entry, i);
-						readJob = InputDataHash.ReadHash(component.Entry, i);
-						read = ManufacturerRecord.ComponentDigests[component.Entry][i];
-						status = string.Equals(readJob, recomputed) && string.Equals(recomputed, read);
-					} catch (Exception e) {
-						status = false;
-						error = e.Message;
-					}
-
-					allSuccess = allSuccess && status;
-					componentChecks.Add(
-						new XElement(
-							tns + "Component",
-							new XAttribute(
-								"componentName", component.Count == 1
-									? component.Entry.XMLElementName()
-									: string.Format("{0} ({1})", component.Entry.XMLElementName(), i + 1)),
-							new XAttribute("status", status ? "success" : "failed"),
-							new XElement(tns + "DigestValueRecomputed", recomputed),
-							new XElement(
-								tns + "DigestValueRead",
-								new XAttribute("source", "JobData"),
-								readJob
-							),
-							new XElement(
-								tns + "DigestValueRead",
-								new XAttribute("source", "ManufacturerRecord"),
-								read
-							),
-							status ? null : new XElement(tns + "Error", error)
-						));
+					componentChecks.Add(CheckComponent(ref allSuccess, component.Entry, i, component.Count));
 				}
 			}
 
-			string jobHashRecomputed = null;
-			string jobHashRead = null;
-			bool jobStatus;
-			string jobError = null;
-			try {
-				var jobHashMethods = ManufacturerRecord.JobDigest;
-				jobHashRecomputed = InputDataHash.ComputeHash(jobHashMethods.CanonicalizationMethods, jobHashMethods.DigestMethod);
-				jobHashRead = jobHashMethods.DigestValue;
-				jobStatus = string.Equals(jobHashRecomputed, jobHashRead);
-			} catch (Exception e) {
-				jobStatus = false;
-				jobError = e.Message;
-			}
+			return componentChecks;
+		}
 
-			allSuccess = allSuccess && jobStatus;
-			string mrHashRead = null;
-			string mrHashRecomputed = null;
-			bool mrStatus;
-			string mrError = null;
+		private XElement CheckComponent(ref bool allSuccess, VectoComponents component, int i, int count)
+		{
+			bool status;
+			var componentName = count == 1
+				? VectoComponentsExtensionMethods.XMLElementName(component)
+				: string.Format("{0} ({1})", VectoComponentsExtensionMethods.XMLElementName(component), i + 1);
+			XElement retVal;
 			try {
-				mrHashRead = ManufacturerRecordHash.ReadHash();
-				mrHashRecomputed = ManufacturerRecordHash.ComputeHash();
-				mrStatus = ManufacturerRecordHash.ValidateHash();
+				var recomputed = InputDataHash.ComputeHash(component, i);
+				var readJob = InputDataHash.ReadHash(component, i);
+				var read = ManufacturerRecord.ComponentDigests[component][i];
+				status = string.Equals(readJob, recomputed) && string.Equals(recomputed, read);
+				retVal = new XElement(
+						tns + "Component",
+						new XAttribute("componentName", componentName),
+						new XAttribute("status", status ? "success" : "failed"),
+						new XElement(tns + "DigestValueRecomputed", recomputed),
+						new XElement(
+							tns + "DigestValueRead",
+							new XAttribute("source", "JobData"),
+							readJob
+						),
+						new XElement(
+							tns + "DigestValueRead",
+							new XAttribute("source", "ManufacturerRecord"),
+							read
+						)
+					);
 			} catch (Exception e) {
-				mrStatus = false;
-				mrError = e.Message;
+				status = false;
+				retVal = new XElement(
+						tns + "Component",
+						new XAttribute("componentName", componentName),
+						new XAttribute("status", "failed"),
+						new XElement(tns + "Error", e.Message));
 			}
-			allSuccess = allSuccess && mrStatus;
-			DataIntegrityPart.Add(
-				new XAttribute("status", allSuccess ? "success" : "failed"),
-				new XElement(
-					tns + "Components",
-					componentChecks.ToArray()
-				),
-				new XElement(
+			allSuccess = allSuccess && status;
+			return retVal;
+		}
+
+		private XElement ManufacturerReportIntegrityChecks(ref bool allSuccess)
+		{
+			bool mrStatus;
+			XElement manufacturerReportIntegrity;
+			try {
+				var mrHashRead = ManufacturerRecordHash.ReadHash();
+				var mrHashRecomputed = ManufacturerRecordHash.ComputeHash();
+				mrStatus = ManufacturerRecordHash.ValidateHash();
+				manufacturerReportIntegrity = new XElement(
 					tns + "ManufacturerReport",
 					new XAttribute("status", mrStatus ? "success" : "failed"),
 					new XElement(tns + "DigestValueRecomputed", mrHashRecomputed),
 					new XElement(
 						tns + "DigestValueRead",
-						new XAttribute("source", "ManufacturerRecord"), mrHashRead),
-					mrStatus ? null : new XElement(tns + "Error", mrError)
-				),
-				new XElement(
+						new XAttribute("source", "ManufacturerRecord"), mrHashRead)
+				);
+			} catch (Exception e) {
+				mrStatus = false;
+				var mrError = e.Message;
+				manufacturerReportIntegrity = new XElement(
+					tns + "ManufacturerReport",
+					new XAttribute("status", "failed"),
+					new XElement(tns + "Error", mrError)
+				);
+			}
+			allSuccess = allSuccess && mrStatus;
+			return manufacturerReportIntegrity;
+		}
+
+		private XElement JobIntegrityChecks(ref bool allSuccess)
+		{
+			bool jobStatus;
+			XElement jobIntegrity;
+			try {
+				var jobHashMethods = ManufacturerRecord.JobDigest;
+				var jobHashRecomputed = InputDataHash.ComputeHash(
+					jobHashMethods.CanonicalizationMethods, jobHashMethods.DigestMethod);
+				var jobHashRead = jobHashMethods.DigestValue;
+				jobStatus = string.Equals(jobHashRecomputed, jobHashRead);
+				jobIntegrity = new XElement(
 					tns + "JobData",
 					new XAttribute("status", jobStatus ? "success" : "failed"),
 					new XElement(
@@ -338,10 +358,19 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(
 						tns + "DigestValueRead",
 						new XAttribute("source", "ManufacturerRecord"),
-						jobHashRead),
-					jobStatus ? null : new XElement(tns + "Error", jobError)
-				)
-			);
+						jobHashRead)
+				);
+			} catch (Exception e) {
+				jobStatus = false;
+				var jobError = e.Message;
+				jobIntegrity = new XElement(
+					tns + "JobData",
+					new XAttribute("status", "failed"),
+					new XElement(tns + "Error", jobError)
+				);
+			}
+			allSuccess = allSuccess && jobStatus;
+			return jobIntegrity;
 		}
 
 		#endregion
