@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			// simulate the Measured cycle
 			foreach (var cycle in JobInputData.Cycles) {
 				var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false);
-				// TODO: MQ 2018-04-23: use correct loading here?
+				// Loading is not relevant as we use P_wheel
 				var runData = CreateVectoRunData(_segment, _segment.Missions.First(), 0.SI<Kilogram>());
 				runData.Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name);
 				runData.Aux = _auxVTP;
