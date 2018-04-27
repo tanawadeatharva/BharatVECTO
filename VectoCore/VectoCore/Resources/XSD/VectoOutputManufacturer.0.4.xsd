@@ -131,7 +131,14 @@
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="axleNumber" use="required"/>
+		<xs:attribute name="axleNumber" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="AxleWheelsType">
 		<xs:sequence minOccurs="2" maxOccurs="4">

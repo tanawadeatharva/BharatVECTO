@@ -34,6 +34,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel.UserControl
@@ -130,37 +132,19 @@ namespace HashingTool.ViewModel.UserControl
 		// readout all required fields from the report xml: c14n, digest method, digest value of job, VIN, ...
 		protected virtual void ReadReportData()
 		{
-			var jobDigest = "";
-			var jobDigestMethod = "";
+			var digestData = new DigestData("", new string[]{}, "", "");
 			var vin = "";
-			var jobc14NMethod = new string[] { };
-
+			
 			if (_xmlFile.Document != null && _xmlFile.Document.DocumentElement != null) {
-				var digestValueNode =
-					_xmlFile.Document.SelectSingleNode("//*[local-name()='InputDataSignature']//*[local-name()='DigestValue']");
-				if (digestValueNode != null) {
-					jobDigest = digestValueNode.InnerText;
-				}
-				var digestMethodNode =
-					_xmlFile.Document.SelectSingleNode(
-						"//*[local-name()='InputDataSignature']//*[local-name()='DigestMethod']/@Algorithm");
-				if (digestMethodNode != null) {
-					jobDigestMethod = digestMethodNode.InnerText;
-				}
-
-				var c14NtMethodNodes =
-					_xmlFile.Document.SelectNodes("//*[local-name()='InputDataSignature']//*[local-name()='Transform']/@Algorithm");
-				if (c14NtMethodNodes != null) {
-					jobc14NMethod = (from XmlNode node in c14NtMethodNodes select node.InnerText).ToArray();
-				}
+				digestData = new DigestData(_xmlFile.Document.SelectSingleNode("//*[local-name()='InputDataSignature']"));
 				var vinNode = _xmlFile.Document.SelectSingleNode("//*[local-name()='VIN']");
 				if (vinNode != null) {
 					vin = vinNode.InnerText;
 				}
 			}
-			JobCanonicalizationMethodRead = jobc14NMethod;
-			JobDigestMethodRead = jobDigestMethod;
-			JobDigestValueRead = jobDigest;
+			JobCanonicalizationMethodRead = digestData.CanonicalizationMethods;
+			JobDigestMethodRead = digestData.DigestMethod;
+			JobDigestValueRead = digestData.DigestValue;
 			ReportVIN = vin;
 			RaisePropertyChanged(GeneralUpdate);
 		}

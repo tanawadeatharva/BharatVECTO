@@ -37,6 +37,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
+using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 

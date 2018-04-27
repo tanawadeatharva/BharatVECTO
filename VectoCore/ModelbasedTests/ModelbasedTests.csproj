@@ -42,7 +42,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="VectoCore">
-      <HintPath>..\VectoCore\bin\Debug\VectoCore.dll</HintPath>
+      <HintPath>..\VectoCore\obj\Debug\VectoCore.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Choose>

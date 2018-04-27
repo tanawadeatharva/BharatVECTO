@@ -499,5 +499,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const string DefaultPTOActivationCycle =
 				DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptoc";
 		}
+
+		public static class VTPMode
+		{
+			public const MissionType SelectedMission = MissionType.LongHaul;
+			public const LoadingType SelectedLoading = LoadingType.ReferenceLoad;
+		}
 	}
 }

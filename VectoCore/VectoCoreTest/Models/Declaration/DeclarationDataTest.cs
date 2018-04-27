@@ -61,6 +61,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			MissionType.Construction,
 		};
 
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+
 		[TestCase("285/60 R22.5", 10.6, 0.914, 3.03, 0.440766),
 		TestCase("285/70 R19.5", 7.9, 0.895, 3.05, 0.434453),
 		TestCase("395/85 R20", 27.9, 1.18, 3.05, 0.572798)]

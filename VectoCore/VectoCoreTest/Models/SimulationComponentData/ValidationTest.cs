@@ -633,7 +633,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		}
 
 		public string CertificationNumber { get; set; }
-		public string DigestValue { get; set; }
+		public DigestData DigestValue { get; set; }
 		public GearboxType Type { get; set; }
 		public IList<ITransmissionInputData> Gears { get; set; }
 

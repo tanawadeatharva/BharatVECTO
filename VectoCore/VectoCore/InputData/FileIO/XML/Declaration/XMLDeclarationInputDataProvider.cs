@@ -49,19 +49,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		private readonly XMLDeclarationJobInputDataProvider _xmlJobData;
 
 
-        public XMLDeclarationInputDataProvider(string filename, bool verifyXml) :
-            this(XmlReader.Create(filename), filename, verifyXml)
-        {
-        }
+		public XMLDeclarationInputDataProvider(string filename, bool verifyXml) :
+			this(XmlReader.Create(filename), filename, verifyXml)
+		{
+		}
 
-        public XMLDeclarationInputDataProvider(XmlReader inputData, bool verifyXml) : this(inputData, "", verifyXml)
-        {
-            
-        }
+		public XMLDeclarationInputDataProvider(XmlReader inputData, bool verifyXml) : this(inputData, "", verifyXml)
+		{
+			
+		}
 
-        protected XMLDeclarationInputDataProvider(XmlReader inputData, string source, bool verifyXml)
-        {
-            Source = source;
+		protected XMLDeclarationInputDataProvider(XmlReader inputData, string source, bool verifyXml)
+		{
+			Source = source;
 			var xmldoc = new XmlDocument();
 			xmldoc.Load(inputData);
 
@@ -72,13 +72,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			var h = VectoHash.Load(xmldoc);
 			XMLHash = h.ComputeXmlHash();
 			Document = new XPathDocument(new XmlNodeReader(xmldoc));
-            
+			
 			_xmlJobData = new XMLDeclarationJobInputDataProvider(this);
 		}
 
-        public string Source { get; protected set; }
+		public string Source { get; protected set; }
 
-        private static void ValidationCallBack(XmlSeverityType severity, ValidationEvent evt)
+		private static void ValidationCallBack(XmlSeverityType severity, ValidationEvent evt)
 		{
 			if (severity == XmlSeverityType.Error) {
 				var args = evt.ValidationEventArgs;

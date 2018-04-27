@@ -124,6 +124,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationTorqueConverterDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationVehicleDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLManufacturerReportReader.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\AbstractEngineeringXMLComponentDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAirdragDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAngledriveDataProvider.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="InputData\Reader\DrivingCycleDataReader.cs" />
     <Compile Include="InputData\Reader\FullLoadCurveReader.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DrivingCycleProxy.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
@@ -192,6 +194,8 @@
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
+    <Compile Include="OutputData\XML\XMLVTPReport.cs" />
+    <Compile Include="OutputData\VTPReport.cs" />
     <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
     <Compile Include="OutputData\ModFilter\ModalData1HzFilter.cs" />
     <Compile Include="OutputData\XML\AbstractXMLWriter.cs" />

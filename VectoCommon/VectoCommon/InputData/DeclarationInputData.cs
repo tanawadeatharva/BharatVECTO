@@ -62,7 +62,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		string CertificationNumber { get; }
 
-		string DigestValue { get; }
+		DigestData DigestValue { get; }
 	}
 
 	public interface IVehicleDeclarationInputData : IComponentInputData

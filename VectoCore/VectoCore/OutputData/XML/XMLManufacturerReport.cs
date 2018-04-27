@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected XNamespace tns;
 		protected XNamespace di;
-		private bool allSuccess = true;
+		private bool _allSuccess = true;
 
 		public XMLManufacturerReport()
 		{
@@ -271,8 +271,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public void AddResult(
 			DeclarationReport<XMLDeclarationReport.ResultEntry>.ResultContainer<XMLDeclarationReport.ResultEntry> entry)
 		{
-			foreach (var resultEntry in entry.ModData) {
-				allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
+			foreach (var resultEntry in entry.ResultEntry) {
+				_allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
 				Results.Add(new XElement(tns + XMLNames.Report_Result_Result,
 					new XAttribute(XMLNames.Report_Result_Status_Attr,
 						resultEntry.Value.Status == VectoRun.Status.Success ? "success" : "error"),
@@ -345,7 +345,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 			var retVal = new XDocument();
 			var results = new XElement(Results);
-			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, allSuccess ? "success" : "error"));
+			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
 			retVal.Add(new XProcessingInstruction("xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));

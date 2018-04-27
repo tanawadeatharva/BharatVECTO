@@ -34,9 +34,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Xml;
+using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel.UserControl
@@ -75,7 +77,7 @@ namespace HashingTool.ViewModel.UserControl
 				RaisePropertyChanged("Components");
 				return;
 			}
-			var components = GetContainigComponents().GroupBy(s => s)
+			var components = XMLManufacturerReportReader.GetContainingComponents(_xmlFile.Document).GroupBy(s => s)
 				.Select(g => new { Entry = g.Key, Count = g.Count() });
 			var jobComponents = _jobData == null ? new ViewModel.ComponentEntry[] { } : _jobData.Components.ToArray();
 			_validationErrors.Clear();
@@ -87,21 +89,19 @@ namespace HashingTool.ViewModel.UserControl
 			// collect c14n, digest method, digest value read, certification nr., digest value from job (re-computed)
 			var componentData = new List<ComponentEntry>();
 			foreach (var component in components) {
-				if (component.Entry == XMLNames.Component_Vehicle) {
+				if (component.Entry == VectoComponents.Vehicle) {
 					continue;
 				}
 				for (var i = 0; i < component.Count; i++) {
-					var node = GetNodes(component.Entry, i);
+					var node = XMLManufacturerReportReader.GetNodes(_xmlFile.Document, component.Entry, i);
 					var entry = new ComponentEntry {
 						Component = component.Count == 1
-							? component.Entry
-							: string.Format("{0} ({1})", component.Entry, i + 1),
+							? component.Entry.XMLElementName()
+							: string.Format("{0} ({1})", component.Entry.XMLElementName(), i + 1),
 						DigestValue = ReadElementValue(node, XMLNames.DI_Signature_Reference_DigestValue),
 						CertificationMethod = ReadElementValue(node, XMLNames.Report_Component_CertificationMethod),
 					};
-					// rename 'Axle' from report to 'Tyre' as in job
-					if (entry.Component.StartsWith("Axle ")) {
-						entry.Component = entry.Component.Replace("Axle", "Tyre");
+					if (entry.Component.StartsWith("Tyre ")) {
 						entry.CertificationNumber = ReadElementValue(node, XMLNames.Report_Tyre_TyreCertificationNumber);
 					} else {
 						entry.CertificationNumber = ReadElementValue(node, XMLNames.Report_Component_CertificationNumber) ??
@@ -171,51 +171,9 @@ namespace HashingTool.ViewModel.UserControl
 			return node.InnerText;
 		}
 
-		protected XmlNode GetNodes(string component, int index)
-		{
-			var nodes = _xmlFile.Document.SelectNodes(GetComponentQueryString(component));
-			if (nodes == null || nodes.Count == 0) {
-				throw new Exception(component == null
-					? "No component found"
-					: string.Format("Component {0} not found", component));
-			}
-			if (index >= nodes.Count) {
-				throw new Exception(string.Format("index exceeds number of components found! index: {0}, #components: {1}", index,
-					nodes.Count));
-			}
-			return nodes[index];
-		}
+		
 
-		protected static string GetComponentQueryString(string component = null)
-		{
-			if (component == null) {
-				return "(//*[@id])[1]";
-			}
-			return string.Format("//*[local-name()='{0}']", component);
-		}
-
-		protected IList<string> GetContainigComponents()
-		{
-			var retVal = new List<string>();
-			foreach (var component in EnumHelper.GetValues<VectoComponents>()) {
-				var nodes = _xmlFile.Document.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']/*[local-name()='Model']",
-					XMLNames.VectoManufacturerReport, component.XMLElementName()));
-				var count = nodes == null ? 0 : nodes.Count;
-				for (var i = 0; i < count; i++) {
-					retVal.Add(component.XMLElementName());
-				}
-			}
-			foreach (var component in new[] { XMLNames.AxleWheels_Axles_Axle }) {
-				var nodes = _xmlFile.Document.SelectNodes(string.Format("//*[local-name()='{0}']//*[local-name()='{1}']",
-					XMLNames.VectoManufacturerReport, component));
-				var count = nodes == null ? 0 : nodes.Count;
-				for (var i = 0; i < count; i++) {
-					retVal.Add(component);
-				}
-			}
-			return retVal;
-		}
-
+		
 
 		public ComponentEntry[] Components { get; private set; }
 

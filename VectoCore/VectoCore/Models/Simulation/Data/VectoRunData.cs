@@ -104,9 +104,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public int JobRunId { get; internal set; }
 
-        public AuxFanData FanData { get; internal set; }
+		public AuxFanData FanData { get; internal set; }
 
 		public SimulationType SimulationType { get; set; }
+
+		public VTPData VTPData { get; set; }
 
 		public class AuxData
 		{
@@ -205,7 +207,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			} catch (VectoException) {
 				return new ValidationResult(
 					string.Format("Interpolation of Gear-{0}-LossMap failed with torque={1} and angularSpeed={2}", gear.Key,
-                        inTorque, angularVelocity.ConvertToRoundsPerMinute()));
+						inTorque, angularVelocity.ConvertToRoundsPerMinute()));
 			}
 			var axlegearTorque = angledriveTorque;
 			try {
@@ -216,7 +218,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			} catch (VectoException) {
 				return new ValidationResult(
 					string.Format("Interpolation of Angledrive-LossMap failed with torque={0} and angularSpeed={1}",
-                        angledriveTorque, (angularVelocity / gear.Value.Ratio).ConvertToRoundsPerMinute()));
+						angledriveTorque, (angularVelocity / gear.Value.Ratio).ConvertToRoundsPerMinute()));
 			}
 
 			if (axleGearData != null) {
@@ -228,11 +230,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 						new ValidationResult(
 							string.Format(
 								"Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1} (gear={2}, velocity={3})",
-                                axlegearTorque, axleAngularVelocity.ConvertToRoundsPerMinute(), gear.Key, velocity));
+								axlegearTorque, axleAngularVelocity.ConvertToRoundsPerMinute(), gear.Key, velocity));
 				}
 			}
 			return null;
 		}
+	}
+
+	public class VTPData
+	{
+		public double CorrectionFactor;
+
+		public JoulePerKilogramm FuelNetCalorificValue;
 	}
 
 	public class AuxFanData

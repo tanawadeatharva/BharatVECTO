@@ -162,11 +162,11 @@ Public Class VectoVTPJobForm
         VectoNew()
 
         'Read GEN
-        Dim vectoJob As IVTPJobInputData = Nothing
-        Dim inputData As IVTPInputDataProvider = Nothing
+        Dim vectoJob As IVTPEngineeringJobInputData = Nothing
+        Dim inputData As IVTPEngineeringInputDataProvider = Nothing
         Try
             inputData = TryCast(JSONInputDataFactory.ReadComponentData(file),
-                                IVTPInputDataProvider)
+                                IVTPEngineeringInputDataProvider)
             vectoJob = inputData.JobInputData()
         Catch ex As Exception
             MsgBox("Failed to read Job-File" + Environment.NewLine + ex.Message)
@@ -638,15 +638,6 @@ Public Class VectoVTPJobForm
             HDVclass = "-"
         Else
             HDVclass = s0.VehicleClass.GetClassNumber()
-
-            If Cfg.DeclMode Then
-                LvCycles.Items.Clear()
-                Dim m0 As Mission
-                For Each m0 In s0.Missions
-                    LvCycles.Items.Add(m0.MissionType.ToString())
-                Next
-            End If
-
         End If
 
         PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _

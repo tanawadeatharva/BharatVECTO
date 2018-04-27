@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			public MissionType Mission;
 
-			public Dictionary<LoadingType, TEntry> ModData;
+			public Dictionary<LoadingType, TEntry> ResultEntry;
 		}
 
 
@@ -103,10 +103,10 @@ namespace TUGraz.VectoCore.OutputData
 			if (!Missions.ContainsKey(mission.MissionType)) {
 				Missions[mission.MissionType] = new ResultContainer<T>() {
 					Mission = mission.MissionType,
-					ModData = new Dictionary<LoadingType, T>(),
+					ResultEntry = new Dictionary<LoadingType, T>(),
 				};
 			}
-			Missions[mission.MissionType].ModData[loading] = new T();
+			Missions[mission.MissionType].ResultEntry[loading] = new T();
 			_resultCount++;
 		}
 
@@ -118,12 +118,12 @@ namespace TUGraz.VectoCore.OutputData
 			if (!Missions.ContainsKey(mission.MissionType)) {
 				throw new VectoException("Unknown mission type {0} for generating declaration report", mission.MissionType);
 			}
-			if (!Missions[mission.MissionType].ModData.ContainsKey(loadingType)) {
+			if (!Missions[mission.MissionType].ResultEntry.ContainsKey(loadingType)) {
 				throw new VectoException("Unknown loading type {0} for mission {1}", loadingType, mission.MissionType);
 			}
 			_resultCount--;
 
-			DoAddResult(Missions[mission.MissionType].ModData[loadingType], runData, modData);
+			DoAddResult(Missions[mission.MissionType].ResultEntry[loadingType], runData, modData);
 
 			if (_resultCount == 0) {
 				DoWriteReport();

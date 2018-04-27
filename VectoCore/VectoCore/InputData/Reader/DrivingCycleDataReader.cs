@@ -74,9 +74,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 			if (DistanceBasedCycleDataParser.ValidateHeader(cols, false)) {
 				return CycleType.DistanceBased;
 			}
-            if (VTPCycleDataParser.ValidateHeader(cols, false)) {
-                return CycleType.VTP;
-            }
+			if (VTPCycleDataParser.ValidateHeader(cols, false)) {
+				return CycleType.VTP;
+			}
 			throw new VectoException("CycleFile format is unknown.");
 		}
 
@@ -95,10 +95,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 					return new MeasuredSpeedDataParser();
 				case CycleType.PTO:
 					return new PTOCycleDataParser();
-                case CycleType.VTP:
-                    return new VTPCycleDataParser();
+				case CycleType.VTP:
+					return new VTPCycleDataParser();
 
-                default:
+				default:
 					throw new ArgumentOutOfRangeException("Cycle Type", type.ToString());
 			}
 		}
@@ -317,8 +317,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 			public const string RoadGradient = "grad";
 			public const string StoppingTime = "stop";
 			public const string EngineSpeed = "n";
-            public const string EngineSpeedSuffix = "n_eng";
-            public const string FanSpeed = "n_fan";
+			public const string EngineSpeedSuffix = "n_eng";
+			public const string FanSpeed = "n_fan";
 			public const string WheelTorqueLeft = "tq_left";
 			public const string WheelTorqueRight = "tq_right";
 			public const string WheelSpeedLeft = "n_wh_left";
@@ -414,7 +414,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					StoppingTime = row.ParseDouble(Fields.StoppingTime).SI<Second>(),
-				    AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 					AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
 					Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
 					AirSpeedRelativeToVehicle =
@@ -467,7 +467,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 						Time = row.ParseDoubleOrGetDefault(Fields.Time, absTime).SI<Second>(),
 						AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
 						AdditionalAuxPowerDemand =
-					        row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+							row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 						AuxiliarySupplyPower = row.GetAuxiliaries()
 					};
 
@@ -481,7 +481,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 						if (row.Field<string>(Fields.EnginePower).Equals("<DRAG>")) {
 							entry.Drag = true;
 						} else {
-						    entry.Torque = row.ParseDouble(Fields.EnginePower).SI(Unit.SI.Kilo.Watt).Cast<Watt>() / entry.AngularVelocity;
+							entry.Torque = row.ParseDouble(Fields.EnginePower).SI(Unit.SI.Kilo.Watt).Cast<Watt>() / entry.AngularVelocity;
 						}
 					}
 					absTime += 1;
@@ -542,10 +542,10 @@ namespace TUGraz.VectoCore.InputData.Reader
 
 				var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
-				    PWheel = row.ParseDouble(Fields.PWheel).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+					PWheel = row.ParseDouble(Fields.PWheel).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 					Gear = (uint)row.ParseDouble(Fields.Gear),
 					AngularVelocity = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
-				    AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 				}).ToArray();
 
 				return entries;
@@ -585,7 +585,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
-				    AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 					AirSpeedRelativeToVehicle =
 						crossWindRequired ? row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond() : null,
 					WindYawAngle = crossWindRequired ? row.ParseDouble(Fields.WindYawAngle) : 0,
@@ -632,7 +632,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Time = row.ParseDouble(Fields.Time).SI<Second>(),
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
-				    AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 					AngularVelocity = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).RPMtoRad(),
 					Gear = (uint)row.ParseDouble(Fields.Gear),
 					TorqueConverterActive = table.Columns.Contains(Fields.TorqueConverterActive)
@@ -712,17 +712,17 @@ namespace TUGraz.VectoCore.InputData.Reader
 			}
 		}
 
-        /// <summary>
-        /// Parser for PTO Cycles.
-        /// </summary>
-        // <t>,<v> [km/h],<Pwheel> [kW],<n_eng> [rpm],<n_fan> [rpm], <Padd> [kW]
-        private class VTPCycleDataParser : AbstractCycleDataParser
-        {
-            public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
-            {
-                ValidateHeader(table.Columns);
+		/// <summary>
+		/// Parser for PTO Cycles.
+		/// </summary>
+		// <t>,<v> [km/h],<Pwheel> [kW],<n_eng> [rpm],<n_fan> [rpm], <Padd> [kW]
+		private class VTPCycleDataParser : AbstractCycleDataParser
+		{
+			public override IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table, bool crossWindRequired)
+			{
+				ValidateHeader(table.Columns);
 
-                var entries = table.Rows.Cast<DataRow>().Select(row => {
+				var entries = table.Rows.Cast<DataRow>().Select(row => {
 					var wheelSpeed =
 						((row.ParseDouble(Fields.WheelSpeedLeft) + row.ParseDouble(Fields.WheelSpeedRight)) / 2).RPMtoRad();
 					var wheelPower = row.ParseDouble(Fields.WheelTorqueLeft).SI<NewtonMeter>() * row.ParseDouble(Fields.WheelSpeedLeft).RPMtoRad() +
@@ -742,23 +742,23 @@ namespace TUGraz.VectoCore.InputData.Reader
 					};
 				}).ToArray();
 
-                return entries;
-            }
+				return entries;
+			}
 
-            public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
-            {
-                var requiredCols = new[] {
-                    Fields.Time,
-                    Fields.VehicleSpeed,
-                    Fields.EngineSpeedSuffix,
-                    Fields.FanSpeed,
+			public static bool ValidateHeader(DataColumnCollection header, bool throwExceptions = true)
+			{
+				var requiredCols = new[] {
+					Fields.Time,
+					Fields.VehicleSpeed,
+					Fields.EngineSpeedSuffix,
+					Fields.FanSpeed,
 					Fields.WheelSpeedLeft,
 					Fields.WheelSpeedRight,
 					Fields.WheelTorqueLeft,
 					Fields.WheelTorqueRight,
-                };
+				};
 
-                var allowedCols = new[] {
+				var allowedCols = new[] {
 					Fields.Time,
 					Fields.VehicleSpeed,
 					Fields.EngineSpeedSuffix,
@@ -771,14 +771,14 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.FuelConsumption
 				};
 
-                const bool allowAux = true;
+				const bool allowAux = true;
 
-                return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux) &&
-                       CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
-            }
-        }
+				return CheckColumns(header, allowedCols, requiredCols, throwExceptions, allowAux) &&
+					   CheckComboColumns(header, new[] { Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle }, throwExceptions);
+			}
+		}
 
-    }
+	}
 
 	#endregion
 }
