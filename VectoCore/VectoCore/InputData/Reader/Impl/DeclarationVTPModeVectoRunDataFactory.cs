@@ -10,6 +10,7 @@ using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
@@ -30,21 +31,50 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		private DeclarationDataAdapter _dao;
 		protected Exception _initException;
 
-		public DeclarationVTPModeVectoRunDataFactory(IVTPDeclarationInputDataProvider ivtpProvider) : this(ivtpProvider.JobInputData)
+		public IVTPReport Report;
+
+		public DeclarationVTPModeVectoRunDataFactory(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : this(ivtpProvider.JobInputData, report)
 		{}
 
-		protected DeclarationVTPModeVectoRunDataFactory(IVTPDeclarationJobInputData job)
+		protected DeclarationVTPModeVectoRunDataFactory(IVTPDeclarationJobInputData job, IVTPReport report)
 		{
 			JobInputData = job;
+			Report = report;
 			try {
 				Initialize();
+				if (Report != null) {
+					InitializeReport();
+				}
 			} catch (Exception e) {
 				_initException = e;
 			}
 		}
 
+		private void InitializeReport()
+		{
+			var powertrainConfig = new VectoRunData() {
+				VehicleData =
+					_dao.CreateVehicleData(JobInputData.Vehicle, _segment.Missions.First(),
+											_segment.Missions.First().Loadings.First().Value, _segment.MunicipalBodyWeight),
+				AirdragData = _airdragData,
+				EngineData = _engineData,
+				GearboxData = _gearboxData,
+				AxleGearData = _axlegearData,
+				Retarder = _retarderData,
+				Aux =
+					_dao.CreateAuxiliaryData(JobInputData.Vehicle.AuxiliaryInputData(),
+											_segment.Missions.First().MissionType,
+											_segment.VehicleClass),
+			};
+			powertrainConfig.VehicleData.VehicleClass = _segment.VehicleClass;
+			Report.InputDataHash = JobInputData.VectoJobHash;
+			Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
+			Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
+			Report.InitializeReport(powertrainConfig);
+		}
 
-		protected virtual void Initialize()
+
+		protected void Initialize()
 		{
 			_dao = new DeclarationDataAdapter();
 			var vehicle = JobInputData.Vehicle;
@@ -88,8 +118,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 
 			// simulate the LongHaul cycle with RefLoad
-			foreach (var mission in _segment.Missions.Where(m => m.MissionType == MissionType.LongHaul)) {
-				foreach (var loading in mission.Loadings.Where(l => l.Key == LoadingType.ReferenceLoad)) {
+			foreach (var mission in _segment.Missions.Where(m => m.MissionType == DeclarationData.VTPMode.SelectedMission)) {
+				foreach (var loading in mission.Loadings.Where(l => l.Key == DeclarationData.VTPMode.SelectedLoading)) {
 					var runData = CreateVectoRunData(_segment, mission, loading.Value);
 					runData.ModFileSuffix = loading.Key.ToString();
 					var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
@@ -99,6 +129,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						JobInputData.Vehicle.AuxiliaryInputData(), mission.MissionType, _segment.VehicleClass);
 					runData.ExecutionMode = ExecutionMode.Declaration;
 					runData.SimulationType = SimulationType.DistanceCycle;
+					runData.Mission = mission;
+					runData.Loading = loading.Key;
 					yield return runData;
 				}
 			}
@@ -116,6 +148,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				};
 				runData.ExecutionMode = ExecutionMode.Declaration;
 				runData.SimulationType = SimulationType.VerificationTest;
+				runData.Mission = new Mission() {
+					MissionType = MissionType.VerificationTest
+				};
+				runData.VTPData = new VTPData() {
+					CorrectionFactor = 1,
+					FuelNetCalorificValue = 0.SI<JoulePerKilogramm>()
+				};
 				yield return runData;
 			}
 
@@ -135,10 +174,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					loading, segment.MunicipalBodyWeight),
 				AirdragData = _airdragData,
 				DriverData = null,
-				
 				AdvancedAux = null,
 				Retarder = _retarderData,
 				PTO = _ptoTransmissionData,
+				Report = Report,
 			};
 		}
 

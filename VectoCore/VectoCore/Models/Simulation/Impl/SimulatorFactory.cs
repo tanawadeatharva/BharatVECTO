@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private bool _engineOnlyMode;
 
 		public SimulatorFactory(ExecutionMode mode, IInputDataProvider dataProvider, IOutputDataWriter writer,
-			IDeclarationReport declarationReport = null, bool validate = true)
+			IDeclarationReport declarationReport = null, IVTPReport vtpReport = null, bool validate = true)
 		{
 			Log.Info("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			switch (mode) {
 				case ExecutionMode.Declaration:
-					CreateDeclarationDataReader(dataProvider, declarationReport);
+					CreateDeclarationDataReader(dataProvider, declarationReport, vtpReport);
 					break;
 				case ExecutionMode.Engineering:
 					CreateEngineeringDataReader(dataProvider);
@@ -85,11 +85,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		private void CreateDeclarationDataReader(IInputDataProvider dataProvider, IDeclarationReport declarationReport)
+		private void CreateDeclarationDataReader(IInputDataProvider dataProvider, IDeclarationReport declarationReport, IVTPReport vtpReport)
 		{
 			if (dataProvider is IVTPDeclarationInputDataProvider) {
 				var vtpProvider = dataProvider as IVTPDeclarationInputDataProvider;
-				DataReader = new DeclarationVTPModeVectoRunDataFactory(vtpProvider);
+				var report = vtpReport ?? new XMLVTPReport(ModWriter);
+				DataReader = new DeclarationVTPModeVectoRunDataFactory(vtpProvider, report);
 				return;
 			}
 			if (dataProvider is IDeclarationInputDataProvider) {

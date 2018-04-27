@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public string TechnicalReportId { get; set; }
 		public CertificationMethod CertificationMethod { get{return CertificationMethod.NotCertified;} }
 		public string CertificationNumber { get; set; }
-		public string DigestValue { get; set; }
+		public DigestData DigestValue { get; set; }
 		public CubicMeter Displacement { get; set; }
 		public PerSecond IdleSpeed { get; set; }
 		public double WHTCMotorway { get; set; }

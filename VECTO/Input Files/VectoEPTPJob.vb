@@ -14,6 +14,7 @@ Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Utils
+Imports TUGraz.VectoHashing
 
 <CustomValidation(GetType(VectoVTPJob), "ValidateJob")>
 Public Class VectoVTPJob
@@ -115,6 +116,11 @@ Public Class VectoVTPJob
         End Get
     End Property
 
+    Public ReadOnly Property IVTPDeclarationJobInputData_ManufacturerReportInputData As IManufacturerReport Implements IVTPDeclarationJobInputData.ManufacturerReportInputData
+
+    Public ReadOnly Property VectoJobHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoJobHash
+    Public ReadOnly Property VectoManufacturerReportHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoManufacturerReportHash
+
     Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IVTPEngineeringJobInputData.Cycles
         Get
             Dim retVal As ICycleData() = New ICycleData(CycleFiles.Count - 1) {}
@@ -174,6 +180,7 @@ Public Class VectoVTPJob
         End Get
     End Property
 
+   
     Public ReadOnly Property IVTPDeclarationInputDataProvider_JobInputData As IVTPDeclarationJobInputData _
         Implements IVTPDeclarationInputDataProvider.JobInputData
         get

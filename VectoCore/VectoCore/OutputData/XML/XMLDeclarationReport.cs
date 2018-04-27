@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public CubicMeter CargoVolume { get; private set; }
 
 
-			public void SetResultData(VectoRunData runData, IModalDataContainer data)
+			public virtual void SetResultData(VectoRunData runData, IModalDataContainer data)
 			{
 				FuelType = data.FuelData.FuelType;
 				Payload = runData.VehicleData.Loading;

@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					TyreTestLoad = axleInput.Tyre.TyreTestLoad,
 					Inertia = DeclarationData.Wheels.Lookup(axleInput.Tyre.Dimension.RemoveWhitespace()).Inertia,
 					CertificationNumber = axleInput.Tyre.CertificationNumber,
-					DigestValueInput = axleInput.Tyre.DigestValue,
+					DigestValueInput = axleInput.Tyre.DigestValue == null ? "" : axleInput.Tyre.DigestValue.DigestValue,
 				};
 				axleData.Add(axle);
 			}
