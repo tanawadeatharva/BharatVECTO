@@ -36,6 +36,8 @@ Result  * { display: block; }
 ApplicationInformation { display: block; }
 Signature { display: none; }
 ResultDataSignature { display: none; }
+VectoVTPReport General {display: none; }
+VectoVTPReport TestConditions { display: none; } 
 
 *[unit]:after { display: inline-block; min-width: 5em; padding-left: 0.3em; text-align: left; }
 *[unit="g/km"]:after { content: "g/km"; }
@@ -52,6 +54,10 @@ ResultDataSignature { display: none; }
 *[unit="kg"]:after { content: "kg" }
 *[unit="km/h"]:after { content: "km/h" }
 *[unit="m/s²"]:after { content: "m/s²" }
+*[unit="kW"]:after { content: "kW" }
+*[unit="kWh"]:after { content: "kWh" }
+*[unit="MJ/kg"]:after { content: "MJ/kg" }
+*[unit="g/kWh"]:after { content: "g/kWh" }
 
 
 Data {
@@ -81,6 +87,10 @@ VectoOutput Data:before {
 VectoCustomerInformation Data:before {
 	content: "Customer Information";
 }
+VectoVTPReport Data:before {
+	content: "VT Report";
+}
+
 Data:after {
 	content: "Note: this presentation of the report does not show all details!";
 	display: block;
@@ -490,3 +500,248 @@ Result CO2:first-of-type:before {
 	margin: 10px 0 5px 40px; 
 }
 
+DataIntegrityCheck,
+VectoVTPReport Results
+{ 
+	display: flex;
+    flex-flow: row wrap;
+    border: 2px solid #1f6032;
+    padding: 5px 10px;
+    margin: 5px 0; 
+}
+DataIntegrityCheck {
+    order: 10;
+}
+
+DataIntegrityCheck[status=failed] {
+	border-color: red;
+}
+
+DataIntegrityCheck > * {
+	display: flex;
+	flex-flow: column;
+	flex-basis: calc(100% - 20px);
+    width: calc(100% - 20px);
+    padding-left: 40px;
+}
+DataIntegrityCheck JobData {
+	order: 1;
+	border-bottom: 2px solid #1f6032;
+	padding-bottom: 10px;
+ 	 margin-bottom: 10px;
+}
+DataIntegrityCheck JobData:before { content: "Job Data Integrity" }
+
+DataIntegrityCheck ManufacturerReport {
+	order: 2;
+	border-bottom: 2px solid #1f6032;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+DataIntegrityCheck ManufacturerReport:before { content: "Manufacturer Record Integrity" }
+
+DataIntegrityCheck Components:before {
+	content: "Component Integrity";
+	margin-left: -20px;
+}
+DataIntegrityCheck Components {
+	order: 3;
+    padding-left: 20px;
+}
+DataIntegrityCheck ManufacturerReport[status=failed],
+DataIntegrityCheck JobData[status=failed],
+DataIntegrityCheck Component[status='failed']
+{
+	background-color: rgba(255, 0, 0, 0.3);
+}
+
+DataIntegrityCheck > *:before {
+	display: block;
+    font-weight: bold;
+    font-style: normal;
+    margin: 10px 0 5px;
+    margin-left: -40px;
+    color: #1f6032;
+}
+
+DataIntegrityCheck Component:before {
+    display: block;
+    /*font-weight: bold;*/
+    font-style: normal;
+    margin: 10px 0 5px;
+    margin-left: -20px;
+    color: #1f6032;
+}
+DataIntegrityCheck Component[componentName='Engine']:before {content: "Engine";}
+DataIntegrityCheck Component[componentName='Gearbox']:before {content: "Transmission";}
+DataIntegrityCheck Component[componentName='Torqueconverter']:before {content: "Torque Converter";}
+DataIntegrityCheck Component[componentName='Retarder']:before {content: "Retarder";}
+DataIntegrityCheck Component[componentName='Angledrive']:before {content: "Angledrive";}
+DataIntegrityCheck Component[componentName='Axlegear']:before {content: "Axlegear";}
+DataIntegrityCheck Component[componentName='AirDrag']:before {content: "Cabin/Airdrag";}
+DataIntegrityCheck Component[componentName='Axle']:before {content: "Wheels";}
+DataIntegrityCheck Component[componentName='Tyre (1)']:before {content: "Tyre Axle 1";}
+DataIntegrityCheck Component[componentName='Tyre (2)']:before {content: "Tyre Axle 2";}
+DataIntegrityCheck Component[componentName='Tyre (3)']:before {content: "Tyre Axle 3";}
+DataIntegrityCheck Component[componentName='Tyre (4)']:before {content: "Tyre Axle 4";}
+DataIntegrityCheck Component[componentName='Auxiliaries']:before {content: "Auxiliaries";}
+
+DataIntegrityCheck Components Component {
+	display: flex;
+    flex-flow: column;
+    flex-basis: calc(100% - 20px);
+    width: calc(100% - 20px);
+    /*margin-bottom: 20px;*/
+    padding-left: 20px;
+    /*border-bottom: 2px solid #1f6032;*/
+}
+
+DataIntegrityCheck Component > *:before,
+DataIntegrityCheck ManufacturerReport > *:before,
+DataIntegrityCheck JobData > *:before
+ {
+    min-width: 20em;
+    padding: 0 5px 0 0;
+    display: inline-block;
+    font-style: italic;
+}
+
+DataIntegrityCheck DigestValueRead,
+DataIntegrityCheck DigestValueRecomputed
+{ 
+	/*order: 99;*/
+    overflow: hidden;
+    margin-right: 2em;
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+    font-family: monospace;
+    font-size: larger;
+}
+DataIntegrityCheck DigestValueRead:before,
+DataIntegrityCheck DigestValueRecomputed:before
+{
+	font-family: sans-serif;
+	font-size: medium;
+}
+DataIntegrityCheck DigestValueRecomputed:before { content: "Digest Value Recomputed:"; }
+DataIntegrityCheck DigestValueRead[source='JobData']:before { content: "Digest Value in Job Data:"; }
+DataIntegrityCheck DigestValueRead[source='ManufacturerRecord']:before { content: "Digest Value in ManufacturerRecord:"; }
+
+VectoVTPReport Results {
+	display: flex;
+	flex-flow: column;
+	flex-basis: calc(100% - 20px);
+    width: calc(100% - 20px);
+    padding: 5px 10px;
+    margin: 5px 0;
+}
+VectoVTPReport Results:before {
+	content: "Results";
+	display: block;
+    font-weight: bold;
+    font-style: normal;
+    margin: 10px 0 5px;
+    /*margin-left: -20px;*/
+    color: #1f6032;
+}
+
+VectoVTPReport Results AverageFanPower:before {content: "Average Fan Power:";}
+VectoVTPReport Results WorkPosVT:before {content: "E_Wheel_pos.:";}
+VectoVTPReport Results TestFuelNCV:before {content: "NCV of Test Fuel:";}
+VectoVTPReport Results Measured:before {content: "Measured:";}
+VectoVTPReport Results MeasuredCorrected:before {content: "Corrected measured:";}
+VectoVTPReport Results Simulated:before {content: "Simulated:";}
+VectoVTPReport Results Declared:before {content: "Declared:";}
+VectoVTPReport Results Verified:before {content: "Verified:";}
+VectoVTPReport Results VTRatio:before {content: "VT Ratio";}
+VectoVTPReport Results Mission:before {content: "Simulated Mission:";}
+
+VectoVTPReport Results AverageFanPower,
+VectoVTPReport Results WorkPosVT,
+VectoVTPReport Results TestFuelNCV,
+VectoVTPReport Results Measured,
+VectoVTPReport Results MeasuredCorrected,
+VectoVTPReport Results Simulated,
+VectoVTPReport Results Declared,
+VectoVTPReport Results Verified,
+VectoVTPReport Results Mission
+{
+	position: relative;
+	width: calc(40% - 40px);
+	display: block;
+	text-align: right;
+	margin-left: 40px;
+	padding: 5px 0;
+}
+VectoVTPReport Results Mission {
+	text-align: left;
+	padding-left: 13em;
+}
+
+VectoVTPReport Results AverageFanPower:before,
+VectoVTPReport Results WorkPosVT:before,
+VectoVTPReport Results TestFuelNCV:before,
+VectoVTPReport Results Measured:before,
+VectoVTPReport Results MeasuredCorrected:before,
+VectoVTPReport Results Simulated:before,
+VectoVTPReport Results Declared:before,
+VectoVTPReport Results Verified:before,
+VectoVTPReport Results Mission:before
+{
+	position: absolute;
+    left: 0px;
+}
+
+
+VectoVTPReport Results > * {
+	flex-basis: calc(100% - 40px);
+    width: 100%;
+    /*padding-left: 40px;*/
+}
+VectoVTPReport Results > *:before,
+VectoVTPReport Results FuelConsumption > *:before,
+VectoVTPReport Results CO2 > *:before
+ {
+    min-width: 12em;
+    width: 12em;
+    padding: 0 5px 0 0;
+    display: inline-block;
+    font-style: italic;
+    text-align: left;
+}
+
+VectoVTPReport Results FuelConsumption,
+VectoVTPReport Results CO2
+{
+	display: flex;
+	flex-flow: column;
+	padding-left: 0px;
+}
+
+VectoVTPReport Results FuelConsumption:before { content: "Fuel Consumption Calculations"; }
+VectoVTPReport Results CO2:before { content: "CO2"; }
+
+VectoVTPReport Results FuelConsumption:before,
+VectoVTPReport Results CO2:before,
+VectoVTPReport Results VTRatio:before
+{
+	display: block;
+    font-weight: bold;
+    font-style: normal;
+    margin: 10px 0 5px;
+    /*margin-left: -40px;*/
+    color: #1f6032;
+    font-size: medium;
+    width: 100%;
+}
+
+VectoVTPReport Results VTRatio {
+	font-size: larger;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-weight: bold;
+	padding-left: 40px;
+}
+VectoVTPReport Results VTRatio:before {
+	margin-left: -40px;
+}
