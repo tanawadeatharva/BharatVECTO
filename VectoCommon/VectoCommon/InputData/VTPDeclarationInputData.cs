@@ -65,6 +65,8 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IManufacturerReport
 	{
+		string Source { get; }
+
 		IDictionary<VectoComponents,IList<string>> ComponentDigests { get; }
 
 		DigestData JobDigest { get; }

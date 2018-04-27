@@ -6,6 +6,7 @@ Imports System.Linq
 Imports System.Xml
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
+Imports TUGraz.VectoCommon.Hashing
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -19,12 +20,13 @@ Imports TUGraz.VectoHashing
 <CustomValidation(GetType(VectoVTPJob), "ValidateJob")>
 Public Class VectoVTPJob
     Implements IVTPEngineeringInputDataProvider, IVTPEngineeringJobInputData, IVTPDeclarationInputDataProvider,
-               IVTPDeclarationJobInputData
+               IVTPDeclarationJobInputData, IManufacturerReport
 
     Private _sFilePath As String
     Private _myPath As String
 
     Private ReadOnly _vehicleFile As SubPath
+    Private ReadOnly _manufacturerRecord As SubPath
 
     Public ReadOnly CycleFiles As List(Of SubPath)
     Public FanCoefficients As Double()
@@ -34,6 +36,7 @@ Public Class VectoVTPJob
     Public Sub New()
         CycleFiles = New List(Of SubPath)
         _vehicleFile = New SubPath
+        _manufacturerRecord = New SubPath()
     End Sub
 
     Public Property FilePath As String
@@ -117,9 +120,15 @@ Public Class VectoVTPJob
     End Property
 
     Public ReadOnly Property IVTPDeclarationJobInputData_ManufacturerReportInputData As IManufacturerReport Implements IVTPDeclarationJobInputData.ManufacturerReportInputData
+    get
+            Return me
+    End Get
+    End Property
 
-    Public ReadOnly Property VectoJobHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoJobHash
+   Public ReadOnly Property VectoJobHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoJobHash
+
     Public ReadOnly Property VectoManufacturerReportHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoManufacturerReportHash
+
 
     Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IVTPEngineeringJobInputData.Cycles
         Get
@@ -187,4 +196,26 @@ Public Class VectoVTPJob
             return Me
         End Get
     End Property
+
+    Public Property ManufacturerRecord(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _manufacturerRecord.OriginalPath
+            Else
+                Return _manufacturerRecord.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _manufacturerRecord.Init(_myPath, value)
+        End Set
+    End Property
+
+    Public ReadOnly Property Source As String Implements IManufacturerReport.Source
+    get
+            Return _manufacturerRecord.FullPath
+    End Get
+    End Property
+
+    Public ReadOnly Property ComponentDigests As IDictionary(Of VectoComponents,IList(Of String)) Implements IManufacturerReport.ComponentDigests
+    Public ReadOnly Property JobDigest As DigestData Implements IManufacturerReport.JobDigest
 End Class

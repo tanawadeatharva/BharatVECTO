@@ -696,6 +696,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVectoHash VectoManufacturerReportHash { get; }
 
+		string IManufacturerReport.Source { get { return Body["ManufacturerRecord"].Value<string>(); } }
+
 		public IList<ICycleData> Cycles
 		{
 			get {

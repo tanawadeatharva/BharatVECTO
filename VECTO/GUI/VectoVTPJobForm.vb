@@ -57,6 +57,8 @@ Public Class VectoVTPJobForm
 
         LvAux.Columns(AuxViewColumns.AuxInputOrTech).Text = "Technology"
 
+        pnManufacturerRecord.Visible = cfg.DeclMode
+
         GrCycles.Enabled = True
 
         _changed = False
@@ -192,6 +194,7 @@ Public Class VectoVTPJobForm
 
         'Files -----------------------------
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.Source, _basePath)
+        tbManufacturerRecord.Text = If (cfg.DeclMode, GetRelativePath(inputData.JobInputData.ManufacturerReportInputData.Source, _basePath), "")
 
         Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.AuxiliaryInputData()
 
@@ -268,6 +271,8 @@ Public Class VectoVTPJobForm
         'Files ------------------------------------------------- -----------------
 
         vectoJob.PathVeh = TbVEH.Text
+        vectoJob.ManufacturerRecord = If(cfg.DeclMode,  tbManufacturerRecord.Text, "")
+
 
         For Each lv0 As ListViewItem In LvCycles.Items
             Dim sb As SubPath = New SubPath
@@ -693,7 +698,11 @@ Public Class VectoVTPJobForm
     Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
     End Sub
 
-
+    Private Sub ButtonManR_Click(sender As Object, e As EventArgs) Handles ButtonManR.Click
+        If ManRXMLFileBrowser.OpenDialog(FileRepl(tbManufacturerRecord.Text, GetPath(VectoFile))) Then
+            tbManufacturerRecord.Text = GetFilenameWithoutDirectory(ManRXMLFileBrowser.Files(0), GetPath(VectoFile))
+        End If
+    End Sub
 End Class
 
 

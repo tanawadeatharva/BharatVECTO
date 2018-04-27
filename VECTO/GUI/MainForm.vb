@@ -116,6 +116,7 @@ Imports TUGraz.VectoCore.Utils
         JobfileFileBrowser = New FileBrowser("vecto")
         VehicleFileBrowser = New FileBrowser("vveh")
         VehicleXMLFileBrowser = New FileBrowser("vveh_xml")
+        ManRXMLFileBrowser = new FileBrowser("xml")
         FuelConsumptionMapFileBrowser = New FileBrowser("vmap")
         DrivingCycleFileBrowser = New FileBrowser("vdri")
         FullLoadCurveFileBrowser = New FileBrowser("vfld")
@@ -144,6 +145,7 @@ Imports TUGraz.VectoCore.Utils
         JobfileFileBrowser.Extensions = New String() {"vecto"}
         VehicleFileBrowser.Extensions = New String() {"vveh"}
         VehicleXMLFileBrowser.Extensions = New String() {"xml"}
+        ManRXMLFileBrowser.Extensions = New String() {"xml"}
         FuelConsumptionMapFileBrowser.Extensions = New String() {"vmap"}
         DrivingCycleFileBrowser.Extensions = New String() {"vdri"}
         FullLoadCurveFileBrowser.Extensions = New String() {"vfld"}
@@ -169,6 +171,7 @@ Imports TUGraz.VectoCore.Utils
         JobfileFileBrowser.Close()
         VehicleFileBrowser.Close()
         VehicleXMLFileBrowser.Close()
+        ManRXMLFileBrowser.Close()
         FuelConsumptionMapFileBrowser.Close()
         DrivingCycleFileBrowser.Close()
         FullLoadCurveFileBrowser.Close()
