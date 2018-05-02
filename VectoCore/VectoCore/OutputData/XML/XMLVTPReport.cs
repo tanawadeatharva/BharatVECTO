@@ -67,10 +67,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					}).ToArray();
 
 				VTPWorkPWheelPos = cycleEntries.Sum(x => x.PWheel * x.dt).Cast<WattSecond>();
-					//runData.Cycle.Entries.Select(x => x.PWheel > 0 ? x.PWheel * 0.5.SI<Second>() : 0.SI<WattSecond>()).Sum().Cast<WattSecond>();
-
 				VTPFcMeasured = cycleEntries.Sum(x => x.FC * x.dt).Cast<Kilogram>();
-					//runData.Cycle.Entries.Sum(x => x.Fuelconsumption * 0.5.SI<Second>());
 				VTPFcFinalSimulated = data.TimeIntegral<Kilogram>(ModalResultField.FCFinal);
 				VTPFcCorrectionFactor = runData.VTPData.CorrectionFactor;
 				VTPNCV = runData.VTPData.FuelNetCalorificValue;
