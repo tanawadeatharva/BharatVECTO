@@ -80,6 +80,12 @@ Partial Class VectoVTPJobForm
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.pnManufacturerRecord = New System.Windows.Forms.Panel()
+        Me.lblMileageUnit = New System.Windows.Forms.Label()
+        Me.tbMileage = New System.Windows.Forms.TextBox()
+        Me.lblMileage = New System.Windows.Forms.Label()
+        Me.lblNCVUnit = New System.Windows.Forms.Label()
+        Me.tbNCV = New System.Windows.Forms.TextBox()
+        Me.lblNCV = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.tbManufacturerRecord = New System.Windows.Forms.TextBox()
         Me.ButtonManR = New System.Windows.Forms.Button()
@@ -104,7 +110,7 @@ Partial Class VectoVTPJobForm
         Me.GrCycles.Controls.Add(Me.LvCycles)
         Me.GrCycles.Controls.Add(Me.BtDRIrem)
         Me.GrCycles.Controls.Add(Me.BtDRIadd)
-        Me.GrCycles.Location = New System.Drawing.Point(12, 290)
+        Me.GrCycles.Location = New System.Drawing.Point(11, 324)
         Me.GrCycles.Name = "GrCycles"
         Me.GrCycles.Size = New System.Drawing.Size(515, 138)
         Me.GrCycles.TabIndex = 10
@@ -174,7 +180,7 @@ Partial Class VectoVTPJobForm
         Me.GrAux.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.GrAux.Controls.Add(Me.LvAux)
-        Me.GrAux.Location = New System.Drawing.Point(12, 144)
+        Me.GrAux.Location = New System.Drawing.Point(11, 178)
         Me.GrAux.Name = "GrAux"
         Me.GrAux.Size = New System.Drawing.Size(515, 140)
         Me.GrAux.TabIndex = 9
@@ -237,7 +243,7 @@ Partial Class VectoVTPJobForm
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 584)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 609)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(944, 22)
         Me.StatusStrip1.SizingGrip = false
@@ -253,7 +259,7 @@ Partial Class VectoVTPJobForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(778, 557)
+        Me.ButOK.Location = New System.Drawing.Point(778, 582)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 0
@@ -264,7 +270,7 @@ Partial Class VectoVTPJobForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(859, 557)
+        Me.ButCancel.Location = New System.Drawing.Point(859, 582)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 1
@@ -481,7 +487,7 @@ Partial Class VectoVTPJobForm
         Me.GroupBox1.Controls.Add(Me.tbC1)
         Me.GroupBox1.Controls.Add(Me.Label1)
         Me.GroupBox1.Controls.Add(Me.PictureBox2)
-        Me.GroupBox1.Location = New System.Drawing.Point(11, 434)
+        Me.GroupBox1.Location = New System.Drawing.Point(10, 468)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(515, 135)
         Me.GroupBox1.TabIndex = 39
@@ -572,22 +578,82 @@ Partial Class VectoVTPJobForm
         '
         'pnManufacturerRecord
         '
+        Me.pnManufacturerRecord.Controls.Add(Me.lblMileageUnit)
+        Me.pnManufacturerRecord.Controls.Add(Me.tbMileage)
+        Me.pnManufacturerRecord.Controls.Add(Me.lblMileage)
+        Me.pnManufacturerRecord.Controls.Add(Me.lblNCVUnit)
+        Me.pnManufacturerRecord.Controls.Add(Me.tbNCV)
+        Me.pnManufacturerRecord.Controls.Add(Me.lblNCV)
         Me.pnManufacturerRecord.Controls.Add(Me.Label8)
         Me.pnManufacturerRecord.Controls.Add(Me.tbManufacturerRecord)
         Me.pnManufacturerRecord.Controls.Add(Me.ButtonManR)
         Me.pnManufacturerRecord.Location = New System.Drawing.Point(11, 112)
         Me.pnManufacturerRecord.Name = "pnManufacturerRecord"
-        Me.pnManufacturerRecord.Size = New System.Drawing.Size(525, 36)
+        Me.pnManufacturerRecord.Size = New System.Drawing.Size(525, 66)
         Me.pnManufacturerRecord.TabIndex = 41
+        '
+        'lblMileageUnit
+        '
+        Me.lblMileageUnit.AutoSize = true
+        Me.lblMileageUnit.Location = New System.Drawing.Point(476, 43)
+        Me.lblMileageUnit.Name = "lblMileageUnit"
+        Me.lblMileageUnit.Size = New System.Drawing.Size(27, 13)
+        Me.lblMileageUnit.TabIndex = 49
+        Me.lblMileageUnit.Text = "[km]"
+        '
+        'tbMileage
+        '
+        Me.tbMileage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.tbMileage.Location = New System.Drawing.Point(394, 40)
+        Me.tbMileage.Name = "tbMileage"
+        Me.tbMileage.Size = New System.Drawing.Size(76, 20)
+        Me.tbMileage.TabIndex = 48
+        '
+        'lblMileage
+        '
+        Me.lblMileage.AutoSize = true
+        Me.lblMileage.Location = New System.Drawing.Point(281, 43)
+        Me.lblMileage.Name = "lblMileage"
+        Me.lblMileage.Size = New System.Drawing.Size(47, 13)
+        Me.lblMileage.TabIndex = 47
+        Me.lblMileage.Text = "Mileage:"
+        '
+        'lblNCVUnit
+        '
+        Me.lblNCVUnit.AutoSize = true
+        Me.lblNCVUnit.Location = New System.Drawing.Point(199, 43)
+        Me.lblNCVUnit.Name = "lblNCVUnit"
+        Me.lblNCVUnit.Size = New System.Drawing.Size(44, 13)
+        Me.lblNCVUnit.TabIndex = 46
+        Me.lblNCVUnit.Text = "[MJ/kg]"
+        '
+        'tbNCV
+        '
+        Me.tbNCV.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.tbNCV.Location = New System.Drawing.Point(117, 40)
+        Me.tbNCV.Name = "tbNCV"
+        Me.tbNCV.Size = New System.Drawing.Size(76, 20)
+        Me.tbNCV.TabIndex = 45
+        '
+        'lblNCV
+        '
+        Me.lblNCV.AutoSize = true
+        Me.lblNCV.Location = New System.Drawing.Point(4, 43)
+        Me.lblNCV.Name = "lblNCV"
+        Me.lblNCV.Size = New System.Drawing.Size(79, 13)
+        Me.lblNCV.TabIndex = 44
+        Me.lblNCV.Text = "NCV Test Fuel:"
         '
         'Label8
         '
         Me.Label8.AutoSize = true
         Me.Label8.Location = New System.Drawing.Point(3, 11)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(108, 13)
+        Me.Label8.Size = New System.Drawing.Size(111, 13)
         Me.Label8.TabIndex = 43
-        Me.Label8.Text = "Manufacturer Record"
+        Me.Label8.Text = "Manufacturer Record:"
         '
         'tbManufacturerRecord
         '
@@ -615,7 +681,7 @@ Partial Class VectoVTPJobForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(944, 606)
+        Me.ClientSize = New System.Drawing.Size(944, 631)
         Me.Controls.Add(Me.pnManufacturerRecord)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.GroupBox1)
@@ -719,4 +785,10 @@ End Sub
     Friend WithEvents Label8 As Label
     Friend WithEvents tbManufacturerRecord As TextBox
     Friend WithEvents ButtonManR As Button
+    Friend WithEvents lblMileageUnit As Label
+    Friend WithEvents tbMileage As TextBox
+    Friend WithEvents lblMileage As Label
+    Friend WithEvents lblNCVUnit As Label
+    Friend WithEvents tbNCV As TextBox
+    Friend WithEvents lblNCV As Label
 End Class

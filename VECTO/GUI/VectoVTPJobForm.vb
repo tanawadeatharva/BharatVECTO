@@ -200,6 +200,9 @@ Public Class VectoVTPJobForm
 
         PopulateAuxiliaryList(auxInput)
 
+        tbMileage.Text = if(Cfg.DeclMode, inputData.JobInputData.Mileage.ConvertToKiloMeter().Value.ToGUIFormat(), "")
+        tbNCV.Text = if (Cfg.DeclMode, inputData.JobInputData.NetCalorificValueTestFuel.ConvertToMegaJoulePerKilogram().Value.ToGUIFormat(), "")
+
         Dim coefficients As Double() = vectoJob.FanPowerCoefficents.ToArray()
         If (coefficients.Length >= 1) Then
             tbC1.Text = coefficients(0).ToGUIFormat()
@@ -279,6 +282,10 @@ Public Class VectoVTPJobForm
             sb.Init(GetPath(file), lv0.Text)
             vectoJob.CycleFiles.Add(sb)
         Next
+
+        vectoJob.Mileage = tbMileage.Text.ToDouble(0).SI(Unit.SI.Kilo.Meter).Cast(of Meter)
+
+        vectoJob.NetCalorificValueTestFuel = tbNCV.Text.ToDouble(0).SI(Unit.SI.Mega.Joule.Per.Kilo.Gramm).Cast(of JoulePerKilogramm)
 
         vectoJob.FanCoefficients = New Double() {
             tbC1.Text.ToDouble(0),
@@ -703,6 +710,8 @@ Public Class VectoVTPJobForm
             tbManufacturerRecord.Text = GetFilenameWithoutDirectory(ManRXMLFileBrowser.Files(0), GetPath(VectoFile))
         End If
     End Sub
+
+ 
 End Class
 
 
