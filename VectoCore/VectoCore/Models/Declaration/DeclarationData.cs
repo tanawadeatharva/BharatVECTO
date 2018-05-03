@@ -502,6 +502,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class VTPMode
 		{
+			public static readonly Meter RunInThreshold = 15000.SI(Unit.SI.Kilo.Meter).Cast<Meter>();
+			public const double EvolutionCoefficient = 0.98;
+
 			public const MissionType SelectedMission = MissionType.LongHaul;
 			public const LoadingType SelectedLoading = LoadingType.ReferenceLoad;
 		}

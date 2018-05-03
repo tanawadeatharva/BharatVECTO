@@ -59,10 +59,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				var aux = data.Auxiliaries.FirstOrDefault(x => x.Key == Constants.Auxiliaries.IDs.Fan);
 				AverageFanPower = data.AuxiliaryWork(aux.Value) / data.Duration();
-				VTPWorkPWheelPos = runData.Cycle.Entries.Select(x => x.PWheel > 0 ? x.PWheel : 0.SI<Watt>()).Sum().Cast<Watt>() *
-									data.Duration();
+				var cycleEntries = runData.Cycle.Entries.Pairwise().Select(
+					x => new {
+						PWheel = x.Item1.PWheel > 0 ? x.Item1.PWheel : 0.SI<Watt>(),
+						dt = x.Item2.Time - x.Item1.Time,
+						FC = x.Item1.Fuelconsumption
+					}).ToArray();
 
-				VTPFcMeasured = runData.Cycle.Entries.Sum(x => x.Fuelconsumption) * data.Duration();
+				VTPWorkPWheelPos = cycleEntries.Sum(x => x.PWheel * x.dt).Cast<WattSecond>();
+				VTPFcMeasured = cycleEntries.Sum(x => x.FC * x.dt).Cast<Kilogram>();
 				VTPFcFinalSimulated = data.TimeIntegral<Kilogram>(ModalResultField.FCFinal);
 				VTPFcCorrectionFactor = runData.VTPData.CorrectionFactor;
 				VTPNCV = runData.VTPData.FuelNetCalorificValue;

@@ -370,6 +370,11 @@ Public Class JSONFileWriter
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 		body.Add("SavedInDeclMode", declarationmode)
 		body.Add("DeclarationVehicle", GetRelativePath(job.Vehicle.Source, Path.GetDirectoryName(filename)))
+        if declarationmode Then
+            body.add("ManufacturerRecord", GetRelativePath(job.ManufacturerReportInputData.Source, Path.GetDirectoryName(filename)))
+            body.Add("Mileage", job.Mileage.ConvertToKiloMeter().Value)
+            body.add("NCVTestFuel", job.NetCalorificValueTestFuel.ConvertToMegaJoulePerKilogram().Value())
+        End If
 		body.Add("FanPowerCoefficients", job.FanPowerCoefficents)
 		body.Add("FanDiameter", job.FanDiameter.Value())
 		body.Add("Cycles",

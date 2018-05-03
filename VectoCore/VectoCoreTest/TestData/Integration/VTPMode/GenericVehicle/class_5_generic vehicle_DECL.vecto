@@ -1,14 +1,16 @@
 ﻿{
   "Header": {
     "CreatedBy": "",
-    "Date": "2017-11-20T13:22:33.6138904Z",
+    "Date": "2018-05-02T11:40:41.8847449Z",
     "AppVersion": "3",
     "FileVersion": 4
   },
   "Body": {
     "SavedInDeclMode": true,
     "DeclarationVehicle": "Tractor_4x2_vehicle-class-5_Generic vehicle.xml",
-	"ManufacturerRecord": "Tractor_4x2_vehicle-class-5_Generic vehicle.RSLT_MANUFACTURER.xml",
+    "ManufacturerRecord": "Tractor_4x2_vehicle-class-5_Generic vehicle.RSLT_MANUFACTURER.xml",
+    "Mileage": 10000.0,
+    "NCVTestFuel": 41.0,
     "FanPowerCoefficients": [
       5.5E-07,
       15.0,

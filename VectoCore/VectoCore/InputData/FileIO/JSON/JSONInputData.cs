@@ -696,6 +696,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IVectoHash VectoManufacturerReportHash { get; }
 
+		public Meter Mileage
+		{
+			get { return Body.GetEx<double>("Mileage").SI(Unit.SI.Kilo.Meter).Cast<Meter>(); }
+		}
+
+		public JoulePerKilogramm NetCalorificValueTestFuel
+		{
+			get { return Body.GetEx<double>("NCVTestFuel").SI(Unit.SI.Mega.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>(); }
+		}
+
+		string IManufacturerReport.Source { get { return Body["ManufacturerRecord"].Value<string>(); } }
+
 		public IList<ICycleData> Cycles
 		{
 			get {

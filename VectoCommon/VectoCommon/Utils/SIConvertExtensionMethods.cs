@@ -201,7 +201,12 @@ namespace TUGraz.VectoCommon.Utils
         {
             return new ConvertedSI(value.Value() * Kilo, "mm");
         }
-    }
+
+		public static ConvertedSI ConvertToMegaJoulePerKilogram(this JoulePerKilogramm value)
+		{
+			return new ConvertedSI(value.Value() / Kilo / Kilo, "MJ/kg");
+		}
+	}
 }
 
 

@@ -207,6 +207,18 @@ namespace TUGraz.VectoCommon.Utils
 		}
 
 		/// <summary>
+		/// Quantifier for Mega (1E6).
+		/// </summary>
+		public UnitInstance Mega
+		{
+			get {
+				Factor *= Math.Pow(1E6, _exponent * _reciproc);
+
+				return this;
+			}
+		}
+
+		/// <summary>
 		/// [m]
 		/// </summary>
 		public UnitInstance Meter

@@ -54,6 +54,10 @@ namespace TUGraz.VectoCommon.InputData
 
 		IVectoHash VectoManufacturerReportHash { get; }
 
+		Meter Mileage { get; }
+
+		JoulePerKilogramm NetCalorificValueTestFuel { get; }
+
 		IList<ICycleData> Cycles { get; }
 
 		IEnumerable<double> FanPowerCoefficents { get; }
@@ -65,6 +69,8 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IManufacturerReport
 	{
+		string Source { get; }
+
 		IDictionary<VectoComponents,IList<string>> ComponentDigests { get; }
 
 		DigestData JobDigest { get; }

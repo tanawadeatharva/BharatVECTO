@@ -16,7 +16,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
 	internal class DeclarationVTPModeVectoRunDataFactory : IVectoRunDataFactory
 	{
-
 		protected IVTPDeclarationJobInputData JobInputData;
 		private DriverData _driverdata;
 		private AirdragData _airdragData;
@@ -33,8 +32,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		public IVTPReport Report;
 
-		public DeclarationVTPModeVectoRunDataFactory(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : this(ivtpProvider.JobInputData, report)
-		{}
+		public DeclarationVTPModeVectoRunDataFactory(IVTPDeclarationInputDataProvider ivtpProvider, IVTPReport report) : this(
+			ivtpProvider.JobInputData, report) { }
 
 		protected DeclarationVTPModeVectoRunDataFactory(IVTPDeclarationJobInputData job, IVTPReport report)
 		{
@@ -54,17 +53,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			var powertrainConfig = new VectoRunData() {
 				VehicleData =
-					_dao.CreateVehicleData(JobInputData.Vehicle, _segment.Missions.First(),
-											_segment.Missions.First().Loadings.First().Value, _segment.MunicipalBodyWeight),
+					_dao.CreateVehicleData(
+						JobInputData.Vehicle, _segment.Missions.First(),
+						_segment.Missions.First().Loadings.First().Value, _segment.MunicipalBodyWeight),
 				AirdragData = _airdragData,
 				EngineData = _engineData,
 				GearboxData = _gearboxData,
 				AxleGearData = _axlegearData,
 				Retarder = _retarderData,
 				Aux =
-					_dao.CreateAuxiliaryData(JobInputData.Vehicle.AuxiliaryInputData(),
-											_segment.Missions.First().MissionType,
-											_segment.VehicleClass),
+					_dao.CreateAuxiliaryData(
+						JobInputData.Vehicle.AuxiliaryInputData(),
+						_segment.Missions.First().MissionType,
+						_segment.VehicleClass),
 			};
 			powertrainConfig.VehicleData.VehicleClass = _segment.VehicleClass;
 			Report.InputDataHash = JobInputData.VectoJobHash;
@@ -138,7 +139,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			// simulate the Measured cycle
 			foreach (var cycle in JobInputData.Cycles) {
 				var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false);
-				// TODO: MQ 2018-04-23: use correct loading here?
+
+				// Loading is not relevant as we use P_wheel
 				var runData = CreateVectoRunData(_segment, _segment.Missions.First(), 0.SI<Kilogram>());
 				runData.Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name);
 				runData.Aux = _auxVTP;
@@ -151,18 +153,29 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				runData.Mission = new Mission() {
 					MissionType = MissionType.VerificationTest
 				};
+				var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.EngineInputData.FuelType).LowerHeatingValue;
+				var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
+				var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
 				runData.VTPData = new VTPData() {
-					CorrectionFactor = 1,
-					FuelNetCalorificValue = 0.SI<JoulePerKilogramm>()
+					CorrectionFactor = ncvCorrection * mileageCorrection,
+					FuelNetCalorificValue = JobInputData.NetCalorificValueTestFuel //0.SI<JoulePerKilogramm>()
 				};
 				yield return runData;
 			}
+		}
 
+		private double GetMileagecorrectionFactor(Meter mileage)
+		{
+			if (mileage > DeclarationData.VTPMode.RunInThreshold) {
+				return 1;
+			}
+
+			return DeclarationData.VTPMode.EvolutionCoefficient + (1 - DeclarationData.VTPMode.EvolutionCoefficient) * mileage /
+					DeclarationData.VTPMode.RunInThreshold;
 		}
 
 		protected VectoRunData CreateVectoRunData(Segment segment, Mission mission, Kilogram loading)
 		{
-			
 			return new VectoRunData {
 				JobName = JobInputData.Vehicle.VIN,
 				EngineData = _engineData,
@@ -181,7 +194,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			};
 		}
 
-		protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(DeclarationDataAdapter dao, IVehicleDeclarationInputData vehicle, Segment segment)
+		protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(
+			DeclarationDataAdapter dao, IVehicleDeclarationInputData vehicle, Segment segment)
 		{
 			var auxRD = dao.CreateAuxiliaryData(
 								vehicle.AuxiliaryInputData(), MissionType.RegionalDelivery, segment.VehicleClass)
