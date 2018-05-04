@@ -206,6 +206,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return new ConvertedSI(value.Value() / Kilo / Kilo, "MJ/kg");
 		}
+
+		public static ConvertedSI ConvertToMinutes(this Second sec)
+		{
+			return new ConvertedSI(sec.Value() / 60.0, "min");
+		}
 	}
 }
 

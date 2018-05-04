@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public bool Validate { get; set; }
 
-		public IVectoRunDataFactory DataReader { get; private set; }
+		protected internal IVectoRunDataFactory DataReader { get; private set; }
 
 		public SummaryDataContainer SumData { get; set; }
 

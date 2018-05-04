@@ -507,6 +507,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public const MissionType SelectedMission = MissionType.LongHaul;
 			public const LoadingType SelectedLoading = LoadingType.ReferenceLoad;
+
+			// verification of input data
+
+			public const double WheelSpeedDifferenceFactor = 1.4;
+			public const double WheelTorqueDifferenceFactor = 3;
+
+			public static readonly PerSecond WheelSpeedZeroTolerance = 0.1.RPMtoRad();
+			public static readonly PerSecond MaxWheelSpeedDifferenceStandstill = 1.RPMtoRad();
+
+			public static readonly NewtonMeter WheelTorqueZeroTolerance = 10.SI<NewtonMeter>();
+			public static readonly NewtonMeter MaxWheelTorqueZeroDifference = 100.SI<NewtonMeter>();
+
+			public static readonly PerSecond MinFanSpeed = 20.RPMtoRad();
+			public static readonly PerSecond MaxFanSpeed = 4000.RPMtoRad();
+
+			public static readonly Second SamplingInterval = 0.5.SI<Second>();
+
+			public static readonly KilogramPerSecond LowerFCThreshold = 180.SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>();
+			public static readonly KilogramPerSecond UpperFCThreshold = 600.SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>();
+			public static readonly Second FCAccumulationWindow = 10.SI(Unit.SI.Minute).Cast<Second>();
 		}
 	}
 }

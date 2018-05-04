@@ -36,6 +36,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -351,11 +352,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Meter Distance
 		{
 			get {
-				if (MilageCounter == null) {
-					Log.Warn("No MileageCounter in VehicleContainer. Distance cannot be measured.");
+				if (RunData.SimulationType != SimulationType.DistanceCycle) {
 					return 0.SI<Meter>();
 				}
-				return MilageCounter.Distance;
+				if (MilageCounter != null) {
+					return MilageCounter.Distance;
+				}
+
+				Log.Warn("No MileageCounter in VehicleContainer. Distance cannot be measured.");
+				return 0.SI<Meter>();
 			}
 		}
 
@@ -411,7 +416,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		public VectoRunData RunData { get; set; }
-		public ExecutionMode ExecutionMode { get; set; }
+		public ExecutionMode ExecutionMode { get; }
+
+
 
 		public CycleData CycleData
 		{

@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
@@ -39,6 +40,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public sealed class Fan : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable
 	{
+		private readonly List<string> FullyElectricFanTechnologies = new List<string>();
+
 		protected override string ResourceId
 		{
 			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech.csv"; }
@@ -53,10 +56,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			foreach (DataRow row in table.Rows) {
 				var name = row.Field<string>("technology");
-
+				var electric = row.ParseBoolean("fullyelectric");
+				if (electric) {
+					FullyElectricFanTechnologies.Add(name);
+				}
 				foreach (DataColumn col in table.Columns) {
-					if (col.Caption != "technology") {
-						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = new AuxDemandEntry(){PowerDemand = row.ParseDouble(col).SI<Watt>()};
+					if (col.Caption != "technology" && col.Caption != "fullyelectric") {
+						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = new AuxDemandEntry {
+							PowerDemand = row.ParseDouble(col).SI<Watt>(),
+						};
 					}
 				}
 			}
@@ -68,6 +76,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				technology = "Crankshaft mounted - Electronically controlled visco clutch";
 			}
 			return base.Lookup(mission, technology);
+		}
+
+		public string[] FullyElectricTechnologies()
+		{
+			return FullyElectricFanTechnologies.ToArray();
 		}
 
 		public string[] GetTechnologies()
