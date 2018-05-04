@@ -53,10 +53,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override IResponse Initialize()
 		{
+			PrepareCycleData();
 			SelectStartGear();
 			return base.Initialize();
 		}
 
+		private void PrepareCycleData()
+		{
+			foreach (var entry in Data.Entries) {
+				var wheelSpeed = (entry.WheelSpeedLeft + entry.WheelSpeedRight) / 2;
+				var wheelPower = entry.TorqueWheelLeft * entry.WheelSpeedLeft + entry.TorqueWheelRight * entry.WheelSpeedRight;
+				entry.PWheel = wheelPower;
+				entry.WheelAngularVelocity = wheelSpeed;
+				entry.Torque = wheelSpeed.IsEqual(0, 1e-3) ? 0.SI<NewtonMeter>() : wheelPower / wheelSpeed;
+			}
+		}
 		private void SelectStartGear()
 		{
 			var transmissionRatio = RunData.AxleGearData.AxleGear.Ratio *

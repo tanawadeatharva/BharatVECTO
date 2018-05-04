@@ -723,22 +723,16 @@ namespace TUGraz.VectoCore.InputData.Reader
 				ValidateHeader(table.Columns);
 
 				var entries = table.Rows.Cast<DataRow>().Select(row => {
-					var wheelSpeed =
-						((row.ParseDouble(Fields.WheelSpeedLeft) + row.ParseDouble(Fields.WheelSpeedRight)) / 2).RPMtoRad();
 					var tqLeft = row.ParseDouble(Fields.WheelTorqueLeft).SI<NewtonMeter>();
 					var tqRight = row.ParseDouble(Fields.WheelTorqueRight).SI<NewtonMeter>();
 					var speedLeft = row.ParseDouble(Fields.WheelSpeedLeft).RPMtoRad();
 					var speedRight = row.ParseDouble(Fields.WheelSpeedRight).RPMtoRad();
-					var wheelPower = tqLeft * speedLeft + tqRight * speedRight;
 					return new DrivingCycleData.DrivingCycleEntry {
 						Time = row.ParseDouble(Fields.Time).SI<Second>(),
 						VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 						AdditionalAuxPowerDemand =
 							row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 						EngineSpeed = row.ParseDouble(Fields.EngineSpeedSuffix).RPMtoRad(),
-						WheelAngularVelocity = wheelSpeed,
-						Torque = wheelSpeed.IsEqual(0, 1e-3) ? 0.SI<NewtonMeter>() : wheelPower / wheelSpeed, 
-						PWheel = wheelPower,
 						FanSpeed = row.ParseDouble(Fields.FanSpeed).RPMtoRad(),
 						Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
 						Fuelconsumption = row.ParseDoubleOrGetDefault(Fields.FuelConsumption).SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>(),
