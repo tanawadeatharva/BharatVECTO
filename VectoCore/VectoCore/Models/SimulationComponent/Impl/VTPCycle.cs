@@ -53,10 +53,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override IResponse Initialize()
 		{
+			PrepareCycleData();
 			if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
 				VerifyInputData();
 			}
-			PrepareCycleData();
 			SelectStartGear();
 			return base.Initialize();
 		}
@@ -100,24 +100,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private void VerifyFCInput()
 		{
 			var idx = 0L;
-			int count = Convert.ToInt32(DeclarationData.VTPMode.FCAccumulationWindow / DeclarationData.VTPMode.SamplingInterval);
-			var sum = 0.SI<Kilogram>();
-			var window = 0.SI<Kilogram>().Repeat(count).ToArray();
+			var count = Convert.ToInt32(DeclarationData.VTPMode.FCAccumulationWindow / DeclarationData.VTPMode.SamplingInterval);
+			var sumFC= 0.SI<Kilogram>();
+			var sumEWheel = 0.SI<WattSecond>();
+
+			var window = new {FC = 0.SI<Kilogram>(), EWheel = 0.SI<WattSecond>()}.Repeat(count).ToArray();
 			
 			foreach (var entry in Data.Entries.Pairwise()) {
-				var fc = entry.Item1.Fuelconsumption * (entry.Item2.Time - entry.Item1.Time);
-				window[idx % count] = fc;
-				sum += window[idx % count];
-				sum -= window[(idx + 1) % count];
-				if (idx >= count && sum < DeclarationData.VTPMode.LowerFCThreshold * DeclarationData.VTPMode.FCAccumulationWindow) {
-					Log.Error("Fuel consumption for the previous {0} below threshold of {1}. t: {2}, FC: {3}", DeclarationData.VTPMode.FCAccumulationWindow.ConvertToMinutes(),
-						DeclarationData.VTPMode.LowerFCThreshold.ConvertToGrammPerHour(), entry.Item1.Time, (sum / DeclarationData.VTPMode.FCAccumulationWindow).ConvertToGrammPerHour());
-				}
-				if (idx >= count && sum > DeclarationData.VTPMode.UpperFCThreshold * DeclarationData.VTPMode.FCAccumulationWindow) {
-					Log.Error("Fuel consumption for the previous {0} above threshold of {1}. t: {2}, FC: {3}", DeclarationData.VTPMode.FCAccumulationWindow.ConvertToMinutes(),
-							DeclarationData.VTPMode.UpperFCThreshold.ConvertToGrammPerHour(), entry.Item1.Time, (sum / DeclarationData.VTPMode.FCAccumulationWindow).ConvertToGrammPerHour());
-				}
+				var dt = entry.Item2.Time - entry.Item1.Time;
+				var fc = entry.Item1.Fuelconsumption * dt;
+				var eWheel = entry.Item1.PWheel > 0 ? entry.Item1.PWheel * dt : 0.SI<WattSecond>();
+				window[idx % count] = new {FC= fc, EWheel = eWheel};
+				sumFC += window[idx % count].FC;
+				sumFC -= window[(idx + 1) % count].FC;
+				sumEWheel += window[idx % count].EWheel;
+				sumEWheel -= window[(idx + 1) % count].EWheel;
 				idx++;
+
+				if (sumEWheel.IsSmaller(1.SI(Unit.SI.Kilo.Watt.Hour))) {
+					continue;
+				}
+				if (sumFC / sumEWheel < DeclarationData.VTPMode.LowerFCThreshold ) {
+					Log.Error("Fuel consumption for the previous {0} [min] below threshold of {1} [g/kWh]. t: {2} [s], FC: {3} [g/kWh]", DeclarationData.VTPMode.FCAccumulationWindow.ConvertToMinutes(),
+						DeclarationData.VTPMode.LowerFCThreshold.ConvertToGramPerKiloWattHour(), entry.Item1.Time, (sumFC / sumEWheel).ConvertToGramPerKiloWattHour());
+				}
+				if (sumFC / sumEWheel > DeclarationData.VTPMode.UpperFCThreshold) {
+					Log.Error("Fuel consumption for the previous {0} [min] above threshold of {1} [g/kWh]. t: {2} [s], FC: {3} [g/kWh]", DeclarationData.VTPMode.FCAccumulationWindow.ConvertToMinutes(),
+							DeclarationData.VTPMode.UpperFCThreshold.ConvertToGramPerKiloWattHour(), entry.Item1.Time, (sumFC / sumEWheel).ConvertToGramPerKiloWattHour());
+				}
 			}
 		}
 

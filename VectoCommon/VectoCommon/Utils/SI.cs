@@ -894,6 +894,8 @@ namespace TUGraz.VectoCommon.Utils
 		private static readonly int[] Units = { 0, -2,2, 0, 0, 0, 0 };
 
 		private SpecificFuelConsumption(double val) : base(val, Units) { }
+
+		public override string UnitString { get { return "kg/Ws"; } }
 	}
 
 	/// <summary>
