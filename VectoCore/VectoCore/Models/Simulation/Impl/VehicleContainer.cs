@@ -352,7 +352,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Meter Distance
 		{
 			get {
-				if (RunData.SimulationType != SimulationType.DistanceCycle) {
+				if (RunData == null || (RunData.SimulationType & SimulationType.DistanceCycle) == 0 ) {
 					return 0.SI<Meter>();
 				}
 				if (MilageCounter != null) {

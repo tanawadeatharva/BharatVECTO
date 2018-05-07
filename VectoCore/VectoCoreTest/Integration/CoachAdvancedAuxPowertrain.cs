@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -79,9 +80,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				WriteAdvancedAux = true,
 				WriteModalResults = true
 			};
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
-			};
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var gearboxData = CreateGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(highEnginePower ? EngineFileHigh : EngineFile,
@@ -100,9 +99,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
 				GearboxData = gearboxData,
-				EngineData = engineData
+				EngineData = engineData,
+				SimulationType = SimulationType.DistanceCycle
 			};
-
+			container.RunData = runData;
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
 				.AddComponent(new Vehicle(container, vehicleData, airdragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))

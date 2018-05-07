@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -104,7 +105,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				JobName = modFileName,
 				Cycle = cycleData,
 				Retarder = new RetarderData() { Type = RetarderType.None },
-				Aux = new List<VectoRunData.AuxData>()
+				Aux = new List<VectoRunData.AuxData>(),
+				SimulationType = SimulationType.DistanceCycle
 			};
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
 				RunData = runData,
