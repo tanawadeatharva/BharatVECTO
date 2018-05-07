@@ -111,6 +111,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 			target.Parameters.Add(new MethodCallParameter("${level}"));
 			target.Parameters.Add(new MethodCallParameter("${message}"));
 			var config = LogManager.Configuration;
+			if (config == null) {
+				config = new LoggingConfiguration();
+				LogManager.Configuration = config;
+			}
 			cycleChecksRule = new LoggingRule(typeof(VTPCycle).FullName, LogLevel.Error, target);
 			config.AddTarget(VTPReportTartetName, target);
 			config.LoggingRules.Add(cycleChecksRule);

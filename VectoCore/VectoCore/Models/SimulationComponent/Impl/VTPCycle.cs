@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return base.Initialize();
 		}
 
-		private void PrepareCycleData()
+		protected internal void PrepareCycleData()
 		{
 			foreach (var entry in Data.Entries) {
 				var wheelSpeed = (entry.WheelSpeedLeft + entry.WheelSpeedRight) / 2;
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				sumEWheel -= window[(idx + 1) % count].EWheel;
 				idx++;
 
-				if (sumEWheel.IsSmaller(1.SI(Unit.SI.Kilo.Watt.Hour))) {
+				if (sumEWheel.IsSmaller(DeclarationData.VTPMode.MinPosWorkAtWheelsForFC)) {
 					continue;
 				}
 				if (sumFC / sumEWheel < DeclarationData.VTPMode.LowerFCThreshold ) {

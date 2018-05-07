@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -398,11 +399,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			SetupLogging();
 
-			var fanSpeed = 0.95 * DeclarationData.VTPMode.MaxFanSpeed.AsRPM;
+			// Approach: calculate min. FC for a certain FC in g/kWh (cycle demands ~10kW constant, i.e., 500NM @ 100rpm at both wheels)
+			//           construct cycle with slightly decreasing FC so that FC falls below threshold 
 
+			var fcLimit = (DeclarationData.VTPMode.LowerFCThreshold * (2 * 500.SI<NewtonMeter>() * 100.RPMtoRad())).Cast<KilogramPerSecond>();
+			
 			var cycleEntries = "";
 			for (var i = 0; i < 2000; i++)
-				cycleEntries += string.Format("  {0} ,    0,  600, 400, 300 , 290 , 50 , 50 , {1}, 3 \n", i / 2.0, DeclarationData.VTPMode.LowerFCThreshold.ConvertToGrammPerHour() / 1.01);
+				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", i / 2.0, (fcLimit * 1.01 * (1 - i/100000.0)).ConvertToGrammPerHour().Value);
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -412,9 +416,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
 			var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
 			var vtpCycle = new VTPCycle(container, cycleData);
+			vtpCycle.PrepareCycleData();
 			vtpCycle.VerifyInputData();
 
 			Assert.Greater(LogList.Count, 1);
+			Assert.IsTrue(LogList.Any(x => x.StartsWith("Fuel consumption for the previous 10 [min] below threshold")));
 
 		}
 
@@ -423,11 +429,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			SetupLogging();
 
-			var fanSpeed = 0.95 * DeclarationData.VTPMode.MaxFanSpeed.AsRPM;
+			// Approach: calculate min. FC for a certain FC in g/kWh (cycle demands ~10kW constant, i.e., 500NM @ 100rpm at both wheels)
+			//           construct cycle with constant FC slightly above min. FC 
+
+			var fcLimit = (DeclarationData.VTPMode.LowerFCThreshold * (2 * 500.SI<NewtonMeter>() * 100.RPMtoRad())).Cast<KilogramPerSecond>();
 
 			var cycleEntries = "";
 			for (var i = 0; i < 2000; i++)
-				cycleEntries += string.Format("  {0} ,    0,  600, 400, 300 , 290 , 50 , 50 , {1}, 3 \n", i / 2.0, DeclarationData.VTPMode.LowerFCThreshold.ConvertToGrammPerHour() * 1.01);
+				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", i / 2.0, (fcLimit * 1.0001).ConvertToGrammPerHour().Value);
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -437,6 +446,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
 			var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
 			var vtpCycle = new VTPCycle(container, cycleData);
+			vtpCycle.PrepareCycleData();
 			vtpCycle.VerifyInputData();
 
 			Assert.AreEqual(0, LogList.Count);
@@ -448,11 +458,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			SetupLogging();
 
-			var fanSpeed = 0.95 * DeclarationData.VTPMode.MaxFanSpeed.AsRPM;
+			// Approach: calculate max. FC for a certain FC in g/kWh (cycle demands ~10kW constant, i.e., 500NM @ 100rpm at both wheels)
+			//           construct cycle with slightly decreasing FC so that FC falls below threshold 
+
+			var fcLimit = (DeclarationData.VTPMode.UpperFCThreshold * (2 * 500.SI<NewtonMeter>() * 100.RPMtoRad())).Cast<KilogramPerSecond>();
 
 			var cycleEntries = "";
 			for (var i = 0; i < 2000; i++)
-				cycleEntries += string.Format("  {0} ,    0,  600, 400, 300 , 290 , 50 , 50 , {1}, 3 \n", i / 2.0, DeclarationData.VTPMode.UpperFCThreshold.ConvertToGrammPerHour() * 1.01);
+				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", i / 2.0, (fcLimit * 0.99 * (1 + i / 100000.0)).ConvertToGrammPerHour().Value);
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -462,10 +475,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
 			var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
 			var vtpCycle = new VTPCycle(container, cycleData);
+			vtpCycle.PrepareCycleData();
 			vtpCycle.VerifyInputData();
 
 			Assert.Greater(LogList.Count, 1);
-
+			Assert.IsTrue(LogList.Any(x => x.StartsWith("Fuel consumption for the previous 10 [min] above threshold")));
 		}
 
 		[TestCase()]
@@ -473,11 +487,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			SetupLogging();
 
-			var fanSpeed = 0.95 * DeclarationData.VTPMode.MaxFanSpeed.AsRPM;
+			// Approach: calculate max. FC for a certain FC in g/kWh (cycle demands ~10kW constant, i.e., 500NM @ 100rpm at both wheels)
+			//           construct cycle with constant FC slightly below max FC 
+
+			var fcLimit = (DeclarationData.VTPMode.UpperFCThreshold * (2 * 500.SI<NewtonMeter>() * 100.RPMtoRad())).Cast<KilogramPerSecond>();
 
 			var cycleEntries = "";
 			for (var i = 0; i < 2000; i++)
-				cycleEntries += string.Format("  {0} ,    0,  600, 400, 300 , 290 , 50 , 50 , {1}, 3 \n", i / 2.0, DeclarationData.VTPMode.UpperFCThreshold.ConvertToGrammPerHour() / 1.01);
+				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", i / 2.0, (fcLimit * 0.9999).ConvertToGrammPerHour().Value);
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -487,6 +504,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
 			var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
 			var vtpCycle = new VTPCycle(container, cycleData);
+			vtpCycle.PrepareCycleData();
 			vtpCycle.VerifyInputData();
 
 			Assert.AreEqual(0, LogList.Count);
