@@ -381,6 +381,13 @@
 			<xs:element name="FuelConsumption" type="FuelConsumptionResultType"/>
 			<xs:element name="CO2" type="CO2ResultType"/>
 			<xs:element name="VTRatio" type="xs:double"/>
+			<xs:element name="Warnings" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Warning" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="RetarderType">
