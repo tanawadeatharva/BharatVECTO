@@ -262,7 +262,7 @@ Imports TUGraz.VectoCore.Utils
         DeclOnOff()
     End Sub
 
-    ' ReSharper disable once UnusedMember.Global -- used via Logging Framework!
+    ' ReSharper disable once UnusedMember.Global -- used via Logging Framework! 
     Public Shared Sub LogMethod(level As String, message As String)
         If VectoWorkerV3.IsBusy AndAlso Not VectoWorkerV3.CancellationPending Then
             If level = "Warn" Then

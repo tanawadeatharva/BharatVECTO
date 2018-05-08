@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -119,49 +120,54 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 
 			// simulate the LongHaul cycle with RefLoad
-			foreach (var mission in _segment.Missions.Where(m => m.MissionType == DeclarationData.VTPMode.SelectedMission)) {
-				foreach (var loading in mission.Loadings.Where(l => l.Key == DeclarationData.VTPMode.SelectedLoading)) {
-					var runData = CreateVectoRunData(_segment, mission, loading.Value);
-					runData.ModFileSuffix = loading.Key.ToString();
-					var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-					runData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
-					runData.DriverData = _driverdata;
-					runData.Aux = _dao.CreateAuxiliaryData(
-						JobInputData.Vehicle.AuxiliaryInputData(), mission.MissionType, _segment.VehicleClass);
-					runData.ExecutionMode = ExecutionMode.Declaration;
-					runData.SimulationType = SimulationType.DistanceCycle;
-					runData.Mission = mission;
-					runData.Loading = loading.Key;
-					yield return runData;
-				}
+			var mission = _segment.Missions.FirstOrDefault(m => m.MissionType == DeclarationData.VTPMode.SelectedMission);
+			if (mission == null) {
+				throw new VectoException("Mission {0} not found in segmentation matrix", DeclarationData.VTPMode.SelectedMission);
 			}
-
+			var loading = mission.Loadings.FirstOrDefault(l => l.Key == DeclarationData.VTPMode.SelectedLoading);
+			var runData = CreateVectoRunData(_segment, mission, loading.Value);
+			runData.ModFileSuffix = loading.Key.ToString();
+			var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
+			runData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
+			runData.DriverData = _driverdata;
+			runData.Aux = _dao.CreateAuxiliaryData(
+				JobInputData.Vehicle.AuxiliaryInputData(), mission.MissionType, _segment.VehicleClass);
+			runData.ExecutionMode = ExecutionMode.Declaration;
+			runData.SimulationType = SimulationType.DistanceCycle;
+			runData.Mission = mission;
+			runData.Loading = loading.Key;
+			yield return runData;
+				
+			
 			// simulate the Measured cycle
-			foreach (var cycle in JobInputData.Cycles) {
-				var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false);
-
-				// Loading is not relevant as we use P_wheel
-				var runData = CreateVectoRunData(_segment, _segment.Missions.First(), 0.SI<Kilogram>());
-				runData.Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name);
-				runData.Aux = _auxVTP;
-				runData.FanData = new AuxFanData() {
-					FanCoefficients = JobInputData.FanPowerCoefficents.ToArray(),
-					FanDiameter = JobInputData.FanDiameter,
-				};
-				runData.ExecutionMode = ExecutionMode.Declaration;
-				runData.SimulationType = SimulationType.VerificationTest;
-				runData.Mission = new Mission() {
-					MissionType = MissionType.VerificationTest
-				};
-				var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.EngineInputData.FuelType).LowerHeatingValue;
-				var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
-				var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
-				runData.VTPData = new VTPData() {
-					CorrectionFactor = ncvCorrection * mileageCorrection,
-					FuelNetCalorificValue = JobInputData.NetCalorificValueTestFuel //0.SI<JoulePerKilogramm>()
-				};
-				yield return runData;
+			var vtpCycle = JobInputData.Cycles.FirstOrDefault();
+			if (vtpCycle == null) {
+				throw new VectoException("no VTP-Cycle provided!");
 			}
+			var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(vtpCycle.CycleData, vtpCycle.Name, false);
+
+			// Loading is not relevant as we use P_wheel
+			var vtpRunData = CreateVectoRunData(_segment, _segment.Missions.First(), 0.SI<Kilogram>());
+			vtpRunData.Cycle = new DrivingCycleProxy(drivingCycle, vtpCycle.Name);
+			vtpRunData.Aux = _auxVTP;
+			vtpRunData.FanData = new AuxFanData() {
+				FanCoefficients = JobInputData.FanPowerCoefficents.ToArray(),
+				FanDiameter = JobInputData.FanDiameter,
+			};
+			vtpRunData.ExecutionMode = ExecutionMode.Declaration;
+			vtpRunData.SimulationType = SimulationType.VerificationTest;
+			vtpRunData.Mission = new Mission() {
+				MissionType = MissionType.VerificationTest
+			};
+			var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.EngineInputData.FuelType).LowerHeatingValue;
+			var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
+			var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
+			vtpRunData.VTPData = new VTPData() {
+				CorrectionFactor = ncvCorrection * mileageCorrection,
+				FuelNetCalorificValue = JobInputData.NetCalorificValueTestFuel //0.SI<JoulePerKilogramm>()
+			};
+			yield return vtpRunData;
+			
 		}
 
 		private double GetMileagecorrectionFactor(Meter mileage)

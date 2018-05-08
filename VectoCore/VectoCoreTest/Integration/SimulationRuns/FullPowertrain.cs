@@ -52,6 +52,7 @@ using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 {
@@ -80,6 +81,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
 			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", FuelType.DieselCI, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
+			container.RunData = new VectoRunData() { SimulationType = SimulationType.DistanceCycle };
 
 			var gearboxData = CreateSimpleGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
@@ -145,6 +147,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
 			var modData = new ModalDataContainer("Coach_FullPowertrain", FuelType.DieselCI, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
+			container.RunData = new VectoRunData() {SimulationType = SimulationType.DistanceCycle };
 
 			var gearboxData = CreateGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);

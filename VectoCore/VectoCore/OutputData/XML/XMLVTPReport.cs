@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using NLog.Config;
+using NLog.Targets;
 using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
@@ -17,12 +19,17 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
+using NLog;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using LogManager = NLog.LogManager;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
 	internal class XMLVTPReport : DeclarationReport<XMLVTPReport.ResultEntry>, IVTPReport
 	{
 		public const string CURRENT_SCHEMA_VERSION = "0.1";
+
+		private const string VTPReportTartetName = "VTPReportTarget";
 
 		protected XElement VehiclePart;
 		protected XElement GeneralPart;
@@ -34,6 +41,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected XNamespace tns;
 
 		private IOutputDataWriter _writer;
+		private static List<string> LogList = new List<string>();
+		private LoggingRule cycleChecksRule;
 
 		//protected XNamespace di;
 		//private bool allSuccess = true;
@@ -87,8 +96,36 @@ namespace TUGraz.VectoCore.OutputData.XML
 			Results = new XElement(tns + "Results");
 
 			_writer = writer;
+
+
+			AddLogging();
 		}
 
+		private void AddLogging()
+		{
+			LogList.Clear();
+			var target = new MethodCallTarget {
+				ClassName = typeof(XMLVTPReport).AssemblyQualifiedName,
+				MethodName = "LogMethod"
+			};
+			target.Parameters.Add(new MethodCallParameter("${level}"));
+			target.Parameters.Add(new MethodCallParameter("${message}"));
+			var config = LogManager.Configuration;
+			if (config == null) {
+				config = new LoggingConfiguration();
+				LogManager.Configuration = config;
+			}
+			cycleChecksRule = new LoggingRule(typeof(VTPCycle).FullName, LogLevel.Error, target);
+			config.AddTarget(VTPReportTartetName, target);
+			config.LoggingRules.Add(cycleChecksRule);
+			LogManager.Configuration.Reload();
+		}
+
+		// ReSharper disable once UnusedMember.Global -- see AddLogging Method
+		public static void LogMethod(string level, string message)
+		{
+			LogList.Add(message);
+		}
 
 		#region Overrides of DeclarationReport<ResultEntry>
 
@@ -100,6 +137,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected internal override void DoWriteReport()
 		{
+			var config = LogManager.Configuration;
+			config.LoggingRules.Remove(cycleChecksRule);
+			config.RemoveTarget(VTPReportTartetName);
+			LogManager.Configuration.Reload();
+
 			GenerateResults();
 
 			var report = GenerateReport();
@@ -170,6 +212,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 					)
 				),
 				new XElement(tns + "VTRatio", cVtp.ToXMLFormat(4)));
+			if (LogList.Any()) {
+				Results.Add(new XElement(tns + "Warnings", LogList.Select(x => new XElement(tns + "Warning", x))));
+			}
 		}
 
 		private XDocument GenerateReport()

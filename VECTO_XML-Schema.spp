@@ -23,6 +23,7 @@
 		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoInput.1.0.xsd" HomeFolder="Yes"/>
 		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoOutputCustomer.0.4.xsd" HomeFolder="Yes"/>
 		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoOutputManufacturer.0.4.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\VTPReport.0.1.xsd" HomeFolder="Yes"/>
 		<File FilePath="VectoCore\VectoCore\Resources\XSD\xmldsig-core-schema.xsd" HomeFolder="Yes"/>
 	</Folder>
 	<Folder FolderName="Entities" ExtStr="ent"/>

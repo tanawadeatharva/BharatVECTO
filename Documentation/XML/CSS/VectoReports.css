@@ -745,3 +745,28 @@ VectoVTPReport Results VTRatio {
 VectoVTPReport Results VTRatio:before {
 	margin-left: -40px;
 }
+
+VectoVTPReport Results Warnings:before {
+	content: "Simulation Warnings:";
+	display: block;
+	font-size: larger;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-weight: bold;
+	font-style: normal;
+
+	/*padding-left: 40px;*/
+}
+VectoVTPReport Results Warnings {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 100%;
+	border: 2px solid #ff9d00;
+	background-color: rgba(255, 157, 0,0.3)
+
+}
+VectoVTPReport Results Warnings Warning {
+	display: block;
+	margin-left: 40px;
+}
+

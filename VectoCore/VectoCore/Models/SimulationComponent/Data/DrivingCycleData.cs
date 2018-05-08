@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		MeasuredSpeed,
 		MeasuredSpeedGear,
 		PTO,
-        VTP
+		VTP
 	}
 
 	public static class CycleTypeHelper
@@ -138,9 +138,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				Drag = entry.Drag;
 				PTOActive = entry.PTOActive;
 				AuxiliarySupplyPower = new Dictionary<string, Watt>(entry.AuxiliarySupplyPower);
-                EngineSpeed = entry.EngineSpeed;
-                FanSpeed = entry.FanSpeed;
-            }
+				EngineSpeed = entry.EngineSpeed;
+				FanSpeed = entry.FanSpeed;
+			}
 
 			/// <summary>
 			/// Travelled distance used for distance-based cycles. If "t" is also defined this column will be ignored.
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// </summary>
 			public Watt PWheel;
 
-            public bool? TorqueConverterActive;
+			public bool? TorqueConverterActive;
 
 			/// <summary>
 			/// The angular velocity at the wheel. only used in PWheelCycle.
@@ -237,9 +237,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// </summary>
 			public bool PTOActive;
 
-            public PerSecond EngineSpeed;
+			public PerSecond EngineSpeed;
 
-            public PerSecond FanSpeed;
-        }
+			public PerSecond FanSpeed;
+
+			// required for VTP Mode (validation of cycle data in declaration mode)
+			public NewtonMeter TorqueWheelLeft;
+
+			public NewtonMeter TorqueWheelRight;
+
+			public PerSecond WheelSpeedLeft;
+
+			public PerSecond WheelSpeedRight;
+
+		}
 	}
 }

@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -88,9 +89,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var modData = new ModalDataContainer(Path.GetFileName(modFileName), FuelType.DieselCI, fileWriter) {
 				WriteModalResults = true
 			};
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
-				RunData = new VectoRunData { JobName = modFileName, Cycle = cycleData }
-			};
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var gearboxData = CreateGearboxData();
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, gearboxData.Gears.Count);
@@ -109,8 +108,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 				VehicleData = vehicleData,
 				AirdragData = airdragData,
 				AxleGearData = axleGearData,
-				GearboxData = gearboxData
+				GearboxData = gearboxData,
+				SimulationType = SimulationType.DistanceCycle
 			};
+			container.RunData = runData;
 
 			IShiftStrategy gbxStrategy;
 			switch (gbxType) {

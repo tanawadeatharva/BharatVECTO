@@ -15,7 +15,7 @@
     <AxleConfiguration>4x2</AxleConfiguration>
     <CurbMassChassis>7800</CurbMassChassis>
     <GrossVehicleMass>40000</GrossVehicleMass>
-    <IdlingSpeed>600</IdlingSpeed>
+    <IdlingSpeed>590</IdlingSpeed>
     <RetarderType>Transmission Output Retarder</RetarderType>
     <RetarderRatio>1.000</RetarderRatio>
     <AngledriveType>None</AngledriveType>
@@ -32,7 +32,7 @@
           <Date>2017-11-20T12:31:47.2109026Z</Date>
           <AppVersion>VectoCore</AppVersion>
           <Displacement>13000</Displacement>
-          <IdlingSpeed>600</IdlingSpeed>
+          <IdlingSpeed>590</IdlingSpeed>
           <RatedSpeed>1736</RatedSpeed>
           <RatedPower>325032</RatedPower>
           <MaxEngineTorque>2134</MaxEngineTorque>
@@ -44,6 +44,18 @@
           <CFNCV>1.0000</CFNCV>
           <FuelType>Diesel CI</FuelType>
           <FuelConsumptionMap>
+			<Entry engineSpeed="550.00" torque="-150.00" fuelConsumption="0.00" />
+            <Entry engineSpeed="550.00" torque="0.00" fuelConsumption="1488.18" />
+            <Entry engineSpeed="550.00" torque="216.90" fuelConsumption="3609.53" />
+            <Entry engineSpeed="550.00" torque="433.80" fuelConsumption="6055.65" />
+            <Entry engineSpeed="550.00" torque="650.70" fuelConsumption="8756.65" />
+            <Entry engineSpeed="550.00" torque="867.60" fuelConsumption="10922.44" />
+            <Entry engineSpeed="550.00" torque="1084.50" fuelConsumption="13315.08" />
+            <Entry engineSpeed="550.00" torque="1301.40" fuelConsumption="15886.96" />
+            <Entry engineSpeed="550.00" torque="1518.30" fuelConsumption="18459.52" />
+            <Entry engineSpeed="550.00" torque="1735.20" fuelConsumption="21032.07" />
+            <Entry engineSpeed="550.00" torque="1952.10" fuelConsumption="23604.64" />
+            <Entry engineSpeed="550.00" torque="2169.00" fuelConsumption="26177.20" />
             <Entry engineSpeed="600.00" torque="-150.00" fuelConsumption="0.00" />
             <Entry engineSpeed="600.00" torque="0.00" fuelConsumption="1488.18" />
             <Entry engineSpeed="600.00" torque="216.90" fuelConsumption="3609.53" />

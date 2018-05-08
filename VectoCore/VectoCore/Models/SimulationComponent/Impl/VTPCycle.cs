@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -48,13 +49,144 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		private uint StartGear;
 
-		public VTPCycle(VehicleContainer container, IDrivingCycleData cycle, double axleGearRatio,
-			VehicleData vehicleData, Dictionary<uint, double> gearRatios) : base(container, cycle) { }
+		public VTPCycle(VehicleContainer container, IDrivingCycleData cycle) : base(container, cycle) { }
 
 		public override IResponse Initialize()
 		{
+			PrepareCycleData();
+			if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
+				VerifyInputData();
+			}
 			SelectStartGear();
 			return base.Initialize();
+		}
+
+		protected internal void PrepareCycleData()
+		{
+			foreach (var entry in Data.Entries) {
+				var wheelSpeed = (entry.WheelSpeedLeft + entry.WheelSpeedRight) / 2;
+				var wheelPower = entry.TorqueWheelLeft * entry.WheelSpeedLeft + entry.TorqueWheelRight * entry.WheelSpeedRight;
+				entry.PWheel = wheelPower;
+				entry.WheelAngularVelocity = wheelSpeed;
+				entry.Torque = wheelSpeed.IsEqual(0, 1e-3) ? 0.SI<NewtonMeter>() : wheelPower / wheelSpeed;
+			}
+		}
+
+		protected internal void VerifyInputData()
+		{
+			var electricFanTechs = DeclarationData.Fan.FullyElectricTechnologies();
+			var hasElectricFan = RunData.Aux.Any(
+				x => x.ID == Constants.Auxiliaries.IDs.Fan && x.Technology.Any(t => electricFanTechs.Contains(t)));
+
+			foreach (var tuple in Data.Entries.Pairwise()) {
+				if (!(tuple.Item2.Time - tuple.Item1.Time).IsEqual(
+						DeclarationData.VTPMode.SamplingInterval, 0.1 * DeclarationData.VTPMode.SamplingInterval)) {
+					Log.Error("Cycle Data exceeds expected sampling frequence of {0}: t: {1}, dt: {2}",
+						DeclarationData.VTPMode.SamplingInterval, tuple.Item1.Time, tuple.Item2.Time - tuple.Item1.Time);
+				}
+			}
+
+			foreach (var entry in Data.Entries) {
+				VerifyWheelSpeeds(entry);
+
+				VerifyWheelTorque(entry);
+
+				VerifyFanSpeed(hasElectricFan, entry);
+			}
+
+			VerifyFCInput();
+		}
+
+		private void VerifyFCInput()
+		{
+			var idx = 0L;
+			var count = Convert.ToInt32(DeclarationData.VTPMode.FCAccumulationWindow / DeclarationData.VTPMode.SamplingInterval);
+			var sumFC= 0.SI<Kilogram>();
+			var sumEWheel = 0.SI<WattSecond>();
+
+			var window = new {FC = 0.SI<Kilogram>(), EWheel = 0.SI<WattSecond>()}.Repeat(count).ToArray();
+			
+			foreach (var entry in Data.Entries.Pairwise()) {
+				var dt = entry.Item2.Time - entry.Item1.Time;
+				var fc = entry.Item1.Fuelconsumption * dt;
+				var eWheel = entry.Item1.PWheel > 0 ? entry.Item1.PWheel * dt : 0.SI<WattSecond>();
+				window[idx % count] = new {FC= fc, EWheel = eWheel};
+				sumFC += window[idx % count].FC;
+				sumFC -= window[(idx + 1) % count].FC;
+				sumEWheel += window[idx % count].EWheel;
+				sumEWheel -= window[(idx + 1) % count].EWheel;
+				idx++;
+
+				if (sumEWheel.IsSmaller(DeclarationData.VTPMode.MinPosWorkAtWheelsForFC)) {
+					continue;
+				}
+				if (sumFC / sumEWheel < DeclarationData.VTPMode.LowerFCThreshold ) {
+					Log.Error("Fuel consumption for the previous {0} [min] below threshold of {1} [g/kWh]. t: {2} [s], FC: {3} [g/kWh]", DeclarationData.VTPMode.FCAccumulationWindow.ConvertToMinutes(),
+						DeclarationData.VTPMode.LowerFCThreshold.ConvertToGramPerKiloWattHour(), entry.Item1.Time, (sumFC / sumEWheel).ConvertToGramPerKiloWattHour());
+				}
+				if (sumFC / sumEWheel > DeclarationData.VTPMode.UpperFCThreshold) {
+					Log.Error("Fuel consumption for the previous {0} [min] above threshold of {1} [g/kWh]. t: {2} [s], FC: {3} [g/kWh]", DeclarationData.VTPMode.FCAccumulationWindow.ConvertToMinutes(),
+							DeclarationData.VTPMode.UpperFCThreshold.ConvertToGramPerKiloWattHour(), entry.Item1.Time, (sumFC / sumEWheel).ConvertToGramPerKiloWattHour());
+				}
+			}
+		}
+
+		private void VerifyFanSpeed(bool hasElectricFan, DrivingCycleData.DrivingCycleEntry entry)
+		{
+			if (hasElectricFan) {
+				if (entry.FanSpeed.IsSmaller(0)) {
+					Log.Error("Fan speed (electric) below zero! t: {0}, n_fan: {1}", entry.Time, entry.FanSpeed);
+				}
+			} else {
+				if (entry.FanSpeed.IsSmaller(DeclarationData.VTPMode.MinFanSpeed) ||
+					entry.FanSpeed.IsGreater(DeclarationData.VTPMode.MaxFanSpeed)) {
+					Log.Error(
+						"Fan speed (non-electric) exceeds range {0} < n_fan < {1}. t: {2}, n_fan: {3}", DeclarationData.VTPMode.MinFanSpeed,
+						DeclarationData.VTPMode.MaxFanSpeed, entry.Time, entry.FanSpeed);
+				}
+			}
+		}
+
+		private void VerifyWheelTorque(DrivingCycleData.DrivingCycleEntry entry)
+		{
+			if (!entry.TorqueWheelLeft.IsEqual(0.SI<NewtonMeter>(), DeclarationData.VTPMode.WheelTorqueZeroTolerance) &&
+				!entry.TorqueWheelRight.IsEqual(0.SI<NewtonMeter>(), DeclarationData.VTPMode.WheelTorqueZeroTolerance)) {
+				var torqueRatio = VectoMath.Max(
+					entry.TorqueWheelLeft / entry.TorqueWheelRight, entry.TorqueWheelRight / entry.TorqueWheelLeft);
+				if (torqueRatio > DeclarationData.VTPMode.WheelTorqueDifferenceFactor) {
+					Log.Error(
+						"Torque difference rel. (L/R) too high! t: {0} tq_left: {1}, tq_right: {2}", entry.Time, entry.TorqueWheelLeft,
+						entry.TorqueWheelRight);
+				}
+			} else {
+				if (VectoMath.Abs(entry.TorqueWheelLeft - entry.TorqueWheelRight) >
+					DeclarationData.VTPMode.MaxWheelTorqueZeroDifference) {
+					Log.Error(
+						"Torque difference abs. (L/R) too high! t: {0} tq_left: {1}, tq_right: {2}", entry.Time, entry.TorqueWheelLeft,
+						entry.TorqueWheelRight);
+				}
+			}
+		}
+
+		private void VerifyWheelSpeeds(DrivingCycleData.DrivingCycleEntry entry)
+		{
+			if (!entry.WheelSpeedLeft.IsEqual(0.RPMtoRad(), DeclarationData.VTPMode.WheelSpeedZeroTolerance) &&
+				!entry.WheelSpeedRight.IsEqual(0.RPMtoRad(), DeclarationData.VTPMode.WheelSpeedZeroTolerance)) {
+				var wheelSpeedRatio = VectoMath.Max(
+					entry.WheelSpeedLeft / entry.WheelSpeedRight, entry.WheelSpeedRight / entry.WheelSpeedLeft);
+				if (wheelSpeedRatio > DeclarationData.VTPMode.WheelSpeedDifferenceFactor) {
+					Log.Error(
+						"Wheel-speed difference rel. (L/R) too high! t: {0} n_left: {1}, n_right: {2}", entry.Time,
+						entry.WheelSpeedLeft.AsRPM, entry.WheelSpeedRight.AsRPM);
+				}
+			} else {
+				if (VectoMath.Abs(entry.WheelSpeedLeft - entry.WheelSpeedRight) >
+					DeclarationData.VTPMode.MaxWheelSpeedDifferenceStandstill) {
+					Log.Error(
+						"Wheel-speed difference abs. (L/R) too high! t: {0} n_left: {1}, n_right: {2}", entry.Time,
+						entry.WheelSpeedLeft.AsRPM, entry.WheelSpeedRight.AsRPM);
+				}
+			}
 		}
 
 		private void SelectStartGear()

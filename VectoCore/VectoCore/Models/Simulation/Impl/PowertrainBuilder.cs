@@ -133,12 +133,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
                 throw new VectoException("CycleType must be VTP.");
             }
 
-            var container = new VehicleContainer(ExecutionMode.Engineering, _modData, _sumWriter) { RunData = data };
+            var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
             var gearbox = new VTPGearbox(container, data);
 
             // VTPCycle --> AxleGear --> Clutch --> Engine <-- Aux
-            var powertrain = new VTPCycle(container, data.Cycle, data.AxleGearData.AxleGear.Ratio, data.VehicleData,
-                    gearbox.ModelData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio))
+            var powertrain = new VTPCycle(container, data.Cycle)
                 .AddComponent(new AxleGear(container, data.AxleGearData))
                 .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
                 .AddComponent(gearbox, data.Retarder, container)
