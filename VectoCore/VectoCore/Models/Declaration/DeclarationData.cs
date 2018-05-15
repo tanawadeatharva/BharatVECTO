@@ -516,8 +516,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly PerSecond WheelSpeedZeroTolerance = 0.1.RPMtoRad();
 			public static readonly PerSecond MaxWheelSpeedDifferenceStandstill = 1.RPMtoRad();
 
-			public static readonly NewtonMeter WheelTorqueZeroTolerance = 10.SI<NewtonMeter>();
-			public static readonly NewtonMeter MaxWheelTorqueZeroDifference = 100.SI<NewtonMeter>();
+			public static readonly NewtonMeter MaxWheelTorqueDifference = 200.SI<NewtonMeter>();
 
 			public static readonly PerSecond MinFanSpeed = 20.RPMtoRad();
 			public static readonly PerSecond MaxFanSpeed = 4000.RPMtoRad();

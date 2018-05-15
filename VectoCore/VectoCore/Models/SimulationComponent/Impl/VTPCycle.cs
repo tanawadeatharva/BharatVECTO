@@ -149,22 +149,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void VerifyWheelTorque(DrivingCycleData.DrivingCycleEntry entry)
 		{
-			if (!entry.TorqueWheelLeft.IsEqual(0.SI<NewtonMeter>(), DeclarationData.VTPMode.WheelTorqueZeroTolerance) &&
-				!entry.TorqueWheelRight.IsEqual(0.SI<NewtonMeter>(), DeclarationData.VTPMode.WheelTorqueZeroTolerance)) {
-				var torqueRatio = VectoMath.Max(
+			var torqueRatio = VectoMath.Max(
 					entry.TorqueWheelLeft / entry.TorqueWheelRight, entry.TorqueWheelRight / entry.TorqueWheelLeft);
-				if (torqueRatio > DeclarationData.VTPMode.WheelTorqueDifferenceFactor) {
-					Log.Error(
-						"Torque difference rel. (L/R) too high! t: {0} tq_left: {1}, tq_right: {2}", entry.Time, entry.TorqueWheelLeft,
-						entry.TorqueWheelRight);
-				}
-			} else {
-				if (VectoMath.Abs(entry.TorqueWheelLeft - entry.TorqueWheelRight) >
-					DeclarationData.VTPMode.MaxWheelTorqueZeroDifference) {
-					Log.Error(
-						"Torque difference abs. (L/R) too high! t: {0} tq_left: {1}, tq_right: {2}", entry.Time, entry.TorqueWheelLeft,
-						entry.TorqueWheelRight);
-				}
+			var torqueDiff = VectoMath.Abs(entry.TorqueWheelLeft - entry.TorqueWheelRight);
+			if (torqueRatio > DeclarationData.VTPMode.WheelTorqueDifferenceFactor && 
+				torqueDiff > DeclarationData.VTPMode.MaxWheelTorqueDifference) {
+				Log.Error(
+					"Torque difference (L/R) too high! t: {0} tq_left: {1}, tq_right: {2}", entry.Time, entry.TorqueWheelLeft,
+					entry.TorqueWheelRight);
 			}
 		}
 
@@ -176,14 +168,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					entry.WheelSpeedLeft / entry.WheelSpeedRight, entry.WheelSpeedRight / entry.WheelSpeedLeft);
 				if (wheelSpeedRatio > DeclarationData.VTPMode.WheelSpeedDifferenceFactor) {
 					Log.Error(
-						"Wheel-speed difference rel. (L/R) too high! t: {0} n_left: {1}, n_right: {2}", entry.Time,
+						"Wheel-speed difference rel. (L/R) too high! t: {0} n_left: {1} rpm, n_right: {2} rpm", entry.Time,
 						entry.WheelSpeedLeft.AsRPM, entry.WheelSpeedRight.AsRPM);
 				}
 			} else {
 				if (VectoMath.Abs(entry.WheelSpeedLeft - entry.WheelSpeedRight) >
 					DeclarationData.VTPMode.MaxWheelSpeedDifferenceStandstill) {
 					Log.Error(
-						"Wheel-speed difference abs. (L/R) too high! t: {0} n_left: {1}, n_right: {2}", entry.Time,
+						"Wheel-speed difference abs. (L/R) too high! t: {0} n_left: {1} rpm, n_right: {2} rpm", entry.Time,
 						entry.WheelSpeedLeft.AsRPM, entry.WheelSpeedRight.AsRPM);
 				}
 			}
