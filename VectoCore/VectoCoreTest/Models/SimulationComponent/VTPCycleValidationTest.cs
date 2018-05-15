@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vtpCycle.VerifyInputData();
 
 			Assert.AreEqual(1, LogList.Count);
-			Assert.IsTrue(LogList[0].Contains("Torque difference rel."));
+			Assert.IsTrue(LogList[0].Contains("Torque difference"));
 		}
 
 
@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vtpCycle.VerifyInputData();
 
 			Assert.AreEqual(1, LogList.Count);
-			Assert.IsTrue(LogList[0].Contains("Torque difference rel."));
+			Assert.IsTrue(LogList[0].Contains("Torque difference"));
 		}
 
 		[TestCase()]
@@ -209,14 +209,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			SetupLogging();
 
-			var torque = 0.95*DeclarationData.VTPMode.WheelTorqueZeroTolerance.Value();
+			var torque = 30; //0.95*DeclarationData.VTPMode.WheelTorqueZeroTolerance.Value();
 
 			var cycleEntries = string.Format(
 				@"  0   ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
 				    0.5 ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
 				    1   ,    0,  600, 400, {0}, {1} , 50 , 50 , 100, 3
 				    1.5 ,    0,  600, 400, {1}, {1} , 50 , 50 , 100, 3
-				", torque, torque + DeclarationData.VTPMode.MaxWheelTorqueZeroDifference.Value() * 1.1);
+				", torque, torque + DeclarationData.VTPMode.MaxWheelTorqueDifference.Value() * 1.1);
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -230,7 +230,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vtpCycle.VerifyInputData();
 
 			Assert.AreEqual(1, LogList.Count);
-			Assert.IsTrue(LogList[0].Contains("Torque difference abs."));
+			Assert.IsTrue(LogList[0].Contains("Torque difference "));
 		}
 
 		[TestCase()]
@@ -238,14 +238,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			SetupLogging();
 
-			var torque = 0.95 * DeclarationData.VTPMode.WheelTorqueZeroTolerance.Value();
+			var torque = 30; //0.95 * DeclarationData.VTPMode.WheelTorqueZeroTolerance.Value();
 
 			var cycleEntries = string.Format(
 				@"  0   ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
 				    0.5 ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
 				    1   ,    0,  600, 400, {1}, {0} , 50 , 50 , 100, 3
 				    1.5 ,    0,  600, 400, {1}, {1} , 50 , 50 , 100, 3
-				", torque, torque + DeclarationData.VTPMode.MaxWheelTorqueZeroDifference.Value() * 1.1);
+				", torque, torque + DeclarationData.VTPMode.MaxWheelTorqueDifference.Value() * 1.1);
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -259,7 +259,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vtpCycle.VerifyInputData();
 
 			Assert.AreEqual(1, LogList.Count);
-			Assert.IsTrue(LogList[0].Contains("Torque difference abs."));
+			Assert.IsTrue(LogList[0].Contains("Torque difference"));
 		}
 
 		[TestCase()]
