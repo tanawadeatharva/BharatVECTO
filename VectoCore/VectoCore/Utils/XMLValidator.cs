@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Utils
 			{XmlDocumentType.DeclarationJobData, Tuple.Create("VectoInput{0}.xsd", new [] {"1.0"}) },
 			{XmlDocumentType.DeclarationComponentData, Tuple.Create("VectoComponent{0}.xsd", new [] {"1.0"}) },
 			{XmlDocumentType.EngineeringData, Tuple.Create("VectoEngineeringInput{0}.xsd", new [] {"0.7"}) },
-			{XmlDocumentType.ManufacturerReport, Tuple.Create("VectoOutputManufacturer{0}.xsd", new [] {"0.4"}) },
+			{XmlDocumentType.ManufacturerReport, Tuple.Create("VectoOutputManufacturer{0}.xsd", new [] {"0.4", "0.5"}) },
 			{ XmlDocumentType.CustomerReport , Tuple.Create("VectoOutputCustomer{0}.xsd", new [] {"0.4"})},
 		};
 
