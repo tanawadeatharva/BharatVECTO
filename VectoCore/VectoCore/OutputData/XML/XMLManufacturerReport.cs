@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLManufacturerReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.4";
+		public const string CURRENT_SCHEMA_VERSION = "0.5";
 		
 		protected XElement VehiclePart;
 		
@@ -315,6 +315,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Report_ResultEntry_VehiclePerformance,
 					new XElement(tns + XMLNames.Report_ResultEntry_AverageSpeed,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "km/h"), result.AverageSpeed.AsKmph.ToXMLFormat(1)),
+					new XElement(tns + "AverageDrivingSpeed", 
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, "km/h"), result.AverageDrivingSpeed.AsKmph.ToXMLFormat(1)),
 					new XElement(tns + XMLNames.Report_ResultEntry_MinSpeed, new XAttribute(XMLNames.Report_Results_Unit_Attr, "km/h"),
 						result.MinSpeed.AsKmph.ToXMLFormat(1)),
 					new XElement(tns + XMLNames.Report_ResultEntry_MaxSpeed, new XAttribute(XMLNames.Report_Results_Unit_Attr, "km/h"),
@@ -325,7 +327,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "m/s²"), result.MaxAcceleration.ToXMLFormat(2)),
 					new XElement(tns + XMLNames.Report_ResultEntry_FullLoadDrivingtimePercentage,
 						result.FullLoadPercentage.ToXMLFormat(2)),
-					new XElement(tns + XMLNames.Report_ResultEntry_GearshiftCount, result.GearshiftCount.ToXMLFormat(0))
+					new XElement(tns + XMLNames.Report_ResultEntry_GearshiftCount, result.GearshiftCount.ToXMLFormat(0)),
+					new XElement(tns + "EngineSpeedDriving", 
+						new XElement(tns + "Min", new XAttribute(XMLNames.Report_Results_Unit_Attr, "rpm"), result.EngineSpeedDrivingMin.AsRPM.ToXMLFormat(1)),
+						new XElement(tns + "Average", new XAttribute(XMLNames.Report_Results_Unit_Attr, "rpm"), result.EngineSpeedDrivingAvg.AsRPM.ToXMLFormat(1)),
+						new XElement(tns + "Max", new XAttribute(XMLNames.Report_Results_Unit_Attr, "rpm"), result.EngineSpeedDrivingMax.AsRPM.ToXMLFormat(1))
+						)
 					),
 				//FC
 				XMLDeclarationReport.GetResults(result, tns, true).Cast<object>().ToArray()
