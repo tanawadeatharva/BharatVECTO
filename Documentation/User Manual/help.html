@@ -2754,20 +2754,44 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <div id="verification-test-mode" class="section level2">
 <h2>Verification Test Mode</h2>
 <p>The purpose of the verification test is to simulate a vehicle defined in declaration mode on a measured real-driving cycle. This simulation mode uses its own <a href="#verification-test-cycle">cyle format</a>, requiring mainly vehicle speed, wheel speed, wheel torque, engine-fan speed, and engine speed. VECTO then calculates the appropriate gear and simulates the cycle. Auxiliary power is according to the technologies defined in the vehicle. However, the engine fan auxiliary is ignored and the power demand for the engine fan is calcuated based on the engine-fan speed. The power demand for the other auxiliaries depends on the vehicle’s actual speed. The fuel consumption is calculated using the engine speed from the driving cycle and the torque demand as given in the cycle, adding the losses of all powertrain components.</p>
-<div id="requirements-2" class="section level3">
-<h3>Requirements</h3>
+<div class="engineering">
+<h3 id="requirements-2">Requirements</h3>
 <ul>
 <li>One or more checked job files in the Job List</li>
 <li>Each job must include a vehicle in declaration mode (XML)</li>
 <li>Each job file must include at least one driving cycle</li>
 </ul>
-</div>
-<div id="results-2" class="section level3">
-<h3>Results</h3>
+<h3 id="results-2">Results</h3>
 <ul>
 <li>Modal results (.vmod). One file for each vehicle/cycle combination. Modal results are only written if the modal output is enabled in the ‘Options’ tab on the <a href="#main-form">Main Window</a></li>
 <li>Sum results (.vsum). One file for each invocation of VECTO.</li>
 </ul>
+</div>
+<div class="declaration">
+<h3 id="requirements-3">Requirements</h3>
+<ul>
+<li>One or more checked job files in the Job List</li>
+<li>Each job must include a vehicle in declaration mode (XML)</li>
+<li>Each job must include the manufacturer report (XML) of the vehicle as generated for the vehicle delcaration</li>
+<li>Each job file must include exactly one driving cycle (in case multiple driving cycles are provided, only the first cycle is simulated!)</li>
+</ul>
+<h3 id="results-3">Results</h3>
+<ul>
+<li>VTP Report (.xml). Contains a description of the vehicle and its components, the verification test analysis according to the draft legislation, and a validation of the input data digest values</li>
+<li>Modal results (.vmod). One file for each vehicle/cycle combination. Modal results are only written if the modal output is enabled in the ‘Options’ tab on the <a href="#main-form">Main Window</a></li>
+<li>Sum results (.vsum). One file for each invocation of VECTO.</li>
+</ul>
+<h3 id="validations">Validations</h3>
+<ul>
+<li>Before the simulation of the measured VTP cycle starts, the provided cycle data is passed through some sanity checks:</li>
+<li>The cycle is provided in 2Hz</li>
+<li>The ratio of wheel speeds (left/right) should be lower than 1.4 for wheel speeds above 0.1rpm</li>
+<li>The absolute difference of wheel speeds (left/right) should be lower than 1rpm for wheel speeds below 0.1rpm</li>
+<li>The torque ratio (left/right) should be lower than 3 and the absoulte difference should be lower than 200Nm.</li>
+<li>The fan speed shall be between 20 and 4000rpm, unless the vehicle is equipped with an electric fan</li>
+<li>The fuel consumption within a window off 10min should be between 180 and 600 g/kWh_(PWheel_pos)</li>
+</ul>
+<p>In case the provided cycle exceeds these limits an according warning message is shown in the user interface and written to the report.</p>
 </div>
 </div>
 <div id="engine-only-mode" class="section level2">
@@ -3629,7 +3653,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <div id="pwheel-input-sico-mode" class="section level2">
 <h2>P<sub>wheel</sub>-Input (SiCo Mode)</h2>
 <p>For verification tasks it is possible to manually input the power at wheels (P<sub>wheel</sub>) which is normally calculated via longitudinal dynamics. In this case VECTO only calculates the losses between wheels and engine and adds auxiliary power demand. This mode is active as soon as P<sub>wheel</sub>, Gear and Engine Speed are defined in the driving cycle.</p>
-<div id="requirements-3" class="section level3">
+<div id="requirements-4" class="section level3">
 <h3>Requirements</h3>
 <ul>
 <li>Driving Cycle must include t, P<sub>wheel</sub> (Pwheel), Gear (Gear) and Engine Speed (n), see <a href="#driving-cycles-.vdri">Driving Cycle (.vdri) format</a>.</li>
