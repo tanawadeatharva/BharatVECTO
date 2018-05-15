@@ -58,6 +58,7 @@ VectoVTPReport TestConditions { display: none; }
 *[unit="kWh"]:after { content: "kWh" }
 *[unit="MJ/kg"]:after { content: "MJ/kg" }
 *[unit="g/kWh"]:after { content: "g/kWh" }
+*[unit="rpm"]:after { content: "rpm" }
 
 
 Data {
@@ -402,12 +403,13 @@ Payload {
 	margin-right: 20px;
 	text-align: right;
 }
-Payload {
-	order: 0
-}
-TotalVehicleMass {
-	order: 2;
-}
+Payload { order: 0 }
+TotalVehicleMass { order: 2; }
+AverageSpeed {order: 3;}
+AverageDrivingSpeed {order: 4;}
+MaxSpeed { order: 5; }
+GearshiftCount {order: 6;}
+EngineSpeedDriving {order: 10;}
 
 VectoCustomerInformation Payload:before,
 VectoCustomerInformation AverageSpeed:before {
@@ -430,15 +432,31 @@ Result VehiclePerformance FullLoadDrivingtimePercentage
 	display: none;
 }
 VehiclePerformance AverageSpeed:before,
-Result AverageSpeed:before { 
-	content: "Average Speed:" 
-}
+Result AverageSpeed:before { content: "Average Speed:" }
+VehiclePerformance AverageDrivingSpeed:before { content: "Average Driving Speed:" }
 VehiclePerformance MaxSpeed:before { content: "Max. Speed:"; }
+VehiclePerformance EngineSpeedDriving:before { content: "Engine Speed driving:"; position: relative; font-style: italic; }
+VehiclePerformance EngineSpeedDriving Min:before { content: "Min:"; }
+VehiclePerformance EngineSpeedDriving Max:before { content: "Max:"; }
+VehiclePerformance EngineSpeedDriving Average:before { content: "Average:"; }
+VehiclePerformance EngineSpeedDriving *:before { padding-left: 20px; }
 VehiclePerformance GearshiftCount:before { content: "# Gearshifts:"; }
-VehiclePerformance GearshiftCount:after { display: inline-block; min-width: 5em; padding-left: 0.3em; text-align: left; content: " "}
+VehiclePerformance GearshiftCount:after,
+VehiclePerformance EngineSpeedDriving Min:after,
+VehiclePerformance EngineSpeedDriving Max:after,
+VehiclePerformance EngineSpeedDriving Average:after
+ { display: inline-block; min-width: 5em; padding-left: 0.3em; text-align: left; content: " "}
+
+VehiclePerformance EngineSpeedDriving { margin-top: 0.5em;}
+
 AverageSpeed,
 MaxSpeed,
-GearshiftCount {
+GearshiftCount,
+AverageDrivingSpeed,
+EngineSpeedDriving Min,
+EngineSpeedDriving Max,
+EngineSpeedDriving Average
+ {
 	width: 100%;
 	margin-right: 20px;
 	text-align: right;
