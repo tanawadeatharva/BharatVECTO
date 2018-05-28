@@ -64,8 +64,8 @@ namespace DeclarationCycleZip
 				}
 				var row = table.NewRow();
 				row["<s>"] = x.Distance.Value().ToString(CultureInfo.InvariantCulture);
-			    row["<v>"] = x.VehicleTargetSpeed.ConvertToKiloMeterPerHour().Value.ToString(CultureInfo.InvariantCulture);
-                row["<grad>"] = x.RoadGradientPercent.Value().ToString(CultureInfo.InvariantCulture);
+				row["<v>"] = x.VehicleTargetSpeed.ConvertToKiloMeterPerHour().Value.ToString(CultureInfo.InvariantCulture);
+				row["<grad>"] = x.RoadGradientPercent.Value().ToString(CultureInfo.InvariantCulture);
 				row["<stop>"] = x.StoppingTime.Value().ToString(CultureInfo.InvariantCulture);
 				table.Rows.Add(row);
 				lastDistance = x.Distance;
