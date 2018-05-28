@@ -979,6 +979,12 @@
     <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Axle_4x2_Tractor.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_DECL_primRet.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_primRet.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_NoAirdrag.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

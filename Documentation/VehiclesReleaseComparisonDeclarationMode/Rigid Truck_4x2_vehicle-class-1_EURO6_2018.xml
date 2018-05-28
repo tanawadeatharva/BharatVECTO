@@ -10,7 +10,7 @@
     <VehicleCategory>Rigid Truck</VehicleCategory>
     <AxleConfiguration>4x2</AxleConfiguration>
     <CurbMassChassis>4010</CurbMassChassis>
-    <GrossVehicleMass>7500</GrossVehicleMass>
+    <GrossVehicleMass>7501</GrossVehicleMass>
     <IdlingSpeed>600</IdlingSpeed>
     <RetarderType>None</RetarderType>
     <AngledriveType>None</AngledriveType>
