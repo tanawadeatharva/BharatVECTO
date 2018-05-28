@@ -379,6 +379,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobContainer = new JobContainer(sumData);
 			jobContainer.AddRuns(factory);
 
+			//var runs = jobContainer.Runs;
+			//runs[0].Run.Run();
+
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
 
