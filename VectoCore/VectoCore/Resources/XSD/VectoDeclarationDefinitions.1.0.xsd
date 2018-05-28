@@ -2269,6 +2269,37 @@ ToDo: -0.00
 			<xs:enumeration value="425/65 R22.5"/>
 			<xs:enumeration value="495/45 R22.5"/>
 			<xs:enumeration value="525/65 R20.5"/>
+			<xs:enumeration value="11.00 R16"/>
+			<xs:enumeration value="6.00 R9"/>
+			<xs:enumeration value="205/65 R17.5"/>
+			<xs:enumeration value="225/75 R16C"/>
+			<xs:enumeration value="255/100 R16"/>
+			<xs:enumeration value="255/60 R19.5"/>
+			<xs:enumeration value="265/55 R19.5"/>
+			<xs:enumeration value="275/60 R19.5"/>
+			<xs:enumeration value="275/80 R20"/>
+			<xs:enumeration value="285/65 R16C"/>
+			<xs:enumeration value="295/75 R22.5"/>
+			<xs:enumeration value="325/85 R16"/>
+			<xs:enumeration value="435/50 R19.5"/>
+			<xs:enumeration value="435/50 R22.5"/>
+			<xs:enumeration value="445/40 R22.5"/>
+			<xs:enumeration value="445/45 R19.5"/>
+			<xs:enumeration value="445/65 R22.5"/>
+			<xs:enumeration value="445/75 R22.5"/>
+			<xs:enumeration value="455/40 R22.5"/>
+			<xs:enumeration value="455/45 R22.5"/>
+			<xs:enumeration value="475/80 R20"/>
+			<xs:enumeration value="7.00 R16C"/>
+			<xs:enumeration value="7.50 R15"/>
+			<xs:enumeration value="7.50 R16"/>
+			<xs:enumeration value="7.50 R16C"/>
+			<xs:enumeration value="8.25 R15"/>
+			<xs:enumeration value="8.25 R16C"/>
+			<xs:enumeration value="8.5 R17.5"/>
+			<xs:enumeration value="8 R17.5"/>
+			<xs:enumeration value="LT265/75 R16"/>
+			<xs:enumeration value="385/55 R19.5"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="TyreFzISOType">
