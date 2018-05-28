@@ -80,6 +80,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 
 			var torqueLossResult = ModelData.LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
+			if (avgOutAngularVelocity.IsEqual(0, 1e-9)) {
+				torqueLossResult.Value = 0.SI<NewtonMeter>();
+			}
 			var inTorque = outTorque / ModelData.Ratio + torqueLossResult.Value;
 
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
@@ -105,12 +108,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (CurrentState.TorqueLossResult.Extrapolated) {
 				Log.Warn("{2} LossMap data was extrapolated: range for loss map is not sufficient: n:{0}, torque:{1}",
-                    CurrentState.OutAngularVelocity.ConvertToRoundsPerMinute(), CurrentState.OutTorque, GetType().Name);
+					CurrentState.OutAngularVelocity.ConvertToRoundsPerMinute(), CurrentState.OutTorque, GetType().Name);
 
 				if (DataBus.ExecutionMode == ExecutionMode.Declaration) {
 					throw new VectoException(
 						"{2} LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient: n:{0}, torque:{1}",
-                        CurrentState.OutAngularVelocity.ConvertToRoundsPerMinute(), CurrentState.OutTorque, GetType().Name);
+						CurrentState.OutAngularVelocity.ConvertToRoundsPerMinute(), CurrentState.OutTorque, GetType().Name);
 				}
 			}
 			AdvanceState();

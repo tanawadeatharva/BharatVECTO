@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			_lossMap = lossMap;
 			_ratio = ratio;
+			_primaryRetarder = container.RunData != null && container.RunData.Retarder.Type == RetarderType.TransmissionInputRetarder;
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
@@ -76,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return NextComponent.Request(absTime, dt, torque, angularVelocity, dryRun);
 			}
 			var avgAngularSpeed = (PreviousState.InAngularVelocity + angularVelocity) / 2.0;
-			var retarderTorqueLoss = _lossMap.GetTorqueLoss(avgAngularSpeed * _ratio) * _ratio;
+			var retarderTorqueLoss = avgAngularSpeed.IsEqual(0, 1e-9) ? 0.SI<NewtonMeter>() : _lossMap.GetTorqueLoss(avgAngularSpeed * _ratio) * _ratio;
 			CurrentState.SetState(torque + retarderTorqueLoss, angularVelocity, torque, angularVelocity);
 			return NextComponent.Request(absTime, dt, CurrentState.InTorque, CurrentState.InAngularVelocity, dryRun);
 		}
