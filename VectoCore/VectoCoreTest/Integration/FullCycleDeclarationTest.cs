@@ -60,6 +60,14 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string Class9RigidTruckPTOJob =
 			@"TestData\Integration\DeclarationMode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
 
+		public const string Class5TractorDeclPrimaryRetarder =
+			@"TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_DECL_primRet.vecto";
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 		[TestCase]
 		public void Truck40t_LongHaulCycle_RefLoad()
@@ -352,6 +360,24 @@ namespace TUGraz.VectoCore.Tests.Integration
 			//var runs = jobContainer.Runs;
 
 			//runs[8].Run.Run();
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		[TestCase]
+		public void DeclarationClass5PrimaryRetarder()
+		{
+			var inputData = JSONInputDataFactory.ReadJsonJob(Class5TractorDeclPrimaryRetarder);
+			var fileWriter = new FileOutputWriter(Class5TractorDeclPrimaryRetarder);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+				WriteModalResults = true
+			};
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+			jobContainer.AddRuns(factory);
 
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
