@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
@@ -61,6 +62,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		const string EngineSpeedLimitJobDecl =
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Class2_RigidTruck_DECL.vecto";
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 
 		[TestCase()]
 		public void TestGearboxTorqueLimitsAbove90FLD()
