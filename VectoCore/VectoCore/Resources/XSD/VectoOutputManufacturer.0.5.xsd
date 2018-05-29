@@ -163,25 +163,53 @@
 		<xs:complexContent>
 			<xs:extension base="ComponentDescriptionType">
 				<xs:sequence>
-					<xs:element name="RatedPower" type="vdecdef:EngineRatedPower">
+					<xs:element name="RatedPower">
 						<xs:annotation>
 							<xs:documentation>P250</xs:documentation>
 						</xs:annotation>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="vdecdef:EngineRatedPower">
+									<xs:attribute name="unit" type="PowerUnitType" use="required"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
 					</xs:element>
-					<xs:element name="IdlingSpeed" type="vdecdef:EngineDeclaredSpeedType">
+					<xs:element name="IdlingSpeed">
 						<xs:annotation>
 							<xs:documentation>P063 / P198</xs:documentation>
 						</xs:annotation>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="vdecdef:EngineDeclaredSpeedType">
+									<xs:attribute name="unit" type="AngularVelocityUnitType" use="required"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
 					</xs:element>
-					<xs:element name="RatedSpeed" type="vdecdef:EngineDeclaredSpeedType">
+					<xs:element name="RatedSpeed">
 						<xs:annotation>
 							<xs:documentation>P249</xs:documentation>
 						</xs:annotation>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="vdecdef:EngineDeclaredSpeedType">
+									<xs:attribute name="unit" type="AngularVelocityUnitType" use="required"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
 					</xs:element>
-					<xs:element name="Displacement" type="vdecdef:EngineDisplacementType">
+					<xs:element name="Displacement">
 						<xs:annotation>
 							<xs:documentation>P061</xs:documentation>
 						</xs:annotation>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:double">
+									<xs:attribute name="unit" type="DisplacementType" use="required"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
 					</xs:element>
 					<xs:element name="FuelType" type="vdecdef:FuelTypeType">
 						<xs:annotation>
@@ -487,15 +515,29 @@
 					<xs:documentation>P037</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="GrossVehicleMass" type="vdecdef:VehicleGrossVehicleMassType">
+			<xs:element name="GrossVehicleMass">
 				<xs:annotation>
 					<xs:documentation>P041</xs:documentation>
 				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:double">
+							<xs:attribute name="unit" type="MassUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
 			</xs:element>
-			<xs:element name="CurbMassChassis" type="vdecdef:VehicleCurbMassChassisType">
+			<xs:element name="CurbMassChassis">
 				<xs:annotation>
 					<xs:documentation>P038</xs:documentation>
 				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="vdecdef:VehicleCurbMassChassisType">
+							<xs:attribute name="unit" type="MassUnitType" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
 			</xs:element>
 			<xs:element name="PTO" type="xs:boolean">
 				<xs:annotation>
@@ -563,6 +605,7 @@
 	<xs:simpleType name="MassUnitType">
 		<xs:restriction base="xs:token">
 			<xs:enumeration value="kg"/>
+			<xs:enumeration value="t"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="MissionTypeType">
@@ -590,6 +633,16 @@
 	<xs:simpleType name="AngularVelocityUnitType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="rpm"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PowerUnitType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="kW"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DisplacementType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ltr"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>
