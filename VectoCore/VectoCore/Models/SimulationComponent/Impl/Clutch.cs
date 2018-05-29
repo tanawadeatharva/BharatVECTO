@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NewtonMeter torqueIn;
 			PerSecond angularVelocityIn;
 
-			var slippingClutchWhenDriving = (DataBus.Gear == 1 && DataBus.DriverBehavior != DrivingBehavior.Braking);
+			var slippingClutchWhenDriving = (DataBus.Gear <= 2 && DataBus.DriverBehavior != DrivingBehavior.Braking);
 			var slippingClutchDuringBraking = DataBus.Gear == 1 && DataBus.DriverBehavior == DrivingBehavior.Braking && outTorque > 0;
 			//var slippingClutchWhenDriving = (DataBus.Gear == 1 && outTorque > 0);
 			AddClutchLoss(outTorque, outAngularVelocity,
