@@ -59,6 +59,9 @@ VectoVTPReport TestConditions { display: none; }
 *[unit="MJ/kg"]:after { content: "MJ/kg" }
 *[unit="g/kWh"]:after { content: "g/kWh" }
 *[unit="rpm"]:after { content: "rpm" }
+*[unit="t"]:after { content: "t" }
+*[unit="ltr"]:after { content: "ltr" }
+
 
 
 Data {
@@ -198,13 +201,13 @@ Vehicle *:after {
 	padding-left: 0.3em; 
 	text-align: left;
 }
-Vehicle CurbMassChassis:after { content: "kg"; }
+/*Vehicle CurbMassChassis:after { content: "kg"; }
 Vehicle GrossVehicleMass:after { content: "kg"; }
 Vehicle RatedPower:after,
 Vehicle EngineRatedPower:after { content: "W"; }
 Vehicle Displacement:after,
 Vehicle EngineDisplacement:after { content: "cm³"; }
-
+*/
 Vehicle Components {
 	/*margin-left: 20px;*/
 	display: flex;
