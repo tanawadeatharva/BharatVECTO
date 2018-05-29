@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLCustomerReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.4";
+		public const string CURRENT_SCHEMA_VERSION = "0.5";
 
 		protected readonly XElement VehiclePart;
 
@@ -80,11 +80,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
-				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, modelData.VehicleData.GrossVehicleWeight.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, modelData.VehicleData.CurbWeight.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Report_Vehicle_EngineRatedPower, modelData.EngineData.RatedPowerDeclared.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Report_Vehicle_EngineDisplacement,
-					modelData.EngineData.Displacement.ConvertToCubicCentiMeter().ToXMLFormat(0)),
+				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleWeight, XMLNames.Unit_t, 1)),
+					
+				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbWeight, XMLNames.Unit_kg)),
+				new XElement(tns + XMLNames.Report_Vehicle_EngineRatedPower, XMLHelper.ValueAsUnit(modelData.EngineData.RatedPowerDeclared, XMLNames.Unit_kW)),
+				new XElement(tns + XMLNames.Report_Vehicle_EngineDisplacement, XMLHelper.ValueAsUnit(modelData.EngineData.Displacement, XMLNames.Unit_ltr, 1)),
 				new XElement(tns + XMLNames.Engine_FuelType, modelData.EngineData.FuelType.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_Vehicle_TransmissionCertificationMethod,
 					modelData.GearboxData.CertificationMethod.ToXMLFormat()),

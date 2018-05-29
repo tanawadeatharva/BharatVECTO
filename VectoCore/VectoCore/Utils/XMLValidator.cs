@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Utils
 			{XmlDocumentType.DeclarationComponentData, Tuple.Create("VectoComponent{0}.xsd", new [] {"1.0"}) },
 			{XmlDocumentType.EngineeringData, Tuple.Create("VectoEngineeringInput{0}.xsd", new [] {"0.7"}) },
 			{XmlDocumentType.ManufacturerReport, Tuple.Create("VectoOutputManufacturer{0}.xsd", new [] {"0.4", "0.5"}) },
-			{ XmlDocumentType.CustomerReport , Tuple.Create("VectoOutputCustomer{0}.xsd", new [] {"0.4"})},
+			{ XmlDocumentType.CustomerReport , Tuple.Create("VectoOutputCustomer{0}.xsd", new [] {"0.4", "0.5"})},
 		};
 
 		private XMLValidator(Action<bool> resultaction, Action<XmlSeverityType, ValidationEvent> validationErrorAction)

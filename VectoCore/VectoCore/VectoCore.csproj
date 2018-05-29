@@ -194,6 +194,7 @@
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
+    <Compile Include="Utils\XMLHelper.cs" />
     <Compile Include="OutputData\XML\XMLVTPReport.cs" />
     <Compile Include="OutputData\VTPReport.cs" />
     <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
@@ -447,6 +448,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.5.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.5.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">
