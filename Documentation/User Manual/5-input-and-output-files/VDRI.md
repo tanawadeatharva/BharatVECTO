@@ -78,6 +78,9 @@ Header: **\<s>, \<v>, \<stop>***\[, \<Padd>]\[, \<grad>]\[, \<PTO>]\[, \<vair\_r
 **Bold columns** are mandatory. *Italic columns* are optional. Only the listed columns are allowed (no other columns!).<br />
 Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign "#".
 
+**Note:** if the cycle starts with a target speed of 0 km/h and the stop-time for the first entry is 0, VECTO sets the stop-time to 1s automatically. 
+
+
 |  Identifier |  Unit  |                                                                                                                                             Description                                                                                                                                              |
 |-------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **s**       | [m]    | Traveled distance. Must always be increasing.                                                                                                                                                                                                                                                        |
