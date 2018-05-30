@@ -213,6 +213,9 @@ namespace TUGraz.VectoCore.InputData.Reader
 			var altitude = current.Altitude;
 			for (var i = 0; i < entries.Count; i++) {
 				var entry = entries[i];
+				if (i == 0 && entry.VehicleTargetSpeed.IsEqual(0) && entry.StoppingTime.IsEqual(0)) {
+					entry.StoppingTime = 1.SI<Second>();
+				}
 				if (!entry.StoppingTime.IsEqual(0) && !entry.VehicleTargetSpeed.IsEqual(0)) {
 					throw new VectoException(
 						"Error in DrivingCycle: stop time specified but target-speed > 0! Distance: {0}, stop-time: {1}, target speed: {2}",
@@ -233,7 +236,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					filtered.Add(entry);
 					current = entry;
 				}
-				if (!entry.StoppingTime.IsEqual(0) && entry.VehicleTargetSpeed.IsEqual(0)) {
+				if (entry.VehicleTargetSpeed.IsEqual(0)) {
 					// vehicle stops. duplicate current distance entry with 0 waiting time
 					var tmp = new DrivingCycleData.DrivingCycleEntry(entry) {
 						StoppingTime = 0.SI<Second>(),
