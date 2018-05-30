@@ -79,8 +79,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		public bool WriteAdvancedAux { get; set; }
 
-		public ModalDataContainer(string runName, FuelType fuel, IModalDataWriter writer, bool writeEngineOnly = false)
-			: this(0, runName, "", fuel, "", writer, _ => { }, writeEngineOnly) {}
+		public ModalDataContainer(string runName, FuelType fuel, IModalDataWriter writer, bool writeEngineOnly = false, params IModalDataFilter[] filters)
+			: this(0, runName, "", fuel, "", writer, _ => { }, writeEngineOnly, filters) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
 			bool writeEngineOnly, params IModalDataFilter[] filter)

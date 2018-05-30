@@ -5430,6 +5430,7 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <p>This driving cycle defines the target speed over distance. Vecto tries to achieve and maintain this target speed.</p>
 <p>Header: <strong>&lt;s&gt;, &lt;v&gt;, &lt;stop&gt;</strong><em>[, &lt;Padd&gt;][, &lt;grad&gt;][, &lt;PTO&gt;][, &lt;vair_res&gt;, &lt;vair_beta&gt;][, &lt;Aux_ID&gt;]</em></p>
 <p><strong>Bold columns</strong> are mandatory. <em>Italic columns</em> are optional. Only the listed columns are allowed (no other columns!).<br /> Units are optional and are enclosed in [square-brackets] after the header-column. Comments may be written with a preceding hash-sign “#”.</p>
+<p><strong>Note:</strong> if the cycle starts with a target speed of 0 km/h and the stop-time for the first entry is 0, VECTO sets the stop-time to 1s automatically.</p>
 <table style="width:100%;">
 <colgroup>
 <col width="4%"></col>

@@ -29,16 +29,21 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Globalization;
+using System.IO;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 
@@ -51,6 +56,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		public const double Tolerance = 0.0001;
 
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 		[TestCase]
 		public void TestLimitRequst()
@@ -218,6 +228,47 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
+		}
+
+		[TestCase]
+		public void CycleStartsWithNoStopTime()
+		{
+			var data = new string[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,   0,  0,   0",
+				" 10,  50,  0,   0",
+				"100,  50,  0,   0"
+			};
+			var cycleData = SimpleDrivingCycles.CreateCycleData(data);
+
+			var modFileName = string.Format(CultureInfo.InvariantCulture, "CyccleStartWithoutStop.vmod");
+			var run = Truck40tPowerTrain.CreateEngineeringRun(cycleData, modFileName);
+
+			
+			run.Run();
+
+			Assert.IsTrue(run.FinishedWithoutErrors, "Cycle start witout stoptime FAILED");
+		}
+
+		[TestCase]
+		public void CycleWithZeroStopTime()
+		{
+			var data = new string[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,   0,  0,   2",
+				"100,  50,  0,   0",
+				"120,   0,  0,   0",
+				"200,  50,  0,   0"
+			};
+			var cycleData = SimpleDrivingCycles.CreateCycleData(data);
+
+			var modFileName = string.Format(CultureInfo.InvariantCulture, "CyccleWithZeroStoptime.vmod");
+			var run = Truck40tPowerTrain.CreateEngineeringRun(cycleData, modFileName);
+
+
+			run.Run();
+
+			Assert.IsTrue(run.FinishedWithoutErrors, "Cycle start witout stoptime FAILED");
 		}
 	}
 }
