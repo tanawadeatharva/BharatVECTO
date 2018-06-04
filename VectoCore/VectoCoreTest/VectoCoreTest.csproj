@@ -105,6 +105,7 @@
     <Compile Include="Models\SimulationComponent\ATGearboxTest.cs" />
     <Compile Include="Models\SimulationComponent\EngineFanAuxTest.cs" />
     <Compile Include="Models\SimulationComponent\GearboxShiftLossesTest.cs" />
+    <Compile Include="Models\SimulationComponent\VTPCycleValidationTest.cs" />
     <Compile Include="Models\Simulation\FactoryTest.cs" />
     <Compile Include="Models\Simulation\PTOIdleLossTest.cs" />
     <Compile Include="Models\Simulation\LossMapRangeValidationTest.cs" />
@@ -978,6 +979,12 @@
     <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Axle_4x2_Tractor.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_DECL_primRet.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_primRet.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\DeclarationMode\Class5_Tractor_4x2\Class5_Tractor_NoAirdrag.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1731,6 +1738,9 @@
     </None>
     <None Include="TestData\Integration\FullPowerTrain\NoLossGbxMap.vtlm" />
     <None Include="TestData\Integration\FullPowerTrain\unlimited.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_noGear.vecto">
@@ -2665,6 +2675,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle\Generic Engine.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\VTPMode\GenericVehicle\Tractor_4x2_vehicle-class-5_Generic vehicle.RSLT_MANUFACTURER.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle\Tractor_4x2_vehicle-class-5_Generic vehicle.xml">

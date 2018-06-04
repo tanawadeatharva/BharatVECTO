@@ -46,7 +46,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		Urban,
 		Suburban,
 		Interurban,
-		Coach
+		Coach,
+		VerificationTest
 	}
 
 	public static class MissionTypeHelper
@@ -59,6 +60,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static bool IsEMS(this MissionType self)
 		{
 			return self == MissionType.LongHaulEMS || self == MissionType.RegionalDeliveryEMS;
+		}
+
+		public static bool IsDeclarationMission(this MissionType self)
+		{
+			return self != MissionType.VerificationTest;
 		}
 
 		public static MissionType GetNonEMSMissionType(this MissionType self)

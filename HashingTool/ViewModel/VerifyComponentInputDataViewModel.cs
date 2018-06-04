@@ -38,6 +38,7 @@ using System.Windows;
 using System.Windows.Input;
 using HashingTool.Helper;
 using HashingTool.ViewModel.UserControl;
+using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel

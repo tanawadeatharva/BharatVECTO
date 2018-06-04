@@ -33,6 +33,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -62,6 +63,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public const string GearboxLimited = @"TestData\Components\limited.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		//public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 		/// <summary>
 		/// VECTO-173

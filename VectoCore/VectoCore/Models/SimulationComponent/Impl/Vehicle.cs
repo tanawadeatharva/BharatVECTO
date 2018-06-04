@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.Distance = PreviousState.Distance + PreviousState.Velocity * dt + acceleration * dt * dt / 2;
 
 			CurrentState.DriverAcceleration = DriverAcceleration(acceleration);
-			CurrentState.RollingResistance = RollingResistance(gradient);
+			CurrentState.RollingResistance = (PreviousState.Velocity + CurrentState.Velocity).IsEqual(0, 1e-9) ? 0.SI<Newton>() : RollingResistance(gradient);
 			try {
 				CurrentState.AirDragResistance = AirDragResistance(PreviousState.Velocity, CurrentState.Velocity);
 			} catch (VectoException ex) {

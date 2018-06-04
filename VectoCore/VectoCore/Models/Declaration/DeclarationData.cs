@@ -499,5 +499,34 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const string DefaultPTOActivationCycle =
 				DeclarationDataResourcePrefix + ".MissionCycles.MunicipalUtility_PTO_generic.vptoc";
 		}
+
+		public static class VTPMode
+		{
+			public static readonly Meter RunInThreshold = 15000.SI(Unit.SI.Kilo.Meter).Cast<Meter>();
+			public const double EvolutionCoefficient = 0.98;
+
+			public const MissionType SelectedMission = MissionType.LongHaul;
+			public const LoadingType SelectedLoading = LoadingType.ReferenceLoad;
+
+			// verification of input data
+
+			public const double WheelSpeedDifferenceFactor = 1.4;
+			public const double WheelTorqueDifferenceFactor = 3;
+
+			public static readonly PerSecond WheelSpeedZeroTolerance = 0.1.RPMtoRad();
+			public static readonly PerSecond MaxWheelSpeedDifferenceStandstill = 1.RPMtoRad();
+
+			public static readonly NewtonMeter MaxWheelTorqueDifference = 200.SI<NewtonMeter>();
+
+			public static readonly PerSecond MinFanSpeed = 20.RPMtoRad();
+			public static readonly PerSecond MaxFanSpeed = 4000.RPMtoRad();
+
+			public static readonly Second SamplingInterval = 0.5.SI<Second>();
+
+			public static readonly WattSecond MinPosWorkAtWheelsForFC = 1.SI(Unit.SI.Kilo.Watt.Hour).Cast<WattSecond>();
+			public static readonly SpecificFuelConsumption LowerFCThreshold = 180.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).Cast<SpecificFuelConsumption>();
+			public static readonly SpecificFuelConsumption UpperFCThreshold = 600.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).Cast<SpecificFuelConsumption>();
+			public static readonly Second FCAccumulationWindow = 10.SI(Unit.SI.Minute).Cast<Second>();
+		}
 	}
 }

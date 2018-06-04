@@ -331,9 +331,9 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property DigestValue As String Implements IComponentInputData.DigestValue
+	Public ReadOnly Property DigestValue As DigestData Implements IComponentInputData.DigestValue
 		Get
-			Return ""
+			Return Nothing
 		End Get
 	End Property
 

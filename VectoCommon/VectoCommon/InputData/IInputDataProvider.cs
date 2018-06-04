@@ -51,19 +51,4 @@ namespace TUGraz.VectoCommon.InputData
 		IDriverEngineeringInputData DriverInputData { get; }
 	}
 
-	public interface IVTPInputDataProvider : IInputDataProvider
-	{
-		IVTPJobInputData JobInputData { get; }
-	}
-
-	public interface IVTPJobInputData
-	{
-		IVehicleDeclarationInputData Vehicle { get; }
-
-		IList<ICycleData> Cycles { get; }
-
-		IEnumerable<double> FanPowerCoefficents { get; }
-        bool SavedInDeclarationMode { get; }
-		Meter FanDiameter { get; }
-	}
 }

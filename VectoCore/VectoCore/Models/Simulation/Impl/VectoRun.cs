@@ -101,6 +101,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void Run()
 		{
+			if (Container.RunStatus != Status.Pending) {
+				return;
+			}
 			var debug = new DebugData();
 
 			Log.Info("VectoJob started running.");

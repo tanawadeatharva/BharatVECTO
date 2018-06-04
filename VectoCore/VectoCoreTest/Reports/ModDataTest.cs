@@ -236,7 +236,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				 fcMap = FuelConsumptionMapReader.Create(engInput.JobInputData.Vehicle
 					.EngineInputData.FuelConsumptionMap);
 			}
-			var vtpInput = inputData as IVTPInputDataProvider;
+			var vtpInput = inputData as IVTPEngineeringInputDataProvider;
 			if (vtpInput != null ) {
 				fcMap = FuelConsumptionMapReader.Create(vtpInput.JobInputData.Vehicle
 					.EngineInputData.FuelConsumptionMap);

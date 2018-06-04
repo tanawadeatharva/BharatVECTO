@@ -778,6 +778,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 
+		[TestCase(0.2/1000/3600, 200)]
+		public void SI_Convert_ConvertToGramPerKiloWattHour(double val, double converted)
+		{
+			var siVal = val.SI<SpecificFuelConsumption>();
+			var siConv = siVal.ConvertToGramPerKiloWattHour();
+			Assert.AreEqual(converted, siConv, 1e-12);
+			Assert.AreEqual("g/kWh", siConv.Units);
+		}
+
 	}
 
 }

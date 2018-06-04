@@ -49,6 +49,7 @@ using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 using NUnit.Framework;
 using System.IO;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 
 namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 {
@@ -64,13 +65,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public const string AccelerationFile2 = @"TestData\Components\Truck.vacc";
 		public const double Tolerance = 0.001;
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
-        [TestCase]
+		[TestCase]
 		public void TestWheelsAndEngineInitialize()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 1);
@@ -202,6 +203,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", FuelType.DieselCI, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
+			container.RunData = new VectoRunData() { SimulationType = SimulationType.DistanceCycle };
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))

@@ -38,7 +38,7 @@
         "LossMap": "Gear_4.vtlm",
         "ShiftPolygon": "",
         "MaxTorque": ""
-      },
+      }
     ],
     "TqReserve": 20.0,
     "ShiftTime": 2.0,
