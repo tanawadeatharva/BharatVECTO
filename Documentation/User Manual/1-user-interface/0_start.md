@@ -16,7 +16,7 @@ User Manual
 ====================================
 ![](pics/VECTOlarge.png)\
 \
-Version: VECTO 3.2 / VectoCore 3.2.0 / VectoCmd 3.2.0
+Version: VECTO 3.3 / VectoCore 3.3.0 / VectoCmd 3.3.0
 
 ---
 
@@ -34,6 +34,6 @@ This User Manual consists of 4 Parts:
 - [Input and Output](#input-and-output):
     : Describes the input and output file formats.
 
-This user manual describes verson 3.2.x of Vecto. 
+This user manual describes verson 3.3.x of Vecto. 
 
 

@@ -1,5 +1,33 @@
 #Changelog
 
+**VECTO 3.3.0**
+
+***Build 1250 (2018-06-04)***
+
+
+- Improvement
+    * [VECTO-665] - Adding style information to XML Reports
+    * [VECTO-669] - Group 1 vehicle comprises vehicles with gross vehicle weight > 7.5t
+    * [VECTO-672] - Keep manual choice for "Validate data"
+    * [VECTO-682] - VTP Simulation in declaration mode
+    * [VECTO-652] - VTP: Check Cycle matches simulation mode
+    * [VECTO-683] - VTP: Quality and plausibility checks for recorded data from VTP
+    * [VECTO-685] - VTP Programming of standard VECTO VTP report
+    * [VECTO-689] - Additional Tyre sizes
+    * [VECTO-702] - Hashing tool: adapt warnings
+    * [VECTO-667] - Removing NCV Correction Factor
+    * [VECTO-679] - Engine n95h computation gives wrong (too high) engine speed (above measured FLD, n70h)
+    * [VECTO-693] - extend vehicle performance in manufacturer record
+
+- Bugfixes
+    * [VECTO-656] - Distance computation in vsum
+    * [VECTO-666] - CF_RegPer no effect in vehicle simulation -- added to the engine correction factors
+    * [VECTO-687] - Saving a Engine-Only Job is not possible
+    * [VECTO-695] - Bug in vectocmd.exe - process does not terminate
+    * [VECTO-699] - Output in manufacturer report and customer report (VECTO) uses different units than described in legislation
+    * [VECTO-700] - errorr in simulation with 0 stop time at the beginning of the cycle 
+
+
 **VECTO 3.2.1**
 
 ***Build 1133 (2018-02-07)***
