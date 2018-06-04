@@ -56,7 +56,7 @@
 <Target Name="AfterBuild" Condition="$(Configuration) == 'Deploy'">
 	<ItemGroup>  
 		<VectoCoreAssembly Include="$(OutputPath)VectoCore.dll" />  
-		<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Deploy\vectocmd.exe*"/>
+		<VectoCommandLine Include="$(SolutionDir)VectoConsole\bin\Release\vectocmd.exe*"/>
 		
 		<GenericVehicles Include="$(SolutionDir)Generic Vehicles\**\*.*" Exclude="$(SolutionDir)**\*.vmod;$(SolutionDir)**\*.vsum;$(SolutionDir)**\*RSLT_*.xml;$(SolutionDir)**\*.pdf"/>
 		<MissionProfiles Include="$(SolutionDir)VectoCore\VectoCore\Resources\Declaration\MissionCycles\**\*.*"/>
@@ -72,7 +72,7 @@
 		<UserManual Include="$(SolutionDir)Documentation\Cdv_Generator_VECTO3.2.xlsx"/>
 		<ReleaseNotes Include="$(SolutionDir)Documentation\User Manual Source\Release Notes Vecto3.x.pdf"/>
 		
-		<HashingTool Include="$(SolutionDir)HashingTool\bin\Deploy\HashingTool.exe"/>
+		<HashingTool Include="$(SolutionDir)HashingTool\bin\Release\HashingTool.exe"/>
 		<HashingTool Include="$(SolutionDir)VectoCommon\VectoHashing\bin\Release\VectoHashing.XML"/>
 		<HashingTool Include="$(SolutionDir)HashingCmd\bin\Release\hashingcmd.exe"/>
 	</ItemGroup>
