@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<tns:VectoInputDeclaration schemaVersion="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v1.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v1.0 https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoInput.xsd">
+<tns:VectoInputDeclaration schemaVersion="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" 
+	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v1.0" 
+	xmlns:di="http://www.w3.org/2000/09/xmldsig#"
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v1.0 https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoInput.xsd">
   <Vehicle id="VEH-Tabelle1_Class-5_Genericvehicle">
     <Manufacturer>Generic Vendor</Manufacturer>
     <ManufacturerAddress>N.A.</ManufacturerAddress>
@@ -11,7 +15,7 @@
     <AxleConfiguration>4x2</AxleConfiguration>
     <CurbMassChassis>7800</CurbMassChassis>
     <GrossVehicleMass>40000</GrossVehicleMass>
-    <IdlingSpeed>600</IdlingSpeed>
+    <IdlingSpeed>590</IdlingSpeed>
     <RetarderType>Transmission Output Retarder</RetarderType>
     <RetarderRatio>1.000</RetarderRatio>
     <AngledriveType>None</AngledriveType>
@@ -28,7 +32,7 @@
           <Date>2017-11-20T12:31:47.2109026Z</Date>
           <AppVersion>VectoCore</AppVersion>
           <Displacement>13000</Displacement>
-          <IdlingSpeed>600</IdlingSpeed>
+          <IdlingSpeed>590</IdlingSpeed>
           <RatedSpeed>1736</RatedSpeed>
           <RatedPower>325032</RatedPower>
           <MaxEngineTorque>2134</MaxEngineTorque>
@@ -40,6 +44,18 @@
           <CFNCV>1.0000</CFNCV>
           <FuelType>Diesel CI</FuelType>
           <FuelConsumptionMap>
+			<Entry engineSpeed="550.00" torque="-150.00" fuelConsumption="0.00" />
+            <Entry engineSpeed="550.00" torque="0.00" fuelConsumption="1488.18" />
+            <Entry engineSpeed="550.00" torque="216.90" fuelConsumption="3609.53" />
+            <Entry engineSpeed="550.00" torque="433.80" fuelConsumption="6055.65" />
+            <Entry engineSpeed="550.00" torque="650.70" fuelConsumption="8756.65" />
+            <Entry engineSpeed="550.00" torque="867.60" fuelConsumption="10922.44" />
+            <Entry engineSpeed="550.00" torque="1084.50" fuelConsumption="13315.08" />
+            <Entry engineSpeed="550.00" torque="1301.40" fuelConsumption="15886.96" />
+            <Entry engineSpeed="550.00" torque="1518.30" fuelConsumption="18459.52" />
+            <Entry engineSpeed="550.00" torque="1735.20" fuelConsumption="21032.07" />
+            <Entry engineSpeed="550.00" torque="1952.10" fuelConsumption="23604.64" />
+            <Entry engineSpeed="550.00" torque="2169.00" fuelConsumption="26177.20" />
             <Entry engineSpeed="600.00" torque="-150.00" fuelConsumption="0.00" />
             <Entry engineSpeed="600.00" torque="0.00" fuelConsumption="1488.18" />
             <Entry engineSpeed="600.00" torque="216.90" fuelConsumption="3609.53" />
@@ -176,12 +192,12 @@
         </Data>
         <Signature>
           <Reference URI="#ENG-GenericEngine" xmlns="http://www.w3.org/2000/09/xmldsig#">
-            <Transforms>
-              <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
-              <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
-            </Transforms>
-            <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-            <DigestValue></DigestValue>
+            <di:Transforms>
+        <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+        <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+      </di:Transforms>
+      <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+      <di:DigestValue>UxwXPq/SM3L4WIYOBWlMy1KbUowxU670gdh+B1MXDpo=</di:DigestValue>
           </Reference>
         </Signature>
       </Engine>
@@ -379,12 +395,12 @@
         </Data>
         <Signature>
           <Reference URI="#GBX-GB_12-gear" xmlns="http://www.w3.org/2000/09/xmldsig#">
-            <Transforms>
-              <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
-              <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
-            </Transforms>
-            <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-            <DigestValue></DigestValue>
+            <di:Transforms>
+        <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+        <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+      </di:Transforms>
+      <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+      <di:DigestValue>JN8KciKSKfvIE54oFkwnuOX1pcxsR//cklWLP8gtNvY=</di:DigestValue>
           </Reference>
         </Signature>
       </Gearbox>
@@ -432,12 +448,12 @@
         </Data>
         <Signature>
           <Reference URI="#RET-RET-generic" xmlns="http://www.w3.org/2000/09/xmldsig#">
-            <Transforms>
-              <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
-              <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
-            </Transforms>
-            <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-            <DigestValue></DigestValue>
+            <di:Transforms>
+        <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+        <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+      </di:Transforms>
+      <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+      <di:DigestValue>acR2Tz1XQ825YZRvDenOm9zarI6Dcw5QLgwPtDRVW1c=</di:DigestValue>
           </Reference>
         </Signature>
       </Retarder>
@@ -466,12 +482,12 @@
         </Data>
         <Signature>
           <Reference URI="#AXLGEAR-2640" xmlns="http://www.w3.org/2000/09/xmldsig#">
-            <Transforms>
-              <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
-              <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
-            </Transforms>
-            <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-            <DigestValue></DigestValue>
+            <di:Transforms>
+        <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+        <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+      </di:Transforms>
+      <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+      <di:DigestValue>cKOhQhbRAelCtdfBGL8VjF5HcvQkVrw9sr0OkWeEYb0=</di:DigestValue>
           </Reference>
         </Signature>
       </Axlegear>
@@ -494,14 +510,14 @@
                   <FzISO>33350</FzISO>
                 </Data>
                 <Signature>
-                  <Reference URI="#TYRE-315_70R225" xmlns="http://www.w3.org/2000/09/xmldsig#">
-                    <Transforms>
-                      <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
-                      <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
-                    </Transforms>
-                    <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                    <DigestValue></DigestValue>
-                  </Reference>
+				<di:Reference URI="#TYRE-315_70R225">
+                  <di:Transforms>
+        <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+        <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+      </di:Transforms>
+      <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+      <di:DigestValue>hr4Dcmy/uO+zoYr0KcPvcAOS93XYlCIKMyy1XeMO0AM=</di:DigestValue>
+                  </di:Reference>
                 </Signature>
               </Tyre>
             </Axle>
@@ -521,14 +537,14 @@
                   <FzISO>33350</FzISO>
                 </Data>
                 <Signature>
-                  <Reference URI="#TYRE-315_70R225" xmlns="http://www.w3.org/2000/09/xmldsig#">
-                    <Transforms>
-                      <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
-                      <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
-                    </Transforms>
-                    <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-                    <DigestValue></DigestValue>
-                  </Reference>
+				<di:Reference URI="#TYRE-315_70R225">
+                 <di:Transforms>
+        <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+        <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+      </di:Transforms>
+      <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+      <di:DigestValue>AsCRWiSEqb1HYnmM1SPXdz6KVzEZjXfvDkFppwyImY0=</di:DigestValue>
+                  </di:Reference>
                 </Signature>
               </Tyre>
             </Axle>
@@ -567,12 +583,12 @@
         </Data>
         <Signature>
           <Reference URI="#Airdrag-genericcabin" xmlns="http://www.w3.org/2000/09/xmldsig#">
-            <Transforms>
-              <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments" />
-              <Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
-            </Transforms>
-            <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
-            <DigestValue></DigestValue>
+            <di:Transforms>
+        <di:Transform Algorithm="urn:vecto:xml:2017:canonicalization" />
+        <di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+      </di:Transforms>
+      <di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+      <di:DigestValue>xbCnjthzGoDH8oiydVX5eQmUoaeZ4aXpKwHtvd3ZkNQ=</di:DigestValue>
           </Reference>
         </Signature>
       </AirDrag>

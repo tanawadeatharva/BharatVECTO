@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLManufacturerReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.4";
+		public const string CURRENT_SCHEMA_VERSION = "0.5";
 		
 		protected XElement VehiclePart;
 		
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected XNamespace tns;
 		protected XNamespace di;
-		private bool allSuccess = true;
+		private bool _allSuccess = true;
 
 		public XMLManufacturerReport()
 		{
@@ -79,8 +79,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
-				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, modelData.VehicleData.GrossVehicleWeight.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, modelData.VehicleData.CurbWeight.ToXMLFormat(0)),
+				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleWeight, XMLNames.Unit_t, 1)),
+				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbWeight, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Vehicle_PTO, modelData.PTO != null),
 				GetTorqueLimits(modelData.EngineData),
 				new XElement(tns + XMLNames.Vehicle_Components,
@@ -130,11 +130,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			return new XElement(tns + XMLNames.Component_Engine,
 				GetCommonDescription(engineData),
-				new XElement(tns + XMLNames.Engine_RatedPower, engineData.RatedPowerDeclared.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Engine_IdlingSpeed, engineData.IdleSpeed.AsRPM.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Engine_RatedSpeed, engineData.RatedSpeedDeclared.AsRPM.ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Engine_Displacement,
-					engineData.Displacement.ConvertToCubicCentiMeter().ToXMLFormat(0)),
+				new XElement(tns + XMLNames.Engine_RatedPower, XMLHelper.ValueAsUnit(engineData.RatedPowerDeclared, XMLNames.Unit_kW)),
+				new XElement(tns + XMLNames.Engine_IdlingSpeed, XMLHelper.ValueAsUnit(engineData.IdleSpeed, XMLNames.Unit_RPM)),
+				new XElement(tns + XMLNames.Engine_RatedSpeed, XMLHelper.ValueAsUnit(engineData.RatedSpeedDeclared, XMLNames.Unit_RPM)),
+				new XElement(tns + XMLNames.Engine_Displacement, XMLHelper.ValueAsUnit(engineData.Displacement, XMLNames.Unit_ltr, 1)),
 				new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelType.ToXMLFormat())
 				);
 		}
@@ -271,8 +270,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public void AddResult(
 			DeclarationReport<XMLDeclarationReport.ResultEntry>.ResultContainer<XMLDeclarationReport.ResultEntry> entry)
 		{
-			foreach (var resultEntry in entry.ModData) {
-				allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
+			foreach (var resultEntry in entry.ResultEntry) {
+				_allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
 				Results.Add(new XElement(tns + XMLNames.Report_Result_Result,
 					new XAttribute(XMLNames.Report_Result_Status_Attr,
 						resultEntry.Value.Status == VectoRun.Status.Success ? "success" : "error"),
@@ -303,29 +302,28 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private object[] GetSuccessResultEntry(XMLDeclarationReport.ResultEntry result)
 		{
 			return new object[] {
-				new XElement(tns + XMLNames.Report_ResultEntry_Distance, new XAttribute(XMLNames.Report_Results_Unit_Attr, "km"),
+				new XElement(tns + XMLNames.Report_ResultEntry_Distance, new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_km),
 					result.Distance.ConvertToKiloMeter().ToXMLFormat(3)),
 				new XElement(tns + XMLNames.Report_ResultEntry_SimulationParameters,
-					new XElement(tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "kg"), result.TotalVehicleWeight.ToXMLFormat(0)),
-					new XElement(tns + XMLNames.Report_ResultEntry_Payload, new XAttribute(XMLNames.Report_Results_Unit_Attr, "kg"),
-						result.Payload.ToXMLFormat(0)),
+					new XElement(tns + XMLNames.Report_ResultEntry_TotalVehicleMass, XMLHelper.ValueAsUnit(result.TotalVehicleWeight, XMLNames.Unit_kg)),
+					new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
 					new XElement(tns + XMLNames.Report_ResultEntry_FuelType, result.FuelType.ToXMLFormat())
 					),
 				new XElement(tns + XMLNames.Report_ResultEntry_VehiclePerformance,
-					new XElement(tns + XMLNames.Report_ResultEntry_AverageSpeed,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "km/h"), result.AverageSpeed.AsKmph.ToXMLFormat(1)),
-					new XElement(tns + XMLNames.Report_ResultEntry_MinSpeed, new XAttribute(XMLNames.Report_Results_Unit_Attr, "km/h"),
-						result.MinSpeed.AsKmph.ToXMLFormat(1)),
-					new XElement(tns + XMLNames.Report_ResultEntry_MaxSpeed, new XAttribute(XMLNames.Report_Results_Unit_Attr, "km/h"),
-						result.MaxSpeed.AsKmph.ToXMLFormat(1)),
-					new XElement(tns + XMLNames.Report_ResultEntry_MaxDeceleration,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "m/s²"), result.MaxDeceleration.ToXMLFormat(2)),
-					new XElement(tns + XMLNames.Report_ResultEntry_MaxAcceleration,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "m/s²"), result.MaxAcceleration.ToXMLFormat(2)),
+					new XElement(tns + XMLNames.Report_ResultEntry_AverageSpeed, XMLHelper.ValueAsUnit(result.AverageSpeed, XMLNames.Unit_kmph, 1)),
+					new XElement(tns + XMLNames.Report_ResultEntry_AvgDrivingSpeed, XMLHelper.ValueAsUnit(result.AverageDrivingSpeed, XMLNames.Unit_kmph, 1)),
+					new XElement(tns + XMLNames.Report_ResultEntry_MinSpeed, XMLHelper.ValueAsUnit(result.MinSpeed, XMLNames.Unit_kmph, 1)),
+					new XElement(tns + XMLNames.Report_ResultEntry_MaxSpeed, XMLHelper.ValueAsUnit(result.MaxSpeed, XMLNames.Unit_kmph, 1)),
+					new XElement(tns + XMLNames.Report_ResultEntry_MaxDeceleration, XMLHelper.ValueAsUnit(result.MaxDeceleration, XMLNames.Unit_mps2, 2)),
+					new XElement(tns + XMLNames.Report_ResultEntry_MaxAcceleration, XMLHelper.ValueAsUnit(result.MaxAcceleration, XMLNames.Unit_mps2, 2)),
 					new XElement(tns + XMLNames.Report_ResultEntry_FullLoadDrivingtimePercentage,
 						result.FullLoadPercentage.ToXMLFormat(2)),
-					new XElement(tns + XMLNames.Report_ResultEntry_GearshiftCount, result.GearshiftCount.ToXMLFormat(0))
+					new XElement(tns + XMLNames.Report_ResultEntry_GearshiftCount, result.GearshiftCount.ToXMLFormat(0)),
+					new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving, 
+						new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Min, XMLHelper.ValueAsUnit(result.EngineSpeedDrivingMin, XMLNames.Unit_RPM, 1)),
+						new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Avg, XMLHelper.ValueAsUnit(result.EngineSpeedDrivingAvg, XMLNames.Unit_RPM, 1)),
+						new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Max, XMLHelper.ValueAsUnit(result.EngineSpeedDrivingMax, XMLNames.Unit_RPM, 1))
+						)
 					),
 				//FC
 				XMLDeclarationReport.GetResults(result, tns, true).Cast<object>().ToArray()
@@ -345,7 +343,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 			var retVal = new XDocument();
 			var results = new XElement(Results);
-			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, allSuccess ? "success" : "error"));
+			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
 			retVal.Add(new XProcessingInstruction("xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));

@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public string Date { get; private set; }
 		public CertificationMethod CertificationMethod { get; private set; }
 		public string CertificationNumber { get; private set; }
-		public string DigestValue { get; private set; }
+		public DigestData DigestValue { get; private set; }
 
 		IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
 		{

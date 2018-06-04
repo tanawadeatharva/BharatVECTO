@@ -139,7 +139,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 					var rollResistance = tyre.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_RRCDeclared), Manager);
 					var tyreTestLoad = tyre.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_FzISO), Manager);
 					var certirficationNumber = tyre.SelectSingleNode(Helper.NSPrefix(XMLNames.Component_CertificationNumber), Manager);
-					var digestValue = tyre.SelectSingleNode(Helper.Query("..//*[local-name()='DigestValue']"), Manager);
 					retVal[axleNumber - 1] = new AxleInputData {
 						AxleType = axleType == null ? AxleType.VehicleNonDriven : axleType.Value.ParseEnum<AxleType>(),
 						TwinTyres = twinTyres != null && XmlConvert.ToBoolean(twinTyres.Value),
@@ -150,7 +149,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 							Dimension = dimension == null ? null : dimension.Value,
 							CertificationNumber = certirficationNumber == null ? null : certirficationNumber.Value,
 							CertificationMethod = CertificationMethod.Measured,
-							DigestValue = digestValue == null ? "" : digestValue.Value
+							DigestValue = new DigestData(tyre.SelectSingleNode(Helper.Query("..//*[local-name()='DigestValue']/.."), Manager))
 						}
 					};
 				}

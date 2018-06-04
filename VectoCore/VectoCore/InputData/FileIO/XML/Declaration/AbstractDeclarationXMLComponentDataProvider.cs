@@ -112,17 +112,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			get { return GetElementValue(XMLNames.Component_CertificationNumber); }
 		}
 
-		public virtual string DigestValue
+		public virtual DigestData DigestValue
 		{
-			get { return GetElementValue("..//*[local-name()='DigestValue']"); }
+			get { return new DigestData(Navigator.SelectSingleNode(XBasePath + "/..", Manager)); }
 		}
 
 
 		protected bool ElementExists(string relativePath)
 		{
 			var path = Helper.Query(XBasePath, relativePath.Any() ? relativePath : null);
-			//new StringBuilder(XBasePath + (relativePath.Any() ? "/" + relativePath : ""));
-
+			
 			var node = Navigator.SelectSingleNode(path, Manager);
 			return node != null;
 		}
@@ -136,6 +135,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				throw new VectoException("Node {0} not found in input data", path);
 			}
 			return node.InnerXml;
+		}
+
+		protected string[] GetElementValues(string querypath)
+		{
+			var path = Helper.Query(XBasePath, querypath.Any() ? querypath : null);
+
+			var nodes = Navigator.Select(path, Manager);
+			var retVal = new List<string>();
+			while (nodes.MoveNext()) {
+				retVal.Add(nodes.Current.InnerXml);
+			}
+
+			return retVal.ToArray();
 		}
 
 		protected double GetDoubleElementValue(string relativePath)

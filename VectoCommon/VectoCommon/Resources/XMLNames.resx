@@ -900,4 +900,43 @@
 	<data name="VectoCustomerReport" xml:space="preserve">
     <value>VectoCustomerInformation</value>
   </data>
+  <data name="Report_ResultEntry_AvgDrivingSpeed" xml:space="preserve">
+    <value>AverageDrivingSpeed</value>
+  </data>
+  <data name="Report_ResultEntry_EngineSpeedDriving" xml:space="preserve">
+    <value>EngineSpeedDriving</value>
+  </data>
+  <data name="Report_ResultEntry_EngineSpeedDriving_Min" xml:space="preserve">
+    <value>Min</value>
+  </data>
+  <data name="Report_ResultEntry_EngineSpeedDriving_Avg" xml:space="preserve">
+    <value>Average</value>
+  </data>
+  <data name="Report_ResultEntry_EngineSpeedDriving_Max" xml:space="preserve">
+    <value>Max</value>
+  </data>
+  <data name="Unit_RPM" xml:space="preserve">
+    <value>rpm</value>
+  </data>
+  <data name="Unit_km" xml:space="preserve">
+    <value>km</value>
+  </data>
+  <data name="Unit_kg" xml:space="preserve">
+    <value>kg</value>
+  </data>
+  <data name="Unit_kmph" xml:space="preserve">
+    <value>km/h</value>
+  </data>
+  <data name="Unit_mps2" xml:space="preserve">
+    <value>m/s²</value>
+  </data>
+  <data name="Unit_t" xml:space="preserve">
+    <value>t</value>
+  </data>
+  <data name="Unit_kW" xml:space="preserve">
+    <value>kW</value>
+  </data>
+  <data name="Unit_ltr" xml:space="preserve">
+    <value>ltr</value>
+  </data>
 </root>

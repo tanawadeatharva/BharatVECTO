@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+	<Folder FolderName="XML Files" ExtStr="xml;cml;math;rdf;smil;svg;wml">
+		<File FilePath="VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_engine-sample.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_gearbox-sample.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_certificationOptions.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL.xml" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_noAirdrag.xml" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="XSL Files" ExtStr="xsl;xslt">
+		<File FilePath="Documentation\XML\RenderTable.xslt" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="XQuery Files" ExtStr="xq;xql;xquery;xqu"/>
+	<Folder FolderName="HTML Files" ExtStr="html;htm;xhtml;asp"/>
+	<Folder FolderName="DTD/Schemas" ExtStr="dtd;dcd;xdr;biz;xsd">
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\ParameterDocumentation.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoComponent.1.0.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoDeclarationDefinitions.1.0.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoDefinitions.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoEngineeringDefinitions.0.7.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoEngineeringInput.0.7.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoInput.1.0.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoOutputCustomer.0.4.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoOutputManufacturer.0.4.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\VectoOutputManufacturer.0.5.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\VTPReport.0.1.xsd" HomeFolder="Yes"/>
+		<File FilePath="VectoCore\VectoCore\Resources\XSD\xmldsig-core-schema.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="Entities" ExtStr="ent"/>
+</Project>

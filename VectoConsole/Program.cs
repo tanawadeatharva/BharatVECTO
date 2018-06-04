@@ -226,7 +226,7 @@ Examples:
 						ModalResults1Hz = args.Contains("-1Hz"),
 						WriteModalResults = args.Contains("-mod"),
 						ActualModalData = args.Contains("-act"),
-						Validate = args.Contains("-nv"),
+						Validate = !args.Contains("-nv"),
 					};
 
 					_jobContainer.AddRuns(runsFactory);

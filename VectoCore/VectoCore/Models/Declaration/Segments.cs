@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
 			var missions = new List<Mission>();
-			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) != "-")) {
+			foreach (var missionType in missionTypes.Where(m => m.IsDeclarationMission() && row.Field<string>(m.ToString()) != "-")) {
 				var body = DeclarationData.StandardBodies.Lookup(row.Field<string>("body"));
 
 				var maxGVW = Constants.SimulationSettings.MaximumGrossVehicleWeight;

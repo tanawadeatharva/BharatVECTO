@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Xml;
@@ -54,6 +55,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public class ResultEntry
 		{
 			public MeterPerSecond AverageSpeed { get; private set; }
+
+			public MeterPerSecond AverageDrivingSpeed { get; private set; }
 
 			public Joule EnergyConsumptionTotal { get; private set; }
 
@@ -88,9 +91,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public Kilogram TotalVehicleWeight { get; private set; }
 
 			public CubicMeter CargoVolume { get; private set; }
+			public PerSecond EngineSpeedDrivingMin { get; private set; }
+			public PerSecond EngineSpeedDrivingAvg { get; private set; }
+			public PerSecond EngineSpeedDrivingMax { get; private set; }
 
 
-			public void SetResultData(VectoRunData runData, IModalDataContainer data)
+			public virtual void SetResultData(VectoRunData runData, IModalDataContainer data)
 			{
 				FuelType = data.FuelData.FuelType;
 				Payload = runData.VehicleData.Loading;
@@ -100,6 +106,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				Error = data.Error;
 				StackTrace = data.StackTrace;
 				AverageSpeed = data.Speed();
+				
 				MinSpeed = data.MinSpeed();
 				MaxSpeed = data.MaxSpeed();
 				MaxAcceleration = data.MaxAcceleration();
@@ -107,6 +114,18 @@ namespace TUGraz.VectoCore.OutputData.XML
 				FullLoadPercentage = data.EngineMaxLoadTimeShare();
 				GearshiftCount = data.GearshiftCount();
 
+				var entriesDriving = data.GetValues(
+					r => new {
+						dt = r.Field<Second>((int)ModalResultField.simulationInterval),
+						v = r.Field<MeterPerSecond>((int)ModalResultField.v_act),
+						nEng = r.Field<PerSecond>((int)ModalResultField.n_eng_avg)
+					}).Where(x => x.v.IsGreater(0)).ToArray();
+				var drivingTime = entriesDriving.Sum(x => x.dt);
+
+				AverageDrivingSpeed = entriesDriving.Sum(x => x.v * x.dt) / drivingTime;
+				EngineSpeedDrivingAvg = (entriesDriving.Sum(x => (x.nEng * x.dt).Value()) / drivingTime.Value()).SI<PerSecond>();
+				EngineSpeedDrivingMin = entriesDriving.Min(x => x.nEng);
+				EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
 				Distance = data.Distance();
 
 				FuelConsumptionTotal = data.TimeIntegral<Kilogram>(ModalResultField.FCFinal);

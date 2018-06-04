@@ -89,9 +89,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return GetElementValue(XMLNames.Component_Date); }
 		}
 
-		public override string DigestValue
+		public override DigestData DigestValue
 		{
-			get { return ""; }
+			get { return null; }
 		}
 
 		public override string CertificationNumber

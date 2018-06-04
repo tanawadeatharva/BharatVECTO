@@ -57,6 +57,8 @@ Public Class VectoVTPJobForm
 
         LvAux.Columns(AuxViewColumns.AuxInputOrTech).Text = "Technology"
 
+        pnManufacturerRecord.Visible = cfg.DeclMode
+
         GrCycles.Enabled = True
 
         _changed = False
@@ -162,11 +164,11 @@ Public Class VectoVTPJobForm
         VectoNew()
 
         'Read GEN
-        Dim vectoJob As IVTPJobInputData = Nothing
-        Dim inputData As IVTPInputDataProvider = Nothing
+        Dim vectoJob As IVTPEngineeringJobInputData = Nothing
+        Dim inputData As IVTPEngineeringInputDataProvider = Nothing
         Try
             inputData = TryCast(JSONInputDataFactory.ReadComponentData(file),
-                                IVTPInputDataProvider)
+                                IVTPEngineeringInputDataProvider)
             vectoJob = inputData.JobInputData()
         Catch ex As Exception
             MsgBox("Failed to read Job-File" + Environment.NewLine + ex.Message)
@@ -192,10 +194,14 @@ Public Class VectoVTPJobForm
 
         'Files -----------------------------
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.Source, _basePath)
+        tbManufacturerRecord.Text = If (cfg.DeclMode, GetRelativePath(inputData.JobInputData.ManufacturerReportInputData.Source, _basePath), "")
 
         Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.AuxiliaryInputData()
 
         PopulateAuxiliaryList(auxInput)
+
+        tbMileage.Text = if(Cfg.DeclMode, inputData.JobInputData.Mileage.ConvertToKiloMeter().Value.ToGUIFormat(), "")
+        tbNCV.Text = if (Cfg.DeclMode, inputData.JobInputData.NetCalorificValueTestFuel.ConvertToMegaJoulePerKilogram().Value.ToGUIFormat(), "")
 
         Dim coefficients As Double() = vectoJob.FanPowerCoefficents.ToArray()
         If (coefficients.Length >= 1) Then
@@ -268,12 +274,18 @@ Public Class VectoVTPJobForm
         'Files ------------------------------------------------- -----------------
 
         vectoJob.PathVeh = TbVEH.Text
+        vectoJob.ManufacturerRecord = If(cfg.DeclMode,  tbManufacturerRecord.Text, "")
+
 
         For Each lv0 As ListViewItem In LvCycles.Items
             Dim sb As SubPath = New SubPath
             sb.Init(GetPath(file), lv0.Text)
             vectoJob.CycleFiles.Add(sb)
         Next
+
+        vectoJob.Mileage = tbMileage.Text.ToDouble(0).SI(Unit.SI.Kilo.Meter).Cast(of Meter)
+
+        vectoJob.NetCalorificValueTestFuel = tbNCV.Text.ToDouble(0).SI(Unit.SI.Mega.Joule.Per.Kilo.Gramm).Cast(of JoulePerKilogramm)
 
         vectoJob.FanCoefficients = New Double() {
             tbC1.Text.ToDouble(0),
@@ -638,15 +650,6 @@ Public Class VectoVTPJobForm
             HDVclass = "-"
         Else
             HDVclass = s0.VehicleClass.GetClassNumber()
-
-            If Cfg.DeclMode Then
-                LvCycles.Items.Clear()
-                Dim m0 As Mission
-                For Each m0 In s0.Missions
-                    LvCycles.Items.Add(m0.MissionType.ToString())
-                Next
-            End If
-
         End If
 
         PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _
@@ -702,7 +705,13 @@ Public Class VectoVTPJobForm
     Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
     End Sub
 
+    Private Sub ButtonManR_Click(sender As Object, e As EventArgs) Handles ButtonManR.Click
+        If ManRXMLFileBrowser.OpenDialog(FileRepl(tbManufacturerRecord.Text, GetPath(VectoFile))) Then
+            tbManufacturerRecord.Text = GetFilenameWithoutDirectory(ManRXMLFileBrowser.Files(0), GetPath(VectoFile))
+        End If
+    End Sub
 
+ 
 End Class
 
 
