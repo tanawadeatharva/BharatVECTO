@@ -79,8 +79,12 @@ namespace HashingTool.ViewModel.UserControl
 			}
 			var components = XMLManufacturerReportReader.GetContainingComponents(_xmlFile.Document).GroupBy(s => s)
 				.Select(g => new { Entry = g.Key, Count = g.Count() });
-			var jobComponents = _jobData == null ? new ViewModel.ComponentEntry[] { } : _jobData.Components.ToArray();
+			var jobComponents = _jobData?.JobDataValid == null || !_jobData.JobDataValid.Value ? new ViewModel.ComponentEntry[] { } : _jobData.Components.ToArray();
 			_validationErrors.Clear();
+
+			if (_jobData != null && _jobData.JobDataValid != null && !_jobData.JobDataValid.Value) {
+				_validationErrors.Add("Verifying Manufacturer Report: Job data is not valid - no validation checks against job data.");
+			}
 
 			var hasComponentsFromJob = _jobData != null && _jobData.JobDataValid != null && _jobData.JobDataValid.Value &&
 										jobComponents.Any();
