@@ -84,5 +84,22 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var runs = factory.SimulationRuns().ToArray();
 			Assert.AreEqual(8, runs.Length);
 		}
+
+		[TestCase()]
+		public void TestEngineCorrectionFactor()
+		{
+			var inputDataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(SampleVehicleDecl), true);
+
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null) { Validate = false };
+
+			var runs = factory.SimulationRuns().ToArray();
+
+			var expected = new[] { 1.018867, 1.018867, 1.018867, 1.018867, 1.013299, 1.013299, 1.013299, 1.013299 };
+
+			for (var i = 0; i < 8; i++)
+				Assert.AreEqual(
+					expected[i], runs[i].GetContainer().RunData.EngineData.FuelConsumptionCorrectionFactor, 1e-6,
+					"correction factor for cycle {0} payload {1} mismatch ({2})", runs[i].CycleName , runs[i].RunSuffix, i);
+		}
 	}
 }
