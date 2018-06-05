@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							_dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, mission, loading.Value,
 								_segment.MunicipalBodyWeight),
 						AirdragData = _dao.CreateAirdragData(InputDataProvider.JobInputData.Vehicle.AirdragInputData, mission, _segment),
-						EngineData = _engineData,
+						EngineData = _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
 						GearboxData = _gearboxData,
 						AxleGearData = _axlegearData,
 						AngledriveData = _angledriveData,
