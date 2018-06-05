@@ -90,6 +90,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			FuelConsumptionCorrectionFactor = 1;
 		}
 
+		public CombustionEngineData Copy()
+		{
+			return new CombustionEngineData {
+				Manufacturer = Manufacturer,
+				ModelName = ModelName,
+				Displacement = Displacement,
+				IdleSpeed = IdleSpeed,
+				Inertia = Inertia,
+				WHTCUrban = WHTCUrban,
+				WHTCRural = WHTCRural,
+				WHTCMotorway = WHTCMotorway,
+				ConsumptionMap = ConsumptionMap,
+				FullLoadCurves = FullLoadCurves,
+				CorrectionFactorRegPer = CorrectionFactorRegPer,
+				ColdHotCorrectionFactor = ColdHotCorrectionFactor,
+				FuelConsumptionCorrectionFactor = FuelConsumptionCorrectionFactor,
+				RatedPowerDeclared = RatedPowerDeclared,
+				RatedSpeedDeclared = RatedSpeedDeclared,
+				MaxTorqueDeclared = MaxTorqueDeclared,
+				FuelType = FuelType
+			};
+		}
+
 		// ReSharper disable once UnusedMember.Global -- used in CustomValidation
 		public static ValidationResult ValidateData(CombustionEngineData data, ValidationContext context)
 		{
