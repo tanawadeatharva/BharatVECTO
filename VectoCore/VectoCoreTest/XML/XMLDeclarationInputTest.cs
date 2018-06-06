@@ -894,7 +894,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				DeclarationData.HeatingVentilationAirConditioning);
 		}
 
-		private string[] GetEnumOptions(string xmlType, string schemaVersion)
+		public static string[] GetEnumOptions(string xmlType, string schemaVersion)
 		{
 			Stream resource;
 			var schemaFile = string.Format("VectoDeclarationDefinitions{0}.xsd", "." + schemaVersion);
