@@ -47,7 +47,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	internal class VTPCycle : PWheelCycle
 	{
-		private uint StartGear;
+		protected uint StartGear;
+
+		protected Second SimulationIntervalEndTime;
 
 		public VTPCycle(VehicleContainer container, IDrivingCycleData cycle) : base(container, cycle) { }
 
@@ -311,6 +313,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaT = CycleIterator.RightSample.Time - absTime
 				};
 			}
+
+			SimulationIntervalEndTime = absTime + dt;
+			if (CycleIterator.LeftSample.Time > absTime) {
+				Log.Warn("absTime: {0} cycle: {1}", absTime, CycleIterator.LeftSample.Time);
+			}
 			var tmp = NextComponent.Initialize(CycleIterator.LeftSample.Torque, CycleIterator.LeftSample.WheelAngularVelocity);
 
 			return DoHandleRequest(absTime, dt, CycleIterator.LeftSample.WheelAngularVelocity);
@@ -323,6 +330,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return CycleIterator.Previous().LeftSample.VehicleTargetSpeed
 					.IsEqual(0.KMPHtoMeterPerSecond(), 0.3.KMPHtoMeterPerSecond());
 			}
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			if (SimulationIntervalEndTime.IsGreaterOrEqual(CycleIterator.RightSample.Time)) {
+				CycleIterator.MoveNext();
+			}
+			AdvanceState();
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
