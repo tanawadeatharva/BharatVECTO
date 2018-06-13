@@ -739,6 +739,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 						FanSpeed = row.ParseDouble(Fields.FanSpeed).RPMtoRad(),
 						Gear = (uint)row.ParseDoubleOrGetDefault(Fields.Gear),
 						Fuelconsumption = row.ParseDoubleOrGetDefault(Fields.FuelConsumption).SI(Unit.SI.Gramm.Per.Hour).Cast<KilogramPerSecond>(),
+						TorqueConverterActive = row.ParseBooleanOrGetDefault(Fields.TorqueConverterActive),
 						TorqueWheelLeft = tqLeft,
 						TorqueWheelRight = tqRight,
 						WheelSpeedLeft = speedLeft,
@@ -772,6 +773,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.WheelTorqueLeft,
 					Fields.WheelTorqueRight,
 					Fields.Gear,
+					Fields.TorqueConverterActive,
 					Fields.FuelConsumption
 				};
 

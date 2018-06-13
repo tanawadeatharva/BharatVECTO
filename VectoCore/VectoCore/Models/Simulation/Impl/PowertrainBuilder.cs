@@ -71,8 +71,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return BuildEngineOnly(data);
 				case CycleType.PWheel:
 					return BuildPWheel(data);
-                case CycleType.VTP:
-                    return BuildVTP(data);
+				case CycleType.VTP:
+					return BuildVTP(data);
 				case CycleType.MeasuredSpeed:
 					return BuildMeasuredSpeed(data);
 				case CycleType.MeasuredSpeedGear:
@@ -127,41 +127,41 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-        private VehicleContainer BuildVTP(VectoRunData data)
-        {
-            if (data.Cycle.CycleType != CycleType.VTP) {
-                throw new VectoException("CycleType must be VTP.");
-            }
+		private VehicleContainer BuildVTP(VectoRunData data)
+		{
+			if (data.Cycle.CycleType != CycleType.VTP) {
+				throw new VectoException("CycleType must be VTP.");
+			}
 
-            var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
-            var gearbox = new VTPGearbox(container, data);
+			var container = new VehicleContainer(data.ExecutionMode, _modData, _sumWriter) { RunData = data };
+			var gearbox = new VTPGearbox(container, data);
 
-            // VTPCycle --> AxleGear --> Clutch --> Engine <-- Aux
-            var powertrain = new VTPCycle(container, data.Cycle)
-                .AddComponent(new AxleGear(container, data.AxleGearData))
-                .AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
-                .AddComponent(gearbox, data.Retarder, container)
-                .AddComponent(new Clutch(container, data.EngineData));
-            var engine = new VTPCombustionEngine(container, data.EngineData, pt1Disabled: true);
+			// VTPCycle --> AxleGear --> Clutch --> Engine <-- Aux
+			var powertrain = new VTPCycle(container, data.Cycle)
+				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(gearbox, data.Retarder, container)
+				.AddComponent(new Clutch(container, data.EngineData));
+			var engine = new VTPCombustionEngine(container, data.EngineData, pt1Disabled: true);
 
-            var aux = CreateSpeedDependentAuxiliaries(data, container);
+			var aux = CreateSpeedDependentAuxiliaries(data, container);
 			var engineFan = new EngineFanAuxiliary(data.FanData.FanCoefficients, data.FanData.FanDiameter);
-            aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed));
-            container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
+			aux.AddCycle(Constants.Auxiliaries.IDs.Fan, cycleEntry => engineFan.PowerDemand(cycleEntry.FanSpeed));
+			container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.Fan);
 
-            engine.Connect(aux.Port());
+			engine.Connect(aux.Port());
 
-            var idleController = new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container);
-            //if (data.PTO != null && data.PTO.PTOCycle != null) {
-            //    var ptoController = new PTOCycleController(container, data.PTO.PTOCycle);
-            //    idleController = new IdleControllerSwitcher(engine.IdleController, ptoController);
-            //}
+			var idleController = new CombustionEngine.CombustionEngineNoDubleclutchIdleController(engine, container);
+			//if (data.PTO != null && data.PTO.PTOCycle != null) {
+			//    var ptoController = new PTOCycleController(container, data.PTO.PTOCycle);
+			//    idleController = new IdleControllerSwitcher(engine.IdleController, ptoController);
+			//}
 
-            powertrain.AddComponent(engine, idleController);
-                //.AddAuxiliaries(container, data);
+			powertrain.AddComponent(engine, idleController);
+				//.AddAuxiliaries(container, data);
 
-            return container;
-        }
+			return container;
+		}
 
 
 

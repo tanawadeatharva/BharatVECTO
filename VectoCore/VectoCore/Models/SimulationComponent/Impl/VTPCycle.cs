@@ -149,8 +149,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void VerifyWheelTorque(DrivingCycleData.DrivingCycleEntry entry)
 		{
-			var torqueRatio = VectoMath.Max(
-					entry.TorqueWheelLeft / entry.TorqueWheelRight, entry.TorqueWheelRight / entry.TorqueWheelLeft);
+			var torqueRatio = entry.TorqueWheelRight.IsEqual(0, 1e-9) && entry.TorqueWheelLeft.IsEqual(0, 1e-9) ? 0 :
+				Math.Max(entry.TorqueWheelLeft / entry.TorqueWheelRight, entry.TorqueWheelRight / entry.TorqueWheelLeft);
 			var torqueDiff = VectoMath.Abs(entry.TorqueWheelLeft - entry.TorqueWheelRight);
 			if (torqueRatio > DeclarationData.VTPMode.WheelTorqueDifferenceFactor && 
 				torqueDiff > DeclarationData.VTPMode.MaxWheelTorqueDifference) {
@@ -256,6 +256,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gearRatios = RunData.GearboxData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio);
 
 			var stopped = false;
+			var hasATGbx = RunData.GearboxData.TorqueConverterData != null && RunData.GearboxData.Type.AutomaticTransmission();
 
 			foreach (var entry in Data.Entries) {
 				stopped = stopped || entry.VehicleTargetSpeed.IsEqual(0.KMPHtoMeterPerSecond(),
@@ -271,6 +272,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					entry.Gear = 0;
 					continue;
 				}
+
+				if (hasATGbx && entry.TorqueConverterActive != null && entry.TorqueConverterActive.Value) {
+					continue;
+				}
+
 				var ratio = (entry.EngineSpeed / cardanSpeed).Value();
 				var gear = gearRatios.Aggregate((x, y) =>
 					Math.Abs(ratio/x.Value   - 1) < Math.Abs(ratio/y.Value - 1) ? x : y).Key;
