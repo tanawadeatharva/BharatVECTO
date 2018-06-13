@@ -68,26 +68,26 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// <remarks>VECTO-177</remarks>
 		[TestCase]
 		public void Pwheel_ReadCycle_Test()
-        {
-            var runData = new VectoRunData() {
-                GearboxData = new GearboxData {
-                    Gears = new Dictionary<uint, GearData> {
-                        { 1, new GearData { Ratio = 2.0 } },
-                        { 2, new GearData { Ratio = 3.5 } }
-                    }
-                },
-                VehicleData = new VehicleData {
-                    //DynamicTyreRadius = 
-                },
-                AxleGearData = new AxleGearData {
-                    AxleGear = new TransmissionData {
-                        Ratio = 2.3
-                    }
-                }
-            };
+		{
+			var runData = new VectoRunData() {
+				GearboxData = new GearboxData {
+					Gears = new Dictionary<uint, GearData> {
+						{ 1, new GearData { Ratio = 2.0 } },
+						{ 2, new GearData { Ratio = 3.5 } }
+					}
+				},
+				VehicleData = new VehicleData {
+					//DynamicTyreRadius = 
+				},
+				AxleGearData = new AxleGearData {
+					AxleGear = new TransmissionData {
+						Ratio = 2.3
+					}
+				}
+			};
 
-            var container = new VehicleContainer(ExecutionMode.Engineering);
-            container.RunData = runData;
+			var container = new VehicleContainer(ExecutionMode.Engineering);
+			container.RunData = runData;
 			var inputData = @"<t>,<Pwheel>,<gear>,<n>,<Padd>
 							   1,89,2,1748,1.300
 							   2,120,2,1400,0.4";
@@ -99,18 +99,18 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 
 			var cycle = new PWheelCycle(container, drivingCycle);
-            cycle.Connect(new MockTnOutPort());
+			cycle.Connect(new MockTnOutPort());
 
-            cycle.Initialize();
-            
+			cycle.Initialize();
+			
 			Assert.AreEqual(container.CycleData.LeftSample.Time, 1.SI<Second>());
 			Assert.AreEqual(container.CycleData.RightSample.Time, 2.SI<Second>());
 
 			Assert.AreEqual(1748.RPMtoRad() / (2.3 * 3.5), container.CycleData.LeftSample.WheelAngularVelocity);
 			Assert.AreEqual(1400.RPMtoRad() / (2.3 * 3.5), container.CycleData.RightSample.WheelAngularVelocity);
 
-		    Assert.AreEqual(89.SI(Unit.SI.Kilo.Watt), container.CycleData.LeftSample.PWheel);
-		    Assert.AreEqual(120.SI(Unit.SI.Kilo.Watt), container.CycleData.RightSample.PWheel);
+			Assert.AreEqual(89.SI(Unit.SI.Kilo.Watt), container.CycleData.LeftSample.PWheel);
+			Assert.AreEqual(120.SI(Unit.SI.Kilo.Watt), container.CycleData.RightSample.PWheel);
 
 			Assert.AreEqual(2u, container.CycleData.LeftSample.Gear);
 			Assert.AreEqual(2u, container.CycleData.RightSample.Gear);
@@ -118,8 +118,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(1300.SI<Watt>(), container.CycleData.LeftSample.AdditionalAuxPowerDemand);
 			Assert.AreEqual(400.SI<Watt>(), container.CycleData.RightSample.AdditionalAuxPowerDemand);
 
-		    Assert.AreEqual(89.SI(Unit.SI.Kilo.Watt) / (1748.RPMtoRad() / (2.3 * 3.5)), container.CycleData.LeftSample.Torque);
-		    Assert.AreEqual(120.SI(Unit.SI.Kilo.Watt) / (1400.RPMtoRad() / (2.3 * 3.5)), container.CycleData.RightSample.Torque);
+			Assert.AreEqual(89.SI(Unit.SI.Kilo.Watt) / (1748.RPMtoRad() / (2.3 * 3.5)), container.CycleData.LeftSample.Torque);
+			Assert.AreEqual(120.SI(Unit.SI.Kilo.Watt) / (1400.RPMtoRad() / (2.3 * 3.5)), container.CycleData.RightSample.Torque);
 		}
 
 		/// <summary>

@@ -105,6 +105,14 @@ namespace TUGraz.VectoCore.Utils
 			return row.Field<string>(row.Table.Columns[columnName]).ToBoolean();
 		}
 
+		public static bool? ParseBooleanOrGetDefault(this DataRow row, string columnName, bool? defaultValue = null)
+		{
+			if (!row.Table.Columns.Contains(columnName)) {
+				return defaultValue;
+			}
+			return row.Field<string>(row.Table.Columns[columnName]).ToBoolean();
+		}
+
 		public static IEnumerable<T> Values<T>(this DataColumn column)
 		{
 			return column.Table.AsEnumerable().Select(r => r.Field<T>(column));
