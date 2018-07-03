@@ -385,8 +385,8 @@
 			<xs:element name="ApplicationInformation">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="SimulationToolVersion"/>
-						<xs:element name="Date"/>
+						<xs:element name="SimulationToolVersion" type="xs:string"/>
+						<xs:element name="Date" type="vdecdef:DateTimeWithTimezone"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -495,7 +495,7 @@
 	</xs:complexType>
 	<xs:complexType name="VehicleType">
 		<xs:sequence>
-			<xs:element name="VIN">
+			<xs:element name="VIN" type="vdecdef:VINType">
 				<xs:annotation>
 					<xs:documentation>P238</xs:documentation>
 				</xs:annotation>
