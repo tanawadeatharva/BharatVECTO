@@ -23,10 +23,10 @@
 	</xs:element>
 	<xs:complexType name="AirdragType">
 		<xs:sequence>
-			<xs:element name="Model" minOccurs="0"/>
+			<xs:element name="Model" type="vdecdef:ModelType" minOccurs="0"/>
 			<xs:element name="CertificationMethod" type="AirdragCertificationOptionType"/>
-			<xs:element name="CertificationNumber" minOccurs="0"/>
-			<xs:element name="DigestValue" minOccurs="0"/>
+			<xs:element name="CertificationNumber" type="vdecdef:CertificationNumberType" minOccurs="0"/>
+			<xs:element name="DigestValue" type="xs:token" minOccurs="0"/>
 			<xs:element name="CdxA" type="vdecdef:AirdragCdxAType">
 				<xs:annotation>
 					<xs:documentation>P245</xs:documentation>
