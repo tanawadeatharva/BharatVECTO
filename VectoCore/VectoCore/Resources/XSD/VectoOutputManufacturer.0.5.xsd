@@ -361,7 +361,7 @@
 	</xs:complexType>
 	<xs:complexType name="TorqueLimitsType">
 		<xs:sequence>
-			<xs:element name="Entry" type="TorqueLimitsEntryType"/>
+			<xs:element name="Entry" type="TorqueLimitsEntryType" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="VectoOutputDataType">
