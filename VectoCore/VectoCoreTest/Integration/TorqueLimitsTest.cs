@@ -34,6 +34,7 @@ using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -62,6 +63,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		const string EngineSpeedLimitJobDecl =
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Class2_RigidTruck_DECL.vecto";
+
+		private const string DeclarationVehicle9GearsFord =
+			@"TestData\Integration\DeclarationMode\EngineSpeedTooHigh\vecto_vehicle-sample_9gears.xml";
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
@@ -238,6 +242,28 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.AddRuns(factory);
 
 			//jobContainer.Runs[1].RunWorkerAsync().Wait();
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
+		[TestCase(DeclarationVehicle9GearsFord)]
+		public void EngineSpeedTooHigh9SpeedGearbox(string jobFile)
+		{
+			var inputData = new XMLDeclarationInputDataProvider(jobFile, true);
+			var fileWriter = new FileOutputWriter(jobFile);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+				WriteModalResults = true,
+				Validate = false
+			};
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+			jobContainer.AddRuns(factory);
+
+			//var runs = jobContainer.Runs;
+			//runs[2].Run.Run();
 
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
