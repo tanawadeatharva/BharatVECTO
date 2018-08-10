@@ -64,6 +64,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 		const string EngineSpeedLimitJobDecl =
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2_engineSpeedlimit\Class2_RigidTruck_DECL.vecto";
 
+		const string EngineSpeedLimitJobATDecl =
+			@"TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\TruckAT.vecto";
+
 		private const string DeclarationVehicle9GearsFord =
 			@"TestData\Integration\DeclarationMode\EngineSpeedTooHigh\vecto_vehicle-sample_9gears.xml";
 
@@ -249,6 +252,28 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 
+		[TestCase(EngineSpeedLimitJobATDecl)]
+		public void EngineSpeedSpeedLimitAT(string jobFile)
+		{
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var fileWriter = new FileOutputWriter(jobFile);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
+				WriteModalResults = true,
+				Validate = false
+			};
+			var sumData = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumData);
+			jobContainer.AddRuns(factory);
+
+			//var runs = jobContainer.Runs;
+			//runs[2].Run.Run();
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+		}
+
 		[TestCase(DeclarationVehicle9GearsFord)]
 		public void EngineSpeedTooHigh9SpeedGearbox(string jobFile)
 		{
@@ -270,5 +295,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 		}
+
+		
 	}
 }
