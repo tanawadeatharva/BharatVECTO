@@ -658,7 +658,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DataBus.BrakePower = 0.SI<Watt>();
 					response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 						gradient, targetDistance: targetDistance);
-				});
+						response.Switch().Case<ResponseOverload>(
+							() => {
+								Log.Info("Brake -> Geearshift -> Overload -> trying roll action (no gear engaged)");
+								response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
+							});
+					});
 			return response;
 		}
 
