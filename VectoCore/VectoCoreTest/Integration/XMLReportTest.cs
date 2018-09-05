@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var manufacturerReport = xmlReport.FullReport;
 
-			Assert.AreEqual(5, manufacturerReport.XPathSelectElement("//*[local-name()='VehicleGroup']").Value.ToInt());
+			Assert.AreEqual(5, manufacturerReport.XPathSelectElement("//*[local-name()='VehicleGroup']")?.Value.ToInt());
 
 			var reportWheels = manufacturerReport.XPathSelectElements("//*[local-name()='TyreCertificationNumber']").ToList();
 			var i = 0;
