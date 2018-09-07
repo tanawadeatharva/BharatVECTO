@@ -1,0 +1,27 @@
+﻿{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2018-08-03T10:29:59.6929954Z",
+    "AppVersion": "3",
+    "FileVersion": 4
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "ModelName": "SomeEngine",
+    "Displacement": "7698",
+    "IdlingSpeed": 550.0,
+    "Inertia": 3.78846,
+    "WHTC-Urban": 1.0,
+    "WHTC-Rural": 1.0,
+    "WHTC-Motorway": 1.0,
+    "WHTC-Engineering": 0.0,
+    "ColdHotBalancingFactor": 0.0,
+    "CFRegPer": 0.5,
+    "RatedPower": 210000.0,
+    "RatedSpeed": 2100.0,
+    "MaxTorque": 1100.0,
+    "FuelType": "DieselCI",
+    "FullLoadCurve": "Engine.vfld",
+    "FuelMap": "325kW.vmap"
+  }
+}
