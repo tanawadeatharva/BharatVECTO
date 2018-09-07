@@ -1,0 +1,61 @@
+﻿{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2018-08-09T12:53:35.3617877Z",
+    "AppVersion": "3",
+    "FileVersion": 4
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "EngineOnlyMode": false,
+    "VehicleFile": "Vehicle.vveh",
+    "EngineFile": "Engine.veng",
+    "GearboxFile": "Gearbox.vgbx",
+    "AuxiliaryAssembly": "Classic",
+    "AuxiliaryVersion": "CLASSIC",
+    "AdvancedAuxiliaryFilePath": "",
+    "Aux": [
+      {
+        "ID": "FAN",
+        "Type": "Fan",
+        "Technology": [
+          "Crankshaft mounted - Electronically controlled visco clutch"
+        ]
+      },
+      {
+        "ID": "STP",
+        "Type": "Steering pump",
+        "Technology": [
+          "Fixed displacement"
+        ]
+      },
+      {
+        "ID": "AC",
+        "Type": "HVAC",
+        "Technology": [
+          "None"
+        ]
+      },
+      {
+        "ID": "ES",
+        "Type": "Electric System",
+        "Technology": [
+          "Standard technology"
+        ]
+      },
+      {
+        "ID": "PS",
+        "Type": "Pneumatic System",
+        "Technology": [
+          "Large Supply + ESS"
+        ]
+      }
+    ],
+    "OverSpeedEcoRoll": {
+      "Mode": "Overspeed",
+      "MinSpeed": 50.0,
+      "OverSpeed": 2.5,
+      "UnderSpeed": 5.0
+    }
+  }
+}

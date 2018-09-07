@@ -54,6 +54,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	[TestFixture]
 	public class ShiftPolygonTest
 	{
+		
+		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);

@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Radian gradient,
 			IResponse previousResponse = null)
 		{
-			DrivingAction = DrivingAction.Accelerate;
+		DrivingAction = DrivingAction.Accelerate;
 			IterationStatistics.Increment(this, "Accelerate");
 			Log.Debug("DrivingAction Accelerate");
 			var operatingPoint = ComputeAcceleration(ds, targetVelocity);
@@ -267,6 +267,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						retVal.Switch().
 							Case<ResponseSuccess>(() => operatingPoint = nextOperatingPoint).
 							Case<ResponseGearShift>(() => operatingPoint = nextOperatingPoint).
+							Case<ResponseOverload>(
+									r => {
+										nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration,
+																				r);
+										DriverAcceleration = nextOperatingPoint.Acceleration;
+										retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
+																		nextOperatingPoint.Acceleration, gradient);
+									}).
 							Default(
 								r => {
 									throw new UnexpectedResponseException("DrivingAction Accelerate after Overload", r);
