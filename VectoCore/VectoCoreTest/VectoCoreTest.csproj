@@ -1483,6 +1483,36 @@
     <None Include="TestData\Integration\EngineeringMode\CityBus_AT\UrbanDelivery.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\Gearbox.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\325kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\Axle_4x2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\Engine.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\Engine.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\Vehicle.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\TruckAT.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\Engine_175kW_6.8l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\EngineeringMode\TruckAT_GbxSpeedLimit\TorqueConverter.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\EngineeringMode\Class2_RigidTruck_4x2\175kW.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -2677,6 +2707,9 @@
     <Folder Include="Integration\FullPowertrain\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestData\Integration\DeclarationMode\EngineSpeedTooHigh\vecto_vehicle-sample_9gears.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle\CityBus_AT_Ser.RSLT_MANUFACTURER.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2700,6 +2733,9 @@
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\vecto_engine-sample.xml" />
     <Content Include="TestData\XML\XMLReaderDeclaration\vecto_gearbox-sample.xml" />
+    <Content Include="TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_AT.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_noAirdrag.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

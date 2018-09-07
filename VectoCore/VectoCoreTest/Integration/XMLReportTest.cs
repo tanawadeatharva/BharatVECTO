@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var manufacturerReport = xmlReport.FullReport;
 
-			Assert.AreEqual(5, manufacturerReport.XPathSelectElement("//*[local-name()='VehicleGroup']").Value.ToInt());
+			Assert.AreEqual(5, manufacturerReport.XPathSelectElement("//*[local-name()='VehicleGroup']")?.Value.ToInt());
 
 			Assert.IsFalse(XmlConvert.ToBoolean(manufacturerReport.XPathSelectElement("//*[local-name()='PTO']").Value));
 

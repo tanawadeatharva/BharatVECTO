@@ -46,14 +46,17 @@ namespace TUGraz.VectoCore.Tests.XML
 	public class XMLReportTest
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
-		
+
+		const string SampleVehicleDeclAT = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_AT.xml";
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase(SampleVehicleDecl)]
+		[TestCase(SampleVehicleDecl),
+		TestCase(SampleVehicleDeclAT)]
 		public void RunDeclarationJob(string filename)
 		{
 			var fileWriter = new FileOutputWriter(filename);

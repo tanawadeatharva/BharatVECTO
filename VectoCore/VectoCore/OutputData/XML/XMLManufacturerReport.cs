@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLManufacturerReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.5";
+		public const string CURRENT_SCHEMA_VERSION = "0.6";
 		
 		protected XElement VehiclePart;
 		
