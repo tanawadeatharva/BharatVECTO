@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -54,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected bool? TorqueConverterActive;
 
-		protected internal readonly CycleTorqueConverter TorqueConverter;
+		protected internal readonly TorqueConverterWrapper TorqueConverter;
 
 		public CycleGearbox(IVehicleContainer container, VectoRunData runData)
 			: base(container, runData)
@@ -64,7 +65,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var strategy = new CycleShiftStrategy(ModelData, null);
-			TorqueConverter = new CycleTorqueConverter(container, ModelData.TorqueConverterData);
+
+			
+			TorqueConverter = new TorqueConverterWrapper(runData.Cycle.Entries.All(x => x.EngineSpeed != null),
+				new CycleTorqueConverter(container, ModelData.TorqueConverterData),
+				new TorqueConverter(this, strategy, container, ModelData.TorqueConverterData, runData));
 			if (TorqueConverter == null) {
 				throw new VectoException("Torque Converter required for AT transmission!");
 			}
@@ -535,70 +540,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				get { throw new System.NotImplementedException(); }
 			}
 		}
-	}
-
-	public class CycleTorqueConverter : StatefulVectoSimulationComponent<TorqueConverter.TorqueConverterComponentState>
-	{
-		protected internal ITnOutPort NextComponent;
-		private TorqueConverterData ModelData;
-
-		public CycleTorqueConverter(IVehicleContainer container, TorqueConverterData modelData) : base(container)
-		{
-			ModelData = modelData;
-		}
-
-		public IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity, PerSecond inAngularVelocity)
-		{
-			
-			var operatingPoint = ModelData.LookupOperatingPoint(outAngularVelocity, inAngularVelocity, outTorque);
-
-			PreviousState.OperatingPoint = operatingPoint;
-			return NextComponent.Initialize(operatingPoint.InTorque, inAngularVelocity);
-		}
-
-		public IResponse Request(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, PerSecond inAngularVelocity,
-			bool dryRun = false)
-		{
-			var operatingPoint = ModelData.LookupOperatingPoint(outAngularVelocity, inAngularVelocity, outTorque);
-			if (!dryRun) {
-				CurrentState.OperatingPoint = operatingPoint;
-			}
-			return NextComponent.Request(absTime, dt, operatingPoint.InTorque, inAngularVelocity, dryRun);
-		}
-
-		public void Locked(
-			NewtonMeter inTorque, PerSecond inAngularVelocity, NewtonMeter outTorque,
-			PerSecond outAngularVelocity) { }
-
-		#region Overrides of VectoSimulationComponent
-
-		protected override void DoWriteModalResults(IModalDataContainer container)
-		{
-			if (CurrentState.OperatingPoint == null) {
-				container[ModalResultField.TorqueConverterTorqueRatio] = 1.0;
-				container[ModalResultField.TorqueConverterSpeedRatio] = 1.0;
-			} else {
-				container[ModalResultField.TorqueConverterTorqueRatio] = CurrentState.OperatingPoint.TorqueRatio;
-				container[ModalResultField.TorqueConverterSpeedRatio] = CurrentState.OperatingPoint.SpeedRatio;
-			}
-			container[ModalResultField.TC_TorqueIn] = CurrentState.InTorque;
-			container[ModalResultField.TC_TorqueOut] = CurrentState.OutTorque;
-			container[ModalResultField.TC_angularSpeedIn] = CurrentState.InAngularVelocity;
-			container[ModalResultField.TC_angularSpeedOut] = CurrentState.OutAngularVelocity;
-
-			var avgOutVelocity = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
-			var avgInVelocity = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
-			container[ModalResultField.P_TC_out] = CurrentState.OutTorque * avgOutVelocity;
-			container[ModalResultField.P_TC_loss] = CurrentState.InTorque * avgInVelocity -
-													CurrentState.OutTorque * avgOutVelocity;
-		}
-
-		protected override void DoCommitSimulationStep()
-		{
-			AdvanceState();
-		}
-
-		#endregion
 	}
 }

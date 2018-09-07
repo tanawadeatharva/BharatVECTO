@@ -182,8 +182,10 @@
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BaseShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\CycleTorqueConverter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineFanAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\TorqueConverterWrapper.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MeasuredSpeedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PTOCycleController.cs" />
