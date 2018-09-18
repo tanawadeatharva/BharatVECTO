@@ -179,6 +179,7 @@
     <Compile Include="Models\SimulationComponent\ILossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AbstractGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategyV2.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BaseShiftStrategy.cs" />
@@ -186,6 +187,8 @@
     <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineFanAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverterWrapper.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\VelocityRollingLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\VelocitySpeedGearshiftPreprocessor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MeasuredSpeedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PTOCycleController.cs" />
@@ -196,6 +199,7 @@
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
+    <Compile Include="Models\Simulation\ISimulationPreprocessor.cs" />
     <Compile Include="OutputData\XML\XMLVTPReport.cs" />
     <Compile Include="OutputData\VTPReport.cs" />
     <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
@@ -207,6 +211,7 @@
     <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
     <Compile Include="OutputData\XML\XMLEngineeringWriter.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReport.cs" />
+    <Compile Include="Utils\Interpolate2D.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
