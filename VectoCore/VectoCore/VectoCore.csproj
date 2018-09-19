@@ -176,6 +176,7 @@
     <Compile Include="Models\SimulationComponent\Data\AngledriveData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMapReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\PredictionDurationLookup.cs" />
     <Compile Include="Models\SimulationComponent\ILossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AbstractGearbox.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
+    <Compile Include="Models\Simulation\Data\ShiftStrategyParameters.cs" />
     <Compile Include="Models\Simulation\ISimulationPreprocessor.cs" />
     <Compile Include="OutputData\XML\XMLVTPReport.cs" />
     <Compile Include="OutputData\VTPReport.cs" />

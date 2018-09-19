@@ -202,3 +202,5 @@ Coverage/
 Documentation/VehiclesReleaseComparisonDeclarationMode/*.vmod
 Documentation/VehiclesReleaseComparisonDeclarationMode/*.vsum
 
+HashingTool/TestData/
+EPTP/

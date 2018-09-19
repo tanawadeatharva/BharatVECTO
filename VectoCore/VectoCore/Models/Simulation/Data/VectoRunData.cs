@@ -110,6 +110,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public VTPData VTPData { get; set; }
 
+		public ShiftStrategyParameters GearshiftParameters { get; set; }
+
 		public class AuxData
 		{
 			// ReSharper disable once InconsistentNaming

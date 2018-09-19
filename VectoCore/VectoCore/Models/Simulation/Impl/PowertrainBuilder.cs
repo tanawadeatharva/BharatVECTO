@@ -353,7 +353,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IShiftStrategy strategy;
 			switch (runData.GearboxData.Type) {
 				case GearboxType.AMT:
-					strategy = new AMTShiftStrategy(runData, container);
+					strategy = new AMTShiftStrategyV2(runData, container);
 					break;
 				case GearboxType.MT:
 					strategy = new MTShiftStrategy(runData, container);
