@@ -122,6 +122,12 @@ namespace TUGraz.VectoCommon.Utils
 			return Interpolate(p1.X, p2.X, p1.Y, p2.Y, x);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static double Interpolate(Edge edge, double x)
+		{
+			return Interpolate(edge.P1, edge.P2, x);
+		}
+
 		/// <summary>
 		/// Linearly interpolates a value between two points.
 		/// </summary>
@@ -331,6 +337,8 @@ namespace TUGraz.VectoCommon.Utils
 			retVal.SimulationInterval = solutions.Where(x => x >= 0).Min().SI<Second>();
 			return retVal;
 		}
+
+		
 
 		[DebuggerStepThrough]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

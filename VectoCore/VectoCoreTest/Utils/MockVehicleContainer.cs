@@ -219,6 +219,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void FinishSimulation() {}
 
 		public void FinishSimulationRun(Exception e) {}
+		public void StartSimulationRun()
+		{ }
+
+		public IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns { get { return new ISimulationPreprocessor[] { }; } }
+		public void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
+		{
+			throw new NotImplementedException();
+		}
 
 		public Watt SetAxlegearLoss
 		{

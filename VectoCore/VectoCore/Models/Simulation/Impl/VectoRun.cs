@@ -106,6 +106,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			var debug = new DebugData();
 
+			Log.Info("VectoJob preprocessing.");
+
+			foreach (var preprocessing in Container.GetPreprocessingRuns) {
+				preprocessing.RunPreprocessing(this);
+			}
+
+
+			Container.StartSimulationRun();
 			Log.Info("VectoJob started running.");
 
 			Container.AbsTime = AbsTime;

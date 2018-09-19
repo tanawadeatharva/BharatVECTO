@@ -134,6 +134,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					_dao.CreateAuxiliaryData(InputDataProvider.JobInputData.Vehicle.AuxiliaryInputData(),
 						_segment.Missions.First().MissionType,
 						_segment.VehicleClass),
+				PTO = _ptoTransmissionData,
 				InputDataHash = InputDataProvider.XMLHash
 			};
 			powertrainConfig.VehicleData.VehicleClass = _segment.VehicleClass;

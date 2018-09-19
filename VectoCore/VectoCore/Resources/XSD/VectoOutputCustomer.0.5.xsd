@@ -62,7 +62,7 @@
 					<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded"/>
 					<xs:element name="CO2" type="CO2Type" maxOccurs="unbounded"/>
 				</xs:sequence>
-				<xs:element name="Error"/>
+				<xs:element name="Error" type="xs:string"/>
 			</xs:choice>
 		</xs:sequence>
 		<xs:attribute name="status" use="required">
@@ -96,8 +96,8 @@
 			<xs:element name="ApplicationInformation">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="SimulationToolVersion"/>
-						<xs:element name="Date"/>
+						<xs:element name="SimulationToolVersion" type="xs:string"/>
+						<xs:element name="Date" type="vdecdef:DateTimeWithTimezone"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
@@ -112,7 +112,7 @@
 			<xs:element name="Model" type="vdecdef:ModelType"/>
 			<xs:element name="Manufacturer" type="vdecdef:ManufacturerType"/>
 			<xs:element name="ManufacturerAddress" type="vdecdef:ManufacturerAddressType"/>
-			<xs:element name="VIN">
+			<xs:element name="VIN" type="vdecdef:VINType">
 				<xs:annotation>
 					<xs:documentation>P238</xs:documentation>
 				</xs:annotation>

@@ -96,6 +96,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public void Finish(VectoRun.Status runStatus, Exception exception = null) {}
+		public void Reset()
+		{ }
 
 		public bool WriteModalResults { get; set; }
 

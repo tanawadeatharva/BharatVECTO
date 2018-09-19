@@ -74,6 +74,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal WriteSumData WriteSumData;
 
+		internal readonly IList<ISimulationPreprocessor> Preprocessors = new List<ISimulationPreprocessor>();
+
 		#region IGearCockpit
 
 		public GearboxType GearboxType
@@ -333,6 +335,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			ModData.FinishSimulation();
 			DrivingCycle.FinishSimulation();
+		}
+
+		public void StartSimulationRun()
+		{
+			ModData?.Reset();
+		}
+
+		public IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns
+		{
+			get { return new ReadOnlyCollection<ISimulationPreprocessor>(Preprocessors); }
+		}
+
+		public void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
+		{
+			Preprocessors.Add(simulationPreprocessor);
 		}
 
 		public void FinishSimulation()
