@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -54,11 +55,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 			return new PredictionDurationLookup(
 				data.Rows.Cast<DataRow>()
 					.Select(
-						r => new PredictionDurationLookup.Entry() {
-							SpeedRatio = r.ParseDouble(Fields.SpeedRatio),
-							PredictionTimeRatio = r.ParseDouble(Fields.PredictionTimeRatio)
-						})
-					.OrderBy(x => x.SpeedRatio)
+						r => new KeyValuePair<double, double>(
+							r.ParseDouble(Fields.SpeedRatio),
+							r.ParseDouble(Fields.PredictionTimeRatio)
+						))
+					.OrderBy(x => x.Key)
 					.ToList());
 		}
 
