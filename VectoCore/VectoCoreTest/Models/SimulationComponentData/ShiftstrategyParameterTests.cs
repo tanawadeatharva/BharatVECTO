@@ -91,5 +91,21 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			Assert.AreEqual(expected, val.Value(), 1e-6);
 		}
+
+		[TestCase(0, 0.6),
+			TestCase(20, 0.8),
+			TestCase(30, 1.0),
+			TestCase(110, 1.0),
+			TestCase(15, 0.7),
+			TestCase(25, 0.9),]
+		public void TestShareTq99l(double velcoity, double expected)
+		{
+			var lookup = ShareTorque99lLookupReader.ReadFromStream(
+				RessourceHelper.ReadStream(
+					DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareTq99L.csv"));
+			var val = lookup.Lookup(velcoity.KMPHtoMeterPerSecond());
+
+			Assert.AreEqual(expected, val, 1e-6);
+		}
 	}
 }

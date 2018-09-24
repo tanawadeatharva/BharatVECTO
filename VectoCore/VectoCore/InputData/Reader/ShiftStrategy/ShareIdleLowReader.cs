@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 		}
 
 		
-		private class Fields
+		public static class Fields
 		{
 			public const string Velocity = "velocity";
 			public const string WeightingFactor = "weighting factor";
