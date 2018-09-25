@@ -197,6 +197,8 @@
     <Compile Include="Models\SimulationComponent\Impl\CycleTorqueConverter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineFanAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxGradabilityLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxGradabilityPreprocessor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverterWrapper.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VelocityRollingLookup.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VelocitySpeedGearshiftPreprocessor.cs" />

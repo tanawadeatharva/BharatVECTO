@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Data;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -18,6 +16,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var velocityDropData = new VelocityRollingLookup();
 			dataBus.AddPreprocessor(new VelocitySpeedGearshiftPreprocessor(velocityDropData, data.GearboxData.TractionInterruption));
+
+			var maxGradability = new MaxGradabilityLookup();
+			dataBus.AddPreprocessor(new MaxGradabilityPreprocessor(maxGradability, data));
 		}
 
 		#region Overrides of BaseShiftStrategy
@@ -50,7 +51,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private uint InitStartGear(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			return 1;
+			var maxStartGear = (int)Math.Round(ModelData.Gears.Count / 2.0, MidpointRounding.AwayFromZero);
+
+			var startGear = 1u;
+			var minRating = double.MaxValue;
+			for (uint i = (uint)maxStartGear; i > 0; i--) {
+				if (StartGearAllowed(i)) {
+					var rating = RatingStartGear(i);
+					if (rating < minRating) {
+						minRating = rating;
+						startGear = i;
+					}
+				}
+			}
+			return startGear;
+		}
+
+		private double RatingStartGear(uint u)
+		{
+			throw new NotImplementedException();
+		}
+
+		private bool StartGearAllowed(uint gear)
+		{
+			throw new NotImplementedException();
 		}
 
 		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
