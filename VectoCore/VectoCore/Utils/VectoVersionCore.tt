@@ -43,10 +43,17 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
+		public static string BranchSuffix
+		{
+			get {
+				return "-DEV";
+			}
+		}
+
 		public static string FullVersion
 		{
 			get {
-				return string.Format("VectoCore {0}", VersionNumber);
+				return string.Format("VectoCore{1} {0}", VersionNumber, BranchSuffix);
 			}
 		}
 	}

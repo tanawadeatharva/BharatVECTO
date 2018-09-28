@@ -6,6 +6,6 @@ int GetBuildNumber()
 
 string GetVectoCoreVersionNumber()
 {
-	return "3.3.0." + GetBuildNumber();
+	return "0.1.0." + GetBuildNumber();
 }
 #>
