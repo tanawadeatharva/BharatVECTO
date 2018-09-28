@@ -10,6 +10,7 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.IO
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Utils
 
 ''' <summary>
 ''' Welcome screen. Shows only on the first time application start
@@ -24,7 +25,7 @@ Public Class WelcomeDialog
 
 	'Init
 	Private Sub F_Welcome_Load(sender As Object, e As EventArgs) Handles Me.Load
-		Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
+		Text = "VECTO " & VECTOvers & " / VectoCore" & VectoSimulationCore.BranchSuffix & " " & COREvers
 	End Sub
 
 	'Open Release Notes

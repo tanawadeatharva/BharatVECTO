@@ -8,7 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-
+Imports TUGraz.VectoCore.Utils
 
 ''' <summary>
 ''' About Dialog. Shows Licence and contact/support information
@@ -17,7 +17,7 @@
 Public Class AboutBox
 	'Initialize
 	Private Sub F10_AboutBox_Load(ByVal sender As Object, ByVal e As EventArgs) Handles MyBase.Load
-		Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
+		Text = "VECTO " & VECTOvers & " / VectoCore" & VectoSimulationCore.BranchSuffix & " " & COREvers
 	End Sub
 
 	'e-mail links----------------------------------------------------------------
