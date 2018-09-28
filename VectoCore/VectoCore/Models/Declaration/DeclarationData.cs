@@ -170,6 +170,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		public static class GearboxTCU
+		{
+			public static readonly MeterPerSecond StartSpeed = 8.KMPHtoMeterPerSecond();
+			public static readonly MeterPerSquareSecond StartAcceleration = 0.8.SI<MeterPerSquareSecond>();
+			public static readonly Second GearResidenceTime = 5.SI<Second>();
+			public static readonly Watt CurrentCardanPowerThresholdPropulsion = 5000.SI<Watt>();
+			public static readonly Watt AverageCardanPowerThresholdPropulsion = 1000.SI<Watt>();
+			public static readonly Second LookBackInterval = 4.SI<Second>();
+			public const double EngineSpeedHighDriveOffFactor = 1.05;
+			public const double DnT99L_highMin1 = 0.4;
+			public const double DnT99L_highMin2 = 0.5;
+			public const int AllowedGearRangeUp = 3;
+			public const int AllowedGearRangeDown = 3;
+			public const double TargetSpeedDeviationFactor = 0.1;
+		}
+
 		public static class Gearbox
 		{
 			public const double TorqueReserve = 0.2;

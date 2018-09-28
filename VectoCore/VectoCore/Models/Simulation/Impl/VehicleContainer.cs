@@ -49,7 +49,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public sealed class VehicleContainer : LoggingObject, IVehicleContainer
+	public class VehicleContainer : LoggingObject, IVehicleContainer
 	{
 		private List<Tuple<int, VectoSimulationComponent>> _components =
 			new List<Tuple<int, VectoSimulationComponent>>();
@@ -414,12 +414,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public DrivingBehavior DriverBehavior
 		{
-			get { return Driver != null ? Driver.DriverBehavior : DrivingBehavior.Driving; }
+			get { return Driver?.DriverBehavior ?? DrivingBehavior.Driving; }
 		}
 
 		public DrivingAction DrivingAction
 		{
-			get { return Driver.DrivingAction; }
+			get { return Driver?.DrivingAction ?? DrivingAction.Accelerate; }
 		}
 
 		public MeterPerSquareSecond DriverAcceleration
@@ -444,7 +444,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public bool PTOActive
 		{
-			get { return DrivingCycle.PTOActive; }
+			get { return DrivingCycle?.PTOActive ?? false; }
 		}
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
@@ -460,6 +460,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Watt AxlegearLoss()
 		{
 			return Axlegear.AxlegearLoss();
+		}
+
+		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand
+		{
+			get { return Axlegear.CurrentAxleDemand; }
 		}
 
 		public Kilogram ReducedMassWheels

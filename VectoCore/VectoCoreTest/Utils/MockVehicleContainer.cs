@@ -238,6 +238,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return _axlegearLoss;
 		}
 
+		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand { get; }
+
 		public Kilogram ReducedMassWheels { get; set; }
 	}
 }

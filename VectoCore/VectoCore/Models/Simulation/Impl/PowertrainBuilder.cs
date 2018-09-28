@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_sumWriter = sumWriter;
 		}
 
-		public VehicleContainer Build(VectoRunData data)
+		public IVehicleContainer Build(VectoRunData data)
 		{
 			switch (data.Cycle.CycleType) {
 				case CycleType.EngineOnly:
@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		private VehicleContainer BuildEngineOnly(VectoRunData data)
+		private IVehicleContainer BuildEngineOnly(VectoRunData data)
 		{
 			if (data.Cycle.CycleType != CycleType.EngineOnly) {
 				throw new VectoException("CycleType must be EngineOnly.");
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private VehicleContainer BuildPWheel(VectoRunData data)
+		private IVehicleContainer BuildPWheel(VectoRunData data)
 		{
 			if (data.Cycle.CycleType != CycleType.PWheel) {
 				throw new VectoException("CycleType must be PWheel.");
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private VehicleContainer BuildVTP(VectoRunData data)
+		private IVehicleContainer BuildVTP(VectoRunData data)
 		{
 			if (data.Cycle.CycleType != CycleType.VTP) {
 				throw new VectoException("CycleType must be VTP.");
@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 
-		private VehicleContainer BuildMeasuredSpeed(VectoRunData data)
+		private IVehicleContainer BuildMeasuredSpeed(VectoRunData data)
 		{
 			if (data.Cycle.CycleType != CycleType.MeasuredSpeed) {
 				throw new VectoException("CycleType must be MeasuredSpeed.");
@@ -197,7 +197,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private VehicleContainer BuildMeasuredSpeedGear(VectoRunData data)
+		private IVehicleContainer BuildMeasuredSpeedGear(VectoRunData data)
 		{
 			if (data.Cycle.CycleType != CycleType.MeasuredSpeedGear) {
 				throw new VectoException("CycleType must be MeasuredSpeed with Gear.");
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
-		private VehicleContainer BuildFullPowertrain(VectoRunData data)
+		private IVehicleContainer BuildFullPowertrain(VectoRunData data)
 		{
 			if (data.Cycle.CycleType != CycleType.DistanceBased) {
 				throw new VectoException("CycleType must be DistanceBased");
@@ -257,6 +257,34 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
 
 			return container;
+		}
+
+		public void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container)
+		{
+			if (data.Cycle.CycleType != CycleType.DistanceBased) {
+				throw new VectoException("CycleType must be DistanceBased");
+			}
+
+			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
+			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
+
+			var powertrain = new Vehicle(container, data.VehicleData, data.AirdragData)
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(GetSimpleGearbox(container, data), data.Retarder, container);
+			if (data.GearboxData.Type.ManualTransmission()) {
+				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
+			}
+
+			var engine = new CombustionEngine(container, data.EngineData);
+			var idleController = GetIdleController(data.PTO, engine, container);
+			//cycle.IdleController = idleController as IdleControllerSwitcher;
+
+			powertrain.AddComponent(engine, idleController)
+					.AddAuxiliaries(container, data);
+
 		}
 
 		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine, IVehicleContainer container)
@@ -299,18 +327,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
 				}
-				container.ModalData.AddAuxiliary(id);
+				container.ModalData?.AddAuxiliary(id);
 			}
 
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
 					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
 					n => container.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 			return aux;
@@ -366,6 +394,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new ArgumentOutOfRangeException("Unknown Gearbox Type", runData.GearboxData.Type.ToString());
 			}
 			return new Gearbox(container, strategy, runData);
+		}
+
+		private static IGearbox GetSimpleGearbox(IVehicleContainer container, VectoRunData runData)
+		{
+			if (runData.GearboxData.Type != GearboxType.AMT) {
+				throw new VectoException("SimplePowertrain only supports AMT gearbox!");
+			}
+			return new Gearbox(container, null, runData);
 		}
 	}
 }

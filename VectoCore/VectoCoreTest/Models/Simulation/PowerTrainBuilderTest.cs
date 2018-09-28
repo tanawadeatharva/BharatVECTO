@@ -70,8 +70,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var writer = new MockModalDataContainer();
 			var builder = new PowertrainBuilder(writer);
 
-			var powerTrain = builder.Build(runData);
+			var powerTrain = builder.Build(runData) as VehicleContainer;
 
+			Assert.NotNull(powerTrain);
 			Assert.IsInstanceOf<IVehicleContainer>(powerTrain);
 			Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
 
@@ -99,8 +100,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				var writer = new MockModalDataContainer();
 				var builder = new PowertrainBuilder(writer);
 
-				var powerTrain = builder.Build(runData);
+				var powerTrain = builder.Build(runData) as VehicleContainer;
 
+				Assert.NotNull(powerTrain);
 				Assert.IsInstanceOf<IVehicleContainer>(powerTrain);
 				Assert.AreEqual(componentCount, powerTrain.SimulationComponents().Count);
 

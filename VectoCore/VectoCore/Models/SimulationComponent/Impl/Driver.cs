@@ -966,7 +966,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 		protected override void DoCommitSimulationStep()
 		{
-			if (!(CurrentState.Response is ResponseSuccess)) {
+			if (CurrentState.Response != null && !(CurrentState.Response is ResponseSuccess)) {
 				throw new VectoSimulationException("Previous request did not succeed!");
 			}
 			CurrentState.Response = null;

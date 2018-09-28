@@ -52,12 +52,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Time when a gearbox shift engages a new gear (shift is finished). Is set when shifting is needed.
 		/// </summary>
-		private Second _engageTime = 0.SI<Second>();
+		protected internal Second EngageTime = 0.SI<Second>();
 
 		/// <summary>
 		/// True if gearbox is disengaged (no gear is set).
 		/// </summary>
 		protected internal bool Disengaged = true;
+
+		protected internal GearInfo _nextGear;
 
 		public Second LastUpshift { get; protected internal set; }
 
@@ -65,18 +67,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override GearInfo NextGear
 		{
-			get { return _strategy.NextGear; }
+			get { return _strategy?.NextGear ?? _nextGear; }
 		}
 
 		public override bool ClutchClosed(Second absTime)
 		{
-			return _engageTime.IsSmallerOrEqual(absTime);
+			return EngageTime.IsSmallerOrEqual(absTime);
 		}
 
 		public Gearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData) : base(container, runData)
 		{
 			_strategy = strategy;
-			_strategy.Gearbox = this;
+			if (_strategy != null) {
+				_strategy.Gearbox = this;
+			}
 
 			LastDownshift = -double.MaxValue.SI<Second>();
 			LastUpshift = -double.MaxValue.SI<Second>();
@@ -87,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
 
-			_engageTime = -double.MaxValue.SI<Second>();
+			EngageTime = -double.MaxValue.SI<Second>();
 
 			if (Disengaged) {
 				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
@@ -170,12 +174,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 			if (DataBus.VehicleStopped) {
-				_engageTime = absTime;
+				EngageTime = absTime;
 				LastDownshift = -double.MaxValue.SI<Second>();
 				LastUpshift = -double.MaxValue.SI<Second>();
 			}
 			if (DataBus.DriverBehavior == DrivingBehavior.Halted) {
-				_engageTime = absTime + dt;
+				EngageTime = absTime + dt;
 			}
 
 			var halted = DataBus.DrivingAction == DrivingAction.Halt;
@@ -184,7 +188,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var vehiclespeedBelowThreshold =
 				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed);
 			if (halted || (driverDeceleratingNegTorque && vehiclespeedBelowThreshold)) {
-				_engageTime = VectoMath.Max(_engageTime, absTime + dt);
+				EngageTime = VectoMath.Max(EngageTime, absTime + dt);
 
 				return RequestGearDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			}
@@ -242,13 +246,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			var shiftTimeExceeded = absTime.IsSmaller(_engageTime) &&
-									_engageTime.IsSmaller(absTime + dt, Constants.SimulationSettings.LowerBoundTimeInterval);
+			var shiftTimeExceeded = absTime.IsSmaller(EngageTime) &&
+									EngageTime.IsSmaller(absTime + dt, Constants.SimulationSettings.LowerBoundTimeInterval);
 			// allow 5% tolerance of shift time
-			if (shiftTimeExceeded && _engageTime - absTime > Constants.SimulationSettings.LowerBoundTimeInterval / 2) {
+			if (shiftTimeExceeded && EngageTime - absTime > Constants.SimulationSettings.LowerBoundTimeInterval / 2) {
 				return new ResponseFailTimeInterval {
 					Source = this,
-					DeltaT = _engageTime - absTime,
+					DeltaT = EngageTime - absTime,
 					GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
 				};
 			}
@@ -335,15 +339,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var shiftAllowed = !inAngularVelocity.IsEqual(0) && !DataBus.VehicleSpeed.IsEqual(0);
 
 			if (response is ResponseSuccess && shiftAllowed) {
-				var shiftRequired = _strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque,
-					response.EngineSpeed, Gear, _engageTime);
+				var shiftRequired = _strategy?.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque,
+					response.EngineSpeed, Gear, EngageTime) ?? false;
 
 				if (shiftRequired) {
-					_engageTime = absTime + ModelData.TractionInterruption;
+					EngageTime = absTime + ModelData.TractionInterruption;
 
 					Log.Debug("Gearbox is shifting. absTime: {0}, dt: {1}, interuptionTime: {2}, out: ({3}, {4}), in: ({5}, {6})",
 						absTime,
-						dt, _engageTime, outTorque, outAngularVelocity, inTorque, inAngularVelocity);
+						dt, EngageTime, outTorque, outAngularVelocity, inTorque, inAngularVelocity);
 
 					Disengaged = true;
 					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
@@ -426,7 +430,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (DataBus.VehicleStopped) {
 				Disengaged = true;
-				_engageTime = -double.MaxValue.SI<Second>();
+				EngageTime = -double.MaxValue.SI<Second>();
 			}
 			base.DoCommitSimulationStep();
 		}

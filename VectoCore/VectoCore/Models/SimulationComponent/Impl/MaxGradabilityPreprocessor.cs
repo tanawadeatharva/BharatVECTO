@@ -13,42 +13,45 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 	public class MaxGradabilityPreprocessor : ISimulationPreprocessor
 	{
-		protected MaxGradabilityLookup GradabilityLookup;
-		protected VectoRunData ModelData;
+		protected readonly MaxGradabilityLookup GradabilityLookup;
+		protected readonly VectoRunData ModelData;
+		protected SimplePowertrainContainer Container;
 
-		public MaxGradabilityPreprocessor(MaxGradabilityLookup maxGradability, VectoRunData modelData)
+		public MaxGradabilityPreprocessor(MaxGradabilityLookup maxGradability, VectoRunData modelData, SimplePowertrainContainer simpleContainer)
 		{
 			GradabilityLookup = maxGradability;
 			ModelData = modelData;
+
+			Container = simpleContainer;
 		}
 
 
 		#region Implementation of ISimulationPreprocessor
 
-		public void RunPreprocessing(VectoRun container)
+		public void RunPreprocessing()
 		{
-			GradabilityLookup.Data = SearchMaxRoadGradient(container);
+			GradabilityLookup.Data = SearchMaxRoadGradient();
 		}
 
-		private Dictionary<uint, Tuple<Radian, Radian>> SearchMaxRoadGradient(VectoRun run)
+		private Dictionary<uint, Tuple<Radian, Radian>> SearchMaxRoadGradient()
 		{
-			var container = run.GetContainer() as VehicleContainer;
-			var vehicle = container?.Vehicle as Vehicle;
+			var vehicle = Container?.Vehicle as Vehicle;
 			if (vehicle == null) {
 				throw new VectoException("no vehicle found...");
 			}
 
-			var gearbox = container.Gearbox as Gearbox;
+			var gearbox = Container.Gearbox as Gearbox;
 			if (gearbox == null) {
 				throw new VectoException("no gearbox found...");
 			}
 
-			var driver = container.Driver as Driver;
-			if (driver == null) {
-				throw new VectoException("no driver found...");
-			}
-			driver.DriverBehavior = DrivingBehavior.Driving;
+			//var driver = container.Driver as Driver;
+			//if (driver == null) {
+			//	throw new VectoException("no driver found...");
+			//}
+			//driver.DriverBehavior = DrivingBehavior.Driving;
 
+			gearbox.Disengaged = false;
 			var retVal = new Dictionary<uint, Tuple<Radian, Radian>>();
 			foreach (var gearData in ModelData.GearboxData.Gears) {
 				var engineSpeed = ModelData.EngineData.FullLoadCurves[0].NTq99lSpeed;

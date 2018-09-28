@@ -51,10 +51,16 @@ namespace TUGraz.VectoCommon.Models
 		Watt GearboxPowerRequest { get; set; }
 		Watt AxlegearPowerRequest { get; set; }
 		Watt WheelsPowerRequest { get; set; }
-		Watt VehiclePowerRequest { get; set; }
+		
+		//Watt VehiclePowerRequest { get; set; }
 		Watt BrakePower { get; set; }
 		Watt AngledrivePowerRequest { get; set; }
 
 		Watt AuxiliariesPowerDemand { get; set; }
+
+		NewtonMeter EngineTorqueDemand { get; set; }
+		NewtonMeter EngineTorqueDemandTotal { get; set; }
+		NewtonMeter EngineDynamicFullLoadTorque { get; set; }
+		MeterPerSecond VehicleSpeed { get; set; }
 	}
 }

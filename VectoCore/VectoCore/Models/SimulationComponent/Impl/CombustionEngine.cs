@@ -227,6 +227,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaEngineSpeed = avgEngineSpeed - engineSpeedLimit,
 					EnginePowerRequest = torqueOut * avgEngineSpeed,
 					DynamicFullLoadPower = dynamicFullLoadPower,
+					EngineTorqueDemand = torqueOut,
+					EngineTorqueDemandTotal = totalTorqueDemand,
+					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
 					DragPower = fullDragTorque * avgEngineSpeed,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
@@ -268,6 +271,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Delta = deltaFull * avgEngineSpeed,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
 					DynamicFullLoadPower = dynamicFullLoadPower,
+					EngineTorqueDemand = torqueOut,
+					EngineTorqueDemandTotal = totalTorqueDemand,
+					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
 					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					Source = this,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
@@ -283,6 +289,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Delta = deltaDrag * avgEngineSpeed,
 					EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
 					DynamicFullLoadPower = dynamicFullLoadPower,
+					EngineTorqueDemand = torqueOut,
+					EngineTorqueDemandTotal = totalTorqueDemand,
+					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
 					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					Source = this,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
@@ -294,6 +303,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return new ResponseSuccess {
 				EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
+				EngineTorqueDemand = torqueOut,
+				EngineTorqueDemandTotal = totalTorqueDemand,
+				EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
 				DynamicFullLoadPower = dynamicFullLoadPower,
 				DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 				AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
@@ -544,7 +556,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 				bool dryRun = false)
 			{
-				if (!_dataBus.VehicleStopped && _dataBus.Gear != _dataBus.NextGear.Gear && _dataBus.Gear != 0 &&
+				if (!_dataBus.VehicleStopped && _dataBus.Gear != 0 &&_dataBus.Gear != _dataBus.NextGear.Gear  &&
 					_dataBus.NextGear.Gear != 0) {
 					return RequestDoubleClutch(absTime, dt, outTorque, outAngularVelocity);
 				}

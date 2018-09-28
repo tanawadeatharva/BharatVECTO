@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
@@ -40,9 +41,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class AxleGear : TransmissionComponent, IAxlegear
 	{
-		public AxleGear(IVehicleContainer container, AxleGearData modelData) : base(container, modelData.AxleGear) {}
+		public AxleGear(IVehicleContainer container, AxleGearData modelData) : base(container, modelData.AxleGear) { }
 
-		public override IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+		public override IResponse Request(
+			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
 			var retVal = base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
@@ -61,6 +63,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Watt AxlegearLoss()
 		{
 			return PreviousState.TorqueLossResult.Value * PreviousState.InAngularVelocity;
+		}
+
+		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand
+		{
+			get {
+				return Tuple.Create(
+					(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0, CurrentState.InTorque);
+			}
 		}
 	}
 }

@@ -285,10 +285,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
+			if (CurrentState == null) {
+				return;
+			}
 			container[ModalResultField.dist] = CurrentState.Distance; // (CurrentState.Distance + PreviousState.Distance) / 2.0;
 			container[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
 			container[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
-			container[ModalResultField.grad] = (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>();
+			container[ModalResultField.grad] = CurrentState.Gradient != null
+				? (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>()
+				: null;
 			container[ModalResultField.altitude] = CurrentState.Altitude;
 
 			if (IdleController != null) {
@@ -298,7 +303,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			if (!(CurrentState.Response is ResponseSuccess)) {
+			if (CurrentState.Response != null && !(CurrentState.Response is ResponseSuccess)) {
 				throw new VectoSimulationException("Previous request did not succeed!");
 			}
 

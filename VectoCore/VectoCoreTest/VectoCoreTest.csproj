@@ -115,6 +115,7 @@
     <Compile Include="Models\Simulation\MockSumWriter.cs" />
     <Compile Include="Models\Simulation\GetSectionTest.cs" />
     <Compile Include="Models\Simulation\DeclarationSimulationFactoryTest.cs" />
+    <Compile Include="Models\Simulation\ShiftStrategyV2Test.cs" />
     <Compile Include="Models\Simulation\SimulationPreprocessingTest.cs" />
     <Compile Include="Reports\ActualModalSimulationDataTest.cs" />
     <Compile Include="Reports\GearshiftCountTest.cs" />
