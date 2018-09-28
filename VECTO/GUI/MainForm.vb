@@ -230,7 +230,7 @@ Imports TUGraz.VectoCore.Utils
 
         FB_Initialize()
 
-        Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
+        Text = "VECTO" & VECTOvers & " / VectoCore" & VectoSimulationCore.BranchSuffix & " " & COREvers
 
 
         'FileLists
@@ -278,10 +278,10 @@ Imports TUGraz.VectoCore.Utils
     Private Sub DeclOnOff()
 
         If Cfg.DeclMode Then
-            Text = "VECTO " & COREvers & " - Declaration Mode"
+            Text = "VECTO" & VectoSimulationCore.BranchSuffix & " " & COREvers & " - Declaration Mode"
             Cfg.DeclInit()
         Else
-            Text = "VECTO " & COREvers
+            Text = "VECTO" & VectoSimulationCore.BranchSuffix & " " & COREvers
         End If
 
         If Cfg.DeclMode Then
