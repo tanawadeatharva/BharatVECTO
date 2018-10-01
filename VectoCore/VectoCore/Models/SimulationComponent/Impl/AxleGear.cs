@@ -43,12 +43,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public AxleGear(IVehicleContainer container, AxleGearData modelData) : base(container, modelData.AxleGear) { }
 
+		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			var retVal = base.Initialize(outTorque, outAngularVelocity);
+			retVal.AxlegearPowerRequest = outTorque * outAngularVelocity;
+			retVal.CardanTorque = PreviousState.InTorque;
+			return retVal;
+		}
+
 		public override IResponse Request(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
 			var retVal = base.Request(absTime, dt, outTorque, outAngularVelocity, dryRun);
 			retVal.AxlegearPowerRequest = outTorque * (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
+			retVal.CardanTorque = CurrentState.InTorque;
 			return retVal;
 		}
 

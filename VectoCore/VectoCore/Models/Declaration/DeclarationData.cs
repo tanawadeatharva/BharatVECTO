@@ -184,6 +184,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const int AllowedGearRangeUp = 3;
 			public const int AllowedGearRangeDown = 3;
 			public const double TargetSpeedDeviationFactor = 0.1;
+			public const double RatingFactorCurrentGear = 0.99;
 		}
 
 		public static class Gearbox

@@ -44,5 +44,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 		public Watt AverageCardanPowerThresholdPropulsion { get; set; }
 		public Watt CurrentCardanPowerThresholdPropulsion { get; set; }
 		public double TargetSpeedDeviationFactor { get; set; }
+		public double RatingFactorCurrentGear { get; set; }
 	}
 }

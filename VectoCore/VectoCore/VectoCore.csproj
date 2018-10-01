@@ -192,11 +192,15 @@
     <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategyV2.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\AverageAccelerationTorqueLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AverageAccelerationTorquePreprocessor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BaseShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CycleTorqueConverter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineFanAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineSpeedDriveOffPreprocessor.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxCardanTorqueLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxCardanTorquePreprocessor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MaxGradabilityLookup.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MaxGradabilityPreprocessor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\SimplePowertrainContainer.cs" />

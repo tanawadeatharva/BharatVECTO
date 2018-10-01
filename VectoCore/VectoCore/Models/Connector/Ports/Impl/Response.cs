@@ -65,6 +65,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Watt BrakePower { get; set; }
 		public Watt AuxiliariesPowerDemand { get; set; }
 
+		public NewtonMeter CardanTorque { get; set; }
+
+
 		public TorqueConverterOperatingPoint TorqueConverterOperatingPoint { get; set; }
 
 		public override string ToString()

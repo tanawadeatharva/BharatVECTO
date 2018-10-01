@@ -62,5 +62,6 @@ namespace TUGraz.VectoCommon.Models
 		NewtonMeter EngineTorqueDemandTotal { get; set; }
 		NewtonMeter EngineDynamicFullLoadTorque { get; set; }
 		MeterPerSecond VehicleSpeed { get; set; }
+		NewtonMeter CardanTorque { get; set; }
 	}
 }

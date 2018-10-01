@@ -525,6 +525,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				CurrentCardanPowerThresholdPropulsion = DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
 				TargetSpeedDeviationFactor = DeclarationData.GearboxTCU.TargetSpeedDeviationFactor,
 				EngineSpeedHighDriveOffFactor = DeclarationData.GearboxTCU.EngineSpeedHighDriveOffFactor,
+				RatingFactorCurrentGear = DeclarationData.GearboxTCU.RatingFactorCurrentGear,
 				AccelerationReserveLookup = AccelerationReserveLookupReader.ReadFromStream(
 					RessourceHelper.ReadStream(
 						DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.AccelerationReserveLookup.csv")),
@@ -540,6 +541,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					RessourceHelper.ReadStream(
 						DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareIdleLow.csv")
 				),
+				ShareEngineHigh = EngineSpeedHighLookupReader.ReadFromStream(
+					RessourceHelper.ReadStream(
+						DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareEngineSpeedHigh.csv")
+				)
 			};
 
 			return retVal;

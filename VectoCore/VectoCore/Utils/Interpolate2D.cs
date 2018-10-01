@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Utils
 			var xEntries = new List<KeyValuePair<TKeyX, int>>();
 			var idx = 0;
 			foreach (var xValue in GetXValuesSorted(entries).Distinct()) {
-				_data.Columns.Add(xValue.ToOutputFormat(), typeof(TKeyX));
+				_data.Columns.Add(xValue.ToOutputFormat(), typeof(TValZ));
 				xEntries.Add(new KeyValuePair<TKeyX, int>(xValue, idx++));
 			}
 
@@ -67,12 +67,20 @@ namespace TUGraz.VectoCore.Utils
 				}
 			}
 
+			if (speedIdx <= 0) {
+				speedIdx = 1;
+			}
+
 			var gradientIdx = -1;
 			for (var i = 0; i < entriesY.Length; i++) {
 				if (entriesY[i].Key.CompareTo(valY) >= 0) {
 					gradientIdx = i;
 					break;
 				}
+			}
+
+			if (gradientIdx <= 0) {
+				gradientIdx = 1;
 			}
 
 			var v1 = _data.Rows[entriesY[gradientIdx - 1].Value][entriesX[speedIdx - 1].Value] as TValZ;
