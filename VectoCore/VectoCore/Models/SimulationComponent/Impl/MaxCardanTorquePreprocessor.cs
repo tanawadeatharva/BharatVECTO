@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 			TestContainer.GearboxCtl.Gear = 1;
 			var init = TestContainer.VehiclePort.Initialize(Data.GearshiftParameters.StartVelocity, 0.SI<Radian>());
-			var powertrainRatioWOGearbox = (Data.GearshiftParameters.StartVelocity / init.EngineSpeed / Data.GearboxData.Gears[1].Ratio).Cast<Meter>();
+			var powertrainRatioWOGearbox = (Data.GearshiftParameters.StartVelocity / init.EngineSpeed * Data.GearboxData.Gears[1].Ratio).Cast<Meter>();
 
 			var engineSpeedSteps = (Data.EngineData.FullLoadCurves[0].N95hSpeed - Data.EngineData.IdleSpeed) / 250;
 
@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					engineSpeed < Data.EngineData.FullLoadCurves[0].N95hSpeed;
 					engineSpeed += engineSpeedSteps) {
 					var maxTorque = Data.EngineData.FullLoadCurves[gearData.Key].FullLoadStationaryTorque(engineSpeed);
-					var vehicleSpeed = engineSpeed * powertrainRatioWOGearbox * gearData.Value.Ratio;
+					var vehicleSpeed = engineSpeed * powertrainRatioWOGearbox / gearData.Value.Ratio;
 					var first = TestContainer.VehiclePort.Initialize(vehicleSpeed, 0.SI<Radian>());
 					var delta = first.EngineTorqueDemandTotal - maxTorque;
 					var grad = SearchAlgorithm.Search(

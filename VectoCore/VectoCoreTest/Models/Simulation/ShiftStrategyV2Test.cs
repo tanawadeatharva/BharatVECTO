@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -24,27 +28,37 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
-		[TestCase(Class9Decl),
+		[TestCase(Class9Decl, 0),
+		TestCase(@"E:\QUAM\Downloads\2018-07-13_Prototype-TCU-VECTO_R2016a\a_input_Data\Cl-5_tractor_directdr_axle_2p53.xml", 0),
+		TestCase(@"E:\QUAM\Downloads\2018-07-13_Prototype-TCU-VECTO_R2016a\a_input_Data\Cl-5_tractor_directdr_axle_2p53.xml", 1),
+		TestCase(@"E:\QUAM\Downloads\2018-07-13_Prototype-TCU-VECTO_R2016a\a_input_Data\Cl-5_tractor_directdr_axle_2p53.xml", 4)
 		]
-		public void TestSShiftStrategyV2(string jobFile)
+		public void TestSShiftStrategyV2(string jobFile, int i)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
-			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var dataProvider = Path.GetExtension(jobFile) == ".vecto"
+				? JSONInputDataFactory.ReadJsonJob(jobFile)
+				: new XMLDeclarationInputDataProvider(jobFile, true);
 			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
 				ModalResults1Hz = false,
 				WriteModalResults = true,
 				ActualModalData = false,
 				Validate = false,
+				SumData = sumWriter,
 			};
 
-			jobContainer.AddRuns(runsFactory);
+			var runs = runsFactory.SimulationRuns().ToArray();
 
+			jobContainer.AddRun(runs[i]);
 
-			var i = 0;
+			jobContainer.Runs[0].Run.Run();
 
-			jobContainer.Runs[i].Run.Run();
+			Assert.IsTrue(jobContainer.Runs[0].Run.FinishedWithoutErrors);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
 		}
 	}
+
 }

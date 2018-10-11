@@ -398,7 +398,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			string crosswindCorrectionParameters, SquareMeter aerodynamicDragAera, Meter vehicleHeight)
 		{
 			const int startSpeed = 60;
-			const int maxSpeed = 130;
+			const int maxSpeed = 200;
 			const int speedStep = 5;
 
 			const int maxAlpha = 180;

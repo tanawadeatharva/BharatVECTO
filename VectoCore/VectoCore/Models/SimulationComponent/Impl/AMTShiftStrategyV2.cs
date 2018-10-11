@@ -32,6 +32,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected MaxCardanTorqueLookup MaxCardanTorqueLookup;
 
 		protected DebugData DebugData = new DebugData();
+		private Dictionary<uint, GearRating> GearRatings = new Dictionary<uint, GearRating>();
+		private MeterPerSquareSecond accRsv;
 
 		public struct HistoryEntry
 		{
@@ -63,10 +65,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			dataBus.AddPreprocessor(new EngineSpeedDriveOffPreprocessor(EngineSpeedAtDriveOff, data, TestContainer));
 
 			AverageAccelerationTorqueLookup = new AverageAccelerationTorqueLookup();
-			dataBus.AddPreprocessor(new AverageAccelerationTorquePreprocessor(AverageAccelerationTorqueLookup, data, GetEngineSpeedLimitHighMin()));
+			dataBus.AddPreprocessor(
+				new AverageAccelerationTorquePreprocessor(AverageAccelerationTorqueLookup, data, GetEngineSpeedLimitHighMin()));
 
 			MaxCardanTorqueLookup = new MaxCardanTorqueLookup();
 			dataBus.AddPreprocessor(new MaxCardanTorquePreprocessor(MaxCardanTorqueLookup, data, TestContainer));
+		}
+
+		private bool SpeedTooLowForEngine(uint gear, PerSecond outAngularSpeed)
+		{
+			return (outAngularSpeed * ModelData.Gears[gear].Ratio).IsSmaller(DataBus.EngineIdleSpeed);
+		}
+
+		private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
+		{
+			return
+				(outAngularSpeed * ModelData.Gears[gear].Ratio).IsGreaterOrEqual(
+					VectoMath.Min(
+						ModelData.Gears[gear].MaxSpeed,
+						DataBus.EngineN95hSpeed));
 		}
 
 		#region Overrides of BaseShiftStrategy
@@ -82,7 +99,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			UpdateHistoryBuffer(absTime, dt, currentCardanPower, velocity);
 
-			// normal shift when all requirements are fullfilled ------------------
+			// no shift when vehicle stands
+			if (DataBus.VehicleStopped) {
+				return false;
+			}
+
+			// emergency shift to not stall the engine ------------------------
+			if (gear == 1 && SpeedTooLowForEngine(_nextGear, inAngularVelocity / ModelData.Gears[gear].Ratio)) {
+				return true;
+			}
+
+			_nextGear = gear;
+			while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, inAngularVelocity / ModelData.Gears[gear].Ratio)) {
+				_nextGear--;
+			}
+			while (_nextGear < ModelData.Gears.Count &&
+					SpeedTooHighForEngine(_nextGear, inAngularVelocity / ModelData.Gears[gear].Ratio)) {
+				_nextGear++;
+			}
+
+			if (_nextGear != gear) {
+				return true;
+			}
+
 			var minimumShiftTimePassed = (lastShiftTime + ModelData.ShiftTime).IsSmallerOrEqual(absTime);
 			if (!minimumShiftTimePassed) {
 				return false;
@@ -117,33 +156,46 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
 			PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
-			var lookAheadDistance = DataBus.VehicleSpeed * ShiftStrategyParameters.GearResidenceTime;
+			var lookAheadDistance = DataBus.VehicleSpeed * ModelData.TractionInterruption;//ShiftStrategyParameters.GearResidenceTime;
 			var roadGradient = DataBus.CycleLookAhead(lookAheadDistance).RoadGradient;
-			var minRating = new GearRating(GearRatingCase.D, double.MaxValue, 0.RPMtoRad());
+			var minRating = new GearRating(GearRatingCase.E, double.MaxValue, 0.RPMtoRad());
 			var selectedGear = gear;
 			var debugData = new DebugData();
-			for (var i = Math.Max(0, gear - ShiftStrategyParameters.AllowedGearRangeDown);
+
+			var currentVelocity = DataBus.VehicleSpeed;
+			var gradient = CalcGradientDuringGearshift(false, dt, currentVelocity);
+			var estimatedVelocityPostShift = VelocityDropData.Interpolate(currentVelocity, gradient);
+			var predictionVelocity = CalcPredictionVelocity(currentVelocity, estimatedVelocityPostShift);
+
+			accRsv = CalcAccelerationReserve(currentVelocity);
+
+			GearRatings.Clear();
+			for (var i = Math.Max(1, gear - ShiftStrategyParameters.AllowedGearRangeDown);
 				i <= Math.Min(ModelData.Gears.Count, gear + ShiftStrategyParameters.AllowedGearRangeUp);
 				i++) {
 				var nextGear = (uint)i;
 
 				var gradientBelowMaxGrad = roadGradient < MaxGradability.GradabilityLimitedTorque(nextGear);
-				var engineSpeedAboveMin = outAngularVelocity * ModelData.Gears[nextGear].Ratio > GetEngineSpeedLimitLow(false);
+				var engineSpeedAboveMin =
+					outAngularVelocity * ModelData.Gears[nextGear].Ratio > PowertrainConfig.EngineData.IdleSpeed;
 
 				var engineSpeedBelowMax = outAngularVelocity * ModelData.Gears[nextGear].Ratio <
 										PowertrainConfig.EngineData.FullLoadCurves[0].N95hSpeed;
-				if (nextGear > gear && !(gradientBelowMaxGrad && engineSpeedAboveMin && engineSpeedBelowMax)) {
+
+				if (!(gradientBelowMaxGrad && engineSpeedAboveMin && engineSpeedBelowMax)) {
 					debugData.Add(
 						string.Format(
 							"{0} - gear {1} exceeds speed limits / gradability {2}", absTime, nextGear,
 							outAngularVelocity * ModelData.Gears[nextGear].Ratio));
+					GearRatings[nextGear] = new GearRating(GearRatingCase.E, 0, null);
 					continue;
 				}
 
-				var rating = RatingGear(false, nextGear, dt);
+				var rating = RatingGear(false, nextGear, gear, gradient, predictionVelocity, estimatedVelocityPostShift, accRsv);
 				if (nextGear == gear) {
 					if (rating.RatingCase == GearRatingCase.A) {
-						rating = new GearRating(GearRatingCase.A, rating.Rating * ShiftStrategyParameters.RatingFactorCurrentGear, rating.MaxEngineSpeed);
+						rating = new GearRating(
+							GearRatingCase.A, rating.Rating * ShiftStrategyParameters.RatingFactorCurrentGear, rating.MaxEngineSpeed);
 					}
 				}
 				debugData.Add(string.Format("{0} - gear {1}: rating {2}", absTime, nextGear, rating));
@@ -151,7 +203,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					minRating = rating;
 					selectedGear = nextGear;
 				}
+				GearRatings[nextGear] = rating;
 			}
+
 			debugData.Add(string.Format("selected gear: {0} - {1}", selectedGear, minRating));
 
 			if (selectedGear < gear && (DownshiftAllowed(absTime) || inAngularVelocity < GetEngineSpeedLimitLow(false))) {
@@ -160,34 +214,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (selectedGear > gear && (UpshiftAllowed(absTime) || inAngularVelocity > minRating.MaxEngineSpeed)) {
 				_nextGear = selectedGear;
 			}
-			
+
 			DebugData.Add(debugData);
 			return _nextGear != gear;
 		}
 
 		private bool UpshiftAllowed(Second absTime)
 		{
-			return (absTime - _gearbox.LastDownshift).IsSmaller(_gearbox.ModelData.UpshiftAfterDownshiftDelay);
+			return (absTime - _gearbox.LastDownshift).IsGreaterOrEqual(_gearbox.ModelData.UpshiftAfterDownshiftDelay);
 		}
 
 		private bool DownshiftAllowed(Second absTime)
 		{
-			return (absTime - _gearbox.LastUpshift).IsSmaller(_gearbox.ModelData.DownshiftAfterUpshiftDelay);
+			return (absTime - _gearbox.LastUpshift).IsGreaterOrEqual(_gearbox.ModelData.DownshiftAfterUpshiftDelay);
 		}
 
-		private GearRating RatingGear(bool driveOff, uint gear, Second dt)
+		private GearRating RatingGear(
+			bool driveOff, uint gear, uint currentGear, Radian gradient, MeterPerSecond predictionVelocity,
+			MeterPerSecond velocityAfterGearshift, MeterPerSquareSecond accRsv)
 		{
-			var currentVelocity = DataBus.VehicleSpeed;
-			var gradient = CalcGradientDuringGearshift(driveOff, dt, currentVelocity);
-
-			var predictionVelocity = ShiftStrategyParameters.StartVelocity;
-			var accRsv = ShiftStrategyParameters.StartAcceleration;
-			if (!driveOff) {
-				predictionVelocity = CalcPredictionVelocity(currentVelocity, gradient);
-
-				accRsv = CalcAccelerationReserve(currentVelocity);
-			}
-
 			TestContainer.GearboxCtl.Gear = gear;
 			TestContainer.VehiclePort.Initialize(predictionVelocity, gradient);
 			var respAccRsv = (ResponseDryRun)TestContainer.VehiclePort.Request(
@@ -196,38 +241,55 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var respConstVel = (ResponseDryRun)TestContainer.VehiclePort.Request(
 				0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval,
 				0.SI<MeterPerSquareSecond>(), gradient, true);
+			var respDriverDemand = (ResponseDryRun)TestContainer.VehiclePort.Request(
+				0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, DataBus.DriverAcceleration, gradient,
+				true);
 
 			if (respAccRsv.EngineSpeed < PowertrainConfig.EngineData.IdleSpeed ||
 				respAccRsv.EngineSpeed > PowertrainConfig.EngineData.FullLoadCurves[0].N95hSpeed) {
 				return new GearRating(GearRatingCase.E, 0, 0.RPMtoRad());
 			}
 
-
 			GearRating? retVal;
 			var engineSpeedLowThreshold = GetEngineSpeedLimitLow(driveOff);
-			var engineSpeedHighThreshold = GetEngineSpeedLimitHigh(driveOff, gear, respAccRsv.EngineSpeed, respConstVel.CardanTorque);
+			var engineSpeedHighThreshold = GetEngineSpeedLimitHigh(
+				driveOff, gear, respAccRsv.EngineSpeed, respConstVel.CardanTorque);
 			if (respAccRsv.EngineSpeed < engineSpeedLowThreshold) {
-				return new GearRating(GearRatingCase.D, (engineSpeedLowThreshold - respAccRsv.EngineSpeed).Value(), engineSpeedHighThreshold);
+				return new GearRating(
+					GearRatingCase.D, (engineSpeedLowThreshold - respAccRsv.EngineSpeed).Value(), engineSpeedHighThreshold);
 			}
 
 			if (respAccRsv.EngineSpeed > engineSpeedHighThreshold) {
-				return new GearRating(GearRatingCase.D, (respAccRsv.EngineSpeed - engineSpeedHighThreshold).Value(), engineSpeedHighThreshold);
+				return new GearRating(
+					GearRatingCase.D, (respAccRsv.EngineSpeed - engineSpeedHighThreshold).Value(), engineSpeedHighThreshold);
 			}
 
 			if (respAccRsv.EngineTorqueDemandTotal <= respAccRsv.EngineDynamicFullLoadTorque) {
 				var fc = PowertrainConfig.EngineData.ConsumptionMap.GetFuelConsumption(
-					VectoMath.Max(respAccRsv.EngineTorqueDemandTotal, PowertrainConfig.EngineData.FullLoadCurves[0].DragLoadStationaryTorque(respAccRsv.EngineSpeed)), respAccRsv.EngineSpeed);
-				retVal = new GearRating(GearRatingCase.A, (fc.Value / respAccRsv.AxlegearPowerRequest).Value(), engineSpeedHighThreshold);
-			} else {
-				retVal = new GearRating(GearRatingCase.B, (respAccRsv.EnginePowerRequest - respAccRsv.DynamicFullLoadPower).Value(), engineSpeedHighThreshold);
-			}
-
-			var estimatedResidenceTime = EstimateResidenceTimeInGear(gear, respAccRsv, engineSpeedHighThreshold, gradient);
-			if (estimatedResidenceTime < ShiftStrategyParameters.GearResidenceTime) {
+					VectoMath.Max(
+						respAccRsv.EngineTorqueDemandTotal,
+						PowertrainConfig.EngineData.FullLoadCurves[0].DragLoadStationaryTorque(respAccRsv.EngineSpeed)),
+					respAccRsv.EngineSpeed);
 				retVal = new GearRating(
-					GearRatingCase.C, (ShiftStrategyParameters.GearResidenceTime - estimatedResidenceTime).Value(), engineSpeedHighThreshold);
+					GearRatingCase.A,
+					(fc.Value.ConvertToGrammPerHour().Value / VectoMath.Max(respAccRsv.AxlegearPowerRequest, 1.SI<Watt>())).Value(),
+					engineSpeedHighThreshold);
+			} else {
+				retVal = new GearRating(
+					GearRatingCase.B, (respAccRsv.EnginePowerRequest - respAccRsv.DynamicFullLoadPower).Value(),
+					engineSpeedHighThreshold);
 			}
 
+			if (gear > currentGear) {
+				var estimatedResidenceTime =
+					EstimateResidenceTimeInGear(
+						gear, respDriverDemand, engineSpeedHighThreshold, velocityAfterGearshift, gradient, engineSpeedLowThreshold);
+				if (estimatedResidenceTime != null && estimatedResidenceTime < ShiftStrategyParameters.GearResidenceTime) {
+					retVal = new GearRating(
+						GearRatingCase.C, (ShiftStrategyParameters.GearResidenceTime - estimatedResidenceTime).Value(),
+						engineSpeedHighThreshold);
+				}
+			}
 			return retVal.Value;
 		}
 
@@ -258,9 +320,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return accRsv;
 		}
 
-		private MeterPerSecond CalcPredictionVelocity(MeterPerSecond currentVelocity, Radian gradient)
+		private MeterPerSecond CalcPredictionVelocity(
+			MeterPerSecond currentVelocity, MeterPerSecond estimatedVelocityPostShift)
 		{
-			var estimatedVelocityPostShift = VelocityDropData.Interpolate(currentVelocity, gradient);
 			var ratioSpeedDrop = estimatedVelocityPostShift / VectoMath.Max(currentVelocity, 0.1.SI<MeterPerSecond>());
 			var predictionIntervalRatio = ShiftStrategyParameters.PredictionDurationLookup.Lookup(ratioSpeedDrop.Value());
 			var speedChange = estimatedVelocityPostShift - currentVelocity;
@@ -288,13 +350,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var upperEngineSpeedLimit = (PowertrainConfig.EngineData.FullLoadCurves[0].NTq99lSpeed +
 										PowertrainConfig.EngineData.FullLoadCurves[0].NTq99hSpeed) / 2.0;
+
+			var currentVelocity = DataBus.VehicleSpeed;
+			var gradient = CalcGradientDuringGearshift(false, dt, currentVelocity);
+			var estimatedVelocityPostShift = VelocityDropData.Interpolate(currentVelocity, gradient);
+			var predictedVelocity = DataBus.DriverBehavior == DrivingBehavior.Braking
+				? currentVelocity + PowertrainConfig.DriverData.AccelerationCurve.Lookup(currentVelocity).Deceleration *
+				ModelData.TractionInterruption
+				: CalcPredictionVelocity(currentVelocity, estimatedVelocityPostShift);
+
 			if (inAngularVelocity < GetEngineSpeedLimitLow(false)) {
 				for (var i = Math.Max(0, gear - ShiftStrategyParameters.AllowedGearRangeDown);
 					i <= Math.Min(ModelData.Gears.Count, gear + ShiftStrategyParameters.AllowedGearRangeUp);
 					i++) {
 					var nextGear = (uint)i;
-					if (outAngularVelocity * ModelData.Gears[nextGear].Ratio > GetEngineSpeedLimitLow(false) &&
-						outAngularVelocity * ModelData.Gears[nextGear].Ratio < upperEngineSpeedLimit) {
+					TestContainer.GearboxCtl.Gear = nextGear;
+					var init = TestContainer.VehiclePort.Initialize(predictedVelocity, gradient);
+					if (init.EngineSpeed > GetEngineSpeedLimitLow(false) &&
+						init.EngineSpeed < upperEngineSpeedLimit) {
 						_nextGear = nextGear;
 						return true;
 					}
@@ -306,8 +379,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					i >= Math.Max(0, gear + ShiftStrategyParameters.AllowedGearRangeDown);
 					i--) {
 					var nextGear = (uint)i;
-					if (outAngularVelocity * ModelData.Gears[nextGear].Ratio > GetEngineSpeedLimitLow(false) &&
-						outAngularVelocity * ModelData.Gears[nextGear].Ratio < upperEngineSpeedLimit) {
+					TestContainer.GearboxCtl.Gear = nextGear;
+					var init = TestContainer.VehiclePort.Initialize(predictedVelocity, gradient);
+					if (init.EngineSpeed > GetEngineSpeedLimitLow(false) &&
+						init.EngineSpeed < upperEngineSpeedLimit) {
 						_nextGear = nextGear;
 						return true;
 					}
@@ -352,9 +427,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var maxStartGear = (int)Math.Round(ModelData.Gears.Count / 2.0, MidpointRounding.AwayFromZero);
 
+			var currentVelocity = DataBus.VehicleSpeed;
+			var gradient = CalcGradientDuringGearshift(true, null, null);
+			var estimatedVelocityPostShift = VelocityDropData.Interpolate(currentVelocity, gradient);
+			var predictionVelocity = ShiftStrategyParameters.StartVelocity;
+			accRsv = ShiftStrategyParameters.StartAcceleration;
+
 			var startGear = 1u;
-			var minRating = new GearRating(GearRatingCase.D, double.MaxValue, 0.RPMtoRad());
+			var minRating = new GearRating(GearRatingCase.E, double.MaxValue, 0.RPMtoRad());
 			var roadGradient = DataBus.CycleData.LeftSample.RoadGradient; //CycleLookAhead(0.SI<Meter>()).RoadGradient;
+			GearRatings.Clear();
 			for (uint i = (uint)maxStartGear; i > 0; i--) {
 				var gradientBelowMaxGrad = roadGradient < MaxGradability.GradabilityLimitedTorque(i);
 				var engineSpeedLimitLow = GetEngineSpeedLimitLow(true);
@@ -362,7 +444,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var engineSpeedAboveMin = engineSpeed > engineSpeedLimitLow;
 				var engineSpeedBelowN95h = engineSpeed < PowertrainConfig.EngineData.FullLoadCurves[0].N95hSpeed;
 				if (gradientBelowMaxGrad && engineSpeedAboveMin && engineSpeedBelowN95h) {
-					var rating = RatingGear(true, i, null);
+					var rating = RatingGear(true, i, 0, roadGradient, predictionVelocity, estimatedVelocityPostShift, accRsv);
+					GearRatings[i] = rating;
 					if (rating < minRating) {
 						minRating = rating;
 						startGear = i;
@@ -389,40 +472,43 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		private Second EstimateResidenceTimeInGear(uint gear, ResponseDryRun responseDriverDemand, PerSecond engineSpeedHighThreshold, Radian estimatedGradient)
+		private Second EstimateResidenceTimeInGear(
+			uint gear, ResponseDryRun responseDriverDemand, PerSecond engineSpeedHighThreshold,
+			MeterPerSecond velocityAfterGearshift, Radian estimatedGradient, PerSecond engineSpeedLowThreshold)
 		{
 			// get total 'transmission ratio' of powertrain
 			var engineSpeed = responseDriverDemand.EngineSpeed;
 			var vehicleSpeed = responseDriverDemand.VehicleSpeed;
 			var ratio = (vehicleSpeed / engineSpeed).Cast<Meter>();
 
+			var estimatedEngineSpeed = velocityAfterGearshift / ratio;
+			if (estimatedEngineSpeed < engineSpeedLowThreshold || estimatedEngineSpeed > engineSpeedHighThreshold) {
+				return null;
+			}
+
 			var averageAccelerationTorque = AverageAccelerationTorqueLookup.Interpolate(
 				responseDriverDemand.EngineSpeed, responseDriverDemand.EngineTorqueDemand);
 
+			TestContainer.GearboxCtl.Gear = gear;
 			var initResponse = TestContainer.VehiclePort.Initialize(vehicleSpeed, estimatedGradient);
 			var delta = initResponse.EngineTorqueDemand - averageAccelerationTorque;
 			var acceleration = SearchAlgorithm.Search(
 				0.SI<MeterPerSquareSecond>(), delta, 0.1.SI<MeterPerSquareSecond>(),
-				getYValue: r => {
-					return (r as AbstractResponse).EngineTorqueDemand - averageAccelerationTorque;
-				},
+				getYValue: r => { return (r as AbstractResponse).EngineTorqueDemand - averageAccelerationTorque; },
 				evaluateFunction: a => {
 					return TestContainer.VehiclePort.Request(
 						0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, a, estimatedGradient, true);
 				},
-				criterion: r => {
-					return ((r as AbstractResponse).EngineTorqueDemand - averageAccelerationTorque).Value();
-				}
+				criterion: r => { return ((r as AbstractResponse).EngineTorqueDemand - averageAccelerationTorque).Value(); }
 			);
-			
+
 			var engineAcceleration = (acceleration / ratio).Cast<PerSquareSecond>();
 			var deltaEngineSpeed = engineSpeedHighThreshold - engineSpeed;
 			if (engineAcceleration > 0 && deltaEngineSpeed > 0) {
 				return (deltaEngineSpeed / engineAcceleration).Cast<Second>();
 			}
 
-			// TODO: make similar to matlab implementtion
-			return 0.SI<Second>();
+			return null;
 		}
 
 		private PerSecond GetEngineSpeedLimitHighDriveOff(uint gear)
@@ -457,44 +543,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
-	}
 
-	internal struct GearRating
-	{
-		public GearRating(GearRatingCase ratingCase, double rating, PerSecond maxEngineSpeed)
+		public void WriteModalResults(IModalDataContainer container)
 		{
-			RatingCase = ratingCase;
-			Rating = rating;
-			MaxEngineSpeed = maxEngineSpeed;
+			foreach (var gear in ModelData.Gears.Keys) {
+				container.SetDataValue(
+					string.Format("Gear{0}-Rating", gear),
+					GearRatings.ContainsKey(gear)
+						? GearRatings[gear].NumericValue
+						: new GearRating(GearRatingCase.E, 0, null).NumericValue);
+			}
+
+			container.SetDataValue("acc_rsv", accRsv?.Value() ?? 0);
+			GearRatings.Clear();
+			accRsv = null;
 		}
-
-		public double Rating { get; }
-
-		public GearRatingCase RatingCase { get; }
-		public PerSecond MaxEngineSpeed { get; set; }
-
-		public static bool operator <(GearRating first, GearRating second)
-		{
-			return first.RatingCase < second.RatingCase && first.Rating < second.Rating;
-		}
-
-		public static bool operator >(GearRating first, GearRating second)
-		{
-			return first.RatingCase > second.RatingCase && first.Rating > second.Rating;
-		}
-
-		public override string ToString()
-		{
-			return string.Format("{0} / {1}", RatingCase, Rating);
-		}
-	}
-
-	internal enum GearRatingCase
-	{
-		A = 1,	// inside preferred speed range and inside torque range
-		B,		// inside engine speed limits, torque demand too high
-		C,		// valid gear, gear residience time below threshold
-		D,		// inside engine speed limits, outside preferred speed range
-		E		// outside engine speed limits
 	}
 }

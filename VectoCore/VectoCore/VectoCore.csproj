@@ -199,6 +199,7 @@
     <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineFanAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineSpeedDriveOffPreprocessor.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\GearRating.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MaxCardanTorqueLookup.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MaxCardanTorquePreprocessor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MaxGradabilityLookup.cs" />

@@ -82,8 +82,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_strategy.Gearbox = this;
 			}
 
-			LastDownshift = -double.MaxValue.SI<Second>();
-			LastUpshift = -double.MaxValue.SI<Second>();
+			LastDownshift = double.MaxValue.SI<Second>();
+			LastUpshift = double.MaxValue.SI<Second>();
 		}
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
@@ -175,8 +175,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 			if (DataBus.VehicleStopped) {
 				EngageTime = absTime;
-				LastDownshift = -double.MaxValue.SI<Second>();
-				LastUpshift = -double.MaxValue.SI<Second>();
+				LastDownshift = double.MaxValue.SI<Second>();
+				LastUpshift = double.MaxValue.SI<Second>();
 			}
 			if (DataBus.DriverBehavior == DrivingBehavior.Halted) {
 				EngageTime = absTime + dt;
@@ -410,6 +410,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.n_gbx_out_avg] = (PreviousState.OutAngularVelocity +
 														CurrentState.OutAngularVelocity) / 2.0;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
+			(_strategy as AMTShiftStrategyV2)?.WriteModalResults(container);
 		}
 
 		protected override void DoCommitSimulationStep()
