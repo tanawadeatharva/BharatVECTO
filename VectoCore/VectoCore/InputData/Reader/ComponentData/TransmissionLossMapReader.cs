@@ -36,6 +36,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
@@ -103,7 +104,6 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		private static List<TransmissionLossMap.GearLossMapEntry> ExtendLossMap(
 			List<TransmissionLossMap.GearLossMapEntry> entries)
 		{
-			var maxRpm = entries.Max(x => x.InputSpeed);
 			var maxTorque = entries.Max(x => x.InputTorque);
 
 			var clusterer = new MeanShiftClustering();
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				VectoMath.LeastSquaresFitting(speedBucket.Value, x => x.InputTorque.Value(), x => x.TorqueLoss.Value(), out k, out d,
 					out r);
 
-				var inTq = 3 * maxTorque;
+				var inTq = DeclarationData.LossMapExtrapolationFactor * maxTorque;
 				entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, inTq, k * inTq + d.SI<NewtonMeter>()));
 				entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, -inTq, k * inTq + d.SI<NewtonMeter>()));
 			}
