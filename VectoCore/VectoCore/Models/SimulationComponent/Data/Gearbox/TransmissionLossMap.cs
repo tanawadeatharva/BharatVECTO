@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	public sealed class TransmissionLossMap : LoggingObject
 	{
-		[ValidateObject] private readonly IReadOnlyList<GearLossMapEntry> _entries;
+		[ValidateObject] internal readonly IReadOnlyList<GearLossMapEntry> _entries;
 
 		private readonly double _ratio;
 

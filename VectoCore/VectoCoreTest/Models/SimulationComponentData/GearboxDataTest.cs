@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
@@ -43,6 +44,12 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
+using TUGraz.VectoCore.Tests.Reports;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
@@ -53,14 +60,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 		protected const string EngineFile = @"TestData\Components\24t Coach.veng";
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 
-        [TestCase]
+		[TestCase]
 		public void TestGearboxDataReadTest()
 		{
 			var axleData = MockSimulationDataFactory.CreateAxleGearDataFromFile(GearboxFile);
@@ -358,6 +365,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var lookupOrig = gearboxDataOrig.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
 			var lookupExt = gearboxDataExt.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
 
+			foreach (var entry in gearboxDataExt.Gears[7].LossMap._entries) {
+				Console.WriteLine(string.Format("{0},{1},{2}", entry.InputSpeed.AsRPM, entry.InputTorque.Value(), entry.TorqueLoss.Value()));
+			}
+
 			Assert.IsTrue(lookupOrig.Extrapolated);
 			Assert.IsFalse(lookupExt.Extrapolated);
 
@@ -368,5 +379,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsTrue(lookupOrig.Extrapolated);
 			Assert.IsFalse(lookupExt.Extrapolated);
 		}
-	}
+
+		}
 }
