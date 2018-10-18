@@ -365,9 +365,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var lookupOrig = gearboxDataOrig.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
 			var lookupExt = gearboxDataExt.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
 
-			foreach (var entry in gearboxDataExt.Gears[7].LossMap._entries) {
-				Console.WriteLine(string.Format("{0},{1},{2}", entry.InputSpeed.AsRPM, entry.InputTorque.Value(), entry.TorqueLoss.Value()));
-			}
+			//foreach (var entry in gearboxDataExt.Gears[7].LossMap._entries) {
+			//	Console.WriteLine(string.Format("{0},{1},{2}", entry.InputSpeed.AsRPM, entry.InputTorque.Value(), entry.TorqueLoss.Value()));
+			//}
 
 			Assert.IsTrue(lookupOrig.Extrapolated);
 			Assert.IsFalse(lookupExt.Extrapolated);
@@ -380,5 +380,34 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsFalse(lookupExt.Extrapolated);
 		}
 
+		[TestCase()]
+		public void TestAxlegearLossMapExtension()
+		{
+			var gbxFile = @"TestData\Components\24t Coach.vgbx";
+
+			var gearboxDataOrig = MockSimulationDataFactory.CreateAxleGearDataFromFile(gbxFile, false);
+			var gearboxDataExt = MockSimulationDataFactory.CreateAxleGearDataFromFile(gbxFile, true);
+
+			//foreach (var entry in gearboxDataExt.AxleGear.LossMap._entries) {
+			//	Console.WriteLine(string.Format("{0},{1},{2}", entry.InputSpeed.AsRPM, entry.InputTorque.Value(), entry.TorqueLoss.Value()));
+			//}
+
+			var rpm = 100.RPMtoRad();
+			var tq = 80000.SI<NewtonMeter>();
+			var lookupOrig = gearboxDataOrig.AxleGear.LossMap.GetTorqueLoss(rpm, tq);
+			var lookupExt = gearboxDataExt.AxleGear.LossMap.GetTorqueLoss(rpm, tq);
+
+			Assert.IsTrue(lookupOrig.Extrapolated);
+			Assert.IsFalse(lookupExt.Extrapolated);
+
+			rpm = 1000.RPMtoRad();
+			lookupOrig = gearboxDataOrig.AxleGear.LossMap.GetTorqueLoss(rpm, tq);
+			lookupExt = gearboxDataExt.AxleGear.LossMap.GetTorqueLoss(rpm, tq);
+
+			Assert.IsTrue(lookupOrig.Extrapolated);
+			Assert.IsFalse(lookupExt.Extrapolated);
 		}
+
+	}
+
 }

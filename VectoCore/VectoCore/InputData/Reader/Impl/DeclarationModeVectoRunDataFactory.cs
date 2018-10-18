@@ -107,11 +107,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_engineData = _dao.CreateEngineData(InputDataProvider.JobInputData.Vehicle.EngineInputData,
 				InputDataProvider.JobInputData.Vehicle.EngineIdleSpeed,
 				InputDataProvider.JobInputData.Vehicle.GearboxInputData, InputDataProvider.JobInputData.Vehicle.TorqueLimits);
-			_axlegearData = _dao.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.AxleGearInputData, false);
-			_angledriveData = _dao.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.AngledriveInputData, false);
+			_axlegearData = _dao.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.AxleGearInputData);
+			_angledriveData = _dao.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.AngledriveInputData);
 			_gearboxData = _dao.CreateGearboxData(InputDataProvider.JobInputData.Vehicle.GearboxInputData, _engineData,
 				_axlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, false);
+				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory);
 			_retarderData = _dao.CreateRetarderData(InputDataProvider.JobInputData.Vehicle.RetarderInputData);
 
 			_ptoTransmissionData = _dao.CreatePTOTransmissionData(InputDataProvider.JobInputData.Vehicle.PTOTransmissionInputData);
