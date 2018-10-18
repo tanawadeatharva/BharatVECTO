@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				if (data.LossMap == null) {
 					throw new InvalidFileFormatException("LossMap for Axlegear is missing.");
 				}
-				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "Axlegear");
+				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "Axlegear", true);
 			}
 			if (axleLossMap == null) {
 				throw new InvalidFileFormatException("LossMap for Axlegear is missing.");
@@ -258,7 +258,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						};
 						try {
 							angledriveData.Angledrive.LossMap = TransmissionLossMapReader.Create(data.LossMap,
-								data.Ratio, "Angledrive");
+								data.Ratio, "Angledrive", true);
 						} catch (VectoException ex) {
 							Log.Info("Angledrive Loss Map not found.");
 							if (useEfficiencyFallback) {
