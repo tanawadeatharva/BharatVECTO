@@ -39,7 +39,7 @@
 			</StackPanel>
 			<StackPanel Orientation="Horizontal" Margin="0, 155, 0,0">
 				<TextBlock Text="Support Contact:" Margin="0,0,30,0"/>
-				<TextBlock Text="vecto@jrc.ec.europa.com" Foreground="Blue" TextDecorations="Underline" MouseLeftButtonUp="Supportmail">
+                <TextBlock Text="JRC-VECTO@ec.europa.eu" Foreground="Blue" TextDecorations="Underline" MouseLeftButtonUp="Supportmail">
 					<TextBlock.Style>
 						<Style>
 							<Style.Triggers>
