@@ -47,7 +47,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	internal class VTPCycle : PWheelCycle
 	{
-		private uint StartGear;
+		protected uint StartGear;
+
+		protected Second SimulationIntervalEndTime;
 
 		public VTPCycle(VehicleContainer container, IDrivingCycleData cycle) : base(container, cycle) { }
 
@@ -149,8 +151,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void VerifyWheelTorque(DrivingCycleData.DrivingCycleEntry entry)
 		{
-			var torqueRatio = VectoMath.Max(
-					entry.TorqueWheelLeft / entry.TorqueWheelRight, entry.TorqueWheelRight / entry.TorqueWheelLeft);
+			var torqueRatio = entry.TorqueWheelRight.IsEqual(0, 1e-9) && entry.TorqueWheelLeft.IsEqual(0, 1e-9) ? 0 :
+				Math.Max(entry.TorqueWheelLeft / entry.TorqueWheelRight, entry.TorqueWheelRight / entry.TorqueWheelLeft);
 			var torqueDiff = VectoMath.Abs(entry.TorqueWheelLeft - entry.TorqueWheelRight);
 			if (torqueRatio > DeclarationData.VTPMode.WheelTorqueDifferenceFactor && 
 				torqueDiff > DeclarationData.VTPMode.MaxWheelTorqueDifference) {
@@ -256,6 +258,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var gearRatios = RunData.GearboxData.Gears.ToDictionary(g => g.Key, g => g.Value.Ratio);
 
 			var stopped = false;
+			var hasATGbx = RunData.GearboxData.TorqueConverterData != null && RunData.GearboxData.Type.AutomaticTransmission();
 
 			foreach (var entry in Data.Entries) {
 				stopped = stopped || entry.VehicleTargetSpeed.IsEqual(0.KMPHtoMeterPerSecond(),
@@ -271,6 +274,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					entry.Gear = 0;
 					continue;
 				}
+
+				if (hasATGbx && entry.TorqueConverterActive != null && entry.TorqueConverterActive.Value) {
+					continue;
+				}
+
 				var ratio = (entry.EngineSpeed / cardanSpeed).Value();
 				var gear = gearRatios.Aggregate((x, y) =>
 					Math.Abs(ratio/x.Value   - 1) < Math.Abs(ratio/y.Value - 1) ? x : y).Key;
@@ -305,6 +313,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaT = CycleIterator.RightSample.Time - absTime
 				};
 			}
+
+			SimulationIntervalEndTime = absTime + dt;
+			if (CycleIterator.LeftSample.Time > absTime) {
+				Log.Warn("absTime: {0} cycle: {1}", absTime, CycleIterator.LeftSample.Time);
+			}
 			var tmp = NextComponent.Initialize(CycleIterator.LeftSample.Torque, CycleIterator.LeftSample.WheelAngularVelocity);
 
 			return DoHandleRequest(absTime, dt, CycleIterator.LeftSample.WheelAngularVelocity);
@@ -317,6 +330,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return CycleIterator.Previous().LeftSample.VehicleTargetSpeed
 					.IsEqual(0.KMPHtoMeterPerSecond(), 0.3.KMPHtoMeterPerSecond());
 			}
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			if (SimulationIntervalEndTime.IsGreaterOrEqual(CycleIterator.RightSample.Time)) {
+				CycleIterator.MoveNext();
+			}
+			AdvanceState();
 		}
 
 		protected override void DoWriteModalResults(IModalDataContainer container)

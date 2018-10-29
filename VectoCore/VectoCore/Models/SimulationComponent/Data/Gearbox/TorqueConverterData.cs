@@ -35,6 +35,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
@@ -206,6 +207,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 					inAngularVelocity, inTorque);
 			}
 			return FindOperatingPoint(inAngularVelocity, solutions.Max().SI<PerSecond>());
+		}
+
+		public TorqueConverterOperatingPoint LookupOperatingPoint(
+			PerSecond outAngularVelocity, PerSecond inAngularVelocity, NewtonMeter outTorque)
+		{
+			var nu = outAngularVelocity / inAngularVelocity;
+			foreach (var edge in TorqueConverterEntries.Pairwise((p1, p2) => Edge.Create(new Point(p1.SpeedRatio, p1.TorqueRatio), new Point(p2.SpeedRatio, p2.TorqueRatio)))) {
+				if (nu >= edge.P1.X && nu < edge.P2.X) {
+					var my = VectoMath.Interpolate(edge, nu);
+					return new TorqueConverterOperatingPoint() {
+						InAngularVelocity = inAngularVelocity,
+						OutAngularVelocity = outAngularVelocity,
+						OutTorque = outTorque,
+						InTorque = outTorque / my,
+						SpeedRatio = nu,
+						TorqueRatio = my,
+					};
+				}
+			}
+			throw new VectoSimulationException(
+				"Torque Converter: Failed to find operating point for outputSpeed/outputTorque/inputSpeed! n_out: {0}, n_in: {1}, tq_out: {2}",
+				outAngularVelocity, inAngularVelocity, outTorque);
 		}
 
 		public TorqueConverterOperatingPoint FindOperatingPointForPowerDemand(Watt power, PerSecond prevInputSpeed,
