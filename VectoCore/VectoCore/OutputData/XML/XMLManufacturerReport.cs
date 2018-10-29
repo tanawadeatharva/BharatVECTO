@@ -75,6 +75,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public void Initialize(VectoRunData modelData)
 		{
 			VehiclePart.Add(
+				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
+				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
+				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
@@ -114,10 +117,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var maxTorque = modelData.FullLoadCurves[0].MaxTorque;
 			for (uint i = 1; i < modelData.FullLoadCurves.Count; i++) {
 				if (!maxTorque.IsEqual(modelData.FullLoadCurves[i].MaxTorque, 1e-3.SI<NewtonMeter>())) {
-					limits.Add(new XElement(tns + XMLNames.Vehicle_TorqueLimits_Entry,
-						new XAttribute(XMLNames.Vehicle_TorqueLimits_Entry_Gear_Attr, i),
-						new XAttribute(XMLNames.Vehicle_TorqueLimits_Entry_MaxTorque_Attr,
-							modelData.FullLoadCurves[i].MaxTorque.ToXMLFormat(0))));
+					limits.Add(
+						new XElement(
+							tns + XMLNames.Vehicle_TorqueLimits_Entry,
+							new XAttribute(XMLNames.Vehicle_TorqueLimits_Entry_Gear_Attr, i),
+							new XAttribute(
+								XMLNames.XMLManufacturerReport_torqueLimit,
+								modelData.FullLoadCurves[i].MaxTorque.ToXMLFormat(0)),
+							new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_Nm),
+							new XAttribute(
+								XMLNames.XMLManufacturerReport_torqueLimitPercent,
+								(modelData.FullLoadCurves[i].MaxTorque / maxTorque * 100).ToXMLFormat(1))));
 				}
 			}
 

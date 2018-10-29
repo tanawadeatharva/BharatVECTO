@@ -358,10 +358,31 @@
 				<xs:documentation>P197 / P194</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="unit" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="Nm"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="torqueLimitPercent" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:float">
+					<xs:minInclusive value="0.0"/>
+					<xs:maxInclusive value="100.0"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="TorqueLimitsType">
 		<xs:sequence>
-			<xs:element name="Entry" type="TorqueLimitsEntryType"/>
+			<xs:element name="Entry">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="TorqueLimitsEntryType"/>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="VectoOutputDataType">
@@ -495,6 +516,9 @@
 	</xs:complexType>
 	<xs:complexType name="VehicleType">
 		<xs:sequence>
+			<xs:element name="Model" type="vdecdef:ModelType"/>
+			<xs:element name="Manufacturer" type="vdecdef:ManufacturerType"/>
+			<xs:element name="ManufacturerAddress" type="vdecdef:ManufacturerAddressType"/>
 			<xs:element name="VIN">
 				<xs:annotation>
 					<xs:documentation>P238</xs:documentation>
