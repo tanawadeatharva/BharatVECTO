@@ -151,8 +151,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XElement GetApplicationInfo()
 		{
+			var versionNumber = VectoSimulationCore.VersionNumber;
+#if RELEASE_CANDIDATE
+			versionNumber += " !!NOT FOR CERTIFICATION!!";
+#endif
 			return new XElement(tns + XMLNames.Report_ApplicationInfo_ApplicationInformation,
-				new XElement(tns + XMLNames.Report_ApplicationInfo_SimulationToolVersion, VectoSimulationCore.VersionNumber),
+				new XElement(tns + XMLNames.Report_ApplicationInfo_SimulationToolVersion, versionNumber),
 				new XElement(tns + XMLNames.Report_ApplicationInfo_Date,
 					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
 		}
