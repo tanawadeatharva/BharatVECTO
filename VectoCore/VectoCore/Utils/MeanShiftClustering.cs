@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Utils
 
 			var iterationCount = 0;
 			var updated = true;
-			while (iterationCount < MaxIterations && updated) {
+			while (iterationCount++ < MaxIterations && updated) {
 				for (var clusterIdx = 0; clusterIdx < ClusterCount; clusterIdx++) {
 					var minDist = double.MaxValue;
 					var minIdx = -1;
