@@ -70,6 +70,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Algorithms\MeanShiftClusteringTest.cs" />
     <Compile Include="Dummy\EngineFLDTest.cs" />
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="FileIO\JsonWriteTest.cs" />
@@ -171,7 +172,7 @@
     <Compile Include="Utils\MockGearbox.cs" />
     <Compile Include="Utils\ShiftPolygonDrawer.cs" />
     <Compile Include="Utils\SITest.cs" />
-    <Compile Include="Utils\DelauneyMapTest.cs" />
+    <Compile Include="Algorithms\DelaunayMapTest.cs" />
     <Compile Include="Utils\MockModalDataContainer.cs" />
     <Compile Include="Utils\DoubleExtensionMethodTest.cs" />
     <Compile Include="Utils\VectoMathTest.cs" />

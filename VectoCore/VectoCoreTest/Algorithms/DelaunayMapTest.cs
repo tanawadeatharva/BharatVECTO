@@ -29,15 +29,16 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using NUnit.Framework;
 using System;
 using System.IO;
 using System.Linq;
+using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Tests.Utils
+namespace TUGraz.VectoCore.Tests.Algorithms
 {
 	[TestFixture]
 	public class DelaunayMapTest
