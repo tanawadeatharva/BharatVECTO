@@ -33,10 +33,17 @@ namespace TUGraz.VectoCore.Utils
 {
 	public static class VectoSimulationCore
 	{
+
+#if RELEASE_CANDIDATE
+		private const string SUFFIX = "-RC";
+#else
+		private const string SUFFIX = "";
+#endif
+
 		public static string VersionNumber
 		{
 			get {
-				return "3.3.0.1250";
+				return "3.3.0.1398" + SUFFIX;
 			}
 		}
 
