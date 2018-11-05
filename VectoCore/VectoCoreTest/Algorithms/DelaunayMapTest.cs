@@ -43,6 +43,13 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 	[TestFixture]
 	public class DelaunayMapTest
 	{
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+
 		[TestCase]
 		public void Test_Simple_DelaunayMap()
 		{

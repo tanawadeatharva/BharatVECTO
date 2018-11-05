@@ -18,18 +18,29 @@ namespace TUGraz.VectoCore.Tests.Algorithms
 			var entries = new List<double>();
 			var rnd = new Random(centers.Length);
 			foreach (var center in centers) {
-				entries.Add(center + rnd.NextDouble() * 80 - 40);
+				var sum = 0.0;
+				for (var i = 0; i < 30; i++) {
+					var val = center + rnd.NextDouble() * 20 - 10;
+					sum += val;
+					entries.Add(val);
+				}
+				Console.WriteLine(sum / 30);
 			}
 
-			var clusterer = new MeanShiftClustering();
-			var clusters = clusterer.FindClusters(entries.ToArray(), 0.1);
+			Console.WriteLine(string.Join(", ", entries));
 
+			var clusterer = new MeanShiftClustering() {
+				ClusterCount = 8
+			};
+			var clusters = clusterer.FindClusters(entries.ToArray(), 10);
+
+			Console.WriteLine(clusterer.IterationCount);
 			Console.WriteLine(string.Join(", ",centers));
 			Console.WriteLine(string.Join(", ", clusters));
 
 			Assert.AreEqual(centers.Length, clusters.Length);
 			foreach (var center in centers) {
-				Assert.IsTrue(clusters.Any(x => Math.Abs(center - x) < 1));
+				Assert.IsTrue(clusters.Any(x => Math.Abs(center - x) < 5));
 			}
 		}
 

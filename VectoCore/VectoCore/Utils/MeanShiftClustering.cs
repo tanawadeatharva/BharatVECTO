@@ -31,9 +31,9 @@ namespace TUGraz.VectoCore.Utils
 				clusters[i] = new Cluster(min + (i + 0.5) * clusterDistance);
 			}
 
-			var iterationCount = 0;
+			IterationCount = 0;
 			var updated = true;
-			while (iterationCount++ < MaxIterations && updated) {
+			while (IterationCount++ < MaxIterations && updated) {
 				for (var clusterIdx = 0; clusterIdx < ClusterCount; clusterIdx++) {
 					var minDist = double.MaxValue;
 					var minIdx = -1;
@@ -57,6 +57,8 @@ namespace TUGraz.VectoCore.Utils
 
 			return clusters.Select(c => c.Center).Distinct(new ClusterComparer(clusterTolerance)).ToArray();
 		}
+
+		public int IterationCount { get; protected set; }
 
 		public struct Cluster
 		{
