@@ -961,55 +961,57 @@
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
-							<xs:element name="ZeroEmissionVehicle" type="xs:boolean" minOccurs="0">
-								<xs:annotation>
-									<xs:documentation>P269 - bool</xs:documentation>
-								</xs:annotation>
-							</xs:element>
-							<xs:element name="VocationalVehicle" type="xs:boolean" minOccurs="0">
-								<xs:annotation>
-									<xs:documentation>P270 - bool</xs:documentation>
-								</xs:annotation>
-							</xs:element>
-							<xs:element name="NgTankSystem" type="tns:NgTankSystemType" minOccurs="0">
-								<xs:annotation>
-									<xs:documentation>P275 - enum</xs:documentation>
-								</xs:annotation>
-							</xs:element>
-							<xs:element name="SleeperCab" type="xs:boolean" minOccurs="0">
-								<xs:annotation>
-									<xs:documentation>P276 - bool</xs:documentation>
-								</xs:annotation>
-							</xs:element>
-							<xs:element name="ADAS" minOccurs="0">
-								<xs:complexType>
-									<xs:sequence>
-										<xs:element name="EngineStopStart" type="xs:boolean">
-											<xs:annotation>
-												<xs:documentation>P271 - bool</xs:documentation>
-											</xs:annotation>
-										</xs:element>
-										<xs:element name="EcoRollWithoutEngineStop" type="xs:boolean">
-											<xs:annotation>
-												<xs:documentation>P272 - bool</xs:documentation>
-											</xs:annotation>
-										</xs:element>
-										<xs:element name="EcoRollWithEngineStop" type="xs:boolean">
-											<xs:annotation>
-												<xs:documentation>P273 - bool</xs:documentation>
-											</xs:annotation>
-										</xs:element>
-										<xs:element name="PredictiveCruiseControl">
-											<xs:annotation>
-												<xs:documentation>P274 - enum</xs:documentation>
-											</xs:annotation>
-											<xs:simpleType>
-												<xs:restriction base="tns:PredictiveCruiseControlType"/>
-											</xs:simpleType>
-										</xs:element>
-									</xs:sequence>
-								</xs:complexType>
-							</xs:element>
+							<xs:sequence minOccurs="0">
+								<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P269 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="VocationalVehicle" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P270 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="NgTankSystem" type="tns:NgTankSystemType" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>P275 - enum</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="SleeperCab" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P276 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="ADAS">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="EngineStopStart" type="xs:boolean">
+												<xs:annotation>
+													<xs:documentation>P271 - bool</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="EcoRollWithoutEngineStop" type="xs:boolean">
+												<xs:annotation>
+													<xs:documentation>P272 - bool</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="EcoRollWithEngineStop" type="xs:boolean">
+												<xs:annotation>
+													<xs:documentation>P273 - bool</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="PredictiveCruiseControl">
+												<xs:annotation>
+													<xs:documentation>P274 - enum</xs:documentation>
+												</xs:annotation>
+												<xs:simpleType>
+													<xs:restriction base="tns:PredictiveCruiseControlType"/>
+												</xs:simpleType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
 							<xs:sequence>
 								<xs:element name="TorqueLimits" type="tns:TorqueLimitsType" minOccurs="0"/>
 								<xs:element name="Components">
