@@ -2122,6 +2122,51 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ADAS.
+        /// </summary>
+        public static string Vehicle_ADAS {
+            get {
+                return ResourceManager.GetString("Vehicle_ADAS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EcoRollWithEngineStop.
+        /// </summary>
+        public static string Vehicle_ADAS_EcoRollWithEngineStopStart {
+            get {
+                return ResourceManager.GetString("Vehicle_ADAS_EcoRollWithEngineStopStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EcoRollWithoutEngineStop.
+        /// </summary>
+        public static string Vehicle_ADAS_EcoRollWithoutEngineStop {
+            get {
+                return ResourceManager.GetString("Vehicle_ADAS_EcoRollWithoutEngineStop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EngineStopStart.
+        /// </summary>
+        public static string Vehicle_ADAS_EngineStopStart {
+            get {
+                return ResourceManager.GetString("Vehicle_ADAS_EngineStopStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PredictiveCruiseControl.
+        /// </summary>
+        public static string Vehicle_ADAS_PCC {
+            get {
+                return ResourceManager.GetString("Vehicle_ADAS_PCC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AdvancedDriverAssist.
         /// </summary>
         public static string Vehicle_AdvancedDriverAssist {

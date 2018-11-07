@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -142,6 +144,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		NgTankSystem TankSystem { get; }
 
+		IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
+
 		// fields for exempted vehicles
 
 		bool ZeroEmissionVehicle { get; }
@@ -154,6 +158,40 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt MaxNetPower2 { get; }
 	}
+
+	public interface IAdvancedDriverAssistantSystemDeclarationInputData
+	{
+		bool EngineStopStart { get; }
+
+		bool EcoRollWitoutEngineStop { get; }
+
+		bool EcoRollWithEngineStop { get; }
+
+		PredictiveCruiseControlType PredictiveCruiseControl { get; }
+	}
+
+	public enum PredictiveCruiseControlType
+	{
+		None,
+		Option_1_2,
+		Option_1_2_3	
+	}
+
+	public static class PredictiveCruiseControlTypeHelper
+	{
+		public const string Prefix = "Option_";
+		public const string SeparatorXML = ",";
+		public const string SeparatorEnum = "_";
+
+		public static PredictiveCruiseControlType Parse(string value)
+		{
+			if (PredictiveCruiseControlType.None.ToString().Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
+				return PredictiveCruiseControlType.None;
+			}
+			return (Prefix + value.Replace(SeparatorXML, SeparatorEnum)).ParseEnum<PredictiveCruiseControlType>();
+		}
+	}
+
 
 	public enum NgTankSystem
 	{

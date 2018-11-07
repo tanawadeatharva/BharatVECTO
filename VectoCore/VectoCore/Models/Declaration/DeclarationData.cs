@@ -536,6 +536,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const NgTankSystem NgTankSystemDefault = NgTankSystem.Compressed;
 			public const bool SleeperCabDefault = true;
 			public const bool VocationalVehicleDefault = false;
+
+			public static class ADAS {
+				public const PredictiveCruiseControlType PredictiveCruiseControlDefault = PredictiveCruiseControlType.None;
+				public const bool EcoRollWithEngineStop = false;
+				public const bool EcoRollWitoutEngineStop = false;
+				public const bool EngineStopStartDefault = false;
+			}
 		}
 	}
 }

@@ -28,7 +28,7 @@ Imports TUGraz.VectoCore.Utils
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
-				IAngledriveInputData, IAirdragEngineeringInputData
+				IAngledriveInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData
 
 	Private _filePath As String
 	Private _path As String
@@ -670,6 +670,12 @@ Public Class Vehicle
     End Get
     End Property
 
+    Public ReadOnly Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
+    get
+            return Me
+    End Get
+    End Property
+
     Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
     get
             Return DeclarationData.Vehicle.ZeroEmissionVehicleDefault
@@ -697,6 +703,30 @@ Public Class Vehicle
     Public ReadOnly Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
     get
             Return Nothing
+    End Get
+    End Property
+
+    Public ReadOnly Property EngineStopStart As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EngineStopStart
+    get
+            return DeclarationData.Vehicle.ADAS.EngineStopStartDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property EcoRollWitoutEngineStop As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EcoRollWitoutEngineStop
+    get
+            return DeclarationData.Vehicle.ADAS.EcoRollWitoutEngineStop
+    End Get
+    End Property
+
+    Public ReadOnly Property EcoRollWithEngineStop As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EcoRollWithEngineStop
+    get
+            Return DeclarationData.Vehicle.ADAS.EcoRollWithEngineStop
+    End Get
+    End Property
+
+    Public ReadOnly Property PredictiveCruiseControl As PredictiveCruiseControlType Implements IAdvancedDriverAssistantSystemDeclarationInputData.PredictiveCruiseControl
+    get
+            Return DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault
     End Get
     End Property
 End Class

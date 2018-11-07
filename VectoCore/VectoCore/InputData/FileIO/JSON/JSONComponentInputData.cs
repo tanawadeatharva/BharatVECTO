@@ -45,7 +45,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONComponentInputData : IEngineeringInputDataProvider, IDeclarationInputDataProvider,
-		IEngineeringJobInputData, IVehicleEngineeringInputData
+		IEngineeringJobInputData, IVehicleEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData
 	{
 		protected IGearboxEngineeringInputData Gearbox;
 		protected IAxleGearInputData AxleGear;
@@ -305,6 +305,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public bool VocationalVehicle { get { return DeclarationData.Vehicle.VocationalVehicleDefault; } }
 		public bool SleeperCab { get { return DeclarationData.Vehicle.SleeperCabDefault; } }
 		public NgTankSystem TankSystem { get { return DeclarationData.Vehicle.NgTankSystemDefault; } }
+		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get { return this; } }
 		public bool ZeroEmissionVehicle { get { return DeclarationData.Vehicle.ZeroEmissionVehicleDefault; } }
 		public bool HybridElectricHDV { get { return DeclarationData.Vehicle.HybridElectricHDVDefault; } }
 		public bool DualFuelVehicle { get { return DeclarationData.Vehicle.DualFuelVehicleDefault; } }
@@ -325,5 +326,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return PTOTransmission; }
 		}
+
+		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
+
+		public bool EngineStopStart { get { return DeclarationData.Vehicle.ADAS.EngineStopStartDefault; } }
+		public bool EcoRollWitoutEngineStop { get { return DeclarationData.Vehicle.ADAS.EcoRollWitoutEngineStop; } }
+		public bool EcoRollWithEngineStop { get { return DeclarationData.Vehicle.ADAS.EcoRollWithEngineStop; } }
+		public PredictiveCruiseControlType PredictiveCruiseControl { get {
+			return DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault;
+		} }
+
+		#endregion
 	}
 }

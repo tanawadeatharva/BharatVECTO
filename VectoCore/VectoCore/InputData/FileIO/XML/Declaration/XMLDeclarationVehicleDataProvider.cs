@@ -44,7 +44,7 @@ using TUGraz.VectoCore.Models.Declaration;
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
 	public class XMLDeclarationVehicleDataProvider : AbstractDeclarationXMLComponentDataProvider,
-		IVehicleDeclarationInputData, IPTOTransmissionInputData
+		IVehicleDeclarationInputData, IPTOTransmissionInputData, IAdvancedDriverAssistantSystemDeclarationInputData
 	{
 		private readonly IAuxiliariesDeclarationInputData XMLAuxiliaryData;
 
@@ -270,6 +270,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				? EnumHelper.ParseEnum<NgTankSystem>(GetElementValue(XMLNames.Vehicle_NgTankSystem))
 				: DeclarationData.Vehicle.NgTankSystemDefault;
 		} }
+
+		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get { return this; } }
+
 		public bool ZeroEmissionVehicle { get {
 			return ElementExists(XMLNames.Vehicle_ZeroEmissionVehicle)
 				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_ZeroEmissionVehicle))
@@ -295,5 +298,35 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				? GetDoubleElementValue(XMLNames.Vehicle_MaxNetPower2).SI<Watt>()
 				: null;
 		} }
+
+		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
+
+		public bool EngineStopStart { get {
+			return ElementExists(XMLNames.Vehicle_ADAS)
+				? XmlConvert.ToBoolean(GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_EngineStopStart)))
+				: DeclarationData.Vehicle.ADAS.EngineStopStartDefault;
+		} }
+		public bool EcoRollWitoutEngineStop { get {
+			return ElementExists(XMLNames.Vehicle_ADAS)
+				? XmlConvert.ToBoolean(GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop)))
+				: DeclarationData.Vehicle.ADAS.EcoRollWitoutEngineStop;
+		} }
+		public bool EcoRollWithEngineStop { get {
+			return ElementExists(XMLNames.Vehicle_ADAS)
+				? XmlConvert.ToBoolean(GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart)))
+				: DeclarationData.Vehicle.ADAS.EcoRollWithEngineStop;
+		} }
+
+		public PredictiveCruiseControlType PredictiveCruiseControl
+		{
+			get {
+				return ElementExists(XMLNames.Vehicle_ADAS)
+					? PredictiveCruiseControlTypeHelper.Parse(
+						GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_PCC)))
+					: DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault;
+			}
+		}
+
+		#endregion
 	}
 }

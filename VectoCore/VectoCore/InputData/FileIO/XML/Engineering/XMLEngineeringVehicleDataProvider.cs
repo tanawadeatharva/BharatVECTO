@@ -294,6 +294,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public bool VocationalVehicle { get { return false; } }
 		public bool SleeperCab { get { return true; } }
 		public NgTankSystem TankSystem { get; }
+		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get { return null; } }
 		public bool ZeroEmissionVehicle { get { return false; } }
 		public bool HybridElectricHDV { get { return false; } }
 		public bool DualFuelVehicle { get { return false; } }
