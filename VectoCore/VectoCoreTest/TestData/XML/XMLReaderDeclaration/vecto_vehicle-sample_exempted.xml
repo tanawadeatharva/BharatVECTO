@@ -15,10 +15,10 @@
 		<VehicleCategory>Tractor</VehicleCategory>
 		<CurbMassChassis>7100</CurbMassChassis>
 		<GrossVehicleMass>40000</GrossVehicleMass>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
 		<MaxNetPower1>30000</MaxNetPower1>
 		<MaxNetPower2>20000</MaxNetPower2>
 		<HybridElectricHDV>true</HybridElectricHDV>
-		<DualFuelVehicle>false</DualFuelVehicle>
+		<DualFuelVehicle>true</DualFuelVehicle>
 	</Vehicle>
 </tns:VectoInputDeclaration>

@@ -24,9 +24,9 @@
 			<PTOShaftsGearWheels>only the drive shaft of the PTO</PTOShaftsGearWheels>
 			<PTOOtherElements>multi-disc clutch</PTOOtherElements>
 		</PTO>
-		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
-		<VocationalVehicle>false</VocationalVehicle>
-		<SleeperCab>true</SleeperCab>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+		<VocationalVehicle>true</VocationalVehicle>
+		<SleeperCab>false</SleeperCab>
 		<ADAS>
 			<EngineStopStart>false</EngineStopStart>
 			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
