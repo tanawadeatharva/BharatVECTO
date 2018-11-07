@@ -51,6 +51,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 
 namespace TUGraz.VectoCore.Tests.XML
@@ -927,7 +928,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[TestCase(SampleVehicleFullDeclUpdated, true, false, true)]
-		public void TestReadingNewParameters(string file, bool vocational, bool sleeperCab, bool zeroEmission)
+		public void TestReadingNewVehicleParameters(string file, bool vocational, bool sleeperCab, bool zeroEmission)
 		{
 			var reader = XmlReader.Create(file);
 
@@ -939,6 +940,25 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(vocational, vehicle.VocationalVehicle);
 			Assert.AreEqual(sleeperCab, vehicle.SleeperCab);
 			Assert.AreEqual(zeroEmission, vehicle.ZeroEmissionVehicle);
+		}
+
+		[TestCase(SampleVehicleDecl, false, false, false, PredictiveCruiseControlType.None),
+		TestCase(SampleVehicleFullDeclUpdated, true, true, true, PredictiveCruiseControlType.Option_1_2)]
+		public void TestReadingAdasParameters(
+			string file, bool engineStopStart, bool ecoRollWithout, bool ecoRollWith, PredictiveCruiseControlType pcc)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+			var adas = vehicle.ADAS;
+
+			Assert.IsFalse(vehicle.ExemptedVehicle);
+
+			Assert.AreEqual(engineStopStart, adas.EngineStopStart);
+			Assert.AreEqual(ecoRollWith, adas.EcoRollWithEngineStop);
+			Assert.AreEqual(ecoRollWithout, adas.EcoRollWitoutEngineStop);
+			Assert.AreEqual(pcc, adas.PredictiveCruiseControl);
 		}
 
 		public static string[] GetEnumOptions(string xmlType, string schemaVersion)

@@ -28,10 +28,10 @@
 		<VocationalVehicle>true</VocationalVehicle>
 		<SleeperCab>false</SleeperCab>
 		<ADAS>
-			<EngineStopStart>false</EngineStopStart>
-			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
-			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
-			<PredictiveCruiseControl>none</PredictiveCruiseControl>
+			<EngineStopStart>true</EngineStopStart>
+			<EcoRollWithoutEngineStop>true</EcoRollWithoutEngineStop>
+			<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
+			<PredictiveCruiseControl>1,2</PredictiveCruiseControl>
 		</ADAS>
 		<TorqueLimits>
 			<Entry gear="6" maxTorque="1800" />
