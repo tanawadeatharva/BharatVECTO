@@ -320,7 +320,13 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property VIN As String Implements IVehicleDeclarationInputData.VIN
+    Public ReadOnly Property ExemptedVehicle As Boolean Implements IVehicleDeclarationInputData.ExemptedVehicle
+    get
+            Return false
+    End Get
+    End Property
+
+    Public ReadOnly Property VIN As String Implements IVehicleDeclarationInputData.VIN
 		Get
 			Return "N.A."
 		End Get
@@ -645,4 +651,52 @@ Public Class Vehicle
 			Return Me
 		End Get
 	End Property
+
+    Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
+    get
+            Return DeclarationData.Vehicle.VocationalVehicleDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
+    get
+            Return DeclarationData.Vehicle.SleeperCabDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property TankSystem As NgTankSystem Implements IVehicleDeclarationInputData.TankSystem
+    get
+            Return DeclarationData.Vehicle.NgTankSystemDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
+    get
+            Return DeclarationData.Vehicle.ZeroEmissionVehicleDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
+    get
+            return DeclarationData.Vehicle.HybridElectricHDVDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
+    get
+            return DeclarationData.Vehicle.DualFuelVehicleDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
+    get
+            Return Nothing
+    End Get
+    End Property
+
+    Public ReadOnly Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
+    get
+            Return Nothing
+    End Get
+    End Property
 End Class

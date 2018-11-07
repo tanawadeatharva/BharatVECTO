@@ -75,6 +75,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return GetAttributeValue("", XMLNames.Component_ID_Attr); }
 		}
 
+		public bool ExemptedVehicle { get { return false; } }
+
 		public string VIN
 		{
 			get { return GetElementValue(XMLNames.Vehicle_VIN); }
@@ -289,6 +291,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public IRetarderInputData RetarderInputData { get; private set; }
 
 		public IPTOTransmissionInputData PTOTransmissionInputData { get; private set; }
+		public bool VocationalVehicle { get { return false; } }
+		public bool SleeperCab { get { return true; } }
+		public NgTankSystem TankSystem { get; }
+		public bool ZeroEmissionVehicle { get { return false; } }
+		public bool HybridElectricHDV { get { return false; } }
+		public bool DualFuelVehicle { get { return false; } }
+		public Watt MaxNetPower1 { get { return null; } }
+		public Watt MaxNetPower2 { get { return null; } }
 
 		#region "FactoryMethods"
 

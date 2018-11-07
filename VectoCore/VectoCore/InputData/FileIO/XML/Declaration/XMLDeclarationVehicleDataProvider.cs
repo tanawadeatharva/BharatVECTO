@@ -62,6 +62,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			XMLAuxiliaryData = new XMLDeclarationAuxiliaryDataProvider(xmlInputDataProvider);
 		}
 
+		public bool ExemptedVehicle
+		{
+			get { return ElementExists(XMLNames.Vehicle_HybridElectricHDV) && ElementExists(XMLNames.Vehicle_DualFuelVehicle); }
+		}
+
 		public string VIN
 		{
 			get { return GetElementValue(XMLNames.Vehicle_VIN); }
@@ -249,5 +254,46 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			get { return this; }
 		}
+
+		public bool VocationalVehicle { get {
+			return ElementExists(XMLNames.Vehicle_VocationalVehicle)
+				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_VocationalVehicle))
+				: DeclarationData.Vehicle.VocationalVehicleDefault;
+		} }
+		public bool SleeperCab { get {
+			return ElementExists(XMLNames.Vehicle_SleeperCab)
+				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_SleeperCab))
+				: DeclarationData.Vehicle.SleeperCabDefault;
+		} }
+		public NgTankSystem TankSystem { get {
+			return ElementExists(XMLNames.Vehicle_NgTankSystem)
+				? EnumHelper.ParseEnum<NgTankSystem>(GetElementValue(XMLNames.Vehicle_NgTankSystem))
+				: DeclarationData.Vehicle.NgTankSystemDefault;
+		} }
+		public bool ZeroEmissionVehicle { get {
+			return ElementExists(XMLNames.Vehicle_ZeroEmissionVehicle)
+				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_ZeroEmissionVehicle))
+				: DeclarationData.Vehicle.ZeroEmissionVehicleDefault;
+		} }
+		public bool HybridElectricHDV { get {
+			return ElementExists(XMLNames.Vehicle_HybridElectricHDV)
+				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_HybridElectricHDV))
+				: DeclarationData.Vehicle.HybridElectricHDVDefault;
+		} }
+		public bool DualFuelVehicle { get {
+			return ElementExists(XMLNames.Vehicle_DualFuelVehicle)
+				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_DualFuelVehicle))
+				: DeclarationData.Vehicle.DualFuelVehicleDefault;
+		} }
+		public Watt MaxNetPower1 { get {
+			return ElementExists(XMLNames.Vehicle_MaxNetPower1)
+				? GetDoubleElementValue(XMLNames.Vehicle_MaxNetPower1).SI<Watt>()
+				: null;
+		} }
+		public Watt MaxNetPower2 { get {
+			return ElementExists(XMLNames.Vehicle_MaxNetPower2)
+				? GetDoubleElementValue(XMLNames.Vehicle_MaxNetPower2).SI<Watt>()
+				: null;
+		} }
 	}
 }

@@ -39,6 +39,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
@@ -147,6 +148,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return ""; }
 		}
+
+		public bool ExemptedVehicle { get { return false; } }
 
 		public string VIN
 		{
@@ -298,6 +301,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return PTOTransmission; }
 		}
+
+		public bool VocationalVehicle { get { return DeclarationData.Vehicle.VocationalVehicleDefault; } }
+		public bool SleeperCab { get { return DeclarationData.Vehicle.SleeperCabDefault; } }
+		public NgTankSystem TankSystem { get { return DeclarationData.Vehicle.NgTankSystemDefault; } }
+		public bool ZeroEmissionVehicle { get { return DeclarationData.Vehicle.ZeroEmissionVehicleDefault; } }
+		public bool HybridElectricHDV { get { return DeclarationData.Vehicle.HybridElectricHDVDefault; } }
+		public bool DualFuelVehicle { get { return DeclarationData.Vehicle.DualFuelVehicleDefault; } }
+		public Watt MaxNetPower1 { get { return null; } }
+		public Watt MaxNetPower2 { get { return null; } }
 
 		IAuxiliariesEngineeringInputData IVehicleEngineeringInputData.AuxiliaryInputData()
 		{

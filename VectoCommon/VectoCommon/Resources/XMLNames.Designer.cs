@@ -2311,11 +2311,29 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DualFuelVehicle.
+        /// </summary>
+        public static string Vehicle_DualFuelVehicle {
+            get {
+                return ResourceManager.GetString("Vehicle_DualFuelVehicle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GrossVehicleMass.
         /// </summary>
         public static string Vehicle_GrossVehicleMass {
             get {
                 return ResourceManager.GetString("Vehicle_GrossVehicleMass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HybridElectricHDV.
+        /// </summary>
+        public static string Vehicle_HybridElectricHDV {
+            get {
+                return ResourceManager.GetString("Vehicle_HybridElectricHDV", resourceCulture);
             }
         }
         
@@ -2343,6 +2361,33 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Vehicle_Loading {
             get {
                 return ResourceManager.GetString("Vehicle_Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxNetPower1.
+        /// </summary>
+        public static string Vehicle_MaxNetPower1 {
+            get {
+                return ResourceManager.GetString("Vehicle_MaxNetPower1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MaxNetPower2.
+        /// </summary>
+        public static string Vehicle_MaxNetPower2 {
+            get {
+                return ResourceManager.GetString("Vehicle_MaxNetPower2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NgTankSystem.
+        /// </summary>
+        public static string Vehicle_NgTankSystem {
+            get {
+                return ResourceManager.GetString("Vehicle_NgTankSystem", resourceCulture);
             }
         }
         
@@ -2482,6 +2527,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SleeperCab.
+        /// </summary>
+        public static string Vehicle_SleeperCab {
+            get {
+                return ResourceManager.GetString("Vehicle_SleeperCab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SteeredAxles.
         /// </summary>
         public static string Vehicle_SteeredAxles {
@@ -2541,6 +2595,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Vehicle_VIN {
             get {
                 return ResourceManager.GetString("Vehicle_VIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VocationalVehicle.
+        /// </summary>
+        public static string Vehicle_VocationalVehicle {
+            get {
+                return ResourceManager.GetString("Vehicle_VocationalVehicle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ZeroEmissionVehicle.
+        /// </summary>
+        public static string Vehicle_ZeroEmissionVehicle {
+            get {
+                return ResourceManager.GetString("Vehicle_ZeroEmissionVehicle", resourceCulture);
             }
         }
         
