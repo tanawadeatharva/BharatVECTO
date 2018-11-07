@@ -67,6 +67,8 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IVehicleDeclarationInputData : IComponentInputData
 	{
+		bool ExemptedVehicle { get; }
+
 		string VIN { get; }
 
 		LegislativeClass LegislativeClass { get; }
@@ -131,6 +133,32 @@ namespace TUGraz.VectoCommon.InputData
 		IRetarderInputData RetarderInputData { get; }
 
 		IPTOTransmissionInputData PTOTransmissionInputData { get; }
+
+		// new (optional) input fields
+
+		bool VocationalVehicle { get; }
+
+		bool SleeperCab { get; }
+
+		NgTankSystem TankSystem { get; }
+
+		// fields for exempted vehicles
+
+		bool ZeroEmissionVehicle { get; }
+
+		bool HybridElectricHDV { get; }
+
+		bool DualFuelVehicle { get; }
+
+		Watt MaxNetPower1 { get; }
+
+		Watt MaxNetPower2 { get; }
+	}
+
+	public enum NgTankSystem
+	{
+		Liquefied,
+		Compressed
 	}
 
 	public interface IAirdragDeclarationInputData : IComponentInputData
