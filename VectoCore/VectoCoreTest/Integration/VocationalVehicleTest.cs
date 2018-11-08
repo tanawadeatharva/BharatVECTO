@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 
-		[TestCase(Class4Vocational, 1),
+		[TestCase(Class4Vocational, 4),
 			TestCase(Class5Vocational, 2)]
 		public void VocationalTest(string filename, int numRuns)
 		{
