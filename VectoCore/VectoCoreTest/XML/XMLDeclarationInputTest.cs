@@ -629,6 +629,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			var vehicleCategories = GetEnumOptions("VehicleCategoryDeclarationType", "1.0");
 			var allowedCategories = DeclarationData.Segments.GetVehicleCategories();
 			foreach (var vehicleCategory in vehicleCategories) {
+				if (vehicleCategory.Equals("Rigid Truck")) {
+					continue; // Rigid Truck has been renamed to Rigid Lorry. The XML contains this entry for backward compatibility (separate testcase)
+				}
 				var reader = XmlReader.Create(SampleVehicleDecl);
 
 				var doc = new XmlDocument();
@@ -982,6 +985,33 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(false, adas.EcoRollWitoutEngineStop);
 			Assert.AreEqual(false, adas.EcoRollWithEngineStop);
 			Assert.AreEqual(PredictiveCruiseControlType.None, adas.PredictiveCruiseControl);
+		}
+
+		[TestCase(SampleVehicleFullDeclUpdated)]
+		public void TestRigidTruckIsReadAsRigidLorry(string file)
+		{
+			var reader = XmlReader.Create(file);
+
+			var doc = new XmlDocument();
+			doc.Load(reader);
+			var nav = doc.CreateNavigator();
+			var manager = new XmlNamespaceManager(nav.NameTable);
+			var helper = new XPathHelper(ExecutionMode.Declaration);
+			helper.AddNamespaces(manager);
+
+			var vehicleCategoryNode = nav.SelectSingleNode(helper.QueryAbs(
+															helper.NSPrefix(XMLNames.VectoInputDeclaration, Constants.XML.RootNSPrefix),
+															XMLNames.Component_Vehicle,
+															XMLNames.Vehicle_VehicleCategory), manager);
+			vehicleCategoryNode.SetValue("Rigid Truck");
+
+			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(modified, true);
+
+			var vehCategory = inputDataProvider.JobInputData.Vehicle.VehicleCategory;
+
+			Assert.AreEqual(VehicleCategory.RigidTruck, vehCategory);
 		}
 
 		public static string[] GetEnumOptions(string xmlType, string schemaVersion)
