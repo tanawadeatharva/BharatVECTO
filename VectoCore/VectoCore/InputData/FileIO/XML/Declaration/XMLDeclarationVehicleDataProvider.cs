@@ -79,7 +79,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public VehicleCategory VehicleCategory
 		{
-			get { return GetElementValue(XMLNames.Vehicle_VehicleCategory).ParseEnum<VehicleCategory>(); }
+			get { var val = GetElementValue(XMLNames.Vehicle_VehicleCategory);
+				if ("Rigid Lorry".Equals(val, StringComparison.InvariantCultureIgnoreCase)) {
+					return VehicleCategory.RigidTruck;
+				}
+				return val.ParseEnum<VehicleCategory>(); }
 		}
 
 		public Kilogram CurbMassChassis
