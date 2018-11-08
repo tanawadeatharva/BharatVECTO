@@ -961,6 +961,29 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(pcc, adas.PredictiveCruiseControl);
 		}
 
+		[TestCase(SampleVehicleDecl)]
+		public void TestDefaultValuesNewParameters(string file)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+			var adas = vehicle.ADAS;
+
+			Assert.IsFalse(vehicle.ExemptedVehicle);
+
+			Assert.AreEqual(false, vehicle.ZeroEmissionVehicle);
+			Assert.AreEqual(false, vehicle.VocationalVehicle);
+			Assert.AreEqual(true, vehicle.SleeperCab);
+
+			Assert.AreEqual(NgTankSystem.Compressed, vehicle.TankSystem);
+
+			Assert.AreEqual(false, adas.EngineStopStart);
+			Assert.AreEqual(false, adas.EcoRollWitoutEngineStop);
+			Assert.AreEqual(false, adas.EcoRollWithEngineStop);
+			Assert.AreEqual(PredictiveCruiseControlType.None, adas.PredictiveCruiseControl);
+		}
+
 		public static string[] GetEnumOptions(string xmlType, string schemaVersion)
 		{
 			Stream resource;
