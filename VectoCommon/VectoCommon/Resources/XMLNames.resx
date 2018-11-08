@@ -951,4 +951,43 @@
   <data name="XMLManufacturerReport_torqueLimitPercent" xml:space="preserve">
     <value>torqueLimitPercent</value>
   </data>
+  <data name="Vehicle_HybridElectricHDV" xml:space="preserve">
+    <value>HybridElectricHDV</value>
+  </data>
+  <data name="Vehicle_DualFuelVehicle" xml:space="preserve">
+    <value>DualFuelVehicle</value>
+  </data>
+  <data name="Vehicle_VocationalVehicle" xml:space="preserve">
+    <value>VocationalVehicle</value>
+  </data>
+  <data name="Vehicle_SleeperCab" xml:space="preserve">
+    <value>SleeperCab</value>
+  </data>
+  <data name="Vehicle_NgTankSystem" xml:space="preserve">
+    <value>NgTankSystem</value>
+  </data>
+  <data name="Vehicle_ZeroEmissionVehicle" xml:space="preserve">
+    <value>ZeroEmissionVehicle</value>
+  </data>
+  <data name="Vehicle_MaxNetPower1" xml:space="preserve">
+    <value>MaxNetPower1</value>
+  </data>
+  <data name="Vehicle_MaxNetPower2" xml:space="preserve">
+    <value>MaxNetPower2</value>
+  </data>
+  <data name="Vehicle_ADAS" xml:space="preserve">
+    <value>ADAS</value>
+  </data>
+  <data name="Vehicle_ADAS_PCC" xml:space="preserve">
+    <value>PredictiveCruiseControl</value>
+  </data>
+  <data name="Vehicle_ADAS_EcoRollWithEngineStopStart" xml:space="preserve">
+    <value>EcoRollWithEngineStop</value>
+  </data>
+  <data name="Vehicle_ADAS_EcoRollWithoutEngineStop" xml:space="preserve">
+    <value>EcoRollWithoutEngineStop</value>
+  </data>
+  <data name="Vehicle_ADAS_EngineStopStart" xml:space="preserve">
+    <value>EngineStopStart</value>
+  </data>
 </root>

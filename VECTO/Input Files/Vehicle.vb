@@ -28,7 +28,7 @@ Imports TUGraz.VectoCore.Utils
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
-				IAngledriveInputData, IAirdragEngineeringInputData
+				IAngledriveInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData
 
 	Private _filePath As String
 	Private _path As String
@@ -320,7 +320,13 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property VIN As String Implements IVehicleDeclarationInputData.VIN
+    Public ReadOnly Property ExemptedVehicle As Boolean Implements IVehicleDeclarationInputData.ExemptedVehicle
+    get
+            Return false
+    End Get
+    End Property
+
+    Public ReadOnly Property VIN As String Implements IVehicleDeclarationInputData.VIN
 		Get
 			Return "N.A."
 		End Get
@@ -645,4 +651,82 @@ Public Class Vehicle
 			Return Me
 		End Get
 	End Property
+
+    Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
+    get
+            Return DeclarationData.Vehicle.VocationalVehicleDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
+    get
+            Return DeclarationData.Vehicle.SleeperCabDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property TankSystem As NgTankSystem Implements IVehicleDeclarationInputData.TankSystem
+    get
+            Return DeclarationData.Vehicle.NgTankSystemDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
+    get
+            return Me
+    End Get
+    End Property
+
+    Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
+    get
+            Return DeclarationData.Vehicle.ZeroEmissionVehicleDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
+    get
+            return DeclarationData.Vehicle.HybridElectricHDVDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
+    get
+            return DeclarationData.Vehicle.DualFuelVehicleDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
+    get
+            Return Nothing
+    End Get
+    End Property
+
+    Public ReadOnly Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
+    get
+            Return Nothing
+    End Get
+    End Property
+
+    Public ReadOnly Property EngineStopStart As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EngineStopStart
+    get
+            return DeclarationData.Vehicle.ADAS.EngineStopStartDefault
+    End Get
+    End Property
+
+    Public ReadOnly Property EcoRollWitoutEngineStop As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EcoRollWitoutEngineStop
+    get
+            return DeclarationData.Vehicle.ADAS.EcoRollWitoutEngineStop
+    End Get
+    End Property
+
+    Public ReadOnly Property EcoRollWithEngineStop As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EcoRollWithEngineStop
+    get
+            Return DeclarationData.Vehicle.ADAS.EcoRollWithEngineStop
+    End Get
+    End Property
+
+    Public ReadOnly Property PredictiveCruiseControl As PredictiveCruiseControlType Implements IAdvancedDriverAssistantSystemDeclarationInputData.PredictiveCruiseControl
+    get
+            Return DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault
+    End Get
+    End Property
 End Class

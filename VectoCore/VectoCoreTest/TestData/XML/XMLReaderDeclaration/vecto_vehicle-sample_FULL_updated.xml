@@ -24,6 +24,15 @@
 			<PTOShaftsGearWheels>only the drive shaft of the PTO</PTOShaftsGearWheels>
 			<PTOOtherElements>multi-disc clutch</PTOOtherElements>
 		</PTO>
+		<ZeroEmissionVehicle>true</ZeroEmissionVehicle>
+		<VocationalVehicle>true</VocationalVehicle>
+		<SleeperCab>false</SleeperCab>
+		<ADAS>
+			<EngineStopStart>true</EngineStopStart>
+			<EcoRollWithoutEngineStop>true</EcoRollWithoutEngineStop>
+			<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
+			<PredictiveCruiseControl>1,2</PredictiveCruiseControl>
+		</ADAS>
 		<TorqueLimits>
 			<Entry gear="6" maxTorque="1800" />
 			<Entry gear="1" maxTorque="2500" />

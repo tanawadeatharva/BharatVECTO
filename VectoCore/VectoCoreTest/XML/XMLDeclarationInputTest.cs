@@ -51,6 +51,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 
 namespace TUGraz.VectoCore.Tests.XML
@@ -61,6 +62,8 @@ namespace TUGraz.VectoCore.Tests.XML
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 		const string SampleVehicleDeclNoAirdrag = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_noAirdrag.xml";
 		const string SampleVehicleFullDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_FULL.xml";
+		const string SampleVehicleFullDeclUpdated = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_FULL_updated.xml";
+		const string SampleVehicleFullDeclExempted = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_exempted.xml";
 
 		const string SampleVehicleFullDeclCertificationOptions =
 			"TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_certificationOptions.xml";
@@ -892,6 +895,93 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			TestAuxTech(AuxiliaryType.HVAC, GetEnumOptions("AuxHVACTechnologyType", "1.0"),
 				DeclarationData.HeatingVentilationAirConditioning);
+		}
+
+		[TestCase(SampleVehicleDecl, false),
+			TestCase(SampleVehicleFullDecl, false),
+			TestCase(SampleVehicleFullDeclUpdated, false),
+			TestCase(SampleVehicleFullDeclExempted, true)]
+		public void TestReadingExemptedVehicles(string file, bool expectedExempted)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+			Assert.AreEqual(expectedExempted, vehicle.ExemptedVehicle);
+		}
+
+		[TestCase(SampleVehicleFullDeclExempted, true, true, true, 30000, 20000)]
+		public void TestReadingExemptedParameters(
+			string file, bool dualfuel, bool elHDV, bool zeroEmission, double maxNetPower1, double maxNetPower2)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+
+			Assert.IsTrue(vehicle.ExemptedVehicle);
+			Assert.AreEqual(elHDV, vehicle.HybridElectricHDV);
+			Assert.AreEqual(zeroEmission, vehicle.ZeroEmissionVehicle);
+			Assert.AreEqual(dualfuel, vehicle.DualFuelVehicle);
+			Assert.AreEqual(maxNetPower1, vehicle.MaxNetPower1.Value());
+			Assert.AreEqual(maxNetPower2, vehicle.MaxNetPower2.Value());
+		}
+
+		[TestCase(SampleVehicleFullDeclUpdated, true, false, true)]
+		public void TestReadingNewVehicleParameters(string file, bool vocational, bool sleeperCab, bool zeroEmission)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+
+			Assert.IsFalse(vehicle.ExemptedVehicle);
+
+			Assert.AreEqual(vocational, vehicle.VocationalVehicle);
+			Assert.AreEqual(sleeperCab, vehicle.SleeperCab);
+			Assert.AreEqual(zeroEmission, vehicle.ZeroEmissionVehicle);
+		}
+
+		[TestCase(SampleVehicleDecl, false, false, false, PredictiveCruiseControlType.None),
+		TestCase(SampleVehicleFullDeclUpdated, true, true, true, PredictiveCruiseControlType.Option_1_2)]
+		public void TestReadingAdasParameters(
+			string file, bool engineStopStart, bool ecoRollWithout, bool ecoRollWith, PredictiveCruiseControlType pcc)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+			var adas = vehicle.ADAS;
+
+			Assert.IsFalse(vehicle.ExemptedVehicle);
+
+			Assert.AreEqual(engineStopStart, adas.EngineStopStart);
+			Assert.AreEqual(ecoRollWith, adas.EcoRollWithEngineStop);
+			Assert.AreEqual(ecoRollWithout, adas.EcoRollWitoutEngineStop);
+			Assert.AreEqual(pcc, adas.PredictiveCruiseControl);
+		}
+
+		[TestCase(SampleVehicleDecl)]
+		public void TestDefaultValuesNewParameters(string file)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+			var adas = vehicle.ADAS;
+
+			Assert.IsFalse(vehicle.ExemptedVehicle);
+
+			Assert.AreEqual(false, vehicle.ZeroEmissionVehicle);
+			Assert.AreEqual(false, vehicle.VocationalVehicle);
+			Assert.AreEqual(true, vehicle.SleeperCab);
+
+			Assert.AreEqual(NgTankSystem.Compressed, vehicle.TankSystem);
+
+			Assert.AreEqual(false, adas.EngineStopStart);
+			Assert.AreEqual(false, adas.EcoRollWitoutEngineStop);
+			Assert.AreEqual(false, adas.EcoRollWithEngineStop);
+			Assert.AreEqual(PredictiveCruiseControlType.None, adas.PredictiveCruiseControl);
 		}
 
 		public static string[] GetEnumOptions(string xmlType, string schemaVersion)

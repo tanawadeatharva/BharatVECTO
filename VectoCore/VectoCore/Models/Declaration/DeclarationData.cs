@@ -528,5 +528,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly SpecificFuelConsumption UpperFCThreshold = 600.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).Cast<SpecificFuelConsumption>();
 			public static readonly Second FCAccumulationWindow = 10.SI(Unit.SI.Minute).Cast<Second>();
 		}
+
+		public static class Vehicle {
+			public const bool DualFuelVehicleDefault = false;
+			public const bool HybridElectricHDVDefault = false;
+			public const bool ZeroEmissionVehicleDefault = false;
+			public const NgTankSystem NgTankSystemDefault = NgTankSystem.Compressed;
+			public const bool SleeperCabDefault = true;
+			public const bool VocationalVehicleDefault = false;
+
+			public static class ADAS {
+				public const PredictiveCruiseControlType PredictiveCruiseControlDefault = PredictiveCruiseControlType.None;
+				public const bool EcoRollWithEngineStop = false;
+				public const bool EcoRollWitoutEngineStop = false;
+				public const bool EngineStopStartDefault = false;
+			}
+		}
 	}
 }
