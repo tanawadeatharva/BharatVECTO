@@ -2023,6 +2023,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to W.
+        /// </summary>
+        public static string Unit_W {
+            get {
+                return ResourceManager.GetString("Unit_W", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to %.
         /// </summary>
         public static string UnitPercent {

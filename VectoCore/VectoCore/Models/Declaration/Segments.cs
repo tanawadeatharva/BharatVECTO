@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
 			var missions = new List<Mission>();
-			foreach (var missionType in missionTypes.Where(m => m.IsDeclarationMission() && row.Field<string>(m.ToString()) != "-")) {
+			foreach (var missionType in missionTypes.Where(m => m.IsDeclarationMission() && m != MissionType.ExemptedMission && row.Field<string>(m.ToString()) != "-")) {
 				var bodyColumn = missionType == MissionType.Construction ? "bodyconstruction" : "body";
 				var body = DeclarationData.StandardBodies.Lookup(row.Field<string>(bodyColumn));
 

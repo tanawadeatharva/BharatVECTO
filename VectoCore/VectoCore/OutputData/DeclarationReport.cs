@@ -102,8 +102,8 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var missionType = mission.MissionType;
 			if (!Missions.ContainsKey(missionType)) {
-				Missions[MissionType.ExemptedMission] = new ResultContainer<T>() {
-					Mission = MissionType.ExemptedMission,
+				Missions[missionType] = new ResultContainer<T>() {
+					Mission = missionType,
 					ResultEntry = new Dictionary<LoadingType, T>(),
 				};
 			}

@@ -990,4 +990,7 @@
   <data name="Vehicle_ADAS_EngineStopStart" xml:space="preserve">
     <value>EngineStopStart</value>
   </data>
+  <data name="Unit_W" xml:space="preserve">
+    <value>W</value>
+  </data>
 </root>
