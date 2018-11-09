@@ -91,7 +91,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		T1,
 		T2,
 		ST1,
-		Dolly
+		Dolly,
+		STT1,
+		STT2
 	}
 
 	public static class TrailterTypeHelper

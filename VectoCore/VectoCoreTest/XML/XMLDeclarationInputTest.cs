@@ -403,7 +403,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			jobContainer.AddRuns(runsFactory);
 
-			Assert.AreEqual(8, jobContainer.Runs.Count);
+			Assert.AreEqual(10, jobContainer.Runs.Count);
 		}
 
 		[TestCase]

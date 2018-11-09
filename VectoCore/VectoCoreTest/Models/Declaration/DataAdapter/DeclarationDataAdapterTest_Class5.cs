@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.IO;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
@@ -45,12 +46,19 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 
 		public const double CdxA = 5.3;
 
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+
 		[TestCase(Class5TractorPTOJob, 0)]
 		public void TestClass5_Vehicle_LongHaul_LowLoad(string file, int runIdx)
 		{
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
-			Assert.AreEqual(8, runData.Length);
+			Assert.AreEqual(10, runData.Length);
 
 			// long haul, min load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData, runData[runIdx].AirdragData,
@@ -84,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		{
 			var runData = DeclarationAdapterTestHelper.CreateVectoRunData(file);
 
-			Assert.AreEqual(8, runData.Length);
+			Assert.AreEqual(10, runData.Length);
 
 			// long haul, min load
 			DeclarationAdapterTestHelper.AssertVehicleData(runData[runIdx].VehicleData, runData[runIdx].AirdragData,
