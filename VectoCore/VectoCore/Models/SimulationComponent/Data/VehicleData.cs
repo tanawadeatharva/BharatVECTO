@@ -205,6 +205,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
+		public bool ZeroEmissionVehicle { get; internal set; }
+		public bool HybridElectricHDV { get; internal set; }
+		public bool DualFuelVehicle { get; internal set; }
+		public Watt MaxNetPower1 { get; internal set; }
+		public Watt MaxNetPower2 { get; internal set; }
+
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{
 			if (TotalVehicleWeight == 0.SI<Kilogram>()) {

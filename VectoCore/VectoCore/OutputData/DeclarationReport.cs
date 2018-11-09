@@ -100,13 +100,16 @@ namespace TUGraz.VectoCore.OutputData
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void PrepareResult(LoadingType loading, Mission mission, VectoRunData runData)
 		{
-			if (!Missions.ContainsKey(mission.MissionType)) {
-				Missions[mission.MissionType] = new ResultContainer<T>() {
-					Mission = mission.MissionType,
+			var missionType = mission.MissionType;
+			if (!Missions.ContainsKey(missionType)) {
+				Missions[MissionType.ExemptedMission] = new ResultContainer<T>() {
+					Mission = MissionType.ExemptedMission,
 					ResultEntry = new Dictionary<LoadingType, T>(),
 				};
 			}
-			Missions[mission.MissionType].ResultEntry[loading] = new T();
+			if (missionType != MissionType.ExemptedMission) {
+				Missions[mission.MissionType].ResultEntry[loading] = new T();
+			}
 			_resultCount++;
 		}
 
@@ -118,12 +121,14 @@ namespace TUGraz.VectoCore.OutputData
 			if (!Missions.ContainsKey(mission.MissionType)) {
 				throw new VectoException("Unknown mission type {0} for generating declaration report", mission.MissionType);
 			}
-			if (!Missions[mission.MissionType].ResultEntry.ContainsKey(loadingType)) {
+			if (mission.MissionType != MissionType.ExemptedMission && !Missions[mission.MissionType].ResultEntry.ContainsKey(loadingType)) {
 				throw new VectoException("Unknown loading type {0} for mission {1}", loadingType, mission.MissionType);
 			}
 			_resultCount--;
 
-			DoAddResult(Missions[mission.MissionType].ResultEntry[loadingType], runData, modData);
+			if (mission.MissionType != MissionType.ExemptedMission) {
+				DoAddResult(Missions[mission.MissionType].ResultEntry[loadingType], runData, modData);
+			}
 
 			if (_resultCount == 0) {
 				DoWriteReport();

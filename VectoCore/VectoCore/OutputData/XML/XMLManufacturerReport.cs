@@ -74,6 +74,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public void Initialize(VectoRunData modelData)
 		{
+			var exempted = modelData.Exempted;
 			VehiclePart.Add(
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
@@ -81,25 +82,35 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
-				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
+				exempted ? null : new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleWeight, XMLNames.Unit_t, 1)),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbWeight, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Vehicle_PTO, modelData.PTO != null),
-				GetTorqueLimits(modelData.EngineData),
-				new XElement(tns + XMLNames.Vehicle_Components,
-					GetEngineDescription(modelData.EngineData),
-					GetGearboxDescription(modelData.GearboxData),
-					GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
-					GetRetarderDescription(modelData.Retarder),
-					GetAngledriveDescription(modelData.AngledriveData),
-					GetAxlegearDescription(modelData.AxleGearData),
-					GetAirDragDescription(modelData.AirdragData),
-					GetAxleWheelsDescription(modelData.VehicleData),
-					GetAuxiliariesDescription(modelData.Aux)
-					)
+				exempted ? null : GetTorqueLimits(modelData.EngineData),
+				exempted ? ExemptedData(modelData) : VehicleComponents(modelData)
 				);
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_Input_Signature,
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
+		}
+
+		private XElement VehicleComponents(VectoRunData modelData)
+		{
+			return new XElement(tns + XMLNames.Vehicle_Components,
+								GetEngineDescription(modelData.EngineData),
+								GetGearboxDescription(modelData.GearboxData),
+								GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
+								GetRetarderDescription(modelData.Retarder),
+								GetAngledriveDescription(modelData.AngledriveData),
+								GetAxlegearDescription(modelData.AxleGearData),
+								GetAirDragDescription(modelData.AirdragData),
+								GetAxleWheelsDescription(modelData.VehicleData),
+								GetAuxiliariesDescription(modelData.Aux)
+			);
+		}
+
+		private XElement ExemptedData(VectoRunData modelData)
+		{
+			return null;
 		}
 
 		private XElement CreateDummySig()
