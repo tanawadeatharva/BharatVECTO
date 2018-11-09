@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Models;
@@ -8,6 +9,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -57,6 +59,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			Assert.IsTrue(File.Exists(manufactuerFile));
 			Assert.IsTrue(File.Exists(customerFile));
+
+			var validator = new XMLValidator(XmlReader.Create(manufactuerFile));
+			Assert.IsTrue(validator.ValidateXML(XMLValidator.XmlDocumentType.ManufacturerReport));
+
+			var val2 = new XMLValidator(XmlReader.Create(customerFile));
+			Assert.IsTrue(val2.ValidateXML(XMLValidator.XmlDocumentType.CustomerReport));
 		}
 	}
 }

@@ -130,7 +130,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
 				powertrainConfig = new VectoRunData() {
 					Exempted = true,
-					VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null, null)
+					VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null, null),
+					InputDataHash = InputDataProvider.XMLHash
 				};
 			} else {
 				powertrainConfig = new VectoRunData() {
@@ -167,7 +168,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Exempted = true,
 						Report = Report,
 						Mission = new Mission() { MissionType = MissionType.ExemptedMission},
-						VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null, null)
+						VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null, null),
+						InputDataHash = InputDataProvider.XMLHash
 					};
 			} else {
 				foreach (var vectoRunData in VectoRunDataNonExempted())
