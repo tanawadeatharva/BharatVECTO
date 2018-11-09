@@ -114,6 +114,10 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			var fuelTypes = GetEnumOptions("FuelTypeType", "1.0");
 			foreach (var fuel in fuelTypes) {
+				if (!(fuel.EndsWith("CI") || fuel.EndsWith("PI"))) {
+					// new fuel labels end either with CI or PI, others are for backward compatibility. separate testcase
+					continue;
+				}
 				var reader = XmlReader.Create(SampleVehicleDecl);
 
 				var doc = new XmlDocument();
@@ -1012,6 +1016,40 @@ namespace TUGraz.VectoCore.Tests.XML
 			var vehCategory = inputDataProvider.JobInputData.Vehicle.VehicleCategory;
 
 			Assert.AreEqual(VehicleCategory.RigidTruck, vehCategory);
+		}
+
+		[TestCase(SampleVehicleFullDecl, "LPG", FuelType.LPGPI),
+			TestCase(SampleVehicleDecl, "NG", FuelType.NGPI)]
+		public void TestFuelTypesLNGandNGBackwardCompatibility(string file, string value, FuelType expectedFuelType)
+		{
+			var reader = XmlReader.Create(file);
+
+			var doc = new XmlDocument();
+			doc.Load(reader);
+			var nav = doc.CreateNavigator();
+			var manager = new XmlNamespaceManager(nav.NameTable);
+			var helper = new XPathHelper(ExecutionMode.Declaration);
+			helper.AddNamespaces(manager);
+
+			var fuelTypeNode = nav.SelectSingleNode(
+				helper.QueryAbs(
+					helper.NSPrefix(
+						XMLNames.VectoInputDeclaration,
+						Constants.XML.RootNSPrefix),
+					XMLNames.Component_Vehicle, XMLNames.Vehicle_Components, XMLNames.Component_Engine,
+					XMLNames.ComponentDataWrapper,
+					XMLNames.Engine_FuelType),
+				manager);
+			
+			fuelTypeNode.SetValue(value);
+
+			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(modified, true);
+
+			var fuelType = inputDataProvider.JobInputData.Vehicle.EngineInputData.FuelType;
+
+			Assert.AreEqual(expectedFuelType, fuelType);
 		}
 
 		public static string[] GetEnumOptions(string xmlType, string schemaVersion)

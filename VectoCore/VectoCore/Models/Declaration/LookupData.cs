@@ -71,6 +71,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		protected Dictionary<TKey, TValue> Data = new Dictionary<TKey, TValue>();
 
+		protected override string ErrorMessage {  get { return "key {0} not found in lookup data"; } }
+
 		public virtual TValue Lookup(TKey key)
 		{
 			try {

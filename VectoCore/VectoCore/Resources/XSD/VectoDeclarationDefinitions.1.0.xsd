@@ -1813,9 +1813,9 @@ ToDo: -0.00
 			<xs:enumeration value="LPG PI"/>
 			<xs:enumeration value="NG PI"/>
 			<xs:enumeration value="NG CI"/>
-			<!-- == LPG PI -->
-			<!-- == NG PI -->
-			<!-- dual fuel -->
+			<!-- LPG == LPG PI -->
+			<!-- NG== NG PI -->
+			<!-- NG CI => dual fuel -->
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="GearboxCertificationOptionType">
