@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -61,7 +62,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public FuelType FuelType
 		{
-			get { return GetElementValue(XMLNames.Engine_FuelType).ParseEnum<FuelType>(); }
+			get {
+				var value = GetElementValue(XMLNames.Engine_FuelType);
+				if ("LPG".Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
+					return FuelType.LPGPI;
+				}
+				if ("NG".Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
+					return FuelType.NGPI;
+				}
+
+				return value.ParseEnum<FuelType>();
+			}
 		}
 
 		public TableData FuelConsumptionMap
