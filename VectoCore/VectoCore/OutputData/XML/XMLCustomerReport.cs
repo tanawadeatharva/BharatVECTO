@@ -72,6 +72,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public void Initialize(VectoRunData modelData)
 		{
+			var exempted = modelData.Exempted;
 			VehiclePart.Add(
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
@@ -79,24 +80,43 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
-				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
+				exempted ? null : new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleWeight, XMLNames.Unit_t, 1)),
 					
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbWeight, XMLNames.Unit_kg)),
-				new XElement(tns + XMLNames.Report_Vehicle_EngineRatedPower, XMLHelper.ValueAsUnit(modelData.EngineData.RatedPowerDeclared, XMLNames.Unit_kW)),
-				new XElement(tns + XMLNames.Report_Vehicle_EngineDisplacement, XMLHelper.ValueAsUnit(modelData.EngineData.Displacement, XMLNames.Unit_ltr, 1)),
+				exempted ? ExemptedData(modelData) : ComponentData(modelData)
+				);
+			InputDataIntegrity = new XElement(tns + "InputDataSignature",
+				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
+		}
+
+		private XElement[] ExemptedData(VectoRunData modelData)
+		{
+			return null;
+		}
+
+		private XElement[] ComponentData(VectoRunData modelData)
+		{
+			return new[] {
+				new XElement(
+					tns + XMLNames.Report_Vehicle_EngineRatedPower,
+					XMLHelper.ValueAsUnit(modelData.EngineData.RatedPowerDeclared, XMLNames.Unit_kW)),
+				new XElement(
+					tns + XMLNames.Report_Vehicle_EngineDisplacement,
+					XMLHelper.ValueAsUnit(modelData.EngineData.Displacement, XMLNames.Unit_ltr, 1)),
 				new XElement(tns + XMLNames.Engine_FuelType, modelData.EngineData.FuelType.ToXMLFormat()),
-				new XElement(tns + XMLNames.Report_Vehicle_TransmissionCertificationMethod,
+				new XElement(
+					tns + XMLNames.Report_Vehicle_TransmissionCertificationMethod,
 					modelData.GearboxData.CertificationMethod.ToXMLFormat()),
 				new XElement(tns + XMLNames.Gearbox_TransmissionType, modelData.GearboxData.Type.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_GetGearbox_GearsCount, modelData.GearboxData.Gears.Count),
 				new XElement(tns + XMLNames.Report_Vehicle_Retarder, modelData.Retarder.Type.IsDedicatedComponent()),
 				new XElement(tns + XMLNames.Report_Vehicle_AxleRatio, modelData.AxleGearData.AxleGear.Ratio.ToXMLFormat(3)),
-				new XElement(tns + XMLNames.Report_Vehicle_AverageRRC,
+				new XElement(
+					tns + XMLNames.Report_Vehicle_AverageRRC,
 					modelData.VehicleData.AverageRollingResistanceTruck.ToXMLFormat(4))
-				);
-			InputDataIntegrity = new XElement(tns + "InputDataSignature",
-				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
+			};
+
 		}
 
 		private XElement CreateDummySig()

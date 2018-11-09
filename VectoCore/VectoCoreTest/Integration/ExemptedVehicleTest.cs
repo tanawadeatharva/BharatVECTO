@@ -26,6 +26,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public void TestSimulationExemptedVehicle(string filename, int numRuns)
 		{
 			var writer = new FileOutputWriter(filename);
+
+			var customerFile = writer.XMLCustomerReportName;
+			var manufactuerFile = writer.XMLFullReportName;
+			if (File.Exists(customerFile)) {
+				File.Delete(customerFile);
+			}
+			if (File.Exists(manufactuerFile)) {
+				File.Delete(manufactuerFile);
+			}
+
 			var inputData = new XMLDeclarationInputDataProvider(filename, true); //.ReadJsonJob(relativeJobPath);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
@@ -44,6 +54,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.WaitFinished();
 			var progress = jobContainer.GetProgress();
 			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+
+			Assert.IsTrue(File.Exists(manufactuerFile));
+			Assert.IsTrue(File.Exists(customerFile));
 		}
 	}
 }
