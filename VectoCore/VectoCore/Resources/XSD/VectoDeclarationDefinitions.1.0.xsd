@@ -1036,12 +1036,12 @@
 									<xs:documentation>P269 - bool</xs:documentation>
 								</xs:annotation>
 							</xs:element>
-							<xs:element name="MaxNetPower1" minOccurs="0">
+							<xs:element name="MaxNetPower1" type="tns:PowerType" minOccurs="0">
 								<xs:annotation>
 									<xs:documentation>P277 - [W]</xs:documentation>
 								</xs:annotation>
 							</xs:element>
-							<xs:element name="MaxNetPower2" minOccurs="0">
+							<xs:element name="MaxNetPower2" type="tns:PowerType" minOccurs="0">
 								<xs:annotation>
 									<xs:documentation>P278 - [W]</xs:documentation>
 								</xs:annotation>
@@ -2557,6 +2557,11 @@ ToDo: -0.00
 			<xs:enumeration value="none"/>
 			<xs:enumeration value="1,2"/>
 			<xs:enumeration value="1,2,3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PowerType">
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="0"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>
