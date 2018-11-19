@@ -111,6 +111,7 @@
     <Compile Include="InputData\FileIO\JSON\IJSONVehicleComponents.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONTCUData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\AbstractDeclarationXMLComponentDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAirdragDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAngledriveDataProvider.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\ShiftPolygonReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\IAccelerationReserveLookup.cs" />
     <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShareTorque99lLookup.cs" />
     <Compile Include="InputData\Reader\ShiftStrategy\ShareTorque99lLookupReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\AccelerationReserveLookup.cs" />

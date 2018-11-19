@@ -268,6 +268,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
 
+			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
+			//       should be a reference/proxy to the main driving cyle. but how to access it?
+			container.AddComponent(new DistanceBasedDrivingCycle(container, data.Cycle));
+
 			var powertrain = new Vehicle(container, data.VehicleData, data.AirdragData)
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -381,7 +385,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IShiftStrategy strategy;
 			switch (runData.GearboxData.Type) {
 				case GearboxType.AMT:
-					strategy = new AMTShiftStrategyV2(runData, container);
+					strategy = runData.GearshiftParameters == null
+						? (IShiftStrategy)new AMTShiftStrategy(runData, container)
+						: new AMTShiftStrategyV2(runData, container);
 					break;
 				case GearboxType.MT:
 					strategy = new MTShiftStrategy(runData, container);

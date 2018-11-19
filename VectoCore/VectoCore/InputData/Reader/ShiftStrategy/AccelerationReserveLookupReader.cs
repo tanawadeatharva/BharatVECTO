@@ -4,18 +4,19 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 {
 	public class AccelerationReserveLookupReader
 	{
-		public static AccelerationReserveLookup ReadFromStream(Stream stream)
+		public static IAccelerationReserveLookup ReadFromStream(Stream stream)
 		{
 			return Create(VectoCSVFile.ReadStream(stream));
 		}
 
-		public static AccelerationReserveLookup ReadFromFile(string filename)
+		public static IAccelerationReserveLookup ReadFromFile(string filename)
 		{
 			try {
 				var data = VectoCSVFile.Read(filename);
@@ -25,7 +26,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 			}
 		}
 
-		private static AccelerationReserveLookup Create(TableData data)
+		public static IAccelerationReserveLookup Create(TableData data)
 		{
 			return new AccelerationReserveLookup(
 				new LookupDataReader<MeterPerSecond, Tuple<MeterPerSquareSecond, MeterPerSquareSecond>>(

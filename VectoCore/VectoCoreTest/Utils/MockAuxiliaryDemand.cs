@@ -117,6 +117,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return new List<DrivingCycleData.DrivingCycleEntry>();
 		}
 
+		public SpeedChangeEntry LastTargetspeedChange { get; set; }
+
 		public void FinishSimulation() {}
 	}
 }

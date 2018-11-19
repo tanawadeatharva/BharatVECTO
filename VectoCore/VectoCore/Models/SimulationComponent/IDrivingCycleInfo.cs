@@ -31,6 +31,7 @@
 
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
@@ -64,6 +65,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time);
 
+		SpeedChangeEntry LastTargetspeedChange { get; }
+
 		void FinishSimulation();
+	}
+
+	public class SpeedChangeEntry
+	{
+		public MeterPerSecond PreviousTargetSpeed;
+		public MeterPerSecond NewTargetSpeed;
+		public Meter Distance;
+		public Second AbsTime;
+		public Meter Altitude;
+
 	}
 }

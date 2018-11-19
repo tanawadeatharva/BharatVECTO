@@ -907,7 +907,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public Meter ComputeDecelerationDistance(MeterPerSecond targetSpeed)
 		{
-			return DriverData.AccelerationCurve.ComputeAccelerationDistance(DataBus.VehicleSpeed, targetSpeed);
+			return DriverData.AccelerationCurve.ComputeDecelerationDistance(DataBus.VehicleSpeed, targetSpeed);
 		}
 
 		/// <summary>

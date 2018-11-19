@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 
 namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy {
-	public class ShareTorque99lLookup
+	
+
+	public class ShareTorque99lLookup : IShareTorque99lLookup
 	{
 		private KeyValuePair<MeterPerSecond, double>[] _entries;
 

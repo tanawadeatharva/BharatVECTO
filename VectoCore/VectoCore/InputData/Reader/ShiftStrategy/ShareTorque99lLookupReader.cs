@@ -2,18 +2,19 @@
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 {
 	public class ShareTorque99lLookupReader
 	{
-		public static ShareTorque99lLookup ReadFromStream(Stream stream)
+		public static IShareTorque99lLookup ReadFromStream(Stream stream)
 		{
 			return Create(VectoCSVFile.ReadStream(stream));
 		}
 
-		private static ShareTorque99lLookup Create(TableData data)
+		public static IShareTorque99lLookup Create(TableData data)
 		{
 			return new ShareTorque99lLookup(
 				new LookupDataReader<MeterPerSecond, double>("Share T_99l", new[] { Fields.Velocity, Fields.ShareT99l })

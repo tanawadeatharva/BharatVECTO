@@ -108,6 +108,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
+		public IGearshiftEngineeringInputData GearshiftInputData { get { return null; } }
+
 		public DataSourceType SourceType
 		{
 			get { return DataSourceType.JSONFile; }

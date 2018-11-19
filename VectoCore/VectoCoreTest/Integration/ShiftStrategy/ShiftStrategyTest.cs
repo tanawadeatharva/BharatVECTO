@@ -31,10 +31,18 @@
 
 using System;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
@@ -45,6 +53,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 		[OneTimeSetUp]
 		public void DisableLogging()
 		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
 			//LogManager.DisableLogging();
 #if TRACE
 			GraphWriter.Enable();
@@ -93,5 +103,6 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 
 			GraphWriter.Write(modFile);
 		}
+
 	}
 }

@@ -4,7 +4,7 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy
 {
-	public class PredictionDurationLookup : SimulationComponentData
+	public class PredictionDurationLookup : IPredictionDurationLookup
 	{
 		private readonly KeyValuePair<double, double>[] _entries;
 
@@ -17,6 +17,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy
 		{
 			return _entries.Interpolate(x => x.Key, y => y.Value, speedRatio);
 		}
-
 	}
 }

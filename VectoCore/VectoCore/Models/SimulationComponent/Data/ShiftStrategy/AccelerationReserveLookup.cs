@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy {
-	public class AccelerationReserveLookup {
+namespace TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy {
+	public class AccelerationReserveLookup : IAccelerationReserveLookup
+	{
 		private KeyValuePair<MeterPerSecond, Tuple<MeterPerSquareSecond, MeterPerSquareSecond>>[] _entries;
 
 		public AccelerationReserveLookup(KeyValuePair<MeterPerSecond, Tuple<MeterPerSquareSecond, MeterPerSquareSecond>>[] entries)

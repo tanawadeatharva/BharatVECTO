@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 
-namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy {
-	public class EngineSpeedHighFactorLookup
+namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
+{
+	public class EngineSpeedHighFactorLookup : IEngineSpeedHighFactorLookup
 	{
 		private KeyValuePair<double, double>[] _entries;
 

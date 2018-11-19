@@ -1,18 +1,19 @@
 ﻿using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 {
 	public class EngineSpeedHighLookupReader
 	{
-		public static EngineSpeedHighFactorLookup ReadFromStream(Stream stream)
+		public static IEngineSpeedHighFactorLookup ReadFromStream(Stream stream)
 		{
 			return Create(VectoCSVFile.ReadStream(stream));
 		}
 
-		private static EngineSpeedHighFactorLookup Create(TableData data)
+		public static IEngineSpeedHighFactorLookup Create(TableData data)
 		{
 			return new EngineSpeedHighFactorLookup(
 				new LookupDataReader<double, double>("EngineSpeedHighFactor", new[] { Fields.TorqueRatio, Fields.SpeedFactor })

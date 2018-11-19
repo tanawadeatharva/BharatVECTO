@@ -420,6 +420,12 @@ Public Class VectoJob
         End Get
     End Property
 
+    Public ReadOnly Property GearshiftInputData As IGearshiftEngineeringInputData Implements IEngineeringInputDataProvider.GearshiftInputData
+    get
+            Return Nothing
+    End Get
+    End Property
+
     Public ReadOnly Property XMLHash As XElement Implements IDeclarationInputDataProvider.XMLHash
         Get
             Return Nothing

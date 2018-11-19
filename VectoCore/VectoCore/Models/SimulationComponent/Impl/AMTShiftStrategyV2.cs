@@ -33,7 +33,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected DebugData DebugData = new DebugData();
 		private Dictionary<uint, GearRating> GearRatings = new Dictionary<uint, GearRating>();
-		private MeterPerSquareSecond accRsv;
+		private MeterPerSquareSecond accRsv = 0.SI<MeterPerSquareSecond>();
+		private MeterPerSecond demandedSpeed = 0.SI<MeterPerSecond>();
 
 		public struct HistoryEntry
 		{
@@ -122,6 +123,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return true;
 			}
 
+			// TEST
+			var currentVelocity = DataBus.VehicleSpeed;
+			accRsv = CalcAccelerationReserve(currentVelocity, absTime + dt);
+
 			var minimumShiftTimePassed = (lastShiftTime + ModelData.ShiftTime).IsSmallerOrEqual(absTime);
 			if (!minimumShiftTimePassed) {
 				return false;
@@ -156,7 +161,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
 			PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
-			var lookAheadDistance = DataBus.VehicleSpeed * ModelData.TractionInterruption;//ShiftStrategyParameters.GearResidenceTime;
+			var lookAheadDistance =
+				DataBus.VehicleSpeed * ModelData.TractionInterruption; //ShiftStrategyParameters.GearResidenceTime;
 			var roadGradient = DataBus.CycleLookAhead(lookAheadDistance).RoadGradient;
 			var minRating = new GearRating(GearRatingCase.E, double.MaxValue, 0.RPMtoRad());
 			var selectedGear = gear;
@@ -167,7 +173,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var estimatedVelocityPostShift = VelocityDropData.Interpolate(currentVelocity, gradient);
 			var predictionVelocity = CalcPredictionVelocity(currentVelocity, estimatedVelocityPostShift);
 
-			accRsv = CalcAccelerationReserve(currentVelocity);
+			accRsv = CalcAccelerationReserve(currentVelocity, absTime + dt);
 
 			GearRatings.Clear();
 			for (var i = Math.Max(1, gear - ShiftStrategyParameters.AllowedGearRangeDown);
@@ -302,22 +308,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentAltitude = DataBus.Altitude;
 			var lookAheadPos = DataBus.CycleLookAhead(lookaheadMidShift);
 			var gradient = VectoMath.InclinationToAngle((lookAheadPos.Altitude - currentAltitude) / lookaheadMidShift);
-			return gradient;
+			return lookAheadPos.RoadGradient;
 		}
 
-		private MeterPerSquareSecond CalcAccelerationReserve(MeterPerSecond currentVelocity)
+		private MeterPerSquareSecond CalcAccelerationReserve(MeterPerSecond currentVelocity, Second absTime)
 		{
-			var targetSpeed = DataBus.CycleData.LeftSample.VehicleTargetSpeed;
+			var lastTargetspeedChange = DataBus.LastTargetspeedChange;
+			demandedSpeed = ComputeDemandedSpeed(lastTargetspeedChange, absTime);
 			var accRsvLow = ShiftStrategyParameters.AccelerationReserveLookup.LookupLow(currentVelocity);
 			var accRsvHigh = ShiftStrategyParameters.AccelerationReserveLookup.LookupHigh(currentVelocity);
-			var targetSpeedDeviationLim = (targetSpeed - currentVelocity).LimitTo(
-				0.KMPHtoMeterPerSecond(), targetSpeed * ShiftStrategyParameters.TargetSpeedDeviationFactor);
-			var accRsv = VectoMath.Interpolate(
+			var targetSpeedDeviationLim = (demandedSpeed - currentVelocity).LimitTo(
+				0.KMPHtoMeterPerSecond(), demandedSpeed * ShiftStrategyParameters.TargetSpeedDeviationFactor);
+			var accr = VectoMath.Interpolate(
 				0.KMPHtoMeterPerSecond(),
-				VectoMath.Max(targetSpeed * ShiftStrategyParameters.TargetSpeedDeviationFactor, 0.001.SI<MeterPerSecond>()),
+				VectoMath.Max(demandedSpeed * ShiftStrategyParameters.TargetSpeedDeviationFactor, 0.001.SI<MeterPerSecond>()),
 				accRsvLow, accRsvHigh,
 				targetSpeedDeviationLim);
-			return accRsv;
+			return accr;
+		}
+
+		protected MeterPerSecond ComputeDemandedSpeed(SpeedChangeEntry lastTargetspeedChange, Second absTime)
+		{
+			var accelerationTime = absTime - lastTargetspeedChange.AbsTime;
+			return VectoMath.Min(
+				PowertrainConfig.DriverData.AccelerationCurve.ComputeEndVelocityAccelerate(
+					lastTargetspeedChange.PreviousTargetSpeed, accelerationTime), 
+				DataBus.CycleData.LeftSample.VehicleTargetSpeed);
 		}
 
 		private MeterPerSecond CalcPredictionVelocity(
@@ -555,6 +571,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			container.SetDataValue("acc_rsv", accRsv?.Value() ?? 0);
+			container.SetDataValue("v_dem", demandedSpeed?.AsKmph ?? 0);
 			GearRatings.Clear();
 			accRsv = null;
 		}

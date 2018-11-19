@@ -7,19 +7,20 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 {
 	public static class ShareIdleLowReader
 	{
-		public static ShareIdleLowLookup ReadFromStream(Stream stream)
+		public static IShareIdleLowLookup ReadFromStream(Stream stream)
 		{
 			var data = VectoCSVFile.ReadStream(stream);
 			return Create(data);
 		}
 
-		public static ShareIdleLowLookup ReadFromFile(string filename)
+		public static IShareIdleLowLookup ReadFromFile(string filename)
 		{
 			try {
 				var data = VectoCSVFile.Read(filename);
@@ -29,7 +30,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 			}
 		}
 
-		private static ShareIdleLowLookup Create(TableData data)
+		public static ShareIdleLowLookup Create(TableData data)
 		{
 			return new ShareIdleLowLookup(
 				new LookupDataReader<MeterPerSecond, double>(

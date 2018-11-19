@@ -338,6 +338,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var response = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity);
 			var shiftAllowed = !inAngularVelocity.IsEqual(0) && !DataBus.VehicleSpeed.IsEqual(0);
 
+			// just for testing the new shift strategy, how individual values are computed for every timestep
+			if (!(response is ResponseDryRun)) {
+				_strategy?.ShiftRequired(
+					absTime, dt, outTorque, outAngularVelocity, inTorque,
+					response.EngineSpeed, Gear, EngageTime);
+			}
+
 			if (response is ResponseSuccess && shiftAllowed) {
 				var shiftRequired = _strategy?.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque,
 					response.EngineSpeed, Gear, EngageTime) ?? false;

@@ -15,13 +15,13 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 {
 	public static class PredictionDurationLookupReader
 	{
-		public static PredictionDurationLookup ReadFromStream(Stream stream)
+		public static IPredictionDurationLookup ReadFromStream(Stream stream)
 		{
 			var data = VectoCSVFile.ReadStream(stream);
 			return Create(data);
 		}
 
-		public static PredictionDurationLookup ReadFromFile(string filename)
+		public static IPredictionDurationLookup ReadFromFile(string filename)
 		{
 			try {
 				var data = VectoCSVFile.Read(filename);
@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 			}
 		}
 
-		private static PredictionDurationLookup Create(TableData data)
+		public static PredictionDurationLookup Create(TableData data)
 		{
 
 			return new PredictionDurationLookup(

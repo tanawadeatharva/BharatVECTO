@@ -393,4 +393,26 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		Watt ConstantPowerDemand { get; }
 	}
+
+	public interface IGearshiftEngineeringInputData
+	{
+		MeterPerSecond StartSpeed { get; }
+		MeterPerSquareSecond StartAcceleration { get; }
+		Second GearResidenceTime { get; }
+		double DnT99LHMin1 { get; }
+		double DnT99LHMin2 { get; }
+		int AllowedGearRangeUp { get; }
+		int AllowedGearRangeDown { get; }
+		Second LookBackInterval { get; }
+		Watt AvgCardanPowerThresholdPropulsion { get; }
+		Watt CurrCardanPowerThresholdPropulsion { get; }
+		double TargetSpeedDeviationFactor { get; }
+		double EngineSpeedHighDriveOffFactor { get; }
+		double RatingFactorCurrentGear { get; }
+		TableData AccelerationReserveLookup { get; }
+		TableData ShareTorque99L { get; }
+		TableData PredictionDurationLookup { get; }
+		TableData ShareIdleLow { get; }
+		TableData ShareEngineHigh { get; }
+	}
 }

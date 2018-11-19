@@ -40,6 +40,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -95,6 +96,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
+			LastTargetspeedChange = SetLastTargetspeedChange(PreviousState.AbsTime, PreviousState, Left);
+
 			return NextComponent.Initialize(Left.VehicleTargetSpeed,
 				Left.RoadGradient);
 		}
@@ -107,6 +110,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Meter ds)
 		{
 			if (Left.Distance.IsEqual(PreviousState.Distance.Value())) {
+				LastTargetspeedChange = SetLastTargetspeedChange(absTime, PreviousState, Left);
 				var response = DoFirstSimulationInterval(absTime);
 				if (response != null) {
 					return response;
@@ -147,6 +151,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				MaxDistance = nextSpeedChange - PreviousState.Distance
 			};
 			return CurrentState.Response;
+		}
+
+		private SpeedChangeEntry SetLastTargetspeedChange(Second absTime, DrivingCycleState previousState, DrivingCycleData.DrivingCycleEntry left)
+		{
+			return new SpeedChangeEntry {
+				PreviousTargetSpeed = previousState.VehicleTargetSpeed,
+				AbsTime = absTime,
+				Altitude = left.Altitude,
+				NewTargetSpeed = left.VehicleTargetSpeed,
+				Distance = left.Distance
+			};
 		}
 
 		private IResponse DoFirstSimulationInterval(Second absTime)
@@ -432,6 +447,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return LookAhead(LookaheadTimeSafetyMargin * DataBus.VehicleSpeed * time);
 		}
+
+		public SpeedChangeEntry LastTargetspeedChange { get; private set; }
 
 		public void FinishSimulation()
 		{

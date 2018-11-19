@@ -46,5 +46,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		FuelType FuelType { get; }
 
 		Second AbsTime { get; set; }
+		
 	}
+
 }

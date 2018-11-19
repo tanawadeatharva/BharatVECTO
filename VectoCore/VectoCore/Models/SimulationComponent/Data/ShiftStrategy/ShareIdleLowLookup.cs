@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 
 namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy {
-	public class ShareIdleLowLookup
+
+
+	public class ShareIdleLowLookup : IShareIdleLowLookup
 	{
 		private readonly KeyValuePair<MeterPerSecond, double>[] _entries;
 

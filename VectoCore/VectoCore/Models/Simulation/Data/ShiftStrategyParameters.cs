@@ -12,14 +12,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 		public Second GearResidenceTime { get; internal set; }
 
 
-		public PredictionDurationLookup PredictionDurationLookup { get; internal set; }
-		public ShareTorque99lLookup ShareTorque99L { get; internal set; }
+		public IPredictionDurationLookup PredictionDurationLookup { get; internal set; }
+		public IShareTorque99lLookup ShareTorque99L { get; internal set; }
 
-		public ShareIdleLowLookup ShareIdleLow { get; internal set; }
+		public IShareIdleLowLookup ShareIdleLow { get; internal set; }
 
-		public EngineSpeedHighFactorLookup ShareEngineHigh { get; internal set; }
+		public IEngineSpeedHighFactorLookup ShareEngineHigh { get; internal set; }
 
-		public AccelerationReserveLookup AccelerationReserveLookup { get; internal set; }
+		public IAccelerationReserveLookup AccelerationReserveLookup { get; internal set; }
 
 		//% Max.acceptable engine speed for current gear
 		//% Low limit, if demanded cardan torque for /constant/ velocity is not above

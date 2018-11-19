@@ -172,6 +172,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new System.NotImplementedException();
 		}
 
+		public SpeedChangeEntry LastTargetspeedChange { get; set; }
+
 		public bool VehicleStopped { get; set; }
 
 		public DrivingBehavior DriverBehavior { get; set; }

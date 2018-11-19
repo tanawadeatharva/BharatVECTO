@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
@@ -58,6 +59,33 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.IsTrue(jobContainer.Runs[0].Run.FinishedWithoutErrors);
 			jobContainer.Execute();
 			jobContainer.WaitFinished();
+		}
+
+		[TestCase(@"TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Class5_Tractor_ENG_TCU.vecto")]
+		public void TestShiftStrategyEngineering(string jobFile, int runIdx = 0)
+		{
+			var relativeJobPath = jobFile;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml" ? new XMLDeclarationInputDataProvider(relativeJobPath, true) : JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+
+			Assert.NotNull(((IEngineeringInputDataProvider)inputData).GearshiftInputData);
+			var jobContainer = new JobContainer(new MockSumWriter());
+
+			var runs = factory.SimulationRuns().ToArray();
+			//jobContainer.AddRun(runs[runIdx]);
+			runs[runIdx].Run();
+
+			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
+			//var progress = jobContainer.GetProgress();
+			//Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			//Assert.IsTrue(jobContainer.Runs.All(r => r.Success), String.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
 		}
 	}
 
