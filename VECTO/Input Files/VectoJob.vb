@@ -48,6 +48,7 @@ Public Class VectoJob
     Private ReadOnly _vehicleFile As SubPath
     Private ReadOnly _engineFile As SubPath
     Private ReadOnly _gearboxFile As SubPath
+    Private ReadOnly _tcuFile As SubPath
 
     Private _startStop As Boolean
     Public StartStopDelay As Double
@@ -97,6 +98,7 @@ Public Class VectoJob
         _vehicleFile = New SubPath
         _engineFile = New SubPath
         _gearboxFile = New SubPath
+        _tcuFile = new SubPath
 
         _driverAccelerationFile = New SubPath
 
@@ -188,6 +190,19 @@ Public Class VectoJob
         End Set
     End Property
 
+    Public Property PathShiftParams(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _tcuFile.OriginalPath
+            Else
+                Return _tcuFile.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _tcuFile.Init(_myPath, value)
+        End Set
+    End Property
+    
 
     Public ReadOnly Property IDriverDeclarationInputData_SavedInDeclarationMode As Boolean _
         Implements IDriverDeclarationInputData.SavedInDeclarationMode
@@ -422,7 +437,8 @@ Public Class VectoJob
 
     Public ReadOnly Property GearshiftInputData As IGearshiftEngineeringInputData Implements IEngineeringInputDataProvider.GearshiftInputData
     get
-            Return Nothing
+            if not file.Exists(_tcuFile.FullPath) Then Return Nothing
+            Return new JSONComponentInputData(_tcuFile.FullPath, me).GearshiftInputData
     End Get
     End Property
 

@@ -414,5 +414,6 @@ namespace TUGraz.VectoCommon.InputData
 		TableData PredictionDurationLookup { get; }
 		TableData ShareIdleLow { get; }
 		TableData ShareEngineHigh { get; }
+		string Source { get; }
 	}
 }

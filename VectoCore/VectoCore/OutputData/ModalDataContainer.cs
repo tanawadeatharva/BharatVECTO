@@ -247,6 +247,7 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc,
 						ModalResultField.FCAAUX, ModalResultField.FCFinal
 					}.Select(x => x.GetName()));
+			// TODO: 2018-11-20: Disable additional columns after testing gearshifting!
 //#if TRACE
 			strCols = strCols.Concat(_additionalColumns);
 //#endif

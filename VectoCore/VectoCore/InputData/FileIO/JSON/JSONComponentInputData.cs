@@ -55,6 +55,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected IRetarderInputData Retarder;
 		protected IPTOTransmissionInputData PTOTransmission;
 		private IAirdragEngineeringInputData AirdragData;
+		protected IGearshiftEngineeringInputData GearshiftData;
 		private string _filename;
 
 
@@ -72,7 +73,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case Constants.FileExtensions.GearboxDataFile:
 					tmp = JSONInputDataFactory.ReadGearbox(filename, tolerateMissing);
 					break;
+				case Constants.FileExtensions.GearshiftDataFile:
+					tmp = JSONInputDataFactory.ReadShiftParameters(filename, tolerateMissing);
+					break;
 			}
+
 			tmp.Switch()
 				.If<IVehicleEngineeringInputData>(c => VehicleData = c)
 				.If<IAirdragEngineeringInputData>(c => AirdragData = c)
@@ -82,7 +87,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				.If<IRetarderInputData>(c => Retarder = c)
 				.If<ITorqueConverterEngineeringInputData>(c => TorqueConverter = c)
 				.If<IAngledriveInputData>(c => Angledrive = c)
-				.If<IPTOTransmissionInputData>(c => PTOTransmission = c);
+				.If<IPTOTransmissionInputData>(c => PTOTransmission = c)
+				.If<IGearshiftEngineeringInputData>(c => GearshiftData = c);
+				
 			_filename = filename;
 		}
 
@@ -108,7 +115,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
-		public IGearshiftEngineeringInputData GearshiftInputData { get { return null; } }
+		public IGearshiftEngineeringInputData GearshiftInputData { get { return GearshiftData; } }
 
 		public DataSourceType SourceType
 		{
