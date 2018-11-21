@@ -126,6 +126,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string FCWHTCC_KM = "FC-WHTCc [g/km]";
 		public const string FCAAUX_H = "FC-AAUX [g/h]";
 		public const string FCAAUX_KM = "FC-AAUX [g/km]";
+		public const string FCADAS_H = "FC-ADAS [g/h]";
+		public const string FCADAS_KM = "FC-ADAS [g/km]";
 
 		public const string FCFINAL_H = "FC-Final [g/h]";
 		public const string FCFINAL_KM = "FC-Final [g/km]";
@@ -272,6 +274,7 @@ namespace TUGraz.VectoCore.OutputData
 				FCAUXC_H, FCAUXC_KM,
 				FCWHTCC_H, FCWHTCC_KM,
 				FCAAUX_H, FCAAUX_KM,
+				FCADAS_H, FCADAS_KM,
 				FCFINAL_H, FCFINAL_KM,
 				FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, FCFINAL_LiterPer100M3KM,SPECIFIC_FC,
 				CO2_KM, CO2_TKM, CO2_M3KM,
@@ -406,6 +409,10 @@ namespace TUGraz.VectoCore.OutputData
 			row[FCAAUX_H] = modData.FuelConsumptionAAUXPerSecond().ConvertToGrammPerHour();
 			var fuelConsumptionAaux = modData.FuelConsumptionAAUX();
 			row[FCAAUX_KM] = fuelConsumptionAaux.ConvertToGrammPerKiloMeter();
+
+			row[FCADAS_H] = modData.FuelConsumptionADASPerSecond().ConvertToGrammPerHour();
+			var fuelConsumptionAdas = modData.FuelConsumptionADAS();
+			row[FCADAS_KM] = fuelConsumptionAdas.ConvertToGrammPerKiloMeter();
 
 			row[FCFINAL_H] = modData.FuelConsumptionFinalPerSecond().ConvertToGrammPerHour();
 			var fcfinal = modData.FuelConsumptionFinal();

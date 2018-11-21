@@ -68,5 +68,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public string ADASCombination;
 
 		}
+
+		public ADASCombination Lookup(IAdvancedDriverAssistantSystemDeclarationInputData adas)
+		{
+			return Lookup(
+				adas.EngineStopStart, adas.EcoRollWitoutEngineStop, adas.EcoRollWithEngineStop, adas.PredictiveCruiseControl);
+		}
 	}
 }

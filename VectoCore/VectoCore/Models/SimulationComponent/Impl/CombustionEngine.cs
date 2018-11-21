@@ -396,7 +396,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var fc = result.Value;
-			var fcAux = fc;
+			var fcAux = fc; // TODO: wird fcNCVcorr
 
 			var fcWHTC = fcAux * WHTCCorrectionFactor;
 			var fcAAUX = fcWHTC;
@@ -405,12 +405,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				advancedAux.DoWriteModalResults(container);
 				fcAAUX = advancedAux.AAuxFuelConsumption;
 			}
-			var fcFinal = fcAAUX;
+			var fcADAS = fcAAUX * ModelData.ADASCorrectionFactor;
+			var fcFinal = fcADAS;
 
 			container[ModalResultField.FCMap] = fc;
 			container[ModalResultField.FCAUXc] = fcAux;
 			container[ModalResultField.FCWHTCc] = fcWHTC;
 			container[ModalResultField.FCAAUX] = fcAAUX;
+			container[ModalResultField.FCADAS] = fcADAS;
 			container[ModalResultField.FCFinal] = fcFinal;
 		}
 

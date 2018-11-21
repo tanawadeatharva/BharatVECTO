@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.OutputData
 				.Concat(
 					new[] {
 						ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc,
-						ModalResultField.FCAAUX, ModalResultField.FCFinal
+						ModalResultField.FCAAUX, ModalResultField.FCADAS, ModalResultField.FCFinal
 					}.Select(x => x.GetName()));
 #if TRACE
 			strCols = strCols.Concat(_additionalColumns);
