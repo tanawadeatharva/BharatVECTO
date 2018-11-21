@@ -163,6 +163,8 @@
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\ShiftPolygonReader.cs" />
+    <Compile Include="Models\Declaration\ADASBenefits.cs" />
+    <Compile Include="Models\Declaration\ADASCombinations.cs" />
     <Compile Include="Models\Declaration\AuxDemandEntry.cs" />
     <Compile Include="Models\Declaration\AuxiliaryTypeHelper.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
@@ -465,6 +467,8 @@
     <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.7.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\ADAS\ADAS_Benefits.csv" />
+    <EmbeddedResource Include="Resources\Declaration\ADAS\ADAS_Combinations.csv" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>
