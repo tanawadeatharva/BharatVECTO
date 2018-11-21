@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var minAcceleration = _gearbox.TorqueConverterLocked
 					? ModelData.UpshiftMinAcceleration
 					: ModelData.TorqueConverterData.CLUpshiftMinAcceleration;
-				minAcceleration = VectoMath.Min(minAcceleration, DataBus.DriverAcceleration);
+				minAcceleration = VectoMath.Min(minAcceleration, VectoMath.Max(0.SI<MeterPerSquareSecond>(), DataBus.DriverAcceleration));
 				minAccelerationReachable = reachableAcceleration.IsGreaterOrEqual(minAcceleration);
 			}
 
@@ -328,6 +328,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (shiftTimeReached && IsBelowDownShiftCurve(gear, inTorque, inAngularVelocity)) {
 				Downshift(absTime, gear);
 				return true;
+			}
+
+			if (shiftTimeReached && DataBus.DrivingAction == DrivingAction.Accelerate) {
+				if (DataBus.VehicleSpeed < DataBus.CycleData.LeftSample.VehicleTargetSpeed - 10.KMPHtoMeterPerSecond() && DataBus.DriverAcceleration < 0.SI<MeterPerSquareSecond>()) {
+					Downshift(absTime, gear);
+					return true;
+				}
 			}
 
 			return false;
