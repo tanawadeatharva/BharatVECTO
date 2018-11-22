@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 																						_engineData.WHTCMotorway) *
 																					_engineData.ColdHotCorrectionFactor * _engineData.CorrectionFactorRegPer;
 					simulationRunData.EngineData.ADASCorrectionFactor = DeclarationData.ADASBenefits.Lookup(
-						simulationRunData.VehicleData.VehicleClass, adasCombination, mission.MissionType, loading.Key);
+						_segment.VehicleClass, adasCombination, mission.MissionType, loading.Key);
 					simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
 					yield return simulationRunData;
 				}
