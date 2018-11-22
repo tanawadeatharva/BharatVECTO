@@ -53,6 +53,12 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 	{
 		private const string EngineFile = @"TestData\Components\24t Coach.veng";
 
+		[OneTimeSetUp]
+		public void Init()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 		[TestCase("24tCoach_EngineOnly",
 			@"TestData\Components\24t Coach.veng",
 			@"TestData\Cycles\Coach Engine Only.vdri",
