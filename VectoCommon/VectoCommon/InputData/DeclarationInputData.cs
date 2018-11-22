@@ -190,6 +190,11 @@ namespace TUGraz.VectoCommon.InputData
 			}
 			return (Prefix + value.Replace(SeparatorXML, SeparatorEnum)).ParseEnum<PredictiveCruiseControlType>();
 		}
+
+		public static string ToXMLFormat(this PredictiveCruiseControlType pcc)
+		{
+			return pcc.ToString().Replace(Prefix, "").Replace(SeparatorEnum, SeparatorXML);
+		}
 	}
 
 

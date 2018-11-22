@@ -367,6 +367,20 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCAAUX) / distance;
 		}
 
+		public static KilogramPerSecond FuelConsumptionADASPerSecond(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCADAS) / data.Duration();
+		}
+
+		public static KilogramPerMeter FuelConsumptionADAS(this IModalDataContainer data)
+		{
+			var distance = data.Distance();
+			if (distance == null || distance.IsEqual(0)) {
+				return null;
+			}
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCADAS) / distance;
+		}
+
 		public static KilogramPerSecond FuelConsumptionAuxStartStopPerSecond(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCAUXc) / data.Duration();

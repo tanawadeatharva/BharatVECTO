@@ -78,6 +78,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly Payloads Payloads = new Payloads();
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 
+		public static readonly ADASCombinations ADASCombinations = new ADASCombinations();
+		public static readonly ADASBenefits ADASBenefits = new ADASBenefits();
 
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.

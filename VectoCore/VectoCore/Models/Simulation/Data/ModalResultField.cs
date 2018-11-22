@@ -124,7 +124,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), name: "FC-AAUX", caption: "FC-AAUX [g/h]", outputFactor: 3600 * 1000)] FCAAUX,
 
 		/// <summary>
-		/// [g/h] Fuel consumption after WHTC Correction. (Based on FC-AUXc.)
+		/// [g/h] Fuel consumption after correction for ADAS technologies. (Based on FC-AAUXc.)
+		/// </summary>
+		[ModalResultField(typeof(SI), name: "FC-ADAS", caption: "FC-Final [g/h]", outputFactor: 3600 * 1000)] FCADAS,
+
+		/// <summary>
+		/// [g/h] Fuel consumption after WHTC Correction. (Based on FC-ADAS.)
 		/// </summary>
 		[ModalResultField(typeof(SI), name: "FC-Final", caption: "FC-Final [g/h]", outputFactor: 3600 * 1000)] FCFinal,
 
@@ -316,6 +321,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankPneumatics [W]")] AA_AveragePowerDemandCrankPneumatics,
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOff [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOff,
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOn [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOn,
+		
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]
