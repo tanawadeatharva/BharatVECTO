@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				FuelConsumptionTotal = data.TimeIntegral<Kilogram>(ModalResultField.FCFinal);
 				CO2Total = FuelConsumptionTotal * data.FuelData.CO2PerFuelWeight;
-				EnergyConsumptionTotal = FuelConsumptionTotal * data.FuelData.LowerHeatingValue;
+				EnergyConsumptionTotal = FuelConsumptionTotal * data.FuelData.LowerHeatingValueVecto;
 			}
 		}
 

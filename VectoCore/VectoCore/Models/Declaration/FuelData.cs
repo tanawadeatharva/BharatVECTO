@@ -73,7 +73,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 						r.Field<string>(0).ParseEnum<FuelType>(),
 						string.IsNullOrWhiteSpace(density) ? null : density.ToDouble(0).SI<KilogramPerCubicMeter>(),
 						r.ParseDouble("co2perfuelweight"),
-						r.ParseDouble("lowerheatingvalue").SI(Unit.SI.Kilo.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>()
+						r.ParseDouble("ncv_stdvecto").SI(Unit.SI.Kilo.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>(),
+						r.ParseDouble("ncv_stdengine").SI(Unit.SI.Kilo.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>()
 						);
 				})
 				.ToDictionary(e => e.FuelType);
@@ -81,21 +82,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public struct Entry
 		{
-			public Entry(FuelType type, KilogramPerCubicMeter density, double weight, JoulePerKilogramm heatingValue) : this()
+			public Entry(FuelType type, KilogramPerCubicMeter density, double weight, JoulePerKilogramm heatingValueVecto, JoulePerKilogramm heatingValueAnnex) : this()
 			{
 				FuelType = type;
 				FuelDensity = density;
 				CO2PerFuelWeight = weight;
-				LowerHeatingValue = heatingValue;
+				LowerHeatingValueVecto = heatingValueVecto;
+				LowerHeatingValueVectoEngine = heatingValueAnnex;
 			}
 
-			public FuelType FuelType { get; private set; }
 
-			public KilogramPerCubicMeter FuelDensity { get; private set; }
+			public FuelType FuelType { get; }
 
-			public double CO2PerFuelWeight { get; private set; }
+			public KilogramPerCubicMeter FuelDensity { get; }
 
-			public JoulePerKilogramm LowerHeatingValue { get; private set; }
+			public double CO2PerFuelWeight { get; }
+
+			public JoulePerKilogramm LowerHeatingValueVecto { get; }
+
+			public JoulePerKilogramm LowerHeatingValueVectoEngine { get; }
+
+			public double HeatingValueCorrection { get { return LowerHeatingValueVectoEngine / LowerHeatingValueVecto; } }
+
 		}
 	}
 }

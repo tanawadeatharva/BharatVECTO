@@ -344,13 +344,18 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / data.Duration();
 		}
 
-		public static KilogramPerMeter FuelConsumptionAuxStartStop(this IModalDataContainer data)
+		public static KilogramPerMeter FuelConsumptionNCVCorrected(this IModalDataContainer data)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCAUXc) / distance;
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCNCVc) / distance;
+		}
+
+		public static KilogramPerSecond FuelConsumptionNCVCorrectedPerSecond(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCNCVc) / data.Duration();
 		}
 
 		public static KilogramPerSecond FuelConsumptionAAUXPerSecond(this IModalDataContainer data)
@@ -381,10 +386,7 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(ModalResultField.FCADAS) / distance;
 		}
 
-		public static KilogramPerSecond FuelConsumptionAuxStartStopPerSecond(this IModalDataContainer data)
-		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCAUXc) / data.Duration();
-		}
+		
 
 		public static KilogramPerSecond FuelConsumptionFinalPerSecond(this IModalDataContainer data)
 		{
@@ -426,7 +428,7 @@ namespace TUGraz.VectoCore.OutputData
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * data.FuelData.LowerHeatingValue / distance;
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * data.FuelData.LowerHeatingValueVecto / distance;
 		}
 
 		public static Kilogram TotalFuelConsumption(this IModalDataContainer data)

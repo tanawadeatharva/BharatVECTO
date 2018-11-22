@@ -120,8 +120,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		public const string FCMAP_H = "FC-Map [g/h]";
 		public const string FCMAP_KM = "FC-Map [g/km]";
-		public const string FCAUXC_H = "FC-AUXc [g/h]";
-		public const string FCAUXC_KM = "FC-AUXc [g/km]";
+		public const string FCNCVC_H = "FC-NCVc [g/h]";
+		public const string FCNCVC_KM = "FC-NCVc [g/km]";
 		public const string FCWHTCC_H = "FC-WHTCc [g/h]";
 		public const string FCWHTCC_KM = "FC-WHTCc [g/km]";
 		public const string FCAAUX_H = "FC-AAUX [g/h]";
@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.OutputData
 				TIME, DISTANCE,
 				SPEED, ALTITUDE_DELTA,
 				FCMAP_H, FCMAP_KM,
-				FCAUXC_H, FCAUXC_KM,
+				FCNCVC_H, FCNCVC_KM,
 				FCWHTCC_H, FCWHTCC_KM,
 				FCAAUX_H, FCAAUX_KM,
 				FCADAS_H, FCADAS_KM,
@@ -398,9 +398,9 @@ namespace TUGraz.VectoCore.OutputData
 				row[FCMAP_KM] = fcMapPerMeter.ConvertToGrammPerKiloMeter();
 			}
 
-			row[FCAUXC_H] = modData.FuelConsumptionAuxStartStopPerSecond().ConvertToGrammPerHour();
-			var fuelConsumptionAuxStartStopCorrected = modData.FuelConsumptionAuxStartStop();
-			row[FCAUXC_KM] = fuelConsumptionAuxStartStopCorrected.ConvertToGrammPerKiloMeter();
+			row[FCNCVC_H] = modData.FuelConsumptionNCVCorrectedPerSecond().ConvertToGrammPerHour();
+			var fuelConsumptionAuxStartStopCorrected = modData.FuelConsumptionNCVCorrected();
+			row[FCNCVC_KM] = fuelConsumptionAuxStartStopCorrected.ConvertToGrammPerKiloMeter();
 
 			row[FCWHTCC_H] = modData.FuelConsumptionWHTCPerSecond().ConvertToGrammPerHour();
 			var fuelConsumptionWHTCCorrected = modData.FuelConsumptionWHTC();
