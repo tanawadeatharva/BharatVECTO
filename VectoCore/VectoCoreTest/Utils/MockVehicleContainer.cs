@@ -147,6 +147,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return 0.SI<Newton>();
 		}
 
+		public MeterPerSecond MaxVehicleSpeed { get { return null; } }
+
 		public Meter Distance { get; set; }
 
 		public bool SetClutchClosed
