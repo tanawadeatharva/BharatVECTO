@@ -29,10 +29,12 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Data;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -250,6 +252,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.WaitFinished();
 
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
+			var view = new DataView(sumData.Table, "", SummaryDataContainer.SORT, DataViewRowState.CurrentRows).ToTable();
+			Assert.AreEqual(207.3194, view.Rows[0][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(245.1693, view.Rows[1][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(173.4171, view.Rows[2][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(186.8289, view.Rows[3][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(226.5712, view.Rows[4][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(256.7632, view.Rows[5][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
 		}
 
 		[TestCase(EngineSpeedLimitJobATDecl)]
