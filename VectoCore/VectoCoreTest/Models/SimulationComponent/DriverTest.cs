@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -60,6 +61,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public const string EngineFileHigh = @"TestData\Components\24t Coach_high.veng";
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 		public const double Tolerance = 0.001;
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
 
 		[TestCase]
 		public void DriverCoastingTest()

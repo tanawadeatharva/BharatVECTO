@@ -157,6 +157,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new System.NotImplementedException();
 		}
 
+		public MeterPerSecond MaxVehicleSpeed { get { return null; } }
+
 		/// <summary>
 		/// Always Driving.
 		/// </summary>
