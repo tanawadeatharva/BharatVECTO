@@ -396,9 +396,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var fc = result.Value;
-			var fcAux = fc; // TODO: wird fcNCVcorr
+			var fcNCVcorr = fc * ModelData.NCVCorrectionFactor; // TODO: wird fcNCVcorr
 
-			var fcWHTC = fcAux * WHTCCorrectionFactor;
+			var fcWHTC = fcNCVcorr * WHTCCorrectionFactor;
 			var fcAAUX = fcWHTC;
 			var advancedAux = EngineAux as BusAuxiliariesAdapter;
 			if (advancedAux != null) {
@@ -409,7 +409,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var fcFinal = fcADAS;
 
 			container[ModalResultField.FCMap] = fc;
-			container[ModalResultField.FCAUXc] = fcAux;
+			container[ModalResultField.FCNCVc] = fcNCVcorr;
 			container[ModalResultField.FCWHTCc] = fcWHTC;
 			container[ModalResultField.FCAAUX] = fcAAUX;
 			container[ModalResultField.FCADAS] = fcADAS;

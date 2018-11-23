@@ -239,7 +239,7 @@ namespace TUGraz.VectoCore.OutputData
 				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
 				.Concat(
 					new[] {
-						ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc,
+						ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc,
 						ModalResultField.FCAAUX, ModalResultField.FCADAS, ModalResultField.FCFinal
 					}.Select(x => x.GetName()));
 #if TRACE
