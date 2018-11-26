@@ -1142,14 +1142,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 						axleWeightDistribution: new[] { 0.45, 0.55 },
 						trailerAxleWeightDistribution: new double[] { },
 						trailerAxleCount: new int[] { },
-						bodyCurbWeight: 1900,
+						bodyCurbWeight: 2000,
 						trailerCurbWeight: new double[] { },
 						trailerType: new TrailerType[] { },
 						lowLoad: 900,
 						refLoad: 4400,
 						trailerGrossVehicleWeight: new double[] { },
 						deltaCdA: 0,
-						maxLoad: 8600);
+						maxLoad: 8500);
 		}
 
 		/// <summary>
@@ -1432,14 +1432,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 						axleWeightDistribution: new[] { 0.35, 0.4, 0.25 },
 						trailerAxleWeightDistribution: new double[] { },
 						trailerAxleCount: new int[] { },
-						bodyCurbWeight: 3100,
+						bodyCurbWeight: 3230,
 						trailerCurbWeight: new double[] { },
 						trailerType: new TrailerType[] { },
 						lowLoad: 1400,
 						refLoad: 7100,
 						trailerGrossVehicleWeight: new double[] { },
 						deltaCdA: 0,
-						maxLoad: 13400);
+						maxLoad: 13270);
 
 		}
 
@@ -1685,14 +1685,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.35, 0.35, 0.3 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 3100,
+				bodyCurbWeight: 3230,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 1400,
 				refLoad: 7100,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 13400);
+				maxLoad: 13270);
 		}
 
 		/// <summary>
@@ -1832,14 +1832,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.25, 0.25, 0.25, 0.25 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 4200,
+				bodyCurbWeight: 4355,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 2600,
 				refLoad: 12900,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 24300);
+				maxLoad: 24145);
 		}
 
 		public static void AssertMission(Mission m, dynamic vehicleData, MissionType missionType, string cosswindCorrection,
