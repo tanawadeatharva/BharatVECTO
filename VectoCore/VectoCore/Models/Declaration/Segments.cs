@@ -92,11 +92,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var segment = new Segment {
 				Found = true,
-			    GrossVehicleWeightMin = row.ParseDouble("gvw_min").SI(Unit.SI.Ton).Cast<Kilogram>(),
-			    GrossVehicleWeightMax = row.ParseDouble("gvw_max").SI(Unit.SI.Ton).Cast<Kilogram>(),
+			    GrossVehicleWeightMin = row.ParseDouble("tpmlm_min").SI(Unit.SI.Ton).Cast<Kilogram>(),
+			    GrossVehicleWeightMax = row.ParseDouble("tpmlm_max").SI(Unit.SI.Ton).Cast<Kilogram>(),
 				VehicleCategory = vehicleCategory,
 				AxleConfiguration = axleConfiguration,
-				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass")),
+				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvgroup")),
 				AccelerationFile =
 					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 												row.Field<string>(".vaccfile")),
@@ -126,8 +126,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var isVocational = r.Field<string>("vocational").ToBoolean();
 					var category = r.Field<string>("vehiclecategory");
 					var axleConf = r.Field<string>("axleconf.");
-				    var massMin = r.ParseDouble("gvw_min").SI(Unit.SI.Ton);
-				    var massMax = r.ParseDouble("gvw_max").SI(Unit.SI.Ton);
+				    var massMin = r.ParseDouble("tpmlm_min").SI(Unit.SI.Ton);
+				    var massMax = r.ParseDouble("tpmlm_max").SI(Unit.SI.Ton);
 					return (considerInvalid || isValid == "1")
 							&& vocational == isVocational
 							&& category == vehicleCategory.ToString()
@@ -150,14 +150,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational, true);
 
 			var vehicleHeight = row.ParseDouble("height").SI<Meter>();
-			var vehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
+			var vehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvgroup"));
 
 			if (vehicleClass == VehicleClass.Class9) {
 				// VECTO-471: for class 9 take similar height than rigid with same maximum gross vehicle weight (class 1, 2, 3 or 4).
 				var rigidGVWrow = _segmentTable.AsEnumerable().FirstOrDefault(r => {
-				    var massMin = r.ParseDouble("gvw_min").SI(Unit.SI.Ton);
-				    var massMax = r.ParseDouble("gvw_max").SI(Unit.SI.Ton);
-					return new[] { "1", "2", "3", "4" }.Contains(r.Field<string>("hdvclass"))
+				    var massMin = r.ParseDouble("tpmlm_min").SI(Unit.SI.Ton);
+				    var massMax = r.ParseDouble("tpmlm_max").SI(Unit.SI.Ton);
+					return new[] { "1", "2", "3", "4" }.Contains(r.Field<string>("hdvgroup"))
 							&& massMin <= grossVehicleMassRating && grossVehicleMassRating <= massMax;
 				});
 				if (rigidGVWrow != null) {
