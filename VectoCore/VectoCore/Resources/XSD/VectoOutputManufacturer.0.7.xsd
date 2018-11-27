@@ -8,17 +8,11 @@
 			<xs:documentation>Comment describing your root element</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="Data">
-					<xs:complexType>
-						<xs:complexContent>
-							<xs:extension base="VectoOutputDataType"/>
-						</xs:complexContent>
-					</xs:complexType>
-				</xs:element>
-				<xs:element name="Signature" type="vdecdef:SignatureType"/>
-			</xs:sequence>
-			<xs:attribute name="schemaVersion" type="xs:decimal" use="required"/>
+			<xs:complexContent>
+				<xs:extension base="VectoOutputManufacturerType">
+					<xs:attribute name="schemaVersion" type="xs:decimal" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="AirdragType">
@@ -400,7 +394,45 @@
 							</xs:simpleType>
 						</xs:element>
 						<xs:choice>
-							<xs:element name="Result" type="ResultType" maxOccurs="unbounded"/>
+							<xs:sequence>
+								<xs:element name="Result" type="ResultType" maxOccurs="unbounded"/>
+								<xs:element name="Summary">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="SpecificCO2Emissions">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:double">
+															<xs:attribute name="unit" use="required">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:enumeration value="gCO2/tkm"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:attribute>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="AveragePayload">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:double">
+															<xs:attribute name="unit" use="required">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:enumeration value="t"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:attribute>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
 							<xs:element name="ExemptedVehicle">
 								<xs:complexType/>
 							</xs:element>
@@ -720,4 +752,16 @@
 			<xs:enumeration value="ltr"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:complexType name="VectoOutputManufacturerType">
+		<xs:sequence>
+			<xs:element name="Data">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="VectoOutputDataType"/>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Signature" type="vdecdef:SignatureType"/>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>
