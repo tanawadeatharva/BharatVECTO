@@ -1735,11 +1735,20 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AverageRRC.
+        ///   Looks up a localized string similar to AverageRRCMotorVehicleTyres.
         /// </summary>
         public static string Report_Vehicle_AverageRRC {
             get {
                 return ResourceManager.GetString("Report_Vehicle_AverageRRC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AverageFuelEfficiencyLabelMotorVehicleTyres.
+        /// </summary>
+        public static string Report_Vehicle_AverageRRCLabel {
+            get {
+                return ResourceManager.GetString("Report_Vehicle_AverageRRCLabel", resourceCulture);
             }
         }
         

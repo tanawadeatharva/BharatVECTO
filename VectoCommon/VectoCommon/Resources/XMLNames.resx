@@ -768,136 +768,136 @@
   <data name="Axlegear_LineType" xml:space="preserve">
     <value>LineType</value>
   </data>
-	<data name="Component_CertificationNumber" xml:space="preserve">
+  <data name="Component_CertificationNumber" xml:space="preserve">
     <value>CertificationNumber</value>
   </data>
-	<data name="Report_Results_FuelConsumption" xml:space="preserve">
+  <data name="Report_Results_FuelConsumption" xml:space="preserve">
     <value>FuelConsumption</value>
   </data>
-	<data name="Report_Results_CO2" xml:space="preserve">
+  <data name="Report_Results_CO2" xml:space="preserve">
     <value>CO2</value>
   </data>
-	<data name="Report_Results_Unit_Attr" xml:space="preserve">
+  <data name="Report_Results_Unit_Attr" xml:space="preserve">
     <value>unit</value>
   </data>
-	<data name="Report_Vehicle_VehicleGroup" xml:space="preserve">
+  <data name="Report_Vehicle_VehicleGroup" xml:space="preserve">
     <value>VehicleGroup</value>
   </data>
-	<data name="Report_Input_Signature" xml:space="preserve">
+  <data name="Report_Input_Signature" xml:space="preserve">
     <value>InputDataSignature</value>
   </data>
-	<data name="Report_GetGearbox_GearsCount" xml:space="preserve">
+  <data name="Report_GetGearbox_GearsCount" xml:space="preserve">
     <value>GearsCount</value>
   </data>
-	<data name="Report_Gearbox_TransmissionRatioFinalGear" xml:space="preserve">
+  <data name="Report_Gearbox_TransmissionRatioFinalGear" xml:space="preserve">
     <value>TransmissionRatioFinalGear</value>
   </data>
-	<data name="Report_Component_CertificationMethod" xml:space="preserve">
+  <data name="Report_Component_CertificationMethod" xml:space="preserve">
     <value>CertificationMethod</value>
   </data>
-	<data name="Report_Component_CertificationNumber" xml:space="preserve">
+  <data name="Report_Component_CertificationNumber" xml:space="preserve">
     <value>CertificationNumber</value>
   </data>
-	<data name="Report_AirDrag_CdxA" xml:space="preserve">
+  <data name="Report_AirDrag_CdxA" xml:space="preserve">
     <value>CdxA</value>
   </data>
-	<data name="Report_Tyre_TyreDimension" xml:space="preserve">
+  <data name="Report_Tyre_TyreDimension" xml:space="preserve">
     <value>TyreDimension</value>
   </data>
-	<data name="Report_Tyre_TyreCertificationNumber" xml:space="preserve">
+  <data name="Report_Tyre_TyreCertificationNumber" xml:space="preserve">
     <value>TyreCertificationNumber</value>
   </data>
-	<data name="Report_Tyre_TyreRRCDeclared" xml:space="preserve">
+  <data name="Report_Tyre_TyreRRCDeclared" xml:space="preserve">
     <value>TyreRRCDeclared</value>
   </data>
-	<data name="Report_Result_Mission" xml:space="preserve">
+  <data name="Report_Result_Mission" xml:space="preserve">
     <value>Mission</value>
   </data>
-	<data name="Report_Result_Result" xml:space="preserve">
+  <data name="Report_Result_Result" xml:space="preserve">
     <value>Result</value>
   </data>
-	<data name="Report_Result_Status_Attr" xml:space="preserve">
+  <data name="Report_Result_Status_Attr" xml:space="preserve">
     <value>status</value>
   </data>
-	<data name="Report_ApplicationInfo_ApplicationInformation" xml:space="preserve">
+  <data name="Report_ApplicationInfo_ApplicationInformation" xml:space="preserve">
     <value>ApplicationInformation</value>
   </data>
-	<data name="Report_ApplicationInfo_SimulationToolVersion" xml:space="preserve">
+  <data name="Report_ApplicationInfo_SimulationToolVersion" xml:space="preserve">
     <value>SimulationToolVersion</value>
   </data>
-	<data name="Report_ApplicationInfo_Date" xml:space="preserve">
+  <data name="Report_ApplicationInfo_Date" xml:space="preserve">
     <value>Date</value>
   </data>
-	<data name="Report_ResultEntry_Distance" xml:space="preserve">
+  <data name="Report_ResultEntry_Distance" xml:space="preserve">
     <value>Distance</value>
   </data>
-	<data name="Report_ResultEntry_SimulationParameters" xml:space="preserve">
+  <data name="Report_ResultEntry_SimulationParameters" xml:space="preserve">
     <value>SimulationParameters</value>
   </data>
-	<data name="Report_ResultEntry_TotalVehicleMass" xml:space="preserve">
+  <data name="Report_ResultEntry_TotalVehicleMass" xml:space="preserve">
     <value>TotalVehicleMass</value>
   </data>
-	<data name="Report_ResultEntry_Payload" xml:space="preserve">
+  <data name="Report_ResultEntry_Payload" xml:space="preserve">
     <value>Payload</value>
   </data>
-	<data name="Report_ResultEntry_FuelType" xml:space="preserve">
+  <data name="Report_ResultEntry_FuelType" xml:space="preserve">
     <value>FuelType</value>
   </data>
-	<data name="Report_ResultEntry_VehiclePerformance" xml:space="preserve">
+  <data name="Report_ResultEntry_VehiclePerformance" xml:space="preserve">
     <value>VehiclePerformance</value>
   </data>
-	<data name="Report_ResultEntry_AverageSpeed" xml:space="preserve">
+  <data name="Report_ResultEntry_AverageSpeed" xml:space="preserve">
     <value>AverageSpeed</value>
   </data>
-	<data name="Report_ResultEntry_MinSpeed" xml:space="preserve">
+  <data name="Report_ResultEntry_MinSpeed" xml:space="preserve">
     <value>MinSpeed</value>
   </data>
-	<data name="Report_ResultEntry_MaxSpeed" xml:space="preserve">
+  <data name="Report_ResultEntry_MaxSpeed" xml:space="preserve">
     <value>MaxSpeed</value>
   </data>
-	<data name="Report_ResultEntry_MaxDeceleration" xml:space="preserve">
+  <data name="Report_ResultEntry_MaxDeceleration" xml:space="preserve">
     <value>MaxDeceleration</value>
   </data>
-	<data name="Report_ResultEntry_MaxAcceleration" xml:space="preserve">
+  <data name="Report_ResultEntry_MaxAcceleration" xml:space="preserve">
     <value>MaxAcceleration</value>
   </data>
-	<data name="Report_ResultEntry_FullLoadDrivingtimePercentage" xml:space="preserve">
+  <data name="Report_ResultEntry_FullLoadDrivingtimePercentage" xml:space="preserve">
     <value>FullLoadDrivingtimePercentage</value>
   </data>
-	<data name="Report_ResultEntry_GearshiftCount" xml:space="preserve">
+  <data name="Report_ResultEntry_GearshiftCount" xml:space="preserve">
     <value>GearshiftCount</value>
   </data>
-	<data name="Report_Results_Error" xml:space="preserve">
+  <data name="Report_Results_Error" xml:space="preserve">
     <value>Error</value>
   </data>
-	<data name="Report_Results_ErrorDetails" xml:space="preserve">
+  <data name="Report_Results_ErrorDetails" xml:space="preserve">
     <value>ErrorDetails</value>
   </data>
-	<data name="Report_Vehicle_EngineRatedPower" xml:space="preserve">
+  <data name="Report_Vehicle_EngineRatedPower" xml:space="preserve">
     <value>EngineRatedPower</value>
   </data>
-	<data name="Report_Vehicle_EngineDisplacement" xml:space="preserve">
+  <data name="Report_Vehicle_EngineDisplacement" xml:space="preserve">
     <value>EngineDisplacement</value>
   </data>
-	<data name="Report_Vehicle_Retarder" xml:space="preserve">
+  <data name="Report_Vehicle_Retarder" xml:space="preserve">
     <value>Retarder</value>
   </data>
-	<data name="Report_Vehicle_AxleRatio" xml:space="preserve">
+  <data name="Report_Vehicle_AxleRatio" xml:space="preserve">
     <value>AxleRatio</value>
   </data>
-	<data name="Report_Vehicle_AverageRRC" xml:space="preserve">
-    <value>AverageRRC</value>
+  <data name="Report_Vehicle_AverageRRC" xml:space="preserve">
+    <value>AverageRRCMotorVehicleTyres</value>
   </data>
-	<data name="Report_Vehicle_TransmissionCertificationMethod" xml:space="preserve">
+  <data name="Report_Vehicle_TransmissionCertificationMethod" xml:space="preserve">
     <value>TransmissionMainCertificationMethod</value>
   </data>
-	<data name="Report_Result_Status" xml:space="preserve">
+  <data name="Report_Result_Status" xml:space="preserve">
     <value>Status</value>
   </data>
-	<data name="VectoManufacturerReport" xml:space="preserve">
+  <data name="VectoManufacturerReport" xml:space="preserve">
     <value>VectoOutput</value>
   </data>
-	<data name="VectoCustomerReport" xml:space="preserve">
+  <data name="VectoCustomerReport" xml:space="preserve">
     <value>VectoCustomerInformation</value>
   </data>
   <data name="Report_ResultEntry_AvgDrivingSpeed" xml:space="preserve">
@@ -992,5 +992,8 @@
   </data>
   <data name="Unit_W" xml:space="preserve">
     <value>W</value>
+  </data>
+  <data name="Report_Vehicle_AverageRRCLabel" xml:space="preserve">
+    <value>AverageFuelEfficiencyLabelMotorVehicleTyres</value>
   </data>
 </root>

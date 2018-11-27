@@ -114,6 +114,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					.Average();
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
 
+			retVal.VocationalVehicle = data.VocationalVehicle;
+			retVal.ADAS = CreateADAS(data.ADAS);
+
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException(
@@ -154,6 +157,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.AxleData = axleData;
 			return retVal;
+		}
+
+		private VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemDeclarationInputData adas)
+		{
+			return new VehicleData.ADASData {
+				EngineStopStart = adas.EngineStopStart,
+				EcoRollWithoutengineStop = adas.EcoRollWitoutEngineStop,
+				EcoRollWithEngineStop = adas.EcoRollWithEngineStop,
+				PredictiveCruiseControl = adas.PredictiveCruiseControl
+			};
 		}
 
 		private VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data)
