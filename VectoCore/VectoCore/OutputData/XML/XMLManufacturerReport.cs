@@ -37,6 +37,7 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML.Writer;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -65,10 +66,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private bool _allSuccess = true;
 
-		private KilogramPerMeter _weightedCo2 = 0.SI<KilogramPerMeter>();
-
-		private Kilogram _weightedPayload = 0.SI<Kilogram>();
-
 		public XMLManufacturerReport()
 		{
 			di = "http://www.w3.org/2000/09/xmldsig#";
@@ -89,12 +86,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleWeight, XMLNames.Unit_t, 1)),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbWeight, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
+				new XElement(tns + XMLNames.Vehicle_HybridElectricHDV, modelData.VehicleData.HybridElectricHDV),
+				new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle),
 				exempted 
 					? ExemptedData(modelData) 
 					: new[] {
-						new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 						new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
+						new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
+						new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
+						new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 						new XElement(tns + XMLNames.Vehicle_PTO, modelData.PTO != null),
+						GetADAS(modelData.VehicleData.ADAS),
 						GetTorqueLimits(modelData.EngineData),
 						VehicleComponents(modelData)
 					}
@@ -104,6 +106,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_Input_Signature,
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
+		}
+
+		private XElement GetADAS(VehicleData.ADASData adasData)
+		{
+			return new XElement(tns + XMLNames.Vehicle_ADAS,
+				new XElement(tns + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
+				new XElement(tns + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRollWithoutengineStop),
+				new XElement(tns + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRollWithEngineStop),
+				new XElement(tns + XMLNames.Vehicle_ADAS_PCC, adasData.PredictiveCruiseControl != PredictiveCruiseControlType.None)
+			);
 		}
 
 		private XElement VehicleComponents(VectoRunData modelData)
@@ -124,8 +136,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private XElement[] ExemptedData(VectoRunData modelData)
 		{
 			return new [] {
-				new XElement(tns + XMLNames.Vehicle_HybridElectricHDV, modelData.VehicleData.HybridElectricHDV),
-				new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle),
 				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower1, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)) : null,
 				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower2, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)) : null 
 			};
@@ -184,7 +194,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Gearbox_TransmissionType, gearboxData.Type.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_GetGearbox_GearsCount, gearboxData.Gears.Count),
 				new XElement(tns + XMLNames.Report_Gearbox_TransmissionRatioFinalGear,
-					gearboxData.Gears.Last().Value.Ratio.ToXMLFormat(3))
+					gearboxData.Gears[gearboxData.Gears.Keys.Max()].Ratio.ToXMLFormat(3))
 				);
 		}
 
@@ -311,8 +321,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			foreach (var resultEntry in entry.ResultEntry) {
 				_allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
-				_weightedPayload += resultEntry.Value.Payload * resultEntry.Value.WeightingFactor;
-				_weightedCo2 += resultEntry.Value.CO2Total / resultEntry.Value.Distance * resultEntry.Value.WeightingFactor;
 				Results.Add(new XElement(tns + XMLNames.Report_Result_Result,
 					new XAttribute(XMLNames.Report_Result_Status_Attr,
 						resultEntry.Value.Status == VectoRun.Status.Success ? "success" : "error"),
@@ -389,21 +397,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var retVal = new XDocument();
 			var results = new XElement(Results);
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
-			var summary = _weightedPayload > 0
-				? new XElement(
-					"Summary",
-					new XElement(
-						"SpecificCO2Emissions",
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "gCO2/tkm"),
-						(_weightedCo2 / _weightedPayload).ConvertToGrammPerTonKilometer().ToXMLFormat(1)
-					),
-					new XElement(
-						"AveragePayload",
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_t),
-						_weightedPayload.ConvertToTon().ToXMLFormat(3)
-					)
-				)
-				: null;
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
 			retVal.Add(new XProcessingInstruction("xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
@@ -417,7 +410,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + "Data",
 					vehicle,
 					results,
-					summary,
 					GetApplicationInfo())
 				)
 				);

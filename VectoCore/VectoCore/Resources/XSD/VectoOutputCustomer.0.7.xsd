@@ -90,7 +90,45 @@
 							</xs:simpleType>
 						</xs:element>
 						<xs:choice>
-							<xs:element name="Result" type="ResultType" maxOccurs="unbounded"/>
+							<xs:sequence>
+								<xs:element name="Result" type="ResultType" maxOccurs="unbounded"/>
+								<xs:element name="Summary" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="SpecificCO2Emissions">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:double">
+															<xs:attribute name="unit" use="required">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:enumeration value="gCO2/tkm"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:attribute>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="AveragePayload">
+												<xs:complexType>
+													<xs:simpleContent>
+														<xs:extension base="xs:double">
+															<xs:attribute name="unit" use="required">
+																<xs:simpleType>
+																	<xs:restriction base="xs:string">
+																		<xs:enumeration value="t"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:attribute>
+														</xs:extension>
+													</xs:simpleContent>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
 							<xs:element name="ExemptedVehicle">
 								<xs:complexType/>
 							</xs:element>
@@ -156,6 +194,16 @@
 					<xs:documentation>P269</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="HybridElectricHDV" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P279</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DualFuelVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P280</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:choice>
 				<xs:sequence>
 					<xs:element name="AxleConfiguration" type="vdecdef:VehicleAxleConfigurationDeclarationType">
@@ -167,6 +215,42 @@
 						<xs:annotation>
 							<xs:documentation>VECTO</xs:documentation>
 						</xs:annotation>
+					</xs:element>
+					<xs:element name="VocationalVehicle" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P270</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SleeperCab" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P267</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ADAS">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="EngineStopStart" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P271 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="EcoRollWithoutEngineStop" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P272 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="EcoRollWithEngineStop" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P273 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="PredictiveCruiseControl" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P274 - enum</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
 					</xs:element>
 					<xs:element name="EngineRatedPower">
 						<xs:annotation>
@@ -227,19 +311,17 @@
 							<xs:documentation>P150</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="AverageRRC" type="vdecdef:TyreRRCISOType"/>
+					<xs:element name="AverageRRCMotorVehicleTyres" type="vdecdef:TyreRRCISOType"/>
+					<xs:element name="AverageFuelEfficiencyLabelMotorVehicleTyres">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1"/>
+								<xs:maxLength value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 				</xs:sequence>
 				<xs:sequence>
-					<xs:element name="HybridElectricHDV" type="xs:boolean">
-						<xs:annotation>
-							<xs:documentation>P279</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="DualFuelVehicle" type="xs:boolean">
-						<xs:annotation>
-							<xs:documentation>P280</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 					<xs:element name="MaxNetPower1" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P277</xs:documentation>

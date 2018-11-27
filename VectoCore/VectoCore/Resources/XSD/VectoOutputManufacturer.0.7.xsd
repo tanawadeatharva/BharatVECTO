@@ -396,7 +396,7 @@
 						<xs:choice>
 							<xs:sequence>
 								<xs:element name="Result" type="ResultType" maxOccurs="unbounded"/>
-								<xs:element name="Summary">
+								<xs:element name="Summary" minOccurs="0">
 									<xs:complexType>
 										<xs:sequence>
 											<xs:element name="SpecificCO2Emissions">
@@ -595,22 +595,68 @@
 					<xs:documentation>P269</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="HybridElectricHDV" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P279</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DualFuelVehicle" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P280</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:choice>
 				<xs:sequence>
+					<xs:element name="AxleConfiguration" type="vdecdef:VehicleAxleConfigurationDeclarationType">
+						<xs:annotation>
+							<xs:documentation>P037</xs:documentation>
+						</xs:annotation>
+					</xs:element>
 					<xs:element name="VehicleGroup" type="VehicleGroupType">
 						<xs:annotation>
 							<xs:documentation>VECTO</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="AxleConfiguration" type="vdecdef:VehicleAxleConfigurationDeclarationType">
+					<xs:element name="VocationalVehicle">
 						<xs:annotation>
-							<xs:documentation>P037</xs:documentation>
+							<xs:documentation>P270</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="SleeperCab" type="xs:boolean">
+						<xs:annotation>
+							<xs:documentation>P267</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="PTO" type="xs:boolean">
 						<xs:annotation>
 							<xs:documentation>P247</xs:documentation>
 						</xs:annotation>
+					</xs:element>
+					<xs:element name="ADAS">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="EngineStopStart" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P271 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="EcoRollWithoutEngineStop" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P272 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="EcoRollWithEngineStop" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P273 - bool</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="PredictiveCruiseControl" type="xs:boolean">
+									<xs:annotation>
+										<xs:documentation>P274 - enum</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
 					</xs:element>
 					<xs:element name="TorqueLimits" type="TorqueLimitsType" minOccurs="0"/>
 					<xs:element name="Components">
@@ -630,16 +676,6 @@
 					</xs:element>
 				</xs:sequence>
 				<xs:sequence>
-					<xs:element name="HybridElectricHDV" type="xs:boolean">
-						<xs:annotation>
-							<xs:documentation>P279</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="DualFuelVehicle" type="xs:boolean">
-						<xs:annotation>
-							<xs:documentation>P280</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 					<xs:element name="MaxNetPower1" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P277</xs:documentation>
