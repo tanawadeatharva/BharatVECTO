@@ -14,7 +14,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public IDictionary<Tuple<MissionType, LoadingType>, double> Lookup(WeightingGroup group)
 		{
-			return new ReadOnlyDictionary<Tuple<MissionType, LoadingType>, double>(Data[group]);
+			try {
+				return new ReadOnlyDictionary<Tuple<MissionType, LoadingType>, double>(Data[group]);
+			} catch (Exception e) {
+				throw new VectoException(ErrorMessage, e, group);
+			}
 		}
 
 		#region Overrides of LookupData

@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		Group9LH,
 		Group10RD,
 		Group10LH,
-		Unknonw
+		Unknown
 	}
 
 	public class WeightingGroupHelper
@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var rows = Entries.FindAll(
 				x => x.VehicleGroup == group && x.SleeperCab == sleeperCab && engineRatedPower >= x.RatedPowerMin &&
 					engineRatedPower < x.RatedPowerMax);
-			return rows.Count == 0 ? WeightingGroup.Unknonw : rows.First().WeightingGroup;
+			return rows.Count == 0 ? WeightingGroup.Unknown : rows.First().WeightingGroup;
 		}
 		#endregion
 

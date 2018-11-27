@@ -62,7 +62,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected XNamespace tns;
 		protected XNamespace di;
+
 		private bool _allSuccess = true;
+
+		private KilogramPerMeter _weightedCo2 = 0.SI<KilogramPerMeter>();
+
+		private Kilogram _weightedPayload = 0.SI<Kilogram>();
 
 		public XMLManufacturerReport()
 		{
@@ -301,11 +306,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 			};
 		}
 
-		public void AddResult(
+		public void WriteResult(
 			DeclarationReport<XMLDeclarationReport.ResultEntry>.ResultContainer<XMLDeclarationReport.ResultEntry> entry)
 		{
 			foreach (var resultEntry in entry.ResultEntry) {
 				_allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
+				_weightedPayload += resultEntry.Value.Payload * resultEntry.Value.WeightingFactor;
+				_weightedCo2 += resultEntry.Value.CO2Total / resultEntry.Value.Distance * resultEntry.Value.WeightingFactor;
 				Results.Add(new XElement(tns + XMLNames.Report_Result_Result,
 					new XAttribute(XMLNames.Report_Result_Status_Attr,
 						resultEntry.Value.Status == VectoRun.Status.Success ? "success" : "error"),
@@ -382,6 +389,21 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var retVal = new XDocument();
 			var results = new XElement(Results);
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
+			var summary = _weightedPayload > 0
+				? new XElement(
+					"Summary",
+					new XElement(
+						"SpecificCO2Emissions",
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, "gCO2/tkm"),
+						(_weightedCo2 / _weightedPayload).ConvertToGrammPerTonKilometer().ToXMLFormat(1)
+					),
+					new XElement(
+						"AveragePayload",
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_t),
+						_weightedPayload.ConvertToTon().ToXMLFormat(3)
+					)
+				)
+				: null;
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
 			retVal.Add(new XProcessingInstruction("xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
@@ -395,6 +417,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + "Data",
 					vehicle,
 					results,
+					summary,
 					GetApplicationInfo())
 				)
 				);

@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				);
 		}
 
-		public void AddResult(
+		public void WriteResult(
 			DeclarationReport<XMLDeclarationReport.ResultEntry>.ResultContainer<XMLDeclarationReport.ResultEntry> entry)
 		{
 			foreach (var resultEntry in entry.ResultEntry) {

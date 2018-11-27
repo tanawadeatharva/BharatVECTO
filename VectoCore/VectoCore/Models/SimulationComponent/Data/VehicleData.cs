@@ -210,6 +210,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public bool DualFuelVehicle { get; internal set; }
 		public Watt MaxNetPower1 { get; internal set; }
 		public Watt MaxNetPower2 { get; internal set; }
+		public bool SleeperCab { get; internal set; }
 
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{

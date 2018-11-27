@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -51,6 +53,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private readonly XMLCustomerReport _customerReport;
 
 		private readonly IOutputDataWriter _writer;
+
+		private IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
 		public class ResultEntry
 		{
@@ -95,8 +99,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public PerSecond EngineSpeedDrivingAvg { get; private set; }
 			public PerSecond EngineSpeedDrivingMax { get; private set; }
 
+			public double WeightingFactor { get; set; }
 
-			public virtual void SetResultData(VectoRunData runData, IModalDataContainer data)
+
+			public virtual void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor)
 			{
 				FuelType = data.FuelData.FuelType;
 				Payload = runData.VehicleData.Loading;
@@ -131,15 +137,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 				FuelConsumptionTotal = data.TimeIntegral<Kilogram>(ModalResultField.FCFinal);
 				CO2Total = FuelConsumptionTotal * data.FuelData.CO2PerFuelWeight;
 				EnergyConsumptionTotal = FuelConsumptionTotal * data.FuelData.LowerHeatingValueVecto;
+
+				WeightingFactor = weightingFactor;
 			}
+
 		}
 
 		public XMLDeclarationReport(IOutputDataWriter writer = null)
 		{
-			_manufacturerReport = new XMLManufacturerReport(); //new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
+			_manufacturerReport = new XMLManufacturerReport();
 			_customerReport = new XMLCustomerReport();
-			//CustomerReport = new XDocument(new XDeclaration("1.0", "utf-8", "yes"));
-
+			
 			_writer = writer;
 		}
 
@@ -156,14 +164,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected override void DoAddResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
-			entry.SetResultData(runData, modData);
+			var factor = _weightingFactors[Tuple.Create(runData.Mission.MissionType, runData.Loading)];
+			entry.SetResultData(runData, modData, factor);
 		}
 
 		protected internal override void DoWriteReport()
 		{
 			foreach (var result in Missions.OrderBy(m => m.Key)) {
-				_manufacturerReport.AddResult(result.Value);
-				_customerReport.AddResult(result.Value);
+				_manufacturerReport.WriteResult(result.Value);
+				_customerReport.WriteResult(result.Value);
 			}
 
 			_manufacturerReport.GenerateReport();
@@ -184,8 +193,34 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public override void InitializeReport(VectoRunData modelData)
 		{
+			var weightingGroup = DeclarationData.WeightingGroup.Lookup(
+				modelData.VehicleData.VehicleClass, modelData.VehicleData.SleeperCab,
+				modelData.EngineData.RatedPowerDeclared);
+			_weightingFactors = weightingGroup == WeightingGroup.Unknown ? ZeroWeighting : DeclarationData.WeightingFactors.Lookup(weightingGroup);
 			_manufacturerReport.Initialize(modelData);
 			_customerReport.Initialize(modelData);
+		}
+
+		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting
+		{
+			get {
+				return new ReadOnlyDictionary<Tuple<MissionType, LoadingType>, double>(new Dictionary<Tuple<MissionType, LoadingType>, double>() {
+					{ Tuple.Create(MissionType.LongHaul, LoadingType.LowLoading), 0},
+					{ Tuple.Create(MissionType.LongHaul, LoadingType.ReferenceLoad), 0},
+					{ Tuple.Create(MissionType.RegionalDelivery, LoadingType.LowLoading), 0},
+					{ Tuple.Create(MissionType.RegionalDelivery, LoadingType.ReferenceLoad), 0},
+					{ Tuple.Create(MissionType.UrbanDelivery, LoadingType.LowLoading), 0},
+					{ Tuple.Create(MissionType.UrbanDelivery, LoadingType.ReferenceLoad), 0},
+					{ Tuple.Create(MissionType.LongHaulEMS, LoadingType.LowLoading), 0},
+					{ Tuple.Create(MissionType.LongHaulEMS, LoadingType.ReferenceLoad), 0},
+					{ Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.LowLoading), 0},
+					{ Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad), 0},
+					{ Tuple.Create(MissionType.MunicipalUtility, LoadingType.LowLoading), 0},
+					{ Tuple.Create(MissionType.MunicipalUtility, LoadingType.ReferenceLoad), 0},
+					{ Tuple.Create(MissionType.Construction, LoadingType.LowLoading), 0},
+					{ Tuple.Create(MissionType.Construction, LoadingType.ReferenceLoad), 0},
+				});
+			}
 		}
 
 
