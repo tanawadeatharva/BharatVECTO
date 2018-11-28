@@ -4,9 +4,6 @@
 <xs:schema xmlns="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.7" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" targetNamespace="urn:tugraz:ivt:VectoAPI:CustomerOutput:v0.7" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.7">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:element name="VectoCustomerInformation">
-		<xs:annotation>
-			<xs:documentation>Comment describing your root element</xs:documentation>
-		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="Data">
@@ -167,7 +164,7 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="id" use="required"/>
+		<xs:attribute name="id" type="xs:NCName" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="VehiclePerformanceType">
 		<xs:sequence/>
@@ -260,32 +257,7 @@
 							<xs:documentation>P267 / II.1.1.13</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="ADAS">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="EngineStopStart" type="xs:boolean">
-									<xs:annotation>
-										<xs:documentation>P271 / II.1.2.11</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-								<xs:element name="EcoRollWithoutEngineStop" type="xs:boolean">
-									<xs:annotation>
-										<xs:documentation>P272 / II.1.2.12</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-								<xs:element name="EcoRollWithEngineStop" type="xs:boolean">
-									<xs:annotation>
-										<xs:documentation>P273 / II.1.2.13</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-								<xs:element name="PredictiveCruiseControl" type="xs:boolean">
-									<xs:annotation>
-										<xs:documentation>P274 / II.1.2.14</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="ADAS" type="ADASType"/>
 					<xs:element name="EngineRatedPower">
 						<xs:annotation>
 							<xs:documentation>P250 / II.1.2.1</xs:documentation>
@@ -347,12 +319,12 @@
 					</xs:element>
 					<xs:element name="AverageRRCMotorVehicleTyres" type="vdecdef:TyreRRCISOType">
 						<xs:annotation>
-							<xs:documentation>P046 / II.1.2.9</xs:documentation>
+							<xs:documentation>P046 / II.1.2.9  // arithmetic average of RRC over all truck tires</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="AverageFuelEfficiencyLabelMotorVehicleTyres">
 						<xs:annotation>
-							<xs:documentation>II.1.2.10</xs:documentation>
+							<xs:documentation>II.1.2.10  // classification of AverageRRCMotorVehicleTyres according to 1222/2009 C3 tyres </xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="xs:string">
@@ -468,4 +440,28 @@
 			<xs:enumeration value="ltr"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:complexType name="ADASType">
+		<xs:sequence>
+			<xs:element name="EngineStopStart" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P271 / II.1.2.11</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EcoRollWithoutEngineStop" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P272 / II.1.2.12</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EcoRollWithEngineStop" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P273 / II.1.2.13</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PredictiveCruiseControl" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P274 / II.1.2.14</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

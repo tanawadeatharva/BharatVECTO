@@ -37,12 +37,14 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML.Writer;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
@@ -96,7 +98,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
 					new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
-
+					GetADAS(modelData.VehicleData.ADAS)
 				}.Concat(ComponentData(modelData))
 				);
 			if (exempted) {
@@ -112,6 +114,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower1, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)) : null,
 				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower2, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)) : null
 			};
+		}
+
+		private XElement GetADAS(VehicleData.ADASData adasData)
+		{
+			return new XElement(tns + XMLNames.Vehicle_ADAS,
+								new XElement(tns + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
+								new XElement(tns + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRollWithoutengineStop),
+								new XElement(tns + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRollWithEngineStop),
+								new XElement(tns + XMLNames.Vehicle_ADAS_PCC, adasData.PredictiveCruiseControl != PredictiveCruiseControlType.None)
+			);
 		}
 
 		private XElement[] ComponentData(VectoRunData modelData)
@@ -132,11 +144,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Report_Vehicle_Retarder, modelData.Retarder.Type.IsDedicatedComponent()),
 				new XElement(tns + XMLNames.Report_Vehicle_AxleRatio, modelData.AxleGearData.AxleGear.Ratio.ToXMLFormat(3)),
 				new XElement(
-					tns + XMLNames.Report_Vehicle_AverageRRC,
-					modelData.VehicleData.AverageRollingResistanceTruck.ToXMLFormat(4),
-				new XElement(tns + XMLNames.Report_Vehicle_AverageRRCLabel),
-					DeclarationData.Wheels.TyreClass.Lookup(modelData.VehicleData.AverageRollingResistanceTruck)
-				)
+					tns + XMLNames.Report_Vehicle_AverageRRC, modelData.VehicleData.AverageRollingResistanceTruck.ToXMLFormat(4)),
+				new XElement(
+					tns + XMLNames.Report_Vehicle_AverageRRCLabel,
+					DeclarationData.Wheels.TyreClass.Lookup(modelData.VehicleData.AverageRollingResistanceTruck))
 			};
 
 		}
@@ -212,15 +223,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var results = new XElement(Results);
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
 			var summary = _weightedPayload > 0
-				? new XElement(
-					"Summary",
-					new XElement(
-						"SpecificCO2Emissions",
+				? new XElement(tns + "Summary",
+					new XElement(tns + "SpecificCO2Emissions",
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "gCO2/tkm"),
 						(_weightedCo2 / _weightedPayload).ConvertToGrammPerTonKilometer().ToXMLFormat(1)
 					),
-					new XElement(
-						"AveragePayload",
+					new XElement(tns + "AveragePayload",
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_t),
 						_weightedPayload.ConvertToTon().ToXMLFormat(3)
 					)
@@ -241,7 +249,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 					vehicle,
 					new XElement(tns + "ResultDataSignature", resultSignature),
 					results,
-					summary,
 					GetApplicationInfo())
 				)
 				);

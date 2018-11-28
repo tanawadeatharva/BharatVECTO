@@ -372,7 +372,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 						new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Min, XMLHelper.ValueAsUnit(result.EngineSpeedDrivingMin, XMLNames.Unit_RPM, 1)),
 						new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Avg, XMLHelper.ValueAsUnit(result.EngineSpeedDrivingAvg, XMLNames.Unit_RPM, 1)),
 						new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Max, XMLHelper.ValueAsUnit(result.EngineSpeedDrivingMax, XMLNames.Unit_RPM, 1))
-						)
+						),
+					new XElement(tns + "AverageGearboxEfficiency", XMLHelper.ValueAsUnit(result.AverageGearboxEfficiency, XMLNames.UnitPercent, 2)),
+					new XElement(tns + "AverageAxlegearEfficiency", XMLHelper.ValueAsUnit(result.AverageAxlegearEfficiency, XMLNames.UnitPercent, 2))
 					),
 				//FC
 				XMLDeclarationReport.GetResults(result, tns, true).Cast<object>().ToArray()

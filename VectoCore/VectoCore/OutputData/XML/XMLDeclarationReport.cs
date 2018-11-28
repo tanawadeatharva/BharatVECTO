@@ -99,6 +99,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public PerSecond EngineSpeedDrivingAvg { get; private set; }
 			public PerSecond EngineSpeedDrivingMax { get; private set; }
 
+			public double AverageGearboxEfficiency { get; private set; }
+
+			public double AverageAxlegearEfficiency { get; private set; }
+
 			public double WeightingFactor { get; set; }
 
 
@@ -137,6 +141,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 				FuelConsumptionTotal = data.TimeIntegral<Kilogram>(ModalResultField.FCFinal);
 				CO2Total = FuelConsumptionTotal * data.FuelData.CO2PerFuelWeight;
 				EnergyConsumptionTotal = FuelConsumptionTotal * data.FuelData.LowerHeatingValueVecto;
+
+				var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
+					? ModalResultField.P_retarder_in
+					: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
+				var eGbxIn = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);
+				var eGbxOut = data.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
+				AverageGearboxEfficiency = eGbxOut / eGbxIn;
+
+				var eAxlIn = data.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
+				var eAxlOut = data.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
+				AverageAxlegearEfficiency = eAxlOut / eAxlIn;
 
 				WeightingFactor = weightingFactor;
 			}
