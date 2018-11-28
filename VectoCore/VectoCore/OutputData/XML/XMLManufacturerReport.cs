@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			di = "http://www.w3.org/2000/09/xmldsig#";
 			tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v" + CURRENT_SCHEMA_VERSION;
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
-			Results = new XElement(tns + "Results");
+			Results = new XElement(tns + XMLNames.Report_Results);
 		}
 
 		public void Initialize(VectoRunData modelData)
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					}
 				);
 			if (exempted) {
-				Results.Add(new XElement(tns + "ExemptedVehicle"));
+				Results.Add(new XElement(tns + XMLNames.Report_ExemptedVehicle));
 			}
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_Input_Signature,
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
@@ -373,8 +373,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 						new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Avg, XMLHelper.ValueAsUnit(result.EngineSpeedDrivingAvg, XMLNames.Unit_RPM, 1)),
 						new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Max, XMLHelper.ValueAsUnit(result.EngineSpeedDrivingMax, XMLNames.Unit_RPM, 1))
 						),
-					new XElement(tns + "AverageGearboxEfficiency", XMLHelper.ValueAsUnit(result.AverageGearboxEfficiency, XMLNames.UnitPercent, 2)),
-					new XElement(tns + "AverageAxlegearEfficiency", XMLHelper.ValueAsUnit(result.AverageAxlegearEfficiency, XMLNames.UnitPercent, 2))
+					new XElement(tns + XMLNames.Report_Results_AverageGearboxEfficiency, XMLHelper.ValueAsUnit(result.AverageGearboxEfficiency, XMLNames.UnitPercent, 2)),
+					new XElement(tns + XMLNames.Report_Results_AverageAxlegearEfficiency, XMLHelper.ValueAsUnit(result.AverageAxlegearEfficiency, XMLNames.UnitPercent, 2))
 					),
 				//FC
 				XMLDeclarationReport.GetResults(result, tns, true).Cast<object>().ToArray()
@@ -409,7 +409,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute(XNamespace.Xmlns + "di", di),
 				new XAttribute(xsi + "schemaLocation",
 					string.Format("{0} {1}VectoOutputManufacturer.{2}.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl, CURRENT_SCHEMA_VERSION)),
-				new XElement(tns + "Data",
+				new XElement(tns + XMLNames.Report_DataWrap,
 					vehicle,
 					results,
 					GetApplicationInfo())

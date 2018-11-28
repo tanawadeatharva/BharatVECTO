@@ -996,4 +996,46 @@
   <data name="Report_Vehicle_AverageRRCLabel" xml:space="preserve">
     <value>AverageFuelEfficiencyLabelMotorVehicleTyres</value>
   </data>
+  <data name="Report_SpecificCO2Emissions" xml:space="preserve">
+    <value>SpecificCO2Emissions</value>
+  </data>
+  <data name="Report_AveragePayload" xml:space="preserve">
+    <value>AveragePayload</value>
+  </data>
+  <data name="Unit_gCO2Pertkm" xml:space="preserve">
+    <value>gCO2/tkm</value>
+  </data>
+  <data name="Report_Results_Summary" xml:space="preserve">
+    <value>Summary</value>
+  </data>
+  <data name="Report_ResultData_Signature" xml:space="preserve">
+    <value>ResultDataSignature</value>
+  </data>
+  <data name="Report_Result_Payload" xml:space="preserve">
+    <value>Payload</value>
+  </data>
+  <data name="Report_Results_AverageSpeed" xml:space="preserve">
+    <value>AverageSpeed</value>
+  </data>
+  <data name="Report_Results_FuelType" xml:space="preserve">
+    <value>FuelType</value>
+  </data>
+  <data name="Report_InputDataSignature" xml:space="preserve">
+    <value>InputDataSignature</value>
+  </data>
+  <data name="Report_ExemptedVehicle" xml:space="preserve">
+    <value>ExemptedVehicle</value>
+  </data>
+  <data name="Report_DataWrap" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="Report_Results_AverageGearboxEfficiency" xml:space="preserve">
+    <value>AverageGearboxEfficiency</value>
+  </data>
+  <data name="Report_Results_AverageAxlegearEfficiency" xml:space="preserve">
+    <value>AverageAxlegearEfficiency</value>
+  </data>
+  <data name="Report_Results" xml:space="preserve">
+    <value>Results</value>
+  </data>
 </root>

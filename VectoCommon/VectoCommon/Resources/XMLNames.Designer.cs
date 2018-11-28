@@ -1420,6 +1420,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AveragePayload.
+        /// </summary>
+        public static string Report_AveragePayload {
+            get {
+                return ResourceManager.GetString("Report_AveragePayload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CertificationMethod.
         /// </summary>
         public static string Report_Component_CertificationMethod {
@@ -1434,6 +1443,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_Component_CertificationNumber {
             get {
                 return ResourceManager.GetString("Report_Component_CertificationNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data.
+        /// </summary>
+        public static string Report_DataWrap {
+            get {
+                return ResourceManager.GetString("Report_DataWrap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ExemptedVehicle.
+        /// </summary>
+        public static string Report_ExemptedVehicle {
+            get {
+                return ResourceManager.GetString("Report_ExemptedVehicle", resourceCulture);
             }
         }
         
@@ -1465,11 +1492,29 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to InputDataSignature.
+        /// </summary>
+        public static string Report_InputDataSignature {
+            get {
+                return ResourceManager.GetString("Report_InputDataSignature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mission.
         /// </summary>
         public static string Report_Result_Mission {
             get {
                 return ResourceManager.GetString("Report_Result_Mission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payload.
+        /// </summary>
+        public static string Report_Result_Payload {
+            get {
+                return ResourceManager.GetString("Report_Result_Payload", resourceCulture);
             }
         }
         
@@ -1497,6 +1542,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_Result_Status_Attr {
             get {
                 return ResourceManager.GetString("Report_Result_Status_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ResultDataSignature.
+        /// </summary>
+        public static string Report_ResultData_Signature {
+            get {
+                return ResourceManager.GetString("Report_ResultData_Signature", resourceCulture);
             }
         }
         
@@ -1663,6 +1717,42 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Results.
+        /// </summary>
+        public static string Report_Results {
+            get {
+                return ResourceManager.GetString("Report_Results", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AverageAxlegearEfficiency.
+        /// </summary>
+        public static string Report_Results_AverageAxlegearEfficiency {
+            get {
+                return ResourceManager.GetString("Report_Results_AverageAxlegearEfficiency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AverageGearboxEfficiency.
+        /// </summary>
+        public static string Report_Results_AverageGearboxEfficiency {
+            get {
+                return ResourceManager.GetString("Report_Results_AverageGearboxEfficiency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AverageSpeed.
+        /// </summary>
+        public static string Report_Results_AverageSpeed {
+            get {
+                return ResourceManager.GetString("Report_Results_AverageSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CO2.
         /// </summary>
         public static string Report_Results_CO2 {
@@ -1699,11 +1789,38 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FuelType.
+        /// </summary>
+        public static string Report_Results_FuelType {
+            get {
+                return ResourceManager.GetString("Report_Results_FuelType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Summary.
+        /// </summary>
+        public static string Report_Results_Summary {
+            get {
+                return ResourceManager.GetString("Report_Results_Summary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to unit.
         /// </summary>
         public static string Report_Results_Unit_Attr {
             get {
                 return ResourceManager.GetString("Report_Results_Unit_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpecificCO2Emissions.
+        /// </summary>
+        public static string Report_SpecificCO2Emissions {
+            get {
+                return ResourceManager.GetString("Report_SpecificCO2Emissions", resourceCulture);
             }
         }
         
@@ -1947,6 +2064,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string TransmissionLossmap_TorqueLoss_Attr {
             get {
                 return ResourceManager.GetString("TransmissionLossmap_TorqueLoss_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to gCO2/tkm.
+        /// </summary>
+        public static string Unit_gCO2Pertkm {
+            get {
+                return ResourceManager.GetString("Unit_gCO2Pertkm", resourceCulture);
             }
         }
         

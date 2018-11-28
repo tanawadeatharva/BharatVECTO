@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			di = "http://www.w3.org/2000/09/xmldsig#";
 			tns = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v" + CURRENT_SCHEMA_VERSION;
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
-			Results = new XElement(tns + "Results");
+			Results = new XElement(tns + XMLNames.Report_Results);
 		}
 
 		public void Initialize(VectoRunData modelData)
@@ -102,9 +102,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				}.Concat(ComponentData(modelData))
 				);
 			if (exempted) {
-				Results.Add(new XElement(tns + "ExemptedVehicle"));
+				Results.Add(new XElement(tns + XMLNames.Report_ExemptedVehicle));
 			}
-			InputDataIntegrity = new XElement(tns + "InputDataSignature",
+			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
 		}
 
@@ -197,9 +197,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private object[] GetSuccessResultEntry(XMLDeclarationReport.ResultEntry result)
 		{
 			return new object[] {
-				new XElement(tns + "Payload", new XAttribute("unit", "kg"), result.Payload.ToXMLFormat(0)),
-				new XElement(tns + "FuelType", result.FuelType.ToXMLFormat()),
-				new XElement(tns + "AverageSpeed", new XAttribute("unit", "km/h"), result.AverageSpeed.AsKmph.ToXMLFormat(1)),
+				new XElement(tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg, 0)),
+				new XElement(tns + XMLNames.Report_Results_FuelType, result.FuelType.ToXMLFormat()),
+				new XElement(tns + XMLNames.Report_Results_AverageSpeed, XMLHelper.ValueAsUnit(result.AverageSpeed, XMLNames.Unit_kmph, 1)),
 				XMLDeclarationReport.GetResults(result, tns, false).Cast<object>().ToArray()
 			};
 		}
@@ -223,12 +223,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var results = new XElement(Results);
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
 			var summary = _weightedPayload > 0
-				? new XElement(tns + "Summary",
-					new XElement(tns + "SpecificCO2Emissions",
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "gCO2/tkm"),
+				? new XElement(tns + XMLNames.Report_Results_Summary,
+					new XElement(tns + XMLNames.Report_SpecificCO2Emissions,
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_gCO2Pertkm),
 						(_weightedCo2 / _weightedPayload).ConvertToGrammPerTonKilometer().ToXMLFormat(1)
 					),
-					new XElement(tns + "AveragePayload",
+					new XElement(tns + XMLNames.Report_AveragePayload,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_t),
 						_weightedPayload.ConvertToTon().ToXMLFormat(3)
 					)
@@ -245,9 +245,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute(XNamespace.Xmlns + "di", di),
 				new XAttribute(xsi + "schemaLocation",
 					string.Format("{0} {1}VectoOutputCustomer.{2}.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl, CURRENT_SCHEMA_VERSION)),
-				new XElement(tns + "Data",
+				new XElement(tns + XMLNames.Report_DataWrap,
 					vehicle,
-					new XElement(tns + "ResultDataSignature", resultSignature),
+					new XElement(tns + XMLNames.Report_ResultData_Signature, resultSignature),
 					results,
 					GetApplicationInfo())
 				)
