@@ -40,6 +40,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	public sealed class Wheels : LookupData<string, Wheels.Entry>
 	{
 		private string[] _dimensions;
+		public TyreClass TyreClass = new TyreClass();
 
 		protected override string ResourceId
 		{

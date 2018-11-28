@@ -1,0 +1,13 @@
+﻿Vehicle Group , Cabin Type , Engine Rated Power Min [kw] , Engine Rated Power Max [kW] , Weighting Group
+4             , DayCab     , 0                           , 170                         , 4-UD
+4             , SleeperCab , 0                           , 170                         , 4-UD
+4             , DayCab     , 170                         , 999999                      , 4-RD
+4             , SleeperCab , 170                         , 265                         , 4-RD
+4             , SleeperCab , 265                         , 999999                      , 4-LH
+5             , DayCab     , 0                           , 999999                      , 5-RD
+5             , SleeperCab , 0                           , 265                         , 5-RD
+5             , SleeperCab , 265                         , 999999                      , 5-LH
+9             , DayCab     , 0                           , 999999                      , 9-RD
+9             , SleeperCab , 0                           , 999999                      , 9-LH
+10            , DayCab     , 0                           , 999999                      , 10-RD
+10            , SleeperCab , 0                           , 999999                      , 10-LH

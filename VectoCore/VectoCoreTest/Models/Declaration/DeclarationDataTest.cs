@@ -2066,5 +2066,112 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			Assert.AreEqual(expectedCorrectionFactor, cf, 1e-6);
 		}
+
+		[
+		TestCase(VehicleClass.Class4, true, 169.9, WeightingGroup.Group4UD),
+		TestCase(VehicleClass.Class4, false, 169.9, WeightingGroup.Group4UD),
+		TestCase(VehicleClass.Class4, false, 170, WeightingGroup.Group4RD),
+		TestCase(VehicleClass.Class4, true, 170, WeightingGroup.Group4RD),
+		TestCase(VehicleClass.Class4, true, 264.9, WeightingGroup.Group4RD),
+		TestCase(VehicleClass.Class4, true, 265, WeightingGroup.Group4LH),
+
+		TestCase(VehicleClass.Class5, false, 169.9, WeightingGroup.Group5RD),
+		TestCase(VehicleClass.Class5, false, 170, WeightingGroup.Group5RD),
+		TestCase(VehicleClass.Class5, false, 264.9, WeightingGroup.Group5RD),
+		TestCase(VehicleClass.Class5, false, 265, WeightingGroup.Group5RD),
+		TestCase(VehicleClass.Class5, true, 264.9, WeightingGroup.Group5RD),
+		TestCase(VehicleClass.Class5, true, 265, WeightingGroup.Group5LH),
+
+		TestCase(VehicleClass.Class9, false, 169.9, WeightingGroup.Group9RD),
+		TestCase(VehicleClass.Class9, false, 264.9, WeightingGroup.Group9RD),
+		TestCase(VehicleClass.Class9, false, 265, WeightingGroup.Group9RD),
+		TestCase(VehicleClass.Class9, true, 169.9, WeightingGroup.Group9LH),
+		TestCase(VehicleClass.Class9, true, 264.9, WeightingGroup.Group9LH),
+		TestCase(VehicleClass.Class9, true, 265, WeightingGroup.Group9LH),
+
+		TestCase(VehicleClass.Class10, false, 169.9, WeightingGroup.Group10RD),
+		TestCase(VehicleClass.Class10, false, 264.9, WeightingGroup.Group10RD),
+		TestCase(VehicleClass.Class10, false, 265, WeightingGroup.Group10RD),
+		TestCase(VehicleClass.Class10, true, 169.9, WeightingGroup.Group10LH),
+		TestCase(VehicleClass.Class10, true, 264.9, WeightingGroup.Group10LH),
+		TestCase(VehicleClass.Class10, true, 265, WeightingGroup.Group10LH),
+			]
+		public void TestWeightingGroupLookup(
+			VehicleClass vehicleGroup, bool sleeperCab, double ratedPowerkWm, WeightingGroup expectedWeightingGroup)
+		{
+			var wGroup = DeclarationData.WeightingGroup.Lookup(
+				vehicleGroup, sleeperCab, ratedPowerkWm.SI(Unit.SI.Kilo.Watt).Cast<Watt>());
+			Assert.AreEqual(expectedWeightingGroup, wGroup);
+		}
+
+		[
+			TestCase(WeightingGroup.Group4UD, 0, 0, 0, 0, 0.5, 0.5),
+			TestCase(WeightingGroup.Group4RD, 0.45, 0.45, 0.05, 0.05, 0, 0),
+			TestCase(WeightingGroup.Group4LH, 0.05, 0.05, 0.45, 0.45, 0, 0),
+
+			TestCase(WeightingGroup.Group5RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
+			TestCase(WeightingGroup.Group5LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+
+			TestCase(WeightingGroup.Group9RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
+			TestCase(WeightingGroup.Group9LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+
+			TestCase(WeightingGroup.Group10RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
+			TestCase(WeightingGroup.Group10LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+		]
+		public void TestMissionProfileWeights(
+			WeightingGroup group, double eRdLow, double eRdRef, double eLhLow, double eLhRef, double eUdLow, double eUdRef)
+		{
+			var factors = DeclarationData.WeightingFactors.Lookup(group);
+
+			Assert.AreEqual(1, factors.Values.Sum(x => x), 1e-9);
+
+			Assert.AreEqual(eLhLow, factors[Tuple.Create(MissionType.LongHaul, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(eLhRef, factors[Tuple.Create(MissionType.LongHaul, LoadingType.ReferenceLoad)], 1e-9);
+			Assert.AreEqual(eRdLow, factors[Tuple.Create(MissionType.RegionalDelivery, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(eRdRef, factors[Tuple.Create(MissionType.RegionalDelivery, LoadingType.ReferenceLoad)], 1e-9);
+			Assert.AreEqual(eUdLow, factors[Tuple.Create(MissionType.UrbanDelivery, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(eUdRef, factors[Tuple.Create(MissionType.UrbanDelivery, LoadingType.ReferenceLoad)], 1e-9);
+
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.Construction, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.Construction, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.MunicipalUtility, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.MunicipalUtility, LoadingType.ReferenceLoad)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.LongHaulEMS, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.LongHaulEMS, LoadingType.ReferenceLoad)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad)], 1e-9);
+		}
+
+
+		[
+			TestCase(0.0030, "A"),
+			TestCase(0.0040, "A"),
+			TestCase(0.0050, "B"),
+			TestCase(0.0060, "C"),
+			TestCase(0.0070, "D"),
+			TestCase(0.0080, "E"),
+
+			TestCase(0.0041, "B"),
+			TestCase(0.0051, "C"),
+			TestCase(0.0061, "D"),
+			TestCase(0.0071, "E"),
+			TestCase(0.0081, "F"),
+
+			TestCase(0.00402, "A"),
+			TestCase(0.004049, "A"),
+			TestCase(0.00405, "B"),
+			TestCase(0.00407, "B"),
+
+			TestCase(0.00502, "B"),
+			TestCase(0.005049, "B"),
+			TestCase(0.00505, "C"),
+			TestCase(0.00507, "C"),
+			]
+		public void TestTyreLabelLookup(double rrc, string expectedClass)
+		{
+			var tyreClass = DeclarationData.Wheels.TyreClass.Lookup(rrc);
+			//Assert.IsTrue(expectedClass.Equals(tyreClass, StringComparison.InvariantCultureIgnoreCase));
+			Assert.AreEqual(expectedClass, tyreClass);
+		}
 	}
 }

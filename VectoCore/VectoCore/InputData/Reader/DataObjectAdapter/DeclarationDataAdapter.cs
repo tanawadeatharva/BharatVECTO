@@ -100,6 +100,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.ManufacturerAddress = data.ManufacturerAddress;
 			retVal.LegislativeClass = data.LegislativeClass;
 			retVal.ZeroEmissionVehicle = data.ZeroEmissionVehicle;
+			retVal.SleeperCab = data.SleeperCab;
 			retVal.TrailerGrossVehicleWeight = mission.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0);
 
 			retVal.BodyAndTrailerWeight = (mission.MissionType == MissionType.MunicipalUtility
@@ -112,6 +113,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					.Select(da => DeclarationData.Wheels.Lookup(da.Tyre.Dimension).DynamicTyreRadius)
 					.Average();
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
+
+			retVal.VocationalVehicle = data.VocationalVehicle;
+			retVal.ADAS = CreateADAS(data.ADAS);
 
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
@@ -153,6 +157,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.AxleData = axleData;
 			return retVal;
+		}
+
+		private VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemDeclarationInputData adas)
+		{
+			return new VehicleData.ADASData {
+				EngineStopStart = adas.EngineStopStart,
+				EcoRollWithoutengineStop = adas.EcoRollWitoutEngineStop,
+				EcoRollWithEngineStop = adas.EcoRollWithEngineStop,
+				PredictiveCruiseControl = adas.PredictiveCruiseControl
+			};
 		}
 
 		private VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data)

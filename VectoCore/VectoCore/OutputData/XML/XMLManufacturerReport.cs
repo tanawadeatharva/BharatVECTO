@@ -37,6 +37,7 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML.Writer;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -62,6 +63,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected XNamespace tns;
 		protected XNamespace di;
+
 		private bool _allSuccess = true;
 
 		public XMLManufacturerReport()
@@ -69,7 +71,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			di = "http://www.w3.org/2000/09/xmldsig#";
 			tns = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v" + CURRENT_SCHEMA_VERSION;
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
-			Results = new XElement(tns + "Results");
+			Results = new XElement(tns + XMLNames.Report_Results);
 		}
 
 		public void Initialize(VectoRunData modelData)
@@ -84,21 +86,36 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleWeight, XMLNames.Unit_t, 1)),
 				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbWeight, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
+				new XElement(tns + XMLNames.Vehicle_HybridElectricHDV, modelData.VehicleData.HybridElectricHDV),
+				new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle),
 				exempted 
 					? ExemptedData(modelData) 
 					: new[] {
-						new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 						new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
+						new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
+						new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
+						new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 						new XElement(tns + XMLNames.Vehicle_PTO, modelData.PTO != null),
+						GetADAS(modelData.VehicleData.ADAS),
 						GetTorqueLimits(modelData.EngineData),
 						VehicleComponents(modelData)
 					}
 				);
 			if (exempted) {
-				Results.Add(new XElement(tns + "ExemptedVehicle"));
+				Results.Add(new XElement(tns + XMLNames.Report_ExemptedVehicle));
 			}
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_Input_Signature,
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
+		}
+
+		private XElement GetADAS(VehicleData.ADASData adasData)
+		{
+			return new XElement(tns + XMLNames.Vehicle_ADAS,
+				new XElement(tns + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
+				new XElement(tns + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRollWithoutengineStop),
+				new XElement(tns + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRollWithEngineStop),
+				new XElement(tns + XMLNames.Vehicle_ADAS_PCC, adasData.PredictiveCruiseControl != PredictiveCruiseControlType.None)
+			);
 		}
 
 		private XElement VehicleComponents(VectoRunData modelData)
@@ -119,8 +136,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private XElement[] ExemptedData(VectoRunData modelData)
 		{
 			return new [] {
-				new XElement(tns + XMLNames.Vehicle_HybridElectricHDV, modelData.VehicleData.HybridElectricHDV),
-				new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle),
 				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower1, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)) : null,
 				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower2, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)) : null 
 			};
@@ -179,7 +194,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Gearbox_TransmissionType, gearboxData.Type.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_GetGearbox_GearsCount, gearboxData.Gears.Count),
 				new XElement(tns + XMLNames.Report_Gearbox_TransmissionRatioFinalGear,
-					gearboxData.Gears.Last().Value.Ratio.ToXMLFormat(3))
+					gearboxData.Gears[gearboxData.Gears.Keys.Max()].Ratio.ToXMLFormat(3))
 				);
 		}
 
@@ -301,7 +316,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			};
 		}
 
-		public void AddResult(
+		public void WriteResult(
 			DeclarationReport<XMLDeclarationReport.ResultEntry>.ResultContainer<XMLDeclarationReport.ResultEntry> entry)
 		{
 			foreach (var resultEntry in entry.ResultEntry) {
@@ -357,7 +372,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 						new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Min, XMLHelper.ValueAsUnit(result.EngineSpeedDrivingMin, XMLNames.Unit_RPM, 1)),
 						new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Avg, XMLHelper.ValueAsUnit(result.EngineSpeedDrivingAvg, XMLNames.Unit_RPM, 1)),
 						new XElement(tns + XMLNames.Report_ResultEntry_EngineSpeedDriving_Max, XMLHelper.ValueAsUnit(result.EngineSpeedDrivingMax, XMLNames.Unit_RPM, 1))
-						)
+						),
+					new XElement(tns + XMLNames.Report_Results_AverageGearboxEfficiency, XMLHelper.ValueAsUnit(result.AverageGearboxEfficiency, XMLNames.UnitPercent, 2)),
+					new XElement(tns + XMLNames.Report_Results_AverageAxlegearEfficiency, XMLHelper.ValueAsUnit(result.AverageAxlegearEfficiency, XMLNames.UnitPercent, 2))
 					),
 				//FC
 				XMLDeclarationReport.GetResults(result, tns, true).Cast<object>().ToArray()
@@ -392,7 +409,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute(XNamespace.Xmlns + "di", di),
 				new XAttribute(xsi + "schemaLocation",
 					string.Format("{0} {1}VectoOutputManufacturer.{2}.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl, CURRENT_SCHEMA_VERSION)),
-				new XElement(tns + "Data",
+				new XElement(tns + XMLNames.Report_DataWrap,
 					vehicle,
 					results,
 					GetApplicationInfo())
