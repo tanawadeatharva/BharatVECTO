@@ -228,7 +228,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 																						mission.MissionType.GetNonEMSMissionType(), _engineData.WHTCRural, _engineData.WHTCUrban,
 																						_engineData.WHTCMotorway) *
 																					_engineData.ColdHotCorrectionFactor * _engineData.CorrectionFactorRegPer;
-					simulationRunData.EngineData.NCVCorrectionFactor = _engineData.FuelData.HeatingValueCorrection;
 					simulationRunData.EngineData.ADASCorrectionFactor = DeclarationData.ADASBenefits.Lookup(
 						_segment.VehicleClass, adasCombination, mission.MissionType, loading.Key);
 					simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;

@@ -83,8 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public NewtonMeter MaxTorqueDeclared { get; internal set; }
 
 		public FuelData.Entry FuelData { get; internal set; }
-		public double NCVCorrectionFactor { get; set; }
-
+		
 		public CombustionEngineData()
 		{
 			WHTCUrban = 1;
@@ -93,7 +92,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			CorrectionFactorRegPer = 1;
 			FuelConsumptionCorrectionFactor = 1;
 			ADASCorrectionFactor = 1;
-			NCVCorrectionFactor = 1;
 		}
 
 		public CombustionEngineData Copy()
@@ -117,7 +115,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				MaxTorqueDeclared = MaxTorqueDeclared,
 				FuelData = FuelData,
 				ADASCorrectionFactor = ADASCorrectionFactor,
-				NCVCorrectionFactor = NCVCorrectionFactor
 			};
 		}
 

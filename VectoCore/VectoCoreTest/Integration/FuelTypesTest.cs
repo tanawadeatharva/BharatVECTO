@@ -112,7 +112,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var run = jobContainer.Runs[runIdx];
 			var modContainer = (ModalDataContainer)run.Run.GetContainer().ModalData;
 			var modData = modContainer.Data;
-			modContainer.FuelData = FuelData.Instance().Lookup(fuelType, tankSystem);
+
+			var fuelData = FuelData.Instance().Lookup(fuelType, tankSystem);
+			modContainer.FuelData = fuelData;
+			((VehicleContainer)run.Run.GetContainer()).RunData.EngineData.FuelData = fuelData;
 
 			run.Run.Run();
 
