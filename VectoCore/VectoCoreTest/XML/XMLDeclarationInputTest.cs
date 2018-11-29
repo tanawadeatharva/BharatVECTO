@@ -127,22 +127,22 @@ namespace TUGraz.VectoCore.Tests.XML
 				var helper = new XPathHelper(ExecutionMode.Declaration);
 				helper.AddNamespaces(manager);
 
-				var technology = nav.SelectSingleNode(helper.QueryAbs(
+				var EngineFuelType = nav.SelectSingleNode(helper.QueryAbs(
 						helper.NSPrefix(XMLNames.VectoInputDeclaration,
 							Constants.XML.RootNSPrefix),
 						XMLNames.Component_Vehicle,
 						XMLNames.Vehicle_Components,
 						XMLNames.Component_Engine, XMLNames.ComponentDataWrapper, XMLNames.Engine_FuelType),
 					manager);
-				technology.SetValue(fuel);
+				EngineFuelType.SetValue(fuel);
 				var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
 				var inputDataProvider = new XMLDeclarationInputDataProvider(modified,
 					true);
-				var techInput = inputDataProvider.JobInputData.Vehicle.EngineInputData.FuelType;
-				Assert.AreEqual(fuel, techInput.ToXMLFormat());
-
-				Assert.NotNull(DeclarationData.FuelData.Lookup(techInput));
+				var fuelTyle = inputDataProvider.JobInputData.Vehicle.EngineInputData.FuelType;
+				Assert.AreEqual(fuel, fuelTyle.ToXMLFormat());
+				var tankSystem = fuelTyle == FuelType.NGPI || fuelTyle == FuelType.NGCI ? TankSystem.Liquefied : (TankSystem?)null;
+				Assert.NotNull(DeclarationData.FuelData.Lookup(fuelTyle, tankSystem));
 			}
 		}
 
