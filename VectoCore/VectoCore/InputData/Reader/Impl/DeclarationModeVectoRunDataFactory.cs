@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				_segment.Missions.First(), _segment);
 			_engineData = _dao.CreateEngineData(vehicle.EngineInputData,
 				vehicle.EngineIdleSpeed,
-				vehicle.GearboxInputData, vehicle.TorqueLimits);
+				vehicle.GearboxInputData, vehicle.TorqueLimits, vehicle.TankSystem);
 			_axlegearData = _dao.CreateAxleGearData(vehicle.AxleGearInputData, false);
 			_angledriveData = _dao.CreateAngledriveData(vehicle.AngledriveInputData, false);
 			_gearboxData = _dao.CreateGearboxData(vehicle.GearboxInputData, _engineData,
@@ -228,7 +228,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 																						mission.MissionType.GetNonEMSMissionType(), _engineData.WHTCRural, _engineData.WHTCUrban,
 																						_engineData.WHTCMotorway) *
 																					_engineData.ColdHotCorrectionFactor * _engineData.CorrectionFactorRegPer;
-					simulationRunData.EngineData.NCVCorrectionFactor = DeclarationData.FuelData.Lookup(_engineData.FuelType).HeatingValueCorrection;
+					simulationRunData.EngineData.NCVCorrectionFactor = _engineData.FuelData.HeatingValueCorrection;
 					simulationRunData.EngineData.ADASCorrectionFactor = DeclarationData.ADASBenefits.Lookup(
 						_segment.VehicleClass, adasCombination, mission.MissionType, loading.Key);
 					simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;

@@ -38,6 +38,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -95,8 +96,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public string StackTrace { get; private set; }
 
-			public FuelType FuelType { get; private set; }
+			public FuelData.Entry FuelData { get; private set; }
 
+			
 			public Kilogram Payload { get; private set; }
 
 			public Kilogram TotalVehicleWeight { get; private set; }
@@ -115,7 +117,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public virtual void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor)
 			{
-				FuelType = data.FuelData.FuelType;
+				FuelData = data.FuelData;
+				
 				Payload = runData.VehicleData.Loading;
 				CargoVolume = runData.VehicleData.CargoVolume;
 				TotalVehicleWeight = runData.VehicleData.TotalVehicleWeight;
@@ -252,7 +255,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public static IEnumerable<XElement> GetResults(ResultEntry result, XNamespace tns, bool fullOutput)
 		{
-			var fuel = FuelData.Instance().Lookup(result.FuelType);
+			var fuel = result.FuelData;
 			var retVal = new List<XElement> {
 				new XElement(
 					tns + XMLNames.Report_Results_FuelConsumption,

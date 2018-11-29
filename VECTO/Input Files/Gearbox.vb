@@ -217,7 +217,7 @@ Public Class Gearbox
 
 				Try
 
-					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.EngineInputData, Nothing, gearbox, New List(Of ITorqueLimitInputData))
+					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.EngineInputData, Nothing, gearbox, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
@@ -227,7 +227,7 @@ Public Class Gearbox
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Try
-					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.EngineInputData, gearbox, New List(Of ITorqueLimitInputData))
+					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.EngineInputData, gearbox, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try

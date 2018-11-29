@@ -30,17 +30,23 @@
 */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class FuelData : LookupData<FuelType, FuelData.Entry>
+	public sealed class FuelData : LookupData
 	{
 		private static FuelData _instance;
+
+		private List<Entry> _data = new List<Entry>();
 
 		public static FuelData Instance()
 		{
@@ -56,35 +62,56 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override string ErrorMessage
 		{
-			get { throw new InvalidOperationException("ErrorMessage not applicable."); }
+			get { return "FuelType {0} {1} not found!"; }
+		}
+
+		public Entry Lookup(FuelType fuelType, TankSystem? tankSystem = null)
+		{
+			var entries = _data.FindAll(x => x.FuelType == fuelType);
+			if (entries.Count == 0) {
+				throw new VectoException(ErrorMessage, fuelType.ToString(), tankSystem?.ToString() ?? "");
+			}
+
+			if (entries.Count > 1) {
+				entries = entries.FindAll(x => x.TankSystem == tankSystem);
+			}
+			if (entries.Count == 0) {
+				throw new VectoException(ErrorMessage, fuelType.ToString(), tankSystem?.ToString() ?? "");
+			}
+
+			return entries.First();
 		}
 
 		public static Entry Diesel
 		{
-			get { return Instance().Lookup(FuelType.DieselCI); }
+			get { return Instance().Lookup(FuelType.DieselCI, null); }
 		}
 
 		protected override void ParseData(DataTable table)
 		{
-			Data = table.Rows.Cast<DataRow>()
-				.Select(r => {
-					var density = r.Field<string>("fueldensity");
-					return new Entry(
-						r.Field<string>(0).ParseEnum<FuelType>(),
+			foreach (DataRow row in table.Rows) {
+				var density = row.Field<string>("fueldensity");
+				var tankSystem = row.Field<string>("tanksystem");
+				_data.Add(
+					new Entry(
+						row.Field<string>(0).ParseEnum<FuelType>(),
+						string.IsNullOrWhiteSpace(tankSystem) ? (TankSystem?)null : tankSystem.ParseEnum<TankSystem>(),
 						string.IsNullOrWhiteSpace(density) ? null : density.ToDouble(0).SI<KilogramPerCubicMeter>(),
-						r.ParseDouble("co2perfuelweight"),
-						r.ParseDouble("ncv_stdvecto").SI(Unit.SI.Kilo.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>(),
-						r.ParseDouble("ncv_stdengine").SI(Unit.SI.Kilo.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>()
-						);
-				})
-				.ToDictionary(e => e.FuelType);
+						row.ParseDouble("co2perfuelweight"),
+						row.ParseDouble("ncv_stdvecto").SI(Unit.SI.Kilo.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>(),
+						row.ParseDouble("ncv_stdengine").SI(Unit.SI.Kilo.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>()
+					));
+			}
+
+			
 		}
 
 		public struct Entry
 		{
-			public Entry(FuelType type, KilogramPerCubicMeter density, double weight, JoulePerKilogramm heatingValueVecto, JoulePerKilogramm heatingValueAnnex) : this()
+			public Entry(FuelType type, TankSystem? tankSystem, KilogramPerCubicMeter density, double weight, JoulePerKilogramm heatingValueVecto, JoulePerKilogramm heatingValueAnnex) : this()
 			{
 				FuelType = type;
+				TankSystem = tankSystem;
 				FuelDensity = density;
 				CO2PerFuelWeight = weight;
 				LowerHeatingValueVecto = heatingValueVecto;
@@ -93,6 +120,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 
 			public FuelType FuelType { get; }
+
+			public TankSystem? TankSystem { get; }
 
 			public KilogramPerCubicMeter FuelDensity { get; }
 
@@ -104,6 +133,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public double HeatingValueCorrection { get { return LowerHeatingValueVectoEngine / LowerHeatingValueVecto; } }
 
+			public string GetLabel()
+			{
+				return (TankSystem != null ? (TankSystem == VectoCommon.InputData.TankSystem.Liquefied ? "L" : "C") : "") +
+					FuelType.GetLabel();
+			}
 		}
 	}
 }

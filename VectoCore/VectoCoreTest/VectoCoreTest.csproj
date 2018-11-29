@@ -85,6 +85,7 @@
     <Compile Include="Integration\CoachPowerTrain.cs" />
     <Compile Include="Integration\Declaration\ADASVehicleTest.cs" />
     <Compile Include="Integration\Declaration\EngineInputDataTests.cs" />
+    <Compile Include="Integration\Declaration\NaturalGasVehicles.cs" />
     <Compile Include="Integration\DriverStrategy\SimpleCycles.cs" />
     <Compile Include="Integration\Declaration\ExemptedVehicleTest.cs" />
     <Compile Include="Integration\Declaration\VocationalVehicleTest.cs" />
@@ -2714,6 +2715,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\DeclarationMode\Class5_ADAS\Tractor_4x2_vehicle-class-5_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\DeclarationMode\Class5_NG\Tractor_4x2_vehicle-class-5_EURO6_2018.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\DeclarationMode\Class5_Vocational\Tractor_4x2_vehicle-class-5_EURO6_2018.xml">

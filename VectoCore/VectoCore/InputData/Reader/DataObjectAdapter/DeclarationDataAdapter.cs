@@ -185,13 +185,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 
 		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine, PerSecond vehicleEngineIdleSpeed,
-			IGearboxDeclarationInputData gearbox, IEnumerable<ITorqueLimitInputData> torqueLimits)
+			IGearboxDeclarationInputData gearbox, IEnumerable<ITorqueLimitInputData> torqueLimits, TankSystem? tankSystem = null)
 		{
 			if (!engine.SavedInDeclarationMode) {
 				WarnDeclarationMode("EngineData");
 			}
 
-			var retVal = SetCommonCombustionEngineData(engine);
+			var retVal = SetCommonCombustionEngineData(engine, tankSystem);
 			retVal.IdleSpeed = VectoMath.Max(engine.IdleSpeed, vehicleEngineIdleSpeed);
 			retVal.WHTCUrban = engine.WHTCUrban;
 			retVal.WHTCMotorway = engine.WHTCMotorway;

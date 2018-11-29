@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", FuelType.DieselCI, fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", FuelData.Diesel, fileWriter);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", FuelType.DieselCI, fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", FuelData.Diesel, fileWriter);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain", FuelType.DieselCI, fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain", FuelData.Diesel, fileWriter);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);

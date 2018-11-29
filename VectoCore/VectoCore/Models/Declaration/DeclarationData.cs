@@ -537,7 +537,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const bool DualFuelVehicleDefault = false;
 			public const bool HybridElectricHDVDefault = false;
 			public const bool ZeroEmissionVehicleDefault = false;
-			public const NgTankSystem NgTankSystemDefault = NgTankSystem.Compressed;
+			public const TankSystem TankSystemDefault = TankSystem.Compressed;
 			public const bool SleeperCabDefault = true;
 			public const bool VocationalVehicleDefault = false;
 

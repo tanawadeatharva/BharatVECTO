@@ -43,6 +43,7 @@ using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
@@ -61,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var writer = new FileOutputWriter("testsumcalc_fixed");
 			var sumWriter = new SummaryDataContainer(writer);
 
-			var modData = new ModalDataContainer("testsumcalc_fixed", FuelType.DieselCI, writer);
+			var modData = new ModalDataContainer("testsumcalc_fixed", FuelData.Diesel, writer);
 
 			modData.AddAuxiliary("FAN");
 
@@ -121,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var writer = new FileOutputWriter("testsumcalc_var");
 			var sumWriter = new SummaryDataContainer(writer);
 
-			var modData = new ModalDataContainer("testsumcalc_var", FuelType.DieselCI, writer);
+			var modData = new ModalDataContainer("testsumcalc_var", FuelData.Diesel, writer);
 			modData.AddAuxiliary("FAN");
 
 			var timeSteps = new[]

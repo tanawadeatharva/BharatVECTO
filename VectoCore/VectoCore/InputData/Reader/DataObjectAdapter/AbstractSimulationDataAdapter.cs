@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -120,7 +121,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 		}
 
-		internal CombustionEngineData SetCommonCombustionEngineData(IEngineDeclarationInputData data)
+		internal CombustionEngineData SetCommonCombustionEngineData(IEngineDeclarationInputData data, TankSystem? tankSystem)
 		{
 			var retVal = new CombustionEngineData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -135,7 +136,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				RatedPowerDeclared = data.RatedPowerDeclared,
 				RatedSpeedDeclared = data.RatedSpeedDeclared,
 				MaxTorqueDeclared = data.MaxTorqueDeclared,
-				FuelType = data.FuelType
+				FuelData = DeclarationData.FuelData.Lookup(data.FuelType, tankSystem)
 			};
 			return retVal;
 		}

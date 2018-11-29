@@ -31,8 +31,12 @@
 
 using System;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Utils {
 
@@ -108,6 +112,17 @@ namespace TUGraz.VectoCore.Utils {
 			};
 		}
 
-		
+
+		public static string ToXmlStr(FuelData.Entry fuelData)
+		{
+			var prefix = "";
+			if (fuelData.FuelType == FuelType.NGPI || fuelData.FuelType == FuelType.NGCI) {
+				if (fuelData.TankSystem == null) {
+					throw new VectoException("No TankSystem specified!");
+				}
+				prefix = fuelData.TankSystem.Value == TankSystem.Liquefied ? "L" : "C";
+			}
+			return prefix + fuelData.FuelType.ToXMLFormat();
+		}
 	}
 }

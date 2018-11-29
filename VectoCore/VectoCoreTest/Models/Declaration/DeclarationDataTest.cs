@@ -2055,14 +2055,17 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 							group, adasConfig, mission, loading, expectedBenefit, (factor - 1) * 100.0);
 		}
 
-		[TestCase("Diesel CI", 1.0),
-		TestCase("Ethanol CI", 1.0),
-		TestCase("Ethanol PI", 1.0),
-		TestCase("NG PI", 1.0)]
-		public void TestNCVCorrection(string fuelTypeStr, double expectedCorrectionFactor)
+		[
+			TestCase("Diesel CI", null, 1.0),
+			TestCase("Ethanol CI", null, 1.0),
+			TestCase("Ethanol PI", null, 1.0),
+			TestCase("NG PI", TankSystem.Liquefied, 1.0),
+			TestCase("NG PI", TankSystem.Compressed, 1.0)
+			]
+		public void TestNCVCorrection(string fuelTypeStr, TankSystem? tankSystem, double expectedCorrectionFactor)
 		{
 			var fuelType = fuelTypeStr.ParseEnum<FuelType>();
-			var cf = DeclarationData.FuelData.Lookup(fuelType).HeatingValueCorrection;
+			var cf = DeclarationData.FuelData.Lookup(fuelType, tankSystem).HeatingValueCorrection;
 
 			Assert.AreEqual(expectedCorrectionFactor, cf, 1e-6);
 		}

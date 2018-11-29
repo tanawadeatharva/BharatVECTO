@@ -983,7 +983,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(false, vehicle.VocationalVehicle);
 			Assert.AreEqual(true, vehicle.SleeperCab);
 
-			Assert.AreEqual(NgTankSystem.Compressed, vehicle.TankSystem);
+			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);
 
 			Assert.AreEqual(false, adas.EngineStopStart);
 			Assert.AreEqual(false, adas.EcoRollWitoutEngineStop);

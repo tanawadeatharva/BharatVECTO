@@ -142,7 +142,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool SleeperCab { get; }
 
-		NgTankSystem TankSystem { get; }
+		TankSystem TankSystem { get; }
 
 		IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
 
@@ -198,7 +198,7 @@ namespace TUGraz.VectoCommon.InputData
 	}
 
 
-	public enum NgTankSystem
+	public enum TankSystem
 	{
 		Liquefied,
 		Compressed

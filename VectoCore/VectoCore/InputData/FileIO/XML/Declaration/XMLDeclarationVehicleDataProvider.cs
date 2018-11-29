@@ -269,10 +269,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_SleeperCab))
 				: DeclarationData.Vehicle.SleeperCabDefault;
 		} }
-		public NgTankSystem TankSystem { get {
+		public TankSystem TankSystem { get {
 			return ElementExists(XMLNames.Vehicle_NgTankSystem)
-				? EnumHelper.ParseEnum<NgTankSystem>(GetElementValue(XMLNames.Vehicle_NgTankSystem))
-				: DeclarationData.Vehicle.NgTankSystemDefault;
+				? EnumHelper.ParseEnum<TankSystem>(GetElementValue(XMLNames.Vehicle_NgTankSystem))
+				: DeclarationData.Vehicle.TankSystemDefault;
 		} }
 
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get { return this; } }

@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public bool VocationalVehicle { get { return DeclarationData.Vehicle.VocationalVehicleDefault; } }
 		public bool SleeperCab { get { return DeclarationData.Vehicle.SleeperCabDefault; } }
-		public NgTankSystem TankSystem { get { return DeclarationData.Vehicle.NgTankSystemDefault; } }
+		public TankSystem TankSystem { get { return DeclarationData.Vehicle.TankSystemDefault; } }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get { return this; } }
 		public bool ZeroEmissionVehicle { get { return DeclarationData.Vehicle.ZeroEmissionVehicleDefault; } }
 		public bool HybridElectricHDV { get { return DeclarationData.Vehicle.HybridElectricHDVDefault; } }
