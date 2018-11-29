@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var modFile = Path.GetFileNameWithoutExtension(modalResultFile);
 			//Path.GetFileNameWithoutExtension(Path.GetRandomFileName()); // + ".vmod";
 			var fileWriter = new FileOutputWriter(modFile);
-			var modData = new ModalDataContainer(modFile, FuelType.DieselCI, fileWriter, true) { WriteModalResults = true };
+			var modData = new ModalDataContainer(modFile, FuelData.Diesel, fileWriter, true) { WriteModalResults = true };
 			modData.AddAuxiliary(Constants.Auxiliaries.Cycle);
 			port.Initialize(data.Entries.First().Torque, data.Entries.First().AngularVelocity);
 			foreach (var cycleEntry in data.Entries) {

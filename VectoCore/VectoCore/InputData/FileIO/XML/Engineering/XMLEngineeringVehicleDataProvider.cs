@@ -293,7 +293,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public IPTOTransmissionInputData PTOTransmissionInputData { get; private set; }
 		public bool VocationalVehicle { get { return false; } }
 		public bool SleeperCab { get { return true; } }
-		public NgTankSystem TankSystem { get; }
+		public TankSystem TankSystem { get; }
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get { return null; } }
 		public bool ZeroEmissionVehicle { get { return false; } }
 		public bool HybridElectricHDV { get { return false; } }

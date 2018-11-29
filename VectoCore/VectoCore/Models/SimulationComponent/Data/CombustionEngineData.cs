@@ -34,6 +34,7 @@ using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -81,7 +82,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public NewtonMeter MaxTorqueDeclared { get; internal set; }
 
-		public FuelType FuelType { get; internal set; }
+		public FuelData.Entry FuelData { get; internal set; }
 		public double NCVCorrectionFactor { get; set; }
 
 		public CombustionEngineData()
@@ -114,7 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				RatedPowerDeclared = RatedPowerDeclared,
 				RatedSpeedDeclared = RatedSpeedDeclared,
 				MaxTorqueDeclared = MaxTorqueDeclared,
-				FuelType = FuelType,
+				FuelData = FuelData,
 				ADASCorrectionFactor = ADASCorrectionFactor,
 				NCVCorrectionFactor = NCVCorrectionFactor
 			};

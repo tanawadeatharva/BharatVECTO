@@ -536,7 +536,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[TOTAL_VEHICLE_MASS] = (ConvertedSI)runData.VehicleData.TotalVehicleWeight;
 			row[ENGINE_MANUFACTURER] = runData.EngineData.Manufacturer;
 			row[ENGINE_MODEL] = runData.EngineData.ModelName;
-			row[ENGINE_FUEL_TYPE] = runData.EngineData.FuelType.GetLabel();
+			row[ENGINE_FUEL_TYPE] = runData.EngineData.FuelData.GetLabel();
 			row[ENGINE_RATED_POWER] = runData.EngineData.RatedPowerDeclared != null && runData.EngineData.RatedPowerDeclared > 0
 				? runData.EngineData.RatedPowerDeclared.ConvertToKiloWatt()
 				: runData.EngineData.FullLoadCurves[0].MaxPower.ConvertToKiloWatt();

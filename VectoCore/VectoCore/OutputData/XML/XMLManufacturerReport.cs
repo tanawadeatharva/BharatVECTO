@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Engine_IdlingSpeed, XMLHelper.ValueAsUnit(engineData.IdleSpeed, XMLNames.Unit_RPM)),
 				new XElement(tns + XMLNames.Engine_RatedSpeed, XMLHelper.ValueAsUnit(engineData.RatedSpeedDeclared, XMLNames.Unit_RPM)),
 				new XElement(tns + XMLNames.Engine_Displacement, XMLHelper.ValueAsUnit(engineData.Displacement, XMLNames.Unit_ltr, 1)),
-				new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelType.ToXMLFormat())
+				new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelData.FuelType.ToXMLFormat())
 				);
 		}
 
@@ -356,7 +356,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Report_ResultEntry_SimulationParameters,
 					new XElement(tns + XMLNames.Report_ResultEntry_TotalVehicleMass, XMLHelper.ValueAsUnit(result.TotalVehicleWeight, XMLNames.Unit_kg)),
 					new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
-					new XElement(tns + XMLNames.Report_ResultEntry_FuelType, result.FuelType.ToXMLFormat())
+					new XElement(tns + XMLNames.Report_ResultEntry_FuelType, XMLHelper.ToXmlStr(result.FuelData))
 					),
 				new XElement(tns + XMLNames.Report_ResultEntry_VehiclePerformance,
 					new XElement(tns + XMLNames.Report_ResultEntry_AverageSpeed, XMLHelper.ValueAsUnit(result.AverageSpeed, XMLNames.Unit_kmph, 1)),

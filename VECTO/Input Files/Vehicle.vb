@@ -664,9 +664,9 @@ Public Class Vehicle
 	End Get
 	End Property
 
-	Public ReadOnly Property TankSystem As NgTankSystem Implements IVehicleDeclarationInputData.TankSystem
+	Public ReadOnly Property TankSystem As TankSystem Implements IVehicleDeclarationInputData.TankSystem
 	get
-			Return DeclarationData.Vehicle.NgTankSystemDefault
+			Return DeclarationData.Vehicle.TankSystemDefault
 	End Get
 	End Property
 

@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(
 					tns + XMLNames.Report_Vehicle_EngineDisplacement,
 					XMLHelper.ValueAsUnit(modelData.EngineData.Displacement, XMLNames.Unit_ltr, 1)),
-				new XElement(tns + XMLNames.Engine_FuelType, modelData.EngineData.FuelType.ToXMLFormat()),
+				new XElement(tns + XMLNames.Engine_FuelType, modelData.EngineData.FuelData.FuelType.ToXMLFormat()),
 				new XElement(
 					tns + XMLNames.Report_Vehicle_TransmissionCertificationMethod,
 					modelData.GearboxData.CertificationMethod.ToXMLFormat()),
@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			return new object[] {
 				new XElement(tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg, 0)),
-				new XElement(tns + XMLNames.Report_Results_FuelType, result.FuelType.ToXMLFormat()),
+				new XElement(tns + XMLNames.Report_Results_FuelType, XMLHelper.ToXmlStr(result.FuelData)),
 				new XElement(tns + XMLNames.Report_Results_AverageSpeed, XMLHelper.ValueAsUnit(result.AverageSpeed, XMLNames.Unit_kmph, 1)),
 				XMLDeclarationReport.GetResults(result, tns, false).Cast<object>().ToArray()
 			};
