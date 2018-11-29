@@ -2057,10 +2057,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		[
 			TestCase("Diesel CI", null, 1.0),
-			TestCase("Ethanol CI", null, 1.0),
-			TestCase("Ethanol PI", null, 1.0),
-			TestCase("NG PI", TankSystem.Liquefied, 1.0),
-			TestCase("NG PI", TankSystem.Compressed, 1.0)
+			TestCase("Ethanol CI", null, 1.011811),
+			TestCase("Petrol PI", null, 1.0),
+			TestCase("Ethanol PI", null, 0.993174),
+			TestCase("NG PI", TankSystem.Liquefied, 0.918533),
+			TestCase("NG PI", TankSystem.Compressed, 0.939583)
 			]
 		public void TestNCVCorrection(string fuelTypeStr, TankSystem? tankSystem, double expectedCorrectionFactor)
 		{
