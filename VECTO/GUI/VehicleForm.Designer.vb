@@ -177,15 +177,15 @@ Partial Class VehicleForm
         'Label1
         '
         Me.Label1.AutoSize = true
-        Me.Label1.Location = New System.Drawing.Point(27, 22)
+        Me.Label1.Location = New System.Drawing.Point(6, 22)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(139, 13)
+        Me.Label1.Size = New System.Drawing.Size(177, 13)
         Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Corrected Actual Curb Mass"
+        Me.Label1.Text = "Corrected Actual Curb Mass Vehicle"
         '
         'TbMass
         '
-        Me.TbMass.Location = New System.Drawing.Point(172, 19)
+        Me.TbMass.Location = New System.Drawing.Point(188, 19)
         Me.TbMass.Name = "TbMass"
         Me.TbMass.Size = New System.Drawing.Size(57, 20)
         Me.TbMass.TabIndex = 0
@@ -193,7 +193,7 @@ Partial Class VehicleForm
         'Label2
         '
         Me.Label2.AutoSize = true
-        Me.Label2.Location = New System.Drawing.Point(115, 31)
+        Me.Label2.Location = New System.Drawing.Point(128, 31)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(45, 13)
         Me.Label2.TabIndex = 2
@@ -201,7 +201,7 @@ Partial Class VehicleForm
         '
         'TbLoad
         '
-        Me.TbLoad.Location = New System.Drawing.Point(166, 28)
+        Me.TbLoad.Location = New System.Drawing.Point(182, 28)
         Me.TbLoad.Name = "TbLoad"
         Me.TbLoad.Size = New System.Drawing.Size(57, 20)
         Me.TbLoad.TabIndex = 1
@@ -262,7 +262,7 @@ Partial Class VehicleForm
         'Label14
         '
         Me.Label14.AutoSize = true
-        Me.Label14.Location = New System.Drawing.Point(231, 22)
+        Me.Label14.Location = New System.Drawing.Point(247, 22)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(25, 13)
         Me.Label14.TabIndex = 24
@@ -271,7 +271,7 @@ Partial Class VehicleForm
         'Label31
         '
         Me.Label31.AutoSize = true
-        Me.Label31.Location = New System.Drawing.Point(225, 31)
+        Me.Label31.Location = New System.Drawing.Point(241, 31)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(25, 13)
         Me.Label31.TabIndex = 24
@@ -522,7 +522,7 @@ Partial Class VehicleForm
         'Label46
         '
         Me.Label46.AutoSize = true
-        Me.Label46.Location = New System.Drawing.Point(6, 5)
+        Me.Label46.Location = New System.Drawing.Point(32, 5)
         Me.Label46.Name = "Label46"
         Me.Label46.Size = New System.Drawing.Size(145, 13)
         Me.Label46.TabIndex = 31
@@ -531,7 +531,7 @@ Partial Class VehicleForm
         'Label50
         '
         Me.Label50.AutoSize = true
-        Me.Label50.Location = New System.Drawing.Point(225, 5)
+        Me.Label50.Location = New System.Drawing.Point(241, 5)
         Me.Label50.Name = "Label50"
         Me.Label50.Size = New System.Drawing.Size(25, 13)
         Me.Label50.TabIndex = 24
@@ -539,7 +539,7 @@ Partial Class VehicleForm
         '
         'TbMassExtra
         '
-        Me.TbMassExtra.Location = New System.Drawing.Point(166, 2)
+        Me.TbMassExtra.Location = New System.Drawing.Point(182, 2)
         Me.TbMassExtra.Name = "TbMassExtra"
         Me.TbMassExtra.Size = New System.Drawing.Size(57, 20)
         Me.TbMassExtra.TabIndex = 0
@@ -734,7 +734,7 @@ Partial Class VehicleForm
         Me.GroupBox1.Size = New System.Drawing.Size(278, 118)
         Me.GroupBox1.TabIndex = 0
         Me.GroupBox1.TabStop = false
-        Me.GroupBox1.Text = "Weight / Loading"
+        Me.GroupBox1.Text = "Masses / Loading"
         '
         'PnLoad
         '
@@ -746,7 +746,7 @@ Partial Class VehicleForm
         Me.PnLoad.Controls.Add(Me.Label46)
         Me.PnLoad.Location = New System.Drawing.Point(6, 43)
         Me.PnLoad.Name = "PnLoad"
-        Me.PnLoad.Size = New System.Drawing.Size(256, 58)
+        Me.PnLoad.Size = New System.Drawing.Size(269, 58)
         Me.PnLoad.TabIndex = 1
         '
         'GrAirRes
@@ -1095,7 +1095,7 @@ Partial Class VehicleForm
         '
         'tbVehIdlingSpeed
         '
-        Me.tbVehIdlingSpeed.Location = New System.Drawing.Point(169, 3)
+        Me.tbVehIdlingSpeed.Location = New System.Drawing.Point(185, 4)
         Me.tbVehIdlingSpeed.Name = "tbVehIdlingSpeed"
         Me.tbVehIdlingSpeed.Size = New System.Drawing.Size(57, 20)
         Me.tbVehIdlingSpeed.TabIndex = 0
@@ -1103,7 +1103,7 @@ Partial Class VehicleForm
         'Label18
         '
         Me.Label18.AutoSize = true
-        Me.Label18.Location = New System.Drawing.Point(229, 6)
+        Me.Label18.Location = New System.Drawing.Point(241, 7)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(30, 13)
         Me.Label18.TabIndex = 24
@@ -1112,7 +1112,7 @@ Partial Class VehicleForm
         'Label19
         '
         Me.Label19.AutoSize = true
-        Me.Label19.Location = New System.Drawing.Point(69, 6)
+        Me.Label19.Location = New System.Drawing.Point(82, 6)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(94, 13)
         Me.Label19.TabIndex = 8
