@@ -2,7 +2,7 @@
 
 
 The rolling resistance is calculated using a speed-independent rolling resistance coefficient (RRC).
-In order to consider that the RRC depends on the vehicle weight it is modelled as a function of the total vehicle mass. The total RRC is calculated in VECTO using the following equation (the index i refers to the vehicle's axle (truck and trailer)):
+In order to consider that the RRC depends on the vehicle's mass it is modelled as a function of the total vehicle mass. The total RRC is calculated in VECTO using the following equation (the index i refers to the vehicle's axle (truck and trailer)):
 
 $RRC = \sum_{i=1}^{n} s_{(i)} \cdot RRC_{ISO(i)} \cdot \left( \frac{s_{(i)} \cdot m \cdot g }{w_{(i)} \cdot F_{zISO(i)} } \right)^{\beta-1}$
 

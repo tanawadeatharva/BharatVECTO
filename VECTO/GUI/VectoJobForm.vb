@@ -1337,7 +1337,7 @@ lbDlog:
 		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _
 		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
-		TbHVCclass.Text = String.Format("HDV Class {0}", HDVclass)
+		TbHVCclass.Text = String.Format("HDV Group {0}", HDVclass)
 		TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
 		TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
 		TbAxleConf.Text = vehicle.AxleConfiguration.GetName()	'ConvAxleConf(VEH0.AxleConf)
