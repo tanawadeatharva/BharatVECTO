@@ -489,7 +489,7 @@
 	</xs:complexType>
 	<xs:complexType name="TorqueLimitsType">
 		<xs:sequence>
-			<xs:element name="Entry">
+			<xs:element name="Entry" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:complexContent>
 						<xs:extension base="TorqueLimitsEntryType"/>
