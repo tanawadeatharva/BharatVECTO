@@ -85,17 +85,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("VehicleData");
 			}
+			return data.ExemptedVehicle
+				? CreateExemptedVehicleData(data)
+				: CreateNonExemptedVehicleData(data, mission, loading, municipalBodyWeight);
+		}
 
+		private VehicleData CreateNonExemptedVehicleData(
+			IVehicleDeclarationInputData data, Mission mission, Kilogram loading, Kilogram municipalBodyWeight)
+		{
 			var retVal = SetCommonVehicleData(data);
+			retVal.AxleConfiguration = data.AxleConfiguration;
 			retVal.AirDensity = DeclarationData.AirDensity;
 			retVal.VIN = data.VIN;
 			retVal.ManufacturerAddress = data.ManufacturerAddress;
 			retVal.LegislativeClass = data.LegislativeClass;
+			retVal.ZeroEmissionVehicle = data.ZeroEmissionVehicle;
+			retVal.SleeperCab = data.SleeperCab;
 			retVal.TrailerGrossVehicleWeight = mission.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0);
 
 			retVal.BodyAndTrailerWeight = (mission.MissionType == MissionType.MunicipalUtility
-				? municipalBodyWeight
-				: mission.BodyCurbWeight) + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
+											? municipalBodyWeight
+											: mission.BodyCurbWeight) + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
 
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
@@ -104,12 +114,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					.Average();
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
 
+			retVal.VocationalVehicle = data.VocationalVehicle;
+			retVal.ADAS = CreateADAS(data.ADAS);
 
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
-				throw new VectoException("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
+				throw new VectoException(
+					"Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
 					data.Axles.Count, mission.AxleWeightDistribution.Length);
 			}
+
 			var axleData = new List<Axle>();
 			for (var i = 0; i < mission.AxleWeightDistribution.Length; i++) {
 				var axleInput = axles[i];
@@ -128,29 +142,56 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			foreach (var trailer in mission.Trailer) {
-				axleData.AddRange(trailer.TrailerWheels.Select(trailerWheel => new Axle {
-					AxleType = AxleType.Trailer,
-					AxleWeightShare = trailer.TrailerAxleWeightShare / trailer.TrailerWheels.Count,
-					TwinTyres = DeclarationData.Trailer.TwinTyres,
-					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
-					TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
-					Inertia = trailerWheel.Inertia,
-					WheelsDimension = trailerWheel.WheelType
-				}));
+				axleData.AddRange(
+					trailer.TrailerWheels.Select(
+						trailerWheel => new Axle {
+							AxleType = AxleType.Trailer,
+							AxleWeightShare = trailer.TrailerAxleWeightShare / trailer.TrailerWheels.Count,
+							TwinTyres = DeclarationData.Trailer.TwinTyres,
+							RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
+							TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
+							Inertia = trailerWheel.Inertia,
+							WheelsDimension = trailerWheel.WheelType
+						}));
 			}
+
 			retVal.AxleData = axleData;
 			return retVal;
 		}
 
+		private VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemDeclarationInputData adas)
+		{
+			return new VehicleData.ADASData {
+				EngineStopStart = adas.EngineStopStart,
+				EcoRollWithoutengineStop = adas.EcoRollWitoutEngineStop,
+				EcoRollWithEngineStop = adas.EcoRollWithEngineStop,
+				PredictiveCruiseControl = adas.PredictiveCruiseControl
+			};
+		}
+
+		private VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data)
+		{
+			var exempted = SetCommonVehicleData(data);
+			exempted.VIN = data.VIN;
+			exempted.ManufacturerAddress = data.ManufacturerAddress;
+			exempted.LegislativeClass = data.LegislativeClass;
+			exempted.ZeroEmissionVehicle = data.ZeroEmissionVehicle;
+			exempted.HybridElectricHDV = data.HybridElectricHDV;
+			exempted.DualFuelVehicle = data.DualFuelVehicle;
+			exempted.MaxNetPower1 = data.MaxNetPower1;
+			exempted.MaxNetPower2 = data.MaxNetPower2;
+			return exempted;
+		}
+
 
 		internal CombustionEngineData CreateEngineData(IEngineDeclarationInputData engine, PerSecond vehicleEngineIdleSpeed,
-			IGearboxDeclarationInputData gearbox, IEnumerable<ITorqueLimitInputData> torqueLimits)
+			IGearboxDeclarationInputData gearbox, IEnumerable<ITorqueLimitInputData> torqueLimits, TankSystem? tankSystem = null)
 		{
 			if (!engine.SavedInDeclarationMode) {
 				WarnDeclarationMode("EngineData");
 			}
 
-			var retVal = SetCommonCombustionEngineData(engine);
+			var retVal = SetCommonCombustionEngineData(engine, tankSystem);
 			retVal.IdleSpeed = VectoMath.Max(engine.IdleSpeed, vehicleEngineIdleSpeed);
 			retVal.WHTCUrban = engine.WHTCUrban;
 			retVal.WHTCMotorway = engine.WHTCMotorway;

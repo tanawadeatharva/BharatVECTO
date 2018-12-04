@@ -242,6 +242,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Vehicle.SlopeResistance(gradient);
 		}
 
+		public MeterPerSecond MaxVehicleSpeed
+		{
+			get { return Vehicle.MaxVehicleSpeed; }
+		}
+
 		#endregion
 
 		public VehicleContainer(ExecutionMode executionMode, IModalDataContainer modData = null,
@@ -327,12 +332,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void FinishSimulationRun(Exception e = null)
 		{
 			Log.Info("VehicleContainer finishing simulation.");
-			ModData.Finish(RunStatus, e);
+			ModData?.Finish(RunStatus, e);
 
 			WriteSumData(ModData);
 
-			ModData.FinishSimulation();
-			DrivingCycle.FinishSimulation();
+			ModData?.FinishSimulation();
+			DrivingCycle?.FinishSimulation();
 		}
 
 		public void FinishSimulation()

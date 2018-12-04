@@ -47,7 +47,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		Suburban,
 		Interurban,
 		Coach,
-		VerificationTest
+		VerificationTest,
+		ExemptedMission
 	}
 
 	public static class MissionTypeHelper

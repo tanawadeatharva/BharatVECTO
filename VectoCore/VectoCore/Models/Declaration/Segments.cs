@@ -42,7 +42,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class Segments : LookupData<VehicleCategory, AxleConfiguration, Kilogram, Kilogram, Segment>
+	public sealed class Segments : LookupData<VehicleCategory, AxleConfiguration, Kilogram, Kilogram, bool, Segment>
 	{
 		private DataTable _segmentTable;
 
@@ -65,9 +65,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		public override Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
-			Kilogram grossVehicleMassRating, Kilogram curbWeight)
+			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational)
 		{
-			return Lookup(vehicleCategory, axleConfiguration, grossVehicleMassRating, curbWeight, false);
+			return Lookup(vehicleCategory, axleConfiguration, grossVehicleMassRating, curbWeight, vocational, false);
 		}
 
 		public VehicleCategory[] GetVehicleCategories(bool declarationOnly = true)
@@ -82,26 +82,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		public Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
-			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool considerInvalid)
+			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational, bool considerInvalid)
 		{
 
-			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, considerInvalid);
+			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational, considerInvalid);
 			if (row == null) {
 				return new Segment() { Found = false };
 			}
 
 			var segment = new Segment {
 				Found = true,
-			    GrossVehicleWeightMin = row.ParseDouble("gvw_min").SI(Unit.SI.Ton).Cast<Kilogram>(),
-			    GrossVehicleWeightMax = row.ParseDouble("gvw_max").SI(Unit.SI.Ton).Cast<Kilogram>(),
+			    GrossVehicleWeightMin = row.ParseDouble("tpmlm_min").SI(Unit.SI.Ton).Cast<Kilogram>(),
+			    GrossVehicleWeightMax = row.ParseDouble("tpmlm_max").SI(Unit.SI.Ton).Cast<Kilogram>(),
 				VehicleCategory = vehicleCategory,
 				AxleConfiguration = axleConfiguration,
-				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass")),
+				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvgroup")),
 				AccelerationFile =
 					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 												row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(ref grossVehicleMassRating, curbWeight, row),
-				VehicleHeight = LookupHeight(vehicleCategory, axleConfiguration, grossVehicleMassRating),
+				VehicleHeight = LookupHeight(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational),
 				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 				GrossVehicleMassRating = grossVehicleMassRating,
 				CdADefault = string.IsNullOrEmpty(row["cdxa_default"].ToString()) ? null : row.ParseDouble("cdxa_default").SI<SquareMeter>(),
@@ -117,17 +117,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		private DataRow GetSegmentDataRow(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
-			Kilogram grossVehicleMassRating, bool considerInvalid)
+			Kilogram grossVehicleMassRating, bool vocational, bool considerInvalid)
 		{
 			DataRow row;
 			try {
 				row = _segmentTable.AsEnumerable().First(r => {
 					var isValid = r.Field<string>("valid");
+					var isVocational = r.Field<string>("vocational").ToBoolean();
 					var category = r.Field<string>("vehiclecategory");
 					var axleConf = r.Field<string>("axleconf.");
-				    var massMin = r.ParseDouble("gvw_min").SI(Unit.SI.Ton);
-				    var massMax = r.ParseDouble("gvw_max").SI(Unit.SI.Ton);
+				    var massMin = r.ParseDouble("tpmlm_min").SI(Unit.SI.Ton);
+				    var massMax = r.ParseDouble("tpmlm_max").SI(Unit.SI.Ton);
 					return (considerInvalid || isValid == "1")
+							&& vocational == isVocational
 							&& category == vehicleCategory.ToString()
 							&& axleConf == axleConfiguration.GetName()
 							&& grossVehicleMassRating > massMin && grossVehicleMassRating <= massMax;
@@ -143,19 +145,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		public Meter LookupHeight(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
-			Kilogram grossVehicleMassRating)
+			Kilogram grossVehicleMassRating, bool vocational)
 		{
-			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, true);
+			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational, true);
 
 			var vehicleHeight = row.ParseDouble("height").SI<Meter>();
-			var vehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
+			var vehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvgroup"));
 
 			if (vehicleClass == VehicleClass.Class9) {
 				// VECTO-471: for class 9 take similar height than rigid with same maximum gross vehicle weight (class 1, 2, 3 or 4).
 				var rigidGVWrow = _segmentTable.AsEnumerable().FirstOrDefault(r => {
-				    var massMin = r.ParseDouble("gvw_min").SI(Unit.SI.Ton);
-				    var massMax = r.ParseDouble("gvw_max").SI(Unit.SI.Ton);
-					return new[] { "1", "2", "3", "4" }.Contains(r.Field<string>("hdvclass"))
+				    var massMin = r.ParseDouble("tpmlm_min").SI(Unit.SI.Ton);
+				    var massMax = r.ParseDouble("tpmlm_max").SI(Unit.SI.Ton);
+					return new[] { "1", "2", "3", "4" }.Contains(r.Field<string>("hdvgroup"))
 							&& massMin <= grossVehicleMassRating && grossVehicleMassRating <= massMax;
 				});
 				if (rigidGVWrow != null) {
@@ -170,9 +172,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		/// Looks up the default CdxA value for the cross wind correction.
 		/// </summary>
 		public SquareMeter LookupCdA(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
-			Kilogram grossVehicleMassRating)
+			Kilogram grossVehicleMassRating, bool vocational)
 		{
-			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, true);
+			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational, true);
 			return row.SI<SquareMeter>("cdxa_default");
 		}
 
@@ -180,8 +182,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
 			var missions = new List<Mission>();
-			foreach (var missionType in missionTypes.Where(m => m.IsDeclarationMission() && row.Field<string>(m.ToString()) != "-")) {
-				var body = DeclarationData.StandardBodies.Lookup(row.Field<string>("body"));
+			foreach (var missionType in missionTypes.Where(m => m.IsDeclarationMission() && m != MissionType.ExemptedMission && row.Field<string>(m.ToString()) != "-")) {
+				var bodyColumn = missionType == MissionType.Construction ? "bodyconstruction" : "body";
+				var body = DeclarationData.StandardBodies.Lookup(row.Field<string>(bodyColumn));
 
 				var maxGVW = Constants.SimulationSettings.MaximumGrossVehicleWeight;
 				var trailers = new List<MissionTrailer>();
@@ -197,7 +200,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 						trailerWeightShares.Select((t, i) => CreateTrailer(trailerList[i], t.ToDouble() / 100.0, i == 0)));
 				} else {
 					if (ShouldTrailerBeUsed(row, missionType)) {
-						var trailerValue = row.Field<string>("trailer");
+						var trailerColumn = missionType == MissionType.Construction ? "trailerconstruction" : "trailer";
+						var trailerValue = row.Field<string>(trailerColumn);
 						if (string.IsNullOrWhiteSpace(trailerValue)) {
 							throw new VectoException("Error in segmentation table: trailer weight share is defined but not trailer type!");
 						}

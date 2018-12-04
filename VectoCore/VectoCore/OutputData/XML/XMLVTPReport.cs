@@ -89,9 +89,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			#region Overrides of ResultEntry
 
-			public override void SetResultData(VectoRunData runData, IModalDataContainer data)
+			public override void SetResultData(VectoRunData runData, IModalDataContainer data, double factor)
 			{
-				base.SetResultData(runData, data);
+				base.SetResultData(runData, data, factor);
 
 				if (runData.SimulationType != SimulationType.VerificationTest) {
 					return;
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected override void DoAddResult(
 			ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
-			entry.SetResultData(runData, modData);
+			entry.SetResultData(runData, modData, 0.0);
 		}
 
 		protected internal override void DoWriteReport()
@@ -475,7 +475,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(
 					tns + XMLNames.Engine_Displacement,
 					engineData.Displacement.ConvertToCubicCentiMeter().ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelType.ToXMLFormat())
+				new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelData.FuelType.ToXMLFormat())
 			);
 		}
 

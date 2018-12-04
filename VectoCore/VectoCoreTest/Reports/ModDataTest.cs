@@ -48,6 +48,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 using System.IO;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
@@ -65,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			TestCase(10, 0.1)]
 		public void SumDataTest(double initialSpeedVal, double accVal)
 		{
-			var modData = new ModalDataContainer("sumDataTest", FuelType.DieselCI, null, false);
+			var modData = new ModalDataContainer("sumDataTest", FuelData.Diesel, null, false);
 			var initalSpeed = initialSpeedVal.KMPHtoMeterPerSecond();
 			var speed = initalSpeed;
 			var dist = 0.SI<Meter>();

@@ -115,7 +115,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				vehicle.VehicleCategory,
 				vehicle.AxleConfiguration,
 				vehicle.GrossVehicleMassRating,
-				vehicle.CurbMassChassis);
+				vehicle.CurbMassChassis,
+				vehicle.VocationalVehicle);
 			_driverdata = _dao.CreateDriverData();
 			_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
 			var tempVehicle = _dao.CreateVehicleData(
@@ -127,7 +128,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_engineData = _dao.CreateEngineData(
 				vehicle.EngineInputData,
 				vehicle.EngineIdleSpeed,
-				vehicle.GearboxInputData, vehicle.TorqueLimits);
+				vehicle.GearboxInputData, vehicle.TorqueLimits, vehicle.TankSystem);
 			_axlegearData = _dao.CreateAxleGearData(vehicle.AxleGearInputData, false);
 			_angledriveData = _dao.CreateAngledriveData(vehicle.AngledriveInputData, false);
 			_gearboxData = _dao.CreateGearboxData(
@@ -190,7 +191,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			vtpRunData.Mission = new Mission() {
 				MissionType = MissionType.VerificationTest
 			};
-			var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.EngineInputData.FuelType).LowerHeatingValue;
+			var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.EngineInputData.FuelType).LowerHeatingValueVecto;
 			var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
 			var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
 			vtpRunData.VTPData = new VTPData() {

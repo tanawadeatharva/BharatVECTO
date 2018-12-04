@@ -54,6 +54,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				WarnEngineeringMode("VehicleData");
 			}
 			var retVal = SetCommonVehicleData(data);
+			retVal.AxleConfiguration = data.AxleConfiguration;
 			retVal.BodyAndTrailerWeight = data.CurbMassExtra;
 			//retVal.CurbWeight += data.CurbMassExtra;
 			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
@@ -96,9 +97,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					break;
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					var airDragArea = airdragData.AirDragArea ??
-									DeclarationData.Segments.LookupCdA(data.VehicleCategory, data.AxleConfiguration, data.GrossVehicleMassRating);
+									DeclarationData.Segments.LookupCdA(data.VehicleCategory, data.AxleConfiguration, data.GrossVehicleMassRating, false);
 					var height = data.Height ?? DeclarationData.Segments.LookupHeight(data.VehicleCategory, data.AxleConfiguration,
-						data.GrossVehicleMassRating);
+						data.GrossVehicleMassRating, false);
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(airDragArea,
 						DeclarationDataAdapter.GetDeclarationAirResistanceCurve(
 							GetAirdragParameterSet(data.VehicleCategory, data.AxleConfiguration, data.Axles.Count), airDragArea, height),
@@ -132,13 +133,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IGearboxEngineeringInputData gbx,
-			IEnumerable<ITorqueLimitInputData> torqueLimits)
+			IEnumerable<ITorqueLimitInputData> torqueLimits, TankSystem? tankSystem = null)
 		{
 			if (engine.SavedInDeclarationMode) {
 				WarnEngineeringMode("EngineData");
 			}
 
-			var retVal = SetCommonCombustionEngineData(engine);
+			var retVal = SetCommonCombustionEngineData(engine, tankSystem);
 			retVal.Inertia = engine.Inertia +
 							(gbx != null && gbx.Type.AutomaticTransmission() ? gbx.TorqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
 			var limits = torqueLimits.ToDictionary(e => e.Gear);

@@ -370,10 +370,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase(VehicleClass.Class1, new[] { 0, 150, 150, 0, 0 }),
 		TestCase(VehicleClass.Class2, new[] { 200, 200, 150, 0, 0 }),
 		TestCase(VehicleClass.Class3, new[] { 0, 200, 150, 0, 0 }),
-		TestCase(VehicleClass.Class4, new[] { 350, 200, 200, 300, 0 }),
-		TestCase(VehicleClass.Class5, new[] { 350, 200, 200, 0, 0 }),
-		TestCase(VehicleClass.Class9, new[] { 350, 200, 200, 300, 0 }),
-		TestCase(VehicleClass.Class10, new[] { 350, 200, 200, 0, 0 }),
+		TestCase(VehicleClass.Class4, new[] { 350, 200, 150, 300, 200 }),
+		TestCase(VehicleClass.Class5, new[] { 350, 200, 150, 0, 200 }),
+		TestCase(VehicleClass.Class9, new[] { 350, 200, 150, 300, 200 }),
+		TestCase(VehicleClass.Class10, new[] { 350, 200, 0, 0, 200 }),
 		TestCase(VehicleClass.Class11, new[] { 350, 200, 0, 300, 200 }),
 		TestCase(VehicleClass.Class12, new[] { 350, 200, 0, 0, 200 }),
 		TestCase(VehicleClass.Class16, new[] { 0, 0, 0, 0, 200 })]
@@ -562,7 +562,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					VehicleCategory.RigidTruck,
 					AxleConfiguration.AxleConfig_4x2,
 					weight.SI<Kilogram>(),
-					0.SI<Kilogram>()),
+					0.SI<Kilogram>(),
+					false),
 				string.Format("ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}", VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2.GetName(), weight.SI<Kilogram>()));
 		}
 
@@ -579,108 +580,121 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					VehicleCategory.RigidTruck,
 					AxleConfiguration.AxleConfig_4x4,
 					weight.SI<Kilogram>(),
-					0.SI<Kilogram>()),
+					0.SI<Kilogram>(),
+					false),
 					string.Format("ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}", VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4.GetName(), weight.SI<Kilogram>()));
 		}
 
 		[Test,
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7500.01, 0, VehicleClass.Class1),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7500.01, 0, VehicleClass.Class1),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10001, 0, VehicleClass.Class2),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10001, 0, VehicleClass.Class2),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12001, 0, VehicleClass.Class3),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12001, 0, VehicleClass.Class3),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class4),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 99000, 0, VehicleClass.Class4),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class5),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 99000, 0, VehicleClass.Class5),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7500.01, 0, false, VehicleClass.Class1),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7500.01, 0, false, VehicleClass.Class1),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10000, 0, false, VehicleClass.Class1),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10000, 0, false, VehicleClass.Class1),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10001, 0, false, VehicleClass.Class2),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10001, 0, false, VehicleClass.Class2),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, false, VehicleClass.Class2),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, false, VehicleClass.Class2),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12001, 0, false, VehicleClass.Class3),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12001, 0, false, VehicleClass.Class3),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, false, VehicleClass.Class4),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 99000, 0, false, VehicleClass.Class4),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, true, VehicleClass.Class4),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 99000, 0, true, VehicleClass.Class4),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, false, VehicleClass.Class5),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 99000, 0, false, VehicleClass.Class5),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, true, VehicleClass.Class5),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 99000, 0, true, VehicleClass.Class5),
 		//TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 7500, 0, VehicleClass.Class6),
 		//TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 16000, 0, VehicleClass.Class6),
 		//TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 16001, 0, VehicleClass.Class7),
 		//TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x4, 99000, 0, VehicleClass.Class7),
 		//TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x4, 16000, 0, VehicleClass.Class8),
 		//TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x4, 99000, 0, VehicleClass.Class8),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class9),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class9),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class9),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 99000, 0, VehicleClass.Class9),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class10),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class10),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class10),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 99000, 0, VehicleClass.Class10),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 7500, 0, VehicleClass.Class11),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 40000, 0, VehicleClass.Class11),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 7500, 0, VehicleClass.Class12),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, VehicleClass.Class12),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 7500, 0, VehicleClass.Class16),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, VehicleClass.Class16)
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7500, 0, false, VehicleClass.Class9),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, false, VehicleClass.Class9),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, false, VehicleClass.Class9),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 99000, 0, false, VehicleClass.Class9),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7500, 0, true, VehicleClass.Class9),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 99000, 0, true, VehicleClass.Class9),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, false, VehicleClass.Class10),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, false, VehicleClass.Class10),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, false, VehicleClass.Class10),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 99000, 0, false, VehicleClass.Class10),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, true, VehicleClass.Class10),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 99000, 0, true, VehicleClass.Class10),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 7500, 0, false, VehicleClass.Class11),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 40000, 0, false, VehicleClass.Class11),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 7500, 0, false, VehicleClass.Class12),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, false, VehicleClass.Class12),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 7500, 0, false, VehicleClass.Class16),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, false, VehicleClass.Class16)
 		]
 		public void SegmentLookupTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
-			double curbWeight, VehicleClass expectedClass)
+			double curbWeight, bool vocational, VehicleClass expectedClass)
 		{
 			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
-				curbWeight.SI<Kilogram>());
+				curbWeight.SI<Kilogram>(), vocational);
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
 		}
 
-		[TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7501, 0, VehicleClass.Class1, 85),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10001, 0, VehicleClass.Class2, 85),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12001, 0, VehicleClass.Class3, 85),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class4, 85),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, VehicleClass.Class5, 85),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7501, 0, VehicleClass.Class9, 85),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, VehicleClass.Class10, 85),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 7500, 0, VehicleClass.Class11, 85),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 7500, 0, VehicleClass.Class12, 85),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 7500, 0, VehicleClass.Class16, 85),
+		[TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7501, 0, false, VehicleClass.Class1, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10001, 0, false, VehicleClass.Class2, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12001, 0, false, VehicleClass.Class3, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, false, VehicleClass.Class4, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16001, 0, true, VehicleClass.Class4, 85),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, false, VehicleClass.Class5, 85),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16001, 0, true, VehicleClass.Class5, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7501, 0, false, VehicleClass.Class9, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 7501, 0, true, VehicleClass.Class9, 85),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, false, VehicleClass.Class10, 85),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 7500, 0, true, VehicleClass.Class10, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 7500, 0, false, VehicleClass.Class11, 85),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 7500, 0, false, VehicleClass.Class12, 85),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 7500, 0, false, VehicleClass.Class16, 85),
 		]
 		public void SegmentDesignSpeedTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
-			double curbWeight, VehicleClass expectedClass, double speed)
+			double curbWeight, bool vocational, VehicleClass expectedClass, double speed)
 		{
 			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
-				curbWeight.SI<Kilogram>());
+				curbWeight.SI<Kilogram>(), vocational);
 
 			Assert.AreEqual(speed.KMPHtoMeterPerSecond(), segment.DesignSpeed);
 		}
 
 		[Test,
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1, 1600, null,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10000, 0, false, VehicleClass.Class1, 1600, null,
 			TestName = "SegmentLookupBodyWeight Class1 Rigid"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1, 1600, null,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10000, 0, false, VehicleClass.Class1, 1600, null,
 			TestName = "SegmentLookupBodyWeight Class1 Tractor"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2, 1900, 3400,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, false, VehicleClass.Class2, 1900, 3400,
 			TestName = "SegmentLookupBodyWeight Class2 Rigid"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2, 1900, 3400,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, false, VehicleClass.Class2, 1900, 3400,
 			TestName = "SegmentLookupBodyWeight Class2 Tractor"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3, 2000, null,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3, 2000, null,
 			TestName = "SegmentLookupBodyWeight Class3 Rigid"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3, 2000, null,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3, 2000, null,
 			TestName = "SegmentLookupBodyWeight Class3 Tractor"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class4, 2100, 5400,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, false, VehicleClass.Class4, 2100, 5400,
 			TestName = "SegmentLookupBodyWeight Class4"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class5, null, 7500,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, false, VehicleClass.Class5, null, 7500,
 			TestName = "SegmentLookupBodyWeight Class5"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class9, 2200, 5400,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, false, VehicleClass.Class9, 2200, 5400,
 			TestName = "SegmentLookupBodyWeight Class9"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class10, null, 7500,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, false, VehicleClass.Class10, null, 7500,
 			TestName = "SegmentLookupBodyWeight Class10"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 12000, 0, VehicleClass.Class11, 2200, 5400,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 12000, 0, false, VehicleClass.Class11, 2200, 5400,
 			TestName = "SegmentLookupBodyWeight Class11"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 12000, 0, VehicleClass.Class12, null, 7500,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 12000, 0, false, VehicleClass.Class12, null, 7500,
 			TestName = "SegmentLookupBodyWeight Class12"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 12000, 0, VehicleClass.Class16, null, null,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 12000, 0, false, VehicleClass.Class16, null, null,
 			TestName = "SegmentLookupBodyWeight Class16")]
 		public void SegmentLookupBodyTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
-			double curbWeight, VehicleClass expectedClass, int? expectedBodyWeight, int? expectedTrailerWeight)
+			double curbWeight, bool vocational, VehicleClass expectedClass, int? expectedBodyWeight, int? expectedTrailerWeight)
 		{
 			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
-				curbWeight.SI<Kilogram>());
+				curbWeight.SI<Kilogram>(), vocational);
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
 
 			if (expectedBodyWeight.HasValue) {
@@ -695,83 +709,99 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[Test,
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1, 3.6,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 10000, 0, false, VehicleClass.Class1, 3.6,
 			TestName = "SegmentLookupHeight Class1 Rigid"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10000, 0, VehicleClass.Class1, 3.6,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 10000, 0, false, VehicleClass.Class1, 3.6,
 			TestName = "SegmentLookupHeight Class1 Tractor"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2, 3.75,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, false, VehicleClass.Class2, 3.75,
 			TestName = "SegmentLookupHeight Class2 Rigid"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2, 3.75,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, false, VehicleClass.Class2, 3.75,
 			TestName = "SegmentLookupHeight Class2 Tractor"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3, 3.9,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3, 3.9,
 			TestName = "SegmentLookupHeight Class3 Rigid"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3, 3.9,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3, 3.9,
 			TestName = "SegmentLookupHeight Class3 Tractor"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class4, 4.0,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, false, VehicleClass.Class4, 4.0,
 			TestName = "SegmentLookupHeight Class4"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class5, 4.0,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, true, VehicleClass.Class4, 4.0,
+			TestName = "SegmentLookupHeight Class4"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, false, VehicleClass.Class5, 4.0,
 			TestName = "SegmentLookupHeight Class5"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 10000, 0, VehicleClass.Class9, 3.6,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, true, VehicleClass.Class5, 4.0,
+			TestName = "SegmentLookupHeight Class5"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 10000, 0, false, VehicleClass.Class9, 3.6,
 			TestName = "SegmentLookupHeight Class9 - 1"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 12000, 0, VehicleClass.Class9, 3.75,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 12000, 0, false, VehicleClass.Class9, 3.75,
 			TestName = "SegmentLookupHeight Class9 - 2"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class9, 3.9,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, false, VehicleClass.Class9, 3.9,
 			TestName = "SegmentLookupHeight Class9 - 3"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 18000, 0, VehicleClass.Class9, 4.0,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 18000, 0, false, VehicleClass.Class9, 4.0,
 			TestName = "SegmentLookupHeight Class9 - 4"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class9, 4.0,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, false, VehicleClass.Class9, 4.0,
 			TestName = "SegmentLookupHeight Class9 - other"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, VehicleClass.Class10, 4.0,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 40000, 0, true, VehicleClass.Class9, 4.0,
+			TestName = "SegmentLookupHeight Class9 - other"),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, false, VehicleClass.Class10, 4.0,
 			TestName = "SegmentLookupHeight Class10"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 12000, 0, VehicleClass.Class11, 4.0,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 40000, 0, true, VehicleClass.Class10, 4.0,
+			TestName = "SegmentLookupHeight Class10"),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 12000, 0, false, VehicleClass.Class11, 4.0,
 			TestName = "SegmentLookupHeight Class11"),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 12000, 0, VehicleClass.Class12, 4.0,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 12000, 0, false, VehicleClass.Class12, 4.0,
 			TestName = "SegmentLookupHeight Class12"),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 12000, 0, VehicleClass.Class16, 3.6,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 12000, 0, false, VehicleClass.Class16, 3.6,
 			TestName = "SegmentLookupHeight Class16")]
 		public void SegmentLookupHeightTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
-			double curbWeight, VehicleClass expectedClass, double expectedHeight)
+			double curbWeight, bool vocational, VehicleClass expectedClass, double expectedHeight)
 		{
 			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
-				curbWeight.SI<Kilogram>());
+				curbWeight.SI<Kilogram>(), vocational);
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
 			AssertHelper.AreRelativeEqual(expectedHeight, segment.VehicleHeight);
 		}
 
 		[Test,
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7501, 0, VehicleClass.Class1,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 7501, 0, false, VehicleClass.Class1,
 			new[] { 36.5, 36.5 }),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7501, 0, VehicleClass.Class1,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 7501, 0, false, VehicleClass.Class1,
 			new[] { 36.5, 36.5 }),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 12000, 0, false, VehicleClass.Class2,
 			new[] { 85.0, 45.2, 45.2 }),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, VehicleClass.Class2,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 12000, 0, false, VehicleClass.Class2,
 			new[] { 85.0, 45.2, 45.2 }),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3,
 			new[] { 47.7, 47.7 }),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, VehicleClass.Class3,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3,
 			new[] { 47.7, 47.7 }),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class4,
-			new[] { 98.9, 49.4, 49.4 }),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, VehicleClass.Class5,
-			new[] { 91.0, 140.5, 91.0, 140.5 }),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class9,
-			new[] { 101.4, 142.9, 51.9, 142.9, 51.9 }),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, VehicleClass.Class10,
-			new[] { 91.0, 140.5, 91.0, 140.5 }),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 40000, 0, VehicleClass.Class11,
-			new[] { 101.4, 142.9, 51.9, 142.9, 51.9, 51.9 }),
-		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, VehicleClass.Class12,
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, false, VehicleClass.Class4,
+			new[] { 98.9, 49.4, 49.4, 49.4 }),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, true, VehicleClass.Class4,
+			new[] { 49.4, 0.0 }),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, false, VehicleClass.Class5,
 			new[] { 91.0, 140.5, 91.0, 140.5, 91.0 }),
-		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, VehicleClass.Class16,
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, true, VehicleClass.Class5,
+			new[] { 0.0 }),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, false, VehicleClass.Class9,
+			new[] { 101.4, 142.9, 51.9, 142.9, 51.9 }),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, true, VehicleClass.Class9,
+			new[] { 51.9, 0.0 }),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, false, VehicleClass.Class10,
+			new[] { 91.0, 140.5, 91.0, 140.5 }),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, true, VehicleClass.Class10,
+			new[] { 0.0 }),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 40000, 0, false, VehicleClass.Class11,
+			new[] { 101.4, 142.9, 51.9, 142.9, 51.9, 0.0 }),
+		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, false, VehicleClass.Class12,
+			new[] { 91.0, 140.5, 91.0, 140.5, 0.0 }),
+		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, false, VehicleClass.Class16,
 			new[] { 0.0 })
 		]
 		public void SegmentLookupCargoVolumeTest(VehicleCategory category, AxleConfiguration axleConfiguration,
 			double grossWeight,
-			double curbWeight, VehicleClass expectedClass, double[] expectedCargoVolume)
+			double curbWeight, bool vocational, VehicleClass expectedClass, double[] expectedCargoVolume)
 		{
 			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
-				curbWeight.SI<Kilogram>());
+				curbWeight.SI<Kilogram>(), vocational);
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
 			Assert.AreEqual(expectedCargoVolume.Length, segment.Missions.Length);
 			for (var i = 0; i < expectedCargoVolume.Length; i++) {
@@ -793,7 +823,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
-				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
 
@@ -866,7 +896,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
-				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
 
@@ -939,7 +969,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
-				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class3, segment.VehicleClass);
 
@@ -992,14 +1022,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
-				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class4, segment.VehicleClass);
 
 			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
 			TestAcceleration(data);
 
-			Assert.AreEqual(3, segment.Missions.Length);
+			Assert.AreEqual(4, segment.Missions.Length);
 
 			AssertMission(segment.Missions[0],
 				vehicleData: vehicleData,
@@ -1034,6 +1064,22 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				maxLoad: 8400);
 
 			AssertMission(segment.Missions[2],
+						vehicleData: vehicleData,
+						missionType: MissionType.UrbanDelivery,
+						cosswindCorrection: "RigidSolo",
+						axleWeightDistribution: new[] { 0.45, 0.55 },
+						trailerAxleWeightDistribution: new double[] { },
+						trailerAxleCount: new int[] { },
+						bodyCurbWeight: 2100,
+						trailerCurbWeight: new double[] { },
+						trailerType: new TrailerType[] { },
+						lowLoad: 900,
+						refLoad: 4400,
+						trailerGrossVehicleWeight: new double[] { },
+						deltaCdA: 0,
+						maxLoad: 8400);
+
+			AssertMission(segment.Missions[3],
 				vehicleData: vehicleData,
 				missionType: MissionType.MunicipalUtility,
 				cosswindCorrection: "RigidSolo",
@@ -1051,6 +1097,62 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		/// <summary>
+		/// fixed reference weight, trailer only in longhaul
+		/// </summary>
+		[TestCase]
+		public void Segment4VocationalTest()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.RigidTruck,
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				GrossVehicleMassRating = 18000.SI<Kilogram>(),
+				CurbWeight = 7500.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, true);
+
+			Assert.AreEqual(VehicleClass.Class4, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(2, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0],
+				vehicleData: vehicleData,
+				missionType: MissionType.MunicipalUtility,
+				cosswindCorrection: "RigidSolo",
+				axleWeightDistribution: new[] { 0.45, 0.55 },
+				trailerAxleWeightDistribution: new double[] { },
+				trailerAxleCount: new int[] { },
+				bodyCurbWeight: 2100,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { },
+				lowLoad: 600,
+				refLoad: 3000,
+				trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
+				maxLoad: 8400);
+
+			AssertMission(segment.Missions[1],
+						vehicleData: vehicleData,
+						missionType: MissionType.Construction,
+						cosswindCorrection: "RigidSolo",
+						axleWeightDistribution: new[] { 0.45, 0.55 },
+						trailerAxleWeightDistribution: new double[] { },
+						trailerAxleCount: new int[] { },
+						bodyCurbWeight: 2000,
+						trailerCurbWeight: new double[] { },
+						trailerType: new TrailerType[] { },
+						lowLoad: 900,
+						refLoad: 4400,
+						trailerGrossVehicleWeight: new double[] { },
+						deltaCdA: 0,
+						maxLoad: 8500);
+		}
+
+		/// <summary>
 		/// Segment 5: fixed reference weight, trailer always used
 		/// </summary>
 		[TestCase]
@@ -1064,14 +1166,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
-				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class5, segment.VehicleClass);
 
 			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
 			TestAcceleration(data);
 
-			Assert.AreEqual(4, segment.Missions.Length);
+			Assert.AreEqual(5, segment.Missions.Length);
 
 			AssertMission(segment.Missions[0],
 				vehicleData: vehicleData,
@@ -1139,6 +1241,46 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		/// <summary>
+		/// Segment 5: fixed reference weight, trailer always used
+		/// </summary>
+		[TestCase]
+		public void Segment5VocationalTest()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.Tractor,
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				GrossVehicleMassRating = 18000.SI<Kilogram>(),
+				CurbWeight = 7500.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, true);
+
+			Assert.AreEqual(VehicleClass.Class5, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(1, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0],
+				vehicleData: vehicleData,
+				missionType: MissionType.Construction,
+				cosswindCorrection: "TractorSemitrailer",
+				axleWeightDistribution: new[] { 0.25, 0.25 },
+				trailerAxleWeightDistribution: new[] { 0.5 },
+				trailerAxleCount: new[] { 3 }, bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 6100.0 },
+				trailerType: new[] { TrailerType.STT1 },
+				lowLoad: 2600,
+				refLoad: 12900,
+				trailerGrossVehicleWeight: new[] { 24000.0 },
+				deltaCdA: 0,
+				maxLoad: 26400);
+
+		}
+
+		/// <summary>
 		/// Segment 9: fixed reference weight, trailer always used
 		/// </summary>
 		[TestCase]
@@ -1152,7 +1294,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
-				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class9, segment.VehicleClass);
 
@@ -1245,6 +1387,63 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		/// <summary>
+		/// Segment 9: fixed reference weight, trailer always used
+		/// </summary>
+		[TestCase]
+		public void Segment9VocationalTest()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.RigidTruck,
+				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
+				GrossVehicleMassRating = 24000.SI<Kilogram>(),
+				CurbWeight = 7500.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, true);
+
+			Assert.AreEqual(VehicleClass.Class9, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(2, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0],
+				vehicleData: vehicleData,
+				missionType: MissionType.MunicipalUtility,
+				cosswindCorrection: "RigidSolo",
+				axleWeightDistribution: new[] { 0.35, 0.4, 0.25 },
+				trailerAxleWeightDistribution: new double[] { },
+				trailerAxleCount: new int[] { },
+				bodyCurbWeight: 2200,
+				trailerCurbWeight: new double[] { },
+				trailerType: new TrailerType[] { },
+				lowLoad: 1200,
+				refLoad: 6000,
+				trailerGrossVehicleWeight: new double[] { },
+				deltaCdA: 0,
+				maxLoad: 14300);
+
+			AssertMission(segment.Missions[1],
+						vehicleData: vehicleData,
+						missionType: MissionType.Construction,
+						cosswindCorrection: "RigidSolo",
+						axleWeightDistribution: new[] { 0.35, 0.4, 0.25 },
+						trailerAxleWeightDistribution: new double[] { },
+						trailerAxleCount: new int[] { },
+						bodyCurbWeight: 3230,
+						trailerCurbWeight: new double[] { },
+						trailerType: new TrailerType[] { },
+						lowLoad: 1400,
+						refLoad: 7100,
+						trailerGrossVehicleWeight: new double[] { },
+						deltaCdA: 0,
+						maxLoad: 13270);
+
+		}
+
+		/// <summary>
 		/// Segment 10: fixed reference weight, trailer always used
 		/// </summary>
 		[TestCase]
@@ -1258,7 +1457,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
-				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class10, segment.VehicleClass);
 
@@ -1335,6 +1534,47 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		/// <summary>
+		/// Segment 10: fixed reference weight, trailer always used
+		/// </summary>
+		[TestCase]
+		public void Segment10VocationalTest()
+		{
+			var vehicleData = new {
+				VehicleCategory = VehicleCategory.Tractor,
+				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
+				GrossVehicleMassRating = 24000.SI<Kilogram>(),
+				CurbWeight = 7500.SI<Kilogram>()
+			};
+
+			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, true);
+
+			Assert.AreEqual(VehicleClass.Class10, segment.VehicleClass);
+
+			var data = AccelerationCurveReader.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
+			Assert.AreEqual(1, segment.Missions.Length);
+
+			AssertMission(segment.Missions[0],
+				vehicleData: vehicleData,
+				missionType: MissionType.Construction,
+				cosswindCorrection: "TractorSemitrailer",
+				axleWeightDistribution: new[] { 0.2, 0.1, 0.2 },
+				trailerAxleWeightDistribution: new[] { 0.5 },
+				trailerAxleCount: new[] { 2 },
+				bodyCurbWeight: 0,
+				trailerCurbWeight: new[] { 5600.0 },
+				trailerType: new[] { TrailerType.STT2 },
+				lowLoad: 2600,
+				refLoad: 12900,
+				trailerGrossVehicleWeight: new[] { 18000.0 },
+				deltaCdA: 0,
+				maxLoad: 26900);
+
+		}
+
+		/// <summary>
 		/// Segment 11: fixed reference weight, trailer always used
 		/// </summary>
 		[TestCase]
@@ -1348,7 +1588,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
-				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class11, segment.VehicleClass);
 
@@ -1445,14 +1685,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.35, 0.35, 0.3 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 2200,
+				bodyCurbWeight: 3230,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 1400,
 				refLoad: 7100,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 14300);
+				maxLoad: 13270);
 		}
 
 		/// <summary>
@@ -1469,7 +1709,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
-				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class12, segment.VehicleClass);
 
@@ -1550,15 +1790,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cosswindCorrection: "TractorSemitrailer",
 				axleWeightDistribution: new[] { 0.2, 0.15, 0.15 },
 				trailerAxleWeightDistribution: new[] { 0.5 },
-				trailerAxleCount: new[] { 3 },
+				trailerAxleCount: new[] { 2 },
 				bodyCurbWeight: 0,
-				trailerCurbWeight: new[] { 7500.0 },
-				trailerType: new[] { TrailerType.ST1 },
+				trailerCurbWeight: new[] { 5600.0 },
+				trailerType: new[] { TrailerType.STT2 },
 				lowLoad: 2600,
 				refLoad: 12900,
-				trailerGrossVehicleWeight: new[] { 24000.0 },
+				trailerGrossVehicleWeight: new[] { 18000.0 },
 				deltaCdA: 0,
-				maxLoad: 25000,
+				maxLoad: 26900,
 				ems: false);
 		}
 
@@ -1576,7 +1816,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
-				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class16, segment.VehicleClass);
 
@@ -1592,14 +1832,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.25, 0.25, 0.25, 0.25 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 0,
+				bodyCurbWeight: 4355,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 2600,
 				refLoad: 12900,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 28500);
+				maxLoad: 24145);
 		}
 
 		public static void AssertMission(Mission m, dynamic vehicleData, MissionType missionType, string cosswindCorrection,
@@ -1699,7 +1939,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var dataReader = new DeclarationModeVectoRunDataFactory(dataProvider, null);
 
 			var runs = dataReader.NextRun().ToList();
-			Assert.AreEqual(6, runs.Count);
+			Assert.AreEqual(8, runs.Count);
 			var withT1 = new[] { 14.9, 14.9, 19.2, 19.2 };
 			CollectionAssert.AreEqual(withT1, runs[0].VehicleData.AxleData.Select(a => a.Inertia.Value()));
 			CollectionAssert.AreEqual(withT1, runs[1].VehicleData.AxleData.Select(a => a.Inertia.Value()));
@@ -1710,6 +1950,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			CollectionAssert.AreEqual(bodyOnly, runs[4].VehicleData.AxleData.Select(a => a.Inertia.Value()));
 			CollectionAssert.AreEqual(bodyOnly, runs[5].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+
+			CollectionAssert.AreEqual(bodyOnly, runs[6].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(bodyOnly, runs[7].VehicleData.AxleData.Select(a => a.Inertia.Value()));
 		}
 
 		[TestCase]
@@ -1722,10 +1965,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var runs = dataReader.NextRun().ToList();
 
 			Assert.AreEqual(VehicleClass.Class5, runs[0].VehicleData.VehicleClass);
-			Assert.AreEqual(8, runs.Count);
+			Assert.AreEqual(10, runs.Count);
 
 			//var bodyOnly = new[] { 14.9, 14.9 };
 			var withST1 = new[] { 14.9, 14.9, 19.2, 19.2, 19.2 };
+			var withSTT1 = new[] { 14.9, 14.9, 19.2, 19.2, 19.2 };
 			var withST1andT2 = new[] { 14.9, 14.9, 19.2, 19.2, 19.2, 19.2, 19.2 };
 
 			CollectionAssert.AreEqual(withST1, runs[0].VehicleData.AxleData.Select(a => a.Inertia.Value()));
@@ -1739,6 +1983,199 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			CollectionAssert.AreEqual(withST1andT2, runs[6].VehicleData.AxleData.Select(a => a.Inertia.Value()));
 			CollectionAssert.AreEqual(withST1andT2, runs[7].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+
+			CollectionAssert.AreEqual(withSTT1, runs[8].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+			CollectionAssert.AreEqual(withSTT1, runs[9].VehicleData.AxleData.Select(a => a.Inertia.Value()));
+		}
+
+		[TestCase(false, false, false, PredictiveCruiseControlType.None, "0"),
+		 TestCase(true, false, false, PredictiveCruiseControlType.None, "1"),
+		 TestCase(true, false, false, PredictiveCruiseControlType.Option_1_2_3, "7/2"),
+		 TestCase(true, true, false, PredictiveCruiseControlType.Option_1_2, "10/1")]
+		public void TestADASCombinationLookup(
+			bool engineStopStart, bool ecoRollWOEngineStop, bool ecoRollWEngineStop, PredictiveCruiseControlType pcc,
+			string expectedADASGroup)
+		{
+			var adas = DeclarationData.ADASCombinations.Lookup(engineStopStart, ecoRollWOEngineStop, ecoRollWEngineStop, pcc);
+			Assert.AreEqual(adas.ID, expectedADASGroup);
+		}
+
+		[TestCase(true, true, true, PredictiveCruiseControlType.Option_1_2),
+		TestCase(true, true, true, PredictiveCruiseControlType.None)]
+		public void TestInvalidADASCombinationLookup(
+			bool engineStopStart, bool ecoRollWOEngineStop, bool ecoRollWEngineStop, PredictiveCruiseControlType pcc)
+		{
+			AssertHelper.Exception<VectoException>(() => {
+				DeclarationData.ADASCombinations.Lookup(engineStopStart, ecoRollWOEngineStop, ecoRollWEngineStop, pcc);
+			});
+		}
+
+
+		[TestCase(VehicleClass.Class4, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
+		TestCase(VehicleClass.Class5, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
+		TestCase(VehicleClass.Class9, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
+		TestCase(VehicleClass.Class10, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
+		 TestCase(VehicleClass.Class4, "4/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.36),
+		TestCase(VehicleClass.Class4, "8/2", MissionType.LongHaul, LoadingType.LowLoading, -0.11),
+		TestCase(VehicleClass.Class4, "11/1", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.79),
+		TestCase(VehicleClass.Class5, "3", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.18),
+		TestCase(VehicleClass.Class5, "5", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.43),
+		TestCase(VehicleClass.Class5, "11/1", MissionType.UrbanDelivery, LoadingType.ReferenceLoad, -0.69),
+		TestCase(VehicleClass.Class9, "1", MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad, -0.25),
+		TestCase(VehicleClass.Class9, "6", MissionType.LongHaulEMS, LoadingType.ReferenceLoad, -0.16),
+		TestCase(VehicleClass.Class9, "10/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.54),
+		TestCase(VehicleClass.Class10, "2", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.08),
+		TestCase(VehicleClass.Class10, "4/2", MissionType.RegionalDeliveryEMS, LoadingType.LowLoading, -0.56),
+		TestCase(VehicleClass.Class10, "11/2", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -1.40)
+
+			]
+		public void TestADASBenefitLookup(
+			VehicleClass group, string adasConfig, MissionType mission, LoadingType loading, double expectedBenefit)
+		{
+			var expectedCorrectionFactor = 1 + expectedBenefit / 100.0;
+			var factor = DeclarationData.ADASBenefits.Lookup(
+				group, new ADASCombination() { ID = adasConfig }, mission, loading);
+			Assert.AreEqual(expectedCorrectionFactor, factor, 1e-6, "group: {0}, adas: {1}, mission: {2}, payload: {3}, expectedBenefit: {4}, actualBenefit: {5}",
+				group, adasConfig, mission, loading, expectedBenefit, (factor - 1)*100.0);
+		}
+
+		[TestCase(VehicleClass.Class4, "3", MissionType.LongHaul, LoadingType.FullLoading),
+		TestCase(VehicleClass.Class4, "5", MissionType.LongHaulEMS, LoadingType.LowLoading),
+		TestCase(VehicleClass.Class7, "10/1", MissionType.LongHaul, LoadingType.LowLoading),
+		TestCase(VehicleClass.Class8, "2", MissionType.RegionalDelivery, LoadingType.LowLoading),
+			]
+		public void TestIvalidADASBenefitLookup(
+			VehicleClass group, string adasConfig, MissionType mission, LoadingType loading)
+		{
+			var expectedBenefit = 0.0;
+			var expectedCorrectionFactor = 1 + expectedBenefit / 100.0;
+			var factor = DeclarationData.ADASBenefits.Lookup(
+				group, new ADASCombination() { ID = adasConfig }, mission, loading);
+			Assert.AreEqual(expectedCorrectionFactor, factor, 1e-6, "group: {0}, adas: {1}, mission: {2}, payload: {3}, expectedBenefit: {4}, actualBenefit: {5}",
+							group, adasConfig, mission, loading, expectedBenefit, (factor - 1) * 100.0);
+		}
+
+		[
+			TestCase("Diesel CI", null, 1.0),
+			TestCase("Ethanol CI", null, 1.011811),
+			TestCase("Petrol PI", null, 1.0),
+			TestCase("Ethanol PI", null, 0.993174),
+			TestCase("NG PI", TankSystem.Liquefied, 0.918533),
+			TestCase("NG PI", TankSystem.Compressed, 0.939583)
+			]
+		public void TestNCVCorrection(string fuelTypeStr, TankSystem? tankSystem, double expectedCorrectionFactor)
+		{
+			var fuelType = fuelTypeStr.ParseEnum<FuelType>();
+			var cf = DeclarationData.FuelData.Lookup(fuelType, tankSystem).HeatingValueCorrection;
+
+			Assert.AreEqual(expectedCorrectionFactor, cf, 1e-6);
+		}
+
+		[
+		TestCase(VehicleClass.Class4, true, 169.9, WeightingGroup.Group4UD),
+		TestCase(VehicleClass.Class4, false, 169.9, WeightingGroup.Group4UD),
+		TestCase(VehicleClass.Class4, false, 170, WeightingGroup.Group4RD),
+		TestCase(VehicleClass.Class4, true, 170, WeightingGroup.Group4RD),
+		TestCase(VehicleClass.Class4, true, 264.9, WeightingGroup.Group4RD),
+		TestCase(VehicleClass.Class4, true, 265, WeightingGroup.Group4LH),
+
+		TestCase(VehicleClass.Class5, false, 169.9, WeightingGroup.Group5RD),
+		TestCase(VehicleClass.Class5, false, 170, WeightingGroup.Group5RD),
+		TestCase(VehicleClass.Class5, false, 264.9, WeightingGroup.Group5RD),
+		TestCase(VehicleClass.Class5, false, 265, WeightingGroup.Group5RD),
+		TestCase(VehicleClass.Class5, true, 264.9, WeightingGroup.Group5RD),
+		TestCase(VehicleClass.Class5, true, 265, WeightingGroup.Group5LH),
+
+		TestCase(VehicleClass.Class9, false, 169.9, WeightingGroup.Group9RD),
+		TestCase(VehicleClass.Class9, false, 264.9, WeightingGroup.Group9RD),
+		TestCase(VehicleClass.Class9, false, 265, WeightingGroup.Group9RD),
+		TestCase(VehicleClass.Class9, true, 169.9, WeightingGroup.Group9LH),
+		TestCase(VehicleClass.Class9, true, 264.9, WeightingGroup.Group9LH),
+		TestCase(VehicleClass.Class9, true, 265, WeightingGroup.Group9LH),
+
+		TestCase(VehicleClass.Class10, false, 169.9, WeightingGroup.Group10RD),
+		TestCase(VehicleClass.Class10, false, 264.9, WeightingGroup.Group10RD),
+		TestCase(VehicleClass.Class10, false, 265, WeightingGroup.Group10RD),
+		TestCase(VehicleClass.Class10, true, 169.9, WeightingGroup.Group10LH),
+		TestCase(VehicleClass.Class10, true, 264.9, WeightingGroup.Group10LH),
+		TestCase(VehicleClass.Class10, true, 265, WeightingGroup.Group10LH),
+			]
+		public void TestWeightingGroupLookup(
+			VehicleClass vehicleGroup, bool sleeperCab, double ratedPowerkWm, WeightingGroup expectedWeightingGroup)
+		{
+			var wGroup = DeclarationData.WeightingGroup.Lookup(
+				vehicleGroup, sleeperCab, ratedPowerkWm.SI(Unit.SI.Kilo.Watt).Cast<Watt>());
+			Assert.AreEqual(expectedWeightingGroup, wGroup);
+		}
+
+		[
+			TestCase(WeightingGroup.Group4UD, 0, 0, 0, 0, 0.5, 0.5),
+			TestCase(WeightingGroup.Group4RD, 0.45, 0.45, 0.05, 0.05, 0, 0),
+			TestCase(WeightingGroup.Group4LH, 0.05, 0.05, 0.45, 0.45, 0, 0),
+
+			TestCase(WeightingGroup.Group5RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
+			TestCase(WeightingGroup.Group5LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+
+			TestCase(WeightingGroup.Group9RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
+			TestCase(WeightingGroup.Group9LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+
+			TestCase(WeightingGroup.Group10RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
+			TestCase(WeightingGroup.Group10LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+		]
+		public void TestMissionProfileWeights(
+			WeightingGroup group, double eRdLow, double eRdRef, double eLhLow, double eLhRef, double eUdLow, double eUdRef)
+		{
+			var factors = DeclarationData.WeightingFactors.Lookup(group);
+
+			Assert.AreEqual(1, factors.Values.Sum(x => x), 1e-9);
+
+			Assert.AreEqual(eLhLow, factors[Tuple.Create(MissionType.LongHaul, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(eLhRef, factors[Tuple.Create(MissionType.LongHaul, LoadingType.ReferenceLoad)], 1e-9);
+			Assert.AreEqual(eRdLow, factors[Tuple.Create(MissionType.RegionalDelivery, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(eRdRef, factors[Tuple.Create(MissionType.RegionalDelivery, LoadingType.ReferenceLoad)], 1e-9);
+			Assert.AreEqual(eUdLow, factors[Tuple.Create(MissionType.UrbanDelivery, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(eUdRef, factors[Tuple.Create(MissionType.UrbanDelivery, LoadingType.ReferenceLoad)], 1e-9);
+
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.Construction, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.Construction, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.MunicipalUtility, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.MunicipalUtility, LoadingType.ReferenceLoad)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.LongHaulEMS, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.LongHaulEMS, LoadingType.ReferenceLoad)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad)], 1e-9);
+		}
+
+
+		[
+			TestCase(0.0030, "A"),
+			TestCase(0.0040, "A"),
+			TestCase(0.0050, "B"),
+			TestCase(0.0060, "C"),
+			TestCase(0.0070, "D"),
+			TestCase(0.0080, "E"),
+
+			TestCase(0.0041, "B"),
+			TestCase(0.0051, "C"),
+			TestCase(0.0061, "D"),
+			TestCase(0.0071, "E"),
+			TestCase(0.0081, "F"),
+
+			TestCase(0.00402, "A"),
+			TestCase(0.004049, "A"),
+			TestCase(0.00405, "B"),
+			TestCase(0.00407, "B"),
+
+			TestCase(0.00502, "B"),
+			TestCase(0.005049, "B"),
+			TestCase(0.00505, "C"),
+			TestCase(0.00507, "C"),
+			]
+		public void TestTyreLabelLookup(double rrc, string expectedClass)
+		{
+			var tyreClass = DeclarationData.Wheels.TyreClass.Lookup(rrc);
+			//Assert.IsTrue(expectedClass.Equals(tyreClass, StringComparison.InvariantCultureIgnoreCase));
+			Assert.AreEqual(expectedClass, tyreClass);
 		}
 	}
 }

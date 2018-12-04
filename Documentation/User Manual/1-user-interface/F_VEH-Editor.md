@@ -4,7 +4,7 @@
 
 ###Description
 
-The [Vehicle File (.vveh)](#vehicle-file-.vveh) defines the main vehicle/chassis parameters like axles including [RRC](#vehicle-rolling-resistance-coefficient)s, air resistance and weight.
+The [Vehicle File (.vveh)](#vehicle-file-.vveh) defines the main vehicle/chassis parameters like axles including [RRC](#vehicle-rolling-resistance-coefficient)s, air resistance and masses.
 
 The Vehicle Editor contains 3 tabs to edit all vehicle-related parameters. The 'General' tab allows to input mass, loading, air resistance, vehicle axles, etc. The 'Powertrain' allows to define the retarder, an optional angle drive, or PTO consumer. In the third tab the engine torque can be limited to a maximum for individual gears.
 
@@ -18,33 +18,33 @@ VECTO automatically uses relative paths if the input file (e.g. Retarder Losses 
 ###General vehicle parameters
 
 Vehicle Category
-: Needed for [Declaration Mode](#declaration-mode) to identify the HDV Class.
+: Needed for [Declaration Mode](#declaration-mode) to identify the HDV Group.
 
 Axle Configuration
-: Needed for [Declaration Mode](#declaration-mode) to identify the HDV Class.
+: Needed for [Declaration Mode](#declaration-mode) to identify the HDV Group.
 
-Gross Vehicle Mass Rating [t]
-: Needed for [Declaration Mode](#declaration-mode) to identify the HDV Class.
+Technically Permissible Maximum Laden Mass [t]
+: Needed for [Declaration Mode](#declaration-mode) to identify the HDV Group.
 
-HDV Class
-: Displays the automatically selected HDV Class depending on the settings above.
+HDV Group
+: Displays the automatically selected HDV Group depending on the settings above.
 
-###Weight/Loading
+###Masses/Loading
 
-Curb Weight Vehicle
-: Specifies the vehicle's weight without loading
+Corrected Actual Curb Mass Vehicle
+: Specifies the vehicle's mass without loading
 
 <div class="engineering">
-Curb Weight Extra Trailer/Body
-: Specifies additional weight due to superstructures on the vehicle or an additional trailer
+Curb Mass Extra Trailer/Body
+: Specifies additional mass due to superstructures on the vehicle or an additional trailer
 
 Loading
 : Speciefies the loading of both, the vehicle and if available the trailer
 </div>
 
-**Max. Loading** displays a hint for the maximum possible loading for the selected vehicle depending on curb weight and GVW values (without taking into account the loading capacity of an additional trailer).
+**Max. Loading** displays a hint for the maximum possible loading for the selected vehicle depending on curb mass and TPMLM values (without taking into account the loading capacity of an additional trailer).
 
-***Note:*** *VECTO uses the sum of* ***Curb Weight Vehicle, Curb Weight Extra Trailer/Body*** *and* ***Loading*** *for calculation! The total weight is distributed to all defined axles according to the relative weight share.*
+***Note:*** *VECTO uses the sum of* ***Corrected Actual Curb Mass Vehicle, Curb Mass Extra Trailer/Body*** *and* ***Loading*** *for calculation! The total mass is distributed to all defined axles according to the relative axle load share.*
 
 <div class="declaration">
 In Declaration Mode only the vehicle itself needs to be specified. Depending on the vehicle category and mission the simulation adds a standard trailer for certain missions.
@@ -91,7 +91,7 @@ Use the ![](pics/plus-circle-icon.png) and ![](pics/minus-circle-icon.png) butto
 <div class="declaration">
 In [Declaration mode](#declaration-mode) only the axles of the truck have to be given (e.g., 2 axles for a 4x2 truck). 
 The dynamic tyre radius is derived from the second axle as it is assumed this is the driven axle.
-For missions with a trailer predefined wheels and weight-shares are added by Vecto automatically.
+For missions with a trailer predefined wheels and load-shares are added by Vecto automatically.
 </div>
 
 Doubleclick entries to edit existing axle configurations.

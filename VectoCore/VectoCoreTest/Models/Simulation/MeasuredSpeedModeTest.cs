@@ -230,7 +230,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			fullLoad.Columns.Add("drag torque");
 			fullLoad.Columns.Add("PT1");
 			fullLoad.Rows.Add("0", "5000", "-5000", "0");
-			fullLoad.Rows.Add("3000", "5000", "-5000", "0");
+			fullLoad.Rows.Add("2000", "5000", "-5000", "0");
+			fullLoad.Rows.Add("3000", "0", "-5000", "0");
 
 			var fullLoadCurve = FullLoadCurveReader.Create(fullLoad);
 			var data = new VectoRunData {
@@ -297,7 +298,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			fullLoad.Columns.Add("drag torque");
 			fullLoad.Columns.Add("PT1");
 			fullLoad.Rows.Add("0", "5000", "-5000", "0");
-			fullLoad.Rows.Add("3000", "5000", "-5000", "0");
+			fullLoad.Rows.Add("2000", "5000", "-5000", "0");
+			fullLoad.Rows.Add("3000", "0", "-5000", "0");
 
 			var fullLoadCurve = FullLoadCurveReader.Create(fullLoad);
 			var data = new VectoRunData {

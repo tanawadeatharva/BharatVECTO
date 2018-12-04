@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			bool overspeed = false, KilogramSquareMeter gearBoxInertia = null)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, FuelType.DieselCI, fileWriter) {
+			var modData = new ModalDataContainer(modFileName, FuelData.Diesel, fileWriter) {
 				WriteModalResults = true,
 				HasTorqueConverter = true
 			};

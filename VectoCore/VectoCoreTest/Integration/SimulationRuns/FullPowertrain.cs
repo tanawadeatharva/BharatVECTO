@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
-			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", FuelType.DieselCI, fileWriter);
+			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", FuelData.Diesel, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 			container.RunData = new VectoRunData() { SimulationType = SimulationType.DistanceCycle };
 
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
-			var modData = new ModalDataContainer("Coach_FullPowertrain", FuelType.DieselCI, fileWriter);
+			var modData = new ModalDataContainer("Coach_FullPowertrain", FuelData.Diesel, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 			container.RunData = new VectoRunData() {SimulationType = SimulationType.DistanceCycle };
 
@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain_LowSpeed()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
-			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", FuelType.DieselCI, fileWriter);
+			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", FuelData.Diesel, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var gearboxData = CreateGearboxData();

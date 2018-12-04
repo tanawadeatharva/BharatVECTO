@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			var retVal = DrivingModes[CurrentDrivingMode].Request(absTime, ds, targetVelocity, gradient);
+			var retVal = DrivingModes[CurrentDrivingMode].Request(absTime, ds, VectoMath.Min(Driver.DataBus.MaxVehicleSpeed, targetVelocity), gradient);
 
 			return retVal;
 		}
@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Driver.DriverBehavior = DrivingBehavior.Halted;
 			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
-			return Driver.DrivingActionHalt(absTime, dt, targetVelocity, gradient);
+			return Driver.DrivingActionHalt(absTime, dt, VectoMath.Min(Driver.DataBus.MaxVehicleSpeed, targetVelocity), gradient);
 		}
 
 		private void UpdateDrivingAction(Meter currentDistance, Meter ds)
@@ -289,8 +289,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (prohibitOverspeed) {
 				return false;
 			}
-			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverMode.Overspeed &&
-					velocity > Driver.DriverData.OverSpeedEcoRoll.MinSpeed;
+			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverMode.Overspeed 
+				&& velocity > Driver.DriverData.OverSpeedEcoRoll.MinSpeed 
+				&& (velocity + Driver.DriverData.OverSpeedEcoRoll.OverSpeed) < (Driver.DataBus.MaxVehicleSpeed ?? 500.KMPHtoMeterPerSecond());
 		}
 	}
 

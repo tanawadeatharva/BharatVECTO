@@ -82,6 +82,7 @@ $P_{avg} = \frac{1}{simulation interval} \int{P(t) dt}$.
 | FC-AUXc			|	[g/h]	|	Fuel consumption after [Auxiliary-Start/Stop Correction](#engine-fuel-consumption-calculation) (based on FC) |
 | FC-WHTCc			|	[g/h]	|	Fuel consumption after [WHTC Correction](#engine-fuel-consumption-calculation) (based on FC-AUXc) |
 | FC-AAUX			|	[g/h]	|	Fuel consumption computed by the AAUX module considering smart auxiliaries |
+| FC-ADAS			|	[g/h]	|	Fuel consumption corrected for specified ADAS technologies (declaration mode only) |
 | FC-Final			|	[g/h]	|	Final fuel consumption value after all applicable corrections |
 
 

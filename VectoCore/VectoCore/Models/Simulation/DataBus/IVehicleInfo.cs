@@ -59,5 +59,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		Newton RollingResistance(Radian gradient);
 
 		Newton SlopeResistance(Radian gradient);
+
+		MeterPerSecond MaxVehicleSpeed { get; }
+
 	}
 }
