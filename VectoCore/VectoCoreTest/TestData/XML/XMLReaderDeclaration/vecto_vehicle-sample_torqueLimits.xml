@@ -27,6 +27,7 @@
 		<TorqueLimits>
 			<Entry gear="1" maxTorque="2000"/>
 			<Entry gear="2" maxTorque="2000"/>
+      <Entry gear="11" maxTorque="2000"/>
 			<Entry gear="12" maxTorque="1500"/>
 		</TorqueLimits>
 		<Components>
