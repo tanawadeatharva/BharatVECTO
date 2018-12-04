@@ -2,7 +2,7 @@
 
 **VECTO 3.3.0**
 
-***Build 1432 (2018-12-03) OFFICIAL RELEASE***
+***Build 1433 (2018-12-03) OFFICIAL RELEASE***
 
 - Bugfixes (compared to 3.3.0.1250)
     * [VECTO-723] - Simulation aborts with engine speed too high in RD cycle
@@ -18,6 +18,7 @@
     * [VECTO-704] - Allow VTP-simulations for AT gearboxes
 - Changes (compared to 3.3.0.1398)
     * [VECTO-795] - VECTO Hashing Tool crashes
+    * [VECTO-802] - Error in XML schema for manufacturer's record file
 
 
 ***Build 1398 (2018-10-30) RELEASE CANDIDATE***
