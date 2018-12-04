@@ -2,9 +2,27 @@
 
 **VECTO 3.3.0**
 
-***Build 1398 (2018-10-30)***
+***Build 1432 (2018-12-03) OFFICIAL RELEASE***
 
-- Bugfixes
+- Bugfixes (compared to 3.3.0.1250)
+    * [VECTO-723] - Simulation aborts with engine speed too high in RD cycle
+    * [VECTO-724] - Simulation aborts with error 'EngineSpeedTooHigh' - duplicate of VECTO-744
+    * [VECTO-728] - Simulation aborts when vehicle's max speed (n95h) is below the target speed
+    * [VECTO-730] - Simulation Aborts with ResponseOverload
+    * [VECTO-744] - ResponseEngineSpeedTooHigh (due to torque limits in gearbox)
+    * [VECTO-731] - Case Mismatch - Torque Converter
+    * [VECTO-711] - Elements without types in CIF and MRF
+    * [VECTO-757] - Correct contact mail address in Hashing Tool
+    * [VECTO-703] - PTO output in MRF file
+    * [VECTO-713] - Manufacturer Information File in the legislation is not compatible with the Simulation results
+    * [VECTO-704] - Allow VTP-simulations for AT gearboxes
+- Changes (compared to 3.3.0.1398)
+    * [VECTO-795] - VECTO Hashing Tool crashes
+
+
+***Build 1398 (2018-10-30) RELEASE CANDIDATE***
+
+- Bugfixes (since 3.3.0.1250)
     * [VECTO-723] - Simulation aborts with engine speed too high in RD cycle
     * [VECTO-724] - Simulation aborts with error 'EngineSpeedTooHigh' - duplicate of VECTO-744
     * [VECTO-728] - Simulation aborts when vehicle's max speed (n95h) is below the target speed
