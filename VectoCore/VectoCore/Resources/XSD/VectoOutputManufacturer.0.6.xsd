@@ -376,7 +376,7 @@
 	</xs:complexType>
 	<xs:complexType name="TorqueLimitsType">
 		<xs:sequence>
-			<xs:element name="Entry">
+			<xs:element name="Entry" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:complexContent>
 						<xs:extension base="TorqueLimitsEntryType"/>
@@ -519,7 +519,7 @@
 			<xs:element name="Model" type="vdecdef:ModelType"/>
 			<xs:element name="Manufacturer" type="vdecdef:ManufacturerType"/>
 			<xs:element name="ManufacturerAddress" type="vdecdef:ManufacturerAddressType"/>
-			<xs:element name="VIN">
+			<xs:element name="VIN" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>P238</xs:documentation>
 				</xs:annotation>
