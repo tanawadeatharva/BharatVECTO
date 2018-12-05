@@ -2755,6 +2755,9 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_exempted.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_LNG.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL_updated.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
