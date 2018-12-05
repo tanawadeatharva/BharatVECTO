@@ -85,7 +85,7 @@ Partial Class JiraDialog
 		Me.LinkLabel3.Size = New System.Drawing.Size(122, 13)
 		Me.LinkLabel3.TabIndex = 18
 		Me.LinkLabel3.TabStop = True
-		Me.LinkLabel3.Text = "vecto@jrc.ec.europa.eu"
+		Me.LinkLabel3.Text = "JRC-VECTO@ec.europa.eu"
 		'
 		'Label2
 		'
