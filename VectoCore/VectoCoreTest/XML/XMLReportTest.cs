@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
@@ -47,6 +48,7 @@ namespace TUGraz.VectoCore.Tests.XML
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 		const string SampleVehicleDeclTqLimits = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_torqueLimits.xml";
+		const string SampleVehicleDeclLNG = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_LNG.xml";
 
 		const string SampleVehicleDeclAT = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_AT.xml";
 
@@ -58,7 +60,8 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		[TestCase(SampleVehicleDecl),
 		TestCase(SampleVehicleDeclTqLimits),
-		TestCase(SampleVehicleDeclAT)]
+		TestCase(SampleVehicleDeclAT),
+		TestCase(SampleVehicleDeclLNG)]
 		public void RunDeclarationJob(string filename)
 		{
 			var fileWriter = new FileOutputWriter(filename);
@@ -77,12 +80,19 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var customerRecord = fileWriter.XMLCustomerReportName;
 			var manufacturerRecord = fileWriter.XMLFullReportName;
-			
-			var validator1 = new XMLValidator(XmlReader.Create(customerRecord));
-			Assert.IsTrue(validator1.ValidateXML(XMLValidator.XmlDocumentType.CustomerReport), customerRecord);
 
-			var validator2 = new XMLValidator(XmlReader.Create(manufacturerRecord));
-			Assert.IsTrue(validator2.ValidateXML(XMLValidator.XmlDocumentType.ManufacturerReport), manufacturerRecord);
+			var validationMsg1 = new List<string> {customerRecord} ;
+
+			var validator1 = new XMLValidator(XmlReader.Create(customerRecord), validationErrorAction: (s,e) => {
+				validationMsg1.Add(e.ValidationEventArgs.Message);
+			});
+			Assert.IsTrue(validator1.ValidateXML(XMLValidator.XmlDocumentType.CustomerReport), string.Join("\n", validationMsg1));
+
+			var validationMsg2 = new List<string> {manufacturerRecord};
+			var validator2 = new XMLValidator(XmlReader.Create(manufacturerRecord), validationErrorAction: (s,e) => {
+				validationMsg2.Add(e.ValidationEventArgs.Message);
+			});
+			Assert.IsTrue(validator2.ValidateXML(XMLValidator.XmlDocumentType.ManufacturerReport), string.Join("\n", validationMsg2));
 		}
 	}
 }
