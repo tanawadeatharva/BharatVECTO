@@ -35,12 +35,16 @@ using System.Xml;
 using System.Xml.XPath;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
+using TUGraz.VectoCore.Tests.XML;
+using TUGraz.VectoCore.Utils;
 
 
 namespace TUGraz.VectoCore.Tests.Integration
@@ -73,16 +77,22 @@ namespace TUGraz.VectoCore.Tests.Integration
 				Validate = false,
 			};
 			jobContainer.AddRuns(runsFactory);
-			jobContainer.Execute();
-			jobContainer.WaitFinished();
+
+			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
+			xmlReport.DoWriteReport();
 
 			var manufacturerReport = xmlReport.FullReport;
 
 			Assert.AreEqual(5, manufacturerReport.XPathSelectElement("//*[local-name()='VehicleGroup']")?.Value.ToInt());
 
+			Assert.IsFalse(XmlConvert.ToBoolean(manufacturerReport.XPathSelectElement("//*[local-name()='PTO']").Value));
+
 			var reportWheels = manufacturerReport.XPathSelectElements("//*[local-name()='TyreCertificationNumber']").ToList();
-			var i = 0;
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Axles.Count, reportWheels.Count);
+
+			var i = 0;
 			foreach (var axleDeclarationInputData in dataProvider.JobInputData.Vehicle.Axles) {
 				Assert.AreEqual(axleDeclarationInputData.Tyre.CertificationNumber, reportWheels[i++].Value);
 			}
@@ -92,6 +102,81 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.AreEqual(2, digestWheels.Count());
 			foreach (var digestWheel in digestWheels) {
 				Assert.IsFalse(string.IsNullOrWhiteSpace(digestWheel.Value));
+			}
+		}
+
+		[TestCase()]
+		public void TestXMLReportPTO()
+		{
+			var ptoGearWheels = XMLDeclarationInputTest.GetEnumOptions("PTOShaftsGearWheelsType", "1.0");
+			var ptoOthers = XMLDeclarationInputTest.GetEnumOptions("PTOOtherElementsType", "1.0");
+
+			foreach (var ptoGearWheel in ptoGearWheels) {
+				foreach (var ptoOther in ptoOthers) {
+					if (ptoGearWheel == "none" || ptoGearWheel == "only one engaged gearwheel above oil level") {
+						if (ptoOther != "none") {
+							continue;
+						}
+					} else {
+						if (ptoOther == "none") {
+							continue;
+						}
+					}
+
+					var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
+
+					var doc = new XmlDocument();
+					doc.Load(XmlReader.Create(jobfile));
+					var nav = doc.CreateNavigator();
+					var manager = new XmlNamespaceManager(nav.NameTable);
+					var helper = new XPathHelper(ExecutionMode.Declaration);
+					helper.AddNamespaces(manager);
+					var ptoGearWheelsNode = nav.SelectSingleNode(
+						helper.QueryAbs(
+							helper.NSPrefix(
+								XMLNames.VectoInputDeclaration,
+								Constants.XML.RootNSPrefix),
+							XMLNames.Component_Vehicle,
+							XMLNames.Vehicle_PTO,
+							XMLNames.Vehicle_PTO_ShaftsGearWheels),
+						manager);
+					ptoGearWheelsNode.SetValue(ptoGearWheel);
+					var ptoOtherNode = nav.SelectSingleNode(
+						helper.QueryAbs(
+							helper.NSPrefix(
+								XMLNames.VectoInputDeclaration,
+								Constants.XML.RootNSPrefix),
+							XMLNames.Component_Vehicle,
+							XMLNames.Vehicle_PTO,
+							XMLNames.Vehicle_PTO_OtherElements),
+						manager);
+					ptoOtherNode.SetValue(ptoOther);
+
+					var modified = XmlReader.Create(new StringReader(nav.OuterXml));
+
+					var writer = new FileOutputWriter(jobfile);
+					var xmlReport = new XMLDeclarationReport(writer);
+					var sumData = new SummaryDataContainer(writer);
+					var jobContainer = new JobContainer(sumData);
+
+					var dataProvider = new XMLDeclarationInputDataProvider(modified, true);
+
+					var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
+						WriteModalResults = false,
+						Validate = false,
+					};
+					jobContainer.AddRuns(runsFactory);
+
+					xmlReport.DoWriteReport();
+
+					var manufacturerReport = xmlReport.FullReport;
+
+					Assert.AreEqual(
+						ptoGearWheel != "none",
+						XmlConvert.ToBoolean(manufacturerReport.XPathSelectElement("//*[local-name()='PTO']").Value),
+						"PTO Type: {0} {1}", ptoGearWheel, ptoOther);
+
+				}
 			}
 		}
 	}

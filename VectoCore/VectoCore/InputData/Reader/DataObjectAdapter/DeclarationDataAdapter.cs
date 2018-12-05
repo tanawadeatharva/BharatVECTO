@@ -256,7 +256,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					ExecutionMode.Declaration, ratio,
 					DeclarationData.TorqueConverter.CLUpshiftMinAcceleration, DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
 				retVal.TorqueConverterData.ModelName = gearbox.TorqueConverter.Model;
-				retVal.TorqueConverterData.DigestValueInput = gearbox.TorqueConverter.DigestValue.DigestValue;
+				retVal.TorqueConverterData.DigestValueInput = gearbox.TorqueConverter.DigestValue?.DigestValue;
 			}
 
 			return retVal;
