@@ -93,6 +93,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
+		public bool TCLocked
+		{
+			get {
+				if (Gearbox == null) {
+					return true;
+				}
+				return  Gearbox.TCLocked;
+			}
+		}
+
 		public MeterPerSecond StartSpeed
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
