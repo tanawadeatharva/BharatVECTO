@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	public sealed class TransmissionLossMap : LoggingObject
 	{
-		[ValidateObject] private readonly IReadOnlyList<GearLossMapEntry> _entries;
+		[ValidateObject] internal readonly IReadOnlyList<GearLossMapEntry> _entries;
 
 		private readonly double _ratio;
 
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			[Required, SIRange(0, 10000 * Constants.RPMToRad)]
 			public PerSecond InputSpeed { get; private set; }
 
-			[Required, SIRange(-100000, 100000)]
+			//[Required, SIRange(-100000, 100000)]
 			public NewtonMeter InputTorque { get; private set; }
 
 			[Required, SIRange(0, 100000)]

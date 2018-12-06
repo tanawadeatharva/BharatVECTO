@@ -109,14 +109,14 @@ Public Class Vehicle
 													segment.Missions.First().Loadings.First().Value, segment.MunicipalBodyWeight)
 				airdragData = doa.CreateAirdragData(vehicle, segment.Missions.First(), segment)
 				retarderData = doa.CreateRetarderData(vehicle)
-				angledriveData = doa.CreateAngledriveData(vehicle, False)
+				angledriveData = doa.CreateAngledriveData(vehicle)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
 				airdragData = doa.CreateAirdragData(vehicle, vehicle)
 				retarderData = doa.CreateRetarderData(vehicle)
-				angledriveData = doa.CreateAngledriveData(vehicle, True)
+				angledriveData = doa.CreateAngledriveData(vehicle)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
 			End If
 

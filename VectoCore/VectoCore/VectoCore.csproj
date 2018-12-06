@@ -213,6 +213,7 @@
     <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
     <Compile Include="OutputData\XML\XMLEngineeringWriter.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReport.cs" />
+    <Compile Include="Utils\MeanShiftClustering.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />

@@ -77,6 +77,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly StandardBodies StandardBodies = new StandardBodies();
 		public static readonly Payloads Payloads = new Payloads();
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
+		public const double LossMapExtrapolationFactor = 3;
 
 		public static readonly ADASCombinations ADASCombinations = new ADASCombinations();
 		public static readonly ADASBenefits ADASBenefits = new ADASBenefits();
