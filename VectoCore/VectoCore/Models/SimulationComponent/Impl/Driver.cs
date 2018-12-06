@@ -214,6 +214,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.Debug("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}",
 						limitedOperatingPoint.SimulationInterval, limitedOperatingPoint.Acceleration);
 				}
+				if (limitedOperatingPoint == null) {
+					throw new VectoException("DrivingActionAccelerate: Failed to find operating point");
+				}
 				DriverAcceleration = limitedOperatingPoint.Acceleration;
 				retVal = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval,
 					limitedOperatingPoint.Acceleration,
@@ -264,6 +267,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								}
 							}
 						}
+						retVal.Acceleration = operatingPoint.Acceleration;
 						retVal.Switch().
 							Case<ResponseSuccess>(() => operatingPoint = nextOperatingPoint).
 							Case<ResponseGearShift>(() => operatingPoint = nextOperatingPoint).
@@ -275,6 +279,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 										retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
 																		nextOperatingPoint.Acceleration, gradient);
 									}).
+							Case<ResponseFailTimeInterval>(r => {
+									// occurs only with AT gearboxes - extend time interval after gearshift!
+									retVal = new ResponseDrivingCycleDistanceExceeded {
+										Source = this,
+										MaxDistance = r.Acceleration / 2 * r.DeltaT * r.DeltaT + DataBus.VehicleSpeed * r.DeltaT
+									};
+								}).
 							Default(
 								r => {
 									throw new UnexpectedResponseException("DrivingAction Accelerate after Overload", r);

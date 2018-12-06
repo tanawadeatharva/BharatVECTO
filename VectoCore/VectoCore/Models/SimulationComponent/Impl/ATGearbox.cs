@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (!(retVal is ResponseGearShift)) {
 					continue;
 				}
-				if (ConsiderShiftLosses(_strategy.NextGear, outTorque)) {
+				if (ConsiderShiftLosses(_strategy.NextGear, outTorque) && !RequestAfterGearshift) {
 					retVal = new ResponseFailTimeInterval {
 						Source = this,
 						DeltaT = ModelData.PowershiftShiftTime,

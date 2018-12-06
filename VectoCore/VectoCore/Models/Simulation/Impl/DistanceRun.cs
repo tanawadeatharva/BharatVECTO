@@ -53,6 +53,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			var loopCount = 0;
 			IResponse response;
+			var debug = new DebugData();
 			do {
 				IterationStatistics.Increment(this, "Iterations");
 
@@ -74,6 +75,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (loopCount++ > Constants.SimulationSettings.MaximumIterationCountForSimulationStep) {
 					throw new VectoSimulationException("Maximum iteration count for a single simulation interval reached! Aborting!");
 				}
+				debug.Add(new {Response = response});
 			} while (!(response is ResponseSuccess || response is ResponseCycleFinished));
 
 			IterationStatistics.Increment(this, "Distance", Container.Distance.Value());
