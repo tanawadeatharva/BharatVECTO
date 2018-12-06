@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public GearboxType GearboxType { get; set; }
 
 		public uint Gear { get; set; }
+		public bool TCLocked { get; set; }
 		public GearInfo NextGear { get; private set; }
 
 		public Second TractionInterruption

@@ -78,6 +78,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		public uint Gear { get; protected internal set; }
 
+		public abstract bool TCLocked { get; }
+
 		[DebuggerHidden]
 		public MeterPerSecond StartSpeed
 		{
