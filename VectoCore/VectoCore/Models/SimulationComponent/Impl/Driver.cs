@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Radian gradient,
 			IResponse previousResponse = null)
 		{
-		DrivingAction = DrivingAction.Accelerate;
+			DrivingAction = DrivingAction.Accelerate;
 			IterationStatistics.Increment(this, "Accelerate");
 			Log.Debug("DrivingAction Accelerate");
 			var operatingPoint = ComputeAcceleration(ds, targetVelocity);

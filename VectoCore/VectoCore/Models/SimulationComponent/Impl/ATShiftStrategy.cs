@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// EMERGENCY SHIFTS ---------------------------------------
-			if (CheckEmergencyShift(absTime, inAngularVelocity, gear)) {
+			if (CheckEmergencyShift(absTime, outTorque, outAngularVelocity, inAngularVelocity, gear)) {
 				return true;
 			}
 
@@ -168,9 +168,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return false;
 		}
 
-		private bool CheckEmergencyShift(Second absTime, PerSecond inAngularVelocity, uint gear)
+		private bool CheckEmergencyShift(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity, PerSecond inAngularVelocity, uint gear)
 		{
-// Emergency Downshift: if lower than engine idle speed
+			// Emergency Downshift: if lower than engine idle speed
 			if (inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
 				Log.Debug("engine speed would fall below idle speed - shift down");
 				Downshift(absTime, gear);
@@ -182,9 +182,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (!ModelData.Gears.ContainsKey(gear + 1)) {
 					return false;
 				}
-				Log.Debug("engine speed would be above max speed / rated speed - shift up");
-				Upshift(absTime, gear);
-				return true;
+
+				PerSecond nextInAngularSpeed;
+				NewtonMeter nextInTorque;
+				if (ModelData.Gears[gear].HasLockedGear) {
+					nextInAngularSpeed = outAngularVelocity * ModelData.Gears[gear].Ratio;
+					nextInTorque = outTorque / ModelData.Gears[gear].Ratio;
+				} else {
+					nextInAngularSpeed = outAngularVelocity * ModelData.Gears[gear + 1].Ratio;
+					nextInTorque = outTorque / ModelData.Gears[gear + 1].Ratio;
+				}
+				if (!IsBelowDownShiftCurve(gear + 1, nextInTorque, nextInAngularSpeed)) {
+					Log.Debug("engine speed would be above max speed / rated speed - shift up");
+					Upshift(absTime, gear);
+					return true;
+				}
 			}
 			return false;
 		}
