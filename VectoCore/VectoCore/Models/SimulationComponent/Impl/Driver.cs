@@ -238,6 +238,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							DriverAcceleration = nextOperatingPoint.Acceleration;
 							retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
 								nextOperatingPoint.Acceleration, gradient);
+							retVal.Switch().Case<ResponseFailTimeInterval>(
+								rt => {
+									// occurs only with AT gearboxes - extend time interval after gearshift!
+									retVal = new ResponseDrivingCycleDistanceExceeded {
+										Source = this,
+										MaxDistance = DriverAcceleration / 2 * rt.DeltaT * rt.DeltaT + DataBus.VehicleSpeed * rt.DeltaT
+									};
+								});
 						} else {
 							if (absTime > 0 && DataBus.VehicleStopped) {
 								Log.Info(
@@ -269,6 +277,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						}
 						retVal.Acceleration = operatingPoint.Acceleration;
 						retVal.Switch().
+							Case<ResponseDrivingCycleDistanceExceeded>().
 							Case<ResponseSuccess>(() => operatingPoint = nextOperatingPoint).
 							Case<ResponseGearShift>(() => operatingPoint = nextOperatingPoint).
 							Case<ResponseOverload>(
@@ -278,6 +287,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 										DriverAcceleration = nextOperatingPoint.Acceleration;
 										retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
 																		nextOperatingPoint.Acceleration, gradient);
+										retVal.Switch().Case<ResponseFailTimeInterval>(
+											rt => {
+												// occurs only with AT gearboxes - extend time interval after gearshift!
+												retVal = new ResponseDrivingCycleDistanceExceeded {
+													Source = this,
+													MaxDistance = DriverAcceleration / 2 * rt.DeltaT * rt.DeltaT + DataBus.VehicleSpeed * rt.DeltaT
+												};
+											});
 									}).
 							Case<ResponseFailTimeInterval>(r => {
 									// occurs only with AT gearboxes - extend time interval after gearshift!
