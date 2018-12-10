@@ -385,9 +385,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IShiftStrategy strategy;
 			switch (runData.GearboxData.Type) {
 				case GearboxType.AMT:
+#if CLASSIC_TCU
+					strategy = new AMTShiftStrategy(runData, container);
+
+#else
 					strategy = runData.GearshiftParameters == null
 						? (IShiftStrategy)new AMTShiftStrategy(runData, container)
 						: new AMTShiftStrategyV2(runData, container);
+#endif
 					break;
 				case GearboxType.MT:
 					strategy = new MTShiftStrategy(runData, container);
