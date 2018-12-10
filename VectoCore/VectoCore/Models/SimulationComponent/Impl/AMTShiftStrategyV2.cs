@@ -548,6 +548,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
+			//_nextGear = gear;
+			while (_nextGear > 1 && SpeedTooLowForEngine(_nextGear, outAngularVelocity)) {
+				_nextGear--;
+			}
+			while (_nextGear < ModelData.Gears.Count &&
+					SpeedTooHighForEngine(_nextGear, outAngularVelocity)) {
+				_nextGear++;
+			}
+
 			return _nextGear;
 		}
 
