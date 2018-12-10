@@ -234,10 +234,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var mission = new Mission {
 					MissionType = missionType,
 					CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection" + GetMissionSuffix(missionType, true)),
+#if USE_EXTENAL_DECLARATION_DATA
 					CycleFile = File.OpenRead(Path.Combine("DeclarationMissions", missionType.ToString().Replace("EMS", "") + ".vdri")),
-					//RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
-					//							missionType.ToString().Replace("EMS", "") +
-					//							Constants.FileExtensions.CycleFile),
+#else
+					CycleFile = RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+												missionType.ToString().Replace("EMS", "") +
+												Constants.FileExtensions.CycleFile),
+#endif
 					AxleWeightDistribution = GetAxleWeightDistribution(row, missionType),
 					BodyCurbWeight = body.CurbWeight,
 					Trailer = trailers,
