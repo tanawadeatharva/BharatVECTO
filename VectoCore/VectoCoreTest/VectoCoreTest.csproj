@@ -70,6 +70,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Integration\AMTShiftStrategyTests.cs" />
     <Compile Include="Dummy\EngineFLDTest.cs" />
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="FileIO\JsonWriteTest.cs" />
