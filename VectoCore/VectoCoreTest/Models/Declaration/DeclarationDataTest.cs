@@ -2015,18 +2015,18 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(VehicleClass.Class5, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
 		TestCase(VehicleClass.Class9, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
 		TestCase(VehicleClass.Class10, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
-		 TestCase(VehicleClass.Class4, "4/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.36),
-		TestCase(VehicleClass.Class4, "8/2", MissionType.LongHaul, LoadingType.LowLoading, -0.11),
-		TestCase(VehicleClass.Class4, "11/1", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.79),
-		TestCase(VehicleClass.Class5, "3", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.18),
-		TestCase(VehicleClass.Class5, "5", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.43),
-		TestCase(VehicleClass.Class5, "11/1", MissionType.UrbanDelivery, LoadingType.ReferenceLoad, -0.69),
-		TestCase(VehicleClass.Class9, "1", MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad, -0.25),
-		TestCase(VehicleClass.Class9, "6", MissionType.LongHaulEMS, LoadingType.ReferenceLoad, -0.16),
-		TestCase(VehicleClass.Class9, "10/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.54),
-		TestCase(VehicleClass.Class10, "2", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.08),
-		TestCase(VehicleClass.Class10, "4/2", MissionType.RegionalDeliveryEMS, LoadingType.LowLoading, -0.56),
-		TestCase(VehicleClass.Class10, "11/2", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -1.40)
+		 TestCase(VehicleClass.Class4, "4/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.4),
+		TestCase(VehicleClass.Class4, "8/2", MissionType.LongHaul, LoadingType.LowLoading, -0.1),
+		TestCase(VehicleClass.Class4, "11/1", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.8),
+		TestCase(VehicleClass.Class5, "3", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.2),
+		TestCase(VehicleClass.Class5, "5", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.4),
+		TestCase(VehicleClass.Class5, "11/1", MissionType.UrbanDelivery, LoadingType.ReferenceLoad, -1.3),
+		TestCase(VehicleClass.Class9, "1", MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad, -0.2),
+		TestCase(VehicleClass.Class9, "6", MissionType.LongHaulEMS, LoadingType.ReferenceLoad, -0.2),
+		TestCase(VehicleClass.Class9, "10/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.5),
+		TestCase(VehicleClass.Class10, "2", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.1),
+		TestCase(VehicleClass.Class10, "4/2", MissionType.RegionalDeliveryEMS, LoadingType.LowLoading, -0.6),
+		TestCase(VehicleClass.Class10, "11/2", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -1.4)
 
 			]
 		public void TestADASBenefitLookup(
