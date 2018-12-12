@@ -241,7 +241,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				var mpEdge = Edge.Create(new Point(segment.Item1.SpeedRatio, segment.Item1.Torque.Value()),
 					new Point(segment.Item2.SpeedRatio, segment.Item2.Torque.Value()));
 
-				/*
+				
 				// Torque Converter: M_P1000 = k * n_out / n_in + d
 				//                   T_out = M_P1000 * (n_in / 1000rpm)^2 = (k * n_out / n_in + d) * (n_in / c)^2
 				// P_eng_out = P_eng_inertia + P_TC_in_avg
@@ -250,15 +250,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				// => solve for n_in
 
 				var a = mpEdge.OffsetXY / (2 * mpNorm * mpNorm);
-				var b = inertia.Value() / (2 * dt.Value()) + mpEdge.SlopeXY * nextOutputSpeed.Value() / (2 * mpNorm * mpNorm);
+				var b = inertia / (2 * dt) + mpEdge.SlopeXY * nextOutputSpeed.Value() / (2 * mpNorm * mpNorm);
 				var c = 0;
-				var d = -inertia.Value() * prevInputSpeed.Value() * prevInputSpeed.Value() / (2 * dt.Value()) - enginePower.Value() +
-						previousPowerTC.Value() / 2;
-				var sol = VectoMath.CubicEquationSolver(a, b, c, d);
+				var d = -inertia * prevInputSpeed * prevInputSpeed / (2 * dt) - enginePower +
+						previousPowerTC / 2;
+				var sol = VectoMath.CubicEquationSolver(a.Value(), b.Value(), c, d.Value());
 				//============================================================================
-				*/
-
 				
+
+				/*
 				// Torque Converter: M_P1000 = k * n_out / n_in + d
 				//                   T_out = M_P1000 * (n_in / 1000rpm)^2 = (k * n_out / n_in + d) * (n_in / c)^2
 				// P_eng_out = P_eng_inertia + P_TC_in_avg
@@ -275,7 +275,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 				var sol = VectoMath.Polynom4Solver(a.Value(), b.Value(), c.Value(), d.Value(), e.Value());
 				//============================================================================
-				
+				*/
+
 				// T_eng_o_2 + T_eng_I + T_aux - T_max) (n_in_1 + n_in_2) / 2 = 0
 				//var a = dt * mpEdge.OffsetXY.SI<NewtonMeter>() / (mpNorm * mpNorm);
 				//var b = inertia + dt * mpEdge.SlopeXY.SI<NewtonMeter>() * nextOutputSpeed / (mpNorm * mpNorm);
