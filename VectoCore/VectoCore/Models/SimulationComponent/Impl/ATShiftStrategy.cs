@@ -34,6 +34,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -344,8 +345,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (shiftTimeReached && DataBus.DrivingAction == DrivingAction.Accelerate) {
 				if (DataBus.VehicleSpeed < DataBus.CycleData.LeftSample.VehicleTargetSpeed - 10.KMPHtoMeterPerSecond() && DataBus.DriverAcceleration < 0.SI<MeterPerSquareSecond>()) {
-					Downshift(absTime, gear);
-					return true;
+					var tmpResponseCurr = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+					if (_gearbox.Gear > 1 || _gearbox.Gear == 1 && _gearbox.TorqueConverterLocked) {
+						var tmpCurr = new NextGearState();
+						var tmpDs = new NextGearState();
+						tmpCurr.SetState(_nextGear);
+						Downshift(absTime, gear);
+						tmpDs.SetState(_nextGear);
+						_gearbox.Gear = _nextGear.Gear;
+						_gearbox.TorqueConverterLocked = _nextGear.TorqueConverterLocked;
+						var tmpResponseDs = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+						_nextGear.SetState(tmpCurr);
+						_gearbox.Gear = _nextGear.Gear;
+						_gearbox.TorqueConverterLocked = _nextGear.TorqueConverterLocked;
+						if (tmpResponseDs.DeltaFullLoad < tmpResponseCurr.DeltaFullLoad) {
+							Downshift(absTime, gear);
+							return true;
+						}
+					}
 				}
 			}
 
@@ -397,6 +414,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Disengaged = disengaged;
 				Gear = gear;
 				TorqueConverterLocked = tcLocked;
+			}
+
+			public void SetState(NextGearState state)
+			{
+				AbsTime = state.AbsTime;
+				Disengaged = state.Disengaged;
+				Gear = state.Gear;
+				TorqueConverterLocked = state.TorqueConverterLocked;
 			}
 		}
 	}
