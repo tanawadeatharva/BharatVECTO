@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData,
-			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory, bool useEfficiencyFallback)
+			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			for (uint i = 0; i < gearbox.Gears.Count; i++) {
 				var gear = gearbox.Gears[(int)i];
-				var lossMap = CreateGearLossMap(gear, i, useEfficiencyFallback, false);
+				var lossMap = CreateGearLossMap(gear, i, true, false);
 
 				var shiftPolygon = gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
@@ -254,6 +254,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.DownshiftAfterUpshiftDelay = gearbox.DownshiftAfterUpshiftDelay;
 			retVal.UpshiftAfterDownshiftDelay = gearbox.UpshiftAfterDownshiftDelay;
 			retVal.UpshiftMinAcceleration = gearbox.UpshiftMinAcceleration;
+		}
+
+		public AxleGearData CreateAxleGearData(IAxleGearInputData data)
+		{
+			var retVal = SetCommonAxleGearData(data);
+			retVal.AxleGear.LossMap = ReadAxleLossMap(data, true, false);
+			return retVal;
+		}
+
+		public AngledriveData CreateAngledriveData(IAngledriveInputData data)
+		{
+			return DoCreateAngledriveData(data, true, false);
 		}
 
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData)
