@@ -28,8 +28,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 		}
 
 
-		[TestCase(Class5ADAS, 1, false, false, false, PredictiveCruiseControlType.Option_1_2_3, 1 - 0.68/100.0),
-		 TestCase(Class5ADAS, 5, true, true, false, PredictiveCruiseControlType.Option_1_2_3, 1 - 1.32 / 100.0)
+		[TestCase(Class5ADAS, 1, false, false, false, PredictiveCruiseControlType.Option_1_2_3, 1 - 0.7/100.0),
+		 TestCase(Class5ADAS, 5, true, true, false, PredictiveCruiseControlType.Option_1_2_3, 1 - 1.3 / 100.0)
 			]
 		public void ADASCorrectionFactorTest(string filename, int runIdx, bool engineStopStart, bool ecoRollWithoutEngineStop, bool ecoRollWithEngineStop, PredictiveCruiseControlType pcc, double expectedCorrectionFactor)
 		{
