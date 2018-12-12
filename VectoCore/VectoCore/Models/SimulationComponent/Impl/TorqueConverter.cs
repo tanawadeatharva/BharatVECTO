@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var operatingPoint = ModelData.FindOperatingPointForPowerDemand(
 					engineResponse.DragPower - engineResponse.AuxiliariesPowerDemand,
 					DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
-				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineRatedSpeed);
+				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineN95hSpeed);
 				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
 					operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
 				}
@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var operatingPoint = ModelData.FindOperatingPointForPowerDemand(
 					engineResponse.DynamicFullLoadPower - engineResponse.AuxiliariesPowerDemand,
 					DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
-				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineRatedSpeed);
+				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineN95hSpeed);
 				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
 					operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
 				}
@@ -233,7 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					"TorqueConverter: Invalid operating point, inAngularVelocity would be below engine's idle speed: {0}",
 					operatingPoint.InAngularVelocity);
 			}
-			var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineRatedSpeed);
+			var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineN95hSpeed);
 			if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
 				operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
 			}
