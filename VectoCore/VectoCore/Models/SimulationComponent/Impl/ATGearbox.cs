@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("AT-Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 
 			var driveOffSpeed = DataBus.VehicleStopped && outAngularVelocity > 0;
-			var driveOffTorque = CurrentState.Disengaged && outTorque.IsGreater(0, 1e-3);
+			var driveOffTorque = CurrentState.Disengaged && outTorque.IsGreater(0, 1e-1);
 			if (!dryRun && (driveOffSpeed || driveOffTorque)) {
 				Gear = 1;
 				CurrentState.TorqueConverterLocked = false;
