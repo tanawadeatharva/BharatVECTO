@@ -79,19 +79,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading,
-			Kilogram municipalBodyWeight)
+		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("VehicleData");
 			}
 			return data.ExemptedVehicle
 				? CreateExemptedVehicleData(data)
-				: CreateNonExemptedVehicleData(data, mission, loading, municipalBodyWeight);
+				: CreateNonExemptedVehicleData(data, mission, loading);
 		}
 
 		private VehicleData CreateNonExemptedVehicleData(
-			IVehicleDeclarationInputData data, Mission mission, Kilogram loading, Kilogram municipalBodyWeight)
+			IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
 		{
 			var retVal = SetCommonVehicleData(data);
 			retVal.AxleConfiguration = data.AxleConfiguration;
@@ -103,9 +102,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.SleeperCab = data.SleeperCab;
 			retVal.TrailerGrossVehicleWeight = mission.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0);
 
-			retVal.BodyAndTrailerWeight = (mission.MissionType == MissionType.MunicipalUtility
-											? municipalBodyWeight
-											: mission.BodyCurbWeight) + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
+			retVal.BodyAndTrailerWeight = mission.BodyCurbWeight + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
 
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
