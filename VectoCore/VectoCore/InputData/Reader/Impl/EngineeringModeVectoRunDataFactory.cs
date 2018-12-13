@@ -67,12 +67,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			var tempVehicle = dao.CreateVehicleData(vehicle);
 
-			var axlegearData = dao.CreateAxleGearData(vehicle.AxleGearInputData, useEfficiencyFallback: true);
+			var axlegearData = dao.CreateAxleGearData(vehicle.AxleGearInputData);
 			var gearboxData = dao.CreateGearboxData(vehicle.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius,tempVehicle.VehicleCategory, useEfficiencyFallback: true);
+				tempVehicle.DynamicTyreRadius,tempVehicle.VehicleCategory);
 			var crossWindRequired = vehicle.AirdragInputData.CrossWindCorrectionMode ==
 									CrossWindCorrectionMode.VAirBetaLookupTable;
-			var angledriveData = dao.CreateAngledriveData(vehicle.AngledriveInputData, useEfficiencyFallback: true);
+			var angledriveData = dao.CreateAngledriveData(vehicle.AngledriveInputData);
 			var ptoTransmissionData = dao.CreatePTOTransmissionData(vehicle.PTOTransmissionInputData);
 
 			return InputDataProvider.JobInputData.Cycles.Select(cycle => {

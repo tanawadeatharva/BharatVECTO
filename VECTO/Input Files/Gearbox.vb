@@ -222,8 +222,8 @@ Public Class Gearbox
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
 				
-				axlegearData = doa.CreateAxleGearData(gearbox, False)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, False)
+				axlegearData = doa.CreateAxleGearData(gearbox)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Try
@@ -232,8 +232,8 @@ Public Class Gearbox
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
 
-				axlegearData = doa.CreateAxleGearData(gearbox, True)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, True)
+				axlegearData = doa.CreateAxleGearData(gearbox)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory)
 			End If
 
 			Dim result As IList(Of ValidationResult) =
