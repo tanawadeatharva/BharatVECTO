@@ -59,6 +59,7 @@ namespace TUGraz.VectoCore.OutputData
 		DeclarationReportPdf,
 		DeclarationReportManufacturerXML,
 		DeclarationReportCustomerXML,
-		DeclarationVTPReportXML
+		DeclarationVTPReportXML,
+		DeclarationReportMonitoringXML
 	}
 }
