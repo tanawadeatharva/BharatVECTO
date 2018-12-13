@@ -176,59 +176,27 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
 			var missions = new List<Mission>();
 			foreach (var missionType in missionTypes.Where(m => m.IsDeclarationMission() && m != MissionType.ExemptedMission && row.Field<string>(m.ToString()) != "-")) {
-				var bodyColumn = "body";
-				switch (missionType) {
-					case MissionType.Construction: bodyColumn = "bodyconstruction";
-						break;
-					case MissionType.MunicipalUtility: bodyColumn = "bodymunicipalutility";
-						break;
-				}
-				var body = DeclarationData.StandardBodies.Lookup(row.Field<string>(bodyColumn));
 
-				var maxGVW = Constants.SimulationSettings.MaximumGrossVehicleWeight;
-				var trailers = new List<MissionTrailer>();
-				if (missionType.IsEMS()) {
-					maxGVW = Constants.SimulationSettings.MaximumGrossVehicleWeightEMS;
-					var trailerList = row.Field<string>("ems").Split('+');
-					var trailerWeightShares = row.Field<string>("traileraxles" + GetMissionSuffix(missionType)).Split('/');
-					if (trailerList.Length != trailerWeightShares.Length) {
-						throw new VectoException(
-							"Error in segmentation table: number of trailers and list of weight shares does not match!");
-					}
-					trailers.AddRange(
-						trailerWeightShares.Select((t, i) => CreateTrailer(trailerList[i], t.ToDouble() / 100.0, i == 0)));
-				} else {
-					if (ShouldTrailerBeUsed(row, missionType)) {
-						var trailerColumn = missionType == MissionType.Construction ? "trailerconstruction" : "trailer";
-						var trailerValue = row.Field<string>(trailerColumn);
-						if (string.IsNullOrWhiteSpace(trailerValue)) {
-							throw new VectoException("Error in segmentation table: trailer weight share is defined but not trailer type!");
-						}
-						trailers.Add(CreateTrailer(trailerValue, GetTrailerAxleWeightDistribution(row, missionType), true));
-					}
-				}
+				var body = GetBody(row, missionType);
+				var trailers = GetTrailers(row, missionType);
 
+				var maxGVW = missionType.IsEMS()? Constants.SimulationSettings.MaximumGrossVehicleWeightEMS : Constants.SimulationSettings.MaximumGrossVehicleWeight;
+				
 				// limit gvw to MaxGVW (40t)
-				var gvw =
-					VectoMath.Min(
+				var gvw = VectoMath.Min(
 						grossVehicleWeight + trailers.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0),
 						maxGVW);
-				var maxLoad = gvw - curbWeight - body.CurbWeight -
+				var vehicleWeight = curbWeight + body.CurbWeight;
+				var maxLoad = gvw - vehicleWeight -
 							trailers.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
 
-				var payloads = row.Field<string>(missionType.ToString()).Split('/');
-				var vehicleWeight = curbWeight + body.CurbWeight;
-				Kilogram refLoad, lowLoad = 0.SI<Kilogram>();
-				if (payloads.Length == 2) {
-					lowLoad = GetLoading(payloads[0], grossVehicleWeight, vehicleWeight, trailers, true);
-					refLoad = GetLoading(payloads[1], grossVehicleWeight, vehicleWeight, trailers, false);
-				} else {
-					refLoad = GetLoading(row.Field<string>(missionType.ToString()), grossVehicleWeight, vehicleWeight, trailers, false);
-				}
 
-				refLoad = refLoad.LimitTo(0.SI<Kilogram>(), maxLoad);
-				lowLoad = lowLoad.LimitTo(0.SI<Kilogram>(), maxLoad);
+				var payloads = row.Field<string>(missionType.ToString());
 
+				Kilogram refLoad, lowLoad;
+				var weight = grossVehicleWeight;
+				GetLoadings(out lowLoad, out refLoad, payloads, (p, l) => GetLoading(p, weight, vehicleWeight, trailers, l), maxLoad);
+				
 				var mission = new Mission {
 					MissionType = missionType,
 					CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection" + GetMissionSuffix(missionType, true)),
@@ -249,6 +217,67 @@ namespace TUGraz.VectoCore.Models.Declaration
 				missions.Add(mission);
 			}
 			return missions.ToArray();
+		}
+
+		private static void GetLoadings(
+			out Kilogram lowLoad, out Kilogram refLoad, string payloadStr, Func<string, bool, Kilogram> loadingParser, Kilogram maxLoad)
+		{
+			var payloads = payloadStr.Split('/');
+			if (payloads.Length == 2) {
+				lowLoad = loadingParser(payloads[0], true);
+				refLoad = loadingParser(payloads[1], false);
+			} else {
+				lowLoad = 0.SI<Kilogram>();
+				refLoad = loadingParser(payloadStr, false);
+			}
+
+			refLoad = refLoad.LimitTo(0.SI<Kilogram>(), maxLoad);
+			lowLoad = lowLoad.LimitTo(0.SI<Kilogram>(), maxLoad);
+		}
+
+		private static IList<MissionTrailer> GetTrailers(DataRow row, MissionType missionType)
+		{
+			var trailers = new List<MissionTrailer>();
+			if (missionType.IsEMS()) {
+				//maxGVW = Constants.SimulationSettings.MaximumGrossVehicleWeightEMS;
+				var trailerList = row.Field<string>("ems").Split('+');
+				var trailerWeightShares = row.Field<string>("traileraxles" + GetMissionSuffix(missionType)).Split('/');
+				if (trailerList.Length != trailerWeightShares.Length) {
+					throw new VectoException(
+						"Error in segmentation table: number of trailers and list of weight shares does not match!");
+				}
+
+				trailers.AddRange(
+					trailerWeightShares.Select((t, i) => CreateTrailer(trailerList[i], t.ToDouble() / 100.0, i == 0)));
+			} else {
+				if (ShouldTrailerBeUsed(row, missionType)) {
+					var trailerColumn = missionType == MissionType.Construction ? "trailerconstruction" : "trailer";
+					var trailerValue = row.Field<string>(trailerColumn);
+					if (string.IsNullOrWhiteSpace(trailerValue)) {
+						throw new VectoException("Error in segmentation table: trailer weight share is defined but not trailer type!");
+					}
+
+					trailers.Add(CreateTrailer(trailerValue, GetTrailerAxleWeightDistribution(row, missionType), true));
+				}
+			}
+
+			return trailers;
+		}
+
+		private static StandardBody GetBody(DataRow row, MissionType missionType)
+		{
+			var bodyColumn = "body";
+			switch (missionType) {
+				case MissionType.Construction:
+					bodyColumn = "bodyconstruction";
+					break;
+				case MissionType.MunicipalUtility:
+					bodyColumn = "bodymunicipalutility";
+					break;
+			}
+
+			var body = DeclarationData.StandardBodies.Lookup(row.Field<string>(bodyColumn));
+			return body;
 		}
 
 		private static SquareMeter ReadDefaultAirDragValue(DataRow row, MissionType missionType)
