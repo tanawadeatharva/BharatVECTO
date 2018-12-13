@@ -272,7 +272,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var tcShiftPolygon = DeclarationData.TorqueConverter.ComputeShiftPolygon(engine.FullLoadCurves[0]);
 			for (uint i = 0; i < gearsInput.Count; i++) {
 				var gear = gearsInput[(int)i];
-				var lossMap = CreateGearLossMap(gear, i, false, true);
+				var lossMap = CreateGearLossMap(gear, i, false);
 
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(gearbox.Type, (int)i, engine.FullLoadCurves[i + 1],
 					gearsInput, engine,
@@ -344,13 +344,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		public AxleGearData CreateAxleGearData(IAxleGearInputData data)
 		{
 			var retVal = SetCommonAxleGearData(data);
-			retVal.AxleGear.LossMap = ReadAxleLossMap(data, false, true);
+			retVal.AxleGear.LossMap = ReadAxleLossMap(data, false);
 			return retVal;
 		}
 
 		public AngledriveData CreateAngledriveData(IAngledriveInputData data)
 		{
-			return DoCreateAngledriveData(data, false, true);
+			return DoCreateAngledriveData(data, false);
 		}
 
 
