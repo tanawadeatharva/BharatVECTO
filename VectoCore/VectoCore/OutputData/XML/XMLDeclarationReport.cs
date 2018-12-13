@@ -52,6 +52,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 	{
 		private readonly XMLManufacturerReport _manufacturerReport;
 		private readonly XMLCustomerReport _customerReport;
+		private readonly XMLMonitoringReport _monitoringReport;
 
 		private readonly IOutputDataWriter _writer;
 
@@ -171,6 +172,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			_manufacturerReport = new XMLManufacturerReport();
 			_customerReport = new XMLCustomerReport();
+			_monitoringReport = new XMLMonitoringReport(_manufacturerReport);
 
 			_writer = writer;
 		}
@@ -183,6 +185,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XDocument CustomerReport
 		{
 			get { return _customerReport.Report; }
+		}
+
+		public XDocument MonitoringReport
+		{
+			get { return _monitoringReport.Report; }
 		}
 
 
@@ -206,6 +213,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			if (_writer != null) {
 				_writer.WriteReport(ReportType.DeclarationReportCustomerXML, _customerReport.Report);
 				_writer.WriteReport(ReportType.DeclarationReportManufacturerXML, _manufacturerReport.Report);
+				_writer.WriteReport(ReportType.DeclarationReportMonitoringXML, _monitoringReport.Report);
 			}
 		}
 
@@ -227,6 +235,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				: DeclarationData.WeightingFactors.Lookup(weightingGroup);
 			_manufacturerReport.Initialize(modelData);
 			_customerReport.Initialize(modelData);
+			_monitoringReport.Initialize(modelData);
 		}
 
 		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting

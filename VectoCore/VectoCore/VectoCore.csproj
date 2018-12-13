@@ -202,6 +202,7 @@
     <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
     <Compile Include="Models\Simulation\Impl\ExemptedRun.cs" />
+    <Compile Include="OutputData\XML\XMLMonitoringReport.cs" />
     <Compile Include="OutputData\XML\XMLVTPReport.cs" />
     <Compile Include="OutputData\VTPReport.cs" />
     <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
@@ -476,6 +477,9 @@
     <EmbeddedResource Include="Resources\Declaration\CO2Standards\MissionProfileWeights.csv" />
     <EmbeddedResource Include="Resources\Declaration\CO2Standards\WeightingGroups.csv" />
     <EmbeddedResource Include="Resources\Declaration\TyreLabeling.csv" />
+    <EmbeddedResource Include="Resources\XSD\VectoMonitoring.0.7.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>
