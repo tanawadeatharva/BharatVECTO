@@ -1086,14 +1086,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.45, 0.55 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 2100,
+				bodyCurbWeight: 6000,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 600,
 				refLoad: 3000,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 8400);
+				maxLoad: 4500);
 		}
 
 		/// <summary>
@@ -1126,14 +1126,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.45, 0.55 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 2100,
+				bodyCurbWeight: 6000,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 600,
 				refLoad: 3000,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 8400);
+				maxLoad: 4500);
 
 			AssertMission(segment.Missions[1],
 						vehicleData: vehicleData,
@@ -1376,14 +1376,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.35, 0.4, 0.25 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 2200,
+				bodyCurbWeight: 6750,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 1200,
 				refLoad: 6000,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 14300);
+				maxLoad: 9750);
 		}
 
 		/// <summary>
@@ -1416,14 +1416,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.35, 0.4, 0.25 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 2200,
+				bodyCurbWeight: 6750,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 1200,
 				refLoad: 6000,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 14300);
+				maxLoad: 9750);
 
 			AssertMission(segment.Missions[1],
 						vehicleData: vehicleData,
@@ -1669,14 +1669,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.35, 0.35, 0.3 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 2200,
+				bodyCurbWeight: 6750,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 1200,
 				refLoad: 6000,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 14300);
+				maxLoad: 9750);
 
 			AssertMission(segment.Missions[5],
 				vehicleData: vehicleData,
