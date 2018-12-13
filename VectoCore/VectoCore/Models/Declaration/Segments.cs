@@ -104,10 +104,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VehicleHeight = LookupHeight(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational),
 				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 				GrossVehicleMassRating = grossVehicleMassRating,
-				CdADefault = string.IsNullOrEmpty(row["cdxa_default"].ToString()) ? null : row.ParseDouble("cdxa_default").SI<SquareMeter>(),
-				CdAConstruction = string.IsNullOrEmpty(row["cdxa_construction"].ToString())
-					? null
-					: row.ParseDouble("cdxa_construction").SI<SquareMeter>(),
 			};
 
 			return segment;
@@ -248,10 +244,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 					RefLoad = refLoad,
 					LowLoad = lowLoad,
 					TotalCargoVolume = body.CargoVolume + trailers.Sum(t => t.CargoVolume).DefaultIfNull(0),
+					DefaultCDxA = ReadDefaultAirDragValue(row, missionType)
 				};
 				missions.Add(mission);
 			}
 			return missions.ToArray();
+		}
+
+		private static SquareMeter ReadDefaultAirDragValue(DataRow row, MissionType missionType)
+		{
+			var airDragColumn = "cdxa_default";
+			if (missionType == MissionType.Construction) {
+				airDragColumn = "cdxa_construction";
+			}
+			var cdxA = string.IsNullOrEmpty(row[airDragColumn].ToString())
+				? null
+				: row.ParseDouble(airDragColumn).SI<SquareMeter>();
+			return cdxA;
 		}
 
 		private static Kilogram GetLoading(string payloadStr, Kilogram grossVehicleWeight, Kilogram vehicleWeight,
