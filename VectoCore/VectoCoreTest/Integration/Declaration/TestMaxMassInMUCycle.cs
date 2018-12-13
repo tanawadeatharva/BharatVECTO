@@ -29,13 +29,16 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,
-				Validate = true
+				Validate = false
 			};
 			var jobContainer = new JobContainer(new MockSumWriter());
 
-			// adding vecto runs to job container must not throw an exception!
 			jobContainer.AddRuns(factory);
 
+			var muRefLoadData = jobContainer.Runs.Last().Run.GetContainer().RunData;
+			Assert.AreEqual(2700, muRefLoadData.VehicleData.Loading.Value());
+			Assert.AreEqual(6000, muRefLoadData.VehicleData.BodyAndTrailerWeight.Value());
+			Assert.AreEqual(18000, muRefLoadData.VehicleData.TotalVehicleWeight.Value());
 
 		}
 	}
