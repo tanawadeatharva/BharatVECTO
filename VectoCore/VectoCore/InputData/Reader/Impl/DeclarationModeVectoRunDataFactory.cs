@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_driverdata = _dao.CreateDriverData();
 			_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
 			var tempVehicle = _dao.CreateVehicleData(vehicle, _segment.Missions.First(),
-				_segment.Missions.First().Loadings.First().Value, _segment.MunicipalBodyWeight);
+				_segment.Missions.First().Loadings.First().Value);
 			_airdragData = _dao.CreateAirdragData(vehicle.AirdragInputData,
 				_segment.Missions.First(), _segment);
 			_engineData = _dao.CreateEngineData(vehicle.EngineInputData,
@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
 				powertrainConfig = new VectoRunData() {
 					Exempted = true,
-					VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null, null),
+					VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null),
 					InputDataHash = InputDataProvider.XMLHash
 				};
 			} else {
@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					VehicleData =
 						_dao.CreateVehicleData(
 							InputDataProvider.JobInputData.Vehicle, _segment.Missions.First(),
-							_segment.Missions.First().Loadings.First().Value, _segment.MunicipalBodyWeight),
+							_segment.Missions.First().Loadings.First().Value),
 					AirdragData = _airdragData,
 					EngineData = _engineData,
 					GearboxData = _gearboxData,
@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Exempted = true,
 						Report = Report,
 						Mission = new Mission() { MissionType = MissionType.ExemptedMission},
-						VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null, null),
+						VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null),
 						InputDataHash = InputDataProvider.XMLHash
 					};
 			} else {
@@ -179,7 +179,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		private IEnumerable<VectoRunData> VectoRunDataNonExempted()
 		{
-			var adasCombination = DeclarationData.ADASCombinations.Lookup(InputDataProvider.JobInputData.Vehicle.ADAS);
+			
+			var vehicle = InputDataProvider.JobInputData.Vehicle;
+			var adasCombination = DeclarationData.ADASCombinations.Lookup(vehicle.ADAS);
 			foreach (var mission in _segment.Missions) {
 				if (mission.MissionType.IsEMS() &&
 					_engineData.RatedPowerDeclared.IsSmaller(DeclarationData.MinEnginePowerForEMS)) {
@@ -198,17 +200,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				foreach (var loading in mission.Loadings) {
 					var simulationRunData = new VectoRunData {
 						Loading = loading.Key,
-						VehicleData =
-							_dao.CreateVehicleData(
-								InputDataProvider.JobInputData.Vehicle, mission, loading.Value,
-								_segment.MunicipalBodyWeight),
-						AirdragData = _dao.CreateAirdragData(InputDataProvider.JobInputData.Vehicle.AirdragInputData, mission, _segment),
+						VehicleData = _dao.CreateVehicleData(vehicle, mission, loading.Value),
+						AirdragData = _dao.CreateAirdragData(vehicle.AirdragInputData, mission, _segment),
 						EngineData = _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
 						GearboxData = _gearboxData,
 						AxleGearData = _axlegearData,
 						AngledriveData = _angledriveData,
-						Aux = _dao.CreateAuxiliaryData(
-							InputDataProvider.JobInputData.Vehicle.AuxiliaryInputData(), mission.MissionType,
+						Aux = _dao.CreateAuxiliaryData(vehicle.AuxiliaryInputData(), mission.MissionType,
 							_segment.VehicleClass),
 						Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 						Retarder = _retarderData,

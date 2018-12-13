@@ -63,6 +63,5 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public SquareMeter CdAConstruction { get; internal set; }
 
-		public Kilogram MunicipalBodyWeight { get; internal set; }
 	}
 }

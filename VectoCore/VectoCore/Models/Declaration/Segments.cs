@@ -108,9 +108,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				CdAConstruction = string.IsNullOrEmpty(row["cdxa_construction"].ToString())
 					? null
 					: row.ParseDouble("cdxa_construction").SI<SquareMeter>(),
-				MunicipalBodyWeight = string.IsNullOrEmpty(row["bodyweight_municipalutility"].ToString())
-					? null
-					: row.ParseDouble("bodyweight_municipalutility").SI<Kilogram>()
 			};
 
 			return segment;
@@ -183,7 +180,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
 			var missions = new List<Mission>();
 			foreach (var missionType in missionTypes.Where(m => m.IsDeclarationMission() && m != MissionType.ExemptedMission && row.Field<string>(m.ToString()) != "-")) {
-				var bodyColumn = missionType == MissionType.Construction ? "bodyconstruction" : "body";
+				var bodyColumn = "body";
+				switch (missionType) {
+					case MissionType.Construction: bodyColumn = "bodyconstruction";
+						break;
+					case MissionType.MunicipalUtility: bodyColumn = "bodymunicipalutility";
+						break;
+				}
 				var body = DeclarationData.StandardBodies.Lookup(row.Field<string>(bodyColumn));
 
 				var maxGVW = Constants.SimulationSettings.MaximumGrossVehicleWeight;
