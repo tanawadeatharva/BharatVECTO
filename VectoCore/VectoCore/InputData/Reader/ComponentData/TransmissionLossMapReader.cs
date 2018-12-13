@@ -44,11 +44,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public static class TransmissionLossMapReader
 	{
-		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
+		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName, bool extendLossMap = false)
 		{
 			try {
 				var data = VectoCSVFile.Read(fileName, true);
-				return Create(data, gearRatio, gearName);
+				return Create(data, gearRatio, gearName, extendLossMap);
 			} catch (Exception ex) {
 				throw new VectoException("ERROR while reading TransmissionLossMap " + gearName + ": " + ex.Message, ex);
 			}
