@@ -155,11 +155,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		protected TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback,
-			bool extendLossMap)
+		protected TransmissionLossMap CreateGearLossMap(ITransmissionInputData gear, uint i, bool useEfficiencyFallback)
 		{
 			if (gear.LossMap != null) {
-				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), extendLossMap);
+				return TransmissionLossMapReader.Create(gear.LossMap, gear.Ratio, string.Format("Gear {0}", i + 1), true);
 			}
 			if (useEfficiencyFallback) {
 				return TransmissionLossMapReader.Create(gear.Efficiency, gear.Ratio, string.Format("Gear {0}", i + 1));
@@ -191,7 +190,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		
-		internal TransmissionLossMap ReadAxleLossMap(IAxleGearInputData data, bool useEfficiencyFallback, bool extendLossmap)
+		internal TransmissionLossMap ReadAxleLossMap(IAxleGearInputData data, bool useEfficiencyFallback)
 		{
 			TransmissionLossMap axleLossMap;
 			if (data.LossMap == null && useEfficiencyFallback) {
@@ -200,7 +199,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				if (data.LossMap == null) {
 					throw new InvalidFileFormatException("LossMap for Axlegear is missing.");
 				}
-				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "Axlegear", extendLossmap);
+				axleLossMap = TransmissionLossMapReader.Create(data.LossMap, data.Ratio, "Axlegear", true);
 			}
 			if (axleLossMap == null) {
 				throw new InvalidFileFormatException("LossMap for Axlegear is missing.");
@@ -228,9 +227,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		/// </summary>
 		/// <param name="data"></param>
 		/// <param name="useEfficiencyFallback">if true, the Efficiency value is used if no LossMap is found.</param>
-		/// <param name="extendLossMap">if true, the loos-map is extended to cover operating points for higher torque (due to TC)</param>
 		/// <returns></returns>
-		internal AngledriveData DoCreateAngledriveData(IAngledriveInputData data, bool useEfficiencyFallback, bool extendLossMap)
+		internal AngledriveData DoCreateAngledriveData(IAngledriveInputData data, bool useEfficiencyFallback)
 		{
 			try {
 				var type = data.Type;
@@ -253,7 +251,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						};
 						try {
 							angledriveData.Angledrive.LossMap = TransmissionLossMapReader.Create(data.LossMap,
-								data.Ratio, "Angledrive", extendLossMap);
+								data.Ratio, "Angledrive", true);
 						} catch (VectoException ex) {
 							Log.Info("Angledrive Loss Map not found.");
 							if (useEfficiencyFallback) {

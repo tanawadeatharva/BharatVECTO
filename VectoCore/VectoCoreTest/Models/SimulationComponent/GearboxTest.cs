@@ -205,7 +205,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2300, 1600, 2356.2326),
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, -1300, 1000, -1267.0686)]
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -1300, 1000, -1267.0686),
+		// the following entries are beyond the original loss map, but are not 'extrapolated' because the loss-map is extended on reading
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, 6300, 1600, 6437.86530),
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -3300, 1000, -3227.8529411)]
 		public void Gearbox_LossMapInterpolation(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
 		{
@@ -227,6 +230,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var tq = torque.SI<NewtonMeter>();
 			var n = inAngularSpeed.RPMtoRad();
 			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, tq * ratio, n / ratio);
+
+			Assert.IsFalse(gearbox.CurrentState.TorqueLossResult.Extrapolated);
 
 			AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
 			AssertHelper.AreRelativeEqual(dt, port.Dt);
@@ -280,8 +285,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			};
 		}
 
-		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.1060109),
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2600, 1000, -2543.4076)]
+		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 9600, 1600, 9756.1054377),
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -9600, 1000, -9445.40776858)]
 		public void Gearbox_LossMapExtrapolation_Declaration(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
 		{
@@ -305,6 +310,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var n = inAngularSpeed.RPMtoRad();
 			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, tq * ratio, n / ratio);
 
+			Assert.IsTrue( gearbox.CurrentState.TorqueLossResult.Extrapolated);
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
 			Assert.AreEqual(inAngularSpeed, port.AngularVelocity.Value() / Constants.RPMToRad, 1e-3);
@@ -315,8 +321,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.Exception<VectoException>(() => { gearbox.CommitSimulationStep(modData); });
 		}
 
-		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, 2658.1060109),
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2600, 1000, -2543.4076)]
+		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 9600, 1600, 9756.1054377),
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -9600, 1000, -9445.40776858)]
 		public void Gearbox_LossMapExtrapolation_Engineering(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, double expectedTorque)
 		{
@@ -339,6 +345,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var n = inAngularSpeed.RPMtoRad();
 			var response = (ResponseSuccess)gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
 
+			Assert.IsTrue(gearbox.CurrentState.TorqueLossResult.Extrapolated);
+
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
 			Assert.AreEqual(n, port.AngularVelocity);
@@ -349,9 +357,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.CommitSimulationStep(modData);
 		}
 
-		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 2600, 1600, true, 2658.1060109),
+		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 9600, 1600, true, 9756.10543),
 		TestCase(GearboxDataFile, EngineDataFile, 6.38, -2500, 1000, false, -2443.5392),
-		TestCase(GearboxDataFile, EngineDataFile, 6.38, -1000, 1000, false, -972.95098)]
+		TestCase(GearboxDataFile, EngineDataFile, 6.38, -3000, 1000, false, -2933.73529)]
 		public void Gearbox_LossMapExtrapolation_DryRun(string gbxFile, string engineFile, double ratio, double torque,
 			double inAngularSpeed, bool extrapolated, double expectedTorque)
 		{
@@ -378,8 +386,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(absTime, port.AbsTime);
 			Assert.AreEqual(dt, port.Dt);
 			Assert.AreEqual(n, port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(expectedTorque.SI<NewtonMeter>(), port.Torque);
 			Assert.AreEqual(extrapolated, gearbox.CurrentState.TorqueLossResult.Extrapolated);
+			AssertHelper.AreRelativeEqual(expectedTorque.SI<NewtonMeter>(), port.Torque);
 
 			var modData = new MockModalDataContainer();
 			gearbox.CommitSimulationStep(modData);

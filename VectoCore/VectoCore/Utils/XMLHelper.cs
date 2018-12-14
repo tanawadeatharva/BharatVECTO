@@ -100,8 +100,8 @@ namespace TUGraz.VectoCore.Utils {
 		{
 			switch (unit) {
 				case "%": return GetValueAsUnit(value * 100, unit, decimals);
+				default: return GetValueAsUnit(value, unit, decimals);
 			}
-			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
 		}
 
 		private static object[] GetValueAsUnit(double value, string unit, uint? decimals)

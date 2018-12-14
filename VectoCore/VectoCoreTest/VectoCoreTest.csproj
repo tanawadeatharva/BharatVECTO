@@ -90,6 +90,7 @@
     <Compile Include="Integration\DriverStrategy\SimpleCycles.cs" />
     <Compile Include="Integration\Declaration\ExemptedVehicleTest.cs" />
     <Compile Include="Integration\Declaration\VocationalVehicleTest.cs" />
+    <Compile Include="Integration\Declaration\TestMaxMassInMUCycle.cs" />
     <Compile Include="Integration\VTP\VTPTest.cs" />
     <Compile Include="Integration\FuelTypesTest.cs" />
     <Compile Include="Integration\FullCycleDeclarationTest.cs">
@@ -1773,6 +1774,66 @@
     </None>
     <None Include="TestData\Integration\FullPowerTrain\NoLossGbxMap.vtlm" />
     <None Include="TestData\Integration\FullPowerTrain\unlimited.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\325kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\325kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\AMT_12.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Axle_4x2_Tractor.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Class4_Tractor.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Class4_Tractor_DECL.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Default.vrlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Engine_325kW_12.7l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_10.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_11.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_12.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_7.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_8.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\TotalMassExceededInMU\Gear_9.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto">

@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			for (uint i = 0; i < gearbox.Gears.Count; i++) {
 				var gear = gearbox.Gears[(int)i];
-				var lossMap = CreateGearLossMap(gear, i, true, false);
+				var lossMap = CreateGearLossMap(gear, i, true);
 
 				var shiftPolygon = gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
@@ -259,13 +259,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		public AxleGearData CreateAxleGearData(IAxleGearInputData data)
 		{
 			var retVal = SetCommonAxleGearData(data);
-			retVal.AxleGear.LossMap = ReadAxleLossMap(data, true, false);
+			retVal.AxleGear.LossMap = ReadAxleLossMap(data, true);
 			return retVal;
 		}
 
 		public AngledriveData CreateAngledriveData(IAngledriveInputData data)
 		{
-			return DoCreateAngledriveData(data, true, false);
+			return DoCreateAngledriveData(data, true);
 		}
 
 		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesEngineeringInputData auxInputData)

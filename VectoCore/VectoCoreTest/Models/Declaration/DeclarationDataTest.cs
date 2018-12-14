@@ -774,23 +774,23 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 16000, 0, false, VehicleClass.Class3,
 			new[] { 47.7, 47.7 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, false, VehicleClass.Class4,
-			new[] { 98.9, 49.4, 49.4, 49.4 }),
+			new[] { 98.9, 49.4, 49.4, 0.0 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_4x2, 18000, 0, true, VehicleClass.Class4,
-			new[] { 49.4, 0.0 }),
+			new[] { 0.0, 0.0 }),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, false, VehicleClass.Class5,
 			new[] { 91.0, 140.5, 91.0, 140.5, 91.0 }),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_4x2, 18000, 0, true, VehicleClass.Class5,
 			new[] { 0.0 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, false, VehicleClass.Class9,
-			new[] { 101.4, 142.9, 51.9, 142.9, 51.9 }),
+			new[] { 101.4, 142.9, 51.9, 142.9, 0.0 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x2, 16000, 0, true, VehicleClass.Class9,
-			new[] { 51.9, 0.0 }),
+			new[] { 0.0, 0.0 }),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, false, VehicleClass.Class10,
 			new[] { 91.0, 140.5, 91.0, 140.5 }),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x2, 16000, 0, true, VehicleClass.Class10,
 			new[] { 0.0 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_6x4, 40000, 0, false, VehicleClass.Class11,
-			new[] { 101.4, 142.9, 51.9, 142.9, 51.9, 0.0 }),
+			new[] { 101.4, 142.9, 51.9, 142.9, 0.0, 0.0 }),
 		TestCase(VehicleCategory.Tractor, AxleConfiguration.AxleConfig_6x4, 99000, 0, false, VehicleClass.Class12,
 			new[] { 91.0, 140.5, 91.0, 140.5, 0.0 }),
 		TestCase(VehicleCategory.RigidTruck, AxleConfiguration.AxleConfig_8x4, 99000, 0, false, VehicleClass.Class16,
@@ -1086,14 +1086,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.45, 0.55 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 2100,
+				bodyCurbWeight: 6000,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 600,
 				refLoad: 3000,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 8400);
+				maxLoad: 4500);
 		}
 
 		/// <summary>
@@ -1126,14 +1126,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.45, 0.55 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 2100,
+				bodyCurbWeight: 6000,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 600,
 				refLoad: 3000,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 8400);
+				maxLoad: 4500);
 
 			AssertMission(segment.Missions[1],
 						vehicleData: vehicleData,
@@ -1376,14 +1376,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.35, 0.4, 0.25 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 2200,
+				bodyCurbWeight: 6750,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 1200,
 				refLoad: 6000,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 14300);
+				maxLoad: 9750);
 		}
 
 		/// <summary>
@@ -1416,14 +1416,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.35, 0.4, 0.25 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 2200,
+				bodyCurbWeight: 6750,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 1200,
 				refLoad: 6000,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 14300);
+				maxLoad: 9750);
 
 			AssertMission(segment.Missions[1],
 						vehicleData: vehicleData,
@@ -1669,14 +1669,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				axleWeightDistribution: new[] { 0.35, 0.35, 0.3 },
 				trailerAxleWeightDistribution: new double[] { },
 				trailerAxleCount: new int[] { },
-				bodyCurbWeight: 2200,
+				bodyCurbWeight: 6750,
 				trailerCurbWeight: new double[] { },
 				trailerType: new TrailerType[] { },
 				lowLoad: 1200,
 				refLoad: 6000,
 				trailerGrossVehicleWeight: new double[] { },
 				deltaCdA: 0,
-				maxLoad: 14300);
+				maxLoad: 9750);
 
 			AssertMission(segment.Missions[5],
 				vehicleData: vehicleData,
@@ -2015,18 +2015,18 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(VehicleClass.Class5, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
 		TestCase(VehicleClass.Class9, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
 		TestCase(VehicleClass.Class10, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
-		 TestCase(VehicleClass.Class4, "4/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.36),
-		TestCase(VehicleClass.Class4, "8/2", MissionType.LongHaul, LoadingType.LowLoading, -0.11),
-		TestCase(VehicleClass.Class4, "11/1", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.79),
-		TestCase(VehicleClass.Class5, "3", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.18),
-		TestCase(VehicleClass.Class5, "5", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.43),
-		TestCase(VehicleClass.Class5, "11/1", MissionType.UrbanDelivery, LoadingType.ReferenceLoad, -0.69),
-		TestCase(VehicleClass.Class9, "1", MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad, -0.25),
-		TestCase(VehicleClass.Class9, "6", MissionType.LongHaulEMS, LoadingType.ReferenceLoad, -0.16),
-		TestCase(VehicleClass.Class9, "10/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.54),
-		TestCase(VehicleClass.Class10, "2", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.08),
-		TestCase(VehicleClass.Class10, "4/2", MissionType.RegionalDeliveryEMS, LoadingType.LowLoading, -0.56),
-		TestCase(VehicleClass.Class10, "11/2", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -1.40)
+		 TestCase(VehicleClass.Class4, "4/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.4),
+		TestCase(VehicleClass.Class4, "8/2", MissionType.LongHaul, LoadingType.LowLoading, -0.1),
+		TestCase(VehicleClass.Class4, "11/1", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.8),
+		TestCase(VehicleClass.Class5, "3", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.2),
+		TestCase(VehicleClass.Class5, "5", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.4),
+		TestCase(VehicleClass.Class5, "11/1", MissionType.UrbanDelivery, LoadingType.ReferenceLoad, -1.3),
+		TestCase(VehicleClass.Class9, "1", MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad, -0.2),
+		TestCase(VehicleClass.Class9, "6", MissionType.LongHaulEMS, LoadingType.ReferenceLoad, -0.2),
+		TestCase(VehicleClass.Class9, "10/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.5),
+		TestCase(VehicleClass.Class10, "2", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.1),
+		TestCase(VehicleClass.Class10, "4/2", MissionType.RegionalDeliveryEMS, LoadingType.LowLoading, -0.6),
+		TestCase(VehicleClass.Class10, "11/2", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -1.4)
 
 			]
 		public void TestADASBenefitLookup(
