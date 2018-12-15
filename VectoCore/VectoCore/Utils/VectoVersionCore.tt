@@ -37,9 +37,12 @@ namespace TUGraz.VectoCore.Utils
 	public static class VectoSimulationCore
 	{
 
+#if BETA_RELEASE
+		private const string SUFFIX = "-DEV";
+#else
 #if RELEASE_CANDIDATE
 		private const string SUFFIX = "-RC";
-#else
+#endif
 		private const string SUFFIX = "";
 #endif
 
