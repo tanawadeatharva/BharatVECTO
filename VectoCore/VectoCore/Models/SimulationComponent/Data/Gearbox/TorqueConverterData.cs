@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			foreach (var edge in TorqueConverterEntries.Pairwise((p1, p2) => Edge.Create(new Point(p1.SpeedRatio, p1.TorqueRatio), new Point(p2.SpeedRatio, p2.TorqueRatio)))) {
 				if (nu >= edge.P1.X && nu < edge.P2.X) {
 					var my = VectoMath.Interpolate(edge, nu);
-					return new TorqueConverterOperatingPoint() {
+					return new TorqueConverterOperatingPoint {
 						InAngularVelocity = inAngularVelocity,
 						OutAngularVelocity = outAngularVelocity,
 						OutTorque = outTorque,
@@ -229,6 +229,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			throw new VectoSimulationException(
 				"Torque Converter: Failed to find operating point for outputSpeed/outputTorque/inputSpeed! n_out: {0}, n_in: {1}, tq_out: {2}",
 				outAngularVelocity, inAngularVelocity, outTorque);
+		}
+
+		public TorqueConverterOperatingPoint LookupOperatingPointOut(PerSecond outAngularVelocity, PerSecond inAngularVelocity, NewtonMeter inTorque)
+		{
+			var nu = outAngularVelocity / inAngularVelocity;
+			foreach (var edge in TorqueConverterEntries.Pairwise((p1, p2) => Edge.Create(new Point(p1.SpeedRatio, p1.TorqueRatio), new Point(p2.SpeedRatio, p2.TorqueRatio)))) {
+				if (nu >= edge.P1.X && nu < edge.P2.X) {
+					var my = VectoMath.Interpolate(edge, nu);
+					return new TorqueConverterOperatingPoint {
+						InAngularVelocity = inAngularVelocity,
+						OutAngularVelocity = outAngularVelocity,
+						OutTorque = inTorque * my,
+						InTorque = inTorque,
+						SpeedRatio = nu,
+						TorqueRatio = my,
+					};
+				}
+			}
+			throw new VectoSimulationException(
+				"Torque Converter: Failed to find operating point for outputSpeed/outputTorque/inputSpeed! n_out: {0}, n_in: {1}, tq_in: {2}",
+				outAngularVelocity, inAngularVelocity, inTorque);
 		}
 
 		public TorqueConverterOperatingPoint FindOperatingPointForPowerDemand(Watt enginePower, PerSecond prevInputSpeed,
@@ -249,8 +270,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				// P_TC_in_avg = (T_in_1 * n_in_1 + T_in_2 * n_in_2) / 2
 				// => solve for n_in
 
-				var a = mpEdge.OffsetXY / (2 * mpNorm * mpNorm);
-				var b = inertia / (2 * dt) + mpEdge.SlopeXY * nextOutputSpeed.Value() / (2 * mpNorm * mpNorm);
+				var a = mpEdge.OffsetXY.SI<NewtonMeter>() / (2 * mpNorm * mpNorm);
+				var b = inertia / (2 * dt) + mpEdge.SlopeXY.SI<NewtonMeter>() * nextOutputSpeed / (2 * mpNorm * mpNorm);
 				var c = 0;
 				var d = -inertia * prevInputSpeed * prevInputSpeed / (2 * dt) - enginePower +
 						previousPowerTC / 2;
@@ -322,6 +343,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 			return ValidationResult.Success;
 		}
+
+
 	}
 
 	public class TorqueConverterOperatingPoint
