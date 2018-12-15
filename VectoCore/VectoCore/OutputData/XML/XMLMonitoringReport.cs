@@ -81,33 +81,41 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public void Initialize(VectoRunData modelData)
 		{
-			var numAxles = modelData.VehicleData.AxleData.Count(x => x.AxleType != AxleType.Trailer);
+			var numAxles = modelData.VehicleData.AxleData?.Count(x => x.AxleType != AxleType.Trailer) ?? 0;
 			var axleData = new object[numAxles];
 			for (var i = 0; i < axleData.Length; i++) {
 				axleData[i] = new XElement(tns + "Axle",
 					new XAttribute("axleNumber", i+1),
 					new XElement(tns + "Tyre", GetStandardFields(string.Format("TYRE_{0}", i+1))
 					));
-			} 
+			}
 
-
+			var components = new object[0];
+			if (!modelData.Exempted) {
+				components = new object[] {
+					new XElement(
+						tns + "Engine",
+						new XElement(
+							tns + "WHTC",
+							new XElement(tns + "CO2", XMLHelper.ValueAsUnit(double.NaN, "g/kWh", 0)),
+							new XElement(tns + "FuelConsumption", XMLHelper.ValueAsUnit(double.NaN, "g/kWh", 0))
+						),
+						new XElement(
+							tns + "WHSC",
+							new XElement(tns + "CO2", XMLHelper.ValueAsUnit(double.NaN, "g/kWh", 0)),
+							new XElement(tns + "FuelConsumption", XMLHelper.ValueAsUnit(double.NaN, "g/kWh", 0))
+						)
+					),
+					new XElement(tns + "Gearbox", GetStandardFields("GEARBOX")),
+					new XElement(tns + "Axlegear", GetStandardFields("AXLEGEAR")),
+					new XElement(tns + "AxleWheels", axleData),
+				};
+			}
 			_additionalFields = new XElement(
 				tns + "AdditionalData",
 				new XElement(tns + "Vehicle",
 							new XElement(tns + "Make", "##VEHICLE_MAKE##")),
-				new XElement(tns + "Engine",
-							new XElement(tns + "WHTC",
-										new XElement(tns + "CO2", XMLHelper.ValueAsUnit(double.NaN, "g/kWh", 0)),
-										new XElement(tns + "FuelConsumption", XMLHelper.ValueAsUnit(double.NaN, "g/kWh", 0))
-							),
-							new XElement(tns + "WHSC",
-										new XElement(tns + "CO2", XMLHelper.ValueAsUnit(double.NaN, "g/kWh", 0)),
-										new XElement(tns + "FuelConsumption", XMLHelper.ValueAsUnit(double.NaN, "g/kWh", 0))
-							)
-				),
-				new XElement(tns + "Gearbox",GetStandardFields("GEARBOX")),
-				new XElement(tns + "Axlegear", GetStandardFields("AXLEGEAR")),
-				new XElement(tns + "AxleWheels", axleData),
+				components,
 				new XElement(tns + "AdvancedReducingTechnologies", new XComment(GetReducingTechnologiesExample())),
 				new XElement(tns + "VectoLicenseNbr", "##VECTO_LICENSE_NUMBER##")
 			);
