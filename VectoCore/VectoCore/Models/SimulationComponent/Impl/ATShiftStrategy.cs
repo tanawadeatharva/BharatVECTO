@@ -347,17 +347,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (DataBus.VehicleSpeed < DataBus.CycleData.LeftSample.VehicleTargetSpeed - 10.KMPHtoMeterPerSecond() && DataBus.DriverAcceleration < 0.SI<MeterPerSquareSecond>()) {
 					var tmpResponseCurr = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
 					if (_gearbox.Gear > 1 || _gearbox.Gear == 1 && _gearbox.TorqueConverterLocked) {
-						var tmpCurr = new NextGearState();
-						var tmpDs = new NextGearState();
-						tmpCurr.SetState(_nextGear);
+						var tmpCurr = _nextGear.Clone();
+						var tmpGbxState = new NextGearState(absTime, _gearbox);
+						
 						Downshift(absTime, gear);
-						tmpDs.SetState(_nextGear);
-						_gearbox.Gear = _nextGear.Gear;
-						_gearbox.TorqueConverterLocked = _nextGear.TorqueConverterLocked;
+						SetGear(_nextGear);
 						var tmpResponseDs = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
 						_nextGear.SetState(tmpCurr);
-						_gearbox.Gear = _nextGear.Gear;
-						_gearbox.TorqueConverterLocked = _nextGear.TorqueConverterLocked;
+						SetGear(tmpGbxState);
 						if (tmpResponseDs.DeltaFullLoad < tmpResponseCurr.DeltaFullLoad) {
 							Downshift(absTime, gear);
 							return true;
@@ -367,6 +364,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			return false;
+		}
+
+		private void SetGear(NextGearState gbxState)
+		{
+			_gearbox.Gear = gbxState.Gear;
+			_gearbox.TorqueConverterLocked = gbxState.TorqueConverterLocked;
+			_gearbox.Disengaged = gbxState.Disengaged;
 		}
 
 		/// <summary>
@@ -408,6 +412,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public uint Gear;
 			public bool TorqueConverterLocked;
 
+			public NextGearState() { }
+
+			private NextGearState(NextGearState nextGearState)
+			{
+				AbsTime = nextGearState.AbsTime;
+				Disengaged = nextGearState.Disengaged;
+				Gear = nextGearState.Gear;
+				TorqueConverterLocked = nextGearState.TorqueConverterLocked;
+			}
+
+			public NextGearState(Second absTime, ATGearbox gearbox)
+			{
+				SetState(absTime, gearbox);
+			}
+
 			public void SetState(Second absTime, bool disengaged, uint gear, bool tcLocked)
 			{
 				AbsTime = absTime;
@@ -422,6 +441,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Disengaged = state.Disengaged;
 				Gear = state.Gear;
 				TorqueConverterLocked = state.TorqueConverterLocked;
+			}
+
+			public void SetState(Second absTime, ATGearbox gearbox)
+			{
+				AbsTime = absTime;
+				Disengaged = gearbox.Disengaged;
+				Gear = gearbox.Gear;
+				TorqueConverterLocked = gearbox.TorqueConverterLocked;
+			}
+
+			public NextGearState Clone()
+			{
+				return new NextGearState(this);
 			}
 		}
 	}

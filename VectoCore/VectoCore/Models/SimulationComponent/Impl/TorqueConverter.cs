@@ -164,10 +164,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgOutSpeedMin = (PreviousState.OutAngularVelocity + dryOperatingPointMin.OutAngularVelocity) / 2.0;
 			var deltaMin = (outTorque - dryOperatingPointMin.OutTorque) * avgOutSpeedMin;
 
+			var inTorqueMin =
+				(PreviousState.InAngularVelocity * PreviousState.InTorque +
+				dryOperatingPointMin.InAngularVelocity * dryOperatingPointMin.InTorque) /
+				(PreviousState.InAngularVelocity + dryOperatingPointMin.InAngularVelocity);
+			var engRespMin = (ResponseDryRun)
+				NextComponent.Request(absTime, dt, inTorqueMin, dryOperatingPointMin.InAngularVelocity, true);
+
+			//var tqMin = 2.0 * engineResponse.DeltaDragLoad / (operatingPoint.InAngularVelocity + DataBus.EngineSpeed);
+			//var operatingPointMin = ModelData.LookupOperatingPointOut(
+			//	outAngularVelocity, operatingPoint.InAngularVelocity, tqMin);
+
 			return new ResponseDryRun {
 				Source = this,
 				DeltaFullLoad = 2 * deltaMax,
-				DeltaDragLoad = 2 * deltaMin,
+				DeltaDragLoad = 2*deltaMin,
 				TorqueConverterOperatingPoint = dryOperatingPointMax
 			};
 		}

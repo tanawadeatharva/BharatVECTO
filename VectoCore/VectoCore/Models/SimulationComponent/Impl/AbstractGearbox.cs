@@ -52,6 +52,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		[Required, ValidateObject] internal readonly GearboxData ModelData;
 
+		protected uint _gear;
+
 		protected AbstractGearbox(IVehicleContainer container, VectoRunData runData) : base(container)
 		{
 			ModelData = runData.GearboxData;
@@ -76,7 +78,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// The current gear.
 		/// </summary>
-		public uint Gear { get; protected internal set; }
+		public virtual uint Gear
+		{
+			get { return _gear; }
+			protected internal set { _gear = value; }
+		}
 
 		public abstract bool TCLocked { get; }
 
