@@ -203,6 +203,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Tests if the simulation works and the modfile and sumfile are correct in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
+		[Category("LongRunning")]
 		[TestCase]
 		public void Pwheel_ultimate_Run_Test()
 		{

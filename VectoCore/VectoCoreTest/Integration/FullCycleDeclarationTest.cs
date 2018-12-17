@@ -69,6 +69,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void Truck40t_LongHaulCycle_RefLoad()
 		{
@@ -80,6 +81,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void Truck40t_RegionalDeliveryCycle_RefLoad()
 		{
@@ -91,6 +93,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void Truck40t_UrbanDeliveryCycle_RefLoad()
 		{
@@ -102,6 +105,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void Truck40t_MunicipalCycle_RefLoad()
 		{
@@ -113,6 +117,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void Truck40t_ConstructionCycle_RefLoad()
 		{
@@ -124,6 +129,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void Truck40t_HeavyUrbanCycle_RefLoad()
 		{

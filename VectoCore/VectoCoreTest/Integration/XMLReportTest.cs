@@ -151,6 +151,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return new XMLValidator(new XmlTextReader(mrfStream));
 		}
 
+		[Category("LongRunning")]
 		[TestCase()]
 		public void TestXMLReportPTO()
 		{

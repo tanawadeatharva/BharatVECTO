@@ -53,6 +53,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
+
+		[Category("LongRunning")]
+		[Category("Integration")]
 		[TestCase(FuelType.DieselCI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 
 			0.0002199424, 0.0002199424, 26.308901, 0.0006886, 9391.5411,

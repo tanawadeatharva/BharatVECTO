@@ -58,6 +58,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
+		[Category("LongRunning")]
+		[Category("Integration")]
 		[TestCase(null, 1.0, 45.5323),
 		TestCase("CFRegPer", 1.2, 45.5323 * 1.2),
 		TestCase("BFColdHot", 1.2, 45.5323 * 1.2),
