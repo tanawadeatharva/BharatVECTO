@@ -410,6 +410,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\MeasuredSpeed\Results\MeasuredSpeedVairBack.vsum", @"TestData\MeasuredSpeed\MeasuredSpeedVairBack.vsum");
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void MeasuredSpeedVair_NoWind_Run()
 		{

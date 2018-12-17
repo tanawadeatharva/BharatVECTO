@@ -31,11 +31,12 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 		}
 
 
-		[
-		 TestCase(Class5NG, 2, TankSystem.Liquefied, 253.7, 702.8),
+		[Category("LongRunning")]
+		[Category("Integration")]
+		[TestCase(Class5NG, 2, TankSystem.Liquefied, 253.7, 702.8),
 		 TestCase(Class5NG, 2, TankSystem.Compressed, 259.5, 698.1),
-		TestCase(Class5NG, 6, TankSystem.Liquefied, 252.9, 700.7),
-		TestCase(Class5NG, 6, TankSystem.Compressed, 258.7, 696.0),
+		 TestCase(Class5NG, 6, TankSystem.Liquefied, 252.9, 700.7),
+		 TestCase(Class5NG, 6, TankSystem.Compressed, 258.7, 696.0),
 			]
 		public void NaturalGasTankSystemTest(string filename, int runIdx, TankSystem tankSystem, double expectedFc, double expectedCo2)
 		{

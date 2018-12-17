@@ -488,6 +488,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestXMLPowertrainGenerationSingleFile()
 		{

@@ -169,6 +169,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_brake [kWh]"), 1e-3);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestSumDataMetaInformation()
 		{
