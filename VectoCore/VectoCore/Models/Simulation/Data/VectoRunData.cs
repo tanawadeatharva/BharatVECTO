@@ -247,8 +247,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	public class VTPData
 	{
 		public double CorrectionFactor;
-
-		public JoulePerKilogramm FuelNetCalorificValue;
 	}
 
 	public class AuxFanData

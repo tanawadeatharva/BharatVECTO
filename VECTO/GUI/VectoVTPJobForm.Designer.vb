@@ -69,26 +69,28 @@ Partial Class VectoVTPJobForm
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.Label7 = New System.Windows.Forms.Label()
         Me.tbFanDiameter = New System.Windows.Forms.TextBox()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.tbC3 = New System.Windows.Forms.TextBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.tbC2 = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.tbC1 = New System.Windows.Forms.TextBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.pnFanParameters = New System.Windows.Forms.Panel()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.tbC1 = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.tbC3 = New System.Windows.Forms.TextBox()
+        Me.tbC2 = New System.Windows.Forms.TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.pnManufacturerRecord = New System.Windows.Forms.Panel()
         Me.lblMileageUnit = New System.Windows.Forms.Label()
         Me.tbMileage = New System.Windows.Forms.TextBox()
         Me.lblMileage = New System.Windows.Forms.Label()
-        Me.lblNCVUnit = New System.Windows.Forms.Label()
-        Me.tbNCV = New System.Windows.Forms.TextBox()
-        Me.lblNCV = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.tbManufacturerRecord = New System.Windows.Forms.TextBox()
         Me.ButtonManR = New System.Windows.Forms.Button()
+        Me.Label12 = New System.Windows.Forms.Label()
         Me.GrCycles.SuspendLayout
         Me.GrAux.SuspendLayout
         Me.StatusStrip1.SuspendLayout
@@ -99,6 +101,7 @@ Partial Class VectoVTPJobForm
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PictureBox2,System.ComponentModel.ISupportInitialize).BeginInit
         Me.GroupBox1.SuspendLayout
+        Me.pnFanParameters.SuspendLayout
         Me.pnManufacturerRecord.SuspendLayout
         Me.SuspendLayout
         '
@@ -106,13 +109,14 @@ Partial Class VectoVTPJobForm
         '
         Me.GrCycles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.GrCycles.Controls.Add(Me.Label12)
         Me.GrCycles.Controls.Add(Me.Label2)
         Me.GrCycles.Controls.Add(Me.LvCycles)
         Me.GrCycles.Controls.Add(Me.BtDRIrem)
         Me.GrCycles.Controls.Add(Me.BtDRIadd)
         Me.GrCycles.Location = New System.Drawing.Point(11, 324)
         Me.GrCycles.Name = "GrCycles"
-        Me.GrCycles.Size = New System.Drawing.Size(515, 138)
+        Me.GrCycles.Size = New System.Drawing.Size(515, 166)
         Me.GrCycles.TabIndex = 10
         Me.GrCycles.TabStop = false
         Me.GrCycles.Text = "Cycles"
@@ -122,7 +126,7 @@ Partial Class VectoVTPJobForm
         Me.Label2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = true
-        Me.Label2.Location = New System.Drawing.Point(391, 109)
+        Me.Label2.Location = New System.Drawing.Point(391, 137)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(118, 13)
         Me.Label2.TabIndex = 3
@@ -139,10 +143,10 @@ Partial Class VectoVTPJobForm
         Me.LvCycles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None
         Me.LvCycles.HideSelection = false
         Me.LvCycles.LabelEdit = true
-        Me.LvCycles.Location = New System.Drawing.Point(6, 19)
+        Me.LvCycles.Location = New System.Drawing.Point(6, 40)
         Me.LvCycles.MultiSelect = false
         Me.LvCycles.Name = "LvCycles"
-        Me.LvCycles.Size = New System.Drawing.Size(503, 89)
+        Me.LvCycles.Size = New System.Drawing.Size(503, 96)
         Me.LvCycles.TabIndex = 0
         Me.LvCycles.TabStop = false
         Me.LvCycles.UseCompatibleStateImageBehavior = false
@@ -158,7 +162,7 @@ Partial Class VectoVTPJobForm
         Me.BtDRIrem.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.BtDRIrem.Image = Global.TUGraz.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.BtDRIrem.Location = New System.Drawing.Point(29, 109)
+        Me.BtDRIrem.Location = New System.Drawing.Point(29, 137)
         Me.BtDRIrem.Name = "BtDRIrem"
         Me.BtDRIrem.Size = New System.Drawing.Size(24, 24)
         Me.BtDRIrem.TabIndex = 2
@@ -169,7 +173,7 @@ Partial Class VectoVTPJobForm
         Me.BtDRIadd.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.BtDRIadd.Image = Global.TUGraz.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.BtDRIadd.Location = New System.Drawing.Point(5, 109)
+        Me.BtDRIadd.Location = New System.Drawing.Point(5, 137)
         Me.BtDRIadd.Name = "BtDRIadd"
         Me.BtDRIadd.Size = New System.Drawing.Size(24, 24)
         Me.BtDRIadd.TabIndex = 1
@@ -243,7 +247,7 @@ Partial Class VectoVTPJobForm
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 609)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 635)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(944, 22)
         Me.StatusStrip1.SizingGrip = false
@@ -259,7 +263,7 @@ Partial Class VectoVTPJobForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(778, 582)
+        Me.ButOK.Location = New System.Drawing.Point(778, 608)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 0
@@ -270,7 +274,7 @@ Partial Class VectoVTPJobForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(859, 582)
+        Me.ButCancel.Location = New System.Drawing.Point(859, 608)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 1
@@ -477,95 +481,133 @@ Partial Class VectoVTPJobForm
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.Label7)
         Me.GroupBox1.Controls.Add(Me.tbFanDiameter)
-        Me.GroupBox1.Controls.Add(Me.Label6)
-        Me.GroupBox1.Controls.Add(Me.tbC3)
-        Me.GroupBox1.Controls.Add(Me.Label4)
-        Me.GroupBox1.Controls.Add(Me.tbC2)
-        Me.GroupBox1.Controls.Add(Me.Label3)
-        Me.GroupBox1.Controls.Add(Me.tbC1)
-        Me.GroupBox1.Controls.Add(Me.Label1)
+        Me.GroupBox1.Controls.Add(Me.Label7)
+        Me.GroupBox1.Controls.Add(Me.pnFanParameters)
         Me.GroupBox1.Controls.Add(Me.PictureBox2)
-        Me.GroupBox1.Location = New System.Drawing.Point(10, 468)
+        Me.GroupBox1.Controls.Add(Me.Label6)
+        Me.GroupBox1.Location = New System.Drawing.Point(10, 496)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(515, 135)
+        Me.GroupBox1.Size = New System.Drawing.Size(517, 135)
         Me.GroupBox1.TabIndex = 39
         Me.GroupBox1.TabStop = false
         Me.GroupBox1.Text = "Fan Power"
         '
+        'tbFanDiameter
+        '
+        Me.tbFanDiameter.Location = New System.Drawing.Point(371, 13)
+        Me.tbFanDiameter.Name = "tbFanDiameter"
+        Me.tbFanDiameter.Size = New System.Drawing.Size(86, 20)
+        Me.tbFanDiameter.TabIndex = 46
+        '
         'Label7
         '
         Me.Label7.AutoSize = true
-        Me.Label7.Location = New System.Drawing.Point(477, 32)
+        Me.Label7.Location = New System.Drawing.Point(463, 16)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(29, 13)
         Me.Label7.TabIndex = 47
         Me.Label7.Text = "[mm]"
         '
-        'tbFanDiameter
+        'pnFanParameters
         '
-        Me.tbFanDiameter.Location = New System.Drawing.Point(371, 29)
-        Me.tbFanDiameter.Name = "tbFanDiameter"
-        Me.tbFanDiameter.Size = New System.Drawing.Size(100, 20)
-        Me.tbFanDiameter.TabIndex = 46
+        Me.pnFanParameters.Controls.Add(Me.Label11)
+        Me.pnFanParameters.Controls.Add(Me.Label10)
+        Me.pnFanParameters.Controls.Add(Me.Label9)
+        Me.pnFanParameters.Controls.Add(Me.Label1)
+        Me.pnFanParameters.Controls.Add(Me.tbC1)
+        Me.pnFanParameters.Controls.Add(Me.Label3)
+        Me.pnFanParameters.Controls.Add(Me.tbC3)
+        Me.pnFanParameters.Controls.Add(Me.tbC2)
+        Me.pnFanParameters.Controls.Add(Me.Label4)
+        Me.pnFanParameters.Location = New System.Drawing.Point(290, 39)
+        Me.pnFanParameters.Name = "pnFanParameters"
+        Me.pnFanParameters.Size = New System.Drawing.Size(218, 88)
+        Me.pnFanParameters.TabIndex = 48
         '
-        'Label6
+        'Label11
         '
-        Me.Label6.AutoSize = true
-        Me.Label6.Location = New System.Drawing.Point(294, 32)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(71, 13)
-        Me.Label6.TabIndex = 45
-        Me.Label6.Text = "Fan diameter:"
+        Me.Label11.AutoSize = true
+        Me.Label11.Location = New System.Drawing.Point(173, 63)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(29, 13)
+        Me.Label11.TabIndex = 50
+        Me.Label11.Text = "[mm]"
         '
-        'tbC3
+        'Label10
         '
-        Me.tbC3.Location = New System.Drawing.Point(371, 107)
-        Me.tbC3.Name = "tbC3"
-        Me.tbC3.Size = New System.Drawing.Size(100, 20)
-        Me.tbC3.TabIndex = 44
+        Me.Label10.AutoSize = true
+        Me.Label10.Location = New System.Drawing.Point(173, 37)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(30, 13)
+        Me.Label10.TabIndex = 49
+        Me.Label10.Text = "[rpm]"
         '
-        'Label4
+        'Label9
         '
-        Me.Label4.AutoSize = true
-        Me.Label4.Location = New System.Drawing.Point(342, 110)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(23, 13)
-        Me.Label4.TabIndex = 43
-        Me.Label4.Text = "C3:"
+        Me.Label9.AutoSize = true
+        Me.Label9.Location = New System.Drawing.Point(173, 11)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(30, 13)
+        Me.Label9.TabIndex = 48
+        Me.Label9.Text = "[kW]"
         '
-        'tbC2
+        'Label1
         '
-        Me.tbC2.Location = New System.Drawing.Point(371, 81)
-        Me.tbC2.Name = "tbC2"
-        Me.tbC2.Size = New System.Drawing.Size(100, 20)
-        Me.tbC2.TabIndex = 42
+        Me.Label1.AutoSize = true
+        Me.Label1.Location = New System.Drawing.Point(52, 11)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(23, 13)
+        Me.Label1.TabIndex = 39
+        Me.Label1.Text = "C1:"
+        '
+        'tbC1
+        '
+        Me.tbC1.Location = New System.Drawing.Point(81, 8)
+        Me.tbC1.Name = "tbC1"
+        Me.tbC1.Size = New System.Drawing.Size(86, 20)
+        Me.tbC1.TabIndex = 40
         '
         'Label3
         '
         Me.Label3.AutoSize = true
-        Me.Label3.Location = New System.Drawing.Point(342, 84)
+        Me.Label3.Location = New System.Drawing.Point(52, 37)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(23, 13)
         Me.Label3.TabIndex = 41
         Me.Label3.Text = "C2:"
         '
-        'tbC1
+        'tbC3
         '
-        Me.tbC1.Location = New System.Drawing.Point(371, 55)
-        Me.tbC1.Name = "tbC1"
-        Me.tbC1.Size = New System.Drawing.Size(100, 20)
-        Me.tbC1.TabIndex = 40
+        Me.tbC3.Location = New System.Drawing.Point(81, 60)
+        Me.tbC3.Name = "tbC3"
+        Me.tbC3.Size = New System.Drawing.Size(86, 20)
+        Me.tbC3.TabIndex = 44
         '
-        'Label1
+        'tbC2
         '
-        Me.Label1.AutoSize = true
-        Me.Label1.Location = New System.Drawing.Point(342, 58)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(23, 13)
-        Me.Label1.TabIndex = 39
-        Me.Label1.Text = "C1:"
+        Me.tbC2.Location = New System.Drawing.Point(81, 34)
+        Me.tbC2.Name = "tbC2"
+        Me.tbC2.Size = New System.Drawing.Size(86, 20)
+        Me.tbC2.TabIndex = 42
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = true
+        Me.Label4.Location = New System.Drawing.Point(52, 63)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(23, 13)
+        Me.Label4.TabIndex = 43
+        Me.Label4.Text = "C3:"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = true
+        Me.Label6.Location = New System.Drawing.Point(294, 16)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(71, 13)
+        Me.Label6.TabIndex = 45
+        Me.Label6.Text = "Fan diameter:"
         '
         'Label5
         '
@@ -581,9 +623,6 @@ Partial Class VectoVTPJobForm
         Me.pnManufacturerRecord.Controls.Add(Me.lblMileageUnit)
         Me.pnManufacturerRecord.Controls.Add(Me.tbMileage)
         Me.pnManufacturerRecord.Controls.Add(Me.lblMileage)
-        Me.pnManufacturerRecord.Controls.Add(Me.lblNCVUnit)
-        Me.pnManufacturerRecord.Controls.Add(Me.tbNCV)
-        Me.pnManufacturerRecord.Controls.Add(Me.lblNCV)
         Me.pnManufacturerRecord.Controls.Add(Me.Label8)
         Me.pnManufacturerRecord.Controls.Add(Me.tbManufacturerRecord)
         Me.pnManufacturerRecord.Controls.Add(Me.ButtonManR)
@@ -595,7 +634,7 @@ Partial Class VectoVTPJobForm
         'lblMileageUnit
         '
         Me.lblMileageUnit.AutoSize = true
-        Me.lblMileageUnit.Location = New System.Drawing.Point(476, 43)
+        Me.lblMileageUnit.Location = New System.Drawing.Point(199, 43)
         Me.lblMileageUnit.Name = "lblMileageUnit"
         Me.lblMileageUnit.Size = New System.Drawing.Size(27, 13)
         Me.lblMileageUnit.TabIndex = 49
@@ -605,7 +644,7 @@ Partial Class VectoVTPJobForm
         '
         Me.tbMileage.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.tbMileage.Location = New System.Drawing.Point(394, 40)
+        Me.tbMileage.Location = New System.Drawing.Point(117, 40)
         Me.tbMileage.Name = "tbMileage"
         Me.tbMileage.Size = New System.Drawing.Size(76, 20)
         Me.tbMileage.TabIndex = 48
@@ -613,38 +652,11 @@ Partial Class VectoVTPJobForm
         'lblMileage
         '
         Me.lblMileage.AutoSize = true
-        Me.lblMileage.Location = New System.Drawing.Point(281, 43)
+        Me.lblMileage.Location = New System.Drawing.Point(4, 43)
         Me.lblMileage.Name = "lblMileage"
         Me.lblMileage.Size = New System.Drawing.Size(47, 13)
         Me.lblMileage.TabIndex = 47
         Me.lblMileage.Text = "Mileage:"
-        '
-        'lblNCVUnit
-        '
-        Me.lblNCVUnit.AutoSize = true
-        Me.lblNCVUnit.Location = New System.Drawing.Point(199, 43)
-        Me.lblNCVUnit.Name = "lblNCVUnit"
-        Me.lblNCVUnit.Size = New System.Drawing.Size(44, 13)
-        Me.lblNCVUnit.TabIndex = 46
-        Me.lblNCVUnit.Text = "[MJ/kg]"
-        '
-        'tbNCV
-        '
-        Me.tbNCV.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.tbNCV.Location = New System.Drawing.Point(117, 40)
-        Me.tbNCV.Name = "tbNCV"
-        Me.tbNCV.Size = New System.Drawing.Size(76, 20)
-        Me.tbNCV.TabIndex = 45
-        '
-        'lblNCV
-        '
-        Me.lblNCV.AutoSize = true
-        Me.lblNCV.Location = New System.Drawing.Point(4, 43)
-        Me.lblNCV.Name = "lblNCV"
-        Me.lblNCV.Size = New System.Drawing.Size(79, 13)
-        Me.lblNCV.TabIndex = 44
-        Me.lblNCV.Text = "NCV Test Fuel:"
         '
         'Label8
         '
@@ -675,13 +687,25 @@ Partial Class VectoVTPJobForm
         Me.ButtonManR.TabStop = false
         Me.ButtonManR.UseVisualStyleBackColor = true
         '
+        'Label12
+        '
+        Me.Label12.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.Label12.AutoSize = true
+        Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.Label12.Location = New System.Drawing.Point(6, 20)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(426, 13)
+        Me.Label12.TabIndex = 4
+        Me.Label12.Text = "The fuel cocnsumption in the cycle has to be corrected for standard NCV!"
+        '
         'VectoVTPJobForm
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(944, 631)
+        Me.ClientSize = New System.Drawing.Size(944, 657)
         Me.Controls.Add(Me.pnManufacturerRecord)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.GroupBox1)
@@ -723,6 +747,8 @@ Partial Class VectoVTPJobForm
         CType(Me.PictureBox2,System.ComponentModel.ISupportInitialize).EndInit
         Me.GroupBox1.ResumeLayout(false)
         Me.GroupBox1.PerformLayout
+        Me.pnFanParameters.ResumeLayout(false)
+        Me.pnFanParameters.PerformLayout
         Me.pnManufacturerRecord.ResumeLayout(false)
         Me.pnManufacturerRecord.PerformLayout
         Me.ResumeLayout(false)
@@ -788,7 +814,9 @@ End Sub
     Friend WithEvents lblMileageUnit As Label
     Friend WithEvents tbMileage As TextBox
     Friend WithEvents lblMileage As Label
-    Friend WithEvents lblNCVUnit As Label
-    Friend WithEvents tbNCV As TextBox
-    Friend WithEvents lblNCV As Label
+    Friend WithEvents pnFanParameters As Panel
+    Friend WithEvents Label11 As Label
+    Friend WithEvents Label10 As Label
+    Friend WithEvents Label9 As Label
+    Friend WithEvents Label12 As Label
 End Class
