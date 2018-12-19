@@ -962,12 +962,12 @@
 								</xs:complexType>
 							</xs:element>
 							<xs:sequence minOccurs="0">
-								<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+								<xs:element name="ZeroEmissionVehicle" type="tns:ZeroEmissionVehicleType">
 									<xs:annotation>
 										<xs:documentation>P269 - bool</xs:documentation>
 									</xs:annotation>
 								</xs:element>
-								<xs:element name="VocationalVehicle" type="xs:boolean">
+								<xs:element name="VocationalVehicle" type="tns:VocationalVehicleType">
 									<xs:annotation>
 										<xs:documentation>P270 - bool</xs:documentation>
 									</xs:annotation>
@@ -977,7 +977,7 @@
 										<xs:documentation>P275 - enum</xs:documentation>
 									</xs:annotation>
 								</xs:element>
-								<xs:element name="SleeperCab" type="xs:boolean">
+								<xs:element name="SleeperCab" type="tns:SleeperCabType">
 									<xs:annotation>
 										<xs:documentation>P276 - bool</xs:documentation>
 									</xs:annotation>
@@ -985,17 +985,17 @@
 								<xs:element name="ADAS">
 									<xs:complexType>
 										<xs:sequence>
-											<xs:element name="EngineStopStart" type="xs:boolean">
+											<xs:element name="EngineStopStart" type="tns:EngineStopStartType">
 												<xs:annotation>
 													<xs:documentation>P271 - bool</xs:documentation>
 												</xs:annotation>
 											</xs:element>
-											<xs:element name="EcoRollWithoutEngineStop" type="xs:boolean">
+											<xs:element name="EcoRollWithoutEngineStop" type="tns:EcoRollWithoutEngineStopType">
 												<xs:annotation>
 													<xs:documentation>P272 - bool</xs:documentation>
 												</xs:annotation>
 											</xs:element>
-											<xs:element name="EcoRollWithEngineStop" type="xs:boolean">
+											<xs:element name="EcoRollWithEngineStop" type="tns:EcoRollWithEngineStopType">
 												<xs:annotation>
 													<xs:documentation>P273 - bool</xs:documentation>
 												</xs:annotation>
@@ -1031,7 +1031,7 @@
 							</xs:sequence>
 						</xs:sequence>
 						<xs:sequence>
-							<xs:element name="ZeroEmissionVehicle" type="xs:boolean">
+							<xs:element name="ZeroEmissionVehicle" type="tns:ZeroEmissionVehicleType">
 								<xs:annotation>
 									<xs:documentation>P269 - bool</xs:documentation>
 								</xs:annotation>
@@ -1046,12 +1046,12 @@
 									<xs:documentation>P278 - [W]</xs:documentation>
 								</xs:annotation>
 							</xs:element>
-							<xs:element name="HybridElectricHDV" type="xs:boolean">
+							<xs:element name="HybridElectricHDV" type="tns:HybridElectricHDVType">
 								<xs:annotation>
 									<xs:documentation>P279 - bool</xs:documentation>
 								</xs:annotation>
 							</xs:element>
-							<xs:element name="DualFuelVehicle" type="xs:boolean">
+							<xs:element name="DualFuelVehicle" type="tns:DualFuelType">
 								<xs:annotation>
 									<xs:documentation>P280 - bool</xs:documentation>
 								</xs:annotation>
@@ -2547,12 +2547,28 @@ ToDo: -0.00
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="NgTankSystemType">
+	<xs:annotation>
+<xs:appinfo>
+<vectoParam:description>
+	<vectoParam:parameterId component="Vehicle">275</vectoParam:parameterId>
+	<vectoParam:unit>-</vectoParam:unit>
+</vectoParam:description>
+</xs:appinfo>
+</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Compressed"/>
 			<xs:enumeration value="Liquefied"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="PredictiveCruiseControlType">
+	<xs:annotation>
+<xs:appinfo>
+<vectoParam:description>
+	<vectoParam:parameterId component="Vehicle/ADAS">274</vectoParam:parameterId>
+	<vectoParam:unit>-</vectoParam:unit>
+</vectoParam:description>
+</xs:appinfo>
+</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="none"/>
 			<xs:enumeration value="1,2"/>
@@ -2560,8 +2576,105 @@ ToDo: -0.00
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="PowerType">
+	<xs:annotation>
+	<xs:appinfo>
+<vectoParam:description>
+	<vectoParam:parameterId component="Vehicle">277</vectoParam:parameterId>
+	<vectoParam:parameterId component="Vehicle">278</vectoParam:parameterId>
+	<vectoParam:unit>W</vectoParam:unit>
+</vectoParam:description>
+</xs:appinfo>
+</xs:annotation>
 		<xs:restriction base="xs:int">
 			<xs:minInclusive value="0"/>
 		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ZeroEmissionVehicleType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">269</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="VocationalVehicleType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">270</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="SleeperCabType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">276</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="EngineStopStartType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle/ADAS">271</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="EcoRollWithoutEngineStopType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle/ADAS">272</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="EcoRollWithEngineStopType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle/ADAS">273</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="HybridElectricHDVType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">279</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="DualFuelType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">280</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
 	</xs:simpleType>
 </xs:schema>
