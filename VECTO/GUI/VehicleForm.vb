@@ -83,7 +83,7 @@ Public Class VehicleForm
 		CbAxleConfig.DisplayMember = "Label"
 		If (cfg.DeclMode) Then
 			CbAxleConfig.DataSource = DeclarationData.Segments.GetAxleConfigurations() _
-			    .Cast(Of AxleConfiguration) _
+				.Cast(Of AxleConfiguration) _
 				.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
 		else
 				CbAxleConfig.DataSource = [Enum].GetValues(GetType(AxleConfiguration)) _
@@ -921,6 +921,14 @@ Public Class VehicleForm
 			entry.SubItems(TorqueLimitsTbl.MaxTorque).Text = _torqueLimitDlog.tbMaxTorque.Text
 		End If
 		_torqueLimitDlog.tbGear.ReadOnly = False
+	End Sub
+
+	Private Sub Label18_Click(sender As Object, e As EventArgs) Handles Label18.Click
+
+	End Sub
+
+	Private Sub tbVehIdlingSpeed_TextChanged(sender As Object, e As EventArgs) Handles tbVehIdlingSpeed.TextChanged
+
 	End Sub
 End Class
 

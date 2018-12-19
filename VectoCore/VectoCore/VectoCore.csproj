@@ -163,6 +163,8 @@
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\ShiftPolygonReader.cs" />
+    <Compile Include="Models\Declaration\ADASBenefits.cs" />
+    <Compile Include="Models\Declaration\ADASCombinations.cs" />
     <Compile Include="Models\Declaration\AuxDemandEntry.cs" />
     <Compile Include="Models\Declaration\AuxiliaryTypeHelper.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
@@ -173,6 +175,9 @@
     <Compile Include="Models\Declaration\FuelData.cs" />
     <Compile Include="Models\Declaration\PTOTransmission.cs" />
     <Compile Include="Models\Declaration\IDeclarationAuxiliaryTable.cs" />
+    <Compile Include="Models\Declaration\TyreClass.cs" />
+    <Compile Include="Models\Declaration\WeightingFactors.cs" />
+    <Compile Include="Models\Declaration\WeightingGroups.cs" />
     <Compile Include="Models\SimulationComponent\Data\AngledriveData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMapReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOData.cs" />
@@ -196,6 +201,8 @@
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
+    <Compile Include="Models\Simulation\Impl\ExemptedRun.cs" />
+    <Compile Include="OutputData\XML\XMLMonitoringReport.cs" />
     <Compile Include="OutputData\XML\XMLVTPReport.cs" />
     <Compile Include="OutputData\VTPReport.cs" />
     <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
@@ -207,6 +214,7 @@
     <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
     <Compile Include="OutputData\XML\XMLEngineeringWriter.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReport.cs" />
+    <Compile Include="Utils\MeanShiftClustering.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
@@ -456,6 +464,20 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.6.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.7.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.7.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\ADAS\ADAS_Benefits.csv" />
+    <EmbeddedResource Include="Resources\Declaration\ADAS\ADAS_Combinations.csv" />
+    <EmbeddedResource Include="Resources\Declaration\CO2Standards\MissionProfileWeights.csv" />
+    <EmbeddedResource Include="Resources\Declaration\CO2Standards\WeightingGroups.csv" />
+    <EmbeddedResource Include="Resources\Declaration\TyreLabeling.csv" />
+    <EmbeddedResource Include="Resources\XSD\VectoMonitoring.0.7.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">

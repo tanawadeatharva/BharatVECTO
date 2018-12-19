@@ -51,8 +51,9 @@ namespace TUGraz.VectoCore.Utils
 			{XmlDocumentType.DeclarationJobData, Tuple.Create("VectoInput{0}.xsd", new [] {"1.0"}) },
 			{XmlDocumentType.DeclarationComponentData, Tuple.Create("VectoComponent{0}.xsd", new [] {"1.0"}) },
 			{XmlDocumentType.EngineeringData, Tuple.Create("VectoEngineeringInput{0}.xsd", new [] {"0.7"}) },
-			{XmlDocumentType.ManufacturerReport, Tuple.Create("VectoOutputManufacturer{0}.xsd", new [] {"0.4", "0.5", "0.6"}) },
-			{ XmlDocumentType.CustomerReport , Tuple.Create("VectoOutputCustomer{0}.xsd", new [] {"0.4", "0.5"})},
+			{XmlDocumentType.ManufacturerReport, Tuple.Create("VectoOutputManufacturer{0}.xsd", new [] {"0.4", "0.5", "0.6", "0.7"}) },
+			{XmlDocumentType.CustomerReport , Tuple.Create("VectoOutputCustomer{0}.xsd", new [] {"0.4", "0.5", "0.7"})},
+			{XmlDocumentType.MonitoringReport , Tuple.Create("VectoMonitoring{0}.xsd", new [] {"0.7"})},
 		};
 
 		private XMLValidator(Action<bool> resultaction, Action<XmlSeverityType, ValidationEvent> validationErrorAction)
@@ -134,6 +135,7 @@ namespace TUGraz.VectoCore.Utils
 			EngineeringData = 1<<4,
 			ManufacturerReport = 1<<5,
 			CustomerReport = 1<<6,
+			MonitoringReport = 1<<7,
 		}
 	}
 

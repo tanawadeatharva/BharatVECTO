@@ -145,6 +145,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 
+		[Category("LongRunning")]
 		[Test,
 		TestCase("Urban", GearboxType.ATSerial),
 		TestCase("Suburban", GearboxType.ATSerial),

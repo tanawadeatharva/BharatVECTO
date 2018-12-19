@@ -1,0 +1,19 @@
+﻿ADAS Combination , Engine Stop Start , EcoRoll without Engine Stop , EcoRoll with Engine Stop , Predictive Cruise Control
+0                , 0                 , 0                           , 0                        , none
+1                , 1                 , 0                           , 0                        , none
+2                , 0                 , 1                           , 0                        , none
+3                , 0                 , 0                           , 1                        , none
+4/1              , 0                 , 0                           , 0                        , "1_2"
+4/2              , 0                 , 0                           , 0                        , "1_2_3"
+5                , 1                 , 1                           , 0                        , none
+6                , 1                 , 0                           , 1                        , none
+7/1              , 1                 , 0                           , 0                        , "1_2"
+7/2              , 1                 , 0                           , 0                        , "1_2_3"
+8/1              , 0                 , 1                           , 0                        , "1_2"
+8/2              , 0                 , 1                           , 0                        , "1_2_3"
+9/1              , 0                 , 0                           , 1                        , "1_2"
+9/2              , 0                 , 0                           , 1                        , "1_2_3"
+10/1             , 1                 , 1                           , 0                        , "1_2"
+10/2             , 1                 , 1                           , 0                        , "1_2_3"
+11/1             , 1                 , 0                           , 1                        , "1_2"
+11/2             , 1                 , 0                           , 1                        , "1_2_3"

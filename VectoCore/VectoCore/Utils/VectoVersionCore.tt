@@ -36,10 +36,20 @@ namespace TUGraz.VectoCore.Utils
 {
 	public static class VectoSimulationCore
 	{
+
+#if BETA_RELEASE
+		private const string SUFFIX = "-DEV";
+#else
+#if RELEASE_CANDIDATE
+		private const string SUFFIX = "-RC";
+#endif
+		private const string SUFFIX = "";
+#endif
+
 		public static string VersionNumber
 		{
 			get {
-				return "<#= GetVectoCoreVersionNumber() #>";
+				return "<#= GetVectoCoreVersionNumber() #>" + SUFFIX;
 			}
 		}
 

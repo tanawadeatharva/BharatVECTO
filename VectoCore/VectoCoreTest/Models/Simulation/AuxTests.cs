@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		{
 			var fileWriter = new FileOutputWriter("AuxWriteModFileSumFile");
-			var modData = new ModalDataContainer("AuxWriteModFileSumFile", FuelType.DieselCI, fileWriter) {
+			var modData = new ModalDataContainer("AuxWriteModFileSumFile", FuelData.Diesel, fileWriter) {
 				WriteModalResults = true
 			};
 			modData.AddAuxiliary("FAN");
@@ -337,6 +337,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}, "Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void AuxReadJobFileDeclarationMode()
 		{
@@ -351,6 +352,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			jobContainer.AddRuns(runsFactory);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void AuxReadJobFileEngineeringMode()
 		{

@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			KilogramSquareMeter gearBoxInertia = null, bool engineHighPower = true)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, FuelType.DieselCI, fileWriter) { WriteModalResults = true };
+			var modData = new ModalDataContainer(modFileName, FuelData.Diesel, fileWriter) { WriteModalResults = true };
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var gearboxData = CreateGearboxData();

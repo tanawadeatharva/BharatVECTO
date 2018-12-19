@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public GearboxType GearboxType { get; set; }
 
 		public uint Gear { get; set; }
+		public bool TCLocked { get; set; }
 		public GearInfo NextGear { get; private set; }
 
 		public Second TractionInterruption
@@ -146,6 +147,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return 0.SI<Newton>();
 		}
+
+		public MeterPerSecond MaxVehicleSpeed { get { return null; } }
 
 		public Meter Distance { get; set; }
 

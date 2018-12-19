@@ -65,6 +65,11 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			get { return Path.ChangeExtension(_jobFile, "RSLT_CUSTOMER.xml"); }
 		}
 
+		public string XMLMonitoringReportName
+		{
+			get { return Path.ChangeExtension(_jobFile, "RSLT_MONITORING.xml"); }
+		}
+
 		public string XMLVTPReportName
 		{
 			get { return Path.ChangeExtension(_jobFile, "VTP_Report.xml"); }
@@ -115,6 +120,9 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 					break;
 				case ReportType.DeclarationReportCustomerXML:
 					fileName = XMLCustomerReportName;
+					break;
+				case ReportType.DeclarationReportMonitoringXML:
+					fileName = XMLMonitoringReportName;
 					break;
 				case ReportType.DeclarationVTPReportXML:
 					fileName = XMLVTPReportName;

@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 
 				SetConstantValues(current, start, end,
 					ModalResultField.FCMap,
-					ModalResultField.FCAUXc,
+					ModalResultField.FCNCVc,
 					ModalResultField.FCAAUX,
 					ModalResultField.FCWHTCc,
 					ModalResultField.FCFinal);

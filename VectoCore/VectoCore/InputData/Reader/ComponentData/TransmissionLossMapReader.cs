@@ -36,6 +36,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
@@ -43,11 +44,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public static class TransmissionLossMapReader
 	{
-		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
+		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName, bool extendLossMap = false)
 		{
 			try {
 				var data = VectoCSVFile.Read(fileName, true);
-				return Create(data, gearRatio, gearName);
+				return Create(data, gearRatio, gearName, extendLossMap);
 			} catch (Exception ex) {
 				throw new VectoException("ERROR while reading TransmissionLossMap " + gearName + ": " + ex.Message, ex);
 			}
@@ -103,29 +104,23 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 		private static List<TransmissionLossMap.GearLossMapEntry> ExtendLossMap(
 			List<TransmissionLossMap.GearLossMapEntry> entries)
 		{
-			var maxRpm = entries.Max(x => x.InputSpeed);
 			var maxTorque = entries.Max(x => x.InputTorque);
-			var speedBuckets = new Dictionary<PerSecond, List<TransmissionLossMap.GearLossMapEntry>>() {
-				{ 0.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() },
-				{ 600.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() },
-				{ 900.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() },
-				{ 1200.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() },
-				{ 1600.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() },
-				{ 2000.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>() }
-			};
-			for (var i = 2500; i < maxRpm.AsRPM; i += 500) {
-				speedBuckets.Add(i.RPMtoRad(), new List<TransmissionLossMap.GearLossMapEntry>());
+
+			var clusterer = new MeanShiftClustering();
+			var cluster = clusterer.FindClusters(entries.Select(x => x.InputSpeed.Value()).ToArray(), 1e-1);
+			var minDistance = cluster.Pairwise((x, y) => Math.Abs(y - x)).Min();
+
+			var speedBuckets = new Dictionary<PerSecond, List<TransmissionLossMap.GearLossMapEntry>>();
+			foreach (var c in cluster) {
+				speedBuckets.Add(c.SI<PerSecond>(), new List<TransmissionLossMap.GearLossMapEntry>());
 			}
-			speedBuckets.Add(maxRpm, new List<TransmissionLossMap.GearLossMapEntry>());
-			var keys = speedBuckets.Keys.ToArray();
 			foreach (var entry in entries) {
-				foreach (var speed in keys) {
-					if (entry.InputTorque.IsGreaterOrEqual(0) && Math.Abs(speed.AsRPM - entry.InputSpeed.AsRPM) < 150) {
-						speedBuckets[speed].Add(entry);
+				foreach (var speed in cluster) {
+					if (entry.InputTorque.IsGreaterOrEqual(0) && Math.Abs(speed - entry.InputSpeed.Value()) < minDistance / 2.0) {
+						speedBuckets[speed.SI<PerSecond>()].Add(entry);
 					}
 				}
 			}
-			var torqueStep = 500.SI<NewtonMeter>();
 			foreach (var speedBucket in speedBuckets) {
 				if (speedBucket.Value.Count < 2) {
 					continue;
@@ -134,10 +129,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				VectoMath.LeastSquaresFitting(speedBucket.Value, x => x.InputTorque.Value(), x => x.TorqueLoss.Value(), out k, out d,
 					out r);
 
-				for (var inTq = speedBucket.Value.Max(x => x.InputTorque) + torqueStep; inTq <= 2 * maxTorque; inTq += torqueStep) {
-					entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, inTq, k * inTq + d.SI<NewtonMeter>()));
-					entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, -inTq, k * inTq + d.SI<NewtonMeter>()));
-				}
+				var inTq = DeclarationData.LossMapExtrapolationFactor * maxTorque;
+				entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, inTq, k * inTq + d.SI<NewtonMeter>()));
+				entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, -inTq, k * inTq + d.SI<NewtonMeter>()));
 			}
 
 			return entries;

@@ -51,6 +51,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 
 namespace TUGraz.VectoCore.Tests.XML
@@ -61,6 +62,8 @@ namespace TUGraz.VectoCore.Tests.XML
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 		const string SampleVehicleDeclNoAirdrag = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_noAirdrag.xml";
 		const string SampleVehicleFullDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_FULL.xml";
+		const string SampleVehicleFullDeclUpdated = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_FULL_updated.xml";
+		const string SampleVehicleFullDeclExempted = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_exempted.xml";
 
 		const string SampleVehicleFullDeclCertificationOptions =
 			"TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_certificationOptions.xml";
@@ -111,6 +114,10 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			var fuelTypes = GetEnumOptions("FuelTypeType", "1.0");
 			foreach (var fuel in fuelTypes) {
+				if (!(fuel.EndsWith("CI") || fuel.EndsWith("PI"))) {
+					// new fuel labels end either with CI or PI, others are for backward compatibility. separate testcase
+					continue;
+				}
 				var reader = XmlReader.Create(SampleVehicleDecl);
 
 				var doc = new XmlDocument();
@@ -120,22 +127,22 @@ namespace TUGraz.VectoCore.Tests.XML
 				var helper = new XPathHelper(ExecutionMode.Declaration);
 				helper.AddNamespaces(manager);
 
-				var technology = nav.SelectSingleNode(helper.QueryAbs(
+				var EngineFuelType = nav.SelectSingleNode(helper.QueryAbs(
 						helper.NSPrefix(XMLNames.VectoInputDeclaration,
 							Constants.XML.RootNSPrefix),
 						XMLNames.Component_Vehicle,
 						XMLNames.Vehicle_Components,
 						XMLNames.Component_Engine, XMLNames.ComponentDataWrapper, XMLNames.Engine_FuelType),
 					manager);
-				technology.SetValue(fuel);
+				EngineFuelType.SetValue(fuel);
 				var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
 				var inputDataProvider = new XMLDeclarationInputDataProvider(modified,
 					true);
-				var techInput = inputDataProvider.JobInputData.Vehicle.EngineInputData.FuelType;
-				Assert.AreEqual(fuel, techInput.ToXMLFormat());
-
-				Assert.NotNull(DeclarationData.FuelData.Lookup(techInput));
+				var fuelTyle = inputDataProvider.JobInputData.Vehicle.EngineInputData.FuelType;
+				Assert.AreEqual(fuel, fuelTyle.ToXMLFormat());
+				var tankSystem = fuelTyle == FuelType.NGPI || fuelTyle == FuelType.NGCI ? TankSystem.Liquefied : (TankSystem?)null;
+				Assert.NotNull(DeclarationData.FuelData.Lookup(fuelTyle, tankSystem));
 			}
 		}
 
@@ -164,6 +171,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(5000, gears.First().MaxTorque.Value());
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestXMLInputAxlG()
 		{
@@ -209,6 +217,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(lossMap);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestXMLInputAxleWheels()
 		{
@@ -300,6 +309,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				});
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestXMLInputAxleWheelsAxleNumTooHigh()
 		{
@@ -384,6 +394,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(inputDataProvider.JobInputData.Vehicle.AirdragInputData.AirDragArea);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestXMLPowertrainGeneration()
 		{
@@ -400,7 +411,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			jobContainer.AddRuns(runsFactory);
 
-			Assert.AreEqual(8, jobContainer.Runs.Count);
+			Assert.AreEqual(10, jobContainer.Runs.Count);
 		}
 
 		[TestCase]
@@ -626,6 +637,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			var vehicleCategories = GetEnumOptions("VehicleCategoryDeclarationType", "1.0");
 			var allowedCategories = DeclarationData.Segments.GetVehicleCategories();
 			foreach (var vehicleCategory in vehicleCategories) {
+				if (vehicleCategory.Equals("Rigid Truck")) {
+					continue; // Rigid Truck has been renamed to Rigid Lorry. The XML contains this entry for backward compatibility (separate testcase)
+				}
 				var reader = XmlReader.Create(SampleVehicleDecl);
 
 				var doc = new XmlDocument();
@@ -892,6 +906,154 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			TestAuxTech(AuxiliaryType.HVAC, GetEnumOptions("AuxHVACTechnologyType", "1.0"),
 				DeclarationData.HeatingVentilationAirConditioning);
+		}
+
+		[TestCase(SampleVehicleDecl, false),
+			TestCase(SampleVehicleFullDecl, false),
+			TestCase(SampleVehicleFullDeclUpdated, false),
+			TestCase(SampleVehicleFullDeclExempted, true)]
+		public void TestReadingExemptedVehicles(string file, bool expectedExempted)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+			Assert.AreEqual(expectedExempted, vehicle.ExemptedVehicle);
+		}
+
+		[TestCase(SampleVehicleFullDeclExempted, true, true, true, 30000, 20000)]
+		public void TestReadingExemptedParameters(
+			string file, bool dualfuel, bool elHDV, bool zeroEmission, double maxNetPower1, double maxNetPower2)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+
+			Assert.IsTrue(vehicle.ExemptedVehicle);
+			Assert.AreEqual(elHDV, vehicle.HybridElectricHDV);
+			Assert.AreEqual(zeroEmission, vehicle.ZeroEmissionVehicle);
+			Assert.AreEqual(dualfuel, vehicle.DualFuelVehicle);
+			Assert.AreEqual(maxNetPower1, vehicle.MaxNetPower1.Value());
+			Assert.AreEqual(maxNetPower2, vehicle.MaxNetPower2.Value());
+		}
+
+		[TestCase(SampleVehicleFullDeclUpdated, true, false, true)]
+		public void TestReadingNewVehicleParameters(string file, bool vocational, bool sleeperCab, bool zeroEmission)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+
+			Assert.IsFalse(vehicle.ExemptedVehicle);
+
+			Assert.AreEqual(vocational, vehicle.VocationalVehicle);
+			Assert.AreEqual(sleeperCab, vehicle.SleeperCab);
+			Assert.AreEqual(zeroEmission, vehicle.ZeroEmissionVehicle);
+		}
+
+		[TestCase(SampleVehicleDecl, false, false, false, PredictiveCruiseControlType.None),
+		TestCase(SampleVehicleFullDeclUpdated, true, true, true, PredictiveCruiseControlType.Option_1_2)]
+		public void TestReadingAdasParameters(
+			string file, bool engineStopStart, bool ecoRollWithout, bool ecoRollWith, PredictiveCruiseControlType pcc)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+			var adas = vehicle.ADAS;
+
+			Assert.IsFalse(vehicle.ExemptedVehicle);
+
+			Assert.AreEqual(engineStopStart, adas.EngineStopStart);
+			Assert.AreEqual(ecoRollWith, adas.EcoRollWithEngineStop);
+			Assert.AreEqual(ecoRollWithout, adas.EcoRollWitoutEngineStop);
+			Assert.AreEqual(pcc, adas.PredictiveCruiseControl);
+		}
+
+		[TestCase(SampleVehicleDecl)]
+		public void TestDefaultValuesNewParameters(string file)
+		{
+			var reader = XmlReader.Create(file);
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(reader, true);
+			var vehicle = inputDataProvider.JobInputData.Vehicle;
+			var adas = vehicle.ADAS;
+
+			Assert.IsFalse(vehicle.ExemptedVehicle);
+
+			Assert.AreEqual(false, vehicle.ZeroEmissionVehicle);
+			Assert.AreEqual(false, vehicle.VocationalVehicle);
+			Assert.AreEqual(true, vehicle.SleeperCab);
+
+			Assert.AreEqual(TankSystem.Compressed, vehicle.TankSystem);
+
+			Assert.AreEqual(false, adas.EngineStopStart);
+			Assert.AreEqual(false, adas.EcoRollWitoutEngineStop);
+			Assert.AreEqual(false, adas.EcoRollWithEngineStop);
+			Assert.AreEqual(PredictiveCruiseControlType.None, adas.PredictiveCruiseControl);
+		}
+
+		[TestCase(SampleVehicleFullDeclUpdated)]
+		public void TestRigidTruckIsReadAsRigidLorry(string file)
+		{
+			var reader = XmlReader.Create(file);
+
+			var doc = new XmlDocument();
+			doc.Load(reader);
+			var nav = doc.CreateNavigator();
+			var manager = new XmlNamespaceManager(nav.NameTable);
+			var helper = new XPathHelper(ExecutionMode.Declaration);
+			helper.AddNamespaces(manager);
+
+			var vehicleCategoryNode = nav.SelectSingleNode(helper.QueryAbs(
+															helper.NSPrefix(XMLNames.VectoInputDeclaration, Constants.XML.RootNSPrefix),
+															XMLNames.Component_Vehicle,
+															XMLNames.Vehicle_VehicleCategory), manager);
+			vehicleCategoryNode.SetValue("Rigid Truck");
+
+			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(modified, true);
+
+			var vehCategory = inputDataProvider.JobInputData.Vehicle.VehicleCategory;
+
+			Assert.AreEqual(VehicleCategory.RigidTruck, vehCategory);
+		}
+
+		[TestCase(SampleVehicleFullDecl, "LPG", FuelType.LPGPI),
+			TestCase(SampleVehicleDecl, "NG", FuelType.NGPI)]
+		public void TestFuelTypesLNGandNGBackwardCompatibility(string file, string value, FuelType expectedFuelType)
+		{
+			var reader = XmlReader.Create(file);
+
+			var doc = new XmlDocument();
+			doc.Load(reader);
+			var nav = doc.CreateNavigator();
+			var manager = new XmlNamespaceManager(nav.NameTable);
+			var helper = new XPathHelper(ExecutionMode.Declaration);
+			helper.AddNamespaces(manager);
+
+			var fuelTypeNode = nav.SelectSingleNode(
+				helper.QueryAbs(
+					helper.NSPrefix(
+						XMLNames.VectoInputDeclaration,
+						Constants.XML.RootNSPrefix),
+					XMLNames.Component_Vehicle, XMLNames.Vehicle_Components, XMLNames.Component_Engine,
+					XMLNames.ComponentDataWrapper,
+					XMLNames.Engine_FuelType),
+				manager);
+			
+			fuelTypeNode.SetValue(value);
+
+			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
+
+			var inputDataProvider = new XMLDeclarationInputDataProvider(modified, true);
+
+			var fuelType = inputDataProvider.JobInputData.Vehicle.EngineInputData.FuelType;
+
+			Assert.AreEqual(expectedFuelType, fuelType);
 		}
 
 		public static string[] GetEnumOptions(string xmlType, string schemaVersion)

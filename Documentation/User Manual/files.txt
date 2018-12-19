@@ -26,6 +26,7 @@
 3-simulation-models/Driver_LAC.md
 3-simulation-models/ADAS_EcoRoll.md
 3-simulation-models/Vehicle_CrossWindCorrection.md
+3-simulation-models/Vehicle_ADAS_technologies.md
 3-simulation-models/Vehicle_RRC.md
 3-simulation-models/Engine_FC.md
 3-simulation-models/Engine_DynamicFullLoad.md

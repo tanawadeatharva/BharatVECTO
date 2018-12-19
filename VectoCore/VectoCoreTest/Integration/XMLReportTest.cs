@@ -31,7 +31,9 @@
 
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.XPath;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
@@ -105,6 +107,51 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 		}
 
+		[TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml"),
+		 TestCase(@"TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml")]
+		public void TestValidationXMLReports(string jobfile)
+		{
+			var dataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(jobfile), true);
+			var writer = new FileOutputWriter(jobfile);
+			var xmlReport = new XMLDeclarationReport(writer);
+			var sumData = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumData);
+
+			if (File.Exists(writer.SumFileName)) {
+				File.Delete(writer.SumFileName);
+			}
+
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
+				WriteModalResults = false,
+				Validate = false,
+			};
+			jobContainer.AddRuns(runsFactory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			var mrfValidator = GetValidator(xmlReport.FullReport);
+			mrfValidator.ValidateXML(XMLValidator.XmlDocumentType.ManufacturerReport);
+
+			var cifValidator = GetValidator(xmlReport.CustomerReport);
+			cifValidator.ValidateXML(XMLValidator.XmlDocumentType.CustomerReport);
+
+			var monitoringValidator = GetValidator(xmlReport.MonitoringReport);
+			monitoringValidator.ValidateXML(XMLValidator.XmlDocumentType.MonitoringReport);
+		}
+
+		private static XMLValidator GetValidator(XDocument xmlReport)
+		{
+			var mrfStream = new MemoryStream();
+			var mrfWriter = new XmlTextWriter(mrfStream, Encoding.UTF8);
+			xmlReport.WriteTo(mrfWriter);
+			mrfWriter.Flush();
+			mrfStream.Flush();
+			mrfStream.Seek(0, SeekOrigin.Begin);
+			return new XMLValidator(new XmlTextReader(mrfStream));
+		}
+
+		[Category("LongRunning")]
 		[TestCase()]
 		public void TestXMLReportPTO()
 		{

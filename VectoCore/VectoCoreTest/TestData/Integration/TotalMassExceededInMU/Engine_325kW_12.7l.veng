@@ -1,0 +1,28 @@
+﻿{
+  "Header": {
+    "CreatedBy": "",
+    "Date": "2017-06-22T11:14:03.7167543Z",
+    "AppVersion": "3",
+    "FileVersion": 4
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "ModelName": "325kW 12.7l Engine",
+    "Displacement": "12740",
+    "IdlingSpeed": 600.0,
+    "Inertia": 5.1498,
+    "WHTC-Urban": 1.04,
+    "WHTC-Rural": 1.01,
+    "WHTC-Motorway": 1.0,
+    "WHTC-Engineering": 1.0,
+    "ColdHotBalancingFactor": 1.0,
+    "CFRegPer": 1.0,
+    "CFNCV": 1.0,
+    "RatedPower": 325000.0,
+    "RatedSpeed": 1800.0,
+    "MaxTorque": 2400.0,
+    "FuelType": 0,
+    "FullLoadCurve": "325kW.vfld",
+    "FuelMap": "325kW.vmap"
+  }
+}

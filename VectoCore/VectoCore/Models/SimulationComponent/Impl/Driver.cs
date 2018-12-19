@@ -749,7 +749,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							? response.DeltaDragLoad
 							: response.GearboxPowerRequest;
 						return delta.Value();
-					});
+					},
+					forceLineSearch: DataBus.GearboxType.AutomaticTransmission() && !DataBus.TCLocked);
 
 				return operatingPoint;
 			} catch (Exception) {

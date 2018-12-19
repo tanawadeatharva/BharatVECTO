@@ -54,12 +54,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Stream CycleFile;
 
-		public List<MissionTrailer> Trailer;
+		public IList<MissionTrailer> Trailer;
 
 		public Kilogram MinLoad;
 		public Kilogram LowLoad;
 		public Kilogram RefLoad;
 		public Kilogram MaxLoad;
+
+		public SquareMeter DefaultCDxA;
 
 		public CubicMeter TotalCargoVolume;
 
@@ -91,7 +93,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		T1,
 		T2,
 		ST1,
-		Dolly
+		Dolly,
+		STT1,
+		STT2
 	}
 
 	public static class TrailterTypeHelper

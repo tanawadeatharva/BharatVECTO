@@ -58,11 +58,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		protected override void ParseData(DataTable table)
 		{
 			foreach (DataRow row in table.Rows) {
-				var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
+				var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvgroup"));
 				var technology = row.Field<string>("technology");
 				foreach (DataColumn col in table.Columns) {
 					var value = row.ParseDoubleOrGetDefault(col.Caption, double.NaN);
-					if (col.Caption != "hdvclass" && col.Caption != "technology" && !double.IsNaN(value)) {
+					if (col.Caption != "hdvgroup" && col.Caption != "technology" && !double.IsNaN(value)) {
 						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), technology, hdvClass)] = new AuxDemandEntry() {
 							PowerDemand = value.SI<Watt>()
 						};

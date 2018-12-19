@@ -46,18 +46,18 @@ Public Class VectoVTPJobForm
     End Enum
 
 
-
     'Initialise form
     Private Sub F02_GEN_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         _auxDialog = New VehicleAuxiliariesDialog
 
 
-        LvAux.Columns(AuxViewColumns.AuxInputOrTech).Width = -2
+        LvAux.Columns(AuxViewColumns.AuxInputOrTech).Width = - 2
 
         LvAux.Columns(AuxViewColumns.AuxInputOrTech).Text = "Technology"
 
         pnManufacturerRecord.Visible = cfg.DeclMode
+        pnFanParameters.Enabled = Not cfg.DeclMode
 
         GrCycles.Enabled = True
 
@@ -70,8 +70,6 @@ Public Class VectoVTPJobForm
             e.Cancel = ChangeCheckCancel()
         End If
     End Sub
-
-
 
 
 #Region "Browse Buttons"
@@ -130,7 +128,7 @@ Public Class VectoVTPJobForm
         If File.Exists(MyAppPath & "User Manual\help.html") Then
             Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
             Process.Start(defaultBrowserPath,
-                        String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#job-editor"))
+                          String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#job-editor"))
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If
@@ -182,7 +180,7 @@ Public Class VectoVTPJobForm
                     Close()
                     MainForm.RbDecl.Checked = Not MainForm.RbDecl.Checked
                     MainForm.OpenVectoFile(file)
-                Case -1
+                Case - 1
                     Exit Sub
             End Select
         End If
@@ -194,26 +192,32 @@ Public Class VectoVTPJobForm
 
         'Files -----------------------------
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.Source, _basePath)
-        tbManufacturerRecord.Text = If (cfg.DeclMode, GetRelativePath(inputData.JobInputData.ManufacturerReportInputData.Source, _basePath), "")
+        tbManufacturerRecord.Text =
+            If (cfg.DeclMode, GetRelativePath(inputData.JobInputData.ManufacturerReportInputData.Source, _basePath), "")
 
         Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.AuxiliaryInputData()
 
         PopulateAuxiliaryList(auxInput)
 
         tbMileage.Text = if(Cfg.DeclMode, inputData.JobInputData.Mileage.ConvertToKiloMeter().Value.ToGUIFormat(), "")
-        tbNCV.Text = if (Cfg.DeclMode, inputData.JobInputData.NetCalorificValueTestFuel.ConvertToMegaJoulePerKilogram().Value.ToGUIFormat(), "")
-
-        Dim coefficients As Double() = vectoJob.FanPowerCoefficents.ToArray()
-        If (coefficients.Length >= 1) Then
-            tbC1.Text = coefficients(0).ToGUIFormat()
+        
+        If cfg.DeclMode Then
+            tbC1.Text = DeclarationData.VTPMode.FanParameters(0).ToGUIFormat()
+            tbC2.Text = DeclarationData.VTPMode.FanParameters(1).ToGUIFormat()
+            tbC3.Text = DeclarationData.VTPMode.FanParameters(2).ToGUIFormat()
+        Else
+            Dim coefficients As Double() = vectoJob.FanPowerCoefficents.ToArray()
+            If (coefficients.Length >= 1) Then
+                tbC1.Text = coefficients(0).ToGUIFormat()
+            End If
+            If (coefficients.Length >= 2) Then
+                tbC2.Text = coefficients(1).ToGUIFormat()
+            End If
+            If (coefficients.Length >= 3) Then
+                tbC3.Text = coefficients(2).ToGUIFormat()
+            End If
         End If
-        If (coefficients.Length >= 2) Then
-            tbC2.Text = coefficients(1).ToGUIFormat()
-        End If
-        If (coefficients.Length >= 3) Then
-            tbC3.Text = coefficients(2).ToGUIFormat()
-        End If
-        tbFanDiameter.Text = (vectoJob.FanDiameter.Value() * 1000).ToGUIFormat()
+        tbFanDiameter.Text = (vectoJob.FanDiameter.Value()*1000).ToGUIFormat()
         Try
             Dim sb As ICycleData
             For Each sb In vectoJob.Cycles
@@ -248,7 +252,8 @@ Public Class VectoVTPJobForm
             'If entry.AuxiliaryType = AuxiliaryDemandType.Constant Then Continue For
             Try
                 LvAux.Items.Add(CreateAuxListEntry(AuxiliaryTypeHelper.GetAuxKey(entry.Type),
-                                                   AuxiliaryTypeHelper.ToString(entry.Type), String.Join("; ", entry.Technology)))
+                                                   AuxiliaryTypeHelper.ToString(entry.Type),
+                                                   String.Join("; ", entry.Technology)))
             Catch ex As Exception
             End Try
         Next
@@ -274,7 +279,7 @@ Public Class VectoVTPJobForm
         'Files ------------------------------------------------- -----------------
 
         vectoJob.PathVeh = TbVEH.Text
-        vectoJob.ManufacturerRecord = If(cfg.DeclMode,  tbManufacturerRecord.Text, "")
+        vectoJob.ManufacturerRecord = If(cfg.DeclMode, tbManufacturerRecord.Text, "")
 
 
         For Each lv0 As ListViewItem In LvCycles.Items
@@ -283,16 +288,14 @@ Public Class VectoVTPJobForm
             vectoJob.CycleFiles.Add(sb)
         Next
 
-        vectoJob.Mileage = tbMileage.Text.ToDouble(0).SI(Unit.SI.Kilo.Meter).Cast(of Meter)
+        vectoJob.Mileage = tbMileage.Text.ToDouble(0).SI(Unit.SI.Kilo.Meter).Cast (of Meter)
 
-        vectoJob.NetCalorificValueTestFuel = tbNCV.Text.ToDouble(0).SI(Unit.SI.Mega.Joule.Per.Kilo.Gramm).Cast(of JoulePerKilogramm)
-
-        vectoJob.FanCoefficients = New Double() {
-            tbC1.Text.ToDouble(0),
-            tbC2.Text.ToDouble(0),
-            tbC3.Text.ToDouble(0)
-        }
-        vectoJob.FanDiameter = (tbFanDiameter.Text.ToDouble(0) / 1000).SI(of Meter)
+       vectoJob.FanCoefficients = New Double() { _
+                                                    tbC1.Text.ToDouble(0),
+                                                    tbC2.Text.ToDouble(0),
+                                                    tbC3.Text.ToDouble(0)
+                                                }
+        vectoJob.FanDiameter = (tbFanDiameter.Text.ToDouble(0)/1000).SI (of Meter)
 
         'SAVE
         If Not vectoJob.SaveFile Then
@@ -326,6 +329,8 @@ Public Class VectoVTPJobForm
 
         LvAux.Items.Clear()
 
+        DeclInit()
+
         EngineForm.AutoSendTo = False
 
         VectoFile = ""
@@ -333,6 +338,14 @@ Public Class VectoVTPJobForm
         ToolStripStatusLabelGEN.Text = ""
         _changed = False
         UpdatePic()
+    End Sub
+
+    Private Sub DeclInit()
+        If not Cfg.DeclMode then exit Sub
+
+        tbC1.Text = DeclarationData.VTPMode.FanParameters(0).ToGUIFormat()
+        tbc2.Text = DeclarationData.VTPMode.FanParameters(1).ToGUIFormat()
+        tbC3.Text = DeclarationData.VTPMode.FanParameters(2).ToGUIFormat()
     End Sub
 
 
@@ -349,16 +362,18 @@ Public Class VectoVTPJobForm
 
     Private Sub UpdateAuxList()
         Dim vehicleFile As String =
-                If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
+                If _
+                (Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text),
+                 TbVEH.Text)
         If File.Exists(vehicleFile) Then
             Try
-                Dim inputData As XMLDeclarationInputDataProvider = New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
+                Dim inputData As XMLDeclarationInputDataProvider =
+                        New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
                 Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.AuxiliaryInputData()
                 PopulateAuxiliaryList(auxInput)
             Catch
             End Try
         End If
-
     End Sub
 
 
@@ -530,10 +545,13 @@ Public Class VectoVTPJobForm
 
         Dim gearbox As IGearboxDeclarationInputData = Nothing
         Dim vehicleFile As String =
-                If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
+                If _
+                (Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text),
+                 TbVEH.Text)
         If File.Exists(vehicleFile) Then
             Try
-                Dim inputData As XMLDeclarationInputDataProvider = New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
+                Dim inputData As XMLDeclarationInputDataProvider =
+                        New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
                 gearbox = inputData.JobInputData.Vehicle.GearboxInputData
             Catch
             End Try
@@ -542,7 +560,6 @@ Public Class VectoVTPJobForm
         If gearbox Is Nothing Then Return
 
         TbGbxTxt.Text = String.Format("{0}-Speed {1} {2}", gearbox.Gears.Count, gearbox.Type.ShortName(), gearbox.Model)
-
     End Sub
 
     Private Sub UpdateEnginePic(ByRef chart As Chart)
@@ -552,10 +569,13 @@ Public Class VectoVTPJobForm
         Dim engine As IEngineDeclarationInputData = Nothing
         lblEngineCharacteristics.Text = ""
         Dim vehicleFile As String =
-                If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
+                If _
+                (Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text),
+                 TbVEH.Text)
         If File.Exists(vehicleFile) Then
             Try
-                Dim inputData As XMLDeclarationInputDataProvider = New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
+                Dim inputData As XMLDeclarationInputDataProvider =
+                        New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
                 engine = inputData.JobInputData.Vehicle.EngineInputData
             Catch
                 Return
@@ -597,11 +617,11 @@ Public Class VectoVTPJobForm
         s.Name = "Motoring"
         chart.Series.Add(s)
 
-        pmax = fullLoadCurve.MaxPower.Value() / 1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
+        pmax = fullLoadCurve.MaxPower.Value()/1000 'FLD0.Pfull(FLD0.EngineRatedSpeed)
 
 
-        TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value() * 1000).ToString("0.0"),
-                                    pmax.ToString("#"), engine.Model)
+        TbEngTxt.Text = String.Format("{0} l {1} kw {2}", (engine.Displacement.Value()*1000).ToString("0.0"),
+                                      pmax.ToString("#"), engine.Model)
 
         Dim fuelConsumptionMap As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.FuelConsumptionMap)
 
@@ -616,8 +636,9 @@ Public Class VectoVTPJobForm
 
         Dim engineCharacteristics As String =
                 String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",
-                            fullLoadCurve.MaxTorque.Value(), fullLoadCurve.MaxPower.Value() / 1000, fullLoadCurve.RatedSpeed.AsRPM,
-                            fullLoadCurve.N95hSpeed.AsRPM)
+                              fullLoadCurve.MaxTorque.Value(), fullLoadCurve.MaxPower.Value()/1000,
+                              fullLoadCurve.RatedSpeed.AsRPM,
+                              fullLoadCurve.N95hSpeed.AsRPM)
         lblEngineCharacteristics.Text = engineCharacteristics
     End Sub
 
@@ -627,10 +648,13 @@ Public Class VectoVTPJobForm
         Dim vehicle As IVehicleDeclarationInputData = Nothing
 
         Dim vehicleFile As String =
-                If(Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text), TbVEH.Text)
+                If _
+                (Not String.IsNullOrWhiteSpace(VectoFile), Path.Combine(Path.GetDirectoryName(VectoFile), TbVEH.Text),
+                 TbVEH.Text)
         If File.Exists(vehicleFile) Then
             Try
-                Dim inputData As XMLDeclarationInputDataProvider = New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
+                Dim inputData As XMLDeclarationInputDataProvider =
+                        New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
                 vehicle = inputData.JobInputData.Vehicle
             Catch
             End Try
@@ -638,12 +662,14 @@ Public Class VectoVTPJobForm
 
         If vehicle Is Nothing Then Return
 
-        Dim maxMass As Kilogram = vehicle.GrossVehicleMassRating                    'CSng(fTextboxToNumString(TbMassMass.Text))
+        Dim maxMass As Kilogram = vehicle.GrossVehicleMassRating _
+        'CSng(fTextboxToNumString(TbMassMass.Text))
 
         Dim s0 As Segment = Nothing
         Try
-            s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram),
-                                                True)
+            s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass,
+                                                 0.SI (Of Kilogram),
+                                                 True)
         Catch
         End Try
         If Not s0.Found Then
@@ -652,12 +678,12 @@ Public Class VectoVTPJobForm
             HDVclass = s0.VehicleClass.GetClassNumber()
         End If
 
-        PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _
+        PicVehicle.Image = ConvPicPath(If(Not s0.Found, - 1, HDVclass.ToInt()), False) _
         'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
-        TbHVCclass.Text = String.Format("HDV Class {0}", HDVclass)
+        TbHVCclass.Text = String.Format("HDV Group {0}", HDVclass)
         TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()   'ConvVehCat(VEH0.VehCat, True)
-        TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
+        TbMass.Text = (vehicle.GrossVehicleMassRating.Value()/1000) & " t"
         TbAxleConf.Text = vehicle.AxleConfiguration.GetName()   'ConvAxleConf(VEH0.AxleConf)
     End Sub
 
@@ -710,8 +736,6 @@ Public Class VectoVTPJobForm
             tbManufacturerRecord.Text = GetFilenameWithoutDirectory(ManRXMLFileBrowser.Files(0), GetPath(VectoFile))
         End If
     End Sub
-
- 
 End Class
 
 
