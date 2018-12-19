@@ -107,10 +107,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 		}
 
-		[TestCase()]
-		public void TestValidationXMLReports()
+		[TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml"),
+		 TestCase(@"TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml")]
+		public void TestValidationXMLReports(string jobfile)
 		{
-			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
 			var dataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(jobfile), true);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);
@@ -151,6 +151,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return new XMLValidator(new XmlTextReader(mrfStream));
 		}
 
+		[Category("LongRunning")]
 		[TestCase()]
 		public void TestXMLReportPTO()
 		{

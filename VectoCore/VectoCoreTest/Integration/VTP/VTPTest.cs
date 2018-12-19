@@ -77,6 +77,8 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			
 		}
 
+		[Category("LongRunning")]
+		[Category("Integration")]
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle_DECL.vecto")]
 		public void RunVTP_Declaration(string jobFile)
 		{
@@ -104,7 +106,8 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			Assert.AreEqual(true, jobContainer.AllCompleted);
 		}
 
-
+		[Category("LongRunning")]
+		[Category("Integration")]
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\VTP_AT-gbx.vecto")]
 		public void RunVTPWithAT(string jobFile)
 		{

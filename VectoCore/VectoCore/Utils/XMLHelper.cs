@@ -55,8 +55,8 @@ namespace TUGraz.VectoCore.Utils {
 		public static object[] ValueAsUnit(Watt power, string unit, uint? decimals = 0)
 		{
 			switch (unit) {
-				case "kW": return GetValueAsUnit(power.ConvertToKiloWatt(), unit, decimals);
-				case "W": return GetValueAsUnit(power.Value(), unit, decimals);
+				case "kW": return GetValueAsUnit(power?.ConvertToKiloWatt(), unit, decimals);
+				case "W": return GetValueAsUnit(power?.Value(), unit, decimals);
 			}
 			throw new NotImplementedException(string.Format("unknown unit '{0}'", unit));
 		}
@@ -104,11 +104,14 @@ namespace TUGraz.VectoCore.Utils {
 			}
 		}
 
-		private static object[] GetValueAsUnit(double value, string unit, uint? decimals)
+		private static object[] GetValueAsUnit(double? value, string unit, uint? decimals)
 		{
+			if (value == null) {
+				return new object[0];
+			}
 			return new object[] {
 				new XAttribute(XMLNames.Report_Results_Unit_Attr, unit),
-				value.ToXMLFormat(decimals)
+				value.Value.ToXMLFormat(decimals)
 			};
 		}
 

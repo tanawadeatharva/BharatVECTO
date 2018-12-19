@@ -373,7 +373,6 @@ Public Class JSONFileWriter
         if declarationmode Then
             body.add("ManufacturerRecord", GetRelativePath(job.ManufacturerReportInputData.Source, Path.GetDirectoryName(filename)))
             body.Add("Mileage", job.Mileage.ConvertToKiloMeter().Value)
-            body.add("NCVTestFuel", job.NetCalorificValueTestFuel.ConvertToMegaJoulePerKilogram().Value())
         End If
 		body.Add("FanPowerCoefficients", job.FanPowerCoefficents)
 		body.Add("FanDiameter", job.FanDiameter.Value())
