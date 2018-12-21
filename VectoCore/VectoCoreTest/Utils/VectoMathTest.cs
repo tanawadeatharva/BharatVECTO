@@ -104,6 +104,32 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
+		[TestCase(1, 6, 18, 30, 25, new double[] {  }),  // only complex-valued solutions
+		TestCase(1, 6, -18, 30, -25, new[] { 1.31684387048749, -8.55416218029519 }), // two complex, two real-valued
+		TestCase(1, 11, 41, 61, 30, new double[] {-5, -3, -2, -1}),
+		TestCase(1, 0, -4, 0, 3, new[] { 1.73205080756888, 1, -1.73205080756888, -1 }), // biquadratic
+		TestCase(5, 0, -20, 0, 15, new[] { 1.73205080756888, 1, -1.73205080756888, -1 }),
+		TestCase(1, 1, 1, 1, 1, new double[] { }), // only complex solutions
+		TestCase(1, 2, -14, 2, 1, new[] { 2.76090563295441601 , 0.362199992663244539, -0.203258341626567109 , -4.91984728399109344 }),
+		TestCase(16, 8,-16,-8,1, new[] { 0.1045284632676534713998341548025, 0.9781476007338056379285667478696, -0.91354545764260089550212757198532, -0.66913060635885821382627333068678 })
+			]
+		public void Polynom4SolverTest(double a, double b, double c, double d, double e, double[] expected)
+		{
+			var results = VectoMath.Polynom4Solver(a, b, c, d, e);
+
+			Console.WriteLine(string.Join(", ", results));
+
+			Assert.AreEqual(expected.Length, results.Length);
+			
+			Array.Sort(expected);
+			Array.Sort(results);
+			var comparison = expected.Zip(results, (exp, result) => exp - result);
+			foreach (var comp in comparison) {
+				Assert.AreEqual(0, comp, 1e-12);
+			}
+		}
+
+
 		[TestCase()]
 		public void TestLeastSquaresFittingExact()
 		{

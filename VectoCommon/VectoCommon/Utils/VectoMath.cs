@@ -223,24 +223,7 @@ namespace TUGraz.VectoCommon.Utils
 			return Math.Atan(inclinationPercent).SI<Radian>();
 		}
 
-		public static double[] QuadraticEquationSolver(double a, double b, double c)
-		{
-			var d = b * b - 4 * a * c;
-
-			// no real solution
-			if (d < 0) {
-				return new double[0];
-			}
-
-			if (d > 0) {
-				// two solutions
-				return new[] { (-b + Math.Sqrt(d)) / (2 * a), (-b - Math.Sqrt(d)) / (2 * a) };
-			}
-
-			// one real solution
-			return new[] { -b / (2 * a) };
-		}
-
+		
 		public static Point Intersect(Edge line1, Edge line2)
 		{
 			var s10X = line1.P2.X - line1.P1.X;
@@ -347,41 +330,7 @@ namespace TUGraz.VectoCommon.Utils
 			return Math.Ceiling(si.Value()).SI<T>();
 		}
 
-		public static double[] CubicEquationSolver(double a, double b, double c, double d)
-		{
-			var solutions = new List<double>();
-			if (a.IsEqual(0, 1e-12)) {
-				return QuadraticEquationSolver(b, c, d);
-			}
-			var w = b / (3 * a);
-			var p = Math.Pow(c / (3 * a) - w * w, 3);
-			var q = -0.5 * (2 * (w * w * w) - (c * w - d) / a);
-			var discriminant = q * q + p;
-			if (discriminant < 0.0) {
-				// 3 real solutions
-				var h = q / Math.Sqrt(-p);
-				var phi = Math.Acos(Math.Max(-1.0, Math.Min(1.0, h)));
-				p = 2 * Math.Pow(-p, 1.0 / 6.0);
-				for (var i = 0; i < 3; i++) {
-					solutions.Add(p * Math.Cos((phi + 2 * i * Math.PI) / 3.0) - w);
-				}
-			} else {
-				// one real solution
-				discriminant = Math.Sqrt(discriminant);
-				solutions.Add(Cbrt(q + discriminant) + Cbrt(q - discriminant) - w);
-			}
-
-			// 1 Newton iteration step in order to minimize round-off errors
-			for (var i = 0; i < solutions.Count; i++) {
-				var h = c + solutions[i] * (2 * b + 3 * solutions[i] * a);
-				if (!h.IsEqual(0, 1e-12)) {
-					solutions[i] -= (d + solutions[i] * (c + solutions[i] * (b + solutions[i] * a))) / h;
-				}
-			}
-			solutions.Sort();
-			return solutions.ToArray();
-		}
-
+		
 		private static double Cbrt(double x)
 		{
 			return x < 0 ? -Math.Pow(-x, 1.0 / 3.0) : Math.Pow(x, 1.0 / 3.0);
@@ -420,6 +369,114 @@ namespace TUGraz.VectoCommon.Utils
 			k = ssxy / ssxx;
 			d = (sumY - k * sumX) / count;
 			r = ssxy * ssxy / ssxx / ssyy;
+		}
+
+		public static double[] QuadraticEquationSolver(double a, double b, double c)
+		{
+			return Polynom2Solver(a, b, c);
+		}
+
+		public static double[] CubicEquationSolver(double a, double b, double c, double d)
+		{
+			return Polynom3Solver(a, b, c, d);
+		}
+
+		public static double[] Polynom2Solver(double a, double b, double c)
+		{
+			var d = b * b - 4 * a * c;
+
+			// no real solution
+			if (d < 0) {
+				return new double[0];
+			}
+
+			if (d > 0) {
+				// two solutions
+				return new[] { (-b + Math.Sqrt(d)) / (2 * a), (-b - Math.Sqrt(d)) / (2 * a) };
+			}
+
+			// one real solution
+			return new[] { -b / (2 * a) };
+		}
+		
+
+		public static double[] Polynom3Solver(double a, double b, double c, double d)
+		{
+			var solutions = new List<double>();
+			if (a.IsEqual(0, 1e-12)) {
+				return QuadraticEquationSolver(b, c, d);
+			}
+			var w = b / (3 * a);
+			var p = Math.Pow(c / (3 * a) - w * w, 3);
+			var q = -0.5 * (2 * (w * w * w) - (c * w - d) / a);
+			var discriminant = q * q + p;
+			if (discriminant < 0.0) {
+				// 3 real solutions
+				var h = q / Math.Sqrt(-p);
+				var phi = Math.Acos(Math.Max(-1.0, Math.Min(1.0, h)));
+				p = 2 * Math.Pow(-p, 1.0 / 6.0);
+				for (var i = 0; i < 3; i++) {
+					solutions.Add(p * Math.Cos((phi + 2 * i * Math.PI) / 3.0) - w);
+				}
+			} else {
+				// one real solution
+				discriminant = Math.Sqrt(discriminant);
+				solutions.Add(Cbrt(q + discriminant) + Cbrt(q - discriminant) - w);
+			}
+
+			// 1 Newton iteration step in order to minimize round-off errors
+			for (var i = 0; i < solutions.Count; i++) {
+				var h = c + solutions[i] * (2 * b + 3 * solutions[i] * a);
+				if (!h.IsEqual(0, 1e-12)) {
+					solutions[i] -= (d + solutions[i] * (c + solutions[i] * (b + solutions[i] * a))) / h;
+				}
+			}
+			solutions.Sort();
+			return solutions.ToArray();
+		}
+
+		public static double[] Polynom4Solver(double A, double B, double C, double D, double E)
+		{
+			// see http://www.mathe.tu-freiberg.de/~hebisch/cafe/viertergrad.pdf
+
+			var a = B / A;
+			var b = C / A;
+			var c = D / A;
+			var d = E / A;
+			var p = -3.0 / 8.0 * a * a + b;
+			var q = 1.0 / 8.0 * a * a * a - a * b / 2.0 + c;
+			var r = -3.0 / 256.0 * a * a * a * a + a * a * b / 16.0 - a * c / 4.0 + d;
+			if (q.IsEqual(0, 1e-12)) {
+				var solY = VectoMath.QuadraticEquationSolver(1, b, d);
+				var retVal = new List<double>();
+				foreach (var s in solY) {
+					if (s < 0) {
+						continue;
+					}
+
+					retVal.Add(Math.Sqrt(s));
+					retVal.Add(-Math.Sqrt(s));
+				}
+
+				return retVal.ToArray();
+			}
+
+			var solZ = VectoMath.Polynom3Solver(8.0, 20.0 * p, 16.0 * p * p - 8.0 * r, 4.0 * p * p * p - 4.0 * p * r - q * q);
+			if (solZ.Length == 0) {
+				return new double[0];
+
+				//throw new VectoException("no solution for polynom grade 4 found");
+			}
+
+			var z = solZ.First();
+			var u = p + 2.0 * z;
+			if (u < 0) {
+				// no real-valued solution
+				return new double[0];
+			}
+			var solY1 = VectoMath.QuadraticEquationSolver(1, -Math.Sqrt(u), q / (2.0 * Math.Sqrt(u)) + p + z);
+			var solY2 = VectoMath.QuadraticEquationSolver(1, Math.Sqrt(u), -q / (2.0 * Math.Sqrt(u)) + p + z);
+			return solY1.Select(s => s - a / 4.0).Concat(solY2.Select(s => s - a / 4.0)).ToArray();
 		}
 	}
 

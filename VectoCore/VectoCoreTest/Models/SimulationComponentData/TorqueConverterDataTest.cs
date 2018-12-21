@@ -461,11 +461,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var tmp = tqData.FindOperatingPoint(operatingPoint.OutTorque, operatingPoint.OutAngularVelocity, 0.RPMtoRad());
 			var backward = tmp.First();
 
-			Debug.WriteLine(operatingPoint);
-			Debug.WriteLine(operatingPoint.InAngularVelocity * operatingPoint.InTorque);
+			Console.WriteLine(operatingPoint);
+			Console.WriteLine(operatingPoint.InAngularVelocity * operatingPoint.InTorque);
 
-			Debug.WriteLine(backward);
-			Debug.WriteLine(backward.InAngularVelocity * backward.InTorque);
+			Console.WriteLine(backward);
+			Console.WriteLine(backward.InAngularVelocity * backward.InTorque);
 
 			Assert.AreEqual(backward.OutAngularVelocity.Value(), operatingPoint.OutAngularVelocity.Value(), 1e-9);
 			Assert.AreEqual(backward.OutTorque.Value(), operatingPoint.OutTorque.Value(), 1e-9);
