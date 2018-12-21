@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		public override bool TCLocked { get { return PreviousState.TorqueConverterLocked; } }
+		public override bool TCLocked { get { return CurrentState.TorqueConverterLocked; } }
 
 		internal ResponseDryRun Initialize(uint gear, bool torqueConverterLocked, NewtonMeter outTorque,
 			PerSecond outAngularVelocity)

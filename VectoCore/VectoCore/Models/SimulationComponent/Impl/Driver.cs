@@ -560,9 +560,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			DriverAcceleration = operatingPoint.Acceleration;
+			var gear = DataBus.Gear;
+			var tcLocked = DataBus.TCLocked;
 			retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
 				gradient);
-
+			var gearChanged = !(DataBus.Gear == gear && DataBus.TCLocked == tcLocked);
+			if (DataBus.GearboxType.AutomaticTransmission() && gearChanged && retVal is ResponseOverload) {
+				Log.Debug("Gear changed after a valid operating point was found - braking is no longer applicable due to overload"); 
+				return null;
+			}
 			retVal.Switch().
 				Case<ResponseSuccess>().
 				Case<ResponseGearShift>().
@@ -587,8 +593,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						var i = 5;
 						while (i-- > 0 && !(retVal is ResponseSuccess)) {
 							DataBus.BrakePower = 0.SI<Watt>();
+							
+							retVal = NextComponent.Request(
+								absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
+								gradient);
+							if (retVal is ResponseSuccess) {
+								break;
+							}
+							
 							operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
-								operatingPoint.Acceleration, response);
+								operatingPoint.Acceleration, retVal);
 							DriverAcceleration = operatingPoint.Acceleration;
 							if (DataBus.BrakePower.IsSmaller(0)) {
 								DataBus.BrakePower = 0.SI<Watt>();
@@ -608,6 +622,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						throw new UnexpectedResponseException(
 							"DrivingAction Brake: request failed after braking power was found.", r);
 					});
+			
 			CurrentState.Acceleration = operatingPoint.Acceleration;
 			CurrentState.dt = operatingPoint.SimulationInterval;
 			CurrentState.Response = retVal;
@@ -615,7 +630,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal.SimulationInterval = operatingPoint.SimulationInterval;
 			retVal.SimulationDistance = ds;
 			retVal.OperatingPoint = operatingPoint;
-
+			
 			return retVal;
 		}
 
@@ -858,6 +873,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (actionRoll) {
 				initialResponse.Switch().
 					Case<ResponseDryRun>(r => origDelta = r.GearboxPowerRequest).
+					Case<ResponseOverload>(r => origDelta = r.Delta).
 					Case<ResponseFailTimeInterval>(r => origDelta = r.GearboxPowerRequest).
 					Default(r => {
 						throw new UnexpectedResponseException("SearchOperatingPoint: Unknown response type.", r);
