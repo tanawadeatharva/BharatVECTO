@@ -118,6 +118,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			AssertModDataIntegrity(modData, auxKeys, cycle.Entries.Last().Distance.Value(), engineData.ConsumptionMap, true);
 		}
 
+		[Category("LongRunning")]
 		[TestCase(@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto")]
 		public void TestFullCycleModDataIntegrityDeclMT(string jobName)
 		{
@@ -135,6 +136,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			AssertSumDataFormat(tmpWriter.SumFileName);
 		}
 
+		[Category("LongRunning")]
 		[TestCase(@"TestData\Integration\EngineeringMode\Class2_RigidTruck_4x2\Class2_RigidTruck_ENG.vecto"),
 		TestCase(@"TestData\Integration\EngineeringMode\Class5_Tractor_4x2\Class5_Tractor_ENG.vecto"),
 		TestCase(@"TestData\Integration\EngineeringMode\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO.vecto"),]
@@ -144,6 +146,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		}
 
 
+		[Category("LongRunning")]
 		[TestCase(@"TestData\Integration\VTPMode\GenericVehicle\class_5_generic vehicle.vecto")]
 		public void TestVTPModeDataIntegrity(string jobName)
 		{
@@ -494,6 +497,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			}
 		}
 
+		[Category("LongRunning")]
 		[
 			TestCase(@"TestData\Integration\EngineeringMode\CityBus_AT\CityBus_AT_Ser.vecto"),
 			TestCase(@"TestData\Integration\EngineeringMode\CityBus_AT\CityBus_AT_PS.vecto")]
@@ -523,14 +527,14 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			foreach (var modalResults in modData) {
 				AssertModDataIntegrityAT(modalResults.Item1, auxKeys, modalResults.Item2,
-					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).JobInputData.Vehicle.EngineInputData.FuelConsumptionMap));
+					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).JobInputData.Vehicle.EngineInputData.FuelConsumptionMap), true);
 			}
 
 			AssertSumDataIntegrity(sumData, ExecutionMode.Engineering, true);
 		}
 
 		private static void AssertModDataIntegrityAT(ModalResults modData, Dictionary<string, DataColumn> auxKeys,
-			Meter totalDistance, FuelConsumptionMap consumptionMap)
+			Meter totalDistance, FuelConsumptionMap consumptionMap, bool atGbx)
 		{
 			Assert.IsTrue(modData.Rows.Count > 0);
 
@@ -619,7 +623,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 					"time: {0}  distance: {1}", time, distance);
 
 				// P_eng_fcmap = P_eng_out + P_AUX + P_eng_inertia ( + P_PTO_Transm + P_PTO_Consumer )
-				Assert.AreEqual(pEngFcmap.Value(), (pEngOut + pAux + pEngInertia + pPTOtransm + pPTOconsumer).Value(), 1E-3,
+				Assert.AreEqual(pEngFcmap.Value(), (pEngOut + pAux + pEngInertia + pPTOtransm + pPTOconsumer).Value(), atGbx ? 1E-1 : 1e-3,
 					"time: {0}  distance: {1}", time,
 					distance);
 
@@ -627,10 +631,10 @@ namespace TUGraz.VectoCore.Tests.Reports
 				var pLossTot = pTcLoss + pLossGbx + pLossRet + pGbxInertia + pLossAngle + pLossAxle + pBrakeLoss +
 								pWheelInertia + pAir + pRoll + pGrad + pVehInertia + pPTOconsumer + pPTOtransm;
 
-				Assert.AreEqual(pEngFcmap.Value(), (pLossTot + pEngInertia + pAux).Value(), 1E-3, "time: {0}  distance: {1}", time,
+				Assert.AreEqual(pEngFcmap.Value(), (pLossTot + pEngInertia + pAux).Value(), atGbx ? 1E-1 : 1e-3, "time: {0}  distance: {1}", time,
 					distance);
 
-				Assert.IsTrue(pLossGbx.IsGreaterOrEqual(pShiftLoss + pGbxInertia), "time: {0}  distance: {1}", time,
+				Assert.IsTrue(pLossGbx.IsGreaterOrEqual(pShiftLoss + pGbxInertia, 0.5.SI<Watt>()), "time: {0}  distance: {1}", time,
 					distance);
 
 				Assert.AreEqual(pGbxIn.Value(), (pRetIn + pLossGbx + pGbxInertia).Value(), gear != 0 ? 1E-3 : 0.5,

@@ -58,6 +58,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
+		[Category("LongRunning")]
+		[Category("Integration")]
 		[TestCase(SampleVehicleDecl),
 		TestCase(SampleVehicleDeclTqLimits),
 		TestCase(SampleVehicleDeclAT),

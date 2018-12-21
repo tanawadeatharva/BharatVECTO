@@ -141,6 +141,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.IsInstanceOf<ResponseCycleFinished>(response);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void Test_FullPowertrain()
 		{
@@ -303,6 +304,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.IsInstanceOf<ResponseCycleFinished>(response);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void Test_FullPowerTrain_JobFile()
 		{

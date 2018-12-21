@@ -1672,6 +1672,7 @@ namespace TUGraz.VectoCommon.Utils
 			}
 		}
 
+		[DebuggerStepThrough]
 		public int CompareTo(object obj)
 		{
 			var si = obj as SI;

@@ -130,9 +130,6 @@ Public Class VectoVTPJob
     Public ReadOnly Property VectoManufacturerReportHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoManufacturerReportHash
     Public Property Mileage As Meter Implements IVTPDeclarationJobInputData.Mileage
    
-    Public Property NetCalorificValueTestFuel As JoulePerKilogramm Implements IVTPDeclarationJobInputData.NetCalorificValueTestFuel
-
-
     Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IVTPEngineeringJobInputData.Cycles
         Get
             Dim retVal As ICycleData() = New ICycleData(CycleFiles.Count - 1) {}

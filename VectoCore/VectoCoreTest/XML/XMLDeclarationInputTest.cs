@@ -171,6 +171,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(5000, gears.First().MaxTorque.Value());
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestXMLInputAxlG()
 		{
@@ -216,6 +217,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(lossMap);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestXMLInputAxleWheels()
 		{
@@ -307,6 +309,7 @@ namespace TUGraz.VectoCore.Tests.XML
 				});
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestXMLInputAxleWheelsAxleNumTooHigh()
 		{
@@ -391,6 +394,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNull(inputDataProvider.JobInputData.Vehicle.AirdragInputData.AirDragArea);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestXMLPowertrainGeneration()
 		{

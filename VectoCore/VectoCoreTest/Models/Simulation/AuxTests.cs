@@ -337,6 +337,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}, "Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void AuxReadJobFileDeclarationMode()
 		{
@@ -351,6 +352,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			jobContainer.AddRuns(runsFactory);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void AuxReadJobFileEngineeringMode()
 		{
