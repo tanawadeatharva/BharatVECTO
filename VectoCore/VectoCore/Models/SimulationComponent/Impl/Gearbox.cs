@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var halted = DataBus.DrivingAction == DrivingAction.Halt;
 			var driverDeceleratingNegTorque = DataBus.DriverBehavior == DrivingBehavior.Braking &&
-											(DataBus.BrakePower.IsGreater(0) || inTorque < 0);
+											(DataBus.BrakePower.IsGreater(0) || inTorque.IsSmaller(0));
 			var vehiclespeedBelowThreshold =
 				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed);
 			if (halted || (driverDeceleratingNegTorque && vehiclespeedBelowThreshold)) {
