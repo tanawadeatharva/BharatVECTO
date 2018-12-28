@@ -488,12 +488,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var response = gearbox.OutPort().Request(absTime, dt, outTorque, angularVelocity);
 			Assert.IsTrue(response.GetType() == responseType);
 
-			if (responseType == typeof(ResponseSuccess)) {
-				AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
-				AssertHelper.AreRelativeEqual(dt, port.Dt);
-				AssertHelper.AreRelativeEqual(expectedN, port.AngularVelocity);
-				AssertHelper.AreRelativeEqual(t, port.Torque, toleranceFactor: 1e-5);
-			}
+			AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
+			AssertHelper.AreRelativeEqual(dt, port.Dt);
+			AssertHelper.AreRelativeEqual(expectedN, port.AngularVelocity);
+			AssertHelper.AreRelativeEqual(t, port.Torque, toleranceFactor: 1e-5);
 		}
 
 		[TestCase(8, 7, 1800, 750, typeof(ResponseGearShift)),
