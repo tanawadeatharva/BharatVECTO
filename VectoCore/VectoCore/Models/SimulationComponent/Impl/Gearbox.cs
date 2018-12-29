@@ -181,6 +181,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_engageTime = absTime + dt;
 			}
 
+			if (ClutchClosed(absTime) && Disengaged && !outAngularVelocity.IsEqual(0)) {
+				ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
+				Log.Debug("Gearbox engaged gear {0}", Gear);
+			}
+
 			var gear = Disengaged ? NextGear.Gear : Gear;
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			var inTorqueLossResult = ModelData.Gears[gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
@@ -319,10 +324,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//{
 			//	Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 			//}
-			if (Disengaged && !outAngularVelocity.IsEqual(0)) {
-				ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
-				Log.Debug("Gearbox engaged gear {0}", Gear);
-			}
 
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
 
