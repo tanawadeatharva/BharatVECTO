@@ -58,10 +58,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase(null, 1.0, 45.5309587),
-		TestCase("CFRegPer", 1.2, 45.5309587 * 1.2),
-		TestCase("BFColdHot", 1.2, 45.5309587 * 1.2),
-		TestCase("CFNCV", 1.2, 45.5309587)  // has no influence - only for documentation purpose
+		[TestCase(null, 1.0, 45.52476184, TestName = "Engine CF - NONE"),
+		TestCase("CFRegPer", 1.2, 45.52476184 * 1.2, TestName = "Engine CF - CFRegPer"),
+		TestCase("BFColdHot", 1.2, 45.52476184 * 1.2, TestName = "Engine CF - BFColdHod"),
+		TestCase("CFNCV", 1.2, 45.52476184, TestName = "Engine CF - CFNCV")  // has no influence - only for documentation purpose
 			]
 		public void TestEngineCorrectionFactors(string correctionFactor, double value, double expectedFc)
 		{

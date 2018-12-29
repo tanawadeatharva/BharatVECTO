@@ -181,7 +181,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_engageTime = absTime + dt;
 			}
 
-			var gear = NextGear.Gear;
+			if (ClutchClosed(absTime) && Disengaged && !outAngularVelocity.IsEqual(0)) {
+				ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
+				Log.Debug("Gearbox engaged gear {0}", Gear);
+			}
+
+			var gear = Disengaged ? NextGear.Gear : Gear;
 			var avgOutAngularVelocity = (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
 			var inTorqueLossResult = ModelData.Gears[gear].LossMap.GetTorqueLoss(avgOutAngularVelocity, outTorque);
 			if (avgOutAngularVelocity.IsEqual(0, 1e-9)) {
@@ -189,7 +194,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[gear].Ratio;
-			var inTorque = outTorque / ModelData.Gears[gear].Ratio + inTorqueLossResult.Value;
+			var avgInAngularVelocity = (PreviousState.InAngularVelocity + inAngularVelocity) / 2.0;
+			var inTorque = !avgInAngularVelocity.IsEqual(0)
+				? outTorque * (avgOutAngularVelocity / avgInAngularVelocity)
+				: outTorque / ModelData.Gears[Gear].Ratio;
+			inTorque += inTorqueLossResult.Value;
+			//var inTorque = outTorque / ModelData.Gears[gear].Ratio + inTorqueLossResult.Value;
+
 			var inertiaTorqueLossOut = !inAngularVelocity.IsEqual(0)
 				? Formulas.InertiaPower(outAngularVelocity, PreviousState.OutAngularVelocity, ModelData.Inertia, dt) /
 				avgOutAngularVelocity
@@ -197,7 +208,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			inTorque += inertiaTorqueLossOut / ModelData.Gears[gear].Ratio;
 
 			var halted = DataBus.DrivingAction == DrivingAction.Halt;
-			var driverDeceleratingNegTorque = DataBus.DriverBehavior == DrivingBehavior.Braking &&
+			var driverDeceleratingNegTorque = DataBus.DriverBehavior == DrivingBehavior.Braking && DataBus.DrivingAction == DrivingAction.Brake &&
 											(DataBus.BrakePower.IsGreater(0) || inTorque.IsSmaller(0));
 			var vehiclespeedBelowThreshold =
 				DataBus.VehicleSpeed.IsSmaller(Constants.SimulationSettings.ClutchDisengageWhenHaltingSpeed);
@@ -313,13 +324,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//{
 			//	Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 			//}
-			if (Disengaged && !outAngularVelocity.IsEqual(0)) {
-				ReEngageGear(absTime, dt, outTorque, outAngularVelocity);
-				Log.Debug("Gearbox engaged gear {0}", Gear);
-			}
 
 			var inAngularVelocity = outAngularVelocity * ModelData.Gears[Gear].Ratio;
-
+			
 			if (dryRun) {
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0;
