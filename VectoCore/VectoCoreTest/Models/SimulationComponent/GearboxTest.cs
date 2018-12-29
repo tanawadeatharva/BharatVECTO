@@ -440,7 +440,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(2, 50, 600, 9.096, typeof(ResponseSuccess)),
 		TestCase(2, 2050, 1200, 52.132, typeof(ResponseSuccess)),
 		TestCase(2, 850, 600, 25.096, typeof(ResponseSuccess)),
-		TestCase(1, 850, 0, 22.06, typeof(ResponseSuccess)),
+		TestCase(1, 850, 0, 0, typeof(ResponseSuccess)), // torque loss is 0 if speed is 0
 		]
 		public void Gearbox_Request_engaged(int gear, double t, double n, double loss, Type responseType)
 		{
