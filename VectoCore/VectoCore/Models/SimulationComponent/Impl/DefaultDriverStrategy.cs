@@ -593,7 +593,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed = false)
 		{
-			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
+			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed && !DataBus.VehicleStopped) {
 				var retVal =  HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
 				for (var i = 0; i < 3 && retVal == null; i++) {
 					retVal = HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
@@ -642,8 +642,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				targetDistance = DriverStrategy.BrakeTrigger.TriggerDistance - DefaultDriverStrategy.BrakingSafetyMargin;
 			}
 			Driver.DriverBehavior = DrivingBehavior.Braking;
-			response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-				gradient, targetDistance: targetDistance);
+
+			if (DataBus.VehicleSpeed.IsEqual(0) && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0)) {
+				if (ds.IsEqual(targetDistance - currentDistance)) {
+					return new ResponseDrivingCycleDistanceExceeded() {
+						Source = this,
+						MaxDistance = ds / 2
+					};
+				}
+
+				response = Driver.DrivingActionAccelerate(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient);
+			} else {
+				response = Driver.DrivingActionBrake(
+					absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+					gradient, targetDistance: targetDistance);
+			}
 
 			if (DataBus.GearboxType.AutomaticTransmission() && response == null) {
 				for (var i = 0; i < 3 && response == null; i++) {
