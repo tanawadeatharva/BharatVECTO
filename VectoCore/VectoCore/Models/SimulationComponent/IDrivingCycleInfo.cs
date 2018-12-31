@@ -58,6 +58,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		Meter Altitude { get; }
 
+		Radian RoadGradient { get; }
+
 		Meter CycleStartDistance { get; }
 
 		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance);
