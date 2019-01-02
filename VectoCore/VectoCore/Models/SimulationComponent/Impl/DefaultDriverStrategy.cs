@@ -653,7 +653,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				response = Driver.DrivingActionAccelerate(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient);
 				if (response is ResponseUnderload) {
-					response = Driver.DrivingActionBrake(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient, response);
+					response = Driver.DrivingActionBrake(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient, response, overrideAction: DrivingAction.Accelerate);
 				}
 			} else {
 				response = Driver.DrivingActionBrake(
