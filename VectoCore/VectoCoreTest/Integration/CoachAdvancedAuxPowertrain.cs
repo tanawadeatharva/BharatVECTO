@@ -100,7 +100,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AirdragData = airdragData,
 				GearboxData = gearboxData,
 				EngineData = engineData,
-				SimulationType = SimulationType.DistanceCycle
+				SimulationType = SimulationType.DistanceCycle,
+				Cycle = cycleData
 			};
 			container.RunData = runData;
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))

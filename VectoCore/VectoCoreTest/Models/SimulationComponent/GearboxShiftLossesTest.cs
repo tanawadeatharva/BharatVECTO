@@ -51,14 +51,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	public class GearboxShiftLossesTest
 	{
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 
-        private static AxleGearData CreateAxleGearData(GearboxType gbxType)
+		private static AxleGearData CreateAxleGearData(GearboxType gbxType)
 		{
 			var ratio = gbxType == GearboxType.ATSerial ? 6.2 : 5.8;
 			return new AxleGearData {
