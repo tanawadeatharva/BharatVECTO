@@ -88,6 +88,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return 0.SI<Meter>(); }
 		}
 
+		public Radian RoadGradient { get { return 0.SI<Radian>(); } }
+
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.dist] = 0.SI<Meter>();

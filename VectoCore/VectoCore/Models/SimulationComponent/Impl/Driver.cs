@@ -478,10 +478,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		public IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient,
-			IResponse previousResponse = null, Meter targetDistance = null)
+		public IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient, IResponse previousResponse = null, Meter targetDistance = null, DrivingAction? overrideAction = null)
 		{
-			DrivingAction = DrivingAction.Brake;
+			DrivingAction = overrideAction ?? DrivingAction.Brake;
 			IterationStatistics.Increment(this, "Brake");
 			Log.Debug("DrivingAction Brake");
 

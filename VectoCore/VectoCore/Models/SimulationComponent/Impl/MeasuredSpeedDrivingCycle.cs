@@ -360,6 +360,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return CycleIterator.LeftSample.Altitude; }
 		}
 
+		public Radian RoadGradient { get { return CycleIterator.LeftSample.RoadGradient; } }
+
 		public Meter CycleStartDistance
 		{
 			get { return 0.SI<Meter>(); }

@@ -496,6 +496,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return PreviousState.Altitude; }
 		}
 
+		public Radian RoadGradient { get { return CurrentState.Gradient; } }
+
+
 		public sealed class DrivingCycleState
 		{
 			public DrivingCycleState Clone()

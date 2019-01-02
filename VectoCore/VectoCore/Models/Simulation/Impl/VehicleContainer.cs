@@ -425,6 +425,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Driver != null ? Driver.DriverAcceleration : 0.SI<MeterPerSquareSecond>(); }
 		}
 
+		public Radian RoadGradient
+		{
+			get { return DrivingCycle.RoadGradient; }
+		}
+
 		public Meter CycleStartDistance
 		{
 			get { return DrivingCycle == null ? 0.SI<Meter>() : DrivingCycle.CycleStartDistance; }

@@ -40,6 +40,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -57,45 +58,45 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[Category("LongRunning")]
 		[Category("Integration")]
 		[TestCase(FuelType.DieselCI, null,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 
-			0.0002199424, 0.0002199424, 26.3060719, 0.0006886, 9390.531125,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0,
+			 0.000219919455699735, 0.000219919455699735, 26.3061549880066, 0.000688347896340172, 9390.5607583787,
 			TestName = "Diesel LH Low"),
 		TestCase(FuelType.EthanolCI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0,
-			0.0002199424, 0.0002225401, 27.136125, 0.000402797, 5651.912176,
+			0.000219919455699735, 0.000222516929585952, 27.1362109251161, 0.000402755642550574, 5651.93001148319,
 			TestName = "Ethanol/CI LH Low"),
 
 		TestCase(FuelType.DieselCI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.0002547295, 0.0002547295, 30.4611849, 0.0007971, 10873.790098,
+			0.000254656206506391, 0.000254656206506391, 30.4612687208601, 0.000797073926365003, 10873.8200178229,
 			TestName = "Diesel LH Ref"),
 		TestCase(FuelType.EthanolCI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.0002547295, 0.000257738, 31.4223473, 0.00046650, 6544.646499,
+			0.000254656206506391, 0.000257663956976937, 31.4224337776753, 0.000466371762128257, 6544.66450721421,
 			TestName = "Ethanol/CI LH Ref"),
 		TestCase(FuelType.EthanolPI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.0002547295, 0.00025299078, 32.17776628, 0.0005312806, 7410.475219,
+			0.000254656206506391, 0.000252917938885187, 32.1778548199983, 0.000531127671658892, 7410.49560933597,
 			TestName = "Ethanol/PI LH Ref"),
 		TestCase(FuelType.PetrolPI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.0002547295, 0.00025472954, 34.0448537, 0.0007743778, 10568.203491,
+			0.000254656206506391, 0.000254656206506391, 34.0449473939025, 0.000774154867779428, 10568.2325700152,
 			TestName = "Petrol/PI LH Ref"),
 		TestCase(FuelType.LPGPI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.0002547295, 0.0002547295, double.NaN, 0.00076928, 11714.1532673,
+			0.000254656206506391, 0.000254656206506391, null, 0.0007690617436493, 11714.185499294,
 			TestName = "LPG/PI LH Ref"),
 		TestCase(FuelType.NGPI, TankSystem.Liquefied,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.0002547295, 0.00023397765, double.NaN, 0.00064811809, 11484.963312,
+			0.000254656206506391, 0.000233910283369414, null, 0.000647931484933277, 11484.9949134382,
 			TestName = "LNG/PI LH Ref"),
 		TestCase(FuelType.NGPI, TankSystem.Compressed,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.0002547295, 0.0002393396, double.NaN, 0.000643823, 11484.963312,
+			0.000254656206506391, 0.000239270727363297, null, 0.00064363825660727, 11484.9949134383,
 			TestName = "CNG/PI LH Ref"),
 			]
 		public void TestFuelTypesCO2(FuelType fuelType, TankSystem? tankSystem, string jobName, int runIdx, 
-			double expectedFCMap, double expectedFCFinal, double expectedFCperkm, double expectedCo2, double expectedMJ)
+			double expectedFCMap, double expectedFCFinal, double? expectedFCperkm, double expectedCo2, double expectedMJ)
 		{
 			// the same engine fc-map is used for different fuel types, thus the difference in expected results
 			var fileWriter = new FileOutputWriter(jobName);
@@ -125,19 +126,20 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// restore data table before assertions
 			modContainer.Data = modData;
 			
-			Console.WriteLine("FC-Map g/m: {0}, FC-Final g/m {1}, FC-Final l/100km: {2}, CO2 g/m: {3}, Energy J/m: {4}", 
+//			Console.WriteLine("FC-Map g/m: {0}, FC-Final g/m {1}, FC-Final l/100km: {2}, CO2 g/m: {3}, Energy J/m: {4}",
+			Console.WriteLine("{0}, {1}, {2}, {3}, {4}",
 				modContainer.FCMapPerMeter().Value(),
 				modContainer.FuelConsumptionFinal().Value(), 
 				modContainer.FuelConsumptionFinalVolumePerMeter()?.ConvertToLiterPer100Kilometer().Value ?? double.NaN,
 				modContainer.CO2PerMeter().Value(), 
 				modContainer.EnergyPerMeter().Value());
 
-			Assert.AreEqual(expectedFCMap, modContainer.FCMapPerMeter().Value(), 1e-6);
-			Assert.AreEqual(expectedFCFinal, modContainer.FuelConsumptionFinal().Value(), 1e-3);
-			Assert.AreEqual(expectedFCperkm, modContainer.FuelConsumptionFinalVolumePerMeter()?.ConvertToLiterPer100Kilometer().Value ?? double.NaN, 1e-6);
-			
-			Assert.AreEqual(expectedCo2, modContainer.CO2PerMeter().Value(), 1e-6);
-			Assert.AreEqual(expectedMJ, modContainer.EnergyPerMeter().Value(), 1e-3);
+			AssertHelper.AreRelativeEqual(expectedFCMap, modContainer.FCMapPerMeter(), 1e-6);
+			AssertHelper.AreRelativeEqual(expectedFCFinal, modContainer.FuelConsumptionFinal(), 1e-3);
+			AssertHelper.AreRelativeEqual(expectedFCperkm, modContainer.FuelConsumptionFinalVolumePerMeter()?.ConvertToLiterPer100Kilometer().Value.SI() ?? null, 1e-6);
+
+			AssertHelper.AreRelativeEqual(expectedCo2, modContainer.CO2PerMeter(), 1e-6);
+			AssertHelper.AreRelativeEqual(expectedMJ, modContainer.EnergyPerMeter(), 1e-3);
 		}
 	}
 }
