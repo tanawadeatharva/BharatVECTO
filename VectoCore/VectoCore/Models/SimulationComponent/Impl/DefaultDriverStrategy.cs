@@ -743,14 +743,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 					}
 				}).
-				Case<ResponseGearShift>(r => {
-					response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
-				}).
 				Case<ResponseEngineSpeedTooHigh>(r => {
 					response = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, r);
 				});
-			// handle the SpeedLimitExceeded Response separately in case it occurs in one of the requests in the second try
+			// handle the SpeedLimitExceeded Response and Gearshift Response separately in case it occurs in one of the requests in the second try
 			response.Switch().
+				Case<ResponseGearShift>(r => {
+					response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+				}).
 				Case<ResponseSpeedLimitExceeded>(() => {
 					response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
 						gradient);
