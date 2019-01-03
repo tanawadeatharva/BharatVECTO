@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			foreach (var edge in TorqueConverterEntries.Pairwise((p1, p2) => Edge.Create(new Point(p1.SpeedRatio, p1.TorqueRatio), new Point(p2.SpeedRatio, p2.TorqueRatio)))) {
 				if (nu >= edge.P1.X && nu < edge.P2.X) {
 					var my = VectoMath.Interpolate(edge, nu);
-					return new TorqueConverterOperatingPoint() {
+					return new TorqueConverterOperatingPoint {
 						InAngularVelocity = inAngularVelocity,
 						OutAngularVelocity = outAngularVelocity,
 						OutTorque = outTorque,
@@ -231,22 +231,80 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				outAngularVelocity, inAngularVelocity, outTorque);
 		}
 
-		public TorqueConverterOperatingPoint FindOperatingPointForPowerDemand(Watt power, PerSecond prevInputSpeed,
-			PerSecond nextOutputSpeed, KilogramSquareMeter inertia, Second dt, Watt previousPower)
+		public TorqueConverterOperatingPoint LookupOperatingPointOut(PerSecond outAngularVelocity, PerSecond inAngularVelocity, NewtonMeter inTorque)
+		{
+			var nu = outAngularVelocity / inAngularVelocity;
+			foreach (var edge in TorqueConverterEntries.Pairwise((p1, p2) => Edge.Create(new Point(p1.SpeedRatio, p1.TorqueRatio), new Point(p2.SpeedRatio, p2.TorqueRatio)))) {
+				if (nu >= edge.P1.X && nu < edge.P2.X) {
+					var my = VectoMath.Interpolate(edge, nu);
+					return new TorqueConverterOperatingPoint {
+						InAngularVelocity = inAngularVelocity,
+						OutAngularVelocity = outAngularVelocity,
+						OutTorque = inTorque * my,
+						InTorque = inTorque,
+						SpeedRatio = nu,
+						TorqueRatio = my,
+					};
+				}
+			}
+			throw new VectoSimulationException(
+				"Torque Converter: Failed to find operating point for outputSpeed/outputTorque/inputSpeed! n_out: {0}, n_in: {1}, tq_in: {2}",
+				outAngularVelocity, inAngularVelocity, inTorque);
+		}
+
+		public TorqueConverterOperatingPoint FindOperatingPointForPowerDemand(Watt enginePower, PerSecond prevInputSpeed,
+			PerSecond nextOutputSpeed, KilogramSquareMeter inertia, Second dt, Watt previousPowerTC)
 		{
 			var solutions = new List<double>();
-			var mpNorm = ReferenceSpeed.Value();
+			var mpNorm = ReferenceSpeed; //.Value();
 
 			foreach (var segment in TorqueConverterEntries.Pairwise(Tuple.Create)) {
 				var mpEdge = Edge.Create(new Point(segment.Item1.SpeedRatio, segment.Item1.Torque.Value()),
 					new Point(segment.Item2.SpeedRatio, segment.Item2.Torque.Value()));
 
-				var a = mpEdge.OffsetXY / (2 * mpNorm * mpNorm);
-				var b = inertia.Value() / (2 * dt.Value()) + mpEdge.SlopeXY * nextOutputSpeed.Value() / (2 * mpNorm * mpNorm);
+				
+				// Torque Converter: M_P1000 = k * n_out / n_in + d
+				//                   T_out = M_P1000 * (n_in / 1000rpm)^2 = (k * n_out / n_in + d) * (n_in / c)^2
+				// P_eng_out = P_eng_inertia + P_TC_in_avg
+				// P_eng_inertia = I_eng * (n_2_eng^2 - n_1_eng^2) / (2 * dt)
+				// P_TC_in_avg = (T_in_1 * n_in_1 + T_in_2 * n_in_2) / 2
+				// => solve for n_in
+
+				var a = mpEdge.OffsetXY.SI<NewtonMeter>() / (2 * mpNorm * mpNorm);
+				var b = inertia / (2 * dt) + mpEdge.SlopeXY.SI<NewtonMeter>() * nextOutputSpeed / (2 * mpNorm * mpNorm);
 				var c = 0;
-				var d = -inertia.Value() * prevInputSpeed.Value() * prevInputSpeed.Value() / (2 * dt.Value()) - power.Value() +
-						previousPower.Value() / 2;
-				var sol = VectoMath.CubicEquationSolver(a, b, c, d);
+				var d = -inertia * prevInputSpeed * prevInputSpeed / (2 * dt) - enginePower +
+						previousPowerTC / 2;
+				var sol = VectoMath.CubicEquationSolver(a.Value(), b.Value(), c, d.Value());
+				//============================================================================
+				
+
+				/*
+				// Torque Converter: M_P1000 = k * n_out / n_in + d
+				//                   T_out = M_P1000 * (n_in / 1000rpm)^2 = (k * n_out / n_in + d) * (n_in / c)^2
+				// P_eng_out = P_eng_inertia + P_TC_in_avg
+				// P_eng_inertia = I_eng * (n_2_eng^2 - n_1_eng^2) / (2 * dt)
+				// P_TC_in_avg = n_in_2 (T_in_1 * n_in_1 + T_in_2 * n_in_2) / (n_in_1 + n_in_2)
+				// (index _1: beginning of simulation interval, index _2: end of simulation interval)
+				// => solve for n_in
+
+				var a = 2 * mpEdge.OffsetXY.SI<NewtonMeter>() * dt / (mpNorm * mpNorm);
+				var b = inertia + 2 * dt * nextOutputSpeed * mpEdge.SlopeXY.SI<NewtonMeter>() / (mpNorm * mpNorm);
+				var c = prevInputSpeed * inertia;
+				var d = 2 * dt * previousPowerTC - inertia * prevInputSpeed * prevInputSpeed - 2 * dt * enginePower;
+				var e = - inertia * prevInputSpeed * prevInputSpeed * prevInputSpeed - 2 * dt * prevInputSpeed * enginePower;
+
+				var sol = VectoMath.Polynom4Solver(a.Value(), b.Value(), c.Value(), d.Value(), e.Value());
+				//============================================================================
+				*/
+
+				// T_eng_o_2 + T_eng_I + T_aux - T_max) (n_in_1 + n_in_2) / 2 = 0
+				//var a = dt * mpEdge.OffsetXY.SI<NewtonMeter>() / (mpNorm * mpNorm);
+				//var b = inertia + dt * mpEdge.SlopeXY.SI<NewtonMeter>() * nextOutputSpeed / (mpNorm * mpNorm);
+				//var c = dt * mpEdge.SlopeXY.SI<NewtonMeter>() * nextOutputSpeed * prevInputSpeed / (mpNorm * mpNorm) - inertia * prevInputSpeed * prevInputSpeed;
+				//var d = 2 * dt * enginePower;
+
+				//var sol = VectoMath.CubicEquationSolver(a.Value(), b.Value(), c.Value(), d.Value());
 
 				var selected = sol.Where(x => x > 0 && nextOutputSpeed / x >= mpEdge.P1.X && nextOutputSpeed / x < mpEdge.P2.X);
 				solutions.AddRange(selected);
@@ -254,7 +312,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 			if (solutions.Count == 0) {
 				throw new VectoException(
-					"Failed to find operating point for power {0}, prevInputSpeed {1}, nextOutputSpeed {2}", power,
+					"Failed to find operating point for power {0}, prevInputSpeed {1}, nextOutputSpeed {2}", enginePower,
 					prevInputSpeed, nextOutputSpeed);
 			}
 			solutions.Sort();
@@ -285,6 +343,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 			return ValidationResult.Success;
 		}
+
+
 	}
 
 	public class TorqueConverterOperatingPoint

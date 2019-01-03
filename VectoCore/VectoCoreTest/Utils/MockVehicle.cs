@@ -48,7 +48,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		internal RequestData LastRequest = new RequestData();
 
-		public MockVehicle(IVehicleContainer cockpit) : base(cockpit) {}
+		public MockVehicle(IVehicleContainer cockpit) : base(cockpit)
+		{
+		}
+
 		protected override void DoWriteModalResults(IModalDataContainer container) {}
 
 		protected override void DoCommitSimulationStep() {}
@@ -104,6 +107,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return 0.SI<Newton>();
 		}
+
+		public MeterPerSecond MaxVehicleSpeed { get { return null; } }
 
 		public void Connect(IFvOutPort other)
 		{

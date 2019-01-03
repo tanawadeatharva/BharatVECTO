@@ -397,6 +397,7 @@ namespace VectoHashingTest
 		}
 
 		[TestCase(@"Testdata\XML\ToHash\vecto_engine-input.xml"),
+		TestCase(@"Testdata\XML\ToHash\vecto_engine-input_emptyDate.xml"),
 		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml"),
 		TestCase(@"Testdata\XML\ToHash\vecto_gearbox-input.xml")]
 		public void TestHashedComponentIsValid(string file)

@@ -1,0 +1,7 @@
+﻿RRC_min [kg/t] , RRC_max [kg/t] , Energy Efficiency Class
+0              , 4.0            , A
+4.1            , 5.0            , B
+5.1            , 6.0            , C
+6.1            , 7.0            , D
+7.1            , 8.0            , E
+8.1            , 999            , F

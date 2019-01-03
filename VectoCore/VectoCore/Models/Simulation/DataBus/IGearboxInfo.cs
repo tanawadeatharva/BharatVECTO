@@ -49,6 +49,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		/// <returns></returns>
 		uint Gear { get; }
 
+		bool TCLocked { get; }
+
 		MeterPerSecond StartSpeed { get; }
 
 		MeterPerSquareSecond StartAcceleration { get; }

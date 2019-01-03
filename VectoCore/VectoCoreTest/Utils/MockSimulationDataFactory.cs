@@ -57,22 +57,26 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var dao = new DeclarationDataAdapter();
 				var engineData = dao.CreateEngineData(engineInput, null, gearboxInput, new List<ITorqueLimitInputData>());
 				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
-					VehicleCategory.RigidTruck,
-					false);
+					VehicleCategory.RigidTruck);
 			} else {
 				var dao = new EngineeringDataAdapter();
 				var engineData = dao.CreateEngineData(engineInput, gearboxInput, new List<ITorqueLimitInputData>());
 				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
-					VehicleCategory.RigidTruck,
-					true);
+					VehicleCategory.RigidTruck);
 			}
 		}
 
-		public static AxleGearData CreateAxleGearDataFromFile(string axleGearFile)
+		public static AxleGearData CreateAxleGearDataFromFile(string axleGearFile, bool declarationMode = true)
 		{
-			var dao = new DeclarationDataAdapter();
-			var axleGearInput = JSONInputDataFactory.ReadGearbox(axleGearFile);
-			return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput, false);
+			if (declarationMode) {
+				var dao = new DeclarationDataAdapter();
+				var axleGearInput = JSONInputDataFactory.ReadGearbox(axleGearFile);
+				return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput);
+			} else {
+				var dao = new EngineeringDataAdapter();
+				var axleGearInput = JSONInputDataFactory.ReadGearbox(axleGearFile);
+				return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput);
+			}
 		}
 
 		public static CombustionEngineData CreateEngineDataFromFile(string engineFile, int numGears)

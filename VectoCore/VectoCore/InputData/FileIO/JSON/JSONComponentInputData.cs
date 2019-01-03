@@ -39,12 +39,13 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONComponentInputData : IEngineeringInputDataProvider, IDeclarationInputDataProvider,
-		IEngineeringJobInputData, IVehicleEngineeringInputData
+		IEngineeringJobInputData, IVehicleEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData
 	{
 		protected IGearboxEngineeringInputData Gearbox;
 		protected IAxleGearInputData AxleGear;
@@ -147,6 +148,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return ""; }
 		}
+
+		public bool ExemptedVehicle { get { return false; } }
 
 		public string VIN
 		{
@@ -299,6 +302,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return PTOTransmission; }
 		}
 
+		public bool VocationalVehicle { get { return DeclarationData.Vehicle.VocationalVehicleDefault; } }
+		public bool SleeperCab { get { return DeclarationData.Vehicle.SleeperCabDefault; } }
+		public TankSystem TankSystem { get { return DeclarationData.Vehicle.TankSystemDefault; } }
+		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get { return this; } }
+		public bool ZeroEmissionVehicle { get { return DeclarationData.Vehicle.ZeroEmissionVehicleDefault; } }
+		public bool HybridElectricHDV { get { return DeclarationData.Vehicle.HybridElectricHDVDefault; } }
+		public bool DualFuelVehicle { get { return DeclarationData.Vehicle.DualFuelVehicleDefault; } }
+		public Watt MaxNetPower1 { get { return null; } }
+		public Watt MaxNetPower2 { get { return null; } }
+
 		IAuxiliariesEngineeringInputData IVehicleEngineeringInputData.AuxiliaryInputData()
 		{
 			throw new NotImplementedException();
@@ -313,5 +326,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return PTOTransmission; }
 		}
+
+		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
+
+		public bool EngineStopStart { get { return DeclarationData.Vehicle.ADAS.EngineStopStartDefault; } }
+		public bool EcoRollWitoutEngineStop { get { return DeclarationData.Vehicle.ADAS.EcoRollWitoutEngineStop; } }
+		public bool EcoRollWithEngineStop { get { return DeclarationData.Vehicle.ADAS.EcoRollWithEngineStop; } }
+		public PredictiveCruiseControlType PredictiveCruiseControl { get {
+			return DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault;
+		} }
+
+		#endregion
 	}
 }

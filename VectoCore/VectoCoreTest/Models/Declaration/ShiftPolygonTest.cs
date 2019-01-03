@@ -661,6 +661,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	{
 		const string BasePath = @"E:\QUAM\Workspace\Daten_INTERN\Testfahrzeuge\";
 
+
+		[Category("LongRunning")]
+		[Ignore("No Assertions - only plotting shift polygons")]
 		[
 			TestCase(@"class2_12t_baseline\175kW_Diesel_example.vfld", @"class2_12t_baseline\delivery_12t_example.vgbx", 0.421,
 				4.18, 600),

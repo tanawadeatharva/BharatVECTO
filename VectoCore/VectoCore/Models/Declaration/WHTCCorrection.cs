@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			protected override void ParseData(DataTable table)
 			{
 				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-					if (mission.IsEMS() || !mission.IsDeclarationMission()) {
+					if (mission.IsEMS() || !mission.IsDeclarationMission() || mission == MissionType.ExemptedMission) {
 						continue;
 					}
 					var values = table.Columns[mission.ToString().ToLower()].Values<string>().ToDouble().ToArray();

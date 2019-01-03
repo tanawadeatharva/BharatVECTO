@@ -79,17 +79,17 @@ namespace TUGraz.VectoCore.OutputData
 
 		public bool WriteAdvancedAux { get; set; }
 
-		public ModalDataContainer(string runName, FuelType fuel, IModalDataWriter writer, bool writeEngineOnly = false, params IModalDataFilter[] filters)
+		public ModalDataContainer(string runName, FuelData.Entry fuel, IModalDataWriter writer, bool writeEngineOnly = false, params IModalDataFilter[] filters)
 			: this(0, runName, "", fuel, "", writer, _ => { }, writeEngineOnly, filters) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
 			bool writeEngineOnly, params IModalDataFilter[] filter)
 			: this(
-				runData.JobRunId, runData.JobName, runData.Cycle.Name, runData.EngineData.FuelType, runData.ModFileSuffix, writer,
+				runData.JobRunId, runData.JobName, runData.Cycle.Name, runData.EngineData.FuelData, runData.ModFileSuffix, writer,
 				addReportResult,
 				writeEngineOnly, filter) {}
 
-		protected ModalDataContainer(int jobRunId, string runName, string cycleName, FuelType fuelType, string runSuffix,
+		protected ModalDataContainer(int jobRunId, string runName, string cycleName, FuelData.Entry fuelData, string runSuffix,
 			IModalDataWriter writer,
 			Action<ModalDataContainer> addReportResult, bool writeEngineOnly, params IModalDataFilter[] filters)
 		{
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.OutputData
 			JobRunId = jobRunId;
 			_writer = writer;
 
-			FuelData = Models.Declaration.FuelData.Instance().Lookup(fuelType);
+			FuelData = fuelData;
 
 			_writeEngineOnly = writeEngineOnly;
 			_filters = filters ?? new IModalDataFilter[0];
@@ -239,8 +239,8 @@ namespace TUGraz.VectoCore.OutputData
 				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
 				.Concat(
 					new[] {
-						ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc,
-						ModalResultField.FCAAUX, ModalResultField.FCFinal
+						ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc,
+						ModalResultField.FCAAUX, ModalResultField.FCADAS, ModalResultField.FCFinal
 					}.Select(x => x.GetName()));
 #if TRACE
 			strCols = strCols.Concat(_additionalColumns);

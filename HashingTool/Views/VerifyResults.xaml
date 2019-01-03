@@ -219,7 +219,7 @@
 					<RowDefinition />
 					<RowDefinition />
 					<RowDefinition />
-                    <RowDefinition/>
+					<RowDefinition/>
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto"  SharedSizeGroup="LabelsShareGroup"/>
@@ -291,63 +291,63 @@
 					</Grid>
 				</GroupBox>
 
-                <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Header="Manufacturer Report Integrity" Style="{DynamicResource CustomGroupboxStyle}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="LabelsShareGroup" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                            <RowDefinition />
-                    
-                        </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="CanonicalizationMethod:" />
-                        <TextBox Grid.Row="0" Grid.Column="1"
+				<GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Header="Manufacturer Report Integrity" Style="{DynamicResource CustomGroupboxStyle}">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" SharedSizeGroup="LabelsShareGroup" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition />
+							<RowDefinition />
+							<RowDefinition />
+							<RowDefinition />
+					
+						</Grid.RowDefinitions>
+						<Label Grid.Row="0" Grid.Column="0" Content="CanonicalizationMethod:" />
+						<TextBox Grid.Row="0" Grid.Column="1"
 								Text="{Binding ManufacturerReportCanonicalizationMethodRead, Mode=OneWay, Converter={StaticResource CollectionConverter}}"
 								Margin="10,2" IsReadOnly="True" />
 
-                        <Label Grid.Row="1" Grid.Column="0" Content="Digest Method:" />
-                        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ManufacturerReportDigestMethodRead, Mode=OneWay}"
+						<Label Grid.Row="1" Grid.Column="0" Content="Digest Method:" />
+						<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ManufacturerReportDigestMethodRead, Mode=OneWay}"
 								Margin="10,2" IsReadOnly="True" />
 
-                        <Label Grid.Row="2" Grid.Column="0" Content="Digest Value Read:"
+						<Label Grid.Row="2" Grid.Column="0" Content="Digest Value Read:"
 								Style="{StaticResource DigestValueLabelStyle}" />
-                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ManufacturerReportDigestValueRead, Mode=OneWay}"
+						<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ManufacturerReportDigestValueRead, Mode=OneWay}"
 								Margin="10,2" IsReadOnly="True">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
-                                    <Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ManufacturerReportDigestValid}" Value="True">
-                                            <Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
+							<TextBox.Style>
+								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding ManufacturerReportDigestValid}" Value="True">
+											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</TextBox.Style>
+						</TextBox>
 
-                        <Label Grid.Row="3" Grid.Column="0" Content="Digest Value Computed:"
+						<Label Grid.Row="3" Grid.Column="0" Content="Digest Value Computed:"
 								Style="{StaticResource DigestValueLabelStyle}" />
-                        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ManufacturerReportDigestValueComputed, Mode=OneWay}"
+						<TextBox Grid.Row="3" Grid.Column="1" Text="{Binding ManufacturerReportDigestValueComputed, Mode=OneWay}"
 								Margin="10,2" IsReadOnly="True">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
-                                    <Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ManufacturerReportDigestValid}" Value="True">
-                                            <Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
-                        </TextBox>
-                    </Grid>
-                </GroupBox>
+							<TextBox.Style>
+								<Style TargetType="TextBox" BasedOn="{StaticResource DigestValueTextboxStyle}">
+									<Setter Property="Foreground" Value="{StaticResource Color.ErrorRed}" />
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding ManufacturerReportDigestValid}" Value="True">
+											<Setter Property="Foreground" Value="{StaticResource Color.SuccessGreen}" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</TextBox.Style>
+						</TextBox>
+					</Grid>
+				</GroupBox>
 
-                <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Header="Job Integrity" Style="{DynamicResource CustomGroupboxStyle}">
+				<GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Header="Job Integrity" Style="{DynamicResource CustomGroupboxStyle}">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto" SharedSizeGroup="LabelsShareGroup" />
@@ -828,7 +828,7 @@
 						<Style TargetType="ContentControl">
 							<Setter Property="ContentTemplate" Value="{StaticResource Icon_NOK}" />
 							<Style.Triggers>
-                                <DataTrigger Binding="{Binding CustomerReport.ManufacturerReportMatchesReport}" Value="True">
+								<DataTrigger Binding="{Binding CustomerReport.ManufacturerReportMatchesReport}" Value="True">
 									<Setter Property="ContentTemplate" Value="{StaticResource Icon_OK}" />
 								</DataTrigger>
 							</Style.Triggers>

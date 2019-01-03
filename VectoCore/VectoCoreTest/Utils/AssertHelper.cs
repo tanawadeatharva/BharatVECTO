@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		/// Assert an expected Exception.
 		/// </summary>
 		[DebuggerHidden]
-		public static void Exception<T>(this Action func, string message = null) where T : Exception
+		public static void Exception<T>(this Action func, string message = null, string messageContains = null) where T : Exception
 		{
 			try {
 				func();
@@ -57,6 +57,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			} catch (T ex) {
 				if (message != null) {
 					Assert.AreEqual(message, ex.Message);
+				}
+				if (messageContains != null) {
+					Assert.IsTrue(ex.Message.Contains(messageContains));
 				}
 			}
 		}

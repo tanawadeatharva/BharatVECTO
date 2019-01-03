@@ -91,7 +91,7 @@ namespace TUGraz.VectoCommon.Models
 				case VehicleCategory.InterurbanBus:
 					return "Interurban Bus";
 				case VehicleCategory.RigidTruck:
-					return "Rigid Truck";
+					return "Rigid Lorry";
 				default:
 					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
 			}

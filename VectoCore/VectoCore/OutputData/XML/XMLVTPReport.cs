@@ -84,14 +84,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public Kilogram VTPFcFinalSimulated;
 			public WattSecond VTPWorkPWheelPos;
 			public double VTPFcCorrectionFactor;
-			public JoulePerKilogramm VTPNCV;
 			public Kilogram VTPFcMeasured;
+			public WattSecond VTPWorPWheelSimPos;
 
 			#region Overrides of ResultEntry
 
-			public override void SetResultData(VectoRunData runData, IModalDataContainer data)
+			public override void SetResultData(VectoRunData runData, IModalDataContainer data, double factor)
 			{
-				base.SetResultData(runData, data);
+				base.SetResultData(runData, data, factor);
 
 				if (runData.SimulationType != SimulationType.VerificationTest) {
 					return;
@@ -105,12 +105,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 						dt = x.Item2.Time - x.Item1.Time,
 						FC = x.Item1.Fuelconsumption
 					}).ToArray();
-
+				VTPWorPWheelSimPos = data.WorkWheelsPos();
 				VTPWorkPWheelPos = cycleEntries.Sum(x => x.PWheel * x.dt).Cast<WattSecond>();
 				VTPFcMeasured = cycleEntries.Sum(x => x.FC * x.dt).Cast<Kilogram>();
 				VTPFcFinalSimulated = data.TimeIntegral<Kilogram>(ModalResultField.FCFinal);
 				VTPFcCorrectionFactor = runData.VTPData.CorrectionFactor;
-				VTPNCV = runData.VTPData.FuelNetCalorificValue;
 			}
 
 			#endregion
@@ -163,7 +162,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected override void DoAddResult(
 			ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
-			entry.SetResultData(runData, modData);
+			entry.SetResultData(runData, modData, 0.0);
 		}
 
 		protected internal override void DoWriteReport()
@@ -192,7 +191,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 								.FirstOrDefault(x => x.Key == selectedLoading).Value;
 			var vtpFcMeasured = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos;
 			var vtpFcMeasuredCorr = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos * vtpResult.VTPFcCorrectionFactor;
-			var vtpFcSimulated = vtpResult.VTPFcFinalSimulated / vtpResult.VTPWorkPWheelPos;
+			var vtpFcSimulated = vtpResult.VTPFcFinalSimulated / vtpResult.VTPWorPWheelSimPos;
 			var cVtp = vtpFcMeasuredCorr / vtpFcSimulated;
 			var declaredCO2 = result.FuelConsumptionTotal / result.Distance / result.Payload;
 			var verifiedCO2 = declaredCO2 * cVtp;
@@ -206,9 +205,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(
 					tns + "WorkPosVT", new XAttribute(XMLNames.Report_Results_Unit_Attr, "kWh"),
 					vtpResult.VTPWorkPWheelPos.ConvertToKiloWattHour().ToXMLFormat(3)),
-				new XElement(
-					tns + "TestFuelNCV", new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/kg"),
-					(vtpResult.VTPNCV / 1e6).ToXMLFormat(3)),
 				new XElement(
 					tns + "FuelConsumption",
 					new XElement(
@@ -475,7 +471,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(
 					tns + XMLNames.Engine_Displacement,
 					engineData.Displacement.ConvertToCubicCentiMeter().ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelType.ToXMLFormat())
+				new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelData.FuelType.ToXMLFormat())
 			);
 		}
 

@@ -56,8 +56,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		Meter Mileage { get; }
 
-		JoulePerKilogramm NetCalorificValueTestFuel { get; }
-
 		IList<ICycleData> Cycles { get; }
 
 		IEnumerable<double> FanPowerCoefficents { get; }

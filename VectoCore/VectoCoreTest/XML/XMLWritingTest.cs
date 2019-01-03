@@ -82,6 +82,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("175kW 6.8l Engine", xml.JobInputData.JobName);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestWriteEngineeringSingleFile()
 		{
@@ -98,6 +99,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestWriteEngineeringSingleFileFull()
 		{
@@ -114,6 +116,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestWriteEngineeringMultipleFilesFull()
 		{
@@ -132,6 +135,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestWriteEngineeringMultipleFiles()
 		{

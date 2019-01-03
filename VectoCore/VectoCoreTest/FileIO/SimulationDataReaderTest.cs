@@ -56,6 +56,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
             Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
         }
 
+		[Category("LongRunning")]
         [TestCase]
 		public void ReadDeclarationJobFile()
 		{

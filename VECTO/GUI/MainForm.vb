@@ -1084,8 +1084,8 @@ Imports TUGraz.VectoCore.Utils
             dim w as FileOutputWriter = new FileOutputWriter(job)
             For Each entry as KeyValuePair(Of string, string) In _
                 new Dictionary(Of string, string) _
-                    from {{w.XMLFullReportName, "XML Manufacturer Report"}, {w.XMLCustomerReportName, "Customer Report"},
-                        {w.XMLVTPReportName, "VTP Report"}}
+                    from {{w.XMLFullReportName, "XML Manufacturer Report"}, {w.XMLCustomerReportName, "XML Customer Report"},
+                        {w.XMLVTPReportName, "VTP Report"}, {w.XMLMonitoringReportName, "XML Monitoring Report"}}
                 If File.Exists(entry.Key) Then
                     sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
                                              .Message =
@@ -1105,6 +1105,20 @@ Imports TUGraz.VectoCore.Utils
         sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
                                  .Message =
                                  String.Format("Simulation Finished in {0:0}s", (DateTime.Now() - start).TotalSeconds)})
+
+#if CERTIFICATION_RELEASE
+        dim message as string = nothing
+#else
+#if RELEASE_CANDIDATE
+        dim message as string = "RELEASE CANDIDATE - NOT FOR CERTIFICATION!"
+#else
+        dim message as string = "DEVELOPMENT VERSION - NOT FOR CERTIFICATION!"
+#End If
+#end if
+        if Not string.IsNullOrWhitespace(message) then
+            sender.ReportProgress(100,  New VectoProgress With {.Target = "ListBoxWarning",
+                                     .Message = message})
+        End If
     End Sub
 
 

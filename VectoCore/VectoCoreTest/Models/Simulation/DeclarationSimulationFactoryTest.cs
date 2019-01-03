@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null) { Validate = false };
 
 			var runs = factory.SimulationRuns().ToArray();
-			Assert.AreEqual(8, runs.Length);
+			Assert.AreEqual(10, runs.Length);
 		}
 
 		[TestCase()]

@@ -126,6 +126,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
+		public override bool TCLocked { get { return !TorqueConverterActive ?? false; } }
+
 		/// <summary>
 		/// Requests the Gearbox to deliver torque and angularVelocity
 		/// </summary>

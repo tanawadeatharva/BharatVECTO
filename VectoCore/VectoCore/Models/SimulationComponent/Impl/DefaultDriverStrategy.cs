@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			var retVal = DrivingModes[CurrentDrivingMode].Request(absTime, ds, targetVelocity, gradient);
+			var retVal = DrivingModes[CurrentDrivingMode].Request(absTime, ds, VectoMath.Min(Driver.DataBus.MaxVehicleSpeed, targetVelocity), gradient);
 
 			return retVal;
 		}
@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Driver.DriverBehavior = DrivingBehavior.Halted;
 			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
-			return Driver.DrivingActionHalt(absTime, dt, targetVelocity, gradient);
+			return Driver.DrivingActionHalt(absTime, dt, VectoMath.Min(Driver.DataBus.MaxVehicleSpeed, targetVelocity), gradient);
 		}
 
 		private void UpdateDrivingAction(Meter currentDistance, Meter ds)
@@ -289,8 +289,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (prohibitOverspeed) {
 				return false;
 			}
-			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverMode.Overspeed &&
-					velocity > Driver.DriverData.OverSpeedEcoRoll.MinSpeed;
+			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverMode.Overspeed 
+				&& velocity > Driver.DriverData.OverSpeedEcoRoll.MinSpeed 
+				&& (velocity + Driver.DriverData.OverSpeedEcoRoll.OverSpeed) < (Driver.DataBus.MaxVehicleSpeed ?? 500.KMPHtoMeterPerSecond());
 		}
 	}
 
@@ -401,7 +402,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				velocity += DriverData.OverSpeedEcoRoll.OverSpeed;
 			}
 			if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
-				return HandleRequestEngaged(absTime, ds, targetVelocity, gradient, prohibitOverspeed, velocity, debug);
+				for (var i = 0; i < 3; i++) {
+					var retVal = HandleRequestEngaged(absTime, ds, targetVelocity, gradient, prohibitOverspeed, velocity, debug);
+					if (retVal != null) {
+						return retVal;
+					}
+				}
+				throw new VectoException("HandleRequestEngaged found no operating point.");
 			} else {
 				return HandleRequestDisengaged(absTime, ds, gradient, velocity, debug);
 			}
@@ -458,6 +465,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					second = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, r);
 				});
 
+			if (second == null) {
+				return null;
+			}
 			var third = second;
 
 			second.Switch().
@@ -583,8 +593,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed = false)
 		{
-			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
-				return HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
+			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed && !DataBus.VehicleStopped) {
+				var retVal =  HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
+				for (var i = 0; i < 3 && retVal == null; i++) {
+					retVal = HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
+				}
+
+				if (retVal == null) {
+					throw new VectoException("Failed to find operating point!");
+				}
 			}
 			var currentDistance = DataBus.Distance;
 
@@ -625,8 +642,35 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				targetDistance = DriverStrategy.BrakeTrigger.TriggerDistance - DefaultDriverStrategy.BrakingSafetyMargin;
 			}
 			Driver.DriverBehavior = DrivingBehavior.Braking;
-			response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-				gradient, targetDistance: targetDistance);
+
+			if (DataBus.VehicleSpeed.IsEqual(0) && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0)) {
+				if (ds.IsEqual(targetDistance - currentDistance)) {
+					return new ResponseDrivingCycleDistanceExceeded() {
+						Source = this,
+						MaxDistance = ds / 2
+					};
+				}
+
+				response = Driver.DrivingActionAccelerate(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient);
+				if (response is ResponseUnderload) {
+					response = Driver.DrivingActionBrake(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient, response, overrideAction: DrivingAction.Accelerate);
+				}
+			} else {
+				response = Driver.DrivingActionBrake(
+					absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+					gradient, targetDistance: targetDistance);
+			}
+
+			if (DataBus.GearboxType.AutomaticTransmission() && response == null) {
+				for (var i = 0; i < 3 && response == null; i++) {
+					response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+														gradient, targetDistance: targetDistance);
+				}
+
+				if (response == null) {
+					throw new VectoException("No valid operating point found");
+				}
+			}
 			response.Switch().
 				Case<ResponseOverload>(r => {
 					Log.Info(
@@ -699,14 +743,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 					}
 				}).
-				Case<ResponseGearShift>(r => {
-					response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
-				}).
 				Case<ResponseEngineSpeedTooHigh>(r => {
 					response = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, r);
 				});
-			// handle the SpeedLimitExceeded Response separately in case it occurs in one of the requests in the second try
+			// handle the SpeedLimitExceeded Response and Gearshift Response separately in case it occurs in one of the requests in the second try
 			response.Switch().
+				Case<ResponseGearShift>(r => {
+					response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+				}).
 				Case<ResponseSpeedLimitExceeded>(() => {
 					response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
 						gradient);
@@ -779,30 +823,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					//	gradient, r);
 					response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed + r.Acceleration * r.SimulationInterval,
 						gradient, r);
-					response.Switch().
-						Case<ResponseGearShift>(() => {
-							DataBus.BrakePower = 0.SI<Watt>();
-							response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-								gradient, r);
-						}).
-						Case<ResponseOverload>(() => {
-							DataBus.BrakePower = 0.SI<Watt>();
-							if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
-								if (DataBus.VehicleSpeed.IsGreater(0)) {
-									response = Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-								} else {
-									if (RetryDistanceExceeded) {
-										response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+					if (response != null) {
+						response.Switch().Case<ResponseGearShift>(
+							() => {
+								DataBus.BrakePower = 0.SI<Watt>();
+								response = Driver.DrivingActionBrake(
+									absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+									gradient, r);
+							}).Case<ResponseOverload>(
+							() => {
+								DataBus.BrakePower = 0.SI<Watt>();
+								if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
+									if (DataBus.VehicleSpeed.IsGreater(0)) {
+										response = Driver.DrivingActionAccelerate(
+											absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 									} else {
-										RetryDistanceExceeded = true;
-										response = new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
+										if (RetryDistanceExceeded) {
+											response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+										} else {
+											RetryDistanceExceeded = true;
+											response = new ResponseDrivingCycleDistanceExceeded() { MaxDistance = ds / 2 };
+										}
 									}
+								} else {
+									response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 								}
-							} else {
-								response = Driver.DrivingActionRoll(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
-							}
-						});
-				});
+							});
+						}
+					});
 			//} while (!(response is ResponseSuccess) && i++ < 3);
 			return response;
 		}

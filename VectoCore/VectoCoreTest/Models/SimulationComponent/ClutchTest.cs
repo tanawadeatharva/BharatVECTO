@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container[ModalResultField.Tq_drag] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.FCMap] = 0.SI<KilogramPerSecond>();
-			container[ModalResultField.FCAUXc] = 0.SI<KilogramPerSecond>();
+			container[ModalResultField.FCNCVc] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCWHTCc] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCAAUX] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCFinal] = 0.SI<KilogramPerSecond>();

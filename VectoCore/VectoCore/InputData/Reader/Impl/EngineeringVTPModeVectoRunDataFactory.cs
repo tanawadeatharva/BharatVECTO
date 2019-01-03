@@ -46,6 +46,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 	internal class EngineeringVTPModeVectoRunDataFactory : DeclarationVTPModeVectoRunDataFactory
 	{
 		
+		private EngineeringDataAdapter _engineeringDao = new EngineeringDataAdapter();
+
 		public EngineeringVTPModeVectoRunDataFactory(IVTPEngineeringInputDataProvider ivtpProvider) : base(ivtpProvider.JobInputData, null)
 		{
 			
@@ -53,24 +55,29 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		public override IEnumerable<VectoRunData> NextRun()
 		{
-			if (_initException != null) {
-				throw _initException;
+			if (InitException != null) {
+				throw InitException;
 			}
 			return JobInputData.Cycles.Select(
 				cycle => {
 					var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false);
 					// loading is not relevant as we use P_wheel
-					var runData = CreateVectoRunData(_segment, _segment.Missions.First(), 0.SI<Kilogram>());
+					var runData = CreateVectoRunData(Segment, Segment.Missions.First(), 0.SI<Kilogram>());
 					runData.Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name);
-					runData.Aux = _auxVTP;
-					runData.FanData = new AuxFanData() {
-						FanCoefficients = JobInputData.FanPowerCoefficents.ToArray(),
-						FanDiameter = JobInputData.FanDiameter,
-					};
+					runData.Aux = AuxVTP;
+					runData.FanData = GetFanData();
 					runData.ExecutionMode = ExecutionMode.Engineering;
 					runData.SimulationType = SimulationType.VerificationTest;
 					return runData;
 				});
+		}
+
+		protected override AuxFanData GetFanData()
+		{
+			return new AuxFanData() {
+				FanCoefficients = JobInputData.FanPowerCoefficents.ToArray(),
+				FanDiameter = JobInputData.FanDiameter,
+			};
 		}
 	}
 }

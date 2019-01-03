@@ -92,7 +92,7 @@ Acceleration Limiting
 
 ###Chart Area
 
-If a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-file-.veng) and [Gearbox File](#gearbox-file-.vgbx) is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and sampling points of the fuel consumption map. 
+If a valid [Vehicle File](#vehicle-editor), [Engine File](#engine-file-.veng) and [Gearbox File](#gearbox-file-.vgbx) is loaded into the Editor the main vehicle parameters like HDV group and axle configuration are shown here. The plot shows the full load curve(s) and sampling points of the fuel consumption map. 
 
 ###Controls
 

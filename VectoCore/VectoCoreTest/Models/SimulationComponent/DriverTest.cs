@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -61,6 +62,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 		public const double Tolerance = 0.001;
 
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+
 		[TestCase]
 		public void DriverCoastingTest()
 		{
@@ -73,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", FuelType.DieselCI, fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", FuelData.Diesel, fileWriter);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -130,7 +138,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", FuelType.DieselCI, fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain_Coasting", FuelData.Diesel, fileWriter);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -193,7 +201,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = CreateDriverData();
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain", FuelType.DieselCI, fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain", FuelData.Diesel, fileWriter);
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);

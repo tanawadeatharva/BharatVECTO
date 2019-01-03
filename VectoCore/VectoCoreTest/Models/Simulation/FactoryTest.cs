@@ -130,6 +130,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.IsInstanceOf<Vehicle>(vehicleContainer.Vehicle,  "vehicle not installed");
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestDistanceCycleInVTPEngineering()
 		{
@@ -139,6 +140,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			AssertHelper.Exception<VectoException>(() => factory.SimulationRuns().ToArray(), "Distance-based cycle can not be simulated in VerificationTest mode");
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestDistanceCycleInEngineOnly()
 		{

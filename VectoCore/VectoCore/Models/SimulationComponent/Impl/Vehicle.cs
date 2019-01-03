@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -60,6 +61,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (AirdragData.CrossWindCorrectionCurve != null) {
 				AirdragData.CrossWindCorrectionCurve.SetDataBus(container);
 			}
+			var model = container.RunData;
+			if (model?.GearboxData == null || model.AxleGearData == null) {
+				return;
+			}
+			MaxVehicleSpeed = model.EngineData.FullLoadCurves[0].N95hSpeed /
+							model.GearboxData.Gears[model.GearboxData.Gears.Keys.Max()].Ratio / model.AxleGearData.AxleGear.Ratio /
+							(model.AngledriveData?.Angledrive.Ratio ?? 1.0) * model.VehicleData.DynamicTyreRadius * 0.995;
 		}
 
 
@@ -177,6 +185,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("SlopeResistance: {0}", retVal);
 			return retVal;
 		}
+
+		public MeterPerSecond MaxVehicleSpeed { get; }
 
 		public Newton AirDragResistance(MeterPerSecond previousVelocity, MeterPerSecond nextVelocity)
 		{

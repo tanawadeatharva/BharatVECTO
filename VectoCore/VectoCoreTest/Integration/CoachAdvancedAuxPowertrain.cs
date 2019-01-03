@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			bool highEnginePower = true)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, FuelType.DieselCI, fileWriter) {
+			var modData = new ModalDataContainer(modFileName, FuelData.Diesel, fileWriter) {
 				WriteAdvancedAux = true,
 				WriteModalResults = true
 			};
@@ -100,7 +100,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AirdragData = airdragData,
 				GearboxData = gearboxData,
 				EngineData = engineData,
-				SimulationType = SimulationType.DistanceCycle
+				SimulationType = SimulationType.DistanceCycle,
+				Cycle = cycleData
 			};
 			container.RunData = runData;
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))

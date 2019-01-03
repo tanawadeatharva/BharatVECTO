@@ -278,6 +278,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.RetarderInputData.Ratio);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestXMLPowertrainGenerationReferencedFile()
 		{

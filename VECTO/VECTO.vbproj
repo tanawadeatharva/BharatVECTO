@@ -560,4 +560,5 @@
   -->
   <Import Project="$(SolutionDir)Build\TextPreProcessing.targets" />
   <Import Project="$(SolutionDir)Build\Packaging.targets" />
+  <Import Project="$(SolutionDir)Build\CommonSettings.targets" />
 </Project>

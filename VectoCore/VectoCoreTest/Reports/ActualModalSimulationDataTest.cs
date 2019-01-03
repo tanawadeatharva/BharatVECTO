@@ -44,6 +44,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 	[TestFixture]
 	public class ActualModalSimulationDataTest
 	{
+
+		[Category("LongRunning")]
 		[Test]
 		public void TestWriteActualModData()
 		{

@@ -54,6 +54,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public const string JobFileDeclNoAngular = @"TestData\Jobs\40t_Long_Haul_Truck_NoAng.vecto";
 		public const string JobFileDeclAngEfficiency = @"TestData\Jobs\40t_Long_Haul_Truck with AngleEfficiency.vecto";
 
+		[Category("LongRunning")]
 		[TestCase(JobFile, 12),
 		TestCase(JobFileNoAngular, 11),
 		TestCase(JobFileAngEfficiency, 12)]

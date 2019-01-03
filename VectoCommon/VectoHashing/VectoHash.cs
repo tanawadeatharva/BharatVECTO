@@ -264,7 +264,7 @@ namespace TUGraz.VectoHashing
 			if (dateNode == null) {
 				throw new Exception("Date-Element not found in input!");
 			}
-			dateNode.FirstChild.Value = XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc);
+			dateNode.InnerText = XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc);
 
 
 			var hash = XMLHashProvider.ComputeHash(Document, id, XMLHashProvider.DefaultCanonicalizationMethod,

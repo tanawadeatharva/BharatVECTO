@@ -29,14 +29,18 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.IO;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -50,19 +54,49 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase(FuelType.DieselCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 0.0006886, 9391.5411,
+
+		[Category("LongRunning")]
+		[Category("Integration")]
+		[TestCase(FuelType.DieselCI, null,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0,
+			 0.000219919455699735, 0.000219919455699735, 26.3061549880066, 0.000688347896340172, 9390.5607583787,
 			TestName = "Diesel LH Low"),
-		TestCase(FuelType.EthanolCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0, 0.00040262, 5652.5200,
-			TestName = "Ethanol LH Low"),
-		TestCase(FuelType.DieselCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1, 0.0007971, 10876.9518,
+		TestCase(FuelType.EthanolCI, null,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0,
+			0.000219919455699735, 0.000222516929585952, 27.1362109251161, 0.000402755642550574, 5651.93001148319,
+			TestName = "Ethanol/CI LH Low"),
+
+		TestCase(FuelType.DieselCI, null,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
+			0.000254656206506391, 0.000254656206506391, 30.4612687208601, 0.000797073926365003, 10873.8200178229,
 			TestName = "Diesel LH Ref"),
-		TestCase(FuelType.EthanolCI,
-			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1, 0.0004660, 6546.5494,
-			TestName = "Ethanol LH Ref"),]
-		public void TestFuelTypesCO2(FuelType fuelType, string jobName, int runIdx, double expectedCo2, double expectedMJ)
+		TestCase(FuelType.EthanolCI, null,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
+			0.000254656206506391, 0.000257663956976937, 31.4224337776753, 0.000466371762128257, 6544.66450721421,
+			TestName = "Ethanol/CI LH Ref"),
+		TestCase(FuelType.EthanolPI, null,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
+			0.000254656206506391, 0.000252917938885187, 32.1778548199983, 0.000531127671658892, 7410.49560933597,
+			TestName = "Ethanol/PI LH Ref"),
+		TestCase(FuelType.PetrolPI, null,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
+			0.000254656206506391, 0.000254656206506391, 34.0449473939025, 0.000774154867779428, 10568.2325700152,
+			TestName = "Petrol/PI LH Ref"),
+		TestCase(FuelType.LPGPI, null,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
+			0.000254656206506391, 0.000254656206506391, null, 0.0007690617436493, 11714.185499294,
+			TestName = "LPG/PI LH Ref"),
+		TestCase(FuelType.NGPI, TankSystem.Liquefied,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
+			0.000254656206506391, 0.000233910283369414, null, 0.000647931484933277, 11484.9949134382,
+			TestName = "LNG/PI LH Ref"),
+		TestCase(FuelType.NGPI, TankSystem.Compressed,
+			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
+			0.000254656206506391, 0.000239270727363297, null, 0.00064363825660727, 11484.9949134383,
+			TestName = "CNG/PI LH Ref"),
+			]
+		public void TestFuelTypesCO2(FuelType fuelType, TankSystem? tankSystem, string jobName, int runIdx, 
+			double expectedFCMap, double expectedFCFinal, double? expectedFCperkm, double expectedCo2, double expectedMJ)
 		{
 			// the same engine fc-map is used for different fuel types, thus the difference in expected results
 			var fileWriter = new FileOutputWriter(jobName);
@@ -82,15 +116,30 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var run = jobContainer.Runs[runIdx];
 			var modContainer = (ModalDataContainer)run.Run.GetContainer().ModalData;
 			var modData = modContainer.Data;
-			modContainer.FuelData = FuelData.Instance().Lookup(fuelType);
+
+			var fuelData = FuelData.Instance().Lookup(fuelType, tankSystem);
+			modContainer.FuelData = fuelData;
+			((VehicleContainer)run.Run.GetContainer()).RunData.EngineData.FuelData = fuelData;
 
 			run.Run.Run();
 
 			// restore data table before assertions
 			modContainer.Data = modData;
+			
+//			Console.WriteLine("FC-Map g/m: {0}, FC-Final g/m {1}, FC-Final l/100km: {2}, CO2 g/m: {3}, Energy J/m: {4}",
+			Console.WriteLine("{0}, {1}, {2}, {3}, {4}",
+				modContainer.FCMapPerMeter().Value(),
+				modContainer.FuelConsumptionFinal().Value(), 
+				modContainer.FuelConsumptionFinalVolumePerMeter()?.ConvertToLiterPer100Kilometer().Value ?? double.NaN,
+				modContainer.CO2PerMeter().Value(), 
+				modContainer.EnergyPerMeter().Value());
 
-			Assert.AreEqual(expectedCo2, modContainer.CO2PerMeter().Value(), 1e-6);
-			Assert.AreEqual(expectedMJ, modContainer.EnergyPerMeter().Value(), 1e-3);
+			AssertHelper.AreRelativeEqual(expectedFCMap, modContainer.FCMapPerMeter(), 1e-6);
+			AssertHelper.AreRelativeEqual(expectedFCFinal, modContainer.FuelConsumptionFinal(), 1e-3);
+			AssertHelper.AreRelativeEqual(expectedFCperkm, modContainer.FuelConsumptionFinalVolumePerMeter()?.ConvertToLiterPer100Kilometer().Value.SI() ?? null, 1e-6);
+
+			AssertHelper.AreRelativeEqual(expectedCo2, modContainer.CO2PerMeter(), 1e-6);
+			AssertHelper.AreRelativeEqual(expectedMJ, modContainer.EnergyPerMeter(), 1e-3);
 		}
 	}
 }

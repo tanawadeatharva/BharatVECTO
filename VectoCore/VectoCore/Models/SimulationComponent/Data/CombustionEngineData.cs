@@ -34,6 +34,7 @@ using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -73,14 +74,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public double FuelConsumptionCorrectionFactor { get; internal set; }
 
+		public double ADASCorrectionFactor { get; internal set; }
+
 		public PerSecond RatedSpeedDeclared { get; internal set; }
 
 		public Watt RatedPowerDeclared { get; internal set; }
 
 		public NewtonMeter MaxTorqueDeclared { get; internal set; }
 
-		public FuelType FuelType { get; internal set; }
-
+		public FuelData.Entry FuelData { get; internal set; }
+		
 		public CombustionEngineData()
 		{
 			WHTCUrban = 1;
@@ -88,6 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			WHTCRural = 1;
 			CorrectionFactorRegPer = 1;
 			FuelConsumptionCorrectionFactor = 1;
+			ADASCorrectionFactor = 1;
 		}
 
 		public CombustionEngineData Copy()
@@ -109,7 +113,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				RatedPowerDeclared = RatedPowerDeclared,
 				RatedSpeedDeclared = RatedSpeedDeclared,
 				MaxTorqueDeclared = MaxTorqueDeclared,
-				FuelType = FuelType
+				FuelData = FuelData,
+				ADASCorrectionFactor = ADASCorrectionFactor,
 			};
 		}
 

@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
@@ -43,6 +44,12 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
+using TUGraz.VectoCore.Tests.Reports;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
@@ -53,14 +60,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 		protected const string EngineFile = @"TestData\Components\24t Coach.veng";
 
-        [OneTimeSetUp]
-        public void RunBeforeAnyTests()
-        {
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-        }
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 
-        [TestCase]
+		[TestCase]
 		public void TestGearboxDataReadTest()
 		{
 			var axleData = MockSimulationDataFactory.CreateAxleGearDataFromFile(GearboxFile);
@@ -346,27 +353,59 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestCase()]
 		public void TestLossMapExtension()
 		{
-			var gbxFile = @"TestData\Components\24t Coach.vgbx";
-			var engineFile = @"TestData\Components\24t Coach.veng";
-
-			var gearboxDataOrig = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile, false);
-			// read loss-map in declaration mode to extrapolate on reading.
-			var gearboxDataExt = MockSimulationDataFactory.CreateGearboxDataFromFile(gbxFile, engineFile, true);
+			var gbxFile = @"TestData\Components\Indirect Gear.vtlm";
+			
+			var lossMapOrig = TransmissionLossMapReader.ReadFromFile(gbxFile, 1.0, "origLossMap");
+			var extendedMap = TransmissionLossMapReader.ReadFromFile(gbxFile, 1.0, "origLossMap", true);
 
 			var rpm = 100.RPMtoRad();
 			var tq = -3000.SI<NewtonMeter>();
-			var lookupOrig = gearboxDataOrig.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
-			var lookupExt = gearboxDataExt.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
+			var lookupOrig = lossMapOrig.GetTorqueLoss(rpm, tq);
+			var lookupExt = extendedMap.GetTorqueLoss(rpm, tq);
+
+			//foreach (var entry in gearboxDataExt.Gears[7].LossMap._entries) {
+			//	Console.WriteLine(string.Format("{0},{1},{2}", entry.InputSpeed.AsRPM, entry.InputTorque.Value(), entry.TorqueLoss.Value()));
+			//}
 
 			Assert.IsTrue(lookupOrig.Extrapolated);
 			Assert.IsFalse(lookupExt.Extrapolated);
 
 			rpm = 1200.RPMtoRad();
-			lookupOrig = gearboxDataOrig.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
-			lookupExt = gearboxDataExt.Gears[7].LossMap.GetTorqueLoss(rpm, tq);
+			lookupOrig = lossMapOrig.GetTorqueLoss(rpm, tq);
+			lookupExt = extendedMap.GetTorqueLoss(rpm, tq);
 
 			Assert.IsTrue(lookupOrig.Extrapolated);
 			Assert.IsFalse(lookupExt.Extrapolated);
 		}
+
+		[TestCase()]
+		public void TestAxlegearLossMapExtension()
+		{
+			var lossMapFile = @"TestData\Components\Axle.vtlm";
+
+			var origLossMap = TransmissionLossMapReader.ReadFromFile(lossMapFile, 3.240355, "AxleOrig");
+			var extendedLossMap = TransmissionLossMapReader.ReadFromFile(lossMapFile, 3.240355, "AxleExtended", true);
+
+			//foreach (var entry in gearboxDataExt.AxleGear.LossMap._entries) {
+			//	Console.WriteLine(string.Format("{0},{1},{2}", entry.InputSpeed.AsRPM, entry.InputTorque.Value(), entry.TorqueLoss.Value()));
+			//}
+
+			var rpm = 100.RPMtoRad();
+			var tq = 80000.SI<NewtonMeter>();
+			var lookupOrig = origLossMap.GetTorqueLoss(rpm, tq);
+			var lookupExt = extendedLossMap.GetTorqueLoss(rpm, tq);
+
+			Assert.IsTrue(lookupOrig.Extrapolated);
+			Assert.IsFalse(lookupExt.Extrapolated);
+
+			rpm = 1000.RPMtoRad();
+			lookupOrig = origLossMap.GetTorqueLoss(rpm, tq);
+			lookupExt = extendedLossMap.GetTorqueLoss(rpm, tq);
+
+			Assert.IsTrue(lookupOrig.Extrapolated);
+			Assert.IsFalse(lookupExt.Extrapolated);
+		}
+
 	}
+
 }

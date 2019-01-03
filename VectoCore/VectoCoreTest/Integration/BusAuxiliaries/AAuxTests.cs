@@ -60,8 +60,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			GraphWriter.Series1Label = "Vecto 3";
 			GraphWriter.Series2Label = "Vecto 2.0_aux";
 
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-    }
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+	}
 
 		private static string GetSlopeString(double slope)
 		{
@@ -73,6 +73,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			return slopeStr;
 		}
 
+		[Category("LongRunning")]
 		[Category("ComparisonAAUX"),
 		TestCase(0, 20, -5), TestCase(0, 20, 0),
 		TestCase(0, 40, 25), TestCase(0, 40, 20), TestCase(0, 40, 15),
@@ -119,6 +120,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				string.Format(CultureInfo.InvariantCulture, "24t Coach_AAux_Cycle_Accelerate_{0}_{1}_{2}.vmod", v1, v2, slopeStr));
 		}
 
+		[Category("LongRunning")]
 		[Category("ComparisonAAUX"),
 		TestCase(40, 0, 20), TestCase(40, 0, 15),
 		TestCase(40, 0, 10), TestCase(40, 0, 5), TestCase(40, 0, 1),
@@ -167,6 +169,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				false);
 		}
 
+		[Category("LongRunning")]
 		[Category("ComparisonAAUX"),
 		TestCase(10, 10, 20), TestCase(10, 10, 15),
 		TestCase(10, 10, 10), TestCase(10, 10, 5), TestCase(10, 10, 1),
@@ -240,6 +243,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				false);
 		}
 
+		[Category("LongRunning")]
 		[Category("ComparisonAAUX"),
 		TestCase(SimpleDrivingCycles.CycleDrive_80_Increasing_Slope,
 			"Coach_AAux_Drive_80_slope_inc.vmod", "24t Coach_AAux_Cycle_Drive_80_Increasing_Slope.vmod",

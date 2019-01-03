@@ -396,21 +396,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var fc = result.Value;
-			var fcAux = fc;
+			var fcNCVcorr = fc * ModelData.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
 
-			var fcWHTC = fcAux * WHTCCorrectionFactor;
+			var fcWHTC = fcNCVcorr * WHTCCorrectionFactor;
 			var fcAAUX = fcWHTC;
 			var advancedAux = EngineAux as BusAuxiliariesAdapter;
 			if (advancedAux != null) {
 				advancedAux.DoWriteModalResults(container);
 				fcAAUX = advancedAux.AAuxFuelConsumption;
 			}
-			var fcFinal = fcAAUX;
+			var fcADAS = fcAAUX * ModelData.ADASCorrectionFactor;
+			var fcFinal = fcADAS;
 
 			container[ModalResultField.FCMap] = fc;
-			container[ModalResultField.FCAUXc] = fcAux;
+			container[ModalResultField.FCNCVc] = fcNCVcorr;
 			container[ModalResultField.FCWHTCc] = fcWHTC;
 			container[ModalResultField.FCAAUX] = fcAAUX;
+			container[ModalResultField.FCADAS] = fcADAS;
 			container[ModalResultField.FCFinal] = fcFinal;
 		}
 

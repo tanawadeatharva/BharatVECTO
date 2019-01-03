@@ -146,37 +146,58 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var warning1Hz = false;
 
 			foreach (var data in DataReader.NextRun()) {
-				var d = data;
-				var addReportResult = PrepareReport(data);
-				if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
-					Log.Error("Output filter for 1Hz results is only available for distance-based cycles!");
-					warning1Hz = true;
-				}
 				var current = i++;
+				var d = data;
 				data.JobRunId = current;
-				IModalDataContainer modContainer =
-					new ModalDataContainer(data, ModWriter,
-						addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
-						writeEngineOnly: _engineOnlyMode,
-						filter: GetModDataFilter(data)) {
-							WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
-							WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
-						};
-				
-				var builder = new PowertrainBuilder(modContainer, modData => {
+				yield return data.Exempted ? GetExemptedRun(data) : GetNonExemptedRun(data, current, d, ref warning1Hz);
+			}
+		}
+
+		private IVectoRun GetExemptedRun(VectoRunData data)
+		{
+			if (data.Report != null) {
+				data.Report.PrepareResult(data.Loading, data.Mission, data);
+			}
+			return new ExemptedRun(new VehicleContainer(data.ExecutionMode) { RunData = data }, modData => {
+				if (data.Report != null) {
+					data.Report.AddResult(data.Loading, data.Mission, data, modData);
+				}
+			});
+		}
+
+		private IVectoRun GetNonExemptedRun(VectoRunData data, int current, VectoRunData d, ref bool warning1Hz)
+		{
+			var addReportResult = PrepareReport(data);
+			if (!data.Cycle.CycleType.IsDistanceBased() && ModalResults1Hz && !warning1Hz) {
+				Log.Error("Output filter for 1Hz results is only available for distance-based cycles!");
+				warning1Hz = true;
+			}
+
+			IModalDataContainer modContainer =
+				new ModalDataContainer(
+					data, ModWriter,
+					addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
+					writeEngineOnly: _engineOnlyMode,
+					filter: GetModDataFilter(data)) {
+					WriteAdvancedAux = data.AdvancedAux != null && data.AdvancedAux.AuxiliaryAssembly == AuxiliaryModel.Advanced,
+					WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
+				};
+
+			var builder = new PowertrainBuilder(
+				modContainer, modData => {
 					if (SumData != null) {
 						SumData.Write(modData, JobNumber, current, d);
 					}
 				});
 
-				var run = GetVectoRun(data, builder);
+			var run = GetVectoRun(data, builder);
 
-				if (Validate) {
-					ValidateVectoRunData(run, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type,
-						data.Mission != null && data.Mission.MissionType.IsEMS());
-				}
-				yield return run;
+			if (Validate) {
+				ValidateVectoRunData(
+					run, data.GearboxData == null ? (GearboxType?)null : data.GearboxData.Type,
+					data.Mission != null && data.Mission.MissionType.IsEMS());
 			}
+			return run;
 		}
 
 		private IModalDataFilter[] GetModDataFilter(VectoRunData data)
@@ -244,9 +265,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.Report != null) {
 				data.Report.PrepareResult(data.Loading, data.Mission, data);
 			}
-			Action<ModalDataContainer> addReportResult = writer => {
+			Action<ModalDataContainer> addReportResult = modData => {
 				if (data.Report != null) {
-					data.Report.AddResult(data.Loading, data.Mission, data, writer);
+					data.Report.AddResult(data.Loading, data.Mission, data, modData);
 				}
 			};
 			return addReportResult;
