@@ -16,7 +16,7 @@ User Manual
 ====================================
 ![](pics/VECTOlarge.png)\
 \
-Version: VECTO 3.3 / VectoCore 3.3.0 / VectoCmd 3.3.0
+Version: VECTO 3.3 / VectoCore 3.3.1 / VectoCmd 3.3.1
 
 ---
 
