@@ -532,4 +532,8 @@
   </Target>
   -->
   <Import Project="$(SolutionDir)Build\TextPreProcessing.targets" />
+  <PropertyGroup Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">
+      <SolutionDir>..\..\</SolutionDir>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)Build\CommonSettings.targets" />
 </Project>

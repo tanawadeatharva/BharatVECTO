@@ -207,7 +207,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private XElement GetApplicationInfo()
 		{
 			var versionNumber = VectoSimulationCore.VersionNumber;
-#if RELEASE_CANDIDATE
+#if CERTIFICATION_RELEASE
+			// add nothing to version number
+#else
 			versionNumber += " !!NOT FOR CERTIFICATION!!";
 #endif
 			return new XElement(tns + XMLNames.Report_ApplicationInfo_ApplicationInformation,

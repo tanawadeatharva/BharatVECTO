@@ -32,6 +32,7 @@
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using DriverData = TUGraz.VectoCore.Models.SimulationComponent.Data.DriverData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
@@ -83,12 +84,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="gradient"></param>
 		/// <param name="previousResponse"></param>
 		/// <param name="targetDistance"></param>
+		/// <param name="overrideAction"></param>
 		/// <returns>
 		/// * ResponseSuccess
 		/// * ResponseDrivingCycleDistanceExceeded: vehicle is at low speed, coasting would lead to stop before ds is reached.
 		/// </returns>
 		IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient,
-			IResponse previousResponse = null, Meter targetDistance = null);
+			IResponse previousResponse = null, Meter targetDistance = null, DrivingAction? overrideAction = null);
 
 		/// <summary>
 		/// perform a 'roll driving action', i.e., the clutch is open and the vehicle rolls without motoring. adjust the acceleration 

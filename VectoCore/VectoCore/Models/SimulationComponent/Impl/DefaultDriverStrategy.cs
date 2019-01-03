@@ -593,7 +593,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed = false)
 		{
-			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
+			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed && !DataBus.VehicleStopped) {
 				var retVal =  HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
 				for (var i = 0; i < 3 && retVal == null; i++) {
 					retVal = HandleTargetspeedReached(absTime, ds, targetVelocity, gradient);
@@ -642,8 +642,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				targetDistance = DriverStrategy.BrakeTrigger.TriggerDistance - DefaultDriverStrategy.BrakingSafetyMargin;
 			}
 			Driver.DriverBehavior = DrivingBehavior.Braking;
-			response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-				gradient, targetDistance: targetDistance);
+
+			if (DataBus.VehicleSpeed.IsEqual(0) && DriverStrategy.BrakeTrigger.NextTargetSpeed.IsEqual(0)) {
+				if (ds.IsEqual(targetDistance - currentDistance)) {
+					return new ResponseDrivingCycleDistanceExceeded() {
+						Source = this,
+						MaxDistance = ds / 2
+					};
+				}
+
+				response = Driver.DrivingActionAccelerate(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient);
+				if (response is ResponseUnderload) {
+					response = Driver.DrivingActionBrake(absTime, ds, 1.KMPHtoMeterPerSecond(), gradient, response, overrideAction: DrivingAction.Accelerate);
+				}
+			} else {
+				response = Driver.DrivingActionBrake(
+					absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+					gradient, targetDistance: targetDistance);
+			}
 
 			if (DataBus.GearboxType.AutomaticTransmission() && response == null) {
 				for (var i = 0; i < 3 && response == null; i++) {
@@ -727,14 +743,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed, gradient);
 					}
 				}).
-				Case<ResponseGearShift>(r => {
-					response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
-				}).
 				Case<ResponseEngineSpeedTooHigh>(r => {
 					response = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, r);
 				});
-			// handle the SpeedLimitExceeded Response separately in case it occurs in one of the requests in the second try
+			// handle the SpeedLimitExceeded Response and Gearshift Response separately in case it occurs in one of the requests in the second try
 			response.Switch().
+				Case<ResponseGearShift>(r => {
+					response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+				}).
 				Case<ResponseSpeedLimitExceeded>(() => {
 					response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
 						gradient);

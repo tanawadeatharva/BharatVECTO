@@ -102,7 +102,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				GearboxData = gearboxData,
 				EngineData = engineData,
 				AirdragData = airDragData,
-				SimulationType = SimulationType.DistanceCycle
+				SimulationType = SimulationType.DistanceCycle,
+				Cycle = cycleData
 			};
 
 			container.RunData = runData;

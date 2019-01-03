@@ -203,6 +203,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return 0.SI<Meter>(); }
 		}
 
+		public Radian RoadGradient { get { return 0.SI<Radian>(); } }
+
 		public Meter CycleStartDistance
 		{
 			get { return 0.SI<Meter>(); }
