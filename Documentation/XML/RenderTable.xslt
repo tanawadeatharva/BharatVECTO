@@ -411,7 +411,7 @@ Basic functionality:
 		<xsl:choose>
 			<xsl:when test="$node">
 				<xsl:variable name="childElementsAttributes" select="$node/(xs:element|xs:attribute)"/>
-				<xsl:variable name="nestedChildElemens" select="vecto:GetContainingElements($node/(xs:sequence|xs:choice), $mergedDocuments)"/>
+				<xsl:variable name="nestedChildElemens" select="vecto:GetContainingElements($node//(xs:sequence|xs:choice), $mergedDocuments)"/>
 				<xsl:variable name="derivedElements" select="vecto:GetComplexContent($node/xs:complexContent|$node/xs:complexType/xs:complexContent, $mergedDocuments)"/>
 				<xsl:sequence select="$childElementsAttributes|$nestedChildElemens|$derivedElements"/>
 			</xsl:when>
