@@ -53,7 +53,7 @@ namespace HashingTool.Views
 
 		private void Supportmail(object sender, MouseButtonEventArgs e)
 		{
-			Process.Start("mailto:vecto@jrc.ec.europa.eu");
+			Process.Start("mailto:JRC-VECTO@ec.europa.eu");
 		}
 	}
 }

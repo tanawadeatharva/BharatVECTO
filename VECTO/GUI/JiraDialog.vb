@@ -24,7 +24,7 @@ Public Class JiraDialog
 					"- Country of workplace" & "%0A" &
 					"- Position"
 
-		Process.Start("mailto:vecto@jrc.ec.europa.eu?subject=CITnet%20account&body=" & bodytext)
+		Process.Start("mailto:JRC-VECTO@ec.europa.eu?subject=CITnet%20account&body=" & bodytext)
 	End Sub
 
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click

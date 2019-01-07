@@ -939,4 +939,16 @@
   <data name="Unit_ltr" xml:space="preserve">
     <value>ltr</value>
   </data>
+  <data name="UnitPercent" xml:space="preserve">
+    <value>%</value>
+  </data>
+  <data name="Unit_Nm" xml:space="preserve">
+    <value>Nm</value>
+  </data>
+  <data name="XMLManufacturerReport_torqueLimit" xml:space="preserve">
+    <value>torqueLimit</value>
+  </data>
+  <data name="XMLManufacturerReport_torqueLimitPercent" xml:space="preserve">
+    <value>torqueLimitPercent</value>
+  </data>
 </root>

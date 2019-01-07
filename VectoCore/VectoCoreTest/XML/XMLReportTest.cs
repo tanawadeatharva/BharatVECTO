@@ -46,6 +46,7 @@ namespace TUGraz.VectoCore.Tests.XML
 	public class XMLReportTest
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
+		const string SampleVehicleDeclTqLimits = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_torqueLimits.xml";
 
 		const string SampleVehicleDeclAT = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_AT.xml";
 
@@ -56,6 +57,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[TestCase(SampleVehicleDecl),
+		TestCase(SampleVehicleDeclTqLimits),
 		TestCase(SampleVehicleDeclAT)]
 		public void RunDeclarationJob(string filename)
 		{
@@ -75,12 +77,12 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var customerRecord = fileWriter.XMLCustomerReportName;
 			var manufacturerRecord = fileWriter.XMLFullReportName;
-
+			
 			var validator1 = new XMLValidator(XmlReader.Create(customerRecord));
-			Assert.IsTrue(validator1.ValidateXML(XMLValidator.XmlDocumentType.CustomerReport));
+			Assert.IsTrue(validator1.ValidateXML(XMLValidator.XmlDocumentType.CustomerReport), customerRecord);
 
 			var validator2 = new XMLValidator(XmlReader.Create(manufacturerRecord));
-			Assert.IsTrue(validator2.ValidateXML(XMLValidator.XmlDocumentType.ManufacturerReport));
+			Assert.IsTrue(validator2.ValidateXML(XMLValidator.XmlDocumentType.ManufacturerReport), manufacturerRecord);
 		}
 	}
 }
