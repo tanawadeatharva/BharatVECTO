@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -74,6 +74,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		{
 			get { return GetAttributeValue("", XMLNames.Component_ID_Attr); }
 		}
+
+		public bool ExemptedVehicle { get { return false; } }
 
 		public string VIN
 		{
@@ -289,6 +291,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public IRetarderInputData RetarderInputData { get; private set; }
 
 		public IPTOTransmissionInputData PTOTransmissionInputData { get; private set; }
+		public bool VocationalVehicle { get { return false; } }
+		public bool SleeperCab { get { return true; } }
+		public TankSystem TankSystem { get; }
+		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get { return null; } }
+		public bool ZeroEmissionVehicle { get { return false; } }
+		public bool HybridElectricHDV { get { return false; } }
+		public bool DualFuelVehicle { get { return false; } }
+		public Watt MaxNetPower1 { get { return null; } }
+		public Watt MaxNetPower2 { get { return null; } }
 
 		#region "FactoryMethods"
 

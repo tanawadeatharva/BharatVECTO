@@ -165,6 +165,8 @@
     <Compile Include="InputData\Reader\ShiftPolygonReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShiftStrategyInterfaces.cs" />
     <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShareTorque99lLookup.cs" />
+    <Compile Include="Models\Declaration\ADASBenefits.cs" />
+    <Compile Include="Models\Declaration\ADASCombinations.cs" />
     <Compile Include="InputData\Reader\ShiftStrategy\ShareTorque99lLookupReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\AccelerationReserveLookup.cs" />
     <Compile Include="InputData\Reader\ShiftStrategy\AccelerationReserveLookupReader.cs" />
@@ -184,6 +186,9 @@
     <Compile Include="Models\Declaration\FuelData.cs" />
     <Compile Include="Models\Declaration\PTOTransmission.cs" />
     <Compile Include="Models\Declaration\IDeclarationAuxiliaryTable.cs" />
+    <Compile Include="Models\Declaration\TyreClass.cs" />
+    <Compile Include="Models\Declaration\WeightingFactors.cs" />
+    <Compile Include="Models\Declaration\WeightingGroups.cs" />
     <Compile Include="Models\SimulationComponent\Data\AngledriveData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMapReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOData.cs" />
@@ -222,6 +227,8 @@
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
     <Compile Include="Models\Simulation\Data\ShiftStrategyParameters.cs" />
     <Compile Include="Models\Simulation\ISimulationPreprocessor.cs" />
+    <Compile Include="Models\Simulation\Impl\ExemptedRun.cs" />
+    <Compile Include="OutputData\XML\XMLMonitoringReport.cs" />
     <Compile Include="OutputData\XML\XMLVTPReport.cs" />
     <Compile Include="OutputData\VTPReport.cs" />
     <Compile Include="OutputData\ModFilter\ActualModalDataFilter.cs" />
@@ -234,6 +241,7 @@
     <Compile Include="OutputData\XML\XMLEngineeringWriter.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReport.cs" />
     <Compile Include="Utils\Interpolate2D.cs" />
+    <Compile Include="Utils\MeanShiftClustering.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
     <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
@@ -490,6 +498,20 @@
     <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareEngineSpeedHigh.csv" />
     <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareIdleLow.csv" />
     <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareTq99L.csv" />
+    <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.7.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputCustomer.0.7.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\ADAS\ADAS_Benefits.csv" />
+    <EmbeddedResource Include="Resources\Declaration\ADAS\ADAS_Combinations.csv" />
+    <EmbeddedResource Include="Resources\Declaration\CO2Standards\MissionProfileWeights.csv" />
+    <EmbeddedResource Include="Resources\Declaration\CO2Standards\WeightingGroups.csv" />
+    <EmbeddedResource Include="Resources\Declaration\TyreLabeling.csv" />
+    <EmbeddedResource Include="Resources\XSD\VectoMonitoring.0.7.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>
@@ -538,4 +560,8 @@
   </Target>
   -->
   <Import Project="$(SolutionDir)Build\TextPreProcessing.targets" />
+  <PropertyGroup Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">
+    <SolutionDir>..\..\</SolutionDir>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)Build\CommonSettings.targets" />
 </Project>

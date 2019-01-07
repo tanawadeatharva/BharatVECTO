@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -125,6 +125,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.GearboxPowerRequest = inTorque * inAngularVelocity;
 			return response;
 		}
+
+		public override bool TCLocked { get { return !TorqueConverterActive ?? false; } }
 
 		/// <summary>
 		/// Requests the Gearbox to deliver torque and angularVelocity

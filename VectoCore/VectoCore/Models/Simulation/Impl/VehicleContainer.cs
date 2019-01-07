@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -92,6 +92,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return 0; // throw new VectoException("no gearbox available!");
 				}
 				return Gearbox.Gear;
+			}
+		}
+
+		public bool TCLocked
+		{
+			get {
+				if (Gearbox == null) {
+					return true;
+				}
+				return  Gearbox.TCLocked;
 			}
 		}
 
@@ -244,6 +254,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Vehicle.SlopeResistance(gradient);
 		}
 
+		public MeterPerSecond MaxVehicleSpeed
+		{
+			get { return Vehicle.MaxVehicleSpeed; }
+		}
+
 		#endregion
 
 		public VehicleContainer(ExecutionMode executionMode, IModalDataContainer modData = null,
@@ -329,12 +344,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void FinishSimulationRun(Exception e = null)
 		{
 			Log.Info("VehicleContainer finishing simulation.");
-			ModData.Finish(RunStatus, e);
+			ModData?.Finish(RunStatus, e);
 
 			WriteSumData(ModData);
 
-			ModData.FinishSimulation();
-			DrivingCycle.FinishSimulation();
+			ModData?.FinishSimulation();
+			DrivingCycle?.FinishSimulation();
 		}
 
 		public void StartSimulationRun()
@@ -425,6 +440,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public MeterPerSquareSecond DriverAcceleration
 		{
 			get { return Driver != null ? Driver.DriverAcceleration : 0.SI<MeterPerSquareSecond>(); }
+		}
+
+		public Radian RoadGradient
+		{
+			get { return DrivingCycle.RoadGradient; }
 		}
 
 		public SpeedChangeEntry LastTargetspeedChange

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null) { Validate = false };
 
 			var runs = factory.SimulationRuns().ToArray();
-			Assert.AreEqual(8, runs.Length);
+			Assert.AreEqual(10, runs.Length);
 		}
 
 		[TestCase()]

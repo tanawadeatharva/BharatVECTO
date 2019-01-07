@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -78,6 +78,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		protected Dictionary<TKey, TValue> Data = new Dictionary<TKey, TValue>();
 
+		protected override string ErrorMessage {  get { return "key {0} not found in lookup data"; } }
+
 		public virtual TValue Lookup(TKey key)
 		{
 			try {
@@ -123,4 +125,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		public abstract TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4);
 	}
+
+	public abstract class LookupData<TKey1, TKey2, TKey3, TKey4, TKey5, TValue> : LookupData where TValue : struct
+	{
+		public abstract TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4, TKey5 key5);
+	}
+
 }

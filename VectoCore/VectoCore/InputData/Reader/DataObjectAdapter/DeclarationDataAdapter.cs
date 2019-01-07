@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -83,24 +83,30 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal VehicleData CreateVehicleData(
-			IVehicleDeclarationInputData data, Mission mission, Kilogram loading,
-			Kilogram municipalBodyWeight)
+		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("VehicleData");
 			}
+			return data.ExemptedVehicle
+				? CreateExemptedVehicleData(data)
+				: CreateNonExemptedVehicleData(data, mission, loading);
+		}
 
+		private VehicleData CreateNonExemptedVehicleData(
+			IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
+		{
 			var retVal = SetCommonVehicleData(data);
+			retVal.AxleConfiguration = data.AxleConfiguration;
 			retVal.AirDensity = DeclarationData.AirDensity;
 			retVal.VIN = data.VIN;
 			retVal.ManufacturerAddress = data.ManufacturerAddress;
 			retVal.LegislativeClass = data.LegislativeClass;
+			retVal.ZeroEmissionVehicle = data.ZeroEmissionVehicle;
+			retVal.SleeperCab = data.SleeperCab;
 			retVal.TrailerGrossVehicleWeight = mission.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0);
 
-			retVal.BodyAndTrailerWeight = (mission.MissionType == MissionType.MunicipalUtility
-											? municipalBodyWeight
-											: mission.BodyCurbWeight) + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
+			retVal.BodyAndTrailerWeight = mission.BodyCurbWeight + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
 
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
@@ -109,6 +115,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					.Average();
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
 
+			retVal.VocationalVehicle = data.VocationalVehicle;
+			retVal.ADAS = CreateADAS(data.ADAS);
 			var axles = data.Axles;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException(
@@ -151,16 +159,40 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
+		private VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemDeclarationInputData adas)
+		{
+			return new VehicleData.ADASData {
+				EngineStopStart = adas.EngineStopStart,
+				EcoRollWithoutengineStop = adas.EcoRollWitoutEngineStop,
+				EcoRollWithEngineStop = adas.EcoRollWithEngineStop,
+				PredictiveCruiseControl = adas.PredictiveCruiseControl
+			};
+		}
+
+		private VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data)
+		{
+			var exempted = SetCommonVehicleData(data);
+			exempted.VIN = data.VIN;
+			exempted.ManufacturerAddress = data.ManufacturerAddress;
+			exempted.LegislativeClass = data.LegislativeClass;
+			exempted.ZeroEmissionVehicle = data.ZeroEmissionVehicle;
+			exempted.HybridElectricHDV = data.HybridElectricHDV;
+			exempted.DualFuelVehicle = data.DualFuelVehicle;
+			exempted.MaxNetPower1 = data.MaxNetPower1;
+			exempted.MaxNetPower2 = data.MaxNetPower2;
+			return exempted;
+		}
+
 
 		internal CombustionEngineData CreateEngineData(
 			IEngineDeclarationInputData engine, PerSecond vehicleEngineIdleSpeed,
-			IGearboxDeclarationInputData gearbox, IEnumerable<ITorqueLimitInputData> torqueLimits)
+			IGearboxDeclarationInputData gearbox, IEnumerable<ITorqueLimitInputData> torqueLimits, TankSystem? tankSystem = null)
 		{
 			if (!engine.SavedInDeclarationMode) {
 				WarnDeclarationMode("EngineData");
 			}
 
-			var retVal = SetCommonCombustionEngineData(engine);
+			var retVal = SetCommonCombustionEngineData(engine, tankSystem);
 			retVal.IdleSpeed = VectoMath.Max(engine.IdleSpeed, vehicleEngineIdleSpeed);
 			retVal.WHTCUrban = engine.WHTCUrban;
 			retVal.WHTCMotorway = engine.WHTCMotorway;
@@ -221,7 +253,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		internal GearboxData CreateGearboxData(
 			IGearboxDeclarationInputData gearbox, CombustionEngineData engine,
-			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory, bool useEfficiencyFallback)
+			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory)
 		{
 			if (!gearbox.SavedInDeclarationMode) {
 				WarnDeclarationMode("GearboxData");
@@ -248,7 +280,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var tcShiftPolygon = DeclarationData.TorqueConverter.ComputeShiftPolygon(engine.FullLoadCurves[0]);
 			for (uint i = 0; i < gearsInput.Count; i++) {
 				var gear = gearsInput[(int)i];
-				var lossMap = CreateGearLossMap(gear, i, useEfficiencyFallback, true);
+				var lossMap = CreateGearLossMap(gear, i, false);
 
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(
 					gearbox.Type, (int)i, engine.FullLoadCurves[i + 1],
@@ -323,8 +355,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.UpshiftMinAcceleration = DeclarationData.Gearbox.UpshiftMinAcceleration;
 		}
 
-		public IList<VectoRunData.AuxData> CreateAuxiliaryData(
-			IAuxiliariesDeclarationInputData auxInputData,
+		public AxleGearData CreateAxleGearData(IAxleGearInputData data)
+		{
+			var retVal = SetCommonAxleGearData(data);
+			retVal.AxleGear.LossMap = ReadAxleLossMap(data, false);
+			return retVal;
+		}
+
+		public AngledriveData CreateAngledriveData(IAngledriveInputData data)
+		{
+			return DoCreateAngledriveData(data, false);
+		}
+
+
+		public IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData,
 			MissionType mission, VehicleClass hvdClass)
 		{
 			if (!auxInputData.SavedInDeclarationMode) {
@@ -480,9 +524,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			var retVal = SetCommonAirdragData(airdragInputData);
-			var aerodynamicDragArea = airdragInputData.AirDragArea + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
 
-			retVal.DeclaredAirdragArea = airdragInputData.AirDragArea;
+			retVal.DeclaredAirdragArea = mission.MissionType == MissionType.Construction ? mission.DefaultCDxA : airdragInputData.AirDragArea;
+
+			var aerodynamicDragArea = retVal.DeclaredAirdragArea + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
+
 			retVal.CrossWindCorrectionCurve =
 				new CrosswindCorrectionCdxALookup(
 					aerodynamicDragArea,
@@ -494,14 +540,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		private AirdragData DefaultAirdragData(Mission mission, Segment segment)
 		{
-			var aerodynamicDragArea = mission.MissionType == MissionType.Construction
-				? segment.CdAConstruction
-				: segment.CdADefault + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
+			var aerodynamicDragArea = mission.DefaultCDxA + mission.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0);
 
 			return new AirdragData() {
 				CertificationMethod = CertificationMethod.StandardValues,
-				DeclaredAirdragArea =
-					mission.MissionType == MissionType.Construction ? segment.CdAConstruction : segment.CdADefault,
+				DeclaredAirdragArea = mission.DefaultCDxA,
 				CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
 					aerodynamicDragArea,
 					GetDeclarationAirResistanceCurve(

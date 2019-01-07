@@ -203,4 +203,5 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/*.vmod
 Documentation/VehiclesReleaseComparisonDeclarationMode/*.vsum
 
 HashingTool/TestData/
+DISTR/
 EPTP/

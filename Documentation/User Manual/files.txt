@@ -26,11 +26,13 @@
 3-simulation-models/Driver_LAC.md
 3-simulation-models/ADAS_EcoRoll.md
 3-simulation-models/Vehicle_CrossWindCorrection.md
+3-simulation-models/Vehicle_ADAS_technologies.md
 3-simulation-models/Vehicle_RRC.md
 3-simulation-models/Engine_FC.md
 3-simulation-models/Engine_DynamicFullLoad.md
 3-simulation-models/Engine_WHTC.md
 3-simulation-models/Engine_Speed_Torque_limitations.md
+3-simulation-models/FuelProperties.md
 3-simulation-models/Transmission_Losses.md
 3-simulation-models/Gearbox_AT.md
 3-simulation-models/GearShift.md

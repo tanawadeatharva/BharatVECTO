@@ -1,5 +1,56 @@
 #Changelog
 
+**VECTO 3.3.1**
+
+***Build 1463 (2019-01-03) RELEASE CANDIDATE***
+
+ - Changes according to 2017/2400 amendments
+    * [VECTO-761] - Adaptation of input XML Schema
+    * [VECTO-762] - Extension of Input Interfaces
+    * [VECTO-763] - Extension of Segmentation Table
+    * [VECTO-764] - ADAS benefits
+    * [VECTO-766] - Update Powerdemand Auxiliaires
+    * [VECTO-767] - Report for exempted vehicles
+    * [VECTO-768] - VTP mode
+    * [VECTO-770] - Fuel Types
+    * [VECTO-771] - Handling of exempted vehicles
+    * [VECTO-824] - Throw exception for certain combinations of exempted vehicle parameters
+    * [VECTO-773] - Correction Factor for Reference Fuel
+    * [VECTO-790] - Adapt generic data for construction/municipal utility
+    * [VECTO-493] - Implementation of generic body weights and air drag values for construction cycle
+    * [VECTO-565] - Consideration of LNG as possible fuel is missing
+
+ - Changes/Improvements
+    * [VECTO-799] - Remove TUG Logos from Simulation Tool, Hashing Tool
+    * [VECTO-808] - Add Moitoring Report
+    * [VECTO-754] - Extending Loss-Maps in case of AT gearbox for each gear, axlegear, gearbox 
+    * [VECTO-757] - Correct contact mail address in Hashing Tool
+    * [VECTO-779] - Update Construction Cycle - shorter stop times
+    * [VECTO-783] - Rename columns in segmentation table and GUI
+    * [VECTO-709] - VTP editor from user manual not matching new VECTO one: updated documentation
+    * [VECTO-785] - Handling of Vehicles that cannot reach the cycle's target speed: Limit max speed in driver model
+    * [VECTO-716] - Validate data in Settings Tab: update documentation
+    * [VECTO-793] - Inconsistency between GUI, Help and Regulation: update wording in GUI and user manual
+    * [VECTO-796] - Adaptation of FuelProperties
+    * [VECTO-806] - extend loss-maps (gbx, axl, angl) for MT and AMT transmissions
+    * [VECTO-750] - Simulation error DrivingAction: adapt downshift rules for AT to drive over hill with 6% inclination
+
+ - Bugfixes
+    * [VECTO-819] - object reference not set to an instance of an object
+    * [VECTO-818] - SearchOperatingPoint: Unknown response type. ResponseOverload
+    * [VECTO-813] - Error "Infinity [] is not allowed for SI-Value"
+    * [VECTO-769] - DrivingAction Brake: request failed after braking power was found.ResponseEngineSpeedTooHigh
+    * [VECTO-804] - Error on simulation with VECTO 3.3.0.1433
+    * [VECTO-805] - Total vehicle mass exceeds TPMLM
+    * [VECTO-811] - AMT: ResponseGearShift
+    * [VECTO-812] - AMT: ResponseOverload
+    * [VECTO-822] - SIMULATION RUN ABORTED by Infinity
+    * [VECTO-792] - Vecto Hashing Tool - error object reference not set to an instance of an object (overwriting Date element)
+    * [VECTO-696] - Problem with Primary Retarder: regression update, set torque loss to 0 for 0 speed and engaged gear
+    * [VECTO-776] - Decision Factor (DF)  field is emptied after each simulation
+    * [VECTO-814] - Error: DistanceRun got an unexpected response: ResponseGearshift
+
+
 **VECTO 3.3.0**
 
 ***Build 1433 (2018-12-03) OFFICIAL RELEASE***

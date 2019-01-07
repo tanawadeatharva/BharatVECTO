@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -264,7 +264,7 @@ namespace TUGraz.VectoHashing
 			if (dateNode == null) {
 				throw new Exception("Date-Element not found in input!");
 			}
-			dateNode.FirstChild.Value = XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc);
+			dateNode.InnerText = XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc);
 
 
 			var hash = XMLHashProvider.ComputeHash(Document, id, XMLHashProvider.DefaultCanonicalizationMethod,

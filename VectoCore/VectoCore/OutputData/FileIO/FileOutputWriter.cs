@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -65,6 +65,11 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			get { return Path.ChangeExtension(_jobFile, "RSLT_CUSTOMER.xml"); }
 		}
 
+		public string XMLMonitoringReportName
+		{
+			get { return Path.ChangeExtension(_jobFile, "RSLT_MONITORING.xml"); }
+		}
+
 		public string XMLVTPReportName
 		{
 			get { return Path.ChangeExtension(_jobFile, "VTP_Report.xml"); }
@@ -115,6 +120,9 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 					break;
 				case ReportType.DeclarationReportCustomerXML:
 					fileName = XMLCustomerReportName;
+					break;
+				case ReportType.DeclarationReportMonitoringXML:
+					fileName = XMLMonitoringReportName;
 					break;
 				case ReportType.DeclarationVTPReportXML:
 					fileName = XMLVTPReportName;

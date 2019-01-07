@@ -36,6 +36,7 @@ Partial Class AboutBox
 	'Das Bearbeiten mit dem Code-Editor ist nicht mÃ¶glich.
 	<DebuggerStepThrough()> _
 	Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(AboutBox))
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
@@ -62,11 +63,13 @@ Partial Class AboutBox
         '
         Me.Label8.AutoSize = true
         Me.Label8.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.Label8.Location = New System.Drawing.Point(27, 263)
+        Me.Label8.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.Label8.Location = New System.Drawing.Point(32, 264)
+        Me.Label8.Margin = New System.Windows.Forms.Padding(0)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(157, 39)
+        Me.Label8.Size = New System.Drawing.Size(198, 13)
         Me.Label8.TabIndex = 3
-        Me.Label8.Text = "Joint Research Centre"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"Sustainable Transport Unit"&Global.Microsoft.VisualBasic.ChrW(13)&Global.Microsoft.VisualBasic.ChrW(10)&"European Commission"
+        Me.Label8.Text = "European Commission DG CLIMA"
         '
         'PictureBox1
         '
@@ -116,15 +119,16 @@ Partial Class AboutBox
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(237, 13)
         Me.Label3.TabIndex = 19
-        Me.Label3.Text = "Copyright © 2012-2016 European Union"
+        Me.Label3.Text = "Copyright © 2012-2019 European Union"
         '
         'PictureBoxJRC
         '
         Me.PictureBoxJRC.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.PictureBoxJRC.Image = Global.TUGraz.VECTO.My.Resources.Resources.JRC_About
-        Me.PictureBoxJRC.Location = New System.Drawing.Point(219, 248)
+        Me.PictureBoxJRC.Image = CType(resources.GetObject("PictureBoxJRC.Image"),System.Drawing.Image)
+        Me.PictureBoxJRC.Location = New System.Drawing.Point(240, 248)
         Me.PictureBoxJRC.Name = "PictureBoxJRC"
-        Me.PictureBoxJRC.Size = New System.Drawing.Size(260, 54)
+        Me.PictureBoxJRC.Size = New System.Drawing.Size(230, 54)
+        Me.PictureBoxJRC.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.PictureBoxJRC.TabIndex = 15
         Me.PictureBoxJRC.TabStop = false
         '

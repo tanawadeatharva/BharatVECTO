@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -397,6 +397,7 @@ namespace VectoHashingTest
 		}
 
 		[TestCase(@"Testdata\XML\ToHash\vecto_engine-input.xml"),
+		TestCase(@"Testdata\XML\ToHash\vecto_engine-input_emptyDate.xml"),
 		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml"),
 		TestCase(@"Testdata\XML\ToHash\vecto_gearbox-input.xml")]
 		public void TestHashedComponentIsValid(string file)

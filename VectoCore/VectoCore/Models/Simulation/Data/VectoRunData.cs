@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -49,6 +49,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	[CustomValidation(typeof(VectoRunData), "ValidateRunData")]
 	public class VectoRunData : SimulationComponentData
 	{
+		public VectoRunData()
+		{
+			Exempted = false;
+		}
+
 		[ValidateObject]
 		public VehicleData VehicleData { get; internal set; }
 
@@ -111,6 +116,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public VTPData VTPData { get; set; }
 
 		public ShiftStrategyParameters GearshiftParameters { get; set; }
+		public bool Exempted { get; set; }
 
 		public class AuxData
 		{
@@ -242,8 +248,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	public class VTPData
 	{
 		public double CorrectionFactor;
-
-		public JoulePerKilogramm FuelNetCalorificValue;
 	}
 
 	public class AuxFanData

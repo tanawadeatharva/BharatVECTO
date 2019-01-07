@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -61,17 +61,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public int RunIdentifier { get; protected set; }
 
-		public string RunName
+		public virtual string RunName
 		{
 			get { return Container.RunData.JobName; }
 		}
 
-		public string CycleName
+		public virtual string CycleName
 		{
 			get { return Container.RunData.Cycle.Name; }
 		}
 
-		public string RunSuffix
+		public virtual string RunSuffix
 		{
 			get { return Container.RunData.ModFileSuffix; }
 		}
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Container.RunData.JobRunId; }
 		}
 
-		public double Progress
+		public virtual double Progress
 		{
 			get { return CyclePort.Progress; }
 		}

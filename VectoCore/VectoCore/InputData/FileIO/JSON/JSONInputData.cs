@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -703,11 +703,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public Meter Mileage
 		{
 			get { return Body.GetEx<double>("Mileage").SI(Unit.SI.Kilo.Meter).Cast<Meter>(); }
-		}
-
-		public JoulePerKilogramm NetCalorificValueTestFuel
-		{
-			get { return Body.GetEx<double>("NCVTestFuel").SI(Unit.SI.Mega.Joule.Per.Kilo.Gramm).Cast<JoulePerKilogramm>(); }
 		}
 
 		string IManufacturerReport.Source { get { return Body["ManufacturerRecord"].Value<string>(); } }

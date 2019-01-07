@@ -50,6 +50,9 @@ Public Class VectoJob
     Private ReadOnly _gearboxFile As SubPath
     Private ReadOnly _tcuFile As SubPath
 
+    Private ReadOnly _lacDfTargetSpeedFile As SubPath
+    Private ReadOnly _lacDfVelocityDropFile as SubPath
+
     Private _startStop As Boolean
     Public StartStopDelay As Double
 
@@ -99,6 +102,8 @@ Public Class VectoJob
         _engineFile = New SubPath
         _gearboxFile = New SubPath
         _tcuFile = new SubPath
+        _lacDfTargetSpeedFile = New SubPath()
+        _lacDfVelocityDropFile = New SubPath()
 
         _driverAccelerationFile = New SubPath
 
@@ -296,8 +301,30 @@ Public Class VectoJob
     Public Property LacPreviewFactor As Double
     Public Property LacDfOffset As Double
     Public Property LacDfScale As Double
-    Public Property LacDfTargetSpeedFile As String
-    Public Property LacDfVelocityDropFile As String
+    Public Property LacDfTargetSpeedFile(Optional ByVal original As Boolean = false) As String
+        Get
+            If original Then
+                Return _lacDfTargetSpeedFile.OriginalPath
+                Else 
+                return _lacDfTargetSpeedFile.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _lacDfTargetSpeedFile.Init(_myPath, value)
+        End Set
+    End Property
+    Public Property LacDfVelocityDropFile(optional ByVal original As Boolean = false) As String
+        Get
+            If original Then
+                Return _lacDfVelocityDropFile.OriginalPath
+            Else 
+                return _lacDfVelocityDropFile.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _lacDfVelocityDropFile.Init(_myPath, value)
+        End Set
+    End Property
 
 
 #End Region

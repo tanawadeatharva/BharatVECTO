@@ -30,7 +30,7 @@ Public Class Configuration
 	Public FirstRun As Boolean
 	Public DeclMode As Boolean
 
-    Public ValidateRunData As Boolean
+	Public ValidateRunData As Boolean
 
 	Public Const DefaultFuelType As FuelType = FuelType.DieselCI
 
@@ -57,7 +57,7 @@ Public Class Configuration
 		Co2PerFc = DeclarationData.FuelData.Lookup(DefaultFuelType).CO2PerFuelWeight
 		FirstRun = True
 		DeclMode = True
-        ValidateRunData = True
+		ValidateRunData = True
 	End Sub
 
 	Public Sub Load()
@@ -85,7 +85,7 @@ Public Class Configuration
 				OpenCmdName = body.GetEx(Of String)("OpenCmdName")
 				FirstRun = body.GetEx(Of Boolean)("FirstRun")
 				DeclMode = body.GetEx(Of Boolean)("DeclMode")
-                ValidateRunData = IsNothing(body("ValidateRunData")) OrElse body.GetEx(Of Boolean)("ValidateRunData")
+				ValidateRunData = IsNothing(body("ValidateRunData")) OrElse body.GetEx(Of Boolean)("ValidateRunData")
 			End Using
 		Catch ex As Exception
 			GUIMsg(MessageType.Err, "Error while loading settings!")
@@ -110,7 +110,7 @@ Public Class Configuration
 		body.Add("OpenCmdName", OpenCmdName)
 		body.Add("FirstRun", FirstRun)
 		body.Add("DeclMode", DeclMode)
-        body.Add("ValidateRunData", ValidateRunData)
+		body.Add("ValidateRunData", ValidateRunData)
 
 		JSONFileWriter.WriteFile(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}}, FilePath)
 	End Sub

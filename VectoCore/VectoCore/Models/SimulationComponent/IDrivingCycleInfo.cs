@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -58,6 +58,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance);
 
 		Meter Altitude { get; }
+
+		Radian RoadGradient { get; }
 
 		Meter CycleStartDistance { get; }
 

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -78,7 +78,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly Payloads Payloads = new Payloads();
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 		public static MeterPerSecond CycleSpeedLimit;
+		public const double LossMapExtrapolationFactor = 3;
 
+		public static readonly ADASCombinations ADASCombinations = new ADASCombinations();
+		public static readonly ADASBenefits ADASBenefits = new ADASBenefits();
+		public static readonly WeightingGroups WeightingGroup = new WeightingGroups();
+		public static readonly WeightingFactors WeightingFactors = new WeightingFactors();
 
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.
@@ -546,6 +551,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly SpecificFuelConsumption LowerFCThreshold = 180.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).Cast<SpecificFuelConsumption>();
 			public static readonly SpecificFuelConsumption UpperFCThreshold = 600.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).Cast<SpecificFuelConsumption>();
 			public static readonly Second FCAccumulationWindow = 10.SI(Unit.SI.Minute).Cast<Second>();
+			public static readonly double[] FanParameters = { 7.320, 1200.0 , 810 };
+		}
+
+		public static class Vehicle {
+			public const bool DualFuelVehicleDefault = false;
+			public const bool HybridElectricHDVDefault = false;
+			public const bool ZeroEmissionVehicleDefault = false;
+			public const TankSystem TankSystemDefault = TankSystem.Compressed;
+			public const bool SleeperCabDefault = true;
+			public const bool VocationalVehicleDefault = false;
+
+			public static class ADAS {
+				public const PredictiveCruiseControlType PredictiveCruiseControlDefault = PredictiveCruiseControlType.None;
+				public const bool EcoRollWithEngineStop = false;
+				public const bool EcoRollWitoutEngineStop = false;
+				public const bool EngineStopStartDefault = false;
+			}
 		}
 	}
 }
