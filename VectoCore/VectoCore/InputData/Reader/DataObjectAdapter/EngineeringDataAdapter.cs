@@ -38,11 +38,13 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -55,22 +57,25 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			var retVal = SetCommonVehicleData(data);
 			retVal.BodyAndTrailerWeight = data.CurbMassExtra;
+
 			//retVal.CurbWeight += data.CurbMassExtra;
 			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 			var axles = data.Axles;
 
-			retVal.AxleData = axles.Select(axle => new Axle {
-				WheelsDimension = axle.Tyre.Dimension,
-				Inertia = axle.Tyre.Inertia,
-				TwinTyres = axle.TwinTyres,
-				RollResistanceCoefficient = axle.Tyre.RollResistanceCoefficient,
-				AxleWeightShare = axle.AxleWeightShare,
-				TyreTestLoad = axle.Tyre.TyreTestLoad,
-				AxleType = axle.AxleType,
-				//Wheels = axle.WheelsStr
-			}).ToList();
+			retVal.AxleData = axles.Select(
+				axle => new Axle {
+					WheelsDimension = axle.Tyre.Dimension,
+					Inertia = axle.Tyre.Inertia,
+					TwinTyres = axle.TwinTyres,
+					RollResistanceCoefficient = axle.Tyre.RollResistanceCoefficient,
+					AxleWeightShare = axle.AxleWeightShare,
+					TyreTestLoad = axle.Tyre.TyreTestLoad,
+					AxleType = axle.AxleType,
+
+					//Wheels = axle.WheelsStr
+				}).ToList();
 			return retVal;
 		}
 
@@ -81,25 +86,31 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			switch (airdragData.CrossWindCorrectionMode) {
 				case CrossWindCorrectionMode.NoCorrection:
-					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(airdragData.AirDragArea,
+					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+						airdragData.AirDragArea,
 						CrossWindCorrectionCurveReader.GetNoCorrectionCurve(airdragData.AirDragArea),
 						CrossWindCorrectionMode.NoCorrection);
 					break;
 				case CrossWindCorrectionMode.SpeedDependentCorrectionFactor:
-					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(airdragData.AirDragArea,
-						CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurve(airdragData.CrosswindCorrectionMap,
+					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+						airdragData.AirDragArea,
+						CrossWindCorrectionCurveReader.ReadSpeedDependentCorrectionCurve(
+							airdragData.CrosswindCorrectionMap,
 							airdragData.AirDragArea), CrossWindCorrectionMode.SpeedDependentCorrectionFactor);
 					break;
 				case CrossWindCorrectionMode.VAirBetaLookupTable:
-					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionVAirBeta(airdragData.AirDragArea,
+					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionVAirBeta(
+						airdragData.AirDragArea,
 						CrossWindCorrectionCurveReader.ReadCdxABetaTable(airdragData.CrosswindCorrectionMap));
 					break;
 				case CrossWindCorrectionMode.DeclarationModeCorrection:
 					var airDragArea = airdragData.AirDragArea ??
 									DeclarationData.Segments.LookupCdA(data.VehicleCategory, data.AxleConfiguration, data.GrossVehicleMassRating);
-					var height = data.Height ?? DeclarationData.Segments.LookupHeight(data.VehicleCategory, data.AxleConfiguration,
-						data.GrossVehicleMassRating);
-					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(airDragArea,
+					var height = data.Height ?? DeclarationData.Segments.LookupHeight(
+									data.VehicleCategory, data.AxleConfiguration,
+									data.GrossVehicleMassRating);
+					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
+						airDragArea,
 						DeclarationDataAdapter.GetDeclarationAirResistanceCurve(
 							GetAirdragParameterSet(data.VehicleCategory, data.AxleConfiguration, data.Axles.Count), airDragArea, height),
 						CrossWindCorrectionMode.DeclarationModeCorrection);
@@ -107,22 +118,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				default:
 					throw new ArgumentOutOfRangeException("CrosswindCorrection", airdragData.CrossWindCorrectionMode.ToString());
 			}
+
 			return retVal;
 		}
 
 		private string GetAirdragParameterSet(VehicleCategory vehicleCategory, AxleConfiguration axles, int numAxles)
 		{
 			switch (vehicleCategory) {
-				case VehicleCategory.RigidTruck:
-					return numAxles > axles.NumAxles() ? "RigidTrailer" : "RigidSolo";
-				case VehicleCategory.Tractor:
-					return "TractorSemitrailer";
+				case VehicleCategory.RigidTruck: return numAxles > axles.NumAxles() ? "RigidTrailer" : "RigidSolo";
+				case VehicleCategory.Tractor: return "TractorSemitrailer";
 				case VehicleCategory.CityBus:
 				case VehicleCategory.InterurbanBus:
-				case VehicleCategory.Coach:
-					return "CoachBus";
-				default:
-					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
+				case VehicleCategory.Coach: return "CoachBus";
+				default: throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
 			}
 		}
 
@@ -131,7 +139,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Log.Error("{0} is in Declaration Mode but is used for Engineering Mode!", msg);
 		}
 
-		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IGearboxEngineeringInputData gbx,
+		internal CombustionEngineData CreateEngineData(
+			IEngineEngineeringInputData engine, IGearboxEngineeringInputData gbx,
 			IEnumerable<ITorqueLimitInputData> torqueLimits)
 		{
 			if (engine.SavedInDeclarationMode) {
@@ -152,12 +161,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					fullLoadCurves[(uint)gear.Gear] = IntersectFullLoadCurves(fullLoadCurves[0], maxTorque);
 				}
 			}
+
 			retVal.FullLoadCurves = fullLoadCurves;
 			retVal.FuelConsumptionCorrectionFactor = engine.WHTCEngineering;
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData,
+		internal GearboxData CreateGearboxData(
+			IGearboxEngineeringInputData gearbox, CombustionEngineData engineData,
 			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory, bool useEfficiencyFallback)
 		{
 			if (gearbox.SavedInDeclarationMode) {
@@ -190,7 +201,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				var shiftPolygon = gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
-					: DeclarationData.Gearbox.ComputeShiftPolygon(gearbox.Type, (int)i, engineData.FullLoadCurves[i + 1], gearbox.Gears,
+					: DeclarationData.Gearbox.ComputeShiftPolygon(
+						gearbox.Type, (int)i, engineData.FullLoadCurves[i + 1], gearbox.Gears,
 						engineData,
 						axlegearRatio, dynamicTyreRadius);
 				var gearData = new GearData {
@@ -203,21 +215,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				CreateATGearData(gearbox, i, gearData, tcShiftPolygon, gearDifferenceRatio, gears, vehicleCategory);
 				gears.Add(i + 1, gearData);
 			}
+
 			retVal.Gears = gears;
 
 			if (retVal.Type.AutomaticTransmission()) {
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = gearbox.PowershiftShiftTime;
-				retVal.TorqueConverterData = TorqueConverterDataReader.Create(gearbox.TorqueConverter.TCData,
+				retVal.TorqueConverterData = TorqueConverterDataReader.Create(
+					gearbox.TorqueConverter.TCData,
 					gearbox.TorqueConverter.ReferenceRPM, gearbox.TorqueConverter.MaxInputSpeed, ExecutionMode.Engineering, ratio,
 					gearbox.TorqueConverter.CLUpshiftMinAcceleration, gearbox.TorqueConverter.CCUpshiftMinAcceleration);
 			}
 
-
 			return retVal;
 		}
 
-		private static void CreateATGearData(IGearboxEngineeringInputData gearbox, uint i, GearData gearData,
+		private static void CreateATGearData(
+			IGearboxEngineeringInputData gearbox, uint i, GearData gearData,
 			ShiftPolygon tcShiftPolygon, double gearDifferenceRatio, Dictionary<uint, GearData> gears,
 			VehicleCategory vehicleCategory)
 		{
@@ -234,6 +248,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					// ratio between first and second gear is above threshold, torqueconverter is active in second gear as well
 					// -> duplicate ratio and lossmap for torque converter mode, remove locked transmission for previous gear
 					CreateTCSecondGearATSerial(gearData, tcShiftPolygon);
+
 					// NOTE: the lower gear in 'gears' dictionary has index i !!
 					gears[i].Ratio = double.NaN;
 					gears[i].LossMap = null;
@@ -269,10 +284,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					case AuxiliaryDemandType.Constant:
 						auxList.Add(CreateConstantAuxiliary(a));
 						break;
-					default:
-						throw new VectoException("Auxiliary type {0} not supported!", a.AuxiliaryType);
+					default: throw new VectoException("Auxiliary type {0} not supported!", a.AuxiliaryType);
 				}
 			}
+
 			return auxList;
 		}
 
@@ -285,6 +300,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoSimulationException(
 					"Demand Map for auxiliary {0} has to contain exactly 3 columns and at least 4 rows", a.ID);
 			}
+
 			return new VectoRunData.AuxData {
 				ID = a.ID,
 				DemandType = AuxiliaryDemandType.Mapping,
@@ -315,12 +331,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (driver.Lookahead == null) {
 				throw new VectoSimulationException("Error: Lookahead Data is missing.");
 			}
+
 			var lookAheadData = new DriverData.LACData {
 				Enabled = driver.Lookahead.Enabled,
+
 				//Deceleration = driver.Lookahead.Deceleration,
 				MinSpeed = driver.Lookahead.MinSpeed,
 				LookAheadDecisionFactor =
-					new LACDecisionFactor(driver.Lookahead.CoastingDecisionFactorOffset, driver.Lookahead.CoastingDecisionFactorScaling,
+					new LACDecisionFactor(
+						driver.Lookahead.CoastingDecisionFactorOffset, driver.Lookahead.CoastingDecisionFactorScaling,
 						driver.Lookahead.CoastingDecisionFactorTargetSpeedLookup,
 						driver.Lookahead.CoastingDecisionFactorVelocityDropLookup),
 				LookAheadDistanceFactor = driver.Lookahead.LookaheadDistanceFactor
@@ -368,6 +387,56 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				AuxiliaryAssembly = auxInputData.AuxiliaryAssembly,
 				AuxiliaryVersion = auxInputData.AuxiliaryVersion
 			};
+		}
+
+		public ShiftStrategyParameters CreateGearshiftData(IGearshiftEngineeringInputData gsInputData)
+		{
+			if (gsInputData == null) {
+				return null;
+			}
+
+			var retVal = new ShiftStrategyParameters {
+				StartVelocity = gsInputData.StartSpeed ?? DeclarationData.GearboxTCU.StartSpeed,
+				StartAcceleration = gsInputData.StartAcceleration ?? DeclarationData.GearboxTCU.StartAcceleration,
+				GearResidenceTime = gsInputData.GearResidenceTime ?? DeclarationData.GearboxTCU.GearResidenceTime,
+				DnT99L_highMin1 = gsInputData.DnT99LHMin1,
+				DnT99L_highMin2 = gsInputData.DnT99LHMin2,
+				AllowedGearRangeUp = gsInputData.AllowedGearRangeUp,
+				AllowedGearRangeDown = gsInputData.AllowedGearRangeDown,
+				LookBackInterval = gsInputData.LookBackInterval ?? DeclarationData.GearboxTCU.LookBackInterval,
+				AverageCardanPowerThresholdPropulsion = gsInputData.AvgCardanPowerThresholdPropulsion ??
+														DeclarationData.GearboxTCU.AverageCardanPowerThresholdPropulsion,
+				CurrentCardanPowerThresholdPropulsion = gsInputData.CurrCardanPowerThresholdPropulsion ??
+														DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
+				TargetSpeedDeviationFactor = gsInputData.TargetSpeedDeviationFactor,
+				EngineSpeedHighDriveOffFactor = gsInputData.EngineSpeedHighDriveOffFactor,
+				RatingFactorCurrentGear = gsInputData.RatingFactorCurrentGear,
+				AccelerationReserveLookup = AccelerationReserveLookupReader.Create(gsInputData.AccelerationReserveLookup) ??
+											AccelerationReserveLookupReader.ReadFromStream(
+												RessourceHelper.ReadStream(
+													DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.AccelerationReserveLookup.csv")),
+				ShareTorque99L = ShareTorque99lLookupReader.Create(gsInputData.ShareTorque99L) ??
+								ShareTorque99lLookupReader.ReadFromStream(
+									RessourceHelper.ReadStream(
+										DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareTq99L.csv")
+								),
+				PredictionDurationLookup = PredictionDurationLookupReader.Create(gsInputData.PredictionDurationLookup) ??
+											PredictionDurationLookupReader.ReadFromStream(
+												RessourceHelper.ReadStream(
+													DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.PredictionTimeLookup.csv")
+											),
+				ShareIdleLow = ShareIdleLowReader.Create(gsInputData.ShareIdleLow) ?? ShareIdleLowReader.ReadFromStream(
+									RessourceHelper.ReadStream(
+										DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareIdleLow.csv")
+								),
+				ShareEngineHigh = EngineSpeedHighLookupReader.Create(gsInputData.ShareEngineHigh) ??
+								EngineSpeedHighLookupReader.ReadFromStream(
+									RessourceHelper.ReadStream(
+										DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareEngineSpeedHigh.csv")
+								)
+			};
+
+			return retVal;
 		}
 	}
 }

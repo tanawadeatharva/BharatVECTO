@@ -642,6 +642,11 @@ namespace TUGraz.VectoCommon.Utils
 			return SIBase<PerSquareSecond>.Create(perSecond.Val / second.Value());
 		}
 
+		public static MeterPerSecond operator *(PerSecond perSecond, Meter meter)
+		{
+			return SIBase<MeterPerSecond>.Create(perSecond.Val * meter.Value());
+		}
+
 		public double AsRPM
 		{
 			get { return Val * 60 / (2 * Math.PI); }

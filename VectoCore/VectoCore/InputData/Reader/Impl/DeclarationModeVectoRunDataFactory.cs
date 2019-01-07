@@ -69,6 +69,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		private PTOData _ptoTransmissionData;
 		private PTOData _municipalPtoTransmissionData;
 		private Exception InitException;
+		private ShiftStrategyParameters _gearshiftData;
 
 		internal DeclarationModeVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report)
 		{
@@ -117,8 +118,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_ptoTransmissionData = _dao.CreatePTOTransmissionData(InputDataProvider.JobInputData.Vehicle.PTOTransmissionInputData);
 
 			_municipalPtoTransmissionData = CreateDefaultPTOData();
+
+			_gearshiftData = _dao.CreateGearshiftData();
 		}
 
+		
 		private void InitializeReport()
 		{
 			var powertrainConfig = new VectoRunData() {
@@ -186,8 +190,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							? _municipalPtoTransmissionData
 							: _ptoTransmissionData,
 						InputDataHash = InputDataProvider.XMLHash,
-							SimulationType = SimulationType.DistanceCycle
-
+							SimulationType = SimulationType.DistanceCycle,
+						GearshiftParameters = _gearshiftData
 					};
 					simulationRunData.EngineData.FuelConsumptionCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
 						mission.MissionType.GetNonEMSMissionType(), _engineData.WHTCRural, _engineData.WHTCUrban, _engineData.WHTCMotorway) *

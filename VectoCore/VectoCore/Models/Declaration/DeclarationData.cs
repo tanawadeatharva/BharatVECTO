@@ -171,6 +171,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		public static class GearboxTCU
+		{
+			public static readonly MeterPerSecond StartSpeed = 8.KMPHtoMeterPerSecond();
+			public static readonly MeterPerSquareSecond StartAcceleration = 0.8.SI<MeterPerSquareSecond>();
+			public static readonly Second GearResidenceTime = 5.SI<Second>();
+			public static readonly Watt CurrentCardanPowerThresholdPropulsion = 5000.SI<Watt>();
+			public static readonly Watt AverageCardanPowerThresholdPropulsion = 1000.SI<Watt>();
+			public static readonly Second LookBackInterval = 4.SI<Second>();
+			public const double EngineSpeedHighDriveOffFactor = 1.05;
+			public const double DnT99L_highMin1 = 0.4;
+			public const double DnT99L_highMin2 = 0.5;
+			public const int AllowedGearRangeUp = 3;
+			public const int AllowedGearRangeDown = 3;
+			public const double TargetSpeedDeviationFactor = 0.1;
+			public const double RatingFactorCurrentGear = 0.99;
+		}
+
 		public static class Gearbox
 		{
 			public const double TorqueReserve = 0.2;
@@ -183,9 +200,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double ShiftPolygonRPMMargin = 7; // %
 			private const double ShiftPolygonEngineFldMargin = 0.98;
 
-			public static readonly Second MinTimeBetweenGearshifts = 1.5.SI<Second>();
-			public static readonly Second DownshiftAfterUpshiftDelay = 10.SI<Second>();
-			public static readonly Second UpshiftAfterDownshiftDelay = 10.SI<Second>();
+			public static readonly Second MinTimeBetweenGearshifts = 2.SI<Second>();
+			public static readonly Second DownshiftAfterUpshiftDelay = 6.SI<Second>();
+			public static readonly Second UpshiftAfterDownshiftDelay = 6.SI<Second>();
 
 			public static readonly MeterPerSquareSecond UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
 
@@ -216,6 +233,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					// That's the same for all gears, so call the same method...
 					: ComputeManualTransmissionShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 			}
+
 
 			public static ShiftPolygon ComputeManualTransmissionShiftPolygon(int gearIdx, EngineFullLoadCurve fullLoadCurve,
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)

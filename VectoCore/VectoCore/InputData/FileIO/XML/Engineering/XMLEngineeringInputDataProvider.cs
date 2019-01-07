@@ -195,5 +195,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		{
 			get { return XMLEngineeringDriverData; }
 		}
+
+		public IGearshiftEngineeringInputData GearshiftInputData { get { return null; } }
 	}
 }

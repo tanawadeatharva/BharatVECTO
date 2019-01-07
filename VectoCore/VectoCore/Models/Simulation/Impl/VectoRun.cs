@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VectoJob preprocessing.");
 
 			foreach (var preprocessing in Container.GetPreprocessingRuns) {
-				preprocessing.RunPreprocessing(this);
+				preprocessing.RunPreprocessing();
 			}
 
 

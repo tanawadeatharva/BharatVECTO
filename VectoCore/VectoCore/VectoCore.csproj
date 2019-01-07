@@ -111,6 +111,7 @@
     <Compile Include="InputData\FileIO\JSON\IJSONVehicleComponents.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONTCUData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\AbstractDeclarationXMLComponentDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAirdragDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAngledriveDataProvider.cs" />
@@ -162,7 +163,17 @@
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\ShiftPolygonReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShiftStrategyInterfaces.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShareTorque99lLookup.cs" />
+    <Compile Include="InputData\Reader\ShiftStrategy\ShareTorque99lLookupReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\AccelerationReserveLookup.cs" />
+    <Compile Include="InputData\Reader\ShiftStrategy\AccelerationReserveLookupReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\EngineSpeedHighFactorLookup.cs" />
+    <Compile Include="InputData\Reader\ShiftStrategy\EngineSpeedHighLookupReader.cs" />
+    <Compile Include="InputData\Reader\ShiftStrategy\LookupDataReader.cs" />
     <Compile Include="InputData\Reader\ShiftStrategy\PredictionDurationLookupReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShareIdleLowLookup.cs" />
+    <Compile Include="InputData\Reader\ShiftStrategy\ShareIdleLowReader.cs" />
     <Compile Include="Models\Declaration\AuxDemandEntry.cs" />
     <Compile Include="Models\Declaration\AuxiliaryTypeHelper.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
@@ -183,10 +194,19 @@
     <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategyV2.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\AverageAccelerationTorqueLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AverageAccelerationTorquePreprocessor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BaseShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CycleTorqueConverter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineFanAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\EngineSpeedDriveOffPreprocessor.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\GearRating.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxCardanTorqueLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxCardanTorquePreprocessor.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxGradabilityLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxGradabilityPreprocessor.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\SimplePowertrainContainer.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverterWrapper.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VelocityRollingLookup.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VelocitySpeedGearshiftPreprocessor.cs" />
@@ -466,6 +486,10 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\PredictionTimeLookup.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\AccelerationReserveLookup.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareEngineSpeedHigh.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareIdleLow.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareTq99L.csv" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>

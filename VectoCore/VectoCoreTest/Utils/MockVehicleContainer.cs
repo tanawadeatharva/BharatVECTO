@@ -172,6 +172,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new System.NotImplementedException();
 		}
 
+		public SpeedChangeEntry LastTargetspeedChange { get; set; }
+
 		public bool VehicleStopped { get; set; }
 
 		public DrivingBehavior DriverBehavior { get; set; }
@@ -237,6 +239,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return _axlegearLoss;
 		}
+
+		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand { get; }
 
 		public Kilogram ReducedMassWheels { get; set; }
 	}
