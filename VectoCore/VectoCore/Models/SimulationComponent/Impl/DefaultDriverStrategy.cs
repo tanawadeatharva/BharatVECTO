@@ -757,6 +757,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (response is ResponseOverload && !DataBus.ClutchClosed(absTime)) {
 						response = Driver.DrivingActionRoll(absTime, ds, DataBus.VehicleSpeed, gradient);
 					}
+					if (response is ResponseGearShift) {
+						response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
+							gradient);
+					}
 				});
 			return response;
 		}
