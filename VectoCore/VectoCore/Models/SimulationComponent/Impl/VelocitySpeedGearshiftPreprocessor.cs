@@ -74,6 +74,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var gearForSpeed = runData.GearboxData.Gears.FirstOrDefault(
 					x => (speed * ratio * x.Value.Ratio).IsBetween(
 						runData.EngineData.IdleSpeed, runData.EngineData.FullLoadCurves[0].RatedSpeed)).Key;
+				if (gearForSpeed == 0) {
+					continue;
+				}
 				for (var grad = MinGradient; grad <= MaxGradient; grad += GradientStep) {
 					var gradient = VectoMath.InclinationToAngle(grad / 100.0);
 					gearbox.Disengaged = false;

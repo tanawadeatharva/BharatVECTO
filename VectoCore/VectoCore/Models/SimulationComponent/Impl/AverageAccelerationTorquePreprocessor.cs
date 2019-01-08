@@ -39,7 +39,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					for (var tmpSpeed = engineSpeed; tmpSpeed < UpperLimit; tmpSpeed += speedStepSize) {
 						sum += VectoMath.Min(torque, fld.FullLoadStationaryTorque(tmpSpeed));
 					}
-					entries.Add(new KeyValuePair<Tuple<PerSecond, NewtonMeter>, NewtonMeter>(Tuple.Create(engineSpeed, torque), sum * speedStepSize / (UpperLimit - engineSpeed)));
+
+					var tmp = sum * speedStepSize / (UpperLimit - engineSpeed);
+					if (engineSpeed.IsEqual(UpperLimit, speedStepSize / 2)) {
+						tmp = 0.SI<NewtonMeter>();
+					}
+					entries.Add(new KeyValuePair<Tuple<PerSecond, NewtonMeter>, NewtonMeter>(Tuple.Create(engineSpeed, torque), tmp));
 				}
 			}
 

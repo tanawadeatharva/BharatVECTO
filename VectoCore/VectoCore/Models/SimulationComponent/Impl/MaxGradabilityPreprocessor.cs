@@ -73,6 +73,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		private Radian SearchGradient(Vehicle vehicle, MeterPerSecond vehicleSpeed, NewtonMeter maxTorque)
 		{
+			var gradientMax = VectoMath.InclinationToAngle(1);
+			var responseMax = vehicle.Initialize(vehicleSpeed, gradientMax);
+			var deltaMax = responseMax.EnginePowerRequest / responseMax.EngineSpeed - maxTorque;
+			if (deltaMax.IsSmaller(0)) {
+				return gradientMax;
+			}
+
 			var gradient = VectoMath.InclinationToAngle(0);
 			var response = vehicle.Initialize(vehicleSpeed, gradient);
 

@@ -39,21 +39,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 					engineSpeed += engineSpeedSteps) {
 					var maxTorque = Data.EngineData.FullLoadCurves[gearData.Key].FullLoadStationaryTorque(engineSpeed);
 					var vehicleSpeed = engineSpeed * powertrainRatioWOGearbox / gearData.Value.Ratio;
-					var first = TestContainer.VehiclePort.Initialize(vehicleSpeed, 0.SI<Radian>());
-					var delta = first.EngineTorqueDemandTotal - maxTorque;
-					var grad = SearchAlgorithm.Search(
-						0.SI<Radian>(), delta, 0.1.SI<Radian>(),
-						getYValue: r => {
-							return ((r as AbstractResponse).EngineTorqueDemandTotal - maxTorque);
-						},
-						evaluateFunction: g => {
-							return TestContainer.VehiclePort.Initialize(vehicleSpeed, g);
-						},
-						criterion: r => {
-							return ((r as AbstractResponse).EngineTorqueDemandTotal - maxTorque).Value();
-						}
-					);
+
+					var grad = VectoMath.InclinationToAngle(1);
 					var max = TestContainer.VehiclePort.Initialize(vehicleSpeed, grad);
+					if ((max.EngineTorqueDemandTotal - maxTorque).IsGreater(0)) {
+
+						var first = TestContainer.VehiclePort.Initialize(vehicleSpeed, 0.SI<Radian>());
+						var delta = first.EngineTorqueDemandTotal - maxTorque;
+						grad = SearchAlgorithm.Search(
+							0.SI<Radian>(), delta, 0.1.SI<Radian>(),
+							getYValue: r => {
+								return ((r as AbstractResponse).EngineTorqueDemandTotal - maxTorque);
+							},
+							evaluateFunction: g => {
+								return TestContainer.VehiclePort.Initialize(vehicleSpeed, g);
+							},
+							criterion: r => {
+								return ((r as AbstractResponse).EngineTorqueDemandTotal - maxTorque).Value();
+							}
+						);
+						max = TestContainer.VehiclePort.Initialize(vehicleSpeed, grad);
+					}
 					retVal[gearData.Key].Add(new KeyValuePair<PerSecond, NewtonMeter>(max.EngineSpeed, max.CardanTorque));
 				}
 			}
