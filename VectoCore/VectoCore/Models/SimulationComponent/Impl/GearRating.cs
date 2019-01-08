@@ -8,12 +8,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		B, // inside engine speed limits, torque demand too high
 		C, // valid gear, gear residience time below threshold
 		D, // inside engine speed limits, outside preferred speed range
-		E // outside engine speed limits
+		E, // outside engine speed limits
+		Z = 10 // no rating calculated
 	}
 
 
 	internal struct GearRating
 	{
+		private const double CaseSeparationInterval = 1e6;
+
 		public GearRating(GearRatingCase ratingCase, double rating, PerSecond maxEngineSpeed)
 		{
 			RatingCase = ratingCase;
@@ -24,11 +27,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		public double Rating { get; }
 
 		public GearRatingCase RatingCase { get; }
-		public PerSecond MaxEngineSpeed { get; set; }
+		public PerSecond MaxEngineSpeed { get;  }
 
 		public double NumericValue
 		{
-			get { return ((int)RatingCase - 1) * 1e3 + (Rating * 100).LimitTo(0, 1e3-10); }
+			get { return ((int)RatingCase - 1) * CaseSeparationInterval + (Rating * 100).LimitTo(0, CaseSeparationInterval-10); }
 		}
 
 		public static bool operator <(GearRating first, GearRating second)

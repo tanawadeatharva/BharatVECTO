@@ -576,7 +576,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					string.Format("Gear{0}-Rating", gear),
 					GearRatings.ContainsKey(gear)
 						? GearRatings[gear].NumericValue
-						: new GearRating(GearRatingCase.E, 0, null).NumericValue);
+						: new GearRating(GearRatingCase.Z, 0, null).NumericValue);
 			}
 
 			container.SetDataValue("acc_rsv", accRsv?.Value() ?? 0);
