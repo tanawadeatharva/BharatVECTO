@@ -211,94 +211,94 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="default.runsettings" />
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\325kW.vfld">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\325kW.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\325kW.vmap">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\325kW.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\AccelerationReserveLookup.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\AccelerationReserveLookup.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Alt.vaux">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Alt.vaux">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\AMT_12.vgbx">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\AMT_12.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Axle_4x2_Tractor.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Axle_4x2_Tractor.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Class5_Tractor.vveh">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Class5_Tractor_ENG_TCU.vecto">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor_ENG_TCU.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Default.vrlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Default.vrlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Engine_325kW_12.7l.veng">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Engine_325kW_12.7l.veng">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_1.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_1.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_10.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_10.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_11.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_11.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_12.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_12.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_2.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_2.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_3.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_3.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_4.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_4.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_5.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_5.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_6.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_6.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_7.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_7.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_8.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_8.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Gear_9.vtlm">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Gear_9.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\LAC-DF-Vdrop.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\LAC-DF-Vdrop.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\LAC-DF-Vtarget.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\LAC-DF-Vtarget.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\PredictionTimeLookup.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\PredictionTimeLookup.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\ShareEngineSpeedHigh.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\ShareEngineSpeedHigh.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\ShareIdleLow.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\ShareIdleLow.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\ShareTq99L.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\ShareTq99L.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\ShiftParameters.vtcu">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\ShiftParameters.vtcu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\EngineeringMode\ShiftStrategyUpdated\Class5_Tractor_4x2\Truck.vacc">
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Truck.vacc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
@@ -2884,6 +2884,36 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_4x2_vehicle-class-1_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_4x2_vehicle-class-3_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_6x2_vehicle-class-9_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_6x4_vehicle-class-11_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Rigid Truck_8x4_vehicle-class-16_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Tractor_4x2_vehicle-class-5_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Tractor_6x2_vehicle-class-10_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\ShiftStrategyV2\SampleVehicles\Tractor_6x4_vehicle-class-12_EURO6_2018.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\VTPMode\GenericVehicle\CityBus_AT_Ser.RSLT_MANUFACTURER.xml">
