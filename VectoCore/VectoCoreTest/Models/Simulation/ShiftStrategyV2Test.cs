@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			//TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 2, TestName = "AMT ShiftV2 Group10 LH EMS Los"),
 			//TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 3, TestName = "AMT ShiftV2 Group10 LH EMS Ref"),
 			//TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 4, TestName = "AMT ShiftV2 Group10 RD Low"),
-			//TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 5, TestName = "AMT ShiftV2 Group10 RD Ref"),
+			TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 5, TestName = "AMT ShiftV2 Group10 RD Ref"),
 			//TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 6, TestName = "AMT ShiftV2 Group10 RD EMS Low"),
 			//TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 7, TestName = "AMT ShiftV2 Group10 RD EMS Ref"),
 			]
@@ -235,17 +235,17 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[//TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", null, TestName = "AMT ShiftV2 Group 11 ALL"),
-			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 0, TestName = "AMT ShiftV2 Group11 LH Low"),
-			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 1, TestName = "AMT ShiftV2 Group11 LH Ref"),
-			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 2, TestName = "AMT ShiftV2 Group11 LH EMS Low"),
-			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 3, TestName = "AMT ShiftV2 Group11 LH EMS Ref"),
-			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 4, TestName = "AMT ShiftV2 Group11 RD Low"),
-			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 5, TestName = "AMT ShiftV2 Group11 RD Ref"),
-			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 6, TestName = "AMT ShiftV2 Group11 RD EMS Low"),
-			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 7, TestName = "AMT ShiftV2 Group11 RD EMS Ref"),
-			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 8, TestName = "AMT ShiftV2 Group11 CO Low"),
-			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 9, TestName = "AMT ShiftV2 Group11 CO Ref"),
+		[//TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", null, TestName = "AMT ShiftV2 Group 12 ALL"),
+			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 0, TestName = "AMT ShiftV2 Group12 LH Low"),
+			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 1, TestName = "AMT ShiftV2 Group12 LH Ref"),
+			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 2, TestName = "AMT ShiftV2 Group12 LH EMS Low"),
+			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 3, TestName = "AMT ShiftV2 Group12 LH EMS Ref"),
+			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 4, TestName = "AMT ShiftV2 Group12 RD Low"),
+			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 5, TestName = "AMT ShiftV2 Group12 RD Ref"),
+			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 6, TestName = "AMT ShiftV2 Group12 RD EMS Low"),
+			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 7, TestName = "AMT ShiftV2 Group12 RD EMS Ref"),
+			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 8, TestName = "AMT ShiftV2 Group12 CO Low"),
+			TestCase("Tractor_6x4_vehicle-class-12_EURO6_2018.xml", 9, TestName = "AMT ShiftV2 Group12 CO Ref"),
 		]
 		public void RunDeclarationTestNewShiftStrategy_Group12(string filename, int? idx)
 		{

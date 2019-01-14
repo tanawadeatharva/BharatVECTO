@@ -564,6 +564,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				AllowedGearRangeUp = DeclarationData.GearboxTCU.AllowedGearRangeUp,
 				AllowedGearRangeDown = DeclarationData.GearboxTCU.AllowedGearRangeDown,
 				LookBackInterval = DeclarationData.GearboxTCU.LookBackInterval,
+				DriverAccelerationLookBackInterval = DeclarationData.GearboxTCU.DriverAccelerationLookBackInterval,
+				DriverAccelerationThresholdLow = DeclarationData.GearboxTCU.DriverAccelerationThresholdLow,
 				AverageCardanPowerThresholdPropulsion = DeclarationData.GearboxTCU.AverageCardanPowerThresholdPropulsion,
 				CurrentCardanPowerThresholdPropulsion = DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
 				TargetSpeedDeviationFactor = DeclarationData.GearboxTCU.TargetSpeedDeviationFactor,

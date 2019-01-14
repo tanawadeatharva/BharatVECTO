@@ -91,6 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		IGearbox Gearbox { get; set; }
 
         GearInfo NextGear { get; }
+		void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
 	}
 
     public class GearInfo

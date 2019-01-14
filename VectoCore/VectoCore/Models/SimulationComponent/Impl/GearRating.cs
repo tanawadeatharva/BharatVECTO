@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 	internal struct GearRating
 	{
-		private const double CaseSeparationInterval = 1e6;
+		private const double CaseSeparationInterval = 1e5;
 
 		public GearRating(GearRatingCase ratingCase, double rating, PerSecond maxEngineSpeed)
 		{
@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public double NumericValue
 		{
-			get { return ((int)RatingCase - 1) * CaseSeparationInterval + (Rating * 100).LimitTo(0, CaseSeparationInterval-10); }
+			get { return ((int)RatingCase - 1) * CaseSeparationInterval + Rating.LimitTo(0, CaseSeparationInterval-1); }
 		}
 
 		public static bool operator <(GearRating first, GearRating second)

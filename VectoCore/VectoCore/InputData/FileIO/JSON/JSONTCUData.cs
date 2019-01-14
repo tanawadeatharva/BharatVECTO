@@ -163,6 +163,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public Second DriverAccelerationLookBackInterval { get {return Body.GetEx<double>("DriverAccelerationLookBackInterval").SI<Second>();} }
+		public MeterPerSquareSecond DriverAccelerationThresholdLow { get { return Body.GetEx<double>("DriverAccelerationThresholdLow").SI<MeterPerSquareSecond>(); } }
+
 		#endregion
 	}
 }

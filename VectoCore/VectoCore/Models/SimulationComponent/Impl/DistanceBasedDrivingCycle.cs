@@ -82,6 +82,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				WaitTime = 0.SI<Second>(),
 				Distance = first.Distance,
 				Altitude = first.Altitude,
+				VehicleTargetSpeed = Data.Entries.First().VehicleTargetSpeed
 			};
 			CurrentState = PreviousState.Clone();
 		}
@@ -481,20 +482,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				myIterator.MoveNext();
 			}
 
-			return InterpolateCycleEntry(absDistance, myIterator.RightSample);
+			return InterpolateCycleEntry(absDistance, myIterator);
 		}
 
 		private DrivingCycleData.DrivingCycleEntry InterpolateCycleEntry(Meter absDistance,
-			DrivingCycleData.DrivingCycleEntry lookahead)
+			DrivingCycleEnumerator lookahead)
 		{
-			var retVal = new DrivingCycleData.DrivingCycleEntry(lookahead) {
+			var retVal = new DrivingCycleData.DrivingCycleEntry(lookahead.RightSample) {
 				Distance = absDistance,
-				Altitude = VectoMath.Interpolate(CurrentState.Distance, lookahead.Distance, CurrentState.Altitude,
-					lookahead.Altitude, absDistance)
+				Altitude = VectoMath.Interpolate(lookahead.LeftSample.Distance, lookahead.RightSample.Distance, lookahead.LeftSample.Altitude,
+					lookahead.RightSample.Altitude, absDistance)
 			};
 
-			retVal.RoadGradient =
-				((retVal.Altitude - CurrentState.Altitude) / (absDistance - CurrentState.Distance)).Value().SI<Radian>();
+			//retVal.RoadGradient =
+			//	((retVal.Altitude - CurrentState.Altitude) / (absDistance - CurrentState.Distance)).Value().SI<Radian>();
 
 			return retVal;
 		}

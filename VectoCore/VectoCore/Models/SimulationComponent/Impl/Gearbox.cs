@@ -175,6 +175,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			IterationStatistics.Increment(this, "Requests");
 
+			_strategy?.Request(absTime, dt, outTorque, outAngularVelocity);
+
 			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 			if (DataBus.VehicleStopped) {
 				EngageTime = absTime;

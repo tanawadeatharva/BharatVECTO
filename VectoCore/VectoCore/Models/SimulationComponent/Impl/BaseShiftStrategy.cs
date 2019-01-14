@@ -58,6 +58,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
 		public abstract IGearbox Gearbox { get; set; }
 		public abstract GearInfo NextGear { get; }
+		public virtual void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{ }
 
 		protected MeterPerSquareSecond EstimateAccelerationForGear(uint gear, PerSecond gbxAngularVelocityOut)
 		{

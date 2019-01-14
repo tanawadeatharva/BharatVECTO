@@ -14,6 +14,8 @@
     "GearRangeUp": 3,
     "GearRangeDown": 3,
     "LookBackDriver": 4,
+    "DriverAccelerationLookBackInterval":  10, 
+    "DriverAccelerationThresholdLow":  0.1,
     "P_card_avg_threshold": 5000,
     "P_card_curr_threshold": 1000,
     "Diff_curr_targ_vel": 0.1,
@@ -23,6 +25,7 @@
     "ShareTorque99L": "ShareTq99L.csv",
     "PredictionDurationLookup": "PredictionTimeLookup.csv",
     "ShareIdleLow": "ShareIdleLow.csv",
-     "ShareEngineHigh": "ShareEngineSpeedHigh.csv" 
+    "ShareEngineHigh": "ShareEngineSpeedHigh.csv"
+   
   }
 }

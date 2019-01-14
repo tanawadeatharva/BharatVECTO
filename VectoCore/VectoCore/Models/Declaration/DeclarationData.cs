@@ -184,6 +184,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly Watt CurrentCardanPowerThresholdPropulsion = 5000.SI<Watt>();
 			public static readonly Watt AverageCardanPowerThresholdPropulsion = 1000.SI<Watt>();
 			public static readonly Second LookBackInterval = 4.SI<Second>();
+			public static readonly Second DriverAccelerationLookBackInterval = 10.SI<Second>();
 			public const double EngineSpeedHighDriveOffFactor = 1.05;
 			public const double DnT99L_highMin1 = 0.4;
 			public const double DnT99L_highMin2 = 0.5;
@@ -191,6 +192,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const int AllowedGearRangeDown = 3;
 			public const double TargetSpeedDeviationFactor = 0.1;
 			public const double RatingFactorCurrentGear = 0.99;
+			public static readonly MeterPerSquareSecond DriverAccelerationThresholdLow = 0.1.SI<MeterPerSquareSecond>();
 		}
 
 		public static class Gearbox

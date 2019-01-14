@@ -41,9 +41,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 		public int AllowedGearRangeDown { get; set; }
 		public int AllowedGearRangeUp { get; set; }
 		public Second LookBackInterval { get; set; }
+		public Second DriverAccelerationLookBackInterval { get; set; }
 		public Watt AverageCardanPowerThresholdPropulsion { get; set; }
 		public Watt CurrentCardanPowerThresholdPropulsion { get; set; }
 		public double TargetSpeedDeviationFactor { get; set; }
 		public double RatingFactorCurrentGear { get; set; }
+		public MeterPerSquareSecond DriverAccelerationThresholdLow { get; set; }
 	}
 }

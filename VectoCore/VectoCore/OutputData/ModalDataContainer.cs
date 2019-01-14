@@ -250,6 +250,7 @@ namespace TUGraz.VectoCore.OutputData
 			// TODO: 2018-11-20: Disable additional columns after testing gearshifting!
 //#if TRACE
 			strCols = strCols.Concat(_additionalColumns);
+			dataColumns.Add(ModalResultField.altitude);
 //#endif
 			if (WriteModalResults) {
 				var filteredData = Data;

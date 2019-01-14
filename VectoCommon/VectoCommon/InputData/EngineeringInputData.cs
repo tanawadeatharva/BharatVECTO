@@ -415,5 +415,7 @@ namespace TUGraz.VectoCommon.InputData
 		TableData ShareIdleLow { get; }
 		TableData ShareEngineHigh { get; }
 		string Source { get; }
+		Second DriverAccelerationLookBackInterval { get; }
+		MeterPerSquareSecond DriverAccelerationThresholdLow { get; }
 	}
 }
