@@ -67,8 +67,21 @@ Public Class EngineForm
 
 		If Not Cfg.DeclMode Then Exit Sub
 
+		Dim gbxType as GearboxType = GearboxType.AMT
+
+		Dim jobFile As String = VectoJobForm.VectoFile
+		If Not jobFile Is Nothing AndAlso File.Exists(jobFile) Then
+
+			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile), 
+																	 IEngineeringInputDataProvider)
+			If (not inputData Is Nothing) Then
+				Dim gbx as IGearboxDeclarationInputData = inputData.JobInputData.Vehicle.GearboxInputData
+				gbxType = gbx.Type
+			End If
+		End If
+	    
 		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble(0.0)/1000.0/1000.0).SI (Of CubicMeter),
-															GearboxType.AMT).ToGUIFormat()
+															gbxType).ToGUIFormat()
 	End Sub
 
 
