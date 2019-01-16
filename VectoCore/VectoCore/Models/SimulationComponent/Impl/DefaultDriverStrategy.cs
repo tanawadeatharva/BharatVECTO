@@ -679,6 +679,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (!DataBus.ClutchClosed(absTime)) {
 						Log.Info("Brake -> Overload -> Clutch is open - Trying roll action");
 						response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+						response.Switch().Case<ResponseSpeedLimitExceeded>(
+							() => {
+								response = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient);
+							}
+						);
 					} else {
 						Log.Info("Brake -> Overload -> Clutch is closed - Trying brake action again");
 						DataBus.BrakePower = 0.SI<Watt>();
