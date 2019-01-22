@@ -334,8 +334,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						PowertrainConfig.EngineData.FullLoadCurves[0].DragLoadStationaryTorque(respAccRsv.EngineSpeed),
 						PowertrainConfig.EngineData.FullLoadCurves[0].FullLoadStationaryTorque(respAccRsv.EngineSpeed)),
 					respAccRsv.EngineSpeed);
-				retVal = new GearRating(GearRatingCase.A,
-					(fc.Value.ConvertToGrammPerHour().Value / VectoMath.Max(respAccRsv.AxlegearPowerRequest, 1.SI<Watt>())).Value() * 1e3,
+				retVal = new GearRating(
+					GearRatingCase.A,
+					(fc.Value.ConvertToGrammPerHour().Value / VectoMath.Max(respDriverDemand.AxlegearPowerRequest, 1.SI<Watt>())).Value() *
+					1e3,
 					engineSpeedHighThreshold);
 			} else {
 				retVal = new GearRating(
