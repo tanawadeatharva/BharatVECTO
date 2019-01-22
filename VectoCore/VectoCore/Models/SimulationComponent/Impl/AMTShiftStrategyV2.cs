@@ -307,6 +307,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, driverAccelerationAvg, gradient,
 				true);
 
+			if (respDriverDemand.DeltaFullLoad.IsGreater(0)) {
+				driverAccelerationAvg = SearchAlgorithm.Search(driverAccelerationAvg, respDriverDemand.DeltaFullLoad,
+					Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
+					getYValue: response => {
+						var r = (ResponseDryRun)response;
+						return r.DeltaFullLoad;
+					},
+					evaluateFunction:
+						acc => {
+							var response = TestContainer.VehiclePort.Request(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, acc, gradient, true);
+							return response;
+
+						},
+					criterion: response => {
+						var r = (ResponseDryRun)response;
+						return r.DeltaFullLoad.Value();
+					});
+				respDriverDemand = (ResponseDryRun)TestContainer.VehiclePort.Request(
+					0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, driverAccelerationAvg, gradient,
+					true);
+			}
+
 			if (respAccRsv.EngineSpeed < PowertrainConfig.EngineData.IdleSpeed ||
 				respAccRsv.EngineSpeed > PowertrainConfig.EngineData.FullLoadCurves[0].N95hSpeed) {
 				return new GearRating(GearRatingCase.E, 0, 0.RPMtoRad());
