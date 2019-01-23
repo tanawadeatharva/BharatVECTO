@@ -219,7 +219,7 @@
           <CertificationNumber>GBX-N.A.</CertificationNumber>
           <Date>2017-07-06T15:06:08.2023609Z</Date>
           <AppVersion>VectoCore</AppVersion>
-          <TransmissionType>SMT</TransmissionType>
+          <TransmissionType>AMT</TransmissionType>
           <MainCertificationMethod>Standard values</MainCertificationMethod>
           <Gears>
             <Gear number="1">
