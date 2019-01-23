@@ -83,13 +83,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
-		[//TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", null, TestName = "AMT ShiftV2 Group4 ALL"),
-		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 0, TestName = "AMT ShiftV2 Group4 LH Low"),
-		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 1, TestName = "AMT ShiftV2 Group4 LH Ref"),
-		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 2, TestName = "AMT ShiftV2 Group4 RD Low"),
-		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 3, TestName = "AMT ShiftV2 Group4 RD Ref"),
-		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 4, TestName = "AMT ShiftV2 Group4 UD Low"),
-		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 5, TestName = "AMT ShiftV2 Group4 UD Ref"),
+		[//TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", null, TestName = "AMT ShiftV2 Group2 ALL"),
+		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 0, TestName = "AMT ShiftV2 Group2 LH Low"),
+		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 1, TestName = "AMT ShiftV2 Group2 LH Ref"),
+		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 2, TestName = "AMT ShiftV2 Group2 RD Low"),
+		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 3, TestName = "AMT ShiftV2 Group2 RD Ref"),
+		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 4, TestName = "AMT ShiftV2 Group2 UD Low"),
+		TestCase(@"Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml", 5, TestName = "AMT ShiftV2 Group2 UD Ref"),
 
 		]
 		public void RunDeclarationTestNewShiftStrategy_Group2(string filename, int? idx)
@@ -196,6 +196,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 5, TestName = "AMT ShiftV2 Group10 RD Ref"),
 			//TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 6, TestName = "AMT ShiftV2 Group10 RD EMS Low"),
 			//TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 7, TestName = "AMT ShiftV2 Group10 RD EMS Ref"),
+		
+			// Testing Class 10 on UD cycle - not for production!
+			//TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 8, TestName = "AMT ShiftV2 Group10 UD Low"),
+			//TestCase("Tractor_6x2_vehicle-class-10_EURO6_2018.xml", 9, TestName = "AMT ShiftV2 Group10 UD Ref"),
 			]
 		public void RunDeclarationTestNewShiftStrategy_Group10(string filename, int? idx)
 		{
