@@ -460,7 +460,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				: CalcPredictionVelocity(currentVelocity, estimatedVelocityPostShift);
 
 			if (inAngularVelocity < GetEngineSpeedLimitLow(false)) {
-				for (var i = Math.Max(0, gear - ShiftStrategyParameters.AllowedGearRangeDown);
+				for (var i = Math.Max(1, gear - ShiftStrategyParameters.AllowedGearRangeDown);
 					i <= Math.Min(ModelData.Gears.Count, gear + ShiftStrategyParameters.AllowedGearRangeUp);
 					i++) {
 					var nextGear = (uint)i;
@@ -476,7 +476,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (inAngularVelocity >= upperEngineSpeedLimit) {
 				for (var i = Math.Min(ModelData.Gears.Count, gear + ShiftStrategyParameters.AllowedGearRangeUp);
-					i >= Math.Max(0, gear + ShiftStrategyParameters.AllowedGearRangeDown);
+					i >= Math.Max(1, gear + ShiftStrategyParameters.AllowedGearRangeDown);
 					i--) {
 					var nextGear = (uint)i;
 					TestContainer.GearboxCtl.Gear = nextGear;
