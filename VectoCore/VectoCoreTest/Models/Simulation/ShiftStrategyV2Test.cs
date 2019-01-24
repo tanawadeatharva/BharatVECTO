@@ -280,6 +280,22 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
+
+		[TestCase("Tractor_4x2_vehicle-class-5_EURO6_2018_FlatFCMap.xml", null, TestName = "AMT ShiftV2 Group5 FlatMap ALL"),
+		TestCase("Tractor_4x2_vehicle-class-5_EURO6_2018_IncreasingFCMap.xml", null, TestName = "AMT ShiftV2 Group5 IncreasingMap ALL"),
+		]
+		public void RunDeclarationTestNewShiftStrategy_Group5_FCMapInfluence(string filename, int? idx)
+		{
+			var job = @"TestData\Integration\ShiftStrategyV2\SampleVehicles\" + filename;
+
+			if (idx.HasValue) {
+				RunJob_DeclSingle(job, idx.Value);
+			} else {
+				RunJob_DeclAll(job);
+			}
+		}
+
+
 		public void RunJob_DeclSingle(string jobName, int runIdx)
 		{
 			var relativeJobPath = jobName;
