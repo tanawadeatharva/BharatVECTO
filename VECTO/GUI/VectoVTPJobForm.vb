@@ -669,7 +669,7 @@ Public Class VectoVTPJobForm
         Try
             s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass,
                                                  0.SI (Of Kilogram),
-                                                 True)
+                                                 False)
         Catch
         End Try
         If Not s0.Found Then
