@@ -750,6 +750,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.Switch().
 				Case<ResponseGearShift>(r => {
 					response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+						if (response is ResponseSpeedLimitExceeded) {
+							response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
+																gradient);
+						}
 				}).
 				Case<ResponseSpeedLimitExceeded>(() => {
 					response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
