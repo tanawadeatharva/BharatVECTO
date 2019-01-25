@@ -602,6 +602,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (retVal == null) {
 					throw new VectoException("Failed to find operating point!");
 				}
+
+				return retVal;
 			}
 			var currentDistance = DataBus.Distance;
 
