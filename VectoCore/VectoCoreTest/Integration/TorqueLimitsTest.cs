@@ -258,9 +258,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.AreEqual(201.39195, view.Rows[0][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
 			Assert.AreEqual(239.28546, view.Rows[1][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
 			Assert.AreEqual(170.15249, view.Rows[2][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(183.06219, view.Rows[3][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(224.26907, view.Rows[4][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(254.53269, view.Rows[5][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(183.03570, view.Rows[3][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(224.26897, view.Rows[4][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(254.53251, view.Rows[5][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
 		}
 
 		[TestCase(EngineSpeedLimitJobATDecl)]
