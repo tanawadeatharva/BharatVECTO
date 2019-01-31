@@ -592,16 +592,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			}
 		}
 
-		[TestCase]
-		public void ComputeShiftPolygonDeclarationTestConfidentialXMLJob()
+		[TestCase(@"E:\QUAM\Downloads\upshifts-missing_over-revving\FL_curve_orig.xml"),
+			TestCase(@"E:\QUAM\Downloads\VECTO_821\VECTO_lorry_6x2_13L_276kW.vecto")]
+		public void ComputeShiftPolygonDeclarationTestConfidentialXMLJob(string jobFile)
 		{
-			var jobFile = @"E:\QUAM\Downloads\upshifts-missing_over-revving\FL_curve_orig.xml";
-
 			if (!File.Exists(jobFile)) {
 				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
 			}
 
-			var job = new XMLDeclarationInputDataProvider(jobFile, true);
+			IDeclarationInputDataProvider job = (IDeclarationInputDataProvider)(Path.GetExtension(jobFile) == ".vecto" ? JSONInputDataFactory.ReadJsonJob(jobFile) :  new XMLDeclarationInputDataProvider(jobFile, true));
 
 			var gearboxData = job.JobInputData.Vehicle.GearboxInputData;
 			var idlespeed = VectoMath.Max(
