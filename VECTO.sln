@@ -67,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashingTool", "HashingTool\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashingCmd", "HashingCmd\HashingCmd.csproj", "{33F9848E-9257-4BE2-915F-68E748AEB204}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Article10Notifications", "..\VECTO-Article10\Article10Notifications\Article10Notifications.csproj", "{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug PerformanceStats|Any CPU = Debug PerformanceStats|Any CPU
