@@ -4212,6 +4212,10 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tbody>
 </table>
 <p>Specifications are based on a recent analysis (2018) performed by CONCAWE/EUCAR and shall reflect typical fuel on the European market. The data is scheduled to be published in March 2019 in the context of the study: Well-To-Wheels Analysis Of Future Automotive Fuels And Powertrains in the European Context – Heavy Duty vehicles</p>
+<div id="vecto-input-for-cnglng-vehicles" class="section level3">
+<h3>VECTO Input for CNG/LNG Vehicles</h3>
+<p>Currently only the fuel type ‘NG PI’ for the engine certification is allowed according to Regulation (EU) 2017/2400. For LNG vehicles, therefore, the engine fuel type has to be set to ‘NG PI’ and at the vehicle level NgTankSystem has to be set to ‘liquefied’. For CNG vehicles the same engine fuel type is provided but NgTankSystem has to be set to ‘compressed’.</p>
+</div>
 </div>
 <div id="transmission-losses" class="section level2">
 <h2>Transmission Losses</h2>
@@ -7540,6 +7544,16 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <div id="changelog" class="section level1">
 <h1>Changelog</h1>
 <p><strong>VECTO 3.3.1</strong></p>
+<p><strong><em>Build 1492 (2019-02-01) OFFICIAL RELEASE</em></strong></p>
+<ul>
+<li>Bugfixes (compared to 3.3.1.1463)
+<ul>
+<li>[VECTO-845] - Fixing bug for VECTO-840</li>
+<li>[VECTO-826] - DistanceRun got an unexpected response: ResponseSpeedLimitExceeded</li>
+<li>[VECTO-837] - VECTO GUI displays incorrect cycles prior to simulation</li>
+<li>[VECTO-831] - Addition of indication to be added in Help and Release notes for simulations with LNG</li>
+</ul></li>
+</ul>
 <p><strong><em>Build 1463 (2019-01-03) RELEASE CANDIDATE</em></strong></p>
 <ul>
 <li>Changes according to 2017/2400 amendments

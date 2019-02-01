@@ -2,6 +2,15 @@
 
 **VECTO 3.3.1**
 
+***Build 1492 (2019-02-01) OFFICIAL RELEASE***
+
+ - Bugfixes (compared to 3.3.1.1463)
+    * [VECTO-845] - Fixing bug for VECTO-840
+    * [VECTO-826] - DistanceRun got an unexpected response: ResponseSpeedLimitExceeded
+    * [VECTO-837] - VECTO GUI displays incorrect cycles prior to simulation
+    * [VECTO-831] - Addition of indication to be added in Help and Release notes for simulations with LNG
+ 
+
 ***Build 1463 (2019-01-03) RELEASE CANDIDATE***
 
  - Changes according to 2017/2400 amendments
