@@ -135,7 +135,7 @@ Public Class VehicleForm
 		_hdVclass = "-"
 		Dim s0 As Segment = Nothing
 		Try
-			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True)
+			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
 
 		Catch
 			' no segment found - ignore
@@ -164,7 +164,7 @@ Public Class VehicleForm
 
 		Dim s0 As Segment = Nothing
 		Try
-			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True)
+			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
 		Catch
 			' no segment found - ignore
 		End Try
