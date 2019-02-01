@@ -2812,8 +2812,11 @@
     <Content Include="TestData\Jobs\Tractor_4x2_vehicle-class-5_Generic vehicle.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\vecto_engine-input_sample.xml" />
     <Content Include="TestData\XML\XMLReaderDeclaration\vecto_engine-sample.xml" />
     <Content Include="TestData\XML\XMLReaderDeclaration\vecto_gearbox-sample.xml" />
+    <Content Include="TestData\XML\XMLReaderDeclaration\vecto_vehicle-exempted-sample.xml" />
+    <Content Include="TestData\XML\XMLReaderDeclaration\vecto_vehicle-new_parameters-sample.xml" />
     <Content Include="TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_exempted.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
