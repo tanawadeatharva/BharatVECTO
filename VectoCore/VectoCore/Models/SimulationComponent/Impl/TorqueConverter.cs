@@ -98,7 +98,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var operatingPoint = FindOperatingPoint(outTorque, outAngularVelocity);
 			var avgEngineSpeed = (PreviousState.InAngularVelocity + operatingPoint.InAngularVelocity) / 2;
-			var avgPower = (PreviousState.InAngularVelocity * PreviousState.InTorque +
+			//var prevInSpeed = PreviousState.OperatingPoint?.InAngularVelocity ?? PreviousState.InAngularVelocity;
+			//var prevInTorque = PreviousState.OperatingPoint?.InTorque ?? PreviousState.InTorque;
+			var prevInSpeed = PreviousState.InAngularVelocity;
+			var prevInTorque = PreviousState.InTorque;
+			var avgPower = (prevInSpeed * prevInTorque +
 							operatingPoint.InAngularVelocity * operatingPoint.InTorque) / 2;
 			var inTorque = avgPower / avgEngineSpeed;
 
@@ -127,7 +131,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// check if shift is required
 			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
-			if (retVal is ResponseSuccess &&
+			if (absTime > DataBus.LastShift && retVal is ResponseSuccess &&
 				ShiftStrategy.ShiftRequired(absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
 					operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift)) {
 				return new ResponseGearShift { Source = this };
@@ -164,10 +168,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgOutSpeedMin = (PreviousState.OutAngularVelocity + dryOperatingPointMin.OutAngularVelocity) / 2.0;
 			var deltaMin = (outTorque - dryOperatingPointMin.OutTorque) * avgOutSpeedMin;
 
+			var inTorqueMax =
+				(PreviousState.InAngularVelocity * PreviousState.InTorque +
+				dryOperatingPointMax.InAngularVelocity * dryOperatingPointMax.InTorque) /
+				(PreviousState.InAngularVelocity + dryOperatingPointMax.InAngularVelocity);
 			var inTorqueMin =
 				(PreviousState.InAngularVelocity * PreviousState.InTorque +
 				dryOperatingPointMin.InAngularVelocity * dryOperatingPointMin.InTorque) /
 				(PreviousState.InAngularVelocity + dryOperatingPointMin.InAngularVelocity);
+			var engRespMax = (ResponseDryRun)
+				NextComponent.Request(absTime, dt, inTorqueMax, dryOperatingPointMax.InAngularVelocity, true);
 			var engRespMin = (ResponseDryRun)
 				NextComponent.Request(absTime, dt, inTorqueMin, dryOperatingPointMin.InAngularVelocity, true);
 

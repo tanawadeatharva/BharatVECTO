@@ -34,8 +34,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Schema;
 using System.Xml.XPath;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Hashing;
@@ -332,13 +330,13 @@ namespace VectoHashingTest
 			var input = new XmlDocument();
 			input.Load(file);
 			var dateNode = input.SelectSingleNode("//*[local-name()='Date']");
-			var date = XmlConvert.ToDateTime(dateNode.FirstChild.Value);
+			var date = XmlConvert.ToDateTime(dateNode.FirstChild.Value, XmlDateTimeSerializationMode.Utc);
 
 			var h = VectoHash.Load(input);
 			var r = h.AddHash();
 
 			var newDateNode = r.XPathSelectElement("//*[local-name()='Date']");
-			var newDate = XmlConvert.ToDateTime(newDateNode.Value);
+			var newDate = XmlConvert.ToDateTime(newDateNode.Value, XmlDateTimeSerializationMode.Utc);
 
 			var now = DateTime.Now;
 
