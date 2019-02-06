@@ -452,6 +452,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var second = first;
 			first.Switch().
 				Case<ResponseUnderload>(r => {
+					if (DataBus.GearboxType.AutomaticTransmission() && !DataBus.ClutchClosed(absTime)) {
+						second = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
+					}
 					if (DataBus.VehicleSpeed.IsGreater(0) && DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
 						second = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
 						debug.Add(new { action = "first:(Underload & Overspeed)-> Coast", second });
