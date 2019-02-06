@@ -57,6 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected AbstractGearbox(IVehicleContainer container, VectoRunData runData) : base(container)
 		{
 			ModelData = runData.GearboxData;
+			LastShift = -double.MaxValue.SI<Second>();
 		}
 
 		#region ITnOutPort
