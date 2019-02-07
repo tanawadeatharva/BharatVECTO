@@ -187,8 +187,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return new ResponseDryRun {
 				Source = this,
-				DeltaFullLoad = 2 * deltaMax,
-				DeltaDragLoad = 2*deltaMin,
+				DeltaFullLoad = 10 * deltaMax,
+				DeltaDragLoad = 10 *deltaMin,
 				TorqueConverterOperatingPoint = dryOperatingPointMax
 			};
 		}
