@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} catch (VectoException ve) {
 				Log.Error(ve, "TorqueConverter: Failed to find operating point for MaxPower {0}",
 					engineResponse.DynamicFullLoadPower);
-				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
+				var tqOperatingPoint = ModelData.FindOperatingPoint(engineResponse.EngineSpeed, outAngularVelocity);
 				tqOperatingPoint.Creeping = true;
 				return tqOperatingPoint;
 			}
