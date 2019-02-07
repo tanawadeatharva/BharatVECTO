@@ -321,13 +321,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (!CurrentState.TorqueConverterLocked) {
-				return TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
+				var response = TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
+				if (response is ResponseGearShift) {
+					RequestAfterGearshift = true;
+				}
+				return response;
 			}
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 			if (!dryRun && retVal is ResponseSuccess &&
 				_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear,
 					LastShift)) {
-				return new ResponseGearShift { Source = this };
+				retVal = new ResponseGearShift { Source = this };
+				RequestAfterGearshift = true;
 			}
 
 			return retVal;
