@@ -621,7 +621,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			switch (Phase) {
 				case BrakingPhase.Coast:
-					return DoCoast(absTime, ds, targetVelocity, gradient, currentDistance);
+					for (var i = 1; i < 3; i++) {
+						var retVal = DoCoast(absTime, ds, targetVelocity, gradient, currentDistance);
+						if (retVal != null) {
+							return retVal;
+						}
+					}
+					throw new VectoException("No valid operating point found");
 				case BrakingPhase.Brake:
 					return DoBrake(absTime, ds, targetVelocity, gradient, brakingDistance, currentDistance);
 				default:
