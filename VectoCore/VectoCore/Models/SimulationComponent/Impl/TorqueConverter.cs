@@ -210,7 +210,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return operatingPoint;
 			} catch (VectoException ve) {
 				Log.Error(ve, "TorqueConverter: Failed to find operating point for DragPower {0}", engineResponse.DragPower);
-				var retVal = ModelData.FindOperatingPoint(engineResponse.EngineSpeed, outAngularVelocity);
+				var retVal = ModelData.FindOperatingPoint(DataBus.EngineSpeed, outAngularVelocity);
 				retVal.Creeping = true;
 				return retVal;
 			}
@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} catch (VectoException ve) {
 				Log.Error(ve, "TorqueConverter: Failed to find operating point for MaxPower {0}",
 					engineResponse.DynamicFullLoadPower);
-				var tqOperatingPoint = ModelData.FindOperatingPoint(engineResponse.EngineSpeed, outAngularVelocity);
+				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineSpeed, outAngularVelocity);
 				tqOperatingPoint.Creeping = true;
 				return tqOperatingPoint;
 			}
