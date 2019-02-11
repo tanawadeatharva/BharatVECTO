@@ -718,6 +718,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (DataBus.GearboxType.AutomaticTransmission() && response == null) {
 				for (var i = 0; i < 3 && response == null; i++) {
+					DataBus.BrakePower = 0.SI<Watt>();
 					response = Driver.DrivingActionBrake(
 						absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 						gradient, targetDistance: targetDistance);
