@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
 				}
 				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
-					operatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
+					operatingPoint = ModelData.FindOperatingPoint(VectoMath.Max(DataBus.EngineIdleSpeed, 0.8 * DataBus.EngineSpeed), outAngularVelocity);
 				}
 				return operatingPoint;
 			} catch (VectoException ve) {
