@@ -323,7 +323,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!CurrentState.TorqueConverterLocked) {
 				var response = TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 				if (response is ResponseGearShift) {
-					RequestAfterGearshift = true;
+					//RequestAfterGearshift = false;
 				}
 				return response;
 			}
@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear,
 					LastShift)) {
 				retVal = new ResponseGearShift { Source = this };
-				RequestAfterGearshift = true;
+				//RequestAfterGearshift = false;
 			}
 
 			return retVal;
