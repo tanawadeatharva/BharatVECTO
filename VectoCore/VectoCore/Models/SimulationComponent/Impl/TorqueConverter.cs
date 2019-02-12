@@ -183,8 +183,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dryOperatingPointMin = GetDragPowerOperatingPoint(
 				absTime, dt, outAngularVelocity, engineResponse,
 				PreviousState.InTorque * PreviousState.InAngularVelocity);
-			var avgOutSpeedMin = (PreviousState.OutAngularVelocity + dryOperatingPointMin.OutAngularVelocity) / 2.0;
-			var deltaMin = (outTorque - dryOperatingPointMin.OutTorque) * avgOutSpeedMin;
+			var deltaMin = -double.MaxValue.SI<Watt>() / 20;
+			if (dryOperatingPointMin != null) {
+				var avgOutSpeedMin = (PreviousState.OutAngularVelocity + dryOperatingPointMin.OutAngularVelocity) / 2.0;
+				deltaMin = (outTorque - dryOperatingPointMin.OutTorque) * avgOutSpeedMin;
+			}
 
 			return new ResponseDryRun {
 				Source = this,
@@ -230,7 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					absTime, dt, outAngularVelocity, engineSpeed,
 					x => x.DeltaDragLoad.IsGreater(0),
 					x => VectoMath.Abs(DataBus.EngineSpeed - x.EngineSpeed).Value());
-
+				if (retVal != null)
 				retVal.Creeping = true;
 				return retVal;
 			}
@@ -248,6 +251,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
 				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineN95hSpeed);
 				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
+					//operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
 					operatingPoint = FindValidTorqueConverterOperatingPoint(
 						absTime, dt, outAngularVelocity, maxInputSpeed,
 						x => x.DeltaFullLoad.IsSmaller(0),
@@ -297,6 +301,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				search.Add(res);
 			}
 
+			if (search.Count == 0) {
+				return null;
+			}
 			var selected = search.Where(selector).OrderBy(orderFunc).First();
 			retVal = ModelData.FindOperatingPoint(selected.EngineSpeed, outAngularVelocity);
 
