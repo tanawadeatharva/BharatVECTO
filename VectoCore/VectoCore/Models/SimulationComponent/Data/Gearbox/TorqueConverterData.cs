@@ -264,7 +264,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 
 				// Torque Converter: M_P1000 = k * n_out / n_in + d
-				//                   T_out = M_P1000 * (n_in / 1000rpm)^2 = (k * n_out / n_in + d) * (n_in / c)^2
+				//                   T_in = M_P1000 * (n_in / 1000rpm)^2 = (k * n_out / n_in + d) * (n_in / c)^2
 				// P_eng_out = P_eng_inertia + P_TC_in_avg
 				// P_eng_inertia = I_eng * (n_2_eng^2 - n_1_eng^2) / (2 * dt)
 				// P_TC_in_avg = (T_in_1 * n_in_1 + T_in_2 * n_in_2) / 2
