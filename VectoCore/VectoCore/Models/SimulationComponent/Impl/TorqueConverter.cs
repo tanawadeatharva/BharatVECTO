@@ -177,8 +177,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dryOperatingPointMax = GetMaxPowerOperatingPoint(
 				absTime, dt, outAngularVelocity, engineResponse,
 				PreviousState.InTorque * PreviousState.InAngularVelocity);
-			var avgOutSpeedMax = (PreviousState.OutAngularVelocity + dryOperatingPointMax.OutAngularVelocity) / 2.0;
-			var deltaMax = (outTorque - dryOperatingPointMax.OutTorque) * avgOutSpeedMax;
+			var deltaMax = double.MaxValue.SI<Watt>() / 20;
+			if (dryOperatingPointMax != null) {
+				var avgOutSpeedMax = (PreviousState.OutAngularVelocity + dryOperatingPointMax.OutAngularVelocity) / 2.0;
+				deltaMax = (outTorque - dryOperatingPointMax.OutTorque) * avgOutSpeedMax;
+			}
 
 			var dryOperatingPointMin = GetDragPowerOperatingPoint(
 				absTime, dt, outAngularVelocity, engineResponse,
