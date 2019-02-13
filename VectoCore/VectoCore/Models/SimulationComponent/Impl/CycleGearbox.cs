@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			inTorque += CurrentState.InertiaTorqueLossOut / effectiveRatio;
 			if (Gear != PreviousState.Gear &&
 				ConsiderShiftLosses(new GearInfo(Gear, torqueConverterLocked), outTorque)) {
-				CurrentState.PowershiftLosses = ComputeShiftLosses(outTorque, outAngularVelocity);
+				CurrentState.PowershiftLosses = ComputeShiftLosses(outTorque, outAngularVelocity, Gear);
 			}
 			if (CurrentState.PowershiftLosses != null) {
 				var averageEngineSpeed = (DataBus.EngineSpeed + outAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;

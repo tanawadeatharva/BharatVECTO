@@ -149,10 +149,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return nextGear.TorqueConverterLocked;
 		}
 
-		protected internal WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		protected internal WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity, uint gear)
 		{
-			var torqueGbxIn = outTorque / ModelData.Gears[Gear].Ratio;
-			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
+			var ratio = ModelData.Gears[gear].Ratio;
+			if (double.IsNaN(ratio)) {
+				ratio = ModelData.Gears[gear].TorqueConverterRatio;
+			}
+			var torqueGbxIn = outTorque / ratio;
+			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ratio) / 2;
 			var shiftLossEnergy = torqueGbxIn * deltaClutchSpeed * ModelData.PowershiftShiftTime;
 
 			return shiftLossEnergy.Abs();

@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (!dryRun && BrakePower < 0) {
-				throw new VectoSimulationException("Negative Braking Power is not allowed!");
+				throw new VectoSimulationException("Negative Braking Power is not allowed! P_br: {0}", BrakePower);
 			}
 			CurrentState.SetState(outTorque + brakeTorque, outAngularVelocity, outTorque, outAngularVelocity);
 
