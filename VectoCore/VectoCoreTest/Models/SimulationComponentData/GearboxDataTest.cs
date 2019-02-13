@@ -406,6 +406,48 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.IsFalse(lookupExt.Extrapolated);
 		}
 
+		[TestCase()]
+		public void TestLossMapExtensionNegativeRegressionSlope()
+		{
+			var entries = new[] {
+				"Input Speed [rpm],Input Torque [Nm],Torque Loss [Nm] # this is a comment",
+				"200,-2500,60",
+				"200,0,30",
+				"200,100,35",
+				"200,200,40",
+				"200,500,32",
+				"200,1000,30",
+				"200,2000,25",
+				"200,2500,23",
+				"500,-2500,60",
+				"500,0,35",
+				"500,2500,23"
+			};
+			var mstream = new MemoryStream();
+			var writer = new StreamWriter(mstream);
+			
+			foreach (var entry in entries) {
+				writer.WriteLine(entry);
+			}
+			writer.Flush();
+			mstream.Flush();
+			mstream.Seek(0, SeekOrigin.Begin);
+			
+			var lossMap = TransmissionLossMapReader.Create(VectoCSVFile.ReadStream(mstream), 1.0, "TestGear", true);
+
+			var validation = lossMap.Validate(ExecutionMode.Declaration, GearboxType.AMT, false);
+
+			Assert.AreEqual(0, validation.Count);
+
+			var lookup1 = lossMap.GetTorqueLoss(200.RPMtoRad(), 500.SI<NewtonMeter>());
+			Assert.IsFalse(lookup1.Extrapolated);
+			Assert.AreEqual(31.8725, lookup1.Value.Value(), 1e-3);
+
+			var lookup2 = lossMap.GetTorqueLoss(200.RPMtoRad(), 7000.SI<NewtonMeter>());
+			Assert.IsFalse(lookup2.Extrapolated);
+			Assert.AreEqual(23, lookup2.Value.Value());
+		}
+
 	}
 
 }
