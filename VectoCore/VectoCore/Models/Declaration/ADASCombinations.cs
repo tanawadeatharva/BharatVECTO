@@ -35,6 +35,7 @@ using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -104,6 +105,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			return Lookup(
 				adas.EngineStopStart, adas.EcoRollWitoutEngineStop, adas.EcoRollWithEngineStop, adas.PredictiveCruiseControl);
+		}
+
+		internal ADASCombination Lookup(VehicleData.ADASData adas)
+		{
+			return Lookup(
+				adas.EngineStopStart, adas.EcoRollWithoutEngineStop, adas.EcoRollWithEngineStop, adas.PredictiveCruiseControl);
 		}
 	}
 }

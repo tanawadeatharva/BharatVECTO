@@ -378,6 +378,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_TC_out] = CurrentState.OutTorque * avgOutVelocity;
 			container[ModalResultField.P_TC_loss] = CurrentState.InTorque * avgInVelocity -
 													CurrentState.OutTorque * avgOutVelocity;
+			container[ModalResultField.P_TC_in] = CurrentState.InTorque * avgInVelocity;
 		}
 
 		protected override void DoCommitSimulationStep()
