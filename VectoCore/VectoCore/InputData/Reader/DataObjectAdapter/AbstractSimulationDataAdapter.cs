@@ -129,6 +129,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				ModelName = data.Model,
 				Date = data.Date,
 				CertificationNumber = data.CertificationNumber,
+				CertificationMethod = CertificationMethod.Measured,
 				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 				Displacement = data.Displacement,
 				IdleSpeed = data.IdleSpeed,

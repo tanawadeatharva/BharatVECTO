@@ -182,20 +182,29 @@ namespace TUGraz.VectoCore.Tests.Reports
 		private void AssertSumDataFormat(string sumFilename)
 		{
 			var first = 2;
+			var sumContainer = new SummaryDataContainer(null);
+			var ranges = new[] {
+				Tuple.Create(SummaryDataContainer.SPEED, SummaryDataContainer.BRAKING_TIME_SHARE)
+			};
 			foreach (var line in File.ReadLines(sumFilename)) {
 				if (first > 0) {
 					first--;
 					continue;
 				}
 				var parts = line.Split(',');
-				for (var i = 56; i < 128; i++) {
-					if (i >= parts.Length || string.IsNullOrWhiteSpace(parts[i])) {
-						continue;
+				foreach (var range in ranges) {
+					for (var i = sumContainer.Table.Columns.IndexOf(range.Item1);
+						i <= sumContainer.Table.Columns.IndexOf(range.Item2);
+						i++) {
+						if (i >= parts.Length || string.IsNullOrWhiteSpace(parts[i])) {
+							continue;
+						}
+
+						var numParts = parts[i].Split('.');
+						Assert.AreEqual(2, numParts.Length);
+						Assert.IsTrue(numParts[0].Length > 0);
+						Assert.AreEqual(4, numParts[1].Length);
 					}
-					var numParts = parts[i].Split('.');
-					Assert.AreEqual(2, numParts.Length);
-					Assert.IsTrue(numParts[0].Length > 0);
-					Assert.AreEqual(4, numParts[1].Length);
 				}
 			}
 		}
