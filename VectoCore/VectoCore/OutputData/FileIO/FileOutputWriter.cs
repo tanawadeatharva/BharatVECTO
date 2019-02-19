@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 		public void WriteSumData(DataTable data)
 		{
-			VectoCSVFile.Write(SumFileName, data, true);
+			VectoCSVFile.Write(SumFileName, data, true, true);
 		}
 
 		public string GetModDataFileName(string runName, string cycleName, string runSuffix)

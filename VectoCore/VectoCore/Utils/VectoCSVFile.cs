@@ -31,6 +31,7 @@
 
 using Microsoft.VisualBasic.FileIO;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -62,6 +63,7 @@ namespace TUGraz.VectoCore.Utils
 		private static readonly Regex HeaderFilter = new Regex(@"\[.*?\]|\<|\>", RegexOptions.Compiled);
 		private const string Delimiter = ",";
 		private const string Comment = "#";
+		private const string DigestValuePrefix = "#@";
 
 		/// <summary>
 		/// Reads a CSV file which is stored in Vecto-CSV-Format.
@@ -175,10 +177,11 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="fileName">Path to the file.</param>
 		/// <param name="table">The Datatable.</param>
 		/// <param name="addVersionHeader"></param>
-		public static void Write(string fileName, DataTable table, bool addVersionHeader = false)
+		/// <param name="addDigest"></param>
+		public static void Write(string fileName, DataTable table, bool addVersionHeader = false, bool addDigest = false)
 		{
 			using (var sw = new StreamWriter(new FileStream(fileName, FileMode.Create), Encoding.UTF8)) {
-				Write(sw, table, addVersionHeader);
+				Write(sw, table, addVersionHeader, addDigest);
 			}
 		}
 
@@ -190,21 +193,24 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="writer"></param>
 		/// <param name="table"></param>
 		/// <param name="addVersionHeader"></param>
-		public static void Write(StreamWriter writer, DataTable table, bool addVersionHeader = false)
+		/// <param name="addDigest"></param>
+		public static void Write(StreamWriter writer, DataTable table, bool addVersionHeader = false, bool addDigest = false)
 		{
 			if (writer == null) {
 				return;
 			}
+
+			var entries = new List<string>();
 			if (addVersionHeader) {
 				try {
-					writer.WriteLine("# VECTO {0} - {1}", VectoSimulationCore.VersionNumber,
-						DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
+					entries.Add(string.Format("# VECTO {0} - {1}", VectoSimulationCore.VersionNumber,
+						DateTime.Now.ToString("dd.MM.yyyy HH:mm")));
 				} catch (Exception) {
-					writer.WriteLine("# VECTO {0} - {1}", "Unknown", DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
+					entries.Add(string.Format("# VECTO {0} - {1}", "Unknown", DateTime.Now.ToString("dd.MM.yyyy HH:mm")));
 				}
 			}
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
-			writer.WriteLine(string.Join(Delimiter, header));
+			entries.Add(string.Join(Delimiter, header));
 
 			var columnFormatter = new Func<ConvertedSI, string>[table.Columns.Count];
 			for (var i = 0; i < table.Columns.Count; i++) {
@@ -221,21 +227,30 @@ namespace TUGraz.VectoCore.Utils
 				var formattedList = new string[items.Length];
 				for (var i = 0; i < items.Length; i++) {
 
-                    if (items[i] is SI) {
-                        formattedList[i] = columnFormatter[i]((SI)items[i]);
+					if (items[i] is SI) {
+						formattedList[i] = columnFormatter[i]((SI)items[i]);
 					} else if (items[i] is ConvertedSI) {
 						// todo mk-2017-10-02: maybe we also have to use decimals and showUnit from columnFormatter here?
 						formattedList[i] = columnFormatter[i]((ConvertedSI)items[i]);
 					} else {
-                        formattedList[i] = string.Format(CultureInfo.InvariantCulture, "{0}", items[i]);
-                    }
+						formattedList[i] = string.Format(CultureInfo.InvariantCulture, "{0}", items[i]);
+					}
 
-                    // if a string contains a "," then it has to be contained in quotes in order to be correctly recognized in a CSV file.
+					// if a string contains a "," then it has to be contained in quotes in order to be correctly recognized in a CSV file.
 					if (formattedList[i].Contains(Delimiter)) {
 						formattedList[i] = string.Format("\"{0}\"", formattedList[i]);
 					}
 				}
-				writer.WriteLine(string.Join(Delimiter, formattedList));
+				entries.Add(string.Join(Delimiter, formattedList));
+			}
+
+			if (addDigest) {
+				var digest = DataIntegrityHelper.ComputeDigestValue(entries.Where(x => !x.StartsWith(DigestValuePrefix)).ToArray());
+				entries.Add(string.Format("{0} {1}", DigestValuePrefix, digest));
+			}
+
+			foreach (var entry in entries) {
+				writer.WriteLine(entry);
 			}
 		}
 	}
