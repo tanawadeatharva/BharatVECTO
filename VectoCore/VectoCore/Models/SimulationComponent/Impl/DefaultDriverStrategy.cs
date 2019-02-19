@@ -818,17 +818,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// handle the SpeedLimitExceeded Response and Gearshift Response separately in case it occurs in one of the requests in the second try
-			response.Switch().Case<ResponseGearShift>(
+			for (var i = 0; i < 3 && (response is ResponseGearShift || response is ResponseSpeedLimitExceeded); i++) {
+				response.Switch()
+				.Case<ResponseGearShift>(
 						r => { response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient); })
-					.Case<ResponseSpeedLimitExceeded>(
-						() => {
-							response = Driver.DrivingActionBrake(
-								absTime, ds, DataBus.VehicleSpeed,
-								gradient);
-							if (response is ResponseOverload && !DataBus.ClutchClosed(absTime)) {
-								response = Driver.DrivingActionRoll(absTime, ds, DataBus.VehicleSpeed, gradient);
-							}
-						});
+				.Case<ResponseSpeedLimitExceeded>(
+					() => {
+						response = Driver.DrivingActionBrake(
+							absTime, ds, DataBus.VehicleSpeed,
+							gradient);
+						if (response is ResponseOverload && !DataBus.ClutchClosed(absTime)) {
+							response = Driver.DrivingActionRoll(absTime, ds, DataBus.VehicleSpeed, gradient);
+						}
+					});
+			}
+
 			return response;
 		}
 
