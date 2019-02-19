@@ -77,6 +77,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Algorithms\CSVDigestValueTest.cs" />
     <Compile Include="Algorithms\MeanShiftClusteringTest.cs" />
     <Compile Include="Dummy\EngineFLDTest.cs" />
     <Compile Include="Exceptions\ExceptionTests.cs" />
