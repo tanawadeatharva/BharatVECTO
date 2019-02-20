@@ -48,7 +48,9 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 using System.IO;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Tests.Models.Simulation;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
@@ -143,6 +145,76 @@ namespace TUGraz.VectoCore.Tests.Reports
 		public void TestFullCycleModDataIntegrityMT(string jobName)
 		{
 			RunSimulation(jobName, ExecutionMode.Engineering);	
+		}
+
+		[TestCase(@"TestData\XML\XMLReaderDeclaration\Tractor_4x2_vehicle-class-5_5_t_0.xml", 1, 1.0),
+		]
+		public void TractionInterruptionTest(string filename, int idx, double expectedTractionInterruption)
+		{
+			var writer = new FileOutputWriter(filename);
+			var inputData = new XMLDeclarationInputDataProvider(filename, true); 
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+			};
+			var jobContainer = new JobContainer(new MockSumWriter());
+
+			jobContainer.AddRuns(factory);
+
+			var run = jobContainer.Runs[idx];
+			var modData = ((ModalDataContainer)run.Run.GetContainer().ModalData).Data;
+
+			run.Run.Run();
+
+			//Assert.IsTrue(run.Done);
+			//Assert.IsTrue(run.Success);
+			Assert.IsTrue(modData.Rows.Count > 0);
+
+			var tractionInterruptionTimes = ExtractTractionInterruptionTimes(modData);
+
+			var min = tractionInterruptionTimes.Values.Min();
+			var max = tractionInterruptionTimes.Values.Max();
+
+			Console.WriteLine("number of traction interruption intervals: {0}", tractionInterruptionTimes.Count);
+			var exceeding = tractionInterruptionTimes.Where(x => x.Value.IsGreater(expectedTractionInterruption, 0.1)).ToList();
+			Console.WriteLine("number of traction interruption times exceeding specified interval: {0}", exceeding.Count());
+			if (exceeding.Count > 0) {
+				foreach (var e in exceeding) {
+					Console.WriteLine("{0} : {1}", e.Key, e.Value);
+				}
+			}
+
+			Assert.IsTrue(min.IsEqual(expectedTractionInterruption, 0.05), "minimum traction interruption time: {0}", min);
+			Assert.IsTrue(max.IsEqual(expectedTractionInterruption, 0.1), "maximum traction interruption time: {0}", max);
+
+			
+		}
+
+		private Dictionary<Second, Second> ExtractTractionInterruptionTimes(ModalResults modData)
+		{
+			var retVal = new Dictionary<Second, Second>();
+
+			Second tracStart = null;
+			foreach (DataRow row in modData.Rows) {
+				var velocity = (MeterPerSecond)row[(int)ModalResultField.v_act];
+				if (velocity.IsEqual(0)) {
+					tracStart = null;
+					continue;
+				}
+
+				var gear = (uint)row[(int)ModalResultField.Gear];
+				var absTime = (Second)row[(int)ModalResultField.time];
+				var dt = (Second)row[(int)ModalResultField.simulationInterval];
+				if (gear == 0 && tracStart == null) {
+					tracStart = absTime - dt / 2.0;
+				}
+				if (gear != 0 && tracStart != null) {
+					var tracEnd = absTime - dt / 2.0;
+					retVal[absTime] =(tracEnd - tracStart);
+					tracStart = null;
+				}
+			}
+
+			return retVal;
 		}
 
 
