@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool ClutchClosed(Second absTime)
 		{
-			return _engageTime.IsSmallerOrEqual(absTime);
+			return _engageTime.IsSmallerOrEqual(absTime, ModelData.TractionInterruption / 20);
 		}
 
 		public Gearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData) : base(container, runData)
