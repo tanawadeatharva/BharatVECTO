@@ -10,6 +10,18 @@ Software Requirements
 
    + Microsoft .NET Framework 4.5
 
+##Installation Options
+
+VECTO is distributed as a portable application. This means you can simply unzip the archive and directly execute it. This, however, requires write and execute permissions for the VECTO application directory.
+
+In case you do not have execute permissions, please ask your system administrator to install VECTO into an appropriate directory (e.g. under `C:\Program Files`). Installing VECTO requires the following two steps:
+
+  + Copy the VECTO directory and all its files and subdirectories to the appropriate location
+  + Edit the file `install.ini` and remove the comment character (#) in the line containing `ExecutionMode = install` 
+
+If the ExecutionMode is set to `install` (this is also possible when running VECTO from an arbitrary directory), VECTO does not write its configuration files and log files to the application directory but to the directories `%APPDATA%` and `%LOCALAPPDATA%` (usually `C:\Users\<username>\AppData\Roaming` and `C:\Users\<username>\AppData\Local`).
+
+**Important:** If the ExecutionMode is set to `install` it is necessary that you copy the generic VECTO models distributed with VECTO to a location where you have write permissions as VECTO writes the results to the same directory as the job file.
 
 
 User Manual

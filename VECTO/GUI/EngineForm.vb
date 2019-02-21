@@ -133,10 +133,10 @@ Public Class EngineForm
 	End Sub
 
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-		If File.Exists(MyAppPath & "User Manual\help.html") Then
+		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#engine-editor"))
+						String.Format("""file://{0}""", path.Combine(MyAppPath, "User Manual\help.html#engine-editor")))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If

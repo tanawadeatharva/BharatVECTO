@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Utils
 		public static TableData Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			try {
-				using (var fs = new FileStream(fileName, FileMode.Open)) {
+				using (var fs = new StreamReader(File.OpenRead(fileName))) {
 					var retVal = new TableData(fileName);
 					ReadCSV(retVal, fs, ignoreEmptyColumns, fullHeader);
 					return retVal;
@@ -98,11 +98,11 @@ namespace TUGraz.VectoCore.Utils
 			string source = null)
 		{
 			var retVal = new TableData(source, DataSourceType.Embedded);
-			ReadCSV(retVal, stream, ignoreEmptyColumns, fullHeader);
+			ReadCSV(retVal, new StreamReader(stream), ignoreEmptyColumns, fullHeader);
 			return retVal;
 		}
 
-		private static void ReadCSV(DataTable table, Stream stream, bool ignoreEmptyColumns, bool fullHeader)
+		private static void ReadCSV(DataTable table, StreamReader stream, bool ignoreEmptyColumns, bool fullHeader)
 		{
 			var p = new TextFieldParser(stream) {
 				TextFieldType = FieldType.Delimited,
