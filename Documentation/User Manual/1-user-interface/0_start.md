@@ -16,8 +16,8 @@ VECTO is distributed as a portable application. This means you can simply unzip 
 
 In case you do not have execute permissions, please ask your system administrator to install VECTO into an appropriate directory (e.g. under `C:\Program Files`). Installing VECTO requires the following two steps:
 
-  + copy the VECTO directory and all its files and subdirectories to the appropriate location
-  + edit the file `install.ini` and remove the comment character (#) in the line containing `ExecutionMode = install` 
+  + Copy the VECTO directory and all its files and subdirectories to the appropriate location
+  + Edit the file `install.ini` and remove the comment character (#) in the line containing `ExecutionMode = install` 
 
 If the ExecutionMode is set to `install` (this is also possible when running VECTO from an arbitrary directory), VECTO does not write its configuration files and log files to the application directory but to the directories `%APPDATA%` and `%LOCALAPPDATA%` (usually `C:\Users\<username>\AppData\Roaming` and `C:\Users\<username>\AppData\Local`).
 
