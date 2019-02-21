@@ -12,8 +12,12 @@ Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
 Imports System.Text
+Imports NLog
+Imports NLog.Targets
+Imports NLog.Targets.Wrappers
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.Utils
+
 
 Namespace My
 	' The following events are available for MyApplication:
@@ -46,9 +50,20 @@ Namespace My
 			ReadInstallMode()
 
 			MyConfPath = path.Combine(MyAppPath, CONFIG_FOLDER)
+            MyLogPath = ""
 			if (InstallModeInstalled) Then
 				MyConfPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), APP_DATA_VENDOR_PATH, VectoSimulationCore.VersionNumber, CONFIG_FOLDER)
 				MyLogPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), APP_DATA_VENDOR_PATH, VectoSimulationCore.VersionNumber)
+
+				Dim logTarget As FileTarget = TryCast(LogManager.Configuration.FindTargetByName("LogFile"), FileTarget)
+				if (logTarget is Nothing) Then
+					logTarget = CType(TryCast(LogManager.Configuration.FindTargetByName("LogFile"), WrapperTargetBase).WrappedTarget, FileTarget)
+				End If
+
+				if (Not (logTarget Is Nothing)) then
+					logTarget.FileName = Path.Combine(MyLogPath, "logs", "log.txt")
+					LogManager.ReconfigExistingLoggers()
+				End If
 			End If
 
 			FileHistoryPath = path.Combine(MyConfPath, CONFIG_FILE_HISTORY_FOLDER)
@@ -56,22 +71,22 @@ Namespace My
 			
 
 			'If folder does not exist: Create!
-		    If Not Directory.Exists(MyLogPath) Then
-		        Try
-		            Directory.CreateDirectory(MyLogPath)
-		        Catch ex As Exception
-		            MsgBox("Failed to create directory '" & MyLogPath & "'!", MsgBoxStyle.Critical)
-		            'LogFile.WriteToLog(MessageType.Err, "Failed to create directory '" & MyLogPath & "'!")
-		            e.Cancel = True
-		        End Try
-		    End If
+			If Not String.IsNullOrWhiteSpace(MyLogPath) AndAlso Not Directory.Exists(MyLogPath) Then
+				Try
+					Directory.CreateDirectory(MyLogPath)
+				Catch ex As Exception
+					MsgBox("Failed to create directory '" & MyLogPath & "'!", MsgBoxStyle.Critical)
+					'LogFile.WriteToLog(MessageType.Err, "Failed to create directory '" & MyLogPath & "'!")
+					e.Cancel = True
+				End Try
+			End If
 
-		    'Log
-		    LogFile = New FileLogger
-		    If Not LogFile.StartLog() Then
-		        MsgBox("Error! Can't access log file. Application folder needs read/write permissions!")
-		        e.Cancel = True
-		    End If
+			'Log
+			LogFile = New FileLogger
+			If Not LogFile.StartLog() Then
+				MsgBox("Error! Can't access log file. Application folder needs read/write permissions!")
+				e.Cancel = True
+			End If
 
 			If Not Directory.Exists(MyConfPath) Then
 				Try
