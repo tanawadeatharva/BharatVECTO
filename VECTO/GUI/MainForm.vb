@@ -234,9 +234,9 @@ Imports TUGraz.VectoCore.Utils
 
 
         'FileLists
-        _jobListView = New FileListView(MyConfPath & "joblist.txt")
+        _jobListView = New FileListView(path.Combine(MyConfPath, CONFIG_JOBLIST_FILE))
         _jobListView.LVbox = LvGEN
-        _cycleListView = New FileListView(MyConfPath & "cyclelist.txt")
+        _cycleListView = New FileListView(path.Combine(MyConfPath, CONFIG_CYCLELIST_FILE))
 
         _jobListView.LoadList()
 

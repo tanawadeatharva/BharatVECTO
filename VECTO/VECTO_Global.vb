@@ -17,8 +17,14 @@ Public Module VECTO_Global
 	Public COREvers As String = "NOT FOUND"
 
 	Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
+	public InstallModeInstalled As Boolean = False
 	Public MyAppPath As String
 	Public MyConfPath As String
+	public MyLogPath As String
+
+	public Const CONFIG_JOBLIST_FILE As string =  "joblist.txt"
+	public const CONFIG_CYCLELIST_FILE As string = "cyclelist.txt"
+    public Const FILE_HISTORY_DIR_FILE As string = "Directories.txt"
 
 
 	Public LogFile As FileLogger
@@ -37,9 +43,24 @@ Public Module VECTO_Global
 	Public Class FileLogger
 		Private _logStream As StreamWriter
 
+		Const LOG_FILENAME As string = "LOG.txt"
+		Const BACKUP_LOG_FILENAME As String = "LOG_backup.txt"
+
+		Private logPath as string
+		Private logFile As string
+
+		public sub New()
+			logPath = MyAppPath
+			If (InstallModeInstalled) Then
+				logPath = MyLogPath
+			End If
+			logFile = path.Combine(logPath, LOG_FILENAME)
+		End sub
+
+
 		Public Function StartLog() As Boolean
 			Try
-				_logStream = My.Computer.FileSystem.OpenTextFileWriter(MyAppPath & "LOG.txt", True, FileFormat)
+				_logStream = My.Computer.FileSystem.OpenTextFileWriter(logFile, True, FileFormat)
 				_logStream.AutoFlush = True
 				WriteToLog(MessageType.Normal, "Starting Session " & Now)
 				WriteToLog(MessageType.Normal, "VECTO " & VECTOvers)
@@ -51,14 +72,12 @@ Public Module VECTO_Global
 		End Function
 
 		Public Function SizeCheck() As Boolean
-			Dim logfDetail As FileInfo
-			Dim backUpError As Boolean
 
 			'Start new log if file size limit reached
-			If File.Exists(MyAppPath & "LOG.txt") Then
+			If File.Exists(logFile) Then
 
 				'File size check
-				logfDetail = My.Computer.FileSystem.GetFileInfo(MyAppPath & "LOG.txt")
+				Dim logfDetail As FileInfo = My.Computer.FileSystem.GetFileInfo(logFile)
 
 				'If Log too large: Delete
 				If logfDetail.Length / (2 ^ 20) > Cfg.LogSize Then
@@ -66,11 +85,11 @@ Public Module VECTO_Global
 					WriteToLog(MessageType.Normal, "Starting new logfile")
 					_logStream.Close()
 
-					backUpError = False
+					Dim backUpError As Boolean = False
 
 					Try
-						If File.Exists(MyAppPath & "LOG_backup.txt") Then File.Delete(MyAppPath & "LOG_backup.txt")
-						File.Move(MyAppPath & "LOG.txt", MyAppPath & "LOG_backup.txt")
+						If File.Exists(path.Combine(logPath, BACKUP_LOG_FILENAME)) Then File.Delete(path.Combine(logPath, BACKUP_LOG_FILENAME))
+						File.Move(logFile, path.Combine(logPath, BACKUP_LOG_FILENAME))
 					Catch ex As Exception
 						backUpError = True
 					End Try
@@ -78,9 +97,9 @@ Public Module VECTO_Global
 					If Not StartLog() Then Return False
 
 					If backUpError Then
-						WriteToLog(MessageType.Err, "Failed to backup logfile! (" & MyAppPath & "LOG_backup.txt)")
+						WriteToLog(MessageType.Err, "Failed to backup logfile! (" & Path.Combine(logPath, BACKUP_LOG_FILENAME) & ")")
 					Else
-						WriteToLog(MessageType.Normal, "Logfile restarted. Old log saved to LOG_backup.txt")
+						WriteToLog(MessageType.Normal, "Logfile restarted. Old log saved to " & BACKUP_LOG_FILENAME)
 					End If
 
 				End If
