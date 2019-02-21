@@ -257,10 +257,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Console.WriteLine(string.Join("; ", view.AsEnumerable().Select(x => x[SummaryDataContainer.FCMAP_KM].ToString().ToDouble())));
 			Assert.AreEqual(201.39195, view.Rows[0][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
 			Assert.AreEqual(239.28546, view.Rows[1][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(170.15249, view.Rows[2][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(183.03570, view.Rows[3][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(224.26897, view.Rows[4][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(254.53251, view.Rows[5][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(170.16912, view.Rows[2][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(183.03651, view.Rows[3][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(224.25062, view.Rows[4][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(254.50948, view.Rows[5][SummaryDataContainer.FCMAP_KM].ToString().ToDouble(), 1e-3);
 		}
 
 		[TestCase(EngineSpeedLimitJobATDecl)]
