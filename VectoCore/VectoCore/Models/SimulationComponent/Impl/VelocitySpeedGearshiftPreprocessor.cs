@@ -77,6 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (gearForSpeed == 0) {
 					continue;
 				}
+
 				for (var grad = MinGradient; grad <= MaxGradient; grad += GradientStep) {
 					var gradient = VectoMath.InclinationToAngle(grad / 100.0);
 					gearbox.Disengaged = false;
@@ -100,47 +101,45 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected MeterPerSecond SimulateRollingVehicle(
 			Vehicle vehicle, Radian gradient, IVehicleContainer container)
 		{
-			var simulationInterval = Constants.SimulationSettings.TargetTimeInterval;
+			var simulationInterval = TractionInterruption;
 
 			var acceleration = 0.SI<MeterPerSquareSecond>();
 			var absTime = 0.SI<Second>();
-			while (absTime < TractionInterruption) {
-				var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-				var delta = initialResponse.GearboxPowerRequest;
-				try {
-					var time = absTime;
-					acceleration = SearchAlgorithm.Search(
-						acceleration, delta, Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
-						getYValue: response => {
-							var r = (ResponseDryRun)response;
-							return r.GearboxPowerRequest;
-						},
-						evaluateFunction: acc => {
-							var response = vehicle.Request(time, simulationInterval, acc, gradient, true);
-							response.Acceleration = acc;
-							return response;
-						},
-						criterion: response => {
-							var r = (ResponseDryRun)response;
-							return r.GearboxPowerRequest.Value();
-						},
-						abortCriterion: (response, cnt) => {
-							var r = (ResponseDryRun)response;
-							return r != null && (vehicle.VehicleSpeed + r.Acceleration * simulationInterval) < 0.KMPHtoMeterPerSecond();
-						}
-					);
-					var step = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
-					if (!(step is ResponseSuccess)) {
-						throw new VectoSimulationException("failed to find acceleration for rolling");
+			var initialResponse = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
+			var delta = initialResponse.GearboxPowerRequest;
+			try {
+				var time = absTime;
+				acceleration = SearchAlgorithm.Search(
+					acceleration, delta, Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating,
+					getYValue: response => {
+						var r = (ResponseDryRun)response;
+						return r.GearboxPowerRequest;
+					},
+					evaluateFunction: acc => {
+						var response = vehicle.Request(time, simulationInterval, acc, gradient, true);
+						response.Acceleration = acc;
+						return response;
+					},
+					criterion: response => {
+						var r = (ResponseDryRun)response;
+						return r.GearboxPowerRequest.Value() * 100;
+					},
+					abortCriterion: (response, cnt) => {
+						var r = (ResponseDryRun)response;
+						return r != null && (vehicle.VehicleSpeed + r.Acceleration * simulationInterval) < 0.KMPHtoMeterPerSecond();
 					}
-
-					absTime += simulationInterval;
-				} catch (VectoSearchAbortedException) {
-					return 0.KMPHtoMeterPerSecond();
+				);
+				var step = vehicle.Request(absTime, simulationInterval, acceleration, gradient);
+				if (!(step is ResponseSuccess)) {
+					throw new VectoSimulationException("failed to find acceleration for rolling");
 				}
 
-				container.CommitSimulationStep(absTime, simulationInterval);
+				absTime += simulationInterval;
+			} catch (VectoSearchAbortedException) {
+				return 0.KMPHtoMeterPerSecond();
 			}
+
+			container.CommitSimulationStep(absTime, simulationInterval);
 
 			return vehicle.VehicleSpeed;
 		}
