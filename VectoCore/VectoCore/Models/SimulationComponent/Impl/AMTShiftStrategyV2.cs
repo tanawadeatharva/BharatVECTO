@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (selectedGear < gear && (DownshiftAllowed(absTime) || inAngularVelocity < GetEngineSpeedLimitLow(false))) {
 				_nextGear = selectedGear;
 			}
-			if (selectedGear > gear && (UpshiftAllowed(absTime) || inAngularVelocity > minRating.MaxEngineSpeed)) {
+			if (selectedGear > gear && (UpshiftAllowed(absTime) || inAngularVelocity > GearRatings[gear].MaxEngineSpeed)) {
 				_nextGear = selectedGear;
 			}
 
