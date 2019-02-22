@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using System;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
@@ -13,7 +14,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 	}
 
 
-	internal struct GearRating
+	internal struct GearRating : IComparable
 	{
 		private const double CaseSeparationInterval = 1e5;
 
@@ -47,6 +48,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		public override string ToString()
 		{
 			return string.Format("{0} / {1} ({2})", RatingCase, Rating, NumericValue);
+		}
+
+		public int CompareTo(object obj)
+		{
+			var other = (GearRating)obj;
+			if (other > this) {
+				return -1;
+			}
+
+			if (other < this) {
+				return 1;
+			}
+
+			return 0;
 		}
 	}
 }
