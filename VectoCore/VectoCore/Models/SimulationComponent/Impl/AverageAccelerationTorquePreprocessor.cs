@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -30,21 +31,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			var numTorqueSteps = 100;
 			var entries = new List<KeyValuePair<Tuple<PerSecond, NewtonMeter>, NewtonMeter>>();
 			var speedStepSize = (UpperLimit - Data.EngineData.IdleSpeed) / numSpeedSteps;
-			for (var engineSpeed = Data.EngineData.IdleSpeed;
-				engineSpeed < UpperLimit;
-				engineSpeed += speedStepSize) {
-				for (var torque = 0.SI<NewtonMeter>(); torque < fld.MaxTorque; torque += fld.MaxTorque / numTorqueSteps) {
+			var maxTorque = new Dictionary<PerSecond, NewtonMeter>();
+			for (var engineSpeed = UpperLimit;
+				engineSpeed >= Data.EngineData.IdleSpeed;
+				engineSpeed -= speedStepSize) {
+				maxTorque[engineSpeed] = fld.FullLoadStationaryTorque(engineSpeed);
+			}
 
-					var sum = 0.SI<NewtonMeter>();
-					for (var tmpSpeed = engineSpeed; tmpSpeed < UpperLimit; tmpSpeed += speedStepSize) {
-						sum += VectoMath.Min(torque, fld.FullLoadStationaryTorque(tmpSpeed));
-					}
+			for (var torque = 0.SI<NewtonMeter>(); torque < fld.MaxTorque; torque += fld.MaxTorque / numTorqueSteps) {
+				var sum = 0.SI<NewtonMeter>();
 
-					var tmp = sum * speedStepSize / (UpperLimit - engineSpeed);
-					if (engineSpeed.IsEqual(UpperLimit, speedStepSize / 2)) {
-						tmp = 0.SI<NewtonMeter>();
-					}
+				for (var engineSpeed = UpperLimit ;
+					engineSpeed >= Data.EngineData.IdleSpeed;
+					engineSpeed -= speedStepSize) {
+
+					sum += VectoMath.Min(torque, maxTorque[engineSpeed]); ;
+					var tmp = engineSpeed.IsEqual(UpperLimit, speedStepSize / 2)
+						? 0.SI<NewtonMeter>()
+						: sum * speedStepSize / (UpperLimit - engineSpeed);
 					entries.Add(new KeyValuePair<Tuple<PerSecond, NewtonMeter>, NewtonMeter>(Tuple.Create(engineSpeed, torque), tmp));
+				
 				}
 			}
 
