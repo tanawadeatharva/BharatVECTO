@@ -190,6 +190,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string NUM_AXLES_NON_DRIVEN = "Number axles vehicle non-driven [-]";
 		public const string NUM_AXLES_TRAILER = "Number axles trailer [-]";
 
+		public const string TCU_MODEL = "ShiftStrategy";
+
 		// ReSharper restore InconsistentNaming
 
 		internal readonly DataTable Table;
@@ -264,6 +266,7 @@ namespace TUGraz.VectoCore.OutputData
 					typeof(string)),
 				Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem), typeof(string)),
 				Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem), typeof(string)),
+				Tuple.Create(TCU_MODEL, typeof(string)),
 			}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
 
 			Table.Columns.AddRange(new[] {
@@ -580,6 +583,8 @@ namespace TUGraz.VectoCore.OutputData
 			row[AXLE_MANUFACTURER] = runData.AxleGearData.Manufacturer;
 			row[AXLE_MODEL] = runData.AxleGearData.ModelName;
 			row[AXLE_RATIO] = (ConvertedSI)runData.AxleGearData.AxleGear.Ratio.SI<Scalar>();
+
+			row[TCU_MODEL] = runData.ShiftStrategy;
 
 			WriteAuxTechnologies(runData, row);
 		}

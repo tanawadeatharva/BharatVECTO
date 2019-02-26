@@ -254,10 +254,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				while (SkipGears && currentGear < ModelData.Gears.Count) {
 					currentGear++;
-					var tmpGear = Gearbox.Gear;
-					_gearbox.Gear = currentGear;
-					var response = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
-					_gearbox.Gear = tmpGear;
+					var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
 
 					inAngularVelocity = response.EngineSpeed; //ModelData.Gears[currentGear].Ratio * outAngularVelocity;
 					inTorque = response.ClutchPowerRequest / inAngularVelocity;
@@ -279,30 +276,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// early up shift to higher gear ---------------------------------------
 			if (EarlyShiftUp && currentGear < ModelData.Gears.Count) {
-				// try if next gear would provide enough torque reserve
-				var tryNextGear = currentGear + 1;
-				var tmpGear = Gearbox.Gear;
-				_gearbox.Gear = tryNextGear;
-				var response = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
-				_gearbox.Gear = tmpGear;
+				currentGear = CheckEarlyUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
+			}
+			return currentGear;
+		}
 
-				inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
-				inTorque = response.ClutchPowerRequest / inAngularVelocity;
+		protected virtual uint CheckEarlyUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear)
+		{
+			// try if next gear would provide enough torque reserve
+			var tryNextGear = currentGear + 1;
+			var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
 
-				// if next gear supplied enough power reserve: take it
-				// otherwise take
-				if (!IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
-					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
-					var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+			var inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
+			var inTorque = response.ClutchPowerRequest / inAngularVelocity;
 
-					if (reserve >= ModelData.TorqueReserve) {
-						currentGear = tryNextGear;
-					}
+			// if next gear supplied enough power reserve: take it
+			// otherwise take
+			if (!IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
+				var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
+				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+
+				if (reserve >= ModelData.TorqueReserve) {
+					currentGear = tryNextGear;
 				}
 			}
 			return currentGear;
 		}
 
+		
 		protected virtual uint DoCheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear)
 		{
@@ -311,10 +312,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				currentGear--;
 				while (SkipGears && currentGear > 1) {
 					currentGear--;
-					var tmpGear = Gearbox.Gear;
-					_gearbox.Gear = currentGear;
-					var response = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
-					_gearbox.Gear = tmpGear;
+					var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
 
 					inAngularVelocity = ModelData.Gears[currentGear].Ratio * outAngularVelocity;
 					inTorque = response.ClutchPowerRequest / inAngularVelocity;
@@ -331,6 +329,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 			return currentGear;
+		}
+
+		protected ResponseDryRun RequestDryRunWithGear(
+			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint tryNextGear)
+		{
+			var tmpGear = Gearbox.Gear;
+			_gearbox.Gear = tryNextGear;
+			var response = (ResponseDryRun)_gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+			_gearbox.Gear = tmpGear;
+			return response;
 		}
 	}
 }
