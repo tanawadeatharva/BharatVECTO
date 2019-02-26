@@ -269,10 +269,11 @@ Public Class JSONFileWriter
         body.Add("VehicleFile", GetRelativePath(job.Vehicle.Source, basePath))
         body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.EngineInputData.Source, basePath))
         body.Add("GearboxFile", GetRelativePath(input.JobInputData.Vehicle.GearboxInputData.Source, basePath))
-        if not job.SavedInDeclarationMode then
+        if not job.SavedInDeclarationMode AndAlso Not(input.GearshiftInputData is Nothing) then
             body.Add("TCU", GetRelativePath(input.GearshiftInputData.Source, basePath))
         end if
-        
+        body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy)
+
         Dim aux As IAuxiliariesEngineeringInputData = job.Vehicle.AuxiliaryInputData()
         'AA-TB
         'ADVANCED AUXILIARIES 

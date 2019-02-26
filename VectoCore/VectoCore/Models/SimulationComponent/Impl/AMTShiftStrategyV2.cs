@@ -63,6 +63,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			PowertrainConfig = data;
 			ShiftStrategyParameters = data.GearshiftParameters;
+			if (ShiftStrategyParameters == null) {
+				throw new VectoException("Parameters for shift strategy missing!");
+			}
 
 			// create a dummy powertrain for pre-processing and estimatins
 			var modData = new ModalDataContainer(data, null, null, false);
@@ -272,8 +275,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									PowertrainConfig.EngineData.FullLoadCurves[0].N95hSpeed;
 
 			if (!(gradientBelowMaxGrad && engineSpeedAboveMin && engineSpeedBelowMax)) {
-				
-				return new GearRating(GearRatingCase.E, 0, null); ;
+				return new GearRating(GearRatingCase.E, 0, null); 
 			}
 
 			return RatingGear(
@@ -709,6 +711,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			get { return new GearInfo(_nextGear, true); }
 		}
+
+		public static string Name { get { return "ACEA TCU"; } }
 
 		#endregion
 

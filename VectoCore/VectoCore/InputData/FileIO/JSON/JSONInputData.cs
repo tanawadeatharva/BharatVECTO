@@ -356,6 +356,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return _jobname; }
 		}
 
+		public string ShiftStrategy
+		{
+			get {
+				if (Body["ShiftStrategy"] == null) {
+					return "";
+				}
+
+				return Body.GetEx<string>("ShiftStrategy");
+			}
+		}
+
 		#endregion
 
 		#region DriverInputData

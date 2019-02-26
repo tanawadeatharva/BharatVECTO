@@ -158,6 +158,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return ""; }
 		}
 
+		public string ShiftStrategy
+		{
+			get { return ""; }
+		}
+
 		public bool ExemptedVehicle { get { return false; } }
 
 		public string VIN

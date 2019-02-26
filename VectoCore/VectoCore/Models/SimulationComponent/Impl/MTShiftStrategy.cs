@@ -41,5 +41,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			EarlyShiftUp = false;
 			SkipGears = true;
 		}
+
+		public new static string Name { get { return "MT Shift Strategy"; } }
 	}
 }

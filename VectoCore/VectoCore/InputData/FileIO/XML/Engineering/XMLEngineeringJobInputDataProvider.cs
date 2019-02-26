@@ -155,6 +155,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			}
 		}
 
+		public string ShiftStrategy { get { return ""; } }
+
 		public double TorqueReserve
 		{
 			get {

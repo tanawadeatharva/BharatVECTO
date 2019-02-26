@@ -44,6 +44,9 @@ namespace TUGraz.VectoCommon.InputData
 		IVehicleDeclarationInputData Vehicle { get; }
 
 		string JobName { get; }
+
+		string ShiftStrategy { get; }
+
 	}
 
 	public interface IComponentInputData

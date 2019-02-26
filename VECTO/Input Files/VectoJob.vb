@@ -73,6 +73,7 @@ Public Class VectoJob
     Public EcoRollOn As Boolean
 
     Public LookAheadMinSpeed As Double
+    Private _shiftStrategy As String
 
     Public Property StartStopMaxSpeed As Double
 
@@ -543,6 +544,15 @@ Public Class VectoJob
         Get
             Return Path.GetFileNameWithoutExtension(FilePath)
         End Get
+    End Property
+
+    Public Property ShiftStrategy As String Implements IDeclarationJobInputData.ShiftStrategy
+    Get
+            Return _shiftStrategy
+    End Get
+        set (value as string)
+            _shiftStrategy = value
+        End set
     End Property
 
     Public Property AuxPAdd As Double

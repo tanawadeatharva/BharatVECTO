@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Meter MaxDistance { get; set; }
 	}
 
-	internal class ResponseDryRun : AbstractResponse
+	public class ResponseDryRun : AbstractResponse
 	{
 		public Watt DeltaFullLoad { get; set; }
 		public Watt DeltaDragLoad { get; set; }

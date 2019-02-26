@@ -35,6 +35,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -63,7 +64,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return new GearInfo(_nextGear.Gear, _nextGear.TorqueConverterLocked); }
 		}
 
-		public ATShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus) {}
+		public static string Name { get { return "Classic AT shift strategy"; } }
+
+		public ATShiftStrategy(VectoRunData data, IDataBus dataBus) : base(data.GearboxData, dataBus) {}
 
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity)
 		{

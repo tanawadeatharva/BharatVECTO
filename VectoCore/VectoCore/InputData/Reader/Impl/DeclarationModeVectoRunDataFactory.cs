@@ -225,7 +225,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							: _ptoTransmissionData,
 						InputDataHash = InputDataProvider.XMLHash,
 							SimulationType = SimulationType.DistanceCycle,
-						GearshiftParameters = _gearshiftData
+						GearshiftParameters = _gearshiftData,
+						ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
 					};
 					simulationRunData.EngineData.FuelConsumptionCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
 																						mission.MissionType.GetNonEMSMissionType(), _engineData.WHTCRural, _engineData.WHTCUrban,

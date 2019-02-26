@@ -47,5 +47,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 		public double TargetSpeedDeviationFactor { get; set; }
 		public double RatingFactorCurrentGear { get; set; }
 		public MeterPerSquareSecond DriverAccelerationThresholdLow { get; set; }
+		public double RatioEarlyDownshiftFC { get; set; }
+		public double RatioEarlyUpshiftFC { get; set; }
 	}
 }

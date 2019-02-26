@@ -417,5 +417,7 @@ namespace TUGraz.VectoCommon.InputData
 		string Source { get; }
 		Second DriverAccelerationLookBackInterval { get; }
 		MeterPerSquareSecond DriverAccelerationThresholdLow { get; }
+		double RatioEarlyUpshiftFC { get; }
+		double RatioEarlyDownshiftFC { get; }
 	}
 }

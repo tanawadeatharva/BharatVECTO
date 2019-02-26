@@ -61,5 +61,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			get { return GetAttributeValue("", XMLNames.Component_ID_Attr); }
 		}
+
+		public string ShiftStrategy { get { return ""; } }
 	}
 }
