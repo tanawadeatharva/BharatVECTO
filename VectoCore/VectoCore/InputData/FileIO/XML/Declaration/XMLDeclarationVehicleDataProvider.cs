@@ -260,14 +260,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		}
 
 		public bool VocationalVehicle { get {
-			return ElementExists(XMLNames.Vehicle_VocationalVehicle)
-				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_VocationalVehicle))
-				: DeclarationData.Vehicle.VocationalVehicleDefault;
+			return XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_VocationalVehicle));
 		} }
 		public bool SleeperCab { get {
-			return ElementExists(XMLNames.Vehicle_SleeperCab)
-				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_SleeperCab))
-				: DeclarationData.Vehicle.SleeperCabDefault;
+			return XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_SleeperCab));
 		} }
 		public TankSystem? TankSystem { get {
 			return ElementExists(XMLNames.Vehicle_NgTankSystem)
@@ -278,19 +274,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get { return this; } }
 
 		public bool ZeroEmissionVehicle { get {
-			return ElementExists(XMLNames.Vehicle_ZeroEmissionVehicle)
-				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_ZeroEmissionVehicle))
-				: DeclarationData.Vehicle.ZeroEmissionVehicleDefault;
+			return XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_ZeroEmissionVehicle));
 		} }
 		public bool HybridElectricHDV { get {
-			return ElementExists(XMLNames.Vehicle_HybridElectricHDV)
-				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_HybridElectricHDV))
-				: DeclarationData.Vehicle.HybridElectricHDVDefault;
+			return  XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_HybridElectricHDV));
 		} }
 		public bool DualFuelVehicle { get {
-			return ElementExists(XMLNames.Vehicle_DualFuelVehicle)
-				? XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_DualFuelVehicle))
-				: DeclarationData.Vehicle.DualFuelVehicleDefault;
+			return XmlConvert.ToBoolean(GetElementValue(XMLNames.Vehicle_DualFuelVehicle));
 		} }
 		public Watt MaxNetPower1 { get {
 			return ElementExists(XMLNames.Vehicle_MaxNetPower1)
@@ -306,28 +296,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
 		public bool EngineStopStart { get {
-			return ElementExists(XMLNames.Vehicle_ADAS)
-				? XmlConvert.ToBoolean(GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_EngineStopStart)))
-				: DeclarationData.Vehicle.ADAS.EngineStopStartDefault;
+			return  XmlConvert.ToBoolean(GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_EngineStopStart)));
 		} }
 		public bool EcoRollWitoutEngineStop { get {
-			return ElementExists(XMLNames.Vehicle_ADAS)
-				? XmlConvert.ToBoolean(GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop)))
-				: DeclarationData.Vehicle.ADAS.EcoRollWitoutEngineStop;
+			return XmlConvert.ToBoolean(GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop)));
 		} }
 		public bool EcoRollWithEngineStop { get {
-			return ElementExists(XMLNames.Vehicle_ADAS)
-				? XmlConvert.ToBoolean(GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart)))
-				: DeclarationData.Vehicle.ADAS.EcoRollWithEngineStop;
+			return XmlConvert.ToBoolean(GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart)));
 		} }
 
 		public PredictiveCruiseControlType PredictiveCruiseControl
 		{
 			get {
-				return ElementExists(XMLNames.Vehicle_ADAS)
-					? PredictiveCruiseControlTypeHelper.Parse(
-						GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_PCC)))
-					: DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault;
+				return PredictiveCruiseControlTypeHelper.Parse(GetElementValue(Helper.Query(XMLNames.Vehicle_ADAS, XMLNames.Vehicle_ADAS_PCC)));
 			}
 		}
 
