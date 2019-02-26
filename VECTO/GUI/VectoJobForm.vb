@@ -24,6 +24,7 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.Simulation.Impl
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
@@ -94,6 +95,9 @@ Public Class VectoJobForm
         'AA-TB
         PopulateAdvancedAuxiliaries()
 
+        cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(Nothing).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
+        cbGearshiftStrategy.DisplayMember = "Label"
+        cbGearshiftStrategy.ValueMember = "Value"
         'Attempt to select that found in Config
     End Sub
 
@@ -443,7 +447,11 @@ Public Class VectoJobForm
         TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.Source, _basePath)
         TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.EngineInputData.Source, _basePath)
         TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.GearboxInputData.Source, _basePath)
-        TbShiftStrategyParams.Text = GetRelativePath(inputData.GearshiftInputData.Source, _basePath)
+        if (inputData.GearshiftInputData Is Nothing) Then
+            TbShiftStrategyParams.Text = ""
+            else
+                TbShiftStrategyParams.Text = GetRelativePath(inputData.GearshiftInputData.Source, _basePath)
+        End If
 
         'Start/Stop
         Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
@@ -545,6 +553,12 @@ Public Class VectoJobForm
         End If
         '-------------------------------------------------------------
 
+        cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(inputData.JobInputData.Vehicle.GearboxInputData.Type).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
+        cbGearshiftStrategy.DisplayMember = "Label"
+        cbGearshiftStrategy.ValueMember = "Value"
+        cbGearshiftStrategy.SelectedValue = inputData.JobInputData.ShiftStrategy
+
+
         DeclInit()
 
 
@@ -617,6 +631,7 @@ Public Class VectoJobForm
 
         vectoJob.PathGbx = TbGBX.Text
         vectoJob.PathShiftParams = TbShiftStrategyParams.Text
+        vectoJob.ShiftStrategy = cbGearshiftStrategy.SelectedValue.ToString()
 
         'a_DesMax
         vectoJob.DesMaxFile = TbDesMaxFile.Text

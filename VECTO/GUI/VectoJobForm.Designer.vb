@@ -28,6 +28,9 @@ Partial Class VectoJobForm
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(VectoJobForm))
         Me.TabPgGen = New System.Windows.Forms.TabPage()
+        Me.TbShiftStrategyParams = New System.Windows.Forms.TextBox()
+        Me.BtnShiftParamsForm = New System.Windows.Forms.Button()
+        Me.BtnShiftStrategyParams = New System.Windows.Forms.Button()
         Me.GrCycles = New System.Windows.Forms.GroupBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.LvCycles = New System.Windows.Forms.ListView()
@@ -129,9 +132,8 @@ Partial Class VectoJobForm
         Me.TbMass = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
-        Me.TbShiftStrategyParams = New System.Windows.Forms.TextBox()
-        Me.BtnShiftParamsForm = New System.Windows.Forms.Button()
-        Me.BtnShiftStrategyParams = New System.Windows.Forms.Button()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.cbGearshiftStrategy = New System.Windows.Forms.ComboBox()
         Me.TabPgGen.SuspendLayout
         Me.GrCycles.SuspendLayout
         Me.GrAux.SuspendLayout
@@ -150,6 +152,7 @@ Partial Class VectoJobForm
         Me.CmOpenFile.SuspendLayout
         CType(Me.PicVehicle,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.GroupBox3.SuspendLayout
         Me.SuspendLayout
         '
         'TabPgGen
@@ -175,6 +178,36 @@ Partial Class VectoJobForm
         Me.TabPgGen.TabIndex = 0
         Me.TabPgGen.Text = "General"
         Me.TabPgGen.UseVisualStyleBackColor = true
+        '
+        'TbShiftStrategyParams
+        '
+        Me.TbShiftStrategyParams.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.TbShiftStrategyParams.Location = New System.Drawing.Point(85, 87)
+        Me.TbShiftStrategyParams.Name = "TbShiftStrategyParams"
+        Me.TbShiftStrategyParams.Size = New System.Drawing.Size(411, 20)
+        Me.TbShiftStrategyParams.TabIndex = 12
+        '
+        'BtnShiftParamsForm
+        '
+        Me.BtnShiftParamsForm.Location = New System.Drawing.Point(7, 87)
+        Me.BtnShiftParamsForm.Name = "BtnShiftParamsForm"
+        Me.BtnShiftParamsForm.Size = New System.Drawing.Size(72, 21)
+        Me.BtnShiftParamsForm.TabIndex = 11
+        Me.BtnShiftParamsForm.TabStop = false
+        Me.BtnShiftParamsForm.Text = "Shift Parameters"
+        Me.BtnShiftParamsForm.UseVisualStyleBackColor = true
+        '
+        'BtnShiftStrategyParams
+        '
+        Me.BtnShiftStrategyParams.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.BtnShiftStrategyParams.Image = CType(resources.GetObject("BtnShiftStrategyParams.Image"),System.Drawing.Image)
+        Me.BtnShiftStrategyParams.Location = New System.Drawing.Point(497, 85)
+        Me.BtnShiftStrategyParams.Name = "BtnShiftStrategyParams"
+        Me.BtnShiftStrategyParams.Size = New System.Drawing.Size(24, 24)
+        Me.BtnShiftStrategyParams.TabIndex = 13
+        Me.BtnShiftStrategyParams.TabStop = false
+        Me.BtnShiftStrategyParams.UseVisualStyleBackColor = true
         '
         'GrCycles
         '
@@ -533,13 +566,14 @@ Partial Class VectoJobForm
         '
         'TabPgDriver
         '
+        Me.TabPgDriver.Controls.Add(Me.GroupBox3)
         Me.TabPgDriver.Controls.Add(Me.GrVACC)
         Me.TabPgDriver.Controls.Add(Me.GrLAC)
         Me.TabPgDriver.Controls.Add(Me.GroupBox1)
         Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
         Me.TabPgDriver.Name = "TabPgDriver"
         Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgDriver.Size = New System.Drawing.Size(527, 487)
+        Me.TabPgDriver.Size = New System.Drawing.Size(527, 512)
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver Model"
         Me.TabPgDriver.UseVisualStyleBackColor = true
@@ -1160,35 +1194,23 @@ Partial Class VectoJobForm
         Me.lblEngineCharacteristics.Size = New System.Drawing.Size(0, 13)
         Me.lblEngineCharacteristics.TabIndex = 37
         '
-        'TbShiftStrategyParams
+        'GroupBox3
         '
-        Me.TbShiftStrategyParams.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.TbShiftStrategyParams.Location = New System.Drawing.Point(85, 87)
-        Me.TbShiftStrategyParams.Name = "TbShiftStrategyParams"
-        Me.TbShiftStrategyParams.Size = New System.Drawing.Size(411, 20)
-        Me.TbShiftStrategyParams.TabIndex = 12
+        Me.GroupBox3.Controls.Add(Me.cbGearshiftStrategy)
+        Me.GroupBox3.Location = New System.Drawing.Point(9, 347)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(514, 50)
+        Me.GroupBox3.TabIndex = 4
+        Me.GroupBox3.TabStop = false
+        Me.GroupBox3.Text = "Gearshift Strategy"
         '
-        'BtnShiftParamsForm
+        'cbGearshiftStrategy
         '
-        Me.BtnShiftParamsForm.Location = New System.Drawing.Point(7, 87)
-        Me.BtnShiftParamsForm.Name = "BtnShiftParamsForm"
-        Me.BtnShiftParamsForm.Size = New System.Drawing.Size(72, 21)
-        Me.BtnShiftParamsForm.TabIndex = 11
-        Me.BtnShiftParamsForm.TabStop = false
-        Me.BtnShiftParamsForm.Text = "Shift Parameters"
-        Me.BtnShiftParamsForm.UseVisualStyleBackColor = true
-        '
-        'BtnShiftStrategyParams
-        '
-        Me.BtnShiftStrategyParams.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.BtnShiftStrategyParams.Image = CType(resources.GetObject("BtnShiftStrategyParams.Image"),System.Drawing.Image)
-        Me.BtnShiftStrategyParams.Location = New System.Drawing.Point(497, 85)
-        Me.BtnShiftStrategyParams.Name = "BtnShiftStrategyParams"
-        Me.BtnShiftStrategyParams.Size = New System.Drawing.Size(24, 24)
-        Me.BtnShiftStrategyParams.TabIndex = 13
-        Me.BtnShiftStrategyParams.TabStop = false
-        Me.BtnShiftStrategyParams.UseVisualStyleBackColor = true
+        Me.cbGearshiftStrategy.FormattingEnabled = true
+        Me.cbGearshiftStrategy.Location = New System.Drawing.Point(6, 19)
+        Me.cbGearshiftStrategy.Name = "cbGearshiftStrategy"
+        Me.cbGearshiftStrategy.Size = New System.Drawing.Size(270, 21)
+        Me.cbGearshiftStrategy.TabIndex = 0
         '
         'VectoJobForm
         '
@@ -1248,6 +1270,7 @@ Partial Class VectoJobForm
         Me.CmOpenFile.ResumeLayout(false)
         CType(Me.PicVehicle,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox3.ResumeLayout(false)
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1357,4 +1380,6 @@ End Sub
     Friend WithEvents TbShiftStrategyParams As TextBox
     Friend WithEvents BtnShiftParamsForm As Button
     Friend WithEvents BtnShiftStrategyParams As Button
+    Friend WithEvents GroupBox3 As GroupBox
+    Friend WithEvents cbGearshiftStrategy As ComboBox
 End Class
