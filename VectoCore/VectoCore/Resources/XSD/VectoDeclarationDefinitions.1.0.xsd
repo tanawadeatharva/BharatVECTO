@@ -961,7 +961,7 @@
 									</xs:sequence>
 								</xs:complexType>
 							</xs:element>
-							<xs:sequence minOccurs="0">
+							<xs:sequence>
 								<xs:element name="ZeroEmissionVehicle" type="tns:ZeroEmissionVehicleType">
 									<xs:annotation>
 										<xs:documentation>P269 - bool</xs:documentation>
@@ -2547,28 +2547,28 @@ ToDo: -0.00
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="NgTankSystemType">
-	<xs:annotation>
-<xs:appinfo>
-<vectoParam:description>
-	<vectoParam:parameterId component="Vehicle">275</vectoParam:parameterId>
-	<vectoParam:unit>-</vectoParam:unit>
-</vectoParam:description>
-</xs:appinfo>
-</xs:annotation>
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">275</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Compressed"/>
 			<xs:enumeration value="Liquefied"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="PredictiveCruiseControlType">
-	<xs:annotation>
-<xs:appinfo>
-<vectoParam:description>
-	<vectoParam:parameterId component="Vehicle/ADAS">274</vectoParam:parameterId>
-	<vectoParam:unit>-</vectoParam:unit>
-</vectoParam:description>
-</xs:appinfo>
-</xs:annotation>
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle/ADAS">274</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="none"/>
 			<xs:enumeration value="1,2"/>
@@ -2576,15 +2576,15 @@ ToDo: -0.00
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="PowerType">
-	<xs:annotation>
-	<xs:appinfo>
-<vectoParam:description>
-	<vectoParam:parameterId component="Vehicle">277</vectoParam:parameterId>
-	<vectoParam:parameterId component="Vehicle">278</vectoParam:parameterId>
-	<vectoParam:unit>W</vectoParam:unit>
-</vectoParam:description>
-</xs:appinfo>
-</xs:annotation>
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">277</vectoParam:parameterId>
+					<vectoParam:parameterId component="Vehicle">278</vectoParam:parameterId>
+					<vectoParam:unit>W</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
 		<xs:restriction base="xs:int">
 			<xs:minInclusive value="0"/>
 		</xs:restriction>
