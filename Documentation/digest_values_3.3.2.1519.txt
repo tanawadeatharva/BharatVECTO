@@ -1,0 +1,18 @@
+Algorithm       Hash                                                                   Path                                                                                              
+---------       ----                                                                   ----
+SHA256          47FAFA2E139EBAFC111C6EE21C783B95192AAC9150D08A8978F706518C10001A       2019_02_21-VECTO-3.3.1.1512.zip
+
+Algorithm       Hash                                                                   Path                                                                                              
+---------       ----                                                                   ----
+SHA256          7FCE31C989808FA702AA0EF7C38A6BB4DE783D4F358704F317134AAC9A534B7C       hashingcmd.exe
+SHA256          EB2309AB4E6FF969A335F726C0B87E5A7FAAA3C566A04A66CB99DC14878371B5       HashingTool.exe
+SHA256          E6677FF019C69FDDF896BD7F9F8D28139D518100A04CFCBD27020D6BF0EC7D2F       VECTO.exe
+SHA256          CA38A0E32F5D58B831F9D6A07CF4C003D537644ED8ADD63E4A16E1144F505198       vectocmd.exe
+SHA256          C4342919D72DCB973906B2A2F6D13E41F199A6DDA73E7A201CD12EABEC93C84D       AdvancedAuxiliaryInterfaces.dll
+SHA256          A09A4C63BC0C7F5EAC8303ACF32C41CDF87B5293F1B1EF0DCC44C9092CFA5B90       BusAuxiliaries.dll
+SHA256          DF8EC2E0245829DDEC5B79F1918C3AE3A3FA540A5A0E3C410E2B6EF0BEBC7927       Newtonsoft.Json.dll
+SHA256          E196C0B84FA16CA895565C0AB611715F0721425F5E73340EA183FFA049F7D79B       NLog.dll
+SHA256          9B7EB6DE62FF1E6A812FA47697FDB2ABCEAD85AA2554ABF12416FC569DD4462E       Omu.ValueInjecter.dll
+SHA256          830C4A37C75C379A95941BA04A994323F3D0788D5DB0E34CA64D9969875810D0       VectoCommon.dll
+SHA256          77BC83EAC518A80751E41A2544804A3C921CFB80C230FC22F4C709A31FBFAA43       VectoCore.dll
+SHA256          2E8E47F6FE785AE72BF041A407FD0AA975DAD28544A26CE8A37AB2A74733E813       VectoHashing.dll
