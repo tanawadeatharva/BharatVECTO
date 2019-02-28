@@ -171,10 +171,10 @@ Public Class GearboxForm
 
 	'Help
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-		If File.Exists(MyAppPath & "User Manual\help.html") Then
+		If File.Exists(Path.Combine(MyAppPath,"User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#gearbox-editor"))
+						String.Format("""file://{0}""", Path.Combine(MyAppPath,"User Manual\help.html#gearbox-editor")))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -911,9 +911,9 @@ Public Class GearboxForm
 			If (vehicle.Axles.Count < 2) Then
 				Return Nothing
 			End If
-            rdyn = vehicle.Axles.Where(Function(axle)  axle.AxleType = AxleType.VehicleDriven) _
-                .Select(Function(da) DeclarationData.Wheels.Lookup(da.Tyre.Dimension).DynamicTyreRadius) _
-		        .Average()
+			rdyn = vehicle.Axles.Where(Function(axle)  axle.AxleType = AxleType.VehicleDriven) _
+				.Select(Function(da) DeclarationData.Wheels.Lookup(da.Tyre.Dimension).DynamicTyreRadius) _
+				.Average()
 		End If
 		If (rDyn.IsEqual(0)) Then
 			Return Nothing

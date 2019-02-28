@@ -142,7 +142,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool SleeperCab { get; }
 
-		TankSystem TankSystem { get; }
+		TankSystem? TankSystem { get; }
 
 		IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
 

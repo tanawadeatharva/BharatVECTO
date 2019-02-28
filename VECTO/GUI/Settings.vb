@@ -72,10 +72,10 @@ Public Class Settings
 
 	'Help button
 	Private Sub BtHelp_Click(sender As Object, e As EventArgs) Handles BtHelp.Click
-		If File.Exists(MyAppPath & "User Manual\help.html") Then
+		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#settings"))
+						String.Format("""file://{0}""", Path.Combine(MyAppPath,"User Manual\help.html#settings")))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If

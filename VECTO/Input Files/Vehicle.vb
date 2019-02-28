@@ -664,7 +664,7 @@ Public Class Vehicle
 	End Get
 	End Property
 
-	Public ReadOnly Property TankSystem As TankSystem Implements IVehicleDeclarationInputData.TankSystem
+	Public ReadOnly Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
 	get
 			Return DeclarationData.Vehicle.TankSystemDefault
 	End Get
@@ -729,4 +729,6 @@ Public Class Vehicle
 			Return DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault
 	End Get
 	End Property
+
+
 End Class

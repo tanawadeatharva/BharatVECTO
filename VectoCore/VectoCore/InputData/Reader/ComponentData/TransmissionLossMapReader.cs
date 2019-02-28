@@ -130,8 +130,14 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					out r);
 
 				var inTq = DeclarationData.LossMapExtrapolationFactor * maxTorque;
-				entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, inTq, k * inTq + d.SI<NewtonMeter>()));
-				entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, -inTq, k * inTq + d.SI<NewtonMeter>()));
+				if (k > 0) {
+					entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, inTq, k * inTq + d.SI<NewtonMeter>()));
+					entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, -inTq, k * inTq + d.SI<NewtonMeter>()));
+				} else {
+					var torqueLossLastEntry = speedBucket.Value.OrderBy(x => x.InputSpeed).Last().TorqueLoss;
+					entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, inTq, torqueLossLastEntry));
+					entries.Add(new TransmissionLossMap.GearLossMapEntry(speedBucket.Key, -inTq, torqueLossLastEntry));
+				}
 			}
 
 			return entries;

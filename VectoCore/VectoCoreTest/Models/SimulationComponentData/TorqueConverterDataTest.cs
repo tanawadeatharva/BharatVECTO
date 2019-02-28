@@ -35,11 +35,19 @@ using System.Diagnostics;
 using System.Linq;
 using NLog.Targets;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
@@ -472,5 +480,53 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(backward.InAngularVelocity.Value(), operatingPoint.InAngularVelocity.Value(), 1e-9);
 			Assert.AreEqual(backward.InTorque.Value(), operatingPoint.InTorque.Value(), 1e-9);
 		}
+
+
+		[Test]
+		public void TestTorqueConverterBehavior()
+		{
+			var tqLimit = 1600;
+
+			var tqInput = new[] {
+				"0.0,1.80,377.80",
+				"0.1,1.71,365.21",
+				"0.2,1.61,352.62",
+				"0.3,1.52,340.02",
+				"0.4,1.42,327.43",
+				"0.5,1.33,314.84",
+				"0.6,1.23,302.24",
+				"0.7,1.14,264.46",
+				"0.8,1.04,226.68",
+				"0.9,0.95,188.90",
+				"1.0,0.95,0.00",
+			};
+
+			var tqInput2 = new[] {
+				"0.0000,1.80,554.30",
+				"0.6000,1.23,443.44",
+				"0.9000,0.95,277.15",
+				"1.0000,0.95,0.00",
+				"5,0.959,-2290"
+			};
+			
+			var tqData =
+				TorqueConverterDataReader.ReadFromStream(InputDataHelper.InputDataAsStream("Speed Ratio, Torque Ratio,MP1000",
+																							tqInput), 1000.RPMtoRad(), tqLimit.RPMtoRad(), ExecutionMode.Engineering, 1, 0.1.SI<MeterPerSquareSecond>(),
+														0.1.SI<MeterPerSquareSecond>());
+
+			var outSpeed = 1200.RPMtoRad();
+			var results = new Dictionary<NewtonMeter, IList<TorqueConverterOperatingPoint>>();
+			for (var t = -2000; t < 2000; t += 10) {
+				var op = tqData.FindOperatingPoint(t.SI<NewtonMeter>(), outSpeed, 0.RPMtoRad());
+				results[t.SI<NewtonMeter>()] = op;
+			}
+
+			foreach (var result in results) {
+				var tmp = result.Value.FirstOrDefault();
+				Console.WriteLine("speed_out: {0},  torque_out: {1}, speed_in: {2},  torque_in: {3}", outSpeed.AsRPM, result.Key, tmp?.InAngularVelocity.AsRPM, tmp?.InTorque);
+			}
+		}
+
+		
 	}
 }
