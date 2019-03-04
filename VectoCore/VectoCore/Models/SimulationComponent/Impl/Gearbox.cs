@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool ClutchClosed(Second absTime)
 		{
-			return EngageTime.IsSmallerOrEqual(absTime);
+			return _engageTime.IsSmallerOrEqual(absTime, ModelData.TractionInterruption / 20);
 		}
 
 		public Gearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData) : base(container, runData)
@@ -278,6 +278,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeltaT = EngageTime - absTime,
 					GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
 				};
+			}
+
+			var remainingTime = _engageTime - (absTime + dt);
+			var withinTractionInterruption = absTime.IsSmaller(_engageTime) && (absTime + dt).IsSmaller(_engageTime);
+			if (withinTractionInterruption && remainingTime.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval) && remainingTime.IsSmaller(ModelData.TractionInterruption * 0.1)) {
+				// interval has already been prolonged, but has been overruled. if remaining time is less than 10%, reduce traction interruption time 
+				_engageTime = absTime + dt;
 			}
 
 			if ((inTorque * avgInAngularVelocity).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {

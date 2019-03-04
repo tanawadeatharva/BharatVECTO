@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			return new VehicleData.ADASData {
 				EngineStopStart = adas.EngineStopStart,
-				EcoRollWithoutengineStop = adas.EcoRollWitoutEngineStop,
+				EcoRollWithoutEngineStop = adas.EcoRollWitoutEngineStop,
 				EcoRollWithEngineStop = adas.EcoRollWithEngineStop,
 				PredictiveCruiseControl = adas.PredictiveCruiseControl
 			};
@@ -310,6 +310,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
 				retVal.TorqueConverterData.ModelName = gearbox.TorqueConverter.Model;
 				retVal.TorqueConverterData.DigestValueInput = gearbox.TorqueConverter.DigestValue?.DigestValue;
+				retVal.TorqueConverterData.CertificationMethod = gearbox.TorqueConverter.CertificationMethod;
+				retVal.TorqueConverterData.CertificationNumber = gearbox.TorqueConverter.CertificationNumber;
 			}
 
 			return retVal;

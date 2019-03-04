@@ -107,7 +107,10 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when the Speed Limit was exceeded.
 	/// </summary>
-	public class ResponseSpeedLimitExceeded : AbstractResponse {}
+	public class ResponseSpeedLimitExceeded : AbstractResponse
+	{
+		public ResponseSpeedLimitExceeded() { }
+	}
 
 	/// <summary>
 	/// Response when the request should have another time interval.

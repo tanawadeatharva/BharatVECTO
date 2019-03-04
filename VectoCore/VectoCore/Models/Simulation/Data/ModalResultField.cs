@@ -268,6 +268,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), "P_TC_out [kW]", outputFactor: 1e-3)] P_TC_out,
 
+		[ModalResultField(typeof(SI), "P_TC_in [kW]", outputFactor: 1e-3)] P_TC_in,
+
 		/// <summary>
 		///     [kW]	Power loss at the torque converter.
 		/// </summary>

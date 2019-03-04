@@ -1,6 +1,55 @@
 #Changelog
 
+**VECTO 3.3.2**
+
+**Build 1519 (2019-03-01) RELEASE CANDIDATE***
+
+
+Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
+
+
+ - Improvement
+    * [VECTO-869] - change new vehicle input fields (ADAS, sleeper cab, etc.) to be mandatory
+    * [VECTO-784] - Configuration file for VECTO log files
+    * [VECTO-865] - Extend Sum-Data
+    * [VECTO-873] - Add digest value to SumData
+
+
+ - Bugfixes
+    * [VECTO-729] - Bugs APT submodel
+    * [VECTO-787] - APT: DrivingAction Accelerate after Overload
+    * [VECTO-789] - APT: ResponseUnderload
+    * [VECTO-797] - VECTO abort with AT transmission and TC table value
+    * [VECTO-798] - VECTO abort with certified AT transmission data and certified TC data
+    * [VECTO-807] - VECTO errors in vehicle class 1/2/3
+    * [VECTO-827] - Torque converter inertia 
+    * [VECTO-838] - APT: ResponseOverload
+    * [VECTO-843] - AT Transmissions problem on VECTO 3.3.1.1463
+    * [VECTO-844] - Error with AT gearbox model
+    * [VECTO-847] - Simulation abort due to error in NLog?
+    * [VECTO-848] - AT Gearbox Simulation abort (was: Problem related to Tyres?)
+    * [VECTO-858] - Urban Delivery Abort - with APT-S Transmission and TC
+    * [VECTO-861] - 3.3.1: Torque converter not working correctly
+    * [VECTO-872] - MRF/CIF: Torque Converter certification method and certification number not correctly set
+    * [VECTO-879] - SIMULATION RUN ABORTED DistanceRun got an unexpected response
+    * [VECTO-883] - Traction interruption may be too long
+    * [VECTO-815] - Unexpected Response: SpeedLimitExceeded
+    * [VECTO-816] - object reference not set to an instance of an object
+    * [VECTO-817] - TargetVelocity and VehicleVelocity must not be 0
+    * [VECTO-820] - DistanceRun got an unexpected response: ResponseSpeedLimitExceeded
+    * [VECTO-864] - Prevent VECTO loss-map extension to result in negative torque loss
+
+
 **VECTO 3.3.1**
+
+***Build 1492 (2019-02-01) OFFICIAL RELEASE***
+
+ - Bugfixes (compared to 3.3.1.1463)
+    * [VECTO-845] - Fixing bug for VECTO-840
+    * [VECTO-826] - DistanceRun got an unexpected response: ResponseSpeedLimitExceeded
+    * [VECTO-837] - VECTO GUI displays incorrect cycles prior to simulation
+    * [VECTO-831] - Addition of indication to be added in Help and Release notes for simulations with LNG
+ 
 
 ***Build 1463 (2019-01-03) RELEASE CANDIDATE***
 

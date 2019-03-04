@@ -115,6 +115,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				MaxTorqueDeclared = MaxTorqueDeclared,
 				FuelData = FuelData,
 				ADASCorrectionFactor = ADASCorrectionFactor,
+				CertificationNumber = CertificationNumber,
+				CertificationMethod = CertificationMethod,
 			};
 		}
 

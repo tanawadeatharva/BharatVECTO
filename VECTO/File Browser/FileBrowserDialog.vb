@@ -300,7 +300,7 @@ Public Class FileBrowserDialog
 		'Folder History
 		If FileBrowserFolderHistoryIninialized Then
 			Try
-				Dim f = My.Computer.FileSystem.OpenTextFileWriter(FileHistoryPath & "Directories.txt", False, Encoding.UTF8)
+				Dim f = My.Computer.FileSystem.OpenTextFileWriter(path.Combine(FileHistoryPath, FILE_HISTORY_DIR_FILE), False, Encoding.UTF8)
 				For x = 0 To 19
 					f.WriteLine(FileBrowserFolderHistory(x))
 				Next
@@ -314,7 +314,7 @@ Public Class FileBrowserDialog
 		If _initialized And Not _bLightMode Then
 			If Not _bBrowseFolder Then
 				Try
-					Dim f = My.Computer.FileSystem.OpenTextFileWriter(FileHistoryPath & _myId & ".txt", False, Encoding.UTF8)
+					Dim f = My.Computer.FileSystem.OpenTextFileWriter(Path.Combine(FileHistoryPath,  _myId & ".txt"), False, Encoding.UTF8)
 					For x = 0 To 9
 						f.WriteLine(ContextMenuHisFile.Items(x).Text)
 					Next
@@ -374,8 +374,8 @@ Public Class FileBrowserDialog
 			For x = 0 To 9
 				ContextMenuHisFile.Items.Add("")
 			Next
-			If File.Exists(FileHistoryPath & _myId & ".txt") Then
-				Dim f = New StreamReader(FileHistoryPath & _myId & ".txt")
+			If File.Exists(path.Combine(FileHistoryPath, _myId & ".txt")) Then
+				Dim f = New StreamReader(path.Combine(FileHistoryPath, _myId & ".txt"))
 				Dim x = -1
 				Do While Not f.EndOfStream And x < 9
 					x += 1
@@ -420,8 +420,8 @@ Public Class FileBrowserDialog
 		For x = 0 To 19
 			FileBrowserFolderHistory(x) = EmptyText
 		Next
-		If File.Exists(FileHistoryPath & "Directories.txt") Then
-			Dim f = New StreamReader(FileHistoryPath & "Directories.txt")
+		If File.Exists(path.Combine(FileHistoryPath, FILE_HISTORY_DIR_FILE)) Then
+			Dim f = New StreamReader(path.Combine(FileHistoryPath, FILE_HISTORY_DIR_FILE))
 			x = -1
 			Do While Not f.EndOfStream And x < 19
 				x += 1

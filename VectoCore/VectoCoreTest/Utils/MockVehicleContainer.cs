@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new System.NotImplementedException();
 		}
 
-		public Second LastShift { get; private set; }
+		public Second LastShift { get;  set; }
 
 		public GearData GetGearData(uint gear)
 		{

@@ -67,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashingTool", "HashingTool\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashingCmd", "HashingCmd\HashingCmd.csproj", "{33F9848E-9257-4BE2-915F-68E748AEB204}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Article10Notifications", "..\VECTO-Article10\Article10Notifications\Article10Notifications.csproj", "{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug PerformanceStats|Any CPU = Debug PerformanceStats|Any CPU
@@ -680,6 +682,48 @@ Global
 		{33F9848E-9257-4BE2-915F-68E748AEB204}.ReleaseTUG|Any CPU.Build.0 = Release|Any CPU
 		{33F9848E-9257-4BE2-915F-68E748AEB204}.ReleaseTUG|x64.ActiveCfg = Release|Any CPU
 		{33F9848E-9257-4BE2-915F-68E748AEB204}.ReleaseTUG|x86.ActiveCfg = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceStats|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceStats|Any CPU.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceStats|x64.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceStats|x64.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceStats|x86.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceStats|x86.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceTrace|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceTrace|Any CPU.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceTrace|x64.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceTrace|x64.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceTrace|x86.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug PerformanceTrace|x86.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug|x64.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Debug|x86.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.DebugTUG|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.DebugTUG|Any CPU.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.DebugTUG|x64.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.DebugTUG|x64.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.DebugTUG|x86.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.DebugTUG|x86.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Deploy|x64.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Deploy|x64.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Deploy|x86.ActiveCfg = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Deploy|x86.Build.0 = Debug|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Release|x64.ActiveCfg = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Release|x64.Build.0 = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Release|x86.ActiveCfg = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.Release|x86.Build.0 = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.ReleaseTUG|Any CPU.ActiveCfg = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.ReleaseTUG|Any CPU.Build.0 = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.ReleaseTUG|x64.ActiveCfg = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.ReleaseTUG|x64.Build.0 = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.ReleaseTUG|x86.ActiveCfg = Release|Any CPU
+		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.ReleaseTUG|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

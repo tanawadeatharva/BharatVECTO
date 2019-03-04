@@ -235,6 +235,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							// search again for operating point, transmission may have shifted inbetween
 							nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration,
 								response);
+							if (nextOperatingPoint == null) {
+								throw new VectoException("DrivingActionAccelerate: Failed to find operating point after Overload");
+							}
 							DriverAcceleration = nextOperatingPoint.Acceleration;
 							retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval,
 								nextOperatingPoint.Acceleration, gradient);
@@ -564,7 +567,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
 				gradient);
 			var gearChanged = !(DataBus.Gear == gear && DataBus.TCLocked == tcLocked);
-			if (DataBus.GearboxType.AutomaticTransmission() && gearChanged && retVal is ResponseOverload) {
+			if (DataBus.GearboxType.AutomaticTransmission() && gearChanged && (retVal is ResponseOverload || retVal is ResponseUnderload)) {
 				Log.Debug("Gear changed after a valid operating point was found - braking is no longer applicable due to overload"); 
 				return null;
 			}

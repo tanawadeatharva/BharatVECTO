@@ -8,8 +8,8 @@ Public Class JiraDialog
 	End Sub
 
 	Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
-		If File.Exists(MyAppPath & "User Manual\JIRA Quick Start Guide.pdf") Then
-			Process.Start(MyAppPath & "User Manual\JIRA Quick Start Guide.pdf")
+		If File.Exists(Path.Combine(MyAppPath, "User Manual\JIRA Quick Start Guide.pdf")) Then
+			Process.Start(Path.Combine(MyAppPath, "User Manual\JIRA Quick Start Guide.pdf"))
 		Else
 			MsgBox("File not found!", MsgBoxStyle.Critical)
 		End If

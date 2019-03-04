@@ -45,8 +45,14 @@ namespace TUGraz.VectoCommon.Models
 
 	public static class CertificationMethodHelper
 	{
+
+
 		public static string ToXMLFormat(this CertificationMethod method)
 		{
+			return GetName(method);
+		}
+
+		public static string GetName(this CertificationMethod method) { 
 			switch (method) {
 				case CertificationMethod.StandardValues:
 					return "Standard values";

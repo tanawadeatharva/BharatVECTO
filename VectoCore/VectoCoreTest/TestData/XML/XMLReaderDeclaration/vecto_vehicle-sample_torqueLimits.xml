@@ -24,10 +24,19 @@
 			<PTOShaftsGearWheels>none</PTOShaftsGearWheels>
 			<PTOOtherElements>none</PTOOtherElements>
 		</PTO>
+		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<VocationalVehicle>false</VocationalVehicle>
+		<SleeperCab>false</SleeperCab>
+		<ADAS>
+			<EngineStopStart>false</EngineStopStart>
+			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
+			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
+			<PredictiveCruiseControl>none</PredictiveCruiseControl>
+		</ADAS>
 		<TorqueLimits>
 			<Entry gear="1" maxTorque="2000"/>
 			<Entry gear="2" maxTorque="2000"/>
-      <Entry gear="11" maxTorque="2000"/>
+			<Entry gear="11" maxTorque="2000"/>
 			<Entry gear="12" maxTorque="1500"/>
 		</TorqueLimits>
 		<Components>

@@ -237,9 +237,9 @@ Imports TUGraz.VectoCore.Utils
 
 
         'FileLists
-        _jobListView = New FileListView(MyConfPath & "joblist.txt")
+        _jobListView = New FileListView(path.Combine(MyConfPath, CONFIG_JOBLIST_FILE))
         _jobListView.LVbox = LvGEN
-        _cycleListView = New FileListView(MyConfPath & "cyclelist.txt")
+        _cycleListView = New FileListView(path.Combine(MyConfPath, CONFIG_CYCLELIST_FILE))
 
         _jobListView.LoadList()
 
@@ -267,6 +267,7 @@ Imports TUGraz.VectoCore.Utils
 
     ' ReSharper disable once UnusedMember.Global -- used via Logging Framework! 
     Public Shared Sub LogMethod(level As String, message As String)
+
         If VectoWorkerV3.IsBusy AndAlso Not VectoWorkerV3.CancellationPending Then
             If level = "Warn" Then
                 VectoWorkerV3.ReportProgress(100,
@@ -729,7 +730,7 @@ Imports TUGraz.VectoCore.Utils
 
     Private Sub OpenLogToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles OpenLogToolStripMenuItem.Click
-        Process.Start(MyAppPath & "log.txt")
+        Process.Start(Path.Combine(MyAppPath, "log.txt"))
     End Sub
 
     Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) _
@@ -739,9 +740,9 @@ Imports TUGraz.VectoCore.Utils
 
     Private Sub UserManualToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UserManualToolStripMenuItem.Click
-        If File.Exists(MyAppPath & "User Manual\help.html") Then
+        If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
             Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
-            Process.Start(defaultBrowserPath, String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html"))
+            Process.Start(defaultBrowserPath, String.Format("""file://{0}""", Path.Combine(MyAppPath, "User Manual\help.html")))
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If
@@ -749,8 +750,8 @@ Imports TUGraz.VectoCore.Utils
 
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UpdateNotesToolStripMenuItem.Click
-        If File.Exists(MyAppPath & "User Manual\Release Notes.pdf") Then
-            Process.Start(MyAppPath & "User Manual\Release Notes.pdf")
+        If File.Exists(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf")) Then
+            Process.Start(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf"))
         Else
             MsgBox("Release Notes not found!", MsgBoxStyle.Critical)
         End If
