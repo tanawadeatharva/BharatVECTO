@@ -289,5 +289,39 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			fh.Close();
 		}
+
+		[TestCase("Tractor_4x2_vehicle-class-5_EURO6_2018.RSLT_MANUFACTURER.xml"),
+		TestCase("Tractor_4x2_vehicle-class-5_EURO6_2018.RSLT_CUSTOMER.xml"),
+		TestCase("Tractor_4x2_vehicle-class-5_EURO6_2018.RSLT_MONITORING.xml"),
+			]
+		public void TestXMLReportFileIsLocked(string xmlFile)
+		{
+
+
+			var jobFile = @"TestData\Integration\DeclarationMode\Class5_Vocational\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
+
+			var reportFile = Path.Combine(Path.GetDirectoryName(jobFile), xmlFile);
+
+			// lock modfile so it can't be written
+			Stream fh = !File.Exists(reportFile) ? File.Create(reportFile) : File.OpenRead(reportFile);
+
+			var writer = new FileOutputWriter(jobFile);
+			var inputData = new XMLDeclarationInputDataProvider(jobFile, true);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				ActualModalData = true
+			};
+			var sumWriter = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumWriter);
+
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(2, sumWriter.Table.Rows.Count);
+
+			fh.Close();
+		}
 	}
 }
