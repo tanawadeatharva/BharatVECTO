@@ -125,115 +125,10 @@ namespace TUGraz.VectoCore.OutputData
 
 		public void Finish(VectoRun.Status runStatus, Exception exception = null)
 		{
-			var dataColumns = new List<ModalResultField> { ModalResultField.time };
-
 			RunStatus = runStatus;
 			SimException = exception;
 
-			if (!_writeEngineOnly) {
-				dataColumns.AddRange(new[] {
-					ModalResultField.simulationInterval,
-					ModalResultField.dist,
-					ModalResultField.v_act,
-					ModalResultField.v_targ,
-					ModalResultField.acc,
-					ModalResultField.grad
-				});
-			}
-			if (!_writeEngineOnly) {
-				dataColumns.AddRange(new[] {
-					ModalResultField.Gear,
-				});
-				if (HasTorqueConverter) {
-					dataColumns.AddRange(new[] { ModalResultField.TC_Locked });
-				}
-			}
-			dataColumns.AddRange(new[] {
-				ModalResultField.n_eng_avg,
-				ModalResultField.T_eng_fcmap,
-				ModalResultField.Tq_full,
-				ModalResultField.Tq_drag,
-				ModalResultField.P_eng_fcmap,
-				ModalResultField.P_eng_full,
-				ModalResultField.P_eng_full_stat,
-				ModalResultField.P_eng_drag,
-				ModalResultField.P_eng_inertia,
-				ModalResultField.P_eng_out,
-			});
-			if (HasTorqueConverter) {
-				dataColumns.AddRange(new[] {
-					ModalResultField.P_gbx_shift_loss,
-					ModalResultField.P_TC_loss,
-					ModalResultField.P_TC_out,
-				});
-			} else {
-				dataColumns.AddRange(new[] {
-					ModalResultField.P_clutch_loss,
-					ModalResultField.P_clutch_out,
-				});
-			}
-			dataColumns.AddRange(new[] {
-				ModalResultField.P_aux
-			});
-
-			if (!_writeEngineOnly) {
-				dataColumns.AddRange(new[] {
-					ModalResultField.P_gbx_in,
-					ModalResultField.P_gbx_loss,
-					ModalResultField.P_gbx_inertia,
-					ModalResultField.P_retarder_in,
-					ModalResultField.P_ret_loss,
-					ModalResultField.P_angle_in,
-					ModalResultField.P_angle_loss,
-					ModalResultField.P_axle_in,
-					ModalResultField.P_axle_loss,
-					ModalResultField.P_brake_in,
-					ModalResultField.P_brake_loss,
-					ModalResultField.P_wheel_in,
-					ModalResultField.P_wheel_inertia,
-					ModalResultField.P_trac,
-					ModalResultField.P_slope,
-					ModalResultField.P_air,
-					ModalResultField.P_roll,
-					ModalResultField.P_veh_inertia,
-					ModalResultField.n_gbx_out_avg,
-					ModalResultField.T_gbx_out
-				});
-
-				if (HasTorqueConverter) {
-					dataColumns.AddRange(new[] {
-						ModalResultField.TorqueConverterSpeedRatio,
-						ModalResultField.TorqueConverterTorqueRatio,
-						ModalResultField.TC_TorqueOut,
-						ModalResultField.TC_angularSpeedOut,
-						ModalResultField.TC_TorqueIn,
-						ModalResultField.TC_angularSpeedIn,
-					});
-				}
-			}
-			if (!_writeEngineOnly && WriteAdvancedAux) {
-				dataColumns.AddRange(new[] {
-					ModalResultField.AA_NonSmartAlternatorsEfficiency,
-					ModalResultField.AA_SmartIdleCurrent_Amps,
-					ModalResultField.AA_SmartIdleAlternatorsEfficiency,
-					ModalResultField.AA_SmartTractionCurrent_Amps,
-					ModalResultField.AA_SmartTractionAlternatorEfficiency,
-					ModalResultField.AA_SmartOverrunCurrent_Amps,
-					ModalResultField.AA_SmartOverrunAlternatorEfficiency,
-					ModalResultField.AA_CompressorFlowRate_LitrePerSec,
-					ModalResultField.AA_OverrunFlag,
-					ModalResultField.AA_EngineIdleFlag,
-					ModalResultField.AA_CompressorFlag,
-					ModalResultField.AA_TotalCycleFC_Grams,
-					ModalResultField.AA_TotalCycleFC_Litres,
-					ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals,
-					ModalResultField.AA_AveragePowerDemandCrankHVACElectricals,
-					ModalResultField.AA_AveragePowerDemandCrankElectrics,
-					ModalResultField.AA_AveragePowerDemandCrankPneumatics,
-					ModalResultField.AA_TotalCycleFuelConsumptionCompressorOff,
-					ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn,
-				});
-			}
+			var dataColumns = GetOutputColumns();
 
 			var strCols = dataColumns.Select(x => x.GetName())
 				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
@@ -251,11 +146,137 @@ namespace TUGraz.VectoCore.OutputData
 					RunSuffix += "_" + filter.ID;
 					filteredData = filter.Filter(filteredData);
 				}
-				_writer.WriteModData(JobRunId, RunName, CycleName, RunSuffix,
-					new DataView(filteredData).ToTable(false, strCols.ToArray()));
+
+				try {
+					_writer.WriteModData(
+						JobRunId, RunName, CycleName, RunSuffix,
+						new DataView(filteredData).ToTable(false, strCols.ToArray()));
+				} catch (Exception e) {
+					LogManager.GetLogger(typeof(ModalDataContainer).FullName).Error(e.Message);
+				}
 			}
 
 			_addReportResult(this);
+		}
+
+		private IEnumerable<ModalResultField> GetOutputColumns()
+		{
+			var dataColumns = new List<ModalResultField> { ModalResultField.time };
+
+			if (!_writeEngineOnly) {
+				dataColumns.AddRange(
+					new[] {
+						ModalResultField.simulationInterval,
+						ModalResultField.dist,
+						ModalResultField.v_act,
+						ModalResultField.v_targ,
+						ModalResultField.acc,
+						ModalResultField.grad
+					});
+			}
+			if (!_writeEngineOnly) {
+				dataColumns.AddRange(
+					new[] {
+						ModalResultField.Gear,
+					});
+				if (HasTorqueConverter) {
+					dataColumns.AddRange(new[] { ModalResultField.TC_Locked });
+				}
+			}
+			dataColumns.AddRange(
+				new[] {
+					ModalResultField.n_eng_avg,
+					ModalResultField.T_eng_fcmap,
+					ModalResultField.Tq_full,
+					ModalResultField.Tq_drag,
+					ModalResultField.P_eng_fcmap,
+					ModalResultField.P_eng_full,
+					ModalResultField.P_eng_full_stat,
+					ModalResultField.P_eng_drag,
+					ModalResultField.P_eng_inertia,
+					ModalResultField.P_eng_out,
+				});
+			if (HasTorqueConverter) {
+				dataColumns.AddRange(
+					new[] {
+						ModalResultField.P_gbx_shift_loss,
+						ModalResultField.P_TC_loss,
+						ModalResultField.P_TC_out,
+					});
+			} else {
+				dataColumns.AddRange(
+					new[] {
+						ModalResultField.P_clutch_loss,
+						ModalResultField.P_clutch_out,
+					});
+			}
+			dataColumns.AddRange(
+				new[] {
+					ModalResultField.P_aux
+				});
+
+			if (!_writeEngineOnly) {
+				dataColumns.AddRange(
+					new[] {
+						ModalResultField.P_gbx_in,
+						ModalResultField.P_gbx_loss,
+						ModalResultField.P_gbx_inertia,
+						ModalResultField.P_retarder_in,
+						ModalResultField.P_ret_loss,
+						ModalResultField.P_angle_in,
+						ModalResultField.P_angle_loss,
+						ModalResultField.P_axle_in,
+						ModalResultField.P_axle_loss,
+						ModalResultField.P_brake_in,
+						ModalResultField.P_brake_loss,
+						ModalResultField.P_wheel_in,
+						ModalResultField.P_wheel_inertia,
+						ModalResultField.P_trac,
+						ModalResultField.P_slope,
+						ModalResultField.P_air,
+						ModalResultField.P_roll,
+						ModalResultField.P_veh_inertia,
+						ModalResultField.n_gbx_out_avg,
+						ModalResultField.T_gbx_out
+					});
+
+				if (HasTorqueConverter) {
+					dataColumns.AddRange(
+						new[] {
+							ModalResultField.TorqueConverterSpeedRatio,
+							ModalResultField.TorqueConverterTorqueRatio,
+							ModalResultField.TC_TorqueOut,
+							ModalResultField.TC_angularSpeedOut,
+							ModalResultField.TC_TorqueIn,
+							ModalResultField.TC_angularSpeedIn,
+						});
+				}
+			}
+			if (!_writeEngineOnly && WriteAdvancedAux) {
+				dataColumns.AddRange(
+					new[] {
+						ModalResultField.AA_NonSmartAlternatorsEfficiency,
+						ModalResultField.AA_SmartIdleCurrent_Amps,
+						ModalResultField.AA_SmartIdleAlternatorsEfficiency,
+						ModalResultField.AA_SmartTractionCurrent_Amps,
+						ModalResultField.AA_SmartTractionAlternatorEfficiency,
+						ModalResultField.AA_SmartOverrunCurrent_Amps,
+						ModalResultField.AA_SmartOverrunAlternatorEfficiency,
+						ModalResultField.AA_CompressorFlowRate_LitrePerSec,
+						ModalResultField.AA_OverrunFlag,
+						ModalResultField.AA_EngineIdleFlag,
+						ModalResultField.AA_CompressorFlag,
+						ModalResultField.AA_TotalCycleFC_Grams,
+						ModalResultField.AA_TotalCycleFC_Litres,
+						ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals,
+						ModalResultField.AA_AveragePowerDemandCrankHVACElectricals,
+						ModalResultField.AA_AveragePowerDemandCrankElectrics,
+						ModalResultField.AA_AveragePowerDemandCrankPneumatics,
+						ModalResultField.AA_TotalCycleFuelConsumptionCompressorOff,
+						ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn,
+					});
+			}
+			return dataColumns;
 		}
 
 		public IEnumerable<T> GetValues<T>(DataColumn col)
