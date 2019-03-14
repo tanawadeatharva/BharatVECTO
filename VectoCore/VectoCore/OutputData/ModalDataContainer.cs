@@ -251,8 +251,14 @@ namespace TUGraz.VectoCore.OutputData
 					RunSuffix += "_" + filter.ID;
 					filteredData = filter.Filter(filteredData);
 				}
-				_writer.WriteModData(JobRunId, RunName, CycleName, RunSuffix,
-					new DataView(filteredData).ToTable(false, strCols.ToArray()));
+
+				try {
+					_writer.WriteModData(
+						JobRunId, RunName, CycleName, RunSuffix,
+						new DataView(filteredData).ToTable(false, strCols.ToArray()));
+				} catch (Exception e) {
+					LogManager.GetLogger(typeof(ModalDataContainer).FullName).Error(e.Message);
+				}
 			}
 
 			_addReportResult(this);
