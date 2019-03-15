@@ -668,6 +668,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			WriteVehicleData(runData.VehicleData, row);
 
+			row[TCU_MODEL] = runData.ShiftStrategy;
 			row[PTO_TECHNOLOGY] = runData.PTO?.TransmissionType ?? "";
 
 			WriteEngineData(runData.EngineData, row);
@@ -750,8 +751,6 @@ namespace TUGraz.VectoCore.OutputData
 		private static void WriteAxleWheelsData(List<Axle> data, DataRow row)
 		{
 			var fields = new[] {
-
-			row[TCU_MODEL] = runData.ShiftStrategy;
 				Tuple.Create(DECLARED_RRC_AXLE1, DECLARED_FZISO_AXLE1),
 				Tuple.Create(DECLARED_RRC_AXLE2, DECLARED_FZISO_AXLE2),
 				Tuple.Create(DECLARED_RRC_AXLE3, DECLARED_FZISO_AXLE3),

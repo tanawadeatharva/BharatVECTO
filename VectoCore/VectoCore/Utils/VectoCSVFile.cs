@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Utils
 			if (addVersionHeader) {
 				try {
 					writer.WriteLine("# VECTO{0} {1} - {2}", VectoSimulationCore.BranchSuffix, VectoSimulationCore.VersionNumber,
-						DateTime.Now.ToString("dd.MM.yyyy HH:mm")));
+						DateTime.Now.ToString("dd.MM.yyyy HH:mm"));
 				} catch (Exception) {
 					entries.Add(string.Format("# VECTO {0} - {1}", "Unknown", DateTime.Now.ToString("dd.MM.yyyy HH:mm")));
 				}
