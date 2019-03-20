@@ -30,7 +30,9 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Utils;
@@ -115,6 +117,21 @@ namespace TUGraz.VectoCommon.InputData
 			CanonicalizationMethods = c14n.ToArray();
 			DigestMethod = xmlNode.SelectSingleNode(DigestMethodQueryXPath)?.InnerXml;
 			DigestValue = xmlNode.SelectSingleNode(DigestValueQuerXPath)?.InnerXml;
+		}
+
+		public DigestData(XElement xmlNode)
+		{
+			Reference = xmlNode.XPathSelectElement(".//*[local-name()='Reference']")?.Attribute(XName.Get("URI"))?.Value;
+			var nodes = xmlNode.XPathSelectElements(".//*[local-name()='Transform']");
+			var c14n = new List<string>();
+
+			foreach (var node in nodes) {
+				c14n.Add(node.Attribute(XName.Get("Algorithm"))?.Value);
+			}
+
+			CanonicalizationMethods = c14n.ToArray();
+			DigestMethod = xmlNode.XPathSelectElement(".//*[local-name()='DigestMethod']")?.Attribute(XName.Get("Algorithm"))?.Value;
+			DigestValue = xmlNode.XPathSelectElement(DigestValueQuerXPath)?.Value;
 		}
 
 		public string DigestValue { get; }

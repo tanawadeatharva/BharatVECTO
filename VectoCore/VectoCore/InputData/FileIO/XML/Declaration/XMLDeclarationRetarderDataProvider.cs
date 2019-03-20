@@ -29,21 +29,48 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
 	public class XMLDeclarationRetarderDataProvider : AbstractDeclarationXMLComponentDataProvider, IRetarderInputData
 	{
+		private RetarderType? _type;
+		private double? _ratio;
+
 		public XMLDeclarationRetarderDataProvider(XMLDeclarationInputDataProvider xmlInputDataProvider) : base(xmlInputDataProvider)
 		{
 			XBasePath = Helper.Query(VehiclePath,
 				XMLNames.Vehicle_Components,
 				XMLNames.Component_Retarder,
 				XMLNames.ComponentDataWrapper);
+		}
+
+		public XMLDeclarationRetarderDataProvider(XDocument xml, RetarderType type, double ratio)
+		{
+			_type = type;
+			_ratio = ratio;
+			if (xml.Document != null) {
+				Navigator = xml.Document.CreateNavigator();
+				Manager = new XmlNamespaceManager(Navigator.NameTable ?? new NameTable());
+				Helper = new XPathHelper(ExecutionMode.Declaration);
+				Manager.AddNamespace(Constants.XML.DeclarationNSPrefix, Constants.XML.VectoDeclarationDefinitionsNS);
+				Manager.AddNamespace(Constants.XML.RootNSPrefix, Constants.XML.VectoDeclarationComponentNS);
+
+				XBasePath = Helper.Query(Helper.NSPrefix(XMLNames.VectoInputDeclaration, Constants.XML.RootNSPrefix),
+										Helper.NSPrefix(XMLNames.Component_Retarder, Constants.XML.RootNSPrefix),
+										XMLNames.ComponentDataWrapper);
+				SourceType = DataSourceType.Embedded;
+			}	
 		}
 
 
@@ -54,12 +81,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public RetarderType Type
 		{
-			get { return InputData.XMLJob.XMLVehicle.RetarderType; }
+			get { return _type ?? InputData.XMLJob.XMLVehicle.RetarderType; }
 		}
 
 		public double Ratio
 		{
-			get { return InputData.XMLJob.XMLVehicle.RetarderRatio; }
+			get { return _ratio ?? InputData.XMLJob.XMLVehicle.RetarderRatio; }
 		}
 
 		public TableData LossMap

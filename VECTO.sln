@@ -69,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashingCmd", "HashingCmd\Ha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Article10Notifications", "..\VECTO-Article10\Article10Notifications\Article10Notifications.csproj", "{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VECTO_GIT", "..\STUDENTEN_PROJEKTE\Kober_VectoGIT\VECTO_GIT\VECTO_GIT\VECTO_GIT.csproj", "{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug PerformanceStats|Any CPU = Debug PerformanceStats|Any CPU
@@ -724,6 +726,48 @@ Global
 		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.ReleaseTUG|x64.Build.0 = Release|Any CPU
 		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.ReleaseTUG|x86.ActiveCfg = Release|Any CPU
 		{EF99431D-4227-44C3-B2BD-DE8AE3E672CA}.ReleaseTUG|x86.Build.0 = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceStats|Any CPU.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceStats|Any CPU.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceStats|x64.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceStats|x64.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceStats|x86.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceStats|x86.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceTrace|Any CPU.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceTrace|Any CPU.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceTrace|x64.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceTrace|x64.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceTrace|x86.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug PerformanceTrace|x86.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug|x64.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Debug|x86.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.DebugTUG|Any CPU.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.DebugTUG|Any CPU.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.DebugTUG|x64.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.DebugTUG|x64.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.DebugTUG|x86.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.DebugTUG|x86.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Deploy|Any CPU.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Deploy|Any CPU.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Deploy|x64.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Deploy|x64.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Deploy|x86.ActiveCfg = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Deploy|x86.Build.0 = Debug|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Release|x64.ActiveCfg = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Release|x64.Build.0 = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Release|x86.ActiveCfg = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.Release|x86.Build.0 = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.ReleaseTUG|Any CPU.ActiveCfg = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.ReleaseTUG|Any CPU.Build.0 = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.ReleaseTUG|x64.ActiveCfg = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.ReleaseTUG|x64.Build.0 = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.ReleaseTUG|x86.ActiveCfg = Release|Any CPU
+		{A684BC49-C9B3-4C0C-8D2E-A13077853EDA}.ReleaseTUG|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
