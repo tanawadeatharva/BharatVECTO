@@ -175,6 +175,8 @@ namespace TUGraz.VectoCore.Configuration
 			public const string VectoDeclarationDefinitionsNS =
 				"urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v" + XSDDeclarationVersion;
 
+			public const string VectoDeclarationComponentNS = "urn:tugraz:ivt:VectoAPI:DeclarationComponent:v" + XSDDeclarationVersion;
+
 			public const string VectoEngineeringDefinitionsNS =
 				"urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v" + XSDEngineeringVersion;
 

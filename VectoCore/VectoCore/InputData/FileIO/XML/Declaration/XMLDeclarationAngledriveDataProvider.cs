@@ -29,11 +29,17 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
@@ -45,6 +51,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				XMLNames.Vehicle_Components,
 				XMLNames.Component_Angledrive,
 				XMLNames.ComponentDataWrapper);
+		}
+
+		public XMLDeclarationAngledriveDataProvider(XDocument xml)
+		{
+			if (xml.Document == null) {
+				throw new ArgumentException("No Document found");
+			}
+			Navigator = xml.Document.CreateNavigator();
+			Manager = new XmlNamespaceManager(Navigator.NameTable ?? new NameTable());
+			Helper = new XPathHelper(ExecutionMode.Declaration);
+			Manager.AddNamespace(Constants.XML.DeclarationNSPrefix, Constants.XML.VectoDeclarationDefinitionsNS);
+			Manager.AddNamespace(Constants.XML.RootNSPrefix, Constants.XML.VectoDeclarationComponentNS);
+
+			XBasePath = Helper.Query(Helper.NSPrefix(XMLNames.VectoInputDeclaration, Constants.XML.RootNSPrefix),
+									Helper.NSPrefix(XMLNames.Component_Angledrive, Constants.XML.RootNSPrefix),
+									XMLNames.ComponentDataWrapper);
+			SourceType = DataSourceType.Embedded;
 		}
 
 		public AngledriveType Type
