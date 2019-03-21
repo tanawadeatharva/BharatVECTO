@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal AngledriveData DoCreateAngledriveData(IAngledriveInputData data, bool useEfficiencyFallback)
 		{
 			try {
-				var type = data.Type;
+				var type = data?.Type ?? AngledriveType.None;
 
 				switch (type) {
 					case AngledriveType.LossesIncludedInGearbox:

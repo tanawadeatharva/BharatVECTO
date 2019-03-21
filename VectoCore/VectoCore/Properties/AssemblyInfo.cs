@@ -51,3 +51,4 @@ using System.Runtime.InteropServices;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VectoAPITest")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VectoXML")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("XMLTest")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VECTO_GIT")]
