@@ -523,13 +523,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 
-			gearbox.OutPort().Initialize(1.SI<NewtonMeter>(), 1.SI<PerSecond>());
+			var expectedN = n.RPMtoRad();
+			var angularVelocity = expectedN / ratios[gear];
+			gearbox.OutPort().Initialize(1.SI<NewtonMeter>(), angularVelocity);
 
 			var expectedT = t.SI<NewtonMeter>();
-			var expectedN = n.RPMtoRad();
+			
 
 			var torque = expectedT * ratios[gear];
-			var angularVelocity = expectedN / ratios[gear];
+			
 
 			gearbox.Gear = (uint)gear;
 			var gearShiftResponse = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
@@ -541,11 +543,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestCase(7, 8, 1000, 1400, typeof(ResponseGearShift)),
-		TestCase(6, 7, 1000, 1400, typeof(ResponseGearShift)),
+		TestCase(6, 8, 1000, 1400, typeof(ResponseGearShift)),
 		TestCase(5, 6, 1000, 1400, typeof(ResponseGearShift)),
 		TestCase(4, 5, 1000, 1400, typeof(ResponseGearShift)),
 		TestCase(3, 4, 1000, 1400, typeof(ResponseGearShift)),
-		TestCase(2, 3, 1000, 1400, typeof(ResponseGearShift)),
+		TestCase(2, 4, 1000, 1400, typeof(ResponseGearShift)),
 		TestCase(1, 2, 1000, 1400, typeof(ResponseGearShift)),
 		TestCase(8, 8, 1000, 1400, typeof(ResponseSuccess)),
 		TestCase(1, 6, 200, 9000, typeof(ResponseGearShift)),]
@@ -575,15 +577,17 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 
-			gearbox.OutPort().Initialize(1.SI<NewtonMeter>(), 1.SI<PerSecond>());
+			var expectedN = n.RPMtoRad();
+			var angularVelocity = expectedN / ratios[gear];
+			gearbox.OutPort().Initialize(1.SI<NewtonMeter>(), angularVelocity);
 
 			absTime += dt;
 
 			var expectedT = tq.SI<NewtonMeter>();
-			var expectedN = n.RPMtoRad();
+			
 
 			var torque = expectedT * ratios[gear];
-			var angularVelocity = expectedN / ratios[gear];
+			
 
 			gearbox.Gear = (uint)gear;
 			var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
