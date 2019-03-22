@@ -192,8 +192,9 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			Assert.IsTrue(exceedingHigh.Count < 5);
 			var max2 = tractionInterruptionTimes.Values.OrderBy(x => x.Value()).Reverse().Skip(5).Max();
+			var min2 = tractionInterruptionTimes.Values.OrderBy(x => x.Value()).Skip(5).Min();
 
-			Assert.IsTrue(min.IsEqual(expectedTractionInterruption, 0.1), "minimum traction interruption time: {0}", min);
+			Assert.IsTrue(min2.IsEqual(expectedTractionInterruption, 0.1), "minimum traction interruption time: {0}", min);
 			Assert.IsTrue(max2.IsEqual(expectedTractionInterruption, 0.1), "maximum traction interruption time: {0}", max2);
 
 			

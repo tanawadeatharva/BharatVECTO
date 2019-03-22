@@ -30,8 +30,7 @@
 */
 
 using System.Collections.Generic;
-using System.Xml;
-using System.Xml.XPath;
+using System.Linq;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoHashing;
@@ -72,57 +71,5 @@ namespace TUGraz.VectoCommon.InputData
 		IDictionary<VectoComponents,IList<string>> ComponentDigests { get; }
 
 		DigestData JobDigest { get; }
-	}
-
-	public class DigestData
-	{
-		private const string ReferenceQueryXPath = ".//*[local-name()='Reference']/@URI";
-		private const string AlgorithmQueryXPath = ".//*[local-name()='Transform']/@Algorithm";
-		private const string DigestMethodQueryXPath = ".//*[local-name()='DigestMethod']/@Algorithm";
-		private const string DigestValueQuerXPath = ".//*[local-name()='DigestValue']";
-
-		public DigestData(string reference, string[] c14n, string digestMethod, string digestValue)
-		{
-			Reference = reference;
-			CanonicalizationMethods = c14n;
-			DigestMethod = digestMethod;
-			DigestValue = digestValue;
-		}
-
-		public DigestData(XPathNavigator navigator)
-		{
-			Reference = navigator.SelectSingleNode(ReferenceQueryXPath)?.InnerXml;
-			var nodes = navigator.Select(AlgorithmQueryXPath);
-			var c14n = new List<string>();
-			while (nodes.MoveNext()) {
-				c14n.Add(nodes.Current.InnerXml);
-			}
-			CanonicalizationMethods = c14n.ToArray();
-			DigestMethod = navigator.SelectSingleNode(DigestMethodQueryXPath)?.InnerXml;
-			DigestValue = navigator.SelectSingleNode(DigestValueQuerXPath)?.InnerXml;
-		}
-
-		public DigestData(XmlNode xmlNode)
-		{
-			Reference = xmlNode.SelectSingleNode(ReferenceQueryXPath)?.InnerXml;
-			var nodes = xmlNode.SelectNodes(AlgorithmQueryXPath);
-			var c14n = new List<string>();
-			if (nodes != null) {
-				for (var i = 0; i < nodes.Count; i++) {
-					c14n.Add(nodes[i].InnerXml);
-				}
-			}
-			CanonicalizationMethods = c14n.ToArray();
-			DigestMethod = xmlNode.SelectSingleNode(DigestMethodQueryXPath)?.InnerXml;
-			DigestValue = xmlNode.SelectSingleNode(DigestValueQuerXPath)?.InnerXml;
-		}
-
-		public string DigestValue { get; }
-
-		public string Reference { get; }
-
-		public string[] CanonicalizationMethods { get; }
-		public string DigestMethod { get; }
-
 	}
 }
