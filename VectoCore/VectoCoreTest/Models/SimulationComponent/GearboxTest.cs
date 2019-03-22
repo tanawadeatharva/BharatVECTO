@@ -500,7 +500,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		TestCase(5, 4, 1800, 750, typeof(ResponseGearShift)),
 		TestCase(4, 3, 1800, 750, typeof(ResponseGearShift)),
 		TestCase(3, 2, 1800, 750, typeof(ResponseGearShift)),
-		TestCase(2, 1, 1500, 750, typeof(ResponseGearShift)),
+		TestCase(2, 1, 1900, 750, typeof(ResponseGearShift)),
 		TestCase(1, 1, 1200, 700, typeof(ResponseSuccess)),
 		TestCase(8, 4, 15000, 200, typeof(ResponseGearShift)),]
 		public void Gearbox_ShiftDown(int gear, int newGear, double t, double n, Type responseType)
