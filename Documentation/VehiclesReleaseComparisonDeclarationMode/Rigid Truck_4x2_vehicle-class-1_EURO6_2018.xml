@@ -18,7 +18,7 @@
       <PTOShaftsGearWheels>none</PTOShaftsGearWheels>
       <PTOOtherElements>none</PTOOtherElements>
     </PTO>
-	<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
 		<SleeperCab>false</SleeperCab>
 		<ADAS>
@@ -27,7 +27,7 @@
 			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
 		</ADAS>
-    <Components>
+		<Components>
       <Engine>
         <Data id="ENG-N.A.">
           <Manufacturer>Generic Vendor</Manufacturer>

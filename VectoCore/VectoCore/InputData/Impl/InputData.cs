@@ -148,9 +148,9 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public string ID { get; internal set; }
 
-		public AuxiliaryType Type { get; internal set; }
+		public AuxiliaryType Type { get; set; }
 
-		public IList<string> Technology { get; internal set; }
+		public IList<string> Technology { get; set; }
 
 		public double TransmissionRatio { get; internal set; }
 
