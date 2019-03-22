@@ -395,7 +395,11 @@ namespace TUGraz.VectoCore.OutputData
 					view.Columns.Remove(dataColumn);
 				}
 
-				_sumWriter.WriteSumData(view);
+				try {
+					_sumWriter.WriteSumData(view);
+				} catch (Exception e) {
+					LogManager.GetLogger(typeof(SummaryDataContainer).FullName).Error(e.Message);
+				}
 			}
 		}
 
