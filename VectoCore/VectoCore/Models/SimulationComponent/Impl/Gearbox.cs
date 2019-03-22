@@ -392,7 +392,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var lastGear = Gear;
 			Gear = DataBus.VehicleStopped
 				? _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity)
-				: _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
+				: _strategy.Engage(absTime, dt, outTorque, VectoMath.Min(PreviousState.OutAngularVelocity, outAngularVelocity));
 			if (!DataBus.VehicleStopped) {
 				if (Gear > lastGear) {
 					LastUpshift = absTime;
