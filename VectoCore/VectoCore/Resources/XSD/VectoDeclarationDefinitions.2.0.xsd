@@ -364,14 +364,6 @@
 			<xs:element name="Signature" type="tns:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="EngineDataBaseType">
-		<xs:annotation>
-			<xs:documentation>Engine Component</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="tns:DeclarationPowertrainComponentType"/>
-		</xs:complexContent>
-	</xs:complexType>
 	<xs:complexType name="EngineDataDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="v1.0:AbstractCombustionEngineDataDeclarationType">
@@ -909,8 +901,8 @@
 					<xs:element name="Engine" type="tns:EngineComponentDeclarationType"/>
 					<xs:element name="Gearbox" type="tns:GearboxComponentDeclarationType"/>
 					<xs:element name="TorqueConverter" type="tns:TorqueConverterComponentDeclarationType" minOccurs="0"/>
-					<xs:element name="Retarder" type="tns:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Angledrive" type="tns:AngledriveComponentDeclarationType" minOccurs="0"/>
+					<xs:element name="Retarder" type="tns:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="tns:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="tns:AxleWheelsComponentDeclarationType"/>
 					<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentDeclarationType"/>

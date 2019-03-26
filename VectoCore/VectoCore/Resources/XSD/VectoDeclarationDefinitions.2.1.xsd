@@ -81,7 +81,7 @@
 					<xs:element name="PTO" type="v2.0:AbstractPTODataType"/>
 					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
 					<xs:element name="VocationalVehicle" type="xs:boolean"/>
-					<xs:element name="NgTankSystem" type="xs:string" minOccurs="0"/>
+					<xs:element name="NgTankSystem" type="tns:NgTankSystemType" minOccurs="0"/>
 					<xs:element name="SleeperCab" type="xs:boolean"/>
 					<xs:element name="ADAS" type="tns:AbstractAdvancedDriverAssistantSystemsType"/>
 					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
@@ -338,6 +338,20 @@
 			<!-- LPG == LPG PI -->
 			<!-- NG== NG PI -->
 			<!-- NG CI => dual fuel -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NgTankSystemType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">275</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Compressed"/>
+			<xs:enumeration value="Liquefied"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>
