@@ -24,6 +24,7 @@
 		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL.xml" HomeFolder="Yes"/>
 		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_vehicle-sample_FULL_Entry_Order.xml" HomeFolder="Yes"/>
 		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL_updated.xml" HomeFolder="Yes"/>
+		<ExtMountFolder FolderName="VectoCore\Resources\XSD\Examples"/>
 	</Folder>
 	<Folder FolderName="XSL Files" ExtStr="xsl;xslt">
 		<File FilePath="E:\QUAM\Workspace\VECTO_quam\Documentation\XML\RenderTable.xslt" HomeFolder="Yes"/>
