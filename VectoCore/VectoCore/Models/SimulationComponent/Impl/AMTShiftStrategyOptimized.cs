@@ -5,7 +5,9 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -14,6 +16,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private FuelConsumptionMap fcMap;
 		private Dictionary<uint, EngineFullLoadCurve> fld;
 		private ShiftStrategyParameters shiftStrategyParameters;
+		private SimplePowertrainContainer TestContainer;
 
 		public AMTShiftStrategyOptimized(VectoRunData runData, IDataBus dataBus) : base(runData, dataBus)
 		{
@@ -23,6 +26,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (shiftStrategyParameters == null) {
 				throw new VectoException("Parameters for shift strategy missing!");
 			}
+
+			var modData = new ModalDataContainer(runData, null, null, false);
+			var builder = new PowertrainBuilder(modData);
+			TestContainer = new SimplePowertrainContainer(runData);
+			builder.BuildSimplePowertrain(runData, TestContainer);
 		}
 
 		#region Overrides of AMTShiftStrategy
@@ -124,6 +132,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
+
+		protected override ResponseDryRun RequestDryRunWithGear(
+			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint tryNextGear)
+		{
+			TestContainer.GearboxCtl.Disengaged = false;
+			TestContainer.GearboxCtl.Gear = tryNextGear;
+
+			TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
+			var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
+				0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
+			return response;
+		}
 
 		public new static string Name { get { return "AMT shift strategy w early upshift (FC-based)"; } }
 	}

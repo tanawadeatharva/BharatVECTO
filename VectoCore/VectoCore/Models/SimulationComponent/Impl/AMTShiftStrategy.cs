@@ -331,7 +331,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return currentGear;
 		}
 
-		protected ResponseDryRun RequestDryRunWithGear(
+		protected virtual ResponseDryRun RequestDryRunWithGear(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint tryNextGear)
 		{
 			var tmpGear = Gearbox.Gear;

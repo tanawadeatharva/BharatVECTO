@@ -16,6 +16,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			get { return (Vehicle as Vehicle)?.OutPort(); }
 		}
 
+		public ITnOutPort GearboxOutPort
+		{
+			get { return (Gearbox as Gearbox)?.OutPort(); }
+		}
+
 		public Gearbox GearboxCtl
 		{
 			get { return Gearbox as Gearbox; }
