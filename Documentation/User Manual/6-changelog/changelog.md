@@ -2,7 +2,19 @@
 
 **VECTO 3.3.2**
 
-**Build 1519 (2019-03-01) RELEASE CANDIDATE***
+**Build 1548 (2019-03-29) OFFICIAL RELEASE**
+
+
+ - Bugfixes
+    * [VECTO-861] - 3.3.1: Torque converter not working correctly
+    * [VECTO-904] - Range for gear loss map not sufficient.
+    * [VECTO-909] - 3.3.2.1519: Problems running more than one input .xml
+    * [VECTO-917] - TargetVelocity (0.0000) and VehicleVelocity (>0) must be zero when vehicle is halting
+    * [VECTO-918] - RegionalDeliveryEMS LowLoading - ResponseSpeedLimitExceeded
+    * [VECTO-920] - Urban Delivery: Simulation Run Aborted, TargetVelocity and VehicleVelocity must be zero when vehicle is halting!
+
+
+**Build 1519 (2019-03-01) RELEASE CANDIDATE**
 
 
 Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC

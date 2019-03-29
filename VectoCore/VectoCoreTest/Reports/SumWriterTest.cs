@@ -225,5 +225,69 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.WHTCMotorway,
 				sumRow[SummaryDataContainer.ENGINE_WHTC_MOTORWAY]);
 		}
+
+
+		[TestCase()]
+		public void TestSumDataIsCompleteEvenIfModFileCannotBeWritten()
+		{
+			
+
+			var jobFile = @"TestData\Integration\DeclarationMode\Class5_Vocational\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
+
+			var modFilename = Path.Combine(Path.GetDirectoryName(jobFile), "VEH-Class5_ConstructionReferenceLoad_sim.vmod");
+
+			// lock modfile so it can't be written
+			Stream fh = !File.Exists(modFilename) ? File.Create(modFilename) : File.OpenRead(modFilename);
+
+			var writer = new FileOutputWriter(jobFile);
+			var inputData = new XMLDeclarationInputDataProvider(jobFile, true); 
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				ActualModalData = true
+			};
+			var sumWriter = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumWriter);
+
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(2, sumWriter.Table.Rows.Count);
+
+			fh.Close();
+		}
+
+
+		[TestCase()]
+		public void TestSumDataFileIsLocked()
+		{
+
+
+			var jobFile = @"TestData\Integration\DeclarationMode\Class5_Vocational\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
+
+			var sumFilename = Path.Combine(Path.GetDirectoryName(jobFile), "Tractor_4x2_vehicle-class-5_EURO6_2018.vsum");
+
+			// lock modfile so it can't be written
+			Stream fh = !File.Exists(sumFilename) ? File.Create(sumFilename) : File.OpenRead(sumFilename);
+
+			var writer = new FileOutputWriter(jobFile);
+			var inputData = new XMLDeclarationInputDataProvider(jobFile, true);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				ActualModalData = true
+			};
+			var sumWriter = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumWriter);
+
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(2, sumWriter.Table.Rows.Count);
+
+			fh.Close();
+		}
 	}
 }
