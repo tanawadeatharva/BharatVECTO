@@ -31,12 +31,14 @@
 
 using System.IO;
 using System.Xml;
+using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
 using TUGraz.VectoCore.OutputData.XML;
 using NUnit.Framework;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
@@ -54,11 +56,17 @@ namespace TUGraz.VectoCore.Tests.XML
 		const string DeclarationJobFull =
 			@"TestData\XML\XMLWriter\DeclarationJob\Class5_Tractor_4x2\Class5_Tractor_DECL-FULL.vecto";
 
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 		[TestCase]
@@ -168,7 +176,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			job.Save(outputFile);
 
 			var reader = XmlReader.Create(outputFile);
-			var xml = new XMLDeclarationInputDataProvider(reader, true);
+			var xml = xmlInputReader.CreateDeclaration(reader, true);
 
 			Assert.IsNotNull(xml);
 			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
@@ -190,7 +198,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			job.Save(outputFile);
 
 			var reader = XmlReader.Create(outputFile);
-			var xml = new XMLDeclarationInputDataProvider(reader, true);
+			var xml = xmlInputReader.CreateDeclaration(reader, true);
 
 			Assert.IsNotNull(xml);
 			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);

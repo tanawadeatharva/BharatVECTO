@@ -83,7 +83,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="JetBrains.Annotations, Version=2018.3.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\packages\JetBrains.Annotations.2018.3.0\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
@@ -92,6 +95,17 @@
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject.Extensions.Factory">
+      <HintPath>..\..\..\STUDENTEN_PROJEKTE\Kober_VectoGIT\VECTO_GIT\packages\Ninject.Extensions.Factory.3.3.2\lib\net45\Ninject.Extensions.Factory.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Extensions.NamedScope, Version=3.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Ninject.Extensions.NamedScope.3.3.0\lib\net45\Ninject.Extensions.NamedScope.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
@@ -120,19 +134,77 @@
     <Compile Include="InputData\FileIO\JSON\IJSONVehicleComponents.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\AbstractDeclarationXMLComponentDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAirdragDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAngledriveDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAuxiliaryDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationAxlegearDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationEngineDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationGearboxDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationJobInputDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationRetarderDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationTorqueConverterDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationVehicleDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationInputDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLManufacturerReportReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractCommonComponentType.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractXMLResource.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractXMLType.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLAuxiliaryDeclarationDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationADASDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAirdragDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAngledriveDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAuxiliariesDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAxleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAxlegearDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAxlesDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationComponentsDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationEngineDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationGearboxDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationJobInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationPTODataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationRetarderDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationTorqueConverterDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationTyreDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLGearData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAirdragDeclarationInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAngledriveInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAuxiliariesDeclarationInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAxleDeclarationInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAxleGearInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAxlesDeclarationInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLDeclarationJobInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLEngineDeclarationInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLGearboxDeclarationInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLGearData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLPTOTransmissionInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLRetarderInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLTorqueConverterDeclarationInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLTyreDeclarationInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLVehicleComponentsDeclaration.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\AbstractComponentReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLADASReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLComponentReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLPTOReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLADASReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLComponentReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLDeclarationInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Impl\AbstractDeclarationXMLComponentDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Factory\IDeclarationInjectFactory.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLDeclarationVehicleData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV10InjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLDeclarationInputReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLJobDataReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLJobDataReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLPTOReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Factory\IEngineeringInjectFactory.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\IXMLEngineeringInputReader.cs" />
+    <Compile Include="InputData\FileIO\XML\IXMLResource.cs" />
+    <Compile Include="InputData\FileIO\XML\XMLInputDataFactory.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
+    <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
+    <Compile Include="Utils\Ninject\UseFirstArgumentAsInstanceProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Impl\XMLDeclarationAirdragDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Impl\XMLDeclarationAngledriveDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Impl\XMLDeclarationAuxiliaryDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Impl\XMLDeclarationAxlegearDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Impl\XMLDeclarationEngineDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Impl\XMLDeclarationGearboxDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Impl\XMLDeclarationJobInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationReaderInjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Impl\XMLDeclarationRetarderDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Impl\XMLDeclarationTorqueConverterDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Impl\XMLManufacturerReportReader.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\AbstractEngineeringXMLComponentDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAirdragDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAngledriveDataProvider.cs" />
@@ -362,10 +434,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VectoVersionCore.tt</DependentUpon>
     </Compile>
+    <Compile Include="Utils\XMLDefinitions.cs" />
     <Compile Include="Utils\XMLHelper.cs" />
     <Compile Include="Utils\XmlResourceResolver.cs" />
     <Compile Include="Utils\XMLValidator.cs" />
     <Compile Include="Utils\XPathHelper.cs" />
+    <Compile Include="Ninject\VectoNinjectModule.cs" />
     <Compile Include="VersionNumber1.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -418,10 +492,6 @@
     <EmbeddedResource Include="Resources\Declaration\VAUX\PTO-tech.csv" />
     <EmbeddedResource Include="Resources\Declaration\TorqueConverter.csv" />
     <EmbeddedResource Include="Resources\XSD\ParameterDocumentation.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoComponent.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -494,6 +564,36 @@
     <EmbeddedResource Include="Resources\XSD\VectoMonitoring.0.7.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.2.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationJob.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoComponent.2.0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationComponent.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.1.0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringInput.1.0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoInput.2.0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>
@@ -533,6 +633,7 @@
       <Name>VectoHashing</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

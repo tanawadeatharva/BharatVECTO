@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
-				data.Axles.Where(axle => axle.AxleType == AxleType.VehicleDriven)
+				data.Components.AxleWheels.AxlesDeclaration.Where(axle => axle.AxleType == AxleType.VehicleDriven)
 					.Select(da => DeclarationData.Wheels.Lookup(da.Tyre.Dimension).DynamicTyreRadius)
 					.Average();
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
@@ -114,11 +114,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.VocationalVehicle = data.VocationalVehicle;
 			retVal.ADAS = CreateADAS(data.ADAS);
 
-			var axles = data.Axles;
+			var axles = data.Components.AxleWheels.AxlesDeclaration;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException(
 					"Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
-					data.Axles.Count, mission.AxleWeightDistribution.Length);
+					axles.Count, mission.AxleWeightDistribution.Length);
 			}
 
 			var axleData = new List<Axle>();

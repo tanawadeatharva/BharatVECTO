@@ -107,19 +107,19 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
 			var tempVehicle = _dao.CreateVehicleData(vehicle, _segment.Missions.First(),
 				_segment.Missions.First().Loadings.First().Value);
-			_airdragData = _dao.CreateAirdragData(vehicle.AirdragInputData,
+			_airdragData = _dao.CreateAirdragData(vehicle.Components.AirdragInputData,
 				_segment.Missions.First(), _segment);
-			_engineData = _dao.CreateEngineData(vehicle.EngineInputData,
+			_engineData = _dao.CreateEngineData(vehicle.Components.EngineInputData,
 				vehicle.EngineIdleSpeed,
-				vehicle.GearboxInputData, vehicle.TorqueLimits, vehicle.TankSystem);
-			_axlegearData = _dao.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.AxleGearInputData);
-			_angledriveData = _dao.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.AngledriveInputData);
-			_gearboxData = _dao.CreateGearboxData(vehicle.GearboxInputData, _engineData,
+				vehicle.Components.GearboxInputData, vehicle.TorqueLimits, vehicle.TankSystem);
+			_axlegearData = _dao.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
+			_angledriveData = _dao.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
+			_gearboxData = _dao.CreateGearboxData(vehicle.Components.GearboxInputData, _engineData,
 				_axlegearData.AxleGear.Ratio,
 				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory);
-			_retarderData = _dao.CreateRetarderData(vehicle.RetarderInputData);
+			_retarderData = _dao.CreateRetarderData(vehicle.Components.RetarderInputData);
 
-			_ptoTransmissionData = _dao.CreatePTOTransmissionData(vehicle.PTOTransmissionInputData);
+			_ptoTransmissionData = _dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
 			_municipalPtoTransmissionData = CreateDefaultPTOData();
 		}
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					Retarder = _retarderData,
 					Aux =
 						_dao.CreateAuxiliaryData(
-							InputDataProvider.JobInputData.Vehicle.AuxiliaryInputData(),
+							InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData,
 							_segment.Missions.First().MissionType,
 							_segment.VehicleClass),
 					PTO = _ptoTransmissionData,
@@ -201,12 +201,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var simulationRunData = new VectoRunData {
 						Loading = loading.Key,
 						VehicleData = _dao.CreateVehicleData(vehicle, mission, loading.Value),
-						AirdragData = _dao.CreateAirdragData(vehicle.AirdragInputData, mission, _segment),
+						AirdragData = _dao.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment),
 						EngineData = _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
 						GearboxData = _gearboxData,
 						AxleGearData = _axlegearData,
 						AngledriveData = _angledriveData,
-						Aux = _dao.CreateAuxiliaryData(vehicle.AuxiliaryInputData(), mission.MissionType,
+						Aux = _dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData, mission.MissionType,
 							_segment.VehicleClass),
 						Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 						Retarder = _retarderData,

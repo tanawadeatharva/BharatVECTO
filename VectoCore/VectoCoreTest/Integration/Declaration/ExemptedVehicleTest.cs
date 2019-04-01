@@ -34,6 +34,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
+using Ninject;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Exceptions;
@@ -41,12 +42,14 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -55,10 +58,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 	{
 		const string ExemptedVehicle = @"Testdata\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml";
 
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 		[TestCase(ExemptedVehicle, 1)]
@@ -79,7 +88,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				File.Delete(monitoringFile);
 			}
 
-			var inputData = new XMLDeclarationInputDataProvider(filename, true); //.ReadJsonJob(relativeJobPath);
+			var inputData = xmlInputReader.CreateDeclaration(filename, true);
+			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true
@@ -102,13 +112,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(File.Exists(customerFile));
 
 			var validator = new XMLValidator(XmlReader.Create(manufactuerFile));
-			Assert.IsTrue(validator.ValidateXML(XMLValidator.XmlDocumentType.ManufacturerReport));
+			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.ManufacturerReport));
 
 			var val2 = new XMLValidator(XmlReader.Create(customerFile));
-			Assert.IsTrue(val2.ValidateXML(XMLValidator.XmlDocumentType.CustomerReport));
+			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.CustomerReport));
 
 			var val3 = new XMLValidator(XmlReader.Create(customerFile));
-			Assert.IsTrue(val3.ValidateXML(XMLValidator.XmlDocumentType.MonitoringReport));
+			Assert.IsTrue(val3.ValidateXML(XmlDocumentType.MonitoringReport));
 
 		}
 
@@ -142,8 +152,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
-			var inputData = new XMLDeclarationInputDataProvider(modified, true);
-
+			var inputData = xmlInputReader.CreateDeclaration(modified, true);
+			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true
@@ -219,8 +229,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
-			var inputData = new XMLDeclarationInputDataProvider(modified, true);
-
+			var inputData = xmlInputReader.CreateDeclaration(modified, true);
+			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true

@@ -31,6 +31,7 @@
 
 using System.IO;
 using System.Xml;
+using Ninject;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
@@ -43,6 +44,7 @@ using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Reports
@@ -50,10 +52,18 @@ namespace TUGraz.VectoCore.Tests.Reports
 	[TestFixture]
 	public class SumWriterTest
 	{
+
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 		[TestCase]
@@ -174,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		public void TestSumDataMetaInformation()
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
-			var dataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(jobfile), true);
+			var dataProvider = xmlInputReader.CreateDeclaration(jobfile, true);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
@@ -196,33 +206,33 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Manufacturer, sumRow[SummaryDataContainer.VEHICLE_MANUFACTURER]);
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Model, sumRow[SummaryDataContainer.VEHICLE_MODEL]);
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.VIN, sumRow[SummaryDataContainer.VIN_NUMBER]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.Manufacturer,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.Manufacturer,
 				sumRow[SummaryDataContainer.ENGINE_MANUFACTURER]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.Model, sumRow[SummaryDataContainer.ENGINE_MODEL]);
-            Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.FuelType.ToXMLFormat(),
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.Model, sumRow[SummaryDataContainer.ENGINE_MODEL]);
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.FuelType.ToXMLFormat(),
 				sumRow[SummaryDataContainer.ENGINE_FUEL_TYPE]);
-			Assert.AreEqual((dataProvider.JobInputData.Vehicle.EngineInputData.RatedPowerDeclared.ConvertToKiloWatt()),
+			Assert.AreEqual((dataProvider.JobInputData.Vehicle.Components.EngineInputData.RatedPowerDeclared.ConvertToKiloWatt()),
 				((ConvertedSI)sumRow[SummaryDataContainer.ENGINE_RATED_POWER]));
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.RatedSpeedDeclared.AsRPM,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.RatedSpeedDeclared.AsRPM,
 				(double)((ConvertedSI)sumRow[SummaryDataContainer.ENGINE_RATED_SPEED]));
-            Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.Displacement.ConvertToCubicCentiMeter(),
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.Displacement.ConvertToCubicCentiMeter(),
 				((ConvertedSI)sumRow[SummaryDataContainer.ENGINE_DISPLACEMENT]));
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.GearboxInputData.Manufacturer,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.GearboxInputData.Manufacturer,
 				sumRow[SummaryDataContainer.GEARBOX_MANUFACTURER]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.GearboxInputData.Model, sumRow[SummaryDataContainer.GEARBOX_MODEL]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.AxleGearInputData.Manufacturer,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.GearboxInputData.Model, sumRow[SummaryDataContainer.GEARBOX_MODEL]);
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.AxleGearInputData.Manufacturer,
 				sumRow[SummaryDataContainer.AXLE_MANUFACTURER]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.AxleGearInputData.Model, sumRow[SummaryDataContainer.AXLE_MODEL]);
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.AxleGearInputData.Model, sumRow[SummaryDataContainer.AXLE_MODEL]);
 
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.ColdHotBalancingFactor,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.ColdHotBalancingFactor,
 				sumRow[SummaryDataContainer.ENGINE_BF_COLD_HOT]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.CorrectionFactorRegPer,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.CorrectionFactorRegPer,
 				sumRow[SummaryDataContainer.ENGINE_CF_REG_PER]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.WHTCRural,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.WHTCRural,
 				sumRow[SummaryDataContainer.ENGINE_WHTC_RURAL]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.WHTCUrban,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.WHTCUrban,
 				sumRow[SummaryDataContainer.ENGINE_WHTC_URBAN]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.WHTCMotorway,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.WHTCMotorway,
 				sumRow[SummaryDataContainer.ENGINE_WHTC_MOTORWAY]);
 		}
 
@@ -240,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Stream fh = !File.Exists(modFilename) ? File.Create(modFilename) : File.OpenRead(modFilename);
 
 			var writer = new FileOutputWriter(jobFile);
-			var inputData = new XMLDeclarationInputDataProvider(jobFile, true); 
+			var inputData = xmlInputReader.CreateDeclaration(jobFile, true);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true
@@ -272,7 +282,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Stream fh = !File.Exists(sumFilename) ? File.Create(sumFilename) : File.OpenRead(sumFilename);
 
 			var writer = new FileOutputWriter(jobFile);
-			var inputData = new XMLDeclarationInputDataProvider(jobFile, true);
+			var inputData = xmlInputReader.CreateDeclaration(jobFile, true);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true

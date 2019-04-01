@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var writer = JSONFileWriter.Instance;
 
 			VECTO_Global.Cfg = new VECTO.Configuration() {DeclMode = true};
-			writer.SaveVehicle(vehicleInput, vehicleInput.AirdragInputData, vehicleInput.RetarderInputData, vehicleInput.PTOTransmissionInputData, vehicleInput.AngledriveInputData, outFile);
+			writer.SaveVehicle(vehicleInput, vehicleInput.Components.AirdragInputData, vehicleInput.Components.RetarderInputData, vehicleInput.Components.PTOTransmissionInputData, vehicleInput.Components.AngledriveInputData, outFile);
 
 			var savedData = JSONInputDataFactory.ReadComponentData(outFile);
 			var savedInprovider = savedData as IEngineeringInputDataProvider;
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var inputProvider = input as IEngineeringInputDataProvider;
 			Assert.NotNull(inputProvider);
 
-			var engineInputData = inputProvider.JobInputData.Vehicle.EngineInputData;
+			var engineInputData = inputProvider.JobInputData.Vehicle.Components.EngineInputData;
 
 			var writer = JSONFileWriter.Instance;
 
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var savedInprovider = savedData as IEngineeringInputDataProvider;
 			Assert.NotNull(savedInprovider);
 
-			AssertHelper.PublicPropertiesEqual(typeof(IEngineDeclarationInputData),engineInputData, savedInprovider.JobInputData.Vehicle.EngineInputData,
+			AssertHelper.PublicPropertiesEqual(typeof(IEngineDeclarationInputData),engineInputData, savedInprovider.JobInputData.Vehicle.Components.EngineInputData,
 				new[] { "Source" });
 		}
 
@@ -112,15 +112,15 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var writer = JSONFileWriter.Instance;
 
 			VECTO_Global.Cfg = new VECTO.Configuration() { DeclMode = true };
-			writer.SaveGearbox(vehicleInputData.GearboxInputData, vehicleInputData.AxleGearInputData, outFile);
+			writer.SaveGearbox(vehicleInputData.Components.GearboxInputData, vehicleInputData.Components.AxleGearInputData, outFile);
 
 			var savedData = JSONInputDataFactory.ReadComponentData(outFile);
 			var savedInprovider = savedData as IEngineeringInputDataProvider;
 			Assert.NotNull(savedInprovider);
 
-			AssertHelper.PublicPropertiesEqual(typeof(IGearboxDeclarationInputData), vehicleInputData.GearboxInputData, savedInprovider.JobInputData.Vehicle.GearboxInputData,
+			AssertHelper.PublicPropertiesEqual(typeof(IGearboxDeclarationInputData), vehicleInputData.Components.GearboxInputData, savedInprovider.JobInputData.Vehicle.Components.GearboxInputData,
 				new[] { "Source" });
-			AssertHelper.PublicPropertiesEqual(typeof(IAxleDeclarationInputData), vehicleInputData.AxleGearInputData, savedInprovider.JobInputData.Vehicle.AxleGearInputData,
+			AssertHelper.PublicPropertiesEqual(typeof(IAxleDeclarationInputData), vehicleInputData.Components.AxleGearInputData, savedInprovider.JobInputData.Vehicle.Components.AxleGearInputData,
 				new[] { "Source" });
 		}
 

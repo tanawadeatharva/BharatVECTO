@@ -45,15 +45,16 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
 	public class XMLEngineeringVehicleDataProvider : AbstractEngineeringXMLComponentDataProvider,
-		IVehicleEngineeringInputData,
-		IPTOTransmissionInputData
+		IVehicleEngineeringInputData, IPTOTransmissionInputData, IVehicleComponentsEngineering, IAuxiliariesEngineeringInputData
 	{
 		protected internal XMLEngineeringAuxiliaryDataProvider XMLEngineeringAuxiliaryData;
 		protected internal XMLEngineeringAxlegearDataProvider AxlegearData;
+		
 
 		public XMLEngineeringVehicleDataProvider(XMLEngineeringInputDataProvider jobProvider,
 			XmlDocument vehicleDocument, string xmlBasePath, string fsBasePath)
@@ -74,6 +75,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		{
 			get { return GetAttributeValue("", XMLNames.Component_ID_Attr); }
 		}
+
+		public string Identifier { get { return GetVehicleID; } }
 
 		public bool ExemptedVehicle { get { return false; } }
 
@@ -156,6 +159,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			}
 		}
 
+		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
+		{
+			get { return this; }
+		}
+
+		IAdvancedDriverAssistantSystemsEngineering IVehicleEngineeringInputData.ADAS
+		{
+			get { return null; }
+		}
+
 
 		public AxleConfiguration AxleConfiguration
 		{
@@ -177,11 +190,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return null; }
 		}
 
-		IList<IAxleDeclarationInputData> IVehicleDeclarationInputData.Axles
-		{
-			get { return AxleEngineeringInput().Cast<IAxleDeclarationInputData>().ToList(); }
-		}
-
+		
 		private IEnumerable<AxleInputData> AxleEngineeringInput()
 		{
 			var axlePath = Helper.Query(
@@ -245,21 +254,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public IAirdragEngineeringInputData AirdragInputData { get; private set; }
 
-		IAirdragDeclarationInputData IVehicleDeclarationInputData.AirdragInputData
-		{
-			get { return AirdragInputData; }
-		}
-
-		IGearboxDeclarationInputData IVehicleDeclarationInputData.GearboxInputData
-		{
-			get { return GearboxInputData; }
-		}
-
-		ITorqueConverterDeclarationInputData IVehicleDeclarationInputData.TorqueConverterInputData
-		{
-			get { return TorqueConverterInputData; }
-		}
-
+		
 		public IGearboxEngineeringInputData GearboxInputData { get; private set; }
 
 		public ITorqueConverterEngineeringInputData TorqueConverterInputData { get; private set; }
@@ -271,26 +266,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public IAngledriveInputData AngledriveInputData { get; private set; }
 
-		IEngineDeclarationInputData IVehicleDeclarationInputData.EngineInputData
-		{
-			get { return EngineInputData; }
-		}
-
 		public IEngineEngineeringInputData EngineInputData { get; private set; }
+
+		IAuxiliariesEngineeringInputData IVehicleComponentsEngineering.AuxiliaryInputData
+		{
+			get { return this; }
+		}
 
 		public IAuxiliariesEngineeringInputData AuxiliaryInputData()
 		{
 			return XMLEngineeringAuxiliaryData;
 		}
 
-		IAuxiliariesDeclarationInputData IVehicleDeclarationInputData.AuxiliaryInputData()
-		{
-			throw new NotImplementedException();
-		}
-
 		public IRetarderInputData RetarderInputData { get; private set; }
 
 		public IPTOTransmissionInputData PTOTransmissionInputData { get; private set; }
+		public IAxlesEngineeringInputData AxleWheels { get; }
 		public bool VocationalVehicle { get { return false; } }
 		public bool SleeperCab { get { return true; } }
 		public TankSystem? TankSystem { get; }
@@ -300,6 +291,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public bool DualFuelVehicle { get { return false; } }
 		public Watt MaxNetPower1 { get { return null; } }
 		public Watt MaxNetPower2 { get { return null; } }
+		public IVehicleComponentsDeclaration Components { get; }
 
 		#region "FactoryMethods"
 
@@ -367,8 +359,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 					var componentDocument = new XmlDocument();
 					componentDocument.Load(XmlReader.Create(Path.Combine(FSBasePath, componentFile)));
 					if (verifyXml) {
-						new XMLValidator(componentDocument, null, XMLEngineeringInputDataProvider.ValidationCallBack).ValidateXML(XMLValidator.XmlDocumentType
-							.EngineeringData);
+						new XMLValidator(componentDocument, null, XMLEngineeringInputDataProvider.ValidationCallBack).ValidateXML(XmlDocumentType
+							.EngineeringJobData);
 					}
 					return creator(InputData, componentDocument,
 						Helper.QueryAbs(Helper.NSPrefix(XMLNames.VectoComponentEngineering, Constants.XML.RootNSPrefix), componentName,
@@ -429,6 +421,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 				return null;
 			}
 		}
+
+		#endregion
+
+		#region Implementation of IAuxiliariesEngineeringInputData
+
+		public IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
+		public AuxiliaryModel AuxiliaryAssembly { get; }
+		public string AuxiliaryVersion { get; }
+		public string AdvancedAuxiliaryFilePath { get; }
 
 		#endregion
 	}

@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
-			var axles = data.Axles;
+			var axles = data.Components.AxleWheels.AxlesEngineering;
 
 			retVal.AxleData = axles.Select(axle => new Axle {
 				WheelsDimension = axle.Tyre.Dimension,
@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						data.GrossVehicleMassRating, false);
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(airDragArea,
 						DeclarationDataAdapter.GetDeclarationAirResistanceCurve(
-							GetAirdragParameterSet(data.VehicleCategory, data.AxleConfiguration, data.Axles.Count), airDragArea, height),
+							GetAirdragParameterSet(data.VehicleCategory, data.AxleConfiguration, data.Components.AxleWheels.AxlesEngineering.Count), airDragArea, height),
 						CrossWindCorrectionMode.DeclarationModeCorrection);
 					break;
 				default:

@@ -347,10 +347,10 @@ Public Class VehicleForm
 		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
 																IEngineeringInputDataProvider)
 		Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
-		Dim airdrag As IAirdragEngineeringInputData = inputData.JobInputData.Vehicle.AirdragInputData
-		Dim retarder As IRetarderInputData = inputData.JobInputData.Vehicle.RetarderInputData
-		Dim angledrive As IAngledriveInputData = inputData.JobInputData.Vehicle.AngledriveInputData
-		Dim pto As IPTOTransmissionInputData = inputData.JobInputData.Vehicle.PTOTransmissionInputData
+		Dim airdrag As IAirdragEngineeringInputData = inputData.JobInputData.Vehicle.Components.AirdragInputData
+		Dim retarder As IRetarderInputData = inputData.JobInputData.Vehicle.Components.RetarderInputData
+		Dim angledrive As IAngledriveInputData = inputData.JobInputData.Vehicle.Components.AngledriveInputData
+		Dim pto As IPTOTransmissionInputData = inputData.JobInputData.Vehicle.Components.PTOTransmissionInputData
 
 		If Cfg.DeclMode <> vehicle.SavedInDeclarationMode Then
 			Select Case WrongMode()
@@ -387,7 +387,7 @@ Public Class VehicleForm
 		LvRRC.Items.Clear()
 		Dim i As Integer = 0
 		Dim a0 As IAxleEngineeringInputData
-		For Each a0 In vehicle.Axles
+		For Each a0 In vehicle.Components.AxleWheels.AxlesEngineering
 			i += 1
 			If Cfg.DeclMode Then
 				Dim inertia As Double = DeclarationData.Wheels.Lookup(a0.Tyre.Dimension).Inertia.Value()

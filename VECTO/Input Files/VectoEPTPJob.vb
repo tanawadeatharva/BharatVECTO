@@ -4,13 +4,16 @@ Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
 Imports System.Xml
+Imports Ninject
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.Hashing
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
@@ -32,11 +35,15 @@ Public Class VectoVTPJob
     Public FanCoefficients As Double()
     Private _fanDiameter As Meter
 
+    Private _xmlInputReader As IXMLInputDataReader
 
     Public Sub New()
         CycleFiles = New List(Of SubPath)
         _vehicleFile = New SubPath
         _manufacturerRecord = New SubPath()
+
+        Dim kernel as IKernel = New StandardKernel(new VectoNinjectModule)
+        _xmlInputReader = kernel.Get(Of IXMLInputDataReader)
     End Sub
 
     Public Property FilePath As String
@@ -115,7 +122,7 @@ Public Class VectoVTPJob
         Get
             If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
             'Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle
-            Return New XMLDeclarationInputDataProvider(_vehicleFile.FullPath, True).JobInputData.Vehicle
+            Return _xmlInputReader.CreateDeclaration(_vehicleFile.FullPath, True).JobInputData.Vehicle
         End Get
     End Property
 

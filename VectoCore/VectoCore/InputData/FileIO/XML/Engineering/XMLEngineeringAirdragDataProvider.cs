@@ -63,5 +63,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 					Helper.Query(XMLNames.Vehicle_CrosswindCorrectionData, XMLNames.Vehicle_CrosswindCorrectionData_Entry));
 			}
 		}
+
+		#region Implementation of IComponentInputData
+
+		
+
+		#endregion
 	}
 }

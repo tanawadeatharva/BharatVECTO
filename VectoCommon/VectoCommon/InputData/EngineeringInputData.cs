@@ -69,13 +69,6 @@ namespace TUGraz.VectoCommon.InputData
 		Kilogram Loading { get; }
 
 		/// <summary>
-		/// parameters for every axle
-		/// P044, P045, P046, P047, P048, P108
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		new IList<IAxleEngineeringInputData> Axles { get; }
-
-		/// <summary>
 		/// P049
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
@@ -83,7 +76,17 @@ namespace TUGraz.VectoCommon.InputData
 
 		Meter Height { get; }
 
+		new IVehicleComponentsEngineering Components { get; }
 
+		IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
+	}
+
+	public interface IAdvancedDriverAssistantSystemsEngineering
+	{ }
+
+
+	public interface IVehicleComponentsEngineering
+	{
 		new IAirdragEngineeringInputData AirdragInputData { get; }
 
 		new IGearboxEngineeringInputData GearboxInputData { get; }
@@ -96,11 +99,30 @@ namespace TUGraz.VectoCommon.InputData
 
 		new IEngineEngineeringInputData EngineInputData { get; }
 
-		new IAuxiliariesEngineeringInputData AuxiliaryInputData();
+		new IAuxiliariesEngineeringInputData AuxiliaryInputData { get; }
 
 		new IRetarderInputData RetarderInputData { get; }
 
 		new IPTOTransmissionInputData PTOTransmissionInputData { get; }
+
+		/// <summary>
+		/// parameters for every axle
+		/// P044, P045, P046, P047, P048, P108
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		IAxlesEngineeringInputData AxleWheels { get; }
+	}
+
+	public interface IAxlesEngineeringInputData
+	{
+		/// <summary>
+		/// parameters for every axle
+		/// P044, P045, P046, P047, P048, P108
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		IList<IAxleEngineeringInputData> AxlesEngineering { get; }
+
+		DataSource DataSource { get; }
 	}
 
 	public interface IAirdragEngineeringInputData : IAirdragDeclarationInputData

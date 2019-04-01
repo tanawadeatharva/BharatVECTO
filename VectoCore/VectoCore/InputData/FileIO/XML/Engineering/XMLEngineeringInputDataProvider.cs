@@ -39,6 +39,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
@@ -94,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			var xmldoc = new XmlDocument();
 			xmldoc.Load(inputData);
 			if (VerifyXml) {
-				new XMLValidator(xmldoc, null, ValidationCallBack).ValidateXML(XMLValidator.XmlDocumentType.EngineeringData);
+				new XMLValidator(xmldoc, null, ValidationCallBack).ValidateXML(XmlDocumentType.EngineeringJobData);
 			}
 			Document = xmldoc;
 		}
@@ -151,8 +152,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 					var vehicleDocument = new XmlDocument();
 					vehicleDocument.Load(XmlReader.Create(Path.Combine(Path.GetDirectoryName(FileName) ?? "./", vehicleFile)));
 					if (VerifyXml) {
-						new XMLValidator(vehicleDocument, null, ValidationCallBack).ValidateXML(XMLValidator.XmlDocumentType
-							.EngineeringData);
+						new XMLValidator(vehicleDocument, null, ValidationCallBack).ValidateXML(XmlDocumentType.EngineeringJobData);
 					}
 					var vehicleCompPath =
 						helper.QueryAbs(
@@ -195,5 +195,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		{
 			get { return XMLEngineeringDriverData; }
 		}
+
+		public string Source { get; private set; }
 	}
 }

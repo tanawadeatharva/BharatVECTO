@@ -222,7 +222,7 @@ Public Class JSONFileWriter
 				{"IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM},
 				{"AxleConfig", New Dictionary(Of String, Object) From {
 				{"Type", vehicle.AxleConfiguration.GetName()},
-				{"Axles", From axle In vehicle.Axles Select New Dictionary(Of String, Object) From {
+				{"Axles", From axle In vehicle.Components.AxleWheels.AxlesEngineering Select New Dictionary(Of String, Object) From {
 				{"Inertia", axle.Tyre.Inertia.Value()},
 				{"Wheels", axle.Tyre.Dimension},
 				{"AxleWeightShare", axle.AxleWeightShare},
@@ -258,7 +258,7 @@ Public Class JSONFileWriter
 		body.Add("EngineOnlyMode", job.EngineOnlyMode)
 
 		If job.EngineOnlyMode Then
-			body.Add("EngineFile", GetRelativePath(job.EngineOnly.Source, basePath))
+			body.Add("EngineFile", GetRelativePath(job.EngineOnly.DataSource.SourceFile, basePath))
 			body.Add("Cycles",
 					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 			WriteFile(header, body, filename)
@@ -266,12 +266,12 @@ Public Class JSONFileWriter
 		End If
 
 		'Main Files
-		body.Add("VehicleFile", GetRelativePath(job.Vehicle.Source, basePath))
-		body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.EngineInputData.Source, basePath))
-		body.Add("GearboxFile", GetRelativePath(input.JobInputData.Vehicle.GearboxInputData.Source, basePath))
+		body.Add("VehicleFile", GetRelativePath(job.Vehicle.DataSource.SourceFile, basePath))
+		body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, basePath))
+		body.Add("GearboxFile", GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, basePath))
 
 		
-		Dim aux As IAuxiliariesEngineeringInputData = job.Vehicle.AuxiliaryInputData()
+		Dim aux As IAuxiliariesEngineeringInputData = job.Vehicle.Components.AuxiliaryInputData
 		'AA-TB
 		'ADVANCED AUXILIARIES 
 		body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.GetName())
@@ -369,7 +369,7 @@ Public Class JSONFileWriter
 		'Body
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 		body.Add("SavedInDeclMode", declarationmode)
-		body.Add("DeclarationVehicle", GetRelativePath(job.Vehicle.Source, Path.GetDirectoryName(filename)))
+		body.Add("DeclarationVehicle", GetRelativePath(job.Vehicle.DataSource.SourceFile, Path.GetDirectoryName(filename)))
         if declarationmode Then
             body.add("ManufacturerRecord", GetRelativePath(job.ManufacturerReportInputData.Source, Path.GetDirectoryName(filename)))
             body.Add("Mileage", job.Mileage.ConvertToKiloMeter().Value)

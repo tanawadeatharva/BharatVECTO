@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.NetworkInformation;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -48,10 +49,8 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IComponentInputData
 	{
-		DataSourceType SourceType { get; }
-
-		string Source { get; }
-
+		DataSource DataSource { get; }
+		
 		bool SavedInDeclarationMode { get; }
 
 		string Manufacturer { get; }
@@ -67,8 +66,24 @@ namespace TUGraz.VectoCommon.InputData
 		DigestData DigestValue { get; }
 	}
 
+	public class DataSource
+	{
+		public DataSourceType SourceType { get; set; }
+
+		public string SourceFile { get; set; }
+
+		public string SourceVersion { get; set; }
+
+		public string SourcePath
+		{
+			get { return SourceFile != null ? Path.GetDirectoryName(Path.GetFullPath(SourceFile)) : null; }
+		}
+	}
+
 	public interface IVehicleDeclarationInputData : IComponentInputData
 	{
+		string Identifier { get; }
+
 		bool ExemptedVehicle { get; }
 
 		string VIN { get; }
@@ -112,29 +127,10 @@ namespace TUGraz.VectoCommon.InputData
 		/// P044, P045, P046, P047, P048, P108
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		IList<IAxleDeclarationInputData> Axles { get; }
 
 		string ManufacturerAddress { get; }
 
 		PerSecond EngineIdleSpeed { get; }
-
-		IAirdragDeclarationInputData AirdragInputData { get; }
-
-		IGearboxDeclarationInputData GearboxInputData { get; }
-
-		ITorqueConverterDeclarationInputData TorqueConverterInputData { get; }
-
-		IAxleGearInputData AxleGearInputData { get; }
-
-		IAngledriveInputData AngledriveInputData { get; }
-
-		IEngineDeclarationInputData EngineInputData { get; }
-
-		IAuxiliariesDeclarationInputData AuxiliaryInputData();
-
-		IRetarderInputData RetarderInputData { get; }
-
-		IPTOTransmissionInputData PTOTransmissionInputData { get; }
 
 		// new (optional) input fields
 
@@ -157,6 +153,46 @@ namespace TUGraz.VectoCommon.InputData
 		Watt MaxNetPower1 { get; }
 
 		Watt MaxNetPower2 { get; }
+
+		// components
+
+		IVehicleComponentsDeclaration Components { get; }
+
+	}
+
+	public interface IVehicleComponentsDeclaration
+	{ 
+
+		IAirdragDeclarationInputData AirdragInputData { get; }
+
+		IGearboxDeclarationInputData GearboxInputData { get; }
+
+		ITorqueConverterDeclarationInputData TorqueConverterInputData { get; }
+
+		IAxleGearInputData AxleGearInputData { get; }
+
+		IAngledriveInputData AngledriveInputData { get; }
+
+		IEngineDeclarationInputData EngineInputData { get; }
+
+		IAuxiliariesDeclarationInputData AuxiliaryInputData { get; }
+
+		IRetarderInputData RetarderInputData { get; }
+
+		IPTOTransmissionInputData PTOTransmissionInputData { get; }
+
+		IAxlesDeclarationInputData AxleWheels { get; }
+
+	}
+
+	public interface IAxlesDeclarationInputData
+	{
+		/// <summary>
+		/// parameters for every axle
+		/// P044, P045, P046, P047, P048, P108
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		IList<IAxleDeclarationInputData> AxlesDeclaration { get; }
 	}
 
 	public interface IAdvancedDriverAssistantSystemDeclarationInputData
@@ -269,6 +305,7 @@ namespace TUGraz.VectoCommon.InputData
 		AxleType AxleType { get; }
 
 		ITyreDeclarationInputData Tyre { get; }
+		
 	}
 
 	public interface ITyreDeclarationInputData : IComponentInputData

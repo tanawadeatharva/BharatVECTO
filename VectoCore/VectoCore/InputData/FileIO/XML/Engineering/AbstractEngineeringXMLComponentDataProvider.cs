@@ -29,24 +29,36 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
-	public class AbstractEngineeringXMLComponentDataProvider : AbstractDeclarationXMLComponentDataProvider
+	public class AbstractEngineeringXMLComponentDataProvider //: AbstractDeclarationXMLComponentDataProvider
 	{
-		protected new readonly XMLEngineeringInputDataProvider InputData;
+		protected readonly XMLEngineeringInputDataProvider InputData;
+
+		protected XPathNavigator Navigator;
 
 		protected readonly string FSBasePath;
 
+		protected string XBasePath = "";
+		protected XmlNamespaceManager Manager;
+
+
+		protected readonly string VehiclePath;
+
+		protected XPathHelper Helper;
 
 		protected readonly XmlDocument XMLDocument;
 
@@ -66,40 +78,49 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			SourceType = DataSourceType.Embedded;
 		}
 
-        public new string Source { get { return FSBasePath; } }
+		public virtual DataSource DataSource
+		{
+			get { return new DataSource() { SourceFile = Source, SourceVersion = SourceVersion, SourceType = SourceType }; }
+		}
+		public string Source { get { return InputData.Source; } }
+		public DataSourceType SourceType { get; protected set; }
 
-		public override bool SavedInDeclarationMode
+		protected string SourceVersion { get { return XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace); } }
+
+		protected string SchemaNamespace { get { return null; } }
+
+		public bool SavedInDeclarationMode
 		{
 			get { return false; }
 		}
 
-		public override string Manufacturer
+		public  string Manufacturer
 		{
 			get { return GetElementValue(XMLNames.Component_Manufacturer); }
 		}
 
-		public override string Model
+		public  string Model
 		{
 			get { return GetElementValue(XMLNames.Component_Model); }
 		}
 
 
-		public override string Date
+		public  string Date
 		{
 			get { return GetElementValue(XMLNames.Component_Date); }
 		}
 
-		public override DigestData DigestValue
+		public  DigestData DigestValue
 		{
 			get { return null; }
 		}
 
-		public override string CertificationNumber
+		public  string CertificationNumber
 		{
 			get { return "N.A."; }
 		}
 
-		public override CertificationMethod CertificationMethod
+		public  CertificationMethod CertificationMethod
 		{
 			get { return CertificationMethod.NotCertified; }
 		}
@@ -126,6 +147,70 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 				return Helper.Query(Helper.QueryConstraint(XMLNames.ExternalResource, XMLNames.ExtResource_Type_Attr,
 					XMLNames.ExtResource_Type_Value_CSV));
 			}
+		}
+
+		protected bool ElementExists(string relativePath)
+		{
+			var path = Helper.Query(XBasePath, relativePath.Any() ? relativePath : null);
+
+			var node = Navigator.SelectSingleNode(path, Manager);
+			return node != null;
+		}
+
+		protected string GetElementValue(string relativePath)
+		{
+			var path = Helper.Query(XBasePath, relativePath.Any() ? relativePath : null);
+
+			var node = Navigator.SelectSingleNode(path, Manager);
+			if (node == null) {
+				throw new VectoException("Node {0} not found in input data", path);
+			}
+			return node.InnerXml;
+		}
+
+		protected double GetDoubleElementValue(string relativePath)
+		{
+			return GetElementValue(relativePath).ToDouble();
+		}
+
+		protected string GetAttributeValue(string relativePath, string attrName)
+		{
+			var nodes =
+				Navigator.Select(string.IsNullOrWhiteSpace(relativePath) ? XBasePath : Helper.Query(XBasePath, relativePath),
+					Manager);
+			if (nodes.Count == 0) {
+				return null;
+			}
+			nodes.MoveNext();
+			return nodes.Current.GetAttribute(attrName, "");
+		}
+
+		protected TableData ReadTableData(Dictionary<string, string> attributeMapping, string relativePath,
+			XPathNavigator origin = null)
+		{
+			var startNode = origin ?? Navigator.SelectSingleNode(XBasePath, Manager);
+			if (startNode == null) {
+				throw new VectoException("start node for base-path {0} not found!", XBasePath);
+			}
+			var table = new TableData();
+			foreach (var entry in attributeMapping) {
+				if (startNode.Select(Helper.Query(relativePath, "@" + entry.Value), Manager).Count == 0) {
+					continue;
+				}
+				table.Columns.Add(entry.Key);
+			}
+			var nodes = startNode.Select(relativePath, Manager);
+			while (nodes.MoveNext()) {
+				var row = table.NewRow();
+				foreach (var attribute in attributeMapping) {
+					if (nodes.Current.SelectSingleNode("@" + attribute.Value) != null) {
+						row[attribute.Key] = nodes.Current.GetAttribute(attribute.Value, "");
+					}
+				}
+				table.Rows.Add(row);
+			}
+
+			return table;
 		}
 	}
 }

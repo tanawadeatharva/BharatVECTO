@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
 
-			var engineDataProvider = inputDataProvider.JobInputData.Vehicle.EngineInputData;
+			var engineDataProvider = inputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 
 			Assert.IsFalse(engineDataProvider.SavedInDeclarationMode);
 
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestXMLInputGbxReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
-			var gearboxDataProvider = inputDataProvider.JobInputData.Vehicle.GearboxInputData;
+			var gearboxDataProvider = inputDataProvider.JobInputData.Vehicle.Components.GearboxInputData;
 
 			Assert.AreEqual("Generic 40t Long Haul Truck Gearbox", gearboxDataProvider.Model);
 			Assert.AreEqual(GearboxType.AMT, gearboxDataProvider.Type);
@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestXMLInputGbxTCReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
-			var tcInputDataProvider = inputDataProvider.JobInputData.Vehicle.GearboxInputData.TorqueConverter;
+			var tcInputDataProvider = inputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.TorqueConverter;
 
 
 			Assert.AreEqual("GBX_ShiftPolygons.vgbs", Path.GetFileName(tcInputDataProvider.ShiftPolygon.Source));
@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestXMLInputAngledriveReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
-			var angledriveInputData = inputDataProvider.JobInputData.Vehicle.AngledriveInputData;
+			var angledriveInputData = inputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData;
 
 			Assert.AreEqual("Generic Angledrive", angledriveInputData.Model);
 
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestXMLInputAxlGReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
-			var axlegearDataProvider = inputDataProvider.JobInputData.Vehicle.AxleGearInputData;
+			var axlegearDataProvider = inputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData;
 
 			Assert.AreEqual("Generic 40t Long Haul Truck AxleGear", axlegearDataProvider.Model);
 
@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestXMLInputRetarderReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
-			var retarderDataProvider = inputDataProvider.JobInputData.Vehicle.RetarderInputData;
+			var retarderDataProvider = inputDataProvider.JobInputData.Vehicle.Components.RetarderInputData;
 
 			Assert.AreEqual("Generic Retarder", retarderDataProvider.Model);
 
@@ -209,7 +209,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
 			var vehicleDataProvider = inputDataProvider.VehicleInputData;
 
-			var axles = vehicleDataProvider.Axles;
+			var axles = vehicleDataProvider.Components.AxleWheels.AxlesEngineering;
 
 			var tyre = axles[0].Tyre;
 			Assert.AreEqual("315/70 R22.5",tyre.Dimension);
@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestXMLInputAuxiliariesReferencedFile()
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
-			var auxDataProvider = inputDataProvider.JobInputData.Vehicle.AuxiliaryInputData();
+			var auxDataProvider = inputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData;
 
 			var aux = auxDataProvider.Auxiliaries;
 			var aux1 = aux[0];
@@ -270,12 +270,12 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			Assert.AreEqual(7100.0, vehicleDataProvider.CurbMassChassis.Value());
 			Assert.AreEqual(18000.0, vehicleDataProvider.GrossVehicleMassRating.Value());
-			Assert.AreEqual(6.29, inputDataProvider.JobInputData.Vehicle.AirdragInputData.AirDragArea.Value());
+			Assert.AreEqual(6.29, inputDataProvider.JobInputData.Vehicle.Components.AirdragInputData.AirDragArea.Value());
 
 			Assert.AreEqual(1500, vehicleDataProvider.Loading.Value());
 			Assert.AreEqual(500, vehicleDataProvider.CurbMassExtra.Value());
 
-			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.RetarderInputData.Ratio);
+			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.Components.RetarderInputData.Ratio);
 		}
 
 		[Category("LongRunning")]
@@ -316,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			var inputDataProvider = new XMLEngineeringInputDataProvider(EngineeringSampleFile, true);
 
-			var ptoData = inputDataProvider.JobInputData.Vehicle.PTOTransmissionInputData;
+			var ptoData = inputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData;
 
 			//Assert.AreEqual("only the drive shaft of the PTO - multi-disc clutch", ptoData.PTOTransmissionType);
 			Assert.AreEqual(2, ptoData.PTOLossMap.Rows.Count);

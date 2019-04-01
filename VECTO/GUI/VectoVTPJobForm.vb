@@ -15,11 +15,14 @@ Imports System.IO
 Imports System.Linq
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports System.Xml
+Imports Ninject
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.Models.Declaration
@@ -39,6 +42,8 @@ Public Class VectoVTPJobForm
 
     Private _auxDialog As VehicleAuxiliariesDialog
 
+    Dim _xmlInputReader as IXMLInputDataReader
+
     Enum AuxViewColumns
         AuxID = 0
         AuxType = 1
@@ -48,6 +53,9 @@ Public Class VectoVTPJobForm
 
     'Initialise form
     Private Sub F02_GEN_Load(sender As Object, e As EventArgs) Handles Me.Load
+
+        Dim kernel as IKernel = New StandardKernel(new VectoNinjectModule)
+        _xmlInputReader = kernel.Get(Of IXMLInputDataReader)
 
         _auxDialog = New VehicleAuxiliariesDialog
 
@@ -191,11 +199,11 @@ Public Class VectoVTPJobForm
 
 
         'Files -----------------------------
-        TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.Source, _basePath)
+        TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
         tbManufacturerRecord.Text =
             If (cfg.DeclMode, GetRelativePath(inputData.JobInputData.ManufacturerReportInputData.Source, _basePath), "")
 
-        Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.AuxiliaryInputData()
+        Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData
 
         PopulateAuxiliaryList(auxInput)
 
@@ -367,9 +375,9 @@ Public Class VectoVTPJobForm
                  TbVEH.Text)
         If File.Exists(vehicleFile) Then
             Try
-                Dim inputData As XMLDeclarationInputDataProvider =
-                        New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
-                Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.AuxiliaryInputData()
+                Dim inputData As IDeclarationInputDataProvider =
+                        _xmlInputReader.CreateDeclaration(XmlReader.Create(vehicleFile), True)
+                Dim auxInput As IAuxiliariesDeclarationInputData = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData
                 PopulateAuxiliaryList(auxInput)
             Catch
             End Try
@@ -550,9 +558,9 @@ Public Class VectoVTPJobForm
                  TbVEH.Text)
         If File.Exists(vehicleFile) Then
             Try
-                Dim inputData As XMLDeclarationInputDataProvider =
-                        New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
-                gearbox = inputData.JobInputData.Vehicle.GearboxInputData
+                Dim inputData As IDeclarationInputDataProvider =
+                        _xmlInputReader.CreateDeclaration(XmlReader.Create(vehicleFile), True)
+                gearbox = inputData.JobInputData.Vehicle.Components.GearboxInputData
             Catch
             End Try
         End If
@@ -574,9 +582,9 @@ Public Class VectoVTPJobForm
                  TbVEH.Text)
         If File.Exists(vehicleFile) Then
             Try
-                Dim inputData As XMLDeclarationInputDataProvider =
-                        New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
-                engine = inputData.JobInputData.Vehicle.EngineInputData
+                Dim inputData As IDeclarationInputDataProvider =
+                        _xmlInputReader.CreateDeclaration(XmlReader.Create(vehicleFile), True)
+                engine = inputData.JobInputData.Vehicle.Components.EngineInputData
             Catch
                 Return
             End Try
@@ -653,8 +661,8 @@ Public Class VectoVTPJobForm
                  TbVEH.Text)
         If File.Exists(vehicleFile) Then
             Try
-                Dim inputData As XMLDeclarationInputDataProvider =
-                        New XMLDeclarationInputDataProvider(XmlReader.Create(vehicleFile), True)
+                Dim inputData As IDeclarationInputDataProvider =
+                        _xmlInputReader.CreateDeclaration(XmlReader.Create(vehicleFile), True)
                 vehicle = inputData.JobInputData.Vehicle
             Catch
             End Try

@@ -46,7 +46,7 @@ namespace HashingTool.Util
 			_validator = new XMLValidator(xml, resultaction, validationErrorAction);
 		}
 
-		public Task<bool> ValidateXML(TUGraz.VectoCore.Utils.XMLValidator.XmlDocumentType docType)
+		public Task<bool> ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType docType)
 		{
 			var task = new Task<bool>(() => _validator.ValidateXML(docType));
 			task.Start();

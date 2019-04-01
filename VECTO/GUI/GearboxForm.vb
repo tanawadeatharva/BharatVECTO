@@ -240,8 +240,8 @@ Public Class GearboxForm
 		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
 																IEngineeringInputDataProvider)
 		Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
-		Dim gearbox As IGearboxEngineeringInputData = vehicle.GearboxInputData
-		Dim axlegear As IAxleGearInputData = vehicle.AxleGearInputData
+		Dim gearbox As IGearboxEngineeringInputData = vehicle.Components.GearboxInputData
+		Dim axlegear As IAxleGearInputData = vehicle.Components.AxleGearInputData
 
 		_vehicleCategory = vehicleCategory
 
@@ -810,7 +810,7 @@ Public Class GearboxForm
 			End If
 			Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
 			'inputData = TryCast(JSONInputDataFactory.ReadComponentData(vectoJob.PathEng(False)), IEngineeringInputDataProvider)
-			Dim engine As IEngineEngineeringInputData = inputData.JobInputData.Vehicle.EngineInputData
+			Dim engine As IEngineEngineeringInputData = inputData.JobInputData.Vehicle.Components.EngineInputData
 			Dim engineFld As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve)
 
 
@@ -908,10 +908,10 @@ Public Class GearboxForm
 		End If
 		Dim rDyn As Meter = vehicle.DynamicTyreRadius
 		If rDyn.IsEqual(0) Then
-			If (vehicle.Axles.Count < 2) Then
+			If (vehicle.Components.AxleWheels.AxlesEngineering.Count < 2) Then
 				Return Nothing
 			End If
-			rdyn = vehicle.Axles.Where(Function(axle)  axle.AxleType = AxleType.VehicleDriven) _
+			rdyn = vehicle.Components.AxleWheels.AxlesEngineering.Where(Function(axle)  axle.AxleType = AxleType.VehicleDriven) _
 				.Select(Function(da) DeclarationData.Wheels.Lookup(da.Tyre.Dimension).DynamicTyreRadius) _
 				.Average()
 		End If
@@ -1057,7 +1057,7 @@ Public Class GearboxForm
 			End If
 
 			Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
-			Dim engine As IEngineEngineeringInputData = vehicle.EngineInputData
+			Dim engine As IEngineEngineeringInputData = vehicle.Components.EngineInputData
 			Dim engineFld As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve)
 
 			If VectoJobForm.Visible AndAlso engine.IdleSpeed > 0 Then

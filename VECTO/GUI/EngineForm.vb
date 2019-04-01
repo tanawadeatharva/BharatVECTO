@@ -75,7 +75,7 @@ Public Class EngineForm
 			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile), 
 																	 IEngineeringInputDataProvider)
 			If (not inputData Is Nothing) Then
-				Dim gbx as IGearboxDeclarationInputData = inputData.JobInputData.Vehicle.GearboxInputData
+				Dim gbx as IGearboxDeclarationInputData = inputData.JobInputData.Vehicle.Components.GearboxInputData
 				gbxType = gbx.Type
 			End If
 		End If
@@ -179,7 +179,7 @@ Public Class EngineForm
 		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
 																IEngineeringInputDataProvider)
 
-		engine = inputData.JobInputData.Vehicle.EngineInputData
+		engine = inputData.JobInputData.Vehicle.Components.EngineInputData
 
 
 		If Cfg.DeclMode <> engine.SavedInDeclarationMode Then

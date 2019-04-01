@@ -36,6 +36,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Utils
@@ -46,15 +47,6 @@ namespace TUGraz.VectoCore.Utils
 		private readonly Action<bool> _resultAction;
 		private bool _valid;
 		private readonly XmlDocument _doc;
-
-		private static Dictionary<XmlDocumentType, Tuple<string, string[]> > schemaFilenames = new Dictionary<XmlDocumentType, Tuple<string, string[]>>() {
-			{XmlDocumentType.DeclarationJobData, Tuple.Create("VectoInput{0}.xsd", new [] {"1.0"}) },
-			{XmlDocumentType.DeclarationComponentData, Tuple.Create("VectoComponent{0}.xsd", new [] {"1.0"}) },
-			{XmlDocumentType.EngineeringData, Tuple.Create("VectoEngineeringInput{0}.xsd", new [] {"0.7"}) },
-			{XmlDocumentType.ManufacturerReport, Tuple.Create("VectoOutputManufacturer{0}.xsd", new [] {"0.4", "0.5", "0.6", "0.7"}) },
-			{XmlDocumentType.CustomerReport , Tuple.Create("VectoOutputCustomer{0}.xsd", new [] {"0.4", "0.5", "0.7"})},
-			{XmlDocumentType.MonitoringReport , Tuple.Create("VectoMonitoring{0}.xsd", new [] {"0.7"})},
-		};
 
 		private XMLValidator(Action<bool> resultaction, Action<XmlSeverityType, ValidationEvent> validationErrorAction)
 		{
@@ -80,7 +72,7 @@ namespace TUGraz.VectoCore.Utils
 			if (_doc.DocumentElement == null) {
 				throw new Exception("empty XML document");
 			}
-			var version = _doc.DocumentElement.GetAttribute("schemaVersion");
+			var version =  XMLHelper.GetSchemaVersion(_doc.DocumentElement);
 			_doc.Schemas = GetXMLSchema(docType, version);
 			_doc.Validate(ValidationCallBack);
 			return _valid;
@@ -93,6 +85,13 @@ namespace TUGraz.VectoCore.Utils
 			_validationErrorAction(args.Severity, new ValidationEvent { ValidationEventArgs = args });
 		}
 
+		public static void CallBackExceptionOnError(XmlSeverityType severity, ValidationEvent evt)
+		{
+			if (severity == XmlSeverityType.Error) {
+				throw new VectoException("Validation error: {0}", evt.ValidationEventArgs.Message);
+			}
+		}
+
 		private static XmlSchemaSet GetXMLSchema(XmlDocumentType docType, string version)
 		{
 			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
@@ -101,41 +100,23 @@ namespace TUGraz.VectoCore.Utils
 				if ((entry & docType) == 0) {
 					continue;
 				}
-				Stream resource;
-				var schemaFile = GetSchemaFilename(entry,  version);
-				if (schemaFile == null) {
-					continue;
+
+				var schemaFile = XMLDefinitions.GetSchemaFilenames(entry, version);
+				foreach (var schema in schemaFile) {
+					Stream resource;
+					try {
+						resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schema);
+					} catch (Exception e) {
+						throw new Exception(
+							string.Format("Unknown XML schema! version: {0}, xml document type: {1} ({2})", entry, version, schemaFile), e);
+					}
+
+					var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
+					xset.Add(XmlSchema.Read(reader, null));
 				}
-				try {
-					resource= RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schemaFile);
-				} catch (Exception e) {
-					throw new Exception(string.Format("Unknown XML schema! version: {0}, xml document type: {1} ({2})", entry, version, schemaFile), e);
-				}
-				var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
-				xset.Add(XmlSchema.Read(reader, null));
 			}
 			xset.Compile();
 			return xset;
-		}
-
-		public static string GetSchemaFilename(XmlDocumentType type, string version)
-		{
-			if (!schemaFilenames.ContainsKey(type)) {
-				throw new Exception(string.Format("Invalid argument {0} - only use single flags", type));
-			}
-			var entry = schemaFilenames[type];
-			return !entry.Item2.Contains(version) ? null : string.Format(entry.Item1, string.IsNullOrWhiteSpace(version) ? "" : "." + version);
-		} 
-
-		[Flags]
-		public enum XmlDocumentType
-		{
-			DeclarationJobData = 1<<1,
-			DeclarationComponentData = 1<<3,
-			EngineeringData = 1<<4,
-			ManufacturerReport = 1<<5,
-			CustomerReport = 1<<6,
-			MonitoringReport = 1<<7,
 		}
 	}
 

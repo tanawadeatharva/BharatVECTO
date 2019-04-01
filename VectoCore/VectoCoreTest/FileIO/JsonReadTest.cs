@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			((JObject)json["Body"]).Property("Aux").Remove();
 
 			// MK,2016-01-20: Changed for PWheel: aux entry may be missing, and that is ok.
-			var tmp = new JSONInputDataV2(json, TestJobFile).JobInputData.Vehicle.AuxiliaryInputData().Auxiliaries;
+			var tmp = new JSONInputDataV2(json, TestJobFile).JobInputData.Vehicle.Components.AuxiliaryInputData.Auxiliaries;
 			Assert.IsTrue(tmp.Count == 0);
 		}
 

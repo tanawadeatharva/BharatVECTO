@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Retarder = RetarderData,
 				Aux =
 					Dao.CreateAuxiliaryData(
-						JobInputData.Vehicle.AuxiliaryInputData(),
+						JobInputData.Vehicle.Components.AuxiliaryInputData,
 						Segment.Missions.First().MissionType,
 						Segment.VehicleClass),
 			};
@@ -123,22 +123,22 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				vehicle, Segment.Missions.First(),
 				Segment.Missions.First().Loadings.First().Value);
 			AirdragData = Dao.CreateAirdragData(
-				vehicle.AirdragInputData,
+				vehicle.Components.AirdragInputData,
 				Segment.Missions.First(), Segment);
 			EngineData = Dao.CreateEngineData(
-				vehicle.EngineInputData,
+				vehicle.Components.EngineInputData,
 				vehicle.EngineIdleSpeed,
-				vehicle.GearboxInputData, vehicle.TorqueLimits, vehicle.TankSystem);
-			AxlegearData = Dao.CreateAxleGearData(vehicle.AxleGearInputData);
-			AngledriveData = Dao.CreateAngledriveData(vehicle.AngledriveInputData);
+				vehicle.Components.GearboxInputData, vehicle.TorqueLimits, vehicle.TankSystem);
+			AxlegearData = Dao.CreateAxleGearData(vehicle.Components.AxleGearInputData);
+			AngledriveData = Dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 			GearboxData = Dao.CreateGearboxData(
-				vehicle.GearboxInputData, EngineData,
+				vehicle.Components.GearboxInputData, EngineData,
 				AxlegearData.AxleGear.Ratio,
 				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory);
-			RetarderData = Dao.CreateRetarderData(vehicle.RetarderInputData);
+			RetarderData = Dao.CreateRetarderData(vehicle.Components.RetarderInputData);
 
 			PTOTransmissionData =
-				Dao.CreatePTOTransmissionData(vehicle.PTOTransmissionInputData);
+				Dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
 			AuxVTP = CreateVTPAuxData(vehicle);
 		}
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			runData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
 			runData.DriverData = Driverdata;
 			runData.Aux = Dao.CreateAuxiliaryData(
-				JobInputData.Vehicle.AuxiliaryInputData(), mission.MissionType, Segment.VehicleClass);
+				JobInputData.Vehicle.Components.AuxiliaryInputData, mission.MissionType, Segment.VehicleClass);
 			runData.ExecutionMode = ExecutionMode.Declaration;
 			runData.SimulationType = SimulationType.DistanceCycle;
 			runData.Mission = mission;
@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			vtpRunData.Mission = new Mission() {
 				MissionType = MissionType.VerificationTest
 			};
-			var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.EngineInputData.FuelType).LowerHeatingValueVecto;
+			var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
 			//var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
 			var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
 			vtpRunData.VTPData = new VTPData() {
@@ -239,21 +239,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)
 		{
 			var auxRD = Dao.CreateAuxiliaryData(
-								vehicle.AuxiliaryInputData(), MissionType.RegionalDelivery, Segment.VehicleClass)
+								vehicle.Components.AuxiliaryInputData, MissionType.RegionalDelivery, Segment.VehicleClass)
 							.ToList();
 			foreach (var entry in auxRD) {
 				entry.MissionType = MissionType.RegionalDelivery;
 			}
 
 			var auxLH = Dao.CreateAuxiliaryData(
-								vehicle.AuxiliaryInputData(), MissionType.LongHaul, Segment.VehicleClass)
+								vehicle.Components.AuxiliaryInputData, MissionType.LongHaul, Segment.VehicleClass)
 							.ToList();
 			foreach (var entry in auxLH) {
 				entry.MissionType = MissionType.LongHaul;
 			}
 
 			var auxUD = Dao.CreateAuxiliaryData(
-								vehicle.AuxiliaryInputData(), MissionType.UrbanDelivery, Segment.VehicleClass)
+								vehicle.Components.AuxiliaryInputData, MissionType.UrbanDelivery, Segment.VehicleClass)
 							.ToList();
 			foreach (var entry in auxUD) {
 				entry.MissionType = MissionType.UrbanDelivery;

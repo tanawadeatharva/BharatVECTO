@@ -41,11 +41,14 @@ Imports System.Threading
 Imports System.Xml
 Imports System.Xml.Linq
 Imports Microsoft.VisualBasic.FileIO
+Imports Ninject
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore
+Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 Imports TUGraz.VectoCore.OutputData
@@ -966,11 +969,13 @@ Imports TUGraz.VectoCore.Utils
                     Case ".xml"
                         Dim xDocument As XDocument = xDocument.Load(jobFile)
                         Dim rootNode As String = If(xDocument Is Nothing, "", xDocument.Root.Name.LocalName)
+                        Dim kernel as IKernel = New StandardKernel(new VectoNinjectModule)
+                        Dim xmlInputReader as IXMLInputDataReader = kernel.Get(Of IXMLInputDataReader)
                         Select Case rootNode
                             Case XMLNames.VectoInputEngineering
                                 input = New XMLEngineeringInputDataProvider(jobFile, True)
                             Case XMLNames.VectoInputDeclaration
-                                input = New XMLDeclarationInputDataProvider(XmlReader.Create(jobFile), True)
+                                input = xmlInputReader.CreateDeclaration(XmlReader.Create(jobFile), True)
                         End Select
                 End Select
 
@@ -2029,11 +2034,13 @@ Imports TUGraz.VectoCore.Utils
                 Case ".xml"
                     Dim xDocument As XDocument = xDocument.Load(f)
                     Dim rootNode As String = If(xDocument Is Nothing, "", xDocument.Root.Name.LocalName)
+                    Dim kernel as IKernel = New StandardKernel(new VectoNinjectModule)
+                    Dim xmlInputReader as IXMLInputDataReader = kernel.Get(Of IXMLInputDataReader)
                     Select Case rootNode
                         Case XMLNames.VectoInputEngineering
                             input = New XMLEngineeringInputDataProvider(f, True)
                         Case XMLNames.VectoInputDeclaration
-                            input = New XMLDeclarationInputDataProvider(XmlReader.Create(f), True)
+                            input = xmlInputReader.CreateDeclaration(XmlReader.Create(f), True)
                     End Select
             End Select
 

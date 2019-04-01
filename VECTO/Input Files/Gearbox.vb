@@ -217,7 +217,7 @@ Public Class Gearbox
 
 				Try
 
-					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.EngineInputData, Nothing, gearbox, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
+					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.Components.EngineInputData, Nothing, gearbox, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
@@ -227,7 +227,7 @@ Public Class Gearbox
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Try
-					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.EngineInputData, gearbox, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
+					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.Components.EngineInputData, gearbox, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
@@ -286,15 +286,12 @@ Public Class Gearbox
 	End Function
 
 
-	Public ReadOnly Property SourceType As DataSourceType Implements IComponentInputData.SourceType
+	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
 		Get
-			Return DataSourceType.JSONFile
-		End Get
-	End Property
-
-	Public ReadOnly Property Source As String Implements IComponentInputData.Source
-		Get
-			Return FilePath
+		    Dim retVal As DataSource =  New DataSource() 
+		    retVal.SourceType = DataSourceType.JSONFile
+		    retVal.SourceFile = FilePath
+		    Return retVal
 		End Get
 	End Property
 

@@ -32,10 +32,12 @@
 using System;
 using System.IO;
 using System.Linq;
+using Ninject;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -49,10 +51,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 		const string Class4Vocational = @"Testdata\Integration\DeclarationMode\Class4_Vocational\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml";
 		const string Class5Vocational = @"Testdata\Integration\DeclarationMode\Class5_Vocational\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
 
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 
@@ -62,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public void VocationalTest(string filename, int numRuns)
 		{
 			var writer = new FileOutputWriter(filename);
-			var inputData = new XMLDeclarationInputDataProvider(filename, true); //.ReadJsonJob(relativeJobPath);
+			var inputData = xmlInputReader.CreateDeclaration(filename, true);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true

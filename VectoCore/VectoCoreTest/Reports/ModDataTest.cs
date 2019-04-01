@@ -48,6 +48,8 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 using System.IO;
+using Ninject;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Tests.Models.Simulation;
@@ -57,10 +59,17 @@ namespace TUGraz.VectoCore.Tests.Reports
 	[TestFixture]
 	public class ModDataTest
 	{
+
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 		[TestCase(80, 0),
@@ -153,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		public void TractionInterruptionTest(string filename, int idx, double expectedTractionInterruption)
 		{
 			var writer = new FileOutputWriter(filename);
-			var inputData = new XMLDeclarationInputDataProvider(filename, true); 
+			var inputData = xmlInputReader.CreateDeclaration(filename, true);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 			};
@@ -330,12 +339,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 			FuelConsumptionMap fcMap = null;
 			if (engInput != null) {
 				 fcMap = FuelConsumptionMapReader.Create(engInput.JobInputData.Vehicle
-					.EngineInputData.FuelConsumptionMap);
+					.Components.EngineInputData.FuelConsumptionMap);
 			}
 			var vtpInput = inputData as IVTPEngineeringInputDataProvider;
 			if (vtpInput != null ) {
 				fcMap = FuelConsumptionMapReader.Create(vtpInput.JobInputData.Vehicle
-					.EngineInputData.FuelConsumptionMap);
+					.Components.EngineInputData.FuelConsumptionMap);
 			}
 			var disatanceBased =
 				((VehicleContainer)(jobContainer.Runs.First().Run.GetContainer())).DrivingCycle is DistanceBasedDrivingCycle;
@@ -619,7 +628,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			foreach (var modalResults in modData) {
 				AssertModDataIntegrityAT(modalResults.Item1, auxKeys, modalResults.Item2,
-					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).JobInputData.Vehicle.EngineInputData.FuelConsumptionMap), true);
+					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).JobInputData.Vehicle.Components.EngineInputData.FuelConsumptionMap), true);
 			}
 
 			AssertSumDataIntegrity(sumData, ExecutionMode.Engineering, true);

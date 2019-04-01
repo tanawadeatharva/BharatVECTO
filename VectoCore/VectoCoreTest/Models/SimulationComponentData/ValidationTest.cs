@@ -618,7 +618,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 	public class DummyGearboxData : IGearboxEngineeringInputData
 	{
-		public DataSourceType SourceType { get; set; }
+		public DataSource DataSource { get; set; }
 		public string Source { get; set; }
 		public bool SavedInDeclarationMode { get; set; }
 		public string Manufacturer { get; set; }

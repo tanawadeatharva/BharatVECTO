@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private XElement CreateDriverModel(IEngineeringInputDataProvider engineering)
 		{
 			var driver = engineering.DriverInputData;
-			var gbx = engineering.JobInputData.Vehicle.GearboxInputData;
+			var gbx = engineering.JobInputData.Vehicle.Components.GearboxInputData;
 			var lookahead = driver.Lookahead;
 			var overspeed = driver.OverSpeedEcoRoll;
 
@@ -213,11 +213,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected XElement CreateVehicle(IEngineeringInputDataProvider data)
 		{
-			var retarder = data.JobInputData.Vehicle.RetarderInputData;
-			var gearbox = data.JobInputData.Vehicle.GearboxInputData;
+			var retarder = data.JobInputData.Vehicle.Components.RetarderInputData;
+			var gearbox = data.JobInputData.Vehicle.Components.GearboxInputData;
 			var vehicle = data.JobInputData.Vehicle;
-			var angledrive = data.JobInputData.Vehicle.AngledriveInputData;
-			var pto = data.JobInputData.Vehicle.PTOTransmissionInputData;
+			var angledrive = data.JobInputData.Vehicle.Components.AngledriveInputData;
+			var pto = data.JobInputData.Vehicle.Components.PTOTransmissionInputData;
 
 			return new XElement(tns + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, "VEH-" + vehicle.Model),
@@ -238,14 +238,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_CurbMassExtra, vehicle.CurbMassExtra.Value()),
 				new XElement(tns + XMLNames.Vehicle_Loading, vehicle.Loading.Value()),
 				new XElement(tns + XMLNames.Vehicle_Components,
-					CreateEngine(vehicle.EngineInputData),
+					CreateEngine(vehicle.Components.EngineInputData),
 					CreateGearbox(gearbox, gearbox.TorqueConverter),
 					angledrive.Type == AngledriveType.SeparateAngledrive ? CreateAngleDrive(angledrive) : null,
 					retarder.Type.IsDedicatedComponent() ? CreateRetarder(retarder) : null,
-					CreateAxlegear(vehicle.AxleGearInputData),
+					CreateAxlegear(vehicle.Components.AxleGearInputData),
 					CreateAxleWheels(vehicle),
-					CreateAuxiliaries(vehicle.AuxiliaryInputData(), RemoveInvalidFileCharacters(vehicle.Model)),
-					CreateAirdrag(vehicle.AirdragInputData)
+					CreateAuxiliaries(vehicle.Components.AuxiliaryInputData, RemoveInvalidFileCharacters(vehicle.Model)),
+					CreateAirdrag(vehicle.Components.AirdragInputData)
 					),
 				new XElement(tns + XMLNames.Vehicle_AdvancedDriverAssist,
 					new XElement(tns + XMLNames.Vehicle_AdvancedDriverAssist_EngineStartStop,
@@ -351,7 +351,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public XElement CreateAxleWheels(IVehicleEngineeringInputData data)
 		{
-			var axleData = data.Axles;
+			var axleData = data.Components.AxleWheels.AxlesEngineering;
 			var numAxles = axleData.Count;
 			var axles = new List<XElement>(numAxles);
 			for (var i = 0; i < numAxles; i++) {
