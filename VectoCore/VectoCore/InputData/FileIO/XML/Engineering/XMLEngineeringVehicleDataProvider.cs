@@ -50,7 +50,7 @@ using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
 	public class XMLEngineeringVehicleDataProvider : AbstractEngineeringXMLComponentDataProvider,
-		IVehicleEngineeringInputData, IPTOTransmissionInputData, IVehicleComponentsEngineering, IAuxiliariesEngineeringInputData
+		IVehicleEngineeringInputData, IPTOTransmissionInputData, IVehicleComponentsEngineering, IAxlesEngineeringInputData
 	{
 		protected internal XMLEngineeringAuxiliaryDataProvider XMLEngineeringAuxiliaryData;
 		protected internal XMLEngineeringAxlegearDataProvider AxlegearData;
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			get { return AxleConfigurationHelper.Parse(GetElementValue(XMLNames.Vehicle_AxleConfiguration)); }
 		}
 
-		public IList<IAxleEngineeringInputData> Axles
+		public IList<IAxleEngineeringInputData> AxlesEngineering
 		{
 			get { return AxleEngineeringInput().Cast<IAxleEngineeringInputData>().ToList(); }
 		}
@@ -193,48 +193,53 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		
 		private IEnumerable<AxleInputData> AxleEngineeringInput()
 		{
-			var axlePath = Helper.Query(
-				XMLNames.Vehicle_Components,
-				XMLNames.Component_AxleWheels,
-				XMLNames.ComponentDataWrapper,
-				XMLNames.AxleWheels_Axles,
-				XMLNames.AxleWheels_Axles_Axle);
-			var axles =
-				Navigator.Select(Helper.Query(XBasePath, axlePath), Manager);
+			
+				var axlePath = Helper.Query(
+					XMLNames.Vehicle_Components,
+					XMLNames.Component_AxleWheels,
+					XMLNames.ComponentDataWrapper,
+					XMLNames.AxleWheels_Axles,
+					XMLNames.AxleWheels_Axles_Axle);
+				var axles =
+					Navigator.Select(Helper.Query(XBasePath, axlePath), Manager);
 
-			var retVal = new AxleInputData[axles.Count];
+				var retVal = new AxleInputData[axles.Count];
 
-			while (axles.MoveNext()) {
-				var axleNumber = axles.Current.GetAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, "").ToInt();
-				if (axleNumber < 1 || axleNumber > retVal.Length) {
-					throw new VectoException("Axle #{0} exceeds axle count", axleNumber);
-				}
-				if (retVal[axleNumber - 1] != null) {
-					throw new VectoException("Axle #{0} defined multiple times!", axleNumber);
-				}
-				var dimension = axles.Current.SelectSingleNode(Helper.Query(XMLNames.AxleWheels_Axles_Axle_Dimension), Manager);
-				var rollResistance = axles.Current.SelectSingleNode(Helper.Query(XMLNames.AxleWheels_Axles_Axle_RRCISO), Manager);
-				var tyreTestLoad = axles.Current.SelectSingleNode(Helper.Query(XMLNames.AxleWheels_Axles_Axle_FzISO), Manager);
-				var weightShare = axles.Current.SelectSingleNode(Helper.Query(XMLNames.AxleWheels_Axles_Axle_WeightShare), Manager);
-				var inertia = axles.Current.SelectSingleNode(Helper.Query(XMLNames.AxleWheels_Axles_Axle_Inertia), Manager);
-				var axleType = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_AxleType), Manager);
-				var twinTyres = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_TwinTyres), Manager);
-				var steered = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_Steered), Manager);
-
-				retVal[axleNumber - 1] = new AxleInputData {
-					AxleType = axleType == null ? AxleType.VehicleNonDriven : axleType.Value.ParseEnum<AxleType>(),
-					TwinTyres = twinTyres != null && XmlConvert.ToBoolean(twinTyres.Value),
-					Steered = steered != null && XmlConvert.ToBoolean(steered.Value),
-					AxleWeightShare = weightShare == null ? 0 : weightShare.ValueAsDouble,
-					Tyre = new TyreInputData() {
-						TyreTestLoad = tyreTestLoad == null ? null : tyreTestLoad.Value.ToDouble().SI<Newton>(),
-						RollResistanceCoefficient = rollResistance == null ? double.NaN : rollResistance.Value.ToDouble(),
-						Dimension = dimension == null ? null : dimension.Value,
-						Inertia = inertia == null ? null : inertia.ValueAsDouble.SI<KilogramSquareMeter>(),
+				while (axles.MoveNext()) {
+					var axleNumber = axles.Current.GetAttribute(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr, "").ToInt();
+					if (axleNumber < 1 || axleNumber > retVal.Length) {
+						throw new VectoException("Axle #{0} exceeds axle count", axleNumber);
 					}
-				};
-			}
-			return retVal;
+					if (retVal[axleNumber - 1] != null) {
+						throw new VectoException("Axle #{0} defined multiple times!", axleNumber);
+					}
+
+					var dimension = axles.Current.SelectSingleNode(Helper.Query(XMLNames.AxleWheels_Axles_Axle_Dimension), Manager);
+					var rollResistance = axles.Current.SelectSingleNode(Helper.Query(XMLNames.AxleWheels_Axles_Axle_RRCISO), Manager);
+					var tyreTestLoad = axles.Current.SelectSingleNode(Helper.Query(XMLNames.AxleWheels_Axles_Axle_FzISO), Manager);
+					var weightShare = axles.Current.SelectSingleNode(
+						Helper.Query(XMLNames.AxleWheels_Axles_Axle_WeightShare), Manager);
+					var inertia = axles.Current.SelectSingleNode(Helper.Query(XMLNames.AxleWheels_Axles_Axle_Inertia), Manager);
+					var axleType = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_AxleType), Manager);
+					var twinTyres = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_TwinTyres), Manager);
+					var steered = axles.Current.SelectSingleNode(Helper.NSPrefix(XMLNames.AxleWheels_Axles_Axle_Steered), Manager);
+
+					retVal[axleNumber - 1] = new AxleInputData {
+						AxleType = axleType == null ? AxleType.VehicleNonDriven : axleType.Value.ParseEnum<AxleType>(),
+						TwinTyres = twinTyres != null && XmlConvert.ToBoolean(twinTyres.Value),
+						Steered = steered != null && XmlConvert.ToBoolean(steered.Value),
+						AxleWeightShare = weightShare == null ? 0 : weightShare.ValueAsDouble,
+						Tyre = new TyreInputData() {
+							TyreTestLoad = tyreTestLoad == null ? null : tyreTestLoad.Value.ToDouble().SI<Newton>(),
+							RollResistanceCoefficient = rollResistance == null ? double.NaN : rollResistance.Value.ToDouble(),
+							Dimension = dimension == null ? null : dimension.Value,
+							Inertia = inertia == null ? null : inertia.ValueAsDouble.SI<KilogramSquareMeter>(),
+						}
+					};
+				}
+
+				return retVal;
+			
 		}
 
 		public double RetarderRatio
@@ -270,18 +275,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		IAuxiliariesEngineeringInputData IVehicleComponentsEngineering.AuxiliaryInputData
 		{
-			get { return this; }
+			get { return XMLEngineeringAuxiliaryData; }
 		}
 
-		public IAuxiliariesEngineeringInputData AuxiliaryInputData()
+		public IAuxiliariesEngineeringInputData AuxiliaryInputData
 		{
-			return XMLEngineeringAuxiliaryData;
+			get { return XMLEngineeringAuxiliaryData; }
 		}
 
 		public IRetarderInputData RetarderInputData { get; private set; }
 
 		public IPTOTransmissionInputData PTOTransmissionInputData { get; private set; }
-		public IAxlesEngineeringInputData AxleWheels { get; }
+		public IAxlesEngineeringInputData AxleWheels { get { return this; } }
 		public bool VocationalVehicle { get { return false; } }
 		public bool SleeperCab { get { return true; } }
 		public TankSystem? TankSystem { get; }
@@ -291,7 +296,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		public bool DualFuelVehicle { get { return false; } }
 		public Watt MaxNetPower1 { get { return null; } }
 		public Watt MaxNetPower2 { get { return null; } }
-		public IVehicleComponentsDeclaration Components { get; }
+		public IVehicleComponentsDeclaration Components { get { return null; } }
 
 		#region "FactoryMethods"
 
@@ -424,13 +429,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		#endregion
 
-		#region Implementation of IAuxiliariesEngineeringInputData
+		
 
-		public IList<IAuxiliaryEngineeringInputData> Auxiliaries { get; }
-		public AuxiliaryModel AuxiliaryAssembly { get; }
-		public string AuxiliaryVersion { get; }
-		public string AdvancedAuxiliaryFilePath { get; }
-
-		#endregion
 	}
 }

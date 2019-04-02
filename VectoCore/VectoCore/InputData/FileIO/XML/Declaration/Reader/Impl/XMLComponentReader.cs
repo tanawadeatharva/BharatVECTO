@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public IAirdragDeclarationInputData AirdragInputData
 		{
 			get {
-				return _airdragInputData ?? (_airdragInputData = CreateComponent(XMLNames.Component_AirDrag, AirdragCreator));
+				return _airdragInputData ?? (_airdragInputData = CreateComponent(XMLNames.Component_AirDrag, AirdragCreator, true));
 			}
 		}
 		
@@ -165,6 +165,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected IAirdragDeclarationInputData AirdragCreator(string version, XmlNode componentNode, string sourceFile)
 		{
+			if (version == null) {
+				return new XMLDeclarationAirdragDataProviderV10(Vehicle, null, sourceFile);
+			}
 			return Factory.CreateAirdragData(version, Vehicle, componentNode, sourceFile);
 		}
 

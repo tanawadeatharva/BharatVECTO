@@ -52,12 +52,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 
 		public virtual string CertificationNumber
 		{
-			get { return "N.A."; }
+			get { return GetString(XMLNames.Component_CertificationNumber); }
 		}
 
 		public virtual DigestData DigestValue
 		{
-			get { return null; }
+			get { return new DigestData(GetNode(XMLNames.DI_Signature, required:false)); }
 		}
 	}
 }

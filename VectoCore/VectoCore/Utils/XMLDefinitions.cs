@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -52,55 +53,27 @@ namespace TUGraz.VectoCore.Utils
 
 
 		// mapping of document type + version => supported schema files (+version)
-		private static Dictionary<Tuple<XmlDocumentType, string>, IList<string>> schemaFilenames = new Dictionary<Tuple<XmlDocumentType, string>, IList<string>>();
+		//private static Dictionary<Tuple<XmlDocumentType, string>, IList<string>> schemaFilenames = new Dictionary<Tuple<XmlDocumentType, string>, IList<string>>();
 
-		static XMLDefinitions()
+		private static Dictionary<XmlDocumentType, Tuple<string, string[]>> schemaFilenames = new Dictionary<XmlDocumentType, Tuple<string, string[]>>() {
+			{XmlDocumentType.DeclarationJobData, Tuple.Create("VectoInput{0}.xsd", new [] {"1.0"}) },
+			{XmlDocumentType.DeclarationComponentData, Tuple.Create("VectoComponent{0}.xsd", new [] {"1.0"}) },
+			{XmlDocumentType.EngineeringJobData, Tuple.Create("VectoEngineeringInput{0}.xsd", new [] {"0.7"}) },
+			{XmlDocumentType.EngineeringComponentData, Tuple.Create("VectoEngineeringInput{0}.xsd", new [] {"0.7"}) },
+			{XmlDocumentType.ManufacturerReport, Tuple.Create("VectoOutputManufacturer{0}.xsd", new [] {"0.4", "0.5", "0.6", "0.7"}) },
+			{XmlDocumentType.CustomerReport , Tuple.Create("VectoOutputCustomer{0}.xsd", new [] {"0.4", "0.5", "0.7"})},
+			{XmlDocumentType.MonitoringReport , Tuple.Create("VectoMonitoring{0}.xsd", new [] {"0.7"})},
+		};
+
+
+		
+		public static string GetSchemaFilename(XmlDocumentType type, string version)
 		{
-			RegisterKnownXMLSchemas();
-		}
-
-		private static void RegisterKnownXMLSchemas()
-		{
-			var declarationJob10 = Tuple.Create(XmlDocumentType.DeclarationJobData, "1.0");
-			RegisterXMLSchema(declarationJob10, "VectoInput.1.0.xsd");
-
-			var declarationComponent10 = Tuple.Create(XmlDocumentType.DeclarationComponentData, "1.0");
-			RegisterXMLSchema(declarationComponent10, "VectoComponent.1.0.xsd");
-
-			var engineeringInput07 = Tuple.Create(XmlDocumentType.EngineeringJobData, "0.7");
-			RegisterXMLSchema(engineeringInput07, "VectoEngineeringInput.0.7.xsd");
-
-			var engineeringInput10 = Tuple.Create(XmlDocumentType.EngineeringJobData, "1.0");
-			RegisterXMLSchema(engineeringInput10, "VectoEngineeringInput.1.0.xsd");
-			RegisterXMLSchema(engineeringInput10, "VectoEngineeringDefinitionsTEST.1.1.xsd");
-
-			var engineeringComponent10 = Tuple.Create(XmlDocumentType.EngineeringComponentData, "1.0");
-			RegisterXMLSchema(engineeringComponent10, "VectoEngineeringInput.1.0.xsd");
-
-			var manufacturerReport = Tuple.Create(XmlDocumentType.ManufacturerReport, "0.5");
-			RegisterXMLSchema(manufacturerReport, String.Format("VectoOutputManufacturer.{0}.xsd", "0.5"));
-
-			var customerReport = Tuple.Create(XmlDocumentType.CustomerReport, "0.5");
-			RegisterXMLSchema(customerReport, String.Format("VectoOutputCustomer.{0}.xsd", "0.5"));
-
-
-		}
-
-		private static void RegisterXMLSchema(Tuple<XmlDocumentType, string> doctypeversion, string schemafile)
-		{
-			if (!schemaFilenames.ContainsKey(doctypeversion)) {
-				schemaFilenames[doctypeversion] = new List<string>();
+			if (!schemaFilenames.ContainsKey(type)) {
+				throw new Exception(string.Format("Invalid argument {0} - only use single flags", type));
 			}
-			schemaFilenames[doctypeversion].Add(schemafile);
-		}
-
-		public static IEnumerable<string> GetSchemaFilenames(XmlDocumentType type, string version)
-		{
-			var key = Tuple.Create(type, version);
-			if (!schemaFilenames.ContainsKey(key)) {
-				throw new Exception(String.Format("Invalid argument {0} - only use single flags", type));
-			}
-			return schemaFilenames[key];
+			var entry = schemaFilenames[type];
+			return !entry.Item2.Contains(version) ? null : string.Format(entry.Item1, string.IsNullOrWhiteSpace(version) ? "" : "." + version);
 		}
 
 	}

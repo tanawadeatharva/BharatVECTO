@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			//Assert.AreEqual(vehicleInput, savedInprovider.JobInputData.Vehicle);
 
 			AssertHelper.PublicPropertiesEqual(typeof(IVehicleDeclarationInputData),vehicleInput, savedInprovider.JobInputData.Vehicle, 
-				new [] {"Source", "GearboxInputData", "EngineInputData", "TorqueConverterInputData", "AxleGearInputData"});
+				new [] {"Source", "GearboxInputData", "EngineInputData", "TorqueConverterInputData", "AxleGearInputData", "Identifier" });
 		}
 		
 

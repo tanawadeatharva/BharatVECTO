@@ -55,24 +55,29 @@ namespace TUGraz.VectoCore.Utils
 			_valid = false;
 		}
 
-		public XMLValidator(XmlReader document, Action<bool> resultaction = null, Action<XmlSeverityType, ValidationEvent> validationErrorAction = null):this(resultaction,validationErrorAction)
+		public XMLValidator(
+			XmlReader document, Action<bool> resultaction = null,
+			Action<XmlSeverityType, ValidationEvent> validationErrorAction = null) : this(resultaction, validationErrorAction)
 		{
 			_doc = new XmlDocument();
-			_doc.Load(document);	
+			_doc.Load(document);
 		}
 
-		public XMLValidator(XmlDocument document, Action<bool> resultaction = null, Action<XmlSeverityType, ValidationEvent> validationErrorAction = null) : this(resultaction, validationErrorAction)
+		public XMLValidator(
+			XmlDocument document, Action<bool> resultaction = null,
+			Action<XmlSeverityType, ValidationEvent> validationErrorAction = null) : this(resultaction, validationErrorAction)
 		{
 			_doc = document;
 		}
 
 		public bool ValidateXML(XmlDocumentType docType)
-		{ 
+		{
 			_valid = true;
 			if (_doc.DocumentElement == null) {
 				throw new Exception("empty XML document");
 			}
-			var version =  XMLHelper.GetSchemaVersion(_doc.DocumentElement);
+
+			var version = XMLHelper.GetSchemaVersion(_doc.DocumentElement);
 			_doc.Schemas = GetXMLSchema(docType, version);
 			_doc.Validate(ValidationCallBack);
 			return _valid;
@@ -101,20 +106,23 @@ namespace TUGraz.VectoCore.Utils
 					continue;
 				}
 
-				var schemaFile = XMLDefinitions.GetSchemaFilenames(entry, version);
-				foreach (var schema in schemaFile) {
-					Stream resource;
-					try {
-						resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schema);
-					} catch (Exception e) {
-						throw new Exception(
-							string.Format("Unknown XML schema! version: {0}, xml document type: {1} ({2})", entry, version, schemaFile), e);
-					}
-
-					var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
-					xset.Add(XmlSchema.Read(reader, null));
+				var schemaFile = XMLDefinitions.GetSchemaFilename(entry, version);
+				if (schemaFile == null) {
+					continue;
 				}
+
+				Stream resource;
+				try {
+					resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schemaFile);
+				} catch (Exception e) {
+					throw new Exception(
+						string.Format("Unknown XML schema! version: {0}, xml document type: {1} ({2})", entry, version, schemaFile), e);
+				}
+
+				var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
+				xset.Add(XmlSchema.Read(reader, null));
 			}
+
 			xset.Compile();
 			return xset;
 		}

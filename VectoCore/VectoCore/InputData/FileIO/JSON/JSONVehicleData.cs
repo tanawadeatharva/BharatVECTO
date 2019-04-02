@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual IList<IAxleEngineeringInputData> Axles
+		public virtual IList<IAxleEngineeringInputData> AxlesEngineering
 		{
 			get { return AxleWheels().Cast<IAxleEngineeringInputData>().ToList(); }
 		}
@@ -553,10 +553,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-		#region Implementation of IAxlesEngineeringInputData
-
-		public IList<IAxleEngineeringInputData> AxlesEngineering { get; }
-
-		#endregion
+		
 	}
 }

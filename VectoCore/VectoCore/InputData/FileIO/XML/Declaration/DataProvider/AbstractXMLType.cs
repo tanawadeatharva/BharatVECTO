@@ -27,12 +27,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 		{
 			var node = GetNode(nodeName, required: fallbackValue != null);
 
+			if (node == null && fallbackValue == null) {
+				throw new VectoException("Node {0} not found in input data", nodeName);
+			}
+
 			return node?.InnerText.ToDouble() ?? fallbackValue.Value;
 		}
 
 		protected double GetDouble(string[] nodePath, double? fallbackValue = null)
 		{
 			var node = GetNode(nodePath, required: fallbackValue == null);
+
+			if (node == null && fallbackValue == null) {
+				throw new VectoException("Node {0} not found in input data", string.Join("/", nodePath));
+			}
 
 			return node?.InnerText.ToDouble() ?? fallbackValue.Value;
 		}
