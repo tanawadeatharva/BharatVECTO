@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public string ManufacturerAddress
 		{
-			get { return "N.A."; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public PerSecond EngineIdleSpeed

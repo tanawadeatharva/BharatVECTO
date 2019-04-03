@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 
@@ -60,7 +61,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string VIN
 		{
-			get { return "N.A."; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public LegislativeClass LegislativeClass
@@ -143,7 +144,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string ManufacturerAddress
 		{
-			get { return "N.A."; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public PerSecond EngineIdleSpeed
@@ -483,17 +484,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string Manufacturer
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public string Model
 		{
-			get { return "N.A."; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public string Date
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public CertificationMethod CertificationMethod
@@ -503,7 +504,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string CertificationNumber
 		{
-			get { return "N.A."; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public DigestData DigestValue

@@ -407,7 +407,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var typeId = string.Format("AXLGEAR-{0:0.000}", data.Ratio);
 			var axl = new XElement(tns + XMLNames.Component_Axlegear,
 				new XElement(tns + XMLNames.ComponentDataWrapper, new XAttribute(XMLNames.Component_ID_Attr, typeId),
-					GetDefaultComponentElements("N.A."),
+					GetDefaultComponentElements(Constants.NOT_AVailABLE),
 					new XElement(tns + XMLNames.Axlegear_Ratio, data.Ratio.ToXMLFormat(3)),
 					data.LossMap == null
 						? new XElement(tns + XMLNames.Axlegear_TorqueLossMap,
@@ -540,7 +540,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement(tns + XMLNames.Component_AirDrag,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
-					GetDefaultComponentElements("N.A."),
+					GetDefaultComponentElements(Constants.NOT_AVailABLE),
 					new XElement(tns + XMLNames.Vehicle_CrossWindCorrectionMode, data.CrossWindCorrectionMode.ToXMLFormat()),
 					new XElement(tns + XMLNames.Vehicle_AirDragArea, data.AirDragArea.Value().ToXMLFormat(2))),
 				GetCrossWindCorrectionData(data)

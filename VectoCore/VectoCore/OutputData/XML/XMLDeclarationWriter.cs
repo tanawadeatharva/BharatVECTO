@@ -42,6 +42,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 
@@ -128,7 +129,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			return new XElement(tns + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, id),
-				GetDefaultComponentElements(vehicle.CertificationNumber, vehicle.Model, "N.A."),
+				GetDefaultComponentElements(vehicle.CertificationNumber, vehicle.Model, Constants.NOT_AVailABLE),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, "N3"),
 				new XElement(tns + XMLNames.Vehicle_VehicleCategory, vehicle.VehicleCategory.ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.GetName()),
@@ -299,7 +300,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement((ns ?? tns) + XMLNames.Component_Axlegear,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, typeId),
-					GetDefaultComponentElements(typeId, "N.A."),
+					GetDefaultComponentElements(typeId, Constants.NOT_AVailABLE),
 					new XElement(tns + "LineType", "Single portal axle"),
 					new XElement(tns + XMLNames.Axlegear_Ratio, data.Ratio.ToXMLFormat(3)),
 					new XElement(tns + XMLNames.Component_CertificationMethod, "Standard values"),
@@ -374,7 +375,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement((ns ?? tns) + XMLNames.Component_AirDrag,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
-					GetDefaultComponentElements(data.Model, "N.A."),
+					GetDefaultComponentElements(data.Model, Constants.NOT_AVailABLE),
 					new XElement(tns + "CdxA_0", data.AirDragArea.Value().ToXMLFormat(2)),
 					new XElement(tns + "TransferredCdxA", data.AirDragArea.Value().ToXMLFormat(2)),
 					new XElement(tns + XMLNames.AirDrag_DeclaredCdxA, data.AirDragArea.Value().ToXMLFormat(2))),

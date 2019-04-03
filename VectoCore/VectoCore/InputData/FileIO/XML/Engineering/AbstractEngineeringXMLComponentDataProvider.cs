@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Utils;
 
@@ -66,7 +67,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 			SourceType = DataSourceType.Embedded;
 		}
 
-        public new string Source { get { return FSBasePath; } }
+		public new string Source { get { return FSBasePath; } }
 
 		public override bool SavedInDeclarationMode
 		{
@@ -96,7 +97,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		public override string CertificationNumber
 		{
-			get { return "N.A."; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public override CertificationMethod CertificationMethod
