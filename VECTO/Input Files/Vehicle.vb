@@ -269,14 +269,14 @@ Public Class Vehicle
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
 	Public ReadOnly Property Model As String Implements IComponentInputData.Model
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
@@ -296,7 +296,7 @@ Public Class Vehicle
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
@@ -328,7 +328,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property VIN As String Implements IVehicleDeclarationInputData.VIN
 		Get
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
@@ -360,7 +360,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property ManufacturerAddress As String Implements IVehicleDeclarationInputData.ManufacturerAddress
 		Get
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
