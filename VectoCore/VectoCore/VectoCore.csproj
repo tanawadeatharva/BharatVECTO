@@ -183,31 +183,114 @@
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLJobDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLJobDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\IXMLPTOReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Factory\IEngineeringInjectFactory.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractCommonComponentType.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractEngineeringXMLComponentDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractVehicleEngineeringType.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractXMLType.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLCyclesDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLDriverAcceleration.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAirdragDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAngledriveDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAuxiliariesDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAxlegearDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAxlesDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringDriverDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringDriverLookAhead.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringEngineDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringGearboxDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringGearshiftData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringJobInputDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringOverspeed.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringRetarderDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringTorqueConverterDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringVehicleComponentsDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringVehicleDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLTyreEngineeringDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Factory\IEngineeringReaderInjectFactory.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAirdragData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAngledriveData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAuxiliairesData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAuxiliaryData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAxleEngineeringData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAxlegearData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLAxlesData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLCyclesDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLDriverAcceleration.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringDriverData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringGearshiftData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringJobInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringVehicleComponentsData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringVehicleData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLGearboxData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLGearData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLLookaheadData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLOverspeedData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLRetarderData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLTorqueconverterData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLTyreData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\IXMLComponentsReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\IXMLDriverDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\IXMLEngineeringInputReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\IXMLJobDataReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\NinjectModules\XMLEngineeringReaderTestOverrides.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\NinjectModules\XMLEngineeringReaderV07InjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\NinjectModules\XMLEngineeringReaderV10InjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\AbstractExternalResourceReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\XMLComponentsEngineeringReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\XMLDriverDataReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\XMLEngineeringInputReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\XMLJobDataReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringReaderInjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLResource.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataFactory.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
+    <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="Models\Simulation\ISimulatorFactory.cs" />
+    <Compile Include="Models\Simulation\ISimulatorFactoryFactory.cs" />
+    <Compile Include="Models\Simulation\SimulationFactoryNinjectModule.cs" />
+    <Compile Include="OutputData\XML\Engineering\Factory\EngineeringWriterFactory.cs" />
+    <Compile Include="OutputData\XML\Engineering\Factory\IEngineeringWriterInjectFactory.cs" />
+    <Compile Include="OutputData\XML\Engineering\Interfaces\IXMLEngineeringComponentWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Interfaces\IXMLEngineeringEngineWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Interfaces\IXMLEngineeringJobWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Interfaces\IXMLEngineeringWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\NinjectModules\XMLEngineeringWriterTestOverrides.cs" />
+    <Compile Include="OutputData\XML\Engineering\NinjectModules\XMLEngineeringWriterV10InjectModule.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\AbstractComponentWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\DriverData\XMLAccelerationDataWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\DriverData\XMLEngineeringLookaheadDataWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\DriverData\XMLEngineeringOverspeedDataWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\DriverData\XMLShiftParmeterDataWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringADASWriterV10.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAirdragWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAngledriveWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAuxiliariesWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAuxiliaryWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAxlegearWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAxlesWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringAxleWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringComponentsWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringDriverDataWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringEngineWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringGearboxWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringGearDataWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringJobWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringRetarderWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringTorqueconverterWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringTyreWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\Writer\XMLEngineeringVehicleDataWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriter.cs" />
+    <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriterInjectModule.cs" />
+    <Compile Include="OutputData\XML\Engineering\XMLWriterMapping.cs" />
     <Compile Include="Utils\Ninject\UseFirstArgumentAsInstanceProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationReaderInjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationVehicleDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XMLReports\XMLManufacturerReportReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\AbstractEngineeringXMLComponentDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAirdragDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAngledriveDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAuxiliaryDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringAxlegearDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringDriverDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringEngineDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringGearboxDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringInputDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringJobInputDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringRetarderDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringTorqueConverterDataProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringVehicleDataProvider.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONEngineData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONGearboxData.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONInputData.cs" />
@@ -282,7 +365,6 @@
     <Compile Include="OutputData\XML\XMLCustomerReport.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationReport.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
-    <Compile Include="OutputData\XML\XMLEngineeringWriter.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReport.cs" />
     <Compile Include="Utils\DataIntegrityHelper.cs" />
     <Compile Include="Utils\MeanShiftClustering.cs" />
@@ -497,10 +579,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoInput.xsd">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -582,6 +660,18 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoInput.2.0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.1.0.TEST.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringComponent.1.0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringComponent.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VTPReport.0.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">

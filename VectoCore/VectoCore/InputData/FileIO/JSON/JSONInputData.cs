@@ -152,11 +152,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			Gearbox = ReadGearbox();
 			AxleGear = Gearbox as IAxleGearInputData;
 			TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
+			GearshiftInputData = Gearbox as IGearshiftEngineeringInputData;
 
 			VehicleData = ReadVehicle();
 		}
 
 		public IGearboxEngineeringInputData Gearbox { get; internal set; }
+
+		public IGearshiftEngineeringInputData GearshiftInputData { get; internal set; }
+
 		public IAxleGearInputData AxleGear { get; internal set; }
 		public ITorqueConverterEngineeringInputData TorqueConverter { get; internal set; }
 		public IEngineEngineeringInputData Engine { get; internal set; }
@@ -462,7 +466,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual TableData AccelerationCurve
+		public virtual IDriverAccelerationData AccelerationCurve
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage(
 				"Microsoft.Design",
@@ -476,22 +480,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 
 				try {
-					return ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve");
+					return new DriverAccelerationInputData() {
+						AccelerationCurve = ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve")
+					};
 				} catch (VectoException e) {
 					Log.Warn("Could not find file for acceleration curve. Trying lookup in declaration data.");
 					try {
 						var resourceName = DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 											acceleration.Value<string>() +
 											Constants.FileExtensions.DriverAccelerationCurve;
-						return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceName), source: resourceName);
+						return new DriverAccelerationInputData() {
+							AccelerationCurve = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceName), source: resourceName)
+						};
 					} catch (Exception) {
 						if (!TolerateMissing) {
 							throw new VectoException("Failed to read Driver Acceleration Curve: " + e.Message, e);
 						}
 
-						return new TableData(
-							Path.Combine(BasePath, acceleration.Value<string>()) + MissingFileSuffix,
-							DataSourceType.Missing);
+						return new DriverAccelerationInputData() {
+							AccelerationCurve = new TableData(
+								Path.Combine(BasePath, acceleration.Value<string>()) + MissingFileSuffix,
+								DataSourceType.Missing)
+						};
 					}
 				}
 			}

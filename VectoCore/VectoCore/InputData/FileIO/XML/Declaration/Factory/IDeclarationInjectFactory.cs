@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLGearboxDeclarationInputData CreateGearboxData(
 			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
-		IXMLGearData CreateGearData(string version, XmlNode gearNode);
+		IXMLGearData CreateGearData(string version, XmlNode gearNode, string sourceFile);
 
 
 		IXMLTorqueConverterDeclarationInputData CreateTorqueconverterData(

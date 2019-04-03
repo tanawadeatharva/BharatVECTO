@@ -1,4 +1,4 @@
-﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.InputData;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces
 {

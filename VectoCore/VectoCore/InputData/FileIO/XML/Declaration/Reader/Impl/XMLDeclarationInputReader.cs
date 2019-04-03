@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		private IDeclarationJobInputData JobCreator(string version, XmlNode node, string arg3)
 		{
-			var job = Factory.CreateJobData(version, BaseNode, InputData, InputData.DataSource.SourceFile);
+			var job = Factory.CreateJobData(version, BaseNode, InputData, (InputData as IXMLResource).DataSource.SourceFile);
 			var jobNode = 
 			job.Reader = Factory.CreateJobReader(version, job, JobNode, VerifyXML);
 			return job;

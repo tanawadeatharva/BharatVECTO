@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData,
+		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData,
 			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory)
 		{
 			if (gearbox.SavedInDeclarationMode) {
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				throw new VectoSimulationException("At least two Gear-Entries must be defined in Gearbox!");
 			}
 
-			SetEngineeringData(gearbox, retVal);
+			SetEngineeringData(gearbox, gearshiftData, retVal);
 
 			var gearDifferenceRatio = gearbox.Type.AutomaticTransmission() && gearbox.Gears.Count > 2
 				? gearbox.Gears[0].Ratio / gearbox.Gears[1].Ratio
@@ -211,7 +211,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				retVal.PowershiftShiftTime = gearbox.PowershiftShiftTime;
 				retVal.TorqueConverterData = TorqueConverterDataReader.Create(gearbox.TorqueConverter.TCData,
 					gearbox.TorqueConverter.ReferenceRPM, gearbox.TorqueConverter.MaxInputSpeed, ExecutionMode.Engineering, ratio,
-					gearbox.TorqueConverter.CLUpshiftMinAcceleration, gearbox.TorqueConverter.CCUpshiftMinAcceleration);
+					gearshiftData.CLUpshiftMinAcceleration, gearshiftData.CCUpshiftMinAcceleration);
 			}
 
 
@@ -242,18 +242,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 		}
 
-		private static void SetEngineeringData(IGearboxEngineeringInputData gearbox, GearboxData retVal)
+		private static void SetEngineeringData(IGearboxEngineeringInputData gearbox, IGearshiftEngineeringInputData gearshiftData, GearboxData retVal)
 		{
 			retVal.Inertia = gearbox.Type.ManualTransmission() ? gearbox.Inertia : 0.SI<KilogramSquareMeter>();
 			retVal.TractionInterruption = gearbox.TractionInterruption;
-			retVal.TorqueReserve = gearbox.TorqueReserve;
-			retVal.StartTorqueReserve = gearbox.StartTorqueReserve;
-			retVal.ShiftTime = gearbox.MinTimeBetweenGearshift;
-			retVal.StartSpeed = gearbox.StartSpeed;
-			retVal.StartAcceleration = gearbox.StartAcceleration;
-			retVal.DownshiftAfterUpshiftDelay = gearbox.DownshiftAfterUpshiftDelay;
-			retVal.UpshiftAfterDownshiftDelay = gearbox.UpshiftAfterDownshiftDelay;
-			retVal.UpshiftMinAcceleration = gearbox.UpshiftMinAcceleration;
+			retVal.TorqueReserve = gearshiftData.TorqueReserve;
+			retVal.StartTorqueReserve = gearshiftData.StartTorqueReserve;
+			retVal.ShiftTime = gearshiftData.MinTimeBetweenGearshift;
+			retVal.StartSpeed = gearshiftData.StartSpeed;
+			retVal.StartAcceleration = gearshiftData.StartAcceleration;
+			retVal.DownshiftAfterUpshiftDelay = gearshiftData.DownshiftAfterUpshiftDelay;
+			retVal.UpshiftAfterDownshiftDelay = gearshiftData.UpshiftAfterDownshiftDelay;
+			retVal.UpshiftMinAcceleration = gearshiftData.UpshiftMinAcceleration;
 		}
 
 		public AxleGearData CreateAxleGearData(IAxleGearInputData data)
@@ -322,7 +322,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			AccelerationCurveData accelerationData = null;
 			if (driver.AccelerationCurve != null) {
-				accelerationData = AccelerationCurveReader.Create(driver.AccelerationCurve);
+				accelerationData = AccelerationCurveReader.Create(driver.AccelerationCurve.AccelerationCurve);
 			}
 
 			if (driver.Lookahead == null) {

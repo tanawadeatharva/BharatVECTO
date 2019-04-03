@@ -39,6 +39,8 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
 using TUGraz.VectoCore.OutputData.XML;
 using NUnit.Framework;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.OutputData.XML.Engineering;
+using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
@@ -79,12 +81,11 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineOnlyJob);
-			var job =
-				new XMLEngineeringWriter(".", true, "TU Graz, IVT").GenerateVectoJob((IEngineeringInputDataProvider)inputData);
+			var job = _kernel.Get<IXMLEngineeringWriter>().Write(inputData);
 			job.Save(outFile);
 
 			//var reader = XmlReader.Create(outFile);
-			var xml = new XMLEngineeringInputDataProvider(outFile, true);
+			var xml = xmlInputReader.CreateEngineering(outFile, true);
 
 			Assert.IsNotNull(xml);
 			Assert.AreEqual("175kW 6.8l Engine", xml.JobInputData.JobName);
@@ -97,14 +98,13 @@ namespace TUGraz.VectoCore.Tests.XML
 			var outFile = "EngineeringJobSingleFile.xml";
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineeringJob);
-			var job =
-				new XMLEngineeringWriter(".", true, "TU Graz, IVT").GenerateVectoJob((IEngineeringInputDataProvider)inputData);
+			var job = _kernel.Get<IXMLEngineeringWriter>().Write(inputData);
 			job.Save(outFile);
 
-			var xml = new XMLEngineeringInputDataProvider(outFile, true);
+			var xml = xmlInputReader.CreateEngineering(outFile, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
+			Assert.AreEqual("N.A. N/A", xml.JobInputData.JobName);
 		}
 
 		[Category("LongRunning")]
@@ -114,14 +114,13 @@ namespace TUGraz.VectoCore.Tests.XML
 			var outFile = "EngineeringJobSingleFileFull.xml";
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineeringJobFull);
-			var job =
-				new XMLEngineeringWriter(".", true, "TU Graz, IVT").GenerateVectoJob((IEngineeringInputDataProvider)inputData);
+			var job = _kernel.Get<IXMLEngineeringWriter>().Write(inputData);
 			job.Save(outFile);
 
-			var xml = new XMLEngineeringInputDataProvider(outFile, true);
+			var xml = xmlInputReader.CreateEngineering(outFile, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
+			Assert.AreEqual("N.A. N/A", xml.JobInputData.JobName);
 		}
 
 		[Category("LongRunning")]
@@ -133,14 +132,13 @@ namespace TUGraz.VectoCore.Tests.XML
 			Directory.CreateDirectory(outDir);
 
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineeringJobFull);
-			var job =
-				new XMLEngineeringWriter(outDir, false, "TU Graz, IVT").GenerateVectoJob((IEngineeringInputDataProvider)inputData);
+			var job = _kernel.Get<IXMLEngineeringWriter>().Write(inputData);
 			job.Save(Path.Combine(outDir, outFile));
 
-			var xml = new XMLEngineeringInputDataProvider(Path.Combine(outDir, outFile), true);
+			var xml = xmlInputReader.CreateEngineering(Path.Combine(outDir, outFile), true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
+			Assert.AreEqual("N.A. N/A", xml.JobInputData.JobName);
 		}
 
 		[Category("LongRunning")]
@@ -149,9 +147,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			var inputData = JSONInputDataFactory.ReadJsonJob(EngineeringJob);
 			Directory.CreateDirectory("Engineering_MultipleFiles");
-			var job =
-				new XMLEngineeringWriter("Engineering_MultipleFiles", false, "TU Graz, IVT").GenerateVectoJob(
-					(IEngineeringInputDataProvider)inputData);
+			var job = _kernel.Get<IXMLEngineeringWriter>().Write(inputData);
 			job.Save("Engineering_MultipleFiles/EngineeringJobMultipleFiles.xml");
 
 			//var xml = new XMLEngineeringInputDataProvider(outFile, true);

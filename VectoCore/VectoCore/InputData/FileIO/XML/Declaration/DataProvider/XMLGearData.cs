@@ -10,9 +10,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public abstract class XMLAbstractGearData : AbstractXMLType
 	{
+		
 		protected TableData _lossmap;
 
-		protected XMLAbstractGearData(XmlNode gearNode) : base(gearNode) { }
+		protected XMLAbstractGearData(XmlNode gearNode, string sourceFile) : base(gearNode)
+		{
+			SourceFile = sourceFile;
+		}
+
+		public string SourceFile { get; }
 
 		#region Implementation of ITransmissionInputData
 
@@ -58,6 +64,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return null; }
 		}
 
+		
+
 		#endregion
 	}
 
@@ -65,6 +73,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
-		public XMLGearDataV10(XmlNode gearNode) : base(gearNode) { }
+		protected DataSource _dataSource;
+
+		public XMLGearDataV10(XmlNode gearNode, string sourceFile) : base(gearNode, sourceFile) { }
+
+		public virtual DataSource DataSource
+		{
+			get { return _dataSource ?? (_dataSource = new DataSource() { SourceFile = SourceFile, SourceType = DataSourceType.XMLEmbedded, SourceVersion = XMLHelper.GetVersionFromNamespaceUri(NAMESPACE_URI) }); }
+		}
 	}
 }

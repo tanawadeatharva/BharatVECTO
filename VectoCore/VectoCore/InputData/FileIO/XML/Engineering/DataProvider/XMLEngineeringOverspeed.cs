@@ -1,0 +1,58 @@
+using System.Xml;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
+using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
+{
+	internal class XMLEngineeringOverspeedV07 : AbstractXMLType, IXMLOverspeedData
+	{
+		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+
+		protected IXMLEngineeringDriverData DriverData;
+
+		public XMLEngineeringOverspeedV07(IXMLEngineeringDriverData driverData, XmlNode node) : base(node)
+		{
+			DriverData = driverData;
+		}
+
+		#region Implementation of IOverSpeedEcoRollDeclarationInputData
+
+		public virtual DriverMode Mode
+		{
+			get { return GetNode(XMLNames.DriverModel_Overspeed_Mode, required: false)?.InnerText.ParseEnum<DriverMode>() ?? DriverMode.Off; }
+		}
+
+		#endregion
+
+		#region Implementation of IOverSpeedEcoRollEngineeringInputData
+
+		public virtual MeterPerSecond MinSpeed
+		{
+			get { return GetNode(XMLNames.DriverModel_Overspeed_MinSpeed, required: false)?.InnerText.ToDouble().KMPHtoMeterPerSecond(); }
+		}
+
+		public virtual MeterPerSecond OverSpeed
+		{
+			get { return GetNode(XMLNames.DriverModel_Overspeed_AllowedOverspeed, required: false)?.InnerText.ToDouble().KMPHtoMeterPerSecond(); }
+		}
+
+		public virtual MeterPerSecond UnderSpeed
+		{
+			get {
+				return GetNode(XMLNames.DriverModel_Overspeed_AllowedUnderspeed, required: false)?.InnerText.ToDouble().KMPHtoMeterPerSecond();
+			}
+		}
+
+		#endregion
+	}
+
+	internal class XMLEngineeringOverspeedV10 : XMLEngineeringOverspeedV07
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		public XMLEngineeringOverspeedV10(IXMLEngineeringDriverData driverData, XmlNode node) : base(driverData, node) { }
+	}
+}

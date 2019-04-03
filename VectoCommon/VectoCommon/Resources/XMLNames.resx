@@ -1038,4 +1038,19 @@
   <data name="Report_Results" xml:space="preserve">
     <value>Results</value>
   </data>
+  <data name="Engine_FCCorrection" xml:space="preserve">
+    <value>FCCorrection</value>
+  </data>
+  <data name="DriverModel_ShiftStrategyParameters_PowershiftShiftTime" xml:space="preserve">
+    <value>PowershiftShiftTime</value>
+  </data>
+  <data name="TorqueConverter_CLUpshiftMinAcceleration" xml:space="preserve">
+    <value>CLUpshiftMinAcceleration</value>
+  </data>
+  <data name="TorqueConverter_CCUpshiftMinAcceleration" xml:space="preserve">
+    <value>CCUpshiftMinAcceleration</value>
+  </data>
+  <data name="TorqueConverter_MaxInputSpeed" xml:space="preserve">
+    <value>MaxInputSpeed</value>
+  </data>
 </root>

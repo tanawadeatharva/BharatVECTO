@@ -78,6 +78,7 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			var version = XMLHelper.GetSchemaVersion(_doc.DocumentElement);
+			
 			_doc.Schemas = GetXMLSchema(docType, version);
 			_doc.Validate(ValidationCallBack);
 			return _valid;

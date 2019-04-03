@@ -74,7 +74,7 @@ Public Class JSONFileWriter
 		Return header
 	End Function
 
-	Public Sub SaveGearbox(gbx As IGearboxEngineeringInputData, axl As IAxleGearInputData, filename As String) _
+	Public Sub SaveGearbox(gbx As IGearboxEngineeringInputData, axl As IAxleGearInputData, gshift As IGearshiftEngineeringInputData, filename As String) _
 		Implements IOutputFileWriter.SaveGearbox
 
 		'Header
@@ -117,11 +117,11 @@ Public Class JSONFileWriter
 			ls.Add(gearDict)
 		Next
 		body.Add(JsonKeys.Gearbox_Gears, ls)
-		body.Add(JsonKeys.Gearbox_TorqueReserve, gbx.TorqueReserve*100)
-		body.Add(JsonKeys.Gearbox_ShiftTime, gbx.MinTimeBetweenGearshift.Value())
-		body.Add(JsonKeys.Gearbox_StartTorqueReserve, gbx.StartTorqueReserve*100)
-		body.Add(JsonKeys.Gearbox_StartSpeed, gbx.StartSpeed.Value())
-		body.Add(JsonKeys.Gearbox_StartAcceleration, gbx.StartAcceleration.Value())
+		body.Add(JsonKeys.Gearbox_TorqueReserve, gshift.TorqueReserve*100)
+		body.Add(JsonKeys.Gearbox_ShiftTime, gshift.MinTimeBetweenGearshift.Value())
+		body.Add(JsonKeys.Gearbox_StartTorqueReserve, gshift.StartTorqueReserve*100)
+		body.Add(JsonKeys.Gearbox_StartSpeed, gshift.StartSpeed.Value())
+		body.Add(JsonKeys.Gearbox_StartAcceleration, gshift.StartAcceleration.Value())
 		body.Add(JsonKeys.Gearbox_GearboxType, gbx.Type.ToString())
 
 		Dim torqueConverter As ITorqueConverterEngineeringInputData = gbx.TorqueConverter
@@ -135,14 +135,14 @@ Public Class JSONFileWriter
 			torqueConverterDict.Add("ShiftPolygon",
 									If (Not gbx.SavedInDeclarationMode AndAlso Not torqueConverter.ShiftPolygon Is Nothing,
 										GetRelativePath(torqueConverter.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
-			torqueConverterDict.Add("CLUpshiftMinAcceleration", torqueConverter.CLUpshiftMinAcceleration.Value())
-			torqueConverterDict.Add("CCUpshiftMinAcceleration", torqueConverter.CCUpshiftMinAcceleration.Value())
+			torqueConverterDict.Add("CLUpshiftMinAcceleration", gshift.CLUpshiftMinAcceleration.Value())
+			torqueConverterDict.Add("CCUpshiftMinAcceleration", gshift.CCUpshiftMinAcceleration.Value())
 		End If
 		body.Add(JsonKeys.Gearbox_TorqueConverter, torqueConverterDict)
 
-		body.Add("DownshiftAfterUpshiftDelay", gbx.DownshiftAfterUpshiftDelay.Value())
-		body.Add("UpshiftAfterDownshiftDelay", gbx.UpshiftAfterDownshiftDelay.Value())
-		body.Add("UpshiftMinAcceleration", gbx.UpshiftMinAcceleration.Value())
+		body.Add("DownshiftAfterUpshiftDelay", gshift.DownshiftAfterUpshiftDelay.Value())
+		body.Add("UpshiftAfterDownshiftDelay", gshift.UpshiftAfterDownshiftDelay.Value())
+		body.Add("UpshiftMinAcceleration", gshift.UpshiftMinAcceleration.Value())
 
 		body.Add("PowershiftShiftTime", gbx.PowershiftShiftTime.Value())
 
@@ -308,7 +308,7 @@ Public Class JSONFileWriter
 		Dim driver As IDriverEngineeringInputData =  input.DriverInputData
 		
 		If Not job.SavedInDeclarationMode Then
-			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.Source, basePath))
+			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath))
 		End If
 		'body.Add("StartStop", New Dictionary(Of String, Object) From {
 		'			{"Enabled", driver.StartStop.Enabled},
@@ -370,10 +370,10 @@ Public Class JSONFileWriter
 		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 		body.Add("SavedInDeclMode", declarationmode)
 		body.Add("DeclarationVehicle", GetRelativePath(job.Vehicle.DataSource.SourceFile, Path.GetDirectoryName(filename)))
-        if declarationmode Then
-            body.add("ManufacturerRecord", GetRelativePath(job.ManufacturerReportInputData.Source, Path.GetDirectoryName(filename)))
-            body.Add("Mileage", job.Mileage.ConvertToKiloMeter().Value)
-        End If
+		if declarationmode Then
+			body.add("ManufacturerRecord", GetRelativePath(job.ManufacturerReportInputData.Source, Path.GetDirectoryName(filename)))
+			body.Add("Mileage", job.Mileage.ConvertToKiloMeter().Value)
+		End If
 		body.Add("FanPowerCoefficients", job.FanPowerCoefficents)
 		body.Add("FanDiameter", job.FanDiameter.Value())
 		body.Add("Cycles",

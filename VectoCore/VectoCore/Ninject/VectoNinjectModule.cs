@@ -1,23 +1,14 @@
 ﻿using Ninject.Modules;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore
 {
-	public class VectoNinjectModule : NinjectModule
+	public abstract class AbstractNinjectModule : NinjectModule
 	{
-		#region Overrides of NinjectModule
-
-		public override void Load()
-		{
-			LoadModule<XMLDeclarationReaderInjectModule>();
-
-			// load module engineering reader
-
-			// use ninject for simulator factory?
-		}
-
-		#endregion
-
 		protected virtual void LoadModule<T>() where T : class, INinjectModule, new()
 		{
 			if (Kernel != null && !Kernel.HasModule(typeof(T).FullName)) {
@@ -25,5 +16,23 @@ namespace TUGraz.VectoCore
 			}
 
 		}
+	}
+
+	public class VectoNinjectModule : AbstractNinjectModule
+	{
+		#region Overrides of NinjectModule
+
+		public override void Load()
+		{
+			LoadModule<XMLInputDataNinjectModule>();
+
+			LoadModule<XMLEngineeringWriterInjectModule>();
+
+			LoadModule<SimulationFactoryNinjectModule>();
+		}
+
+		#endregion
+
+		
 	}
 }

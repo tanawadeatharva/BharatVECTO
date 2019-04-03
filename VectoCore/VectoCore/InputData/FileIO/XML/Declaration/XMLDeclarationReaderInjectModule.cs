@@ -16,14 +16,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			Bind<IDeclarationInjectFactory>().ToFactory(() => new UseFirstArgumentAsInstanceProvider());
 
-			Bind<IXMLInputDataReader>().To<XMLInputDataFactory>();
-
 			Kernel?.Load(new INinjectModule[] {
 				new XMLDeclarationInputDataV10InjectModule(), 
 			});
-
-			// dummy 
-			Bind<IEngineeringInjectFactory>().ToFactory(() => new UseFirstArgumentAsInstanceProvider());
 
 			#endregion
 		}

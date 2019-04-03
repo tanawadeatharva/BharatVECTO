@@ -55,14 +55,14 @@ namespace TUGraz.VectoCore.Utils
 		// mapping of document type + version => supported schema files (+version)
 		//private static Dictionary<Tuple<XmlDocumentType, string>, IList<string>> schemaFilenames = new Dictionary<Tuple<XmlDocumentType, string>, IList<string>>();
 
-		private static Dictionary<XmlDocumentType, Tuple<string, string[]>> schemaFilenames = new Dictionary<XmlDocumentType, Tuple<string, string[]>>() {
-			{XmlDocumentType.DeclarationJobData, Tuple.Create("VectoInput{0}.xsd", new [] {"1.0"}) },
-			{XmlDocumentType.DeclarationComponentData, Tuple.Create("VectoComponent{0}.xsd", new [] {"1.0"}) },
-			{XmlDocumentType.EngineeringJobData, Tuple.Create("VectoEngineeringInput{0}.xsd", new [] {"0.7"}) },
-			{XmlDocumentType.EngineeringComponentData, Tuple.Create("VectoEngineeringInput{0}.xsd", new [] {"0.7"}) },
-			{XmlDocumentType.ManufacturerReport, Tuple.Create("VectoOutputManufacturer{0}.xsd", new [] {"0.4", "0.5", "0.6", "0.7"}) },
-			{XmlDocumentType.CustomerReport , Tuple.Create("VectoOutputCustomer{0}.xsd", new [] {"0.4", "0.5", "0.7"})},
-			{XmlDocumentType.MonitoringReport , Tuple.Create("VectoMonitoring{0}.xsd", new [] {"0.7"})},
+		private static Dictionary<XmlDocumentType, string> schemaFilenames = new Dictionary<XmlDocumentType, string>() {
+			{XmlDocumentType.DeclarationJobData, "VectoDeclarationJob.xsd"},
+			{XmlDocumentType.DeclarationComponentData, "VectoComponent.xsd"},
+			{XmlDocumentType.EngineeringJobData, "VectoEngineeringInput.xsd" },
+			{XmlDocumentType.EngineeringComponentData, "VectoEngineeringComponent.xsd" },
+			{XmlDocumentType.ManufacturerReport, "VectoOutputManufacturer{0}.xsd" },
+			{XmlDocumentType.CustomerReport , "VectoOutputCustomer{0}.xsd"},
+			{XmlDocumentType.MonitoringReport , "VectoMonitoring{0}.xsd"},
 		};
 
 
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Utils
 				throw new Exception(string.Format("Invalid argument {0} - only use single flags", type));
 			}
 			var entry = schemaFilenames[type];
-			return !entry.Item2.Contains(version) ? null : string.Format(entry.Item1, string.IsNullOrWhiteSpace(version) ? "" : "." + version);
+			return string.Format(entry, string.IsNullOrWhiteSpace(version) ? "" : "." + version);
 		}
 
 	}

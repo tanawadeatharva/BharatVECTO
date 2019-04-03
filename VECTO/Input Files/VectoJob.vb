@@ -230,7 +230,7 @@ Public Class VectoJob
     End Property
 
 
-    Public ReadOnly Property AccelerationCurve As TableData Implements IDriverEngineeringInputData.AccelerationCurve
+    Public ReadOnly Property AccelerationCurve As IDriverAccelerationData Implements IDriverEngineeringInputData.AccelerationCurve
         Get
             If String.IsNullOrWhiteSpace(_driverAccelerationFile.FullPath) Then Return Nothing
             If Not File.Exists(_driverAccelerationFile.FullPath) Then
@@ -239,15 +239,16 @@ Public Class VectoJob
                             RessourceHelper.ReadStream(
                                 DeclarationData.DeclarationDataResourcePrefix + ".VACC." + _driverAccelerationFile.OriginalPath +
                                 VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
-                    Return _
+                    Return  New DriverAccelerationInputData() With{ .AccelerationCurve =
                         VectoCSVFile.ReadStream(cycleDataRes,
                                                 source:=DeclarationData.DeclarationDataResourcePrefix + ".VACC." + _driverAccelerationFile.OriginalPath +
                                                         VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
+                    }
                 Catch ex As Exception
                     Return Nothing
                 End Try
             End If
-            Return VectoCSVFile.Read(_driverAccelerationFile.FullPath)
+            Return New DriverAccelerationInputData() With{ .AccelerationCurve = VectoCSVFile.Read(_driverAccelerationFile.FullPath) }
         End Get
     End Property
 
@@ -269,6 +270,11 @@ Public Class VectoJob
         End Get
     End Property
 
+    Public ReadOnly Property GearshiftInputData As IGearshiftEngineeringInputData Implements IDriverEngineeringInputData.GearshiftInputData
+        get
+            Return TryCast( New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.GearboxInputData, IGearshiftEngineeringInputData)
+        End Get
+    End Property
 
     Public Property DesMaxFile(Optional ByVal original As Boolean = False) As String
         Get
@@ -639,6 +645,16 @@ Public Class VectoJob
             Return Me
         End Get
     End Property
+
+    Public ReadOnly Property DataSource As DataSource Implements IInputDataProvider.DataSource
+        Get
+            Dim retVal As DataSource =  New DataSource() 
+            retVal.SourceType = DataSourceType.JSONFile
+            retVal.SourceFile = FilePath
+            Return retVal
+        End Get
+    End Property
+
 End Class
 
 

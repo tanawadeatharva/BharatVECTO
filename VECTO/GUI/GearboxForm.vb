@@ -15,10 +15,12 @@ Imports System.IO
 Imports System.Linq
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports System.Xml.Linq
+Imports Ninject
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader
@@ -28,6 +30,8 @@ Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.OutputData.XML
+Imports TUGraz.VectoCore.OutputData.XML.Engineering
+Imports TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces
 Imports TUGraz.VectoCore.Utils
 
 ''' <summary>
@@ -241,6 +245,7 @@ Public Class GearboxForm
 																IEngineeringInputDataProvider)
 		Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
 		Dim gearbox As IGearboxEngineeringInputData = vehicle.Components.GearboxInputData
+	    Dim shiftParams As IGearshiftEngineeringInputData = TryCast(gearbox, IGearshiftEngineeringInputData)
 		Dim axlegear As IAxleGearInputData = vehicle.Components.AxleGearInputData
 
 		_vehicleCategory = vehicleCategory
@@ -286,11 +291,11 @@ Public Class GearboxForm
 												If(gear.MaxInputSpeed Is Nothing, "", gear.MaxInputSpeed.AsRPM.ToGUIFormat())))
 		Next
 
-		TbTqResv.Text = (gearbox.TorqueReserve * 100).ToGUIFormat()
-		TbMinTimeBetweenShifts.Text = gearbox.MinTimeBetweenGearshift.ToGUIFormat()
-		TbTqResvStart.Text = (gearbox.StartTorqueReserve * 100).ToGUIFormat()
-		TbStartSpeed.Text = gearbox.StartSpeed.ToGUIFormat()
-		TbStartAcc.Text = gearbox.StartAcceleration.ToGUIFormat()
+		TbTqResv.Text = (shiftParams.TorqueReserve * 100).ToGUIFormat()
+		TbMinTimeBetweenShifts.Text = shiftParams.MinTimeBetweenGearshift.ToGUIFormat()
+		TbTqResvStart.Text = (shiftParams.StartTorqueReserve * 100).ToGUIFormat()
+		TbStartSpeed.Text = shiftParams.StartSpeed.ToGUIFormat()
+		TbStartAcc.Text = shiftParams.StartAcceleration.ToGUIFormat()
 
 		Dim torqueConverter As ITorqueConverterEngineeringInputData = gearbox.TorqueConverter
 		If torqueConverter Is Nothing OrElse gearbox.Type.ManualTransmission() Then
@@ -310,13 +315,13 @@ Public Class GearboxForm
 				If(torqueConverter.ShiftPolygon Is Nothing, "", GetRelativePath(torqueConverter.ShiftPolygon.Source, basePath))
 			tbTCmaxSpeed.Text =
 				If(torqueConverter.MaxInputSpeed Is Nothing, "", torqueConverter.MaxInputSpeed.AsRPM.ToGUIFormat())
-			tbTCLUpshiftMinAcceleration.Text = torqueConverter.CLUpshiftMinAcceleration.ToGUIFormat()
-			tbTCCUpshiftMinAcceleration.Text = torqueConverter.CCUpshiftMinAcceleration.ToGUIFormat()
+			tbTCLUpshiftMinAcceleration.Text = shiftParams.CLUpshiftMinAcceleration.ToGUIFormat()
+			tbTCCUpshiftMinAcceleration.Text = shiftParams.CCUpshiftMinAcceleration.ToGUIFormat()
 		End If
 
-		tbUpshiftMinAcceleration.Text = gearbox.UpshiftMinAcceleration.ToGUIFormat()
-		tbDownshiftAfterUpshift.Text = gearbox.DownshiftAfterUpshiftDelay.ToGUIFormat()
-		tbUpshiftAfterDownshift.Text = gearbox.UpshiftAfterDownshiftDelay.ToGUIFormat()
+		tbUpshiftMinAcceleration.Text = shiftParams.UpshiftMinAcceleration.ToGUIFormat()
+		tbDownshiftAfterUpshift.Text = shiftParams.DownshiftAfterUpshiftDelay.ToGUIFormat()
+		tbUpshiftAfterDownshift.Text = shiftParams.UpshiftAfterDownshiftDelay.ToGUIFormat()
 
 		tbATShiftTime.Text = gearbox.PowershiftShiftTime.ToGUIFormat()
 
@@ -999,8 +1004,10 @@ Public Class GearboxForm
 			Dim export As XDocument = New XMLDeclarationWriter(data.Manufacturer).GenerateVectoComponent(data, data)
 			export.Save(Path.Combine(filePath, data.ModelName + ".xml"))
 		Else
-			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Manufacturer).GenerateVectoComponent(data,
-																														data)
+		    Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
+		    dim writer As IXMLEngineeringWriter = kernel.Get(of IXMLEngineeringWriter)()
+		    writer.Configuration = new WriterConfiguration() With { .SingleFile = true, .BasePath = filePath }
+			Dim export As XDocument = writer.WriteComponent(TryCast(data, IGearboxEngineeringInputData))
 			export.Save(Path.Combine(filePath, data.ModelName + ".xml"))
 		End If
 	End Sub
@@ -1020,7 +1027,10 @@ Public Class GearboxForm
 			Dim export As XDocument = New XMLDeclarationWriter(data.Manufacturer).GenerateVectoComponent(data)
 			export.Save(Path.Combine(filePath, data.ModelName + ".xml"))
 		Else
-			Dim export As XDocument = New XMLEngineeringWriter(_gbxFile, True, data.Manufacturer).GenerateVectoComponent(data)
+		    Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
+		    dim writer As IXMLEngineeringWriter = kernel.Get(of IXMLEngineeringWriter)()
+		    writer.Configuration = new WriterConfiguration() With { .SingleFile = true, .BasePath = filePath }
+			Dim export As XDocument = writer.WriteComponent(TryCast(data, IAxleGearInputData))
 			export.Save(Path.Combine(filePath, data.ModelName + ".xml"))
 		End If
 	End Sub

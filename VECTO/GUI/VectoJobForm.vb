@@ -469,7 +469,7 @@ Public Class VectoJobForm
 		Else
 			'VACC
 			TbDesMaxFile.Text =
-				If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.Source, _basePath))
+				If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, _basePath))
 
 			cboAdvancedAuxiliaries.Enabled = True
 			Dim auxInput As IAuxiliariesEngineeringInputData = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData

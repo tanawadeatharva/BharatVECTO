@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		{
 			var version = XMLHelper.GetSchemaVersion(gearNode);
 			try {
-				return Factory.CreateGearData(version, gearNode);
+				return Factory.CreateGearData(version, gearNode, ParentComponent.DataSource.SourceFile);
 			} catch (Exception e) {
 				var gearNumber = gearNode.Attributes?.GetNamedItem(XMLNames.Gearbox_Gear_GearNumber_Attr).InnerText;
 				throw new VectoException(

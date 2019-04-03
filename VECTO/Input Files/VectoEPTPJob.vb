@@ -225,4 +225,13 @@ Public Class VectoVTPJob
 
     Public ReadOnly Property ComponentDigests As IDictionary(Of VectoComponents,IList(Of String)) Implements IManufacturerReport.ComponentDigests
     Public ReadOnly Property JobDigest As DigestData Implements IManufacturerReport.JobDigest
+
+    Public ReadOnly Property DataSource As DataSource Implements IInputDataProvider.DataSource
+        Get
+            Dim retVal As DataSource =  New DataSource() 
+            retVal.SourceType = DataSourceType.JSONFile
+            retVal.SourceFile = FilePath
+            Return retVal
+        End Get
+    End Property
 End Class

@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -204,6 +205,52 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			return table;
+		}
+
+		public static TableData ReadEntriesOrResource(XmlNode baseNode, string basePath, string baseElement, string entryElement, Dictionary<string, string> mapping)
+		{
+			var entries = baseNode.SelectNodes(
+				QueryLocalName(baseElement, entryElement));
+			if (entries != null && entries.Count > 0) {
+				return ReadTableData(mapping, entries);
+			}
+
+			return ReadCSVResource(baseNode, baseElement, basePath);
+		}
+
+		public static TableData ReadCSVResource(XmlNode baseNode, string xmlElement, string basePath)
+		{
+			var resourceNode = baseNode.SelectSingleNode(
+				XMLHelper.QueryLocalName(xmlElement) + ExtCSVResourceQuery);
+			var filename = string.Empty;
+			if (resourceNode != null) {
+				filename = resourceNode.Attributes?.GetNamedItem(XMLNames.ExtResource_File_Attr).InnerText;
+				if (filename == null) {
+					throw new VectoException("{0} No filename provided!", xmlElement);
+				}
+
+				if (basePath == null) {
+					throw new VectoException("cannot read referenced file - job passed as stream!");
+				}
+
+				var fullFilename = Path.Combine(basePath, filename);
+				if (!File.Exists(fullFilename)) {
+					throw new VectoException("{1} file not found: {0}", filename, xmlElement);
+				}
+
+				return VectoCSVFile.Read(fullFilename);
+			}
+
+			return null;// new TableData(Path.Combine(basePath ?? "", filename), DataSourceType.Missing);
+		}
+
+		private static string ExtCSVResourceQuery
+		{
+			get {
+				return string.Format(
+					"/*[local-name()='{0}' and @{1}='{2}']", XMLNames.ExternalResource, XMLNames.ExtResource_Type_Attr,
+					XMLNames.ExtResource_Type_Value_CSV);
+			}
 		}
 
 		private static IEnumerable<T> Shim<T>(XmlNodeList nodes)

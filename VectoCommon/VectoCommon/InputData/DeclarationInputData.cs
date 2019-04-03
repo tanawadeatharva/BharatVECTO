@@ -305,7 +305,8 @@ namespace TUGraz.VectoCommon.InputData
 		AxleType AxleType { get; }
 
 		ITyreDeclarationInputData Tyre { get; }
-		
+
+		DataSource DataSource { get; }
 	}
 
 	public interface ITyreDeclarationInputData : IComponentInputData
@@ -388,6 +389,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		TableData ShiftPolygon { get; }
+
+		DataSource DataSource { get; }
 	}
 
 	public interface IAxleGearInputData : IComponentInputData
@@ -506,12 +509,12 @@ namespace TUGraz.VectoCommon.InputData
 		TableData CycleData { get; }
 	}
 
-	public interface IDriverDeclarationInputData
+	public interface IDriverDeclarationInputData : IDriverModelData
 	{
 		bool SavedInDeclarationMode { get; }
 	}
 
-	public interface IOverSpeedEcoRollDeclarationInputData
+	public interface IOverSpeedEcoRollDeclarationInputData : IDriverModelData
 	{
 		/// <summary>
 		/// P015

@@ -37,6 +37,15 @@ namespace TUGraz.VectoCommon.InputData
 		CSVFile,
 		JSONFile,
 		Missing,
-		XMLFile
+		XMLFile,
+		XMLEmbedded
+	}
+
+	public static class DataSourceTypeExtensions
+	{
+		public static bool IsXMLFormat(this DataSourceType dst)
+		{
+			return dst == DataSourceType.XMLFile || dst == DataSourceType.XMLEmbedded;
+		}
 	}
 }
