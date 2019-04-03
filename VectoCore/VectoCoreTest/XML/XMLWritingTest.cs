@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLEngineeringInputDataProvider(outFile, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
+			Assert.AreEqual("VEH-N/A", xml.JobInputData.JobName);
 		}
 
 		[Category("LongRunning")]
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLEngineeringInputDataProvider(outFile, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
+			Assert.AreEqual("VEH-N/A", xml.JobInputData.JobName);
 		}
 
 		[Category("LongRunning")]
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLEngineeringInputDataProvider(Path.Combine(outDir, outFile), true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
+			Assert.AreEqual("VEH-N/A", xml.JobInputData.JobName);
 		}
 
 		[Category("LongRunning")]
@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLDeclarationInputDataProvider(reader, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
+			Assert.AreEqual("VEH-NA", xml.JobInputData.JobName);
 		}
 
 		[TestCase]
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var xml = new XMLDeclarationInputDataProvider(reader, true);
 
 			Assert.IsNotNull(xml);
-			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
+			Assert.AreEqual("VEH-NA", xml.JobInputData.JobName);
 		}
 	}
 }
