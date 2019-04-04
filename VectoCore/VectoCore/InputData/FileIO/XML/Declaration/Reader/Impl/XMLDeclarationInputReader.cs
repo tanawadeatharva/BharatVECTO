@@ -11,9 +11,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 {
 	public class XMLDeclarationInputReaderV10 : AbstractComponentReader, IXMLDeclarationInputDataReader
 	{
-		private XmlNode JobNode;
+		protected XmlNode JobNode;
 		protected IXMLDeclarationInputData InputData;
-		private IDeclarationJobInputData _jobData;
+		protected IDeclarationJobInputData _jobData;
 
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
@@ -29,19 +29,29 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region Implementation of IXMLDeclarationInputReader
 
-		public IDeclarationJobInputData JobData
+		public virtual IDeclarationJobInputData JobData
 		{
 			get { return _jobData ?? (_jobData = CreateComponent(XMLNames.VectoInputDeclaration, JobCreator)); }
 		}
 
 		#endregion
 
-		private IDeclarationJobInputData JobCreator(string version, XmlNode node, string arg3)
+		protected virtual IDeclarationJobInputData JobCreator(string version, XmlNode node, string arg3)
 		{
 			var job = Factory.CreateJobData(version, BaseNode, InputData, (InputData as IXMLResource).DataSource.SourceFile);
-			var jobNode = 
-			job.Reader = Factory.CreateJobReader(version, job, JobNode, VerifyXML);
+			var jobNode =
+				job.Reader = Factory.CreateJobReader(version, job, JobNode, VerifyXML);
 			return job;
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationInputReaderV20 : XMLDeclarationInputReaderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLDeclarationInputReaderV20(IXMLDeclarationInputData inputData, XmlNode baseNode, bool verifyXML) : base(inputData, baseNode, verifyXML) { }
+	}
+
 }

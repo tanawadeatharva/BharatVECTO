@@ -13,13 +13,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
 		protected IXMLDeclarationJobInputData JobData;
-		private XmlNode JobNode;
-		private IVehicleDeclarationInputData _vehicle;
+		protected XmlNode JobNode;
+		protected IVehicleDeclarationInputData _vehicle;
 
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
 
-		public XMLJobDataReaderV10(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool verifyXML) : base (jobData, jobNode, verifyXML)
+		public XMLJobDataReaderV10(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool verifyXML) : base(
+			jobData, jobNode, verifyXML)
 		{
 			JobNode = jobNode;
 			JobData = jobData;
@@ -27,15 +28,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region Implementation of IXMLJobDataReader
 
-		public IVehicleDeclarationInputData CreateVehicle
+		public virtual IVehicleDeclarationInputData CreateVehicle
 		{
 			get { return _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator)); }
 		}
 
-
 		#endregion
 
-		private IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
+		protected virtual IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
 		{
 			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile);
 			vehicle.ComponentReader = Factory.CreateComponentReader(version, vehicle, vehicleNode, VerifyXML);
@@ -43,6 +43,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			vehicle.PTOReader = Factory.CreatePTOReader(version, vehicle, vehicleNode, VerifyXML);
 			return vehicle;
 		}
+	}
 
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLJobDataReaderV20 : XMLJobDataReaderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLJobDataReaderV20(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool verifyXML) : base(
+			jobData, jobNode, verifyXML) { }
 	}
 }

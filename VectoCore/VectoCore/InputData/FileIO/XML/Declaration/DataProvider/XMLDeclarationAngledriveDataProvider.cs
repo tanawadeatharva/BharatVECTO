@@ -26,17 +26,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAngledriveInputData
 
-		public AngledriveType Type
+		public virtual AngledriveType Type
 		{
 			get { return Vehicle.AngledriveType; }
 		}
 
-		public double Ratio
+		public virtual double Ratio
 		{
 			get { return GetDouble(XMLNames.AngleDrive_Ratio); }
 		}
 
-		public TableData LossMap
+		public virtual TableData LossMap
 		{
 			get {
 				return ReadTableData(
@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public double Efficiency
+		public virtual double Efficiency
 		{
 			get { throw new VectoException("Efficiency not supported in Declaration Mode!"); }
 		}

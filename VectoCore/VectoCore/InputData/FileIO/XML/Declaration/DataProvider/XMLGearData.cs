@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			SourceFile = sourceFile;
 		}
 
-		public string SourceFile { get; }
+		public virtual string SourceFile { get; }
 
 		#region Implementation of ITransmissionInputData
 
@@ -68,6 +68,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
+
+	// ---------------------------------------------------------------------------------------
 
 	public class XMLGearDataV10 : XMLAbstractGearData, IXMLGearData
 	{

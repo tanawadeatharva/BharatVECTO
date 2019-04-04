@@ -21,12 +21,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAuxiliariesDeclarationInputData
 
-		public bool SavedInDeclarationMode
+		public virtual bool SavedInDeclarationMode
 		{
 			get { return true; }
 		}
 
-		public IList<IAuxiliaryDeclarationInputData> Auxiliaries
+		public virtual IList<IAuxiliaryDeclarationInputData> Auxiliaries
 		{
 			get {
 				if (_auxiliaries != null) {
@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IXMLAuxiliariesDeclarationInputData
 
-		public IXMLComponentReader Reader { protected get; set; }
+		public virtual IXMLComponentReader Reader { protected get; set; }
 
 		#endregion
 	}

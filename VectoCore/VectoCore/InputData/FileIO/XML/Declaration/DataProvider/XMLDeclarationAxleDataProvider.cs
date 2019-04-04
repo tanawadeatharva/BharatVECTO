@@ -13,9 +13,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
-		private ITyreDeclarationInputData _tyre;
-		private bool? _twinTyre;
-		private AxleType? _axleType;
+		protected ITyreDeclarationInputData _tyre;
+		protected bool? _twinTyre;
+		protected AxleType? _axleType;
 
 		public XMLDeclarationAxleDataProviderV10(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
 		{
@@ -24,21 +24,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAxleDeclarationInputData
 
-		public bool TwinTyres
+		public virtual bool TwinTyres
 		{
 			get {
 				return _twinTyre ?? (_twinTyre = XmlConvert.ToBoolean(GetString(XMLNames.AxleWheels_Axles_Axle_TwinTyres))).Value;
 			}
 		}
 
-		public AxleType AxleType
+		public virtual AxleType AxleType
 		{
 			get {
 				return _axleType ?? (_axleType = GetString(XMLNames.AxleWheels_Axles_Axle_AxleType).ParseEnum<AxleType>()).Value;
 			}
 		}
 
-		public ITyreDeclarationInputData Tyre
+		public virtual ITyreDeclarationInputData Tyre
 		{
 			get { return _tyre ?? (_tyre = Reader.Tyre); }
 		}
@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IXMLAxleDeclarationInputData
 
-		public IXMLComponentReader Reader { protected get; set; }
+		public virtual IXMLComponentReader Reader { protected get; set; }
 
 		#endregion
 

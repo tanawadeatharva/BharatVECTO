@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of ITorqueconverterDeclarationInputData
 
-		public TableData TCData
+		public virtual TableData TCData
 		{
 			get {
 				return ReadTableData(

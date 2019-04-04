@@ -32,32 +32,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IVehicleComponentsDeclaration
 
-		public IAirdragDeclarationInputData AirdragInputData
+		public virtual IAirdragDeclarationInputData AirdragInputData
 		{
 			get { return _airdragInputData ?? (_airdragInputData = ComponentReader.AirdragInputData); }
 		}
 
-		public IGearboxDeclarationInputData GearboxInputData
+		public virtual IGearboxDeclarationInputData GearboxInputData
 		{
 			get { return _gearboxInputData ?? (_gearboxInputData = ComponentReader.GearboxInputData); }
 		}
 
-		public ITorqueConverterDeclarationInputData TorqueConverterInputData
+		public virtual ITorqueConverterDeclarationInputData TorqueConverterInputData
 		{
 			get { return GearboxInputData.TorqueConverter; }
 		}
 
-		public IAxleGearInputData AxleGearInputData
+		public virtual IAxleGearInputData AxleGearInputData
 		{
 			get { return _axleGearInputData ?? (_axleGearInputData = ComponentReader.AxleGearInputData); }
 		}
 
-		public IAngledriveInputData AngledriveInputData
+		public virtual IAngledriveInputData AngledriveInputData
 		{
 			get { return _angledriveInputData ?? (_angledriveInputData = ComponentReader.AngledriveInputData); }
 		}
 
-		public IEngineDeclarationInputData EngineInputData
+		public virtual IEngineDeclarationInputData EngineInputData
 		{
 			get { return _engineInputData ?? (_engineInputData = ComponentReader.EngineInputData); }
 		}
@@ -67,17 +67,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return _auxInputData ?? (_auxInputData = ComponentReader.AuxiliaryData); }
 		}
 
-		public IRetarderInputData RetarderInputData
+		public virtual IRetarderInputData RetarderInputData
 		{
 			get { return _retarderInputData ?? (_retarderInputData = ComponentReader.RetarderInputData); }
 		}
 
-		public IPTOTransmissionInputData PTOTransmissionInputData
+		public virtual IPTOTransmissionInputData PTOTransmissionInputData
 		{
 			get { return _vehicle.PTOTransmissionInputData; }
 		}
 
-		public IAxlesDeclarationInputData AxleWheels
+		public virtual IAxlesDeclarationInputData AxleWheels
 		{
 			get { return _axleWheels ?? (_axleWheels = ComponentReader.AxlesDeclarationInputData); }
 		}
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IXMLVehicleComponentsDeclaration
 
-		public IXMLComponentReader ComponentReader { protected get; set; }
+		public virtual IXMLComponentReader ComponentReader { protected get; set; }
 		
 		
 		#endregion

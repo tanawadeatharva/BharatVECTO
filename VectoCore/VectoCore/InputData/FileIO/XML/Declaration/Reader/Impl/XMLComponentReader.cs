@@ -18,16 +18,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected IXMLDeclarationVehicleData Vehicle;
 
-		private IVehicleComponentsDeclaration _components;
-		private IGearboxDeclarationInputData _gearboxInputData;
-		private IAxleGearInputData _axlegearInputData;
-		private IAngledriveInputData _angledriveInputData;
-		private IEngineDeclarationInputData _engineInputData;
-		private IRetarderInputData _retarderInputData;
-		private IAxlesDeclarationInputData _axlesInputData;
-		private IAirdragDeclarationInputData _airdragInputData;
-		private IAuxiliariesDeclarationInputData _auxiliaryInputData;
-		private ITorqueConverterDeclarationInputData _torqueConverterInputData;
+		protected IVehicleComponentsDeclaration _components;
+		protected IGearboxDeclarationInputData _gearboxInputData;
+		protected IAxleGearInputData _axlegearInputData;
+		protected IAngledriveInputData _angledriveInputData;
+		protected IEngineDeclarationInputData _engineInputData;
+		protected IRetarderInputData _retarderInputData;
+		protected IAxlesDeclarationInputData _axlesInputData;
+		protected IAirdragDeclarationInputData _airdragInputData;
+		protected IAuxiliariesDeclarationInputData _auxiliaryInputData;
+		protected ITorqueConverterDeclarationInputData _torqueConverterInputData;
 
 
 		[Inject]
@@ -45,26 +45,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region Implementation of IXMLComponentReader
 
-		public IVehicleComponentsDeclaration ComponentInputData
+		public virtual IVehicleComponentsDeclaration ComponentInputData
 		{
 			get { return _components ?? (_components = CreateComponent(XMLNames.Vehicle_Components, ComponentsCreator)); }
 		}
 
-		public IAirdragDeclarationInputData AirdragInputData
+		public virtual IAirdragDeclarationInputData AirdragInputData
 		{
 			get {
 				return _airdragInputData ?? (_airdragInputData = CreateComponent(XMLNames.Component_AirDrag, AirdragCreator, true));
 			}
 		}
-		
-		public IGearboxDeclarationInputData GearboxInputData
+
+		public virtual IGearboxDeclarationInputData GearboxInputData
 		{
 			get {
 				return _gearboxInputData ?? (_gearboxInputData = CreateComponent(XMLNames.Component_Gearbox, GearboxCreator));
 			}
 		}
 
-		public ITorqueConverterDeclarationInputData TorqueConverterInputData
+		public virtual ITorqueConverterDeclarationInputData TorqueConverterInputData
 		{
 			get {
 				return _torqueConverterInputData ?? (_torqueConverterInputData = CreateComponent(
@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
-		public ITransmissionInputData CreateGear(XmlNode gearNode)
+		public virtual ITransmissionInputData CreateGear(XmlNode gearNode)
 		{
 			var version = XMLHelper.GetSchemaVersion(gearNode);
 			try {
@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
-		public IAuxiliaryDeclarationInputData CreateAuxiliary(XmlNode auxNode)
+		public virtual IAuxiliaryDeclarationInputData CreateAuxiliary(XmlNode auxNode)
 		{
 			var version = XMLHelper.GetSchemaVersion(auxNode);
 			try {
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
-		public IAxleDeclarationInputData CreateAxle(XmlNode axleNode)
+		public virtual IAxleDeclarationInputData CreateAxle(XmlNode axleNode)
 		{
 			var version = XMLHelper.GetSchemaVersion(axleNode);
 			try {
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		public IAxleGearInputData AxleGearInputData
+		public virtual IAxleGearInputData AxleGearInputData
 		{
 			get {
 				return _axlegearInputData ?? (_axlegearInputData = CreateComponent(XMLNames.Component_Axlegear, AxlegearCreator));
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		public IAngledriveInputData AngledriveInputData
+		public virtual IAngledriveInputData AngledriveInputData
 		{
 			get {
 				return _angledriveInputData ??
@@ -125,13 +125,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
-		public IEngineDeclarationInputData EngineInputData
+		public virtual IEngineDeclarationInputData EngineInputData
 		{
 			get { return _engineInputData ?? (_engineInputData = CreateComponent(XMLNames.Component_Engine, EngineCreator)); }
 		}
 
 
-		public IAuxiliariesDeclarationInputData AuxiliaryData
+		public virtual IAuxiliariesDeclarationInputData AuxiliaryData
 		{
 			get {
 				return _auxiliaryInputData ??
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		public IRetarderInputData RetarderInputData
+		public virtual IRetarderInputData RetarderInputData
 		{
 			get {
 				return _retarderInputData ??
@@ -149,36 +149,39 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		public IAxlesDeclarationInputData AxlesDeclarationInputData
+		public virtual IAxlesDeclarationInputData AxlesDeclarationInputData
 		{
 			get {
 				return _axlesInputData ?? (_axlesInputData = CreateComponent(XMLNames.Component_AxleWheels, AxleWheelsCreator));
 			}
 		}
 
-		public ITyreDeclarationInputData Tyre
+		public virtual ITyreDeclarationInputData Tyre
 		{
 			get { return CreateComponent(XMLNames.AxleWheels_Axles_Axle_Tyre, TyreCreator); }
 		}
 
 		#endregion
 
-		protected IAirdragDeclarationInputData AirdragCreator(string version, XmlNode componentNode, string sourceFile)
+		protected virtual IAirdragDeclarationInputData AirdragCreator(
+			string version, XmlNode componentNode, string sourceFile)
 		{
 			if (version == null) {
 				return new XMLDeclarationAirdragDataProviderV10(Vehicle, null, sourceFile);
 			}
+
 			return Factory.CreateAirdragData(version, Vehicle, componentNode, sourceFile);
 		}
 
-		protected IGearboxDeclarationInputData GearboxCreator(string version, XmlNode componentNode, string sourceFile)
+		protected virtual IGearboxDeclarationInputData GearboxCreator(
+			string version, XmlNode componentNode, string sourceFile)
 		{
 			var gbx = Factory.CreateGearboxData(version, Vehicle, componentNode, sourceFile);
 			gbx.Reader = Factory.CreateComponentReader(version, Vehicle, componentNode, VerifyXML);
 			return gbx;
 		}
 
-		protected ITorqueConverterDeclarationInputData TorqueConverterCreator(
+		protected virtual ITorqueConverterDeclarationInputData TorqueConverterCreator(
 			string version, XmlNode componentNode, string sourceFile)
 		{
 			if (version == null) {
@@ -188,12 +191,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return Factory.CreateTorqueconverterData(version, Vehicle, componentNode, sourceFile);
 		}
 
-		protected IAxleGearInputData AxlegearCreator(string version, XmlNode componentNode, string sourceFile)
+		protected virtual IAxleGearInputData AxlegearCreator(string version, XmlNode componentNode, string sourceFile)
 		{
 			return Factory.CreateAxlegearData(version, Vehicle, componentNode, sourceFile);
 		}
 
-		protected IAngledriveInputData AngledriveCreator(string version, XmlNode componentNode, string sourceFile)
+		protected virtual IAngledriveInputData AngledriveCreator(string version, XmlNode componentNode, string sourceFile)
 		{
 			if (version == null) {
 				return new XMLDeclarationAngledriveDataProviderV10(Vehicle, componentNode, sourceFile);
@@ -202,12 +205,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return Factory.CreateAngledriveData(version, Vehicle, componentNode, sourceFile);
 		}
 
-		protected IEngineDeclarationInputData EngineCreator(string version, XmlNode componentNode, string sourceFile)
+		protected virtual IEngineDeclarationInputData EngineCreator(string version, XmlNode componentNode, string sourceFile)
 		{
 			return Factory.CreateEngineData(version, Vehicle, componentNode, sourceFile);
 		}
 
-		protected IRetarderInputData RetarderCreator(string version, XmlNode componentNode, string sourceFile)
+		protected virtual IRetarderInputData RetarderCreator(string version, XmlNode componentNode, string sourceFile)
 		{
 			if (version == null) {
 				return new XMLDeclarationRetarderDataProviderV10(Vehicle, componentNode, sourceFile);
@@ -216,7 +219,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return Factory.CreateRetarderData(version, Vehicle, componentNode, sourceFile);
 		}
 
-		protected IAxlesDeclarationInputData AxleWheelsCreator(string version, XmlNode componentNode, string sourceFile)
+		protected virtual IAxlesDeclarationInputData AxleWheelsCreator(
+			string version, XmlNode componentNode, string sourceFile)
 		{
 			var axles = Factory.CreateAxleWheels(version, Vehicle, componentNode, sourceFile);
 			axles.Reader = Factory.CreateComponentReader(version, Vehicle, componentNode, VerifyXML);
@@ -224,13 +228,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		protected ITyreDeclarationInputData TyreCreator(string version, XmlNode componentNode, string sourceFile)
+		protected virtual ITyreDeclarationInputData TyreCreator(string version, XmlNode componentNode, string sourceFile)
 		{
 			return Factory.CreateTyre(version, Vehicle, componentNode, sourceFile);
 		}
 
 
-		protected IAuxiliariesDeclarationInputData AuxiliaryCreator(string version, XmlNode componentNode, string sourceFile)
+		protected virtual IAuxiliariesDeclarationInputData AuxiliaryCreator(
+			string version, XmlNode componentNode, string sourceFile)
 		{
 			var aux = Factory.CreateAuxiliariesData(version, Vehicle, componentNode, sourceFile);
 			aux.Reader = Factory.CreateComponentReader(version, Vehicle, componentNode, VerifyXML);
@@ -238,11 +243,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		}
 
 
-		protected IVehicleComponentsDeclaration ComponentsCreator(string version, XmlNode componentNode, string sourcefile)
+		protected virtual IVehicleComponentsDeclaration ComponentsCreator(
+			string version, XmlNode componentNode, string sourcefile)
 		{
 			var components = Factory.CreateComponentData(version, Vehicle, componentNode, sourcefile);
 			components.ComponentReader = Factory.CreateComponentReader(version, Vehicle, componentNode, VerifyXML);
 			return components;
 		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLComponentReaderV20 : XMLComponentReaderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLComponentReaderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode, bool verifyXML) : base(
+			vehicle, componentsNode, verifyXML) { }
 	}
 }

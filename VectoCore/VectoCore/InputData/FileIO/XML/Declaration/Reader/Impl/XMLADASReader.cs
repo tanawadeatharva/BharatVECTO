@@ -27,17 +27,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		#region Implementation of IXMLADASReader
 
-		public IAdvancedDriverAssistantSystemDeclarationInputData ADASInputData
+		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADASInputData
 		{
 			get { return _adas ?? (_adas = CreateComponent(XMLNames.Vehicle_ADAS, ADASCreator)); }
 		}
 
 		#endregion
 
-		protected IAdvancedDriverAssistantSystemDeclarationInputData ADASCreator(
+		protected virtual IAdvancedDriverAssistantSystemDeclarationInputData ADASCreator(
 			string version, XmlNode componentNode, string sourceFile)
 		{
 			return Factory.CreateADASData(version, Vehicle, componentNode, sourceFile);
 		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLADASReaderV20 : XMLADASReaderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLADASReaderV20(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode, bool verifyXML) : base(vehicle, vehicleNode, verifyXML) { }
 	}
 }

@@ -11,9 +11,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
-		private string _dimension;
-		private double? _rrc;
-		private Newton _fzIso;
+		protected string _dimension;
+		protected double? _rrc;
+		protected Newton _fzIso;
 
 		public XMLDeclarationTyreDataProviderV10(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
@@ -35,17 +35,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of ITyreDeclarationInputData
 
-		public string Dimension
+		public virtual string Dimension
 		{
 			get { return _dimension ?? (_dimension = GetString(XMLNames.AxleWheels_Axles_Axle_Dimension)); }
 		}
 
-		public double RollResistanceCoefficient
+		public virtual double RollResistanceCoefficient
 		{
 			get { return _rrc ?? (_rrc = GetDouble(XMLNames.AxleWheels_Axles_Axle_RRCDeclared)).Value; }
 		}
 
-		public Newton TyreTestLoad
+		public virtual Newton TyreTestLoad
 		{
 			get { return _fzIso ?? (_fzIso = GetDouble(XMLNames.AxleWheels_Axles_Axle_FzISO).SI<Newton>()); }
 		}

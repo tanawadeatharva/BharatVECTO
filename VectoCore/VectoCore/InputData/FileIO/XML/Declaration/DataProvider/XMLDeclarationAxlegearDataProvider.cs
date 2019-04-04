@@ -22,12 +22,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAxleGearInputData
 
-		public double Ratio
+		public virtual double Ratio
 		{
 			get { return GetDouble(XMLNames.Axlegear_Ratio); }
 		}
 
-		public TableData LossMap
+		public virtual TableData LossMap
 		{
 			get {
 				return ReadTableData(
@@ -36,12 +36,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public double Efficiency
+		public virtual double Efficiency
 		{
 			get { throw new VectoException("Efficiency not supported in Declaration Mode!"); }
 		}
 
-		public AxleLineType LineType
+		public virtual AxleLineType LineType
 		{
 			get {
 				var value = GetString(XMLNames.Axlegear_LineType);

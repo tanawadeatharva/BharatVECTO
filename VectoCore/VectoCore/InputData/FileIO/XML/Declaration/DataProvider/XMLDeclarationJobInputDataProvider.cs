@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public class XMLDeclarationJobInputDataProviderV10 : AbstractXMLResource, IXMLDeclarationJobInputData
 	{
-		private IVehicleDeclarationInputData _vehicle;
+		protected IVehicleDeclarationInputData _vehicle;
 
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
@@ -34,24 +34,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IDeclarationJobInputData
 
-		public bool SavedInDeclarationMode
+		public virtual bool SavedInDeclarationMode
 		{
 			get { return true; }
 		}
 
-		public IVehicleDeclarationInputData Vehicle
+		public virtual IVehicleDeclarationInputData Vehicle
 		{
 			get { return _vehicle ?? (_vehicle = Reader.CreateVehicle); }
 		}
 
-		public string JobName { get { return Vehicle.Identifier; } }
+		public virtual string JobName { get { return Vehicle.Identifier; } }
 
 		#endregion
 
 		#region Implementation of IXMLDeclarationJobInputData
 
-		public IXMLJobDataReader Reader { protected get; set; }
-		public IXMLDeclarationInputData InputData { get; }
+		public virtual IXMLJobDataReader Reader { protected get; set; }
+		public virtual IXMLDeclarationInputData InputData { get; }
 
 		#endregion
 	}

@@ -23,17 +23,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IRetarderInputData
 
-		public RetarderType Type
+		public virtual RetarderType Type
 		{
 			get { return Vehicle.RetarderType; }
 		}
 
-		public double Ratio
+		public virtual double Ratio
 		{
 			get { return Vehicle.RetarderRatio; }
 		}
 
-		public TableData LossMap
+		public virtual TableData LossMap
 		{
 			get {
 				return ReadTableData(XMLNames.Retarder_RetarderLossMap, XMLNames.Retarder_RetarderLossMap_Entry, AttributeMappings.RetarderLossmapMapping);

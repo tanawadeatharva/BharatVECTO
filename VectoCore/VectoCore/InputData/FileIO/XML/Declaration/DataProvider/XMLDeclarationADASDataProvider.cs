@@ -31,22 +31,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
-		public bool EngineStopStart
+		public virtual bool EngineStopStart
 		{
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EngineStopStart)); }
 		}
 
-		public bool EcoRollWitoutEngineStop
+		public virtual bool EcoRollWitoutEngineStop
 		{
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop)); }
 		}
 
-		public bool EcoRollWithEngineStop
+		public virtual bool EcoRollWithEngineStop
 		{
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart)); }
 		}
 
-		public PredictiveCruiseControlType PredictiveCruiseControl
+		public virtual PredictiveCruiseControlType PredictiveCruiseControl
 		{
 			get { return PredictiveCruiseControlTypeHelper.Parse(GetString(XMLNames.Vehicle_ADAS_PCC)); }
 		}

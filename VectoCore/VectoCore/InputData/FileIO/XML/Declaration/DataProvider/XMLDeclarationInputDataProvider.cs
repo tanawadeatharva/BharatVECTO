@@ -49,38 +49,47 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
-		internal readonly XmlDocument Document;
+		protected readonly XmlDocument Document;
 		protected IDeclarationJobInputData JobData;
+
+		public XMLDeclarationInputDataProviderV10(XmlDocument xmlDoc, string fileName) : base(
+			xmlDoc.DocumentElement, fileName)
+		{
+			Document = xmlDoc;
+			SourceType = DataSourceType.XMLFile;
+		}
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override string SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
 
 		#region Implementation of IXMLDeclarationInputData
 
-		public IXMLDeclarationInputDataReader Reader { protected get; set; }
+		public virtual IXMLDeclarationInputDataReader Reader { protected get; set; }
 
 		#endregion
 
-		public XMLDeclarationInputDataProviderV10(XmlDocument xmlDoc, string fileName) : base(xmlDoc.DocumentElement, fileName)
-		{		
-			Document = xmlDoc;
-			SourceType = DataSourceType.XMLFile;
-		}
-
 		
-		public IDeclarationJobInputData JobInputData
+
+		public virtual IDeclarationJobInputData JobInputData
 		{
 			get { return JobData ?? (JobData = Reader.JobData); }
 		}
 
 
-		public XElement XMLHash { get; private set; }
+		public virtual XElement XMLHash { get; private set; }
+	}
 
-
-		
+	public class XMLDeclarationInputDataProviderV20 : XMLDeclarationInputDataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+		public XMLDeclarationInputDataProviderV20(XmlDocument xmlDoc, string fileName) : base(xmlDoc, fileName) { }
 	}
 }

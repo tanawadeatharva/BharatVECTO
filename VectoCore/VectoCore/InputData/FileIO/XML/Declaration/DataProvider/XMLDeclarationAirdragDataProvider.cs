@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAirdragDeclarationInputData
 
-		public SquareMeter AirDragArea
+		public virtual SquareMeter AirDragArea
 		{
 			get {
 				return ElementExists(XMLNames.AirDrag_DeclaredCdxA)
@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public new CertificationMethod CertificationMethod
+		public override CertificationMethod CertificationMethod
 		{
 			get { return CertificationMethod.Measured; }
 		}

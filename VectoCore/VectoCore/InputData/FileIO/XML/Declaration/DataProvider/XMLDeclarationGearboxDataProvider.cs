@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
 		protected ITorqueConverterDeclarationInputData _torqueConverter;
-		private IList<ITransmissionInputData> _gears;
+		protected IList<ITransmissionInputData> _gears;
 
 		public XMLDeclarationGearboxDataProviderV10(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
@@ -38,33 +38,31 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IGearboxDeclarationInputData
 
-		public GearboxType Type
+		public virtual GearboxType Type
 		{
 			get {
 				var value = GetString(XMLNames.Gearbox_TransmissionType);
 				switch (value) {
 					case "MT":
-					case "SMT":
-						return GearboxType.MT;
-					case "AMT":
-						return GearboxType.AMT;
+					case "SMT": return GearboxType.MT;
+					case "AMT": return GearboxType.AMT;
 					case "APT-S":
-					case "AT - Serial":
-						return GearboxType.ATSerial;
+					case "AT - Serial": return GearboxType.ATSerial;
 					case "APT-P":
-					case "AT - PowerSplit":
-						return GearboxType.ATPowerSplit;
+					case "AT - PowerSplit": return GearboxType.ATPowerSplit;
 				}
+
 				throw new ArgumentOutOfRangeException("GearboxType", value);
 			}
 		}
 
-		public IList<ITransmissionInputData> Gears
+		public virtual IList<ITransmissionInputData> Gears
 		{
 			get {
 				if (_gears != null) {
 					return _gears;
 				}
+
 				_gears = new List<ITransmissionInputData>();
 
 				var gearNodes = GetNodes(new[] { XMLNames.Gearbox_Gears, XMLNames.Gearbox_Gears_Gear });
@@ -78,9 +76,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public ITorqueConverterDeclarationInputData TorqueConverter { get {
-			return _torqueConverter ?? (_torqueConverter = Reader.TorqueConverterInputData);
-		} }
+		public virtual ITorqueConverterDeclarationInputData TorqueConverter
+		{
+			get { return _torqueConverter ?? (_torqueConverter = Reader.TorqueConverterInputData); }
+		}
 
 		#endregion
 

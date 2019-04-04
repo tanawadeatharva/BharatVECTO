@@ -31,9 +31,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -41,7 +39,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -50,16 +47,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
-		public IXMLComponentReader ComponentReader { protected get; set; }
-
-		public IXMLPTOReader PTOReader { protected get; set; }
-
-		public IXMLADASReader ADASReader { protected get; set; }
-
-		private IVehicleComponentsDeclaration _components;
-		private IPTOTransmissionInputData _ptoData;
-
-
 		public XMLDeclarationVehicleDataProviderV10(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(xmlNode, sourceFile)
 		{
@@ -67,29 +54,40 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			SourceType = DataSourceType.XMLFile;
 		}
 
-		public IXMLDeclarationJobInputData Job { get; }
+	
+		public virtual IXMLComponentReader ComponentReader { protected get; set; }
 
-		public string Identifier
+		public virtual IXMLPTOReader PTOReader { protected get; set; }
+
+		public virtual IXMLADASReader ADASReader { protected get; set; }
+
+		protected IVehicleComponentsDeclaration _components;
+		protected IPTOTransmissionInputData _ptoData;
+
+
+			public IXMLDeclarationJobInputData Job { get; }
+
+		public virtual string Identifier
 		{
 			get { return GetAttribute(BaseNode, XMLNames.Component_ID_Attr); }
 		}
 
-		public bool ExemptedVehicle
+		public virtual bool ExemptedVehicle
 		{
 			get { return ElementExists(XMLNames.Vehicle_HybridElectricHDV) && ElementExists(XMLNames.Vehicle_DualFuelVehicle); }
 		}
 
-		public string VIN
+		public virtual string VIN
 		{
 			get { return GetString(XMLNames.Vehicle_VIN); }
 		}
 
-		public LegislativeClass LegislativeClass
+		public virtual LegislativeClass LegislativeClass
 		{
 			get { return GetString(XMLNames.Vehicle_LegislativeClass).ParseEnum<LegislativeClass>(); }
 		}
 
-		public VehicleCategory VehicleCategory
+		public virtual VehicleCategory VehicleCategory
 		{
 			get {
 				var val = GetString(XMLNames.Vehicle_VehicleCategory);
@@ -101,18 +99,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public Kilogram CurbMassChassis
+		public virtual Kilogram CurbMassChassis
 		{
 			get { return GetDouble(XMLNames.Vehicle_CurbMassChassis).SI<Kilogram>(); }
 		}
 
 
-		public Kilogram GrossVehicleMassRating
+		public virtual Kilogram GrossVehicleMassRating
 		{
 			get { return GetDouble(XMLNames.Vehicle_GrossVehicleMass).SI<Kilogram>(); }
 		}
 
-		public IList<ITorqueLimitInputData> TorqueLimits
+		public virtual IList<ITorqueLimitInputData> TorqueLimits
 		{
 			get {
 				var retVal = new List<ITorqueLimitInputData>();
@@ -132,32 +130,32 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public AxleConfiguration AxleConfiguration
+		public virtual AxleConfiguration AxleConfiguration
 		{
 			get { return AxleConfigurationHelper.Parse(GetString(XMLNames.Vehicle_AxleConfiguration)); }
 		}
 
-		public string ManufacturerAddress
+		public virtual string ManufacturerAddress
 		{
 			get { return GetString(XMLNames.Component_ManufacturerAddress); }
 		}
 
-		public PerSecond EngineIdleSpeed
+		public virtual PerSecond EngineIdleSpeed
 		{
 			get { return GetDouble(XMLNames.Vehicle_IdlingSpeed).RPMtoRad(); }
 		}
 
-		public double RetarderRatio
+		public virtual double RetarderRatio
 		{
 			get { return GetDouble(XMLNames.Vehicle_RetarderRatio); }
 		}
 
-		public IPTOTransmissionInputData PTOTransmissionInputData
+		public virtual IPTOTransmissionInputData PTOTransmissionInputData
 		{
 			get { return _ptoData ?? (_ptoData = PTOReader.PTOInputData); }
 		}
 
-		public RetarderType RetarderType
+		public virtual RetarderType RetarderType
 		{
 			get {
 				var value = GetString(XMLNames.Vehicle_RetarderType); //.ParseEnum<RetarderType>(); 
@@ -173,22 +171,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public AngledriveType AngledriveType
+		public virtual AngledriveType AngledriveType
 		{
 			get { return GetString(XMLNames.Vehicle_AngledriveType).ParseEnum<AngledriveType>(); }
 		}
 
-		public bool VocationalVehicle
+		public virtual bool VocationalVehicle
 		{
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_VocationalVehicle)); }
 		}
 
-		public bool SleeperCab
+		public virtual bool SleeperCab
 		{
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_SleeperCab)); }
 		}
 
-		public TankSystem? TankSystem
+		public virtual TankSystem? TankSystem
 		{
 			get {
 				return ElementExists(XMLNames.Vehicle_NgTankSystem)
@@ -197,27 +195,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS
+		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS
 		{
 			get { return ADASReader.ADASInputData; }
 		}
 
-		public bool ZeroEmissionVehicle
+		public virtual bool ZeroEmissionVehicle
 		{
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle)); }
 		}
 
-		public bool HybridElectricHDV
+		public virtual bool HybridElectricHDV
 		{
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_HybridElectricHDV)); }
 		}
 
-		public bool DualFuelVehicle
+		public virtual bool DualFuelVehicle
 		{
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle)); }
 		}
 
-		public Watt MaxNetPower1
+		public virtual Watt MaxNetPower1
 		{
 			get {
 				return ElementExists(XMLNames.Vehicle_MaxNetPower1)
@@ -226,7 +224,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public Watt MaxNetPower2
+		public virtual Watt MaxNetPower2
 		{
 			get {
 				return ElementExists(XMLNames.Vehicle_MaxNetPower2)
@@ -235,7 +233,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public IVehicleComponentsDeclaration Components
+		public virtual IVehicleComponentsDeclaration Components
 		{
 			get { return _components ?? (_components = ComponentReader.ComponentInputData); }
 		}

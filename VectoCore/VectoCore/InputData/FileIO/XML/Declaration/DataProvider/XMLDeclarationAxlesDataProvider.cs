@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 
 		#region Implementation of IAxlesDeclarationInputData
 
-		public IList<IAxleDeclarationInputData> AxlesDeclaration
+		public virtual IList<IAxleDeclarationInputData> AxlesDeclaration
 		{
 			get {
 				if (_axles != null) {
@@ -51,13 +51,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 
 		#region Implementation of IXMLResource
 
-		public DataSource DataSource { get; }
+		public virtual DataSource DataSource { get; }
 
 		#endregion
 
 		#region Implementation of IXMLAxlesDeclarationInputData
 
-		public IXMLComponentReader Reader { protected get; set; }
+		public virtual IXMLComponentReader Reader { protected get; set; }
 
 		#endregion
 	}

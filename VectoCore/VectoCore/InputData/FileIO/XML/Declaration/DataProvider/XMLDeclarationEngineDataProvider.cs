@@ -22,17 +22,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IEngineDeclarationInputData
 
-		public CubicMeter Displacement
+		public virtual CubicMeter Displacement
 		{
 			get { return GetDouble(XMLNames.Engine_Displacement).SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(); }
 		}
 
-		public PerSecond IdleSpeed
+		public virtual PerSecond IdleSpeed
 		{
 			get { return GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad(); }
 		}
 
-		public FuelType FuelType
+		public virtual FuelType FuelType
 		{
 			get {
 				var value = GetString(XMLNames.Engine_FuelType);
@@ -47,56 +47,56 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public TableData FuelConsumptionMap
+		public virtual TableData FuelConsumptionMap
 		{
 			get {
 				return ReadTableData(XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry, AttributeMappings.FuelConsumptionMapMapping);
 			}
 		}
 
-		public TableData FullLoadCurve
+		public virtual TableData FullLoadCurve
 		{
 			get {
 				return ReadTableData(XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FullLoadCurve_Entry, AttributeMappings.EngineFullLoadCurveMapping);
 			}
 		}
 
-		public Watt RatedPowerDeclared
+		public virtual Watt RatedPowerDeclared
 		{
 			get { return GetDouble(XMLNames.Engine_RatedPower).SI<Watt>(); }
 		}
 
-		public PerSecond RatedSpeedDeclared
+		public virtual PerSecond RatedSpeedDeclared
 		{
 			get { return GetDouble(XMLNames.Engine_RatedSpeed).RPMtoRad(); }
 		}
 
-		public NewtonMeter MaxTorqueDeclared
+		public virtual NewtonMeter MaxTorqueDeclared
 		{
 			get { return GetDouble(XMLNames.Engine_MaxTorque).SI<NewtonMeter>(); }
 		}
 
-		public double WHTCMotorway
+		public virtual double WHTCMotorway
 		{
 			get { return GetDouble(XMLNames.Engine_WHTCMotorway); }
 		}
 
-		public double WHTCRural
+		public virtual double WHTCRural
 		{
 			get { return GetDouble(XMLNames.Engine_WHTCRural); }
 		}
 
-		public double WHTCUrban
+		public virtual double WHTCUrban
 		{
 			get { return GetDouble(XMLNames.Engine_WHTCUrban); }
 		}
 
-		public double ColdHotBalancingFactor
+		public virtual double ColdHotBalancingFactor
 		{
 			get { return GetDouble(XMLNames.Engine_ColdHotBalancingFactor); }
 		}
 
-		public double CorrectionFactorRegPer
+		public virtual double CorrectionFactorRegPer
 		{
 			get { return GetDouble(XMLNames.Engine_CorrectionFactor_RegPer); }
 		}

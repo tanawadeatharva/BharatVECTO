@@ -19,14 +19,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAuxiliaryDeclarationInputData
 
-		public AuxiliaryType Type
+		public virtual AuxiliaryType Type
 		{
 			get {
 				return _type ?? (_type = BaseNode.LocalName.ParseEnum<AuxiliaryType>()).Value;
 			}
 		}
 
-		public IList<string> Technology
+		public virtual IList<string> Technology
 		{
 			get {
 				if (_technology != null) {
