@@ -10,8 +10,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public abstract class XMLAbstractGearData : AbstractXMLType
 	{
-		
 		protected TableData _lossmap;
+		protected DataSource _dataSource;
 
 		protected XMLAbstractGearData(XmlNode gearNode, string sourceFile) : base(gearNode)
 		{
@@ -19,6 +19,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public virtual string SourceFile { get; }
+
+
+		public virtual DataSource DataSource
+		{
+			get {
+				return _dataSource ?? (_dataSource = new DataSource() {
+					SourceFile = SourceFile,
+					SourceType = DataSourceType.XMLEmbedded,
+					SourceVersion = XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace)
+				});
+			}
+		}
+
+		protected abstract string SchemaNamespace { get; }
 
 		#region Implementation of ITransmissionInputData
 
@@ -39,8 +53,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get {
 				return _lossmap ?? (_lossmap = XMLHelper.ReadTableData(
-					AttributeMappings.TransmissionLossmapMapping,
-					GetNodes(new[] { XMLNames.Gearbox_Gear_TorqueLossMap, XMLNames.Gearbox_Gear_TorqueLossMap_Entry })));
+							AttributeMappings.TransmissionLossmapMapping,
+							GetNodes(new[] { XMLNames.Gearbox_Gear_TorqueLossMap, XMLNames.Gearbox_Gear_TorqueLossMap_Entry })));
 			}
 		}
 
@@ -64,8 +78,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return null; }
 		}
 
-		
-
 		#endregion
 	}
 
@@ -75,13 +87,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
-		protected DataSource _dataSource;
-
 		public XMLGearDataV10(XmlNode gearNode, string sourceFile) : base(gearNode, sourceFile) { }
 
-		public virtual DataSource DataSource
-		{
-			get { return _dataSource ?? (_dataSource = new DataSource() { SourceFile = SourceFile, SourceType = DataSourceType.XMLEmbedded, SourceVersion = XMLHelper.GetVersionFromNamespaceUri(NAMESPACE_URI) }); }
-		}
+		#region Overrides of XMLAbstractGearData
+
+		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+
+		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLGearDataV20 : XMLGearDataV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLGearDataV20(XmlNode gearNode, string sourceFile) : base(gearNode, sourceFile) { }
+
+		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+
 	}
 }

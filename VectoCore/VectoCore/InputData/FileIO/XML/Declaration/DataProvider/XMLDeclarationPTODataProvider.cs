@@ -27,14 +27,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				if ("none".Equals(shaftGearWheels, StringComparison.InvariantCultureIgnoreCase)) {
 					return "None";
 				}
-				if ("only one engaged gearwheel above oil level".Equals(shaftGearWheels, StringComparison.CurrentCultureIgnoreCase)) {
+				if ("only one engaged gearwheel above oil level".Equals(
+					shaftGearWheels, StringComparison.CurrentCultureIgnoreCase)) {
 					return "only one engaged gearwheel above oil level";
 				}
+
 				var otherElements = GetString(XMLNames.Vehicle_PTO_OtherElements);
 				var ptoTech = string.Format("{0} - {1}", shaftGearWheels, otherElements);
 				if (DeclarationData.PTOTransmission.GetTechnologies().Contains(ptoTech)) {
 					return ptoTech;
 				}
+
 				throw new VectoException("PTO Technology {0} invalid!", ptoTech);
 			}
 		}
@@ -50,5 +53,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPTODataProviderV20 : XMLDeclarationPTODataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLDeclarationPTODataProviderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) { }
 	}
 }

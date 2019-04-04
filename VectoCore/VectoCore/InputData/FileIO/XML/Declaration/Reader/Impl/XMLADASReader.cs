@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public IDeclarationInjectFactory Factory { protected get; set; }
 
 		protected IXMLDeclarationVehicleData Vehicle;
-		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
+		protected IAdvancedDriverAssistantSystemDeclarationInputData _adas;
 
 
 		public XMLADASReaderV10(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode, bool verifyXML) : base(
@@ -37,7 +37,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected virtual IAdvancedDriverAssistantSystemDeclarationInputData ADASCreator(
 			string version, XmlNode componentNode, string sourceFile)
 		{
+			if (version == null) {
+				version = XMLHelper.GetVersionFromNamespaceUri(SchemaVersion);
+			}
 			return Factory.CreateADASData(version, Vehicle, componentNode, sourceFile);
+		}
+
+		public virtual string SchemaVersion
+		{
+			get { return NAMESPACE_URI; }
 		}
 	}
 
@@ -47,6 +55,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 	{
 		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
 
-		public XMLADASReaderV20(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode, bool verifyXML) : base(vehicle, vehicleNode, verifyXML) { }
+		public XMLADASReaderV20(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode, bool verifyXML) : base(
+			vehicle, vehicleNode, verifyXML) { }
+
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADASInputData
+		{
+			get { return _adas ?? (_adas = CreateComponent(XMLNames.Vehicle_ADAS, ADASCreator, true)); }
+		}
+
+		public override string SchemaVersion
+		{
+			get { return NAMESPACE_URI; }
+		}
 	}
 }

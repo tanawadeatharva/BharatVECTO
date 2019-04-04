@@ -14,7 +14,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
-		public XMLDeclarationAxlegearDataProviderV10(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+		public XMLDeclarationAxlegearDataProviderV10(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
 			base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLFile;
@@ -48,6 +49,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				return value.ParseEnum<AxleLineType>();
 			}
 		}
+
 		#endregion
 
 		#region Overrides of AbstractXMLResource
@@ -61,4 +63,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationAxlegearDataProviderV20 : XMLDeclarationAxlegearDataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLDeclarationAxlegearDataProviderV20(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile) { }
+
+		protected override string SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
+
 }

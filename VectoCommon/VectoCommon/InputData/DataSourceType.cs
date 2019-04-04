@@ -38,7 +38,8 @@ namespace TUGraz.VectoCommon.InputData
 		JSONFile,
 		Missing,
 		XMLFile,
-		XMLEmbedded
+		XMLEmbedded,
+		DefaultValue
 	}
 
 	public static class DataSourceTypeExtensions

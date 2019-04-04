@@ -21,9 +21,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public virtual AuxiliaryType Type
 		{
-			get {
-				return _type ?? (_type = BaseNode.LocalName.ParseEnum<AuxiliaryType>()).Value;
-			}
+			get { return _type ?? (_type = BaseNode.LocalName.ParseEnum<AuxiliaryType>()).Value; }
 		}
 
 		public virtual IList<string> Technology
@@ -44,5 +42,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		#endregion
+	}
+
+	public class XMLAuxiliaryDeclarationDataProviderV20 : XMLAuxiliaryDeclarationDataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+
+		public XMLAuxiliaryDeclarationDataProviderV20(XmlNode auxNode, IXMLDeclarationVehicleData vehicle) : base(
+			auxNode, vehicle) { }
 	}
 }

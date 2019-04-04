@@ -42,6 +42,12 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 
+		[TestCase(@"SchemaVersion2.0\vecto_vehicle-components_1.0.xml")]
+		public void TestReadingJobVersion_V20_ComponentsV10(string jobFile)
+		{
+			ReadDeclarationJob(jobFile);
+		}
+
 		public void ReadDeclarationJob(string jobfile)
 		{
 			var filename = Path.Combine(@"TestData\XML\XMLReaderDeclaration", jobfile);

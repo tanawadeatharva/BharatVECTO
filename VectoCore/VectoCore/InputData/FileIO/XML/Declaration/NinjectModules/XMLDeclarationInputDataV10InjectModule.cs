@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 				XMLHelper.GetVersionFromNamespaceUri(XMLDeclarationRetarderDataProviderV10.NAMESPACE_URI));
 
 			Bind<IXMLGearboxDeclarationInputData>().To<XMLDeclarationGearboxDataProviderV10>()
-													.Named(XMLHelper.GetVersionFromNamespaceUri(XMLDeclarationGearboxDataProviderV10.NAMESPACE_URI));
+				.Named(XMLHelper.GetVersionFromNamespaceUri(XMLDeclarationGearboxDataProviderV10.NAMESPACE_URI));
 
 			Bind<IXMLGearData>().To<XMLGearDataV10>().Named(XMLHelper.GetVersionFromNamespaceUri(XMLGearDataV10.NAMESPACE_URI));
 

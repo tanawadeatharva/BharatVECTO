@@ -20,7 +20,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationGearboxDataProviderV10(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
-			base(componentNode, sourceFile) { }
+			base(componentNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+		}
 
 		#region Overrides of AbstractXMLResource
 
@@ -29,10 +32,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return NAMESPACE_URI; }
 		}
 
-		protected override DataSourceType SourceType
-		{
-			get { return DataSourceType.XMLFile; }
-		}
+		protected override DataSourceType SourceType { get; }
 
 		#endregion
 
@@ -88,5 +88,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public IXMLComponentReader Reader { protected get; set; }
 
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationGearboxDataProviderV20 : XMLDeclarationGearboxDataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLDeclarationGearboxDataProviderV20(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile) { }
+
+		protected override string SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
 	}
 }

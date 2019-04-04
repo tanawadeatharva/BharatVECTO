@@ -8,9 +8,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public class XMLDeclarationJobInputDataProviderV10 : AbstractXMLResource, IXMLDeclarationJobInputData
 	{
-		protected IVehicleDeclarationInputData _vehicle;
-
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+
+		protected IVehicleDeclarationInputData _vehicle;
 
 		public XMLDeclarationJobInputDataProviderV10(XmlNode node, IXMLDeclarationInputData inputProvider, string fileName) :
 			base(node, fileName)
@@ -44,7 +44,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return _vehicle ?? (_vehicle = Reader.CreateVehicle); }
 		}
 
-		public virtual string JobName { get { return Vehicle.Identifier; } }
+		public virtual string JobName
+		{
+			get { return Vehicle.Identifier; }
+		}
 
 		#endregion
 
@@ -54,5 +57,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IXMLDeclarationInputData InputData { get; }
 
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationJobInputDataProviderV20 : XMLDeclarationJobInputDataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLDeclarationJobInputDataProviderV20(XmlNode node, IXMLDeclarationInputData inputProvider, string fileName) :
+			base(node, inputProvider, fileName) { }
+
+		protected override string SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
 	}
 }

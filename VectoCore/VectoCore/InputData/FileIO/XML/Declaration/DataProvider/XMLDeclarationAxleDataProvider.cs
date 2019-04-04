@@ -17,7 +17,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected bool? _twinTyre;
 		protected AxleType? _axleType;
 
-		public XMLDeclarationAxleDataProviderV10(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode, sourceFile)
+		public XMLDeclarationAxleDataProviderV10(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLFile;
 		}
@@ -62,5 +63,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationAxleDataProviderV20 : XMLDeclarationAxleDataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLDeclarationAxleDataProviderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) { }
+
+		protected override string SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
 	}
 }

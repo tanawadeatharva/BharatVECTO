@@ -34,6 +34,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				}
 
 				_auxiliaries = new List<IAuxiliaryDeclarationInputData>();
+
 				//var auxNodes = GetNodes(XMLNames.Auxiliaries_Auxiliary);
 				var auxNodes = BaseNode.SelectNodes(XMLHelper.QueryLocalName(XMLNames.Auxiliaries_Auxiliary_Technology) + "/..");
 				if (auxNodes == null) {
@@ -55,5 +56,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual IXMLComponentReader Reader { protected get; set; }
 
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationAuxiliariesDataProviderV20 : XMLDeclarationAuxiliariesDataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLDeclarationAuxiliariesDataProviderV20(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile) { }
 	}
 }

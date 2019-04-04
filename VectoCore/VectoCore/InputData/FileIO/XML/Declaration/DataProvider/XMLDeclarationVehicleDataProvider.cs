@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			SourceType = DataSourceType.XMLFile;
 		}
 
-	
+
 		public virtual IXMLComponentReader ComponentReader { protected get; set; }
 
 		public virtual IXMLPTOReader PTOReader { protected get; set; }
@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected IPTOTransmissionInputData _ptoData;
 
 
-			public IXMLDeclarationJobInputData Job { get; }
+		public IXMLDeclarationJobInputData Job { get; }
 
 		public virtual string Identifier
 		{
@@ -240,7 +240,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
-		
 		#endregion
 
 		#region Overrides of AbstractXMLResource
@@ -253,5 +252,65 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationVehicleDataProviderV20 : XMLDeclarationVehicleDataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLDeclarationVehicleDataProviderV20(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
+			base(jobData, xmlNode, sourceFile) { }
+
+		protected override string SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		public override bool VocationalVehicle
+		{
+			get { return false; }
+		}
+
+		public override bool SleeperCab
+		{
+			get { return true; }
+		}
+
+		public override TankSystem? TankSystem
+		{
+			get { return VectoCommon.InputData.TankSystem.Compressed; }
+		}
+
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
+		{
+			get { return ADASReader.ADASInputData; }
+		}
+
+		public override bool ZeroEmissionVehicle
+		{
+			get { return false; }
+		}
+
+		public override bool HybridElectricHDV
+		{
+			get { return false; }
+		}
+
+		public override bool DualFuelVehicle
+		{
+			get { return false; }
+		}
+
+		public override Watt MaxNetPower1
+		{
+			get { return null; }
+		}
+
+		public override Watt MaxNetPower2
+		{
+			get { return null; }
+		}
 	}
 }

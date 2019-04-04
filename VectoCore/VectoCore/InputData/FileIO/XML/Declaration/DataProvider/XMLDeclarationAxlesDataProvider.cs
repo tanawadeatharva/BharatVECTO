@@ -8,7 +8,8 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
+namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
+{
 	public class XMLDeclarationAxlesDataProviderV10 : AbstractXMLType, IXMLAxlesDeclarationInputData
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
@@ -16,8 +17,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 		protected IAxleDeclarationInputData[] _axles;
 
 
-		public XMLDeclarationAxlesDataProviderV10(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode)
-		{ DataSource = new DataSource() { SourceType = DataSourceType.XMLFile, SourceFile = sourceFile, SourceVersion = XMLHelper.GetVersionFromNamespaceUri(NAMESPACE_URI)}; }
+		public XMLDeclarationAxlesDataProviderV10(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode)
+		{
+			DataSource = new DataSource() {
+				SourceType = DataSourceType.XMLFile,
+				SourceFile = sourceFile,
+				SourceVersion = XMLHelper.GetVersionFromNamespaceUri(NAMESPACE_URI)
+			};
+		}
 
 		#region Implementation of IAxlesDeclarationInputData
 
@@ -27,10 +35,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 				if (_axles != null) {
 					return _axles;
 				}
+
 				var axleNodes = GetNodes(new[] { XMLNames.AxleWheels_Axles, XMLNames.AxleWheels_Axles_Axle });
 				if (axleNodes == null) {
 					return new List<IAxleDeclarationInputData>();
 				}
+
 				_axles = new IAxleDeclarationInputData[axleNodes.Count];
 				foreach (XmlNode axlenode in axleNodes) {
 					var axleNumber = GetAttribute(axlenode, XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr).ToInt();
@@ -43,6 +53,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 
 					_axles[axleNumber - 1] = Reader.CreateAxle(axlenode);
 				}
+
 				return _axles;
 			}
 		}
@@ -60,5 +71,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 		public virtual IXMLComponentReader Reader { protected get; set; }
 
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationAxlesDataProviderV20 : XMLDeclarationAxlesDataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLDeclarationAxlesDataProviderV20(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile) { }
 	}
 }

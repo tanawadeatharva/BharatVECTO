@@ -14,7 +14,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		protected IXMLDeclarationVehicleData Vehicle;
 
-		public XMLDeclarationRetarderDataProviderV10(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+		public XMLDeclarationRetarderDataProviderV10(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
 			base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLFile;
@@ -36,7 +37,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual TableData LossMap
 		{
 			get {
-				return ReadTableData(XMLNames.Retarder_RetarderLossMap, XMLNames.Retarder_RetarderLossMap_Entry, AttributeMappings.RetarderLossmapMapping);
+				return ReadTableData(
+					XMLNames.Retarder_RetarderLossMap, XMLNames.Retarder_RetarderLossMap_Entry,
+					AttributeMappings.RetarderLossmapMapping);
 			}
 		}
 
@@ -52,5 +55,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationRetarderDataProviderV20 : XMLDeclarationRetarderDataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public XMLDeclarationRetarderDataProviderV20(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile) { }
+
+		protected override string SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
 	}
 }
