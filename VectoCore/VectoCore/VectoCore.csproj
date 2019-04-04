@@ -169,6 +169,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLTorqueConverterDeclarationInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLTyreDeclarationInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLVehicleComponentsDeclaration.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV20InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\AbstractComponentReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLADASReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLComponentReader.cs" />
@@ -231,19 +232,19 @@
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLRetarderData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLTorqueconverterData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLTyreData.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\IXMLComponentsReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\IXMLDriverDataReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\IXMLComponentsReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\IXMLDriverDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\IXMLEngineeringInputReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\IXMLJobDataReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\IXMLJobDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\NinjectModules\XMLEngineeringReaderTestOverrides.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\NinjectModules\XMLEngineeringReaderV07InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\NinjectModules\XMLEngineeringReaderV10InjectModule.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\AbstractExternalResourceReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\XMLComponentsEngineeringReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\XMLDriverDataReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\XMLEngineeringInputReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\Reader\XMLJobDataReader.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\XMLEngineeringReaderInjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\Impl\AbstractExternalResourceReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\Impl\XMLComponentsEngineeringReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\Impl\XMLDriverDataReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\Impl\XMLEngineeringInputReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Reader\Impl\XMLJobDataReader.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\NinjectModules\XMLEngineeringReaderInjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLResource.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataFactory.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
@@ -287,7 +288,7 @@
     <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriterInjectModule.cs" />
     <Compile Include="OutputData\XML\Engineering\XMLWriterMapping.cs" />
     <Compile Include="Utils\Ninject\UseFirstArgumentAsInstanceProvider.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\XMLDeclarationReaderInjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationReaderInjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationVehicleDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XMLReports\XMLManufacturerReportReader.cs" />
@@ -672,6 +673,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VTPReport.0.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">

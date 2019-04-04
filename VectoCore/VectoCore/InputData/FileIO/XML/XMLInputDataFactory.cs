@@ -40,7 +40,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 		}
 
 
-
 		public IEngineeringInputDataProvider CreateEngineering(Stream inputData, bool verifyXML)
 		{
 			return DoCreateEngineering(XmlReader.Create(inputData), null, verifyXML);
@@ -50,7 +49,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 		{
 			return DoCreateEngineering(inputData, null, verifyXML);
 		}
-
 
 
 		public IDeclarationInputDataProvider CreateDeclaration(string filename, bool verifyXML)
@@ -91,6 +89,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			if (xmlDoc.DocumentElement == null) {
 				throw new VectoException("empty xml document!");
 			}
+
 			var documentType = XMLHelper.GetDocumentType(xmlDoc.DocumentElement.LocalName);
 			if (documentType == null) {
 				throw new VectoException("unknown xml file! {0}", xmlDoc.DocumentElement.LocalName);
@@ -124,10 +123,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 		private IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source, bool verifyXML)
 		{
 			var versionNumber = XMLHelper.GetSchemaVersion(xmlDoc.DocumentElement);
-
-			var input = DeclarationFactory.CreateInputProvider(versionNumber, xmlDoc, source);
-			input.Reader = DeclarationFactory.CreateInputReader(versionNumber, input, xmlDoc.DocumentElement, verifyXML);
-			return input;
+			try {
+				var input = DeclarationFactory.CreateInputProvider(versionNumber, xmlDoc, source);
+				input.Reader = DeclarationFactory.CreateInputReader(versionNumber, input, xmlDoc.DocumentElement, verifyXML);
+				return input;
+			} catch (Exception e) {
+				throw new VectoException("Failed to read Declaration job version {0}", e, versionNumber);
+			}
 		}
 	}
 }

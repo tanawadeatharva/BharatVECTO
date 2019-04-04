@@ -16,17 +16,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 			get { return true; }
 		}
 
-		public string Manufacturer
+		public virtual string Manufacturer
 		{
 			get { return GetString(XMLNames.Component_Manufacturer); }
 		}
 
-		public string Model
+		public virtual string Model
 		{
 			get { return GetString(XMLNames.Component_Model); }
 		}
 
-		public string Date
+		public virtual string Date
 		{
 			get { return GetString(XMLNames.Component_Date); }
 		}
@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 			}
 		}
 
-		protected TableData ReadTableData(string baseElement, string entryElement, Dictionary<string, string> mapping)
+		protected virtual TableData ReadTableData(string baseElement, string entryElement, Dictionary<string, string> mapping)
 		{
 			var entries = BaseNode.SelectNodes(
 				XMLHelper.QueryLocalName(baseElement, entryElement));
