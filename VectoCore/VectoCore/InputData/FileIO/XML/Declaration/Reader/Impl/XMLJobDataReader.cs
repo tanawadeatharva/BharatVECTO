@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -38,11 +39,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected virtual IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
 		{
 			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile);
-			vehicle.ComponentReader = Factory.CreateComponentReader(version, vehicle, vehicleNode, VerifyXML);
-			vehicle.ADASReader = Factory.CreateADASReader(version, vehicle, vehicleNode, VerifyXML);
-			vehicle.PTOReader = Factory.CreatePTOReader(version, vehicle, vehicleNode, VerifyXML);
+
+			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);  	
+			vehicle.ADASReader =  GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
+			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader); 
+
 			return vehicle;
 		}
+
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -53,5 +57,38 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public XMLJobDataReaderV20(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool verifyXML) : base(
 			jobData, jobNode, verifyXML) { }
+
+		protected override IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
+		{
+			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile);
+
+			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
+			vehicle.ADASReader = vehicle.ADASNode == null ? null : GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader); //null;
+			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
+
+			return vehicle;
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLJobDataReaderV21 : XMLJobDataReaderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21;
+
+		public XMLJobDataReaderV21(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool verifyXML) : base(
+			jobData, jobNode, verifyXML)
+		{ }
+
+		protected override IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
+		{
+			var vehicle = Factory.CreateVehicleData(version, JobData, vehicleNode, sourceFile);
+
+			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
+			vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader); ;
+			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
+
+			return vehicle;
+		}
 	}
 }

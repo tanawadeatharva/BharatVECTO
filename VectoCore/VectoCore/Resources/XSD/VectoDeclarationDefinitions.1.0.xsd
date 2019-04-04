@@ -878,13 +878,7 @@
 	</xs:complexType>
 	<xs:complexType name="VectoDeclarationJobType">
 		<xs:sequence>
-			<xs:element name="Vehicle">
-				<xs:complexType>
-					<xs:complexContent>
-						<xs:extension base="tns:VehicleDeclarationType"/>
-					</xs:complexContent>
-				</xs:complexType>
-			</xs:element>
+			<xs:element name="Vehicle" type="tns:VehicleDeclarationType"/>
 		</xs:sequence>
 		<xs:attribute name="schemaVersion" use="required">
 			<xs:simpleType>

@@ -3,6 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
 	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
+	xmlns:v2.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2"
 	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"
 	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_quam\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd
@@ -30,7 +31,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_quam
     <VocationalVehicle>false</VocationalVehicle>
     <SleeperCab>false</SleeperCab>
     <ADAS xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xsi:type="v2.1:AdvancedDriverAssistantSystemsType">
-					<EnginStopStart>false</EnginStopStart>
+					<EngineStopStart>false</EngineStopStart>
 					<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
 					<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
 					<PredictiveCruiseControl>none</PredictiveCruiseControl>
@@ -526,16 +527,16 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_quam
               <TwinTyres>true</TwinTyres>
               <Steered>false</Steered>
               <Tyre>
-                <Data id="TYRE-315_70R225" xsi:type="TyreDataDeclarationType">
+                <v2.0:Data id="WHL-5432198760-315-70-R22.5" xsi:type="v2.2:TyreDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2">
                   <Manufacturer>Generic Vendor</Manufacturer>
                   <Model>315/70 R22.5</Model>
                   <CertificationNumber>TYRE-315/70 R22.5</CertificationNumber>
                   <Date>2017-09-26T15:33:45.1110278Z</Date>
                   <AppVersion>VectoCore</AppVersion>
-                  <Dimension>315/70 R22.5</Dimension>
+                  <Dimension>235/60 R17 C</Dimension>
                   <RRCDeclared>0.0061</RRCDeclared>
                   <FzISO>33350</FzISO>
-                </Data>
+                </v2.0:Data>
                 <Signature>
                   <Reference URI="#TYRE-315_70R225" xmlns="http://www.w3.org/2000/09/xmldsig#">
                     <Transforms>

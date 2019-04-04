@@ -19,6 +19,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 			Kernel?.Load(new INinjectModule[] {
 				new XMLDeclarationInputDataV10InjectModule(),
 				new XMLDeclarationInputDataV20InjectModule(),
+				new XMLDeclarationInputDataV21InjectModule(),
+				new XMLDeclarationInputDataV22InjectModule(),
 			});
 
 			#endregion

@@ -66,9 +66,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 			Bind<IXMLPTOTransmissionInputData>().To<XMLDeclarationPTODataProviderV20>().Named(
 				XMLHelper.GetVersionFromNamespaceUri(XMLDeclarationPTODataProviderV20.NAMESPACE_URI));
 
-			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
-				.To<XMLDeclarationADASDataProviderV20>().Named(
-					XMLHelper.GetVersionFromNamespaceUri(XMLDeclarationADASDataProviderV20.NAMESPACE_URI));
 
 			// ---------------------------------------------------------------------------------------
 

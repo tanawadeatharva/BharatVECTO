@@ -54,43 +54,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLDeclarationADASDataProviderV20 : XMLDeclarationADASDataProviderV10
+	public class XMLDeclarationADASDataProviderV21 : XMLDeclarationADASDataProviderV10
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
-
-		public XMLDeclarationADASDataProviderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+		/*
+		 * ADAS are added in version 2.1
+		 */
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21;
+		
+		public XMLDeclarationADASDataProviderV21(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
-
-		protected override string SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
-
-		protected override DataSourceType SourceType
-		{
-			get { return DataSourceType.DefaultValue; }
-		}
-
-		public override bool EngineStopStart
-		{
-			get { return false; }
-		}
-
-		public override bool EcoRollWitoutEngineStop
-		{
-			get { return false; }
-		}
-
-		public override bool EcoRollWithEngineStop
-		{
-			get { return false; }
-		}
-
-		public override PredictiveCruiseControlType PredictiveCruiseControl
-		{
-			get { return PredictiveCruiseControlType.None; }
-		}
 	}
 }

@@ -8,7 +8,7 @@
 	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_quam\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd
 urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_quam\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.2.1.xsd">
   <v2.0:Vehicle id="VEH-class5_Class-5_5t0" xsi:type="VehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
-    <Manufacturer>Generic Vendor</Manufacturer>
+    <v2.1:Manufacturer>Generic Vendor</v2.1:Manufacturer>
     <ManufacturerAddress>N.A.</ManufacturerAddress>
     <Model>class 5_Class-5_5t0</Model>
     <VIN>standard values</VIN>
@@ -30,7 +30,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_quam
     <VocationalVehicle>false</VocationalVehicle>
     <SleeperCab>false</SleeperCab>
     <ADAS xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xsi:type="v2.1:AdvancedDriverAssistantSystemsType">
-					<EnginStopStart>false</EnginStopStart>
+					<EngineStopStart>false</EngineStopStart>
 					<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
 					<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
 					<PredictiveCruiseControl>none</PredictiveCruiseControl>

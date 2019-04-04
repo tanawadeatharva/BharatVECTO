@@ -32,7 +32,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 				: BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(component));
 			var dataNode = componentNode?.SelectSingleNode(string.Format("./*[local-name()='{0}']", XMLNames.ComponentDataWrapper)) ?? componentNode;
 			if (componentNode != null) {
-				var version = XMLHelper.GetSchemaVersion(dataNode ?? componentNode);
+				var type = (dataNode ?? componentNode).SchemaInfo.SchemaType;
+				var version = XMLHelper.GetSchemaVersion(type);
+
 				try {
 					return componentCreator(version, componentNode, ParentComponent.DataSource.SourceFile);
 				} catch (Exception e) {
@@ -64,8 +66,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 						new XMLValidator(componentDocument, null, XMLValidator.CallBackExceptionOnError).ValidateXML(
 							XmlDocumentType.EngineeringJobData);
 					}
-
-					var version = XMLHelper.GetSchemaVersion(componentDocument.DocumentElement);
+					var type = componentDocument.DocumentElement.SchemaInfo.SchemaType;
+					var version = XMLHelper.GetSchemaVersion(type);
 					try {
 						return componentCreator(version, componentDocument.DocumentElement, fullFileName);
 					} catch (Exception e) {

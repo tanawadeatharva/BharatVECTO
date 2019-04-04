@@ -35,6 +35,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -57,10 +58,15 @@ namespace TUGraz.VectoCore.Utils
 			return null;
 		}
 
-		public static string GetSchemaVersion(XmlElement node)
+		internal static string GetSchemaVersion(XmlSchemaType type)
 		{
-			return GetVersionFromNamespaceUri(node.NamespaceURI);
+			return GetVersionFromNamespaceUri(type.QualifiedName.Namespace);
 		}
+
+		//public static string GetSchemaVersion(XmlElement node)
+		//{
+		//	return GetVersionFromNamespaceUri(node.NamespaceURI);
+		//}
 
 		public static string GetSchemaVersion(XmlNode node)
 		{
@@ -259,5 +265,7 @@ namespace TUGraz.VectoCore.Utils
 				yield return (T)node;
 			}
 		}
+
+		
 	}
 }

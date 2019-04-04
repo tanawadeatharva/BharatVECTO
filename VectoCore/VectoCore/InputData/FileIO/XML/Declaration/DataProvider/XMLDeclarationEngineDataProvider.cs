@@ -14,7 +14,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
-		public XMLDeclarationEngineDataProviderV10(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+		public XMLDeclarationEngineDataProviderV10(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
 			base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLFile;
@@ -50,14 +51,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual TableData FuelConsumptionMap
 		{
 			get {
-				return ReadTableData(XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry, AttributeMappings.FuelConsumptionMapMapping);
+				return ReadTableData(
+					XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry,
+					AttributeMappings.FuelConsumptionMapMapping);
 			}
 		}
 
 		public virtual TableData FullLoadCurve
 		{
 			get {
-				return ReadTableData(XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FullLoadCurve_Entry, AttributeMappings.EngineFullLoadCurveMapping);
+				return ReadTableData(
+					XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FullLoadCurve_Entry,
+					AttributeMappings.EngineFullLoadCurveMapping);
 			}
 		}
 
@@ -121,7 +126,34 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
 
-		public XMLDeclarationEngineDataProviderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+		public XMLDeclarationEngineDataProviderV20(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile) { }
+
+		protected override string SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationEngineDataProviderV21 : XMLDeclarationEngineDataProviderV20
+	{
+		/*
+		 * harmonize fuel-type paramenter in Regulation 2019/318 (amendment of 2017/2400)
+		 */
+
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21;
+
+		public XMLDeclarationEngineDataProviderV21(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile) { }
+
+		public override FuelType FuelType
+		{
+			get { return GetString(XMLNames.Engine_FuelType).ParseEnum<FuelType>(); }
+		}
 
 		protected override string SchemaNamespace
 		{

@@ -6,6 +6,7 @@ using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -48,7 +49,40 @@ namespace TUGraz.VectoCore.Tests.XML
 			ReadDeclarationJob(jobFile);
 		}
 
-		public void ReadDeclarationJob(string jobfile)
+		[TestCase(@"SchemaVersion2.1\Tractor_4x2_vehicle-class-5_5_t_0.xml")]
+		public void TestReadingJobVersion_V21(string jobFile)
+		{
+			ReadDeclarationJob(jobFile);
+		}
+
+		[TestCase(@"SchemaVersion2.1\vecto_vehicle-exempted-sample.xml")]
+		public void TestReadingJobVersion_V21_Exempted(string jobFile)
+		{
+			ReadDeclarationJob(jobFile);
+		}
+
+		[TestCase(@"SchemaVersion2.1\vecto_vehicle-components_1.0.xml")]
+		public void TestReadingJobVersion_V21_ComponentsV10(string jobFile)
+		{
+			ReadDeclarationJob(jobFile);
+		}
+
+		[TestCase(@"SchemaVersion2.1\vecto_vehicle-components_2.0.xml")]
+		public void TestReadingJobVersion_V21_ComponentsV20(string jobFile)
+		{
+			ReadDeclarationJob(jobFile);
+		}
+
+		[TestCase(@"SchemaVersion2.2\Tractor_4x2_vehicle-class-5_5_t_0.xml")]
+		public void TestReadingJobVersion_V22(string jobFile)
+		{
+			var runs = ReadDeclarationJob(jobFile);
+
+			Assert.AreEqual("235/60 R17 C", runs[0].GetContainer().RunData.VehicleData.AxleData[1].WheelsDimension);
+		}
+
+
+		public IVectoRun[] ReadDeclarationJob(string jobfile)
 		{
 			var filename = Path.Combine(@"TestData\XML\XMLReaderDeclaration", jobfile);
 
@@ -65,6 +99,8 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var runs = runsFactory.SimulationRuns().ToArray();
 			Assert.IsTrue(runs.Length > 0);
+
+			return runs;
 
 			//var customerRecord = fileWriter.XMLCustomerReportName;
 			//var manufacturerRecord = fileWriter.XMLFullReportName;

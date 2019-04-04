@@ -68,4 +68,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			get { return NAMESPACE_URI; }
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLADASReaderV21 : XMLADASReaderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21;
+
+		public XMLADASReaderV21(IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode, bool verifyXML) : base(
+			vehicle, vehicleNode, verifyXML) { }
+
+		public override string SchemaVersion
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
 }

@@ -67,4 +67,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return NAMESPACE_URI; }
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationTyreDataProviderV22 : XMLDeclarationTyreDataProviderV10
+	{
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V22;
+
+		public XMLDeclarationTyreDataProviderV22(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) { }
+
+		protected override string SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
 }

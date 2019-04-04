@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		private IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source, bool verifyXML)
 		{
-			var versionNumber = XMLHelper.GetSchemaVersion(xmlDoc.DocumentElement);
+			var versionNumber = XMLHelper.GetSchemaVersion(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 			try {
 				var input = DeclarationFactory.CreateInputProvider(versionNumber, xmlDoc, source);
 				input.Reader = DeclarationFactory.CreateInputReader(versionNumber, input, xmlDoc.DocumentElement, verifyXML);

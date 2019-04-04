@@ -47,6 +47,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
+		protected IVehicleComponentsDeclaration _components;
+		protected IPTOTransmissionInputData _ptoData;
+		private XmlElement _componentNode;
+		private XmlElement _ptoNode;
+		private XmlElement _adasNode;
+
+
 		public XMLDeclarationVehicleDataProviderV10(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(xmlNode, sourceFile)
 		{
@@ -55,16 +62,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 
+		public XmlElement ComponentNode
+		{
+			get { return _componentNode ?? (_componentNode = GetNode(XMLNames.Vehicle_Components) as XmlElement ); }
+		}
+
 		public virtual IXMLComponentReader ComponentReader { protected get; set; }
+
+		public XmlElement PTONode
+		{
+			get { return _ptoNode ?? (_ptoNode = GetNode(XMLNames.Vehicle_PTO) as XmlElement); }
+		}
 
 		public virtual IXMLPTOReader PTOReader { protected get; set; }
 
+		public XmlElement ADASNode
+		{
+			get { return _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement); }
+		}
+
 		public virtual IXMLADASReader ADASReader { protected get; set; }
-
-		protected IVehicleComponentsDeclaration _components;
-		protected IPTOTransmissionInputData _ptoData;
-
-
+		
 		public IXMLDeclarationJobInputData Job { get; }
 
 		public virtual string Identifier
@@ -258,6 +276,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationVehicleDataProviderV20 : XMLDeclarationVehicleDataProviderV10
 	{
+		/*
+		 * use default values for new parameters introduced in 2019/318 (amendment of 2017/2400
+		 */
+
 		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
 
 		public XMLDeclarationVehicleDataProviderV20(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
@@ -285,7 +307,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
 		{
-			get { return ADASReader.ADASInputData; }
+			get { return new ADASDefaultValues(); }
 		}
 
 		public override bool ZeroEmissionVehicle
@@ -311,6 +333,49 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override Watt MaxNetPower2
 		{
 			get { return null; }
+		}
+
+		public class ADASDefaultValues : IAdvancedDriverAssistantSystemDeclarationInputData
+		{
+			#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
+
+			public bool EngineStopStart { get { return false; } }
+			public bool EcoRollWitoutEngineStop { get { return false; } }
+			public bool EcoRollWithEngineStop { get { return false; } }
+			public PredictiveCruiseControlType PredictiveCruiseControl { get { return PredictiveCruiseControlType.None; } }
+
+			#endregion
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationVehicleDataProviderV21 : XMLDeclarationVehicleDataProviderV10
+	{
+		/*
+		 * added new parameters introduced in 2019/318 (amendment of 2017/2400) (already implemented in version 1.0)
+		 */
+
+		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21;
+
+		public XMLDeclarationVehicleDataProviderV21(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
+			base(jobData, xmlNode, sourceFile) { }
+
+		public override VehicleCategory VehicleCategory
+		{
+			get {
+				var val = GetString(XMLNames.Vehicle_VehicleCategory);
+				if ("Rigid Lorry".Equals(val, StringComparison.InvariantCultureIgnoreCase)) {
+					return VehicleCategory.RigidTruck;
+				}
+
+				return val.ParseEnum<VehicleCategory>();
+			}
+		}
+
+		protected override string SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
 		}
 	}
 }

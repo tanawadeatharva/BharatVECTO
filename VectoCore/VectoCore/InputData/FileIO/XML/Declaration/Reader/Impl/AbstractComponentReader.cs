@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Xml;
+using System.Xml.Schema;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
@@ -28,7 +30,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			var dataNode =
 				componentNode?.SelectSingleNode(string.Format("./*[local-name()='{0}']", XMLNames.ComponentDataWrapper));
 			if (componentNode != null) {
-				var version = XMLHelper.GetSchemaVersion(dataNode ?? componentNode);
+				var type = (dataNode ?? componentNode).SchemaInfo.SchemaType;
+				var version = XMLHelper.GetSchemaVersion(type);
+				if (string.IsNullOrWhiteSpace(version)) {
+					version = XMLHelper.GetVersionFromNamespaceUri(((dataNode ?? componentNode).SchemaInfo.SchemaType?.Parent as XmlSchemaElement)?.QualifiedName.Namespace);
+				}
 				return componentCreator(version, componentNode, ParentComponent.DataSource.SourceFile);
 			}
 
@@ -41,6 +47,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 
 			throw new VectoException("Component {0} not found!", component);
+		}
+
+		protected virtual T GetReader<T>(IXMLDeclarationVehicleData vehicle, XmlNode node, Func<string, IXMLDeclarationVehicleData, XmlNode, bool, T> creator)
+		{
+			var version = XMLHelper.GetSchemaVersion(node.SchemaInfo.SchemaType);
+			if (string.IsNullOrWhiteSpace(version)) {
+				version = XMLHelper.GetVersionFromNamespaceUri((node.SchemaInfo.SchemaType?.Parent as XmlSchemaElement)?.QualifiedName.Namespace);
+			}
+			return creator(version, vehicle, node, VerifyXML);
 		}
 	}
 }
