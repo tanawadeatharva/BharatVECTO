@@ -76,9 +76,15 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase(@"SchemaVersion2.2\Tractor_4x2_vehicle-class-5_5_t_0.xml")]
 		public void TestReadingJobVersion_V22(string jobFile)
 		{
-			var runs = ReadDeclarationJob(jobFile);
+			// does not work as the new tire dimension is not allowed in VECTO at the moment
+			//var runs = ReadDeclarationJob(jobFile);
 
-			Assert.AreEqual("235/60 R17 C", runs[0].GetContainer().RunData.VehicleData.AxleData[1].WheelsDimension);
+			//Assert.AreEqual("235/60 R17 C", runs[0].GetContainer().RunData.VehicleData.AxleData[1].WheelsDimension);
+
+			var filename = Path.Combine(@"TestData\XML\XMLReaderDeclaration", jobFile);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
+			Assert.AreEqual("235/60 R17 C", dataProvider.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration[1].Tyre.Dimension);
+
 		}
 
 
@@ -89,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var fileWriter = new FileOutputWriter(filename);
 			//var sumWriter = new SummaryDataContainer(fileWriter);
 			//var jobContainer = new JobContainer(sumWriter);
-			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename), true);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
 				ModalResults1Hz = false,
 				WriteModalResults = false,

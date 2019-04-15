@@ -252,7 +252,7 @@ Public Class Engine
 				engineData = doa.CreateEngineData(engine, Nothing, dummyGearboxData, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
-				engineData = doa.CreateEngineData(engine, Nothing, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
+				engineData = doa.CreateEngineData(engine, Nothing, New List(Of ITorqueLimitInputData), Nothing, TankSystem.Compressed)
 			End If
 
 			Dim result As IList(Of ValidationResult) =

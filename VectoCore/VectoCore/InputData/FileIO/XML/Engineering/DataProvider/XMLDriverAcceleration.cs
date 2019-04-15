@@ -12,6 +12,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
 
+		public const string XSD_TYPE = "DriverAccelerationCurveEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+
 		protected IXMLEngineeringDriverData DriverData;
 		private IDriverAccelerationData _accelerationCurve;
 
@@ -42,6 +47,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	internal class XMLDriverAccelerationV10 : XMLDriverAccelerationV07
 	{
 		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		//public new const string XSD_TYPE = "DriverAccelerationCurveType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+
 
 		public XMLDriverAccelerationV10(IXMLEngineeringDriverData driverData, XmlNode node) : base(driverData, node) { }
 	}

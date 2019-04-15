@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using System.Xml.Linq;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -15,13 +16,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IXMLDeclarationInputData InputData;
 		protected IDeclarationJobInputData _jobData;
 
-		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+
+		public const string XSD_TYPE = "VectoDeclarationJobType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
 
-		public XMLDeclarationInputReaderV10(IXMLDeclarationInputData inputData, XmlNode baseNode, bool verifyXML) : base(
-			inputData, baseNode, verifyXML)
+		public XMLDeclarationInputReaderV10(IXMLDeclarationInputData inputData, XmlNode baseNode) : base(
+			inputData, baseNode)
 		{
 			JobNode = baseNode;
 			InputData = inputData;
@@ -39,8 +44,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected virtual IDeclarationJobInputData JobCreator(string version, XmlNode node, string arg3)
 		{
 			var job = Factory.CreateJobData(version, BaseNode, InputData, (InputData as IXMLResource).DataSource.SourceFile);
-			var jobNode =
-				job.Reader = Factory.CreateJobReader(version, job, JobNode, VerifyXML);
+			job.Reader = Factory.CreateJobReader(version, job, JobNode);
 			return job;
 		}
 	}
@@ -49,9 +53,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	public class XMLDeclarationInputReaderV20 : XMLDeclarationInputReaderV10
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
 
-		public XMLDeclarationInputReaderV20(IXMLDeclarationInputData inputData, XmlNode baseNode, bool verifyXML) : base(inputData, baseNode, verifyXML) { }
+		public new const string XSD_TYPE = "VectoDeclarationJobType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationInputReaderV20(IXMLDeclarationInputData inputData, XmlNode baseNode) : base(inputData, baseNode) { }
 	}
 
 }

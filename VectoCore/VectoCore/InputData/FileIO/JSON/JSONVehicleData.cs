@@ -212,6 +212,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Job.Gearbox; }
 		}
 
+		public ITorqueConverterDeclarationInputData TorqueConverter { get { return Job.TorqueConverter; } }
+
 		IGearboxEngineeringInputData IVehicleComponentsEngineering.GearboxInputData
 		{
 			get { return Job.Gearbox; }

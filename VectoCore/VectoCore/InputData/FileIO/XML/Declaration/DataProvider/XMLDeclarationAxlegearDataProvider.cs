@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -12,7 +13,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public class XMLDeclarationAxlegearDataProviderV10 : AbstractCommonComponentType, IXMLAxleGearInputData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+
+		public const string XSD_TYPE = "AxlegearDataDeclarationType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
 
 		public XMLDeclarationAxlegearDataProviderV10(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
@@ -54,7 +60,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace
+		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
 		}
@@ -68,13 +74,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationAxlegearDataProviderV20 : XMLDeclarationAxlegearDataProviderV10
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		//public new const string XSD_TYPE = "AxlegearComponentDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		static XMLDeclarationAxlegearDataProviderV20()
+		{
+			NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+		}
 
 		public XMLDeclarationAxlegearDataProviderV20(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile) { }
 
-		protected override string SchemaNamespace
+		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
 		}

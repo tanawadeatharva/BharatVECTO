@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -45,45 +46,60 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public class XMLDeclarationVehicleDataProviderV10 : AbstractCommonComponentType, IXMLDeclarationVehicleData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+
+		public const string XSD_TYPE = "VehicleDeclarationType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		protected IVehicleComponentsDeclaration _components;
 		protected IPTOTransmissionInputData _ptoData;
-		private XmlElement _componentNode;
-		private XmlElement _ptoNode;
-		private XmlElement _adasNode;
+		protected XmlElement _componentNode;
+		protected XmlElement _ptoNode;
+		protected XmlElement _adasNode;
 
 
 		public XMLDeclarationVehicleDataProviderV10(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile)
 			: base(xmlNode, sourceFile)
 		{
 			Job = jobData;
-			SourceType = DataSourceType.XMLFile;
+			SourceType = DataSourceType.XMLEmbedded;
 		}
 
 
-		public XmlElement ComponentNode
+		public virtual XmlElement ComponentNode
 		{
-			get { return _componentNode ?? (_componentNode = GetNode(XMLNames.Vehicle_Components) as XmlElement ); }
+			get {
+				if (ExemptedVehicle) {
+					return null;
+				}
+
+				return _componentNode ?? (_componentNode = GetNode(XMLNames.Vehicle_Components) as XmlElement);
+			}
 		}
 
 		public virtual IXMLComponentReader ComponentReader { protected get; set; }
 
-		public XmlElement PTONode
+		public virtual XmlElement PTONode
 		{
-			get { return _ptoNode ?? (_ptoNode = GetNode(XMLNames.Vehicle_PTO) as XmlElement); }
+			get {
+				if (ExemptedVehicle) {
+					return null;
+				}
+				return _ptoNode ?? (_ptoNode = GetNode(XMLNames.Vehicle_PTO) as XmlElement);
+			}
 		}
 
 		public virtual IXMLPTOReader PTOReader { protected get; set; }
 
-		public XmlElement ADASNode
+		public virtual XmlElement ADASNode
 		{
 			get { return _adasNode ?? (_adasNode = GetNode(XMLNames.Vehicle_ADAS, required: false) as XmlElement); }
 		}
 
 		public virtual IXMLADASReader ADASReader { protected get; set; }
-		
-		public IXMLDeclarationJobInputData Job { get; }
+
+		public virtual IXMLDeclarationJobInputData Job { get; }
 
 		public virtual string Identifier
 		{
@@ -262,7 +278,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace
+		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
 		}
@@ -280,12 +296,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		 * use default values for new parameters introduced in 2019/318 (amendment of 2017/2400
 		 */
 
-		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public new const string XSD_TYPE = "VehicleDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		public XMLDeclarationVehicleDataProviderV20(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
 			base(jobData, xmlNode, sourceFile) { }
 
-		protected override string SchemaNamespace
+		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
 		}
@@ -339,10 +360,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
-			public bool EngineStopStart { get { return false; } }
-			public bool EcoRollWitoutEngineStop { get { return false; } }
-			public bool EcoRollWithEngineStop { get { return false; } }
-			public PredictiveCruiseControlType PredictiveCruiseControl { get { return PredictiveCruiseControlType.None; } }
+			public bool EngineStopStart
+			{
+				get { return false; }
+			}
+
+			public bool EcoRollWitoutEngineStop
+			{
+				get { return false; }
+			}
+
+			public bool EcoRollWithEngineStop
+			{
+				get { return false; }
+			}
+
+			public PredictiveCruiseControlType PredictiveCruiseControl
+			{
+				get { return PredictiveCruiseControlType.None; }
+			}
 
 			#endregion
 		}
@@ -356,7 +392,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		 * added new parameters introduced in 2019/318 (amendment of 2017/2400) (already implemented in version 1.0)
 		 */
 
-		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21;
+
+		public new const string XSD_TYPE = "VehicleDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
 
 		public XMLDeclarationVehicleDataProviderV21(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
 			base(jobData, xmlNode, sourceFile) { }
@@ -373,9 +415,149 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		protected override string SchemaNamespace
+		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
 		}
+	}
+
+	public class XMLDeclarationExemptedVehicleDataProviderV22 : XMLDeclarationVehicleDataProviderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21;
+
+		public new const string XSD_TYPE = "ExemptedVehicleDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationExemptedVehicleDataProviderV22(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+		}
+
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+
+		#region Implementation of IVehicleDeclarationInputData
+
+		public override bool ExemptedVehicle
+		{
+			get { return true; }
+		}
+
+		public override AxleConfiguration AxleConfiguration
+		{
+			get { return AxleConfiguration.AxleConfig_Undefined; }
+		}
+
+		public override IList<ITorqueLimitInputData> TorqueLimits
+		{
+			get { return new List<ITorqueLimitInputData>(); }
+		}
+
+		public override PerSecond EngineIdleSpeed
+		{
+			get { return null; }
+		}
+
+		public override bool VocationalVehicle
+		{
+			get { return false; }
+		}
+
+		public override bool SleeperCab
+		{
+			get { return false; }
+		}
+
+		public override TankSystem? TankSystem
+		{
+			get { return null; }
+		}
+
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
+		{
+			get { return null; }
+		}
+
+		public override bool ZeroEmissionVehicle
+		{
+			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ZeroEmissionVehicle)); }
+		}
+
+		public override bool HybridElectricHDV
+		{
+			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_HybridElectricHDV)); }
+		}
+
+		public override bool DualFuelVehicle
+		{
+			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_DualFuelVehicle)); }
+		}
+
+		public override Watt MaxNetPower1
+		{
+			get { return GetDouble(XMLNames.Vehicle_MaxNetPower1).SI<Watt>(); }
+		}
+
+		public override Watt MaxNetPower2
+		{
+			get { return GetDouble(XMLNames.Vehicle_MaxNetPower2).SI<Watt>(); }
+		}
+
+		public override IVehicleComponentsDeclaration Components
+		{
+			get { return null; }
+		}
+
+		#endregion
+
+		#region Implementation of IXMLDeclarationVehicleData
+
+		public override XmlElement ComponentNode
+		{
+			get { return null; }
+		}
+
+		public override XmlElement PTONode
+		{
+			get { return null; }
+		}
+
+		public override XmlElement ADASNode
+		{
+			get { return null; }
+		}
+
+		public override AngledriveType AngledriveType
+		{
+			get { return AngledriveType.None; }
+		}
+
+		public override RetarderType RetarderType
+		{
+			get { return RetarderType.None; }
+		}
+
+		public override double RetarderRatio
+		{
+			get { return 0; }
+		}
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData
+		{
+			get { return null; }
+		}
+
+		#endregion
 	}
 }

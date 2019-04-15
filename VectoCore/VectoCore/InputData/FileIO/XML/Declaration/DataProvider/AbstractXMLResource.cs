@@ -1,4 +1,5 @@
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Utils;
 
@@ -20,7 +21,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 
 		protected string SourceVersion { get { return XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace); } }
 
-		protected abstract string SchemaNamespace { get; }
+		protected abstract XNamespace SchemaNamespace { get; }
 
 		protected abstract DataSourceType SourceType { get; }
 	}

@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		public void TestSumDataMetaInformation()
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
-			var dataProvider = xmlInputReader.CreateDeclaration(jobfile, true);
+			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Stream fh = !File.Exists(modFilename) ? File.Create(modFilename) : File.OpenRead(modFilename);
 
 			var writer = new FileOutputWriter(jobFile);
-			var inputData = xmlInputReader.CreateDeclaration(jobFile, true);
+			var inputData = xmlInputReader.CreateDeclaration(jobFile);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true
@@ -282,7 +282,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Stream fh = !File.Exists(sumFilename) ? File.Create(sumFilename) : File.OpenRead(sumFilename);
 
 			var writer = new FileOutputWriter(jobFile);
-			var inputData = xmlInputReader.CreateDeclaration(jobFile, true);
+			var inputData = xmlInputReader.CreateDeclaration(jobFile);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true

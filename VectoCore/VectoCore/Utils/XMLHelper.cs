@@ -58,10 +58,10 @@ namespace TUGraz.VectoCore.Utils
 			return null;
 		}
 
-		internal static string GetSchemaVersion(XmlSchemaType type)
-		{
-			return GetVersionFromNamespaceUri(type.QualifiedName.Namespace);
-		}
+		//internal static string GetSchemaVersion(XmlSchemaType type)
+		//{
+		//	return GetVersionFromNamespaceUri(type.QualifiedName.Namespace);
+		//}
 
 		//public static string GetSchemaVersion(XmlElement node)
 		//{
@@ -80,9 +80,10 @@ namespace TUGraz.VectoCore.Utils
 			return GetVersionFromNamespaceUri(node.NamespaceURI);
 		}
 
-		public static string GetVersionFromNamespaceUri(string namespaceUri)
+		public static string GetVersionFromNamespaceUri(XNamespace namespaceUri)
 		{
-			return namespaceUri.Split(':').Last().Replace("v", "");
+			const string versionPrefix = "v";
+			return namespaceUri.NamespaceName.Split(':').Last(x => x.StartsWith(versionPrefix)).Replace(versionPrefix, string.Empty);
 		}
 
 		public static object[] ValueAsUnit(Kilogram mass, string unit, uint? decimals = 0)
@@ -266,6 +267,15 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		
+
+		public static string CombineNamespace(XNamespace xmlNamespace, string type)
+		{
+			return string.Join(":", xmlNamespace.NamespaceName, type);
+		}
+
+		public static string GetXsdType(XmlSchemaType schemaInfoSchemaType)
+		{
+			return string.Join(":", schemaInfoSchemaType.QualifiedName.Namespace, schemaInfoSchemaType.QualifiedName.Name);
+		}
 	}
 }

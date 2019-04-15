@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -13,12 +14,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 {
 	internal class XMLEngineeringVehicleDataProviderV07 : AbstractVehicleEngineeringType, IXMLEngineeringVehicleData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
 
-		public IXMLComponentsReader ComponentReader { protected get; set; }
+		public const string XSD_TYPE = "VehicleEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+		
 
 		private IVehicleComponentsEngineering _components;
-		
+		protected XmlElement _componentNode;
+
 
 		public XMLEngineeringVehicleDataProviderV07(
 			IXMLEngineeringJobInputData jobProvider, XmlNode vehicleNode, string fullFilename) :
@@ -26,6 +32,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			Job = jobProvider;
 			SourceType = jobProvider.DataSource.SourceFile == fullFilename ? DataSourceType.XMLEmbedded : DataSourceType.XMLFile;
+		}
+
+		public IXMLComponentsReader ComponentReader { protected get; set; }
+
+		public virtual XmlElement ComponentNode
+		{
+			get { return _componentNode ?? (_componentNode = GetNode(XMLNames.Vehicle_Components) as XmlElement); }
 		}
 
 		#region Implementation of IComponentInputData
@@ -273,7 +286,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace
+		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
 		}
@@ -286,7 +299,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 	internal class XMLEngineeringVehicleDataProviderV10 : XMLEngineeringVehicleDataProviderV07
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		//public new const string XSD_TYPE = "VehicleEngineeringType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
 		public XMLEngineeringVehicleDataProviderV10(
 			IXMLEngineeringJobInputData jobProvider, XmlNode vehicleNode, string fullFilename) : base(
@@ -294,7 +311,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of XMLEngineeringVehicleDataProviderV07
 
-		protected override string SchemaNamespace
+		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
 		}

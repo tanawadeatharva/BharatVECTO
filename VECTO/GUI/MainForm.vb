@@ -973,9 +973,9 @@ Imports TUGraz.VectoCore.Utils
                         Dim xmlInputReader as IXMLInputDataReader = kernel.Get(Of IXMLInputDataReader)
                         Select Case rootNode
                             Case XMLNames.VectoInputEngineering
-                                input = xmlInputReader.CreateEngineering(jobFile, True)
+                                input = xmlInputReader.CreateEngineering(jobFile)
                             Case XMLNames.VectoInputDeclaration
-                                input = xmlInputReader.CreateDeclaration(XmlReader.Create(jobFile), True)
+                                input = xmlInputReader.CreateDeclaration(XmlReader.Create(jobFile))
                         End Select
                 End Select
 
@@ -2038,9 +2038,9 @@ Imports TUGraz.VectoCore.Utils
                     Dim xmlInputReader as IXMLInputDataReader = kernel.Get(Of IXMLInputDataReader)
                     Select Case rootNode
                         Case XMLNames.VectoInputEngineering
-                            input = xmlInputReader.CreateEngineering(f, True)
+                            input = xmlInputReader.CreateEngineering(f)
                         Case XMLNames.VectoInputDeclaration
-                            input = xmlInputReader.CreateDeclaration(XmlReader.Create(f), True)
+                            input = xmlInputReader.CreateDeclaration(XmlReader.Create(f))
                     End Select
             End Select
 

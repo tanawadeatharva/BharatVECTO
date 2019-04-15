@@ -214,10 +214,10 @@ Examples:
 							var rootNode = xDocument == null ? "" : xDocument.Root.Name.LocalName;
 							switch (rootNode) {
 								case "VectoInputEngineering":
-									dataProvider = inputReader.CreateEngineering(file, true);
+									dataProvider = inputReader.CreateEngineering(file);
 									break;
 								case "VectoInputDeclaration":
-									dataProvider = inputReader.CreateDeclaration(XmlReader.Create(file), true);
+									dataProvider = inputReader.CreateDeclaration(XmlReader.Create(file));
 									break;
 							}
 							break;

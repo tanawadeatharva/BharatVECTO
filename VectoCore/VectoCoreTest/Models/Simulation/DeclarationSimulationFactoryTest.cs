@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
-			var inputDataProvider = xmlInputReader.CreateDeclaration(modified, true);
+			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null) { Validate = false };
 
@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase()]
 		public void TestEngineCorrectionFactor()
 		{
-			var inputDataProvider = xmlInputReader.CreateDeclaration(SampleVehicleDecl, true);
+			var inputDataProvider = xmlInputReader.CreateDeclaration(SampleVehicleDecl);
 			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null) { Validate = false };
 

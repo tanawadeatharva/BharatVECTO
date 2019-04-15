@@ -123,7 +123,7 @@ Public Class Gearbox
 
 		Try
 			Dim writer As JSONFileWriter = JSONFileWriter.Instance
-			writer.SaveGearbox(Me, Me, Me, _filePath)
+			writer.SaveGearbox(Me, Me, Me, Me, _filePath)
 		Catch ex As Exception
 			MsgBox("failed to write Gearbox file: " + ex.Message)
 			Return False
@@ -223,17 +223,17 @@ Public Class Gearbox
 				End Try
 				
 				axlegearData = doa.CreateAxleGearData(gearbox)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, gearbox)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Try
-					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.Components.EngineInputData, gearbox, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
+					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.Components.EngineInputData, gearbox, New List(Of ITorqueLimitInputData), gearbox, TankSystem.Compressed)
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
 
 				axlegearData = doa.CreateAxleGearData(gearbox)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, gearbox, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, gearbox, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, gearbox)
 			End If
 
 			Dim result As IList(Of ValidationResult) =
@@ -376,13 +376,6 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property IGearboxDeclarationInputData_TorqueConverter As ITorqueConverterDeclarationInputData _
-		Implements IGearboxDeclarationInputData.TorqueConverter
-		Get
-			Return Me
-		End Get
-	End Property
-
 	Public ReadOnly Property ReferenceRPM As PerSecond Implements ITorqueConverterEngineeringInputData.ReferenceRPM
 		Get
 			Return TorqueConverterReferenceRpm.RPMtoRad()
@@ -453,13 +446,6 @@ Public Class Gearbox
 	Public ReadOnly Property StartTorqueReserve As Double Implements IGearshiftEngineeringInputData.StartTorqueReserve
 		Get
 			Return TorqueResvStart / 100
-		End Get
-	End Property
-
-	Public ReadOnly Property TorqueConverter As ITorqueConverterEngineeringInputData _
-		Implements IGearboxEngineeringInputData.TorqueConverter
-		Get
-			Return Me
 		End Get
 	End Property
 

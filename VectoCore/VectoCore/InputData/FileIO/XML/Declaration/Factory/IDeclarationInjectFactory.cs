@@ -71,19 +71,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		// ---------------------------------------------------------------------------------------------
 
 		IXMLDeclarationInputDataReader CreateInputReader(
-			string version, IXMLDeclarationInputData inputData, XmlNode baseNode, bool verifyXML);
+			string version, IXMLDeclarationInputData inputData, XmlNode baseNode);
 
 		IXMLJobDataReader CreateJobReader(
-			string version, IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool verifyXML);
+			string version, IXMLDeclarationJobInputData jobData, XmlNode jobNode);
 
 		IXMLComponentReader CreateComponentReader(
-			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentsNode, bool verifyXML);
+			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentsNode);
 
 		IXMLADASReader CreateADASReader(
-			string version, IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode, bool verifyXML);
+			string version, IXMLDeclarationVehicleData vehicle, XmlNode vehicleNode);
 
 		IXMLPTOReader CreatePTOReader(
-			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, bool verifyXML);
+			string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode);
+
+		IXMLAxlesReader CreateAxlesReader(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentsNode);
+
+		IXMLAxleReader CreateAxleReader(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentsNode);
+		IXMLGearboxReader CreateGearboxReader(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentsNode);
+		IXMLAuxiliaryReader CreateAuxiliariesReader(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentsNode);
 	}
 
 }

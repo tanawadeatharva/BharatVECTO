@@ -607,7 +607,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
 			}
 
-			IDeclarationInputDataProvider job = (IDeclarationInputDataProvider)(Path.GetExtension(jobFile) == ".vecto" ? JSONInputDataFactory.ReadJsonJob(jobFile) : xmlInputReader.CreateDeclaration(jobFile, true));
+			IDeclarationInputDataProvider job = (IDeclarationInputDataProvider)(Path.GetExtension(jobFile) == ".vecto" ? JSONInputDataFactory.ReadJsonJob(jobFile) : xmlInputReader.CreateDeclaration(jobFile));
 
 			var gearboxData = job.JobInputData.Vehicle.Components.GearboxInputData;
 			var idlespeed = VectoMath.Max(
@@ -865,7 +865,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase(@"E:\QUAM\Workspace\VECTO-Bugreports\BugReportTests\Bugreport Jobs\20190307_VECTO-904_Extrapolation\OM-18173493.xml")]
 		public void ComputeShiftPolygonXML(string xmlJob)
 		{
-			var inputData = xmlInputReader.CreateDeclaration(xmlJob, true);
+			var inputData = xmlInputReader.CreateDeclaration(xmlJob);
 			var dao = new DeclarationDataAdapter();
 
 			var gearboxData = inputData.JobInputData.Vehicle.Components.GearboxInputData;

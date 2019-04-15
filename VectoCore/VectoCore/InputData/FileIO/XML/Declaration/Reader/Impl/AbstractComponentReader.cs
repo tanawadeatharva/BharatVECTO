@@ -10,15 +10,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 {
 	public abstract class AbstractComponentReader
 	{
-		protected bool VerifyXML;
 		protected readonly XmlNode BaseNode;
 		protected readonly IXMLResource ParentComponent;
 
-		public AbstractComponentReader(IXMLResource parent, XmlNode baseNode, bool verifyXML)
+		public AbstractComponentReader(IXMLResource parent, XmlNode baseNode)
 		{
 			BaseNode = baseNode;
 			ParentComponent = parent;
-			VerifyXML = verifyXML;
 		}
 
 		protected virtual T CreateComponent<T>(
@@ -30,8 +28,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			var dataNode =
 				componentNode?.SelectSingleNode(string.Format("./*[local-name()='{0}']", XMLNames.ComponentDataWrapper));
 			if (componentNode != null) {
-				var type = (dataNode ?? componentNode).SchemaInfo.SchemaType;
-				var version = XMLHelper.GetSchemaVersion(type);
+				var type =  (dataNode ?? componentNode).SchemaInfo.SchemaType;
+				var version = XMLHelper.GetXsdType(type);
 				if (string.IsNullOrWhiteSpace(version)) {
 					version = XMLHelper.GetVersionFromNamespaceUri(((dataNode ?? componentNode).SchemaInfo.SchemaType?.Parent as XmlSchemaElement)?.QualifiedName.Namespace);
 				}
@@ -49,13 +47,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			throw new VectoException("Component {0} not found!", component);
 		}
 
-		protected virtual T GetReader<T>(IXMLDeclarationVehicleData vehicle, XmlNode node, Func<string, IXMLDeclarationVehicleData, XmlNode, bool, T> creator)
+		protected virtual T GetReader<T>(IXMLDeclarationVehicleData vehicle, XmlNode node, Func<string, IXMLDeclarationVehicleData, XmlNode, T> creator) where T : class 
 		{
-			var version = XMLHelper.GetSchemaVersion(node.SchemaInfo.SchemaType);
+			if (node == null) {
+				return null;
+			}
+			var version = XMLHelper.GetXsdType(node.SchemaInfo.SchemaType);
 			if (string.IsNullOrWhiteSpace(version)) {
 				version = XMLHelper.GetVersionFromNamespaceUri((node.SchemaInfo.SchemaType?.Parent as XmlSchemaElement)?.QualifiedName.Namespace);
 			}
-			return creator(version, vehicle, node, VerifyXML);
+			return creator(version, vehicle, node);
 		}
 	}
 }

@@ -30,6 +30,7 @@
 */
 
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -43,7 +44,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	internal class XMLEngineeringAirdragDataProviderV07 : AbstractEngineeringXMLComponentDataProvider,
 		IXMLAirdragData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+
+		public const string XSD_TYPE = "AirDragDataEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
 
 		public XMLEngineeringAirdragDataProviderV07(
 			IXMLEngineeringVehicleData vehicle,
@@ -84,7 +90,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 
 		protected override DataSourceType SourceType { get; }
 
@@ -93,12 +99,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 	internal class XMLEngineeringAirdragDataProviderV10 : XMLEngineeringAirdragDataProviderV07
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		public new const string XSD_TYPE = "AirDragComponentEngineeringType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
 
 		public XMLEngineeringAirdragDataProviderV10(
 			IXMLEngineeringVehicleData vehicle, XmlNode axlegearNode, string fsBasePath) : base(
 			vehicle, axlegearNode, fsBasePath) { }
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 	}
 }

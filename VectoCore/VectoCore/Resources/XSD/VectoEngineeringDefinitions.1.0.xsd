@@ -90,16 +90,7 @@
 	</xs:complexType>
 	<xs:complexType name="AbstractVectoComponentEngineeringType" abstract="true"/>
 	<xs:complexType name="AbstractVehicleComponentsType" abstract="true"/>
-	<xs:complexType name="AbstractVehicleEngineeringType" abstract="true">
-		<xs:sequence>
-			<xs:element name="Manufacturer" type="vdecdef:ManufacturerType"/>
-			<xs:element name="ManufacturerAddress" type="vdecdef:ManufacturerAddressType"/>
-			<xs:element name="Model" type="vdecdef:ModelType"/>
-			<xs:element name="VIN" type="vdecdef:VINType"/>
-			<xs:element name="Date" type="vdecdef:DateTimeWithTimezone"/>
-		</xs:sequence>
-		<xs:attribute name="id"/>
-	</xs:complexType>
+	<xs:complexType name="AbstractVehicleEngineeringType" abstract="true"/>
 	<xs:complexType name="AdvancedDriverAssistEngineeringType">
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractAdvancedDriverAssistEngineeringType">
@@ -110,10 +101,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AirDragComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:AbstractAirdragDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:AbstractAirdragDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="AirDragDataEngineeringType">
 		<xs:complexContent>
@@ -144,10 +138,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AngledriveComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:AbstractAngledriveDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:AbstractAngledriveDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="AngledriveDataEngineeringType">
 		<xs:complexContent>
@@ -172,9 +169,10 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AuxiliariesComponentEngineeringType">
-		<xs:sequence>
+		<xs:choice>
 			<xs:element name="Data" type="tns:AbstractAuxiliariesDataEngineeringType"/>
-		</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="AuxiliariesDataEngineeringType">
 		<xs:complexContent>
@@ -225,7 +223,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AxleComponentEngineeringType">
+	<xs:complexType name="AxleWheelsDataEngineeringType">
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractAxleWheelsDataType">
 				<xs:sequence>
@@ -276,10 +274,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AxlegearComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:AbstractAxlegearDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:AbstractAxlegearDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="AxlegearDataEngineeringType">
 		<xs:complexContent>
@@ -312,9 +313,10 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AxleWheelsComponentEngineeringType">
-		<xs:sequence>
+		<xs:choice>
 			<xs:element name="Data" type="tns:AbstractAxleWheelsDataType"/>
-		</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="ComponentResourceType">
 		<xs:annotation>
@@ -406,10 +408,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="EngineComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:AbstractEngineDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:AbstractEngineDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="EngineDataEngineeringType">
 		<xs:complexContent>
@@ -506,17 +511,13 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="GearboxComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:AbstractGearboxDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-			<xs:element name="TorqueConverter" minOccurs="0">
-				<xs:complexType>
-					<xs:complexContent>
-						<xs:extension base="tns:TorqueConverterComponentEngineeringType"/>
-					</xs:complexContent>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:AbstractGearboxDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="GearboxDataEngineeringType">
 		<xs:complexContent>
@@ -695,10 +696,13 @@
 		<xs:attribute name="ptoTorqueLoss" type="vdecdef:PTOTorqueLossType" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="RetarderComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:AbstractRetarderDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:AbstractRetarderDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="RetarderDataEngineeringType">
 		<xs:complexContent>
@@ -793,7 +797,7 @@
 			<xs:element name="Resource" type="tns:ComponentResourceType"/>
 		</xs:choice>
 	</xs:complexType>
-	<xs:complexType name="TorqueConverterEngineeringDataType">
+	<xs:complexType name="TorqueConverterDataEngineeringType">
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractTorqueConverterDataEngineeringType">
 				<xs:sequence>
@@ -877,6 +881,7 @@
 					<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentEngineeringType"/>
 					<xs:element name="Vehicle" type="tns:AbstractVehicleEngineeringType"/>
 					<xs:element name="AirDrag" type="tns:AirDragComponentEngineeringType"/>
+					<xs:element name="TorqueConverter" type="tns:TorqueConverterComponentEngineeringType"/>
 				</xs:choice>
 				<xs:attribute name="schemaVersion"/>
 			</xs:extension>
@@ -888,32 +893,18 @@
 			<xs:choice>
 				<xs:sequence>
 					<xs:choice>
-						<xs:element name="Vehicle" type="tns:AbstractVehicleEngineeringType"/>
+						<xs:element name="Vehicle" type="tns:VehicleEngineeringType"/>
 						<xs:element name="Resource" type="tns:ComponentResourceType">
 							<xs:annotation>
 								<xs:documentation>P002 - ext. Resource</xs:documentation>
 							</xs:annotation>
 						</xs:element>
 					</xs:choice>
-					<xs:element name="Signature" minOccurs="0"/>
 					<xs:element name="DriverModel" type="tns:AbstractDriverModelEngineeringType"/>
 				</xs:sequence>
-				<xs:sequence>
-					<xs:element name="Engine" type="tns:EngineComponentEngineeringType"/>
-					<xs:element name="Signature" minOccurs="0"/>
-				</xs:sequence>
+				<xs:element name="Engine" type="tns:EngineComponentEngineeringType"/>
 			</xs:choice>
-			<xs:element name="MissionCycles">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="Cycle" type="tns:ExtResourceEngineeringType" maxOccurs="unbounded">
-							<xs:annotation>
-								<xs:documentation>P008 - ext. Resource</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
+			<xs:element name="MissionCycles" type="tns:MissionCyclesType"/>
 		</xs:sequence>
 		<xs:attribute name="schemaVersion"/>
 	</xs:complexType>
@@ -921,45 +912,27 @@
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractVehicleComponentsType">
 				<xs:sequence>
-					<xs:choice>
-						<xs:element name="Engine" type="tns:EngineComponentEngineeringType"/>
-						<xs:element name="Resource" type="tns:ComponentResourceType">
-							<xs:annotation>
-								<xs:documentation>P003 - ext. Resource</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:choice>
-					<xs:choice>
-						<xs:element name="Gearbox" type="tns:GearboxComponentEngineeringType"/>
-						<xs:element name="Resource" type="tns:ComponentResourceType">
-							<xs:annotation>
-								<xs:documentation>P004 - ext. Resource</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:choice>
+					<xs:element name="Engine" type="tns:EngineComponentEngineeringType"/>
+					<xs:element name="Gearbox" type="tns:GearboxComponentEngineeringType"/>
+					<xs:element name="TorqueConverter" minOccurs="0">
+						<xs:complexType>
+							<xs:complexContent>
+								<xs:extension base="tns:TorqueConverterComponentEngineeringType"/>
+							</xs:complexContent>
+						</xs:complexType>
+					</xs:element>
 					<xs:element name="Angledrive" type="tns:AngledriveComponentEngineeringType" minOccurs="0"/>
 					<xs:element name="Retarder" type="tns:RetarderComponentEngineeringType" minOccurs="0"/>
-					<xs:choice>
-						<xs:element name="Axlegear" type="tns:AxlegearComponentEngineeringType"/>
-						<xs:element name="Resource" type="tns:ComponentResourceType"/>
-					</xs:choice>
-					<xs:choice>
-						<xs:element name="AxleWheels">
-							<xs:complexType>
-								<xs:complexContent>
-									<xs:extension base="tns:AxleWheelsComponentEngineeringType"/>
-								</xs:complexContent>
-							</xs:complexType>
-						</xs:element>
-					</xs:choice>
-					<xs:choice>
-						<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentEngineeringType"/>
-						<xs:element name="Resource" type="tns:ComponentResourceType"/>
-					</xs:choice>
-					<xs:choice>
-						<xs:element name="AirDrag" type="tns:AirDragComponentEngineeringType"/>
-						<xs:element name="Resource" type="tns:ComponentResourceType"/>
-					</xs:choice>
+					<xs:element name="Axlegear" type="tns:AxlegearComponentEngineeringType"/>
+					<xs:element name="AxleWheels">
+						<xs:complexType>
+							<xs:complexContent>
+								<xs:extension base="tns:AxleWheelsComponentEngineeringType"/>
+							</xs:complexContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentEngineeringType"/>
+					<xs:element name="AirDrag" type="tns:AirDragComponentEngineeringType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -967,50 +940,59 @@
 	<xs:complexType name="VehicleEngineeringType">
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractVehicleEngineeringType">
-				<xs:sequence>
-					<xs:element name="VehicleCategory" type="vdecdef:VehicleCategoryType" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>P036 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AxleConfiguration" type="vdecdef:VehicleAxleConfigurationType">
-						<xs:annotation>
-							<xs:documentation>P037 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="CurbMassChassis" type="vdecdef:VehicleCurbMassChassisType">
-						<xs:annotation>
-							<xs:documentation>P038 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="GrossVehicleMass" type="vdecdef:VehicleGrossVehicleMassType">
-						<xs:annotation>
-							<xs:documentation>P041 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="RetarderType" type="vdecdef:RetarderTypeType">
-						<xs:annotation>
-							<xs:documentation>P052 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="RetarderRatio" type="vdecdef:RetarderRatioType" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>P053 - [-]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AngledriveType" type="vdecdef:AngledriveTypeType"/>
-					<xs:element name="PTOType" type="vdecdef:PTOTypeType">
-						<xs:annotation>
-							<xs:documentation>P186 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="PTOIdleLossMap" type="tns:PTOIdleLossMapEngineeringType" minOccurs="0"/>
-					<xs:element name="PTOCycle" type="tns:PTOCycleEngineeringType" minOccurs="0"/>
-					<xs:element name="CurbMassExtra" type="tns:VehicleCurbWeightExtraType"/>
-					<xs:element name="Loading" type="tns:VehicleLoadingType"/>
-					<xs:element name="AdvancedDriverAssist" type="tns:AbstractAdvancedDriverAssistEngineeringType" minOccurs="0"/>
-					<xs:element name="Components" type="tns:AbstractVehicleComponentsType"/>
-				</xs:sequence>
+				<xs:choice>
+					<xs:sequence>
+						<xs:element name="Manufacturer" type="vdecdef:ManufacturerType"/>
+						<xs:element name="ManufacturerAddress" type="vdecdef:ManufacturerAddressType"/>
+						<xs:element name="Model" type="vdecdef:ModelType"/>
+						<xs:element name="VIN" type="vdecdef:VINType"/>
+						<xs:element name="Date" type="vdecdef:DateTimeWithTimezone"/>
+						<xs:element name="VehicleCategory" type="vdecdef:VehicleCategoryType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P036 - enum</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="AxleConfiguration" type="vdecdef:VehicleAxleConfigurationType">
+							<xs:annotation>
+								<xs:documentation>P037 - enum</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="CurbMassChassis" type="vdecdef:VehicleCurbMassChassisType">
+							<xs:annotation>
+								<xs:documentation>P038 - [kg]</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="GrossVehicleMass" type="vdecdef:VehicleGrossVehicleMassType">
+							<xs:annotation>
+								<xs:documentation>P041 - [kg]</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="RetarderType" type="vdecdef:RetarderTypeType">
+							<xs:annotation>
+								<xs:documentation>P052 - enum</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="RetarderRatio" type="vdecdef:RetarderRatioType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>P053 - [-]</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="AngledriveType" type="vdecdef:AngledriveTypeType"/>
+						<xs:element name="PTOType" type="vdecdef:PTOTypeType">
+							<xs:annotation>
+								<xs:documentation>P186 - enum</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="PTOIdleLossMap" type="tns:PTOIdleLossMapEngineeringType" minOccurs="0"/>
+						<xs:element name="PTOCycle" type="tns:PTOCycleEngineeringType" minOccurs="0"/>
+						<xs:element name="CurbMassExtra" type="tns:VehicleCurbWeightExtraType"/>
+						<xs:element name="Loading" type="tns:VehicleLoadingType"/>
+						<xs:element name="AdvancedDriverAssist" type="tns:AbstractAdvancedDriverAssistEngineeringType" minOccurs="0"/>
+						<xs:element name="Components" type="tns:AbstractVehicleComponentsType"/>
+					</xs:sequence>
+					<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+				</xs:choice>
+				<xs:attribute name="id"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -2023,4 +2005,13 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
+	<xs:complexType name="MissionCyclesType">
+		<xs:sequence>
+			<xs:element name="Cycle" type="tns:ExtResourceEngineeringType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>P008 - ext. Resource</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

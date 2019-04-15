@@ -14,25 +14,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 		public override void Load()
 		{
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationVehicleDataProviderV21>().Named(
-				XMLHelper.GetVersionFromNamespaceUri(XMLDeclarationVehicleDataProviderV21.NAMESPACE_URI));
+				XMLDeclarationVehicleDataProviderV21.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationExemptedVehicleDataProviderV22>()
+											.Named(XMLDeclarationExemptedVehicleDataProviderV22.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLEngineDeclarationInputData>().To<XMLDeclarationEngineDataProviderV21>().Named(
-				XMLHelper.GetVersionFromNamespaceUri(XMLDeclarationEngineDataProviderV21.NAMESPACE_URI));
+				XMLDeclarationEngineDataProviderV21.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
 				.To<XMLDeclarationADASDataProviderV21>().Named(
-					XMLHelper.GetVersionFromNamespaceUri(XMLDeclarationADASDataProviderV21.NAMESPACE_URI));
+					XMLDeclarationADASDataProviderV21.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLEngineDeclarationInputData>().To<XMLDeclarationEngineDataProviderV21>().Named(
-				XMLHelper.GetVersionFromNamespaceUri(XMLDeclarationEngineDataProviderV21.NAMESPACE_URI));
+				XMLDeclarationEngineDataProviderV21.QUALIFIED_XSD_TYPE);
 
 			// ---------------------------------------------------------------------------------------
 
 			Bind<IXMLJobDataReader>().To<XMLJobDataReaderV21>()
-									.Named(XMLHelper.GetVersionFromNamespaceUri(XMLJobDataReaderV21.NAMESPACE_URI));
+									.Named(XMLJobDataReaderV21.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLADASReader>().To<XMLADASReaderV21>()
-								.Named(XMLHelper.GetVersionFromNamespaceUri(XMLADASReaderV21.NAMESPACE_URI));
+								.Named(XMLADASReaderV21.QUALIFIED_XSD_TYPE);
 		}
 
 		#endregion

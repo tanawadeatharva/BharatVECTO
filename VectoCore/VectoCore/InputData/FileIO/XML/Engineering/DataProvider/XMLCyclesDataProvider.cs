@@ -16,6 +16,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
 
+		public const string XSD_TYPE = "MissionCyclesType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
 		protected string BasePath;
 
 		public XMLCyclesDataProviderV07(IEngineeringJobInputData jobData, XmlNode baseNode, string basePath) : base(baseNode)
@@ -71,6 +75,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	internal class XMLCyclesDataProviderV10 : XMLCyclesDataProviderV07
 	{
 		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		public new const string XSD_TYPE = "MissionCyclesType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
 		public XMLCyclesDataProviderV10(IEngineeringJobInputData jobData, XmlNode baseNode, string basePath) : base(
 			jobData, baseNode, basePath) { }

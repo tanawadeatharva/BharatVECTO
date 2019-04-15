@@ -2540,12 +2540,6 @@
     <None Include="TestData\XML\XMLReaderEngineering\engine.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\XML\XMLReaderEngineering\engineering_job-sample.vsum">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\XML\XMLReaderEngineering\engineering_job-sample_ref.vsum">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\XML\XMLReaderEngineering\GBX_DirectGear.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -2970,6 +2964,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderEngineering\engineering_retarder-sample_ref.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderEngineering\engineering_torqueconverter-sample_ref.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderEngineering\engineering_vehicle_ref.xml">

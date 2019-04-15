@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var writer = JSONFileWriter.Instance;
 
 			VECTO_Global.Cfg = new VECTO.Configuration() { DeclMode = true };
-			writer.SaveGearbox(components.GearboxInputData, components.AxleGearInputData, (IGearshiftEngineeringInputData)components.GearboxInputData, outFile);
+			writer.SaveGearbox(components.GearboxInputData, components.AxleGearInputData, components.TorqueConverterInputData, (IGearshiftEngineeringInputData)components.GearboxInputData, outFile);
 
 			var savedData = JSONInputDataFactory.ReadComponentData(outFile);
 			var savedInprovider = savedData as IEngineeringInputDataProvider;

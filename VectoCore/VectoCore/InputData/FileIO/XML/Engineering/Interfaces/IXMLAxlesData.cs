@@ -4,6 +4,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces
 {
 	public interface IXMLAxlesData : IAxlesEngineeringInputData
 	{
-		IXMLComponentsReader Reader { set; }
+		IXMLAxlesReader Reader { set; }
 	}
 }

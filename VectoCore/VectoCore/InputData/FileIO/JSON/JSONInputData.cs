@@ -706,8 +706,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get {
 				return _inputReader.CreateDeclaration(
-					Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>()),
-					true).JobInputData.Vehicle;
+					Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>())).JobInputData.Vehicle;
 			}
 		}
 

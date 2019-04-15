@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using System.Xml.Linq;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -11,7 +12,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 {
 	public class XMLJobDataReaderV10 : AbstractComponentReader, IXMLJobDataReader
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+
+		public const string XSD_TYPE = "VectoDeclarationJobType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
 
 		protected IXMLDeclarationJobInputData JobData;
 		protected XmlNode JobNode;
@@ -20,8 +26,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
 
-		public XMLJobDataReaderV10(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool verifyXML) : base(
-			jobData, jobNode, verifyXML)
+		public XMLJobDataReaderV10(IXMLDeclarationJobInputData jobData, XmlNode jobNode) : base(
+			jobData, jobNode)
 		{
 			JobNode = jobNode;
 			JobData = jobData;
@@ -53,10 +59,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	public class XMLJobDataReaderV20 : XMLJobDataReaderV10
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
 
-		public XMLJobDataReaderV20(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool verifyXML) : base(
-			jobData, jobNode, verifyXML) { }
+		public new const string XSD_TYPE = "VectoDeclarationJobType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataReaderV20(IXMLDeclarationJobInputData jobData, XmlNode jobNode) : base(
+			jobData, jobNode) { }
 
 		protected override IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
 		{
@@ -74,10 +84,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	public class XMLJobDataReaderV21 : XMLJobDataReaderV10
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21;
 
-		public XMLJobDataReaderV21(IXMLDeclarationJobInputData jobData, XmlNode jobNode, bool verifyXML) : base(
-			jobData, jobNode, verifyXML)
+		public new const string XSD_TYPE = "VectoDeclarationJobType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLJobDataReaderV21(IXMLDeclarationJobInputData jobData, XmlNode jobNode) : base(
+			jobData, jobNode)
 		{ }
 
 		protected override IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)

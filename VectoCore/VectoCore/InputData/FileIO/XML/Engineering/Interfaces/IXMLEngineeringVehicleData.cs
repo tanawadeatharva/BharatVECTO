@@ -1,3 +1,4 @@
+using System.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 
@@ -7,6 +8,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces
 	{
 		IXMLComponentsReader ComponentReader { set; }
 
+		XmlElement ComponentNode { get; }
+
 		AngledriveType AngledriveType { get; }
 
 		RetarderType RetarderType { get; }
@@ -14,5 +17,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces
 		double RetarderRatio { get; }
 
 		IXMLEngineeringJobInputData Job { get; }
+		
 	}
 }

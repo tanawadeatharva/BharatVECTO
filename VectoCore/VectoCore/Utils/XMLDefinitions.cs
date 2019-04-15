@@ -23,30 +23,37 @@ namespace TUGraz.VectoCore.Utils
 		public const string SCHEMA_BASE_LOCATION = "https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/";
 
 
-		public const string ENGINEERING_INPUT_NAMESPACE_URI_V07 = "urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7";
+		public const string ENGINEERING_NAMESPACE = "urn:tugraz:ivt:VectoAPI:EngineeringDefinitions"; 
 
-		public const string ENGINEERING_DEFINITONS_NAMESPACE_V07 = "urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7";
+		public const string ENGINEERING_INPUT_NAMESPACE_URI_V07 = "urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7";
 
 		public const string ENGINEERING_INPUT_NAMESPACE_URI_V10 = "urn:tugraz:ivt:VectoAPI:EngineeringInput:v1.0";
 
-		public const string ENGINEERING_DEFINITONS_NAMESPACE_V10 = "urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v1.0";
+		public const string ENGINEERING_DEFINITONS_NAMESPACE_V07 = ENGINEERING_NAMESPACE + ":v0.7";
+		
+		public const string ENGINEERING_DEFINITONS_NAMESPACE_V10 = ENGINEERING_NAMESPACE + ":v1.0";
 
-		public const string ENGINEERING_DEFINITONS_NAMESPACE_V10_TEST = "urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v1.0TEST";
-
-
-
-		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V10 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0";
-
-		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V20 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0";
-
-		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V21 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1";
-
-		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V22 = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2";
+		public const string ENGINEERING_DEFINITONS_NAMESPACE_V10_TEST = ENGINEERING_NAMESPACE + ":v1.0TEST";
 
 
-		public const string DECLARATION_INPUT_NAMESPACE_URI_V10 = "urn:tugraz:ivt:VectoAPI:DeclarationInput:v1.0";
+		public const string DECLARATION_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions";
+			
+		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V10 = DECLARATION_NAMESPACE + ":v1.0";
 
-		public const string DECLARATION_COMPONENT_NAMESPACE_URI_V10 = "urn:tugraz:ivt:VectoAPI:DeclarationComponent:v1.0";
+		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V20 = DECLARATION_NAMESPACE + ":v2.0";
+
+		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V21 = DECLARATION_NAMESPACE + ":v2.1";
+
+		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V22 = DECLARATION_NAMESPACE + ":v2.2";
+
+
+		public const string DECLARATION_INPUT_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationInput";
+
+		public const string DECLARATION_INPUT_NAMESPACE_URI_V10 = DECLARATION_INPUT_NAMESPACE + ":v1.0";
+
+		public const string DECLARATION_INPUT_NAMESPACE_URI_V20 = DECLARATION_INPUT_NAMESPACE + ":v2.0";
+
+//		public const string DECLARATION_COMPONENT_NAMESPACE_URI_V10 = "urn:tugraz:ivt:VectoAPI:DeclarationComponent:v1.0";
 
 
 		public const string DECLARATION_MANUFACTURER_REPORT_V05 = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:v0.5";
@@ -64,8 +71,8 @@ namespace TUGraz.VectoCore.Utils
 
 		private static Dictionary<XmlDocumentType, string> schemaFilenames = new Dictionary<XmlDocumentType, string>() {
 			{XmlDocumentType.DeclarationJobData, "VectoDeclarationJob.xsd"},
-			{XmlDocumentType.DeclarationComponentData, "VectoComponent.xsd"},
-			{XmlDocumentType.EngineeringJobData, "VectoEngineeringInput.xsd" },
+			{XmlDocumentType.DeclarationComponentData, "VectoDeclarationComponent.xsd"},
+			{XmlDocumentType.EngineeringJobData, "VectoEngineeringJob.xsd" },
 			{XmlDocumentType.EngineeringComponentData, "VectoEngineeringComponent.xsd" },
 			{XmlDocumentType.ManufacturerReport, "VectoOutputManufacturer{0}.xsd" },
 			{XmlDocumentType.CustomerReport , "VectoOutputCustomer{0}.xsd"},

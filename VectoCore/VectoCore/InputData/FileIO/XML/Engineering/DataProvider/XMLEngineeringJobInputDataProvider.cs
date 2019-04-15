@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
@@ -10,7 +11,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 {
 	internal class XMLEngineeringJobInputDataProviderV07 : AbstractXMLResource, IXMLEngineeringJobInputData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+
+		public const string XSD_TYPE = "VectoJobEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
 		protected string FileName;
 		protected IXMLEngineeringInputData InputProvider;
@@ -83,7 +88,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
@@ -92,14 +97,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 	internal class XMLEngineeringJobInputDataProviderV10 : XMLEngineeringJobInputDataProviderV07
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_INPUT_NAMESPACE_URI_V10;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		public new const string XSD_TYPE = "VectoJobEngineeringType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
 
 		public XMLEngineeringJobInputDataProviderV10(XmlNode node, IXMLEngineeringInputData inputProvider, string fileName) :
 			base(node, inputProvider, fileName) { }
 
 		#region Overrides of XMLEngineeringJobInputDataProviderV07
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 
 		#endregion
 	}

@@ -30,6 +30,7 @@
 */
 
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -44,16 +45,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	internal class XMLEngineeringEngineDataProviderV07 : AbstractEngineeringXMLComponentDataProvider,
 		IXMLEngineData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+
+		public const string XSD_TYPE = "EngineDataEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
 
 		public XMLEngineeringEngineDataProviderV07(
 			IXMLEngineeringVehicleData vehicle,
 			XmlNode vehicleNode, string fsBasePath)
 			: base(vehicle, vehicleNode, fsBasePath)
 		{
-			SourceType = (vehicle as IXMLResource).DataSource.SourceFile == fsBasePath ? DataSourceType.XMLEmbedded : DataSourceType.XMLFile;
+			SourceType = (vehicle as IXMLResource).DataSource.SourceFile == fsBasePath
+				? DataSourceType.XMLEmbedded
+				: DataSourceType.XMLFile;
 		}
 
+		
 		public XMLEngineeringEngineDataProviderV07(XmlNode node, string sourceFile) : base(null, node, sourceFile) { }
 
 		public virtual CubicMeter Displacement
@@ -158,7 +167,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
 
 		protected override DataSourceType SourceType { get; }
 
@@ -169,10 +181,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	{
 		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
 
+		//public new const string XSD_TYPE = "EngineDataEngineeringType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
 		public XMLEngineeringEngineDataProviderV10(
 			XMLEngineeringVehicleDataProviderV07 vehicle, XmlNode vehicleNode, string fsBasePath) : base(
 			vehicle, vehicleNode, fsBasePath) { }
 
+		// engine-only constructor
 		public XMLEngineeringEngineDataProviderV10(XmlNode node, string sourceFile) : base(node, sourceFile) { }
 
 		public override double WHTCEngineering
@@ -184,7 +201,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of XMLEngineeringEngineDataProviderV07
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
 
 		#endregion
 
@@ -194,21 +214,31 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	// this class is just for testing reading derived XML datatypes
 	internal class XMLEngineeringEngineDataProviderV10TEST : XMLEngineeringEngineDataProviderV10
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10_TEST;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10_TEST;
 
-		public XMLEngineeringEngineDataProviderV10TEST(XMLEngineeringVehicleDataProviderV07 vehicle, XmlNode vehicleNode, string fsBasePath) : base(vehicle, vehicleNode, fsBasePath) { }
+		public new const string XSD_TYPE = "EngineDataEngineeringType";
 
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+		public XMLEngineeringEngineDataProviderV10TEST(
+			XMLEngineeringVehicleDataProviderV07 vehicle, XmlNode vehicleNode, string fsBasePath) : base(
+			vehicle, vehicleNode, fsBasePath) { }
+
+		// engine-only constructor
 		public XMLEngineeringEngineDataProviderV10TEST(XmlNode node, string sourceFile) : base(node, sourceFile) { }
 
 		#region Overrides of XMLEngineeringEngineDataProviderV07
 
-		public override PerSecond RatedSpeedDeclared { get {
-			return GetString(XMLNames.Engine_RatedSpeed).Replace("rpm", "").ToDouble(0).RPMtoRad();
-		} }
+		public override PerSecond RatedSpeedDeclared
+		{
+			get { return GetString(XMLNames.Engine_RatedSpeed).Replace("rpm", "").ToDouble(0).RPMtoRad(); }
+		}
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
 
 		#endregion
 	}
-
 }

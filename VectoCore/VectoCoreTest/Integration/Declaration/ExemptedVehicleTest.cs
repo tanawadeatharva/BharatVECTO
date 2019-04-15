@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				File.Delete(monitoringFile);
 			}
 
-			var inputData = xmlInputReader.CreateDeclaration(filename, true);
+			var inputData = xmlInputReader.CreateDeclaration(filename);
 			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
-			var inputData = xmlInputReader.CreateDeclaration(modified, true);
+			var inputData = xmlInputReader.CreateDeclaration(modified);
 			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
-			var inputData = xmlInputReader.CreateDeclaration(modified, true);
+			var inputData = xmlInputReader.CreateDeclaration(modified);
 			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,

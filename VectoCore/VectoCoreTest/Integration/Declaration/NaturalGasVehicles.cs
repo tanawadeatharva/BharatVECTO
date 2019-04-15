@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
 			var writer = new MockDeclarationWriter(filename);
-			var inputData = xmlInputReader.CreateDeclaration(modified, true);
+			var inputData = xmlInputReader.CreateDeclaration(modified);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true

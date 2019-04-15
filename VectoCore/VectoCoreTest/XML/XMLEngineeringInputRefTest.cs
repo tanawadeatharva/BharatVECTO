@@ -73,14 +73,14 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			AssertHelper.Exception<VectoException>(() => {
 				var reader = File.OpenRead(EngineeringSampleFile);
-				var foo = xmlInputReader.CreateEngineering(reader, true);
+				var foo = xmlInputReader.CreateEngineering(reader);
 			});
 		}
 
 		[TestCase]
 		public void TestXMLInputEngReferencedFile()
 		{
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 
 			var engineDataProvider = inputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 
@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase]
 		public void TestXMLInputGbxReferencedFile()
 		{
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 			var gearboxDataProvider = inputDataProvider.JobInputData.Vehicle.Components.GearboxInputData;
 
 			Assert.AreEqual("Generic 40t Long Haul Truck Gearbox", gearboxDataProvider.Model);
@@ -146,8 +146,8 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase]
 		public void TestXMLInputGbxTCReferencedFile()
 		{
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
-			var tcInputDataProvider = inputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.TorqueConverter;
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
+			var tcInputDataProvider = inputDataProvider.JobInputData.Vehicle.Components.TorqueConverterInputData;
 
 
 			Assert.AreEqual("GBX_ShiftPolygons.vgbs", Path.GetFileName(tcInputDataProvider.ShiftPolygon.Source));
@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase]
 		public void TestXMLInputAngledriveReferencedFile()
 		{
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 			var angledriveInputData = inputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData;
 
 			Assert.AreEqual("Generic Angledrive", angledriveInputData.Model);
@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase]
 		public void TestXMLInputAxlGReferencedFile()
 		{
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 			var axlegearDataProvider = inputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData;
 
 			Assert.AreEqual("Generic 40t Long Haul Truck AxleGear", axlegearDataProvider.Model);
@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase]
 		public void TestXMLInputRetarderReferencedFile()
 		{
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 			var retarderDataProvider = inputDataProvider.JobInputData.Vehicle.Components.RetarderInputData;
 
 			Assert.AreEqual("Generic Retarder", retarderDataProvider.Model);
@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase]
 		public void TestXMLInputAxleWheelsReferencedFile()
 		{
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 			var vehicleDataProvider = inputDataProvider.JobInputData.Vehicle;
 
 			var axles = vehicleDataProvider.Components.AxleWheels.AxlesEngineering;
@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase]
 		public void TestXMLInputAuxiliariesReferencedFile()
 		{
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 			var auxDataProvider = inputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData;
 
 			var aux = auxDataProvider.Auxiliaries;
@@ -261,7 +261,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		{
 			//var reader = XmlReader.Create(EngineeringSampleFile);
 
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 
 			var adas = inputDataProvider.DriverInputData;
 
@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase]
 		public void TestVehicleInputReferencedFile()
 		{
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 
 			var vehicleDataProvider = inputDataProvider.JobInputData.Vehicle;
 
@@ -295,7 +295,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var sumWriter = new FileOutputWriter("vecto_vehicle-sample_xml");
 			var sumData = new SummaryDataContainer(sumWriter);
 			var jobContainer = new JobContainer(sumData);
-			var dataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var dataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 
 			var runsFactory = _kernel.Get<ISimulatorFactoryFactory>().Factory(ExecutionMode.Engineering, dataProvider, fileWriter);
 			runsFactory.WriteModalResults = true;
@@ -309,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase]
 		public void TestXMEngineering_DriverModelLACExt()
 		{
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 
 			var driverDataProvider = inputDataProvider.DriverInputData;
 
@@ -323,7 +323,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		[TestCase]
 		public void TestXMEngineering_PTO()
 		{
-			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile, true);
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringSampleFile);
 
 			var ptoData = inputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData;
 

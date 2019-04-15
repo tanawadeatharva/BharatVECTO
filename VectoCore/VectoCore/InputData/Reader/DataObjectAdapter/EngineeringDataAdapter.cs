@@ -132,8 +132,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			Log.Error("{0} is in Declaration Mode but is used for Engineering Mode!", msg);
 		}
 
-		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IGearboxEngineeringInputData gbx,
-			IEnumerable<ITorqueLimitInputData> torqueLimits, TankSystem? tankSystem = null)
+		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IGearboxEngineeringInputData gbx, IEnumerable<ITorqueLimitInputData> torqueLimits, ITorqueConverterEngineeringInputData torqueConverter, TankSystem? tankSystem = null)
 		{
 			if (engine.SavedInDeclarationMode) {
 				WarnEngineeringMode("EngineData");
@@ -141,7 +140,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = SetCommonCombustionEngineData(engine, tankSystem);
 			retVal.Inertia = engine.Inertia +
-							(gbx != null && gbx.Type.AutomaticTransmission() ? gbx.TorqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
+							(gbx != null && gbx.Type.AutomaticTransmission() ? torqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
 			var limits = torqueLimits.ToDictionary(e => e.Gear);
 			var numGears = gbx == null ? 0 : gbx.Gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
@@ -158,8 +157,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData,
-			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory)
+		internal GearboxData CreateGearboxData(IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData, double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory, ITorqueConverterEngineeringInputData torqueConverter)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
@@ -181,8 +179,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var gears = new Dictionary<uint, GearData>();
 			ShiftPolygon tcShiftPolygon = null;
 			if (gearbox.Type.AutomaticTransmission()) {
-				tcShiftPolygon = gearbox.TorqueConverter.ShiftPolygon != null
-					? ShiftPolygonReader.Create(gearbox.TorqueConverter.ShiftPolygon)
+				tcShiftPolygon = torqueConverter.ShiftPolygon != null
+					? ShiftPolygonReader.Create(torqueConverter.ShiftPolygon)
 					: DeclarationData.TorqueConverter.ComputeShiftPolygon(engineData.FullLoadCurves[0]);
 			}
 			for (uint i = 0; i < gearbox.Gears.Count; i++) {
@@ -209,8 +207,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (retVal.Type.AutomaticTransmission()) {
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = gearbox.PowershiftShiftTime;
-				retVal.TorqueConverterData = TorqueConverterDataReader.Create(gearbox.TorqueConverter.TCData,
-					gearbox.TorqueConverter.ReferenceRPM, gearbox.TorqueConverter.MaxInputSpeed, ExecutionMode.Engineering, ratio,
+				retVal.TorqueConverterData = TorqueConverterDataReader.Create(torqueConverter.TCData,
+					torqueConverter.ReferenceRPM, torqueConverter.MaxInputSpeed, ExecutionMode.Engineering, ratio,
 					gearshiftData.CLUpshiftMinAcceleration, gearshiftData.CCUpshiftMinAcceleration);
 			}
 

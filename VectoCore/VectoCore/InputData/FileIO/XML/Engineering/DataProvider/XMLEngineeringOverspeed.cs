@@ -1,4 +1,5 @@
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -9,7 +10,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 {
 	internal class XMLEngineeringOverspeedV07 : AbstractXMLType, IXMLOverspeedData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+
+		public const string XSD_TYPE = "OverspeedEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
 
 		protected IXMLEngineeringDriverData DriverData;
 
@@ -51,7 +57,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 	internal class XMLEngineeringOverspeedV10 : XMLEngineeringOverspeedV07
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		public new const string XSD_TYPE = "OverspeedEngineeringType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+
 
 		public XMLEngineeringOverspeedV10(IXMLEngineeringDriverData driverData, XmlNode node) : base(driverData, node) { }
 	}

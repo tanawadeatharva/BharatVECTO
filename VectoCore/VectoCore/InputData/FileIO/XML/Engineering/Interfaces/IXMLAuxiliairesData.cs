@@ -4,6 +4,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces
 {
 	public interface IXMLAuxiliairesData : IAuxiliariesEngineeringInputData
 	{
-		IXMLComponentsReader Reader { set; }
+		IXMLAuxiliaryReader Reader { set; }
 	}
 }

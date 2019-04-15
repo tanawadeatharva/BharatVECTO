@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
 			var writer = new FileOutputWriter(filename);
-			var inputData = xmlInputReader.CreateDeclaration(modified, true); //.ReadJsonJob(relativeJobPath);
+			var inputData = xmlInputReader.CreateDeclaration(modified); //.ReadJsonJob(relativeJobPath);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true

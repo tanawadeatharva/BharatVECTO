@@ -63,14 +63,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var driver = dao.CreateDriverData(InputDataProvider.DriverInputData);
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 			var engineData = dao.CreateEngineData(vehicle.Components.EngineInputData, vehicle.Components.GearboxInputData,
-				vehicle.TorqueLimits, vehicle.TankSystem);
+				vehicle.TorqueLimits, vehicle.Components.TorqueConverterInputData, vehicle.TankSystem);
 
 			var tempVehicle = dao.CreateVehicleData(vehicle);
 
 			var axlegearData = dao.CreateAxleGearData(vehicle.Components.AxleGearInputData);
 			var gearboxData = dao.CreateGearboxData(
 				vehicle.Components.GearboxInputData, engineData, InputDataProvider.DriverInputData.GearshiftInputData,
-				axlegearData.AxleGear.Ratio, tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory);
+				axlegearData.AxleGear.Ratio, tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData);
 			var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==
 									CrossWindCorrectionMode.VAirBetaLookupTable;
 			var angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);

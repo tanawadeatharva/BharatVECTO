@@ -2592,7 +2592,7 @@
 				</Signature>
 				</Gearbox>
 			<TorqueConverter>
-				<Data id="tc-123xyz" xsi:type="v1.0:TorqueConverterDeclarationDataType">
+				<Data id="tc-123xyz" xsi:type="v1.0:TorqueConverterDataDeclarationType">
 					<v1.0:Manufacturer>Some Manufacturer</v1.0:Manufacturer>
 					<v1.0:Model>Some Model</v1.0:Model>
 					<v1.0:CertificationNumber>e12*0815/8051*2017/05E0000*00</v1.0:CertificationNumber>

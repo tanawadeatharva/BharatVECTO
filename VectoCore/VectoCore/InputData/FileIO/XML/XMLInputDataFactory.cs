@@ -21,50 +21,50 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		public IInputDataProvider Create(string filename, bool verifyXML)
 		{
-			return ReadXmlDoc(XmlReader.Create(filename), filename, verifyXML);
+			return ReadXmlDoc(XmlReader.Create(filename), filename);
 		}
 
 		public IInputDataProvider Create(Stream inputData, bool verifyXML)
 		{
-			return ReadXmlDoc(XmlReader.Create(inputData), null, verifyXML);
+			return ReadXmlDoc(XmlReader.Create(inputData), null);
 		}
 
 		public IInputDataProvider Create(XmlReader inputData, bool verifyXML)
 		{
-			return ReadXmlDoc(inputData, null, verifyXML);
+			return ReadXmlDoc(inputData, null);
 		}
 
-		public IEngineeringInputDataProvider CreateEngineering(string filename, bool verifyXML)
+		public IEngineeringInputDataProvider CreateEngineering(string filename)
 		{
-			return DoCreateEngineering(XmlReader.Create(filename), filename, verifyXML);
-		}
-
-
-		public IEngineeringInputDataProvider CreateEngineering(Stream inputData, bool verifyXML)
-		{
-			return DoCreateEngineering(XmlReader.Create(inputData), null, verifyXML);
-		}
-
-		public IEngineeringInputDataProvider CreateEngineering(XmlReader inputData, bool verifyXML)
-		{
-			return DoCreateEngineering(inputData, null, verifyXML);
+			return DoCreateEngineering(XmlReader.Create(filename), filename);
 		}
 
 
-		public IDeclarationInputDataProvider CreateDeclaration(string filename, bool verifyXML)
+		public IEngineeringInputDataProvider CreateEngineering(Stream inputData)
 		{
-			return DoCreateDeclaration(XmlReader.Create(filename), filename, verifyXML);
+			return DoCreateEngineering(XmlReader.Create(inputData), null);
 		}
 
-		public IDeclarationInputDataProvider CreateDeclaration(XmlReader inputData, bool verifyXML)
+		public IEngineeringInputDataProvider CreateEngineering(XmlReader inputData)
 		{
-			return DoCreateDeclaration(inputData, null, verifyXML);
+			return DoCreateEngineering(inputData, null);
 		}
 
 
-		private IDeclarationInputDataProvider DoCreateDeclaration(XmlReader inputData, string source, bool verifyXML)
+		public IDeclarationInputDataProvider CreateDeclaration(string filename)
 		{
-			var retVal = ReadXmlDoc(inputData, source, verifyXML) as IDeclarationInputDataProvider;
+			return DoCreateDeclaration(XmlReader.Create(filename), filename);
+		}
+
+		public IDeclarationInputDataProvider CreateDeclaration(XmlReader inputData)
+		{
+			return DoCreateDeclaration(inputData, null);
+		}
+
+
+		private IDeclarationInputDataProvider DoCreateDeclaration(XmlReader inputData, string source)
+		{
+			var retVal = ReadXmlDoc(inputData, source) as IDeclarationInputDataProvider;
 			if (retVal == null) {
 				throw new VectoException("Input data is not in declaration mode!");
 			}
@@ -72,9 +72,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			return retVal;
 		}
 
-		private IEngineeringInputDataProvider DoCreateEngineering(XmlReader inputData, string source, bool verifyXML)
+		private IEngineeringInputDataProvider DoCreateEngineering(XmlReader inputData, string source)
 		{
-			var retVal = ReadXmlDoc(inputData, source, verifyXML) as IEngineeringInputDataProvider;
+			var retVal = ReadXmlDoc(inputData, source) as IEngineeringInputDataProvider;
 			if (retVal == null) {
 				throw new VectoException("Input data is not in engineering mode!");
 			}
@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			return retVal;
 		}
 
-		private IInputDataProvider ReadXmlDoc(XmlReader inputData, string source, bool verifyXML)
+		private IInputDataProvider ReadXmlDoc(XmlReader inputData, string source)
 		{
 			var xmlDoc = new XmlDocument();
 			xmlDoc.Load(inputData);
@@ -95,13 +95,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 				throw new VectoException("unknown xml file! {0}", xmlDoc.DocumentElement.LocalName);
 			}
 
-			if (verifyXML) {
-				new XMLValidator(xmlDoc, null, XMLValidator.CallBackExceptionOnError).ValidateXML(documentType.Value);
-			}
+			new XMLValidator(xmlDoc, null, XMLValidator.CallBackExceptionOnError).ValidateXML(documentType.Value);
 
 			switch (documentType.Value) {
-				case XmlDocumentType.DeclarationJobData: return ReadDeclarationJob(xmlDoc, source, verifyXML);
-				case XmlDocumentType.EngineeringJobData: return ReadEngineeringJob(xmlDoc, source, verifyXML);
+				case XmlDocumentType.DeclarationJobData: return ReadDeclarationJob(xmlDoc, source);
+				case XmlDocumentType.EngineeringJobData: return ReadEngineeringJob(xmlDoc, source);
 				case XmlDocumentType.EngineeringComponentData:
 				case XmlDocumentType.DeclarationComponentData:
 				case XmlDocumentType.ManufacturerReport:
@@ -111,21 +109,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 			}
 		}
 
-		private IEngineeringInputDataProvider ReadEngineeringJob(XmlDocument xmlDoc, string source, bool verifyXML)
+		private IEngineeringInputDataProvider ReadEngineeringJob(XmlDocument xmlDoc, string source)
 		{
-			var versionNumber = XMLHelper.GetSchemaVersion(xmlDoc.DocumentElement);
+			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 
 			var input = EngineeringFactory.CreateInputProvider(versionNumber, xmlDoc, source);
-			input.Reader = EngineeringFactory.CreateInputReader(versionNumber, input, xmlDoc.DocumentElement, verifyXML);
+			input.Reader = EngineeringFactory.CreateInputReader(versionNumber, input, xmlDoc.DocumentElement);
 			return input;
 		}
 
-		private IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source, bool verifyXML)
+		private IDeclarationInputDataProvider ReadDeclarationJob(XmlDocument xmlDoc, string source)
 		{
-			var versionNumber = XMLHelper.GetSchemaVersion(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
+			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
 			try {
 				var input = DeclarationFactory.CreateInputProvider(versionNumber, xmlDoc, source);
-				input.Reader = DeclarationFactory.CreateInputReader(versionNumber, input, xmlDoc.DocumentElement, verifyXML);
+				input.Reader = DeclarationFactory.CreateInputReader(versionNumber, input, xmlDoc.DocumentElement);
 				return input;
 			} catch (Exception e) {
 				throw new VectoException("Failed to read Declaration job version {0}", e, versionNumber);

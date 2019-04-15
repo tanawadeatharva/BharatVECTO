@@ -16,13 +16,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader {
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
 
+		public const string XSD_TYPE = "DriverModelType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
 		protected XmlNode DriverDataNode;
 		protected IXMLEngineeringDriverData DriverData;
 
 		[Inject]
 		public IEngineeringInjectFactory Factory { protected get; set; }
 
-		public XMLDriverDataReaderV07(IXMLEngineeringDriverData driverData, XmlNode driverDataNode, bool verifyXML)
+		public XMLDriverDataReaderV07(IXMLEngineeringDriverData driverData, XmlNode driverDataNode)
 		{
 			DriverData = driverData;
 			DriverDataNode = driverDataNode;
@@ -82,7 +86,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader {
 				}
 			}
 
-			var version = XMLHelper.GetSchemaVersion(node);
+			var version = XMLHelper.GetXsdType(node.SchemaInfo.SchemaType);
 			try {
 				return creator(version, node);
 			} catch (Exception e) {
@@ -119,7 +123,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader {
 	{
 		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
 
-		public XMLDriverDataReaderV10(IXMLEngineeringDriverData driverData, XmlNode driverDataNode, bool verifyXML) : base(driverData, driverDataNode, verifyXML) { }
+		public new const string XSD_TYPE = "DriverModelType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+
+		public XMLDriverDataReaderV10(IXMLEngineeringDriverData driverData, XmlNode driverDataNode) : base(driverData, driverDataNode) { }
 	}
 
 }

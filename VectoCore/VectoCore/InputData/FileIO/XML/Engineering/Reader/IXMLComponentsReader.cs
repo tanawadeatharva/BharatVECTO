@@ -5,6 +5,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 {
 	public interface IXMLComponentsReader
 	{
+		IVehicleComponentsEngineering ComponentInputData { get; }
+
 		IAxleGearInputData AxleGearInputData { get; }
 
 		IAngledriveInputData AngularGearInputData { get; }
@@ -25,14 +27,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 		IAxlesEngineeringInputData AxlesEngineeringInputData { get; }
 
-		ITyreEngineeringInputData Tyre { get; }
+	}
 
-		IVehicleComponentsEngineering ComponentInputData { get; }
-
+	public interface IXMLAxlesReader
+	{
 		IAxleEngineeringInputData CreateAxle(XmlNode axleNode);
+	}
 
+	public interface IXMLAxleReader
+	{
+		ITyreEngineeringInputData Tyre { get; }
+	}
+
+	public interface IXMLGearboxReader
+	{
 		ITransmissionInputData CreateGear(XmlNode gearNode);
+	}
 
-		IAuxiliaryEngineeringInputData Create(XmlNode auxNode);
+	public interface IXMLAuxiliaryReader
+	{
+		IAuxiliaryEngineeringInputData CreateAuxiliary(XmlNode auxNode);
 	}
 }

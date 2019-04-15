@@ -297,7 +297,7 @@ Public Class GearboxForm
 		TbStartSpeed.Text = shiftParams.StartSpeed.ToGUIFormat()
 		TbStartAcc.Text = shiftParams.StartAcceleration.ToGUIFormat()
 
-		Dim torqueConverter As ITorqueConverterEngineeringInputData = gearbox.TorqueConverter
+		Dim torqueConverter As ITorqueConverterEngineeringInputData = vehicle.Components.TorqueConverterInputData
 		If torqueConverter Is Nothing OrElse gearbox.Type.ManualTransmission() Then
 			TbTCfile.Text = ""
 			TbTCrefrpm.Text = ""

@@ -265,7 +265,7 @@
 					<xs:documentation>P195 - bool</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="Tyre" type="tns:TyreDeclarationType"/>
+			<xs:element name="Tyre" type="tns:TyreComponentDeclarationType"/>
 		</xs:sequence>
 		<xs:attribute name="axleNumber" use="required">
 			<xs:simpleType>
@@ -554,13 +554,7 @@
 		<xs:sequence>
 			<xs:element name="Data" type="tns:GearboxDataDeclarationType"/>
 			<xs:element name="Signature" type="tns:SignatureType"/>
-			<xs:element name="TorqueConverter" minOccurs="0">
-				<xs:complexType>
-					<xs:complexContent>
-						<xs:extension base="tns:TorqueConverterComponentDeclarationType"/>
-					</xs:complexContent>
-				</xs:complexType>
-			</xs:element>
+			<xs:element name="TorqueConverter" type="tns:TorqueConverterComponentDeclarationType" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="GearboxDataDeclarationType">
@@ -738,11 +732,11 @@
 	</xs:complexType>
 	<xs:complexType name="TorqueConverterComponentDeclarationType">
 		<xs:sequence>
-			<xs:element name="Data" type="tns:TorqueConverterDeclarationDataType"/>
+			<xs:element name="Data" type="tns:TorqueConverterDataDeclarationType"/>
 			<xs:element name="Signature" type="tns:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="TorqueConverterDeclarationDataType">
+	<xs:complexType name="TorqueConverterDataDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractTorqueConverterDataDeclarationType">
 				<xs:sequence>
@@ -870,7 +864,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="TyreDeclarationType">
+	<xs:complexType name="TyreComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="tns:TyreDataDeclarationType"/>
 			<xs:element name="Signature" type="tns:SignatureType"/>
@@ -982,22 +976,7 @@
 									<xs:documentation>P180 - enum</xs:documentation>
 								</xs:annotation>
 							</xs:element>
-							<xs:element name="PTO">
-								<xs:complexType>
-									<xs:sequence>
-										<xs:element name="PTOShaftsGearWheels" type="tns:PTOShaftsGearWheelsType">
-											<xs:annotation>
-												<xs:documentation>P247 - enum</xs:documentation>
-											</xs:annotation>
-										</xs:element>
-										<xs:element name="PTOOtherElements" type="tns:PTOOtherElementsType">
-											<xs:annotation>
-												<xs:documentation>P248 - enum</xs:documentation>
-											</xs:annotation>
-										</xs:element>
-									</xs:sequence>
-								</xs:complexType>
-							</xs:element>
+							<xs:element name="PTO" type="tns:PTOType"/>
 							<xs:sequence>
 								<xs:element name="ZeroEmissionVehicle" type="tns:ZeroEmissionVehicleType">
 									<xs:annotation>
@@ -1019,52 +998,11 @@
 										<xs:documentation>P276 - bool</xs:documentation>
 									</xs:annotation>
 								</xs:element>
-								<xs:element name="ADAS">
-									<xs:complexType>
-										<xs:sequence>
-											<xs:element name="EngineStopStart" type="tns:EngineStopStartType">
-												<xs:annotation>
-													<xs:documentation>P271 - bool</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-											<xs:element name="EcoRollWithoutEngineStop" type="tns:EcoRollWithoutEngineStopType">
-												<xs:annotation>
-													<xs:documentation>P272 - bool</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-											<xs:element name="EcoRollWithEngineStop" type="tns:EcoRollWithEngineStopType">
-												<xs:annotation>
-													<xs:documentation>P273 - bool</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-											<xs:element name="PredictiveCruiseControl">
-												<xs:annotation>
-													<xs:documentation>P274 - enum</xs:documentation>
-												</xs:annotation>
-												<xs:simpleType>
-													<xs:restriction base="tns:PredictiveCruiseControlType"/>
-												</xs:simpleType>
-											</xs:element>
-										</xs:sequence>
-									</xs:complexType>
-								</xs:element>
+								<xs:element name="ADAS" type="tns:ADASType"/>
 							</xs:sequence>
 							<xs:sequence>
 								<xs:element name="TorqueLimits" type="tns:TorqueLimitsType" minOccurs="0"/>
-								<xs:element name="Components">
-									<xs:complexType>
-										<xs:sequence>
-											<xs:element name="Engine" type="tns:EngineComponentDeclarationType"/>
-											<xs:element name="Gearbox" type="tns:GearboxComponentDeclarationType"/>
-											<xs:element name="Angledrive" type="tns:AngledriveComponentDeclarationType" minOccurs="0"/>
-											<xs:element name="Retarder" type="tns:RetarderComponentDeclarationType" minOccurs="0"/>
-											<xs:element name="Axlegear" type="tns:AxlegearComponentDeclarationType"/>
-											<xs:element name="AxleWheels" type="tns:AxleWheelsComponentDeclarationType"/>
-											<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentDeclarationType"/>
-											<xs:element name="AirDrag" type="tns:AirDragComponentDeclarationType" minOccurs="0"/>
-										</xs:sequence>
-									</xs:complexType>
-								</xs:element>
+								<xs:element name="Components" type="tns:VehicleComponentsType"/>
 							</xs:sequence>
 						</xs:sequence>
 						<xs:sequence>
@@ -2714,4 +2652,57 @@ ToDo: -0.00
 		</xs:annotation>
 		<xs:restriction base="xs:boolean"/>
 	</xs:simpleType>
+	<xs:complexType name="VehicleComponentsType">
+		<xs:sequence>
+			<xs:element name="Engine" type="tns:EngineComponentDeclarationType"/>
+			<xs:element name="Gearbox" type="tns:GearboxComponentDeclarationType"/>
+			<xs:element name="Angledrive" type="tns:AngledriveComponentDeclarationType" minOccurs="0"/>
+			<xs:element name="Retarder" type="tns:RetarderComponentDeclarationType" minOccurs="0"/>
+			<xs:element name="Axlegear" type="tns:AxlegearComponentDeclarationType"/>
+			<xs:element name="AxleWheels" type="tns:AxleWheelsComponentDeclarationType"/>
+			<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentDeclarationType"/>
+			<xs:element name="AirDrag" type="tns:AirDragComponentDeclarationType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PTOType">
+		<xs:sequence>
+			<xs:element name="PTOShaftsGearWheels" type="tns:PTOShaftsGearWheelsType">
+				<xs:annotation>
+					<xs:documentation>P247 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PTOOtherElements" type="tns:PTOOtherElementsType">
+				<xs:annotation>
+					<xs:documentation>P248 - enum</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ADASType">
+		<xs:sequence>
+			<xs:element name="EngineStopStart" type="tns:EngineStopStartType">
+				<xs:annotation>
+					<xs:documentation>P271 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EcoRollWithoutEngineStop" type="tns:EcoRollWithoutEngineStopType">
+				<xs:annotation>
+					<xs:documentation>P272 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EcoRollWithEngineStop" type="tns:EcoRollWithEngineStopType">
+				<xs:annotation>
+					<xs:documentation>P273 - bool</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PredictiveCruiseControl">
+				<xs:annotation>
+					<xs:documentation>P274 - enum</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="tns:PredictiveCruiseControlType"/>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

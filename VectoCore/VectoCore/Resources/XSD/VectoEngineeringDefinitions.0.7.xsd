@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2016 rel. 2 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
 <xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" targetNamespace="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" elementFormDefault="qualified" attributeFormDefault="unqualified" version="0.6" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
-	<xs:complexType name="ADASOverspeedEngineeringType">
+	<xs:complexType name="OverspeedEngineeringType">
 		<xs:sequence>
 			<xs:element name="Mode" type="tns:ADASOverspeedModeType"/>
 			<xs:element name="MinSpeed" type="tns:ADASOverspeedEcorollMinSpeedType" minOccurs="0"/>
@@ -11,10 +11,13 @@
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AngledriveComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:AngledriveDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:AngledriveDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="AngledriveDataEngineeringType">
 		<xs:complexContent>
@@ -39,10 +42,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AuxiliariesComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:AuxiliariesDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:AuxiliariesDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resoure" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="AuxiliariesDataEngineeringType">
 		<xs:complexContent>
@@ -89,7 +95,7 @@
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:complexType name="AxleComponentEngineeringType">
+	<xs:complexType name="AxleWheelsDataEngineeringType">
 		<xs:complexContent>
 			<xs:extension base="vdecdef:VectoSimulationComponent">
 				<xs:sequence>
@@ -150,10 +156,13 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="AxlegearComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:AxlegearDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:AxlegearDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="AxlegearDataEngineeringType">
 		<xs:complexContent>
@@ -186,61 +195,13 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AxleWheelsComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:AxleComponentEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="ComponentResourceType">
-		<xs:annotation>
-			<xs:appinfo>
-				<vectoParam:description>
-					<vectoParam:parameterId component="Job">002</vectoParam:parameterId>
-					<vectoParam:parameterId component="Vehicle">003</vectoParam:parameterId>
-					<vectoParam:parameterId component="Vehicle">004</vectoParam:parameterId>
-					<vectoParam:parameterId component="Vehicle">007</vectoParam:parameterId>
-					<vectoParam:parameterId component="Job">008</vectoParam:parameterId>
-					<vectoParam:parameterId component="Driver">009</vectoParam:parameterId>
-					<vectoParam:parameterId component="Retarder">054</vectoParam:parameterId>
-					<vectoParam:parameterId component="Engine/FLD">144</vectoParam:parameterId>
-					<vectoParam:parameterId component="Engine/FC-map">067</vectoParam:parameterId>
-					<vectoParam:parameterId component="Gearbox/Gear/Lossmap">079</vectoParam:parameterId>
-					<vectoParam:parameterId component="Gearbox/Gear">082</vectoParam:parameterId>
-					<vectoParam:comment>Only for file-based input data</vectoParam:comment>
-					<vectoParam:unit>-</vectoParam:unit>
-				</vectoParam:description>
-			</xs:appinfo>
-		</xs:annotation>
-		<xs:attribute name="component" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="Engine"/>
-					<xs:enumeration value="Gearbox"/>
-					<xs:enumeration value="Retarder"/>
-					<xs:enumeration value="Axlegear"/>
-					<xs:enumeration value="AxleWheels"/>
-					<xs:enumeration value="Auxiliaries"/>
-					<xs:enumeration value="Vehicle"/>
-					<xs:enumeration value="TorqueConverter"/>
-					<xs:enumeration value="Airdrag"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="type" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="xml"/>
-					<xs:enumeration value="json"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="file" use="required">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:minLength value="1"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:AxleWheelsDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="CrossWindCorrectionEntryType">
 		<xs:attribute name="vehicleSpeed" type="tns:CrosswindCorrectionVehicleSpeedType"/>
@@ -254,10 +215,13 @@
 		<xs:attribute name="maxDeceleration" type="tns:DriverAccelerationCurveMaxDecelerationType" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="EngineComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:EngineDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:EngineDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="EngineDataEngineeringType">
 		<xs:complexContent>
@@ -349,25 +313,13 @@
 		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="GearboxComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:GearboxDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-			<xs:element name="TorqueConverter" minOccurs="0">
-				<xs:complexType>
-					<xs:complexContent>
-						<xs:extension base="tns:TorqueConverterComponentEngineeringType">
-							<xs:choice>
-								<xs:sequence>
-									<xs:element name="Data" type="tns:TorqueConverterEngineeringDataType"/>
-									<xs:element name="Signature" minOccurs="0"/>
-								</xs:sequence>
-								<xs:element name="Resource" type="tns:ComponentResourceType"/>
-							</xs:choice>
-						</xs:extension>
-					</xs:complexContent>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:GearboxDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="GearboxDataEngineeringType">
 		<xs:complexContent>
@@ -443,7 +395,7 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:complexType name="LookAheadCoastingType">
+	<xs:complexType name="LookAheadCoastingEngineeringType">
 		<xs:sequence>
 			<xs:element name="Enabled" type="tns:LookAheadCoastingEnabledType"/>
 			<xs:element name="MinSpeed" minOccurs="0">
@@ -546,10 +498,13 @@
 		<xs:attribute name="ptoTorqueLoss" type="vdecdef:PTOTorqueLossType" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="RetarderComponentEngineeringType">
-		<xs:sequence>
-			<xs:element name="Data" type="tns:RetarderDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
-		</xs:sequence>
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:RetarderDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="RetarderDataEngineeringType">
 		<xs:complexContent>
@@ -577,8 +532,7 @@
 		<xs:attribute name="downshiftSpeed" type="tns:GearboxShiftpolygonEntryDownshiftSpeedType" use="required"/>
 		<xs:attribute name="upshiftSpeed" type="tns:GearboxShiftpolygonEntryUpshiftSpeedType" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="TorqueConverterComponentEngineeringType"/>
-	<xs:complexType name="TorqueConverterEngineeringDataType">
+	<xs:complexType name="TorqueConverterDataEngineeringType">
 		<xs:complexContent>
 			<xs:extension base="tns:EngineeringPowertrainComponentType">
 				<xs:sequence>
@@ -629,6 +583,7 @@
 		<xs:choice>
 			<xs:element name="Engine" type="tns:EngineComponentEngineeringType"/>
 			<xs:element name="Gearbox" type="tns:GearboxComponentEngineeringType"/>
+			<xs:element name="TorqueConverter" type="tns:TorqueConverterComponentEngineeringType" minOccurs="0"/>
 			<xs:element name="Angledrive" type="tns:AngledriveComponentEngineeringType"/>
 			<xs:element name="Retarder" type="tns:RetarderComponentEngineeringType"/>
 			<xs:element name="Axlegear" type="tns:AxlegearComponentEngineeringType"/>
@@ -643,201 +598,80 @@
 			<xs:element name="EngineOnlyMode" type="tns:EngineOnlyModeType"/>
 			<xs:choice>
 				<xs:sequence>
-					<xs:choice>
-						<xs:element name="Vehicle" type="tns:VehicleEngineeringType"/>
-						<xs:element name="Resource" type="tns:ComponentResourceType">
-							<xs:annotation>
-								<xs:documentation>P002 - ext. Resource</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:choice>
-					<xs:element name="Signature" minOccurs="0"/>
-					<xs:element name="DriverModel">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="LookAheadCoasting" type="tns:LookAheadCoastingType"/>
-								<xs:element name="Overspeed" type="tns:ADASOverspeedEngineeringType"/>
-								<xs:element name="DriverAccelerationCurve" minOccurs="0">
-									<xs:complexType>
-										<xs:choice>
-											<xs:element name="Entry" type="tns:DriverAccelerationCurveEntryType" minOccurs="2" maxOccurs="unbounded"/>
-											<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
-												<xs:annotation>
-													<xs:documentation>P009 - ext. Resource</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-										</xs:choice>
-									</xs:complexType>
-								</xs:element>
-								<xs:element name="ShiftStrategyParameters" minOccurs="0">
-									<xs:complexType>
-										<xs:sequence>
-											<xs:element name="UpshiftMinAcceleration" type="tns:ShiftStrategyMinAccelerationUpshiftType">
-												<xs:annotation>
-													<xs:documentation>P167 - [m/s²]</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-											<xs:element name="DownshiftAfterUpshiftDelay" type="tns:ShiftDelayType">
-												<xs:annotation>
-													<xs:documentation>P168 - [s]</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-											<xs:element name="UpshiftAfterDownshiftDelay" type="tns:ShiftDelayType">
-												<xs:annotation>
-													<xs:documentation>P169 - [s]</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-											<xs:element name="TorqueReserve" type="tns:GearboxTorqueReserveType" minOccurs="0"/>
-											<xs:element name="TimeBetweenGearshift" type="tns:GearboxTimeBetweenGearshiftType" minOccurs="0"/>
-											<xs:element name="StartSpeed" type="tns:GearboxStartSpeedType" minOccurs="0"/>
-											<xs:element name="StartAcceleration" type="tns:GearboxStartAccelerationType" minOccurs="0"/>
-											<xs:element name="StartTorqueReserve" type="tns:GearboxStartTorqueReserveType" minOccurs="0"/>
-											<xs:element name="PowershiftShiftTime" type="tns:PowershiftShiftTimeType" minOccurs="0">
-												<xs:annotation>
-													<xs:documentation>P188 - [s]</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-											<xs:element name="PowershiftInertiaFactor" type="tns:PowershiftInertiaFactorType" minOccurs="0">
-												<xs:annotation>
-													<xs:documentation>P189 - [-]</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-											<xs:element name="CLUpshiftMinAcceleration" type="tns:CLUpshiftMinAccelerationType" minOccurs="0">
-												<xs:annotation>
-													<xs:documentation>P190 - [1/s^2]</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-											<xs:element name="CCUpshiftMinAcceleration" type="tns:CCUpshiftMinAccelerationType" minOccurs="0">
-												<xs:annotation>
-													<xs:documentation>P191 - [1/s^2]</xs:documentation>
-												</xs:annotation>
-											</xs:element>
-										</xs:sequence>
-									</xs:complexType>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Vehicle" type="tns:VehicleEngineeringType"/>
+					<xs:element name="DriverModel" type="tns:DriverModelType"/>
 				</xs:sequence>
 				<xs:sequence>
 					<xs:element name="Engine" type="tns:EngineComponentEngineeringType"/>
 					<xs:element name="Signature" minOccurs="0"/>
 				</xs:sequence>
 			</xs:choice>
-			<xs:element name="MissionCycles">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="Cycle" type="tns:ExtResourceEngineeringType" maxOccurs="unbounded">
-							<xs:annotation>
-								<xs:documentation>P008 - ext. Resource</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
+			<xs:element name="MissionCycles" type="tns:MissionCyclesType"/>
 		</xs:sequence>
 		<xs:attribute name="schemaVersion" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="VehicleEngineeringType">
-		<xs:complexContent>
-			<xs:extension base="tns:EngineeringPowertrainComponentType">
-				<xs:sequence>
-					<xs:element name="VehicleCategory" type="vdecdef:VehicleCategoryType" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>P036 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AxleConfiguration" type="vdecdef:VehicleAxleConfigurationType">
-						<xs:annotation>
-							<xs:documentation>P037 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="CurbMassChassis" type="vdecdef:VehicleCurbMassChassisType">
-						<xs:annotation>
-							<xs:documentation>P038 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="GrossVehicleMass" type="vdecdef:VehicleGrossVehicleMassType">
-						<xs:annotation>
-							<xs:documentation>P041 - [kg]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="RetarderType" type="vdecdef:RetarderTypeType">
-						<xs:annotation>
-							<xs:documentation>P052 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="RetarderRatio" type="vdecdef:RetarderRatioType" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>P053 - [-]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="AngledriveType" type="vdecdef:AngledriveTypeType"/>
-					<xs:element name="PTOType" type="vdecdef:PTOTypeType">
-						<xs:annotation>
-							<xs:documentation>P186 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="PTOIdleLossMap" type="tns:PTOIdleLossMapEngineeringType" minOccurs="0"/>
-					<xs:element name="PTOCycle" type="tns:PTOCycleEngineeringType" minOccurs="0"/>
-					<xs:element name="CurbMassExtra" type="tns:VehicleCurbWeightExtraType"/>
-					<xs:element name="Loading" type="tns:VehicleLoadingType"/>
-					<xs:element name="Components">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:choice>
-									<xs:element name="Engine" type="tns:EngineComponentEngineeringType"/>
-									<xs:element name="Resource" type="tns:ComponentResourceType">
-										<xs:annotation>
-											<xs:documentation>P003 - ext. Resource</xs:documentation>
-										</xs:annotation>
-									</xs:element>
-								</xs:choice>
-								<xs:choice>
-									<xs:element name="Gearbox" type="tns:GearboxComponentEngineeringType"/>
-									<xs:element name="Resource" type="tns:ComponentResourceType">
-										<xs:annotation>
-											<xs:documentation>P004 - ext. Resource</xs:documentation>
-										</xs:annotation>
-									</xs:element>
-								</xs:choice>
-								<xs:element name="Angledrive" type="tns:AngledriveComponentEngineeringType" minOccurs="0"/>
-								<xs:element name="Retarder" type="tns:RetarderComponentEngineeringType" minOccurs="0"/>
-								<xs:choice>
-									<xs:element name="Axlegear" type="tns:AxlegearComponentEngineeringType"/>
-									<xs:element name="Resource" type="tns:ComponentResourceType"/>
-								</xs:choice>
-								<xs:choice>
-									<xs:element name="AxleWheels">
-										<xs:complexType>
-											<xs:complexContent>
-												<xs:extension base="tns:AxleWheelsComponentEngineeringType"/>
-											</xs:complexContent>
-										</xs:complexType>
-									</xs:element>
-									<xs:element name="Resource" type="tns:ComponentResourceType"/>
-								</xs:choice>
-								<xs:choice>
-									<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentEngineeringType"/>
-									<xs:element name="Resource" type="tns:ComponentResourceType"/>
-								</xs:choice>
-								<xs:choice>
-									<xs:element name="AirDrag" type="tns:AirDragComponentEngineeringType"/>
-									<xs:element name="Resource" type="tns:ComponentResourceType"/>
-								</xs:choice>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="AdvancedDriverAssist">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="EngineStartStop" type="tns:EngineStartStopEngineeringType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
+		<xs:choice>
+			<xs:sequence>
+				<xs:group ref="tns:GeneralComponentDataElements"/>
+				<xs:element name="VehicleCategory" type="vdecdef:VehicleCategoryType" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>P036 - enum</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="AxleConfiguration" type="vdecdef:VehicleAxleConfigurationType">
+					<xs:annotation>
+						<xs:documentation>P037 - enum</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="CurbMassChassis" type="vdecdef:VehicleCurbMassChassisType">
+					<xs:annotation>
+						<xs:documentation>P038 - [kg]</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="GrossVehicleMass" type="vdecdef:VehicleGrossVehicleMassType">
+					<xs:annotation>
+						<xs:documentation>P041 - [kg]</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="RetarderType" type="vdecdef:RetarderTypeType">
+					<xs:annotation>
+						<xs:documentation>P052 - enum</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="RetarderRatio" type="vdecdef:RetarderRatioType" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>P053 - [-]</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="AngledriveType" type="vdecdef:AngledriveTypeType"/>
+				<xs:element name="PTOType" type="vdecdef:PTOTypeType">
+					<xs:annotation>
+						<xs:documentation>P186 - enum</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="PTOIdleLossMap" type="tns:PTOIdleLossMapEngineeringType" minOccurs="0"/>
+				<xs:element name="PTOCycle" type="tns:PTOCycleEngineeringType" minOccurs="0"/>
+				<xs:element name="CurbMassExtra" type="tns:VehicleCurbWeightExtraType"/>
+				<xs:element name="Loading" type="tns:VehicleLoadingType"/>
+				<xs:element name="AdvancedDriverAssist">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="EngineStartStop" type="tns:EngineStartStopEngineeringType"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Components" type="tns:VehicleComponentsType"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
+		<xs:attribute name="id">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="5"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:simpleType name="ADASOverspeedEcorollAllowedOverspeedType">
 		<xs:annotation>
@@ -1884,9 +1718,106 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AirDragComponentEngineeringType">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:AirDragDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="MissionCyclesType">
 		<xs:sequence>
-			<xs:element name="Data" type="tns:AirDragDataEngineeringType"/>
-			<xs:element name="Signature" minOccurs="0"/>
+			<xs:element name="Cycle" type="tns:ExtResourceEngineeringType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>P008 - ext. Resource</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="DriverAccelerationCurveEngineeringType">
+		<xs:choice>
+			<xs:element name="Entry" type="tns:DriverAccelerationCurveEntryType" minOccurs="2" maxOccurs="unbounded"/>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType">
+				<xs:annotation>
+					<xs:documentation>P009 - ext. Resource</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="ShiftStrategyParametersEngineeringType">
+		<xs:sequence>
+			<xs:element name="UpshiftMinAcceleration" type="tns:ShiftStrategyMinAccelerationUpshiftType">
+				<xs:annotation>
+					<xs:documentation>P167 - [m/s²]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DownshiftAfterUpshiftDelay" type="tns:ShiftDelayType">
+				<xs:annotation>
+					<xs:documentation>P168 - [s]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UpshiftAfterDownshiftDelay" type="tns:ShiftDelayType">
+				<xs:annotation>
+					<xs:documentation>P169 - [s]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TorqueReserve" type="tns:GearboxTorqueReserveType" minOccurs="0"/>
+			<xs:element name="TimeBetweenGearshift" type="tns:GearboxTimeBetweenGearshiftType" minOccurs="0"/>
+			<xs:element name="StartSpeed" type="tns:GearboxStartSpeedType" minOccurs="0"/>
+			<xs:element name="StartAcceleration" type="tns:GearboxStartAccelerationType" minOccurs="0"/>
+			<xs:element name="StartTorqueReserve" type="tns:GearboxStartTorqueReserveType" minOccurs="0"/>
+			<xs:element name="PowershiftShiftTime" type="tns:PowershiftShiftTimeType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P188 - [s]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PowershiftInertiaFactor" type="tns:PowershiftInertiaFactorType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P189 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CLUpshiftMinAcceleration" type="tns:CLUpshiftMinAccelerationType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P190 - [1/s^2]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CCUpshiftMinAcceleration" type="tns:CCUpshiftMinAccelerationType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P191 - [1/s^2]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DriverModelType">
+		<xs:sequence>
+			<xs:element name="LookAheadCoasting" type="tns:LookAheadCoastingEngineeringType"/>
+			<xs:element name="Overspeed" type="tns:OverspeedEngineeringType"/>
+			<xs:element name="DriverAccelerationCurve" type="tns:DriverAccelerationCurveEngineeringType" minOccurs="0"/>
+			<xs:element name="ShiftStrategyParameters" type="tns:ShiftStrategyParametersEngineeringType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VehicleComponentsType">
+		<xs:sequence>
+			<xs:element name="Engine" type="tns:EngineComponentEngineeringType"/>
+			<xs:element name="Gearbox" type="tns:GearboxComponentEngineeringType"/>
+			<xs:element name="TorqueConverter" type="tns:TorqueConverterComponentEngineeringType" minOccurs="0"/>
+			<xs:element name="Angledrive" type="tns:AngledriveComponentEngineeringType" minOccurs="0"/>
+			<xs:element name="Retarder" type="tns:RetarderComponentEngineeringType" minOccurs="0"/>
+			<xs:element name="Axlegear" type="tns:AxlegearComponentEngineeringType"/>
+			<xs:element name="AxleWheels" type="tns:AxleWheelsComponentEngineeringType"/>
+			<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentEngineeringType"/>
+			<xs:element name="AirDrag" type="tns:AirDragComponentEngineeringType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TorqueConverterComponentEngineeringType">
+		<xs:choice>
+			<xs:sequence>
+				<xs:element name="Data" type="tns:TorqueConverterDataEngineeringType"/>
+				<xs:element name="Signature" minOccurs="0"/>
+			</xs:sequence>
+			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="VehicleDataEngineeringType"/>
 </xs:schema>

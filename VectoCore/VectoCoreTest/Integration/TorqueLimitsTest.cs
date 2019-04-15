@@ -296,7 +296,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestCase(DeclarationVehicle9GearsFord)]
 		public void EngineSpeedTooHigh9SpeedGearbox(string jobFile)
 		{
-			var inputData = xmlInputReader.CreateDeclaration(jobFile, true);
+			var inputData = xmlInputReader.CreateDeclaration(jobFile);
 			var fileWriter = new FileOutputWriter(jobFile);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
 				WriteModalResults = true,

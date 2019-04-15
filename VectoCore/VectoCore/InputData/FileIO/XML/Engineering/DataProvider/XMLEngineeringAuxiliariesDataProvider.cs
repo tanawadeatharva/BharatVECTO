@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -15,12 +16,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 {
 	internal class XMLEngineeringAuxiliariesDataProviderV07 : AbstractXMLType, IXMLAuxiliairesData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+
+		public const string XSD_TYPE = "AuxiliariesDataEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
 
 		public XMLEngineeringAuxiliariesDataProviderV07(
 			IXMLEngineeringVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
 
-		public IXMLComponentsReader Reader { protected get; set; }
+		public IXMLAuxiliaryReader Reader { protected get; set; }
 
 		#region Implementation of IAuxiliariesEngineeringInputData
 
@@ -34,7 +40,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 				var retVal = new List<IAuxiliaryEngineeringInputData>();
 				foreach (XmlNode auxNode in auxNodes) {
-					retVal.Add(Reader.Create(auxNode));
+					retVal.Add(Reader.CreateAuxiliary(auxNode));
 				}
 
 				return retVal;
@@ -63,6 +69,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	{
 		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
 
+		public new const string XSD_TYPE = "AuxiliariesComponentEngineeringType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+
 		public XMLEngineeringAuxiliariesDataProviderV10(
 			IXMLEngineeringVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile) { }
@@ -71,6 +82,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	internal class XMLAuxiliaryEngineeringDataV07 : AbstractXMLType, IXMLAuxiliaryData
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+
+		public const string XSD_TYPE = "AuxiliaryEntryEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+
 
 		protected string BasePath;
 
@@ -113,7 +130,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 					AuxiliaryType = AuxiliaryDemandType.Constant,
 					ConstantPowerDemand = childNode.InnerText.ToDouble().SI<Watt>(),
 					DataSource =
-						new DataSource() { SourceType = DataSourceType.XMLEmbedded, SourceVersion = XMLHelper.GetVersionFromNamespaceUri(NAMESPACE_URI) }
+						new DataSource() { SourceType = DataSourceType.XMLEmbedded, SourceVersion = XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace) }
 				};
 			}
 
@@ -135,9 +152,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 					BaseNode.SelectNodes(
 						XMLHelper.QueryLocalName(XMLNames.Auxiliaries_Auxiliary_AuxMap, XMLNames.Auxiliaries_Auxiliary_AuxMap_Entry))),
 				DataSource =
-					new DataSource() { SourceType = DataSourceType.XMLEmbedded, SourceVersion = XMLHelper.GetVersionFromNamespaceUri(NAMESPACE_URI) }
+					new DataSource() { SourceType = DataSourceType.XMLEmbedded, SourceVersion = XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace) }
 			};
 		}
+
+		protected virtual XNamespace SchemaNamespace {  get { return NAMESPACE_URI; } }
 
 		#region Implementation of IAuxiliaryEngineeringInputData
 
@@ -186,8 +205,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 	internal class XMLAuxiliaryEngineeringDataV10 : XMLAuxiliaryEngineeringDataV07
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		public new const string XSD_TYPE = "AuxiliaryEntryEngineeringType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
 
 		public XMLAuxiliaryEngineeringDataV10(XmlNode node, string basePath) : base(node, basePath) { }
+
+		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 	}
 }

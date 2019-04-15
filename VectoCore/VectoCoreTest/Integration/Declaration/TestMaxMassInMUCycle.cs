@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 		{
 			var relativeJobPath = jobFile;
 			var writer = new FileOutputWriter(relativeJobPath);
-			var inputData = Path.GetExtension(relativeJobPath) == ".xml" ? xmlInputReader.CreateDeclaration(relativeJobPath, true) : JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml" ? xmlInputReader.CreateDeclaration(relativeJobPath) : JSONInputDataFactory.ReadJsonJob(relativeJobPath);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,

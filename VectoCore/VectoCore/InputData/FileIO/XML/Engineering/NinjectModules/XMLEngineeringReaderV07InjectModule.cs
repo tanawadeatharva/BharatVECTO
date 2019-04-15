@@ -14,69 +14,79 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.NinjectModules
 		public override void Load()
 		{
 			Bind<IXMLEngineeringInputData>().To<XMLEngineeringInputDataProviderV07>()
-											.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringInputDataProviderV07.NAMESPACE_URI));
+											.Named(XMLEngineeringInputDataProviderV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLEngineeringInputReader>().To<XMLEngineeringInputReaderV07>()
-											.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringInputReaderV07.NAMESPACE_URI));
+											.Named(XMLEngineeringInputReaderV07.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLEngineeringJobInputData>().To<XMLEngineeringJobInputDataProviderV07>()
-												.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringJobInputDataProviderV07.NAMESPACE_URI));
+												.Named(XMLEngineeringJobInputDataProviderV07.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLJobDataReader>().To<XMLJobDataReaderV07>()
-									.Named(XMLHelper.GetVersionFromNamespaceUri(XMLJobDataReaderV07.NAMESPACE_URI));
+									.Named(XMLJobDataReaderV07.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLEngineeringDriverData>().To<XMLEngineeringDriverDataProviderV07>()
-											.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringDriverDataProviderV07.NAMESPACE_URI));
+											.Named(XMLEngineeringDriverDataProviderV07.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLDriverDataReader>().To<XMLDriverDataReaderV07>()
-										.Named(XMLHelper.GetVersionFromNamespaceUri(XMLDriverDataReaderV07.NAMESPACE_URI));
+										.Named(XMLDriverDataReaderV07.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLEngineeringGearshiftData>().To<XMLEngineeringGearshiftDataV07>()
-												.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringGearshiftDataV07.NAMESPACE_URI));
+												.Named(XMLEngineeringGearshiftDataV07.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLCyclesDataProvider>().To<XMLCyclesDataProviderV07>()
-										.Named(XMLHelper.GetVersionFromNamespaceUri(XMLCyclesDataProviderV07.NAMESPACE_URI));
+										.Named(XMLCyclesDataProviderV07.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLEngineeringVehicleData>().To<XMLEngineeringVehicleDataProviderV07>()
-											.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringVehicleDataProviderV07.NAMESPACE_URI));
+											.Named(XMLEngineeringVehicleDataProviderV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLComponentsReader>().To<XMLComponentsEngineeringReaderV07>()
-										.Named(XMLHelper.GetVersionFromNamespaceUri(XMLComponentsEngineeringReaderV07.NAMESPACE_URI));
+										.Named(XMLComponentsEngineeringReaderV07.QUALIFIED_XSD_TYPE_COMPONENTS);
+
+			Bind<IXMLAxlesReader>().To<XMLComponentsEngineeringReaderV07>()
+										.Named(XMLComponentsEngineeringReaderV07.QUALIFIED_XSD_TYPE_AXLES);
+			Bind<IXMLAxleReader>().To<XMLComponentsEngineeringReaderV07>()
+										.Named(XMLComponentsEngineeringReaderV07.QUALIFIED_XSD_TYPE_AXLE);
+			Bind<IXMLGearboxReader>().To<XMLComponentsEngineeringReaderV07>()
+										.Named(XMLComponentsEngineeringReaderV07.QUALIFIED_XSD_TYPE_GEARBOX);
+			Bind<IXMLAuxiliaryReader>().To<XMLComponentsEngineeringReaderV07>()
+										.Named(XMLComponentsEngineeringReaderV07.QUALIFIED_XSD_TYPE_AUXILIARY);
+
 
 			Bind<IXMLEngineeringVehicleComponentsData>().To<XMLEngineeringVehicleComponentsDataProviderV07>()
 														.Named(
-															XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringVehicleComponentsDataProviderV07.NAMESPACE_URI));
+															XMLEngineeringVehicleComponentsDataProviderV07.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLAxleEngineeringData>().To<XMLAxleEngineeringDataV07>().Named(
-				XMLHelper.GetVersionFromNamespaceUri(XMLAxleEngineeringDataV07.NAMESPACE_URI));
-			Bind<IXMLGearData>().To<XMLGearDataV07>().Named(XMLHelper.GetVersionFromNamespaceUri(XMLGearDataV07.NAMESPACE_URI));
+				XMLAxleEngineeringDataV07.QUALIFIED_XSD_TYPE);
+			Bind<IXMLGearData>().To<XMLGearDataV07>().Named(XMLGearDataV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLAuxiliaryData>().To<XMLAuxiliaryEngineeringDataV07>().Named(
-				XMLHelper.GetVersionFromNamespaceUri(XMLAuxiliaryEngineeringDataV07.NAMESPACE_URI));
+				XMLAuxiliaryEngineeringDataV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLAxlegearData>().To<XMLEngineeringAxlegearDataProviderV07>()
-									.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringAxlegearDataProviderV07.NAMESPACE_URI));
+									.Named(XMLEngineeringAxlegearDataProviderV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLAngledriveData>().To<XMLEngineeringAngledriveDataProviderV07>()
-									.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringAngledriveDataProviderV07.NAMESPACE_URI));
+									.Named(XMLEngineeringAngledriveDataProviderV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLEngineData>().To<XMLEngineeringEngineDataProviderV07>()
-								.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringEngineDataProviderV07.NAMESPACE_URI));
+								.Named(XMLEngineeringEngineDataProviderV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLRetarderData>().To<XMLEngineeringRetarderDataProviderV07>()
-									.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringRetarderDataProviderV07.NAMESPACE_URI));
+									.Named(XMLEngineeringRetarderDataProviderV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLAuxiliairesData>().To<XMLEngineeringAuxiliariesDataProviderV07>()
-										.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringAuxiliariesDataProviderV07.NAMESPACE_URI));
+										.Named(XMLEngineeringAuxiliariesDataProviderV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLGearboxData>().To<XMLEngineeringGearboxDataProviderV07>()
-									.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringGearboxDataProviderV07.NAMESPACE_URI));
+									.Named(XMLEngineeringGearboxDataProviderV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLAirdragData>().To<XMLEngineeringAirdragDataProviderV07>()
-									.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringAirdragDataProviderV07.NAMESPACE_URI));
+									.Named(XMLEngineeringAirdragDataProviderV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLTorqueconverterData>().To<XMLEngineeringTorqueConverterDataProviderV07>()
-											.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringTorqueConverterDataProviderV07.NAMESPACE_URI));
+											.Named(XMLEngineeringTorqueConverterDataProviderV07.QUALIFIED_XSD_TYPE);
 			Bind<IXMLAxlesData>().To<XMLEngineeringAxlesDataProviderV07>()
-								.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringAxlesDataProviderV07.NAMESPACE_URI));
+								.Named(XMLEngineeringAxlesDataProviderV07.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLLookaheadData>().To<XMLEngineeringDriverLookAheadV07>().Named(
-				XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringDriverLookAheadV07.NAMESPACE_URI));
+				XMLEngineeringDriverLookAheadV07.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLOverspeedData>().To<XMLEngineeringOverspeedV07>().Named(
-				XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringOverspeedV07.NAMESPACE_URI));
+				XMLEngineeringOverspeedV07.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLDriverAcceleration>().To<XMLDriverAccelerationV07>()
-										.Named(XMLHelper.GetVersionFromNamespaceUri(XMLDriverAccelerationV07.NAMESPACE_URI));
+										.Named(XMLDriverAccelerationV07.QUALIFIED_XSD_TYPE);
 		}
 
 		#endregion

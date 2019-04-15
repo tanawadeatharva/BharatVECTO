@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
@@ -8,8 +9,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public class XMLDeclarationComponentsDataProviderV10 : AbstractCommonComponentType, IXMLVehicleComponentsDeclaration
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
 
+		public const string XSD_TYPE = "VehicleComponentsType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		protected IAirdragDeclarationInputData _airdragInputData;
 		protected IGearboxDeclarationInputData _gearboxInputData;
@@ -21,9 +25,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		protected IAxlesDeclarationInputData _axleWheels;
 		protected IPTOTransmissionInputData _ptoInputData;
 		protected IXMLDeclarationVehicleData _vehicle;
+		protected ITorqueConverterDeclarationInputData _torqueconverterInputData;
 
 
-		public XMLDeclarationComponentsDataProviderV10(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
+		public XMLDeclarationComponentsDataProviderV10(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
 			base(componentNode, sourceFile)
 		{
 			SourceType = DataSourceType.XMLFile;
@@ -42,9 +48,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return _gearboxInputData ?? (_gearboxInputData = ComponentReader.GearboxInputData); }
 		}
 
+		
 		public virtual ITorqueConverterDeclarationInputData TorqueConverterInputData
 		{
-			get { return GearboxInputData.TorqueConverter; }
+			get { return _torqueconverterInputData ?? (_torqueconverterInputData = ComponentReader.TorqueConverterInputData); }
 		}
 
 		public virtual IAxleGearInputData AxleGearInputData
@@ -87,14 +94,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#region Implementation of IXMLVehicleComponentsDeclaration
 
 		public virtual IXMLComponentReader ComponentReader { protected get; set; }
-		
-		
+
 		#endregion
 
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace
+		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
 		}
@@ -108,14 +114,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 	public class XMLDeclarationComponentsDataProviderV20 : XMLDeclarationComponentsDataProviderV10
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
 
-		public XMLDeclarationComponentsDataProviderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+		public new const string XSD_TYPE = "VehicleComponentsType";
 
-		protected override string SchemaNamespace
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationComponentsDataProviderV20(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile) { }
+
+		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
 		}
-
 	}
 }

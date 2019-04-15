@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -12,7 +13,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public class XMLDeclarationAxlesDataProviderV10 : AbstractXMLType, IXMLAxlesDeclarationInputData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+
+		public const string XSD_TYPE = "AxleWheelsDataDeclarationType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		protected IAxleDeclarationInputData[] _axles;
 
@@ -23,7 +28,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			DataSource = new DataSource() {
 				SourceType = DataSourceType.XMLFile,
 				SourceFile = sourceFile,
-				SourceVersion = XMLHelper.GetVersionFromNamespaceUri(NAMESPACE_URI)
+				SourceVersion = XMLHelper.GetVersionFromNamespaceUri(SchemaNamespace)
 			};
 		}
 
@@ -68,19 +73,35 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IXMLAxlesDeclarationInputData
 
-		public virtual IXMLComponentReader Reader { protected get; set; }
+		public virtual IXMLAxlesReader Reader { protected get; set; }
 
 		#endregion
+
+		protected virtual XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
 	}
 
 	// ---------------------------------------------------------------------------------------
 
 	public class XMLDeclarationAxlesDataProviderV20 : XMLDeclarationAxlesDataProviderV10
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
 
+		//public new const string XSD_TYPE = "AxleWheelsComponentDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		
 		public XMLDeclarationAxlesDataProviderV20(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile) { }
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
 	}
 }

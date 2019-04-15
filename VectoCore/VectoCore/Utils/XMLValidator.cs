@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
@@ -46,7 +47,7 @@ namespace TUGraz.VectoCore.Utils
 		private readonly Action<XmlSeverityType, ValidationEvent> _validationErrorAction;
 		private readonly Action<bool> _resultAction;
 		private bool _valid;
-		private readonly XmlDocument _doc;
+		private  XmlDocument _doc;
 
 		private XMLValidator(Action<bool> resultaction, Action<XmlSeverityType, ValidationEvent> validationErrorAction)
 		{
@@ -78,9 +79,25 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			var version = XMLHelper.GetSchemaVersion(_doc.DocumentElement);
-			
+
 			_doc.Schemas = GetXMLSchema(docType, version);
 			_doc.Validate(ValidationCallBack);
+			//var settings = new XmlReaderSettings();
+			//settings.Schemas = GetXMLSchema(docType, version);
+			//settings.ValidationType = ValidationType.Schema;
+			//settings.ValidationFlags =
+			//	XmlSchemaValidationFlags.ReportValidationWarnings | XmlSchemaValidationFlags.AllowXmlAttributes;
+			//settings.ValidationEventHandler += ValidationCallBack;
+			//var m = new MemoryStream();
+			//var w = new XmlTextWriter(m, Encoding.UTF8);
+			//_doc.WriteTo(w);
+			//w.Flush();
+			//m.Flush();
+			//m.Seek(0, SeekOrigin.Begin);
+			//var r = new XmlTextReader(m);
+			//var reader = XmlReader.Create(r, settings);
+			//_doc = new XmlDocument();
+			//_doc.Load(reader);
 			return _valid;
 		}
 

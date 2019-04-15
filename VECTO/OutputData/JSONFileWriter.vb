@@ -74,7 +74,7 @@ Public Class JSONFileWriter
 		Return header
 	End Function
 
-	Public Sub SaveGearbox(gbx As IGearboxEngineeringInputData, axl As IAxleGearInputData, gshift As IGearshiftEngineeringInputData, filename As String) _
+	Public Sub SaveGearbox(gbx As IGearboxEngineeringInputData, axl As IAxleGearInputData, torqueConverter As ITorqueConverterEngineeringInputData, gshift As IGearshiftEngineeringInputData, filename As String) _
 		Implements IOutputFileWriter.SaveGearbox
 
 		'Header
@@ -124,7 +124,7 @@ Public Class JSONFileWriter
 		body.Add(JsonKeys.Gearbox_StartAcceleration, gshift.StartAcceleration.Value())
 		body.Add(JsonKeys.Gearbox_GearboxType, gbx.Type.ToString())
 
-		Dim torqueConverter As ITorqueConverterEngineeringInputData = gbx.TorqueConverter
+		
 		Dim torqueConverterDict As New Dictionary(Of String, Object)
 		torqueConverterDict.Add("Enabled", Not torqueConverter Is Nothing AndAlso gbx.Type.AutomaticTransmission())
 		If gbx.Type.AutomaticTransmission() AndAlso Not torqueConverter Is Nothing Then

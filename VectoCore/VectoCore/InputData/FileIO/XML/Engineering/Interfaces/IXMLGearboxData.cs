@@ -4,6 +4,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces
 {
 	public interface IXMLGearboxData : IGearboxEngineeringInputData
 	{
-		IXMLComponentsReader Reader { set; }
+		IXMLGearboxReader Reader { set; }
 	}
 }

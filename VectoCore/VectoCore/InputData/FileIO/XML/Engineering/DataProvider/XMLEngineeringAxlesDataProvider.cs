@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -14,7 +15,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	internal class XMLEngineeringAxlesDataProviderV07 : AbstractEngineeringXMLComponentDataProvider,
 		IXMLAxlesData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+
+		public const string XSD_TYPE = "AxleWheelsDataEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
 
 		public XMLEngineeringAxlesDataProviderV07(IXMLEngineeringVehicleData vehicle, XmlNode baseNode, string source)
 			: base(vehicle, baseNode, source)
@@ -49,13 +55,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			}
 		}
 
-		public IXMLComponentsReader Reader { protected get; set; }
+		public IXMLAxlesReader Reader { protected get; set; }
 
 		#endregion
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 		protected override DataSourceType SourceType { get; }
 
 
@@ -64,14 +70,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 	internal class XMLEngineeringAxlesDataProviderV10 : XMLEngineeringAxlesDataProviderV07
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		public new const string XSD_TYPE = "AxleWheelsComponentEngineeringType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+
 
 		public XMLEngineeringAxlesDataProviderV10(IXMLEngineeringVehicleData vehicle, XmlNode baseNode, string source) : base(
 			vehicle, baseNode, source) { }
 
 		#region Overrides of XMLEngineeringAxlesDataProviderV07
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 
 		#endregion
 	}
@@ -79,7 +91,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	internal class XMLAxleEngineeringDataV07 : AbstractEngineeringXMLComponentDataProvider, IXMLAxleEngineeringData,
 		ITyreEngineeringInputData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
+
+				public const string XSD_TYPE = "AxleDataEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
 		public XMLAxleEngineeringDataV07(XmlNode node, IXMLEngineeringVehicleData vehicle) : base(
 			vehicle, node, (vehicle as IXMLResource).DataSource.SourcePath)
@@ -154,11 +170,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#endregion
 
-		public IXMLComponentsReader Reader { protected get; set; }
+		public IXMLAxleReader Reader { protected get; set; }
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 
 		protected override DataSourceType SourceType { get; }
 
@@ -167,7 +183,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 	internal class XMLAxleEngineeringDataV10 : AbstractEngineeringXMLComponentDataProvider, IXMLAxleEngineeringData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		public const string XSD_TYPE = "AxleDataEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
 		private ITyreEngineeringInputData _tyre;
 
@@ -212,11 +232,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#endregion
 
-		public IXMLComponentsReader Reader { protected get; set; }
+		public IXMLAxleReader Reader { protected get; set; }
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 		protected override DataSourceType SourceType { get; }
 
 		#endregion
@@ -224,7 +244,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 	internal class XMLAxleEngineeringDataV10TEST : XMLAxleEngineeringDataV10
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10_TEST;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10_TEST;
+
+		//public new const string XSD_TYPE = "AxleDataEngineeringType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
 		public XMLAxleEngineeringDataV10TEST(XmlNode node, IXMLEngineeringVehicleData vehicle) : base(node, vehicle) { }
 
@@ -233,6 +257,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return XmlConvert.ToBoolean(GetNode("TwinTires")?.InnerText ?? ""); }
 		}
 
-		protected override string SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 	}
 }

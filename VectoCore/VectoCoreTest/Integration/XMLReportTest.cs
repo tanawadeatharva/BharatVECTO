@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public void TestXMLReportMetaInformation()
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
-			var dataProvider = xmlInputReader.CreateDeclaration(jobfile, true);
+			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
@@ -120,7 +120,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		 TestCase(@"TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml")]
 		public void TestValidationXMLReports(string jobfile)
 		{
-			var dataProvider = xmlInputReader.CreateDeclaration(jobfile, true);
+			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
@@ -215,7 +215,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 					var sumData = new SummaryDataContainer(writer);
 					var jobContainer = new JobContainer(sumData);
 
-					var dataProvider = xmlInputReader.CreateDeclaration(modified, true);
+					var dataProvider = xmlInputReader.CreateDeclaration(modified);
 					
 					var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
 						WriteModalResults = false,

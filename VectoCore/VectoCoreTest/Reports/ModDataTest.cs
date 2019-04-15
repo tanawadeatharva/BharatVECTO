@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		public void TractionInterruptionTest(string filename, int idx, double expectedTractionInterruption)
 		{
 			var writer = new FileOutputWriter(filename);
-			var inputData = xmlInputReader.CreateDeclaration(filename, true);
+			var inputData = xmlInputReader.CreateDeclaration(filename);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 			};

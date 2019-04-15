@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public void VocationalTest(string filename, int numRuns)
 		{
 			var writer = new FileOutputWriter(filename);
-			var inputData = xmlInputReader.CreateDeclaration(filename, true);
+			var inputData = xmlInputReader.CreateDeclaration(filename);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true

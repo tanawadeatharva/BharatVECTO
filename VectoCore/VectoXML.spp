@@ -1,30 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
 	<Folder FolderName="XML Files" ExtStr="xml;cml;math;rdf;smil;svg;wml">
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_axlegear-sample_ref.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_engine-sample_ref.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_gearbox-sample_ref.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-engine_only-sample_ref.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample_FULL.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample_ref.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_retarder-sample_ref.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_vehicle_ref.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding ISO 8859-15.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-16 BE BOM.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-16 LE.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-8 BOM.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-8.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding windows-1292.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_engine-sample.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample_Whitespaces.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_gearbox-sample.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_exempted.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_vehicle-sample_FULL_Entry_Order.xml" HomeFolder="Yes"/>
-		<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL_updated.xml" HomeFolder="Yes"/>
-		<ExtMountFolder FolderName="VectoCore\Resources\XSD\Examples"/>
+		<Folder FolderName="Schema 2.0">
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.0\Tractor_4x2_vehicle-class-5_5_t_0.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.0\vecto_engine-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.0\vecto_tyre-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.0\vecto_vehicle-components_1.0.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.0\vecto_vehicle-new_parameters-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.0\vecto_vehicle-sample_LNG.xml" HomeFolder="Yes"/>
+		</Folder>
+		<Folder FolderName="Examples 1.0">
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_axlegear-sample_ref.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_engine-sample_ref.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_gearbox-sample_ref.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-engine_only-sample_ref.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample_FULL.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample_ref.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_retarder-sample_ref.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_vehicle_ref.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding ISO 8859-15.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-16 BE BOM.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-16 LE.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-8 BOM.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding UTF-8.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample Encoding windows-1292.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_engine-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_engine-sample_Whitespaces.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_gearbox-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_exempted.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\Hashing\vecto_vehicle-sample_FULL_Entry_Order.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderDeclaration\vecto_vehicle-sample_FULL_updated.xml" HomeFolder="Yes"/>
+		</Folder>
+		<Folder FolderName="EngineeringExamples">
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_axlegear-sample_ref.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_engine-sample_ref.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_gearbox-sample_ref.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-engine_only-sample_ref.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample_FULL.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_job-sample_ref.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_retarder-sample_ref.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\XMLReaderEngineering\engineering_vehicle_ref.xml"/>
+			<File FilePath="VectoCoreTest\TestData\XML\EngineeringJob\SampleJobEngineering1.0.xml" HomeFolder="Yes"/>
+			<File FilePath="VectoCoreTest\TestData\XML\EngineeringJob\SampleJobEngineering1.1.xml" HomeFolder="Yes"/>
+		</Folder>
 	</Folder>
 	<Folder FolderName="XSL Files" ExtStr="xsl;xslt">
 		<File FilePath="E:\QUAM\Workspace\VECTO_quam\Documentation\XML\RenderTable.xslt" HomeFolder="Yes"/>
@@ -59,8 +81,9 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.1.0.TEST.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.1.0.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringInput.0.7.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringInput.1.0.xsd" HomeFolder="Yes"/>
-			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringInput.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringJob.xsd" HomeFolder="Yes"/>
 		</Folder>
 		<Folder FolderName="Reports">
 			<File FilePath="VectoCore\Resources\XSD\VectoMonitoring.0.7.xsd" HomeFolder="Yes"/>

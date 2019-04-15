@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			job.Save(outFile);
 
 			//var reader = XmlReader.Create(outFile);
-			var xml = xmlInputReader.CreateEngineering(outFile, true);
+			var xml = xmlInputReader.CreateEngineering(outFile);
 
 			Assert.IsNotNull(xml);
 			Assert.AreEqual("175kW 6.8l Engine", xml.JobInputData.JobName);
@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var job = _kernel.Get<IXMLEngineeringWriter>().Write(inputData);
 			job.Save(outFile);
 
-			var xml = xmlInputReader.CreateEngineering(outFile, true);
+			var xml = xmlInputReader.CreateEngineering(outFile);
 
 			Assert.IsNotNull(xml);
 			Assert.AreEqual("N.A. N/A", xml.JobInputData.JobName);
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var job = _kernel.Get<IXMLEngineeringWriter>().Write(inputData);
 			job.Save(outFile);
 
-			var xml = xmlInputReader.CreateEngineering(outFile, true);
+			var xml = xmlInputReader.CreateEngineering(outFile);
 
 			Assert.IsNotNull(xml);
 			Assert.AreEqual("N.A. N/A", xml.JobInputData.JobName);
@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var job = _kernel.Get<IXMLEngineeringWriter>().Write(inputData);
 			job.Save(Path.Combine(outDir, outFile));
 
-			var xml = xmlInputReader.CreateEngineering(Path.Combine(outDir, outFile), true);
+			var xml = xmlInputReader.CreateEngineering(Path.Combine(outDir, outFile));
 
 			Assert.IsNotNull(xml);
 			Assert.AreEqual("N.A. N/A", xml.JobInputData.JobName);
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			job.Save(outputFile);
 
 			var reader = XmlReader.Create(outputFile);
-			var xml = xmlInputReader.CreateDeclaration(reader, true);
+			var xml = xmlInputReader.CreateDeclaration(reader);
 
 			Assert.IsNotNull(xml);
 			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			job.Save(outputFile);
 
 			var reader = XmlReader.Create(outputFile);
-			var xml = xmlInputReader.CreateDeclaration(reader, true);
+			var xml = xmlInputReader.CreateDeclaration(reader);
 
 			Assert.IsNotNull(xml);
 			Assert.AreEqual("VEH-N.A.", xml.JobInputData.JobName);

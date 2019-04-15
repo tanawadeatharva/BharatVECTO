@@ -47,7 +47,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
 	public class XMLDeclarationInputDataProviderV10 : AbstractXMLResource, IXMLDeclarationInputData
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+		// "urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0:VectoDeclarationJobType"
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+
+		public const string XSD_TYPE = "VectoDeclarationJobType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		protected readonly XmlDocument Document;
 		protected IDeclarationJobInputData JobData;
@@ -61,7 +66,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		#region Overrides of AbstractXMLResource
 
-		protected override string SchemaNamespace
+		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
 		}
@@ -90,12 +95,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 	public class XMLDeclarationInputDataProviderV20 : XMLDeclarationInputDataProviderV10
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+		public new static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public new const string XSD_TYPE = "VectoDeclarationJobType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
 		public XMLDeclarationInputDataProviderV20(XmlDocument xmlDoc, string fileName) : base(xmlDoc, fileName) { }
 
-		protected override string SchemaNamespace
-		{
-			get { return NAMESPACE_URI; }
-		}
+		
 	}
 }

@@ -734,7 +734,7 @@
 			<xs:element name="Signature" type="tns:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="TorqueConverterDeclarationDataType">
+	<xs:complexType name="TorqueConverterDataDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="v1.0:AbstractTorqueConverterDataDeclarationType">
 				<xs:sequence>

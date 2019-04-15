@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using System.Xml.Linq;
 using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -10,7 +11,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 {
 	public class XMLPTOReaderV10 : AbstractComponentReader, IXMLPTOReader
 	{
-		public const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V10;
+
+		public const string XSD_TYPE = "PTOType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
 		[Inject]
 		public IDeclarationInjectFactory Factory { protected get; set; }
@@ -19,8 +24,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected IPTOTransmissionInputData _ptoInputData;
 
 
-		public XMLPTOReaderV10(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, bool verifyXML) : base(
-			vehicle, componentNode, verifyXML)
+		public XMLPTOReaderV10(IXMLDeclarationVehicleData vehicle, XmlNode componentNode) : base(
+			vehicle, componentNode)
 		{
 			Vehicle = vehicle;
 		}
@@ -44,9 +49,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	public class XMLPTOReaderV20 : XMLPTOReaderV10
 	{
-		public new const string NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
 
-		public XMLPTOReaderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, bool verifyXML) : base(
-			vehicle, componentNode, verifyXML) { }
+		//public new const string XSD_TYPE = "PTOType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLPTOReaderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentNode) : base(
+			vehicle, componentNode) { }
 	}
 }

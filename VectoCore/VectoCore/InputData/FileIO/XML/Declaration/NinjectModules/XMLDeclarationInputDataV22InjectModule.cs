@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules {
 		public override void Load()
 		{
 			Bind<IXMLTyreDeclarationInputData>().To<XMLDeclarationTyreDataProviderV22>().Named(
-				XMLHelper.GetVersionFromNamespaceUri(XMLDeclarationTyreDataProviderV22.NAMESPACE_URI));
+				XMLDeclarationTyreDataProviderV22.QUALIFIED_XSD_TYPE);
 		}
 
 		#endregion

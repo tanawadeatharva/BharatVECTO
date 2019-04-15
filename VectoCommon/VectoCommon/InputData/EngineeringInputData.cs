@@ -195,8 +195,6 @@ namespace TUGraz.VectoCommon.InputData
 		Second TractionInterruption { get; }
 
 		Second PowershiftShiftTime { get; }
-
-		new ITorqueConverterEngineeringInputData TorqueConverter { get; }
 	}
 
 	public interface IGearshiftEngineeringInputData : ITorqueConverterEngineeringShiftParameterInputData, IDriverModelData

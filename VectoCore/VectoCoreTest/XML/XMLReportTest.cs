@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var fileWriter = new FileOutputWriter(filename);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
-			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename), true);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
 				ModalResults1Hz = false,
 				WriteModalResults = false,

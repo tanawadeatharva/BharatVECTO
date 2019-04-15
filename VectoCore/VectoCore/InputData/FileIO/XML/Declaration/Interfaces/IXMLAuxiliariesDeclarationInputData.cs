@@ -5,7 +5,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces
 {
 	public interface IXMLAuxiliariesDeclarationInputData : IAuxiliariesDeclarationInputData
 	{
-		IXMLComponentReader Reader { set; }
+		IXMLAuxiliaryReader Reader { set; }
 	}
 
 	public interface IXMLAuxiliaryDeclarationInputData : IAuxiliaryDeclarationInputData

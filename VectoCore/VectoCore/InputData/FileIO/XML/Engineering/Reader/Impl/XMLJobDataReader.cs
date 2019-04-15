@@ -12,7 +12,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 	internal class XMLJobDataReaderV07 : AbstractExternalResourceReader, IXMLJobDataReader
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
-		
+
+		public const string XSD_TYPE = "VectoJobEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
 		protected XmlNode JobNode;
 		protected IXMLEngineeringJobInputData JobData;
 
@@ -21,8 +25,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 
 		[Inject] public IEngineeringInjectFactory Factory { protected get; set; }
 
-		public XMLJobDataReaderV07(IXMLEngineeringJobInputData jobData, XmlNode jobNode, bool verifyXML) : base(
-			jobData, jobNode, verifyXML)
+		public XMLJobDataReaderV07(IXMLEngineeringJobInputData jobData, XmlNode jobNode) : base(
+			jobData, jobNode)
 		{
 			JobNode = jobNode;
 			JobData = jobData;
@@ -35,7 +39,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 
 		public IVehicleEngineeringInputData CreateVehicle
 		{
-			get { return _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator)); }
+			get { return _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator, requireDataNode: false)); }
 		}
 
 
@@ -43,7 +47,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 		{
 			get {
 				var cyclesNode = JobNode.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.VectoJob_MissionCycles));
-				var version = XMLHelper.GetSchemaVersion(cyclesNode);
+				var version = XMLHelper.GetXsdType(cyclesNode?.SchemaInfo.SchemaType);
 
 				return Factory.CreateCycleData(version, JobData, JobNode, JobData.DataSource.SourcePath);
 			}
@@ -53,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 		private IVehicleEngineeringInputData VehicleCreator(string version, XmlNode componentNode, string sourceFile)
 		{
 			var vehicle = Factory.CreateVehicleData(version, JobData, componentNode, sourceFile);
-			vehicle.ComponentReader = Factory.CreateComponentReader(version, vehicle, componentNode.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.Vehicle_Components)), VerifyXML);
+			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			return vehicle;
 		}
 
@@ -64,6 +68,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 	{
 		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
 
-		public XMLJobDataReaderV10(XMLEngineeringJobInputDataProviderV10 jobData, XmlNode jobNode, bool verifyXML) : base(jobData, jobNode, verifyXML) { }
+		public new const string XSD_TYPE = "VectoJobEngineeringType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+		public XMLJobDataReaderV10(XMLEngineeringJobInputDataProviderV10 jobData, XmlNode jobNode) : base(jobData, jobNode) { }
 	}
 }

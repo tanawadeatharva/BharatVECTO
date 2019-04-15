@@ -14,13 +14,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.NinjectModules
 		{
 			// testing derived xml data types
 			Bind<IXMLEngineData>().To<XMLEngineeringEngineDataProviderV10TEST>()
-								.Named(XMLHelper.GetVersionFromNamespaceUri(XMLEngineeringEngineDataProviderV10TEST.NAMESPACE_URI));
-			Bind<IXMLTyreData>().To<XMLTyreEngineeringDataProviderV10TEST>().Named(XMLHelper.GetVersionFromNamespaceUri(XMLTyreEngineeringDataProviderV10TEST.NAMESPACE_URI));
+								.Named(XMLEngineeringEngineDataProviderV10TEST.QUALIFIED_XSD_TYPE);
+			Bind<IXMLTyreData>().To<XMLTyreEngineeringDataProviderV10TEST>().Named(XMLTyreEngineeringDataProviderV10TEST.QUALIFIED_XSD_TYPE);
 
 			Bind<IXMLAxleEngineeringData>().To<XMLAxleEngineeringDataV10TEST>()
-											.Named(XMLHelper.GetVersionFromNamespaceUri(XMLAxleEngineeringDataV10TEST.NAMESPACE_URI));
+											.Named(XMLAxleEngineeringDataV10TEST.QUALIFIED_XSD_TYPE);
 			Bind<IXMLComponentsReader>().To<XMLComponentsEngineeringReaderV10TEST>()
-										.Named(XMLHelper.GetVersionFromNamespaceUri(XMLComponentsEngineeringReaderV10TEST.NAMESPACE_URI));
+										.Named(XMLComponentsEngineeringReaderV10TEST.QUALIFIED_XSD_TYPE_COMPONENTS);
+
+			Bind<IXMLAxlesReader>().To<XMLComponentsEngineeringReaderV10TEST>()
+									.Named(XMLComponentsEngineeringReaderV10TEST.QUALIFIED_XSD_TYPE_AXLES);
+			Bind<IXMLAxleReader>().To<XMLComponentsEngineeringReaderV10TEST>()
+								.Named(XMLComponentsEngineeringReaderV10TEST.QUALIFIED_XSD_TYPE_AXLE);
+			Bind<IXMLGearboxReader>().To<XMLComponentsEngineeringReaderV10TEST>()
+									.Named(XMLComponentsEngineeringReaderV10TEST.QUALIFIED_XSD_TYPE_GEARBOX);
+			Bind<IXMLAuxiliaryReader>().To<XMLComponentsEngineeringReaderV10TEST>()
+										.Named(XMLComponentsEngineeringReaderV10TEST.QUALIFIED_XSD_TYPE_AUXILIARY);
+
 		}
 
 		#endregion

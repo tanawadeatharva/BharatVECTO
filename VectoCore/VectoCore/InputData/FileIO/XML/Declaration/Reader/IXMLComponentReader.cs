@@ -17,10 +17,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 		IAxlesDeclarationInputData AxlesDeclarationInputData { get; }
 
 		ITorqueConverterDeclarationInputData TorqueConverterInputData { get; }
-		ITransmissionInputData CreateGear(XmlNode gearNode);
-		IAuxiliaryDeclarationInputData CreateAuxiliary(XmlNode auxNode);
-		IAxleDeclarationInputData CreateAxle(XmlNode axleNode);
+	}
 
+	public interface IXMLAxlesReader
+	{
+		IAxleDeclarationInputData CreateAxle(XmlNode axleNode);
+	}
+
+	public interface IXMLAxleReader
+	{
 		ITyreDeclarationInputData Tyre { get; }
+	}
+
+	public interface IXMLGearboxReader
+	{
+		ITransmissionInputData CreateGear(XmlNode gearNode);
+	}
+
+	public interface IXMLAuxiliaryReader
+	{
+		IAuxiliaryDeclarationInputData CreateAuxiliary(XmlNode auxNode);
+
 	}
 }

@@ -12,14 +12,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		IInputDataProvider Create(XmlReader inputData, bool verifyXML);
 
-		IEngineeringInputDataProvider CreateEngineering(string filename, bool verifyXML);
+		IEngineeringInputDataProvider CreateEngineering(string filename);
 
-		IEngineeringInputDataProvider CreateEngineering(Stream inputData, bool verifyXML);
+		IEngineeringInputDataProvider CreateEngineering(Stream inputData);
 
-		IEngineeringInputDataProvider CreateEngineering(XmlReader inputData, bool verifyXML);
+		IEngineeringInputDataProvider CreateEngineering(XmlReader inputData);
 
-		IDeclarationInputDataProvider CreateDeclaration(string filename, bool verifyXML);
+		IDeclarationInputDataProvider CreateDeclaration(string filename);
 
-		IDeclarationInputDataProvider CreateDeclaration(XmlReader inputData, bool verifyXML);
+		IDeclarationInputDataProvider CreateDeclaration(XmlReader inputData);
 	}
 }

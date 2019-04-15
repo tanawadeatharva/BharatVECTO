@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 		[Inject]
 		public IEngineeringWriterFactory Factory { protected get; set; }
 
-		public XMLEngineeringAxlesWriterV10() : base("AxleComponentEngineeringType") { }
+		public XMLEngineeringAxlesWriterV10() : base("AxleWheelsDataEngineeringType") { }
 
 		#region Overrides of AbstractXMLWriter
 

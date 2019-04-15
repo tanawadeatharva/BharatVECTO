@@ -349,11 +349,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_StartTorqueReserve) / 100.0; }
 		}
 
-		ITorqueConverterDeclarationInputData IGearboxDeclarationInputData.TorqueConverter
-		{
-			get { return TorqueConverter; }
-		}
-
+		
 		public virtual ITorqueConverterEngineeringInputData TorqueConverter
 		{
 			get { return this; }
