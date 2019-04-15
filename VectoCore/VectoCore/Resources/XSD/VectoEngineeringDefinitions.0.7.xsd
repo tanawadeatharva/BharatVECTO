@@ -1819,5 +1819,4 @@
 			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
 		</xs:choice>
 	</xs:complexType>
-	<xs:complexType name="VehicleDataEngineeringType"/>
 </xs:schema>
