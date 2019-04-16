@@ -591,7 +591,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				ShareEngineHigh = EngineSpeedHighLookupReader.ReadFromStream(
 					RessourceHelper.ReadStream(
 						DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareEngineSpeedHigh.csv")
-				)
+				),
+				//--------------------
+				RatioEarlyUpshiftFC = 5,
+				RatioEarlyDownshiftFC = 10,
 			};
 
 			return retVal;

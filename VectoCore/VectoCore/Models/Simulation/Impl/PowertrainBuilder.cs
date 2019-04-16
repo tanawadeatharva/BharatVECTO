@@ -413,7 +413,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (string.IsNullOrWhiteSpace(runData.ShiftStrategy)) {
 				switch (runData.GearboxData.Type) {
 					case GearboxType.AMT:
-						return new AMTShiftStrategy(runData, container);
+						return new AMTShiftStrategyOptimized(runData, container);
 					case GearboxType.MT:
 						return new MTShiftStrategy(runData, container);
 					case GearboxType.ATPowerSplit:

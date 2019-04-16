@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							: double.MaxValue.SI<NewtonMeter>());
 					var reserve = 1 - inTorque / maxTorque;
 
-					if (reserve >= ModelData.TorqueReserve && IsAboveDownShiftCurve(currentGear, inTorque, inAngularVelocity)) {
+					if (reserve >= 0 /*ModelData.TorqueReserve */ && IsAboveDownShiftCurve(currentGear, inTorque, inAngularVelocity)) {
 						continue;
 					}
 
@@ -296,7 +296,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
 				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
 
-				if (reserve >= ModelData.TorqueReserve) {
+				if (reserve >= 0 /* ModelData.TorqueReserve */) {
 					currentGear = tryNextGear;
 				}
 			}
@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// down shift
 			if (IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity)) {
 				currentGear--;
-				while (SkipGears && currentGear > 1) {
+				while (false && SkipGears && currentGear > 1) {
 					currentGear--;
 					var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
 
