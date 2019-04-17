@@ -116,6 +116,7 @@ Public Class VectoVTPJob
     Private Shared Function ValidateVehicleJob(vectoJob As VectoVTPJob, mode As ExecutionMode) As ValidationResult
 
         ' TODO!!
+        Return ValidationResult.Success
     End Function
 
     Public ReadOnly Property Vehicle As IVehicleDeclarationInputData Implements IVTPEngineeringJobInputData.Vehicle

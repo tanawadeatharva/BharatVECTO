@@ -78,7 +78,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		new IVehicleComponentsEngineering Components { get; }
 
-		IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
+		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
 	}
 
 	public interface IAdvancedDriverAssistantSystemsEngineering
@@ -89,23 +89,23 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IVehicleComponentsEngineering
 	{
-		new IAirdragEngineeringInputData AirdragInputData { get; }
+		IAirdragEngineeringInputData AirdragInputData { get; }
 
-		new IGearboxEngineeringInputData GearboxInputData { get; }
+		IGearboxEngineeringInputData GearboxInputData { get; }
 
-		new ITorqueConverterEngineeringInputData TorqueConverterInputData { get; }
+		ITorqueConverterEngineeringInputData TorqueConverterInputData { get; }
 
-		new IAxleGearInputData AxleGearInputData { get; }
+		IAxleGearInputData AxleGearInputData { get; }
 
-		new IAngledriveInputData AngledriveInputData { get; }
+		IAngledriveInputData AngledriveInputData { get; }
 
-		new IEngineEngineeringInputData EngineInputData { get; }
+		IEngineEngineeringInputData EngineInputData { get; }
 
-		new IAuxiliariesEngineeringInputData AuxiliaryInputData { get; }
+		IAuxiliariesEngineeringInputData AuxiliaryInputData { get; }
 
-		new IRetarderInputData RetarderInputData { get; }
+		IRetarderInputData RetarderInputData { get; }
 
-		new IPTOTransmissionInputData PTOTransmissionInputData { get; }
+		IPTOTransmissionInputData PTOTransmissionInputData { get; }
 
 		/// <summary>
 		/// parameters for every axle
@@ -247,8 +247,6 @@ namespace TUGraz.VectoCommon.InputData
 		Second UpshiftAfterDownshiftDelay { get; }
 
 		MeterPerSquareSecond UpshiftMinAcceleration { get; }
-
-
 	}
 
 	public interface ITorqueConverterEngineeringShiftParameterInputData
@@ -288,7 +286,6 @@ namespace TUGraz.VectoCommon.InputData
 		TableData ShiftPolygon { get; }
 
 		PerSecond MaxInputSpeed { get; }
-
 	}
 
 	public interface IEngineEngineeringInputData : IEngineDeclarationInputData
@@ -317,10 +314,7 @@ namespace TUGraz.VectoCommon.InputData
 		string AdvancedAuxiliaryFilePath { get; }
 	}
 
-	public interface IDriverModelData
-	{
-
-	}
+	public interface IDriverModelData { }
 
 	public interface IDriverAccelerationData : IDriverModelData
 	{
