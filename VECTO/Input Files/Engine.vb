@@ -288,7 +288,7 @@ Public Class Engine
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
@@ -307,7 +307,7 @@ Public Class Engine
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 

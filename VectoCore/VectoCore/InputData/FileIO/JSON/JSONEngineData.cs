@@ -35,6 +35,7 @@ using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -218,7 +219,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		
 		public string Manufacturer
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public string Model
@@ -229,7 +230,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string Date
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public CertificationMethod CertificationMethod
@@ -239,7 +240,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string CertificationNumber
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public DigestData DigestValue

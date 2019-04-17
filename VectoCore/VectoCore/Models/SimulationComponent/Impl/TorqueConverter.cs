@@ -271,6 +271,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					absTime, dt, outAngularVelocity, engineSpeed,
 					x => x.DeltaFullLoad.IsSmaller(0),
 					x => VectoMath.Abs(DataBus.EngineSpeed - x.EngineSpeed).Value());
+				if (tqOperatingPoint == null) {
+					return null;
+				}
 				tqOperatingPoint.Creeping = true;
 				return tqOperatingPoint;
 			}

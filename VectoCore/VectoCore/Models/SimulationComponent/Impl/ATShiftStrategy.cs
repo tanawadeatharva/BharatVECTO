@@ -194,7 +194,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					nextInAngularSpeed = outAngularVelocity * ModelData.Gears[gear + 1].Ratio;
 					nextInTorque = outTorque / ModelData.Gears[gear + 1].Ratio;
 				}
-				if (!IsBelowDownShiftCurve(gear + 1, nextInTorque, nextInAngularSpeed)) {
+				var acc = EstimateAccelerationForGear(gear + 1, outAngularVelocity);
+				if ((acc > 0 || _gearbox.TCLocked) && !IsBelowDownShiftCurve(gear + 1, nextInTorque, nextInAngularSpeed)) {
 					Log.Debug("engine speed would be above max speed / rated speed - shift up");
 					Upshift(absTime, gear);
 					return true;
