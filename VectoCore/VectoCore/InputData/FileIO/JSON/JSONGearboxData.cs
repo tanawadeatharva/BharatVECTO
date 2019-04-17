@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	/// }
 	// ReSharper disable once InconsistentNaming
 	public class JSONGearboxDataV5 : JSONFile, IGearboxEngineeringInputData, IAxleGearInputData,
-		ITorqueConverterEngineeringInputData
+		ITorqueConverterEngineeringInputData, IGearshiftEngineeringInputData
 	{
 		public JSONGearboxDataV5(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) {}
@@ -349,11 +349,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_StartTorqueReserve) / 100.0; }
 		}
 
-		ITorqueConverterDeclarationInputData IGearboxDeclarationInputData.TorqueConverter
-		{
-			get { return TorqueConverter; }
-		}
-
+		
 		public virtual ITorqueConverterEngineeringInputData TorqueConverter
 		{
 			get { return this; }

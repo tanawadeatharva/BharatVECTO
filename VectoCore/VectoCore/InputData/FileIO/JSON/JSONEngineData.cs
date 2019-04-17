@@ -216,6 +216,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return 1; }
 		}
 
+		
 		public string Manufacturer
 		{
 			get { return Constants.NOT_AVailABLE; }

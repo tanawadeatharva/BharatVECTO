@@ -118,11 +118,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected XElement CreateVehicle(IDeclarationInputDataProvider data)
 		{
-			var retarder = data.JobInputData.Vehicle.RetarderInputData;
-			var gearbox = data.JobInputData.Vehicle.GearboxInputData;
+			var retarder = data.JobInputData.Vehicle.Components.RetarderInputData;
+			var gearbox = data.JobInputData.Vehicle.Components.GearboxInputData;
 			var vehicle = data.JobInputData.Vehicle;
-			var engine = data.JobInputData.Vehicle.EngineInputData;
-			var angledrive = data.JobInputData.Vehicle.AngledriveInputData;
+			var engine = data.JobInputData.Vehicle.Components.EngineInputData;
+			var angledrive = data.JobInputData.Vehicle.Components.AngledriveInputData;
 
 
 			var id = CreateIdString("VEH-" + vehicle.Model);
@@ -159,13 +159,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 				CreateTorqueLimits(vehicle),
 				new XElement(tns + XMLNames.Vehicle_Components,
 					CreateEngine(engine),
-					CreateGearbox(gearbox, gearbox.Type.AutomaticTransmission() ? vehicle.TorqueConverterInputData : null),
+					CreateGearbox(gearbox, gearbox.Type.AutomaticTransmission() ? vehicle.Components.TorqueConverterInputData : null),
 					angledrive.Type == AngledriveType.SeparateAngledrive ? CreateAngleDrive(angledrive) : null,
 					retarder.Type.IsDedicatedComponent() ? CreateRetarder(retarder) : null,
-					CreateAxlegear(vehicle.AxleGearInputData),
-					CreateAxleWheels(vehicle),
-					CreateAuxiliaries(vehicle.AuxiliaryInputData()),
-					CreateAirdrag(vehicle.AirdragInputData)
+					CreateAxlegear(vehicle.Components.AxleGearInputData),
+					CreateAxleWheels(vehicle.Components.AxleWheels),
+					CreateAuxiliaries(vehicle.Components.AuxiliaryInputData),
+					CreateAirdrag(vehicle.Components.AirdragInputData)
 					)
 				);
 		}
@@ -310,9 +310,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				);
 		}
 
-		public XElement CreateAxleWheels(IVehicleDeclarationInputData data, XNamespace ns = null)
+		public XElement CreateAxleWheels(IAxlesDeclarationInputData data, XNamespace ns = null)
 		{
-			var axleData = data.Axles;
+			var axleData = data.AxlesDeclaration;
 			var numAxles = axleData.Count;
 			var axles = new List<XElement>(numAxles);
 			for (var i = 0; i < numAxles; i++) {

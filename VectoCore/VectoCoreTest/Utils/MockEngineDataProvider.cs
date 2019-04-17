@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 {
 	public class MockEngineDataProvider : IEngineEngineeringInputData
 	{
-		public DataSourceType SourceType { get; set; }
+		public DataSource DataSource { get; set; }
 		public string Source { get; set; }
 		public bool SavedInDeclarationMode { get; set; }
 		public string Manufacturer { get; set; }

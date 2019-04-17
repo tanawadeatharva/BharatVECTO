@@ -47,6 +47,7 @@ namespace TUGraz.VectoCommon.Models
 		AxleConfig_8x4,
 		AxleConfig_8x6,
 		AxleConfig_8x8,
+		AxleConfig_Undefined,
 	}
 
 	public enum AxleType

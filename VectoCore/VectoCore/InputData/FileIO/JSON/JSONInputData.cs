@@ -36,6 +36,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Ninject;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.InputData;
@@ -43,6 +44,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -56,13 +58,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public const string MissingFileSuffix = "   -- (MISSING!)";
 
-		private readonly string _sourceFile;
+		protected readonly string _sourceFile;
+
+		protected readonly string Version;
 
 		protected readonly JObject Body;
 
 		protected JSONFile(JObject data, string filename, bool tolerateMissing = false)
 		{
-			//var header = (JObject)data.GetEx(JsonKeys.JsonHeader);
+			var header = (JObject)data.GetEx(JsonKeys.JsonHeader);
+			Version = header.GetEx<string>(JsonKeys.JsonHeader_FileVersion);
 			Body = (JObject)data.GetEx(JsonKeys.JsonBody);
 			_sourceFile = Path.GetFullPath(filename);
 			TolerateMissing = tolerateMissing;
@@ -70,9 +75,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected bool TolerateMissing { get; set; }
 
-		public DataSourceType SourceType
+		public DataSource DataSource
 		{
-			get { return DataSourceType.JSONFile; }
+			get { return new DataSource { SourceType = DataSourceType.JSONFile, SourceFile = _sourceFile, SourceVersion = Version }; }
 		}
 
 		public string Source
@@ -147,11 +152,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			Gearbox = ReadGearbox();
 			AxleGear = Gearbox as IAxleGearInputData;
 			TorqueConverter = Gearbox as ITorqueConverterEngineeringInputData;
+			GearshiftInputData = Gearbox as IGearshiftEngineeringInputData;
 
 			VehicleData = ReadVehicle();
 		}
 
 		public IGearboxEngineeringInputData Gearbox { get; internal set; }
+
+		public IGearshiftEngineeringInputData GearshiftInputData { get; internal set; }
+
 		public IAxleGearInputData AxleGear { get; internal set; }
 		public ITorqueConverterEngineeringInputData TorqueConverter { get; internal set; }
 		public IEngineEngineeringInputData Engine { get; internal set; }
@@ -457,7 +466,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual TableData AccelerationCurve
+		public virtual IDriverAccelerationData AccelerationCurve
 		{
 			[System.Diagnostics.CodeAnalysis.SuppressMessage(
 				"Microsoft.Design",
@@ -471,22 +480,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 
 				try {
-					return ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve");
+					return new DriverAccelerationInputData() {
+						AccelerationCurve = ReadTableData(acceleration.Value<string>(), "DriverAccelerationCurve")
+					};
 				} catch (VectoException e) {
 					Log.Warn("Could not find file for acceleration curve. Trying lookup in declaration data.");
 					try {
 						var resourceName = DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 											acceleration.Value<string>() +
 											Constants.FileExtensions.DriverAccelerationCurve;
-						return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceName), source: resourceName);
+						return new DriverAccelerationInputData() {
+							AccelerationCurve = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceName), source: resourceName)
+						};
 					} catch (Exception) {
 						if (!TolerateMissing) {
 							throw new VectoException("Failed to read Driver Acceleration Curve: " + e.Message, e);
 						}
 
-						return new TableData(
-							Path.Combine(BasePath, acceleration.Value<string>()) + MissingFileSuffix,
-							DataSourceType.Missing);
+						return new DriverAccelerationInputData() {
+							AccelerationCurve = new TableData(
+								Path.Combine(BasePath, acceleration.Value<string>()) + MissingFileSuffix,
+								DataSourceType.Missing)
+						};
 					}
 				}
 			}
@@ -663,6 +678,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		private IDictionary<VectoComponents, IList<string>> _componentDigests = null;
 		private DigestData _jobDigest = null;
+		private IXMLInputDataReader _inputReader;
 
 		public JSONVTPInputDataV4(JObject data, string filename, bool tolerateMissing = false) : base(
 			data, filename, tolerateMissing)
@@ -671,6 +687,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>()));
 			VectoManufacturerReportHash = Body["ManufacturerRecord"] != null ? VectoHash.Load(
 				Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>())) : null;
+
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			_inputReader = kernel.Get<IXMLInputDataReader>();
 		}
 
 		public IVTPEngineeringJobInputData JobInputData
@@ -686,9 +705,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public IVehicleDeclarationInputData Vehicle
 		{
 			get {
-				return new XMLDeclarationInputDataProvider(
-					Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>()),
-					true).JobInputData.Vehicle;
+				return _inputReader.CreateDeclaration(
+					Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>())).JobInputData.Vehicle;
 			}
 		}
 

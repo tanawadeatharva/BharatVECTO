@@ -252,7 +252,7 @@ Public Class Engine
 				engineData = doa.CreateEngineData(engine, Nothing, dummyGearboxData, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
-				engineData = doa.CreateEngineData(engine, Nothing, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
+				engineData = doa.CreateEngineData(engine, Nothing, New List(Of ITorqueLimitInputData), Nothing, TankSystem.Compressed)
 			End If
 
 			Dim result As IList(Of ValidationResult) =
@@ -269,18 +269,16 @@ Public Class Engine
 
 #Region "IInputData"
 
-	Public ReadOnly Property SourceType As DataSourceType Implements IComponentInputData.SourceType
+	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
 		Get
-			Return DataSourceType.JSONFile
+		    Dim retVal As DataSource =  New DataSource() 
+		    retVal.SourceType = DataSourceType.JSONFile
+		    retVal.SourceFile = FilePath
+		    Return retVal
 		End Get
 	End Property
 
-	Public ReadOnly Property Source As String Implements IComponentInputData.Source
-		Get
-			Return FilePath
-		End Get
-	End Property
-
+	
 	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
 		Get
 			Return Cfg.DeclMode

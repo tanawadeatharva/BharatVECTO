@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputEngineering xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" schemaVersion="0.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 ../XSD/VectoEngineeringInput.xsd">
+<tns:VectoInputEngineering xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.8" schemaVersion="0.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 E:\QUAM\Workspace\VECTO_quam\VectoCore\VectoCore\Resources\XSD/VectoEngineeringInput.0.7.xsd">
 	<EngineOnlyMode>false</EngineOnlyMode>
 	<Vehicle id="VEH-1234567890">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
@@ -26,6 +26,14 @@
 		</PTOCycle>
 		<CurbMassExtra>500</CurbMassExtra>
 		<Loading>1500</Loading>
+		<AdvancedDriverAssist>
+			<EngineStartStop>
+				<Enabled>false</Enabled>
+				<MaxSpeed>8</MaxSpeed>
+				<MinOnTime>8</MinOnTime>
+				<ActivationDelay>8</ActivationDelay>
+			</EngineStartStop>
+		</AdvancedDriverAssist>
 		<Components>
 			<Engine>
 				<Data id="ENG-gooZah3D">
@@ -2550,27 +2558,27 @@
 				<Signature>
 					<ComponentDataHash>d14189366134120e08fa3f2c6e3328dd13c08a23</ComponentDataHash>
 				</Signature>
-				<TorqueConverter>
-					<Data>
+			</Gearbox>
+			<TorqueConverter>
+				<Data>
 					<Manufacturer>Generic Torqueconverter Manufacturer</Manufacturer>
 					<Model>Generic Torqueconverter</Model>
 					<Creator>Markus Quaritsch, TUG ITI</Creator>
 					<Date>2017-01-11T11:00:00Z</Date>
-						<ReferenceRPM>1000</ReferenceRPM>
-						<Characteristics>
-							<Entry speedRatio="0.0000" inputTorqueRef="300.00" torqueRatio="1.80"/>
-							<Entry speedRatio="1.0000" inputTorqueRef="10.00" torqueRatio="1.00"/>
-							<Entry speedRatio="2.0000" inputTorqueRef="-10.00" torqueRatio="0.90"/>
-						</Characteristics>
-						<Inertia>1.1</Inertia>
-						<ShiftPolygon>
-							<Entry engineTorque="-200" downshiftSpeed="700" upshiftSpeed="800"/>
-							<Entry engineTorque="1600" downshiftSpeed="700" upshiftSpeed="800"/>
-						</ShiftPolygon>
-						<MaxInputSpeed>1700</MaxInputSpeed>
-					</Data>
-				</TorqueConverter>
-			</Gearbox>
+					<ReferenceRPM>1000</ReferenceRPM>
+					<Characteristics>
+						<Entry speedRatio="0.0000" inputTorqueRef="300.00" torqueRatio="1.80"/>
+						<Entry speedRatio="1.0000" inputTorqueRef="10.00" torqueRatio="1.00"/>
+						<Entry speedRatio="2.0000" inputTorqueRef="-10.00" torqueRatio="0.90"/>
+					</Characteristics>
+					<Inertia>1.1</Inertia>
+					<ShiftPolygon>
+						<Entry engineTorque="-200" downshiftSpeed="700" upshiftSpeed="800"/>
+						<Entry engineTorque="1600" downshiftSpeed="700" upshiftSpeed="800"/>
+					</ShiftPolygon>
+					<MaxInputSpeed>1700</MaxInputSpeed>
+				</Data>
+			</TorqueConverter>
 			<Angledrive>
 				<Data>
 					<Manufacturer>Generic Angledrive Manufacturer</Manufacturer>
@@ -3464,18 +3472,7 @@
 				</Data>
 			</AirDrag>
 		</Components>
-		<AdvancedDriverAssist>
-			<EngineStartStop>
-				<Enabled>false</Enabled>
-				<MaxSpeed>8</MaxSpeed>
-				<MinOnTime>8</MinOnTime>
-				<ActivationDelay>8</ActivationDelay>
-			</EngineStartStop>
-		</AdvancedDriverAssist>
 	</Vehicle>
-	<Signature>
-		<ComponentDataHash>69459c035a9733204729dce38e991f1092d2eb42</ComponentDataHash>
-	</Signature>
 	<DriverModel>
 		<LookAheadCoasting>
 			<Enabled>true</Enabled>

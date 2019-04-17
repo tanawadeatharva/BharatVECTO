@@ -69,13 +69,6 @@ namespace TUGraz.VectoCommon.InputData
 		Kilogram Loading { get; }
 
 		/// <summary>
-		/// parameters for every axle
-		/// P044, P045, P046, P047, P048, P108
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		new IList<IAxleEngineeringInputData> Axles { get; }
-
-		/// <summary>
 		/// P049
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
@@ -83,24 +76,55 @@ namespace TUGraz.VectoCommon.InputData
 
 		Meter Height { get; }
 
+		new IVehicleComponentsEngineering Components { get; }
 
-		new IAirdragEngineeringInputData AirdragInputData { get; }
+		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
+	}
 
-		new IGearboxEngineeringInputData GearboxInputData { get; }
+	public interface IAdvancedDriverAssistantSystemsEngineering
+	{
+		DataSource DataSource { get; }
+	}
 
-		new ITorqueConverterEngineeringInputData TorqueConverterInputData { get; }
 
-		new IAxleGearInputData AxleGearInputData { get; }
+	public interface IVehicleComponentsEngineering
+	{
+		IAirdragEngineeringInputData AirdragInputData { get; }
 
-		new IAngledriveInputData AngledriveInputData { get; }
+		IGearboxEngineeringInputData GearboxInputData { get; }
 
-		new IEngineEngineeringInputData EngineInputData { get; }
+		ITorqueConverterEngineeringInputData TorqueConverterInputData { get; }
 
-		new IAuxiliariesEngineeringInputData AuxiliaryInputData();
+		IAxleGearInputData AxleGearInputData { get; }
 
-		new IRetarderInputData RetarderInputData { get; }
+		IAngledriveInputData AngledriveInputData { get; }
 
-		new IPTOTransmissionInputData PTOTransmissionInputData { get; }
+		IEngineEngineeringInputData EngineInputData { get; }
+
+		IAuxiliariesEngineeringInputData AuxiliaryInputData { get; }
+
+		IRetarderInputData RetarderInputData { get; }
+
+		IPTOTransmissionInputData PTOTransmissionInputData { get; }
+
+		/// <summary>
+		/// parameters for every axle
+		/// P044, P045, P046, P047, P048, P108
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		IAxlesEngineeringInputData AxleWheels { get; }
+	}
+
+	public interface IAxlesEngineeringInputData
+	{
+		/// <summary>
+		/// parameters for every axle
+		/// P044, P045, P046, P047, P048, P108
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		IList<IAxleEngineeringInputData> AxlesEngineering { get; }
+
+		DataSource DataSource { get; }
 	}
 
 	public interface IAirdragEngineeringInputData : IAirdragDeclarationInputData
@@ -152,6 +176,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		KilogramSquareMeter Inertia { get; }
+
+		Meter DynamicTyreRadius { get; }
 	}
 
 	public interface IGearboxEngineeringInputData : IGearboxDeclarationInputData
@@ -168,6 +194,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		Second TractionInterruption { get; }
 
+		Second PowershiftShiftTime { get; }
+	}
+
+	public interface IGearshiftEngineeringInputData : ITorqueConverterEngineeringShiftParameterInputData, IDriverModelData
+	{
 		/// <summary>
 		/// P086
 		/// cf. VECTO Input Parameters.xlsx
@@ -216,10 +247,19 @@ namespace TUGraz.VectoCommon.InputData
 		Second UpshiftAfterDownshiftDelay { get; }
 
 		MeterPerSquareSecond UpshiftMinAcceleration { get; }
+	}
 
-		Second PowershiftShiftTime { get; }
+	public interface ITorqueConverterEngineeringShiftParameterInputData
+	{
+		/// <summary>
+		/// Min Acceleration after C->L upshifts.
+		/// </summary>
+		MeterPerSquareSecond CLUpshiftMinAcceleration { get; }
 
-		new ITorqueConverterEngineeringInputData TorqueConverter { get; }
+		/// <summary>
+		/// Min Acceleration after C->C upshifts.
+		/// </summary>
+		MeterPerSquareSecond CCUpshiftMinAcceleration { get; }
 	}
 
 	public interface ITorqueConverterEngineeringInputData : ITorqueConverterDeclarationInputData
@@ -246,16 +286,6 @@ namespace TUGraz.VectoCommon.InputData
 		TableData ShiftPolygon { get; }
 
 		PerSecond MaxInputSpeed { get; }
-
-		/// <summary>
-		/// Min Acceleration after C->L upshifts.
-		/// </summary>
-		MeterPerSquareSecond CLUpshiftMinAcceleration { get; }
-
-		/// <summary>
-		/// Min Acceleration after C->C upshifts.
-		/// </summary>
-		MeterPerSquareSecond CCUpshiftMinAcceleration { get; }
 	}
 
 	public interface IEngineEngineeringInputData : IEngineDeclarationInputData
@@ -284,6 +314,14 @@ namespace TUGraz.VectoCommon.InputData
 		string AdvancedAuxiliaryFilePath { get; }
 	}
 
+	public interface IDriverModelData { }
+
+	public interface IDriverAccelerationData : IDriverModelData
+	{
+		TableData AccelerationCurve { get; }
+	}
+
+
 	public interface IDriverEngineeringInputData : IDriverDeclarationInputData
 	{
 		//new IStartStopEngineeringInputData StartStop { get; }
@@ -294,9 +332,11 @@ namespace TUGraz.VectoCommon.InputData
 		/// P009; P033, P034, P035
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		TableData AccelerationCurve { get; }
+		IDriverAccelerationData AccelerationCurve { get; }
 
 		ILookaheadCoastingInputData Lookahead { get; }
+
+		IGearshiftEngineeringInputData GearshiftInputData { get; }
 	}
 
 	public interface IOverSpeedEcoRollEngineeringInputData : IOverSpeedEcoRollDeclarationInputData
@@ -320,7 +360,7 @@ namespace TUGraz.VectoCommon.InputData
 		MeterPerSecond UnderSpeed { get; }
 	}
 
-	public interface ILookaheadCoastingInputData
+	public interface ILookaheadCoastingInputData : IDriverModelData
 	{
 		/// <summary>
 		/// P019
@@ -392,5 +432,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// additional constant auxiliary load, similar to Padd; not specified in the cycle but as auxiliary
 		/// </summary>
 		Watt ConstantPowerDemand { get; }
+
+		DataSource DataSource { get; }
 	}
 }

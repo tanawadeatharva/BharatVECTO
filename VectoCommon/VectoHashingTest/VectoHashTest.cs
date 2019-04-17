@@ -41,6 +41,7 @@ using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using VectoHashingTest.Utils;
 using Assert = NUnit.Framework.Assert;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace VectoHashingTest
 {
@@ -415,7 +416,7 @@ namespace VectoHashingTest
 
 			// re-load generated XML and perform XSD validation
 			var validator = new XMLValidator(XmlReader.Create(destination));
-			Assert.IsTrue(validator.ValidateXML(XMLValidator.XmlDocumentType.DeclarationComponentData));
+			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.DeclarationComponentData));
 		}
 
 

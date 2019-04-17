@@ -45,7 +45,7 @@ using TUGraz.VectoCore.Models.Declaration;
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngledriveInputData,
-		IPTOTransmissionInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData
+		IPTOTransmissionInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData, IVehicleComponentsDeclaration, IVehicleComponentsEngineering, IAxlesEngineeringInputData, IAxlesDeclarationInputData
 	{
 		public JSONVehicleDataV7(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false)
 			: base(data, fileName, tolerateMissing)
@@ -56,6 +56,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private IJSONVehicleComponents Job;
 
 		#region IVehicleInputData
+
+		public string Identifier { get { return Path.GetFileNameWithoutExtension(_sourceFile); } }
 
 		public bool ExemptedVehicle { get { return false; } }
 
@@ -128,6 +130,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>(); }
 		}
 
+		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
+		{
+			get { return this; }
+		}
+
+		IAdvancedDriverAssistantSystemsEngineering IVehicleEngineeringInputData.ADAS
+		{
+			get { return null; }
+		}
+
 		public virtual AxleConfiguration AxleConfiguration
 		{
 			get {
@@ -137,7 +149,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual IList<IAxleEngineeringInputData> Axles
+		public virtual IList<IAxleEngineeringInputData> AxlesEngineering
 		{
 			get { return AxleWheels().Cast<IAxleEngineeringInputData>().ToList(); }
 		}
@@ -152,7 +164,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body["IdlingSpeed"] != null ? Body.GetEx<double>("IdlingSpeed").RPMtoRad() : null; }
 		}
 
-		IList<IAxleDeclarationInputData> IVehicleDeclarationInputData.Axles
+		IList<IAxleDeclarationInputData> IAxlesDeclarationInputData.AxlesDeclaration
 		{
 			get { return AxleWheels().Cast<IAxleDeclarationInputData>().ToList(); }
 		}
@@ -168,7 +180,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 								? axle.GetEx<string>("Type").ParseEnum<AxleType>()
 								: (idx == 1 ? AxleType.VehicleDriven : AxleType.VehicleNonDriven),
 						Tyre = new TyreInputData() {
-							SourceType = DataSourceType.JSONFile,
+							DataSource = new DataSource {
+								SourceType = DataSourceType.JSONFile,
+								SourceFile = Source,
+								SourceVersion = Version,
+							},
 							Source = Source,
 							Inertia = axle.GetEx<double>(JsonKeys.Vehicle_Axles_Inertia).SI<KilogramSquareMeter>(),
 							Dimension = axle.GetEx<string>(JsonKeys.Vehicle_Axles_Wheels),
@@ -182,42 +198,44 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region "VehicleComponents"
 
-		IAirdragDeclarationInputData IVehicleDeclarationInputData.AirdragInputData
+		IAirdragDeclarationInputData IVehicleComponentsDeclaration.AirdragInputData
 		{
 			get { return this; }
 		}
 
-		IAirdragEngineeringInputData IVehicleEngineeringInputData.AirdragInputData
+		IAirdragEngineeringInputData IVehicleComponentsEngineering.AirdragInputData
 		{
 			get { return this; }
 		}
 
-		IGearboxDeclarationInputData IVehicleDeclarationInputData.GearboxInputData
+		IGearboxDeclarationInputData IVehicleComponentsDeclaration.GearboxInputData
 		{
 			get { return Job.Gearbox; }
 		}
 
-		IGearboxEngineeringInputData IVehicleEngineeringInputData.GearboxInputData
+		public ITorqueConverterDeclarationInputData TorqueConverter { get { return Job.TorqueConverter; } }
+
+		IGearboxEngineeringInputData IVehicleComponentsEngineering.GearboxInputData
 		{
 			get { return Job.Gearbox; }
 		}
 
-		ITorqueConverterDeclarationInputData IVehicleDeclarationInputData.TorqueConverterInputData
+		ITorqueConverterDeclarationInputData IVehicleComponentsDeclaration.TorqueConverterInputData
 		{
 			get { return Job.TorqueConverter; }
 		}
 
-		ITorqueConverterEngineeringInputData IVehicleEngineeringInputData.TorqueConverterInputData
+		ITorqueConverterEngineeringInputData IVehicleComponentsEngineering.TorqueConverterInputData
 		{
 			get { return Job.TorqueConverter; }
 		}
 
-		IAxleGearInputData IVehicleEngineeringInputData.AxleGearInputData
+		IAxleGearInputData IVehicleComponentsEngineering.AxleGearInputData
 		{
 			get { return Job.AxleGear; }
 		}
 
-		IAngledriveInputData IVehicleEngineeringInputData.AngledriveInputData
+		IAngledriveInputData IVehicleComponentsEngineering.AngledriveInputData
 		{
 			get { return this; }
 		}
@@ -227,32 +245,42 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Job.Engine; }
 		}
 
-		IAxleGearInputData IVehicleDeclarationInputData.AxleGearInputData
+		IAxleGearInputData IVehicleComponentsDeclaration.AxleGearInputData
 		{
 			get { return Job.AxleGear; }
 		}
 
-		IAngledriveInputData IVehicleDeclarationInputData.AngledriveInputData
+		IAngledriveInputData IVehicleComponentsDeclaration.AngledriveInputData
 		{
 			get { return this; }
 		}
 
-		IEngineDeclarationInputData IVehicleDeclarationInputData.EngineInputData
+		IEngineDeclarationInputData IVehicleComponentsDeclaration.EngineInputData
 		{
 			get { return Job.Engine; }
 		}
 
-		IAuxiliariesDeclarationInputData IVehicleDeclarationInputData.AuxiliaryInputData()
+		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
 		{
-			return Job.DeclarationAuxiliaries;
+			get { return Job.DeclarationAuxiliaries; }
 		}
 
-		IRetarderInputData IVehicleEngineeringInputData.RetarderInputData
+		IRetarderInputData IVehicleComponentsEngineering.RetarderInputData
 		{
 			get { return this; }
 		}
 
-		IPTOTransmissionInputData IVehicleEngineeringInputData.PTOTransmissionInputData
+		IPTOTransmissionInputData IVehicleComponentsEngineering.PTOTransmissionInputData
+		{
+			get { return this; }
+		}
+
+		IAxlesEngineeringInputData IVehicleComponentsEngineering.AxleWheels
+		{
+			get { return this; }
+		}
+
+		IAxlesDeclarationInputData IVehicleComponentsDeclaration.AxleWheels
 		{
 			get { return this; }
 		}
@@ -274,18 +302,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Watt MaxNetPower2 { get { return null; } }
 
-		IAuxiliariesEngineeringInputData IVehicleEngineeringInputData.AuxiliaryInputData()
+		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{
-			return Job.EngineeringAuxiliaries;
+			get { return this; }
 		}
 
-		IRetarderInputData IVehicleDeclarationInputData.RetarderInputData
+		IAuxiliariesEngineeringInputData IVehicleComponentsEngineering.AuxiliaryInputData
+		{
+			get { return Job.EngineeringAuxiliaries; }
+		}
+
+		IRetarderInputData IVehicleComponentsDeclaration.RetarderInputData
 		{
 			get { return this; }
 		}
 
 
-		IPTOTransmissionInputData IVehicleDeclarationInputData.PTOTransmissionInputData
+		IPTOTransmissionInputData IVehicleComponentsDeclaration.PTOTransmissionInputData
 		{
 			get { return this; }
 		}
@@ -522,5 +555,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		} }
 
 		#endregion
+
+		
 	}
 }

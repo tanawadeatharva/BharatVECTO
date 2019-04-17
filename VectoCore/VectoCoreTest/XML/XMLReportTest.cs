@@ -34,13 +34,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
@@ -52,10 +55,16 @@ namespace TUGraz.VectoCore.Tests.XML
 
 		const string SampleVehicleDeclAT = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_AT.xml";
 
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 		[Category("LongRunning")]
@@ -69,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			var fileWriter = new FileOutputWriter(filename);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
-			var dataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(filename), true);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
 				ModalResults1Hz = false,
 				WriteModalResults = false,
@@ -88,13 +97,13 @@ namespace TUGraz.VectoCore.Tests.XML
 			var validator1 = new XMLValidator(XmlReader.Create(customerRecord), validationErrorAction: (s,e) => {
 				validationMsg1.Add(e.ValidationEventArgs.Message);
 			});
-			Assert.IsTrue(validator1.ValidateXML(XMLValidator.XmlDocumentType.CustomerReport), string.Join("\n", validationMsg1));
+			Assert.IsTrue(validator1.ValidateXML(XmlDocumentType.CustomerReport), string.Join("\n", validationMsg1));
 
 			var validationMsg2 = new List<string> {manufacturerRecord};
 			var validator2 = new XMLValidator(XmlReader.Create(manufacturerRecord), validationErrorAction: (s,e) => {
 				validationMsg2.Add(e.ValidationEventArgs.Message);
 			});
-			Assert.IsTrue(validator2.ValidateXML(XMLValidator.XmlDocumentType.ManufacturerReport), string.Join("\n", validationMsg2));
+			Assert.IsTrue(validator2.ValidateXML(XmlDocumentType.ManufacturerReport), string.Join("\n", validationMsg2));
 		}
 	}
 }

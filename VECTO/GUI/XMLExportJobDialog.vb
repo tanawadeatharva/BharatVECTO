@@ -1,9 +1,12 @@
 ﻿Imports System.IO
 Imports System.Xml.Linq
+Imports Ninject
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
+Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.OutputData.XML
+Imports TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces
 
 Public Class XMLExportJobDialog
 	Private _mode As ExecutionMode
@@ -58,8 +61,11 @@ Public Class XMLExportJobDialog
 			If (engineeringData Is Nothing OrElse engineeringData.JobInputData().SavedInDeclarationMode) Then
 				Throw New Exception("Input data is not in engineering mode!")
 			End If
-			Dim document As XDocument =
-					New XMLEngineeringWriter(tbDestination.Text, cbSingleFile.Checked, tbVendor.Text).GenerateVectoJob(engineeringData)
+
+		    Dim kernel As IKernel = new StandardKernel(new VectoNinjectModule)
+		    dim writer As IXMLEngineeringWriter = kernel.Get(of IXMLEngineeringWriter)()
+		    writer.Configuration = new WriterConfiguration() With { .SingleFile = true, .BasePath = tbDestination.Text }
+			Dim document As XDocument =writer.Write(engineeringData)
 			document.Save(Path.Combine(tbDestination.Text, engineeringData.JobInputData().JobName + ".xml"))
 			MessageBox.Show("Successfully exported")
 			Close()

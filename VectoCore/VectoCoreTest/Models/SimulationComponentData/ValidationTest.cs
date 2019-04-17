@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			};
 			var dao = new EngineeringDataAdapter();
 
-			var engineData = dao.CreateEngineData(data, null, new List<ITorqueLimitInputData>());
+			var engineData = dao.CreateEngineData(data, null, new List<ITorqueLimitInputData>(), null);
 
 			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
@@ -618,7 +618,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 	public class DummyGearboxData : IGearboxEngineeringInputData
 	{
-		public DataSourceType SourceType { get; set; }
+		public DataSource DataSource { get; set; }
 		public string Source { get; set; }
 		public bool SavedInDeclarationMode { get; set; }
 		public string Manufacturer { get; set; }
@@ -636,11 +636,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public DigestData DigestValue { get; set; }
 		public GearboxType Type { get; set; }
 		public IList<ITransmissionInputData> Gears { get; set; }
-
-		ITorqueConverterDeclarationInputData IGearboxDeclarationInputData.TorqueConverter
-		{
-			get { return TorqueConverter; }
-		}
 
 		public KilogramSquareMeter Inertia { get; set; }
 		public Second TractionInterruption { get; set; }

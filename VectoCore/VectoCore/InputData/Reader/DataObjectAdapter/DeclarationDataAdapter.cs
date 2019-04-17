@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
-				data.Axles.Where(axle => axle.AxleType == AxleType.VehicleDriven)
+				data.Components.AxleWheels.AxlesDeclaration.Where(axle => axle.AxleType == AxleType.VehicleDriven)
 					.Select(da => DeclarationData.Wheels.Lookup(da.Tyre.Dimension).DynamicTyreRadius)
 					.Average();
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
@@ -114,11 +114,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.VocationalVehicle = data.VocationalVehicle;
 			retVal.ADAS = CreateADAS(data.ADAS);
 
-			var axles = data.Axles;
+			var axles = data.Components.AxleWheels.AxlesDeclaration;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException(
 					"Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
-					data.Axles.Count, mission.AxleWeightDistribution.Length);
+					axles.Count, mission.AxleWeightDistribution.Length);
 			}
 
 			var axleData = new List<Axle>();
@@ -242,8 +242,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return null;
 		}
 
-		internal GearboxData CreateGearboxData(IGearboxDeclarationInputData gearbox, CombustionEngineData engine,
-			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory)
+		internal GearboxData CreateGearboxData(IGearboxDeclarationInputData gearbox, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory, ITorqueConverterDeclarationInputData torqueConverter)
 		{
 			if (!gearbox.SavedInDeclarationMode) {
 				WarnDeclarationMode("GearboxData");
@@ -289,14 +288,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (retVal.Type.AutomaticTransmission()) {
 				var ratio = double.IsNaN(retVal.Gears[1].Ratio) ? 1 : retVal.Gears[1].TorqueConverterRatio / retVal.Gears[1].Ratio;
 				retVal.PowershiftShiftTime = DeclarationData.Gearbox.PowershiftShiftTime;
-				retVal.TorqueConverterData = TorqueConverterDataReader.Create(gearbox.TorqueConverter.TCData,
+				retVal.TorqueConverterData = TorqueConverterDataReader.Create(torqueConverter.TCData,
 					DeclarationData.TorqueConverter.ReferenceRPM, DeclarationData.TorqueConverter.MaxInputSpeed,
 					ExecutionMode.Declaration, ratio,
 					DeclarationData.TorqueConverter.CLUpshiftMinAcceleration, DeclarationData.TorqueConverter.CCUpshiftMinAcceleration);
-				retVal.TorqueConverterData.ModelName = gearbox.TorqueConverter.Model;
-				retVal.TorqueConverterData.DigestValueInput = gearbox.TorqueConverter.DigestValue?.DigestValue;
-				retVal.TorqueConverterData.CertificationMethod = gearbox.TorqueConverter.CertificationMethod;
-				retVal.TorqueConverterData.CertificationNumber = gearbox.TorqueConverter.CertificationNumber;
+				retVal.TorqueConverterData.ModelName = torqueConverter.Model;
+				retVal.TorqueConverterData.DigestValueInput = torqueConverter.DigestValue?.DigestValue;
+				retVal.TorqueConverterData.CertificationMethod = torqueConverter.CertificationMethod;
+				retVal.TorqueConverterData.CertificationNumber = torqueConverter.CertificationNumber;
 			}
 
 			return retVal;
