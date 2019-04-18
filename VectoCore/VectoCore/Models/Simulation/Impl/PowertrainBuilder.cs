@@ -46,6 +46,9 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
+using StrategyCreator = System.Func<TUGraz.VectoCore.Models.Simulation.Data.VectoRunData, TUGraz.VectoCore.Models.Simulation.IVehicleContainer, TUGraz.VectoCore.Models.SimulationComponent.Impl.BaseShiftStrategy>;
+using GbxTypeList = System.Collections.Generic.List<TUGraz.VectoCommon.Models.GearboxType>;
+
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	/// <summary>
@@ -56,13 +59,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly IModalDataContainer _modData;
 		private readonly WriteSumData _sumWriter;
 
-		private static List<Tuple<List<GearboxType>, string, string, Func<VectoRunData, IVehicleContainer, BaseShiftStrategy>>> ShiftStrategies = new List<Tuple<List<GearboxType>, string, string, Func<VectoRunData, IVehicleContainer, BaseShiftStrategy>>>
+		private static List<Tuple<GbxTypeList, string, string, StrategyCreator>> ShiftStrategies = new List<Tuple<GbxTypeList, string, string, StrategyCreator>>
 		{
-			Tuple.Create<List<GearboxType>, string, string, Func<VectoRunData, IVehicleContainer, BaseShiftStrategy>>(new List<GearboxType> {GearboxType.MT}, typeof(MTShiftStrategy).FullName, MTShiftStrategy.Name, (r, c) => new MTShiftStrategy(r, c)),
-			Tuple.Create<List<GearboxType>, string, string, Func<VectoRunData, IVehicleContainer, BaseShiftStrategy>>( new List<GearboxType> {GearboxType.AMT}, typeof(AMTShiftStrategy).FullName,AMTShiftStrategy.Name, (r, c) => new AMTShiftStrategy(r, c)),
-			Tuple.Create<List<GearboxType>, string, string, Func<VectoRunData, IVehicleContainer, BaseShiftStrategy>>( new List<GearboxType> {GearboxType.AMT}, typeof(AMTShiftStrategyOptimized).FullName, AMTShiftStrategyOptimized.Name, (r, c) => new AMTShiftStrategyOptimized(r, c)),
-			Tuple.Create<List<GearboxType>, string, string, Func<VectoRunData, IVehicleContainer, BaseShiftStrategy>>( new List<GearboxType> {GearboxType.AMT}, typeof(AMTShiftStrategyV2).FullName, AMTShiftStrategyV2.Name, (r, c) => new AMTShiftStrategyV2(r, c)),
-			Tuple.Create<List<GearboxType>, string, string, Func<VectoRunData, IVehicleContainer, BaseShiftStrategy>>( new List<GearboxType> {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategy).FullName, ATShiftStrategy.Name, (r, c) => new ATShiftStrategy(r, c)),
+			Tuple.Create<GbxTypeList, string, string ,StrategyCreator>(new GbxTypeList {GearboxType.MT}, typeof(MTShiftStrategy).FullName, MTShiftStrategy.Name, (r, c) => new MTShiftStrategy(r, c)),
+			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.AMT}, typeof(AMTShiftStrategy).FullName,AMTShiftStrategy.Name, (r, c) => new AMTShiftStrategy(r, c)),
+			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.AMT}, typeof(AMTShiftStrategyOptimized).FullName, AMTShiftStrategyOptimized.Name, (r, c) => new AMTShiftStrategyOptimized(r, c)),
+			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.AMT}, typeof(AMTShiftStrategyV2).FullName, AMTShiftStrategyV2.Name, (r, c) => new AMTShiftStrategyV2(r, c)),
+			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategy).FullName, ATShiftStrategy.Name, (r, c) => new ATShiftStrategy(r, c)),
+			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategyVoith).FullName, ATShiftStrategyVoith.Name, (r, c) => new ATShiftStrategyVoith(r, c)),
 		};
 
 		

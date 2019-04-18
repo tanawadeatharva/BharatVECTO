@@ -452,6 +452,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				//---------------
 				RatioEarlyUpshiftFC = gsInputData.RatioEarlyUpshiftFC,
 				RatioEarlyDownshiftFC = gsInputData.RatioEarlyDownshiftFC,
+
+				// voith gs parameters
+
+				GearshiftLines = gsInputData.LoadStageShiftLines
 			};
 
 			return retVal;

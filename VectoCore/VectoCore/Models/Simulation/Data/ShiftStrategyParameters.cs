@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.ShiftStrategy;
 
@@ -49,5 +50,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 		public MeterPerSquareSecond DriverAccelerationThresholdLow { get; set; }
 		public double RatioEarlyDownshiftFC { get; set; }
 		public double RatioEarlyUpshiftFC { get; set; }
+
+		// Shift Lines for Voith proposed shift strategy
+		public TableData GearshiftLines { get; set; }
 	}
 }

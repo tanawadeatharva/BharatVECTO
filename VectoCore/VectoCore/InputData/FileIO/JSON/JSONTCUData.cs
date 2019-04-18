@@ -180,6 +180,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public TableData LoadStageShiftLines
+		{
+			get {
+				try {
+					return ReadTableData(Body.GetEx<string>("LoadStageShiftLines"), "LoadStageShiftLines");
+				} catch (Exception) {
+					return null;
+				}
+			}
+		}
+
 		#endregion
 	}
 }

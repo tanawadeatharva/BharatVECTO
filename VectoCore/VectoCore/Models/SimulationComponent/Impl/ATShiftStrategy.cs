@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return false;
 		}
 
-		private bool CheckEmergencyShift(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity, PerSecond inAngularVelocity, uint gear)
+		protected virtual bool CheckEmergencyShift(Second absTime, NewtonMeter outTorque, PerSecond outAngularVelocity, PerSecond inAngularVelocity, uint gear)
 		{
 			// Emergency Downshift: if lower than engine idle speed
 			if (inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
@@ -207,7 +207,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
-		private bool CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+		protected virtual bool CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return false;
 		}
 
-		private bool? CheckUpshiftTcTc(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint gear,
+		protected virtual bool? CheckUpshiftTcTc(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint gear,
 			GearData currentGear)
 		{
 // C -> C+1
@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return null;
 		}
 
-		private bool? CheckUpshiftToLocked(Second absTime, PerSecond outAngularVelocity, NewtonMeter inTorque,
+		protected virtual bool? CheckUpshiftToLocked(Second absTime, PerSecond outAngularVelocity, NewtonMeter inTorque,
 			PerSecond inAngularVelocity, uint gear)
 		{
 // UPSHIFT - General Rule
@@ -313,7 +313,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="inEngineSpeed">The in engine speed.</param>
 		/// <param name="torqueConverterLocked">if true, the regular shift polygon is used, otherwise the shift polygon for the torque converter is used</param>
 		/// <returns><c>true</c> if the operating point is above the up-shift curve; otherwise, <c>false</c>.</returns>
-		private bool IsAboveUpShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed,
+		protected virtual bool IsAboveUpShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed,
 			bool torqueConverterLocked)
 		{
 			var shiftPolygon = torqueConverterLocked
@@ -323,7 +323,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return gear < ModelData.Gears.Keys.Max() && shiftPolygon.IsAboveUpshiftCurve(inTorque, inEngineSpeed);
 		}
 
-		private void Upshift(Second absTime, uint gear)
+		protected virtual void Upshift(Second absTime, uint gear)
 		{
 			// C -> L: switch from torque converter to locked gear
 			if (!_gearbox.TorqueConverterLocked && ModelData.Gears[gear].HasLockedGear) {
@@ -344,7 +344,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
-		private bool CheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+		protected virtual bool CheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
@@ -377,7 +377,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return false;
 		}
 
-		private void SetGear(NextGearState gbxState)
+		protected virtual void SetGear(NextGearState gbxState)
 		{
 			_gearbox.Gear = gbxState.Gear;
 			_gearbox.TorqueConverterLocked = gbxState.TorqueConverterLocked;
@@ -391,12 +391,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="inTorque">The in torque.</param>
 		/// <param name="inEngineSpeed">The in engine speed.</param>
 		/// <returns><c>true</c> if the operating point is below the down-shift curv; otherwise, <c>false</c>.</returns>
-		private bool IsBelowDownShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
+		protected virtual bool IsBelowDownShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
 		{
 			return gear > 1 && ModelData.Gears[gear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inEngineSpeed);
 		}
 
-		private void Downshift(Second absTime, uint gear)
+		protected virtual void Downshift(Second absTime, uint gear)
 		{
 			// L -> C
 			if (_gearbox.TorqueConverterLocked && ModelData.Gears[gear].HasTorqueConverter) {
@@ -416,7 +416,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				"ShiftStrategy wanted to shift down but current gear is locked (L) and has no torque converter (C) and disenganging directly from (L) is not allowed.");
 		}
 
-		private class NextGearState
+		protected class NextGearState
 		{
 			public Second AbsTime;
 			public bool Disengaged;

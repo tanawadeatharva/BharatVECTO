@@ -209,6 +209,7 @@
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\AverageAccelerationTorqueLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategyVoith.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AverageAccelerationTorquePreprocessor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BaseShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CycleTorqueConverter.cs" />

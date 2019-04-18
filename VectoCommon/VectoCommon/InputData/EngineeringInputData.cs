@@ -419,5 +419,6 @@ namespace TUGraz.VectoCommon.InputData
 		MeterPerSquareSecond DriverAccelerationThresholdLow { get; }
 		double RatioEarlyUpshiftFC { get; }
 		double RatioEarlyDownshiftFC { get; }
+		TableData LoadStageShiftLines { get; }
 	}
 }
