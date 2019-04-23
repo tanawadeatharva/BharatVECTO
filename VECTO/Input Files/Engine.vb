@@ -159,7 +159,7 @@ Public Class Engine
 			Dim messages As IEnumerable(Of String) =
 					validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
 			MsgBox("Invalid input." + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
-					"Failed to save gearbox")
+					"Failed to save engine")
 			Return False
 		End If
 
