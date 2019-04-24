@@ -30,6 +30,7 @@
 */
 
 using System.Linq;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -309,23 +310,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// down shift
 			if (IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity)) {
 				currentGear--;
-				while (false && SkipGears && currentGear > 1) {
-					currentGear--;
-					var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
+				//while (SkipGears && currentGear > 1) {
+				//	currentGear--;
+				//	var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
 
-					inAngularVelocity = ModelData.Gears[currentGear].Ratio * outAngularVelocity;
-					inTorque = response.ClutchPowerRequest / inAngularVelocity;
-					var maxTorque = VectoMath.Min(response.DynamicFullLoadPower / ((DataBus.EngineSpeed + response.EngineSpeed) / 2),
-						currentGear > 1
-							? ModelData.Gears[currentGear].ShiftPolygon.InterpolateDownshift(response.EngineSpeed)
-							: double.MaxValue.SI<NewtonMeter>());
-					var reserve = maxTorque.IsEqual(0) ? -1 : (1 - inTorque / maxTorque).Value();
-					if (reserve >= ModelData.TorqueReserve && IsBelowUpShiftCurve(currentGear, inTorque, inAngularVelocity)) {
-						continue;
-					}
-					currentGear++;
-					break;
-				}
+				//	inAngularVelocity = ModelData.Gears[currentGear].Ratio * outAngularVelocity;
+				//	inTorque = response.ClutchPowerRequest / inAngularVelocity;
+				//	var maxTorque = VectoMath.Min(response.DynamicFullLoadPower / ((DataBus.EngineSpeed + response.EngineSpeed) / 2),
+				//		currentGear > 1
+				//			? ModelData.Gears[currentGear].ShiftPolygon.InterpolateDownshift(response.EngineSpeed)
+				//			: double.MaxValue.SI<NewtonMeter>());
+				//	var reserve = maxTorque.IsEqual(0) ? -1 : (1 - inTorque / maxTorque).Value();
+				//	if (reserve >= ModelData.TorqueReserve && IsBelowUpShiftCurve(currentGear, inTorque, inAngularVelocity)) {
+				//		continue;
+				//	}
+				//	currentGear++;
+				//	break;
+				//}
 			}
 			return currentGear;
 		}

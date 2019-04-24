@@ -104,9 +104,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.LegislativeClass = data.LegislativeClass;
 			retVal.ZeroEmissionVehicle = data.ZeroEmissionVehicle;
 			retVal.SleeperCab = data.SleeperCab;
-			retVal.TrailerGrossVehicleWeight = mission.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0);
+			retVal.TrailerGrossVehicleMass = mission.Trailer.Sum(t => t.TrailerGrossVehicleWeight).DefaultIfNull(0);
 
-			retVal.BodyAndTrailerWeight = mission.BodyCurbWeight + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
+			retVal.BodyAndTrailerMass = mission.BodyCurbWeight + mission.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0);
 
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =

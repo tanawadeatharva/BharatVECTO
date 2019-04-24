@@ -695,13 +695,13 @@ namespace TUGraz.VectoCore.OutputData
 			row[VEHICLE_MODEL] = data.ModelName;
 
 			row[HDV_CO2_VEHICLE_CLASS] = data.VehicleClass.GetClassNumber();
-			row[CURB_MASS] = (ConvertedSI)data.CurbWeight;
+			row[CURB_MASS] = (ConvertedSI)data.CurbMass;
 
 			// - (data.BodyAndTrailerWeight ?? 0.SI<Kilogram>());
 			row[LOADING] = (ConvertedSI)data.Loading;
 			row[CARGO_VOLUME] = (ConvertedSI)data.CargoVolume;
 
-			row[TOTAL_VEHICLE_MASS] = (ConvertedSI)data.TotalVehicleWeight;
+			row[TOTAL_VEHICLE_MASS] = (ConvertedSI)data.TotalVehicleMass;
 
 			row[SLEEPER_CAB] = data.SleeperCab ? "yes" : "no";
 

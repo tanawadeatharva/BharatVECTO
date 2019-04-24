@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var body = GetBody(row, missionType);
 				var trailers = GetTrailers(row, missionType);
 
-				var maxGVW = missionType.IsEMS()? Constants.SimulationSettings.MaximumGrossVehicleWeightEMS : Constants.SimulationSettings.MaximumGrossVehicleWeight;
+				var maxGVW = missionType.IsEMS()? Constants.SimulationSettings.MaximumGrossVehicleMassEMS : Constants.SimulationSettings.MaximumGrossVehicleMass;
 				
 				// limit gvw to MaxGVW (40t)
 				var gvw = VectoMath.Min(

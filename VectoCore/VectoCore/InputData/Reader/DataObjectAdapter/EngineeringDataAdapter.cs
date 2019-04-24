@@ -57,10 +57,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 			var retVal = SetCommonVehicleData(data);
 			retVal.AxleConfiguration = data.AxleConfiguration;
-			retVal.BodyAndTrailerWeight = data.CurbMassExtra;
+			retVal.BodyAndTrailerMass = data.CurbMassExtra;
 
 			//retVal.CurbWeight += data.CurbMassExtra;
-			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
+			retVal.TrailerGrossVehicleMass = 0.SI<Kilogram>();
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 			var axles = data.Axles;

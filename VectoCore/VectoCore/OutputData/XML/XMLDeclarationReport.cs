@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				
 				Payload = runData.VehicleData.Loading;
 				CargoVolume = runData.VehicleData.CargoVolume;
-				TotalVehicleWeight = runData.VehicleData.TotalVehicleWeight;
+				TotalVehicleWeight = runData.VehicleData.TotalVehicleMass;
 				Status = data.RunStatus;
 				Error = data.Error;
 				StackTrace = data.StackTrace;

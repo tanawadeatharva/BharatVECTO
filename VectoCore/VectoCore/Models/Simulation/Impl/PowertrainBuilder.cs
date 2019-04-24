@@ -323,7 +323,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var conventionalAux = CreateAuxiliaries(data, container);
 			var busAux = new BusAuxiliariesAdapter(container, data.AdvancedAux.AdvancedAuxiliaryFilePath, data.Cycle.Name,
-				data.VehicleData.TotalVehicleWeight, data.EngineData.ConsumptionMap, data.EngineData.IdleSpeed, conventionalAux);
+				data.VehicleData.TotalVehicleMass, data.EngineData.ConsumptionMap, data.EngineData.IdleSpeed, conventionalAux);
 			return busAux;
 		}
 
