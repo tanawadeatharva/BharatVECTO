@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.VisualBasic.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -130,9 +131,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		public override bool ShiftRequired(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
 			var cardanDemand = DataBus.CurrentAxleDemand;
 			var currentCardanPower = cardanDemand.Item1 * cardanDemand.Item2;
@@ -716,7 +715,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public void WriteModalResults(IModalDataContainer container)
+		public override void WriteModalResults(IModalDataContainer container)
 		{
 			foreach (var gear in ModelData.Gears.Keys) {
 				container.SetDataValue(

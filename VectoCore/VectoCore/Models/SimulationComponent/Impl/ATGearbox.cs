@@ -208,6 +208,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.Debug("AT-Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 
+			_strategy?.Request(absTime, dt, outTorque, outAngularVelocity);
+
 			var driveOffSpeed = DataBus.VehicleStopped && outAngularVelocity > 0;
 			var driveOffTorque = CurrentState.Disengaged && outTorque.IsGreater(0, 1e-1);
 			if (!dryRun && (driveOffSpeed || driveOffTorque)) {
@@ -330,7 +332,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 			if (!dryRun && retVal is ResponseSuccess &&
 				_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear,
-					LastShift)) {
+					LastShift, retVal)) {
 				retVal = new ResponseGearShift { Source = this };
 				//RequestAfterGearshift = false;
 			}
@@ -409,6 +411,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_gbx_shift_loss] = CurrentState.PowershiftLoss.DefaultIfNull(0) * avgInAngularSpeed;
 			container[ModalResultField.n_gbx_out_avg] = avgOutAngularSpeed;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
+
+			_strategy.WriteModalResults(container);
 		}
 
 		protected override void DoCommitSimulationStep()

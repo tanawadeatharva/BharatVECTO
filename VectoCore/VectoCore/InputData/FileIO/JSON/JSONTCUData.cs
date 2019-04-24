@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
@@ -191,6 +193,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public IList<double> LoadStageThresoldsUp
+		{
+			get { return Body.GetEx<string>("LoadStageThresoldsUp").Split(';').Select(x => x.ToDouble()).ToList(); }
+		}
+
+		public IList<double> LoadStageThresoldsDown
+		{
+			get {
+				return Body.GetEx<string>("LoadStageThresoldsDown").Split(';').Select(x => x.ToDouble()).ToList();
+			}
+		}
+
 		#endregion
+
 	}
 }

@@ -32,6 +32,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -45,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class ATShiftStrategy : BaseShiftStrategy
 	{
-		private ATGearbox _gearbox;
+		protected ATGearbox _gearbox;
 		private readonly NextGearState _nextGear = new NextGearState();
 
 		public override IGearbox Gearbox
@@ -117,8 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new System.NotImplementedException("AT Shift Strategy does not support disengaging.");
 		}
 
-		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
 			// ENGAGE ---------------------------------------------------------
 			// 0 -> 1C: drive off after disengaged - engage first gear

@@ -157,8 +157,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return 1;
 		}
 
-		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
 			// no shift when vehicle stands
 			if (DataBus.VehicleStopped) {

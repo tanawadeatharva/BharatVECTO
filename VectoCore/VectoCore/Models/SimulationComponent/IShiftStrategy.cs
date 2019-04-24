@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
@@ -49,9 +51,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="inAngularVelocity">The in angular velocity.</param>
 		/// <param name="gear">The current gear.</param>
 		/// <param name="lastShiftTime">The last shift time.</param>
+		/// <param name="response"></param>
 		/// <returns><c>true</c> if a shift is required, <c>false</c> otherwise.</returns>
-		bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime);
+		bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response);
 
 		/// <summary>
 		/// Returns an appropriate starting gear after a vehicle standstill.
@@ -92,6 +94,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
         GearInfo NextGear { get; }
 		void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
+
+		void WriteModalResults(IModalDataContainer container);
+
 	}
 
     public class GearInfo

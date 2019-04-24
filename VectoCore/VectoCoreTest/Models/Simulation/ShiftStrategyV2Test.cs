@@ -296,6 +296,44 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
+		[TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT\CityBus_AT_PS.vecto"),
+		TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT\CityBus_AT_Ser.vecto")]
+		public void RunEngineeringVoith(string jobName)
+		{
+			RunJob_Engineering(jobName);
+		}
+
+
+		[TestCase(@"J:\TE-Em\Projekte\I_2017_24_VECTO_Erweiterungen_2018ff\Arbeitsordner\GearshiftModel\AMT\Overdrive\Scania\FC based DECL\Scania w overdrive transm.vecto", 1)]
+		public void RunDeclaration(string jobName, int runIdx)
+		{
+			RunJob_DeclSingle(jobName, runIdx);
+		}
+
+
+		public void RunJob_Engineering(string jobName)
+		{
+			var relativeJobPath = jobName;
+			var writer = new FileOutputWriter(relativeJobPath);
+			var inputData =  JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var sumWriter = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumWriter);
+
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat<Exception>(jobContainer.Runs.Select(r => r.ExecException)));
+
+		}
+
 		public void RunJob_DeclSingle(string jobName, int runIdx)
 		{
 			var relativeJobPath = jobName;

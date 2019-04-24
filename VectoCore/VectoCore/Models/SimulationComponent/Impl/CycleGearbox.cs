@@ -514,10 +514,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public override IGearbox Gearbox { get; set; }
 
-			public override bool ShiftRequired(
-				Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-				NewtonMeter inTorque,
-				PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+			public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 			{
 				return false;
 			}

@@ -35,6 +35,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -49,9 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DataBus = dataBus;
 		}
 
-		public abstract bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, Second lastShiftTime);
+		public abstract bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response);
 
 		public abstract uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity);
 		public abstract uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity);
@@ -60,6 +59,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public abstract GearInfo NextGear { get; }
 		public virtual void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{ }
+
+		public virtual void WriteModalResults(IModalDataContainer container)
+		{
+			
+		}
 
 		protected MeterPerSquareSecond EstimateAccelerationForGear(uint gear, PerSecond gbxAngularVelocityOut)
 		{
@@ -111,5 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return acceleration.Cast<MeterPerSquareSecond>();
 
 		}
+
+		
 	}
 }

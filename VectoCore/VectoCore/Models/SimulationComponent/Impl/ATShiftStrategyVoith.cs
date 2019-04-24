@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -17,13 +23,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected ShiftStrategyParameters shiftParameters;
 
-		internal Dictionary<int, ShiftLineSet> UpshiftLines = new Dictionary<int, ShiftLineSet>();
-		internal Dictionary<int, ShiftLineSet> DownshiftLines = new Dictionary<int, ShiftLineSet>();
+		protected internal Dictionary<int, ShiftLineSet> UpshiftLines = new Dictionary<int, ShiftLineSet>();
+		protected internal Dictionary<int, ShiftLineSet> DownshiftLines = new Dictionary<int, ShiftLineSet>();
+		protected Kilogram MinMass;
+		protected Kilogram MaxMass;
+		protected EngineFullLoadCurve FullLoadCurve;
+		protected MeterPerSquareSecond _accMin = 0.SI<MeterPerSquareSecond>();
+		private MeterPerSquareSecond _accMax = 0.SI<MeterPerSquareSecond>();
+		private int _loadStage;
+		private List<SchmittTrigger> LoadStageSteps;
+		private Radian roadGradient;
+		private MeterPerSquareSecond driverAcceleration;
 
 		public ATShiftStrategyVoith(VectoRunData data, IDataBus dataBus) : base(data, dataBus)
 		{
 			shiftParameters = data.GearshiftParameters;
 			InitializeShiftLines(shiftParameters.GearshiftLines);
+			LoadStageSteps = new List<SchmittTrigger>();
+			foreach (var entry in shiftParameters.LoadstageThresholds) {
+				LoadStageSteps.Add(new SchmittTrigger(entry));
+			}
+
+			MinMass = data.VehicleData.MinimumVehicleMass;
+			MaxMass = data.VehicleData.MaximumVehicleMass;
+			FullLoadCurve = data.EngineData.FullLoadCurves[0];
 		}
 
 		private void InitializeShiftLines(TableData lines)
@@ -51,86 +74,74 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var nDhAmaxLower = row.Field<string>(ShiftLinesColumns.nDhAmaxLower).ToDouble().RPMtoRad();
 				var nLevelAmaxLower = row.Field<string>(ShiftLinesColumns.nLevelAmaxLower).ToDouble()
+										.RPMtoRad();
+				var nUhAmaxLower = row.Field<string>(ShiftLinesColumns.nUhAmaxLower).ToDouble().RPMtoRad();
+
+				var nDhAminLower = GetAlternativeIfEmpty(row, ShiftLinesColumns.nDhAminLower, ShiftLinesColumns.nDhAmaxLower)
 					.RPMtoRad();
-				var nUhAmaxLower = row.Field<string>( ShiftLinesColumns.nUhAmaxLower).ToDouble().RPMtoRad();
+				var nLevelAminLower = GetAlternativeIfEmpty(
+					row, ShiftLinesColumns.nLevelAminLower, ShiftLinesColumns.nLevelAmaxLower).RPMtoRad();
+				var nUhAminLower = GetAlternativeIfEmpty(row, ShiftLinesColumns.nUhAminLower, ShiftLinesColumns.nUhAmaxLower)
+					.RPMtoRad();
 
-
-				var nDhAminLower = GetAlternativeIfEmpty(row, ShiftLinesColumns.nDhAminLower, ShiftLinesColumns.nDhAmaxLower).RPMtoRad();
-				var nLevelAminLower = GetAlternativeIfEmpty(row, ShiftLinesColumns.nLevelAminLower, ShiftLinesColumns.nLevelAmaxLower).RPMtoRad();
-				var nUhAminLower = GetAlternativeIfEmpty(row, ShiftLinesColumns.nUhAminLower, ShiftLinesColumns.nUhAmaxLower).RPMtoRad();
-
-
-				var nDhAminUpper = GetAlternativeIfEmpty(row, ShiftLinesColumns.nDhAminUpper, ShiftLinesColumns.nDhAminLower, ShiftLinesColumns.nDhAmaxLower)
+				var nDhAminUpper = GetAlternativeIfEmpty(
+						row, ShiftLinesColumns.nDhAminUpper, ShiftLinesColumns.nDhAminLower, ShiftLinesColumns.nDhAmaxLower)
 					.RPMtoRad();
 				var nLevelAminUpper = GetAlternativeIfEmpty(
-					row, ShiftLinesColumns.nLevelAminUpper, ShiftLinesColumns.nLevelAminLower, ShiftLinesColumns.nLevelAmaxLower).RPMtoRad();
-				var nUhAminUpper = GetAlternativeIfEmpty(row, ShiftLinesColumns.nUhAminUpper, ShiftLinesColumns.nUhAminLower, ShiftLinesColumns.nUhAmaxLower)
+						row, ShiftLinesColumns.nLevelAminUpper, ShiftLinesColumns.nLevelAminLower, ShiftLinesColumns.nLevelAmaxLower)
+					.RPMtoRad();
+				var nUhAminUpper = GetAlternativeIfEmpty(
+						row, ShiftLinesColumns.nUhAminUpper, ShiftLinesColumns.nUhAminLower, ShiftLinesColumns.nUhAmaxLower)
 					.RPMtoRad();
 
-				var nDhAmaxUpper = GetAlternativeIfEmpty(row, ShiftLinesColumns.nDhAmaxUpper, ShiftLinesColumns.nDhAmaxLower).RPMtoRad();
-				var nLevelAmaxUpper = GetAlternativeIfEmpty(row, ShiftLinesColumns.nLevelAmaxUpper, ShiftLinesColumns.nLevelAmaxLower)
+				var nDhAmaxUpper = GetAlternativeIfEmpty(row, ShiftLinesColumns.nDhAmaxUpper, ShiftLinesColumns.nDhAmaxLower)
 					.RPMtoRad();
-				var nUhAmaxUpper = GetAlternativeIfEmpty(row, ShiftLinesColumns.nUhAmaxUpper, ShiftLinesColumns.nUhAmaxLower).RPMtoRad();
+				var nLevelAmaxUpper = GetAlternativeIfEmpty(
+						row, ShiftLinesColumns.nLevelAmaxUpper, ShiftLinesColumns.nLevelAmaxLower)
+					.RPMtoRad();
+				var nUhAmaxUpper = GetAlternativeIfEmpty(row, ShiftLinesColumns.nUhAmaxUpper, ShiftLinesColumns.nUhAmaxLower)
+					.RPMtoRad();
 
+				ShiftLineSet shiftLineSet;
 				if (upshift) {
 					if (!UpshiftLines.ContainsKey(g1)) {
 						UpshiftLines[g1] = new ShiftLineSet();
 					}
-					var shiftLineSet = UpshiftLines[g1];
+					shiftLineSet = UpshiftLines[g1];
 					if (shiftLineSet.LoadStages.ContainsKey(loadStage)) {
 						throw new VectoException(
 							"Gearshift entries for upshift {0}-{1} load stage {2} already defined!", g1, g2, loadStage);
 					}
-
-					var entry = new ShiftLines();
-
-					entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeDh, nDhAminLower));
-					entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeLevel, nLevelAminLower));
-					entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeUh, nUhAminLower));
-
-					entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeDh, nDhAmaxLower));
-					entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeLevel, nLevelAmaxLower));
-					entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeUh, nUhAmaxLower));
-
-					entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeDh, nDhAminUpper));
-					entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeLevel, nLevelAminUpper));
-					entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeUh, nUhAminUpper));
-
-					entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeDh, nDhAmaxUpper));
-					entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeLevel, nLevelAmaxUpper));
-					entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeUh, nUhAmaxUpper));
-
-					shiftLineSet.LoadStages[loadStage] = entry;
 				} else {
 					if (!DownshiftLines.ContainsKey(g1)) {
 						DownshiftLines[g1] = new ShiftLineSet();
 					}
-					var shiftLineSet = DownshiftLines[g1];
+					shiftLineSet = DownshiftLines[g1];
 					if (shiftLineSet.LoadStages.ContainsKey(loadStage)) {
 						throw new VectoException(
 							"Gearshift entries for downshift {0}-{1} load stage {2} already defined!", g1, g2, loadStage);
 					}
-
-					var entry = new ShiftLines();
-
-					entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeDh, nDhAminLower));
-					entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeLevel, nLevelAminLower));
-					entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeUh, nUhAminLower));
-
-					entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeDh, nDhAmaxLower));
-					entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeLevel, nLevelAmaxLower));
-					entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeUh, nUhAmaxLower));
-
-					entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeDh, nDhAminUpper));
-					entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeLevel, nLevelAminUpper));
-					entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeUh, nUhAminUpper));
-
-					entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeDh, nDhAmaxUpper));
-					entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeLevel, nLevelAmaxUpper));
-					entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeUh, nUhAmaxUpper));
-
-					shiftLineSet.LoadStages[loadStage] = entry;
 				}
+
+				var entry = new ShiftLines();
+
+				entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeDh, nDhAminLower));
+				entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeLevel, nLevelAminLower));
+				entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeUh, nUhAminLower));
+
+				entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeDh, nDhAmaxLower));
+				entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeLevel, nLevelAmaxLower));
+				entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeUh, nUhAmaxLower));
+
+				entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeDh, nDhAminUpper));
+				entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeLevel, nLevelAminUpper));
+				entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeUh, nUhAminUpper));
+
+				entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeDh, nDhAmaxUpper));
+				entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeLevel, nLevelAmaxUpper));
+				entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeUh, nUhAmaxUpper));
+
+				shiftLineSet.LoadStages[loadStage] = entry;
 			}
 		}
 
@@ -156,14 +167,57 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
+		protected Watt EstimateAccelerrationPower(PerSecond gbxOutSpeed, NewtonMeter gbxOutTorque)
+		{
+			var vehicleSpeed = DataBus.VehicleSpeed;
+			var avgSlope =
+			((DataBus.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
+			DataBus.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
+
+			var airDragLoss = DataBus.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleSpeed;
+			var rollResistanceLoss = DataBus.RollingResistance(avgSlope) * DataBus.VehicleSpeed;
+
+			//DataBus.GearboxLoss();
+			var slopeLoss = DataBus.SlopeResistance(avgSlope) * DataBus.VehicleSpeed;
+			var axleLoss = DataBus.AxlegearLoss();
+
+			return gbxOutSpeed * gbxOutTorque - axleLoss - airDragLoss - rollResistanceLoss - slopeLoss;
+		}
+
 		#region Overrides of ATShiftStrategy
+
+		public override void Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			driverAcceleration = DataBus.DriverAcceleration;
+			roadGradient = DataBus.RoadGradient;
+			base.Request(absTime, dt, outTorque, outAngularVelocity);
+		}
 
 		public override bool ShiftRequired(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+			PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
+			var accPower = EstimateAccelerrationPower(outAngularVelocity, outTorque);
+
+			_accMin = (accPower / DataBus.VehicleSpeed / (MaxMass + DataBus.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
+			_accMax = (accPower / DataBus.VehicleSpeed / (MinMass + DataBus.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
+
+			//var engineLoadPercent = inTorque / FullLoadCurve.FullLoadStationaryTorque(inAngularVelocity);
+			var engineLoadPercent = inTorque / response.EngineDynamicFullLoadTorque;
+			_loadStage = GetLoadStage(engineLoadPercent);
+
 			return base.ShiftRequired(
-				absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime);
+				absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime, response);
+		}
+
+		private int GetLoadStage(double engineLoadPercent)
+		{
+			var sum = 1;
+			foreach (var entry in LoadStageSteps) {
+				sum += entry.GetOutput(engineLoadPercent * 100);
+			}
+
+			return sum;
 		}
 
 
@@ -171,8 +225,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
 			PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
-			return base.CheckUpshift(
-				absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime);
+			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
+			if (!shiftTimeReached) {
+				return false;
+			}
+
+			var currentGear = ModelData.Gears[gear];
+			if (gear >= ModelData.Gears.Keys.Max()) {
+				return false;
+			}
+
+			var nextGear = _gearbox.TorqueConverterLocked ? gear + 1 : gear;
+
+			var shiftSpeed = UpshiftLines[(int)gear].LookupShiftSpeed(
+				_loadStage, DataBus.RoadGradient, DataBus.DriverAcceleration, _accMin, _accMax);
+			var shiftSpeedGbxOut = shiftSpeed / ModelData.Gears[nextGear].Ratio;
+			if (outAngularVelocity > shiftSpeedGbxOut) {
+				Upshift(absTime, gear);
+				return true;
+			}
+
+			return false;
 		}
 
 
@@ -180,9 +253,50 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
 			PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
-			return base.CheckDownshift(
-				absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime);
+			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
+			if (!shiftTimeReached) {
+				return false;
+			}
+
+			if (gear == 1) {
+				return false;
+			}
+
+			var shiftSpeed = DownshiftLines[(int)gear].LookupShiftSpeed(
+				_loadStage, DataBus.RoadGradient, DataBus.DriverAcceleration, -0.4.SI<MeterPerSquareSecond>(),
+				-0.2.SI<MeterPerSquareSecond>());
+			if (inAngularVelocity < shiftSpeed) {
+				Downshift(absTime, gear);
+				return true;
+			}
+
+			return false;
 		}
+
+		#region Overrides of BaseShiftStrategy
+
+		public override void WriteModalResults(IModalDataContainer container)
+		{
+			container.SetDataValue("loadStage", _loadStage);
+			container.SetDataValue("accMin", _accMin.Value());
+			container.SetDataValue("accMax", _accMax.Value());
+
+			if (_loadStage == 0 || roadGradient == null) {
+				container.SetDataValue("S12_UPS", 0);
+				container.SetDataValue("S23_UPS", 0);
+				container.SetDataValue("S34_UPS", 0);
+			} else {
+				container.SetDataValue(
+					"S12_UPS", UpshiftLines[1].LookupShiftSpeed(_loadStage, roadGradient, driverAcceleration, _accMin, _accMax).AsRPM);
+				container.SetDataValue(
+					"S23_UPS", UpshiftLines[2].LookupShiftSpeed(_loadStage, roadGradient, driverAcceleration, _accMin, _accMax).AsRPM);
+				container.SetDataValue(
+					"S34_UPS", UpshiftLines[3].LookupShiftSpeed(_loadStage, roadGradient, driverAcceleration, _accMin, _accMax).AsRPM);
+			}
+			base.WriteModalResults(container);
+		}
+
+		#endregion
 
 		#endregion
 
@@ -209,7 +323,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 	}
 
-	internal class ShiftLineSet
+	public class ShiftLineSet
 	{
 		public Dictionary<int, ShiftLines> LoadStages = new Dictionary<int, ShiftLines>();
 
@@ -231,22 +345,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				VectoMath.InclinationToAngle(ATShiftStrategyVoith.UphillSlope));
 			var shiftSpeedsLower = shiftLinesSet.LowerBound.LookupShiftSpeed(gradient);
 			var shiftSpeedsUpper = shiftLinesSet.UpperBound.LookupShiftSpeed(gradient);
-			var acc = acceleration.LimitTo(aMin, aMax);
+			var acc = aMin > aMax ? acceleration.LimitTo(aMax, aMin) : acceleration.LimitTo(aMin, aMax);
 
-			var shiftSpeed1 = VectoMath.Interpolate(aMin, aMax, shiftSpeedsLower.ShiftSpeedAMin, shiftSpeedsLower.ShiftSpeedAMax, acc);
-			var shiftSpeed2 = VectoMath.Interpolate(aMin, aMax, shiftSpeedsUpper.ShiftSpeedAMin, shiftSpeedsUpper.ShiftSpeedAMax, acc);
+			var shiftSpeed1 = VectoMath.Interpolate(
+				aMin, aMax, shiftSpeedsLower.ShiftSpeedAMin, shiftSpeedsLower.ShiftSpeedAMax, acc);
+			var shiftSpeed2 = VectoMath.Interpolate(
+				aMin, aMax, shiftSpeedsUpper.ShiftSpeedAMin, shiftSpeedsUpper.ShiftSpeedAMax, acc);
 
 			return (shiftSpeed1 + shiftSpeed2) / 2.0;
 		}
 	}
 
-	internal class ShiftLines
+	public class ShiftLines
 	{
 		public readonly ShiftSpeeds LowerBound = new ShiftSpeeds();
 		public readonly ShiftSpeeds UpperBound = new ShiftSpeeds();
 	}
 
-	internal class ShiftSpeeds
+	public class ShiftSpeeds
 	{
 		//private Tuple<Radian, Tuple<PerSecond, PerSecond>>[] entries;
 
@@ -266,16 +382,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 	}
 
-	internal class ShiftSpeedTuple
+	public class ShiftSpeedTuple
 	{
-		public  PerSecond ShiftSpeedAMin { get; } 
-		public  PerSecond ShiftSpeedAMax { get; }
+		public PerSecond ShiftSpeedAMin { get; }
+		public PerSecond ShiftSpeedAMax { get; }
 
 		public ShiftSpeedTuple(PerSecond shiftSpeedAMin, PerSecond shiftSpeedAMax)
 		{
 			ShiftSpeedAMin = shiftSpeedAMin;
 			ShiftSpeedAMax = shiftSpeedAMax;
 		}
-
 	}
 }

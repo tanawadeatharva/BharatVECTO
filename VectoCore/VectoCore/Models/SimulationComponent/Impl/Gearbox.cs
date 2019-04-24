@@ -352,7 +352,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (response is ResponseSuccess && shiftAllowed) {
 				var shiftRequired = _strategy?.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque,
-					response.EngineSpeed, Gear, EngageTime) ?? false;
+					response.EngineSpeed, Gear, EngageTime, response) ?? false;
 
 				if (shiftRequired) {
 					EngageTime = absTime + ModelData.TractionInterruption;
@@ -422,7 +422,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.n_gbx_out_avg] = (PreviousState.OutAngularVelocity +
 														CurrentState.OutAngularVelocity) / 2.0;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
-			(_strategy as AMTShiftStrategyV2)?.WriteModalResults(container);
+			_strategy.WriteModalResults(container);
 		}
 
 		protected override void DoCommitSimulationStep()

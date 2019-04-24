@@ -221,6 +221,7 @@
     <Compile Include="Models\SimulationComponent\Impl\MaxCardanTorquePreprocessor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MaxGradabilityLookup.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MaxGradabilityPreprocessor.cs" />
+    <Compile Include="Utils\SchmittTrigger.cs" />
     <Compile Include="Models\SimulationComponent\Impl\SimplePowertrainContainer.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverterWrapper.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VelocityRollingLookup.cs" />

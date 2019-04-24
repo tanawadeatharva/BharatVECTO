@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -419,6 +420,11 @@ namespace TUGraz.VectoCommon.InputData
 		MeterPerSquareSecond DriverAccelerationThresholdLow { get; }
 		double RatioEarlyUpshiftFC { get; }
 		double RatioEarlyDownshiftFC { get; }
+
 		TableData LoadStageShiftLines { get; }
+		IList<double> LoadStageThresoldsUp { get; }
+		IList<double> LoadStageThresoldsDown { get; }
+
+
 	}
 }

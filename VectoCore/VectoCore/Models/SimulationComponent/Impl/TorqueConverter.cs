@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (absTime > DataBus.LastShift && retVal is ResponseSuccess) {
 				var shiftRequired = ShiftStrategy.ShiftRequired(
 					absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
-					operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift);
+					operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift, retVal);
 				return shiftRequired ? new ResponseGearShift { Source = this } : retVal;
 			}
 
