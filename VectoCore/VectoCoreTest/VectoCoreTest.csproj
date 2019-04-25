@@ -261,6 +261,9 @@
     <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\GearshiftLinesVoith.vgsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\Interurban.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\PredictionTimeLookup.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -283,6 +286,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\TorqueConverterPowerSplit.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\Urban.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\UrbanDelivery.vdri">

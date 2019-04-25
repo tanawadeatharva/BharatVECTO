@@ -53,7 +53,7 @@
       }
     ],
     "TqReserve": 0.0,
-    "ShiftTime": 0.0,
+    "ShiftTime": 1.0,
     "StartTqReserve": 0.0,
     "StartSpeed": 2.0,
     "StartAcc": 0.6,
