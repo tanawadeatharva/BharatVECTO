@@ -222,76 +222,145 @@
     <None Include="TestData\Components\GearshiftLinesVoith.vgsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\175kW.vfld">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\175kW.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\175kW.vmap">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\175kW.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\AccelerationReserveLookup.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\AccelerationReserveLookup.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\AT-Shift.vgbs">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\AT-Shift.vgbs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\CityBus_AT_PS.vecto">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\CityBus_AT_PS.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\CityBus_AT_PS.vveh">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\CityBus_AT_PS.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\CityBus_AT_Ser.vecto">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\CityBus_AT_Ser.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\CityBus_AT_Ser.vveh">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\CityBus_AT_Ser.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\Driver.vacc">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\Driver.vacc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\Engine_175kW_6.8l.veng">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\Engine_175kW_6.8l.veng">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\GearboxPowerSplit.vgbx">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\GearboxPowerSplit.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\GearboxSerial.vgbx">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\GearboxSerial.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\GearshiftLinesVoith.vgsv">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\GearshiftLinesVoith.vgsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\Interurban.vdri">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\Interurban.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\PredictionTimeLookup.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\PredictionTimeLookup.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\RegionalDelivery.vdri">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\RegionalDelivery.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\ShareEngineSpeedHigh.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\ShareEngineSpeedHigh.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\ShareIdleLow.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\ShareIdleLow.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\ShareTq99L.csv">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\ShareTq99L.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\ShiftParameters.vtcu">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\ShiftParameters.vtcu">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\TorqueConverter.vtcc">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\TorqueConverter.vtcc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\TorqueConverterPowerSplit.vtcc">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\TorqueConverterPowerSplit.vtcc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\Urban.vdri">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\Urban.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT\UrbanDelivery.vdri">
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\UrbanDelivery.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\175kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\175kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\AccelerationReserveLookup.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\AT-Shift.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\CityBus_AT_PS.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\CityBus_AT_PS.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\CityBus_AT_Ser.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\CityBus_AT_Ser.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\Driver.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\Engine_175kW_6.8l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\GearboxPowerSplit.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\GearboxSerial.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\Interurban.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\PredictionTimeLookup.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\RegionalDelivery.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\ShareEngineSpeedHigh.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\ShareIdleLow.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\ShareTq99L.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\ShiftParameters.vtcu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\TorqueConverter.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\TorqueConverterPowerSplit.vtcc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\Urban.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\UrbanDelivery.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\325kW.vfld">

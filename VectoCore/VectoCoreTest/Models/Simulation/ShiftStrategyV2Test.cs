@@ -296,9 +296,16 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
-		[TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT\CityBus_AT_PS.vecto"),
-		TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT\CityBus_AT_Ser.vecto")]
+		[TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\CityBus_AT_PS.vecto"),
+		TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT_GSVoith\CityBus_AT_Ser.vecto")]
 		public void RunEngineeringVoith(string jobName)
+		{
+			RunJob_Engineering(jobName);
+		}
+
+		[TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\CityBus_AT_PS.vecto"),
+		TestCase(@"TestData\Integration\ShiftStrategyV2\CityBus_AT_FCOpt\CityBus_AT_Ser.vecto")]
+		public void RunEngineeringFCoptimized(string jobName)
 		{
 			RunJob_Engineering(jobName);
 		}

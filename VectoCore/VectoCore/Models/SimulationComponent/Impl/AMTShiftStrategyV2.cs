@@ -40,6 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private MeterPerSecond demandedSpeed = 0.SI<MeterPerSecond>();
 		private MeterPerSquareSecond driverAccelerationAvg;
 		private Radian gradient = 0.SI<Radian>();
+		private Gearbox TestContainerGbx;
 
 		public struct HistoryEntry
 		{
@@ -73,6 +74,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var builder = new PowertrainBuilder(modData);
 			TestContainer = new SimplePowertrainContainer(data);
 			builder.BuildSimplePowertrain(data, TestContainer);
+			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
+			if (TestContainerGbx == null) {
+				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
+			}
 
 			// register pre-processors
 			var maxG = data.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
@@ -317,7 +322,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool driveOff, uint gear, uint currentGear, Radian gradient, MeterPerSecond predictionVelocity,
 			MeterPerSecond velocityAfterGearshift, MeterPerSquareSecond accRsv, MeterPerSquareSecond driverAccelerationAvg)
 		{
-			TestContainer.GearboxCtl.Gear = gear;
+			TestContainerGbx.Gear = gear;
 			TestContainer.VehiclePort.Initialize(predictionVelocity, gradient);
 			
 			var respAccRsv = (ResponseDryRun)TestContainer.VehiclePort.Request(
@@ -498,7 +503,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					i <= Math.Min(ModelData.Gears.Count, gear + ShiftStrategyParameters.AllowedGearRangeUp);
 					i++) {
 					var nextGear = (uint)i;
-					TestContainer.GearboxCtl.Gear = nextGear;
+					TestContainerGbx.Gear = nextGear;
 					var init = TestContainer.VehiclePort.Initialize(predictedVelocity, gradient);
 					if (init.EngineSpeed > GetEngineSpeedLimitLow(false) &&
 						init.EngineSpeed < upperEngineSpeedLimit) {
@@ -513,7 +518,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					i >= Math.Max(1, gear + ShiftStrategyParameters.AllowedGearRangeDown);
 					i--) {
 					var nextGear = (uint)i;
-					TestContainer.GearboxCtl.Gear = nextGear;
+					TestContainerGbx.Gear = nextGear;
 					var init = TestContainer.VehiclePort.Initialize(predictedVelocity, gradient);
 					if (init.EngineSpeed > GetEngineSpeedLimitLow(false) &&
 						init.EngineSpeed < upperEngineSpeedLimit) {
@@ -649,7 +654,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var averageAccelerationTorque = AverageAccelerationTorqueLookup.Interpolate(
 				responseDriverDemand.EngineSpeed, responseDriverDemand.EngineTorqueDemand);
 
-			TestContainer.GearboxCtl.Gear = gear;
+			TestContainerGbx.Gear = gear;
 			var initResponse = TestContainer.VehiclePort.Initialize(vehicleSpeed, estimatedGradient);
 			var delta = initResponse.EngineTorqueDemand - averageAccelerationTorque;
 			var acceleration = SearchAlgorithm.Search(

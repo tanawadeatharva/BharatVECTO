@@ -232,7 +232,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return result.Value;
 				}
 			}
+
+			if (gear < ModelData.Gears.Keys.Max()) {
+				var earlyUpshift = CheckEarlyUpshift(
+					absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime);
+				if (earlyUpshift.HasValue) {
+					return earlyUpshift.Value;
+				}
+			}
+
 			return false;
+		}
+
+		protected virtual bool? CheckEarlyUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+		{
+			return null;
 		}
 
 		protected virtual bool? CheckUpshiftTcTc(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint gear,
@@ -374,7 +388,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
+			if (gear > 1 || (gear == 1 && _gearbox.TorqueConverterLocked)) {
+				var earlyDownshift = CheckEarlyDownshift(
+					absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime);
+				if (earlyDownshift.HasValue) {
+					return earlyDownshift.Value;
+				}
+			}
+
 			return false;
+		}
+
+		protected virtual bool? CheckEarlyDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+		{
+			return null;
 		}
 
 		protected virtual void SetGear(NextGearState gbxState)

@@ -67,6 +67,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.AMT}, typeof(AMTShiftStrategyV2).FullName, AMTShiftStrategyV2.Name, (r, c) => new AMTShiftStrategyV2(r, c)),
 			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategy).FullName, ATShiftStrategy.Name, (r, c) => new ATShiftStrategy(r, c)),
 			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategyVoith).FullName, ATShiftStrategyVoith.Name, (r, c) => new ATShiftStrategyVoith(r, c)),
+			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategyOptimized).FullName, ATShiftStrategyOptimized.Name, (r, c) => new ATShiftStrategyOptimized(r, c)),
 		};
 
 		
@@ -437,10 +438,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static IGearbox GetSimpleGearbox(IVehicleContainer container, VectoRunData runData)
 		{
-			if (runData.GearboxData.Type != GearboxType.AMT) {
-				throw new VectoException("SimplePowertrain only supports AMT gearbox!");
-			}
-			return new Gearbox(container, null, runData);
+			return runData.GearboxData.Type.AutomaticTransmission() ? (IGearbox) new ATGearbox(container, null, runData)  : new Gearbox(container, null, runData);
 		}
 
 		public static IEnumerable<Tuple<string, string>> GetRegisteredShiftStrategies(GearboxType? type)

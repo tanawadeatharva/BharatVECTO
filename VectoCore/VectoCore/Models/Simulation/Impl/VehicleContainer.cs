@@ -286,7 +286,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return ModData.FuelData.FuelType; }
 		}
 
-		public Second AbsTime { get; set; }
+		public virtual Second AbsTime { get; set; }
 
 		public void AddComponent(VectoSimulationComponent component)
 		{

@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCore.Models.Connector.Ports;
+﻿using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -18,12 +19,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		public ITnOutPort GearboxOutPort
 		{
-			get { return (Gearbox as Gearbox)?.OutPort(); }
+			get { return (Gearbox as IGearbox)?.OutPort(); }
 		}
 
-		public Gearbox GearboxCtl
+		public IGearbox GearboxCtl
 		{
-			get { return Gearbox as Gearbox; }
+			get { return Gearbox as IGearbox; }
 		}
+
+		public override Second AbsTime { get { return 0.SI<Second>(); } }
 	}
 }

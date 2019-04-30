@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -11,15 +10,23 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class AMTShiftStrategyOptimized : AMTShiftStrategy
+
+
+	public class ATShiftStrategyOptimized : ATShiftStrategy
 	{
 		private FuelConsumptionMap fcMap;
 		private Dictionary<uint, EngineFullLoadCurve> fld;
 		private ShiftStrategyParameters shiftStrategyParameters;
 		private SimplePowertrainContainer TestContainer;
-		private Gearbox TestContainerGbx;
+		private ATGearbox TestContainerGbx;
 
-		public AMTShiftStrategyOptimized(VectoRunData runData, IDataBus dataBus) : base(runData, dataBus)
+
+		public new static string Name
+		{
+			get { return "AT shift strategy w early upshift (FC-based)"; }
+		}
+
+		public ATShiftStrategyOptimized(VectoRunData runData, IDataBus dataBus) : base(runData, dataBus)
 		{
 			fcMap = runData.EngineData.ConsumptionMap;
 			fld = runData.EngineData.FullLoadCurves;
@@ -32,40 +39,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var builder = new PowertrainBuilder(modData);
 			TestContainer = new SimplePowertrainContainer(runData);
 			builder.BuildSimplePowertrain(runData, TestContainer);
-			TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
+			TestContainerGbx = TestContainer.GearboxCtl as ATGearbox;
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
 			}
+
+			
 		}
 
-		#region Overrides of AMTShiftStrategy
+		#region Overrides of ATShiftStrategy
 
-		protected override uint CheckEarlyUpshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear)
+		protected override bool? CheckEarlyUpshift(
+			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter origInTorque,
+			PerSecond origInAngularVelocity, uint currentGear, Second lastShiftTime)
 		{
-			if (ModelData.Gears[currentGear + 1].Ratio < shiftStrategyParameters.RatioEarlyUpshiftFC) {
-				return OverdriveUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
+			var tryNextGear = _gearbox.TorqueConverterLocked ? currentGear + 1 : currentGear;
+			if (!(ModelData.Gears[tryNextGear].Ratio <= shiftStrategyParameters.RatioEarlyDownshiftFC)) {
+				return null;
 			}
 
-			return base.CheckEarlyUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
-		}
-
-		protected virtual uint OverdriveUpshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear)
-		{
-			var tryNextGear = currentGear + 1;
-			var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
+			var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear, true);
 
 			var inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
-			var inTorque = response.ClutchPowerRequest / inAngularVelocity;
+			var inTorque = response.EnginePowerRequest / inAngularVelocity;
 
 			// if next gear supplied enough power reserve: take it
 			// otherwise take
-			if (!IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
+			if (!ModelData.Gears[tryNextGear].ShiftPolygon.IsBelowDownshiftCurve(inTorque, inAngularVelocity)) {
 				var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
 				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
 
-				var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
+				var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear, _gearbox.TorqueConverterLocked);
 				var fcCurrent = fcMap.GetFuelConsumption(
 					responseCurrent.EngineTorqueDemand.LimitTo(
 						fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
@@ -77,47 +81,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						fld[tryNextGear].FullLoadStationaryTorque(response.EngineSpeed)), response.EngineSpeed);
 
 				if (reserve >= ModelData.TorqueReserve && fcNext.Value.IsSmaller(fcCurrent.Value * shiftStrategyParameters.RatingFactorCurrentGear)) {
-					currentGear = tryNextGear;
+					Upshift(absTime, currentGear);
+					return true;
 				}
 			}
-
-			return currentGear;
+			return null;
 		}
 
-		protected override uint DoCheckDownshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear)
+		protected override bool? CheckEarlyDownshift(
+			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter origInTorque,
+			PerSecond origInAngularVelocity, uint currentGear, Second lastShiftTime)
 		{
-			var nextGear = base.DoCheckDownshift(
-				absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, currentGear);
-
-			if (nextGear == currentGear && currentGear > ModelData.Gears.Keys.Min()) {
-				nextGear = CheckEarlyDownshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
-			}
-			return nextGear;
-		}
-
-		protected virtual uint CheckEarlyDownshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear)
-		{
-			if (ModelData.Gears[currentGear - 1].Ratio <= shiftStrategyParameters.RatioEarlyDownshiftFC) {
-				return OverdriveDownshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
+			var tryNextGear = _gearbox.TorqueConverterLocked && currentGear == 1 ? currentGear : currentGear - 1;
+			var tryNextTc = currentGear == 1 && _gearbox.TorqueConverterLocked ? false : true;
+			if (!(ModelData.Gears[tryNextGear].Ratio < shiftStrategyParameters.RatioEarlyUpshiftFC)) {
+				return null;
 			}
 
-			return currentGear;
-		}
-
-		private uint OverdriveDownshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear)
-		{
-			var tryNextGear = currentGear - 1;
-			var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
+			var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear, tryNextTc);
 
 			var inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
-			var inTorque = response.ClutchPowerRequest / inAngularVelocity;
+			var inTorque = response.EnginePowerRequest / inAngularVelocity;
 
-			if (!IsAboveUpShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
-				var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
+			if (!IsAboveUpShiftCurve(tryNextGear, inTorque, inAngularVelocity, tryNextTc)) {
+				var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear, _gearbox.TorqueConverterLocked);
 				var fcCurrent = fcMap.GetFuelConsumption(
 					responseCurrent.EngineTorqueDemand.LimitTo(
 						fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
@@ -129,27 +116,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						fld[tryNextGear].FullLoadStationaryTorque(response.EngineSpeed)), response.EngineSpeed);
 
 				if (fcNext.Value.IsSmaller(fcCurrent.Value * shiftStrategyParameters.RatingFactorCurrentGear)) {
-					currentGear = tryNextGear;
+					Downshift(absTime, currentGear);
+					return true;
 				}
 			}
 
-			return currentGear;
+			return null;
 		}
 
 		#endregion
 
-		protected override ResponseDryRun RequestDryRunWithGear(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint tryNextGear)
+		protected ResponseDryRun RequestDryRunWithGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint tryNextGear, bool tcLocked)
 		{
 			TestContainerGbx.Disengaged = false;
 			TestContainerGbx.Gear = tryNextGear;
+			TestContainerGbx.TorqueConverterLocked = tcLocked;
 
 			TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
 			var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
 				0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
 			return response;
 		}
-
-		public new static string Name { get { return "AMT shift strategy w early upshift (FC-based)"; } }
 	}
 }

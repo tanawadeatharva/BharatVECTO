@@ -131,9 +131,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// check if shift is required
 			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
 			if (absTime > DataBus.LastShift && retVal is ResponseSuccess) {
-				var shiftRequired = ShiftStrategy.ShiftRequired(
+				var shiftRequired = ShiftStrategy?.ShiftRequired(
 					absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
-					operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift, retVal);
+					operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift, retVal) ?? false;
 				return shiftRequired ? new ResponseGearShift { Source = this } : retVal;
 			}
 
@@ -170,7 +170,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Source = this,
 					DeltaFullLoad = delta,
 					DeltaDragLoad = delta,
-					TorqueConverterOperatingPoint = operatingPoint
+					TorqueConverterOperatingPoint = operatingPoint,
+					EngineTorqueDemand = inTorque,
+					EngineSpeed = engineResponse.EngineSpeed,
+					EnginePowerRequest = engineResponse.EnginePowerRequest
 				};
 			}
 
@@ -196,7 +199,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Source = this,
 				DeltaFullLoad = 10 * deltaMax,
 				DeltaDragLoad = 10 * deltaMin,
-				TorqueConverterOperatingPoint = dryOperatingPointMax
+				TorqueConverterOperatingPoint = dryOperatingPointMax,
+				EngineTorqueDemand = inTorque,
+				EngineSpeed = dryOperatingPointMax?.InAngularVelocity ?? dryOperatingPointMin?.InAngularVelocity ?? 0.RPMtoRad(),
+				EnginePowerRequest = engineResponse.EnginePowerRequest
 			};
 		}
 

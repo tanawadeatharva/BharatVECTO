@@ -64,7 +64,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			: base(container, runData)
 		{
 			_strategy = strategy;
-			_strategy.Gearbox = this;
+			if (_strategy != null) {
+				_strategy.Gearbox = this;
+			}
 			LastShift = -double.MaxValue.SI<Second>();
 			TorqueConverter = new TorqueConverter(this, _strategy, container, ModelData.TorqueConverterData,
 				runData);
@@ -330,7 +332,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return response;
 			}
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
-			if (!dryRun && retVal is ResponseSuccess &&
+			if (!dryRun && retVal is ResponseSuccess && _strategy != null &&
 				_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear,
 					LastShift, retVal)) {
 				retVal = new ResponseGearShift { Source = this };
@@ -412,7 +414,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.n_gbx_out_avg] = avgOutAngularSpeed;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
 
-			_strategy.WriteModalResults(container);
+			_strategy?.WriteModalResults(container);
 		}
 
 		protected override void DoCommitSimulationStep()

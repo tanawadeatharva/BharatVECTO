@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -25,7 +26,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		{
 			var retVal = new Dictionary<uint, List<KeyValuePair<PerSecond, NewtonMeter>>>(Data.GearboxData.Gears.Count);
 
-			TestContainer.GearboxCtl.Gear = 1;
+			var testContainerGbx = TestContainer.GearboxCtl as Gearbox;
+			if (testContainerGbx == null) {
+				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
+			}
+
+			testContainerGbx.Gear = 1;
 			var init = TestContainer.VehiclePort.Initialize(Data.GearshiftParameters.StartVelocity, 0.SI<Radian>());
 			var powertrainRatioWOGearbox = (Data.GearshiftParameters.StartVelocity / init.EngineSpeed * Data.GearboxData.Gears[1].Ratio).Cast<Meter>();
 
@@ -33,7 +39,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 			foreach (var gearData in Data.GearboxData.Gears) {
 				retVal[gearData.Key] = new List<KeyValuePair<PerSecond, NewtonMeter>>();
-				TestContainer.GearboxCtl.Gear = gearData.Key;
+				testContainerGbx.Gear = gearData.Key;
 				for (var engineSpeed = Data.EngineData.IdleSpeed;
 					engineSpeed < Data.EngineData.FullLoadCurves[0].N95hSpeed;
 					engineSpeed += engineSpeedSteps) {
