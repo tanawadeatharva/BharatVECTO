@@ -303,8 +303,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var avgEngineSpeed = (DataBus.EngineSpeed + outAngularVelocity * effectiveRatio) / 2;
 					powershiftLoss = aliquotEnergyLoss / dt / avgEngineSpeed;
 					inTorque += powershiftLoss;
-					
+
 					//inTorque += CurrentState.PowershiftLossEnergy;
+				} else {
+					_powershiftLossEnergy = null;
 				}
 			}
 

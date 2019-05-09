@@ -245,7 +245,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var nextGearboxInTorque = outTorque / nextGear.TorqueConverterRatio;
 			var shiftLosses = _gearbox.ComputeShiftLosses(outTorque, outAngularVelocity, gear + 1) / ModelData.PowershiftShiftTime / nextGearboxInSpeed;
 			nextGearboxInTorque += shiftLosses;
-			var tcOperatingPoint = _gearbox.TorqueConverter.FindOperatingPoint(nextGearboxInTorque, nextGearboxInSpeed);
+			var tcOperatingPoint = _gearbox.TorqueConverter.FindOperatingPoint(absTime, dt, nextGearboxInTorque, nextGearboxInSpeed);
 
 			var engineSpeedOverMin = tcOperatingPoint.InAngularVelocity.IsGreater(minEngineSpeed);
 			var avgSpeed = (DataBus.EngineSpeed + tcOperatingPoint.InAngularVelocity) / 2;
