@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun = false)
 		{
-			var operatingPoint = FindOperatingPoint(outTorque, outAngularVelocity);
+			var operatingPoint = FindOperatingPoint(absTime, dt, outTorque, outAngularVelocity);
 			var inTorque = CalculateAverageInTorque(operatingPoint);
 
 			if (dryRun) {
@@ -209,7 +209,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					engineResponse.DragPower - engineResponse.AuxiliariesPowerDemand,
 					DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
 				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineN95hSpeed);
-				var lowerInputSpeed = VectoMath.Max(DataBus.EngineIdleSpeed, 0.8 * DataBus.EngineSpeed);
+				var lowerInputSpeed = VectoMath.Max(DataBus.EngineIdleSpeed * 1.001, 0.8 * DataBus.EngineSpeed);
 				var corrected = false;
 				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
 					operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
@@ -316,7 +316,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		protected internal TorqueConverterOperatingPoint FindOperatingPoint(
+		protected internal TorqueConverterOperatingPoint FindOperatingPoint(Second absTime, Second dt,
 			NewtonMeter outTorque,
 			PerSecond outAngularVelocity)
 		{
@@ -324,6 +324,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (operatingPointList.Count == 0) {
 				Log.Debug("TorqueConverter: Failed to find torque converter operating point, fallback: creeping");
 				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed, outAngularVelocity);
+
+				var engineResponse = (ResponseDryRun)
+					NextComponent.Request(absTime, dt, tqOperatingPoint.InTorque, tqOperatingPoint.InAngularVelocity, true);
+
+				var engineOK = engineResponse.DeltaDragLoad.IsGreaterOrEqual(0) && engineResponse.DeltaFullLoad.IsSmallerOrEqual(0);
+				if (!engineOK) {
+					tqOperatingPoint = ModelData.FindOperatingPoint(VectoMath.Max(DataBus.EngineIdleSpeed, DataBus.EngineSpeed * 0.9), outAngularVelocity);
+				}
+
 				tqOperatingPoint.Creeping = true;
 				return tqOperatingPoint;
 			}

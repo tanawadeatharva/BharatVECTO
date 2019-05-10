@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fullLoad.Columns.Add("drag torque");
 			fullLoad.Columns.Add("PT1");
 			fullLoad.Rows.Add("3", "3", "-3", "3");
-			fullLoad.Rows.Add("3", "3", "-3", "3");
+			fullLoad.Rows.Add("4", "3", "-3", "3");
 
 			var data = new CombustionEngineData {
 				ModelName = "asdf",
@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fullLoad.Columns.Add("drag torque");
 			fullLoad.Columns.Add("PT1");
 			fullLoad.Rows.Add("3", "3", "-3", "3");
-			fullLoad.Rows.Add("3", "3", "-3", "3");
+			fullLoad.Rows.Add("4", "3", "-3", "3");
 			var data = new MockEngineDataProvider {
 				Model = "asdf",
 			    Displacement = 6374.SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(),
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fullLoad.Columns.Add("drag torque");
 			fullLoad.Columns.Add("PT1");
 			fullLoad.Rows.Add("3", "3", "-3", "3");
-			fullLoad.Rows.Add("3", "3", "-3", "3");
+			fullLoad.Rows.Add("4", "3", "-3", "3");
 			var data = new MockEngineDataProvider {
 				Model = "asdf",
 			    Displacement = 6374.SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(),
