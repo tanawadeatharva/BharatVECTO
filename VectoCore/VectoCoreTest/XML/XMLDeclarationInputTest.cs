@@ -995,7 +995,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[TestCase(SampleVehicleDecl, false, false, false, PredictiveCruiseControlType.None),
-		TestCase(SampleVehicleFullDeclUpdated, true, true, true, PredictiveCruiseControlType.Option_1_2)]
+		TestCase(SampleVehicleFullDeclUpdated, true, false, true, PredictiveCruiseControlType.Option_1_2)]
 		public void TestReadingAdasParameters(
 			string file, bool engineStopStart, bool ecoRollWithout, bool ecoRollWith, PredictiveCruiseControlType pcc)
 		{
