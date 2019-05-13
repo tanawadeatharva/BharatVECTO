@@ -91,13 +91,22 @@ Public Class VehicleForm
 					.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
 		End If
 
-		
+		cbEcoRoll.ValueMember = "Value"
+        cbEcoRoll.DisplayMember = "Label"
+        cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) new With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
+
+
+        cbPcc.ValueMember = "Value"
+        cbPcc.DisplayMember = "Label"
+	    cbPcc.DataSource = [Enum].GetValues(GetType(PredictiveCruiseControlType)).Cast(Of PredictiveCruiseControlType).Select(Function(pcc) new With {Key .Value = pcc, .Label = pcc.GetName()}).ToList()
+
+        tpADAS.Enabled = Cfg.DeclMode
 
 		CbCat.ValueMember = "Value"
 		CbCat.DisplayMember = "Label"
 		CbCat.DataSource = [Enum].GetValues(GetType(VehicleCategory)) _
 			.Cast(Of VehicleCategory) _
-			.Select(Function(category) New With {Key .Value = category, .label = category.GetLabel()}).ToList()
+			.Select(Function(category) New With {Key .Value = category, .Label = category.GetLabel()}).ToList()
 
 		cbAngledriveType.ValueMember = "Value"
 		cbAngledriveType.DisplayMember = "Label"
@@ -384,6 +393,17 @@ Public Class VehicleForm
 		TbRtRatio.Text = retarder.Ratio.ToGUIFormat()
 		TbRtPath.Text = If(retarder.LossMap Is Nothing, "", GetRelativePath(retarder.LossMap.Source, basePath))
 
+        if (vehicle.SavedInDeclarationMode) then
+            Dim declVehicle as IVehicleDeclarationInputData = vehicle
+            cbPcc.SelectedValue = declVehicle.ADAS.PredictiveCruiseControl
+            cbEcoRoll.SelectedValue = declvehicle.ADAS.EcoRoll
+            cbEngineStopStart.Checked = declVehicle.ADAS.EngineStopStart
+        Else 
+            cbPcc.SelectedValue = PredictiveCruiseControlType.None
+            cbEcoRoll.SelectedValue = EcoRollType.None
+            cbEngineStopStart.Checked = False
+        End If
+
 		LvRRC.Items.Clear()
 		Dim i As Integer = 0
 		Dim a0 As IAxleEngineeringInputData
@@ -510,6 +530,9 @@ Public Class VehicleForm
 			veh.torqueLimitsList.Add(tl)
 		Next
 
+        veh.EcoRollType = CType(cbEcoRoll.SelectedValue, EcoRollType)
+        veh.PCC = CType(cbPcc.SelectedValue, PredictiveCruiseControlType)
+        veh.EngineStop = cbEngineStopStart.Checked
 
 		'---------------------------------------------------------------------------------
 		If Not veh.SaveFile Then

@@ -147,6 +147,13 @@ Partial Class VehicleForm
         Me.btAddMaxTorqueEntry = New System.Windows.Forms.Button()
         Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
+        Me.tpADAS = New System.Windows.Forms.TabPage()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.lblPCC = New System.Windows.Forms.Label()
+        Me.cbEngineStopStart = New System.Windows.Forms.CheckBox()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.cbEcoRoll = New System.Windows.Forms.ComboBox()
+        Me.cbPcc = New System.Windows.Forms.ComboBox()
         Me.GroupBox6.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.GroupBox7.SuspendLayout
@@ -172,6 +179,8 @@ Partial Class VehicleForm
         Me.Panel1.SuspendLayout
         Me.TabPage2.SuspendLayout
         Me.TabPage3.SuspendLayout
+        Me.tpADAS.SuspendLayout
+        Me.GroupBox5.SuspendLayout
         Me.SuspendLayout
         '
         'Label1
@@ -1050,6 +1059,7 @@ Partial Class VehicleForm
         Me.TabControl1.Controls.Add(Me.TabPage1)
         Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
+        Me.TabControl1.Controls.Add(Me.tpADAS)
         Me.TabControl1.Location = New System.Drawing.Point(6, 173)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
@@ -1216,6 +1226,75 @@ Partial Class VehicleForm
         Me.Label21.TabIndex = 42
         Me.Label21.Text = "Maximum Laden Mass"
         '
+        'tpADAS
+        '
+        Me.tpADAS.Controls.Add(Me.GroupBox5)
+        Me.tpADAS.Location = New System.Drawing.Point(4, 22)
+        Me.tpADAS.Name = "tpADAS"
+        Me.tpADAS.Padding = New System.Windows.Forms.Padding(3)
+        Me.tpADAS.Size = New System.Drawing.Size(579, 355)
+        Me.tpADAS.TabIndex = 3
+        Me.tpADAS.Text = "ADAS"
+        Me.tpADAS.UseVisualStyleBackColor = true
+        '
+        'GroupBox5
+        '
+        Me.GroupBox5.Controls.Add(Me.cbPcc)
+        Me.GroupBox5.Controls.Add(Me.cbEcoRoll)
+        Me.GroupBox5.Controls.Add(Me.Label22)
+        Me.GroupBox5.Controls.Add(Me.cbEngineStopStart)
+        Me.GroupBox5.Controls.Add(Me.lblPCC)
+        Me.GroupBox5.Location = New System.Drawing.Point(6, 6)
+        Me.GroupBox5.Name = "GroupBox5"
+        Me.GroupBox5.Size = New System.Drawing.Size(565, 136)
+        Me.GroupBox5.TabIndex = 0
+        Me.GroupBox5.TabStop = false
+        Me.GroupBox5.Text = "ADAS Options"
+        '
+        'lblPCC
+        '
+        Me.lblPCC.AutoSize = true
+        Me.lblPCC.Location = New System.Drawing.Point(6, 88)
+        Me.lblPCC.Name = "lblPCC"
+        Me.lblPCC.Size = New System.Drawing.Size(122, 13)
+        Me.lblPCC.TabIndex = 3
+        Me.lblPCC.Text = "Predictive Cruise Control"
+        '
+        'cbEngineStopStart
+        '
+        Me.cbEngineStopStart.AutoSize = true
+        Me.cbEngineStopStart.Location = New System.Drawing.Point(6, 19)
+        Me.cbEngineStopStart.Name = "cbEngineStopStart"
+        Me.cbEngineStopStart.Size = New System.Drawing.Size(203, 17)
+        Me.cbEngineStopStart.TabIndex = 4
+        Me.cbEngineStopStart.Text = "Engine Stop/Start during vehicle stop"
+        Me.cbEngineStopStart.UseVisualStyleBackColor = true
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = true
+        Me.Label22.Location = New System.Drawing.Point(6, 42)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(47, 13)
+        Me.Label22.TabIndex = 6
+        Me.Label22.Text = "Eco-Roll"
+        '
+        'cbEcoRoll
+        '
+        Me.cbEcoRoll.FormattingEnabled = true
+        Me.cbEcoRoll.Location = New System.Drawing.Point(18, 58)
+        Me.cbEcoRoll.Name = "cbEcoRoll"
+        Me.cbEcoRoll.Size = New System.Drawing.Size(179, 21)
+        Me.cbEcoRoll.TabIndex = 7
+        '
+        'cbPcc
+        '
+        Me.cbPcc.FormattingEnabled = true
+        Me.cbPcc.Location = New System.Drawing.Point(18, 104)
+        Me.cbPcc.Name = "cbPcc"
+        Me.cbPcc.Size = New System.Drawing.Size(179, 21)
+        Me.cbPcc.TabIndex = 8
+        '
         'VehicleForm
         '
         Me.AcceptButton = Me.ButOK
@@ -1283,6 +1362,9 @@ Partial Class VehicleForm
         Me.TabPage2.ResumeLayout(false)
         Me.TabPage3.ResumeLayout(false)
         Me.TabPage3.PerformLayout
+        Me.tpADAS.ResumeLayout(false)
+        Me.GroupBox5.ResumeLayout(false)
+        Me.GroupBox5.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1400,4 +1482,11 @@ End Sub
 	Friend WithEvents Label11 As System.Windows.Forms.Label
 	Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents Label21 As Label
+    Friend WithEvents tpADAS As TabPage
+    Friend WithEvents GroupBox5 As GroupBox
+    Friend WithEvents cbEngineStopStart As CheckBox
+    Friend WithEvents lblPCC As Label
+    Friend WithEvents Label22 As Label
+    Friend WithEvents cbPcc As ComboBox
+    Friend WithEvents cbEcoRoll As ComboBox
 End Class

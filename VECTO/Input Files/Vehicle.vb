@@ -68,6 +68,10 @@ Public Class Vehicle
 	Public legClass As LegislativeClass
 	Public VehicleHeight As Double
 
+    public EcoRolltype as EcoRollType
+    public PCC as PredictiveCruiseControlType
+    public EngineStop as Boolean
+
 
 	Public Sub New()
 		_path = ""
@@ -408,6 +412,10 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
+    get
+            Return me
+    End Get
+	End Property
 
 	Public ReadOnly Property CrosswindCorrectionMap As TableData _
 		Implements IAirdragEngineeringInputData.CrosswindCorrectionMap
@@ -739,25 +747,20 @@ Public Class Vehicle
 
 	Public ReadOnly Property EngineStopStart As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EngineStopStart
 	get
-			return DeclarationData.Vehicle.ADAS.EngineStopStartDefault
+			return EngineStop
 	End Get
 	End Property
 
-	Public ReadOnly Property EcoRollWitoutEngineStop As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EcoRollWitoutEngineStop
+	Public ReadOnly Property EcoRoll As EcoRollType Implements IAdvancedDriverAssistantSystemDeclarationInputData.EcoRoll
 	get
-			return DeclarationData.Vehicle.ADAS.EcoRollWitoutEngineStop
+			return EcoRolltype
 	End Get
 	End Property
 
-	Public ReadOnly Property EcoRollWithEngineStop As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EcoRollWithEngineStop
-	get
-			Return DeclarationData.Vehicle.ADAS.EcoRollWithEngineStop
-	End Get
-	End Property
-
+	
 	Public ReadOnly Property PredictiveCruiseControl As PredictiveCruiseControlType Implements IAdvancedDriverAssistantSystemDeclarationInputData.PredictiveCruiseControl
 	get
-			Return DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault
+			Return PCC
 	End Get
 	End Property
 
