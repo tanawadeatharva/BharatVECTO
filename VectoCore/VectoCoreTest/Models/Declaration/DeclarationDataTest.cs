@@ -1996,7 +1996,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			bool engineStopStart, bool ecoRollWOEngineStop, bool ecoRollWEngineStop, PredictiveCruiseControlType pcc,
 			string expectedADASGroup)
 		{
-			var adas = DeclarationData.ADASCombinations.Lookup(engineStopStart, ecoRollWOEngineStop, ecoRollWEngineStop, pcc);
+			var adas = DeclarationData.ADASCombinations.Lookup(engineStopStart, EcorollTypeHelper.Get(ecoRollWOEngineStop, ecoRollWEngineStop), pcc);
 			Assert.AreEqual(adas.ID, expectedADASGroup);
 		}
 
@@ -2006,7 +2006,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			bool engineStopStart, bool ecoRollWOEngineStop, bool ecoRollWEngineStop, PredictiveCruiseControlType pcc)
 		{
 			AssertHelper.Exception<VectoException>(() => {
-				DeclarationData.ADASCombinations.Lookup(engineStopStart, ecoRollWOEngineStop, ecoRollWEngineStop, pcc);
+				DeclarationData.ADASCombinations.Lookup(engineStopStart, EcorollTypeHelper.Get(ecoRollWOEngineStop, ecoRollWEngineStop), pcc);
 			});
 		}
 

@@ -365,14 +365,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				get { return false; }
 			}
 
-			public bool EcoRollWitoutEngineStop
+			public EcoRollType EcoRoll
 			{
-				get { return false; }
-			}
-
-			public bool EcoRollWithEngineStop
-			{
-				get { return false; }
+				get { return EcoRollType.None; }
 			}
 
 			public PredictiveCruiseControlType PredictiveCruiseControl

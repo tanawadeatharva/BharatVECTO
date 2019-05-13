@@ -995,7 +995,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		}
 
 		[TestCase(SampleVehicleDecl, false, false, false, PredictiveCruiseControlType.None),
-		TestCase(SampleVehicleFullDeclUpdated, true, true, true, PredictiveCruiseControlType.Option_1_2)]
+		TestCase(SampleVehicleFullDeclUpdated, true, false, true, PredictiveCruiseControlType.Option_1_2)]
 		public void TestReadingAdasParameters(
 			string file, bool engineStopStart, bool ecoRollWithout, bool ecoRollWith, PredictiveCruiseControlType pcc)
 		{
@@ -1008,8 +1008,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsFalse(vehicle.ExemptedVehicle);
 
 			Assert.AreEqual(engineStopStart, adas.EngineStopStart);
-			Assert.AreEqual(ecoRollWith, adas.EcoRollWithEngineStop);
-			Assert.AreEqual(ecoRollWithout, adas.EcoRollWitoutEngineStop);
+			Assert.AreEqual(ecoRollWith, adas.EcoRoll.WithEngineStop());
+			Assert.AreEqual(ecoRollWithout, adas.EcoRoll.WithoutEngineStop());
 			Assert.AreEqual(pcc, adas.PredictiveCruiseControl);
 		}
 

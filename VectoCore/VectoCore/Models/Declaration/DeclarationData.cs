@@ -543,8 +543,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static class ADAS {
 				public const PredictiveCruiseControlType PredictiveCruiseControlDefault = PredictiveCruiseControlType.None;
-				public const bool EcoRollWithEngineStop = false;
-				public const bool EcoRollWitoutEngineStop = false;
+				public const EcoRollType EcoRoll = EcoRollType.None;
 				public const bool EngineStopStartDefault = false;
 			}
 		}

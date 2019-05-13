@@ -404,14 +404,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return DeclarationData.Vehicle.ADAS.EngineStopStartDefault; }
 		}
 
-		public bool EcoRollWitoutEngineStop
+		public EcoRollType EcoRoll
 		{
-			get { return DeclarationData.Vehicle.ADAS.EcoRollWitoutEngineStop; }
-		}
-
-		public bool EcoRollWithEngineStop
-		{
-			get { return DeclarationData.Vehicle.ADAS.EcoRollWithEngineStop; }
+			get { return DeclarationData.Vehicle.ADAS.EcoRoll; }
 		}
 
 		public PredictiveCruiseControlType PredictiveCruiseControl

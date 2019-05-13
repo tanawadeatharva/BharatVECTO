@@ -16,7 +16,7 @@ Public Class JSONFileWriter
 
 	Public Const GearboxFormatVersion As Integer = 6
 
-	Public Const VehicleFormatVersion As Integer = 7
+	Public Const VehicleFormatVersion As Integer = 8
 
 	Private Const VectoJobFormatVersion As Integer = 4
 
@@ -229,8 +229,15 @@ Public Class JSONFileWriter
 				{"TwinTyres", axle.TwinTyres},
 				{"RRCISO", axle.Tyre.RollResistanceCoefficient},
 				{"FzISO", axle.Tyre.TyreTestLoad.Value()},
-				{"Type", axle.AxleType.ToString()}
+				{"Type", axle.AxleType.ToString()}                                                                                         
 				}}}}}
+
+		if (Cfg.DeclMode) then
+			Dim declVehicle As IVehicleDeclarationInputData = vehicle
+			body("EngineStopStart") = declVehicle.ADAS.EngineStopStart
+			body("EcoRoll") = declVehicle.ADAS.EcoRoll.ToString()
+			body("PredictiveCruiseControl") = declVehicle.ADAS.PredictiveCruiseControl.ToString()
+		End If
 
 		If (Not IsNothing(airdrag.AirDragArea)) Then
 			body("CdA") = airdrag.AirDragArea.Value()

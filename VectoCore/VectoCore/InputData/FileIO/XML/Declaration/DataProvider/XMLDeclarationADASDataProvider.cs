@@ -41,14 +41,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EngineStopStart)); }
 		}
 
-		public virtual bool EcoRollWitoutEngineStop
+		public virtual EcoRollType EcoRoll
 		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop)); }
-		}
-
-		public virtual bool EcoRollWithEngineStop
-		{
-			get { return XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart)); }
+			get {
+				return EcorollTypeHelper.Get(
+					XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop)),
+					XmlConvert.ToBoolean(GetString(XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart)));
+			}
 		}
 
 		public virtual PredictiveCruiseControlType PredictiveCruiseControl

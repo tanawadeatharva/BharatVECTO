@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.NetworkInformation;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -199,9 +200,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		bool EngineStopStart { get; }
 
-		bool EcoRollWitoutEngineStop { get; }
-
-		bool EcoRollWithEngineStop { get; }
+		EcoRollType EcoRoll { get; }
 
 		PredictiveCruiseControlType PredictiveCruiseControl { get; }
 	}
@@ -231,8 +230,64 @@ namespace TUGraz.VectoCommon.InputData
 		{
 			return pcc.ToString().Replace(Prefix, "").Replace(SeparatorEnum, SeparatorXML);
 		}
+
+		public static string GetName(this PredictiveCruiseControlType pcc)
+		{
+			return pcc.ToString().Replace(Prefix, Prefix.Replace(SeparatorEnum, " ")).Replace(SeparatorEnum, "&");
+		}
 	}
 
+	public enum EcoRollType
+	{
+		None,
+		WithoutEngineStop,
+		WithEngineStop
+	}
+
+	public static class EcorollTypeHelper
+	{
+		public static EcoRollType Get(bool ecoRollWithoutEngineStop, bool ecoRollWithEngineStop)
+		{
+			if (ecoRollWithEngineStop && ecoRollWithoutEngineStop) {
+				throw new VectoException("invalid combination or EcoRoll");
+			}
+
+			if (ecoRollWithoutEngineStop) {
+				return EcoRollType.WithoutEngineStop;
+			}
+
+			if (ecoRollWithEngineStop) {
+				return EcoRollType.WithEngineStop;
+			}
+
+			return EcoRollType.None;
+		}
+
+		public static EcoRollType Parse(string ecoRoll)
+		{
+			return ecoRoll.ParseEnum<EcoRollType>();
+		}
+
+		public static bool WithoutEngineStop(this EcoRollType ecoRoll)
+		{
+			return ecoRoll == EcoRollType.WithoutEngineStop;
+		}
+
+		public static bool WithEngineStop(this EcoRollType ecoRoll)
+		{
+			return ecoRoll == EcoRollType.WithEngineStop;
+		}
+
+		public static string GetName(this EcoRollType ecoRoll)
+		{
+			switch (ecoRoll) {
+				case EcoRollType.None: return "None";
+				case EcoRollType.WithoutEngineStop: return "without engine stop";
+				case EcoRollType.WithEngineStop: return "with engine stop";
+				default: throw new ArgumentOutOfRangeException(nameof(ecoRoll), ecoRoll, null);
+			}
+		}
+	}
 
 	public enum TankSystem
 	{

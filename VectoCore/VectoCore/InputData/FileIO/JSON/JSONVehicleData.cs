@@ -44,6 +44,27 @@ using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
+
+	public class JSONVehicleDataV8 : JSONVehicleDataV7
+	{
+		public JSONVehicleDataV8(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) : base(data, fileName, job, tolerateMissing) { }
+
+		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
+
+		public override bool EngineStopStart { get { return Body.GetEx<bool>("EngineStopStart"); } }
+		public override EcoRollType EcoRoll { get { return EcorollTypeHelper.Parse(Body.GetEx<string>("EcoRoll")); } }
+
+		public override PredictiveCruiseControlType PredictiveCruiseControl
+		{
+			get {
+				return Body.GetEx<string>("PredictiveCruiseControl").ParseEnum<PredictiveCruiseControlType>();
+			}
+		}
+
+		#endregion
+	}
+
+
 	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngledriveInputData,
 		IPTOTransmissionInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData, IVehicleComponentsDeclaration, IVehicleComponentsEngineering, IAxlesEngineeringInputData, IAxlesDeclarationInputData
 	{
@@ -57,16 +78,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region IVehicleInputData
 
-		public string Identifier { get { return Path.GetFileNameWithoutExtension(_sourceFile); } }
+		public virtual string Identifier { get { return Path.GetFileNameWithoutExtension(_sourceFile); } }
 
-		public bool ExemptedVehicle { get { return false; } }
+		public virtual bool ExemptedVehicle { get { return false; } }
 
-		public string VIN
+		public virtual string VIN
 		{
 			get { return Constants.NOT_AVailABLE; }
 		}
 
-		public LegislativeClass LegislativeClass
+		public virtual LegislativeClass LegislativeClass
 		{
 			get {
 				return Body["LegislativeClass"] != null
@@ -75,7 +96,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public VehicleCategory VehicleCategory
+		public virtual VehicleCategory VehicleCategory
 		{
 			get {
 				return
@@ -98,7 +119,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		    get { return Body.GetEx<double>(JsonKeys.Vehicle_GrossVehicleMassRating).SI(Unit.SI.Ton).Cast<Kilogram>(); }
 		}
 
-		public IList<ITorqueLimitInputData> TorqueLimits
+		public virtual IList<ITorqueLimitInputData> TorqueLimits
 		{
 			get {
 				var retVal = new List<ITorqueLimitInputData>();
@@ -125,7 +146,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		    get { return Body.GetEx<double>(JsonKeys.Vehicle_DynamicTyreRadius).SI(Unit.SI.Milli.Meter).Cast<Meter>(); }
 		}
 
-		public Meter Height
+		public virtual Meter Height
 		{
 			get { return Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>(); }
 		}
@@ -154,12 +175,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return AxleWheels().Cast<IAxleEngineeringInputData>().ToList(); }
 		}
 
-		public string ManufacturerAddress
+		public virtual string ManufacturerAddress
 		{
 			get { return Constants.NOT_AVailABLE; }
 		}
 
-		public PerSecond EngineIdleSpeed
+		public virtual PerSecond EngineIdleSpeed
 		{
 			get { return Body["IdlingSpeed"] != null ? Body.GetEx<double>("IdlingSpeed").RPMtoRad() : null; }
 		}
@@ -213,7 +234,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Job.Gearbox; }
 		}
 
-		public ITorqueConverterDeclarationInputData TorqueConverter { get { return Job.TorqueConverter; } }
+		public virtual ITorqueConverterDeclarationInputData TorqueConverter { get { return Job.TorqueConverter; } }
 
 		IGearboxEngineeringInputData IVehicleComponentsEngineering.GearboxInputData
 		{
@@ -240,7 +261,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
-		public IEngineEngineeringInputData EngineInputData
+		public virtual IEngineEngineeringInputData EngineInputData
 		{
 			get { return Job.Engine; }
 		}
@@ -285,22 +306,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
-		public bool VocationalVehicle { get { return DeclarationData.Vehicle.VocationalVehicleDefault; } }
+		public virtual bool VocationalVehicle { get { return DeclarationData.Vehicle.VocationalVehicleDefault; } }
 
-		public bool SleeperCab { get { return DeclarationData.Vehicle.SleeperCabDefault; } }
+		public virtual bool SleeperCab { get { return DeclarationData.Vehicle.SleeperCabDefault; } }
 
-		public TankSystem? TankSystem { get { return DeclarationData.Vehicle.TankSystemDefault; } }
-		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get { return this; } }
+		public virtual TankSystem? TankSystem { get { return DeclarationData.Vehicle.TankSystemDefault; } }
+		public virtual IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get { return this; } }
 
-		public bool ZeroEmissionVehicle { get { return DeclarationData.Vehicle.ZeroEmissionVehicleDefault; } }
+		public virtual bool ZeroEmissionVehicle { get { return DeclarationData.Vehicle.ZeroEmissionVehicleDefault; } }
 
-		public bool HybridElectricHDV { get { return DeclarationData.Vehicle.HybridElectricHDVDefault; } }
+		public virtual bool HybridElectricHDV { get { return DeclarationData.Vehicle.HybridElectricHDVDefault; } }
 
-		public bool DualFuelVehicle { get { return DeclarationData.Vehicle.DualFuelVehicleDefault; } }
+		public virtual bool DualFuelVehicle { get { return DeclarationData.Vehicle.DualFuelVehicleDefault; } }
 
-		public Watt MaxNetPower1 { get { return null; } }
+		public virtual Watt MaxNetPower1 { get { return null; } }
 
-		public Watt MaxNetPower2 { get { return null; } }
+		public virtual Watt MaxNetPower2 { get { return null; } }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{
@@ -491,7 +512,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public TableData PTOCycle
+		public virtual TableData PTOCycle
 		{
 			get {
 				var pto = Body[JsonKeys.Vehicle_PTO];
@@ -515,17 +536,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-		public string Manufacturer
+		public virtual string Manufacturer
 		{
 			get { return Constants.NOT_AVailABLE; }
 		}
 
-		public string Model
+		public virtual string Model
 		{
 			get { return Constants.NOT_AVailABLE; }
 		}
 
-		public string Date
+		public virtual string Date
 		{
 			get { return Constants.NOT_AVailABLE; }
 		}
@@ -535,27 +556,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return CertificationMethod.NotCertified; }
 		}
 
-		public string CertificationNumber
+		public virtual string CertificationNumber
 		{
 			get { return Constants.NOT_AVailABLE; }
 		}
 
-		public DigestData DigestValue
+		public virtual DigestData DigestValue
 		{
 			get { return null; }
 		}
 
 		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
 
-		public bool EngineStopStart { get { return DeclarationData.Vehicle.ADAS.EngineStopStartDefault; } }
-		public bool EcoRollWitoutEngineStop { get { return DeclarationData.Vehicle.ADAS.EcoRollWitoutEngineStop; } }
-		public bool EcoRollWithEngineStop { get { return DeclarationData.Vehicle.ADAS.EcoRollWithEngineStop; } }
-		public PredictiveCruiseControlType PredictiveCruiseControl { get {
+		public virtual bool EngineStopStart { get { return DeclarationData.Vehicle.ADAS.EngineStopStartDefault; } }
+		public virtual EcoRollType EcoRoll { get { return DeclarationData.Vehicle.ADAS.EcoRoll; } }
+
+		public virtual PredictiveCruiseControlType PredictiveCruiseControl { get {
 			return DeclarationData.Vehicle.ADAS.PredictiveCruiseControlDefault;
 		} }
 
 		#endregion
-
-		
+	
 	}
+
+	
 }
