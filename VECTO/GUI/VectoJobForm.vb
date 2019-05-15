@@ -556,8 +556,9 @@ Public Class VectoJobForm
         cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(inputData.JobInputData.Vehicle.GearboxInputData.Type).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
         cbGearshiftStrategy.DisplayMember = "Label"
         cbGearshiftStrategy.ValueMember = "Value"
-        cbGearshiftStrategy.SelectedValue = inputData.JobInputData.ShiftStrategy
-
+        if (inputData.JobInputData.ShiftStrategy <> Nothing) then
+            cbGearshiftStrategy.SelectedValue = inputData.JobInputData.ShiftStrategy
+        end if
 
         DeclInit()
 
@@ -631,7 +632,7 @@ Public Class VectoJobForm
 
         vectoJob.PathGbx = TbGBX.Text
         vectoJob.PathShiftParams = TbShiftStrategyParams.Text
-        vectoJob.ShiftStrategy = cbGearshiftStrategy.SelectedValue.ToString()
+        vectoJob.ShiftStrategy = cbGearshiftStrategy.SelectedValue?.ToString()
 
         'a_DesMax
         vectoJob.DesMaxFile = TbDesMaxFile.Text
