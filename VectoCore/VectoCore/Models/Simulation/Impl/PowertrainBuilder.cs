@@ -31,11 +31,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -64,7 +66,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Tuple.Create<GbxTypeList, string, string ,StrategyCreator>(new GbxTypeList {GearboxType.MT}, typeof(MTShiftStrategy).FullName, MTShiftStrategy.Name, (r, c) => new MTShiftStrategy(r, c)),
 			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.AMT}, typeof(AMTShiftStrategy).FullName,AMTShiftStrategy.Name, (r, c) => new AMTShiftStrategy(r, c)),
 			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.AMT}, typeof(AMTShiftStrategyOptimized).FullName, AMTShiftStrategyOptimized.Name, (r, c) => new AMTShiftStrategyOptimized(r, c)),
-			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.AMT}, typeof(AMTShiftStrategyV2).FullName, AMTShiftStrategyV2.Name, (r, c) => new AMTShiftStrategyV2(r, c)),
+			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.AMT}, typeof(AMTShiftStrategyACEA).FullName, AMTShiftStrategyACEA.Name, (r, c) => new AMTShiftStrategyACEA(r, c)),
 			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategy).FullName, ATShiftStrategy.Name, (r, c) => new ATShiftStrategy(r, c)),
 			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategyVoith).FullName, ATShiftStrategyVoith.Name, (r, c) => new ATShiftStrategyVoith(r, c)),
 			Tuple.Create<GbxTypeList, string, string, StrategyCreator>( new GbxTypeList {GearboxType.ATPowerSplit, GearboxType.ATSerial}, typeof(ATShiftStrategyOptimized).FullName, ATShiftStrategyOptimized.Name, (r, c) => new ATShiftStrategyOptimized(r, c)),
@@ -278,18 +280,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container)
 		{
-			if (data.Cycle.CycleType != CycleType.DistanceBased) {
-				throw new VectoException("CycleType must be DistanceBased");
-			}
+			//if (data.Cycle.CycleType != CycleType.DistanceBased) {
+			//	throw new VectoException("CycleType must be DistanceBased");
+			//}
 
-			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
-			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
-
-			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
-			//       should be a reference/proxy to the main driving cyle. but how to access it?
-			container.AddComponent(new DistanceBasedDrivingCycle(container, data.Cycle));
-
-			var powertrain = new Vehicle(container, data.VehicleData, data.AirdragData)
+			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
+			var powertrain = vehicle
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, data.AxleGearData))
@@ -298,6 +294,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
+			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
+			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
+
+			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
+			//       should be a reference/proxy to the main driving cyle. but how to access it?
+			switch (data.Cycle.CycleType) {
+				case CycleType.DistanceBased:
+					container.AddComponent(new DistanceBasedDrivingCycle(container, data.Cycle));
+					break;
+				case CycleType.MeasuredSpeed:
+					var dummyData = GetMeasuredSpeedDummnCycle();
+					var msCycle = new MeasuredSpeedDrivingCycle(container, dummyData);
+					msCycle.AddComponent(vehicle);
+					break;
+				case CycleType.EngineOnly: break;
+				default: throw new VectoException("Wrong CycleType for SimplePowertrain");
+			}
+			
 
 			var engine = new CombustionEngine(container, data.EngineData);
 			var idleController = GetIdleController(data.PTO, engine, container);
@@ -306,6 +320,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			powertrain.AddComponent(engine, idleController)
 					.AddAuxiliaries(container, data);
 
+		}
+
+		private DrivingCycleData GetMeasuredSpeedDummnCycle()
+		{
+			var header = "<t>,<v>,<grad>";
+			var entries = new[] { "0, 50, 0", "10, 50, 0" };
+			var cycleData = new MemoryStream();
+			var writer = new StreamWriter(cycleData);
+			writer.WriteLine(header);
+			foreach (var entry in entries) {
+				writer.WriteLine(entry);
+			}
+			writer.Flush();
+			cycleData.Seek(0, SeekOrigin.Begin);
+			return DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.MeasuredSpeed, "DummyCycle", false);
 		}
 
 		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine, IVehicleContainer container)
@@ -413,12 +442,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		private static IShiftStrategy GetShiftStrategy(VectoRunData runData, IVehicleContainer container)
+		public static IShiftStrategy GetShiftStrategy(VectoRunData runData, IVehicleContainer container)
 		{
 			if (string.IsNullOrWhiteSpace(runData.ShiftStrategy)) {
 				switch (runData.GearboxData.Type) {
 					case GearboxType.AMT:
-						return new AMTShiftStrategyOptimized(runData, container);
+						//return new AMTShiftStrategyOptimized(runData, container);
+						return new AMTShiftStrategy(runData, container);
 					case GearboxType.MT:
 						return new MTShiftStrategy(runData, container);
 					case GearboxType.ATPowerSplit:

@@ -400,16 +400,16 @@ namespace TUGraz.VectoCommon.InputData
 		MeterPerSecond StartSpeed { get; }
 		MeterPerSquareSecond StartAcceleration { get; }
 		Second GearResidenceTime { get; }
-		double DnT99LHMin1 { get; }
-		double DnT99LHMin2 { get; }
-		int AllowedGearRangeUp { get; }
-		int AllowedGearRangeDown { get; }
+		double? DnT99LHMin1 { get; }
+		double? DnT99LHMin2 { get; }
+		int? AllowedGearRangeUp { get; }
+		int? AllowedGearRangeDown { get; }
 		Second LookBackInterval { get; }
 		Watt AvgCardanPowerThresholdPropulsion { get; }
 		Watt CurrCardanPowerThresholdPropulsion { get; }
-		double TargetSpeedDeviationFactor { get; }
-		double EngineSpeedHighDriveOffFactor { get; }
-		double RatingFactorCurrentGear { get; }
+		double? TargetSpeedDeviationFactor { get; }
+		double? EngineSpeedHighDriveOffFactor { get; }
+		double? RatingFactorCurrentGear { get; }
 		TableData AccelerationReserveLookup { get; }
 		TableData ShareTorque99L { get; }
 		TableData PredictionDurationLookup { get; }
@@ -418,8 +418,8 @@ namespace TUGraz.VectoCommon.InputData
 		string Source { get; }
 		Second DriverAccelerationLookBackInterval { get; }
 		MeterPerSquareSecond DriverAccelerationThresholdLow { get; }
-		double RatioEarlyUpshiftFC { get; }
-		double RatioEarlyDownshiftFC { get; }
+		double? RatioEarlyUpshiftFC { get; }
+		double? RatioEarlyDownshiftFC { get; }
 
 		TableData LoadStageShiftLines { get; }
 		IList<double> LoadStageThresoldsUp { get; }

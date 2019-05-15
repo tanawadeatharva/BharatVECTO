@@ -233,7 +233,7 @@ Public Class Gearbox
 				End Try
 
 				axlegearData = doa.CreateAxleGearData(gearbox)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, Nothing)
 			End If
 
 			Dim result As IList(Of ValidationResult) =

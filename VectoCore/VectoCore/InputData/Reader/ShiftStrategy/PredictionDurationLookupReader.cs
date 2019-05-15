@@ -33,7 +33,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 
 		public static PredictionDurationLookup Create(TableData data)
 		{
-
+			if (data == null) {
+				return null;
+			}
 			return new PredictionDurationLookup(
 				new LookupDataReader<double, double>(
 						"ShiftStrategy PredictionDuration", new[] { Fields.SpeedRatio, Fields.PredictionTimeRatio })

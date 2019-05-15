@@ -16,6 +16,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 
 		public static IShareTorque99lLookup Create(TableData data)
 		{
+			if (data == null) {
+				return null;
+			}
 			return new ShareTorque99lLookup(
 				new LookupDataReader<MeterPerSecond, double>("Share T_99l", new[] { Fields.Velocity, Fields.ShareT99l })
 					.Create(data, x => x.ParseDouble(Fields.Velocity).KMPHtoMeterPerSecond(), y => y.ParseDouble(Fields.ShareT99l))

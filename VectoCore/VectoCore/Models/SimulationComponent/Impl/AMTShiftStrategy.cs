@@ -29,13 +29,19 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -51,7 +57,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			EarlyShiftUp = true;
 			SkipGears = true;
-
+			if (runData.EngineData == null) {
+				return;
+			}
 			var transmissionRatio = runData.AxleGearData.AxleGear.Ratio *
 									(runData.AngledriveData == null ? 1.0 : runData.AngledriveData.Angledrive.Ratio) /
 									runData.VehicleData.DynamicTyreRadius;
@@ -80,6 +88,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override GearInfo NextGear
 		{
 			get { return new GearInfo(_nextGear, false); }
+		}
+
+		public override ShiftPolygon ComputeDeclarationShiftPolygon(
+			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius)
+		{
+			return DeclarationData.Gearbox.ComputeManualTransmissionShiftPolygon(
+				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
 		}
 
 		public static string Name { get { return "Classic AMT shift strategy (shift lines)"; } }

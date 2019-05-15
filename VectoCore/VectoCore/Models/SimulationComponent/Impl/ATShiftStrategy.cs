@@ -29,16 +29,20 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
@@ -64,6 +68,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override GearInfo NextGear
 		{
 			get { return new GearInfo(_nextGear.Gear, _nextGear.TorqueConverterLocked); }
+		}
+
+		public override ShiftPolygon ComputeDeclarationShiftPolygon(
+			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius)
+		{
+			return DeclarationData.TorqueConverter.ComputeShiftPolygon(engineDataFullLoadCurve, i == 0, i >= gearboxGears.Count - 1);
 		}
 
 		public static string Name { get { return "Classic AT shift strategy"; } }
@@ -388,7 +399,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			if (gear > 1 || (gear == 1 && _gearbox.TorqueConverterLocked)) {
+			if (shiftTimeReached &&  gear > 1 || (gear == 1 && _gearbox.TorqueConverterLocked)) {
 				var earlyDownshift = CheckEarlyDownshift(
 					absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime);
 				if (earlyDownshift.HasValue) {

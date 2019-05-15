@@ -1,12 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -21,6 +26,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public AMTShiftStrategyOptimized(VectoRunData runData, IDataBus dataBus) : base(runData, dataBus)
 		{
+			if (runData.EngineData == null) {
+				return;
+			}
 			fcMap = runData.EngineData.ConsumptionMap;
 			fld = runData.EngineData.FullLoadCurves;
 			shiftStrategyParameters = runData.GearshiftParameters;
@@ -151,5 +159,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public new static string Name { get { return "AMT shift strategy w early upshift (FC-based)"; } }
+
+		#region Overrides of AMTShiftStrategy
+
+		public override ShiftPolygon ComputeDeclarationShiftPolygon(
+			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius)
+		{
+			return DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
+		}
+
+		#endregion
 	}
 }

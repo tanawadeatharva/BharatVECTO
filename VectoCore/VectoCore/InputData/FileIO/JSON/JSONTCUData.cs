@@ -17,81 +17,81 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public MeterPerSecond StartSpeed
 		{
-			get { return Body.GetEx<double>("StartSpeed").KMPHtoMeterPerSecond(); }
+			get { return Body.GetValueOrDefault<double>("StartSpeed")?.KMPHtoMeterPerSecond(); }
 		}
 
 		public MeterPerSquareSecond StartAcceleration
 		{
-			get { return Body.GetEx<double>("StartAcceleration").SI<MeterPerSquareSecond>(); }
+			get { return Body.GetValueOrDefault<double>("StartAcceleration")?.SI<MeterPerSquareSecond>(); }
 		}
 
 		public Second GearResidenceTime
 		{
-			get { return Body.GetEx<double>("GearResidenceTime").SI<Second>(); }
+			get { return Body.GetValueOrDefault<double>("GearResidenceTime")?.SI<Second>(); }
 		}
 
-		public double DnT99LHMin1
+		public double? DnT99LHMin1
 		{
-			get { return Body.GetEx<double>("Dn_Tq99L_high_min_1"); }
+			get { return Body.GetValueOrDefault<double>("Dn_Tq99L_high_min_1"); }
 		}
 
-		public double DnT99LHMin2
+		public double? DnT99LHMin2
 		{
-			get { return Body.GetEx<double>("Dn_Tq99L_high_min_2"); }
+			get { return Body.GetValueOrDefault<double>("Dn_Tq99L_high_min_2"); }
 		}
 
-		public int AllowedGearRangeUp
+		public int? AllowedGearRangeUp
 		{
-			get { return Body.GetEx<int>("GearRangeUp"); }
+			get { return Body.GetValueOrDefault<int>("GearRangeUp"); }
 		}
 
-		public int AllowedGearRangeDown
+		public int? AllowedGearRangeDown
 		{
-			get { return Body.GetEx<int>("GearRangeDown"); }
+			get { return Body.GetValueOrDefault<int>("GearRangeDown"); }
 		}
 
 		public Second LookBackInterval
 		{
-			get { return Body.GetEx<double>("LookBackDriver").SI<Second>(); }
+			get { return Body.GetValueOrDefault<double>("LookBackDriver")?.SI<Second>(); }
 		}
 
 		public Watt AvgCardanPowerThresholdPropulsion
 		{
-			get { return Body.GetEx<double>("P_card_avg_threshold").SI<Watt>(); }
+			get { return Body.GetValueOrDefault<double>("P_card_avg_threshold")?.SI<Watt>(); }
 		}
 
 		public Watt CurrCardanPowerThresholdPropulsion
 		{
-			get { return Body.GetEx<double>("P_card_curr_threshold").SI<Watt>(); }
+			get { return Body.GetValueOrDefault<double>("P_card_curr_threshold")?.SI<Watt>(); }
 		}
 
-		public double TargetSpeedDeviationFactor
+		public double? TargetSpeedDeviationFactor
 		{
-			get { return Body.GetEx<double>("Diff_curr_targ_vel"); }
+			get { return Body.GetValueOrDefault<double>("Diff_curr_targ_vel"); }
 		}
 
-		public double EngineSpeedHighDriveOffFactor
+		public double? EngineSpeedHighDriveOffFactor
 		{
-			get { return Body.GetEx<double>("EngineSpeedHighDriveOffFactor"); }
+			get { return Body.GetValueOrDefault<double>("EngineSpeedHighDriveOffFactor"); }
 		}
 
-		public double RatingFactorCurrentGear
+		public double? RatingFactorCurrentGear
 		{
-			get { return Body.GetEx<double>("Rating_current_gear"); }
+			get { return Body.GetValueOrDefault<double>("Rating_current_gear"); }
 		}
 
 		public TableData AccelerationReserveLookup
 		{
 			get {
 				try {
-					return ReadTableData(Body.GetEx<string>("AccelerationReserveLookup"), "AccelerationReserveLookup");
+					return ReadTableData(Body["AccelerationReserveLookup"]?.ToString(), "AccelerationReserveLookup", false);
 				} catch (Exception) {
 					if (!TolerateMissing) {
 						throw;
 					}
 
 					return new TableData(
-						Path.Combine(BasePath, Body["AccelerationReserveLookup"].ToString()) + MissingFileSuffix,
+						Path.Combine(BasePath, Body["AccelerationReserveLookup"]?.ToString() ?? "") + MissingFileSuffix,
 						DataSourceType.Missing);
 				}
 			}
@@ -101,14 +101,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get {
 				try {
-					return ReadTableData(Body.GetEx<string>("ShareTorque99L"), "ShareTorque99L");
+					return ReadTableData(Body["ShareTorque99L"]?.ToString(), "ShareTorque99L", false);
 				} catch (Exception) {
 					if (!TolerateMissing) {
 						throw;
 					}
 
 					return new TableData(
-						Path.Combine(BasePath, Body["ShareTorque99L"].ToString()) + MissingFileSuffix,
+						Path.Combine(BasePath, Body["ShareTorque99L"]?.ToString() ?? "") + MissingFileSuffix,
 						DataSourceType.Missing);
 				}
 			}
@@ -118,14 +118,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get {
 				try {
-					return ReadTableData(Body.GetEx<string>("PredictionDurationLookup"), "PredictionDurationLookup");
+					return ReadTableData(Body["PredictionDurationLookup"]?.ToString(), "PredictionDurationLookup", false);
 				} catch (Exception) {
 					if (!TolerateMissing) {
 						throw;
 					}
 
 					return new TableData(
-						Path.Combine(BasePath, Body["PredictionDurationLookup"].ToString()) + MissingFileSuffix,
+						Path.Combine(BasePath, Body["PredictionDurationLookup"]?.ToString() ?? "") + MissingFileSuffix,
 						DataSourceType.Missing);
 				}
 			}
@@ -135,14 +135,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get {
 				try {
-					return ReadTableData(Body.GetEx<string>("ShareIdleLow"), "ShareIdleLow");
+					return ReadTableData(Body["ShareIdleLow"]?.ToString(), "ShareIdleLow", false);
 				} catch (Exception) {
 					if (!TolerateMissing) {
 						throw;
 					}
 
 					return new TableData(
-						Path.Combine(BasePath, Body["ShareIdleLow"].ToString()) + MissingFileSuffix,
+						Path.Combine(BasePath, Body["ShareIdleLow"]?.ToString() ?? "") + MissingFileSuffix,
 						DataSourceType.Missing);
 				}
 			}
@@ -152,33 +152,33 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get {
 				try {
-					return ReadTableData(Body.GetEx<string>("ShareEngineHigh"), "ShareEngineHigh");
+					return ReadTableData(Body["ShareEngineHigh"]?.ToString(), "ShareEngineHigh", false);
 				} catch (Exception) {
 					if (!TolerateMissing) {
 						throw;
 					}
 
 					return new TableData(
-						Path.Combine(BasePath, Body["ShareEngineHigh"].ToString()) + MissingFileSuffix,
+						Path.Combine(BasePath, Body["ShareEngineHigh"]?.ToString() ?? "") + MissingFileSuffix,
 						DataSourceType.Missing);
 				}
 			}
 		}
 
-		public Second DriverAccelerationLookBackInterval { get {return Body.GetEx<double>("DriverAccelerationLookBackInterval").SI<Second>();} }
-		public MeterPerSquareSecond DriverAccelerationThresholdLow { get { return Body.GetEx<double>("DriverAccelerationThresholdLow").SI<MeterPerSquareSecond>(); } }
+		public Second DriverAccelerationLookBackInterval { get {return Body.GetValueOrDefault<double>("DriverAccelerationLookBackInterval")?.SI<Second>();} }
+		public MeterPerSquareSecond DriverAccelerationThresholdLow { get { return Body.GetValueOrDefault<double>("DriverAccelerationThresholdLow")?.SI<MeterPerSquareSecond>(); } }
 
-		public double RatioEarlyUpshiftFC
+		public double? RatioEarlyUpshiftFC
 		{
 			get {
-				return Body.GetEx<double>("RatioEarlyUpshiftFC");
+				return Body.GetValueOrDefault<double>("RatioEarlyUpshiftFC");
 			}
 		}
 
-		public double RatioEarlyDownshiftFC
+		public double? RatioEarlyDownshiftFC
 		{
 			get {
-				return Body.GetEx<double>("RatioEarlyDownshiftFC");
+				return Body.GetValueOrDefault<double>("RatioEarlyDownshiftFC");
 			}
 		}
 
@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get {
 				try {
-					return ReadTableData(Body.GetEx<string>("LoadStageShiftLines"), "LoadStageShiftLines");
+					return ReadTableData(Body["LoadStageShiftLines"]?.ToString(), "LoadStageShiftLines", false);
 				} catch (Exception) {
 					return null;
 				}
@@ -195,13 +195,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IList<double> LoadStageThresoldsUp
 		{
-			get { return Body.GetEx<string>("LoadStageThresoldsUp").Split(';').Select(x => x.ToDouble()).ToList(); }
+			get { return (Body["LoadStageThresoldsUp"]?.ToString() ?? "").Split(';').Select(x => x.ToDouble(0)).ToList(); }
 		}
 
 		public IList<double> LoadStageThresoldsDown
 		{
 			get {
-				return Body.GetEx<string>("LoadStageThresoldsDown").Split(';').Select(x => x.ToDouble()).ToList();
+				return (Body["LoadStageThresoldsDown"]?.ToString() ?? "").Split(';').Select(x => x.ToDouble(0)).ToList();
 			}
 		}
 

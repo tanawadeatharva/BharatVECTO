@@ -32,6 +32,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 
 		public static ShareIdleLowLookup Create(TableData data)
 		{
+			if (data == null) {
+				return null;
+			}
 			return new ShareIdleLowLookup(
 				new LookupDataReader<MeterPerSecond, double>(
 						"ShiftStrategy IdleLow", new[] { Fields.Velocity, Fields.WeightingFactor })

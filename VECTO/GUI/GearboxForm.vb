@@ -23,9 +23,13 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.InputData.Reader
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.Simulation.Data
+Imports TUGraz.VectoCore.Models.Simulation.Impl
+Imports TUGraz.VectoCore.Models.SimulationComponent
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
+Imports TUGraz.VectoCore.Models.SimulationComponent.Impl
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.OutputData.XML
 Imports TUGraz.VectoCore.Utils
@@ -828,7 +832,7 @@ Public Class GearboxForm
 
                 'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
                 Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-                Dim shiftLines As ShiftPolygon = GetShiftLines(engine.IdleSpeed, engineFld, vehicle, gears, gear)
+                Dim shiftLines As ShiftPolygon = GetShiftLines(engine.IdleSpeed, engineFld, vehicle, gears, gear, inputData.JobInputData.ShiftStrategy)
                 If (Not IsNothing(shiftLines)) Then
 
 
@@ -897,8 +901,7 @@ Public Class GearboxForm
     End Sub
 
 
-    Private Function GetShiftLines(ByVal idleSpeed As PerSecond, engineFullLoadCurve As EngineFullLoadCurve,
-                                    vehicle As IVehicleEngineeringInputData, gears As IList(Of ITransmissionInputData), ByVal gear As Integer) _
+    Private Function GetShiftLines(idleSpeed As PerSecond, engineFullLoadCurve As EngineFullLoadCurve, vehicle As IVehicleEngineeringInputData, gears As IList(Of ITransmissionInputData), gear As Integer, shiftStrategy As String) _
         As ShiftPolygon
         Dim maxTqStr As String = LvGears.Items(gear).SubItems(GearboxTbl.MaxTorque).Text
         Dim engine As CombustionEngineData = ConvertToEngineData(engineFullLoadCurve, idleSpeed, gear,
@@ -918,7 +921,17 @@ Public Class GearboxForm
         If (rDyn.IsEqual(0)) Then
             Return Nothing
         End If
-        Dim shiftLines As ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(
+
+        Dim tmpRunData as VectoRunData = New VectoRunData() With {
+            .ShiftStrategy = shiftStrategy,
+            .GearboxData = New GearboxData() with {
+                .Type = CType(CbGStype.SelectedValue, GearboxType)
+            }
+        }
+        Dim tmpStrategy as IShiftStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData))
+            
+
+        Dim shiftLines As ShiftPolygon = tmpStrategy.ComputeDeclarationShiftPolygon(
             CType(CbGStype.SelectedValue, GearboxType), gear - 1,
             engine.FullLoadCurves(CType(gear, UInteger)), gears, engine,
             Double.Parse(LvGears.Items(0).SubItems(GearboxTbl.Ratio).Text, CultureInfo.InvariantCulture),
@@ -1062,7 +1075,7 @@ Public Class GearboxForm
 
             If VectoJobForm.Visible AndAlso engine.IdleSpeed > 0 Then
                 Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-                Dim shiftLines As ShiftPolygon = GetShiftLines(engine.IdleSpeed, engineFld, vehicle, gears, gear)
+                Dim shiftLines As ShiftPolygon = GetShiftLines(engine.IdleSpeed, engineFld, vehicle, gears, gear, inputData.JobInputData.ShiftStrategy)
                 If (Not IsNothing(shiftLines)) Then
                     ShiftPolygonExport.WriteShiftPolygon(shiftLines, jobFile & "_Gear " & gear & ".vgbs")
                 End If

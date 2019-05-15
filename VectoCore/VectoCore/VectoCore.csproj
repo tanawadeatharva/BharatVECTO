@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;BETA_RELEASE</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
@@ -76,7 +76,8 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>RELEASE_CANDIDATE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
@@ -205,7 +206,7 @@
     <Compile Include="Models\SimulationComponent\Data\PTOLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AbstractGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategyOptimized.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategyV2.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategyACEA.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\AverageAccelerationTorqueLookup.cs" />

@@ -15,6 +15,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 
 		public static IEngineSpeedHighFactorLookup Create(TableData data)
 		{
+			if (data == null) {
+				return null;
+			}
 			return new EngineSpeedHighFactorLookup(
 				new LookupDataReader<double, double>("EngineSpeedHighFactor", new[] { Fields.TorqueRatio, Fields.SpeedFactor })
 					.Create(

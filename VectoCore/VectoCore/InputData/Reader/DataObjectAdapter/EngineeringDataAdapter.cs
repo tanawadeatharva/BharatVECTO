@@ -41,6 +41,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -170,7 +171,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		internal GearboxData CreateGearboxData(
 			IGearboxEngineeringInputData gearbox, CombustionEngineData engineData,
-			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory)
+			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory, IShiftStrategy shiftStrategy)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
@@ -202,10 +203,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				var shiftPolygon = gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
-					: DeclarationData.Gearbox.ComputeShiftPolygon(
-						gearbox.Type, (int)i, engineData.FullLoadCurves[i + 1], gearbox.Gears,
-						engineData,
-						axlegearRatio, dynamicTyreRadius);
+					: shiftStrategy != null
+						? shiftStrategy.ComputeDeclarationShiftPolygon(
+							gearbox.Type, (int)i, engineData.FullLoadCurves[i + 1], gearbox.Gears,
+							engineData,
+							axlegearRatio, dynamicTyreRadius)
+						: DeclarationData.Gearbox.ComputeShiftPolygon(
+							gearbox.Type, (int)i, engineData.FullLoadCurves[i + 1], gearbox.Gears,
+							engineData,
+							axlegearRatio, dynamicTyreRadius);
 				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,
 					MaxSpeed = gear.MaxInputSpeed,
@@ -412,10 +418,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				StartVelocity = gsInputData.StartSpeed ?? DeclarationData.GearboxTCU.StartSpeed,
 				StartAcceleration = gsInputData.StartAcceleration ?? DeclarationData.GearboxTCU.StartAcceleration,
 				GearResidenceTime = gsInputData.GearResidenceTime ?? DeclarationData.GearboxTCU.GearResidenceTime,
-				DnT99L_highMin1 = gsInputData.DnT99LHMin1,
-				DnT99L_highMin2 = gsInputData.DnT99LHMin2,
-				AllowedGearRangeUp = gsInputData.AllowedGearRangeUp,
-				AllowedGearRangeDown = gsInputData.AllowedGearRangeDown,
+				DnT99L_highMin1 = gsInputData.DnT99LHMin1 ?? DeclarationData.GearboxTCU.DnT99L_highMin1,
+				DnT99L_highMin2 = gsInputData.DnT99LHMin2 ?? DeclarationData.GearboxTCU.DnT99L_highMin2,
+				AllowedGearRangeUp = gsInputData.AllowedGearRangeUp ?? DeclarationData.GearboxTCU.AllowedGearRangeUp,
+				AllowedGearRangeDown = gsInputData.AllowedGearRangeDown ?? DeclarationData.GearboxTCU.AllowedGearRangeDown,
 				LookBackInterval = gsInputData.LookBackInterval ?? DeclarationData.GearboxTCU.LookBackInterval,
 				DriverAccelerationLookBackInterval = gsInputData.DriverAccelerationLookBackInterval ?? DeclarationData.GearboxTCU.DriverAccelerationLookBackInterval,
 				DriverAccelerationThresholdLow = gsInputData.DriverAccelerationThresholdLow ?? DeclarationData.GearboxTCU.DriverAccelerationThresholdLow,
@@ -423,9 +429,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 														DeclarationData.GearboxTCU.AverageCardanPowerThresholdPropulsion,
 				CurrentCardanPowerThresholdPropulsion = gsInputData.CurrCardanPowerThresholdPropulsion ??
 														DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
-				TargetSpeedDeviationFactor = gsInputData.TargetSpeedDeviationFactor,
-				EngineSpeedHighDriveOffFactor = gsInputData.EngineSpeedHighDriveOffFactor,
-				RatingFactorCurrentGear = gsInputData.RatingFactorCurrentGear,
+				TargetSpeedDeviationFactor = gsInputData.TargetSpeedDeviationFactor ?? DeclarationData.GearboxTCU.TargetSpeedDeviationFactor,
+				EngineSpeedHighDriveOffFactor = gsInputData.EngineSpeedHighDriveOffFactor ?? DeclarationData.GearboxTCU.EngineSpeedHighDriveOffFactor,
+				RatingFactorCurrentGear = gsInputData.RatingFactorCurrentGear ?? DeclarationData.GearboxTCU.RatingFactorCurrentGear,
 				AccelerationReserveLookup = AccelerationReserveLookupReader.Create(gsInputData.AccelerationReserveLookup) ??
 											AccelerationReserveLookupReader.ReadFromStream(
 												RessourceHelper.ReadStream(
@@ -450,8 +456,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 										DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareEngineSpeedHigh.csv")
 								),
 				//---------------
-				RatioEarlyUpshiftFC = gsInputData.RatioEarlyUpshiftFC,
-				RatioEarlyDownshiftFC = gsInputData.RatioEarlyDownshiftFC,
+				RatioEarlyUpshiftFC = gsInputData.RatioEarlyUpshiftFC ?? 0,
+				RatioEarlyDownshiftFC = gsInputData.RatioEarlyDownshiftFC ?? 0,
 
 				// voith gs parameters
 

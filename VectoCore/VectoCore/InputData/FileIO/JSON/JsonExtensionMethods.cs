@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.Exceptions;
 
@@ -62,6 +63,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public static T GetEx<T>(this JToken value, string property)
 		{
 			return GetEx(value, property).Value<T>();
+		}
+
+
+		//public static T GetValueOrDefault<T>(this JToken jtoken, string property, T defaultVal = null) where T : class 
+		//{
+		//	var val = jtoken[property];
+		//	return val == null ? defaultVal : val.Value<T>();
+		//}
+
+		public static T? GetValueOrDefault<T>(this JToken jtoken, string property) where T : struct 
+		{
+			var val = jtoken[property];
+			return val?.Value<T>();
 		}
 	}
 }

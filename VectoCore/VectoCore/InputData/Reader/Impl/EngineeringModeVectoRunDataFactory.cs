@@ -36,7 +36,9 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
@@ -68,8 +70,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var tempVehicle = dao.CreateVehicleData(vehicle);
 
 			var axlegearData = dao.CreateAxleGearData(vehicle.AxleGearInputData);
+			var tmpRunData = new VectoRunData() {
+				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
+				GearboxData = new GearboxData() {
+					Type = vehicle.GearboxInputData.Type,
+				}
+			};
+			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
 			var gearboxData = dao.CreateGearboxData(vehicle.GearboxInputData, engineData, axlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius,tempVehicle.VehicleCategory);
+				tempVehicle.DynamicTyreRadius,tempVehicle.VehicleCategory, tmpStrategy);
 			var crossWindRequired = vehicle.AirdragInputData.CrossWindCorrectionMode ==
 									CrossWindCorrectionMode.VAirBetaLookupTable;
 			var angledriveData = dao.CreateAngledriveData(vehicle.AngledriveInputData);

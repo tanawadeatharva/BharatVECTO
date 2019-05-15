@@ -28,6 +28,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ShiftStrategy
 
 		public static IAccelerationReserveLookup Create(TableData data)
 		{
+			if (data == null) {
+				return null;
+			}
 			return new AccelerationReserveLookup(
 				new LookupDataReader<MeterPerSecond, Tuple<MeterPerSquareSecond, MeterPerSquareSecond>>(
 						"AcceleationReserve", new[] { Fields.Velocity, Fields.AccelerationReserveLow, Fields.AccelerationReserveHigh }, 3)

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.VisualBasic.CompilerServices;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -15,12 +16,14 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class AMTShiftStrategyV2 : ShiftStrategy
+	public class AMTShiftStrategyACEA : ShiftStrategy
 	{
 		private uint _nextGear;
 		protected readonly MaxGradabilityLookup MaxGradability;
@@ -61,8 +64,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		public AMTShiftStrategyV2(VectoRunData data, IVehicleContainer dataBus) : base(data.GearboxData, dataBus)
+		public AMTShiftStrategyACEA(VectoRunData data, IVehicleContainer dataBus) : base(data.GearboxData, dataBus)
 		{
+			if (data.EngineData == null) {
+				return;
+			}
 			PowertrainConfig = data;
 			ShiftStrategyParameters = data.GearshiftParameters;
 			if (ShiftStrategyParameters == null) {
@@ -736,6 +742,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container.SetDataValue("grad_shift", Math.Tan(gradient.Value()) * 100);
 			GearRatings.Clear();
 			accRsv = null;
+		}
+
+		public override ShiftPolygon ComputeDeclarationShiftPolygon(
+			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius)
+		{
+			return null;
 		}
 	}
 }

@@ -236,10 +236,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
 				switch (type) {
+					case GearboxType.AMT:
+						//return ComputeEfficiencyShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 					case GearboxType.MT: 
 						return ComputeManualTransmissionShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
-					case GearboxType.AMT: 
-						return ComputeEfficiencyShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 					case GearboxType.ATSerial: 
 					case GearboxType.ATPowerSplit:
 						return TorqueConverter.ComputeShiftPolygon(fullLoadCurve, gearIdx == 0, gearIdx >= gears.Count - 1);
@@ -253,7 +253,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					: ComputeManualTransmissionShiftPolygon(gearIdx, fullLoadCurve, gears, engine, axlegearRatio, dynamicTyreRadius);
 			}
 
-			private static ShiftPolygon ComputeEfficiencyShiftPolygon(int gearIdx, EngineFullLoadCurve fullLoadCurve, IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
+			public static ShiftPolygon ComputeEfficiencyShiftPolygon(int gearIdx, EngineFullLoadCurve fullLoadCurve, IList<ITransmissionInputData> gears, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius)
 			{
 				if (gears.Count < 2) {
 					throw new VectoException("ComputeShiftPolygon needs at least 2 gears. {0} gears given.", gears.Count);

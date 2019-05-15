@@ -1,11 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -28,6 +35,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public ATShiftStrategyOptimized(VectoRunData runData, IDataBus dataBus) : base(runData, dataBus)
 		{
+			if (runData.EngineData == null) {
+				return;
+			}
 			fcMap = runData.EngineData.ConsumptionMap;
 			fld = runData.EngineData.FullLoadCurves;
 			shiftStrategyParameters = runData.GearshiftParameters;
@@ -42,6 +52,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			TestContainerGbx = TestContainer.GearboxCtl as ATGearbox;
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
+			}
+
+			if (runData.Cycle.CycleType == CycleType.MeasuredSpeed) {
+				try {
+					TestContainer.GetCycleOutPort().Initialize();
+					TestContainer.GetCycleOutPort().Request(0.SI<Second>(), 1.SI<Second>());
+				} catch (Exception ) { }
 			}
 
 			
@@ -137,5 +154,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
 			return response;
 		}
+
+		#region Overrides of ATShiftStrategy
+
+		public override ShiftPolygon ComputeDeclarationShiftPolygon(
+			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve, IList<ITransmissionInputData> gearboxGears,
+			CombustionEngineData engineData, double axlegearRatio, Meter dynamicTyreRadius)
+		{
+			var shiftLine = DeclarationData.Gearbox.ComputeEfficiencyShiftPolygon(
+				Math.Max(i, 2), engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
+
+			var upshift = new List<ShiftPolygon.ShiftPolygonEntry>();
+
+			if (i < gearboxGears.Count - 1) {
+
+				var maxDragTorque = engineDataFullLoadCurve.MaxDragTorque * 1.1;
+				var maxTorque = engineDataFullLoadCurve.MaxTorque * 1.1;
+
+				var speed = engineData.FullLoadCurves[0].RatedSpeed / gearboxGears[i].Ratio * gearboxGears[i + 1].Ratio;
+
+
+				upshift.Add(new ShiftPolygon.ShiftPolygonEntry(maxDragTorque, speed));
+				upshift.Add(new ShiftPolygon.ShiftPolygonEntry(maxTorque, speed));
+			}
+			return new ShiftPolygon(shiftLine.Downshift.ToList(), upshift);
+		}
+
+		#endregion
 	}
 }
