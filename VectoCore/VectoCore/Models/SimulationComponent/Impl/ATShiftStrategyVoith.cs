@@ -37,6 +37,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public ATShiftStrategyVoith(VectoRunData data, IDataBus dataBus) : base(data, dataBus)
 		{
+			if (data.EngineData == null) {
+				return;
+			}
 			shiftParameters = data.GearshiftParameters;
 			InitializeShiftLines(shiftParameters.GearshiftLines);
 			LoadStageSteps = new List<SchmittTrigger>();
