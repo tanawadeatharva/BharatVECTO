@@ -131,6 +131,14 @@ Three settings can be set:
 - PTO Consumer Loss Map (.vptol): Here the [PTO Idle Loss Map](#pto-idle-consumption-map-.vptoi) of the pto consumer can be defined (adds power demand when the pto cycle is not active).
 - PTO Cycle (.vptoc): Defines the [PTO Cycle](#pto-cycle-.vptoc) which is used when the pto-cycle is activated (when the PTO-Flag in the driving cycle is set).
 
+<div class="declaration">
+
+###ADAS
+
+On the ADAS tab, the options for advanced driver assistant systems can be selected. This is only supported in declaration mode. Depending on the mission cycle, vehicle group, and payload a certain benefit is applied to the calcualated fuel consumption. See [ADAS: Overspeed](#driver-overspeed) and [ADAS Technologies](#vehicle-adas-technologies)
+
+</div>
+
 ###Controls
 
 
