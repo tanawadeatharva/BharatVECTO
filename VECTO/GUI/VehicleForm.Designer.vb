@@ -145,15 +145,18 @@ Partial Class VehicleForm
         Me.Label17 = New System.Windows.Forms.Label()
         Me.btDelMaxTorqueEntry = New System.Windows.Forms.Button()
         Me.btAddMaxTorqueEntry = New System.Windows.Forms.Button()
-        Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
-        Me.Label21 = New System.Windows.Forms.Label()
         Me.tpADAS = New System.Windows.Forms.TabPage()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
-        Me.lblPCC = New System.Windows.Forms.Label()
-        Me.cbEngineStopStart = New System.Windows.Forms.CheckBox()
-        Me.Label22 = New System.Windows.Forms.Label()
-        Me.cbEcoRoll = New System.Windows.Forms.ComboBox()
         Me.cbPcc = New System.Windows.Forms.ComboBox()
+        Me.cbEcoRoll = New System.Windows.Forms.ComboBox()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.cbEngineStopStart = New System.Windows.Forms.CheckBox()
+        Me.lblPCC = New System.Windows.Forms.Label()
+        Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.GroupBox9 = New System.Windows.Forms.GroupBox()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.cbTankSystem = New System.Windows.Forms.ComboBox()
         Me.GroupBox6.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.GroupBox7.SuspendLayout
@@ -181,6 +184,7 @@ Partial Class VehicleForm
         Me.TabPage3.SuspendLayout
         Me.tpADAS.SuspendLayout
         Me.GroupBox5.SuspendLayout
+        Me.GroupBox9.SuspendLayout
         Me.SuspendLayout
         '
         'Label1
@@ -446,7 +450,7 @@ Partial Class VehicleForm
         Me.GroupBox7.Controls.Add(Me.CbRtType)
         Me.GroupBox7.Location = New System.Drawing.Point(6, 6)
         Me.GroupBox7.Name = "GroupBox7"
-        Me.GroupBox7.Size = New System.Drawing.Size(564, 111)
+        Me.GroupBox7.Size = New System.Drawing.Size(293, 111)
         Me.GroupBox7.TabIndex = 3
         Me.GroupBox7.TabStop = false
         Me.GroupBox7.Text = "Retarder Losses"
@@ -953,7 +957,7 @@ Partial Class VehicleForm
         Me.GroupBox2.Controls.Add(Me.cbAngledriveType)
         Me.GroupBox2.Location = New System.Drawing.Point(6, 123)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(564, 111)
+        Me.GroupBox2.Size = New System.Drawing.Size(293, 111)
         Me.GroupBox2.TabIndex = 4
         Me.GroupBox2.TabStop = false
         Me.GroupBox2.Text = "Angledrive"
@@ -1130,6 +1134,7 @@ Partial Class VehicleForm
         '
         'TabPage2
         '
+        Me.TabPage2.Controls.Add(Me.GroupBox9)
         Me.TabPage2.Controls.Add(Me.gbPTO)
         Me.TabPage2.Controls.Add(Me.GroupBox7)
         Me.TabPage2.Controls.Add(Me.GroupBox2)
@@ -1208,24 +1213,6 @@ Partial Class VehicleForm
         Me.btAddMaxTorqueEntry.TabIndex = 4
         Me.btAddMaxTorqueEntry.UseVisualStyleBackColor = true
         '
-        'cbLegislativeClass
-        '
-        Me.cbLegislativeClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbLegislativeClass.FormattingEnabled = true
-        Me.cbLegislativeClass.Location = New System.Drawing.Point(220, 140)
-        Me.cbLegislativeClass.Name = "cbLegislativeClass"
-        Me.cbLegislativeClass.Size = New System.Drawing.Size(52, 21)
-        Me.cbLegislativeClass.TabIndex = 41
-        '
-        'Label21
-        '
-        Me.Label21.AutoSize = true
-        Me.Label21.Location = New System.Drawing.Point(32, 123)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(112, 13)
-        Me.Label21.TabIndex = 42
-        Me.Label21.Text = "Maximum Laden Mass"
-        '
         'tpADAS
         '
         Me.tpADAS.Controls.Add(Me.GroupBox5)
@@ -1251,14 +1238,30 @@ Partial Class VehicleForm
         Me.GroupBox5.TabStop = false
         Me.GroupBox5.Text = "ADAS Options"
         '
-        'lblPCC
+        'cbPcc
         '
-        Me.lblPCC.AutoSize = true
-        Me.lblPCC.Location = New System.Drawing.Point(6, 88)
-        Me.lblPCC.Name = "lblPCC"
-        Me.lblPCC.Size = New System.Drawing.Size(122, 13)
-        Me.lblPCC.TabIndex = 3
-        Me.lblPCC.Text = "Predictive Cruise Control"
+        Me.cbPcc.FormattingEnabled = true
+        Me.cbPcc.Location = New System.Drawing.Point(18, 104)
+        Me.cbPcc.Name = "cbPcc"
+        Me.cbPcc.Size = New System.Drawing.Size(179, 21)
+        Me.cbPcc.TabIndex = 8
+        '
+        'cbEcoRoll
+        '
+        Me.cbEcoRoll.FormattingEnabled = true
+        Me.cbEcoRoll.Location = New System.Drawing.Point(18, 58)
+        Me.cbEcoRoll.Name = "cbEcoRoll"
+        Me.cbEcoRoll.Size = New System.Drawing.Size(179, 21)
+        Me.cbEcoRoll.TabIndex = 7
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = true
+        Me.Label22.Location = New System.Drawing.Point(6, 42)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(47, 13)
+        Me.Label22.TabIndex = 6
+        Me.Label22.Text = "Eco-Roll"
         '
         'cbEngineStopStart
         '
@@ -1270,30 +1273,61 @@ Partial Class VehicleForm
         Me.cbEngineStopStart.Text = "Engine Stop/Start during vehicle stop"
         Me.cbEngineStopStart.UseVisualStyleBackColor = true
         '
-        'Label22
+        'lblPCC
         '
-        Me.Label22.AutoSize = true
-        Me.Label22.Location = New System.Drawing.Point(6, 42)
-        Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(47, 13)
-        Me.Label22.TabIndex = 6
-        Me.Label22.Text = "Eco-Roll"
+        Me.lblPCC.AutoSize = true
+        Me.lblPCC.Location = New System.Drawing.Point(6, 88)
+        Me.lblPCC.Name = "lblPCC"
+        Me.lblPCC.Size = New System.Drawing.Size(122, 13)
+        Me.lblPCC.TabIndex = 3
+        Me.lblPCC.Text = "Predictive Cruise Control"
         '
-        'cbEcoRoll
+        'cbLegislativeClass
         '
-        Me.cbEcoRoll.FormattingEnabled = true
-        Me.cbEcoRoll.Location = New System.Drawing.Point(18, 58)
-        Me.cbEcoRoll.Name = "cbEcoRoll"
-        Me.cbEcoRoll.Size = New System.Drawing.Size(179, 21)
-        Me.cbEcoRoll.TabIndex = 7
+        Me.cbLegislativeClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbLegislativeClass.FormattingEnabled = true
+        Me.cbLegislativeClass.Location = New System.Drawing.Point(220, 140)
+        Me.cbLegislativeClass.Name = "cbLegislativeClass"
+        Me.cbLegislativeClass.Size = New System.Drawing.Size(52, 21)
+        Me.cbLegislativeClass.TabIndex = 41
         '
-        'cbPcc
+        'Label21
         '
-        Me.cbPcc.FormattingEnabled = true
-        Me.cbPcc.Location = New System.Drawing.Point(18, 104)
-        Me.cbPcc.Name = "cbPcc"
-        Me.cbPcc.Size = New System.Drawing.Size(179, 21)
-        Me.cbPcc.TabIndex = 8
+        Me.Label21.AutoSize = true
+        Me.Label21.Location = New System.Drawing.Point(32, 123)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(112, 13)
+        Me.Label21.TabIndex = 42
+        Me.Label21.Text = "Maximum Laden Mass"
+        '
+        'GroupBox9
+        '
+        Me.GroupBox9.Controls.Add(Me.cbTankSystem)
+        Me.GroupBox9.Controls.Add(Me.Label23)
+        Me.GroupBox9.Location = New System.Drawing.Point(306, 7)
+        Me.GroupBox9.Name = "GroupBox9"
+        Me.GroupBox9.Size = New System.Drawing.Size(264, 63)
+        Me.GroupBox9.TabIndex = 5
+        Me.GroupBox9.TabStop = false
+        Me.GroupBox9.Text = "Tank System"
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = true
+        Me.Label23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.Label23.Location = New System.Drawing.Point(6, 16)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(187, 13)
+        Me.Label23.TabIndex = 0
+        Me.Label23.Text = "Only applicable for NG engines!"
+        '
+        'cbTankSystem
+        '
+        Me.cbTankSystem.FormattingEnabled = true
+        Me.cbTankSystem.Location = New System.Drawing.Point(9, 33)
+        Me.cbTankSystem.Name = "cbTankSystem"
+        Me.cbTankSystem.Size = New System.Drawing.Size(247, 21)
+        Me.cbTankSystem.TabIndex = 1
         '
         'VehicleForm
         '
@@ -1365,6 +1399,8 @@ Partial Class VehicleForm
         Me.tpADAS.ResumeLayout(false)
         Me.GroupBox5.ResumeLayout(false)
         Me.GroupBox5.PerformLayout
+        Me.GroupBox9.ResumeLayout(false)
+        Me.GroupBox9.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1489,4 +1525,7 @@ End Sub
     Friend WithEvents Label22 As Label
     Friend WithEvents cbPcc As ComboBox
     Friend WithEvents cbEcoRoll As ComboBox
+    Friend WithEvents GroupBox9 As GroupBox
+    Friend WithEvents cbTankSystem As ComboBox
+    Friend WithEvents Label23 As Label
 End Class

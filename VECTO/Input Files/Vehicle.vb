@@ -72,6 +72,7 @@ Public Class Vehicle
     public PCC as PredictiveCruiseControlType
     public EngineStop as Boolean
 
+    public VehicleTankSystem as TankSystem?
 
 	Public Sub New()
 		_path = ""
@@ -693,7 +694,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
 	get
-			Return DeclarationData.Vehicle.TankSystemDefault
+			Return vehicleTankSystem
 	End Get
 	End Property
 

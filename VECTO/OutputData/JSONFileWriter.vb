@@ -231,7 +231,9 @@ Public Class JSONFileWriter
 				{"FzISO", axle.Tyre.TyreTestLoad.Value()},
 				{"Type", axle.AxleType.ToString()}                                                                                         
 				}}}}}
-
+        If (vehicle.TankSystem.HasValue) Then
+            body("TankSystem") = vehicle.TankSystem.Value.ToString()
+        End If
 		if (Cfg.DeclMode) then
 			Dim declVehicle As IVehicleDeclarationInputData = vehicle
 			body("EngineStopStart") = declVehicle.ADAS.EngineStopStart

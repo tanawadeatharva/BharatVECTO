@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public JSONVehicleDataV8(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) : base(data, fileName, job, tolerateMissing) { }
 
-		#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
+		#region Overrides of JSONVehicleDataV7
 
 		public override bool EngineStopStart { get { return Body.GetEx<bool>("EngineStopStart"); } }
 		public override EcoRollType EcoRoll { get { return EcorollTypeHelper.Parse(Body.GetEx<string>("EcoRoll")); } }
@@ -61,7 +61,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		
+
+		public override TankSystem? TankSystem
+		{
+			get {
+				return Body["TankSystem"]?.ToString().ParseEnum<TankSystem>();
+			}
+		}
+
 		#endregion
+
 	}
 
 
