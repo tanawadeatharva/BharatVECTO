@@ -66,13 +66,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Data = cycle;
 			CycleIterator = new DrivingCycleEnumerator(Data);
 
-			AbsTime = 0.SI<Second>();
+			AbsTime = -1.SI<Second>();
 		}
 
 		public virtual IResponse Initialize()
 		{
 			var first = Data.Entries[0];
-			AbsTime = first.Time;
+			if (AbsTime < 0) {
+				AbsTime = first.Time;
+				CycleIterator.MoveNext();
+			}
 			var response = NextComponent.Initialize(first.Torque, first.AngularVelocity);
 			response.AbsTime = AbsTime;
 			return response;
