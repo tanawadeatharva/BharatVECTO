@@ -85,8 +85,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//UpdateEngineState(CurrentState.EnginePower, avgEngineSpeed);
 
-			CurrentState.EngineTorque = CurrentState.EnginePower / CurrentState.EngineSpeed;
-
 			return new ResponseSuccess { Source = this };
 		}
 
