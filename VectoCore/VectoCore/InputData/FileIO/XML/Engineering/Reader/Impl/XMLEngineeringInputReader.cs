@@ -41,7 +41,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 			get { return _driverModel ?? (_driverModel = CreateComponent(XMLNames.Component_DriverModel, DriverModelCreator, requireDataNode:false)); }
 		}
 
-
 		public IEngineeringJobInputData JobCreator(string version, XmlNode baseNode, string filename)
 		{
 			var job = Factory.CreateJobData(version, JobNode, InputData, (InputData as IXMLResource).DataSource.SourceFile);

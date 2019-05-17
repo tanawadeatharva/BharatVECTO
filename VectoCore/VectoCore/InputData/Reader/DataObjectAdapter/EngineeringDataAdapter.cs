@@ -460,7 +460,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				GearshiftLines = gsInputData.LoadStageShiftLines,
 
-				LoadstageThresholds = gsInputData.LoadStageThresoldsUp.Zip(gsInputData.LoadStageThresoldsDown, Tuple.Create)
+				LoadstageThresholds = gsInputData.LoadStageThresoldsUp != null && gsInputData.LoadStageThresoldsDown != null ? gsInputData.LoadStageThresoldsUp.Zip(gsInputData.LoadStageThresoldsDown, Tuple.Create) : null
 			};
 
 			return retVal;

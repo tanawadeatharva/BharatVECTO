@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return DriverData ?? (DriverData = Reader.DriverModel); }
 		}
 
-		public virtual IGearshiftEngineeringInputData GearshiftInputData { get { return null; } }
+		//public virtual IGearshiftEngineeringInputData GearshiftInputData { get { return DriverInputData.GearshiftInputData; } }
 
 		#endregion
 

@@ -6,6 +6,10 @@
     "FileVersion": 1
   },
   "Body": {
+    "TqReserve": 20.0,
+    "ShiftTime": 2.0,
+    "StartTqReserve": 20.0,
+    "StartAcc": 0.6,
     "StartSpeed": 8,
     "StartAcceleration": 0.8,
     "GearResidenceTime": 5,
@@ -14,8 +18,8 @@
     "GearRangeUp": 3,
     "GearRangeDown": 3,
     "LookBackDriver": 4,
-    "DriverAccelerationLookBackInterval":  10, 
-    "DriverAccelerationThresholdLow":  0.1,
+    "DriverAccelerationLookBackInterval": 10,
+    "DriverAccelerationThresholdLow": 0.1,
     "P_card_avg_threshold": 5000,
     "P_card_curr_threshold": 1000,
     "Diff_curr_targ_vel": 0.1,
@@ -26,6 +30,6 @@
     "PredictionDurationLookup": "PredictionTimeLookup.csv",
     "ShareIdleLow": "ShareIdleLow.csv",
     "ShareEngineHigh": "ShareEngineSpeedHigh.csv"
-   
+
   }
 }

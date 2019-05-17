@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				}
 			};
 			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
-			var gearboxData = dao.CreateGearboxData(vehicle.Components.GearboxInputData, engineData, InputDataProvider.GearshiftInputData, axlegearData.AxleGear.Ratio,
+			var gearboxData = dao.CreateGearboxData(vehicle.Components.GearboxInputData, engineData, InputDataProvider.DriverInputData.GearshiftInputData, axlegearData.AxleGear.Ratio,
 				tempVehicle.DynamicTyreRadius,tempVehicle.VehicleCategory, tmpStrategy, vehicle.Components.TorqueConverterInputData);
 			var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==
 									CrossWindCorrectionMode.VAirBetaLookupTable;
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering,
 					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
-					GearshiftParameters = dao.CreateGearshiftData(InputDataProvider.GearshiftInputData),
+					GearshiftParameters = dao.CreateGearshiftData(InputDataProvider.DriverInputData.GearshiftInputData),
 					ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
 				};
 			});

@@ -18,6 +18,15 @@
       <PTOShaftsGearWheels>none</PTOShaftsGearWheels>
       <PTOOtherElements>none</PTOOtherElements>
     </PTO>
+    <ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+    <VocationalVehicle>false</VocationalVehicle>
+    <SleeperCab>true</SleeperCab>
+    <ADAS>
+      <EngineStopStart>false</EngineStopStart>
+      <EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
+      <EcoRollWithEngineStop>false</EcoRollWithEngineStop>
+      <PredictiveCruiseControl>none</PredictiveCruiseControl>
+    </ADAS>
     <Components>
       <Engine>
         <Data id="ENG-N.A.">

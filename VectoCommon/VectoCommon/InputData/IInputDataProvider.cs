@@ -53,7 +53,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		IDriverEngineeringInputData DriverInputData { get; }
 
-		IGearshiftEngineeringInputData GearshiftInputData { get; }
 	}
 
 }

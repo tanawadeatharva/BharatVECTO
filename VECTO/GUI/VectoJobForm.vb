@@ -447,10 +447,10 @@ Public Class VectoJobForm
 		TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
 		TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
 		TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
-        if (inputData.GearshiftInputData Is Nothing) Then
+        if (inputData.DriverInputData.GearshiftInputData Is Nothing) Then
             TbShiftStrategyParams.Text = ""
             else
-                TbShiftStrategyParams.Text = GetRelativePath(inputData.GearshiftInputData.Source, _basePath)
+                TbShiftStrategyParams.Text = GetRelativePath(inputData.DriverInputData.GearshiftInputData.Source, _basePath)
         End If
 
         'Start/Stop

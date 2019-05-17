@@ -474,12 +474,7 @@ Public Class VectoJob
     '        Return TryCast( New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.GearboxInputData, IGearshiftEngineeringInputData)
     '    End Get
     'End Property
-    Public ReadOnly Property GearshiftInputData As IGearshiftEngineeringInputData Implements IEngineeringInputDataProvider.GearshiftInputData
-    get
-            if not file.Exists(_tcuFile.FullPath) Then Return Nothing
-            Return new JSONComponentInputData(_tcuFile.FullPath, me).GearshiftInputData
-    End Get
-    End Property
+
 
     Public ReadOnly Property XMLHash As XElement Implements IDeclarationInputDataProvider.XMLHash
         Get

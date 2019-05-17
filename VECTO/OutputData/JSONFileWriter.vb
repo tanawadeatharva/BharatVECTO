@@ -278,8 +278,8 @@ Public Class JSONFileWriter
 		body.Add("VehicleFile", GetRelativePath(job.Vehicle.DataSource.SourceFile, basePath))
 		body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, basePath))
 		body.Add("GearboxFile", GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, basePath))
-        if not job.SavedInDeclarationMode AndAlso Not(input.GearshiftInputData is Nothing) then
-            body.Add("TCU", GetRelativePath(input.GearshiftInputData.Source, basePath))
+        if not job.SavedInDeclarationMode AndAlso Not(input.DriverInputData.GearshiftInputData is Nothing) then
+            body.Add("TCU", GetRelativePath(input.DriverInputData.GearshiftInputData.Source, basePath))
         end if
         body.Add("ShiftStrategy", input.JobInputData.ShiftStrategy)
 

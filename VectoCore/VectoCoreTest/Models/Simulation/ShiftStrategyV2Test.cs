@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Validate = false
 			};
 
-			Assert.NotNull(((IEngineeringInputDataProvider)inputData).GearshiftInputData);
+			Assert.NotNull(((IEngineeringInputDataProvider)inputData).DriverInputData.GearshiftInputData);
 			var jobContainer = new JobContainer(new MockSumWriter());
 
 			var runs = factory.SimulationRuns().ToArray();

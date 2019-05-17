@@ -1,7 +1,14 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
@@ -72,11 +79,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var data = VectoCSVFile.Read(filename);
 
-			var runData = new VectoRunData() {
-				GearshiftParameters = new ShiftStrategyParameters() {
-					GearshiftLines = data
-				}
-			};
+			var runData = GetVectoRunData(data);
 
 			var strategy = new ATShiftStrategyVoith(runData, null);
 			var slope = VectoMath.InclinationToAngle(gradient / 100.0);
@@ -87,17 +90,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(expectedRpm, upshiftSpeed.AsRPM, 0.1);
 		}
 
-
+		
 		[TestCase(File, 3, 5, 2.8, 1.0, 731.2)]
 		public void TestShiftlinesLookupDownshift(string filename, int gear, int loadStage, double gradient, double acc, double expectedRpm, double amin = -0.2, double amax = -0.4)
 		{
 			var data = VectoCSVFile.Read(filename);
-
-			var runData = new VectoRunData() {
-				GearshiftParameters = new ShiftStrategyParameters() {
-					GearshiftLines = data
-				}
-			};
+			
+			var runData = GetVectoRunData(data);
 
 			var strategy = new ATShiftStrategyVoith(runData, null);
 			var slope = VectoMath.InclinationToAngle(gradient / 100.0);
@@ -106,6 +105,27 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				loadStage, slope, acc.SI<MeterPerSquareSecond>(), amin.SI<MeterPerSquareSecond>(), amax.SI<MeterPerSquareSecond>());
 
 			Assert.AreEqual(expectedRpm, upshiftSpeed.AsRPM, 0.1);
+		}
+
+		private static VectoRunData GetVectoRunData(TableData data)
+		{
+			var loadStageThresoldsUp = "19.7;36.34;53.01;69.68;86.35".Split(';').Select(x => x.ToDouble()).ToList();
+			var loadStageThresoldsDown = "13.7;30.34;47.01;63.68;80.35".Split(';').Select(x => x.ToDouble()).ToList();
+			var runData = new VectoRunData() {
+				EngineData = new CombustionEngineData() {
+					FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() {
+						{ 0, new EngineFullLoadCurve(new List<EngineFullLoadCurve.FullLoadCurveEntry>(), new PT1()) }
+					}
+				},
+				VehicleData = new VehicleData() {
+					GrossVehicleMass = 18000.SI<Kilogram>()
+				},
+				GearshiftParameters = new ShiftStrategyParameters() {
+					GearshiftLines = data,
+					LoadstageThresholds = loadStageThresoldsUp.Zip(loadStageThresoldsDown, Tuple.Create)
+				}
+			};
+			return runData;
 		}
 	}
 }
