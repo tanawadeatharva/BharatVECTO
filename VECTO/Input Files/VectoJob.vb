@@ -246,7 +246,7 @@ Public Class VectoJob
     End Property
 
 
-    Public ReadOnly Property AccelerationCurve As TableData Implements IDriverEngineeringInputData.AccelerationCurve
+    Public ReadOnly Property AccelerationCurve As IDriverAccelerationData Implements IDriverEngineeringInputData.AccelerationCurve
         Get
             If String.IsNullOrWhiteSpace(_driverAccelerationFile.FullPath) Then Return Nothing
             If Not File.Exists(_driverAccelerationFile.FullPath) Then
@@ -255,15 +255,16 @@ Public Class VectoJob
                             RessourceHelper.ReadStream(
                                 DeclarationData.DeclarationDataResourcePrefix + ".VACC." + _driverAccelerationFile.OriginalPath +
                                 VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
-                    Return _
+                    Return  New DriverAccelerationInputData() With{ .AccelerationCurve =
                         VectoCSVFile.ReadStream(cycleDataRes,
                                                 source:=DeclarationData.DeclarationDataResourcePrefix + ".VACC." + _driverAccelerationFile.OriginalPath +
                                                         VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
+                    }
                 Catch ex As Exception
                     Return Nothing
                 End Try
             End If
-            Return VectoCSVFile.Read(_driverAccelerationFile.FullPath)
+            Return New DriverAccelerationInputData() With{ .AccelerationCurve = VectoCSVFile.Read(_driverAccelerationFile.FullPath) }
         End Get
     End Property
 
@@ -285,6 +286,11 @@ Public Class VectoJob
         End Get
     End Property
 
+    Public ReadOnly Property IDriverEngineeringInputData_GearshiftInputData As IGearshiftEngineeringInputData Implements IDriverEngineeringInputData.GearshiftInputData
+        Get
+            Return Nothing
+        End Get
+    End Property
 
     Public Property DesMaxFile(Optional ByVal original As Boolean = False) As String
         Get
@@ -366,8 +372,8 @@ Public Class VectoJob
         Dim result As IList(Of ValidationResult) = New List(Of ValidationResult)
 
         Dim vehicleInputData As IVehicleEngineeringInputData = vectoJob.JobInputData.Vehicle
-        Dim engineInputData As IEngineDeclarationInputData = vectoJob.JobInputData.Vehicle.EngineInputData
-        Dim gearboxInputData As IGearboxDeclarationInputData = vectoJob.Vehicle.GearboxInputData
+        Dim engineInputData As IEngineDeclarationInputData = vectoJob.JobInputData.Vehicle.Components.EngineInputData
+        Dim gearboxInputData As IGearboxDeclarationInputData = vectoJob.Vehicle.Components.GearboxInputData
 
         If vehicleInputData Is Nothing Then _
             result.Add(New ValidationResult("Vehicle File is missing or invalid"))
@@ -463,6 +469,11 @@ Public Class VectoJob
         End Get
     End Property
 
+    'Public ReadOnly Property GearshiftInputData As IGearshiftEngineeringInputData Implements IDriverEngineeringInputData.GearshiftInputData
+    '    get
+    '        Return TryCast( New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.GearboxInputData, IGearshiftEngineeringInputData)
+    '    End Get
+    'End Property
     Public ReadOnly Property GearshiftInputData As IGearshiftEngineeringInputData Implements IEngineeringInputDataProvider.GearshiftInputData
     get
             if not file.Exists(_tcuFile.FullPath) Then Return Nothing
@@ -536,7 +547,7 @@ Public Class VectoJob
     Public ReadOnly Property IEngineeringJobInputData_EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly
         Get
             If Not File.Exists(_engineFile.FullPath) Then Return Nothing
-            Return New JSONComponentInputData(_engineFile.FullPath, Me).JobInputData.Vehicle.EngineInputData
+            Return New JSONComponentInputData(_engineFile.FullPath, Me).JobInputData.Vehicle.Components.EngineInputData
         End Get
     End Property
 
@@ -636,27 +647,27 @@ Public Class VectoJob
 
     Public ReadOnly Property Gearbox As IGearboxEngineeringInputData Implements IJSONVehicleComponents.Gearbox
         Get
-            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.GearboxInputData
+            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.GearboxInputData
         End Get
     End Property
 
     Public ReadOnly Property TorqueConverter As ITorqueConverterEngineeringInputData Implements IJSONVehicleComponents.TorqueConverter
         Get
-            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.TorqueConverterInputData
+            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.TorqueConverterInputData
         End Get
 
     End Property
 
     Public ReadOnly Property AxleGear As IAxleGearInputData Implements IJSONVehicleComponents.AxleGear
         Get
-            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.AxleGearInputData
+            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.AxleGearInputData
         End Get
 
     End Property
 
     Public ReadOnly Property Engine As IEngineEngineeringInputData Implements IJSONVehicleComponents.Engine
         Get
-            Return New JSONComponentInputData(_engineFile.FullPath, Me).JobInputData.Vehicle.EngineInputData
+            Return New JSONComponentInputData(_engineFile.FullPath, Me).JobInputData.Vehicle.Components.EngineInputData
         End Get
     End Property
 
@@ -671,6 +682,16 @@ Public Class VectoJob
             Return Me
         End Get
     End Property
+
+    Public ReadOnly Property DataSource As DataSource Implements IInputDataProvider.DataSource
+        Get
+            Dim retVal As DataSource =  New DataSource() 
+            retVal.SourceType = DataSourceType.JSONFile
+            retVal.SourceFile = FilePath
+            Return retVal
+        End Get
+    End Property
+
 End Class
 
 

@@ -1,7 +1,7 @@
 ##Vehicle: ADAS Technologies
 
 <div class="declaration">
-Advanced Driver Assistant Systems are considered in Declaratio Mode via a technology dependent and vehicle group specific bonus on the fuel cosumption as described in the followin.
+Advanced Driver Assistant Systems are considered in Declaration Mode via a technology dependent and vehicle group specific bonus on the fuel cosumption as described in the followin.
 </div>		
 
 In Declaration mode VECTO applies a correction factor to take into account certain Advanced Driver Assistant System technologies. The following Technologies are currently considered:

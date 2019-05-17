@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
+	<xs:complexType name="AbstractAdvancedDriverAssistantSystemsType" abstract="true"/>
+	<xs:complexType name="AdvancedDriverAssistantSystemsType">
+		<xs:complexContent>
+			<xs:extension base="tns:AbstractAdvancedDriverAssistantSystemsType">
+				<xs:sequence>
+					<xs:element name="EngineStopStart" type="tns:EngineStopStartType"/>
+					<xs:element name="EcoRollWithoutEngineStop" type="tns:EcoRollWithoutEngineStopType"/>
+					<xs:element name="EcoRollWithEngineStop" type="tns:EcoRollWithEngineStopType"/>
+					<xs:element name="PredictiveCruiseControl" type="tns:PredictiveCruiseControlType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="EngineDataDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="v1.0:AbstractCombustionEngineDataDeclarationType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P200</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P201</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+						<xs:annotation>
+							<xs:documentation>P261</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P203</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P204</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Displacement" type="v1.0:EngineDisplacementType" nillable="false">
+						<xs:annotation>
+							<xs:documentation>P061 - [cm³]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
+						<xs:annotation>
+							<xs:documentation>P063 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RatedSpeed" type="v1.0:EngineDeclaredSpeedType">
+						<xs:annotation>
+							<xs:documentation>P249 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RatedPower" type="v1.0:EngineRatedPower">
+						<xs:annotation>
+							<xs:documentation>P250 - [W]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MaxEngineTorque" type="v1.0:EngineMaxTorque">
+						<xs:annotation>
+							<xs:documentation>P259 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="WHTCUrban" type="v1.0:EngineWHTCType">
+						<xs:annotation>
+							<xs:documentation>P109 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="WHTCRural" type="v1.0:EngineWHTCType">
+						<xs:annotation>
+							<xs:documentation>P110 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="WHTCMotorway" type="v1.0:EngineWHTCType">
+						<xs:annotation>
+							<xs:documentation>P111 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="BFColdHot" type="v1.0:EngineColdHotBalancingFactorType">
+						<xs:annotation>
+							<xs:documentation>P159 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CFRegPer" type="v1.0:EngineCFRegPerType">
+						<xs:annotation>
+							<xs:documentation>P192 [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CFNCV" type="v1.0:EngineNCVCFType">
+						<xs:annotation>
+							<xs:documentation>P260 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="FuelType" type="tns:FuelTypeType">
+						<xs:annotation>
+							<xs:documentation>P193 [enum]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="FuelConsumptionMap">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="v2.0:FuelConsumptionEntryType" minOccurs="4" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="FullLoadAndDragCurve">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Entry" type="v2.0:FullLoadAndDragCurveEntryType" minOccurs="2" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ExemptedVehicleDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P235</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
+						<xs:annotation>
+							<xs:documentation>P252</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P236</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="VIN" type="v1.0:VINType">
+						<xs:annotation>
+							<xs:documentation>P238</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P239</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="LegislativeClass" type="v1.0:LegislativeClassDeclarationType">
+						<xs:annotation>
+							<xs:documentation>P251 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="VehicleCategory" type="v1.0:VehicleCategoryDeclarationType">
+						<xs:annotation>
+							<xs:documentation>P036 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CurbMassChassis" type="v1.0:VehicleCurbMassChassisType">
+						<xs:annotation>
+							<xs:documentation>P038 - [kg]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="GrossVehicleMass" type="v1.0:VehicleGrossVehicleMassType">
+						<xs:annotation>
+							<xs:documentation>P041 - [kg]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+					<xs:sequence minOccurs="0">
+						<xs:element name="MaxNetPower1" type="xs:int"/>
+						<xs:element name="MaxNetPower2" type="xs:int"/>
+					</xs:sequence>
+					<xs:element name="HybridElectricHDV" type="xs:boolean"/>
+					<xs:element name="DualFuelVehicle" type="xs:boolean"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="VehicleDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P235</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
+						<xs:annotation>
+							<xs:documentation>P252</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P236</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="VIN" type="v1.0:VINType">
+						<xs:annotation>
+							<xs:documentation>P238</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P239</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="LegislativeClass" type="v1.0:LegislativeClassDeclarationType">
+						<xs:annotation>
+							<xs:documentation>P251 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="VehicleCategory" type="tns:VehicleCategoryType">
+						<xs:annotation>
+							<xs:documentation>P036 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AxleConfiguration" type="v1.0:VehicleAxleConfigurationDeclarationType">
+						<xs:annotation>
+							<xs:documentation>P037 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CurbMassChassis" type="v1.0:VehicleCurbMassChassisType">
+						<xs:annotation>
+							<xs:documentation>P038 - [kg]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="GrossVehicleMass" type="v1.0:VehicleGrossVehicleMassType">
+						<xs:annotation>
+							<xs:documentation>P041 - [kg]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
+						<xs:annotation>
+							<xs:documentation>P198 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RetarderType" type="v1.0:RetarderTypeType">
+						<xs:annotation>
+							<xs:documentation>P052 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RetarderRatio" type="v1.0:RetarderRatioType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>P053 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AngledriveType" type="v1.0:AngledriveTypeType">
+						<xs:annotation>
+							<xs:documentation>P180 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="PTO" type="v2.0:AbstractPTODataType"/>
+					<xs:element name="ZeroEmissionVehicle" type="xs:boolean"/>
+					<xs:element name="VocationalVehicle" type="xs:boolean"/>
+					<xs:element name="NgTankSystem" type="tns:NgTankSystemType" minOccurs="0"/>
+					<xs:element name="SleeperCab" type="xs:boolean"/>
+					<xs:element name="ADAS" type="tns:AbstractAdvancedDriverAssistantSystemsType"/>
+					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.0:AbstractVehicleComponentsDeclarationType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:simpleType name="EcoRollWithEngineStopType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle/ADAS">273</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="EcoRollWithoutEngineStopType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle/ADAS">272</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="EngineStopStartType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle/ADAS">271</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:boolean"/>
+	</xs:simpleType>
+	<xs:simpleType name="FuelTypeType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Engine">193</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Diesel CI"/>
+			<xs:enumeration value="Ethanol CI"/>
+			<xs:enumeration value="Petrol PI"/>
+			<xs:enumeration value="Ethanol PI"/>
+			<xs:enumeration value="LPG PI"/>
+			<xs:enumeration value="NG PI"/>
+			<xs:enumeration value="NG CI"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NgTankSystemType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">275</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Compressed"/>
+			<xs:enumeration value="Liquefied"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PredictiveCruiseControlType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle/ADAS">274</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="1,2"/>
+			<xs:enumeration value="1,2,3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VehicleCategoryType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Rigid Lorry"/>
+			<xs:enumeration value="Tractor"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -13,10 +15,18 @@ namespace TUGraz.VectoCore.Tests.Integration
 {
 	public class AMTShiftStrategyTests
 	{
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+
 		}
 
 		[TestCase(@"E:\QUAM\tmp\AMT_ShiftStrategyNeu\VOLVO_AxleLossMapExtrapolation\Class5_TUG_Vehicle_VOLVO.xml", 5)]
@@ -24,7 +34,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var relativeJobPath = jobName;
 			var writer = new FileOutputWriter(relativeJobPath);
-			var inputData = Path.GetExtension(relativeJobPath) == ".xml" ? new XMLDeclarationInputDataProvider(relativeJobPath, true) : JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,
@@ -45,7 +57,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var relativeJobPath = jobName;
 			var writer = new FileOutputWriter(relativeJobPath);
-			var inputData = Path.GetExtension(relativeJobPath) == ".xml" ? new XMLDeclarationInputDataProvider(relativeJobPath, true) : JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var inputData = Path.GetExtension(relativeJobPath) == ".xml"
+				? xmlInputReader.CreateDeclaration(relativeJobPath)
+				: JSONInputDataFactory.ReadJsonJob(relativeJobPath);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				//ActualModalData = true,

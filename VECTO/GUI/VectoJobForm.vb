@@ -427,7 +427,7 @@ Public Class VectoJobForm
         'Update Form
 
         If inputData.JobInputData().EngineOnlyMode Then
-            TbENG.Text = GetRelativePath(inputData.JobInputData.EngineOnly.Source, _basePath)
+			TbENG.Text = GetRelativePath(inputData.JobInputData.EngineOnly.DataSource.SourceFile, _basePath)
             CbEngOnly.Checked = True
             Try
                 Dim sb As ICycleData
@@ -444,9 +444,9 @@ Public Class VectoJobForm
         CbEngOnly.Checked = False
         CheckEngOnly()
         'Files -----------------------------
-        TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.Source, _basePath)
-        TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.EngineInputData.Source, _basePath)
-        TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.GearboxInputData.Source, _basePath)
+		TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
+		TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
+		TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
         if (inputData.GearshiftInputData Is Nothing) Then
             TbShiftStrategyParams.Text = ""
             else
@@ -461,7 +461,7 @@ Public Class VectoJobForm
             'AA-TB
             'Try and Select any previously selected Auxiliary Type
             Dim declarationInput As IDeclarationInputDataProvider = CType(inputData, IDeclarationInputDataProvider)
-            Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.JobInputData.Vehicle.AuxiliaryInputData()
+			Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.JobInputData.Vehicle.Components.AuxiliaryInputData
 
             cboAdvancedAuxiliaries.SelectedIndex = 0
             cboAdvancedAuxiliaries.Enabled = False
@@ -478,10 +478,10 @@ Public Class VectoJobForm
         Else
             'VACC
             TbDesMaxFile.Text =
-                If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.Source, _basePath))
+				If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, _basePath))
 
             cboAdvancedAuxiliaries.Enabled = True
-            Dim auxInput As IAuxiliariesEngineeringInputData = inputData.JobInputData.Vehicle.AuxiliaryInputData()
+			Dim auxInput As IAuxiliariesEngineeringInputData = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData
             For Each item As AdvancedAuxiliary In cboAdvancedAuxiliaries.Items
                 If _
                     AuxiliaryModelHelper.Parse(item.AssemblyName) = auxInput.AuxiliaryAssembly AndAlso
@@ -553,7 +553,7 @@ Public Class VectoJobForm
         End If
         '-------------------------------------------------------------
 
-        cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(inputData.JobInputData.Vehicle.GearboxInputData.Type).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
+        cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(inputData.JobInputData.Vehicle.Components.GearboxInputData.Type).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
         cbGearshiftStrategy.DisplayMember = "Label"
         cbGearshiftStrategy.ValueMember = "Value"
         if (inputData.JobInputData.ShiftStrategy <> Nothing) then
@@ -1165,7 +1165,7 @@ lbDlog:
             Try
                 Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(gearboxFile), 
                                                                         IEngineeringInputDataProvider)
-                gearbox = inputData.JobInputData.Vehicle.GearboxInputData
+				gearbox = inputData.JobInputData.Vehicle.Components.GearboxInputData
             Catch
             End Try
         End If
@@ -1249,7 +1249,7 @@ lbDlog:
             Try
                 Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(engineFile), 
                                                                         IEngineeringInputDataProvider)
-                engine = inputData.JobInputData.Vehicle.EngineInputData
+				engine = inputData.JobInputData.Vehicle.Components.EngineInputData
             Catch
                 Return
             End Try

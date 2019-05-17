@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:VectoComponentEngineering xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaVersion="0.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 E:\QUAM\Workspace\VECTO_quam\VectoCore\VectoCore\Resources\XSD/VectoEngineeringInput.0.7.xsd">
+	<TorqueConverter>
+		<Data>
+			<Manufacturer>Generic Torqueconverter Manufacturer</Manufacturer>
+			<Model>Generic Torqueconverter</Model>
+			<Creator>Markus Quaritsch, TUG ITI</Creator>
+			<Date>2017-01-11T11:00:00Z</Date>
+			<ReferenceRPM>1000</ReferenceRPM>
+			<Characteristics>
+				<Resource type="csv" file="tc_data.vtcc"/>
+			</Characteristics>
+			<Inertia>1.234</Inertia>
+			<ShiftPolygon>
+				<Resource type="csv" file="GBX_ShiftPolygons.vgbs"/>
+			</ShiftPolygon>
+		</Data>
+	</TorqueConverter>
+</tns:VectoComponentEngineering>

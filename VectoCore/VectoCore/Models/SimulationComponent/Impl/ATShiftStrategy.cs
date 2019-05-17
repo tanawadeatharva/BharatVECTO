@@ -208,7 +208,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					nextInAngularSpeed = outAngularVelocity * ModelData.Gears[gear + 1].Ratio;
 					nextInTorque = outTorque / ModelData.Gears[gear + 1].Ratio;
 				}
-				if (!IsBelowDownShiftCurve(gear + 1, nextInTorque, nextInAngularSpeed)) {
+				var acc = EstimateAccelerationForGear(gear + 1, outAngularVelocity);
+				if ((acc > 0 || _gearbox.TCLocked) && !IsBelowDownShiftCurve(gear + 1, nextInTorque, nextInAngularSpeed)) {
 					Log.Debug("engine speed would be above max speed / rated speed - shift up");
 					Upshift(absTime, gear);
 					return true;
@@ -272,7 +273,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var nextGearboxInTorque = outTorque / nextGear.TorqueConverterRatio;
 			var shiftLosses = _gearbox.ComputeShiftLosses(outTorque, outAngularVelocity, gear + 1) / ModelData.PowershiftShiftTime / nextGearboxInSpeed;
 			nextGearboxInTorque += shiftLosses;
-			var tcOperatingPoint = _gearbox.TorqueConverter.FindOperatingPoint(nextGearboxInTorque, nextGearboxInSpeed);
+			var tcOperatingPoint = _gearbox.TorqueConverter.FindOperatingPoint(absTime, dt, nextGearboxInTorque, nextGearboxInSpeed);
 
 			var engineSpeedOverMin = tcOperatingPoint.InAngularVelocity.IsGreater(minEngineSpeed);
 			var avgSpeed = (DataBus.EngineSpeed + tcOperatingPoint.InAngularVelocity) / 2;

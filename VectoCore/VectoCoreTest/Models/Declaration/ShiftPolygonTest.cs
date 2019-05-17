@@ -33,11 +33,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
@@ -54,11 +56,16 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	[TestFixture]
 	public class ShiftPolygonTest
 	{
-		
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 
@@ -600,16 +607,16 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				Assert.Inconclusive("Confidential File not found. Test cannot run without file.");
 			}
 
-			IDeclarationInputDataProvider job = (IDeclarationInputDataProvider)(Path.GetExtension(jobFile) == ".vecto" ? JSONInputDataFactory.ReadJsonJob(jobFile) :  new XMLDeclarationInputDataProvider(jobFile, true));
+			IDeclarationInputDataProvider job = (IDeclarationInputDataProvider)(Path.GetExtension(jobFile) == ".vecto" ? JSONInputDataFactory.ReadJsonJob(jobFile) : xmlInputReader.CreateDeclaration(jobFile));
 
-			var gearboxData = job.JobInputData.Vehicle.GearboxInputData;
+			var gearboxData = job.JobInputData.Vehicle.Components.GearboxInputData;
 			var idlespeed = VectoMath.Max(
-				job.JobInputData.Vehicle.EngineIdleSpeed, job.JobInputData.Vehicle.EngineInputData.IdleSpeed);
+				job.JobInputData.Vehicle.EngineIdleSpeed, job.JobInputData.Vehicle.Components.EngineInputData.IdleSpeed);
 			var dao = new DeclarationDataAdapter();
 			var engineData = dao.CreateEngineData(
-				job.JobInputData.Vehicle.EngineInputData, idlespeed, gearboxData, job.JobInputData.Vehicle.TorqueLimits);
-			var axlegearRatio = job.JobInputData.Vehicle.AxleGearInputData.Ratio;
-			var rdyn = job.JobInputData.Vehicle.Axles.Where(x => x.AxleType == AxleType.VehicleDriven)
+				job.JobInputData.Vehicle.Components.EngineInputData, idlespeed, gearboxData, job.JobInputData.Vehicle.TorqueLimits);
+			var axlegearRatio = job.JobInputData.Vehicle.Components.AxleGearInputData.Ratio;
+			var rdyn = job.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration.Where(x => x.AxleType == AxleType.VehicleDriven)
 						.Select(x => DeclarationData.Wheels.Lookup(x.Tyre.Dimension)).Average(x => x.DynamicTyreRadius.Value())
 						.SI<Meter>();
 
@@ -660,6 +667,17 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	{
 		const string BasePath = @"E:\QUAM\Workspace\Daten_INTERN\Testfahrzeuge\";
 
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
+		}
 
 		[Category("LongRunning")]
 		[Ignore("No Assertions - only plotting shift polygons")]
@@ -841,6 +859,62 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				);
 
 			Assert.AreEqual(result, ShiftPolygon.IsLeftOf(speed.RPMtoRad(), torque.SI<NewtonMeter>(), segment));
+		}
+
+
+		[TestCase(@"E:\QUAM\Workspace\VECTO-Bugreports\BugReportTests\Bugreport Jobs\20190307_VECTO-904_Extrapolation\OM-18173493.xml")]
+		public void ComputeShiftPolygonXML(string xmlJob)
+		{
+			var inputData = xmlInputReader.CreateDeclaration(xmlJob);
+			var dao = new DeclarationDataAdapter();
+
+			var gearboxData = inputData.JobInputData.Vehicle.Components.GearboxInputData;
+			var engineData = dao.CreateEngineData(inputData.JobInputData.Vehicle.Components.EngineInputData,0.RPMtoRad(), gearboxData, new List<ITorqueLimitInputData>());
+
+			var fullLoadCurves = engineData.FullLoadCurves;
+
+			var axlegearRatio = inputData.JobInputData.Vehicle.Components.AxleGearInputData.Ratio;
+			var vehicle = inputData.JobInputData.Vehicle;
+			var segment = DeclarationData.Segments.Lookup(
+				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis,
+				false);
+			var vehicleData = dao.CreateVehicleData(inputData.JobInputData.Vehicle, segment.Missions.First(), 0.SI<Kilogram>());
+			var rdyn = vehicleData.DynamicTyreRadius;
+
+			var shiftPolygons = new List<ShiftPolygon>();
+			var downshiftTransformed = new List<List<Point>>();
+			var upshiftOrig = new List<List<Point>>();
+			for (var i = 0; i < gearboxData.Gears.Count; i++) {
+				shiftPolygons.Add(
+					DeclarationData.Gearbox.ComputeShiftPolygon(gearboxData.Type, i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
+						engineData, axlegearRatio, rdyn)
+					);
+				List<Point> tmp1, tmp2, tmp3;
+				ComputShiftPolygonPoints(i, fullLoadCurves[(uint)(i + 1)], gearboxData.Gears,
+					engineData, axlegearRatio, rdyn, out tmp1, out tmp2, out tmp3);
+				upshiftOrig.Add(tmp1);
+				downshiftTransformed.Add(tmp2);
+			}
+
+			var imageFile = Path.Combine(Path.GetDirectoryName(xmlJob), Path.GetFileNameWithoutExtension(xmlJob) + "_shiftlines.png");
+			ShiftPolygonDrawer.DrawShiftPolygons(Path.GetDirectoryName(xmlJob), fullLoadCurves, shiftPolygons,
+				imageFile,
+				DeclarationData.Gearbox.TruckMaxAllowedSpeed / rdyn * axlegearRatio * gearboxData.Gears.Last().Ratio,
+				upshiftOrig, downshiftTransformed);
+			var str = "";
+			var g = 1;
+			foreach (var shiftPolygon in shiftPolygons) {
+				str += "Gear " + g + "\n";
+				str += "downshift\n";
+				foreach (var entry in shiftPolygon.Downshift) {
+					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+				}
+				str += "upshift\n";
+				foreach (var entry in shiftPolygon.Upshift) {
+					str += string.Format("{0} {1}\n", entry.AngularSpeed.AsRPM, entry.Torque.Value());
+				}
+				g++;
+			}
 		}
 	}
 }

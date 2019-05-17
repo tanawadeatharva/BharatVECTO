@@ -49,7 +49,7 @@ using TUGraz.VectoCore.OutputData.XML;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class SimulatorFactory : LoggingObject
+	public class SimulatorFactory : LoggingObject, ISimulatorFactory
 	{
 		private static int _jobNumberCounter;
 
@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public bool Validate { get; set; }
 
-		protected internal IVectoRunDataFactory DataReader { get; private set; }
+		public IVectoRunDataFactory DataReader { get; private set; }
 
 		public SummaryDataContainer SumData { get; set; }
 

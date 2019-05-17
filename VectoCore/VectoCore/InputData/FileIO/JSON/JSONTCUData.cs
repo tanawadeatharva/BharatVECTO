@@ -5,6 +5,7 @@ using System.Linq;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
@@ -13,16 +14,80 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public JSONTCUDataV1(JObject json, string filename, bool tolerateMissing) : base(json, filename, tolerateMissing) { }
 
+
+
 		#region Implementation of IGearshiftEngineeringInputData
+
+		public virtual Second MinTimeBetweenGearshift
+		{
+			get { return Body.GetEx<double>(JsonKeys.Gearbox_ShiftTime).SI<Second>(); }
+		}
+
+		public virtual double TorqueReserve
+		{
+			get { return Body.GetEx<double>(JsonKeys.Gearbox_TorqueReserve) / 100.0; }
+		}
+
+		public Second DownshiftAfterUpshiftDelay
+		{
+			get {
+				return Body["DownshiftAfterUpshiftDelay"] == null
+					? DeclarationData.Gearbox.DownshiftAfterUpshiftDelay
+					: Body.GetEx<double>("DownshiftAfterUpshiftDelay").SI<Second>();
+			}
+		}
+
+		public Second UpshiftAfterDownshiftDelay
+		{
+			get {
+				return Body["UpshiftAfterDownshiftDelay"] == null
+					? DeclarationData.Gearbox.UpshiftAfterDownshiftDelay
+					: Body.GetEx<double>("UpshiftAfterDownshiftDelay").SI<Second>();
+			}
+		}
+
+		public MeterPerSquareSecond UpshiftMinAcceleration
+		{
+			get {
+				return Body["UpshiftMinAcceleration"] == null
+					? DeclarationData.Gearbox.UpshiftMinAcceleration
+					: Body.GetEx<double>("UpshiftMinAcceleration").SI<MeterPerSquareSecond>();
+			}
+		}
+
+		public MeterPerSquareSecond CLUpshiftMinAcceleration
+		{
+			get {
+				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
+						Body[JsonKeys.Gearbox_TorqueConverter]["CLUpshiftMinAcceleration"] != null
+					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("CLUpshiftMinAcceleration").SI<MeterPerSquareSecond>()
+					: UpshiftMinAcceleration;
+			}
+		}
+
+		public MeterPerSquareSecond CCUpshiftMinAcceleration
+		{
+			get {
+				return Body[JsonKeys.Gearbox_TorqueConverter] != null &&
+						Body[JsonKeys.Gearbox_TorqueConverter]["CCUpshiftMinAcceleration"] != null
+					? Body.GetEx(JsonKeys.Gearbox_TorqueConverter).GetEx<double>("CCUpshiftMinAcceleration").SI<MeterPerSquareSecond>()
+					: UpshiftMinAcceleration;
+			}
+		}
+
+		public virtual double StartTorqueReserve
+		{
+			get { return Body.GetEx<double>(JsonKeys.Gearbox_StartTorqueReserve) / 100.0; }
+		}
 
 		public MeterPerSecond StartSpeed
 		{
-			get { return Body.GetValueOrDefault<double>("StartSpeed")?.KMPHtoMeterPerSecond(); }
+			get { return Body.GetValueOrDefault<double>(JsonKeys.Gearbox_StartSpeed)?.KMPHtoMeterPerSecond(); }
 		}
 
 		public MeterPerSquareSecond StartAcceleration
 		{
-			get { return Body.GetValueOrDefault<double>("StartAcceleration")?.SI<MeterPerSquareSecond>(); }
+			get { return Body.GetValueOrDefault<double>(JsonKeys.Gearbox_StartAcceleration)?.SI<MeterPerSquareSecond>(); }
 		}
 
 		public Second GearResidenceTime

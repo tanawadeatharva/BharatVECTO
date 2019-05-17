@@ -398,7 +398,11 @@ namespace TUGraz.VectoCore.OutputData
 					view.Columns.Remove(dataColumn);
 				}
 
-				_sumWriter.WriteSumData(view);
+				try {
+					_sumWriter.WriteSumData(view);
+				} catch (Exception e) {
+					LogManager.GetLogger(typeof(SummaryDataContainer).FullName).Error(e.Message);
+				}
 			}
 		}
 
@@ -813,10 +817,11 @@ namespace TUGraz.VectoCore.OutputData
 						? ""
 						: data.CertificationNumber;
 			} else {
-				row[ANGLEDRIVE_MANUFACTURER] = "n.a.";
-				row[ANGLEDRIVE_MODEL] = "n.a.";
-				row[ANGLEDRIVE_RATIO] = "n.a.";
+				row[ANGLEDRIVE_MANUFACTURER] = Constants.NOT_AVailABLE;
+				row[ANGLEDRIVE_MODEL] = Constants.NOT_AVailABLE;
+				row[ANGLEDRIVE_RATIO] = Constants.NOT_AVailABLE;
 				row[ANGLEDRIVE_CERTIFICATION_METHOD] = "";
+				row[ANGLEDRIVE_CERTIFICATION_NUMBER] = "";
 			}
 		}
 
@@ -831,8 +836,8 @@ namespace TUGraz.VectoCore.OutputData
 					? ""
 					: data.CertificationNumber;
 			} else {
-				row[RETARDER_MANUFACTURER] = "n.a.";
-				row[RETARDER_MODEL] = "n.a.";
+				row[RETARDER_MANUFACTURER] = Constants.NOT_AVailABLE;
+				row[RETARDER_MODEL] = Constants.NOT_AVailABLE;
 				row[RETARDER_CERTIFICATION_METHOD] = "";
 				row[RETARDER_CERTIFICATION_NUMBER] = "";
 			}
@@ -870,8 +875,8 @@ namespace TUGraz.VectoCore.OutputData
 				row[GEAR_RATIO_LAST_GEAR] = data.Gears.Count > 0
 					? (ConvertedSI)data.Gears.Last().Value.Ratio.SI<Scalar>()
 					: (ConvertedSI)0.SI<Scalar>();
-				row[TORQUECONVERTER_MANUFACTURER] = "n.a.";
-				row[TORQUECONVERTER_MODEL] = "n.a.";
+				row[TORQUECONVERTER_MANUFACTURER] = Constants.NOT_AVailABLE;
+				row[TORQUECONVERTER_MODEL] = Constants.NOT_AVailABLE;
 				row[TORQUE_CONVERTER_CERTIFICATION_METHOD] = "";
 				row[TORQUE_CONVERTER_CERTIFICATION_NUMBER] = "";
 			}

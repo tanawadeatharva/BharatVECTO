@@ -381,5 +381,29 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(1352, fldCurve.FullLoadStationaryTorque(2000.RPMtoRad()).Value(), Tolerance);
 			Assert.AreEqual(1231, fldCurve.FullLoadStationaryTorque(580.RPMtoRad()).Value(), Tolerance);
 		}
+
+		[TestCase]
+		public void TestDuplicateEntries()
+		{
+			var fldData = new[] {
+				"560,1180,-149,0.6",
+				"600,1282,-148,0.6",
+				"800,1791,-149,0.6",
+				"1000,2300,-160,0.6",
+				"1200,2400,-179,0.6",
+				"1400,2300,-203,0.6",
+				"1600,2079,-235,0.49",
+				"1800,1857,-264,0.25",
+				"2000,1352,-301,0.25",
+				"2100,1100,-320,0.25",
+				"1200,2410,-180,0.6",
+			};
+			var fldEntries = InputDataHelper.InputDataAsStream("n [U/min],Mfull [Nm],Mdrag [Nm],<PT1> [s] ", fldData);
+
+			AssertHelper.Exception<VectoException>(
+				() => {
+					var fldCurve = FullLoadCurveReader.Create(VectoCSVFile.ReadStream(fldEntries));
+				}, messageContains: "Error reading full-load curve: multiple entries for engine speeds 1200");
+		}
 	}
 }

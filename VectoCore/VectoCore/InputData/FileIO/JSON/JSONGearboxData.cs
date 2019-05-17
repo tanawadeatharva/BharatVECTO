@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	/// }
 	// ReSharper disable once InconsistentNaming
 	public class JSONGearboxDataV5 : JSONFile, IGearboxEngineeringInputData, IAxleGearInputData,
-		ITorqueConverterEngineeringInputData
+		ITorqueConverterEngineeringInputData, IGearshiftEngineeringInputData
 	{
 		public JSONGearboxDataV5(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) {}
@@ -349,11 +349,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_StartTorqueReserve) / 100.0; }
 		}
 
-		ITorqueConverterDeclarationInputData IGearboxDeclarationInputData.TorqueConverter
-		{
-			get { return TorqueConverter; }
-		}
-
+		
 		public virtual ITorqueConverterEngineeringInputData TorqueConverter
 		{
 			get { return this; }
@@ -385,6 +381,30 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					: Body.GetEx<double>("UpshiftMinAcceleration").SI<MeterPerSquareSecond>();
 			}
 		}
+
+		public Second GearResidenceTime { get { return null; } }
+		public double? DnT99LHMin1 { get { return null; } }
+		public double? DnT99LHMin2 { get { return null; } }
+		public int? AllowedGearRangeUp { get { return null; } }
+		public int? AllowedGearRangeDown { get { return null; } }
+		public Second LookBackInterval { get { return null; } }
+		public Watt AvgCardanPowerThresholdPropulsion { get { return null; } }
+		public Watt CurrCardanPowerThresholdPropulsion { get { return null; } }
+		public double? TargetSpeedDeviationFactor { get { return null; } }
+		public double? EngineSpeedHighDriveOffFactor { get { return null; } }
+		public double? RatingFactorCurrentGear { get { return null; } }
+		public TableData AccelerationReserveLookup { get { return null; } }
+		public TableData ShareTorque99L { get { return null; } }
+		public TableData PredictionDurationLookup { get { return null; } }
+		public TableData ShareIdleLow { get { return null; } }
+		public TableData ShareEngineHigh { get { return null; } }
+		public Second DriverAccelerationLookBackInterval { get { return null; } }
+		public MeterPerSquareSecond DriverAccelerationThresholdLow { get { return null; } }
+		public double? RatioEarlyUpshiftFC { get { return null; } }
+		public double? RatioEarlyDownshiftFC { get { return null; } }
+		public TableData LoadStageShiftLines { get { return null; } }
+		public IList<double> LoadStageThresoldsUp { get { return null; } }
+		public IList<double> LoadStageThresoldsDown { get { return null; } }
 
 		public Second PowershiftShiftTime
 		{
@@ -477,7 +497,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string Manufacturer
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public string Model
@@ -487,7 +507,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string Date
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public CertificationMethod CertificationMethod
@@ -497,7 +517,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string CertificationNumber
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public DigestData DigestValue

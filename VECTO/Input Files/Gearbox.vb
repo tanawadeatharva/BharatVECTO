@@ -30,7 +30,7 @@ Imports TUGraz.VectoCore.Utils
 <CustomValidation(GetType(Gearbox), "ValidateGearbox")>
 Public Class Gearbox
 	Implements IGearboxEngineeringInputData, IGearboxDeclarationInputData, IAxleGearInputData, 
-				ITorqueConverterEngineeringInputData, ITorqueConverterDeclarationInputData
+				ITorqueConverterEngineeringInputData, ITorqueConverterDeclarationInputData, IGearshiftEngineeringInputData
 
 	Private _myPath As String
 	Private _filePath As String
@@ -123,7 +123,7 @@ Public Class Gearbox
 
 		Try
 			Dim writer As JSONFileWriter = JSONFileWriter.Instance
-			writer.SaveGearbox(Me, Me, _filePath)
+			writer.SaveGearbox(Me, Me, Me, Me, _filePath)
 		Catch ex As Exception
 			MsgBox("failed to write Gearbox file: " + ex.Message)
 			Return False
@@ -217,23 +217,23 @@ Public Class Gearbox
 
 				Try
 
-					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.EngineInputData, Nothing, gearbox, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
+					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.Components.EngineInputData, Nothing, gearbox, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
 				
 				axlegearData = doa.CreateAxleGearData(gearbox)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, gearbox)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Try
-					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.EngineInputData, gearbox, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
+					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.Components.EngineInputData, gearbox, New List(Of ITorqueLimitInputData), gearbox, TankSystem.Compressed)
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try
 
 				axlegearData = doa.CreateAxleGearData(gearbox)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, Nothing)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, gearbox, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, Nothing, gearbox)
 			End If
 
 			Dim result As IList(Of ValidationResult) =
@@ -286,15 +286,12 @@ Public Class Gearbox
 	End Function
 
 
-	Public ReadOnly Property SourceType As DataSourceType Implements IComponentInputData.SourceType
+	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
 		Get
-			Return DataSourceType.JSONFile
-		End Get
-	End Property
-
-	Public ReadOnly Property Source As String Implements IComponentInputData.Source
-		Get
-			Return FilePath
+			Dim retVal As DataSource =  New DataSource() 
+			retVal.SourceType = DataSourceType.JSONFile
+			retVal.SourceFile = FilePath
+			Return retVal
 		End Get
 	End Property
 
@@ -307,7 +304,7 @@ Public Class Gearbox
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
@@ -327,7 +324,7 @@ Public Class Gearbox
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
@@ -379,13 +376,6 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public ReadOnly Property IGearboxDeclarationInputData_TorqueConverter As ITorqueConverterDeclarationInputData _
-		Implements IGearboxDeclarationInputData.TorqueConverter
-		Get
-			Return Me
-		End Get
-	End Property
-
 	Public ReadOnly Property ReferenceRPM As PerSecond Implements ITorqueConverterEngineeringInputData.ReferenceRPM
 		Get
 			Return TorqueConverterReferenceRpm.RPMtoRad()
@@ -419,14 +409,14 @@ Public Class Gearbox
 	End Property
 
 	Public ReadOnly Property CLUpshiftMinAcceleration As MeterPerSquareSecond _
-		Implements ITorqueConverterEngineeringInputData.CLUpshiftMinAcceleration
+		Implements IGearshiftEngineeringInputData.CLUpshiftMinAcceleration
 		Get
 			Return TCLUpshiftMinAcceleration.SI(Of MeterPerSquareSecond)()
 		End Get
 	End Property
 
 	Public ReadOnly Property CCUpshiftMinAcceleration As MeterPerSquareSecond _
-		Implements ITorqueConverterEngineeringInputData.CCUpshiftMinAcceleration
+		Implements IGearshiftEngineeringInputData.CCUpshiftMinAcceleration
 		Get
 			Return TCCUpshiftMinAcceleration.SI(Of MeterPerSquareSecond)()
 		End Get
@@ -440,43 +430,180 @@ Public Class Gearbox
 	End Property
 
 
-	Public ReadOnly Property TorqueReserve As Double Implements IGearboxEngineeringInputData.TorqueReserve
+	Public ReadOnly Property TorqueReserve As Double Implements IGearshiftEngineeringInputData.TorqueReserve
 		Get
 			Return TorqueResv / 100
 		End Get
 	End Property
 
 	Public ReadOnly Property StartAcceleration As MeterPerSquareSecond _
-		Implements IGearboxEngineeringInputData.StartAcceleration
+		Implements IGearshiftEngineeringInputData.StartAcceleration
 		Get
 			Return StartAcc.SI(Of MeterPerSquareSecond)()
 		End Get
 	End Property
 
-	Public ReadOnly Property StartTorqueReserve As Double Implements IGearboxEngineeringInputData.StartTorqueReserve
+	Public ReadOnly Property StartTorqueReserve As Double Implements IGearshiftEngineeringInputData.StartTorqueReserve
 		Get
 			Return TorqueResvStart / 100
 		End Get
 	End Property
 
-	Public ReadOnly Property TorqueConverter As ITorqueConverterEngineeringInputData _
-		Implements IGearboxEngineeringInputData.TorqueConverter
-		Get
-			Return Me
-		End Get
-	End Property
-
 	Public ReadOnly Property DownshiftAferUpshiftDelay As Second _
-		Implements IGearboxEngineeringInputData.DownshiftAfterUpshiftDelay
+		Implements IGearshiftEngineeringInputData.DownshiftAfterUpshiftDelay
 		Get
 			Return DownshiftAfterUpshift.SI(Of Second)()
 		End Get
 	End Property
 
 	Public ReadOnly Property UpshiftAfterDownshiftDelay As Second _
-		Implements IGearboxEngineeringInputData.UpshiftAfterDownshiftDelay
+		Implements IGearshiftEngineeringInputData.UpshiftAfterDownshiftDelay
 		Get
 			Return UpshiftAfterDownshift.SI(Of Second)()
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property GearResidenceTime As Second Implements IGearshiftEngineeringInputData.GearResidenceTime
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property DnT99LHMin1 As Double? Implements IGearshiftEngineeringInputData.DnT99LHMin1
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property DnT99LHMin2 As Double? Implements IGearshiftEngineeringInputData.DnT99LHMin2
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property AllowedGearRangeUp As Integer? Implements IGearshiftEngineeringInputData.AllowedGearRangeUp
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property AllowedGearRangeDown As Integer? Implements IGearshiftEngineeringInputData.AllowedGearRangeDown
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property LookBackInterval As Second Implements IGearshiftEngineeringInputData.LookBackInterval
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property AvgCardanPowerThresholdPropulsion As Watt Implements IGearshiftEngineeringInputData.AvgCardanPowerThresholdPropulsion
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property CurrCardanPowerThresholdPropulsion As Watt Implements IGearshiftEngineeringInputData.CurrCardanPowerThresholdPropulsion
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property TargetSpeedDeviationFactor As Double? Implements IGearshiftEngineeringInputData.TargetSpeedDeviationFactor
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property EngineSpeedHighDriveOffFactor As Double? Implements IGearshiftEngineeringInputData.EngineSpeedHighDriveOffFactor
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property RatingFactorCurrentGear As Double? Implements IGearshiftEngineeringInputData.RatingFactorCurrentGear
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property AccelerationReserveLookup As TableData Implements IGearshiftEngineeringInputData.AccelerationReserveLookup
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property ShareTorque99L As TableData Implements IGearshiftEngineeringInputData.ShareTorque99L
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property PredictionDurationLookup As TableData Implements IGearshiftEngineeringInputData.PredictionDurationLookup
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property ShareIdleLow As TableData Implements IGearshiftEngineeringInputData.ShareIdleLow
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property ShareEngineHigh As TableData Implements IGearshiftEngineeringInputData.ShareEngineHigh
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property Source As String Implements IGearshiftEngineeringInputData.Source
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property DriverAccelerationLookBackInterval As Second Implements IGearshiftEngineeringInputData.DriverAccelerationLookBackInterval
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property DriverAccelerationThresholdLow As MeterPerSquareSecond Implements IGearshiftEngineeringInputData.DriverAccelerationThresholdLow
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property RatioEarlyUpshiftFC As Double? Implements IGearshiftEngineeringInputData.RatioEarlyUpshiftFC
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property RatioEarlyDownshiftFC As Double? Implements IGearshiftEngineeringInputData.RatioEarlyDownshiftFC
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property LoadStageShiftLines As TableData Implements IGearshiftEngineeringInputData.LoadStageShiftLines
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property LoadStageThresoldsUp As IList(Of Double) Implements IGearshiftEngineeringInputData.LoadStageThresoldsUp
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property LoadStageThresoldsDown As IList(Of Double) Implements IGearshiftEngineeringInputData.LoadStageThresoldsDown
+		Get
+			Return Nothing
 		End Get
 	End Property
 
@@ -488,7 +615,7 @@ Public Class Gearbox
 
 
 	Public ReadOnly Property IGearboxEngineeringInputData_UpshiftMinAcceleration As MeterPerSquareSecond _
-		Implements IGearboxEngineeringInputData.UpshiftMinAcceleration
+		Implements IGearshiftEngineeringInputData.UpshiftMinAcceleration
 		Get
 			Return UpshiftMinAcceleration.SI(Of MeterPerSquareSecond)()
 		End Get
@@ -496,14 +623,14 @@ Public Class Gearbox
 
 
 	Public ReadOnly Property IGearboxEngineeringInputData_StartSpeed As MeterPerSecond _
-		Implements IGearboxEngineeringInputData.StartSpeed
+		Implements IGearshiftEngineeringInputData.StartSpeed
 		Get
 			Return StartSpeed.SI(Of MeterPerSecond)()
 		End Get
 	End Property
 
 	Public ReadOnly Property MinTimeBetweenGearshift As Second _
-		Implements IGearboxEngineeringInputData.MinTimeBetweenGearshift
+		Implements IGearshiftEngineeringInputData.MinTimeBetweenGearshift
 		Get
 			Return ShiftTime.SI(Of Second)()
 		End Get
