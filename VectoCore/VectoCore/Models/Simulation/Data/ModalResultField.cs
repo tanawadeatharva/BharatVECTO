@@ -53,6 +53,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI), "simulation_interval", "dt [s]")] simulationInterval,
 
+
+		[ModalResultField(typeof(bool), "Ignition On")] IgnitionOn,
+
 		/// <summary>
 		///     Engine speed [1/min].
 		/// </summary>

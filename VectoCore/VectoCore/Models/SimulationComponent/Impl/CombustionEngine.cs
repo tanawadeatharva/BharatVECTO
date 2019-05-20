@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
+		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
 			IterationStatistics.Increment(this, "Requests");
 
@@ -382,6 +382,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_eng_drag] = CurrentState.FullDragTorque * avgEngineSpeed;
 			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
+			container[ModalResultField.IgnitionOn] = CurrentState.IgnitionOn;
 
 			var result = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed,
 				DataBus.ExecutionMode != ExecutionMode.Declaration);
@@ -488,6 +489,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class EngineState
 		{
+			public EngineState()
+			{
+				IgnitionOn = true;
+			}
+
 			public EngineOperationMode OperationMode { get; set; }
 
 			// ReSharper disable once InconsistentNaming
@@ -508,6 +514,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public NewtonMeter DynamicFullLoadTorque { get; set; }
 
 			public NewtonMeter FullDragTorque { get; set; }
+
+			public bool IgnitionOn { get; set; }
 		}
 
 		protected internal class CombustionEngineIdleController : LoggingObject, IIdleController
@@ -684,5 +692,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return RequestIdling(absTime, dt, outTorque, outAngularVelocity);
 			}
 		}
+
+		#region Implementation of IEngineControl
+
+		public virtual bool IgnitionOn
+		{
+			get { return true; }
+			set {  }
+		}
+
+		#endregion
 	}
 }

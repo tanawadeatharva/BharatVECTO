@@ -252,6 +252,8 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
+    <Compile Include="Models\Simulation\DataBus\IEngineControl.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactory.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactoryFactory.cs" />
     <Compile Include="Models\Simulation\SimulationFactoryNinjectModule.cs" />
