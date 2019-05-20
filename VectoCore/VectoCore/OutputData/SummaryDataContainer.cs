@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string DECLARED_FZISO_AXLE3 = "Declared FzISO axle 3 [N]";
 		public const string DECLARED_RRC_AXLE4 = "Declared RRC axle 4 [-]";
 		public const string DECLARED_FZISO_AXLE4 = "Declared FzISO axle 4 [N]";
-		public const string ADAS_TECHNOLOGY_COMBINATION = "ADAS technology combination [-]";
+		//public const string ADAS_TECHNOLOGY_COMBINATION = "ADAS technology combination [-]";
 
 		public const string PTO_TECHNOLOGY = "PTOShaftsGearWheels";
 
@@ -323,7 +323,7 @@ namespace TUGraz.VectoCore.OutputData
 						typeof(string)),
 					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem), typeof(string)),
 					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem), typeof(string)),
-					Tuple.Create(ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
+					//Tuple.Create(ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
 					Tuple.Create(PTO_TECHNOLOGY, typeof(string)),
 
 					//Tuple.Create(PTO_OTHER_ELEMENTS, typeof(string)),
@@ -712,7 +712,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[R_DYN] = (ConvertedSI)data.DynamicTyreRadius;
 
-			row[ADAS_TECHNOLOGY_COMBINATION] = data.ADAS != null ? DeclarationData.ADASCombinations.Lookup(data.ADAS).ID : "";
+			//row[ADAS_TECHNOLOGY_COMBINATION] = data.ADAS != null ? DeclarationData.ADASCombinations.Lookup(data.ADAS).ID : "";
 		}
 
 		private static void WriteAirdragData(AirdragData data, DataRow row)

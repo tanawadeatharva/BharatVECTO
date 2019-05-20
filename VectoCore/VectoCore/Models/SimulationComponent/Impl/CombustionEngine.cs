@@ -405,14 +405,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				advancedAux.DoWriteModalResults(container);
 				fcAAUX = advancedAux.AAuxFuelConsumption;
 			}
-			var fcADAS = fcAAUX * ModelData.ADASCorrectionFactor;
-			var fcFinal = fcADAS;
+			var fcFinal = fcAAUX;
 
 			container[ModalResultField.FCMap] = fc;
 			container[ModalResultField.FCNCVc] = fcNCVcorr;
 			container[ModalResultField.FCWHTCc] = fcWHTC;
 			container[ModalResultField.FCAAUX] = fcAAUX;
-			container[ModalResultField.FCADAS] = fcADAS;
 			container[ModalResultField.FCFinal] = fcFinal;
 		}
 

@@ -1988,73 +1988,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			CollectionAssert.AreEqual(withSTT1, runs[9].VehicleData.AxleData.Select(a => a.Inertia.Value()));
 		}
 
-		[TestCase(false, false, false, PredictiveCruiseControlType.None, "0"),
-		 TestCase(true, false, false, PredictiveCruiseControlType.None, "1"),
-		 TestCase(true, false, false, PredictiveCruiseControlType.Option_1_2_3, "7/2"),
-		 TestCase(true, true, false, PredictiveCruiseControlType.Option_1_2, "10/1")]
-		public void TestADASCombinationLookup(
-			bool engineStopStart, bool ecoRollWOEngineStop, bool ecoRollWEngineStop, PredictiveCruiseControlType pcc,
-			string expectedADASGroup)
-		{
-			var adas = DeclarationData.ADASCombinations.Lookup(engineStopStart, EcorollTypeHelper.Get(ecoRollWOEngineStop, ecoRollWEngineStop), pcc);
-			Assert.AreEqual(adas.ID, expectedADASGroup);
-		}
-
-		[TestCase(true, true, true, PredictiveCruiseControlType.Option_1_2),
-		TestCase(true, true, true, PredictiveCruiseControlType.None)]
-		public void TestInvalidADASCombinationLookup(
-			bool engineStopStart, bool ecoRollWOEngineStop, bool ecoRollWEngineStop, PredictiveCruiseControlType pcc)
-		{
-			AssertHelper.Exception<VectoException>(() => {
-				DeclarationData.ADASCombinations.Lookup(engineStopStart, EcorollTypeHelper.Get(ecoRollWOEngineStop, ecoRollWEngineStop), pcc);
-			});
-		}
-
-
-		[TestCase(VehicleClass.Class4, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
-		TestCase(VehicleClass.Class5, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
-		TestCase(VehicleClass.Class9, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
-		TestCase(VehicleClass.Class10, "0", MissionType.LongHaul, LoadingType.LowLoading, 0.0),
-		 TestCase(VehicleClass.Class4, "4/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.4),
-		TestCase(VehicleClass.Class4, "8/2", MissionType.LongHaul, LoadingType.LowLoading, -0.1),
-		TestCase(VehicleClass.Class4, "11/1", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.8),
-		TestCase(VehicleClass.Class5, "3", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.2),
-		TestCase(VehicleClass.Class5, "5", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -0.4),
-		TestCase(VehicleClass.Class5, "11/1", MissionType.UrbanDelivery, LoadingType.ReferenceLoad, -1.3),
-		TestCase(VehicleClass.Class9, "1", MissionType.RegionalDeliveryEMS, LoadingType.ReferenceLoad, -0.2),
-		TestCase(VehicleClass.Class9, "6", MissionType.LongHaulEMS, LoadingType.ReferenceLoad, -0.2),
-		TestCase(VehicleClass.Class9, "10/1", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.5),
-		TestCase(VehicleClass.Class10, "2", MissionType.LongHaul, LoadingType.ReferenceLoad, -0.1),
-		TestCase(VehicleClass.Class10, "4/2", MissionType.RegionalDeliveryEMS, LoadingType.LowLoading, -0.6),
-		TestCase(VehicleClass.Class10, "11/2", MissionType.RegionalDelivery, LoadingType.ReferenceLoad, -1.4)
-
-			]
-		public void TestADASBenefitLookup(
-			VehicleClass group, string adasConfig, MissionType mission, LoadingType loading, double expectedBenefit)
-		{
-			var expectedCorrectionFactor = 1 + expectedBenefit / 100.0;
-			var factor = DeclarationData.ADASBenefits.Lookup(
-				group, new ADASCombination() { ID = adasConfig }, mission, loading);
-			Assert.AreEqual(expectedCorrectionFactor, factor, 1e-6, "group: {0}, adas: {1}, mission: {2}, payload: {3}, expectedBenefit: {4}, actualBenefit: {5}",
-				group, adasConfig, mission, loading, expectedBenefit, (factor - 1)*100.0);
-		}
-
-		[TestCase(VehicleClass.Class4, "3", MissionType.LongHaul, LoadingType.FullLoading),
-		TestCase(VehicleClass.Class4, "5", MissionType.LongHaulEMS, LoadingType.LowLoading),
-		TestCase(VehicleClass.Class7, "10/1", MissionType.LongHaul, LoadingType.LowLoading),
-		TestCase(VehicleClass.Class8, "2", MissionType.RegionalDelivery, LoadingType.LowLoading),
-			]
-		public void TestIvalidADASBenefitLookup(
-			VehicleClass group, string adasConfig, MissionType mission, LoadingType loading)
-		{
-			var expectedBenefit = 0.0;
-			var expectedCorrectionFactor = 1 + expectedBenefit / 100.0;
-			var factor = DeclarationData.ADASBenefits.Lookup(
-				group, new ADASCombination() { ID = adasConfig }, mission, loading);
-			Assert.AreEqual(expectedCorrectionFactor, factor, 1e-6, "group: {0}, adas: {1}, mission: {2}, payload: {3}, expectedBenefit: {4}, actualBenefit: {5}",
-							group, adasConfig, mission, loading, expectedBenefit, (factor - 1) * 100.0);
-		}
-
+		
 		[
 			TestCase("Diesel CI", null, 1.0),
 			TestCase("Ethanol CI", null, 1.011811),
