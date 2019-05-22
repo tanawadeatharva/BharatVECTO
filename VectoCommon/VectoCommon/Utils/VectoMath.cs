@@ -371,6 +371,39 @@ namespace TUGraz.VectoCommon.Utils
 			r = ssxy * ssxy / ssxx / ssyy;
 		}
 
+		public static void LeastSquaresFitting(IEnumerable<Point> entries, out double k, out double d, out double r)
+		{
+			// algoritm taken from http://mathworld.wolfram.com/LeastSquaresFitting.html (eqn. 27 & 28)
+			var count = 0;
+			var sumX = 0.0;
+			var sumY = 0.0;
+			var sumXSquare = 0.0;
+			var sumYSquare = 0.0;
+			var sumXY = 0.0;
+			foreach (var entry in entries) {
+				var x = entry.X;
+				var y = entry.Y;
+				sumX += x;
+				sumY += y;
+				sumXSquare += x * x;
+				sumYSquare += y * y;
+				sumXY += x * y;
+				count++;
+			}
+			if (count == 0) {
+				k = 0;
+				d = 0;
+				r = 0;
+				return;
+			}
+			var ssxx = sumXSquare - sumX * sumX / count;
+			var ssxy = sumXY - sumX * sumY / count;
+			var ssyy = sumYSquare - sumY * sumY / count;
+			k = ssxy / ssxx;
+			d = (sumY - k * sumX) / count;
+			r = ssxy * ssxy / ssxx / ssyy;
+		}
+
 		public static double[] QuadraticEquationSolver(double a, double b, double c)
 		{
 			return Polynom2Solver(a, b, c);

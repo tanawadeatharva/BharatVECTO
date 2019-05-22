@@ -94,6 +94,7 @@
     <Compile Include="FileIO\JsonReadTest.cs" />
     <Compile Include="FileIO\SimulationDataReaderTest.cs" />
     <Compile Include="GraphProgram.cs" />
+    <Compile Include="Integration\ADAS\ADASTests.cs" />
     <Compile Include="Integration\ATPowerTrain.cs" />
     <Compile Include="Integration\BusAuxiliaries\AuxDemandTest.cs" />
     <Compile Include="Integration\BusAuxiliaries\BusAdapterTest.cs" />
@@ -2784,6 +2785,9 @@
     <Folder Include="Integration\FullPowertrain\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestData\Integration\ADAS\Group5_EngineStopStart.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\DeclarationMode\Class4_Vocational\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

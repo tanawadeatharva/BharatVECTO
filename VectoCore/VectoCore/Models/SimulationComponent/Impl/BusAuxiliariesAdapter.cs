@@ -145,6 +145,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return CurrentState.PowerDemand / avgAngularSpeed;
 		}
 
+		public Watt PowerDemandEngineOn(PerSecond engineSpeed)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Watt PowerDemandEngineOff()
+		{
+			throw new NotImplementedException();
+		}
+
 
 		protected internal void DoWriteModalResults(IModalDataContainer container)
 		{

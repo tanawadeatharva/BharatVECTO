@@ -538,6 +538,11 @@ Public Class VectoJobForm
 			tbLacDfVelocityDropFile.Text = If(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup Is Nothing, "",
 											GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, _basePath))
 		End If
+
+		tbEngineStopStartThreshold.Text = driver.EngineOffStandStillThreshold.ToGUIFormat()
+        tbEngineOffThreshold.Text = If(driver.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.MaxEngineOffTimespan.ToGUIFormat())
+        tbEssUtility.Text = driver.EngineStopStartUtilityFactor.ToGUIFormat()
+
 		'-------------------------------------------------------------
 
 		DeclInit()
@@ -654,6 +659,10 @@ Public Class VectoJobForm
 		vectoJob.LacDfScale = tbDfCoastingScale.Text.ToDouble(0)
 		vectoJob.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
 		vectoJob.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
+
+        vectoJob.EngineStopStartThreshold = tbEngineStopStartThreshold.text.ToDouble(0)
+        vectoJob.EngineOffTimeLimit = tbEngineOffThreshold.Text.ToDouble(0)
+        vectoJob.EngineStStUtilityFactor = tbEssUtility.Text.ToDouble(0)
 		'------------------------------------------------------------
 
 		'SAVE

@@ -235,5 +235,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public Kilogram ReducedMassWheels { get; set; }
+
+		#region Implementation of IEngineControl
+
+		public bool IgnitionOn { get; set; }
+
+		#endregion
 	}
 }

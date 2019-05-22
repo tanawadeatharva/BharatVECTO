@@ -54,17 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public bool PT1Disabled { get; set; }
 
-		public enum EngineOperationMode
-		{
-			Idle,
-			Drag,
-			FullDrag,
-			Load,
-			FullLoad,
-			Stopped,
-			Undef
-		}
-
+		
 		protected const int EngineIdleSpeedStopThreshold = 100;
 		protected const double MaxTorqueExceededThreshold = 1.05;
 		protected const double ZeroThreshold = 0.0001;
@@ -82,7 +72,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PT1Disabled = pt1Disabled;
 			ModelData = modelData;
 
-			PreviousState.OperationMode = EngineOperationMode.Undef;
 			PreviousState.EnginePower = 0.SI<Watt>();
 			PreviousState.EngineSpeed = ModelData.IdleSpeed;
 			PreviousState.dt = 1.SI<Second>();
@@ -412,6 +401,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.FCNCVc] = fcNCVcorr;
 			container[ModalResultField.FCWHTCc] = fcWHTC;
 			container[ModalResultField.FCAAUX] = fcAAUX;
+			container[ModalResultField.FCEngineStopStart] = fcFinal;
 			container[ModalResultField.FCFinal] = fcFinal;
 		}
 
@@ -494,8 +484,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				IgnitionOn = true;
 			}
 
-			public EngineOperationMode OperationMode { get; set; }
-
 			// ReSharper disable once InconsistentNaming
 			public Second dt { get; set; }
 
@@ -516,6 +504,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public NewtonMeter FullDragTorque { get; set; }
 
 			public bool IgnitionOn { get; set; }
+
+			public Watt AuxPowerEngineOff { get; set; }
 		}
 
 		protected internal class CombustionEngineIdleController : LoggingObject, IIdleController

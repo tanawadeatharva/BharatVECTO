@@ -419,6 +419,12 @@ Public Class Engine
 		End Get
 	End Property
 
+    Public ReadOnly Property EngineStartTime As Second Implements IEngineEngineeringInputData.EngineStartTime
+        Get
+            Return Nothing
+        End Get
+    End Property
+
 #End Region
 End Class
 

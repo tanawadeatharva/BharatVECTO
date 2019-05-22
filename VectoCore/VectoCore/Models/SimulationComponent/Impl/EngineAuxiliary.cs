@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -147,6 +148,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return ComputePowerDemand(avgAngularSpeed, dryRun) / avgAngularSpeed;
 			}
 			return 0.SI<NewtonMeter>();
+		}
+
+		public Watt PowerDemandEngineOff()
+		{
+			if (!DataBus.VehicleStopped) {
+				throw new NotImplementedException("EngineOff while Driving not implemented");
+			}
+			var auxiliariesVehicleStopped = new[] {
+				Constants.Auxiliaries.IDs.ElectricSystem, Constants.Auxiliaries.IDs.PneumaticSystem,
+				Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
+			};
+			return Auxiliaries.Where(x => auxiliariesVehicleStopped.Contains(x.Key)).Sum(x => x.Value(0.RPMtoRad()));
+		}
+
+		public Watt PowerDemandEngineOn(PerSecond engineSpeed)
+		{
+			return ComputePowerDemand(engineSpeed, true);
 		}
 
 		protected Watt ComputePowerDemand(PerSecond engineSpeed, bool dryRun)

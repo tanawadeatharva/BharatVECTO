@@ -115,6 +115,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Driver
 		{
+			public static readonly Second EngineOffStandStillThreshold = 2.SI<Second>();
+			public static readonly Second MaxEngineOffTimespan = 120.SI<Second>();
+			public const double EngineStopStartUtilityFactor = 0.8;
+
 			public static class LookAhead
 			{
 				public const bool Enabled = true;
@@ -161,6 +165,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
 		    public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI(Unit.SI.Kilo.Gramm.Per.Meter); // [kg/m]
+			public static readonly Second DefaultEngineStartTime = 1.SI<Second>();
 
 			public const double TorqueLimitGearboxFactor = 0.9;
 			public const double TorqueLimitVehicleFactor = 0.95;

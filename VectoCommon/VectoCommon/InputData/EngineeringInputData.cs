@@ -300,6 +300,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// P170
 		/// </summary>
 		double WHTCEngineering { get; }
+
+		Second EngineStartTime { get; }
 	}
 
 	public interface IAuxiliariesEngineeringInputData
@@ -337,6 +339,9 @@ namespace TUGraz.VectoCommon.InputData
 		ILookaheadCoastingInputData Lookahead { get; }
 
 		IGearshiftEngineeringInputData GearshiftInputData { get; }
+		Second EngineOffStandStillThreshold { get; }
+		Second MaxEngineOffTimespan { get; }
+		double EngineStopStartUtilityFactor { get; }
 	}
 
 	public interface IOverSpeedEcoRollEngineeringInputData : IOverSpeedEcoRollDeclarationInputData

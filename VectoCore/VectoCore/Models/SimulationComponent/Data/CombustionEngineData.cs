@@ -42,6 +42,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	[CustomValidation(typeof(CombustionEngineData), "ValidateData")]
 	public class CombustionEngineData : SimulationComponentData
 	{
+		[Required, SIRange(1, 5)] public Second EngineStartTime;
+
 		[Required, SIRange(1000 * 1E-6, 20000 * 1E-6)]
 		public CubicMeter Displacement { get; internal set; }
 
@@ -113,6 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				FuelData = FuelData,
 				CertificationNumber = CertificationNumber,
 				CertificationMethod = CertificationMethod,
+				EngineStartTime = EngineStartTime
 			};
 		}
 
