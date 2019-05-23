@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var vtpFcMeasuredCorr = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos * vtpResult.VTPFcCorrectionFactor;
 			var vtpFcSimulated = vtpResult.VTPFcFinalSimulated / vtpResult.VTPWorPWheelSimPos;
 			var cVtp = vtpFcMeasuredCorr / vtpFcSimulated;
-			var declaredCO2 = result.FuelConsumptionTotal / result.Distance / result.Payload;
+			var declaredCO2 = result.FuelConsumptionFinal / result.Distance / result.Payload;
 			var verifiedCO2 = declaredCO2 * cVtp;
 
 			Results.Add(
