@@ -132,8 +132,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var fcVolumePerMeter = modContainer.FuelData.FuelDensity == null ? null :
 				(fcFinal / modContainer.FuelData.FuelDensity)
 				.Cast<VolumePerMeter>();
-			var co2PerMeter = distance == null ? null : fcFinal / modContainer.FuelData.CO2PerFuelWeight / distance;
-			var energyPerMeter = distance == null ? null : fcFinal * modContainer.FuelData.LowerHeatingValueVecto / distance;
+			var co2PerMeter = distance == null ? null : fcFinal * modContainer.FuelData.CO2PerFuelWeight;
+			var energyPerMeter = distance == null ? null : fcFinal * modContainer.FuelData.LowerHeatingValueVecto;
 
 //			Console.WriteLine("FC-Map g/m: {0}, FC-Final g/m {1}, FC-Final l/100km: {2}, CO2 g/m: {3}, Energy J/m: {4}",
 			Console.WriteLine("{0}, {1}, {2}, {3}, {4}",

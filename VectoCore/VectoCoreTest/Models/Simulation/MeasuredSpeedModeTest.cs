@@ -257,10 +257,19 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				EngineData =
 					new CombustionEngineData {
 						IdleSpeed = 560.RPMtoRad(),
+						EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime,
+						Inertia = 1.SI<KilogramSquareMeter>(),
 						FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fullLoadCurve }, { 1, fullLoadCurve } }
 					},
 				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 1, new GearData { Ratio = 6.2 } } } },
-				Retarder = new RetarderData()
+				Retarder = new RetarderData(),
+				DriverData = new DriverData() {
+					EngineStopStart = new DriverData.EngineStopStartData() {
+						UtilityFactor = DeclarationData.Driver.EngineStopStartUtilityFactor,
+						EngineOffStandStillThreshold = DeclarationData.Driver.EngineOffStandStillThreshold,
+						MaxEngineOffTimespan =  DeclarationData.Driver.MaxEngineOffTimespan
+					}
+				}
 			};
 
 			// call builder (actual test)
@@ -319,6 +328,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				AxleGearData = new AxleGearData { AxleGear = new GearData { Ratio = 2.3 } },
 				EngineData = new CombustionEngineData {
 					IdleSpeed = 560.RPMtoRad(),
+					Inertia = 1.SI<KilogramSquareMeter>(),
+					EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime,
 					FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve> {
 						{ 0, fullLoadCurve },
 						{ 1, fullLoadCurve },
@@ -334,7 +345,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 					},
 					StartSpeed = 2.SI<MeterPerSecond>()
 				},
-				Retarder = new RetarderData()
+				Retarder = new RetarderData(),
+				DriverData = new DriverData() {
+					EngineStopStart = new DriverData.EngineStopStartData() {
+						EngineOffStandStillThreshold = DeclarationData.Driver.EngineOffStandStillThreshold,
+						UtilityFactor = DeclarationData.Driver.EngineStopStartUtilityFactor,
+						MaxEngineOffTimespan = DeclarationData.Driver.MaxEngineOffTimespan,
+					}
+				}
 			};
 
 			// call builder (actual test)

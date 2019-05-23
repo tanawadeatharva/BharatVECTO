@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 	}
 
-	public class MockEngine : VectoSimulationComponent, IEngineInfo
+	public class MockEngine : VectoSimulationComponent, IEngineInfo, IEngineControl
 	{
 		public MockEngine(IVehicleContainer container) : base(container) {}
 
@@ -203,5 +203,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		protected override void DoCommitSimulationStep() {}
+
+		#region Implementation of IEngineControl
+
+		public bool IgnitionOn { get; set; }
+
+		#endregion
 	}
 }
