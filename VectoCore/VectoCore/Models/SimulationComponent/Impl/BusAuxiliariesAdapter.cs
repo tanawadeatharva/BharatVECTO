@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -143,6 +143,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var avgAngularSpeed = (CurrentState.AngularSpeed + PreviousState.AngularSpeed) / 2.0;
 			return CurrentState.PowerDemand / avgAngularSpeed;
+		}
+
+		public Watt PowerDemandEngineOn(PerSecond engineSpeed)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Watt PowerDemandEngineOff()
+		{
+			throw new NotImplementedException();
 		}
 
 

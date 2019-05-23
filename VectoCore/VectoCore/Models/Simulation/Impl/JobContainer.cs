@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			return
 				Runs.Select(
-					r => new CycleTypeDescription { Name = r.Run.CycleName, CycleType = r.Run.GetContainer().RunData.Cycle.CycleType })
+					r => new CycleTypeDescription { Name = r.Run.CycleName, CycleType = r.Run.GetContainer().RunData.Cycle?.CycleType ?? CycleType.None })
 					.Distinct();
 		}
 
@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Adds the runs from the factory to the job container.
 		/// </summary>
 		/// <returns>A List of Run-Identifiers (unique), int</returns>
-		public List<int> AddRuns(SimulatorFactory factory)
+		public List<int> AddRuns(ISimulatorFactory factory)
 		{
 			var runIDs = new List<int>();
 

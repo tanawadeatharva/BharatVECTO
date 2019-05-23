@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -99,7 +99,10 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when the Speed Limit was exceeded.
 	/// </summary>
-	public class ResponseSpeedLimitExceeded : AbstractResponse {}
+	public class ResponseSpeedLimitExceeded : AbstractResponse
+	{
+		public ResponseSpeedLimitExceeded() { }
+	}
 
 	/// <summary>
 	/// Response when the request should have another time interval.

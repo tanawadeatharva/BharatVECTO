@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -62,8 +62,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			GraphWriter.Series1Label = "Vecto 3";
 			GraphWriter.Series2Label = "Vecto 2.2";
 
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
-    }
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+	}
 
 		private static string GetSlopeString(double slope)
 		{

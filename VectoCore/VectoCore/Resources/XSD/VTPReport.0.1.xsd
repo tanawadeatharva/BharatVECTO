@@ -369,7 +369,7 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="TestFuelNCV">
+			<xs:element name="TestFuelNCV" minOccurs="0">
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:double">

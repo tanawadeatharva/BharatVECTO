@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -51,3 +51,4 @@ using System.Runtime.InteropServices;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VectoAPITest")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VectoXML")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("XMLTest")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("VECTO_GIT")]

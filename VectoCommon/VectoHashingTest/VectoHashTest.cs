@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -34,8 +34,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Schema;
 using System.Xml.XPath;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Hashing;
@@ -43,6 +41,7 @@ using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using VectoHashingTest.Utils;
 using Assert = NUnit.Framework.Assert;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace VectoHashingTest
 {
@@ -332,13 +331,13 @@ namespace VectoHashingTest
 			var input = new XmlDocument();
 			input.Load(file);
 			var dateNode = input.SelectSingleNode("//*[local-name()='Date']");
-			var date = XmlConvert.ToDateTime(dateNode.FirstChild.Value);
+			var date = XmlConvert.ToDateTime(dateNode.FirstChild.Value, XmlDateTimeSerializationMode.Utc);
 
 			var h = VectoHash.Load(input);
 			var r = h.AddHash();
 
 			var newDateNode = r.XPathSelectElement("//*[local-name()='Date']");
-			var newDate = XmlConvert.ToDateTime(newDateNode.Value);
+			var newDate = XmlConvert.ToDateTime(newDateNode.Value, XmlDateTimeSerializationMode.Utc);
 
 			var now = DateTime.Now;
 
@@ -397,6 +396,7 @@ namespace VectoHashingTest
 		}
 
 		[TestCase(@"Testdata\XML\ToHash\vecto_engine-input.xml"),
+		TestCase(@"Testdata\XML\ToHash\vecto_engine-input_emptyDate.xml"),
 		TestCase(@"Testdata\XML\ToHash\vecto_engine_withid-input.xml"),
 		TestCase(@"Testdata\XML\ToHash\vecto_gearbox-input.xml")]
 		public void TestHashedComponentIsValid(string file)
@@ -416,7 +416,7 @@ namespace VectoHashingTest
 
 			// re-load generated XML and perform XSD validation
 			var validator = new XMLValidator(XmlReader.Create(destination));
-			Assert.IsTrue(validator.ValidateXML(XMLValidator.XmlDocumentType.DeclarationComponentData));
+			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.DeclarationComponentData));
 		}
 
 

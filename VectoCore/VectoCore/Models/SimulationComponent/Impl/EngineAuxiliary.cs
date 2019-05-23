@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -76,10 +77,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Add(auxId, _ => DataBus.CycleData.LeftSample.AdditionalAuxPowerDemand);
 		}
 
-        public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc)
-        {
-            Add(auxId, _ => powerLossFunc(DataBus.CycleData.LeftSample));
-        }
+		public void AddCycle(string auxId, Func<DrivingCycleData.DrivingCycleEntry, Watt> powerLossFunc)
+		{
+			Add(auxId, _ => powerLossFunc(DataBus.CycleData.LeftSample));
+		}
 
 		/// <summary>
 		/// Adds an auxiliary which calculates the demand based on a aux-map and the engine speed.
@@ -147,6 +148,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return ComputePowerDemand(avgAngularSpeed, dryRun) / avgAngularSpeed;
 			}
 			return 0.SI<NewtonMeter>();
+		}
+
+		public Watt PowerDemandEngineOff()
+		{
+			if (!DataBus.VehicleStopped) {
+				throw new NotImplementedException("EngineOff while Driving not implemented");
+			}
+
+			var auxiliarieIgnoredDuringVehicleStop = new[] {
+				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan
+			};
+			return Auxiliaries.Where(x => !auxiliarieIgnoredDuringVehicleStop.Contains(x.Key)).Sum(x => x.Value(0.RPMtoRad()));
+		}
+
+		public Watt PowerDemandEngineOn(PerSecond engineSpeed)
+		{
+			return ComputePowerDemand(engineSpeed, true);
 		}
 
 		protected Watt ComputePowerDemand(PerSecond engineSpeed, bool dryRun)

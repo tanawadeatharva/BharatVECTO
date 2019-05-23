@@ -30,8 +30,8 @@ Public Class WelcomeDialog
 
 	'Open Release Notes
 	Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-		If File.Exists(MyAppPath & "User Manual\Release Notes.pdf") Then
-			Process.Start(MyAppPath & "User Manual\Release Notes.pdf")
+		If File.Exists(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf")) Then
+			Process.Start(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf"))
 		Else
 			MsgBox("Release Notes not found!", MsgBoxStyle.Critical)
 		End If
@@ -39,9 +39,9 @@ Public Class WelcomeDialog
 
 	'Open Quick Start Guide
 	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-		If File.Exists(MyAppPath & "User Manual\help.html") Then
+		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
-			Process.Start(defaultBrowserPath, String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html"))
+			Process.Start(defaultBrowserPath, String.Format("""file://{0}""", Path.Combine(MyAppPath, "User Manual\help.html")))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If

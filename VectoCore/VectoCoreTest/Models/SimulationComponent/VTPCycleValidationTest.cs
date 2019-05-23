@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -174,124 +174,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsTrue(LogList[0].Contains("Wheel-speed difference abs."));
 		}
 
-
-
-		[TestCase()]
-		public void TestWheelTorqueRatioExceeds_Left()
-		{
-			SetupLogging();
-
-			var torque = 300;
-
-			var cycleEntries = string.Format(
-				@"  0   ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
-				    0.5 ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
-				    1   ,    0,  600, 400, {0}, {1} , 50 , 50 , 100, 3
-				    1.5 ,    0,  600, 400, {1}, {1} , 50 , 50 , 100, 3
-				", torque, torque * DeclarationData.VTPMode.WheelTorqueDifferenceFactor * 1.1);
-
-			var container = new VehicleContainer(ExecutionMode.Declaration) {
-				RunData = new VectoRunData() {
-					Aux = new List<VectoRunData.AuxData>()
-				}
-			};
-			var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
-			var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
-			var vtpCycle = new VTPCycle(container, cycleData);
-
-			vtpCycle.VerifyInputData();
-
-			Assert.AreEqual(1, LogList.Count);
-			Assert.IsTrue(LogList[0].Contains("Torque difference"));
-		}
-
-
-		[TestCase()]
-		public void TestWheelTorqueRatioExceeds_Right()
-		{
-			SetupLogging();
-
-			var torque = 300;
-
-			var cycleEntries = string.Format(
-				@"  0   ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
-				    0.5 ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
-				    1   ,    0,  600, 400, {1}, {0} , 50 , 50 , 100, 3
-				    1.5 ,    0,  600, 400, {1}, {1} , 50 , 50 , 100, 3
-				", torque, torque * DeclarationData.VTPMode.WheelTorqueDifferenceFactor * 1.1);
-
-			var container = new VehicleContainer(ExecutionMode.Declaration) {
-				RunData = new VectoRunData() {
-					Aux = new List<VectoRunData.AuxData>()
-				}
-			};
-			var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
-			var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
-			var vtpCycle = new VTPCycle(container, cycleData);
-
-			vtpCycle.VerifyInputData();
-
-			Assert.AreEqual(1, LogList.Count);
-			Assert.IsTrue(LogList[0].Contains("Torque difference"));
-		}
-
-		[TestCase()]
-		public void TestWheelTorqueDiffExceeds_Left()
-		{
-			SetupLogging();
-
-			var torque = 30; //0.95*DeclarationData.VTPMode.WheelTorqueZeroTolerance.Value();
-
-			var cycleEntries = string.Format(
-				@"  0   ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
-				    0.5 ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
-				    1   ,    0,  600, 400, {0}, {1} , 50 , 50 , 100, 3
-				    1.5 ,    0,  600, 400, {1}, {1} , 50 , 50 , 100, 3
-				", torque, torque + DeclarationData.VTPMode.MaxWheelTorqueDifference.Value() * 1.1);
-
-			var container = new VehicleContainer(ExecutionMode.Declaration) {
-				RunData = new VectoRunData() {
-					Aux = new List<VectoRunData.AuxData>()
-				}
-			};
-			var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
-			var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
-			var vtpCycle = new VTPCycle(container, cycleData);
-
-			vtpCycle.VerifyInputData();
-
-			Assert.AreEqual(1, LogList.Count);
-			Assert.IsTrue(LogList[0].Contains("Torque difference "));
-		}
-
-		[TestCase()]
-		public void TestWheelTorqueDiffExceeds_Right()
-		{
-			SetupLogging();
-
-			var torque = 30; //0.95 * DeclarationData.VTPMode.WheelTorqueZeroTolerance.Value();
-
-			var cycleEntries = string.Format(
-				@"  0   ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
-				    0.5 ,    0,  600, 400, {0}, {0} , 50 , 50 , 100, 3
-				    1   ,    0,  600, 400, {1}, {0} , 50 , 50 , 100, 3
-				    1.5 ,    0,  600, 400, {1}, {1} , 50 , 50 , 100, 3
-				", torque, torque + DeclarationData.VTPMode.MaxWheelTorqueDifference.Value() * 1.1);
-
-			var container = new VehicleContainer(ExecutionMode.Declaration) {
-				RunData = new VectoRunData() {
-					Aux = new List<VectoRunData.AuxData>()
-				}
-			};
-			var cycle = InputDataHelper.InputDataAsStream(Header, cycleEntries.Split('\n'));
-			var cycleData = DrivingCycleDataReader.ReadFromDataTable(VectoCSVFile.ReadStream(cycle), "VTP Cycle", false);
-			var vtpCycle = new VTPCycle(container, cycleData);
-
-			vtpCycle.VerifyInputData();
-
-			Assert.AreEqual(1, LogList.Count);
-			Assert.IsTrue(LogList[0].Contains("Torque difference"));
-		}
 
 		[TestCase()]
 		public void TestFanSpeedTooLow()

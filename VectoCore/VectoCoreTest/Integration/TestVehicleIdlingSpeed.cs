@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,6 +31,7 @@
 
 using System.IO;
 using System.Xml;
+using Ninject;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -42,6 +43,7 @@ using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -50,10 +52,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 		[TestCase, Category("LongRunning")]
@@ -78,8 +86,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
-			var inputDataProvider = new XMLDeclarationInputDataProvider(modified, true);
-
+			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
+			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, new FileOutputWriter("Idle900"));
 			//factory.WriteModalResults = true;
 

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -203,6 +203,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		/// Tests if the simulation works and the modfile and sumfile are correct in P_wheel_in mode.
 		/// </summary>
 		/// <remarks>VECTO-177</remarks>
+		[Category("LongRunning")]
 		[TestCase]
 		public void Pwheel_ultimate_Run_Test()
 		{

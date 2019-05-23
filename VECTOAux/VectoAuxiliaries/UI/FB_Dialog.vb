@@ -300,7 +300,7 @@ Public Class FB_Dialog
 		'Folder History
 		If FB_Init Then
 			Try
-				Dim f = My.Computer.FileSystem.OpenTextFileWriter(FB_FilHisDir & "Directories.txt", False, Encoding.UTF8)
+				Dim f = My.Computer.FileSystem.OpenTextFileWriter(Path.Combine(FB_FilHisDir, "Directories.txt"), False, Encoding.UTF8)
 				For x = 0 To 19
 					f.WriteLine(FB_FolderHistory(x))
 				Next
@@ -314,7 +314,7 @@ Public Class FB_Dialog
 		If _initialized And Not _bLightMode Then
 			If Not _bBrowseFolder Then
 				Try
-					Dim f = My.Computer.FileSystem.OpenTextFileWriter(FB_FilHisDir & _myId & ".txt", False, Encoding.UTF8)
+					Dim f = My.Computer.FileSystem.OpenTextFileWriter(Path.Combine(FB_FilHisDir,  _myId & ".txt"), False, Encoding.UTF8)
 					For x = 0 To 9
 						f.WriteLine(ContextMenuHisFile.Items(x).Text)
 					Next
@@ -374,8 +374,8 @@ Public Class FB_Dialog
 			For x = 0 To 9
 				ContextMenuHisFile.Items.Add("")
 			Next
-			If File.Exists(FB_FilHisDir & _myId & ".txt") Then
-				Dim f = New StreamReader(FB_FilHisDir & _myId & ".txt")
+			If File.Exists(path.Combine(FB_FilHisDir,  _myId & ".txt")) Then
+				Dim f = New StreamReader(path.Combine(FB_FilHisDir, _myId & ".txt"))
 				Dim x = -1
 				Do While Not f.EndOfStream And x < 9
 					x += 1
@@ -418,8 +418,8 @@ Public Class FB_Dialog
 		For x = 0 To 19
 			FB_FolderHistory(x) = EmptyText
 		Next
-		If File.Exists(FB_FilHisDir & "Directories.txt") Then
-			Dim f = New StreamReader(FB_FilHisDir & "Directories.txt")
+		If File.Exists(path.Combine(FB_FilHisDir, "Directories.txt")) Then
+			Dim f = New StreamReader(path.Combine(FB_FilHisDir,"Directories.txt"))
 			x = -1
 			Do While Not f.EndOfStream And x < 19
 				x += 1

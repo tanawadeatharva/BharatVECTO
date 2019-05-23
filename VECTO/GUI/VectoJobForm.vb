@@ -358,10 +358,10 @@ Public Class VectoJobForm
 
 	'Help
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-		If File.Exists(MyAppPath & "User Manual\help.html") Then
+		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#job-editor"))
+						String.Format("""file://{0}""", Path.Combine(MyAppPath,"User Manual\help.html#job-editor")))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -423,7 +423,7 @@ Public Class VectoJobForm
 		'Update Form
 
 		If inputData.JobInputData().EngineOnlyMode Then
-			TbENG.Text = GetRelativePath(inputData.JobInputData.EngineOnly.Source, _basePath)
+			TbENG.Text = GetRelativePath(inputData.JobInputData.EngineOnly.DataSource.SourceFile, _basePath)
 			CbEngOnly.Checked = True
 			Try
 				Dim sb As ICycleData
@@ -440,9 +440,9 @@ Public Class VectoJobForm
 		CbEngOnly.Checked = False
 		CheckEngOnly()
 		'Files -----------------------------
-		TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.Source, _basePath)
-		TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.EngineInputData.Source, _basePath)
-		TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.GearboxInputData.Source, _basePath)
+		TbVEH.Text = GetRelativePath(inputData.JobInputData.Vehicle.DataSource.SourceFile, _basePath)
+		TbENG.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, _basePath)
+		TbGBX.Text = GetRelativePath(inputData.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, _basePath)
 
 		'Start/Stop
 		Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
@@ -452,7 +452,7 @@ Public Class VectoJobForm
 			'AA-TB
 			'Try and Select any previously selected Auxiliary Type
 			Dim declarationInput As IDeclarationInputDataProvider = CType(inputData, IDeclarationInputDataProvider)
-			Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.JobInputData.Vehicle.AuxiliaryInputData()
+			Dim auxInput As IAuxiliariesDeclarationInputData = declarationInput.JobInputData.Vehicle.Components.AuxiliaryInputData
 
 			cboAdvancedAuxiliaries.SelectedIndex = 0
 			cboAdvancedAuxiliaries.Enabled = False
@@ -469,10 +469,10 @@ Public Class VectoJobForm
 		Else
 			'VACC
 			TbDesMaxFile.Text =
-				If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.Source, _basePath))
+				If(driver.AccelerationCurve Is Nothing, "", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, _basePath))
 
 			cboAdvancedAuxiliaries.Enabled = True
-			Dim auxInput As IAuxiliariesEngineeringInputData = inputData.JobInputData.Vehicle.AuxiliaryInputData()
+			Dim auxInput As IAuxiliariesEngineeringInputData = inputData.JobInputData.Vehicle.Components.AuxiliaryInputData
 			For Each item As AdvancedAuxiliary In cboAdvancedAuxiliaries.Items
 				If _
 					AuxiliaryModelHelper.Parse(item.AssemblyName) = auxInput.AuxiliaryAssembly AndAlso
@@ -538,6 +538,11 @@ Public Class VectoJobForm
 			tbLacDfVelocityDropFile.Text = If(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup Is Nothing, "",
 											GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, _basePath))
 		End If
+
+		tbEngineStopStartThreshold.Text = driver.EngineOffStandStillThreshold.ToGUIFormat()
+        tbEngineOffThreshold.Text = If(driver.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.MaxEngineOffTimespan.ToGUIFormat())
+        tbEssUtility.Text = driver.EngineStopStartUtilityFactor.ToGUIFormat()
+
 		'-------------------------------------------------------------
 
 		DeclInit()
@@ -654,6 +659,10 @@ Public Class VectoJobForm
 		vectoJob.LacDfScale = tbDfCoastingScale.Text.ToDouble(0)
 		vectoJob.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
 		vectoJob.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
+
+        vectoJob.EngineStopStartThreshold = tbEngineStopStartThreshold.text.ToDouble(0)
+        vectoJob.EngineOffTimeLimit = tbEngineOffThreshold.Text.ToDouble(0)
+        vectoJob.EngineStStUtilityFactor = tbEssUtility.Text.ToDouble(0)
 		'------------------------------------------------------------
 
 		'SAVE
@@ -1144,7 +1153,7 @@ lbDlog:
 			Try
 				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(gearboxFile), 
 																		IEngineeringInputDataProvider)
-				gearbox = inputData.JobInputData.Vehicle.GearboxInputData
+				gearbox = inputData.JobInputData.Vehicle.Components.GearboxInputData
 			Catch
 			End Try
 		End If
@@ -1228,7 +1237,7 @@ lbDlog:
 			Try
 				Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(engineFile), 
 																		IEngineeringInputDataProvider)
-				engine = inputData.JobInputData.Vehicle.EngineInputData
+				engine = inputData.JobInputData.Vehicle.Components.EngineInputData
 			Catch
 				Return
 			End Try
@@ -1316,7 +1325,7 @@ lbDlog:
 		Dim s0 As Segment = Nothing
 		Try
 			s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass, 0.SI(Of Kilogram),
-												True)
+												False)
 		Catch
 		End Try
 		If Not s0.Found Then
@@ -1337,7 +1346,7 @@ lbDlog:
 		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _
 		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
-		TbHVCclass.Text = String.Format("HDV Class {0}", HDVclass)
+		TbHVCclass.Text = String.Format("HDV Group {0}", HDVclass)
 		TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
 		TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
 		TbAxleConf.Text = vehicle.AxleConfiguration.GetName()	'ConvAxleConf(VEH0.AxleConf)

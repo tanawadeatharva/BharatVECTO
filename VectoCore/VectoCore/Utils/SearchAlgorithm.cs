@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -55,10 +55,10 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion) where T : SIBase<T>
+			Func<object, double> criterion, bool forceLineSearch = false) where T : SIBase<T>
 		{
 			var iterationCount = 0;
-			return Search(x, y, interval, getYValue, evaluateFunction, criterion, null, ref iterationCount);
+			return Search(x, y, interval, getYValue, evaluateFunction, criterion, null, ref iterationCount, forceLineSearch);
 		}
 
 		/// <summary>
@@ -72,10 +72,10 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion) where T : SIBase<T>
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, bool forceLineSearch = false) where T : SIBase<T>
 		{
 			var iterationCount = 0;
-			return Search(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount);
+			return Search(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount, forceLineSearch);
 		}
 
 		/// <summary>
@@ -89,12 +89,18 @@ namespace TUGraz.VectoCore.Utils
 		/// </code>
 		/// </summary>
 		public static T Search<T>(T x, SI y, T interval, Func<object, SI> getYValue, Func<T, object> evaluateFunction,
-			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount) where T : SIBase<T>
+			Func<object, double> criterion, Func<object, int, bool> abortCriterion, ref int iterationCount, bool forceLineSearch) where T : SIBase<T>
 		{
 			T result;
 			try {
-				result = InterpolateSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion,
-					ref iterationCount);
+				if (forceLineSearch) {
+					result = LineSearch(x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion, ref iterationCount); 
+					
+				} else {
+					result = InterpolateSearch(
+						x, y, interval, getYValue, evaluateFunction, criterion, abortCriterion,
+						ref iterationCount);
+				}
 			} catch (VectoException ex) {
 				var log = LogManager.GetLogger(typeof(SearchAlgorithm).FullName);
 				log.Debug("Falling back to InterpolationSearch in reverse. Normal InterpolationSearch failed: " + ex.Message);

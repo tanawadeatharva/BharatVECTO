@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -43,9 +42,7 @@ using System.Xml.Schema;
 using HashingTool.Helper;
 using HashingTool.Util;
 using HashingTool.ViewModel.UserControl;
-using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
-using TUGraz.VectoHashing.Impl;
 
 namespace HashingTool.ViewModel
 {
@@ -172,7 +169,7 @@ namespace HashingTool.ViewModel
 										: e.ValidationEventArgs.Message,
 									e.ValidationEventArgs == null ? 0 : e.ValidationEventArgs.Exception.LineNumber)));
 						});
-					await validator.ValidateXML(XMLValidator.XmlDocumentType.DeclarationComponentData);
+					await validator.ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType.DeclarationComponentData);
 				}
 				if (ComponentDataValid != null && ComponentDataValid.Value) {
 					//var c14N = XMLHashProvider.DefaultCanonicalizationMethod.ToArray();

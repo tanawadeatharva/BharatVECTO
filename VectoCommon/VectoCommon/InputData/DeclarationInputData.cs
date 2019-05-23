@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -29,7 +29,11 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.NetworkInformation;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -46,10 +50,8 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IComponentInputData
 	{
-		DataSourceType SourceType { get; }
-
-		string Source { get; }
-
+		DataSource DataSource { get; }
+		
 		bool SavedInDeclarationMode { get; }
 
 		string Manufacturer { get; }
@@ -65,8 +67,26 @@ namespace TUGraz.VectoCommon.InputData
 		DigestData DigestValue { get; }
 	}
 
+	public class DataSource
+	{
+		public DataSourceType SourceType { get; set; }
+
+		public string SourceFile { get; set; }
+
+		public string SourceVersion { get; set; }
+
+		public string SourcePath
+		{
+			get { return SourceFile != null ? Path.GetDirectoryName(Path.GetFullPath(SourceFile)) : null; }
+		}
+	}
+
 	public interface IVehicleDeclarationInputData : IComponentInputData
 	{
+		string Identifier { get; }
+
+		bool ExemptedVehicle { get; }
+
 		string VIN { get; }
 
 		LegislativeClass LegislativeClass { get; }
@@ -108,11 +128,41 @@ namespace TUGraz.VectoCommon.InputData
 		/// P044, P045, P046, P047, P048, P108
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		IList<IAxleDeclarationInputData> Axles { get; }
 
 		string ManufacturerAddress { get; }
 
 		PerSecond EngineIdleSpeed { get; }
+
+		// new (optional) input fields
+
+		bool VocationalVehicle { get; }
+
+		bool SleeperCab { get; }
+
+		TankSystem? TankSystem { get; }
+
+		IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; }
+
+		// fields for exempted vehicles
+
+		bool ZeroEmissionVehicle { get; }
+
+		bool HybridElectricHDV { get; }
+
+		bool DualFuelVehicle { get; }
+
+		Watt MaxNetPower1 { get; }
+
+		Watt MaxNetPower2 { get; }
+
+		// components
+
+		IVehicleComponentsDeclaration Components { get; }
+
+	}
+
+	public interface IVehicleComponentsDeclaration
+	{ 
 
 		IAirdragDeclarationInputData AirdragInputData { get; }
 
@@ -126,11 +176,123 @@ namespace TUGraz.VectoCommon.InputData
 
 		IEngineDeclarationInputData EngineInputData { get; }
 
-		IAuxiliariesDeclarationInputData AuxiliaryInputData();
+		IAuxiliariesDeclarationInputData AuxiliaryInputData { get; }
 
 		IRetarderInputData RetarderInputData { get; }
 
 		IPTOTransmissionInputData PTOTransmissionInputData { get; }
+
+		IAxlesDeclarationInputData AxleWheels { get; }
+
+	}
+
+	public interface IAxlesDeclarationInputData
+	{
+		/// <summary>
+		/// parameters for every axle
+		/// P044, P045, P046, P047, P048, P108
+		/// cf. VECTO Input Parameters.xlsx
+		/// </summary>
+		IList<IAxleDeclarationInputData> AxlesDeclaration { get; }
+	}
+
+	public interface IAdvancedDriverAssistantSystemDeclarationInputData
+	{
+		bool EngineStopStart { get; }
+
+		EcoRollType EcoRoll { get; }
+
+		PredictiveCruiseControlType PredictiveCruiseControl { get; }
+	}
+
+	public enum PredictiveCruiseControlType
+	{
+		None,
+		Option_1_2,
+		Option_1_2_3	
+	}
+
+	public static class PredictiveCruiseControlTypeHelper
+	{
+		public const string Prefix = "Option_";
+		public const string SeparatorXML = ",";
+		public const string SeparatorEnum = "_";
+
+		public static PredictiveCruiseControlType Parse(string value)
+		{
+			if (PredictiveCruiseControlType.None.ToString().Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
+				return PredictiveCruiseControlType.None;
+			}
+			return (Prefix + value.Replace(SeparatorXML, SeparatorEnum)).ParseEnum<PredictiveCruiseControlType>();
+		}
+
+		public static string ToXMLFormat(this PredictiveCruiseControlType pcc)
+		{
+			return pcc.ToString().Replace(Prefix, "").Replace(SeparatorEnum, SeparatorXML);
+		}
+
+		public static string GetName(this PredictiveCruiseControlType pcc)
+		{
+			return pcc.ToString().Replace(Prefix, Prefix.Replace(SeparatorEnum, " ")).Replace(SeparatorEnum, "&");
+		}
+	}
+
+	public enum EcoRollType
+	{
+		None,
+		WithoutEngineStop,
+		WithEngineStop
+	}
+
+	public static class EcorollTypeHelper
+	{
+		public static EcoRollType Get(bool ecoRollWithoutEngineStop, bool ecoRollWithEngineStop)
+		{
+			if (ecoRollWithEngineStop && ecoRollWithoutEngineStop) {
+				throw new VectoException("invalid combination or EcoRoll");
+			}
+
+			if (ecoRollWithoutEngineStop) {
+				return EcoRollType.WithoutEngineStop;
+			}
+
+			if (ecoRollWithEngineStop) {
+				return EcoRollType.WithEngineStop;
+			}
+
+			return EcoRollType.None;
+		}
+
+		public static EcoRollType Parse(string ecoRoll)
+		{
+			return ecoRoll.ParseEnum<EcoRollType>();
+		}
+
+		public static bool WithoutEngineStop(this EcoRollType ecoRoll)
+		{
+			return ecoRoll == EcoRollType.WithoutEngineStop;
+		}
+
+		public static bool WithEngineStop(this EcoRollType ecoRoll)
+		{
+			return ecoRoll == EcoRollType.WithEngineStop;
+		}
+
+		public static string GetName(this EcoRollType ecoRoll)
+		{
+			switch (ecoRoll) {
+				case EcoRollType.None: return "None";
+				case EcoRollType.WithoutEngineStop: return "without engine stop";
+				case EcoRollType.WithEngineStop: return "with engine stop";
+				default: throw new ArgumentOutOfRangeException(nameof(ecoRoll), ecoRoll, null);
+			}
+		}
+	}
+
+	public enum TankSystem
+	{
+		Liquefied,
+		Compressed
 	}
 
 	public interface IAirdragDeclarationInputData : IComponentInputData
@@ -198,6 +360,8 @@ namespace TUGraz.VectoCommon.InputData
 		AxleType AxleType { get; }
 
 		ITyreDeclarationInputData Tyre { get; }
+
+		DataSource DataSource { get; }
 	}
 
 	public interface ITyreDeclarationInputData : IComponentInputData
@@ -235,11 +399,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		IList<ITransmissionInputData> Gears { get; }
 
-		/// <summary>
-		/// P090, P091, P092, P127
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		ITorqueConverterDeclarationInputData TorqueConverter { get; }
 	}
 
 
@@ -280,6 +439,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		TableData ShiftPolygon { get; }
+
+		DataSource DataSource { get; }
 	}
 
 	public interface IAxleGearInputData : IComponentInputData
@@ -398,12 +559,12 @@ namespace TUGraz.VectoCommon.InputData
 		TableData CycleData { get; }
 	}
 
-	public interface IDriverDeclarationInputData
+	public interface IDriverDeclarationInputData : IDriverModelData
 	{
 		bool SavedInDeclarationMode { get; }
 	}
 
-	public interface IOverSpeedEcoRollDeclarationInputData
+	public interface IOverSpeedEcoRollDeclarationInputData : IDriverModelData
 	{
 		/// <summary>
 		/// P015

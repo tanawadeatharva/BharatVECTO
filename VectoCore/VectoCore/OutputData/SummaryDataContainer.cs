@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -30,12 +30,14 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -53,6 +55,7 @@ namespace TUGraz.VectoCore.OutputData
 	{
 		// ReSharper disable InconsistentNaming
 		public const string INTERNAL_PREFIX = "INTERNAL";
+
 		public const string SORT = INTERNAL_PREFIX + " Sorting";
 		public const string JOB = "Job [-]";
 		public const string INPUTFILE = "Input File [-]";
@@ -108,7 +111,9 @@ namespace TUGraz.VectoCore.OutputData
 		public const string HDV_CO2_VEHICLE_CLASS = "HDV CO2 vehicle class [-]";
 		public const string TOTAL_VEHICLE_MASS = "Total vehicle mass [kg]";
 		public const string CD_x_A_DECLARED = "Declared CdxA [m²]";
+
 		public const string CD_x_A = "CdxA [m²]";
+
 		//public const string ROLLING_RESISTANCE_COEFFICIENT = "weighed RRC [-]";
 		public const string R_DYN = "r_dyn [m]";
 
@@ -120,12 +125,16 @@ namespace TUGraz.VectoCore.OutputData
 
 		public const string FCMAP_H = "FC-Map [g/h]";
 		public const string FCMAP_KM = "FC-Map [g/km]";
-		public const string FCAUXC_H = "FC-AUXc [g/h]";
-		public const string FCAUXC_KM = "FC-AUXc [g/km]";
+		public const string FCNCVC_H = "FC-NCVc [g/h]";
+		public const string FCNCVC_KM = "FC-NCVc [g/km]";
 		public const string FCWHTCC_H = "FC-WHTCc [g/h]";
 		public const string FCWHTCC_KM = "FC-WHTCc [g/km]";
 		public const string FCAAUX_H = "FC-AAUX [g/h]";
 		public const string FCAAUX_KM = "FC-AAUX [g/km]";
+		public const string FCESS_H = "FC-ESS [g/h]";
+		public const string FCESS_KM = "FC-ESS [g/km]";
+		public const string FCESS_H_CORR = "FC-ESS_Corr [g/h]";
+		public const string FCESS_KM_CORR = "FC-ESS_Corr [g/km]";
 
 		public const string FCFINAL_H = "FC-Final [g/h]";
 		public const string FCFINAL_KM = "FC-Final [g/km]";
@@ -143,6 +152,11 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_FORMAT = "E_{0} [kWh]";
 		public const string E_AUX_FORMAT = "E_aux_{0} [kWh]";
 		public const string E_AUX = "E_aux_sum [kWh]";
+
+		public const string E_AUX_ESS_MECH = "E_aux_ess_mech [kWh]";
+		public const string E_ICE_START = "E_ice_start [kWh]";
+		public const string NUM_ICE_STARTS = "ice_starts [-]";
+		public const string K_VEHLINE = "k_vehline [g/kWh]";
 
 		public const string E_AIR = "E_air [kWh]";
 		public const string E_ROLL = "E_roll [kWh]";
@@ -188,101 +202,185 @@ namespace TUGraz.VectoCore.OutputData
 		public const string NUM_AXLES_NON_DRIVEN = "Number axles vehicle non-driven [-]";
 		public const string NUM_AXLES_TRAILER = "Number axles trailer [-]";
 
+		public const string VEHICLE_FUEL_TYPE = "Vehicle fuel type [-]";
+		public const string AIRDRAG_MODEL = "AirDrag model [-]";
+		public const string SLEEPER_CAB = "Sleeper cab [-]";
+		public const string DECLARED_RRC_AXLE1 = "Declared RRC axle 1 [-]";
+		public const string DECLARED_FZISO_AXLE1 = "Declared FzISO axle 1 [N]";
+		public const string DECLARED_RRC_AXLE2 = "Declared RRC axle 2 [-]";
+		public const string DECLARED_FZISO_AXLE2 = "Declared FzISO axle 2 [N]";
+		public const string DECLARED_RRC_AXLE3 = "Declared RRC axle 3 [-]";
+		public const string DECLARED_FZISO_AXLE3 = "Declared FzISO axle 3 [N]";
+		public const string DECLARED_RRC_AXLE4 = "Declared RRC axle 4 [-]";
+		public const string DECLARED_FZISO_AXLE4 = "Declared FzISO axle 4 [N]";
+		//public const string ADAS_TECHNOLOGY_COMBINATION = "ADAS technology combination [-]";
+
+		public const string PTO_TECHNOLOGY = "PTOShaftsGearWheels";
+
+		//public const string PTO_OTHER_ELEMENTS = "PTOOtherElements";
+
+		public const string ENGINE_CERTIFICATION_NUMBER = "Engine certification number";
+		public const string AVERAGE_ENGINE_EFFICIENCY = "Average engine efficiency [%]";
+		public const string TORQUE_CONVERTER_CERTIFICATION_NUMBER = "TorqueConverter certification number";
+		public const string TORQUE_CONVERTER_CERTIFICATION_METHOD = "Torque converter certification option";
+
+		public const string AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITH_LOCKUP =
+			"Average torque converter efficiency with lockup [%]";
+
+		public const string AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITHOUT_LOCKUP =
+			"Average torque converter efficiency w/o lockup [%]";
+
+		public const string GEARBOX_CERTIFICATION_NUMBER = "Gearbox certification number";
+		public const string GEARBOX_CERTIFICATION_METHOD = "Gearbox certification option";
+		public const string AVERAGE_GEARBOX_EFFICIENCY = "Average gearbox efficiency [%]";
+		public const string RETARDER_CERTIFICATION_NUMBER = "Retarder certification number";
+		public const string RETARDER_CERTIFICATION_METHOD = "Retarder certification option";
+		public const string ANGLEDRIVE_CERTIFICATION_NUMBER = "Angledrive certification number";
+		public const string ANGLEDRIVE_CERTIFICATION_METHOD = "Angledrive certification option";
+		public const string AVERAGE_ANGLEDRIVE_EFFICIENCY = "Average angledrive efficiency [%]";
+		public const string AXLEGEAR_CERTIFICATION_NUMBER = "Axlegear certification number";
+		public const string AXLEGEAR_CERTIFICATION_METHOD = "Axlegear certification method";
+		public const string AVERAGE_AXLEGEAR_EFFICIENCY = "Average axlegear efficiency [%]";
+		public const string AIRDRAG_CERTIFICATION_NUMBER = "AirDrag certification number";
+		public const string AIRDRAG_CERTIFICATION_METHOD = "AirDrag certification option";
+
 		// ReSharper restore InconsistentNaming
 
 		internal readonly DataTable Table;
 		private readonly ISummaryWriter _sumWriter;
 
-		protected SummaryDataContainer() {}
+		protected SummaryDataContainer() { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SummaryDataContainer"/> class.
 		/// </summary>
 		/// <param name="writer"></param>
-		
 		public SummaryDataContainer(ISummaryWriter writer)
 		{
 			_sumWriter = writer;
-			
+
 			Table = new DataTable();
 
-			Table.Columns.AddRange(new[] {
-				Tuple.Create(SORT, typeof(int)),
-				Tuple.Create(JOB, typeof(string)),
-				Tuple.Create(INPUTFILE, typeof(string)),
-				Tuple.Create(CYCLE, typeof(string)),
-				Tuple.Create(STATUS, typeof(string)),
-				Tuple.Create(VEHICLE_MANUFACTURER, typeof(string)),
-				Tuple.Create(VIN_NUMBER, typeof(string)),
-				Tuple.Create(VEHICLE_MODEL, typeof(string)),
-				Tuple.Create(HDV_CO2_VEHICLE_CLASS, typeof(string)),
-				Tuple.Create(CURB_MASS, typeof(ConvertedSI)),
-				Tuple.Create(LOADING, typeof(ConvertedSI)),
-				Tuple.Create(TOTAL_VEHICLE_MASS, typeof(ConvertedSI)),
-				Tuple.Create(ENGINE_MANUFACTURER, typeof(string)),
-				Tuple.Create(ENGINE_MODEL, typeof(string)),
-				Tuple.Create(ENGINE_FUEL_TYPE, typeof(string)),
-				Tuple.Create(ENGINE_RATED_POWER, typeof(ConvertedSI)),
-				Tuple.Create(ENGINE_IDLING_SPEED, typeof(ConvertedSI)),
-				Tuple.Create(ENGINE_RATED_SPEED, typeof(ConvertedSI)),
-				Tuple.Create(ENGINE_DISPLACEMENT, typeof(ConvertedSI)),
-				Tuple.Create(ENGINE_WHTC_URBAN, typeof(double)),
-				Tuple.Create(ENGINE_WHTC_RURAL, typeof(double)),
-				Tuple.Create(ENGINE_WHTC_MOTORWAY, typeof(double)),
-				Tuple.Create(ENGINE_BF_COLD_HOT, typeof(double)),
-				Tuple.Create(ENGINE_CF_REG_PER, typeof(double)),
-				Tuple.Create(ENGINE_ACTUAL_CORRECTION_FACTOR, typeof(double)),
-				Tuple.Create(CD_x_A_DECLARED, typeof(ConvertedSI)),
-				Tuple.Create(CD_x_A, typeof(ConvertedSI)),
-				Tuple.Create(ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER, typeof(double)),
-				Tuple.Create(ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER, typeof(double)),
-				Tuple.Create(R_DYN, typeof(ConvertedSI)),
-				Tuple.Create(NUM_AXLES_DRIVEN, typeof(int)),
-				Tuple.Create(NUM_AXLES_NON_DRIVEN, typeof(int)),
-				Tuple.Create(NUM_AXLES_TRAILER, typeof(int)),
-				Tuple.Create(GEARBOX_MANUFACTURER, typeof(string)),
-				Tuple.Create(GEARBOX_MODEL, typeof(string)),
-				Tuple.Create(GEARBOX_TYPE, typeof(string)),
-				Tuple.Create(GEAR_RATIO_FIRST_GEAR, typeof(ConvertedSI)),
-				Tuple.Create(GEAR_RATIO_LAST_GEAR, typeof(ConvertedSI)),
-				Tuple.Create(TORQUECONVERTER_MANUFACTURER, typeof(string)),
-				Tuple.Create(TORQUECONVERTER_MODEL, typeof(string)),
-				Tuple.Create(RETARDER_MANUFACTURER, typeof(string)),
-				Tuple.Create(RETARDER_MODEL, typeof(string)),
-				Tuple.Create(RETARDER_TYPE, typeof(string)),
-				Tuple.Create(ANGLEDRIVE_MANUFACTURER, typeof(string)),
-				Tuple.Create(ANGLEDRIVE_MODEL, typeof(string)),
-				Tuple.Create(ANGLEDRIVE_RATIO, typeof(string)),
-				Tuple.Create(AXLE_MANUFACTURER, typeof(string)),
-				Tuple.Create(AXLE_MODEL, typeof(string)),
-				Tuple.Create(AXLE_RATIO, typeof(ConvertedSI)),
-				Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.SteeringPump), typeof(string)),
-				Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.Fan), typeof(string)),
-				Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition),
-					typeof(string)),
-				Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem), typeof(string)),
-				Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem), typeof(string)),
-			}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
+			Table.Columns.AddRange(
+				new[] {
+					Tuple.Create(SORT, typeof(int)),
+					Tuple.Create(JOB, typeof(string)),
+					Tuple.Create(INPUTFILE, typeof(string)),
+					Tuple.Create(CYCLE, typeof(string)),
+					Tuple.Create(STATUS, typeof(string)),
+					Tuple.Create(VEHICLE_MANUFACTURER, typeof(string)),
+					Tuple.Create(VIN_NUMBER, typeof(string)),
+					Tuple.Create(VEHICLE_MODEL, typeof(string)),
+					Tuple.Create(HDV_CO2_VEHICLE_CLASS, typeof(string)),
+					Tuple.Create(CURB_MASS, typeof(ConvertedSI)),
+					Tuple.Create(LOADING, typeof(ConvertedSI)),
+					Tuple.Create(TOTAL_VEHICLE_MASS, typeof(ConvertedSI)),
+					Tuple.Create(ENGINE_MANUFACTURER, typeof(string)),
+					Tuple.Create(ENGINE_MODEL, typeof(string)),
+					Tuple.Create(ENGINE_FUEL_TYPE, typeof(string)),
+					Tuple.Create(ENGINE_RATED_POWER, typeof(ConvertedSI)),
+					Tuple.Create(ENGINE_IDLING_SPEED, typeof(ConvertedSI)),
+					Tuple.Create(ENGINE_RATED_SPEED, typeof(ConvertedSI)),
+					Tuple.Create(ENGINE_DISPLACEMENT, typeof(ConvertedSI)),
+					Tuple.Create(ENGINE_WHTC_URBAN, typeof(double)),
+					Tuple.Create(ENGINE_WHTC_RURAL, typeof(double)),
+					Tuple.Create(ENGINE_WHTC_MOTORWAY, typeof(double)),
+					Tuple.Create(ENGINE_BF_COLD_HOT, typeof(double)),
+					Tuple.Create(ENGINE_CF_REG_PER, typeof(double)),
+					Tuple.Create(ENGINE_ACTUAL_CORRECTION_FACTOR, typeof(double)),
+					Tuple.Create(VEHICLE_FUEL_TYPE, typeof(string)),
+					Tuple.Create(AIRDRAG_MODEL, typeof(string)),
+					Tuple.Create(CD_x_A_DECLARED, typeof(ConvertedSI)),
+					Tuple.Create(CD_x_A, typeof(ConvertedSI)),
+					Tuple.Create(SLEEPER_CAB, typeof(string)),
+					Tuple.Create(DECLARED_RRC_AXLE1, typeof(double)),
+					Tuple.Create(DECLARED_FZISO_AXLE1, typeof(ConvertedSI)),
+					Tuple.Create(DECLARED_RRC_AXLE2, typeof(double)),
+					Tuple.Create(DECLARED_FZISO_AXLE2, typeof(ConvertedSI)),
+					Tuple.Create(DECLARED_RRC_AXLE3, typeof(double)),
+					Tuple.Create(DECLARED_FZISO_AXLE3, typeof(ConvertedSI)),
+					Tuple.Create(DECLARED_RRC_AXLE4, typeof(double)),
+					Tuple.Create(DECLARED_FZISO_AXLE4, typeof(ConvertedSI)),
+					Tuple.Create(ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER, typeof(double)),
+					Tuple.Create(ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER, typeof(double)),
+					Tuple.Create(R_DYN, typeof(ConvertedSI)),
+					Tuple.Create(NUM_AXLES_DRIVEN, typeof(int)),
+					Tuple.Create(NUM_AXLES_NON_DRIVEN, typeof(int)),
+					Tuple.Create(NUM_AXLES_TRAILER, typeof(int)),
+					Tuple.Create(GEARBOX_MANUFACTURER, typeof(string)),
+					Tuple.Create(GEARBOX_MODEL, typeof(string)),
+					Tuple.Create(GEARBOX_TYPE, typeof(string)),
+					Tuple.Create(GEAR_RATIO_FIRST_GEAR, typeof(ConvertedSI)),
+					Tuple.Create(GEAR_RATIO_LAST_GEAR, typeof(ConvertedSI)),
+					Tuple.Create(TORQUECONVERTER_MANUFACTURER, typeof(string)),
+					Tuple.Create(TORQUECONVERTER_MODEL, typeof(string)),
+					Tuple.Create(RETARDER_MANUFACTURER, typeof(string)),
+					Tuple.Create(RETARDER_MODEL, typeof(string)),
+					Tuple.Create(RETARDER_TYPE, typeof(string)),
+					Tuple.Create(ANGLEDRIVE_MANUFACTURER, typeof(string)),
+					Tuple.Create(ANGLEDRIVE_MODEL, typeof(string)),
+					Tuple.Create(ANGLEDRIVE_RATIO, typeof(string)),
+					Tuple.Create(AXLE_MANUFACTURER, typeof(string)),
+					Tuple.Create(AXLE_MODEL, typeof(string)),
+					Tuple.Create(AXLE_RATIO, typeof(ConvertedSI)),
+					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.SteeringPump), typeof(string)),
+					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.Fan), typeof(string)),
+					Tuple.Create(
+						string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.HeatingVentilationAirCondition),
+						typeof(string)),
+					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem), typeof(string)),
+					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem), typeof(string)),
+					//Tuple.Create(ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
+					Tuple.Create(PTO_TECHNOLOGY, typeof(string)),
 
-			Table.Columns.AddRange(new[] {
-				CARGO_VOLUME,
-				TIME, DISTANCE,
-				SPEED, ALTITUDE_DELTA,
-				FCMAP_H, FCMAP_KM,
-				FCAUXC_H, FCAUXC_KM,
-				FCWHTCC_H, FCWHTCC_KM,
-				FCAAUX_H, FCAAUX_KM,
-				FCFINAL_H, FCFINAL_KM,
-				FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, FCFINAL_LiterPer100M3KM,SPECIFIC_FC,
-				CO2_KM, CO2_TKM, CO2_M3KM,
-				P_WHEEL_POS, P_FCMAP_POS,
-				E_FCMAP_POS, E_FCMAP_NEG, E_POWERTRAIN_INERTIA,
-				E_AUX, E_CLUTCH_LOSS, E_TC_LOSS, E_SHIFT_LOSS, E_GBX_LOSS,
-				E_RET_LOSS, E_ANGLE_LOSS, E_AXL_LOSS, E_BRAKE, E_VEHICLE_INERTIA, E_WHEEL , E_AIR, E_ROLL, E_GRAD ,
-				ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE,
-				MAX_SPEED, MAX_ACCELERATION, MAX_DECELERATION, AVG_ENGINE_SPEED, MAX_ENGINE_SPEED, NUM_GEARSHIFTS,
-				STOP_TIMESHARE, ENGINE_FULL_LOAD_TIME_SHARE, COASTING_TIME_SHARE, BRAKING_TIME_SHARE
-			}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
+					//Tuple.Create(PTO_OTHER_ELEMENTS, typeof(string)),
+				}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
+
+			Table.Columns.AddRange(
+				new[] {
+					CARGO_VOLUME,
+					TIME, DISTANCE,
+					SPEED, ALTITUDE_DELTA,
+					FCMAP_H, FCMAP_KM,
+					FCNCVC_H, FCNCVC_KM,
+					FCWHTCC_H, FCWHTCC_KM,
+					FCAAUX_H, FCAAUX_KM,
+					FCESS_H, FCESS_KM, FCESS_H_CORR, FCESS_KM_CORR,
+					FCFINAL_H, FCFINAL_KM,
+					FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, FCFINAL_LiterPer100M3KM, SPECIFIC_FC,
+					CO2_KM, CO2_TKM, CO2_M3KM,
+					P_WHEEL_POS, P_FCMAP_POS,
+					E_FCMAP_POS, E_FCMAP_NEG, E_POWERTRAIN_INERTIA,
+					E_AUX, E_CLUTCH_LOSS, E_TC_LOSS, E_SHIFT_LOSS, E_GBX_LOSS,
+					E_RET_LOSS, E_ANGLE_LOSS, E_AXL_LOSS, E_BRAKE, E_VEHICLE_INERTIA, E_WHEEL, E_AIR, E_ROLL, E_GRAD,
+					E_AUX_ESS_MECH, E_ICE_START, NUM_ICE_STARTS, K_VEHLINE,
+					ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE,
+					MAX_SPEED, MAX_ACCELERATION, MAX_DECELERATION, AVG_ENGINE_SPEED, MAX_ENGINE_SPEED, NUM_GEARSHIFTS,
+					STOP_TIMESHARE, ENGINE_FULL_LOAD_TIME_SHARE, COASTING_TIME_SHARE, BRAKING_TIME_SHARE
+				}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
+
+			Table.Columns.AddRange(
+				new[] {
+					Tuple.Create(ENGINE_CERTIFICATION_NUMBER, typeof(string)),
+					Tuple.Create(AVERAGE_ENGINE_EFFICIENCY, typeof(double)),
+					Tuple.Create(TORQUE_CONVERTER_CERTIFICATION_METHOD, typeof(string)),
+					Tuple.Create(TORQUE_CONVERTER_CERTIFICATION_NUMBER, typeof(string)),
+					Tuple.Create(AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITHOUT_LOCKUP, typeof(double)),
+					Tuple.Create(AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITH_LOCKUP, typeof(double)),
+					Tuple.Create(GEARBOX_CERTIFICATION_METHOD, typeof(string)),
+					Tuple.Create(GEARBOX_CERTIFICATION_NUMBER, typeof(string)),
+					Tuple.Create(AVERAGE_GEARBOX_EFFICIENCY, typeof(double)),
+					Tuple.Create(RETARDER_CERTIFICATION_METHOD, typeof(string)),
+					Tuple.Create(RETARDER_CERTIFICATION_NUMBER, typeof(string)),
+					Tuple.Create(ANGLEDRIVE_CERTIFICATION_METHOD, typeof(string)),
+					Tuple.Create(ANGLEDRIVE_CERTIFICATION_NUMBER, typeof(string)),
+					Tuple.Create(AVERAGE_ANGLEDRIVE_EFFICIENCY, typeof(double)),
+					Tuple.Create(AXLEGEAR_CERTIFICATION_METHOD, typeof(string)),
+					Tuple.Create(AXLEGEAR_CERTIFICATION_NUMBER, typeof(string)),
+					Tuple.Create(AVERAGE_AXLEGEAR_EFFICIENCY, typeof(double)),
+					Tuple.Create(AIRDRAG_CERTIFICATION_NUMBER, typeof(string)),
+					Tuple.Create(AIRDRAG_CERTIFICATION_METHOD, typeof(string)),
+				}.Select(x => new DataColumn(x.Item1, x.Item2)).ToArray());
 		}
 
 		/// <summary>
@@ -304,7 +402,12 @@ namespace TUGraz.VectoCore.OutputData
 				foreach (var dataColumn in toRemove) {
 					view.Columns.Remove(dataColumn);
 				}
-				_sumWriter.WriteSumData(view);
+
+				try {
+					_sumWriter.WriteSumData(view);
+				} catch (Exception e) {
+					LogManager.GetLogger(typeof(SummaryDataContainer).FullName).Error(e.Message);
+				}
 			}
 		}
 
@@ -335,6 +438,7 @@ namespace TUGraz.VectoCore.OutputData
 				gearCount = (uint)runData.GearboxData.Gears.Count;
 			}
 
+			row[VEHICLE_FUEL_TYPE] = modData.FuelData.GetLabel();
 
 			var totalTime = modData.Duration();
 			row[TIME] = (ConvertedSI)totalTime;
@@ -353,8 +457,94 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, runData.Cycle.CycleType == CycleType.VTP);
 
-			var kilogramPerMeter = modData.CO2PerMeter();
-			if (kilogramPerMeter != null) {
+			row[P_WHEEL_POS] = modData.PowerWheelPositive().ConvertToKiloWatt();
+
+			row[P_FCMAP_POS] = modData.TotalPowerEnginePositiveAverage().ConvertToKiloWatt();
+
+			WriteAuxiliaries(modData, row);
+
+			WriteWorkEntries(modData, row, runData.Cycle.CycleType == CycleType.VTP);
+
+			WritePerformanceEntries(runData, modData, row);
+
+			row[ENGINE_FULL_LOAD_TIME_SHARE] = (ConvertedSI)modData.EngineMaxLoadTimeShare();
+			row[COASTING_TIME_SHARE] = (ConvertedSI)modData.CoastingTimeShare();
+			row[BRAKING_TIME_SHARE] = (ConvertedSI)modData.BrakingTimeShare();
+
+			row[NUM_ICE_STARTS] = (ConvertedSI)modData.NumICEStarts().SI<Scalar>();
+
+
+			if (gearCount <= 0) {
+				return;
+			}
+
+			WriteGearshiftStats(modData, row, gearCount);
+		}
+
+		private static void WriteFuelconsumptionEntries(
+			IModalDataContainer modData, DataRow row, Kilogram vehicleLoading,
+			CubicMeter cargoVolume, bool vtpCycle)
+		{
+			
+			row[FCMAP_H] = modData.FuelConsumptionPerSecond(ModalResultField.FCMap)?.ConvertToGrammPerHour();
+			row[FCMAP_KM] = modData.FuelConsumptionPerMeter(ModalResultField.FCMap)?.ConvertToGrammPerKiloMeter();
+			
+
+			row[FCNCVC_H] = modData.FuelConsumptionPerSecond(ModalResultField.FCNCVc)?.ConvertToGrammPerHour();
+			row[FCNCVC_KM] = modData.FuelConsumptionPerMeter(ModalResultField.FCNCVc)?.ConvertToGrammPerKiloMeter();
+
+			row[FCWHTCC_H] = modData.FuelConsumptionPerSecond(ModalResultField.FCWHTCc)?.ConvertToGrammPerHour();
+			row[FCWHTCC_KM] = modData.FuelConsumptionPerMeter(ModalResultField.FCWHTCc)?.ConvertToGrammPerKiloMeter();
+
+			row[FCAAUX_H] = modData.FuelConsumptionPerSecond(ModalResultField.FCAAUX)?.ConvertToGrammPerHour();
+			row[FCAAUX_KM] = modData.FuelConsumptionPerMeter(ModalResultField.FCAAUX)?.ConvertToGrammPerKiloMeter();
+
+			row[FCESS_H] = modData.FuelConsumptionPerSecond(ModalResultField.FCEngineStopStart)?.ConvertToGrammPerHour();
+			row[FCESS_KM] = modData.FuelConsumptionPerMeter(ModalResultField.FCEngineStopStart)?.ConvertToGrammPerKiloMeter();
+
+			var fcModSum = modData.TotalFuelConsumption(ModalResultField.FCFinal);
+			var distance = modData.Distance();
+			var duration = modData.Duration();
+
+			
+			double k, d, r;
+			VectoMath.LeastSquaresFitting(
+				modData.GetValues(
+					x => x.Field<bool>((int)ModalResultField.IgnitionOn) ? new Point(
+						x.Field<SI>((int)ModalResultField.P_eng_fcmap).Value(), x.Field<SI>((int)ModalResultField.FCFinal).Value()):null).Where(x => x != null && x.Y > 0),
+				out k, out d, out r);
+
+			var correction = k.SI<KilogramPerWattSecond>();
+
+			row[K_VEHLINE] = correction.ConvertToGramPerKiloWattHour();
+
+			var workESS = modData.TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
+
+			var fcEssCorr = fcModSum + correction * workESS;
+
+			row[FCESS_H_CORR] = duration != null ? (fcEssCorr / duration).ConvertToGrammPerHour() : null;
+			row[FCESS_KM_CORR] = distance != null ? (fcEssCorr / distance).ConvertToGrammPerKiloMeter() : null;
+
+			var fcFinal = fcEssCorr;
+
+			row[FCFINAL_H] = (fcFinal / duration).ConvertToGrammPerHour();
+
+			if (distance != null && distance.IsGreater(0)) {
+				row[FCFINAL_KM] = (fcFinal / distance).ConvertToGrammPerKiloMeter();
+
+				if (modData.FuelData.FuelDensity != null) {
+					var fcVolumePerMeter = (fcFinal / distance / modData.FuelData.FuelDensity).Cast<VolumePerMeter>();
+
+					row[FCFINAL_LITERPER100KM] = fcVolumePerMeter.ConvertToLiterPer100Kilometer();
+					if (vehicleLoading != null && !vehicleLoading.IsEqual(0) && fcFinal != null) {
+						row[FCFINAL_LITERPER100TKM] = (fcVolumePerMeter / vehicleLoading).ConvertToLiterPer100TonKiloMeter();
+					}
+					if (cargoVolume > 0 && fcFinal != null) {
+						row[FCFINAL_LiterPer100M3KM] = (fcVolumePerMeter / cargoVolume).ConvertToLiterPerCubicMeter100KiloMeter();
+					}
+				}
+
+				var kilogramPerMeter = fcFinal * modData.FuelData.CO2PerFuelWeight / distance;
 				row[CO2_KM] = kilogramPerMeter.ConvertToGrammPerKiloMeter();
 				if (vehicleLoading != null && !vehicleLoading.IsEqual(0)) {
 					row[CO2_TKM] = (kilogramPerMeter / vehicleLoading).ConvertToGrammPerTonKilometer();
@@ -364,64 +554,9 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 
-			row[P_WHEEL_POS] = modData.PowerWheelPositive().ConvertToKiloWatt();
-
-			row[P_FCMAP_POS] = modData.TotalPowerEnginePositiveAverage().ConvertToKiloWatt();
-
-			WriteAuxiliaries(modData, row);
-
-			WriteWorkEntries(modData, row, runData.Cycle.CycleType == CycleType.VTP);
-
-			WritePerformanceEntries(modData, row);
-
-			row[ENGINE_FULL_LOAD_TIME_SHARE] = (ConvertedSI)modData.EngineMaxLoadTimeShare();
-			row[COASTING_TIME_SHARE] = (ConvertedSI)modData.CoastingTimeShare();
-			row[BRAKING_TIME_SHARE] = (ConvertedSI)modData.BrakingTimeShare();
-
-			if (gearCount <= 0) {
-				return;
-			}
-
-			WriteGearshiftStats(modData, row, gearCount);
-		}
-
-		private static void WriteFuelconsumptionEntries(IModalDataContainer modData, DataRow row, Kilogram vehicleLoading,
-			CubicMeter cargoVolume, bool vtpCycle)
-		{
-			var tmp = modData.FCMapPerSecond();
-			row[FCMAP_H] = tmp.ConvertToGrammPerHour();
-			var fcMapPerMeter = modData.FCMapPerMeter();
-			if (fcMapPerMeter != null) {
-				row[FCMAP_KM] = fcMapPerMeter.ConvertToGrammPerKiloMeter();
-			}
-
-			row[FCAUXC_H] = modData.FuelConsumptionAuxStartStopPerSecond().ConvertToGrammPerHour();
-			var fuelConsumptionAuxStartStopCorrected = modData.FuelConsumptionAuxStartStop();
-			row[FCAUXC_KM] = fuelConsumptionAuxStartStopCorrected.ConvertToGrammPerKiloMeter();
-
-			row[FCWHTCC_H] = modData.FuelConsumptionWHTCPerSecond().ConvertToGrammPerHour();
-			var fuelConsumptionWHTCCorrected = modData.FuelConsumptionWHTC();
-			row[FCWHTCC_KM] = fuelConsumptionWHTCCorrected.ConvertToGrammPerKiloMeter();
-
-			row[FCAAUX_H] = modData.FuelConsumptionAAUXPerSecond().ConvertToGrammPerHour();
-			var fuelConsumptionAaux = modData.FuelConsumptionAAUX();
-			row[FCAAUX_KM] = fuelConsumptionAaux.ConvertToGrammPerKiloMeter();
-
-			row[FCFINAL_H] = modData.FuelConsumptionFinalPerSecond().ConvertToGrammPerHour();
-			var fcfinal = modData.FuelConsumptionFinal();
-			row[FCFINAL_KM] = fcfinal.ConvertToGrammPerKiloMeter();
-
-			var fcFinal = modData.FuelConsumptionFinalVolumePerMeter();
-			row[FCFINAL_LITERPER100KM] = fcFinal.ConvertToLiterPer100Kilometer();
-			if (vehicleLoading != null && !vehicleLoading.IsEqual(0) && fcFinal != null) {
-				row[FCFINAL_LITERPER100TKM] = (fcFinal / vehicleLoading).ConvertToLiterPer100TonKiloMeter();
-			}
-			if (cargoVolume > 0 && fcFinal != null) {
-				row[FCFINAL_LiterPer100M3KM] = (fcFinal / cargoVolume).ConvertToLiterPerCubicMeter100KiloMeter();
-			}
-
 			if (vtpCycle) {
-				row[SPECIFIC_FC] = (modData.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / modData.WorkWheelsPos()).ConvertToGramPerKiloWattHour();
+				row[SPECIFIC_FC] = (modData.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / modData.WorkWheelsPos())
+					.ConvertToGramPerKiloWattHour();
 			}
 		}
 
@@ -438,6 +573,7 @@ namespace TUGraz.VectoCore.OutputData
 
 				if (!Table.Columns.Contains(colName)) {
 					var col = Table.Columns.Add(colName, typeof(ConvertedSI));
+
 					// move the new column to correct position
 					col.SetOrdinal(Table.Columns[E_AUX].Ordinal);
 				}
@@ -460,7 +596,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private void WritePerformanceEntries(IModalDataContainer modData, DataRow row)
+		private void WritePerformanceEntries(VectoRunData runData, IModalDataContainer modData, DataRow row)
 		{
 			row[ACC] = (ConvertedSI)modData.AccelerationAverage();
 			row[ACC_POS] = (ConvertedSI)modData.AccelerationsPositive();
@@ -489,6 +625,54 @@ namespace TUGraz.VectoCore.OutputData
 						shareSum.ToOutputFormat(1, null, false));
 				}
 			}
+
+			var eFC = modData.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * modData.FuelData.LowerHeatingValueVecto;
+			var eIcePos = modData.TimeIntegral<WattSecond>(ModalResultField.P_eng_fcmap, x => x > 0);
+			row[AVERAGE_ENGINE_EFFICIENCY] = eFC.IsEqual(0, 1e-9) ? 0 : (eIcePos / eFC).Value();
+
+			if (runData.SimulationType == SimulationType.EngineOnly) {
+				return;
+			}
+
+			var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
+				? ModalResultField.P_retarder_in
+				: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
+			var eGbxIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_gbx_in, x => x > 0);
+			var eGbxOut = modData.TimeIntegral<WattSecond>(gbxOutSignal, x => x > 0);
+			row[AVERAGE_GEARBOX_EFFICIENCY] = eGbxIn.IsEqual(0, 1e-9) ? 0 : (eGbxOut / eGbxIn).Value();
+
+			if (runData.GearboxData.Type.AutomaticTransmission()) {
+				var eTcIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_TC_in, x => x > 0);
+				var eTcOut = eGbxIn;
+				row[AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITHOUT_LOCKUP] = eTcIn.IsEqual(0, 1e-9) ? 0 : (eTcOut / eTcIn).Value();
+
+				var tcData = modData.GetValues(
+					x => new {
+						dt = x.Field<Second>((int)ModalResultField.simulationInterval),
+						locked = x.Field<int>((int)ModalResultField.TC_Locked),
+						P_TCin = x.Field<Watt>((int)ModalResultField.P_TC_in),
+						P_TCout = x.Field<Watt>((int)ModalResultField.P_TC_out)
+					});
+				eTcIn = 0.SI<WattSecond>();
+				eTcOut = 0.SI<WattSecond>();
+				foreach (var entry in tcData.Where(x => x.locked == 0)) {
+					eTcIn += entry.dt * entry.P_TCin;
+					eTcOut += entry.dt * entry.P_TCout;
+				}
+
+				row[AVERAGE_TORQUE_CONVERTER_EFFICIENCY_WITH_LOCKUP] = eTcIn.IsEqual(0, 1e-9) ? 0 : (eTcOut / eTcIn).Value();
+			}
+
+			if (runData.AngledriveData != null) {
+				var eAnglIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_angle_in, x => x > 0);
+				var eAnglOut = modData.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
+
+				row[AVERAGE_ANGLEDRIVE_EFFICIENCY] = (eAnglOut / eAnglIn).Value();
+			}
+
+			var eAxlIn = modData.TimeIntegral<WattSecond>(ModalResultField.P_axle_in, x => x > 0);
+			var eAxlOut = modData.TimeIntegral<WattSecond>(ModalResultField.P_brake_in, x => x > 0);
+			row[AVERAGE_AXLEGEAR_EFFICIENCY] = eAxlIn.IsEqual(0, 1e-9) ? 0 : (eAxlOut / eAxlIn).Value();
 		}
 
 		private static void WriteWorkEntries(IModalDataContainer modData, DataRow row, bool vtpMode)
@@ -512,81 +696,140 @@ namespace TUGraz.VectoCore.OutputData
 			if (vtpMode) {
 				row[E_WHEEL] = modData.WorkWheels().ConvertToKiloWattHour();
 			}
+
+			row[E_AUX_ESS_MECH] = modData.WorkAuxiliariesDuringEngineStop().ConvertToKiloWattHour();
+			row[E_ICE_START] = modData.WorkEngineStart().ConvertToKiloWattHour();
 		}
 
 		private void WriteFullPowertrain(VectoRunData runData, DataRow row)
 		{
-			row[VEHICLE_MANUFACTURER] = runData.VehicleData.Manufacturer;
-			row[VIN_NUMBER] = runData.VehicleData.VIN;
-			row[VEHICLE_MODEL] = runData.VehicleData.ModelName;
+			WriteVehicleData(runData.VehicleData, row);
 
-			row[HDV_CO2_VEHICLE_CLASS] = runData.VehicleData.VehicleClass.GetClassNumber();
-			row[CURB_MASS] = (ConvertedSI)runData.VehicleData.CurbWeight;
-			// - (runData.VehicleData.BodyAndTrailerWeight ?? 0.SI<Kilogram>());
-			row[LOADING] = (ConvertedSI)runData.VehicleData.Loading;
-			row[CARGO_VOLUME] = (ConvertedSI)runData.VehicleData.CargoVolume;
+			row[PTO_TECHNOLOGY] = runData.PTO?.TransmissionType ?? "";
 
-			row[TOTAL_VEHICLE_MASS] = (ConvertedSI)runData.VehicleData.TotalVehicleWeight;
-			row[ENGINE_MANUFACTURER] = runData.EngineData.Manufacturer;
-			row[ENGINE_MODEL] = runData.EngineData.ModelName;
-			row[ENGINE_FUEL_TYPE] = runData.EngineData.FuelType.GetLabel();
-			row[ENGINE_RATED_POWER] = runData.EngineData.RatedPowerDeclared != null && runData.EngineData.RatedPowerDeclared > 0
-				? runData.EngineData.RatedPowerDeclared.ConvertToKiloWatt()
-				: runData.EngineData.FullLoadCurves[0].MaxPower.ConvertToKiloWatt();
-			row[ENGINE_IDLING_SPEED] = (ConvertedSI)runData.EngineData.IdleSpeed.AsRPM.SI<Scalar>();
-			row[ENGINE_RATED_SPEED] = runData.EngineData.RatedSpeedDeclared != null && runData.EngineData.RatedSpeedDeclared > 0
-				? (ConvertedSI)runData.EngineData.RatedSpeedDeclared.AsRPM.SI<Scalar>()
-				: (ConvertedSI)runData.EngineData.FullLoadCurves[0].RatedSpeed.AsRPM.SI<Scalar>();
-			row[ENGINE_DISPLACEMENT] = runData.EngineData.Displacement.ConvertToCubicCentiMeter();
+			WriteEngineData(runData.EngineData, row);
 
-			row[ENGINE_WHTC_URBAN] = runData.EngineData.WHTCUrban;
-			row[ENGINE_WHTC_RURAL] = runData.EngineData.WHTCRural;
-			row[ENGINE_WHTC_MOTORWAY] = runData.EngineData.WHTCMotorway;
-			row[ENGINE_BF_COLD_HOT] = runData.EngineData.ColdHotCorrectionFactor;
-			row[ENGINE_CF_REG_PER] = runData.EngineData.CorrectionFactorRegPer;
-			row[ENGINE_ACTUAL_CORRECTION_FACTOR] = runData.EngineData.FuelConsumptionCorrectionFactor;
+			WriteGearboxData(runData.GearboxData, row);
 
-			row[CD_x_A_DECLARED] = (ConvertedSI)runData.AirdragData.DeclaredAirdragArea;
-			row[CD_x_A] = (ConvertedSI)runData.AirdragData.CrossWindCorrectionCurve.AirDragArea;
+			WriteRetarderData(runData.Retarder, row);
 
-			row[ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER] =
-				runData.VehicleData.RollResistanceCoefficientWithoutTrailer;
-			row[ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER] =
-				runData.VehicleData.TotalRollResistanceCoefficient;
+			WriteAngledriveData(runData.AngledriveData, row);
 
-			row[R_DYN] = (ConvertedSI)runData.VehicleData.DynamicTyreRadius;
+			WriteAxlegearData(runData.AxleGearData, row);
 
-			row[NUM_AXLES_DRIVEN] = runData.VehicleData.AxleData.Count(x => x.AxleType == AxleType.VehicleDriven);
-			row[NUM_AXLES_NON_DRIVEN] = runData.VehicleData.AxleData.Count(x => x.AxleType == AxleType.VehicleNonDriven);
-			row[NUM_AXLES_TRAILER] = runData.VehicleData.AxleData.Count(x => x.AxleType == AxleType.Trailer);
+			WriteAuxTechnologies(runData.Aux, row);
 
-			row[GEARBOX_MANUFACTURER] = runData.GearboxData.Manufacturer;
-			row[GEARBOX_MODEL] = runData.GearboxData.ModelName;
-			row[GEARBOX_TYPE] = runData.GearboxData.Type;
-			WriteGearboxData(runData, row);
+			WriteAxleWheelsData(runData.VehicleData.AxleData, row);
 
-			row[RETARDER_TYPE] = runData.Retarder.Type.GetLabel();
-			WriteRetarderData(runData, row);
+			WriteAirdragData(runData.AirdragData, row);
 
-			WriteAngledriveData(runData, row);
-
-			row[AXLE_MANUFACTURER] = runData.AxleGearData.Manufacturer;
-			row[AXLE_MODEL] = runData.AxleGearData.ModelName;
-			row[AXLE_RATIO] = (ConvertedSI)runData.AxleGearData.AxleGear.Ratio.SI<Scalar>();
-
-			WriteAuxTechnologies(runData, row);
 		}
 
-		private void WriteAuxTechnologies(VectoRunData runData, DataRow row)
+		private static void WriteVehicleData(VehicleData data, DataRow row)
 		{
-			foreach (var aux in runData.Aux) {
+			row[VEHICLE_MANUFACTURER] = data.Manufacturer;
+			row[VIN_NUMBER] = data.VIN;
+			row[VEHICLE_MODEL] = data.ModelName;
+
+			row[HDV_CO2_VEHICLE_CLASS] = data.VehicleClass.GetClassNumber();
+			row[CURB_MASS] = (ConvertedSI)data.CurbWeight;
+
+			// - (data.BodyAndTrailerWeight ?? 0.SI<Kilogram>());
+			row[LOADING] = (ConvertedSI)data.Loading;
+			row[CARGO_VOLUME] = (ConvertedSI)data.CargoVolume;
+
+			row[TOTAL_VEHICLE_MASS] = (ConvertedSI)data.TotalVehicleWeight;
+
+			row[SLEEPER_CAB] = data.SleeperCab ? "yes" : "no";
+
+			row[ROLLING_RESISTANCE_COEFFICIENT_WO_TRAILER] =
+				data.RollResistanceCoefficientWithoutTrailer;
+			row[ROLLING_RESISTANCE_COEFFICIENT_W_TRAILER] =
+				data.TotalRollResistanceCoefficient;
+
+			row[R_DYN] = (ConvertedSI)data.DynamicTyreRadius;
+
+			//row[ADAS_TECHNOLOGY_COMBINATION] = data.ADAS != null ? DeclarationData.ADASCombinations.Lookup(data.ADAS).ID : "";
+		}
+
+		private static void WriteAirdragData(AirdragData data, DataRow row)
+		{
+			row[AIRDRAG_MODEL] = data.ModelName;
+			row[AIRDRAG_CERTIFICATION_METHOD] = data.CertificationMethod.GetName();
+			row[AIRDRAG_CERTIFICATION_NUMBER] =
+				data.CertificationMethod == CertificationMethod.StandardValues ? "" : data.CertificationNumber;
+			row[CD_x_A_DECLARED] = (ConvertedSI)data.DeclaredAirdragArea;
+			row[CD_x_A] = (ConvertedSI)data.CrossWindCorrectionCurve.AirDragArea;
+		}
+
+		private static void WriteEngineData(CombustionEngineData data, DataRow row)
+		{
+			row[ENGINE_MANUFACTURER] = data.Manufacturer;
+			row[ENGINE_MODEL] = data.ModelName;
+			row[ENGINE_CERTIFICATION_NUMBER] = data.CertificationNumber;
+			row[ENGINE_FUEL_TYPE] = data.FuelData.GetLabel();
+			row[ENGINE_RATED_POWER] = data.RatedPowerDeclared != null && data.RatedPowerDeclared > 0
+				? data.RatedPowerDeclared.ConvertToKiloWatt()
+				: data.FullLoadCurves[0].MaxPower.ConvertToKiloWatt();
+			row[ENGINE_IDLING_SPEED] = (ConvertedSI)data.IdleSpeed.AsRPM.SI<Scalar>();
+			row[ENGINE_RATED_SPEED] = data.RatedSpeedDeclared != null && data.RatedSpeedDeclared > 0
+				? (ConvertedSI)data.RatedSpeedDeclared.AsRPM.SI<Scalar>()
+				: (ConvertedSI)data.FullLoadCurves[0].RatedSpeed.AsRPM.SI<Scalar>();
+			row[ENGINE_DISPLACEMENT] = data.Displacement.ConvertToCubicCentiMeter();
+
+			row[ENGINE_WHTC_URBAN] = data.WHTCUrban;
+			row[ENGINE_WHTC_RURAL] = data.WHTCRural;
+			row[ENGINE_WHTC_MOTORWAY] = data.WHTCMotorway;
+			row[ENGINE_BF_COLD_HOT] = data.ColdHotCorrectionFactor;
+			row[ENGINE_CF_REG_PER] = data.CorrectionFactorRegPer;
+			row[ENGINE_ACTUAL_CORRECTION_FACTOR] = data.FuelConsumptionCorrectionFactor;
+		}
+
+		private static void WriteAxleWheelsData(List<Axle> data, DataRow row)
+		{
+			var fields = new[] {
+				Tuple.Create(DECLARED_RRC_AXLE1, DECLARED_FZISO_AXLE1),
+				Tuple.Create(DECLARED_RRC_AXLE2, DECLARED_FZISO_AXLE2),
+				Tuple.Create(DECLARED_RRC_AXLE3, DECLARED_FZISO_AXLE3),
+				Tuple.Create(DECLARED_RRC_AXLE4, DECLARED_FZISO_AXLE4),
+			};
+			for (var i = 0; i < Math.Min(fields.Length, data.Count); i++) {
+				if (data[i].AxleType == AxleType.Trailer) {
+					continue;
+				}
+
+				row[fields[i].Item1] = data[i].RollResistanceCoefficient;
+				row[fields[i].Item2] = (ConvertedSI)data[i].TyreTestLoad;
+			}
+
+			row[NUM_AXLES_DRIVEN] = data.Count(x => x.AxleType == AxleType.VehicleDriven);
+			row[NUM_AXLES_NON_DRIVEN] = data.Count(x => x.AxleType == AxleType.VehicleNonDriven);
+			row[NUM_AXLES_TRAILER] = data.Count(x => x.AxleType == AxleType.Trailer);
+		}
+
+		private static void WriteAxlegearData(AxleGearData data, DataRow row)
+		{
+			row[AXLE_MANUFACTURER] = data.Manufacturer;
+			row[AXLE_MODEL] = data.ModelName;
+			row[AXLE_RATIO] = (ConvertedSI)data.AxleGear.Ratio.SI<Scalar>();
+			row[AXLEGEAR_CERTIFICATION_METHOD] = data.CertificationMethod.GetName();
+			row[AXLEGEAR_CERTIFICATION_NUMBER] = data.CertificationMethod == CertificationMethod.StandardValues
+				? ""
+				: data.CertificationNumber;
+		}
+
+		private void WriteAuxTechnologies(IEnumerable<VectoRunData.AuxData> auxData, DataRow row)
+		{
+			foreach (var aux in auxData) {
 				if (aux.ID == Constants.Auxiliaries.IDs.PTOConsumer || aux.ID == Constants.Auxiliaries.IDs.PTOTransmission) {
 					continue;
 				}
+
 				var colName = string.Format(AUX_TECH_FORMAT, aux.ID);
 
 				if (!Table.Columns.Contains(colName)) {
 					var col = Table.Columns.Add(colName, typeof(string));
+
 					// move the new column to correct position
 					col.SetOrdinal(Table.Columns[CARGO_VOLUME].Ordinal);
 				}
@@ -595,52 +838,80 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private static void WriteAngledriveData(VectoRunData runData, DataRow row)
+		private static void WriteAngledriveData(AngledriveData data, DataRow row)
 		{
-			if (runData.AngledriveData != null) {
-				row[ANGLEDRIVE_MANUFACTURER] = runData.AngledriveData.Manufacturer;
-				row[ANGLEDRIVE_MODEL] = runData.AngledriveData.ModelName;
-				row[ANGLEDRIVE_RATIO] = runData.AngledriveData.Angledrive.Ratio;
+			if (data != null) {
+				row[ANGLEDRIVE_MANUFACTURER] = data.Manufacturer;
+				row[ANGLEDRIVE_MODEL] = data.ModelName;
+				row[ANGLEDRIVE_RATIO] = data.Angledrive.Ratio;
+				row[ANGLEDRIVE_CERTIFICATION_METHOD] = data.CertificationMethod.GetName();
+				row[ANGLEDRIVE_CERTIFICATION_NUMBER] =
+					data.CertificationMethod == CertificationMethod.StandardValues
+						? ""
+						: data.CertificationNumber;
 			} else {
-				row[ANGLEDRIVE_MANUFACTURER] = "n.a.";
-				row[ANGLEDRIVE_MODEL] = "n.a.";
-				row[ANGLEDRIVE_RATIO] = "n.a.";
+				row[ANGLEDRIVE_MANUFACTURER] = Constants.NOT_AVailABLE;
+				row[ANGLEDRIVE_MODEL] = Constants.NOT_AVailABLE;
+				row[ANGLEDRIVE_RATIO] = Constants.NOT_AVailABLE;
+				row[ANGLEDRIVE_CERTIFICATION_METHOD] = "";
+				row[ANGLEDRIVE_CERTIFICATION_NUMBER] = "";
 			}
 		}
 
-		private static void WriteRetarderData(VectoRunData runData, DataRow row)
+		private static void WriteRetarderData(RetarderData data, DataRow row)
 		{
-			if (runData.Retarder.Type.IsDedicatedComponent()) {
-				row[RETARDER_MANUFACTURER] = runData.Retarder.Manufacturer;
-				row[RETARDER_MODEL] = runData.Retarder.ModelName;
+			row[RETARDER_TYPE] = data.Type.GetLabel();
+			if (data.Type.IsDedicatedComponent()) {
+				row[RETARDER_MANUFACTURER] = data.Manufacturer;
+				row[RETARDER_MODEL] = data.ModelName;
+				row[RETARDER_CERTIFICATION_METHOD] = data.CertificationMethod.GetName();
+				row[RETARDER_CERTIFICATION_NUMBER] = data.CertificationMethod == CertificationMethod.StandardValues
+					? ""
+					: data.CertificationNumber;
 			} else {
-				row[RETARDER_MANUFACTURER] = "n.a.";
-				row[RETARDER_MODEL] = "n.a.";
+				row[RETARDER_MANUFACTURER] = Constants.NOT_AVailABLE;
+				row[RETARDER_MODEL] = Constants.NOT_AVailABLE;
+				row[RETARDER_CERTIFICATION_METHOD] = "";
+				row[RETARDER_CERTIFICATION_NUMBER] = "";
 			}
 		}
 
-		private static void WriteGearboxData(VectoRunData runData, DataRow row)
+		private static void WriteGearboxData(GearboxData data, DataRow row)
 		{
-			if (runData.GearboxData.Type.AutomaticTransmission()) {
-				row[GEAR_RATIO_FIRST_GEAR] = runData.GearboxData.Gears.Count > 0
-					? (double.IsNaN(runData.GearboxData.Gears.First().Value.Ratio)
-						? (ConvertedSI)runData.GearboxData.Gears.First().Value.TorqueConverterRatio.SI<Scalar>()
-						: (ConvertedSI)runData.GearboxData.Gears.First().Value.Ratio.SI<Scalar>())
+			row[GEARBOX_MANUFACTURER] = data.Manufacturer;
+			row[GEARBOX_MODEL] = data.ModelName;
+			row[GEARBOX_TYPE] = data.Type;
+			row[GEARBOX_CERTIFICATION_NUMBER] = data.CertificationMethod == CertificationMethod.StandardValues
+				? ""
+				: data.CertificationNumber;
+			row[GEARBOX_CERTIFICATION_METHOD] = data.CertificationMethod.GetName();
+			if (data.Type.AutomaticTransmission()) {
+				row[GEAR_RATIO_FIRST_GEAR] = data.Gears.Count > 0
+					? (double.IsNaN(data.Gears.First().Value.Ratio)
+						? (ConvertedSI)data.Gears.First().Value.TorqueConverterRatio.SI<Scalar>()
+						: (ConvertedSI)data.Gears.First().Value.Ratio.SI<Scalar>())
 					: 0.SI<Scalar>();
-				row[GEAR_RATIO_LAST_GEAR] = runData.GearboxData.Gears.Count > 0
-					? (ConvertedSI)runData.GearboxData.Gears.Last().Value.Ratio.SI<Scalar>()
+				row[GEAR_RATIO_LAST_GEAR] = data.Gears.Count > 0
+					? (ConvertedSI)data.Gears.Last().Value.Ratio.SI<Scalar>()
 					: (ConvertedSI)0.SI<Scalar>();
-				row[TORQUECONVERTER_MANUFACTURER] = runData.GearboxData.TorqueConverterData.Manufacturer;
-				row[TORQUECONVERTER_MODEL] = runData.GearboxData.TorqueConverterData.ModelName;
+				row[TORQUECONVERTER_MANUFACTURER] = data.TorqueConverterData.Manufacturer;
+				row[TORQUECONVERTER_MODEL] = data.TorqueConverterData.ModelName;
+				row[TORQUE_CONVERTER_CERTIFICATION_NUMBER] =
+					data.TorqueConverterData.CertificationMethod == CertificationMethod.StandardValues
+						? ""
+						: data.TorqueConverterData.CertificationNumber;
+				row[TORQUE_CONVERTER_CERTIFICATION_METHOD] = data.TorqueConverterData.CertificationMethod.GetName();
 			} else {
-				row[GEAR_RATIO_FIRST_GEAR] = runData.GearboxData.Gears.Count > 0
-					? (ConvertedSI)runData.GearboxData.Gears.First().Value.Ratio.SI<Scalar>()
+				row[GEAR_RATIO_FIRST_GEAR] = data.Gears.Count > 0
+					? (ConvertedSI)data.Gears.First().Value.Ratio.SI<Scalar>()
 					: (ConvertedSI)0.SI<Scalar>();
-				row[GEAR_RATIO_LAST_GEAR] = runData.GearboxData.Gears.Count > 0
-					? (ConvertedSI)runData.GearboxData.Gears.Last().Value.Ratio.SI<Scalar>()
+				row[GEAR_RATIO_LAST_GEAR] = data.Gears.Count > 0
+					? (ConvertedSI)data.Gears.Last().Value.Ratio.SI<Scalar>()
 					: (ConvertedSI)0.SI<Scalar>();
-				row[TORQUECONVERTER_MANUFACTURER] = "n.a.";
-				row[TORQUECONVERTER_MODEL] = "n.a.";
+				row[TORQUECONVERTER_MANUFACTURER] = Constants.NOT_AVailABLE;
+				row[TORQUECONVERTER_MODEL] = Constants.NOT_AVailABLE;
+				row[TORQUE_CONVERTER_CERTIFICATION_METHOD] = "";
+				row[TORQUE_CONVERTER_CERTIFICATION_NUMBER] = "";
 			}
 		}
 

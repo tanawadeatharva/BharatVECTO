@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -46,7 +46,7 @@ namespace HashingTool.Util
 			_validator = new XMLValidator(xml, resultaction, validationErrorAction);
 		}
 
-		public Task<bool> ValidateXML(TUGraz.VectoCore.Utils.XMLValidator.XmlDocumentType docType)
+		public Task<bool> ValidateXML(TUGraz.VectoCore.Utils.XmlDocumentType docType)
 		{
 			var task = new Task<bool>(() => _validator.ValidateXML(docType));
 			task.Start();

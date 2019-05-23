@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -42,6 +42,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 
@@ -117,18 +118,18 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected XElement CreateVehicle(IDeclarationInputDataProvider data)
 		{
-			var retarder = data.JobInputData.Vehicle.RetarderInputData;
-			var gearbox = data.JobInputData.Vehicle.GearboxInputData;
+			var retarder = data.JobInputData.Vehicle.Components.RetarderInputData;
+			var gearbox = data.JobInputData.Vehicle.Components.GearboxInputData;
 			var vehicle = data.JobInputData.Vehicle;
-			var engine = data.JobInputData.Vehicle.EngineInputData;
-			var angledrive = data.JobInputData.Vehicle.AngledriveInputData;
+			var engine = data.JobInputData.Vehicle.Components.EngineInputData;
+			var angledrive = data.JobInputData.Vehicle.Components.AngledriveInputData;
 
 
 			var id = CreateIdString("VEH-" + vehicle.Model);
 
 			return new XElement(tns + XMLNames.Component_Vehicle,
 				new XAttribute(XMLNames.Component_ID_Attr, id),
-				GetDefaultComponentElements(vehicle.CertificationNumber, vehicle.Model, "N.A."),
+				GetDefaultComponentElements(vehicle.CertificationNumber, vehicle.Model, Constants.NOT_AVailABLE),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, "N3"),
 				new XElement(tns + XMLNames.Vehicle_VehicleCategory, vehicle.VehicleCategory.ToXMLFormat()),
 				new XElement(tns + XMLNames.Vehicle_AxleConfiguration, vehicle.AxleConfiguration.GetName()),
@@ -146,16 +147,25 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_PTO,
 					new XElement(tns + XMLNames.Vehicle_PTO_ShaftsGearWheels, "none"),
 					new XElement(tns + XMLNames.Vehicle_PTO_OtherElements, "none")),
+				new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, false),
+				new XElement(tns+XMLNames.Vehicle_VocationalVehicle, false),
+				new XElement(tns + XMLNames.Vehicle_SleeperCab, true),
+				new XElement(tns + XMLNames.Vehicle_ADAS,
+					new XElement(tns + XMLNames.Vehicle_ADAS_EngineStopStart, false),
+					new XElement(tns + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, false),
+					new XElement(tns + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, false),
+					new XElement(tns + XMLNames.Vehicle_ADAS_PCC, "none")
+				),
 				CreateTorqueLimits(vehicle),
 				new XElement(tns + XMLNames.Vehicle_Components,
 					CreateEngine(engine),
-					CreateGearbox(gearbox, gearbox.Type.AutomaticTransmission() ? vehicle.TorqueConverterInputData : null),
+					CreateGearbox(gearbox, gearbox.Type.AutomaticTransmission() ? vehicle.Components.TorqueConverterInputData : null),
 					angledrive.Type == AngledriveType.SeparateAngledrive ? CreateAngleDrive(angledrive) : null,
 					retarder.Type.IsDedicatedComponent() ? CreateRetarder(retarder) : null,
-					CreateAxlegear(vehicle.AxleGearInputData),
-					CreateAxleWheels(vehicle),
-					CreateAuxiliaries(vehicle.AuxiliaryInputData()),
-					CreateAirdrag(vehicle.AirdragInputData)
+					CreateAxlegear(vehicle.Components.AxleGearInputData),
+					CreateAxleWheels(vehicle.Components.AxleWheels),
+					CreateAuxiliaries(vehicle.Components.AuxiliaryInputData),
+					CreateAirdrag(vehicle.Components.AirdragInputData)
 					)
 				);
 		}
@@ -290,7 +300,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement((ns ?? tns) + XMLNames.Component_Axlegear,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, typeId),
-					GetDefaultComponentElements(typeId, "N.A."),
+					GetDefaultComponentElements(typeId, Constants.NOT_AVailABLE),
 					new XElement(tns + "LineType", "Single portal axle"),
 					new XElement(tns + XMLNames.Axlegear_Ratio, data.Ratio.ToXMLFormat(3)),
 					new XElement(tns + XMLNames.Component_CertificationMethod, "Standard values"),
@@ -300,9 +310,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				);
 		}
 
-		public XElement CreateAxleWheels(IVehicleDeclarationInputData data, XNamespace ns = null)
+		public XElement CreateAxleWheels(IAxlesDeclarationInputData data, XNamespace ns = null)
 		{
-			var axleData = data.Axles;
+			var axleData = data.AxlesDeclaration;
 			var numAxles = axleData.Count;
 			var axles = new List<XElement>(numAxles);
 			for (var i = 0; i < numAxles; i++) {
@@ -365,7 +375,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new XElement((ns ?? tns) + XMLNames.Component_AirDrag,
 				new XElement(tns + XMLNames.ComponentDataWrapper,
 					new XAttribute(XMLNames.Component_ID_Attr, id),
-					GetDefaultComponentElements(data.Model, "N.A."),
+					GetDefaultComponentElements(data.Model, Constants.NOT_AVailABLE),
 					new XElement(tns + "CdxA_0", data.AirDragArea.Value().ToXMLFormat(2)),
 					new XElement(tns + "TransferredCdxA", data.AirDragArea.Value().ToXMLFormat(2)),
 					new XElement(tns + XMLNames.AirDrag_DeclaredCdxA, data.AirDragArea.Value().ToXMLFormat(2))),

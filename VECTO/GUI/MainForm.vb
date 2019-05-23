@@ -41,11 +41,14 @@ Imports System.Threading
 Imports System.Xml
 Imports System.Xml.Linq
 Imports Microsoft.VisualBasic.FileIO
+Imports Ninject
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Resources
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore
+Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 Imports TUGraz.VectoCore.OutputData
@@ -234,9 +237,9 @@ Imports TUGraz.VectoCore.Utils
 
 
         'FileLists
-        _jobListView = New FileListView(MyConfPath & "joblist.txt")
+        _jobListView = New FileListView(path.Combine(MyConfPath, CONFIG_JOBLIST_FILE))
         _jobListView.LVbox = LvGEN
-        _cycleListView = New FileListView(MyConfPath & "cyclelist.txt")
+        _cycleListView = New FileListView(path.Combine(MyConfPath, CONFIG_CYCLELIST_FILE))
 
         _jobListView.LoadList()
 
@@ -264,6 +267,7 @@ Imports TUGraz.VectoCore.Utils
 
     ' ReSharper disable once UnusedMember.Global -- used via Logging Framework! 
     Public Shared Sub LogMethod(level As String, message As String)
+
         If VectoWorkerV3.IsBusy AndAlso Not VectoWorkerV3.CancellationPending Then
             If level = "Warn" Then
                 VectoWorkerV3.ReportProgress(100,
@@ -726,7 +730,7 @@ Imports TUGraz.VectoCore.Utils
 
     Private Sub OpenLogToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles OpenLogToolStripMenuItem.Click
-        Process.Start(MyAppPath & "log.txt")
+        Process.Start(Path.Combine(MyAppPath, "log.txt"))
     End Sub
 
     Private Sub SettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) _
@@ -736,9 +740,9 @@ Imports TUGraz.VectoCore.Utils
 
     Private Sub UserManualToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UserManualToolStripMenuItem.Click
-        If File.Exists(MyAppPath & "User Manual\help.html") Then
+        If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
             Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
-            Process.Start(defaultBrowserPath, String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html"))
+            Process.Start(defaultBrowserPath, String.Format("""file://{0}""", Path.Combine(MyAppPath, "User Manual\help.html")))
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If
@@ -746,8 +750,8 @@ Imports TUGraz.VectoCore.Utils
 
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As Object, e As EventArgs) _
         Handles UpdateNotesToolStripMenuItem.Click
-        If File.Exists(MyAppPath & "User Manual\Release Notes.pdf") Then
-            Process.Start(MyAppPath & "User Manual\Release Notes.pdf")
+        If File.Exists(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf")) Then
+            Process.Start(Path.Combine(MyAppPath, "User Manual\Release Notes.pdf"))
         Else
             MsgBox("Release Notes not found!", MsgBoxStyle.Critical)
         End If
@@ -965,11 +969,13 @@ Imports TUGraz.VectoCore.Utils
                     Case ".xml"
                         Dim xDocument As XDocument = xDocument.Load(jobFile)
                         Dim rootNode As String = If(xDocument Is Nothing, "", xDocument.Root.Name.LocalName)
+                        Dim kernel as IKernel = New StandardKernel(new VectoNinjectModule)
+                        Dim xmlInputReader as IXMLInputDataReader = kernel.Get(Of IXMLInputDataReader)
                         Select Case rootNode
                             Case XMLNames.VectoInputEngineering
-                                input = New XMLEngineeringInputDataProvider(jobFile, True)
+                                input = xmlInputReader.CreateEngineering(jobFile)
                             Case XMLNames.VectoInputDeclaration
-                                input = New XMLDeclarationInputDataProvider(XmlReader.Create(jobFile), True)
+                                input = xmlInputReader.CreateDeclaration(XmlReader.Create(jobFile))
                         End Select
                 End Select
 
@@ -1084,8 +1090,8 @@ Imports TUGraz.VectoCore.Utils
             dim w as FileOutputWriter = new FileOutputWriter(job)
             For Each entry as KeyValuePair(Of string, string) In _
                 new Dictionary(Of string, string) _
-                    from {{w.XMLFullReportName, "XML Manufacturer Report"}, {w.XMLCustomerReportName, "Customer Report"},
-                        {w.XMLVTPReportName, "VTP Report"}}
+                    from {{w.XMLFullReportName, "XML Manufacturer Report"}, {w.XMLCustomerReportName, "XML Customer Report"},
+                        {w.XMLVTPReportName, "VTP Report"}, {w.XMLMonitoringReportName, "XML Monitoring Report"}}
                 If File.Exists(entry.Key) Then
                     sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
                                              .Message =
@@ -1105,6 +1111,20 @@ Imports TUGraz.VectoCore.Utils
         sender.ReportProgress(100, New VectoProgress With {.Target = "ListBox",
                                  .Message =
                                  String.Format("Simulation Finished in {0:0}s", (DateTime.Now() - start).TotalSeconds)})
+
+#if CERTIFICATION_RELEASE
+        dim message as string = nothing
+#else
+#if RELEASE_CANDIDATE
+        dim message as string = "RELEASE CANDIDATE - NOT FOR CERTIFICATION!"
+#else
+        dim message as string = "DEVELOPMENT VERSION - NOT FOR CERTIFICATION!"
+#End If
+#end if
+        if Not string.IsNullOrWhitespace(message) then
+            sender.ReportProgress(100,  New VectoProgress With {.Target = "ListBoxWarning",
+                                     .Message = message})
+        End If
     End Sub
 
 
@@ -2014,11 +2034,13 @@ Imports TUGraz.VectoCore.Utils
                 Case ".xml"
                     Dim xDocument As XDocument = xDocument.Load(f)
                     Dim rootNode As String = If(xDocument Is Nothing, "", xDocument.Root.Name.LocalName)
+                    Dim kernel as IKernel = New StandardKernel(new VectoNinjectModule)
+                    Dim xmlInputReader as IXMLInputDataReader = kernel.Get(Of IXMLInputDataReader)
                     Select Case rootNode
                         Case XMLNames.VectoInputEngineering
-                            input = New XMLEngineeringInputDataProvider(f, True)
+                            input = xmlInputReader.CreateEngineering(f)
                         Case XMLNames.VectoInputDeclaration
-                            input = New XMLDeclarationInputDataProvider(XmlReader.Create(f), True)
+                            input = xmlInputReader.CreateDeclaration(XmlReader.Create(f))
                     End Select
             End Select
 

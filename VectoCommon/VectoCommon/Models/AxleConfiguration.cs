@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -47,6 +47,7 @@ namespace TUGraz.VectoCommon.Models
 		AxleConfig_8x4,
 		AxleConfig_8x6,
 		AxleConfig_8x8,
+		AxleConfig_Undefined,
 	}
 
 	public enum AxleType

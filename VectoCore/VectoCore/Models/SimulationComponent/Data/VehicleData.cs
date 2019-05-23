@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -203,6 +204,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}
 				return _averageRollingResistanceTruck.GetValueOrDefault();
 			}
+			protected internal set { _averageRollingResistanceTruck = value; }
+		}
+
+		public bool ZeroEmissionVehicle { get; internal set; }
+		public bool HybridElectricHDV { get; internal set; }
+		public bool DualFuelVehicle { get; internal set; }
+		public Watt MaxNetPower1 { get; internal set; }
+		public Watt MaxNetPower2 { get; internal set; }
+		public bool SleeperCab { get; internal set; }
+		public ADASData ADAS { get; internal set; }
+		public bool VocationalVehicle { get; internal set; }
+
+		public class ADASData
+		{
+			public bool EngineStopStart { get; internal set; }
+			public EcoRollType EcoRoll { get; internal set; }
+			public PredictiveCruiseControlType PredictiveCruiseControl { get; internal set; }
 		}
 
 		protected void ComputeRollResistanceAndReducedMassWheels()
@@ -242,7 +260,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 			RollResistanceCoefficientWithoutTrailer = rrcVehicle / vehicleWeightShare;
 			TotalRollResistanceCoefficient = rrc;
-			_averageRollingResistanceTruck = averageRRC / vehicleWheels;
+			AverageRollingResistanceTruck = averageRRC / vehicleWheels;
 			WheelsInertia = wheelsInertia;
 		}
 

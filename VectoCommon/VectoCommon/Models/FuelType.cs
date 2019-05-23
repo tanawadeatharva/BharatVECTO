@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -40,8 +40,9 @@ namespace TUGraz.VectoCommon.Models
 		EthanolCI,
 		PetrolPI,
 		EthanolPI,
-		LPG,
-		NG,
+		LPGPI,
+		NGPI,
+		NGCI,
 		// ReSharper restore InconsistentNaming
 	}
 
@@ -58,10 +59,12 @@ namespace TUGraz.VectoCommon.Models
 					return "Petrol PI";
 				case FuelType.EthanolPI:
 					return "Ethanol PI";
-				case FuelType.LPG:
-					return "LPG";
-				case FuelType.NG:
-					return "NG";
+				case FuelType.LPGPI:
+					return "LPG PI";
+				case FuelType.NGPI:
+					return "NG PI";
+				case FuelType.NGCI:
+					return "NG CI";
 				default:
 					throw new ArgumentOutOfRangeException("fuel type", ftype, null);
 			}

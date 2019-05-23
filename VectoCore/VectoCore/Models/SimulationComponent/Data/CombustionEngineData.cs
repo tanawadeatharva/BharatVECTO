@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -34,6 +34,7 @@ using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -41,6 +42,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	[CustomValidation(typeof(CombustionEngineData), "ValidateData")]
 	public class CombustionEngineData : SimulationComponentData
 	{
+		[Required, SIRange(1, 5)] public Second EngineStartTime;
+
 		[Required, SIRange(1000 * 1E-6, 20000 * 1E-6)]
 		public CubicMeter Displacement { get; internal set; }
 
@@ -79,8 +82,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public NewtonMeter MaxTorqueDeclared { get; internal set; }
 
-		public FuelType FuelType { get; internal set; }
-
+		public FuelData.Entry FuelData { get; internal set; }
+		
 		public CombustionEngineData()
 		{
 			WHTCUrban = 1;
@@ -109,7 +112,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				RatedPowerDeclared = RatedPowerDeclared,
 				RatedSpeedDeclared = RatedSpeedDeclared,
 				MaxTorqueDeclared = MaxTorqueDeclared,
-				FuelType = FuelType
+				FuelData = FuelData,
+				CertificationNumber = CertificationNumber,
+				CertificationMethod = CertificationMethod,
+				EngineStartTime = EngineStartTime
 			};
 		}
 

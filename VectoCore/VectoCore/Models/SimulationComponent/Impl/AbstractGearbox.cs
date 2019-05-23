@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -52,9 +52,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		[Required, ValidateObject] internal readonly GearboxData ModelData;
 
+		protected uint _gear;
+
 		protected AbstractGearbox(IVehicleContainer container, VectoRunData runData) : base(container)
 		{
 			ModelData = runData.GearboxData;
+			LastShift = -double.MaxValue.SI<Second>();
 		}
 
 		#region ITnOutPort
@@ -76,7 +79,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// The current gear.
 		/// </summary>
-		public uint Gear { get; protected internal set; }
+		public virtual uint Gear
+		{
+			get { return _gear; }
+			protected internal set { _gear = value; }
+		}
+
+		public abstract bool TCLocked { get; }
 
 		[DebuggerHidden]
 		public MeterPerSecond StartSpeed
@@ -140,10 +149,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return nextGear.TorqueConverterLocked;
 		}
 
-		protected internal WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity)
+		protected internal WattSecond ComputeShiftLosses(NewtonMeter outTorque, PerSecond outAngularVelocity, uint gear)
 		{
-			var torqueGbxIn = outTorque / ModelData.Gears[Gear].Ratio;
-			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;
+			var ratio = ModelData.Gears[gear].Ratio;
+			if (double.IsNaN(ratio)) {
+				ratio = ModelData.Gears[gear].TorqueConverterRatio;
+			}
+			var torqueGbxIn = outTorque / ratio;
+			var deltaClutchSpeed = (DataBus.EngineSpeed - PreviousState.OutAngularVelocity * ratio) / 2;
 			var shiftLossEnergy = torqueGbxIn * deltaClutchSpeed * ModelData.PowershiftShiftTime;
 
 			return shiftLossEnergy.Abs();

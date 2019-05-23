@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -126,6 +126,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
+		public override bool TCLocked { get { return !TorqueConverterActive ?? false; } }
+
 		/// <summary>
 		/// Requests the Gearbox to deliver torque and angularVelocity
 		/// </summary>
@@ -222,7 +224,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			inTorque += CurrentState.InertiaTorqueLossOut / effectiveRatio;
 			if (Gear != PreviousState.Gear &&
 				ConsiderShiftLosses(new GearInfo(Gear, torqueConverterLocked), outTorque)) {
-				CurrentState.PowershiftLosses = ComputeShiftLosses(outTorque, outAngularVelocity);
+				CurrentState.PowershiftLosses = ComputeShiftLosses(outTorque, outAngularVelocity, Gear);
 			}
 			if (CurrentState.PowershiftLosses != null) {
 				var averageEngineSpeed = (DataBus.EngineSpeed + outAngularVelocity * ModelData.Gears[Gear].Ratio) / 2;

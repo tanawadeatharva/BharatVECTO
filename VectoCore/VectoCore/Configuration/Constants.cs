@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -36,6 +36,8 @@ namespace TUGraz.VectoCore.Configuration
 {
 	public static class Constants
 	{
+		public const string NOT_AVailABLE = "N/A";
+
 		public static Second DefaultPowerShiftTime = 0.8.SI<Second>();
 		public const double RPMToRad = 2 * Math.PI / 60;
 		public const double Kilo = 1000;
@@ -174,6 +176,8 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const string VectoDeclarationDefinitionsNS =
 				"urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v" + XSDDeclarationVersion;
+
+			public const string VectoDeclarationComponentNS = "urn:tugraz:ivt:VectoAPI:DeclarationComponent:v" + XSDDeclarationVersion;
 
 			public const string VectoEngineeringDefinitionsNS =
 				"urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v" + XSDEngineeringVersion;

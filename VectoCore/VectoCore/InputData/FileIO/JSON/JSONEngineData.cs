@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -35,6 +35,8 @@ using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -185,6 +187,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public virtual Second EngineStartTime
+		{
+			get { return null; }
+		}
+
 		public virtual double WHTCMotorway
 		{
 			get { return Body.GetEx<double>(JsonKeys.Engine_WHTC_Motorway); }
@@ -215,9 +222,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return 1; }
 		}
 
+		
 		public string Manufacturer
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public string Model
@@ -228,7 +236,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string Date
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public CertificationMethod CertificationMethod
@@ -238,7 +246,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string CertificationNumber
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public DigestData DigestValue

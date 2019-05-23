@@ -49,6 +49,9 @@ Public Class VectoJob
     Private ReadOnly _engineFile As SubPath
     Private ReadOnly _gearboxFile As SubPath
 
+    Private ReadOnly _lacDfTargetSpeedFile As SubPath
+    Private ReadOnly _lacDfVelocityDropFile as SubPath
+
     Private _startStop As Boolean
     Public StartStopDelay As Double
 
@@ -69,6 +72,9 @@ Public Class VectoJob
     Public EcoRollOn As Boolean
 
     Public LookAheadMinSpeed As Double
+    Public EngineStopStartThreshold As Double
+    public EngineOffTimeLimit As double
+    public EngineStStUtilityFactor As Double
 
     Public Property StartStopMaxSpeed As Double
 
@@ -97,6 +103,8 @@ Public Class VectoJob
         _vehicleFile = New SubPath
         _engineFile = New SubPath
         _gearboxFile = New SubPath
+        _lacDfTargetSpeedFile = New SubPath()
+        _lacDfVelocityDropFile = New SubPath()
 
         _driverAccelerationFile = New SubPath
 
@@ -225,7 +233,7 @@ Public Class VectoJob
     End Property
 
 
-    Public ReadOnly Property AccelerationCurve As TableData Implements IDriverEngineeringInputData.AccelerationCurve
+    Public ReadOnly Property AccelerationCurve As IDriverAccelerationData Implements IDriverEngineeringInputData.AccelerationCurve
         Get
             If String.IsNullOrWhiteSpace(_driverAccelerationFile.FullPath) Then Return Nothing
             If Not File.Exists(_driverAccelerationFile.FullPath) Then
@@ -234,15 +242,16 @@ Public Class VectoJob
                             RessourceHelper.ReadStream(
                                 DeclarationData.DeclarationDataResourcePrefix + ".VACC." + _driverAccelerationFile.OriginalPath +
                                 VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
-                    Return _
+                    Return  New DriverAccelerationInputData() With{ .AccelerationCurve =
                         VectoCSVFile.ReadStream(cycleDataRes,
                                                 source:=DeclarationData.DeclarationDataResourcePrefix + ".VACC." + _driverAccelerationFile.OriginalPath +
                                                         VectoCore.Configuration.Constants.FileExtensions.DriverAccelerationCurve)
+                    }
                 Catch ex As Exception
                     Return Nothing
                 End Try
             End If
-            Return VectoCSVFile.Read(_driverAccelerationFile.FullPath)
+            Return New DriverAccelerationInputData() With{ .AccelerationCurve = VectoCSVFile.Read(_driverAccelerationFile.FullPath) }
         End Get
     End Property
 
@@ -264,6 +273,29 @@ Public Class VectoJob
         End Get
     End Property
 
+    Public ReadOnly Property GearshiftInputData As IGearshiftEngineeringInputData Implements IDriverEngineeringInputData.GearshiftInputData
+        get
+            Return TryCast( New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.GearboxInputData, IGearshiftEngineeringInputData)
+        End Get
+    End Property
+
+    Public ReadOnly Property EngineOffStandStillThreshold As Second Implements IDriverEngineeringInputData.EngineOffStandStillThreshold
+        Get
+            return EngineStopStartThreshold.SI(Of Second)()
+        End Get
+    End Property
+
+    Public ReadOnly Property MaxEngineOffTimespan As Second Implements IDriverEngineeringInputData.MaxEngineOffTimespan
+        Get
+            Return EngineOffTimeLimit.SI(Of Second)()
+        End Get
+    End Property
+
+    Public ReadOnly Property EngineStopStartUtilityFactor As Double Implements IDriverEngineeringInputData.EngineStopStartUtilityFactor
+        Get
+            Return EngineStStUtilityFactor
+        End Get
+    End Property
 
     Public Property DesMaxFile(Optional ByVal original As Boolean = False) As String
         Get
@@ -281,8 +313,30 @@ Public Class VectoJob
     Public Property LacPreviewFactor As Double
     Public Property LacDfOffset As Double
     Public Property LacDfScale As Double
-    Public Property LacDfTargetSpeedFile As String
-    Public Property LacDfVelocityDropFile As String
+    Public Property LacDfTargetSpeedFile(Optional ByVal original As Boolean = false) As String
+        Get
+            If original Then
+                Return _lacDfTargetSpeedFile.OriginalPath
+                Else 
+                return _lacDfTargetSpeedFile.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _lacDfTargetSpeedFile.Init(_myPath, value)
+        End Set
+    End Property
+    Public Property LacDfVelocityDropFile(optional ByVal original As Boolean = false) As String
+        Get
+            If original Then
+                Return _lacDfVelocityDropFile.OriginalPath
+            Else 
+                return _lacDfVelocityDropFile.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _lacDfVelocityDropFile.Init(_myPath, value)
+        End Set
+    End Property
 
 
 #End Region
@@ -323,8 +377,8 @@ Public Class VectoJob
         Dim result As IList(Of ValidationResult) = New List(Of ValidationResult)
 
         Dim vehicleInputData As IVehicleEngineeringInputData = vectoJob.JobInputData.Vehicle
-        Dim engineInputData As IEngineDeclarationInputData = vectoJob.JobInputData.Vehicle.EngineInputData
-        Dim gearboxInputData As IGearboxDeclarationInputData = vectoJob.Vehicle.GearboxInputData
+        Dim engineInputData As IEngineDeclarationInputData = vectoJob.JobInputData.Vehicle.Components.EngineInputData
+        Dim gearboxInputData As IGearboxDeclarationInputData = vectoJob.Vehicle.Components.GearboxInputData
 
         If vehicleInputData Is Nothing Then _
             result.Add(New ValidationResult("Vehicle File is missing or invalid"))
@@ -486,7 +540,7 @@ Public Class VectoJob
     Public ReadOnly Property IEngineeringJobInputData_EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly
         Get
             If Not File.Exists(_engineFile.FullPath) Then Return Nothing
-            Return New JSONComponentInputData(_engineFile.FullPath, Me).JobInputData.Vehicle.EngineInputData
+            Return New JSONComponentInputData(_engineFile.FullPath, Me).JobInputData.Vehicle.Components.EngineInputData
         End Get
     End Property
 
@@ -577,27 +631,27 @@ Public Class VectoJob
 
     Public ReadOnly Property Gearbox As IGearboxEngineeringInputData Implements IJSONVehicleComponents.Gearbox
         Get
-            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.GearboxInputData
+            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.GearboxInputData
         End Get
     End Property
 
     Public ReadOnly Property TorqueConverter As ITorqueConverterEngineeringInputData Implements IJSONVehicleComponents.TorqueConverter
         Get
-            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.TorqueConverterInputData
+            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.TorqueConverterInputData
         End Get
 
     End Property
 
     Public ReadOnly Property AxleGear As IAxleGearInputData Implements IJSONVehicleComponents.AxleGear
         Get
-            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.AxleGearInputData
+            Return New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.AxleGearInputData
         End Get
 
     End Property
 
     Public ReadOnly Property Engine As IEngineEngineeringInputData Implements IJSONVehicleComponents.Engine
         Get
-            Return New JSONComponentInputData(_engineFile.FullPath, Me).JobInputData.Vehicle.EngineInputData
+            Return New JSONComponentInputData(_engineFile.FullPath, Me).JobInputData.Vehicle.Components.EngineInputData
         End Get
     End Property
 
@@ -612,6 +666,16 @@ Public Class VectoJob
             Return Me
         End Get
     End Property
+
+    Public ReadOnly Property DataSource As DataSource Implements IInputDataProvider.DataSource
+        Get
+            Dim retVal As DataSource =  New DataSource() 
+            retVal.SourceType = DataSourceType.JSONFile
+            retVal.SourceFile = FilePath
+            Return retVal
+        End Get
+    End Property
+
 End Class
 
 

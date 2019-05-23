@@ -21,7 +21,7 @@ The Main Form includes two tabs as described below:
 ###Job Files Tab
 
 
-###Job Files List#
+####Job Files List#
 
 Job files (.vecto) listed here will be used for calculation. Unchecked files will be ignored!
 Doubleclick entries to edit job files with the [VECTO Editor](#job-editor).
@@ -35,7 +35,7 @@ Doubleclick entries to edit job files with the [VECTO Editor](#job-editor).
 
 ![up](pics/Actions-arrow-up-icon.png)![down](pics/Actions-arrow-down-icon.png) ***Move selected files up or down in list***
 
-####List Options#
+#####List Options#
 
 - **Save/Load List**
     - Save or load Job List to text file
@@ -50,7 +50,7 @@ Doubleclick entries to edit job files with the [VECTO Editor](#job-editor).
 
 
 
-###![START](pics/Play-icon.png) ***START Button***
+####![START](pics/Play-icon.png) ***START Button***
 
 Start VECTO in the selected mode (see [Options](#options-tab)).
 
@@ -58,17 +58,31 @@ Start VECTO in the selected mode (see [Options](#options-tab)).
 
 ###Options Tab
 
+![](pics/VECTO_OptionsTab.png)
 
 In this tab the global calculation settings can be changed.
 
-![](pics/checkbox.png) Declaration Mode
+**Mode**
+
 :   Select either [Declaration Mode](#declaration-mode) or [Engineering Mode](#engineering-mode)
 
+**Output**
+
 ![cb](pics/checkbox.png) Write modal results
-:   Toggle output of modal results (.vmod files). Summary files (.vsum, .vres) are always created.
+:   Toggle output of modal results (.vmod files) in declaration mode. A Summary file (.vsum) is always created.
 
 ![cb](pics/checkbox.png) Modal results in 1Hz
-:   If selected, the modal results (.vmod file) will be converted into 1Hz after the simulation.
+:   If selected, the modal results (.vmod file) will be converted into 1Hz after the simulation. This may add certain artefacts in the resulting modal results file.
+
+**MISC**
+
+Validate Data
+:    Enables or disables internal checks if the model parameters are within a reasonable range. When simulating a new vehicle model it is good to have this option enabled. If the model parameters are from certified components or the model data has been modified slightly this check may be disabled. The VECTO simulation will abort anyways if there is an error in the model parameters. Enabling this option increases the simulation time by a few seconds.
+
+Output values in vmod at beginning and end of simulation iterval
+:    By defaul VECTO writes the simulation results at the middle of every simulation interval. If this option is enabled, the .vmod file will contain two entries for every simulation interval, one at the beginning and one at the end of the simulation interval. Enabling this option may be helpful for analysing the trace of certain signals but can not be used for quantitative analyses of the fuel consumption, average power losses, etc. The generated modal result file has the suffix '_sim'. The picture below shows the difference in the output (top: conventional, bottom: if this option is checked)
+
+![](pics/VECTO_vmod_vgl.png)
 
 
 ###Controls

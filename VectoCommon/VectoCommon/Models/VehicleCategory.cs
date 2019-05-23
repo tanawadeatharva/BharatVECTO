@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -35,6 +35,7 @@ namespace TUGraz.VectoCommon.Models
 {
 	public enum VehicleCategory
 	{
+		Unknown,
 		RigidTruck,
 		Tractor,
 		CityBus,
@@ -91,7 +92,7 @@ namespace TUGraz.VectoCommon.Models
 				case VehicleCategory.InterurbanBus:
 					return "Interurban Bus";
 				case VehicleCategory.RigidTruck:
-					return "Rigid Truck";
+					return "Rigid Lorry";
 				default:
 					throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
 			}

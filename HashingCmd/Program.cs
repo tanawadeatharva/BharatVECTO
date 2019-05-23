@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -40,6 +40,7 @@ using System.Xml.Schema;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace HashingCmd
 {
@@ -159,8 +160,7 @@ hashingcmd.exe
 			writer.Close();
 
 			if (_validateXML) {
-				new XMLValidator(XmlReader.Create(destination), null, ValidationCallBack).ValidateXML(XMLValidator.XmlDocumentType
-					.DeclarationComponentData);
+				new XMLValidator(XmlReader.Create(destination), null, ValidationCallBack).ValidateXML(XmlDocumentType.DeclarationComponentData);
 				WriteLine("Valid", ConsoleColor.Green);
 				 
 			}
@@ -181,8 +181,8 @@ hashingcmd.exe
 		private static void ValidateFile(string filename)
 		{
 			new XMLValidator(XmlReader.Create(filename),null, ValidationCallBack).ValidateXML(
-				XMLValidator.XmlDocumentType.DeclarationJobData | XMLValidator.XmlDocumentType.CustomerReport |
-				XMLValidator.XmlDocumentType.ManufacturerReport | XMLValidator.XmlDocumentType.DeclarationComponentData);
+				XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport |
+				XmlDocumentType.ManufacturerReport | XmlDocumentType.DeclarationComponentData);
 		}
 		
 		private static void ReadHashAction(string filename, VectoHash h)

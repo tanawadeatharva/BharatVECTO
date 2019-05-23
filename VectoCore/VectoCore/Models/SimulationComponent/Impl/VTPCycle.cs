@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -91,8 +91,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			foreach (var entry in Data.Entries) {
 				VerifyWheelSpeeds(entry);
 
-				VerifyWheelTorque(entry);
-
 				VerifyFanSpeed(hasElectricFan, entry);
 			}
 
@@ -149,19 +147,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		private void VerifyWheelTorque(DrivingCycleData.DrivingCycleEntry entry)
-		{
-			var torqueRatio = entry.TorqueWheelRight.IsEqual(0, 1e-9) && entry.TorqueWheelLeft.IsEqual(0, 1e-9) ? 0 :
-				Math.Max(entry.TorqueWheelLeft / entry.TorqueWheelRight, entry.TorqueWheelRight / entry.TorqueWheelLeft);
-			var torqueDiff = VectoMath.Abs(entry.TorqueWheelLeft - entry.TorqueWheelRight);
-			if (torqueRatio > DeclarationData.VTPMode.WheelTorqueDifferenceFactor && 
-				torqueDiff > DeclarationData.VTPMode.MaxWheelTorqueDifference) {
-				Log.Error(
-					"Torque difference (L/R) too high! t: {0} tq_left: {1}, tq_right: {2}", entry.Time, entry.TorqueWheelLeft,
-					entry.TorqueWheelRight);
-			}
-		}
-
+		
 		private void VerifyWheelSpeeds(DrivingCycleData.DrivingCycleEntry entry)
 		{
 			if (!entry.WheelSpeedLeft.IsEqual(0.RPMtoRad(), DeclarationData.VTPMode.WheelSpeedZeroTolerance) &&

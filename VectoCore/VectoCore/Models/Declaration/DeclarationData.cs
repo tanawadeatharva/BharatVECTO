@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -77,7 +77,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly StandardBodies StandardBodies = new StandardBodies();
 		public static readonly Payloads Payloads = new Payloads();
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
+		public const double LossMapExtrapolationFactor = 3;
 
+		public static readonly WeightingGroups WeightingGroup = new WeightingGroups();
+		public static readonly WeightingFactors WeightingFactors = new WeightingFactors();
+
+		public const double AlternaterEfficiency = 0.7;
 
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.
@@ -112,6 +117,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Driver
 		{
+			public static readonly Second EngineOffStandStillThreshold = 2.SI<Second>();
+			public static readonly Second MaxEngineOffTimespan = 120.SI<Second>();
+			public const double EngineStopStartUtilityFactor = 0.8;
+
 			public static class LookAhead
 			{
 				public const bool Enabled = true;
@@ -158,6 +167,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
 		    public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI(Unit.SI.Kilo.Gramm.Per.Meter); // [kg/m]
+			public static readonly Second DefaultEngineStartTime = 1.SI<Second>();
 
 			public const double TorqueLimitGearboxFactor = 0.9;
 			public const double TorqueLimitVehicleFactor = 0.95;
@@ -183,8 +193,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			private const double ShiftPolygonEngineFldMargin = 0.98;
 
 			public static readonly Second MinTimeBetweenGearshifts = 1.5.SI<Second>();
-			public static readonly Second DownshiftAfterUpshiftDelay = 10.SI<Second>();
-			public static readonly Second UpshiftAfterDownshiftDelay = 10.SI<Second>();
+			public static readonly Second DownshiftAfterUpshiftDelay = 6.SI<Second>();
+			public static readonly Second UpshiftAfterDownshiftDelay = 6.SI<Second>();
 
 			public static readonly MeterPerSquareSecond UpshiftMinAcceleration = 0.1.SI<MeterPerSquareSecond>();
 
@@ -516,8 +526,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly PerSecond WheelSpeedZeroTolerance = 0.1.RPMtoRad();
 			public static readonly PerSecond MaxWheelSpeedDifferenceStandstill = 1.RPMtoRad();
 
-			public static readonly NewtonMeter MaxWheelTorqueDifference = 200.SI<NewtonMeter>();
-
 			public static readonly PerSecond MinFanSpeed = 20.RPMtoRad();
 			public static readonly PerSecond MaxFanSpeed = 4000.RPMtoRad();
 
@@ -527,6 +535,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly SpecificFuelConsumption LowerFCThreshold = 180.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).Cast<SpecificFuelConsumption>();
 			public static readonly SpecificFuelConsumption UpperFCThreshold = 600.SI(Unit.SI.Gramm.Per.Kilo.Watt.Hour).Cast<SpecificFuelConsumption>();
 			public static readonly Second FCAccumulationWindow = 10.SI(Unit.SI.Minute).Cast<Second>();
+			public static readonly double[] FanParameters = { 7.320, 1200.0 , 810 };
+		}
+
+		public static class Vehicle {
+			public const bool DualFuelVehicleDefault = false;
+			public const bool HybridElectricHDVDefault = false;
+			public const bool ZeroEmissionVehicleDefault = false;
+			public const TankSystem TankSystemDefault = TankSystem.Compressed;
+			public const bool SleeperCabDefault = true;
+			public const bool VocationalVehicleDefault = false;
+
+			public static class ADAS {
+				public const PredictiveCruiseControlType PredictiveCruiseControlDefault = PredictiveCruiseControlType.None;
+				public const EcoRollType EcoRoll = EcoRollType.None;
+				public const bool EngineStopStartDefault = false;
+			}
 		}
 	}
 }

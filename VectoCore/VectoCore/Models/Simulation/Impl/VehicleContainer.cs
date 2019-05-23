@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -55,6 +55,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			new List<Tuple<int, VectoSimulationComponent>>();
 
 		internal IEngineInfo Engine;
+		internal IEngineControl EngineCtl;
 		internal IGearboxInfo Gearbox;
 		internal IAxlegearInfo Axlegear;
 		internal IVehicleInfo Vehicle;
@@ -90,6 +91,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return 0; // throw new VectoException("no gearbox available!");
 				}
 				return Gearbox.Gear;
+			}
+		}
+
+		public bool TCLocked
+		{
+			get {
+				if (Gearbox == null) {
+					return true;
+				}
+				return  Gearbox.TCLocked;
 			}
 		}
 
@@ -242,6 +253,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Vehicle.SlopeResistance(gradient);
 		}
 
+		public MeterPerSecond MaxVehicleSpeed
+		{
+			get { return Vehicle.MaxVehicleSpeed; }
+		}
+
 		#endregion
 
 		public VehicleContainer(ExecutionMode executionMode, IModalDataContainer modData = null,
@@ -280,6 +296,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Engine = c;
 					commitPriority = 2;
 				})
+				.If<IEngineControl>(c => {
+						EngineCtl = c;
+					})
 				.If<IDriverInfo>(c => Driver = c)
 				.If<IGearboxInfo>(c => {
 					Gearbox = c;
@@ -327,12 +346,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void FinishSimulationRun(Exception e = null)
 		{
 			Log.Info("VehicleContainer finishing simulation.");
-			ModData.Finish(RunStatus, e);
+			ModData?.Finish(RunStatus, e);
 
 			WriteSumData(ModData);
 
-			ModData.FinishSimulation();
-			DrivingCycle.FinishSimulation();
+			ModData?.FinishSimulation();
+			DrivingCycle?.FinishSimulation();
 		}
 
 		public void FinishSimulation()
@@ -410,6 +429,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Driver != null ? Driver.DriverAcceleration : 0.SI<MeterPerSquareSecond>(); }
 		}
 
+		public Radian RoadGradient
+		{
+			get { return DrivingCycle.RoadGradient; }
+		}
+
 		public Meter CycleStartDistance
 		{
 			get { return DrivingCycle == null ? 0.SI<Meter>() : DrivingCycle.CycleStartDistance; }
@@ -449,5 +473,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			get { return Wheels.ReducedMassWheels; }
 		}
+
+		#region Implementation of IEngineControl
+
+		public bool IgnitionOn
+		{
+			get { return EngineCtl.IgnitionOn; }
+			set { EngineCtl.IgnitionOn = value; }
+		}
+
+		#endregion
 	}
 }

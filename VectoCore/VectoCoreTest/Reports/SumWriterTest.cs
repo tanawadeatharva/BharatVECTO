@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,6 +31,7 @@
 
 using System.IO;
 using System.Xml;
+using Ninject;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
@@ -43,16 +44,26 @@ using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using NUnit.Framework;
+using TUGraz.VectoCore.InputData.FileIO.XML;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Reports
 {
 	[TestFixture]
 	public class SumWriterTest
 	{
+
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 		[TestCase]
@@ -61,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var writer = new FileOutputWriter("testsumcalc_fixed");
 			var sumWriter = new SummaryDataContainer(writer);
 
-			var modData = new ModalDataContainer("testsumcalc_fixed", FuelType.DieselCI, writer);
+			var modData = new ModalDataContainer("testsumcalc_fixed", FuelData.Diesel, writer);
 
 			modData.AddAuxiliary("FAN");
 
@@ -121,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var writer = new FileOutputWriter("testsumcalc_var");
 			var sumWriter = new SummaryDataContainer(writer);
 
-			var modData = new ModalDataContainer("testsumcalc_var", FuelType.DieselCI, writer);
+			var modData = new ModalDataContainer("testsumcalc_var", FuelData.Diesel, writer);
 			modData.AddAuxiliary("FAN");
 
 			var timeSteps = new[]
@@ -168,11 +179,12 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(0.934722222, sumData.Rows[0].ParseDouble("E_brake [kWh]"), 1e-3);
 		}
 
+		[Category("LongRunning")]
 		[TestCase]
 		public void TestSumDataMetaInformation()
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
-			var dataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(jobfile), true);
+			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
@@ -194,34 +206,98 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Manufacturer, sumRow[SummaryDataContainer.VEHICLE_MANUFACTURER]);
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Model, sumRow[SummaryDataContainer.VEHICLE_MODEL]);
 			Assert.AreEqual(dataProvider.JobInputData.Vehicle.VIN, sumRow[SummaryDataContainer.VIN_NUMBER]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.Manufacturer,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.Manufacturer,
 				sumRow[SummaryDataContainer.ENGINE_MANUFACTURER]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.Model, sumRow[SummaryDataContainer.ENGINE_MODEL]);
-            Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.FuelType.ToXMLFormat(),
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.Model, sumRow[SummaryDataContainer.ENGINE_MODEL]);
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.FuelType.ToXMLFormat(),
 				sumRow[SummaryDataContainer.ENGINE_FUEL_TYPE]);
-			Assert.AreEqual((dataProvider.JobInputData.Vehicle.EngineInputData.RatedPowerDeclared.ConvertToKiloWatt()),
+			Assert.AreEqual((dataProvider.JobInputData.Vehicle.Components.EngineInputData.RatedPowerDeclared.ConvertToKiloWatt()),
 				((ConvertedSI)sumRow[SummaryDataContainer.ENGINE_RATED_POWER]));
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.RatedSpeedDeclared.AsRPM,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.RatedSpeedDeclared.AsRPM,
 				(double)((ConvertedSI)sumRow[SummaryDataContainer.ENGINE_RATED_SPEED]));
-            Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.Displacement.ConvertToCubicCentiMeter(),
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.Displacement.ConvertToCubicCentiMeter(),
 				((ConvertedSI)sumRow[SummaryDataContainer.ENGINE_DISPLACEMENT]));
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.GearboxInputData.Manufacturer,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.GearboxInputData.Manufacturer,
 				sumRow[SummaryDataContainer.GEARBOX_MANUFACTURER]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.GearboxInputData.Model, sumRow[SummaryDataContainer.GEARBOX_MODEL]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.AxleGearInputData.Manufacturer,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.GearboxInputData.Model, sumRow[SummaryDataContainer.GEARBOX_MODEL]);
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.AxleGearInputData.Manufacturer,
 				sumRow[SummaryDataContainer.AXLE_MANUFACTURER]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.AxleGearInputData.Model, sumRow[SummaryDataContainer.AXLE_MODEL]);
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.AxleGearInputData.Model, sumRow[SummaryDataContainer.AXLE_MODEL]);
 
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.ColdHotBalancingFactor,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.ColdHotBalancingFactor,
 				sumRow[SummaryDataContainer.ENGINE_BF_COLD_HOT]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.CorrectionFactorRegPer,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.CorrectionFactorRegPer,
 				sumRow[SummaryDataContainer.ENGINE_CF_REG_PER]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.WHTCRural,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.WHTCRural,
 				sumRow[SummaryDataContainer.ENGINE_WHTC_RURAL]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.WHTCUrban,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.WHTCUrban,
 				sumRow[SummaryDataContainer.ENGINE_WHTC_URBAN]);
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.EngineInputData.WHTCMotorway,
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.EngineInputData.WHTCMotorway,
 				sumRow[SummaryDataContainer.ENGINE_WHTC_MOTORWAY]);
+		}
+
+
+		[TestCase()]
+		public void TestSumDataIsCompleteEvenIfModFileCannotBeWritten()
+		{
+			
+
+			var jobFile = @"TestData\Integration\DeclarationMode\Class5_Vocational\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
+
+			var modFilename = Path.Combine(Path.GetDirectoryName(jobFile), "VEH-Class5_ConstructionReferenceLoad_sim.vmod");
+
+			// lock modfile so it can't be written
+			Stream fh = !File.Exists(modFilename) ? File.Create(modFilename) : File.OpenRead(modFilename);
+
+			var writer = new FileOutputWriter(jobFile);
+			var inputData = xmlInputReader.CreateDeclaration(jobFile);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				ActualModalData = true
+			};
+			var sumWriter = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumWriter);
+
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(2, sumWriter.Table.Rows.Count);
+
+			fh.Close();
+		}
+
+
+		[TestCase()]
+		public void TestSumDataFileIsLocked()
+		{
+
+
+			var jobFile = @"TestData\Integration\DeclarationMode\Class5_Vocational\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
+
+			var sumFilename = Path.Combine(Path.GetDirectoryName(jobFile), "Tractor_4x2_vehicle-class-5_EURO6_2018.vsum");
+
+			// lock modfile so it can't be written
+			Stream fh = !File.Exists(sumFilename) ? File.Create(sumFilename) : File.OpenRead(sumFilename);
+
+			var writer = new FileOutputWriter(jobFile);
+			var inputData = xmlInputReader.CreateDeclaration(jobFile);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				ActualModalData = true
+			};
+			var sumWriter = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumWriter);
+
+			jobContainer.AddRuns(factory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(2, sumWriter.Table.Rows.Count);
+
+			fh.Close();
 		}
 	}
 }

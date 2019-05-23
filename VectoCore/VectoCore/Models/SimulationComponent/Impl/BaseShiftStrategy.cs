@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -87,6 +87,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var acceleration = accelerationPower / DataBus.VehicleSpeed / (DataBus.TotalMass + DataBus.ReducedMassWheels);
 
 			return acceleration.Cast<MeterPerSquareSecond>();
+		}
+
+		protected MeterPerSquareSecond EstimateAcceleration(PerSecond gbxOutSpeed, NewtonMeter gbxOutTorque)
+		{
+			var vehicleSpeed = DataBus.VehicleSpeed;
+			var avgSlope =
+			((DataBus.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
+			DataBus.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
+
+			var airDragLoss = DataBus.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleSpeed;
+			var rollResistanceLoss = DataBus.RollingResistance(avgSlope) * DataBus.VehicleSpeed;
+			//DataBus.GearboxLoss();
+			var slopeLoss = DataBus.SlopeResistance(avgSlope) * DataBus.VehicleSpeed;
+			var axleLoss = DataBus.AxlegearLoss();
+
+			var accelerationPower = gbxOutSpeed * gbxOutTorque - axleLoss - airDragLoss - rollResistanceLoss - slopeLoss;
+
+			var acceleration = accelerationPower / DataBus.VehicleSpeed / (DataBus.TotalMass + DataBus.ReducedMassWheels);
+
+			return acceleration.Cast<MeterPerSquareSecond>();
+
 		}
 	}
 }

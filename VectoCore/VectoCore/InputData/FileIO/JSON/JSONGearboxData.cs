@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	/// }
 	// ReSharper disable once InconsistentNaming
 	public class JSONGearboxDataV5 : JSONFile, IGearboxEngineeringInputData, IAxleGearInputData,
-		ITorqueConverterEngineeringInputData
+		ITorqueConverterEngineeringInputData, IGearshiftEngineeringInputData
 	{
 		public JSONGearboxDataV5(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) {}
@@ -349,11 +349,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Gearbox_StartTorqueReserve) / 100.0; }
 		}
 
-		ITorqueConverterDeclarationInputData IGearboxDeclarationInputData.TorqueConverter
-		{
-			get { return TorqueConverter; }
-		}
-
+		
 		public virtual ITorqueConverterEngineeringInputData TorqueConverter
 		{
 			get { return this; }
@@ -477,7 +473,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string Manufacturer
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public string Model
@@ -487,7 +483,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string Date
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public CertificationMethod CertificationMethod
@@ -497,7 +493,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public string CertificationNumber
 		{
-			get { return "N/A"; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public DigestData DigestValue

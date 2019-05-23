@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -57,29 +57,34 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var dao = new DeclarationDataAdapter();
 				var engineData = dao.CreateEngineData(engineInput, null, gearboxInput, new List<ITorqueLimitInputData>());
 				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
-					VehicleCategory.RigidTruck,
-					false);
+					VehicleCategory.RigidTruck, (ITorqueConverterDeclarationInputData)gearboxInput);
 			} else {
 				var dao = new EngineeringDataAdapter();
-				var engineData = dao.CreateEngineData(engineInput, gearboxInput, new List<ITorqueLimitInputData>());
-				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
-					VehicleCategory.RigidTruck,
-					true);
+				var engineData = dao.CreateEngineData(engineInput, gearboxInput, new List<ITorqueLimitInputData>(), (ITorqueConverterEngineeringInputData)gearboxInput);
+				return dao.CreateGearboxData(gearboxInput, engineData, (IGearshiftEngineeringInputData)gearboxInput, 
+					((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
+					VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)gearboxInput);
 			}
 		}
 
-		public static AxleGearData CreateAxleGearDataFromFile(string axleGearFile)
+		public static AxleGearData CreateAxleGearDataFromFile(string axleGearFile, bool declarationMode = true)
 		{
-			var dao = new DeclarationDataAdapter();
-			var axleGearInput = JSONInputDataFactory.ReadGearbox(axleGearFile);
-			return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput, false);
+			if (declarationMode) {
+				var dao = new DeclarationDataAdapter();
+				var axleGearInput = JSONInputDataFactory.ReadGearbox(axleGearFile);
+				return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput);
+			} else {
+				var dao = new EngineeringDataAdapter();
+				var axleGearInput = JSONInputDataFactory.ReadGearbox(axleGearFile);
+				return dao.CreateAxleGearData((IAxleGearInputData)axleGearInput);
+			}
 		}
 
 		public static CombustionEngineData CreateEngineDataFromFile(string engineFile, int numGears)
 		{
 			var dao = new EngineeringDataAdapter();
 			var engineInput = JSONInputDataFactory.ReadEngine(engineFile);
-			var engineData = dao.CreateEngineData(engineInput, null, new List<ITorqueLimitInputData>());
+			var engineData = dao.CreateEngineData(engineInput, null, new List<ITorqueLimitInputData>(), null);
 			for (uint i = 1; i <= numGears; i++) {
 				engineData.FullLoadCurves[i] = engineData.FullLoadCurves[0];
 			}

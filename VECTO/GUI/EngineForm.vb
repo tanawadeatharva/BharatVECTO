@@ -67,8 +67,21 @@ Public Class EngineForm
 
 		If Not Cfg.DeclMode Then Exit Sub
 
+		Dim gbxType as GearboxType = GearboxType.AMT
+
+		Dim jobFile As String = VectoJobForm.VectoFile
+		If Not jobFile Is Nothing AndAlso File.Exists(jobFile) Then
+
+			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile), 
+																	 IEngineeringInputDataProvider)
+			If (not inputData Is Nothing) Then
+				Dim gbx as IGearboxDeclarationInputData = inputData.JobInputData.Vehicle.Components.GearboxInputData
+				gbxType = gbx.Type
+			End If
+		End If
+	    
 		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble(0.0)/1000.0/1000.0).SI (Of CubicMeter),
-															GearboxType.AMT).ToGUIFormat()
+															gbxType).ToGUIFormat()
 	End Sub
 
 
@@ -120,10 +133,10 @@ Public Class EngineForm
 	End Sub
 
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-		If File.Exists(MyAppPath & "User Manual\help.html") Then
+		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#engine-editor"))
+						String.Format("""file://{0}""", path.Combine(MyAppPath, "User Manual\help.html#engine-editor")))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -166,7 +179,7 @@ Public Class EngineForm
 		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file),
 																IEngineeringInputDataProvider)
 
-		engine = inputData.JobInputData.Vehicle.EngineInputData
+		engine = inputData.JobInputData.Vehicle.Components.EngineInputData
 
 
 		If Cfg.DeclMode <> engine.SavedInDeclarationMode Then

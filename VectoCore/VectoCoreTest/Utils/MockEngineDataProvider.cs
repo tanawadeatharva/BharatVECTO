@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -33,12 +33,13 @@ using System.Data;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
 	public class MockEngineDataProvider : IEngineEngineeringInputData
 	{
-		public DataSourceType SourceType { get; set; }
+		public DataSource DataSource { get; set; }
 		public string Source { get; set; }
 		public bool SavedInDeclarationMode { get; set; }
 		public string Manufacturer { get; set; }
@@ -64,5 +65,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public NewtonMeter MaxTorqueDeclared { get; set; }
 		public KilogramSquareMeter Inertia { get; set; }
 		public double WHTCEngineering { get; set; }
+
+		public Second EngineStartTime
+		{
+			get { return DeclarationData.Engine.DefaultEngineStartTime; }
+		}
 	}
 }

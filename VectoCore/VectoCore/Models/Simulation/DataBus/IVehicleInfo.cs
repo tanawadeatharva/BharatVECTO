@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -59,5 +59,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		Newton RollingResistance(Radian gradient);
 
 		Newton SlopeResistance(Radian gradient);
+
+		MeterPerSecond MaxVehicleSpeed { get; }
+
 	}
 }

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -30,39 +30,55 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.XML
 {
 	public class XMLReportTest
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
+		const string SampleVehicleDeclTqLimits = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_torqueLimits.xml";
+		const string SampleVehicleDeclLNG = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_LNG.xml";
 
 		const string SampleVehicleDeclAT = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample_AT.xml";
+
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
 
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
+		[Category("LongRunning")]
+		[Category("Integration")]
 		[TestCase(SampleVehicleDecl),
-		TestCase(SampleVehicleDeclAT)]
+		TestCase(SampleVehicleDeclTqLimits),
+		TestCase(SampleVehicleDeclAT),
+		TestCase(SampleVehicleDeclLNG)]
 		public void RunDeclarationJob(string filename)
 		{
 			var fileWriter = new FileOutputWriter(filename);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
-			var dataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(filename), true);
+			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
 			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
 				ModalResults1Hz = false,
 				WriteModalResults = false,
@@ -76,11 +92,18 @@ namespace TUGraz.VectoCore.Tests.XML
 			var customerRecord = fileWriter.XMLCustomerReportName;
 			var manufacturerRecord = fileWriter.XMLFullReportName;
 
-			var validator1 = new XMLValidator(XmlReader.Create(customerRecord));
-			Assert.IsTrue(validator1.ValidateXML(XMLValidator.XmlDocumentType.CustomerReport));
+			var validationMsg1 = new List<string> {customerRecord} ;
 
-			var validator2 = new XMLValidator(XmlReader.Create(manufacturerRecord));
-			Assert.IsTrue(validator2.ValidateXML(XMLValidator.XmlDocumentType.ManufacturerReport));
+			var validator1 = new XMLValidator(XmlReader.Create(customerRecord), validationErrorAction: (s,e) => {
+				validationMsg1.Add(e.ValidationEventArgs.Message);
+			});
+			Assert.IsTrue(validator1.ValidateXML(XmlDocumentType.CustomerReport), string.Join("\n", validationMsg1));
+
+			var validationMsg2 = new List<string> {manufacturerRecord};
+			var validator2 = new XMLValidator(XmlReader.Create(manufacturerRecord), validationErrorAction: (s,e) => {
+				validationMsg2.Add(e.ValidationEventArgs.Message);
+			});
+			Assert.IsTrue(validator2.ValidateXML(XmlDocumentType.ManufacturerReport), string.Join("\n", validationMsg2));
 		}
 	}
 }

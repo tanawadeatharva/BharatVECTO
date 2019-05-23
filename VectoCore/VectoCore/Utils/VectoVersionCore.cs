@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -33,10 +33,21 @@ namespace TUGraz.VectoCore.Utils
 {
 	public static class VectoSimulationCore
 	{
+
+#if CERTIFICATION_RELEASE
+		private const string SUFFIX = "";
+#else
+#if RELEASE_CANDIDATE
+		private const string SUFFIX = "-RC";
+#else
+		private const string SUFFIX = "-DEV";
+#endif
+#endif
+
 		public static string VersionNumber
 		{
 			get {
-				return "0.1.0.1366";
+				return "0.1.0.1600" + SUFFIX;
 			}
 		}
 

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -84,6 +84,12 @@ namespace TUGraz.VectoCore.InputData.Reader
 				tmp = data.Columns.Count > 3 ? new PT1(data) : new PT1();
 			}
 			entriesFld.Sort((entry1, entry2) => entry1.EngineSpeed.Value().CompareTo(entry2.EngineSpeed.Value()));
+			var duplicates = entriesFld.Select(x => x.EngineSpeed.AsRPM).GroupBy(x => x).Where(g => g.Count() > 1)
+										.Select(g => g.Key).ToList();
+			if (duplicates.Count > 0) {
+				throw new VectoException(
+					"Error reading full-load curve: multiple entries for engine speeds {0}", string.Join(", ", duplicates));
+			}
 			return new EngineFullLoadCurve(entriesFld, tmp);
 		}
 

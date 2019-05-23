@@ -10,6 +10,7 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 'Option Infer On
 
+Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
 Imports System.Text.RegularExpressions
@@ -83,7 +84,7 @@ Public Class VehicleForm
 		CbAxleConfig.DisplayMember = "Label"
 		If (cfg.DeclMode) Then
 			CbAxleConfig.DataSource = DeclarationData.Segments.GetAxleConfigurations() _
-			    .Cast(Of AxleConfiguration) _
+				.Cast(Of AxleConfiguration) _
 				.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
 		else
 				CbAxleConfig.DataSource = [Enum].GetValues(GetType(AxleConfiguration)) _
@@ -91,13 +92,27 @@ Public Class VehicleForm
 					.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
 		End If
 
-		
+		cbEcoRoll.ValueMember = "Value"
+        cbEcoRoll.DisplayMember = "Label"
+        cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) new With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
+
+
+        cbPcc.ValueMember = "Value"
+        cbPcc.DisplayMember = "Label"
+	    cbPcc.DataSource = [Enum].GetValues(GetType(PredictiveCruiseControlType)).Cast(Of PredictiveCruiseControlType).Select(Function(pcc) new With {Key .Value = pcc, .Label = pcc.GetName()}).ToList()
+
+        cbTankSystem.ValueMember = "Value"
+        cbTankSystem.DisplayMember = "Label"
+        
+        cbTankSystem.DataSource = {New With {Key .Value = CType(Nothing, TankSystem?), .Label = ""}}.Concat([Enum].GetValues(GetType(TankSystem)).Cast(Of TankSystem?).Select(Function(ts) New With {Key .Value = ts , .Label = ts.ToString()})).ToList()
+
+        tpADAS.Enabled = Cfg.DeclMode
 
 		CbCat.ValueMember = "Value"
 		CbCat.DisplayMember = "Label"
 		CbCat.DataSource = [Enum].GetValues(GetType(VehicleCategory)) _
 			.Cast(Of VehicleCategory) _
-			.Select(Function(category) New With {Key .Value = category, .label = category.GetLabel()}).ToList()
+			.Select(Function(category) New With {Key .Value = category, .Label = category.GetLabel()}).ToList()
 
 		cbAngledriveType.ValueMember = "Value"
 		cbAngledriveType.DisplayMember = "Label"
@@ -135,7 +150,7 @@ Public Class VehicleForm
 		_hdVclass = "-"
 		Dim s0 As Segment = Nothing
 		Try
-			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True)
+			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
 
 		Catch
 			' no segment found - ignore
@@ -164,7 +179,7 @@ Public Class VehicleForm
 
 		Dim s0 As Segment = Nothing
 		Try
-			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), True)
+			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
 		Catch
 			' no segment found - ignore
 		End Try
@@ -266,10 +281,10 @@ Public Class VehicleForm
 
 	'Help
 	Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
-		If File.Exists(MyAppPath & "User Manual\help.html") Then
+		If File.Exists(Path.Combine(MyAppPath, "User Manual\help.html")) Then
 			Dim defaultBrowserPath As String = BrowserUtils.GetDefaultBrowserPath()
 			Process.Start(defaultBrowserPath,
-						String.Format("""file://{0}{1}""", MyAppPath, "User Manual\help.html#vehicle-editor"))
+						String.Format("""file://{0}""", Path.Combine(MyAppPath, "User Manual\help.html#vehicle-editor")))
 		Else
 			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
 		End If
@@ -347,10 +362,10 @@ Public Class VehicleForm
 		Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadComponentData(file), 
 																IEngineeringInputDataProvider)
 		Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
-		Dim airdrag As IAirdragEngineeringInputData = inputData.JobInputData.Vehicle.AirdragInputData
-		Dim retarder As IRetarderInputData = inputData.JobInputData.Vehicle.RetarderInputData
-		Dim angledrive As IAngledriveInputData = inputData.JobInputData.Vehicle.AngledriveInputData
-		Dim pto As IPTOTransmissionInputData = inputData.JobInputData.Vehicle.PTOTransmissionInputData
+		Dim airdrag As IAirdragEngineeringInputData = inputData.JobInputData.Vehicle.Components.AirdragInputData
+		Dim retarder As IRetarderInputData = inputData.JobInputData.Vehicle.Components.RetarderInputData
+		Dim angledrive As IAngledriveInputData = inputData.JobInputData.Vehicle.Components.AngledriveInputData
+		Dim pto As IPTOTransmissionInputData = inputData.JobInputData.Vehicle.Components.PTOTransmissionInputData
 
 		If Cfg.DeclMode <> vehicle.SavedInDeclarationMode Then
 			Select Case WrongMode()
@@ -384,10 +399,24 @@ Public Class VehicleForm
 		TbRtRatio.Text = retarder.Ratio.ToGUIFormat()
 		TbRtPath.Text = If(retarder.LossMap Is Nothing, "", GetRelativePath(retarder.LossMap.Source, basePath))
 
+        if (vehicle.SavedInDeclarationMode) then
+            Dim declVehicle as IVehicleDeclarationInputData = vehicle
+            cbPcc.SelectedValue = declVehicle.ADAS.PredictiveCruiseControl
+            cbEcoRoll.SelectedValue = declvehicle.ADAS.EcoRoll
+            cbEngineStopStart.Checked = declVehicle.ADAS.EngineStopStart
+            if (declVehicle.TankSystem.HasValue) then
+                cbTankSystem.SelectedValue = declVehicle.TankSystem.Value
+            End If
+        Else 
+            cbPcc.SelectedValue = PredictiveCruiseControlType.None
+            cbEcoRoll.SelectedValue = EcoRollType.None
+            cbEngineStopStart.Checked = False
+        End If
+
 		LvRRC.Items.Clear()
 		Dim i As Integer = 0
 		Dim a0 As IAxleEngineeringInputData
-		For Each a0 In vehicle.Axles
+		For Each a0 In vehicle.Components.AxleWheels.AxlesEngineering
 			i += 1
 			If Cfg.DeclMode Then
 				Dim inertia As Double = DeclarationData.Wheels.Lookup(a0.Tyre.Dimension).Inertia.Value()
@@ -510,6 +539,11 @@ Public Class VehicleForm
 			veh.torqueLimitsList.Add(tl)
 		Next
 
+        veh.EcoRollType = CType(cbEcoRoll.SelectedValue, EcoRollType)
+        veh.PCC = CType(cbPcc.SelectedValue, PredictiveCruiseControlType)
+        veh.EngineStop = cbEngineStopStart.Checked
+
+        veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, nothing), TankSystem?)
 
 		'---------------------------------------------------------------------------------
 		If Not veh.SaveFile Then
@@ -921,6 +955,14 @@ Public Class VehicleForm
 			entry.SubItems(TorqueLimitsTbl.MaxTorque).Text = _torqueLimitDlog.tbMaxTorque.Text
 		End If
 		_torqueLimitDlog.tbGear.ReadOnly = False
+	End Sub
+
+	Private Sub Label18_Click(sender As Object, e As EventArgs) Handles Label18.Click
+
+	End Sub
+
+	Private Sub tbVehIdlingSpeed_TextChanged(sender As Object, e As EventArgs) Handles tbVehIdlingSpeed.TextChanged
+
 	End Sub
 End Class
 

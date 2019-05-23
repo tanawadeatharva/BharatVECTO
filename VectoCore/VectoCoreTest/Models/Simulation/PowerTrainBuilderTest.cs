@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
@@ -54,6 +55,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public const string JobFileDeclNoAngular = @"TestData\Jobs\40t_Long_Haul_Truck_NoAng.vecto";
 		public const string JobFileDeclAngEfficiency = @"TestData\Jobs\40t_Long_Haul_Truck with AngleEfficiency.vecto";
 
+
+		
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
+
+		[Category("LongRunning")]
 		[TestCase(JobFile, 12),
 		TestCase(JobFileNoAngular, 11),
 		TestCase(JobFileAngEfficiency, 12)]

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -71,9 +71,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case 3:
 					return new JSONInputDataV3(json, filename, tolerateMissing);
 				case 4:
-                    if (json["Body"]["DeclarationVehicle"] != null) {
-                        return new JSONVTPInputDataV4(json, filename, tolerateMissing);
-                    }
+					if (json["Body"]["DeclarationVehicle"] != null) {
+						return new JSONVTPInputDataV4(json, filename, tolerateMissing);
+					}
 					return new JSONInputDataV4(json, filename, tolerateMissing);
 				default:
 					throw new VectoException("Job-File: Unsupported FileVersion. Got: {0} ", version);
@@ -87,6 +87,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (version) {
 				case 7:
 					return new JSONVehicleDataV7(json, filename, job,tolerateMissing);
+				case 8:
+					return new JSONVehicleDataV8(json, filename, job, tolerateMissing);
 				default:
 					throw new VectoException("Vehicle-File: Unsupported FileVersion. Got {0}", version);
 			}

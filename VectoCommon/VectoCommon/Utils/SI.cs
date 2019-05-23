@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -640,6 +640,11 @@ namespace TUGraz.VectoCommon.Utils
 		public static PerSquareSecond operator /(PerSecond perSecond, Second second)
 		{
 			return SIBase<PerSquareSecond>.Create(perSecond.Val / second.Value());
+		}
+
+		public static MeterPerSecond operator *(PerSecond perSecond, Meter meter)
+		{
+			return SIBase<MeterPerSecond>.Create(perSecond.Val * meter.Value());
 		}
 
 		public double AsRPM
@@ -1667,6 +1672,7 @@ namespace TUGraz.VectoCommon.Utils
 			}
 		}
 
+		[DebuggerStepThrough]
 		public int CompareTo(object obj)
 		{
 			var si = obj as SI;

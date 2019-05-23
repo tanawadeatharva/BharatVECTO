@@ -28,7 +28,8 @@ Imports TUGraz.VectoCore.Utils
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
-				IAngledriveInputData, IAirdragEngineeringInputData
+				IAngledriveInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData,
+				IVehicleComponentsEngineering, IVehicleComponentsDeclaration, IAxlesEngineeringInputData, IAxlesDeclarationInputData
 
 	Private _filePath As String
 	Private _path As String
@@ -67,6 +68,11 @@ Public Class Vehicle
 	Public legClass As LegislativeClass
 	Public VehicleHeight As Double
 
+    public EcoRolltype as EcoRollType
+    public PCC as PredictiveCruiseControlType
+    public EngineStop as Boolean
+
+    public VehicleTankSystem as TankSystem?
 
 	Public Sub New()
 		_path = ""
@@ -104,19 +110,19 @@ Public Class Vehicle
 			If mode = ExecutionMode.Declaration Then
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
 				Dim segment As Segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
-																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis)
+																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, false)
 				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
-													segment.Missions.First().Loadings.First().Value, segment.MunicipalBodyWeight)
+													segment.Missions.First().Loadings.First().Value)
 				airdragData = doa.CreateAirdragData(vehicle, segment.Missions.First(), segment)
 				retarderData = doa.CreateRetarderData(vehicle)
-				angledriveData = doa.CreateAngledriveData(vehicle, False)
+				angledriveData = doa.CreateAngledriveData(vehicle)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				vehicleData = doa.CreateVehicleData(vehicle)
 				airdragData = doa.CreateAirdragData(vehicle, vehicle)
 				retarderData = doa.CreateRetarderData(vehicle)
-				angledriveData = doa.CreateAngledriveData(vehicle, True)
+				angledriveData = doa.CreateAngledriveData(vehicle)
 				ptoData = doa.CreatePTOTransmissionData(vehicle)
 			End If
 
@@ -248,15 +254,12 @@ Public Class Vehicle
 
 #Region "IInputData"
 
-	Public ReadOnly Property SourceType As DataSourceType Implements IComponentInputData.SourceType
+	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
 		Get
-			Return DataSourceType.JSONFile
-		End Get
-	End Property
-
-	Public ReadOnly Property Source As String Implements IComponentInputData.Source
-		Get
-			Return FilePath
+			Dim retVal As DataSource =  New DataSource() 
+			retVal.SourceType = DataSourceType.JSONFile
+			retVal.SourceFile = FilePath
+			Return retVal
 		End Get
 	End Property
 
@@ -269,14 +272,14 @@ Public Class Vehicle
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
 	Public ReadOnly Property Model As String Implements IComponentInputData.Model
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
@@ -296,7 +299,7 @@ Public Class Vehicle
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
@@ -320,9 +323,21 @@ Public Class Vehicle
 		End Get
 	End Property
 
+    Public ReadOnly Property Identifier As String Implements IVehicleDeclarationInputData.Identifier
+    get
+            Return ""
+    End Get
+    End Property
+
+    Public ReadOnly Property ExemptedVehicle As Boolean Implements IVehicleDeclarationInputData.ExemptedVehicle
+	get
+			Return false
+	End Get
+	End Property
+
 	Public ReadOnly Property VIN As String Implements IVehicleDeclarationInputData.VIN
 		Get
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
@@ -341,7 +356,7 @@ Public Class Vehicle
 	Public ReadOnly Property GrossVehicleMassRating As Kilogram _
 		Implements IVehicleDeclarationInputData.GrossVehicleMassRating
 		Get
-            		Return MassMax.SI(Unit.SI.Ton).Cast(Of Kilogram)()
+					Return MassMax.SI(Unit.SI.Ton).Cast(Of Kilogram)()
 		End Get
 	End Property
 
@@ -354,7 +369,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property ManufacturerAddress As String Implements IVehicleDeclarationInputData.ManufacturerAddress
 		Get
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
@@ -371,14 +386,14 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Axles As IList(Of IAxleEngineeringInputData) _
-		Implements IVehicleEngineeringInputData.Axles
+		Implements IAxlesEngineeringInputData.AxlesEngineering
 		Get
 			Return Axles.Cast(Of IAxleEngineeringInputData)().ToList()
 		End Get
 	End Property
 
 	Public ReadOnly Property IVehicleDeclarationInputData_Axles As IList(Of IAxleDeclarationInputData) _
-		Implements IVehicleDeclarationInputData.Axles
+		Implements IAxlesDeclarationInputData.AxlesDeclaration
 		Get
 			Return Axles.Cast(Of IAxleDeclarationInputData)().ToList()
 		End Get
@@ -395,6 +410,12 @@ Public Class Vehicle
 		Get
 			Return VehicleHeight.SI(Of Meter)()
 		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
+    get
+            Return me
+    End Get
 	End Property
 
 	Public ReadOnly Property CrosswindCorrectionMap As TableData _
@@ -414,7 +435,7 @@ Public Class Vehicle
 	Public ReadOnly Property IVehicleEngineeringInputData_DynamicTyreRadius As Meter _
 		Implements IVehicleEngineeringInputData.DynamicTyreRadius
 		Get
-           		Return DynamicTyreRadius.SI(Unit.SI.Milli.Meter).Cast(Of Meter)()
+				Return DynamicTyreRadius.SI(Unit.SI.Milli.Meter).Cast(Of Meter)()
 		End Get
 	End Property
 
@@ -499,21 +520,21 @@ Public Class Vehicle
 
 
 	Public ReadOnly Property IDeclarationInputDataProvider_AirdragInputData As IAirdragDeclarationInputData _
-		Implements IVehicleDeclarationInputData.AirdragInputData
+		Implements IVehicleComponentsDeclaration.AirdragInputData
 		Get
 			Return AirdragInputData
 		End Get
 	End Property
 
 	Public ReadOnly Property AirdragInputData As IAirdragEngineeringInputData _
-		Implements IVehicleEngineeringInputData.AirdragInputData
+		Implements IVehicleComponentsEngineering.AirdragInputData
 		Get
 			Return Me
 		End Get
 	End Property
 
 	Public ReadOnly Property IDeclarationInputDataProvider_GearboxInputData As IGearboxDeclarationInputData _
-		Implements IVehicleDeclarationInputData.GearboxInputData
+		Implements IVehicleComponentsDeclaration.GearboxInputData
 		Get
 			Return Nothing
 			'If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
@@ -522,7 +543,7 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property GearboxInputData As IGearboxEngineeringInputData _
-		Implements IVehicleEngineeringInputData.GearboxInputData
+		Implements IVehicleComponentsEngineering.GearboxInputData
 		Get
 			Return Nothing
 			'If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
@@ -531,7 +552,7 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property IDeclarationInputDataProvider_TorqueConverterInputData As ITorqueConverterDeclarationInputData _
-		Implements IVehicleDeclarationInputData.TorqueConverterInputData
+		Implements IVehicleComponentsDeclaration.TorqueConverterInputData
 		Get
 			Return Nothing
 			'If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
@@ -540,7 +561,7 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property TorqueConverterInputData As ITorqueConverterEngineeringInputData _
-		Implements IVehicleEngineeringInputData.TorqueConverterInputData
+		Implements IVehicleComponentsEngineering.TorqueConverterInputData
 		Get
 			Return Nothing
 			'If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
@@ -549,7 +570,7 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property IDeclarationInputDataProvider_AxleGearInputData As IAxleGearInputData _
-		Implements IVehicleDeclarationInputData.AxleGearInputData
+		Implements IVehicleComponentsDeclaration.AxleGearInputData
 		Get
 			Return Nothing
 			'If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
@@ -558,7 +579,7 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property AxleGearInputData As IAxleGearInputData _
-		Implements IVehicleEngineeringInputData.AxleGearInputData
+		Implements IVehicleComponentsEngineering.AxleGearInputData
 		Get
 			Return Nothing
 			'If Not File.Exists(_gearboxFile.FullPath) Then Return Nothing
@@ -567,21 +588,21 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property DeclarationInputDataProviderAngledriveInputData As IAngledriveInputData _
-		Implements IVehicleDeclarationInputData.AngledriveInputData
+		Implements IVehicleComponentsDeclaration.AngledriveInputData
 		Get
 			Return Me
 		End Get
 	End Property
 
 	Public ReadOnly Property AngledriveInputData As IAngledriveInputData _
-		Implements IVehicleEngineeringInputData.AngledriveInputData
+		Implements IVehicleComponentsEngineering.AngledriveInputData
 		Get
 			Return Me
 		End Get
 	End Property
 
 	Public ReadOnly Property IDeclarationInputDataProvider_EngineInputData As IEngineDeclarationInputData _
-		Implements IVehicleDeclarationInputData.EngineInputData
+		Implements IVehicleComponentsDeclaration.EngineInputData
 		Get
 			Return Nothing
 			'If Not File.Exists(_engineFile.FullPath) Then Return Nothing
@@ -590,7 +611,7 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property EngineInputData As IEngineEngineeringInputData _
-		Implements IVehicleEngineeringInputData.EngineInputData
+		Implements IVehicleComponentsEngineering.EngineInputData
 		Get
 			Return Nothing
 			'If Not File.Exists(_engineFile.FullPath) Then Return Nothing
@@ -598,27 +619,28 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public Function AuxiliaryInputData() As IAuxiliariesEngineeringInputData _
-		Implements IVehicleEngineeringInputData.AuxiliaryInputData
+    Public ReadOnly Property IVehicleComponentsDeclaration_AuxiliaryInputData As IAuxiliariesDeclarationInputData Implements IVehicleComponentsDeclaration.AuxiliaryInputData
+    get
+            return nothing
+    End Get
+    End Property
 
-		Return Nothing
-	End Function
+    Public ReadOnly Property AuxiliaryInputData As IAuxiliariesEngineeringInputData Implements IVehicleComponentsEngineering.AuxiliaryInputData
+	get
+			Return Nothing
+	End Get
+	End Property
 
-	Public Function IDeclarationInputDataProvider_AuxiliaryInputData() As IAuxiliariesDeclarationInputData _
-		Implements IVehicleDeclarationInputData.AuxiliaryInputData
-
-		Return Nothing
-	End Function
 
 	Public ReadOnly Property IDeclarationInputDataProvider_RetarderInputData As IRetarderInputData _
-		Implements IVehicleDeclarationInputData.RetarderInputData
+		Implements IVehicleComponentsDeclaration.RetarderInputData
 		Get
 			Return Me
 		End Get
 	End Property
 
 	Public ReadOnly Property RetarderInputData As IRetarderInputData _
-		Implements IVehicleEngineeringInputData.RetarderInputData
+		Implements IVehicleComponentsEngineering.RetarderInputData
 		Get
 			Return Me
 		End Get
@@ -633,16 +655,120 @@ Public Class Vehicle
 	'End Property
 
 	Public ReadOnly Property IDeclarationInputDataProvider_PTOTransmissionInputData As IPTOTransmissionInputData _
-		Implements IVehicleDeclarationInputData.PTOTransmissionInputData
+		Implements IVehicleComponentsDeclaration.PTOTransmissionInputData
 		Get
 			Return Me
 		End Get
 	End Property
 
 	Public ReadOnly Property PTOTransmissionInputData As IPTOTransmissionInputData _
-		Implements IVehicleEngineeringInputData.PTOTransmissionInputData
+		Implements IVehicleComponentsEngineering.PTOTransmissionInputData
 		Get
 			Return Me
 		End Get
+	End Property
+
+	Public ReadOnly Property IVehicleComponentsDeclaration_AxleWheels As IAxlesDeclarationInputData Implements IVehicleComponentsDeclaration.AxleWheels
+	get
+			Return Me
+	End Get
+	End Property
+
+	Public ReadOnly Property AxleWheels As IAxlesEngineeringInputData Implements IVehicleComponentsEngineering.AxleWheels
+	get
+			Return me
+	End Get
+	End Property
+
+	Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
+	get
+			Return DeclarationData.Vehicle.VocationalVehicleDefault
+	End Get
+	End Property
+
+	Public ReadOnly Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
+	get
+			Return DeclarationData.Vehicle.SleeperCabDefault
+	End Get
+	End Property
+
+	Public ReadOnly Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
+	get
+			Return vehicleTankSystem
+	End Get
+	End Property
+
+	Public ReadOnly Property IVehicleEngineeringInputData_ADAS As IAdvancedDriverAssistantSystemsEngineering Implements IVehicleEngineeringInputData.ADAS
+	get
+			Return Nothing
+	End Get
+	End Property
+
+	Public ReadOnly Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
+	get
+			return Me
+	End Get
+	End Property
+
+	Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
+	get
+			Return DeclarationData.Vehicle.ZeroEmissionVehicleDefault
+	End Get
+	End Property
+
+	Public ReadOnly Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
+	get
+			return DeclarationData.Vehicle.HybridElectricHDVDefault
+	End Get
+	End Property
+
+	Public ReadOnly Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
+	get
+			return DeclarationData.Vehicle.DualFuelVehicleDefault
+	End Get
+	End Property
+
+	Public ReadOnly Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
+	get
+			Return Nothing
+	End Get
+	End Property
+
+	Public ReadOnly Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
+	get
+			Return Nothing
+	End Get
+	End Property
+
+	Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
+	get
+			Return Me
+	End Get
+	End Property
+
+	Public ReadOnly Property EngineStopStart As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EngineStopStart
+	get
+			return EngineStop
+	End Get
+	End Property
+
+	Public ReadOnly Property EcoRoll As EcoRollType Implements IAdvancedDriverAssistantSystemDeclarationInputData.EcoRoll
+	get
+			return EcoRolltype
+	End Get
+	End Property
+
+	
+	Public ReadOnly Property PredictiveCruiseControl As PredictiveCruiseControlType Implements IAdvancedDriverAssistantSystemDeclarationInputData.PredictiveCruiseControl
+	get
+			Return PCC
+	End Get
+	End Property
+
+
+	Public ReadOnly Property IAxlesEngineeringInputData_DataSource As DataSource Implements IAxlesEngineeringInputData.DataSource
+	get
+		Return New DataSource() With {.SourceType = DataSourceType.JSONFile}
+	End Get
 	End Property
 End Class

@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -66,13 +66,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Data = cycle;
 			CycleIterator = new DrivingCycleEnumerator(Data);
 
-			AbsTime = 0.SI<Second>();
+			AbsTime = -1.SI<Second>();
 		}
 
 		public virtual IResponse Initialize()
 		{
 			var first = Data.Entries[0];
-			AbsTime = first.Time;
+			if (AbsTime < 0) {
+				AbsTime = first.Time;
+				CycleIterator.MoveNext();
+			}
 			var response = NextComponent.Initialize(first.Torque, first.AngularVelocity);
 			response.AbsTime = AbsTime;
 			return response;
@@ -202,6 +205,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			get { return 0.SI<Meter>(); }
 		}
+
+		public Radian RoadGradient { get { return 0.SI<Radian>(); } }
 
 		public Meter CycleStartDistance
 		{

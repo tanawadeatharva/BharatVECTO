@@ -1,6 +1,153 @@
 #Changelog
 
+**VECTO 3.3.2**
+
+**Build 1548 (2019-03-29) OFFICIAL RELEASE**
+
+
+ - Bugfixes
+    * [VECTO-861] - 3.3.1: Torque converter not working correctly
+    * [VECTO-904] - Range for gear loss map not sufficient.
+    * [VECTO-909] - 3.3.2.1519: Problems running more than one input .xml
+    * [VECTO-917] - TargetVelocity (0.0000) and VehicleVelocity (>0) must be zero when vehicle is halting
+    * [VECTO-918] - RegionalDeliveryEMS LowLoading - ResponseSpeedLimitExceeded
+    * [VECTO-920] - Urban Delivery: Simulation Run Aborted, TargetVelocity and VehicleVelocity must be zero when vehicle is halting!
+
+
+**Build 1519 (2019-03-01) RELEASE CANDIDATE**
+
+
+Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC
+
+
+ - Improvement
+    * [VECTO-869] - change new vehicle input fields (ADAS, sleeper cab, etc.) to be mandatory
+    * [VECTO-784] - Configuration file for VECTO log files
+    * [VECTO-865] - Extend Sum-Data
+    * [VECTO-873] - Add digest value to SumData
+
+
+ - Bugfixes
+    * [VECTO-729] - Bugs APT submodel
+    * [VECTO-787] - APT: DrivingAction Accelerate after Overload
+    * [VECTO-789] - APT: ResponseUnderload
+    * [VECTO-797] - VECTO abort with AT transmission and TC table value
+    * [VECTO-798] - VECTO abort with certified AT transmission data and certified TC data
+    * [VECTO-807] - VECTO errors in vehicle class 1/2/3
+    * [VECTO-827] - Torque converter inertia 
+    * [VECTO-838] - APT: ResponseOverload
+    * [VECTO-843] - AT Transmissions problem on VECTO 3.3.1.1463
+    * [VECTO-844] - Error with AT gearbox model
+    * [VECTO-847] - Simulation abort due to error in NLog?
+    * [VECTO-848] - AT Gearbox Simulation abort (was: Problem related to Tyres?)
+    * [VECTO-858] - Urban Delivery Abort - with APT-S Transmission and TC
+    * [VECTO-861] - 3.3.1: Torque converter not working correctly
+    * [VECTO-872] - MRF/CIF: Torque Converter certification method and certification number not correctly set
+    * [VECTO-879] - SIMULATION RUN ABORTED DistanceRun got an unexpected response
+    * [VECTO-883] - Traction interruption may be too long
+    * [VECTO-815] - Unexpected Response: SpeedLimitExceeded
+    * [VECTO-816] - object reference not set to an instance of an object
+    * [VECTO-817] - TargetVelocity and VehicleVelocity must not be 0
+    * [VECTO-820] - DistanceRun got an unexpected response: ResponseSpeedLimitExceeded
+    * [VECTO-864] - Prevent VECTO loss-map extension to result in negative torque loss
+
+
+**VECTO 3.3.1**
+
+***Build 1492 (2019-02-01) OFFICIAL RELEASE***
+
+ - Bugfixes (compared to 3.3.1.1463)
+    * [VECTO-845] - Fixing bug for VECTO-840
+    * [VECTO-826] - DistanceRun got an unexpected response: ResponseSpeedLimitExceeded
+    * [VECTO-837] - VECTO GUI displays incorrect cycles prior to simulation
+    * [VECTO-831] - Addition of indication to be added in Help and Release notes for simulations with LNG
+ 
+
+***Build 1463 (2019-01-03) RELEASE CANDIDATE***
+
+ - Changes according to 2017/2400 amendments
+    * [VECTO-761] - Adaptation of input XML Schema
+    * [VECTO-762] - Extension of Input Interfaces
+    * [VECTO-763] - Extension of Segmentation Table
+    * [VECTO-764] - ADAS benefits
+    * [VECTO-766] - Update Powerdemand Auxiliaires
+    * [VECTO-767] - Report for exempted vehicles
+    * [VECTO-768] - VTP mode
+    * [VECTO-770] - Fuel Types
+    * [VECTO-771] - Handling of exempted vehicles
+    * [VECTO-824] - Throw exception for certain combinations of exempted vehicle parameters
+    * [VECTO-773] - Correction Factor for Reference Fuel
+    * [VECTO-790] - Adapt generic data for construction/municipal utility
+    * [VECTO-493] - Implementation of generic body weights and air drag values for construction cycle
+    * [VECTO-565] - Consideration of LNG as possible fuel is missing
+
+ - Changes/Improvements
+    * [VECTO-799] - Remove TUG Logos from Simulation Tool, Hashing Tool
+    * [VECTO-808] - Add Moitoring Report
+    * [VECTO-754] - Extending Loss-Maps in case of AT gearbox for each gear, axlegear, gearbox 
+    * [VECTO-757] - Correct contact mail address in Hashing Tool
+    * [VECTO-779] - Update Construction Cycle - shorter stop times
+    * [VECTO-783] - Rename columns in segmentation table and GUI
+    * [VECTO-709] - VTP editor from user manual not matching new VECTO one: updated documentation
+    * [VECTO-785] - Handling of Vehicles that cannot reach the cycle's target speed: Limit max speed in driver model
+    * [VECTO-716] - Validate data in Settings Tab: update documentation
+    * [VECTO-793] - Inconsistency between GUI, Help and Regulation: update wording in GUI and user manual
+    * [VECTO-796] - Adaptation of FuelProperties
+    * [VECTO-806] - extend loss-maps (gbx, axl, angl) for MT and AMT transmissions
+    * [VECTO-750] - Simulation error DrivingAction: adapt downshift rules for AT to drive over hill with 6% inclination
+
+ - Bugfixes
+    * [VECTO-819] - object reference not set to an instance of an object
+    * [VECTO-818] - SearchOperatingPoint: Unknown response type. ResponseOverload
+    * [VECTO-813] - Error "Infinity [] is not allowed for SI-Value"
+    * [VECTO-769] - DrivingAction Brake: request failed after braking power was found.ResponseEngineSpeedTooHigh
+    * [VECTO-804] - Error on simulation with VECTO 3.3.0.1433
+    * [VECTO-805] - Total vehicle mass exceeds TPMLM
+    * [VECTO-811] - AMT: ResponseGearShift
+    * [VECTO-812] - AMT: ResponseOverload
+    * [VECTO-822] - SIMULATION RUN ABORTED by Infinity
+    * [VECTO-792] - Vecto Hashing Tool - error object reference not set to an instance of an object (overwriting Date element)
+    * [VECTO-696] - Problem with Primary Retarder: regression update, set torque loss to 0 for 0 speed and engaged gear
+    * [VECTO-776] - Decision Factor (DF)  field is emptied after each simulation
+    * [VECTO-814] - Error: DistanceRun got an unexpected response: ResponseGearshift
+
+
 **VECTO 3.3.0**
+
+***Build 1433 (2018-12-03) OFFICIAL RELEASE***
+
+- Bugfixes (compared to 3.3.0.1250)
+    * [VECTO-723] - Simulation aborts with engine speed too high in RD cycle
+    * [VECTO-724] - Simulation aborts with error 'EngineSpeedTooHigh' - duplicate of VECTO-744
+    * [VECTO-728] - Simulation aborts when vehicle's max speed (n95h) is below the target speed
+    * [VECTO-730] - Simulation Aborts with ResponseOverload
+    * [VECTO-744] - ResponseEngineSpeedTooHigh (due to torque limits in gearbox)
+    * [VECTO-731] - Case Mismatch - Torque Converter
+    * [VECTO-711] - Elements without types in CIF and MRF
+    * [VECTO-757] - Correct contact mail address in Hashing Tool
+    * [VECTO-703] - PTO output in MRF file
+    * [VECTO-713] - Manufacturer Information File in the legislation is not compatible with the Simulation results
+    * [VECTO-704] - Allow VTP-simulations for AT gearboxes
+- Changes (compared to 3.3.0.1398)
+    * [VECTO-795] - VECTO Hashing Tool crashes
+    * [VECTO-802] - Error in XML schema for manufacturer's record file
+
+
+***Build 1398 (2018-10-30) RELEASE CANDIDATE***
+
+- Bugfixes (since 3.3.0.1250)
+    * [VECTO-723] - Simulation aborts with engine speed too high in RD cycle
+    * [VECTO-724] - Simulation aborts with error 'EngineSpeedTooHigh' - duplicate of VECTO-744
+    * [VECTO-728] - Simulation aborts when vehicle's max speed (n95h) is below the target speed
+    * [VECTO-730] - Simulation Aborts with ResponseOverload
+    * [VECTO-744] - ResponseEngineSpeedTooHigh (due to torque limits in gearbox)
+    * [VECTO-731] - Case Mismatch - Torque Converter
+    * [VECTO-711] - Elements without types in CIF and MRF
+    * [VECTO-757] - Correct contact mail address in Hashing Tool
+    * [VECTO-703] - PTO output in MRF file
+    * [VECTO-713] - Manufacturer Information File in the legislation is not compatible with the Simulation results
+    * [VECTO-704] - Allow VTP-simulations for AT gearboxes
+
 
 ***Build 1250 (2018-06-04)***
 

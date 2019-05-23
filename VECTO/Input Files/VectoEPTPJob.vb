@@ -4,13 +4,16 @@ Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
 Imports System.Xml
+Imports Ninject
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.Hashing
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.Impl
 Imports TUGraz.VectoCore.Models.Declaration
@@ -32,11 +35,15 @@ Public Class VectoVTPJob
     Public FanCoefficients As Double()
     Private _fanDiameter As Meter
 
+    Private _xmlInputReader As IXMLInputDataReader
 
     Public Sub New()
         CycleFiles = New List(Of SubPath)
         _vehicleFile = New SubPath
         _manufacturerRecord = New SubPath()
+
+        Dim kernel as IKernel = New StandardKernel(new VectoNinjectModule)
+        _xmlInputReader = kernel.Get(Of IXMLInputDataReader)
     End Sub
 
     Public Property FilePath As String
@@ -109,13 +116,14 @@ Public Class VectoVTPJob
     Private Shared Function ValidateVehicleJob(vectoJob As VectoVTPJob, mode As ExecutionMode) As ValidationResult
 
         ' TODO!!
+        Return ValidationResult.Success
     End Function
 
     Public ReadOnly Property Vehicle As IVehicleDeclarationInputData Implements IVTPEngineeringJobInputData.Vehicle
         Get
             If Not File.Exists(_vehicleFile.FullPath) Then Return Nothing
             'Return New JSONComponentInputData(_vehicleFile.FullPath).JobInputData.Vehicle
-            Return New XMLDeclarationInputDataProvider(_vehicleFile.FullPath, True).JobInputData.Vehicle
+            Return _xmlInputReader.CreateDeclaration(_vehicleFile.FullPath).JobInputData.Vehicle
         End Get
     End Property
 
@@ -130,9 +138,6 @@ Public Class VectoVTPJob
     Public ReadOnly Property VectoManufacturerReportHash As IVectoHash Implements IVTPDeclarationJobInputData.VectoManufacturerReportHash
     Public Property Mileage As Meter Implements IVTPDeclarationJobInputData.Mileage
    
-    Public Property NetCalorificValueTestFuel As JoulePerKilogramm Implements IVTPDeclarationJobInputData.NetCalorificValueTestFuel
-
-
     Public ReadOnly Property Cycles As IList(Of ICycleData) Implements IVTPEngineeringJobInputData.Cycles
         Get
             Dim retVal As ICycleData() = New ICycleData(CycleFiles.Count - 1) {}
@@ -221,4 +226,13 @@ Public Class VectoVTPJob
 
     Public ReadOnly Property ComponentDigests As IDictionary(Of VectoComponents,IList(Of String)) Implements IManufacturerReport.ComponentDigests
     Public ReadOnly Property JobDigest As DigestData Implements IManufacturerReport.JobDigest
+
+    Public ReadOnly Property DataSource As DataSource Implements IInputDataProvider.DataSource
+        Get
+            Dim retVal As DataSource =  New DataSource() 
+            retVal.SourceType = DataSourceType.JSONFile
+            retVal.SourceFile = FilePath
+            Return retVal
+        End Get
+    End Property
 End Class

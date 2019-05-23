@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -31,13 +31,17 @@
 
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.XPath;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -45,6 +49,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Tests.XML;
 using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 
 namespace TUGraz.VectoCore.Tests.Integration
@@ -52,17 +57,23 @@ namespace TUGraz.VectoCore.Tests.Integration
 	[TestFixture]
 	public class XMLReportTest
 	{
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 		[TestCase]
 		public void TestXMLReportMetaInformation()
 		{
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
-			var dataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(jobfile), true);
+			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
 			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
@@ -90,10 +101,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsFalse(XmlConvert.ToBoolean(manufacturerReport.XPathSelectElement("//*[local-name()='PTO']").Value));
 
 			var reportWheels = manufacturerReport.XPathSelectElements("//*[local-name()='TyreCertificationNumber']").ToList();
-			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Axles.Count, reportWheels.Count);
+			Assert.AreEqual(dataProvider.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration.Count, reportWheels.Count);
 
 			var i = 0;
-			foreach (var axleDeclarationInputData in dataProvider.JobInputData.Vehicle.Axles) {
+			foreach (var axleDeclarationInputData in dataProvider.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration) {
 				Assert.AreEqual(axleDeclarationInputData.Tyre.CertificationNumber, reportWheels[i++].Value);
 			}
 
@@ -105,6 +116,51 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 		}
 
+		[TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml"),
+		 TestCase(@"TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml")]
+		public void TestValidationXMLReports(string jobfile)
+		{
+			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
+			var writer = new FileOutputWriter(jobfile);
+			var xmlReport = new XMLDeclarationReport(writer);
+			var sumData = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumData);
+
+			if (File.Exists(writer.SumFileName)) {
+				File.Delete(writer.SumFileName);
+			}
+
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
+				WriteModalResults = false,
+				Validate = false,
+			};
+			jobContainer.AddRuns(runsFactory);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			var mrfValidator = GetValidator(xmlReport.FullReport);
+			mrfValidator.ValidateXML(XmlDocumentType.ManufacturerReport);
+
+			var cifValidator = GetValidator(xmlReport.CustomerReport);
+			cifValidator.ValidateXML(XmlDocumentType.CustomerReport);
+
+			var monitoringValidator = GetValidator(xmlReport.MonitoringReport);
+			monitoringValidator.ValidateXML(XmlDocumentType.MonitoringReport);
+		}
+
+		private static XMLValidator GetValidator(XDocument xmlReport)
+		{
+			var mrfStream = new MemoryStream();
+			var mrfWriter = new XmlTextWriter(mrfStream, Encoding.UTF8);
+			xmlReport.WriteTo(mrfWriter);
+			mrfWriter.Flush();
+			mrfStream.Flush();
+			mrfStream.Seek(0, SeekOrigin.Begin);
+			return new XMLValidator(new XmlTextReader(mrfStream));
+		}
+
+		[Category("LongRunning")]
 		[TestCase()]
 		public void TestXMLReportPTO()
 		{
@@ -159,8 +215,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 					var sumData = new SummaryDataContainer(writer);
 					var jobContainer = new JobContainer(sumData);
 
-					var dataProvider = new XMLDeclarationInputDataProvider(modified, true);
-
+					var dataProvider = xmlInputReader.CreateDeclaration(modified);
+					
 					var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
 						WriteModalResults = false,
 						Validate = false,

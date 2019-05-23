@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -85,9 +85,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			protected override void ParseData(DataTable table)
 			{
 				foreach (DataRow row in table.Rows) {
-					var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass"));
+					var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvgroup"));
 					foreach (DataColumn col in table.Columns) {
-						if (col.Caption == "hdvclass" || string.IsNullOrWhiteSpace(row.Field<string>(col.Caption))) {
+						if (col.Caption == "hdvgroup" || string.IsNullOrWhiteSpace(row.Field<string>(col.Caption))) {
 							continue;
 						}
 						var values = row.Field<string>(col.Caption).Split('/')

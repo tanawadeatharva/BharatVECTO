@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container[ModalResultField.Tq_drag] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.FCMap] = 0.SI<KilogramPerSecond>();
-			container[ModalResultField.FCAUXc] = 0.SI<KilogramPerSecond>();
+			container[ModalResultField.FCNCVc] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCWHTCc] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCAAUX] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCFinal] = 0.SI<KilogramPerSecond>();

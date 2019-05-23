@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			foreach (var cycle in InputDataProvider.JobInputData.Cycles) {
 				var simulationRunData = new VectoRunData {
 					JobName = InputDataProvider.JobInputData.JobName,
-					EngineData = dao.CreateEngineData(InputDataProvider.JobInputData.EngineOnly, null, new List<ITorqueLimitInputData>()),
+					EngineData = dao.CreateEngineData(InputDataProvider.JobInputData.EngineOnly, null, new List<ITorqueLimitInputData>(), null, null),
 					Cycle = new DrivingCycleProxy(
 						DrivingCycleDataReader.ReadFromDataTable(cycle.CycleData, cycle.Name, false), cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering,

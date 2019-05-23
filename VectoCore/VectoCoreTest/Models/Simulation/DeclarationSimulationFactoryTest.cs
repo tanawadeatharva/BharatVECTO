@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -32,10 +32,12 @@
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
@@ -47,10 +49,16 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 		[TestCase("None", RetarderType.None),
@@ -77,19 +85,19 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
-			var inputDataProvider = new XMLDeclarationInputDataProvider(modified, true);
-
+			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
+			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null) { Validate = false };
 
 			var runs = factory.SimulationRuns().ToArray();
-			Assert.AreEqual(8, runs.Length);
+			Assert.AreEqual(10, runs.Length);
 		}
 
 		[TestCase()]
 		public void TestEngineCorrectionFactor()
 		{
-			var inputDataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(SampleVehicleDecl), true);
-
+			var inputDataProvider = xmlInputReader.CreateDeclaration(SampleVehicleDecl);
+			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null) { Validate = false };
 
 			var runs = factory.SimulationRuns().ToArray();

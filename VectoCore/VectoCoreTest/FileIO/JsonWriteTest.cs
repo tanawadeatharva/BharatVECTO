@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var writer = JSONFileWriter.Instance;
 
 			VECTO_Global.Cfg = new VECTO.Configuration() {DeclMode = true};
-			writer.SaveVehicle(vehicleInput, vehicleInput.AirdragInputData, vehicleInput.RetarderInputData, vehicleInput.PTOTransmissionInputData, vehicleInput.AngledriveInputData, outFile);
+			writer.SaveVehicle(vehicleInput, vehicleInput.Components.AirdragInputData, vehicleInput.Components.RetarderInputData, vehicleInput.Components.PTOTransmissionInputData, vehicleInput.Components.AngledriveInputData, outFile);
 
 			var savedData = JSONInputDataFactory.ReadComponentData(outFile);
 			var savedInprovider = savedData as IEngineeringInputDataProvider;
@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			//Assert.AreEqual(vehicleInput, savedInprovider.JobInputData.Vehicle);
 
 			AssertHelper.PublicPropertiesEqual(typeof(IVehicleDeclarationInputData),vehicleInput, savedInprovider.JobInputData.Vehicle, 
-				new [] {"Source", "GearboxInputData", "EngineInputData", "TorqueConverterInputData", "AxleGearInputData"});
+				new [] {"Source", "GearboxInputData", "EngineInputData", "TorqueConverterInputData", "AxleGearInputData", "Identifier" });
 		}
 		
 
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var inputProvider = input as IEngineeringInputDataProvider;
 			Assert.NotNull(inputProvider);
 
-			var engineInputData = inputProvider.JobInputData.Vehicle.EngineInputData;
+			var engineInputData = inputProvider.JobInputData.Vehicle.Components.EngineInputData;
 
 			var writer = JSONFileWriter.Instance;
 
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var savedInprovider = savedData as IEngineeringInputDataProvider;
 			Assert.NotNull(savedInprovider);
 
-			AssertHelper.PublicPropertiesEqual(typeof(IEngineDeclarationInputData),engineInputData, savedInprovider.JobInputData.Vehicle.EngineInputData,
+			AssertHelper.PublicPropertiesEqual(typeof(IEngineDeclarationInputData),engineInputData, savedInprovider.JobInputData.Vehicle.Components.EngineInputData,
 				new[] { "Source" });
 		}
 
@@ -107,20 +107,20 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var inputProvider = input as IEngineeringInputDataProvider;
 			Assert.NotNull(inputProvider);
 
-			var vehicleInputData = inputProvider.JobInputData.Vehicle;
+			var components = inputProvider.JobInputData.Vehicle.Components;
 
 			var writer = JSONFileWriter.Instance;
 
 			VECTO_Global.Cfg = new VECTO.Configuration() { DeclMode = true };
-			writer.SaveGearbox(vehicleInputData.GearboxInputData, vehicleInputData.AxleGearInputData, outFile);
+			writer.SaveGearbox(components.GearboxInputData, components.AxleGearInputData, components.TorqueConverterInputData, (IGearshiftEngineeringInputData)components.GearboxInputData, outFile);
 
 			var savedData = JSONInputDataFactory.ReadComponentData(outFile);
 			var savedInprovider = savedData as IEngineeringInputDataProvider;
 			Assert.NotNull(savedInprovider);
 
-			AssertHelper.PublicPropertiesEqual(typeof(IGearboxDeclarationInputData), vehicleInputData.GearboxInputData, savedInprovider.JobInputData.Vehicle.GearboxInputData,
+			AssertHelper.PublicPropertiesEqual(typeof(IGearboxDeclarationInputData), components.GearboxInputData, savedInprovider.JobInputData.Vehicle.Components.GearboxInputData,
 				new[] { "Source" });
-			AssertHelper.PublicPropertiesEqual(typeof(IAxleDeclarationInputData), vehicleInputData.AxleGearInputData, savedInprovider.JobInputData.Vehicle.AxleGearInputData,
+			AssertHelper.PublicPropertiesEqual(typeof(IAxleDeclarationInputData), components.AxleGearInputData, savedInprovider.JobInputData.Vehicle.Components.AxleGearInputData,
 				new[] { "Source" });
 		}
 

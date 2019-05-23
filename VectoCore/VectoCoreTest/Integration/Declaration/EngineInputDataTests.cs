@@ -1,7 +1,7 @@
 ﻿/*
 * This file is part of VECTO.
 *
-* Copyright © 2012-2017 European Union
+* Copyright © 2012-2019 European Union
 *
 * Developed by Graz University of Technology,
 *              Institute of Internal Combustion Engines and Thermodynamics,
@@ -33,11 +33,13 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -52,16 +54,21 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 	{
 		const string SampleVehicleDecl = "TestData/XML/XMLReaderDeclaration/vecto_vehicle-sample.xml";
 
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase(null, 1.0, 45.5323),
-		TestCase("CFRegPer", 1.2, 45.5323 * 1.2),
-		TestCase("BFColdHot", 1.2, 45.5323 * 1.2),
-		TestCase("CFNCV", 1.2, 45.5323)  // has no influence - only for documentation purpose
+		[TestCase(null, 1.0, 45.542369, TestName = "Engine CF - NONE"),
+		TestCase("CFRegPer", 1.2, 45.542369 * 1.2, TestName = "Engine CF - CFRegPer"),
+		TestCase("BFColdHot", 1.2, 45.542369 * 1.2, TestName = "Engine CF - BFColdHod"),
+		TestCase("CFNCV", 1.2, 45.542369, TestName = "Engine CF - CFNCV")  // has no influence - only for documentation purpose
 			]
 		public void TestEngineCorrectionFactors(string correctionFactor, double value, double expectedFc)
 		{
@@ -85,8 +92,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 				 modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
 			}
-			var inputDataProvider = new XMLDeclarationInputDataProvider(modified, true);
-
+			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
+			
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputDataProvider, null, validate: false);
 			var first = factory.SimulationRuns().First();
 
