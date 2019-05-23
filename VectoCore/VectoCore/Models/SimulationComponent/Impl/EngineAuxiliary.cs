@@ -155,11 +155,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!DataBus.VehicleStopped) {
 				throw new NotImplementedException("EngineOff while Driving not implemented");
 			}
-			var auxiliariesVehicleStopped = new[] {
-				Constants.Auxiliaries.IDs.ElectricSystem, Constants.Auxiliaries.IDs.PneumaticSystem,
-				Constants.Auxiliaries.IDs.HeatingVentilationAirCondition
+
+			var auxiliarieIgnoredDuringVehicleStop = new[] {
+				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan
 			};
-			return Auxiliaries.Where(x => auxiliariesVehicleStopped.Contains(x.Key)).Sum(x => x.Value(0.RPMtoRad()));
+			return Auxiliaries.Where(x => !auxiliarieIgnoredDuringVehicleStop.Contains(x.Key)).Sum(x => x.Value(0.RPMtoRad()));
 		}
 
 		public Watt PowerDemandEngineOn(PerSecond engineSpeed)
