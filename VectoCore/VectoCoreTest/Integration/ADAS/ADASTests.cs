@@ -31,8 +31,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		[TestCase(@"TestData\Integration\ADAS\Group5_EngineStopStart.xml")]
 		public void TestVehicleWithADASEngineStopStart(string filename)
 		{
-			//var container = RunAllDeclarationJob(filename);
-			var container = RunSingleDeclarationJob(filename, 4);
+			var container = RunAllDeclarationJob(filename);
+			//var container = RunSingleDeclarationJob(filename, 4);
 		}
 
 
