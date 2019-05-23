@@ -20,7 +20,48 @@ Parameters in [Job File](#job-file):
 -   **Max. Overspeed \[km/h\]** (relative to target speed)
 
 
-###Advanced Driver Assistant Systems and Eco-Roll
+##Advanced Driver Assistant Systems, Eco-Roll, Engine Stop/Start
 
-Advanced Driver Assistant Systems (ADAS) and Eco-Roll are considred only in Declaration mode. Depending on the vehicle group and mission profiile a benefit is applied to the fuel consumption calculated by VECTO (see [ADAS Technologies](#vehicle-adas-technologies)). The ADAS technology and Eco-Roll option can be selected in the Vehicle editor.
+###Engine Stop/Start
 
+If engine stop/start is enabled in the Vehicle, the engine is turned off during vehicle stops to reduce the fuel consumption. During vehicle stops the energy demand for certain auxiliaires and for starting the engine is accumulated. In a post-processing step the final [fuel consumption is corrected](#engine-stopstart-fuel-consumption-correction) to consider the energy demand for the auxiliaries and engine start.
+
+<div class="declaration">
+In declaration mode, the engine is switched on after a period of 120 seconds of engine-off.
+</div>
+
+**Engine Start-Up Energy Demand**
+
+The energy demand to ramp-up the engine depends on the engine's inertia and the engine's drag torque and is computed according to the following equation:
+
+$E_{ICE,rampUp} = 0.5 * I_{ICE} * n_{idle}^2 + T_{drag}(n_{idle}) * n_{idle} / 2 * t_{ICE,start}$
+
+$E_{ICE,start} = E_{ICE,rampUp} / \eta_{alternator}^2$
+
+
+$E_{ICE,start}$ is the amount of energy the combustion engine needs to provide to compensate the start up is the ramp-up energy multiplied by the efficiency of the alternator.  $t_{ICE,start}$ is assumed to be 1 second and $\eta_{alternator}$ is 0.7.
+
+**Utility Factor**
+
+Engine Stop/Start is usually not activated at every vehicle stop. This is considered in VECTO via a utility factor (e.g. 0.8). This utility factor (f) is applied for every engine stop as follows:
+
+   - the auxiliary demand during engine stops is multiplied by the utility factor
+   - the fuel consumption FC_final during engine stop is the fuel consumption with the engine idling and all auxiliaires on multiplied by  1-f
+   - the energy demand for starting the engine is multiplied by the utility factor
+
+<div class="declaration">
+In declaration mode the utility factor is set to 0.8.
+</div>
+
+<div class="declaration">
+**Auxiliary energy demand**
+
+In Declaration Mode the energy demand of all auxiliaries except the engine cooling fan and the steering pump is considered during vehicle stops.
+
+</div>
+
+<div class="engineering">
+**Auxiliary energy demand**
+
+In Engineering Mode the energy demand of all auxiliaries is assumed to be drawn also during engine stop periods and the fuel consumption is corrected in a post-processing step.
+</div>

@@ -82,6 +82,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly WeightingGroups WeightingGroup = new WeightingGroups();
 		public static readonly WeightingFactors WeightingFactors = new WeightingFactors();
 
+		public const double AlternaterEfficiency = 0.7;
+
 		/// <summary>
 		/// Formula for calculating the payload for a given gross vehicle weight.
 		/// (so called "pc-formula", Whitebook Apr 2016, Part 1, p.187)
