@@ -523,13 +523,14 @@ namespace TUGraz.VectoCore.OutputData
 			var fcEssCorr = fcModSum + correction * workESS;
 
 			row[FCESS_H_CORR] = duration != null ? (fcEssCorr / duration).ConvertToGrammPerHour() : null;
-			row[FCESS_KM_CORR] = distance != null ? (fcEssCorr / distance).ConvertToGrammPerKiloMeter() : null;
 
 			var fcFinal = fcEssCorr;
 
 			row[FCFINAL_H] = (fcFinal / duration).ConvertToGrammPerHour();
 
 			if (distance != null && distance.IsGreater(0)) {
+				row[FCESS_KM_CORR] = (fcEssCorr / distance).ConvertToGrammPerKiloMeter();
+
 				row[FCFINAL_KM] = (fcFinal / distance).ConvertToGrammPerKiloMeter();
 
 				if (modData.FuelData.FuelDensity != null) {
