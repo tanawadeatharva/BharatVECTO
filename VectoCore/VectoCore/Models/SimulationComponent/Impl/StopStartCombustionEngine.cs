@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -25,7 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			var engineDragEnergy = VectoMath.Abs(modelData.FullLoadCurves[0].DragLoadStationaryTorque(modelData.IdleSpeed)) *
 									modelData.IdleSpeed / 2.0 * modelData.EngineStartTime;
 
-			EngineStartEnergy = (engineRampUpEnergy + engineDragEnergy) * EngineStopStartUtilityFactor;
+			EngineStartEnergy = (engineRampUpEnergy + engineDragEnergy) * EngineStopStartUtilityFactor / DeclarationData.AlternaterEfficiency / DeclarationData.AlternaterEfficiency;
 		}
 
 		public override bool IgnitionOn { get; set; }
