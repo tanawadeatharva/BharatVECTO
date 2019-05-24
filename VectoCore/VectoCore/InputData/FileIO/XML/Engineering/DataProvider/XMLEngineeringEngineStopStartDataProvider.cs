@@ -1,0 +1,39 @@
+using System.Xml;
+using System.Xml.Linq;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider {
+	internal class XMLEngineeringEngineStopStartDataProviderV10 : AbstractXMLType, IXMLEngineeringEngineStopStartData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		public const string XSD_TYPE = "EngineStopStartEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+		public XMLEngineeringEngineStopStartDataProviderV10(IXMLEngineeringDriverData driverData, XmlNode node) : base(node) { }
+
+		public virtual Second ActivationDelay
+		{
+			get { return GetDouble("ActivationDelay", DeclarationData.Driver.EngineStopStartActivationDelay.Value()).SI<Second>(); }
+		}
+
+		public virtual Second MaxEngineOffTimespan
+		{
+			get { return GetDouble("MaxEngineStopStartTimespan", DeclarationData.Driver.MaxEngineOffTimespan.Value()).SI<Second>(); }
+		}
+
+		public virtual double UtilityFactor
+		{
+			get {
+				return GetDouble("UtilityFactor", DeclarationData.Driver.EngineStopStartUtilityFactor);
+			}
+		}
+
+		protected XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+
+	}
+}

@@ -445,7 +445,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
 					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
-				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
+				OverSpeed = new DriverData.OverSpeedData {
 					Mode = DriverMode.Off
 				},
 			};

@@ -33,7 +33,7 @@ Imports TUGraz.VectoCore.Utils
 Public Class VectoJob
     Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData,
                 IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData,
-                IAuxiliariesDeclarationInputData, IJSONVehicleComponents
+                IAuxiliariesDeclarationInputData, IJSONVehicleComponents, IEngineStopStartEngineeringInputData, IEcoRollEngineeringInputData
 
     'AA-TB
     'STORES THE Type and version of the chosen or default Auxiliary Type ( Classic/Original or other )
@@ -72,13 +72,13 @@ Public Class VectoJob
     Public EcoRollOn As Boolean
 
     Public LookAheadMinSpeed As Double
-    Public EngineStopStartThreshold As Double
+    Public EngineStopStartActivationThreshold As Double
     public EngineOffTimeLimit As double
     public EngineStStUtilityFactor As Double
 
-    Public Property StartStopMaxSpeed As Double
-
-    Public Property StartStopTime As Double
+    Public EcoRollMinSpeed As double
+    Public EcoRollUnderspeedThreshold As Double
+    Public EcoRollActivationDelay as double
 
     'Private _vehicleInputData As JSONComponentInputData
     'Private _engineInputData As JSONComponentInputData
@@ -213,8 +213,8 @@ Public Class VectoJob
     '	End Set
     'End Property
 
-    Public ReadOnly Property IDriverEngineeringInputData_OverSpeedEcoRoll As IOverSpeedEcoRollEngineeringInputData _
-        Implements IDriverEngineeringInputData.OverSpeedEcoRoll
+    Public ReadOnly Property OverSpeedData As IOverSpeedEngineeringInputData _
+        Implements IDriverEngineeringInputData.OverSpeedData
         Get
             Dim mode As DriverMode = DriverMode.Off
             If EcoRollOn Then
@@ -223,7 +223,7 @@ Public Class VectoJob
                 mode = DriverMode.Overspeed
             End If
 
-            Return New OverSpeedEcoRollInputData() With {
+            Return New OverSpeedInputData() With {
                 .Mode = mode,
                 .MinSpeed = VMin.KMPHtoMeterPerSecond(),
                 .OverSpeed = OverSpeed.KMPHtoMeterPerSecond(),
@@ -279,19 +279,48 @@ Public Class VectoJob
         End Get
     End Property
 
-    Public ReadOnly Property EngineOffStandStillThreshold As Second Implements IDriverEngineeringInputData.EngineOffStandStillThreshold
+    Public ReadOnly Property EngineStopStartData As IEngineStopStartEngineeringInputData Implements IDriverEngineeringInputData.EngineStopStartData
         Get
-            return EngineStopStartThreshold.SI(Of Second)()
+            Return me
         End Get
     End Property
 
-    Public ReadOnly Property MaxEngineOffTimespan As Second Implements IDriverEngineeringInputData.MaxEngineOffTimespan
+    Public ReadOnly Property EcoRollData As IEcoRollEngineeringInputData Implements IDriverEngineeringInputData.EcoRollData
+    Get
+            Return me
+    End Get
+    End Property
+
+    Public ReadOnly Property MinSpeed As MeterPerSecond Implements IEcoRollEngineeringInputData.MinSpeed
+    get
+            Return EcoRollMinSpeed.KMPHtoMeterPerSecond()
+    End Get
+    End Property
+    Public ReadOnly Property IEcoRollEngineeringInputData_ActivationDelay As Second Implements IEcoRollEngineeringInputData.ActivationDelay
+    get
+            Return EcoRollActivationDelay.SI(Of Second)()
+    End Get
+    End Property
+
+    Public ReadOnly Property ActivationDelay As Second Implements IEngineStopStartEngineeringInputData.ActivationDelay
+        Get
+            return EngineStopStartActivationThreshold.SI(Of Second)()
+        End Get
+    End Property
+
+    Public ReadOnly Property UnderspeedThreshold As MeterPerSecond Implements IEcoRollEngineeringInputData.UnderspeedThreshold
+    get
+            Return EcoRollUnderspeedThreshold.KMPHtoMeterPerSecond()
+    End Get
+    End Property
+
+    Public ReadOnly Property MaxEngineOffTimespan As Second Implements IEngineStopStartEngineeringInputData.MaxEngineOffTimespan
         Get
             Return EngineOffTimeLimit.SI(Of Second)()
         End Get
     End Property
 
-    Public ReadOnly Property EngineStopStartUtilityFactor As Double Implements IDriverEngineeringInputData.EngineStopStartUtilityFactor
+    Public ReadOnly Property UtilityFactor As Double Implements IEngineStopStartEngineeringInputData.UtilityFactor
         Get
             Return EngineStStUtilityFactor
         End Get

@@ -35,7 +35,12 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			//var container = RunSingleDeclarationJob(filename, 4);
 		}
 
-
+		[TestCase(@"TestData\Integration\ADAS\Group5_EcoRoll.xml")]
+		public void TestVehicleWithADASEcoRoll(string filename)
+		{
+			var container = RunAllDeclarationJob(filename);
+			//var container = RunSingleDeclarationJob(filename, 4);
+		}
 
 		public JobContainer RunAllDeclarationJob(string jobName)
 		{

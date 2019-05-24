@@ -736,6 +736,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EcoRoll.
+        /// </summary>
+        public static string DriverModel_EcoRoll {
+            get {
+                return ResourceManager.GetString("DriverModel_EcoRoll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EngineStopStart.
+        /// </summary>
+        public static string DriverModel_EngineStopStart {
+            get {
+                return ResourceManager.GetString("DriverModel_EngineStopStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LookAheadCoasting.
         /// </summary>
         public static string DriverModel_LookAheadCoasting {

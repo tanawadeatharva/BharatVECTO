@@ -219,13 +219,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 					LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
-				OverSpeedEcoRoll = overspeed
-					? new DriverData.OverSpeedEcoRollData {
+				OverSpeed = overspeed
+					? new DriverData.OverSpeedData {
 						Mode = DriverMode.Overspeed,
 						MinSpeed = 50.KMPHtoMeterPerSecond(),
 						OverSpeed = 5.KMPHtoMeterPerSecond()
 					}
-					: new DriverData.OverSpeedEcoRollData {
+					: new DriverData.OverSpeedData {
 						Mode = DriverMode.Off
 					},
 			};

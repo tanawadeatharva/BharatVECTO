@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LookAheadDecisionFactor = new LACDecisionFactor(),
 				LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 			};
-			var overspeedData = new DriverData.OverSpeedEcoRollData {
+			var overspeedData = new DriverData.OverSpeedData {
 				Mode = DriverMode.Overspeed,
 				MinSpeed = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed,
 				OverSpeed = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed,
@@ -77,9 +77,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = new DriverData {
 				LookAheadCoasting = lookAheadData,
-				OverSpeedEcoRoll = overspeedData,
+				OverSpeed = overspeedData,
 				EngineStopStart = new DriverData.EngineStopStartData() {
-					EngineOffStandStillThreshold = DeclarationData.Driver.EngineOffStandStillThreshold,
+					EngineOffStandStillThreshold = DeclarationData.Driver.EngineStopStartActivationDelay,
 					MaxEngineOffTimespan = DeclarationData.Driver.MaxEngineOffTimespan,
 					UtilityFactor = DeclarationData.Driver.EngineStopStartUtilityFactor,
 				},

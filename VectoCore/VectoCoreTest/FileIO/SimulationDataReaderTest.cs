@@ -91,13 +91,13 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			//Assert.AreEqual(DeclarationData.Driver.LookAhead.Deceleration.Value(),
 			//	runData.DriverData.LookAheadCoasting.Deceleration.Value(), Tolerance);
 
-			Assert.AreNotEqual(DriverMode.Off, runData.DriverData.OverSpeedEcoRoll.Mode);
+			Assert.AreNotEqual(DriverMode.Off, runData.DriverData.OverSpeed.Mode);
 			Assert.AreEqual(DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed.Value(),
-				runData.DriverData.OverSpeedEcoRoll.MinSpeed.Value(), Tolerance);
+				runData.DriverData.OverSpeed.MinSpeed.Value(), Tolerance);
 			Assert.AreEqual(DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.Value(),
-				runData.DriverData.OverSpeedEcoRoll.OverSpeed.Value(), Tolerance);
+				runData.DriverData.OverSpeed.OverSpeed.Value(), Tolerance);
 			Assert.AreEqual(DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.Value(),
-				runData.DriverData.OverSpeedEcoRoll.UnderSpeed.Value(), Tolerance);
+				runData.DriverData.OverSpeed.UnderSpeed.Value(), Tolerance);
 
 			Assert.AreEqual(3.7890, runData.EngineData.Inertia.Value(), 1e-6);
 

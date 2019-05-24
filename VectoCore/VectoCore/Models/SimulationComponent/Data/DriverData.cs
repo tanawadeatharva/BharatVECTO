@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class DriverData
 	{
-		[Required, ValidateObject] public OverSpeedEcoRollData OverSpeedEcoRoll;
+		[Required, ValidateObject] public OverSpeedData OverSpeed;
 
 		[Required, ValidateObject] public LACData LookAheadCoasting;
 
@@ -48,12 +48,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, ValidateObject] public EngineStopStartData EngineStopStart;
 
+		[Required, ValidateObject] public EcoRollData EcoRoll;
+
 		public static DriverMode ParseDriverMode(string mode)
 		{
 			return mode.Replace("-", "").ParseEnum<DriverMode>();
 		}
 
-		public class OverSpeedEcoRollData
+		public class OverSpeedData
 		{
 			public DriverMode Mode;
 
@@ -62,6 +64,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			[Required, SIRange(0, 50 / Constants.MeterPerSecondToKMH)] public MeterPerSecond OverSpeed;
 
 			[Required, SIRange(0, 50 / Constants.MeterPerSecondToKMH)] public MeterPerSecond UnderSpeed;
+		}
+
+		public class EcoRollData
+		{
+			public MeterPerSecond MinSpeed;
+
+			public MeterPerSquareSecond AccelerationLowerLimit;
+
+			public MeterPerSquareSecond AccelerationUpperLimit;
+
+			public MeterPerSecond UnderspeedThreshold;
+
+			public Second ActivationPhaseDuration;
 		}
 
 		public class LACData

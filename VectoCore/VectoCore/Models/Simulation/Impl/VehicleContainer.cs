@@ -57,6 +57,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal IEngineInfo Engine;
 		internal IEngineControl EngineCtl;
 		internal IGearboxInfo Gearbox;
+		internal IGearboxControl GearboxCtl;
 		internal IAxlegearInfo Axlegear;
 		internal IVehicleInfo Vehicle;
 		internal IBrakes Brakes;
@@ -304,6 +305,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Gearbox = c;
 					commitPriority = 4;
 				})
+				.If<IGearboxControl>(c => GearboxCtl = c)
 				.If<IAxlegearInfo>(c => Axlegear = c)
 				.If<IWheelsInfo>(c => Wheels = c)
 				.If<IVehicleInfo>(c => {
@@ -480,6 +482,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			get { return EngineCtl.IgnitionOn; }
 			set { EngineCtl.IgnitionOn = value; }
+		}
+
+		#endregion
+
+		#region Implementation of IGearboxControl
+
+		public bool DisengageGearbox
+		{
+			get { return GearboxCtl.DisengageGearbox; }
+			set { GearboxCtl.DisengageGearbox = value; }
 		}
 
 		#endregion

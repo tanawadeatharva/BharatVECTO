@@ -512,18 +512,18 @@ Public Class VectoJobForm
 		Catch ex As Exception
 		End Try
 
-		If driver.OverSpeedEcoRoll.Mode = DriverMode.EcoRoll Then
+		If driver.OverSpeedData.Mode = DriverMode.EcoRoll Then
 			'mk 2016-11-10: removed eco roll - instead automatically overspeed is used
 			'RdEcoRoll.Checked = True
 			RdOverspeed.Checked = True
-		ElseIf driver.OverSpeedEcoRoll.Mode = DriverMode.Overspeed Then
+		ElseIf driver.OverSpeedData.Mode = DriverMode.Overspeed Then
 			RdOverspeed.Checked = True
 		Else
 			RdOff.Checked = True
 		End If
-		TbOverspeed.Text = driver.OverSpeedEcoRoll.OverSpeed.AsKmph.ToGUIFormat()
-		TbUnderSpeed.Text = driver.OverSpeedEcoRoll.UnderSpeed.AsKmph.ToGUIFormat()
-		TbVmin.Text = driver.OverSpeedEcoRoll.MinSpeed.AsKmph.ToGUIFormat()
+		TbOverspeed.Text = driver.OverSpeedData.OverSpeed.AsKmph.ToGUIFormat()
+		TbUnderSpeed.Text = driver.OverSpeedData.UnderSpeed.AsKmph.ToGUIFormat()
+		TbVmin.Text = driver.OverSpeedData.MinSpeed.AsKmph.ToGUIFormat()
 		If Not driver.Lookahead Is Nothing Then
 			CbLookAhead.Checked = driver.Lookahead.Enabled
 			'TbAlookahead.Text = CStr(VEC0.ALookahead)
@@ -539,9 +539,9 @@ Public Class VectoJobForm
 											GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, _basePath))
 		End If
 
-		tbEngineStopStartThreshold.Text = driver.EngineOffStandStillThreshold.ToGUIFormat()
-        tbEngineOffThreshold.Text = If(driver.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.MaxEngineOffTimespan.ToGUIFormat())
-        tbEssUtility.Text = driver.EngineStopStartUtilityFactor.ToGUIFormat()
+		tbEngineStopStartThreshold.Text = driver.EngineStopStartData.ActivationDelay.ToGUIFormat()
+        tbEngineOffThreshold.Text = If(driver.EngineStopStartData.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.MaxEngineOffTimespan.ToGUIFormat())
+        tbEssUtility.Text = driver.EngineStopStartData.UtilityFactor.ToGUIFormat()
 
 		'-------------------------------------------------------------
 
@@ -660,7 +660,7 @@ Public Class VectoJobForm
 		vectoJob.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
 		vectoJob.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
 
-        vectoJob.EngineStopStartThreshold = tbEngineStopStartThreshold.text.ToDouble(0)
+        vectoJob.EngineStopStartActivationThreshold = tbEngineStopStartThreshold.text.ToDouble(0)
         vectoJob.EngineOffTimeLimit = tbEngineOffThreshold.Text.ToDouble(0)
         vectoJob.EngineStStUtilityFactor = tbEssUtility.Text.ToDouble(0)
 		'------------------------------------------------------------

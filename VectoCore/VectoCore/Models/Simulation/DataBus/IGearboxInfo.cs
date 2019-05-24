@@ -69,4 +69,9 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		Second TractionInterruption { get; }
 		uint NumGears { get; }
 	}
+
+	public interface IGearboxControl
+	{
+		bool DisengageGearbox { get; set; }
+	}
 }

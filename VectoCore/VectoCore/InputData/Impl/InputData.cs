@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public TableData CoastingDecisionFactorVelocityDropLookup { get; internal set; }
 	}
 
-	public class OverSpeedEcoRollInputData : IOverSpeedEcoRollEngineeringInputData
+	public class OverSpeedInputData : IOverSpeedEngineeringInputData
 	{
 		public DriverMode Mode { get; internal set; }
 

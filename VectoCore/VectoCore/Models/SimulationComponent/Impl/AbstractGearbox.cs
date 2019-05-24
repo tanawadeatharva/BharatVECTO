@@ -161,6 +161,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return shiftLossEnergy.Abs();
 		}
+
+		#region Implementation of IGearboxControl
+
+		public abstract bool DisengageGearbox { get; set; }
+
+		#endregion
 	}
 
 	public class GearboxState : SimpleComponentState

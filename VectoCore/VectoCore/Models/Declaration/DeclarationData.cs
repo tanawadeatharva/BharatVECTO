@@ -117,9 +117,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Driver
 		{
-			public static readonly Second EngineOffStandStillThreshold = 2.SI<Second>();
+			public static readonly Second EngineStopStartActivationDelay = 2.SI<Second>();
 			public static readonly Second MaxEngineOffTimespan = 120.SI<Second>();
 			public const double EngineStopStartUtilityFactor = 0.8;
+
+			public static readonly MeterPerSecond EcoRollMinSpeed = 60.KMPHtoMeterPerSecond();
+			public static readonly Second EcoRollActivationDelay = 2.SI<Second>();
+			public static readonly MeterPerSecond EcoRollUnderspeedThreshold = 2.5.KMPHtoMeterPerSecond();
 
 			public static class LookAhead
 			{

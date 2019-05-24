@@ -1053,4 +1053,10 @@
   <data name="TorqueConverter_MaxInputSpeed" xml:space="preserve">
     <value>MaxInputSpeed</value>
   </data>
+  <data name="DriverModel_EngineStopStart" xml:space="preserve">
+    <value>EngineStopStart</value>
+  </data>
+  <data name="DriverModel_EcoRoll" xml:space="preserve">
+    <value>EcoRoll</value>
+  </data>
 </root>

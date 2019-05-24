@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 
 		public override object[] WriteXML(IDriverModelData inputData)
 		{
-			var overspeed = inputData as IOverSpeedEcoRollEngineeringInputData;
+			var overspeed = inputData as IOverSpeedEngineeringInputData;
 			var ns = ComponentDataNamespace;
 			if (overspeed == null) {
 				return new object[] { };

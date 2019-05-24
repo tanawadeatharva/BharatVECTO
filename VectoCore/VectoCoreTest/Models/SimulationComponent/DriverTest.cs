@@ -436,7 +436,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					Enabled = false,
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
 				},
-				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
+				OverSpeed = new DriverData.OverSpeedData {
 					Mode = DriverMode.Off
 				},
 			};

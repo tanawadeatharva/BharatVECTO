@@ -114,6 +114,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					!(CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted));
 		}
 
+		public override bool DisengageGearbox
+		{
+			get { throw new System.NotImplementedException(); }
+			set { throw new System.NotImplementedException(); }
+		}
+
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			if (CurrentState.Disengaged) {

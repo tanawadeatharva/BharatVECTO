@@ -318,9 +318,14 @@ Public Class JSONFileWriter
 		
 		If Not job.SavedInDeclarationMode Then
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath))
-		    body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineOffStandStillThreshold.Value())
-            body.Add("EngineStopStartMaxOffTimespan", driver.MaxEngineOffTimespan.Value())
-            body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartUtilityFactor)
+		    body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value())
+            body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value())
+            body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactor)
+
+            body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed)
+		    body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay)
+		    body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold)
+
 		End If
 		'body.Add("StartStop", New Dictionary(Of String, Object) From {
 		'			{"Enabled", driver.StartStop.Enabled},
@@ -349,11 +354,11 @@ Public Class JSONFileWriter
 		'Overspeed / EcoRoll
 		Dim overspeedDic As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
-		overspeedDic.Add("Mode", driver.OverSpeedEcoRoll.Mode.ToString())
+		overspeedDic.Add("Mode", driver.OverSpeedData.Mode.ToString())
 
-		overspeedDic.Add("MinSpeed", driver.OverSpeedEcoRoll.MinSpeed.AsKmph)
-		overspeedDic.Add("OverSpeed", driver.OverSpeedEcoRoll.OverSpeed.AsKmph)
-		overspeedDic.Add("UnderSpeed", driver.OverSpeedEcoRoll.UnderSpeed.AsKmph)
+		overspeedDic.Add("MinSpeed", driver.OverSpeedData.MinSpeed.AsKmph)
+		overspeedDic.Add("OverSpeed", driver.OverSpeedData.OverSpeed.AsKmph)
+		overspeedDic.Add("UnderSpeed", driver.OverSpeedData.UnderSpeed.AsKmph)
 		body.Add("OverSpeedEcoRoll", overspeedDic)
 
 		'Cycles

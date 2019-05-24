@@ -63,10 +63,6 @@ Partial Class VectoJobForm
         Me.ButtonMAP = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPgDriver = New System.Windows.Forms.TabPage()
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.tbEngineStopStartThreshold = New System.Windows.Forms.TextBox()
-        Me.Label16 = New System.Windows.Forms.Label()
         Me.GrVACC = New System.Windows.Forms.GroupBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.TbDesMaxFile = New System.Windows.Forms.TextBox()
@@ -133,18 +129,32 @@ Partial Class VectoJobForm
         Me.TbMass = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
+        Me.TabPgADAS = New System.Windows.Forms.TabPage()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.tbEssUtility = New System.Windows.Forms.TextBox()
+        Me.Label24 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.tbEngineOffThreshold = New System.Windows.Forms.TextBox()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.tbEssUtility = New System.Windows.Forms.TextBox()
-        Me.Label24 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.tbEngineStopStartThreshold = New System.Windows.Forms.TextBox()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.tbEcoRollMinSpeed = New System.Windows.Forms.TextBox()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.tbEcoRollActivationDelay = New System.Windows.Forms.TextBox()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.TabPgGen.SuspendLayout
         Me.GrCycles.SuspendLayout
         Me.GrAux.SuspendLayout
         CType(Me.picAuxInfo,System.ComponentModel.ISupportInitialize).BeginInit
         Me.TabControl1.SuspendLayout
         Me.TabPgDriver.SuspendLayout
-        Me.GroupBox3.SuspendLayout
         Me.GrVACC.SuspendLayout
         Me.GrLAC.SuspendLayout
         Me.pnLookAheadCoasting.SuspendLayout
@@ -157,6 +167,9 @@ Partial Class VectoJobForm
         Me.CmOpenFile.SuspendLayout
         CType(Me.PicVehicle,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.TabPgADAS.SuspendLayout
+        Me.GroupBox3.SuspendLayout
+        Me.GroupBox4.SuspendLayout
         Me.SuspendLayout
         '
         'TabPgGen
@@ -528,6 +541,7 @@ Partial Class VectoJobForm
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.TabPgGen)
         Me.TabControl1.Controls.Add(Me.TabPgDriver)
+        Me.TabControl1.Controls.Add(Me.TabPgADAS)
         Me.TabControl1.Location = New System.Drawing.Point(1, 107)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
@@ -537,7 +551,6 @@ Partial Class VectoJobForm
         '
         'TabPgDriver
         '
-        Me.TabPgDriver.Controls.Add(Me.GroupBox3)
         Me.TabPgDriver.Controls.Add(Me.GrVACC)
         Me.TabPgDriver.Controls.Add(Me.GrLAC)
         Me.TabPgDriver.Controls.Add(Me.GroupBox1)
@@ -548,48 +561,6 @@ Partial Class VectoJobForm
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver Model"
         Me.TabPgDriver.UseVisualStyleBackColor = true
-        '
-        'GroupBox3
-        '
-        Me.GroupBox3.Controls.Add(Me.tbEssUtility)
-        Me.GroupBox3.Controls.Add(Me.Label24)
-        Me.GroupBox3.Controls.Add(Me.Label18)
-        Me.GroupBox3.Controls.Add(Me.tbEngineOffThreshold)
-        Me.GroupBox3.Controls.Add(Me.Label19)
-        Me.GroupBox3.Controls.Add(Me.Label17)
-        Me.GroupBox3.Controls.Add(Me.tbEngineStopStartThreshold)
-        Me.GroupBox3.Controls.Add(Me.Label16)
-        Me.GroupBox3.Location = New System.Drawing.Point(8, 347)
-        Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(515, 100)
-        Me.GroupBox3.TabIndex = 4
-        Me.GroupBox3.TabStop = false
-        Me.GroupBox3.Text = "ADAS Parameters"
-        '
-        'Label17
-        '
-        Me.Label17.AutoSize = true
-        Me.Label17.Location = New System.Drawing.Point(305, 20)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(18, 13)
-        Me.Label17.TabIndex = 2
-        Me.Label17.Text = "[s]"
-        '
-        'tbEngineStopStartThreshold
-        '
-        Me.tbEngineStopStartThreshold.Location = New System.Drawing.Point(247, 17)
-        Me.tbEngineStopStartThreshold.Name = "tbEngineStopStartThreshold"
-        Me.tbEngineStopStartThreshold.Size = New System.Drawing.Size(52, 20)
-        Me.tbEngineStopStartThreshold.TabIndex = 1
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = true
-        Me.Label16.Location = New System.Drawing.Point(7, 20)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(215, 13)
-        Me.Label16.TabIndex = 0
-        Me.Label16.Text = "Engine Stop/Start @ vehicle stop threshold:"
         '
         'GrVACC
         '
@@ -1207,6 +1178,50 @@ Partial Class VectoJobForm
         Me.lblEngineCharacteristics.Size = New System.Drawing.Size(0, 13)
         Me.lblEngineCharacteristics.TabIndex = 37
         '
+        'TabPgADAS
+        '
+        Me.TabPgADAS.Controls.Add(Me.GroupBox4)
+        Me.TabPgADAS.Controls.Add(Me.GroupBox3)
+        Me.TabPgADAS.Location = New System.Drawing.Point(4, 22)
+        Me.TabPgADAS.Name = "TabPgADAS"
+        Me.TabPgADAS.Size = New System.Drawing.Size(527, 487)
+        Me.TabPgADAS.TabIndex = 8
+        Me.TabPgADAS.Text = "ADAS Parameters"
+        Me.TabPgADAS.UseVisualStyleBackColor = true
+        '
+        'GroupBox3
+        '
+        Me.GroupBox3.Controls.Add(Me.tbEssUtility)
+        Me.GroupBox3.Controls.Add(Me.Label24)
+        Me.GroupBox3.Controls.Add(Me.Label18)
+        Me.GroupBox3.Controls.Add(Me.tbEngineOffThreshold)
+        Me.GroupBox3.Controls.Add(Me.Label19)
+        Me.GroupBox3.Controls.Add(Me.Label17)
+        Me.GroupBox3.Controls.Add(Me.tbEngineStopStartThreshold)
+        Me.GroupBox3.Controls.Add(Me.Label16)
+        Me.GroupBox3.Location = New System.Drawing.Point(7, 9)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(515, 100)
+        Me.GroupBox3.TabIndex = 5
+        Me.GroupBox3.TabStop = false
+        Me.GroupBox3.Text = "Engine Stop/Start"
+        '
+        'tbEssUtility
+        '
+        Me.tbEssUtility.Location = New System.Drawing.Point(247, 69)
+        Me.tbEssUtility.Name = "tbEssUtility"
+        Me.tbEssUtility.Size = New System.Drawing.Size(52, 20)
+        Me.tbEssUtility.TabIndex = 7
+        '
+        'Label24
+        '
+        Me.Label24.AutoSize = true
+        Me.Label24.Location = New System.Drawing.Point(7, 72)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(141, 13)
+        Me.Label24.TabIndex = 6
+        Me.Label24.Text = "Engie stop/start utility factor:"
+        '
         'Label18
         '
         Me.Label18.AutoSize = true
@@ -1232,21 +1247,123 @@ Partial Class VectoJobForm
         Me.Label19.TabIndex = 3
         Me.Label19.Text = "Max. engine-off time:"
         '
-        'tbEssUtility
+        'Label17
         '
-        Me.tbEssUtility.Location = New System.Drawing.Point(247, 69)
-        Me.tbEssUtility.Name = "tbEssUtility"
-        Me.tbEssUtility.Size = New System.Drawing.Size(52, 20)
-        Me.tbEssUtility.TabIndex = 7
+        Me.Label17.AutoSize = true
+        Me.Label17.Location = New System.Drawing.Point(305, 20)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(18, 13)
+        Me.Label17.TabIndex = 2
+        Me.Label17.Text = "[s]"
         '
-        'Label24
+        'tbEngineStopStartThreshold
         '
-        Me.Label24.AutoSize = true
-        Me.Label24.Location = New System.Drawing.Point(7, 72)
-        Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(141, 13)
-        Me.Label24.TabIndex = 6
-        Me.Label24.Text = "Engie stop/start utility factor:"
+        Me.tbEngineStopStartThreshold.Location = New System.Drawing.Point(247, 17)
+        Me.tbEngineStopStartThreshold.Name = "tbEngineStopStartThreshold"
+        Me.tbEngineStopStartThreshold.Size = New System.Drawing.Size(52, 20)
+        Me.tbEngineStopStartThreshold.TabIndex = 1
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = true
+        Me.Label16.Location = New System.Drawing.Point(7, 20)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(87, 13)
+        Me.Label16.TabIndex = 0
+        Me.Label16.Text = "Delay engine-off:"
+        '
+        'GroupBox4
+        '
+        Me.GroupBox4.Controls.Add(Me.Label29)
+        Me.GroupBox4.Controls.Add(Me.Label30)
+        Me.GroupBox4.Controls.Add(Me.TextBox1)
+        Me.GroupBox4.Controls.Add(Me.Label27)
+        Me.GroupBox4.Controls.Add(Me.Label28)
+        Me.GroupBox4.Controls.Add(Me.tbEcoRollActivationDelay)
+        Me.GroupBox4.Controls.Add(Me.Label25)
+        Me.GroupBox4.Controls.Add(Me.Label26)
+        Me.GroupBox4.Controls.Add(Me.tbEcoRollMinSpeed)
+        Me.GroupBox4.Location = New System.Drawing.Point(7, 115)
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.Size = New System.Drawing.Size(515, 100)
+        Me.GroupBox4.TabIndex = 6
+        Me.GroupBox4.TabStop = false
+        Me.GroupBox4.Text = "Eco-Roll"
+        '
+        'Label25
+        '
+        Me.Label25.AutoSize = true
+        Me.Label25.Location = New System.Drawing.Point(305, 22)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(38, 13)
+        Me.Label25.TabIndex = 10
+        Me.Label25.Text = "[km/h]"
+        '
+        'tbEcoRollMinSpeed
+        '
+        Me.tbEcoRollMinSpeed.Location = New System.Drawing.Point(247, 19)
+        Me.tbEcoRollMinSpeed.Name = "tbEcoRollMinSpeed"
+        Me.tbEcoRollMinSpeed.Size = New System.Drawing.Size(52, 20)
+        Me.tbEcoRollMinSpeed.TabIndex = 9
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = true
+        Me.Label26.Location = New System.Drawing.Point(7, 22)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(83, 13)
+        Me.Label26.TabIndex = 8
+        Me.Label26.Text = "Minimum speed:"
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = true
+        Me.Label27.Location = New System.Drawing.Point(305, 48)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(18, 13)
+        Me.Label27.TabIndex = 13
+        Me.Label27.Text = "[s]"
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = true
+        Me.Label28.Location = New System.Drawing.Point(7, 48)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(85, 13)
+        Me.Label28.TabIndex = 11
+        Me.Label28.Text = "Activation delay:"
+        '
+        'tbEcoRollActivationDelay
+        '
+        Me.tbEcoRollActivationDelay.Location = New System.Drawing.Point(247, 45)
+        Me.tbEcoRollActivationDelay.Name = "tbEcoRollActivationDelay"
+        Me.tbEcoRollActivationDelay.Size = New System.Drawing.Size(52, 20)
+        Me.tbEcoRollActivationDelay.TabIndex = 12
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = true
+        Me.Label29.Location = New System.Drawing.Point(305, 74)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(38, 13)
+        Me.Label29.TabIndex = 16
+        Me.Label29.Text = "[km/h]"
+        '
+        'Label30
+        '
+        Me.Label30.AutoSize = true
+        Me.Label30.Location = New System.Drawing.Point(7, 74)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(114, 13)
+        Me.Label30.TabIndex = 14
+        Me.Label30.Text = "Underspeed threshold:"
+        '
+        'TextBox1
+        '
+        Me.TextBox1.Location = New System.Drawing.Point(247, 71)
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(52, 20)
+        Me.TextBox1.TabIndex = 15
         '
         'VectoJobForm
         '
@@ -1286,8 +1403,6 @@ Partial Class VectoJobForm
         CType(Me.picAuxInfo,System.ComponentModel.ISupportInitialize).EndInit
         Me.TabControl1.ResumeLayout(false)
         Me.TabPgDriver.ResumeLayout(false)
-        Me.GroupBox3.ResumeLayout(false)
-        Me.GroupBox3.PerformLayout
         Me.GrVACC.ResumeLayout(false)
         Me.GrVACC.PerformLayout
         Me.GrLAC.ResumeLayout(false)
@@ -1308,6 +1423,11 @@ Partial Class VectoJobForm
         Me.CmOpenFile.ResumeLayout(false)
         CType(Me.PicVehicle,System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).EndInit
+        Me.TabPgADAS.ResumeLayout(false)
+        Me.GroupBox3.ResumeLayout(false)
+        Me.GroupBox3.PerformLayout
+        Me.GroupBox4.ResumeLayout(false)
+        Me.GroupBox4.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1414,13 +1534,24 @@ End Sub
 	Friend WithEvents Label15 As System.Windows.Forms.Label
 	Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
 	Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
+    Friend WithEvents TabPgADAS As TabPage
+    Friend WithEvents GroupBox4 As GroupBox
+    Friend WithEvents Label29 As Label
+    Friend WithEvents Label30 As Label
+    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents Label27 As Label
+    Friend WithEvents Label28 As Label
+    Friend WithEvents tbEcoRollActivationDelay As TextBox
+    Friend WithEvents Label25 As Label
+    Friend WithEvents Label26 As Label
+    Friend WithEvents tbEcoRollMinSpeed As TextBox
     Friend WithEvents GroupBox3 As GroupBox
-    Friend WithEvents Label17 As Label
-    Friend WithEvents tbEngineStopStartThreshold As TextBox
-    Friend WithEvents Label16 As Label
+    Friend WithEvents tbEssUtility As TextBox
+    Friend WithEvents Label24 As Label
     Friend WithEvents Label18 As Label
     Friend WithEvents tbEngineOffThreshold As TextBox
     Friend WithEvents Label19 As Label
-    Friend WithEvents tbEssUtility As TextBox
-    Friend WithEvents Label24 As Label
+    Friend WithEvents Label17 As Label
+    Friend WithEvents tbEngineStopStartThreshold As TextBox
+    Friend WithEvents Label16 As Label
 End Class
