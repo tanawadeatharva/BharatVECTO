@@ -65,11 +65,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 			var overspeedData = new DriverData.OverSpeedData {
 				Mode = DriverMode.Overspeed,
-				MinSpeed = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed,
-				OverSpeed = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed,
-				UnderSpeed = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed
+				MinSpeed = DeclarationData.Driver.OverSpeed.MinSpeed,
+				OverSpeed = DeclarationData.Driver.OverSpeed.AllowedOverSpeed,
+				UnderSpeed = DeclarationData.Driver.OverSpeed.UnderSpeed
 			};
-			if (!DeclarationData.Driver.OverSpeedEcoRoll.AllowedModes.Contains(overspeedData.Mode)) {
+			if (!DeclarationData.Driver.OverSpeed.AllowedModes.Contains(overspeedData.Mode)) {
 				throw new VectoSimulationException(
 					"Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}",
 					overspeedData.Mode);
@@ -79,9 +79,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LookAheadCoasting = lookAheadData,
 				OverSpeed = overspeedData,
 				EngineStopStart = new DriverData.EngineStopStartData() {
-					EngineOffStandStillThreshold = DeclarationData.Driver.EngineStopStartActivationDelay,
-					MaxEngineOffTimespan = DeclarationData.Driver.MaxEngineOffTimespan,
-					UtilityFactor = DeclarationData.Driver.EngineStopStartUtilityFactor,
+					EngineOffStandStillThreshold = DeclarationData.Driver.EngineStopStart.ActivationDelay,
+					MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
+					UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
 				},
 			};
 			return retVal;

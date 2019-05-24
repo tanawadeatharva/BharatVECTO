@@ -18,18 +18,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider {
 
 		public virtual Second ActivationDelay
 		{
-			get { return GetDouble("ActivationDelay", DeclarationData.Driver.EngineStopStartActivationDelay.Value()).SI<Second>(); }
+			get { return GetDouble("ActivationDelay", DeclarationData.Driver.EngineStopStart.ActivationDelay.Value()).SI<Second>(); }
 		}
 
 		public virtual Second MaxEngineOffTimespan
 		{
-			get { return GetDouble("MaxEngineStopStartTimespan", DeclarationData.Driver.MaxEngineOffTimespan.Value()).SI<Second>(); }
+			get { return GetDouble("MaxEngineStopStartTimespan", DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.Value()).SI<Second>(); }
 		}
 
 		public virtual double UtilityFactor
 		{
 			get {
-				return GetDouble("UtilityFactor", DeclarationData.Driver.EngineStopStartUtilityFactor);
+				return GetDouble("UtilityFactor", DeclarationData.Driver.EngineStopStart.UtilityFactor);
 			}
 		}
 

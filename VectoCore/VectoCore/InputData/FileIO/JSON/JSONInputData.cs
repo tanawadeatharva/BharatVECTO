@@ -847,7 +847,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						? null
 						: Body.GetEx<double>("EngineStopStartMaxOffTimespan").SI<Second>(),
 					UtilityFactor = Body["EngineStopStartUtilityFactor"] == null
-						? DeclarationData.Driver.EngineStopStartUtilityFactor
+						? DeclarationData.Driver.EngineStopStart.UtilityFactor
 						: Body.GetEx<double>("EngineStopStartUtilityFactor"),
 					ActivationDelay = Body["EngineStopStartAtVehicleStopThreshold"] == null
 						? null

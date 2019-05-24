@@ -119,10 +119,10 @@ Public Class VectoJobForm
 		tbLacDfTargetSpeedFile.Text = ""
 		tbLacDfVelocityDropFile.Text = ""
 
-		TbOverspeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.AsKmph.ToGUIFormat()	 'cDeclaration.Overspeed
-		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.AsKmph.ToGUIFormat() _
+		TbOverspeed.Text = DeclarationData.Driver.OverSpeed.AllowedOverSpeed.AsKmph.ToGUIFormat()	 'cDeclaration.Overspeed
+		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeed.UnderSpeed.AsKmph.ToGUIFormat() _
 		' cDeclaration.Underspeed
-		TbVmin.Text = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed.AsKmph.ToGUIFormat()	 'cDeclaration.ECvmin
+		TbVmin.Text = DeclarationData.Driver.OverSpeed.MinSpeed.AsKmph.ToGUIFormat()	 'cDeclaration.ECvmin
 		TbAuxPAdd.Text = ""
 		If _
 			LvAux.Items.Count <> 5 OrElse
@@ -540,7 +540,7 @@ Public Class VectoJobForm
 		End If
 
 		tbEngineStopStartThreshold.Text = driver.EngineStopStartData.ActivationDelay.ToGUIFormat()
-        tbEngineOffThreshold.Text = If(driver.EngineStopStartData.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.MaxEngineOffTimespan.ToGUIFormat())
+        tbEngineOffThreshold.Text = If(driver.EngineStopStartData.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.ToGUIFormat())
         tbEssUtility.Text = driver.EngineStopStartData.UtilityFactor.ToGUIFormat()
 
 		'-------------------------------------------------------------
@@ -705,9 +705,9 @@ Public Class VectoJobForm
 		RdOverspeed.Checked = True
 		CbLookAhead.Checked = True
 		'TbAlookahead.Text = "-0.5"
-		TbOverspeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed.AsKmph.ToGUIFormat()
-		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed.AsKmph.ToGUIFormat()
-		TbVmin.Text = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed.AsKmph.ToGUIFormat()
+		TbOverspeed.Text = DeclarationData.Driver.OverSpeed.AllowedOverSpeed.AsKmph.ToGUIFormat()
+		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeed.UnderSpeed.AsKmph.ToGUIFormat()
+		TbVmin.Text = DeclarationData.Driver.OverSpeed.MinSpeed.AsKmph.ToGUIFormat()
 
 		'TbVminLA.Text = "50"
 		tbLacMinSpeed.Text = DeclarationData.Driver.LookAhead.MinimumSpeed.AsKmph.ToGUIFormat()

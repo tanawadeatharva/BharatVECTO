@@ -20,17 +20,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider {
 
 		public MeterPerSecond MinSpeed
 		{
-			get { return GetDouble("MinSpeed", DeclarationData.Driver.EcoRollMinSpeed.AsKmph).KMPHtoMeterPerSecond(); }
+			get { return GetDouble("MinSpeed", DeclarationData.Driver.EcoRoll.MinSpeed.AsKmph).KMPHtoMeterPerSecond(); }
 		}
 
 		public Second ActivationDelay
 		{
-			get { return GetDouble("ActivationDelay", DeclarationData.Driver.EcoRollActivationDelay.Value()).SI<Second>(); }
+			get { return GetDouble("ActivationDelay", DeclarationData.Driver.EcoRoll.ActivationDelay.Value()).SI<Second>(); }
 		}
 
 		public MeterPerSecond UnderspeedThreshold
 		{
-			get { return GetDouble("UnderspeedThreshold", DeclarationData.Driver.EcoRollUnderspeedThreshold.AsKmph).KMPHtoMeterPerSecond(); }
+			get { return GetDouble("UnderspeedThreshold", DeclarationData.Driver.EcoRoll.UnderspeedThreshold.AsKmph).KMPHtoMeterPerSecond(); }
 		}
 
 		#endregion
