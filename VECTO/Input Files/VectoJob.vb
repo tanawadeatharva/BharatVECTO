@@ -68,8 +68,7 @@ Public Class VectoJob
     Public LookAheadOn As Boolean
     Public OverSpeedOn As Boolean
     Public OverSpeed As Double
-    Public UnderSpeed As Double
-    Public EcoRollOn As Boolean
+   
 
     Public LookAheadMinSpeed As Double
     Public EngineStopStartActivationThreshold As Double
@@ -216,18 +215,10 @@ Public Class VectoJob
     Public ReadOnly Property OverSpeedData As IOverSpeedEngineeringInputData _
         Implements IDriverEngineeringInputData.OverSpeedData
         Get
-            Dim mode As DriverMode = DriverMode.Off
-            If EcoRollOn Then
-                mode = DriverMode.EcoRoll
-            ElseIf OverSpeedOn Then
-                mode = DriverMode.Overspeed
-            End If
-
-            Return New OverSpeedInputData() With {
-                .Mode = mode,
+           Return New OverSpeedInputData() With {
+                .Enabled = OverSpeedOn,
                 .MinSpeed = VMin.KMPHtoMeterPerSecond(),
-                .OverSpeed = OverSpeed.KMPHtoMeterPerSecond(),
-                .UnderSpeed = UnderSpeed.KMPHtoMeterPerSecond()
+                .OverSpeed = OverSpeed.KMPHtoMeterPerSecond()
                 }
         End Get
     End Property

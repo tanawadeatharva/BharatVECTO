@@ -120,7 +120,6 @@ Public Class VectoJobForm
 		tbLacDfVelocityDropFile.Text = ""
 
 		TbOverspeed.Text = DeclarationData.Driver.OverSpeed.AllowedOverSpeed.AsKmph.ToGUIFormat()	 'cDeclaration.Overspeed
-		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeed.UnderSpeed.AsKmph.ToGUIFormat() _
 		' cDeclaration.Underspeed
 		TbVmin.Text = DeclarationData.Driver.OverSpeed.MinSpeed.AsKmph.ToGUIFormat()	 'cDeclaration.ECvmin
 		TbAuxPAdd.Text = ""
@@ -512,17 +511,13 @@ Public Class VectoJobForm
 		Catch ex As Exception
 		End Try
 
-		If driver.OverSpeedData.Mode = DriverMode.EcoRoll Then
-			'mk 2016-11-10: removed eco roll - instead automatically overspeed is used
-			'RdEcoRoll.Checked = True
-			RdOverspeed.Checked = True
-		ElseIf driver.OverSpeedData.Mode = DriverMode.Overspeed Then
+		
+		If driver.OverSpeedData.Enabled  Then
 			RdOverspeed.Checked = True
 		Else
 			RdOff.Checked = True
 		End If
 		TbOverspeed.Text = driver.OverSpeedData.OverSpeed.AsKmph.ToGUIFormat()
-		TbUnderSpeed.Text = driver.OverSpeedData.UnderSpeed.AsKmph.ToGUIFormat()
 		TbVmin.Text = driver.OverSpeedData.MinSpeed.AsKmph.ToGUIFormat()
 		If Not driver.Lookahead Is Nothing Then
 			CbLookAhead.Checked = driver.Lookahead.Enabled
@@ -645,10 +640,8 @@ Public Class VectoJobForm
 
 		vectoJob.EngineOnly = CbEngOnly.Checked
 
-		vectoJob.EcoRollOn = False 'RdEcoRoll.Checked
 		vectoJob.OverSpeedOn = RdOverspeed.Checked
 		vectoJob.OverSpeed = TbOverspeed.Text.ToDouble(0)
-		vectoJob.UnderSpeed = TbUnderSpeed.Text.ToDouble(0)
 		vectoJob.VMin = TbVmin.Text.ToDouble(0)
 		vectoJob.LookAheadOn = CbLookAhead.Checked
 		'vec0.ALookahead = CSng(fTextboxToNumString(TbAlookahead.Text))
@@ -706,7 +699,6 @@ Public Class VectoJobForm
 		CbLookAhead.Checked = True
 		'TbAlookahead.Text = "-0.5"
 		TbOverspeed.Text = DeclarationData.Driver.OverSpeed.AllowedOverSpeed.AsKmph.ToGUIFormat()
-		TbUnderSpeed.Text = DeclarationData.Driver.OverSpeed.UnderSpeed.AsKmph.ToGUIFormat()
 		TbVmin.Text = DeclarationData.Driver.OverSpeed.MinSpeed.AsKmph.ToGUIFormat()
 
 		'TbVminLA.Text = "50"
@@ -772,7 +764,7 @@ Public Class VectoJobForm
 		Change()
 	End Sub
 
-	Private Sub TbUnderSpeed_TextChanged(sender As Object, e As EventArgs) Handles TbUnderSpeed.TextChanged
+	Private Sub TbUnderSpeed_TextChanged(sender As Object, e As EventArgs) 
 		Change()
 	End Sub
 
@@ -1075,10 +1067,6 @@ lbDlog:
 		TbOverspeed.Enabled = overspeed Or ecoRoll
 		Label13.Enabled = overspeed Or ecoRoll
 		Label14.Enabled = overspeed Or ecoRoll
-
-		TbUnderSpeed.Enabled = ecoRoll
-		Label22.Enabled = ecoRoll
-		Label20.Enabled = ecoRoll
 
 		TbVmin.Enabled = overspeed Or ecoRoll
 		Label23.Enabled = overspeed Or ecoRoll

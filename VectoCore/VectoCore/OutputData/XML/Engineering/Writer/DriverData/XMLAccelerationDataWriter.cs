@@ -8,7 +8,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
+namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer.DriverData
 {
 	internal class XMLAccelerationDataWriterV10 : AbstractXMLWriter, IXMLAccelerationDataWriter
 	{

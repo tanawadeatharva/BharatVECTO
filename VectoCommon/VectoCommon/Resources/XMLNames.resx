@@ -1059,4 +1059,7 @@
   <data name="DriverModel_EcoRoll" xml:space="preserve">
     <value>EcoRoll</value>
   </data>
+  <data name="DriverModel_Overspeed_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
 </root>

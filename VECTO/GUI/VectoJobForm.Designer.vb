@@ -88,10 +88,6 @@ Partial Class VectoJobForm
         Me.tbLacDfVelocityDropFile = New System.Windows.Forms.TextBox()
         Me.CbLookAhead = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.Label22 = New System.Windows.Forms.Label()
-        Me.TbUnderSpeed = New System.Windows.Forms.TextBox()
-        Me.Label20 = New System.Windows.Forms.Label()
         Me.PnEcoRoll = New System.Windows.Forms.Panel()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
@@ -159,7 +155,6 @@ Partial Class VectoJobForm
         Me.GrLAC.SuspendLayout
         Me.pnLookAheadCoasting.SuspendLayout
         Me.GroupBox1.SuspendLayout
-        Me.GroupBox2.SuspendLayout
         Me.PnEcoRoll.SuspendLayout
         Me.StatusStrip1.SuspendLayout
         Me.ToolStrip1.SuspendLayout
@@ -806,7 +801,6 @@ Partial Class VectoJobForm
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.GroupBox2)
         Me.GroupBox1.Controls.Add(Me.PnEcoRoll)
         Me.GroupBox1.Controls.Add(Me.RdOverspeed)
         Me.GroupBox1.Controls.Add(Me.RdOff)
@@ -816,48 +810,6 @@ Partial Class VectoJobForm
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = false
         Me.GroupBox1.Text = "Overspeed"
-        '
-        'GroupBox2
-        '
-        Me.GroupBox2.Controls.Add(Me.Label22)
-        Me.GroupBox2.Controls.Add(Me.TbUnderSpeed)
-        Me.GroupBox2.Controls.Add(Me.Label20)
-        Me.GroupBox2.Enabled = false
-        Me.GroupBox2.Location = New System.Drawing.Point(338, 14)
-        Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(168, 57)
-        Me.GroupBox2.TabIndex = 37
-        Me.GroupBox2.TabStop = false
-        Me.GroupBox2.Text = "!! hidden !!"
-        Me.GroupBox2.Visible = false
-        '
-        'Label22
-        '
-        Me.Label22.AutoSize = true
-        Me.Label22.Location = New System.Drawing.Point(6, 16)
-        Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(91, 13)
-        Me.Label22.TabIndex = 1
-        Me.Label22.Text = "Max. Underspeed"
-        Me.Label22.Visible = false
-        '
-        'TbUnderSpeed
-        '
-        Me.TbUnderSpeed.Location = New System.Drawing.Point(9, 32)
-        Me.TbUnderSpeed.Name = "TbUnderSpeed"
-        Me.TbUnderSpeed.Size = New System.Drawing.Size(64, 20)
-        Me.TbUnderSpeed.TabIndex = 1
-        Me.TbUnderSpeed.Visible = false
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = true
-        Me.Label20.Location = New System.Drawing.Point(75, 36)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(38, 13)
-        Me.Label20.TabIndex = 3
-        Me.Label20.Text = "[km/h]"
-        Me.Label20.Visible = false
         '
         'PnEcoRoll
         '
@@ -1411,8 +1363,6 @@ Partial Class VectoJobForm
         Me.pnLookAheadCoasting.PerformLayout
         Me.GroupBox1.ResumeLayout(false)
         Me.GroupBox1.PerformLayout
-        Me.GroupBox2.ResumeLayout(false)
-        Me.GroupBox2.PerformLayout
         Me.PnEcoRoll.ResumeLayout(false)
         Me.PnEcoRoll.PerformLayout
         Me.StatusStrip1.ResumeLayout(false)
@@ -1482,13 +1432,10 @@ End Sub
 	Friend WithEvents CbLookAhead As CheckBox
 	Friend WithEvents GroupBox1 As GroupBox
 	Friend WithEvents Label21 As Label
-	Friend WithEvents Label20 As Label
 	Friend WithEvents Label14 As Label
 	Friend WithEvents TbVmin As TextBox
-	Friend WithEvents TbUnderSpeed As TextBox
 	Friend WithEvents TbOverspeed As TextBox
 	Friend WithEvents Label23 As Label
-	Friend WithEvents Label22 As Label
 	Friend WithEvents Label13 As Label
 	Friend WithEvents RdOverspeed As RadioButton
 	Friend WithEvents RdOff As RadioButton
@@ -1532,7 +1479,6 @@ End Sub
 	Friend WithEvents TbAuxPAdd As System.Windows.Forms.TextBox
 	Friend WithEvents Label8 As System.Windows.Forms.Label
 	Friend WithEvents Label15 As System.Windows.Forms.Label
-	Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
 	Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
     Friend WithEvents TabPgADAS As TabPage
     Friend WithEvents GroupBox4 As GroupBox

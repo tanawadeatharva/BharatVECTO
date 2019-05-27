@@ -64,17 +64,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 			};
 			var overspeedData = new DriverData.OverSpeedData {
-				Mode = DriverMode.Overspeed,
+				Enabled = true,
 				MinSpeed = DeclarationData.Driver.OverSpeed.MinSpeed,
 				OverSpeed = DeclarationData.Driver.OverSpeed.AllowedOverSpeed,
-				UnderSpeed = DeclarationData.Driver.OverSpeed.UnderSpeed
 			};
-			if (!DeclarationData.Driver.OverSpeed.AllowedModes.Contains(overspeedData.Mode)) {
-				throw new VectoSimulationException(
-					"Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}",
-					overspeedData.Mode);
-			}
-
+			
 			var retVal = new DriverData {
 				LookAheadCoasting = lookAheadData,
 				OverSpeed = overspeedData,

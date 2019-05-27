@@ -368,11 +368,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		MeterPerSecond OverSpeed { get; }
 
-		/// <summary>
-		/// P018
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		MeterPerSecond UnderSpeed { get; }
 	}
 
 	public interface ILookaheadCoastingInputData : IDriverModelData

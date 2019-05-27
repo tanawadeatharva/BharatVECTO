@@ -446,7 +446,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
 				OverSpeed = new DriverData.OverSpeedData {
-					Mode = DriverMode.Off
+					Enabled = false
 				},
 			};
 		}

@@ -50,20 +50,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, ValidateObject] public EcoRollData EcoRoll;
 
-		public static DriverMode ParseDriverMode(string mode)
+		public static bool ParseDriverMode(string mode)
 		{
-			return mode.Replace("-", "").ParseEnum<DriverMode>();
+			if (mode == null) {
+				return false;
+			}
+			var txt = mode.Replace("-", "");
+			if (txt.Equals("Off", StringComparison.InvariantCultureIgnoreCase)) {
+				return false;
+			}
+
+			if (txt.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase)) {
+				return true;
+			}
+
+			return false;
 		}
 
 		public class OverSpeedData
 		{
-			public DriverMode Mode;
+			public bool Enabled;
 
 			[Required, SIRange(0, 120 / Constants.MeterPerSecondToKMH)] public MeterPerSecond MinSpeed;
 
 			[Required, SIRange(0, 50 / Constants.MeterPerSecondToKMH)] public MeterPerSecond OverSpeed;
-
-			[Required, SIRange(0, 50 / Constants.MeterPerSecondToKMH)] public MeterPerSecond UnderSpeed;
 		}
 
 		public class EcoRollData

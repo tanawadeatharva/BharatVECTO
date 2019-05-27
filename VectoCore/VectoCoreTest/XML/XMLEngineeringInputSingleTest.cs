@@ -375,7 +375,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var adas = inputDataProvider.DriverInputData;
 
-			Assert.AreEqual(DriverMode.Overspeed, adas.OverSpeedData.Mode);
+			Assert.IsTrue(adas.OverSpeedData.Enabled);
 		}
 
 		[TestCase]
@@ -412,10 +412,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(DeclarationData.Driver.LookAhead.MinimumSpeed.AsKmph, lac.MinSpeed.AsKmph, 1e-6);
 
 			var overspeed = driverDataProvider.OverSpeedData;
-			Assert.AreEqual(DriverMode.Overspeed, overspeed.Mode);
+			Assert.IsTrue(overspeed.Enabled);
 			Assert.AreEqual(50, overspeed.MinSpeed.AsKmph, 1e-6);
 			Assert.AreEqual(5, overspeed.OverSpeed.AsKmph, 1e-6);
-			Assert.AreEqual(5, overspeed.UnderSpeed.AsKmph, 1e-6);
 
 			var driverAcc = driverDataProvider.AccelerationCurve.AccelerationCurve;
 			Assert.AreEqual(2, driverAcc.Rows.Count);
@@ -561,10 +560,9 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("1", lac.CoastingDecisionFactorVelocityDropLookup.Rows[1][1]);
 
 			var overspeed = driverDataProvider.OverSpeedData;
-			Assert.AreEqual(DriverMode.Overspeed, overspeed.Mode);
+			Assert.IsTrue(overspeed.Enabled);
 			Assert.AreEqual(50, overspeed.MinSpeed.AsKmph, 1e-6);
 			Assert.AreEqual(5, overspeed.OverSpeed.AsKmph, 1e-6);
-			Assert.AreEqual(5, overspeed.UnderSpeed.AsKmph, 1e-6);
 
 			var driverAcc = driverDataProvider.AccelerationCurve.AccelerationCurve;
 			Assert.AreEqual(2, driverAcc.Rows.Count);

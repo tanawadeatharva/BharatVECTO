@@ -354,11 +354,10 @@ Public Class JSONFileWriter
 		'Overspeed / EcoRoll
 		Dim overspeedDic As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
-		overspeedDic.Add("Mode", driver.OverSpeedData.Mode.ToString())
+		overspeedDic.Add("Mode", If(driver.OverSpeedData.Enabled,  "Overspeed" ,"Off"))
 
 		overspeedDic.Add("MinSpeed", driver.OverSpeedData.MinSpeed.AsKmph)
 		overspeedDic.Add("OverSpeed", driver.OverSpeedData.OverSpeed.AsKmph)
-		overspeedDic.Add("UnderSpeed", driver.OverSpeedData.UnderSpeed.AsKmph)
 		body.Add("OverSpeedEcoRoll", overspeedDic)
 
 		'Cycles

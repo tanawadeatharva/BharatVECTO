@@ -465,14 +465,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get {
 				var overspeed = Body.GetEx(JsonKeys.DriverData_OverspeedEcoRoll);
 				return new OverSpeedInputData() {
-					Mode = DriverData.ParseDriverMode(
+					Enabled = DriverData.ParseDriverMode(
 						overspeed.GetEx<string>(JsonKeys.DriverData_OverspeedEcoRoll_Mode)),
 					MinSpeed = overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_MinSpeed)
 										.KMPHtoMeterPerSecond(),
 					OverSpeed = overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_OverSpeed)
 										.KMPHtoMeterPerSecond(),
-					UnderSpeed =
-						overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_UnderSpeed).KMPHtoMeterPerSecond()
 				};
 			}
 		}

@@ -407,7 +407,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 
-			return Driver.DriverData.OverSpeed.Mode == DriverMode.Overspeed
+			return Driver.DriverData.OverSpeed.Enabled
 					&& velocity > Driver.DriverData.OverSpeed.MinSpeed
 					&& (velocity + Driver.DriverData.OverSpeed.OverSpeed) <
 					(Driver.DataBus.MaxVehicleSpeed ?? 500.KMPHtoMeterPerSecond());

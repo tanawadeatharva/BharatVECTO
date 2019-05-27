@@ -129,14 +129,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static class OverSpeed
 			{
-				public static readonly IList<DriverMode> AllowedModes = new List<DriverMode> {
-					DriverMode.EcoRoll,
-					DriverMode.Overspeed
-				};
-
 				public static readonly MeterPerSecond MinSpeed = 50.KMPHtoMeterPerSecond();
 				public static readonly MeterPerSecond AllowedOverSpeed = 2.5.KMPHtoMeterPerSecond();
-				public static readonly MeterPerSecond UnderSpeed = 5.KMPHtoMeterPerSecond();
 			}
 
 			public static class EngineStopStart

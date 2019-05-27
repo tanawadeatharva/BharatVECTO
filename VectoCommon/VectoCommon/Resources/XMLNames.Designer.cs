@@ -853,6 +853,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        public static string DriverModel_Overspeed_Enabled {
+            get {
+                return ResourceManager.GetString("DriverModel_Overspeed_Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MinSpeed.
         /// </summary>
         public static string DriverModel_Overspeed_MinSpeed {

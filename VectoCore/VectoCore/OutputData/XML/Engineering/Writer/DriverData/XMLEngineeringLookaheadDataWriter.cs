@@ -6,7 +6,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
+namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer.DriverData
 {
 	internal class XMLEngineeringLookaheadDataWriterV10 : AbstractXMLWriter, IXMLLookaheadDataWriter
 	{

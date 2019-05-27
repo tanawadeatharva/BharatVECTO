@@ -363,10 +363,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LookAheadDistanceFactor = driver.Lookahead.LookaheadDistanceFactor
 			};
 			var overspeedData = new DriverData.OverSpeedData {
-				Mode = driver.OverSpeedData.Mode,
+				Enabled = driver.OverSpeedData.Enabled,
 				MinSpeed = driver.OverSpeedData.MinSpeed,
 				OverSpeed = driver.OverSpeedData.OverSpeed,
-				UnderSpeed = driver.OverSpeedData.UnderSpeed,
 			};
 			var retVal = new DriverData {
 				AccelerationCurve = accelerationData,

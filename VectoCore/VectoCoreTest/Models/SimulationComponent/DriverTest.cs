@@ -437,7 +437,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
 				},
 				OverSpeed = new DriverData.OverSpeedData {
-					Mode = DriverMode.Off
+					Enabled = false
 				},
 			};
 		}
