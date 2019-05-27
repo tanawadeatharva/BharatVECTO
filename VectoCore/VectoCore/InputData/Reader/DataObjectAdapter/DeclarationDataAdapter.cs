@@ -77,6 +77,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
 					UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
 				},
+				EcoRoll = new DriverData.EcoRollData() {
+					UnderspeedThreshold =  DeclarationData.Driver.EcoRoll.UnderspeedThreshold,
+					MinSpeed =  DeclarationData.Driver.EcoRoll.MinSpeed,
+					ActivationPhaseDuration = DeclarationData.Driver.EcoRoll.ActivationDelay,
+					AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
+					AccelerationUpperLimit = DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
+				}
 			};
 			return retVal;
 		}

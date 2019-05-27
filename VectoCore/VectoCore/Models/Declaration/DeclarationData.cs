@@ -145,6 +145,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public static readonly MeterPerSecond MinSpeed = 60.KMPHtoMeterPerSecond();
 				public static readonly Second ActivationDelay = 2.SI<Second>();
 				public static readonly MeterPerSecond UnderspeedThreshold = 2.5.KMPHtoMeterPerSecond();
+
+				public static readonly MeterPerSquareSecond AccelerationLowerLimit = 0.SI<MeterPerSquareSecond>();
+				public static readonly MeterPerSquareSecond AccelerationUpperLimit = 0.1.SI<MeterPerSquareSecond>();
 			}
 
 		}
