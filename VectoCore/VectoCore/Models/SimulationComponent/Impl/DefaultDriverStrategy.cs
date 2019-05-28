@@ -431,9 +431,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				throw new VectoException("HandleRequestEngaged found no operating point.");
-			} else {
-				return HandleRequestDisengaged(absTime, ds, gradient, velocity, debug);
+			} 
+
+			var response = HandleRequestDisengaged(absTime, ds, gradient, velocity, debug);
+			if (!(response is ResponseSuccess) && DataBus.ClutchClosed(absTime)) {
+				response = HandleRequestEngaged(absTime, ds, targetVelocity, gradient, prohibitOverspeed, velocity, debug);
 			}
+			
+			return response;
 		}
 
 		private IResponse HandleRequestDisengaged(
