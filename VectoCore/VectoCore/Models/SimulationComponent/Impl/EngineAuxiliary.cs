@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Watt PowerDemandEngineOff()
 		{
 			if (!DataBus.VehicleStopped) {
-				throw new NotImplementedException("EngineOff while Driving not implemented");
+				return Auxiliaries.Sum(x => x.Value(0.RPMtoRad()));
 			}
 
 			var auxiliarieIgnoredDuringVehicleStop = new[] {

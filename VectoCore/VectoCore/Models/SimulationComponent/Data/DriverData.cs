@@ -60,6 +60,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				return false;
 			}
 
+			if (txt.Equals("Overspeed", StringComparison.InvariantCultureIgnoreCase)) {
+				return true;
+			}
+
 			if (txt.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase)) {
 				return true;
 			}

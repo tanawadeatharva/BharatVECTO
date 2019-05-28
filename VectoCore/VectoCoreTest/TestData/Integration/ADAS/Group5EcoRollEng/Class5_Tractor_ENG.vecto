@@ -14,7 +14,7 @@
     "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
-    "Aux": [
+   "Aux": [
       {
         "ID": "ES",
         "Type": "Electric System",
@@ -36,13 +36,21 @@
       "Df_velocityDropLookup": ""
     },
     "OverSpeedEcoRoll": {
-      "Mode": "Off",
+      "Mode": "Overspeed",
       "MinSpeed": 50.0,
-      "OverSpeed": 5.0,
-      "UnderSpeed": 5.0
+      "OverSpeed": 2.5,
     },
     "Cycles": [
-      "Long_Haul+ES.vdri"
+      "DriveDHSl1.1.vdri",
+      "DriveDHSl1.1_Uh0.1.vdri",
+      "DriveDHSl1.3.vdri",
+      "DriveDhSl0.8.vdri",
+      "DriveDhSl1.5.vdri",
+      "DriveDHSl1.1_Stop.vdri",
+      "DriveDHSl1.1_TS--.vdri",
+      "DriveDHSl1.1_TS-.vdri",
+      "DriveDHSl1.1_TS+.vdri",
+      "DriveDHSl1.1_TS++.vdri",
     ]
   }
 }

@@ -61,6 +61,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
+			retVal.ADAS = CreateADAS(data.ADAS);
+
 			var axles = data.Components.AxleWheels.AxlesEngineering;
 
 			retVal.AxleData = axles.Select(
