@@ -533,7 +533,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_quam
                   <CertificationNumber>TYRE-315/70 R22.5</CertificationNumber>
                   <Date>2017-09-26T15:33:45.1110278Z</Date>
                   <AppVersion>VectoCore</AppVersion>
-                  <Dimension>235/60 R17 C</Dimension>
+                  <Dimension>235/60 R17C</Dimension>
                   <RRCDeclared>0.0061</RRCDeclared>
                   <FzISO>33350</FzISO>
                 </v2.0:Data>
