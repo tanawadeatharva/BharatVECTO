@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputEngineering xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaVersion="0.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 ../XSD/VectoEngineeringInput.xsd">
+<tns:VectoInputEngineering xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaVersion="0.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 E:\QUAM\Workspace\VECTO_quam\VectoCore\VectoCore\Resources\XSD/VectoEngineeringInput.0.7.xsd">
 	<EngineOnlyMode>false</EngineOnlyMode>
-	<Resource type="xml" component="Vehicle" file="engineering_vehicle_ref.xml"/>
-	<Signature>
-		<ComponentDataHash>69459c035a9733204729dce38e991f1092d2eb42</ComponentDataHash>
-	</Signature>
+	<Vehicle>
+	<Resource type="xml" file="engineering_vehicle_ref.xml"/>
+	</Vehicle>
 	<DriverModel>
 		<LookAheadCoasting>
 			<Enabled>true</Enabled>

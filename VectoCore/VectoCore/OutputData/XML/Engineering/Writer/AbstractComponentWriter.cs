@@ -1,0 +1,171 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
+using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
+{
+	public abstract class AbstractXMLWriter
+	{
+		public string XMLDataType { get; }
+
+		protected AbstractXMLWriter(string xmlType)
+		{
+			XMLDataType = xmlType;
+		}
+
+		protected XElement[] GetDefaultComponentElements(IComponentInputData data)
+		{
+			var tns = Writer.RegisterNamespace(XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10);
+			return new[] {
+				new XElement(tns + XMLNames.Component_Manufacturer, string.IsNullOrWhiteSpace(data.Manufacturer) ? "N.A." : data.Manufacturer),
+				new XElement(tns + XMLNames.Component_Model,  string.IsNullOrWhiteSpace(data.Model) ? "N.A." : data.Model),
+				new XElement(tns + XMLNames.Component_Date, XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
+				new XElement(tns + XMLNames.Component_AppVersion, "VECTO " + VectoSimulationCore.VersionNumber),
+			};
+		}
+
+		protected XElement[] GetDefaultComponentElements(IVehicleEngineeringInputData data)
+		{
+			var tns = Writer.RegisterNamespace(XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10);
+			return new[] {
+				new XElement(tns + XMLNames.Component_Manufacturer, data.Manufacturer),
+				new XElement(tns + XMLNames.Component_ManufacturerAddress, data.ManufacturerAddress),
+				new XElement(tns + XMLNames.Component_Model, data.Model),
+				new XElement(tns + XMLNames.Vehicle_VIN, data.VIN),
+				new XElement(tns + XMLNames.Component_Date, XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)),
+			};
+		}
+
+		protected object[] EmbedDataTable(
+			DataTable table, Dictionary<string, string> mapping, string tagName = "Entry",
+			Dictionary<string, uint> precision = null)
+		{
+			var tns = Writer.RegisterNamespace(XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10);
+
+			return (from DataRow row in table.Rows
+					select
+						new XElement(
+							tns + tagName,
+							table.Columns.Cast<DataColumn>()
+								.Where(c => mapping.ContainsKey(c.ColumnName))
+								.Select(
+									c => {
+										var p = precision != null && precision.ContainsKey(c.ColumnName) ? precision[c.ColumnName] : 2;
+										return new XAttribute(mapping[c.ColumnName], row.Field<string>(c).ToDouble().ToXMLFormat(p));
+									})))
+				.Cast<object>().ToArray();
+		}
+
+		protected object[] ExtCSVResource(DataTable data, string filename)
+		{
+			var tns = Writer.RegisterNamespace(XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10);
+			VectoCSVFile.Write(filename, data);
+			return new object[] {
+				new XElement(
+					tns + XMLNames.ExternalResource,
+					new XAttribute(XMLNames.ExtResource_Type_Attr, XMLNames.ExtResource_Type_Value_CSV),
+					new XAttribute(XMLNames.ExtResource_File_Attr, filename))
+			};
+		}
+
+		protected virtual XElement ExtComponent(XDocument document, string component, string filename)
+		{
+			var writer = new XmlTextWriter(filename, Encoding.UTF8) {
+				Formatting = Formatting.Indented
+			};
+			document.WriteTo(writer);
+			writer.Flush();
+			writer.Close();
+			var tns = Writer.RegisterNamespace(XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10);
+			var retVal = new XElement(
+				tns + XMLNames.ExternalResource,
+				new XAttribute(XMLNames.ExtResource_Type_Attr, XMLNames.ExtResource_Type_Value_XML),
+				new XAttribute(XMLNames.ExtResource_Component_Attr, component),
+				new XAttribute(XMLNames.ExtResource_File_Attr, filename));
+			return retVal;
+		}
+
+		public virtual IXMLEngineeringWriter Writer { protected get; set; }
+
+		public virtual object[] WriteXML(IAxleEngineeringInputData axle, int idx, Meter dynamicTyreRadius)
+		{
+			return null;
+		}
+
+		public virtual object[] WriteXML(ITransmissionInputData inputData, int i)
+		{
+			return null;
+		}
+
+		public virtual object[] WriteXML(IDriverModelData inputData)
+		{
+			return null;
+		}
+
+		public virtual object[] WriteXML(IComponentInputData inputData)
+		{
+			return null;
+		}
+
+		
+		public virtual object[] WriteXML(IEngineeringInputDataProvider inputData)
+		{
+			return null;
+		}
+
+		public virtual object[] WriteXML(IAuxiliaryEngineeringInputData inputData)
+		{
+			return null;
+		}
+
+		public abstract XNamespace ComponentDataNamespace { get; }
+
+		public virtual XAttribute GetXMLTypeAttribute()
+		{
+			var xsns = Writer.RegisterNamespace(XMLDefinitions.XML_SCHEMA_NAMESPACE);
+			return new XAttribute(
+				xsns + "type", string.Format("{0}:{1}", Writer.GetNSPrefix(ComponentDataNamespace.NamespaceName), XMLDataType));
+		}
+
+		public virtual object[] WriteXML(IAdvancedDriverAssistantSystemsEngineering inputData)
+		{
+			return null;
+		}
+	}
+
+
+	public abstract class AbstractComponentWriter<T> : AbstractXMLWriter where T : class, IComponentInputData
+	{
+		protected AbstractComponentWriter(string xmlType) : base(xmlType) { }
+
+		#region Implementation of IXMLEngineeringComponentWriter
+
+		public override object[] WriteXML(IComponentInputData inputData)
+		{
+			var componentData = inputData as T;
+			if (Writer == null) {
+				throw new VectoException("no main writer set!");
+			}
+
+			if (componentData == null) {
+				throw new VectoException("input Data is not of type IEngineEngineeringInputData");
+			}
+
+			return DoWriteXML(componentData);
+		}
+
+		#endregion
+
+		protected abstract object[] DoWriteXML(T inputData);
+	}
+}

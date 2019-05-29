@@ -41,6 +41,7 @@ using System.Xml.Schema;
 using HashingTool.Helper;
 using HashingTool.Util;
 using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace HashingTool.ViewModel.UserControl
 {
@@ -282,7 +283,7 @@ namespace HashingTool.ViewModel.UserControl
 										: e.ValidationEventArgs.Message,
 									e.ValidationEventArgs == null ? 0 : e.ValidationEventArgs.Exception.LineNumber)));
 					});
-				await validator.ValidateXML(XMLValidator.XmlDocumentType.DeclarationComponentData | XMLValidator.XmlDocumentType.DeclarationJobData | XMLValidator.XmlDocumentType.CustomerReport | XMLValidator.XmlDocumentType.ManufacturerReport);
+				await validator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 			} catch (Exception e) {
 				LogError(e.Message);
 			}

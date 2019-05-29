@@ -219,8 +219,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public class ADASData
 		{
 			public bool EngineStopStart { get; internal set; }
-			public bool EcoRollWithoutEngineStop { get; internal set; }
-			public bool EcoRollWithEngineStop { get; internal set; }
+			public EcoRollType EcoRoll { get; internal set; }
 			public PredictiveCruiseControlType PredictiveCruiseControl { get; internal set; }
 		}
 

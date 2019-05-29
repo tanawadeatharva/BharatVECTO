@@ -34,11 +34,13 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -52,10 +54,16 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 	{
 		const string Class5ADAS = @"Testdata\Integration\DeclarationMode\Class5_ADAS\Tractor_4x2_vehicle-class-5_EURO6_2018.xml";
 
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 
@@ -90,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
 			var writer = new FileOutputWriter(filename);
-			var inputData = new XMLDeclarationInputDataProvider(modified, true); //.ReadJsonJob(relativeJobPath);
+			var inputData = xmlInputReader.CreateDeclaration(modified); //.ReadJsonJob(relativeJobPath);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
 				ActualModalData = true

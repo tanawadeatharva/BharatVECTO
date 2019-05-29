@@ -69,6 +69,16 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public MeterPerSecond UnderSpeed { get; internal set; }
 	}
 
+	public class DriverAccelerationInputData : IDriverAccelerationData
+	{
+		#region Implementation of IDriverAccelerationData
+
+		public TableData AccelerationCurve { get; internal set; }
+
+		#endregion
+	}
+
+
 	public class TransmissionInputData : ITransmissionInputData
 	{
 		public int Gear { get; internal set; }
@@ -84,6 +94,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public PerSecond MaxInputSpeed { get; internal set; }
 
 		public TableData ShiftPolygon { get; internal set; }
+		public DataSource DataSource { get; internal set; }
 	}
 
 	public class AxleInputData : IAxleEngineeringInputData
@@ -103,13 +114,15 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 
 		public double AxleWeightShare { get; internal set; }
+
+		public DataSource DataSource { get; internal set; }
 	}
 
 	public class TyreInputData : ITyreEngineeringInputData
 	{
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
 			"CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-		public DataSourceType SourceType { get; internal set; }
+		public DataSource DataSource { get; internal set; }
 
 		public string Source { get; internal set; }
 
@@ -134,6 +147,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public Newton TyreTestLoad { get; internal set; }
 
 		public KilogramSquareMeter Inertia { get; internal set; }
+
+		public Meter DynamicTyreRadius { get; }
 	}
 
 	public class AuxiliaryDataInputData : IAuxiliaryEngineeringInputData, IAuxiliaryDeclarationInputData
@@ -161,6 +176,8 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public TableData DemandMap { get; internal set; }
 
 		public Watt ConstantPowerDemand { get; internal set; }
+
+		public DataSource DataSource { get; internal set; }
 	}
 
 	public class TorqueLimitInputData : ITorqueLimitInputData

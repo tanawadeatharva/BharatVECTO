@@ -20,7 +20,7 @@ Parameters in [Job File](#job-file):
 -   **Max. Overspeed \[km/h\]** (relative to target speed)
 
 
-###Eco-Roll
+###Advanced Driver Assistant Systems and Eco-Roll
 
-Eco-Roll is not implemented in Vecto 3.1.
+Advanced Driver Assistant Systems (ADAS) and Eco-Roll are considred only in Declaration mode. Depending on the vehicle group and mission profiile a benefit is applied to the fuel consumption calculated by VECTO (see [ADAS Technologies](#vehicle-adas-technologies)). The ADAS technology and Eco-Roll option can be selected in the Vehicle editor.
 

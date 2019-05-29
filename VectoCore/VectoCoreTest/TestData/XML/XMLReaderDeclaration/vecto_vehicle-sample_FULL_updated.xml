@@ -29,7 +29,7 @@
 		<SleeperCab>false</SleeperCab>
 		<ADAS>
 			<EngineStopStart>true</EngineStopStart>
-			<EcoRollWithoutEngineStop>true</EcoRollWithoutEngineStop>
+			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
 			<EcoRollWithEngineStop>true</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>1,2</PredictiveCruiseControl>
 		</ADAS>

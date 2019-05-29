@@ -41,8 +41,8 @@ namespace TUGraz.VectoCommon.InputData {
 
 		public DigestData(XmlNode xmlNode)
 		{
-			Reference = xmlNode.SelectSingleNode(ReferenceUriAttrXPath)?.InnerXml;
-			var nodes = xmlNode.SelectNodes(TransformAlgorithmAttrXPath);
+			Reference = xmlNode?.SelectSingleNode(ReferenceUriAttrXPath)?.InnerXml;
+			var nodes = xmlNode?.SelectNodes(TransformAlgorithmAttrXPath);
 			var c14n = new List<string>();
 			if (nodes != null) {
 				for (var i = 0; i < nodes.Count; i++) {
@@ -50,8 +50,8 @@ namespace TUGraz.VectoCommon.InputData {
 				}
 			}
 			CanonicalizationMethods = c14n.ToArray();
-			DigestMethod = xmlNode.SelectSingleNode(DigestMethodAlgorithmAttrXPath)?.InnerXml;
-			DigestValue = xmlNode.SelectSingleNode(DigestValueElementXPath)?.InnerXml;
+			DigestMethod = xmlNode?.SelectSingleNode(DigestMethodAlgorithmAttrXPath)?.InnerXml;
+			DigestValue = xmlNode?.SelectSingleNode(DigestValueElementXPath)?.InnerXml;
 		}
 
 		public DigestData(XNode xmlNode)

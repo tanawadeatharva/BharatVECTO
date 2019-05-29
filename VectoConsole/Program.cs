@@ -38,14 +38,17 @@ using System.Reflection;
 using System.Threading;
 using System.Xml;
 using System.Xml.Linq;
+using Ninject;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -100,9 +103,11 @@ Examples:
 		private static JobContainer _jobContainer;
 		private static bool _quiet;
 		private static bool _debugEnabled;
+		private static IKernel _kernel;
 
 		private static int Main(string[] args)
 		{
+			_kernel = new StandardKernel(new VectoNinjectModule());
 			try {
 				// on -h display help and terminate.
 				if (args.Contains("-h")) {
@@ -194,6 +199,8 @@ Examples:
 					return 1;
 				}
 
+				var inputReader = _kernel.Get<IXMLInputDataReader>();
+
 				foreach (var file in jobFiles) {
 					WriteLine(@"Reading job: " + file);
 					var extension = Path.GetExtension(file);
@@ -207,10 +214,10 @@ Examples:
 							var rootNode = xDocument == null ? "" : xDocument.Root.Name.LocalName;
 							switch (rootNode) {
 								case "VectoInputEngineering":
-									dataProvider = new XMLEngineeringInputDataProvider(file, true);
+									dataProvider = inputReader.CreateEngineering(file);
 									break;
 								case "VectoInputDeclaration":
-									dataProvider = new XMLDeclarationInputDataProvider(XmlReader.Create(file), true);
+									dataProvider = inputReader.CreateDeclaration(XmlReader.Create(file));
 									break;
 							}
 							break;

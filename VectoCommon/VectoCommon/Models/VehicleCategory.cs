@@ -35,6 +35,7 @@ namespace TUGraz.VectoCommon.Models
 {
 	public enum VehicleCategory
 	{
+		Unknown,
 		RigidTruck,
 		Tractor,
 		CityBus,

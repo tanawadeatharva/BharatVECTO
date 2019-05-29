@@ -159,7 +159,7 @@ Public Class Engine
 			Dim messages As IEnumerable(Of String) =
 					validationResults.Select(Function(r) r.ErrorMessage + String.Join(", ", r.MemberNames.Distinct()))
 			MsgBox("Invalid input." + Environment.NewLine + String.Join(Environment.NewLine, messages), MsgBoxStyle.OkOnly,
-					"Failed to save gearbox")
+					"Failed to save engine")
 			Return False
 		End If
 
@@ -252,7 +252,7 @@ Public Class Engine
 				engineData = doa.CreateEngineData(engine, Nothing, dummyGearboxData, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
-				engineData = doa.CreateEngineData(engine, Nothing, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
+				engineData = doa.CreateEngineData(engine, Nothing, New List(Of ITorqueLimitInputData), Nothing, TankSystem.Compressed)
 			End If
 
 			Dim result As IList(Of ValidationResult) =
@@ -269,18 +269,16 @@ Public Class Engine
 
 #Region "IInputData"
 
-	Public ReadOnly Property SourceType As DataSourceType Implements IComponentInputData.SourceType
+	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
 		Get
-			Return DataSourceType.JSONFile
+		    Dim retVal As DataSource =  New DataSource() 
+		    retVal.SourceType = DataSourceType.JSONFile
+		    retVal.SourceFile = FilePath
+		    Return retVal
 		End Get
 	End Property
 
-	Public ReadOnly Property Source As String Implements IComponentInputData.Source
-		Get
-			Return FilePath
-		End Get
-	End Property
-
+	
 	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
 		Get
 			Return Cfg.DeclMode
@@ -290,7 +288,7 @@ Public Class Engine
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 
@@ -309,7 +307,7 @@ Public Class Engine
 	Public ReadOnly Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 		Get
 			' Just for the interface. Value is not available in GUI yet.
-			Return "N.A."
+			Return TUGraz.VectoCore.Configuration.Constants.NOT_AVailABLE
 		End Get
 	End Property
 

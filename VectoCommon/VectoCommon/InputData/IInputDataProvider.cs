@@ -35,7 +35,10 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCommon.InputData
 {
-	public interface IInputDataProvider {}
+	public interface IInputDataProvider
+	{
+		DataSource DataSource { get; }
+	}
 
 	public interface IDeclarationInputDataProvider : IInputDataProvider
 	{

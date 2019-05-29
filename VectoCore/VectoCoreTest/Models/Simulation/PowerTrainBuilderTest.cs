@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Exceptions;
@@ -53,6 +54,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public const string JobFileDecl = @"TestData\Jobs\40t_Long_Haul_Truck.vecto";
 		public const string JobFileDeclNoAngular = @"TestData\Jobs\40t_Long_Haul_Truck_NoAng.vecto";
 		public const string JobFileDeclAngEfficiency = @"TestData\Jobs\40t_Long_Haul_Truck with AngleEfficiency.vecto";
+
+
+		
+		[OneTimeSetUp]
+		public void RunBeforeAnyTests()
+		{
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+		}
 
 		[Category("LongRunning")]
 		[TestCase(JobFile, 12),

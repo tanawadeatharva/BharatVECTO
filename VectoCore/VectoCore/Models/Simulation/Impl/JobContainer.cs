@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Adds the runs from the factory to the job container.
 		/// </summary>
 		/// <returns>A List of Run-Identifiers (unique), int</returns>
-		public List<int> AddRuns(SimulatorFactory factory)
+		public List<int> AddRuns(ISimulatorFactory factory)
 		{
 			var runIDs = new List<int>();
 

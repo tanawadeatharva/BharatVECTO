@@ -33,10 +33,12 @@ using System;
 using System.Data;
 using System.IO;
 using System.Linq;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -73,10 +75,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 		private const string DeclarationVehicle9GearsFord =
 			@"TestData\Integration\DeclarationMode\EngineSpeedTooHigh\vecto_vehicle-sample_9gears.xml";
 
+		protected IXMLInputDataReader xmlInputReader;
+		private IKernel _kernel;
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 
@@ -288,7 +296,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestCase(DeclarationVehicle9GearsFord)]
 		public void EngineSpeedTooHigh9SpeedGearbox(string jobFile)
 		{
-			var inputData = new XMLDeclarationInputDataProvider(jobFile, true);
+			var inputData = xmlInputReader.CreateDeclaration(jobFile);
 			var fileWriter = new FileOutputWriter(jobFile);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, fileWriter) {
 				WriteModalResults = true,
