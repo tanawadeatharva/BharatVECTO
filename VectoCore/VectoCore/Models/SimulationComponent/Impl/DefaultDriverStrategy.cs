@@ -41,6 +41,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -66,7 +67,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private EcoRoll EcoRollState;
 
-		
 
 		public DefaultDriverStrategy(VehicleData.ADASData adas = null)
 		{
@@ -121,6 +121,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				absTime, dt, VectoMath.Min(Driver.DataBus.MaxVehicleSpeed, targetVelocity), gradient);
 			EcoRollState.PreviousBrakePower = Driver.DataBus.BrakePower;
 			return retVal;
+		}
+
+		public void WriteModalResults(IModalDataContainer container)
+		{
+			container.SetDataValue("EcoRollConditionsMet", EcoRollState.AllConditionsMet ? 1 : 0);
+		}
+
+		public void CommitSimulationStep()
+		{
+			
 		}
 
 		protected virtual IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
@@ -189,18 +199,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Driver.DriverData.EcoRoll.AccelerationLowerLimit, Driver.DriverData.EcoRoll.AccelerationUpperLimit);
 			var accelerationPedalIdle = EcoRollState.AcceleratorPedalIdle;
 			var brakeActive = !EcoRollState.PreviousBrakePower.IsEqual(0);
-			var allConditionsMet = vehicleSpeedAboveLowerThreshold && slopeNegative && accelerationWithinLimits && accelerationPedalIdle && !brakeActive;
+
+			EcoRollState.AllConditionsMet = vehicleSpeedAboveLowerThreshold && slopeNegative && accelerationWithinLimits && accelerationPedalIdle && !brakeActive;
 
 			EcoRollState.Gear = dBus.Gear;
 			switch (EcoRollState.State) {
 				case EcoRollStates.EcoRollOff:
-					if (allConditionsMet) {
+					if (EcoRollState.AllConditionsMet) {
 						EcoRollState.State = EcoRollStates.PreActivation;
 						EcoRollState.StateChangeTstmp = absTime;
 					}
 					break;
 				case EcoRollStates.PreActivation:
-					if (!allConditionsMet) {
+					if (!EcoRollState.AllConditionsMet) {
 						EcoRollState.State = EcoRollStates.EcoRollOff;
 						EcoRollState.StateChangeTstmp = absTime;
 						break;
@@ -454,6 +465,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Watt PreviousBrakePower;
 
 		public bool AcceleratorPedalIdle;
+
+		public bool AllConditionsMet;
+
 	}
 
 	internal enum EcoRollStates
