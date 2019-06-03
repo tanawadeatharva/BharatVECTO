@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private void HandleEcoRoll(Second absTime, MeterPerSecond targetVelocity)
 		{
 			var dBus = Driver.DataBus;
-			var vehicleSpeedAboveLowerThreshold = dBus.VehicleSpeed > Driver.DriverData.EcoRoll.MinSpeed;
+			var vehicleSpeedAboveLowerThreshold = dBus.VehicleSpeed >= Driver.DriverData.EcoRoll.MinSpeed;
 			var slopeNegative = dBus.RoadGradient.IsSmaller(0);
 			var forces = dBus.SlopeResistance(dBus.RoadGradient) + dBus.RollingResistance(dBus.RoadGradient) +
 						dBus.AirDragResistance(dBus.VehicleSpeed, dBus.VehicleSpeed);
