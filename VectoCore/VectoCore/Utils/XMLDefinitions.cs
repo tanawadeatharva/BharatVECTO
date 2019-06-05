@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -81,14 +82,25 @@ namespace TUGraz.VectoCore.Utils
 
 
 
-		public static string GetSchemaFilename(XmlDocumentType type, string version)
+		public static string GetSchemaFilename(XmlDocumentType type, string xsdType)
 		{
 			if (!schemaFilenames.ContainsKey(type)) {
 				throw new Exception(string.Format("Invalid argument {0} - only use single flags", type));
 			}
 			var entry = schemaFilenames[type];
+			var version = GetSchemaVersion(xsdType);
 			return string.Format(entry, string.IsNullOrWhiteSpace(version) ? "" : "." + version);
 		}
 
+
+		public static string GetSchemaVersion(string nodeType)
+		{
+			var parts = nodeType?.Split(':');
+			if (parts?.Length == 2) {
+				return XMLHelper.GetVersionFromNamespaceUri(parts[0]);
+			}
+
+			return null;
+		}
 	}
 }
