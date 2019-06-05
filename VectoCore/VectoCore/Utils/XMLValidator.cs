@@ -78,26 +78,12 @@ namespace TUGraz.VectoCore.Utils
 				throw new Exception("empty XML document");
 			}
 
-			var version = XMLHelper.GetSchemaVersion(_doc.DocumentElement);
+			var xsdType = _doc.DocumentElement.Attributes?.GetNamedItem("type", "http://www.w3.org/2001/XMLSchema-instance")
+							?.InnerText;
 
-			_doc.Schemas = GetXMLSchema(docType, version);
+			_doc.Schemas = GetXMLSchema(docType, xsdType);
 			_doc.Validate(ValidationCallBack);
-			//var settings = new XmlReaderSettings();
-			//settings.Schemas = GetXMLSchema(docType, version);
-			//settings.ValidationType = ValidationType.Schema;
-			//settings.ValidationFlags =
-			//	XmlSchemaValidationFlags.ReportValidationWarnings | XmlSchemaValidationFlags.AllowXmlAttributes;
-			//settings.ValidationEventHandler += ValidationCallBack;
-			//var m = new MemoryStream();
-			//var w = new XmlTextWriter(m, Encoding.UTF8);
-			//_doc.WriteTo(w);
-			//w.Flush();
-			//m.Flush();
-			//m.Seek(0, SeekOrigin.Begin);
-			//var r = new XmlTextReader(m);
-			//var reader = XmlReader.Create(r, settings);
-			//_doc = new XmlDocument();
-			//_doc.Load(reader);
+			
 			return _valid;
 		}
 
@@ -115,7 +101,7 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		private static XmlSchemaSet GetXMLSchema(XmlDocumentType docType, string version)
+		private static XmlSchemaSet GetXMLSchema(XmlDocumentType docType, string xsdType)
 		{
 			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
 
@@ -124,7 +110,7 @@ namespace TUGraz.VectoCore.Utils
 					continue;
 				}
 
-				var schemaFile = XMLDefinitions.GetSchemaFilename(entry, version);
+				var schemaFile = XMLDefinitions.GetSchemaFilename(entry, xsdType);
 				if (schemaFile == null) {
 					continue;
 				}
@@ -134,7 +120,7 @@ namespace TUGraz.VectoCore.Utils
 					resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schemaFile);
 				} catch (Exception e) {
 					throw new Exception(
-						string.Format("Unknown XML schema! version: {0}, xml document type: {1} ({2})", entry, version, schemaFile), e);
+						string.Format("Unknown XML schema! version: {0}, xml document type: {1} ({2})", entry, xsdType, schemaFile), e);
 				}
 
 				var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
