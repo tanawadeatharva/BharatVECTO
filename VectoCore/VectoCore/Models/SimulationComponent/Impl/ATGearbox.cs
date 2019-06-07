@@ -83,6 +83,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public bool ShiftToLocked
+		{
+			get {
+				return PreviousState.Gear == 1 && !PreviousState.TorqueConverterLocked && Gear == PreviousState.Gear &&
+						TorqueConverterLocked;
+			}
+		}
+
 		public bool Disengaged
 		{
 			get { return CurrentState.Disengaged; }
