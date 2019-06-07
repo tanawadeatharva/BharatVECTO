@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var shift = row[ShiftLinesColumns.Shift].ToString().Split('-');
 				var g1 = shift[0].ToInt();
 				var g2 = shift[1].ToInt();
-				var upshift = true;
+				bool upshift;
 				if (g1 + 1 == g2) {
 					// upshift
 					upshift = true;
@@ -75,34 +75,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var loadStage = row[ShiftLinesColumns.LoadStage].ToString().ToInt();
 
-				var nDhAmaxLower = row.Field<string>(ShiftLinesColumns.nDhAmaxLower).ToDouble().RPMtoRad();
-				var nLevelAmaxLower = row.Field<string>(ShiftLinesColumns.nLevelAmaxLower).ToDouble()
+				var nDhAmaxLower = row.Field<string>(ShiftLinesColumns.nDhAmax).ToDouble().RPMtoRad();
+				var nLevelAmaxLower = row.Field<string>(ShiftLinesColumns.nLevelAmax).ToDouble()
 										.RPMtoRad();
-				var nUhAmaxLower = row.Field<string>(ShiftLinesColumns.nUhAmaxLower).ToDouble().RPMtoRad();
+				var nUhAmaxLower = row.Field<string>(ShiftLinesColumns.nUhAmax).ToDouble().RPMtoRad();
 
-				var nDhAminLower = GetAlternativeIfEmpty(row, ShiftLinesColumns.nDhAminLower, ShiftLinesColumns.nDhAmaxLower)
+				var nDhAminLower = GetAlternativeIfEmpty(row, ShiftLinesColumns.nDhAmin, ShiftLinesColumns.nDhAmax)
 					.RPMtoRad();
 				var nLevelAminLower = GetAlternativeIfEmpty(
-					row, ShiftLinesColumns.nLevelAminLower, ShiftLinesColumns.nLevelAmaxLower).RPMtoRad();
-				var nUhAminLower = GetAlternativeIfEmpty(row, ShiftLinesColumns.nUhAminLower, ShiftLinesColumns.nUhAmaxLower)
-					.RPMtoRad();
-
-				var nDhAminUpper = GetAlternativeIfEmpty(
-						row, ShiftLinesColumns.nDhAminUpper, ShiftLinesColumns.nDhAminLower, ShiftLinesColumns.nDhAmaxLower)
-					.RPMtoRad();
-				var nLevelAminUpper = GetAlternativeIfEmpty(
-						row, ShiftLinesColumns.nLevelAminUpper, ShiftLinesColumns.nLevelAminLower, ShiftLinesColumns.nLevelAmaxLower)
-					.RPMtoRad();
-				var nUhAminUpper = GetAlternativeIfEmpty(
-						row, ShiftLinesColumns.nUhAminUpper, ShiftLinesColumns.nUhAminLower, ShiftLinesColumns.nUhAmaxLower)
-					.RPMtoRad();
-
-				var nDhAmaxUpper = GetAlternativeIfEmpty(row, ShiftLinesColumns.nDhAmaxUpper, ShiftLinesColumns.nDhAmaxLower)
-					.RPMtoRad();
-				var nLevelAmaxUpper = GetAlternativeIfEmpty(
-						row, ShiftLinesColumns.nLevelAmaxUpper, ShiftLinesColumns.nLevelAmaxLower)
-					.RPMtoRad();
-				var nUhAmaxUpper = GetAlternativeIfEmpty(row, ShiftLinesColumns.nUhAmaxUpper, ShiftLinesColumns.nUhAmaxLower)
+					row, ShiftLinesColumns.nLevelAmin, ShiftLinesColumns.nLevelAmax).RPMtoRad();
+				var nUhAminLower = GetAlternativeIfEmpty(row, ShiftLinesColumns.nUhAmin, ShiftLinesColumns.nUhAmax)
 					.RPMtoRad();
 
 				ShiftLineSet shiftLineSet;
@@ -128,33 +110,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var entry = new ShiftLines();
 
-				entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeDh, nDhAminLower));
-				entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeLevel, nLevelAminLower));
-				entry.LowerBound.entriesAMin.Add(Tuple.Create(slopeUh, nUhAminLower));
+				entry.entriesAMin.Add(Tuple.Create(slopeDh, nDhAminLower));
+				entry.entriesAMin.Add(Tuple.Create(slopeLevel, nLevelAminLower));
+				entry.entriesAMin.Add(Tuple.Create(slopeUh, nUhAminLower));
 
-				entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeDh, nDhAmaxLower));
-				entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeLevel, nLevelAmaxLower));
-				entry.LowerBound.entriesAMax.Add(Tuple.Create(slopeUh, nUhAmaxLower));
-
-				entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeDh, nDhAminUpper));
-				entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeLevel, nLevelAminUpper));
-				entry.UpperBound.entriesAMin.Add(Tuple.Create(slopeUh, nUhAminUpper));
-
-				entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeDh, nDhAmaxUpper));
-				entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeLevel, nLevelAmaxUpper));
-				entry.UpperBound.entriesAMax.Add(Tuple.Create(slopeUh, nUhAmaxUpper));
+				entry.entriesAMax.Add(Tuple.Create(slopeDh, nDhAmaxLower));
+				entry.entriesAMax.Add(Tuple.Create(slopeLevel, nLevelAmaxLower));
+				entry.entriesAMax.Add(Tuple.Create(slopeUh, nUhAmaxLower));
 
 				shiftLineSet.LoadStages[loadStage] = entry;
 			}
-		}
-
-		private double GetAlternativeIfEmpty(DataRow row, string col1, string col2, string col3)
-		{
-			return string.IsNullOrWhiteSpace(row[col1].ToString())
-				? (string.IsNullOrWhiteSpace(row[col2].ToString())
-					? row.Field<string>(col3).ToDouble()
-					: row.Field<string>(col2).ToDouble())
-				: row.Field<string>(col1).ToDouble();
 		}
 
 		private double GetAlternativeIfEmpty(DataRow row, string col1, string col2)
@@ -308,21 +273,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public const string Shift = "shift";
 			public const string LoadStage = "loadstage";
 
-			public const string nDhAminLower = "n_dh_amin_lower";
-			public const string nLevelAminLower = "n_level_amin_lower";
-			public const string nUhAminLower = "n_uh_amin_lower";
+			public const string nDhAmin = "n_dh_amin";
+			public const string nLevelAmin = "n_level_amin";
+			public const string nUhAmin = "n_uh_amin";
 
-			public const string nDhAmaxLower = "n_dh_amax_lower";
-			public const string nLevelAmaxLower = "n_level_amax_lower";
-			public const string nUhAmaxLower = "n_uh_amax_lower";
-
-			public const string nDhAminUpper = "n_dh_amin_upper";
-			public const string nLevelAminUpper = "n_level_amin_upper";
-			public const string nUhAminUpper = "n_uh_amin_upper";
-
-			public const string nDhAmaxUpper = "n_dh_amax_upper";
-			public const string nLevelAmaxUpper = "n_level_amax_upper";
-			public const string nUhAmaxUpper = "n_uh_amax_upper";
+			public const string nDhAmax = "n_dh_amax";
+			public const string nLevelAmax = "n_level_amax";
+			public const string nUhAmax = "n_uh_amax";
 		}
 	}
 
@@ -346,29 +303,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			gradient = gradient.LimitTo(
 				VectoMath.InclinationToAngle(ATShiftStrategyVoith.DownhillSlope),
 				VectoMath.InclinationToAngle(ATShiftStrategyVoith.UphillSlope));
-			var shiftSpeedsLower = shiftLinesSet.LowerBound.LookupShiftSpeed(gradient);
-			var shiftSpeedsUpper = shiftLinesSet.UpperBound.LookupShiftSpeed(gradient);
+			var shiftLine = shiftLinesSet.LookupShiftSpeed(gradient);
 			var acc = aMin > aMax ? acceleration.LimitTo(aMax, aMin) : acceleration.LimitTo(aMin, aMax);
 
-			var shiftSpeed1 = VectoMath.Interpolate(
-				aMin, aMax, shiftSpeedsLower.ShiftSpeedAMin, shiftSpeedsLower.ShiftSpeedAMax, acc);
-			var shiftSpeed2 = VectoMath.Interpolate(
-				aMin, aMax, shiftSpeedsUpper.ShiftSpeedAMin, shiftSpeedsUpper.ShiftSpeedAMax, acc);
+			var shiftSpeed = VectoMath.Interpolate(
+				aMin, aMax, shiftLine.ShiftSpeedAMin, shiftLine.ShiftSpeedAMax, acc);
 
-			return (shiftSpeed1 + shiftSpeed2) / 2.0;
+			return shiftSpeed;
 		}
 	}
 
 	public class ShiftLines
 	{
-		public readonly ShiftSpeeds LowerBound = new ShiftSpeeds();
-		public readonly ShiftSpeeds UpperBound = new ShiftSpeeds();
-	}
-
-	public class ShiftSpeeds
-	{
-		//private Tuple<Radian, Tuple<PerSecond, PerSecond>>[] entries;
-
+	
 		internal readonly List<Tuple<Radian, PerSecond>> entriesAMin = new List<Tuple<Radian, PerSecond>>();
 		internal readonly List<Tuple<Radian, PerSecond>> entriesAMax = new List<Tuple<Radian, PerSecond>>();
 
