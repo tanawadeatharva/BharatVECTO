@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering,
 					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
-					GearshiftParameters = dao.CreateGearshiftData(InputDataProvider.DriverInputData.GearshiftInputData),
+					GearshiftParameters = dao.CreateGearshiftData(InputDataProvider.DriverInputData.GearshiftInputData, axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0)),
 					ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
 				};
 			});

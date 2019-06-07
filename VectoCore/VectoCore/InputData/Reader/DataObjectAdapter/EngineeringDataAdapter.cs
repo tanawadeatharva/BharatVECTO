@@ -405,7 +405,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public ShiftStrategyParameters CreateGearshiftData(IGearshiftEngineeringInputData gsInputData)
+		public ShiftStrategyParameters CreateGearshiftData(IGearshiftEngineeringInputData gsInputData, double axleRatio)
 		{
 			if (gsInputData == null) {
 				return null;
@@ -453,8 +453,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 										DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareEngineSpeedHigh.csv")
 								),
 				//---------------
-				RatioEarlyUpshiftFC = gsInputData.RatioEarlyUpshiftFC ?? 0,
-				RatioEarlyDownshiftFC = gsInputData.RatioEarlyDownshiftFC ?? 0,
+				RatioEarlyUpshiftFC = gsInputData.RatioEarlyUpshiftFC / axleRatio ?? 0,
+				RatioEarlyDownshiftFC = gsInputData.RatioEarlyDownshiftFC / axleRatio ?? 0,
 
 				// voith gs parameters
 

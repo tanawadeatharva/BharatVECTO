@@ -552,7 +552,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public ShiftStrategyParameters CreateGearshiftData()
+		public ShiftStrategyParameters CreateGearshiftData(double axleRatio)
 		{
 			var retVal = new ShiftStrategyParameters {
 				StartVelocity = DeclarationData.GearboxTCU.StartSpeed,
@@ -590,8 +590,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareEngineSpeedHigh.csv")
 				),
 				//--------------------
-				RatioEarlyUpshiftFC = 5,
-				RatioEarlyDownshiftFC = 10,
+				RatioEarlyUpshiftFC = 8.0 / axleRatio,
+				RatioEarlyDownshiftFC = 21.0 / axleRatio,
 			};
 
 			return retVal;

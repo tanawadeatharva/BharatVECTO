@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 			_municipalPtoTransmissionData = CreateDefaultPTOData();
 
-			_gearshiftData = _dao.CreateGearshiftData();
+			_gearshiftData = _dao.CreateGearshiftData(_axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0));
 		}
 
 		
