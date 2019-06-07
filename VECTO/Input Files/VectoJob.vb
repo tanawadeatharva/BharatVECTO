@@ -288,7 +288,8 @@ Public Class VectoJob
 
     Public ReadOnly Property IDriverEngineeringInputData_GearshiftInputData As IGearshiftEngineeringInputData Implements IDriverEngineeringInputData.GearshiftInputData
         Get
-            Return Nothing
+            return new JSONComponentInputData(_tcuFile.FullPath, Me).DriverInputData.GearshiftInputData
+            'Return TryCast( New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.GearboxInputData, IGearshiftEngineeringInputData)
         End Get
     End Property
 

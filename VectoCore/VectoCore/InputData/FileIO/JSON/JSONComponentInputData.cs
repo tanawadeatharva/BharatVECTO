@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONComponentInputData : IEngineeringInputDataProvider, IDeclarationInputDataProvider,
 		IEngineeringJobInputData, IVehicleEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData,
-		IAdvancedDriverAssistantSystemsEngineering, IVehicleComponentsDeclaration, IVehicleComponentsEngineering
+		IAdvancedDriverAssistantSystemsEngineering, IVehicleComponentsDeclaration, IVehicleComponentsEngineering, IDriverEngineeringInputData
 	{
 		protected IGearboxEngineeringInputData Gearbox;
 		protected IAxleGearInputData AxleGear;
@@ -118,10 +118,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IDriverEngineeringInputData DriverInputData
 		{
-			get { return null; }
+			get { return this; }
 		}
 
+		public IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll { get; }
+		public IDriverAccelerationData AccelerationCurve { get; }
+		public ILookaheadCoastingInputData Lookahead { get; }
 		public IGearshiftEngineeringInputData GearshiftInputData { get { return GearshiftData; } }
+
 		public DataSource DataSource
 
 		{
