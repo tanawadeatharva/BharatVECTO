@@ -592,6 +592,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				//--------------------
 				RatioEarlyUpshiftFC = 8.0 / axleRatio,
 				RatioEarlyDownshiftFC = 21.0 / axleRatio,
+				AllowedGearRangeFC = 1,
 			};
 
 			return retVal;

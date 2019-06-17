@@ -25,6 +25,11 @@
     "Diff_curr_targ_vel": 0.1,
     "EngineSpeedHighDriveOffFactor": 1.05,
     "Rating_current_gear": 0.99,
+
+    "RatioEarlyUpshiftFC": 8,
+    "RatioEarlyDownshiftFC": 21,
+    "AllowedGearRangeFC": 1,  
+
     "AccelerationReserveLookup": "AccelerationReserveLookup.csv",
     "ShareTorque99L": "ShareTq99L.csv",
     "PredictionDurationLookup": "PredictionTimeLookup.csv",

@@ -44,6 +44,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
 			}
+
+			if (shiftStrategyParameters.AllowedGearRangeFC > 2 || shiftStrategyParameters.AllowedGearRangeFC < 1) {
+				Log.Warn("Gear-range for FC-based gearshift must be either 1 or 2!");
+				shiftStrategyParameters.AllowedGearRangeFC = shiftStrategyParameters.AllowedGearRangeFC.LimitTo(1, 2);
+			}
 		}
 
 		#region Overrides of AMTShiftStrategy
@@ -51,8 +56,55 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override uint CheckEarlyUpshift(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear)
 		{
-			if (ModelData.Gears[currentGear + 1].Ratio < shiftStrategyParameters.RatioEarlyUpshiftFC) {
-				return OverdriveUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
+			var minFcGear = currentGear;
+			var minFc = double.MaxValue;
+			KilogramPerSecond fcCurrent = null;
+
+			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
+				var tryNextGear = (uint)(currentGear + i);
+
+				if (tryNextGear >= ModelData.Gears.Keys.Max() || !(ModelData.Gears[tryNextGear].Ratio < shiftStrategyParameters.RatioEarlyUpshiftFC)) {
+					continue;
+				}
+
+				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
+
+				var inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
+				var inTorque = response.ClutchPowerRequest / inAngularVelocity;
+
+				// if next gear supplied enough power reserve: take it
+				// otherwise take
+				if (IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
+					continue;
+				}
+
+				var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
+				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+
+				if (fcCurrent == null) {
+					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
+					fcCurrent = fcMap.GetFuelConsumption(
+						responseCurrent.EngineTorqueDemand.LimitTo(
+							fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
+							fld[currentGear].FullLoadStationaryTorque(responseCurrent.EngineSpeed))
+						, responseCurrent.EngineSpeed).Value;
+				}
+				var fcNext = fcMap.GetFuelConsumption(
+					response.EngineTorqueDemand.LimitTo(
+						fld[tryNextGear].DragLoadStationaryTorque(response.EngineSpeed),
+						fld[tryNextGear].FullLoadStationaryTorque(response.EngineSpeed)), response.EngineSpeed).Value;
+
+				if (reserve < ModelData.TorqueReserve ||
+					!fcNext.IsSmaller(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) || !fcNext.IsSmaller(minFc)) {
+					continue;
+				}
+
+				minFcGear = tryNextGear;
+				minFc = fcNext.Value();
+			}
+
+			if (currentGear != minFcGear) {
+				return minFcGear;
 			}
 
 			return base.CheckEarlyUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
@@ -108,41 +160,52 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected virtual uint CheckEarlyDownshift(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear)
 		{
-			if (ModelData.Gears[currentGear - 1].Ratio <= shiftStrategyParameters.RatioEarlyDownshiftFC) {
-				return OverdriveDownshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
-			}
+			var minFcGear = currentGear;
+			var minFc = double.MaxValue;
+			KilogramPerSecond fcCurrent = null;
 
-			return currentGear;
-		}
+			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
+				var tryNextGear = (uint)(currentGear - i);
 
-		private uint OverdriveDownshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear)
-		{
-			var tryNextGear = currentGear - 1;
-			var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
+				if (tryNextGear <= 1 || !(ModelData.Gears[tryNextGear].Ratio <= shiftStrategyParameters.RatioEarlyDownshiftFC)) {
+					continue;
+				}
 
-			var inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
-			var inTorque = response.ClutchPowerRequest / inAngularVelocity;
+				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
 
-			if (!IsAboveUpShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
-				var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
-				var fcCurrent = fcMap.GetFuelConsumption(
-					responseCurrent.EngineTorqueDemand.LimitTo(
-						fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
-						fld[currentGear].FullLoadStationaryTorque(responseCurrent.EngineSpeed))
-					, responseCurrent.EngineSpeed);
+				var inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
+				var inTorque = response.ClutchPowerRequest / inAngularVelocity;
+
+				if (IsAboveUpShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
+					continue;
+				}
+
+				
+				if (fcCurrent == null) {
+					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
+					fcCurrent = fcMap.GetFuelConsumption(
+						responseCurrent.EngineTorqueDemand.LimitTo(
+							fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
+							fld[currentGear].FullLoadStationaryTorque(responseCurrent.EngineSpeed))
+						, responseCurrent.EngineSpeed).Value;
+				}
 				var fcNext = fcMap.GetFuelConsumption(
 					response.EngineTorqueDemand.LimitTo(
 						fld[tryNextGear].DragLoadStationaryTorque(response.EngineSpeed),
-						fld[tryNextGear].FullLoadStationaryTorque(response.EngineSpeed)), response.EngineSpeed);
+						fld[tryNextGear].FullLoadStationaryTorque(response.EngineSpeed)), response.EngineSpeed).Value;
 
-				if (fcNext.Value.IsSmaller(fcCurrent.Value * shiftStrategyParameters.RatingFactorCurrentGear)) {
-					currentGear = tryNextGear;
+				if (!fcNext.IsSmaller(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) ||
+					!fcNext.IsSmaller(minFc)) {
+					continue;
 				}
+
+				minFcGear = tryNextGear;
+				minFc = fcNext.Value();
 			}
 
-			return currentGear;
+			return minFcGear;
 		}
+
 
 		#endregion
 

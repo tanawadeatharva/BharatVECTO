@@ -402,6 +402,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public MeterPerSquareSecond DriverAccelerationThresholdLow { get { return null; } }
 		public double? RatioEarlyUpshiftFC { get { return null; } }
 		public double? RatioEarlyDownshiftFC { get { return null; } }
+		public int? AllowedGearRangeFC { get { return null; } }
 		public TableData LoadStageShiftLines { get { return null; } }
 		public IList<double> LoadStageThresoldsUp { get { return null; } }
 		public IList<double> LoadStageThresoldsDown { get { return null; } }

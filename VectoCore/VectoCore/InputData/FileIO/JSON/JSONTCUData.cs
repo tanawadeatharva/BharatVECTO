@@ -257,6 +257,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public int? AllowedGearRangeFC
+		{
+			get {
+				if (Body["AllowedGearRangeFC"] == null) {
+					return null;
+				}
+
+				return Body.GetEx<int>("AllowedGearRangeFC");
+			}
+		}
+
 		public TableData LoadStageShiftLines
 		{
 			get {

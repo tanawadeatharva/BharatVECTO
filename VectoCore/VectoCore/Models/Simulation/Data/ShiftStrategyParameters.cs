@@ -58,5 +58,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 		public TableData GearshiftLines { get; set; }
 
 		public IEnumerable<Tuple<double, double>> LoadstageThresholds { get; set; }
+		
+		public int AllowedGearRangeFC { get; set; }
 	}
 }

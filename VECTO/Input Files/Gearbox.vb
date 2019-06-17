@@ -589,7 +589,13 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public Overridable ReadOnly Property LoadStageShiftLines As TableData Implements IGearshiftEngineeringInputData.LoadStageShiftLines
+    Public ReadOnly Property AllowedGearRangeFC As Integer? Implements IGearshiftEngineeringInputData.AllowedGearRangeFC
+    get
+            Return Nothing
+    End Get
+    End Property
+
+    Public Overridable ReadOnly Property LoadStageShiftLines As TableData Implements IGearshiftEngineeringInputData.LoadStageShiftLines
 		Get
 			Return Nothing
 		End Get

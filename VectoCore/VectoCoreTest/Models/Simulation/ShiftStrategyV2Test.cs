@@ -47,7 +47,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			RunJob_DeclSingle(jobFile, i);
 		}
 
-		[TestCase(@"TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor_ENG_TCU.vecto")]
+		[TestCase(@"TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor_ENG_TCU.vecto"),
+		TestCase(@"TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor_ENG_FC.vecto"),
+			TestCase(@"TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\MB_Citaro_G_MP156_ZF_Sort.vecto", 2)]
 		public void TestShiftStrategyEngineering(string jobFile, int runIdx = 0)
 		{
 			var relativeJobPath = jobFile;

@@ -275,6 +275,8 @@ namespace TUGraz.VectoCommon.InputData
 		double? RatioEarlyUpshiftFC { get; }
 		double? RatioEarlyDownshiftFC { get; }
 
+		int? AllowedGearRangeFC { get; }
+
 
 		// Voith GS Parameters
 		TableData LoadStageShiftLines { get; }
