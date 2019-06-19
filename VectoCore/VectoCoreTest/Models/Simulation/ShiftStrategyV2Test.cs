@@ -328,6 +328,18 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
+		[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_quam\VectoCore\VectoCoreTest\TestData\Integration\ShiftStrategyV2\Allison_FC-based_AT_CONFIDENTIAL\WDB96702410158849.vecto", 5)]
+		public void RunDeclarationAllisonFCShift(string jobName, int runIdx)
+		{
+			RunJob_DeclSingle(jobName, runIdx);
+		}
+
+		[TestCase(@"E:\QUAM\Workspace\VECTO_DEV_quam\VectoCore\VectoCoreTest\TestData\Integration\ShiftStrategyV2\Allison_Voith_AT_CONFIDENTIAL\WDB96702410158849.vecto", 5)]
+		public void RunDeclarationAllisonVoithhift(string jobName, int runIdx)
+		{
+			RunJob_Engineering(jobName);
+		}
+
 		public void RunJob_Engineering(string jobName)
 		{
 			var relativeJobPath = jobName;
