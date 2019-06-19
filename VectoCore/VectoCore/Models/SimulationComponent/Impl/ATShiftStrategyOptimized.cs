@@ -91,6 +91,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter origInTorque,
 			PerSecond origInAngularVelocity, uint currentGear, Second lastShiftTime)
 		{
+			if (outAngularVelocity.IsEqual(0)) {
+				return null;
+			}
+
 			var minFcGear = new GearshiftPosition(currentGear, _gearbox.TorqueConverterLocked);
 			var minFc = double.MaxValue;
 			KilogramPerSecond fcCurrent = null;

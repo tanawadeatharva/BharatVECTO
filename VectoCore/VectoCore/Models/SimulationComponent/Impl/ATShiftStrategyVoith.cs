@@ -34,6 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private List<SchmittTrigger> LoadStageSteps;
 		private Radian roadGradient;
 		private MeterPerSquareSecond driverAcceleration;
+		private bool dualTCTransmission;
 
 		public ATShiftStrategyVoith(VectoRunData data, IDataBus dataBus) : base(data, dataBus)
 		{
@@ -50,6 +51,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			MinMass = data.VehicleData.MinimumVehicleMass;
 			MaxMass = data.VehicleData.MaximumVehicleMass;
 			FullLoadCurve = data.EngineData.FullLoadCurves[0];
+
+			dualTCTransmission = ModelData.Gears[1].HasTorqueConverter && ModelData.Gears[2].HasTorqueConverter;
 		}
 
 		private void InitializeShiftLines(TableData lines)
@@ -199,18 +202,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var currentGear = ModelData.Gears[gear];
-			if (gear >= ModelData.Gears.Keys.Max()) {
-				return false;
-			}
+			if (dualTCTransmission && gear == 1) {
+				// UPSHIFT - Special rule for 1C -> 2C
+				if (!_gearbox.TorqueConverterLocked && ModelData.Gears.ContainsKey(gear + 1) &&
+					ModelData.Gears[gear + 1].HasTorqueConverter && outAngularVelocity.IsGreater(0)) {
+					var result = CheckUpshiftTcTc(absTime, dt, outTorque, outAngularVelocity, gear, currentGear);
+					if (result.HasValue) {
+						return result.Value;
+					}
+				}
+			} else {
 
-			var nextGear = _gearbox.TorqueConverterLocked ? gear + 1 : gear;
 
-			var shiftSpeed = UpshiftLines[(int)gear].LookupShiftSpeed(
-				_loadStage, DataBus.RoadGradient, DataBus.DriverAcceleration, _accMin, _accMax);
-			var shiftSpeedGbxOut = shiftSpeed / ModelData.Gears[nextGear].Ratio;
-			if (outAngularVelocity > shiftSpeedGbxOut) {
-				Upshift(absTime, gear);
-				return true;
+				if (gear >= ModelData.Gears.Keys.Max()) {
+					return false;
+				}
+
+				var nextGear = _gearbox.TorqueConverterLocked ? gear + 1 : gear;
+
+				var shiftSpeed = UpshiftLines[(int)gear].LookupShiftSpeed(
+					_loadStage, DataBus.RoadGradient, DataBus.DriverAcceleration, _accMin, _accMax);
+				var shiftSpeedGbxOut = shiftSpeed / ModelData.Gears[nextGear].Ratio;
+				if (outAngularVelocity > shiftSpeedGbxOut) {
+					Upshift(absTime, gear);
+					return true;
+				}
 			}
 
 			return false;
