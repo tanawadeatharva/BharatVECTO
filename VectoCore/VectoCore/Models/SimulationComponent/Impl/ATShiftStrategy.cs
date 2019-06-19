@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -51,7 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class ATShiftStrategy : BaseShiftStrategy
 	{
 		protected ATGearbox _gearbox;
-		private readonly NextGearState _nextGear = new NextGearState();
+		protected readonly NextGearState _nextGear = new NextGearState();
 
 		public override IGearbox Gearbox
 		{

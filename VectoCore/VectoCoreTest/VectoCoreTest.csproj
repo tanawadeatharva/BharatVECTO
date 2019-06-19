@@ -379,6 +379,9 @@
     <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor_ENG_FC.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor_ENG_TCU.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -2016,6 +2019,123 @@
     </None>
     <None Include="TestData\Integration\FullPowerTrain\NoLossGbxMap.vtlm" />
     <None Include="TestData\Integration\FullPowerTrain\unlimited.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\5_ms2.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\AccelerationReserveLookup.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\Acc_TUG.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\Acc_ZF.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\HeavyUrban.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\Interurban.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\MB_Citaro_G_MP156_HUB_UB_SUB.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\MB_Citaro_G_MP156_IUB.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\MB_Citaro_G_MP156_Sort.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\MB_Citaro_G_MP156_ZF_HUB_UB_SUB.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\MB_Citaro_G_MP156_ZF_IUB.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\MB_Citaro_G_MP156_ZF_Sort.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\OM470EU6_265kW_1700Nm_MP156_Engine.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\OM470EU6_265kW_1700Nm_MP156_Fullload.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\OM470EU6_MP156_FCmap_komplett.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\PredictionTimeLookup.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ShareEngineSpeedHigh.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ShareIdleLow.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ShareTq99L.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ShiftParameters.vtcu">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\Shift_tc.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\Shift_V2_gear 1.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\Shift_V2_gear 2.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\Shift_V2_gear 3.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\Shift_V2_gear 4.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\Shift_V2_gear 5.vgbs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\SORT1_target_speed.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\SORT2_target_speed.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\SORT3_target_speed.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\Suburban.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\Urban.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ZF_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ZF_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ZF_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ZF_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ZF_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ZF_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ZF_EcoLife_1700_SN2837.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\ZF_EcoLife_1700_SN2837.vtcc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\TotalMassExceededInMU\325kW.vfld">
