@@ -498,5 +498,21 @@ namespace VectoHashingTest
 		{
 			AssertHelper.Exception<ArgumentOutOfRangeException>(() => ((VectoComponents)9999).HashIdPrefix());
 		}
+
+
+
+		[TestCase(@"Testdata\XML\Validation\vecto_engine_valid.xml"),
+		TestCase(@"Testdata\XML\Validation\vecto_gearbox_valid.xml")]
+		public void TestXMLComponentValidation(string file)
+		{
+			var xmlDoc = new XmlDocument();
+			xmlDoc.Load(XmlReader.Create(file));
+			var validator = new XMLValidator(xmlDoc);
+			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport));
+
+			var version = XMLHelper.GetVersionFromNamespaceUri(xmlDoc.DocumentElement.NamespaceURI);
+			Assert.AreEqual("1.0", version);
+
+		}
 	}
 }
