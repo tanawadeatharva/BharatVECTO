@@ -140,13 +140,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.WaitFinished();
 
 			var mrfValidator = GetValidator(xmlReport.FullReport);
-			mrfValidator.ValidateXML(XmlDocumentType.ManufacturerReport);
+			mrfValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 
 			var cifValidator = GetValidator(xmlReport.CustomerReport);
-			cifValidator.ValidateXML(XmlDocumentType.CustomerReport);
+			cifValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 
 			var monitoringValidator = GetValidator(xmlReport.MonitoringReport);
-			monitoringValidator.ValidateXML(XmlDocumentType.MonitoringReport);
+			monitoringValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 		}
 
 		private static XMLValidator GetValidator(XDocument xmlReport)
