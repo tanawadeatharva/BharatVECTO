@@ -78,12 +78,15 @@ namespace TUGraz.VectoCore.Utils
 				throw new Exception("empty XML document");
 			}
 
-			var xsdType = _doc.DocumentElement.Attributes?.GetNamedItem("type", "http://www.w3.org/2001/XMLSchema-instance")
-							?.InnerText;
-
-			_doc.Schemas = GetXMLSchema(docType, xsdType);
-			_doc.Validate(ValidationCallBack);
+			_doc.Schemas = GetXMLSchema(docType);
 			
+			_doc.Validate(ValidationCallBack);
+
+			if (_doc.SchemaInfo.Validity != XmlSchemaValidity.Valid || _doc.DocumentElement?.SchemaInfo == null ||
+				_doc.DocumentElement.SchemaInfo.SchemaType == null) {
+				_valid = false;
+			}
+
 			return _valid;
 		}
 
