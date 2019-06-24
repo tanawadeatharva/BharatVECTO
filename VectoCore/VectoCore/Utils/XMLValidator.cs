@@ -101,16 +101,15 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		private static XmlSchemaSet GetXMLSchema(XmlDocumentType docType, string xsdType)
+		private static XmlSchemaSet GetXMLSchema(XmlDocumentType docType)
 		{
 			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
-
 			foreach (var entry in EnumHelper.GetValues<XmlDocumentType>()) {
 				if ((entry & docType) == 0) {
 					continue;
 				}
 
-				var schemaFile = XMLDefinitions.GetSchemaFilename(entry, xsdType);
+				var schemaFile = XMLDefinitions.GetSchemaFilename(entry);
 				if (schemaFile == null) {
 					continue;
 				}
@@ -120,7 +119,7 @@ namespace TUGraz.VectoCore.Utils
 					resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schemaFile);
 				} catch (Exception e) {
 					throw new Exception(
-						string.Format("Unknown XML schema! version: {0}, xml document type: {1} ({2})", entry, xsdType, schemaFile), e);
+						string.Format("Missing resource {0} for XML document type: {1} ({2})", schemaFile, entry, docType.ToString()), e);
 				}
 
 				var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
