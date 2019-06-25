@@ -111,6 +111,47 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			GraphWriter.Write(modFilename);
 		}
 
+		[TestCase(0, TestName = "AT EcoRoll DH1.1 const"),
+		TestCase(1, TestName = "AT EcoRoll DH1.1 UH0.1"),
+		TestCase(2, TestName = "AT EcoRoll DH1.3 const"),
+		TestCase(3, TestName = "AT EcoRoll DH0.8 const - too flat"),
+		TestCase(4, TestName = "AT EcoRoll DH1.5 const - too steep"),
+		TestCase(5, TestName = "AT EcoRoll DH1.1 const - Stop"),
+		TestCase(6, TestName = "AT EcoRoll DH1.1 const - TS60"),
+		TestCase(7, TestName = "AT EcoRoll DH1.1 const - TS68"),
+		TestCase(8, TestName = "AT EcoRoll DH1.1 const - TS72"),
+		TestCase(9, TestName = "AT EcoRoll DH1.1 const - TS80"),
+		]
+		public void TestEcoRollAT(int cycleIdx)
+		{
+			string jobName = @"TestData\Integration\ADAS\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng.vecto";
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
+
+			var sumContainer = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumContainer);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+
+			factory.SumData = sumContainer;
+
+			var runs = factory.SimulationRuns().ToArray();
+			var run = runs[cycleIdx];
+
+			jobContainer.AddRun(run);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
+			GraphWriter.Write(modFilename);
+		}
+
+
 		public JobContainer RunAllDeclarationJob(string jobName)
 		{
 			var relativeJobPath =  jobName;

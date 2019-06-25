@@ -114,11 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					!(CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted));
 		}
 
-		public override bool DisengageGearbox
-		{
-			get { throw new System.NotImplementedException(); }
-			set { throw new System.NotImplementedException(); }
-		}
+		public override bool DisengageGearbox { get; set; }
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
@@ -328,7 +324,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.InAngularVelocity);
 			}
 
-			if (!CurrentState.TorqueConverterLocked) {
+			if (!CurrentState.TorqueConverterLocked || DisengageGearbox) {
 				var response = TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 				if (response is ResponseGearShift) {
 					//RequestAfterGearshift = false;
@@ -408,8 +404,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgInAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			var avgOutAngularSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 
-			container[ModalResultField.Gear] = CurrentState.Disengaged || DataBus.VehicleStopped ? 0 : Gear;
-			container[ModalResultField.TC_Locked] = CurrentState.TorqueConverterLocked;
+			container[ModalResultField.Gear] = DisengageGearbox || CurrentState.Disengaged || DataBus.VehicleStopped ? 0 : Gear;
+			container[ModalResultField.TC_Locked] = !DisengageGearbox && CurrentState.TorqueConverterLocked;
 			container[ModalResultField.P_gbx_loss] = CurrentState.InTorque * avgInAngularSpeed -
 													CurrentState.OutTorque * avgOutAngularSpeed;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgOutAngularSpeed;

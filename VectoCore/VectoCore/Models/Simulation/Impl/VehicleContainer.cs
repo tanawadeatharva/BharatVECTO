@@ -490,7 +490,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public bool DisengageGearbox
 		{
-			get { return GearboxCtl.DisengageGearbox; }
+			get { return Gearbox.DisengageGearbox; }
 			set { GearboxCtl.DisengageGearbox = value; }
 		}
 
