@@ -39,6 +39,7 @@ using System.Windows.Input;
 using HashingTool.Helper;
 using HashingTool.ViewModel.UserControl;
 using TUGraz.VectoCommon.Hashing;
+using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel
@@ -49,7 +50,7 @@ namespace HashingTool.ViewModel
 		//private bool _componentDataValid;
 
 		public VerifyComponentInputDataViewModel()
-			: base("Verify Component Data", HashingHelper.IsComponentFile, HashingHelper.ValidateDocumentHash)
+			: base("Verify Component Data", HashingHelper.IsComponentFile, XmlDocumentType.DeclarationComponentData, HashingHelper.ValidateDocumentHash)
 		{
 			_xmlFile.PropertyChanged += ComponentFilechanged;
 		}

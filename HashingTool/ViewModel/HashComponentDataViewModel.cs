@@ -43,6 +43,7 @@ using HashingTool.Helper;
 using HashingTool.Util;
 using HashingTool.ViewModel.UserControl;
 using TUGraz.VectoHashing;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace HashingTool.ViewModel
 {
@@ -60,7 +61,7 @@ namespace HashingTool.ViewModel
 		private DateTime? _date;
 
 		public HashComponentDataViewModel()
-			: base("Hash Component Data", false, HashingHelper.IsComponentFile)
+			: base("Hash Component Data", false, HashingHelper.IsComponentFile, XmlDocumentType.DeclarationComponentData)
 		{
 			_xmlFile.PropertyChanged += SourceChanged;
 			_saveCommand = new RelayCommand(SaveDocument,
