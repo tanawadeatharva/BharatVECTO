@@ -78,12 +78,17 @@ namespace TUGraz.VectoCore.Utils
 				throw new Exception("empty XML document");
 			}
 
-			var xsdType = _doc.DocumentElement.Attributes?.GetNamedItem("type", "http://www.w3.org/2001/XMLSchema-instance")
+			_doc.Schemas = GetXMLSchema(docType);
 							?.InnerText;
-
-			_doc.Schemas = GetXMLSchema(docType, xsdType);
-			_doc.Validate(ValidationCallBack);
 			
+			_doc.Validate(ValidationCallBack);
+
+			if (_doc.SchemaInfo.Validity != XmlSchemaValidity.Valid || _doc.DocumentElement?.SchemaInfo == null ||
+				_doc.DocumentElement.SchemaInfo.SchemaType == null) {
+				ValidationCallBack(null, null);
+				_valid = false;
+			}
+
 			return _valid;
 		}
 
@@ -91,7 +96,7 @@ namespace TUGraz.VectoCore.Utils
 		{
 			_resultAction(false);
 			_valid = false;
-			_validationErrorAction(args.Severity, new ValidationEvent { ValidationEventArgs = args });
+			_validationErrorAction(args?.Severity ?? XmlSeverityType.Error, new ValidationEvent { ValidationEventArgs = args });
 		}
 
 		public static void CallBackExceptionOnError(XmlSeverityType severity, ValidationEvent evt)
@@ -101,16 +106,15 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		private static XmlSchemaSet GetXMLSchema(XmlDocumentType docType, string xsdType)
+		private static XmlSchemaSet GetXMLSchema(XmlDocumentType docType)
 		{
 			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
-
 			foreach (var entry in EnumHelper.GetValues<XmlDocumentType>()) {
 				if ((entry & docType) == 0) {
 					continue;
 				}
 
-				var schemaFile = XMLDefinitions.GetSchemaFilename(entry, xsdType);
+				var schemaFile = XMLDefinitions.GetSchemaFilename(entry);
 				if (schemaFile == null) {
 					continue;
 				}
@@ -120,7 +124,7 @@ namespace TUGraz.VectoCore.Utils
 					resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schemaFile);
 				} catch (Exception e) {
 					throw new Exception(
-						string.Format("Unknown XML schema! version: {0}, xml document type: {1} ({2})", entry, xsdType, schemaFile), e);
+						string.Format("Missing resource {0} for XML document type: {1} ({2})", schemaFile, entry, docType.ToString()), e);
 				}
 
 				var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");

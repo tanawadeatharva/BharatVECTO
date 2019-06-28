@@ -72,13 +72,15 @@ namespace HashingTool.ViewModel.UserControl
 		private bool? _contentValid;
 		private RelayCommand _browseFileCommand;
 		private string _prefix;
+		private XmlDocumentType _expectedDocumentType;
 
-		public XMLFileSelector(IOService ioservice, string prefix, bool validate = false,
+		public XMLFileSelector(IOService ioservice, string prefix, XmlDocumentType expectedDocumentType, bool validate = false,
 			Func<XmlDocument, IErrorLogger, bool?> contentCheck = null)
 		{
 			IoService = ioservice;
 			_validate = validate;
 			_prefix = prefix;
+			_expectedDocumentType = expectedDocumentType;
 			_browseFileCommand = new RelayCommand(BrowseXMLFile, () => !_busy);
 			XMLValidationErrors = new ObservableCollection<string>();
 			HasContentValidation = contentCheck != null;
@@ -181,8 +183,13 @@ namespace HashingTool.ViewModel.UserControl
 				IsValid = XmlFileStatus.Unknown;
 				return;
 			}
-			using (var stream = File.OpenRead(fileName)) {
-				await LoadXMLFile(stream);
+
+			try {
+				using (var stream = File.OpenRead(fileName)) {
+					await LoadXMLFile(stream);
+				}
+			} catch (Exception e) {
+				LogError(e.Message);
 			}
 		}
 
@@ -190,14 +197,17 @@ namespace HashingTool.ViewModel.UserControl
 		private async void BrowseXMLFile()
 		{
 			string filename;
+			try {
+				using (var stream = IoService.OpenFileDialog(null, ".xml", "VECTO XML file|*.xml", out filename)) {
+					if (stream == null) {
+						return;
+					}
 
-			using (var stream = IoService.OpenFileDialog(null, ".xml", "VECTO XML file|*.xml", out filename)) {
-				if (stream == null) {
-					return;
+					Source = filename;
+					//await LoadXMLFile(stream);
 				}
-
-				await LoadXMLFile(stream);
-				Source = filename;
+			} catch (Exception e) {
+				LogError(e.Message);
 			}
 		}
 
@@ -272,18 +282,32 @@ namespace HashingTool.ViewModel.UserControl
 			var valid = true;
 			try {
 				var validator = new AsyncXMLValidator(xml, r => { valid = r; },
-					(s, e) => {
-						Application.Current.Dispatcher.Invoke(
-							() =>
-								LogError(string.Format("Validation {0} Line {2}: {1}",
-									s == XmlSeverityType.Warning ? "WARNING" : "ERROR",
-									e.ValidationEventArgs == null
-										? e.Exception.Message +
-										(e.Exception.InnerException != null ? Environment.NewLine + e.Exception.InnerException.Message : "")
-										: e.ValidationEventArgs.Message,
-									e.ValidationEventArgs == null ? 0 : e.ValidationEventArgs.Exception.LineNumber)));
-					});
-				await validator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
+													(s, e) => {
+														Application.Current.Dispatcher.Invoke(
+															() => {
+																if (e.ValidationEventArgs == null) {
+																	LogError(
+																		string.Format(
+																			"XML file does not validate against a supported version of {0}",
+																			_expectedDocumentType.ToString()));
+																} else {
+																	LogError(
+																		string.Format(
+																			"Validation {0} Line {2}: {1}",
+																			s == XmlSeverityType.Warning ? "WARNING" : "ERROR",
+																			e.ValidationEventArgs == null
+																				? e.Exception.Message +
+																				(e.Exception.InnerException != null
+																					? Environment.NewLine + e.Exception.InnerException.Message
+																					: "")
+																				: e.ValidationEventArgs.Message,
+																			e.ValidationEventArgs == null ? 0 : e.ValidationEventArgs.Exception.LineNumber));
+																}
+															}
+														);
+													}
+				);
+				valid = await validator.ValidateXML(_expectedDocumentType);
 			} catch (Exception e) {
 				LogError(e.Message);
 			}

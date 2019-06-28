@@ -2,6 +2,18 @@
 
 **VECTO 3.3.3**
 
+***Build 1639 (2019-06-27) OFFICIAL RELEASE***
+
+- Bugfixes (compared to VECTO 3.3.3.1609-RC)
+    * [VECTO-1003] - Vecto Error: Loss-Map extrapolation in declaration mode required (issue VECTO-991)
+    * [VECTO-1006] - Failed to find torque converter operating point on UD cycle (issue VECTO-996)
+    * [VECTO-1010] - Unexpected Response: ResponseOverload in UD cycle (issue VECTO-996)
+    * [VECTO-1015] - XML Schema not correctly identified
+    * [VECTO-1019] - Error opening job in case a file is missing
+    * [VECTO-1020] - HashingTool Crashes
+    * [VECTO-1021] - Invalid hash of job data
+
+
 ***Build 1609 (2019-05-29) RELEASE CANDIDATE***
 
  - Improvement
