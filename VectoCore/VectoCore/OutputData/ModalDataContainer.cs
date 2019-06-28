@@ -134,8 +134,9 @@ namespace TUGraz.VectoCore.OutputData
 				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
 				.Concat(
 					new[] {
+						ModalResultField.P_aux_ice_off, ModalResultField.P_ice_start,
 						ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc,
-						ModalResultField.FCAAUX, ModalResultField.FCADAS, ModalResultField.FCFinal
+						ModalResultField.FCAAUX, ModalResultField.FCEngineStopStart, ModalResultField.FCFinal
 					}.Select(x => x.GetName()));
 #if TRACE
 			strCols = strCols.Concat(_additionalColumns);

@@ -33,6 +33,7 @@ using System.Data;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -64,5 +65,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public NewtonMeter MaxTorqueDeclared { get; set; }
 		public KilogramSquareMeter Inertia { get; set; }
 		public double WHTCEngineering { get; set; }
+
+		public Second EngineStartTime
+		{
+			get { return DeclarationData.Engine.DefaultEngineStartTime; }
+		}
 	}
 }

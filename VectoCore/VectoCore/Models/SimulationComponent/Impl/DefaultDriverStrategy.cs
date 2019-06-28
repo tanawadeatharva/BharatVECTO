@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -59,12 +60,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal DrivingMode CurrentDrivingMode;
 
 		protected readonly Dictionary<DrivingMode, IDriverMode> DrivingModes = new Dictionary<DrivingMode, IDriverMode>();
+		protected Second VehicleHaltTimestamp;
+		protected Second EngineOffTimestamp;
+		private VehicleData.ADASData ADAS;
 
-		public DefaultDriverStrategy()
+		public DefaultDriverStrategy(VehicleData.ADASData adas = null)
 		{
 			DrivingModes.Add(DrivingMode.DrivingModeDrive, new DriverModeDrive() { DriverStrategy = this });
 			DrivingModes.Add(DrivingMode.DrivingModeBrake, new DriverModeBrake() { DriverStrategy = this });
 			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
+
+			ADAS = adas ?? new VehicleData.ADASData() {
+				EcoRoll = EcoRollType.None,
+				EngineStopStart = false,
+				PredictiveCruiseControl = PredictiveCruiseControlType.None,
+			};
 		}
 
 		public IDriverActions Driver { get; set; }
@@ -73,6 +83,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
+			VehicleHaltTimestamp = null;
+			EngineOffTimestamp = null;
+			Driver.DataBus.IgnitionOn = true;
+
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
 				if (Driver.DataBus.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance, 1e-3.SI<Meter>())) {
 					CurrentDrivingMode = DrivingMode.DrivingModeDrive;
@@ -128,8 +142,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Driver.DriverBehavior = DrivingBehavior.Halted;
 			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
+
+			if (ADAS.EngineStopStart) {
+				HandleEngineStopStartDuringVehicleStop(absTime);
+			}
+
 			return Driver.DrivingActionHalt(
 				absTime, dt, VectoMath.Min(Driver.DataBus.MaxVehicleSpeed, targetVelocity), gradient);
+		}
+
+		private void HandleEngineStopStartDuringVehicleStop(Second absTime)
+		{
+			if (VehicleHaltTimestamp == null) {
+				VehicleHaltTimestamp = absTime;
+			}
+
+			if ((absTime - VehicleHaltTimestamp).IsGreaterOrEqual(
+				Driver.DriverData.EngineStopStart.EngineOffStandStillThreshold)) {
+				if (EngineOffTimestamp == null) {
+					EngineOffTimestamp = absTime;
+					Driver.DataBus.IgnitionOn = false;
+				}
+			}
+			if (EngineOffTimestamp != null &&
+				(absTime - EngineOffTimestamp).IsGreaterOrEqual(Driver.DriverData.EngineStopStart.MaxEngineOffTimespan)) {
+				Driver.DataBus.IgnitionOn = true;
+			}
 		}
 
 		private void UpdateDrivingAction(Meter currentDistance, Meter ds)

@@ -161,6 +161,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IGearshiftEngineeringInputData GearshiftInputData { get; internal set; }
 
+		
 		public IAxleGearInputData AxleGear { get; internal set; }
 		public ITorqueConverterEngineeringInputData TorqueConverter { get; internal set; }
 		public IEngineEngineeringInputData Engine { get; internal set; }
@@ -507,6 +508,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public virtual Second EngineOffStandStillThreshold
+		{
+			get { return null; }
+		}
+
+		public virtual Second MaxEngineOffTimespan
+		{
+			get { return null; }
+		}
+
+		public virtual double EngineStopStartUtilityFactor
+		{
+			get { return DeclarationData.Driver.EngineStopStartUtilityFactor; }
+		}
+
 		#endregion
 
 		#region IAuxiliariesEngineeringInputData
@@ -816,6 +832,40 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				_jobDigest = new DigestData(xmlDoc.SelectSingleNode("//*[local-name()='InputDataSignature']"));
 			} catch (Exception) {
 				_jobDigest = new DigestData("", new string[] {},"","" );
+			}
+		}
+	}
+
+
+	public class JSONInputDataV5 : JSONInputDataV4
+	{
+		public JSONInputDataV5(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
+
+		public override Second EngineOffStandStillThreshold
+		{
+			get {
+				return Body["EngineStopStartAtVehicleStopThreshold"] == null
+					? null
+					: Body.GetEx<double>("EngineStopStartAtVehicleStopThreshold").SI<Second>();
+			}
+		}
+
+		
+
+		public override Second MaxEngineOffTimespan
+		{
+			get {
+				return Body["EngineStopStartMaxOffTimespan"] == null
+					? null
+					: Body.GetEx<double>("EngineStopStartMaxOffTimespan").SI<Second>(); }
+		}
+
+		public override double EngineStopStartUtilityFactor
+		{
+			get {
+				return Body["EngineStopStartUtilityFactor"] == null
+					? DeclarationData.Driver.EngineStopStartUtilityFactor
+					: Body.GetEx<double>("EngineStopStartUtilityFactor");
 			}
 		}
 	}

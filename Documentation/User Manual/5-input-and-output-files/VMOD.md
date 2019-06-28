@@ -57,6 +57,8 @@ $P_{avg} = \frac{1}{simulation interval} \int{P(t) dt}$.
 | P_roll			|	[kW]	|	Rolling resistance power loss. |
 | P_veh_inertia		|	[kW]	|	Power loss due to the vehicle's inertia |
 | P_aux_<XXX>		|	[kW]	|	Power demand for every individual auxiliary. Only if the run has auxiliaries. |
+| P_aux_ESS_mech	|	[kW]	|	Power demand for the auxiliaries considered during engine off periods, multiplied by the engine start/stop utility factor. The final fuel consumption (.vsum) is correctedd for this power demand in a [post-processing step](#engine-stopstart-fuel-consumption-correction). |
+| P_ice_start		|	[kW]	|	Power demand for starting the engine after an engine-off period multiplied by the engine start/stop utility factor. P_ice_start = [E_ice_start](#advanced-driver-assistant-systems-eco-roll-engine-stopstart) / dt. The final fuel consumption (.vmod) is corrected for this power demand in a [post-processing step](#engine-stopstart-fuel-consumption-correction). |
 | P_PTO_consum		|	[kW]	|	Power demand from the PTO consumer. Only if the vehicle has a PTO consumer. |
 | P_PTO_transmission|	[kW]	|	Power demand from the PTO transmission. Only if the vehicle has a PTO consumer. |
 | AA_NonSmartAlternatorsEfficiency     | [Fraction]  | Non-Smart Alternators Efficiency, Advance Auxiliaries Module |
@@ -82,8 +84,8 @@ $P_{avg} = \frac{1}{simulation interval} \int{P(t) dt}$.
 | FC-AUXc			|	[g/h]	|	Fuel consumption after [Auxiliary-Start/Stop Correction](#engine-fuel-consumption-calculation) (based on FC) |
 | FC-WHTCc			|	[g/h]	|	Fuel consumption after [WHTC Correction](#engine-fuel-consumption-calculation) (based on FC-AUXc) |
 | FC-AAUX			|	[g/h]	|	Fuel consumption computed by the AAUX module considering smart auxiliaries |
-| FC-ADAS			|	[g/h]	|	Fuel consumption corrected for specified ADAS technologies (declaration mode only) |
-| FC-Final			|	[g/h]	|	Final fuel consumption value after all applicable corrections |
+| FC-ESS			|	[g/h]	|	Fuel consumption considering engine stop/start. During engine-on periods equals FC-AAUX, during engine-off periods the fuel consumption for supplying all auxiliaries at idling speed multiplied by (1 - engine stop/start utility factor) - see [Engine Stop/Start](#advanced-driver-assistant-systems-eco-roll-engine-stopstart) |
+| FC-Final_mod		|	[g/h]	|	Instantaneous final fuel consumption value after all applicable corrections |
 
 
 P_eng_FCmap = T_eng_fcmap * n_eng_avg

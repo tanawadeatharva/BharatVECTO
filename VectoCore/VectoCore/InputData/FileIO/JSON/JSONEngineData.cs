@@ -36,6 +36,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
@@ -184,6 +185,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				}
 				return Body.GetEx<double>("WHTC-Engineering");
 			}
+		}
+
+		public virtual Second EngineStartTime
+		{
+			get { return null; }
 		}
 
 		public virtual double WHTCMotorway

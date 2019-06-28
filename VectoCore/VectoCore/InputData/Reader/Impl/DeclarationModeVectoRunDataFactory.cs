@@ -181,7 +181,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
-			var adasCombination = DeclarationData.ADASCombinations.Lookup(vehicle.ADAS);
 			foreach (var mission in _segment.Missions) {
 				if (mission.MissionType.IsEMS() &&
 					_engineData.RatedPowerDeclared.IsSmaller(DeclarationData.MinEnginePowerForEMS)) {
@@ -226,8 +225,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 																						mission.MissionType.GetNonEMSMissionType(), _engineData.WHTCRural, _engineData.WHTCUrban,
 																						_engineData.WHTCMotorway) *
 																					_engineData.ColdHotCorrectionFactor * _engineData.CorrectionFactorRegPer;
-					simulationRunData.EngineData.ADASCorrectionFactor = DeclarationData.ADASBenefits.Lookup(
-						_segment.VehicleClass, adasCombination, mission.MissionType, loading.Key);
 					simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
 					yield return simulationRunData;
 				}

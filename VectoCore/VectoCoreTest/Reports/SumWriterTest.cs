@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.P_brake_loss] = 3000.SI<Watt>();
 
 				modData[ModalResultField.FCMap] = 1e-4.SI<KilogramPerSecond>();
-
+				modData[ModalResultField.IgnitionOn] = false;
 				modData[ModalResultField.altitude] = 0.SI<Meter>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
 				modData[ModalResultField.P_eng_out] = (i % 2 == 0 ? 1 : -1) * 3000.SI<Watt>();
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.P_eng_out] = (i % 2 == 0 ? 1 : -1) * powerDemand[i % powerDemand.Length];
 
 				modData[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
-
+				modData[ModalResultField.IgnitionOn] = false;
 				modData.CommitSimulationStep();
 			}
 

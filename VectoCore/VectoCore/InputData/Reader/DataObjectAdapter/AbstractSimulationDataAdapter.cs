@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				RatedPowerDeclared = data.RatedPowerDeclared,
 				RatedSpeedDeclared = data.RatedSpeedDeclared,
 				MaxTorqueDeclared = data.MaxTorqueDeclared,
-				FuelData = DeclarationData.FuelData.Lookup(data.FuelType, tankSystem)
+				FuelData = DeclarationData.FuelData.Lookup(data.FuelType, tankSystem),
 			};
 			return retVal;
 		}

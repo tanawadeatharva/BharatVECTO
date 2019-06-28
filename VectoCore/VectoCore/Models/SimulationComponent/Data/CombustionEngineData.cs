@@ -42,6 +42,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	[CustomValidation(typeof(CombustionEngineData), "ValidateData")]
 	public class CombustionEngineData : SimulationComponentData
 	{
+		[Required, SIRange(1, 5)] public Second EngineStartTime;
+
 		[Required, SIRange(1000 * 1E-6, 20000 * 1E-6)]
 		public CubicMeter Displacement { get; internal set; }
 
@@ -74,8 +76,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public double FuelConsumptionCorrectionFactor { get; internal set; }
 
-		public double ADASCorrectionFactor { get; internal set; }
-
 		public PerSecond RatedSpeedDeclared { get; internal set; }
 
 		public Watt RatedPowerDeclared { get; internal set; }
@@ -91,7 +91,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			WHTCRural = 1;
 			CorrectionFactorRegPer = 1;
 			FuelConsumptionCorrectionFactor = 1;
-			ADASCorrectionFactor = 1;
 		}
 
 		public CombustionEngineData Copy()
@@ -114,9 +113,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				RatedSpeedDeclared = RatedSpeedDeclared,
 				MaxTorqueDeclared = MaxTorqueDeclared,
 				FuelData = FuelData,
-				ADASCorrectionFactor = ADASCorrectionFactor,
 				CertificationNumber = CertificationNumber,
 				CertificationMethod = CertificationMethod,
+				EngineStartTime = EngineStartTime
 			};
 		}
 

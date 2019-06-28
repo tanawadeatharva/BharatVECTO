@@ -133,6 +133,10 @@ namespace TUGraz.VectoCommon.Utils
 			return new ConvertedSI(value.Value() * 3600e6, "g/kWh");
 		}
 
+		public static ConvertedSI ConvertToGramPerKiloWattHour(this KilogramPerWattSecond value)
+		{
+			return new ConvertedSI(value.Value() * 3600e6, "g/kWh");
+		}
 
 		public static ConvertedSI ConvertToLiterPer100Kilometer(this VolumePerMeter value)
 		{

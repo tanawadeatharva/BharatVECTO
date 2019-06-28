@@ -80,6 +80,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return GetDouble(XMLNames.Engine_WHTCEngineering); }
 		}
 
+		public virtual Second EngineStartTime
+		{
+			get { return null; }
+		}
+
 		public virtual double WHTCMotorway
 		{
 			get { throw new VectoException("Property not available in Engineering Mode"); }

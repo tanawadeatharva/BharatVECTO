@@ -340,6 +340,12 @@ namespace TUGraz.VectoCommon.Utils
 		public static void LeastSquaresFitting<T>(IEnumerable<T> entries, Func<T, double> getX, Func<T, double> getY,
 			out double k, out double d, out double r)
 		{
+
+			LeastSquaresFitting(entries?.Select(x => new Point(getX(x), getY(x))), out k, out d, out r);
+		}
+
+		public static void LeastSquaresFitting(IEnumerable<Point> entries, out double k, out double d, out double r)
+		{
 			// algoritm taken from http://mathworld.wolfram.com/LeastSquaresFitting.html (eqn. 27 & 28)
 			var count = 0;
 			var sumX = 0.0;
@@ -347,9 +353,15 @@ namespace TUGraz.VectoCommon.Utils
 			var sumXSquare = 0.0;
 			var sumYSquare = 0.0;
 			var sumXY = 0.0;
+			if (entries == null) {
+				k = 0;
+				d = 0;
+				r = 0;
+				return;
+			}
 			foreach (var entry in entries) {
-				var x = getX(entry);
-				var y = getY(entry);
+				var x = entry.X;
+				var y = entry.Y;
 				sumX += x;
 				sumY += y;
 				sumXSquare += x * x;
@@ -360,6 +372,12 @@ namespace TUGraz.VectoCommon.Utils
 			if (count == 0) {
 				k = 0;
 				d = 0;
+				r = 0;
+				return;
+			}
+			if (count == 1) {
+				k = 0;
+				d = sumY;
 				r = 0;
 				return;
 			}
