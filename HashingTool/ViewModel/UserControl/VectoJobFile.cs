@@ -38,6 +38,7 @@ using HashingTool.Helper;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoHashing;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace HashingTool.ViewModel.UserControl
 {
@@ -50,7 +51,7 @@ namespace HashingTool.ViewModel.UserControl
 
 
 		public VectoJobFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
-			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, true, contentCheck, hashValidation)
+			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, true, contentCheck, XmlDocumentType.DeclarationJobData, hashValidation)
 		{
 			_xmlFile.PropertyChanged += JobFilechanged;
 			Components = new ObservableCollection<ComponentEntry>();

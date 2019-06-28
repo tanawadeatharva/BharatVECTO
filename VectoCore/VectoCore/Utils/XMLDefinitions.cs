@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -74,20 +75,21 @@ namespace TUGraz.VectoCore.Utils
 			{XmlDocumentType.DeclarationComponentData, "VectoDeclarationComponent.xsd"},
 			{XmlDocumentType.EngineeringJobData, "VectoEngineeringJob.xsd" },
 			{XmlDocumentType.EngineeringComponentData, "VectoEngineeringComponent.xsd" },
-			{XmlDocumentType.ManufacturerReport, "VectoOutputManufacturer{0}.xsd" },
-			{XmlDocumentType.CustomerReport , "VectoOutputCustomer{0}.xsd"},
-			{XmlDocumentType.MonitoringReport , "VectoMonitoring{0}.xsd"},
+			{XmlDocumentType.ManufacturerReport, "VectoOutputManufacturer.xsd" },
+			{XmlDocumentType.CustomerReport , "VectoOutputCustomer.xsd"},
+			{XmlDocumentType.MonitoringReport , "VectoMonitoring.xsd"},
 		};
 
 
 
-		public static string GetSchemaFilename(XmlDocumentType type, string version)
+		public static string GetSchemaFilename(XmlDocumentType type)
 		{
 			if (!schemaFilenames.ContainsKey(type)) {
 				throw new Exception(string.Format("Invalid argument {0} - only use single flags", type));
 			}
 			var entry = schemaFilenames[type];
-			return string.Format(entry, string.IsNullOrWhiteSpace(version) ? "" : "." + version);
+			
+			return entry;
 		}
 
 	}

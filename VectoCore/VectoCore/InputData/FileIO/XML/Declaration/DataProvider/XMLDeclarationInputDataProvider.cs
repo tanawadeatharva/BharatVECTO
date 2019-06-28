@@ -62,6 +62,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 		{
 			Document = xmlDoc;
 			SourceType = DataSourceType.XMLFile;
+
+			var h = VectoHash.Load(xmlDoc);
+			XMLHash = h.ComputeXmlHash();
 		}
 
 		#region Overrides of AbstractXMLResource

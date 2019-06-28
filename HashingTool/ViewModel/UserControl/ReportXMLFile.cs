@@ -37,6 +37,7 @@ using System.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoHashing;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace HashingTool.ViewModel.UserControl
 {
@@ -52,9 +53,8 @@ namespace HashingTool.ViewModel.UserControl
 		protected VectoJobFile _jobData;
 		private string _reportVin;
 
-		public ReportXMLFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
-			Action<XmlDocument, VectoXMLFile> hashValidation = null)
-			: base(name, contentCheck, hashValidation)
+		public ReportXMLFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck, XmlDocumentType xmlDocumentType, Action<XmlDocument, VectoXMLFile> hashValidation = null)
+			: base(name, contentCheck, xmlDocumentType, hashValidation)
 		{
 			_xmlFile.PropertyChanged += ReportChanged;
 		}
@@ -123,7 +123,8 @@ namespace HashingTool.ViewModel.UserControl
 
 				JobDigestMatchesReport = vinMatch
 										&& digestMatch;
-			} catch (Exception) {
+			} catch (Exception e) {
+				_xmlFile.LogError(e.Message);
 				JobDigestValueComputed = "";
 				JobDigestMatchesReport = false;
 			}

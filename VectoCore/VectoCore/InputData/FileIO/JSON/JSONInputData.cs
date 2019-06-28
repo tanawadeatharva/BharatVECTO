@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected JSONFile(JObject data, string filename, bool tolerateMissing = false)
 		{
 			var header = (JObject)data.GetEx(JsonKeys.JsonHeader);
-			Version = header.GetEx<string>(JsonKeys.JsonHeader_FileVersion);
+			Version = header[JsonKeys.JsonHeader_FileVersion] != null ? header.GetEx<string>(JsonKeys.JsonHeader_FileVersion) : string.Empty;
 			Body = (JObject)data.GetEx(JsonKeys.JsonBody);
 			_sourceFile = Path.GetFullPath(filename);
 			TolerateMissing = tolerateMissing;
