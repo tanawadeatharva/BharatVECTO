@@ -92,5 +92,15 @@ namespace TUGraz.VectoCore.Utils
 			return entry;
 		}
 
+
+		public static string GetSchemaVersion(string nodeType)
+		{
+			var parts = nodeType?.Split(':');
+			if (parts?.Length == 2) {
+				return XMLHelper.GetVersionFromNamespaceUri(parts[0]);
+			}
+
+			return null;
+		}
 	}
 }

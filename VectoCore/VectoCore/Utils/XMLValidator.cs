@@ -79,6 +79,7 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			_doc.Schemas = GetXMLSchema(docType);
+							?.InnerText;
 			
 			_doc.Validate(ValidationCallBack);
 
