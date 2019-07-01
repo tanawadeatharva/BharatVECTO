@@ -60,13 +60,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var minFc = double.MaxValue;
 			KilogramPerSecond fcCurrent = null;
 
+			var fcUpshiftPossible = false;
+
 			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 				var tryNextGear = (uint)(currentGear + i);
 
-				if (tryNextGear >= ModelData.Gears.Keys.Max() || !(ModelData.Gears[tryNextGear].Ratio < shiftStrategyParameters.RatioEarlyUpshiftFC)) {
+				if (tryNextGear > ModelData.Gears.Keys.Max() || !(ModelData.Gears[tryNextGear].Ratio < shiftStrategyParameters.RatioEarlyUpshiftFC)) {
 					continue;
 				}
 
+				fcUpshiftPossible = true;
 				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
 
 				var inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
@@ -84,13 +87,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (fcCurrent == null) {
 					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
 					fcCurrent = fcMap.GetFuelConsumption(
-						responseCurrent.EngineTorqueDemand.LimitTo(
+						responseCurrent.EngineTorqueDemandTotal.LimitTo(
 							fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
 							fld[currentGear].FullLoadStationaryTorque(responseCurrent.EngineSpeed))
 						, responseCurrent.EngineSpeed).Value;
 				}
 				var fcNext = fcMap.GetFuelConsumption(
-					response.EngineTorqueDemand.LimitTo(
+					response.EngineTorqueDemandTotal.LimitTo(
 						fld[tryNextGear].DragLoadStationaryTorque(response.EngineSpeed),
 						fld[tryNextGear].FullLoadStationaryTorque(response.EngineSpeed)), response.EngineSpeed).Value;
 
@@ -107,7 +110,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return minFcGear;
 			}
 
-			return base.CheckEarlyUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
+			return fcUpshiftPossible ? currentGear : base.CheckEarlyUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
 		}
 
 		protected virtual uint OverdriveUpshift(
@@ -212,12 +215,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override ResponseDryRun RequestDryRunWithGear(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint tryNextGear)
 		{
+			LogEnabled = false;
 			TestContainerGbx.Disengaged = false;
 			TestContainerGbx.Gear = tryNextGear;
 
 			TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
 			var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
 				0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
+			LogEnabled = true;
 			return response;
 		}
 
