@@ -142,6 +142,22 @@ namespace TUGraz.VectoCore.OutputData
 				.Average();
 		}
 
+
+		public static MeterPerSquareSecond AverageAccelerationBelowTargetSpeed(this IModalDataContainer data)
+		{
+			var accPos = data.GetValues(
+				x => new {
+					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc),
+					dt = x.Field<Second>((int)ModalResultField.simulationInterval),
+					dv = x.Field<MeterPerSecond>((int)ModalResultField.v_targ) -
+						x.Field<MeterPerSecond>((int)ModalResultField.v_act),
+						driverStatus = x.Field<int>((int)ModalResultField.drivingBehavior)
+				}).Where(x => x.driverStatus == 2 && x.dv > 0).ToArray();
+			var duration = accPos.Sum(x => x.dt);
+			var accSum = accPos.Sum(x => x.a * x.dt);
+			return accSum / duration;
+		}
+
 		public static MeterPerSquareSecond AccelerationsNegative(this IModalDataContainer data)
 		{
 			return data.GetValues<MeterPerSquareSecond>(ModalResultField.acc)

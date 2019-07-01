@@ -239,6 +239,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string AIRDRAG_CERTIFICATION_NUMBER = "AirDrag certification number";
 		public const string AIRDRAG_CERTIFICATION_METHOD = "AirDrag certification option";
 
+		public const string AVERAGE_POS_ACC = "a_avg_acc";
+
 		// ReSharper restore InconsistentNaming
 
 		internal readonly DataTable Table;
@@ -351,7 +353,8 @@ namespace TUGraz.VectoCore.OutputData
 					E_RET_LOSS, E_ANGLE_LOSS, E_AXL_LOSS, E_BRAKE, E_VEHICLE_INERTIA, E_WHEEL, E_AIR, E_ROLL, E_GRAD,
 					ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE,
 					MAX_SPEED, MAX_ACCELERATION, MAX_DECELERATION, AVG_ENGINE_SPEED, MAX_ENGINE_SPEED, NUM_GEARSHIFTS,
-					STOP_TIMESHARE, ENGINE_FULL_LOAD_TIME_SHARE, COASTING_TIME_SHARE, BRAKING_TIME_SHARE
+					STOP_TIMESHARE, ENGINE_FULL_LOAD_TIME_SHARE, COASTING_TIME_SHARE, BRAKING_TIME_SHARE,
+					AVERAGE_POS_ACC
 				}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
 
 			Table.Columns.AddRange(
@@ -585,6 +588,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[MAX_DECELERATION] = (ConvertedSI)modData.MaxDeceleration();
 			row[AVG_ENGINE_SPEED] = (ConvertedSI)modData.AvgEngineSpeed().AsRPM.SI<Scalar>();
 			row[MAX_ENGINE_SPEED] = (ConvertedSI)modData.MaxEngineSpeed().AsRPM.SI<Scalar>();
+			row[AVERAGE_POS_ACC] = (ConvertedSI)modData.AverageAccelerationBelowTargetSpeed();
 			if (accTimeShare != null && decTimeShare != null && cruiseTimeShare != null) {
 				var shareSum = accTimeShare + decTimeShare + cruiseTimeShare + stopTimeShare;
 				if (!shareSum.IsEqual(100)) {
