@@ -312,7 +312,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
 				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
 
-				if (reserve >= 0 /* ModelData.TorqueReserve */) {
+				if (reserve >= ModelData.TorqueReserve) {
 					currentGear = tryNextGear;
 				}
 			}
