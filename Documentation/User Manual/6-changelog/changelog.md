@@ -1,8 +1,40 @@
 #Changelog
 
+**VECTO 3.3.3**
+
+***Build 1639 (2019-06-27) OFFICIAL RELEASE***
+
+- Bugfixes (compared to VECTO 3.3.3.1609-RC)
+    * [VECTO-1003] - Vecto Error: Loss-Map extrapolation in declaration mode required (issue VECTO-991)
+    * [VECTO-1006] - Failed to find torque converter operating point on UD cycle (issue VECTO-996)
+    * [VECTO-1010] - Unexpected Response: ResponseOverload in UD cycle (issue VECTO-996)
+    * [VECTO-1015] - XML Schema not correctly identified
+    * [VECTO-1019] - Error opening job in case a file is missing
+    * [VECTO-1020] - HashingTool Crashes
+    * [VECTO-1021] - Invalid hash of job data
+
+
+***Build 1609 (2019-05-29) RELEASE CANDIDATE***
+
+ - Improvement
+    * [VECTO-916] - Adding new tyre sizes
+    * [VECTO-946] - Refactoring XML reading
+    * [VECTO-965] - Add input fields for ADAS into VECTO GUI
+    * [VECTO-966] - Allow selecting Tank System for NG engines in GUI
+    * [VECTO-932] - Consistency in NA values in the vsum file
+
+ - Bugfixes
+    * [VECTO-954] - Failed to find operating point for braking power (Fix for Notification Art. 10(2) - [VECTO-952])
+    * [VECTO-979] - VECTO Simulation abort with 8-speed MT transmission (Fix for Notification Art. 10(2) - [VECTO-978])
+    * [VECTO-931] - AT error in VECTO version 3.3.2.1519
+    * [VECTO-950] - Error when loading Engine Full-load curve
+    * [VECTO-967] - Engine-Only mode: Engine Torque reported in .vmod does not match the provided cycle
+    * [VECTO-980] - Error during simulation run
+
+
 **VECTO 3.3.2**
 
-**Build 1548 (2019-03-29) OFFICIAL RELEASE**
+***Build 1548 (2019-03-29) OFFICIAL RELEASE***
 
 
  - Bugfixes
@@ -14,7 +46,7 @@
     * [VECTO-920] - Urban Delivery: Simulation Run Aborted, TargetVelocity and VehicleVelocity must be zero when vehicle is halting!
 
 
-**Build 1519 (2019-03-01) RELEASE CANDIDATE**
+***Build 1519 (2019-03-01) RELEASE CANDIDATE***
 
 
 Release Notes - VECTO: Vehicle Energy Calculation Tool - Version 3.3.2.1519-RC

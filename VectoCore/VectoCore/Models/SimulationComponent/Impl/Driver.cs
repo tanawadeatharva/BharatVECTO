@@ -352,7 +352,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IterationStatistics.Increment(this, "Coast");
 			Log.Debug("DrivingAction Coast");
 
-			return CoastOrRollAction(absTime, ds, maxVelocity, gradient, false);
+			var gear = DataBus.Gear;
+			var tcLocked = DataBus.TCLocked;
+			var retVal = CoastOrRollAction(absTime, ds, maxVelocity, gradient, false);
+			var gearChanged = !(DataBus.Gear == gear && DataBus.TCLocked == tcLocked);
+			if (DataBus.GearboxType.AutomaticTransmission() && gearChanged && (retVal is ResponseOverload || retVal is ResponseUnderload)) {
+				Log.Debug("Gear changed after a valid operating point was found - re-try coasting!");
+				retVal = CoastOrRollAction(absTime, ds, maxVelocity, gradient, false);
+			}
+
+			return retVal;
 		}
 
 		/// <summary>

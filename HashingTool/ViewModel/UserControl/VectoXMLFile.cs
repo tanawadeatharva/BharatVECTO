@@ -35,6 +35,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Xml;
 using HashingTool.Helper;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace HashingTool.ViewModel.UserControl
 {
@@ -51,11 +52,10 @@ namespace HashingTool.ViewModel.UserControl
 		private string _digestMethod;
 
 
-		public VectoXMLFile(string name, bool validate, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
-			Action<XmlDocument, VectoXMLFile> hashValidation = null)
+		public VectoXMLFile(string name, bool validate, Func<XmlDocument, IErrorLogger, bool?> contentCheck, XmlDocumentType xmlDocumentType, Action<XmlDocument, VectoXMLFile> hashValidation = null)
 		{
 			_validateHashes = hashValidation;
-			_xmlFile = new XMLFileSelector(IoService, name, validate, contentCheck);
+			_xmlFile = new XMLFileSelector(IoService, name, xmlDocumentType, validate, contentCheck);
 			_xmlFile.PropertyChanged += FileChanged;
 			Name = name;
 			CanonicalizationMethods = new ObservableCollection<string>();

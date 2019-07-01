@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var filename = Path.Combine(@"TestData\XML\XMLReaderDeclaration", jobFile);
 			var dataProvider = xmlInputReader.CreateDeclaration(XmlReader.Create(filename));
-			Assert.AreEqual("235/60 R17 C", dataProvider.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration[1].Tyre.Dimension);
+			Assert.AreEqual("235/60 R17C", dataProvider.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration[1].Tyre.Dimension);
 
 		}
 

@@ -78,26 +78,17 @@ namespace TUGraz.VectoCore.Utils
 				throw new Exception("empty XML document");
 			}
 
-			var version = XMLHelper.GetSchemaVersion(_doc.DocumentElement);
-
-			_doc.Schemas = GetXMLSchema(docType, version);
+			_doc.Schemas = GetXMLSchema(docType);
+							?.InnerText;
+			
 			_doc.Validate(ValidationCallBack);
-			//var settings = new XmlReaderSettings();
-			//settings.Schemas = GetXMLSchema(docType, version);
-			//settings.ValidationType = ValidationType.Schema;
-			//settings.ValidationFlags =
-			//	XmlSchemaValidationFlags.ReportValidationWarnings | XmlSchemaValidationFlags.AllowXmlAttributes;
-			//settings.ValidationEventHandler += ValidationCallBack;
-			//var m = new MemoryStream();
-			//var w = new XmlTextWriter(m, Encoding.UTF8);
-			//_doc.WriteTo(w);
-			//w.Flush();
-			//m.Flush();
-			//m.Seek(0, SeekOrigin.Begin);
-			//var r = new XmlTextReader(m);
-			//var reader = XmlReader.Create(r, settings);
-			//_doc = new XmlDocument();
-			//_doc.Load(reader);
+
+			if (_doc.SchemaInfo.Validity != XmlSchemaValidity.Valid || _doc.DocumentElement?.SchemaInfo == null ||
+				_doc.DocumentElement.SchemaInfo.SchemaType == null) {
+				ValidationCallBack(null, null);
+				_valid = false;
+			}
+
 			return _valid;
 		}
 
@@ -105,7 +96,7 @@ namespace TUGraz.VectoCore.Utils
 		{
 			_resultAction(false);
 			_valid = false;
-			_validationErrorAction(args.Severity, new ValidationEvent { ValidationEventArgs = args });
+			_validationErrorAction(args?.Severity ?? XmlSeverityType.Error, new ValidationEvent { ValidationEventArgs = args });
 		}
 
 		public static void CallBackExceptionOnError(XmlSeverityType severity, ValidationEvent evt)
@@ -115,16 +106,15 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		private static XmlSchemaSet GetXMLSchema(XmlDocumentType docType, string version)
+		private static XmlSchemaSet GetXMLSchema(XmlDocumentType docType)
 		{
 			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
-
 			foreach (var entry in EnumHelper.GetValues<XmlDocumentType>()) {
 				if ((entry & docType) == 0) {
 					continue;
 				}
 
-				var schemaFile = XMLDefinitions.GetSchemaFilename(entry, version);
+				var schemaFile = XMLDefinitions.GetSchemaFilename(entry);
 				if (schemaFile == null) {
 					continue;
 				}
@@ -134,7 +124,7 @@ namespace TUGraz.VectoCore.Utils
 					resource = RessourceHelper.LoadResourceAsStream(RessourceHelper.ResourceType.XMLSchema, schemaFile);
 				} catch (Exception e) {
 					throw new Exception(
-						string.Format("Unknown XML schema! version: {0}, xml document type: {1} ({2})", entry, version, schemaFile), e);
+						string.Format("Missing resource {0} for XML document type: {1} ({2})", schemaFile, entry, docType.ToString()), e);
 				}
 
 				var reader = XmlReader.Create(resource, new XmlReaderSettings(), "schema://");
