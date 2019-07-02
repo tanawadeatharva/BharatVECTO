@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public new static string Name
 		{
-			get { return "AT shift strategy Voith proposal"; }
+			get { return "AT - Voith"; }
 		}
 
 

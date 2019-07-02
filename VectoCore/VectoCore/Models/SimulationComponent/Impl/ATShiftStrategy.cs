@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return DeclarationData.TorqueConverter.ComputeShiftPolygon(engineDataFullLoadCurve, i == 0, i >= gearboxGears.Count - 1);
 		}
 
-		public static string Name { get { return "Classic AT shift strategy"; } }
+		public static string Name { get { return "AT - Classic"; } }
 
 		public ATShiftStrategy(VectoRunData data, IDataBus dataBus) : base(data.GearboxData, dataBus) {}
 

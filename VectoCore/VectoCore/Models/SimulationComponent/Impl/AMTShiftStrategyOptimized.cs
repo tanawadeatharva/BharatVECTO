@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
-		public new static string Name { get { return "AMT shift strategy w early upshift (FC-based)"; } }
+		public new static string Name { get { return "AMT - EffShift"; } }
 
 		#region Overrides of AMTShiftStrategy
 

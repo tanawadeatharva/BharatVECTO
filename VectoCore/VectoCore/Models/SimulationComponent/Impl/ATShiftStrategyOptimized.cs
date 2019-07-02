@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public new static string Name
 		{
-			get { return "AT shift strategy w early upshift (FC-based)"; }
+			get { return "AT - EffShift"; }
 		}
 
 		public ATShiftStrategyOptimized(VectoRunData runData, IDataBus dataBus) : base(runData, dataBus)

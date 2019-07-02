@@ -722,7 +722,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return new GearInfo(_nextGear, true); }
 		}
 
-		public static string Name { get { return "ACEA TCU"; } }
+		public static string Name { get { return "AMT - ACEA TCU"; } }
 
 		#endregion
 

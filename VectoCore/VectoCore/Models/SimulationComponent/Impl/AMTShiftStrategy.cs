@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				i, engineDataFullLoadCurve, gearboxGears, engineData, axlegearRatio, dynamicTyreRadius);
 		}
 
-		public static string Name { get { return "Classic AMT shift strategy (shift lines)"; } }
+		public static string Name { get { return "AMT - Classic"; } }
 
 		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
