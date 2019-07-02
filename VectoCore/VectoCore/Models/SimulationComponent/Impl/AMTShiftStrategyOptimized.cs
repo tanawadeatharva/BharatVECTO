@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var minFc = double.MaxValue;
 			KilogramPerSecond fcCurrent = null;
 
-			var fcUpshiftPossible = false;
+			var fcUpshiftPossible = true;
 
 			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 				var tryNextGear = (uint)(currentGear + i);
