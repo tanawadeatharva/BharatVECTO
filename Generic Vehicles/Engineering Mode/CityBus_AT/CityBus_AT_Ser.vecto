@@ -16,7 +16,7 @@
     "AdvancedAuxiliaryFilePath": "",
     "Aux": [],
     "Padd": 3540.0,
-    "VACC": "Driver.vacc",
+    "VACC": "Acc_Citybus.vacc",
     "StartStop": {
       "Enabled": false,
       "MaxSpeed": 5.0,
