@@ -631,34 +631,34 @@
     <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl0.8.vdri">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.2.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.1.vdri">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.8.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.1_Stop.vdri">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.9_Stop.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.1_TS++.vdri">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.9_TS++.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.1_TS+.vdri">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.9_TS+.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.1_TS--.vdri">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.9_TS--.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.1_TS-.vdri">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.9_TS-.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.1_Uh0.1.vdri">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.8_Uh0.1.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.3.vdri">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.9.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.5.vdri">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl2.5.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\Engine_220kW.veng">

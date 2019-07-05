@@ -404,7 +404,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgInAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			var avgOutAngularSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 
-			container[ModalResultField.Gear] = DisengageGearbox || CurrentState.Disengaged || DataBus.VehicleStopped ? 0 : Gear;
+			container[ModalResultField.Gear] =  CurrentState.Disengaged || DataBus.VehicleStopped ? 0 : Gear;
 			container[ModalResultField.TC_Locked] = !DisengageGearbox && CurrentState.TorqueConverterLocked;
 			container[ModalResultField.P_gbx_loss] = CurrentState.InTorque * avgInAngularSpeed -
 													CurrentState.OutTorque * avgOutAngularSpeed;

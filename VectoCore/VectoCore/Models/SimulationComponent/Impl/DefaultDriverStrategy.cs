@@ -202,7 +202,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var slopeNegative = dBus.RoadGradient.IsSmaller(0);
 			var forces = dBus.SlopeResistance(dBus.RoadGradient) + dBus.RollingResistance(dBus.RoadGradient) +
 						dBus.AirDragResistance(dBus.VehicleSpeed, dBus.VehicleSpeed);
-			//forces -= 
+			
 			if (dBus.GearboxType.AutomaticTransmission() && dBus.VehicleSpeed.IsGreater(0)) {
 				// for AT transmissions consider engine drag losses during eco-roll events
 				forces -= dBus.EngineDragPower(dBus.EngineSpeed) / dBus.VehicleSpeed;
@@ -664,21 +664,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var first = FirstAccelerateOrCoast(absTime, ds, targetVelocity, gradient, prohibitOverspeed, velocityWithOverspeed, debug);
 
 			var second = first;
-			first.Switch().Case<ResponseUnderload>(
-				r => {
-					if (DataBus.GearboxType.AutomaticTransmission() && !DataBus.ClutchClosed(absTime)) {
-						second = Driver.DrivingActionRoll(absTime, ds, velocityWithOverspeed, gradient);
-					}
-					if (DataBus.VehicleSpeed.IsGreater(0) && DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
-						second = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
-						debug.Add(new { action = "first:(Underload & Overspeed)-> Coast", second });
-						second = HandleCoastAfterUnderloadWithOverspeed(absTime, ds, gradient, velocityWithOverspeed, debug, second);
-					} else {
+			first.Switch()
+				.Case<ResponseUnderload>(
+					r => {
+						if (DataBus.GearboxType.AutomaticTransmission() && !DataBus.ClutchClosed(absTime)) {
+							second = Driver.DrivingActionRoll(absTime, ds, velocityWithOverspeed, gradient);
+						}
+						if (DataBus.VehicleSpeed.IsGreater(0) && DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
+							second = Driver.DrivingActionCoast(absTime, ds, velocityWithOverspeed, gradient);
+							debug.Add(new { action = "first:(Underload & Overspeed)-> Coast", second });
+							second = HandleCoastAfterUnderloadWithOverspeed(absTime, ds, gradient, velocityWithOverspeed, debug, second);
+						} else {
+							second = Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient);
+							debug.Add(new { action = "first:(Underload & !Overspeed) -> Brake", second });
+						}
+					})
+				.Case<ResponseEngineSpeedTooHigh>(
+					r => {
+						second = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, r); 
+					})
+				.Case<ResponseSpeedLimitExceeded>(
+					r => {
 						second = Driver.DrivingActionBrake(absTime, ds, velocityWithOverspeed, gradient);
-						debug.Add(new { action = "first:(Underload & !Overspeed) -> Brake", second });
-					}
-				}).Case<ResponseEngineSpeedTooHigh>(
-				r => { second = Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, r); });
+						debug.Add(new { action = "SpeedLimitExceeded -> Brake", second });
+					}); ;
 
 			if (second == null) {
 				return null;

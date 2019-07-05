@@ -111,16 +111,16 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			GraphWriter.Write(modFilename);
 		}
 
-		[TestCase(0, TestName = "AT EcoRoll DH1.1 const"),
-		TestCase(1, TestName = "AT EcoRoll DH1.1 UH0.1"),
-		TestCase(2, TestName = "AT EcoRoll DH1.3 const"),
-		TestCase(3, TestName = "AT EcoRoll DH0.8 const - too flat"),
-		TestCase(4, TestName = "AT EcoRoll DH1.5 const - too steep"),
-		TestCase(5, TestName = "AT EcoRoll DH1.1 const - Stop"),
-		TestCase(6, TestName = "AT EcoRoll DH1.1 const - TS60"),
-		TestCase(7, TestName = "AT EcoRoll DH1.1 const - TS68"),
-		TestCase(8, TestName = "AT EcoRoll DH1.1 const - TS72"),
-		TestCase(9, TestName = "AT EcoRoll DH1.1 const - TS80"),
+		[TestCase(0, TestName = "AT EcoRoll DH1.8 const"),
+		TestCase(1, TestName = "AT EcoRoll DH1.8 UH0.1"), 
+		TestCase(2, TestName = "AT EcoRoll DH1.9 const"),
+		TestCase(3, TestName = "AT EcoRoll DH1.2 const - too flat"),
+		TestCase(4, TestName = "AT EcoRoll DH2.5 const - too steep"),
+		TestCase(5, TestName = "AT EcoRoll DH1.9 const - Stop"),
+		TestCase(6, TestName = "AT EcoRoll DH1.9 const - TS60"),
+		TestCase(7, TestName = "AT EcoRoll DH1.9 const - TS68"),
+		TestCase(8, TestName = "AT EcoRoll DH1.9 const - TS72"),
+		TestCase(9, TestName = "AT EcoRoll DH1.9 const - TS80"),
 		]
 		public void TestEcoRollAT(int cycleIdx)
 		{
