@@ -215,7 +215,8 @@ The following screenshot shows the details of the selected customer report.
 ![](images\VectoHashingTool_Result_CustR_ann.svg)
 
   1. Integrity information on the customer report. Creation date, canonicalization methods, digest method, digest value from the report file as well as the re-computed digest value. If both digest values match, they are shown in green.
-  2. Integrity information on the job data. Shows the canonicalization method, digest method, and digest value of the job data from the customer report as well as the re-computed job-digest value. If both digest values match, they are shown in green.
+  2. Integrity information on the manufacturer report. Shows the canonicalization methods, digest method, digest value from the report file as well as the re-computed digest value. If both digest values match, they are shown in green.
+  3. Integrity information on the job data. Shows the canonicalization method, digest method, and digest value of the job data from the customer report as well as the re-computed job-digest value. If both digest values match, they are shown in green.
 
 
 ## General UI Elements

@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoHashing;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace HashingTool.ViewModel.UserControl
 {
@@ -48,7 +49,7 @@ namespace HashingTool.ViewModel.UserControl
 		private bool _manufacturerReportValid;
 
 		public ManufacturerReportXMLFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
-			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, contentCheck, hashValidation)
+			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, contentCheck, XmlDocumentType.ManufacturerReport, hashValidation)
 		{
 			_xmlFile.PropertyChanged += UpdateComponents;
 		}

@@ -68,18 +68,6 @@ namespace TUGraz.VectoCore.Utils
 		//	return GetVersionFromNamespaceUri(node.NamespaceURI);
 		//}
 
-		public static string GetSchemaVersion(XmlNode node)
-		{
-			var nodeType = node.Attributes?.GetNamedItem("type", "http://www.w3.org/2001/XMLSchema-instance");
-			if (nodeType != null) {
-				var parts = nodeType.InnerText.Split(':');
-				if (parts.Length == 2) {
-					return GetVersionFromNamespaceUri(nodeType.GetNamespaceOfPrefix(parts[0]));
-				}
-			}
-			return GetVersionFromNamespaceUri(node.NamespaceURI);
-		}
-
 		public static string GetVersionFromNamespaceUri(XNamespace namespaceUri)
 		{
 			const string versionPrefix = "v";

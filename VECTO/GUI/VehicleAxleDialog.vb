@@ -29,7 +29,7 @@ Public Class VehicleAxleDialog
 		InitializeComponent()
 
 		CbWheels.Items.Add("-")
-		CbWheels.Items.AddRange(DeclarationData.Wheels.GetWheelsDimensions())
+		CbWheels.Items.AddRange(DeclarationData.Wheels.GetWheelsDimensions().OrderBy(function(s) s).ToArray())
 
 		cbAxleType.Items.Clear()
 		cbAxleType.ValueMember = "Value"

@@ -78,8 +78,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearbox = new MockGearbox(container);
 			gearbox.Gear = (uint)gear;
 			var clutch = new Clutch(container, engineData) { IdleController = new MockIdleController() };
-			var vehicle = new MockVehicle(container);
-			vehicle.MyVehicleSpeed = 50.KMPHtoMeterPerSecond();
+			var brakes = new Brakes(container) { BrakePower = 0.SI<Watt>() };
+			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 50.KMPHtoMeterPerSecond() };
 
 			var inPort = clutch.InPort();
 			var outPort = new MockTnOutPort();
