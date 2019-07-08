@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual double TorqueReserve
 		{
 			get { return Body[JsonKeys.Gearbox_TorqueReserve] == null ?
-					DeclarationData.Gearbox.TorqueReserve
+					DeclarationData.GearboxTCU.TorqueReserve
 					:Body.GetEx<double>(JsonKeys.Gearbox_TorqueReserve) / 100.0; }
 		}
 
@@ -85,19 +85,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get {
 				return Body[JsonKeys.Gearbox_StartTorqueReserve] == null
-					? DeclarationData.Gearbox.TorqueReserveStart
+					? DeclarationData.GearboxTCU.TorqueReserveStart
 					: Body.GetEx<double>(JsonKeys.Gearbox_StartTorqueReserve) / 100.0;
 			}
 		}
 
 		public MeterPerSecond StartSpeed
 		{
-			get { return Body.GetValueOrDefault<double>(JsonKeys.Gearbox_StartSpeed)?.KMPHtoMeterPerSecond() ?? DeclarationData.Gearbox.StartSpeed; }
+			get { return Body.GetValueOrDefault<double>(JsonKeys.Gearbox_StartSpeed)?.KMPHtoMeterPerSecond() ?? DeclarationData.GearboxTCU.StartSpeed; }
 		}
 
 		public MeterPerSquareSecond StartAcceleration
 		{
-			get { return Body.GetValueOrDefault<double>(JsonKeys.Gearbox_StartAcceleration)?.SI<MeterPerSquareSecond>() ?? DeclarationData.Gearbox.StartAcceleration; }
+			get { return Body.GetValueOrDefault<double>(JsonKeys.Gearbox_StartAcceleration)?.SI<MeterPerSquareSecond>() ?? DeclarationData.GearboxTCU.StartAcceleration; }
 		}
 
 		public Second GearResidenceTime
