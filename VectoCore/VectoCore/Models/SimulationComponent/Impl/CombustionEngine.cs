@@ -462,11 +462,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var stationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * avgAngularVelocity;
 			Watt dynFullPowerCalculated;
 
-			var atGbx = (DataBus as VehicleContainer)?.Gearbox as ATGearbox;
-			if (atGbx != null && atGbx.ShiftToLocked) {
-				
-				return VectoMath.Min(PreviousState.EngineTorque * avgAngularVelocity, stationaryFullLoadPower);
-			}
+			
 
 			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)
 			if (PT1Disabled || PreviousState.EnginePower.IsGreaterOrEqual(stationaryFullLoadPower)) {
@@ -500,6 +496,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (dynFullPowerCalculated < 0) {
 				return 0.SI<Watt>();
+			}
+			var atGbx = (DataBus as VehicleContainer)?.Gearbox as ATGearbox;
+			if (atGbx != null && atGbx.ShiftToLocked && PreviousState.EngineTorque.IsGreater(0)) {
+
+				return VectoMath.Min(PreviousState.EngineTorque * avgAngularVelocity, dynFullPowerCalculated);
 			}
 			return dynFullPowerCalculated;
 		}
