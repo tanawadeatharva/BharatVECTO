@@ -197,7 +197,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const int AllowedGearRangeDown = 3;
 
 			public const double TargetSpeedDeviationFactor = 0.1;
+
 			public const double RatingFactorCurrentGear = 0.99;
+			public const double RatingFactorCurrentGearAT = 0.95;
+
 			public static readonly MeterPerSquareSecond DriverAccelerationThresholdLow = 0.1.SI<MeterPerSquareSecond>();
 
 			public const double RatioEarlyUpshiftFC = 24;
