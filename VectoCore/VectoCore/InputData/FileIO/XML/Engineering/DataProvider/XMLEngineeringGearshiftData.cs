@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get {
 				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_TorqueReserve, required: false)?.InnerText.ToDouble() ??
-						DeclarationData.Gearbox.TorqueReserve;
+						DeclarationData.GearboxTCU.TorqueReserve;
 			}
 		}
 
@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get {
 				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartSpeed, required: false)
-							?.InnerText.ToDouble().SI<MeterPerSecond>() ?? DeclarationData.Gearbox.StartSpeed;
+							?.InnerText.ToDouble().SI<MeterPerSecond>() ?? DeclarationData.GearboxTCU.StartSpeed;
 			}
 		}
 
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get {
 				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartAcceleration, required: false)
-							?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ?? DeclarationData.Gearbox.StartAcceleration;
+							?.InnerText.ToDouble().SI<MeterPerSquareSecond>() ?? DeclarationData.GearboxTCU.StartAcceleration;
 			}
 		}
 
@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get {
 				return GetNode(XMLNames.DriverModel_ShiftStrategyParameters_StartTorqueReserve, required: false)
 							?.InnerText.ToDouble() ??
-						DeclarationData.Gearbox.TorqueReserveStart;
+						DeclarationData.GearboxTCU.TorqueReserveStart;
 			}
 		}
 

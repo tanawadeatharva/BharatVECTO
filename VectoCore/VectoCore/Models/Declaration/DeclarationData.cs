@@ -178,8 +178,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class GearboxTCU
 		{
+			public const double TorqueReserve = 0;
+			public const double TorqueReserveStart = 0.2;
+
 			public static readonly MeterPerSecond StartSpeed = 8.KMPHtoMeterPerSecond();
 			public static readonly MeterPerSquareSecond StartAcceleration = 0.8.SI<MeterPerSquareSecond>();
+
 			public static readonly Second GearResidenceTime = 5.SI<Second>();
 			public static readonly Watt CurrentCardanPowerThresholdPropulsion = 5000.SI<Watt>();
 			public static readonly Watt AverageCardanPowerThresholdPropulsion = 1000.SI<Watt>();
@@ -188,19 +192,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double EngineSpeedHighDriveOffFactor = 1.05;
 			public const double DnT99L_highMin1 = 0.4;
 			public const double DnT99L_highMin2 = 0.5;
+
 			public const int AllowedGearRangeUp = 3;
 			public const int AllowedGearRangeDown = 3;
+
 			public const double TargetSpeedDeviationFactor = 0.1;
 			public const double RatingFactorCurrentGear = 0.99;
 			public static readonly MeterPerSquareSecond DriverAccelerationThresholdLow = 0.1.SI<MeterPerSquareSecond>();
+
+			public const double RatioEarlyUpshiftFC = 24;
+			public const double RatioEarlyDownshiftFC = 24;
+
+			public const int AllowedGearRangeFCAMT = 2;
+			public const int AllowedGearRangeFCAT = 1;
 		}
 
 		public static class Gearbox
 		{
-			public const double TorqueReserve = 0.2;
-			public const double TorqueReserveStart = 0.2;
-			public static readonly MeterPerSecond StartSpeed = 1.3.SI<MeterPerSecond>();
-			public static readonly MeterPerSquareSecond StartAcceleration = 0.6.SI<MeterPerSquareSecond>();
 			public static readonly KilogramSquareMeter Inertia = 0.SI<KilogramSquareMeter>();
 
 			public static readonly MeterPerSecond TruckMaxAllowedSpeed = 85.KMPHtoMeterPerSecond();

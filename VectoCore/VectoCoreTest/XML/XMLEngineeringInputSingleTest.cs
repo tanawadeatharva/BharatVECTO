@@ -436,12 +436,12 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(DeclarationData.Gearbox.UpshiftAfterDownshiftDelay.Value(),
 				shiftStrategy.UpshiftAfterDownshiftDelay.Value(), 1e-6);
 
-			Assert.AreEqual(DeclarationData.Gearbox.TorqueReserve, shiftStrategy.TorqueReserve, 1e-6);
+			Assert.AreEqual(DeclarationData.GearboxTCU.TorqueReserve, shiftStrategy.TorqueReserve, 1e-6);
 			Assert.AreEqual(DeclarationData.Gearbox.MinTimeBetweenGearshifts.Value(),
 				shiftStrategy.MinTimeBetweenGearshift.Value(), 1e-6);
-			Assert.AreEqual(DeclarationData.Gearbox.StartSpeed.Value(), shiftStrategy.StartSpeed.Value(), 1e-6);
-			Assert.AreEqual(DeclarationData.Gearbox.StartAcceleration.Value(), shiftStrategy.StartAcceleration.Value(), 1e-6);
-			Assert.AreEqual(DeclarationData.Gearbox.TorqueReserveStart, shiftStrategy.StartTorqueReserve, 1e-6);
+			Assert.AreEqual(DeclarationData.GearboxTCU.StartSpeed.Value(), shiftStrategy.StartSpeed.Value(), 1e-6);
+			Assert.AreEqual(DeclarationData.GearboxTCU.StartAcceleration.Value(), shiftStrategy.StartAcceleration.Value(), 1e-6);
+			Assert.AreEqual(DeclarationData.GearboxTCU.TorqueReserveStart, shiftStrategy.StartTorqueReserve, 1e-6);
 
 			AssertHelper.AreRelativeEqual(Constants.DefaultPowerShiftTime, gearboxData.PowershiftShiftTime);
 

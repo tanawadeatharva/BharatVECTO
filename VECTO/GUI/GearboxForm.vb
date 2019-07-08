@@ -112,10 +112,10 @@ Public Class GearboxForm
         TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
         'cDeclaration.MinTimeBetweenGearshift(GStype)
 
-        TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()											  ' cDeclaration.TqResv
-        TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
-        TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
-        TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
+        TbTqResv.Text = (DeclarationData.GearboxTCU.TorqueReserve * 100).ToGUIFormat()											  ' cDeclaration.TqResv
+        TbTqResvStart.Text = (DeclarationData.GearboxTCU.TorqueReserveStart * 100).ToGUIFormat() 'cDeclaration.TqResvStart
+        TbStartSpeed.Text = DeclarationData.GearboxTCU.StartSpeed.ToGUIFormat()	'cDeclaration.StartSpeed
+        TbStartAcc.Text = DeclarationData.GearboxTCU.StartAcceleration.ToGUIFormat()	' cDeclaration.StartAcc
 
         tbUpshiftMinAcceleration.Text = DeclarationData.Gearbox.UpshiftMinAcceleration.ToGUIFormat()
         tbTCCUpshiftMinAcceleration.Text = ""
@@ -208,11 +208,11 @@ Public Class GearboxForm
 
         'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
         'Me.ChShiftInside.Checked = False       'set by CbGStype.SelectedIndexChanged
-        TbTqResv.Text = (DeclarationData.Gearbox.TorqueReserve * 100).ToGUIFormat()
+        TbTqResv.Text = (DeclarationData.GearboxTCU.TorqueReserve * 100).ToGUIFormat()
         TbMinTimeBetweenShifts.Text = DeclarationData.Gearbox.MinTimeBetweenGearshifts.ToGUIFormat()
-        TbTqResvStart.Text = (DeclarationData.Gearbox.TorqueReserveStart * 100).ToGUIFormat()
-        TbStartSpeed.Text = DeclarationData.Gearbox.StartSpeed.ToGUIFormat() ' in m/s!
-        TbStartAcc.Text = DeclarationData.Gearbox.StartAcceleration.ToGUIFormat()
+        TbTqResvStart.Text = (DeclarationData.GearboxTCU.TorqueReserveStart * 100).ToGUIFormat()
+        TbStartSpeed.Text = DeclarationData.GearboxTCU.StartSpeed.ToGUIFormat() ' in m/s!
+        TbStartAcc.Text = DeclarationData.GearboxTCU.StartAcceleration.ToGUIFormat()
 
         tbUpshiftMinAcceleration.Text = DeclarationData.Gearbox.UpshiftMinAcceleration.ToGUIFormat()
         tbTCLUpshiftMinAcceleration.Text = ""
