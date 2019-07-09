@@ -664,6 +664,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var brakingDistance = Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed) +
 								DefaultDriverStrategy.BrakingSafetyMargin;
 			DriverStrategy.BrakeTrigger.BrakingStartDistance = DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance;
+			if (DriverStrategy.BrakeTrigger.Action == DrivingBehavior.Braking) {
+				Phase = BrakingPhase.Brake;
+			}
 			if (Phase == BrakingPhase.Coast) {
 				var resp = CheckSwitchingToBraking(ds, currentDistance);
 				if (resp != null) {
