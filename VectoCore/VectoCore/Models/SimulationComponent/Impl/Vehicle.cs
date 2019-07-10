@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 												+ PreviousState.AirDragResistance
 												+ PreviousState.SlopeResistance;
 
-			return NextComponent.Initialize(PreviousState.VehicleTractionForce, vehicleSpeed);
+			return NextComponent?.Initialize(PreviousState.VehicleTractionForce, vehicleSpeed);
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)

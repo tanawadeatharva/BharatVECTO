@@ -51,11 +51,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var modData = new ModalDataContainer(runData, null, null, false);
 			var builder = new PowertrainBuilder(modData);
 			TestContainer = new SimplePowertrainContainer(runData);
+			
 			builder.BuildSimplePowertrain(runData, TestContainer);
 			TestContainerGbx = TestContainer.GearboxCtl as ATGearbox;
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
 			}
+			// initialize vehicle so that vehicleStopped of the testcontainer is false (required for test-runs)
+			TestContainer.VehiclePort.Initialize(10.KMPHtoMeterPerSecond(), 0.SI<Radian>());
 
 			if (runData.Cycle.CycleType == CycleType.MeasuredSpeed) {
 				try {
@@ -186,6 +189,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				var next = GearList[currentIdx - i];
+				if (!next.TorqueConverterLocked.Value) {
+					continue;
+				}
 				if (current.TorqueConverterLocked != next.TorqueConverterLocked && current.Gear != next.Gear) {
 					// downshift from C to L with skipping gear not allowed
 					continue;
