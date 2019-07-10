@@ -3359,6 +3359,10 @@
       <Project>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</Project>
       <Name>VectoCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj">
+      <Project>{B673E12F-D323-4C4C-8805-9915B2C72D3D}</Project>
+      <Name>VectoHashing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\VECTO\VECTO.vbproj">
       <Project>{AAC0F132-0A9F-45B3-B682-77AC9B24B352}</Project>
       <Name>VECTO</Name>
