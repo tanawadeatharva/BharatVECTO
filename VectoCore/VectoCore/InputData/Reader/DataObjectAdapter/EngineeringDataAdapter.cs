@@ -457,7 +457,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				//---------------
 				RatioEarlyUpshiftFC = (gsInputData.RatioEarlyUpshiftFC ?? DeclarationData.GearboxTCU.RatioEarlyUpshiftFC) / axleRatio,
 				RatioEarlyDownshiftFC = (gsInputData.RatioEarlyDownshiftFC ?? DeclarationData.GearboxTCU.RatioEarlyDownshiftFC) / axleRatio,
-				AllowedGearRangeFC = gsInputData.AllowedGearRangeFC ?? 1,
+				AllowedGearRangeFC = gsInputData.AllowedGearRangeFC ?? (gbxType.AutomaticTransmission() ? DeclarationData.GearboxTCU.AllowedGearRangeFCAT : DeclarationData.GearboxTCU.AllowedGearRangeFCAMT),
 
 				// voith gs parameters
 
