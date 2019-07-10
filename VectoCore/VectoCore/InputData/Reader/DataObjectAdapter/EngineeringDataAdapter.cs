@@ -405,7 +405,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public ShiftStrategyParameters CreateGearshiftData(IGearshiftEngineeringInputData gsInputData, double axleRatio)
+		public ShiftStrategyParameters CreateGearshiftData(GearboxType gbxType, IGearshiftEngineeringInputData gsInputData, double axleRatio)
 		{
 			if (gsInputData == null) {
 				return null;
@@ -428,7 +428,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 														DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
 				TargetSpeedDeviationFactor = gsInputData.TargetSpeedDeviationFactor ?? DeclarationData.GearboxTCU.TargetSpeedDeviationFactor,
 				EngineSpeedHighDriveOffFactor = gsInputData.EngineSpeedHighDriveOffFactor ?? DeclarationData.GearboxTCU.EngineSpeedHighDriveOffFactor,
-				RatingFactorCurrentGear = gsInputData.RatingFactorCurrentGear ?? DeclarationData.GearboxTCU.RatingFactorCurrentGear,
+				RatingFactorCurrentGear = gsInputData.RatingFactorCurrentGear ?? (gbxType.AutomaticTransmission()
+					? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
+					: DeclarationData.GearboxTCU.RatingFactorCurrentGear),
 				AccelerationReserveLookup = AccelerationReserveLookupReader.Create(gsInputData.AccelerationReserveLookup) ??
 											AccelerationReserveLookupReader.ReadFromStream(
 												RessourceHelper.ReadStream(
@@ -453,8 +455,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 										DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareEngineSpeedHigh.csv")
 								),
 				//---------------
-				RatioEarlyUpshiftFC = gsInputData.RatioEarlyUpshiftFC / axleRatio ?? 0,
-				RatioEarlyDownshiftFC = gsInputData.RatioEarlyDownshiftFC / axleRatio ?? 0,
+				RatioEarlyUpshiftFC = (gsInputData.RatioEarlyUpshiftFC ?? DeclarationData.GearboxTCU.RatioEarlyUpshiftFC) / axleRatio,
+				RatioEarlyDownshiftFC = (gsInputData.RatioEarlyDownshiftFC ?? DeclarationData.GearboxTCU.RatioEarlyDownshiftFC) / axleRatio,
 				AllowedGearRangeFC = gsInputData.AllowedGearRangeFC ?? 1,
 
 				// voith gs parameters
