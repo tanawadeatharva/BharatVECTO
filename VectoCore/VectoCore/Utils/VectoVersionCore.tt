@@ -38,12 +38,12 @@ namespace TUGraz.VectoCore.Utils
 	{
 
 #if CERTIFICATION_RELEASE
-		private const string SUFFIX = "";
+		private const string SUFFIX = "-RoadSweepers";
 #else
 #if RELEASE_CANDIDATE
-		private const string SUFFIX = "-RC";
+		private const string SUFFIX = "-RoadSweepers-RC";
 #else
-		private const string SUFFIX = "-DEV";
+		private const string SUFFIX = "-RoadSweepers-DEV";
 #endif
 #endif
 

@@ -35,19 +35,19 @@ namespace TUGraz.VectoCore.Utils
 	{
 
 #if CERTIFICATION_RELEASE
-		private const string SUFFIX = "";
+		private const string SUFFIX = "-RoadSweepers";
 #else
 #if RELEASE_CANDIDATE
-		private const string SUFFIX = "-RC";
+		private const string SUFFIX = "-RoadSweepers-RC";
 #else
-		private const string SUFFIX = "-DEV";
+		private const string SUFFIX = "-RoadSweepers-DEV";
 #endif
 #endif
 
 		public static string VersionNumber
 		{
 			get {
-				return "3.3.3.1639" + SUFFIX;
+				return "3.3.3.1652" + SUFFIX;
 			}
 		}
 
