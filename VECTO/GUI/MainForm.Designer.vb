@@ -59,6 +59,9 @@ Partial Class MainForm
         Me.ButtonGENadd = New System.Windows.Forms.Button()
         Me.TabPgOptions = New System.Windows.Forms.TabPage()
         Me.PanelOptAllg = New System.Windows.Forms.Panel()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.BtTCfileBrowse = New System.Windows.Forms.Button()
+        Me.tbOutputFolder = New System.Windows.Forms.TextBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.cbActVmod = New System.Windows.Forms.CheckBox()
         Me.cbValidateRunData = New System.Windows.Forms.CheckBox()
@@ -116,15 +119,13 @@ Partial Class MainForm
         Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
-        Me.tbOutputFolder = New System.Windows.Forms.TextBox()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.StatusBAR.SuspendLayout
         Me.TabControl1.SuspendLayout
         Me.TabPageGEN.SuspendLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
         Me.TabPgOptions.SuspendLayout
         Me.PanelOptAllg.SuspendLayout
+        Me.GroupBox4.SuspendLayout
         Me.GroupBox3.SuspendLayout
         Me.GroupBox2.SuspendLayout
         Me.GroupBox1.SuspendLayout
@@ -136,7 +137,6 @@ Partial Class MainForm
         Me.SplitContainer1.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.CmOpenFile.SuspendLayout
-        Me.GroupBox4.SuspendLayout
         Me.SuspendLayout
         '
         'StatusBAR
@@ -387,6 +387,34 @@ Partial Class MainForm
         Me.PanelOptAllg.Name = "PanelOptAllg"
         Me.PanelOptAllg.Size = New System.Drawing.Size(1022, 290)
         Me.PanelOptAllg.TabIndex = 0
+        '
+        'GroupBox4
+        '
+        Me.GroupBox4.Controls.Add(Me.BtTCfileBrowse)
+        Me.GroupBox4.Controls.Add(Me.tbOutputFolder)
+        Me.GroupBox4.Location = New System.Drawing.Point(183, 4)
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.Size = New System.Drawing.Size(260, 46)
+        Me.GroupBox4.TabIndex = 19
+        Me.GroupBox4.TabStop = false
+        Me.GroupBox4.Text = "Output Directory"
+        '
+        'BtTCfileBrowse
+        '
+        Me.BtTCfileBrowse.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.BtTCfileBrowse.Location = New System.Drawing.Point(227, 14)
+        Me.BtTCfileBrowse.Name = "BtTCfileBrowse"
+        Me.BtTCfileBrowse.Size = New System.Drawing.Size(24, 24)
+        Me.BtTCfileBrowse.TabIndex = 27
+        Me.BtTCfileBrowse.TabStop = false
+        Me.BtTCfileBrowse.UseVisualStyleBackColor = true
+        '
+        'tbOutputFolder
+        '
+        Me.tbOutputFolder.Location = New System.Drawing.Point(6, 17)
+        Me.tbOutputFolder.Name = "tbOutputFolder"
+        Me.tbOutputFolder.Size = New System.Drawing.Size(215, 20)
+        Me.tbOutputFolder.TabIndex = 0
         '
         'GroupBox3
         '
@@ -825,33 +853,6 @@ Partial Class MainForm
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
-        'GroupBox4
-        '
-        Me.GroupBox4.Controls.Add(Me.Label2)
-        Me.GroupBox4.Controls.Add(Me.tbOutputFolder)
-        Me.GroupBox4.Location = New System.Drawing.Point(183, 4)
-        Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(344, 71)
-        Me.GroupBox4.TabIndex = 19
-        Me.GroupBox4.TabStop = false
-        Me.GroupBox4.Text = "Results Output"
-        '
-        'tbOutputFolder
-        '
-        Me.tbOutputFolder.Location = New System.Drawing.Point(6, 38)
-        Me.tbOutputFolder.Name = "tbOutputFolder"
-        Me.tbOutputFolder.Size = New System.Drawing.Size(215, 20)
-        Me.tbOutputFolder.TabIndex = 0
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = true
-        Me.Label2.Location = New System.Drawing.Point(7, 19)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(84, 13)
-        Me.Label2.TabIndex = 1
-        Me.Label2.Text = "Output Directory"
-        '
         'MainForm
         '
         Me.AcceptButton = Me.btStartV3
@@ -874,6 +875,8 @@ Partial Class MainForm
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).EndInit
         Me.TabPgOptions.ResumeLayout(false)
         Me.PanelOptAllg.ResumeLayout(false)
+        Me.GroupBox4.ResumeLayout(false)
+        Me.GroupBox4.PerformLayout
         Me.GroupBox3.ResumeLayout(false)
         Me.GroupBox3.PerformLayout
         Me.GroupBox2.ResumeLayout(false)
@@ -890,8 +893,6 @@ Partial Class MainForm
         Me.ToolStrip1.ResumeLayout(false)
         Me.ToolStrip1.PerformLayout
         Me.CmOpenFile.ResumeLayout(false)
-        Me.GroupBox4.ResumeLayout(false)
-        Me.GroupBox4.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -986,6 +987,6 @@ End Sub
 	Friend WithEvents cbActVmod As System.Windows.Forms.CheckBox
 	Friend WithEvents EPTPJobEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents GroupBox4 As GroupBox
-    Friend WithEvents Label2 As Label
     Friend WithEvents tbOutputFolder As TextBox
+    Friend WithEvents BtTCfileBrowse As Button
 End Class

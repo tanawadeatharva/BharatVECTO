@@ -2123,6 +2123,16 @@ Imports TUGraz.VectoCore.Utils
         Handles EPTPJobEditorToolStripMenuItem.Click
         OpenVECTOeditor("<VTP>")
     End Sub
+
+    Private Sub BtTCfileBrowse_Click(sender As Object, e As EventArgs) Handles BtTCfileBrowse.Click
+        If Not FolderFileBrowser.OpenDialog("") Then
+            Exit Sub
+        End If
+
+        Dim filePath As String = FolderFileBrowser.Files(0)
+        tbOutputFolder.Text = Path.GetFullPath(filePath)
+    End Sub
+
 End Class
 
 
