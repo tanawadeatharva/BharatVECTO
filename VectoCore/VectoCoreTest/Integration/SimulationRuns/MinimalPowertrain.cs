@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", FuelData.Diesel, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
-			var driver = new Driver(container, driverData, new DefaultDriverStrategy());
+			var driver = new Driver(container, driverData, new DefaultDriverStrategy(container));
 			var engine = new CombustionEngine(container, engineData);
 			driver.AddComponent(new Vehicle(container, vehicleData, CreateAirdragData()))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, CreateAirdragData()))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			container.RunData = new VectoRunData() { SimulationType = SimulationType.DistanceCycle };
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, CreateAirdragData()))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))

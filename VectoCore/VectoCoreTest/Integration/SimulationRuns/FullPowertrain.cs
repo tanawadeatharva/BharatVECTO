@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				AirdragData = airDragData
 			};
 
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 
 			var cyclePort = cycle.OutPort();
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))

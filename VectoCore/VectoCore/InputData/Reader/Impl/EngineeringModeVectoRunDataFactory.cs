@@ -76,6 +76,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 			var ptoTransmissionData = dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
+			if (InputDataProvider.JobInputData.Vehicle.PTO_DriveGear.HasValue &&
+				InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed != null) {
+				driver.PTODriveMinSpeed = InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed /
+										axlegearData.AxleGear.Ratio /
+										gearboxData.Gears[InputDataProvider.JobInputData.Vehicle.PTO_DriveGear.Value].Ratio /
+										(angledriveData?.Angledrive.Ratio ?? 1.0) * vehicle.DynamicTyreRadius;
+				driver.PTODriveRoadsweepingGear = InputDataProvider.JobInputData.Vehicle.PTO_DriveGear.Value;
+			}
+
+
 			return InputDataProvider.JobInputData.Cycles.Select(cycle => {
 				var drivingCycle = CyclesCache.ContainsKey(cycle.CycleData.Source)
 					? CyclesCache[cycle.CycleData.Source]

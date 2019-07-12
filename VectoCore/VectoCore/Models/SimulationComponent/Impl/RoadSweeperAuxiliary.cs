@@ -1,0 +1,34 @@
+﻿using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+
+namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+{
+	public class RoadSweeperAuxiliary
+	{
+		private IDataBus DataBus;
+
+		public RoadSweeperAuxiliary(IVehicleContainer container)
+		{
+			DataBus = container;
+		}
+
+		public Watt PowerDemand(PerSecond engineSpeed, Second dt, bool dryRun)
+		{
+			var left = DataBus.CycleData.LeftSample;
+			//var acc = DataBus.DriverAcceleration;
+			//var vehicleSpeed = DataBus.VehicleSpeed;
+
+			var powerDemand = 0.SI<Watt>();
+
+			if (left.PTOActive == PTOActivity.PTOActivityRoadSweeping) {
+				// todo: iterate over cycle from left to right and compute pto energy and then average power demand
+				powerDemand = left.PTOPowerDemandDuringDrive;
+			}
+
+			return  powerDemand;
+
+		}
+	}
+}

@@ -226,6 +226,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
+		public uint? PTO_DriveGear
+		{
+			get { return VehicleData.PTO_DriveGear; }
+		}
+
+		public PerSecond PTO_DriveEngineSpeed
+		{
+			get { return VehicleData.PTO_DriveEngineSpeed; }
+		}
+
 		public IAirdragEngineeringInputData AirdragInputData
 		{
 			get { return AirdragData; }

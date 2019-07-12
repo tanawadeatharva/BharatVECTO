@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
-			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airdragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))

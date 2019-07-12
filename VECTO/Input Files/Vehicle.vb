@@ -74,7 +74,10 @@ Public Class Vehicle
 
     public VehicleTankSystem as TankSystem?
 
-	Public Sub New()
+    public GearDuringPTODrive As UInteger?
+    Public EngineSpeedDuringPTODrive As PerSecond
+
+    Public Sub New()
 		_path = ""
 		_filePath = ""
 		CrossWindCorrectionFile = New SubPath
@@ -710,7 +713,19 @@ Public Class Vehicle
 	End Get
 	End Property
 
-	Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
+    Public ReadOnly Property PTO_DriveGear As UInteger? Implements IVehicleEngineeringInputData.PTO_DriveGear
+    get
+            return gearDuringPTODrive
+    End Get
+    End Property
+
+    Public ReadOnly Property PTO_DriveEngineSpeed As PerSecond Implements IVehicleEngineeringInputData.PTO_DriveEngineSpeed
+    get
+            Return EngineSpeedDuringPTODrive
+    End Get
+    End Property
+
+    Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
 	get
 			Return DeclarationData.Vehicle.ZeroEmissionVehicleDefault
 	End Get

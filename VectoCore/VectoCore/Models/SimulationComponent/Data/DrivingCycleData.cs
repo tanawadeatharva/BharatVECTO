@@ -141,6 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				AuxiliarySupplyPower = new Dictionary<string, Watt>(entry.AuxiliarySupplyPower);
 				EngineSpeed = entry.EngineSpeed;
 				FanSpeed = entry.FanSpeed;
+				PTOPowerDemandDuringDrive = entry.PTOPowerDemandDuringDrive;
 			}
 
 			/// <summary>
@@ -236,7 +237,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			/// <summary>
 			/// Flag if PTO Cycle is active or not.
 			/// </summary>
-			public bool PTOActive;
+			public PTOActivity PTOActive;
 
 			public PerSecond EngineSpeed;
 
@@ -251,6 +252,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			public PerSecond WheelSpeedRight;
 
+			// road sweeper application
+			public Watt PTOPowerDemandDuringDrive;
 		}
+	}
+
+	public enum PTOActivity
+	{
+		Inactive = 0,
+		PTOActivityDuringStop = 1,
+		PTOActivityRoadSweeping = 2,
+		PTOActivityWhileDrive = 3,
 	}
 }

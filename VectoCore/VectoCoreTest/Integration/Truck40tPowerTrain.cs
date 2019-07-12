@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 					throw new ArgumentOutOfRangeException("gbxType", gbxType, null);
 			}
 
-			dynamic tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			dynamic tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airdragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))

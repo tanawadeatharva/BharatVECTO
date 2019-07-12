@@ -236,7 +236,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
-			var powertrain = cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy()))
+			var powertrain = cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -309,10 +309,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
-					n => container.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
+					(n, dt, dryRun) => container.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
 				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
+
+			if (data.ExecutionMode == ExecutionMode.Engineering && data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityRoadSweeping)) {
+				var rdSwpAux = new RoadSweeperAuxiliary(container);
+				aux.Add(Constants.Auxiliaries.IDs.PTOWhileDrive, (nEng, dt, dryRun) => rdSwpAux.PowerDemand(nEng, dt, dryRun));
+				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOWhileDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOWhileDrive);
+			}
+
 			return aux;
 		}
 

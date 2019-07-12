@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.InputData.Reader
 					// vehicle stops. duplicate current distance entry with 0 waiting time
 					var tmp = new DrivingCycleData.DrivingCycleEntry(entry) {
 						StoppingTime = 0.SI<Second>(),
-						PTOActive = false,
+						PTOActive = PTOActivity.Inactive,
 						RoadGradient = entry.RoadGradient,
 						VehicleTargetSpeed = i < entries.Count - 1 ? entries[i + 1].VehicleTargetSpeed : 0.SI<MeterPerSecond>()
 					};
@@ -306,11 +306,20 @@ namespace TUGraz.VectoCore.InputData.Reader
 				return false;
 			}
 
+			if (first.PTOActive != second.PTOActive) {
+				return false;
+			}
+
+			if (first.PTOPowerDemandDuringDrive != null && !first.PTOPowerDemandDuringDrive.IsEqual(second.PTOPowerDemandDuringDrive)) {
+				return false;
+			}
+
 			return true;
 		}
 
 		public static class Fields
 		{
+			public const string PTOPowerDemand = "P_PTO";
 			public const string PTOTorque = "PTO Torque";
 			public const string EngineSpeedFull = "Engine speed";
 			public const string PWheel = "Pwheel";
@@ -424,7 +433,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 						crossWindRequired ? row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond() : null,
 					WindYawAngle = crossWindRequired ? row.ParseDoubleOrGetDefault(Fields.WindYawAngle) : 0,
 					AuxiliarySupplyPower = row.GetAuxiliaries(),
-					PTOActive = table.Columns.Contains(Fields.PTOActive) && row.Field<string>(Fields.PTOActive) == "1"
+					PTOActive = table.Columns.Contains(Fields.PTOActive) ? (PTOActivity)row.Field<string>(Fields.PTOActive).ToInt() : PTOActivity.Inactive,
+					PTOPowerDemandDuringDrive = table.Columns.Contains(Fields.PTOPowerDemand) ? row.ParseDouble(Fields.PTOPowerDemand).SI(Unit.SI.Kilo.Watt).Cast<Watt>() : null
 				});
 			}
 
@@ -444,7 +454,8 @@ namespace TUGraz.VectoCore.InputData.Reader
 					Fields.RoadGradient,
 					Fields.AirSpeedRelativeToVehicle,
 					Fields.WindYawAngle,
-					Fields.PTOActive
+					Fields.PTOActive,
+					Fields.PTOPowerDemand,
 				};
 
 				const bool allowAux = true;

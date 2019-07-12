@@ -35,6 +35,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -45,6 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected readonly uint MaxStartGear;
 		protected uint _nextGear;
+		private uint DesiredGearRoadsweeping;
 
 		public AMTShiftStrategy(VectoRunData runData, IDataBus dataBus) : base(runData.GearboxData, dataBus)
 		{
@@ -56,6 +58,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 									runData.VehicleData.DynamicTyreRadius;
 			var minEngineSpeed = (runData.EngineData.FullLoadCurves[0].RatedSpeed - runData.EngineData.IdleSpeed) *
 								Constants.SimulationSettings.ClutchClosingSpeedNorm + runData.EngineData.IdleSpeed;
+
+			DesiredGearRoadsweeping = runData.DriverData.PTODriveRoadsweepingGear;
+
 			foreach (var gearData in ModelData.Gears.Reverse()) {
 				if (ModelData.StartSpeed * transmissionRatio * gearData.Value.Ratio > minEngineSpeed) {
 					MaxStartGear = gearData.Key;
@@ -177,6 +182,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			if (_nextGear != gear) {
 				return true;
+			}
+
+			// PTO Active while drive (roadsweeping) shift rules
+			if (DataBus.CycleData.LeftSample.PTOActive == PTOActivity.PTOActivityRoadSweeping) {
+				if (gear == DesiredGearRoadsweeping) {
+					return false;
+				}
+
+				if (gear > DesiredGearRoadsweeping) {
+					if (IsAboveDownShiftCurve(DesiredGearRoadsweeping, inTorque, inAngularVelocity)) {
+						_nextGear = DesiredGearRoadsweeping;
+						return true;
+					}
+				}
 			}
 
 			// normal shift when all requirements are fullfilled ------------------

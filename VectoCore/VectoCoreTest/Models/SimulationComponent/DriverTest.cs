@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
-			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 			var clutch = new Clutch(vehicleContainer, engineData);
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData, airdragData));
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
-			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 			var clutch = new Clutch(vehicleContainer, engineData);
 
@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
 
-			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData, airdragData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia));
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new MockVehicle(vehicleContainer);
 
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
-			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
 
@@ -319,7 +319,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new MockVehicle(vehicleContainer);
 
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
-			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
 

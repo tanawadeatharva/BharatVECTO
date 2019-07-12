@@ -145,9 +145,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				}
 			}
 
-			if (runData.Cycle != null && runData.Cycle.Entries.Any(e => e.PTOActive)) {
+			if (runData.Cycle != null && runData.Cycle.Entries.Any(e => e.PTOActive == PTOActivity.PTOActivityDuringStop)) {
 				if (runData.PTO == null || runData.PTO.PTOCycle == null) {
 					return new ValidationResult("PTOCycle is used in DrivingCycle, but is not defined in Vehicle-Data.");
+				}
+			}
+
+			if (runData.EngineData.PTORoadSweepEngineSpeed != null) {
+				if (runData.EngineData.IdleSpeed.IsGreater(runData.EngineData.PTORoadSweepEngineSpeed)) {
+					return new ValidationResult("PTO Operating enginespeed is below engine idling speed");
+				}
+
+				if (runData.EngineData.FullLoadCurves[0].N95hSpeed.IsSmaller(runData.EngineData.PTORoadSweepEngineSpeed)) {
+					return new ValidationResult("PTO operating enginespeed is above n_95h");
 				}
 			}
 

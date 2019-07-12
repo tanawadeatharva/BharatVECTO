@@ -51,7 +51,8 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static class IDs
 			{
-				public static string PTOTransmission = "PTO_TRANSM";
+				public const string PTOTransmission = "PTO_TRANSM";
+				public const string PTOWhileDrive = "PTO_RoadSweeping";
 				public const string Fan = "FAN";
 				public const string SteeringPump = "STP";
 				public const string ElectricSystem = "ES";

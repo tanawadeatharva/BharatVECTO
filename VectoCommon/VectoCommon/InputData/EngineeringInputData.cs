@@ -79,6 +79,12 @@ namespace TUGraz.VectoCommon.InputData
 		new IVehicleComponentsEngineering Components { get; }
 
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
+
+		// input parameters for road sweeper use case
+
+		uint? PTO_DriveGear { get; }
+
+		PerSecond PTO_DriveEngineSpeed { get; }
 	}
 
 	public interface IAdvancedDriverAssistantSystemsEngineering
