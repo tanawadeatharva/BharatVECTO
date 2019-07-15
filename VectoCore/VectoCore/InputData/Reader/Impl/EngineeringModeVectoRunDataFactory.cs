@@ -83,6 +83,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 										gearboxData.Gears[InputDataProvider.JobInputData.Vehicle.PTO_DriveGear.Value].Ratio /
 										(angledriveData?.Angledrive.Ratio ?? 1.0) * vehicle.DynamicTyreRadius;
 				driver.PTODriveRoadsweepingGear = InputDataProvider.JobInputData.Vehicle.PTO_DriveGear.Value;
+				engineData.PTORoadSweepEngineSpeed = InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed;
 			}
 
 

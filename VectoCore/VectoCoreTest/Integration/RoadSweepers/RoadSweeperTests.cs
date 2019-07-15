@@ -87,6 +87,18 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 			EngineeringRunWithCycle(RoadSweeperJob, cycle, "Accelerate_Drive_switch_PTO_on_during_drive_with_higher_speed");
 		}
 
+
+		[TestCase()]
+		public void RoadSweeper_ChangePTOLoadDuringSweeping()
+		{
+			var cycle = "   0,  0, 0, 5, 0, 3, 0   \n" +
+						"   1,  8, 0, 0, 2, 3, 10  \n" +
+						" 400,  8, 0, 0, 2, 3, 20  \n" +
+						"1000,  0, 0, 5, 0, 3, 0   \n";
+			EngineeringRunWithCycle(RoadSweeperJob, cycle, "Accelerate_Drive_change_PTO_load_while_sweeping");
+		}
+
+
 		[TestCase(RoadSweeperJob, 1, TestName = "RoadSweeper 1")]
 		public void RoadSweeperTest(string jobFile, int idx)
 		{
