@@ -44,8 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// Retarder component.
 	/// </summary>
 	public class Retarder : StatefulProviderComponent<SimpleComponentState, ITnOutPort, ITnInPort, ITnOutPort>,
-		IPowerTrainComponent, ITnInPort,
-		ITnOutPort
+		IPowerTrainComponent, ITnInPort, ITnOutPort
 	{
 		private readonly RetarderLossMap _lossMap;
 		private readonly double _ratio;

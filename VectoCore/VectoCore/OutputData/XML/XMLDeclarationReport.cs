@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private readonly XMLCustomerReport _customerReport;
 		private readonly XMLMonitoringReport _monitoringReport;
 
-		private readonly IOutputDataWriter _writer;
+		private readonly IReportWriter _writer;
 
 		private IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 		}
 
-		public XMLDeclarationReport(IOutputDataWriter writer = null)
+		public XMLDeclarationReport(IReportWriter writer = null)
 		{
 			_manufacturerReport = new XMLManufacturerReport();
 			_customerReport = new XMLCustomerReport();
