@@ -54,7 +54,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private readonly XMLCustomerReport _customerReport;
 		private readonly XMLMonitoringReport _monitoringReport;
 
-		private readonly IReportWriter _writer;
 
 		private IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
@@ -168,13 +167,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 		}
 
-		public XMLDeclarationReport(IReportWriter writer = null)
+		public XMLDeclarationReport(IReportWriter writer = null) : base(writer)
 		{
 			_manufacturerReport = new XMLManufacturerReport();
 			_customerReport = new XMLCustomerReport();
 			_monitoringReport = new XMLMonitoringReport(_manufacturerReport);
-
-			_writer = writer;
 		}
 
 		public XDocument FullReport
@@ -210,10 +207,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var fullReportHash = GetSignature(_manufacturerReport.Report);
 			_customerReport.GenerateReport(fullReportHash);
 
-			if (_writer != null) {
-				_writer.WriteReport(ReportType.DeclarationReportCustomerXML, _customerReport.Report);
-				_writer.WriteReport(ReportType.DeclarationReportManufacturerXML, _manufacturerReport.Report);
-				_writer.WriteReport(ReportType.DeclarationReportMonitoringXML, _monitoringReport.Report);
+			if (Writer != null) {
+				Writer.WriteReport(ReportType.DeclarationReportCustomerXML, _customerReport.Report);
+				Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, _manufacturerReport.Report);
+				Writer.WriteReport(ReportType.DeclarationReportMonitoringXML, _monitoringReport.Report);
 			}
 		}
 
