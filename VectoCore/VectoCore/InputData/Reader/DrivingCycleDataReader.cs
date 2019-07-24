@@ -306,6 +306,15 @@ namespace TUGraz.VectoCore.InputData.Reader
 				return false;
 			}
 
+			if (first.AirSpeedRelativeToVehicle != null && second.AirSpeedRelativeToVehicle != null &&
+				!first.AirSpeedRelativeToVehicle.IsEqual(second.AirSpeedRelativeToVehicle)) {
+				return false;
+			}
+
+			if (!first.WindYawAngle.IsEqual(second.WindYawAngle)) {
+				return false;
+			}
+
 			return true;
 		}
 
