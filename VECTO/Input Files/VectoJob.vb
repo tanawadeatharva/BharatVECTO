@@ -516,6 +516,12 @@ Public Class VectoJob
         End Get
     End Property
 
+    Public ReadOnly Property PTOCycleWhileDrive As TableData Implements IEngineeringJobInputData.PTOCycleWhileDrive
+    get
+            return Nothing
+    End Get
+    End Property
+
     Public ReadOnly Property IEngineeringJobInputData_EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly
         Get
             If Not File.Exists(_engineFile.FullPath) Then Return Nothing

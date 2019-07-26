@@ -86,6 +86,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				engineData.PTORoadSweepEngineSpeed = InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed;
 			}
 
+			var ptoCycleWhileDrive = InputDataProvider.JobInputData.PTOCycleWhileDrive != null
+				? DrivingCycleDataReader.ReadFromDataTable(InputDataProvider.JobInputData.PTOCycleWhileDrive, "PTO During Drive", false)
+				: null;
+
 
 			return InputDataProvider.JobInputData.Cycles.Select(cycle => {
 				var drivingCycle = CyclesCache.ContainsKey(cycle.CycleData.Source)
@@ -107,7 +111,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					PTO = ptoTransmissionData,
 					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering,
-					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel
+					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
+					PTOCycleWhileDrive = ptoCycleWhileDrive
 				};
 			});
 		}

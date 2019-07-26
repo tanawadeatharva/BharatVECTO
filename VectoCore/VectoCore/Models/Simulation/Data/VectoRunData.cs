@@ -49,6 +49,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	[CustomValidation(typeof(VectoRunData), "ValidateRunData")]
 	public class VectoRunData : SimulationComponentData
 	{
+
 		public VectoRunData()
 		{
 			Exempted = false;
@@ -116,6 +117,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public VTPData VTPData { get; set; }
 
 		public bool Exempted { get; set; }
+
+		public IDrivingCycleData PTOCycleWhileDrive { get; internal set; }
+
 
 		public class AuxData
 		{

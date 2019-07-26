@@ -309,15 +309,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
-					(n, dt, dryRun) => container.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
+					(n, absTime, dt, dryRun) => container.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
 				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 
 			if (data.ExecutionMode == ExecutionMode.Engineering && data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityRoadSweeping)) {
 				var rdSwpAux = new RoadSweeperAuxiliary(container);
-				aux.Add(Constants.Auxiliaries.IDs.PTOWhileDrive, (nEng, dt, dryRun) => rdSwpAux.PowerDemand(nEng, dt, dryRun));
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOWhileDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOWhileDrive);
+				aux.Add(Constants.Auxiliaries.IDs.PTORoadsweeping, (nEng, absTime, dt, dryRun) => rdSwpAux.PowerDemand(nEng, absTime, dt, dryRun));
+				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTORoadsweeping, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTORoadsweeping);
+			}
+
+			if (data.ExecutionMode == ExecutionMode.Engineering &&
+				data.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityWhileDrive)) {
+				if (data.PTOCycleWhileDrive == null) {
+					throw new VectoException("PTO activation while drive requested in cycle but no PTO cycle provided");
+				}
+
+				var ptoDrive = new PTODriveAuxiliary(container, data.PTOCycleWhileDrive);
+				aux.Add(Constants.Auxiliaries.IDs.PTODuringDrive, (nEng, absTime, dt, dryRun) => ptoDrive.PowerDemand(nEng, absTime, dt, dryRun));
+				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTODuringDrive);
 			}
 
 			return aux;
@@ -375,4 +386,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return new Gearbox(container, strategy, runData);
 		}
 	}
+
+	
 }

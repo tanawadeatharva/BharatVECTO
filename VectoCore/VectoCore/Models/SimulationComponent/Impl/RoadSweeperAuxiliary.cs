@@ -7,14 +7,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class RoadSweeperAuxiliary
 	{
-		private IDataBus DataBus;
+		protected IDataBus DataBus;
 
 		public RoadSweeperAuxiliary(IVehicleContainer container)
 		{
 			DataBus = container;
 		}
 
-		public Watt PowerDemand(PerSecond engineSpeed, Second dt, bool dryRun)
+		public Watt PowerDemand(PerSecond engineSpeed, Second absTime, Second dt, bool dryRun)
 		{
 			var left = DataBus.CycleData.LeftSample;
 			//var acc = DataBus.DriverAcceleration;

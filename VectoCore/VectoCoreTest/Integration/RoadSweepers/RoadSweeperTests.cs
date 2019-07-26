@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -25,9 +27,8 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 		public const string RoadSweeperJob =
 			@"TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO.vecto";
 
-		public const string RoadSweeperVehicle =
-				@"E:\QUAM\Workspace\VECTO-RoadSweepers\VectoCore\VectoCoreTest\TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck.vveh"
-			;
+		public const string SideLoaderJob =
+			@"TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO-SideLoader.vecto";
 
 		[OneTimeSetUp]
 		public void OneTimeSetup()
@@ -39,7 +40,8 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 		[TestCase()]
 		public void RoadSweeper_StartDriveStop()
 		{
-			var cycle = "   0, 0, 0, 5, 0, 3, 0   \n" +
+			var cycle = "s,v,grad,stop,PTO, Padd, P_PTO \n" +
+						"   0, 0, 0, 5, 0, 3, 0   \n" +
 						"   1, 8, 0, 0, 2, 3, 10  \n" +
 						"1000, 0, 0, 5, 0, 3, 0   \n" +
 						"1001, 8, 0, 0, 0, 3, 0   \n" +
@@ -50,7 +52,8 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 		[TestCase()]
 		public void RoadSweeper_SwitchPTOOffDuringDrive()
 		{
-			var cycle = "   0, 0, 0, 5, 0, 3, 0   \n" +
+			var cycle = "s,v,grad,stop,PTO, Padd, P_PTO \n" + 
+						"   0, 0, 0, 5, 0, 3, 0   \n" +
 						"   1, 8, 0, 0, 2, 3, 10  \n" +
 						" 800, 8, 0, 0, 0, 3, 10  \n" +
 						"1000, 0, 0, 5, 0, 3, 0   \n";
@@ -60,7 +63,8 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 		[TestCase()]
 		public void RoadSweeper_SwitchPTOOnDuringDrive()
 		{
-			var cycle = "   0, 0, 0, 5, 0, 3, 0   \n" +
+			var cycle = "s,v,grad,stop,PTO, Padd, P_PTO \n" +
+						"   0, 0, 0, 5, 0, 3, 0   \n" +
 						"   1, 8, 0, 0, 0, 3, 10  \n" +
 						" 200, 8, 0, 0, 2, 3, 10  \n" +
 						"1000, 0, 0, 5, 0, 3, 0   \n";
@@ -70,7 +74,8 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 		[TestCase()]
 		public void RoadSweeper_SwitchPTOOnDuringDriveFromHigherSpeed()
 		{
-			var cycle = "   0,  0, 0, 5, 0, 3, 0   \n" +
+			var cycle = "s,v,grad,stop,PTO, Padd, P_PTO \n" +
+						"   0,  0, 0, 5, 0, 3, 0   \n" +
 						"   1, 20, 0, 0, 0, 3, 10  \n" +
 						" 200,  8, 0, 0, 2, 3, 10  \n" +
 						"1000,  0, 0, 5, 0, 3, 0   \n";
@@ -80,7 +85,8 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 		[TestCase()]
 		public void RoadSweeper_SwitchPTOOnDuringDriveWithHigherSpeed()
 		{
-			var cycle = "   0,  0, 0, 5, 0, 3, 0   \n" +
+			var cycle = "s,v,grad,stop,PTO, Padd, P_PTO \n" +
+						"   0,  0, 0, 5, 0, 3, 0   \n" +
 						"   1, 20, 0, 0, 0, 3, 10  \n" +
 						" 200, 20, 0, 0, 2, 3, 10  \n" +
 						"1000,  0, 0, 5, 0, 3, 0   \n";
@@ -91,13 +97,91 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 		[TestCase()]
 		public void RoadSweeper_ChangePTOLoadDuringSweeping()
 		{
-			var cycle = "   0,  0, 0, 5, 0, 3, 0   \n" +
+			var cycle = "s,v,grad,stop,PTO, Padd, P_PTO \n" +
+						"   0,  0, 0, 5, 0, 3, 0   \n" +
 						"   1,  8, 0, 0, 2, 3, 10  \n" +
 						" 400,  8, 0, 0, 2, 3, 20  \n" +
 						"1000,  0, 0, 5, 0, 3, 0   \n";
 			EngineeringRunWithCycle(RoadSweeperJob, cycle, "Accelerate_Drive_change_PTO_load_while_sweeping");
 		}
 
+
+		[TestCase()]
+		public void TestReadingPTOCycleDuringDrive()
+		{
+			var cycle = @"TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\PTO-cycle.vptor";
+			var cyleTbl = VectoCSVFile.Read(cycle);
+
+			var cycleData = DrivingCycleDataReader.ReadFromDataTable(cyleTbl, "PTO During Drive", false);
+
+			Assert.AreEqual(7, cycleData.Entries.Count);
+		}
+
+
+		[TestCase()]
+		public void SideLoader_PTOLoadDuringDriving()
+		{
+			var cycle = "s,v,grad,stop,PTO, Padd \n" +
+						"   0,  0, 0, 5, 0, 3 \n" +
+						"   1,  50, 0, 0, 0, 3 \n" +
+						" 400,  50, 0, 0, 3, 3 \n" +
+						"1000,   0, 0, 5, 0, 3 \n";
+			EngineeringRunWithCycle(SideLoaderJob, cycle, "PTOLoadDuringDriving");
+		}
+
+		[TestCase()]
+		public void SideLoader_PTOLoadDuringDrivingMultiple()
+		{
+			var cycle = "s,v,grad,stop,PTO, Padd \n" +
+						"   0,  0, 0, 5, 0, 3 \n" +
+						"   1,  50, 0, 0, 0, 3 \n" +
+						" 400,  50, 0, 0, 3, 3 \n" +
+						"1400,  50, 0, 0, 3, 3 \n" +
+						"2400,  50, 0, 0, 3, 3 \n" +
+						"3400,  50, 0, 0, 3, 3 \n" +
+						"4000,   0, 0, 5, 0, 3 \n";
+			EngineeringRunWithCycle(SideLoaderJob, cycle, "PTOLoadDuringDrivingMultiple");
+		}
+
+		[TestCase()]
+		public void SideLoader_PTOLoadDuringDrivingReActivation()
+		{
+			var cycle = "s,v,grad,stop,PTO, Padd \n" +
+						"   0,  0, 0, 5, 0, 3 \n" +
+						"   1,  50, 0, 0, 0, 3 \n" +
+						" 400,  50, 0, 0, 3, 3 \n" +
+						" 450,  50, 0, 0, 3, 3 \n" +
+						"1000,   0, 0, 5, 0, 3 \n";
+			try {
+				EngineeringRunWithCycle(SideLoaderJob, cycle, "PTOLoadDuringDriving_ReActivation");
+				Assert.Fail("Exception expected!");
+			} catch (Exception e) {
+				Assert.IsTrue(e.InnerException.Message.Contains("Additional PTO activation during drive requested while PTO still active!"));
+			}
+		}
+
+
+		[TestCase()]
+		public void SideLoader_PTOLoadDuringAcceleration()
+		{
+			var cycle = "s,v,grad,stop,PTO, Padd \n" +
+						"   0,  0, 0, 5, 0, 3 \n" +
+						"   1,  50, 0, 0, 0, 3 \n" +
+						"  50,  50, 0, 0, 3, 3 \n" +
+						"1000,   0, 0, 5, 0, 3 \n";
+			EngineeringRunWithCycle(SideLoaderJob, cycle, "PTOLoadDuringAcceleration");
+		}
+
+		[TestCase()]
+		public void SideLoader_PTOLoadDuringDeceleration()
+		{
+			var cycle = "s,v,grad,stop,PTO, Padd \n" +
+						"   0,  0, 0, 5, 0, 3 \n" +
+						"   1,  50, 0, 0, 0, 3 \n" +
+						" 900,  50, 0, 0, 3, 3 \n" +
+						"1000,   0, 0,60, 0, 3 \n";
+			EngineeringRunWithCycle(SideLoaderJob, cycle, "PTOLoadDuringDeceleration");
+		}
 
 		[TestCase(RoadSweeperJob, 1, TestName = "RoadSweeper 1")]
 		public void RoadSweeperTest(string jobFile, int idx)
@@ -140,14 +224,15 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 
 			var cycle = (ICycleData)new CycleInputData() {
 				Name = testName,
-				CycleData = VectoCSVFile.ReadStream(InputDataHelper.InputDataAsStream("s,v,grad,stop,PTO, Padd, P_PTO", cycleData.Split('\n')), source: testName)
+				CycleData = VectoCSVFile.ReadStream(cycleData.ToStream(), source: testName)
 			};
 
 			var inputData = new EngineeringJobInputData() {
 				JobName = job.JobInputData.JobName,
 				Vehicle = job.JobInputData.Vehicle,
 				DriverInputData = job.DriverInputData,
-				Cycles = (new[] {cycle}).ToList()
+				Cycles = (new[] {cycle}).ToList(),
+				PTOCycleWhileDrive = job.JobInputData.PTOCycleWhileDrive
 			};
 			
 
@@ -194,6 +279,7 @@ namespace TUGraz.VectoCore.Tests.Integration.RoadSweepers
 			public IList<ICycleData> Cycles { get; set; }
 			public bool EngineOnlyMode { get { return false; } }
 			public IEngineEngineeringInputData EngineOnly { get { return null; } }
+			public TableData PTOCycleWhileDrive { get; set; }
 
 			IVehicleDeclarationInputData IDeclarationJobInputData.Vehicle
 			{

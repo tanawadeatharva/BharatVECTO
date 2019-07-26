@@ -48,7 +48,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		MeasuredSpeedGear,
 		PTO,
 		VTP,
-		None
+		None,
+		PTODuringDrive
 	}
 
 	public static class CycleTypeHelper

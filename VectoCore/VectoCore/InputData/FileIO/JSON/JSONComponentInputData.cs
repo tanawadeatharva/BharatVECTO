@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -149,6 +150,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public bool EngineOnlyMode { get; private set; }
 
 		public IEngineEngineeringInputData EngineOnly { get; private set; }
+		public TableData PTOCycleWhileDrive { get; private set; }
 
 
 		public string JobName

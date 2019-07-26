@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Data;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -52,6 +53,8 @@ namespace TUGraz.VectoCommon.InputData
 		bool EngineOnlyMode { get; }
 
 		IEngineEngineeringInputData EngineOnly { get; }
+
+		TableData PTOCycleWhileDrive { get; }
 	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
