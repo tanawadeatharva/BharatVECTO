@@ -364,6 +364,11 @@ Public Class JSONFileWriter
 					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 		End If
 
+        if (not job.PTOCycleWhileDrive Is Nothing) Then
+            body.Add("PTOCycleDuringDrive", GetRelativePath(job.PTOCycleWhileDrive.Source, basePath))
+        End If
+
+
 		WriteFile(header, body, filename)
 	End Sub
 
