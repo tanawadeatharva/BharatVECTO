@@ -658,6 +658,8 @@ Public Class VectoJobForm
 		vectoJob.LacDfScale = tbDfCoastingScale.Text.ToDouble(0)
 		vectoJob.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
 		vectoJob.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
+
+        vectoJob.PTOCycleWhileDriveFile = tbPtoSideloadCycle.Text
 		'------------------------------------------------------------
 
 		'SAVE
