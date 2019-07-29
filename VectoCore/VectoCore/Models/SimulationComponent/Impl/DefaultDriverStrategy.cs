@@ -426,7 +426,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
 				velocity += DriverData.OverSpeedEcoRoll.OverSpeed;
 			}
-			if (DataBus.CycleData.LeftSample.PTOActive == PTOActivity.PTOActivityRoadSweeping) {
+			if (DataBus.CycleData.LeftSample.PTOActive == PTOActivity.PTOActivityRoadSweeping && targetVelocity < DriverStrategy.PTODriveMinSpeed) {
 				velocity = DriverStrategy.PTODriveMinSpeed;
 				targetVelocity = velocity;
 			}
