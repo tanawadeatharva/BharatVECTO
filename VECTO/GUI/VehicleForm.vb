@@ -413,7 +413,7 @@ Public Class VehicleForm
             cbEcoRoll.SelectedValue = EcoRollType.None
             cbEngineStopStart.Checked = False
 
-            tbPtoEngineSpeed.Text = vehicle.PTO_DriveEngineSpeed.AsRPM.ToGUIFormat()
+            tbPtoEngineSpeed.Text = vehicle.PTO_DriveEngineSpeed?.AsRPM.ToGUIFormat()
             tbPtoGear.Text = if (vehicle.PTO_DriveGear.HasValue, vehicle.PTO_DriveGear.Value.ToString() ,"")
         End If
 

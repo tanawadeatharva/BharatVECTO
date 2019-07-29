@@ -233,8 +233,12 @@ Public Class JSONFileWriter
 				}}}}}
         
 	    if (Not cfg.DeclMode) Then
-            body.Add("EngineSpeedDuringPTODrive", vehicle.PTO_DriveEngineSpeed?.AsRPM)
-            body.Add("GearDuringPTODrive", vehicle.PTO_DriveGear)
+            if (not vehicle.PTO_DriveEngineSpeed is nothing) then
+                body.Add("EngineSpeedDuringPTODrive", vehicle.PTO_DriveEngineSpeed?.AsRPM)
+            End If
+            If (vehicle.PTO_DriveGear.HasValue) then
+                body.Add("GearDuringPTODrive", vehicle.PTO_DriveGear)
+            End If
 	    End If
         If (vehicle.TankSystem.HasValue) Then
             body("TankSystem") = vehicle.TankSystem.Value.ToString()
