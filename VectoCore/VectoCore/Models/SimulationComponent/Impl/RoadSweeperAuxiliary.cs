@@ -14,6 +14,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DataBus = container;
 		}
 
+		public bool Active(Second absTime)
+		{
+			return DataBus.CycleData.LeftSample.PTOActive == PTOActivity.PTOActivityRoadSweeping;
+		}
+
 		public Watt PowerDemand(PerSecond engineSpeed, Second absTime, Second dt, bool dryRun)
 		{
 			var left = DataBus.CycleData.LeftSample;

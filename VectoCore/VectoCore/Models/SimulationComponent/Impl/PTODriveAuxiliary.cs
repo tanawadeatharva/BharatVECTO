@@ -24,6 +24,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			Cycle = cycle;
 		}
 
+		public bool Active(Second absTime)
+		{
+			if (PTOActivityStart == null) {
+				return false;
+			}
+			var timeInCycle = absTime - PTOActivityStart;
+			return !timeInCycle.IsGreaterOrEqual(Cycle.Entries.Last().Time);
+		}
+
 		public Watt PowerDemand(PerSecond nEng, Second absTime, Second dt, bool dryRun)
 		{
 			if (DataBus.CycleData.LeftSample.PTOActive == PTOActivity.PTOActivityWhileDrive) {
@@ -42,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			}
 
 			var timeInCycle = absTime - PTOActivityStart;
-			if (timeInCycle > Cycle.Entries.Last().Time) {
+			if (timeInCycle.IsGreaterOrEqual(Cycle.Entries.Last().Time)) {
 				PTOActivityStart = null;
 				return 0.SI<Watt>();
 			}

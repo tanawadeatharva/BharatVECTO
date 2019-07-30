@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -167,15 +168,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			var auxPowerDemand = 0.SI<Watt>();
+			var excludedFromAuxSum = new[] {
+				Constants.Auxiliaries.IDs.PTOTransmission, Constants.Auxiliaries.IDs.PTOConsumer,
+				Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.IDs.PTORoadsweeping
+			};
+			var ptoConsumerAggregation = new[] {
+				Constants.Auxiliaries.IDs.PTOConsumer,
+				Constants.Auxiliaries.IDs.PTODuringDrive, Constants.Auxiliaries.IDs.PTORoadsweeping
+			};
 			if (CurrentState.PowerDemands != null) {
 				foreach (var kv in CurrentState.PowerDemands) {
 					container[kv.Key] = kv.Value;
 					// mk 2016-10-11: pto's should not be counted in sum auxiliary power demand
-					if (kv.Key != Constants.Auxiliaries.IDs.PTOTransmission && kv.Key != Constants.Auxiliaries.IDs.PTOConsumer) {
+					if (!excludedFromAuxSum.Contains(kv.Key)) {
 						auxPowerDemand += kv.Value;
 					}
 				}
+
+				var ptoConsumer = 0.SI<Watt>();
+				foreach (var kv in CurrentState.PowerDemands) {
+					if (ptoConsumerAggregation.Contains(kv.Key)) {
+						ptoConsumer += kv.Value;
+					}
+				}
+
+				container[Constants.Auxiliaries.IDs.PTOConsumer] = ptoConsumer;
 			}
+
+
 			if (container[ModalResultField.P_aux] == null || container[ModalResultField.P_aux] == DBNull.Value) {
 				// only overwrite if nobody else already wrote the total aux power
 				container[ModalResultField.P_aux] = auxPowerDemand;
