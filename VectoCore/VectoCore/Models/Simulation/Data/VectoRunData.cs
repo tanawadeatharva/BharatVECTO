@@ -155,6 +155,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				}
 			}
 
+			if (runData.Cycle != null && runData.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityRoadSweeping)) {
+				if (runData.EngineData.PTORoadSweepEngineSpeed == null) {
+					return new ValidationResult("RoadSweeping PTO activity detected in cycle but no min. engine speed during road sweeping provided");
+				}
+
+				if (runData.DriverData.PTODriveRoadsweepingGear == 0) {
+					return new ValidationResult("RoadSweeping PTO activity detected in cycle but no gear during road sweeping provided");
+				}
+			}
+
+			if (runData.Cycle != null && runData.Cycle.Entries.Any(x => x.PTOActive == PTOActivity.PTOActivityWhileDrive)) {
+				if (runData.PTOCycleWhileDrive == null || runData.PTOCycleWhileDrive.Entries.Count == 0) {
+					return new ValidationResult("PTO activity while driving detected in cycle but PTO cycle provided");
+				}
+			}
+
 			if (runData.EngineData.PTORoadSweepEngineSpeed != null) {
 				if (runData.EngineData.IdleSpeed.IsGreater(runData.EngineData.PTORoadSweepEngineSpeed)) {
 					return new ValidationResult("PTO Operating enginespeed is below engine idling speed");
