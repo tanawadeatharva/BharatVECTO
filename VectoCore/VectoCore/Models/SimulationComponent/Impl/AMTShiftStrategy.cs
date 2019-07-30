@@ -196,6 +196,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						return true;
 					}
 				}
+
+				if (gear < DesiredGearRoadsweeping) {
+					if (!SpeedTooHighForEngine(
+						DesiredGearRoadsweeping, inAngularVelocity / ModelData.Gears[DesiredGearRoadsweeping].Ratio)) {
+						_nextGear = DesiredGearRoadsweeping;
+						return true;
+					}
+				}
 			}
 
 			// normal shift when all requirements are fullfilled ------------------
