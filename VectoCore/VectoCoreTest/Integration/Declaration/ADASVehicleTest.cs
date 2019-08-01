@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			var modData = modContainer.Data;
 			run.Run();
 			modContainer.Data = modData;
-			var cf = modContainer.FuelConsumptionADASPerSecond() / modContainer.FuelConsumptionWHTCPerSecond();
+			var cf = modContainer.FuelConsumptionADASPerSecond(modContainer.FuelData.First()) / modContainer.FuelConsumptionWHTCPerSecond(modContainer.FuelData.First());
 
 			Assert.AreEqual(expectedCorrectionFactor, cf.Value(), 1e-6);
 

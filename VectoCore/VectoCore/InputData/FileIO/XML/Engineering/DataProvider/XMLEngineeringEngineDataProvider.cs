@@ -29,6 +29,8 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
@@ -43,7 +45,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 {
 	internal class XMLEngineeringEngineDataProviderV07 : AbstractEngineeringXMLComponentDataProvider,
-		IXMLEngineData
+		IXMLEngineData, IEngineModeDeclarationInputData, IEngineFuelDelcarationInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
 
@@ -139,6 +141,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			}
 		}
 
+		public virtual  IList<IEngineFuelDelcarationInputData> Fuels {
+			get { return new[] { this }.Cast<IEngineFuelDelcarationInputData>().ToList(); }
+		}
+
 		public virtual Watt RatedPowerDeclared
 		{
 			get {
@@ -159,6 +165,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				return null; //GetDoubleElementValue(XMLNames.Engine_MaxTorque).SI<NewtonMeter>(); 
 			}
 		}
+
+		public virtual IList<IEngineModeDeclarationInputData> EngineModes { get { return new[] { this }.Cast<IEngineModeDeclarationInputData>().ToList(); } }
 
 		public virtual KilogramSquareMeter Inertia
 		{

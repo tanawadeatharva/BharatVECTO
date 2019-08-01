@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			var modData = ((ModalDataContainer)first.GetContainer().ModalData).Data;
 			first.Run();
 
-			Assert.AreEqual(expectedFc, modData.AsEnumerable().Sum(r => r.Field<SI>((int)ModalResultField.FCFinal).Value()), 1e-3);
+			Assert.AreEqual(expectedFc, modData.AsEnumerable().Sum(r => r.Field<SI>(ModalResultField.FCFinal.GetName()).Value()), 1e-3);
 
 		}
 	}

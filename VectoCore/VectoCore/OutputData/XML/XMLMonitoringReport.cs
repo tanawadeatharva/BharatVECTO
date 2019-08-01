@@ -31,7 +31,9 @@
 
 using System;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using System.Xml.XPath;
 using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.Models;
@@ -39,14 +41,17 @@ using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLMonitoringReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.7";
+		public const string CURRENT_SCHEMA_VERSION = "0.8";
 
-		private XMLManufacturerReport _manufacturerReport;
+		public const string NAMESPACE_BASE_URI = "urn:tugraz:ivt:VectoAPI:MonitoringOutput";
+
+		private readonly XMLManufacturerReport _manufacturerReport;
 
 		protected XNamespace tns;
 		protected XNamespace di;
@@ -56,7 +61,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XMLMonitoringReport(XMLManufacturerReport manufacturerReport)
 		{
 			di = "http://www.w3.org/2000/09/xmldsig#";
-			tns = "urn:tugraz:ivt:VectoAPI:MonitoringOutput:v" + CURRENT_SCHEMA_VERSION;
+			tns = NAMESPACE_BASE_URI + ":v" + CURRENT_SCHEMA_VERSION;
 			_manufacturerReport = manufacturerReport;
 		}
 
@@ -68,11 +73,30 @@ namespace TUGraz.VectoCore.OutputData.XML
 					return null;
 				}
 
+
+				bool mrfErrors = false;
+				mrf.Validate(XMLValidator.GetXMLSchema(XmlDocumentType.ManufacturerReport), (o, e) => mrfErrors = true, true);
+				if (mrfErrors) {
+					return null;
+				}
+
+				var mrfType = GetXMLType(mrf.Root);
+				if (mrfType == null) {
+					return null;
+				}
+
 				var retVal = GenerateReport();
+				var prefix = "mrf" + mrfType.Namespace.Split(':').Last();
+				
+				var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
 				retVal.Root?.Add(
+					new XAttribute(XNamespace.Xmlns + prefix, mrfType.Namespace),
 					new XElement(
 						tns + "ManufacturerRecord",
+						new XAttribute(xsi + "type", string.Format("{0}:{1}", prefix, mrfType.Name)),
+						new XAttribute("xmlns", mrfType.Namespace),
+						new XAttribute(XNamespace.Xmlns + "m", tns),
 						GetManufacturerData(mrf)),
 					_additionalFields
 				);
@@ -80,7 +104,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 		}
 
-		
+		private XmlQualifiedName GetXMLType(XElement mrfRoot)
+		{
+			var si = mrfRoot.GetSchemaInfo();
+
+			return si?.SchemaType?.BaseXmlSchemaType.QualifiedName; 
+		}
+
+
 		private object[] GetManufacturerData(XDocument mrf)
 		{
 			return mrf.Root?.XPathSelectElements("./*").ToArray<object>();
@@ -104,7 +135,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XAttribute(
 						xsi + "schemaLocation",
 						string.Format(
-							"{0} {1}VectoMonitoring.{2}.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl, CURRENT_SCHEMA_VERSION))
+							"{0} {1}VectoMonitoring.xsd", NAMESPACE_BASE_URI, AbstractXMLWriter.SchemaLocationBaseUrl))
 				)
 			);
 			return retVal;

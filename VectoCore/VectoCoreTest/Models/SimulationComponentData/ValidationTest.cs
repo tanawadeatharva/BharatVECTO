@@ -86,11 +86,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			    Displacement = 6374.SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(),
 				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
-				WHTCUrban = 1,
-				WHTCRural = 1,
-				WHTCMotorway = 1,
+				Fuels = new List<CombustionEngineFuelData>() {
+					new CombustionEngineFuelData() {
+						WHTCUrban = 1,
+						WHTCRural = 1,
+						WHTCMotorway = 1,
+						ConsumptionMap = FuelConsumptionMapReader.Create(fuelConsumption)
+					}
+				},
 				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, FullLoadCurveReader.Create(fullLoad) } },
-				ConsumptionMap = FuelConsumptionMapReader.Create(fuelConsumption)
 			};
 			data.FullLoadCurves[0].EngineData = data;
 
@@ -129,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var engineData = dao.CreateEngineData(data, null, new List<ITorqueLimitInputData>(), null);
 
-			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
+			var results = engineData.Validate(ExecutionMode.Engineering, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));
 			Assert.IsTrue(engineData.IsValid());
 		}
@@ -169,8 +173,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				Type = GearboxType.AMT,
 				Gears = new List<ITransmissionInputData>()
 			};
-
-			var engineData = dao.CreateEngineData(data, null, dummyGearbox, new List<ITorqueLimitInputData>());
+			var vehicle = new MockVehicleInputData() {
+				EngineInputData = data,
+				GearboxInputData = dummyGearbox
+			};
+			var engineData = dao.CreateEngineData(vehicle, data.EngineModes.First(), new Mission() {MissionType = MissionType.LongHaul});
 
 			var results = engineData.Validate(ExecutionMode.Declaration, null, false);
 			Assert.IsFalse(results.Any(), "Validation failed: " + string.Join("; ", results.Select(r => r.ErrorMessage)));

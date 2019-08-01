@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -56,6 +57,8 @@ namespace TUGraz.VectoCore.OutputData
 		/// <returns></returns>
 		object this[ModalResultField key] { get; set; }
 
+		object this[ModalResultField key, FuelData.Entry fuel] { get; set; }
+
 		/// <summary>
 		/// Indexer for auxiliary fields of the DataWriter.
 		/// </summary>
@@ -70,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// </summary>
 		void CommitSimulationStep();
 
-		FuelData.Entry FuelData { get; }
+		IList<FuelData.Entry> FuelData { get; }
 
 		VectoRun.Status RunStatus { get; }
 
@@ -88,6 +91,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>;
 
+		T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>;
+
 		void SetDataValue(string fieldName, object value);
 
 		void AddAuxiliary(string id, string columnName = null);
@@ -102,6 +107,8 @@ namespace TUGraz.VectoCore.OutputData
 		/// called after the simulation is finished and the sum-entries have been written
 		/// </summary>
 		void FinishSimulation();
+
+		string GetColumnName(FuelData.Entry fuelData, ModalResultField mrf);
 	}
 
 	public static class ModalDataContainerExtensions
@@ -151,8 +158,8 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar AccelerationTimeShare(this IModalDataContainer data)
 		{
 			var accelerationTimeShare = data.GetValues(x => new {
-				a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
-				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+				a = x.Field<MeterPerSquareSecond>(ModalResultField.acc.GetName()).DefaultIfNull(0),
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			})
 				.Sum(x => x.a > 0.125 ? x.dt : 0.SI<Second>()).DefaultIfNull(0);
 			return 100 * (accelerationTimeShare / data.Duration()).Cast<Scalar>();
@@ -161,8 +168,8 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar DecelerationTimeShare(this IModalDataContainer data)
 		{
 			var decelerationTimeShare = data.GetValues(x => new {
-				a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
-				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+				a = x.Field<MeterPerSquareSecond>(ModalResultField.acc.GetName()).DefaultIfNull(0),
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			})
 				.Sum(x => x.a < -0.125 ? x.dt : 0.SI<Second>()).DefaultIfNull(0);
 			return 100 * (decelerationTimeShare / data.Duration()).Cast<Scalar>();
@@ -171,9 +178,9 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar CruiseTimeShare(this IModalDataContainer data)
 		{
 			var cruiseTime = data.GetValues(x => new {
-				v = x.Field<MeterPerSecond>((int)ModalResultField.v_act).DefaultIfNull(0),
-				a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc).DefaultIfNull(0),
-				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+				v = x.Field<MeterPerSecond>(ModalResultField.v_act.GetName()).DefaultIfNull(0),
+				a = x.Field<MeterPerSquareSecond>(ModalResultField.acc.GetName()).DefaultIfNull(0),
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			})
 				.Sum(x => x.v >= 0.1.KMPHtoMeterPerSecond() && x.a.IsBetween(-0.125, 0.125) ? x.dt : 0.SI<Second>())
 				.DefaultIfNull(0);
@@ -183,8 +190,8 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar StopTimeShare(this IModalDataContainer data)
 		{
 			var stopTime = data.GetValues(x => new {
-				v = x.Field<MeterPerSecond>((int)ModalResultField.v_act).DefaultIfNull(0),
-				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+				v = x.Field<MeterPerSecond>(ModalResultField.v_act.GetName()).DefaultIfNull(0),
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			})
 				.Sum(x => x.v < 0.1.KMPHtoMeterPerSecond() ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
@@ -270,10 +277,10 @@ namespace TUGraz.VectoCore.OutputData
 			var max = data.GetValues<Meter>(ModalResultField.dist).LastOrDefault() ?? 0.SI<Meter>();
 			var first = data.GetValues(
 				r => new {
-					dist = r.Field<Meter>((int)ModalResultField.dist),
-					vact = r.Field<MeterPerSecond>((int)ModalResultField.v_act),
-					acc = r.Field<MeterPerSquareSecond>((int)ModalResultField.acc),
-					dt = r.Field<Second>((int)ModalResultField.simulationInterval)
+					dist = r.Field<Meter>(ModalResultField.dist.GetName()),
+					vact = r.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
+					acc = r.Field<MeterPerSquareSecond>(ModalResultField.acc.GetName()),
+					dt = r.Field<Second>(ModalResultField.simulationInterval.GetName())
 				}).First();
 			var min = 0.SI<Meter>();
 			if (first != null && first.vact != null && first.acc != null && first.dt != null) {
@@ -330,86 +337,97 @@ namespace TUGraz.VectoCore.OutputData
 			return data.WorkWheelsPos() / data.Duration();
 		}
 
-		public static KilogramPerMeter FuelConsumptionWHTC(this IModalDataContainer data)
+		public static KilogramPerMeter FuelConsumptionWHTC(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / distance;
+			var column = data.GetColumnName(fuelData, ModalResultField.FCWHTCc);
+			return data.TimeIntegral<Kilogram>(column) / distance;
 		}
 
-		public static KilogramPerSecond FuelConsumptionWHTCPerSecond(this IModalDataContainer data)
+		public static KilogramPerSecond FuelConsumptionWHTCPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / data.Duration();
+			var column = data.GetColumnName(fuelData, ModalResultField.FCWHTCc);
+			return data.TimeIntegral<Kilogram>(column) / data.Duration();
 		}
 
-		public static KilogramPerMeter FuelConsumptionNCVCorrected(this IModalDataContainer data)
-		{
-			var distance = data.Distance();
-			if (distance == null || distance.IsEqual(0)) {
-				return null;
-			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCNCVc) / distance;
-		}
-
-		public static KilogramPerSecond FuelConsumptionNCVCorrectedPerSecond(this IModalDataContainer data)
-		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCNCVc) / data.Duration();
-		}
-
-		public static KilogramPerSecond FuelConsumptionAAUXPerSecond(this IModalDataContainer data)
-		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCAAUX) / data.Duration();
-		}
-
-		public static KilogramPerMeter FuelConsumptionAAUX(this IModalDataContainer data)
+		public static KilogramPerMeter FuelConsumptionNCVCorrected(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCAAUX) / distance;
+			var column = data.GetColumnName(fuelData, ModalResultField.FCNCVc);
+			return data.TimeIntegral<Kilogram>(column) / distance;
 		}
 
-		public static KilogramPerSecond FuelConsumptionADASPerSecond(this IModalDataContainer data)
+		public static KilogramPerSecond FuelConsumptionNCVCorrectedPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCADAS) / data.Duration();
+			var column = data.GetColumnName(fuelData, ModalResultField.FCNCVc);
+			return data.TimeIntegral<Kilogram>(column) / data.Duration();
 		}
 
-		public static KilogramPerMeter FuelConsumptionADAS(this IModalDataContainer data)
+		public static KilogramPerSecond FuelConsumptionAAUXPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
+		{
+			var column = data.GetColumnName(fuelData, ModalResultField.FCAAUX);
+			return data.TimeIntegral<Kilogram>(column) / data.Duration();
+		}
+
+		public static KilogramPerMeter FuelConsumptionAAUX(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCADAS) / distance;
+			var column = data.GetColumnName(fuelData, ModalResultField.FCAAUX);
+			return data.TimeIntegral<Kilogram>(column) / distance;
+		}
+
+		public static KilogramPerSecond FuelConsumptionADASPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
+		{
+			var column = data.GetColumnName(fuelData, ModalResultField.FCADAS);
+			return data.TimeIntegral<Kilogram>(column) / data.Duration();
+		}
+
+		public static KilogramPerMeter FuelConsumptionADAS(this IModalDataContainer data, FuelData.Entry fuelData)
+		{
+			var distance = data.Distance();
+			if (distance == null || distance.IsEqual(0)) {
+				return null;
+			}
+			var column = data.GetColumnName(fuelData, ModalResultField.FCADAS);
+			return data.TimeIntegral<Kilogram>(column) / distance;
 		}
 
 		
 
-		public static KilogramPerSecond FuelConsumptionFinalPerSecond(this IModalDataContainer data)
+		public static KilogramPerSecond FuelConsumptionFinalPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / data.Duration();
+			var column = data.GetColumnName(fuelData, ModalResultField.FCFinal);
+			return data.TimeIntegral<Kilogram>(column) / data.Duration();
 		}
 
-		public static KilogramPerMeter FuelConsumptionFinal(this IModalDataContainer data)
+		public static KilogramPerMeter FuelConsumptionFinal(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) / distance;
+
+			var column = data.GetColumnName(fuelData, ModalResultField.FCFinal);
+			return data.TimeIntegral<Kilogram>(column) / distance;
 		}
 
-		public static VolumePerMeter FuelConsumptionFinalVolumePerMeter(this IModalDataContainer data)
+		public static VolumePerMeter FuelConsumptionFinalVolumePerMeter(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
-			var fuelConsumptionFinal = data.FuelConsumptionFinal();
-			if (fuelConsumptionFinal == null || data.FuelData.FuelDensity == null) {
+			var fuelConsumptionFinal = data.FuelConsumptionFinal(fuelData);
+			if (fuelConsumptionFinal == null || fuelData.FuelDensity == null) {
 				return null;
 			}
 
-			var fcVolumePerMeter = fuelConsumptionFinal / data.FuelData.FuelDensity;
+			var fcVolumePerMeter = fuelConsumptionFinal / fuelData.FuelDensity;
 			return fcVolumePerMeter.Cast<VolumePerMeter>();
 		}
 
@@ -419,35 +437,44 @@ namespace TUGraz.VectoCore.OutputData
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * data.FuelData.CO2PerFuelWeight / distance;
+
+			var sum = 0.SI<Kilogram>();
+			foreach (var fuelData in data.FuelData) {
+				sum += data.GetValues(
+							row => row.Field<Second>(ModalResultField.simulationInterval.GetName()) *
+									row.Field<KilogramPerSecond>(data.GetColumnName(fuelData, ModalResultField.FCFinal))).Sum() * fuelData.CO2PerFuelWeight;
+			}
+
+			return sum / distance;
+			//return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * fuelData.CO2PerFuelWeight / distance;
 		}
 
-		public static JoulePerMeter EnergyPerMeter(this IModalDataContainer data)
+		public static JoulePerMeter EnergyPerMeter(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * data.FuelData.LowerHeatingValueVecto / distance;
+			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, ModalResultField.FCFinal)) * fuelData.LowerHeatingValueVecto / distance;
 		}
 
-		public static Kilogram TotalFuelConsumption(this IModalDataContainer data)
+		public static Kilogram TotalFuelConsumptionFcMap(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
-			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap);
+			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, ModalResultField.FCMap));
 		}
 
-		public static KilogramPerSecond FCMapPerSecond(this IModalDataContainer data)
+		public static KilogramPerSecond FCMapPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
-			return data.TotalFuelConsumption() / data.Duration();
+			return data.TotalFuelConsumptionFcMap(fuelData) / data.Duration();
 		}
 
-		public static KilogramPerMeter FCMapPerMeter(this IModalDataContainer data)
+		public static KilogramPerMeter FCMapPerMeter(this IModalDataContainer data, FuelData.Entry fuelData)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			return data.TotalFuelConsumption() / distance;
+			return data.TotalFuelConsumptionFcMap(fuelData) / distance;
 		}
 
 
@@ -509,8 +536,8 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static PerSecond AvgEngineSpeed(this IModalDataContainer data)
 		{
-			var integral = data.GetValues(x => x.Field<PerSecond>((int)ModalResultField.n_eng_avg).Value() *
-												x.Field<Second>((int)ModalResultField.simulationInterval).Value()).Sum();
+			var integral = data.GetValues(x => x.Field<PerSecond>(ModalResultField.n_eng_avg.GetName()).Value() *
+												x.Field<Second>(ModalResultField.simulationInterval.GetName()).Value()).Sum();
 			return (integral / Duration(data).Value()).SI<PerSecond>();
 		}
 
@@ -522,9 +549,9 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar EngineMaxLoadTimeShare(this IModalDataContainer data)
 		{
 			var sum = data.GetValues(x => new {
-				tMax = x.Field<NewtonMeter>((int)ModalResultField.Tq_full).DefaultIfNull(-1),
-				tEng = x.Field<NewtonMeter>((int)ModalResultField.T_eng_fcmap).DefaultIfNull(0),
-				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+				tMax = x.Field<NewtonMeter>(ModalResultField.Tq_full.GetName()).DefaultIfNull(-1),
+				tEng = x.Field<NewtonMeter>(ModalResultField.T_eng_fcmap.GetName()).DefaultIfNull(0),
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			}).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * sum / Duration(data);
 		}
@@ -543,8 +570,8 @@ namespace TUGraz.VectoCore.OutputData
 			var gearCount = 0;
 
 			var shifts = data.GetValues(x => new {
-				Gear = x.Field<uint>((int)ModalResultField.Gear),
-				Speed = x.Field<MeterPerSecond>((int)ModalResultField.v_act)
+				Gear = x.Field<uint>(ModalResultField.Gear.GetName()),
+				Speed = x.Field<MeterPerSecond>(ModalResultField.v_act.GetName())
 			});
 			foreach (var entry in shifts) {
 				if (entry.Speed != null && entry.Speed.IsSmallerOrEqual(0.1)) {
@@ -567,8 +594,8 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar CoastingTimeShare(this IModalDataContainer data)
 		{
 			var sum = data.GetValues(x => new {
-				DrivingBehavior = x.Field<DrivingBehavior>((int)ModalResultField.drivingBehavior),
-				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+				DrivingBehavior = x.Field<DrivingBehavior>(ModalResultField.drivingBehavior.GetName()),
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			})
 				.Sum(x => x.DrivingBehavior == DrivingBehavior.Coasting ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * sum / Duration(data);
@@ -577,8 +604,8 @@ namespace TUGraz.VectoCore.OutputData
 		public static Scalar BrakingTimeShare(this IModalDataContainer data)
 		{
 			var sum = data.GetValues(x => new {
-				DrivingBehavior = x.Field<DrivingBehavior>((int)ModalResultField.drivingBehavior),
-				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+				DrivingBehavior = x.Field<DrivingBehavior>(ModalResultField.drivingBehavior.GetName()),
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			})
 				.Sum(x => x.DrivingBehavior == DrivingBehavior.Braking ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * sum / Duration(data);
@@ -592,8 +619,8 @@ namespace TUGraz.VectoCore.OutputData
 			}
 
 			var gearData = data.GetValues(x => new {
-				Gear = x.Field<uint>((int)ModalResultField.Gear),
-				dt = x.Field<Second>((int)ModalResultField.simulationInterval)
+				Gear = x.Field<uint>(ModalResultField.Gear.GetName()),
+				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			});
 
 			foreach (var entry in gearData) {

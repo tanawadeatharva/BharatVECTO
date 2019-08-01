@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLCustomerReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.7";
+		public const string CURRENT_SCHEMA_VERSION = "0.8";
 
 		protected readonly XElement VehiclePart;
 
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
 
-		public void Initialize(VectoRunData modelData)
+		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			var exempted = modelData.Exempted;
 			VehiclePart.Add(
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
 					new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 					GetADAS(modelData.VehicleData.ADAS)
-				}.Concat(ComponentData(modelData))
+				}.Concat(ComponentData(modelData, fuelModes))
 				);
 			if (exempted) {
 				Results.Add(new XElement(tns + XMLNames.Report_ExemptedVehicle));
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			);
 		}
 
-		private XElement[] ComponentData(VectoRunData modelData)
+		private XElement[] ComponentData(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			return new[] {
 				new XElement(
@@ -135,7 +135,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(
 					tns + XMLNames.Report_Vehicle_EngineDisplacement,
 					XMLHelper.ValueAsUnit(modelData.EngineData.Displacement, XMLNames.Unit_ltr, 1)),
-				new XElement(tns + XMLNames.Engine_FuelType, modelData.EngineData.FuelData.FuelType.ToXMLFormat()),
+				new XElement(tns + XMLNames.Report_Vehicle_FuelTypes,  
+					fuelModes.SelectMany(x => x.Select(f =>  f.FuelType.ToXMLFormat())).Distinct().Select(x => new XElement(tns + XMLNames.Engine_FuelType, x))
+				),
 				new XElement(
 					tns + XMLNames.Report_Vehicle_TransmissionCertificationMethod,
 					modelData.GearboxData.CertificationMethod.ToXMLFormat()),
@@ -198,7 +200,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			return new object[] {
 				new XElement(tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg, 0)),
-				new XElement(tns + XMLNames.Report_Results_FuelType, XMLHelper.ToXmlStr(result.FuelData)),
+				new XElement(tns + XMLNames.Report_Result_FuelMode, result.FuelData.Count > 1 ? XMLNames.Report_Result_FuelMode_Val_Dual : XMLNames.Report_Result_FuelMode_Val_Single),
 				new XElement(tns + XMLNames.Report_Results_AverageSpeed, XMLHelper.ValueAsUnit(result.AverageSpeed, XMLNames.Unit_kmph, 1)),
 				XMLDeclarationReport.GetResults(result, tns, false).Cast<object>().ToArray()
 			};

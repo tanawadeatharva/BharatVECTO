@@ -1,4 +1,5 @@
-﻿using Ninject.Extensions.Factory;
+﻿using System.Collections.Generic;
+using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.Declaration;
@@ -34,7 +35,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 	{
 		#region Implementation of IDeclarationReport
 
-		public void InitializeReport(VectoRunData modelData)
+		public void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 
 		}
@@ -56,7 +57,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 	{
 		#region Implementation of IDeclarationReport
 
-		public void InitializeReport(VectoRunData modelData)
+		public void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 
 		}

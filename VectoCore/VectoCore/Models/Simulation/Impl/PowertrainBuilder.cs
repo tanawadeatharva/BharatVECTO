@@ -274,8 +274,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal static IAuxInProvider CreateAdvancedAuxiliaries(VectoRunData data, IVehicleContainer container)
 		{
 			var conventionalAux = CreateAuxiliaries(data, container);
+			// TODO: MQ 2019-07-30 -- which fuel map for advanced auxiliaries?!
 			var busAux = new BusAuxiliariesAdapter(container, data.AdvancedAux.AdvancedAuxiliaryFilePath, data.Cycle.Name,
-				data.VehicleData.TotalVehicleWeight, data.EngineData.ConsumptionMap, data.EngineData.IdleSpeed, conventionalAux);
+				data.VehicleData.TotalVehicleWeight, data.EngineData.Fuels[0].ConsumptionMap, data.EngineData.IdleSpeed, conventionalAux);
 			return busAux;
 		}
 

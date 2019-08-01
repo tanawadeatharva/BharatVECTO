@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.OutputData
 		 * This methodd is called once befor creating the simulation runs with a temporary 
 		 * VectoRunData instance
 		 */
-		void InitializeReport(VectoRunData modelData);
+		void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
 
 		/**
 		 * called when creating the simulation run (before starting the simulations)
@@ -157,6 +157,6 @@ namespace TUGraz.VectoCore.OutputData
 		protected internal abstract void DoWriteReport();
 
 
-		public abstract void InitializeReport(VectoRunData modelData);
+		public abstract void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
 	}
 }

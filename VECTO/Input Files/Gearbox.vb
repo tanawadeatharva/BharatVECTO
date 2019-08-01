@@ -216,8 +216,7 @@ Public Class Gearbox
 				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
 
 				Try
-
-					engine = doa.CreateEngineData(inputData.JobInputData.Vehicle.Components.EngineInputData, Nothing, gearbox, New List(Of ITorqueLimitInputData), TankSystem.Compressed)
+				    engine = doa.CreateEngineData(inputData.JobInputData.Vehicle, inputData.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First(), New Mission() With {.MissionType = MissionType.LongHaul})
 				Catch
 					engine = GetDefaultEngine(gearbox.Gears)
 				End Try

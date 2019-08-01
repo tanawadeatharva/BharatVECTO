@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLManufacturerReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.7";
+		public const string CURRENT_SCHEMA_VERSION = "0.8";
 		
 		protected XElement VehiclePart;
 		
@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
 
-		public void Initialize(VectoRunData modelData)
+		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			var exempted = modelData.Exempted;
 			VehiclePart.Add(
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						new XElement(tns + XMLNames.Vehicle_PTO, modelData.PTO != null),
 						GetADAS(modelData.VehicleData.ADAS),
 						GetTorqueLimits(modelData.EngineData),
-						VehicleComponents(modelData)
+						VehicleComponents(modelData, fuelModes)
 					}
 				);
 			if (exempted) {
@@ -118,10 +118,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 			);
 		}
 
-		private XElement VehicleComponents(VectoRunData modelData)
+		private XElement VehicleComponents(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			return new XElement(tns + XMLNames.Vehicle_Components,
-								GetEngineDescription(modelData.EngineData),
+								GetEngineDescription(modelData.EngineData, fuelModes),
 								GetGearboxDescription(modelData.GearboxData),
 								GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
 								GetRetarderDescription(modelData.Retarder),
@@ -175,15 +175,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 				: new XElement(tns + XMLNames.Vehicle_TorqueLimits, limits.Cast<object>().ToArray());
 		}
 
-		private XElement GetEngineDescription(CombustionEngineData engineData)
+		private XElement GetEngineDescription(CombustionEngineData engineData, List<List<FuelData.Entry>> fuelModes)
 		{
 			return new XElement(tns + XMLNames.Component_Engine,
 				GetCommonDescription(engineData),
 				new XElement(tns + XMLNames.Engine_RatedPower, XMLHelper.ValueAsUnit(engineData.RatedPowerDeclared, XMLNames.Unit_kW)),
 				new XElement(tns + XMLNames.Engine_IdlingSpeed, XMLHelper.ValueAsUnit(engineData.IdleSpeed, XMLNames.Unit_RPM)),
 				new XElement(tns + XMLNames.Engine_RatedSpeed, XMLHelper.ValueAsUnit(engineData.RatedSpeedDeclared, XMLNames.Unit_RPM)),
-				new XElement(tns + XMLNames.Engine_Displacement, XMLHelper.ValueAsUnit(engineData.Displacement, XMLNames.Unit_ltr, 1)),
-				new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelData.FuelType.ToXMLFormat())
+				new XElement(tns + XMLNames.Engine_Displacement, XMLHelper.ValueAsUnit(engineData.Displacement, XMLNames.Unit_ltr, 1)),				
+				fuelModes.Select(x => new XElement(tns + XMLNames.Report_Engine_FuelMode, x.Select(f => new XElement(tns + XMLNames.Engine_FuelType, f.FuelType.ToXMLFormat()))))
 				);
 		}
 
@@ -356,7 +356,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Report_ResultEntry_SimulationParameters,
 					new XElement(tns + XMLNames.Report_ResultEntry_TotalVehicleMass, XMLHelper.ValueAsUnit(result.TotalVehicleWeight, XMLNames.Unit_kg)),
 					new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
-					new XElement(tns + XMLNames.Report_ResultEntry_FuelType, XMLHelper.ToXmlStr(result.FuelData))
+					new XElement(tns + XMLNames.Report_Result_FuelMode, result.FuelData.Count > 1 ? XMLNames.Report_Result_FuelMode_Val_Dual : XMLNames.Report_Result_FuelMode_Val_Single)
 					),
 				new XElement(tns + XMLNames.Report_ResultEntry_VehiclePerformance,
 					new XElement(tns + XMLNames.Report_ResultEntry_AverageSpeed, XMLHelper.ValueAsUnit(result.AverageSpeed, XMLNames.Unit_kmph, 1)),

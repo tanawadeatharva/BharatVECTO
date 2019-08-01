@@ -172,10 +172,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Log.Error("Output filter for 1Hz results is only available for distance-based cycles!");
 				warning1Hz = true;
 			}
-
+			var fuels = data.EngineData.Fuels.Select(x => x.FuelData).ToList();
 			IModalDataContainer modContainer =
 				new ModalDataContainer(
-					data, ModWriter,
+					data, ModWriter, fuels,
 					addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
 					writeEngineOnly: _engineOnlyMode,
 					filter: GetModDataFilter(data)) {

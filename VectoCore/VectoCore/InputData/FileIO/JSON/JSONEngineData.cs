@@ -30,7 +30,9 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -102,7 +104,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 
-	public class JSONEngineDataV3 : JSONFile, IEngineEngineeringInputData
+	public class JSONEngineDataV3 : JSONFile, IEngineEngineeringInputData, IEngineModeDeclarationInputData, IEngineFuelDelcarationInputData
 	{
 		public JSONEngineDataV3(JObject data, string fileName, bool tolerateMissing = false)
 			: base(data, fileName, tolerateMissing) {}
@@ -156,6 +158,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public IList<IEngineFuelDelcarationInputData> Fuels { get { return new IEngineFuelDelcarationInputData[] { this }; } }
+
 		public virtual Watt RatedPowerDeclared
 		{
 			get { return 0.SI<Watt>(); }
@@ -170,6 +174,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return 0.SI<NewtonMeter>(); }
 		}
+
+		public IList<IEngineModeDeclarationInputData> EngineModes { get { return new IEngineModeDeclarationInputData[] { this }; } }
 
 		public virtual KilogramSquareMeter Inertia
 		{

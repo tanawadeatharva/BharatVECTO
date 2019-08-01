@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -383,44 +384,50 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
 
-			var result = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed,
-				DataBus.ExecutionMode != ExecutionMode.Declaration);
-			if (DataBus.ExecutionMode != ExecutionMode.Declaration && result.Extrapolated) {
-				Log.Warn("FuelConsumptionMap was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
-					avgEngineSpeed.Value(), CurrentState.EngineTorque.Value());
-			}
-			var pt1 = ModelData.FullLoadCurves[DataBus.Gear].PT1(avgEngineSpeed);
-			if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated) {
-				Log.Error("requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}",
-					avgEngineSpeed);
-			}
+			foreach (var fuel in ModelData.Fuels) {
+				var result = fuel.ConsumptionMap.GetFuelConsumption(
+					CurrentState.EngineTorque, avgEngineSpeed,
+					DataBus.ExecutionMode != ExecutionMode.Declaration);
+				if (DataBus.ExecutionMode != ExecutionMode.Declaration && result.Extrapolated) {
+					Log.Warn(
+						"FuelConsumptionMap for fuel {2} was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
+						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value(), fuel.FuelData.FuelType.GetLabel());
+				}
+				var pt1 = ModelData.FullLoadCurves[DataBus.Gear].PT1(avgEngineSpeed);
+				if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated) {
+					Log.Error(
+						"requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}",
+						avgEngineSpeed);
+				}
 
-			var fc = result.Value;
-			var fcNCVcorr = fc * ModelData.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
+				var fc = result.Value;
+				var fcNCVcorr = fc * fuel.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
 
-			var fcWHTC = fcNCVcorr * WHTCCorrectionFactor;
-			var fcAAUX = fcWHTC;
-			var advancedAux = EngineAux as BusAuxiliariesAdapter;
-			if (advancedAux != null) {
-				advancedAux.DoWriteModalResults(container);
-				fcAAUX = advancedAux.AAuxFuelConsumption;
+				var fcWHTC = fcNCVcorr * WHTCCorrectionFactor(fuel.FuelData);
+				var fcAAUX = fcWHTC;
+				var advancedAux = EngineAux as BusAuxiliariesAdapter;
+				if (advancedAux != null) {
+					advancedAux.DoWriteModalResults(container);
+					fcAAUX = advancedAux.AAuxFuelConsumption;
+				}
+				var fcADAS = fcAAUX * ModelData.ADASCorrectionFactor;
+				var fcFinal = fcADAS;
+
+				container[ModalResultField.FCMap, fuel.FuelData] = fc;
+				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
+				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
+				container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
+				container[ModalResultField.FCADAS, fuel.FuelData] = fcADAS;
+				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
 			}
-			var fcADAS = fcAAUX * ModelData.ADASCorrectionFactor;
-			var fcFinal = fcADAS;
-
-			container[ModalResultField.FCMap] = fc;
-			container[ModalResultField.FCNCVc] = fcNCVcorr;
-			container[ModalResultField.FCWHTCc] = fcWHTC;
-			container[ModalResultField.FCAAUX] = fcAAUX;
-			container[ModalResultField.FCADAS] = fcADAS;
-			container[ModalResultField.FCFinal] = fcFinal;
 		}
 
-		protected virtual double WHTCCorrectionFactor
+		protected virtual double WHTCCorrectionFactor(FuelData.Entry fuel)
 		{
-			get { return ModelData.FuelConsumptionCorrectionFactor; }
+			return ModelData.Fuels.First(x=> x.FuelData.FuelType == fuel.FuelType).FuelConsumptionCorrectionFactor; 
 		}
 
+		
 		protected override void DoCommitSimulationStep()
 		{
 			AdvanceState();

@@ -31,6 +31,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -118,28 +119,32 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var modData = modContainer.Data;
 
 			var fuelData = FuelData.Instance().Lookup(fuelType, tankSystem);
-			modContainer.FuelData = fuelData;
-			((VehicleContainer)run.Run.GetContainer()).RunData.EngineData.FuelData = fuelData;
+			
+			// change the fuel entry in mod data and engine data
+			var origFuel = modContainer.FuelColumns.Keys.First();
+			modContainer.FuelColumns[fuelData] = modContainer.FuelColumns[origFuel];
+			modContainer.FuelColumns.Remove(origFuel);
+			((VehicleContainer)run.Run.GetContainer()).RunData.EngineData.Fuels.First().FuelData = fuelData;
 
 			run.Run.Run();
 
 			// restore data table before assertions
 			modContainer.Data = modData;
-			
+			var fuel = modContainer.FuelData.First();
 //			Console.WriteLine("FC-Map g/m: {0}, FC-Final g/m {1}, FC-Final l/100km: {2}, CO2 g/m: {3}, Energy J/m: {4}",
 			Console.WriteLine("{0}, {1}, {2}, {3}, {4}",
-				modContainer.FCMapPerMeter().Value(),
-				modContainer.FuelConsumptionFinal().Value(), 
-				modContainer.FuelConsumptionFinalVolumePerMeter()?.ConvertToLiterPer100Kilometer().Value ?? double.NaN,
+				modContainer.FCMapPerMeter(fuel).Value(),
+				modContainer.FuelConsumptionFinal(fuelData).Value(), 
+				modContainer.FuelConsumptionFinalVolumePerMeter(fuelData)?.ConvertToLiterPer100Kilometer().Value ?? double.NaN,
 				modContainer.CO2PerMeter().Value(), 
-				modContainer.EnergyPerMeter().Value());
+				modContainer.EnergyPerMeter(fuelData).Value());
 
-			AssertHelper.AreRelativeEqual(expectedFCMap, modContainer.FCMapPerMeter(), 1e-6);
-			AssertHelper.AreRelativeEqual(expectedFCFinal, modContainer.FuelConsumptionFinal(), 1e-3);
-			AssertHelper.AreRelativeEqual(expectedFCperkm, modContainer.FuelConsumptionFinalVolumePerMeter()?.ConvertToLiterPer100Kilometer().Value.SI() ?? null, 1e-6);
+			AssertHelper.AreRelativeEqual(expectedFCMap, modContainer.FCMapPerMeter(fuel), 1e-6);
+			AssertHelper.AreRelativeEqual(expectedFCFinal, modContainer.FuelConsumptionFinal(fuelData), 1e-3);
+			AssertHelper.AreRelativeEqual(expectedFCperkm, modContainer.FuelConsumptionFinalVolumePerMeter(fuelData)?.ConvertToLiterPer100Kilometer().Value.SI() ?? null, 1e-6);
 
 			AssertHelper.AreRelativeEqual(expectedCo2, modContainer.CO2PerMeter(), 1e-6);
-			AssertHelper.AreRelativeEqual(expectedMJ, modContainer.EnergyPerMeter(), 1e-3);
+			AssertHelper.AreRelativeEqual(expectedMJ, modContainer.EnergyPerMeter(fuelData), 1e-3);
 		}
 	}
 }

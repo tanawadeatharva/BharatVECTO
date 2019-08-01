@@ -33,6 +33,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -46,11 +48,46 @@ namespace TUGraz.VectoCore.Tests.Utils
 	/// </summary>
 	internal class MockModalDataContainer : IModalDataContainer
 	{
+		protected Dictionary<FuelData.Entry, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<FuelData.Entry, Dictionary<ModalResultField, DataColumn>>();
+
+		
 		public MockModalDataContainer()
 		{
 			Data = new ModalResults();
+			foreach (var value in EnumHelper.GetValues<ModalResultField>()) {
+				if (ModalDataContainer.FuelConsumptionSignals.Contains(value)) {
+					continue;
+				}
+				var col = new DataColumn(value.GetName(), value.GetAttribute().DataType) { Caption = value.GetCaption() };
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = value.GetAttribute().Decimals;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] = value.GetAttribute().OutputFactor;
+				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] = value.GetAttribute().ShowUnit;
+				Data.Columns.Add(col);
+			}
 			CurrentRow = Data.NewRow();
 			Auxiliaries = new Dictionary<string, DataColumn>();
+
+			AddFuels(new[] { VectoCore.Models.Declaration.FuelData.Diesel }.ToList());
+		}
+
+		protected void AddFuels(List<FuelData.Entry> fuels)
+		{
+			foreach (var entry in fuels) {
+				if (FuelColumns.ContainsKey(entry)) {
+					throw new VectoException("Fuel {0} already added!", entry.FuelType.GetLabel());
+				}
+				FuelColumns[entry] = new Dictionary<ModalResultField, DataColumn>();
+				foreach (var fcCol in ModalDataContainer.FuelConsumptionSignals) {
+					var col = Data.Columns.Add(fuels.Count == 1 ? fcCol.GetName() : string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()), typeof(SI));
+					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
+						fcCol.GetAttribute().Decimals;
+					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
+						fcCol.GetAttribute().OutputFactor;
+					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
+						fcCol.GetAttribute().ShowUnit;
+					FuelColumns[entry][fcCol] = col;
+				}
+			}
 		}
 
 		public ModalResults Data { get; set; }
@@ -59,6 +96,24 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public string ModFileName
 		{
 			get { return ""; }
+		}
+
+		public object this[ModalResultField key, FuelData.Entry fuel]
+		{
+			get {
+				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key)) {
+					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
+				}
+
+				return CurrentRow[FuelColumns[fuel][key]];
+			}
+			set {
+				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key)) {
+					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
+				}
+
+				CurrentRow[FuelColumns[fuel][key]] = value;
+			}
 		}
 
 		public object this[string auxId]
@@ -74,6 +129,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Data.Rows.Add(CurrentRow);
 			CurrentRow = Data.NewRow();
 		}
+
+		IList<FuelData.Entry> IModalDataContainer.FuelData { get { return FuelColumns.Keys.ToList(); } }
 
 		public FuelData.Entry FuelData
 		{
@@ -119,6 +176,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
+		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
+		{
+			throw new NotImplementedException();
+		}
+
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
 		public void SetDataValue(string fieldName, object value)
@@ -143,6 +205,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void FinishSimulation()
 		{
 			Data.Rows.Clear();
+		}
+
+		public string GetColumnName(FuelData.Entry fuelData, ModalResultField mrf)
+		{
+			if (!FuelColumns.ContainsKey(fuelData) || !FuelColumns[fuelData].ContainsKey(mrf)) {
+				throw new VectoException("unknown fuel {0} for key {1}", fuelData.GetLabel(), mrf.GetName());
+			}
+
+			return FuelColumns[fuelData][mrf].ColumnName;
 		}
 
 		public string RunName { get; set; }

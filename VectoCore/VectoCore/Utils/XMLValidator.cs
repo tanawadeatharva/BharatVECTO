@@ -95,8 +95,11 @@ namespace TUGraz.VectoCore.Utils
 		{
 			_resultAction(false);
 			_valid = false;
+			ValidationError = args?.Message ?? "no schema found";
 			_validationErrorAction(args?.Severity ?? XmlSeverityType.Error, new ValidationEvent { ValidationEventArgs = args });
 		}
+
+		public string ValidationError { get; private set; }
 
 		public static void CallBackExceptionOnError(XmlSeverityType severity, ValidationEvent evt)
 		{
@@ -105,7 +108,7 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		private static XmlSchemaSet GetXMLSchema(XmlDocumentType docType)
+		public static XmlSchemaSet GetXMLSchema(XmlDocumentType docType)
 		{
 			var xset = new XmlSchemaSet() { XmlResolver = new XmlResourceResolver() };
 			foreach (var entry in EnumHelper.GetValues<XmlDocumentType>()) {

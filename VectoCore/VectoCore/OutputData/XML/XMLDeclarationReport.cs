@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public Kilogram CO2Total { get; private set; }
 
-			public Kilogram FuelConsumptionTotal { get; private set; }
+			public Dictionary<FuelType, Kilogram> FuelConsumptionTotal { get; private set; }
 
 			public Meter Distance { get; private set; }
 
@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public string StackTrace { get; private set; }
 
-			public FuelData.Entry FuelData { get; private set; }
+			public IList<FuelData.Entry> FuelData { get; private set; }
 
 			
 			public Kilogram Payload { get; private set; }
@@ -136,9 +136,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				var entriesDriving = data.GetValues(
 					r => new {
-						dt = r.Field<Second>((int)ModalResultField.simulationInterval),
-						v = r.Field<MeterPerSecond>((int)ModalResultField.v_act),
-						nEng = r.Field<PerSecond>((int)ModalResultField.n_eng_avg)
+						dt = r.Field<Second>(ModalResultField.simulationInterval.GetName()),
+						v = r.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
+						nEng = r.Field<PerSecond>(ModalResultField.n_eng_avg.GetName())
 					}).Where(x => x.v.IsGreater(0)).ToArray();
 				var drivingTime = entriesDriving.Sum(x => x.dt);
 
@@ -148,9 +148,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 				EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
 				Distance = data.Distance();
 
-				FuelConsumptionTotal = data.TimeIntegral<Kilogram>(ModalResultField.FCFinal);
-				CO2Total = FuelConsumptionTotal * data.FuelData.CO2PerFuelWeight;
-				EnergyConsumptionTotal = FuelConsumptionTotal * data.FuelData.LowerHeatingValueVecto;
+				FuelConsumptionTotal = new Dictionary<FuelType, Kilogram>();
+				CO2Total = 0.SI<Kilogram>();
+				EnergyConsumptionTotal = 0.SI<Joule>();
+				foreach (var entry in FuelData) {
+					var col = data.GetColumnName(entry, ModalResultField.FCFinal);
+					var fcFinal = data.TimeIntegral<Kilogram>(col);
+					FuelConsumptionTotal[entry.FuelType] = fcFinal;
+					CO2Total += fcFinal * entry.CO2PerFuelWeight;
+					EnergyConsumptionTotal += fcFinal * entry.LowerHeatingValueVecto;
+				}
 
 				var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
 					? ModalResultField.P_retarder_in
@@ -220,7 +227,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 
 
-		public override void InitializeReport(VectoRunData modelData)
+		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			var weightingGroup = modelData.Exempted
 				? WeightingGroup.Unknown
@@ -230,8 +237,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 			_weightingFactors = weightingGroup == WeightingGroup.Unknown
 				? ZeroWeighting
 				: DeclarationData.WeightingFactors.Lookup(weightingGroup);
-			_manufacturerReport.Initialize(modelData);
-			_customerReport.Initialize(modelData);
+			_manufacturerReport.Initialize(modelData, fuelModes);
+			_customerReport.Initialize(modelData, fuelModes);
 			_monitoringReport.Initialize(modelData);
 		}
 
@@ -261,69 +268,83 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public static IEnumerable<XElement> GetResults(ResultEntry result, XNamespace tns, bool fullOutput)
 		{
-			var fuel = result.FuelData;
-			var retVal = new List<XElement> {
-				new XElement(
-					tns + XMLNames.Report_Results_FuelConsumption,
-					new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
-					(result.FuelConsumptionTotal / result.Distance).ConvertToGrammPerKiloMeter().ToMinSignificantDigits(3, 1)),
-				new XElement(
-					tns + XMLNames.Report_Results_FuelConsumption,
-					new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
-					(result.FuelConsumptionTotal / result.Distance / result.Payload)
-					.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)),
-				result.CargoVolume > 0
-					? new XElement(
-						tns + XMLNames.Report_Results_FuelConsumption,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/m³-km"),
-						(result.FuelConsumptionTotal.ConvertToGramm() / result.Distance.ConvertToKiloMeter() / result.CargoVolume)
-						.Value
-						().ToMinSignificantDigits(3, 1))
-					: null
-			};
+			//var fuel = result.FuelData;
+			var retVal = new List<XElement>();
 
-			//FC
-			if (fullOutput) {
-				retVal.Add(
+			foreach (var fuel in result.FuelData) {
+				var fcResult = new XElement(tns + XMLNames.Report_Results_Fuel, new XAttribute(XMLNames.Report_Results_Fuel_Type_Attr, fuel.FuelType.ToXMLFormat()));
+				fcResult.Add(
 					new XElement(
 						tns + XMLNames.Report_Results_FuelConsumption,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"),
-						(result.EnergyConsumptionTotal / result.Distance.ConvertToKiloMeter() / 1e6)
-						.Value().ToMinSignificantDigits(3, 1)));
-				retVal.Add(
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
+						(result.FuelConsumptionTotal[fuel.FuelType] / result.Distance)
+						.ConvertToGrammPerKiloMeter().ToMinSignificantDigits(3, 1)),
 					new XElement(
 						tns + XMLNames.Report_Results_FuelConsumption,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/t-km"),
-						(result.EnergyConsumptionTotal / result.Distance.ConvertToKiloMeter() / result.Payload.ConvertToTon() / 1e6)
-						.Value().ToMinSignificantDigits(3, 1)));
-				if (result.CargoVolume > 0)
-					retVal.Add(
+						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
+						(result.FuelConsumptionTotal[fuel.FuelType] / result.Distance / result.Payload)
+						.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)),
+					result.CargoVolume > 0
+						? new XElement(
+							tns + XMLNames.Report_Results_FuelConsumption,
+							new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/m³-km"),
+							(result.FuelConsumptionTotal[fuel.FuelType].ConvertToGramm() / result.Distance.ConvertToKiloMeter() /
+							result.CargoVolume)
+							.Value
+							().ToMinSignificantDigits(3, 1))
+						: null
+				);
+
+				//FC
+				// TODO: MQ 2019-07-31 - per fuel or overall?
+				if (fullOutput) {
+					fcResult.Add(
 						new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
-							new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/m³-km"),
-							(result.EnergyConsumptionTotal / result.Distance.ConvertToKiloMeter() / result.CargoVolume / 1e6).Value()
-																															.ToMinSignificantDigits(3, 1)));
-			}
-			if (fuel.FuelDensity != null) {
-				retVal.Add(
-					new XElement(
-						tns + XMLNames.Report_Results_FuelConsumption,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/100km"),
-						(result.FuelConsumptionTotal.ConvertToGramm() / fuel.FuelDensity / result.Distance.ConvertToKiloMeter() * 100)
-						.Value().ToMinSignificantDigits(3, 1)));
-				retVal.Add(
-					new XElement(
-						tns + XMLNames.Report_Results_FuelConsumption,
-						new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/t-km"),
-						(result.FuelConsumptionTotal.ConvertToGramm() / fuel.FuelDensity / result.Distance.ConvertToKiloMeter() /
-						result.Payload.ConvertToTon()).Value().ToMinSignificantDigits(3, 1)));
-				if (result.CargoVolume > 0)
-					retVal.Add(
+							new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"),
+							(result.FuelConsumptionTotal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
+							result.Distance.ConvertToKiloMeter() / 1e6)
+							.Value().ToMinSignificantDigits(3, 1)),
 						new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
-							new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/m³-km"),
-							(result.FuelConsumptionTotal.ConvertToGramm() / fuel.FuelDensity / result.Distance.ConvertToKiloMeter() /
-							result.CargoVolume).Value().ToMinSignificantDigits(3, 1)));
+							new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/t-km"),
+							(result.FuelConsumptionTotal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
+							result.Distance.ConvertToKiloMeter() / result.Payload.ConvertToTon() / 1e6)
+							.Value().ToMinSignificantDigits(3, 1)));
+					if (result.CargoVolume > 0) {
+						fcResult.Add(
+							new XElement(
+								tns + XMLNames.Report_Results_FuelConsumption,
+								new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/m³-km"),
+								(result.FuelConsumptionTotal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
+								result.Distance.ConvertToKiloMeter() / result.CargoVolume / 1e6).Value().ToMinSignificantDigits(3, 1)));
+					}
+				}
+				if (fuel.FuelDensity != null) {
+					fcResult.Add(
+						new XElement(
+							tns + XMLNames.Report_Results_FuelConsumption,
+							new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/100km"),
+							(result.FuelConsumptionTotal[fuel.FuelType].ConvertToGramm() / fuel.FuelDensity /
+							result.Distance.ConvertToKiloMeter() * 100)
+							.Value().ToMinSignificantDigits(3, 1)),
+						new XElement(
+							tns + XMLNames.Report_Results_FuelConsumption,
+							new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/t-km"),
+							(result.FuelConsumptionTotal[fuel.FuelType].ConvertToGramm() / fuel.FuelDensity /
+							result.Distance.ConvertToKiloMeter() /
+							result.Payload.ConvertToTon()).Value().ToMinSignificantDigits(3, 1)));
+					if (result.CargoVolume > 0) {
+						fcResult.Add(
+							new XElement(
+								tns + XMLNames.Report_Results_FuelConsumption,
+								new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/m³-km"),
+								(result.FuelConsumptionTotal[fuel.FuelType].ConvertToGramm() / fuel.FuelDensity /
+								result.Distance.ConvertToKiloMeter() /
+								result.CargoVolume).Value().ToMinSignificantDigits(3, 1)));
+					}
+				}
+				retVal.Add(fcResult);
 			}
 
 			//CO2

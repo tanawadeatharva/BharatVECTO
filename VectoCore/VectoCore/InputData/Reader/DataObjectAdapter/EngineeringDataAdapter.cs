@@ -137,14 +137,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			if (engine.SavedInDeclarationMode) {
 				WarnEngineeringMode("EngineData");
 			}
-
+			var mode = engine.EngineModes.First();
 			var retVal = SetCommonCombustionEngineData(engine, tankSystem);
+			retVal.IdleSpeed = mode.IdleSpeed;
+			retVal.Fuels = new List<CombustionEngineFuelData>();
+			foreach (var fuel in mode.Fuels) {
+				retVal.Fuels.Add(new CombustionEngineFuelData() {
+					FuelData = DeclarationData.FuelData.Lookup(fuel.FuelType, tankSystem),
+					ConsumptionMap = FuelConsumptionMapReader.Create(fuel.FuelConsumptionMap),
+					FuelConsumptionCorrectionFactor = engine.WHTCEngineering,
+				});
+			}
 			retVal.Inertia = engine.Inertia +
 							(gbx != null && gbx.Type.AutomaticTransmission() ? torqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
 			var limits = torqueLimits.ToDictionary(e => e.Gear);
 			var numGears = gbx == null ? 0 : gbx.Gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
-			fullLoadCurves[0] = FullLoadCurveReader.Create(engine.FullLoadCurve);
+			fullLoadCurves[0] = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve);
 			fullLoadCurves[0].EngineData = retVal;
 			if (gbx != null) {
 				foreach (var gear in gbx.Gears) {
@@ -153,7 +162,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 			retVal.FullLoadCurves = fullLoadCurves;
-			retVal.FuelConsumptionCorrectionFactor = engine.WHTCEngineering;
+			//foreach (var fuelEntry in retVal.Fuels) {
+				
+			
+			//retVal.Fuels[0].FuelConsumptionCorrectionFactor = engine.WHTCEngineering;
 			return retVal;
 		}
 

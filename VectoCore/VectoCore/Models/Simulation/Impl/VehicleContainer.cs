@@ -279,10 +279,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return Cycle;
 		}
 
-		public FuelType FuelType
-		{
-			get { return ModData.FuelData.FuelType; }
-		}
 
 		public Second AbsTime { get; set; }
 

@@ -1053,4 +1053,25 @@
   <data name="TorqueConverter_MaxInputSpeed" xml:space="preserve">
     <value>MaxInputSpeed</value>
   </data>
+  <data name="Report_Vehicle_FuelTypes" xml:space="preserve">
+    <value>FuelTypes</value>
+  </data>
+  <data name="Report_Result_FuelMode" xml:space="preserve">
+    <value>FuelMode</value>
+  </data>
+  <data name="Report_Result_FuelMode_Val_Dual" xml:space="preserve">
+    <value>dual fuel mode</value>
+  </data>
+  <data name="Report_Result_FuelMode_Val_Single" xml:space="preserve">
+    <value>single fuel mode</value>
+  </data>
+  <data name="Report_Results_Fuel" xml:space="preserve">
+    <value>Fuel</value>
+  </data>
+  <data name="Report_Results_Fuel_Type_Attr" xml:space="preserve">
+    <value>type</value>
+  </data>
+  <data name="Report_Engine_FuelMode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
 </root>
