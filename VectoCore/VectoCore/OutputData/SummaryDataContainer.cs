@@ -349,7 +349,7 @@ namespace TUGraz.VectoCore.OutputData
 					SPEED, ALTITUDE_DELTA,
 				}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
 
-			Table.Columns.AddRange(fcColumns.Select(x => new DataColumn(string.Format(x, ""), typeof(ConvertedSI))).ToArray());
+			
 			Table.Columns.AddRange(
 				new[] {
 					SPECIFIC_FC,
@@ -415,15 +415,11 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private void UpdateTableColumns(IList<FuelData.Entry> modDataFuelData)
+		private void UpdateTableColumns(IList<FuelData.Entry> modDataFuelData, bool engineDataMultipleEngineFuelModes)
 		{
-			if (modDataFuelData.Count <= 1) {
-				return;
-			}
-
 			foreach (var entry in modDataFuelData) {
-				foreach (var column in fcColumns) {
-					var colName = string.Format(column, "_"+entry.FuelType.GetLabel());
+				foreach (var column in fcColumns.Reverse()) {
+					var colName = string.Format(column, modDataFuelData.Count <= 1 && !engineDataMultipleEngineFuelModes ? "" : "_" +entry.FuelType.GetLabel());
 					if (!Table.Columns.Contains(colName)) {
 						var col = new DataColumn(colName, typeof(ConvertedSI));
 						Table.Columns.Add(col);
@@ -439,7 +435,7 @@ namespace TUGraz.VectoCore.OutputData
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public virtual void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData)
 		{
-			UpdateTableColumns(modData.FuelData);
+			UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
 			var row = Table.NewRow();
 			Table.Rows.Add(row);
 
@@ -478,7 +474,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[ALTITUDE_DELTA] = (ConvertedSI)modData.AltitudeDelta();
 
-			WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, runData.Cycle.CycleType == CycleType.VTP);
+			WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, runData.EngineData.MultipleEngineFuelModes, runData.Cycle.CycleType == CycleType.VTP);
 
 			var kilogramPerMeter = modData.CO2PerMeter();
 			if (kilogramPerMeter != null) {
@@ -515,11 +511,11 @@ namespace TUGraz.VectoCore.OutputData
 		
 
 		private static void WriteFuelconsumptionEntries(
-			IModalDataContainer modData, DataRow row, Kilogram vehicleLoading,
-			CubicMeter cargoVolume, bool vtpCycle)
+			IModalDataContainer modData, DataRow row, Kilogram vehicleLoading, 
+			CubicMeter cargoVolume, bool multipleEngineModes, bool vtpCycle)
 		{
 			foreach (var entry in modData.FuelData) {
-				var suffix = modData.FuelData.Count <= 1 ? "" : "_" + entry.FuelType.GetLabel();
+				var suffix = modData.FuelData.Count <= 1 && !multipleEngineModes ? "" : "_" + entry.FuelType.GetLabel();
 
 				var tmp = modData.FCMapPerSecond(entry);
 				row[FcCol(FCMAP_H, suffix)] = tmp.ConvertToGrammPerHour();

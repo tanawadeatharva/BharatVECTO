@@ -57,14 +57,21 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		public class ResultEntry
+		public class ResultEntry : IResultEntry
 		{
 			public ResultEntry()
 			{
-				Payload = 0.SI<Kilogram>();
-				CO2Total = double.MaxValue.SI<Kilogram>();
 				Distance = double.MaxValue.SI<Meter>();
 			}
+
+			public IList<FuelData.Entry> FuelData { get; set; }
+
+
+			public Kilogram Payload { get; set; }
+
+			public Kilogram TotalVehicleWeight { get; set; }
+
+			public CubicMeter CargoVolume { get; set; }
 
 			public MeterPerSecond AverageSpeed { get; private set; }
 
@@ -96,14 +103,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public string StackTrace { get; private set; }
 
-			public IList<FuelData.Entry> FuelData { get; private set; }
-
-			
-			public Kilogram Payload { get; private set; }
-
-			public Kilogram TotalVehicleWeight { get; private set; }
-
-			public CubicMeter CargoVolume { get; private set; }
 			public PerSecond EngineSpeedDrivingMin { get; private set; }
 			public PerSecond EngineSpeedDrivingAvg { get; private set; }
 			public PerSecond EngineSpeedDrivingMax { get; private set; }
@@ -117,11 +116,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public virtual void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor)
 			{
-				FuelData = data.FuelData;
+				//FuelData = data.FuelData;
 				
-				Payload = runData.VehicleData.Loading;
-				CargoVolume = runData.VehicleData.CargoVolume;
-				TotalVehicleWeight = runData.VehicleData.TotalVehicleWeight;
+				//Payload = runData.VehicleData.Loading;
+				//CargoVolume = runData.VehicleData.CargoVolume;
+				//TotalVehicleWeight = runData.VehicleData.TotalVehicleWeight;
 				Status = data.RunStatus;
 				Error = data.Error;
 				StackTrace = data.StackTrace;
@@ -151,7 +150,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				FuelConsumptionTotal = new Dictionary<FuelType, Kilogram>();
 				CO2Total = 0.SI<Kilogram>();
 				EnergyConsumptionTotal = 0.SI<Joule>();
-				foreach (var entry in FuelData) {
+				foreach (var entry in data.FuelData) {
 					var col = data.GetColumnName(entry, ModalResultField.FCFinal);
 					var fcFinal = data.TimeIntegral<Kilogram>(col);
 					FuelConsumptionTotal[entry.FuelType] = fcFinal;
@@ -205,9 +204,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected internal override void DoWriteReport()
 		{
-			foreach (var result in Missions.OrderBy(m => m.Key)) {
-				_manufacturerReport.WriteResult(result.Value);
-				_customerReport.WriteResult(result.Value);
+			foreach (var fuelMode in Missions.OrderBy(f => f.Key)) {
+				foreach (var result in fuelMode.Value.OrderBy(m => m.Key)) {
+					_manufacturerReport.WriteResult(result.Value);
+					_customerReport.WriteResult(result.Value);
+				}
 			}
 
 			_manufacturerReport.GenerateReport();

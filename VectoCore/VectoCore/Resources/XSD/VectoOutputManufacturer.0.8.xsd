@@ -369,6 +369,7 @@
 					</xs:element>
 				</xs:sequence>
 				<xs:sequence>
+					<xs:element name="SimulationParameters" type="SimulationParametersType"/>
 					<xs:element name="Error" type="xs:string"/>
 					<xs:element name="ErrorDetails" type="xs:string"/>
 				</xs:sequence>

@@ -138,6 +138,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				RatedSpeedDeclared = data.RatedSpeedDeclared,
 				MaxTorqueDeclared = data.MaxTorqueDeclared,
 				//FuelData = DeclarationData.FuelData.Lookup(data.FuelType, tankSystem)
+				MultipleEngineFuelModes = data.EngineModes.Count > 1
 			};
 			return retVal;
 		}

@@ -257,7 +257,10 @@ Public Class Engine
 				engineData = doa.CreateEngineData(dummyVehicle, engine.EngineModes.First(), New Mission() With {.MissionType = MissionType.LongHaul})
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
-				engineData = doa.CreateEngineData(engine, Nothing, New List(Of ITorqueLimitInputData), Nothing, TankSystem.Compressed)
+			    dim dummyVehicle as IVehicleEngineeringInputData = New DummyVehicle() With {
+                        .EngineInputData = engine
+                        }
+				engineData = doa.CreateEngineData(dummyVehicle, engine.EngineModes.First())
 			End If
 
 			Dim result As IList(Of ValidationResult) =
@@ -440,7 +443,7 @@ Public Class Engine
 End Class
 
 Public Class DummyVehicle
-	Implements IVehicleDeclarationInputData, IVehicleComponentsDeclaration
+	Implements IVehicleDeclarationInputData, IVehicleComponentsDeclaration, IVehicleEngineeringInputData
 	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
 	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
@@ -467,13 +470,20 @@ Public Class DummyVehicle
 	Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
 	Public ReadOnly Property SleeperCab As Boolean Implements IVehicleDeclarationInputData.SleeperCab
 	Public ReadOnly Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
-	Public ReadOnly Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
+    Public ReadOnly Property IVehicleEngineeringInputData_ADAS As IAdvancedDriverAssistantSystemsEngineering Implements IVehicleEngineeringInputData.ADAS
+    Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
+    Public ReadOnly Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
 	Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
 	Public ReadOnly Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
 	Public ReadOnly Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
 	Public ReadOnly Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
 	Public ReadOnly Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
-	Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
+    Public ReadOnly Property CurbMassExtra As Kilogram Implements IVehicleEngineeringInputData.CurbMassExtra
+    Public ReadOnly Property Loading As Kilogram Implements IVehicleEngineeringInputData.Loading
+    Public ReadOnly Property DynamicTyreRadius As Meter Implements IVehicleEngineeringInputData.DynamicTyreRadius
+    Public ReadOnly Property Height As Meter Implements IVehicleEngineeringInputData.Height
+
+    Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
 	get
 			Return me
 	End Get

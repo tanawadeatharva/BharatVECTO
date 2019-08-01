@@ -40,12 +40,12 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		}
 
-		public void PrepareResult(LoadingType loading, Mission mission, VectoRunData runData)
+		public void PrepareResult(LoadingType loading, Mission mission, int fuelMode, VectoRunData runData)
 		{
 
 		}
 
-		public void AddResult(LoadingType loadingType, Mission mission, VectoRunData runData, IModalDataContainer modData)
+		public void AddResult(LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData, IModalDataContainer modData)
 		{
 
 		}
@@ -62,12 +62,12 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		}
 
-		public void PrepareResult(LoadingType loading, Mission mission, VectoRunData runData)
+		public void PrepareResult(LoadingType loading, Mission mission, int fuelMode, VectoRunData runData)
 		{
 
 		}
 
-		public void AddResult(LoadingType loadingType, Mission mission, VectoRunData runData, IModalDataContainer modData)
+		public void AddResult(LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData, IModalDataContainer modData)
 		{
 
 		}

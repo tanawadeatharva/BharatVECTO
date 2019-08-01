@@ -168,8 +168,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			foreach (var resultEntry in entry.ResultEntry) {
 				_allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
-				_weightedPayload += resultEntry.Value.Payload * resultEntry.Value.WeightingFactor;
-				_weightedCo2 += resultEntry.Value.CO2Total / resultEntry.Value.Distance * resultEntry.Value.WeightingFactor;
+				if (resultEntry.Value.Status == VectoRun.Status.Success) {
+					_weightedPayload += resultEntry.Value.Payload * resultEntry.Value.WeightingFactor;
+					_weightedCo2 += resultEntry.Value.CO2Total / resultEntry.Value.Distance * resultEntry.Value.WeightingFactor;
+				}
 				Results.Add(new XElement(tns + XMLNames.Report_Result_Result,
 					new XAttribute(XMLNames.Report_Result_Status_Attr,
 						resultEntry.Value.Status == VectoRun.Status.Success ? "success" : "error"),
@@ -226,7 +228,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var retVal = new XDocument();
 			var results = new XElement(Results);
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
-			var summary = _weightedPayload > 0
+			var summary = _allSuccess && _weightedPayload > 0
 				? new XElement(tns + XMLNames.Report_Results_Summary,
 					new XElement(tns + XMLNames.Report_SpecificCO2Emissions,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_gCO2Pertkm),

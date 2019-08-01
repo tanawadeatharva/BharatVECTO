@@ -89,16 +89,16 @@ namespace TUGraz.VectoCore.OutputData
 		public bool WriteAdvancedAux { get; set; }
 
 		public ModalDataContainer(string runName, IList<FuelData.Entry> fuel, IModalDataWriter writer, bool writeEngineOnly = false, params IModalDataFilter[] filters)
-			: this(0, runName, "", fuel, "", writer, _ => { }, writeEngineOnly, filters) {}
+			: this(0, runName, "", fuel, false, "", writer, _ => { }, writeEngineOnly, filters) {}
 
 		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, IList<FuelData.Entry> fuels, Action<ModalDataContainer> addReportResult,
 			bool writeEngineOnly, params IModalDataFilter[] filter)
 			: this(
-				runData.JobRunId, runData.JobName, runData.Cycle.Name, fuels, runData.ModFileSuffix, writer,
+				runData.JobRunId, runData.JobName, runData.Cycle.Name, fuels, runData.EngineData.MultipleEngineFuelModes, runData.ModFileSuffix, writer,
 				addReportResult,
 				writeEngineOnly, filter) {}
 
-		protected ModalDataContainer(int jobRunId, string runName, string cycleName, IList<FuelData.Entry> fuels, string runSuffix,
+		protected ModalDataContainer(int jobRunId, string runName, string cycleName, IList<FuelData.Entry> fuels, bool multipleEngineModes, string runSuffix,
 			IModalDataWriter writer,
 			Action<ModalDataContainer> addReportResult, bool writeEngineOnly, params IModalDataFilter[] filters)
 		{
@@ -117,9 +117,9 @@ namespace TUGraz.VectoCore.OutputData
 				FuelColumns[entry] = new Dictionary<ModalResultField, DataColumn>();
 				foreach (var fcCol in FuelConsumptionSignals) {
 
-					var col = new DataColumn(fuels.Count == 1 ? fcCol.GetName() : string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()), typeof(SI))
+					var col = new DataColumn(fuels.Count == 1 && !multipleEngineModes ? fcCol.GetName() : string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()), typeof(SI))
 					{
-						Caption = string.Format(fcCol.GetCaption(), fuels.Count == 1 ? "" : "_" + entry.FuelType.GetLabel())
+						Caption = string.Format(fcCol.GetCaption(), fuels.Count == 1 && !multipleEngineModes ? "" : "_" + entry.FuelType.GetLabel())
 					};
 					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
 						fcCol.GetAttribute().Decimals;

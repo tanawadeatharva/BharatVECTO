@@ -178,12 +178,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private void GenerateResults()
 		{
-			var vtpResult = Missions.FirstOrDefault(x => x.Key == MissionType.VerificationTest).Value.ResultEntry
+			var vtpResult = Missions.First().Value.FirstOrDefault(x => x.Key == MissionType.VerificationTest).Value.ResultEntry
 									.FirstOrDefault().Value;
 
 			const MissionType selectedMission = DeclarationData.VTPMode.SelectedMission;
 			const LoadingType selectedLoading = DeclarationData.VTPMode.SelectedLoading;
-			var result = Missions.FirstOrDefault(x => x.Key == selectedMission).Value.ResultEntry
+			var result = Missions.First().Value.FirstOrDefault(x => x.Key == selectedMission).Value.ResultEntry
 								.FirstOrDefault(x => x.Key == selectedLoading).Value;
 			var vtpFcMeasured = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos;
 			var vtpFcMeasuredCorr = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos * vtpResult.VTPFcCorrectionFactor;

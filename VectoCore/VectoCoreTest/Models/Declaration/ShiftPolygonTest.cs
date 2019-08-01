@@ -451,7 +451,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var dao = new DeclarationDataAdapter();
 			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
 			var engineInput = new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile);
-			var vehicle = new MockVehicleInputData() {
+			var vehicle = new MockDeclarationVehicleInputData() {
 				EngineInputData = engineInput,
 				GearboxInputData = gearboxData
 			};
@@ -503,7 +503,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var dao = new DeclarationDataAdapter();
 			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
 			var engineInput = new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile);
-			var vehicle = new MockVehicleInputData() {
+			var vehicle = new MockDeclarationVehicleInputData() {
 				EngineInputData = engineInput,
 				GearboxInputData = gearboxData
 			};

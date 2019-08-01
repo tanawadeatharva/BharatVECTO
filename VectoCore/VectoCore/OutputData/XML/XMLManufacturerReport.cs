@@ -334,12 +334,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 			switch (resultEntry.Value.Status) {
 				case VectoRun.Status.Pending:
 				case VectoRun.Status.Running:
-					return null; // should not happen!
+					return new object[] {
+						GetSimulationParameters(resultEntry.Value),
+						new XElement(tns + XMLNames.Report_Results_Error, string.Format("Simulation not finished! Status: {0}", resultEntry.Value.Status)),
+						new XElement(tns + XMLNames.Report_Results_ErrorDetails, ""),
+					}; // should not happen!
 				case VectoRun.Status.Success:
 					return GetSuccessResultEntry(resultEntry.Value);
 				case VectoRun.Status.Canceled:
 				case VectoRun.Status.Aborted:
 					return new object[] {
+						GetSimulationParameters(resultEntry.Value),
 						new XElement(tns + XMLNames.Report_Results_Error, resultEntry.Value.Error),
 						new XElement(tns + XMLNames.Report_Results_ErrorDetails, resultEntry.Value.StackTrace),
 					};
@@ -353,11 +358,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return new object[] {
 				new XElement(tns + XMLNames.Report_ResultEntry_Distance, new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_km),
 					result.Distance.ConvertToKiloMeter().ToXMLFormat(3)),
-				new XElement(tns + XMLNames.Report_ResultEntry_SimulationParameters,
-					new XElement(tns + XMLNames.Report_ResultEntry_TotalVehicleMass, XMLHelper.ValueAsUnit(result.TotalVehicleWeight, XMLNames.Unit_kg)),
-					new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
-					new XElement(tns + XMLNames.Report_Result_FuelMode, result.FuelData.Count > 1 ? XMLNames.Report_Result_FuelMode_Val_Dual : XMLNames.Report_Result_FuelMode_Val_Single)
-					),
+				GetSimulationParameters(result),
 				new XElement(tns + XMLNames.Report_ResultEntry_VehiclePerformance,
 					new XElement(tns + XMLNames.Report_ResultEntry_AverageSpeed, XMLHelper.ValueAsUnit(result.AverageSpeed, XMLNames.Unit_kmph, 1)),
 					new XElement(tns + XMLNames.Report_ResultEntry_AvgDrivingSpeed, XMLHelper.ValueAsUnit(result.AverageDrivingSpeed, XMLNames.Unit_kmph, 1)),
@@ -379,6 +380,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 				//FC
 				XMLDeclarationReport.GetResults(result, tns, true).Cast<object>().ToArray()
 			};
+		}
+
+		private XElement GetSimulationParameters(XMLDeclarationReport.ResultEntry result)
+		{
+			return new XElement(tns + XMLNames.Report_ResultEntry_SimulationParameters,
+								new XElement(tns + XMLNames.Report_ResultEntry_TotalVehicleMass, XMLHelper.ValueAsUnit(result.TotalVehicleWeight, XMLNames.Unit_kg)),
+								new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
+								new XElement(tns + XMLNames.Report_Result_FuelMode, result.FuelData.Count > 1 ? XMLNames.Report_Result_FuelMode_Val_Dual : XMLNames.Report_Result_FuelMode_Val_Single)
+			);
 		}
 
 		private XElement GetApplicationInfo()

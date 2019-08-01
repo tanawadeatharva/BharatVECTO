@@ -62,8 +62,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public NewtonMeter MaxTorqueDeclared { get; internal set; }
 
+		public bool MultipleEngineFuelModes { get; internal set; }
+
+		public int FuelMode { get; internal set; }
+
 		[Required, ValidateObject]
 		public List<CombustionEngineFuelData> Fuels { get; internal set; }
+
 
 		public CombustionEngineData()
 		{

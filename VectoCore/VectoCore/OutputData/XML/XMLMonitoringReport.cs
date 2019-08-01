@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -73,17 +74,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 					return null;
 				}
 
-
-				bool mrfErrors = false;
-				mrf.Validate(XMLValidator.GetXMLSchema(XmlDocumentType.ManufacturerReport), (o, e) => mrfErrors = true, true);
+				var errors = new List<string>();
+				var mrfErrors = false;
+				mrf.Validate(XMLValidator.GetXMLSchema(XmlDocumentType.ManufacturerReport), (o, e) => {
+					mrfErrors = true;
+					errors.Add(e.Message);
+				}, true);
 				if (mrfErrors) {
-					return null;
+					LogManager.GetLogger(typeof(XMLMonitoringReport).FullName).Warn("XML Validation of manufacturer record failed! errors: {0}", string.Join(System.Environment.NewLine, errors));
 				}
 
-				var mrfType = GetXMLType(mrf.Root);
-				if (mrfType == null) {
-					return null;
-				}
+				var mrfType = GetXMLType(mrf.Root) ?? new XmlQualifiedName("urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:AbstractVectoOutputManufacturerType");
 
 				var retVal = GenerateReport();
 				var prefix = "mrf" + mrfType.Namespace.Split(':').Last();

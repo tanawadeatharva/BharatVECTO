@@ -189,8 +189,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;
 
-			foreach (var engineMode in engineModes) {
-
+			//foreach (var engineMode in engineModes) {
+			for(var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
+				var engineMode = engineModes[modeIdx];
 				foreach (var mission in _segment.Missions) {
 					if (mission.MissionType.IsEMS() &&
 						engine.RatedPowerDeclared.IsSmaller(DeclarationData.MinEnginePowerForEMS)) {
@@ -223,7 +224,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							DriverData = _driverdata,
 							ExecutionMode = ExecutionMode.Declaration,
 							JobName = InputDataProvider.JobInputData.JobName,
-							ModFileSuffix = loading.Key.ToString(),
+							ModFileSuffix = (engineModes.Count > 1 ? string.Format("_EngineMode{0}_", modeIdx) : "") + loading.Key.ToString(),
 							Report = Report,
 							Mission = mission,
 							PTO = mission.MissionType == MissionType.MunicipalUtility
@@ -232,6 +233,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							InputDataHash = InputDataProvider.XMLHash,
 							SimulationType = SimulationType.DistanceCycle
 						};
+						simulationRunData.EngineData.FuelMode = modeIdx;
 						simulationRunData.EngineData.ADASCorrectionFactor = DeclarationData.ADASBenefits.Lookup(
 							_segment.VehicleClass, adasCombination, mission.MissionType, loading.Key);
 						simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;

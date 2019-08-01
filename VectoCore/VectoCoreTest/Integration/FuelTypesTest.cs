@@ -123,7 +123,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// change the fuel entry in mod data and engine data
 			var origFuel = modContainer.FuelColumns.Keys.First();
 			modContainer.FuelColumns[fuelData] = modContainer.FuelColumns[origFuel];
-			modContainer.FuelColumns.Remove(origFuel);
+			if (fuelData.FuelType != origFuel.FuelType) {
+				modContainer.FuelColumns.Remove(origFuel);
+			}
 			((VehicleContainer)run.Run.GetContainer()).RunData.EngineData.Fuels.First().FuelData = fuelData;
 
 			run.Run.Run();

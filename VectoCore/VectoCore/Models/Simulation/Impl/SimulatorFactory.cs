@@ -156,11 +156,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IVectoRun GetExemptedRun(VectoRunData data)
 		{
 			if (data.Report != null) {
-				data.Report.PrepareResult(data.Loading, data.Mission, data);
+				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data);
 			}
 			return new ExemptedRun(new VehicleContainer(data.ExecutionMode) { RunData = data }, modData => {
 				if (data.Report != null) {
-					data.Report.AddResult(data.Loading, data.Mission, data, modData);
+					data.Report.AddResult(data.Loading, data.Mission, data.EngineData?.FuelMode ?? 0, data, modData);
 				}
 			});
 		}
@@ -263,11 +263,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private static Action<ModalDataContainer> PrepareReport(VectoRunData data)
 		{
 			if (data.Report != null) {
-				data.Report.PrepareResult(data.Loading, data.Mission, data);
+				data.Report.PrepareResult(data.Loading, data.Mission, data.EngineData.FuelMode, data);
 			}
 			Action<ModalDataContainer> addReportResult = modData => {
 				if (data.Report != null) {
-					data.Report.AddResult(data.Loading, data.Mission, data, modData);
+					data.Report.AddResult(data.Loading, data.Mission, data.EngineData.FuelMode, data, modData);
 				}
 			};
 			return addReportResult;
