@@ -48,6 +48,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using NUnit.Framework;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -160,10 +161,19 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				EngineData =
 					new CombustionEngineData {
 						IdleSpeed = 560.RPMtoRad(),
+						Inertia = 1.SI<KilogramSquareMeter>(),
+						EngineStartTime = DeclarationData.Engine.DefaultEngineStartTime,
 						FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fullLoadCurve }, { 1, fullLoadCurve } }
 					},
 				GearboxData = new GearboxData { Gears = new Dictionary<uint, GearData> { { 2, new GearData { Ratio = 3.5 } } } },
-				Retarder = new RetarderData()
+				Retarder = new RetarderData(),
+				DriverData = new DriverData() {
+					EngineStopStart = new DriverData.EngineStopStartData() {
+						UtilityFactor = DeclarationData.Driver.EngineStopStartUtilityFactor,
+						EngineOffStandStillThreshold = DeclarationData.Driver.EngineOffStandStillThreshold,
+						MaxEngineOffTimespan = DeclarationData.Driver.MaxEngineOffTimespan
+					}
+				}
 			};
 
 			// call builder (actual test)

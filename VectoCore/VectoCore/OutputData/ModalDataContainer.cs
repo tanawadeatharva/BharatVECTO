@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
 			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, ModalResultField.FCAAUX,
-			ModalResultField.FCADAS, ModalResultField.FCFinal
+			ModalResultField.FCEngineStopStart,  ModalResultField.FCFinal
 		};
 
 		public int JobRunId { get; private set; }
@@ -163,8 +163,9 @@ namespace TUGraz.VectoCore.OutputData
 			var dataColumns = GetOutputColumns();
 
 			var strCols = dataColumns.Select(x => x.GetName())
-				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
-				.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
+									.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
+									.Concat(new[] { ModalResultField.P_aux_ice_off, ModalResultField.P_ice_start }.Select(x => x.GetName()))
+									.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
 
 #if TRACE
 			strCols = strCols.Concat(_additionalColumns);

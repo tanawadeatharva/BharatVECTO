@@ -170,6 +170,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.Inertia = engine.Inertia +
 							(gbx != null && gbx.Type.AutomaticTransmission() ? torqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
+			retVal.EngineStartTime = engine.EngineStartTime ?? DeclarationData.Engine.DefaultEngineStartTime;
 			var limits = torqueLimits.ToDictionary(e => e.Gear);
 			var numGears = gbx == null ? 0 : gbx.Gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
@@ -209,6 +210,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			retVal.Inertia = engine.Inertia;
+			retVal.EngineStartTime = engine.EngineStartTime ?? DeclarationData.Engine.DefaultEngineStartTime;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
 			fullLoadCurves[0] = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve);
 			retVal.FullLoadCurves = fullLoadCurves;
@@ -417,6 +419,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				AccelerationCurve = accelerationData,
 				LookAheadCoasting = lookAheadData,
 				OverSpeedEcoRoll = overspeedData,
+				EngineStopStart = new DriverData.EngineStopStartData() {
+					EngineOffStandStillThreshold =
+						driver.EngineOffStandStillThreshold ?? DeclarationData.Driver.EngineOffStandStillThreshold,
+					MaxEngineOffTimespan = driver.MaxEngineOffTimespan ?? DeclarationData.Driver.MaxEngineOffTimespan,
+					UtilityFactor = driver.EngineStopStartUtilityFactor,
+				}
 			};
 			return retVal;
 		}

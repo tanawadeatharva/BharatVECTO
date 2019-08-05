@@ -332,152 +332,43 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_eng_fcmap, x => x < 0);
 		}
 
+		public static WattSecond WorkAuxiliariesDuringEngineStop(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
+		}
+
+		public static WattSecond WorkEngineStart(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_ice_start);
+		}
+
 		public static Watt PowerWheelPositive(this IModalDataContainer data)
 		{
 			return data.WorkWheelsPos() / data.Duration();
 		}
 
-		public static KilogramPerMeter FuelConsumptionWHTC(this IModalDataContainer data, FuelData.Entry fuelData)
+		
+		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, FuelData.Entry fuelData)
+		{
+			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf)) / data.Duration();
+		}
+
+		public static KilogramPerMeter FuelConsumptionPerMeter(this IModalDataContainer data, ModalResultField mrf, FuelData.Entry fuelData)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
-			var column = data.GetColumnName(fuelData, ModalResultField.FCWHTCc);
-			return data.TimeIntegral<Kilogram>(column) / distance;
+
+			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf)) / distance;
 		}
 
-		public static KilogramPerSecond FuelConsumptionWHTCPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
+		public static Kilogram TotalFuelConsumption(this IModalDataContainer data, ModalResultField mrf, FuelData.Entry fuelData)
 		{
-			var column = data.GetColumnName(fuelData, ModalResultField.FCWHTCc);
-			return data.TimeIntegral<Kilogram>(column) / data.Duration();
-		}
-
-		public static KilogramPerMeter FuelConsumptionNCVCorrected(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			var distance = data.Distance();
-			if (distance == null || distance.IsEqual(0)) {
-				return null;
-			}
-			var column = data.GetColumnName(fuelData, ModalResultField.FCNCVc);
-			return data.TimeIntegral<Kilogram>(column) / distance;
-		}
-
-		public static KilogramPerSecond FuelConsumptionNCVCorrectedPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			var column = data.GetColumnName(fuelData, ModalResultField.FCNCVc);
-			return data.TimeIntegral<Kilogram>(column) / data.Duration();
-		}
-
-		public static KilogramPerSecond FuelConsumptionAAUXPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			var column = data.GetColumnName(fuelData, ModalResultField.FCAAUX);
-			return data.TimeIntegral<Kilogram>(column) / data.Duration();
-		}
-
-		public static KilogramPerMeter FuelConsumptionAAUX(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			var distance = data.Distance();
-			if (distance == null || distance.IsEqual(0)) {
-				return null;
-			}
-			var column = data.GetColumnName(fuelData, ModalResultField.FCAAUX);
-			return data.TimeIntegral<Kilogram>(column) / distance;
-		}
-
-		public static KilogramPerSecond FuelConsumptionADASPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			var column = data.GetColumnName(fuelData, ModalResultField.FCADAS);
-			return data.TimeIntegral<Kilogram>(column) / data.Duration();
-		}
-
-		public static KilogramPerMeter FuelConsumptionADAS(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			var distance = data.Distance();
-			if (distance == null || distance.IsEqual(0)) {
-				return null;
-			}
-			var column = data.GetColumnName(fuelData, ModalResultField.FCADAS);
-			return data.TimeIntegral<Kilogram>(column) / distance;
+			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf));
 		}
 
 		
-
-		public static KilogramPerSecond FuelConsumptionFinalPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			var column = data.GetColumnName(fuelData, ModalResultField.FCFinal);
-			return data.TimeIntegral<Kilogram>(column) / data.Duration();
-		}
-
-		public static KilogramPerMeter FuelConsumptionFinal(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			var distance = data.Distance();
-			if (distance == null || distance.IsEqual(0)) {
-				return null;
-			}
-
-			var column = data.GetColumnName(fuelData, ModalResultField.FCFinal);
-			return data.TimeIntegral<Kilogram>(column) / distance;
-		}
-
-		public static VolumePerMeter FuelConsumptionFinalVolumePerMeter(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			var fuelConsumptionFinal = data.FuelConsumptionFinal(fuelData);
-			if (fuelConsumptionFinal == null || fuelData.FuelDensity == null) {
-				return null;
-			}
-
-			var fcVolumePerMeter = fuelConsumptionFinal / fuelData.FuelDensity;
-			return fcVolumePerMeter.Cast<VolumePerMeter>();
-		}
-
-		public static KilogramPerMeter CO2PerMeter(this IModalDataContainer data)
-		{
-			var distance = data.Distance();
-			if (distance == null || distance.IsEqual(0)) {
-				return null;
-			}
-
-			var sum = 0.SI<Kilogram>();
-			foreach (var fuelData in data.FuelData) {
-				sum += data.GetValues(
-							row => row.Field<Second>(ModalResultField.simulationInterval.GetName()) *
-									row.Field<KilogramPerSecond>(data.GetColumnName(fuelData, ModalResultField.FCFinal))).Sum() * fuelData.CO2PerFuelWeight;
-			}
-
-			return sum / distance;
-			//return data.TimeIntegral<Kilogram>(ModalResultField.FCFinal) * fuelData.CO2PerFuelWeight / distance;
-		}
-
-		public static JoulePerMeter EnergyPerMeter(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			var distance = data.Distance();
-			if (distance == null || distance.IsEqual(0)) {
-				return null;
-			}
-			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, ModalResultField.FCFinal)) * fuelData.LowerHeatingValueVecto / distance;
-		}
-
-		public static Kilogram TotalFuelConsumptionFcMap(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, ModalResultField.FCMap));
-		}
-
-		public static KilogramPerSecond FCMapPerSecond(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			return data.TotalFuelConsumptionFcMap(fuelData) / data.Duration();
-		}
-
-		public static KilogramPerMeter FCMapPerMeter(this IModalDataContainer data, FuelData.Entry fuelData)
-		{
-			var distance = data.Distance();
-			if (distance == null || distance.IsEqual(0)) {
-				return null;
-			}
-			return data.TotalFuelConsumptionFcMap(fuelData) / distance;
-		}
-
-
 		public static Watt TotalPowerEnginePositiveAverage(this IModalDataContainer data)
 		{
 			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
@@ -632,6 +523,11 @@ namespace TUGraz.VectoCore.OutputData
 				retVal[i] = 100 * retVal[i] / duration;
 			}
 			return retVal;
+		}
+
+		public static int NumICEStarts(this IModalDataContainer data)
+		{
+			return data.GetValues(x => x.Field<bool>((int)ModalResultField.IgnitionOn)).Pairwise((x, y) => !x && y ? 1 : 0).Sum();
 		}
 	}
 }

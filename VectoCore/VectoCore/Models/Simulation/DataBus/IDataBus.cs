@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 	/// Defines interfaces for all different cockpits to access shared data of the powertrain.
 	/// </summary>
 	public interface IDataBus : IGearboxInfo, IAxlegearInfo, IEngineInfo, IVehicleInfo, IMileageCounter, IClutchInfo,
-		IBrakes, IWheelsInfo, IDriverInfo, IDrivingCycleInfo
+		IBrakes, IWheelsInfo, IDriverInfo, IDrivingCycleInfo, IEngineControl
 	{
 		ExecutionMode ExecutionMode { get; }
 

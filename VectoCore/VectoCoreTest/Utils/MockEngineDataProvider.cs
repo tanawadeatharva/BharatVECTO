@@ -35,6 +35,7 @@ using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -74,5 +75,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public KilogramSquareMeter Inertia { get; set; }
 		public double WHTCEngineering { get; set; }
+
+		public Second EngineStartTime
+		{
+			get { return DeclarationData.Engine.DefaultEngineStartTime; }
+		}
 	}
 }

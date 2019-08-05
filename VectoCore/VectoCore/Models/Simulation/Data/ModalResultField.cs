@@ -53,6 +53,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI), "simulation_interval", "dt [s]")] simulationInterval,
 
+
+		[ModalResultField(typeof(bool), "Ignition On")] IgnitionOn,
+
+		[ModalResultField(typeof(SI), caption: "P_ice_start [kW]", outputFactor: 1e-3)] P_ice_start,
+
+
+		[ModalResultField(typeof(SI), caption: "P_aux_ESS_mech [kW]", outputFactor: 1e-3)] P_aux_ice_off,
+
 		/// <summary>
 		///     Engine speed [1/min].
 		/// </summary>
@@ -126,12 +134,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		/// [g/h] Fuel consumption after correction for ADAS technologies. (Based on FC-AAUXc.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-ADAS", caption: "FC-ADAS{0} [g/h]", outputFactor: 3600 * 1000)] FCADAS,
+		[ModalResultField(typeof(SI), name: "FC-ESS", caption: "FC-ESS{0} [g/h]", outputFactor: 3600 * 1000)] FCEngineStopStart,
 
 		/// <summary>
 		/// [g/h] Fuel consumption after WHTC Correction. (Based on FC-ADAS.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-Final", caption: "FC-Final{0} [g/h]", outputFactor: 3600 * 1000)] FCFinal,
+		[ModalResultField(typeof(SI), name: "FC-Final_mod", caption: "FC-Final_mod{0} [g/h]", outputFactor: 3600 * 1000)] FCFinal,
 
 		/// <summary>
 		///     [km]	Travelled distance.
@@ -323,7 +331,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankPneumatics [W]")] AA_AveragePowerDemandCrankPneumatics,
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOff [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOff,
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOn [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOn,
-		
+
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]

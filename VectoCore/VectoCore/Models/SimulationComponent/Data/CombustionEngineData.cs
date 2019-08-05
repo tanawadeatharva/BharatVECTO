@@ -42,6 +42,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	[CustomValidation(typeof(CombustionEngineData), "ValidateData")]
 	public class CombustionEngineData : SimulationComponentData
 	{
+		[Required, SIRange(1, 5)] public Second EngineStartTime;
+
 		[Required, SIRange(1000 * 1E-6, 20000 * 1E-6)]
 		public CubicMeter Displacement { get; internal set; }
 
@@ -54,8 +56,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, ValidateObject]
 		public Dictionary<uint, EngineFullLoadCurve> FullLoadCurves { get; internal set; }
 		
-		public double ADASCorrectionFactor { get; internal set; }
-
 		public PerSecond RatedSpeedDeclared { get; internal set; }
 
 		public Watt RatedPowerDeclared { get; internal set; }
@@ -69,11 +69,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, ValidateObject]
 		public List<CombustionEngineFuelData> Fuels { get; internal set; }
 
-
-		public CombustionEngineData()
-		{
-			ADASCorrectionFactor = 1;
-		}
 
 		// ReSharper disable once UnusedMember.Global -- used in CustomValidation
 		public static ValidationResult ValidateData(CombustionEngineData data, ValidationContext context)

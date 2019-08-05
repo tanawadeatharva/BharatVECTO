@@ -55,17 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public bool PT1Disabled { get; set; }
 
-		public enum EngineOperationMode
-		{
-			Idle,
-			Drag,
-			FullDrag,
-			Load,
-			FullLoad,
-			Stopped,
-			Undef
-		}
-
+		
 		protected const int EngineIdleSpeedStopThreshold = 100;
 		protected const double MaxTorqueExceededThreshold = 1.05;
 		protected const double ZeroThreshold = 0.0001;
@@ -83,7 +73,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PT1Disabled = pt1Disabled;
 			ModelData = modelData;
 
-			PreviousState.OperationMode = EngineOperationMode.Undef;
 			PreviousState.EnginePower = 0.SI<Watt>();
 			PreviousState.EngineSpeed = ModelData.IdleSpeed;
 			PreviousState.dt = 1.SI<Second>();
@@ -160,7 +149,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
+		public virtual IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, bool dryRun)
 		{
 			IterationStatistics.Increment(this, "Requests");
 
@@ -383,6 +372,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_eng_drag] = CurrentState.FullDragTorque * avgEngineSpeed;
 			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
+			container[ModalResultField.IgnitionOn] = CurrentState.IgnitionOn;
 
 			foreach (var fuel in ModelData.Fuels) {
 				var result = fuel.ConsumptionMap.GetFuelConsumption(
@@ -410,14 +400,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					advancedAux.DoWriteModalResults(container);
 					fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
-				var fcADAS = fcAAUX * ModelData.ADASCorrectionFactor;
-				var fcFinal = fcADAS;
+				var fcFinal = fcAAUX;
 
 				container[ModalResultField.FCMap, fuel.FuelData] = fc;
 				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
 				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
 				container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
-				container[ModalResultField.FCADAS, fuel.FuelData] = fcADAS;
+				container[ModalResultField.FCEngineStopStart, fuel.FuelData] = fcFinal;
 				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
 			}
 		}
@@ -497,7 +486,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class EngineState
 		{
-			public EngineOperationMode OperationMode { get; set; }
+			public EngineState()
+			{
+				IgnitionOn = true;
+			}
 
 			// ReSharper disable once InconsistentNaming
 			public Second dt { get; set; }
@@ -517,6 +509,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public NewtonMeter DynamicFullLoadTorque { get; set; }
 
 			public NewtonMeter FullDragTorque { get; set; }
+
+			public bool IgnitionOn { get; set; }
+
+			public Watt AuxPowerEngineOff { get; set; }
 		}
 
 		protected internal class CombustionEngineIdleController : LoggingObject, IIdleController
@@ -693,5 +689,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return RequestIdling(absTime, dt, outTorque, outAngularVelocity);
 			}
 		}
+
+		#region Implementation of IEngineControl
+
+		public virtual bool IgnitionOn
+		{
+			get { return true; }
+			set {  }
+		}
+
+		#endregion
 	}
 }

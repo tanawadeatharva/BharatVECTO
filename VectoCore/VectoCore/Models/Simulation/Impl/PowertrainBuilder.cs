@@ -118,7 +118,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
 				.AddComponent(gearbox, data.Retarder, container)
 				.AddComponent(new Clutch(container, data.EngineData));
-			var engine = new CombustionEngine(container, data.EngineData, pt1Disabled: true);
+			var engine = new StopStartCombustionEngine(container, data.EngineData, pt1Disabled: true);
 			var idleController = GetIdleController(data.PTO, engine, container);
 
 			powertrain.AddComponent(engine, idleController)
@@ -187,7 +187,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
 
-			var engine = new CombustionEngine(container, data.EngineData);
+			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			var idleController = GetIdleController(data.PTO, engine, container);
 
 			powertrain.AddComponent(engine, idleController)
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (data.GearboxData.Type.ManualTransmission()) {
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
-			powertrain.AddComponent(new CombustionEngine(container, data.EngineData))
+			powertrain.AddComponent(new StopStartCombustionEngine(container, data.EngineData))
 				.AddAuxiliaries(container, data);
 
 			_modData.HasTorqueConverter = data.GearboxData.Type.AutomaticTransmission();
@@ -236,7 +236,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
-			var powertrain = cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy()))
+			var powertrain = cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(data.VehicleData.ADAS)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -247,7 +247,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
 			}
 
-			var engine = new CombustionEngine(container, data.EngineData);
+			var engine = new StopStartCombustionEngine(container, data.EngineData);
 			var idleController = GetIdleController(data.PTO, engine, container);
 			cycle.IdleController = idleController as IdleControllerSwitcher;
 

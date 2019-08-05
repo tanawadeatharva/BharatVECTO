@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var vtpFcSimulated = vtpResult.VTPFcFinalSimulated / vtpResult.VTPWorPWheelSimPos;
 			var cVtp = vtpFcMeasuredCorr / vtpFcSimulated;
 			// TODO: MQ 20119-07-31 - how to handle vtp with dual-fuel vehicles?
-			var declaredCO2 = result.FuelConsumptionTotal.Sum(x => x.Value) / result.Distance / result.Payload;
+			var declaredCO2 = result.FuelConsumptionFinal.Sum(x => x.Value) / result.Distance / result.Payload;
 			var verifiedCO2 = declaredCO2 * cVtp;
 
 			Results.Add(

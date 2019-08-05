@@ -94,6 +94,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 						ConsumptionMap = FuelConsumptionMapReader.Create(fuelConsumption)
 					}
 				},
+				EngineStartTime = 1.SI<Second>(),
 				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, FullLoadCurveReader.Create(fullLoad) } },
 			};
 			data.FullLoadCurves[0].EngineData = data;
@@ -127,7 +128,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				IdleSpeed = 560.RPMtoRad(),
 				Inertia = 1.SI<KilogramSquareMeter>(),
 				FullLoadCurve = fullLoad,
-				FuelConsumptionMap = fuelConsumption
+				FuelConsumptionMap = fuelConsumption,
+				
 			};
 			var dao = new EngineeringDataAdapter();
 

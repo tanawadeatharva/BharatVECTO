@@ -18,7 +18,7 @@ Public Class JSONFileWriter
 
 	Public Const VehicleFormatVersion As Integer = 8
 
-	Private Const VectoJobFormatVersion As Integer = 4
+	Private Const VectoJobFormatVersion As Integer = 5
 
 	Private Shared _instance As JSONFileWriter
 
@@ -231,9 +231,9 @@ Public Class JSONFileWriter
 				{"FzISO", axle.Tyre.TyreTestLoad.Value()},
 				{"Type", axle.AxleType.ToString()}                                                                                         
 				}}}}}
-        If (vehicle.TankSystem.HasValue) Then
-            body("TankSystem") = vehicle.TankSystem.Value.ToString()
-        End If
+		If (vehicle.TankSystem.HasValue) Then
+			body("TankSystem") = vehicle.TankSystem.Value.ToString()
+		End If
 		if (Cfg.DeclMode) then
 			Dim declVehicle As IVehicleDeclarationInputData = vehicle
 			body("EngineStopStart") = declVehicle.ADAS.EngineStopStart
@@ -318,6 +318,9 @@ Public Class JSONFileWriter
 		
 		If Not job.SavedInDeclarationMode Then
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath))
+		    body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineOffStandStillThreshold.Value())
+            body.Add("EngineStopStartMaxOffTimespan", driver.MaxEngineOffTimespan.Value())
+            body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartUtilityFactor)
 		End If
 		'body.Add("StartStop", New Dictionary(Of String, Object) From {
 		'			{"Enabled", driver.StartStop.Enabled},

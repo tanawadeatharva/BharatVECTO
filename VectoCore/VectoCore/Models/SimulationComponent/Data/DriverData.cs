@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -44,6 +45,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, ValidateObject] public LACData LookAheadCoasting;
 
 		[Required, ValidateObject] public AccelerationCurveData AccelerationCurve;
+
+		[Required, ValidateObject] public EngineStopStartData EngineStopStart;
 
 		public static DriverMode ParseDriverMode(string mode)
 		{
@@ -72,6 +75,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			[Required, Range(0, 20)] public double LookAheadDistanceFactor;
 
 			[Required, ValidateObject] public LACDecisionFactor LookAheadDecisionFactor;
+		}
+
+		public class EngineStopStartData
+		{
+			[Required, SIRange(0, Double.MaxValue)] public Second EngineOffStandStillThreshold;
+
+			[Required, SIRange(0, double.MaxValue)] public Second MaxEngineOffTimespan;
+
+			[Required, Range(0.0, 1.0)] public double UtilityFactor;
+
 		}
 	}
 }

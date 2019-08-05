@@ -255,6 +255,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
+			new MockEngine(vehicleContainer);
+
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
 
 			driver.Connect(vehicle.OutPort());
@@ -319,6 +321,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
 			var vehicle = new MockVehicle(vehicleContainer);
+			new MockEngine(vehicleContainer);
 
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());

@@ -1,7 +1,9 @@
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
@@ -44,6 +46,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return _shiftParameters ?? (_shiftParameters = Reader.ShiftParameters); }
 		}
 
+		public virtual Second EngineOffStandStillThreshold
+		{
+			get { return null; }
+		}
+
+		public virtual Second MaxEngineOffTimespan
+		{
+			get { return null; }
+		}
+
+		public virtual double EngineStopStartUtilityFactor
+		{
+			get { return DeclarationData.Driver.EngineStopStartUtilityFactor; }
+		}
+
 		public virtual IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll
 		{
 			get { return _overspeed ?? (_overspeed = Reader.OverspeedData); }
@@ -73,6 +90,25 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		#region Overrides of XMLEngineeringDriverDataProviderV07
 
 		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+
+		public override Second EngineOffStandStillThreshold
+		{
+			get { return GetDouble("EngineStopStartThreshold", DeclarationData.Driver.EngineOffStandStillThreshold.Value()).SI<Second>(); }
+		}
+
+		public override Second MaxEngineOffTimespan
+		{
+			get { return GetDouble("MaxEngineStopStartTimespan", DeclarationData.Driver.EngineOffStandStillThreshold.Value()).SI<Second>(); }
+		}
+
+		public override double EngineStopStartUtilityFactor
+		{
+			get {
+				return ElementExists("EngineStopStartUtilityFactor")
+					? GetDouble("EngineStopStartUtilityFactor")
+					: DeclarationData.Driver.EngineStopStartUtilityFactor;
+			}
+		}
 
 		#endregion
 	}

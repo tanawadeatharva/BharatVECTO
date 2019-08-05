@@ -55,6 +55,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			new List<Tuple<int, VectoSimulationComponent>>();
 
 		internal IEngineInfo Engine;
+		internal IEngineControl EngineCtl;
 		internal IGearboxInfo Gearbox;
 		internal IAxlegearInfo Axlegear;
 		internal IVehicleInfo Vehicle;
@@ -291,6 +292,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Engine = c;
 					commitPriority = 2;
 				})
+				.If<IEngineControl>(c => {
+						EngineCtl = c;
+					})
 				.If<IDriverInfo>(c => Driver = c)
 				.If<IGearboxInfo>(c => {
 					Gearbox = c;
@@ -465,5 +469,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			get { return Wheels.ReducedMassWheels; }
 		}
+
+		#region Implementation of IEngineControl
+
+		public bool IgnitionOn
+		{
+			get { return EngineCtl.IgnitionOn; }
+			set { EngineCtl.IgnitionOn = value; }
+		}
+
+		#endregion
 	}
 }

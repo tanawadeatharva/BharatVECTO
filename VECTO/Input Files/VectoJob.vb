@@ -72,6 +72,9 @@ Public Class VectoJob
     Public EcoRollOn As Boolean
 
     Public LookAheadMinSpeed As Double
+    Public EngineStopStartThreshold As Double
+    public EngineOffTimeLimit As double
+    public EngineStStUtilityFactor As Double
 
     Public Property StartStopMaxSpeed As Double
 
@@ -273,6 +276,24 @@ Public Class VectoJob
     Public ReadOnly Property GearshiftInputData As IGearshiftEngineeringInputData Implements IDriverEngineeringInputData.GearshiftInputData
         get
             Return TryCast( New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.GearboxInputData, IGearshiftEngineeringInputData)
+        End Get
+    End Property
+
+    Public ReadOnly Property EngineOffStandStillThreshold As Second Implements IDriverEngineeringInputData.EngineOffStandStillThreshold
+        Get
+            return EngineStopStartThreshold.SI(Of Second)()
+        End Get
+    End Property
+
+    Public ReadOnly Property MaxEngineOffTimespan As Second Implements IDriverEngineeringInputData.MaxEngineOffTimespan
+        Get
+            Return EngineOffTimeLimit.SI(Of Second)()
+        End Get
+    End Property
+
+    Public ReadOnly Property EngineStopStartUtilityFactor As Double Implements IDriverEngineeringInputData.EngineStopStartUtilityFactor
+        Get
+            Return EngineStStUtilityFactor
         End Get
     End Property
 

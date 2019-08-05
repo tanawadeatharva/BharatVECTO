@@ -47,14 +47,21 @@ namespace TUGraz.VectoCore.Utils
 		public static string VersionNumber
 		{
 			get {
-				return "3.3.3.1639" + SUFFIX;
+				return "0.1.0.1600" + SUFFIX;
+			}
+		}
+
+		public static string BranchSuffix
+		{
+			get {
+				return "-DEV";
 			}
 		}
 
 		public static string FullVersion
 		{
 			get {
-				return string.Format("VectoCore {0}", VersionNumber);
+				return string.Format("VectoCore{1} {0}", VersionNumber, BranchSuffix);
 			}
 		}
 	}

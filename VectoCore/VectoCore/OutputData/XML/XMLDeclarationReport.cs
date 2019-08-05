@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public Kilogram CO2Total { get; private set; }
 
-			public Dictionary<FuelType, Kilogram> FuelConsumptionTotal { get; private set; }
+			public Dictionary<FuelType, Kilogram> FuelConsumptionFinal { get; private set; }
 
 			public Meter Distance { get; private set; }
 
@@ -147,17 +147,27 @@ namespace TUGraz.VectoCore.OutputData.XML
 				EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
 				Distance = data.Distance();
 
-				FuelConsumptionTotal = new Dictionary<FuelType, Kilogram>();
+				var workESS = data.TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
+				FuelConsumptionFinal = new Dictionary<FuelType, Kilogram>();
 				CO2Total = 0.SI<Kilogram>();
 				EnergyConsumptionTotal = 0.SI<Joule>();
+
 				foreach (var entry in data.FuelData) {
 					var col = data.GetColumnName(entry, ModalResultField.FCFinal);
-					var fcFinal = data.TimeIntegral<Kilogram>(col);
-					FuelConsumptionTotal[entry.FuelType] = fcFinal;
-					CO2Total += fcFinal * entry.CO2PerFuelWeight;
-					EnergyConsumptionTotal += fcFinal * entry.LowerHeatingValueVecto;
+					var fcSum = data.TimeIntegral<Kilogram>(col);
+					//FuelConsumptionTotal[entry.FuelType] = fcSum;
+					double k, d, s;
+					VectoMath.LeastSquaresFitting(
+						data.GetValues(
+							x => x.Field<bool>(ModalResultField.IgnitionOn.GetName()) ? new Point(
+								x.Field<SI>(ModalResultField.P_eng_fcmap.GetName()).Value(), x.Field<SI>(data.GetColumnName(entry, ModalResultField.FCFinal)).Value()) : null).Where(x => x != null && x.Y > 0),
+						out k, out d, out s);
+					var correction = k.SI<KilogramPerWattSecond>();
+					FuelConsumptionFinal[entry.FuelType] = fcSum + correction * workESS;
+					CO2Total += fcSum * entry.CO2PerFuelWeight;
+					EnergyConsumptionTotal += fcSum * entry.LowerHeatingValueVecto;
 				}
-
+				
 				var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
 					? ModalResultField.P_retarder_in
 					: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
@@ -278,18 +288,18 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(
 						tns + XMLNames.Report_Results_FuelConsumption,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/km"),
-						(result.FuelConsumptionTotal[fuel.FuelType] / result.Distance)
+						(result.FuelConsumptionFinal[fuel.FuelType] / result.Distance)
 						.ConvertToGrammPerKiloMeter().ToMinSignificantDigits(3, 1)),
 					new XElement(
 						tns + XMLNames.Report_Results_FuelConsumption,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/t-km"),
-						(result.FuelConsumptionTotal[fuel.FuelType] / result.Distance / result.Payload)
+						(result.FuelConsumptionFinal[fuel.FuelType] / result.Distance / result.Payload)
 						.ConvertToGrammPerTonKilometer().ToMinSignificantDigits(3, 1)),
 					result.CargoVolume > 0
 						? new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
 							new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/m³-km"),
-							(result.FuelConsumptionTotal[fuel.FuelType].ConvertToGramm() / result.Distance.ConvertToKiloMeter() /
+							(result.FuelConsumptionFinal[fuel.FuelType].ConvertToGramm() / result.Distance.ConvertToKiloMeter() /
 							result.CargoVolume)
 							.Value
 							().ToMinSignificantDigits(3, 1))
@@ -303,13 +313,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 						new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
 							new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/km"),
-							(result.FuelConsumptionTotal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
+							(result.FuelConsumptionFinal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
 							result.Distance.ConvertToKiloMeter() / 1e6)
 							.Value().ToMinSignificantDigits(3, 1)),
 						new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
 							new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/t-km"),
-							(result.FuelConsumptionTotal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
+							(result.FuelConsumptionFinal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
 							result.Distance.ConvertToKiloMeter() / result.Payload.ConvertToTon() / 1e6)
 							.Value().ToMinSignificantDigits(3, 1)));
 					if (result.CargoVolume > 0) {
@@ -317,7 +327,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 							new XElement(
 								tns + XMLNames.Report_Results_FuelConsumption,
 								new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/m³-km"),
-								(result.FuelConsumptionTotal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
+								(result.FuelConsumptionFinal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
 								result.Distance.ConvertToKiloMeter() / result.CargoVolume / 1e6).Value().ToMinSignificantDigits(3, 1)));
 					}
 				}
@@ -326,13 +336,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 						new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
 							new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/100km"),
-							(result.FuelConsumptionTotal[fuel.FuelType].ConvertToGramm() / fuel.FuelDensity /
+							(result.FuelConsumptionFinal[fuel.FuelType].ConvertToGramm() / fuel.FuelDensity /
 							result.Distance.ConvertToKiloMeter() * 100)
 							.Value().ToMinSignificantDigits(3, 1)),
 						new XElement(
 							tns + XMLNames.Report_Results_FuelConsumption,
 							new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/t-km"),
-							(result.FuelConsumptionTotal[fuel.FuelType].ConvertToGramm() / fuel.FuelDensity /
+							(result.FuelConsumptionFinal[fuel.FuelType].ConvertToGramm() / fuel.FuelDensity /
 							result.Distance.ConvertToKiloMeter() /
 							result.Payload.ConvertToTon()).Value().ToMinSignificantDigits(3, 1)));
 					if (result.CargoVolume > 0) {
@@ -340,7 +350,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 							new XElement(
 								tns + XMLNames.Report_Results_FuelConsumption,
 								new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/m³-km"),
-								(result.FuelConsumptionTotal[fuel.FuelType].ConvertToGramm() / fuel.FuelDensity /
+								(result.FuelConsumptionFinal[fuel.FuelType].ConvertToGramm() / fuel.FuelDensity /
 								result.Distance.ConvertToKiloMeter() /
 								result.CargoVolume).Value().ToMinSignificantDigits(3, 1)));
 					}

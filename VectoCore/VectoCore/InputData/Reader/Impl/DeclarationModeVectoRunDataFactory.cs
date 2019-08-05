@@ -184,7 +184,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
-			var adasCombination = DeclarationData.ADASCombinations.Lookup(vehicle.ADAS);
 
 			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;
@@ -234,8 +233,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 							SimulationType = SimulationType.DistanceCycle
 						};
 						simulationRunData.EngineData.FuelMode = modeIdx;
-						simulationRunData.EngineData.ADASCorrectionFactor = DeclarationData.ADASBenefits.Lookup(
-							_segment.VehicleClass, adasCombination, mission.MissionType, loading.Key);
 						simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
 						yield return simulationRunData;
 					}
