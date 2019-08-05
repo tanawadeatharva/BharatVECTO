@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Kilogram massExtra, Kilogram loading, bool overspeed = false, GearboxType gbxType = GearboxType.AMT)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(Path.GetFileName(modFileName), FuelData.Diesel, fileWriter) {
+			var modData = new ModalDataContainer(Path.GetFileName(modFileName), new[] { FuelData.Diesel }, fileWriter) {
 				WriteModalResults = true
 			};
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);

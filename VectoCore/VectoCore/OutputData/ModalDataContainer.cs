@@ -35,6 +35,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
@@ -54,6 +55,14 @@ namespace TUGraz.VectoCore.OutputData
 		private readonly IModalDataWriter _writer;
 		private readonly List<string> _additionalColumns = new List<string>();
 		private Exception SimException;
+
+		protected internal readonly Dictionary<FuelData.Entry, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<FuelData.Entry, Dictionary<ModalResultField, DataColumn>>();
+
+		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
+			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, ModalResultField.FCAAUX,
+			ModalResultField.FCEngineStopStart,  ModalResultField.FCFinal
+		};
+
 		public int JobRunId { get; private set; }
 		public string RunName { get; private set; }
 		public string CycleName { get; private set; }
@@ -79,17 +88,17 @@ namespace TUGraz.VectoCore.OutputData
 
 		public bool WriteAdvancedAux { get; set; }
 
-		public ModalDataContainer(string runName, FuelData.Entry fuel, IModalDataWriter writer, bool writeEngineOnly = false, params IModalDataFilter[] filters)
-			: this(0, runName, "", fuel, "", writer, _ => { }, writeEngineOnly, filters) {}
+		public ModalDataContainer(string runName, IList<FuelData.Entry> fuel, IModalDataWriter writer, bool writeEngineOnly = false, params IModalDataFilter[] filters)
+			: this(0, runName, "", fuel, false, "", writer, _ => { }, writeEngineOnly, filters) {}
 
-		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, Action<ModalDataContainer> addReportResult,
+		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, IList<FuelData.Entry> fuels, Action<ModalDataContainer> addReportResult,
 			bool writeEngineOnly, params IModalDataFilter[] filter)
 			: this(
-				runData.JobRunId, runData.JobName, runData.Cycle.Name, runData.EngineData.FuelData, runData.ModFileSuffix, writer,
+				runData.JobRunId, runData.JobName, runData.Cycle.Name, fuels, runData.EngineData.MultipleEngineFuelModes, runData.ModFileSuffix, writer,
 				addReportResult,
 				writeEngineOnly, filter) {}
 
-		protected ModalDataContainer(int jobRunId, string runName, string cycleName, FuelData.Entry fuelData, string runSuffix,
+		protected ModalDataContainer(int jobRunId, string runName, string cycleName, IList<FuelData.Entry> fuels, bool multipleEngineModes, string runSuffix,
 			IModalDataWriter writer,
 			Action<ModalDataContainer> addReportResult, bool writeEngineOnly, params IModalDataFilter[] filters)
 		{
@@ -100,13 +109,33 @@ namespace TUGraz.VectoCore.OutputData
 			JobRunId = jobRunId;
 			_writer = writer;
 
-			FuelData = fuelData;
+			Data = new ModalResults(false);
+			foreach (var entry in fuels) {
+				if (FuelColumns.ContainsKey(entry)) {
+					throw new VectoException("Fuel {0} already added!", entry.FuelType.GetLabel());
+				}
+				FuelColumns[entry] = new Dictionary<ModalResultField, DataColumn>();
+				foreach (var fcCol in FuelConsumptionSignals) {
 
+					var col = new DataColumn(fuels.Count == 1 && !multipleEngineModes ? fcCol.GetName() : string.Format("{0}_{1}", fcCol.GetName(), entry.FuelType.GetLabel()), typeof(SI))
+					{
+						Caption = string.Format(fcCol.GetCaption(), fuels.Count == 1 && !multipleEngineModes ? "" : "_" + entry.FuelType.GetLabel())
+					};
+					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
+						fcCol.GetAttribute().Decimals;
+					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
+						fcCol.GetAttribute().OutputFactor;
+					col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] =
+						fcCol.GetAttribute().ShowUnit;
+					FuelColumns[entry][fcCol] = col;
+					Data.Columns.Add(col);
+				}
+			}
+			
 			_writeEngineOnly = writeEngineOnly;
 			_filters = filters ?? new IModalDataFilter[0];
 			_addReportResult = addReportResult ?? (x => { });
 
-			Data = new ModalResults();
 			Auxiliaries = new Dictionary<string, DataColumn>();
 			CurrentRow = Data.NewRow();
 			WriteAdvancedAux = false;
@@ -121,7 +150,10 @@ namespace TUGraz.VectoCore.OutputData
 			CurrentRow = Data.NewRow();
 		}
 
-		public FuelData.Entry FuelData { get; internal set; }
+		public IList<FuelData.Entry> FuelData
+		{
+			get { return FuelColumns.Keys.ToList(); }
+		}
 
 		public void Finish(VectoRun.Status runStatus, Exception exception = null)
 		{
@@ -131,13 +163,10 @@ namespace TUGraz.VectoCore.OutputData
 			var dataColumns = GetOutputColumns();
 
 			var strCols = dataColumns.Select(x => x.GetName())
-				.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
-				.Concat(
-					new[] {
-						ModalResultField.P_aux_ice_off, ModalResultField.P_ice_start,
-						ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc,
-						ModalResultField.FCAAUX, ModalResultField.FCEngineStopStart, ModalResultField.FCFinal
-					}.Select(x => x.GetName()));
+									.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
+									.Concat(new[] { ModalResultField.P_aux_ice_off, ModalResultField.P_ice_start }.Select(x => x.GetName()))
+									.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
+
 #if TRACE
 			strCols = strCols.Concat(_additionalColumns);
 #endif
@@ -292,13 +321,19 @@ namespace TUGraz.VectoCore.OutputData
 
 		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
 		{
+			return TimeIntegral<T>(field.GetName(), filter);
+		}
+
+		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
+		{
 			var result = 0.0;
+			var idx = Data.Columns.IndexOf(field);
 			for (var i = 0; i < Data.Rows.Count; i++) {
-				var value = Data.Rows[i][(int)field];
+				var value = Data.Rows[i][idx];
 				if (value != null && value != DBNull.Value) {
 					var siValue = (SI)value;
 					if (filter == null || filter(siValue)) {
-						result += siValue.Value() * ((Second)Data.Rows[i][(int)ModalResultField.simulationInterval]).Value();
+						result += siValue.Value() * ((Second)Data.Rows[i][ModalResultField.simulationInterval.GetName()]).Value();
 					}
 				}
 			}
@@ -308,13 +343,40 @@ namespace TUGraz.VectoCore.OutputData
 
 		public IEnumerable<T> GetValues<T>(ModalResultField key)
 		{
-			return GetValues<T>(Data.Columns[(int)key]);
+			return GetValues<T>(Data.Columns[key.GetName()]);
 		}
 
 		public object this[ModalResultField key]
 		{
-			get { return CurrentRow[(int)key]; }
-			set { CurrentRow[(int)key] = value; }
+			get { return CurrentRow[key.GetName()]; }
+			set { CurrentRow[key.GetName()] = value; }
+		}
+
+		public string GetColumnName(FuelData.Entry fuelData, ModalResultField mrf)
+		{
+			if (!FuelColumns.ContainsKey(fuelData) || !FuelColumns[fuelData].ContainsKey(mrf)) {
+				throw new VectoException("unknown fuel {0} for key {1}", fuelData.GetLabel(), mrf.GetName());
+			}
+
+			return FuelColumns[fuelData][mrf].ColumnName;
+		}
+
+		public object this[ModalResultField key, FuelData.Entry fuel]
+		{
+			get {
+				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key)) {
+					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
+				}
+
+				return CurrentRow[FuelColumns[fuel][key]];
+			}
+			set {
+				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key)) {
+					throw new VectoException("unknown fuel {0} for key {1}", fuel.GetLabel(), key.GetName());
+				}
+
+				CurrentRow[FuelColumns[fuel][key]] = value;
+			}
 		}
 
 		public object this[string auxId]

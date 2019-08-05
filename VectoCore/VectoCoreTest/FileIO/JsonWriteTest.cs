@@ -31,7 +31,6 @@
 
 using System.IO;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Tests.Utils;
@@ -95,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.NotNull(savedInprovider);
 
 			AssertHelper.PublicPropertiesEqual(typeof(IEngineDeclarationInputData),engineInputData, savedInprovider.JobInputData.Vehicle.Components.EngineInputData,
-				new[] { "Source" });
+				new[] { "Source", "EngineModes" });
 		}
 
 		[TestCase(@"TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\AMT_12.vgbx")]

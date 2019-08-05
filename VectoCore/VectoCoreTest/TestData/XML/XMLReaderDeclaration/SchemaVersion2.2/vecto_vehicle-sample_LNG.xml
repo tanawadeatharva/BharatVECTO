@@ -3247,7 +3247,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_quam
 									<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
 									<Date>2017-01-11T14:00:00Z</Date>
 									<AppVersion>Tyre Generation App 1.0</AppVersion>
-									<Dimension>235/60 R17 C</Dimension> <!-- New Dimesion added in v2.2 -->
+									<Dimension>235/60 R17C</Dimension> <!-- New Dimesion added in v2.2 -->
 									<RRCDeclared>0.0063</RRCDeclared>
 									<FzISO>31300</FzISO>
 								</v2.0:Data>

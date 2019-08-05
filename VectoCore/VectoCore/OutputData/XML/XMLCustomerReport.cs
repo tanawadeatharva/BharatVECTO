@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLCustomerReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.7";
+		public const string CURRENT_SCHEMA_VERSION = "0.8";
 
 		protected readonly XElement VehiclePart;
 
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
 
-		public void Initialize(VectoRunData modelData)
+		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			var exempted = modelData.Exempted;
 			VehiclePart.Add(
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
 					new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
 					GetADAS(modelData.VehicleData.ADAS)
-				}.Concat(ComponentData(modelData))
+				}.Concat(ComponentData(modelData, fuelModes))
 				);
 			if (exempted) {
 				Results.Add(new XElement(tns + XMLNames.Report_ExemptedVehicle));
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			);
 		}
 
-		private XElement[] ComponentData(VectoRunData modelData)
+		private XElement[] ComponentData(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			return new[] {
 				new XElement(
@@ -135,7 +135,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(
 					tns + XMLNames.Report_Vehicle_EngineDisplacement,
 					XMLHelper.ValueAsUnit(modelData.EngineData.Displacement, XMLNames.Unit_ltr, 1)),
-				new XElement(tns + XMLNames.Engine_FuelType, modelData.EngineData.FuelData.FuelType.ToXMLFormat()),
+				new XElement(tns + XMLNames.Report_Vehicle_FuelTypes,  
+					fuelModes.SelectMany(x => x.Select(f =>  f.FuelType.ToXMLFormat())).Distinct().Select(x => new XElement(tns + XMLNames.Engine_FuelType, x))
+				),
 				new XElement(
 					tns + XMLNames.Report_Vehicle_TransmissionCertificationMethod,
 					modelData.GearboxData.CertificationMethod.ToXMLFormat()),
@@ -166,8 +168,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			foreach (var resultEntry in entry.ResultEntry) {
 				_allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
-				_weightedPayload += resultEntry.Value.Payload * resultEntry.Value.WeightingFactor;
-				_weightedCo2 += resultEntry.Value.CO2Total / resultEntry.Value.Distance * resultEntry.Value.WeightingFactor;
+				if (resultEntry.Value.Status == VectoRun.Status.Success) {
+					_weightedPayload += resultEntry.Value.Payload * resultEntry.Value.WeightingFactor;
+					_weightedCo2 += resultEntry.Value.CO2Total / resultEntry.Value.Distance * resultEntry.Value.WeightingFactor;
+				}
 				Results.Add(new XElement(tns + XMLNames.Report_Result_Result,
 					new XAttribute(XMLNames.Report_Result_Status_Attr,
 						resultEntry.Value.Status == VectoRun.Status.Success ? "success" : "error"),
@@ -198,7 +202,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		{
 			return new object[] {
 				new XElement(tns + XMLNames.Report_Result_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg, 0)),
-				new XElement(tns + XMLNames.Report_Results_FuelType, XMLHelper.ToXmlStr(result.FuelData)),
+				new XElement(tns + XMLNames.Report_Result_FuelMode, result.FuelData.Count > 1 ? XMLNames.Report_Result_FuelMode_Val_Dual : XMLNames.Report_Result_FuelMode_Val_Single),
 				new XElement(tns + XMLNames.Report_Results_AverageSpeed, XMLHelper.ValueAsUnit(result.AverageSpeed, XMLNames.Unit_kmph, 1)),
 				XMLDeclarationReport.GetResults(result, tns, false).Cast<object>().ToArray()
 			};
@@ -224,7 +228,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var retVal = new XDocument();
 			var results = new XElement(Results);
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
-			var summary = _weightedPayload > 0
+			var summary = _allSuccess && _weightedPayload > 0
 				? new XElement(tns + XMLNames.Report_Results_Summary,
 					new XElement(tns + XMLNames.Report_SpecificCO2Emissions,
 						new XAttribute(XMLNames.Report_Results_Unit_Attr, XMLNames.Unit_gCO2Pertkm),

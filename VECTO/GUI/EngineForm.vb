@@ -197,21 +197,21 @@ Public Class EngineForm
 		TbName.Text = engine.Model
 		TbDispl.Text = (engine.Displacement*1000*1000).ToGUIFormat()
 		TbInertia.Text = engine.Inertia.ToGUIFormat()
-		TbNleerl.Text = engine.IdleSpeed.AsRPM.ToGUIFormat()
+		TbNleerl.Text = engine.EngineModes.First().IdleSpeed.AsRPM.ToGUIFormat()
 
-		TbMAP.Text = GetRelativePath(engine.FuelConsumptionMap.Source, basePath)
-		TbFLD.Text = GetRelativePath(engine.FullLoadCurve.Source, basePath)
-		TbWHTCurban.Text = engine.WHTCUrban.ToGUIFormat()
-		TbWHTCrural.Text = engine.WHTCRural.ToGUIFormat()
-		TbWHTCmw.Text = engine.WHTCMotorway.ToGUIFormat()
+		TbMAP.Text = GetRelativePath(engine.EngineModes.First().Fuels.First().FuelConsumptionMap.Source, basePath)
+		TbFLD.Text = GetRelativePath(engine.EngineModes.First().FullLoadCurve.Source, basePath)
+		TbWHTCurban.Text = engine.EngineModes.First().Fuels.First().WHTCUrban.ToGUIFormat()
+		TbWHTCrural.Text = engine.EngineModes.First().Fuels.First().WHTCRural.ToGUIFormat()
+		TbWHTCmw.Text = engine.EngineModes.First().Fuels.First().WHTCMotorway.ToGUIFormat()
 		TbWHTCEngineering.Text = engine.WHTCEngineering.ToGUIFormat()
-		TbColdHotFactor.Text = engine.ColdHotBalancingFactor.ToGUIFormat()
-		tbRegPerCorrFactor.Text = engine.CorrectionFactorRegPer.ToGUIFormat()
+		TbColdHotFactor.Text = engine.EngineModes.First().Fuels.First().ColdHotBalancingFactor.ToGUIFormat()
+		tbRegPerCorrFactor.Text = engine.EngineModes.First().Fuels.First().CorrectionFactorRegPer.ToGUIFormat()
 		tbMaxTorque.Text = engine.MaxTorqueDeclared.ToGUIFormat()
 		tbRatedPower.Text = (engine.RatedPowerDeclared.Value()/1000).ToGUIFormat()
 		tbRatedSpeed.Text = engine.RatedSpeedDeclared.AsRPM.ToGUIFormat()
 
-		cbFuelType.SelectedValue = engine.FuelType
+		cbFuelType.SelectedValue = engine.EngineModes.First().Fuels.First().FuelType
 
 		DeclInit()
 

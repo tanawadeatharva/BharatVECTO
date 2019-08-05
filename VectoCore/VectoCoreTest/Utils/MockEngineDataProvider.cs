@@ -29,7 +29,9 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -37,7 +39,7 @@ using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockEngineDataProvider : IEngineEngineeringInputData
+	public class MockEngineDataProvider : IEngineEngineeringInputData, IEngineModeDeclarationInputData, IEngineFuelDelcarationInputData
 	{
 		public DataSource DataSource { get; set; }
 		public string Source { get; set; }
@@ -60,9 +62,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public FuelType FuelType { get; set; }
 		public TableData FuelConsumptionMap { get; set; }
 		public TableData FullLoadCurve { get; set; }
+
+		public IList<IEngineFuelDelcarationInputData> Fuels
+		{
+			get { return new[] { this }.Cast<IEngineFuelDelcarationInputData>().ToList(); }
+		}
+
 		public Watt RatedPowerDeclared { get; set; }
 		public PerSecond RatedSpeedDeclared { get; set; }
 		public NewtonMeter MaxTorqueDeclared { get; set; }
+		public IList<IEngineModeDeclarationInputData> EngineModes { get { return new[] { this }.Cast<IEngineModeDeclarationInputData>().ToList(); } }
+
 		public KilogramSquareMeter Inertia { get; set; }
 		public double WHTCEngineering { get; set; }
 

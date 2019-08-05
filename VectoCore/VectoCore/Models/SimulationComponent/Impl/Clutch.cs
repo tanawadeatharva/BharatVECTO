@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond angularVelocityIn;
 
 			var slippingClutchWhenDriving = (DataBus.Gear <= 2 && DataBus.DriverBehavior != DrivingBehavior.Braking);
-			var slippingClutchDuringBraking = DataBus.Gear == 1 && DataBus.DriverBehavior == DrivingBehavior.Braking && outTorque > 0;
+			var slippingClutchDuringBraking = DataBus.Gear == 1 && DataBus.DriverBehavior == DrivingBehavior.Braking && outTorque > 0 && DataBus.BrakePower.IsEqual(0);
 			//var slippingClutchWhenDriving = (DataBus.Gear == 1 && outTorque > 0);
 			AddClutchLoss(outTorque, outAngularVelocity,
 				slippingClutchWhenDriving || slippingClutchDuringBraking || startClutch || outAngularVelocity.IsEqual(0),

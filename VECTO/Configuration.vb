@@ -32,6 +32,8 @@ Public Class Configuration
 
     Public ValidateRunData As Boolean
 
+    public OutputFolder As String
+
 	Public Const DefaultFuelType As FuelType = FuelType.DieselCI
 
 	Private Const FormatVersion As Short = 2
@@ -58,6 +60,7 @@ Public Class Configuration
 		FirstRun = True
 		DeclMode = True
         ValidateRunData = True
+        OutputFolder = ""
 	End Sub
 
 	Public Sub Load()
@@ -86,6 +89,7 @@ Public Class Configuration
 				FirstRun = body.GetEx(Of Boolean)("FirstRun")
 				DeclMode = body.GetEx(Of Boolean)("DeclMode")
                 ValidateRunData = IsNothing(body("ValidateRunData")) OrElse body.GetEx(Of Boolean)("ValidateRunData")
+                OutputFolder = If(body("OutputFolder") Is Nothing, "", body("OutputFolder").Value(of string)())
 			End Using
 		Catch ex As Exception
 			GUIMsg(MessageType.Err, "Error while loading settings!")
@@ -111,6 +115,7 @@ Public Class Configuration
 		body.Add("FirstRun", FirstRun)
 		body.Add("DeclMode", DeclMode)
         body.Add("ValidateRunData", ValidateRunData)
+        body.Add("OutputFolder", OutputFolder)
 
 		JSONFileWriter.WriteFile(New Dictionary(Of String, Object) From {{"Header", header}, {"Body", body}}, FilePath)
 	End Sub

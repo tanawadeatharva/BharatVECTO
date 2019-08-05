@@ -53,71 +53,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, SIRange(0, 10)]
 		public KilogramSquareMeter Inertia { get; internal set; }
 
-		[Required, Range(0.9, 2)]
-		public double WHTCUrban { get; internal set; }
-
-		[Required, Range(0.9, 2)]
-		public double WHTCRural { get; internal set; }
-
-		[Required, Range(0.9, 2)]
-		public double WHTCMotorway { get; internal set; }
-
-		[Required, ValidateObject]
-		public FuelConsumptionMap ConsumptionMap { get; internal set; }
-
 		[Required, ValidateObject]
 		public Dictionary<uint, EngineFullLoadCurve> FullLoadCurves { get; internal set; }
-
-		[Required, Range(double.MinValue, double.MaxValue)]
-		public double ColdHotCorrectionFactor { get; internal set; }
-
-		[Required, Range(double.MinValue, double.MaxValue)]
-		public double CorrectionFactorRegPer { get; internal set; }
-
-		public double FuelConsumptionCorrectionFactor { get; internal set; }
-
+		
 		public PerSecond RatedSpeedDeclared { get; internal set; }
 
 		public Watt RatedPowerDeclared { get; internal set; }
 
 		public NewtonMeter MaxTorqueDeclared { get; internal set; }
 
-		public FuelData.Entry FuelData { get; internal set; }
-		
-		public CombustionEngineData()
-		{
-			WHTCUrban = 1;
-			WHTCMotorway = 1;
-			WHTCRural = 1;
-			CorrectionFactorRegPer = 1;
-			FuelConsumptionCorrectionFactor = 1;
-		}
+		public bool MultipleEngineFuelModes { get; internal set; }
 
-		public CombustionEngineData Copy()
-		{
-			return new CombustionEngineData {
-				Manufacturer = Manufacturer,
-				ModelName = ModelName,
-				Displacement = Displacement,
-				IdleSpeed = IdleSpeed,
-				Inertia = Inertia,
-				WHTCUrban = WHTCUrban,
-				WHTCRural = WHTCRural,
-				WHTCMotorway = WHTCMotorway,
-				ConsumptionMap = ConsumptionMap,
-				FullLoadCurves = FullLoadCurves,
-				CorrectionFactorRegPer = CorrectionFactorRegPer,
-				ColdHotCorrectionFactor = ColdHotCorrectionFactor,
-				FuelConsumptionCorrectionFactor = FuelConsumptionCorrectionFactor,
-				RatedPowerDeclared = RatedPowerDeclared,
-				RatedSpeedDeclared = RatedSpeedDeclared,
-				MaxTorqueDeclared = MaxTorqueDeclared,
-				FuelData = FuelData,
-				CertificationNumber = CertificationNumber,
-				CertificationMethod = CertificationMethod,
-				EngineStartTime = EngineStartTime
-			};
-		}
+		public int FuelMode { get; internal set; }
+
+		[Required, ValidateObject]
+		public List<CombustionEngineFuelData> Fuels { get; internal set; }
+
 
 		// ReSharper disable once UnusedMember.Global -- used in CustomValidation
 		public static ValidationResult ValidateData(CombustionEngineData data, ValidationContext context)
@@ -127,5 +78,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 			return ValidationResult.Success;
 		}
+	}
+
+	public class CombustionEngineFuelData
+	{
+		public CombustionEngineFuelData()
+		{
+			WHTCUrban = 1;
+			WHTCMotorway = 1;
+			WHTCRural = 1;
+			CorrectionFactorRegPer = 1;
+			FuelConsumptionCorrectionFactor = 1;
+		}
+
+		[Required, Range(0.9, 2)]
+		public double WHTCUrban { get; internal set; }
+
+		[Required, Range(0.9, 2)]
+		public double WHTCRural { get; internal set; }
+
+		[Required, Range(0.9, 2)]
+		public double WHTCMotorway { get; internal set; }
+
+		[Required, Range(double.MinValue, double.MaxValue)]
+		public double ColdHotCorrectionFactor { get; internal set; }
+
+		[Required, Range(double.MinValue, double.MaxValue)]
+		public double CorrectionFactorRegPer { get; internal set; }
+
+		public double FuelConsumptionCorrectionFactor { get; internal set; }
+
+		[Required, ValidateObject]
+		public FuelConsumptionMap ConsumptionMap { get; internal set; }
+
+		public FuelData.Entry FuelData { get; internal set; }
 	}
 }

@@ -31,9 +31,11 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -74,7 +76,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_fcMapAdapter = new FuelConsumptionAdapter() { FcMap = fcMap };
 			tmpAux.VectoInputs.FuelMap = _fcMapAdapter;
-			tmpAux.VectoInputs.FuelDensity = FuelData.Instance().Lookup(container.FuelType).FuelDensity;
+			// TODO: MQ 2019-07-30: how to handle fuel in aaux?
+			tmpAux.VectoInputs.FuelDensity = FuelData.Instance().Lookup((container as IVehicleContainer).RunData.EngineData.Fuels.First().FuelData.FuelType).FuelDensity;
 
 			//'Set Signals
 			tmpAux.Signals.EngineIdleSpeed = engineIdleSpeed;

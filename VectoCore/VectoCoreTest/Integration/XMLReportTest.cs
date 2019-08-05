@@ -37,6 +37,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using Ninject;
 using NUnit.Framework;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -49,6 +50,7 @@ using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Tests.XML;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoHashing;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 
@@ -140,13 +142,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.WaitFinished();
 
 			var mrfValidator = GetValidator(xmlReport.FullReport);
-			mrfValidator.ValidateXML(XmlDocumentType.ManufacturerReport);
+			mrfValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 
 			var cifValidator = GetValidator(xmlReport.CustomerReport);
-			cifValidator.ValidateXML(XmlDocumentType.CustomerReport);
+			cifValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 
 			var monitoringValidator = GetValidator(xmlReport.MonitoringReport);
-			monitoringValidator.ValidateXML(XmlDocumentType.MonitoringReport);
+			monitoringValidator.ValidateXML(XmlDocumentType.DeclarationComponentData | XmlDocumentType.DeclarationJobData | XmlDocumentType.CustomerReport | XmlDocumentType.ManufacturerReport);
 		}
 
 		private static XMLValidator GetValidator(XDocument xmlReport)
@@ -234,6 +236,53 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 				}
 			}
+		}
+
+
+		[TestCase]
+		public void TestXMLReportCorrectHashes()
+		{
+			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
+			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
+			var writer = new FileOutputWriter(jobfile);
+			var xmlReport = new XMLDeclarationReport(writer);
+			var sumData = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumData);
+
+			if (File.Exists(writer.SumFileName)) {
+				File.Delete(writer.SumFileName);
+			}
+
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
+				WriteModalResults = false,
+				Validate = false,
+			};
+			jobContainer.AddRuns(runsFactory);
+
+			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
+			xmlReport.DoWriteReport();
+
+			
+			var inputHash = VectoHash.Load(jobfile);
+
+			var mrfDigestData = new DigestData(xmlReport.FullReport.Document.XPathSelectElement("//*[local-name()='InputDataSignature']"));
+			var mrfInputDigest = inputHash.ComputeHash(mrfDigestData.CanonicalizationMethods, mrfDigestData.DigestMethod);
+
+			Assert.AreEqual(mrfInputDigest, mrfDigestData.DigestValue);
+
+			var cifDigestData = new DigestData(xmlReport.CustomerReport.Document.XPathSelectElement("//*[local-name()='InputDataSignature']"));
+			var cifInputDigest = inputHash.ComputeHash(cifDigestData.CanonicalizationMethods, cifDigestData.DigestMethod);
+
+			Assert.AreEqual(cifInputDigest, cifDigestData.DigestValue);
+
+			var mrfHash = VectoHash.Load(writer.XMLFullReportName);
+			var mrfCifDigestData = new DigestData(xmlReport.CustomerReport.Document.XPathSelectElement("//*[local-name()='ResultDataSignature']"));
+			var mrfCifDigest = mrfHash.ComputeHash(mrfCifDigestData.CanonicalizationMethods, mrfCifDigestData.DigestMethod);
+
+			Assert.AreEqual(mrfCifDigest, mrfCifDigestData.DigestValue);
+
 		}
 	}
 }

@@ -103,9 +103,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				UpdateDrivingAction(currentDistance, ds);
 				if (NextDrivingAction != null) {
 					var remainingDistance = NextDrivingAction.ActionDistance - currentDistance;
-					var estimatedNextTimestep = remainingDistance / Driver.DataBus.VehicleSpeed;
-					if (remainingDistance.IsEqual(0.SI<Meter>(), Constants.SimulationSettings.DriverActionDistanceTolerance) ||
-						estimatedNextTimestep.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval)) {
+					var estimatedTimestep = remainingDistance / Driver.DataBus.VehicleSpeed;
+
+					var atTriggerTistance = remainingDistance.IsEqual(
+						0.SI<Meter>(), Constants.SimulationSettings.DriverActionDistanceTolerance);
+					var closeBeforeBraking = estimatedTimestep.IsSmaller(Constants.SimulationSettings.LowerBoundTimeInterval);
+					var brakingIntervalTooShort = NextDrivingAction.Action == DrivingBehavior.Braking &&
+												((NextDrivingAction.TriggerDistance - NextDrivingAction.ActionDistance) / Driver.DataBus.VehicleSpeed)
+												.IsSmaller(
+													Constants.SimulationSettings.LowerBoundTimeInterval / 20) && !Driver.DataBus.ClutchClosed(absTime);
+					if ( atTriggerTistance || closeBeforeBraking || brakingIntervalTooShort) {
 						CurrentDrivingMode = DrivingMode.DrivingModeBrake;
 						DrivingModes[CurrentDrivingMode].ResetMode();
 						Log.Debug("Switching to DrivingMode BRAKE");
@@ -469,9 +476,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				throw new VectoException("HandleRequestEngaged found no operating point.");
-			} else {
-				return HandleRequestDisengaged(absTime, ds, gradient, velocity, debug);
+			} 
+
+			var response = HandleRequestDisengaged(absTime, ds, gradient, velocity, debug);
+			if (!(response is ResponseSuccess) && DataBus.ClutchClosed(absTime)) {
+				response = HandleRequestEngaged(absTime, ds, targetVelocity, gradient, prohibitOverspeed, velocity, debug);
 			}
+			
+			return response;
 		}
 
 		private IResponse HandleRequestDisengaged(
@@ -690,6 +702,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var brakingDistance = Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed) +
 								DefaultDriverStrategy.BrakingSafetyMargin;
 			DriverStrategy.BrakeTrigger.BrakingStartDistance = DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance;
+			if (DriverStrategy.BrakeTrigger.Action == DrivingBehavior.Braking) {
+				Phase = BrakingPhase.Brake;
+			}
 			if (Phase == BrakingPhase.Coast) {
 				var resp = CheckSwitchingToBraking(ds, currentDistance);
 				if (resp != null) {

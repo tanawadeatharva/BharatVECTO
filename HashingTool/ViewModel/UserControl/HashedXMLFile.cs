@@ -33,6 +33,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Xml;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace HashingTool.ViewModel.UserControl
 {
@@ -41,8 +42,10 @@ namespace HashingTool.ViewModel.UserControl
 		protected string _digestValueRead;
 		private DateTime? _date;
 
-		public HashedXMLFile(string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck,
-			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(name, true, contentCheck, hashValidation) {}
+		public HashedXMLFile(
+			string name, Func<XmlDocument, IErrorLogger, bool?> contentCheck, XmlDocumentType xmlDocumentType,
+			Action<XmlDocument, VectoXMLFile> hashValidation = null) : base(
+			name, true, contentCheck, xmlDocumentType, hashValidation) { }
 
 		public string DigestValueRead
 		{

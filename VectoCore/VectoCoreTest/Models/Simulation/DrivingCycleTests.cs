@@ -379,6 +379,62 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			TestCycleRead(cycle, type, entryCount);
 		}
 
+
+		[TestCase()]
+		public void DrivingCycleRead_CompressEntries_TargetSpeedOnly()
+		{
+			var cycle = "<s>,<v>,<Grad>,<STOP>\n" +
+						" 1, 0,0,1\n" +
+						" 2,50,0,0\n" +
+						" 5,50,0,0\n" +
+						"50,50,0,0\n" +
+						"99,50,0,0";
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycle.ToStream(), CycleType.DistanceBased, "", false);
+			Assert.AreEqual(3, drivingCycle.Entries.Count);
+			Assert.AreEqual(1, drivingCycle.Entries[0].Distance.Value());
+			Assert.AreEqual(1, drivingCycle.Entries[1].Distance.Value());
+			Assert.AreEqual(99, drivingCycle.Entries[2].Distance.Value());
+		}
+
+		[TestCase()]
+		public void DrivingCycleRead_CompressEntries_TargetSpeedVAirBeta1()
+		{
+			var cycle = "<s>,<v>,<Grad>,<STOP>,vair_res,vair_beta\n" +
+						" 1, 0,0,1,30,10\n" +
+						" 2,50,0,0,30,10\n" +
+						" 5,50,0,0,30,15\n" +
+						"50,50,0,0,30,10\n" +
+						"99,50,0,0,30,15";
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycle.ToStream(), CycleType.DistanceBased, "", true);
+			Assert.AreEqual(5, drivingCycle.Entries.Count);
+
+			Assert.AreEqual(1, drivingCycle.Entries[0].Distance.Value());
+			Assert.AreEqual(1, drivingCycle.Entries[1].Distance.Value());
+			Assert.AreEqual(5, drivingCycle.Entries[2].Distance.Value());
+			Assert.AreEqual(50, drivingCycle.Entries[3].Distance.Value());
+			Assert.AreEqual(99, drivingCycle.Entries[4].Distance.Value());
+		}
+
+		[TestCase()]
+		public void DrivingCycleRead_CompressEntries_TargetSpeedVAirBeta2()
+		{
+			var cycle = "<s>,<v>,<Grad>,<STOP>,vair_res,vair_beta\n" +
+						" 1, 0,0,1,30,10\n" +
+						" 2,50,0,0,30,10\n" +
+						" 5,50,0,0,35,10\n" +
+						"50,50,0,0,30,10\n" +
+						"99,50,0,0,33,10";
+			var drivingCycle = DrivingCycleDataReader.ReadFromStream(cycle.ToStream(), CycleType.DistanceBased, "", true);
+			Assert.AreEqual(5, drivingCycle.Entries.Count);
+
+			Assert.AreEqual(1, drivingCycle.Entries[0].Distance.Value());
+			Assert.AreEqual(1, drivingCycle.Entries[1].Distance.Value());
+			Assert.AreEqual(5, drivingCycle.Entries[2].Distance.Value());
+			Assert.AreEqual(50, drivingCycle.Entries[3].Distance.Value());
+			Assert.AreEqual(99, drivingCycle.Entries[4].Distance.Value());
+		}
+
+
 		private static void TestCycleDetect(string inputData, CycleType cycleType)
 		{
 			var cycleTypeCalc = DrivingCycleDataReader.DetectCycleType(VectoCSVFile.ReadStream(inputData.ToStream()));

@@ -134,11 +134,17 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var fcMap = FuelConsumptionMapReader.ReadFromFile(engineFCMapFilePath);
 			var fld = FullLoadCurveReader.ReadFromFile(engineFLDFilePath);
 			var modelData = new CombustionEngineData() {
-				ConsumptionMap = fcMap,
+				Fuels = new List<CombustionEngineFuelData>() {
+					new CombustionEngineFuelData() {
+						ConsumptionMap = fcMap,
+					}
+				},
 				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fld }, { 1, fld } },
 				IdleSpeed = 560.SI<PerSecond>()
 			};
-
+			vehicle.RunData = new VectoRunData() {
+				EngineData = modelData
+			};
 			var engine = new CombustionEngine(vehicle, modelData);
 			//new Vehicle(vehicle, new VehicleData());
 			driver = new MockDriver(vehicle) { VehicleStopped = false, DriverBehavior = DrivingBehavior.Braking };

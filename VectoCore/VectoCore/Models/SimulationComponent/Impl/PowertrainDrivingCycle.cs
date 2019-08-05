@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public double Progress
 		{
-			get { return AbsTime.Value() / Data.Entries.Last().Time.Value(); }
+			get { return Math.Max(0, AbsTime.Value() / Data.Entries.Last().Time.Value()); }
 		}
 
 		#endregion
