@@ -55,6 +55,16 @@
 							<xs:documentation>P259 - [Nm]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="WHRType">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="none"/>
+								<xs:enumeration value="mechanical only"/>
+								<xs:enumeration value="electrical only"/>
+								<xs:enumeration value="mechanical and electrical"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 					<xs:element name="Mode" type="tns:EngineFuelModeType" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
@@ -76,6 +86,7 @@
 				<xs:documentation>P074 - [g/h]</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="electricPower" type="v1.0:Double2"/>
 	</xs:complexType>
 	<xs:complexType name="EngineFuelModeType">
 		<xs:sequence>
@@ -126,6 +137,7 @@
 					<xs:documentation>P260 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="WHRCorrectionFactors" type="tns:WHRCorrectionFactorsType" minOccurs="0"/>
 			<xs:element name="FuelConsumptionMap">
 				<xs:complexType>
 					<xs:sequence>
@@ -139,5 +151,44 @@
 				<xs:documentation>P193 [enum]</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="WHRCorrectionFactorsType">
+		<xs:sequence>
+			<xs:element name="Urban">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Rural">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Motorway">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="BFColdHot">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CFRegPer">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
 	</xs:complexType>
 </xs:schema>
