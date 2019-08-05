@@ -150,6 +150,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return new[] { this }.Cast<IEngineFuelDelcarationInputData>().ToList(); }
 		}
 
+		public virtual IWHRData WasteHeatRecoveryData { get { return null; } }
+
 		public virtual Watt RatedPowerDeclared
 		{
 			get {

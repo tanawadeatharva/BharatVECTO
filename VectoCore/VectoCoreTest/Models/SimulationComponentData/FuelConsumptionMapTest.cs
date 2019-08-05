@@ -36,6 +36,7 @@ using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using NUnit.Framework;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {

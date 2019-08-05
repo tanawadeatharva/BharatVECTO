@@ -512,6 +512,24 @@ namespace TUGraz.VectoCommon.InputData
 
 		IList<IEngineFuelDelcarationInputData> Fuels { get; }
 
+		IWHRData WasteHeatRecoveryData { get; }
+
+	}
+
+	public interface IWHRData
+	{
+		double UrbanCorrectionFactor { get; }
+		
+		double RuralCorrectionFactor { get; }
+
+		double MotorwayCorrectionFactor { get; }
+
+		double BFColdHot { get; }
+
+		double CFRegPer { get; }
+
+		TableData GeneratedElectricPower { get; }
+
 	}
 
 	public interface IEngineFuelDelcarationInputData

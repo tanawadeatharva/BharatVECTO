@@ -159,7 +159,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public IList<IEngineFuelDelcarationInputData> Fuels { get { return new IEngineFuelDelcarationInputData[] { this }; } }
+		public virtual IList<IEngineFuelDelcarationInputData> Fuels { get { return new IEngineFuelDelcarationInputData[] { this }; } }
+
+		public virtual IWHRData WasteHeatRecoveryData { get { return null; } }
 
 		public virtual Watt RatedPowerDeclared
 		{

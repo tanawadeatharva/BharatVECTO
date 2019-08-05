@@ -403,7 +403,13 @@ Public Class Engine
 	End Get
 	End Property
 
-	Public ReadOnly Property RatedPowerDeclared As Watt Implements IEngineDeclarationInputData.RatedPowerDeclared
+    Public ReadOnly Property WasteHeatRecoveryData As IWHRData Implements IEngineModeDeclarationInputData.WasteHeatRecoveryData
+    Get
+            Return nothing
+    End Get
+    End Property
+
+    Public ReadOnly Property RatedPowerDeclared As Watt Implements IEngineDeclarationInputData.RatedPowerDeclared
 		Get
 			Return ratedPowerInput
 		End Get

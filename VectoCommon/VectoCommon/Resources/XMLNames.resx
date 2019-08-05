@@ -1074,4 +1074,31 @@
   <data name="Report_Engine_FuelMode" xml:space="preserve">
     <value>Mode</value>
   </data>
+  <data name="Engine_FuelConsumptionMap_WHRElPower_Attr" xml:space="preserve">
+    <value>electricPower</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors" xml:space="preserve">
+    <value>WHRCorrectionFactors</value>
+  </data>
+  <data name="Engine_FuelModes" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Engine_FuelModes_Fuel" xml:space="preserve">
+    <value>Fuel</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors_Urban" xml:space="preserve">
+    <value>Urban</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors_Rural" xml:space="preserve">
+    <value>Rural</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors_Motorway" xml:space="preserve">
+    <value>Motorway</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors_BFColdHot" xml:space="preserve">
+    <value>BFColdHot</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors_CFRegPer" xml:space="preserve">
+    <value>CFRegPer</value>
+  </data>
 </root>
