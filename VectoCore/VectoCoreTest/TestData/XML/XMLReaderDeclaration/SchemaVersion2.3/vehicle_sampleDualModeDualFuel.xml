@@ -45,7 +45,8 @@
 					<RatedSpeed>2200</RatedSpeed>
 					<RatedPower>380000</RatedPower>
 					<MaxEngineTorque>2300</MaxEngineTorque>
-					<Mode>
+          <WHRType>none</WHRType>
+          <Mode>
 						<IdlingSpeed>560</IdlingSpeed>
 						<FullLoadAndDragCurve>
 							<Entry engineSpeed="560.00" maxTorque="1180.00" dragTorque="-149.00" />

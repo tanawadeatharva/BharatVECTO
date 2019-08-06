@@ -45,7 +45,7 @@
 					<RatedSpeed>2200</RatedSpeed>
 					<RatedPower>380000</RatedPower>
 					<MaxEngineTorque>2300</MaxEngineTorque>
-					<WHRType>none</WHRType>
+					<WHRType>electrical only</WHRType>
 					<Mode>
 						<IdlingSpeed>560</IdlingSpeed>
 						<FullLoadAndDragCurve>
@@ -67,119 +67,126 @@
 							<BFColdHot>1.0000</BFColdHot>
 							<CFRegPer>1.0000</CFRegPer>
 							<CFNCV>1.0000</CFNCV>
+							<WHRCorrectionFactors>
+								<Urban>1.0097</Urban>
+								<Rural>1.0000</Rural>
+								<Motorway>1.0000</Motorway>
+								<BFColdHot>1.0000</BFColdHot>
+								<CFRegPer>1.0000</CFRegPer>
+							</WHRCorrectionFactors>
 							<FuelConsumptionMap>
-								<Entry engineSpeed="560.00" torque="-149.00" fuelConsumption="0.00" />
-								<Entry engineSpeed="560.00" torque="0.00" fuelConsumption="125.60" />
-								<Entry engineSpeed="560.00" torque="200.00" fuelConsumption="319.70" />
-								<Entry engineSpeed="560.00" torque="400.00" fuelConsumption="529.50" />
-								<Entry engineSpeed="560.00" torque="600.00" fuelConsumption="761.50" />
-								<Entry engineSpeed="560.00" torque="800.00" fuelConsumption="937.50" />
-								<Entry engineSpeed="560.00" torque="1000.00" fuelConsumption="1123.90" />
-								<Entry engineSpeed="560.00" torque="1180.00" fuelConsumption="1286.90" />
-								<Entry engineSpeed="600.00" torque="-148.00" fuelConsumption="0.00" />
-								<Entry engineSpeed="600.00" torque="0.00" fuelConsumption="145.90" />
-								<Entry engineSpeed="600.00" torque="200.00" fuelConsumption="335.80" />
-								<Entry engineSpeed="600.00" torque="400.00" fuelConsumption="549.80" />
-								<Entry engineSpeed="600.00" torque="600.00" fuelConsumption="810.10" />
-								<Entry engineSpeed="600.00" torque="800.00" fuelConsumption="1001.40" />
-								<Entry engineSpeed="600.00" torque="1000.00" fuelConsumption="1207.10" />
-								<Entry engineSpeed="600.00" torque="1200.00" fuelConsumption="1420.10" />
-								<Entry engineSpeed="600.00" torque="1282.00" fuelConsumption="1530.40" />
-								<Entry engineSpeed="800.00" torque="-149.00" fuelConsumption="0.00" />
-								<Entry engineSpeed="800.00" torque="0.00" fuelConsumption="187.90" />
-								<Entry engineSpeed="800.00" torque="200.00" fuelConsumption="428.60" />
-								<Entry engineSpeed="800.00" torque="400.00" fuelConsumption="702.10" />
-								<Entry engineSpeed="800.00" torque="600.00" fuelConsumption="1005.90" />
-								<Entry engineSpeed="800.00" torque="800.00" fuelConsumption="1308.60" />
-								<Entry engineSpeed="800.00" torque="1000.00" fuelConsumption="1601.50" />
-								<Entry engineSpeed="800.00" torque="1200.00" fuelConsumption="1923.90" />
-								<Entry engineSpeed="800.00" torque="1400.00" fuelConsumption="2242.60" />
-								<Entry engineSpeed="800.00" torque="1600.00" fuelConsumption="2548.30" />
-								<Entry engineSpeed="800.00" torque="1791.00" fuelConsumption="2890.50" />
-								<Entry engineSpeed="1000.00" torque="-160.00" fuelConsumption="0.00" />
-								<Entry engineSpeed="1000.00" torque="0.00" fuelConsumption="286.50" />
-								<Entry engineSpeed="1000.00" torque="200.00" fuelConsumption="596.30" />
-								<Entry engineSpeed="1000.00" torque="400.00" fuelConsumption="919.80" />
-								<Entry engineSpeed="1000.00" torque="600.00" fuelConsumption="1235.40" />
-								<Entry engineSpeed="1000.00" torque="800.00" fuelConsumption="1596.50" />
-								<Entry engineSpeed="1000.00" torque="1000.00" fuelConsumption="1986.40" />
-								<Entry engineSpeed="1000.00" torque="1200.00" fuelConsumption="2353.00" />
-								<Entry engineSpeed="1000.00" torque="1400.00" fuelConsumption="2720.20" />
-								<Entry engineSpeed="1000.00" torque="1600.00" fuelConsumption="3116.50" />
-								<Entry engineSpeed="1000.00" torque="1800.00" fuelConsumption="3510.30" />
-								<Entry engineSpeed="1000.00" torque="2000.00" fuelConsumption="3936.00" />
-								<Entry engineSpeed="1000.00" torque="2200.00" fuelConsumption="4412.00" />
-								<Entry engineSpeed="1000.00" torque="2300.00" fuelConsumption="4683.60" />
-								<Entry engineSpeed="1200.00" torque="-179.00" fuelConsumption="0.00" />
-								<Entry engineSpeed="1200.00" torque="0.00" fuelConsumption="330.70" />
-								<Entry engineSpeed="1200.00" torque="200.00" fuelConsumption="689.70" />
-								<Entry engineSpeed="1200.00" torque="400.00" fuelConsumption="1065.10" />
-								<Entry engineSpeed="1200.00" torque="600.00" fuelConsumption="1464.50" />
-								<Entry engineSpeed="1200.00" torque="800.00" fuelConsumption="1911.50" />
-								<Entry engineSpeed="1200.00" torque="1000.00" fuelConsumption="2367.00" />
-								<Entry engineSpeed="1200.00" torque="1200.00" fuelConsumption="2818.00" />
-								<Entry engineSpeed="1200.00" torque="1400.00" fuelConsumption="3243.00" />
-								<Entry engineSpeed="1200.00" torque="1600.00" fuelConsumption="3669.00" />
-								<Entry engineSpeed="1200.00" torque="1800.00" fuelConsumption="4169.00" />
-								<Entry engineSpeed="1200.00" torque="2000.00" fuelConsumption="4691.00" />
-								<Entry engineSpeed="1200.00" torque="2200.00" fuelConsumption="5178.00" />
-								<Entry engineSpeed="1200.00" torque="2300.00" fuelConsumption="5493.00" />
-								<Entry engineSpeed="1400.00" torque="-203.00" fuelConsumption="0.00" />
-								<Entry engineSpeed="1400.00" torque="0.00" fuelConsumption="430.00" />
-								<Entry engineSpeed="1400.00" torque="200.00" fuelConsumption="814.00" />
-								<Entry engineSpeed="1400.00" torque="400.00" fuelConsumption="1272.00" />
-								<Entry engineSpeed="1400.00" torque="600.00" fuelConsumption="1752.00" />
-								<Entry engineSpeed="1400.00" torque="800.00" fuelConsumption="2228.00" />
-								<Entry engineSpeed="1400.00" torque="1000.00" fuelConsumption="2709.00" />
-								<Entry engineSpeed="1400.00" torque="1200.00" fuelConsumption="3253.00" />
-								<Entry engineSpeed="1400.00" torque="1400.00" fuelConsumption="3774.00" />
-								<Entry engineSpeed="1400.00" torque="1600.00" fuelConsumption="4319.00" />
-								<Entry engineSpeed="1400.00" torque="1800.00" fuelConsumption="4945.00" />
-								<Entry engineSpeed="1400.00" torque="2000.00" fuelConsumption="5583.00" />
-								<Entry engineSpeed="1400.00" torque="2200.00" fuelConsumption="6107.00" />
-								<Entry engineSpeed="1400.00" torque="2300.00" fuelConsumption="6437.00" />
-								<Entry engineSpeed="1600.00" torque="-235.00" fuelConsumption="0.00" />
-								<Entry engineSpeed="1600.00" torque="0.00" fuelConsumption="520.00" />
-								<Entry engineSpeed="1600.00" torque="200.00" fuelConsumption="966.00" />
-								<Entry engineSpeed="1600.00" torque="400.00" fuelConsumption="1483.00" />
-								<Entry engineSpeed="1600.00" torque="600.00" fuelConsumption="2012.00" />
-								<Entry engineSpeed="1600.00" torque="800.00" fuelConsumption="2589.00" />
-								<Entry engineSpeed="1600.00" torque="1000.00" fuelConsumption="3163.00" />
-								<Entry engineSpeed="1600.00" torque="1200.00" fuelConsumption="3724.00" />
-								<Entry engineSpeed="1600.00" torque="1400.00" fuelConsumption="4282.00" />
-								<Entry engineSpeed="1600.00" torque="1600.00" fuelConsumption="4975.00" />
-								<Entry engineSpeed="1600.00" torque="1800.00" fuelConsumption="5702.00" />
-								<Entry engineSpeed="1600.00" torque="2000.00" fuelConsumption="6391.00" />
-								<Entry engineSpeed="1600.00" torque="2079.00" fuelConsumption="6652.00" />
-								<Entry engineSpeed="1800.00" torque="-264.00" fuelConsumption="0.00" />
-								<Entry engineSpeed="1800.00" torque="0.00" fuelConsumption="640.00" />
-								<Entry engineSpeed="1800.00" torque="200.00" fuelConsumption="1177.00" />
-								<Entry engineSpeed="1800.00" torque="400.00" fuelConsumption="1732.00" />
-								<Entry engineSpeed="1800.00" torque="600.00" fuelConsumption="2339.00" />
-								<Entry engineSpeed="1800.00" torque="800.00" fuelConsumption="3050.00" />
-								<Entry engineSpeed="1800.00" torque="1000.00" fuelConsumption="3637.00" />
-								<Entry engineSpeed="1800.00" torque="1200.00" fuelConsumption="4307.00" />
-								<Entry engineSpeed="1800.00" torque="1400.00" fuelConsumption="4979.00" />
-								<Entry engineSpeed="1800.00" torque="1600.00" fuelConsumption="5743.00" />
-								<Entry engineSpeed="1800.00" torque="1800.00" fuelConsumption="6515.00" />
-								<Entry engineSpeed="1800.00" torque="1857.00" fuelConsumption="6757.00" />
-								<Entry engineSpeed="2000.00" torque="-301.00" fuelConsumption="0.00" />
-								<Entry engineSpeed="2000.00" torque="0.00" fuelConsumption="912.00" />
-								<Entry engineSpeed="2000.00" torque="200.00" fuelConsumption="1482.00" />
-								<Entry engineSpeed="2000.00" torque="400.00" fuelConsumption="2065.00" />
-								<Entry engineSpeed="2000.00" torque="600.00" fuelConsumption="2707.00" />
-								<Entry engineSpeed="2000.00" torque="800.00" fuelConsumption="3418.00" />
-								<Entry engineSpeed="2000.00" torque="1000.00" fuelConsumption="4283.00" />
-								<Entry engineSpeed="2000.00" torque="1200.00" fuelConsumption="5101.00" />
-								<Entry engineSpeed="2000.00" torque="1352.00" fuelConsumption="5661.00" />
-								<Entry engineSpeed="2100.00" torque="-320.00" fuelConsumption="0.00" />
-								<Entry engineSpeed="2100.00" torque="0.00" fuelConsumption="1047.00" />
-								<Entry engineSpeed="2100.00" torque="200.00" fuelConsumption="1633.00" />
-								<Entry engineSpeed="2100.00" torque="400.00" fuelConsumption="2239.00" />
-								<Entry engineSpeed="2100.00" torque="600.00" fuelConsumption="2891.00" />
-								<Entry engineSpeed="2100.00" torque="800.00" fuelConsumption="3571.00" />
-								<Entry engineSpeed="2100.00" torque="1000.00" fuelConsumption="4564.00" />
-								<Entry engineSpeed="2100.00" torque="1100.00" fuelConsumption="5065.00" />
+								<Entry engineSpeed="560.00" torque="-149.00" fuelConsumption="0.00"  electricPower="200.00" />
+								<Entry engineSpeed="560.00" torque="0.00" fuelConsumption="125.60"  electricPower="200.00" />
+								<Entry engineSpeed="560.00" torque="200.00" fuelConsumption="319.70"  electricPower="200.00" />
+								<Entry engineSpeed="560.00" torque="400.00" fuelConsumption="529.50"  electricPower="200.00" />
+								<Entry engineSpeed="560.00" torque="600.00" fuelConsumption="761.50"  electricPower="200.00" />
+								<Entry engineSpeed="560.00" torque="800.00" fuelConsumption="937.50"  electricPower="200.00" />
+								<Entry engineSpeed="560.00" torque="1000.00" fuelConsumption="1123.90"  electricPower="200.00" />
+								<Entry engineSpeed="560.00" torque="1180.00" fuelConsumption="1286.90"  electricPower="200.00" />
+								<Entry engineSpeed="600.00" torque="-148.00" fuelConsumption="0.00"  electricPower="200.00" />
+								<Entry engineSpeed="600.00" torque="0.00" fuelConsumption="145.90"  electricPower="200.00" />
+								<Entry engineSpeed="600.00" torque="200.00" fuelConsumption="335.80"  electricPower="200.00" />
+								<Entry engineSpeed="600.00" torque="400.00" fuelConsumption="549.80"  electricPower="200.00" />
+								<Entry engineSpeed="600.00" torque="600.00" fuelConsumption="810.10"  electricPower="200.00" />
+								<Entry engineSpeed="600.00" torque="800.00" fuelConsumption="1001.40"  electricPower="200.00" />
+								<Entry engineSpeed="600.00" torque="1000.00" fuelConsumption="1207.10"  electricPower="200.00" />
+								<Entry engineSpeed="600.00" torque="1200.00" fuelConsumption="1420.10"  electricPower="200.00" />
+								<Entry engineSpeed="600.00" torque="1282.00" fuelConsumption="1530.40"  electricPower="200.00" />
+								<Entry engineSpeed="800.00" torque="-149.00" fuelConsumption="0.00"  electricPower="200.00" />
+								<Entry engineSpeed="800.00" torque="0.00" fuelConsumption="187.90"  electricPower="200.00" />
+								<Entry engineSpeed="800.00" torque="200.00" fuelConsumption="428.60"  electricPower="200.00" />
+								<Entry engineSpeed="800.00" torque="400.00" fuelConsumption="702.10"  electricPower="200.00" />
+								<Entry engineSpeed="800.00" torque="600.00" fuelConsumption="1005.90"  electricPower="200.00" />
+								<Entry engineSpeed="800.00" torque="800.00" fuelConsumption="1308.60"  electricPower="200.00" />
+								<Entry engineSpeed="800.00" torque="1000.00" fuelConsumption="1601.50"  electricPower="200.00" />
+								<Entry engineSpeed="800.00" torque="1200.00" fuelConsumption="1923.90"  electricPower="200.00" />
+								<Entry engineSpeed="800.00" torque="1400.00" fuelConsumption="2242.60"  electricPower="200.00" />
+								<Entry engineSpeed="800.00" torque="1600.00" fuelConsumption="2548.30"  electricPower="200.00" />
+								<Entry engineSpeed="800.00" torque="1791.00" fuelConsumption="2890.50"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="-160.00" fuelConsumption="0.00"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="0.00" fuelConsumption="286.50"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="200.00" fuelConsumption="596.30"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="400.00" fuelConsumption="919.80"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="600.00" fuelConsumption="1235.40"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="800.00" fuelConsumption="1596.50"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="1000.00" fuelConsumption="1986.40"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="1200.00" fuelConsumption="2353.00"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="1400.00" fuelConsumption="2720.20"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="1600.00" fuelConsumption="3116.50"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="1800.00" fuelConsumption="3510.30"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="2000.00" fuelConsumption="3936.00"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="2200.00" fuelConsumption="4412.00"  electricPower="200.00" />
+								<Entry engineSpeed="1000.00" torque="2300.00" fuelConsumption="4683.60"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="-179.00" fuelConsumption="0.00"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="0.00" fuelConsumption="330.70"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="200.00" fuelConsumption="689.70"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="400.00" fuelConsumption="1065.10"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="600.00" fuelConsumption="1464.50"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="800.00" fuelConsumption="1911.50"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="1000.00" fuelConsumption="2367.00"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="1200.00" fuelConsumption="2818.00"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="1400.00" fuelConsumption="3243.00"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="1600.00" fuelConsumption="3669.00"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="1800.00" fuelConsumption="4169.00"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="2000.00" fuelConsumption="4691.00"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="2200.00" fuelConsumption="5178.00"  electricPower="200.00" />
+								<Entry engineSpeed="1200.00" torque="2300.00" fuelConsumption="5493.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="-203.00" fuelConsumption="0.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="0.00" fuelConsumption="430.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="200.00" fuelConsumption="814.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="400.00" fuelConsumption="1272.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="600.00" fuelConsumption="1752.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="800.00" fuelConsumption="2228.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="1000.00" fuelConsumption="2709.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="1200.00" fuelConsumption="3253.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="1400.00" fuelConsumption="3774.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="1600.00" fuelConsumption="4319.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="1800.00" fuelConsumption="4945.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="2000.00" fuelConsumption="5583.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="2200.00" fuelConsumption="6107.00"  electricPower="200.00" />
+								<Entry engineSpeed="1400.00" torque="2300.00" fuelConsumption="6437.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="-235.00" fuelConsumption="0.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="0.00" fuelConsumption="520.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="200.00" fuelConsumption="966.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="400.00" fuelConsumption="1483.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="600.00" fuelConsumption="2012.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="800.00" fuelConsumption="2589.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="1000.00" fuelConsumption="3163.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="1200.00" fuelConsumption="3724.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="1400.00" fuelConsumption="4282.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="1600.00" fuelConsumption="4975.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="1800.00" fuelConsumption="5702.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="2000.00" fuelConsumption="6391.00"  electricPower="200.00" />
+								<Entry engineSpeed="1600.00" torque="2079.00" fuelConsumption="6652.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="-264.00" fuelConsumption="0.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="0.00" fuelConsumption="640.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="200.00" fuelConsumption="1177.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="400.00" fuelConsumption="1732.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="600.00" fuelConsumption="2339.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="800.00" fuelConsumption="3050.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="1000.00" fuelConsumption="3637.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="1200.00" fuelConsumption="4307.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="1400.00" fuelConsumption="4979.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="1600.00" fuelConsumption="5743.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="1800.00" fuelConsumption="6515.00"  electricPower="200.00" />
+								<Entry engineSpeed="1800.00" torque="1857.00" fuelConsumption="6757.00"  electricPower="200.00" />
+								<Entry engineSpeed="2000.00" torque="-301.00" fuelConsumption="0.00"  electricPower="200.00" />
+								<Entry engineSpeed="2000.00" torque="0.00" fuelConsumption="912.00"  electricPower="200.00" />
+								<Entry engineSpeed="2000.00" torque="200.00" fuelConsumption="1482.00"  electricPower="200.00" />
+								<Entry engineSpeed="2000.00" torque="400.00" fuelConsumption="2065.00"  electricPower="200.00" />
+								<Entry engineSpeed="2000.00" torque="600.00" fuelConsumption="2707.00"  electricPower="200.00" />
+								<Entry engineSpeed="2000.00" torque="800.00" fuelConsumption="3418.00"  electricPower="200.00" />
+								<Entry engineSpeed="2000.00" torque="1000.00" fuelConsumption="4283.00"  electricPower="200.00" />
+								<Entry engineSpeed="2000.00" torque="1200.00" fuelConsumption="5101.00"  electricPower="200.00" />
+								<Entry engineSpeed="2000.00" torque="1352.00" fuelConsumption="5661.00"  electricPower="200.00" />
+								<Entry engineSpeed="2100.00" torque="-320.00" fuelConsumption="0.00"  electricPower="200.00" />
+								<Entry engineSpeed="2100.00" torque="0.00" fuelConsumption="1047.00"  electricPower="200.00" />
+								<Entry engineSpeed="2100.00" torque="200.00" fuelConsumption="1633.00"  electricPower="200.00" />
+								<Entry engineSpeed="2100.00" torque="400.00" fuelConsumption="2239.00"  electricPower="200.00" />
+								<Entry engineSpeed="2100.00" torque="600.00" fuelConsumption="2891.00"  electricPower="200.00" />
+								<Entry engineSpeed="2100.00" torque="800.00" fuelConsumption="3571.00"  electricPower="200.00" />
+								<Entry engineSpeed="2100.00" torque="1000.00" fuelConsumption="4564.00"  electricPower="200.00" />
+								<Entry engineSpeed="2100.00" torque="1100.00" fuelConsumption="5065.00"  electricPower="200.00" />
 							</FuelConsumptionMap>
 						</Fuel>
 						<Fuel type="NG PI">
