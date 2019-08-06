@@ -271,15 +271,23 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			protected virtual IWHRData ReadWHRData()
 			{
 				var correctionFactorNodes = GetNodes(new[] { XMLNames.Engine_FuelModes_Fuel, XMLNames.Engine_WHRCorrectionFactors });
+				var whrPwrNodes = GetNodes(new[] { XMLNames.Engine_FuelModes_Fuel, XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry
+						})
+					.Cast<XmlNode>().All(x => x.Attributes?[XMLNames.Engine_FuelConsumptionMap_WHRElPower_Attr] == null);
 				if (correctionFactorNodes.Count == 0) {
+					if (whrPwrNodes) {
+						Warn("WHR correction factors provided but no electric power defined - ignoring WHR.");
+					}
 					return new XMLWHRData();
 				}
 				if (correctionFactorNodes.Count > 1) {
-					throw new VectoException("WHRData can only be defined for one fuel!");
+					throw new VectoException("WHRData (correction factors) can only be defined for one fuel!");
 				}
 
-				if (GetNodes(new[] { XMLNames.Engine_FuelModes_Fuel, XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry })
-					.Cast<XmlNode>().All(x => x.Attributes?[XMLNames.Engine_FuelConsumptionMap_WHRElPower_Attr] == null)) {
+				if (whrPwrNodes) {
+					if (correctionFactorNodes.Count == 1) {
+						Warn("WHR electric power provided but no correction factors found - ignoring WHR.");
+					}
 					return new XMLWHRData();
 				}
 
@@ -290,7 +298,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 						var fuel = fuelNodes[i];
 						if (GetNodes("Entry", fuel).Cast<XmlNode>().Any(x => x.Attributes?[XMLNames.Engine_FuelConsumptionMap_WHRElPower_Attr] != null)) {
 							if (whrFuelNode != null) {
-								throw new VectoException("WHRData can only be defined for one fuel!");
+								throw new VectoException("WHRData (electric power) can only be defined for one fuel!");
 							}
 
 							whrFuelNode = fuel;
@@ -298,6 +306,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					}
 				} else {
 					whrFuelNode = fuelNodes[0];
+				}
+
+				if (GetNodes(new [] { XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry}, whrFuelNode)
+					.Cast<XmlNode>().Any(x => x.Attributes?[XMLNames.Engine_FuelConsumptionMap_WHRElPower_Attr] == null)) {
+					var missing = GetNodes(new[] { XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry }, whrFuelNode)
+						.Cast<XmlNode>().Where(x => x.Attributes?[XMLNames.Engine_FuelConsumptionMap_WHRElPower_Attr] == null);
+					throw new VectoException(
+						"WHRData has to be provided for every entry in the FC-Map! {0}",
+						string.Join("; ",
+							missing.Select(
+								x => string.Format(
+									"n: {0}, T: {1}", x.Attributes?[XMLNames.Engine_FuelConsumptionMap_EngineSpeed_Attr]?.Value,
+									x.Attributes?[XMLNames.Engine_FuelConsumptionMap_Torque_Attr]?.Value))));
 				}
 
 				if (correctionFactorNodes[0].ParentNode != whrFuelNode) {
@@ -345,7 +366,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 			public TableData GeneratedElectricPower
 			{
-				get { return WHRPower ?? (WHRPower = ReadTableData(XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry, AttributeMappings.WHRPowerMapMapping)); }
+				get { return WHRPower ?? (WHRPower = BaseNode == null ? null : ReadTableData(XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry, AttributeMappings.WHRPowerMapMapping)); }
 			}
 
 			#endregion

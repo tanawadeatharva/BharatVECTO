@@ -34,6 +34,7 @@ using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
@@ -44,6 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		[Required, SIRange(1, 5)] public Second EngineStartTime;
 
+		
 		[Required, SIRange(1000 * 1E-6, 20000 * 1E-6)]
 		public CubicMeter Displacement { get; internal set; }
 
@@ -69,6 +71,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, ValidateObject]
 		public List<CombustionEngineFuelData> Fuels { get; internal set; }
 
+		public WHRData WHRData;
+
 
 		// ReSharper disable once UnusedMember.Global -- used in CustomValidation
 		public static ValidationResult ValidateData(CombustionEngineData data, ValidationContext context)
@@ -78,6 +82,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 			return ValidationResult.Success;
 		}
+	}
+
+	public class WHRData
+	{
+		public double CFUrban { get; internal set; }
+		public double CFRural { get; internal set; }
+		public double CFMotorway { get;internal set; }
+
+		public double CFColdHot { get; internal set; }
+		public double CFRegPer { get; internal set; }
+		public double WHRCorrectionFactor { get; internal set; }
+
+		public WHRPowerMap WHRMap { get; internal set; }
 	}
 
 	public class CombustionEngineFuelData
