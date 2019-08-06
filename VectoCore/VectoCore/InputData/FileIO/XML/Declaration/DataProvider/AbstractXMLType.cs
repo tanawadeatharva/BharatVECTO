@@ -2,11 +2,12 @@ using System.Collections.Generic;
 using System.Xml;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
-	public abstract class AbstractXMLType
+	public abstract class AbstractXMLType : LoggingObject
 	{
 		protected readonly XmlNode BaseNode;
 
