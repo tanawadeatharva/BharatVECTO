@@ -73,6 +73,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public WHRData WHRData;
 
+		public WHRType WHRType;
+
 
 		// ReSharper disable once UnusedMember.Global -- used in CustomValidation
 		public static ValidationResult ValidateData(CombustionEngineData data, ValidationContext context)

@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
@@ -174,6 +175,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		}
 
 		public virtual IList<IEngineModeDeclarationInputData> EngineModes { get { return new[] { this }.Cast<IEngineModeDeclarationInputData>().ToList(); } }
+		public virtual WHRType WHRType { get { return WHRType.None; } }
 
 		public virtual KilogramSquareMeter Inertia
 		{

@@ -493,6 +493,7 @@ namespace TUGraz.VectoCommon.InputData
 		NewtonMeter MaxTorqueDeclared { get; }
 
 		IList<IEngineModeDeclarationInputData> EngineModes { get; }
+		WHRType WHRType{ get; }
 	}
 
 	public interface IEngineModeDeclarationInputData

@@ -135,6 +135,9 @@ namespace TUGraz.VectoCore.OutputData
 		public const string FCESS_KM = "FC-ESS{0} [g/km]";
 		public const string FCESS_H_CORR = "FC-ESS_Corr{0} [g/h]";
 		public const string FCESS_KM_CORR = "FC-ESS_Corr{0} [g/km]";
+		public const string FCWHR_H_CORR = "FC-WHR_Corr{0} [g/h]";
+		public const string FCWHR_KM_CORR = "FC-WHR_Corr{0} [g/km]";
+
 
 		public const string FCFINAL_H = "FC-Final{0} [g/h]";
 		public const string FCFINAL_KM = "FC-Final{0} [g/km]";
@@ -157,6 +160,9 @@ namespace TUGraz.VectoCore.OutputData
 		public const string E_ICE_START = "E_ice_start [kWh]";
 		public const string NUM_ICE_STARTS = "ice_starts [-]";
 		public const string K_VEHLINE = "k_vehline{0} [g/kWh]";
+
+		public const string E_WHR_EL = "E_WHR_el [kWh]";
+
 
 		public const string E_AIR = "E_air [kWh]";
 		public const string E_ROLL = "E_roll [kWh]";
@@ -250,6 +256,7 @@ namespace TUGraz.VectoCore.OutputData
 			FCWHTCC_H, FCWHTCC_KM,
 			FCAAUX_H, FCAAUX_KM,
 			FCESS_H, FCESS_KM,
+			FCWHR_H_CORR, FCWHR_KM_CORR,
 			FCESS_H_CORR, FCESS_KM_CORR,
 			FCFINAL_H, FCFINAL_KM,
 			FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM, FCFINAL_LiterPer100M3KM,
@@ -367,7 +374,7 @@ namespace TUGraz.VectoCore.OutputData
 					E_FCMAP_POS, E_FCMAP_NEG, E_POWERTRAIN_INERTIA,
 					E_AUX, E_CLUTCH_LOSS, E_TC_LOSS, E_SHIFT_LOSS, E_GBX_LOSS,
 					E_RET_LOSS, E_ANGLE_LOSS, E_AXL_LOSS, E_BRAKE, E_VEHICLE_INERTIA, E_WHEEL, E_AIR, E_ROLL, E_GRAD,
-					E_AUX_ESS_MECH, E_ICE_START, NUM_ICE_STARTS, 
+					E_WHR_EL, E_AUX_ESS_MECH, E_ICE_START, NUM_ICE_STARTS, 
 					ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE,
 					MAX_SPEED, MAX_ACCELERATION, MAX_DECELERATION, AVG_ENGINE_SPEED, MAX_ENGINE_SPEED, NUM_GEARSHIFTS,
 					STOP_TIMESHARE, ENGINE_FULL_LOAD_TIME_SHARE, COASTING_TIME_SHARE, BRAKING_TIME_SHARE
@@ -516,11 +523,18 @@ namespace TUGraz.VectoCore.OutputData
 			IModalDataContainer modData, DataRow row, Kilogram vehicleLoading, 
 			CubicMeter cargoVolume, bool multipleEngineModes, bool vtpCycle)
 		{
-			var workESS = modData.TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
+			var workESS = modData.WorkAuxiliariesDuringEngineStop() +
+						modData.WorkEngineStart();
+
+			var workWHREl = modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
+			var workWhrMech = - workWHREl / DeclarationData.AlternaterEfficiency;
+
 			var distance = modData.Distance();
 			var duration = modData.Duration();
 
 			var kilogramCO2PerMeter = 0.SI<KilogramPerMeter>();
+
+			row[E_WHR_EL] = workWHREl.ConvertToKiloWattHour();
 
 			foreach (var fuel in modData.FuelData) {
 				var suffix = modData.FuelData.Count <= 1 && !multipleEngineModes ? "" : "_" + fuel.FuelType.GetLabel();
@@ -566,15 +580,18 @@ namespace TUGraz.VectoCore.OutputData
 
 				row[FcCol(K_VEHLINE, suffix)] = correction.ConvertToGramPerKiloWattHour();
 
-				var fcEssCorr = fcModSum + correction * workESS;
+				var fcWHRCorr = fcModSum + correction * workWhrMech;
+				var fcEssCorr = fcWHRCorr + correction * workESS;
 
 				row[FcCol(FCESS_H_CORR, suffix)] = duration != null ? (fcEssCorr / duration).ConvertToGrammPerHour() : null;
+				row[FcCol(FCWHR_H_CORR, suffix)] = duration != null ? (fcWHRCorr / duration).ConvertToGrammPerHour() : null;
 
 				var fcFinal = fcEssCorr;
 
 				row[FcCol(FCFINAL_H, suffix)] = (fcFinal / duration).ConvertToGrammPerHour();
 
 				if (distance != null && distance.IsGreater(0)) {
+					row[FcCol(FCWHR_KM_CORR, suffix)] = (fcWHRCorr / distance).ConvertToGrammPerKiloMeter();
 					row[FcCol(FCESS_KM_CORR, suffix)] = (fcEssCorr / distance).ConvertToGrammPerKiloMeter();
 					row[FcCol(FCFINAL_KM, suffix)] = (fcFinal / distance).ConvertToGrammPerKiloMeter();
 

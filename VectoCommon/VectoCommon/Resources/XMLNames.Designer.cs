@@ -1213,6 +1213,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WHRType.
+        /// </summary>
+        public static string Engine_WHRType {
+            get {
+                return ResourceManager.GetString("Engine_WHRType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WHTCEngineering.
         /// </summary>
         public static string Engine_WHTCEngineering {

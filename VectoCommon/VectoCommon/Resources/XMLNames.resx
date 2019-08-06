@@ -1101,4 +1101,7 @@
   <data name="Engine_WHRCorrectionFactors_CFRegPer" xml:space="preserve">
     <value>CFRegPer</value>
   </data>
+  <data name="Engine_WHRType" xml:space="preserve">
+    <value>WHRType</value>
+  </data>
 </root>

@@ -332,6 +332,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOff [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOff,
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOn [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOn,
 
+		[ModalResultField(typeof(SI), "P_WHR_el", outputFactor:1e-3)] P_WHR_el_map,
+		[ModalResultField(typeof(SI), "P_WHR_el_corr", outputFactor: 1e-3)] P_WHR_el_corr
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]
