@@ -118,6 +118,39 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 		}
 
+        [TestCase]
+        public void TestXMLSummaryReportExists()
+        {
+            var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
+            var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
+            var writer = new FileOutputWriter(jobfile);
+            var xmlReport = new XMLDeclarationReport(writer);
+            var sumData = new SummaryDataContainer(writer);
+            var jobContainer = new JobContainer(sumData);
+
+            if (File.Exists(writer.SumFileName))
+            {
+                File.Delete(writer.SumFileName);
+            }
+
+            var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport)
+            {
+                WriteModalResults = false,
+                Validate = false,
+            };
+            jobContainer.AddRuns(runsFactory);
+
+            // no need to run the simulation, we only check whether the meta-data is correct, no results are considered
+            //jobContainer.Execute();
+            //jobContainer.WaitFinished();
+            xmlReport.DoWriteReport();
+
+            var manufacturerReport = xmlReport.CustomerReport;
+
+            //check if the summary entry exists in the final customerreport file
+			Assert.IsTrue(manufacturerReport.Elements("Summary").Any());
+		}
+
 		[TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml"),
 		 TestCase(@"TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml")]
 		public void TestValidationXMLReports(string jobfile)
