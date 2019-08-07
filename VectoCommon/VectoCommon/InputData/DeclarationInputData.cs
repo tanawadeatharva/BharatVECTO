@@ -36,6 +36,7 @@ using System.Net.NetworkInformation;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCommon.InputData
 {
@@ -493,6 +494,7 @@ namespace TUGraz.VectoCommon.InputData
 		NewtonMeter MaxTorqueDeclared { get; }
 
 		IList<IEngineModeDeclarationInputData> EngineModes { get; }
+
 		WHRType WHRType{ get; }
 	}
 
@@ -528,6 +530,8 @@ namespace TUGraz.VectoCommon.InputData
 		double BFColdHot { get; }
 
 		double CFRegPer { get; }
+
+		double EngineeringCorrectionFactor { get; }
 
 		TableData GeneratedElectricPower { get; }
 

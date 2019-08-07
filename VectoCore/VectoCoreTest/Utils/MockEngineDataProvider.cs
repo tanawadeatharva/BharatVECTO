@@ -74,6 +74,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public PerSecond RatedSpeedDeclared { get; set; }
 		public NewtonMeter MaxTorqueDeclared { get; set; }
 		public IList<IEngineModeDeclarationInputData> EngineModes { get { return new[] { this }.Cast<IEngineModeDeclarationInputData>().ToList(); } }
+		public WHRType WHRType { get; }
 
 		public KilogramSquareMeter Inertia { get; set; }
 		public double WHTCEngineering { get; set; }

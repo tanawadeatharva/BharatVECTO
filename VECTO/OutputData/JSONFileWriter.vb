@@ -12,7 +12,7 @@ Imports TUGraz.VectoCommon.Utils
 
 Public Class JSONFileWriter
 	Implements IOutputFileWriter
-	Public Const EngineFormatVersion As Integer = 4
+	Public Const EngineFormatVersion As Integer = 5
 
 	Public Const GearboxFormatVersion As Integer = 6
 
@@ -61,7 +61,21 @@ Public Class JSONFileWriter
 
 		body.Add("FuelMap", GetRelativePath(eng.EngineModes.First().Fuels.First().FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
 
-		WriteFile(header, body, filename)
+        body.add("WHRType", eng.WHRType.ToString())
+
+        If (eng.WHRType.IsElectrical()) then
+            Dim whr As Dictionary(Of String, Object) = New Dictionary(Of String,Object)
+            Dim whrInput As IWHRData = eng.EngineModes.First().WasteHeatRecoveryData
+            whr.Add("Urban", whrInput.UrbanCorrectionFactor)
+            whr.Add("Rural", whrInput.RuralCorrectionFactor)
+            whr.Add("Motorway", whrInput.MotorwayCorrectionFactor)
+            whr.Add("ColdHotBalancingFactor", whrInput.BFColdHot)
+            whr.Add("CFRegPer", whrInput.CFRegPer)
+            whr.Add("EngineeringCorrectionFactor", whrInput.EngineeringCorrectionFactor)
+            body.Add("WHRCorrectionFactors", whr)
+        End If
+
+	    WriteFile(header, body, filename)
 	End Sub
 
 	Protected Function GetHeader(fileVersion As Integer) As Dictionary(Of String, Object)
@@ -234,13 +248,11 @@ Public Class JSONFileWriter
 		If (vehicle.TankSystem.HasValue) Then
 			body("TankSystem") = vehicle.TankSystem.Value.ToString()
 		End If
-		if (Cfg.DeclMode) then
-			Dim declVehicle As IVehicleDeclarationInputData = vehicle
-			body("EngineStopStart") = declVehicle.ADAS.EngineStopStart
-			body("EcoRoll") = declVehicle.ADAS.EcoRoll.ToString()
-			body("PredictiveCruiseControl") = declVehicle.ADAS.PredictiveCruiseControl.ToString()
-		End If
-
+		
+		body("EngineStopStart") = vehicle.ADAS.EngineStopStart
+		body("EcoRoll") = vehicle.ADAS.EcoRoll.ToString()
+		body("PredictiveCruiseControl") = vehicle.ADAS.PredictiveCruiseControl.ToString()
+		
 		If (Not IsNothing(airdrag.AirDragArea)) Then
 			body("CdA") = airdrag.AirDragArea.Value()
 		End If

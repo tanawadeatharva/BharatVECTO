@@ -29,7 +29,7 @@ Imports TUGraz.VectoCore.Utils
 ''' <remarks></remarks>
 <CustomValidation(GetType(Engine), "ValidateEngine")>
 Public Class Engine
-	Implements IEngineEngineeringInputData, IEngineDeclarationInputData, IEngineModeDeclarationInputData, IEngineFuelDelcarationInputData
+	Implements IEngineEngineeringInputData, IEngineDeclarationInputData, IEngineModeDeclarationInputData, IEngineFuelDelcarationInputData, IWHRData
 
 	''' <summary>
 	''' Current format version
@@ -113,6 +113,14 @@ Public Class Engine
 	Public ratedPowerInput As Watt
 	Public ratedSpeedInput As PerSecond
 	Public maxTorqueInput As NewtonMeter
+
+    public WHRTypeInput As WHRType
+    Public WHRUrbanInput as Double
+    public WHRRuralInput As Double
+    public WHRMotorwayInput As Double
+    public WHRColdHotInput As Double
+    public WHRRegPerInput As Double
+    public WHREngineeringInput As Double
 
 
 	''' <summary>
@@ -258,7 +266,7 @@ Public Class Engine
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 			    dim dummyVehicle as IVehicleEngineeringInputData = New DummyVehicle() With {
-                        .EngineInputData = engine
+                        .IVehicleComponentsEngineering_EngineInputData = engine
                         }
 				engineData = doa.CreateEngineData(dummyVehicle, engine.EngineModes.First())
 			End If
@@ -405,7 +413,7 @@ Public Class Engine
 
     Public ReadOnly Property WasteHeatRecoveryData As IWHRData Implements IEngineModeDeclarationInputData.WasteHeatRecoveryData
     Get
-            Return nothing
+            Return Me
     End Get
     End Property
 
@@ -433,7 +441,13 @@ Public Class Engine
 		End Get
 	End Property
 
-	Public ReadOnly Property Inertia As KilogramSquareMeter Implements IEngineEngineeringInputData.Inertia
+    Public ReadOnly Property WHRType As WHRType Implements IEngineDeclarationInputData.WHRType
+    Get
+            Return WHRTypeInput
+    End Get
+    End Property
+
+    Public ReadOnly Property Inertia As KilogramSquareMeter Implements IEngineEngineeringInputData.Inertia
 		Get
 			Return EngineInertia.SI(Of KilogramSquareMeter)()
 		End Get
@@ -452,10 +466,51 @@ Public Class Engine
     End Property
 
 #End Region
+
+    Public ReadOnly Property UrbanCorrectionFactor As Double Implements IWHRData.UrbanCorrectionFactor
+    Get
+            Return WHRUrbanInput
+    End Get
+    End Property
+    Public ReadOnly Property RuralCorrectionFactor As Double Implements IWHRData.RuralCorrectionFactor
+    Get
+            Return WHRRuralInput
+    End Get
+    End Property
+    Public ReadOnly Property MotorwayCorrectionFactor As Double Implements IWHRData.MotorwayCorrectionFactor
+    get
+            Return WHRMotorwayInput
+    End Get
+    End Property
+    Public ReadOnly Property BFColdHot As Double Implements IWHRData.BFColdHot
+    Get
+            Return WHRColdHotInput
+    End Get
+    End Property
+    Public ReadOnly Property CFRegPer As Double Implements IWHRData.CFRegPer
+    get
+            Return WHRRegPerInput
+    End Get
+    End Property
+
+    Public ReadOnly Property EngineeringCorrectionFactor As Double Implements IWHRData.EngineeringCorrectionFactor
+    Get
+            Return WHREngineeringInput
+    End Get
+    End Property
+
+    Public ReadOnly Property GeneratedElectricPower As TableData Implements IWHRData.GeneratedElectricPower
+    get
+        If Not File.Exists(_fuelConsumptionMapPath.FullPath) Then _
+            Throw New VectoException("FuelConsumptionMap is missing or invalid")
+        Return VectoCSVFile.Read(_fuelConsumptionMapPath.FullPath)
+    End Get
+    End Property
 End Class
 
+
 Public Class DummyVehicle
-	Implements IVehicleDeclarationInputData, IVehicleComponentsDeclaration, IVehicleEngineeringInputData
+	Implements IVehicleDeclarationInputData, IVehicleComponentsDeclaration, IVehicleEngineeringInputData, IVehicleComponentsEngineering
 	Public ReadOnly Property DataSource As DataSource Implements IComponentInputData.DataSource
 	Public ReadOnly Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
 	Public ReadOnly Property Manufacturer As String Implements IComponentInputData.Manufacturer
@@ -484,6 +539,10 @@ Public Class DummyVehicle
 	Public ReadOnly Property TankSystem As TankSystem? Implements IVehicleDeclarationInputData.TankSystem
     Public ReadOnly Property IVehicleEngineeringInputData_ADAS As IAdvancedDriverAssistantSystemsEngineering Implements IVehicleEngineeringInputData.ADAS
     Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
+    get
+            return me
+    End Get
+    End Property
     Public ReadOnly Property ADAS As IAdvancedDriverAssistantSystemDeclarationInputData Implements IVehicleDeclarationInputData.ADAS
 	Public ReadOnly Property ZeroEmissionVehicle As Boolean Implements IVehicleDeclarationInputData.ZeroEmissionVehicle
 	Public ReadOnly Property HybridElectricHDV As Boolean Implements IVehicleDeclarationInputData.HybridElectricHDV
@@ -502,15 +561,25 @@ Public Class DummyVehicle
 	End Property
 
 	Public ReadOnly Property AirdragInputData As IAirdragDeclarationInputData Implements IVehicleComponentsDeclaration.AirdragInputData
-	Public Property GearboxInputData As IGearboxDeclarationInputData Implements IVehicleComponentsDeclaration.GearboxInputData
-	Public ReadOnly Property TorqueConverterInputData As ITorqueConverterDeclarationInputData Implements IVehicleComponentsDeclaration.TorqueConverterInputData
-	Public ReadOnly Property AxleGearInputData As IAxleGearInputData Implements IVehicleComponentsDeclaration.AxleGearInputData
-	Public ReadOnly Property AngledriveInputData As IAngledriveInputData Implements IVehicleComponentsDeclaration.AngledriveInputData
-	Public Property EngineInputData As IEngineDeclarationInputData Implements IVehicleComponentsDeclaration.EngineInputData
-	Public ReadOnly Property AuxiliaryInputData As IAuxiliariesDeclarationInputData Implements IVehicleComponentsDeclaration.AuxiliaryInputData
-	Public ReadOnly Property RetarderInputData As IRetarderInputData Implements IVehicleComponentsDeclaration.RetarderInputData
-	Public ReadOnly Property PTOTransmissionInputData As IPTOTransmissionInputData Implements IVehicleComponentsDeclaration.PTOTransmissionInputData
-	Public ReadOnly Property AxleWheels As IAxlesDeclarationInputData Implements IVehicleComponentsDeclaration.AxleWheels
+    Public ReadOnly Property IVehicleComponentsEngineering_GearboxInputData As IGearboxEngineeringInputData Implements IVehicleComponentsEngineering.GearboxInputData
+    Public ReadOnly Property IVehicleComponentsEngineering_AirdragInputData As IAirdragEngineeringInputData Implements IVehicleComponentsEngineering.AirdragInputData
+    Public Property GearboxInputData As IGearboxDeclarationInputData Implements IVehicleComponentsDeclaration.GearboxInputData
+    Public ReadOnly Property IVehicleComponentsEngineering_TorqueConverterInputData As ITorqueConverterEngineeringInputData Implements IVehicleComponentsEngineering.TorqueConverterInputData
+    Public ReadOnly Property TorqueConverterInputData As ITorqueConverterDeclarationInputData Implements IVehicleComponentsDeclaration.TorqueConverterInputData
+    Public ReadOnly Property IVehicleComponentsEngineering_AxleGearInputData As IAxleGearInputData Implements IVehicleComponentsEngineering.AxleGearInputData
+    Public ReadOnly Property AxleGearInputData As IAxleGearInputData Implements IVehicleComponentsDeclaration.AxleGearInputData
+    Public ReadOnly Property IVehicleComponentsEngineering_AngledriveInputData As IAngledriveInputData Implements IVehicleComponentsEngineering.AngledriveInputData
+    Public ReadOnly Property AngledriveInputData As IAngledriveInputData Implements IVehicleComponentsDeclaration.AngledriveInputData
+    Public  Property IVehicleComponentsEngineering_EngineInputData As IEngineEngineeringInputData Implements IVehicleComponentsEngineering.EngineInputData
+    Public Property EngineInputData As IEngineDeclarationInputData Implements IVehicleComponentsDeclaration.EngineInputData
+    Public ReadOnly Property IVehicleComponentsEngineering_AuxiliaryInputData As IAuxiliariesEngineeringInputData Implements IVehicleComponentsEngineering.AuxiliaryInputData
+    Public ReadOnly Property AuxiliaryInputData As IAuxiliariesDeclarationInputData Implements IVehicleComponentsDeclaration.AuxiliaryInputData
+    Public ReadOnly Property IVehicleComponentsEngineering_RetarderInputData As IRetarderInputData Implements IVehicleComponentsEngineering.RetarderInputData
+    Public ReadOnly Property RetarderInputData As IRetarderInputData Implements IVehicleComponentsDeclaration.RetarderInputData
+    Public ReadOnly Property IVehicleComponentsEngineering_PTOTransmissionInputData As IPTOTransmissionInputData Implements IVehicleComponentsEngineering.PTOTransmissionInputData
+    Public ReadOnly Property PTOTransmissionInputData As IPTOTransmissionInputData Implements IVehicleComponentsDeclaration.PTOTransmissionInputData
+    Public ReadOnly Property IVehicleComponentsEngineering_AxleWheels As IAxlesEngineeringInputData Implements IVehicleComponentsEngineering.AxleWheels
+    Public ReadOnly Property AxleWheels As IAxlesDeclarationInputData Implements IVehicleComponentsDeclaration.AxleWheels
 End Class
 
 

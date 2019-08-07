@@ -21,5 +21,15 @@ namespace TUGraz.VectoCore.Models.Declaration {
 				default: throw new ArgumentOutOfRangeException(nameof(whrType), whrType, null);
 			}
 		}
+
+		public static string GetLabel(this WHRType whrType)
+		{
+			return ToXMLFormat(whrType);
+		}
+
+		public static bool IsElectrical(this WHRType whrType)
+		{
+			return whrType == WHRType.ElectricalOnly || whrType == WHRType.MechanicalAndElectrical;
+		}
 	}
 }

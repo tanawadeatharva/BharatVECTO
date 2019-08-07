@@ -84,6 +84,7 @@
     <Compile Include="Models\RetarderType.cs" />
     <Compile Include="Models\SimulationType.cs" />
     <Compile Include="Models\VehicleCategory.cs" />
+    <Compile Include="Models\WHRType.cs" />
     <Compile Include="OutputData\IOutputFileWriter.cs" />
     <Compile Include="OutputData\IOutputPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

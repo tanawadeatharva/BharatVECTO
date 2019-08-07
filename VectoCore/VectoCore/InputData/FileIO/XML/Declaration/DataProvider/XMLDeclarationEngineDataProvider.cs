@@ -10,6 +10,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
@@ -60,7 +61,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 						(_engineModes = new List<IEngineModeDeclarationInputData>() { new XMLSingleFuelEngineMode(BaseNode) });
 			}
 		}
-		
+
+		public virtual WHRType WHRType { get { return WHRType.None; } }
+
 
 		public class XMLSingleFuelEngineMode : AbstractXMLType, IEngineModeDeclarationInputData
 		{
@@ -243,6 +246,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+
+		public override WHRType WHRType
+		{
+			get { return GetString(XMLNames.Engine_WHRType).ParseEnum<WHRType>(); }
+		}
+
+
+
 		#endregion
 
 		public class XMLDualFuelEngineMode : XMLSingleFuelEngineMode
@@ -348,13 +359,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			protected TableData WHRPower;
 
-			public XMLWHRData(XmlNode whrFuelNode) : base(whrFuelNode)
-			{
-			}
+			public XMLWHRData(XmlNode whrFuelNode) : base(whrFuelNode) { }
 
-			public XMLWHRData() :base(null)
-			{
-			}
+			public XMLWHRData() :base(null) { }
 
 			#region Implementation of IWHRData
 
@@ -363,6 +370,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			public double MotorwayCorrectionFactor { get { return GetDouble(new[] { XMLNames.Engine_WHRCorrectionFactors, XMLNames.Engine_WHRCorrectionFactors_Motorway}, 1); } }
 			public double BFColdHot { get { return GetDouble(new[] { XMLNames.Engine_WHRCorrectionFactors, XMLNames.Engine_WHRCorrectionFactors_BFColdHot}, 1); } }
 			public double CFRegPer { get { return GetDouble(new[] { XMLNames.Engine_WHRCorrectionFactors, XMLNames.Engine_WHRCorrectionFactors_CFRegPer}, 1); } }
+			public double EngineeringCorrectionFactor { get { return 1.0; } }
 
 			public TableData GeneratedElectricPower
 			{

@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
+			retVal.ADAS = CreateADAS(data.ADAS);
 			var axles = data.Components.AxleWheels.AxlesEngineering;
 
 			retVal.AxleData = axles.Select(
@@ -78,7 +79,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		
+		private VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemsEngineering adas)
+		{
+			return new VehicleData.ADASData {
+				EngineStopStart = adas.EngineStopStart,
+				EcoRoll = adas.EcoRoll,
+				PredictiveCruiseControl = adas.PredictiveCruiseControl
+			};
+		}
+
 
 		public AirdragData CreateAirdragData(IAirdragEngineeringInputData airdragData, IVehicleEngineeringInputData data)
 		{
@@ -185,10 +194,33 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.FullLoadCurves = fullLoadCurves;
 
+			var whr = CreateWHRData(engineMode.WasteHeatRecoveryData);
+			if (whr != null) {
+				whr.WHRCorrectionFactor = engineMode.WasteHeatRecoveryData.EngineeringCorrectionFactor;
+			}
+
+			retVal.WHRType = engine.WHRType;
+			retVal.WHRData = whr;
 			//foreach (var fuelEntry in retVal.Fuels) {
 
 			//retVal.Fuels[0].FuelConsumptionCorrectionFactor = engine.WHTCEngineering;
 			return retVal;
+		}
+
+		private WHRData CreateWHRData(IWHRData whrInputData)
+		{
+			if (whrInputData == null || whrInputData.GeneratedElectricPower == null) {
+				return null;
+			}
+
+			return new WHRData() {
+				CFUrban = 1,
+				CFRural = 1,
+				CFMotorway = 1,
+				CFColdHot = 1,
+				CFRegPer = 1,
+				WHRMap = WHRPowerReader.Create(whrInputData.GeneratedElectricPower)
+			};
 		}
 
 

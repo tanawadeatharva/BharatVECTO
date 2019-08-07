@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -20,18 +21,21 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData {
 			}
 		}
 
-		public static WHRPowerMap Create(DataTable data)
+		public static WHRPowerMap Create(TableData data)
 		{
 			var headerValid = HeaderIsValid(data.Columns);
 			if (!headerValid) {
 				LoggingObject.Logger<FuelConsumptionMap>().Warn(
-					"FuelConsumptionMap: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
+					"WHRMap: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: {3}",
 					Fields.EngineSpeed, Fields.Torque, Fields.ElectricPower,
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
-			var delaunayMap = new DelaunayMap("FuelConsumptionMap");
+			var delaunayMap = new DelaunayMap("WHRMap");
 
 			if (!headerValid) {
+				if (data.SourceType == DataSourceType.CSVFile && data.Columns.Count < 4) {
+					throw new VectoException("FC-Map has to contain at least 4 columns when WHR is used");
+				}
 				data.Columns[0].ColumnName = Fields.EngineSpeed;
 				data.Columns[1].ColumnName = Fields.Torque;
 				// column with idx==2 is fuel consumption in csv files

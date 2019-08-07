@@ -52,12 +52,20 @@ Public Class EngineForm
 		PnWhtcDeclaration.Enabled = Cfg.DeclMode
 		PnWhtcEngineering.Enabled = Not Cfg.DeclMode
 
+		pnWHRDeclaration.Enabled = Cfg.DeclMode
+		pnWhrEngineering.Enabled = Not Cfg.DeclMode
+
 		cbFuelType.Items.Clear()
 		cbFuelType.ValueMember = "Value"
 		cbFuelType.DisplayMember = "Label"
 		cbFuelType.DataSource =
 			[Enum].GetValues(GetType(TUGraz.VectoCommon.Models.FuelType)).Cast (Of TUGraz.VectoCommon.Models.FuelType).Select(
 				Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
+
+		cbWHRType.Items.Clear()
+		cbWHRType.ValueMember = "Value"
+		cbWHRType.DisplayMember = "Label"
+		cbWHRType.DataSource = [Enum].GetValues(GetType(WHRType)).cast(Of WHRType).select(Function(type) new With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
 		_changed = False
 		NewEngine()
@@ -80,7 +88,7 @@ Public Class EngineForm
 				gbxType = gbx.Type
 			End If
 		End If
-	    
+		
 		TbInertia.Text = DeclarationData.Engine.EngineInertia((TbDispl.Text.ToDouble(0.0)/1000.0/1000.0).SI (Of CubicMeter),
 															gbxType).ToGUIFormat()
 	End Sub
@@ -160,6 +168,13 @@ Public Class EngineForm
 		TbWHTCrural.Text = ""
 		TbWHTCmw.Text = ""
 
+		tbWHREngineering.Text = ""
+		tbWHRColdHot.Text = ""
+		tbWHRRegPer.Text = ""
+		tbWHRRural.Text = ""
+		tbWHRUrban.Text = ""
+		tbWHRMotorway.Text = ""
+
 		DeclInit()
 
 		_engFile = ""
@@ -214,6 +229,21 @@ Public Class EngineForm
 
 		cbFuelType.SelectedValue = engine.EngineModes.First().Fuels.First().FuelType
 
+		cbWHRType.SelectedValue = engine.WHRType
+		gbWHR.Enabled = engine.WHRType.IsElectrical()
+		If (engine.WHRType.IsElectrical()) Then
+			Dim whr As IWHRData = engine.enginemodes.first().Wasteheatrecoverydata
+			If (Cfg.DeclMode) then
+				tbWHRRural.Text = whr.RuralCorrectionFactor.ToGUIFormat()
+				tbWHRUrban.Text = whr.UrbanCorrectionFactor.ToGUIFormat()
+				tbWHRMotorway.Text = whr.MotorwayCorrectionFactor.ToGUIFormat()
+				tbWHRColdHot.Text = whr.BFColdHot.ToGUIFormat()
+				tbWHRRegPer.Text = whr.CFRegPer.ToGUIFormat()
+			Else
+				tbWHREngineering.Text = whr.EngineeringCorrectionFactor.ToGUIFormat() 
+			end if
+		End If
+
 		DeclInit()
 
 		EngineFileBrowser.UpdateHistory(file)
@@ -260,13 +290,21 @@ Public Class EngineForm
 		engine.WHTCEngineeringInput = TbWHTCEngineering.Text.ToDouble(0)
 		engine.correctionFactorRegPerInput = tbRegPerCorrFactor.Text.ToDouble(0)
 
+		engine.WHRTypeInput = CType(cbWHRType.SelectedValue, WHRType)
+		engine.WHRUrbanInput = tbWHRUrban.Text.ToDouble(0)
+		engine.WHRRuralInput = tbWHRRural.Text.ToDouble(0)
+		engine.WHRMotorwayInput = tbWHRMotorway.Text.ToDouble(0)
+		engine.WHRColdHotInput = tbWHRColdHot.Text.ToDouble(0)
+		engine.WHRRegPerInput = tbWHRRegPer.Text.ToDouble(0)
+		engine.WHREngineeringInput = tbWHREngineering.Text.ToDouble(0)
+
 		engine.ColdHotBalancingFactorInput = TbColdHotFactor.Text.ToDouble(0)
 
 		engine.ratedPowerInput = (tbRatedPower.Text.ToDouble(0)*1000).SI (Of Watt)()
 		engine.ratedSpeedInput = tbRatedSpeed.Text.ToDouble(0).RPMtoRad()
 		engine.maxTorqueInput = tbMaxTorque.Text.ToDouble(0).SI (Of NewtonMeter)()
 
-		engine.FuelTypeInput = CType(cbFuelType.SelectedValue, TUGraz.VectoCommon.Models.FuelType)
+		engine.FuelTypeInput = CType(cbFuelType.SelectedValue, FuelType)
 
 		If Not engine.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
@@ -548,4 +586,7 @@ Public Class EngineForm
 		End If
 	End Sub
 
+	Private Sub cbWHRType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbWHRType.SelectedIndexChanged
+		gbWHR.Enabled = CType(CType(sender, ComboBox).SelectedValue, WHRType).IsElectrical()
+	End Sub
 End Class
