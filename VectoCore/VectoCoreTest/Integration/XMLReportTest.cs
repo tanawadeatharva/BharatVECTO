@@ -118,20 +118,23 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 		}
 
-        [TestCase]
-        public void TestXMLSummaryReportExists()
+		[TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group1.xml"),
+		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group2.xml"),
+		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group3.xml"),
+		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group4.xml"),
+		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group5.xml"),
+		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group9.xml"),
+		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group10.xml"),
+		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group11.xml"),
+		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group12.xml"),
+		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group16.xml")]
+        public void TestXMLSummaryReportExists(string jobfile)
         {
-            var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
-            var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
+			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
             var writer = new FileOutputWriter(jobfile);
             var xmlReport = new XMLDeclarationReport(writer);
             var sumData = new SummaryDataContainer(writer);
             var jobContainer = new JobContainer(sumData);
-
-            if (File.Exists(writer.SumFileName))
-            {
-                File.Delete(writer.SumFileName);
-            }
 
             var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport)
             {
@@ -141,14 +144,14 @@ namespace TUGraz.VectoCore.Tests.Integration
             jobContainer.AddRuns(runsFactory);
 
             // no need to run the simulation, we only check whether the meta-data is correct, no results are considered
-            //jobContainer.Execute();
-            //jobContainer.WaitFinished();
+            jobContainer.Execute();
+            jobContainer.WaitFinished();
             xmlReport.DoWriteReport();
 
-            var manufacturerReport = xmlReport.CustomerReport;
+			var customerReport = xmlReport.CustomerReport;
 
-            //check if the summary entry exists in the final customerreport file
-			Assert.IsTrue(manufacturerReport.Elements("Summary").Any());
+            //check if the customerReport contains the summary XML-Element
+			Assert.AreNotEqual(null,customerReport.XPathSelectElement("//*[local-name()='Summary']"));
 		}
 
 		[TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml"),
