@@ -118,16 +118,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 		}
 
-		[TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group1.xml"),
-		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group2.xml"),
-		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group3.xml"),
-		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group4.xml"),
-		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group5.xml"),
-		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group9.xml"),
-		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group10.xml"),
-		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group11.xml"),
-		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group12.xml"),
-		TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample_group16.xml")]
+		[TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-1_EURO6_2018.xml"),
+		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml"),
+		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-3_EURO6_2018.xml"),
+		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml"),
+		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_4x2_vehicle-class-5_EURO6_2018.xml"),
+		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x2_vehicle-class-9_EURO6_2018.xml"),
+		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x2_vehicle-class-10_EURO6_2018.xml"),
+		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x4_vehicle-class-11_EURO6_2018.xml"),
+		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x4_vehicle-class-12_EURO6_2018.xml"),
+		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_8x4_vehicle-class-16_EURO6_2018.xml")]
         public void TestXMLSummaryReportExists(string jobfile)
         {
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
