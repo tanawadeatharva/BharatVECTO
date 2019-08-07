@@ -894,7 +894,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.NotNull(inputDataProvider);
 
 			Assert.AreEqual("Generic Eninge", inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.Model);
-			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.WHTCEngineering, 1e-6);
+			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().WHTCEngineering, 1e-6);
 
 		}
 
@@ -912,7 +912,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.NotNull(inputDataProvider);
 
 			Assert.AreEqual("Generic Eninge", inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.Model);
-			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.WHTCEngineering, 1e-6);
+			Assert.AreEqual(1.0, inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().WHTCEngineering, 1e-6);
 
 			Assert.AreEqual(2200, inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.RatedSpeedDeclared.AsRPM, 1e-6);
 

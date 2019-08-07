@@ -46,15 +46,14 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 {
 	internal class XMLEngineeringEngineDataProviderV07 : AbstractEngineeringXMLComponentDataProvider,
-		IXMLEngineData, IEngineModeDeclarationInputData, IEngineFuelDelcarationInputData
+		IXMLEngineData, IEngineModeEngineeringInputData, IEngineFuelEngineeringInputData
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
 
 		public const string XSD_TYPE = "EngineDataEngineeringType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
-
-
+		
 		public XMLEngineeringEngineDataProviderV07(
 			IXMLEngineeringVehicleData vehicle,
 			XmlNode vehicleNode, string fsBasePath)
@@ -81,6 +80,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public virtual double WHTCEngineering
 		{
 			get { return GetDouble(XMLNames.Engine_WHTCEngineering); }
+		}
+
+		IList<IEngineModeEngineeringInputData> IEngineEngineeringInputData.EngineModes
+		{
+			get { return new[] { this }.Cast<IEngineModeEngineeringInputData>().ToList(); }
 		}
 
 		public virtual Second EngineStartTime
@@ -145,6 +149,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 					BaseNode, DataSource.SourcePath, XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FullLoadCurve_Entry,
 					AttributeMappings.EngineFullLoadCurveMapping);
 			}
+		}
+
+		IList<IEngineFuelEngineeringInputData> IEngineModeEngineeringInputData.Fuels
+		{
+			get { return new[] { this }.Cast<IEngineFuelEngineeringInputData>().ToList(); }
 		}
 
 		public virtual  IList<IEngineFuelDelcarationInputData> Fuels {

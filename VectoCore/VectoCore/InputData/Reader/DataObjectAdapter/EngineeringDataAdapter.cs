@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		internal CombustionEngineData CreateEngineData(
-			IVehicleEngineeringInputData vehicle, IEngineModeDeclarationInputData engineMode)
+			IVehicleEngineeringInputData vehicle, IEngineModeEngineeringInputData engineMode)
 		{
 			var engine = vehicle.Components.EngineInputData;
 			var gbx = vehicle.Components.GearboxInputData;
@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					new CombustionEngineFuelData() {
 						FuelData = DeclarationData.FuelData.Lookup(fuel.FuelType, tankSystem),
 						ConsumptionMap = FuelConsumptionMapReader.Create(fuel.FuelConsumptionMap),
-						FuelConsumptionCorrectionFactor = engine.WHTCEngineering,
+						FuelConsumptionCorrectionFactor = fuel.WHTCEngineering,
 					});
 			}
 
@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IEngineModeDeclarationInputData engineMode)
+		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IEngineModeEngineeringInputData engineMode)
 		{
 			if (engine.SavedInDeclarationMode) {
 				WarnEngineeringMode("EngineData");
@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					new CombustionEngineFuelData() {
 						FuelData = DeclarationData.FuelData.Lookup(fuel.FuelType, null),
 						ConsumptionMap = FuelConsumptionMapReader.Create(fuel.FuelConsumptionMap),
-						FuelConsumptionCorrectionFactor = engine.WHTCEngineering,
+						FuelConsumptionCorrectionFactor = fuel.WHTCEngineering,
 					});
 			}
 

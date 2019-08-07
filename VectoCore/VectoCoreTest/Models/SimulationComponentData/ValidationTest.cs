@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			fullLoad.Columns.Add("PT1");
 			fullLoad.Rows.Add("3", "3", "-3", "3");
 			fullLoad.Rows.Add("4", "3", "-3", "3");
-			var data = new MockEngineDataProvider {
+			IEngineEngineeringInputData data = new MockEngineDataProvider {
 				Model = "asdf",
 			    Displacement = 6374.SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(),
 				IdleSpeed = 560.RPMtoRad(),

@@ -46,20 +46,31 @@ Public Class JSONFileWriter
 		body.Add("IdlingSpeed", eng.EngineModes.First().IdleSpeed.AsRPM)
 		body.Add("Inertia", eng.Inertia.Value())
 
-		body.Add("WHTC-Urban", eng.EngineModes.First().Fuels.First().WHTCUrban)
-		body.Add("WHTC-Rural", eng.EngineModes.First().Fuels.First().WHTCRural)
-		body.Add("WHTC-Motorway", eng.EngineModes.First().Fuels.First().WHTCMotorway)
-		body.Add("WHTC-Engineering", eng.WHTCEngineering)
-		body.Add("ColdHotBalancingFactor", eng.EngineModes.First().Fuels.First().ColdHotBalancingFactor)
-		body.Add("CFRegPer", eng.EngineModes.First().Fuels.First().CorrectionFactorRegPer)
+        Dim fuels As List(Of Object) = New List(Of Object)()
+
+	    For Each fuel As IEngineFuelEngineeringInputData In eng.EngineModes.First().Fuels
+	        Dim entry as Dictionary(Of string, object) = New Dictionary(Of String,Object)()
+	        entry.Add("WHTC-Urban", fuel.WHTCUrban)
+	        entry.Add("WHTC-Rural", fuel.WHTCRural)
+	        entry.Add("WHTC-Motorway", fuel.WHTCMotorway)
+	        entry.Add("WHTC-Engineering", fuel.WHTCEngineering)
+	        entry.Add("ColdHotBalancingFactor", fuel.ColdHotBalancingFactor)
+	        entry.Add("CFRegPer", fuel.CorrectionFactorRegPer)
+	        entry.Add("FuelMap", GetRelativePath(fuel.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
+	        entry.Add("FuelType", fuel.FuelType.ToString())
+
+            fuels.Add(entry)
+	    Next
+
+        body.Add("Fuels", fuels)
+	   
 		body.Add("RatedPower", eng.RatedPowerDeclared.Value())
 		body.Add("RatedSpeed", eng.RatedSpeedDeclared.AsRPM)
 		body.Add("MaxTorque", eng.MaxTorqueDeclared.Value())
-		body.Add("FuelType", eng.EngineModes.First().Fuels.First().FuelType.ToString())
+		
 
 		body.Add("FullLoadCurve", GetRelativePath(eng.EngineModes.First().FullLoadCurve.Source, Path.GetDirectoryName(filename)))
 
-		body.Add("FuelMap", GetRelativePath(eng.EngineModes.First().Fuels.First().FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
 
         body.add("WHRType", eng.WHRType.ToString())
 

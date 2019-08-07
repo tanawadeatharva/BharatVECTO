@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 				new XElement(ns + XMLNames.Engine_Displacement, (data.Displacement.Value() * 1000 * 1000).ToXMLFormat(0)),
 				new XElement(ns + XMLNames.Engine_IdlingSpeed, data.EngineModes.First().IdleSpeed.AsRPM.ToXMLFormat(0)),
 				data.Inertia != null ? new XElement(ns + XMLNames.Engine_Inertia, data.Inertia.Value()) : null,
-				new XElement(ns + XMLNames.Engine_FCCorrection, data.WHTCEngineering.ToXMLFormat(4)),
+				new XElement(ns + XMLNames.Engine_FCCorrection, data.EngineModes.First().Fuels.First().WHTCEngineering.ToXMLFormat(4)),
 				new XElement(ns + XMLNames.Engine_FuelType, data.EngineModes.First().Fuels.First().FuelType.ToXMLFormat()),
 				new XElement(ns + XMLNames.Engine_FuelConsumptionMap, GetFuelConsumptionMap(ns, data)),
 				new XElement(ns + XMLNames.Engine_FullLoadAndDragCurve, GetFullLoadDragCurve(ns, data))
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 				new XElement(v10 + XMLNames.Engine_Displacement, (data.Displacement.Value() * 1000 * 1000).ToXMLFormat(0)),
 				new XElement(v10 + XMLNames.Engine_IdlingSpeed, data.EngineModes.First().IdleSpeed.AsRPM.ToXMLFormat(0)),
 				data.Inertia != null ? new XElement(v10 + XMLNames.Engine_Inertia, data.Inertia.Value()) : null,
-				new XElement(v10 + XMLNames.Engine_FCCorrection, data.WHTCEngineering.ToXMLFormat(4)),
+				new XElement(v10 + XMLNames.Engine_FCCorrection, data.EngineModes.First().Fuels.First().WHTCEngineering.ToXMLFormat(4)),
 				new XElement(v10 + XMLNames.Engine_FuelType, data.EngineModes.First().Fuels.First().FuelType.ToXMLFormat()),
 				new XElement(v10 + XMLNames.Engine_FuelConsumptionMap, GetFuelConsumptionMap(v10, data)),
 				new XElement(v10 + XMLNames.Engine_FullLoadAndDragCurve, GetFullLoadDragCurve(v10, data)),

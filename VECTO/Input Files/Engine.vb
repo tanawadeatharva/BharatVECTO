@@ -29,7 +29,7 @@ Imports TUGraz.VectoCore.Utils
 ''' <remarks></remarks>
 <CustomValidation(GetType(Engine), "ValidateEngine")>
 Public Class Engine
-	Implements IEngineEngineeringInputData, IEngineDeclarationInputData, IEngineModeDeclarationInputData, IEngineFuelDelcarationInputData, IWHRData
+	Implements IEngineEngineeringInputData, IEngineDeclarationInputData, IEngineModeDeclarationInputData, IWHRData, IEngineModeEngineeringInputData
 
 	''' <summary>
 	''' Current format version
@@ -67,17 +67,13 @@ Public Class Engine
 	''' <remarks></remarks>
 	Private ReadOnly _fullLoadCurvePath As SubPath
 
-	''' <summary>
-	''' Path to fuel consumption map
-	''' </summary>
-	''' <remarks></remarks>
-	Private ReadOnly _fuelConsumptionMapPath As SubPath
+	
 
 	''' <summary>
 	''' Directory of engine file. Defined in FilePath property (Set)
 	''' </summary>
 	''' <remarks></remarks>
-	Private _myPath As String
+    Friend _myPath As String
 
 	''' <summary>
 	''' Full file path. Needs to be defined via FilePath property before calling ReadFile or SaveFile.
@@ -86,30 +82,7 @@ Public Class Engine
 	Private _filePath As String
 
 
-	''' <summary>
-	''' WHTC Urban test results. Saved in input file. 
-	''' </summary>
-	''' <remarks></remarks>
-	Public WHTCUrbanInput As Double
 
-	''' <summary>
-	''' WHTC Rural test results. Saved in input file. 
-	''' </summary>
-	''' <remarks></remarks>
-	Public WHTCRuralInput As Double
-
-	''' <summary>
-	''' WHTC Motorway test results. Saved in input file. 
-	''' </summary>
-	''' <remarks></remarks>
-	Public WHTCMotorwayInput As Double
-
-	Public WHTCEngineeringInput As Double
-
-
-	Public ColdHotBalancingFactorInput As Double
-	Public correctionFactorRegPerInput As Double
-	Public FuelTypeInput As FuelType
 	Public ratedPowerInput As Watt
 	Public ratedSpeedInput As PerSecond
 	Public maxTorqueInput As NewtonMeter
@@ -122,16 +95,24 @@ Public Class Engine
     public WHRRegPerInput As Double
     public WHREngineeringInput As Double
 
+    Public PrimaryEngineFuel As EngineFuel
+    Public SecondaryEngineFuel as EngineFuel
 
-	''' <summary>
+    public DualFuelInput As Boolean
+
+
+    ''' <summary>
 	''' New instance. Initialise
 	''' </summary>
 	''' <remarks></remarks>
 	Public Sub New()
 		_myPath = ""
 		_filePath = ""
-		_fuelConsumptionMapPath = New SubPath
+		
 		_fullLoadCurvePath = New SubPath
+
+        PrimaryEngineFuel = New EngineFuel(me)
+        SecondaryEngineFuel = New EngineFuel(me)
 		SetDefault()
 	End Sub
 
@@ -146,13 +127,8 @@ Public Class Engine
 		EngineInertia = 0
 
 
-		_fuelConsumptionMapPath.Clear()
 		_fullLoadCurvePath.Clear()
 
-		WHTCUrbanInput = 0
-		WHTCRuralInput = 0
-		WHTCMotorwayInput = 0
-		WHTCEngineeringInput = 1
 	End Sub
 
 	''' <summary>
@@ -217,25 +193,7 @@ Public Class Engine
 		End Set
 	End Property
 
-	''' <summary>
-	''' Get or set file path (cSubPath) to FC map (.vmap)
-	''' </summary>
-	''' <param name="original">True= (relative) file path as saved in file; False= full file path</param>
-	''' <value></value>
-	''' <returns>Relative or absolute file path to FC map</returns>
-	''' <remarks></remarks>
-	Public Property PathMap(Optional ByVal original As Boolean = False) As String
-		Get
-			If original Then
-				Return _fuelConsumptionMapPath.OriginalPath
-			Else
-				Return _fuelConsumptionMapPath.FullPath
-			End If
-		End Get
-		Set(ByVal value As String)
-			_fuelConsumptionMapPath.Init(_myPath, value)
-		End Set
-	End Property
+	
 
 
 	' ReSharper disable once UnusedMember.Global  -- used for Validation
@@ -268,7 +226,7 @@ Public Class Engine
 			    dim dummyVehicle as IVehicleEngineeringInputData = New DummyVehicle() With {
                         .IVehicleComponentsEngineering_EngineInputData = engine
                         }
-				engineData = doa.CreateEngineData(dummyVehicle, engine.EngineModes.First())
+				engineData = doa.CreateEngineData(dummyVehicle, CType(engine.EngineModes.First(), IEngineModeEngineeringInputData))
 			End If
 
 			Dim result As IList(Of ValidationResult) =
@@ -353,49 +311,7 @@ Public Class Engine
 		End Get
 	End Property
 
-	Public ReadOnly Property WHTCMotorway As Double Implements IEngineFuelDelcarationInputData.WHTCMotorway
-		Get
-			Return WHTCMotorwayInput
-		End Get
-	End Property
-
-	Public ReadOnly Property WHTCRural As Double Implements IEngineFuelDelcarationInputData.WHTCRural
-		Get
-			Return WHTCRuralInput
-		End Get
-	End Property
-
-	Public ReadOnly Property WHTCUrban As Double Implements IEngineFuelDelcarationInputData.WHTCUrban
-		Get
-			Return WHTCUrbanInput
-		End Get
-	End Property
-
-	Public ReadOnly Property ColdHotBalancingFactor As Double Implements IEngineFuelDelcarationInputData.ColdHotBalancingFactor
-		Get
-			Return ColdHotBalancingFactorInput
-		End Get
-	End Property
-
-	Public ReadOnly Property CorrectionFactorRegPer As Double Implements IEngineFuelDelcarationInputData.CorrectionFactorRegPer
-		Get
-			Return correctionFactorRegPerInput
-		End Get
-	End Property
-
-	Public ReadOnly Property FuelType As FuelType Implements IEngineFuelDelcarationInputData.FuelType
-		Get
-			Return FuelTypeInput
-		End Get
-	End Property
-
-	Public ReadOnly Property FuelConsumptionMap As TableData Implements IEngineFuelDelcarationInputData.FuelConsumptionMap
-		Get
-			If Not File.Exists(_fuelConsumptionMapPath.FullPath) Then _
-				Throw New VectoException("FuelConsumptionMap is missing or invalid")
-			Return VectoCSVFile.Read(_fuelConsumptionMapPath.FullPath)
-		End Get
-	End Property
+	
 
 	Public ReadOnly Property FullLoadCurve As TableData Implements IEngineModeDeclarationInputData.FullLoadCurve
 		Get
@@ -405,9 +321,23 @@ Public Class Engine
 		End Get
 	End Property
 
-	Public ReadOnly Property Fuels As IList(Of IEngineFuelDelcarationInputData) Implements IEngineModeDeclarationInputData.Fuels
+    Public ReadOnly Property IEngineModeEngineeringInputData_Fuels As IList(Of IEngineFuelEngineeringInputData) Implements IEngineModeEngineeringInputData.Fuels
+        Get
+            Dim retval As List(Of IEngineFuelEngineeringInputData) = new List(Of IEngineFuelEngineeringInputData)({PrimaryEngineFuel})
+            If (DualFuelInput) Then
+                retval.Add(SecondaryEngineFuel)
+            End If
+            Return retval
+        End Get
+    End Property
+
+    Public ReadOnly Property Fuels As IList(Of IEngineFuelDelcarationInputData) Implements IEngineModeDeclarationInputData.Fuels
 	Get
-			Return new List(Of IEngineFuelDelcarationInputData)({me})
+			Dim retval As List(Of IEngineFuelDelcarationInputData) = new List(Of IEngineFuelDelcarationInputData)({PrimaryEngineFuel})
+            If (DualFuelInput) Then
+                retval.Add(SecondaryEngineFuel)
+            End If
+            Return retval
 	End Get
 	End Property
 
@@ -435,7 +365,13 @@ Public Class Engine
 		End Get
 	End Property
 
-	Public ReadOnly Property EngineModes As IList(Of IEngineModeDeclarationInputData) Implements IEngineDeclarationInputData.EngineModes
+    Public ReadOnly Property IEngineEngineeringInputData_EngineModes As IList(Of IEngineModeEngineeringInputData) Implements IEngineEngineeringInputData.EngineModes
+        get
+            Return New List(Of IEngineModeEngineeringInputData)({me})
+        End Get
+    End Property
+
+    Public ReadOnly Property EngineModes As IList(Of IEngineModeDeclarationInputData) Implements IEngineDeclarationInputData.EngineModes
 	get
 			Return New List(Of IEngineModeDeclarationInputData)({me})
 		End Get
@@ -453,11 +389,6 @@ Public Class Engine
 		End Get
 	End Property
 
-	Public ReadOnly Property WHTCEngineering As Double Implements IEngineEngineeringInputData.WHTCEngineering
-		Get
-			Return WHTCEngineeringInput
-		End Get
-	End Property
 
     Public ReadOnly Property EngineStartTime As Second Implements IEngineEngineeringInputData.EngineStartTime
         Get
@@ -501,9 +432,137 @@ Public Class Engine
 
     Public ReadOnly Property GeneratedElectricPower As TableData Implements IWHRData.GeneratedElectricPower
     get
-        If Not File.Exists(_fuelConsumptionMapPath.FullPath) Then _
+        If Not File.Exists(PrimaryEngineFuel._fuelConsumptionMapPath.FullPath) Then _
             Throw New VectoException("FuelConsumptionMap is missing or invalid")
-        Return VectoCSVFile.Read(_fuelConsumptionMapPath.FullPath)
+        Return VectoCSVFile.Read(PrimaryEngineFuel._fuelConsumptionMapPath.FullPath)
+    End Get
+    End Property
+End Class
+
+Public Class EngineFuel
+    Implements IEngineFuelDelcarationInputData, IEngineFuelEngineeringInputData
+
+    ''' <summary>
+    ''' WHTC Urban test results. Saved in input file. 
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public WHTCUrbanInput As Double
+
+    ''' <summary>
+    ''' WHTC Rural test results. Saved in input file. 
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public WHTCRuralInput As Double
+
+    ''' <summary>
+    ''' WHTC Motorway test results. Saved in input file. 
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public WHTCMotorwayInput As Double
+
+    Public WHTCEngineeringInput As Double
+
+    ''' <summary>
+    ''' Path to fuel consumption map
+    ''' </summary>
+    ''' <remarks></remarks>
+    
+    Friend ReadOnly _fuelConsumptionMapPath As SubPath
+
+
+    Public ColdHotBalancingFactorInput As Double
+    Public correctionFactorRegPerInput As Double
+    Public FuelTypeInput As FuelType
+    Private engineData As Engine
+
+    Public Sub New(engine As Engine)
+
+        engineData = engine
+       _fuelConsumptionMapPath = New SubPath
+        
+        SetDefault()
+    End Sub
+
+    ''' <summary>
+    ''' Set default values
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub SetDefault()
+       _fuelConsumptionMapPath.Clear()
+       
+        WHTCUrbanInput = 0
+        WHTCRuralInput = 0
+        WHTCMotorwayInput = 0
+        WHTCEngineeringInput = 1
+    End Sub
+
+    Public ReadOnly Property WHTCMotorway As Double Implements IEngineFuelDelcarationInputData.WHTCMotorway
+        Get
+            Return WHTCMotorwayInput
+        End Get
+    End Property
+
+    Public ReadOnly Property WHTCRural As Double Implements IEngineFuelDelcarationInputData.WHTCRural
+        Get
+            Return WHTCRuralInput
+        End Get
+    End Property
+
+    Public ReadOnly Property WHTCUrban As Double Implements IEngineFuelDelcarationInputData.WHTCUrban
+        Get
+            Return WHTCUrbanInput
+        End Get
+    End Property
+
+    Public ReadOnly Property ColdHotBalancingFactor As Double Implements IEngineFuelDelcarationInputData.ColdHotBalancingFactor
+        Get
+            Return ColdHotBalancingFactorInput
+        End Get
+    End Property
+
+    Public ReadOnly Property CorrectionFactorRegPer As Double Implements IEngineFuelDelcarationInputData.CorrectionFactorRegPer
+        Get
+            Return correctionFactorRegPerInput
+        End Get
+    End Property
+
+    Public ReadOnly Property FuelType As FuelType Implements IEngineFuelDelcarationInputData.FuelType
+        Get
+            Return FuelTypeInput
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Get or set file path (cSubPath) to FC map (.vmap)
+    ''' </summary>
+    ''' <param name="original">True= (relative) file path as saved in file; False= full file path</param>
+    ''' <value></value>
+    ''' <returns>Relative or absolute file path to FC map</returns>
+    ''' <remarks></remarks>
+    Public Property PathMap(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _fuelConsumptionMapPath.OriginalPath
+            Else
+                Return _fuelConsumptionMapPath.FullPath
+            End If
+        End Get
+        Set(ByVal value As String)
+            _fuelConsumptionMapPath.Init(engineData._myPath, value)
+        End Set
+    End Property
+
+    Public ReadOnly Property FuelConsumptionMap As TableData Implements IEngineFuelDelcarationInputData.FuelConsumptionMap
+        Get
+            If Not File.Exists(_fuelConsumptionMapPath.FullPath) Then _
+                Throw New VectoException("FuelConsumptionMap is missing or invalid")
+            Return VectoCSVFile.Read(_fuelConsumptionMapPath.FullPath)
+        End Get
+    End Property
+
+    Public ReadOnly Property WHTCEngineering As Double Implements IEngineFuelEngineeringInputData.WHTCEngineering
+    Get
+            Return WHTCEngineeringInput
     End Get
     End Property
 End Class
