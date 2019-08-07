@@ -2146,10 +2146,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(eUdLow, factors[Tuple.Create(MissionType.UrbanDelivery, LoadingType.LowLoading)], 1e-9);
 			Assert.AreEqual(eUdRef, factors[Tuple.Create(MissionType.UrbanDelivery, LoadingType.ReferenceLoad)], 1e-9);
 
-			Assert.AreEqual(0, factors[Tuple.Create(MissionType.Construction, LoadingType.LowLoading)], 1e-9);
+			/*Assert.AreEqual(0, factors[Tuple.Create(MissionType.Construction, LoadingType.LowLoading)], 1e-9);
 			Assert.AreEqual(0, factors[Tuple.Create(MissionType.Construction, LoadingType.LowLoading)], 1e-9);
 			Assert.AreEqual(0, factors[Tuple.Create(MissionType.MunicipalUtility, LoadingType.LowLoading)], 1e-9);
 			Assert.AreEqual(0, factors[Tuple.Create(MissionType.MunicipalUtility, LoadingType.ReferenceLoad)], 1e-9);
+			*/
 			Assert.AreEqual(0, factors[Tuple.Create(MissionType.LongHaulEMS, LoadingType.LowLoading)], 1e-9);
 			Assert.AreEqual(0, factors[Tuple.Create(MissionType.LongHaulEMS, LoadingType.ReferenceLoad)], 1e-9);
 			Assert.AreEqual(0, factors[Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.LowLoading)], 1e-9);
