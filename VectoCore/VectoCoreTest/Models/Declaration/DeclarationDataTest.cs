@@ -2133,7 +2133,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
         ]
 		public void TestMissionProfileWeights(
-			WeightingGroup group, double eRdLow, double eRdRef, double eLhLow, double eLhRef, double eUdLow, double eUdRef)
+			WeightingGroup group, double eRdLow, double eRdRef, double eLhLow, double eLhRef, double eUdLow, double eUdRef, double eMuLow=0, double eMuRef=0, double eCoLow=0, double eCoRef=0, double eLhEmsRef=0, double elhEmsLow=0, double eRdEmsLow=0, double eRdEmsRef=0)
 		{
 			var factors = DeclarationData.WeightingFactors.Lookup(group);
 
@@ -2147,10 +2147,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(eUdRef, factors[Tuple.Create(MissionType.UrbanDelivery, LoadingType.ReferenceLoad)], 1e-9);
 
 			/*Assert.AreEqual(0, factors[Tuple.Create(MissionType.Construction, LoadingType.LowLoading)], 1e-9);
-			Assert.AreEqual(0, factors[Tuple.Create(MissionType.Construction, LoadingType.LowLoading)], 1e-9);
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.Construction, LoadingType.ReferenceLoad)], 1e-9);
+
 			Assert.AreEqual(0, factors[Tuple.Create(MissionType.MunicipalUtility, LoadingType.LowLoading)], 1e-9);
-			Assert.AreEqual(0, factors[Tuple.Create(MissionType.MunicipalUtility, LoadingType.ReferenceLoad)], 1e-9);
-			*/
+			Assert.AreEqual(0, factors[Tuple.Create(MissionType.MunicipalUtility, LoadingType.ReferenceLoad)], 1e-9);*/
+			
 			Assert.AreEqual(0, factors[Tuple.Create(MissionType.LongHaulEMS, LoadingType.LowLoading)], 1e-9);
 			Assert.AreEqual(0, factors[Tuple.Create(MissionType.LongHaulEMS, LoadingType.ReferenceLoad)], 1e-9);
 			Assert.AreEqual(0, factors[Tuple.Create(MissionType.RegionalDeliveryEMS, LoadingType.LowLoading)], 1e-9);
