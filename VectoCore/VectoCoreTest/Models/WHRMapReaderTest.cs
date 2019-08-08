@@ -24,6 +24,8 @@ namespace TUGraz.VectoCore.Tests.Models
 
 		public const string DualFuelWHRVehicle = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeDualFuel_WHR.xml";
 
+		public const string EngineeringDualFuelWHRVehicle = @"TestData\XML\XMLReaderEngineering\engineering_job-sample_ref_DF_WHR.xml";
+
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 
@@ -288,6 +290,19 @@ namespace TUGraz.VectoCore.Tests.Models
 			var runs = dao.NextRun().ToArray();
 
 			Assert.IsTrue(runs.All(x => x.EngineData.WHRData == null));
+		}
+
+
+		[TestCase()]
+		public void ReadEngineeringXMLDualFuel()
+		{
+			var inputDataProvider = xmlInputReader.CreateEngineering(EngineeringDualFuelWHRVehicle);
+			var dao = new EngineeringModeVectoRunDataFactory(inputDataProvider);
+
+			var runs = dao.NextRun().ToArray();
+			Assert.AreEqual(1, runs.Length);
+
+			Assert.IsTrue(runs.All(x => x.EngineData.WHRData?.WHRMap != null));
 		}
 	}
 }
