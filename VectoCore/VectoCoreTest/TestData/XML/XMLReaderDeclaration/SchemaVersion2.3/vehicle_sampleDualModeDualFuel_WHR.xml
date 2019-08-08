@@ -189,7 +189,7 @@
 								<Entry engineSpeed="2100.00" torque="1100.00" fuelConsumption="5065.00"  electricPower="200.00" />
 							</FuelConsumptionMap>
 						</Fuel>
-						<Fuel type="NG PI">
+						<Fuel type="NG CI">
 							<WHTCUrban>1.0097</WHTCUrban>
 							<WHTCRural>1.0035</WHTCRural>
 							<WHTCMotorway>1.0200</WHTCMotorway>
