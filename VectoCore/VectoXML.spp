@@ -84,6 +84,7 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.0.7.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.1.0.TEST.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.1.0.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.1.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringInput.0.7.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringInput.1.0.xsd" HomeFolder="Yes"/>

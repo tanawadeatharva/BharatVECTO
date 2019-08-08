@@ -29,7 +29,7 @@
 			<xs:extension base="tns:EngineeringPowertrainComponentType"/>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AbstractEngineStartStopEngineeringType" abstract="true"/>
+	<xs:complexType name="AbstractEngineStartStopParametersEngineeringType" abstract="true"/>
 	<xs:complexType name="AbstractGearboxDataEngineeringType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="tns:EngineeringPowertrainComponentType"/>
@@ -95,7 +95,9 @@
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractAdvancedDriverAssistEngineeringType">
 				<xs:sequence>
-					<xs:element name="EngineStartStop" type="tns:AbstractEngineStartStopEngineeringType" minOccurs="0"/>
+					<xs:element name="EngineStopStart" type="xs:boolean"/>
+					<xs:element name="EcoRoll" type="tns:EcoRollType"/>
+					<xs:element name="PredictiveCruiseControl" type="tns:PredictiveCruiseControlType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -403,6 +405,7 @@
 					<xs:element name="Overspeed" type="tns:AbstractOverspeedEngineeringType"/>
 					<xs:element name="DriverAccelerationCurve" type="tns:AbstractDriverAccelerationCurveEngineeringType" minOccurs="0"/>
 					<xs:element name="ShiftStrategyParameters" type="tns:AbstractShiftStrategyParametersEngineeringType" minOccurs="0"/>
+					<xs:element name="EngineStopStartParameters" type="tns:AbstractEngineStartStopParametersEngineeringType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -481,14 +484,20 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:complexType name="EngineStartStopEngineeringType">
+	<xs:complexType name="EngineStartStopParametersEngineeringType">
 		<xs:complexContent>
-			<xs:extension base="tns:AbstractEngineStartStopEngineeringType">
+			<xs:extension base="tns:AbstractEngineStartStopParametersEngineeringType">
 				<xs:sequence>
-					<xs:element name="Enabled" type="vdecdef:ADASEngineStartStopEnabled"/>
-					<xs:element name="MaxSpeed" type="tns:EngineStartStopMaxSpeedType" minOccurs="0"/>
-					<xs:element name="MinOnTime" type="tns:EngineStartStopMinOnTimeType" minOccurs="0"/>
-					<xs:element name="ActivationDelay" type="tns:EngineStartStopActivationDelayType" minOccurs="0"/>
+					<xs:element name="ActivationDelay" type="tns:EngineStartStopActivationDelayType"/>
+					<xs:element name="MaxEngineOffTime" type="tns:EngineStartStopMaxOffTimeType"/>
+					<xs:element name="UtilityFactor">
+						<xs:simpleType>
+							<xs:restriction base="xs:double">
+								<xs:minInclusive value="0"/>
+								<xs:maxInclusive value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1486,7 +1495,7 @@
 			<xs:maxInclusive value="120"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="EngineStartStopMinOnTimeType">
+	<xs:simpleType name="EngineStartStopMaxOffTimeType">
 		<xs:annotation>
 			<xs:appinfo>
 				<vectoParam:description>
@@ -1500,7 +1509,6 @@
 		</xs:annotation>
 		<xs:restriction base="xs:double">
 			<xs:minInclusive value="0"/>
-			<xs:maxInclusive value="100"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="GearboxEarlyShiftUpType">
@@ -2014,4 +2022,18 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:simpleType name="EcoRollType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="without engine stop"/>
+			<xs:enumeration value="with engine stop"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PredictiveCruiseControlType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="1,2"/>
+			<xs:enumeration value="1,2,3"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>

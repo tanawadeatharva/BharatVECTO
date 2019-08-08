@@ -263,6 +263,7 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="WHRType" type="xs:string"/>
 			<xs:element name="Mode" maxOccurs="unbounded">
 				<xs:complexType>
 					<xs:sequence>
