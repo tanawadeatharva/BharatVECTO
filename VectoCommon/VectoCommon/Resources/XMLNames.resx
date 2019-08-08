@@ -1104,4 +1104,7 @@
   <data name="Engine_WHRType" xml:space="preserve">
     <value>WHRType</value>
   </data>
+  <data name="Vehicle_ADAS_EcoRoll" xml:space="preserve">
+    <value>EcoRoll</value>
+  </data>
 </root>

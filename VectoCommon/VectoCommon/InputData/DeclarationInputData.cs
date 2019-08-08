@@ -288,6 +288,11 @@ namespace TUGraz.VectoCommon.InputData
 				default: throw new ArgumentOutOfRangeException(nameof(ecoRoll), ecoRoll, null);
 			}
 		}
+
+		public static string ToXMLFormat(this EcoRollType ecoRoll)
+		{
+			return GetName(ecoRoll).ToLowerInvariant();
+		}
 	}
 
 	public enum TankSystem

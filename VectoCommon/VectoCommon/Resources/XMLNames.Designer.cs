@@ -2473,6 +2473,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EcoRoll.
+        /// </summary>
+        public static string Vehicle_ADAS_EcoRoll {
+            get {
+                return ResourceManager.GetString("Vehicle_ADAS_EcoRoll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EcoRollWithEngineStop.
         /// </summary>
         public static string Vehicle_ADAS_EcoRollWithEngineStopStart {
