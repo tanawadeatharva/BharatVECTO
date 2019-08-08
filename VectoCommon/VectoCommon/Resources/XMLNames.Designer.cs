@@ -1159,6 +1159,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WHRCorrection.
+        /// </summary>
+        public static string Engine_WHRCorrectionFactor {
+            get {
+                return ResourceManager.GetString("Engine_WHRCorrectionFactor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WHRCorrectionFactors.
         /// </summary>
         public static string Engine_WHRCorrectionFactors {
@@ -1209,6 +1218,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Engine_WHRCorrectionFactors_Urban {
             get {
                 return ResourceManager.GetString("Engine_WHRCorrectionFactors_Urban", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WHRMap.
+        /// </summary>
+        public static string Engine_WHRMap {
+            get {
+                return ResourceManager.GetString("Engine_WHRMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entry.
+        /// </summary>
+        public static string Engine_WHRMap_Entry {
+            get {
+                return ResourceManager.GetString("Engine_WHRMap_Entry", resourceCulture);
             }
         }
         

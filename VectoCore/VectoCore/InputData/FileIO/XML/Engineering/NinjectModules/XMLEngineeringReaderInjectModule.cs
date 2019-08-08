@@ -21,7 +21,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 
 			Kernel?.Load(new INinjectModule[] {
 				new XMLEngineeringReaderV07InjectModule(),
-				new XMLEngineeringReaderV10InjectModule()}
+				new XMLEngineeringReaderV10InjectModule(),
+				new XMLEngineeringReaderV11InjectModule()
+				}
 			);
 
 		}

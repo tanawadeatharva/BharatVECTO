@@ -4,6 +4,8 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.InputData.FileIO.XML.Common;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Utils;
 

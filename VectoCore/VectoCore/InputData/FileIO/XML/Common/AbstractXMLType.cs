@@ -1,11 +1,13 @@
-﻿using System.Xml;
+using System.Collections.Generic;
+using System.Xml;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
-{
-	public abstract class AbstractXMLType
+namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
+	public abstract class AbstractXMLType : LoggingObject
 	{
 		protected readonly XmlNode BaseNode;
 
@@ -16,7 +18,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		protected bool ElementExists(string nodeName)
 		{
-			return GetNode(nodeName, BaseNode, required: false) != null;
+			return GetNode(nodeName, BaseNode, required:false) != null;
 		}
 
 		protected string GetString(string nodeName, XmlNode basenode = null, bool required = true)
@@ -28,6 +30,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			var node = GetNode(nodeName, required: fallbackValue != null);
 
+			if (node == null && fallbackValue == null) {
+				throw new VectoException("Node {0} not found in input data", nodeName);
+			}
+
 			return node?.InnerText.ToDouble() ?? fallbackValue.Value;
 		}
 
@@ -35,10 +41,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			var node = GetNode(nodePath, required: fallbackValue == null);
 
+			if (node == null && fallbackValue == null) {
+				throw new VectoException("Node {0} not found in input data", string.Join("/", nodePath));
+			}
+
 			return node?.InnerText.ToDouble() ?? fallbackValue.Value;
 		}
 
-		protected bool GetBool(string nodeName) 
+		protected bool GetBool(string nodeName)
 		{
 			return XmlConvert.ToBoolean(GetNode(nodeName).InnerText);
 		}
@@ -76,6 +86,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		protected string GetAttribute(XmlNode node, string attribute)
 		{
 			return node?.Attributes?.GetNamedItem(attribute)?.InnerText;
+		}
+
+		protected virtual TableData ReadTableData(string baseElement, string entryElement, Dictionary<string, string> mapping)
+		{
+			var entries = BaseNode.SelectNodes(
+				XMLHelper.QueryLocalName(baseElement, entryElement));
+			if (entries != null && entries.Count > 0) {
+				return XMLHelper.ReadTableData(mapping, entries);
+			}
+
+			return null;
 		}
 	}
 }

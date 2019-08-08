@@ -1,4 +1,5 @@
-﻿using Ninject.Modules;
+﻿using System;
+using Ninject.Modules;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Impl;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
@@ -91,5 +92,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.NinjectModules
 		}
 
 		#endregion
+	}
+
+	public class XMLEngineeringReaderV11InjectModule : NinjectModule
+	{
+		public override void Load()
+		{
+			Bind<IXMLEngineData>().To<XMLEngineeringEngineDataProviderV11>()
+								.Named(XMLEngineeringEngineDataProviderV11.QUALIFIED_XSD_TYPE);
+
+		}
 	}
 }

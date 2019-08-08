@@ -136,8 +136,8 @@
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractCommonComponentType.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractXMLResource.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractXMLType.cs" />
+    <Compile Include="InputData\FileIO\XML\Common\AbstractXMLResource.cs" />
+    <Compile Include="InputData\FileIO\XML\Common\AbstractXMLType.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLAuxiliaryDeclarationDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationADASDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAirdragDataProvider.cs" />
@@ -191,7 +191,6 @@
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractCommonComponentType.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractEngineeringXMLComponentDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractVehicleEngineeringType.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractXMLType.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLCyclesDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLDriverAcceleration.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAirdragDataProvider.cs" />

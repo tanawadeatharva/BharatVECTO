@@ -1,9 +1,10 @@
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
+namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 	public abstract class AbstractXMLResource : AbstractXMLType, IXMLResource
 	{
 		protected string SourceFile;

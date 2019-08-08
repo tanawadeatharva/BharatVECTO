@@ -1107,4 +1107,13 @@
   <data name="Vehicle_ADAS_EcoRoll" xml:space="preserve">
     <value>EcoRoll</value>
   </data>
+  <data name="Engine_WHRCorrectionFactor" xml:space="preserve">
+    <value>WHRCorrection</value>
+  </data>
+  <data name="Engine_WHRMap_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="Engine_WHRMap" xml:space="preserve">
+    <value>WHRMap</value>
+  </data>
 </root>
