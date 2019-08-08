@@ -147,6 +147,7 @@ Partial Class EngineForm
         Me.cbFuelType2 = New System.Windows.Forms.ComboBox()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.cbDualFuel = New System.Windows.Forms.CheckBox()
+        Me.Label36 = New System.Windows.Forms.Label()
         Me.ToolStrip1.SuspendLayout
         Me.StatusStrip1.SuspendLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
@@ -221,7 +222,7 @@ Partial Class EngineForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(916, 533)
+        Me.ButCancel.Location = New System.Drawing.Point(916, 586)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 13
@@ -231,7 +232,7 @@ Partial Class EngineForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(835, 533)
+        Me.ButOK.Location = New System.Drawing.Point(835, 586)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 12
@@ -320,7 +321,7 @@ Partial Class EngineForm
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 559)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 612)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(1003, 22)
         Me.StatusStrip1.SizingGrip = false
@@ -376,7 +377,7 @@ Partial Class EngineForm
         '
         'TbMAP
         '
-        Me.TbMAP.Location = New System.Drawing.Point(6, 54)
+        Me.TbMAP.Location = New System.Drawing.Point(6, 57)
         Me.TbMAP.Name = "TbMAP"
         Me.TbMAP.Size = New System.Drawing.Size(406, 20)
         Me.TbMAP.TabIndex = 5
@@ -384,7 +385,7 @@ Partial Class EngineForm
         'Label6
         '
         Me.Label6.AutoSize = true
-        Me.Label6.Location = New System.Drawing.Point(6, 38)
+        Me.Label6.Location = New System.Drawing.Point(6, 41)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(115, 13)
         Me.Label6.TabIndex = 38
@@ -393,7 +394,7 @@ Partial Class EngineForm
         'BtMAP
         '
         Me.BtMAP.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.BtMAP.Location = New System.Drawing.Point(418, 52)
+        Me.BtMAP.Location = New System.Drawing.Point(418, 55)
         Me.BtMAP.Name = "BtMAP"
         Me.BtMAP.Size = New System.Drawing.Size(24, 24)
         Me.BtMAP.TabIndex = 6
@@ -431,7 +432,7 @@ Partial Class EngineForm
         'BtMAPopen
         '
         Me.BtMAPopen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.BtMAPopen.Location = New System.Drawing.Point(441, 52)
+        Me.BtMAPopen.Location = New System.Drawing.Point(441, 55)
         Me.BtMAPopen.Name = "BtMAPopen"
         Me.BtMAPopen.Size = New System.Drawing.Size(24, 24)
         Me.BtMAPopen.TabIndex = 7
@@ -452,7 +453,7 @@ Partial Class EngineForm
         '
         Me.GrWHTC.Controls.Add(Me.PnWhtcDeclaration)
         Me.GrWHTC.Controls.Add(Me.PnWhtcEngineering)
-        Me.GrWHTC.Location = New System.Drawing.Point(3, 85)
+        Me.GrWHTC.Location = New System.Drawing.Point(3, 94)
         Me.GrWHTC.Name = "GrWHTC"
         Me.GrWHTC.Size = New System.Drawing.Size(462, 135)
         Me.GrWHTC.TabIndex = 9
@@ -716,7 +717,7 @@ Partial Class EngineForm
         'Label18
         '
         Me.Label18.AutoSize = true
-        Me.Label18.Location = New System.Drawing.Point(11, 9)
+        Me.Label18.Location = New System.Drawing.Point(11, 13)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(54, 13)
         Me.Label18.TabIndex = 50
@@ -725,7 +726,7 @@ Partial Class EngineForm
         'cbFuelType
         '
         Me.cbFuelType.FormattingEnabled = true
-        Me.cbFuelType.Location = New System.Drawing.Point(71, 6)
+        Me.cbFuelType.Location = New System.Drawing.Point(71, 10)
         Me.cbFuelType.Name = "cbFuelType"
         Me.cbFuelType.Size = New System.Drawing.Size(143, 21)
         Me.cbFuelType.TabIndex = 51
@@ -740,11 +741,12 @@ Partial Class EngineForm
         '
         'gbWHR
         '
+        Me.gbWHR.Controls.Add(Me.Label36)
         Me.gbWHR.Controls.Add(Me.pnWHRDeclaration)
         Me.gbWHR.Controls.Add(Me.pnWhrEngineering)
         Me.gbWHR.Location = New System.Drawing.Point(504, 392)
         Me.gbWHR.Name = "gbWHR"
-        Me.gbWHR.Size = New System.Drawing.Size(481, 135)
+        Me.gbWHR.Size = New System.Drawing.Size(481, 155)
         Me.gbWHR.TabIndex = 53
         Me.gbWHR.TabStop = false
         Me.gbWHR.Text = "WHR Correction Factors"
@@ -906,7 +908,7 @@ Partial Class EngineForm
         Me.tbDualFuel.Location = New System.Drawing.Point(12, 268)
         Me.tbDualFuel.Name = "tbDualFuel"
         Me.tbDualFuel.SelectedIndex = 0
-        Me.tbDualFuel.Size = New System.Drawing.Size(481, 259)
+        Me.tbDualFuel.Size = New System.Drawing.Size(481, 279)
         Me.tbDualFuel.TabIndex = 56
         '
         'tpPrimaryfuel
@@ -921,7 +923,7 @@ Partial Class EngineForm
         Me.tpPrimaryfuel.Location = New System.Drawing.Point(4, 22)
         Me.tpPrimaryfuel.Name = "tpPrimaryfuel"
         Me.tpPrimaryfuel.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpPrimaryfuel.Size = New System.Drawing.Size(473, 233)
+        Me.tpPrimaryfuel.Size = New System.Drawing.Size(473, 253)
         Me.tpPrimaryfuel.TabIndex = 0
         Me.tpPrimaryfuel.Text = "Primary Fuel"
         Me.tpPrimaryfuel.UseVisualStyleBackColor = true
@@ -1150,13 +1152,23 @@ Partial Class EngineForm
         Me.cbDualFuel.Text = "Dual Fuel Engine"
         Me.cbDualFuel.UseVisualStyleBackColor = true
         '
+        'Label36
+        '
+        Me.Label36.AutoSize = true
+        Me.Label36.Location = New System.Drawing.Point(5, 132)
+        Me.Label36.Name = "Label36"
+        Me.Label36.Size = New System.Drawing.Size(408, 13)
+        Me.Label36.TabIndex = 11
+        Me.Label36.Text = "Note: Electric power generated by WHR has to be provided in FC-Map of primary fue"& _ 
+    "l"
+        '
         'EngineForm
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(1003, 581)
+        Me.ClientSize = New System.Drawing.Size(1003, 634)
         Me.Controls.Add(Me.cbDualFuel)
         Me.Controls.Add(Me.tbDualFuel)
         Me.Controls.Add(Me.cbWHRType)
@@ -1213,6 +1225,7 @@ Partial Class EngineForm
         Me.PnWhtcEngineering.PerformLayout
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).EndInit
         Me.gbWHR.ResumeLayout(false)
+        Me.gbWHR.PerformLayout
         Me.pnWHRDeclaration.ResumeLayout(false)
         Me.pnWHRDeclaration.PerformLayout
         Me.pnWhrEngineering.ResumeLayout(false)
@@ -1341,4 +1354,5 @@ End Sub
     Friend WithEvents cbFuelType2 As ComboBox
     Friend WithEvents Label35 As Label
     Friend WithEvents cbDualFuel As CheckBox
+    Friend WithEvents Label36 As Label
 End Class
