@@ -8,12 +8,13 @@
 			<xs:extension base="ve1.0:AbstractEngineDataEngineeringType">
 				<xs:sequence>
 					<xs:element name="Displacement" type="vdecdef:EngineDisplacementType"/>
-					<xs:element name="IdlingSpeed" type="vdecdef:EngineDeclaredSpeedType"/>
 					<xs:element name="Inertia" type="ve1.0:EngineInertiaType" minOccurs="0"/>
+					<xs:element name="WHRType" type="tns:WHRTypeType"/>
 					<xs:element name="Mode" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
 								<xs:sequence>
+									<xs:element name="IdlingSpeed" type="vdecdef:EngineDeclaredSpeedType"/>
 									<xs:element name="FullLoadAndDragCurve">
 										<xs:complexType>
 											<xs:choice>
@@ -45,18 +46,32 @@
 														<xs:documentation>P170 - [-]</xs:documentation>
 													</xs:annotation>
 												</xs:element>
-												<xs:element name="WHRCorrection" minOccurs="0">
-													<xs:simpleType>
-														<xs:restriction base="xs:double">
-															<xs:minExclusive value="0"/>
-														</xs:restriction>
-													</xs:simpleType>
+												<xs:element name="WasteHeatRecovery" minOccurs="0">
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="WHRCorrection">
+																<xs:simpleType>
+																	<xs:restriction base="xs:double">
+																		<xs:minExclusive value="0"/>
+																	</xs:restriction>
+																</xs:simpleType>
+															</xs:element>
+															<xs:element name="WHRMap">
+																<xs:complexType>
+																	<xs:choice>
+																		<xs:element name="Entry" type="tns:WHREngryEngineeringType" minOccurs="4" maxOccurs="unbounded"/>
+																		<xs:element name="Resource" type="ve1.0:ExtResourceEngineeringType"/>
+																	</xs:choice>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
 												</xs:element>
 												<xs:element name="FuelConsumptionMap">
 													<xs:complexType>
 														<xs:choice>
 															<xs:sequence>
-																<xs:element name="Entry" type="tns:FuelEntryWHREngineeringType" minOccurs="4" maxOccurs="unbounded"/>
+																<xs:element name="Entry" type="vdecdef:FuelConsumptionEntryType" minOccurs="4" maxOccurs="unbounded"/>
 															</xs:sequence>
 															<xs:element name="Resource" type="ve1.0:ExtResourceEngineeringType">
 																<xs:annotation>
@@ -77,11 +92,29 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="FuelEntryWHREngineeringType">
-		<xs:complexContent>
-			<xs:extension base="vdecdef:FuelConsumptionEntryType">
-				<xs:attribute name="electricPower" type="vdecdef:Double2"/>
-			</xs:extension>
-		</xs:complexContent>
+	<xs:complexType name="WHREngryEngineeringType">
+		<xs:attribute name="engineSpeed" type="vdecdef:EngineSpeedType" use="required">
+			<xs:annotation>
+				<xs:documentation>P072 - [1/min]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="torque" type="vdecdef:EngineFuelConsumptionMapTorqueType" use="required">
+			<xs:annotation>
+				<xs:documentation>P073 - [Nm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="electricPower" type="vdecdef:Double2" use="required">
+			<xs:annotation>
+				<xs:documentation>Pxxx - [W]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
+	<xs:simpleType name="WHRTypeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="mechanical only"/>
+			<xs:enumeration value="electrical only"/>
+			<xs:enumeration value="mechanical and electrical"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>

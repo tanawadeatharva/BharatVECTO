@@ -996,6 +996,7 @@
 						<xs:element name="PTOCycle" type="tns:PTOCycleEngineeringType" minOccurs="0"/>
 						<xs:element name="CurbMassExtra" type="tns:VehicleCurbWeightExtraType"/>
 						<xs:element name="Loading" type="tns:VehicleLoadingType"/>
+						<xs:element name="NgTankSystem" type="vdecdef:NgTankSystemType" minOccurs="0"/>
 						<xs:element name="AdvancedDriverAssist" type="tns:AbstractAdvancedDriverAssistEngineeringType" minOccurs="0"/>
 						<xs:element name="Components" type="tns:AbstractVehicleComponentsType"/>
 					</xs:sequence>

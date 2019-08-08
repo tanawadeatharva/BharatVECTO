@@ -80,6 +80,7 @@
 		</Folder>
 		<Folder FolderName="Engineering">
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringComponent.1.0.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringComponent.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.0.6.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.0.7.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoEngineeringDefinitions.1.0.TEST.xsd" HomeFolder="Yes"/>
