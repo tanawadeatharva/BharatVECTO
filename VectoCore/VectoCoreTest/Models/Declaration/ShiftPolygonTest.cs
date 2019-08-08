@@ -863,6 +863,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 
 		[TestCase(@"E:\QUAM\Workspace\VECTO-Bugreports\BugReportTests\Bugreport Jobs\20190307_VECTO-904_Extrapolation\OM-18173493.xml")]
+		[Ignore("Confidential data")]
 		public void ComputeShiftPolygonXML(string xmlJob)
 		{
 			var inputData = xmlInputReader.CreateDeclaration(xmlJob);
