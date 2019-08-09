@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoInputEngineering xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v0.7" xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7" xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v0.6" schemaVersion="0.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput:v0.7 E:\QUAM\Workspace\VECTO_quam\VectoCore\VectoCore\Resources\XSD/VectoEngineeringInput.0.7.xsd">
+<tns:VectoInputEngineering schemaVersion="1.0"
+	xmlns="urn:tugraz:ivt:VectoAPI:EngineeringDefinitions:v1.0" 
+	xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v1.0"
+	xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoEngineeringJob.xsd">
 	<EngineOnlyMode>false</EngineOnlyMode>
 	<Vehicle>
-	<Resource type="xml" file="engineering_vehicle_ref_DF_WHR.xml"/>
+		<Resource type="xml" file="engineering_vehicle_ref_DF_WHR.xml"/>
 	</Vehicle>
-	<DriverModel>
-		<LookAheadCoasting>
+	<DriverModel xsi:type="DriverModelEngineeringType">
+		<LookAheadCoasting xsi:type="LookAheadCoastingEngineeringType">
 			<Enabled>true</Enabled>
 			<MinSpeed>50</MinSpeed>
 			<PreviewDistanceFactor>8</PreviewDistanceFactor>
@@ -18,13 +23,13 @@
 				<Resource type="csv" file="lac_velocityDrop.csv"/>
 			</VelocityDropDecisionFactor>
 		</LookAheadCoasting>
-		<Overspeed>
+		<Overspeed xsi:type="OverspeedEngineeringType">
 			<Mode>Overspeed</Mode>
 			<MinSpeed>50</MinSpeed>
 			<AllowedOverspeed>5</AllowedOverspeed>
 			<AllowedUnderspeed>5</AllowedUnderspeed>
 		</Overspeed>
-		<DriverAccelerationCurve>
+		<DriverAccelerationCurve xsi:type="DriverAccelerationCurveEngineeringType">
 			<Entry vehicleSpeed="0" maxAcceleration="1" maxDeceleration="-1"/>
 			<Entry vehicleSpeed="100" maxAcceleration="1" maxDeceleration="-1"/>
 		</DriverAccelerationCurve>
