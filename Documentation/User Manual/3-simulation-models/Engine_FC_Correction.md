@@ -12,7 +12,7 @@ VECTO currently does not model the vehicle's electric system. The power demand o
 
 ###Vehicle-Line Approach
 
-The total fuel consumption is corrected in a post-processing step according to the *vehline* approach. Therefore, for every engine operating point with a positive fuel consumption the fuel consumption is plotted over the engine power. The slope (k) of the linear regression of the fuel consumption is used to compute the additional fuel that is needed for the energy demand during engine-off periods and engine starts.
+The total fuel consumption is corrected in a post-processing step according to the *vehline* approach. Therefore, for every engine operating point where the engine is switched on and has a positive fuel consumption the fuel consumption is plotted over the engine power. The slope (k) of the linear regression of the fuel consumption is used to compute the additional fuel that is needed for the energy demand during engine-off periods and engine starts.
 
 ![](pics/FC_Correction.PNG)
 
