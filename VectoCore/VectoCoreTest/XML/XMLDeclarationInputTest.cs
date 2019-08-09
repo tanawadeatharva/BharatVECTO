@@ -127,10 +127,6 @@ namespace TUGraz.VectoCore.Tests.XML
 					continue;
 				}
 
-				if (fuel.Equals("NG CI")) {
-					// not supported at the moment - can't be certified for engines
-					continue;
-				}
 				var reader = XmlReader.Create(SampleVehicleDecl);
 
 				var doc = new XmlDocument();
@@ -158,39 +154,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			}
 		}
 
-		[TestCase("NG CI", TankSystem.Liquefied),
-		TestCase("NG CI", TankSystem.Compressed),]
-		public void TestUnsupportedEngineFuelTypes(string fuel, TankSystem? tankSystem)
-		{
-			
-			var reader = XmlReader.Create(SampleVehicleDecl);
-
-			var doc = new XmlDocument();
-			doc.Load(reader);
-			var nav = doc.CreateNavigator();
-			var manager = new XmlNamespaceManager(nav.NameTable);
-			var helper = new XPathHelper(ExecutionMode.Declaration);
-			helper.AddNamespaces(manager);
-
-			var engineFuelType = nav.SelectSingleNode(helper.QueryAbs(
-														helper.NSPrefix(XMLNames.VectoInputDeclaration,
-																		Constants.XML.RootNSPrefix),
-														XMLNames.Component_Vehicle,
-														XMLNames.Vehicle_Components,
-														XMLNames.Component_Engine, XMLNames.ComponentDataWrapper, XMLNames.Engine_FuelType),
-													manager);
-			engineFuelType.SetValue(fuel);
-			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
-
-			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			var fuelTyle = inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().FuelType;
-			Assert.AreEqual(fuel, fuelTyle.ToXMLFormat());
-			AssertHelper.Exception<VectoException>(
-				() => {
-					DeclarationData.FuelData.Lookup(fuelTyle, tankSystem);
-				});			
-		}
-
+		
 		[TestCase]
 		public void TestXMLInputGbx()
 		{
