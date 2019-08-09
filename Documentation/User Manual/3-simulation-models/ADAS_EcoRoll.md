@@ -24,7 +24,7 @@ Parameters in [Job File](#job-file):
 
 ###Engine Stop/Start
 
-If engine stop/start is enabled in the Vehicle, the engine is turned off during vehicle stops to reduce the fuel consumption. During vehicle stops the energy demand for certain auxiliaires and for starting the engine is accumulated. In a post-processing step the final [fuel consumption is corrected](#engine-stopstart-fuel-consumption-correction) to consider the energy demand for the auxiliaries and engine start.
+If engine stop/start is enabled in the Vehicle, the engine is turned off during vehicle stops to reduce the fuel consumption. During vehicle stops the energy demand for certain auxiliaires and for starting the engine is accumulated. In a post-processing step the final [fuel consumption is corrected](#engine-fuel-consumption-correction) to consider the energy demand for the auxiliaries and engine start.
 
 <div class="declaration">
 In declaration mode, the engine is switched on after a period of 120 seconds of engine-off.
