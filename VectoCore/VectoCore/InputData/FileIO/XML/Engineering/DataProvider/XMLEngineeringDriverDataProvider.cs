@@ -2,6 +2,7 @@ using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
@@ -26,7 +27,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			XmlNode driverDataNode, string fsBasePath)
 			: base(driverDataNode, fsBasePath)
 		{
-			SourceType = (inputData as IXMLResource).DataSource.SourceFile == fsBasePath ? DataSourceType.XMLEmbedded : DataSourceType.XMLFile;
+			SourceType = (inputData as IXMLResource).DataSource.SourceFile == fsBasePath
+				? DataSourceType.XMLEmbedded
+				: DataSourceType.XMLFile;
 		}
 
 		public IXMLDriverDataReader Reader { protected get; set; }
@@ -46,7 +49,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return _shiftParameters ?? (_shiftParameters = Reader.ShiftParameters); }
 		}
 
-		public virtual Second EngineOffStandStillThreshold
+		public virtual Second EngineOffStandStillActivationDelay
 		{
 			get { return null; }
 		}
@@ -68,7 +71,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Overrides of AbstractXMLResource
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
 
 		protected override DataSourceType SourceType { get; }
 
@@ -83,25 +89,71 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
+		protected IXMLEngineStopStartDriverData _engineStopStart;
+
 		public XMLEngineeringDriverDataProviderV10(
 			IXMLEngineeringInputData inputData, XmlNode driverDataNode, string fsBasePath) : base(
 			inputData, driverDataNode, fsBasePath) { }
 
 		#region Overrides of XMLEngineeringDriverDataProviderV07
 
-		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
-
-		public override Second EngineOffStandStillThreshold
+		protected override XNamespace SchemaNamespace
 		{
-			get { return GetDouble("EngineStopStartThreshold", DeclarationData.Driver.EngineOffStandStillThreshold.Value()).SI<Second>(); }
+			get { return NAMESPACE_URI; }
+		}
+
+		public override Second EngineOffStandStillActivationDelay
+		{
+			get {
+				return (_engineStopStart ?? (_engineStopStart = Reader.EngineStopStartData))?.EngineOffStandStillActivationDelay;
+			}
 		}
 
 		public override Second MaxEngineOffTimespan
 		{
-			get { return GetDouble("MaxEngineStopStartTimespan", DeclarationData.Driver.EngineOffStandStillThreshold.Value()).SI<Second>(); }
+			get { return (_engineStopStart ?? (_engineStopStart = Reader.EngineStopStartData))?.MaxEngineOffTimespan; }
 		}
 
 		public override double EngineStopStartUtilityFactor
+		{
+			get {
+				return (_engineStopStart ?? (_engineStopStart = Reader.EngineStopStartData))?.EngineStopStartUtilityFactor ??
+						DeclarationData.Driver.EngineStopStartUtilityFactor;
+			}
+		}
+
+		#endregion
+	}
+
+	internal class XMLEngineStopStartDriverDataV10 : AbstractXMLType, IXMLEngineStopStartDriverData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
+
+		public const string XSD_TYPE = "EngineStartStopParametersEngineeringType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
+
+		public XMLEngineStopStartDriverDataV10(IXMLEngineeringDriverData driverData, XmlNode node) : base(node) { }
+
+		#region Implementation of IXMLEngineStopStartDriverData
+
+		public Second EngineOffStandStillActivationDelay
+		{
+			get {
+				return GetDouble("ActivationDelay", DeclarationData.Driver.EngineOffStandStillActivationDelay.Value()).SI<Second>();
+			}
+		}
+
+		public Second MaxEngineOffTimespan
+		{
+			get {
+				return GetDouble(
+					"MaxEngineStopStartTimespan",
+					DeclarationData.Driver.EngineOffStandStillActivationDelay.Value()).SI<Second>();
+			}
+		}
+
+		public double EngineStopStartUtilityFactor
 		{
 			get {
 				return ElementExists("EngineStopStartUtilityFactor")

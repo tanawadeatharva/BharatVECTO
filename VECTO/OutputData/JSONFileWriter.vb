@@ -341,7 +341,7 @@ Public Class JSONFileWriter
 		
 		If Not job.SavedInDeclarationMode Then
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath))
-		    body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineOffStandStillThreshold.Value())
+		    body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineOffStandStillActivationDelay.Value())
             body.Add("EngineStopStartMaxOffTimespan", driver.MaxEngineOffTimespan.Value())
             body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartUtilityFactor)
 		End If

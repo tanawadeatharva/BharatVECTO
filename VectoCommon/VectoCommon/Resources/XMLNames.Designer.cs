@@ -736,6 +736,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EngineStopStartParameters.
+        /// </summary>
+        public static string DriverModel_EngineStopStartParameters {
+            get {
+                return ResourceManager.GetString("DriverModel_EngineStopStartParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LookAheadCoasting.
         /// </summary>
         public static string DriverModel_LookAheadCoasting {

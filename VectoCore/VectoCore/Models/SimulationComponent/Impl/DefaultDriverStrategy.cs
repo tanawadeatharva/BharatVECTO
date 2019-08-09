@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if ((absTime - VehicleHaltTimestamp).IsGreaterOrEqual(
-				Driver.DriverData.EngineStopStart.EngineOffStandStillThreshold)) {
+				Driver.DriverData.EngineStopStart.EngineOffStandStillActivationDelay)) {
 				if (EngineOffTimestamp == null) {
 					EngineOffTimestamp = absTime;
 					Driver.DataBus.IgnitionOn = false;

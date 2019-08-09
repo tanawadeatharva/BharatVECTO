@@ -536,7 +536,7 @@ Public Class VectoJobForm
 											GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, _basePath))
 		End If
 
-		tbEngineStopStartThreshold.Text =  If(driver.EngineOffStandStillThreshold?.ToGUIFormat(), DeclarationData.Driver.MaxEngineOffTimespan.ToGUIFormat())
+		tbEngineStopStartThreshold.Text =  If(driver.EngineOffStandStillActivationDelay?.ToGUIFormat(), DeclarationData.Driver.MaxEngineOffTimespan.ToGUIFormat())
         tbEngineOffThreshold.Text = If(driver.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.MaxEngineOffTimespan.ToGUIFormat())
         tbEssUtility.Text = driver.EngineStopStartUtilityFactor.ToGUIFormat()
 

@@ -458,8 +458,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LookAheadCoasting = lookAheadData,
 				OverSpeedEcoRoll = overspeedData,
 				EngineStopStart = new DriverData.EngineStopStartData() {
-					EngineOffStandStillThreshold =
-						driver.EngineOffStandStillThreshold ?? DeclarationData.Driver.EngineOffStandStillThreshold,
+					EngineOffStandStillActivationDelay =
+						driver.EngineOffStandStillActivationDelay ?? DeclarationData.Driver.EngineOffStandStillActivationDelay,
 					MaxEngineOffTimespan = driver.MaxEngineOffTimespan ?? DeclarationData.Driver.MaxEngineOffTimespan,
 					UtilityFactor = driver.EngineStopStartUtilityFactor,
 				}

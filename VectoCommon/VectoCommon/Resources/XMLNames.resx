@@ -1116,4 +1116,7 @@
   <data name="Engine_WHRMap" xml:space="preserve">
     <value>WHRMap</value>
   </data>
+  <data name="DriverModel_EngineStopStartParameters" xml:space="preserve">
+    <value>EngineStopStartParameters</value>
+  </data>
 </root>

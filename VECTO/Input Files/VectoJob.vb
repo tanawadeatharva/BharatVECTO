@@ -279,7 +279,7 @@ Public Class VectoJob
         End Get
     End Property
 
-    Public ReadOnly Property EngineOffStandStillThreshold As Second Implements IDriverEngineeringInputData.EngineOffStandStillThreshold
+    Public ReadOnly Property EngineOffStandStillActivationDelay As Second Implements IDriverEngineeringInputData.EngineOffStandStillActivationDelay
         Get
             return EngineStopStartThreshold.SI(Of Second)()
         End Get

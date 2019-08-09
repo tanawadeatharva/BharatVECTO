@@ -33,6 +33,11 @@
 			<Entry vehicleSpeed="0" maxAcceleration="1" maxDeceleration="-1"/>
 			<Entry vehicleSpeed="100" maxAcceleration="1" maxDeceleration="-1"/>
 		</DriverAccelerationCurve>
+		<!--<EngineStopStartParameters xsi:type="EngineStartStopParametersEngineeringType">
+			<ActivationDelay>2</ActivationDelay>
+			<MaxEngineOffTime>120</MaxEngineOffTime>
+			<UtilityFactor>0.8</UtilityFactor>
+		</EngineStopStartParameters>-->
 	</DriverModel>
 	<MissionCycles>
 		<Cycle type="csv" file="Long_Haul+FAN+ES.vdri"/>

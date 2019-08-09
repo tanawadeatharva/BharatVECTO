@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Driver
 		{
-			public static readonly Second EngineOffStandStillThreshold = 2.SI<Second>();
+			public static readonly Second EngineOffStandStillActivationDelay = 2.SI<Second>();
 			public static readonly Second MaxEngineOffTimespan = 120.SI<Second>();
 			public const double EngineStopStartUtilityFactor = 0.8;
 

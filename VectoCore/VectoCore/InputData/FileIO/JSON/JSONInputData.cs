@@ -508,7 +508,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual Second EngineOffStandStillThreshold
+		public virtual Second EngineOffStandStillActivationDelay
 		{
 			get { return null; }
 		}
@@ -841,7 +841,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public JSONInputDataV5(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
 
-		public override Second EngineOffStandStillThreshold
+		public override Second EngineOffStandStillActivationDelay
 		{
 			get {
 				return Body["EngineStopStartAtVehicleStopThreshold"] == null

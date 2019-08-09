@@ -89,6 +89,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.NinjectModules
 
 			Bind<IXMLDriverAcceleration>().To<XMLDriverAccelerationV10>()
 										.Named(XMLDriverAccelerationV10.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLEngineStopStartDriverData>().To<XMLEngineStopStartDriverDataV10>()
+												.Named(XMLEngineStopStartDriverDataV10.QUALIFIED_XSD_TYPE);
 		}
 
 		#endregion

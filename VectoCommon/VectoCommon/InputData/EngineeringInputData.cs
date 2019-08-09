@@ -349,7 +349,7 @@ namespace TUGraz.VectoCommon.InputData
 		ILookaheadCoastingInputData Lookahead { get; }
 
 		IGearshiftEngineeringInputData GearshiftInputData { get; }
-		Second EngineOffStandStillThreshold { get; }
+		Second EngineOffStandStillActivationDelay { get; }
 		Second MaxEngineOffTimespan { get; }
 		double EngineStopStartUtilityFactor { get; }
 	}

@@ -67,6 +67,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader {
 			}
 		}
 
+		public IXMLEngineStopStartDriverData EngineStopStartData
+		{
+			get {
+				return CreateData(
+					XMLNames.DriverModel_EngineStopStartParameters, 
+					(version, node) => version == null ? null : Factory.CreateEngineStopStartData(version, DriverData, node), false);
+			}
+		}
+
 		private IGearshiftEngineeringInputData ShiftParametersCreator(string version, XmlNode node)
 		{
 			if (version == null) {
@@ -123,7 +132,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader {
 	{
 		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
 
-		public new const string XSD_TYPE = "DriverModelType";
+		public new const string XSD_TYPE = "DriverModelEngineeringType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
