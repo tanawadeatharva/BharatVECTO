@@ -581,10 +581,10 @@ namespace TUGraz.VectoCore.OutputData
 				row[FcCol(K_VEHLINE, suffix)] = correction.ConvertToGramPerKiloWattHour();
 
 				var fcWHRCorr = fcModSum + correction * workWhrMech;
-				var fcEssCorr = fcWHRCorr + correction * workESS;
-
-				row[FcCol(FCESS_H_CORR, suffix)] = duration != null ? (fcEssCorr / duration).ConvertToGrammPerHour() : null;
 				row[FcCol(FCWHR_H_CORR, suffix)] = duration != null ? (fcWHRCorr / duration).ConvertToGrammPerHour() : null;
+
+				var fcEssCorr = fcWHRCorr + correction * workESS;
+				row[FcCol(FCESS_H_CORR, suffix)] = duration != null ? (fcEssCorr / duration).ConvertToGrammPerHour() : null;
 
 				var fcFinal = fcEssCorr;
 

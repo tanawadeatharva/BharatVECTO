@@ -413,7 +413,7 @@ namespace TUGraz.VectoCore.OutputData
 		public void AddAuxiliary(string id, string columnName = null)
 		{
 			if (!string.IsNullOrWhiteSpace(id) && !Auxiliaries.ContainsKey(id)) {
-				var col = Data.Columns.Add(columnName ?? ModalResultField.P_aux_ + id, typeof(SI));
+				var col = Data.Columns.Add(columnName ?? string.Format(ModalResultField.P_aux_.GetCaption(), id), typeof(SI));
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
 					ModalResultField.P_aux_.GetAttribute().Decimals;
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
