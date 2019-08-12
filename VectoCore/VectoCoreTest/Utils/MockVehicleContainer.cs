@@ -247,5 +247,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool DisengageGearbox { get; set; }
 
 		#endregion
+
+		public IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns { get { return new ISimulationPreprocessor[] { }; } }
+		public void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

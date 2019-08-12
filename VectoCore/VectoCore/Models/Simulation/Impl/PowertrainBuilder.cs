@@ -31,11 +31,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -259,6 +261,70 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return container;
 		}
 
+		public void BuildSimplePowertrain(VectoRunData data, IVehicleContainer container)
+		{
+			//if (data.Cycle.CycleType != CycleType.DistanceBased) {
+			//	throw new VectoException("CycleType must be DistanceBased");
+			//}
+
+			var vehicle = new Vehicle(container, data.VehicleData, data.AirdragData);
+			var powertrain = vehicle
+				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
+				.AddComponent(new Brakes(container))
+				.AddComponent(new AxleGear(container, data.AxleGearData))
+				.AddComponent(data.AngledriveData != null ? new Angledrive(container, data.AngledriveData) : null)
+				.AddComponent(GetSimpleGearbox(container, data), data.Retarder, container);
+			if (data.GearboxData.Type.ManualTransmission()) {
+				powertrain = powertrain.AddComponent(new Clutch(container, data.EngineData));
+			}
+			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
+			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
+
+			// TODO: MQ 2018-11-19: engineering mode needs AUX power from cycle, use face cycle...
+			//       should be a reference/proxy to the main driving cyle. but how to access it?
+			switch (data.Cycle.CycleType) {
+				case CycleType.DistanceBased:
+					container.AddComponent(new DistanceBasedDrivingCycle(container, data.Cycle));
+					break;
+				case CycleType.MeasuredSpeed:
+					var dummyData = GetMeasuredSpeedDummnCycle();
+					var msCycle = new MeasuredSpeedDrivingCycle(container, dummyData);
+					msCycle.AddComponent(vehicle);
+					break;
+				case CycleType.EngineOnly: break;
+				default: throw new VectoException("Wrong CycleType for SimplePowertrain");
+			}
+
+
+			var engine = new CombustionEngine(container, data.EngineData);
+			var idleController = GetIdleController(data.PTO, engine, container);
+			//cycle.IdleController = idleController as IdleControllerSwitcher;
+
+			powertrain.AddComponent(engine, idleController)
+					.AddAuxiliaries(container, data);
+
+		}
+
+		private static IGearbox GetSimpleGearbox(IVehicleContainer container, VectoRunData runData)
+		{
+			return runData.GearboxData.Type.AutomaticTransmission() ? (IGearbox)new ATGearbox(container, null, runData) : new Gearbox(container, null, runData);
+		}
+
+		private DrivingCycleData GetMeasuredSpeedDummnCycle()
+		{
+			var header = "<t>,<v>,<grad>";
+			var entries = new[] { "0, 50, 0", "10, 50, 0" };
+			var cycleData = new MemoryStream();
+			var writer = new StreamWriter(cycleData);
+			writer.WriteLine(header);
+			foreach (var entry in entries) {
+				writer.WriteLine(entry);
+			}
+			writer.Flush();
+			cycleData.Seek(0, SeekOrigin.Begin);
+			return DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.MeasuredSpeed, "DummyCycle", false);
+		}
+
 		private static IIdleController GetIdleController(PTOData pto, ICombustionEngine engine, IVehicleContainer container)
 		{
 			var controller = engine.IdleController;
@@ -300,18 +366,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					default:
 						throw new ArgumentOutOfRangeException("AuxiliaryDemandType", auxData.DemandType.ToString());
 				}
-				container.ModalData.AddAuxiliary(id);
+				container.ModalData?.AddAuxiliary(id);
 			}
 
 			if (data.PTO != null) {
 				aux.AddConstant(Constants.Auxiliaries.IDs.PTOTransmission,
 					DeclarationData.PTOTransmission.Lookup(data.PTO.TransmissionType).PowerDemand);
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
+				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOTransmission,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOTransmission);
 
 				aux.Add(Constants.Auxiliaries.IDs.PTOConsumer,
 					n => container.PTOActive ? null : data.PTO.LossMap.GetTorqueLoss(n) * n);
-				container.ModalData.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
+				container.ModalData?.AddAuxiliary(Constants.Auxiliaries.IDs.PTOConsumer,
 					Constants.Auxiliaries.PowerPrefix + Constants.Auxiliaries.IDs.PTOConsumer);
 			}
 			return aux;

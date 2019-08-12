@@ -141,6 +141,11 @@ namespace TUGraz.VectoCore.OutputData
 			WriteAdvancedAux = false;
 		}
 
+		public void Reset()
+		{
+			Data.Rows.Clear();
+			CurrentRow = Data.NewRow();
+		}
 
 		public bool HasTorqueConverter { get; set; }
 

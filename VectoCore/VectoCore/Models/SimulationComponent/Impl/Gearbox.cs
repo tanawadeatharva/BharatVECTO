@@ -60,13 +60,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		protected internal bool Disengaged = true;
 
+		protected internal GearInfo _nextGear;
+
 		public Second LastUpshift { get; protected internal set; }
 
 		public Second LastDownshift { get; protected internal set; }
 
 		public override GearInfo NextGear
 		{
-			get { return _strategy.NextGear; }
+			get { return _strategy?.NextGear ?? _nextGear; }
 		}
 
 		public override bool ClutchClosed(Second absTime)
@@ -79,7 +81,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Gearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData) : base(container, runData)
 		{
 			_strategy = strategy;
-			_strategy.Gearbox = this;
+			if (_strategy != null) {
+				_strategy.Gearbox = this;
+			}
 
 			LastDownshift = -double.MaxValue.SI<Second>();
 			LastUpshift = -double.MaxValue.SI<Second>();
@@ -92,7 +96,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_engageTime = -double.MaxValue.SI<Second>();
 
-			if (Disengaged || DisengageGearbox) {
+			if (_strategy != null && (Disengaged || DisengageGearbox)) {
 				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 			}
 

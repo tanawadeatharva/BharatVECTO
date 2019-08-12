@@ -83,6 +83,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					ActivationPhaseDuration = DeclarationData.Driver.EcoRoll.ActivationDelay,
 					AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
 					AccelerationUpperLimit = DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
+				},
+				PCC = new DriverData.PCCData() {
+					MinSpeed = DeclarationData.Driver.PCC.MinSpeed,
+					MaxSpeed = DeclarationData.Driver.PCC.MaxSpeed,
 				}
 			};
 			return retVal;

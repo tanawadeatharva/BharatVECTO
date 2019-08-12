@@ -38,8 +38,10 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
@@ -83,6 +85,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Altitude = first.Altitude,
 			};
 			CurrentState = PreviousState.Clone();
+
+			if (container is SimplePowertrainContainer) {
+				return;
+			}
+
+			var data = container.RunData;
+			// create a dummy powertrain for pre-processing and estimatins
+			var modData = new ModalDataContainer(data, null, new[] {FuelData.Diesel}, null, false);
+			var builder = new PowertrainBuilder(modData);
+			var TestContainer = new SimplePowertrainContainer(data);
+			builder.BuildSimplePowertrain(data, TestContainer);
+			var TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
+			if (TestContainerGbx == null) {
+				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
+			}
+
+			var ecoRollSlope = new EcoRollSlopeData();
+			container.AddPreprocessor(new PCCEcoRollEngineStopPreprocessor(TestContainer, ecoRollSlope, data.DriverData.PCC.MinSpeed, data.DriverData.PCC.MaxSpeed));
 		}
 
 		public IResponse Initialize()

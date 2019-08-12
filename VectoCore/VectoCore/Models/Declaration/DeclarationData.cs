@@ -150,6 +150,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public static readonly MeterPerSquareSecond AccelerationUpperLimit = 0.1.SI<MeterPerSquareSecond>();
 			}
 
+
+			public static class PCC
+			{
+				public static readonly MeterPerSecond MinSpeed = 50.KMPHtoMeterPerSecond();
+				public static readonly MeterPerSecond MaxSpeed = 100.KMPHtoMeterPerSecond();
+			}
 		}
 
 		public static class Trailer
