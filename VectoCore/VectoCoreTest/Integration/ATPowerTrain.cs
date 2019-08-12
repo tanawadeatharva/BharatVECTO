@@ -102,6 +102,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AirdragData = airdragData,
 				GearboxData = gearboxData,
 				EngineData = engineData,
+				DriverData = driverData,
 				JobName = modFileName,
 				Cycle = cycleData,
 				Retarder = new RetarderData() { Type = RetarderType.None },
@@ -238,15 +239,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 					LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
-				OverSpeedEcoRoll = overspeed
-					? new DriverData.OverSpeedEcoRollData {
-						Mode = DriverMode.Overspeed,
+				EngineStopStart = new DriverData.EngineStopStartData() {
+					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
+					MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
+					UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
+				},
+				OverSpeed = new DriverData.OverSpeedData {
+						Enabled = overspeed,
 						MinSpeed = 50.KMPHtoMeterPerSecond(),
 						OverSpeed = 5.KMPHtoMeterPerSecond()
 					}
-					: new DriverData.OverSpeedEcoRollData {
-						Mode = DriverMode.Off
-					},
 			};
 		}
 	}

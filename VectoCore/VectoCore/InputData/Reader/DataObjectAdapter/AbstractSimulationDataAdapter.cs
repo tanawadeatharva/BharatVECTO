@@ -67,6 +67,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
+		protected VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemDeclarationInputData adas)
+		{
+			return new VehicleData.ADASData {
+				EngineStopStart = adas.EngineStopStart,
+				EcoRoll = adas.EcoRoll,
+				PredictiveCruiseControl = adas.PredictiveCruiseControl
+			};
+		}
+
 		internal AirdragData SetCommonAirdragData(IAirdragDeclarationInputData data)
 		{
 			var retVal = new AirdragData() {

@@ -125,12 +125,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.SetState(inTorque, operatingPoint.InAngularVelocity, outTorque, outAngularVelocity);
 			CurrentState.OperatingPoint = operatingPoint;
+			CurrentState.IgnitionOn = DataBus.IgnitionOn;
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, operatingPoint.InAngularVelocity);
 
 			// check if shift is required
 			var ratio = Gearbox.GetGearData(Gearbox.Gear).TorqueConverterRatio;
-			if (absTime > DataBus.LastShift && retVal is ResponseSuccess) {
+			if (!Gearbox.DisengageGearbox && absTime > DataBus.LastShift && retVal is ResponseSuccess) {
 				var shiftRequired = ShiftStrategy.ShiftRequired(
 					absTime, dt, outTorque * ratio, outAngularVelocity / ratio, inTorque,
 					operatingPoint.InAngularVelocity, Gearbox.Gear, Gearbox.LastShift);
@@ -142,11 +143,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private NewtonMeter CalculateAverageInTorque(TorqueConverterOperatingPoint operatingPoint)
 		{
-			var avgEngineSpeed = (PreviousState.InAngularVelocity + operatingPoint.InAngularVelocity) / 2;
+			var prevInSpeed = PreviousState.IgnitionOn ? PreviousState.InAngularVelocity : DataBus.EngineIdleSpeed;
+			var avgEngineSpeed = (prevInSpeed + operatingPoint.InAngularVelocity) / 2;
 
 			//var prevInSpeed = PreviousState.OperatingPoint?.InAngularVelocity ?? PreviousState.InAngularVelocity;
 			//var prevInTorque = PreviousState.OperatingPoint?.InTorque ?? PreviousState.InTorque;
-			var prevInSpeed = PreviousState.InAngularVelocity;
+			//var prevInSpeed = PreviousState.InAngularVelocity;
 			var prevInTorque = PreviousState.InTorque;
 			var avgPower = (prevInSpeed * prevInTorque +
 							operatingPoint.InAngularVelocity * operatingPoint.InTorque) / 2;
@@ -408,6 +410,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public class TorqueConverterComponentState : SimpleComponentState
 		{
 			public TorqueConverterOperatingPoint OperatingPoint;
+			public bool IgnitionOn;
 		}
 	}
 }

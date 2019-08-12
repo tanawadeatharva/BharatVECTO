@@ -200,7 +200,9 @@
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAxlesDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringDriverDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringDriverLookAhead.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringEcoRollDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringEngineDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringEngineStopStartDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringGearboxDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringGearshiftData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringInputDataProvider.cs" />
@@ -223,11 +225,13 @@
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLDriverAcceleration.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringDriverData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringEcoRollData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringGearshiftData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringJobInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringVehicleComponentsData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringVehicleData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringEngineStopStartData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLGearboxData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLGearData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLLookaheadData.cs" />

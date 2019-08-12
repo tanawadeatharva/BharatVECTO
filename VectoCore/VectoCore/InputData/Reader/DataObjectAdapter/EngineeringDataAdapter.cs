@@ -62,6 +62,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
 			retVal.ADAS = CreateADAS(data.ADAS);
+
 			var axles = data.Components.AxleWheels.AxlesEngineering;
 
 			retVal.AxleData = axles.Select(
@@ -447,21 +448,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						driver.Lookahead.CoastingDecisionFactorVelocityDropLookup),
 				LookAheadDistanceFactor = driver.Lookahead.LookaheadDistanceFactor
 			};
-			var overspeedData = new DriverData.OverSpeedEcoRollData {
-				Mode = driver.OverSpeedEcoRoll.Mode,
-				MinSpeed = driver.OverSpeedEcoRoll.MinSpeed,
-				OverSpeed = driver.OverSpeedEcoRoll.OverSpeed,
-				UnderSpeed = driver.OverSpeedEcoRoll.UnderSpeed,
+			var overspeedData = new DriverData.OverSpeedData {
+				Enabled = driver.OverSpeedData.Enabled,
+				MinSpeed = driver.OverSpeedData.MinSpeed,
+				OverSpeed = driver.OverSpeedData.OverSpeed,
 			};
 			var retVal = new DriverData {
 				AccelerationCurve = accelerationData,
 				LookAheadCoasting = lookAheadData,
-				OverSpeedEcoRoll = overspeedData,
+				OverSpeed = overspeedData,
 				EngineStopStart = new DriverData.EngineStopStartData() {
 					EngineOffStandStillActivationDelay =
-						driver.EngineOffStandStillActivationDelay ?? DeclarationData.Driver.EngineOffStandStillActivationDelay,
-					MaxEngineOffTimespan = driver.MaxEngineOffTimespan ?? DeclarationData.Driver.MaxEngineOffTimespan,
-					UtilityFactor = driver.EngineStopStartUtilityFactor,
+						driver.EngineStopStartData?.ActivationDelay ?? DeclarationData.Driver.EngineStopStart.ActivationDelay,
+					MaxEngineOffTimespan = driver.EngineStopStartData?.MaxEngineOffTimespan ?? DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
+					UtilityFactor = driver.EngineStopStartData?.UtilityFactor ?? DeclarationData.Driver.EngineStopStart.UtilityFactor,
+				},
+				EcoRoll = new DriverData.EcoRollData() {
+					UnderspeedThreshold = driver.EcoRollData?.UnderspeedThreshold ?? DeclarationData.Driver.EcoRoll.UnderspeedThreshold,
+					MinSpeed = driver.EcoRollData?.MinSpeed ?? DeclarationData.Driver.EcoRoll.MinSpeed,
+					ActivationPhaseDuration = driver.EcoRollData?.ActivationDelay ?? DeclarationData.Driver.EcoRoll.ActivationDelay,
+					AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
+					AccelerationUpperLimit = 0.15.SI<MeterPerSquareSecond>(), // DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
 				}
 			};
 			return retVal;

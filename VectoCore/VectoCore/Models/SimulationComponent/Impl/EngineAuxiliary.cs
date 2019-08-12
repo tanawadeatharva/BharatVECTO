@@ -51,7 +51,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly Dictionary<string, Func<PerSecond, Watt>> Auxiliaries =
 			new Dictionary<string, Func<PerSecond, Watt>>();
 
-		public EngineAuxiliary(IVehicleContainer container) : base(container) {}
+		protected double EngineStopStartUtilityFactor;
+
+		public EngineAuxiliary(IVehicleContainer container) : base(container)
+		{
+			EngineStopStartUtilityFactor = container.RunData?.DriverData?.EngineStopStart?.UtilityFactor ?? double.NaN;
+		}
 
 		public IAuxPort Port()
 		{
@@ -153,13 +158,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Watt PowerDemandEngineOff()
 		{
 			if (!DataBus.VehicleStopped) {
-				throw new NotImplementedException("EngineOff while Driving not implemented");
+				return Auxiliaries.Sum(x => x.Value(0.RPMtoRad()));
 			}
 
 			var auxiliarieIgnoredDuringVehicleStop = new[] {
-				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan
+				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan,
+				Constants.Auxiliaries.IDs.PTOConsumer, Constants.Auxiliaries.IDs.PTOTransmission
 			};
-			return Auxiliaries.Where(x => !auxiliarieIgnoredDuringVehicleStop.Contains(x.Key)).Sum(x => x.Value(0.RPMtoRad()));
+			var powerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
+			var engineOffDemand = 0.SI<Watt>();
+			foreach (var item in Auxiliaries) {
+
+				var value =  item.Value(DataBus.EngineIdleSpeed) ;
+				if (value == null) {
+					continue;
+				}
+
+				powerDemands[item.Key] = value *  (1-EngineStopStartUtilityFactor);
+				engineOffDemand += auxiliarieIgnoredDuringVehicleStop.Contains(item.Key) ? 0.SI<Watt>() : value *  EngineStopStartUtilityFactor;
+			}
+			CurrentState.PowerDemands = powerDemands;
+			return engineOffDemand;  //powerDemands.Sum(kv => kv.Value); 
 		}
 
 		public Watt PowerDemandEngineOn(PerSecond engineSpeed)

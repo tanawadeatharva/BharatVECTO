@@ -145,7 +145,7 @@
 			<Enabled>false</Enabled>
 		</LookAheadCoasting>
 		<Overspeed xsi:type="ve1.0:OverspeedEngineeringType">
-			<Mode>Off</Mode>
+			<Enabled>false</Enabled>
 		</Overspeed>
 	</DriverModel>
 	<MissionCycles>

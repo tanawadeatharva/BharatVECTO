@@ -145,4 +145,7 @@
 	<data name="MaxTCSpeed" xml:space="preserve">
     <value>MaxTCSpeed</value>
   </data>
+  <data name="DriverModel_EngineStopStart" xml:space="preserve">
+    <value>EngineStopStart</value>
+  </data>
 </root>

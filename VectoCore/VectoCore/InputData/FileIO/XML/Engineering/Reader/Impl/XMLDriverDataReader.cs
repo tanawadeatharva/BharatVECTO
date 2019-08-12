@@ -11,7 +11,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader {
+namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl {
 	internal class XMLDriverDataReaderV07 : IXMLDriverDataReader
 	{
 		public const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V07;
@@ -40,11 +40,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader {
 			}
 		}
 
-		public IOverSpeedEcoRollEngineeringInputData OverspeedData
+		public IOverSpeedEngineeringInputData OverspeedData
 		{
 			get {
 				return CreateData(
 					XMLNames.DriverModel_Overspeed, (version, node) => Factory.CreateOverspeedData(version, DriverData, node));
+			}
+		}
+
+		
+		public IEcoRollEngineeringInputData EcoRollData
+		{
+			get {
+				return CreateData(
+					XMLNames.DriverModel_EcoRoll,
+					(version, node) => version == null ? null : Factory.CreateEcoRolltData(version, DriverData, node), false);
 			}
 		}
 
@@ -67,7 +77,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader {
 			}
 		}
 
-		public IXMLEngineStopStartDriverData EngineStopStartData
+		public IEngineStopStartEngineeringInputData EngineStopStartData
 		{
 			get {
 				return CreateData(

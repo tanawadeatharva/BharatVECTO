@@ -2,26 +2,24 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 
-namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
+namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 {
 	public interface IXMLDriverDataReader
 	{
 		ILookaheadCoastingInputData LookAheadData { get; }
 
-		IOverSpeedEcoRollEngineeringInputData OverspeedData { get; }
+		IOverSpeedEngineeringInputData OverspeedData { get; }
 
 		IXMLDriverAcceleration AccelerationCurveData { get; }
 
 		IGearshiftEngineeringInputData ShiftParameters { get; }
-		IXMLEngineStopStartDriverData EngineStopStartData { get; }
+		IEngineStopStartEngineeringInputData EngineStopStartData { get; }
+		IEcoRollEngineeringInputData EcoRollData { get; }
+		
 	}
 
-	public interface IXMLEngineStopStartDriverData
+	public interface IXMLEngineStopStartDriverData : IEngineStopStartEngineeringInputData
 	{
-		Second EngineOffStandStillActivationDelay { get; }
-
-		Second MaxEngineOffTimespan { get; }
-
-		double EngineStopStartUtilityFactor { get; }
+		
 	}
 }

@@ -24,10 +24,9 @@
 			</VelocityDropDecisionFactor>
 		</LookAheadCoasting>
 		<Overspeed xsi:type="OverspeedEngineeringType">
-			<Mode>Overspeed</Mode>
+			<Enabled>true</Enabled>
 			<MinSpeed>50</MinSpeed>
 			<AllowedOverspeed>5</AllowedOverspeed>
-			<AllowedUnderspeed>5</AllowedUnderspeed>
 		</Overspeed>
 		<DriverAccelerationCurve xsi:type="DriverAccelerationCurveEngineeringType">
 			<Entry vehicleSpeed="0" maxAcceleration="1" maxDeceleration="-1"/>

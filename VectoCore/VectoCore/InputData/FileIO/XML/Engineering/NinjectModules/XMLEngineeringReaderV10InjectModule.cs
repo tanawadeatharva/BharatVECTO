@@ -4,6 +4,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Impl;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader;
+using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.NinjectModules
@@ -92,6 +93,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.NinjectModules
 
 			Bind<IXMLEngineStopStartDriverData>().To<XMLEngineStopStartDriverDataV10>()
 												.Named(XMLEngineStopStartDriverDataV10.QUALIFIED_XSD_TYPE);
+			Bind<IXMLEngineeringEngineStopStartData>().To<XMLEngineeringEngineStopStartDataProviderV10>()
+													.Named(XMLEngineeringEngineStopStartDataProviderV10.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLEngineeringEcoRollData>().To<XMLEngineeringEcoRollDataProviderV10>()
+											.Named(XMLEngineeringEcoRollDataProviderV10.QUALIFIED_XSD_TYPE);
 		}
 
 		#endregion

@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
+using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Factory
 {
@@ -78,5 +79,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Factory
 		IXMLGearboxReader CreateGearboxReader(string version, IXMLEngineeringVehicleData vehicle, XmlNode componentsNode);
 
 		IXMLEngineStopStartDriverData CreateEngineStopStartData(string version, IXMLEngineeringDriverData driverData, XmlNode node);
+		IXMLEngineeringEngineStopStartData CreateStopStartData(string version, IXMLEngineeringDriverData driverData, XmlNode node);
+		IEcoRollEngineeringInputData CreateEcoRolltData(string version, IXMLEngineeringDriverData driverData, XmlNode node);
 	}
 }

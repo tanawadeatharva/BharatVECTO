@@ -63,26 +63,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LookAheadDecisionFactor = new LACDecisionFactor(),
 				LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 			};
-			var overspeedData = new DriverData.OverSpeedEcoRollData {
-				Mode = DriverMode.Overspeed,
-				MinSpeed = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed,
-				OverSpeed = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed,
-				UnderSpeed = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed
+			var overspeedData = new DriverData.OverSpeedData {
+				Enabled = true,
+				MinSpeed = DeclarationData.Driver.OverSpeed.MinSpeed,
+				OverSpeed = DeclarationData.Driver.OverSpeed.AllowedOverSpeed,
 			};
-			if (!DeclarationData.Driver.OverSpeedEcoRoll.AllowedModes.Contains(overspeedData.Mode)) {
-				throw new VectoSimulationException(
-					"Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}",
-					overspeedData.Mode);
-			}
-
+			
 			var retVal = new DriverData {
 				LookAheadCoasting = lookAheadData,
-				OverSpeedEcoRoll = overspeedData,
+				OverSpeed = overspeedData,
 				EngineStopStart = new DriverData.EngineStopStartData() {
-					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineOffStandStillActivationDelay,
-					MaxEngineOffTimespan = DeclarationData.Driver.MaxEngineOffTimespan,
-					UtilityFactor = DeclarationData.Driver.EngineStopStartUtilityFactor,
+					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
+					MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
+					UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
 				},
+				EcoRoll = new DriverData.EcoRollData() {
+					UnderspeedThreshold =  DeclarationData.Driver.EcoRoll.UnderspeedThreshold,
+					MinSpeed =  DeclarationData.Driver.EcoRoll.MinSpeed,
+					ActivationPhaseDuration = DeclarationData.Driver.EcoRoll.ActivationDelay,
+					AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
+					AccelerationUpperLimit = DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
+				}
 			};
 			return retVal;
 		}
@@ -97,8 +98,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				: CreateNonExemptedVehicleData(data, mission, loading);
 		}
 
-		private VehicleData CreateNonExemptedVehicleData(
-			IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
+		private VehicleData CreateNonExemptedVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
 		{
 			var retVal = SetCommonVehicleData(data);
 			retVal.AxleConfiguration = data.AxleConfiguration;
@@ -122,6 +122,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.VocationalVehicle = data.VocationalVehicle;
 			retVal.ADAS = CreateADAS(data.ADAS);
+			// eco-roll is not allowed for MT transmissions!
+			if (retVal.ADAS.EcoRoll != EcoRollType.None && data.Components.GearboxInputData.Type == GearboxType.MT) {
+				retVal.ADAS.EcoRoll = EcoRollType.None;
+			}
+			if (retVal.ADAS.EcoRoll == EcoRollType.WithEngineStop && data.Components.GearboxInputData.Type.AutomaticTransmission()) {
+				retVal.ADAS.EcoRoll = EcoRollType.WithoutEngineStop;
+			}
 
 			var axles = data.Components.AxleWheels.AxlesDeclaration;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
@@ -165,14 +172,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemDeclarationInputData adas)
-		{
-			return new VehicleData.ADASData {
-				EngineStopStart = adas.EngineStopStart,
-				EcoRoll = adas.EcoRoll,
-				PredictiveCruiseControl = adas.PredictiveCruiseControl
-			};
-		}
+		
 
 		private VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data)
 		{
