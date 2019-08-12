@@ -267,6 +267,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void HandleEngineStopStartDuringVehicleStop(Second absTime)
 		{
+			if (Driver.DataBus.CycleData.LeftSample.PTOActive) {
+				// engine stop start is disabled for stops where the PTO is activated
+				return;
+			}
 			if (VehicleHaltTimestamp == null) {
 				VehicleHaltTimestamp = absTime;
 			}

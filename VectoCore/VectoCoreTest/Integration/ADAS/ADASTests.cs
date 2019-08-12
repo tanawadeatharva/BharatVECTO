@@ -152,6 +152,20 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		}
 
 
+		[TestCase(@"TestData\Integration\ADAS\Group9_AT_EngineStopStart.xml")]
+		public void TestATVehicleWithADASEngineStopStart(string filename)
+		{
+			//var container = RunAllDeclarationJob(filename);
+			var container = RunSingleDeclarationJob(filename, 5);
+		}
+
+		[TestCase(@"TestData\Integration\ADAS\Group9_AT_EcoRoll.xml")]
+		public void TestATVehicleWithADASEcoRoll(string filename)
+		{
+			var container = RunAllDeclarationJob(filename);
+			//var container = RunSingleDeclarationJob(filename, 1);
+		}
+
 		public JobContainer RunAllDeclarationJob(string jobName)
 		{
 			var relativeJobPath =  jobName;

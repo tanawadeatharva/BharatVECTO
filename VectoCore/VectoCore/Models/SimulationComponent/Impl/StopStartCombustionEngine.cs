@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			CurrentState.dt = dt;
 
 			if (!dryRun) {
-				EngineAux.TorqueDemand(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), ModelData.IdleSpeed);
+				//EngineAux.TorqueDemand(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), ModelData.IdleSpeed);
 				CurrentState.AuxPowerEngineOff = EngineAux.PowerDemandEngineOff();
 			} else {
 				return new ResponseDryRun {
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.Tq_drag] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.IgnitionOn] = CurrentState.IgnitionOn;
-			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>()) * EngineStopStartUtilityFactor;
+			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
 
 
 
