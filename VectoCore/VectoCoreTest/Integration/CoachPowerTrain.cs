@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			KilogramSquareMeter gearBoxInertia = null, bool engineHighPower = true)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, FuelData.Diesel, fileWriter) { WriteModalResults = true };
+			var modData = new ModalDataContainer(modFileName, new[] { FuelData.Diesel }, fileWriter) { WriteModalResults = true };
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var gearboxData = CreateGearboxData();
@@ -101,6 +101,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AxleGearData = axleGearData,
 				GearboxData = gearboxData,
 				EngineData = engineData,
+				DriverData = driverData,
 				AirdragData = airDragData,
 				SimulationType = SimulationType.DistanceCycle,
 				Cycle = cycleData
@@ -226,15 +227,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 					LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
-				OverSpeedEcoRoll = overspeed
-					? new DriverData.OverSpeedEcoRollData {
-						Mode = DriverMode.Overspeed,
+				EngineStopStart = new DriverData.EngineStopStartData() {
+					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
+					MaxEngineOffTimespan =  DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
+					UtilityFactor =  DeclarationData.Driver.EngineStopStart.UtilityFactor,
+				},
+				OverSpeed = new DriverData.OverSpeedData {
+						Enabled = overspeed,
 						MinSpeed = 50.KMPHtoMeterPerSecond(),
 						OverSpeed = 5.KMPHtoMeterPerSecond()
 					}
-					: new DriverData.OverSpeedEcoRollData {
-						Mode = DriverMode.Off
-					},
 			};
 		}
 	}

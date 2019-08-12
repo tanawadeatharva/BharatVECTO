@@ -286,12 +286,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// test fuel consumption not negative
 			Assert.IsTrue(
 				modFile1Hz.Rows.Cast<DataRow>()
-					.All(r => r.ParseDouble(ModalResultField.FCWHTCc.GetShortCaption()).IsGreaterOrEqual(0)),
+					.All(r => r.ParseDouble(string.Format(ModalResultField.FCWHTCc.GetShortCaption(), "")).IsGreaterOrEqual(0)),
 				"fuel consumption must not be negative.");
 
 			// last v_act entry must be the same as original
-			var vAct = modFile.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
-			var vAct1Hz = modFile1Hz.Rows.Cast<DataRow>().Last().ParseDouble((int)ModalResultField.v_act).SI<MeterPerSecond>();
+			var vAct = modFile.Rows.Cast<DataRow>().Last().ParseDouble(ModalResultField.v_act.GetName()).SI<MeterPerSecond>();
+			var vAct1Hz = modFile1Hz.Rows.Cast<DataRow>().Last().ParseDouble(ModalResultField.v_act.GetName()).SI<MeterPerSecond>();
 			AssertHelper.AreRelativeEqual(vAct, vAct1Hz, 1e-4, "end velocity is not equal");
 		}
 

@@ -114,32 +114,32 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		/// [g/h] Fuel consumption from FC map..
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-Map", caption: "FC-Map [g/h]", outputFactor: 3600 * 1000)] FCMap,
+		[ModalResultField(typeof(SI), name: "FC-Map", caption: "FC-Map{0} [g/h]", outputFactor: 3600 * 1000)] FCMap,
 
 		/// <summary>
 		/// [g/h] Fuel consumption after correction for different NCV in VECTO Engine and VECTO sim. (Based on FC.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-NCVc", caption: "FC-NCVc [g/h]", outputFactor: 3600 * 1000)] FCNCVc,
+		[ModalResultField(typeof(SI), name: "FC-NCVc", caption: "FC-NCVc{0} [g/h]", outputFactor: 3600 * 1000)] FCNCVc,
 
 		/// <summary>
 		/// [g/h] Fuel consumption after WHTC Correction. (Based on FC-AUXc.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-WHTCc", caption: "FC-WHTCc [g/h]", outputFactor: 3600 * 1000)] FCWHTCc,
+		[ModalResultField(typeof(SI), name: "FC-WHTCc", caption: "FC-WHTCc{0} [g/h]", outputFactor: 3600 * 1000)] FCWHTCc,
 
 		/// <summary>
 		/// [g/h] Fuel consumption after smart auxiliary correction.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-AAUX", caption: "FC-AAUX [g/h]", outputFactor: 3600 * 1000)] FCAAUX,
+		[ModalResultField(typeof(SI), name: "FC-AAUX", caption: "FC-AAUX{0} [g/h]", outputFactor: 3600 * 1000)] FCAAUX,
 
 		/// <summary>
 		/// [g/h] Fuel consumption after correction for ADAS technologies. (Based on FC-AAUXc.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-ESS", caption: "FC-ESS [g/h]", outputFactor: 3600 * 1000)] FCEngineStopStart,
+		[ModalResultField(typeof(SI), name: "FC-ESS", caption: "FC-ESS{0} [g/h]", outputFactor: 3600 * 1000)] FCEngineStopStart,
 
 		/// <summary>
 		/// [g/h] Fuel consumption after WHTC Correction. (Based on FC-ADAS.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-Final_mod", caption: "FC-Final_mod [g/h]", outputFactor: 3600 * 1000)] FCFinal,
+		[ModalResultField(typeof(SI), name: "FC-Final_mod", caption: "FC-Final_mod{0} [g/h]", outputFactor: 3600 * 1000)] FCFinal,
 
 		/// <summary>
 		///     [km]	Travelled distance.
@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
 		/// </summary>
-		[ModalResultField(typeof(SI), outputFactor: 1e-3)] P_aux_,
+		[ModalResultField(typeof(SI), caption: "P_aux_{0} [kW]", outputFactor: 1e-3)] P_aux_,
 
 		/// <summary>
 		///		[-]  true/false  indicate whether torque converter is locked or not (only applicable for gears with TC)
@@ -286,22 +286,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [Nm]	Torque converter output torque
 		/// </summary>
-		[ModalResultField(typeof(SI), "T_TC_out")] TC_TorqueOut,
+		[ModalResultField(typeof(SI), "T_TC_out [Nm]")] TC_TorqueOut,
 
 		/// <summary>
 		///     [1/min]	Torque converter output speed
 		/// </summary>
-		[ModalResultField(typeof(SI), "n_TC_out", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedOut,
+		[ModalResultField(typeof(SI), "n_TC_out [rpm]", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedOut,
 
 		/// <summary>
 		///     [Nm]	Torque converter output torque
 		/// </summary>
-		[ModalResultField(typeof(SI), "T_TC_in")] TC_TorqueIn,
+		[ModalResultField(typeof(SI), "T_TC_in [Nm]")] TC_TorqueIn,
 
 		/// <summary>
 		///     [1/min]	Torque converter output speed
 		/// </summary>
-		[ModalResultField(typeof(SI), "n_TC_in", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedIn,
+		[ModalResultField(typeof(SI), "n_TC_in [rpm]", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedIn,
 
 		/// <summary>
 		///     [m]	Altitude
@@ -332,6 +332,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOff [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOff,
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOn [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOn,
 
+		[ModalResultField(typeof(SI), "P_WHR_el [kW]", outputFactor:1e-3)] P_WHR_el_map,
+		[ModalResultField(typeof(SI), "P_WHR_el_corr [kW]", outputFactor: 1e-3)] P_WHR_el_corr
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]

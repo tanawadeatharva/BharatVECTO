@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering {
 				typeof(ILookaheadCoastingInputData),
 				new Entry { WriterType = typeof(IXMLLookaheadDataWriter) }
 			}, {
-				typeof(IOverSpeedEcoRollEngineeringInputData),
+				typeof(IOverSpeedEngineeringInputData),
 				new Entry { WriterType = typeof(IXMLOverspeedDataWriter) }
 			}, {
 				typeof(IDriverAccelerationData),

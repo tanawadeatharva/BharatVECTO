@@ -112,13 +112,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(File.Exists(customerFile));
 
 			var validator = new XMLValidator(XmlReader.Create(manufactuerFile));
-			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.ManufacturerReport));
+			Assert.IsTrue(validator.ValidateXML(XmlDocumentType.ManufacturerReport), validator.ValidationError);
 
 			var val2 = new XMLValidator(XmlReader.Create(customerFile));
-			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.CustomerReport));
+			Assert.IsTrue(val2.ValidateXML(XmlDocumentType.CustomerReport), val2.ValidationError);
 
 			var val3 = new XMLValidator(XmlReader.Create(monitoringFile));
-			Assert.IsTrue(val3.ValidateXML(XmlDocumentType.MonitoringReport));
+			Assert.IsTrue(val3.ValidateXML(XmlDocumentType.MonitoringReport), val3.ValidationError);
 
 		}
 

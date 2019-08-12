@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class DriverData
 	{
-		[Required, ValidateObject] public OverSpeedEcoRollData OverSpeedEcoRoll;
+		[Required, ValidateObject] public OverSpeedData OverSpeed;
 
 		[Required, ValidateObject] public LACData LookAheadCoasting;
 
@@ -48,20 +48,49 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, ValidateObject] public EngineStopStartData EngineStopStart;
 
-		public static DriverMode ParseDriverMode(string mode)
+		[Required, ValidateObject] public EcoRollData EcoRoll;
+
+		public static bool ParseDriverMode(string mode)
 		{
-			return mode.Replace("-", "").ParseEnum<DriverMode>();
+			if (mode == null) {
+				return false;
+			}
+			var txt = mode.Replace("-", "");
+			if (txt.Equals("Off", StringComparison.InvariantCultureIgnoreCase)) {
+				return false;
+			}
+
+			if (txt.Equals("Overspeed", StringComparison.InvariantCultureIgnoreCase)) {
+				return true;
+			}
+
+			if (txt.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase)) {
+				return true;
+			}
+
+			return false;
 		}
 
-		public class OverSpeedEcoRollData
+		public class OverSpeedData
 		{
-			public DriverMode Mode;
+			public bool Enabled;
 
 			[Required, SIRange(0, 120 / Constants.MeterPerSecondToKMH)] public MeterPerSecond MinSpeed;
 
 			[Required, SIRange(0, 50 / Constants.MeterPerSecondToKMH)] public MeterPerSecond OverSpeed;
+		}
 
-			[Required, SIRange(0, 50 / Constants.MeterPerSecondToKMH)] public MeterPerSecond UnderSpeed;
+		public class EcoRollData
+		{
+			public MeterPerSecond MinSpeed;
+
+			public MeterPerSquareSecond AccelerationLowerLimit;
+
+			public MeterPerSquareSecond AccelerationUpperLimit;
+
+			public MeterPerSecond UnderspeedThreshold;
+
+			public Second ActivationPhaseDuration;
 		}
 
 		public class LACData
@@ -79,7 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public class EngineStopStartData
 		{
-			[Required, SIRange(0, Double.MaxValue)] public Second EngineOffStandStillThreshold;
+			[Required, SIRange(0, Double.MaxValue)] public Second EngineOffStandStillActivationDelay;
 
 			[Required, SIRange(0, double.MaxValue)] public Second MaxEngineOffTimespan;
 

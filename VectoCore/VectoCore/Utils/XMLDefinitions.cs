@@ -34,6 +34,8 @@ namespace TUGraz.VectoCore.Utils
 		
 		public const string ENGINEERING_DEFINITONS_NAMESPACE_V10 = ENGINEERING_NAMESPACE + ":v1.0";
 
+		public const string ENGINEERING_DEFINITONS_NAMESPACE_V11 = ENGINEERING_NAMESPACE + ":v1.1";
+
 		public const string ENGINEERING_DEFINITONS_NAMESPACE_V10_TEST = ENGINEERING_NAMESPACE + ":v1.0TEST";
 
 
@@ -46,6 +48,8 @@ namespace TUGraz.VectoCore.Utils
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V21 = DECLARATION_NAMESPACE + ":v2.1";
 
 		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V22 = DECLARATION_NAMESPACE + ":v2.2";
+
+		public const string DECLARATION_DEFINITIONS_NAMESPACE_URI_V23 = DECLARATION_NAMESPACE + ":v2.3_DF";
 
 
 		public const string DECLARATION_INPUT_NAMESPACE = "urn:tugraz:ivt:VectoAPI:DeclarationInput";

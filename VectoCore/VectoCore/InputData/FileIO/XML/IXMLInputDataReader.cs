@@ -6,11 +6,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 {
 	public interface IXMLInputDataReader
 	{
-		IInputDataProvider Create(string filename, bool verifyXML);
+		IInputDataProvider Create(string filename);
 
-		IInputDataProvider Create(Stream inputData, bool verifyXML);
+		IInputDataProvider Create(Stream inputData);
 
-		IInputDataProvider Create(XmlReader inputData, bool verifyXML);
+		IInputDataProvider Create(XmlReader inputData);
 
 		IEngineeringInputDataProvider CreateEngineering(string filename);
 

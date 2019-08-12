@@ -79,7 +79,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_SimpleGearbox");
-			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", FuelData.Diesel, fileWriter);
+			var modData = new ModalDataContainer("Coach_FullPowertrain_SimpleGearbox", new[] { FuelData.Diesel }, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 			container.RunData = new VectoRunData() { SimulationType = SimulationType.DistanceCycle };
 
@@ -146,7 +146,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain");
-			var modData = new ModalDataContainer("Coach_FullPowertrain", FuelData.Diesel, fileWriter);
+			var modData = new ModalDataContainer("Coach_FullPowertrain", new[] { FuelData.Diesel }, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 			container.RunData = new VectoRunData() {SimulationType = SimulationType.DistanceCycle };
 
@@ -227,7 +227,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain_LowSpeed()
 		{
 			var fileWriter = new FileOutputWriter("Coach_FullPowertrain_LowSpeed");
-			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", FuelData.Diesel, fileWriter);
+			var modData = new ModalDataContainer("Coach_FullPowertrain_LowSpeed", new[] { FuelData.Diesel }, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var gearboxData = CreateGearboxData();
@@ -445,8 +445,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
 					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
-				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
-					Mode = DriverMode.Off
+				OverSpeed = new DriverData.OverSpeedData {
+					Enabled = false
 				},
 			};
 		}

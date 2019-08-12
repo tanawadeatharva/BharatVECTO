@@ -500,6 +500,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						: DataBus.CycleData.RightSample.Gear) != 0;
 		}
 
+		public override bool DisengageGearbox
+		{
+			get { return false; }
+			set { throw new System.NotImplementedException(); }
+		}
+
 		#endregion
 
 		public class CycleGearboxState : GearboxState

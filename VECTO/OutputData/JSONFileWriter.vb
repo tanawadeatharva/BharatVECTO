@@ -12,7 +12,7 @@ Imports TUGraz.VectoCommon.Utils
 
 Public Class JSONFileWriter
 	Implements IOutputFileWriter
-	Public Const EngineFormatVersion As Integer = 4
+	Public Const EngineFormatVersion As Integer = 5
 
 	Public Const GearboxFormatVersion As Integer = 6
 
@@ -43,25 +43,50 @@ Public Class JSONFileWriter
 		body.Add("ModelName", eng.Model)
 
 			body.Add("Displacement", eng.Displacement.ConvertToCubicCentiMeter().ToString())
-		body.Add("IdlingSpeed", eng.IdleSpeed.AsRPM)
+		body.Add("IdlingSpeed", eng.EngineModes.First().IdleSpeed.AsRPM)
 		body.Add("Inertia", eng.Inertia.Value())
 
-		body.Add("WHTC-Urban", eng.WHTCUrban)
-		body.Add("WHTC-Rural", eng.WHTCRural)
-		body.Add("WHTC-Motorway", eng.WHTCMotorway)
-		body.Add("WHTC-Engineering", eng.WHTCEngineering)
-		body.Add("ColdHotBalancingFactor", eng.ColdHotBalancingFactor)
-		body.Add("CFRegPer", eng.CorrectionFactorRegPer)
+        Dim fuels As List(Of Object) = New List(Of Object)()
+
+	    For Each fuel As IEngineFuelEngineeringInputData In eng.EngineModes.First().Fuels
+	        Dim entry as Dictionary(Of string, object) = New Dictionary(Of String,Object)()
+	        entry.Add("WHTC-Urban", fuel.WHTCUrban)
+	        entry.Add("WHTC-Rural", fuel.WHTCRural)
+	        entry.Add("WHTC-Motorway", fuel.WHTCMotorway)
+	        entry.Add("WHTC-Engineering", fuel.WHTCEngineering)
+	        entry.Add("ColdHotBalancingFactor", fuel.ColdHotBalancingFactor)
+	        entry.Add("CFRegPer", fuel.CorrectionFactorRegPer)
+	        entry.Add("FuelMap", GetRelativePath(fuel.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
+	        entry.Add("FuelType", fuel.FuelType.ToString())
+
+            fuels.Add(entry)
+	    Next
+
+        body.Add("Fuels", fuels)
+	   
 		body.Add("RatedPower", eng.RatedPowerDeclared.Value())
 		body.Add("RatedSpeed", eng.RatedSpeedDeclared.AsRPM)
 		body.Add("MaxTorque", eng.MaxTorqueDeclared.Value())
-		body.Add("FuelType", eng.FuelType.ToString())
+		
 
-		body.Add("FullLoadCurve", GetRelativePath(eng.FullLoadCurve.Source, Path.GetDirectoryName(filename)))
+		body.Add("FullLoadCurve", GetRelativePath(eng.EngineModes.First().FullLoadCurve.Source, Path.GetDirectoryName(filename)))
 
-		body.Add("FuelMap", GetRelativePath(eng.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
 
-		WriteFile(header, body, filename)
+        body.add("WHRType", eng.WHRType.ToString())
+
+        If (eng.WHRType.IsElectrical()) then
+            Dim whr As Dictionary(Of String, Object) = New Dictionary(Of String,Object)
+            Dim whrInput As IWHRData = eng.EngineModes.First().WasteHeatRecoveryData
+            whr.Add("Urban", whrInput.UrbanCorrectionFactor)
+            whr.Add("Rural", whrInput.RuralCorrectionFactor)
+            whr.Add("Motorway", whrInput.MotorwayCorrectionFactor)
+            whr.Add("ColdHotBalancingFactor", whrInput.BFColdHot)
+            whr.Add("CFRegPer", whrInput.CFRegPer)
+            whr.Add("EngineeringCorrectionFactor", whrInput.EngineeringCorrectionFactor)
+            body.Add("WHRCorrectionFactors", whr)
+        End If
+
+	    WriteFile(header, body, filename)
 	End Sub
 
 	Protected Function GetHeader(fileVersion As Integer) As Dictionary(Of String, Object)
@@ -234,13 +259,11 @@ Public Class JSONFileWriter
 		If (vehicle.TankSystem.HasValue) Then
 			body("TankSystem") = vehicle.TankSystem.Value.ToString()
 		End If
-		if (Cfg.DeclMode) then
-			Dim declVehicle As IVehicleDeclarationInputData = vehicle
-			body("EngineStopStart") = declVehicle.ADAS.EngineStopStart
-			body("EcoRoll") = declVehicle.ADAS.EcoRoll.ToString()
-			body("PredictiveCruiseControl") = declVehicle.ADAS.PredictiveCruiseControl.ToString()
-		End If
-
+		
+		body("EngineStopStart") = vehicle.ADAS.EngineStopStart
+		body("EcoRoll") = vehicle.ADAS.EcoRoll.ToString()
+		body("PredictiveCruiseControl") = vehicle.ADAS.PredictiveCruiseControl.ToString()
+		
 		If (Not IsNothing(airdrag.AirDragArea)) Then
 			body("CdA") = airdrag.AirDragArea.Value()
 		End If
@@ -318,9 +341,14 @@ Public Class JSONFileWriter
 		
 		If Not job.SavedInDeclarationMode Then
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath))
-		    body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineOffStandStillThreshold.Value())
-            body.Add("EngineStopStartMaxOffTimespan", driver.MaxEngineOffTimespan.Value())
-            body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartUtilityFactor)
+		    body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value())
+            body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value())
+            body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactor)
+
+            body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed)
+		    body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay)
+		    body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold)
+
 		End If
 		'body.Add("StartStop", New Dictionary(Of String, Object) From {
 		'			{"Enabled", driver.StartStop.Enabled},
@@ -349,11 +377,10 @@ Public Class JSONFileWriter
 		'Overspeed / EcoRoll
 		Dim overspeedDic As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
-		overspeedDic.Add("Mode", driver.OverSpeedEcoRoll.Mode.ToString())
+		overspeedDic.Add("Mode", If(driver.OverSpeedData.Enabled,  "Overspeed" ,"Off"))
 
-		overspeedDic.Add("MinSpeed", driver.OverSpeedEcoRoll.MinSpeed.AsKmph)
-		overspeedDic.Add("OverSpeed", driver.OverSpeedEcoRoll.OverSpeed.AsKmph)
-		overspeedDic.Add("UnderSpeed", driver.OverSpeedEcoRoll.UnderSpeed.AsKmph)
+		overspeedDic.Add("MinSpeed", driver.OverSpeedData.MinSpeed.AsKmph)
+		overspeedDic.Add("OverSpeed", driver.OverSpeedData.OverSpeed.AsKmph)
 		body.Add("OverSpeedEcoRoll", overspeedDic)
 
 		'Cycles

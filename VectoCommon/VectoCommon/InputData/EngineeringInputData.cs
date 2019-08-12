@@ -81,7 +81,7 @@ namespace TUGraz.VectoCommon.InputData
 		new IAdvancedDriverAssistantSystemsEngineering ADAS { get; }
 	}
 
-	public interface IAdvancedDriverAssistantSystemsEngineering
+	public interface IAdvancedDriverAssistantSystemsEngineering : IAdvancedDriverAssistantSystemDeclarationInputData
 	{
 		DataSource DataSource { get; }
 	}
@@ -296,12 +296,22 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		KilogramSquareMeter Inertia { get; }
 
+		new IList<IEngineModeEngineeringInputData> EngineModes { get; }
+
+		Second EngineStartTime { get; }
+	}
+
+	public interface IEngineModeEngineeringInputData : IEngineModeDeclarationInputData
+	{
+		new IList<IEngineFuelEngineeringInputData> Fuels { get; }
+	}
+
+	public interface IEngineFuelEngineeringInputData : IEngineFuelDelcarationInputData
+	{
 		/// <summary>
 		/// P170
 		/// </summary>
 		double WHTCEngineering { get; }
-
-		Second EngineStartTime { get; }
 	}
 
 	public interface IAuxiliariesEngineeringInputData
@@ -328,7 +338,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		//new IStartStopEngineeringInputData StartStop { get; }
 
-		IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll { get; }
+		IOverSpeedEngineeringInputData OverSpeedData { get; }
 
 		/// <summary>
 		/// P009; P033, P034, P035
@@ -339,12 +349,22 @@ namespace TUGraz.VectoCommon.InputData
 		ILookaheadCoastingInputData Lookahead { get; }
 
 		IGearshiftEngineeringInputData GearshiftInputData { get; }
-		Second EngineOffStandStillThreshold { get; }
-		Second MaxEngineOffTimespan { get; }
-		double EngineStopStartUtilityFactor { get; }
+
+		IEngineStopStartEngineeringInputData EngineStopStartData { get; }
+
+		IEcoRollEngineeringInputData EcoRollData { get; }	
 	}
 
-	public interface IOverSpeedEcoRollEngineeringInputData : IOverSpeedEcoRollDeclarationInputData
+	public interface IEcoRollEngineeringInputData
+	{
+		MeterPerSecond MinSpeed { get; }
+
+		Second ActivationDelay { get; }
+
+		MeterPerSecond UnderspeedThreshold { get; }
+	}
+
+	public interface IOverSpeedEngineeringInputData : IOverSpeedEcoRollDeclarationInputData
 	{
 		/// <summary>
 		/// P016
@@ -358,11 +378,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		MeterPerSecond OverSpeed { get; }
 
-		/// <summary>
-		/// P018
-		/// cf. VECTO Input Parameters.xlsx
-		/// </summary>
-		MeterPerSecond UnderSpeed { get; }
 	}
 
 	public interface ILookaheadCoastingInputData : IDriverModelData
@@ -393,6 +408,13 @@ namespace TUGraz.VectoCommon.InputData
 		TableData CoastingDecisionFactorTargetSpeedLookup { get; }
 
 		TableData CoastingDecisionFactorVelocityDropLookup { get; }
+	}
+
+	public interface IEngineStopStartEngineeringInputData
+	{
+		Second ActivationDelay { get; }
+		Second MaxEngineOffTimespan { get; }
+		double UtilityFactor { get; }
 	}
 
 	public interface IAuxiliaryEngineeringInputData

@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", FuelData.Diesel, fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", new[] { FuelData.Diesel }, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var driver = new Driver(container, driverData, new DefaultDriverStrategy());
@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrain", FuelData.Diesel, fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrain", new[] { FuelData.Diesel }, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile2);
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
-			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", FuelData.Diesel, fileWriter);
+			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", new[] { FuelData.Diesel }, fileWriter);
 			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
 			container.RunData = new VectoRunData() { SimulationType = SimulationType.DistanceCycle };
 
@@ -312,8 +312,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
 					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
-				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
-					Mode = DriverMode.Off
+				OverSpeed = new DriverData.OverSpeedData {
+					Enabled = false
 				},
 			};
 		}

@@ -1053,4 +1053,79 @@
   <data name="TorqueConverter_MaxInputSpeed" xml:space="preserve">
     <value>MaxInputSpeed</value>
   </data>
+  <data name="DriverModel_EngineStopStart" xml:space="preserve">
+    <value>EngineStopStart</value>
+  </data>
+  <data name="Report_Vehicle_FuelTypes" xml:space="preserve">
+    <value>FuelTypes</value>
+  </data>
+  <data name="DriverModel_EcoRoll" xml:space="preserve">
+    <value>EcoRoll</value>
+  </data>
+  <data name="Report_Result_FuelMode" xml:space="preserve">
+    <value>FuelMode</value>
+  </data>
+  <data name="DriverModel_Overspeed_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Report_Result_FuelMode_Val_Dual" xml:space="preserve">
+    <value>dual fuel mode</value>
+  </data>
+  <data name="Report_Result_FuelMode_Val_Single" xml:space="preserve">
+    <value>single fuel mode</value>
+  </data>
+  <data name="Report_Results_Fuel" xml:space="preserve">
+    <value>Fuel</value>
+  </data>
+  <data name="Report_Results_Fuel_Type_Attr" xml:space="preserve">
+    <value>type</value>
+  </data>
+  <data name="Report_Engine_FuelMode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Engine_FuelConsumptionMap_WHRElPower_Attr" xml:space="preserve">
+    <value>electricPower</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors" xml:space="preserve">
+    <value>WHRCorrectionFactors</value>
+  </data>
+  <data name="Engine_FuelModes" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Engine_FuelModes_Fuel" xml:space="preserve">
+    <value>Fuel</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors_Urban" xml:space="preserve">
+    <value>Urban</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors_Rural" xml:space="preserve">
+    <value>Rural</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors_Motorway" xml:space="preserve">
+    <value>Motorway</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors_BFColdHot" xml:space="preserve">
+    <value>BFColdHot</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors_CFRegPer" xml:space="preserve">
+    <value>CFRegPer</value>
+  </data>
+  <data name="Engine_WHRType" xml:space="preserve">
+    <value>WHRType</value>
+  </data>
+  <data name="Vehicle_ADAS_EcoRoll" xml:space="preserve">
+    <value>EcoRoll</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactor" xml:space="preserve">
+    <value>WHRCorrection</value>
+  </data>
+  <data name="Engine_WHRMap_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="Engine_WHRMap" xml:space="preserve">
+    <value>WHRMap</value>
+  </data>
+  <data name="DriverModel_EngineStopStartParameters" xml:space="preserve">
+    <value>EngineStopStartParameters</value>
+  </data>
 </root>

@@ -1,8 +1,10 @@
-﻿using Ninject.Modules;
+﻿using System;
+using Ninject.Modules;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Impl;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader;
+using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.NinjectModules
@@ -88,8 +90,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.NinjectModules
 
 			Bind<IXMLDriverAcceleration>().To<XMLDriverAccelerationV10>()
 										.Named(XMLDriverAccelerationV10.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLEngineStopStartDriverData>().To<XMLEngineStopStartDriverDataV10>()
+												.Named(XMLEngineStopStartDriverDataV10.QUALIFIED_XSD_TYPE);
+			Bind<IXMLEngineeringEngineStopStartData>().To<XMLEngineeringEngineStopStartDataProviderV10>()
+													.Named(XMLEngineeringEngineStopStartDataProviderV10.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLEngineeringEcoRollData>().To<XMLEngineeringEcoRollDataProviderV10>()
+											.Named(XMLEngineeringEcoRollDataProviderV10.QUALIFIED_XSD_TYPE);
 		}
 
 		#endregion
+	}
+
+	public class XMLEngineeringReaderV11InjectModule : NinjectModule
+	{
+		public override void Load()
+		{
+			Bind<IXMLEngineData>().To<XMLEngineeringEngineDataProviderV11>()
+								.Named(XMLEngineeringEngineDataProviderV11.QUALIFIED_XSD_TYPE);
+
+		}
 	}
 }

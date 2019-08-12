@@ -61,6 +61,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.TrailerGrossVehicleWeight = 0.SI<Kilogram>();
 			retVal.Loading = data.Loading;
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius;
+			retVal.ADAS = CreateADAS(data.ADAS);
+
 			var axles = data.Components.AxleWheels.AxlesEngineering;
 
 			retVal.AxleData = axles.Select(
@@ -77,6 +79,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}).ToList();
 			return retVal;
 		}
+
+		private VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemsEngineering adas)
+		{
+			return adas == null ?
+				new VehicleData.ADASData() {
+					EngineStopStart = false,
+					EcoRoll = EcoRollType.None,
+					PredictiveCruiseControl = PredictiveCruiseControlType.None
+				}: 
+				new VehicleData.ADASData {
+				EngineStopStart = adas.EngineStopStart,
+				EcoRoll = adas.EcoRoll,
+				PredictiveCruiseControl = adas.PredictiveCruiseControl
+			};
+		}
+
 
 		public AirdragData CreateAirdragData(IAirdragEngineeringInputData airdragData, IVehicleEngineeringInputData data)
 		{
@@ -142,22 +160,37 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		internal CombustionEngineData CreateEngineData(
-			IEngineEngineeringInputData engine, IGearboxEngineeringInputData gbx,
-			IEnumerable<ITorqueLimitInputData> torqueLimits, ITorqueConverterEngineeringInputData torqueConverter,
-			TankSystem? tankSystem = null)
+			IVehicleEngineeringInputData vehicle, IEngineModeEngineeringInputData engineMode)
 		{
+			var engine = vehicle.Components.EngineInputData;
+			var gbx = vehicle.Components.GearboxInputData;
+			var torqueLimits = vehicle.TorqueLimits;
+			var torqueConverter = vehicle.Components.TorqueConverterInputData;
+			var tankSystem = vehicle.TankSystem;
+			
 			if (engine.SavedInDeclarationMode) {
 				WarnEngineeringMode("EngineData");
 			}
-
+			
 			var retVal = SetCommonCombustionEngineData(engine, tankSystem);
+			retVal.IdleSpeed = engineMode.IdleSpeed;
+			retVal.Fuels = new List<CombustionEngineFuelData>();
+			foreach (var fuel in engineMode.Fuels) {
+				retVal.Fuels.Add(
+					new CombustionEngineFuelData() {
+						FuelData = DeclarationData.FuelData.Lookup(fuel.FuelType, tankSystem),
+						ConsumptionMap = FuelConsumptionMapReader.Create(fuel.FuelConsumptionMap),
+						FuelConsumptionCorrectionFactor = fuel.WHTCEngineering,
+					});
+			}
+
 			retVal.Inertia = engine.Inertia +
 							(gbx != null && gbx.Type.AutomaticTransmission() ? torqueConverter.Inertia : 0.SI<KilogramSquareMeter>());
 			retVal.EngineStartTime = engine.EngineStartTime ?? DeclarationData.Engine.DefaultEngineStartTime;
 			var limits = torqueLimits.ToDictionary(e => e.Gear);
 			var numGears = gbx == null ? 0 : gbx.Gears.Count;
 			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>(numGears + 1);
-			fullLoadCurves[0] = FullLoadCurveReader.Create(engine.FullLoadCurve);
+			fullLoadCurves[0] = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve);
 			fullLoadCurves[0].EngineData = retVal;
 			if (gbx != null) {
 				foreach (var gear in gbx.Gears) {
@@ -167,9 +200,62 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			retVal.FullLoadCurves = fullLoadCurves;
-			retVal.FuelConsumptionCorrectionFactor = engine.WHTCEngineering;
+
+			var whr = CreateWHRData(engineMode.WasteHeatRecoveryData);
+			if (whr != null) {
+				whr.WHRCorrectionFactor = engineMode.WasteHeatRecoveryData.EngineeringCorrectionFactor;
+			}
+
+			retVal.WHRType = engine.WHRType;
+			retVal.WHRData = whr;
+			//foreach (var fuelEntry in retVal.Fuels) {
+
+			//retVal.Fuels[0].FuelConsumptionCorrectionFactor = engine.WHTCEngineering;
 			return retVal;
 		}
+
+		private WHRData CreateWHRData(IWHRData whrInputData)
+		{
+			if (whrInputData == null || whrInputData.GeneratedElectricPower == null) {
+				return null;
+			}
+
+			return new WHRData() {
+				CFUrban = 1,
+				CFRural = 1,
+				CFMotorway = 1,
+				CFColdHot = 1,
+				CFRegPer = 1,
+				WHRMap = WHRPowerReader.Create(whrInputData.GeneratedElectricPower)
+			};
+		}
+
+
+		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IEngineModeEngineeringInputData engineMode)
+		{
+			if (engine.SavedInDeclarationMode) {
+				WarnEngineeringMode("EngineData");
+			}
+			var retVal = SetCommonCombustionEngineData(engine, null);
+			retVal.IdleSpeed = engineMode.IdleSpeed;
+			retVal.Fuels = new List<CombustionEngineFuelData>();
+			foreach (var fuel in engineMode.Fuels) {
+				retVal.Fuels.Add(
+					new CombustionEngineFuelData() {
+						FuelData = DeclarationData.FuelData.Lookup(fuel.FuelType, null),
+						ConsumptionMap = FuelConsumptionMapReader.Create(fuel.FuelConsumptionMap),
+						FuelConsumptionCorrectionFactor = fuel.WHTCEngineering,
+					});
+			}
+
+			retVal.Inertia = engine.Inertia;
+			retVal.EngineStartTime = engine.EngineStartTime ?? DeclarationData.Engine.DefaultEngineStartTime;
+			var fullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>();
+			fullLoadCurves[0] = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve);
+			retVal.FullLoadCurves = fullLoadCurves;
+			return retVal;
+		}
+
 
 		internal GearboxData CreateGearboxData(
 			IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData,
@@ -362,21 +448,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						driver.Lookahead.CoastingDecisionFactorVelocityDropLookup),
 				LookAheadDistanceFactor = driver.Lookahead.LookaheadDistanceFactor
 			};
-			var overspeedData = new DriverData.OverSpeedEcoRollData {
-				Mode = driver.OverSpeedEcoRoll.Mode,
-				MinSpeed = driver.OverSpeedEcoRoll.MinSpeed,
-				OverSpeed = driver.OverSpeedEcoRoll.OverSpeed,
-				UnderSpeed = driver.OverSpeedEcoRoll.UnderSpeed,
+			var overspeedData = new DriverData.OverSpeedData {
+				Enabled = driver.OverSpeedData.Enabled,
+				MinSpeed = driver.OverSpeedData.MinSpeed,
+				OverSpeed = driver.OverSpeedData.OverSpeed,
 			};
 			var retVal = new DriverData {
 				AccelerationCurve = accelerationData,
 				LookAheadCoasting = lookAheadData,
-				OverSpeedEcoRoll = overspeedData,
+				OverSpeed = overspeedData,
 				EngineStopStart = new DriverData.EngineStopStartData() {
-					EngineOffStandStillThreshold =
-						driver.EngineOffStandStillThreshold ?? DeclarationData.Driver.EngineOffStandStillThreshold,
-					MaxEngineOffTimespan = driver.MaxEngineOffTimespan ?? DeclarationData.Driver.MaxEngineOffTimespan,
-					UtilityFactor = driver.EngineStopStartUtilityFactor,
+					EngineOffStandStillActivationDelay =
+						driver.EngineStopStartData?.ActivationDelay ?? DeclarationData.Driver.EngineStopStart.ActivationDelay,
+					MaxEngineOffTimespan = driver.EngineStopStartData?.MaxEngineOffTimespan ?? DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
+					UtilityFactor = driver.EngineStopStartData?.UtilityFactor ?? DeclarationData.Driver.EngineStopStart.UtilityFactor,
+				},
+				EcoRoll = new DriverData.EcoRollData() {
+					UnderspeedThreshold = driver.EcoRollData?.UnderspeedThreshold ?? DeclarationData.Driver.EcoRoll.UnderspeedThreshold,
+					MinSpeed = driver.EcoRollData?.MinSpeed ?? DeclarationData.Driver.EcoRoll.MinSpeed,
+					ActivationPhaseDuration = driver.EcoRollData?.ActivationDelay ?? DeclarationData.Driver.EcoRoll.ActivationDelay,
+					AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
+					AccelerationUpperLimit = 0.15.SI<MeterPerSquareSecond>(), // DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
 				}
 			};
 			return retVal;

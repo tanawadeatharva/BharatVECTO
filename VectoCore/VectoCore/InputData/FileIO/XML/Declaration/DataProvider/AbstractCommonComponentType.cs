@@ -4,6 +4,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
@@ -37,17 +38,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 				var certMethod = GetString(XMLNames.Component_Gearbox_CertificationMethod, required:false) ?? GetString(XMLNames.Component_CertificationMethod, required:false);
 				return certMethod != null ? EnumHelper.ParseEnum<CertificationMethod>(certMethod) : CertificationMethod.Measured;
 			}
-		}
-
-		protected virtual TableData ReadTableData(string baseElement, string entryElement, Dictionary<string, string> mapping)
-		{
-			var entries = BaseNode.SelectNodes(
-				XMLHelper.QueryLocalName(baseElement, entryElement));
-			if (entries != null && entries.Count > 0) {
-				return XMLHelper.ReadTableData(mapping, entries);
-			}
-
-			return null;
 		}
 
 		public virtual string CertificationNumber

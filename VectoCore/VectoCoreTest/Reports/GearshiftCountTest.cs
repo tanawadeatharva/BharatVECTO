@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -44,7 +45,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestCase()]
 		public void TestGearshiftCountTractionInterruptionShiftup()
 		{
-			var modData = new ModalDataContainer("GearshiftRun", FuelData.Diesel, null);
+			var modData = new ModalDataContainer("GearshiftRun", new[] { FuelData.Diesel}, null);
 
 			var entries = new[] {
 				new DummyEntry { v = 34, gear = 4u },
@@ -66,7 +67,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestCase()]
 		public void TestGearshiftCountTractionInterruption()
 		{
-			var modData = new ModalDataContainer("GearshiftRun", FuelData.Diesel, null);
+			var modData = new ModalDataContainer("GearshiftRun", new[] { FuelData.Diesel }, null);
 
 			var entries = new[] {
 				new DummyEntry { v = 34, gear = 4u },
@@ -88,7 +89,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestCase()]
 		public void TestGearshiftCountTractionInterruptionShiftDown()
 		{
-			var modData = new ModalDataContainer("GearshiftRun", FuelData.Diesel, null);
+			var modData = new ModalDataContainer("GearshiftRun", new[] { FuelData.Diesel }, null);
 
 			var entries = new[] {
 				new DummyEntry { v = 34, gear = 4u },
@@ -111,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestCase()]
 		public void TestGearshiftCountTractionInterruptionStop()
 		{
-			var modData = new ModalDataContainer("GearshiftRun", FuelData.Diesel, null);
+			var modData = new ModalDataContainer("GearshiftRun", new[] { FuelData.Diesel }, null);
 
 			var entries = new[] {
 				new DummyEntry { v = 4, gear = 4u },
@@ -133,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestCase()]
 		public void TestGearshiftCountTractionInterruptionStopDriveOff()
 		{
-			var modData = new ModalDataContainer("GearshiftRun", FuelData.Diesel, null);
+			var modData = new ModalDataContainer("GearshiftRun", new[] { FuelData.Diesel }, null);
 
 			var entries = new[] {
 				new DummyEntry { v = 4, gear = 4u },
@@ -157,7 +158,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestCase()]
 		public void TestGearshiftCountTractionInterruptionShiftupAT()
 		{
-			var modData = new ModalDataContainer("GearshiftRun", FuelData.Diesel, null);
+			var modData = new ModalDataContainer("GearshiftRun", new[] { FuelData.Diesel }, null);
 
 			var entries = new[] {
 				new DummyEntry { v = 34, gear = 4u },
@@ -180,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 		[TestCase()]
 		public void TestGearshiftCountTractionInterruptionShiftDownAT()
 		{
-			var modData = new ModalDataContainer("GearshiftRun", FuelData.Diesel, null);
+			var modData = new ModalDataContainer("GearshiftRun", new[] { FuelData.Diesel }, null);
 
 			var entries = new[] {
 				new DummyEntry { v = 34, gear = 4u },

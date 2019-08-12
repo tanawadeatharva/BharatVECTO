@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			CurrentState.dt = dt;
 
 			if (!dryRun) {
-				EngineAux.TorqueDemand(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), ModelData.IdleSpeed);
+				//EngineAux.TorqueDemand(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), ModelData.IdleSpeed);
 				CurrentState.AuxPowerEngineOff = EngineAux.PowerDemandEngineOff();
 			} else {
 				return new ResponseDryRun {
@@ -109,34 +109,49 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.Tq_drag] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.IgnitionOn] = CurrentState.IgnitionOn;
-			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>()) * EngineStopStartUtilityFactor;
-
-
-
-			var fc = 0.SI<KilogramPerSecond>();
-			var fcNCVcorr = fc * ModelData.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
-
-			var fcWHTC = fcNCVcorr * WHTCCorrectionFactor;
-			var fcAAUX = fcWHTC;
-			var advancedAux = EngineAux as BusAuxiliariesAdapter;
-			if (advancedAux != null) {
-				throw new VectoException("Engine Stop/Start with advanced auxiliaries not supported!");
-				//advancedAux.DoWriteModalResults(container);
-				//fcAAUX = advancedAux.AAuxFuelConsumption;
-			}
+			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
 
 			var auxDemand = EngineAux.PowerDemandEngineOn(ModelData.IdleSpeed) / ModelData.IdleSpeed;
-			var result = ModelData.ConsumptionMap.GetFuelConsumption(auxDemand, ModelData.IdleSpeed);
 
-			var fcESS = result.Value * (1 - EngineStopStartUtilityFactor);
-			var fcFinal = fcESS;
+			var pWHRelMap = 0.SI<Watt>();
+			var pWHRelCorr = 0.SI<Watt>();
 
-			container[ModalResultField.FCMap] = fc;
-			container[ModalResultField.FCNCVc] = fcNCVcorr;
-			container[ModalResultField.FCWHTCc] = fcWHTC;
-			container[ModalResultField.FCAAUX] = fcAAUX;
-			container[ModalResultField.FCEngineStopStart] = fcESS;
-			container[ModalResultField.FCFinal] = fcFinal;
+			if (ModelData.WHRData != null) {
+				var whrPwr = ModelData.WHRData.WHRMap.GetWHRPower(auxDemand, ModelData.IdleSpeed, DataBus.ExecutionMode != ExecutionMode.Declaration);
+
+				pWHRelMap = whrPwr.ElectricPower * (1 - EngineStopStartUtilityFactor);
+				pWHRelCorr = pWHRelMap * ModelData.WHRData.WHRCorrectionFactor;
+			}
+			container[ModalResultField.P_WHR_el_map] = pWHRelMap;
+			container[ModalResultField.P_WHR_el_corr] = pWHRelCorr;
+
+			foreach (var fuel in ModelData.Fuels) {
+				var fc = 0.SI<KilogramPerSecond>();
+				var fcNCVcorr = fc * fuel.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
+
+				var fcWHTC = fcNCVcorr * WHTCCorrectionFactor(fuel.FuelData);
+				var fcAAUX = fcWHTC;
+				var advancedAux = EngineAux as BusAuxiliariesAdapter;
+				if (advancedAux != null) {
+					throw new VectoException("Engine Stop/Start with advanced auxiliaries not supported!");
+
+					//advancedAux.DoWriteModalResults(container);
+					//fcAAUX = advancedAux.AAuxFuelConsumption;
+				}
+
+				
+				var result = fuel.ConsumptionMap.GetFuelConsumption(auxDemand, ModelData.IdleSpeed);
+
+				var fcESS = result.Value * (1 - EngineStopStartUtilityFactor);
+				var fcFinal = fcESS;
+
+				container[ModalResultField.FCMap, fuel.FuelData] = fc;
+				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
+				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
+				container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
+				container[ModalResultField.FCEngineStopStart, fuel.FuelData] = fcESS;
+				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
+			}
 		}
 
 		

@@ -23,16 +23,14 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Impl
-Imports TUGraz.VectoCore.InputData.Reader
+Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.OutputData.XML
-Imports TUGraz.VectoCore.OutputData.XML.Engineering
 Imports TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces
-Imports TUGraz.VectoCore.Utils
 
 ''' <summary>
 ''' Gearbox Editor
@@ -816,7 +814,7 @@ Public Class GearboxForm
 			Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
 			'inputData = TryCast(JSONInputDataFactory.ReadComponentData(vectoJob.PathEng(False)), IEngineeringInputDataProvider)
 			Dim engine As IEngineEngineeringInputData = inputData.JobInputData.Vehicle.Components.EngineInputData
-			Dim engineFld As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve)
+			Dim engineFld As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve)
 
 
 			s = New Series
@@ -828,12 +826,12 @@ Public Class GearboxForm
 			s.Name = "Full load"
 			chart.Series.Add(s)
 
-			If VectoJobForm.Visible AndAlso engine.IdleSpeed > 0 Then
+			If VectoJobForm.Visible AndAlso engine.EngineModes.First().IdleSpeed > 0 Then
 				'If FLD0.Init(VectoJobForm.n_idle) Then
 
 				'Dim fullLoadCurve As FullLoadCurve = ConvertToFullLoadCurve(FLD0.LnU, FLD0.LTq)
 				Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.IdleSpeed, engineFld, vehicle, gears, gear)
+				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.EngineModes.First().IdleSpeed, engineFld, vehicle, gears, gear)
 				If (Not IsNothing(shiftLines)) Then
 
 
@@ -1068,11 +1066,11 @@ Public Class GearboxForm
 
 			Dim vehicle As IVehicleEngineeringInputData = inputData.JobInputData.Vehicle
 			Dim engine As IEngineEngineeringInputData = vehicle.Components.EngineInputData
-			Dim engineFld As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.FullLoadCurve)
+			Dim engineFld As EngineFullLoadCurve = FullLoadCurveReader.Create(engine.EngineModes.First().FullLoadCurve)
 
-			If VectoJobForm.Visible AndAlso engine.IdleSpeed > 0 Then
+			If VectoJobForm.Visible AndAlso engine.EngineModes.First().IdleSpeed > 0 Then
 				Dim gears As IList(Of ITransmissionInputData) = ConvertToGears(LvGears.Items)
-				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.IdleSpeed, engineFld, vehicle, gears, gear)
+				Dim shiftLines As ShiftPolygon = GetShiftLines(engine.EngineModes.First().IdleSpeed, engineFld, vehicle, gears, gear)
 				If (Not IsNothing(shiftLines)) Then
 					ShiftPolygonExport.WriteShiftPolygon(shiftLines, jobFile & "_Gear " & gear & ".vgbs")
 				End If

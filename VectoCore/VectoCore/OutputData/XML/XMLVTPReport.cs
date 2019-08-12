@@ -178,18 +178,19 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private void GenerateResults()
 		{
-			var vtpResult = Missions.FirstOrDefault(x => x.Key == MissionType.VerificationTest).Value.ResultEntry
+			var vtpResult = Missions.First().Value.FirstOrDefault(x => x.Key == MissionType.VerificationTest).Value.ResultEntry
 									.FirstOrDefault().Value;
 
 			const MissionType selectedMission = DeclarationData.VTPMode.SelectedMission;
 			const LoadingType selectedLoading = DeclarationData.VTPMode.SelectedLoading;
-			var result = Missions.FirstOrDefault(x => x.Key == selectedMission).Value.ResultEntry
+			var result = Missions.First().Value.FirstOrDefault(x => x.Key == selectedMission).Value.ResultEntry
 								.FirstOrDefault(x => x.Key == selectedLoading).Value;
 			var vtpFcMeasured = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos;
 			var vtpFcMeasuredCorr = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos * vtpResult.VTPFcCorrectionFactor;
 			var vtpFcSimulated = vtpResult.VTPFcFinalSimulated / vtpResult.VTPWorPWheelSimPos;
 			var cVtp = vtpFcMeasuredCorr / vtpFcSimulated;
-			var declaredCO2 = result.FuelConsumptionFinal / result.Distance / result.Payload;
+			// TODO: MQ 20119-07-31 - how to handle vtp with dual-fuel vehicles?
+			var declaredCO2 = result.FuelConsumptionFinal.Sum(x => x.Value) / result.Distance / result.Payload;
 			var verifiedCO2 = declaredCO2 * cVtp;
 
 			Results.Add(
@@ -273,7 +274,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			return retVal;
 		}
 
-		public override void InitializeReport(VectoRunData modelData)
+		public override void InitializeReport(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			GeneralPart.Add(
 				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
@@ -292,7 +293,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Vehicle_PTO, modelData.PTO != null),
 				new XElement(
 					tns + XMLNames.Vehicle_Components,
-					GetEngineDescription(modelData.EngineData),
+					GetEngineDescription(modelData.EngineData, fuelModes),
 					GetGearboxDescription(modelData.GearboxData),
 					GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
 					GetRetarderDescription(modelData.Retarder),
@@ -458,7 +459,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
 		}
 
-		private XElement GetEngineDescription(CombustionEngineData engineData)
+		private XElement GetEngineDescription(CombustionEngineData engineData, List<List<FuelData.Entry>> fuelModes)
 		{
 			return new XElement(
 				tns + XMLNames.Component_Engine,
@@ -467,7 +468,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(
 					tns + XMLNames.Engine_Displacement,
 					engineData.Displacement.ConvertToCubicCentiMeter().ToXMLFormat(0)),
-				new XElement(tns + XMLNames.Engine_FuelType, engineData.FuelData.FuelType.ToXMLFormat())
+				new XElement(tns + XMLNames.Engine_FuelType, string.Join( ", ", fuelModes.SelectMany(x => x.Select(f => f.FuelType.ToXMLFormat())).Distinct()))
 			);
 		}
 

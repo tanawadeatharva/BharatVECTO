@@ -1019,6 +1019,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			container[ModalResultField.acc] = CurrentState.Acceleration;
 			container.SetDataValue("DriverAction", (int)DrivingAction);
+
+			DriverStrategy.WriteModalResults(container);
 		}
 
 		
@@ -1028,6 +1030,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoSimulationException("Previous request did not succeed!");
 			}
 			CurrentState.Response = null;
+			DriverStrategy.CommitSimulationStep();
 		}
 
 		public class DriverState

@@ -736,6 +736,33 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EcoRoll.
+        /// </summary>
+        public static string DriverModel_EcoRoll {
+            get {
+                return ResourceManager.GetString("DriverModel_EcoRoll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EngineStopStart.
+        /// </summary>
+        public static string DriverModel_EngineStopStart {
+            get {
+                return ResourceManager.GetString("DriverModel_EngineStopStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EngineStopStartParameters.
+        /// </summary>
+        public static string DriverModel_EngineStopStartParameters {
+            get {
+                return ResourceManager.GetString("DriverModel_EngineStopStartParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to LookAheadCoasting.
         /// </summary>
         public static string DriverModel_LookAheadCoasting {
@@ -831,6 +858,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string DriverModel_Overspeed_AllowedUnderspeed {
             get {
                 return ResourceManager.GetString("DriverModel_Overspeed_AllowedUnderspeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        public static string DriverModel_Overspeed_Enabled {
+            get {
+                return ResourceManager.GetString("DriverModel_Overspeed_Enabled", resourceCulture);
             }
         }
         
@@ -1042,6 +1078,33 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to electricPower.
+        /// </summary>
+        public static string Engine_FuelConsumptionMap_WHRElPower_Attr {
+            get {
+                return ResourceManager.GetString("Engine_FuelConsumptionMap_WHRElPower_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mode.
+        /// </summary>
+        public static string Engine_FuelModes {
+            get {
+                return ResourceManager.GetString("Engine_FuelModes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fuel.
+        /// </summary>
+        public static string Engine_FuelModes_Fuel {
+            get {
+                return ResourceManager.GetString("Engine_FuelModes_Fuel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FuelType.
         /// </summary>
         public static string Engine_FuelType {
@@ -1128,6 +1191,96 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Engine_RatedSpeed {
             get {
                 return ResourceManager.GetString("Engine_RatedSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WHRCorrection.
+        /// </summary>
+        public static string Engine_WHRCorrectionFactor {
+            get {
+                return ResourceManager.GetString("Engine_WHRCorrectionFactor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WHRCorrectionFactors.
+        /// </summary>
+        public static string Engine_WHRCorrectionFactors {
+            get {
+                return ResourceManager.GetString("Engine_WHRCorrectionFactors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BFColdHot.
+        /// </summary>
+        public static string Engine_WHRCorrectionFactors_BFColdHot {
+            get {
+                return ResourceManager.GetString("Engine_WHRCorrectionFactors_BFColdHot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CFRegPer.
+        /// </summary>
+        public static string Engine_WHRCorrectionFactors_CFRegPer {
+            get {
+                return ResourceManager.GetString("Engine_WHRCorrectionFactors_CFRegPer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Motorway.
+        /// </summary>
+        public static string Engine_WHRCorrectionFactors_Motorway {
+            get {
+                return ResourceManager.GetString("Engine_WHRCorrectionFactors_Motorway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rural.
+        /// </summary>
+        public static string Engine_WHRCorrectionFactors_Rural {
+            get {
+                return ResourceManager.GetString("Engine_WHRCorrectionFactors_Rural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Urban.
+        /// </summary>
+        public static string Engine_WHRCorrectionFactors_Urban {
+            get {
+                return ResourceManager.GetString("Engine_WHRCorrectionFactors_Urban", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WHRMap.
+        /// </summary>
+        public static string Engine_WHRMap {
+            get {
+                return ResourceManager.GetString("Engine_WHRMap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entry.
+        /// </summary>
+        public static string Engine_WHRMap_Entry {
+            get {
+                return ResourceManager.GetString("Engine_WHRMap_Entry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WHRType.
+        /// </summary>
+        public static string Engine_WHRType {
+            get {
+                return ResourceManager.GetString("Engine_WHRType", resourceCulture);
             }
         }
         
@@ -1474,6 +1627,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mode.
+        /// </summary>
+        public static string Report_Engine_FuelMode {
+            get {
+                return ResourceManager.GetString("Report_Engine_FuelMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ExemptedVehicle.
         /// </summary>
         public static string Report_ExemptedVehicle {
@@ -1515,6 +1677,33 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_InputDataSignature {
             get {
                 return ResourceManager.GetString("Report_InputDataSignature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelMode.
+        /// </summary>
+        public static string Report_Result_FuelMode {
+            get {
+                return ResourceManager.GetString("Report_Result_FuelMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dual fuel mode.
+        /// </summary>
+        public static string Report_Result_FuelMode_Val_Dual {
+            get {
+                return ResourceManager.GetString("Report_Result_FuelMode_Val_Dual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to single fuel mode.
+        /// </summary>
+        public static string Report_Result_FuelMode_Val_Single {
+            get {
+                return ResourceManager.GetString("Report_Result_FuelMode_Val_Single", resourceCulture);
             }
         }
         
@@ -1798,6 +1987,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fuel.
+        /// </summary>
+        public static string Report_Results_Fuel {
+            get {
+                return ResourceManager.GetString("Report_Results_Fuel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to type.
+        /// </summary>
+        public static string Report_Results_Fuel_Type_Attr {
+            get {
+                return ResourceManager.GetString("Report_Results_Fuel_Type_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FuelConsumption.
         /// </summary>
         public static string Report_Results_FuelConsumption {
@@ -1911,6 +2118,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_Vehicle_EngineRatedPower {
             get {
                 return ResourceManager.GetString("Report_Vehicle_EngineRatedPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelTypes.
+        /// </summary>
+        public static string Report_Vehicle_FuelTypes {
+            get {
+                return ResourceManager.GetString("Report_Vehicle_FuelTypes", resourceCulture);
             }
         }
         
@@ -2316,6 +2532,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Vehicle_ADAS {
             get {
                 return ResourceManager.GetString("Vehicle_ADAS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to EcoRoll.
+        /// </summary>
+        public static string Vehicle_ADAS_EcoRoll {
+            get {
+                return ResourceManager.GetString("Vehicle_ADAS_EcoRoll", resourceCulture);
             }
         }
         

@@ -95,10 +95,10 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			Assert.AreEqual("Generic 40t Long Haul Truck Engine", engineDataProvider.Model);
 			Assert.AreEqual(0.012730, engineDataProvider.Displacement.Value());
-			Assert.AreEqual(1.0097, engineDataProvider.WHTCUrban);
+			Assert.AreEqual(1.0097, engineDataProvider.EngineModes.First().Fuels.First().WHTCUrban);
 			//AssertHelper.Exception<VectoException>(() => { var tmp = engineDataProvider.Inertia; });
 
-			var fcMapTable = engineDataProvider.FuelConsumptionMap;
+			var fcMapTable = engineDataProvider.EngineModes.First().Fuels.First().FuelConsumptionMap;
 			Assert.AreEqual(112, fcMapTable.Rows.Count);
 			Assert.AreEqual("engine speed", fcMapTable.Columns[0].Caption);
 			Assert.AreEqual("torque", fcMapTable.Columns[1].Caption);
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1256.SI(Unit.SI.Gramm.Per.Hour).Value(),
 				fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
 
-			var fldTable = engineDataProvider.FullLoadCurve;
+			var fldTable = engineDataProvider.EngineModes.First().FullLoadCurve;
 			Assert.AreEqual(10, fldTable.Rows.Count);
 			Assert.AreEqual("engine speed", fldTable.Columns[0].Caption);
 			Assert.AreEqual("full load torque", fldTable.Columns[1].Caption);
@@ -127,10 +127,6 @@ namespace TUGraz.VectoCore.Tests.XML
 					continue;
 				}
 
-				if (fuel.Equals("NG CI")) {
-					// not supported at the moment - can't be certified for engines
-					continue;
-				}
 				var reader = XmlReader.Create(SampleVehicleDecl);
 
 				var doc = new XmlDocument();
@@ -151,46 +147,14 @@ namespace TUGraz.VectoCore.Tests.XML
 				var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
 				var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-				var fuelTyle = inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.FuelType;
+				var fuelTyle = inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().FuelType;
 				Assert.AreEqual(fuel, fuelTyle.ToXMLFormat());
 				var tankSystem = fuelTyle == FuelType.NGPI || fuelTyle == FuelType.NGCI ? TankSystem.Liquefied : (TankSystem?)null;
 				Assert.NotNull(DeclarationData.FuelData.Lookup(fuelTyle, tankSystem));
 			}
 		}
 
-		[TestCase("NG CI", TankSystem.Liquefied),
-		TestCase("NG CI", TankSystem.Compressed),]
-		public void TestUnsupportedEngineFuelTypes(string fuel, TankSystem? tankSystem)
-		{
-			
-			var reader = XmlReader.Create(SampleVehicleDecl);
-
-			var doc = new XmlDocument();
-			doc.Load(reader);
-			var nav = doc.CreateNavigator();
-			var manager = new XmlNamespaceManager(nav.NameTable);
-			var helper = new XPathHelper(ExecutionMode.Declaration);
-			helper.AddNamespaces(manager);
-
-			var engineFuelType = nav.SelectSingleNode(helper.QueryAbs(
-														helper.NSPrefix(XMLNames.VectoInputDeclaration,
-																		Constants.XML.RootNSPrefix),
-														XMLNames.Component_Vehicle,
-														XMLNames.Vehicle_Components,
-														XMLNames.Component_Engine, XMLNames.ComponentDataWrapper, XMLNames.Engine_FuelType),
-													manager);
-			engineFuelType.SetValue(fuel);
-			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
-
-			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
-			var fuelTyle = inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.FuelType;
-			Assert.AreEqual(fuel, fuelTyle.ToXMLFormat());
-			AssertHelper.Exception<VectoException>(
-				() => {
-					DeclarationData.FuelData.Lookup(fuelTyle, tankSystem);
-				});			
-		}
-
+		
 		[TestCase]
 		public void TestXMLInputGbx()
 		{
@@ -1071,7 +1035,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 
-			var fuelType = inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.FuelType;
+			var fuelType = inputDataProvider.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().FuelType;
 
 			Assert.AreEqual(expectedFuelType, fuelType);
 		}

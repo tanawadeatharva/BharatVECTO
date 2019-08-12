@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			bool highEnginePower = true)
 		{
 			var fileWriter = new FileOutputWriter(modFileName);
-			var modData = new ModalDataContainer(modFileName, FuelData.Diesel, fileWriter) {
+			var modData = new ModalDataContainer(modFileName, new[] { FuelData.Diesel }, fileWriter) {
 				WriteAdvancedAux = true,
 				WriteModalResults = true
 			};
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(engine);
 
 			var aux = new BusAuxiliariesAdapter(container, AdvancedAuxFile, "Coach",
-				vehicleData.TotalVehicleWeight, engineData.ConsumptionMap, engineData.IdleSpeed);
+				vehicleData.TotalVehicleWeight, engineData.Fuels.First().ConsumptionMap, engineData.IdleSpeed);
 
 			engine.Connect(aux.Port());
 
@@ -219,15 +219,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 					LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 					LookAheadDecisionFactor = new LACDecisionFactor()
 				},
-				OverSpeedEcoRoll = overspeed
-					? new DriverData.OverSpeedEcoRollData {
-						Mode = DriverMode.Overspeed,
+				OverSpeed = new DriverData.OverSpeedData {
+						Enabled = overspeed,
 						MinSpeed = 50.KMPHtoMeterPerSecond(),
 						OverSpeed = 5.KMPHtoMeterPerSecond()
 					}
-					: new DriverData.OverSpeedEcoRollData {
-						Mode = DriverMode.Off
-					},
 			};
 		}
 	}

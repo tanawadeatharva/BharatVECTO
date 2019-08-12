@@ -28,7 +28,7 @@ Imports TUGraz.VectoCore.Utils
 <CustomValidation(GetType(Vehicle), "ValidateVehicle")>
 Public Class Vehicle
 	Implements IVehicleEngineeringInputData, IVehicleDeclarationInputData, IRetarderInputData, IPTOTransmissionInputData, 
-				IAngledriveInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData,
+				IAngledriveInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData, IAdvancedDriverAssistantSystemsEngineering,
 				IVehicleComponentsEngineering, IVehicleComponentsDeclaration, IAxlesEngineeringInputData, IAxlesDeclarationInputData
 
 	Private _filePath As String
@@ -68,11 +68,11 @@ Public Class Vehicle
 	Public legClass As LegislativeClass
 	Public VehicleHeight As Double
 
-    public EcoRolltype as EcoRollType
-    public PCC as PredictiveCruiseControlType
-    public EngineStop as Boolean
+	public EcoRolltype as EcoRollType
+	public PCC as PredictiveCruiseControlType
+	public EngineStop as Boolean
 
-    public VehicleTankSystem as TankSystem?
+	public VehicleTankSystem as TankSystem?
 
 	Public Sub New()
 		_path = ""
@@ -323,13 +323,13 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property Identifier As String Implements IVehicleDeclarationInputData.Identifier
-    get
-            Return ""
-    End Get
-    End Property
+	Public ReadOnly Property Identifier As String Implements IVehicleDeclarationInputData.Identifier
+	get
+			Return ""
+	End Get
+	End Property
 
-    Public ReadOnly Property ExemptedVehicle As Boolean Implements IVehicleDeclarationInputData.ExemptedVehicle
+	Public ReadOnly Property ExemptedVehicle As Boolean Implements IVehicleDeclarationInputData.ExemptedVehicle
 	get
 			Return false
 	End Get
@@ -413,9 +413,9 @@ Public Class Vehicle
 	End Property
 
 	Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
-    get
-            Return me
-    End Get
+	get
+			Return me
+	End Get
 	End Property
 
 	Public ReadOnly Property CrosswindCorrectionMap As TableData _
@@ -619,13 +619,13 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property IVehicleComponentsDeclaration_AuxiliaryInputData As IAuxiliariesDeclarationInputData Implements IVehicleComponentsDeclaration.AuxiliaryInputData
-    get
-            return nothing
-    End Get
-    End Property
+	Public ReadOnly Property IVehicleComponentsDeclaration_AuxiliaryInputData As IAuxiliariesDeclarationInputData Implements IVehicleComponentsDeclaration.AuxiliaryInputData
+	get
+			return nothing
+	End Get
+	End Property
 
-    Public ReadOnly Property AuxiliaryInputData As IAuxiliariesEngineeringInputData Implements IVehicleComponentsEngineering.AuxiliaryInputData
+	Public ReadOnly Property AuxiliaryInputData As IAuxiliariesEngineeringInputData Implements IVehicleComponentsEngineering.AuxiliaryInputData
 	get
 			Return Nothing
 	End Get
@@ -700,7 +700,7 @@ Public Class Vehicle
 
 	Public ReadOnly Property IVehicleEngineeringInputData_ADAS As IAdvancedDriverAssistantSystemsEngineering Implements IVehicleEngineeringInputData.ADAS
 	get
-			Return Nothing
+			Return me
 	End Get
 	End Property
 
@@ -765,10 +765,18 @@ Public Class Vehicle
 	End Get
 	End Property
 
+    Public ReadOnly Property IAdvancedDriverAssistantSystemsEngineering_DataSource As DataSource Implements IAdvancedDriverAssistantSystemsEngineering.DataSource
+        get
+            Return New DataSource() With {.SourceType = DataSourceType.JSONFile}
+        End Get
+    End Property
+
 
 	Public ReadOnly Property IAxlesEngineeringInputData_DataSource As DataSource Implements IAxlesEngineeringInputData.DataSource
 	get
 		Return New DataSource() With {.SourceType = DataSourceType.JSONFile}
 	End Get
 	End Property
+
+    
 End Class

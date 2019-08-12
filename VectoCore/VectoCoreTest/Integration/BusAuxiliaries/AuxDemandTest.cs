@@ -33,7 +33,6 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -42,6 +41,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using System.IO;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {
@@ -134,11 +134,17 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var fcMap = FuelConsumptionMapReader.ReadFromFile(engineFCMapFilePath);
 			var fld = FullLoadCurveReader.ReadFromFile(engineFLDFilePath);
 			var modelData = new CombustionEngineData() {
-				ConsumptionMap = fcMap,
+				Fuels = new List<CombustionEngineFuelData>() {
+					new CombustionEngineFuelData() {
+						ConsumptionMap = fcMap,
+					}
+				},
 				FullLoadCurves = new Dictionary<uint, EngineFullLoadCurve>() { { 0, fld }, { 1, fld } },
 				IdleSpeed = 560.SI<PerSecond>()
 			};
-
+			vehicle.RunData = new VectoRunData() {
+				EngineData = modelData
+			};
 			var engine = new CombustionEngine(vehicle, modelData);
 			//new Vehicle(vehicle, new VehicleData());
 			driver = new MockDriver(vehicle) { VehicleStopped = false, DriverBehavior = DrivingBehavior.Braking };

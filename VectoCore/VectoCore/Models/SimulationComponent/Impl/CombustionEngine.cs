@@ -37,6 +37,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -373,43 +374,66 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
 			container[ModalResultField.IgnitionOn] = CurrentState.IgnitionOn;
 
-			var result = ModelData.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, avgEngineSpeed,
-				DataBus.ExecutionMode != ExecutionMode.Declaration);
-			if (DataBus.ExecutionMode != ExecutionMode.Declaration && result.Extrapolated) {
-				Log.Warn("FuelConsumptionMap was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
-					avgEngineSpeed.Value(), CurrentState.EngineTorque.Value());
-			}
-			var pt1 = ModelData.FullLoadCurves[DataBus.Gear].PT1(avgEngineSpeed);
-			if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated) {
-				Log.Error("requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}",
-					avgEngineSpeed);
-			}
+			var pWHRelMap = 0.SI<Watt>();
+			var pWHRelCorr = 0.SI<Watt>();
+			if (ModelData.WHRData != null) {
+				var whrPwr = ModelData.WHRData.WHRMap.GetWHRPower(
+					CurrentState.EngineTorque, avgEngineSpeed, DataBus.ExecutionMode != ExecutionMode.Declaration);
+				if (DataBus.ExecutionMode != ExecutionMode.Declaration && whrPwr.Extrapolated) {
+					Log.Warn(
+						"Electric WHR power was extrapolated: range for WHR-Map is not sufficient: n: {0}, torque: {1}",
+						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value());
+				}
+				pWHRelMap = whrPwr.ElectricPower;
+				pWHRelCorr = pWHRelMap * ModelData.WHRData.WHRCorrectionFactor;
+			} 
 
-			var fc = result.Value;
-			var fcNCVcorr = fc * ModelData.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
+			container[ModalResultField.P_WHR_el_map] = pWHRelMap;
+			container[ModalResultField.P_WHR_el_corr] = pWHRelCorr;
 
-			var fcWHTC = fcNCVcorr * WHTCCorrectionFactor;
-			var fcAAUX = fcWHTC;
-			var advancedAux = EngineAux as BusAuxiliariesAdapter;
-			if (advancedAux != null) {
-				advancedAux.DoWriteModalResults(container);
-				fcAAUX = advancedAux.AAuxFuelConsumption;
+			foreach (var fuel in ModelData.Fuels) {
+				var result = fuel.ConsumptionMap.GetFuelConsumption(
+					CurrentState.EngineTorque, avgEngineSpeed,
+					DataBus.ExecutionMode != ExecutionMode.Declaration);
+				if (DataBus.ExecutionMode != ExecutionMode.Declaration && result.Extrapolated) {
+					Log.Warn(
+						"FuelConsumptionMap for fuel {2} was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
+						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value(), fuel.FuelData.FuelType.GetLabel());
+				}
+				var pt1 = ModelData.FullLoadCurves[DataBus.Gear].PT1(avgEngineSpeed);
+				if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated) {
+					Log.Error(
+						"requested rpm below minimum rpm in pt1 - extrapolating. n_eng_avg: {0}",
+						avgEngineSpeed);
+				}
+
+				var fc = result.Value;
+				var fcNCVcorr = fc * fuel.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
+
+				var fcWHTC = fcNCVcorr * WHTCCorrectionFactor(fuel.FuelData);
+				var fcAAUX = fcWHTC;
+				var advancedAux = EngineAux as BusAuxiliariesAdapter;
+				if (advancedAux != null) {
+					advancedAux.DoWriteModalResults(container);
+					fcAAUX = advancedAux.AAuxFuelConsumption;
+				}
+				var fcFinal = fcAAUX;
+
+				container[ModalResultField.FCMap, fuel.FuelData] = fc;
+				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
+				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
+				container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
+				container[ModalResultField.FCEngineStopStart, fuel.FuelData] = fcFinal;
+				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
 			}
-			var fcFinal = fcAAUX;
-
-			container[ModalResultField.FCMap] = fc;
-			container[ModalResultField.FCNCVc] = fcNCVcorr;
-			container[ModalResultField.FCWHTCc] = fcWHTC;
-			container[ModalResultField.FCAAUX] = fcAAUX;
-			container[ModalResultField.FCEngineStopStart] = fcFinal;
-			container[ModalResultField.FCFinal] = fcFinal;
 		}
 
-		protected virtual double WHTCCorrectionFactor
+		protected virtual double WHTCCorrectionFactor(FuelData.Entry fuel)
 		{
-			get { return ModelData.FuelConsumptionCorrectionFactor; }
+			return ModelData.Fuels.First(x=> x.FuelData.FuelType == fuel.FuelType).FuelConsumptionCorrectionFactor; 
 		}
 
+		
 		protected override void DoCommitSimulationStep()
 		{
 			AdvanceState();
@@ -430,9 +454,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
 			}
 
-			CurrentState.StationaryFullLoadTorque =
-				ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(angularVelocity);
-			var stationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * angularVelocity;
+			var tStatFull = ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(angularVelocity);
+			var stationaryFullLoadPower = tStatFull * angularVelocity;
+			if (!dryRun) {
+				CurrentState.StationaryFullLoadTorque = tStatFull;
+			}
 			Watt dynFullPowerCalculated;
 
 			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)
