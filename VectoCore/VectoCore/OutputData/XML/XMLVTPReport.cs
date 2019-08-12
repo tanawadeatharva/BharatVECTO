@@ -71,7 +71,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected XNamespace tns;
 
-		private IOutputDataWriter _writer;
 		private static List<string> LogList = new List<string>();
 		private LoggingRule cycleChecksRule;
 
@@ -115,7 +114,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			#endregion
 		}
 
-		public XMLVTPReport(IOutputDataWriter writer)
+		public XMLVTPReport(IReportWriter writer) : base(writer)
 		{
 			//di = "http://www.w3.org/2000/09/xmldsig#";
 			tns = "urn:tugraz:ivt:VectoAPI:VTPReport:v" + CURRENT_SCHEMA_VERSION;
@@ -124,9 +123,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 			DataIntegrityPart = new XElement(tns + "DataIntegrityCheck");
 			TestConditionsPart = new XElement(tns + "TestConditions");
 			Results = new XElement(tns + "Results");
-
-			_writer = writer;
-
 
 			AddLogging();
 		}
@@ -175,8 +171,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 			GenerateResults();
 
 			var report = GenerateReport();
-			if (_writer != null) {
-				_writer.WriteReport(ReportType.DeclarationVTPReportXML, report);
+			if (Writer != null) {
+				Writer.WriteReport(ReportType.DeclarationVTPReportXML, report);
 			}
 		}
 

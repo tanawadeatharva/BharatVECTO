@@ -618,8 +618,8 @@ namespace TUGraz.VectoCore.OutputData
 			row[MAX_ENGINE_SPEED] = (ConvertedSI)modData.MaxEngineSpeed().AsRPM.SI<Scalar>();
 			if (accTimeShare != null && decTimeShare != null && cruiseTimeShare != null) {
 				var shareSum = accTimeShare + decTimeShare + cruiseTimeShare + stopTimeShare;
-				if (!shareSum.IsEqual(100)) {
-					Log.Error(
+				if (!shareSum.IsEqual(100, 1e-2)) {
+					Log.Warn(
 						"Sumfile Error: driving behavior timeshares must sum up to 100%: acc: {0}%, dec: {1}%, cruise: {2}%, stop: {3}%, sum: {4}%",
 						accTimeShare.ToOutputFormat(1, null, false), decTimeShare.ToOutputFormat(1, null, false),
 						cruiseTimeShare.ToOutputFormat(1, null, false), stopTimeShare.ToOutputFormat(1, null, false),

@@ -596,7 +596,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}).
 					Case<ResponseOverload>(r => {
 						var angularSpeed = SearchAlgorithm.Search(nextAngularSpeed, r.Delta,
-							-Constants.SimulationSettings.EngineIdlingSearchInterval,
+							Constants.SimulationSettings.EngineIdlingSearchInterval,
 							getYValue: result => ((ResponseDryRun)result).DeltaFullLoad,
 							evaluateFunction: n => RequestPort.Request(absTime, dt, 0.SI<NewtonMeter>(), n, true),
 							criterion: result => ((ResponseDryRun)result).DeltaFullLoad.Value());
