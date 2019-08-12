@@ -167,9 +167,9 @@ namespace TUGraz.VectoCore.OutputData
 									.Concat(new[] { ModalResultField.P_aux_ice_off, ModalResultField.P_ice_start }.Select(x => x.GetName()))
 									.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
 
-#if TRACE
+//#if TRACE
 			strCols = strCols.Concat(_additionalColumns);
-#endif
+//#endif
 			if (WriteModalResults) {
 				var filteredData = Data;
 				foreach (var filter in _filters) {

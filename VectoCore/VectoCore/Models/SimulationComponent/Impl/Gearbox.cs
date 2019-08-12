@@ -71,8 +71,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool ClutchClosed(Second absTime)
 		{
-			return _engageTime.IsSmallerOrEqual(absTime, ModelData.TractionInterruption / 20);
+			return !DisengageGearbox && _engageTime.IsSmallerOrEqual(absTime, ModelData.TractionInterruption / 20);
 		}
+
+		public override bool DisengageGearbox { get; set; }
 
 		public Gearbox(IVehicleContainer container, IShiftStrategy strategy, VectoRunData runData) : base(container, runData)
 		{
@@ -90,7 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_engageTime = -double.MaxValue.SI<Second>();
 
-			if (Disengaged) {
+			if (Disengaged || DisengageGearbox) {
 				Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 			}
 

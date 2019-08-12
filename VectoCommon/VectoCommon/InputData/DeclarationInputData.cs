@@ -584,7 +584,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// P015
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
-		DriverMode Mode { get; }
+		bool Enabled { get; }
 	}
 
 	public interface IAuxiliaryDeclarationInputData

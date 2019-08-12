@@ -24,6 +24,7 @@
 	<xs:complexType name="AbstractAxleWheelsDataType" abstract="true"/>
 	<xs:complexType name="AbstractDriverAccelerationCurveEngineeringType" abstract="true"/>
 	<xs:complexType name="AbstractDriverModelEngineeringType" abstract="true"/>
+	<xs:complexType name="AbstractEcoRollEngineeringType"/>
 	<xs:complexType name="AbstractEngineDataEngineeringType" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="tns:EngineeringPowertrainComponentType"/>
@@ -223,21 +224,6 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="AxleWheelsDataEngineeringType">
-		<xs:complexContent>
-			<xs:extension base="tns:AbstractAxleWheelsDataType">
-				<xs:sequence>
-					<xs:element name="Axles">
-						<xs:complexType>
-							<xs:sequence minOccurs="2" maxOccurs="unbounded">
-								<xs:element name="Axle" type="tns:AbstractAxleDataEngineeringType"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
 	<xs:complexType name="AxleDataEngineeringType">
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractAxleDataEngineeringType">
@@ -317,6 +303,21 @@
 			<xs:element name="Data" type="tns:AbstractAxleWheelsDataType"/>
 			<xs:element name="Resource" type="tns:ExtResourceEngineeringType"/>
 		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="AxleWheelsDataEngineeringType">
+		<xs:complexContent>
+			<xs:extension base="tns:AbstractAxleWheelsDataType">
+				<xs:sequence>
+					<xs:element name="Axles">
+						<xs:complexType>
+							<xs:sequence minOccurs="2" maxOccurs="unbounded">
+								<xs:element name="Axle" type="tns:AbstractAxleDataEngineeringType"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="ComponentResourceType">
 		<xs:annotation>
@@ -403,9 +404,17 @@
 					<xs:element name="Overspeed" type="tns:AbstractOverspeedEngineeringType"/>
 					<xs:element name="DriverAccelerationCurve" type="tns:AbstractDriverAccelerationCurveEngineeringType" minOccurs="0"/>
 					<xs:element name="ShiftStrategyParameters" type="tns:AbstractShiftStrategyParametersEngineeringType" minOccurs="0"/>
+					<xs:element name="EcoRoll" type="tns:AbstractEcoRollEngineeringType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="EcoRollEngineeringType">
+		<xs:sequence>
+			<xs:element name="ActivationDelay" type="tns:EcoRollActivationDelayType"/>
+			<xs:element name="MinSpeed" type="tns:EcoRollMinSpeedType"/>
+			<xs:element name="Underspeed" type="tns:EcoRollUnderSpeedType"/>
+		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="EngineComponentEngineeringType">
 		<xs:choice>
@@ -648,14 +657,22 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="MissionCyclesType">
+		<xs:sequence>
+			<xs:element name="Cycle" type="tns:ExtResourceEngineeringType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>P008 - ext. Resource</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="OverspeedEngineeringType">
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractOverspeedEngineeringType">
 				<xs:sequence>
-					<xs:element name="Mode" type="tns:ADASOverspeedModeType"/>
+					<xs:element name="Enabled" type="xs:boolean"/>
 					<xs:element name="MinSpeed" type="tns:ADASOverspeedEcorollMinSpeedType" minOccurs="0"/>
 					<xs:element name="AllowedOverspeed" type="tns:ADASOverspeedEcorollAllowedOverspeedType" minOccurs="0"/>
-					<xs:element name="AllowedUnderspeed" type="tns:ADASOverspeedEcorollAllowedUnderspeedType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -1405,6 +1422,24 @@
 			<xs:maxInclusive value="700"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="EcoRollActivationDelayType">
+		<xs:restriction base="xs:double">
+			<xs:minExclusive value="0"/>
+			<xs:maxInclusive value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EcoRollMinSpeedType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="120"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EcoRollUnderSpeedType">
+		<xs:restriction base="xs:double">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="EngineFLDEntryPT1Type">
 		<xs:annotation>
 			<xs:appinfo>
@@ -2005,13 +2040,4 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
-	<xs:complexType name="MissionCyclesType">
-		<xs:sequence>
-			<xs:element name="Cycle" type="tns:ExtResourceEngineeringType" maxOccurs="unbounded">
-				<xs:annotation>
-					<xs:documentation>P008 - ext. Resource</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
 </xs:schema>

@@ -146,5 +146,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			throw new NotImplementedException();
 		}
+
+
+		public bool DisengageGearbox { get; set; }
+
 	}
 }

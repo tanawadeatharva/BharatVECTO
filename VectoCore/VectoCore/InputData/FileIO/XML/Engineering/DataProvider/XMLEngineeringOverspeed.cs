@@ -1,3 +1,4 @@
+using System;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.Models;
@@ -26,9 +27,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		#region Implementation of IOverSpeedEcoRollDeclarationInputData
 
-		public virtual DriverMode Mode
+		public virtual bool Enabled
 		{
-			get { return GetNode(XMLNames.DriverModel_Overspeed_Mode, required: false)?.InnerText.ParseEnum<DriverMode>() ?? DriverMode.Off; }
+			get { return GetNode(XMLNames.DriverModel_Overspeed_Mode, required: false)?.InnerText.Equals("Overspeed", StringComparison.InvariantCultureIgnoreCase) ?? false; }
 		}
 
 		#endregion
@@ -66,5 +67,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 
 		public XMLEngineeringOverspeedV10(IXMLEngineeringDriverData driverData, XmlNode node) : base(driverData, node) { }
+
+		public override bool Enabled
+		{
+			get { return XmlConvert.ToBoolean(GetNode(XMLNames.DriverModel_Overspeed_Enabled, required: false)?.InnerText ?? "false"); }
+		}
+
 	}
 }

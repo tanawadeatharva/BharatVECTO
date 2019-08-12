@@ -3,6 +3,7 @@ using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Impl;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader;
+using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.NinjectModules

@@ -31,6 +31,7 @@
 
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
@@ -41,5 +42,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient);
 
 		IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient);
+
+		void WriteModalResults(IModalDataContainer container);
+
+		void CommitSimulationStep();
 	}
 }

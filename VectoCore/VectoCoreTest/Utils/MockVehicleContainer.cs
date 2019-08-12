@@ -241,5 +241,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool IgnitionOn { get; set; }
 
 		#endregion
+
+		#region Implementation of IGearboxControl
+
+		public bool DisengageGearbox { get; set; }
+
+		#endregion
 	}
 }

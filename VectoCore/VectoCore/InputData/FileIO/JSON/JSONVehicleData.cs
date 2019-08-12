@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 
 	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngledriveInputData,
-		IPTOTransmissionInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData, IVehicleComponentsDeclaration, IVehicleComponentsEngineering, IAxlesEngineeringInputData, IAxlesDeclarationInputData
+		IPTOTransmissionInputData, IAirdragEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData, IVehicleComponentsDeclaration, IVehicleComponentsEngineering, IAxlesEngineeringInputData, IAxlesDeclarationInputData, IAdvancedDriverAssistantSystemsEngineering
 	{
 		public JSONVehicleDataV7(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false)
 			: base(data, fileName, tolerateMissing)
@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		IAdvancedDriverAssistantSystemsEngineering IVehicleEngineeringInputData.ADAS
 		{
-			get { return null; }
+			get { return this; }
 		}
 
 		public virtual AxleConfiguration AxleConfiguration

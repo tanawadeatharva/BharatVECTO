@@ -213,6 +213,23 @@ namespace TUGraz.VectoCommon.Utils
 			return value;
 		}
 
+		[DebuggerStepThrough]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static bool IsBetween<T>(this T value, T lowerBound, T upperBound) where T : IComparable
+		{
+			if (lowerBound.CompareTo(upperBound) > 0) {
+				throw new VectoException(
+					"VectoMath.LimitTo: lowerBound must not be greater than upperBound. lowerBound: {0}, upperBound: {1}", lowerBound,
+					upperBound);
+			}
+
+			if (value.CompareTo(upperBound) > 0 || value.CompareTo(lowerBound) < 0) {
+				return false;
+			}
+
+			return true;
+		}
+
 		/// <summary>
 		///	converts the given inclination in percent (0-1+) into Radians
 		/// </summary>

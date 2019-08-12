@@ -1,9 +1,8 @@
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
-using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
@@ -17,7 +16,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
 		private ILookaheadCoastingInputData _lookahead;
-		private IOverSpeedEcoRollEngineeringInputData _overspeed;
+		private IOverSpeedEngineeringInputData _overspeed;
 		private IXMLDriverAcceleration _accCurve;
 		private IGearshiftEngineeringInputData _shiftParameters;
 
@@ -46,22 +45,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return _shiftParameters ?? (_shiftParameters = Reader.ShiftParameters); }
 		}
 
-		public virtual Second EngineOffStandStillThreshold
+		public virtual IEngineStopStartEngineeringInputData EngineStopStartData
 		{
 			get { return null; }
 		}
 
-		public virtual Second MaxEngineOffTimespan
+		public virtual IEcoRollEngineeringInputData EcoRollData
 		{
 			get { return null; }
 		}
 
-		public virtual double EngineStopStartUtilityFactor
-		{
-			get { return DeclarationData.Driver.EngineStopStartUtilityFactor; }
-		}
-
-		public virtual IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll
+		public virtual IOverSpeedEngineeringInputData OverSpeedData
 		{
 			get { return _overspeed ?? (_overspeed = Reader.OverspeedData); }
 		}
@@ -83,31 +77,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
+		protected IEngineStopStartEngineeringInputData _startStopData;
+		protected IEcoRollEngineeringInputData _ecoRollData;
+
 		public XMLEngineeringDriverDataProviderV10(
 			IXMLEngineeringInputData inputData, XmlNode driverDataNode, string fsBasePath) : base(
 			inputData, driverDataNode, fsBasePath) { }
 
-		#region Overrides of XMLEngineeringDriverDataProviderV07
 
 		protected override XNamespace SchemaNamespace { get { return NAMESPACE_URI; } }
 
-		public override Second EngineOffStandStillThreshold
+		#region Overrides of XMLEngineeringDriverDataProviderV07
+
+		public override IEngineStopStartEngineeringInputData EngineStopStartData
 		{
-			get { return GetDouble("EngineStopStartThreshold", DeclarationData.Driver.EngineOffStandStillThreshold.Value()).SI<Second>(); }
+			get { return _startStopData ?? (_startStopData = Reader.EngineStopStartData); }
 		}
 
-		public override Second MaxEngineOffTimespan
+		public override IEcoRollEngineeringInputData EcoRollData
 		{
-			get { return GetDouble("MaxEngineStopStartTimespan", DeclarationData.Driver.EngineOffStandStillThreshold.Value()).SI<Second>(); }
-		}
-
-		public override double EngineStopStartUtilityFactor
-		{
-			get {
-				return ElementExists("EngineStopStartUtilityFactor")
-					? GetDouble("EngineStopStartUtilityFactor")
-					: DeclarationData.Driver.EngineStopStartUtilityFactor;
-			}
+			get { return _ecoRollData ?? (_ecoRollData = Reader.EcoRollData); }
 		}
 
 		#endregion

@@ -117,10 +117,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Driver
 		{
-			public static readonly Second EngineOffStandStillThreshold = 2.SI<Second>();
-			public static readonly Second MaxEngineOffTimespan = 120.SI<Second>();
-			public const double EngineStopStartUtilityFactor = 0.8;
-
 			public static class LookAhead
 			{
 				public const bool Enabled = true;
@@ -131,24 +127,29 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
 			}
 
-			public static class OverSpeedEcoRoll
+			public static class OverSpeed
 			{
-				public static readonly IList<DriverMode> AllowedModes = new List<DriverMode> {
-					DriverMode.EcoRoll,
-					DriverMode.Overspeed
-				};
-
 				public static readonly MeterPerSecond MinSpeed = 50.KMPHtoMeterPerSecond();
-				public static readonly MeterPerSecond OverSpeed = 2.5.KMPHtoMeterPerSecond();
-				public static readonly MeterPerSecond UnderSpeed = 5.KMPHtoMeterPerSecond();
+				public static readonly MeterPerSecond AllowedOverSpeed = 2.5.KMPHtoMeterPerSecond();
 			}
 
-			//public static class StartStop
-			//{
-			//	public static readonly MeterPerSecond MaxSpeed = 5.KMPHtoMeterPerSecond();
-			//	public static readonly Second Delay = 5.SI<Second>();
-			//	public static readonly Second MinTime = 5.SI<Second>();
-			//}
+			public static class EngineStopStart
+			{
+				public static readonly Second ActivationDelay = 2.SI<Second>();
+				public static readonly Second MaxEngineOffTimespan = 120.SI<Second>();
+				public const double UtilityFactor = 0.8;
+			}
+
+			public static class EcoRoll
+			{
+				public static readonly MeterPerSecond MinSpeed = 60.KMPHtoMeterPerSecond();
+				public static readonly Second ActivationDelay = 2.SI<Second>();
+				public static readonly MeterPerSecond UnderspeedThreshold = 0.KMPHtoMeterPerSecond();
+
+				public static readonly MeterPerSquareSecond AccelerationLowerLimit = 0.SI<MeterPerSquareSecond>();
+				public static readonly MeterPerSquareSecond AccelerationUpperLimit = 0.1.SI<MeterPerSquareSecond>();
+			}
+
 		}
 
 		public static class Trailer

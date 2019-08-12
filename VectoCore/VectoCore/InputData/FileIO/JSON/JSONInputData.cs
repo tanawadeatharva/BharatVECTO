@@ -161,7 +161,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IGearshiftEngineeringInputData GearshiftInputData { get; internal set; }
 
-		
+		public virtual IEngineStopStartEngineeringInputData EngineStopStartData
+		{
+			get { return null; }
+		}
+
+		public virtual IEcoRollEngineeringInputData EcoRollData
+		{
+			get { return null; }
+		}
+
+
 		public IAxleGearInputData AxleGear { get; internal set; }
 		public ITorqueConverterEngineeringInputData TorqueConverter { get; internal set; }
 		public IEngineEngineeringInputData Engine { get; internal set; }
@@ -450,19 +460,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return null;
 		}
 
-		public virtual IOverSpeedEcoRollEngineeringInputData OverSpeedEcoRoll
+		public virtual IOverSpeedEngineeringInputData OverSpeedData
 		{
 			get {
 				var overspeed = Body.GetEx(JsonKeys.DriverData_OverspeedEcoRoll);
-				return new OverSpeedEcoRollInputData() {
-					Mode = DriverData.ParseDriverMode(
+				return new OverSpeedInputData() {
+					Enabled = DriverData.ParseDriverMode(
 						overspeed.GetEx<string>(JsonKeys.DriverData_OverspeedEcoRoll_Mode)),
 					MinSpeed = overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_MinSpeed)
 										.KMPHtoMeterPerSecond(),
 					OverSpeed = overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_OverSpeed)
 										.KMPHtoMeterPerSecond(),
-					UnderSpeed =
-						overspeed.GetEx<double>(JsonKeys.DriverData_OverspeedEcoRoll_UnderSpeed).KMPHtoMeterPerSecond()
 				};
 			}
 		}
@@ -508,21 +516,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public virtual Second EngineOffStandStillThreshold
-		{
-			get { return null; }
-		}
-
-		public virtual Second MaxEngineOffTimespan
-		{
-			get { return null; }
-		}
-
-		public virtual double EngineStopStartUtilityFactor
-		{
-			get { return DeclarationData.Driver.EngineStopStartUtilityFactor; }
-		}
-
+		
 		#endregion
 
 		#region IAuxiliariesEngineeringInputData
@@ -841,32 +835,64 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public JSONInputDataV5(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
 
-		public override Second EngineOffStandStillThreshold
+		#region Overrides of JSONInputDataV2
+
+		public override IEngineStopStartEngineeringInputData EngineStopStartData
 		{
 			get {
-				return Body["EngineStopStartAtVehicleStopThreshold"] == null
-					? null
-					: Body.GetEx<double>("EngineStopStartAtVehicleStopThreshold").SI<Second>();
+				return new EngineStopStartInputData {
+					MaxEngineOffTimespan = Body["EngineStopStartMaxOffTimespan"] == null
+						? null
+						: Body.GetEx<double>("EngineStopStartMaxOffTimespan").SI<Second>(),
+					UtilityFactor = Body["EngineStopStartUtilityFactor"] == null
+						? DeclarationData.Driver.EngineStopStart.UtilityFactor
+						: Body.GetEx<double>("EngineStopStartUtilityFactor"),
+					ActivationDelay = Body["EngineStopStartAtVehicleStopThreshold"] == null
+						? null
+						: Body.GetEx<double>("EngineStopStartAtVehicleStopThreshold").SI<Second>()
+				};
 			}
 		}
 
 		
-
-		public override Second MaxEngineOffTimespan
+		public override IEcoRollEngineeringInputData EcoRollData
 		{
-			get {
-				return Body["EngineStopStartMaxOffTimespan"] == null
+			get { return new EcoRollInputData {
+				UnderspeedThreshold = Body["EcoRollUnderspeedThreshold"] == null
 					? null
-					: Body.GetEx<double>("EngineStopStartMaxOffTimespan").SI<Second>(); }
+					: Body.GetEx<double>("EcoRollUnderspeedThreshold").KMPHtoMeterPerSecond(),
+				MinSpeed = Body["EcoRollMinSpeed"] == null
+					? null
+					: Body.GetEx<double>("EcoRollMinSpeed").KMPHtoMeterPerSecond(),
+				ActivationDelay = Body["EcoRollActivationDelay"] == null
+					? null
+					: Body.GetEx<double>("EcoRollActivationDelay").SI<Second>()
+			}; }
 		}
 
-		public override double EngineStopStartUtilityFactor
-		{
-			get {
-				return Body["EngineStopStartUtilityFactor"] == null
-					? DeclarationData.Driver.EngineStopStartUtilityFactor
-					: Body.GetEx<double>("EngineStopStartUtilityFactor");
-			}
-		}
+		#endregion
+
+	}
+
+	public class EcoRollInputData : IEcoRollEngineeringInputData {
+		#region Implementation of IEcoRollEngineeringInputData
+
+		public MeterPerSecond MinSpeed { get; set; }
+		public Second ActivationDelay { get; set; }
+		public MeterPerSecond UnderspeedThreshold { get; set; }
+
+		#endregion
+	}
+
+	public class EngineStopStartInputData : IEngineStopStartEngineeringInputData {
+		#region Implementation of IEngineStopStartEngineeringInputData
+
+		public Second ActivationDelay { get; set; }
+
+		public Second MaxEngineOffTimespan { get; set; }
+
+		public double UtilityFactor { get; set; }
+
+		#endregion
 	}
 }

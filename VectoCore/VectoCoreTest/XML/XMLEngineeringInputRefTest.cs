@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var adas = inputDataProvider.DriverInputData;
 
-			Assert.AreEqual(DriverMode.Overspeed, adas.OverSpeedEcoRoll.Mode);
+			Assert.IsTrue(adas.OverSpeedData.Enabled);
 		}
 
 		[TestCase]
