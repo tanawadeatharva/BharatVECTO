@@ -136,8 +136,8 @@
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractCommonComponentType.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractXMLResource.cs" />
-    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractXMLType.cs" />
+    <Compile Include="InputData\FileIO\XML\Common\AbstractXMLResource.cs" />
+    <Compile Include="InputData\FileIO\XML\Common\AbstractXMLType.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLAuxiliaryDeclarationDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationADASDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAirdragDataProvider.cs" />
@@ -191,7 +191,6 @@
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractCommonComponentType.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractEngineeringXMLComponentDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractVehicleEngineeringType.cs" />
-    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\AbstractXMLType.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLCyclesDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLDriverAcceleration.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringAirdragDataProvider.cs" />
@@ -258,6 +257,8 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />
+    <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
     <Compile Include="Models\Simulation\DataBus\IEngineControl.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactory.cs" />
@@ -319,14 +320,14 @@
     <Compile Include="InputData\Reader\DataObjectAdapter\AbstractSimulationDataAdapter.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapter.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\EngineeringDataAdapter.cs" />
-    <Compile Include="InputData\Reader\DrivingCycleDataReader.cs" />
-    <Compile Include="InputData\Reader\FullLoadCurveReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\DrivingCycleDataReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\FullLoadCurveReader.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DrivingCycleProxy.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
-    <Compile Include="InputData\Reader\ShiftPolygonReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\ShiftPolygonReader.cs" />
     <Compile Include="Models\Declaration\AuxDemandEntry.cs" />
     <Compile Include="Models\Declaration\AuxiliaryTypeHelper.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
@@ -341,7 +342,7 @@
     <Compile Include="Models\Declaration\WeightingFactors.cs" />
     <Compile Include="Models\Declaration\WeightingGroups.cs" />
     <Compile Include="Models\SimulationComponent\Data\AngledriveData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMapReader.cs" />
+    <Compile Include="InputData\Reader\ComponentData\FuelConsumptionMapReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOData.cs" />
     <Compile Include="Models\SimulationComponent\ILossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOLossMap.cs" />
@@ -691,6 +692,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoMonitoring.0.8.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.1.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">

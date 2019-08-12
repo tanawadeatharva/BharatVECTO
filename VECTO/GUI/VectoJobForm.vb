@@ -14,17 +14,14 @@ Imports System.Collections.Generic
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Linq
-Imports System.Runtime.CompilerServices
-Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
-Imports TUGraz.VectoCore.InputData.Reader
+Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.Declaration
-Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
@@ -534,8 +531,8 @@ Public Class VectoJobForm
 											GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, _basePath))
 		End If
 
-		tbEngineStopStartThreshold.Text = driver.EngineStopStartData.ActivationDelay.ToGUIFormat()
-        tbEngineOffThreshold.Text = If(driver.EngineStopStartData.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.ToGUIFormat())
+		tbEngineStopStartActivationDelay.Text =  If(driver.EngineStopStartData.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.ActivationDelay.ToGUIFormat())
+        tbMaxEngineOffTimespan.Text = If(driver.EngineStopStartData.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.ToGUIFormat())
         tbEssUtility.Text = driver.EngineStopStartData.UtilityFactor.ToGUIFormat()
 
 		'-------------------------------------------------------------
@@ -653,8 +650,8 @@ Public Class VectoJobForm
 		vectoJob.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
 		vectoJob.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
 
-        vectoJob.EngineStopStartActivationThreshold = tbEngineStopStartThreshold.text.ToDouble(0)
-        vectoJob.EngineOffTimeLimit = tbEngineOffThreshold.Text.ToDouble(0)
+        vectoJob.EngineStopStartActivationThreshold = tbEngineStopStartActivationDelay.text.ToDouble(0)
+        vectoJob.EngineOffTimeLimit = tbMaxEngineOffTimespan.Text.ToDouble(0)
         vectoJob.EngineStStUtilityFactor = tbEssUtility.Text.ToDouble(0)
 		'------------------------------------------------------------
 
@@ -1281,7 +1278,22 @@ lbDlog:
 		s.MarkerSize = 3
 		s.Color = Color.Red
 		s.Name = "Map"
-		chart.Series.Add(s)
+		
+
+        If (engine.EngineModes.First().Fuels.Count > 1) then
+            Dim fcMap2 As FuelConsumptionMap = FuelConsumptionMapReader.Create(engine.EngineModes.First().Fuels(1).FuelConsumptionMap)
+
+            Dim s2 As Series = New Series
+            s2.Points.DataBindXY(fcMap2.Entries.Select(Function(x) x.EngineSpeed.AsRPM).ToArray(),
+                                fcMap2.Entries.Select(Function(x) x.Torque.Value()).ToArray())
+            s2.ChartType = SeriesChartType.Point
+            s2.MarkerSize = 3
+            s2.Color = Color.Green
+            s2.Name = "Map 2"
+            chart.Series.Add(s2)
+        End If
+
+	    chart.Series.Add(s)
 
 		Dim engineCharacteristics As String =
 				String.Format("Max. Torque: {0:F0} Nm; Max. Power: {1:F1} kW; n_rated: {2:F0} rpm; n_95h: {3:F0} rpm",

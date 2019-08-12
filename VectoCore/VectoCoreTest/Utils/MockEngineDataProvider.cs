@@ -39,8 +39,10 @@ using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockEngineDataProvider : IEngineEngineeringInputData, IEngineModeDeclarationInputData, IEngineFuelDelcarationInputData
+	public class MockEngineDataProvider : IEngineEngineeringInputData, IEngineModeEngineeringInputData, IEngineFuelEngineeringInputData
 	{
+		private IList<IEngineModeEngineeringInputData> _engineModes;
+		private IList<IEngineFuelEngineeringInputData> _fuels;
 		public DataSource DataSource { get; set; }
 		public string Source { get; set; }
 		public bool SavedInDeclarationMode { get; set; }
@@ -63,15 +65,29 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public TableData FuelConsumptionMap { get; set; }
 		public TableData FullLoadCurve { get; set; }
 
+		IList<IEngineFuelEngineeringInputData> IEngineModeEngineeringInputData.Fuels
+		{
+			get { return new[] { this }.Cast<IEngineFuelEngineeringInputData>().ToList(); }
+		}
+
 		public IList<IEngineFuelDelcarationInputData> Fuels
 		{
 			get { return new[] { this }.Cast<IEngineFuelDelcarationInputData>().ToList(); }
 		}
 
+		public IWHRData WasteHeatRecoveryData { get; }
+
 		public Watt RatedPowerDeclared { get; set; }
 		public PerSecond RatedSpeedDeclared { get; set; }
 		public NewtonMeter MaxTorqueDeclared { get; set; }
+
+		IList<IEngineModeEngineeringInputData> IEngineEngineeringInputData.EngineModes
+		{
+			get { return  new[] { this }.Cast<IEngineModeEngineeringInputData>().ToList(); }
+		}
+
 		public IList<IEngineModeDeclarationInputData> EngineModes { get { return new[] { this }.Cast<IEngineModeDeclarationInputData>().ToList(); } }
+		public WHRType WHRType { get; }
 
 		public KilogramSquareMeter Inertia { get; set; }
 		public double WHTCEngineering { get; set; }

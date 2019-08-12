@@ -93,20 +93,20 @@ Public Class VehicleForm
 		End If
 
 		cbEcoRoll.ValueMember = "Value"
-        cbEcoRoll.DisplayMember = "Label"
-        cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) new With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
+		cbEcoRoll.DisplayMember = "Label"
+		cbEcoRoll.DataSource = [Enum].GetValues(GetType(EcoRollType)).Cast(Of EcoRollType).Select(Function(ecoRoll) new With {Key .Value = ecoRoll, .Label = ecoRoll.GetName()}).ToList()
 
 
-        cbPcc.ValueMember = "Value"
-        cbPcc.DisplayMember = "Label"
-	    cbPcc.DataSource = [Enum].GetValues(GetType(PredictiveCruiseControlType)).Cast(Of PredictiveCruiseControlType).Select(Function(pcc) new With {Key .Value = pcc, .Label = pcc.GetName()}).ToList()
+		cbPcc.ValueMember = "Value"
+		cbPcc.DisplayMember = "Label"
+		cbPcc.DataSource = [Enum].GetValues(GetType(PredictiveCruiseControlType)).Cast(Of PredictiveCruiseControlType).Select(Function(pcc) new With {Key .Value = pcc, .Label = pcc.GetName()}).ToList()
 
-        cbTankSystem.ValueMember = "Value"
-        cbTankSystem.DisplayMember = "Label"
-        
-        cbTankSystem.DataSource = {New With {Key .Value = CType(Nothing, TankSystem?), .Label = ""}}.Concat([Enum].GetValues(GetType(TankSystem)).Cast(Of TankSystem?).Select(Function(ts) New With {Key .Value = ts , .Label = ts.ToString()})).ToList()
+		cbTankSystem.ValueMember = "Value"
+		cbTankSystem.DisplayMember = "Label"
+		
+		cbTankSystem.DataSource = {New With {Key .Value = CType(Nothing, TankSystem?), .Label = ""}}.Concat([Enum].GetValues(GetType(TankSystem)).Cast(Of TankSystem?).Select(Function(ts) New With {Key .Value = ts , .Label = ts.ToString()})).ToList()
 
-        tpADAS.Enabled = Cfg.DeclMode
+		'tpADAS.Enabled = Cfg.DeclMode
 
 		CbCat.ValueMember = "Value"
 		CbCat.DisplayMember = "Label"
@@ -399,19 +399,16 @@ Public Class VehicleForm
 		TbRtRatio.Text = retarder.Ratio.ToGUIFormat()
 		TbRtPath.Text = If(retarder.LossMap Is Nothing, "", GetRelativePath(retarder.LossMap.Source, basePath))
 
-        if (vehicle.SavedInDeclarationMode) then
-            Dim declVehicle as IVehicleDeclarationInputData = vehicle
-            cbPcc.SelectedValue = declVehicle.ADAS.PredictiveCruiseControl
-            cbEcoRoll.SelectedValue = declvehicle.ADAS.EcoRoll
-            cbEngineStopStart.Checked = declVehicle.ADAS.EngineStopStart
-            if (declVehicle.TankSystem.HasValue) then
-                cbTankSystem.SelectedValue = declVehicle.TankSystem.Value
-            End If
-        Else 
-            cbPcc.SelectedValue = PredictiveCruiseControlType.None
-            cbEcoRoll.SelectedValue = EcoRollType.None
-            cbEngineStopStart.Checked = False
-        End If
+	    cbPcc.SelectedValue = vehicle.ADAS.PredictiveCruiseControl
+	    cbEcoRoll.SelectedValue = vehicle.ADAS.EcoRoll
+	    cbEngineStopStart.Checked = vehicle.ADAS.EngineStopStart
+		if (vehicle.SavedInDeclarationMode) then
+			Dim declVehicle as IVehicleDeclarationInputData = vehicle
+			
+			if (declVehicle.TankSystem.HasValue) then
+				cbTankSystem.SelectedValue = declVehicle.TankSystem.Value
+			End If
+		End If
 
 		LvRRC.Items.Clear()
 		Dim i As Integer = 0
@@ -539,11 +536,11 @@ Public Class VehicleForm
 			veh.torqueLimitsList.Add(tl)
 		Next
 
-        veh.EcoRollType = CType(cbEcoRoll.SelectedValue, EcoRollType)
-        veh.PCC = CType(cbPcc.SelectedValue, PredictiveCruiseControlType)
-        veh.EngineStop = cbEngineStopStart.Checked
+		veh.EcoRollType = CType(cbEcoRoll.SelectedValue, EcoRollType)
+		veh.PCC = CType(cbPcc.SelectedValue, PredictiveCruiseControlType)
+		veh.EngineStop = cbEngineStopStart.Checked
 
-        veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, nothing), TankSystem?)
+		veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, nothing), TankSystem?)
 
 		'---------------------------------------------------------------------------------
 		If Not veh.SaveFile Then

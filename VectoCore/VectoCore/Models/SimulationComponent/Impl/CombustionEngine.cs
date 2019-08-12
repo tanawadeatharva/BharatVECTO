@@ -374,6 +374,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
 			container[ModalResultField.IgnitionOn] = CurrentState.IgnitionOn;
 
+			var pWHRelMap = 0.SI<Watt>();
+			var pWHRelCorr = 0.SI<Watt>();
+			if (ModelData.WHRData != null) {
+				var whrPwr = ModelData.WHRData.WHRMap.GetWHRPower(
+					CurrentState.EngineTorque, avgEngineSpeed, DataBus.ExecutionMode != ExecutionMode.Declaration);
+				if (DataBus.ExecutionMode != ExecutionMode.Declaration && whrPwr.Extrapolated) {
+					Log.Warn(
+						"Electric WHR power was extrapolated: range for WHR-Map is not sufficient: n: {0}, torque: {1}",
+						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value());
+				}
+				pWHRelMap = whrPwr.ElectricPower;
+				pWHRelCorr = pWHRelMap * ModelData.WHRData.WHRCorrectionFactor;
+			} 
+
+			container[ModalResultField.P_WHR_el_map] = pWHRelMap;
+			container[ModalResultField.P_WHR_el_corr] = pWHRelCorr;
+
 			foreach (var fuel in ModelData.Fuels) {
 				var result = fuel.ConsumptionMap.GetFuelConsumption(
 					CurrentState.EngineTorque, avgEngineSpeed,
@@ -437,9 +454,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
 			}
 
-			CurrentState.StationaryFullLoadTorque =
-				ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(angularVelocity);
-			var stationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * angularVelocity;
+			var tStatFull = ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(angularVelocity);
+			var stationaryFullLoadPower = tStatFull * angularVelocity;
+			if (!dryRun) {
+				CurrentState.StationaryFullLoadTorque = tStatFull;
+			}
 			Watt dynFullPowerCalculated;
 
 			// disable pt1 behaviour if PT1Disabled is true, or if the previous enginepower is greater than the current stationary fullload power (in this case the pt1 calculation fails)

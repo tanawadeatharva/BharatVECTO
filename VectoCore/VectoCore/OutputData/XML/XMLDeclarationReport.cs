@@ -116,11 +116,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 			public virtual void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor)
 			{
-				//FuelData = data.FuelData;
-				
-				//Payload = runData.VehicleData.Loading;
-				//CargoVolume = runData.VehicleData.CargoVolume;
-				//TotalVehicleWeight = runData.VehicleData.TotalVehicleWeight;
 				Status = data.RunStatus;
 				Error = data.Error;
 				StackTrace = data.StackTrace;
@@ -147,7 +142,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 				EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
 				Distance = data.Distance();
 
-				var workESS = data.TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
+				var workESS = data.WorkAuxiliariesDuringEngineStop() + data.WorkEngineStart();
+				var workWHRel = data.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
+				var workWhrMech = -workWHRel / DeclarationData.AlternaterEfficiency;
+
 				FuelConsumptionFinal = new Dictionary<FuelType, Kilogram>();
 				CO2Total = 0.SI<Kilogram>();
 				EnergyConsumptionTotal = 0.SI<Joule>();
@@ -163,9 +161,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 								x.Field<SI>(ModalResultField.P_eng_fcmap.GetName()).Value(), x.Field<SI>(data.GetColumnName(entry, ModalResultField.FCFinal)).Value()) : null).Where(x => x != null && x.Y > 0),
 						out k, out d, out s);
 					var correction = k.SI<KilogramPerWattSecond>();
-					FuelConsumptionFinal[entry.FuelType] = fcSum + correction * workESS;
-					CO2Total += fcSum * entry.CO2PerFuelWeight;
-					EnergyConsumptionTotal += fcSum * entry.LowerHeatingValueVecto;
+					var fcTotalcorr = fcSum + correction * (workESS + workWhrMech);
+					FuelConsumptionFinal[entry.FuelType] = fcTotalcorr;
+					CO2Total += fcTotalcorr * entry.CO2PerFuelWeight;
+					EnergyConsumptionTotal += fcTotalcorr * entry.LowerHeatingValueVecto;
 				}
 				
 				var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder

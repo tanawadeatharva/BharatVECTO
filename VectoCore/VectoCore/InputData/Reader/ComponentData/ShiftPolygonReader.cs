@@ -39,7 +39,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.InputData.Reader
+namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public static class ShiftPolygonReader
 	{

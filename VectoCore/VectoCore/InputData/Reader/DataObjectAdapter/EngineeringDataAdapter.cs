@@ -80,7 +80,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		
+		private VehicleData.ADASData CreateADAS(IAdvancedDriverAssistantSystemsEngineering adas)
+		{
+			return adas == null ?
+				new VehicleData.ADASData() {
+					EngineStopStart = false,
+					EcoRoll = EcoRollType.None,
+					PredictiveCruiseControl = PredictiveCruiseControlType.None
+				}: 
+				new VehicleData.ADASData {
+				EngineStopStart = adas.EngineStopStart,
+				EcoRoll = adas.EcoRoll,
+				PredictiveCruiseControl = adas.PredictiveCruiseControl
+			};
+		}
+
 
 		public AirdragData CreateAirdragData(IAirdragEngineeringInputData airdragData, IVehicleEngineeringInputData data)
 		{
@@ -146,7 +160,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 		internal CombustionEngineData CreateEngineData(
-			IVehicleEngineeringInputData vehicle, IEngineModeDeclarationInputData engineMode)
+			IVehicleEngineeringInputData vehicle, IEngineModeEngineeringInputData engineMode)
 		{
 			var engine = vehicle.Components.EngineInputData;
 			var gbx = vehicle.Components.GearboxInputData;
@@ -166,7 +180,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					new CombustionEngineFuelData() {
 						FuelData = DeclarationData.FuelData.Lookup(fuel.FuelType, tankSystem),
 						ConsumptionMap = FuelConsumptionMapReader.Create(fuel.FuelConsumptionMap),
-						FuelConsumptionCorrectionFactor = engine.WHTCEngineering,
+						FuelConsumptionCorrectionFactor = fuel.WHTCEngineering,
 					});
 			}
 
@@ -187,14 +201,37 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.FullLoadCurves = fullLoadCurves;
 
+			var whr = CreateWHRData(engineMode.WasteHeatRecoveryData);
+			if (whr != null) {
+				whr.WHRCorrectionFactor = engineMode.WasteHeatRecoveryData.EngineeringCorrectionFactor;
+			}
+
+			retVal.WHRType = engine.WHRType;
+			retVal.WHRData = whr;
 			//foreach (var fuelEntry in retVal.Fuels) {
 
 			//retVal.Fuels[0].FuelConsumptionCorrectionFactor = engine.WHTCEngineering;
 			return retVal;
 		}
 
+		private WHRData CreateWHRData(IWHRData whrInputData)
+		{
+			if (whrInputData == null || whrInputData.GeneratedElectricPower == null) {
+				return null;
+			}
 
-		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IEngineModeDeclarationInputData engineMode)
+			return new WHRData() {
+				CFUrban = 1,
+				CFRural = 1,
+				CFMotorway = 1,
+				CFColdHot = 1,
+				CFRegPer = 1,
+				WHRMap = WHRPowerReader.Create(whrInputData.GeneratedElectricPower)
+			};
+		}
+
+
+		internal CombustionEngineData CreateEngineData(IEngineEngineeringInputData engine, IEngineModeEngineeringInputData engineMode)
 		{
 			if (engine.SavedInDeclarationMode) {
 				WarnEngineeringMode("EngineData");
@@ -207,7 +244,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					new CombustionEngineFuelData() {
 						FuelData = DeclarationData.FuelData.Lookup(fuel.FuelType, null),
 						ConsumptionMap = FuelConsumptionMapReader.Create(fuel.FuelConsumptionMap),
-						FuelConsumptionCorrectionFactor = engine.WHTCEngineering,
+						FuelConsumptionCorrectionFactor = fuel.WHTCEngineering,
 					});
 			}
 
@@ -421,7 +458,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LookAheadCoasting = lookAheadData,
 				OverSpeed = overspeedData,
 				EngineStopStart = new DriverData.EngineStopStartData() {
-					EngineOffStandStillThreshold =
+					EngineOffStandStillActivationDelay =
 						driver.EngineStopStartData?.ActivationDelay ?? DeclarationData.Driver.EngineStopStart.ActivationDelay,
 					MaxEngineOffTimespan = driver.EngineStopStartData?.MaxEngineOffTimespan ?? DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
 					UtilityFactor = driver.EngineStopStartData?.UtilityFactor ?? DeclarationData.Driver.EngineStopStart.UtilityFactor,

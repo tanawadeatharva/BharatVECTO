@@ -145,10 +145,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var prevInSpeed = PreviousState.IgnitionOn ? PreviousState.InAngularVelocity : DataBus.EngineIdleSpeed;
 			var avgEngineSpeed = (prevInSpeed + operatingPoint.InAngularVelocity) / 2;
-
-			//var prevInSpeed = PreviousState.OperatingPoint?.InAngularVelocity ?? PreviousState.InAngularVelocity;
-			//var prevInTorque = PreviousState.OperatingPoint?.InTorque ?? PreviousState.InTorque;
+			//var avgEngineSpeed = (PreviousState.InAngularVelocity + operatingPoint.InAngularVelocity) / 2;
 			//var prevInSpeed = PreviousState.InAngularVelocity;
+
+			////var prevInSpeed = PreviousState.OperatingPoint?.InAngularVelocity ?? PreviousState.InAngularVelocity;
+			////var prevInTorque = PreviousState.OperatingPoint?.InTorque ?? PreviousState.InTorque;
 			var prevInTorque = PreviousState.InTorque;
 			var avgPower = (prevInSpeed * prevInTorque +
 							operatingPoint.InAngularVelocity * operatingPoint.InTorque) / 2;
@@ -217,7 +218,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
 					corrected = true;
 				}
-				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed)) {
+				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed * 1.001)) {
 					operatingPoint = ModelData.FindOperatingPoint(lowerInputSpeed, outAngularVelocity);
 					corrected = true;
 				}
@@ -252,7 +253,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			try {
 				var operatingPoint = ModelData.FindOperatingPointForPowerDemand(
-					engineResponse.DynamicFullLoadPower - engineResponse.AuxiliariesPowerDemand,
+					(engineResponse.DynamicFullLoadPower - engineResponse.AuxiliariesPowerDemand),
 					DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
 				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineN95hSpeed);
 				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
@@ -405,6 +406,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond outAngularVelocity)
 		{
 			CurrentState.SetState(inTorque, inAngularVelocity, outTorque, outAngularVelocity);
+			CurrentState.IgnitionOn = DataBus.IgnitionOn;
 		}
 
 		public class TorqueConverterComponentState : SimpleComponentState

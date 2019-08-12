@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
 		/// </summary>
-		[ModalResultField(typeof(SI), outputFactor: 1e-3)] P_aux_,
+		[ModalResultField(typeof(SI), caption: "P_aux_{0} [kW]", outputFactor: 1e-3)] P_aux_,
 
 		/// <summary>
 		///		[-]  true/false  indicate whether torque converter is locked or not (only applicable for gears with TC)
@@ -286,22 +286,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [Nm]	Torque converter output torque
 		/// </summary>
-		[ModalResultField(typeof(SI), "T_TC_out")] TC_TorqueOut,
+		[ModalResultField(typeof(SI), "T_TC_out [Nm]")] TC_TorqueOut,
 
 		/// <summary>
 		///     [1/min]	Torque converter output speed
 		/// </summary>
-		[ModalResultField(typeof(SI), "n_TC_out", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedOut,
+		[ModalResultField(typeof(SI), "n_TC_out [rpm]", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedOut,
 
 		/// <summary>
 		///     [Nm]	Torque converter output torque
 		/// </summary>
-		[ModalResultField(typeof(SI), "T_TC_in")] TC_TorqueIn,
+		[ModalResultField(typeof(SI), "T_TC_in [Nm]")] TC_TorqueIn,
 
 		/// <summary>
 		///     [1/min]	Torque converter output speed
 		/// </summary>
-		[ModalResultField(typeof(SI), "n_TC_in", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedIn,
+		[ModalResultField(typeof(SI), "n_TC_in [rpm]", outputFactor: 60 / (2 * Math.PI))] TC_angularSpeedIn,
 
 		/// <summary>
 		///     [m]	Altitude
@@ -332,6 +332,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOff [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOff,
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFuelConsumptionCompressorOn [g]", outputFactor: 1000)] AA_TotalCycleFuelConsumptionCompressorOn,
 
+		[ModalResultField(typeof(SI), "P_WHR_el [kW]", outputFactor:1e-3)] P_WHR_el_map,
+		[ModalResultField(typeof(SI), "P_WHR_el_corr [kW]", outputFactor: 1e-3)] P_WHR_el_corr
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]

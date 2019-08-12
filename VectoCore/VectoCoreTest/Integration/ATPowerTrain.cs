@@ -102,6 +102,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				AirdragData = airdragData,
 				GearboxData = gearboxData,
 				EngineData = engineData,
+				DriverData = driverData,
 				JobName = modFileName,
 				Cycle = cycleData,
 				Retarder = new RetarderData() { Type = RetarderType.None },
@@ -237,6 +238,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 					//Deceleration = -0.5.SI<MeterPerSquareSecond>()
 					LookAheadDistanceFactor = DeclarationData.Driver.LookAhead.LookAheadDistanceFactor,
 					LookAheadDecisionFactor = new LACDecisionFactor()
+				},
+				EngineStopStart = new DriverData.EngineStopStartData() {
+					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
+					MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
+					UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
 				},
 				OverSpeed = new DriverData.OverSpeedData {
 						Enabled = overspeed,

@@ -5,11 +5,12 @@
 	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0"
 	xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0"
 	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
+	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"
 	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3_DF"
 	xmlns:di="http://www.w3.org/2000/09/xmldsig#"
 	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_FurtherDev\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd"
 	>
-	<Vehicle id="VEH-1234567890" xsi:type="VehicleDeclarationType">
+	<v2.0:Vehicle id="VEH-1234567890" xsi:type="VehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
 		<ManufacturerAddress>Street, ZIP City</ManufacturerAddress>
 		<Model>Generic Model</Model>
@@ -24,17 +25,27 @@
 		<RetarderType>Transmission Output Retarder</RetarderType>
 		<RetarderRatio>1.000</RetarderRatio>
 		<AngledriveType>None</AngledriveType>
-		<PTO xsi:type="PTOType">
+		<v2.1:PTO xsi:type="PTOType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 			<PTOShaftsGearWheels>only the drive shaft of the PTO</PTOShaftsGearWheels>
 			<PTOOtherElements>multi-disc clutch</PTOOtherElements>
-		</PTO>
-		<TorqueLimits xsi:type="TorqueLimitsType">
+		</v2.1:PTO>
+		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
+		<VocationalVehicle>false</VocationalVehicle>
+    <NgTankSystem>Compressed</NgTankSystem>
+		<SleeperCab>false</SleeperCab>
+		<v2.1:ADAS xsi:type="AdvancedDriverAssistantSystemsType">
+			<EngineStopStart>true</EngineStopStart>
+			<EcoRollWithoutEngineStop>false</EcoRollWithoutEngineStop>
+			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
+			<PredictiveCruiseControl>none</PredictiveCruiseControl>
+		</v2.1:ADAS>
+		<v2.1:TorqueLimits xsi:type="TorqueLimitsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 			<Entry gear="6" maxTorque="1800" />
 			<Entry gear="1" maxTorque="2500" />
 			<Entry gear="12" maxTorque="1900" />
-		</TorqueLimits>
-		<Components xsi:type="VehicleComponentsType">
-			<Engine>
+		</v2.1:TorqueLimits>
+		<Components xsi:type="v2.0:VehicleComponentsType">
+			<Engine xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="EngineComponentDeclarationType">
 				<v2.0:Data id="ENG-gooZah3D" xsi:type="v2.3:EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3_DF">
 					<Manufacturer>Generic Engine Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Engine</Model>
@@ -45,7 +56,8 @@
 					<RatedSpeed>2200</RatedSpeed>
 					<RatedPower>380000</RatedPower>
 					<MaxEngineTorque>2300</MaxEngineTorque>
-					<Mode>
+          <WHRType>none</WHRType>
+          <Mode>
 						<IdlingSpeed>560</IdlingSpeed>
 						<FullLoadAndDragCurve>
 							<Entry engineSpeed="560.00" maxTorque="1180.00" dragTorque="-149.00" />
@@ -453,7 +465,7 @@
 					</di:Reference>
 				</Signature>
 			</Engine>
-			<Gearbox>
+			<Gearbox xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="GearboxComponentDeclarationType">
 				<v2.0:Data id="gbx-vi2Oak2N" xsi:type="v2.0:GearboxDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Gearbox</Model>
@@ -2853,7 +2865,7 @@
 					</di:Reference>
 				</Signature>
 				</Gearbox>
-			<TorqueConverter>
+			<TorqueConverter xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="TorqueConverterComponentDeclarationType">
 				<Data id="tc-123xyz" xsi:type="v2.0:TorqueConverterDataDeclarationType">
 					<v2.0:Manufacturer>Some Manufacturer</v2.0:Manufacturer>
 					<v2.0:Model>Some Model</v2.0:Model>
@@ -2874,7 +2886,7 @@
 					</di:Reference>
 				</Signature>
 			</TorqueConverter>
-			<Angledrive>
+			<Angledrive xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AngledriveComponentDeclarationType">
 				<v2.0:Data id="agl-vi2Oak2N" xsi:type="v2.0:AngledriveDataDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Gearbox</Model>
@@ -2903,7 +2915,7 @@
 					</di:Reference>
 				</Signature>
 			</Angledrive>
-			<Retarder>
+			<Retarder xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="RetarderComponentDeclarationType">
 				<v2.0:Data id="RET-Shai9imi" xsi:type="v2.0:RetarderDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 					<Manufacturer>Generic Retarder Manufacturer</Manufacturer>
 					<Model>Generic Retarder</Model>
@@ -2949,7 +2961,7 @@
 					</di:Reference>
 				</Signature>
 			</Retarder>
-			<Axlegear>
+			<Axlegear xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxlegearComponentDeclarationType">
 				<v2.0:Data id="AXL-EC3ohnoh" xsi:type="v1.0:AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
 					<Manufacturer>Generic Gearbox Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck AxleGear</Model>
@@ -3465,7 +3477,7 @@
 					</di:Reference>
 				</Signature>
 			</Axlegear>
-			<AxleWheels>
+			<AxleWheels xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxleWheelsComponentDeclarationType">
 				<Data xsi:type="AxleWheelsDataDeclarationType">
 					<Axles>
 						<Axle axleNumber="1" xsi:type="AxleDataDeclarationType">
@@ -3525,7 +3537,7 @@
 					</Axles>
 				</Data>
 			</AxleWheels>
-			<Auxiliaries>
+			<Auxiliaries xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AuxiliariesComponentDeclarationType">
 				<Data xsi:type="AuxiliariesDataDeclarationType">
 					<Fan>
 						<Technology>Hydraulic driven - Constant displacement pump</Technology>
@@ -3544,7 +3556,7 @@
 					</HVAC>
 				</Data>
 			</Auxiliaries>
-			<AirDrag>
+			<AirDrag xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AirDragComponentDeclarationType">
 				<Data id="CabinX23h" xsi:type="AirDragDataDeclarationType">
 					<Manufacturer>Generic Manufacturer</Manufacturer>
 					<Model>Generic Model</Model>
@@ -3567,5 +3579,5 @@
 				</Signature>
 			</AirDrag>
 		</Components>
-	</Vehicle>
+	</v2.0:Vehicle>
 </tns:VectoInputDeclaration>

@@ -1,4 +1,5 @@
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
@@ -14,5 +15,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 		IGearshiftEngineeringInputData ShiftParameters { get; }
 		IEngineStopStartEngineeringInputData EngineStopStartData { get; }
 		IEcoRollEngineeringInputData EcoRollData { get; }
+		
+	}
+
+	public interface IXMLEngineStopStartDriverData : IEngineStopStartEngineeringInputData
+	{
+		
 	}
 }

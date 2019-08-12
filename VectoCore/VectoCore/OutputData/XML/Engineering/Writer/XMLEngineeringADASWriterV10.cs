@@ -1,5 +1,6 @@
 ﻿using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.OutputData.XML.Engineering.Interfaces;
 using TUGraz.VectoCore.Utils;
 
@@ -20,8 +21,12 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer {
 			if (adas == null) {
 				return null;
 			}
-			// todo: write different ADAS options
-			return null;
+
+			var ns = ComponentDataNamespace;
+			return new object[] { new XElement(ns + XMLNames.Vehicle_AdvancedDriverAssist, 
+				new XElement(ns + XMLNames.Vehicle_ADAS_EngineStopStart, adas.EngineStopStart),
+				new XElement(ns + XMLNames.Vehicle_ADAS_EcoRoll, adas.EcoRoll.ToXMLFormat()),
+				new XElement(ns + XMLNames.Vehicle_ADAS_PCC, adas.PredictiveCruiseControl.ToXMLFormat()))};
 		}
 
 		#endregion

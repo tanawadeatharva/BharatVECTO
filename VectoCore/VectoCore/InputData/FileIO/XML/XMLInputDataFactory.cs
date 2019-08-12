@@ -19,17 +19,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 		[Inject]
 		public IEngineeringInjectFactory EngineeringFactory { protected get; set; }
 
-		public IInputDataProvider Create(string filename, bool verifyXML)
+		public IInputDataProvider Create(string filename)
 		{
 			return ReadXmlDoc(XmlReader.Create(filename), filename);
 		}
 
-		public IInputDataProvider Create(Stream inputData, bool verifyXML)
+		public IInputDataProvider Create(Stream inputData)
 		{
 			return ReadXmlDoc(XmlReader.Create(inputData), null);
 		}
 
-		public IInputDataProvider Create(XmlReader inputData, bool verifyXML)
+		public IInputDataProvider Create(XmlReader inputData)
 		{
 			return ReadXmlDoc(inputData, null);
 		}

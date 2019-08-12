@@ -48,17 +48,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl {
 			}
 		}
 
-		public IEngineStopStartEngineeringInputData EngineStopStartData
-		{
-			get {
-				return CreateData(XMLNames.DriverModel_EngineStopStart, (version, node) => Factory.CreateStopStartData(version, DriverData, node));
-			}
-		}
-
+		
 		public IEcoRollEngineeringInputData EcoRollData
 		{
 			get {
-				return CreateData(XMLNames.DriverModel_EcoRoll, (version, node) => Factory.CreateEcoRolltData(version, DriverData, node));
+				return CreateData(
+					XMLNames.DriverModel_EcoRoll,
+					(version, node) => version == null ? null : Factory.CreateEcoRolltData(version, DriverData, node), false);
 			}
 		}
 
@@ -78,6 +74,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl {
 			get {
 				return CreateData(
 					XMLNames.DriverModel_ShiftStrategyParameters, ShiftParametersCreator, false);
+			}
+		}
+
+		public IEngineStopStartEngineeringInputData EngineStopStartData
+		{
+			get {
+				return CreateData(
+					XMLNames.DriverModel_EngineStopStartParameters, 
+					(version, node) => version == null ? null : Factory.CreateEngineStopStartData(version, DriverData, node), false);
 			}
 		}
 
@@ -137,7 +142,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader.Impl {
 	{
 		public new const string NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
 
-		public new const string XSD_TYPE = "DriverModelType";
+		public new const string XSD_TYPE = "DriverModelEngineeringType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 

@@ -50,7 +50,7 @@ using TUGraz.VectoCore.Tests.Utils;
 using System.IO;
 using Ninject;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 

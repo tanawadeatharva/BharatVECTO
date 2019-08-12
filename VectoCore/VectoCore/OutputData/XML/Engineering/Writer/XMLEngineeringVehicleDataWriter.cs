@@ -64,14 +64,11 @@ namespace TUGraz.VectoCore.OutputData.XML.Engineering.Writer
 				CreateTorqueLimits(ns, vehicle),
 				new XElement(ns + XMLNames.Vehicle_CurbMassExtra, vehicle.CurbMassExtra.Value()),
 				new XElement(ns + XMLNames.Vehicle_Loading, vehicle.Loading.Value()),
+				Factory.GetWriter(vehicle.ADAS, Writer, vehicle.ADAS.DataSource).WriteXML(vehicle),
 				new XElement(
 					ns + XMLNames.Vehicle_Components,
 					componentsWriter.WriteXML(vehicle)
-				),
-				vehicle.ADAS == null ? null : 
-				new XElement(ns + XMLNames.Vehicle_AdvancedDriverAssist,
-							Factory.GetWriter(vehicle.ADAS, Writer, vehicle.ADAS.DataSource).WriteXML(vehicle)
-				), 
+				) 
 			};
 			return retVal;
 		}

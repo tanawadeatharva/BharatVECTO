@@ -182,7 +182,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Engine_RatedPower, XMLHelper.ValueAsUnit(engineData.RatedPowerDeclared, XMLNames.Unit_kW)),
 				new XElement(tns + XMLNames.Engine_IdlingSpeed, XMLHelper.ValueAsUnit(engineData.IdleSpeed, XMLNames.Unit_RPM)),
 				new XElement(tns + XMLNames.Engine_RatedSpeed, XMLHelper.ValueAsUnit(engineData.RatedSpeedDeclared, XMLNames.Unit_RPM)),
-				new XElement(tns + XMLNames.Engine_Displacement, XMLHelper.ValueAsUnit(engineData.Displacement, XMLNames.Unit_ltr, 1)),				
+				new XElement(tns + XMLNames.Engine_Displacement, XMLHelper.ValueAsUnit(engineData.Displacement, XMLNames.Unit_ltr, 1)),	
+				new XElement(tns + XMLNames.Engine_WHRType, engineData.WHRType.ToXMLFormat()),			
 				fuelModes.Select(x => new XElement(tns + XMLNames.Report_Engine_FuelMode, x.Select(f => new XElement(tns + XMLNames.Engine_FuelType, f.FuelType.ToXMLFormat()))))
 				);
 		}

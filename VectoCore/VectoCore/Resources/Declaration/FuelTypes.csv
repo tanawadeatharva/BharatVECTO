@@ -6,5 +6,5 @@ Ethanol PI ,            , 786                 , 2.10                            
 LPG PI     ,            ,                     , 3.02                              , 46000                 , 46000
 NG PI      , compressed ,                     , 2.69                              , 45100                 , 48000
 NG PI      , liquefied  ,                     , 2.77                              , 45100                 , 49100
-##NG CI      , compressed ,                     , 1000                              , 100000                , 100000
-##NG CI      , liquefied  ,                     , 1000                              , 100000                , 100000
+NG CI      , compressed ,                     , 2.69                              , 45100                 , 48000
+NG CI      , liquefied  ,                     , 2.77                              , 45100                 , 49100

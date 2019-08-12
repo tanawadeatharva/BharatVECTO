@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LookAheadCoasting = lookAheadData,
 				OverSpeed = overspeedData,
 				EngineStopStart = new DriverData.EngineStopStartData() {
-					EngineOffStandStillThreshold = DeclarationData.Driver.EngineStopStart.ActivationDelay,
+					EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
 					MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan,
 					UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
 				},
@@ -232,7 +232,32 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			retVal.FullLoadCurves = fullLoadCurves;
+
+			var whr = CreateWHRData(mode.WasteHeatRecoveryData);
+			if (whr != null) {
+				whr.WHRCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
+														mission.MissionType.GetNonEMSMissionType(), whr.CFRural, whr.CFUrban,
+														whr.CFMotorway) * whr.CFColdHot * whr.CFRegPer;
+			}
+			retVal.WHRData = whr;
+
 			return retVal;
+		}
+
+		private static WHRData CreateWHRData(IWHRData whrInputData)
+		{
+			if (whrInputData == null || whrInputData.GeneratedElectricPower == null) {
+				return null;
+			}
+
+			return new WHRData() {
+				CFUrban = whrInputData.UrbanCorrectionFactor,
+				CFRural = whrInputData.RuralCorrectionFactor,
+				CFMotorway = whrInputData.MotorwayCorrectionFactor,
+				CFColdHot = whrInputData.BFColdHot,
+				CFRegPer = whrInputData.CFRegPer,
+				WHRMap = WHRPowerReader.Create(whrInputData.GeneratedElectricPower)
+			};
 		}
 
 		private static NewtonMeter VehMaxTorque(

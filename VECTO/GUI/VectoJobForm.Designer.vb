@@ -130,10 +130,10 @@ Partial Class VectoJobForm
         Me.tbEssUtility = New System.Windows.Forms.TextBox()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
-        Me.tbEngineOffThreshold = New System.Windows.Forms.TextBox()
+        Me.tbMaxEngineOffTimespan = New System.Windows.Forms.TextBox()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.Label17 = New System.Windows.Forms.Label()
-        Me.tbEngineStopStartThreshold = New System.Windows.Forms.TextBox()
+        Me.tbEngineStopStartActivationDelay = New System.Windows.Forms.TextBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.Label25 = New System.Windows.Forms.Label()
@@ -1146,10 +1146,10 @@ Partial Class VectoJobForm
         Me.GroupBox3.Controls.Add(Me.tbEssUtility)
         Me.GroupBox3.Controls.Add(Me.Label24)
         Me.GroupBox3.Controls.Add(Me.Label18)
-        Me.GroupBox3.Controls.Add(Me.tbEngineOffThreshold)
+        Me.GroupBox3.Controls.Add(Me.tbMaxEngineOffTimespan)
         Me.GroupBox3.Controls.Add(Me.Label19)
         Me.GroupBox3.Controls.Add(Me.Label17)
-        Me.GroupBox3.Controls.Add(Me.tbEngineStopStartThreshold)
+        Me.GroupBox3.Controls.Add(Me.tbEngineStopStartActivationDelay)
         Me.GroupBox3.Controls.Add(Me.Label16)
         Me.GroupBox3.Location = New System.Drawing.Point(7, 9)
         Me.GroupBox3.Name = "GroupBox3"
@@ -1185,10 +1185,10 @@ Partial Class VectoJobForm
         '
         'tbEngineOffThreshold
         '
-        Me.tbEngineOffThreshold.Location = New System.Drawing.Point(247, 43)
-        Me.tbEngineOffThreshold.Name = "tbEngineOffThreshold"
-        Me.tbEngineOffThreshold.Size = New System.Drawing.Size(52, 20)
-        Me.tbEngineOffThreshold.TabIndex = 4
+        Me.tbMaxEngineOffTimespan.Location = New System.Drawing.Point(247, 43)
+        Me.tbMaxEngineOffTimespan.Name = "tbMaxEngineOffTimespan"
+        Me.tbMaxEngineOffTimespan.Size = New System.Drawing.Size(52, 20)
+        Me.tbMaxEngineOffTimespan.TabIndex = 4
         '
         'Label19
         '
@@ -1210,10 +1210,10 @@ Partial Class VectoJobForm
         '
         'tbEngineStopStartThreshold
         '
-        Me.tbEngineStopStartThreshold.Location = New System.Drawing.Point(247, 17)
-        Me.tbEngineStopStartThreshold.Name = "tbEngineStopStartThreshold"
-        Me.tbEngineStopStartThreshold.Size = New System.Drawing.Size(52, 20)
-        Me.tbEngineStopStartThreshold.TabIndex = 1
+        Me.tbEngineStopStartActivationDelay.Location = New System.Drawing.Point(247, 17)
+        Me.tbEngineStopStartActivationDelay.Name = "tbEngineStopStartActivationDelay"
+        Me.tbEngineStopStartActivationDelay.Size = New System.Drawing.Size(52, 20)
+        Me.tbEngineStopStartActivationDelay.TabIndex = 1
         '
         'Label16
         '
@@ -1495,9 +1495,9 @@ End Sub
     Friend WithEvents tbEssUtility As TextBox
     Friend WithEvents Label24 As Label
     Friend WithEvents Label18 As Label
-    Friend WithEvents tbEngineOffThreshold As TextBox
+    Friend WithEvents tbMaxEngineOffTimespan As TextBox
     Friend WithEvents Label19 As Label
     Friend WithEvents Label17 As Label
-    Friend WithEvents tbEngineStopStartThreshold As TextBox
+    Friend WithEvents tbEngineStopStartActivationDelay As TextBox
     Friend WithEvents Label16 As Label
 End Class

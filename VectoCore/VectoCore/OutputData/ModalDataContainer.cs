@@ -164,12 +164,16 @@ namespace TUGraz.VectoCore.OutputData
 
 			var strCols = dataColumns.Select(x => x.GetName())
 									.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
-									.Concat(new[] { ModalResultField.P_aux_ice_off, ModalResultField.P_ice_start }.Select(x => x.GetName()))
+									.Concat(
+										new[] {
+											ModalResultField.P_WHR_el_map, ModalResultField.P_WHR_el_corr, ModalResultField.P_aux_ice_off,
+											ModalResultField.P_ice_start
+										}.Select(x => x.GetName()))
 									.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
 
-//#if TRACE
+#if TRACE
 			strCols = strCols.Concat(_additionalColumns);
-//#endif
+#endif
 			if (WriteModalResults) {
 				var filteredData = Data;
 				foreach (var filter in _filters) {
@@ -409,7 +413,7 @@ namespace TUGraz.VectoCore.OutputData
 		public void AddAuxiliary(string id, string columnName = null)
 		{
 			if (!string.IsNullOrWhiteSpace(id) && !Auxiliaries.ContainsKey(id)) {
-				var col = Data.Columns.Add(columnName ?? ModalResultField.P_aux_ + id, typeof(SI));
+				var col = Data.Columns.Add(columnName ?? string.Format(ModalResultField.P_aux_.GetCaption(), id), typeof(SI));
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] =
 					ModalResultField.P_aux_.GetAttribute().Decimals;
 				col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =

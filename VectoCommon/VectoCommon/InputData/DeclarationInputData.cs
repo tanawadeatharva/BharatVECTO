@@ -36,6 +36,7 @@ using System.Net.NetworkInformation;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCommon.InputData
 {
@@ -287,6 +288,11 @@ namespace TUGraz.VectoCommon.InputData
 				default: throw new ArgumentOutOfRangeException(nameof(ecoRoll), ecoRoll, null);
 			}
 		}
+
+		public static string ToXMLFormat(this EcoRollType ecoRoll)
+		{
+			return GetName(ecoRoll).ToLowerInvariant();
+		}
 	}
 
 	public enum TankSystem
@@ -493,6 +499,8 @@ namespace TUGraz.VectoCommon.InputData
 		NewtonMeter MaxTorqueDeclared { get; }
 
 		IList<IEngineModeDeclarationInputData> EngineModes { get; }
+
+		WHRType WHRType{ get; }
 	}
 
 	public interface IEngineModeDeclarationInputData
@@ -511,6 +519,26 @@ namespace TUGraz.VectoCommon.InputData
 		TableData FullLoadCurve { get; }
 
 		IList<IEngineFuelDelcarationInputData> Fuels { get; }
+
+		IWHRData WasteHeatRecoveryData { get; }
+
+	}
+
+	public interface IWHRData
+	{
+		double UrbanCorrectionFactor { get; }
+		
+		double RuralCorrectionFactor { get; }
+
+		double MotorwayCorrectionFactor { get; }
+
+		double BFColdHot { get; }
+
+		double CFRegPer { get; }
+
+		double EngineeringCorrectionFactor { get; }
+
+		TableData GeneratedElectricPower { get; }
 
 	}
 

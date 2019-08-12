@@ -207,7 +207,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
-
+			var brakes = new Brakes(vehicleContainer);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData, airdragData));
@@ -258,7 +258,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			new MockEngine(vehicleContainer);
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
-
+			var brakes = new Brakes(vehicleContainer);
 			driver.Connect(vehicle.OutPort());
 
 			vehicle.MyVehicleSpeed = 0.SI<MeterPerSecond>();
@@ -327,7 +327,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
-
+			var brakes = new Brakes(vehicleContainer);
 			driver.Connect(vehicle.OutPort());
 
 			vehicle.MyVehicleSpeed = 5.SI<MeterPerSecond>();

@@ -296,12 +296,22 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		KilogramSquareMeter Inertia { get; }
 
+		new IList<IEngineModeEngineeringInputData> EngineModes { get; }
+
+		Second EngineStartTime { get; }
+	}
+
+	public interface IEngineModeEngineeringInputData : IEngineModeDeclarationInputData
+	{
+		new IList<IEngineFuelEngineeringInputData> Fuels { get; }
+	}
+
+	public interface IEngineFuelEngineeringInputData : IEngineFuelDelcarationInputData
+	{
 		/// <summary>
 		/// P170
 		/// </summary>
 		double WHTCEngineering { get; }
-
-		Second EngineStartTime { get; }
 	}
 
 	public interface IAuxiliariesEngineeringInputData

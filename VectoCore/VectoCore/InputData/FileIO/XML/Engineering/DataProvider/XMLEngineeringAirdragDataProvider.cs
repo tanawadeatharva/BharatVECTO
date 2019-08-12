@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
 
-		public new const string XSD_TYPE = "AirDragComponentEngineeringType";
+		public new const string XSD_TYPE = "AirDragDataEngineeringType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 

@@ -112,6 +112,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
 
 			var auxDemand = EngineAux.PowerDemandEngineOn(ModelData.IdleSpeed) / ModelData.IdleSpeed;
+
+			var pWHRelMap = 0.SI<Watt>();
+			var pWHRelCorr = 0.SI<Watt>();
+
+			if (ModelData.WHRData != null) {
+				var whrPwr = ModelData.WHRData.WHRMap.GetWHRPower(auxDemand, ModelData.IdleSpeed, DataBus.ExecutionMode != ExecutionMode.Declaration);
+
+				pWHRelMap = whrPwr.ElectricPower * (1 - EngineStopStartUtilityFactor);
+				pWHRelCorr = pWHRelMap * ModelData.WHRData.WHRCorrectionFactor;
+			}
+			container[ModalResultField.P_WHR_el_map] = pWHRelMap;
+			container[ModalResultField.P_WHR_el_corr] = pWHRelCorr;
+
 			foreach (var fuel in ModelData.Fuels) {
 				var fc = 0.SI<KilogramPerSecond>();
 				var fcNCVcorr = fc * fuel.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr

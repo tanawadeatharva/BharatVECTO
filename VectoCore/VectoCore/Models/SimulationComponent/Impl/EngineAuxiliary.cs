@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public EngineAuxiliary(IVehicleContainer container) : base(container)
 		{
-			EngineStopStartUtilityFactor = container.RunData.DriverData.EngineStopStart.UtilityFactor;
+			EngineStopStartUtilityFactor = container.RunData?.DriverData?.EngineStopStart?.UtilityFactor ?? double.NaN;
 		}
 
 		public IAuxPort Port()

@@ -502,7 +502,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool DisengageGearbox
 		{
-			get { throw new System.NotImplementedException(); }
+			get { return false; }
 			set { throw new System.NotImplementedException(); }
 		}
 

@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public class EngineStopStartData
 		{
-			[Required, SIRange(0, Double.MaxValue)] public Second EngineOffStandStillThreshold;
+			[Required, SIRange(0, Double.MaxValue)] public Second EngineOffStandStillActivationDelay;
 
 			[Required, SIRange(0, double.MaxValue)] public Second MaxEngineOffTimespan;
 

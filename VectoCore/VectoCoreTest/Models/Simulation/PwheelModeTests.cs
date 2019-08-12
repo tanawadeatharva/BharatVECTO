@@ -36,7 +36,6 @@ using System.Linq;
 using System.Collections.Generic;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -48,6 +47,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using NUnit.Framework;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				DriverData = new DriverData() {
 					EngineStopStart = new DriverData.EngineStopStartData() {
 						UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
-						EngineOffStandStillThreshold = DeclarationData.Driver.EngineStopStart.ActivationDelay,
+						EngineOffStandStillActivationDelay = DeclarationData.Driver.EngineStopStart.ActivationDelay,
 						MaxEngineOffTimespan = DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan
 					}
 				}

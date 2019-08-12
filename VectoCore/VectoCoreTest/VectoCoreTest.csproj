@@ -138,6 +138,7 @@
     <Compile Include="Models\Simulation\MockSumWriter.cs" />
     <Compile Include="Models\Simulation\GetSectionTest.cs" />
     <Compile Include="Models\Simulation\DeclarationSimulationFactoryTest.cs" />
+    <Compile Include="Models\WHRMapReaderTest.cs" />
     <Compile Include="Reports\ActualModalSimulationDataTest.cs" />
     <Compile Include="Reports\GearshiftCountTest.cs" />
     <Compile Include="Reports\ModDataTest.cs" />
@@ -2721,10 +2722,16 @@
     <None Include="TestData\XML\XMLReaderEngineering\dummy.vaux">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\XML\XMLReaderEngineering\engine_WHR.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\XML\XMLReaderEngineering\engine.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\XML\XMLReaderEngineering\engine.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\XML\XMLReaderEngineering\engine_DF.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\XML\XMLReaderEngineering\GBX_DirectGear.vtlm">
@@ -3115,6 +3122,18 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\engineSampleDualModeDualFuel.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\engineSample_WHR.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleDualModeDualFuel_WHR.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeSingleFuel_WHR.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeDualFuel_WHR.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleSingleModeDualFuel.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -3159,6 +3178,9 @@
     <Content Include="TestData\XML\XMLReaderEngineering\engineering_axlegear-sample_ref.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderEngineering\engineering_engine-sample_ref_DF_WHR.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderEngineering\engineering_engine-sample_ref.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -3174,6 +3196,9 @@
     <Content Include="TestData\XML\XMLReaderEngineering\engineering_job-sample_FULL.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderEngineering\engineering_job-sample_ref_DF_WHR.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderEngineering\engineering_job-sample_ref.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -3181,6 +3206,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderEngineering\engineering_torqueconverter-sample_ref.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderEngineering\engineering_vehicle_ref_DF_WHR.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderEngineering\engineering_vehicle_ref.xml">
