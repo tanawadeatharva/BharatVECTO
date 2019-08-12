@@ -51,6 +51,7 @@ Imports TUGraz.VectoCore
 Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Engineering
+Imports TUGraz.VectoCore.Models.Simulation
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
@@ -937,7 +938,7 @@ Imports TUGraz.VectoCore.Utils
 
         AllowSleepOff()
 
-        Dim sumFileWriter As FileOutputWriter = New FileOutputWriter(JobFileList(0))
+        Dim sumFileWriter As FileOutputWriter = New FileOutputWriter(GetOutputDirectory(JobFileList(0)))
         Dim sumWriter As SummaryDataContainer = New SummaryDataContainer(sumFileWriter)
         Dim jobContainer As JobContainer = New JobContainer(sumWriter)
 
@@ -987,7 +988,8 @@ Imports TUGraz.VectoCore.Utils
                     Continue For
                 End If
 
-                Dim fileWriter As FileOutputWriter = New FileOutputWriter(jobFile)
+                Dim outFile As String = GetOutputDirectory(jobFile)
+                Dim fileWriter As FileOutputWriter = New FileOutputWriter(outFile)
 
                 Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, input, fileWriter)
                 runsFactory.WriteModalResults = Cfg.ModOut
@@ -1087,7 +1089,7 @@ Imports TUGraz.VectoCore.Utils
         Next
 
         For Each job As String In JobFileList
-            dim w as FileOutputWriter = new FileOutputWriter(job)
+            dim w as FileOutputWriter = new FileOutputWriter(GetOutputDirectory(job))
             For Each entry as KeyValuePair(Of string, string) In _
                 new Dictionary(Of string, string) _
                     from {{w.XMLFullReportName, "XML Manufacturer Report"}, {w.XMLCustomerReportName, "XML Customer Report"},
@@ -1126,6 +1128,23 @@ Imports TUGraz.VectoCore.Utils
                                      .Message = message})
         End If
     End Sub
+
+    Private Function GetOutputDirectory(jobFile As String) As String
+
+        dim outFile as String = jobfile
+        If (Not string.IsNullOrWhiteSpace(tbOutputFolder.Text)) Then
+            Dim outPath as string = tbOutputFolder.Text
+            if (path.IsPathRooted(outPath)) Then
+                outFile = Path.Combine(outPath, Path.GetFileName(jobFile))
+            Else 
+                outFile = Path.Combine(path.GetDirectoryName(jobFile), outPath, path.GetFileName(jobFile))
+            End If
+            If (Not directory.Exists(path.GetDirectoryName(outFile))) then
+                Directory.CreateDirectory(path.GetDirectoryName(outFile))
+            End If
+        End If
+        Return outFile
+    End Function
 
 
     Private Shared Sub PrintRuns(progress As Dictionary(Of Integer, JobContainer.ProgressEntry),
@@ -1435,6 +1454,9 @@ Imports TUGraz.VectoCore.Utils
 
         RbDecl.Checked = Cfg.DeclMode
         cbValidateRunData.Checked = cfg.ValidateRunData
+
+        tbOutputFolder.Text = Cfg.OutputFolder
+
     End Sub
 
     'Update config class from options in GUI, e.g. before running calculations 
@@ -1442,6 +1464,7 @@ Imports TUGraz.VectoCore.Utils
         Cfg.ModOut = ChBoxModOut.Checked
         Cfg.Mod1Hz = ChBoxMod1Hz.Checked
         Cfg.ValidateRunData = cbValidateRunData.Checked
+        Cfg.OutputFolder = tbOutputFolder.Text
     End Sub
 
 #End Region
@@ -2100,6 +2123,16 @@ Imports TUGraz.VectoCore.Utils
         Handles EPTPJobEditorToolStripMenuItem.Click
         OpenVECTOeditor("<VTP>")
     End Sub
+
+    Private Sub BtTCfileBrowse_Click(sender As Object, e As EventArgs) Handles BtTCfileBrowse.Click
+        If Not FolderFileBrowser.OpenDialog("") Then
+            Exit Sub
+        End If
+
+        Dim filePath As String = FolderFileBrowser.Files(0)
+        tbOutputFolder.Text = Path.GetFullPath(filePath)
+    End Sub
+
 End Class
 
 

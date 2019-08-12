@@ -103,7 +103,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Report.InputDataHash = JobInputData.VectoJobHash;
 			Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
 			Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
-			Report.InitializeReport(powertrainConfig);
+			var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem)).ToList())
+										.ToList();
+			Report.InitializeReport(powertrainConfig, fuels);
 		}
 
 
@@ -126,9 +128,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				vehicle.Components.AirdragInputData,
 				Segment.Missions.First(), Segment);
 			EngineData = Dao.CreateEngineData(
-				vehicle.Components.EngineInputData,
-				vehicle.EngineIdleSpeed,
-				vehicle.Components.GearboxInputData, vehicle.TorqueLimits, vehicle.TankSystem);
+				vehicle, vehicle.Components.EngineInputData.EngineModes.First(),
+				new Mission() { MissionType = MissionType.LongHaul });
 			AxlegearData = Dao.CreateAxleGearData(vehicle.Components.AxleGearInputData);
 			AngledriveData = Dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 			GearboxData = Dao.CreateGearboxData(
@@ -188,7 +189,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			vtpRunData.Mission = new Mission() {
 				MissionType = MissionType.VerificationTest
 			};
-			var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
+			//var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
 			//var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
 			var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
 			vtpRunData.VTPData = new VTPData() {

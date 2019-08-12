@@ -301,7 +301,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (_powershiftLossEnergy != null) {
 				var remainingShiftLossLime = ModelData.PowershiftShiftTime - (absTime - LastShift);
 				if (remainingShiftLossLime.IsGreater(0)) {
-					aliquotEnergyLoss = _powershiftLossEnergy * VectoMath.Min(1.0, dt / remainingShiftLossLime);
+					aliquotEnergyLoss = _powershiftLossEnergy * VectoMath.Min(1.0, VectoMath.Min(dt, remainingShiftLossLime) / ModelData.PowershiftShiftTime);
 					var avgEngineSpeed = (DataBus.EngineSpeed + outAngularVelocity * effectiveRatio) / 2;
 					powershiftLoss = aliquotEnergyLoss / dt / avgEngineSpeed;
 					inTorque += powershiftLoss;
@@ -319,7 +319,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.Gear = Gear;
 				CurrentState.TransmissionTorqueLoss = inTorque * effectiveRatio - outTorque;
 				CurrentState.PowershiftLoss = powershiftLoss;
-				CurrentState.PowershiftLossEnergy = _powershiftLossEnergy ?? 0.SI<WattSecond>() - aliquotEnergyLoss;
+				CurrentState.PowershiftLossEnergy = _powershiftLossEnergy;
 				TorqueConverter.Locked(CurrentState.InTorque, CurrentState.InAngularVelocity, CurrentState.InTorque,
 					CurrentState.InAngularVelocity);
 			}

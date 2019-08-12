@@ -1501,6 +1501,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mode.
+        /// </summary>
+        public static string Report_Engine_FuelMode {
+            get {
+                return ResourceManager.GetString("Report_Engine_FuelMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ExemptedVehicle.
         /// </summary>
         public static string Report_ExemptedVehicle {
@@ -1542,6 +1551,33 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_InputDataSignature {
             get {
                 return ResourceManager.GetString("Report_InputDataSignature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelMode.
+        /// </summary>
+        public static string Report_Result_FuelMode {
+            get {
+                return ResourceManager.GetString("Report_Result_FuelMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dual fuel mode.
+        /// </summary>
+        public static string Report_Result_FuelMode_Val_Dual {
+            get {
+                return ResourceManager.GetString("Report_Result_FuelMode_Val_Dual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to single fuel mode.
+        /// </summary>
+        public static string Report_Result_FuelMode_Val_Single {
+            get {
+                return ResourceManager.GetString("Report_Result_FuelMode_Val_Single", resourceCulture);
             }
         }
         
@@ -1825,6 +1861,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fuel.
+        /// </summary>
+        public static string Report_Results_Fuel {
+            get {
+                return ResourceManager.GetString("Report_Results_Fuel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to type.
+        /// </summary>
+        public static string Report_Results_Fuel_Type_Attr {
+            get {
+                return ResourceManager.GetString("Report_Results_Fuel_Type_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FuelConsumption.
         /// </summary>
         public static string Report_Results_FuelConsumption {
@@ -1938,6 +1992,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_Vehicle_EngineRatedPower {
             get {
                 return ResourceManager.GetString("Report_Vehicle_EngineRatedPower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FuelTypes.
+        /// </summary>
+        public static string Report_Vehicle_FuelTypes {
+            get {
+                return ResourceManager.GetString("Report_Vehicle_FuelTypes", resourceCulture);
             }
         }
         

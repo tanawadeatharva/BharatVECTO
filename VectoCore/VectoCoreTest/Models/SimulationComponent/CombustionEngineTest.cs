@@ -517,13 +517,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Test_EngineData()
 		{
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(CoachEngine, 0);
-			var motorway = engineData.WHTCMotorway;
+			var motorway = engineData.Fuels.First().WHTCMotorway;
 			Assert.AreEqual(motorway, 1);
 
-			var rural = engineData.WHTCRural;
+			var rural = engineData.Fuels.First().WHTCRural;
 			Assert.AreEqual(rural, 1);
 
-			var urban = engineData.WHTCUrban;
+			var urban = engineData.Fuels.First().WHTCUrban;
 			Assert.AreEqual(urban, 1);
 
 			var displace = engineData.Displacement;

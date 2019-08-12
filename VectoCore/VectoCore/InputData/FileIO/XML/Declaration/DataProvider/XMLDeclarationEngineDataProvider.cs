@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
@@ -19,6 +21,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
+		protected List<IEngineModeDeclarationInputData> _engineModes;
+
 		public XMLDeclarationEngineDataProviderV10(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) :
 			base(componentNode, sourceFile)
@@ -31,44 +35,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual CubicMeter Displacement
 		{
 			get { return GetDouble(XMLNames.Engine_Displacement).SI(Unit.SI.Cubic.Centi.Meter).Cast<CubicMeter>(); }
-		}
-
-		public virtual PerSecond IdleSpeed
-		{
-			get { return GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad(); }
-		}
-
-		public virtual FuelType FuelType
-		{
-			get {
-				var value = GetString(XMLNames.Engine_FuelType);
-				if ("LPG".Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
-					return FuelType.LPGPI;
-				}
-				if ("NG".Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
-					return FuelType.NGPI;
-				}
-
-				return value.ParseEnum<FuelType>();
-			}
-		}
-
-		public virtual TableData FuelConsumptionMap
-		{
-			get {
-				return ReadTableData(
-					XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry,
-					AttributeMappings.FuelConsumptionMapMapping);
-			}
-		}
-
-		public virtual TableData FullLoadCurve
-		{
-			get {
-				return ReadTableData(
-					XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FullLoadCurve_Entry,
-					AttributeMappings.EngineFullLoadCurveMapping);
-			}
 		}
 
 		public virtual Watt RatedPowerDeclared
@@ -86,31 +52,101 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetDouble(XMLNames.Engine_MaxTorque).SI<NewtonMeter>(); }
 		}
 
-		public virtual double WHTCMotorway
+		public virtual IList<IEngineModeDeclarationInputData> EngineModes
 		{
-			get { return GetDouble(XMLNames.Engine_WHTCMotorway); }
+			get {
+				return _engineModes ??
+						(_engineModes = new List<IEngineModeDeclarationInputData>() { new XMLSingleFuelEngine(BaseNode) });
+			}
+		}
+		
+
+		public class XMLSingleFuelEngine : AbstractXMLType, IEngineModeDeclarationInputData
+		{
+			protected IList<IEngineFuelDelcarationInputData> _fuels;
+
+			public XMLSingleFuelEngine(XmlNode baseNode) : base(baseNode)
+			{
+			}
+
+			public virtual PerSecond IdleSpeed
+			{
+				get { return GetDouble(XMLNames.Engine_IdlingSpeed).RPMtoRad(); }
+			}
+
+			public virtual TableData FullLoadCurve
+			{
+				get {
+					return ReadTableData(
+						XMLNames.Engine_FullLoadAndDragCurve, XMLNames.Engine_FullLoadCurve_Entry,
+						AttributeMappings.EngineFullLoadCurveMapping);
+				}
+			}
+
+			public virtual IList<IEngineFuelDelcarationInputData> Fuels {
+				get {
+					return _fuels ?? (_fuels = new List<IEngineFuelDelcarationInputData>() { new XMLSingleFuelEngineFuel(BaseNode) });
+				}
+			
+			}
+
 		}
 
-		public virtual double WHTCRural
+		public class XMLSingleFuelEngineFuel : AbstractXMLType, IEngineFuelDelcarationInputData
 		{
-			get { return GetDouble(XMLNames.Engine_WHTCRural); }
+			public XMLSingleFuelEngineFuel(XmlNode baseNode) : base(baseNode) { }
+
+			public virtual FuelType FuelType
+			{
+				get {
+					var value = GetString(XMLNames.Engine_FuelType);
+					if ("LPG".Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
+						return FuelType.LPGPI;
+					}
+					if ("NG".Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
+						return FuelType.NGPI;
+					}
+
+					return value.ParseEnum<FuelType>();
+				}
+			}
+
+			public virtual TableData FuelConsumptionMap
+			{
+				get {
+					return ReadTableData(
+						XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry,
+						AttributeMappings.FuelConsumptionMapMapping);
+				}
+			}
+
+			public virtual double WHTCMotorway
+			{
+				get { return GetDouble(XMLNames.Engine_WHTCMotorway); }
+			}
+
+			public virtual double WHTCRural
+			{
+				get { return GetDouble(XMLNames.Engine_WHTCRural); }
+			}
+
+			public virtual double WHTCUrban
+			{
+				get { return GetDouble(XMLNames.Engine_WHTCUrban); }
+			}
+
+			public virtual double ColdHotBalancingFactor
+			{
+				get { return GetDouble(XMLNames.Engine_ColdHotBalancingFactor); }
+			}
+
+			public virtual double CorrectionFactorRegPer
+			{
+				get { return GetDouble(XMLNames.Engine_CorrectionFactor_RegPer); }
+			}
 		}
 
-		public virtual double WHTCUrban
-		{
-			get { return GetDouble(XMLNames.Engine_WHTCUrban); }
-		}
-
-		public virtual double ColdHotBalancingFactor
-		{
-			get { return GetDouble(XMLNames.Engine_ColdHotBalancingFactor); }
-		}
-
-		public virtual double CorrectionFactorRegPer
-		{
-			get { return GetDouble(XMLNames.Engine_CorrectionFactor_RegPer); }
-		}
-
+		
 		#endregion
 
 		#region Overrides of AbstractXMLResource
@@ -124,6 +160,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
+
 
 	// ---------------------------------------------------------------------------------------
 
@@ -166,14 +203,75 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile) { }
 
-		public override FuelType FuelType
+		protected override XNamespace SchemaNamespace
 		{
-			get { return GetString(XMLNames.Engine_FuelType).ParseEnum<FuelType>(); }
+			get { return NAMESPACE_URI; }
 		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationEngineDataProviderV23 : XMLDeclarationEngineDataProviderV20
+	{
+		/*
+		 * Support for dual-fuel engines (in different operating modes - either single fuel or dual fuel)
+		 */
+
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationEngineDataProviderV23(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile) { }
 
 		protected override XNamespace SchemaNamespace
 		{
 			get { return NAMESPACE_URI; }
+		}
+
+		#region Overrides of XMLDeclarationEngineDataProviderV10
+
+		public override IList<IEngineModeDeclarationInputData> EngineModes
+		{
+			get {
+				return _engineModes ?? (_engineModes = GetNodes("Mode")
+							.Cast<XmlNode>().Select(x => new XMLDualFuelEngineMode(x)).Cast<IEngineModeDeclarationInputData>().ToList());
+			}
+		}
+
+		#endregion
+
+		public class XMLDualFuelEngineMode : XMLSingleFuelEngine
+		{
+			public XMLDualFuelEngineMode(XmlNode baseNode) : base(baseNode) { }
+
+			#region Overrides of XMLSingleFuelEngine
+
+			public override IList<IEngineFuelDelcarationInputData> Fuels
+			{
+				get {
+					return _fuels ?? (_fuels = GetNodes("Fuel").Cast<XmlNode>().Select(x => new XMLDualFuelEngineFuel(x))
+																.Cast<IEngineFuelDelcarationInputData>().ToList());
+				}
+			}
+
+			#endregion
+		}
+
+		public class XMLDualFuelEngineFuel : XMLSingleFuelEngineFuel
+		{
+			public XMLDualFuelEngineFuel(XmlNode baseNode) : base(baseNode) { }
+
+			#region Overrides of XMLSingleFuelEngineFuel
+
+			public override FuelType FuelType
+			{
+				get { return GetAttribute(BaseNode, "type").ParseEnum<FuelType>(); }
+			}
+
+			#endregion
 		}
 	}
 }

@@ -66,6 +66,10 @@ In this tab the global calculation settings can be changed.
 
 :   Select either [Declaration Mode](#declaration-mode) or [Engineering Mode](#engineering-mode)
 
+**Output Directory**
+
+:   This input can be used to write all simulation result files to a certain directory. This can be either an absolute path or a relative path. If an absolute path is provided, all result files are written to this directory. If a relative path is provided the .vmod and XML reports are written into the corresponding subdirectory of the job file and the .vsum file is written to the corresponding subdirectory of the first selected job file.
+
 **Output**
 
 ![cb](pics/checkbox.png) Write modal results

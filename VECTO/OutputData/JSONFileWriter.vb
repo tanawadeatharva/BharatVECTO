@@ -43,23 +43,23 @@ Public Class JSONFileWriter
 		body.Add("ModelName", eng.Model)
 
 			body.Add("Displacement", eng.Displacement.ConvertToCubicCentiMeter().ToString())
-		body.Add("IdlingSpeed", eng.IdleSpeed.AsRPM)
+		body.Add("IdlingSpeed", eng.EngineModes.First().IdleSpeed.AsRPM)
 		body.Add("Inertia", eng.Inertia.Value())
 
-		body.Add("WHTC-Urban", eng.WHTCUrban)
-		body.Add("WHTC-Rural", eng.WHTCRural)
-		body.Add("WHTC-Motorway", eng.WHTCMotorway)
+		body.Add("WHTC-Urban", eng.EngineModes.First().Fuels.First().WHTCUrban)
+		body.Add("WHTC-Rural", eng.EngineModes.First().Fuels.First().WHTCRural)
+		body.Add("WHTC-Motorway", eng.EngineModes.First().Fuels.First().WHTCMotorway)
 		body.Add("WHTC-Engineering", eng.WHTCEngineering)
-		body.Add("ColdHotBalancingFactor", eng.ColdHotBalancingFactor)
-		body.Add("CFRegPer", eng.CorrectionFactorRegPer)
+		body.Add("ColdHotBalancingFactor", eng.EngineModes.First().Fuels.First().ColdHotBalancingFactor)
+		body.Add("CFRegPer", eng.EngineModes.First().Fuels.First().CorrectionFactorRegPer)
 		body.Add("RatedPower", eng.RatedPowerDeclared.Value())
 		body.Add("RatedSpeed", eng.RatedSpeedDeclared.AsRPM)
 		body.Add("MaxTorque", eng.MaxTorqueDeclared.Value())
-		body.Add("FuelType", eng.FuelType.ToString())
+		body.Add("FuelType", eng.EngineModes.First().Fuels.First().FuelType.ToString())
 
-		body.Add("FullLoadCurve", GetRelativePath(eng.FullLoadCurve.Source, Path.GetDirectoryName(filename)))
+		body.Add("FullLoadCurve", GetRelativePath(eng.EngineModes.First().FullLoadCurve.Source, Path.GetDirectoryName(filename)))
 
-		body.Add("FuelMap", GetRelativePath(eng.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
+		body.Add("FuelMap", GetRelativePath(eng.EngineModes.First().Fuels.First().FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
 
 		WriteFile(header, body, filename)
 	End Sub
