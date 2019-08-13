@@ -40,7 +40,9 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -115,9 +117,16 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				vehicle.Components.GearboxInputData, vehicle.TorqueLimits, vehicle.TankSystem);
 			_axlegearData = _dao.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
 			_angledriveData = _dao.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
+			var tmpRunData = new VectoRunData() {
+				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
+				GearboxData = new GearboxData() {
+					Type = vehicle.Components.GearboxInputData.Type,
+				}
+			};
+			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
 			_gearboxData = _dao.CreateGearboxData(vehicle.Components.GearboxInputData, _engineData,
 				_axlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData);
+				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, tmpStrategy);
 			_retarderData = _dao.CreateRetarderData(vehicle.Components.RetarderInputData);
 
 			_ptoTransmissionData = _dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);

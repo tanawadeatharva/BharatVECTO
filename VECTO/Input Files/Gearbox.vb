@@ -223,7 +223,7 @@ Public Class Gearbox
 				End Try
 				
 				axlegearData = doa.CreateAxleGearData(gearbox)
-				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, gearbox)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, gearbox, Nothing)
 			Else
 				Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
 				Try

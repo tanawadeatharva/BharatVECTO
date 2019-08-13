@@ -41,6 +41,7 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.ShiftStrategy;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -250,7 +251,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return null;
 		}
 
-		internal GearboxData CreateGearboxData(IGearboxDeclarationInputData gearbox, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory, ITorqueConverterDeclarationInputData torqueConverter)
+		internal GearboxData CreateGearboxData(IGearboxDeclarationInputData gearbox, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory, ITorqueConverterDeclarationInputData torqueConverter, IShiftStrategy shiftStrategy)
 		{
 			if (!gearbox.SavedInDeclarationMode) {
 				WarnDeclarationMode("GearboxData");
@@ -279,10 +280,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var gear = gearsInput[(int)i];
 				var lossMap = CreateGearLossMap(gear, i, false);
 
-				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(
-					gearbox.Type, (int)i, engine.FullLoadCurves[i + 1],
-					gearsInput, engine,
-					axlegearRatio, dynamicTyreRadius);
+				var shiftPolygon = shiftStrategy != null
+					? shiftStrategy.ComputeDeclarationShiftPolygon(
+						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1], gearbox.Gears, engine, axlegearRatio, dynamicTyreRadius)
+					: DeclarationData.Gearbox.ComputeShiftPolygon(
+						gearbox.Type, (int)i, engine.FullLoadCurves[i + 1],
+						gearsInput, engine,
+						axlegearRatio, dynamicTyreRadius);
 
 				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,

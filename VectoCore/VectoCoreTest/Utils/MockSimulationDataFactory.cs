@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var dao = new DeclarationDataAdapter();
 				var engineData = dao.CreateEngineData(engineInput, null, gearboxInput, new List<ITorqueLimitInputData>());
 				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
-					VehicleCategory.RigidTruck, (ITorqueConverterDeclarationInputData)gearboxInput);
+					VehicleCategory.RigidTruck, (ITorqueConverterDeclarationInputData)gearboxInput, null);
 			} else {
 				var dao = new EngineeringDataAdapter();
 				var engineData = dao.CreateEngineData(engineInput, gearboxInput, new List<ITorqueLimitInputData>(), (ITorqueConverterEngineeringInputData)gearboxInput);
