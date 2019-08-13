@@ -253,5 +253,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			throw new NotImplementedException();
 		}
+
+		public void StartSimulationRun()
+		{
+			
+		}
 	}
 }

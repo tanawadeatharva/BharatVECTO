@@ -369,6 +369,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Preprocessors.Add(simulationPreprocessor);
 		}
 
+		public void StartSimulationRun()
+		{
+			ModData?.Reset();
+		}
+
 		public VectoRun.Status RunStatus { get; set; }
 
 		#endregion

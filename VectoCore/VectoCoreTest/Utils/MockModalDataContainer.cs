@@ -216,6 +216,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return FuelColumns[fuelData][mrf].ColumnName;
 		}
 
+		public void Reset()
+		{
+			
+		}
+
 		public string RunName { get; set; }
 		public string CycleName { get; set; }
 		public string RunSuffix { get; set; }

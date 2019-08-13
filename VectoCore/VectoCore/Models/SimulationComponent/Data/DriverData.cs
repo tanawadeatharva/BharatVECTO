@@ -123,6 +123,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public MeterPerSecond MinSpeed;
 
 			public MeterPerSecond MaxSpeed;
+
+			public Meter PreviewDistance;
+
+			public MeterPerSecond UnderSpeed;
 		}
 	}
 }

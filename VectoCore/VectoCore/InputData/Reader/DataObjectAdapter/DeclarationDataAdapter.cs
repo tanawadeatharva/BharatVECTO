@@ -87,6 +87,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				PCC = new DriverData.PCCData() {
 					MinSpeed = DeclarationData.Driver.PCC.MinSpeed,
 					MaxSpeed = DeclarationData.Driver.PCC.MaxSpeed,
+					PreviewDistance = DeclarationData.Driver.PCC.PreviewDistance,
+					UnderSpeed =  DeclarationData.Driver.PCC.Underspeed,
 				}
 			};
 			return retVal;

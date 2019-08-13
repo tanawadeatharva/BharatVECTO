@@ -90,19 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return;
 			}
 
-			var data = container.RunData;
-			// create a dummy powertrain for pre-processing and estimatins
-			var modData = new ModalDataContainer(data, null, new[] {FuelData.Diesel}, null, false);
-			var builder = new PowertrainBuilder(modData);
-			var TestContainer = new SimplePowertrainContainer(data);
-			builder.BuildSimplePowertrain(data, TestContainer);
-			var TestContainerGbx = TestContainer.GearboxCtl as Gearbox;
-			if (TestContainerGbx == null) {
-				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
-			}
-
-			var ecoRollSlope = new EcoRollSlopeData();
-			container.AddPreprocessor(new PCCEcoRollEngineStopPreprocessor(TestContainer, ecoRollSlope, data.DriverData.PCC.MinSpeed, data.DriverData.PCC.MaxSpeed));
+			
 		}
 
 		public IResponse Initialize()

@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// DistanceBasedDrivingCycle --> driver --> vehicle --> wheels 
 			// --> axleGear --> (retarder) --> gearBox --> (retarder) --> clutch --> engine <-- Aux
 			var cycle = new DistanceBasedDrivingCycle(container, data.Cycle);
-			var powertrain = cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(data.VehicleData.ADAS)))
+			var powertrain = cycle.AddComponent(new Driver(container, data.DriverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, data.VehicleData, data.AirdragData))
 				.AddComponent(new Wheels(container, data.VehicleData.DynamicTyreRadius, data.VehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))

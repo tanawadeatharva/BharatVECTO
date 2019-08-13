@@ -282,6 +282,8 @@ Public Class VectoJob
     End Get
     End Property
 
+    Public ReadOnly Property PCCData As IPCCEngineeringInputData Implements IDriverEngineeringInputData.PCCData
+
     Public ReadOnly Property MinSpeed As MeterPerSecond Implements IEcoRollEngineeringInputData.MinSpeed
     get
             Return EcoRollMinSpeed.KMPHtoMeterPerSecond()

@@ -176,9 +176,9 @@ namespace TUGraz.VectoCore.OutputData
 										}.Select(x => x.GetName()))
 									.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
 
-#if TRACE
+//#if TRACE
 			strCols = strCols.Concat(_additionalColumns);
-#endif
+//#endif
 			if (WriteModalResults) {
 				var filteredData = Data;
 				foreach (var filter in _filters) {
@@ -315,6 +315,7 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn,
 					});
 			}
+			dataColumns.Add(ModalResultField.altitude);
 			return dataColumns;
 		}
 

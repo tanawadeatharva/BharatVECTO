@@ -166,6 +166,43 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			//var container = RunSingleDeclarationJob(filename, 1);
 		}
 
+
+
+
+		[TestCase(0, TestName = "PCC CrestCoast 1"),
+		TestCase(1, TestName = "PCC CrestCoast 2"),
+		]
+		public void TestPCC(int cycleIdx)
+		{
+			string jobName = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto";
+			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
+
+			var sumContainer = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumContainer);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+
+			factory.SumData = sumContainer;
+
+			var runs = factory.SimulationRuns().ToArray();
+			var run = runs[cycleIdx];
+
+			jobContainer.AddRun(run);
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			var progress = jobContainer.GetProgress();
+			Assert.IsTrue(progress.All(r => r.Value.Success), string.Concat<Exception>(progress.Select(r => r.Value.Error)));
+			var modFilename = writer.GetModDataFileName(run.RunName, run.CycleName, run.RunSuffix);
+			GraphWriter.Write(modFilename);
+		}
+
+
+
 		public JobContainer RunAllDeclarationJob(string jobName)
 		{
 			var relativeJobPath =  jobName;

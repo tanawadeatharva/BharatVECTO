@@ -109,6 +109,7 @@ namespace TUGraz.VectoCore.OutputData
 		void FinishSimulation();
 
 		string GetColumnName(FuelData.Entry fuelData, ModalResultField mrf);
+		void Reset();
 	}
 
 	public static class ModalDataContainerExtensions

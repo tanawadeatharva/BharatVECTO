@@ -59,6 +59,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return null; }
 		}
 
+		public IPCCEngineeringInputData PCCData { get; }
+
 		public virtual IOverSpeedEngineeringInputData OverSpeedData
 		{
 			get { return _overspeed ?? (_overspeed = Reader.OverspeedData); }

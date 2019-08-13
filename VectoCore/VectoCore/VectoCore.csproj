@@ -259,7 +259,6 @@
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />
     <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\EcoRollSlopeData.cs" />
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
     <Compile Include="Models\Simulation\DataBus\IEngineControl.cs" />
     <Compile Include="Models\Simulation\Impl\PCCEcoRollEngineStopPreprocessor.cs" />
