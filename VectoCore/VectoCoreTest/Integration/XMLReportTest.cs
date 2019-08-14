@@ -118,6 +118,42 @@ namespace TUGraz.VectoCore.Tests.Integration
 			}
 		}
 
+		[TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-1_EURO6_2018.xml"),
+		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml"),
+		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-3_EURO6_2018.xml"),
+		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml"),
+		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_4x2_vehicle-class-5_EURO6_2018.xml"),
+		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x2_vehicle-class-9_EURO6_2018.xml"),
+		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x2_vehicle-class-10_EURO6_2018.xml"),
+		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x4_vehicle-class-11_EURO6_2018.xml"),
+		//TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x4_vehicle-class-12_EURO6_2018.xml"),
+		TestCase(@"TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_8x4_vehicle-class-16_EURO6_2018.xml")]
+        public void TestXMLSummaryReportExists(string jobfile)
+        {
+			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
+            var writer = new FileOutputWriter(jobfile);
+            var xmlReport = new XMLDeclarationReport(writer);
+            var sumData = new SummaryDataContainer(writer);
+            var jobContainer = new JobContainer(sumData);
+
+            var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport)
+            {
+                WriteModalResults = false,
+                Validate = false,
+            };
+            jobContainer.AddRuns(runsFactory);
+
+            // no need to run the simulation, we only check whether the meta-data is correct, no results are considered
+            jobContainer.Execute();
+            jobContainer.WaitFinished();
+            xmlReport.DoWriteReport();
+
+			var customerReport = xmlReport.CustomerReport;
+
+            //check if the customerReport contains the summary XML-Element
+			Assert.AreNotEqual(null,customerReport.XPathSelectElement("//*[local-name()='Summary']"));
+		}
+
 		[TestCase(@"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml"),
 		 TestCase(@"TestData\Integration\DeclarationMode\ExemptedVehicle\vecto_vehicle-sample_exempted.xml")]
 		public void TestValidationXMLReports(string jobfile)

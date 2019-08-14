@@ -97,6 +97,14 @@ namespace TUGraz.VectoCore.OutputData
 		/// </summary>
 		private int _resultCount;
 
+		protected readonly IReportWriter Writer;
+
+		protected DeclarationReport(IReportWriter writer)
+		{
+			Writer = writer;
+		}
+
+
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void PrepareResult(LoadingType loading, Mission mission, VectoRunData runData)
 		{

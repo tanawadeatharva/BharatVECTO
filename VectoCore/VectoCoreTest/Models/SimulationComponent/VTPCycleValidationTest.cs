@@ -30,6 +30,7 @@
 */
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using NLog;
 using NLog.Config;
@@ -129,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				    0.5 ,    0,  600, 400, 200, 200, {0}, {0}	, 100, 3
 				    1   ,    0,  600, 400, 200, 200, {1}, {0}	, 100, 3
 				    1.5 ,    0,  600, 400, 200, 200, {1}, {1}	, 100, 3
-				", wheelSpeed, wheelSpeed + DeclarationData.VTPMode.MaxWheelSpeedDifferenceStandstill.AsRPM * 1.1);
+				", wheelSpeed.ToString(CultureInfo.InvariantCulture), (wheelSpeed + DeclarationData.VTPMode.MaxWheelSpeedDifferenceStandstill.AsRPM * 1.1).ToString(CultureInfo.InvariantCulture));
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -157,7 +158,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				    0.5 ,    0,  600, 400, 200, 200, {0}, {0}	, 100, 3
 				    1   ,    0,  600, 400, 200, 200, {0}, {1}	, 100, 3
 				    1.5 ,    0,  600, 400, 200, 200, {1}, {1}	, 100, 3
-				", wheelSpeed, wheelSpeed + DeclarationData.VTPMode.MaxWheelSpeedDifferenceStandstill.AsRPM * 1.1);
+				", wheelSpeed.ToString(CultureInfo.InvariantCulture), (wheelSpeed + DeclarationData.VTPMode.MaxWheelSpeedDifferenceStandstill.AsRPM * 1.1).ToString(CultureInfo.InvariantCulture));
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -187,7 +188,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				    0.5 ,    0,  600, {0}, 300 , 290 , 50 , 50 , 100, 3
 				    1   ,    0,  600, {1}, 300 , 290 , 50 , 50 , 100, 3
 				    1.5 ,    0,  600, {0}, 300 , 290 , 50 , 50 , 100, 3
-				", fanSpeed, fanSpeed * 0.9);
+				", fanSpeed.ToString(CultureInfo.InvariantCulture), (fanSpeed * 0.9).ToString(CultureInfo.InvariantCulture));
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -254,7 +255,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				    0.5 ,    0,  600, {0}, 300 , 290 , 50 , 50 , 100, 3
 				    1   ,    0,  600, {1}, 300 , 290 , 50 , 50 , 100, 3
 				    1.5 ,    0,  600, {0}, 300 , 290 , 50 , 50 , 100, 3
-				", fanSpeed, fanSpeed * 0.9);
+				", fanSpeed.ToString(CultureInfo.InvariantCulture), (fanSpeed * 0.9).ToString(CultureInfo.InvariantCulture));
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -319,7 +320,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			
 			var cycleEntries = "";
 			for (var i = 0; i < 2000; i++)
-				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", i / 2.0, (fcLimit * 1.01 * (1 - i/100000.0)).ConvertToGrammPerHour().Value);
+				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", (i / 2.0).ToString(CultureInfo.InvariantCulture), ((fcLimit * 1.01 * (1 - i/100000.0)).ConvertToGrammPerHour().Value).ToString(CultureInfo.InvariantCulture));
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -349,7 +350,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var cycleEntries = "";
 			for (var i = 0; i < 2000; i++)
-				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", i / 2.0, (fcLimit * 1.0001).ConvertToGrammPerHour().Value);
+				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", (i / 2.0).ToString(CultureInfo.InvariantCulture), ((fcLimit * 1.0001).ConvertToGrammPerHour().Value).ToString(CultureInfo.InvariantCulture));
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -378,7 +379,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var cycleEntries = "";
 			for (var i = 0; i < 2000; i++)
-				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", i / 2.0, (fcLimit * 0.99 * (1 + i / 100000.0)).ConvertToGrammPerHour().Value);
+				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", (i / 2.0).ToString(CultureInfo.InvariantCulture), ((fcLimit * 0.99 * (1 + i / 100000.0)).ConvertToGrammPerHour().Value).ToString(CultureInfo.InvariantCulture));
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
@@ -407,7 +408,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var cycleEntries = "";
 			for (var i = 0; i < 2000; i++)
-				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", i / 2.0, (fcLimit * 0.9999).ConvertToGrammPerHour().Value);
+				cycleEntries += string.Format("  {0} ,    0,  600, 400, 500 , 500 , 100 , 100 , {1}, 3 \n", (i / 2.0).ToString(CultureInfo.InvariantCulture), ((fcLimit * 0.9999).ConvertToGrammPerHour().Value).ToString(CultureInfo.InvariantCulture));
 
 			var container = new VehicleContainer(ExecutionMode.Declaration) {
 				RunData = new VectoRunData() {
