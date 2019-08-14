@@ -19,7 +19,6 @@ Namespace UnitTests
         Private alternatorMap As IAlternatorMap
         Private signals As Signals = New Signals
         Private powernetVoltage As Volt = 26.3.SI(Of Volt)()
-        Private ssm As IHVACSteadyStateModel = New HVACSteadyStateModel(100, 100, 100)
 
         Private Function GetSSM() As ISSMTOOL
 
