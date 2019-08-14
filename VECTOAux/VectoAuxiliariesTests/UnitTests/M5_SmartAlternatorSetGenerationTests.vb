@@ -20,7 +20,6 @@ Namespace UnitTests
 		Private _m05 As M0_5_SmartAlternatorSetEfficiency
 		Private _target As M5__SmartAlternatorSetGeneration
 		Private _signals As ISignals = New Signals
-		Private ssmHVac As IHVACSteadyStateModel = New HVACSteadyStateModel(100, 100, 100)
 
 
 		Private Function GetSSM() As ISSMTOOL
