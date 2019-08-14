@@ -1,5 +1,22 @@
 #Changelog
 
+**VECTO 3.3.4**
+
+***Build 1686 (2019-08-14) RELEASE CANDIDATE***
+
+- Improvement
+    * [VECTO-1042] - Add option to write results into a certain directory
+    * [VECTO-1064] - add weighting factors for vehicle groups 1, 2, 3, 11, 12, 16
+
+- Bugfixes
+    * [VECTO-1030] - Exceeded max iterations when searching for operating point! Failed to find operating point!
+    * [VECTO-1032] - Gear 5 LossMap data was extrapolated in Declaration Mode: range for loss map is not sufficient
+    * [VECTO-1067] - Vair and Beta correction for Aerodynamics
+    * [VECTO-1000] - Error Loss-Map extrapolation in Declaration Mode
+    * [VECTO-1040] - Gear 6 LossMap data was extrapolated in Declaration Mode
+    * [VECTO-1047] - Failed to find operating point on construction cycle, ref load, AT gearbox
+
+
 **VECTO 3.3.3**
 
 ***Build 1639 (2019-06-27) OFFICIAL RELEASE***
