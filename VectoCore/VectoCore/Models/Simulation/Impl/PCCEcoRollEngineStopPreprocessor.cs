@@ -143,6 +143,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			PCCSegment pccSegment = null;
 			var targetspeedChanged = 0.SI<Meter>();
 			foreach (var tuple in Container.RunData.Cycle.Entries.Pairwise(Tuple.Create)) {
+				if (!tuple.Item1.Highway) {
+					continue;
+				}
 				if (tuple.Item1.Distance.IsEqual(tuple.Item2.Distance)) {
 					// can't calculate avg slope if difference between two entries is 0
 					continue;
