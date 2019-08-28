@@ -695,6 +695,9 @@
     <None Include="TestData\Integration\ADAS\Group5PCCEng\Gear_9.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\ADAS\Group5PCCEng\Group5Eng_CaseA.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\ADAS\Group5PCCEng\LAC-DF-Vdrop.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -3060,6 +3063,9 @@
     <Folder Include="Integration\FullPowertrain\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="TestData\Integration\ADAS\Group5PCCDecl\Tractor_4x2_vehicle-class-5_5_t_0.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\ADAS\Group9_AT_EcoRoll.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
