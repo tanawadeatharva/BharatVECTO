@@ -21,6 +21,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public const string Class9Decl =
 			@"TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
 
+		public const string Class5Eng = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto";
+
 		[OneTimeSetUp]
 		public void RunBeforeAnyTests()
 		{
@@ -68,9 +70,41 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		}
 
+		[TestCase(Class5Eng),
+		]
+		public void TestSimulationPreprocessingPccRollSlopeEng(string jobFile)
+		{
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Engineering, dataProvider, fileWriter) {
+				ModalResults1Hz = false,
+				WriteModalResults = true,
+				ActualModalData = false,
+				Validate = false,
+			};
+
+			jobContainer.AddRuns(runsFactory);
+
+			var i = 0;
+
+			//jobContainer.Runs[i].Run.Run();
+
+			var lookup = SimulationRunPreprocessingEcoRoll(jobContainer.Runs[i].Run);
+
+			Console.WriteLine(string.Format("run: {0}{1} vehicle mass: {2}", jobContainer.Runs[i].Run.RunName, jobContainer.Runs[i].Run.RunSuffix, jobContainer.Runs[i].Run.GetContainer().RunData.VehicleData.TotalVehicleWeight));
+			foreach (var tuple in lookup) {
+				Console.WriteLine("velocity: {0}, slope: {1},", tuple.Key, tuple.Value);
+			}
+			Console.WriteLine();		
+
+		}
+
 
 		[TestCase(Class9Decl, ExecutionMode.Declaration, 0),
 		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 0),
+		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 1),
 		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 1)
 		]
 		public void TestSimulationPreprocessingPccSegments(string jobFile, ExecutionMode mode, int i)
