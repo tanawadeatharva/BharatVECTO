@@ -165,6 +165,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				container.SetDataValue("PCCSegment", val);
 				container.SetDataValue("PCCState", (int)PCCState);
+			} else {
+				container.SetDataValue("PCCSegment", 0);
+				container.SetDataValue("PCCState", (int)PCCState);
 			}
 		}
 
@@ -244,7 +247,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var dataBus = Driver.DataBus;
 			var distance = dataBus.Distance;
-			if (PCCSegments.Current.StartDistance < distance && PCCSegments.Current.EndDistance > distance) {
+			if (PCCSegments.Current != null && PCCSegments.Current.StartDistance < distance && PCCSegments.Current.EndDistance > distance) {
 				// within pcc-segment
 				PCCState = PCCStates.WithinSegment;
 			} else {

@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public int Count {  get { return Segments.Count; } }
 
-		public PCCSegment Current { get { return Segments[CurrentIdx]; } }
+		public PCCSegment Current { get { return Segments.Any() ? Segments[CurrentIdx] : null; } }
 
 		public List<PCCSegment> Segments { get; }
 	}
