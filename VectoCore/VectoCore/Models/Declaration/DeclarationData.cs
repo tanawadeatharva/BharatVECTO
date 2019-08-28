@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			{
 				public static readonly MeterPerSecond MinSpeed = 50.KMPHtoMeterPerSecond();
 				public static readonly MeterPerSecond MaxSpeed = 100.KMPHtoMeterPerSecond();
-				public static readonly Meter PreviewDistance = 1000.SI<Meter>();
+				public static readonly Meter PreviewDistance = 1500.SI<Meter>();
 				public static readonly MeterPerSecond Underspeed = 8.KMPHtoMeterPerSecond();
 			}
 		}
