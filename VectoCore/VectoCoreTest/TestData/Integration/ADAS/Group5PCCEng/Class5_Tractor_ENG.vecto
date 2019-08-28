@@ -15,12 +15,6 @@
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
    "Aux": [
-      {
-        "ID": "ES",
-        "Type": "Electric System",
-        "Path": "Alt.vaux",
-        "Technology": []
-      }
     ],
     "Padd": 5000.0,
     "VACC": "Truck.vacc",
@@ -44,6 +38,8 @@
       "CrestCoast1.vdri",
       "CrestCoast2.vdri",
       "Group5Eng_CaseA.vdri",
+      "Group5Eng_CaseB.vdri",
+      "Group5Eng_CaseC.vdri",
     ]
   }
 }

@@ -169,12 +169,28 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 
-		[TestCase(0, TestName = "PCC CrestCoast 1"),
-		TestCase(1, TestName = "PCC CrestCoast 2"),
+		[TestCase(0, TestName = "G5Eng PCC CrestCoast 1"),
+		TestCase(1, TestName = "G5Eng PCC CrestCoast 2"),
+		TestCase(2), // Case A
+		TestCase(3), // Case B
+		TestCase(4), // Case C
 		]
-		public void TestPCC(int cycleIdx)
+		public void TestPCCEngineeringSampleCases(int cycleIdx)
 		{
-			string jobName = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto";
+			var jobName = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto";
+			RunSingleEngineeringCycle(jobName, cycleIdx);
+		}
+
+		[TestCase(5, TestName = "PCC Group5 RD RefLoad"),
+		TestCase(1, TestName = "PCC Group5 LH RefLoad")]
+		public void TestTCCDeclaration(int runIdx)
+		{
+			var jobName = @"TestData\Integration\ADAS\Group5PCCDecl\Tractor_4x2_vehicle-class-5_5_t_0.xml";
+			RunSingleDeclarationJob(jobName, runIdx);
+		}
+
+		public void RunSingleEngineeringCycle(string jobName, int cycleIdx)
+		{ 
 			var inputData = JSONInputDataFactory.ReadJsonJob(jobName);
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(jobName), Path.GetFileName(jobName)));
 

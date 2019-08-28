@@ -17,7 +17,7 @@
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
     "EngineStopStart":  false,
-    "EcoRoll": "WithoutEngineStop",
+    "EcoRoll": "none",
     "PredictiveCruiseControl":  "1,2",  
     "Retarder": {
       "Type": "secondary",
