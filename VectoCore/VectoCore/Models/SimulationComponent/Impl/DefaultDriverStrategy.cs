@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected EcoRoll EcoRollState;
 		protected PCCSegments PCCSegments;
-		protected internal PCCStates PCCState;
+		protected internal PCCStates PCCState = PCCStates.OutsideSegment;
 
 
 		public DefaultDriverStrategy(IVehicleContainer container = null)
@@ -176,6 +176,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (PCCSegments.Count > 0) {
 				if (Driver.DataBus.Distance > PCCSegments.Current.EndDistance) {
 					PCCSegments.MoveNext();
+					PCCState = PCCStates.OutsideSegment;
 				}
 			}
 		}
@@ -187,8 +188,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None) {
 				HandlePCC(absTime, targetVelocity);
 			}
-			if ((ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None && (PCCState == PCCStates.OutsideSegment || PCCState == PCCStates.WithinSegment)) ||
-				ADAS.EcoRoll != EcoRollType.None) {
+			if (ADAS.EcoRoll != EcoRollType.None &&
+				(PCCState == PCCStates.OutsideSegment || PCCState == PCCStates.WithinSegment)
+				) {
 				HandleEcoRoll(absTime, targetVelocity);
 			}
 
@@ -247,55 +249,75 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var dataBus = Driver.DataBus;
 			var distance = dataBus.Distance;
-			if (PCCSegments.Current != null && PCCSegments.Current.StartDistance < distance && PCCSegments.Current.EndDistance > distance) {
-				// within pcc-segment
-				PCCState = PCCStates.WithinSegment;
-			} else {
-				PCCState = PCCStates.OutsideSegment;
-			}
+			var withinPCCSegment = PCCSegments.Current != null && PCCSegments.Current.StartDistance < distance &&
+									PCCSegments.Current.EndDistance > distance;
+			//if (PCCSegments.Current != null && PCCSegments.Current.StartDistance < distance && PCCSegments.Current.EndDistance > distance) {
+			//	// within pcc-segment
+			//	//PCCState = PCCStates.WithinSegment;
+			//} else {
+			//	//PCCState = PCCStates.OutsideSegment;
+			//}
 			var vehicleSpeed = dataBus.VehicleSpeed;
-			if (PCCState == PCCStates.WithinSegment) {
+			if (withinPCCSegment) {
 				var currentEnergy = CalculateEnergy(dataBus.Altitude, vehicleSpeed, dataBus.TotalMass);
 
-				var end = PCCSegments.Current.EndDistance;
-				var endEnergy = PCCSegments.Current.EnergyEnd;
-				if ((distance + Driver.DriverData.PCC.PreviewDistance).IsSmallerOrEqual(end)) {
-					end = distance + Driver.DriverData.PCC.PreviewDistance;
-					var endCycleEntry = dataBus.CycleLookAhead(Driver.DriverData.PCC.PreviewDistance);
-					endEnergy = CalculateEnergy(endCycleEntry.Altitude, endCycleEntry.VehicleTargetSpeed, dataBus.TotalMass);
+				var endUseCase1 = PCCSegments.Current.EndDistance;
+				var endEnergyUseCase1 = PCCSegments.Current.EnergyEnd;
+				if ((distance + Driver.DriverData.PCC.PreviewDistanceUseCase1).IsSmallerOrEqual(endUseCase1)) {
+					endUseCase1 = distance + Driver.DriverData.PCC.PreviewDistanceUseCase1;
+					var endCycleEntry = dataBus.CycleLookAhead(Driver.DriverData.PCC.PreviewDistanceUseCase1);
+					endEnergyUseCase1 = CalculateEnergy(endCycleEntry.Altitude, endCycleEntry.VehicleTargetSpeed, dataBus.TotalMass);
 				}
 				var lowEnergy = PCCSegments.Current.EnergyMinSpeed;
 
-				var airDragForce = Driver.DataBus.AirDragResistance(vehicleSpeed, targetVelocity);
-
-				//var rollResistanceForce = Driver.DataBus.RollingResistance(
-				//	((targetAltitude - vehicleAltitude) / (actionEntry.Distance - Driver.DataBus.Distance))
-				//	.Value().SI<Radian>());
-				var rollResistanceForce = Driver.DataBus.RollingResistance(dataBus.RoadGradient);
-				var engineDragLoss = ADAS.EcoRoll == EcoRollType.None
-					? Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed)
-					: 0.SI<Watt>();
-				var gearboxLoss = Driver.DataBus.GearboxLoss();
-				var axleLoss = Driver.DataBus.AxlegearLoss();
-
-				var coastingForce = airDragForce + rollResistanceForce +
-									(gearboxLoss + axleLoss - engineDragLoss) / vehicleSpeed;
+				var coastingForce = CoastingForce(targetVelocity, vehicleSpeed);
 
 				var energyCoastingLow = (coastingForce * (PCCSegments.Current.DistanceMinSpeed - distance)).Cast<Joule>();
-				var energyCoastingEnd = (coastingForce * (end - distance)).Cast<Joule>();
+				var energyCoastingEndUseCase1 = (coastingForce * (endUseCase1 - distance)).Cast<Joule>();
 
 				var speedSufficient = vehicleSpeed.IsGreaterOrEqual(targetVelocity - Driver.DriverData.PCC.UnderSpeed);
 				var currentEnergyHigherThanMin = currentEnergy.IsGreaterOrEqual(lowEnergy + energyCoastingLow);
-				var currentEnergyHigherThanEnd = currentEnergy.IsGreaterOrEqual(endEnergy + energyCoastingEnd);
-				if (speedSufficient && currentEnergyHigherThanEnd && currentEnergyHigherThanMin) {
+				var currentEnergyHigherThanEndUseCase1 = currentEnergy.IsGreaterOrEqual(endEnergyUseCase1 + energyCoastingEndUseCase1);
+
+
+				var endUseCase2 = PCCSegments.Current.EndDistance;
+				var endEnergyUseCase2 = PCCSegments.Current.EnergyEnd;
+				if ((distance + Driver.DriverData.PCC.PreviewDistanceUseCase2).IsSmallerOrEqual(endUseCase1)) {
+					endUseCase2 = distance + Driver.DriverData.PCC.PreviewDistanceUseCase2;
+					var endCycleEntry = dataBus.CycleLookAhead(Driver.DriverData.PCC.PreviewDistanceUseCase2);
+					endEnergyUseCase2 = CalculateEnergy(endCycleEntry.Altitude, endCycleEntry.VehicleTargetSpeed, dataBus.TotalMass);
+				}
+
+				var energyCoastingEndUseCase2 = (coastingForce * (endUseCase2 - distance)).Cast<Joule>();
+
+				var beyondVLow = distance.IsGreaterOrEqual(PCCSegments.Current.DistanceMinSpeed);
+				var speedSufficientUseCase2 = vehicleSpeed.IsGreaterOrEqual(VectoMath.Max(targetVelocity - Driver.DriverData.PCC.UnderSpeed, Driver.DriverData.PCC.MinSpeed));
+				var currentEnergyHigherThanEndUseCase2 = currentEnergy.IsGreaterOrEqual(endEnergyUseCase2 + energyCoastingEndUseCase2);
+				
+
+				if (PCCState == PCCStates.OutsideSegment) {
+					PCCState = PCCStates.WithinSegment;
+				}
+				if (PCCState == PCCStates.WithinSegment && speedSufficient && currentEnergyHigherThanEndUseCase1 &&
+					currentEnergyHigherThanMin) {
 					PCCState = PCCStates.UseCase1;
 				}
+				if (PCCState == PCCStates.WithinSegment && speedSufficientUseCase2 && beyondVLow && currentEnergyHigherThanEndUseCase2) {
+					PCCState = PCCStates.UseCase2;
+				}
+			} else {
+				PCCState = PCCStates.OutsideSegment;
 			}
 			if (PCCState == PCCStates.UseCase1) {
 				if (vehicleSpeed <= targetVelocity - Driver.DriverData.PCC.UnderSpeed * 1.05) {
 					PCCState = PCCStates.PCCinterrupt;
 				}
 				if (vehicleSpeed >= targetVelocity + 1.KMPHtoMeterPerSecond()) {
+					PCCState = PCCStates.WithinSegment;
+				}
+			}
+			if (PCCState == PCCStates.UseCase2) {
+				if (vehicleSpeed < Driver.DriverData.PCC.MinSpeed || vehicleSpeed > targetVelocity + 1.KMPHtoMeterPerSecond()) {
 					PCCState = PCCStates.WithinSegment;
 				}
 			}
@@ -307,6 +329,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			switch (PCCState) {
 				case PCCStates.UseCase1:
+				case PCCStates.UseCase2:
 					switch (ADAS.EcoRoll) {
 						case EcoRollType.None: break;
 						case EcoRollType.WithoutEngineStop:
@@ -320,7 +343,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 
 					break;
-				case PCCStates.UseCase2: break;
 				case PCCStates.OutsideSegment:
 				case PCCStates.WithinSegment:
 				case PCCStates.PCCinterrupt:
@@ -329,6 +351,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					break;
 				default: throw new ArgumentOutOfRangeException();
 			}
+		}
+
+		private Newton CoastingForce(MeterPerSecond targetVelocity, MeterPerSecond vehicleSpeed)
+		{
+			var dataBus = Driver.DataBus;
+			var airDragForce = Driver.DataBus.AirDragResistance(vehicleSpeed, targetVelocity);
+
+			//var rollResistanceForce = Driver.DataBus.RollingResistance(
+			//	((targetAltitude - vehicleAltitude) / (actionEntry.Distance - Driver.DataBus.Distance))
+			//	.Value().SI<Radian>());
+			var rollResistanceForce = Driver.DataBus.RollingResistance(dataBus.RoadGradient);
+			var engineDragLoss = ADAS.EcoRoll == EcoRollType.None
+				? Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed)
+				: 0.SI<Watt>();
+			var gearboxLoss = Driver.DataBus.GearboxLoss();
+			var axleLoss = Driver.DataBus.AxlegearLoss();
+
+			var coastingForce = airDragForce + rollResistanceForce +
+								(gearboxLoss + axleLoss - engineDragLoss) / vehicleSpeed;
+			return coastingForce;
 		}
 
 		private Joule CalculateEnergy(Meter altitude, MeterPerSecond velocity, Kilogram mass)
@@ -892,7 +934,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			bool prohibitOverspeed, MeterPerSecond velocityWithOverspeed, DebugData debug)
 		{
-			if (DriverStrategy.PCCState == DefaultDriverStrategy.PCCStates.UseCase1) {
+			if (DriverStrategy.PCCState == DefaultDriverStrategy.PCCStates.UseCase1 || DriverStrategy.PCCState == DefaultDriverStrategy.PCCStates.UseCase2) {
 				return Driver.DrivingActionCoast(absTime, ds, targetVelocity, gradient);
 			}
 			IResponse first;

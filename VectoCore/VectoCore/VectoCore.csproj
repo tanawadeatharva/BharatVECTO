@@ -262,6 +262,7 @@
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
     <Compile Include="Models\Simulation\DataBus\IEngineControl.cs" />
     <Compile Include="Models\Simulation\Impl\PCCEcoRollEngineStopPreprocessor.cs" />
+    <Compile Include="Models\Simulation\Impl\PCCSegmentPreprocessor.cs" />
     <Compile Include="Models\Simulation\Impl\SimplePowertrainContainer.cs" />
     <Compile Include="Models\Simulation\ISimulationPreprocessor.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactory.cs" />

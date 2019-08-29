@@ -471,9 +471,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					AccelerationUpperLimit = 0.15.SI<MeterPerSquareSecond>(), // DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
 				},
 				PCC = new DriverData.PCCData() {
+					PCCEnableSpeed = driver.PCCData?.PCCEnabledSpeed ?? DeclarationData.Driver.PCC.PCCEnableSpeed,
 					MinSpeed = driver.PCCData?.MinSpeed ?? DeclarationData.Driver.PCC.MinSpeed,
 					MaxSpeed = driver.PCCData?.MaxSpeed ?? DeclarationData.Driver.PCC.MaxSpeed,
-					PreviewDistance = driver.PCCData?.PreviewDistance ?? DeclarationData.Driver.PCC.PreviewDistance,
+					PreviewDistanceUseCase1 = driver.PCCData?.PreviewDistanceUseCase1 ?? DeclarationData.Driver.PCC.PreviewDistanceUseCase1,
+					PreviewDistanceUseCase2 = driver.PCCData?.PreviewDistanceUseCase2 ?? DeclarationData.Driver.PCC.PreviewDistanceUseCase2,
 					UnderSpeed = driver.PCCData?.Underspeed ?? DeclarationData.Driver.PCC.Underspeed,
 				}
 			};

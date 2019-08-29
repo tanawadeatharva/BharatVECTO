@@ -367,9 +367,13 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IPCCEngineeringInputData
 	{
+		MeterPerSecond PCCEnabledSpeed { get; }
+
 		MeterPerSecond MinSpeed { get; }
 		MeterPerSecond MaxSpeed { get; }
-		Meter PreviewDistance { get; }
+		Meter PreviewDistanceUseCase1 { get; }
+		Meter PreviewDistanceUseCase2 { get; }
+
 		MeterPerSecond Underspeed { get; }
 	}
 
