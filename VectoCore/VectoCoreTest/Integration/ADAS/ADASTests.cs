@@ -174,6 +174,13 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		TestCase(2), // Case A
 		TestCase(3), // Case B
 		TestCase(4), // Case C
+		TestCase(5), // Case D
+		TestCase(6), // Case E
+		TestCase(7), // Case F
+		TestCase(8), // Case G
+		TestCase(9), // Case H
+		TestCase(10), // Case I
+		TestCase(11), // Case J
 		]
 		public void TestPCCEngineeringSampleCases(int cycleIdx)
 		{

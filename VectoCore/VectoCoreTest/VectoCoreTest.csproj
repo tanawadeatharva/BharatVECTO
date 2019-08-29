@@ -695,6 +695,27 @@
     <None Include="TestData\Integration\ADAS\Group5PCCEng\Gear_9.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\ADAS\Group5PCCEng\Group5Eng_CaseJ.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ADAS\Group5PCCEng\Group5Eng_CaseI.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ADAS\Group5PCCEng\Group5Eng_CaseH.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ADAS\Group5PCCEng\Group5Eng_CaseG.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ADAS\Group5PCCEng\Group5Eng_CaseF.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ADAS\Group5PCCEng\Group5Eng_CaseE.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ADAS\Group5PCCEng\Group5Eng_CaseD.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\ADAS\Group5PCCEng\Group5Eng_CaseC.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
