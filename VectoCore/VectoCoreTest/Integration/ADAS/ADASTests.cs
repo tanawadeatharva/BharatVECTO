@@ -20,6 +20,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 		public const string Group5PCC12 = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto";
 		public const string Group5PCC123 = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto";
+		public const string Group5PCC123EcoSS = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG_PCC123EcoSS.vecto";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
@@ -195,6 +196,17 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 		TestCase(Group5PCC123, 9, TestName = "G5Eng PCC123 Case H"), // Case H
 		TestCase(Group5PCC123, 10, TestName = "G5Eng PCC123 Case I"), // Case I
 		TestCase(Group5PCC123, 11, TestName = "G5Eng PCC123 Case J"), // Case J
+
+		TestCase(Group5PCC123EcoSS, 2, TestName = "G5Eng PCC123-EcoSS Case A"), // Case A
+		TestCase(Group5PCC123EcoSS, 3, TestName = "G5Eng PCC123-EcoSS Case B"), // Case B
+		TestCase(Group5PCC123EcoSS, 4, TestName = "G5Eng PCC123-EcoSS Case C"), // Case C
+		TestCase(Group5PCC123EcoSS, 5, TestName = "G5Eng PCC123-EcoSS Case D"), // Case D
+		TestCase(Group5PCC123EcoSS, 6, TestName = "G5Eng PCC123-EcoSS Case E"), // Case E
+		TestCase(Group5PCC123EcoSS, 7, TestName = "G5Eng PCC123-EcoSS Case F"), // Case F
+		TestCase(Group5PCC123EcoSS, 8, TestName = "G5Eng PCC123-EcoSS Case G"), // Case G
+		TestCase(Group5PCC123EcoSS, 9, TestName = "G5Eng PCC123-EcoSS Case H"), // Case H
+		TestCase(Group5PCC123EcoSS, 10, TestName = "G5Eng PCC123-EcoSS Case I"), // Case I
+		TestCase(Group5PCC123EcoSS, 11, TestName = "G5Eng PCC123-EcoSS Case J"), // Case J
 		]
 		public void TestPCCEngineeringSampleCases(string jobName, int cycleIdx)
 		{

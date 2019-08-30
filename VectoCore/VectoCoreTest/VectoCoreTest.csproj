@@ -641,10 +641,16 @@
     <None Include="TestData\Integration\ADAS\Group5PCCEng\Axle_4x2_Tractor.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG_PCC123EcoSS.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_PCC123EcoSS.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_PCC123.vveh">
