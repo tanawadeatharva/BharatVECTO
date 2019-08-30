@@ -18,6 +18,9 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 	public class ADASTests
 	{
 
+		public const string Group5PCC12 = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG_PCC12.vecto";
+		public const string Group5PCC123 = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG_PCC123.vecto";
+
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
 
@@ -38,7 +41,7 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 			GraphWriter.Enable();
 			//#else
 			//GraphWriter.Disable();
-//#endif
+			//#endif
 			GraphWriter.Xfields = new[] { ModalResultField.time, ModalResultField.dist };
 
 			GraphWriter.Yfields = new[] {
@@ -169,22 +172,33 @@ namespace TUGraz.VectoCore.Tests.Integration.ADAS
 
 
 
-		[TestCase(0, TestName = "G5Eng PCC CrestCoast 1"),
-		TestCase(1, TestName = "G5Eng PCC CrestCoast 2"),
-		TestCase(2), // Case A
-		TestCase(3), // Case B
-		TestCase(4), // Case C
-		TestCase(5), // Case D
-		TestCase(6), // Case E
-		TestCase(7), // Case F
-		TestCase(8), // Case G
-		TestCase(9), // Case H
-		TestCase(10), // Case I
-		TestCase(11), // Case J
+		[TestCase(Group5PCC12, 0, TestName = "G5Eng PCC12 CrestCoast 1"),
+		TestCase(Group5PCC12, 1, TestName = "G5Eng PCC12 CrestCoast 2"),
+		TestCase(Group5PCC12, 2, TestName = "G5Eng PCC12 Case A"), // Case A
+		TestCase(Group5PCC12, 3, TestName = "G5Eng PCC12 Case B"), // Case B
+		TestCase(Group5PCC12, 4, TestName = "G5Eng PCC12 Case C"), // Case C
+		TestCase(Group5PCC12, 5, TestName = "G5Eng PCC12 Case D"), // Case D
+		TestCase(Group5PCC12, 6, TestName = "G5Eng PCC12 Case E"), // Case E
+		TestCase(Group5PCC12, 7, TestName = "G5Eng PCC12 Case F"), // Case F
+		TestCase(Group5PCC12, 8, TestName = "G5Eng PCC12 Case G"), // Case G
+		TestCase(Group5PCC12, 9, TestName = "G5Eng PCC12 Case H"), // Case H
+		TestCase(Group5PCC12, 10, TestName = "G5Eng PCC12 Case I"), // Case I
+		TestCase(Group5PCC12, 11, TestName = "G5Eng PCC12 Case J"), // Case J
+
+		TestCase(Group5PCC123, 2, TestName = "G5Eng PCC123 Case A"), // Case A
+		TestCase(Group5PCC123, 3, TestName = "G5Eng PCC123 Case B"), // Case B
+		TestCase(Group5PCC123, 4, TestName = "G5Eng PCC123 Case C"), // Case C
+		TestCase(Group5PCC123, 5, TestName = "G5Eng PCC123 Case D"), // Case D
+		TestCase(Group5PCC123, 6, TestName = "G5Eng PCC123 Case E"), // Case E
+		TestCase(Group5PCC123, 7, TestName = "G5Eng PCC123 Case F"), // Case F
+		TestCase(Group5PCC123, 8, TestName = "G5Eng PCC123 Case G"), // Case G
+		TestCase(Group5PCC123, 9, TestName = "G5Eng PCC123 Case H"), // Case H
+		TestCase(Group5PCC123, 10, TestName = "G5Eng PCC123 Case I"), // Case I
+		TestCase(Group5PCC123, 11, TestName = "G5Eng PCC123 Case J"), // Case J
 		]
-		public void TestPCCEngineeringSampleCases(int cycleIdx)
+		public void TestPCCEngineeringSampleCases(string jobName, int cycleIdx)
 		{
-			var jobName = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto";
+			
 			RunSingleEngineeringCycle(jobName, cycleIdx);
 		}
 

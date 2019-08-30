@@ -105,7 +105,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestCase(Class9Decl, ExecutionMode.Declaration, 0),
 		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 0),
 		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 1),
-		TestCase(@"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto", ExecutionMode.Engineering, 1)
 		]
 		public void TestSimulationPreprocessingPccSegments(string jobFile, ExecutionMode mode, int i)
 		{
