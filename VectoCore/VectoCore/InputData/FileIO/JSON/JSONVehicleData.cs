@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public override PredictiveCruiseControlType PredictiveCruiseControl
 		{
 			get {
-				return Body.GetEx<string>("PredictiveCruiseControl").ParseEnum<PredictiveCruiseControlType>();
+				return PredictiveCruiseControlTypeHelper.Parse(Body.GetEx<string>("PredictiveCruiseControl"));
 			}
 		}
 
