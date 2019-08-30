@@ -131,7 +131,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public MeterPerSecond UnderSpeed;
 
 			public MeterPerSecond PCCEnableSpeed;
-			
+
+			public MeterPerSecond OverspeedUseCase3;
 		}
 	}
 }

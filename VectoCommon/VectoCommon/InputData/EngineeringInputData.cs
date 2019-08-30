@@ -370,11 +370,16 @@ namespace TUGraz.VectoCommon.InputData
 		MeterPerSecond PCCEnabledSpeed { get; }
 
 		MeterPerSecond MinSpeed { get; }
+
 		MeterPerSecond MaxSpeed { get; }
+
 		Meter PreviewDistanceUseCase1 { get; }
+
 		Meter PreviewDistanceUseCase2 { get; }
 
 		MeterPerSecond Underspeed { get; }
+
+		MeterPerSecond OverspeedUseCase3 { get; }
 	}
 
 	public interface IOverSpeedEngineeringInputData : IOverSpeedEcoRollDeclarationInputData

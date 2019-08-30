@@ -159,6 +159,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public static readonly Meter PreviewDistanceUseCase1 = 1500.SI<Meter>();
 				public static readonly Meter PreviewDistanceUseCase2 = 1000.SI<Meter>();
 				public static readonly MeterPerSecond Underspeed = 8.KMPHtoMeterPerSecond();
+				public static readonly MeterPerSecond OverspeedUseCase3 = 5.KMPHtoMeterPerSecond();
 			}
 		}
 

@@ -91,6 +91,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					PreviewDistanceUseCase1 = DeclarationData.Driver.PCC.PreviewDistanceUseCase1,
 					PreviewDistanceUseCase2 = DeclarationData.Driver.PCC.PreviewDistanceUseCase2,
 					UnderSpeed =  DeclarationData.Driver.PCC.Underspeed,
+					OverspeedUseCase3 = DeclarationData.Driver.PCC.OverspeedUseCase3
 				}
 			};
 			return retVal;
