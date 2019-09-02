@@ -89,9 +89,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					PredictiveCruiseControl = PredictiveCruiseControlType.None
 				}: 
 				new VehicleData.ADASData {
-				EngineStopStart = adas.EngineStopStart,
-				EcoRoll = adas.EcoRoll,
-				PredictiveCruiseControl = adas.PredictiveCruiseControl
+					EngineStopStart = adas.EngineStopStart,
+					EcoRoll = adas.EcoRoll,
+					PredictiveCruiseControl = adas.PredictiveCruiseControl
 			};
 		}
 
@@ -473,7 +473,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				PCC = new DriverData.PCCData() {
 					PCCEnableSpeed = driver.PCCData?.PCCEnabledSpeed ?? DeclarationData.Driver.PCC.PCCEnableSpeed,
 					MinSpeed = driver.PCCData?.MinSpeed ?? DeclarationData.Driver.PCC.MinSpeed,
-					MaxSpeed = driver.PCCData?.MaxSpeed ?? DeclarationData.Driver.PCC.MaxSpeed,
 					PreviewDistanceUseCase1 = driver.PCCData?.PreviewDistanceUseCase1 ?? DeclarationData.Driver.PCC.PreviewDistanceUseCase1,
 					PreviewDistanceUseCase2 = driver.PCCData?.PreviewDistanceUseCase2 ?? DeclarationData.Driver.PCC.PreviewDistanceUseCase2,
 					UnderSpeed = driver.PCCData?.Underspeed ?? DeclarationData.Driver.PCC.Underspeed,

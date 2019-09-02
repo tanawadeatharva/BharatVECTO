@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			PCCSegments = new PCCSegments();
 
-			if (data?.VehicleData.ADAS.PredictiveCruiseControl != PredictiveCruiseControlType.None) {
+			if (data?.VehicleData?.ADAS?.PredictiveCruiseControl != PredictiveCruiseControlType.None) {
 				// create a dummy powertrain for pre-processing and estimatins
 				var modData = new ModalDataContainer(data, null, new[] { FuelData.Diesel }, null, false);
 				var builder = new PowertrainBuilder(modData);

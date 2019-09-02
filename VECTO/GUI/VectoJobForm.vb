@@ -87,6 +87,10 @@ Public Class VectoJobForm
 		ButAuxRem.Enabled = Not Cfg.DeclMode
 		PnEcoRoll.Enabled = Not Cfg.DeclMode
 
+        gbEcoRoll.Enabled = not Cfg.DeclMode
+        gbEngineStopStart.Enabled = not cfg.DeclMode
+        gbPCC.Enabled = Not Cfg.DeclMode
+
 		_changed = False
 		'AA-TB
 		PopulateAdvancedAuxiliaries()
@@ -531,9 +535,20 @@ Public Class VectoJobForm
 											GetRelativePath(driver.Lookahead.CoastingDecisionFactorVelocityDropLookup.Source, _basePath))
 		End If
 
-		tbEngineStopStartActivationDelay.Text =  If(driver.EngineStopStartData.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.ActivationDelay.ToGUIFormat())
-        tbMaxEngineOffTimespan.Text = If(driver.EngineStopStartData.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.ToGUIFormat())
-        tbEssUtility.Text = driver.EngineStopStartData.UtilityFactor.ToGUIFormat()
+		tbEngineStopStartActivationDelay.Text =  If(driver.EngineStopStartData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.ActivationDelay.ToGUIFormat())
+        tbMaxEngineOffTimespan.Text = If(driver.EngineStopStartData?.MaxEngineOffTimespan?.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.ToGUIFormat())
+        tbEssUtility.Text = If(driver.EngineStopStartData?.UtilityFactor.ToGUIFormat(), DeclarationData.Driver.EngineStopStart.UtilityFactor.ToGUIFormat())
+
+        tbEcoRollActivationDelay.Text = if(driver.EcoRollData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EcoRoll.ActivationDelay.ToGUIFormat())
+        tbEcoRollMinSpeed.Text = if(driver.EcoRollData?.MinSpeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.EcoRoll.MinSpeed.AsKmph().ToGUIFormat())
+        tbEcoRollUnderspeed.Text = if(driver.EcoRollData?.UnderspeedThreshold?.AsKmph().ToGUIFormat(), DeclarationData.Driver.EcoRoll.UnderspeedThreshold.AsKmph().ToGUIFormat())
+
+        tbPCCUnderspeed.Text = if(driver.PCCData?.Underspeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.PCC.Underspeed.AsKmph().ToGUIFormat())
+        tbPCCOverspeed.Text = If(driver.PCCData?.OverspeedUseCase3?.AsKmph().ToGUIFormat(), DeclarationData.Driver.PCC.OverspeedUseCase3.AsKmph().ToGUIFormat())
+        tbPCCEnableSpeed.Text = if(driver.PCCData?.PCCEnabledSpeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.PCC.PCCEnableSpeed.AsKmph().ToGUIFormat())
+        tbPCCMinSpeed.Text = if(driver.PCCData?.MinSpeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.PCC.MinSpeed.AsKmph().ToGUIFormat())
+        tbPCCPreviewUseCase1.Text = If(driver.PCCData?.PreviewDistanceUseCase1?.ToGUIFormat(), DeclarationData.Driver.PCC.PreviewDistanceUseCase1.ToGUIFormat())
+        tbPCCPreviewUseCase2.Text = if(driver.PCCData?.PreviewDistanceUseCase2?.ToGUIFormat(), DeclarationData.Driver.PCC.PreviewDistanceUseCase2.ToGUIFormat())
 
 		'-------------------------------------------------------------
 
@@ -653,6 +668,18 @@ Public Class VectoJobForm
         vectoJob.EngineStopStartActivationThreshold = tbEngineStopStartActivationDelay.text.ToDouble(0)
         vectoJob.EngineOffTimeLimit = tbMaxEngineOffTimespan.Text.ToDouble(0)
         vectoJob.EngineStStUtilityFactor = tbEssUtility.Text.ToDouble(0)
+
+        vectoJob.EcoRollActivationDelay = tbEcoRollActivationDelay.Text.ToDouble(0)
+        vectoJob.EcoRollMinSpeed = tbEcoRollMinSpeed.Text.ToDouble(0)
+        vectoJob.EcoRollUnderspeedThreshold = tbEcoRollUnderspeed.Text.ToDouble(0)
+
+        vectoJob.PCCEnableSpeedVal = tbPCCEnableSpeed.Text.ToDouble(0)
+        vectoJob.PCCMinSpeed = tbPCCMinSpeed.Text.ToDouble(0)
+        vectoJob.PCCUnderspeed = tbPCCUnderspeed.Text.ToDouble(0)
+        vectoJob.PCCOverspeedUseCase3 = tbPCCOverspeed.Text.ToDouble(0)
+        vectoJob.PCCPrevewiDistance1 = tbPCCPreviewUseCase1.Text.ToDouble(0)
+        vectoJob.PCCPreviewDistance2 = tbPCCPreviewUseCase2.Text.ToDouble(0)
+
 		'------------------------------------------------------------
 
 		'SAVE

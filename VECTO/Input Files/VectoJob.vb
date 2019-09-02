@@ -33,7 +33,7 @@ Imports TUGraz.VectoCore.Utils
 Public Class VectoJob
     Implements IEngineeringInputDataProvider, IDeclarationInputDataProvider, IEngineeringJobInputData,
                 IDeclarationJobInputData, IDriverEngineeringInputData, IDriverDeclarationInputData, IAuxiliariesEngineeringInputData,
-                IAuxiliariesDeclarationInputData, IJSONVehicleComponents, IEngineStopStartEngineeringInputData, IEcoRollEngineeringInputData
+                IAuxiliariesDeclarationInputData, IJSONVehicleComponents, IEngineStopStartEngineeringInputData, IEcoRollEngineeringInputData, IPCCEngineeringInputData
 
     'AA-TB
     'STORES THE Type and version of the chosen or default Auxiliary Type ( Classic/Original or other )
@@ -78,6 +78,12 @@ Public Class VectoJob
     Public EcoRollMinSpeed As double
     Public EcoRollUnderspeedThreshold As Double
     Public EcoRollActivationDelay as double
+    Public PCCEnableSpeedVal As Double
+    Public PCCMinSpeed As Double
+    Public PCCPrevewiDistance1 As Double
+    Public PCCPreviewDistance2 As Double
+    Public PCCUnderspeed As Double
+    Public PCCOverspeedUseCase3 As Double
 
     'Private _vehicleInputData As JSONComponentInputData
     'Private _engineInputData As JSONComponentInputData
@@ -283,12 +289,49 @@ Public Class VectoJob
     End Property
 
     Public ReadOnly Property PCCData As IPCCEngineeringInputData Implements IDriverEngineeringInputData.PCCData
+    get
+            return me
+    End Get
+    End Property
+
+    Public ReadOnly Property PCCEnabledSpeed As MeterPerSecond Implements IPCCEngineeringInputData.PCCEnabledSpeed
+    get
+            return PCCEnableSpeedVal.KMPHtoMeterPerSecond()
+    End Get
+    End Property
+    Public ReadOnly Property IPCCEngineeringInputData_MinSpeed As MeterPerSecond Implements IPCCEngineeringInputData.MinSpeed
+    get
+            return PCCMinSpeed.KMPHtoMeterPerSecond()
+    End Get
+    End Property
 
     Public ReadOnly Property MinSpeed As MeterPerSecond Implements IEcoRollEngineeringInputData.MinSpeed
     get
             Return EcoRollMinSpeed.KMPHtoMeterPerSecond()
     End Get
     End Property
+
+    Public ReadOnly Property PreviewDistanceUseCase1 As Meter Implements IPCCEngineeringInputData.PreviewDistanceUseCase1
+    get
+            return PCCPrevewiDistance1.SI(of Meter)
+    End Get
+    End Property
+    Public ReadOnly Property PreviewDistanceUseCase2 As Meter Implements IPCCEngineeringInputData.PreviewDistanceUseCase2
+    get
+            return PCCPreviewDistance2.SI(of Meter)
+    End Get
+    End Property
+    Public ReadOnly Property Underspeed As MeterPerSecond Implements IPCCEngineeringInputData.Underspeed
+    get
+            return PCCUnderspeed.KMPHtoMeterPerSecond()
+    End Get
+    End Property
+    Public ReadOnly Property OverspeedUseCase3 As MeterPerSecond Implements IPCCEngineeringInputData.OverspeedUseCase3
+    get
+            Return PCCOverspeedUseCase3.KMPHtoMeterPerSecond()
+    End Get
+    End Property
+
     Public ReadOnly Property IEcoRollEngineeringInputData_ActivationDelay As Second Implements IEcoRollEngineeringInputData.ActivationDelay
     get
             Return EcoRollActivationDelay.SI(Of Second)()

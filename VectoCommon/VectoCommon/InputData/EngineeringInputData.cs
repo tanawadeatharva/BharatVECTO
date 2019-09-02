@@ -371,8 +371,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		MeterPerSecond MinSpeed { get; }
 
-		MeterPerSecond MaxSpeed { get; }
-
 		Meter PreviewDistanceUseCase1 { get; }
 
 		Meter PreviewDistanceUseCase2 { get; }
