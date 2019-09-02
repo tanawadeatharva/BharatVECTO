@@ -20,16 +20,11 @@ The basic file format is [Vecto-CSV](#csv) and the file type ending is ".vdri". 
 ###Declaration Mode Cycles
 In Declaration Mode driving cycles are automatically chosen depending on vehicle category and cannot be changed by the user. These predefined cycles are of type target-speed, distance-based.
 
-- Coach: 275km
-- Construction: 21km
-- Heavy Urban: 30km
-- Inter Urban: 123km
+- Construction: 100km
 - Long Haul: 100km
-- Municipal Utility: 10km
-- Regional Delivery: 26km
-- Sub Urban: 23km
-- Urban: 40km
-- Urban Delivery: 28km
+- Municipal Utility: 11.25km
+- Regional Delivery: 100km
+- Urban Delivery: 100km
 
 ###Verification Test Cycle
 This kind of cycle is used for simulating vehicles defined in declaration mode (xml) on a real driving cycle.
