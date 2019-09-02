@@ -65,6 +65,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public static bool PlotDrivingMode = false;
 
+		public static bool PlotIgnitionState = false;
+
 		public static void Enable()
 		{
 			_enabled = true;
@@ -119,7 +121,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 					if (yfield == ModalResultField.v_act) {
 						var y3 = LoadData(modDataV3, ModalResultField.v_targ.GetName());
 						var series3 = CreateSeries("v_target", legend, chartArea, chart, Color.Green, x, y3);
+					}
 
+					if ((Yfields.Contains(ModalResultField.altitude) && yfield == ModalResultField.altitude) || 
+						(!Yfields.Contains(ModalResultField.altitude) && yfield == ModalResultField.v_act)) {
+						
 						var grad = LoadData(modDataV3, ModalResultField.grad.GetName());
 
 						chartArea.AxisY2.Enabled = AxisEnabled.True;
@@ -166,6 +172,20 @@ namespace TUGraz.VectoCore.Tests.Utils
 							var seriesAction = CreateSeries("Driving Mode", legend, chartArea, chart, Color.Maroon, x, mode);
 							//seriesAction.YAxisType = AxisType;
 						}
+					}
+					if (PlotIgnitionState && yfield == ModalResultField.P_eng_out) {
+						var ignition = LoadData(modDataV3, ModalResultField.IgnitionOn.GetName());
+
+						chartArea.AxisY2.Enabled = AxisEnabled.True;
+						chartArea.AxisY2.Title = "Engine On [0/1]";
+						chartArea.AxisY2.TitleFont = AxisTitleFont;
+						chartArea.AxisY2.LabelStyle.Font = AxisLabelFont;
+						chartArea.AxisY2.LabelAutoFitStyle = LabelAutoFitStyles.None;
+						chartArea.AxisY2.MinorGrid.Enabled = false;
+						chartArea.AxisY2.MajorGrid.Enabled = false;
+
+						var seriesIgnition = CreateSeries("Engine On", legend, chartArea, chart, Color.Crimson, x, ignition);
+						seriesIgnition.YAxisType = AxisType.Secondary;
 					}
 
 					var series1 = CreateSeries(string.Format("{1} - {0}", yfield, Series1Label), legend, chartArea, chart,
