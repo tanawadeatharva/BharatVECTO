@@ -67,7 +67,7 @@ In Declaration Mode the energy demand of all auxiliaries except the engine cooli
 <div class="engineering">
 **Auxiliary energy demand**
 
-In Engineering Mode the energy demand of all auxiliaries is assumed to be drawn also during engine stop periods and the fuel consumption is corrected in a post-processing step.
+In Engineering Mode the energy demand of all auxiliaries is assumed to be drawn also during engine-off periods and the fuel consumption is corrected in a post-processing step.
 </div>
 
 
@@ -75,11 +75,44 @@ In Engineering Mode the energy demand of all auxiliaries is assumed to be drawn 
 
 ###Description
 
-###Model Parameters
+Eco-roll is a driver assistant system that automatically decouples the internal combustion engine from the power train during specific downhill driving conditions with low negative slopes. The aim is to save fuel during such phases. VECTO supports eco-roll without engine stop/start and eco-roll with engine stop/start. In the former case, the combustion engine is idling during eco-roll phases while in the latter case the combustion engine is turned off during eco-roll events. For vehicles having eco-roll with engine stop/start the fuel consumption is corrected for the engine stop/start events and the auxiliary power demand during engine-off phases.
 
 <div class="declaration">
+**Auxiliary energy demand**
 
+In Declaration Mode the energy demand of all auxiliaries is applied in the fuel consumption correction during engine-off periods
 </div>
+
+<div class="engineering">
+**Auxiliary energy demand**
+
+In Engineering Mode the energy demand of all auxiliaries is assumed to be drawn also during engine-off periods and the fuel consumption is corrected in a post-processing step.
+</div>
+
+
+###Model Parameters
+
+  - **Minimum speed:** minimum vehicle speed to allow eco-roll to be activated
+  - **Activation delay:** delay between the point in time when all conditions for an eco-roll event are fulfilled until eco-roll is activated
+  - **Underspeed threshold:** Threshold below the target speed to disable eco-roll 
+
+<div class="declaration">
+  - Minimum speed: 60 km/h
+  - Activation delay: 2s
+  - Underspeed threshold: 0 km/h
+</div>
+
+###Eco-Roll Model
+
+**Calulations during simulation**
+
+$a_{veh,est} = \frac{F_{grad}(x) + F_{roll}(x) + F_{aero}(v_{veh})}{m_{veh}}$
+
+**Eco-Roll State Diagram**
+
+The following state diagram depicts when eco-roll is activated during the simulation.
+
+![](pics/EcoRollActivation.svg)
 
 ##Advanced Driver Assistant Systems: Predictive Cruise Control
 
@@ -157,7 +190,11 @@ $E(x_{end}) = m \cdot g \cdot h(x_{end}) + \frac{m \cdot v_{target}(x_{end})^2}{
 
 **PCC State Diagram**
 
-TODO!
+The following state diagram depicts when a PCC event is activated during the simulation.
+
+![](pics/PredictiveCruiseControlActivation.svg)
+
+The fuel consumption of vehicles equipped with PCC option 1 & 2 and eco-roll with engine stop/start will be corrected for engine stop/start as described in [engine stop/start correction](#engine-fuel-consumption-correction).
 
 ###Predictive Cruise Control Model Use-case 3
 
