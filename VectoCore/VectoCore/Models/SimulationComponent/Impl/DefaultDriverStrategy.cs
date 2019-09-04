@@ -194,6 +194,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				HandleEcoRoll(absTime, targetVelocity);
 			}
 
+			if (EcoRollState.State != EcoRollStates.EcoRollOn && PCCState != PCCStates.UseCase1 &&
+				PCCState != PCCStates.UseCase2) {
+				EngineOffTimestamp = null;
+				Driver.DataBus.IgnitionOn = true;
+			}
+
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
 				if (Driver.DataBus.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance, 1e-3.SI<Meter>())) {
 					CurrentDrivingMode = DrivingMode.DrivingModeDrive;
@@ -392,6 +398,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dBus = Driver.DataBus;
 			var vehicleSpeedAboveLowerThreshold = dBus.VehicleSpeed >= Driver.DriverData.EcoRoll.MinSpeed;
 			var slopeNegative = dBus.RoadGradient.IsSmaller(0);
+			// potential optimization...
+			//if (EcoRollState.State != EcoRollStates.EcoRollOn && !slopeNegative) {
+			//	EcoRollState.State = EcoRollStates.EcoRollOff;
+			//	return;
+			//}
 			var forces = dBus.SlopeResistance(dBus.RoadGradient) + dBus.RollingResistance(dBus.RoadGradient) +
 						dBus.AirDragResistance(dBus.VehicleSpeed, dBus.VehicleSpeed);
 
