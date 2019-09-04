@@ -43,11 +43,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			var targetspeedChanged = 0.SI<Meter>();
 			foreach (var tuple in Container.RunData.Cycle.Entries.Pairwise(Tuple.Create)) {
 				if (!tuple.Item1.Highway) {
+					pccSegment = null;
 					continue;
 				}
 
 				if (!tuple.Item1.VehicleTargetSpeed.IsGreaterOrEqual(PCCDriverData.PCCEnableSpeed)) {
 					// only consider pcc segments where the target speed is at least the pcc-enable speed
+					pccSegment = null;
 					continue;
 				}
 				if (tuple.Item1.Distance.IsEqual(tuple.Item2.Distance)) {
@@ -58,6 +60,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 				if (!tuple.Item1.VehicleTargetSpeed.IsEqual(tuple.Item2.VehicleTargetSpeed)) {
 					// target speed must not change within PCC segment
 					targetspeedChanged = tuple.Item2.Distance;
+					pccSegment = null;
 					continue;
 				}
 
