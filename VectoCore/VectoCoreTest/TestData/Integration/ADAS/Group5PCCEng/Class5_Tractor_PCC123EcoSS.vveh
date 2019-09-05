@@ -18,7 +18,7 @@
     "CdCorrFile": "",
     "EngineStopStart":  true,
     "EcoRoll": "withEngineStop",
-    "PredictiveCruiseControl":  "1,2,3",  
+    "PredictiveCruiseControl":  "Option_1_2_3",  
     "Retarder": {
       "Type": "secondary",
       "Ratio": 1.0,
