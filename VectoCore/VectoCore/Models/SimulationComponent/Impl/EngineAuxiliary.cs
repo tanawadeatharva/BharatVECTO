@@ -157,13 +157,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Watt PowerDemandEngineOff()
 		{
-			if (!DataBus.VehicleStopped) {
-				return Auxiliaries.Sum(x => x.Value(0.RPMtoRad()));
-			}
 
 			var auxiliarieIgnoredDuringVehicleStop = new[] {
 				Constants.Auxiliaries.IDs.SteeringPump, Constants.Auxiliaries.IDs.Fan,
 				Constants.Auxiliaries.IDs.PTOConsumer, Constants.Auxiliaries.IDs.PTOTransmission
+			};
+			var auxiliarieIgnoredDuringDrive = new[] {
+				Constants.Auxiliaries.IDs.Fan,
 			};
 			var powerDemands = new Dictionary<string, Watt>(Auxiliaries.Count);
 			var engineOffDemand = 0.SI<Watt>();
@@ -175,7 +175,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				powerDemands[item.Key] = value *  (1-EngineStopStartUtilityFactor);
-				engineOffDemand += auxiliarieIgnoredDuringVehicleStop.Contains(item.Key) ? 0.SI<Watt>() : value *  EngineStopStartUtilityFactor;
+				if (DataBus.VehicleStopped) {
+					engineOffDemand += auxiliarieIgnoredDuringVehicleStop.Contains(item.Key)
+						? 0.SI<Watt>()
+						: value * EngineStopStartUtilityFactor;
+				} else {
+					engineOffDemand += auxiliarieIgnoredDuringDrive.Contains(item.Key)
+						? 0.SI<Watt>()
+						: value * EngineStopStartUtilityFactor;
+				}
 			}
 			CurrentState.PowerDemands = powerDemands;
 			return engineOffDemand;  //powerDemands.Sum(kv => kv.Value); 

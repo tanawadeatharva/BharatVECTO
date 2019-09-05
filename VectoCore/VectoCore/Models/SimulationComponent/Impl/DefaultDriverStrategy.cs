@@ -636,7 +636,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DrivingCycleData.DrivingCycleEntry actionEntry)
 		{
 			var targetSpeed = OverspeedAllowed(actionEntry.VehicleTargetSpeed)
-				? actionEntry.VehicleTargetSpeed + GetOverspeed()
+				? actionEntry.VehicleTargetSpeed + Driver.DriverData.OverSpeed.OverSpeed
 				: actionEntry.VehicleTargetSpeed;
 
 			var vehicleMass = Driver.DataBus.TotalMass + Driver.DataBus.ReducedMassWheels;
