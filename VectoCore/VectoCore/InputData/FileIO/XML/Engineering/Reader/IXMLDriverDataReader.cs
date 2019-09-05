@@ -15,11 +15,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader
 		IGearshiftEngineeringInputData ShiftParameters { get; }
 		IEngineStopStartEngineeringInputData EngineStopStartData { get; }
 		IEcoRollEngineeringInputData EcoRollData { get; }
+
+		IPCCEngineeringInputData PCCData { get; }
 		
 	}
 
-	public interface IXMLEngineStopStartDriverData : IEngineStopStartEngineeringInputData
-	{
-		
-	}
 }

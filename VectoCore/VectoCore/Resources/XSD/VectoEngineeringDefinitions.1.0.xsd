@@ -415,11 +415,15 @@
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="EcoRollEngineeringType">
-		<xs:sequence>
-			<xs:element name="ActivationDelay" type="tns:EcoRollActivationDelayType"/>
-			<xs:element name="MinSpeed" type="tns:EcoRollMinSpeedType"/>
-			<xs:element name="Underspeed" type="tns:EcoRollUnderSpeedType"/>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="tns:AbstractEcoRollEngineeringType">
+				<xs:sequence>
+					<xs:element name="ActivationDelay" type="tns:EcoRollActivationDelayType" minOccurs="0"/>
+					<xs:element name="MinSpeed" type="tns:EcoRollMinSpeedType" minOccurs="0"/>
+					<xs:element name="Underspeed" type="tns:EcoRollUnderSpeedType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="EngineComponentEngineeringType">
 		<xs:choice>
@@ -692,7 +696,7 @@
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractPCCParametersType">
 				<xs:sequence>
-					<xs:element name="PreviewDistance" type="xs:double" minOccurs="0"/>
+					<xs:element name="EnablingSpeed" type="xs:double" minOccurs="0"/>
 					<xs:element name="MinSpeed" minOccurs="0">
 						<xs:simpleType>
 							<xs:restriction base="xs:double">
@@ -714,6 +718,8 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:element>
+					<xs:element name="PreviewDistanceUseCase1" type="xs:double" minOccurs="0"/>
+					<xs:element name="PreviewDistanceUseCase2" type="xs:double" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -2095,4 +2101,5 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:group>
+	<xs:complexType name="PCCEngineeringT"/>
 </xs:schema>
