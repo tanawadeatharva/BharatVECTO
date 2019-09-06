@@ -200,6 +200,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				foreach (var loading in mission.Loadings) {
 					var simulationRunData = new VectoRunData {
 						Loading = loading.Key,
+						VehicleDesignSpeed = _segment.DesignSpeed,
 						VehicleData = _dao.CreateVehicleData(vehicle, mission, loading.Value),
 						AirdragData = _dao.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment),
 						EngineData = _engineData.Copy(), // a copy is necessary because every run has a different correction factor!

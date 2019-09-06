@@ -49,10 +49,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	[CustomValidation(typeof(VectoRunData), "ValidateRunData")]
 	public class VectoRunData : SimulationComponentData
 	{
+
 		public VectoRunData()
 		{
 			Exempted = false;
 		}
+
+		public MeterPerSecond VehicleDesignSpeed { get; internal set; }
 
 		[ValidateObject]
 		public VehicleData VehicleData { get; internal set; }
@@ -157,7 +160,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private static ValidationResult CheckPowertrainLossMapsSize(VectoRunData runData, GearboxData gearboxData,
 			CombustionEngineData engineData)
 		{
-			var maxSpeed = 95.KMPHtoMeterPerSecond();
+			
 			var axleGearData = runData.AxleGearData;
 			var angledriveData = runData.AngledriveData;
 			var hasAngleDrive = angledriveData != null && angledriveData.Angledrive != null;
@@ -166,6 +169,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				: 1.0;
 			var axlegearRatio = axleGearData != null ? axleGearData.AxleGear.Ratio : 1.0;
 			var dynamicTyreRadius = runData.VehicleData != null ? runData.VehicleData.DynamicTyreRadius : 0.0.SI<Meter>();
+
+			var vehicleMaxSpeed = runData.EngineData.FullLoadCurves[0].N95hSpeed /
+								runData.GearboxData.Gears[runData.GearboxData.Gears.Keys.Max()].Ratio / axlegearRatio /
+								angledriveRatio * dynamicTyreRadius;
+			var maxSpeed = VectoMath.Min(vehicleMaxSpeed, (runData.VehicleDesignSpeed ?? 90.KMPHtoMeterPerSecond()) + (runData.DriverData?.OverSpeedEcoRoll?.OverSpeed ?? 0.KMPHtoMeterPerSecond()));
 
 			if (gearboxData.Gears.Count + 1 != engineData.FullLoadCurves.Count) {
 				return
@@ -202,7 +210,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		}
 
 		private static ValidationResult CheckLossMapsEntries(KeyValuePair<uint, GearData> gear, PerSecond angularVelocity,
-			NewtonMeter inTorque, AngledriveData angledriveData, AxleGearData axleGearData, SI velocity)
+			NewtonMeter inTorque, AngledriveData angledriveData, AxleGearData axleGearData, MeterPerSecond velocity)
 		{
 			var hasAngleDrive = angledriveData != null && angledriveData.Angledrive != null;
 			var angledriveRatio = hasAngleDrive && angledriveData.Type == AngledriveType.SeparateAngledrive
