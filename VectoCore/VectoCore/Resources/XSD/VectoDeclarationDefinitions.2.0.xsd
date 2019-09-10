@@ -9,6 +9,7 @@
 	<xs:complexType name="AbstractAxleWheelsComponentDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractAxleWheelsDataDeclarationType"/>
 	<xs:complexType name="AbstractGearEntryType" abstract="true"/>
+	<xs:complexType name="AbstractGearsDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractPTODataType" abstract="true"/>
 	<xs:complexType name="AbstractTorqueLimitsType"/>
 	<xs:complexType name="AbstractVehicleComponentsDeclarationType" abstract="true"/>
@@ -579,13 +580,7 @@
 							<xs:documentation>P254 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="Gears">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Gear" type="tns:GearDeclarationType" maxOccurs="99"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Gears" type="tns:AbstractGearsDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -615,6 +610,15 @@
 							</xs:complexContent>
 						</xs:complexType>
 					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GearsDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="tns:AbstractGearsDeclarationType">
+				<xs:sequence>
+					<xs:element name="Gear" type="tns:GearDeclarationType" maxOccurs="99"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -894,6 +898,49 @@
 			</xs:simpleType>
 		</xs:attribute>
 	</xs:complexType>
+	<xs:complexType name="VehicleBaseType" abstract="true">
+		<xs:complexContent>
+			<xs:extension base="tns:AbstractVehicleDeclarationType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P235</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
+						<xs:annotation>
+							<xs:documentation>P252</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P236</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="VIN" type="v1.0:VINType">
+						<xs:annotation>
+							<xs:documentation>P238</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P239</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="LegislativeClass" type="v1.0:LegislativeClassDeclarationType">
+						<xs:annotation>
+							<xs:documentation>P251 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="VehicleCategory" type="v1.0:VehicleCategoryDeclarationType">
+						<xs:annotation>
+							<xs:documentation>P036 - enum</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="VehicleComponentsType">
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractVehicleComponentsDeclarationType">
@@ -953,49 +1000,6 @@
 					<xs:element name="PTO" type="tns:AbstractPTODataType"/>
 					<xs:element name="TorqueLimits" type="tns:AbstractTorqueLimitsType" minOccurs="0"/>
 					<xs:element name="Components" type="tns:AbstractVehicleComponentsDeclarationType"/>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="VehicleBaseType" abstract="true">
-		<xs:complexContent>
-			<xs:extension base="tns:AbstractVehicleDeclarationType">
-				<xs:sequence>
-					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
-						<xs:annotation>
-							<xs:documentation>P235</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="ManufacturerAddress" type="v1.0:ManufacturerAddressType">
-						<xs:annotation>
-							<xs:documentation>P252</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Model" type="v1.0:ModelType">
-						<xs:annotation>
-							<xs:documentation>P236</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="VIN" type="v1.0:VINType">
-						<xs:annotation>
-							<xs:documentation>P238</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
-						<xs:annotation>
-							<xs:documentation>P239</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="LegislativeClass" type="v1.0:LegislativeClassDeclarationType">
-						<xs:annotation>
-							<xs:documentation>P251 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="VehicleCategory" type="v1.0:VehicleCategoryDeclarationType">
-						<xs:annotation>
-							<xs:documentation>P036 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
