@@ -3126,6 +3126,12 @@
     <Content Include="TestData\Integration\ADAS\Group5_EngineStopStart.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\Integration\ADAS\Group9_AT_PCC.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\ADAS\Group9_AT_PCCEcoRoll.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\Integration\DeclarationMode\Class4_Vocational\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

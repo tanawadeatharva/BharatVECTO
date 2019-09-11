@@ -208,6 +208,7 @@
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringJobInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringOverspeed.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringPCCInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringRetarderDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringTorqueConverterDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringVehicleComponentsDataProvider.cs" />
@@ -229,6 +230,7 @@
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringGearshiftData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringJobInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringPCCInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringVehicleComponentsData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringVehicleData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringEngineStopStartData.cs" />

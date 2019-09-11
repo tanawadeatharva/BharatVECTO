@@ -40,10 +40,44 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var gearbox = Container.Gearbox as Gearbox;
-			if (gearbox == null) {
-				throw new VectoException("no gearbox found...");
+			if (gearbox != null) {
+				RunPreprocessingAMTGearbox(gearbox, vehicle);
+				return;
+			}
+			var atGearbox = Container.Gearbox as ATGearbox;
+			if (atGearbox != null) {
+				RunPreprocessingATGearbox(atGearbox, vehicle);
+				return;
 			}
 
+			throw new VectoException("no valid gearbox found...");
+			
+
+		}
+
+		private void RunPreprocessingATGearbox(ATGearbox gearbox, Vehicle vehicle)
+		{
+			var modData = Container.ModalData as ModalDataContainer;
+			SlopeData.Clear();
+
+			for (var speed = MinSpeed; speed <= MaxSpeed; speed += SpeedStep) {
+				var gear = FindLowestGearForSpeed(speed);
+				gearbox.Gear = gear;
+				gearbox.TorqueConverterLocked = true;
+				gearbox.DisengageGearbox = true;
+
+				//gearbox._nextGear = new GearInfo(gear, true);
+				vehicle.Initialize(speed, 0.SI<Radian>());
+
+				var slope = SearchSlope(vehicle, Container);
+
+				modData?.Reset();
+				SlopeData[speed] = slope;
+			}
+		}
+
+		private void RunPreprocessingAMTGearbox(Gearbox gearbox, Vehicle vehicle)
+		{
 			var modData = Container.ModalData as ModalDataContainer;
 			SlopeData.Clear();
 
@@ -68,6 +102,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						data.VehicleData.DynamicTyreRadius;
 			return Container.RunData.GearboxData.Gears.Select(
 				x => {
+					if (double.IsNaN(x.Value.Ratio)) {
+						// ignore converter gears
+						return 0u;
+					}
 					var n = speed * ratio * x.Value.Ratio;
 					return n < data.EngineData.IdleSpeed ? 0 : x.Key;
 				}).Max();

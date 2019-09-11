@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -18,8 +20,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[TestFixture]
 	public class SimulationPreprocessingTest
 	{
+		private StandardKernel _kernel;
+		private IXMLInputDataReader xmlInputReader;
+
 		public const string Class9Decl =
 			@"TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
+
+		public const string Class9DeclAT =
+			@"E:\QUAM\Workspace\VECTO_DEV_ADAS\VectoCore\VectoCoreTest\TestData\Integration\ADAS\Group9_AT_PCC.xml";
 
 		public const string Class5Eng = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto";
 
@@ -27,16 +35,20 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void RunBeforeAnyTests()
 		{
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+
+			_kernel = new StandardKernel(new VectoNinjectModule());
+			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
 		[TestCase(Class9Decl),
+		 TestCase(Class9DeclAT)
 		]
 		public void TestSimulationPreprocessingPccRollSlope(string jobFile)
 		{
 			var fileWriter = new FileOutputWriter(jobFile);
 			var sumWriter = new SummaryDataContainer(fileWriter);
 			var jobContainer = new JobContainer(sumWriter);
-			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var dataProvider = Path.GetExtension(jobFile) == ".xml" ? xmlInputReader.CreateDeclaration(jobFile) : JSONInputDataFactory.ReadJsonJob(jobFile);
 			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
 				ModalResults1Hz = false,
 				WriteModalResults = true,
