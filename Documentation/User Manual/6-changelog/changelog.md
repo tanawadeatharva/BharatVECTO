@@ -2,6 +2,13 @@
 
 **VECTO 3.3.4**
 
+***Build 1716 (2019-09-13) OFFICIAL RELEASE***
+
+- Bugfixes
+    * [VECTO-1074] - Vecto Calculation Aborts with Interpolation Error ([VECTO-1046])
+    * [VECTO-1111] - Simulation Abort in Municipal Reference Load
+
+
 ***Build 1686 (2019-08-14) RELEASE CANDIDATE***
 
 - Improvement
