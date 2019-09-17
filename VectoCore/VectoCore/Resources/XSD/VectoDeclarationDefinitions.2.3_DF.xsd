@@ -55,16 +55,7 @@
 							<xs:documentation>P259 - [Nm]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="WHRType">
-						<xs:simpleType>
-							<xs:restriction base="xs:string">
-								<xs:enumeration value="none"/>
-								<xs:enumeration value="mechanical only"/>
-								<xs:enumeration value="electrical only"/>
-								<xs:enumeration value="mechanical and electrical"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:element>
+					<xs:element name="WHRType" type="tns:WHRTypeType"/>
 					<xs:element name="Mode" type="tns:EngineFuelModeType" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
@@ -86,7 +77,16 @@
 				<xs:documentation>P074 - [g/h]</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="electricPower" type="v1.0:Double2"/>
+		<xs:attribute name="electricPower" type="v1.0:Double2">
+			<xs:annotation>
+				<xs:documentation>Pxxx - [W]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="mechanicalPower" type="v1.0:Double2">
+			<xs:annotation>
+				<xs:documentation>Pxxx - [W]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="EngineFuelModeType">
 		<xs:sequence>
@@ -137,7 +137,14 @@
 					<xs:documentation>P260 - [-]</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="WHRCorrectionFactors" type="tns:WHRCorrectionFactorsType" minOccurs="0"/>
+			<xs:element name="WHRCorrectionFactors" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Electrical" type="tns:WHRCorrectionFactorsType" minOccurs="0"/>
+						<xs:element name="Mechanical" type="tns:WHRCorrectionFactorsType" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="FuelConsumptionMap">
 				<xs:complexType>
 					<xs:sequence>
@@ -189,6 +196,13 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="WHRTypeType">
+		<xs:sequence>
+			<xs:element name="MechanicalOutputICE" type="xs:boolean"/>
+			<xs:element name="MechanicalOutputDrivetrain" type="xs:boolean"/>
+			<xs:element name="ElectricalOutput" type="xs:boolean"/>
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>
