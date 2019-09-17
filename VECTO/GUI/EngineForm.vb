@@ -67,8 +67,8 @@ Public Class EngineForm
         pnWhtcFuel2.Enabled = cfg.DeclMode
         pnEngCFFuel2.Enabled = not cfg.DeclMode
 
-	    ElectricalWhrTab = tbWHR.TabPages(0)
-	    MechanicalWhrTab = tbWHR.TabPages(1)
+	    ElectricalWhrTab = tbWHR.TabPages(1)
+	    MechanicalWhrTab = tbWHR.TabPages(2)
 	    tbWHR.TabPages.Remove(ElectricalWhrTab)
 	    tbWHR.TabPages.Remove(MechanicalWhrTab)
 
@@ -744,7 +744,7 @@ Public Class EngineForm
     End Sub
 
     Private Sub cbElWHR_CheckedChanged(sender As Object, e As EventArgs) Handles cbElWHR.CheckedChanged
-
+        UpdateWHRTabs()
     End Sub
 
     Private Sub UpdateWHRTabs()
@@ -753,14 +753,14 @@ Public Class EngineForm
 
         tbWHR.TabPages.Remove(tbElectricalWHR)
         tbWHR.TabPages.Remove(tbMechanicalWHR)
-        If (whrtype and WHRType.ElectricalOutput) <> 0 Then
-            if (Not tbWHR.TabPages.Contains(tbElectricalWHR)) then
-                tbWHR.TabPages.Add(ElectricalWhrTab)
-            End If
-        End If
         if ( whrtype and WHRType.MechanicalOutputDrivetrain) <> 0 Then
             if (not tbWHR.TabPages.Contains(tbMechanicalWHR)) then
                 tbWHR.TabPages.Add(MechanicalWhrTab)
+            End If
+        End If
+        If (whrtype and WHRType.ElectricalOutput) <> 0 Then
+            if (Not tbWHR.TabPages.Contains(tbElectricalWHR)) then
+                tbWHR.TabPages.Add(ElectricalWhrTab)
             End If
         End If
     End Sub

@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": "",
-    "Date": "2019-08-07T15:06:44.7357177Z",
+    "Date": "2019-09-17T13:37:57.2352607Z",
     "AppVersion": "3",
     "FileVersion": 5
   },
@@ -37,14 +37,18 @@
     "RatedSpeed": 0.0,
     "MaxTorque": 0.0,
     "FullLoadCurve": "325kW.vfld",
-    "WHRType": "ElectricalOnly",
+    "WHRType": [
+      "ElectricalOutput"
+    ],
     "WHRCorrectionFactors": {
-      "Urban": 0.0,
-      "Rural": 0.0,
-      "Motorway": 0.0,
-      "ColdHotBalancingFactor": 0.0,
-      "CFRegPer": 0.0,
-      "EngineeringCorrectionFactor": 1.02
+      "Electrical": {
+        "Urban": 0.0,
+        "Rural": 0.0,
+        "Motorway": 0.0,
+        "ColdHotBalancingFactor": 0.0,
+        "CFRegPer": 0.0,
+        "EngineeringCorrectionFactor": 1.02
+      }
     }
   }
 }

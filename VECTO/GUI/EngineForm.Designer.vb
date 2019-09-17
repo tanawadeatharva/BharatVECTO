@@ -1348,7 +1348,7 @@ Partial Class EngineForm
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Size = New System.Drawing.Size(474, 145)
         Me.TabPage1.TabIndex = 2
-        Me.TabPage1.Text = "tbWHRType"
+        Me.TabPage1.Text = "WHR Type"
         Me.TabPage1.UseVisualStyleBackColor = true
         '
         'cbMechWHRInMap

@@ -71,27 +71,30 @@ Public Class JSONFileWriter
 
 		body.Add("FullLoadCurve", GetRelativePath(eng.EngineModes.First().FullLoadCurve.Source, Path.GetDirectoryName(filename)))
 
+        Dim whrtypes as List(Of String) = New List(Of String)
+        if (eng.WHRType And WHRType.ElectricalOutput) <> 0 
+            whrtypes.Add(WHRType.ElectricalOutput.ToString())
+        End If
+	    if (eng.WHRType And WHRType.MechanicalOutputDrivetrain) <> 0 
+	        whrtypes.Add(WHRType.MechanicalOutputDrivetrain.ToString())
+	    End If
+	    if (eng.WHRType And WHRType.MechanicalOutputICE) <> 0 
+	        whrtypes.Add(WHRType.MechanicalOutputICE.ToString())
+	    End If
 
-		body.add("WHRType", eng.WHRType.ToString())
+	    body.add("WHRType", if(whrtypes.Count > 0, whrtypes, New List(Of String)() From { whrtype.None.ToString() }))
 
-		If (eng.WHRType.IsElectrical()) then
+        Dim whrCF As Dictionary(Of String, Object) = New Dictionary(Of String,Object)
+	    If ((eng.WHRType and whrtype.ElectricalOutput) <> 0) then
 		    Dim whr As Dictionary(Of String,Object) = GetWhr(eng.EngineModes.First().WasteHeatRecoveryDataElectrical)
-		    dim elWhr as Dictionary(Of String, Object) = New Dictionary(Of String,Object)()
-            elWhr.Add("Electrical", whr)
-		    if (body.ContainsKey("WHRCorrectionFactors")) then
-		        body.Add("WHRCorrectionFactors", elWhr)
-            End If
+	        whrCF.Add("Electrical", whr)
 		End If
         
-        if (eng.WHRType.IsMechanical()) Then
+        if ((eng.WHRType and WHRType.MechanicalOutputDrivetrain) <> 0) Then
             Dim whr As Dictionary(Of String,Object) = GetWhr(eng.EngineModes.First().WasteHeatRecoveryDataMechanical)
-            dim mechWhr as Dictionary(Of String, Object) = New Dictionary(Of String,Object)()
-            mechWhr.Add("Mechanical", whr)
-            if (body.ContainsKey("WHRCorrectionFactors")) then
-                body.Add("WHRCorrectionFactors", mechWhr)
-            End If
+            whrCF.Add("Mechanical", whr)           
         End If
-
+	    body.Add("WHRCorrectionFactors", whrCF)
 		WriteFile(header, body, filename)
 	End Sub
 

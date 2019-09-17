@@ -96,7 +96,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public override WHRType WHRType
 		{
-			get { return Body.GetEx<string>("WHRType").ParseEnum<WHRType>(); }
+			get {
+				var whr = Body["WHRType"];
+				var retVal = WHRType.None;
+				if (whr == null) {
+					return retVal;
+				}
+
+				foreach (var entry in whr) {
+					retVal |= entry.ToString().ParseEnum<WHRType>(); 
+				}
+				return retVal;
+			}
 		}
 
 		protected override IList<IEngineFuelEngineeringInputData> ReadFuels()
