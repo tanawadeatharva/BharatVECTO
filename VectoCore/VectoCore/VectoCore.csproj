@@ -522,6 +522,11 @@
     <Compile Include="Utils\XMLValidator.cs" />
     <Compile Include="Utils\XPathHelper.cs" />
     <Compile Include="Ninject\VectoNinjectModule.cs" />
+    <Compile Include="VersionNumber1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VersionNumber.t4</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -695,6 +700,12 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.1.1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.4_Tyre.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.5_Gearbox.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">

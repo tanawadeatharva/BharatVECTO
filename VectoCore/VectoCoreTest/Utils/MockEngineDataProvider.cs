@@ -75,7 +75,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return new[] { this }.Cast<IEngineFuelDelcarationInputData>().ToList(); }
 		}
 
-		public IWHRData WasteHeatRecoveryData { get; }
+		public IWHRData WasteHeatRecoveryDataElectrical { get; }
+
+		public IWHRData WasteHeatRecoveryDataMechanical { get; }
 
 		public Watt RatedPowerDeclared { get; set; }
 		public PerSecond RatedSpeedDeclared { get; set; }

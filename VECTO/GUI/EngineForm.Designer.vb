@@ -103,24 +103,6 @@ Partial Class EngineForm
         Me.Label18 = New System.Windows.Forms.Label()
         Me.cbFuelType = New System.Windows.Forms.ComboBox()
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
-        Me.gbWHR = New System.Windows.Forms.GroupBox()
-        Me.Label36 = New System.Windows.Forms.Label()
-        Me.pnWHRDeclaration = New System.Windows.Forms.Panel()
-        Me.tbWHRRegPer = New System.Windows.Forms.TextBox()
-        Me.Label21 = New System.Windows.Forms.Label()
-        Me.tbWHRColdHot = New System.Windows.Forms.TextBox()
-        Me.Label22 = New System.Windows.Forms.Label()
-        Me.Label23 = New System.Windows.Forms.Label()
-        Me.Label24 = New System.Windows.Forms.Label()
-        Me.Label25 = New System.Windows.Forms.Label()
-        Me.tbWHRMotorway = New System.Windows.Forms.TextBox()
-        Me.tbWHRUrban = New System.Windows.Forms.TextBox()
-        Me.tbWHRRural = New System.Windows.Forms.TextBox()
-        Me.pnWhrEngineering = New System.Windows.Forms.Panel()
-        Me.tbWHREngineering = New System.Windows.Forms.TextBox()
-        Me.Label26 = New System.Windows.Forms.Label()
-        Me.Label19 = New System.Windows.Forms.Label()
-        Me.cbWHRType = New System.Windows.Forms.ComboBox()
         Me.tbDualFuel = New System.Windows.Forms.TabControl()
         Me.tpPrimaryfuel = New System.Windows.Forms.TabPage()
         Me.tpSecondaryFuel = New System.Windows.Forms.TabPage()
@@ -147,7 +129,45 @@ Partial Class EngineForm
         Me.cbFuelType2 = New System.Windows.Forms.ComboBox()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.cbDualFuel = New System.Windows.Forms.CheckBox()
+        Me.tbWHR = New System.Windows.Forms.TabControl()
+        Me.tbElectricalWHR = New System.Windows.Forms.TabPage()
+        Me.tbMechanicalWHR = New System.Windows.Forms.TabPage()
+        Me.Label36 = New System.Windows.Forms.Label()
+        Me.pnElWHRDeclaration = New System.Windows.Forms.Panel()
         Me.lblWHRRegPer = New System.Windows.Forms.Label()
+        Me.tbElWHRRegPer = New System.Windows.Forms.TextBox()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.tbElWHRColdHot = New System.Windows.Forms.TextBox()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.tbElWHRMotorway = New System.Windows.Forms.TextBox()
+        Me.tbElWHRUrban = New System.Windows.Forms.TextBox()
+        Me.tbElWHRRural = New System.Windows.Forms.TextBox()
+        Me.pnElWhrEngineering = New System.Windows.Forms.Panel()
+        Me.tbElWHREngineering = New System.Windows.Forms.TextBox()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.Label37 = New System.Windows.Forms.Label()
+        Me.pnMechWhrDeclaration = New System.Windows.Forms.Panel()
+        Me.Label38 = New System.Windows.Forms.Label()
+        Me.tbMechWHRRegPerCF = New System.Windows.Forms.TextBox()
+        Me.Label39 = New System.Windows.Forms.Label()
+        Me.tbMechWHRBFColdHot = New System.Windows.Forms.TextBox()
+        Me.Label42 = New System.Windows.Forms.Label()
+        Me.Label43 = New System.Windows.Forms.Label()
+        Me.Label44 = New System.Windows.Forms.Label()
+        Me.Label45 = New System.Windows.Forms.Label()
+        Me.tbMechWHRMotorway = New System.Windows.Forms.TextBox()
+        Me.tbMechWHRUrban = New System.Windows.Forms.TextBox()
+        Me.tbMechWHRRural = New System.Windows.Forms.TextBox()
+        Me.pnMechWhrEngineering = New System.Windows.Forms.Panel()
+        Me.tbMechWHREngineering = New System.Windows.Forms.TextBox()
+        Me.Label46 = New System.Windows.Forms.Label()
+        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.cbMechWHRInMap = New System.Windows.Forms.CheckBox()
+        Me.cbMechWHRNotConnectedCrankshaft = New System.Windows.Forms.CheckBox()
+        Me.cbElWHR = New System.Windows.Forms.CheckBox()
         Me.ToolStrip1.SuspendLayout
         Me.StatusStrip1.SuspendLayout
         CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
@@ -157,15 +177,20 @@ Partial Class EngineForm
         Me.PnWhtcDeclaration.SuspendLayout
         Me.PnWhtcEngineering.SuspendLayout
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.gbWHR.SuspendLayout
-        Me.pnWHRDeclaration.SuspendLayout
-        Me.pnWhrEngineering.SuspendLayout
         Me.tbDualFuel.SuspendLayout
         Me.tpPrimaryfuel.SuspendLayout
         Me.tpSecondaryFuel.SuspendLayout
         Me.GroupBox1.SuspendLayout
         Me.pnWhtcFuel2.SuspendLayout
         Me.pnEngCFFuel2.SuspendLayout
+        Me.tbWHR.SuspendLayout
+        Me.tbElectricalWHR.SuspendLayout
+        Me.tbMechanicalWHR.SuspendLayout
+        Me.pnElWHRDeclaration.SuspendLayout
+        Me.pnElWhrEngineering.SuspendLayout
+        Me.pnMechWhrDeclaration.SuspendLayout
+        Me.pnMechWhrEngineering.SuspendLayout
+        Me.TabPage1.SuspendLayout
         Me.SuspendLayout
         '
         'TbIdleSpeed
@@ -222,7 +247,7 @@ Partial Class EngineForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(916, 586)
+        Me.ButCancel.Location = New System.Drawing.Point(916, 552)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 13
@@ -232,7 +257,7 @@ Partial Class EngineForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(835, 586)
+        Me.ButOK.Location = New System.Drawing.Point(835, 552)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 12
@@ -321,7 +346,7 @@ Partial Class EngineForm
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 612)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 578)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(1003, 22)
         Me.StatusStrip1.SizingGrip = false
@@ -599,13 +624,13 @@ Partial Class EngineForm
         Me.PicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.PicBox.Location = New System.Drawing.Point(503, 28)
         Me.PicBox.Name = "PicBox"
-        Me.PicBox.Size = New System.Drawing.Size(482, 336)
+        Me.PicBox.Size = New System.Drawing.Size(482, 323)
         Me.PicBox.TabIndex = 40
         Me.PicBox.TabStop = false
         '
         'TbFLD
         '
-        Me.TbFLD.Location = New System.Drawing.Point(12, 239)
+        Me.TbFLD.Location = New System.Drawing.Point(12, 241)
         Me.TbFLD.Name = "TbFLD"
         Me.TbFLD.Size = New System.Drawing.Size(434, 20)
         Me.TbFLD.TabIndex = 5
@@ -613,7 +638,7 @@ Partial Class EngineForm
         'Label14
         '
         Me.Label14.AutoSize = true
-        Me.Label14.Location = New System.Drawing.Point(12, 223)
+        Me.Label14.Location = New System.Drawing.Point(12, 225)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(128, 13)
         Me.Label14.TabIndex = 38
@@ -622,7 +647,7 @@ Partial Class EngineForm
         'BtFLD
         '
         Me.BtFLD.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.BtFLD.Location = New System.Drawing.Point(446, 237)
+        Me.BtFLD.Location = New System.Drawing.Point(446, 239)
         Me.BtFLD.Name = "BtFLD"
         Me.BtFLD.Size = New System.Drawing.Size(24, 24)
         Me.BtFLD.TabIndex = 6
@@ -632,7 +657,7 @@ Partial Class EngineForm
         'BtFLDopen
         '
         Me.BtFLDopen.Image = Global.TUGraz.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.BtFLDopen.Location = New System.Drawing.Point(469, 237)
+        Me.BtFLDopen.Location = New System.Drawing.Point(469, 239)
         Me.BtFLDopen.Name = "BtFLDopen"
         Me.BtFLDopen.Size = New System.Drawing.Size(24, 24)
         Me.BtFLDopen.TabIndex = 7
@@ -734,173 +759,10 @@ Partial Class EngineForm
         'lblEngineCharacteristics
         '
         Me.lblEngineCharacteristics.AutoSize = true
-        Me.lblEngineCharacteristics.Location = New System.Drawing.Point(505, 370)
+        Me.lblEngineCharacteristics.Location = New System.Drawing.Point(506, 354)
         Me.lblEngineCharacteristics.Name = "lblEngineCharacteristics"
         Me.lblEngineCharacteristics.Size = New System.Drawing.Size(0, 13)
         Me.lblEngineCharacteristics.TabIndex = 52
-        '
-        'gbWHR
-        '
-        Me.gbWHR.Controls.Add(Me.Label36)
-        Me.gbWHR.Controls.Add(Me.pnWHRDeclaration)
-        Me.gbWHR.Controls.Add(Me.pnWhrEngineering)
-        Me.gbWHR.Location = New System.Drawing.Point(504, 392)
-        Me.gbWHR.Name = "gbWHR"
-        Me.gbWHR.Size = New System.Drawing.Size(481, 155)
-        Me.gbWHR.TabIndex = 53
-        Me.gbWHR.TabStop = false
-        Me.gbWHR.Text = "WHR Correction Factors"
-        '
-        'Label36
-        '
-        Me.Label36.AutoSize = true
-        Me.Label36.Location = New System.Drawing.Point(5, 132)
-        Me.Label36.Name = "Label36"
-        Me.Label36.Size = New System.Drawing.Size(408, 13)
-        Me.Label36.TabIndex = 11
-        Me.Label36.Text = "Note: Electric power generated by WHR has to be provided in FC-Map of primary fue"& _ 
-    "l"
-        '
-        'pnWHRDeclaration
-        '
-        Me.pnWHRDeclaration.Controls.Add(Me.lblWHRRegPer)
-        Me.pnWHRDeclaration.Controls.Add(Me.tbWHRRegPer)
-        Me.pnWHRDeclaration.Controls.Add(Me.Label21)
-        Me.pnWHRDeclaration.Controls.Add(Me.tbWHRColdHot)
-        Me.pnWHRDeclaration.Controls.Add(Me.Label22)
-        Me.pnWHRDeclaration.Controls.Add(Me.Label23)
-        Me.pnWHRDeclaration.Controls.Add(Me.Label24)
-        Me.pnWHRDeclaration.Controls.Add(Me.Label25)
-        Me.pnWHRDeclaration.Controls.Add(Me.tbWHRMotorway)
-        Me.pnWHRDeclaration.Controls.Add(Me.tbWHRUrban)
-        Me.pnWHRDeclaration.Controls.Add(Me.tbWHRRural)
-        Me.pnWHRDeclaration.Location = New System.Drawing.Point(4, 19)
-        Me.pnWHRDeclaration.Name = "pnWHRDeclaration"
-        Me.pnWHRDeclaration.Size = New System.Drawing.Size(472, 74)
-        Me.pnWHRDeclaration.TabIndex = 10
-        '
-        'tbWHRRegPer
-        '
-        Me.tbWHRRegPer.Location = New System.Drawing.Point(402, 46)
-        Me.tbWHRRegPer.Name = "tbWHRRegPer"
-        Me.tbWHRRegPer.Size = New System.Drawing.Size(57, 20)
-        Me.tbWHRRegPer.TabIndex = 10
-        '
-        'Label21
-        '
-        Me.Label21.AutoSize = true
-        Me.Label21.Location = New System.Drawing.Point(47, 49)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(177, 13)
-        Me.Label21.TabIndex = 5
-        Me.Label21.Text = "Cold/Hot Emission Balancing Factor"
-        '
-        'tbWHRColdHot
-        '
-        Me.tbWHRColdHot.Location = New System.Drawing.Point(230, 46)
-        Me.tbWHRColdHot.Name = "tbWHRColdHot"
-        Me.tbWHRColdHot.Size = New System.Drawing.Size(57, 20)
-        Me.tbWHRColdHot.TabIndex = 6
-        '
-        'Label22
-        '
-        Me.Label22.AutoSize = true
-        Me.Label22.Location = New System.Drawing.Point(38, 23)
-        Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(36, 13)
-        Me.Label22.TabIndex = 0
-        Me.Label22.Text = "Urban"
-        '
-        'Label23
-        '
-        Me.Label23.AutoSize = true
-        Me.Label23.Location = New System.Drawing.Point(191, 27)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(32, 13)
-        Me.Label23.TabIndex = 0
-        Me.Label23.Text = "Rural"
-        '
-        'Label24
-        '
-        Me.Label24.AutoSize = true
-        Me.Label24.Location = New System.Drawing.Point(1, 1)
-        Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(242, 13)
-        Me.Label24.TabIndex = 3
-        Me.Label24.Text = "Correction Factors calculated with VECTO-Engine"
-        '
-        'Label25
-        '
-        Me.Label25.AutoSize = true
-        Me.Label25.Location = New System.Drawing.Point(342, 23)
-        Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(53, 13)
-        Me.Label25.TabIndex = 0
-        Me.Label25.Text = "Motorway"
-        Me.Label25.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'tbWHRMotorway
-        '
-        Me.tbWHRMotorway.Location = New System.Drawing.Point(402, 20)
-        Me.tbWHRMotorway.Name = "tbWHRMotorway"
-        Me.tbWHRMotorway.Size = New System.Drawing.Size(57, 20)
-        Me.tbWHRMotorway.TabIndex = 2
-        '
-        'tbWHRUrban
-        '
-        Me.tbWHRUrban.Location = New System.Drawing.Point(81, 20)
-        Me.tbWHRUrban.Name = "tbWHRUrban"
-        Me.tbWHRUrban.Size = New System.Drawing.Size(57, 20)
-        Me.tbWHRUrban.TabIndex = 0
-        '
-        'tbWHRRural
-        '
-        Me.tbWHRRural.Location = New System.Drawing.Point(230, 20)
-        Me.tbWHRRural.Name = "tbWHRRural"
-        Me.tbWHRRural.Size = New System.Drawing.Size(57, 20)
-        Me.tbWHRRural.TabIndex = 1
-        '
-        'pnWhrEngineering
-        '
-        Me.pnWhrEngineering.Controls.Add(Me.tbWHREngineering)
-        Me.pnWhrEngineering.Controls.Add(Me.Label26)
-        Me.pnWhrEngineering.Location = New System.Drawing.Point(4, 99)
-        Me.pnWhrEngineering.Name = "pnWhrEngineering"
-        Me.pnWhrEngineering.Size = New System.Drawing.Size(472, 30)
-        Me.pnWhrEngineering.TabIndex = 9
-        '
-        'tbWHREngineering
-        '
-        Me.tbWHREngineering.Location = New System.Drawing.Point(194, 3)
-        Me.tbWHREngineering.Name = "tbWHREngineering"
-        Me.tbWHREngineering.Size = New System.Drawing.Size(57, 20)
-        Me.tbWHREngineering.TabIndex = 5
-        '
-        'Label26
-        '
-        Me.Label26.AutoSize = true
-        Me.Label26.Location = New System.Drawing.Point(125, 6)
-        Me.Label26.Name = "Label26"
-        Me.Label26.Size = New System.Drawing.Size(63, 13)
-        Me.Label26.TabIndex = 6
-        Me.Label26.Text = "Engineering"
-        '
-        'Label19
-        '
-        Me.Label19.AutoSize = true
-        Me.Label19.Location = New System.Drawing.Point(57, 160)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(61, 13)
-        Me.Label19.TabIndex = 54
-        Me.Label19.Text = "WHR Type"
-        '
-        'cbWHRType
-        '
-        Me.cbWHRType.FormattingEnabled = true
-        Me.cbWHRType.Location = New System.Drawing.Point(123, 157)
-        Me.cbWHRType.Name = "cbWHRType"
-        Me.cbWHRType.Size = New System.Drawing.Size(129, 21)
-        Me.cbWHRType.TabIndex = 55
         '
         'tbDualFuel
         '
@@ -1146,21 +1008,378 @@ Partial Class EngineForm
         'cbDualFuel
         '
         Me.cbDualFuel.AutoSize = true
-        Me.cbDualFuel.Location = New System.Drawing.Point(123, 191)
+        Me.cbDualFuel.CheckAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.cbDualFuel.Location = New System.Drawing.Point(30, 160)
         Me.cbDualFuel.Name = "cbDualFuel"
         Me.cbDualFuel.Size = New System.Drawing.Size(107, 17)
         Me.cbDualFuel.TabIndex = 58
         Me.cbDualFuel.Text = "Dual Fuel Engine"
         Me.cbDualFuel.UseVisualStyleBackColor = true
         '
+        'tbWHR
+        '
+        Me.tbWHR.Controls.Add(Me.TabPage1)
+        Me.tbWHR.Controls.Add(Me.tbElectricalWHR)
+        Me.tbWHR.Controls.Add(Me.tbMechanicalWHR)
+        Me.tbWHR.Location = New System.Drawing.Point(503, 376)
+        Me.tbWHR.Name = "tbWHR"
+        Me.tbWHR.SelectedIndex = 0
+        Me.tbWHR.Size = New System.Drawing.Size(482, 171)
+        Me.tbWHR.TabIndex = 59
+        '
+        'tbElectricalWHR
+        '
+        Me.tbElectricalWHR.Controls.Add(Me.Label36)
+        Me.tbElectricalWHR.Controls.Add(Me.pnElWHRDeclaration)
+        Me.tbElectricalWHR.Controls.Add(Me.pnElWhrEngineering)
+        Me.tbElectricalWHR.Location = New System.Drawing.Point(4, 22)
+        Me.tbElectricalWHR.Name = "tbElectricalWHR"
+        Me.tbElectricalWHR.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbElectricalWHR.Size = New System.Drawing.Size(474, 145)
+        Me.tbElectricalWHR.TabIndex = 0
+        Me.tbElectricalWHR.Text = "Correction Factors Electrical WHR"
+        Me.tbElectricalWHR.UseVisualStyleBackColor = true
+        '
+        'tbMechanicalWHR
+        '
+        Me.tbMechanicalWHR.Controls.Add(Me.Label37)
+        Me.tbMechanicalWHR.Controls.Add(Me.pnMechWhrDeclaration)
+        Me.tbMechanicalWHR.Controls.Add(Me.pnMechWhrEngineering)
+        Me.tbMechanicalWHR.Location = New System.Drawing.Point(4, 22)
+        Me.tbMechanicalWHR.Name = "tbMechanicalWHR"
+        Me.tbMechanicalWHR.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbMechanicalWHR.Size = New System.Drawing.Size(474, 145)
+        Me.tbMechanicalWHR.TabIndex = 1
+        Me.tbMechanicalWHR.Text = "Correction Factors Mechanical WHR"
+        Me.tbMechanicalWHR.UseVisualStyleBackColor = true
+        '
+        'Label36
+        '
+        Me.Label36.AutoSize = true
+        Me.Label36.Location = New System.Drawing.Point(7, 119)
+        Me.Label36.Name = "Label36"
+        Me.Label36.Size = New System.Drawing.Size(408, 13)
+        Me.Label36.TabIndex = 14
+        Me.Label36.Text = "Note: Electric power generated by WHR has to be provided in FC-Map of primary fue"& _ 
+    "l"
+        '
+        'pnElWHRDeclaration
+        '
+        Me.pnElWHRDeclaration.Controls.Add(Me.lblWHRRegPer)
+        Me.pnElWHRDeclaration.Controls.Add(Me.tbElWHRRegPer)
+        Me.pnElWHRDeclaration.Controls.Add(Me.Label21)
+        Me.pnElWHRDeclaration.Controls.Add(Me.tbElWHRColdHot)
+        Me.pnElWHRDeclaration.Controls.Add(Me.Label22)
+        Me.pnElWHRDeclaration.Controls.Add(Me.Label23)
+        Me.pnElWHRDeclaration.Controls.Add(Me.Label24)
+        Me.pnElWHRDeclaration.Controls.Add(Me.Label25)
+        Me.pnElWHRDeclaration.Controls.Add(Me.tbElWHRMotorway)
+        Me.pnElWHRDeclaration.Controls.Add(Me.tbElWHRUrban)
+        Me.pnElWHRDeclaration.Controls.Add(Me.tbElWHRRural)
+        Me.pnElWHRDeclaration.Location = New System.Drawing.Point(6, 6)
+        Me.pnElWHRDeclaration.Name = "pnElWHRDeclaration"
+        Me.pnElWHRDeclaration.Size = New System.Drawing.Size(458, 74)
+        Me.pnElWHRDeclaration.TabIndex = 13
+        '
         'lblWHRRegPer
         '
         Me.lblWHRRegPer.AutoSize = true
-        Me.lblWHRRegPer.Location = New System.Drawing.Point(306, 49)
+        Me.lblWHRRegPer.Location = New System.Drawing.Point(280, 49)
         Me.lblWHRRegPer.Name = "lblWHRRegPer"
         Me.lblWHRRegPer.Size = New System.Drawing.Size(89, 13)
         Me.lblWHRRegPer.TabIndex = 11
         Me.lblWHRRegPer.Text = "Reg. Per. Corr. F."
+        '
+        'tbElWHRRegPer
+        '
+        Me.tbElWHRRegPer.Location = New System.Drawing.Point(376, 46)
+        Me.tbElWHRRegPer.Name = "tbElWHRRegPer"
+        Me.tbElWHRRegPer.Size = New System.Drawing.Size(57, 20)
+        Me.tbElWHRRegPer.TabIndex = 10
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = true
+        Me.Label21.Location = New System.Drawing.Point(11, 49)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(177, 13)
+        Me.Label21.TabIndex = 5
+        Me.Label21.Text = "Cold/Hot Emission Balancing Factor"
+        '
+        'tbElWHRColdHot
+        '
+        Me.tbElWHRColdHot.Location = New System.Drawing.Point(194, 46)
+        Me.tbElWHRColdHot.Name = "tbElWHRColdHot"
+        Me.tbElWHRColdHot.Size = New System.Drawing.Size(57, 20)
+        Me.tbElWHRColdHot.TabIndex = 6
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = true
+        Me.Label22.Location = New System.Drawing.Point(21, 23)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(36, 13)
+        Me.Label22.TabIndex = 0
+        Me.Label22.Text = "Urban"
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = true
+        Me.Label23.Location = New System.Drawing.Point(155, 27)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(32, 13)
+        Me.Label23.TabIndex = 0
+        Me.Label23.Text = "Rural"
+        '
+        'Label24
+        '
+        Me.Label24.AutoSize = true
+        Me.Label24.Location = New System.Drawing.Point(1, 1)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(242, 13)
+        Me.Label24.TabIndex = 3
+        Me.Label24.Text = "Correction Factors calculated with VECTO-Engine"
+        '
+        'Label25
+        '
+        Me.Label25.AutoSize = true
+        Me.Label25.Location = New System.Drawing.Point(316, 23)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(53, 13)
+        Me.Label25.TabIndex = 0
+        Me.Label25.Text = "Motorway"
+        Me.Label25.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'tbElWHRMotorway
+        '
+        Me.tbElWHRMotorway.Location = New System.Drawing.Point(376, 20)
+        Me.tbElWHRMotorway.Name = "tbElWHRMotorway"
+        Me.tbElWHRMotorway.Size = New System.Drawing.Size(57, 20)
+        Me.tbElWHRMotorway.TabIndex = 2
+        '
+        'tbElWHRUrban
+        '
+        Me.tbElWHRUrban.Location = New System.Drawing.Point(64, 20)
+        Me.tbElWHRUrban.Name = "tbElWHRUrban"
+        Me.tbElWHRUrban.Size = New System.Drawing.Size(57, 20)
+        Me.tbElWHRUrban.TabIndex = 0
+        '
+        'tbElWHRRural
+        '
+        Me.tbElWHRRural.Location = New System.Drawing.Point(194, 20)
+        Me.tbElWHRRural.Name = "tbElWHRRural"
+        Me.tbElWHRRural.Size = New System.Drawing.Size(57, 20)
+        Me.tbElWHRRural.TabIndex = 1
+        '
+        'pnElWhrEngineering
+        '
+        Me.pnElWhrEngineering.Controls.Add(Me.tbElWHREngineering)
+        Me.pnElWhrEngineering.Controls.Add(Me.Label26)
+        Me.pnElWhrEngineering.Location = New System.Drawing.Point(6, 86)
+        Me.pnElWhrEngineering.Name = "pnElWhrEngineering"
+        Me.pnElWhrEngineering.Size = New System.Drawing.Size(458, 30)
+        Me.pnElWhrEngineering.TabIndex = 12
+        '
+        'tbElWHREngineering
+        '
+        Me.tbElWHREngineering.Location = New System.Drawing.Point(194, 3)
+        Me.tbElWHREngineering.Name = "tbElWHREngineering"
+        Me.tbElWHREngineering.Size = New System.Drawing.Size(57, 20)
+        Me.tbElWHREngineering.TabIndex = 5
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = true
+        Me.Label26.Location = New System.Drawing.Point(125, 6)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(63, 13)
+        Me.Label26.TabIndex = 6
+        Me.Label26.Text = "Engineering"
+        '
+        'Label37
+        '
+        Me.Label37.AutoSize = true
+        Me.Label37.Location = New System.Drawing.Point(7, 119)
+        Me.Label37.Name = "Label37"
+        Me.Label37.Size = New System.Drawing.Size(426, 13)
+        Me.Label37.TabIndex = 14
+        Me.Label37.Text = "Note: Mechanica power generated by WHR has to be provided in FC-Map of primary fu"& _ 
+    "el"
+        '
+        'pnMechWhrDeclaration
+        '
+        Me.pnMechWhrDeclaration.Controls.Add(Me.Label38)
+        Me.pnMechWhrDeclaration.Controls.Add(Me.tbMechWHRRegPerCF)
+        Me.pnMechWhrDeclaration.Controls.Add(Me.Label39)
+        Me.pnMechWhrDeclaration.Controls.Add(Me.tbMechWHRBFColdHot)
+        Me.pnMechWhrDeclaration.Controls.Add(Me.Label42)
+        Me.pnMechWhrDeclaration.Controls.Add(Me.Label43)
+        Me.pnMechWhrDeclaration.Controls.Add(Me.Label44)
+        Me.pnMechWhrDeclaration.Controls.Add(Me.Label45)
+        Me.pnMechWhrDeclaration.Controls.Add(Me.tbMechWHRMotorway)
+        Me.pnMechWhrDeclaration.Controls.Add(Me.tbMechWHRUrban)
+        Me.pnMechWhrDeclaration.Controls.Add(Me.tbMechWHRRural)
+        Me.pnMechWhrDeclaration.Location = New System.Drawing.Point(6, 6)
+        Me.pnMechWhrDeclaration.Name = "pnMechWhrDeclaration"
+        Me.pnMechWhrDeclaration.Size = New System.Drawing.Size(458, 74)
+        Me.pnMechWhrDeclaration.TabIndex = 13
+        '
+        'Label38
+        '
+        Me.Label38.AutoSize = true
+        Me.Label38.Location = New System.Drawing.Point(280, 49)
+        Me.Label38.Name = "Label38"
+        Me.Label38.Size = New System.Drawing.Size(89, 13)
+        Me.Label38.TabIndex = 11
+        Me.Label38.Text = "Reg. Per. Corr. F."
+        '
+        'tbMechWHRRegPerCF
+        '
+        Me.tbMechWHRRegPerCF.Location = New System.Drawing.Point(376, 46)
+        Me.tbMechWHRRegPerCF.Name = "tbMechWHRRegPerCF"
+        Me.tbMechWHRRegPerCF.Size = New System.Drawing.Size(57, 20)
+        Me.tbMechWHRRegPerCF.TabIndex = 10
+        '
+        'Label39
+        '
+        Me.Label39.AutoSize = true
+        Me.Label39.Location = New System.Drawing.Point(11, 49)
+        Me.Label39.Name = "Label39"
+        Me.Label39.Size = New System.Drawing.Size(177, 13)
+        Me.Label39.TabIndex = 5
+        Me.Label39.Text = "Cold/Hot Emission Balancing Factor"
+        '
+        'tbMechWHRBFColdHot
+        '
+        Me.tbMechWHRBFColdHot.Location = New System.Drawing.Point(194, 46)
+        Me.tbMechWHRBFColdHot.Name = "tbMechWHRBFColdHot"
+        Me.tbMechWHRBFColdHot.Size = New System.Drawing.Size(57, 20)
+        Me.tbMechWHRBFColdHot.TabIndex = 6
+        '
+        'Label42
+        '
+        Me.Label42.AutoSize = true
+        Me.Label42.Location = New System.Drawing.Point(21, 23)
+        Me.Label42.Name = "Label42"
+        Me.Label42.Size = New System.Drawing.Size(36, 13)
+        Me.Label42.TabIndex = 0
+        Me.Label42.Text = "Urban"
+        '
+        'Label43
+        '
+        Me.Label43.AutoSize = true
+        Me.Label43.Location = New System.Drawing.Point(155, 27)
+        Me.Label43.Name = "Label43"
+        Me.Label43.Size = New System.Drawing.Size(32, 13)
+        Me.Label43.TabIndex = 0
+        Me.Label43.Text = "Rural"
+        '
+        'Label44
+        '
+        Me.Label44.AutoSize = true
+        Me.Label44.Location = New System.Drawing.Point(1, 1)
+        Me.Label44.Name = "Label44"
+        Me.Label44.Size = New System.Drawing.Size(242, 13)
+        Me.Label44.TabIndex = 3
+        Me.Label44.Text = "Correction Factors calculated with VECTO-Engine"
+        '
+        'Label45
+        '
+        Me.Label45.AutoSize = true
+        Me.Label45.Location = New System.Drawing.Point(316, 23)
+        Me.Label45.Name = "Label45"
+        Me.Label45.Size = New System.Drawing.Size(53, 13)
+        Me.Label45.TabIndex = 0
+        Me.Label45.Text = "Motorway"
+        Me.Label45.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'tbMechWHRMotorway
+        '
+        Me.tbMechWHRMotorway.Location = New System.Drawing.Point(376, 20)
+        Me.tbMechWHRMotorway.Name = "tbMechWHRMotorway"
+        Me.tbMechWHRMotorway.Size = New System.Drawing.Size(57, 20)
+        Me.tbMechWHRMotorway.TabIndex = 2
+        '
+        'tbMechWHRUrban
+        '
+        Me.tbMechWHRUrban.Location = New System.Drawing.Point(64, 20)
+        Me.tbMechWHRUrban.Name = "tbMechWHRUrban"
+        Me.tbMechWHRUrban.Size = New System.Drawing.Size(57, 20)
+        Me.tbMechWHRUrban.TabIndex = 0
+        '
+        'tbMechWHRRural
+        '
+        Me.tbMechWHRRural.Location = New System.Drawing.Point(194, 20)
+        Me.tbMechWHRRural.Name = "tbMechWHRRural"
+        Me.tbMechWHRRural.Size = New System.Drawing.Size(57, 20)
+        Me.tbMechWHRRural.TabIndex = 1
+        '
+        'pnMechWhrEngineering
+        '
+        Me.pnMechWhrEngineering.Controls.Add(Me.tbMechWHREngineering)
+        Me.pnMechWhrEngineering.Controls.Add(Me.Label46)
+        Me.pnMechWhrEngineering.Location = New System.Drawing.Point(6, 86)
+        Me.pnMechWhrEngineering.Name = "pnMechWhrEngineering"
+        Me.pnMechWhrEngineering.Size = New System.Drawing.Size(458, 30)
+        Me.pnMechWhrEngineering.TabIndex = 12
+        '
+        'tbMechWHREngineering
+        '
+        Me.tbMechWHREngineering.Location = New System.Drawing.Point(194, 3)
+        Me.tbMechWHREngineering.Name = "tbMechWHREngineering"
+        Me.tbMechWHREngineering.Size = New System.Drawing.Size(57, 20)
+        Me.tbMechWHREngineering.TabIndex = 5
+        '
+        'Label46
+        '
+        Me.Label46.AutoSize = true
+        Me.Label46.Location = New System.Drawing.Point(125, 6)
+        Me.Label46.Name = "Label46"
+        Me.Label46.Size = New System.Drawing.Size(63, 13)
+        Me.Label46.TabIndex = 6
+        Me.Label46.Text = "Engineering"
+        '
+        'TabPage1
+        '
+        Me.TabPage1.Controls.Add(Me.cbElWHR)
+        Me.TabPage1.Controls.Add(Me.cbMechWHRNotConnectedCrankshaft)
+        Me.TabPage1.Controls.Add(Me.cbMechWHRInMap)
+        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage1.Name = "TabPage1"
+        Me.TabPage1.Size = New System.Drawing.Size(474, 145)
+        Me.TabPage1.TabIndex = 2
+        Me.TabPage1.Text = "tbWHRType"
+        Me.TabPage1.UseVisualStyleBackColor = true
+        '
+        'cbMechWHRInMap
+        '
+        Me.cbMechWHRInMap.AutoSize = true
+        Me.cbMechWHRInMap.Location = New System.Drawing.Point(17, 12)
+        Me.cbMechWHRInMap.Name = "cbMechWHRInMap"
+        Me.cbMechWHRInMap.Size = New System.Drawing.Size(287, 17)
+        Me.cbMechWHRInMap.TabIndex = 0
+        Me.cbMechWHRInMap.Text = "Mechanical WHR System incuded in FC measurements"
+        Me.cbMechWHRInMap.UseVisualStyleBackColor = true
+        '
+        'cbMechWHRNotConnectedCrankshaft
+        '
+        Me.cbMechWHRNotConnectedCrankshaft.AutoSize = true
+        Me.cbMechWHRNotConnectedCrankshaft.Location = New System.Drawing.Point(17, 35)
+        Me.cbMechWHRNotConnectedCrankshaft.Name = "cbMechWHRNotConnectedCrankshaft"
+        Me.cbMechWHRNotConnectedCrankshaft.Size = New System.Drawing.Size(303, 17)
+        Me.cbMechWHRNotConnectedCrankshaft.TabIndex = 1
+        Me.cbMechWHRNotConnectedCrankshaft.Text = "Mechanical WHR System not connected to the crankshaft"
+        Me.cbMechWHRNotConnectedCrankshaft.UseVisualStyleBackColor = true
+        '
+        'cbElWHR
+        '
+        Me.cbElWHR.AutoSize = true
+        Me.cbElWHR.Location = New System.Drawing.Point(17, 58)
+        Me.cbElWHR.Name = "cbElWHR"
+        Me.cbElWHR.Size = New System.Drawing.Size(136, 17)
+        Me.cbElWHR.TabIndex = 2
+        Me.cbElWHR.Text = "Electrical WHR System"
+        Me.cbElWHR.UseVisualStyleBackColor = true
         '
         'EngineForm
         '
@@ -1168,12 +1387,10 @@ Partial Class EngineForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(1003, 634)
+        Me.ClientSize = New System.Drawing.Size(1003, 600)
+        Me.Controls.Add(Me.tbWHR)
         Me.Controls.Add(Me.cbDualFuel)
         Me.Controls.Add(Me.tbDualFuel)
-        Me.Controls.Add(Me.cbWHRType)
-        Me.Controls.Add(Me.Label19)
-        Me.Controls.Add(Me.gbWHR)
         Me.Controls.Add(Me.lblEngineCharacteristics)
         Me.Controls.Add(Me.tbMaxTorque)
         Me.Controls.Add(Me.Label16)
@@ -1224,12 +1441,6 @@ Partial Class EngineForm
         Me.PnWhtcEngineering.ResumeLayout(false)
         Me.PnWhtcEngineering.PerformLayout
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).EndInit
-        Me.gbWHR.ResumeLayout(false)
-        Me.gbWHR.PerformLayout
-        Me.pnWHRDeclaration.ResumeLayout(false)
-        Me.pnWHRDeclaration.PerformLayout
-        Me.pnWhrEngineering.ResumeLayout(false)
-        Me.pnWhrEngineering.PerformLayout
         Me.tbDualFuel.ResumeLayout(false)
         Me.tpPrimaryfuel.ResumeLayout(false)
         Me.tpPrimaryfuel.PerformLayout
@@ -1240,6 +1451,21 @@ Partial Class EngineForm
         Me.pnWhtcFuel2.PerformLayout
         Me.pnEngCFFuel2.ResumeLayout(false)
         Me.pnEngCFFuel2.PerformLayout
+        Me.tbWHR.ResumeLayout(false)
+        Me.tbElectricalWHR.ResumeLayout(false)
+        Me.tbElectricalWHR.PerformLayout
+        Me.tbMechanicalWHR.ResumeLayout(false)
+        Me.tbMechanicalWHR.PerformLayout
+        Me.pnElWHRDeclaration.ResumeLayout(false)
+        Me.pnElWHRDeclaration.PerformLayout
+        Me.pnElWhrEngineering.ResumeLayout(false)
+        Me.pnElWhrEngineering.PerformLayout
+        Me.pnMechWhrDeclaration.ResumeLayout(false)
+        Me.pnMechWhrDeclaration.PerformLayout
+        Me.pnMechWhrEngineering.ResumeLayout(false)
+        Me.pnMechWhrEngineering.PerformLayout
+        Me.TabPage1.ResumeLayout(false)
+        Me.TabPage1.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1310,23 +1536,6 @@ End Sub
 	Friend WithEvents Label18 As System.Windows.Forms.Label
 	Friend WithEvents cbFuelType As System.Windows.Forms.ComboBox
 	Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
-    Friend WithEvents gbWHR As GroupBox
-    Friend WithEvents pnWHRDeclaration As Panel
-    Friend WithEvents tbWHRRegPer As TextBox
-    Friend WithEvents Label21 As Label
-    Friend WithEvents tbWHRColdHot As TextBox
-    Friend WithEvents Label22 As Label
-    Friend WithEvents Label23 As Label
-    Friend WithEvents Label24 As Label
-    Friend WithEvents Label25 As Label
-    Friend WithEvents tbWHRMotorway As TextBox
-    Friend WithEvents tbWHRUrban As TextBox
-    Friend WithEvents tbWHRRural As TextBox
-    Friend WithEvents pnWhrEngineering As Panel
-    Friend WithEvents tbWHREngineering As TextBox
-    Friend WithEvents Label26 As Label
-    Friend WithEvents Label19 As Label
-    Friend WithEvents cbWHRType As ComboBox
     Friend WithEvents tbDualFuel As TabControl
     Friend WithEvents tpPrimaryfuel As TabPage
     Friend WithEvents tpSecondaryFuel As TabPage
@@ -1353,6 +1562,43 @@ End Sub
     Friend WithEvents cbFuelType2 As ComboBox
     Friend WithEvents Label35 As Label
     Friend WithEvents cbDualFuel As CheckBox
+    Friend WithEvents tbWHR As TabControl
+    Friend WithEvents tbElectricalWHR As TabPage
+    Friend WithEvents tbMechanicalWHR As TabPage
     Friend WithEvents Label36 As Label
+    Friend WithEvents pnElWHRDeclaration As Panel
     Friend WithEvents lblWHRRegPer As Label
+    Friend WithEvents tbElWHRRegPer As TextBox
+    Friend WithEvents Label21 As Label
+    Friend WithEvents tbElWHRColdHot As TextBox
+    Friend WithEvents Label22 As Label
+    Friend WithEvents Label23 As Label
+    Friend WithEvents Label24 As Label
+    Friend WithEvents Label25 As Label
+    Friend WithEvents tbElWHRMotorway As TextBox
+    Friend WithEvents tbElWHRUrban As TextBox
+    Friend WithEvents tbElWHRRural As TextBox
+    Friend WithEvents pnElWhrEngineering As Panel
+    Friend WithEvents tbElWHREngineering As TextBox
+    Friend WithEvents Label26 As Label
+    Friend WithEvents Label37 As Label
+    Friend WithEvents pnMechWhrDeclaration As Panel
+    Friend WithEvents Label38 As Label
+    Friend WithEvents tbMechWHRRegPerCF As TextBox
+    Friend WithEvents Label39 As Label
+    Friend WithEvents tbMechWHRBFColdHot As TextBox
+    Friend WithEvents Label42 As Label
+    Friend WithEvents Label43 As Label
+    Friend WithEvents Label44 As Label
+    Friend WithEvents Label45 As Label
+    Friend WithEvents tbMechWHRMotorway As TextBox
+    Friend WithEvents tbMechWHRUrban As TextBox
+    Friend WithEvents tbMechWHRRural As TextBox
+    Friend WithEvents pnMechWhrEngineering As Panel
+    Friend WithEvents tbMechWHREngineering As TextBox
+    Friend WithEvents Label46 As Label
+    Friend WithEvents TabPage1 As TabPage
+    Friend WithEvents cbElWHR As CheckBox
+    Friend WithEvents cbMechWHRNotConnectedCrankshaft As CheckBox
+    Friend WithEvents cbMechWHRInMap As CheckBox
 End Class
