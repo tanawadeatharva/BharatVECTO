@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 			//'* * AirSuspension * *
 			//	'=IF(K12 = "electrically", 0, G38 * F54) - Suplied Spreadsheet
 			var AirSuspension = (_pneumaticUserInputsConfig.AirSuspensionControl == "Electrically" ?  0 :
-				_pneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute * _cycleDurationMinutes).SI<NormLiter>();
+				_pneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute * (_signals.TotalCycleTimeSeconds / 60.0)).SI<NormLiter>();
 
 			//'* * Total Air Demand**
 			var TotalAirDemand = Breaks + ParkBrakesplus2Doors + Kneeling + AdBlue + Regeneration + DeadVolBlowOuts +

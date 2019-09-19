@@ -262,7 +262,7 @@ Namespace UnitTests
 					New M03Impl(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
-			Dim expected As Double = 7947.68457 / _Signals.TotalCycleTimeSeconds
+			Dim expected As Double = 8726.1840 / _Signals.TotalCycleTimeSeconds
 
 			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
 		End Sub
