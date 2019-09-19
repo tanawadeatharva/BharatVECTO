@@ -6,6 +6,7 @@ Imports NUnit.Framework
 Imports VectoAuxiliaries
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 
 Namespace UnitTests
 	<TestFixture()>
@@ -28,12 +29,12 @@ Namespace UnitTests
 			m9.Setup(Function(x) x.TotalCycleFuelConsumptionCompressorOffContinuously).Returns((y3 / 1000).SI(Of Kilogram))
 
 
-			Dim target As IM10 = New M10(m3.Object, m9.Object, signals)
+			Dim target As IM10 = New M10Impl(m3.Object, m9.Object, signals)
 
 			target.CycleStep(1.SI(Of Second))
 
-            		Assert.AreEqual(out1.SI(Unit.SI.Gramm).Value(), target.AverageLoadsFuelConsumptionInterpolatedForPneumatics.Value(), 0.001)
-            		Assert.AreEqual(out2.SI(Unit.SI.Gramm).Value(), target.FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand.Value(), 0.001)
+			Assert.AreEqual(out1.SI(Unit.SI.Gramm).Value(), target.AverageLoadsFuelConsumptionInterpolatedForPneumatics.Value(), 0.001)
+			Assert.AreEqual(out2.SI(Unit.SI.Gramm).Value(), target.FuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand.Value(), 0.001)
 		End Sub
 	End Class
 End Namespace

@@ -6,6 +6,9 @@ Imports VectoAuxiliariesTests.Mocks
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Hvac
 Imports System.IO
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports VectoAuxiliaries.DownstreamModules.Electrics
+Imports VectoAuxiliaries.DownstreamModules.HVAC
 
 Namespace UnitTests
     <TestFixture()>
@@ -54,27 +57,26 @@ Namespace UnitTests
 
         <Test()>
         Public Sub CreateNewTest()
-            Dim target As M0_NonSmart_AlternatorsSetEfficiency = New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers,
-                                                                                                        alternatorMap, powernetVoltage, signals, GetSSM())
+            Dim target As IM0_NonSmart_AlternatorsSetEfficiency = New M00Impl(elecConsumers,alternatorMap, powernetVoltage, signals, GetSSM())
             Assert.IsNotNull(target)
         End Sub
 
         <Test()>
         Public Sub CreateNew_MissingElecConsumers_ThrowArgumentExceptionTest()
 
-            Dim target As M0_NonSmart_AlternatorsSetEfficiency
-            Assert.That(Sub() target = New M0_NonSmart_AlternatorsSetEfficiency(Nothing, alternatorMap, powernetVoltage, signals, GetSSM()), Throws.InstanceOf(Of ArgumentException))
+            Dim target As IM0_NonSmart_AlternatorsSetEfficiency
+            Assert.That(Sub() target = New M00Impl(Nothing, alternatorMap, powernetVoltage, signals, GetSSM()), Throws.InstanceOf(Of ArgumentException))
         End Sub
 
         <Test()>
         Public Sub CreateNew_MissingAlternatorMap_ThrowArgumentExceptionTest()
-            Dim target As M0_NonSmart_AlternatorsSetEfficiency
-            Assert.That(Sub() target = New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers, Nothing, powernetVoltage, signals, GetSSM()), Throws.InstanceOf(Of ArgumentException))
+            Dim target As IM0_NonSmart_AlternatorsSetEfficiency
+            Assert.That(Sub() target = New M00Impl(elecConsumers, Nothing, powernetVoltage, signals, GetSSM()), Throws.InstanceOf(Of ArgumentException))
         End Sub
 
         <Test()>
         Public Sub EfficiencyValueTest()
-            Dim target As M0_NonSmart_AlternatorsSetEfficiency = New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers,
+            Dim target As IM0_NonSmart_AlternatorsSetEfficiency = New M00Impl(elecConsumers,
                                                                                                         alternatorMap, powernetVoltage, signals, GetSSM())
 
             Dim actual As Single = target.AlternatorsEfficiency
@@ -87,7 +89,7 @@ Namespace UnitTests
         <Test()>
         Public Sub HVAC_PowerDemandAmpsTest()
 
-            Dim target As M0_NonSmart_AlternatorsSetEfficiency = New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers,
+            Dim target As IM0_NonSmart_AlternatorsSetEfficiency = New M00Impl(elecConsumers,
                                                                                                         alternatorMap, powernetVoltage, signals, GetSSM())
 
             Dim actual As Ampere

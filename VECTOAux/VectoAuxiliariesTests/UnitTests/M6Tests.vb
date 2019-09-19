@@ -6,6 +6,8 @@ Imports NUnit.Framework
 Imports VectoAuxiliaries
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+
 
 Namespace UnitTests
 	<TestFixture()>
@@ -25,7 +27,7 @@ Namespace UnitTests
 			M4 = New M4_Mock(100, 2, 200, 100, 100)
 			M5 = New M5_Mock(200, 50, 80)
 
-			Return New M6(M1, M2, M3, M4, M5, Signals)
+			Return New M06Impl(M1, M2, M3, M4, M5, Signals)
 		End Function
 
 		Public Sub New()
@@ -103,7 +105,7 @@ Namespace UnitTests
 			signals.SmartElectrics = SM
 
 
-			Dim target As New M6(M1, M2, M3, M4, M5, signals)
+			Dim target As New M06Impl(M1, M2, M3, M4, M5, signals)
 
 			Assert.AreEqual(OUT1, target.OverrunFlag)
 			Assert.AreEqual(OUT2, target.SmartElecAndPneumaticsCompressorFlag)

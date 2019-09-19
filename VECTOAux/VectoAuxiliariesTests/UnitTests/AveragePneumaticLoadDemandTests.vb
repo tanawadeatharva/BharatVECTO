@@ -1,7 +1,9 @@
 ﻿
+Imports System.IO
 Imports VectoAuxiliaries.Pneumatics
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 Imports VectoAuxiliariesTests.Mocks
 Imports VectoAuxiliaries
 
@@ -24,6 +26,10 @@ Namespace UnitTests
 		Private _defaultInputConfig As IPneumaticUserInputsConfig
 		Private _Signals As ISignals = New Signals
 
+        <OneTimeSetUp>
+        Sub RunBeforeAnyTests()    
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+        end Sub
 
 		'Constructors
 		Public Sub New()
@@ -51,7 +57,7 @@ Namespace UnitTests
 		End Sub
 
 
-		<Test>
+		<TestCase()>
 		Public Sub CreateNewtest()
 
 			Dim psUserInputsConfig = CType(New PneumaticUserInputsConfig(), IPneumaticUserInputsConfig)
@@ -68,14 +74,14 @@ Namespace UnitTests
 			psCompressorMap.Initialise()
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(psUserInputsConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+					New M03Impl(psUserInputsConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 
 			Assert.IsNotNull(target)
 		End Sub
 
-		<Test()>
+		<TestCase()>
 		Public Sub AverageLoadValueUsingDefaultAuxValuesTest()
 
 			initialise()
@@ -88,11 +94,11 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+					New M03Impl(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Double = 7947.684
-			Dim actual As NormLiter = target.TotalAirDemand()
+			Dim actual As NormLiter = target.TotalAirDemand
 
 			Assert.AreEqual(expected, actual.Value(), 0.000001)
 		End Sub
@@ -110,7 +116,7 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+					New M03Impl(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Single = 5832.091
@@ -135,7 +141,7 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+					New M03Impl(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Single = 5832.091
@@ -156,7 +162,7 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+					New M03Impl(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Single = 7947.55127 / _Signals.TotalCycleTimeSeconds
@@ -180,7 +186,7 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+					New M03Impl(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Double = 8863.378 / _Signals.TotalCycleTimeSeconds
@@ -204,7 +210,7 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+					New M03Impl(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Double = 8541.45 / _Signals.TotalCycleTimeSeconds
@@ -229,7 +235,7 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+					New M03Impl(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Double = 8557.524 / _Signals.TotalCycleTimeSeconds
@@ -253,7 +259,7 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+					New M03Impl(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Double = 7947.68457 / _Signals.TotalCycleTimeSeconds
@@ -277,7 +283,7 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+					New M03Impl(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Double = 7947.68457 / _Signals.TotalCycleTimeSeconds
@@ -301,7 +307,7 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M3_AveragePneumaticLoadDemand(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
+					New M03Impl(_defaultInputConfig, psAuxConfig, psActuationsMap, psCompressorMap,
 													_vehicleMassKG.SI(Of Kilogram), "Urban", _Signals)
 
 			Dim expected As Double = 6880.88428 / _Signals.TotalCycleTimeSeconds

@@ -2,6 +2,7 @@
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliariesTests.Mocks
 Imports VectoAuxiliaries
+Imports VectoAuxiliaries.DownstreamModules.HVAC
 Imports VectoAuxiliaries.Hvac
 
 Namespace UnitTests

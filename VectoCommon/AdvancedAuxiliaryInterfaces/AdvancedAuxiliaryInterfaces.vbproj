@@ -77,6 +77,52 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DownstreamModules\Electrics\AlternatorMapValues.vb" />
+    <Compile Include="DownstreamModules\Electrics\AltUserInput.vb" />
+    <Compile Include="DownstreamModules\Electrics\ElectricConstants.vb" />
+    <Compile Include="DownstreamModules\Electrics\IAlternator.vb" />
+    <Compile Include="DownstreamModules\Electrics\IAlternatorMap.vb" />
+    <Compile Include="DownstreamModules\Electrics\ICombinedAlternator.vb" />
+    <Compile Include="DownstreamModules\Electrics\ICombinedAlternatorMapRow.vb" />
+    <Compile Include="DownstreamModules\Electrics\ICombinedAlternatorSignals.vb" />
+    <Compile Include="DownstreamModules\Electrics\IElectricalConsumer.vb" />
+    <Compile Include="DownstreamModules\Electrics\IElectricalConsumerList.vb" />
+    <Compile Include="DownstreamModules\Electrics\IElectricsUserInputsConfig.vb" />
+    <Compile Include="DownstreamModules\Electrics\IResultCard.vb" />
+    <Compile Include="DownstreamModules\Electrics\SmartResult.vb" />
+    <Compile Include="DownstreamModules\HVAC\IEnvironmentalCondition.vb" />
+    <Compile Include="DownstreamModules\HVAC\IEnvironmentalConditionsMap.vb" />
+    <Compile Include="DownstreamModules\HVAC\IHVACConstants.vb" />
+    <Compile Include="DownstreamModules\HVAC\IHVACSteadyStateModel.vb" />
+    <Compile Include="DownstreamModules\HVAC\IHVACUserInputsConfig.vb" />
+    <Compile Include="DownstreamModules\HVAC\ISSMCalculate.vb" />
+    <Compile Include="DownstreamModules\HVAC\ISSMGenInputs.vb" />
+    <Compile Include="DownstreamModules\HVAC\ISSMRun.vb" />
+    <Compile Include="DownstreamModules\HVAC\ISSMTechList.vb" />
+    <Compile Include="DownstreamModules\HVAC\ISSMTOOL.vb" />
+    <Compile Include="DownstreamModules\HVAC\ITechListBenefitLine.vb" />
+    <Compile Include="DownstreamModules\IAbstractModule.vb" />
+    <Compile Include="DownstreamModules\IM0_5_SmartAlternatorSetEfficiency.vb" />
+    <Compile Include="DownstreamModules\IM0_NonSmart_AlternatorsSetEfficiency.vb" />
+    <Compile Include="DownstreamModules\IM10.vb" />
+    <Compile Include="DownstreamModules\IM11.vb" />
+    <Compile Include="DownstreamModules\IM12.vb" />
+    <Compile Include="DownstreamModules\IM13.vb" />
+    <Compile Include="DownstreamModules\IM14.vb" />
+    <Compile Include="DownstreamModules\IM1_AverageHVACLoadDemand.vb" />
+    <Compile Include="DownstreamModules\IM2_AverageElectricalLoadDemand.vb" />
+    <Compile Include="DownstreamModules\IM3_AveragePneumaticLoadDemand.vb" />
+    <Compile Include="DownstreamModules\IM4_AirCompressor.vb" />
+    <Compile Include="DownstreamModules\IM5_SmartAlternatorSetGeneration.vb" />
+    <Compile Include="DownstreamModules\IM6.vb" />
+    <Compile Include="DownstreamModules\IM7.vb" />
+    <Compile Include="DownstreamModules\IM8.vb" />
+    <Compile Include="DownstreamModules\IM9.vb" />
+    <Compile Include="DownstreamModules\PneumaticSystem\ActuationsKey.vb" />
+    <Compile Include="DownstreamModules\PneumaticSystem\ICompressorMap.vb" />
+    <Compile Include="DownstreamModules\PneumaticSystem\IPneumaticActuationsMAP.vb" />
+    <Compile Include="DownstreamModules\PneumaticSystem\IPneumaticsAuxilliariesConfig.vb" />
+    <Compile Include="DownstreamModules\PneumaticSystem\IPneumaticUserInputsConfig.vb" />
     <Compile Include="Enumerations.vb" />
     <Compile Include="IAdvancedAuxiliaries.vb" />
     <Compile Include="IAuxiliaryEvent.vb" />
@@ -127,6 +173,7 @@
       <Name>VectoCommon</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -6,6 +6,7 @@ Imports NUnit.Framework
 Imports VectoAuxiliaries
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 
 Namespace UnitTests
 	<TestFixture()>
@@ -55,7 +56,7 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M9(m1Mock.Object, m4Mock.Object, m6Mock.Object, m8Mock.Object, fMapMock, psac.Object, sgnlsMock.Object)
+					New M09Impl(m1Mock.Object, m4Mock.Object, m6Mock.Object, m8Mock.Object, fMapMock, psac.Object, sgnlsMock.Object)
 
 			target.CycleStep(1.SI(Of Second))
 
@@ -109,7 +110,7 @@ Namespace UnitTests
 
 			Dim _
 				target As _
-					New M9(m1Mock.Object, m4Mock.Object, m6Mock.Object, m8Mock.Object, fMapMock.Object, psac.Object, sgnlsMock.Object)
+					New M09Impl(m1Mock.Object, m4Mock.Object, m6Mock.Object, m8Mock.Object, fMapMock.Object, psac.Object, sgnlsMock.Object)
 
 			target.CycleStep(1.SI(Of Second))
 

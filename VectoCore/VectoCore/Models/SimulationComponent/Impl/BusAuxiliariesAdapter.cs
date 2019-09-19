@@ -235,6 +235,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Watt GetBusAuxPowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
 		{
+			Auxiliaries.ResetCalculations();
+
 			_fcMapAdapter.AllowExtrapolation = true;
 
 			Auxiliaries.Signals.ClutchEngaged = DataBus.ClutchClosed(absTime);

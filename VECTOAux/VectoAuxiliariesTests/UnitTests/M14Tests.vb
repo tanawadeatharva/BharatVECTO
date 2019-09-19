@@ -6,6 +6,8 @@ Imports NUnit.Framework
 Imports VectoAuxiliaries
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports VectoAuxiliaries.DownstreamModules.HVAC
 
 
 Namespace UnitTests
@@ -115,7 +117,7 @@ Namespace UnitTests
 
 
 			'Act
-			Dim m14 As New M14(m13.Object, ssmMock, constants, signals.Object)
+			Dim m14 As New M14Impl(m13.Object, ssmMock, constants, signals.Object)
 
 			'Assert
             Assert.AreEqual(expectedOut1.SI(Unit.SI.Gramm).Value(), m14.TotalCycleFCGrams.Value(), 0.1)

@@ -3,11 +3,13 @@ Imports VectoAuxiliaries.Hvac
 Imports VectoAuxiliaries
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 Namespace UnitTests
 	<TestFixture()>
 	Public Class M0_5_SmartAlternatorSetEfficiencyTests
-		Private target As M0_5_SmartAlternatorSetEfficiency
+		Private target As IM0_5_SmartAlternatorSetEfficiency
 		Private signals = New Signals
 
 		Public Sub New()
@@ -45,7 +47,7 @@ Namespace UnitTests
 			Dim signals = New Signals()
 			signals.EngineSpeed = 2000.RPMtoRad()
 
-			Dim m0 As New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers, alternatoMap, 26.3.SI(Of Volt), signals, ssm)
+			Dim m0 As New M00Impl(elecConsumers, alternatoMap, 26.3.SI(Of Volt), signals, ssm)
 
 			'Results Cards
 			Dim readings = New List(Of SmartResult)
@@ -58,7 +60,7 @@ Namespace UnitTests
 
 
 			signals.EngineSpeed = 2000.RPMtoRad()
-			target = New M0_5_SmartAlternatorSetEfficiency(m0, elecConsumers, alternatoMap, idleResult, tractionResult,
+			target = New M0_5Impl(m0, elecConsumers, alternatoMap, idleResult, tractionResult,
 															overrunResult, signals)
 		End Sub
 

@@ -4,6 +4,7 @@ Imports VectoAuxiliaries.Hvac
 Imports VectoAuxiliaries.DownstreamModules
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 Imports VectoAuxiliaries
 
 Namespace UnitTests
@@ -20,9 +21,9 @@ Namespace UnitTests
 			Signals = New Signals()
 		End Sub
 
-		<Test()>
+		<TestCase()>
 		Public Sub CreateNew_M7InstanceTest()
-			Dim target As IM7 = New M7(M5, M6, Signals)
+			Dim target As IM7 = New M07Impl(M5, M6, Signals)
 			Assert.IsNotNull(target)
 		End Sub
 
@@ -83,7 +84,7 @@ Namespace UnitTests
 
 
 			'Create Instance of M7 from 
-			Dim target As IM7 = New M7(M5, M6, Signals)
+			Dim target As IM7 = New M07Impl(M5, M6, Signals)
 
 			Dim OP1act As Double = target.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank().Value()
 			Dim OP2act As Double = target.SmartElectricalAndPneumaticAuxAirCompPowerGenAtCrank().Value()

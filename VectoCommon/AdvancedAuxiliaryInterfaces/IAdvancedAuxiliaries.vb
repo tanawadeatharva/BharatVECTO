@@ -128,6 +128,9 @@ Public Interface IAdvancedAuxiliaries
 	''' <returns></returns>
 	''' <remarks></remarks>
 	Function RunStop(ByRef message As String) As Boolean
+
+    Sub ResetCalculations()
+
 End Interface
 
 

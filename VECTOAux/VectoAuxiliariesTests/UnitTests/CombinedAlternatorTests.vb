@@ -7,6 +7,7 @@ Imports VectoAuxiliariesTests.Mocks
 Imports VectoAuxiliaries
 Imports VectoAuxiliaries.Hvac
 Imports System.IO
+Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 Namespace UnitTests
 

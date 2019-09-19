@@ -1,6 +1,8 @@
 ﻿Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 Imports VectoAuxiliaries
+Imports VectoAuxiliaries.DownstreamModules.Electrics
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
@@ -30,7 +32,7 @@ Namespace UnitTests
 
 			ssm.Load(_SSMMAP)
 
-			m0 = New M0_NonSmart_AlternatorsSetEfficiency(New ElectricalConsumerList(powernetVoltage, 0.096, True),
+			m0 = New M00Impl(New ElectricalConsumerList(powernetVoltage, 0.096, True),
 														alternatorMap, powernetVoltage.SI(Of Volt), signals, ssm)
 		End Sub
 
@@ -38,8 +40,7 @@ Namespace UnitTests
 
 			ssm.Load(_SSMMAP)
 
-			Return New M1_AverageHVACLoadDemand(m0,
-												alternatorGearEfficiency,
+			Return New M01Impl(m0, alternatorGearEfficiency,
 												compressorGrearEfficiency,
 												powernetVoltage.SI(Of Volt),
 												signals,

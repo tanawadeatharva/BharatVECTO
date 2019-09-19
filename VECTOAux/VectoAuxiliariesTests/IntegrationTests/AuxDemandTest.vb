@@ -68,7 +68,7 @@ Namespace IntegrationTests
             Dim engineFCMapFilePath = "TestFiles\Integration\24t Coach.vmap"
             Dim auxFilePath = "TestFiles\Integration\AdvAuxTest.aaux"
 
-            Dim aux As AdvancedAuxiliaries = New AdvancedAuxiliaries
+            Dim aux As IAdvancedAuxiliaries = New AdvancedAuxiliaries
 
             aux.VectoInputs.Cycle = "Coach"
             aux.VectoInputs.VehicleWeightKG = 12000.SI(Of Kilogram)()
@@ -84,7 +84,7 @@ Namespace IntegrationTests
             aux.Signals.TotalCycleTimeSeconds = 15000
             aux.Signals.EngineIdleSpeed = 560.RPMtoRad()
 
-            aux.Initialise(Path.GetFileName(auxFilePath), Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
+            CType(aux, AdvancedAuxiliaries).Initialise(Path.GetFileName(auxFilePath), Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 
             aux.Signals.ClutchEngaged = True
             aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)() 'kW
@@ -100,9 +100,10 @@ Namespace IntegrationTests
 
             Dim msg As String = String.Empty
             For i As Integer = 0 To 9
+                aux.ResetCalculations()
                 Assert.AreEqual(6087.0317, aux.AuxiliaryPowerAtCrankWatts().Value(), 0.001)
                 aux.CycleStep(1.SI(Of Second), msg)
-                Debug.Print("{0}", aux.AA_TotalCycleFC_Grams)
+                Console.WriteLine("{0}", aux.AA_TotalCycleFC_Grams)
             Next
 
             Assert.AreEqual(79.303.SI(Unit.SI.Gramm).Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
@@ -112,9 +113,10 @@ Namespace IntegrationTests
             aux.Signals.InternalEnginePower = (-50 * 1000).SI(Of Watt)()
 
             For i As Integer = 0 To 9
+                aux.ResetCalculations()
                 Assert.AreEqual(8954.1435, aux.AuxiliaryPowerAtCrankWatts().Value(), 0.001)
                 aux.CycleStep(1.SI(Of Second), msg)
-                Debug.Print("{0}", aux.AA_TotalCycleFC_Grams)
+                Console.WriteLine("{0}", aux.AA_TotalCycleFC_Grams)
             Next
 
             Assert.AreEqual(82.5783.SI(Unit.SI.Gramm).Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
@@ -124,8 +126,10 @@ Namespace IntegrationTests
             aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()       'kW
 
             For i As Integer = 0 To 9
+                aux.ResetCalculations()
                 Assert.AreEqual(6087.0317, aux.AuxiliaryPowerAtCrankWatts().Value(), 0.001)
                 aux.CycleStep(1.SI(Of Second), msg)
+                Console.WriteLine("{0}", aux.AA_TotalCycleFC_Grams)
             Next
 
             Assert.AreEqual(162.4655.SI(Unit.SI.Gramm).Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
