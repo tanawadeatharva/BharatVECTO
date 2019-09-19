@@ -8,185 +8,184 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Imports System.Collections.Generic
 Imports System.Globalization
 Imports TUGraz.VectoCommon.Utils
 
 Public Class cMAP
-	Implements IFuelConsumptionMap
+    Implements IFuelConsumptionMap
 
-	Private LnU As List(Of Single)
-	Private LTq As List(Of Single)
-	Private lFC As List(Of Single)
+    Private LnU As List(Of Single)
+    Private LTq As List(Of Single)
+    Private lFC As List(Of Single)
 
-	Private sFilePath As String
-	Private iMapDim As Integer
+    Private sFilePath As String
+    Private iMapDim As Integer
 
-	Private FuelMap As cDelaunayMap
+    Private FuelMap As cDelaunayMap
 
-	Private Sub ResetMe()
-		lFC = Nothing
-		LTq = Nothing
-		LnU = Nothing
-		iMapDim = - 1
-		FuelMap = New cDelaunayMap
-	End Sub
+    Private Sub ResetMe()
+        lFC = Nothing
+        LTq = Nothing
+        LnU = Nothing
+        iMapDim = -1
+        FuelMap = New cDelaunayMap
+    End Sub
 
-	Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
-		Dim file As cFile_V3
-		Dim line As String()
-		Dim nU As Single
-		Dim MsgSrc As String
-
-
-		MsgSrc = "Main/ReadInp/MAP"
-
-		'Reset
-		ResetMe()
-
-		'Stop if there's no file
-		If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
-			Return False
-		End If
-
-		'Open file
-		file = New cFile_V3
-		If Not file.OpenRead(sFilePath) Then
-			file = Nothing
-			Return False
-		End If
-
-		'Skip Header
-		file.ReadLine()
-
-		'Initi Lists (before version check so ReadOldFormat works)
-		lFC = New System.Collections.Generic.List(Of Single)
-		LTq = New System.Collections.Generic.List(Of Single)
-		LnU = New System.Collections.Generic.List(Of Single)
-
-		Try
-			Do While Not file.EndOfFile
-
-				'Line read
-				line = file.ReadLine
-
-				'Line counter up (was reset in ResetMe)
-				iMapDim += 1
-
-				'Revolutions
-				nU = Single.Parse(line(0), CultureInfo.InvariantCulture)
-
-				LnU.Add(nU)
-
-				'Power
-				LTq.Add(Single.Parse(line(1), CultureInfo.InvariantCulture))
-
-				'FC
-				'Check sign
-				If CSng(line(2)) < 0 Then
-					file.Close()
-
-					Return False
-				End If
-
-				lFC.Add(CSng(line(2)))
+    Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
+        Dim file As cFile_V3
+        Dim line As String()
+        Dim nU As Single
+        Dim MsgSrc As String
 
 
-			Loop
-		Catch ex As Exception
+        MsgSrc = "Main/ReadInp/MAP"
+
+        'Reset
+        ResetMe()
+
+        'Stop if there's no file
+        If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
+            Return False
+        End If
+
+        'Open file
+        file = New cFile_V3
+        If Not file.OpenRead(sFilePath) Then
+            file = Nothing
+            Return False
+        End If
+
+        'Skip Header
+        file.ReadLine()
+
+        'Initi Lists (before version check so ReadOldFormat works)
+        lFC = New System.Collections.Generic.List(Of Single)
+        LTq = New System.Collections.Generic.List(Of Single)
+        LnU = New System.Collections.Generic.List(Of Single)
+
+        Try
+            Do While Not file.EndOfFile
+
+                'Line read
+                line = file.ReadLine
+
+                'Line counter up (was reset in ResetMe)
+                iMapDim += 1
+
+                'Revolutions
+                nU = Single.Parse(line(0), CultureInfo.InvariantCulture)
+
+                LnU.Add(nU)
+
+                'Power
+                LTq.Add(Single.Parse(line(1), CultureInfo.InvariantCulture))
+
+                'FC
+                'Check sign
+                If CSng(line(2)) < 0 Then
+                    file.Close()
+
+                    Return False
+                End If
+
+                lFC.Add(CSng(line(2)))
 
 
-			GoTo lbEr
-
-		End Try
-
-		'Close file
-		file.Close()
-
-		file = Nothing
-
-		Return True
+            Loop
+        Catch ex As Exception
 
 
-		'ERROR-label for clean Abort
-		lbEr:
-		file.Close()
-		file = Nothing
+            GoTo lbEr
 
-		Return False
-	End Function
+        End Try
 
-	Public Function Triangulate() As Boolean
-		Dim i As Integer
+        'Close file
+        file.Close()
 
-		Dim MsgSrc As String
+        file = Nothing
 
-		MsgSrc = "MAP/Norm"
-
-		'FC Delauney
-		For i = 0 To iMapDim
-			FuelMap.AddPoints(LnU(i), LTq(i), lFC(i))
-		Next
-
-		Return FuelMap.Triangulate()
-	End Function
+        Return True
 
 
-	Public Function fFCdelaunay_Intp(ByVal nU As Single, ByVal Tq As Single) As Single
-		Dim val As Single
+        'ERROR-label for clean Abort
+lbEr:
+        file.Close()
+        file = Nothing
 
-		val = CType(FuelMap.Intpol(nU, Tq), Single)
+        Return False
+    End Function
 
-		If FuelMap.ExtrapolError Then
+    Public Function Triangulate() As Boolean
+        Dim i As Integer
 
-			Return - 10000
-		Else
-			Return val
-		End If
-	End Function
+        Dim MsgSrc As String
+
+        MsgSrc = "MAP/Norm"
+
+        'FC Delauney
+        For i = 0 To iMapDim
+            FuelMap.AddPoints(LnU(i), LTq(i), lFC(i))
+        Next
+
+        Return FuelMap.Triangulate()
+    End Function
+
+
+    Public Function fFCdelaunay_Intp(ByVal nU As Single, ByVal Tq As Single) As Single
+        Dim val As Single
+
+        val = CType(FuelMap.Intpol(nU, Tq), Single)
+
+        If FuelMap.ExtrapolError Then
+
+            Return -10000
+        Else
+            Return val
+        End If
+    End Function
 
 #Region "Properties"
 
-	Public Property FilePath() As String
-		Get
-			Return sFilePath
-		End Get
-		Set(ByVal value As String)
-			sFilePath = value
-		End Set
-	End Property
+    Public Property FilePath() As String
+        Get
+            Return sFilePath
+        End Get
+        Set(ByVal value As String)
+            sFilePath = value
+        End Set
+    End Property
 
-	Public ReadOnly Property MapDim As Integer
-		Get
-			Return iMapDim
-		End Get
-	End Property
+    Public ReadOnly Property MapDim As Integer
+        Get
+            Return iMapDim
+        End Get
+    End Property
 
-	Public ReadOnly Property Tq As List(Of Single)
-		Get
-			Return LTq
-		End Get
-	End Property
+    Public ReadOnly Property Tq As List(Of Single)
+        Get
+            Return LTq
+        End Get
+    End Property
 
-	Public ReadOnly Property FC As List(Of Single)
-		Get
-			Return lFC
-		End Get
-	End Property
+    Public ReadOnly Property FC As List(Of Single)
+        Get
+            Return lFC
+        End Get
+    End Property
 
-	Public ReadOnly Property nU As List(Of Single)
-		Get
-			Return LnU
-		End Get
-	End Property
+    Public ReadOnly Property nU As List(Of Single)
+        Get
+            Return LnU
+        End Get
+    End Property
 
 #End Region
 
-	Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As PerSecond) As KilogramPerSecond _
-		Implements IFuelConsumptionMap.GetFuelConsumption
-		Return _
-			(fFCdelaunay_Intp(CType(angularVelocity.AsRPM, Single), CType(torque.Value(), Single)) / 3600.0 / 1000.0).SI(Of KilogramPerSecond)()
-	End Function
+    Public Function GetFuelConsumption(torque As NewtonMeter, angularVelocity As PerSecond) As KilogramPerSecond _
+        Implements IFuelConsumptionMap.GetFuelConsumption
+        Return _
+            (fFCdelaunay_Intp(CType(angularVelocity.AsRPM, Single), CType(torque.Value(), Single)) / 3600.0 / 1000.0).SI(Of KilogramPerSecond)()
+    End Function
 End Class
 
 
