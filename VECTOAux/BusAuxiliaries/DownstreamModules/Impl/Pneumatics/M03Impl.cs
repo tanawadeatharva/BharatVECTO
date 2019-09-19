@@ -6,18 +6,17 @@ namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 {
 	public class M03Impl : AbstractModule, IM3_AveragePneumaticLoadDemand
 	{
-		private IPneumaticUserInputsConfig _pneumaticUserInputsConfig;
-		private IPneumaticsAuxilliariesConfig _pneumaticAuxillariesConfig;
-		private IPneumaticActuationsMAP _pneumaticsActuationsMap;
-		private ICompressorMap _pneumaticsCompressorFlowRateMap;
-		private Kilogram _vehicleMassKG;
-		private string _cycleName;
-		private ISignals _signals;
-		private SI _averagePowerDemandPerCompressorUnitFlowRateInWPerLitresPerSecond;
-		private NormLiter _totalAirDemand;
+		protected IPneumaticUserInputsConfig _pneumaticUserInputsConfig;
+		protected IPneumaticsAuxilliariesConfig _pneumaticAuxillariesConfig;
+		protected IPneumaticActuationsMAP _pneumaticsActuationsMap;
+		protected ICompressorMap _pneumaticsCompressorFlowRateMap;
+		protected Kilogram _vehicleMassKG;
+		protected string _cycleName;
+		protected ISignals _signals;
+		protected SI _averagePowerDemandPerCompressorUnitFlowRateInWPerLitresPerSecond;
+		protected NormLiter _totalAirDemand;
 
-		private double _cycleDurationMinutes;
-
+		
 		public M03Impl(IPneumaticUserInputsConfig pneumaticsUserInputConfig, IPneumaticsAuxilliariesConfig pneumaticsAuxillariesConfig, IPneumaticActuationsMAP pneumaticsActuationsMap, ICompressorMap pneumaticsCompressorFlowRateMap, Kilogram vehicleMassKG, string cycleName, ISignals signals)
 		{
 			_pneumaticUserInputsConfig = pneumaticsUserInputConfig;
