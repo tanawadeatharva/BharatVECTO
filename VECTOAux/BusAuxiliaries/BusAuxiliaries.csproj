@@ -42,18 +42,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DownstreamModules\Impl\AbstractModule.cs" />
-    <Compile Include="DownstreamModules\Impl\M00Impl.cs" />
-    <Compile Include="DownstreamModules\Impl\M02Impl.cs" />
-    <Compile Include="DownstreamModules\Impl\M03Impl.cs" />
-    <Compile Include="DownstreamModules\Impl\M04Impl.cs" />
-    <Compile Include="DownstreamModules\Impl\M05Impl.cs" />
-    <Compile Include="DownstreamModules\Impl\M0_5Impl.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\M00Impl.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\M02Impl.cs" />
+    <Compile Include="DownstreamModules\Impl\Pneumatics\M03Impl.cs" />
+    <Compile Include="DownstreamModules\Impl\Pneumatics\M04Impl.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\M05Impl.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\M0_5Impl.cs" />
     <Compile Include="DownstreamModules\Impl\M10Impl.cs" />
     <Compile Include="DownstreamModules\Impl\M11Impl.cs" />
     <Compile Include="DownstreamModules\Impl\M12Impl.cs" />
     <Compile Include="DownstreamModules\Impl\M13Impl.cs" />
     <Compile Include="DownstreamModules\Impl\M14Impl.cs" />
-    <Compile Include="DownstreamModules\Impl\M01Impl.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\M01Impl.cs" />
     <Compile Include="DownstreamModules\Impl\M06Impl.cs" />
     <Compile Include="DownstreamModules\Impl\M07Impl.cs" />
     <Compile Include="DownstreamModules\Impl\M08Impl.cs" />
