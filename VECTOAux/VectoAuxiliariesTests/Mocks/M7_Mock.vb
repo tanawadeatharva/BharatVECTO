@@ -1,5 +1,6 @@
 ﻿
 Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
@@ -57,4 +58,8 @@ Public Class M7_Mock
 		_SmartElectricalOnlyAuxAltPowerGenAtCrank = SmartElectricalOnlyAuxAltPowerGenAtCrank
 		_SmartPneumaticOnlyAuxAirCompPowerGenAtCrank = SmartPneumaticOnlyAuxAirCompPowerGenAtCrank
 	End Sub
+
+    Public Sub ResetCalculations() Implements IAbstractModule.ResetCalculations
+        Throw New NotImplementedException
+    End Sub
 End Class

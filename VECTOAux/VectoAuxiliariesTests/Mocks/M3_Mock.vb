@@ -1,4 +1,5 @@
 ﻿Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
@@ -9,12 +10,19 @@ Public Class M3_Mock
 
 	Public _GetAveragePowerDemandAtCrankFromPneumatics As Watt
 	Public _TotalAirConsumedPerCycle As NormLiterPerSecond
+	Private _totalAirDemand As NormLiter
 
 
 	Public Function GetAveragePowerDemandAtCrankFromPneumatics() As Watt _
 		Implements IM3_AveragePneumaticLoadDemand.GetAveragePowerDemandAtCrankFromPneumatics
 		Return _GetAveragePowerDemandAtCrankFromPneumatics
 	End Function
+
+	Public ReadOnly Property TotalAirDemand As NormLiter Implements IM3_AveragePneumaticLoadDemand.TotalAirDemand
+		Get
+			Return _totalAirDemand
+		End Get
+	End Property
 
 	Public Function TotalAirConsumedPerCycle() As NormLiterPerSecond _
 		Implements IM3_AveragePneumaticLoadDemand.AverageAirConsumedPerSecondLitre
@@ -30,5 +38,9 @@ Public Class M3_Mock
 		_GetAveragePowerDemandAtCrankFromPneumatics = GetAveragePowerDemandAtCrankFromPneumatics.SI(Of Watt)()
 		_TotalAirConsumedPerCycle = TotalAirConsumedPerCycle.SI(Of NormLiterPerSecond)()
 	End Sub
+
+    Public Sub ResetCalculations() Implements IAbstractModule.ResetCalculations
+        Throw New NotImplementedException
+    End Sub
 End Class
 

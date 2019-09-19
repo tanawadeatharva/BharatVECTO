@@ -1,4 +1,5 @@
 ﻿Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
@@ -32,5 +33,9 @@ Public Class M2_Mock
 		_GetAveragePowerAtCrankFromElectrics = GetAveragePowerAtCrankFromElectrics.SI(Of Watt)()
 		_GetAveragePowerDemandAtAlternator = GetAveragePowerDemandAtAlternator.SI(Of Watt)()
 	End Sub
+
+    Public Sub ResetCalculations() Implements IAbstractModule.ResetCalculations
+        Throw New NotImplementedException
+    End Sub
 End Class
 

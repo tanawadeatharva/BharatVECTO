@@ -1,4 +1,5 @@
 ﻿Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries.DownstreamModules.Electrics
 Imports VectoAuxiliaries.Electrics
 
 Namespace Mocks

@@ -1,4 +1,5 @@
 ﻿Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
@@ -40,5 +41,9 @@ Public Class M5_Mock
 		_AlternatorsGenerationPowerAtCrankOverrunWatts = AlternatorsGenerationPowerAtCrankOverrunWatts.SI(Of Watt)()
 		_AlternatorsGenerationPowerAtCrankTractionOnWatts = AlternatorsGenerationPowerAtCrankTractionOnWatts.SI(Of Watt)()
 	End Sub
+
+    Public Sub ResetCalculations() Implements IAbstractModule.ResetCalculations
+        Throw New NotImplementedException
+    End Sub
 End Class
 
