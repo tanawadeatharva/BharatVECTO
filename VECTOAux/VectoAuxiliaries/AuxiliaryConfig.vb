@@ -18,6 +18,8 @@ Imports System.Windows.Forms
 Imports Newtonsoft.Json
 Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries
+Imports VectoAuxiliaries.DownstreamModules.Electrics
+Imports VectoAuxiliaries.DownstreamModules.HVAC
 
 <Serializable()>
 Public Class AuxiliaryConfig

@@ -7,6 +7,7 @@ Imports System.Text
 Imports System.IO
 Imports System.Globalization
 Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 
 Namespace Electrics

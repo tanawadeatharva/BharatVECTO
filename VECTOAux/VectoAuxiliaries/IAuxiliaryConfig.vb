@@ -17,6 +17,8 @@ Imports System.IO
 
 Imports System.Windows.Forms
 Imports Newtonsoft.Json
+Imports VectoAuxiliaries.DownstreamModules.Electrics
+Imports VectoAuxiliaries.DownstreamModules.HVAC
 
 
 Public Interface IAuxiliaryConfig

@@ -12,6 +12,7 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Text
 Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 Namespace Electrics
 	Public Class AlternatorMap

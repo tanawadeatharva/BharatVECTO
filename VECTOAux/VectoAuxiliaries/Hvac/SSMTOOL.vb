@@ -5,6 +5,7 @@ Imports System.IO
 Imports System.Reflection
 Imports System.Text
 Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries.DownstreamModules.HVAC
 
 Namespace Hvac
 	'Used by frmHVACTool

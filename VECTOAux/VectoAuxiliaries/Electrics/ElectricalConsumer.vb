@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 ' Copyright 2017 European Union.
 ' Licensed under the EUPL (the 'Licence');

@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports VectoAuxiliaries.DownstreamModules.HVAC
 
 Namespace Hvac
 	'Used by SSMHVAC Class

@@ -9,6 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports VectoAuxiliaries.DownstreamModules.HVAC
 Imports VectoAuxiliaries.Hvac
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics

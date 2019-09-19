@@ -4,6 +4,7 @@ Imports System.Drawing
 Imports System.Windows.Forms
 Imports VectoAuxiliaries.Electrics
 Imports System.ComponentModel
+Imports VectoAuxiliaries.DownstreamModules.Electrics
 Imports VectoAuxiliaries.Hvac
 
 

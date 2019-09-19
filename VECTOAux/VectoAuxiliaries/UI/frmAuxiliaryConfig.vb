@@ -17,6 +17,8 @@ Imports System.Windows.Forms
 Imports System.Drawing
 Imports VectoAuxiliaries.Hvac
 Imports System.IO
+Imports VectoAuxiliaries.DownstreamModules.Electrics
+Imports VectoAuxiliaries.DownstreamModules.HVAC
 
 
 Public Class frmAuxiliaryConfig
@@ -1226,7 +1228,7 @@ Public Class frmAuxiliaryConfig
 		Next
 	End Sub
 
-	Private Function GetSSMMAP(ByVal filePath As String, ByRef message As String) As Hvac.IHVACSteadyStateModel
+	Private Function GetSSMMAP(ByVal filePath As String, ByRef message As String) As IHVACSteadyStateModel
 
 		Dim ssmMap As New Hvac.HVACSteadyStateModel()
 

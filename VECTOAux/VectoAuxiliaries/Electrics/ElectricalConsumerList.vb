@@ -12,6 +12,7 @@
 
 Imports System.Collections.Generic
 Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 Namespace Electrics
 	Public Class ElectricalConsumerList
@@ -184,7 +185,7 @@ Namespace Electrics
 			End Get
 		End Property
 
-		Public Sub AddConsumer(consumer As IElectricalConsumer) Implements Electrics.IElectricalConsumerList.AddConsumer
+		Public Sub AddConsumer(consumer As IElectricalConsumer) Implements IElectricalConsumerList.AddConsumer
 
 			If Not _items.Contains(consumer) Then
 				_items.Add(consumer)
@@ -195,7 +196,7 @@ Namespace Electrics
 			End If
 		End Sub
 
-		Public Sub RemoveConsumer(consumer As IElectricalConsumer) Implements Electrics.IElectricalConsumerList.RemoveConsumer
+		Public Sub RemoveConsumer(consumer As IElectricalConsumer) Implements IElectricalConsumerList.RemoveConsumer
 
 			If _items.Contains(consumer) Then
 
@@ -210,7 +211,7 @@ Namespace Electrics
 
 
 		Public Function GetTotalAverageDemandAmps(excludeOnBase As Boolean) As Ampere _
-			Implements Electrics.IElectricalConsumerList.GetTotalAverageDemandAmps
+			Implements IElectricalConsumerList.GetTotalAverageDemandAmps
 
 			Dim Amps As Ampere
 

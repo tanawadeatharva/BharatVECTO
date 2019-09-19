@@ -17,6 +17,8 @@ Imports VectoAuxiliaries.Hvac
 Imports VectoAuxiliaries.DownstreamModules
 Imports System.Windows.Forms
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 <Assembly: InternalsVisibleTo("VectoCore")> 
 
@@ -138,14 +140,14 @@ Public Class AdvancedAuxiliaries
 		End If
 
 
-		M0 = New M0_NonSmart_AlternatorsSetEfficiency(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
+		M0 = New M00Impl(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
 													alternatorMap,
 													auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt),
 													Signals,
 													ssmTool)
 
 
-		Dim M05tmp As M0_5_SmartAlternatorSetEfficiency = New M0_5_SmartAlternatorSetEfficiency(M0,
+		Dim M05tmp As IM0_5_SmartAlternatorSetEfficiency = New M0_5Impl(M0,
 																								auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
 																								alternatorMap,
 																								auxConfig.ElectricalUserInputsConfig.ResultCardIdle,
@@ -153,7 +155,7 @@ Public Class AdvancedAuxiliaries
 																								auxConfig.ElectricalUserInputsConfig.ResultCardOverrun, Signals)
 		M05 = M05tmp
 
-		M1 = New M1_AverageHVACLoadDemand(M0,
+		M1 = New M01Impl(M0,
 										auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
 										auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency,
 										auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt),
@@ -161,13 +163,13 @@ Public Class AdvancedAuxiliaries
 										ssmTool)
 
 
-		M2 = New M2_AverageElectricalLoadDemand(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
+		M2 = New M02Impl(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
 												M0,
 												auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
 												auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt), Signals)
 
 
-		M3 = New M3_AveragePneumaticLoadDemand(auxConfig.PneumaticUserInputsConfig,
+		M3 = New M03Impl(auxConfig.PneumaticUserInputsConfig,
 												auxConfig.PneumaticAuxillariesConfig,
 												actuationsMap,
 												compressorMap,
@@ -175,19 +177,19 @@ Public Class AdvancedAuxiliaries
 												VectoInputs.Cycle,
 												Signals)
 
-		M4 = New M4_AirCompressor(compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
+		M4 = New M04Impl(compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
 								auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals)
-		M5 = New M5__SmartAlternatorSetGeneration(M05tmp, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt),
+		M5 = New M05Impl(M05tmp, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt),
 												auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency)
-		M6 = New M6(M1, M2, M3, M4, M5, Signals)
-		M7 = New M7(M5, M6, Signals)
-		M8 = New M8(M1, M6, M7, Signals)
-		M9 = New M9(M1, M4, M6, M8, fuelMap, auxConfig.PneumaticAuxillariesConfig, Signals)
-		M10 = New M10(M3, M9, Signals)
-		M11 = New M11(M1, M3, M6, M8, fuelMap, Signals)
-		M12 = New M12(M10, M11, Signals)
-		M13 = New M13(M10, M11, M12, Signals)
-		M14 = New M14(M13, ssmToolModule14, hvacConstants, Signals)
+		M6 = New M06Impl(M1, M2, M3, M4, M5, Signals)
+		M7 = New M07Impl(M5, M6, Signals)
+		M8 = New M08Impl(M1, M6, M7, Signals)
+		M9 = New M09Impl(M1, M4, M6, M8, fuelMap, auxConfig.PneumaticAuxillariesConfig, Signals)
+		M10 = New M10Impl(M3, M9, Signals)
+		M11 = New M11Impl(M1, M3, M6, M8, fuelMap, Signals)
+		M12 = New M12Impl(M10, M11, Signals)
+		M13 = New M13Impl(M10, M11, M12, Signals)
+		M14 = New M14Impl(M13, ssmToolModule14, hvacConstants, Signals)
 	End Sub
 
 #Region "Interface implementation"
@@ -274,7 +276,15 @@ Public Class AdvancedAuxiliaries
 		Throw New NotImplementedException
 	End Function
 
-	Public ReadOnly Property TotalFuelGRAMS As Kilogram Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelGRAMS
+    Public Sub IAdvancedAuxiliaries_ResetCalculations() Implements IAdvancedAuxiliaries.ResetCalculations
+        Dim modules As List(Of IAbstractModule) = New List(Of IAbstractModule)() From {
+                M0, M05, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14}
+        For Each moduel As IAbstractModule In modules
+            moduel.ResetCalculations()
+        Next
+    End Sub
+
+    Public ReadOnly Property TotalFuelGRAMS As Kilogram Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelGRAMS
 		Get
 			If Not M13 Is Nothing Then
 				Return M14.TotalCycleFCGrams
@@ -474,4 +484,5 @@ Public Class AdvancedAuxiliaries
 			Return M9.TotalCycleFuelConsumptionCompressorOnContinuously
 		End Get
 	End Property
+
 End Class

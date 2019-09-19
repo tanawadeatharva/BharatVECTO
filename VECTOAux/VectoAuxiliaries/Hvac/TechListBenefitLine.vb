@@ -1,10 +1,8 @@
 ﻿
-Namespace Hvac
-	Public Enum TechLineType
+Imports VectoAuxiliaries.DownstreamModules.HVAC
 
-		Normal
-		HVCActiveSelection
-	End Enum
+Namespace Hvac
+	
 
 	Public Enum PowerType
 

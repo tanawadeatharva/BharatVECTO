@@ -1,4 +1,6 @@
-﻿Namespace Hvac
+﻿Imports VectoAuxiliaries.DownstreamModules.HVAC
+
+Namespace Hvac
 	Public Class EnvironmentalCondition
 		Implements IEnvironmentalCondition
 

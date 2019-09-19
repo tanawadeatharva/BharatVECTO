@@ -1,18 +1,11 @@
 ﻿Option Strict On
 
 Imports TUGraz.VectoCommon.Utils
+Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 Namespace Electrics
-	Public Class Table4Row
-		Public RPM As Double
-		Public Efficiency As Double
-
-		Public Sub New(rpm As Double, eff As Double)
-
-			Me.RPM = rpm
-			Me.Efficiency = eff
-		End Sub
-	End Class
+	
+   
 
 	'Model based on CombinedALTS_V02_Editable.xlsx
 	Public Class Alternator

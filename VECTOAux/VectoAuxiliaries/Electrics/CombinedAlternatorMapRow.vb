@@ -1,4 +1,6 @@
-﻿Namespace Electrics
+﻿Imports VectoAuxiliaries.DownstreamModules.Electrics
+
+Namespace Electrics
 	'This class is reflective of the stored entries for the combined alternator
 	'And is used by the Combined Alternator Form and any related classes.
 
