@@ -1,0 +1,329 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Security;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.VisualBasic;
+using DownstreamModules.Electrics;
+
+namespace Electrics
+{
+	// Model based on CombinedALTS_V02_Editable.xlsx
+	public class Alternator : IAlternator
+	{
+		private ICombinedAlternatorSignals signals;
+
+		// D6
+		public string AlternatorName { get; set; }
+
+		// G6
+		public double PulleyRatio { get; set; }
+
+		// C10-D15
+		public List<AltUserInput> InputTable2000 { get; set; } = new List<AltUserInput>();
+
+		// F10-G15
+		public List<AltUserInput> InputTable4000 { get; set; } = new List<AltUserInput>();
+
+		// I10-J15
+		public List<AltUserInput> InputTable6000 { get; set; } = new List<AltUserInput>();
+
+		// M10-N15
+		public List<Table4Row> RangeTable { get; set; } = new List<Table4Row>();
+
+		// S9
+		public double SpindleSpeed
+		{
+			get { return signals.CrankRPM * PulleyRatio; }
+		}
+
+		// S10
+		public double Efficiency
+		{
+			get {
+				// First build RangeTable, table 4
+				InitialiseRangeTable();
+				CalculateRangeTable();
+
+				// Calculate ( Interpolate ) Efficiency
+				var range = RangeTable.Select(s => new AltUserInput(s.RPM, s.Efficiency)).ToList();
+
+				return Alternator.Iterpolate(range, Convert.ToSingle(SpindleSpeed));
+			}
+		}
+
+
+		// Constructors
+		public Alternator() { }
+
+		public Alternator(ICombinedAlternatorSignals isignals, List<ICombinedAlternatorMapRow> inputs)
+		{
+			if (isignals == null)
+				throw new ArgumentException("Alternator - ISignals supplied is nothing");
+
+			signals = isignals;
+
+			AlternatorName = inputs.First().AlternatorName;
+			PulleyRatio = inputs.First().PulleyRatio;
+
+			var values2k = inputs.Where(x => x.RPM == 2000)
+														.Select(x => new KeyValuePair<double, double>(x.Amps, x.Efficiency))
+														.ToDictionary(x => x.Key, x => x.Value);
+			var values4k = inputs.Where(x => x.RPM == 4000)
+														.Select(x => new KeyValuePair<double, double>(x.Amps, x.Efficiency))
+														.ToDictionary(x => x.Key, x => x.Value);
+			var values6k = inputs.Where(x => x.RPM == 6000)
+														.Select(x => new KeyValuePair<double, double>(x.Amps, x.Efficiency))
+														.ToDictionary(x => x.Key, x => x.Value);
+
+			BuildInputTable(values2k, InputTable2000);
+			BuildInputTable(values4k, InputTable4000);
+			BuildInputTable(values6k, InputTable6000);
+
+			CreateRangeTable();
+		}
+
+		public static double Iterpolate(List<AltUserInput> values, double x)
+		{
+			var lowestX = values.Min(m => m.Amps);
+			var highestX = values.Max(m => m.Amps);
+
+			// Out of range, returns efficiency for lowest
+			if (x < lowestX)
+				return values.First(f => f.Amps == lowestX).Eff;
+
+			// Out of range, efficiency for highest
+			if (x > highestX)
+				return values.First(f => f.Amps == highestX).Eff;
+
+			// On Bounds check
+			if (values.Where(w => w.Amps == x).Count() == 1)
+				return values.First(w => w.Amps == x).Eff;
+
+			// OK, we need to interpolate.
+			var preKey = values.Last(l => l.Amps < x).Amps;
+			var postKey = values.First(l => l.Amps > x).Amps;
+			var preEff = values.First(f => f.Amps == preKey).Eff;
+			var postEff = values.First(f => f.Amps == postKey).Eff;
+
+			var deltaX = postKey - preKey;
+			var deltaEff = postEff - preEff;
+
+			// slopes
+			var effSlope = deltaEff / deltaX;
+
+			var retVal = ((x - preKey) * effSlope) + preEff;
+
+			return retVal;
+		}
+
+		private void CalculateRangeTable()
+		{
+			// M10=Row0-Rpm - N10=Row0-Eff
+			// M11=Row1-Rpm - N11=Row1-Eff
+			// M12=Row2-Rpm - N12=Row2-Eff - 2000
+			// M13=Row3-Rpm - N13=Row3-Eff - 4000
+			// M14=Row4-Rpm - N14=Row4-Eff - 6000
+			// M15=Row5-Rpm - N15=Row5-Eff
+			// M16=Row6-Rpm - N16=Row6-Eff
+
+			double N10, N11, N12, N13, N14, N15, N16;
+			double M10, M11, M12, M13, M14, M15, M16;
+
+			// EFFICIENCY
+
+			// 2000
+			N12 = Alternator.Iterpolate(InputTable2000, signals.CurrentDemandAmps.Value());
+			RangeTable[2].Efficiency = N12;
+
+			// 4000
+			N13 = Alternator.Iterpolate(InputTable4000, signals.CurrentDemandAmps.Value());
+			RangeTable[3].Efficiency = N13;
+
+			// 6000
+			N14 = Alternator.Iterpolate(InputTable6000, signals.CurrentDemandAmps.Value());
+			RangeTable[4].Efficiency = N14;
+
+			// Row0 & Row1 Efficiency  =IF(N13>N12,0,MAX(N12:N14)) - Example Alt 1 N13=
+			N11 = N13 > N12 ? 0 : Math.Max(Math.Max(N12, N13), N14);
+			RangeTable[1].Efficiency = N11;
+			N10 = N11;
+			RangeTable[0].Efficiency = N10;
+
+			// Row 5 Efficiency
+			N15 = N13 > N14 ? 0 : Math.Max(Math.Max(N12, N13), N14);
+			RangeTable[5].Efficiency = N15;
+
+			// Row 6 - Efficiency
+			N16 = N15;
+			RangeTable[6].Efficiency = N16;
+
+			// RPM
+
+			// 2000 Row 2 - RPM
+			M12 = 2000;
+			RangeTable[2].RPM = M12;
+
+			// 4000 Row 3 - RPM
+			M13 = 4000;
+			RangeTable[3].RPM = M13;
+
+			// 6000 Row 4 - RPM
+			M14 = 6000;
+			RangeTable[4].RPM = M14;
+
+			// Row 1 - RPM
+			// NOTE: Update to reflect CombineALternatorSchematicV02 20150429
+			// IF(M12=IF(N12>N13,M12-((M12-M13)/(N12-N13))*(N12-N11),M12-((M12-M13)/(N12-N13))*(N12-N11)), M12-0.01, IF(N12>N13,M12-((M12-M13)/(N12-N13))*(N12-N11),M12-((M12-M13)/(N12-N13))*(N12-N11)))
+			M11 =
+				Convert.ToSingle(
+					N12 - N13 == 0
+						? 0
+						: (
+							M12 == (N12 > N13
+								? M12 - (M12 - M13) / (N12 - N13) * (N12 - N11)
+								: M12 - (M12 - M13) / (N12 - N13) * (N12 - N11))
+								? M12 - 0.01
+								: (N12 > N13
+									? M12 - (M12 - M13) / (N12 - N13) * (N12 - N11)
+									: M12 - (M12 - M13) / (N12 - N13) * (N12 - N11))));
+
+			RangeTable[1].RPM = M11;
+
+			// Row 0 - RPM
+			M10 = M11 < 1500 ? M11 - 1 : 1500;
+			RangeTable[0].RPM = M10;
+
+			// Row 5 - RPM
+			M15 =
+				Convert.ToSingle(
+					M14 == (N14 == 0 || N14 == N13
+						? M14 + 1
+						: (N13 > N14 ? (M14 - M13) / (N13 - N14) * N14 + M14 : (M14 - M13) / (N13 - N14) * (N14 - N15) + M14)
+					)
+						? M14 + 0.01
+						: (N14 == 0 || N14 == N13
+							? M14 + 1
+							: (N13 > N14 ? (M14 - M13) / (N13 - N14) * N14 + M14 : (M14 - M13) / (N13 - N14) * (N14 - N15) + M14)));
+
+			RangeTable[5].RPM = M15;
+
+			// Row 6 - RPM
+			M16 = M15 > 10000 ? M15 + 1 : 10000;
+			RangeTable[6].RPM = M16;
+		}
+
+		private void InitialiseRangeTable()
+		{
+			RangeTable[0].RPM = 0;
+			RangeTable[0].Efficiency = 0;
+			RangeTable[1].RPM = 0;
+			RangeTable[0].Efficiency = 0;
+			RangeTable[2].RPM = 2000;
+			RangeTable[0].Efficiency = 0;
+			RangeTable[3].RPM = 4000;
+			RangeTable[0].Efficiency = 0;
+			RangeTable[4].RPM = 6000;
+			RangeTable[0].Efficiency = 0;
+			RangeTable[5].RPM = 0;
+			RangeTable[0].Efficiency = 0;
+			RangeTable[6].RPM = 0;
+			RangeTable[0].Efficiency = 0;
+		}
+
+		private void CreateRangeTable()
+		{
+			RangeTable.Clear();
+
+			RangeTable.Add(new Table4Row(0, 0));
+			RangeTable.Add(new Table4Row(0, 0));
+			RangeTable.Add(new Table4Row(0, 0));
+			RangeTable.Add(new Table4Row(0, 0));
+			RangeTable.Add(new Table4Row(0, 0));
+			RangeTable.Add(new Table4Row(0, 0));
+			RangeTable.Add(new Table4Row(0, 0));
+		}
+
+		public void BuildInputTable(Dictionary<double, double> inputs, List<AltUserInput> targetTable)
+		{
+			double C11, C12, C13, C14, C15, D11, D12, D13, D14, D15;
+			targetTable.Clear();
+
+			// Row0
+			D14 = 0;
+			targetTable.Add(new AltUserInput(0, D14));
+
+			// Row1
+			targetTable.Add(new AltUserInput(inputs.OrderBy(x => x.Key).First().Key, inputs.OrderBy(x => x.Key).First().Value));
+
+			// Row2
+			targetTable.Add(
+				new AltUserInput(inputs.OrderBy(x => x.Key).Skip(1).First().Key, inputs.OrderBy(x => x.Key).Skip(1).First().Value));
+
+			// Row3
+			targetTable.Add(
+				new AltUserInput(inputs.OrderBy(x => x.Key).Skip(2).First().Key, inputs.OrderBy(x => x.Key).Skip(2).First().Value));
+
+			C11 = targetTable[1].Amps;
+			C12 = targetTable[2].Amps;
+			C13 = targetTable[3].Amps;
+
+			D11 = targetTable[1].Eff;
+			D12 = targetTable[2].Eff;
+			D13 = targetTable[3].Eff;
+
+			D14 = D12 > D13 ? 0 : Math.Max(Math.Max(D11, D12), D13);
+
+			// Row4  - Eff
+			targetTable.Add(new AltUserInput(0, D14));
+
+			// Row4  - Amps
+			// Should probably refactor this into some sort of helper/extension method
+			var numarray = new[] { D11, D12, D13 };
+			var maxD11_D13 = numarray.Max();
+
+			// =IF(OR(D13=0,D13=D12),C13+1,IF(D12>D13,((((C13-C12)/(D12-D13))*D13)+C13),((((C13-C12)/(D12-D13))*(D13-D14))+C13)))
+			C14 = (D13 == 0 || D13 == D12 || D13 == maxD11_D13)
+				? C13 + 1
+				: D12 > D13
+					? ((((C13 - C12) / (D12 - D13)) * D13) + C13)
+					: ((((C13 - C12) / (D12 - D13)) * (D13 - D14)) + C13);
+			targetTable[4].Amps = C14;
+
+			// Row5 
+			C15 = C14 > 200 ? C14 + 1 : 200;
+			D15 = D14;
+			targetTable.Add(new AltUserInput(C15, D15));
+
+			// Row0
+			targetTable[0].Eff = D11;
+		}
+
+		public bool IsEqualTo(IAlternator other)
+		{
+			if (AlternatorName != other.AlternatorName) {
+				return false;
+			}
+			if (PulleyRatio != other.PulleyRatio) {
+				return false;
+			}
+
+			for (var i = 1; i <= 3; i++) {
+				if (InputTable2000[i].Eff != other.InputTable2000[i].Eff)
+					return false;
+				if (InputTable4000[i].Eff != other.InputTable4000[i].Eff)
+					return false;
+				if (InputTable6000[i].Eff != other.InputTable6000[i].Eff)
+					return false;
+			}
+
+			return true;
+		}
+	}
+}
