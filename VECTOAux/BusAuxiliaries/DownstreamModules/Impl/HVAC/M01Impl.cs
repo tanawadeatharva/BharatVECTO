@@ -1,11 +1,11 @@
 ﻿using System;
+using DownstreamModules.Electrics;
+using Electrics;
+using Hvac;
 using TUGraz.VectoCommon.Utils;
-using VectoAuxiliaries;
-using VectoAuxiliaries.DownstreamModules.Electrics;
-using VectoAuxiliaries.Electrics;
-using VectoAuxiliaries.Hvac;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
 
-namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
 	public class M01Impl : AbstractModule, IM1_AverageHVACLoadDemand
 	{

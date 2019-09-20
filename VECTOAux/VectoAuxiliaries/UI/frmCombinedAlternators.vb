@@ -4,7 +4,7 @@ Imports System.Drawing
 Imports System.Windows.Forms
 Imports VectoAuxiliaries.Electrics
 Imports System.ComponentModel
-Imports VectoAuxiliaries.DownstreamModules.Electrics
+Imports DownstreamModules.Electrics
 
 
 Public Class frmCombinedAlternators

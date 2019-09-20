@@ -1,10 +1,13 @@
-﻿Imports VectoAuxiliaries.Electrics
+﻿Imports Electrics
+Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
-Imports VectoAuxiliaries.DownstreamModules.Electrics
+
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+
 
 Namespace UnitTests
 	<TestFixture()>

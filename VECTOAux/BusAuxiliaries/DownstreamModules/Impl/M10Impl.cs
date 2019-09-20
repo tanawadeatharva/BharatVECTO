@@ -1,8 +1,9 @@
 ﻿using System;
+using DownstreamModules;
+using Pneumatics;
 using TUGraz.VectoCommon.Utils;
-using VectoAuxiliaries;
-using VectoAuxiliaries.DownstreamModules;
-using VectoAuxiliaries.Pneumatics;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
+
 
 namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 {

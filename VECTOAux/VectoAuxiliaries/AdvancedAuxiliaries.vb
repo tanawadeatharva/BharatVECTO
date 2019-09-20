@@ -13,11 +13,18 @@ Imports System.Runtime.CompilerServices
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
 Imports System.Windows.Forms
+Imports DownstreamModules
+Imports DownstreamModules.Electrics
+Imports Electrics
+Imports Hvac
+Imports Pneumatics
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
-Imports VectoAuxiliaries.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 
 <Assembly: InternalsVisibleTo("VectoCore")>
 
@@ -200,7 +207,7 @@ Public Class AdvancedAuxiliaries
         Implements IAdvancedAuxiliaries.AuxiliaryEvent
 
     Public Function Configure(filePath As String, vectoFilePath As String) As Boolean _
-        Implements VectoAuxiliaries.IAdvancedAuxiliaries.Configure
+        Implements IAdvancedAuxiliaries.Configure
 
         Try
 
@@ -232,7 +239,7 @@ Public Class AdvancedAuxiliaries
     End Function
 
     Public Function CycleStep(seconds As Second, ByRef message As String) As Boolean _
-        Implements VectoAuxiliaries.IAdvancedAuxiliaries.CycleStep
+        Implements IAdvancedAuxiliaries.CycleStep
 
         Try
             M9.CycleStep(seconds)
@@ -249,14 +256,14 @@ Public Class AdvancedAuxiliaries
         Return True
     End Function
 
-    Public ReadOnly Property Running As Boolean Implements VectoAuxiliaries.IAdvancedAuxiliaries.Running
+    Public ReadOnly Property Running As Boolean Implements IAdvancedAuxiliaries.Running
         Get
             Throw New NotImplementedException
         End Get
     End Property
 
     Public Function RunStart(ByVal auxFilePath As String, ByVal vectoFilePath As String) As Boolean _
-        Implements VectoAuxiliaries.IAdvancedAuxiliaries.RunStart
+        Implements IAdvancedAuxiliaries.RunStart
 
         Try
 
@@ -271,7 +278,7 @@ Public Class AdvancedAuxiliaries
         Return True
     End Function
 
-    Public Function RunStop(ByRef message As String) As Boolean Implements VectoAuxiliaries.IAdvancedAuxiliaries.RunStop
+    Public Function RunStop(ByRef message As String) As Boolean Implements IAdvancedAuxiliaries.RunStop
         Throw New NotImplementedException
     End Function
 
@@ -283,7 +290,7 @@ Public Class AdvancedAuxiliaries
         Next
     End Sub
 
-    Public ReadOnly Property TotalFuelGRAMS As Kilogram Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelGRAMS
+    Public ReadOnly Property TotalFuelGRAMS As Kilogram Implements IAdvancedAuxiliaries.TotalFuelGRAMS
         Get
             If Not M13 Is Nothing Then
                 Return M14.TotalCycleFCGrams
@@ -293,7 +300,7 @@ Public Class AdvancedAuxiliaries
         End Get
     End Property
 
-    Public ReadOnly Property TotalFuelLITRES As Liter Implements VectoAuxiliaries.IAdvancedAuxiliaries.TotalFuelLITRES
+    Public ReadOnly Property TotalFuelLITRES As Liter Implements IAdvancedAuxiliaries.TotalFuelLITRES
         Get
             If Not M14 Is Nothing Then
                 Return M14.TotalCycleFCLitres
@@ -303,13 +310,13 @@ Public Class AdvancedAuxiliaries
         End Get
     End Property
 
-    Public ReadOnly Property AuxiliaryName As String Implements VectoAuxiliaries.IAdvancedAuxiliaries.AuxiliaryName
+    Public ReadOnly Property AuxiliaryName As String Implements IAdvancedAuxiliaries.AuxiliaryName
         Get
             Return "BusAuxiliaries"
         End Get
     End Property
 
-    Public ReadOnly Property AuxiliaryVersion As String Implements VectoAuxiliaries.IAdvancedAuxiliaries.AuxiliaryVersion
+    Public ReadOnly Property AuxiliaryVersion As String Implements IAdvancedAuxiliaries.AuxiliaryVersion
         Get
             Return "Version 1.0 Beta"
         End Get

@@ -1,7 +1,7 @@
 ﻿Imports System.Globalization
 Imports System.IO
+Imports DownstreamModules.HVAC
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.DownstreamModules.HVAC
 
 Namespace Hvac
 	'Used By SSMTOOL Class.

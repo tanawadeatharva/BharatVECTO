@@ -11,6 +11,7 @@
 
 Imports System.Globalization
 Imports System.IO
+Imports Pneumatics
 
 Namespace Pneumatics
 	Public Class PneumaticActuationsMAP

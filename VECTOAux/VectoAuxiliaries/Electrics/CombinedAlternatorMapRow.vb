@@ -1,4 +1,4 @@
-﻿Imports VectoAuxiliaries.DownstreamModules.Electrics
+﻿Imports DownstreamModules.Electrics
 
 Namespace Electrics
 	'This class is reflective of the stored entries for the combined alternator
@@ -8,10 +8,10 @@ Namespace Electrics
 		Implements ICombinedAlternatorMapRow
 
 		Public Property AlternatorName As String Implements ICombinedAlternatorMapRow.AlternatorName
-		Public Property RPM As Single Implements ICombinedAlternatorMapRow.RPM
-		Public Property Amps As Single Implements ICombinedAlternatorMapRow.Amps
-		Public Property Efficiency As Single Implements ICombinedAlternatorMapRow.Efficiency
-		Public Property PulleyRatio As Single Implements ICombinedAlternatorMapRow.PulleyRatio
+		Public Property RPM As Double Implements ICombinedAlternatorMapRow.RPM
+		Public Property Amps As Double Implements ICombinedAlternatorMapRow.Amps
+		Public Property Efficiency As Double Implements ICombinedAlternatorMapRow.Efficiency
+		Public Property PulleyRatio As Double Implements ICombinedAlternatorMapRow.PulleyRatio
 
 		'Constructors
 		Sub New()

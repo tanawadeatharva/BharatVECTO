@@ -1,10 +1,10 @@
 ﻿using System;
+using DownstreamModules.Electrics;
+using Electrics;
 using TUGraz.VectoCommon.Utils;
-using VectoAuxiliaries;
-using VectoAuxiliaries.DownstreamModules.Electrics;
-using VectoAuxiliaries.Electrics;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
 
-namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
 	public class M00Impl : AbstractModule, IM0_NonSmart_AlternatorsSetEfficiency
 	{

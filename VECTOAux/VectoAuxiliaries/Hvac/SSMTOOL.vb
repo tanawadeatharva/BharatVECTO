@@ -3,7 +3,7 @@ Imports Newtonsoft.Json
 Imports System.IO
 Imports System.Reflection
 Imports System.Text
-Imports VectoAuxiliaries.DownstreamModules.HVAC
+Imports DownstreamModules.HVAC
 
 Namespace Hvac
     'Used by frmHVACTool

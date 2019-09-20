@@ -1,5 +1,6 @@
 ﻿Option Strict On
-Imports VectoAuxiliaries.DownstreamModules.Electrics
+
+Imports DownstreamModules.Electrics
 
 Namespace Electrics
 
@@ -14,7 +15,7 @@ Namespace Electrics
         'D6
         Public Property AlternatorName As String Implements IAlternator.AlternatorName
         'G6
-        Public Property PulleyRatio As Single Implements IAlternator.PulleyRatio
+        Public Property PulleyRatio As Double Implements IAlternator.PulleyRatio
         'C10-D15
         Public Property InputTable2000 As New List(Of AltUserInput) Implements IAlternator.InputTable2000
         'F10-G15

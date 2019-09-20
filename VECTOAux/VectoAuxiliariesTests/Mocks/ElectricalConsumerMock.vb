@@ -1,7 +1,7 @@
-﻿Imports VectoAuxiliaries.Electrics
+﻿
 Imports System.ComponentModel
+Imports DownstreamModules.Electrics
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 Namespace Mocks
 	Public Class ElectricalConsumerMock

@@ -1,9 +1,10 @@
 ﻿using System;
+using DownstreamModules;
+using Hvac;
+using Pneumatics;
 using TUGraz.VectoCommon.Utils;
-using VectoAuxiliaries;
-using VectoAuxiliaries.DownstreamModules;
-using VectoAuxiliaries.Hvac;
-using VectoAuxiliaries.Pneumatics;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
+
 
 namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 {
@@ -49,7 +50,7 @@ namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 
 		#region Implementation of IAuxiliaryEvent
 
-		public event IAuxiliaryEvent.AuxiliaryEventEventHandler AuxiliaryEvent;
+		public event AuxiliaryEventEventHandler AuxiliaryEvent;
 
 		#endregion
 

@@ -1,9 +1,10 @@
-﻿using TUGraz.VectoCommon.Utils;
-using VectoAuxiliaries;
-using VectoAuxiliaries.DownstreamModules;
-using VectoAuxiliaries.Electrics;
-using VectoAuxiliaries.Hvac;
-using VectoAuxiliaries.Pneumatics;
+﻿using DownstreamModules;
+using Electrics;
+using Hvac;
+using Pneumatics;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
+
 
 namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 {

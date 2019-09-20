@@ -8,6 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports Pneumatics
 
 Namespace Pneumatics
 	Public Class PneumaticUserInputsConfig

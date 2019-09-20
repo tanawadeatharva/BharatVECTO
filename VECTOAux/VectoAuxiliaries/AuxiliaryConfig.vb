@@ -14,10 +14,13 @@ Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliaries.Hvac
 Imports System.IO
 Imports System.Windows.Forms
+Imports DownstreamModules.Electrics
+Imports DownstreamModules.HVAC
 Imports Newtonsoft.Json
+Imports Pneumatics
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.DownstreamModules.Electrics
-Imports VectoAuxiliaries.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 <Serializable()>
 Public Class AuxiliaryConfig

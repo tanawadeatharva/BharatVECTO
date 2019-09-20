@@ -1,4 +1,4 @@
-﻿Imports VectoAuxiliaries.DownstreamModules.HVAC
+﻿Imports DownstreamModules.HVAC
 
 Namespace Hvac
 	Public Class EnvironmentalCondition

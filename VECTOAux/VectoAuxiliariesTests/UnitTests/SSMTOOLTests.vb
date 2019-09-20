@@ -1,8 +1,5 @@
-﻿Imports NUnit.Framework
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliariesTests.Mocks
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.DownstreamModules.HVAC
+﻿Imports DownstreamModules.HVAC
+Imports NUnit.Framework
 Imports VectoAuxiliaries.Hvac
 
 Namespace UnitTests

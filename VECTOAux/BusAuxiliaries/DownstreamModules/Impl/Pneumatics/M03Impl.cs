@@ -1,8 +1,8 @@
-﻿using TUGraz.VectoCommon.Utils;
-using VectoAuxiliaries;
-using VectoAuxiliaries.Pneumatics;
+﻿using Pneumatics;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
 
-namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 {
 	public class M03Impl : AbstractModule, IM3_AveragePneumaticLoadDemand
 	{

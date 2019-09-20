@@ -1,9 +1,5 @@
-﻿Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
+﻿Imports Electrics
+Imports TUGraz.VectoCommon.Utils
 
 Public Class M2_Mock
 	Implements IM2_AverageElectricalLoadDemand

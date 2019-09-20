@@ -1,9 +1,9 @@
 ﻿using System;
+using DownstreamModules.Electrics;
+using Electrics;
 using TUGraz.VectoCommon.Utils;
-using VectoAuxiliaries.DownstreamModules.Electrics;
-using VectoAuxiliaries.Electrics;
 
-namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
 	public class M05Impl : AbstractModule, IM5_SmartAlternatorSetGeneration
 	{

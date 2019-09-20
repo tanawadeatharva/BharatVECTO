@@ -1,5 +1,5 @@
 ﻿Imports System.Text
-Imports VectoAuxiliaries.DownstreamModules.HVAC
+Imports DownstreamModules.HVAC
 
 Namespace Hvac
 

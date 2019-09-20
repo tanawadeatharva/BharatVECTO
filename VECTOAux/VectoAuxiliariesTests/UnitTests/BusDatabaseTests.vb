@@ -1,7 +1,4 @@
 ﻿Imports NUnit.Framework
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliariesTests.Mocks
-Imports VectoAuxiliaries
 Imports VectoAuxiliaries.Hvac
 
 

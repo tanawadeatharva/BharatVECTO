@@ -10,7 +10,7 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Imports System.IO
-Imports VectoAuxiliaries.DownstreamModules.HVAC
+Imports DownstreamModules.HVAC
 
 Namespace Hvac
 	Public Class HVACSteadyStateModel

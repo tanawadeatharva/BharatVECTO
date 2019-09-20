@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\STUDENTEN_PROJEKTE\Kober_VectoGIT\VECTO_GIT\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,6 +46,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DownstreamModules\Impl\AbstractModule.cs" />
+    <Compile Include="DownstreamModules\Impl\AlternatorMap.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\Alternator.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\ElectricsUserInputsConfig.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\ResultCard.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\ElectricalConsumer.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\ElectricalConsumerList.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\CombinedAlternatorSignals.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\CombinedAlternatorMapRow.cs" />
+    <Compile Include="DownstreamModules\Impl\Electrics\CombinedAlternator.cs" />
     <Compile Include="DownstreamModules\Impl\Electrics\M00Impl.cs" />
     <Compile Include="DownstreamModules\Impl\Electrics\M02Impl.cs" />
     <Compile Include="DownstreamModules\Impl\Pneumatics\M03Impl.cs" />
@@ -58,18 +71,71 @@
     <Compile Include="DownstreamModules\Impl\M07Impl.cs" />
     <Compile Include="DownstreamModules\Impl\M08Impl.cs" />
     <Compile Include="DownstreamModules\Impl\M09Impl.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\SmartResult.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\IResultCard.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\IElectricsUserInputsConfig.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\IElectricalConsumerList.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\IElectricalConsumer.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\ICombinedAlternatorSignals.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\ICombinedAlternatorMapRow.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\AlternatorMapValues.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\AltUserInput.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\ElectricConstants.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\IAlternator.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\IAlternatorMap.cs" />
+    <Compile Include="Interfaces\DownstreamModules\Electrics\ICombinedAlternator.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\Class1.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\ISSMTOOL.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\ISSMTechList.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\ISSMRun.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\ISSMGenInputs.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\ISSMCalculate.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\IHVACUserInputsConfig.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\IHVACSteadyStateModel.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\IHVACConstants.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\IEnvironmentalConditionsMap.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\IEnvironmentalCondition.cs" />
+    <Compile Include="Interfaces\DownstreamModules\HVAC\ITechListBenefitLine.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IAbstractModule.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM0_5_SmartAlternatorSetEfficiency.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM0_NonSmart_AlternatorsSetEfficiency.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM10.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM11.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM13.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM14.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM1_AverageHVACLoadDemand.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM2_AverageElectrialLoadDemand.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM3_AveragePneumaticLoadDemand.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM4_AirCompressor.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM5_SmartAlternatorSetGeneration.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM6.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM7.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM8.cs" />
+    <Compile Include="Interfaces\DownstreamModules\IM9.cs" />
+    <Compile Include="Interfaces\DownstreamModules\PneumaticSystem\ActuationsKey.cs" />
+    <Compile Include="Interfaces\DownstreamModules\PneumaticSystem\IPneumaticUserInputsConfig.cs" />
+    <Compile Include="Interfaces\DownstreamModules\PneumaticSystem\IPneumaticsAuxilliariesConfig.cs" />
+    <Compile Include="Interfaces\DownstreamModules\PneumaticSystem\IPneumaticActuationsMAP.cs" />
+    <Compile Include="Interfaces\DownstreamModules\PneumaticSystem\ICompressorMap.cs" />
+    <Compile Include="Interfaces\Enumerations.cs" />
+    <Compile Include="Interfaces\IAdvancedAuxiliaries.cs" />
+    <Compile Include="Interfaces\IAuxiliaryEvent.cs" />
+    <Compile Include="Interfaces\IFuelConsumptionMap.cs" />
+    <Compile Include="Interfaces\IM12.cs" />
+    <Compile Include="Interfaces\ISignals.cs" />
+    <Compile Include="Interfaces\IVectoInputs.cs" />
+    <Compile Include="Interfaces\Signals.cs" />
+    <Compile Include="Interfaces\VectoInputs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\FilePathUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\VectoCommon\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
-      <Project>{B4B9BD2F-FD8F-4BB8-82FA-E2154D2C7FBD}</Project>
-      <Name>AdvancedAuxiliaryInterfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
       <Project>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</Project>
       <Name>VectoCommon</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

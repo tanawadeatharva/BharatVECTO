@@ -9,7 +9,9 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
-Imports VectoAuxiliaries.DownstreamModules.Electrics
+Imports DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 Namespace Electrics
     Public Class ElectricsUserInputsConfig
@@ -23,7 +25,7 @@ Namespace Electrics
             Implements IElectricsUserInputsConfig.ElectricalConsumers
 
         Public Property DoorActuationTimeSecond As Integer Implements IElectricsUserInputsConfig.DoorActuationTimeSecond
-        Public Property StoredEnergyEfficiency As Single Implements IElectricsUserInputsConfig.StoredEnergyEfficiency
+        Public Property StoredEnergyEfficiency As Double Implements IElectricsUserInputsConfig.StoredEnergyEfficiency
 
         Public Property ResultCardIdle As IResultCard Implements IElectricsUserInputsConfig.ResultCardIdle
         Public Property ResultCardTraction As IResultCard Implements IElectricsUserInputsConfig.ResultCardTraction

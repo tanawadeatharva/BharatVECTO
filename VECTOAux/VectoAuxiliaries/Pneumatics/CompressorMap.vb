@@ -11,7 +11,9 @@
 
 Imports System.Globalization
 Imports System.IO
+Imports Pneumatics
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 
 Namespace Pneumatics
 	''' <summary>

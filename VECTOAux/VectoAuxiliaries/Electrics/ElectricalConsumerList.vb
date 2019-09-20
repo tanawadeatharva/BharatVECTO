@@ -10,8 +10,8 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 
+Imports DownstreamModules.Electrics
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 Namespace Electrics
     Public Class ElectricalConsumerList

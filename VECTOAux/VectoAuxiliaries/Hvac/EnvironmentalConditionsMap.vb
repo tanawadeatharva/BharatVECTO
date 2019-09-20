@@ -1,6 +1,6 @@
 ﻿Imports System.Globalization
 Imports System.IO
-Imports VectoAuxiliaries.DownstreamModules.HVAC
+Imports DownstreamModules.HVAC
 
 Namespace Hvac
 	Public Class EnvironmentalConditionsMap

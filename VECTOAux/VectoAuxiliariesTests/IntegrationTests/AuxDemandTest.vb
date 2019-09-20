@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports VectoAuxiliaries
 
 Namespace IntegrationTests

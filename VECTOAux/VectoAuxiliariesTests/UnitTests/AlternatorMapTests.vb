@@ -1,8 +1,7 @@
-﻿Imports VectoAuxiliaries.Electrics
+﻿Imports DownstreamModules.Electrics
+Imports VectoAuxiliaries.Electrics
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 
 Namespace UnitTests

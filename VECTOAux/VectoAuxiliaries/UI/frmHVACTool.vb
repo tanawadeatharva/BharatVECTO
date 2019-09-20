@@ -3,7 +3,7 @@ Imports VectoAuxiliaries.Hvac
 Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Globalization
-Imports VectoAuxiliaries.DownstreamModules.HVAC
+Imports DownstreamModules.HVAC
 
 Public Class frmHVACTool
 	'Fields

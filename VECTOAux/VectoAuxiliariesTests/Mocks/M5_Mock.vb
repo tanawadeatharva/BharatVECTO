@@ -1,9 +1,5 @@
-﻿Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
+﻿Imports Electrics
+Imports TUGraz.VectoCommon.Utils
 
 Public Class M5_Mock
 	Implements IM5_SmartAlternatorSetGeneration

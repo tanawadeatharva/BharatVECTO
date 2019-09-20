@@ -1,6 +1,6 @@
 ﻿
+Imports DownstreamModules.Electrics
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.DownstreamModules.Electrics
 
 Namespace Electrics
 	'Used by the CombinedAlternator class and any other related classes.

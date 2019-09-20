@@ -2,8 +2,10 @@
 Imports System.Text
 Imports System.IO
 Imports System.Globalization
+Imports DownstreamModules.Electrics
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 
 Namespace Electrics
@@ -53,7 +55,7 @@ Namespace Electrics
             For Each alt As IEnumerable(Of ICombinedAlternatorMapRow) In map.GroupBy(Function(g) g.AlternatorName)
 
                 Dim altName As String = alt.First().AlternatorName
-                Dim pulleyRatio As Single = alt.First().PulleyRatio
+                Dim pulleyRatio As Double = alt.First().PulleyRatio
 
 
                 Dim alternator As IAlternator = New Alternator(altSignals, alt.ToList())
@@ -150,7 +152,7 @@ Namespace Electrics
             Dim returnValue As Boolean = True
 
             Dim altName As String = list.First().AlternatorName
-            Dim pulleyRatio As Single = list.First().PulleyRatio
+            Dim pulleyRatio As Double = list.First().PulleyRatio
 
             'Check alt does not already exist in list
             If Alternators.Where(Function(w) w.AlternatorName = altName).Count > 0 Then

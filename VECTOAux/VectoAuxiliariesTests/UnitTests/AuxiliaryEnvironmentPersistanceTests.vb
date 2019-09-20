@@ -1,10 +1,6 @@
-﻿Imports System.Text
+﻿
 Imports NUnit.Framework
-Imports NUnit
 Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
 
 Namespace UnitTests
 

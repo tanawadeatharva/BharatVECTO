@@ -3,11 +3,9 @@
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliariesTests.Mocks
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Hvac
 Imports System.IO
-Imports VectoAuxiliaries.DownstreamModules.Electrics
+Imports DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 Namespace UnitTests
 

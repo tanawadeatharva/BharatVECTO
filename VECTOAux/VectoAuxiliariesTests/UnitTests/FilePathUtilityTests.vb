@@ -1,11 +1,7 @@
 ﻿
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
+
 Imports NUnit.Framework
 Imports VectoAuxiliaries
-Imports Moq
 
 Namespace UnitTests
 

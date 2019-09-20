@@ -1,7 +1,8 @@
-﻿Imports NUnit
+﻿
 Imports VectoAuxiliaries.Pneumatics
 Imports NUnit.Framework
 Imports System.IO
+Imports Pneumatics
 
 Namespace Pneumatics
 

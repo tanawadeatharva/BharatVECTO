@@ -1,8 +1,8 @@
 ﻿Imports System.Collections.Generic
-Imports VectoAuxiliaries
 Imports System.IO
 Imports System.Linq
 Imports System.Runtime.Remoting
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 
 Module AdvancedAuxiliariesModule
 	Public WithEvents AdvancedAuxModel As IAdvancedAuxiliaries

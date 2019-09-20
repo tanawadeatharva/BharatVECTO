@@ -1,10 +1,6 @@
 ﻿
+Imports DownstreamModules
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
 
 
 Public Class M7_Mock
@@ -59,7 +55,7 @@ Public Class M7_Mock
 		_SmartPneumaticOnlyAuxAirCompPowerGenAtCrank = SmartPneumaticOnlyAuxAirCompPowerGenAtCrank
 	End Sub
 
-    Public Sub ResetCalculations() Implements IAbstractModule.ResetCalculations
-        Throw New NotImplementedException
-    End Sub
+	Public Sub ResetCalculations() Implements IAbstractModule.ResetCalculations
+		Throw New NotImplementedException
+	End Sub
 End Class

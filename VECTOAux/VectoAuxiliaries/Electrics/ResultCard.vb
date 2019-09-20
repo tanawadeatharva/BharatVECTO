@@ -9,8 +9,9 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
+Imports DownstreamModules.Electrics
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 Namespace Electrics
     Public Class ResultCard

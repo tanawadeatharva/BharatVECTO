@@ -1,10 +1,6 @@
 ﻿
+Imports DownstreamModules
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
 
 
 Public Class M6_Mock

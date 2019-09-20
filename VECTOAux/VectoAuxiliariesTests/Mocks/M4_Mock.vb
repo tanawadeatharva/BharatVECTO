@@ -1,9 +1,5 @@
-﻿Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
+﻿Imports Pneumatics
+Imports TUGraz.VectoCommon.Utils
 
 Public Class M4_Mock
 	Implements IM4_AirCompressor

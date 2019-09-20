@@ -1,14 +1,13 @@
 ﻿Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliariesTests.Mocks
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Hvac
 Imports System.IO
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
-Imports VectoAuxiliaries.DownstreamModules.Electrics
-Imports VectoAuxiliaries.DownstreamModules.HVAC
+Imports DownstreamModules.Electrics
+Imports DownstreamModules.HVAC
+Imports Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports Signals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.Signals
 
 Namespace UnitTests
     <TestFixture()>

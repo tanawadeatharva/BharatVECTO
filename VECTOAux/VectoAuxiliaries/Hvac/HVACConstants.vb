@@ -8,9 +8,9 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+Imports DownstreamModules.HVAC
 Imports Newtonsoft.Json
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.DownstreamModules.HVAC
 
 Namespace Hvac
 	Public Class HVACConstants

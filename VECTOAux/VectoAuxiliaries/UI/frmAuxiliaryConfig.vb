@@ -16,8 +16,9 @@ Imports System.Windows.Forms
 Imports System.Drawing
 Imports VectoAuxiliaries.Hvac
 Imports System.IO
-Imports VectoAuxiliaries.DownstreamModules.Electrics
-Imports VectoAuxiliaries.DownstreamModules.HVAC
+Imports DownstreamModules.Electrics
+Imports DownstreamModules.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 
 Public Class frmAuxiliaryConfig

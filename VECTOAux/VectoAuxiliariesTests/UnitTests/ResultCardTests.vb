@@ -1,6 +1,6 @@
 ﻿Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports VectoAuxiliaries.Electrics
 
 <TestFixture()>
