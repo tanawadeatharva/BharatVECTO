@@ -366,9 +366,9 @@ Public Class JSONFileWriter
 			body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value())
 			body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactor)
 
-			body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed)
-			body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay)
-			body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold)
+			body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed.AsKmph)
+			body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay.Value())
+			body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold.AsKmph)
 
 		End If
 		'body.Add("StartStop", New Dictionary(Of String, Object) From {
