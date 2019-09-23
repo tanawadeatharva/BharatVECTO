@@ -1,6 +1,7 @@
-﻿using Pneumatics;
-using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem;
 
 namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 {

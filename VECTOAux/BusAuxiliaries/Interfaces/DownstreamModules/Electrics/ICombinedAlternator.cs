@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DownstreamModules.Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
 	public interface ICombinedAlternator
 	{

@@ -11,7 +11,7 @@
 
 using TUGraz.VectoCommon.Utils;
 
-namespace Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 {
 	public interface IM0_NonSmart_AlternatorsSetEfficiency : IAbstractModule
 	{

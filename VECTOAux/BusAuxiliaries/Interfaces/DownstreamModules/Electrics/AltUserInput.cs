@@ -1,7 +1,6 @@
 ﻿using System;
 
-
-namespace DownstreamModules.Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
 	// Used by the Combined Alternator Form/Classes to accept user input for the combined alternators efficiency
 	// At different Current Demands

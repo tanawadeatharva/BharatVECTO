@@ -1,4 +1,4 @@
-﻿namespace DownstreamModules.Electrics
+﻿namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
 	public class ElectricConstants
 	{

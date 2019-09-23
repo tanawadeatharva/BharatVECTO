@@ -10,9 +10,7 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 
-using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
-
-namespace DownstreamModules.Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
 	public interface IElectricsUserInputsConfig
 	{

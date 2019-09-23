@@ -11,8 +11,7 @@
 
 using TUGraz.VectoCommon.Utils;
 
-
-namespace DownstreamModules
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 {
 	public interface IM11 : IAbstractModule
 	{

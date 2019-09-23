@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DownstreamModules.HVAC
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 {
 	public interface IEnvironmentalCondition
 	{

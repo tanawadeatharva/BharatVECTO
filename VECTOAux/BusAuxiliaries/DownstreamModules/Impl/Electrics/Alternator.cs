@@ -1,18 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
-using DownstreamModules.Electrics;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
-namespace Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
 	// Model based on CombinedALTS_V02_Editable.xlsx
 	public class Alternator : IAlternator

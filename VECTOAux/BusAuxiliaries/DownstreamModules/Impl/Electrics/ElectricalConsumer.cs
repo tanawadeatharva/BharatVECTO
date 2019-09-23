@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
 using System.ComponentModel;
-using DownstreamModules.Electrics;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
 // Copyright 2017 European Union.
 // Licensed under the EUPL (the 'Licence');
@@ -25,7 +14,7 @@ using TUGraz.VectoCommon.Utils;
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
-namespace Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
 	/// <summary>
 	/// 	''' Described a consumer of Alternator electrical power
@@ -186,7 +175,7 @@ namespace Electrics
 			if (obj == null || GetType() != obj.GetType())
 				return false;
 
-			IElectricalConsumer other = (IElectricalConsumer)obj;
+			var other = (IElectricalConsumer)obj;
 
 
 			return this.ConsumerName == other.ConsumerName;

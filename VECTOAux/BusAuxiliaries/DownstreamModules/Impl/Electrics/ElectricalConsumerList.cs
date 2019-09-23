@@ -12,20 +12,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
-using DownstreamModules.Electrics;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
-namespace Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
 	public class ElectricalConsumerList : IElectricalConsumerList
 	{
@@ -53,9 +44,9 @@ namespace Electrics
 			if (_items.Count != GetDefaultConsumerList().Count)
 				return;
 
-			List<IElectricalConsumer> dflt = GetDefaultConsumerList();
+			var dflt = GetDefaultConsumerList();
 
-			for (int idx = 0; idx <= _items.Count - 1; idx++)
+			for (var idx = 0; idx <= _items.Count - 1; idx++)
 
 				_items[idx].Info = dflt[idx].Info;
 		}
@@ -68,7 +59,7 @@ namespace Electrics
 			// Vehicle Basic Equipment' category can be added or remove by customers.
 			// At some time in the future, this may be removed and replace with file based consumer lists.
 
-			List<IElectricalConsumer> items = new List<IElectricalConsumer>();
+			var items = new List<IElectricalConsumer>();
 
 			IElectricalConsumer c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15, c16, c17, c18, c19, c20;
 

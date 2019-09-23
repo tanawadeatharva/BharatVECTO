@@ -10,10 +10,8 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
-using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
-namespace DownstreamModules.Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
 	public interface IAlternatorMap : IAuxiliaryEvent
 	{

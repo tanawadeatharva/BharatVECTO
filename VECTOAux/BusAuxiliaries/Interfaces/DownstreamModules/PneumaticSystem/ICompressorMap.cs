@@ -10,9 +10,8 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
 
-namespace Pneumatics
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 {
 	public interface ICompressorMap : IAuxiliaryEvent
 	{

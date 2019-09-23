@@ -8,11 +8,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
+
 using System;
 using System.ComponentModel;
 using TUGraz.VectoCommon.Utils;
 
-namespace DownstreamModules.Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
 	public interface IElectricalConsumer : INotifyPropertyChanged
 	{

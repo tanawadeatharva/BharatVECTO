@@ -10,10 +10,8 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
 
-
-namespace DownstreamModules
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 {
 	public interface IM9 : IAuxiliaryEvent, IAbstractModule
 	{

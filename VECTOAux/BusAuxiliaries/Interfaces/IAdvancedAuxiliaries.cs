@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces {
 		/// <param name="vectoFilePath"></param>
 		/// <returns></returns>
 		/// <remarks></remarks>
-		bool Configure(string filePath, string vectoFilePath);
+		//bool Configure(string filePath, string vectoFilePath);
 
 		/// <summary>
 		/// Validate AAUX file path supplied.

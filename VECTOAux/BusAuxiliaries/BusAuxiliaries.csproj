@@ -31,12 +31,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\STUDENTEN_PROJEKTE\Kober_VectoGIT\VECTO_GIT\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=3.1.1.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ValueInjecter.3.1.1.5\lib\net40\Omu.ValueInjecter.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,6 +52,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuxiliaryConfig.cs" />
+    <Compile Include="AdvancedAuxiliaries.cs" />
+    <Compile Include="IAuxiliaryConfig.cs" />
     <Compile Include="DownstreamModules\Impl\AbstractModule.cs" />
     <Compile Include="DownstreamModules\Impl\AlternatorMap.cs" />
     <Compile Include="DownstreamModules\Impl\Electrics\Alternator.cs" />
@@ -57,6 +67,28 @@
     <Compile Include="DownstreamModules\Impl\Electrics\CombinedAlternator.cs" />
     <Compile Include="DownstreamModules\Impl\Electrics\M00Impl.cs" />
     <Compile Include="DownstreamModules\Impl\Electrics\M02Impl.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\Bus.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\BusDatabase.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\BusEngineType.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\SSMTOOL.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\SSMTechList.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\SSMRun.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\SSMGenInputs.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\SSMCalculate.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\HVACUserInputsConfig.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\HVACSteadyStateModel.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\HVACConstants.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\EnvironmentalConditionsMap.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\EnvironmentalCondition.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\DeleteCell.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\DeleteColumn.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\IBusDatabase.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\IBus.cs" />
+    <Compile Include="DownstreamModules\Impl\HVAC\TechListBenefitLine.cs" />
+    <Compile Include="DownstreamModules\Impl\Pneumatics\PneumaticUserInputsConfig.cs" />
+    <Compile Include="DownstreamModules\Impl\Pneumatics\PneumaticsAuxilliariesConfig.cs" />
+    <Compile Include="DownstreamModules\Impl\Pneumatics\PneumaticActuationsMap.cs" />
+    <Compile Include="DownstreamModules\Impl\Pneumatics\CompressorMap.cs" />
     <Compile Include="DownstreamModules\Impl\Pneumatics\M03Impl.cs" />
     <Compile Include="DownstreamModules\Impl\Pneumatics\M04Impl.cs" />
     <Compile Include="DownstreamModules\Impl\Electrics\M05Impl.cs" />
@@ -126,6 +158,9 @@
     <Compile Include="Interfaces\IVectoInputs.cs" />
     <Compile Include="Interfaces\Signals.cs" />
     <Compile Include="Interfaces\VectoInputs.cs" />
+    <Compile Include="Legacy\cDelaunayMap.cs" />
+    <Compile Include="Legacy\cFile_V3.cs" />
+    <Compile Include="Legacy\Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\FilePathUtils.cs" />
   </ItemGroup>
@@ -135,7 +170,44 @@
       <Name>VectoCommon</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\application-export-icon-small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Delete.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Delete1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Blank.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\desktop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\favorites.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\file-history.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Image1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Info.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\new_dir.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Open-icon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

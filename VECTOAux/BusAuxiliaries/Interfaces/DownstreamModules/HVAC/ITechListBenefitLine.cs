@@ -1,4 +1,4 @@
-﻿namespace DownstreamModules.HVAC {
+﻿namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC {
 	public interface ITechListBenefitLine
 	{
 		string Units { get; set; }

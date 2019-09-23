@@ -1,8 +1,8 @@
 ﻿using System;
-using DownstreamModules.Electrics;
-using Electrics;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
 namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {

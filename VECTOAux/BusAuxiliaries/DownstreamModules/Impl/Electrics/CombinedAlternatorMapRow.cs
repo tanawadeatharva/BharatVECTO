@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
-using DownstreamModules.Electrics;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
-namespace Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
 	// This class is reflective of the stored entries for the combined alternator
 	// And is used by the Combined Alternator Form and any related classes.

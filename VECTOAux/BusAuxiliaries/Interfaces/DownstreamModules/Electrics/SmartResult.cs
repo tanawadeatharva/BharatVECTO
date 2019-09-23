@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 		// Comparison Overrides
 		public override bool Equals(object obj)
 		{
-			SmartResult other = (SmartResult)obj;
+			var other = (SmartResult)obj;
 
 			return Amps == other.Amps;
 		}

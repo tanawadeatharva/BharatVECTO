@@ -1,4 +1,4 @@
-﻿namespace DownstreamModules.Electrics
+﻿namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
 	// Reflects stored data in pesisted CombinedAlternator Map .AALT
 	public interface ICombinedAlternatorMapRow

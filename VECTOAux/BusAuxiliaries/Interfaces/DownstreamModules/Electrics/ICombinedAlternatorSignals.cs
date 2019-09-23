@@ -1,6 +1,6 @@
 ﻿using TUGraz.VectoCommon.Utils;
 
-namespace DownstreamModules.Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
 	// Used by CombinedAlternator
 	public interface ICombinedAlternatorSignals

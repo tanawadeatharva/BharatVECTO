@@ -1,6 +1,6 @@
 ﻿using TUGraz.VectoCommon.Utils;
 
-namespace DownstreamModules.HVAC
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 {
 	public interface IHVACConstants
 	{

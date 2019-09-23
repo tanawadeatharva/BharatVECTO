@@ -1,4 +1,4 @@
-﻿namespace DownstreamModules.HVAC
+﻿namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 {
 	public interface ISSMGenInputs
 	{

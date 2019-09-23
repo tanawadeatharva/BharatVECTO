@@ -11,21 +11,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
-using DownstreamModules.Electrics;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
-namespace Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
 	public class ResultCard : IResultCard
 	{
@@ -77,7 +67,7 @@ namespace Electrics
 			maxKey = _results.Max().Amps;
 			minKey = _results.Min().Amps;
 
-			SmartResult compareKey = new SmartResult(amps, 0);
+			var compareKey = new SmartResult(amps, 0);
 
 			// Is on boundary check
 			if (_results.Contains(compareKey))

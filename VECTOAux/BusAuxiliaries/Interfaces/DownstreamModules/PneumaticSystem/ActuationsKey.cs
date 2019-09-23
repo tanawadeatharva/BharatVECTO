@@ -11,7 +11,7 @@
 
 using System;
 
-namespace Pneumatics
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 {
 	public class ActuationsKey
 	{
@@ -46,7 +46,7 @@ namespace Pneumatics
 		// Overrides to enable this class to be used as a dictionary key in the ActuationsMap.
 		public override bool Equals(object obj)
 		{
-			ActuationsKey other = (ActuationsKey)obj;
+			var other = (ActuationsKey)obj;
 
 			return other.ConsumerName == this.ConsumerName && other.CycleName == this.CycleName;
 		}

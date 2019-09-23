@@ -1,22 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
-using DownstreamModules.Electrics;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+using TUGraz.VectoCore.BusAuxiliaries.Util;
 
-
-namespace Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
 	public class CombinedAlternator : IAlternatorMap, ICombinedAlternator
 	{
@@ -74,7 +67,7 @@ namespace Electrics
 		// Constructors
 		public CombinedAlternator(string filePath, ISignals signals = null/* TODO Change to default(_) if this is not a reference type */)
 		{
-			string feedback = string.Empty;
+			var feedback = string.Empty;
 			this.Signals = signals;
 
 			if (!FilePathUtils.ValidateFilePath(filePath, ".aalt", ref feedback))
@@ -99,7 +92,7 @@ namespace Electrics
 			// Calculate alternators average which is used only in the pre-run
 			var efficiencySum = 0.0;
 			
-			foreach (IAlternator alt in Alternators) {
+			foreach (var alt in Alternators) {
 				efficiencySum += alt.InputTable2000.ElementAt(1).Eff;
 				efficiencySum += alt.InputTable2000.ElementAt(2).Eff;
 				efficiencySum += alt.InputTable2000.ElementAt(3).Eff;
@@ -202,8 +195,8 @@ namespace Electrics
 				return false;
 			}
 
-			IAlternator altToRemove = Alternators.First(w => w.AlternatorName == alternatorName);
-			int numAlternators = Alternators.Count;
+			var altToRemove = Alternators.First(w => w.AlternatorName == alternatorName);
+			var numAlternators = Alternators.Count;
 
 			Alternators.Remove(altToRemove);
 
@@ -224,7 +217,7 @@ namespace Electrics
 			sb.AppendLine("[AlternatorName],[RPM],[Amps],[Efficiency],[PulleyRatio]");
 
 			// write details
-			foreach (IAlternator alt in Alternators.OrderBy(o => o.AlternatorName)) {
+			foreach (var alt in Alternators.OrderBy(o => o.AlternatorName)) {
 				// 2000 - IE Alt1,2000,10,50,3
 				for (var row = 1; row <= 3; row++) {
 					var amps = alt.InputTable2000[row].Amps;
@@ -255,7 +248,7 @@ namespace Electrics
 			sb.Append(ToString());
 
 			// Write the stream cotnents to a new file named "AllTxtFiles.txt" 
-			using (StreamWriter outfile = new StreamWriter(aaltPath)) {
+			using (var outfile = new StreamWriter(aaltPath)) {
 				outfile.Write(sb.ToString());
 			}
 
@@ -274,13 +267,13 @@ namespace Electrics
 		// Initialises the map, only valid when loadingUI for first time in edit mode or always in operational mode.
 		private bool InitialiseMap(string filePath)
 		{
-			bool returnValue = false;
+			var returnValue = false;
 			string[] elements;
 
 			if (File.Exists(filePath)) {
-				using (StreamReader sr = new StreamReader(filePath)) {
+				using (var sr = new StreamReader(filePath)) {
 					// get array og lines fron csv
-					string[] lines = sr.ReadToEnd().Split(new[] { Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
+					var lines = sr.ReadToEnd().Split(new[] { Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
 
 					// Must have at least 2 entries in map to make it usable [dont forget the header row]
 					if ((lines.Count() < 10))
@@ -288,9 +281,9 @@ namespace Electrics
 
 					map = new List<ICombinedAlternatorMapRow>();
 
-					bool firstline = true;
+					var firstline = true;
 
-					foreach (string line in lines) {
+					foreach (var line in lines) {
 						if (!firstline) {
 
 							// Advanced Alternator Source Check.
@@ -326,7 +319,7 @@ namespace Electrics
 		// Basically it is a check against the model/Spreadsheet
 		public override string ToString()
 		{
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 			string a1, a2, a3, e1, e2, e3;
 
 			const string vbTab = "\t";
@@ -337,7 +330,7 @@ namespace Electrics
 				sb.AppendLine("******************************************************************");
 				sb.AppendLine("");
 
-				int i = 1;
+				var i = 1;
 				sb.AppendLine("Table 1 (2000)" + vbTab + "Table 2 (4000)" + vbTab + "Table 3 (6000)");
 				sb.AppendLine("Amps" + vbTab + "Eff" + vbTab + "Amps" + vbTab + "Eff" + vbTab + "Amps" + vbTab + "Eff" + vbTab);
 				sb.AppendLine("");
@@ -384,7 +377,7 @@ namespace Electrics
 			if (this.Alternators.Count != other.Alternators.Count)
 				return false;
 
-			foreach (IAlternator alt in this.Alternators) {
+			foreach (var alt in this.Alternators) {
 
 				// Can we find the same alternatorName in other
 				if (other.Alternators.Where(f => f.AlternatorName == alt.AlternatorName).Count() != 1)

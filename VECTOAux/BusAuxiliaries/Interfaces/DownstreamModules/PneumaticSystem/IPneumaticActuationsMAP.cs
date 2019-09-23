@@ -10,7 +10,7 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 
-namespace Pneumatics
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 {
 	public interface IPneumaticActuationsMAP
 	{

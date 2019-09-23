@@ -1,4 +1,6 @@
-﻿public interface IAbstractModule
-{
-	void ResetCalculations();
+﻿namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules {
+	public interface IAbstractModule
+	{
+		void ResetCalculations();
+	}
 }

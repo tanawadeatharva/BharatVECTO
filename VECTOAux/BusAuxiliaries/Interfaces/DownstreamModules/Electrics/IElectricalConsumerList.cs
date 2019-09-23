@@ -12,7 +12,7 @@
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Utils;
 
-namespace DownstreamModules.Electrics
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
 	public interface IElectricalConsumerList
 	{

@@ -10,6 +10,7 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules;
 
 namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces
 {
