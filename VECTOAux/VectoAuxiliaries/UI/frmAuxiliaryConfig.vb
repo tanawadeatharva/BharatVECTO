@@ -16,9 +16,13 @@ Imports System.Windows.Forms
 Imports System.Drawing
 Imports VectoAuxiliaries.Hvac
 Imports System.IO
-Imports DownstreamModules.Electrics
-Imports DownstreamModules.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Util
 
 
 Public Class frmAuxiliaryConfig
@@ -1230,7 +1234,7 @@ Public Class frmAuxiliaryConfig
 
     Private Function GetSSMMAP(ByVal filePath As String, ByRef message As String) As IHVACSteadyStateModel
 
-        Dim ssmMap As New Hvac.HVACSteadyStateModel()
+        Dim ssmMap As New HVACSteadyStateModel()
 
 
         Try

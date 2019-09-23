@@ -4,7 +4,9 @@ Imports System.Drawing
 Imports System.Windows.Forms
 Imports VectoAuxiliaries.Electrics
 Imports System.ComponentModel
-Imports DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 
 Public Class frmCombinedAlternators

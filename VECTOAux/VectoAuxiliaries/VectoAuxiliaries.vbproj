@@ -90,41 +90,9 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdvancedAuxiliaries.vb" />
     <Compile Include="AuxiliaryConfig.vb" />
-    <Compile Include="DownstreamModules\cDelaunayMap.vb" />
-    <Compile Include="DownstreamModules\cFile V3.vb" />
-    <Compile Include="DownstreamModules\cMAP.vb" />
-    <Compile Include="Electrics\Alternator.vb" />
-    <Compile Include="Electrics\AlternatorMap.vb" />
-    <Compile Include="Electrics\CombinedAlternator.vb" />
-    <Compile Include="Electrics\CombinedAlternatorMapRow.vb" />
-    <Compile Include="Electrics\CombinedAlternatorSignals.vb" />
-    <Compile Include="Electrics\ElectricsUserInputsConfig.vb" />
-    <Compile Include="Electrics\ElectricalConsumerList.vb" />
-    <Compile Include="Electrics\ResultCard.vb" />
     <Compile Include="FilePathUtils.vb" />
-    <Compile Include="Hvac\Bus.vb" />
-    <Compile Include="Hvac\BusDatabase.vb" />
-    <Compile Include="Hvac\BusEngineType.vb" />
-    <Compile Include="Hvac\DeleteCell.vb" />
-    <Compile Include="Hvac\DeleteColumn.vb" />
-    <Compile Include="Hvac\EnvironmentalCondition.vb" />
-    <Compile Include="Hvac\EnvironmentalConditionsMap.vb" />
-    <Compile Include="Hvac\HVACConstants.vb" />
-    <Compile Include="Hvac\HVACSteadyStateModel.vb" />
-    <Compile Include="Hvac\HVACUserInputsConfig.vb" />
-    <Compile Include="Hvac\IBus.vb" />
-    <Compile Include="Hvac\IBusDatabase.vb" />
-    <Compile Include="Hvac\SSMCalculate.vb" />
-    <Compile Include="Hvac\SSMGenInputs.vb" />
-    <Compile Include="Hvac\SSMRun.vb" />
-    <Compile Include="Hvac\SSMTechList.vb" />
-    <Compile Include="Hvac\SSMTOOL.vb" />
-    <Compile Include="Hvac\TechListBenefitLine.vb" />
     <Compile Include="IAuxiliaryConfig.vb" />
-    <Compile Include="Pneumatics\CompressorMap.vb" />
-    <Compile Include="Electrics\ElectricalConsumer.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -140,9 +108,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Pneumatics\PneumaticActuationsMap.vb" />
-    <Compile Include="Pneumatics\PneumaticsAuxilliariesConfig.vb" />
-    <Compile Include="Pneumatics\PneumaticUserInputsConfig.vb" />
     <Compile Include="UI\cFileBrowser.vb" />
     <Compile Include="UI\FB_Dialog.designer.vb">
       <DependentUpon>FB_Dialog.vb</DependentUpon>
@@ -217,6 +182,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="3rdPartyLibraries\" />
+    <Folder Include="DownstreamModules\" />
+    <Folder Include="Electrics\" />
+    <Folder Include="Hvac\" />
+    <Folder Include="Pneumatics\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\application-export-icon-small.png" />
