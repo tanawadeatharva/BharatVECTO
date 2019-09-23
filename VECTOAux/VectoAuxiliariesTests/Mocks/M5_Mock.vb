@@ -1,5 +1,6 @@
-﻿Imports Electrics
+﻿
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 
 Public Class M5_Mock
 	Implements IM5_SmartAlternatorSetGeneration

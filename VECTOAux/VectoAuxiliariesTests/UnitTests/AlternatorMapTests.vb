@@ -1,7 +1,9 @@
-﻿Imports DownstreamModules.Electrics
+﻿Imports System.IO
 Imports VectoAuxiliaries.Electrics
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 
 Namespace UnitTests
@@ -16,6 +18,11 @@ Namespace UnitTests
 		Private Const _GOODCOMBINEDMAP As String = "TestFiles\testAlternatorMapCombined.aalt"
 		Private Const _ASYMETRICALCOMBINEDROWSMAP As String = "TestFiles\testAlternatorMapAsymetricalRowsCombined.aalt"
 		Private Const _ASYMETRICALCOMBINEDXYPAIRSMAP As String = "TestFiles\testAlternatorMapAsymetricalXYPairsCombined.aalt"
+
+        <OneTimeSetUp>
+        Sub RunBeforeAnyTests()    
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+        end Sub
 
 
 		<Test()>

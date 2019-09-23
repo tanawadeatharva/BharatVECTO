@@ -4,7 +4,7 @@ Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
 Imports System.IO
-Imports DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 Namespace UnitTests

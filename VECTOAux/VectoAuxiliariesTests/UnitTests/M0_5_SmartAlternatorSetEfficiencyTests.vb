@@ -1,15 +1,21 @@
-﻿Imports Electrics
+﻿Imports System.IO
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Hvac
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 
 
 Namespace UnitTests
+
+
 	<TestFixture()>
 	Public Class M0_5_SmartAlternatorSetEfficiencyTests
 		Private target As IM0_5_SmartAlternatorSetEfficiency
@@ -17,9 +23,15 @@ Namespace UnitTests
 
 		Public Sub New()
 
-			Initialise()
+			
 		End Sub
 
+        <OneTimeSetUp>
+        Sub RunBeforeAnyTests()    
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+
+            Initialise()
+        end Sub
 
 		Private Function GetSSM() As ISSMTOOL
 

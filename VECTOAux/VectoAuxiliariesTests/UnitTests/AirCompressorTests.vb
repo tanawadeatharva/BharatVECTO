@@ -1,7 +1,8 @@
 ﻿Imports NUnit.Framework
-Imports Pneumatics
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 Imports VectoAuxiliariesTests.Mocks
 Imports ISignals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.ISignals
 Imports Signals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.Signals

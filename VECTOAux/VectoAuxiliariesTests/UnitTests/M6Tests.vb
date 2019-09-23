@@ -1,7 +1,8 @@
-﻿Imports DownstreamModules
+﻿
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports Signals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.Signals
 
 

@@ -3,10 +3,12 @@ Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Hvac
 Imports System.IO
-Imports DownstreamModules.Electrics
-Imports DownstreamModules.HVAC
-Imports Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 Imports Signals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.Signals
 
 Namespace UnitTests

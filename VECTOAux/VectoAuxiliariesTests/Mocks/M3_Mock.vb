@@ -1,5 +1,6 @@
-﻿Imports Pneumatics
+﻿
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 
 Public Class M3_Mock
 	Implements IM3_AveragePneumaticLoadDemand

@@ -1,10 +1,10 @@
-﻿Imports DownstreamModules
-Imports Hvac
+﻿
 Imports NUnit.Framework
 Imports Moq
-Imports Pneumatics
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 Imports IFuelConsumptionMap = TUGraz.VectoCore.BusAuxiliaries.Interfaces.IFuelConsumptionMap
 Imports ISignals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.ISignals
 

@@ -1,5 +1,7 @@
-﻿Imports DownstreamModules.HVAC
+﻿Imports System.IO
 Imports NUnit.Framework
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 Imports VectoAuxiliaries.Hvac
 
 Namespace UnitTests
@@ -44,6 +46,11 @@ Namespace UnitTests
 
 			Assert.IsTrue(src.TechList.Add(newItem, feedback))
 		End Sub
+
+        <OneTimeSetUp>
+        Sub RunBeforeAnyTests()    
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+        end Sub
 
 		'SSMGenInputTests
 		<Test()> _

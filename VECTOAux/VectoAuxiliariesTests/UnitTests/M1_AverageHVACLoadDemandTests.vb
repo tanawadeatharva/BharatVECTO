@@ -1,10 +1,12 @@
-﻿Imports DownstreamModules.Electrics
-Imports Electrics
-Imports Hvac
+﻿
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Hvac
 Imports ISignals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.ISignals

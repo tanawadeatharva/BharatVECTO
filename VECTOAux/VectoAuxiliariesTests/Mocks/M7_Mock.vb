@@ -1,6 +1,7 @@
 ﻿
-Imports DownstreamModules
+
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 
 
 Public Class M7_Mock
