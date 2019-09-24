@@ -45,47 +45,47 @@ namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 			//'* * Breaks * *
 			double numActuationsPerCycle = _pneumaticsActuationsMap.GetNumActuations(new ActuationsKey("Brakes", _cycleName));
 			//'=IF(K10 = "yes", IF(COUNTBLANK(F33), G33, F33), IF(COUNTBLANK(F34), G34, F34)) * K16
-			var airConsumptionPerActuationNI = _pneumaticUserInputsConfig.RetarderBrake
+			var airConsumptionPerActuation = _pneumaticUserInputsConfig.RetarderBrake
 				? _pneumaticAuxillariesConfig.BrakingWithRetarderNIperKG
 				: _pneumaticAuxillariesConfig.BrakingNoRetarderNIperKG;
-			var Breaks = (numActuationsPerCycle * airConsumptionPerActuationNI * _vehicleMassKG.Value()).SI<NormLiter>();
+			var Breaks = (numActuationsPerCycle * airConsumptionPerActuation * _vehicleMassKG.Value()).SI<NormLiter>();
 
 			//'* * ParkBrakesBreakplus2Doors * *Park break +2 doors
 			numActuationsPerCycle =
 				_pneumaticsActuationsMap.GetNumActuations(new ActuationsKey("Park brake + 2 doors", _cycleName));
 			//'=SUM(IF(K14 = "electric", 0, IF(COUNTBLANK(F36), G36, F36)), PRODUCT(K16 * IF(COUNTBLANK(F37), G37, F37)))
-			airConsumptionPerActuationNI = _pneumaticUserInputsConfig.Doors == "Electric"
+			airConsumptionPerActuation = _pneumaticUserInputsConfig.Doors == "Electric"
 				? 0
 				: _pneumaticAuxillariesConfig.PerDoorOpeningNI;
-			airConsumptionPerActuationNI += _pneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG * _vehicleMassKG.Value();
-			var ParkBrakesplus2Doors = (numActuationsPerCycle * airConsumptionPerActuationNI).SI<NormLiter>();
+			airConsumptionPerActuation += _pneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG * _vehicleMassKG.Value();
+			var parkBrakesplus2Doors = (numActuationsPerCycle * airConsumptionPerActuation).SI<NormLiter>();
 
 			//'* * Kneeling * *
 			numActuationsPerCycle = _pneumaticsActuationsMap.GetNumActuations(new ActuationsKey("Kneeling", _cycleName));
 			//'=IF(COUNTBLANK(F35), G35, F35) * K11 * K16
-			airConsumptionPerActuationNI = _pneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM * _vehicleMassKG.Value() *
+			airConsumptionPerActuation = _pneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM * _vehicleMassKG.Value() *
 											_pneumaticUserInputsConfig.KneelingHeightMillimeters;
-			var Kneeling = (numActuationsPerCycle * airConsumptionPerActuationNI).SI<NormLiter>();
+			var kneeling = (numActuationsPerCycle * airConsumptionPerActuation).SI<NormLiter>();
 
 			//'* * AdBlue * *
 			//	'=IF(K13 = "electric", 0, G39 * F54) - Supplied Spreadsheet
-			var AdBlue = (_pneumaticUserInputsConfig.AdBlueDosing == "Electric" ? 0 :
+			var adBlue = (_pneumaticUserInputsConfig.AdBlueDosing == "Electric" ? 0 :
 				_pneumaticAuxillariesConfig.AdBlueNIperMinute * (_signals.TotalCycleTimeSeconds / 60.0)).SI<NormLiter>();
 
 			//'* * Regeneration * *
 			//	'=SUM(R6: R9) * IF(K9 = "yes", IF(COUNTBLANK(F41), G41, F41), IF(COUNTBLANK(F40), G40, F40)) - Supplied SpreadSheet
-			var Regeneration = Breaks + ParkBrakesplus2Doors + Kneeling + AdBlue;
+			var regeneration = Breaks + parkBrakesplus2Doors + kneeling + adBlue;
 			var regenFraction = _pneumaticUserInputsConfig.SmartRegeneration
 				? _pneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand
 				: _pneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand;
-			Regeneration = Regeneration * regenFraction;
+			regeneration = regeneration * regenFraction;
 
 			//'* * DeadVolBlowOuts * *
 			//	'=IF(COUNTBLANK(F43), G43, F43) / (F54 / 60) - Supplied SpreadSheet
 			numActuationsPerCycle = _pneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour /
 									(60.0 / (_signals.TotalCycleTimeSeconds / 60.0));
-			airConsumptionPerActuationNI = _pneumaticAuxillariesConfig.DeadVolumeLitres;
-			var DeadVolBlowOuts = (numActuationsPerCycle * airConsumptionPerActuationNI).SI<NormLiter>();
+			airConsumptionPerActuation = _pneumaticAuxillariesConfig.DeadVolumeLitres;
+			var DeadVolBlowOuts = (numActuationsPerCycle * airConsumptionPerActuation).SI<NormLiter>();
 
 			//'* * AirSuspension * *
 			//	'=IF(K12 = "electrically", 0, G38 * F54) - Suplied Spreadsheet
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 				_pneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute * (_signals.TotalCycleTimeSeconds / 60.0)).SI<NormLiter>();
 
 			//'* * Total Air Demand**
-			var TotalAirDemand = Breaks + ParkBrakesplus2Doors + Kneeling + AdBlue + Regeneration + DeadVolBlowOuts +
+			var TotalAirDemand = Breaks + parkBrakesplus2Doors + kneeling + adBlue + regeneration + DeadVolBlowOuts +
 								AirSuspension;
 
 
