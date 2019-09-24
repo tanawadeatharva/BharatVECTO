@@ -1,7 +1,7 @@
 {
-  "$type": "VectoAuxiliaries.Hvac.SSMTOOL, BusAuxiliaries",
+  "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMTOOL, BusAuxiliaries",
   "GenInputs": {
-    "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
     "BP_BusModel": "IVECO - Arway Intercity 10.6m",
     "BP_NumberOfPassengers": 47.0,
     "BP_BusFloorType": "raised floor",
@@ -52,12 +52,12 @@
     "AH_FuelFiredHeaterkW": 10.0
   },
   "TechList": {
-    "$type": "VectoAuxiliaries.Hvac.SSMTechList, BusAuxiliaries",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMTechList, BusAuxiliaries",
     "TechLines": [
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -131,9 +131,9 @@
         "C": 0.01
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -207,9 +207,9 @@
         "C": 0.025
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -283,9 +283,9 @@
         "C": 0.024
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -359,9 +359,9 @@
         "C": -0.032
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -435,9 +435,9 @@
         "C": 0.05
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -511,9 +511,9 @@
         "C": 0.012
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -587,9 +587,9 @@
         "C": 0.021
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -663,9 +663,9 @@
         "C": 0.041
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -739,9 +739,9 @@
         "C": 0.029
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -815,9 +815,9 @@
         "C": 0.025
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -891,9 +891,9 @@
         "C": 0.012
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -967,9 +967,9 @@
         "C": 0.02
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1043,9 +1043,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1119,9 +1119,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1195,9 +1195,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1271,9 +1271,9 @@
         "C": -0.032
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1347,9 +1347,9 @@
         "C": -0.032
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1423,9 +1423,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1499,9 +1499,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1575,9 +1575,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1651,9 +1651,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1727,9 +1727,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1803,9 +1803,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1879,9 +1879,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -1955,9 +1955,9 @@
         "C": 0.02
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -2031,9 +2031,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -2107,9 +2107,9 @@
         "C": -0.2
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -2183,9 +2183,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -2259,9 +2259,9 @@
         "C": 0.012
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -2335,9 +2335,9 @@
         "C": 0.021
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -2411,9 +2411,9 @@
         "C": 0.012
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "IVECO - Arway Intercity 10.6m",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -2499,7 +2499,7 @@
     "VVValueVariationKW": 0.0
   },
   "Calculate": {
-    "$type": "VectoAuxiliaries.Hvac.SSMCalculate, BusAuxiliaries",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMCalculate, BusAuxiliaries",
     "ElectricalWBase": 296.699127,
     "MechanicalWBase": 1180.55444,
     "FuelLPerHBase": 0.0,

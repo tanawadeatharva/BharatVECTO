@@ -9,10 +9,10 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
-Imports DownstreamModules.Electrics
-Imports DownstreamModules.HVAC
-Imports Pneumatics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 
 
 Public Interface IAuxiliaryConfig

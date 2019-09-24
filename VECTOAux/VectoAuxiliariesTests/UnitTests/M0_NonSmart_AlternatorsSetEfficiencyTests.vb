@@ -1,7 +1,5 @@
 ﻿Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Hvac
 Imports System.IO
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics

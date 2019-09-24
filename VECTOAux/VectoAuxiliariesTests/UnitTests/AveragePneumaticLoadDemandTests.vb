@@ -1,13 +1,10 @@
 ﻿
 Imports System.IO
-Imports VectoAuxiliaries.Pneumatics
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
-Imports ISignals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.ISignals
-Imports Signals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.Signals
-
 
 Namespace UnitTests
 	<TestFixture>

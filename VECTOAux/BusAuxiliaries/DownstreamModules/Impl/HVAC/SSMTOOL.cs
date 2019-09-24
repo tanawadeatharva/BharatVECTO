@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		{
 			var feedback = string.Empty;
 
-			GenInputs.InjectFrom((SSMTOOL)from.GenInputs);
+			GenInputs.InjectFrom(((SSMTOOL)from).GenInputs);
 
 			TechList.Clear();
 

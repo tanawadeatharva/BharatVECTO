@@ -2,8 +2,8 @@
 {
 	public interface ISSMCalculate
 	{
-		ISSMRun Run1 { get; set; }
-		ISSMRun Run2 { get; set; }
+		//ISSMRun Run1 { get; set; }
+		//ISSMRun Run2 { get; set; }
 
 
 		double ElectricalWBase { get; }

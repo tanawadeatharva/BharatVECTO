@@ -1,8 +1,8 @@
 ﻿
 
 Imports NUnit.Framework
-Imports VectoAuxiliaries
-Imports FilePathUtils = TUGraz.VectoCore.BusAuxiliaries.Util.FilePathUtils
+Imports TUGraz.VectoCore.BusAuxiliaries.Util
+
 
 Namespace UnitTests
 

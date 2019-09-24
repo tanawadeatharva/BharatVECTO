@@ -1,6 +1,4 @@
 ﻿Imports System.IO
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Hvac
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
@@ -134,6 +132,8 @@ Namespace UnitTests
 
 			Assert.AreEqual(expected, actual, 0.000001)
 		End Sub
+
+       
 	End Class
 End Namespace
 

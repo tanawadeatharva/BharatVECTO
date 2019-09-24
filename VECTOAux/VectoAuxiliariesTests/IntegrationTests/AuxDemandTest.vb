@@ -4,7 +4,6 @@ Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.BusAuxiliaries.Legacy
-Imports VectoAuxiliaries
 
 Namespace IntegrationTests
     <TestFixture>

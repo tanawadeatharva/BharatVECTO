@@ -71,15 +71,15 @@ Public Class AdvancedAuxiliaries
     Private hvacConstants As HVACConstants
 
     'Event Handler top level bubble.
-    Public Sub VectoEventHandler(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) _
-        Handles compressorMap.AuxiliaryEvent, alternatorMap.AuxiliaryEvent, ssmTool.Message, ssmToolModule14.Message
+    'Public Sub VectoEventHandler(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) _
+    '    Handles compressorMap.AuxiliaryEvent, alternatorMap.AuxiliaryEvent, ssmTool.Message, ssmToolModule14.Message
 
-        If Signals.AuxiliaryEventReportingLevel <= messageType Then
+    '    If Signals.AuxiliaryEventReportingLevel <= messageType Then
 
-            RaiseEvent AuxiliaryEvent(sender, message, messageType)
+    '        RaiseEvent AuxiliaryEvent(sender, message, messageType)
 
-        End If
-    End Sub
+    '    End If
+    'End Sub
 
     'Constructor
     Public Sub New()
@@ -105,16 +105,19 @@ Public Class AdvancedAuxiliaries
         Signals.SmartElectrics = auxConfig.ElectricalUserInputsConfig.SmartElectrical
         Signals.StoredEnergyEfficiency = auxConfig.ElectricalUserInputsConfig.StoredEnergyEfficiency
         Signals.SmartPneumatics = auxConfig.PneumaticUserInputsConfig.SmartAirCompression
-        Signals.PneumaticOverrunUtilisation = auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
+        Signals.PneumaticOverrunUtilisation =
+            auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
 
         alternatorMap = New CombinedAlternator(
             FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.ElectricalUserInputsConfig.AlternatorMap), Signals)
 
         actuationsMap = New PneumaticActuationsMAP(FilePathUtils.ResolveFilePath(vectoDirectory,
-                                                                                auxConfig.PneumaticUserInputsConfig.ActuationsMap))
+                                                                                 auxConfig.PneumaticUserInputsConfig.
+                                                                                    ActuationsMap))
 
         compressorMap = New CompressorMap(FilePathUtils.ResolveFilePath(vectoDirectory,
-                                                                        auxConfig.PneumaticUserInputsConfig.CompressorMap))
+                                                                        auxConfig.PneumaticUserInputsConfig.
+                                                                           CompressorMap))
         compressorMap.Initialise()
 
         'fuelMap = New cMAP()
@@ -131,7 +134,7 @@ Public Class AdvancedAuxiliaries
         'SSM HVAC
         Dim ssmPath As String = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath)
         Dim BusDatabase As String = FilePathUtils.ResolveFilePath(vectoDirectory,
-                                                                auxConfig.HvacUserInputsConfig.BusDatabasePath)
+                                                                  auxConfig.HvacUserInputsConfig.BusDatabasePath)
         ssmTool = New SSMTOOL(ssmPath, hvacConstants, auxConfig.HvacUserInputsConfig.SSMDisabled)
 
         'This duplicate SSM is being created for use in M14 as its properties will be dynamically changed at that point
@@ -147,46 +150,50 @@ Public Class AdvancedAuxiliaries
 
 
         M0 = New M00Impl(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
-                                                    alternatorMap,
-                                                    auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt),
-                                                    Signals,
-                                                    ssmTool)
+                         alternatorMap,
+                         auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI (Of Volt),
+                         Signals,
+                         ssmTool)
 
 
         Dim M05tmp As IM0_5_SmartAlternatorSetEfficiency = New M0_5Impl(M0,
-                                                                                                auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
-                                                                                                alternatorMap,
-                                                                                                auxConfig.ElectricalUserInputsConfig.ResultCardIdle,
-                                                                                                auxConfig.ElectricalUserInputsConfig.ResultCardTraction,
-                                                                                                auxConfig.ElectricalUserInputsConfig.ResultCardOverrun, Signals)
+                                                                        auxConfig.ElectricalUserInputsConfig.
+                                                                           ElectricalConsumers,
+                                                                        alternatorMap,
+                                                                        auxConfig.ElectricalUserInputsConfig.
+                                                                           ResultCardIdle,
+                                                                        auxConfig.ElectricalUserInputsConfig.
+                                                                           ResultCardTraction,
+                                                                        auxConfig.ElectricalUserInputsConfig.
+                                                                           ResultCardOverrun, Signals)
         M05 = M05tmp
 
         M1 = New M01Impl(M0,
-                                        auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
-                                        auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency,
-                                        auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt),
-                                        Signals,
-                                        ssmTool)
+                         auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
+                         auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency,
+                         auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI (Of Volt),
+                         Signals,
+                         ssmTool)
 
 
         M2 = New M02Impl(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers,
-                                                M0,
-                                                auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
-                                                auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt), Signals)
+                         M0,
+                         auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
+                         auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI (Of Volt), Signals)
 
 
         M3 = New M03Impl(auxConfig.PneumaticUserInputsConfig,
-                                                auxConfig.PneumaticAuxillariesConfig,
-                                                actuationsMap,
-                                                compressorMap,
-                                                VectoInputs.VehicleWeightKG,
-                                                VectoInputs.Cycle,
-                                                Signals)
+                         auxConfig.PneumaticAuxillariesConfig,
+                         actuationsMap,
+                         compressorMap,
+                         VectoInputs.VehicleWeightKG,
+                         VectoInputs.Cycle,
+                         Signals)
 
         M4 = New M04Impl(compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
-                                auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals)
-        M5 = New M05Impl(M05tmp, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI(Of Volt),
-                                                auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency)
+                         auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals)
+        M5 = New M05Impl(M05tmp, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage.SI (Of Volt),
+                         auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency)
         M6 = New M06Impl(M1, M2, M3, M4, M5, Signals)
         M7 = New M07Impl(M5, M6, Signals)
         M8 = New M08Impl(M1, M6, M7, Signals)
@@ -295,7 +302,7 @@ Public Class AdvancedAuxiliaries
             If Not M13 Is Nothing Then
                 Return M14.TotalCycleFCGrams
             Else
-                Return 0.SI(Of Kilogram)()
+                Return 0.SI (Of Kilogram)()
             End If
         End Get
     End Property
@@ -305,7 +312,7 @@ Public Class AdvancedAuxiliaries
             If Not M14 Is Nothing Then
                 Return M14.TotalCycleFCLitres
             Else
-                Return 0.SI(Of Liter)()
+                Return 0.SI (Of Liter)()
             End If
         End Get
     End Property
@@ -328,14 +335,16 @@ Public Class AdvancedAuxiliaries
     'Helpers
     Private Function GetDoorActuationTimeFraction() As Single
 
-        Dim actuationsMap As PneumaticActuationsMAP = New PneumaticActuationsMAP(FilePathUtils.ResolveFilePath(vectoDirectory,
-                                                                                                                auxConfig.PneumaticUserInputsConfig.ActuationsMap))
+        Dim actuationsMap As PneumaticActuationsMAP =
+                New PneumaticActuationsMAP(FilePathUtils.ResolveFilePath(vectoDirectory,
+                                                                         auxConfig.PneumaticUserInputsConfig.
+                                                                            ActuationsMap))
         Dim actuationsKey As ActuationsKey = New ActuationsKey("Park brake + 2 doors", VectoInputs.Cycle)
 
         Dim numActuations As Single = actuationsMap.GetNumActuations(actuationsKey)
         Dim secondsPerActuation As Single = auxConfig.ElectricalUserInputsConfig.DoorActuationTimeSecond
 
-        Dim doorDutyCycleFraction As Single = (numActuations * secondsPerActuation) / Signals.TotalCycleTimeSeconds
+        Dim doorDutyCycleFraction As Single = (numActuations*secondsPerActuation)/Signals.TotalCycleTimeSeconds
 
         Return doorDutyCycleFraction
     End Function
@@ -420,7 +429,9 @@ Public Class AdvancedAuxiliaries
 
             Return _
                 If _
-                    (Signals.EngineSpeed <= _Signals.EngineIdleSpeed AndAlso (Not Signals.ClutchEngaged OrElse Signals.InNeutral), 1, 0)
+                    (
+                        Signals.EngineSpeed <= _Signals.EngineIdleSpeed AndAlso
+                        (Not Signals.ClutchEngaged OrElse Signals.InNeutral), 1, 0)
         End Get
     End Property
 
@@ -490,5 +501,4 @@ Public Class AdvancedAuxiliaries
             Return M9.TotalCycleFuelConsumptionCompressorOnContinuously
         End Get
     End Property
-
 End Class

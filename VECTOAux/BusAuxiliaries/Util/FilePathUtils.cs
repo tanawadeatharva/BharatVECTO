@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.BusAuxiliaries.Util {
 		{
 
 			// No Vecto Path supplied
-			if (vectoPath == "")
+			if (string.IsNullOrEmpty(vectoPath))
 				return filename;
 
 			// This is not relative

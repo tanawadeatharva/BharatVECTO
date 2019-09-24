@@ -3,7 +3,7 @@ Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
-Imports VectoAuxiliaries.Electrics
+
 
 <TestFixture()>
 Public Class ResultCardTests

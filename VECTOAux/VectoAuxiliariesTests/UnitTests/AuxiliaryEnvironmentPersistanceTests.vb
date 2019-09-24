@@ -1,7 +1,7 @@
 ﻿
 Imports NUnit.Framework
-Imports VectoAuxiliaries
-Imports AuxiliaryConfig = TUGraz.VectoCore.BusAuxiliaries.AuxiliaryConfig
+Imports TUGraz.VectoCore.BusAuxiliaries
+
 
 Namespace UnitTests
 

@@ -2,7 +2,7 @@
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
-Imports VectoAuxiliaries.Pneumatics
+
 
 Namespace UnitTests
     <TestFixture()>

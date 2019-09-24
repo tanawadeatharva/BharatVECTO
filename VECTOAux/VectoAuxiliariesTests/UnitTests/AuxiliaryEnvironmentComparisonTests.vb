@@ -1,8 +1,8 @@
 ﻿
 Imports NUnit.Framework
+Imports TUGraz.VectoCore.BusAuxiliaries
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
-Imports VectoAuxiliaries
-Imports AuxiliaryConfig = TUGraz.VectoCore.BusAuxiliaries.AuxiliaryConfig
+
 
 Namespace UnitTests
 	<TestFixture()>

@@ -8,13 +8,14 @@ namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
 	public class SSMCalculate : ISSMCalculate
 	{
 		private ISSMTOOL ssmTOOL;
-		public ISSMRun Run1 { get; set; }
-		public ISSMRun Run2 { get; set; }
+
+		private ISSMRun Run1; // { get; set; }
+		private ISSMRun Run2 { get; set; }
 
 		// Constructor
 		public SSMCalculate(ISSMTOOL ssmTool)
 		{
-			this.ssmTOOL = ssmTool;
+			ssmTOOL = ssmTool;
 			Run1 = new SSMRun(this.ssmTOOL, 1);
 			Run2 = new SSMRun(this.ssmTOOL, 2);
 		}
@@ -383,7 +384,21 @@ namespace TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim C43 As Double   =  gen.BC_MaxPossibleBenefitFromTechnologyList
 				// Dim C53 As string   =  gen.AC_CompressorType
 
-				result = gen.AC_CompressorType.ToLower() == "mechanical" ? tl.CValueVariation : 0 > 0 ? Math.Min(gen.AC_CompressorType.ToLower() == "mechanical" ? tl.CValueVariation : 0, gen.BC_MaxPossibleBenefitFromTechnologyList) : Math.Max(gen.AC_CompressorType.ToLower() == "mechanical" ? tl.CValueVariation : 0, -gen.BC_MaxPossibleBenefitFromTechnologyList);
+				//result = If(If(gen.AC_CompressorType.ToLower() = "mechanical", tl.CValueVariation, 0) > 0,
+				//			Math.Min(If(gen.AC_CompressorType.ToLower() = "mechanical", tl.CValueVariation, 0),
+				//					gen.BC_MaxPossibleBenefitFromTechnologyList),
+				//			Math.Max(If(gen.AC_CompressorType.ToLower() = "mechanical", tl.CValueVariation, 0),
+				//					-gen.BC_MaxPossibleBenefitFromTechnologyList))
+
+				result = (gen.AC_CompressorType.ToLower() == "mechanical"
+					? tl.CValueVariation
+					: 0) > 0
+						? Math.Min(
+							gen.AC_CompressorType.ToLower() == "mechanical" ? tl.CValueVariation : 0,
+							gen.BC_MaxPossibleBenefitFromTechnologyList)
+						: Math.Max(
+							gen.AC_CompressorType.ToLower() == "mechanical" ? tl.CValueVariation : 0,
+							-gen.BC_MaxPossibleBenefitFromTechnologyList);
 
 				return result;
 			}

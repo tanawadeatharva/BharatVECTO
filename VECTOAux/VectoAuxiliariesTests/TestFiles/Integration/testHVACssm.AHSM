@@ -1,7 +1,7 @@
 {
-  "$type": "VectoAuxiliaries.Hvac.SSMTOOL, BusAuxiliaries",
+  "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMTOOL, BusAuxiliaries",
   "GenInputs": {
-    "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
     "BP_BusModel": "DummyBus",
     "BP_NumberOfPassengers": 47.0,
     "BP_BusFloorType": "raised floor",
@@ -41,7 +41,7 @@
     "EC_EnviromentalTemperature": 25.0,
     "EC_Solar": 400.0,
     "EC_EnvironmentalConditionsMap": {
-      "$type": "VectoAuxiliaries.Hvac.EnvironmentalConditionsMap, BusAuxiliaries"
+      "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.EnvironmentalConditionsMap, BusAuxiliaries"
     },
     "EC_EnviromentalConditions_BatchFile": "DefaultClimatic.aenv",
     "EC_EnviromentalConditions_BatchEnabled": true,
@@ -61,12 +61,12 @@
     "AH_CoolantHeatTransferredToAirCabinHeater": 0.75
   },
   "TechList": {
-    "$type": "VectoAuxiliaries.Hvac.SSMTechList, BusAuxiliaries",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMTechList, BusAuxiliaries",
     "TechLines": [
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "DummyBus",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -106,7 +106,7 @@
           "EC_EnviromentalTemperature": 25.0,
           "EC_Solar": 400.0,
           "EC_EnvironmentalConditionsMap": {
-            "$type": "VectoAuxiliaries.Hvac.EnvironmentalConditionsMap, BusAuxiliaries"
+            "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.EnvironmentalConditionsMap, BusAuxiliaries"
           },
           "EC_EnviromentalConditions_BatchFile": "DefaultClimatic.aenv",
           "EC_EnviromentalConditions_BatchEnabled": true,
@@ -149,9 +149,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "DummyBus",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -191,7 +191,7 @@
           "EC_EnviromentalTemperature": 25.0,
           "EC_Solar": 400.0,
           "EC_EnvironmentalConditionsMap": {
-            "$type": "VectoAuxiliaries.Hvac.EnvironmentalConditionsMap, BusAuxiliaries"
+            "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.EnvironmentalConditionsMap, BusAuxiliaries"
           },
           "EC_EnviromentalConditions_BatchFile": "DefaultClimatic.aenv",
           "EC_EnviromentalConditions_BatchEnabled": true,
@@ -234,9 +234,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "DummyBus",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -276,7 +276,7 @@
           "EC_EnviromentalTemperature": 25.0,
           "EC_Solar": 400.0,
           "EC_EnvironmentalConditionsMap": {
-            "$type": "VectoAuxiliaries.Hvac.EnvironmentalConditionsMap, BusAuxiliaries"
+            "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.EnvironmentalConditionsMap, BusAuxiliaries"
           },
           "EC_EnviromentalConditions_BatchFile": "DefaultClimatic.aenv",
           "EC_EnviromentalConditions_BatchEnabled": true,
@@ -319,9 +319,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "DummyBus",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -361,7 +361,7 @@
           "EC_EnviromentalTemperature": 25.0,
           "EC_Solar": 400.0,
           "EC_EnvironmentalConditionsMap": {
-            "$type": "VectoAuxiliaries.Hvac.EnvironmentalConditionsMap, BusAuxiliaries"
+            "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.EnvironmentalConditionsMap, BusAuxiliaries"
           },
           "EC_EnviromentalConditions_BatchFile": "DefaultClimatic.aenv",
           "EC_EnviromentalConditions_BatchEnabled": true,
@@ -404,9 +404,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "DummyBus",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -446,7 +446,7 @@
           "EC_EnviromentalTemperature": 25.0,
           "EC_Solar": 400.0,
           "EC_EnvironmentalConditionsMap": {
-            "$type": "VectoAuxiliaries.Hvac.EnvironmentalConditionsMap, BusAuxiliaries"
+            "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.EnvironmentalConditionsMap, BusAuxiliaries"
           },
           "EC_EnviromentalConditions_BatchFile": "DefaultClimatic.aenv",
           "EC_EnviromentalConditions_BatchEnabled": true,
@@ -489,9 +489,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "DummyBus",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -531,7 +531,7 @@
           "EC_EnviromentalTemperature": 25.0,
           "EC_Solar": 400.0,
           "EC_EnvironmentalConditionsMap": {
-            "$type": "VectoAuxiliaries.Hvac.EnvironmentalConditionsMap, BusAuxiliaries"
+            "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.EnvironmentalConditionsMap, BusAuxiliaries"
           },
           "EC_EnviromentalConditions_BatchFile": "DefaultClimatic.aenv",
           "EC_EnviromentalConditions_BatchEnabled": true,
@@ -574,9 +574,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "DummyBus",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -616,7 +616,7 @@
           "EC_EnviromentalTemperature": 25.0,
           "EC_Solar": 400.0,
           "EC_EnvironmentalConditionsMap": {
-            "$type": "VectoAuxiliaries.Hvac.EnvironmentalConditionsMap, BusAuxiliaries"
+            "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.EnvironmentalConditionsMap, BusAuxiliaries"
           },
           "EC_EnviromentalConditions_BatchFile": "DefaultClimatic.aenv",
           "EC_EnviromentalConditions_BatchEnabled": true,
@@ -659,9 +659,9 @@
         "C": 0.0
       },
       {
-        "$type": "VectoAuxiliaries.Hvac.TechListBenefitLine, BusAuxiliaries",
+        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.TechListBenefitLine, BusAuxiliaries",
         "inputSheet": {
-          "$type": "VectoAuxiliaries.Hvac.SSMGenInputs, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMGenInputs, BusAuxiliaries",
           "BP_BusModel": "DummyBus",
           "BP_NumberOfPassengers": 47.0,
           "BP_BusFloorType": "raised floor",
@@ -701,7 +701,7 @@
           "EC_EnviromentalTemperature": 25.0,
           "EC_Solar": 400.0,
           "EC_EnvironmentalConditionsMap": {
-            "$type": "VectoAuxiliaries.Hvac.EnvironmentalConditionsMap, BusAuxiliaries"
+            "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.EnvironmentalConditionsMap, BusAuxiliaries"
           },
           "EC_EnviromentalConditions_BatchFile": "DefaultClimatic.aenv",
           "EC_EnviromentalConditions_BatchEnabled": true,
@@ -756,7 +756,7 @@
     "VVValueVariationKW": 0.0
   },
   "Calculate": {
-    "$type": "VectoAuxiliaries.Hvac.SSMCalculate, BusAuxiliaries",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.SSMCalculate, BusAuxiliaries",
     "ElectricalWBase": 692.2979,
     "MechanicalWBase": 349.774,
     "FuelLPerHBase": 0.151278213,
@@ -790,7 +790,7 @@
   },
   "SSMDisabled": false,
   "HVACConstants": {
-    "$type": "VectoAuxiliaries.Hvac.HVACConstants, BusAuxiliaries",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.HVACConstants, BusAuxiliaries",
     "DieselGCVJperGram": 44800.0,
     "FuelDensity": 0.832
   },

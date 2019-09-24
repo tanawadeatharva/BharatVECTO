@@ -1,16 +1,15 @@
 ﻿
+Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Hvac
-Imports ISignals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.ISignals
-Imports Signals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.Signals
+
 
 
 Namespace UnitTests
@@ -26,13 +25,14 @@ Namespace UnitTests
 
 
 		Private m0 As IM0_NonSmart_AlternatorsSetEfficiency
-		Private alternatorMap As IAlternatorMap = New AlternatorMap(_GOODMAP)
+		Private alternatorMap As IAlternatorMap 
 		Private alternatorGearEfficiency As Single = 0.8
 		Private compressorGrearEfficiency As Single = 0.8
 
-
-		Public Sub New()
-
+       
+        Public Sub New()
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+            alternatorMap = New AlternatorMap(_GOODMAP)
 			alternatorMap.Initialise()
 
 			ssm.Load(_SSMMAP)
