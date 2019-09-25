@@ -71,7 +71,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, ValidateObject]
 		public List<CombustionEngineFuelData> Fuels { get; internal set; }
 
-		public WHRData WHRData;
+		public WHRData ElectricalWHR;
+
+		public WHRData MechanicalWHR;
 
 		public WHRType WHRType;
 

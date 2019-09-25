@@ -166,7 +166,7 @@ namespace TUGraz.VectoCore.OutputData
 									.Concat(Auxiliaries.Values.Select(c => c.ColumnName))
 									.Concat(
 										new[] {
-											ModalResultField.P_WHR_el_map, ModalResultField.P_WHR_el_corr, ModalResultField.P_aux_ice_off,
+											ModalResultField.P_WHR_el_map, ModalResultField.P_WHR_el_corr, ModalResultField.P_WHR_mech_map, ModalResultField.P_WHR_mech_corr, ModalResultField.P_aux_ice_off,
 											ModalResultField.P_ice_start
 										}.Select(x => x.GetName()))
 									.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));

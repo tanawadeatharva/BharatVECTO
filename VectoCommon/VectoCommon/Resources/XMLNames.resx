@@ -1128,4 +1128,13 @@
   <data name="DriverModel_EngineStopStartParameters" xml:space="preserve">
     <value>EngineStopStartParameters</value>
   </data>
+  <data name="Engine_WHRCorrectionFactors_Electrical" xml:space="preserve">
+    <value>Electrical</value>
+  </data>
+  <data name="Engine_WHRCorrectionFactors_Mechanical" xml:space="preserve">
+    <value>Mechanical</value>
+  </data>
+  <data name="Engine_FuelConsumptionMap_WHRMechPower_Attr" xml:space="preserve">
+    <value>mechanicalPower</value>
+  </data>
 </root>

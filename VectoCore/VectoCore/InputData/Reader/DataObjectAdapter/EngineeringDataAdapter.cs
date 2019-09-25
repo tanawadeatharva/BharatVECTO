@@ -201,22 +201,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.FullLoadCurves = fullLoadCurves;
 
-			var whr = CreateWHRData(engineMode.WasteHeatRecoveryData);
-			if (whr != null) {
-				whr.WHRCorrectionFactor = engineMode.WasteHeatRecoveryData.EngineeringCorrectionFactor;
+			retVal.WHRType = engine.WHRType;
+			if ((retVal.WHRType & WHRType.ElectricalOutput) != 0) {
+				retVal.ElectricalWHR = CreateWHRData(
+					engineMode.WasteHeatRecoveryDataElectrical, WHRType.ElectricalOutput);
+			}
+			if ((retVal.WHRType & WHRType.MechanicalOutputDrivetrain) != 0) {
+				retVal.MechanicalWHR = CreateWHRData(
+					engineMode.WasteHeatRecoveryDataMechanical, WHRType.MechanicalOutputDrivetrain);
 			}
 
-			retVal.WHRType = engine.WHRType;
-			retVal.WHRData = whr;
-			//foreach (var fuelEntry in retVal.Fuels) {
-
-			//retVal.Fuels[0].FuelConsumptionCorrectionFactor = engine.WHTCEngineering;
 			return retVal;
 		}
 
-		private WHRData CreateWHRData(IWHRData whrInputData)
+		private WHRData CreateWHRData(IWHRData whrInputData, WHRType whrType)
 		{
-			if (whrInputData == null || whrInputData.GeneratedElectricPower == null) {
+			if (whrInputData == null || whrInputData.GeneratedPower == null) {
 				return null;
 			}
 
@@ -226,7 +226,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				CFMotorway = 1,
 				CFColdHot = 1,
 				CFRegPer = 1,
-				WHRMap = WHRPowerReader.Create(whrInputData.GeneratedElectricPower)
+				WHRMap = WHRPowerReader.Create(whrInputData.GeneratedPower, whrType),
+				WHRCorrectionFactor = whrInputData.EngineeringCorrectionFactor,
 			};
 		}
 

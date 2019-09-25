@@ -527,7 +527,11 @@ namespace TUGraz.VectoCore.OutputData
 						modData.WorkEngineStart();
 
 			var workWHREl = modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
-			var workWhrMech = - workWHREl / DeclarationData.AlternaterEfficiency;
+			var workWhrElMech = - workWHREl / DeclarationData.AlternaterEfficiency;
+
+			var workWHRMech = -modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
+
+			var workWhr = workWhrElMech + workWHRMech;
 
 			var distance = modData.Distance();
 			var duration = modData.Duration();
@@ -580,7 +584,7 @@ namespace TUGraz.VectoCore.OutputData
 
 				row[FcCol(K_VEHLINE, suffix)] = correction.ConvertToGramPerKiloWattHour();
 
-				var fcWHRCorr = fcModSum + correction * workWhrMech;
+				var fcWHRCorr = fcModSum + correction * workWhr;
 				row[FcCol(FCWHR_H_CORR, suffix)] = duration != null ? (fcWHRCorr / duration).ConvertToGrammPerHour() : null;
 
 				var fcEssCorr = fcWHRCorr + correction * workESS;

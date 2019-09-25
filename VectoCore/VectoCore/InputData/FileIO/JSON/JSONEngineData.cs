@@ -72,29 +72,43 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	///  }
 	/// }
 	/// </code>
-	public class JSONEngineDataV5 : JSONEngineDataV4, IWHRData, IEngineModeEngineeringInputData
+	public class JSONEngineDataV5 : JSONEngineDataV4, IEngineModeEngineeringInputData
 	{
+		protected IWHRData _elWHRData;
+		protected IWHRData _mechWHRData;
+
 		
-
-		#region Overrides of JSONEngineDataV3
-
-		public override IWHRData WasteHeatRecoveryData
-		{
-			get { return this; }
-		}
-
-
-		public override WHRType WHRType
-		{
-			get { return Body.GetEx<string>("WHRType").ParseEnum<WHRType>(); }
-		}
-
-		#endregion
-
 		public JSONEngineDataV5(JObject data, string fileName, bool tolerateMissing = false) : base(
 			data, fileName, tolerateMissing) { }
 
 		#region Overrides of JSONEngineDataV3
+
+		public override IWHRData WasteHeatRecoveryDataElectrical
+		{
+			get { return _elWHRData ?? (_elWHRData = ReadWHRData(Body["WHRCorrectionFactors"]?["Electrical"])); }
+		}
+
+
+		public override IWHRData WasteHeatRecoveryDataMechanical
+		{
+			get { return _mechWHRData ?? (_mechWHRData = ReadWHRData(Body["WHRCorrectionFactors"]?["Mechanical"])); }
+		}
+
+		public override WHRType WHRType
+		{
+			get {
+				var whr = Body["WHRType"];
+				var retVal = WHRType.None;
+				if (whr == null) {
+					return retVal;
+				}
+
+				foreach (var entry in whr) {
+					retVal |= entry.ToString().ParseEnum<WHRType>(); 
+				}
+				return retVal;
+			}
+		}
 
 		protected override IList<IEngineFuelEngineeringInputData> ReadFuels()
 		{
@@ -130,6 +144,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
+		private IWHRData ReadWHRData(JToken correctionFactors)
+		{
+			TableData whrMap = null;
+			try {
+				whrMap = ReadTableData(Body["Fuels"][0].GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap");
+			} catch (Exception) {
+				if (!TolerateMissing) {
+					throw;
+				}
+
+				whrMap =
+					new TableData(
+						Path.Combine(BasePath, Body[JsonKeys.Engine_FuelConsumptionMap].ToString()) + MissingFileSuffix,
+						DataSourceType.Missing);
+			}
+
+			var retVal = new JSonWHRData(correctionFactors, whrMap);
+			return retVal;
+		}
+
 		public class JSONFuelInputData : IEngineFuelEngineeringInputData {
 			#region Implementation of IEngineFuelDelcarationInputData
 
@@ -150,59 +184,59 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			#endregion
 		}
 
-		
-
-		#region Implementation of IWHRData
-
-		public double UrbanCorrectionFactor
+		private class JSonWHRData : IWHRData
 		{
-			get { return Body["WHRCorrectionFactors"]?["Urban"]?.ToString().ToDouble() ?? 1.0; }
-		}
+			protected JToken CorrectionFactors;
+			protected TableData WHRMap;
 
-		public double RuralCorrectionFactor
-		{
-			get { return Body["WHRCorrectionFactors"]?["Rural"]?.ToString().ToDouble() ?? 1.0; }
-		}
-
-		public double MotorwayCorrectionFactor
-		{
-			get { return Body["WHRCorrectionFactors"]?["Motorway"]?.ToString().ToDouble() ?? 1.0; }
-		}
-
-		public double BFColdHot
-		{
-			get { return Body["WHRCorrectionFactors"]?["ColdHotBalancingFactor"]?.ToString().ToDouble() ?? 1.0; }
-		}
-
-		public double CFRegPer
-		{
-			get { return Body["WHRCorrectionFactors"]?["CFRegPer"]?.ToString().ToDouble() ?? 1.0; }
-		}
-
-		public double EngineeringCorrectionFactor
-		{
-			get { return Body["WHRCorrectionFactors"]?["EngineeringCorrectionFactor"]?.ToString().ToDouble() ?? 1.0; }
-		}
-
-		public TableData GeneratedElectricPower
-		{
-			get {
-				try {
-					return ReadTableData(Body["Fuels"][0].GetEx<string>(JsonKeys.Engine_FuelConsumptionMap), "FuelConsumptionMap");
-				} catch (Exception) {
-					if (!TolerateMissing) {
-						throw;
-					}
-
-					return
-						new TableData(
-							Path.Combine(BasePath, Body[JsonKeys.Engine_FuelConsumptionMap].ToString()) + MissingFileSuffix,
-							DataSourceType.Missing);
-				}
+			public JSonWHRData(JToken correctionFactors, TableData whrMap)
+			{
+				CorrectionFactors = correctionFactors;
+				WHRMap = whrMap;
 			}
+
+			#region Implementation of IWHRData
+
+			public double UrbanCorrectionFactor
+			{
+				get { return CorrectionFactors?["Urban"]?.ToString().ToDouble() ?? 1.0; }
+			}
+
+			public double RuralCorrectionFactor
+			{
+				get { return CorrectionFactors?["Rural"]?.ToString().ToDouble() ?? 1.0; }
+			}
+
+			public double MotorwayCorrectionFactor
+			{
+				get { return CorrectionFactors?["Motorway"]?.ToString().ToDouble() ?? 1.0; }
+			}
+
+			public double BFColdHot
+			{
+				get { return CorrectionFactors?["ColdHotBalancingFactor"]?.ToString().ToDouble() ?? 1.0; }
+			}
+
+			public double CFRegPer
+			{
+				get { return CorrectionFactors?["CFRegPer"]?.ToString().ToDouble() ?? 1.0; }
+			}
+
+			public double EngineeringCorrectionFactor
+			{
+				get { return CorrectionFactors?["EngineeringCorrectionFactor"]?.ToString().ToDouble() ?? 1.0; }
+			}
+
+			public TableData GeneratedPower
+			{
+				get { return WHRMap; }
+			}
+
+			#endregion
 		}
 
-		#endregion
+
+
 	}
 
 
@@ -315,7 +349,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return new IEngineFuelEngineeringInputData[] { this };
 		}
 
-		public virtual IWHRData WasteHeatRecoveryData
+		public virtual IWHRData WasteHeatRecoveryDataElectrical
+		{
+			get { return null; }
+		}
+
+		public virtual IWHRData WasteHeatRecoveryDataMechanical
 		{
 			get { return null; }
 		}

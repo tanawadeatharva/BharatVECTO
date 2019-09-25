@@ -46,23 +46,23 @@ Public Class JSONFileWriter
 		body.Add("IdlingSpeed", eng.EngineModes.First().IdleSpeed.AsRPM)
 		body.Add("Inertia", eng.Inertia.Value())
 
-        Dim fuels As List(Of Object) = New List(Of Object)()
+		Dim fuels As List(Of Object) = New List(Of Object)()
 
-	    For Each fuel As IEngineFuelEngineeringInputData In eng.EngineModes.First().Fuels
-	        Dim entry as Dictionary(Of string, object) = New Dictionary(Of String,Object)()
-	        entry.Add("WHTC-Urban", fuel.WHTCUrban)
-	        entry.Add("WHTC-Rural", fuel.WHTCRural)
-	        entry.Add("WHTC-Motorway", fuel.WHTCMotorway)
-	        entry.Add("WHTC-Engineering", fuel.WHTCEngineering)
-	        entry.Add("ColdHotBalancingFactor", fuel.ColdHotBalancingFactor)
-	        entry.Add("CFRegPer", fuel.CorrectionFactorRegPer)
-	        entry.Add("FuelMap", GetRelativePath(fuel.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
-	        entry.Add("FuelType", fuel.FuelType.ToString())
+		For Each fuel As IEngineFuelEngineeringInputData In eng.EngineModes.First().Fuels
+			Dim entry as Dictionary(Of string, object) = New Dictionary(Of String,Object)()
+			entry.Add("WHTC-Urban", fuel.WHTCUrban)
+			entry.Add("WHTC-Rural", fuel.WHTCRural)
+			entry.Add("WHTC-Motorway", fuel.WHTCMotorway)
+			entry.Add("WHTC-Engineering", fuel.WHTCEngineering)
+			entry.Add("ColdHotBalancingFactor", fuel.ColdHotBalancingFactor)
+			entry.Add("CFRegPer", fuel.CorrectionFactorRegPer)
+			entry.Add("FuelMap", GetRelativePath(fuel.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
+			entry.Add("FuelType", fuel.FuelType.ToString())
 
-            fuels.Add(entry)
-	    Next
+			fuels.Add(entry)
+		Next
 
-        body.Add("Fuels", fuels)
+		body.Add("Fuels", fuels)
 	   
 		body.Add("RatedPower", eng.RatedPowerDeclared.Value())
 		body.Add("RatedSpeed", eng.RatedSpeedDeclared.AsRPM)
@@ -71,25 +71,46 @@ Public Class JSONFileWriter
 
 		body.Add("FullLoadCurve", GetRelativePath(eng.EngineModes.First().FullLoadCurve.Source, Path.GetDirectoryName(filename)))
 
-
-        body.add("WHRType", eng.WHRType.ToString())
-
-        If (eng.WHRType.IsElectrical()) then
-            Dim whr As Dictionary(Of String, Object) = New Dictionary(Of String,Object)
-            Dim whrInput As IWHRData = eng.EngineModes.First().WasteHeatRecoveryData
-            whr.Add("Urban", whrInput.UrbanCorrectionFactor)
-            whr.Add("Rural", whrInput.RuralCorrectionFactor)
-            whr.Add("Motorway", whrInput.MotorwayCorrectionFactor)
-            whr.Add("ColdHotBalancingFactor", whrInput.BFColdHot)
-            whr.Add("CFRegPer", whrInput.CFRegPer)
-            whr.Add("EngineeringCorrectionFactor", whrInput.EngineeringCorrectionFactor)
-            body.Add("WHRCorrectionFactors", whr)
+        Dim whrtypes as List(Of String) = New List(Of String)
+        if (eng.WHRType And WHRType.ElectricalOutput) <> 0 
+            whrtypes.Add(WHRType.ElectricalOutput.ToString())
         End If
+	    if (eng.WHRType And WHRType.MechanicalOutputDrivetrain) <> 0 
+	        whrtypes.Add(WHRType.MechanicalOutputDrivetrain.ToString())
+	    End If
+	    if (eng.WHRType And WHRType.MechanicalOutputICE) <> 0 
+	        whrtypes.Add(WHRType.MechanicalOutputICE.ToString())
+	    End If
 
-	    WriteFile(header, body, filename)
+	    body.add("WHRType", if(whrtypes.Count > 0, whrtypes, New List(Of String)() From { whrtype.None.ToString() }))
+
+        Dim whrCF As Dictionary(Of String, Object) = New Dictionary(Of String,Object)
+	    If ((eng.WHRType and whrtype.ElectricalOutput) <> 0) then
+		    Dim whr As Dictionary(Of String,Object) = GetWhr(eng.EngineModes.First().WasteHeatRecoveryDataElectrical)
+	        whrCF.Add("Electrical", whr)
+		End If
+        
+        if ((eng.WHRType and WHRType.MechanicalOutputDrivetrain) <> 0) Then
+            Dim whr As Dictionary(Of String,Object) = GetWhr(eng.EngineModes.First().WasteHeatRecoveryDataMechanical)
+            whrCF.Add("Mechanical", whr)           
+        End If
+	    body.Add("WHRCorrectionFactors", whrCF)
+		WriteFile(header, body, filename)
 	End Sub
 
-	Protected Function GetHeader(fileVersion As Integer) As Dictionary(Of String, Object)
+    Private Function GetWhr(whrInput As IWHRData) As Dictionary(Of String,Object)
+
+        Dim whr As Dictionary(Of String, Object) = New Dictionary(Of String,Object)
+        whr.Add("Urban", whrInput.UrbanCorrectionFactor)
+        whr.Add("Rural", whrInput.RuralCorrectionFactor)
+        whr.Add("Motorway", whrInput.MotorwayCorrectionFactor)
+        whr.Add("ColdHotBalancingFactor", whrInput.BFColdHot)
+        whr.Add("CFRegPer", whrInput.CFRegPer)
+        whr.Add("EngineeringCorrectionFactor", whrInput.EngineeringCorrectionFactor)
+        Return whr
+    End Function
+
+    Protected Function GetHeader(fileVersion As Integer) As Dictionary(Of String, Object)
 		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
 		header.Add("CreatedBy", "")
@@ -341,13 +362,13 @@ Public Class JSONFileWriter
 		
 		If Not job.SavedInDeclarationMode Then
 			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath))
-		    body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value())
-            body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value())
-            body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactor)
+			body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value())
+			body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value())
+			body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactor)
 
-            body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed)
-		    body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay)
-		    body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold)
+			body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed.AsKmph)
+			body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay.Value())
+			body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold.AsKmph)
 
 		End If
 		'body.Add("StartStop", New Dictionary(Of String, Object) From {
