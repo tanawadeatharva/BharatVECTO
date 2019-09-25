@@ -233,6 +233,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.FullLoadCurves = fullLoadCurves;
 
+			retVal.WHRType = engine.WHRType;
 			if ((retVal.WHRType & WHRType.ElectricalOutput) != 0) {
 				retVal.ElectricalWHR = CreateWHRData(
 					mode.WasteHeatRecoveryDataElectrical, mission.MissionType, WHRType.ElectricalOutput);

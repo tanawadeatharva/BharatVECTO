@@ -202,8 +202,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.FullLoadCurves = fullLoadCurves;
 
 			retVal.WHRType = engine.WHRType;
-			retVal.ElectricalWHR = CreateWHRData(engineMode.WasteHeatRecoveryDataElectrical, WHRType.ElectricalOutput);
-			retVal.MechanicalWHR = CreateWHRData(engineMode.WasteHeatRecoveryDataMechanical, WHRType.MechanicalOutputDrivetrain);
+			if ((retVal.WHRType & WHRType.ElectricalOutput) != 0) {
+				retVal.ElectricalWHR = CreateWHRData(
+					engineMode.WasteHeatRecoveryDataElectrical, WHRType.ElectricalOutput);
+			}
+			if ((retVal.WHRType & WHRType.MechanicalOutputDrivetrain) != 0) {
+				retVal.MechanicalWHR = CreateWHRData(
+					engineMode.WasteHeatRecoveryDataMechanical, WHRType.MechanicalOutputDrivetrain);
+			}
 
 			return retVal;
 		}
