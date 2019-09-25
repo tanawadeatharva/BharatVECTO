@@ -220,7 +220,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var nextGear = _gearbox.TorqueConverterLocked ? gear + 1 : gear;
 
-				var shiftSpeed = UpshiftLines[(int)gear + (dualTCTransmission ? 2 : 1)].LookupShiftSpeed(
+				var gearIdx = (int)gear;
+				if (_gearbox.TorqueConverterLocked) {
+					gearIdx += 1;
+				}
+
+
+				var shiftSpeed = UpshiftLines[gearIdx].LookupShiftSpeed(
 					_loadStage, DataBus.RoadGradient, DataBus.DriverAcceleration, _accMin, _accMax);
 				var shiftSpeedGbxOut = shiftSpeed / ModelData.Gears[nextGear].Ratio;
 				if (outAngularVelocity > shiftSpeedGbxOut) {
@@ -246,7 +252,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 
-			var shiftSpeed = DownshiftLines[(int)gear + (dualTCTransmission ? 2 : 1)].LookupShiftSpeed(
+			var gearIdx = (int)gear;
+			if (_gearbox.TorqueConverterLocked) {
+				gearIdx += 1;
+			}
+			var shiftSpeed = DownshiftLines[gearIdx].LookupShiftSpeed(
 				_loadStage, DataBus.RoadGradient, DataBus.DriverAcceleration, -0.4.SI<MeterPerSquareSecond>(),
 				-0.2.SI<MeterPerSquareSecond>());
 			if (inAngularVelocity < shiftSpeed) {
