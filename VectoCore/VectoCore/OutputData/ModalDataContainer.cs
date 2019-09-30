@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.OutputData
 			double k, d, r;
 			VectoMath.LeastSquaresFitting(
 				GetValues(
-					x => x.Field<bool>(ModalResultField.IgnitionOn.GetName())
+					x => x.Field<bool>(ModalResultField.ICEOn.GetName())
 						? new Point(
 							x.Field<SI>(ModalResultField.P_eng_fcmap.GetName()).Value(),
 							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.OutputData
 
 //#if TRACE
 			strCols = strCols.Concat(_additionalColumns);
-			strCols = strCols.Concat(new[] { ModalResultField.IgnitionOn }.Select(x => x.GetName()));
+			strCols = strCols.Concat(new[] { ModalResultField.ICEOn }.Select(x => x.GetName()));
 //#endif
 			if (WriteModalResults) {
 				var filteredData = Data;

@@ -367,6 +367,7 @@ Public Class JSONFileWriter
                 body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed.AsKmph)
                 body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay.Value())
                 body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold.AsKmph)
+                body.Add("EcoRollMaxAcceleration", driver.EcoRollData.AccelerationUpperLimit.Value())
             End If
 
             if not (driver.PCCData is Nothing) then

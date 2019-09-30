@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						}
 					}
 					if (PlotIgnitionState && yfield == ModalResultField.P_eng_out) {
-						var ignition = LoadData(modDataV3, ModalResultField.IgnitionOn.GetName());
+						var ignition = LoadData(modDataV3, ModalResultField.ICEOn.GetName());
 
 						chartArea.AxisY2.Enabled = AxisEnabled.True;
 						chartArea.AxisY2.Title = "Engine On [0/1]";

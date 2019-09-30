@@ -489,7 +489,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static int NumICEStarts(this IModalDataContainer data)
 		{
-			return data.GetValues(x => x.Field<bool>((int)ModalResultField.IgnitionOn)).Pairwise((x, y) => !x && y ? 1 : 0).Sum();
+			return data.GetValues(x => x.Field<bool>((int)ModalResultField.ICEOn)).Pairwise((x, y) => !x && y ? 1 : 0).Sum();
 		}
 	}
 }

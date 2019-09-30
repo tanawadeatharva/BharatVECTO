@@ -363,6 +363,8 @@ namespace TUGraz.VectoCommon.InputData
 		Second ActivationDelay { get; }
 
 		MeterPerSecond UnderspeedThreshold { get; }
+
+		MeterPerSquareSecond AccelerationUpperLimit { get; }
 	}
 
 	public interface IPCCEngineeringInputData

@@ -372,7 +372,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_eng_drag] = CurrentState.FullDragTorque * avgEngineSpeed;
 			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
-			container[ModalResultField.IgnitionOn] = CurrentState.IgnitionOn;
+			container[ModalResultField.ICEOn] = CurrentState.IgnitionOn;
 
 			var pWHRelMap = 0.SI<Watt>();
 			var pWHRelCorr = 0.SI<Watt>();

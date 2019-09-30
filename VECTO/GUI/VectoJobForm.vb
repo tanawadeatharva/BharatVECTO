@@ -542,6 +542,7 @@ Public Class VectoJobForm
         tbEcoRollActivationDelay.Text = if(driver.EcoRollData?.ActivationDelay?.ToGUIFormat(), DeclarationData.Driver.EcoRoll.ActivationDelay.ToGUIFormat())
         tbEcoRollMinSpeed.Text = if(driver.EcoRollData?.MinSpeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.EcoRoll.MinSpeed.AsKmph().ToGUIFormat())
         tbEcoRollUnderspeed.Text = if(driver.EcoRollData?.UnderspeedThreshold?.AsKmph().ToGUIFormat(), DeclarationData.Driver.EcoRoll.UnderspeedThreshold.AsKmph().ToGUIFormat())
+        tbEcoRollMaxAcc.Text = If (driver.EcoRollData?.AccelerationUpperLimit?.ToGUIFormat(), DeclarationData.Driver.EcoRoll.AccelerationUpperLimit.ToGUIFormat())
 
         tbPCCUnderspeed.Text = if(driver.PCCData?.Underspeed?.AsKmph().ToGUIFormat(), DeclarationData.Driver.PCC.Underspeed.AsKmph().ToGUIFormat())
         tbPCCOverspeed.Text = If(driver.PCCData?.OverspeedUseCase3?.AsKmph().ToGUIFormat(), DeclarationData.Driver.PCC.OverspeedUseCase3.AsKmph().ToGUIFormat())
@@ -672,6 +673,7 @@ Public Class VectoJobForm
         vectoJob.EcoRollActivationDelay = tbEcoRollActivationDelay.Text.ToDouble(0)
         vectoJob.EcoRollMinSpeed = tbEcoRollMinSpeed.Text.ToDouble(0)
         vectoJob.EcoRollUnderspeedThreshold = tbEcoRollUnderspeed.Text.ToDouble(0)
+        vectojob.EcoRollMaxAcceleration = tbEcoRollMaxAcc.Text.ToDouble(0)
 
         vectoJob.PCCEnableSpeedVal = tbPCCEnableSpeed.Text.ToDouble(0)
         vectoJob.PCCMinSpeed = tbPCCMinSpeed.Text.ToDouble(0)

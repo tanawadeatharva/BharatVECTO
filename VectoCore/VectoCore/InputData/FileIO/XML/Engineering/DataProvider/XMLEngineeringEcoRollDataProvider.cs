@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public const string XSD_TYPE = "EcoRollEngineeringType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
-
+		
 		public XMLEngineeringEcoRollDataProviderV10(IXMLEngineeringDriverData driverData, XmlNode node) : base(node) { }
 
 		#region Implementation of IEcoRollEngineeringInputData
@@ -34,6 +34,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get {
 				return GetDouble("Underspeed", DeclarationData.Driver.EcoRoll.UnderspeedThreshold.AsKmph).KMPHtoMeterPerSecond();
+			}
+		}
+
+		public MeterPerSquareSecond AccelerationUpperLimit
+		{
+			get {
+				return GetDouble("MaxAcceleration", DeclarationData.Driver.EcoRoll.AccelerationUpperLimit.Value())
+					.SI<MeterPerSquareSecond>();
 			}
 		}
 

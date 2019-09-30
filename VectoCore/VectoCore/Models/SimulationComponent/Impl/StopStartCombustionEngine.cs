@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.Tq_full] = 0.SI<NewtonMeter>();
 			container[ModalResultField.Tq_drag] = 0.SI<NewtonMeter>();
 
-			container[ModalResultField.IgnitionOn] = CurrentState.IgnitionOn;
+			container[ModalResultField.ICEOn] = CurrentState.IgnitionOn;
 			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>()) * EngineStopStartUtilityFactor;
 
 

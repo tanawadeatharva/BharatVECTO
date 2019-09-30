@@ -885,7 +885,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 						: Body.GetEx<double>("EcoRollMinSpeed").KMPHtoMeterPerSecond(),
 					ActivationDelay = Body["EcoRollActivationDelay"] == null
 						? null
-						: Body.GetEx<double>("EcoRollActivationDelay").SI<Second>()
+						: Body.GetEx<double>("EcoRollActivationDelay").SI<Second>(),
+					AccelerationUpperLimit = Body["EcoRollMaxAcceleration"] == null? null : Body.GetEx<double>("EcoRollMaxAcceleration").SI<MeterPerSquareSecond>()
 				});
 			}
 		}
@@ -912,6 +913,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public MeterPerSecond MinSpeed { get; set; }
 		public Second ActivationDelay { get; set; }
 		public MeterPerSecond UnderspeedThreshold { get; set; }
+
+		public MeterPerSquareSecond AccelerationUpperLimit { get; set; }
 
 		#endregion
 	}

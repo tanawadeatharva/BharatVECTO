@@ -468,7 +468,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					MinSpeed = driver.EcoRollData?.MinSpeed ?? DeclarationData.Driver.EcoRoll.MinSpeed,
 					ActivationPhaseDuration = driver.EcoRollData?.ActivationDelay ?? DeclarationData.Driver.EcoRoll.ActivationDelay,
 					AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
-					AccelerationUpperLimit = 0.15.SI<MeterPerSquareSecond>(), // DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
+					AccelerationUpperLimit = driver.EcoRollData?.AccelerationUpperLimit ?? DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
 				},
 				PCC = new DriverData.PCCData() {
 					PCCEnableSpeed = driver.PCCData?.PCCEnabledSpeed ?? DeclarationData.Driver.PCC.PCCEnableSpeed,

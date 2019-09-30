@@ -78,12 +78,15 @@ Public Class VectoJob
     Public EcoRollMinSpeed As double
     Public EcoRollUnderspeedThreshold As Double
     Public EcoRollActivationDelay as double
+    public EcoRollMaxAcceleration as Double
+
     Public PCCEnableSpeedVal As Double
     Public PCCMinSpeed As Double
     Public PCCPrevewiDistance1 As Double
     Public PCCPreviewDistance2 As Double
     Public PCCUnderspeed As Double
     Public PCCOverspeedUseCase3 As Double
+    Private _accelerationUpperLimit As MeterPerSquareSecond
 
     'Private _vehicleInputData As JSONComponentInputData
     'Private _engineInputData As JSONComponentInputData
@@ -348,6 +351,12 @@ Public Class VectoJob
     get
             Return EcoRollUnderspeedThreshold.KMPHtoMeterPerSecond()
     End Get
+    End Property
+
+    Public ReadOnly Property AccelerationUpperLimit As MeterPerSquareSecond Implements IEcoRollEngineeringInputData.AccelerationUpperLimit
+        Get
+            Return EcoRollMaxAcceleration.SI(of MeterPerSquareSecond)
+        End Get
     End Property
 
     Public ReadOnly Property MaxEngineOffTimespan As Second Implements IEngineStopStartEngineeringInputData.MaxEngineOffTimespan

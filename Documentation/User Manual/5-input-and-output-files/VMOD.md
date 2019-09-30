@@ -92,6 +92,10 @@ $P_{avg} = \frac{1}{simulation interval} \int{P(t) dt}$.
 | FC-AAUX			|	[g/h]	|	Fuel consumption computed by the AAUX module considering smart auxiliaries. (FC-AAUX = FC-WHTCc if the AAUX model is not used, otherwise the fuel consumption as calculated by the AAUX model) |
 | FC-ESS			|	[g/h]	|	Fuel consumption considering engine stop/start not always activated. (FC-ESS = FC-AAUX if the engie is on, FC-ESS = FC(P_aux) * (1 - engine stop/start utility factor) if the combustion engine is off - see [Engine Stop/Start](#advanced-driver-assistant-systems-eco-roll-engine-stopstart) |
 | FC-Final_mod		|	[g/h]	|	Instantaneous final fuel consumption value after all applicable corrections. (FC-Final_mod = FC-ESS) |
+| EcoRollConditionsMet |        |   0 if the conditions for switching to eco-roll are _not_ met, 1 if the conditions for eco-roll are met - eco roll is activated after the activation delay (2s in declaration mode) |   
+| PCCSegment        |           |   1 if a PCC segment was identified in the pre-processing (gradient below threshold where vehicle accelerates on its own without engine power), 0 otherwise |
+| PCCState          |           |   0: not inside PCC segment, 1: inside PCC segment, 2: PCC use-case 1 active, 3: PCC use-case 2 active |
+| ICE On            |           |   0 if the combustion engine is switched off (either during stand-still or eco-roll), 1 otherwise |
 
 
 P_eng_FCmap = T_eng_fcmap * n_eng_avg
