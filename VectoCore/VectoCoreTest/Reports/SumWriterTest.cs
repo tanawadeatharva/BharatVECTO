@@ -111,8 +111,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var sumData = VectoCSVFile.Read("testsumcalc_fixed.vsum", false, true);
 
 			// duration: 500s, distance: 500m
-			Assert.AreEqual(500, modData.Duration().Value());
-			Assert.AreEqual(500, modData.Distance().Value());
+			Assert.AreEqual(500, modData.Duration.Value());
+			Assert.AreEqual(500, modData.Distance.Value());
 
 			// 3kW * 500s => to kWh
 			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("E_air [kWh]"), 1e-3);

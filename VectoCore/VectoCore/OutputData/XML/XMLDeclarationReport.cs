@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				EngineSpeedDrivingAvg = (entriesDriving.Sum(x => (x.nEng * x.dt).Value()) / drivingTime.Value()).SI<PerSecond>();
 				EngineSpeedDrivingMin = entriesDriving.Min(x => x.nEng);
 				EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
-				Distance = data.Distance();
+				Distance = data.Distance;
 
 				var workESS = data.WorkAuxiliariesDuringEngineStop() + data.WorkEngineStart();
 				var workWHRel = data.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
@@ -153,14 +153,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 				foreach (var entry in data.FuelData) {
 					var col = data.GetColumnName(entry, ModalResultField.FCFinal);
 					var fcSum = data.TimeIntegral<Kilogram>(col);
-					//FuelConsumptionTotal[entry.FuelType] = fcSum;
-					double k, d, s;
-					VectoMath.LeastSquaresFitting(
-						data.GetValues(
-							x => x.Field<bool>(ModalResultField.IgnitionOn.GetName()) ? new Point(
-								x.Field<SI>(ModalResultField.P_eng_fcmap.GetName()).Value(), x.Field<SI>(data.GetColumnName(entry, ModalResultField.FCFinal)).Value()) : null).Where(x => x != null && x.Y > 0),
-						out k, out d, out s);
-					var correction = k.SI<KilogramPerWattSecond>();
+
+					var correction = 0.SI<KilogramPerWattSecond>();
+					if (!(workWhrMech + workESS).IsEqual(0)) {
+						correction = data.VehicleLineCorrectionFactor(entry);
+					}
 					var fcTotalcorr = fcSum + correction * (workESS + workWhrMech);
 					FuelConsumptionFinal[entry.FuelType] = fcTotalcorr;
 					CO2Total += fcTotalcorr * entry.CO2PerFuelWeight;

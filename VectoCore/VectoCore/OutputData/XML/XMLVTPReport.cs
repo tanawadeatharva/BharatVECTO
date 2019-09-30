@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				}
 
 				var aux = data.Auxiliaries.FirstOrDefault(x => x.Key == Constants.Auxiliaries.IDs.Fan);
-				AverageFanPower = data.AuxiliaryWork(aux.Value) / data.Duration();
+				AverageFanPower = data.AuxiliaryWork(aux.Value) / data.Duration;
 				var cycleEntries = runData.Cycle.Entries.Pairwise().Select(
 					x => new {
 						PWheel = x.Item1.PWheel > 0 ? x.Item1.PWheel : 0.SI<Watt>(),

@@ -476,10 +476,10 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[VEHICLE_FUEL_TYPE] = string.Join(", ", modData.FuelData.Select(x => x.GetLabel()));
 
-			var totalTime = modData.Duration();
+			var totalTime = modData.Duration;
 			row[TIME] = (ConvertedSI)totalTime;
 
-			var distance = modData.Distance();
+			var distance = modData.Distance;
 			if (distance != null) {
 				row[DISTANCE] = distance.ConvertToKiloMeter();
 			}
@@ -529,8 +529,8 @@ namespace TUGraz.VectoCore.OutputData
 			var workWHREl = modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
 			var workWhrMech = - workWHREl / DeclarationData.AlternaterEfficiency;
 
-			var distance = modData.Distance();
-			var duration = modData.Duration();
+			var distance = modData.Distance;
+			var duration = modData.Duration;
 
 			var kilogramCO2PerMeter = 0.SI<KilogramPerMeter>();
 
@@ -567,17 +567,11 @@ namespace TUGraz.VectoCore.OutputData
 
 				var fcModSum = modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel);
 
-				double k, d, r;
-				VectoMath.LeastSquaresFitting(
-					modData.GetValues(
-						x => x.Field<bool>(ModalResultField.IgnitionOn.GetName())
-							? new Point(
-								x.Field<SI>(ModalResultField.P_eng_fcmap.GetName()).Value(), x.Field<SI>(modData.GetColumnName(fuel, ModalResultField.FCFinal)).Value())
-							: null).Where(x => x != null && x.Y > 0),
-					out k, out d, out r);
-
-				var correction = k.SI<KilogramPerWattSecond>();
-
+				var correction = 0.SI<KilogramPerWattSecond>();
+				if (!workWhrMech.IsEqual(0) || !workESS.IsEqual(0)) { 
+					correction = modData.VehicleLineCorrectionFactor(fuel);
+				}
+				
 				row[FcCol(K_VEHLINE, suffix)] = correction.ConvertToGramPerKiloWattHour();
 
 				var fcWHRCorr = fcModSum + correction * workWhrMech;

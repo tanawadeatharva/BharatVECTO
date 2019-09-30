@@ -49,8 +49,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 	internal class MockModalDataContainer : IModalDataContainer
 	{
 		protected Dictionary<FuelData.Entry, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<FuelData.Entry, Dictionary<ModalResultField, DataColumn>>();
+		private Second _duration;
+		private Meter _distance;
 
-		
+
 		public MockModalDataContainer()
 		{
 			Data = new ModalResults();
@@ -219,6 +221,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void Reset()
 		{
 			
+		}
+
+		public Second Duration
+		{
+			get { return _duration; }
+		}
+
+		public Meter Distance
+		{
+			get { return _distance; }
+		}
+
+		public KilogramPerWattSecond VehicleLineCorrectionFactor(FuelData.Entry fuel)
+		{
+			return 0.SI<KilogramPerWattSecond>();
 		}
 
 		public string RunName { get; set; }
