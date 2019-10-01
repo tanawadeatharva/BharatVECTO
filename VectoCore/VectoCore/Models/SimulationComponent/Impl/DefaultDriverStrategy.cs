@@ -98,7 +98,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 												((NextDrivingAction.TriggerDistance - NextDrivingAction.ActionDistance) / Driver.DataBus.VehicleSpeed)
 												.IsSmaller(
 													Constants.SimulationSettings.LowerBoundTimeInterval / 20) && !Driver.DataBus.ClutchClosed(absTime);
-					if ( atTriggerTistance || closeBeforeBraking || brakingIntervalTooShort) {
+					var brakingIntervalShort = NextDrivingAction.Action == DrivingBehavior.Braking &&
+												((NextDrivingAction.TriggerDistance - NextDrivingAction.ActionDistance) / Driver.DataBus.VehicleSpeed)
+												.IsSmaller(
+													Constants.SimulationSettings.LowerBoundTimeInterval / 2) && !Driver.DataBus.ClutchClosed(absTime);
+					if (brakingIntervalShort && remainingDistance.IsEqual(ds)) {
+						return new ResponseDrivingCycleDistanceExceeded()
+						{
+							Source = this,
+							MaxDistance = ds / 2
+						};
+					}
+                    if ( atTriggerTistance || closeBeforeBraking || brakingIntervalTooShort) {
 						CurrentDrivingMode = DrivingMode.DrivingModeBrake;
 						DrivingModes[CurrentDrivingMode].ResetMode();
 						Log.Debug("Switching to DrivingMode BRAKE");
