@@ -62,6 +62,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		private PerSecond _nTq99lSpeed; // 99% of max Torque below rated speed
 		private PerSecond _nP99hSpeed; // 99% of Pmax above rated speed
 
+		private PerSecond _nTq98hSpeed; // 99% of max Torque above rated
+		private PerSecond _nP98hSpeed; // 99% of Pmax above rated speed
+
+
 		[Required, ValidateObject] internal readonly List<FullLoadCurveEntry> FullLoadEntries;
 
 		private SortedList<PerSecond, int> _quickLookup;
@@ -281,9 +285,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			get { return _nP99hSpeed ?? (_nP99hSpeed = ComputeNP99HSpeed()); }
 		}
 
+		public PerSecond NTq98hSpeed
+		{
+			get { return _nTq98hSpeed ?? (_nTq98hSpeed = FindEnginSpeedForTorque(0.98 * MaxTorque).Last()); }
+		}
+
+		public PerSecond NP98hSpeed
+		{
+			get { return _nP98hSpeed ?? (_nP98hSpeed = ComputeNP98HSpeed()); }
+		}
+
 		private PerSecond ComputeNP99HSpeed()
 		{
 			var retVal = FindEngineSpeedForPower(0.99 * MaxPower).Last();
+			if (retVal <= RatedSpeed) {
+				throw new VectoException(
+					"failed to compute n_P99H - must be higher than rated speed. rated speed: {0}, n_tq99h: {1}", RatedSpeed, retVal);
+			}
+			return retVal;
+		}
+
+		private PerSecond ComputeNP98HSpeed()
+		{
+			var retVal = FindEngineSpeedForPower(0.98 * MaxPower).Last();
 			if (retVal <= RatedSpeed) {
 				throw new VectoException(
 					"failed to compute n_P99H - must be higher than rated speed. rated speed: {0}, n_tq99h: {1}", RatedSpeed, retVal);

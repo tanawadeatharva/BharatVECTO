@@ -54,11 +54,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 		public double RatioEarlyDownshiftFC { get; set; }
 		public double RatioEarlyUpshiftFC { get; set; }
 
+		public int AllowedGearRangeFC { get; set; }
+
+		public double AccelerationFactor { get; set; }
+
+		public double VelocityDropFactor { get; internal set; }
+
 		// Shift Lines for Voith proposed shift strategy
 		public TableData GearshiftLines { get; set; }
 
 		public IEnumerable<Tuple<double, double>> LoadstageThresholds { get; set; }
 		
-		public int AllowedGearRangeFC { get; set; }
+		
 	}
 }

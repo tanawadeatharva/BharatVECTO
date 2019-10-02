@@ -115,6 +115,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public virtual double? RatioEarlyUpshiftFC { get { return null; } }
 		public virtual double? RatioEarlyDownshiftFC { get { return null; } }
 		public int? AllowedGearRangeFC { get { return null; } }
+
+		public double? VeloictyDropFactor { get { return null; } }
+
+		public double? AccelerationFactor
+		{
+			get { return null; }
+		}
+
 		public virtual TableData LoadStageShiftLines { get { return null; } }
 		public virtual IList<double> LoadStageThresoldsUp { get { return null; } }
 		public virtual IList<double> LoadStageThresoldsDown { get { return null; } }

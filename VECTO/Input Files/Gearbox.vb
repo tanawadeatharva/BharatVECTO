@@ -74,7 +74,7 @@ Public Class Gearbox
 	Public PSShiftTime As Double
 
 
-	Public Sub New()
+    Public Sub New()
 		_myPath = ""
 		_filePath = ""
 		SetDefault()
@@ -593,6 +593,18 @@ Public Class Gearbox
     get
             Return Nothing
     End Get
+    End Property
+
+    Public ReadOnly Property VeloictyDropFactor As Double? Implements IGearshiftEngineeringInputData.VeloictyDropFactor
+        Get
+            Return Nothing
+        End Get
+    End Property
+
+    Public ReadOnly Property AccelerationFactor As Double? Implements IGearshiftEngineeringInputData.AccelerationFactor
+        Get
+            Return Nothing
+        End Get
     End Property
 
     Public Overridable ReadOnly Property LoadStageShiftLines As TableData Implements IGearshiftEngineeringInputData.LoadStageShiftLines

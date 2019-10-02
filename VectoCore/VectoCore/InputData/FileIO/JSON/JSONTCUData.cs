@@ -268,6 +268,28 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public double? VeloictyDropFactor
+		{
+			get {
+				if (Body["VelocityDropFactor"] == null) {
+					return null;
+				}
+
+				return Body.GetEx<double>("VelocityDropFactor");
+			}
+		}
+
+		public double? AccelerationFactor
+		{
+			get {
+				if (Body["AccelerationFactorNP98h"] == null) {
+					return null;
+				}
+
+				return Body.GetEx<double>("AccelerationFactorNP98h");
+			}
+		}
+
 		public TableData LoadStageShiftLines
 		{
 			get {

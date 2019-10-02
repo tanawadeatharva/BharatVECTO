@@ -277,6 +277,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		int? AllowedGearRangeFC { get; }
 
+		double? VeloictyDropFactor { get; }
+
+		double? AccelerationFactor { get; }
 
 		// Voith GS Parameters
 		TableData LoadStageShiftLines { get; }

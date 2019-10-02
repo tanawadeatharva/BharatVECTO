@@ -193,7 +193,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var fullDragTorque = ModelData.FullLoadCurves[DataBus.Gear].DragLoadStationaryTorque(avgEngineSpeed);
-			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, dt, dryRun);
+			var stationaryFullLoadTorque = ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(avgEngineSpeed);
+			var dynamicFullLoadPower = ComputeFullLoadPower(avgEngineSpeed, stationaryFullLoadTorque, dt, dryRun);
 
 			var dynamicFullLoadTorque = dynamicFullLoadPower / avgEngineSpeed;
 			var inertiaTorqueLoss =
@@ -231,6 +232,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					EngineTorqueDemand = torqueOut,
 					EngineTorqueDemandTotal = totalTorqueDemand,
 					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
+					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
 					DragPower = fullDragTorque * avgEngineSpeed,
 					AuxiliariesPowerDemand = auxTorqueDemand * avgEngineSpeed,
 					EngineSpeed = angularVelocity,
@@ -243,6 +245,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.FullDragTorque = fullDragTorque;
 			CurrentState.DynamicFullLoadTorque = dynamicFullLoadTorque;
 			CurrentState.InertiaTorqueLoss = inertiaTorqueLoss;
+			CurrentState.StationaryFullLoadTorque = stationaryFullLoadTorque;
 
 			if ((deltaFull * avgEngineSpeed).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance) &&
 				(deltaDrag * avgEngineSpeed).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.LineSearchTolerance)) {
@@ -274,6 +277,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DynamicFullLoadPower = dynamicFullLoadPower,
 					EngineTorqueDemand = torqueOut,
 					EngineTorqueDemandTotal = totalTorqueDemand,
+					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
 					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
 					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					Source = this,
@@ -292,6 +296,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DynamicFullLoadPower = dynamicFullLoadPower,
 					EngineTorqueDemand = torqueOut,
 					EngineTorqueDemandTotal = totalTorqueDemand,
+					EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
 					EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
 					DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
 					Source = this,
@@ -306,6 +311,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EnginePowerRequest = totalTorqueDemand * avgEngineSpeed,
 				EngineTorqueDemand = torqueOut,
 				EngineTorqueDemandTotal = totalTorqueDemand,
+				EngineStationaryFullLoadTorque = stationaryFullLoadTorque,
 				EngineDynamicFullLoadTorque = dynamicFullLoadTorque,
 				DynamicFullLoadPower = dynamicFullLoadPower,
 				DragPower = CurrentState.FullDragTorque * avgEngineSpeed,
@@ -451,15 +457,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		///     computes full load power from gear [-], angularVelocity [rad/s] and dt [s].
 		/// </summary>
-		protected Watt ComputeFullLoadPower(PerSecond avgAngularVelocity, Second dt, bool dryRun)
+		protected Watt ComputeFullLoadPower(PerSecond avgAngularVelocity, NewtonMeter stationaryFullLoadTorque, Second dt, bool dryRun)
 		{
 			if (dt <= 0) {
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
 			}
 
-			CurrentState.StationaryFullLoadTorque =
-				ModelData.FullLoadCurves[DataBus.Gear].FullLoadStationaryTorque(avgAngularVelocity);
-			var stationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * avgAngularVelocity;
+			
+			var stationaryFullLoadPower = stationaryFullLoadTorque * avgAngularVelocity;
 			Watt dynFullPowerCalculated;
 
 			

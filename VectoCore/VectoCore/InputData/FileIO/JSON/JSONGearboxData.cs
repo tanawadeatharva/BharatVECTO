@@ -118,6 +118,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONGearboxDataV5 : JSONFile, IGearboxEngineeringInputData, IAxleGearInputData,
 		ITorqueConverterEngineeringInputData, IGearshiftEngineeringInputData
 	{
+
 		public JSONGearboxDataV5(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) {}
 
@@ -403,6 +404,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public double? RatioEarlyUpshiftFC { get { return null; } }
 		public double? RatioEarlyDownshiftFC { get { return null; } }
 		public int? AllowedGearRangeFC { get { return null; } }
+
+		public double? VeloictyDropFactor
+		{
+			get { return null; }
+		}
+
+		public double? AccelerationFactor
+		{
+			get { return null; }
+		}
+
 		public TableData LoadStageShiftLines { get { return null; } }
 		public IList<double> LoadStageThresoldsUp { get { return null; } }
 		public IList<double> LoadStageThresoldsDown { get { return null; } }

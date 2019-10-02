@@ -52,6 +52,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Watt DragPower { get; set; }
 		public NewtonMeter EngineTorqueDemand { get; set; }
 		public NewtonMeter EngineTorqueDemandTotal { get; set; }
+
+		public NewtonMeter EngineStationaryFullLoadTorque { get; set; }
+
 		public NewtonMeter EngineDynamicFullLoadTorque { get; set; }
 		public MeterPerSecond VehicleSpeed { get; set; }
 
@@ -127,10 +130,11 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	public class ResponseDryRun : AbstractResponse
 	{
+		
 		public Watt DeltaFullLoad { get; set; }
 		public Watt DeltaDragLoad { get; set; }
 		public PerSecond DeltaEngineSpeed { get; set; }
-		
+
 	}
 
 	internal class ResponseGearShift : AbstractResponse

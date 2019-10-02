@@ -202,6 +202,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double RatingFactorCurrentGearAT = 0.95;
 
 			public static readonly MeterPerSquareSecond DriverAccelerationThresholdLow = 0.1.SI<MeterPerSquareSecond>();
+			public static double VelocityDropFactor = 0.0;
+			public static double AccelerationFactor = 0.5;
 
 			public const double RatioEarlyUpshiftFC = 24;
 			public const double RatioEarlyDownshiftFC = 24;
@@ -272,7 +274,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				var p2 = new Point(engine.IdleSpeed.Value() * 1.1, 0);
 				var p3 = new Point(fullLoadCurve.NTq99lSpeed.Value(), 0);
-				var p5 = new Point(fullLoadCurve.RatedSpeed.Value(), fullLoadCurve.MaxTorque.Value() * 1.1);
+				var p5 = new Point(fullLoadCurve.NP98hSpeed.Value(), fullLoadCurve.MaxTorque.Value() * 1.1);
 
 				var downShift = new List<ShiftPolygon.ShiftPolygonEntry>();
 

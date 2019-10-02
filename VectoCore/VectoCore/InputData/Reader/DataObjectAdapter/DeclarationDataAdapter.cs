@@ -599,6 +599,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				RatioEarlyUpshiftFC = DeclarationData.GearboxTCU.RatioEarlyUpshiftFC / axleRatio,
 				RatioEarlyDownshiftFC = DeclarationData.GearboxTCU.RatioEarlyDownshiftFC / axleRatio,
 				AllowedGearRangeFC = gbxType.AutomaticTransmission() ? DeclarationData.GearboxTCU.AllowedGearRangeFCAT : DeclarationData.GearboxTCU.AllowedGearRangeFCAMT,
+				VelocityDropFactor = DeclarationData.GearboxTCU.VelocityDropFactor,
+				AccelerationFactor = DeclarationData.GearboxTCU.AccelerationFactor,
 			};
 
 			return retVal;

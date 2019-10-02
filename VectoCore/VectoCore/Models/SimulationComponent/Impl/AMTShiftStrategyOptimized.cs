@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
@@ -6,6 +7,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -24,7 +26,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private SimplePowertrainContainer TestContainer;
 		private Gearbox TestContainerGbx;
 
-		public AMTShiftStrategyOptimized(VectoRunData runData, IDataBus dataBus) : base(runData, dataBus)
+		protected readonly VelocityRollingLookup VelocityDropData;
+		private AccelerationCurveData accCurve;
+
+		public AMTShiftStrategyOptimized(VectoRunData runData, IVehicleContainer dataBus) : base(runData, dataBus)
 		{
 			if (runData.EngineData == null) {
 				return;
@@ -32,6 +37,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			fcMap = runData.EngineData.ConsumptionMap;
 			fld = runData.EngineData.FullLoadCurves;
 			shiftStrategyParameters = runData.GearshiftParameters;
+			accCurve = runData.DriverData.AccelerationCurve;
 			if (shiftStrategyParameters == null) {
 				throw new VectoException("Parameters for shift strategy missing!");
 			}
@@ -44,6 +50,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (TestContainerGbx == null) {
 				throw new VectoException("Unknown gearboxtype: {0}", TestContainer.GearboxCtl.GetType().FullName);
 			}
+
+			// register pre-processors
+			var maxG = runData.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
+			var grad = Convert.ToInt32(maxG / 2) * 2;
+
+			VelocityDropData = new VelocityRollingLookup();
+			dataBus.AddPreprocessor(
+				new VelocitySpeedGearshiftPreprocessor(VelocityDropData, runData.GearboxData.TractionInterruption, TestContainer, -grad, grad, 2));
+
 
 			if (shiftStrategyParameters.AllowedGearRangeFC > 2 || shiftStrategyParameters.AllowedGearRangeFC < 1) {
 				Log.Warn("Gear-range for FC-based gearshift must be either 1 or 2!");
@@ -62,6 +77,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var fcUpshiftPossible = true;
 
+			var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleSpeed, DataBus.RoadGradient);
+			var vDrop = DataBus.VehicleSpeed - estimatedVelocityPostShift;
+			var vehicleSpeedForGearRating = DataBus.VehicleSpeed - vDrop * shiftStrategyParameters.VelocityDropFactor;
+
+			var totalTransmissionRatio = DataBus.EngineSpeed / DataBus.VehicleSpeed;
+
 			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 				var tryNextGear = (uint)(currentGear + i);
 
@@ -70,7 +91,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				fcUpshiftPossible = true;
-				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
+
+				var response = RequestDryRunWithGear(absTime, dt, vehicleSpeedForGearRating, DataBus.DriverAcceleration, tryNextGear);
+				//var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
 
 				var inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
 				var inTorque = response.ClutchPowerRequest / inAngularVelocity;
@@ -83,19 +106,48 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
 				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+				//var reserve = 1 - response.EngineTorqueDemandTotal / response.EngineStationaryFullLoadTorque;
+
+				if (reserve < ModelData.TorqueReserve && reserve > -0.1) {
+					//var acc = EstimateAcceleration(outAngularVelocity, outTorque);
+
+					//var estimatedEngineSpeed = vehicleSpeedForGearRating * (totalTransmissionRatio / ModelData.Gears[currentGear].Ratio * ModelData.Gears[tryNextGear].Ratio);
+					var accelerationFactor = outAngularVelocity * ModelData.Gears[currentGear].Ratio < fld[0].NTq98hSpeed ?
+						1.0 :
+						VectoMath.Interpolate(fld[0].NTq98hSpeed, fld[0].NP98hSpeed, 1.0, shiftStrategyParameters.AccelerationFactor, outAngularVelocity * ModelData.Gears[currentGear].Ratio);
+					var minAcc = VectoMath.Min(DataBus.DriverAcceleration, accCurve.Lookup(vehicleSpeedForGearRating).Acceleration * accelerationFactor);
+					//var minAcc = DataBus.DriverAcceleration * accelerationFactor;
+					response = RequestDryRunWithGear(absTime, dt, vehicleSpeedForGearRating, minAcc, tryNextGear);
+					//response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
+					fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
+					reserve = 1 - response.EnginePowerRequest / fullLoadPower;
+					if (reserve < ModelData.TorqueReserve) {
+						continue;
+					} else {
+						Log.Error("foo");
+					}
+				}
 
 				if (fcCurrent == null) {
-					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, currentGear);
-					fcCurrent = fcMap.GetFuelConsumption(
-						responseCurrent.EngineTorqueDemandTotal.LimitTo(
-							fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
-							fld[currentGear].FullLoadStationaryTorque(responseCurrent.EngineSpeed))
-						, responseCurrent.EngineSpeed).Value;
+					var responseCurrent = RequestDryRunWithGear(absTime, dt, DataBus.VehicleSpeed, DataBus.DriverAcceleration, currentGear);
+					//var responseCurrent = RequestDryRunWithGear(absTime, dt,outTorque, outAngularVelocity, currentGear);
+					var tqCurrent = responseCurrent.EngineTorqueDemandTotal.LimitTo(
+						fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
+						fld[currentGear].FullLoadStationaryTorque(responseCurrent.EngineSpeed));
+					var fcCurRes = fcMap.GetFuelConsumption(tqCurrent, responseCurrent.EngineSpeed, true);
+					if (fcCurRes.Extrapolated) {
+						Log.Warn("EffShift Strategy: Extrapolation of fuel consumption for current gear!n: {1}, Tq: {2}", responseCurrent.EngineSpeed, tqCurrent);
+					}
+					fcCurrent = fcCurRes.Value;
 				}
-				var fcNext = fcMap.GetFuelConsumption(
-					response.EngineTorqueDemandTotal.LimitTo(
-						fld[tryNextGear].DragLoadStationaryTorque(response.EngineSpeed),
-						fld[tryNextGear].FullLoadStationaryTorque(response.EngineSpeed)), response.EngineSpeed).Value;
+				var tqNext = response.EngineTorqueDemandTotal.LimitTo(
+					fld[tryNextGear].DragLoadStationaryTorque(response.EngineSpeed),
+					fld[tryNextGear].FullLoadStationaryTorque(response.EngineSpeed));
+				var fcNextRes = fcMap.GetFuelConsumption(tqNext, response.EngineSpeed, true);
+				if (fcNextRes.Extrapolated) {
+					Log.Warn("EffShift Strategy: Extrapolation of fuel consumption for gear {0}! n: {1}, Tq: {2}", tryNextGear, response.EngineSpeed, tqNext);
+				}
+				var fcNext = fcNextRes.Value;
 
 				if (reserve < ModelData.TorqueReserve ||
 					!fcNext.IsSmaller(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) || !fcNext.IsSmaller(minFc)) {
@@ -211,6 +263,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		#endregion
+
+		protected  ResponseDryRun RequestDryRunWithGear(
+			Second absTime, Second dt, MeterPerSecond vehicleSpeed, MeterPerSquareSecond acceleration, uint tryNextGear)
+		{
+			LogEnabled = false;
+			TestContainerGbx.Disengaged = false;
+			TestContainerGbx.Gear = tryNextGear;
+
+			//TestContainer.GearboxOutPort.Initialize(outTorque, outAngularVelocity);
+			TestContainer.VehiclePort.Initialize(vehicleSpeed, DataBus.RoadGradient);
+			var response = (ResponseDryRun)TestContainer.VehiclePort.Request(
+				0.SI<Second>(), dt, acceleration, DataBus.RoadGradient, true);
+
+			//var response = (ResponseDryRun)TestContainer.GearboxOutPort.Request(
+			//	0.SI<Second>(), dt, outTorque, outAngularVelocity, true);
+			LogEnabled = true;
+			return response;
+		}
 
 		protected override ResponseDryRun RequestDryRunWithGear(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint tryNextGear)
