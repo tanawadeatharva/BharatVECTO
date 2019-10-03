@@ -1,8 +1,8 @@
-﻿Imports NUnit.Framework
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliariesTests.Mocks
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Hvac
+﻿Imports System.IO
+Imports NUnit.Framework
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+
 
 Namespace UnitTests
 	<TestFixture()>
@@ -46,6 +46,11 @@ Namespace UnitTests
 
 			Assert.IsTrue(src.TechList.Add(newItem, feedback))
 		End Sub
+
+		<OneTimeSetUp>
+		Sub RunBeforeAnyTests()    
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+		end Sub
 
 		'SSMGenInputTests
 		<Test()> _

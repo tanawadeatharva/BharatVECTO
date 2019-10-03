@@ -1,11 +1,14 @@
-﻿Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
+﻿
+
 Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
 Imports NUnit.Framework
-Imports VectoAuxiliaries
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 
 
 Namespace UnitTests
@@ -115,7 +118,7 @@ Namespace UnitTests
 
 
 			'Act
-			Dim m14 As New M14(m13.Object, ssmMock, constants, signals.Object)
+			Dim m14 As New M14Impl(m13.Object, ssmMock, constants, signals.Object)
 
 			'Assert
             Assert.AreEqual(expectedOut1.SI(Unit.SI.Gramm).Value(), m14.TotalCycleFCGrams.Value(), 0.1)

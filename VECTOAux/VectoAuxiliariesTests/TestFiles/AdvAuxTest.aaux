@@ -1,7 +1,7 @@
 {
-  "$type": "VectoAuxiliaries.AuxiliaryConfig, BusAuxiliaries",
+  "$type": "TUGraz.VectoCore.BusAuxiliaries.AuxiliaryConfig, BusAuxiliaries",
   "VectoInputs": {
-    "$type": "VectoAuxiliaries.VectoInputs, AdvancedAuxiliaryInterfaces",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.Interfaces.VectoInputs, AdvancedAuxiliaryInterfaces",
     "Cycle": "Urban",
     "VehicleWeightKG": 16500.0,
     "PowerNetVoltage": 28.3,
@@ -9,16 +9,16 @@
     "FuelDensity": 0.832
   },
   "ElectricalUserInputsConfig": {
-    "$type": "VectoAuxiliaries.Electrics.ElectricsUserInputsConfig, BusAuxiliaries",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricsUserInputsConfig, BusAuxiliaries",
     "PowerNetVoltage": 28.3,
     "AlternatorMap": "testCombAlternatorMap_1Alt.AALT",
     "AlternatorGearEfficiency": 0.92,
     "ElectricalConsumers": {
-      "$type": "VectoAuxiliaries.Electrics.ElectricalConsumerList, BusAuxiliaries",
+      "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumerList, BusAuxiliaries",
       "DoorDutyCycleFraction": 0.096,
       "Items": [
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Doors",
           "ConsumerName": "Doors per Door",
@@ -29,7 +29,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": true,
           "Category": "Veh Electronics &Engine",
           "ConsumerName": "Controllers,Valves etc",
@@ -40,7 +40,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
           "ConsumerName": "Radio City",
@@ -51,7 +51,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
           "ConsumerName": "Radio Intercity",
@@ -62,7 +62,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
           "ConsumerName": "Radio/Audio Tourism",
@@ -73,7 +73,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
           "ConsumerName": "Fridge",
@@ -84,7 +84,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
           "ConsumerName": "Kitchen Standard",
@@ -95,7 +95,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
           "ConsumerName": "Interior lights City/ Intercity + Doorlights [1/m]",
@@ -106,7 +106,7 @@
           "Info": "1 Per metre length of bus"
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
           "ConsumerName": "LED Interior lights ceiling city/ontercity + door [1/m]",
@@ -117,7 +117,7 @@
           "Info": "1 Per metre length of bus"
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
           "ConsumerName": "Interior lights Tourism + reading [1/m]",
@@ -128,7 +128,7 @@
           "Info": "1 Per metre length of bus"
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Vehicle basic equipment",
           "ConsumerName": "LED Interior lights ceiling Tourism + LED reading [1/m]",
@@ -139,7 +139,7 @@
           "Info": "1 Per metre length of bus"
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Customer Specific Equipment",
           "ConsumerName": "External Displays Font/Side/Rear",
@@ -150,7 +150,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Customer Specific Equipment",
           "ConsumerName": "Internal display per unit ( front side rear)",
@@ -161,7 +161,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Customer Specific Equipment",
           "ConsumerName": "CityBus Ref EBSF Table4 Devices ITS No Displays",
@@ -172,7 +172,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Lights",
           "ConsumerName": "Exterior Lights BULB",
@@ -183,7 +183,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Lights",
           "ConsumerName": "Day running lights LED bonus",
@@ -194,7 +194,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Lights",
           "ConsumerName": "Antifog rear lights LED bonus",
@@ -205,7 +205,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Lights",
           "ConsumerName": "Position lights LED bonus",
@@ -216,7 +216,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Lights",
           "ConsumerName": "Direction lights LED bonus",
@@ -227,7 +227,7 @@
           "Info": ""
         },
         {
-          "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
+          "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Lights",
           "ConsumerName": "Brake Lights LED bonus",
@@ -241,21 +241,21 @@
     },
     "DoorActuationTimeSecond": 4,
     "ResultCardIdle": {
-      "$type": "VectoAuxiliaries.Electrics.ResultCard, BusAuxiliaries",
+      "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ResultCard, BusAuxiliaries",
       "Results": []
     },
     "ResultCardTraction": {
-      "$type": "VectoAuxiliaries.Electrics.ResultCard, BusAuxiliaries",
+      "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ResultCard, BusAuxiliaries",
       "Results": []
     },
     "ResultCardOverrun": {
-      "$type": "VectoAuxiliaries.Electrics.ResultCard, BusAuxiliaries",
+      "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ResultCard, BusAuxiliaries",
       "Results": []
     },
     "SmartElectrical": false
   },
   "PneumaticUserInputsConfig": {
-    "$type": "VectoAuxiliaries.Pneumatics.PneumaticUserInputsConfig, BusAuxiliaries",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics.PneumaticUserInputsConfig, BusAuxiliaries",
     "CompressorMap": "DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP",
     "CompressorGearRatio": 1.0,
     "CompressorGearEfficiency": 0.8,
@@ -269,7 +269,7 @@
     "SmartRegeneration": true
   },
   "PneumaticAuxillariesConfig": {
-    "$type": "VectoAuxiliaries.Pneumatics.PneumaticsAuxilliariesConfig, BusAuxiliaries",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics.PneumaticsAuxilliariesConfig, BusAuxiliaries",
     "AdBlueNIperMinute": 21.25,
     "AirControlledSuspensionNIperMinute": 15.0,
     "BrakingNoRetarderNIperKG": 0.00081,
@@ -284,13 +284,13 @@
     "SmartRegenFractionTotalAirDemand": 0.12
   },
   "HvacUserInputsConfig": {
-    "$type": "VectoAuxiliaries.Hvac.HVACUserInputsConfig, BusAuxiliaries",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Hvac.HVACUserInputsConfig, BusAuxiliaries",
     "SSMFilePath": "testHVACssm.AHSM",
     "BusDatabasePath": "BusDatabase.abdb",
     "SSMDisabled": false
   },
   "Signals": {
-    "$type": "VectoAuxiliaries.Signals, AdvancedAuxiliaryInterfaces",
+    "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Signals, AdvancedAuxiliaryInterfaces",
     "ClutchEngaged": false,
     "EngineDrivelinePower": 0.0,
     "EngineDrivelineTorque": 0.0,

@@ -203,3 +203,4 @@ Documentation/VehiclesReleaseComparisonDeclarationMode/*.vmod
 Documentation/VehiclesReleaseComparisonDeclarationMode/*.vsum
 
 DISTR/
+[0-9][0-9][0-9][0-9]_[0-9][0-9]_[0-9][0-9]-VECTO-*.zip

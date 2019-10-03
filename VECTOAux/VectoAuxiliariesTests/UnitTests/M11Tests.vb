@@ -1,11 +1,11 @@
-﻿Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
+﻿
 Imports NUnit.Framework
-Imports VectoAuxiliaries
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+
 
 Namespace UnitTests
 	<TestFixture()>
@@ -53,7 +53,7 @@ Namespace UnitTests
 
 
 			'Act
-			Dim target = New M11(m1Mock.Object, m3Mock.Object, m6Mock.Object, m8Mock.Object, fmap, sgnlsMock.Object) _
+			Dim target = New M11Impl(m1Mock.Object, m3Mock.Object, m6Mock.Object, m8Mock.Object, fmap, sgnlsMock.Object) _
 			',m3Mock.Object,m6Mock.Object,m8Mock.Object,fmap,sgnlsMock.Object)
 
 			'Add Current Calculation to Internal Aggregates ( Accesseed by public output properties which are external interface )
@@ -109,7 +109,7 @@ Namespace UnitTests
 
 
 			'Act
-			Dim target = New M11(m1Mock.Object, m3Mock.Object, m6Mock.Object, m8Mock.Object, fmap, sgnlsMock.Object) _
+			Dim target = New M11Impl(m1Mock.Object, m3Mock.Object, m6Mock.Object, m8Mock.Object, fmap, sgnlsMock.Object) _
 			',m3Mock.Object,m6Mock.Object,m8Mock.Object,fmap,sgnlsMock.Object)
 
 

@@ -1,9 +1,7 @@
 ﻿
+
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 
 
 Public Class M1_Mock
@@ -51,5 +49,9 @@ Public Class M1_Mock
        		_HVACFuelingLitresPerHour = HVACFuelingLitresPerHour.SI(Unit.SI.Liter.Per.Hour).Cast(Of LiterPerSecond)() _
 		'(Of LiterPerHour)()
 	End Sub
+
+    Public Sub ResetCalculations() Implements IAbstractModule.ResetCalculations
+        Throw New NotImplementedException
+    End Sub
 End Class
 

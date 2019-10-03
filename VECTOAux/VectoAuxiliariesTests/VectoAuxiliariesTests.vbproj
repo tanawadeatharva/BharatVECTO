@@ -391,17 +391,13 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\VectoCommon\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
-      <Project>{b4b9bd2f-fd8f-4bb8-82fa-e2154d2c7fbd}</Project>
-      <Name>AdvancedAuxiliaryInterfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
       <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
       <Name>VectoCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VectoAuxiliaries\VectoAuxiliaries.vbproj">
-      <Project>{fdeee460-0b8a-4ef6-8d9e-72f203a50f65}</Project>
-      <Name>VectoAuxiliaries</Name>
+    <ProjectReference Include="..\BusAuxiliaries\BusAuxiliaries.csproj">
+      <Project>{550D99D4-25F7-48D9-B0F0-E5DD6CB3485D}</Project>
+      <Name>BusAuxiliaries</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

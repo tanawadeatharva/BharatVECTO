@@ -1,12 +1,10 @@
-﻿Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
+﻿
 Imports NUnit.Framework
-Imports VectoAuxiliaries
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
-
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 
 Namespace UnitTests
 	<TestFixture()>
@@ -53,7 +51,7 @@ Namespace UnitTests
 			Signals.Setup(Function(x) x.CurrentCycleTimeInSeconds).Returns(3114)
 
 			'Act
-			Dim target = New M13(m10.Object, m11.Object, m12.Object, Signals.Object)
+			Dim target = New M13Impl(m10.Object, m11.Object, m12.Object, Signals.Object)
 
 			'Assert
             		Assert.AreEqual(OUT1.SI(Unit.SI.Gramm).Value(), target.WHTCTotalCycleFuelConsumptionGrams.Value(), 0.001)

@@ -1,16 +1,15 @@
-﻿Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
+﻿
 Imports NUnit.Framework
-Imports VectoAuxiliaries
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 
 Namespace UnitTests
 	<TestFixture()>
 	Public Class M8Tests
-		<Test()>
+		<TestCase()>
 		Public Sub CreateInstanceTest()
 
 			'Arrange
@@ -20,7 +19,7 @@ Namespace UnitTests
 			Dim sigsMock = New Mock(Of ISignals)()
 
 			'Act
-			Dim target As IM8 = New M8(m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
+			Dim target As IM8 = New M08Impl(m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
 
 			'Assert
 			Assert.IsNotNull(target)
@@ -66,7 +65,7 @@ Namespace UnitTests
 			sigsMock.Setup(Function(x) x.SmartElectrics).Returns(IP11)
 
 			'Act
-			Dim target As IM8 = New M8(m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
+			Dim target As IM8 = New M08Impl(m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
 
 			'Assert
 			Assert.AreEqual(OUT1, target.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries.Value(), 0.001)
@@ -114,7 +113,7 @@ Namespace UnitTests
 
 
 			'Act
-			Dim target As IM8 = New M8(m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
+			Dim target As IM8 = New M08Impl(m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
 
 			'Assert
 			Assert.AreEqual(OUT1, target.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries.Value(), 0.001)

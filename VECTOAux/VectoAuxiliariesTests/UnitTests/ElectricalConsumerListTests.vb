@@ -1,6 +1,8 @@
-﻿Imports NUnit.Framework
+﻿
+Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+
 
 <TestFixture()>
 Public Class ElectricalConsumerListTests

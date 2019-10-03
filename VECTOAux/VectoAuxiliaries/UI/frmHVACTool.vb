@@ -3,6 +3,9 @@ Imports VectoAuxiliaries.Hvac
 Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Globalization
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Util
 
 Public Class frmHVACTool
 	'Fields

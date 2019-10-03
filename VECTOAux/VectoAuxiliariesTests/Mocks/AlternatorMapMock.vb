@@ -1,5 +1,7 @@
-﻿Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.Electrics
+﻿
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 Namespace Mocks
 
@@ -27,10 +29,7 @@ Namespace Mocks
 		End Function
 
 
-		Public Event AuxiliaryEvent(ByRef sender As Object, message As String, messageType As VectoAuxiliaries.AdvancedAuxiliaryMessageType) Implements VectoAuxiliaries.IAuxiliaryEvent.AuxiliaryEvent
-
-
-
+		Public Event IAuxiliaryEvent_AuxiliaryEvent As AuxiliaryEventEventHandler Implements IAuxiliaryEvent.AuxiliaryEvent
 	End Class
 
 End Namespace

@@ -1,11 +1,8 @@
-﻿Imports System.Text
+﻿
 Imports NUnit.Framework
-Imports NUnit
-Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
+Imports TUGraz.VectoCore.BusAuxiliaries
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+
 
 Namespace UnitTests
 	<TestFixture()>

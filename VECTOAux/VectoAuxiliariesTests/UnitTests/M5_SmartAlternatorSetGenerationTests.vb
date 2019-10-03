@@ -1,10 +1,13 @@
-﻿Imports NUnit.Framework
+﻿
+Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliariesTests.Mocks
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 
 Namespace UnitTests
 	<TestFixture()>
@@ -17,8 +20,8 @@ Namespace UnitTests
 		Private Const _altGearPullyEfficiency As Single = 0.8
 
 		'Private fields
-		Private _m05 As M0_5_SmartAlternatorSetEfficiency
-		Private _target As M5__SmartAlternatorSetGeneration
+		Private _m05 As IM0_5_SmartAlternatorSetEfficiency
+		Private _target As IM5_SmartAlternatorSetGeneration
 		Private _signals As ISignals = New Signals
 		Private ssmHVac As IHVACSteadyStateModel = New HVACSteadyStateModel(100, 100, 100)
 
@@ -48,7 +51,7 @@ Namespace UnitTests
 			alternatoMap.Initialise()
 			Dim _
 				m0 As _
-					New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers, alternatoMap, _powerNetVoltage.SI(Of Volt), _signals,
+					New M00Impl(elecConsumers, alternatoMap, _powerNetVoltage.SI(Of Volt), _signals,
 															GetSSM())
 
 			'Results Cards
@@ -63,45 +66,45 @@ Namespace UnitTests
 			Dim signals As ISignals = New Signals
 			signals.EngineSpeed = 2000.RPMtoRad()
 
-			_m05 = New M0_5_SmartAlternatorSetEfficiency(m0, elecConsumers, alternatoMap, idleResult, tractionResult,
+			_m05 = New M0_5Impl(m0, elecConsumers, alternatoMap, idleResult, tractionResult,
 														overrunResult, signals)
 		End Sub
 
-		<Test()>
+		<TestCase()>
 		Public Sub CreateNewTest()
 
 			Initialise()
-			_target = New M5__SmartAlternatorSetGeneration(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
+			_target = New M05Impl(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
 			Assert.IsNotNull(_target)
 		End Sub
 
-		<Test()>
+		<TestCase()>
 		Public Sub PowerAtCrankIdleWatts()
 
 			Initialise()
-			_target = New M5__SmartAlternatorSetGeneration(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
+			_target = New M05Impl(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
 			Dim expected As Single = 1641.35791
 			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankIdleWatts()
 
 			Assert.AreEqual(expected, actual.Value(), 0.001)
 		End Sub
 
-		<Test()>
+		<TestCase()>
 		Public Sub PowerAtCrankTractionWatts()
 
 			Initialise()
-			_target = New M5__SmartAlternatorSetGeneration(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
+			_target = New M05Impl(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
 			Dim expected As Single = 1641.35791
 			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankTractionOnWatts()
 
 			Assert.AreEqual(expected, actual.Value(), 0.001)
 		End Sub
 
-		<Test()>
+		<TestCase()>
 		Public Sub PowerAtCrankOverrunWatts()
 
 			Initialise()
-			_target = New M5__SmartAlternatorSetGeneration(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
+			_target = New M05Impl(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
 			Dim expected As Single = 1641.35791F
 
 			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankOverrunWatts()

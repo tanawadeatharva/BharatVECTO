@@ -1,7 +1,8 @@
-﻿Imports NUnit
-Imports VectoAuxiliaries.Pneumatics
+﻿
 Imports NUnit.Framework
 Imports System.IO
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 
 Namespace Pneumatics
 

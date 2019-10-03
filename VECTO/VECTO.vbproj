@@ -519,9 +519,13 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VectoCommon\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
-      <Project>{b4b9bd2f-fd8f-4bb8-82fa-e2154d2c7fbd}</Project>
-      <Name>AdvancedAuxiliaryInterfaces</Name>
+    <ProjectReference Include="..\VECTOAux\BusAuxiliaries\BusAuxiliaries.csproj">
+      <Project>{550d99d4-25f7-48d9-b0f0-e5dd6cb3485d}</Project>
+      <Name>BusAuxiliaries</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VECTOAux\VectoAuxiliaries\VectoAuxiliaries.vbproj">
+      <Project>{FDEEE460-0B8A-4EF6-8D9E-72F203A50F65}</Project>
+      <Name>VectoAuxiliaries</Name>
     </ProjectReference>
     <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj">
       <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>

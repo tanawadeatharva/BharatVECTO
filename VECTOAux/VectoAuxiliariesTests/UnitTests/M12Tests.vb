@@ -1,11 +1,11 @@
-﻿Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
+﻿
 Imports NUnit.Framework
-Imports VectoAuxiliaries
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+
 
 Namespace UnitTests
 	<TestFixture()>
@@ -39,7 +39,7 @@ Namespace UnitTests
 			M10Mock.Setup(Function(x) x.AverageLoadsFuelConsumptionInterpolatedForPneumatics).Returns((IP7 / 1000).SI(Of Kilogram))
 
 			'Act
-			Dim target = New M12(M10Mock.Object, m11Mock.Object, sgnlsMock.Object)
+			Dim target = New M12Impl(M10Mock.Object, m11Mock.Object, sgnlsMock.Object)
 
 			'Assert
 			Assert.AreEqual(target.FuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand().Value(),

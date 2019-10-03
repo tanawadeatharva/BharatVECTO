@@ -2,11 +2,11 @@
 
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliariesTests.Mocks
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Hvac
 Imports System.IO
+Imports Newtonsoft.Json
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 Namespace UnitTests
 

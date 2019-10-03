@@ -1,8 +1,9 @@
 ﻿Imports System.Collections.Generic
-Imports VectoAuxiliaries
 Imports System.IO
 Imports System.Linq
 Imports System.Runtime.Remoting
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports VectoAuxiliaries
 
 Module AdvancedAuxiliariesModule
 	Public WithEvents AdvancedAuxModel As IAdvancedAuxiliaries
@@ -100,7 +101,7 @@ Module AdvancedAuxiliariesModule
 			o = Activator.CreateInstance(chosenAssembly.Value.AssemblyName, "VectoAuxiliaries.AdvancedAuxiliaries")
 			iAdvancedAux = DirectCast(o.Unwrap, IAdvancedAuxiliaries)
 
-			iAdvancedAux.Configure(filePath, vectoFilePath)
+			Configure(filePath, vectoFilePath)
 
 		Catch ex As Exception
 
@@ -110,6 +111,31 @@ Module AdvancedAuxiliariesModule
 
 		Return result
 	End Function
+
+    Function Configure(filePath As String, vectoFilePath As String) As Boolean
+        Try
+
+            Dim frmAuxiliaryConfig As New frmAuxiliaryConfig(filePath, vectoFilePath)
+
+            frmAuxiliaryConfig.Show()
+
+            If frmAuxiliaryConfig.DialogResult <> DialogResult.OK Then
+
+                Return True
+
+            Else
+
+                Return False
+
+            End If
+
+
+        Catch ex As Exception
+
+            Return False
+
+        End Try
+    End Function
 
 
 	''' <summary>

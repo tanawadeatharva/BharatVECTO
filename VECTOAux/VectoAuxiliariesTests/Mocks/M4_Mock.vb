@@ -1,8 +1,6 @@
-﻿Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
+﻿
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 
 Public Class M4_Mock
 	Implements IM4_AirCompressor
@@ -63,6 +61,8 @@ Public Class M4_Mock
 	Public Property PulleyGearRatio As Double Implements IM4_AirCompressor.PulleyGearRatio
 
 
-
+    Public Sub ResetCalculations() Implements IAbstractModule.ResetCalculations
+        Throw New NotImplementedException
+    End Sub
 End Class
 

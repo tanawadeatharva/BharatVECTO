@@ -9,35 +9,31 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
-Imports System.IO
-
-Imports System.Windows.Forms
-Imports Newtonsoft.Json
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 
 
 Public Interface IAuxiliaryConfig
-	'Vecto
-	Property VectoInputs As IVectoInputs
+    'Vecto
+    Property VectoInputs As IVectoInputs
 
-	'Electrical
-	property ElectricalUserInputsConfig As IElectricsUserInputsConfig
-
-
-	'Pneumatics
-	Property PneumaticUserInputsConfig As IPneumaticUserInputsConfig
-	Property PneumaticAuxillariesConfig As IPneumaticsAuxilliariesConfig
-
-	'Hvac
-	Property HvacUserInputsConfig As IHVACUserInputsConfig
-
-	Function ConfigValuesAreTheSameAs(other As AuxiliaryConfig) As Boolean
+    'Electrical
+    property ElectricalUserInputsConfig As IElectricsUserInputsConfig
 
 
-	'Persistance Functions
-	Function Save(filePath As String) As Boolean
-	Function Load(filePath As String) As Boolean
+    'Pneumatics
+    Property PneumaticUserInputsConfig As IPneumaticUserInputsConfig
+    Property PneumaticAuxillariesConfig As IPneumaticsAuxilliariesConfig
+
+    'Hvac
+    Property HvacUserInputsConfig As IHVACUserInputsConfig
+
+    Function ConfigValuesAreTheSameAs(other As AuxiliaryConfig) As Boolean
+
+
+    'Persistance Functions
+    Function Save(filePath As String) As Boolean
+    Function Load(filePath As String) As Boolean
 End Interface

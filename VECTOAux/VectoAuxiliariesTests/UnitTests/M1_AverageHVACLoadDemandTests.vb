@@ -1,9 +1,15 @@
-﻿Imports NUnit.Framework
+﻿
+Imports System.IO
+Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+
 
 
 Namespace UnitTests
@@ -19,18 +25,19 @@ Namespace UnitTests
 
 
 		Private m0 As IM0_NonSmart_AlternatorsSetEfficiency
-		Private alternatorMap As IAlternatorMap = New AlternatorMap(_GOODMAP)
+		Private alternatorMap As IAlternatorMap 
 		Private alternatorGearEfficiency As Single = 0.8
 		Private compressorGrearEfficiency As Single = 0.8
 
-
-		Public Sub New()
-
+       
+        Public Sub New()
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+            alternatorMap = New AlternatorMap(_GOODMAP)
 			alternatorMap.Initialise()
 
 			ssm.Load(_SSMMAP)
 
-			m0 = New M0_NonSmart_AlternatorsSetEfficiency(New ElectricalConsumerList(powernetVoltage, 0.096, True),
+			m0 = New M00Impl(New ElectricalConsumerList(powernetVoltage, 0.096, True),
 														alternatorMap, powernetVoltage.SI(Of Volt), signals, ssm)
 		End Sub
 
@@ -38,8 +45,7 @@ Namespace UnitTests
 
 			ssm.Load(_SSMMAP)
 
-			Return New M1_AverageHVACLoadDemand(m0,
-												alternatorGearEfficiency,
+			Return New M01Impl(m0, alternatorGearEfficiency,
 												compressorGrearEfficiency,
 												powernetVoltage.SI(Of Volt),
 												signals,

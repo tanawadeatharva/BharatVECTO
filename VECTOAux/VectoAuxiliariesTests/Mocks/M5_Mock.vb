@@ -1,8 +1,6 @@
-﻿Imports TUGraz.VectoCommon.Utils
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
-Imports VectoAuxiliaries.Hvac
-Imports VectoAuxiliaries.DownstreamModules
+﻿
+Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 
 Public Class M5_Mock
 	Implements IM5_SmartAlternatorSetGeneration
@@ -40,5 +38,9 @@ Public Class M5_Mock
 		_AlternatorsGenerationPowerAtCrankOverrunWatts = AlternatorsGenerationPowerAtCrankOverrunWatts.SI(Of Watt)()
 		_AlternatorsGenerationPowerAtCrankTractionOnWatts = AlternatorsGenerationPowerAtCrankTractionOnWatts.SI(Of Watt)()
 	End Sub
+
+    Public Sub ResetCalculations() Implements IAbstractModule.ResetCalculations
+        Throw New NotImplementedException
+    End Sub
 End Class
 
