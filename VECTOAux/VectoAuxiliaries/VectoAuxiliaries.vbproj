@@ -177,13 +177,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="3rdPartyLibraries\" />
-    <Folder Include="DownstreamModules\" />
-    <Folder Include="Electrics\" />
-    <Folder Include="Hvac\" />
-    <Folder Include="Pneumatics\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Images\application-export-icon-small.png" />
   </ItemGroup>
