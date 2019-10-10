@@ -37,13 +37,15 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.BusAuxiliaries;
 using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem;
+using TUGraz.VectoCore.Models.BusAuxiliaries;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.OutputData;
-using VectoAuxiliaries;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {

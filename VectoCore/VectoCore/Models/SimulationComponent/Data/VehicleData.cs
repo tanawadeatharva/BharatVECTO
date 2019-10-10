@@ -223,6 +223,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public PredictiveCruiseControlType PredictiveCruiseControl { get; internal set; }
 		}
 
+#region "Bus Parameters"
+		public double PassengerCount { get; internal set; }
+
+		public FloorType FloorType { get; internal set; }
+
+		public bool DoubleDecker { get; internal set; }
+
+		public Meter Length { get;internal set; }
+		 
+		public Meter Width { get; internal set; }
+
+		public Meter Height { get; internal set; }
+
+#endregion
 		protected void ComputeRollResistanceAndReducedMassWheels()
 		{
 			if (TotalVehicleWeight == 0.SI<Kilogram>()) {

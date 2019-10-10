@@ -33,6 +33,8 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Linq;
+using System.Text;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Configuration;
@@ -42,6 +44,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	// ReSharper disable once InconsistentNaming
 	public static class JSONInputDataFactory
 	{
+		internal static void WriteFile(JToken content, string path)
+		{
+			if (!content.Any()) {
+				return;
+			}
+
+			try {
+				var str = JsonConvert.SerializeObject(content, Formatting.Indented);
+				File.WriteAllText(path, str, Encoding.UTF8);
+			} catch (Exception) {
+				return;
+			}
+		}
+
 		internal static JObject ReadFile(string fileName)
 		{
 			if (!File.Exists(fileName)) {
