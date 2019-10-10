@@ -229,7 +229,7 @@ Public Class EngineForm
 
 		Dim basePath As String = Path.GetDirectoryName(file)
 		TbName.Text = engine.Model
-		TbDispl.Text = (engine.Displacement*1000*1000).ToGUIFormat()
+		TbDispl.Text = (engine.Displacement.Value() * 1000.0 * 1000).ToGUIFormat()
 		TbInertia.Text = engine.Inertia.ToGUIFormat()
 		
 
