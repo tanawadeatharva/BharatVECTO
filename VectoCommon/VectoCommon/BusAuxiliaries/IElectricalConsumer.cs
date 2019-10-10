@@ -10,47 +10,23 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 using System;
+using System.ComponentModel;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
-	public class SmartResult : IComparable<SmartResult>
+	public interface IElectricalConsumer : INotifyPropertyChanged
 	{
-		public double Amps { get; set; }
-		public double SmartAmps { get; set; }
-
-		// Constructors
-		public SmartResult()
-		{
-		}
-
-		public SmartResult(double amps, double smartAmps)
-		{
-			Amps = amps;
-			SmartAmps = smartAmps;
-		}
-
-		// Comparison
-		public int CompareTo(SmartResult other)
-		{
-			if (other.Amps > Amps)
-				return -1;
-			if (other.Amps == Amps)
-				return 0;
-
-			return 1;
-		}
-
-		// Comparison Overrides
-		public override bool Equals(object obj)
-		{
-			var other = (SmartResult)obj;
-
-			return Amps == other.Amps;
-		}
-
-		public override int GetHashCode()
-		{
-			return 0;
-		}
+		string Category { get; set; }
+		string ConsumerName { get; set; }
+		bool BaseVehicle { get; set; }
+		Ampere NominalConsumptionAmps { get; set; }
+		double PhaseIdle_TractionOn { get; set; }
+		int NumberInActualVehicle { get; set; }
+		Volt PowerNetVoltage { get; set; }
+		Ampere AvgConsumptionAmps { get; set; }
+		string Info { get; set; }
+		Ampere TotalAvgConumptionAmps(double PhaseIdle_TractionOnBasedOnCycle = 0.0);
+		Watt TotalAvgConsumptionInWatts(double PhaseIdle_TractionOnBasedOnCycle = 0.0);
 	}
 }

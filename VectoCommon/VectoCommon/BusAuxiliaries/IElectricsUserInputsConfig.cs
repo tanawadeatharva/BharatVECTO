@@ -10,6 +10,8 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 
+using TUGraz.VectoCommon.Utils;
+
 namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
 	public interface IElectricsUserInputsConfig
@@ -20,7 +22,7 @@ namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		double PowerNetVoltage { get; set; }
+		Volt PowerNetVoltage { get; set; }
 
 		/// <summary>
 		/// 	The Path for the Alternator map
@@ -52,7 +54,7 @@ namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		int DoorActuationTimeSecond { get; set; }
+		double DoorActuationTimeSecond { get; set; }
 
 		/// <summary>
 		/// 	Result Card Taken During Idle.

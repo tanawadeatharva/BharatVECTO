@@ -1,4 +1,6 @@
-﻿namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem {
+﻿using TUGraz.VectoCommon.Utils;
+
+namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem {
 	public interface IPneumaticsAuxilliariesConfig
 	{
 		double OverrunUtilisationForCompressionFraction { get; set; }

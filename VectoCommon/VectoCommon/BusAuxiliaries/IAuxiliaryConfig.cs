@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.BusAuxiliaries {
 		// Hvac
 		IHVACUserInputsConfig HvacUserInputsConfig { get; set; }
 
-		bool ConfigValuesAreTheSameAs(AuxiliaryConfig other);
+		bool ConfigValuesAreTheSameAs(IAuxiliaryConfig other);
 
 
 		// Persistance Functions
