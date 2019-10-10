@@ -1,11 +1,13 @@
-﻿Imports System.Windows.Forms
-Imports VectoAuxiliaries.Hvac
+﻿Imports System.Collections.Generic
+Imports System.Windows.Forms
 Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Globalization
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports System.Linq
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
-Imports TUGraz.VectoCore.BusAuxiliaries.Util
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Util
 
 Public Class frmHVACTool
 	'Fields
@@ -108,25 +110,25 @@ Public Class frmHVACTool
 			Timer1.Enabled = True
 		End If
 
-		setupBuses()
+		'setupBuses()
 		setupControls()
 		setupBindings()
 	End Sub
 
 	'Setup Methods
-	Private Sub setupBuses()
+	'Private Sub setupBuses()
 
-		'Setup Buses
-		buses = New BusDatabase()
-		If Not buses.Initialise(busDatabasePath) Then
-			MessageBox.Show("Problems initialising the Bus Database, some buses may not appear")
-		End If
+	'	'Setup Buses
+	'	buses = New BusDatabase()
+	'	If Not buses.Initialise(busDatabasePath) Then
+	'		MessageBox.Show("Problems initialising the Bus Database, some buses may not appear")
+	'	End If
 
-		busesList = New BindingList(Of IBus)(buses.GetBuses(String.Empty, True))
+	'	busesList = New BindingList(Of IBus)(buses.GetBuses(String.Empty, True))
 
-		cboBuses.DataSource = busesList
-		cboBuses.DisplayMember = "Model"
-	End Sub
+	'	cboBuses.DataSource = busesList
+	'	cboBuses.DisplayMember = "Model"
+	'End Sub
 
 	Private Sub setupControls()
 
@@ -320,39 +322,39 @@ Public Class frmHVACTool
 	End Sub
 
 	'GeneralInputControlEvents
-	Private Sub cboBuses_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBuses.SelectedIndexChanged
+	'Private Sub cboBuses_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboBuses.SelectedIndexChanged
 
-		If cboBuses.SelectedIndex > 0 Then
+	'	If cboBuses.SelectedIndex > 0 Then
 
-			Dim bus As IBus = DirectCast(cboBuses.SelectedItem, IBus)
+	'		Dim bus As IBus = DirectCast(cboBuses.SelectedItem, IBus)
 
-			ssmTOOL.GenInputs.BP_BusModel = bus.Model
-			ssmTOOL.GenInputs.BP_NumberOfPassengers = bus.RegisteredPassengers
-			ssmTOOL.GenInputs.BP_BusFloorType = bus.FloorType
-			ssmTOOL.GenInputs.BP_DoubleDecker = bus.IsDoubleDecker
-			ssmTOOL.GenInputs.BP_BusLength = bus.LengthInMetres
-			ssmTOOL.GenInputs.BP_BusWidth = bus.WidthInMetres
-			ssmTOOL.GenInputs.BP_BusHeight = bus.HeightInMetres
+	'		ssmTOOL.GenInputs.BP_BusModel = bus.Model
+	'		ssmTOOL.GenInputs.BP_NumberOfPassengers = bus.RegisteredPassengers
+	'		ssmTOOL.GenInputs.BP_BusFloorType = bus.FloorType
+	'		ssmTOOL.GenInputs.BP_DoubleDecker = bus.IsDoubleDecker
+	'		ssmTOOL.GenInputs.BP_BusLength = bus.LengthInMetres
+	'		ssmTOOL.GenInputs.BP_BusWidth = bus.WidthInMetres
+	'		ssmTOOL.GenInputs.BP_BusHeight = bus.HeightInMetres
 
-			txtBusModel.Text = bus.Model
-			txtRegisteredPassengers.Text = bus.RegisteredPassengers.ToString()
-			cmbBusFloorType.Text = bus.FloorType
-			txtBusLength.Text = bus.LengthInMetres.ToString()
-			txtBusWidth.Text = bus.WidthInMetres.ToString()
-			txtBusHeight.Text = bus.HeightInMetres.ToString()
-			chkIsDoubleDecker.Checked = bus.IsDoubleDecker
+	'		txtBusModel.Text = bus.Model
+	'		txtRegisteredPassengers.Text = bus.RegisteredPassengers.ToString()
+	'		cmbBusFloorType.Text = bus.FloorType
+	'		txtBusLength.Text = bus.LengthInMetres.ToString()
+	'		txtBusWidth.Text = bus.WidthInMetres.ToString()
+	'		txtBusHeight.Text = bus.HeightInMetres.ToString()
+	'		chkIsDoubleDecker.Checked = bus.IsDoubleDecker
 
-			txtBusFloorSurfaceArea.Text = ssmTOOL.GenInputs.BP_BusFloorSurfaceArea.ToString()
-			txtBusWindowSurfaceArea.Text = ssmTOOL.GenInputs.BP_BusWindowSurface.ToString()
-			txtBusSurfaceArea.Text = ssmTOOL.GenInputs.BP_BusSurfaceAreaM2.ToString()
-			txtBusVolume.Text = ssmTOOL.GenInputs.BP_BusVolume.ToString()
+	'		txtBusFloorSurfaceArea.Text = ssmTOOL.GenInputs.BP_BusFloorSurfaceArea.ToString()
+	'		txtBusWindowSurfaceArea.Text = ssmTOOL.GenInputs.BP_BusWindowSurface.ToString()
+	'		txtBusSurfaceArea.Text = ssmTOOL.GenInputs.BP_BusSurfaceAreaM2.ToString()
+	'		txtBusVolume.Text = ssmTOOL.GenInputs.BP_BusVolume.ToString()
 
-			btnEditBus.Enabled = True
+	'		btnEditBus.Enabled = True
 
-		Else
-			btnEditBus.Enabled = False
-		End If
-	End Sub
+	'	Else
+	'		btnEditBus.Enabled = False
+	'	End If
+	'End Sub
 
 	'Validators
 	Public Sub Validating_GeneralInputsBP(sender As Object, e As CancelEventArgs) _
@@ -1051,7 +1053,7 @@ Public Class frmHVACTool
 
 			IsAddingBus = True
 
-			cboBuses.Enabled = False
+			'cboBuses.Enabled = False
 			btnUpdateBusDatabase.Enabled = False
 			btnEditBus.Enabled = False
 			btnCancelBus.Enabled = True
@@ -1074,7 +1076,7 @@ Public Class frmHVACTool
 				buses.AddBus(newBus)
 				busesList.Add(newBus)
 
-				cboBuses.Enabled = True
+				'cboBuses.Enabled = True
 				btnUpdateBusDatabase.Enabled = True
 				btnEditBus.Enabled = True
 				btnCancelBus.Enabled = False
@@ -1085,7 +1087,7 @@ Public Class frmHVACTool
 				btnNewBus.Text = "New"
 				btnNewBus.Tag = "New"
 
-				cboBuses.SelectedIndex = busesList.Count - 1
+				'cboBuses.SelectedIndex = busesList.Count - 1
 
 				IsAddingBus = False
 			End If
@@ -1102,107 +1104,107 @@ Public Class frmHVACTool
 		End If
 	End Sub
 
-	Private Sub btnEditBus_Click(sender As Object, e As EventArgs) Handles btnEditBus.Click
+	'Private Sub btnEditBus_Click(sender As Object, e As EventArgs) Handles btnEditBus.Click
 
-		If cboBuses.SelectedIndex > 0 Then
+	'	If cboBuses.SelectedIndex > 0 Then
 
-			If "Edit".Equals(btnEditBus.Tag) Then
+	'		If "Edit".Equals(btnEditBus.Tag) Then
 
-				IsUpdatingBus = True
+	'			IsUpdatingBus = True
 
-				cboBuses.Enabled = False
-				btnUpdateBusDatabase.Enabled = False
-				btnNewBus.Enabled = False
-				btnCancelBus.Enabled = True
+	'			cboBuses.Enabled = False
+	'			btnUpdateBusDatabase.Enabled = False
+	'			btnNewBus.Enabled = False
+	'			btnCancelBus.Enabled = True
 
-				btnEditBus.Text = "Save"
-				btnEditBus.Tag = "Save"
+	'			btnEditBus.Text = "Save"
+	'			btnEditBus.Tag = "Save"
 
-				BusParamGroupModel.Visible = False
-				BusParamGroupEdit.Visible = True
+	'			BusParamGroupModel.Visible = False
+	'			BusParamGroupEdit.Visible = True
 
-				Dim bus As IBus = DirectCast(cboBuses.SelectedItem, IBus)
+	'			Dim bus As IBus = DirectCast(cboBuses.SelectedItem, IBus)
 
-				txtEditBusModel.Text = bus.Model
-				cmbEditFloorType.Text = bus.FloorType
-				cmbEditEngineType.Text = bus.EngineType
-				txtEditBusLength.Text = String.Format(CultureInfo.InvariantCulture, "{0}", bus.LengthInMetres)
-				txtEditBusWidth.Text = String.Format(CultureInfo.InvariantCulture, "{0}", bus.WidthInMetres)
-				txtEditBusHeight.Text = String.Format(CultureInfo.InvariantCulture, "{0}", bus.HeightInMetres)
-				txtEditBusPassengers.Text = String.Format(CultureInfo.InvariantCulture, "{0}", bus.RegisteredPassengers)
+	'			txtEditBusModel.Text = bus.Model
+	'			cmbEditFloorType.Text = bus.FloorType
+	'			cmbEditEngineType.Text = bus.EngineType
+	'			txtEditBusLength.Text = String.Format(CultureInfo.InvariantCulture, "{0}", bus.LengthInMetres)
+	'			txtEditBusWidth.Text = String.Format(CultureInfo.InvariantCulture, "{0}", bus.WidthInMetres)
+	'			txtEditBusHeight.Text = String.Format(CultureInfo.InvariantCulture, "{0}", bus.HeightInMetres)
+	'			txtEditBusPassengers.Text = String.Format(CultureInfo.InvariantCulture, "{0}", bus.RegisteredPassengers)
 
-			ElseIf "Save".Equals(btnEditBus.Tag) Then
+	'		ElseIf "Save".Equals(btnEditBus.Tag) Then
 
-				If Validate_GeneralInputsBPEdit() Then
+	'			If Validate_GeneralInputsBPEdit() Then
 
-					Dim bus As IBus = DirectCast(cboBuses.SelectedItem, IBus)
+	'				Dim bus As IBus = DirectCast(cboBuses.SelectedItem, IBus)
 
-					bus.Model = txtEditBusModel.Text
-					bus.FloorType = cmbEditFloorType.Text
-					bus.EngineType = cmbEditEngineType.Text
-					bus.LengthInMetres = Double.Parse(txtEditBusLength.Text, CultureInfo.InvariantCulture)
-					bus.WidthInMetres = Double.Parse(txtEditBusWidth.Text, CultureInfo.InvariantCulture)
-					bus.HeightInMetres = Double.Parse(txtEditBusHeight.Text, CultureInfo.InvariantCulture)
-					bus.RegisteredPassengers = Integer.Parse(txtEditBusPassengers.Text, CultureInfo.InvariantCulture)
-					bus.IsDoubleDecker = chkEditIsDoubleDecker.Checked
+	'				bus.Model = txtEditBusModel.Text
+	'				bus.FloorType = cmbEditFloorType.Text
+	'				bus.EngineType = cmbEditEngineType.Text
+	'				bus.LengthInMetres = Double.Parse(txtEditBusLength.Text, CultureInfo.InvariantCulture)
+	'				bus.WidthInMetres = Double.Parse(txtEditBusWidth.Text, CultureInfo.InvariantCulture)
+	'				bus.HeightInMetres = Double.Parse(txtEditBusHeight.Text, CultureInfo.InvariantCulture)
+	'				bus.RegisteredPassengers = Integer.Parse(txtEditBusPassengers.Text, CultureInfo.InvariantCulture)
+	'				bus.IsDoubleDecker = chkEditIsDoubleDecker.Checked
 
-					buses.UpdateBus(bus.Id, bus)
+	'				buses.UpdateBus(bus.Id, bus)
 
-					cboBuses.Enabled = True
-					btnUpdateBusDatabase.Enabled = True
-					btnNewBus.Enabled = True
-					btnCancelBus.Enabled = False
+	'				cboBuses.Enabled = True
+	'				btnUpdateBusDatabase.Enabled = True
+	'				btnNewBus.Enabled = True
+	'				btnCancelBus.Enabled = False
 
-					BusParamGroupModel.Visible = True
-					BusParamGroupEdit.Visible = False
+	'				BusParamGroupModel.Visible = True
+	'				BusParamGroupEdit.Visible = False
 
-					btnEditBus.Text = "Edit"
-					btnEditBus.Tag = "Edit"
+	'				btnEditBus.Text = "Edit"
+	'				btnEditBus.Tag = "Edit"
 
-					Dim currentIndex As Integer = cboBuses.SelectedIndex
-					cboBuses.SelectedIndex = 0
-					cboBuses.SelectedIndex = currentIndex
+	'				Dim currentIndex As Integer = cboBuses.SelectedIndex
+	'				cboBuses.SelectedIndex = 0
+	'				cboBuses.SelectedIndex = currentIndex
 
-					IsUpdatingBus = False
-				End If
+	'				IsUpdatingBus = False
+	'			End If
 
-			End If
+	'		End If
 
-		End If
-	End Sub
+	'	End If
+	'End Sub
 
-	Private Sub btnCancelBus_Click(sender As Object, e As EventArgs) Handles btnCancelBus.Click
+	'Private Sub btnCancelBus_Click(sender As Object, e As EventArgs) Handles btnCancelBus.Click
 
-		IsUpdatingBus = False
-		IsAddingBus = False
+	'	IsUpdatingBus = False
+	'	IsAddingBus = False
 
-		cboBuses.Enabled = True
-		btnUpdateBusDatabase.Enabled = True
-		btnNewBus.Enabled = True
-		btnCancelBus.Enabled = False
+	'	cboBuses.Enabled = True
+	'	btnUpdateBusDatabase.Enabled = True
+	'	btnNewBus.Enabled = True
+	'	btnCancelBus.Enabled = False
 
-		If cboBuses.SelectedIndex > 0 Then
-			btnEditBus.Enabled = True
-		End If
+	'	If cboBuses.SelectedIndex > 0 Then
+	'		btnEditBus.Enabled = True
+	'	End If
 
-		btnEditBus.Text = "Edit"
-		btnEditBus.Tag = "Edit"
+	'	btnEditBus.Text = "Edit"
+	'	btnEditBus.Tag = "Edit"
 
-		btnNewBus.Text = "New"
-		btnNewBus.Tag = "New"
+	'	btnNewBus.Text = "New"
+	'	btnNewBus.Tag = "New"
 
-		txtEditBusModel.Text = String.Empty
-		cmbEditFloorType.Text = String.Empty
-		cmbEditEngineType.Text = String.Empty
-		txtEditBusLength.Text = String.Empty
-		txtEditBusWidth.Text = String.Empty
-		txtEditBusHeight.Text = String.Empty
-		txtEditBusPassengers.Text = String.Empty
-		chkEditIsDoubleDecker.Checked = False
+	'	txtEditBusModel.Text = String.Empty
+	'	cmbEditFloorType.Text = String.Empty
+	'	cmbEditEngineType.Text = String.Empty
+	'	txtEditBusLength.Text = String.Empty
+	'	txtEditBusWidth.Text = String.Empty
+	'	txtEditBusHeight.Text = String.Empty
+	'	txtEditBusPassengers.Text = String.Empty
+	'	chkEditIsDoubleDecker.Checked = False
 
-		BusParamGroupModel.Visible = True
-		BusParamGroupEdit.Visible = False
-	End Sub
+	'	BusParamGroupModel.Visible = True
+	'	BusParamGroupEdit.Visible = False
+	'End Sub
 
 	'TechList Helpers
 	Private Sub FillTechLineEditPanel(index As Integer)
@@ -1305,11 +1307,11 @@ Public Class frmHVACTool
 
 			If Not ssmTOOL Is Nothing Then
 
-				txtBasElectrical.Text = ssmTOOL.ElectricalWBase.ToString("F4", CultureInfo.InvariantCulture)
-				txtBaseMechanical.Text = ssmTOOL.MechanicalWBase.ToString("F4", CultureInfo.InvariantCulture)
+				txtBasElectrical.Text = ssmTOOL.ElectricalWBase.Value().ToString("F4", CultureInfo.InvariantCulture)
+				txtBaseMechanical.Text = ssmTOOL.MechanicalWBase.Value().ToString("F4", CultureInfo.InvariantCulture)
 
-				txtAdjElectrical.Text = ssmTOOL.ElectricalWAdjusted.ToString("F4", CultureInfo.InvariantCulture)
-				txtAdjMechanical.Text = ssmTOOL.MechanicalWBaseAdjusted.ToString("F4", CultureInfo.InvariantCulture)
+				txtAdjElectrical.Text = ssmTOOL.ElectricalWAdjusted.Value().ToString("F4", CultureInfo.InvariantCulture)
+				txtAdjMechanical.Text = ssmTOOL.MechanicalWBaseAdjusted.Value().ToString("F4", CultureInfo.InvariantCulture)
 
 				If captureDiagnostics Then
 

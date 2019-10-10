@@ -1,12 +1,14 @@
 ﻿Option Strict on
 
+Imports System.Collections.Generic
 Imports System.Drawing
 Imports System.Windows.Forms
 Imports VectoAuxiliaries.Electrics
 Imports System.ComponentModel
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports System.Linq
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 
 Public Class frmCombinedAlternators

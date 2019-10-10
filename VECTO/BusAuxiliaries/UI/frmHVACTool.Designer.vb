@@ -80,7 +80,7 @@ Partial Class frmHVACTool
 		Me.lblBusFloorSurfaceArea = New System.Windows.Forms.Label()
 		Me.txtRegisteredPassengers = New System.Windows.Forms.TextBox()
 		Me.lblRegisteredPassengers = New System.Windows.Forms.Label()
-		Me.cboBuses = New System.Windows.Forms.ComboBox()
+		'Me.cboBuses = New System.Windows.Forms.ComboBox()
 		Me.tabGeneralInputsBC = New System.Windows.Forms.TabPage()
 		Me.GroupBox2 = New System.Windows.Forms.GroupBox()
 		Me.Label24 = New System.Windows.Forms.Label()
@@ -297,7 +297,7 @@ Partial Class frmHVACTool
 		Me.tabGeneralInputsBP.Controls.Add(Me.btnUpdateBusDatabase)
 		Me.tabGeneralInputsBP.Controls.Add(Me.btnNewBus)
 		Me.tabGeneralInputsBP.Controls.Add(Me.BusParamGroupModel)
-		Me.tabGeneralInputsBP.Controls.Add(Me.cboBuses)
+		'Me.tabGeneralInputsBP.Controls.Add(Me.cboBuses)
 		Me.tabGeneralInputsBP.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.tabGeneralInputsBP.Location = New System.Drawing.Point(4, 22)
 		Me.tabGeneralInputsBP.Name = "tabGeneralInputsBP"
@@ -906,11 +906,11 @@ Partial Class frmHVACTool
 		'
 		'cboBuses
 		'
-		Me.cboBuses.FormattingEnabled = True
-		Me.cboBuses.Location = New System.Drawing.Point(30, 22)
-		Me.cboBuses.Name = "cboBuses"
-		Me.cboBuses.Size = New System.Drawing.Size(251, 23)
-		Me.cboBuses.TabIndex = 7
+		'Me.cboBuses.FormattingEnabled = True
+		'Me.cboBuses.Location = New System.Drawing.Point(30, 22)
+		'Me.cboBuses.Name = "cboBuses"
+		'Me.cboBuses.Size = New System.Drawing.Size(251, 23)
+		'Me.cboBuses.TabIndex = 7
 		'
 		'tabGeneralInputsBC
 		'
@@ -1785,7 +1785,7 @@ Partial Class frmHVACTool
 		'
 		'btnEnvironmentConditionsSource
 		'
-		Me.btnEnvironmentConditionsSource.Image = Global.VectoAuxiliaries.My.Resources.Resources.Open_icon
+		Me.btnEnvironmentConditionsSource.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
 		Me.btnEnvironmentConditionsSource.Location = New System.Drawing.Point(721, 122)
 		Me.btnEnvironmentConditionsSource.Name = "btnEnvironmentConditionsSource"
 		Me.btnEnvironmentConditionsSource.Size = New System.Drawing.Size(24, 24)
@@ -2988,7 +2988,7 @@ Partial Class frmHVACTool
     Friend WithEvents lblBusFloorSurfaceArea As System.Windows.Forms.Label
     Friend WithEvents txtRegisteredPassengers As System.Windows.Forms.TextBox
     Friend WithEvents lblRegisteredPassengers As System.Windows.Forms.Label
-    Friend WithEvents cboBuses As System.Windows.Forms.ComboBox
+    'Friend WithEvents cboBuses As System.Windows.Forms.ComboBox
     Friend WithEvents grpEnvironmentConditions As System.Windows.Forms.GroupBox
     Friend WithEvents btnOpenAenv As System.Windows.Forms.Button
     Friend WithEvents btnEnvironmentConditionsSource As System.Windows.Forms.Button

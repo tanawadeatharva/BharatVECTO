@@ -230,7 +230,7 @@ Partial Class frmAuxiliaryConfig
 		'
 		'btnFuelMap
 		'
-		Me.btnFuelMap.Image = Global.VectoAuxiliaries.My.Resources.Resources.Open_icon
+		Me.btnFuelMap.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
 		Me.btnFuelMap.Location = New System.Drawing.Point(800, 202)
 		Me.btnFuelMap.Name = "btnFuelMap"
 		Me.btnFuelMap.Size = New System.Drawing.Size(24, 24)
@@ -325,7 +325,7 @@ Partial Class frmAuxiliaryConfig
 		'
 		'btnAlternatorMapPath
 		'
-		Me.btnAlternatorMapPath.Image = Global.VectoAuxiliaries.My.Resources.Resources.Open_icon
+		Me.btnAlternatorMapPath.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
 		Me.btnAlternatorMapPath.Location = New System.Drawing.Point(498, 41)
 		Me.btnAlternatorMapPath.Name = "btnAlternatorMapPath"
 		Me.btnAlternatorMapPath.Size = New System.Drawing.Size(24, 24)
@@ -655,7 +655,7 @@ Partial Class frmAuxiliaryConfig
 		'
 		'btnActuationsMap
 		'
-		Me.btnActuationsMap.Image = Global.VectoAuxiliaries.My.Resources.Resources.Open_icon
+		Me.btnActuationsMap.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
 		Me.btnActuationsMap.Location = New System.Drawing.Point(421, 343)
 		Me.btnActuationsMap.Name = "btnActuationsMap"
 		Me.btnActuationsMap.Size = New System.Drawing.Size(24, 24)
@@ -664,7 +664,7 @@ Partial Class frmAuxiliaryConfig
 		'
 		'btnCompressorMap
 		'
-		Me.btnCompressorMap.Image = Global.VectoAuxiliaries.My.Resources.Resources.Open_icon
+		Me.btnCompressorMap.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
 		Me.btnCompressorMap.Location = New System.Drawing.Point(421, 58)
 		Me.btnCompressorMap.Name = "btnCompressorMap"
 		Me.btnCompressorMap.Size = New System.Drawing.Size(24, 24)
@@ -1132,7 +1132,7 @@ Partial Class frmAuxiliaryConfig
 		'
 		'btnBusDatabaseSource
 		'
-		Me.btnBusDatabaseSource.Image = Global.VectoAuxiliaries.My.Resources.Resources.Open_icon
+		Me.btnBusDatabaseSource.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
 		Me.btnBusDatabaseSource.Location = New System.Drawing.Point(713, 159)
 		Me.btnBusDatabaseSource.Name = "btnBusDatabaseSource"
 		Me.btnBusDatabaseSource.Size = New System.Drawing.Size(24, 24)
@@ -1157,7 +1157,7 @@ Partial Class frmAuxiliaryConfig
 		'
 		'btnSSMBSource
 		'
-		Me.btnSSMBSource.Image = Global.VectoAuxiliaries.My.Resources.Resources.Open_icon
+		Me.btnSSMBSource.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
 		Me.btnSSMBSource.Location = New System.Drawing.Point(713, 106)
 		Me.btnSSMBSource.Name = "btnSSMBSource"
 		Me.btnSSMBSource.Size = New System.Drawing.Size(24, 24)
