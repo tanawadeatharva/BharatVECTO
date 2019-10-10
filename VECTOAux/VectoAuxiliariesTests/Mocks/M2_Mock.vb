@@ -1,6 +1,7 @@
 ﻿
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 
 Public Class M2_Mock
 	Implements IM2_AverageElectricalLoadDemand

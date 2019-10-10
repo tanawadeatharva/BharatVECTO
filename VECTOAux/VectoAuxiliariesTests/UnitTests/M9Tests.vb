@@ -2,10 +2,12 @@
 Imports NUnit.Framework
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 Imports IFuelConsumptionMap = TUGraz.VectoCore.BusAuxiliaries.Interfaces.IFuelConsumptionMap
 
 

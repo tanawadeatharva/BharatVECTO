@@ -7,7 +7,7 @@ Namespace Mocks
 	Public Class ElectricalConsumerMock
 		Implements IElectricalConsumer
 
-		Public Property AvgConsumptionAmps As Double Implements IElectricalConsumer.AvgConsumptionAmps
+		Public Property AvgConsumptionAmps As Ampere Implements IElectricalConsumer.AvgConsumptionAmps
 
 		Public Property BaseVehicle As Boolean Implements IElectricalConsumer.BaseVehicle
 
@@ -15,13 +15,13 @@ Namespace Mocks
 
 		Public Property ConsumerName As String Implements IElectricalConsumer.ConsumerName
 
-		Public Property NominalConsumptionAmps As Double Implements IElectricalConsumer.NominalConsumptionAmps
+		Public Property NominalConsumptionAmps As Ampere Implements IElectricalConsumer.NominalConsumptionAmps
 
 		Public Property NumberInActualVehicle As Integer Implements IElectricalConsumer.NumberInActualVehicle
 
 		Public Property PhaseIdle_TractionOn As Double Implements IElectricalConsumer.PhaseIdle_TractionOn
 
-		Public Property PowerNetVoltage As Double Implements IElectricalConsumer.PowerNetVoltage
+		Public Property PowerNetVoltage As Volt Implements IElectricalConsumer.PowerNetVoltage
 
 		Public Function TotalAvgConumptionAmps(Optional PhaseIdle_TractionOnBasedOnCycle As Double = Nothing) As Ampere _
 			Implements IElectricalConsumer.TotalAvgConumptionAmps

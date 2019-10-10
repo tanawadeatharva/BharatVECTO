@@ -1,7 +1,10 @@
 ﻿Imports System.IO
 Imports NUnit.Framework
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.Models.Declaration
 
 
 Namespace UnitTests
@@ -62,19 +65,19 @@ Namespace UnitTests
 		<TestCase("AuxHeater")>
 		Public Sub InstantiateDefaultSSMGenInputsTest(section As String)
 
-			Dim target As ISSMGenInputs = New SSMGenInputs(True)
+			Dim target As ISSMGenInputs = New SSMGenInputs()
 
 			If section = "BusParameterisation" Then
 				'BUS Parameterisation
 				'********************
 				Assert.AreEqual(47, target.BP_NumberOfPassengers)
-				Assert.AreEqual("raised floor", target.BP_BusFloorType)
-				Assert.AreEqual(24.1102486R, target.BP_BusFloorSurfaceArea, 2)
-				Assert.AreEqual(114.42325R, target.BP_BusSurfaceAreaM2)
-				Assert.AreEqual(20.98R, Math.Round(target.BP_BusWindowSurface, 2))
-				Assert.AreEqual(61.81231875D, Math.Round(target.BP_BusVolume, 8))
-				Assert.AreEqual(10.655R, target.BP_BusLength)
-				Assert.AreEqual(2.55R, target.BP_BusWidth)
+				Assert.AreEqual(FloorType.HighFloor, target.BP_BusFloorType)
+				Assert.AreEqual(24.1102486R, target.BP_BusFloorSurfaceArea.Value(), 2)
+				Assert.AreEqual(114.42325R, target.BP_BusSurfaceAreaM2.Value())
+				Assert.AreEqual(20.98R, Math.Round(target.BP_BusWindowSurface.Value(), 2))
+				Assert.AreEqual(61.81231875D, Math.Round(target.BP_BusVolume.Value(), 8))
+				Assert.AreEqual(10.655R, target.BP_BusLength.Value())
+				Assert.AreEqual(2.55R, target.BP_BusWidth.Value())
 			End If
 
 			If section = "BoundaryConditions" Then
@@ -82,27 +85,27 @@ Namespace UnitTests
 				'******************
 				Assert.AreEqual(0.95R, target.BC_GFactor)
 				Assert.AreEqual(0.8R, target.BC_SolarClouding)
-				Assert.AreEqual(80, target.BC_HeatPerPassengerIntoCabinW)
-				Assert.AreEqual(12, target.BC_PassengerBoundaryTemperature)
-				Assert.AreEqual(3.0R, target.BC_PassengerDensityLowFloor)
-				Assert.AreEqual(2.2R, target.BC_PassengerDensitySemiLowFloor)
-				Assert.AreEqual(1.4R, target.BC_PassengerDensityRaisedFloor)
+				Assert.AreEqual(80, target.BC_HeatPerPassengerIntoCabinW.Value())
+				Assert.AreEqual(12, target.BC_PassengerBoundaryTemperature.AsDegCelsius)
+				Assert.AreEqual(3.0R, target.BC_PassengerDensityLowFloor.Value())
+				Assert.AreEqual(2.2R, target.BC_PassengerDensitySemiLowFloor.Value())
+				Assert.AreEqual(1.4R, target.BC_PassengerDensityRaisedFloor.Value())
 				Assert.AreEqual(34.0R, Math.Round(target.BC_CalculatedPassengerNumber, 4))
-				Assert.AreEqual(3.0R, target.BC_UValues)
-				Assert.AreEqual(18, target.BC_HeatingBoundaryTemperature)
-				Assert.AreEqual(23, target.BC_CoolingBoundaryTemperature)
-				Assert.AreEqual(20, target.BC_HighVentilation)
-				Assert.AreEqual(7, target.BC_lowVentilation)
-				Assert.AreEqual(1236.25, Math.Round(target.BC_High, 2))
-				Assert.AreEqual(432.69, Math.Round(target.BC_Low, 2))
-				Assert.AreEqual(692.3, Math.Round(target.BC_HighVentPowerW, 2))
-				Assert.AreEqual(242.3, Math.Round(target.BC_LowVentPowerW, 2))
-				Assert.AreEqual(0.56R, target.BC_SpecificVentilationPower)
+				Assert.AreEqual(3.0R, target.BC_UValues.Value())
+				Assert.AreEqual(18, target.BC_HeatingBoundaryTemperature.AsDegCelsius)
+				Assert.AreEqual(23, target.BC_CoolingBoundaryTemperature.AsDegCelsius)
+				Assert.AreEqual(20, target.BC_HighVentilation.Value() * 3600)
+				Assert.AreEqual(7, target.BC_lowVentilation.Value() * 3600)
+				Assert.AreEqual(1236.25, Math.Round(target.BC_High.Value() * 3600, 2))
+				Assert.AreEqual(432.69, Math.Round(target.BC_Low.Value() * 3600, 2))
+				Assert.AreEqual(692.3, Math.Round(target.BC_HighVentPowerW.Value(), 2))
+				Assert.AreEqual(242.3, Math.Round(target.BC_LowVentPowerW.Value(), 2))
+				Assert.AreEqual(0.56R, target.BC_SpecificVentilationPower.Value() / 3600)
 				Assert.AreEqual(0.84, target.BC_AuxHeaterEfficiency)
-				Assert.AreEqual(11.8, target.BC_GCVDieselOrHeatingOil)
-				Assert.AreEqual(1.5R, target.BC_WindowAreaPerUnitBusLength)
-				Assert.AreEqual(5, target.BC_FrontRearWindowArea)
-				Assert.AreEqual(3, target.BC_MaxTemperatureDeltaForLowFloorBusses)
+				Assert.AreEqual(11.8, target.BC_GCVDieselOrHeatingOil.Value() / 3600.0 / 1000.0)
+				Assert.AreEqual(1.5R, target.BC_WindowAreaPerUnitBusLength.Value())
+				Assert.AreEqual(5, target.BC_FrontRearWindowArea.Value())
+				Assert.AreEqual(3, target.BC_MaxTemperatureDeltaForLowFloorBusses.Value())
 				Assert.AreEqual(0.5R, target.BC_MaxPossibleBenefitFromTechnologyList)
 			End If
 
@@ -110,8 +113,8 @@ Namespace UnitTests
 			If section = "EnvironmentalConditions" Then
 				'Environmental Conditions
 				'************************
-				Assert.AreEqual(25.0, target.EC_EnviromentalTemperature)
-				Assert.AreEqual(400.0, target.EC_Solar)
+				Assert.AreEqual(25.0, target.EC_EnviromentalTemperature.AsDegCelsius)
+				Assert.AreEqual(400.0, target.EC_Solar.Value())
 
 			End If
 
@@ -119,7 +122,7 @@ Namespace UnitTests
 				'AC-SYSTEM
 				'*********
 				Assert.AreEqual("2-stage", target.AC_CompressorType)
-				Assert.AreEqual(18, target.AC_CompressorCapacitykW)
+				Assert.AreEqual(18, target.AC_CompressorCapacitykW.Value() / 1000.0)
 				Assert.AreEqual(3.5, target.AC_COP)
 			End If
 
@@ -138,8 +141,8 @@ Namespace UnitTests
 			If section = "AuxHeater" Then
 				'AUX HEATER
 				'**********
-				Assert.AreEqual(0, target.AH_EngineWasteHeatkW)
-				Assert.AreEqual(30, target.AH_FuelFiredHeaterkW)
+				Assert.AreEqual(0, target.AH_EngineWasteHeatkW.ConvertToKiloWatt().Value())
+				Assert.AreEqual(30, target.AH_FuelFiredHeaterkW.ConvertToKiloWatt().Value())
 			End If
 		End Sub
 
@@ -148,7 +151,7 @@ Namespace UnitTests
 		Public Sub Instantiate_TechListTest()
 
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim target As ISSMTechList = New SSMTechList(GOODTechList, gen)
 
@@ -160,7 +163,7 @@ Namespace UnitTests
 		Public Sub Instantiate_TechListTestALLON()
 
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim target As ISSMTechList = New SSMTechList(GOODTechListALLON, gen)
 
@@ -186,7 +189,7 @@ Namespace UnitTests
 		Public Sub Instantiate_TechListTestEMPTYList()
 
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
 
@@ -199,7 +202,7 @@ Namespace UnitTests
 		Public Sub Instantiate_TechListTestEMPTYListADD1()
 
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
 
@@ -239,7 +242,7 @@ Namespace UnitTests
 		Public Sub Instantiate_TechListTestEMPTYListADD1Duplicate()
 
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
 
@@ -279,7 +282,7 @@ Namespace UnitTests
 		Public Sub Instantiate_TechListTestEMPTYListADD1AndClear()
 
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
 
@@ -319,7 +322,7 @@ Namespace UnitTests
 		Public Sub Instantiate_TechListTestEMPTYListADD1AndModify()
 
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
 
@@ -361,7 +364,7 @@ Namespace UnitTests
 		Public Sub Instantiate_TechListTestEMPTYListADD1andDeleteIt()
 
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
 
@@ -401,7 +404,7 @@ Namespace UnitTests
 		Public Sub Instantiate_TechListTestEMPTYListandDeleteNonExistantItem()
 
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
 
@@ -438,7 +441,7 @@ Namespace UnitTests
 		<Test()>
 		Public Sub Instantiate_NewTechListLine()
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim ttl As ITechListBenefitLine = New TechListBenefitLine(gen)
 
@@ -448,7 +451,7 @@ Namespace UnitTests
 		<Test()>
 		Public Sub TechBenefitLineCompareAsEqual()
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim ttl1 As ITechListBenefitLine = New TechListBenefitLine(gen)
 			Dim ttl2 As ITechListBenefitLine = New TechListBenefitLine(gen)
@@ -476,7 +479,7 @@ Namespace UnitTests
 		<TestCase("OnVehicle")>
 		Public Sub TechBenefitLineCompareAsUnequal(prop As String)
 
-			Dim gen As ISSMGenInputs = New SSMGenInputs(True)
+			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
 			Dim ttl1 As ITechListBenefitLine = New TechListBenefitLine(gen)
 			Dim ttl2 As ITechListBenefitLine = New TechListBenefitLine(gen)
@@ -538,15 +541,15 @@ Namespace UnitTests
 			Assert.IsTrue(success)
 
 			'change something
-			target.GenInputs.BP_BusLength = 202.202
+			target.GenInputs.BC_HighVentilation = 202.202.SI(Of PerSecond)
 
-			Assert.AreEqual(target.GenInputs.BP_BusLength, 202.202)
+			Assert.AreEqual(202.202, target.GenInputs.BC_HighVentilation.Value(), 1e-3)
 
 			'Retreive
 			success = target.Load(filePath)
 			Assert.IsTrue(success)
 
-			Assert.AreEqual(target.GenInputs.BP_BusLength, 10.655)
+			Assert.AreEqual(20.SI(Unit.SI.Per.Hour).Value(), target.GenInputs.BC_HighVentilation.Value(), 1e-3)
 		End Sub
 
 		'GenInputs Comparison
@@ -572,7 +575,8 @@ Namespace UnitTests
 			Dim ssmTool1 As SSMTOOL = New SSMTOOL(filePath, New HVACConstants())
 
 			'Alter somthing
-			ssmTool1.genInputs.BP_BusLength = 11
+			'CType(ssmTool1.genInputs, SSMGenInputs)._vehicle.Length = 11.SI(Of Meter)
+            ssmTool1.GenInputs.BC_PassengerBoundaryTemperature = 99.0.DegCelsiusToKelvin()
 
 			Dim ssmTool2 As SSMTOOL = New SSMTOOL(filePath, New HVACConstants())
 

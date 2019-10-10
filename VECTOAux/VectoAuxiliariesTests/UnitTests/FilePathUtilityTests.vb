@@ -1,7 +1,7 @@
 ﻿
 
 Imports NUnit.Framework
-Imports TUGraz.VectoCore.BusAuxiliaries.Util
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Util
 
 
 Namespace UnitTests

@@ -1,6 +1,8 @@
 ﻿
+Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCore.BusAuxiliaries
+Imports TUGraz.VectoCore.Models.BusAuxiliaries
 
 
 Namespace UnitTests
@@ -19,6 +21,11 @@ Public Class AuxiliaryPersistanceTests
       dim auxDefault  = New AuxiliaryConfig("")
       auxDefault.Save("TestFiles\auxiliaryConfigKEEP.json")
 
+     End Sub
+
+     <OneTimeSetUp>
+     Public Sub RunBeforeAnyTests()
+         Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
      End Sub
 
     <Test()>

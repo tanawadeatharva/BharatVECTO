@@ -1,19 +1,23 @@
 ﻿
+Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 
 Namespace UnitTests
 	<TestFixture()>
 	Public Class M5_SmartAlternatorSetGenerationTests
 		'Constants
-		Private Const _powerNetVoltage As Single = 26.3
+		Private Shared ReadOnly _powerNetVoltage As Volt = 26.3.SI(of Volt)
 		Private Const _hvacMap As String = "testFiles\TestHvacMap.csv"
 		Private Const _altMap As String = "testFiles\testAlternatormap.aalt"
 		Private Const _rpm As Integer = 2000
@@ -25,6 +29,10 @@ Namespace UnitTests
 		Private _signals As ISignals = New Signals
 		Private ssmHVac As IHVACSteadyStateModel = New HVACSteadyStateModel(100, 100, 100)
 
+        <OneTimeSetUp>
+        Public Sub RunBeforeAnyTests()
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+        End Sub
 
 		Private Function GetSSM() As ISSMTOOL
 
@@ -34,6 +42,7 @@ Namespace UnitTests
 
 			Dim ssm As ISSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
 
+		    CType(ssm.GenInputs, SSMGenInputs)._vehicle.Height = 0.SI(of Meter)
 
 			ssm.Load(_SSMMAP)
 
@@ -51,13 +60,13 @@ Namespace UnitTests
 			alternatoMap.Initialise()
 			Dim _
 				m0 As _
-					New M00Impl(elecConsumers, alternatoMap, _powerNetVoltage.SI(Of Volt), _signals,
+					New M00Impl(elecConsumers, alternatoMap, _powerNetVoltage, _signals,
 															GetSSM())
 
 			'Results Cards
 			Dim readings = New List(Of SmartResult)
-			readings.Add(New SmartResult(10, 8))
-			readings.Add(New SmartResult(70, 63))
+			readings.Add(New SmartResult(10.SI(Of Ampere), 8.SI(Of Ampere)))
+			readings.Add(New SmartResult(70.SI(Of Ampere), 63.SI(Of Ampere)))
 
 			Dim idleResult As New ResultCard(readings)
 			Dim tractionResult As New ResultCard(readings)
@@ -74,7 +83,7 @@ Namespace UnitTests
 		Public Sub CreateNewTest()
 
 			Initialise()
-			_target = New M05Impl(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
+			_target = New M05Impl(_m05, _powerNetVoltage, _altGearPullyEfficiency)
 			Assert.IsNotNull(_target)
 		End Sub
 
@@ -82,7 +91,7 @@ Namespace UnitTests
 		Public Sub PowerAtCrankIdleWatts()
 
 			Initialise()
-			_target = New M05Impl(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
+			_target = New M05Impl(_m05, _powerNetVoltage, _altGearPullyEfficiency)
 			Dim expected As Single = 1641.35791
 			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankIdleWatts()
 
@@ -93,7 +102,7 @@ Namespace UnitTests
 		Public Sub PowerAtCrankTractionWatts()
 
 			Initialise()
-			_target = New M05Impl(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
+			_target = New M05Impl(_m05, _powerNetVoltage, _altGearPullyEfficiency)
 			Dim expected As Single = 1641.35791
 			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankTractionOnWatts()
 
@@ -104,7 +113,7 @@ Namespace UnitTests
 		Public Sub PowerAtCrankOverrunWatts()
 
 			Initialise()
-			_target = New M05Impl(_m05, _powerNetVoltage.SI(Of Volt), _altGearPullyEfficiency)
+			_target = New M05Impl(_m05, _powerNetVoltage, _altGearPullyEfficiency)
 			Dim expected As Single = 1641.35791F
 
 			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankOverrunWatts()

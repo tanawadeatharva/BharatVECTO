@@ -1,7 +1,9 @@
 ﻿
 Imports NUnit.Framework
+Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries
 
 
 Namespace UnitTests
@@ -113,7 +115,7 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).AvgConsumptionAmps += 1
+			auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).AvgConsumptionAmps += 1.SI(of Ampere)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -180,7 +182,7 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).NominalConsumptionAmps += 1
+			auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).NominalConsumptionAmps += 1.SI(of Ampere)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -230,7 +232,7 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(50, 49))
+			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -246,7 +248,7 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxNow.ElectricalUserInputsConfig.ResultCardTraction.Results.Add(New SmartResult(50, 49))
+			auxNow.ElectricalUserInputsConfig.ResultCardTraction.Results.Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -262,7 +264,7 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxNow.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(50, 49))
+			auxNow.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -278,8 +280,8 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxFresh.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(50, 49))
-			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49, 49))
+			auxFresh.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -295,8 +297,8 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxFresh.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49, 49))
-			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(50, 49))
+			auxFresh.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -312,8 +314,8 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxFresh.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49, 51))
-			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49, 50))
+			auxFresh.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49.SI(of Ampere), 51.SI(of Ampere)))
+			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -329,8 +331,8 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxFresh.ElectricalUserInputsConfig.ResultCardTraction.Results.Add(New SmartResult(50, 49))
-			auxNow.ElectricalUserInputsConfig.ResultCardTraction.Results.Add(New SmartResult(51, 49))
+			auxFresh.ElectricalUserInputsConfig.ResultCardTraction.Results.Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+			auxNow.ElectricalUserInputsConfig.ResultCardTraction.Results.Add(New SmartResult(51.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -346,8 +348,8 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxFresh.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49, 49))
-			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(50, 49))
+			auxFresh.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -363,8 +365,8 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxFresh.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49, 49))
-			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49, 50))
+			auxFresh.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+			auxNow.ElectricalUserInputsConfig.ResultCardIdle.Results.Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -380,8 +382,8 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxFresh.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(50, 49))
-			auxNow.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(50, 48))
+			auxFresh.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+			auxNow.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(50.SI(of Ampere), 48.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -397,8 +399,8 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxFresh.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(49, 49))
-			auxNow.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(50, 49))
+			auxFresh.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+			auxNow.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -414,8 +416,8 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxFresh.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(49, 49))
-			auxNow.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(49, 50))
+			auxFresh.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+			auxNow.ElectricalUserInputsConfig.ResultCardOverrun.Results.Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -431,7 +433,7 @@ Namespace UnitTests
 			Dim auxFresh = New AuxiliaryConfig("")
 			Dim auxNow = New AuxiliaryConfig("")
 			Dim compareResult As Boolean
-			auxNow.ElectricalUserInputsConfig.PowerNetVoltage += 1
+			auxNow.ElectricalUserInputsConfig.PowerNetVoltage += 1.SI(of Volt)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)

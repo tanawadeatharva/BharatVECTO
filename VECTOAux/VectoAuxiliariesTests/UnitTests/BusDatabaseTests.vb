@@ -1,6 +1,6 @@
 ﻿
 Imports NUnit.Framework
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 
 Namespace UnitTests

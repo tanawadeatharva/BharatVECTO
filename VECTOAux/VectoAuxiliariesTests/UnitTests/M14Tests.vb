@@ -4,11 +4,14 @@ Imports VectoAuxiliaries.Hvac
 Imports NUnit.Framework
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 
 
 Namespace UnitTests
@@ -21,43 +24,43 @@ Namespace UnitTests
 		Public Property SSMDisabled As Boolean Implements ISSMTOOL.SSMDisabled
 		Public Property HVACConstants As IHVACConstants Implements ISSMTOOL.HVACConstants
 
-		Public Sub Clone(from As ISSMTOOL) Implements ISSMTOOL.Clone
-		End Sub
+		'Public Sub Clone(from As ISSMTOOL) Implements ISSMTOOL.Clone
+		'End Sub
 
-		Public ReadOnly Property ElectricalWAdjusted As Double Implements ISSMTOOL.ElectricalWAdjusted
+		Public ReadOnly Property ElectricalWAdjusted As Watt Implements ISSMTOOL.ElectricalWAdjusted
 			Get
 				Throw New NotImplementedException
 			End Get
 		End Property
 
-		Public ReadOnly Property ElectricalWBase As Double Implements ISSMTOOL.ElectricalWBase
+		Public ReadOnly Property ElectricalWBase As Watt Implements ISSMTOOL.ElectricalWBase
 			Get
 				Throw New NotImplementedException
 			End Get
 		End Property
 
-		Public ReadOnly Property FuelPerHBase As Double Implements ISSMTOOL.FuelPerHBase
+		Public ReadOnly Property FuelPerHBase As KilogramPerSecond Implements ISSMTOOL.FuelPerHBase
 			Get
 				Throw New NotImplementedException
 			End Get
 		End Property
 
-		Public ReadOnly Property FuelPerHBaseAdjusted As Double Implements ISSMTOOL.FuelPerHBaseAdjusted
+		Public ReadOnly Property FuelPerHBaseAdjusted As KilogramPerSecond Implements ISSMTOOL.FuelPerHBaseAdjusted
 			Get
 				Throw New NotImplementedException
 			End Get
 		End Property
 
-		Public Function FuelPerHBaseAsjusted(AverageUseableEngineWasteHeatKW As Double) As Double _
-			Implements ISSMTOOL.FuelPerHBaseAsjusted
+		Public Function FuelPerHBaseAsjusted(AverageUseableEngineWasteHeatKW As Watt) As KilogramPerSecond _
+		    Implements ISSMTOOL.FuelPerHBaseAsjusted
 
-			Return 0.5 * AverageUseableEngineWasteHeatKW
+			Return (0.5 * (AverageUseableEngineWasteHeatKW.Value() * 0.835).SI(Unit.SI.Liter.Per.Hour).Value()).SI(of KilogramPerSecond)
 		End Function
 
 		Public Property GenInputs As ISSMGenInputs Implements ISSMTOOL.GenInputs
 
 			Get
-				Return New SSMGenInputs(True)
+				Return New SSMGenInputs()
 			End Get
 			Set(value As ISSMGenInputs)
 			End Set
@@ -71,13 +74,13 @@ Namespace UnitTests
 			Throw New NotImplementedException
 		End Function
 
-		Public ReadOnly Property MechanicalWBase As Double Implements ISSMTOOL.MechanicalWBase
+		Public ReadOnly Property MechanicalWBase As Watt Implements ISSMTOOL.MechanicalWBase
 			Get
 				Throw New NotImplementedException
 			End Get
 		End Property
 
-		Public ReadOnly Property MechanicalWBaseAdjusted As Double Implements ISSMTOOL.MechanicalWBaseAdjusted
+		Public ReadOnly Property MechanicalWBaseAdjusted As Watt Implements ISSMTOOL.MechanicalWBaseAdjusted
 			Get
 				Throw New NotImplementedException
 			End Get

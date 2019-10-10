@@ -2,6 +2,7 @@
 
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 
 
 Public Class M1_Mock
@@ -10,7 +11,7 @@ Public Class M1_Mock
 	Public _AveragePowerDemandAtAlternatorFromHVACElectricsWatts As Watt
 	Public _AveragePowerDemandAtCrankFromHVACElectricsWatts As Watt
 	Public _AveragePowerDemandAtCrankFromHVACMechanicalsWatts As Watt
-	Public _HVACFuelingLitresPerHour As LiterPerSecond
+	Public _HVACFuelingLitresPerHour As KilogramPerSecond
 
 	Public Function AveragePowerDemandAtAlternatorFromHVACElectricsWatts() As Watt _
 		Implements IM1_AverageHVACLoadDemand.AveragePowerDemandAtAlternatorFromHVACElectricsWatts
@@ -27,8 +28,8 @@ Public Class M1_Mock
 		Return _AveragePowerDemandAtCrankFromHVACMechanicalsWatts
 	End Function
 
-	Public Function HVACFuelingLitresPerHour() As LiterPerSecond _
-		Implements IM1_AverageHVACLoadDemand.HVACFuelingLitresPerHour
+	Public Function HVACFuelingLitresPerHour() As KilogramPerSecond _
+	    Implements IM1_AverageHVACLoadDemand.HVACFuelingLitresPerHour
 		Return _HVACFuelingLitresPerHour
 	End Function
 
@@ -46,7 +47,7 @@ Public Class M1_Mock
 			AveragePowerDemandAtAlternatorFromHVACElectricsWatts.SI(Of Watt)()
 		_AveragePowerDemandAtCrankFromHVACElectricsWatts = AveragePowerDemandAtCrankFromHVACElectricsWatts.SI(Of Watt)()
 		_AveragePowerDemandAtCrankFromHVACMechanicalsWatts = AveragePowerDemandAtCrankFromHVACMechanicalsWatts.SI(Of Watt)()
-       		_HVACFuelingLitresPerHour = HVACFuelingLitresPerHour.SI(Unit.SI.Liter.Per.Hour).Cast(Of LiterPerSecond)() _
+       		_HVACFuelingLitresPerHour = HVACFuelingLitresPerHour.SI(Of KilogramPerSecond)() _
 		'(Of LiterPerHour)()
 	End Sub
 

@@ -1,12 +1,12 @@
 ﻿
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 
 
 <TestFixture()>
 Public Class ElectricalConsumerListTests
-	Private TestConsumerList As ElectricalConsumerList = New ElectricalConsumerList(26.3, 0.096, True)
+	Private TestConsumerList As ElectricalConsumerList = New ElectricalConsumerList(26.3.SI(of Volt), 0.096, True)
 
 
 	Sub New()
@@ -16,7 +16,7 @@ Public Class ElectricalConsumerListTests
 	<Test()>
 	Public Sub CreateNewTest()
 
-		Dim target As New ElectricalConsumerList(26.3, 0.096, True)
+		Dim target As New ElectricalConsumerList(26.3.SI(of Volt), 0.096, True)
 
 		Assert.IsNotNull(target)
 	End Sub
@@ -50,10 +50,10 @@ Public Class ElectricalConsumerListTests
     <Test()>
     Public Sub DuplicateConsumersTest_ThrowsArgumentException()
 
-        Dim target As New ElectricalConsumerList(0.096, 26.3)
+        Dim target As New ElectricalConsumerList(0.096.SI(of Volt), 26.3)
         'Add two OnBaseVehicle consumers
-        target.AddConsumer(New ElectricalConsumer(True, "TEST", "Exclude1", 10, 1, 26.3, 1, ""))
-        Assert.That(Sub() target.AddConsumer(New ElectricalConsumer(True, "TEST", "Exclude1", 10, 1, 26.3, 1, "")), Throws.InstanceOf(Of System.ArgumentException))
+        target.AddConsumer(New ElectricalConsumer(True, "TEST", "Exclude1", 10.SI(of Ampere), 1, 26.3.SI(of Volt), 1, ""))
+        Assert.That(Sub() target.AddConsumer(New ElectricalConsumer(True, "TEST", "Exclude1", 10.SI(of Ampere), 1, 26.3.SI(of Volt), 1, "")), Throws.InstanceOf(Of System.ArgumentException))
 
 
     End Sub

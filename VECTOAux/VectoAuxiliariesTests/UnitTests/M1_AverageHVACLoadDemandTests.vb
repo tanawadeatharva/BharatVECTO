@@ -2,14 +2,17 @@
 Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
-
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 
 
 Namespace UnitTests
@@ -20,7 +23,7 @@ Namespace UnitTests
 		Private Const _BusDatabase As String = "TestFiles\BusDatabase.abdb"
 
 		Private signals As ISignals = New Signals With {.EngineSpeed = 2000.RPMtoRad()}
-		Private powernetVoltage As Double = 26.3
+		Private powernetVoltage As Volt = 26.3.SI(of Volt)
 		Private ssm As ISSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
 
 
@@ -35,10 +38,12 @@ Namespace UnitTests
             alternatorMap = New AlternatorMap(_GOODMAP)
 			alternatorMap.Initialise()
 
+            CType(ssm.GenInputs, SSMGenInputs)._vehicle.Height = 0.SI(of Meter)
+
 			ssm.Load(_SSMMAP)
 
 			m0 = New M00Impl(New ElectricalConsumerList(powernetVoltage, 0.096, True),
-														alternatorMap, powernetVoltage.SI(Of Volt), signals, ssm)
+														alternatorMap, powernetVoltage, signals, ssm)
 		End Sub
 
 		Private Function GETM1Instance() As IM1_AverageHVACLoadDemand
@@ -47,7 +52,7 @@ Namespace UnitTests
 
 			Return New M01Impl(m0, alternatorGearEfficiency,
 												compressorGrearEfficiency,
-												powernetVoltage.SI(Of Volt),
+												powernetVoltage,
 												signals,
 												ssm)
 		End Function
@@ -101,7 +106,7 @@ Namespace UnitTests
 
 			Dim target As IM1_AverageHVACLoadDemand = GETM1Instance()
 			Dim expected As Single = 0
-			Dim actual As LiterPerSecond = target.HVACFuelingLitresPerHour()
+			Dim actual As KilogramPerSecond = target.HVACFuelingLitresPerHour()
 
 			Assert.AreEqual(expected, actual.Value(), 0.001)
 		End Sub

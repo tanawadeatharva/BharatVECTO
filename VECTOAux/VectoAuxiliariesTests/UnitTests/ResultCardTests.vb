@@ -1,8 +1,8 @@
 ﻿
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 
 
 <TestFixture()>
@@ -16,15 +16,15 @@ Public Class ResultCardTests
 
 	Public Sub New()
 
-		results.Add(New SmartResult(20, 18))
-		results.Add(New SmartResult(30, 27))
-		results.Add(New SmartResult(40, 36))
-		results.Add(New SmartResult(50, 45))
+		results.Add(New SmartResult(20.SI(Of Ampere), 18.SI(Of Ampere)))
+		results.Add(New SmartResult(30.SI(Of Ampere), 27.SI(Of Ampere)))
+		results.Add(New SmartResult(40.SI(Of Ampere), 36.SI(Of Ampere)))
+		results.Add(New SmartResult(50.SI(Of Ampere), 45.SI(Of Ampere)))
 
-		unorderedResults.Add(New SmartResult(40, 36))
-		unorderedResults.Add(New SmartResult(30, 27))
-		unorderedResults.Add(New SmartResult(50, 45))
-		unorderedResults.Add(New SmartResult(20, 18))
+		unorderedResults.Add(New SmartResult(40.SI(Of Ampere), 36.SI(Of Ampere)))
+		unorderedResults.Add(New SmartResult(30.SI(Of Ampere), 27.SI(Of Ampere)))
+		unorderedResults.Add(New SmartResult(50.SI(Of Ampere), 45.SI(Of Ampere)))
+		unorderedResults.Add(New SmartResult(20.SI(Of Ampere), 18.SI(Of Ampere)))
 
 		'results.Add(60, 54)
 

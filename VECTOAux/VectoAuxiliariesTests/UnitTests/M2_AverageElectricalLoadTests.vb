@@ -3,13 +3,17 @@ Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Hvac
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 
 
 Namespace UnitTests
@@ -28,7 +32,7 @@ Namespace UnitTests
 			'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
 
 			Dim ssm As ISSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
-
+		    CType(ssm.GenInputs, SSMGenInputs)._vehicle.Height = 0.SI(of Meter)
 
 			ssm.Load(_SSMMAP)
 
@@ -43,7 +47,7 @@ Namespace UnitTests
 			signals.EngineSpeed = 2000.RPMtoRad()
 
 
-			Dim consumers As IElectricalConsumerList = CType(New ElectricalConsumerList(26.3, 0.096, True), 
+			Dim consumers As IElectricalConsumerList = CType(New ElectricalConsumerList(26.3.SI(of Volt), 0.096, True), 
 															IElectricalConsumerList)
 
 			Dim altMap As IAlternatorMap = CType(New AlternatorMap("testfiles\testAlternatorMap.aalt"), IAlternatorMap)

@@ -1,13 +1,16 @@
 ﻿Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
 Imports System.IO
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
-Imports Signals = TUGraz.VectoCore.BusAuxiliaries.Interfaces.Signals
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports Signals = TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.Signals
 
 Namespace UnitTests
     <TestFixture()>
@@ -27,7 +30,8 @@ Namespace UnitTests
 
             Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
 
-            Dim ssm As ISSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
+            Dim ssm As SSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
+            CType(ssm.GenInputs, SSMGenInputs)._vehicle.Height = 0.SI(of Meter)
             ssm.Load(_SSMMAP)
 
             Return ssm
@@ -40,9 +44,9 @@ Namespace UnitTests
             signals.EngineSpeed = 2000.RPMtoRad()
 
             'Setup consumers and HVAC ( 1 Consumer in Test Category )
-            elecConsumers = CType(New ElectricalConsumerList(0.096, 26.3), IElectricalConsumerList)
-            elecConsumers.AddConsumer(New ElectricalConsumer(False, "TEST", "CONSUMER1", 20, 0.5,
-                                                            26.3, 1, ""))
+            elecConsumers = CType(New ElectricalConsumerList(0.096.SI(of Volt), 26.3), IElectricalConsumerList)
+            elecConsumers.AddConsumer(New ElectricalConsumer(False, "TEST", "CONSUMER1", 20.SI(of Ampere), 0.5,
+                                                            26.3.SI(of Volt), 1, ""))
 
             'Alternator Map
             alternatorMap = CType(New AlternatorMap(cstrAlternatorMap), IAlternatorMap)
@@ -75,7 +79,7 @@ Namespace UnitTests
 
         <Test()>
         Public Sub EfficiencyValueTest()
-            Dim target As IM0_NonSmart_AlternatorsSetEfficiency = New M00Impl(elecConsumers,
+            Dim target As M00Impl = New M00Impl(elecConsumers,
                                                                                                         alternatorMap, powernetVoltage, signals, GetSSM())
 
             Dim actual As Single = target.AlternatorsEfficiency

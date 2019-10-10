@@ -1,14 +1,17 @@
 ﻿Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl
 
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics
-Imports TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 
 
 Namespace UnitTests
@@ -38,7 +41,7 @@ Namespace UnitTests
 			'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
 
 			Dim ssm As ISSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
-
+		    CType(ssm.GenInputs, SSMGenInputs)._vehicle.Height = 0.SI(of Meter)
 
 			ssm.Load(_SSMMAP)
 
@@ -50,7 +53,7 @@ Namespace UnitTests
 
 
 			Dim ssm As ISSMTOOL = GetSSM()
-			Dim elecConsumers As New ElectricalConsumerList(26.3, 0.096, True)
+			Dim elecConsumers As New ElectricalConsumerList(26.3.SI(of Volt), 0.096, True)
 
 			'Dim  hvacMap As New HVACMap("testFiles\TestHvacMap.csv")
 			'hvacMap.Initialise()
@@ -64,8 +67,8 @@ Namespace UnitTests
 
 			'Results Cards
 			Dim readings = New List(Of SmartResult)
-			readings.Add(New SmartResult(10, 8))
-			readings.Add(New SmartResult(70, 63))
+			readings.Add(New SmartResult(10.SI(of Ampere), 8.SI(of Ampere)))
+			readings.Add(New SmartResult(70.SI(of Ampere), 63.SI(of Ampere)))
 
 			Dim idleResult As New ResultCard(readings)
 			Dim tractionResult As New ResultCard(readings)

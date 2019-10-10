@@ -2,6 +2,7 @@
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 
 Namespace Mocks
 	Public Class CompressorMapMock
@@ -41,6 +42,6 @@ Namespace Mocks
 		End Function
 
 
-        Public Event AuxiliaryEvent As AuxiliaryEventEventHandler Implements IAuxiliaryEvent.AuxiliaryEvent
+        'Public Event AuxiliaryEvent As AuxiliaryEventEventHandler Implements IAuxiliaryEvent.AuxiliaryEvent
 	End Class
 End Namespace
