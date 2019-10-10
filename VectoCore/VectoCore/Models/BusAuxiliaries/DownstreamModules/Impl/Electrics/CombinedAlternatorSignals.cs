@@ -6,7 +6,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 	// Used by the CombinedAlternator class and any other related classes.
 	public class CombinedAlternatorSignals : ICombinedAlternatorSignals
 	{
-		public double CrankRPM { get; set; }
+		public PerSecond CrankRPM { get; set; }
 
 		public Ampere CurrentDemandAmps { get; set; }
 

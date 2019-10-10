@@ -6,6 +6,7 @@ Imports System.Windows.Forms
 Imports VectoAuxiliaries.Electrics
 Imports System.ComponentModel
 Imports System.Linq
+Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
@@ -356,25 +357,25 @@ Public Class frmCombinedAlternators
 
         Dim newAlt As New List(Of ICombinedAlternatorMapRow)
 
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000, Convert.ToSingle(txt2K10Amps.Text),
+        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000.RPMtoRad(), txt2K10Amps.Text.ToDouble().si(Of Ampere),
                                                 Convert.ToSingle(txt2K10Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000, Convert.ToSingle(txt2KMax2Amps.Text),
+        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000.RPMtoRad(), txt2KMax2Amps.Text.ToDouble().si(Of Ampere),
                                                 Convert.ToSingle(txt2KMax2Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000, Convert.ToSingle(txt2KMaxAmps.Text),
+        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 2000.RPMtoRad(), txt2KMaxAmps.Text.ToDouble().si(Of Ampere),
                                                 Convert.ToSingle(txt2KMaxEfficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
 
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000, Convert.ToSingle(txt4K10Amps.Text),
+        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000.RPMtoRad(), txt4K10Amps.Text.ToDouble().si(Of Ampere),
                                                 Convert.ToSingle(txt4K10Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000, Convert.ToSingle(txt4KMax2Amps.Text),
+        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000.RPMtoRad(),txt4KMax2Amps.Text.ToDouble().si(Of Ampere),
                                                 Convert.ToSingle(txt4KMax2Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000, Convert.ToSingle(txt4KMaxAmps.Text),
+        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 4000.RPMtoRad(), txt4KMaxAmps.Text.ToDouble().si(Of Ampere),
                                                 Convert.ToSingle(txt4KMaxEfficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
 
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000, Convert.ToSingle(txt6K10Amps.Text),
+        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000.RPMtoRad(),txt6K10Amps.Text.ToDouble().si(Of Ampere),
                                                 Convert.ToSingle(txt6K10Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000, Convert.ToSingle(txt6KMax2Amps.Text),
+        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000.RPMtoRad(), txt6KMax2Amps.Text.ToDouble().si(Of Ampere),
                                                 Convert.ToSingle(txt6KMax2Efficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
-        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000, Convert.ToSingle(txt6KMaxAmps.Text),
+        newAlt.Add(New CombinedAlternatorMapRow(txtAlternatorName.Text, 6000.RPMtoRad(), txt6KMaxAmps.Text.ToDouble().si(Of Ampere),
                                                 Convert.ToSingle(txt6KMaxEfficiency.Text), Convert.ToSingle(txtPulleyRatio.Text)))
 
         Return newAlt

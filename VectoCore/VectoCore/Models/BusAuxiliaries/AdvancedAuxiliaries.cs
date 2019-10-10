@@ -252,25 +252,25 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 				moduel.ResetCalculations();
 		}
 
-		public Kilogram TotalFuelGRAMS
+		public Kilogram TotalFuel
 		{
 			get {
 				if (M13 != null)
-					return M14.TotalCycleFCGrams;
+					return M14.TotalCycleFC;
 				else
 					return 0.SI<Kilogram>();
 			}
 		}
 
-		public Liter TotalFuelLITRES
-		{
-			get {
-				if (M14 != null)
-					return M14.TotalCycleFCLitres;
-				else
-					return 0.SI<Liter>();
-			}
-		}
+		//public Liter TotalFuelLITRES
+		//{
+		//	get {
+		//		if (M14 != null)
+		//			return M14.TotalCycleFCLitres;
+		//		else
+		//			return 0.SI<Liter>();
+		//	}
+		//}
 
 		public string AuxiliaryName
 		{
@@ -391,16 +391,16 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 		public Kilogram AA_TotalCycleFC_Grams
 		{
 			get {
-				return M14.TotalCycleFCGrams;
+				return M14.TotalCycleFC;
 			}
 		}
 
-		public Liter AA_TotalCycleFC_Litres
-		{
-			get {
-				return M14.TotalCycleFCLitres;
-			}
-		}
+		//public Liter AA_TotalCycleFC_Litres
+		//{
+		//	get {
+		//		return M14.TotalCycleFCLitres;
+		//	}
+		//}
 
 		public Watt AuxiliaryPowerAtCrankWatts
 		{

@@ -22,8 +22,8 @@ Public Class M3_Mock
 		End Get
 	End Property
 
-	Public Function TotalAirConsumedPerCycle() As NormLiterPerSecond _
-		Implements IM3_AveragePneumaticLoadDemand.AverageAirConsumedPerSecondLitre
+	Public Function AverageAirConsumed() As NormLiterPerSecond _
+		Implements IM3_AveragePneumaticLoadDemand.AverageAirConsumed
 		Return _TotalAirConsumedPerCycle
 	End Function
 

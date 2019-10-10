@@ -1,26 +1,27 @@
 ﻿using System;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
 	// Used by the Combined Alternator Form/Classes to accept user input for the combined alternators efficiency
 	// At different Current Demands
-	public class AltUserInput
+	public class AltUserInput<T> where T: SI
 	{
-		public double Amps;
+		public T Amps;
 		public double Eff;
 
 		// Constructor
-		public AltUserInput(double amps, double eff)
+		public AltUserInput(T amps, double eff)
 		{
-			this.Amps = amps;
-			this.Eff = eff;
+			Amps = amps;
+			Eff = eff;
 		}
 
 		// Equality
-		public bool IsEqual(AltUserInput other, int rounding = 7)
+		public bool IsEqual(AltUserInput<T> other, int rounding = 7)
 		{
-			return Math.Round(this.Amps, rounding) == Math.Round(other.Amps, rounding) &&
-					Math.Round(this.Eff, rounding) == Math.Round(other.Eff, rounding);
+			return Amps != null && other != null && Amps.IsEqual(other.Amps, Math.Pow(10, -rounding).SI<Ampere>()) &&
+					Eff.IsEqual(other.Eff, Math.Pow(10, -rounding));
 		}
 	}
 }

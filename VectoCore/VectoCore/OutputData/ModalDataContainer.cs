@@ -301,7 +301,7 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.AA_EngineIdleFlag,
 						ModalResultField.AA_CompressorFlag,
 						ModalResultField.AA_TotalCycleFC_Grams,
-						ModalResultField.AA_TotalCycleFC_Litres,
+						//ModalResultField.AA_TotalCycleFC_Litres,
 						ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals,
 						ModalResultField.AA_AveragePowerDemandCrankHVACElectricals,
 						ModalResultField.AA_AveragePowerDemandCrankElectrics,

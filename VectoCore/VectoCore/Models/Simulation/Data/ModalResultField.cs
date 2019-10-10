@@ -324,7 +324,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(int), caption: "AA_EngineIdleFlag [bool]")] AA_EngineIdleFlag,
 		[ModalResultField(typeof(int), caption: "AA_CompressorFlag [bool]")] AA_CompressorFlag,
 		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Grams [g]", outputFactor: 1000)] AA_TotalCycleFC_Grams,
-		[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Litres [l]")] AA_TotalCycleFC_Litres,
+		//[ModalResultField(typeof(SI), caption: "AA_TotalCycleFC_Litres [l]")] AA_TotalCycleFC_Litres,
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankHVACMechanicals [W]")] AA_AveragePowerDemandCrankHVACMechanicals,
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankHVACElectricals [W]")] AA_AveragePowerDemandCrankHVACElectricals,
 		[ModalResultField(typeof(SI), caption: "AA_AveragePowerDemandCrankElectrics [W]")] AA_AveragePowerDemandCrankElectrics,

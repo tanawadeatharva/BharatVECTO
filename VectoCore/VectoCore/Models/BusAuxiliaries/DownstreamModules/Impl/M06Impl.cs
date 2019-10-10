@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected override void DoCalculate()
 		{
 			var sum1 = _m1.AveragePowerDemandAtCrankFromHVACElectricsWatts() + _m2.GetAveragePowerAtCrankFromElectrics();
-			var sw1 = _signals.SmartElectrics ? _m5.AlternatorsGenerationPowerAtCrankTractionOnWatts() : sum1;
+			var sw1 = _signals.SmartElectrics ? _m5.AlternatorsGenerationPowerAtCrankTractionOn() : sum1;
 			var sum2 = _m1.AveragePowerDemandAtCrankFromHVACMechanicalsWatts() + sw1 +
 						_m3.GetAveragePowerDemandAtCrankFromPneumatics();
 			var sum3 = _signals.EngineMotoringPower + _signals.InternalEnginePower + sum2;
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 
 			var sum4 = sum3 - sw1 - _m3.GetAveragePowerDemandAtCrankFromPneumatics() + _m4.GetPowerCompressorOff();
 			var sum5 = vc0 ? sum4 : 0.SI<Watt>();
-			var sum10 = _m5.AlternatorsGenerationPowerAtCrankOverrunWatts() * -1.0;
+			var sum10 = _m5.AlternatorsGenerationPowerAtCrankOverrun() * -1.0;
 			var max1 = sum5 > sum10 ? sum5 : sum10;
 			var sum11 = sum5 - max1;
 			var sum12 = _m4.GetPowerDifference() + sum11;

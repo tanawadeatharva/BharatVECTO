@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public double AlternatorsEfficiencyIdleResultCard
 		{
-			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed.AsRPM, SmartIdleCurrent).Efficiency; }
+			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartIdleCurrent).Efficiency; }
 		}
 
 		public Ampere SmartTractionCurrent
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public double AlternatorsEfficiencyTractionOnResultCard
 		{
-			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed.AsRPM, SmartTractionCurrent).Efficiency; }
+			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartTractionCurrent).Efficiency; }
 		}
 
 		public Ampere SmartOverrunCurrent
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public double AlternatorsEfficiencyOverrunResultCard
 		{
-			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed.AsRPM, SmartOverrunCurrent).Efficiency; }
+			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartOverrunCurrent).Efficiency; }
 		}
 
 		#endregion

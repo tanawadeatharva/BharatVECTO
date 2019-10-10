@@ -28,8 +28,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 						(!_signals.ClutchEngaged || _signals.InNeutral);
 
 			var sw1 = idle
-				? _m5.AlternatorsGenerationPowerAtCrankIdleWatts()
-				: _m5.AlternatorsGenerationPowerAtCrankTractionOnWatts();
+				? _m5.AlternatorsGenerationPowerAtCrankIdle()
+				: _m5.AlternatorsGenerationPowerAtCrankTractionOn();
 
 			var c1 = _m6.OverrunFlag && _signals.ClutchEngaged && _signals.InNeutral == false;
 			var sw2 = c1 ? _m6.SmartElecAndPneumaticAltPowerGenAtCrank : sw1;

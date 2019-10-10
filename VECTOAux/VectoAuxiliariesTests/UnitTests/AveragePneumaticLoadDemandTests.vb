@@ -167,7 +167,7 @@ Namespace UnitTests
 
 			Dim expected As Single = 7947.55127 / _Signals.TotalCycleTimeSeconds
 
-			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
+			Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
 		End Sub
 
 		'SmartRegeneration = False
@@ -191,7 +191,7 @@ Namespace UnitTests
 
 			Dim expected As Double = 8863.378 / _Signals.TotalCycleTimeSeconds
 
-			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
+			Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
 		End Sub
 
 		'RetarderBrake = False
@@ -216,7 +216,7 @@ Namespace UnitTests
 			Dim expected As Double = 8541.45 / _Signals.TotalCycleTimeSeconds
 
 
-			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
+			Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
 		End Sub
 
 		'KneelingHeightMilimeters = 100
@@ -240,7 +240,7 @@ Namespace UnitTests
 
 			Dim expected As Double = 8557.524 / _Signals.TotalCycleTimeSeconds
 
-			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
+			Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
 		End Sub
 
 		'AirSuspensionControl = "mechanically"
@@ -264,7 +264,7 @@ Namespace UnitTests
 
 			Dim expected As Double = 8726.1840 / _Signals.TotalCycleTimeSeconds
 
-			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
+			Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
 		End Sub
 
 		'AdBlueDosing = "electric"
@@ -288,7 +288,7 @@ Namespace UnitTests
 
 			Dim expected As Double = 7947.68457 / _Signals.TotalCycleTimeSeconds
 
-			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
+			Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
 		End Sub
 
 		'Doors = "Electric"
@@ -312,7 +312,7 @@ Namespace UnitTests
 
 			Dim expected As Double = 6880.88428 / _Signals.TotalCycleTimeSeconds
 
-			Assert.AreEqual(expected, target.AverageAirConsumedPerSecondLitre().Value(), 0.001)
+			Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
 		End Sub
 	End Class
 End Namespace

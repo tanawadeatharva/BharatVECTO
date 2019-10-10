@@ -13,19 +13,19 @@ Namespace UnitTests
     <TestFixture()>
     Public Class CombinedAlternatorTests
 
-        Private Alt1ExpectedTable2000 As New List(Of AltUserInput)
-        Private Alt1ExpectedTable4000 As New List(Of AltUserInput)
-        Private Alt1ExpectedTable6000 As New List(Of AltUserInput)
-        Private Alt2ExpectedTable2000 As New List(Of AltUserInput)
-        Private Alt2ExpectedTable4000 As New List(Of AltUserInput)
-        Private Alt2ExpectedTable6000 As New List(Of AltUserInput)
-        Private Alt3ExpectedTable2000 As New List(Of AltUserInput)
-        Private Alt3ExpectedTable4000 As New List(Of AltUserInput)
-        Private Alt3ExpectedTable6000 As New List(Of AltUserInput)
-        Private Alt4ExpectedTable2000 As New List(Of AltUserInput)
-        Private Alt4ExpectedTable4000 As New List(Of AltUserInput)
-        Private Alt4ExpectedTable6000 As New List(Of AltUserInput)
-        Private RangeTableExpected As New List(Of AltUserInput)
+        Private Alt1ExpectedTable2000 As New List(Of AltUserInput(of Ampere))
+        Private Alt1ExpectedTable4000 As New List(Of AltUserInput(of Ampere))
+        Private Alt1ExpectedTable6000 As New List(Of AltUserInput(of Ampere))
+        Private Alt2ExpectedTable2000 As New List(Of AltUserInput(of Ampere))
+        Private Alt2ExpectedTable4000 As New List(Of AltUserInput(of Ampere))
+        Private Alt2ExpectedTable6000 As New List(Of AltUserInput(of Ampere))
+        Private Alt3ExpectedTable2000 As New List(Of AltUserInput(of Ampere))
+        Private Alt3ExpectedTable4000 As New List(Of AltUserInput(of Ampere))
+        Private Alt3ExpectedTable6000 As New List(Of AltUserInput(of Ampere))
+        Private Alt4ExpectedTable2000 As New List(Of AltUserInput(of Ampere))
+        Private Alt4ExpectedTable4000 As New List(Of AltUserInput(of Ampere))
+        Private Alt4ExpectedTable6000 As New List(Of AltUserInput(of Ampere))
+        Private RangeTableExpected As New List(Of AltUserInput(of PerSecond))
 
 
 
@@ -34,109 +34,109 @@ Namespace UnitTests
 
         Sub New()
 
-            Alt1ExpectedTable2000 = New List(Of AltUserInput)() From {New AltUserInput(0, 50),
-                                                                         New AltUserInput(10, 50),
-                                                                         New AltUserInput(40, 50),
-                                                                         New AltUserInput(60, 50),
-                                                                         New AltUserInput(61, 50),
-                                                                         New AltUserInput(200, 50)}
+            Alt1ExpectedTable2000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(Of Ampere), 50),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 50),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 50),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 50),
+                                                                         New AltUserInput(of Ampere)(61.SI(of Ampere), 50),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 50)}
 
-            Alt1ExpectedTable4000 = New List(Of AltUserInput)() From {New AltUserInput(0, 70),
-                                                                         New AltUserInput(10, 70),
-                                                                         New AltUserInput(40, 70),
-                                                                         New AltUserInput(60, 70),
-                                                                         New AltUserInput(61, 70),
-                                                                         New AltUserInput(200, 70)}
+            Alt1ExpectedTable4000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(of Ampere), 70),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 70),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 70),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 70),
+                                                                         New AltUserInput(of Ampere)(61.SI(of Ampere), 70),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 70)}
 
 
-            Alt1ExpectedTable6000 = New List(Of AltUserInput)() From {New AltUserInput(0, 60),
-                                                                         New AltUserInput(10, 60),
-                                                                         New AltUserInput(40, 60),
-                                                                         New AltUserInput(60, 60),
-                                                                         New AltUserInput(61, 60),
-                                                                         New AltUserInput(200, 60)}
+            Alt1ExpectedTable6000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(of Ampere), 60),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 60),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 60),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 60),
+                                                                         New AltUserInput(of Ampere)(61.SI(of Ampere), 60),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 60)}
 
             'ALT 2
-            Alt2ExpectedTable2000 = New List(Of AltUserInput)() From {New AltUserInput(0, 80),
-                                                                         New AltUserInput(10, 80),
-                                                                         New AltUserInput(40, 80),
-                                                                         New AltUserInput(60, 80),
-                                                                         New AltUserInput(61, 80),
-                                                                         New AltUserInput(200, 80)}
+            Alt2ExpectedTable2000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(of Ampere), 80),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 80),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 80),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 80),
+                                                                         New AltUserInput(of Ampere)(61.SI(of Ampere), 80),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 80)}
 
-            Alt2ExpectedTable4000 = New List(Of AltUserInput)() From {New AltUserInput(0, 40),
-                                                                         New AltUserInput(10, 40),
-                                                                         New AltUserInput(40, 40),
-                                                                         New AltUserInput(60, 40),
-                                                                         New AltUserInput(61, 40),
-                                                                         New AltUserInput(200, 40)}
+            Alt2ExpectedTable4000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(of Ampere), 40),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 40),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 40),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 40),
+                                                                         New AltUserInput(of Ampere)(61.SI(of Ampere), 40),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 40)}
 
 
-            Alt2ExpectedTable6000 = New List(Of AltUserInput)() From {New AltUserInput(0, 60),
-                                                                         New AltUserInput(10, 60),
-                                                                         New AltUserInput(40, 60),
-                                                                         New AltUserInput(60, 60),
-                                                                         New AltUserInput(61, 60),
-                                                                         New AltUserInput(200, 60)}
+            Alt2ExpectedTable6000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(of Ampere), 60),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 60),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 60),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 60),
+                                                                         New AltUserInput(of Ampere)(61.SI(of Ampere), 60),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 60)}
 
 
             'ALT 3
-            Alt3ExpectedTable2000 = New List(Of AltUserInput)() From {New AltUserInput(0, 95),
-                                                                         New AltUserInput(10, 95),
-                                                                         New AltUserInput(40, 50),
-                                                                         New AltUserInput(60, 90),
-                                                                         New AltUserInput(62.5, 95),
-                                                                         New AltUserInput(200, 95)}
+            Alt3ExpectedTable2000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(of Ampere), 95),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 95),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 50),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 90),
+                                                                         New AltUserInput(of Ampere)(62.5.SI(of Ampere), 95),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 95)}
 
-            Alt3ExpectedTable4000 = New List(Of AltUserInput)() From {New AltUserInput(0, 99),
-                                                                         New AltUserInput(10, 99),
-                                                                         New AltUserInput(40, 1),
-                                                                         New AltUserInput(60, 55),
-                                                                         New AltUserInput(76.2962963, 99),
-                                                                         New AltUserInput(200, 99)}
+            Alt3ExpectedTable4000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(of Ampere), 99),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 99),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 1),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 55),
+                                                                         New AltUserInput(of Ampere)(76.2962963.SI(of Ampere), 99),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 99)}
 
 
-            Alt3ExpectedTable6000 = New List(Of AltUserInput)() From {New AltUserInput(0, 94),
-                                                                         New AltUserInput(10, 94),
-                                                                         New AltUserInput(40, 86),
-                                                                         New AltUserInput(60, 13),
-                                                                         New AltUserInput(63.5616438, 0),
-                                                                         New AltUserInput(200, 0)}
+            Alt3ExpectedTable6000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(of Ampere), 94),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 94),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 86),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 13),
+                                                                         New AltUserInput(of Ampere)(63.5616438.SI(of Ampere), 0),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 0)}
 
 
             'ALT 4
-            Alt4ExpectedTable2000 = New List(Of AltUserInput)() From {New AltUserInput(0, 55),
-                                                                         New AltUserInput(10, 55),
-                                                                         New AltUserInput(40, 45),
-                                                                         New AltUserInput(60, 67),
-                                                                         New AltUserInput(61, 67),
-                                                                         New AltUserInput(200, 67)}
+            Alt4ExpectedTable2000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(of Ampere), 55),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 55),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 45),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 67),
+                                                                         New AltUserInput(of Ampere)(61.SI(of Ampere), 67),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 67)}
 
-            Alt4ExpectedTable4000 = New List(Of AltUserInput)() From {New AltUserInput(0, 77),
-                                                                         New AltUserInput(10, 77),
-                                                                         New AltUserInput(40, 39),
-                                                                         New AltUserInput(60, 23),
-                                                                         New AltUserInput(88.75, 0),
-                                                                         New AltUserInput(200, 0)}
+            Alt4ExpectedTable4000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(of Ampere), 77),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 77),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 39),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 23),
+                                                                         New AltUserInput(of Ampere)(88.75.SI(of Ampere), 0),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 0)}
 
 
-            Alt4ExpectedTable6000 = New List(Of AltUserInput)() From {New AltUserInput(0, 34),
-                                                                         New AltUserInput(10, 34),
-                                                                         New AltUserInput(40, 67),
-                                                                         New AltUserInput(60, 35),
-                                                                         New AltUserInput(81.875, 0),
-                                                                         New AltUserInput(200, 0)}
+            Alt4ExpectedTable6000 = New List(Of AltUserInput(of Ampere))() From {New AltUserInput(of Ampere)(0.SI(of Ampere), 34),
+                                                                         New AltUserInput(of Ampere)(10.SI(of Ampere), 34),
+                                                                         New AltUserInput(of Ampere)(40.SI(of Ampere), 67),
+                                                                         New AltUserInput(of Ampere)(60.SI(of Ampere), 35),
+                                                                         New AltUserInput(of Ampere)(81.875.SI(of Ampere), 0),
+                                                                         New AltUserInput(of Ampere)(200.SI(of Ampere), 0)}
 
 
 
             'RangeTable
-            RangeTableExpected = New List(Of AltUserInput)() From {New AltUserInput(-3001, 0),
-                                                                        New AltUserInput(-3000, 0),
-                                                                        New AltUserInput(2000, 50),
-                                                                        New AltUserInput(4000, 70),
-                                                                        New AltUserInput(6000, 60),
-                                                                        New AltUserInput(18000, 0),
-                                                                        New AltUserInput(18001, 0)}
+            RangeTableExpected = New List(Of AltUserInput(of PerSecond))() From {New AltUserInput(of PerSecond)(-3001.RPMtoRad(), 0),
+                                                                        New AltUserInput(of PerSecond)(-3000.RPMtoRad(), 0),
+                                                                        New AltUserInput(of PerSecond)(2000.RPMtoRad(), 50),
+                                                                        New AltUserInput(of PerSecond)(4000.RPMtoRad(), 70),
+                                                                        New AltUserInput(of PerSecond)(6000.RPMtoRad(), 60),
+                                                                        New AltUserInput(of PerSecond)(18000.RPMtoRad(), 0),
+                                                                        New AltUserInput(of PerSecond)(18001.RPMtoRad(), 0)}
 
 
 
@@ -177,11 +177,11 @@ Namespace UnitTests
                     Select Case rpmK
 
                         Case 2
-                            interpValue = Alternator.Iterpolate(Alt1ExpectedTable2000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt1ExpectedTable2000, 42.5.SI(Of Ampere))
                         Case 4
-                            interpValue = Alternator.Iterpolate(Alt1ExpectedTable4000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt1ExpectedTable4000, 42.5.SI(Of Ampere))
                         Case 6
-                            interpValue = Alternator.Iterpolate(Alt1ExpectedTable6000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt1ExpectedTable6000, 42.5.SI(Of Ampere))
 
                     End Select
 
@@ -191,11 +191,11 @@ Namespace UnitTests
                     Select Case rpmK
 
                         Case 2
-                            interpValue = Alternator.Iterpolate(Alt2ExpectedTable2000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt2ExpectedTable2000, 42.5.SI(Of Ampere))
                         Case 4
-                            interpValue = Alternator.Iterpolate(Alt2ExpectedTable4000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt2ExpectedTable4000, 42.5.SI(Of Ampere))
                         Case 6
-                            interpValue = Alternator.Iterpolate(Alt2ExpectedTable6000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt2ExpectedTable6000, 42.5.SI(Of Ampere))
 
                     End Select
 
@@ -204,11 +204,11 @@ Namespace UnitTests
                     Select Case rpmK
 
                         Case 2
-                            interpValue = Alternator.Iterpolate(Alt3ExpectedTable2000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt3ExpectedTable2000, 42.5.SI(Of Ampere))
                         Case 4
-                            interpValue = Alternator.Iterpolate(Alt3ExpectedTable4000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt3ExpectedTable4000, 42.5.SI(Of Ampere))
                         Case 6
-                            interpValue = Alternator.Iterpolate(Alt3ExpectedTable6000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt3ExpectedTable6000, 42.5.SI(Of Ampere))
 
                     End Select
 
@@ -217,11 +217,11 @@ Namespace UnitTests
                     Select Case rpmK
 
                         Case 2
-                            interpValue = Alternator.Iterpolate(Alt4ExpectedTable2000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt4ExpectedTable2000, 42.5.SI(Of Ampere))
                         Case 4
-                            interpValue = Alternator.Iterpolate(Alt4ExpectedTable4000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt4ExpectedTable4000, 42.5.SI(Of Ampere))
                         Case 6
-                            interpValue = Alternator.Iterpolate(Alt4ExpectedTable6000, 42.5)
+                            interpValue = Alternator.Iterpolate(Alt4ExpectedTable6000, 42.5.SI(Of Ampere))
 
                     End Select
 
@@ -396,7 +396,7 @@ Namespace UnitTests
             ca.Initialise()
 
 
-            Dim actual As AlternatorMapValues = ca.GetEfficiency(1750, 170.SI(Of Ampere))
+            Dim actual As AlternatorMapValues = ca.GetEfficiency(1750.RPMtoRad(), 170.SI(Of Ampere))
 
             Assert.AreEqual(0.684354842F, actual.Efficiency)
 
@@ -428,7 +428,7 @@ Namespace UnitTests
                 crank = rand.Next(0, 0)
                 demand = rand.Next(0, 0)
 
-                Dim actual As AlternatorMapValues = ca.GetEfficiency(crank, demand.SI(Of Ampere))
+                Dim actual As AlternatorMapValues = ca.GetEfficiency(crank.RPMtoRad(), demand.SI(Of Ampere))
 
                 If actual.Efficiency < min Then min = actual.Efficiency
 

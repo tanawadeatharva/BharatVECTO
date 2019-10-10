@@ -23,6 +23,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		/// <value></value>
 		/// <returns></returns>
 		/// <remarks>WHTC and Start Stop Adjusted</remarks>
-		Kilogram WHTCTotalCycleFuelConsumptionGrams { get; }
+		Kilogram WHTCTotalCycleFuelConsumption { get; }
 	}
 }
