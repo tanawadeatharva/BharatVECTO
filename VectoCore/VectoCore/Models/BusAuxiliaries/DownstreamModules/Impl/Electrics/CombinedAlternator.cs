@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		private AlternatorMapValues AverageAlternatorsEfficiency;
 
 		// Interface Implementation
-		public AlternatorMapValues GetEfficiency(double CrankRPM, Ampere Amps)
+		public AlternatorMapValues GetEfficiency(PerSecond CrankRPM, Ampere Amps)
 		{
 			altSignals.CrankRPM = CrankRPM;
 			altSignals.CurrentDemandAmps = (Amps.Value() / (double)Alternators.Count).SI<Ampere>();
@@ -126,30 +126,30 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		{
 			map.Clear();
 
-			map.Add(new CombinedAlternatorMapRow("Alt1", 2000, 10, 62, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 2000, 27, 70, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 2000, 53, 30, 3.6));
+			map.Add(new CombinedAlternatorMapRow("Alt1", 2000.RPMtoRad(), 10.SI<Ampere>(), 62, 3.6));
+			map.Add(new CombinedAlternatorMapRow("Alt1", 2000.RPMtoRad(), 27.SI<Ampere>(), 70, 3.6));
+			map.Add(new CombinedAlternatorMapRow("Alt1", 2000.RPMtoRad(), 53.SI<Ampere>(), 30, 3.6));
 
-			map.Add(new CombinedAlternatorMapRow("Alt1", 4000, 10, 64, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 4000, 63, 74, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 4000, 125, 68, 3.6));
+			map.Add(new CombinedAlternatorMapRow("Alt1", 4000.RPMtoRad(), 10.SI<Ampere>(), 64, 3.6));
+			map.Add(new CombinedAlternatorMapRow("Alt1", 4000.RPMtoRad(), 63.SI<Ampere>(), 74, 3.6));
+			map.Add(new CombinedAlternatorMapRow("Alt1", 4000.RPMtoRad(), 125.SI<Ampere>(), 68, 3.6));
 
-			map.Add(new CombinedAlternatorMapRow("Alt1", 6000, 10, 53, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 6000, 68, 70, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 6000, 136, 62, 3.6));
+			map.Add(new CombinedAlternatorMapRow("Alt1", 6000.RPMtoRad(), 10.SI<Ampere>(), 53, 3.6));
+			map.Add(new CombinedAlternatorMapRow("Alt1", 6000.RPMtoRad(), 68.SI<Ampere>(), 70, 3.6));
+			map.Add(new CombinedAlternatorMapRow("Alt1", 6000.RPMtoRad(), 136.SI<Ampere>(), 62, 3.6));
 
-			map.Add(new CombinedAlternatorMapRow("Alt2", 2000, 10, 62, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 2000, 27, 70, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 2000, 53, 30, 3));
+			map.Add(new CombinedAlternatorMapRow("Alt2", 2000.RPMtoRad(), 10.SI<Ampere>(), 62, 3));
+			map.Add(new CombinedAlternatorMapRow("Alt2", 2000.RPMtoRad(), 27.SI<Ampere>(), 70, 3));
+			map.Add(new CombinedAlternatorMapRow("Alt2", 2000.RPMtoRad(), 53.SI<Ampere>(), 30, 3));
 
-			map.Add(new CombinedAlternatorMapRow("Alt2", 4000, 10, 64, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 4000, 63, 74, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 4000, 125, 68, 3));
+			map.Add(new CombinedAlternatorMapRow("Alt2", 4000.RPMtoRad(), 10.SI<Ampere>(), 64, 3));
+			map.Add(new CombinedAlternatorMapRow("Alt2", 4000.RPMtoRad(), 63.SI<Ampere>(), 74, 3));
+			map.Add(new CombinedAlternatorMapRow("Alt2", 4000.RPMtoRad(), 125.SI<Ampere>(), 68, 3));
 
-			map.Add(new CombinedAlternatorMapRow("Alt2", 6000, 10, 53, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 6000, 68, 70, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 6000, 136, 62, 3));
-		}
+			map.Add(new CombinedAlternatorMapRow("Alt2", 6000.RPMtoRad(), 10.SI<Ampere>(), 53, 3));
+			map.Add(new CombinedAlternatorMapRow("Alt2", 6000.RPMtoRad(), 68.SI<Ampere>(), 70, 3));
+			map.Add(new CombinedAlternatorMapRow("Alt2", 6000.RPMtoRad(), 136.SI<Ampere>(), 62, 3));
+		}													
 
 		// Grid Management
 		private bool AddNewAlternator(List<ICombinedAlternatorMapRow> list, ref string feeback)
@@ -222,7 +222,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				for (var row = 1; row <= 3; row++) {
 					var amps = alt.InputTable2000[row].Amps;
 					var eff = alt.InputTable2000[row].Eff;
-					sb.Append(alt.AlternatorName + ",2000," + amps.ToString("0.000") + "," + eff.ToString("0.000") + "," + alt.PulleyRatio.ToString("0.000"));
+					sb.Append(alt.AlternatorName + ",2000," + amps.Value().ToString("0.000") + "," + eff.ToString("0.000") + "," + alt.PulleyRatio.ToString("0.000"));
 					sb.AppendLine("");
 				}
 
@@ -230,7 +230,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				for (var row = 1; row <= 3; row++) {
 					var amps = alt.InputTable4000[row].Amps;
 					var eff = alt.InputTable4000[row].Eff;
-					sb.Append(alt.AlternatorName + ",4000," + amps.ToString("0.000") + "," + eff.ToString("0.000") + "," + alt.PulleyRatio.ToString("0.000"));
+					sb.Append(alt.AlternatorName + ",4000," + amps.Value().ToString("0.000") + "," + eff.ToString("0.000") + "," + alt.PulleyRatio.ToString("0.000"));
 					sb.AppendLine("");
 				}
 
@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				for (var row = 1; row <= 3; row++) {
 					var amps = alt.InputTable6000[row].Amps;
 					var eff = alt.InputTable6000[row].Eff;
-					sb.Append(alt.AlternatorName + ",6000," + amps.ToString("0.000") + "," + eff.ToString("0.000") + "," + alt.PulleyRatio.ToString("0.000"));
+					sb.Append(alt.AlternatorName + ",6000," + amps.Value().ToString("0.000") + "," + eff.ToString("0.000") + "," + alt.PulleyRatio.ToString("0.000"));
 					sb.AppendLine("");
 				}
 			}
@@ -297,7 +297,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 								throw new ArgumentException("Incorrect number of values in csv file");
 							// add values to map
 
-							map.Add(new CombinedAlternatorMapRow(elements[0], float.Parse(elements[1], CultureInfo.InvariantCulture), float.Parse(elements[2], CultureInfo.InvariantCulture), float.Parse(elements[3], CultureInfo.InvariantCulture), float.Parse(elements[4], CultureInfo.InvariantCulture)));
+							map.Add(new CombinedAlternatorMapRow(elements[0], elements[1].ToDouble().RPMtoRad(), elements[2].ToDouble().SI<Ampere>(), float.Parse(elements[3], CultureInfo.InvariantCulture), elements[4].ToDouble()));
 						} else {
 							firstline = false;
 						}
@@ -337,11 +337,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				sb.AppendLine("Amps" + vbTab + "Eff" + vbTab + "Amps" + vbTab + "Eff" + vbTab + "Amps" + vbTab + "Eff" + vbTab);
 				sb.AppendLine("");
 				for (i = 1; i <= 3; i++) {
-					a1 = alt.InputTable2000[i].Amps.ToString("0");
+					a1 = alt.InputTable2000[i].Amps.Value().ToString("0");
 					e1 = alt.InputTable2000[i].Eff.ToString("0.000");
-					a2 = alt.InputTable4000[i].Amps.ToString("0");
+					a2 = alt.InputTable4000[i].Amps.Value().ToString("0");
 					e2 = alt.InputTable4000[i].Eff.ToString("0.000");
-					a3 = alt.InputTable6000[i].Amps.ToString("0");
+					a3 = alt.InputTable6000[i].Amps.Value().ToString("0");
 					e3 = alt.InputTable6000[i].Eff.ToString("0.000");
 					sb.AppendLine(a1 + vbTab + e1 + vbTab + a2 + vbTab + e2 + vbTab + a3 + vbTab + e3 + vbTab);
 				}

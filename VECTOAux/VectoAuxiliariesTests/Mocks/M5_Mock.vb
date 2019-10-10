@@ -11,18 +11,18 @@ Public Class M5_Mock
 	Public Property _AlternatorsGenerationPowerAtCrankTractionOnWatts As Watt
 
 
-	Public Function AlternatorsGenerationPowerAtCrankIdleWatts() As Watt _
-		Implements IM5_SmartAlternatorSetGeneration.AlternatorsGenerationPowerAtCrankIdleWatts
+	Public Function AlternatorsGenerationPowerAtCrankIdle() As Watt _
+		Implements IM5_SmartAlternatorSetGeneration.AlternatorsGenerationPowerAtCrankIdle
 		Return _AlternatorsGenerationPowerAtCrankIdleWatts
 	End Function
 
-	Public Function AlternatorsGenerationPowerAtCrankOverrunWatts() As Watt _
-		Implements IM5_SmartAlternatorSetGeneration.AlternatorsGenerationPowerAtCrankOverrunWatts
+	Public Function AlternatorsGenerationPowerAtCrankOverrun() As Watt _
+		Implements IM5_SmartAlternatorSetGeneration.AlternatorsGenerationPowerAtCrankOverrun
 		Return _AlternatorsGenerationPowerAtCrankOverrunWatts
 	End Function
 
-	Public Function AlternatorsGenerationPowerAtCrankTractionOnWatts() As Watt _
-		Implements IM5_SmartAlternatorSetGeneration.AlternatorsGenerationPowerAtCrankTractionOnWatts
+	Public Function AlternatorsGenerationPowerAtCrankTractionOn() As Watt _
+		Implements IM5_SmartAlternatorSetGeneration.AlternatorsGenerationPowerAtCrankTractionOn
 		Return _AlternatorsGenerationPowerAtCrankTractionOnWatts
 	End Function
 

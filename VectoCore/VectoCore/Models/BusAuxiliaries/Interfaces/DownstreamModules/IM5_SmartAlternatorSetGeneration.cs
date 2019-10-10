@@ -21,20 +21,20 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		/// 	</summary>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		Watt AlternatorsGenerationPowerAtCrankIdleWatts();
+		Watt AlternatorsGenerationPowerAtCrankIdle();
 
 		/// <summary>
 		/// 	Alternators Generation Power At Crank Traction On  (W)
 		/// 	</summary>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		Watt AlternatorsGenerationPowerAtCrankTractionOnWatts();
+		Watt AlternatorsGenerationPowerAtCrankTractionOn();
 
 		/// <summary>
 		/// 	Alternators Generation Power At Crank Overrun  (W)
 		/// 	</summary>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		Watt AlternatorsGenerationPowerAtCrankOverrunWatts();
+		Watt AlternatorsGenerationPowerAtCrankOverrun();
 	}
 }

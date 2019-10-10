@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 
 		#region Implementation of IM13
 
-		public Kilogram WHTCTotalCycleFuelConsumptionGrams
+		public Kilogram WHTCTotalCycleFuelConsumption
 		{
 			get {
 				if (!calculationValid) {

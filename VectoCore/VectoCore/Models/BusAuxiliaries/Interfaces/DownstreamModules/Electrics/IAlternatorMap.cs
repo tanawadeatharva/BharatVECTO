@@ -30,6 +30,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.El
 		/// <param name="amps"></param>
 		/// <returns>Single</returns>
 		/// 	<remarks></remarks>
-		AlternatorMapValues GetEfficiency(double rpm, Ampere amps);
+		AlternatorMapValues GetEfficiency(PerSecond rpm, Ampere amps);
 	}
 }

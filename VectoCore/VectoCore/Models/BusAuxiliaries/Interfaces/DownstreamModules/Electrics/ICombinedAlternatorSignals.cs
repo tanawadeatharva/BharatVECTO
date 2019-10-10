@@ -6,7 +6,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.El
 	public interface ICombinedAlternatorSignals
 	{
 		int NumberOfAlternators { get; set; }
-		double CrankRPM { get; set; }
+		PerSecond CrankRPM { get; set; }
 		Ampere CurrentDemandAmps { get; set; }
 	}
 }

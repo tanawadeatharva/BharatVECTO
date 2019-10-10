@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			return Sum4;
 		}
 
-		public NormLiterPerSecond AverageAirConsumedPerSecondLitre()
+		public NormLiterPerSecond AverageAirConsumed()
 		{
 			var Sum1 = _totalAirDemand / _signals.TotalCycleTimeSeconds.SI<Second>();
 			return Sum1;

@@ -171,7 +171,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             Auxiliaries.CycleStep(CurrentState.dt, ref message);
             Log.Warn(message);
 
-            CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuelGRAMS;
+            CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
             container[ModalResultField.P_aux] = CurrentState.PowerDemand;
 
             container[ModalResultField.AA_NonSmartAlternatorsEfficiency] = Auxiliaries.AA_NonSmartAlternatorsEfficiency;
@@ -197,9 +197,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             container[ModalResultField.AA_CompressorFlag] = Auxiliaries.AA_CompressorFlag;
             if (Auxiliaries.AA_TotalCycleFC_Grams != null) {
                 container[ModalResultField.AA_TotalCycleFC_Grams] = Auxiliaries.AA_TotalCycleFC_Grams;
-            }
-            if (Auxiliaries.AA_TotalCycleFC_Litres != null) {
-                container[ModalResultField.AA_TotalCycleFC_Litres] = Auxiliaries.AA_TotalCycleFC_Litres;
             }
             if (Auxiliaries.AA_AveragePowerDemandCrankHVACMechanicals != null) {
                 container[ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals] =

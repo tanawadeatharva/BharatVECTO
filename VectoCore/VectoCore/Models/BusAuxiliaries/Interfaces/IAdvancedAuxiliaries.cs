@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		int? AA_EngineIdleFlag { get; }
 		bool AA_CompressorFlag { get; }
 		Kilogram AA_TotalCycleFC_Grams { get; }
-		Liter AA_TotalCycleFC_Litres { get; }
+		//Liter AA_TotalCycleFC_Litres { get; }
 		Watt AA_AveragePowerDemandCrankHVACMechanicals { get; }
 		Watt AA_AveragePowerDemandCrankHVACElectricals { get; }
 		Watt AA_AveragePowerDemandCrankElectrics { get; }
@@ -55,15 +55,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		/// <value></value>
 		/// <returns></returns>
 		/// <remarks></remarks>
-		Kilogram TotalFuelGRAMS { get; }
+		Kilogram TotalFuel { get; }
 
-		/// <summary>
-		/// Total Cycle Fuel in Litres
-		/// </summary>
-		/// <value></value>
-		/// <returns></returns>
-		/// <remarks></remarks>
-		Liter TotalFuelLITRES { get; }
+		///// <summary>
+		///// Total Cycle Fuel in Litres
+		///// </summary>
+		///// <value></value>
+		///// <returns></returns>
+		///// <remarks></remarks>
+		//Liter TotalFuelLITRES { get; }
 
 		/// <summary>
 		/// Total Power Demans At Crank From Auxuliaries (W)

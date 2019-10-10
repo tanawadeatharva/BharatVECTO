@@ -1,4 +1,5 @@
 ﻿using System;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
@@ -9,8 +10,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 	public class CombinedAlternatorMapRow : ICombinedAlternatorMapRow
 	{
 		public string AlternatorName { get; set; }
-		public double RPM { get; set; }
-		public double Amps { get; set; }
+		public PerSecond RPM { get; set; }
+		public Ampere Amps { get; set; }
 		public double Efficiency { get; set; }
 		public double PulleyRatio { get; set; }
 
@@ -19,7 +20,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		{
 		}
 
-		public CombinedAlternatorMapRow(string alternatorName, double rpm, double amps, double efficiency, double pulleyRatio)
+		public CombinedAlternatorMapRow(string alternatorName, PerSecond rpm, Ampere amps, double efficiency, double pulleyRatio)
 		{
 
 			// Sanity Check

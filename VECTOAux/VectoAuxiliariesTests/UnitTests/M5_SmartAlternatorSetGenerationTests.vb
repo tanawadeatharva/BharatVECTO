@@ -93,7 +93,7 @@ Namespace UnitTests
 			Initialise()
 			_target = New M05Impl(_m05, _powerNetVoltage, _altGearPullyEfficiency)
 			Dim expected As Single = 1641.35791
-			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankIdleWatts()
+			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankIdle()
 
 			Assert.AreEqual(expected, actual.Value(), 0.001)
 		End Sub
@@ -104,7 +104,7 @@ Namespace UnitTests
 			Initialise()
 			_target = New M05Impl(_m05, _powerNetVoltage, _altGearPullyEfficiency)
 			Dim expected As Single = 1641.35791
-			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankTractionOnWatts()
+			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankTractionOn()
 
 			Assert.AreEqual(expected, actual.Value(), 0.001)
 		End Sub
@@ -116,7 +116,7 @@ Namespace UnitTests
 			_target = New M05Impl(_m05, _powerNetVoltage, _altGearPullyEfficiency)
 			Dim expected As Single = 1641.35791F
 
-			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankOverrunWatts()
+			Dim actual As Watt = _target.AlternatorsGenerationPowerAtCrankOverrun()
 
 			Assert.AreEqual(expected, actual.Value(), 0.001)
 		End Sub

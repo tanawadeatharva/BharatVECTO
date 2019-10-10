@@ -32,19 +32,19 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		#region Implementation of IM5_SmartAlternatorSetGeneration
 
-		public Watt AlternatorsGenerationPowerAtCrankIdleWatts()
+		public Watt AlternatorsGenerationPowerAtCrankIdle()
 		{
 			return _m05.SmartIdleCurrent * _powerNetVoltage *
 					(1 / (_m05.AlternatorsEfficiencyIdleResultCard * _alternatorGearEfficiency));
 		}
 
-		public Watt AlternatorsGenerationPowerAtCrankTractionOnWatts()
+		public Watt AlternatorsGenerationPowerAtCrankTractionOn()
 		{
 			return _m05.SmartTractionCurrent * _powerNetVoltage *
 					(1 / (_m05.AlternatorsEfficiencyTractionOnResultCard * _alternatorGearEfficiency));
 		}
 
-		public Watt AlternatorsGenerationPowerAtCrankOverrunWatts()
+		public Watt AlternatorsGenerationPowerAtCrankOverrun()
 		{
 			return _m05.SmartOverrunCurrent * _powerNetVoltage *
 					(1 / (_m05.AlternatorsEfficiencyOverrunResultCard * _alternatorGearEfficiency));

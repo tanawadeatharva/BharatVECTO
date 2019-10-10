@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			get {
 				var baseCurrentDemandAmps = _electricalConsumersList.GetTotalAverageDemandAmps(false);
 				var totalDemandAmps = baseCurrentDemandAmps + GetHVACElectricalPowerDemandAmps;
-				return _alternatorEfficiencyMap.GetEfficiency(_signals.EngineSpeed.AsRPM, totalDemandAmps).Efficiency;
+				return _alternatorEfficiencyMap.GetEfficiency(_signals.EngineSpeed, totalDemandAmps).Efficiency;
 			}
 		}
 

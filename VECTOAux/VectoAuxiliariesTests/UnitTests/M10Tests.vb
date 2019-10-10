@@ -21,7 +21,7 @@ Namespace UnitTests
 			Dim m9 As New Mock(Of IM9)
 			Dim signals As New Signals() ' Not required , here for expansion only.
 
-			m3.Setup(Function(x) x.AverageAirConsumedPerSecondLitre).Returns(xTAir.SI(Of NormLiterPerSecond))
+			m3.Setup(Function(x) x.AverageAirConsumed).Returns(xTAir.SI(Of NormLiterPerSecond))
 			m9.Setup(Function(x) x.LitresOfAirCompressorOnContinually).Returns(x1.SI(Of NormLiter))
 			m9.Setup(Function(x) x.TotalCycleFuelConsumptionCompressorOnContinuously).Returns((y1 / 1000).SI(Of Kilogram))
 			'x2 is not an output of m9, an is allways zero, but to keep in line with schematic, is represented anyway although it is a constant.

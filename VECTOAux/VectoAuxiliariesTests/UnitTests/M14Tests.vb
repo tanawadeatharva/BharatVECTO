@@ -116,7 +116,7 @@ Namespace UnitTests
 			Dim constants As IHVACConstants = New HVACConstants(835.SI(Of KilogramPerCubicMeter))
 
 			'Moq' Arrangements
-			m13.Setup(Function(x) x.WHTCTotalCycleFuelConsumptionGrams).Returns((ip1 / 1000).SI(Of Kilogram))
+			m13.Setup(Function(x) x.WHTCTotalCycleFuelConsumption).Returns((ip1 / 1000).SI(Of Kilogram))
 			signals.Setup(Function(x) x.CurrentCycleTimeInSeconds).Returns(ip5)
 
 
@@ -124,8 +124,8 @@ Namespace UnitTests
 			Dim m14 As New M14Impl(m13.Object, ssmMock, constants, signals.Object)
 
 			'Assert
-            Assert.AreEqual(expectedOut1.SI(Unit.SI.Gramm).Value(), m14.TotalCycleFCGrams.Value(), 0.1)
-            Assert.AreEqual(expectedOut2.SI(Of Liter).Value(), m14.TotalCycleFCLitres.Value(), 0.00001)
+            Assert.AreEqual(expectedOut1.SI(Unit.SI.Gramm).Value(), m14.TotalCycleFC.Value(), 0.1)
+            'Assert.AreEqual(expectedOut2.SI(Of Liter).Value(), m14.TotalCycleFCLitres.Value(), 0.00001)
 		End Sub
 	End Class
 End Namespace

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 {
@@ -25,19 +26,19 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.El
 		double PulleyRatio { get; set; }
 
 		// S9
-		double SpindleSpeed { get; }
+		PerSecond SpindleSpeed { get; }
 
 		// S10
 		double Efficiency { get; }
 
 		// C10-D15
-		List<AltUserInput> InputTable2000 { get; set; }
+		List<AltUserInput<Ampere>> InputTable2000 { get; set; }
 
 		// F10-G15
-		List<AltUserInput> InputTable4000 { get; set; }
+		List<AltUserInput<Ampere>> InputTable4000 { get; set; }
 
 		// I10-J15
-		List<AltUserInput> InputTable6000 { get; set; }
+		List<AltUserInput<Ampere>> InputTable6000 { get; set; }
 
 		// M10-N15
 		List<Table4Row> RangeTable { get; set; }
