@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static readonly MeterPerSquareSecond DriverAccelerationThresholdLow = 0.1.SI<MeterPerSquareSecond>();
 			public static double VelocityDropFactor = 0.0;
-			public static double AccelerationFactor = 0.5;
+			public static double AccelerationFactor = 1.0;
 
 			public const double RatioEarlyUpshiftFC = 24;
 			public const double RatioEarlyDownshiftFC = 24;

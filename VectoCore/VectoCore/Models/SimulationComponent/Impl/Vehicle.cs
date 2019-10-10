@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
 		{
 			//CurrentState.Velocity = vehicleSpeed + startAcceleration * Constants.SimulationSettings.TargetTimeInterval;
-			var vehicleAccelerationForce = DriverAcceleration(startAcceleration)
+			var vehicleAccelerationForce = AccelerationForce(startAcceleration)
 											+ RollingResistance(roadGradient)
 											+
 											AirDragResistance(vehicleSpeed,
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			CurrentState.Distance = PreviousState.Distance + PreviousState.Velocity * dt + acceleration * dt * dt / 2;
 
-			CurrentState.DriverAcceleration = DriverAcceleration(acceleration);
+			CurrentState.DriverAcceleration = AccelerationForce(acceleration);
 			CurrentState.RollingResistance = (PreviousState.Velocity + CurrentState.Velocity).IsEqual(0, 1e-9) ? 0.SI<Newton>() : RollingResistance(gradient);
 			try {
 				CurrentState.AirDragResistance = AirDragResistance(PreviousState.Velocity, CurrentState.Velocity);
@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		protected internal Newton DriverAcceleration(MeterPerSquareSecond accelleration)
+		protected internal Newton AccelerationForce(MeterPerSquareSecond accelleration)
 		{
 			var retVal = ModelData.TotalVehicleMass * accelleration;
 			Log.Debug("DriverAcceleration: {0}", retVal);
