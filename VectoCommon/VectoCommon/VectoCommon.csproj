@@ -50,6 +50,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusAuxiliaries\IAuxiliaryConfig.cs" />
+    <Compile Include="BusAuxiliaries\IElectricalConsumer.cs" />
+    <Compile Include="BusAuxiliaries\IElectricalConsumerList.cs" />
+    <Compile Include="BusAuxiliaries\IElectricsUserInputsConfig.cs" />
+    <Compile Include="BusAuxiliaries\IFuelConsumptionMap.cs" />
+    <Compile Include="BusAuxiliaries\IHVACUserInputsConfig.cs" />
+    <Compile Include="BusAuxiliaries\IPneumaticsAuxilliariesConfig.cs" />
+    <Compile Include="BusAuxiliaries\IPneumaticUserInputsConfig.cs" />
+    <Compile Include="BusAuxiliaries\IResultCard.cs" />
+    <Compile Include="BusAuxiliaries\IVectoInputs.cs" />
+    <Compile Include="BusAuxiliaries\SmartResult.cs" />
     <Compile Include="Hashing\IVectoHash.cs" />
     <Compile Include="Hashing\VectoComponents.cs" />
     <Compile Include="InputData\DataSourceType.cs" />

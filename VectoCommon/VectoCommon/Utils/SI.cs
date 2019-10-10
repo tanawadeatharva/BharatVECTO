@@ -214,6 +214,39 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Second>.Create(second.Val / meterPerSecond.Value());
 		}
+
+		public static SquareMeter operator *(Meter m1, Meter m2)
+		{
+			return SIBase<SquareMeter>.Create(m1.Val * m2.Val);
+		}
+
+		public static CubicMeter operator *(SquareMeter m1, Meter m2)
+		{
+			return SIBase<CubicMeter>.Create(m1.Value() * m2.Val);
+		}
+	}
+
+	public class PerSquareMeter : SIBase<PerSquareMeter>
+	{
+		private static readonly int[] Units = { 0, -2, 0, 0, 0, 0, 0 };
+
+		[DebuggerHidden]
+		private PerSquareMeter(double val) : base(val, Units) { }
+
+		
+	}
+
+	public class SquareMeterPerMeter : SIBase<SquareMeterPerMeter>
+	{
+		private static readonly int[] Units = { 0, 1, 0, 0, 0, 0, 0 };
+
+		[DebuggerHidden]
+		private SquareMeterPerMeter(double val) : base(val, Units) { }
+
+		public static SquareMeter operator *(SquareMeterPerMeter m1, Meter m2)
+		{
+			return SIBase<SquareMeter>.Create(m1.Val * m2.Value());
+		}
 	}
 
 	/// <summary>
@@ -404,6 +437,12 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Kilogram>.Create(kilogramPerSecond.Val * second.Value());
 		}
+
+		[DebuggerHidden]
+		public static Kilogram operator *(Second second, KilogramPerSecond kilogramPerSecond)
+		{
+			return SIBase<Kilogram>.Create(kilogramPerSecond.Val * second.Value());
+		}
 	}
 
 	/// <summary>
@@ -427,6 +466,30 @@ namespace TUGraz.VectoCommon.Utils
 		[DebuggerHidden]
 		private CubicMeter(double value)
 			: base(value, Units) { }
+
+		public static CubicMeterPerSecond operator *(CubicMeter m3, PerSecond ps)
+		{
+			return SIBase<CubicMeterPerSecond>.Create(m3.Val * ps.Value());
+		}
+	}
+
+	public class CubicMeterPerSecond : SIBase<CubicMeterPerSecond>
+	{
+		private static readonly int[] Units = { 0, 3, -1, 0, 0, 0, 0 };
+
+		[DebuggerHidden]
+		private CubicMeterPerSecond(double value)
+			: base(value, Units) { }
+
+		public static Watt operator *(CubicMeterPerSecond m3ps, WattSecondPerCubicMeter wspm3)
+		{
+			return SIBase<Watt>.Create(m3ps.Val * wspm3.Value());
+		}
+
+		public static Watt operator *(CubicMeterPerSecond m3ps, JoulePerCubicMeter jpm3)
+		{
+			return SIBase<Watt>.Create(m3ps.Val * jpm3.Value());
+		}
 	}
 
 	/// <summary>
@@ -500,6 +563,44 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
+	public class WattSecondPerCubicMeter : SIBase<WattSecondPerCubicMeter>
+	{
+		private static readonly int[] Units = { 1, -1, -2, 0, 0, 0, 0 };
+
+		[DebuggerHidden]
+		private WattSecondPerCubicMeter(double val) : base(val, Units) { }
+	}
+
+	public class WattPerKelvinSquareMeter : SIBase<WattPerKelvinSquareMeter>
+	{
+		private static readonly int[] Units = { 1, 0, -3, 0, -1, 0, 0 };
+
+		private WattPerKelvinSquareMeter(double val) : base(val, Units)
+		{ }
+	}
+
+	public class WattPerSquareMeter : SIBase<WattPerSquareMeter>
+	{
+		private static readonly int[] Units = { 1, 0, -3, 0, 0, 0, 0 };
+
+		private WattPerSquareMeter(double val) : base(val, Units)
+		{ }
+
+		public static Watt operator *(WattPerSquareMeter wpsqm, SquareMeter sqm)
+		{
+			return SIBase<Watt>.Create(wpsqm.Val * sqm.Value());
+		}
+	}
+
+
+	public class WattPerCubicMeter : SIBase<WattPerCubicMeter>
+	{
+		private static readonly int[] Units = { 1, -1, -3, 0, 0, 0, 0 };
+
+		private WattPerCubicMeter(double val) : base(val, Units)
+		{ }
+	}
+
 	/// <summary>
 	/// SI Class for Watt [W].
 	/// </summary>
@@ -557,6 +658,12 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return Create(watt.Val * val);
 		}
+
+		[DebuggerHidden]
+		public static KilogramPerSecond operator /(Watt watt, JoulePerKilogramm jpkg)
+		{
+			return SIBase<KilogramPerSecond>.Create(watt.Val / jpkg.Value());
+		}
 	}
 
 	/// <summary>
@@ -608,6 +715,23 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Joule>.Create(kg.Value() * jpg.Val);
 		}
+		
+		public static JoulePerCubicMeter operator *(JoulePerKilogramm jpk, KilogramPerCubicMeter kpm3)
+		{
+			return SIBase<JoulePerCubicMeter>.Create(jpk.Val * kpm3.Value());
+		}
+	}
+
+	public class JoulePerCubicMeter : SIBase<JoulePerCubicMeter>
+	{
+		private static readonly int[] Units = { 1, -1, -2, 0, 0, 0, 0 };
+
+		private JoulePerCubicMeter(double val) : base(val, Units) { }
+
+		//public static CubicMeterPerSecond operator /(Watt w, JoulePerCubicMeter cpm3)
+		//{
+		//	return SIBase<CubicMeterPerSecond>.Create(w.Value() * cpm3.Val);
+		//}
 	}
 
 	/// <summary>
@@ -790,6 +914,35 @@ namespace TUGraz.VectoCommon.Utils
 		private NewtonMeterSecond(double val) : base(val, Units) { }
 
 		public override string UnitString { get { return "Nms"; } }
+	}
+
+	public class Kelvin : SIBase<Kelvin>
+	{
+		private static readonly int[] Units = { 0, 0, 0, 0, 1, 0, 0 };
+
+		private Kelvin(double val) : base(val, Units) { }
+
+		public double AsDegCelsius
+		{
+			get { return Val - 273.16; }
+		}
+
+		public static KelvinSquareMeter operator *(Kelvin k, SquareMeter sq)
+		{
+			return SIBase<KelvinSquareMeter>.Create(k.Val * sq.Value());
+		}
+	}
+
+	public class KelvinSquareMeter : SIBase<KelvinSquareMeter>
+	{
+		private static readonly int[] Units = { 0, 2, 0, 0, 1, 0, 0 };
+
+		private KelvinSquareMeter(double val) : base(val, Units) { }
+
+		public static Watt operator *(KelvinSquareMeter ksqm, WattPerKelvinSquareMeter wpksqm)
+		{
+			return SIBase<Watt>.Create(ksqm.Val * wpksqm.Value());
+		}
 	}
 
 	/// <summary>
