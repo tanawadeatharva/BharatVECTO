@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 
 		SquareMeter BP_BusFloorSurfaceArea { get; }
 		SquareMeter BP_BusWindowSurface { get; }
-		SquareMeter BP_BusSurfaceAreaM2 { get; }
+		SquareMeter BP_BusSurfaceArea { get; }
 		CubicMeter BP_BusVolume { get; }
 
 		// Boundary Conditions:			
@@ -37,8 +37,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 		PerSecond BC_lowVentilation { get; set; }
 		CubicMeterPerSecond BC_High { get; }
 		CubicMeterPerSecond BC_Low { get; }
-		Watt BC_HighVentPowerW { get; }
-		Watt BC_LowVentPowerW { get; }
+		Watt BC_HighVentPower { get; }
+		Watt BC_LowVentPower { get; }
 		JoulePerCubicMeter BC_SpecificVentilationPower { get; set; }
 		double BC_AuxHeaterEfficiency { get; set; }
 		JoulePerKilogramm BC_GCVDieselOrHeatingOil { get; set; }

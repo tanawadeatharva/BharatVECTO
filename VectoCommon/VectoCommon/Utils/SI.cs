@@ -577,6 +577,8 @@ namespace TUGraz.VectoCommon.Utils
 
 		private WattPerKelvinSquareMeter(double val) : base(val, Units)
 		{ }
+
+		public override string UnitString { get { return "W/Km^2"; } }
 	}
 
 	public class WattPerSquareMeter : SIBase<WattPerSquareMeter>
@@ -590,6 +592,7 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<Watt>.Create(wpsqm.Val * sqm.Value());
 		}
+		public override string UnitString { get { return "W/m^2"; } }
 	}
 
 
@@ -599,6 +602,8 @@ namespace TUGraz.VectoCommon.Utils
 
 		private WattPerCubicMeter(double val) : base(val, Units)
 		{ }
+
+		public override string UnitString { get { return "W/m^3"; } }
 	}
 
 	/// <summary>

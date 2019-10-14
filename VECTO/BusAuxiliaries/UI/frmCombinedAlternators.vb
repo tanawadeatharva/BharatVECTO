@@ -611,33 +611,33 @@ Public Class frmCombinedAlternators
         txtAlternatorName.Text = alt.AlternatorName
 
         'Table1 - 2K Table
-        txt2K10Amps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToString()
+        txt2K10Amps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToXMLFormat()
         txt2K10Efficiency.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(1).First().Eff.ToString()
 
-        txt2KMax2Amps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToString()
+        txt2KMax2Amps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToXMLFormat()
         txt2KMax2Efficiency.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(2).First().Eff.ToString()
 
-        txt2KMaxAmps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToString()
+        txt2KMaxAmps.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToXMLFormat()
         txt2KMaxEfficiency.Text = alt.InputTable2000.OrderBy(Function(x) x.Amps).Skip(3).First().Eff.ToString()
 
         'Table2 - 4K Table
-        txt4K10Amps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToString()
+        txt4K10Amps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToXMLFormat()
         txt4K10Efficiency.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(1).First().Eff.ToString()
 
-        txt4KMax2Amps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToString()
+        txt4KMax2Amps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToXMLFormat()
         txt4KMax2Efficiency.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(2).First().Eff.ToString()
 
-        txt4KMaxAmps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToString()
+        txt4KMaxAmps.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToXMLFormat()
         txt4KMaxEfficiency.Text = alt.InputTable4000.OrderBy(Function(x) x.Amps).Skip(3).First().Eff.ToString()
 
         'Table3 - 6K Table
-        txt6K10Amps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToString()
+        txt6K10Amps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(1).First().Amps.ToXMLFormat()
         txt6K10Efficiency.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(1).First().Eff.ToString()
 
-        txt6KMax2Amps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToString()
+        txt6KMax2Amps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(2).First().Amps.ToXMLFormat()
         txt6KMax2Efficiency.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(2).First().Eff.ToString()
 
-        txt6KMaxAmps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToString()
+        txt6KMaxAmps.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(3).First().Amps.ToXMLFormat()
         txt6KMaxEfficiency.Text = alt.InputTable6000.OrderBy(Function(x) x.Amps).Skip(3).First().Eff.ToString()
 
         txtPulleyRatio.Text = alt.PulleyRatio.ToString()

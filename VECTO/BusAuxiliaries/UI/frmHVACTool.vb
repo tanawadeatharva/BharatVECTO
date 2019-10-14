@@ -4,6 +4,7 @@ Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Globalization
 Imports System.Linq
+Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
@@ -232,7 +233,7 @@ Public Class frmHVACTool
 		btnNewBus.Tag = "New"
 		btnEditBus.Tag = "Edit"
 
-		BusParamGroupEdit.Location = New Point(30, 51)
+		BusParamGroupEdit.Location = New Drawing.Point(30, 51)
 	End Sub
 
 	Private Sub setupBindings()
@@ -250,48 +251,165 @@ Public Class frmHVACTool
 										DataSourceUpdateMode.OnPropertyChanged)
 		chkIsDoubleDecker.DataBindings.Add("Checked", ssmTOOL.GenInputs, "BP_DoubleDecker", False,
 											DataSourceUpdateMode.OnPropertyChanged)
-		txtBusLength.DataBindings.Add("Text", ssmTOOL.GenInputs, "BP_BusLength")
-		txtBusWidth.DataBindings.Add("Text", ssmTOOL.GenInputs, "BP_BusWidth")
-		txtBusHeight.DataBindings.Add("Text", ssmTOOL.GenInputs, "BP_BusHeight")
+	    dim bLength As Binding = New Binding("Text", ssmTOOL.GenInputs, "BP_BusLength")
+	    AddHandler bLength.Parse, New ConvertEventHandler(AddressOf TextToSI(of Meter))
+	    AddHandler blength.Format , New ConvertEventHandler(AddressOf SIToText)
+        txtBusLength.DataBindings.Add(bLength)
 
-		txtBusFloorSurfaceArea.DataBindings.Add("Text", ssmTOOL.GenInputs, "BP_BusFloorSurfaceArea", False,
-												DataSourceUpdateMode.OnPropertyChanged)
-		txtBusWindowSurfaceArea.DataBindings.Add("Text", ssmTOOL.GenInputs, "BP_BusWindowSurface")
-		txtBusSurfaceArea.DataBindings.Add("Text", ssmTOOL.GenInputs, "BP_BusSurfaceAreaM2")
-		txtBusVolume.DataBindings.Add("Text", ssmTOOL.GenInputs, "BP_BusVolume")
+	    dim bWidth As Binding = New Binding("Text", ssmTOOL.GenInputs, "BP_BusWidth")
+	    AddHandler bWidth.Parse, New ConvertEventHandler(AddressOf TextToSI(of Meter))
+	    AddHandler bWidth.Format , New ConvertEventHandler(AddressOf SIToText)
+        txtBusWidth.DataBindings.Add(bWidth)
+
+        dim bHeight As Binding = New Binding("Text", ssmTOOL.GenInputs, "BP_BusHeight")
+	    AddHandler bHeight.Parse, New ConvertEventHandler(AddressOf TextToSI(of Meter))
+	    AddHandler bHeight.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBusHeight.DataBindings.Add(bHeight)
+
+	    dim bFloorSurface As Binding = New Binding("Text", ssmTOOL.GenInputs, "BP_BusFloorSurfaceArea", False,
+                                                  DataSourceUpdateMode.OnPropertyChanged)
+	    AddHandler bFloorSurface.Parse, New ConvertEventHandler(AddressOf TextToSI(of SquareMeter))
+	    AddHandler bFloorSurface.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBusFloorSurfaceArea.DataBindings.Add(bFloorSurface)
+
+	    dim bWindowSF As Binding = New Binding("Text", ssmTOOL.GenInputs, "BP_BusWindowSurface")
+	    AddHandler bWindowSF.Parse, New ConvertEventHandler(AddressOf TextToSI(of SquareMeter))
+	    AddHandler bWindowSF.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBusWindowSurfaceArea.DataBindings.Add(bWindowSF)
+
+	    dim bBusSF As Binding = New Binding("Text", ssmTOOL.GenInputs, "BP_BusSurfaceArea")
+	    AddHandler bBusSF.Parse, New ConvertEventHandler(AddressOf TextToSI(of SquareMeter))
+	    AddHandler bBusSF.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBusSurfaceArea.DataBindings.Add(bBusSF)
+
+	    dim bBusVol As Binding = New Binding("Text", ssmTOOL.GenInputs, "BP_BusVolume")
+	    AddHandler bBusVol.Parse, New ConvertEventHandler(AddressOf TextToSI(of CubicMeter))
+	    AddHandler bBusVol.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBusVolume.DataBindings.Add(bBusVol)
 
 		'Boundary Conditions
 		txtBC_GFactor.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_GFactor")
 		txtBC_SolarClouding.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_SolarClouding")
-		txtBC_HeatPerPassengerIntoCabinW.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_HeatPerPassengerIntoCabinW")
-		txtBC_PassengerBoundaryTemperature.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_PassengerBoundaryTemperature")
-		txtBC_PassengerDensityLowFloor.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_PassengerDensityLowFloor")
-		txtBC_PassengerDensitySemiLowFloor.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_PassengerDensitySemiLowFloor")
-		txtBC_PassengerDensityRaisedFloor.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_PassengerDensityRaisedFloor")
+
+	    dim bPassHeat As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_HeatPerPassengerIntoCabinW")
+	    AddHandler bPassHeat.Parse, New ConvertEventHandler(AddressOf TextToSI(of Watt))
+	    AddHandler bPassHeat.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBC_HeatPerPassengerIntoCabinW.DataBindings.Add(bPassHeat)
+
+	    dim bPassBT As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_PassengerBoundaryTemperature")
+	    AddHandler bPassBT.Parse, New ConvertEventHandler(AddressOf TextToSIKelvin)
+	    AddHandler bPassBT.Format , New ConvertEventHandler(AddressOf SIKelvinToText)
+		txtBC_PassengerBoundaryTemperature.DataBindings.Add(bPassBT)
+
+	    dim bPassLowFloor As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_PassengerDensityLowFloor")
+	    AddHandler bPassLowFloor.Parse, New ConvertEventHandler(AddressOf TextToSI(of PerSquareMeter))
+	    AddHandler bPassLowFloor.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBC_PassengerDensityLowFloor.DataBindings.Add(bPassLowFloor)
+
+	    dim bPassSemi As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_PassengerDensitySemiLowFloor")
+	    AddHandler bPassSemi.Parse, New ConvertEventHandler(AddressOf TextToSI(of PerSquareMeter))
+	    AddHandler bPassSemi.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBC_PassengerDensitySemiLowFloor.DataBindings.Add(bPassSemi)
+
+	    dim bPassRaised As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_PassengerDensityRaisedFloor")
+	    AddHandler bPassRaised.Parse, New ConvertEventHandler(AddressOf TextToSI(of PerSquareMeter))
+	    AddHandler bPassRaised.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBC_PassengerDensityRaisedFloor.DataBindings.Add(bPassRaised)
+
+	   
 		txtBC_CalculatedPassengerNumber.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_CalculatedPassengerNumber")
-		txtBC_UValues.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_UValues")
-		txtBC_HeatingBoundaryTemperature.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_HeatingBoundaryTemperature")
-		txtBC_CoolingBoundaryTemperature.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_CoolingBoundaryTemperature")
-		txtBC_TemperatureCoolingOff.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_TemperatureCoolingTurnsOff")
-		txtBC_HighVentilation.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_HighVentilation")
-		txtBC_lowVentilation.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_lowVentilation")
-		txtBC_High.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_High")
-		txtBC_Low.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_Low")
-		txtBC_HighVentPowerW.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_HighVentPowerW")
-		txtBC_LowVentPowerW.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_LowVentPowerW")
-		txtBC_SpecificVentilationPower.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_SpecificVentilationPower")
+
+	    dim bUVal As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_UValues")
+	    AddHandler bUVal.Parse, New ConvertEventHandler(AddressOf TextToSI(of WattPerKelvinSquareMeter))
+	    AddHandler bUVal.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBC_UValues.DataBindings.Add(bUVal)
+
+	    dim bPassBdT As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_HeatingBoundaryTemperature")
+	    AddHandler bPassBdT.Parse, New ConvertEventHandler(AddressOf TextToSIKelvin)
+	    AddHandler bPassBdT.Format , New ConvertEventHandler(AddressOf SIKelvinToText)
+		txtBC_HeatingBoundaryTemperature.DataBindings.Add(bPassBdT)
+
+	    dim bBdTCool As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_CoolingBoundaryTemperature")
+	    AddHandler bBdTCool.Parse, New ConvertEventHandler(AddressOf TextToSIKelvin)
+	    AddHandler bBdTCool.Format , New ConvertEventHandler(AddressOf SIKelvinToText)
+		txtBC_CoolingBoundaryTemperature.DataBindings.Add(bBdTCool)
+
+	    dim bCoolingOff As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_TemperatureCoolingTurnsOff")
+	    AddHandler bCoolingOff.Parse, New ConvertEventHandler(AddressOf TextToSIKelvin)
+	    AddHandler bCoolingOff.Format , New ConvertEventHandler(AddressOf SIKelvinToText)
+		txtBC_TemperatureCoolingOff.DataBindings.Add(bCoolingOff)
+
+	    dim bVentPerHour As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_HighVentilation")
+	    AddHandler bVentPerHour.Parse, New ConvertEventHandler(AddressOf TextToSIPerHour)
+	    AddHandler bVentPerHour.Format , New ConvertEventHandler(AddressOf SIPerHourToText)
+		txtBC_HighVentilation.DataBindings.Add(bVentPerHour)
+
+	    dim bVentLPerHour As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_lowVentilation")
+	    AddHandler bVentLPerHour.Parse, New ConvertEventHandler(AddressOf TextToSIPerHour)
+	    AddHandler bVentLPerHour.Format , New ConvertEventHandler(AddressOf SIPerHourToText)
+		txtBC_lowVentilation.DataBindings.Add(bVentLPerHour)
+
+	    dim bHigh As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_High")
+	    AddHandler bHigh.Parse, New ConvertEventHandler(AddressOf TextToSICubicMeterPerHour)
+	    AddHandler bHigh.Format , New ConvertEventHandler(AddressOf SICubicMeterPerHourToText)
+		txtBC_High.DataBindings.Add(bHigh)
+
+	    dim bLow As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_Low")
+	    AddHandler bLow.Parse, New ConvertEventHandler(AddressOf TextToSICubicMeterPerHour)
+	    AddHandler bLow.Format , New ConvertEventHandler(AddressOf SICubicMeterPerHourToText)
+		txtBC_Low.DataBindings.Add(bLow)
+
+	    dim bHiP As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_HighVentPower")
+	    AddHandler bHiP.Parse, New ConvertEventHandler(AddressOf TextToSI(of Watt))
+	    AddHandler bHiP.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBC_HighVentPowerW.DataBindings.Add(bHiP)
+
+	    dim bLoP As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_LowVentPower")
+	    AddHandler bLoP.Parse, New ConvertEventHandler(AddressOf TextToSI(of Watt))
+	    AddHandler bLoP.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBC_LowVentPowerW.DataBindings.Add(bLoP)
+
+	    dim bSpecPwr As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_SpecificVentilationPower")
+	    AddHandler bSpecPwr.Parse, New ConvertEventHandler(AddressOf TextToSIWattHourPerCubicMeter)
+	    AddHandler bSpecPwr.Format , New ConvertEventHandler(AddressOf SIWattHourPerCubicMeterToText)
+		txtBC_SpecificVentilationPower.DataBindings.Add(bSpecPwr)
+
 		txtBC_AuxHeaterEfficiency.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_AuxHeaterEfficiency")
-		txtBC_GCVDieselOrHeatingOil.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_GCVDieselOrHeatingOil")
-		txtBC_WindowAreaPerUnitBusLength.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_WindowAreaPerUnitBusLength")
-		txtBC_FrontRearWindowArea.DataBindings.Add("Text", ssmTOOL.GenInputs, "BC_FrontRearWindowArea")
-		txtBC_MaxTemperatureDeltaForLowFloorBusses.DataBindings.Add("Text", ssmTOOL.GenInputs,
-																	"BC_MaxTemperatureDeltaForLowFloorBusses")
-		txtBC_MaxPossibleBenefitFromTechnologyList.DataBindings.Add("Text", ssmTOOL.GenInputs,
+
+	    dim bGCV As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_GCVDieselOrHeatingOil")
+	    AddHandler bGCV.Parse, New ConvertEventHandler(AddressOf TextToSIkWhkg)
+	    AddHandler bGCV.Format , New ConvertEventHandler(AddressOf SIWhkgToText)
+		txtBC_GCVDieselOrHeatingOil.DataBindings.Add(bGCV)
+
+	    dim bWnd As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_WindowAreaPerUnitBusLength")
+	    AddHandler bWnd.Parse, New ConvertEventHandler(AddressOf TextToSI(of SquareMeterPerMeter))
+	    AddHandler bWnd.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBC_WindowAreaPerUnitBusLength.DataBindings.Add(bWnd)
+
+	    dim bFrReW As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_FrontRearWindowArea")
+	    AddHandler bFrReW.Parse, New ConvertEventHandler(AddressOf TextToSI(of SquareMeter))
+	    AddHandler bFrReW.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBC_FrontRearWindowArea.DataBindings.Add(bFrReW)
+
+	    dim bTDiff As Binding = New Binding("Text", ssmTOOL.GenInputs, "BC_MaxTemperatureDeltaForLowFloorBusses")
+	    AddHandler bTDiff.Parse, New ConvertEventHandler(AddressOf TextToSI(of Kelvin))
+	    AddHandler bTDiff.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtBC_MaxTemperatureDeltaForLowFloorBusses.DataBindings.Add(bTDiff)
+
+	    txtBC_MaxPossibleBenefitFromTechnologyList.DataBindings.Add("Text", ssmTOOL.GenInputs,
 																	"BC_MaxPossibleBenefitFromTechnologyList")
 
 		'EnviromentalConditions	        		
-		txtEC_EnviromentalTemperature.DataBindings.Add("Text", ssmTOOL.GenInputs, "EC_EnviromentalTemperature")
-		txtEC_Solar.DataBindings.Add("Text", ssmTOOL.GenInputs, "EC_Solar")
+	    dim bEnvT As Binding = New Binding("Text", ssmTOOL.GenInputs, "EC_EnviromentalTemperature")
+	    AddHandler bEnvT.Parse, New ConvertEventHandler(AddressOf TextToSIKelvin)
+	    AddHandler bEnvT.Format , New ConvertEventHandler(AddressOf SIKelvinToText)
+		txtEC_EnviromentalTemperature.DataBindings.Add(bEnvT)
+
+	    dim bSolar As Binding = New Binding("Text", ssmTOOL.GenInputs, "EC_Solar")
+	    AddHandler bSolar.Parse, New ConvertEventHandler(AddressOf TextToSI(of WattPerSquareMeter))
+	    AddHandler bSolar.Format , New ConvertEventHandler(AddressOf SIToText)
+		txtEC_Solar.DataBindings.Add(bSolar)
+
 		chkEC_BatchMode.DataBindings.Add("Checked", ssmTOOL.GenInputs, "EC_EnviromentalConditions_BatchEnabled", False,
 										DataSourceUpdateMode.OnPropertyChanged)
 
@@ -299,7 +417,12 @@ Public Class frmHVACTool
 		cboAC_CompressorType.DataBindings.Add("Text", ssmTOOL.GenInputs, "AC_CompressorType", False,
 											DataSourceUpdateMode.OnPropertyChanged)
 		txtAC_CompressorType.DataBindings.Add("Text", ssmTOOL.GenInputs, "AC_CompressorTypeDerived")
-		txtAC_CompressorCapacitykW.DataBindings.Add("Text", ssmTOOL.GenInputs, "AC_CompressorCapacitykW")
+
+	    dim bAcPwr As Binding = New Binding("Text", ssmTOOL.GenInputs, "AC_CompressorCapacitykW")
+	    AddHandler bAcPwr.Parse, New ConvertEventHandler(AddressOf TextToSIKiloWatt)
+	    AddHandler bAcPwr.Format , New ConvertEventHandler(AddressOf SIKiloWattToText)
+		txtAC_CompressorCapacitykW.DataBindings.Add(bAcPwr)
+
 		txtAC_COP.DataBindings.Add("Text", ssmTOOL.GenInputs, "AC_COP")
 
 		'Ventilation	
@@ -315,7 +438,11 @@ Public Class frmHVACTool
 		cboVEN_VentilationDuringCooling.DataBindings.Add("Text", ssmTOOL.GenInputs, "VEN_VentilationDuringCooling")
 
 		'Aux. Heater  
-		txtAH_FuelFiredHeaterkW.DataBindings.Add("Text", ssmTOOL.GenInputs, "AH_FuelFiredHeaterkW")
+	    dim bHtr As Binding = New Binding("Text", ssmTOOL.GenInputs, "AH_FuelFiredHeaterkW")
+	    AddHandler bHtr.Parse, New ConvertEventHandler(AddressOf TextToSIKiloWatt)
+	    AddHandler bHtr.Format , New ConvertEventHandler(AddressOf SIKiloWattToText)
+		txtAH_FuelFiredHeaterkW.DataBindings.Add(bHtr)
+
 		txtAH_FuelEnergyHeatToCoolant.DataBindings.Add("Text", ssmTOOL.GenInputs, "AH_FuelEnergyToHeatToCoolant")
 		txtAH_CoolantHeatToAirCabinHeater.DataBindings.Add("Text", ssmTOOL.GenInputs,
 															"AH_CoolantHeatTransferredToAirCabinHeater")
@@ -346,7 +473,7 @@ Public Class frmHVACTool
 
 	'		txtBusFloorSurfaceArea.Text = ssmTOOL.GenInputs.BP_BusFloorSurfaceArea.ToString()
 	'		txtBusWindowSurfaceArea.Text = ssmTOOL.GenInputs.BP_BusWindowSurface.ToString()
-	'		txtBusSurfaceArea.Text = ssmTOOL.GenInputs.BP_BusSurfaceAreaM2.ToString()
+	'		txtBusSurfaceArea.Text = ssmTOOL.GenInputs.BP_BusSurfaceArea.ToString()
 	'		txtBusVolume.Text = ssmTOOL.GenInputs.BP_BusVolume.ToString()
 
 	'		btnEditBus.Enabled = True

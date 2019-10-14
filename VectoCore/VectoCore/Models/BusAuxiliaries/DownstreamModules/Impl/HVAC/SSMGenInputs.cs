@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		// D8/C8 - ( M/2 )
-		public SquareMeter BP_BusSurfaceAreaM2
+		public SquareMeter BP_BusSurfaceArea
 		{
 			get {
 				// 2 * (C12*C13 + C12*C14 + C13*C14)
@@ -229,7 +229,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		// C33 - ( W )
-		public Watt BC_HighVentPowerW
+		public Watt BC_HighVentPower
 		{
 			get {
 				// =C31*C35
@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		// C34 - ( W )
-		public Watt BC_LowVentPowerW
+		public Watt BC_LowVentPower
 		{
 			get {
 				// =C32*C35
@@ -382,7 +382,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			};
 
 			// BP_BusFloorSurfaceArea  : Calculated
-			// BP_BusSurfaceAreaM2 : Calculated
+			// BP_BusSurfaceArea : Calculated
 			// BP_BusWindowSurface    : Calculated
 			// BP_BusVolume : Calculated
 
@@ -409,8 +409,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			// BC_High  :Calculated
 			// BC_Low  :Calculated
-			// BC_HighVentPowerW  :Calculated
-			// BC_LowVentPowerW  :Calculated
+			// BC_HighVentPower  :Calculated
+			// BC_LowVentPower  :Calculated
 			BC_SpecificVentilationPower = 0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast<JoulePerCubicMeter>();
 
 			// BC_COP :Calculated

@@ -79,12 +79,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// =I79*C8*C23  or '=I80*C8*C23
 
 				// C23 = BC_UValues
-				// C8  = BP_BusSurfaceAreaM2
+				// C8  = BP_BusSurfaceArea
 				// I78/I80 = Me.TemperatureDelta
 
 				var gen = ssmTOOL.GenInputs;
 
-				return TemperatureDelta * gen.BP_BusSurfaceAreaM2 * gen.BC_UValues;
+				return TemperatureDelta * gen.BP_BusSurfaceArea * gen.BC_UValues;
 			}
 		}
 		public Watt WattsPerPass

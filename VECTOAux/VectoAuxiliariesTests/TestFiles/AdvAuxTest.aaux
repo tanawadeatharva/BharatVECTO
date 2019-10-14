@@ -264,18 +264,9 @@
         ]
       },
       "DoorActuationTimeSecond": 4,
-      "ResultCardIdle": {
-        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ResultCard, BusAuxiliaries",
-        "Results": []
-      },
-      "ResultCardTraction": {
-        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ResultCard, BusAuxiliaries",
-        "Results": []
-      },
-      "ResultCardOverrun": {
-        "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ResultCard, BusAuxiliaries",
-        "Results": []
-      },
+      "ResultCardIdle": [],
+      "ResultCardTraction": [],
+      "ResultCardOverrun": [],
       "SmartElectrical": false
     },
     "PneumaticUserInputsConfig": {

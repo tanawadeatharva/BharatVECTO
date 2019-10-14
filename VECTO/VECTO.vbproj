@@ -235,6 +235,7 @@
     <Compile Include="BusAuxiliaries\UI\VECTO_Types.vb" />
     <Compile Include="BusAuxiliaries\Util\DeleteCell.vb" />
     <Compile Include="BusAuxiliaries\Util\DeleteColumn.vb" />
+    <Compile Include="BusAuxiliaries\Util\SIConvert.vb" />
     <Compile Include="GUI\VectoVTPJobForm.Designer.vb">
       <DependentUpon>VectoVTPJobForm.vb</DependentUpon>
     </Compile>
@@ -571,7 +572,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj">
-      <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
+      <Project>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</Project>
       <Name>VectoCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj">
@@ -594,6 +595,7 @@
     <EmbeddedResource Include="Resources\6x2r.png" />
     <EmbeddedResource Include="Resources\6x2rt.png" />
     <EmbeddedResource Include="Resources\6x2tt.png" />
+    <None Include="Resources\Delete.png" />
     <Content Include="Resources\F_ENG.ico" />
     <Content Include="Resources\F_GBX.ico" />
     <Content Include="Resources\F_VECTO.ico" />

@@ -18,6 +18,7 @@ Imports System.Drawing
 Imports VectoAuxiliaries.Hvac
 Imports System.IO
 Imports System.Linq
+Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
@@ -1372,7 +1373,10 @@ Public Class frmAuxiliaryConfig
     Private Sub CreateBindings()
 
         'auxConfig.Vecto Bindings
-        txtPowernetVoltage.DataBindings.Add("Text", auxConfig.ElectricalUserInputsConfig, "PowerNetVoltage")
+        dim bVoltage As Binding = new Binding("Text", auxConfig.ElectricalUserInputsConfig, "PowerNetVoltage")
+        AddHandler bVoltage.Parse, new ConvertEventHandler(AddressOf TextToSI(Of Volt))
+        AddHandler bVoltage.Format, new ConvertEventHandler(AddressOf SIToText)
+        txtPowernetVoltage.DataBindings.Add(bVoltage)
         'txtVehicleWeightKG.DataBindings.Add("Text", auxConfig.VectoInputs, "VehicleWeightKG")
         'cboCycle.DataBindings.Add("Text", auxConfig.VectoInputs, "Cycle")
         txtFuelMap.DataBindings.Add("Text", auxConfig.VectoInputs, "FuelMap")
@@ -1390,6 +1394,7 @@ Public Class frmAuxiliaryConfig
         electricalConsumerBinding =
             New BindingList(Of IElectricalConsumer)(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers.Items)
         gvElectricalConsumables.DataSource = electricalConsumerBinding
+        AddHandler gvElectricalConsumables.CellFormatting, New DataGridViewCellFormattingEventHandler(AddressOf SIToText)
 
 
         'ResultCards
@@ -1400,6 +1405,8 @@ Public Class frmAuxiliaryConfig
         idleBinding.AllowNew = True
         idleBinding.AllowRemove = True
         gvResultsCardIdle.DataSource = idleBinding
+        AddHandler gvResultsCardIdle.CellParsing, new DataGridViewCellParsingEventHandler (AddressOf TextToSI(of Ampere))
+        AddHandler gvResultsCardIdle.CellFormatting, new DataGridViewCellFormattingEventHandler(AddressOf SIToText)
 
         'TRACTION
         Dim tractionBinding As BindingList(Of SmartResult)
@@ -1407,6 +1414,8 @@ Public Class frmAuxiliaryConfig
         tractionBinding.AllowNew = True
         tractionBinding.AllowRemove = True
         gvResultsCardTraction.DataSource = tractionBinding
+        AddHandler gvResultsCardTraction.CellParsing, new DataGridViewCellParsingEventHandler (AddressOf TextToSI(of Ampere))
+        AddHandler gvResultsCardTraction.CellFormatting, new DataGridViewCellFormattingEventHandler(AddressOf SIToText)
 
         'OVERRUN
         Dim overrunBinding As BindingList(Of SmartResult)
@@ -1414,6 +1423,8 @@ Public Class frmAuxiliaryConfig
         overrunBinding.AllowNew = True
         overrunBinding.AllowRemove = True
         gvResultsCardOverrun.DataSource = overrunBinding
+        AddHandler gvResultsCardOverrun.CellParsing, new DataGridViewCellParsingEventHandler (AddressOf TextToSI(of Ampere))
+        AddHandler gvResultsCardOverrun.CellFormatting, new DataGridViewCellFormattingEventHandler(AddressOf SIToText)
 
 
         'Pneumatic Auxillaries Binding

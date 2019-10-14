@@ -190,8 +190,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 				var gen = ssmTOOL.GenInputs;
 
-				// Dim C33 = gen.BC_HighVentPowerW
-				// Dim C34 = gen.BC_LowVentPowerW
+				// Dim C33 = gen.BC_HighVentPower
+				// Dim C34 = gen.BC_LowVentPower
 				// Dim C62 = gen.VEN_VentilationONDuringHeating
 				// Dim C66 = gen.VEN_VentilationDuringHeating
 				// Dim M89 = Me.Run1.TotalW
@@ -199,9 +199,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 				var res = Run1.TotalW < 0 && Run2.TotalW < 0
 					? gen.VEN_VentilationOnDuringHeating && gen.VEN_VentilationDuringHeating.ToLower() == "high"
-						? gen.BC_HighVentPowerW
+						? gen.BC_HighVentPower
 						: gen.VEN_VentilationOnDuringHeating && gen.VEN_VentilationDuringHeating.ToLower() == "low"
-							? gen.BC_LowVentPowerW
+							? gen.BC_LowVentPower
 							: 0.SI<Watt>()
 					: 0.SI<Watt>();
 
@@ -288,14 +288,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim M90 = Run2.TotalW
 				// Dim C64 = gen.VEN_VentilationDuringAC
 				// Dim C67 = gen.VEN_VentilationDuringCooling
-				// Dim C33 = gen.BC_HighVentPowerW
-				// Dim C34 = gen.BC_LowVentPowerW
+				// Dim C33 = gen.BC_HighVentPower
+				// Dim C34 = gen.BC_LowVentPower
 
 				return gen.EC_EnviromentalTemperature >= gen.BC_TemperatureCoolingTurnsOff && Run1.TotalW > 0 && Run2.TotalW > 0
 					? gen.VEN_VentilationDuringAC && gen.VEN_VentilationDuringCooling.ToLower() == "high"
-						? gen.BC_HighVentPowerW
+						? gen.BC_HighVentPower
 						: gen.VEN_VentilationDuringAC && gen.VEN_VentilationDuringCooling.ToLower() == "low"
-							? gen.BC_LowVentPowerW
+							? gen.BC_LowVentPower
 							: 0.SI<Watt>()
 					: 0.SI<Watt>();
 			}
@@ -335,17 +335,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim M90 = Run2.TotalW
 				// Dim C63 = gen.VEN_VentilationWhenBothHeatingAndACInactive
 				// Dim C65 = gen.VEN_VentilationFlowSettingWhenHeatingAndACInactive
-				// Dim C33 = gen.BC_HighVentPowerW
-				// Dim C34 = gen.BC_LowVentPowerW
+				// Dim C33 = gen.BC_HighVentPower
+				// Dim C34 = gen.BC_LowVentPower
 
 				return (gen.EC_EnviromentalTemperature < gen.BC_TemperatureCoolingTurnsOff && Run1.TotalW > 0 && Run2.TotalW > 0) ||
 						(Run1.TotalW > 0 && Run2.TotalW < 0)
 					? gen.VEN_VentilationWhenBothHeatingAndACInactive &&
 					gen.VEN_VentilationFlowSettingWhenHeatingAndACInactive.ToLower() == "high"
-						? gen.BC_HighVentPowerW
+						? gen.BC_HighVentPower
 						: gen.VEN_VentilationWhenBothHeatingAndACInactive &&
 						gen.VEN_VentilationFlowSettingWhenHeatingAndACInactive.ToLower() == "low"
-							? gen.BC_LowVentPowerW
+							? gen.BC_LowVentPower
 							: 0.SI<Watt>()
 					: 0.SI<Watt>();
 			}
