@@ -1,4 +1,6 @@
 {
+"Header": "AAUX",
+"Body":{
   "$type": "VectoAuxiliaries.AuxiliaryConfig, BusAuxiliaries",
   "VectoInputs": {
     "$type": "VectoAuxiliaries.VectoInputs, AdvancedAuxiliaryInterfaces",
@@ -13,10 +15,7 @@
     "PowerNetVoltage": 28.3,
     "AlternatorMap": "testCombAlternatorMap_1Alt.AALT",
     "AlternatorGearEfficiency": 0.92,
-    "ElectricalConsumers": {
-      "$type": "VectoAuxiliaries.Electrics.ElectricalConsumerList, BusAuxiliaries",
-      "DoorDutyCycleFraction": 0.096,
-      "Items": [
+    "ElectricalConsumers": [
         {
           "$type": "VectoAuxiliaries.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
@@ -237,22 +236,12 @@
           "PowerNetVoltage": 28.3,
           "Info": ""
         }
-      ]
-    },
+      ],
     "DoorActuationTimeSecond": 4,
     "StoredEnergyEfficiency": 0.935,
-    "ResultCardIdle": {
-      "$type": "VectoAuxiliaries.Electrics.ResultCard, BusAuxiliaries",
-      "Results": []
-    },
-    "ResultCardTraction": {
-      "$type": "VectoAuxiliaries.Electrics.ResultCard, BusAuxiliaries",
-      "Results": []
-    },
-    "ResultCardOverrun": {
-      "$type": "VectoAuxiliaries.Electrics.ResultCard, BusAuxiliaries",
-      "Results": []
-    },
+    "ResultCardIdle": [],
+    "ResultCardTraction":[],
+    "ResultCardOverrun": [],
     "SmartElectrical": false
   },
   "PneumaticUserInputsConfig": {
@@ -290,4 +279,5 @@
     "BusDatabasePath": "BusDatabase.abdb",
     "SSMDisabled": false
   }
+}
 }
