@@ -3,6 +3,7 @@ Imports System.Windows.Forms
 Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Globalization
+Imports System.IO
 Imports System.Linq
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
@@ -224,8 +225,8 @@ Public Class frmHVACTool
 		cboLineType.DataSource = {"Normal", "ActiveVentilation"}
 
 		txtEC_EnvironmentConditionsFilePath.Tag = ssmTOOL.GenInputs.EC_EnviromentalConditions_BatchFile
-		txtEC_EnvironmentConditionsFilePath.Text = fFileWoDir(ssmTOOL.GenInputs.EC_EnviromentalConditions_BatchFile,
-															fPATH(vectoFile))
+		txtEC_EnvironmentConditionsFilePath.Text = GetRelativePath(ssmTOOL.GenInputs.EC_EnviromentalConditions_BatchFile,
+															Path.GetDirectoryName(vectoFile))
 		txtEC_EnvironmentConditionsFilePath.ReadOnly = True
 		btnEnvironmentConditionsSource.Enabled = False
 		btnOpenAenv.Enabled = False
@@ -722,7 +723,7 @@ Public Class frmHVACTool
 
 		Try
 			Dim environmentalConditionsMap As IEnvironmentalConditionsMap =
-					New EnvironmentalConditionsMap(CType(txtEC_EnvironmentConditionsFilePath.Tag, String), fPATH(vectoFile))
+					New EnvironmentalConditionsMap(CType(txtEC_EnvironmentConditionsFilePath.Tag, String), Path.GetDirectoryName(vectoFile))
 			ErrorProvider1.SetError(txtEC_EnvironmentConditionsFilePath, String.Empty)
 			ssmTOOL.GenInputs.EC_EnviromentalConditions_BatchFile = CType(txtEC_EnvironmentConditionsFilePath.Tag, String)
 		Catch ex As Exception
@@ -1460,14 +1461,14 @@ Public Class frmHVACTool
 	Private Sub btnEnvironmentConditionsSource_Click(sender As Object, e As EventArgs) _
 		Handles btnEnvironmentConditionsSource.Click
 
-		Dim ecFileBrowser As New cFileBrowser("AAUXEnv", True, False)
+		Dim ecFileBrowser As New FileBrowser("AAUXEnv", True, False)
 
 		ecFileBrowser.Extensions = New String() {"aenv"}
 
-		If ecFileBrowser.OpenDialog(fPATH(vectoFile)) Then
+		If ecFileBrowser.OpenDialog(path.GetDirectoryName(vectoFile)) Then
 
 			txtEC_EnvironmentConditionsFilePath.Tag = ecFileBrowser.Files(0)
-			txtEC_EnvironmentConditionsFilePath.Text = fFileWoDir(ecFileBrowser.Files(0), fPATH(vectoFile))
+			txtEC_EnvironmentConditionsFilePath.Text = GetRelativePath(ecFileBrowser.Files(0), path.GetDirectoryName(vectoFile))
 
 			txtEC_EnvironmentConditionsFilePath.Focus()
 			txtAH_FuelFiredHeaterkW.Focus()
@@ -1496,7 +1497,7 @@ Public Class frmHVACTool
 	Private cmFilesList As String()
 
 	Private Sub btnOpenECDB_Click(sender As Object, e As EventArgs) Handles btnOpenAenv.Click
-		OpenFiles(fFileRepl(Me.txtEC_EnvironmentConditionsFilePath.Text, fPATH(vectoFile)))
+		OpenFiles(path.Combine(Me.txtEC_EnvironmentConditionsFilePath.Text, path.GetDirectoryName(vectoFile)))
 	End Sub
 
 	Public Function FileOpenAlt(ByVal file As String) As Boolean

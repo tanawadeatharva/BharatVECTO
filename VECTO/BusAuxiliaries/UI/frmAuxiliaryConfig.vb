@@ -837,24 +837,24 @@ Public Class frmAuxiliaryConfig
 
     Private Sub btnFuelMap_Click(sender As Object, e As EventArgs) Handles btnFuelMap.Click
 
-        Dim fbAux As New cFileBrowser("AAUXFuelMap", False, False)
+        Dim fbAux As New FileBrowser("AAUXFuelMap", False, False)
 
 
         ' Dim vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
-        Dim fname As String = fFILE(vectoFile, True)
+        Dim fname As String = Path.GetFileName(vectoFile) ' fFILE(vectoFile, True)
 
         fbAux.Extensions = New String() {"vmap"}
         '  If fbAux.OpenDialog(fFileRepl(fname, fPATH(VECTOfile))) Then 
-        If fbAux.OpenDialog(fPATH(vectoFile)) Then
+        If fbAux.OpenDialog(Path.GetDirectoryName(vectoFile)) Then
 
-            txtFuelMap.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+            txtFuelMap.Text = GetRelativePath(fbAux.Files(0), path.GetDirectoryName(vectoFile))
 
         End If
     End Sub
 
     Private Sub btnAlternatorMapPath_Click(sender As Object, e As EventArgs) Handles btnAlternatorMapPath.Click
 
-        Dim fbAux As New cFileBrowser("AAUXALT", False, False)
+        Dim fbAux As New FileBrowser("AAUXALT", False, False)
         fbAux.Extensions = New String() {"AALT"}
 
         Dim suppliedAALTPath As String = txtAlternatorMapPath.Text
@@ -887,10 +887,10 @@ Public Class frmAuxiliaryConfig
             While needToFindOrCreateFile
 
                 'Find / Create  file and configure.
-                If fbAux.CustomDialog(absoluteAALTPath, False, False, tFbExtMode.ForceExt, False, String.Empty) Then
-                    txtAlternatorMapPath.Text = fFileWoDir(fbAux.Files(0), fPATH(vectoFile))
+                If fbAux.CustomDialog(absoluteAALTPath, False, False, FileBrowserFileExtensionMode.ForceExt, False, String.Empty) Then
+                    txtAlternatorMapPath.Text = GetRelativePath(fbAux.Files(0), Path.GetDirectoryName(vectoFile))
                     suppliedAALTPath = txtAlternatorMapPath.Text
-                    absoluteAALTPath = FilePathUtils.ResolveFilePath(fPATH(vectoFile), suppliedAALTPath)
+                    absoluteAALTPath = FilePathUtils.ResolveFilePath(path.GetDirectoryName(vectoFile), suppliedAALTPath)
 
                     If _
                         IO.File.Exists(absoluteAALTPath) OrElse
@@ -915,7 +915,7 @@ Public Class frmAuxiliaryConfig
                         txtAlternatorMapPath.Text =
                             If(suppliedAALTPath.Contains(aauxPath), suppliedAALTPath.Replace(aauxPath, ""), suppliedAALTPath)
                     Else
-                        txtAlternatorMapPath.Text = fFileWoDir(suppliedAALTPath)
+                        txtAlternatorMapPath.Text = path.GetFileName(suppliedAALTPath)
                     End If
                 Else
                     Return
@@ -930,11 +930,11 @@ Public Class frmAuxiliaryConfig
     Private Sub btnCompressorMap_Click(sender As Object, e As EventArgs) Handles btnCompressorMap.Click
 
 
-        Dim fbAux As New cFileBrowser("AAUXComp", False, False)
+        Dim fbAux As New FileBrowser("AAUXComp", False, False)
 
 
         ' Dim vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
-        Dim fname As String = fFILE(vectoFile, True)
+        Dim fname As String = path.GetFileName(vectoFile)
 
         fbAux.Extensions = New String() {"ACMP"}
         If fbAux.OpenDialog(Path.Combine(aauxPath, txtCompressorMap.Text)) Then
@@ -955,10 +955,10 @@ Public Class frmAuxiliaryConfig
 
     Private Sub btnActuationsMap_Click(sender As Object, e As EventArgs) Handles btnActuationsMap.Click
 
-        Dim fbAux As New cFileBrowser("AAUXPneuAct", False, False)
+        Dim fbAux As New FileBrowser("AAUXPneuAct", False, False)
 
         ' Dim vectoFile As String = "C:\Users\tb28\Source\Workspaces\VECTO\AuxillaryTestHarness\bin\Debug\vectopath.vecto"
-        Dim fname As String = fFILE(vectoFile, True)
+        Dim fname As String = path.GetFileName(vectoFile)
 
         fbAux.Extensions = New String() {"APAC"}
         If fbAux.OpenDialog(Path.Combine(aauxPath, txtActuationsMap.Text)) Then
@@ -982,7 +982,7 @@ Public Class frmAuxiliaryConfig
 
     Private Sub btnBusDatabaseSource_Click(sender As Object, e As EventArgs) Handles btnBusDatabaseSource.Click
 
-        Dim fbAux As New cFileBrowser("AAUXBusDB", False, False)
+        Dim fbAux As New FileBrowser("AAUXBusDB", False, False)
         Dim message As String = String.Empty
 
 
@@ -1011,7 +1011,7 @@ Public Class frmAuxiliaryConfig
 
     Private Sub btnSSMBSource_Click(sender As Object, e As EventArgs) Handles btnSSMBSource.Click
 
-        Dim fbAux As New cFileBrowser("AAUXSSM", False, False)
+        Dim fbAux As New FileBrowser("AAUXSSM", False, False)
         fbAux.Extensions = New String() {"AHSM"}
 
         Dim suppliedSSMPath As String = txtSSMFilePath.Text.Trim()
@@ -1048,7 +1048,7 @@ Public Class frmAuxiliaryConfig
             While needToFindOrCreateFile
 
                 'Find / Create  file and configure.
-                If fbAux.CustomDialog(absoluteSSMPath, False, False, tFbExtMode.ForceExt, False, String.Empty) Then
+                If fbAux.CustomDialog(absoluteSSMPath, False, False, FileBrowserFileExtensionMode.ForceExt, False, String.Empty) Then
                     txtSSMFilePath.Text = GetRelativePath(fbAux.Files(0), aauxPath)
                     suppliedSSMPath = txtSSMFilePath.Text
                     absoluteSSMPath = FilePathUtils.ResolveFilePath(aauxPath, suppliedSSMPath)
@@ -1074,7 +1074,7 @@ Public Class frmAuxiliaryConfig
                         txtSSMFilePath.Text =
                             If(suppliedSSMPath.Contains(aauxPath), suppliedSSMPath.Replace(aauxPath, ""), suppliedSSMPath)
                     Else
-                        txtSSMFilePath.Text = fFileWoDir(suppliedSSMPath)
+                        txtSSMFilePath.Text = path.GetFileName(suppliedSSMPath)
                     End If
                 Else
                     Return
@@ -1098,29 +1098,29 @@ Public Class frmAuxiliaryConfig
 
     Private Sub btnAALTOpen_Click(sender As Object, e As EventArgs) Handles btnAALTOpen.Click
 
-        OpenFiles(fFileRepl(Me.txtAlternatorMapPath.Text, fPATH(vectoFile)))
+        OpenFiles(GetRelativePath(Me.txtAlternatorMapPath.Text, Path.GetDirectoryName(vectoFile)))
     End Sub
 
     Private Sub btnOpenACMP_Click(sender As Object, e As EventArgs) Handles btnOpenACMP.Click
 
 
-        OpenFiles(fFileRepl(Me.txtCompressorMap.Text, fPATH(vectoFile)))
+        OpenFiles(GetRelativePath(Me.txtCompressorMap.Text, Path.GetDirectoryName(vectoFile)))
     End Sub
 
     Private Sub btnOpenAPAC_Click(sender As Object, e As EventArgs) Handles btnOpenAPAC.Click
 
-        OpenFiles(fFileRepl(Me.txtActuationsMap.Text, fPATH(vectoFile)))
+        OpenFiles(GetRelativePath(Me.txtActuationsMap.Text, Path.GetDirectoryName(vectoFile)))
     End Sub
 
     Private Sub btnOpenAHSM_Click(sender As Object, e As EventArgs) Handles btnOpenAHSM.Click
 
-        OpenFiles(fFileRepl(Me.txtSSMFilePath.Text, fPATH(vectoFile)))
+        OpenFiles(GetRelativePath(Me.txtSSMFilePath.Text, Path.GetDirectoryName(vectoFile)))
     End Sub
 
     Private Sub btnOpenABDB_Click(sender As Object, e As EventArgs) Handles btnOpenABDB.Click
 
 
-        OpenFiles(fFileRepl(Me.txtBusDatabaseFilePath.Text, fPATH(vectoFile)))
+        OpenFiles(GetRelativePath(Me.txtBusDatabaseFilePath.Text, Path.GetDirectoryName(vectoFile)))
     End Sub
 
 
