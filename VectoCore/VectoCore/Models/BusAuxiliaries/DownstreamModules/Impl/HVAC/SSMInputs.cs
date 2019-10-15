@@ -7,7 +7,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
 	// Used by SSMHVAC Class
-	public class SSMGenInputs : ISSMGenInputs
+	public class SSMInputs : ISSMInputs, ISSMBoundaryConditions, IEnvironmentalConditions, IACSystem, IVentilation,
+		IAuxHeater, ISSMBusParameters
 	{
 		private string _EC_EnviromentalConditions_BatchFile;
 		private IEnvironmentalConditionsMap _EC_EnvironmentalConditionsMap;
@@ -17,7 +18,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		private string _vectoDir;
 
 
-		//public SSMGenInputs(bool initialiseDefaults = false, string vectoDir = "")
+		//public IssmInputs(bool initialiseDefaults = false, string vectoDir = "")
 		//{
 		//	_vectoDir = vectoDir;
 		//	BP_BusModel = "";
@@ -31,13 +32,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		//		SetDefaults();
 		//}
 
-		public SSMGenInputs(string vectoDir = "")
+		public SSMInputs(string vectoDir = "")
 		{
 			_vectoDir = vectoDir;
 			SetDefaults();
 		}
 
-		public SSMGenInputs(VehicleData vehicle)
+		public SSMInputs(VehicleData vehicle)
 		{
 			_vehicle = vehicle;
 		}
@@ -62,16 +63,28 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		// C10/D10
-		public bool BP_DoubleDecker { get { return _vehicle.DoubleDecker; } }
+		public bool BP_DoubleDecker
+		{
+			get { return _vehicle.DoubleDecker; }
+		}
 
 		// D12/C12 - ( M )
-		public Meter BP_BusLength { get { return _vehicle.Length; } }
+		public Meter BP_BusLength
+		{
+			get { return _vehicle.Length; }
+		}
 
 		// D13/C13 - ( M )
-		public Meter BP_BusWidth { get { return _vehicle.Width; } }
+		public Meter BP_BusWidth
+		{
+			get { return _vehicle.Width; }
+		}
 
 		// D14/C14 - ( M )
-		public Meter BP_BusHeight { get { return _vehicle.Height; } }
+		public Meter BP_BusHeight
+		{
+			get { return _vehicle.Height; }
+		}
 
 
 		// D7/C7 - ( M/2 )
@@ -114,8 +127,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				return BP_BusLength * BP_BusWidth * BP_BusHeight;
 			}
 		}
-
-		
 
 
 		// C17
@@ -175,10 +186,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			get {
 				// =ROUND(IF($D$5<IF(D6="low floor",C21,IF(D6="semi low floor",C22,C23))*D7,$D$5,IF(D6="low floor",C21,IF(D6="semi low floor",C22,C23))*D7),0)
 				var tmp = (BP_BusFloorType == FloorType.LowFloor
-					? BC_PassengerDensityLowFloor
-					: BP_BusFloorType == FloorType.SemiLowFloor
-						? BC_PassengerDensitySemiLowFloor
-						: BC_PassengerDensityRaisedFloor) * BP_BusFloorSurfaceArea;
+							? BC_PassengerDensityLowFloor
+							: BP_BusFloorType == FloorType.SemiLowFloor
+								? BC_PassengerDensitySemiLowFloor
+								: BC_PassengerDensityRaisedFloor) * BP_BusFloorSurfaceArea;
 				return Math.Round(BP_NumberOfPassengers < tmp ? BP_NumberOfPassengers : tmp.Value(), 0);
 			}
 		}
@@ -188,7 +199,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		{
 			get {
 				// =IF(D6="low floor",4,IF(D6="semi low floor",3.5,3))
-				return (BP_BusFloorType ==FloorType.LowFloor ? 4 : BP_BusFloorType == FloorType.SemiLowFloor ? 3.5 : 3).SI<WattPerKelvinSquareMeter>();
+				return (BP_BusFloorType == FloorType.LowFloor ? 4 : BP_BusFloorType == FloorType.SemiLowFloor ? 3.5 : 3)
+					.SI<WattPerKelvinSquareMeter>();
 			}
 		}
 
@@ -450,5 +462,39 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			AH_CoolantHeatTransferredToAirCabinHeater = 0.75;
 			AH_EngineWasteHeatkW = 0.SI<Watt>();
 		}
+
+		#region Implementation of ISSMInputs
+
+		public ISSMBusParameters BusParameters
+		{
+			get { return this; }
+		}
+
+		public ISSMBoundaryConditions BoundaryConditions
+		{
+			get { return this; }
+		}
+
+		public IEnvironmentalConditions EnvironmentalConditions
+		{
+			get { return this; }
+		}
+
+		public IACSystem ACSystem
+		{
+			get { return this; }
+		}
+
+		public IVentilation Ventilation
+		{
+			get { return this; }
+		}
+
+		public IAuxHeater AuxHeater
+		{
+			get { return this; }
+		}
+
+		#endregion
 	}
 }

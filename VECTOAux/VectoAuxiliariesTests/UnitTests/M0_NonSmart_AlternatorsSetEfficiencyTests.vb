@@ -30,7 +30,7 @@ Namespace UnitTests
             Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
 
             Dim ssm As SSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
-            CType(ssm.GenInputs, SSMGenInputs)._vehicle.Height = 0.SI(of Meter)
+            CType(ssm.SSMInputs, SSMInputs)._vehicle.Height = 0.SI(of Meter)
             ssm.Load(_SSMMAP)
 
             Return ssm

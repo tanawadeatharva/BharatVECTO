@@ -2,7 +2,7 @@
   "Header":  "AHSM", 
   "Body": {
     "SSMDisabled": false,
-    "GenInputs": {
+    "SSMInputs": {
       "BC_GFactor": 0.95,
       "BC_PassengerBoundaryTemperature": 12.0,
       "BC_HeatingBoundaryTemperature": 18.0,

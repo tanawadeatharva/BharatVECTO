@@ -55,12 +55,12 @@ Namespace UnitTests
 			Return (0.5 * (AverageUseableEngineWasteHeatKW.Value() * 0.835).SI(Unit.SI.Liter.Per.Hour).Value()).SI(of KilogramPerSecond)
 		End Function
 
-		Public Property GenInputs As ISSMGenInputs Implements ISSMTOOL.GenInputs
+		Public Property SSMInputs As ISSMInputs Implements ISSMTOOL.SSMInputs
 
 			Get
-				Return New SSMGenInputs()
+				Return New SSMInputs()
 			End Get
-			Set(value As ISSMGenInputs)
+			Set(value As ISSMInputs)
 			End Set
 		End Property
 

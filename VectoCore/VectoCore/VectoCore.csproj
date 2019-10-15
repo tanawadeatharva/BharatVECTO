@@ -290,7 +290,7 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\IBusDatabase.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\M01Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMCalculate.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMGenInputs.cs" />
+    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\IssmInputs.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMRun.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTechList.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTOOL.cs" />
@@ -324,7 +324,7 @@
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\IHVACConstants.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\IHVACSteadyStateModel.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMCalculate.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMGenInputs.cs" />
+    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMInputs.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMRun.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMTechList.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMTOOL.cs" />

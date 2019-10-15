@@ -190,6 +190,18 @@
     <Content Include="3rdParty\DocumentFormat.OpenXml.xml" />
     <Content Include="3rdParty\SpreadsheetLight.dll" />
     <Content Include="3rdParty\SpreadsheetLight.xml" />
+    <Content Include="TestFiles\testHVACSteadyStateModelBadHeaders.ahsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\testHVACSteadyStateModelBadValues.ahsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\testHVACSteadyStateModelGOODMAP.ahsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestFiles\testHVACSteadyStateModelInsufficientLines.ahsm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestFiles\testPneumaticActuationsMap_GOODMAP.apac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -245,18 +257,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\TestHvacMap - MissingHeader.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\testHVACSteadyStateModelGOODMAP.ahsm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\testHVACSteadyStateModelBadHeaders.ahsm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\testHVACSteadyStateModelBadValues.ahsm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\testHVACSteadyStateModelInsufficientLines.ahsm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestFiles\testBusDatabase.csv">

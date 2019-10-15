@@ -2,7 +2,7 @@
   "Header": "AHSM",
   "Body": {
     "SSMDisabled": false,
-    "GenInputs": {
+    "SSMInputs": {
       "BC_GFactor": 1.0,
       "BC_SolarClouding": 0.8,
       "BC_HeatPerPassengerIntoCabinW": 80.0,

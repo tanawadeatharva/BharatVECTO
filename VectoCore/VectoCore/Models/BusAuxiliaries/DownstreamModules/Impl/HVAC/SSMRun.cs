@@ -32,9 +32,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// C25 = BC_CoolingBoundary Temperature
 				// C24 = BC_HeatingBoundaryTemperature
 
-				var gen = ssmTOOL.GenInputs;
+				var gen = ssmTOOL.SSMInputs;
 
-				return gen.EC_EnviromentalTemperature > gen.BC_CoolingBoundaryTemperature ? 3 : gen.EC_EnviromentalTemperature < gen.BC_HeatingBoundaryTemperature ? 1 : 2;
+				return gen.EnvironmentalConditions.EC_EnviromentalTemperature > gen.BoundaryConditions.BC_CoolingBoundaryTemperature
+					? 3
+					: gen.EnvironmentalConditions.EC_EnviromentalTemperature < gen.BoundaryConditions.BC_HeatingBoundaryTemperature
+						? 1
+						: 2;
 			}
 		}
 		public Kelvin TCalc
@@ -47,17 +51,18 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// C43 = EC_Enviromental Temperature
 				// C39 = BC_FontAndRearWindowArea
 
-				var gen = ssmTOOL.GenInputs;
+				var gen = ssmTOOL.SSMInputs;
 				
 				if (runNumber == 1) {
-					return gen.BC_HeatingBoundaryTemperature;
+					return gen.BoundaryConditions.BC_HeatingBoundaryTemperature;
 				}
 
-				return gen.BP_BusFloorType == FloorType.LowFloor
-					? (gen.EC_EnviromentalTemperature - gen.BC_CoolingBoundaryTemperature) < gen.BC_MaxTemperatureDeltaForLowFloorBusses
-						? gen.BC_CoolingBoundaryTemperature
-						: gen.EC_EnviromentalTemperature - 3.SI<Kelvin>()
-					: gen.BC_CoolingBoundaryTemperature;
+				return gen.BusParameters.BP_BusFloorType == FloorType.LowFloor
+					? (gen.EnvironmentalConditions.EC_EnviromentalTemperature - gen.BoundaryConditions.BC_CoolingBoundaryTemperature) <
+					gen.BoundaryConditions.BC_MaxTemperatureDeltaForLowFloorBusses
+						? gen.BoundaryConditions.BC_CoolingBoundaryTemperature
+						: gen.EnvironmentalConditions.EC_EnviromentalTemperature - 3.SI<Kelvin>()
+					: gen.BoundaryConditions.BC_CoolingBoundaryTemperature;
 			}
 		}
 		public Kelvin TemperatureDelta
@@ -67,7 +72,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// C43 = EC_Enviromental Temperature
 				// F79/80 = Me.TCalc
 
-				var gen = ssmTOOL.GenInputs;
+				var gen = ssmTOOL.SSMInputs.EnvironmentalConditions;
 				return gen.EC_EnviromentalTemperature - TCalc;
 			}
 		}
@@ -82,9 +87,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// C8  = BP_BusSurfaceArea
 				// I78/I80 = Me.TemperatureDelta
 
-				var gen = ssmTOOL.GenInputs;
+				var gen = ssmTOOL.SSMInputs;
 
-				return TemperatureDelta * gen.BP_BusSurfaceArea * gen.BC_UValues;
+				return TemperatureDelta * gen.BusParameters.BP_BusSurfaceArea * gen.BoundaryConditions.BC_UValues;
 			}
 		}
 		public Watt WattsPerPass
@@ -102,9 +107,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// C17  = BC_Heat Per Passenger into cabin
 
 
-				var gen = ssmTOOL.GenInputs;
+				var gen = ssmTOOL.SSMInputs;
 
-				return Math.Min(gen.BP_NumberOfPassengers, gen.BC_CalculatedPassengerNumber) * gen.BC_HeatPerPassengerIntoCabinW;
+				return Math.Min(gen.BusParameters.BP_NumberOfPassengers, gen.BusParameters.BC_CalculatedPassengerNumber) *
+						gen.BoundaryConditions.BC_HeatPerPassengerIntoCabinW;
 			}
 		}
 		public Watt Solar
@@ -119,10 +125,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// C15 = BC_GFactor
 				// C16 = BC_SolarClouding
 
-				var gen = ssmTOOL.GenInputs;
+				var gen = ssmTOOL.SSMInputs;
 
 
-				return gen.EC_Solar * gen.BP_BusWindowSurface * gen.BC_GFactor * gen.BC_SolarClouding * 0.25;
+				return gen.EnvironmentalConditions.EC_Solar * gen.BusParameters.BP_BusWindowSurface *
+						gen.BoundaryConditions.BC_GFactor * gen.BoundaryConditions.BC_SolarClouding * 0.25;
 			}
 		}
 		public Watt TotalW
@@ -150,12 +157,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			get {
 				// =IF(AND(N79<0,N79<(C60*-1)),N79-(C60*-1),0)*1000
 
-				var gen = ssmTOOL.GenInputs;
+				var gen = ssmTOOL.SSMInputs.AuxHeater;
 
 				// Dim N79  as Double =  TotalKW
 				// Dim C60  As Double = gen.AH_EngineWasteHeatkW
 
-				return (TotalW < 0 && TotalW < (gen.AH_EngineWasteHeatkW * -1)) ? TotalW - (gen.AH_EngineWasteHeatkW * -1) : 0.SI<Watt>();
+				return (TotalW < 0 && TotalW < (gen.AH_EngineWasteHeatkW * -1))
+					? TotalW - (gen.AH_EngineWasteHeatkW * -1)
+					: 0.SI<Watt>();
 			}
 		}
 		public Watt TechListAmendedFuelW
@@ -163,7 +172,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			get {
 				// =IF(IF(AND((N79*(1-$J$89))<0,(N79*(1-$J$89))<(C60*-1)),(N79*(1-$J$89))-(C60*-1),0)*1000<0,IF(AND((N79*(1-$J$89))<0,(N79*(1-$J$89))<(C60*-1)),(N79*(1-$J$89))-(C60*-1),0)*1000,0)
 
-				var gen = ssmTOOL.GenInputs;
+				var gen = ssmTOOL.SSMInputs.AuxHeater;
 				var TLFFH = ssmTOOL.Calculate.TechListAdjustedHeatingW_FuelFiredHeating;
 				// Dim C60 As Double = gen.AH_EngineWasteHeatkW
 				// Dim N79 As Double = Me.TotalKW

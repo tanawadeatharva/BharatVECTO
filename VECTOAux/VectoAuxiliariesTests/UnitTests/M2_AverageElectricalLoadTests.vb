@@ -30,7 +30,7 @@ Namespace UnitTests
 			'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
 
 			Dim ssm As ISSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
-		    CType(ssm.GenInputs, SSMGenInputs)._vehicle.Height = 0.SI(of Meter)
+		    CType(ssm.SSMInputs, SSMInputs)._vehicle.Height = 0.SI(of Meter)
 
 			ssm.Load(_SSMMAP)
 

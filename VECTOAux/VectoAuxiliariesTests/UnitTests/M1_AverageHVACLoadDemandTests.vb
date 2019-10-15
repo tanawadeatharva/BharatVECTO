@@ -36,8 +36,8 @@ Namespace UnitTests
             alternatorMap = New AlternatorMap(_GOODMAP)
 			alternatorMap.Initialise()
 
-            CType(ssm.GenInputs, SSMGenInputs)._vehicle.Height = 0.SI(of Meter)
-            CType(ssm.GenInputs, SSMGenInputs)._vehicle.FloorType = FloorType.HighFloor
+            CType(ssm.SSMInputs, SSMInputs)._vehicle.Height = 0.SI(of Meter)
+            CType(ssm.SSMInputs, SSMInputs)._vehicle.FloorType = FloorType.HighFloor
 
 			ssm.Load(_SSMMAP)
             For Each entry As ITechListBenefitLine In ssm.TechList.TechLines

@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 		bool Delete(ITechListBenefitLine item, ref string feedback);
 		bool Modify(ITechListBenefitLine originalItem, ITechListBenefitLine modifiedItem, ref string feedback);
 
-		//void SetSSMGeneralInputs(ISSMGenInputs genInputs);
+		//void SetSSMGeneralInputs(ISSMInputs genInputs);
 
 		double HValueVariation { get; }
 		double VHValueVariation { get; }

@@ -3,7 +3,7 @@
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC {
 	public interface ISSMTOOL
 	{
-		ISSMGenInputs GenInputs { get; set; }
+		ISSMInputs SSMInputs { get; set; }
 		ISSMTechList TechList { get; set; }
 		ISSMCalculate Calculate { get; set; }
 		bool SSMDisabled { get; set; }

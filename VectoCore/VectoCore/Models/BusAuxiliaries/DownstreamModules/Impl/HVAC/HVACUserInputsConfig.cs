@@ -19,9 +19,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		// Constructor
 		public HVACUserInputsConfig(string ssmFilePath, string busDatabasePath, bool isDisabled)
 		{
-			this.SSMFilePath = ssmFilePath;
-			this.BusDatabasePath = busDatabasePath;
-			this.SSMDisabled = isDisabled;
+			SSMFilePath = ssmFilePath;
+			BusDatabasePath = busDatabasePath;
+			SSMDisabled = isDisabled;
 		}
 
 		public string SSMFilePath { get; set; }
