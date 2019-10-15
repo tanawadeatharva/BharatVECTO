@@ -18,11 +18,8 @@ Imports System.Drawing
 Imports VectoAuxiliaries.Hvac
 Imports System.IO
 Imports System.Linq
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries
-Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
-Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
-Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC

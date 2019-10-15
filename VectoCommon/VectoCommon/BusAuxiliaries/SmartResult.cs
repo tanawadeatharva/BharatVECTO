@@ -12,7 +12,7 @@
 using System;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public class SmartResult : IComparable<SmartResult>
 	{

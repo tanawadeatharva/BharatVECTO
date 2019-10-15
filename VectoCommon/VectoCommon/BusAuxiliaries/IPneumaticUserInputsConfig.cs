@@ -1,4 +1,4 @@
-﻿namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
+﻿namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IPneumaticUserInputsConfig
 	{

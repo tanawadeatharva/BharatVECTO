@@ -2,8 +2,6 @@
 Imports System.IO
 Imports System.Linq
 Imports System.Runtime.Remoting
-Imports TUGraz.VectoCore.BusAuxiliaries
-Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports VectoAuxiliaries

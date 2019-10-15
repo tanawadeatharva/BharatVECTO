@@ -11,7 +11,7 @@
 
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces {
+namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public interface IVectoInputs
 	{
 		/// <summary>

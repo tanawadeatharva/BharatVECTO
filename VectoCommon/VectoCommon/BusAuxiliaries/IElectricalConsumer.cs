@@ -9,11 +9,10 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
-using System;
 using System.ComponentModel;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IElectricalConsumer : INotifyPropertyChanged
 	{

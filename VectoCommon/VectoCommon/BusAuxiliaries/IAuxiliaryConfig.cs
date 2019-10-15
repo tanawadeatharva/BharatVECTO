@@ -9,12 +9,7 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
-using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
-using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
-using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
-using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem;
-
-namespace TUGraz.VectoCore.BusAuxiliaries {
+namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public interface IAuxiliaryConfig
 	{
 		// Vecto

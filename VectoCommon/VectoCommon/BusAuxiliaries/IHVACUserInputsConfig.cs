@@ -1,4 +1,4 @@
-﻿namespace TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+﻿namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IHVACUserInputsConfig
 	{

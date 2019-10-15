@@ -9,7 +9,7 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
-using TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
+using TUGraz.VectoCommon.BusAuxiliaries;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {

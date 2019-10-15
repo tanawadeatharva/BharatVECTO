@@ -12,8 +12,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.Legacy {
