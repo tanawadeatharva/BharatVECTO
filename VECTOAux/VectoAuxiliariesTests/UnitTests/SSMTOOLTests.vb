@@ -21,9 +21,11 @@ Namespace UnitTests
 
 			Dim src As SSMTOOL = DirectCast(source, SSMTOOL)
 
-			Dim newItem As ITechListBenefitLine = New TechListBenefitLine(src.GenInputs)
+			Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+		    newItem.BusFloorType = src.GenInputs.BP_BusFloorType
 
-			newItem.Units = "fraction"
+
+			'newItem.Units = "fraction"
 			newItem.Category = "Insulation"
 			newItem.BenefitName = "Benefit1"
 
@@ -43,10 +45,11 @@ Namespace UnitTests
 			newItem.ActiveVH = True
 			newItem.ActiveVV = True
 			newItem.ActiveVC = True
-			newItem.LineType = TechLineType.Normal
+			'newItem.LineType = TechLineType.Normal
 
 			Dim feedback As String = String.Empty
 
+            src.TechList.Clear()
 			Assert.IsTrue(src.TechList.Add(newItem, feedback))
 		End Sub
 
@@ -153,10 +156,11 @@ Namespace UnitTests
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim target As ISSMTechList = New SSMTechList(GOODTechList, gen)
+			Dim target As ISSMTechList = New SSMTechList(gen.BP_BusFloorType)
+            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechList)
 
 
-			Assert.IsTrue(target.Initialise())
+			Assert.IsTrue(target.TechLines.Count > 0)
 		End Sub
 
 		<Test()>
@@ -165,23 +169,25 @@ Namespace UnitTests
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim target As ISSMTechList = New SSMTechList(GOODTechListALLON, gen)
+			Dim target As ISSMTechList = New SSMTechList(gen.BP_BusFloorType)
+            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListALLON)
 
-			Dim v As Double = target.CValueVariation
-
-
-			Assert.IsTrue(target.Initialise())
+		    For Each entry As ITechListBenefitLine In target.TechLines
+		        entry.OnVehicle = True
+		    Next
+            
+			Assert.IsTrue(target.TechLines.Count > 0)
 			Assert.AreEqual(0.142, Math.Round(target.HValueVariation, 3))
 			Assert.AreEqual(0.006, Math.Round(target.VHValueVariation, 3))
 			Assert.AreEqual(0.006, Math.Round(target.VVValueVariation, 3))
 			Assert.AreEqual(0.006, Math.Round(target.VCValueVariation, 3))
 			Assert.AreEqual(0.259, Math.Round(target.CValueVariation, 3))
 
-			Assert.AreEqual(0.0, Math.Round(target.VHValueVariationKW, 3))
-			Assert.AreEqual(0.0, Math.Round(target.VVValueVariationKW, 3))
-			Assert.AreEqual(0.0, Math.Round(target.VCValueVariationKW, 3))
-			Assert.AreEqual(0.0, Math.Round(target.VCValueVariationKW, 3))
-			Assert.AreEqual(-0.2, Math.Round(target.CValueVariationKW, 3))
+			'Assert.AreEqual(0.0, Math.Round(target.VHValueVariationKW, 3))
+			'Assert.AreEqual(0.0, Math.Round(target.VVValueVariationKW, 3))
+			'Assert.AreEqual(0.0, Math.Round(target.VCValueVariationKW, 3))
+			'Assert.AreEqual(0.0, Math.Round(target.VCValueVariationKW, 3))
+			'Assert.AreEqual(-0.2, Math.Round(target.CValueVariationKW, 3))
 		End Sub
 
 		'List Management Methods
@@ -191,9 +197,10 @@ Namespace UnitTests
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
+			Dim target As ISSMTechList = New SSMTechList(gen.BP_BusFloorType)
+            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST)
 
-			Assert.IsTrue(target.Initialise())
+			'Assert.IsTrue(target.Initialise())
 
 			Assert.IsTrue(target.TechLines.Count = 0)
 		End Sub
@@ -204,11 +211,13 @@ Namespace UnitTests
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
+			Dim target As ISSMTechList = New SSMTechList(gen.BP_BusFloorType)
+            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST)
 
-			Dim newItem As ITechListBenefitLine = New TechListBenefitLine(gen)
+			Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+            newItem.BusFloorType = gen.BP_BusFloorType
 
-			newItem.Units = "fraction"
+			'newItem.Units = "fraction"
 			newItem.Category = "Insulation"
 			newItem.BenefitName = "Benefit1"
 
@@ -228,7 +237,7 @@ Namespace UnitTests
 			newItem.ActiveVH = True
 			newItem.ActiveVV = True
 			newItem.ActiveVC = True
-			newItem.LineType = TechLineType.Normal
+			'newItem.LineType = TechLineType.Normal
 
 			Dim feedback As String = String.Empty
 
@@ -244,11 +253,13 @@ Namespace UnitTests
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
+			Dim target As ISSMTechList = New SSMTechList(gen.BP_BusFloorType)
+            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST)
 
-			Dim newItem As ITechListBenefitLine = New TechListBenefitLine(gen)
+			Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+		    newItem.BusFloorType = gen.BP_BusFloorType
 
-			newItem.Units = "fraction"
+			'newItem.Units = "fraction"
 			newItem.Category = "Insulation"
 			newItem.BenefitName = "Benefit1"
 
@@ -268,7 +279,7 @@ Namespace UnitTests
 			newItem.ActiveVH = True
 			newItem.ActiveVV = True
 			newItem.ActiveVC = True
-			newItem.LineType = TechLineType.Normal
+			'newItem.LineType = TechLineType.Normal
 
 			Dim feedback As String = String.Empty
 
@@ -284,11 +295,13 @@ Namespace UnitTests
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
+			Dim target As ISSMTechList = New SSMTechList( gen.BP_BusFloorType)
+		    target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST)
 
-			Dim newItem As ITechListBenefitLine = New TechListBenefitLine(gen)
+			Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+		    newItem.BusFloorType = gen.BP_BusFloorType
 
-			newItem.Units = "fraction"
+			'newItem.Units = "fraction"
 			newItem.Category = "Insulation"
 			newItem.BenefitName = "Benefit1"
 
@@ -308,7 +321,7 @@ Namespace UnitTests
 			newItem.ActiveVH = True
 			newItem.ActiveVV = True
 			newItem.ActiveVC = True
-			newItem.LineType = TechLineType.Normal
+			'newItem.LineType = TechLineType.Normal
 
 			Dim feedback As String = String.Empty
 
@@ -324,11 +337,13 @@ Namespace UnitTests
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
+			Dim target As ISSMTechList = New SSMTechList( gen.BP_BusFloorType)
+		    target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST)
 
-			Dim newItem As ITechListBenefitLine = New TechListBenefitLine(gen)
+			Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+		    newItem.BusFloorType = gen.BP_BusFloorType
 
-			newItem.Units = "fraction"
+			'newItem.Units = "fraction"
 			newItem.Category = "Insulation"
 			newItem.BenefitName = "Benefit1"
 
@@ -348,7 +363,7 @@ Namespace UnitTests
 			newItem.ActiveVH = True
 			newItem.ActiveVV = True
 			newItem.ActiveVC = True
-			newItem.LineType = TechLineType.Normal
+			'newItem.LineType = TechLineType.Normal
 
 			Dim feedback As String = String.Empty
 
@@ -366,11 +381,13 @@ Namespace UnitTests
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
+			Dim target As ISSMTechList = New SSMTechList( gen.BP_BusFloorType)
+		    target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST)
 
-			Dim newItem As ITechListBenefitLine = New TechListBenefitLine(gen)
+			Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+		    newItem.BusFloorType = gen.BP_BusFloorType
 
-			newItem.Units = "fraction"
+			'newItem.Units = "fraction"
 			newItem.Category = "Insulation"
 			newItem.BenefitName = "Benefit1"
 
@@ -390,7 +407,7 @@ Namespace UnitTests
 			newItem.ActiveVH = True
 			newItem.ActiveVV = True
 			newItem.ActiveVC = True
-			newItem.LineType = TechLineType.Normal
+			'newItem.LineType = TechLineType.Normal
 
 			Dim feedback As String = String.Empty
 
@@ -406,11 +423,13 @@ Namespace UnitTests
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim target As ISSMTechList = New SSMTechList(GOODTechListEMPTYLIST, gen)
+			Dim target As ISSMTechList = New SSMTechList( gen.BP_BusFloorType)
+		    target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST)
 
-			Dim newItem As ITechListBenefitLine = New TechListBenefitLine(gen)
+			Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+		    newItem.BusFloorType = gen.BP_BusFloorType
 
-			newItem.Units = "fraction"
+			'newItem.Units = "fraction"
 			newItem.Category = "Insulation"
 			newItem.BenefitName = "Benefit1"
 
@@ -430,7 +449,7 @@ Namespace UnitTests
 			newItem.ActiveVH = True
 			newItem.ActiveVV = True
 			newItem.ActiveVC = True
-			newItem.LineType = TechLineType.Normal
+			'newItem.LineType = TechLineType.Normal
 
 			Dim feedback As String = String.Empty
 
@@ -443,7 +462,8 @@ Namespace UnitTests
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim ttl As ITechListBenefitLine = New TechListBenefitLine(gen)
+			Dim ttl As ITechListBenefitLine = New TechListBenefitLine()
+		    ttl.BusFloorType = gen.BP_BusFloorType
 
 			Assert.IsNotNull(ttl)
 		End Sub
@@ -453,19 +473,23 @@ Namespace UnitTests
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim ttl1 As ITechListBenefitLine = New TechListBenefitLine(gen)
-			Dim ttl2 As ITechListBenefitLine = New TechListBenefitLine(gen)
+			Dim ttl1 As ITechListBenefitLine = New TechListBenefitLine()
+		    ttl1.BusFloorType = gen.BP_BusFloorType
+
+			Dim ttl2 As ITechListBenefitLine = New TechListBenefitLine()
+		    ttl2.BusFloorType = gen.BP_BusFloorType
 
 			Assert.IsTrue(ttl1.IsEqualTo(ttl2))
 		End Sub
 
+        '<TestCase("Units")> _
+        '<TestCase("LineType")> _
 		<Test()> _
 		<TestCase("Category")> _
 		<TestCase("BenefitName")> _
 		<TestCase("ActiveVC")> _
 		<TestCase("ActiveVH")> _
 		<TestCase("ActiveVV")> _
-		<TestCase("LineType")> _
 		<TestCase("LowFloorC")> _
 		<TestCase("LowFloorV")> _
 		<TestCase("LowFloorH")> _
@@ -475,14 +499,16 @@ Namespace UnitTests
 		<TestCase("RaisedFloorC")> _
 		<TestCase("RaisedFloorH")> _
 		<TestCase("RaisedFloorV")> _
-		<TestCase("Units")> _
 		<TestCase("OnVehicle")>
 		Public Sub TechBenefitLineCompareAsUnequal(prop As String)
 
 			Dim gen As ISSMGenInputs = New SSMGenInputs()
 
-			Dim ttl1 As ITechListBenefitLine = New TechListBenefitLine(gen)
-			Dim ttl2 As ITechListBenefitLine = New TechListBenefitLine(gen)
+			Dim ttl1 As ITechListBenefitLine = New TechListBenefitLine()
+		    ttl1.BusFloorType = gen.BP_BusFloorType
+
+			Dim ttl2 As ITechListBenefitLine = New TechListBenefitLine()
+		    ttl2.BusFloorType = gen.BP_BusFloorType
 
 			Select Case prop
 
@@ -497,8 +523,8 @@ Namespace UnitTests
 					ttl2.ActiveVH = True
 				Case "ActiveVV"
 					ttl2.ActiveVV = True
-				Case "LineType"
-					ttl2.LineType = TechLineType.HVCActiveSelection
+				'Case "LineType"
+				'	ttl2.LineType = TechLineType.HVCActiveSelection
 				Case "LowFloorC"
 					ttl2.LowFloorC = 1
 				Case "LowFloorV"
@@ -517,8 +543,8 @@ Namespace UnitTests
 					ttl2.RaisedFloorH = 1
 				Case "RaisedFloorV"
 					ttl2.RaisedFloorV = 1
-				Case "Units"
-					ttl2.Units = "NONE"
+				'Case "Units"
+				'	ttl2.Units = "NONE"
 				Case "OnVehicle"
 					ttl2.OnVehicle = True
 

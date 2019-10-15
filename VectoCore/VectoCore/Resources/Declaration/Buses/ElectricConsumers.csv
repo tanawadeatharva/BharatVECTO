@@ -1,0 +1,21 @@
+﻿Category                    , Consumer                                                , Base Vehicle , Nominal Amps , PhaseIdle/TractionOn , Num in Vehicle , Info
+Veh Electronics & Engine    , Controllers Valves etc.                                 , 1            , 25.0         , 1.0                  , 1              ,
+Doors                       , Doors per vehicle                                       , 0            , 3.0          , 0.096339             , 3              ,
+Vehicle basic equipment     , Radio City                                              , 0            , 2.0          , 0.8                  , 1              ,
+Vehicle basic equipment     , Radio Intercity                                         , 0            , 5.0          , 0.8                  , 0              ,
+Vehicle basic equipment     , Radio/Audio Tourism                                     , 0            , 9.0          , 0.8                  , 0              ,
+Vehicle basic equipment     , Fridge                                                  , 0            , 4.0          , 0.5                  , 0              ,
+Vehicle basic equipment     , Kitchen Standard                                        , 0            , 67.0         , 0.05                 , 0              ,
+Vehicle basic equipment     , Interior lights City/ Intercity + doorlights            , 0            , 1.0          , 0.7                  , 12             , 1/m vehicle length
+Vehicle basic equipment     , LED Interior lights ceiling city/Intercity + doorlights , 0            , 0.6          , 0.7                  , 0              , 1/m vehicle length
+Vehicle basic equipment     , Interior lights Tourism + reading                       , 0            , 1.1          , 0.7                  , 0              , 1/m vehicle length
+Vehicle basic equipment     , LED Interior lights ceiling Tourism + reading           , 0            , 0.66         , 0.7                  , 0              , 1/m vehicle length
+Customer Specific Equipment , External Displays Font/Side/Rear                        , 0            , 2.65         , 1.0                  , 4              ,
+Customer Specific Equipment , Internal display per unit                               , 0            , 1.06         , 1.0                  , 1              , (front side rear)
+Customer Specific Equipment , CityBus Ref EBSF Table4 Devices ITS No Displays         , 0            , 9.3          , 1.0                  , 1              ,
+Lights                      , Exterior Lights BULB                                    , 0            , 7.4          , 1.0                  , 1              ,
+Lights                      , Day running lights LED bonus                            , 0            , -0.723       , 1.0                  , 1              ,
+# Lights                    , Antifog rear lights LED bonus                           , 0            , -0.17        , 1.0                  , 1              , @quam: not mentioned input parameters
+Lights                      , Position lights LED bonus                               , 0            , -1.2         , 1.0                  , 1              ,
+Lights                      , Direction lights LED bonus                              , 0            , -0.3         , 1.0                  , 1              ,
+Lights                      , Brake Lights LED bonus                                  , 0            , -1.2         , 1.0                  , 1              ,

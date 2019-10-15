@@ -10,6 +10,7 @@ Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.Models.Declaration
 
 
 Namespace UnitTests
@@ -36,8 +37,12 @@ Namespace UnitTests
 			alternatorMap.Initialise()
 
             CType(ssm.GenInputs, SSMGenInputs)._vehicle.Height = 0.SI(of Meter)
+            CType(ssm.GenInputs, SSMGenInputs)._vehicle.FloorType = FloorType.HighFloor
 
 			ssm.Load(_SSMMAP)
+            For Each entry As ITechListBenefitLine In ssm.TechList.TechLines
+                entry.OnVehicle = True
+            Next
 
 			m0 = New M00Impl(New ElectricalConsumerList(powernetVoltage, 0.096, True),
 														alternatorMap, powernetVoltage, signals, ssm)
@@ -46,6 +51,10 @@ Namespace UnitTests
 		Private Function GETM1Instance() As IM1_AverageHVACLoadDemand
 
 			ssm.Load(_SSMMAP)
+
+		    For Each entry As ITechListBenefitLine In ssm.TechList.TechLines
+		        entry.OnVehicle = true
+            next
 
 			Return New M01Impl(m0, alternatorGearEfficiency,
 												compressorGrearEfficiency,

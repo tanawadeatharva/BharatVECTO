@@ -261,6 +261,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="InputData\Reader\ComponentData\HVACTechBenefitsReader.cs" />
     <Compile Include="Models\BusAuxiliaries\AdvancedAuxiliaries.cs" />
     <Compile Include="Models\BusAuxiliaries\AuxiliaryConfig.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\AbstractModule.cs" />
@@ -798,6 +799,8 @@
     <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.1.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\Buses\ElectricConsumers.csv" />
+    <EmbeddedResource Include="Resources\Declaration\Buses\HVAC_TechList.csv" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>
@@ -829,6 +832,7 @@
       <Name>VectoHashing</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

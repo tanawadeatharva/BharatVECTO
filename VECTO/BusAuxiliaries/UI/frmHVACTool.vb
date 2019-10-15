@@ -19,7 +19,7 @@ Public Class frmHVACTool
 	Private ssmTOOL As SSMTOOL
 	Private originalssmTOOL As SSMTOOL
 	Private TabColors As Dictionary(Of TabPage, Color) = New Dictionary(Of TabPage, Color)()
-	Private editTechLine As ITechListBenefitLine = New TechListBenefitLine(Nothing)
+	Private editTechLine As ITechListBenefitLine = New TechListBenefitLine()
 	Private gvTechListBinding As BindingList(Of ITechListBenefitLine)
 	Private DefaultCategories As String() = {"Cooling", "Heating", "Insulation", "Ventiliation"}
 	Private vectoFile As String = String.Empty
@@ -1037,15 +1037,6 @@ Public Class frmHVACTool
 
 		editTechLine = ssmTOOL.TechList.TechLines.First(Function(f) f.BenefitName = benefitName AndAlso f.Category = category)
 
-		If editTechLine.Units.ToLower = "kw" Then
-
-			ClearEditPanel()
-			MessageBox.Show("KW Unit types not supported, any KW Units in list are for test purposes only")
-			Return
-
-		End If
-
-
 		FillTechLineEditPanel(row)
 
 		UpdateButtonText()
@@ -1082,8 +1073,7 @@ Public Class frmHVACTool
 				Case "OnVehicle"
 					Dim onVehicle As Boolean = Not CType(gvTechBenefitLines.Rows(e.RowIndex).Cells(e.ColumnIndex).Value, Boolean)
 
-					Dim fi As ITechListBenefitLine =
-							ssmTOOL.TechList.TechLines.Find(Function(f) (f.Category = category) AndAlso f.BenefitName = benefit)
+					Dim fi As ITechListBenefitLine = ssmTOOL.TechList.Find(category, benefit)
 					fi.OnVehicle = onVehicle
 					' ssmTOOL.TechList.TechLines.First( Function(x)  x.BenefitName= benefit AndAlso x.Category=category).OnVehicle=onVehicle  
 					' BindGrid 
@@ -1347,8 +1337,7 @@ Public Class frmHVACTool
 		txtIndex.Text = index.ToString()
 		cboCategory.Text = techline.Category
 		txtBenefitName.Text = techline.BenefitName
-		cboUnits.Text = techline.Units
-		cboLineType.Text = If(techline.LineType = 0, "Normal", "ActiveVentilation")
+		'cboLineType.Text = If(techline.LineType = 0, "Normal", "ActiveVentilation")
 		txtLowFloorH.Text = String.Format(CultureInfo.InvariantCulture, "{0}", techline.LowFloorH)
 		txtLowFloorV.Text = String.Format(CultureInfo.InvariantCulture, "{0}", techline.LowFloorV)
 		txtLowFloorC.Text = String.Format(CultureInfo.InvariantCulture, "{0}", techline.LowFloorC)
@@ -1366,13 +1355,12 @@ Public Class frmHVACTool
 
 	Private Function GetTechLineFromPanel() As ITechListBenefitLine
 
-		Dim tl As ITechListBenefitLine = New TechListBenefitLine(ssmTOOL.GenInputs)
-
+		Dim tl As ITechListBenefitLine = New TechListBenefitLine()
+	    tl.BusFloorType = ssmTOOL.GenInputs.BP_BusFloorType
 
 		tl.Category = StrConv(cboCategory.Text, vbProperCase)
 		tl.BenefitName = txtBenefitName.Text
-		tl.Units = cboUnits.Text
-		tl.LineType = If(cboLineType.Text = "Normal", TechLineType.Normal, TechLineType.HVCActiveSelection)
+		'tl.LineType = If(cboLineType.Text = "Normal", TechLineType.Normal, TechLineType.HVCActiveSelection)
 		tl.LowFloorH = Double.Parse(txtLowFloorH.Text, CultureInfo.InvariantCulture)
 		tl.LowFloorV = Double.Parse(txtLowFloorV.Text, CultureInfo.InvariantCulture)
 		tl.LowFloorC = Double.Parse(txtLowFloorC.Text, CultureInfo.InvariantCulture)

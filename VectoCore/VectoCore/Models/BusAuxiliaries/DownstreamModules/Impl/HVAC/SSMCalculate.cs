@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 				// If batch mode is disabled use the EC_EnviromentalTemperature and EC_Solar variables. 
 				// Else if batch is enable calculate the MechanicalWBaseAdjusted for each input in the AENV file and then calculate the weighted average
-				if (!gen.EC_EnviromentalConditions_BatchEnabled)
+			if (!gen.EC_EnviromentalConditions_BatchEnabled)
 					MechanicalWBaseAdjustedAverage = CalculateMechanicalWBaseAdjusted(gen, tl, gen.EC_EnviromentalTemperature, gen.EC_Solar, 1);
 				else {
 					foreach (var envCondition in gen.EC_EnvironmentalConditionsMap.GetEnvironmentalConditions())
@@ -537,25 +537,21 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var firstValuePos = nameLength + catLength + unitLength + 2;
 			string cat;
 			string name;
-			string units;
-
+			
 			sb.AppendLine(string.Format(new string(' ', firstValuePos) + "H{0}VH{0}VV{0}VC{0}C{0}", vbTab));
 
 
 			foreach (var line in ssmTOOL.TechList.TechLines) {
 				{
 					var withBlock = line;
-					int extraNameSpaces, extraCatSpaces, extraUnitSpaces;
 
-					extraNameSpaces = nameLength - withBlock.BenefitName.Length;
-					extraCatSpaces = catLength - withBlock.Category.Length;
-					extraUnitSpaces = unitLength - withBlock.Units.Length;
+					var extraNameSpaces = nameLength - withBlock.BenefitName.Length;
+					var extraCatSpaces = catLength - withBlock.Category.Length;
 
 					cat = line.Category.Substring(0, Math.Min(line.Category.Length, catLength)) + new string(' ', extraCatSpaces < 0 ? 0 : extraCatSpaces).Replace(" ", ".");
 					name = line.BenefitName.Substring(0, Math.Min(line.BenefitName.Length, nameLength)) + new string(' ', extraNameSpaces < 0 ? 0 : extraNameSpaces).Replace(" ", ".");
-					units = line.Units.Substring(0, Math.Min(line.Units.Length, unitLength)) + new string(' ', extraUnitSpaces < 0 ? 0 : extraUnitSpaces).Replace(" ", ".");
 
-					sb.AppendLine(string.Format(units + cat + name + " {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.H.ToString("0.000"), withBlock.VH.ToString("0.000"), withBlock.VV.ToString("0.000"), withBlock.VC.ToString("0.000"), withBlock.C.ToString("0.000")));
+					sb.AppendLine(string.Format( cat + name + " {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.H.ToString("0.000"), withBlock.VH.ToString("0.000"), withBlock.VV.ToString("0.000"), withBlock.VC.ToString("0.000"), withBlock.C.ToString("0.000")));
 				}
 			}
 
@@ -567,7 +563,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				var withBlock = ssmTOOL.TechList;
 				sb.AppendLine(vbTab + vbTab + "H" + vbTab + "VH" + vbTab + "VV" + vbTab + "VC" + vbTab + "C");
 				sb.AppendLine(string.Format("Base Var %   {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.HValueVariation.ToString("0.000"), withBlock.VHValueVariation.ToString("0.000"), withBlock.VVValueVariation.ToString("0.000"), withBlock.VCValueVariation.ToString("0.000"), withBlock.CValueVariation.ToString("0.000")));
-				sb.AppendLine(string.Format("Base Var KW  {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.HValueVariationKW.ToString("0.000"), withBlock.VHValueVariationKW.ToString("0.000"), withBlock.VVValueVariationKW.ToString("0.000"), withBlock.VCValueVariationKW.ToString("0.000"), withBlock.CValueVariationKW.ToString("0.000")));
 			}
 
 
@@ -695,7 +690,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var C54 = genInputs.AC_CompressorCapacitykW;
 			var C59 = genInputs.AC_COP;
 
-			var MechanicalWBaseAdjusted = (VectoMath.Min((F94 * (1 - F100)), C54 * 1000) / C59);
+			var MechanicalWBaseAdjusted = (VectoMath.Min((F94 * (1 - F100)), C54) / C59);
 
 			return MechanicalWBaseAdjusted * Weight;
 		}

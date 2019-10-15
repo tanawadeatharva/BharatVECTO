@@ -4,14 +4,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 {
 	public interface ISSMTechList
 	{
-		List<ITechListBenefitLine> TechLines { get; set; }
+		IReadOnlyList<ITechListBenefitLine> TechLines { get; set; }
 
 		void Clear();
+		ITechListBenefitLine Find(string category, string benefitName);
 		bool Add(ITechListBenefitLine item, ref string feedback);
 		bool Delete(ITechListBenefitLine item, ref string feedback);
 		bool Modify(ITechListBenefitLine originalItem, ITechListBenefitLine modifiedItem, ref string feedback);
 
-		void SetSSMGeneralInputs(ISSMGenInputs genInputs);
+		//void SetSSMGeneralInputs(ISSMGenInputs genInputs);
 
 		double HValueVariation { get; }
 		double VHValueVariation { get; }
@@ -19,14 +20,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 		double VCValueVariation { get; }
 		double CValueVariation { get; }
 
-		double HValueVariationKW { get; }
-		double VHValueVariationKW { get; }
-		double VVValueVariationKW { get; }
-		double VCValueVariationKW { get; }
-		double CValueVariationKW { get; }
+		//double HValueVariationKW { get; }
+		//double VHValueVariationKW { get; }
+		//double VVValueVariationKW { get; }
+		//double VCValueVariationKW { get; }
+		//double CValueVariationKW { get; }
 
 
-		bool Initialise();
-		bool Initialise(string filePath);
+		//bool Initialise();
+		//bool Initialise(string filePath);
 	}
 }

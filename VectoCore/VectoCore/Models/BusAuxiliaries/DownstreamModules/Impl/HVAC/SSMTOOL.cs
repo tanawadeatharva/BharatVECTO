@@ -8,8 +8,11 @@ using Newtonsoft.Json.Linq;
 using Omu.ValueInjecter;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
@@ -18,7 +21,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 	// Version of which appears on the form title.
 	public class SSMTOOL : ISSMTOOL
 	{
-		private string filePath;
+		private string FilePath;
 		public ISSMGenInputs GenInputs { get; set; }
 		public ISSMTechList TechList { get; set; }
 		public ISSMCalculate Calculate { get; set; }
@@ -84,12 +87,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		// Constructors
 		public SSMTOOL(string filePath, HVACConstants hvacConstants, bool isDisabled = false, bool useTestValues = false)
 		{
-			this.filePath = filePath;
-			this.SSMDisabled = isDisabled;
-			this.HVACConstants = hvacConstants;
+			FilePath = filePath;
+			SSMDisabled = isDisabled;
+			HVACConstants = hvacConstants;
 
 			GenInputs = new SSMGenInputs(Path.GetDirectoryName(filePath));
-			TechList = new SSMTechList(filePath, GenInputs, useTestValues);
+			TechList = new SSMTechList(GenInputs.BP_BusFloorType);
+			TechList.TechLines = HVACTechBenefitsReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".Buses." +
+																								"HVAC_TechList.csv"));
 
 			Calculate = new SSMCalculate(this);
 		}
@@ -122,7 +127,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			try {
 				//var output = JsonConvert.SerializeObject(this, Formatting.Indented, settings);
 
-				//File.WriteAllText(filePath, output);
+				//File.WriteAllText(FilePath, output);
 
 				var body = new Dictionary<string, object>();
 				body["SSMDisabled"] = SSMDisabled;
@@ -182,7 +187,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			foreach (var line in TechList.TechLines) {
 				var tmp = new Dictionary<string, object>();
-				tmp["Units"] = line.Units;
+				//tmp["Units"] = line.Units;
 				tmp["Category"] = line.Category;
 				tmp["BenefitName"] = line.BenefitName;
 				tmp["LowFloorH"] = line.LowFloorH;
@@ -198,7 +203,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				tmp["ActiveVH"] = line.ActiveVH;
 				tmp["ActiveVV"] = line.ActiveVV;
 				tmp["ActiveVC"] = line.ActiveVC;
-				tmp["LineType"] = line.LineType;
+				//tmp["LineType"] = line.LineType;
 				retVal.Add(tmp);
 			}
 
@@ -208,35 +213,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public bool Load(string filePath)
 		{
 			var returnValue = true;
-			//var settings = new JsonSerializerSettings();
-			//SSMTOOL tmpAux; // = New SSMTOOL(filePath, HVACConstants)
-
-			//settings.TypeNameHandling = TypeNameHandling.Objects;
-
-			// JSON METHOD
+			
 			try {
 				var json = JSONInputDataFactory.ReadFile(filePath);
 				var body = (JObject)json["Body"];
 
 				SSMDisabled = body.GetEx<bool>("SSMDisabled");
 				LoadGenInputs((JObject)body["GenInputs"]);
-				LoadTechList((JArray)body["TechList"]);
-				
-
-				//var output = File.ReadAllText(filePath);
-
-
-				//tmpAux = JsonConvert.DeserializeObject<SSMTOOL>(output, settings);
-
-				//tmpAux.TechList.SetSSMGeneralInputs(tmpAux.GenInputs);
-
-				//foreach (TechListBenefitLine tll in tmpAux.TechList.TechLines)
-
-				//	tll.inputSheet = tmpAux.GenInputs;
-
-
-				//// This is where we Assume values of loaded( Deserialized ) object.
-				//Clone(tmpAux);
 			} catch (Exception ) {
 
 				// Nothing to do except return false.
@@ -278,20 +261,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			GenInputs.AH_CoolantHeatTransferredToAirCabinHeater = genInput.GetEx<double>("AH_CoolantHeatTransferredToAirCabinHeater");
 		}
 
-		private void LoadTechList(JArray tech)
-		{
-			TechList.TechLines.Clear();
-			foreach (var line in tech) {
-				//var line = entry.Value ;
-				var tmp = new TechListBenefitLine(GenInputs, line.GetEx<string>("Units"), line.GetEx<string>("Category"), line.GetEx<string>("BenefitName"),
-					line.GetEx<double>("LowFloorH"), line.GetEx<double>("LowFloorV"), line.GetEx<double>("LowFloorC"),
-					line.GetEx<double>("SemiLowFloorH"), line.GetEx<double>("SemiLowFloorV"), line.GetEx<double>("SemiLowFloorC"),
-					line.GetEx<double>("RaisedFloorH"), line.GetEx<double>("RaisedFloorV"), line.GetEx<double>("RaisedFloorC"),
-					line.GetEx<bool>("OnVehicle"), line.GetEx<string>("LineType").ParseEnum<TechLineType>(), line.GetEx<bool>("ActiveVH"), line.GetEx<bool>("ActiveVV"), line.GetEx<bool>("ActiveVC"));
-				TechList.TechLines.Add(tmp);
-			}
-		}
-
 		// Comparison
 		public bool IsEqualTo(ISSMTOOL source)
 		{
@@ -308,13 +277,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			var returnValue = true;
 
-			var properties = this.GenInputs.GetType().GetProperties();
+			var properties = GenInputs.GetType().GetProperties();
 
 			foreach (var prop in properties) {
 
 				// If Not prop.GetAccessors.IsReadOnly Then
 				if (prop.CanWrite) {
-					if (!prop.GetValue(this.GenInputs, null/* TODO Change to default(_) if this is not a reference type */).Equals(prop.GetValue(src.GenInputs, null/* TODO Change to default(_) if this is not a reference type */)))
+					if (!prop.GetValue(GenInputs, null/* TODO Change to default(_) if this is not a reference type */).Equals(prop.GetValue(src.GenInputs, null/* TODO Change to default(_) if this is not a reference type */)))
 						returnValue = false;
 				}
 			}
@@ -327,10 +296,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var src = (SSMTOOL)source;
 
 			// Equal numbers of lines check
-			if (this.TechList.TechLines.Count != src.TechList.TechLines.Count)
+			if (TechList.TechLines.Count != src.TechList.TechLines.Count)
 				return false;
 
-			foreach (var tl in this.TechList.TechLines.OrderBy(o => o.Category).ThenBy(n => n.BenefitName)) {
+			foreach (var tl in TechList.TechLines.OrderBy(o => o.Category).ThenBy(n => n.BenefitName)) {
 
 				// First Check line exists in other
 				if (src.TechList.TechLines.Where(w => w.BenefitName == tl.BenefitName && w.Category == tl.Category).Count() != 1)

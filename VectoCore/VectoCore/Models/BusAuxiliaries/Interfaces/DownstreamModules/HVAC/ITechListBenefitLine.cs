@@ -1,7 +1,10 @@
-﻿namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC {
+﻿using TUGraz.VectoCore.Models.Declaration;
+
+namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC {
 	public interface ITechListBenefitLine
 	{
-		string Units { get; set; }
+		FloorType BusFloorType { set; }
+
 		string Category { get; set; }
 		string BenefitName { get; set; }
 
@@ -21,7 +24,6 @@
 		bool ActiveVH { get; set; }
 		bool ActiveVV { get; set; }
 		bool ActiveVC { get; set; }
-		TechLineType LineType { get; set; }
 
 		double H { get; }
 		double VH { get; }

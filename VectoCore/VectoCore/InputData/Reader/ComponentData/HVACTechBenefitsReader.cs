@@ -1,0 +1,89 @@
+﻿using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
+using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.InputData.Reader.ComponentData
+{
+	public class HVACTechBenefitsReader
+	{
+		protected static string[] headerCols = new[]
+		{
+			Fields.Category, Fields.BenefitName,
+			Fields.LowFloorC, Fields.LowFloorH, Fields.LowFloorV,
+			Fields.SemiLowFloorC, Fields.SemiLowFloorH, Fields.SemiLowFloorV,
+			Fields.RaisedFloorC, Fields.RaisedFloorH, Fields.RaisedFloorV,
+			Fields.ActiveVC, Fields.ActiveVH, Fields.ActiveVV
+		};
+
+		public static List<ITechListBenefitLine> ReadFromFile(string fileName)
+		{
+			return Create(VectoCSVFile.Read(fileName));
+		}
+
+		public static List<ITechListBenefitLine> ReadFromStream(Stream str)
+		{
+			return Create(VectoCSVFile.ReadStream(str));
+		}
+
+		public static List<ITechListBenefitLine> Create(DataTable data)
+		{
+			if (!HeaderIsValid(data.Columns)) {
+				throw new VectoException("invalid header for techlist file. expected: {0} got: {1}",
+					string.Join(", ", headerCols), string.Join(", ",  data.Columns)
+					);
+			}
+
+			var retVal = new List<ITechListBenefitLine>();
+			foreach (DataRow row in data.Rows) {
+				retVal.Add(new TechListBenefitLine()
+				{
+					Category = row.Field<string>(Fields.Category),
+					BenefitName = row.Field<string>(Fields.BenefitName),
+					LowFloorH = row.Field<string>(Fields.LowFloorH).ToDouble(),
+					LowFloorC = row.Field<string>(Fields.LowFloorC).ToDouble(),
+					LowFloorV = row.Field<string>(Fields.LowFloorV).ToDouble(),
+					SemiLowFloorH = row.Field<string>(Fields.SemiLowFloorH).ToDouble(),
+					SemiLowFloorC = row.Field<string>(Fields.SemiLowFloorC).ToDouble(),
+					SemiLowFloorV = row.Field<string>(Fields.SemiLowFloorV).ToDouble(),
+					RaisedFloorH = row.Field<string>(Fields.RaisedFloorH).ToDouble(),
+					RaisedFloorC = row.Field<string>(Fields.RaisedFloorC).ToDouble(),
+					RaisedFloorV = row.Field<string>(Fields.RaisedFloorV).ToDouble(),
+					ActiveVH = row.Field<string>(Fields.ActiveVH).ToBoolean(),
+					ActiveVV = row.Field<string>(Fields.ActiveVV).ToBoolean(),
+					ActiveVC = row.Field<string>(Fields.ActiveVC).ToBoolean(),
+				});
+			}
+
+			return retVal;
+		}
+
+		protected static bool HeaderIsValid(DataColumnCollection columns)
+		{
+			return headerCols.All(h => columns.Contains(h));
+		}
+
+		public class Fields
+		{
+			public const string Category = "Category";
+			public const string BenefitName = "BenefitName";
+			public const string LowFloorH = "LowFloorH";
+			public const string LowFloorC = "LowFloorC";
+			public const string LowFloorV = "LowFloorV";
+			public const string SemiLowFloorH = "SemiLowFloorH";
+			public const string SemiLowFloorC = "SemiLowFloorC";
+			public const string SemiLowFloorV = "SemiLowFloorV";
+			public const string RaisedFloorH = "RaisedFloorH";
+			public const string RaisedFloorC = "RaisedFloorC";
+			public const string RaisedFloorV = "RaisedFloorV";
+			public const string ActiveVH = "ActiveVH";
+			public const string ActiveVV = "ActiveVV";
+			public const string ActiveVC = "ActiveVC";
+		}
+	}
+}
