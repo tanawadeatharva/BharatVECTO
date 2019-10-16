@@ -321,7 +321,6 @@
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\IEnvironmentalCondition.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\IEnvironmentalConditionsMap.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\IHVACConstants.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\IHVACSteadyStateModel.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMCalculate.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMInputs.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMRun.cs" />
