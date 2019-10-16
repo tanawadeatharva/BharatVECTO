@@ -21,7 +21,7 @@ Namespace UnitTests
 
 		Private Const csngDoorDutyCycleZeroToOne As Single = 0.0963391136801541
 		Private Const csngPowernetVoltage As Single = 26.3
-		Private ssmHVac As IHVACSteadyStateModel = New HVACSteadyStateModel(100, 100, 100)
+		
 
 		Private Function GetSSM() As ISSMTOOL
 

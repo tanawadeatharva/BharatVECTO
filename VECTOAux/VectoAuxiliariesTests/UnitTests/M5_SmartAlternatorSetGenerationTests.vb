@@ -25,7 +25,7 @@ Namespace UnitTests
 		Private _m05 As IM0_5_SmartAlternatorSetEfficiency
 		Private _target As IM5_SmartAlternatorSetGeneration
 		Private _signals As ISignals = New Signals
-		Private ssmHVac As IHVACSteadyStateModel = New HVACSteadyStateModel(100, 100, 100)
+		
 
         <OneTimeSetUp>
         Public Sub RunBeforeAnyTests()

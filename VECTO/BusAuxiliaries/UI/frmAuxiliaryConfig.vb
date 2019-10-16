@@ -1237,28 +1237,6 @@ Public Class frmAuxiliaryConfig
         Next
     End Sub
 
-    Private Function GetSSMMAP(ByVal filePath As String, ByRef message As String) As IHVACSteadyStateModel
-
-        Dim ssmMap As New HVACSteadyStateModel()
-
-
-        Try
-
-            If ssmMap.SetValuesFromMap(FilePathUtils.ResolveFilePath(aauxPath, txtSSMFilePath.Text), message) Then
-
-                Return ssmMap
-
-            End If
-
-        Catch ex As Exception
-
-            MessageBox.Show("Unable to retreive values from map")
-
-        End Try
-
-        Return Nothing
-    End Function
-
     Private Sub SetupControls()
 
 

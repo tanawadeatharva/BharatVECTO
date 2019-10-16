@@ -122,7 +122,6 @@
     <Compile Include="UnitTests\BusDatabaseTests.vb" />
     <Compile Include="UnitTests\CombinedAlternatorTests.vb" />
     <Compile Include="UnitTests\FilePathUtilityTests.vb" />
-    <Compile Include="UnitTests\HVACSSMMapTests.vb" />
     <Compile Include="UnitTests\M0_5_SmartAlternatorSetEfficiencyTests.vb" />
     <Compile Include="UnitTests\M0_NonSmart_AlternatorsSetEfficiencyTests.vb" />
     <Compile Include="UnitTests\AveragePneumaticLoadDemandTests.vb" />
@@ -190,18 +189,6 @@
     <Content Include="3rdParty\DocumentFormat.OpenXml.xml" />
     <Content Include="3rdParty\SpreadsheetLight.dll" />
     <Content Include="3rdParty\SpreadsheetLight.xml" />
-    <Content Include="TestFiles\testHVACSteadyStateModelBadHeaders.ahsm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\testHVACSteadyStateModelBadValues.ahsm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\testHVACSteadyStateModelGOODMAP.ahsm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestFiles\testHVACSteadyStateModelInsufficientLines.ahsm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="TestFiles\testPneumaticActuationsMap_GOODMAP.apac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

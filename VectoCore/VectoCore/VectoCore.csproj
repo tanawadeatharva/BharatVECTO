@@ -284,7 +284,6 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\EnvironmentalCondition.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\EnvironmentalConditionsMap.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\HVACConstants.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\HVACSteadyStateModel.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\HVACUserInputsConfig.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\IBus.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\IBusDatabase.cs" />
