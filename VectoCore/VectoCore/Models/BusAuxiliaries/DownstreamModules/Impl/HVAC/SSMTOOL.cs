@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			get {
 				var mechAdjusted = SSMDisabled ? 0.SI<Watt>() : Calculate.MechanicalWBaseAdjusted;
 
-				if (CompressorCapacityInsufficientWarned == false && (mechAdjusted) / (1000 * SSMInputs.ACSystem.AC_COP) > SSMInputs.ACSystem.AC_CompressorCapacitykW) {
+				if (CompressorCapacityInsufficientWarned == false && (mechAdjusted) / (1000 * SSMInputs.ACSystem.COP) > SSMInputs.ACSystem.CompressorCapacity) {
 					OnMessage(this, "HVAC SSM :AC-Compressor Capacity unable to service cooling, run continues as if capacity was sufficient.", AdvancedAuxiliaryMessageType.Warning);
 					CompressorCapacityInsufficientWarned = true;
 				}
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			HVACConstants = hvacConstants;
 
 			SSMInputs = new SSMInputs(Path.GetDirectoryName(filePath));
-			TechList = new SSMTechList(SSMInputs.BusParameters.BP_BusFloorType);
+			TechList = new SSMTechList(SSMInputs.BusParameters.BusFloorType);
 			TechList.TechLines = HVACTechBenefitsReader.ReadFromStream(RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".Buses." +
 																								"HVAC_TechList.csv"));
 
@@ -153,33 +153,33 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		{
 			var retVal = new Dictionary<string, object>();
 
-			retVal["BC_GFactor"] = SSMInputs.BoundaryConditions.BC_GFactor;
-			retVal["BC_PassengerBoundaryTemperature"] = SSMInputs.BoundaryConditions.BC_PassengerBoundaryTemperature.AsDegCelsius;
-			retVal["BC_HeatingBoundaryTemperature"] = SSMInputs.BoundaryConditions.BC_HeatingBoundaryTemperature.AsDegCelsius;
-			retVal["BC_CoolingBoundaryTemperature"] = SSMInputs.BoundaryConditions.BC_CoolingBoundaryTemperature.AsDegCelsius;
-			retVal["BC_HighVentilation"] = SSMInputs.BoundaryConditions.BC_HighVentilation.ConvertToPerHour().Value;
-			retVal["BC_lowVentilation"] = SSMInputs.BoundaryConditions.BC_lowVentilation.ConvertToPerHour().Value;
-			retVal["BC_SpecificVentilationPower"] = SSMInputs.BoundaryConditions.BC_SpecificVentilationPower.ConvertToWattHourPerCubicMeter().Value;
-			retVal["BC_AuxHeaterEfficiency"] = SSMInputs.BoundaryConditions.BC_AuxHeaterEfficiency;
-			retVal["BC_GCVDieselOrHeatingOil"] = SSMInputs.BoundaryConditions.BC_GCVDieselOrHeatingOil.ConvertToKiloWattHourPerKilogramm().Value;
-			retVal["BC_MaxTemperatureDeltaForLowFloorBusses"] = SSMInputs.BoundaryConditions.BC_MaxTemperatureDeltaForLowFloorBusses.AsDegCelsius;
-			retVal["BC_MaxPossibleBenefitFromTechnologyList"] = SSMInputs.BoundaryConditions.BC_MaxPossibleBenefitFromTechnologyList;
-			retVal["EC_EnviromentalTemperature"] = SSMInputs.EnvironmentalConditions.EC_EnviromentalTemperature.AsDegCelsius;
-			retVal["EC_Solar"] = SSMInputs.EnvironmentalConditions.EC_Solar.Value();
-			retVal["EC_EnviromentalConditions_BatchFile"] = SSMInputs.EnvironmentalConditions.EC_EnviromentalConditions_BatchFile;
-			retVal["EC_EnviromentalConditions_BatchEnabled"] = SSMInputs.EnvironmentalConditions.EC_EnviromentalConditions_BatchEnabled;
-			retVal["AC_CompressorType"] = SSMInputs.ACSystem.AC_CompressorType;
-			retVal["AC_CompressorCapacitykW"] = SSMInputs.ACSystem.AC_CompressorCapacitykW.ConvertToKiloWatt().Value;
-			retVal["VEN_VentilationOnDuringHeating"] = SSMInputs.Ventilation.VEN_VentilationOnDuringHeating;
-			retVal["VEN_VentilationWhenBothHeatingAndACInactive"] = SSMInputs.Ventilation.VEN_VentilationWhenBothHeatingAndACInactive;
-			retVal["VEN_VentilationDuringAC"] = SSMInputs.Ventilation.VEN_VentilationDuringAC;
-			retVal["VEN_VentilationFlowSettingWhenHeatingAndACInactive"] = SSMInputs.Ventilation.VEN_VentilationFlowSettingWhenHeatingAndACInactive;
-			retVal["VEN_VentilationDuringHeating"] = SSMInputs.Ventilation.VEN_VentilationDuringHeating;
-			retVal["VEN_VentilationDuringCooling"] = SSMInputs.Ventilation.VEN_VentilationDuringCooling;
-			retVal["AH_EngineWasteHeatkW"] = SSMInputs.AuxHeater.AH_EngineWasteHeatkW.ConvertToKiloWatt().Value;
-			retVal["AH_FuelFiredHeaterkW"] = SSMInputs.AuxHeater.AH_FuelFiredHeaterkW.ConvertToKiloWatt().Value;
-			retVal["AH_FuelEnergyToHeatToCoolant"] = SSMInputs.AuxHeater.AH_FuelEnergyToHeatToCoolant;
-			retVal["AH_CoolantHeatTransferredToAirCabinHeater"] = SSMInputs.AuxHeater.AH_CoolantHeatTransferredToAirCabinHeater;
+			retVal["BC_GFactor"] = SSMInputs.BoundaryConditions.GFactor;
+			retVal["BC_PassengerBoundaryTemperature"] = SSMInputs.BoundaryConditions.PassengerBoundaryTemperature.AsDegCelsius;
+			retVal["BC_HeatingBoundaryTemperature"] = SSMInputs.BoundaryConditions.HeatingBoundaryTemperature.AsDegCelsius;
+			retVal["BC_CoolingBoundaryTemperature"] = SSMInputs.BoundaryConditions.CoolingBoundaryTemperature.AsDegCelsius;
+			retVal["BC_HighVentilation"] = SSMInputs.BoundaryConditions.HighVentilation.ConvertToPerHour().Value;
+			retVal["BC_lowVentilation"] = SSMInputs.BoundaryConditions.LowVentilation.ConvertToPerHour().Value;
+			retVal["BC_SpecificVentilationPower"] = SSMInputs.BoundaryConditions.SpecificVentilationPower.ConvertToWattHourPerCubicMeter().Value;
+			retVal["BC_AuxHeaterEfficiency"] = SSMInputs.BoundaryConditions.AuxHeaterEfficiency;
+			retVal["BC_GCVDieselOrHeatingOil"] = SSMInputs.BoundaryConditions.GCVDieselOrHeatingOil.ConvertToKiloWattHourPerKilogramm().Value;
+			retVal["BC_MaxTemperatureDeltaForLowFloorBusses"] = SSMInputs.BoundaryConditions.MaxTemperatureDeltaForLowFloorBusses.AsDegCelsius;
+			retVal["BC_MaxPossibleBenefitFromTechnologyList"] = SSMInputs.BoundaryConditions.MaxPossibleBenefitFromTechnologyList;
+			retVal["EC_EnviromentalTemperature"] = SSMInputs.EnvironmentalConditions.EnviromentalTemperature.AsDegCelsius;
+			retVal["EC_Solar"] = SSMInputs.EnvironmentalConditions.Solar.Value();
+			retVal["EC_EnviromentalConditions_BatchFile"] = SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile;
+			retVal["EC_EnviromentalConditions_BatchEnabled"] = SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchEnabled;
+			retVal["AC_CompressorType"] = SSMInputs.ACSystem.CompressorType;
+			retVal["AC_CompressorCapacitykW"] = SSMInputs.ACSystem.CompressorCapacity.ConvertToKiloWatt().Value;
+			retVal["VEN_VentilationOnDuringHeating"] = SSMInputs.Ventilation.VentilationOnDuringHeating;
+			retVal["VEN_VentilationWhenBothHeatingAndACInactive"] = SSMInputs.Ventilation.VentilationWhenBothHeatingAndACInactive;
+			retVal["VEN_VentilationDuringAC"] = SSMInputs.Ventilation.VentilationDuringAC;
+			retVal["VEN_VentilationFlowSettingWhenHeatingAndACInactive"] = SSMInputs.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive;
+			retVal["VEN_VentilationDuringHeating"] = SSMInputs.Ventilation.VentilationDuringHeating;
+			retVal["VEN_VentilationDuringCooling"] = SSMInputs.Ventilation.VentilationDuringCooling;
+			retVal["AH_EngineWasteHeatkW"] = SSMInputs.AuxHeater.EngineWasteHeatkW.ConvertToKiloWatt().Value;
+			retVal["AH_FuelFiredHeaterkW"] = SSMInputs.AuxHeater.FuelFiredHeaterkW.ConvertToKiloWatt().Value;
+			retVal["AH_FuelEnergyToHeatToCoolant"] = SSMInputs.AuxHeater.FuelEnergyToHeatToCoolant;
+			retVal["AH_CoolantHeatTransferredToAirCabinHeater"] = SSMInputs.AuxHeater.CoolantHeatTransferredToAirCabinHeater;
 
 			return retVal;
 		}
@@ -235,33 +235,33 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		private void LoadGenInputs(JObject genInput)
 		{
-			SSMInputs.BoundaryConditions.BC_GFactor = genInput.GetEx<double>("BC_GFactor");
-			SSMInputs.BoundaryConditions.BC_PassengerBoundaryTemperature = genInput.GetEx<double>("BC_PassengerBoundaryTemperature").DegCelsiusToKelvin();
-			SSMInputs.BoundaryConditions.BC_HeatingBoundaryTemperature = genInput.GetEx<double>("BC_HeatingBoundaryTemperature").DegCelsiusToKelvin();
-			SSMInputs.BoundaryConditions.BC_CoolingBoundaryTemperature = genInput.GetEx<double>("BC_CoolingBoundaryTemperature").DegCelsiusToKelvin();
-			SSMInputs.BoundaryConditions.BC_HighVentilation = genInput.GetEx<double>("BC_HighVentilation").SI(Unit.SI.Per.Hour).Cast<PerSecond>();
-			SSMInputs.BoundaryConditions.BC_lowVentilation = genInput.GetEx<double>("BC_lowVentilation").SI(Unit.SI.Per.Hour).Cast<PerSecond>();
-			SSMInputs.BoundaryConditions.BC_SpecificVentilationPower = genInput.GetEx<double>("BC_SpecificVentilationPower").SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast<JoulePerCubicMeter>();
-			SSMInputs.BoundaryConditions.BC_AuxHeaterEfficiency = genInput.GetEx<double>("BC_AuxHeaterEfficiency");
-			SSMInputs.BoundaryConditions.BC_GCVDieselOrHeatingOil = genInput.GetEx<double>("BC_GCVDieselOrHeatingOil").SI(Unit.SI.Kilo.Watt.Hour.Per.Kilo.Gramm).Cast<JoulePerKilogramm>();
-			SSMInputs.BoundaryConditions.BC_MaxTemperatureDeltaForLowFloorBusses = genInput.GetEx<double>("BC_MaxTemperatureDeltaForLowFloorBusses").SI<Kelvin>();
-			SSMInputs.BoundaryConditions.BC_MaxPossibleBenefitFromTechnologyList = genInput.GetEx<double>("BC_MaxPossibleBenefitFromTechnologyList");
-			SSMInputs.EnvironmentalConditions.EC_EnviromentalTemperature = genInput.GetEx<double>("EC_EnviromentalTemperature").DegCelsiusToKelvin();
-			SSMInputs.EnvironmentalConditions.EC_Solar = genInput.GetEx<double>("EC_Solar").SI<WattPerSquareMeter>();
-			SSMInputs.EnvironmentalConditions.EC_EnviromentalConditions_BatchFile = genInput.GetEx<string>("EC_EnviromentalConditions_BatchFile");
-			SSMInputs.EnvironmentalConditions.EC_EnviromentalConditions_BatchEnabled = genInput.GetEx<bool>("EC_EnviromentalConditions_BatchEnabled");
-			SSMInputs.ACSystem.AC_CompressorType = genInput.GetEx<string>("AC_CompressorType");
-			SSMInputs.ACSystem.AC_CompressorCapacitykW = genInput.GetEx<double>("AC_CompressorCapacitykW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-			SSMInputs.Ventilation.VEN_VentilationOnDuringHeating = genInput.GetEx<bool>("VEN_VentilationOnDuringHeating");
-			SSMInputs.Ventilation.VEN_VentilationWhenBothHeatingAndACInactive = genInput.GetEx<bool>("VEN_VentilationWhenBothHeatingAndACInactive");
-			SSMInputs.Ventilation.VEN_VentilationDuringAC = genInput.GetEx<bool>("VEN_VentilationDuringAC");
-			SSMInputs.Ventilation.VEN_VentilationFlowSettingWhenHeatingAndACInactive = genInput.GetEx<string>("VEN_VentilationFlowSettingWhenHeatingAndACInactive");
-			SSMInputs.Ventilation.VEN_VentilationDuringHeating = genInput.GetEx<string>("VEN_VentilationDuringHeating");
-			SSMInputs.Ventilation.VEN_VentilationDuringCooling = genInput.GetEx<string>("VEN_VentilationDuringCooling");
-			SSMInputs.AuxHeater.AH_EngineWasteHeatkW = genInput.GetEx<double>("AH_EngineWasteHeatkW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-			SSMInputs.AuxHeater.AH_FuelFiredHeaterkW = genInput.GetEx<double>("AH_FuelFiredHeaterkW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-			SSMInputs.AuxHeater.AH_FuelEnergyToHeatToCoolant = genInput.GetEx<double>("AH_FuelEnergyToHeatToCoolant");
-			SSMInputs.AuxHeater.AH_CoolantHeatTransferredToAirCabinHeater = genInput.GetEx<double>("AH_CoolantHeatTransferredToAirCabinHeater");
+			SSMInputs.BoundaryConditions.GFactor = genInput.GetEx<double>("BC_GFactor");
+			SSMInputs.BoundaryConditions.PassengerBoundaryTemperature = genInput.GetEx<double>("BC_PassengerBoundaryTemperature").DegCelsiusToKelvin();
+			SSMInputs.BoundaryConditions.HeatingBoundaryTemperature = genInput.GetEx<double>("BC_HeatingBoundaryTemperature").DegCelsiusToKelvin();
+			SSMInputs.BoundaryConditions.CoolingBoundaryTemperature = genInput.GetEx<double>("BC_CoolingBoundaryTemperature").DegCelsiusToKelvin();
+			SSMInputs.BoundaryConditions.HighVentilation = genInput.GetEx<double>("BC_HighVentilation").SI(Unit.SI.Per.Hour).Cast<PerSecond>();
+			SSMInputs.BoundaryConditions.LowVentilation = genInput.GetEx<double>("BC_lowVentilation").SI(Unit.SI.Per.Hour).Cast<PerSecond>();
+			SSMInputs.BoundaryConditions.SpecificVentilationPower = genInput.GetEx<double>("BC_SpecificVentilationPower").SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast<JoulePerCubicMeter>();
+			SSMInputs.BoundaryConditions.AuxHeaterEfficiency = genInput.GetEx<double>("BC_AuxHeaterEfficiency");
+			SSMInputs.BoundaryConditions.GCVDieselOrHeatingOil = genInput.GetEx<double>("BC_GCVDieselOrHeatingOil").SI(Unit.SI.Kilo.Watt.Hour.Per.Kilo.Gramm).Cast<JoulePerKilogramm>();
+			SSMInputs.BoundaryConditions.MaxTemperatureDeltaForLowFloorBusses = genInput.GetEx<double>("BC_MaxTemperatureDeltaForLowFloorBusses").SI<Kelvin>();
+			SSMInputs.BoundaryConditions.MaxPossibleBenefitFromTechnologyList = genInput.GetEx<double>("BC_MaxPossibleBenefitFromTechnologyList");
+			SSMInputs.EnvironmentalConditions.EnviromentalTemperature = genInput.GetEx<double>("EC_EnviromentalTemperature").DegCelsiusToKelvin();
+			SSMInputs.EnvironmentalConditions.Solar = genInput.GetEx<double>("EC_Solar").SI<WattPerSquareMeter>();
+			SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile = genInput.GetEx<string>("EC_EnviromentalConditions_BatchFile");
+			SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchEnabled = genInput.GetEx<bool>("EC_EnviromentalConditions_BatchEnabled");
+			SSMInputs.ACSystem.CompressorType = genInput.GetEx<string>("AC_CompressorType");
+			SSMInputs.ACSystem.CompressorCapacity = genInput.GetEx<double>("AC_CompressorCapacitykW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+			SSMInputs.Ventilation.VentilationOnDuringHeating = genInput.GetEx<bool>("VEN_VentilationOnDuringHeating");
+			SSMInputs.Ventilation.VentilationWhenBothHeatingAndACInactive = genInput.GetEx<bool>("VEN_VentilationWhenBothHeatingAndACInactive");
+			SSMInputs.Ventilation.VentilationDuringAC = genInput.GetEx<bool>("VEN_VentilationDuringAC");
+			SSMInputs.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive = genInput.GetEx<string>("VEN_VentilationFlowSettingWhenHeatingAndACInactive");
+			SSMInputs.Ventilation.VentilationDuringHeating = genInput.GetEx<string>("VEN_VentilationDuringHeating");
+			SSMInputs.Ventilation.VentilationDuringCooling = genInput.GetEx<string>("VEN_VentilationDuringCooling");
+			SSMInputs.AuxHeater.EngineWasteHeatkW = genInput.GetEx<double>("AH_EngineWasteHeatkW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+			SSMInputs.AuxHeater.FuelFiredHeaterkW = genInput.GetEx<double>("AH_FuelFiredHeaterkW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+			SSMInputs.AuxHeater.FuelEnergyToHeatToCoolant = genInput.GetEx<double>("AH_FuelEnergyToHeatToCoolant");
+			SSMInputs.AuxHeater.CoolantHeatTransferredToAirCabinHeater = genInput.GetEx<double>("AH_CoolantHeatTransferredToAirCabinHeater");
 		}
 
 		// Comparison
@@ -340,7 +340,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				return 0.SI<KilogramPerSecond>();
 
 			// Set Engine Waste Heat
-			SSMInputs.AuxHeater.AH_EngineWasteHeatkW = AverageUseableEngineWasteHeatKW;
+			SSMInputs.AuxHeater.EngineWasteHeatkW = AverageUseableEngineWasteHeatKW;
 			var fba = FuelPerHBaseAdjusted;
 
 			// Dim FuelFiredWarning As Boolean = fba * SSMInputs.BC_AuxHeaterEfficiency * HVACConstants.FuelDensity * SSMInputs.BC_GCVDieselOrHeatingOil * 1000 > (AverageUseableEngineWasteHeatKW + SSMInputs.AH_FuelFiredHeaterkW)

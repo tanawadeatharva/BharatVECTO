@@ -27,8 +27,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected override void DoCalculate()
 		{
 			var s1 = M13.WHTCTotalCycleFuelConsumption * Constants.DieselGCVJperGram;
-			var s2 = SSM.SSMInputs.AuxHeater.AH_FuelEnergyToHeatToCoolant * s1;
-			var s3 = s2 * SSM.SSMInputs.AuxHeater.AH_CoolantHeatTransferredToAirCabinHeater;
+			var s2 = SSM.SSMInputs.AuxHeater.FuelEnergyToHeatToCoolant * s1;
+			var s3 = s2 * SSM.SSMInputs.AuxHeater.CoolantHeatTransferredToAirCabinHeater;
 			var s4 = s3 / Signals.CurrentCycleTimeInSeconds.SI<Second>();
 			var s5 = Signals.CurrentCycleTimeInSeconds.SI<Second>(); // ' / 3600
 			var s6 = s5 * SSM.FuelPerHBaseAsjusted(s4); // * Constants.FuelDensity;

@@ -22,100 +22,93 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 	{ 
 
 		// Bus Parameterisation	
-		string BP_BusModel { get; }
+		string BusModel { get; }
 
-		double BP_NumberOfPassengers { get; }
-		FloorType BP_BusFloorType { get; }
-		bool BP_DoubleDecker { get; }
-		Meter BP_BusLength { get; }
-		Meter BP_BusWidth { get; }
-		Meter BP_BusHeight { get; }
+		double NumberOfPassengers { get; }
+		FloorType BusFloorType { get; }
+		bool DoubleDecker { get; }
+		Meter BusLength { get; }
+		Meter BusWidth { get; }
+		Meter BusHeight { get; }
 
-		SquareMeter BP_BusFloorSurfaceArea { get; }
-		SquareMeter BP_BusWindowSurface { get; }
-		SquareMeter BP_BusSurfaceArea { get; }
-		CubicMeter BP_BusVolume { get; }
+		SquareMeter BusFloorSurfaceArea { get; }
+		SquareMeter BusWindowSurface { get; }
+		SquareMeter BusSurfaceArea { get; }
+		CubicMeter BusVolume { get; }
 
-		PerSquareMeter BC_PassengerDensityLowFloor { get; }
-		PerSquareMeter BC_PassengerDensitySemiLowFloor { get; }
-		PerSquareMeter BC_PassengerDensityRaisedFloor { get; }
-		double BC_CalculatedPassengerNumber { get; }
+		PerSquareMeter PassengerDensityLowFloor { get; }
+		PerSquareMeter PassengerDensitySemiLowFloor { get; }
+		PerSquareMeter PassengerDensityRaisedFloor { get; }
+		double CalculatedPassengerNumber { get; }
 
 	}
 
 	public interface ISSMBoundaryConditions
 	{
-
 		// Boundary Conditions:			
-		double BC_GFactor { get; set; }
-
-		double BC_SolarClouding { get; }
-		Watt BC_HeatPerPassengerIntoCabinW { get; }
-		Kelvin BC_PassengerBoundaryTemperature { get; set; }
-		WattPerKelvinSquareMeter BC_UValues { get; }
-		Kelvin BC_HeatingBoundaryTemperature { get; set; }
-		Kelvin BC_CoolingBoundaryTemperature { get; set; }
-		Kelvin BC_TemperatureCoolingTurnsOff { get; }
-		PerSecond BC_HighVentilation { get; set; }
-		PerSecond BC_lowVentilation { get; set; }
-		CubicMeterPerSecond BC_High { get; }
-		CubicMeterPerSecond BC_Low { get; }
-		Watt BC_HighVentPower { get; }
-		Watt BC_LowVentPower { get; }
-		JoulePerCubicMeter BC_SpecificVentilationPower { get; set; }
-		double BC_AuxHeaterEfficiency { get; set; }
-		JoulePerKilogramm BC_GCVDieselOrHeatingOil { get; set; }
-		SquareMeterPerMeter BC_WindowAreaPerUnitBusLength { get; }
-		SquareMeter BC_FrontRearWindowArea { get; }
-		Kelvin BC_MaxTemperatureDeltaForLowFloorBusses { get; set; }
-		double BC_MaxPossibleBenefitFromTechnologyList { get; set; }
+		double GFactor { get; set; }
+		double SolarClouding { get; }
+		Watt HeatPerPassengerIntoCabin { get; }
+		Kelvin PassengerBoundaryTemperature { get; set; }
+		WattPerKelvinSquareMeter UValue { get; }
+		Kelvin HeatingBoundaryTemperature { get; set; }
+		Kelvin CoolingBoundaryTemperature { get; set; }
+		Kelvin TemperatureCoolingTurnsOff { get; }
+		PerSecond HighVentilation { get; set; }
+		PerSecond LowVentilation { get; set; }
+		CubicMeterPerSecond HighVolumeExchange { get; }
+		CubicMeterPerSecond LowVolumeExchange { get; }
+		Watt HighVentPower { get; }
+		Watt LowVentPower { get; }
+		JoulePerCubicMeter SpecificVentilationPower { get; set; }
+		double AuxHeaterEfficiency { get; set; }
+		JoulePerKilogramm GCVDieselOrHeatingOil { get; set; }
+		SquareMeterPerMeter WindowAreaPerUnitBusLength { get; }
+		SquareMeter FrontRearWindowArea { get; }
+		Kelvin MaxTemperatureDeltaForLowFloorBusses { get; set; }
+		double MaxPossibleBenefitFromTechnologyList { get; set; }
 	}
 
 	public interface IEnvironmentalConditions
 	{
-
 		// EnviromentalConditions				
-		Kelvin EC_EnviromentalTemperature { get; set; }
-
-		WattPerSquareMeter EC_Solar { get; set; }
-		IEnvironmentalConditionsMap EC_EnvironmentalConditionsMap { get; }
-		string EC_EnviromentalConditions_BatchFile { get; set; }
-		bool EC_EnviromentalConditions_BatchEnabled { get; set; }
+		Kelvin EnviromentalTemperature { get; set; }
+		WattPerSquareMeter Solar { get; set; }
+		IEnvironmentalConditionsMap EnvironmentalConditionsMap { get; }
+		string EnviromentalConditions_BatchFile { get; set; }
+		bool EnviromentalConditions_BatchEnabled { get; set; }
 
 	}
 
 	public interface IACSystem
 	{
-
 		// AC-system				            
-		string AC_CompressorType { get; set; }
-
-		string AC_CompressorTypeDerived { get; }
-		Watt AC_CompressorCapacitykW { get; set; }
-		double AC_COP { get; }
+		string CompressorType { get; set; }
+		string CompressorTypeDerived { get; }
+		Watt CompressorCapacity { get; set; }
+		double COP { get; }
 
 	}
 
 	public interface IVentilation
 	{
 		// Ventilation				
-		bool VEN_VentilationOnDuringHeating { get; set; }
+		bool VentilationOnDuringHeating { get; set; }
 
-		bool VEN_VentilationWhenBothHeatingAndACInactive { get; set; }
-		bool VEN_VentilationDuringAC { get; set; }
-		string VEN_VentilationFlowSettingWhenHeatingAndACInactive { get; set; }
-		string VEN_VentilationDuringHeating { get; set; }
-		string VEN_VentilationDuringCooling { get; set; }
+		bool VentilationWhenBothHeatingAndACInactive { get; set; }
+		bool VentilationDuringAC { get; set; }
+		string VentilationFlowSettingWhenHeatingAndACInactive { get; set; }
+		string VentilationDuringHeating { get; set; }
+		string VentilationDuringCooling { get; set; }
 
 	}
 
 	public interface IAuxHeater
 	{ 
-
 		// Aux. Heater				
-		Watt AH_EngineWasteHeatkW { get; set; }
-		Watt AH_FuelFiredHeaterkW { get; set; }
-		double AH_FuelEnergyToHeatToCoolant { get; set; }
-		double AH_CoolantHeatTransferredToAirCabinHeater { get; set; }
+		Watt EngineWasteHeatkW { get; set; }
+		Watt FuelFiredHeaterkW { get; set; }
+		double FuelEnergyToHeatToCoolant { get; set; }
+		double CoolantHeatTransferredToAirCabinHeater { get; set; }
 	}
 }

@@ -290,7 +290,7 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\IBusDatabase.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\M01Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMCalculate.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\IssmInputs.cs" />
+    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMInputs.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMRun.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTechList.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTOOL.cs" />

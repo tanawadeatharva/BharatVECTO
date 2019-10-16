@@ -223,8 +223,8 @@ Public Class frmHVACTool
 		cboUnits.DataSource = {"Fraction"}
 		cboLineType.DataSource = {"Normal", "ActiveVentilation"}
 
-		txtEC_EnvironmentConditionsFilePath.Tag = ssmTOOL.SSMInputs.EnvironmentalConditions.EC_EnviromentalConditions_BatchFile
-		txtEC_EnvironmentConditionsFilePath.Text = GetRelativePath(ssmTOOL.SSMInputs.EnvironmentalConditions.EC_EnviromentalConditions_BatchFile,
+		txtEC_EnvironmentConditionsFilePath.Tag = ssmTOOL.SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile
+		txtEC_EnvironmentConditionsFilePath.Text = GetRelativePath(ssmTOOL.SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile,
 															Path.GetDirectoryName(vectoFile))
 		txtEC_EnvironmentConditionsFilePath.ReadOnly = True
 		btnEnvironmentConditionsSource.Enabled = False
@@ -724,7 +724,7 @@ Public Class frmHVACTool
 			Dim environmentalConditionsMap As IEnvironmentalConditionsMap =
 					New EnvironmentalConditionsMap(CType(txtEC_EnvironmentConditionsFilePath.Tag, String), Path.GetDirectoryName(vectoFile))
 			ErrorProvider1.SetError(txtEC_EnvironmentConditionsFilePath, String.Empty)
-			ssmTOOL.SSMInputs.EnvironmentalConditions.EC_EnviromentalConditions_BatchFile = CType(txtEC_EnvironmentConditionsFilePath.Tag, String)
+			ssmTOOL.SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile = CType(txtEC_EnvironmentConditionsFilePath.Tag, String)
 		Catch ex As Exception
 			ErrorProvider1.SetError(txtEC_EnvironmentConditionsFilePath,
 									"Error : The environment conditions file is invalid or cannot be found, please select a valid aenv file.")
@@ -1356,7 +1356,7 @@ Public Class frmHVACTool
 	Private Function GetTechLineFromPanel() As ITechListBenefitLine
 
 		Dim tl As ITechListBenefitLine = New TechListBenefitLine()
-	    tl.BusFloorType = ssmTOOL.SSMInputs.BusParameters.BP_BusFloorType
+	    tl.BusFloorType = ssmTOOL.SSMInputs.BusParameters.BusFloorType
 
 		tl.Category = StrConv(cboCategory.Text, vbProperCase)
 		tl.BenefitName = txtBenefitName.Text
