@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual("560", fcMapTable.Rows[0][0]);
 			var fcMap = FuelConsumptionMapReader.Create(fcMapTable);
 			Assert.AreEqual(1256.SI(Unit.SI.Gramm.Per.Hour).Value(), 
-				fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad()).Value.Value());
+				fcMap.GetFuelConsumption(0.SI<NewtonMeter>(), 560.RPMtoRad(), false).Value.Value());
 
 			var fldTable = engineDataProvider.EngineModes.First().FullLoadCurve;
 			Assert.AreEqual(10, fldTable.Rows.Count);

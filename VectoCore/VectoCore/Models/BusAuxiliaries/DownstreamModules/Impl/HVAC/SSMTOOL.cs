@@ -38,8 +38,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		// Repeat Warning Flags
 		private bool CompressorCapacityInsufficientWarned;
 
-		//private bool FuelFiredHeaterInsufficientWarned;
-
 		// Base Values
 		public Watt ElectricalWBase
 		{
@@ -93,26 +91,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		public Watt EngineWasteHeatkW { get; protected set; }
-
 		
-
-		// Clone values from another object of same type
-		//public void Clone(ISSMTOOL from)
-		//{
-		//	var feedback = string.Empty;
-
-		//	SSMInputs.InjectFrom(((SSMTOOL)from).SSMInputs);
-
-		//	TechList.Clear();
-
-		//	foreach (var line in from.TechList.TechLines) {
-		//		var newLine = new TechListBenefitLine(this.SSMInputs);
-		//		// newLine.InjectFrom()
-		//		newLine.InjectFrom(line);
-		//		TechList.Add(newLine, ref feedback);
-		//	}
-		//}
-
 		// Persistance Functions
 		
 

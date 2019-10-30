@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 	// Model based on CombinedALTS_V02_Editable.xlsx
 	public class Alternator : IAlternator
 	{
-		private ICombinedAlternatorSignals signals;
+		//private ICombinedAlternatorSignals signals;
 
 		// D6
 		public string AlternatorName { get; set; }
@@ -31,38 +31,31 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public List<Table4Row> RangeTable { get; set; } = new List<Table4Row>();
 
 		// S9
-		public PerSecond SpindleSpeed
-		{
-			get { return signals.CrankRPM * PulleyRatio; }
-		}
+		//public PerSecond SpindleSpeed
+		//{
+		//	get { return signals.CrankRPM * PulleyRatio; }
+		//}
 
 		// S10
-		public double Efficiency
+		public double GetEfficiency(PerSecond crankSpeed, Ampere currentDemand)
 		{
-			get {
-				// First build RangeTable, table 4
+			// First build RangeTable, table 4
 				InitialiseRangeTable();
-				CalculateRangeTable();
+				CalculateRangeTable(currentDemand);
 
 				// Calculate ( Interpolate ) Efficiency
 				var range = RangeTable.Select(s => new AltUserInput<PerSecond>(s.RPM, s.Efficiency)).ToList();
 
-				return Alternator.Iterpolate(range, SpindleSpeed);
-			}
+				return Iterpolate(range, crankSpeed * PulleyRatio);
+			
 		}
 
 
 		// Constructors
 		public Alternator() { }
 
-		public Alternator(ICombinedAlternatorSignals isignals, List<ICombinedAlternatorMapRow> inputs)
+		public Alternator(List<ICombinedAlternatorMapRow> inputs)
 		{
-			if (isignals == null) {
-				throw new ArgumentException("Alternator - ISignals supplied is nothing");
-			}
-
-			signals = isignals;
-
 			AlternatorName = inputs.First().AlternatorName;
 			PulleyRatio = inputs.First().PulleyRatio;
 
@@ -115,7 +108,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			return retVal;
 		}
 
-		private void CalculateRangeTable()
+		private void CalculateRangeTable(Ampere currentDemand)
 		{
 			// M10=Row0-Rpm - N10=Row0-Eff
 			// M11=Row1-Rpm - N11=Row1-Eff
@@ -128,15 +121,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			// EFFICIENCY
 
 			// 2000
-			var N12 = Alternator.Iterpolate(InputTable2000, signals.CurrentDemandAmps);
+			var N12 = Iterpolate(InputTable2000, currentDemand);
 			RangeTable[2].Efficiency = N12;
 
 			// 4000
-			var N13 = Alternator.Iterpolate(InputTable4000, signals.CurrentDemandAmps);
+			var N13 = Iterpolate(InputTable4000, currentDemand);
 			RangeTable[3].Efficiency = N13;
 
 			// 6000
-			var N14 = Alternator.Iterpolate(InputTable6000, signals.CurrentDemandAmps);
+			var N14 = Iterpolate(InputTable6000, currentDemand);
 			RangeTable[4].Efficiency = N14;
 
 			// Row0 & Row1 Efficiency  =IF(N13>N12,0,MAX(N12:N14)) - Example Alt 1 N13=

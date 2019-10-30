@@ -1,7 +1,6 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
@@ -10,34 +9,28 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 	{
 		protected IPneumaticUserInputsConfig _pneumaticUserInputsConfig;
 		protected IPneumaticsAuxilliariesConfig _pneumaticAuxillariesConfig;
-		protected IPneumaticActuationsMap _pneumaticsActuationsMap;
+		protected IActuationsMap ActuationsMap;
 		protected ICompressorMap _pneumaticsCompressorFlowRateMap;
 		protected Kilogram _vehicleMassKG;
 		protected string _cycleName;
 		protected ISignals _signals;
-		protected JoulePerNormLiter _averagePowerDemandPerCompressorUnitFlowRateInWPerLitresPerSecond;
 		protected NormLiter _totalAirDemand;
 		private Second totalCycleTimeSeconds;
 
 
 		//public M03Impl(IPneumaticUserInputsConfig pneumaticsUserInputConfig, IPneumaticsAuxilliariesConfig pneumaticsAuxillariesConfig, IPneumaticActuationsMap pneumaticsActuationsMap, ICompressorMap pneumaticsCompressorFlowRateMap, Kilogram vehicleMassKG, string cycleName, ISignals signals)
-		public M03Impl(IAuxiliaryConfig auxConfig, ICompressorMap compressorMap, IPneumaticActuationsMap actuationsMap, ISignals signals)
+		public M03Impl(IAuxiliaryConfig auxConfig, ICompressorMap compressorMap, IActuationsMap actuationsMap, ISignals signals)
 		{
 			_pneumaticUserInputsConfig = auxConfig.PneumaticUserInputsConfig;
 			_pneumaticAuxillariesConfig = auxConfig.PneumaticAuxillariesConfig;
-			_pneumaticsActuationsMap = actuationsMap;
+			ActuationsMap = actuationsMap;
 			_pneumaticsCompressorFlowRateMap = compressorMap;
 			_vehicleMassKG = auxConfig.VehicleData.TotalVehicleWeight;
 			_cycleName = auxConfig.Cycle;
 			_signals = signals;
 
-			totalCycleTimeSeconds = _pneumaticsActuationsMap
+			totalCycleTimeSeconds = ActuationsMap
 				.GetNumActuations(new ActuationsKey(Constants.BusAuxiliaries.CycleTimeActuationKey, auxConfig.Cycle)).SI<Second>();
-
-
-			//'Total up the blow demands from compressor map
-			_averagePowerDemandPerCompressorUnitFlowRateInWPerLitresPerSecond =
-				(_pneumaticsCompressorFlowRateMap.GetAveragePowerDemandPerCompressorUnitFlowRate());
 
 			//'Calculate the Total Required Air Delivery Rate L / S
 			_totalAirDemand = TotalAirDemandCalculation();
@@ -50,7 +43,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 
 			//'* * Breaks * *
-			double numActuationsPerCycle = _pneumaticsActuationsMap.GetNumActuations(new ActuationsKey("Brakes", _cycleName));
+			double numActuationsPerCycle = ActuationsMap.GetNumActuations(new ActuationsKey("Brakes", _cycleName));
 			//'=IF(K10 = "yes", IF(COUNTBLANK(F33), G33, F33), IF(COUNTBLANK(F34), G34, F34)) * K16
 			var airConsumptionPerActuation = (_pneumaticUserInputsConfig.RetarderBrake
 				? _pneumaticAuxillariesConfig.BrakingWithRetarderNIperKG
@@ -59,7 +52,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 			//'* * ParkBrakesBreakplus2Doors * *Park break +2 doors
 			numActuationsPerCycle =
-				_pneumaticsActuationsMap.GetNumActuations(new ActuationsKey(Constants.BusAuxiliaries.BrakeAndDoorsActuationKey, _cycleName));
+				ActuationsMap.GetNumActuations(new ActuationsKey(Constants.BusAuxiliaries.BrakeAndDoorsActuationKey, _cycleName));
 			//'=SUM(IF(K14 = "electric", 0, IF(COUNTBLANK(F36), G36, F36)), PRODUCT(K16 * IF(COUNTBLANK(F37), G37, F37)))
 			airConsumptionPerActuation = _pneumaticUserInputsConfig.Doors == ConsumerTechnology.Electrically
 				? 0.SI<NormLiter>()
@@ -68,7 +61,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			var parkBrakesplus2Doors = (numActuationsPerCycle * airConsumptionPerActuation);
 
 			//'* * Kneeling * *
-			numActuationsPerCycle = _pneumaticsActuationsMap.GetNumActuations(new ActuationsKey("Kneeling", _cycleName));
+			numActuationsPerCycle = ActuationsMap.GetNumActuations(new ActuationsKey("Kneeling", _cycleName));
 			//'=IF(COUNTBLANK(F35), G35, F35) * K11 * K16
 			airConsumptionPerActuation = _pneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM *
 										_pneumaticUserInputsConfig.KneelingHeightMillimeters * _vehicleMassKG;

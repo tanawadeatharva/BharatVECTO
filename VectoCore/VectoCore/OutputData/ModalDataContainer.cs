@@ -35,6 +35,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -56,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData
 		private readonly List<string> _additionalColumns = new List<string>();
 		private Exception SimException;
 
-		protected internal readonly Dictionary<FuelData.Entry, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<FuelData.Entry, Dictionary<ModalResultField, DataColumn>>();
+		protected internal readonly Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
 			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, ModalResultField.FCAAUX,
@@ -88,17 +89,17 @@ namespace TUGraz.VectoCore.OutputData
 
 		public bool WriteAdvancedAux { get; set; }
 
-		public ModalDataContainer(string runName, IList<FuelData.Entry> fuel, IModalDataWriter writer, bool writeEngineOnly = false, params IModalDataFilter[] filters)
+		public ModalDataContainer(string runName, IList<IFuelProperties> fuel, IModalDataWriter writer, bool writeEngineOnly = false, params IModalDataFilter[] filters)
 			: this(0, runName, "", fuel, false, "", writer, _ => { }, writeEngineOnly, filters) {}
 
-		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, IList<FuelData.Entry> fuels, Action<ModalDataContainer> addReportResult,
+		public ModalDataContainer(VectoRunData runData, IModalDataWriter writer, IList<IFuelProperties> fuels, Action<ModalDataContainer> addReportResult,
 			bool writeEngineOnly, params IModalDataFilter[] filter)
 			: this(
 				runData.JobRunId, runData.JobName, runData.Cycle.Name, fuels, runData.EngineData.MultipleEngineFuelModes, runData.ModFileSuffix, writer,
 				addReportResult,
 				writeEngineOnly, filter) {}
 
-		protected ModalDataContainer(int jobRunId, string runName, string cycleName, IList<FuelData.Entry> fuels, bool multipleEngineModes, string runSuffix,
+		protected ModalDataContainer(int jobRunId, string runName, string cycleName, IList<IFuelProperties> fuels, bool multipleEngineModes, string runSuffix,
 			IModalDataWriter writer,
 			Action<ModalDataContainer> addReportResult, bool writeEngineOnly, params IModalDataFilter[] filters)
 		{
@@ -150,7 +151,7 @@ namespace TUGraz.VectoCore.OutputData
 			CurrentRow = Data.NewRow();
 		}
 
-		public IList<FuelData.Entry> FuelData
+		public IList<IFuelProperties> FuelData
 		{
 			get { return FuelColumns.Keys.ToList(); }
 		}
@@ -356,7 +357,7 @@ namespace TUGraz.VectoCore.OutputData
 			set { CurrentRow[key.GetName()] = value; }
 		}
 
-		public string GetColumnName(FuelData.Entry fuelData, ModalResultField mrf)
+		public string GetColumnName(IFuelProperties fuelData, ModalResultField mrf)
 		{
 			if (!FuelColumns.ContainsKey(fuelData) || !FuelColumns[fuelData].ContainsKey(mrf)) {
 				throw new VectoException("unknown fuel {0} for key {1}", fuelData.GetLabel(), mrf.GetName());
@@ -365,7 +366,7 @@ namespace TUGraz.VectoCore.OutputData
 			return FuelColumns[fuelData][mrf].ColumnName;
 		}
 
-		public object this[ModalResultField key, FuelData.Entry fuel]
+		public object this[ModalResultField key, IFuelProperties fuel]
 		{
 			get {
 				if (!FuelColumns.ContainsKey(fuel) || !FuelColumns[fuel].ContainsKey(key)) {

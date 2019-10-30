@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -432,7 +433,7 @@ namespace TUGraz.VectoCore.OutputData
 			}
 		}
 
-		private void UpdateTableColumns(IList<FuelData.Entry> modDataFuelData, bool engineDataMultipleEngineFuelModes)
+		private void UpdateTableColumns(IList<IFuelProperties> modDataFuelData, bool engineDataMultipleEngineFuelModes)
 		{
 			foreach (var entry in modDataFuelData) {
 				foreach (var column in fcColumns.Reverse()) {

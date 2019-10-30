@@ -15,11 +15,11 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 {
-	public class PneumaticActuationsMap : IPneumaticActuationsMap
+	public class ActuationsMap : IActuationsMap
 	{
 		private Dictionary<ActuationsKey, int> _map;
 
-		public PneumaticActuationsMap(Dictionary<ActuationsKey, int> map, string source)
+		public ActuationsMap(Dictionary<ActuationsKey, int> map, string source)
 		{
 			_map = map;
 			Source = source;

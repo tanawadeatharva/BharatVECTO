@@ -34,7 +34,7 @@
       "EC_EnviromentalConditions_BatchFile": "",
       "EC_EnviromentalConditions_BatchEnabled": false,
       "AC_InCabinRoomAC_System": true,
-      "AC_CompressorType": "mechanical",
+      "AC_CompressorType": "2-stage",
       "AC_CompressorCapacitykW": 18.0,
       "VEN_VentilationOnDuringHeating": true,
       "VEN_VentilationWhenBothHeatingAndACInactive": true,

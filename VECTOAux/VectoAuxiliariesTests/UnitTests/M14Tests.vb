@@ -5,6 +5,7 @@ Imports VectoAuxiliaries.Hvac
 Imports NUnit.Framework
 Imports Moq
 Imports TUGraz.VectoCommon.BusAuxiliaries
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -12,6 +13,7 @@ Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.Models.Declaration
 
 
 Namespace UnitTests
@@ -120,15 +122,14 @@ Namespace UnitTests
 			Dim hvacSSM As New Mock(Of ISSMTOOL)
 			Dim signals As New Mock(Of ISignals)
 			Dim ssmMock As ISSMTOOL = New SSMToolMock()
-			Dim constants As IHVACConstants = New HVACConstants(835.SI(Of KilogramPerCubicMeter))
 
 			'Moq' Arrangements
 			m13.Setup(Function(x) x.WHTCTotalCycleFuelConsumption).Returns((ip1 / 1000).SI(Of Kilogram))
 			signals.Setup(Function(x) x.CurrentCycleTimeInSeconds).Returns(ip5)
 
-
+            Dim fuel = New FuelData.Entry(FuelType.DieselCI, Nothing, 0.SI(of KilogramPerCubicMeter),1.0, 44800.SI(Unit.SI.Joule.Per.Gramm).Cast(Of JoulePerKilogramm), 44800.SI(Unit.SI.Joule.Per.Gramm).Cast(Of JoulePerKilogramm))
 			'Act
-			Dim m14 As New M14Impl(m13.Object, ssmMock, constants, signals.Object)
+			Dim m14 As New M14Impl(m13.Object, ssmMock, fuel, signals.Object)
 
 			'Assert
             Assert.AreEqual(expectedOut1.SI(Unit.SI.Gramm).Value(), m14.TotalCycleFC.Value(), 0.1)

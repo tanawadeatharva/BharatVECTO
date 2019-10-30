@@ -16,7 +16,7 @@ Namespace UnitTests
     Public Class M3_AveragePneumaticLoadDemandTests
         Private _pneumaticUserInputsConfig As IPneumaticUserInputsConfig
         Private _pneumaticAuxillariesConfig As IPneumaticsAuxilliariesConfig
-        Private _pneumaticsActuationsMap As IPneumaticActuationsMAP
+        Private _actuationsMap As IActuationsMap
         Private _pneumaticsCompressorFlowRateMap As ICompressorMap
         Private _vehicleMassKG As Single = 16500
         Private _cycleName As String = "Urban"
@@ -70,7 +70,7 @@ Namespace UnitTests
 
 
             Dim psAuxConfig = DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig
-            Dim psActuationsMap = PneumaticActuationsMapReader.Read(_actuationsMapPath)
+            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
                                         
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
@@ -93,7 +93,7 @@ Namespace UnitTests
 
             Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
                                     PneumaticsAuxilliariesConfig)
-            Dim psActuationsMap = PneumaticActuationsMapReader.Read(_actuationsMapPath)
+            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
@@ -120,7 +120,7 @@ Namespace UnitTests
 
             Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
                                     PneumaticsAuxilliariesConfig)
-            Dim psActuationsMap = PneumaticActuationsMapReader.Read(_actuationsMapPath)
+            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
 
             Dim psCompressorMap =CompressorMapReader.ReadFile(_compressorMapPath)
@@ -151,7 +151,7 @@ Namespace UnitTests
 
             Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
                                     PneumaticsAuxilliariesConfig)
-            Dim psActuationsMap = PneumaticActuationsMapReader.Read(_actuationsMapPath)
+            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
@@ -176,7 +176,7 @@ Namespace UnitTests
 
             Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
                                     PneumaticsAuxilliariesConfig)
-            Dim psActuationsMap = PneumaticActuationsMapReader.Read(_actuationsMapPath)
+            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
@@ -208,7 +208,7 @@ Namespace UnitTests
 
             Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
                                     PneumaticsAuxilliariesConfig)
-            Dim psActuationsMap = PneumaticActuationsMapReader.Read(_actuationsMapPath)
+            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
@@ -238,7 +238,7 @@ Namespace UnitTests
 
             Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
                                     PneumaticsAuxilliariesConfig)
-            Dim psActuationsMap = PneumaticActuationsMapReader.Read(_actuationsMapPath)
+            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
 
@@ -268,7 +268,7 @@ Namespace UnitTests
 
             Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
                                     PneumaticsAuxilliariesConfig)
-            Dim psActuationsMap = PneumaticActuationsMapReader.Read(_actuationsMapPath)
+            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
 
@@ -295,7 +295,7 @@ Namespace UnitTests
 
             Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
                                     PneumaticsAuxilliariesConfig)
-            Dim psActuationsMap = PneumaticActuationsMapReader.Read(_actuationsMapPath)
+            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
 
@@ -324,7 +324,7 @@ Namespace UnitTests
 
             Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
                                     PneumaticsAuxilliariesConfig)
-            Dim psActuationsMap = PneumaticActuationsMapReader.Read(_actuationsMapPath)
+            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
 
@@ -354,7 +354,7 @@ Namespace UnitTests
 
             Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
                                     PneumaticsAuxilliariesConfig)
-            Dim psActuationsMap = PneumaticActuationsMapReader.Read(_actuationsMapPath)
+            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
 
             Dim auxConfig As IAuxiliaryConfig = GetAuxConfig(psAuxConfig)
@@ -378,7 +378,6 @@ Namespace UnitTests
             Return New AuxiliaryConfig() with {
                 .PneumaticAuxillariesConfig = psAuxConfig,
                 .PneumaticUserInputsConfig = _defaultInputConfig,
-                .HvacUserInputsConfig = New HVACUserInputsConfig(),
                 .VehicleData = New VehicleData() with {
                     .CurbWeight = _vehicleMassKG.SI(of Kilogram)
                     },

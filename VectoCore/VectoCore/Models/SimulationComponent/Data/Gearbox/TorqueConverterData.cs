@@ -35,7 +35,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {

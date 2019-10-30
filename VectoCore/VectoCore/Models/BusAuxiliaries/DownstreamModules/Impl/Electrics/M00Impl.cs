@@ -1,7 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
@@ -10,19 +9,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 {
 	public class M00Impl : AbstractModule, IM0_NonSmart_AlternatorsSetEfficiency
 	{
-		protected Ampere _getHVACElectricalPowerDemandAmps;
-		protected double _alternatorsEfficiency;
 		protected IAlternatorMap _alternatorEfficiencyMap;
 		protected Volt _powernetVoltage;
 		protected ISignals _signals;
-		protected ISSMTOOL _steadyStateModelHVAC;
 		protected Watt _ElectricalPowerW;
-		protected Watt _MechanicalPowerW;
-		protected KilogramPerSecond _FuelingLPerH;
 		private IM0_1_AverageElectricLoadDemand _m0_1;
 
-		public M00Impl(
-			IM0_1_AverageElectricLoadDemand m0_1, IAlternatorMap alternatorEfficiencyMap, Volt powernetVoltage,
+		public M00Impl(IM0_1_AverageElectricLoadDemand m0_1, IAlternatorMap alternatorEfficiencyMap, Volt powernetVoltage,
 			ISignals signals, ISSMTOOL ssmHvac)
 		{
 			if (m0_1 == null) {
@@ -49,13 +42,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 			_signals = signals;
 
-			_steadyStateModelHVAC = ssmHvac;
-
 			_ElectricalPowerW = ssmHvac.ElectricalWAdjusted;
-
-			_MechanicalPowerW = ssmHvac.MechanicalWBaseAdjusted;
-
-			_FuelingLPerH = ssmHvac.FuelPerHBaseAdjusted;
 		}
 
 		#region Implementation of IM0_NonSmart_AlternatorsSetEfficiency

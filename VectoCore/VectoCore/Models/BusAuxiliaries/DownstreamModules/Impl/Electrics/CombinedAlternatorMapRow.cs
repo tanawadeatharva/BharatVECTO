@@ -1,7 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
@@ -10,27 +9,25 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 	public class CombinedAlternatorMapRow : ICombinedAlternatorMapRow
 	{
-		public string AlternatorName { get; set; }
-		public PerSecond RPM { get; set; }
-		public Ampere Amps { get; set; }
-		public double Efficiency { get; set; }
-		public double PulleyRatio { get; set; }
+		public string AlternatorName { get; }
+		public PerSecond RPM { get; }
+		public Ampere Amps { get; }
+		public double Efficiency { get; }
+		public double PulleyRatio { get; }
 
-		// Constructors
-		public CombinedAlternatorMapRow()
+		public CombinedAlternatorMapRow(
+			string alternatorName, PerSecond rpm, Ampere amps, double efficiency, double pulleyRatio)
 		{
-		}
-
-		public CombinedAlternatorMapRow(string alternatorName, PerSecond rpm, Ampere amps, double efficiency, double pulleyRatio)
-		{
-
 			// Sanity Check
-			if (alternatorName.Trim().Length == 0)
+			if (alternatorName.Trim().Length == 0) {
 				throw new ArgumentException("Alternator name cannot be zero length");
-			if (efficiency < 0 | efficiency > 100)
+			}
+			if (efficiency < 0 | efficiency > 100) {
 				throw new ArgumentException("Alternator Efficiency must be between 0 and 100");
-			if (pulleyRatio <= 0)
+			}
+			if (pulleyRatio <= 0) {
 				throw new ArgumentException("Alternator Pully ratio must be a positive number");
+			}
 
 			// Assignments
 			AlternatorName = alternatorName;

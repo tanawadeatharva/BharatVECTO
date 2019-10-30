@@ -31,7 +31,6 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Utils;

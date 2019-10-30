@@ -10,7 +10,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 		ISSMBusParameters BusParameters { get; }
 
-		ITechlistBenefitLines Technologies { get; }
+		ISSMTechnologies Technologies { get; }
 
 		ISSMBoundaryConditions BoundaryConditions { get; }
 
@@ -55,7 +55,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		double SolarClouding(Kelvin envTemp);
 
 		Watt HeatPerPassengerIntoCabin(Kelvin envTemp);
-		//Kelvin PassengerBoundaryTemperature { get; }
 		WattPerKelvinSquareMeter UValue { get; }
 		Kelvin HeatingBoundaryTemperature { get; }
 		Kelvin CoolingBoundaryTemperature { get; }
@@ -78,9 +77,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	public interface IEnvironmentalConditions
 	{
 		// EnviromentalConditions				
-		//Kelvin EnviromentalTemperature { get; }
-
-		//WattPerSquareMeter Solar { get; }
 
 		IEnvironmentalConditionsMapEntry DefaultConditions { get; }
 
@@ -94,9 +90,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	public interface IACSystem
 	{
 		// AC-system				            
-		string CompressorType { get; }
-
-		string CompressorTypeDerived { get; }
+		ACCompressorType CompressorType { get; }
 		Watt CompressorCapacity { get; }
 		double COP { get; }
 	}
@@ -117,6 +111,47 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	{
 		Low,
 		High
+	}
+
+	public enum ACCompressorType
+	{
+		TwoStage,
+		ThreeStage,
+		FourStage,
+		Continuous
+	}
+
+	public static class ACCompressorTypeExtensions
+	{
+		public static ACCompressorType ParseEnum(string txt)
+		{
+			switch (txt) {
+				case "2-stage": return ACCompressorType.TwoStage;
+				case "3-stage": return ACCompressorType.ThreeStage;
+				case "4-stage": return ACCompressorType.FourStage;
+				default: return txt.ParseEnum<ACCompressorType>();
+			}
+		}
+
+		public static string ToString(this ACCompressorType type)
+		{
+			switch (type) {
+				case ACCompressorType.TwoStage: return "2-stage";
+				case ACCompressorType.ThreeStage: return "3-stage";
+				case ACCompressorType.FourStage: return "4-stage";
+				default: return type.ToString();
+			}
+		}
+
+		public static bool IsElectrical(this ACCompressorType type)
+		{
+			return type == ACCompressorType.Continuous;
+		}
+
+		public static bool IsMechanical(this ACCompressorType type)
+		{
+			return type != ACCompressorType.Continuous;
+		}
 	}
 
 	public interface IAuxHeater

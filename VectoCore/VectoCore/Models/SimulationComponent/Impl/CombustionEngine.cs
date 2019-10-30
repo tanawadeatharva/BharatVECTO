@@ -31,6 +31,7 @@
 
 using System;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -395,10 +396,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var result = fuel.ConsumptionMap.GetFuelConsumption(
 					CurrentState.EngineTorque, avgEngineSpeed,
 					DataBus.ExecutionMode != ExecutionMode.Declaration);
+				var fuelData = fuel.FuelData;
 				if (DataBus.ExecutionMode != ExecutionMode.Declaration && result.Extrapolated) {
 					Log.Warn(
 						"FuelConsumptionMap for fuel {2} was extrapolated: range for FC-Map is not sufficient: n: {0}, torque: {1}",
-						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value(), fuel.FuelData.FuelType.GetLabel());
+						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value(), fuelData.FuelType.GetLabel());
 				}
 				var pt1 = ModelData.FullLoadCurves[DataBus.Gear].PT1(avgEngineSpeed);
 				if (DataBus.ExecutionMode == ExecutionMode.Declaration && pt1.Extrapolated) {
@@ -408,9 +410,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				var fc = result.Value;
-				var fcNCVcorr = fc * fuel.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
+				var fcNCVcorr = fc * fuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
 
-				var fcWHTC = fcNCVcorr * WHTCCorrectionFactor(fuel.FuelData);
+				var fcWHTC = fcNCVcorr * WHTCCorrectionFactor(fuelData);
 				var fcAAUX = fcWHTC;
 				var advancedAux = EngineAux as BusAuxiliariesAdapter;
 				if (advancedAux != null) {
@@ -419,7 +421,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				var fcFinal = fcAAUX;
 
-				container[ModalResultField.FCMap, fuel.FuelData] = fc;
+				container[ModalResultField.FCMap, fuelData] = fc;
 				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
 				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
 				container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
@@ -428,7 +430,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
-		protected virtual double WHTCCorrectionFactor(FuelData.Entry fuel)
+		protected virtual double WHTCCorrectionFactor(IFuelProperties fuel)
 		{
 			return ModelData.Fuels.First(x=> x.FuelData.FuelType == fuel.FuelType).FuelConsumptionCorrectionFactor; 
 		}

@@ -34,11 +34,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -64,7 +62,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				Distance = double.MaxValue.SI<Meter>();
 			}
 
-			public IList<FuelData.Entry> FuelData { get; set; }
+			public IList<IFuelProperties> FuelData { get; set; }
 
 
 			public Kilogram Payload { get; set; }

@@ -1,7 +1,5 @@
 ﻿using System;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
@@ -13,15 +11,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		protected IM0_NonSmart_AlternatorsSetEfficiency _m0;
 		protected Double _alternatorGearEfficiency;
 		protected Double _compressorGearEfficiency;
-		protected ISignals _signals;
-		protected Volt _powernetVoltage;
-		protected ISSMTOOL _steadyStateModel;
-
+		
 		protected Watt _ElectricalPowerW;
 		protected Watt _MechanicalPowerW;
 		protected KilogramPerSecond _FuelingLPerH;
 
-		public M01Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, double altGearEfficiency, double compressorGearEfficiency, Volt powernetVoltage, ISignals signals, ISSMTOOL ssm)
+		public M01Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, double altGearEfficiency, double compressorGearEfficiency, ISSMTOOL ssm)
 		{
 			//'Sanity Check - Illegal operations without all params.
 			if (m0 == null) {
@@ -30,23 +25,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			if (altGearEfficiency < ElectricConstants.AlternatorPulleyEfficiencyMin ||
 				altGearEfficiency > ElectricConstants.AlternatorPulleyEfficiencyMax) {
-				throw new ArgumentException(
-					string.Format
-					(
-						"Gear efficiency must be between {0} and {1}",
+				throw new ArgumentException(string.Format("Gear efficiency must be between {0} and {1}",
 						ElectricConstants.AlternatorPulleyEfficiencyMin, ElectricConstants.AlternatorPulleyEfficiencyMax));
 			}
-			if (signals == null) {
-				throw new Exception("Signals object as supplied is null");
-			}
-
-			if (powernetVoltage < ElectricConstants.PowenetVoltageMin || powernetVoltage > ElectricConstants.PowenetVoltageMax) {
-				throw new ArgumentException(
-					string.Format(
-						"PowenetVoltage supplied must be in the range {0} to {1}", ElectricConstants.PowenetVoltageMin,
-						ElectricConstants.PowenetVoltageMax));
-			}
-
+			
+			
 			if (ssm == null ) {
 				throw new ArgumentException("Steady State model was not supplied");
 			}
@@ -58,14 +41,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			//'Assign
 			_m0 = m0;
 			_alternatorGearEfficiency = altGearEfficiency;
-			_signals = signals;
+			
 
 			_compressorGearEfficiency = compressorGearEfficiency;
-			_powernetVoltage = powernetVoltage;
-
-
-			_steadyStateModel = ssm;
-
+			
 			_ElectricalPowerW = ssm.ElectricalWAdjusted;
 			_MechanicalPowerW = ssm.MechanicalWBaseAdjusted;
 			_FuelingLPerH = ssm.FuelPerHBaseAdjusted; // ' SI(Of LiterPerHour)()

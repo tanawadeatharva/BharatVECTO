@@ -1,20 +1,12 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 {
 	public class M11Impl : AbstractModule, IM11
 	{
-		protected Joule _smartElectricalTotalCycleElectricalEnergyGeneratedDuringOverrunOnly;
-		protected Joule _smartElectricalTotalCycleEletricalEnergyGenerated;
-		protected Joule _totalCycleElectricalDemand;
-		protected Kilogram _totalCycleFuelConsumptionSmartElectricalLoad;
-		protected Kilogram _totalCycleFuelConsumptionZeroElectricalLoad;
-		protected Joule _stopStartSensitiveTotalCycleElectricalDemand;
-		protected Kilogram _totalCycleFuelConsuptionAverageLoads;
-
+		
 #region "Private Aggregates"
 		protected Joule AG1;
 		protected Joule AG2;
@@ -25,12 +17,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected Kilogram AG7;
 #endregion
 
-		protected IM1_AverageHVACLoadDemand M1;
-		protected IM3_AveragePneumaticLoadDemand M3;
-		protected IM6 M6;
-		protected IM8 M8;
-		protected IFuelConsumptionMap FMAP;
-		protected ISignals Signals;
+		protected readonly IM1_AverageHVACLoadDemand M1;
+		protected readonly IM3_AveragePneumaticLoadDemand M3;
+		protected readonly IM6 M6;
+		protected readonly IM8 M8;
+		protected readonly IFuelConsumptionMap FMAP;
+		protected readonly ISignals Signals;
 
 		public M11Impl(IM1_AverageHVACLoadDemand m1, IM3_AveragePneumaticLoadDemand m3, IM6 m6, IM8 m8, IFuelConsumptionMap fmap, ISignals signals)
 		{

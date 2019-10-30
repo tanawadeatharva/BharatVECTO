@@ -11,5 +11,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 		/// <returns></returns>
 		/// <remarks></remarks>
 		KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity);
+
 	}
 }

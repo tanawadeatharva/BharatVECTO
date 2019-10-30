@@ -9,10 +9,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 
 	public class M13Impl : AbstractModule, IM13
 	{
-		protected IM10 M10;
-		protected IM11 M11;
-		protected IM12 M12;
-		protected ISignals Signals;
+		protected readonly IM10 M10;
+		protected readonly IM11 M11;
+		protected readonly IM12 M12;
+		protected readonly ISignals Signals;
 
 		private Kilogram _whtcTotalCycleFuelConsumptionGrams;
 

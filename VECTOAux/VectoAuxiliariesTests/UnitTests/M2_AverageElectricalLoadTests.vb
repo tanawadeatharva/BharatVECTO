@@ -65,7 +65,7 @@ Namespace UnitTests
 			'Get Consumers.
 
 
-			Return New M02Impl(m01, m0, 0.8, 26.3.SI(Of Volt), signals)
+			Return New M02Impl(m01, m0, 0.8, 26.3.SI(Of Volt))
 		End Function
 
 #End Region

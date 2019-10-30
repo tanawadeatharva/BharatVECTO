@@ -10,21 +10,21 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
-	public static class PneumaticActuationsMapReader
+	public static class ActuationsMapReader
 	{
 		public static readonly string[] Header = new[] { Fields.ConsumerName, Fields.CycleName, Fields.Actuations };
 
-		public static IPneumaticActuationsMap Read(string fileName)
+		public static IActuationsMap Read(string fileName)
 		{
 			return Create(VectoCSVFile.Read(fileName), Path.GetFullPath(fileName));
 		}
 
-		public static IPneumaticActuationsMap ReadStream(Stream str)
+		public static IActuationsMap ReadStream(Stream str)
 		{
 			return Create(VectoCSVFile.ReadStream(str), null);
 		}
 
-		public static IPneumaticActuationsMap Create(DataTable data, string source)
+		public static IActuationsMap Create(DataTable data, string source)
 		{
 			if (!HeaderIsValid(data.Columns)) {
 				throw new VectoException("Invalid header for pneumatic actuations. expected: {0}, got: {1}",
@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 				retVal[key] = row.Field<string>(Fields.Actuations).ToInt();
 			}
-			return new PneumaticActuationsMap(retVal, source);
+			return new ActuationsMap(retVal, source);
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection cols)

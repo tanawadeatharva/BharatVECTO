@@ -32,6 +32,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
@@ -66,7 +67,7 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IResultEntry
 	{
-		IList<FuelData.Entry> FuelData { get; set; }
+		IList<IFuelProperties> FuelData { get; set; }
 		Kilogram Payload { get; set; }
 		Kilogram TotalVehicleWeight { get; set; }
 		CubicMeter CargoVolume { get; set; }

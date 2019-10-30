@@ -4,7 +4,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface ISSMTechList
 	{
-		IReadOnlyList<ITechListBenefitLine> TechLines { get; set; }
+		IReadOnlyList<ISSMTechnology> TechLines { get; set; }
 
 		//void Clear();
 		//ITechListBenefitLine Find(string category, string benefitName);

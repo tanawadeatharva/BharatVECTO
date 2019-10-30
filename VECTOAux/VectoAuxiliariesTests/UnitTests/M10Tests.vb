@@ -2,7 +2,6 @@
 Imports NUnit.Framework
 Imports Moq
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
@@ -29,7 +28,7 @@ Namespace UnitTests
 			m9.Setup(Function(x) x.TotalCycleFuelConsumptionCompressorOffContinuously).Returns((y3 / 1000).SI(Of Kilogram))
 
 
-			Dim target As IM10 = New M10Impl(m3.Object, m9.Object, signals)
+			Dim target As IM10 = New M10Impl(m3.Object, m9.Object)
 
 			target.CycleStep(1.SI(Of Second))
 

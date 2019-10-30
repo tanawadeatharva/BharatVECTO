@@ -2,8 +2,6 @@
 using Ninject.Modules;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
-using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Factory;
 using TUGraz.VectoCore.Utils.Ninject;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration

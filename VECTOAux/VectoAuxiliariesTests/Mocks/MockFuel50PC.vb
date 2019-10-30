@@ -1,9 +1,12 @@
 ﻿
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Models.Declaration
 
 Public Class MockFuel50PC
 	Implements IFuelConsumptionMap
+
+	
 
 	Public Function fFCdelaunay_Intp(nU As Double, Tq As Double) As Double
 
@@ -15,5 +18,7 @@ Public Class MockFuel50PC
 		Implements IFuelConsumptionMap.GetFuelConsumption
 		Return (fFCdelaunay_Intp(angularVelocity.AsRPM, torque.Value()) / 3600 / 1000).SI(Of KilogramPerSecond)()
 	End Function
+
+	
 End Class
 

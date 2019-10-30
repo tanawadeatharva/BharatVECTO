@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -100,38 +99,6 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			public const string Current = "Amps";
 			public const string Efficiency = "Efficiency";
 			public const string PulleyRatio = "PulleyRatio";
-		}
-
-		// Helpers
-		public static IList<ICombinedAlternatorMapRow> CreateDefaultMap()
-		{
-			var map = new List<ICombinedAlternatorMapRow>();
-
-			map.Add(new CombinedAlternatorMapRow("Alt1", 2000.RPMtoRad(), 10.SI<Ampere>(), 62, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 2000.RPMtoRad(), 27.SI<Ampere>(), 70, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 2000.RPMtoRad(), 53.SI<Ampere>(), 30, 3.6));
-
-			map.Add(new CombinedAlternatorMapRow("Alt1", 4000.RPMtoRad(), 10.SI<Ampere>(), 64, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 4000.RPMtoRad(), 63.SI<Ampere>(), 74, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 4000.RPMtoRad(), 125.SI<Ampere>(), 68, 3.6));
-
-			map.Add(new CombinedAlternatorMapRow("Alt1", 6000.RPMtoRad(), 10.SI<Ampere>(), 53, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 6000.RPMtoRad(), 68.SI<Ampere>(), 70, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 6000.RPMtoRad(), 136.SI<Ampere>(), 62, 3.6));
-
-			map.Add(new CombinedAlternatorMapRow("Alt2", 2000.RPMtoRad(), 10.SI<Ampere>(), 62, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 2000.RPMtoRad(), 27.SI<Ampere>(), 70, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 2000.RPMtoRad(), 53.SI<Ampere>(), 30, 3));
-
-			map.Add(new CombinedAlternatorMapRow("Alt2", 4000.RPMtoRad(), 10.SI<Ampere>(), 64, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 4000.RPMtoRad(), 63.SI<Ampere>(), 74, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 4000.RPMtoRad(), 125.SI<Ampere>(), 68, 3));
-
-			map.Add(new CombinedAlternatorMapRow("Alt2", 6000.RPMtoRad(), 10.SI<Ampere>(), 53, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 6000.RPMtoRad(), 68.SI<Ampere>(), 70, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 6000.RPMtoRad(), 136.SI<Ampere>(), 62, 3));
-
-			return map;
 		}
 
 	}

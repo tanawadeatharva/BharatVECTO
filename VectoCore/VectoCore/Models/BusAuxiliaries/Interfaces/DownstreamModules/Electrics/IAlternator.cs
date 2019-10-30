@@ -25,11 +25,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.El
 		// G6
 		double PulleyRatio { get; set; }
 
-		// S9
-		PerSecond SpindleSpeed { get; }
-
+		
 		// S10
-		double Efficiency { get; }
+		double GetEfficiency(PerSecond crankSpeed, Ampere currentDemand);
 
 		// C10-D15
 		List<AltUserInput<Ampere>> InputTable2000 { get; set; }

@@ -1,8 +1,6 @@
 ﻿using System.Xml;
-using System.Xml.Schema;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces

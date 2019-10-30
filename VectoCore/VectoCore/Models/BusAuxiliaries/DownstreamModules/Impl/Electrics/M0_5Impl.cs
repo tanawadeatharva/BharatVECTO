@@ -1,7 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
@@ -62,18 +61,16 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		private Ampere HvacPlusNonBaseCurrents()
 		{
-			//'Stored Energy Efficience removed from V8.0 21/4/15 by Mike Preston  //tb
 			return _m0.GetHVACElectricalPowerDemandAmps + _m0_1.GetTotalAverageDemandAmpsWithoutBaseLoad;
-			//_electricalConsumables.GetTotalAverageDemandAmps(true);  //'/ElectricConstants.StoredEnergyEfficiency)
 		}
 
 		public Ampere SmartIdleCurrent
 		{
 			get {
-				var hvac_Plus_None_Base = HvacPlusNonBaseCurrents();
-				var smart_idle_current = _resultCardIdle.GetSmartCurrentResult(hvac_Plus_None_Base);
+				var hvacPlusNoneBase = HvacPlusNonBaseCurrents();
+				var smartIdleCurrent = _resultCardIdle.GetSmartCurrentResult(hvacPlusNoneBase);
 
-				return smart_idle_current; 
+				return smartIdleCurrent; 
 			}
 		}
 

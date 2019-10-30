@@ -31,6 +31,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -130,6 +131,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[Required, ValidateObject]
 		public FuelConsumptionMap ConsumptionMap { get; internal set; }
 
-		public FuelData.Entry FuelData { get; internal set; }
+		public IFuelProperties FuelData { get; internal set; }
 	}
 }

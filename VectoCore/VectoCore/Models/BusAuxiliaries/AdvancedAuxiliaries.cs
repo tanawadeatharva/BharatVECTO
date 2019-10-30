@@ -11,17 +11,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Util;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries {
@@ -66,21 +63,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 		private IM13 M13;
 		private IM14 M14;
 
-		//private string vectoDirectory;
-
-		private IHVACConstants hvacConstants;
-
-		// Event Handler top level bubble.
-		// Public Sub VectoEventHandler(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) _
-		// Handles compressorMap.AuxiliaryEvent, alternatorMap.AuxiliaryEvent, ssmTool.Message, ssmToolModule14.Message
-
-		// If Signals.AuxiliaryEventReportingLevel <= messageType Then
-
-		// RaiseEvent AuxiliaryEvent(sender, message, messageType)
-
-		// End If
-		// End Sub
-
+		
 		public void VectoEventHandler(ref object sender, string message, AdvancedAuxiliaryMessageType messageType)
 		{
 			//if (Signals.AuxiliaryEventReportingLevel <= messageType) {
@@ -98,14 +81,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 	
 
 		// Initialise Model
-		public void Initialise(IAuxiliaryConfig auxCfg /*string IAuxPath, string vectoFilePath*/)
+		public void Initialise(IAuxiliaryConfig auxCfg, IFuelProperties fuelProperties /*string IAuxPath, string vectoFilePath*/)
 		{
-			//var vectoDirectory = ""; // FilePathUtils.fPATH(vectoFilePath);
-
-			//var auxPath = FilePathUtils.ResolveFilePath(vectoDirectory, IAuxPath);
-
-			hvacConstants = auxCfg.HvacUserInputsConfig.HVACConstants;
-
 			Signals.CurrentCycleTimeInSeconds = 0;
 			auxConfig = auxCfg; //new AuxiliaryConfig(auxPath);
 
@@ -154,13 +131,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 
 			M1 = new M01Impl(
 				M0, auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
-				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
-				Signals, ssmTool);
+				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, ssmTool);
 
 
 			M2 = new M02Impl(m0_1, M0,
-				auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
-				Signals);
+				auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage);
 
 			
 			M3 = new M03Impl(auxConfig, compressorMap, actuationsMap, Signals);
@@ -171,11 +146,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 			M7 = new M07Impl(M5, M6, Signals);
 			M8 = new M08Impl(M1, M6, M7, Signals);
 			M9 = new M09Impl(M1, M4, M6, M8, fuelMap, auxConfig.PneumaticAuxillariesConfig, Signals);
-			M10 = new M10Impl(M3, M9, Signals);
+			M10 = new M10Impl(M3, M9);
 			M11 = new M11Impl(M1, M3, M6, M8, fuelMap, Signals);
-			M12 = new M12Impl(M10, M11, Signals);
+			M12 = new M12Impl(M10, M11);
 			M13 = new M13Impl(M10, M11, M12, Signals);
-			M14 = new M14Impl(M13, ssmToolModule14, hvacConstants, Signals);
+			M14 = new M14Impl(M13, ssmToolModule14, fuelProperties, Signals);
 
 			//compressorMap.AuxiliaryEvent += VectoEventHandler;
 			//alternatorMap.AuxiliaryEvent += VectoEventHandler;
@@ -232,10 +207,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 			}
 		}
 
-		public bool RunStart(IAuxiliaryConfig auxCfg)
+		public bool RunStart(IAuxiliaryConfig auxCfg, IFuelProperties fuelProperties)
 		{
 			try {
-				Initialise(auxCfg);
+				Initialise(auxCfg, fuelProperties);
 			} catch (Exception ) {
 				return false;
 			}

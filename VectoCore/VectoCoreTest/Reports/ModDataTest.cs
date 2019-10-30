@@ -627,8 +627,11 @@ namespace TUGraz.VectoCore.Tests.Reports
 			jobContainer.WaitFinished();
 
 			foreach (var modalResults in modData) {
-				AssertModDataIntegrityAT(modalResults.Item1, auxKeys, modalResults.Item2,
-					FuelConsumptionMapReader.Create(((IEngineeringInputDataProvider)inputData).JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().FuelConsumptionMap), true);
+				AssertModDataIntegrityAT(
+					modalResults.Item1, auxKeys, modalResults.Item2,
+					FuelConsumptionMapReader.Create(
+						((IEngineeringInputDataProvider)inputData)
+						.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().Fuels.First().FuelConsumptionMap), true);
 			}
 
 			AssertSumDataIntegrity(sumData, ExecutionMode.Engineering, true);
@@ -659,7 +662,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				// check fuel consumption interpolation
 				var fuelConsumption = (SI)row[ModalResultField.FCMap.GetName()];
 				Assert.AreEqual(fuelConsumption.Value(),
-					consumptionMap.GetFuelConsumption(tqEngFcmap, nEngFcMap).Value.Value(), 1E-3, "time: {0}  distance: {1}",
+					consumptionMap.GetFuelConsumption(tqEngFcmap, nEngFcMap, false).Value.Value(), 1E-3, "time: {0}  distance: {1}",
 					time, distance);
 
 				// check P_eng_FCmap = T_eng_fcmap * n_eng

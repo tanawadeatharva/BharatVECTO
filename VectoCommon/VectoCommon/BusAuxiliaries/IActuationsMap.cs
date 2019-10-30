@@ -9,25 +9,13 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
-using TUGraz.VectoCommon.BusAuxiliaries;
 
-namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
+namespace TUGraz.VectoCommon.BusAuxiliaries
 {
-	public class HVACUserInputsConfig : IHVACUserInputsConfig
+	public interface IActuationsMap
 	{
-		public HVACUserInputsConfig()
-		{
-			HVACConstants = new HVACConstants();
-		}
+		int GetNumActuations(ActuationsKey key);
 
-		//public ISSMInputs SSMInputs { get; internal set; }
-
-		public IHVACConstants HVACConstants { get; }
-
-		//public string SSMFilePath { get; set; }
-
-		//public string BusDatabasePath { get; set; }
-
-		//public bool SSMDisabled { get; set; }
+		string Source { get; }
 	}
 }

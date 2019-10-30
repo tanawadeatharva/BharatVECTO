@@ -4,14 +4,12 @@ using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
-	public class HVACTechBenefitsReader
+	public class SSMTechnologiesReader
 	{
 		protected static string[] headerCols = new[]
 		{
@@ -22,17 +20,17 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			Fields.ActiveVC, Fields.ActiveVH, Fields.ActiveVV
 		};
 
-		public static ITechlistBenefitLines ReadFromFile(string fileName)
+		public static ISSMTechnologies ReadFromFile(string fileName)
 		{
 			return Create(VectoCSVFile.Read(fileName), fileName);
 		}
 
-		public static ITechlistBenefitLines ReadFromStream(Stream str)
+		public static ISSMTechnologies ReadFromStream(Stream str)
 		{
 			return Create(VectoCSVFile.ReadStream(str), null);
 		}
 
-		public static ITechlistBenefitLines Create(DataTable data, string fileName)
+		public static ISSMTechnologies Create(DataTable data, string fileName)
 		{
 			if (!HeaderIsValid(data.Columns)) {
 				throw new VectoException("invalid header for techlist file. expected: {0} got: {1}",
@@ -40,9 +38,9 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					);
 			}
 
-			var retVal = new List<ITechListBenefitLine>();
+			var retVal = new List<ISSMTechnology>();
 			foreach (DataRow row in data.Rows) {
-				retVal.Add(new TechListBenefitLine()
+				retVal.Add(new SSMTechnology()
 				{
 					Category = row.Field<string>(Fields.Category),
 					BenefitName = row.Field<string>(Fields.BenefitName),

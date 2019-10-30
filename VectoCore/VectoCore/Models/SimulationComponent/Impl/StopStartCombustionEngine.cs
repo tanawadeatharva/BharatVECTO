@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				
 				var result = fuel.ConsumptionMap.GetFuelConsumption(auxDemand, ModelData.IdleSpeed);
 
-				var fcESS = result.Value * (1 - EngineStopStartUtilityFactor);
+				var fcESS = result.Value() * (1 - EngineStopStartUtilityFactor);
 				var fcFinal = fcESS;
 
 				container[ModalResultField.FCMap, fuel.FuelData] = fc;

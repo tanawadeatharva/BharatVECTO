@@ -40,27 +40,5 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 		public double SmartRegenFractionTotalAirDemand { get; set; }
 
-
-		//public PneumaticsAuxilliariesConfig()
-		//{
-		//	//if (setToDefaults)
-		//	//	SetDefaults();
-		//}
-
-		//public void SetDefaults()
-		//{
-		//	AdBlueNIperMinute = 21.25.SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
-		//	AirControlledSuspensionNIperMinute = 15.SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
-		//	BrakingNoRetarderNIperKG = 0.00081.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
-		//	BrakingWithRetarderNIperKG = 0.0006.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
-		//	BreakingPerKneelingNIperKGinMM = 0.000066.SI(Unit.SI.Liter.Per.Kilo.Gramm.Meter).Cast<NormLiterPerKilogramMeter>();
-		//	DeadVolBlowOutsPerLitresperHour = 24.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
-		//	DeadVolumeLitres = 30.SI<NormLiter>();
-		//	NonSmartRegenFractionTotalAirDemand = 0.26;
-		//	OverrunUtilisationForCompressionFraction = 0.97;
-		//	PerDoorOpeningNI = 12.7.SI<NormLiter>();
-		//	PerStopBrakeActuationNIperKG = 0.00064.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
-		//	SmartRegenFractionTotalAirDemand = 0.12;
-		//}
 	}
 }

@@ -47,7 +47,7 @@ Namespace UnitTests
             dim auxConfig = Utils.GetAuxTestConfig()
             dim vehicle = auxConfig.VehicleData
             CType(vehicle, VehicleData).Height = 0.SI (of Meter)
-            Dim ssmInput = SSMInputData.ReadFile(_SSMMAP, vehicle, Nothing, HVACTechBenefitsReader.ReadFromFile("TestFiles/TechBenefits.csv"))
+            Dim ssmInput = SSMInputData.ReadFile(_SSMMAP, vehicle, Nothing, SSMTechnologiesReader.ReadFromFile("TestFiles/TechBenefits.csv"))
             ssm = New SSMTOOL(ssmInput)
             
             alternatorMap = AlternatorReader.ReadMap(_GOODMAP)
@@ -55,7 +55,7 @@ Namespace UnitTests
             
 
             'ssm.Load(_SSMMAP)
-            For Each entry As ITechListBenefitLine In ssm.TechList.TechLines
+            For Each entry As ISSMTechnology In ssm.TechList.TechLines
                 entry.OnVehicle = True
             Next
             Dim m01 As IM0_1_AverageElectricLoadDemand = New M0_1Impl(auxConfig)
@@ -67,14 +67,12 @@ Namespace UnitTests
 
             'ssm.Load(_SSMMAP)
 
-            For Each entry As ITechListBenefitLine In ssm.TechList.TechLines
+            For Each entry As ISSMTechnology In ssm.TechList.TechLines
                 entry.OnVehicle = true
             next
 
             Return New M01Impl(m0, alternatorGearEfficiency,
                                compressorGrearEfficiency,
-                               powernetVoltage,
-                               signals,
                                ssm)
         End Function
 

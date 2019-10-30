@@ -240,11 +240,9 @@ Namespace UnitTests
 
 
             'Arrange
-            Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
-
-
+           
             'Act
-            Dim alt As CombinedAlternator = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
+            Dim alt = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
 
 
 
@@ -268,12 +266,9 @@ Namespace UnitTests
         <Test()>
         Public Sub Alt2TableConstructTest()
 
-
-
-            'Arrange
-
+            
             'Act
-            Dim alt As CombinedAlternator = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
+            Dim alt = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
 
 
             Dim idx As Integer
@@ -295,13 +290,9 @@ Namespace UnitTests
         <Test()>
         Public Sub Alt3TableConstructTest()
 
-
-            'Arrange
-            Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
-
-
+            
             'Act
-            Dim alt As CombinedAlternator = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
+            Dim alt = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
 
 
             Dim idx As Integer
@@ -323,12 +314,8 @@ Namespace UnitTests
         <Test()>
         Public Sub Alt4TableConstructTest()
 
-            'Arrange
-            Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
-
-
-            'Act
-            Dim alt As CombinedAlternator = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
+           'Act
+            Dim alt = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
 
 
             Dim idx As Integer
@@ -353,16 +340,10 @@ Namespace UnitTests
         <Test()>
         Public Sub InitialiseCombinedAlternatorMapFromFile()
 
-
-            'Arrange
-            Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
-
-
             'Act
-            Dim target As CombinedAlternator = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
+            Dim target = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
 
-
-
+            
             'Assert
 
             Assert.AreEqual(target.Alternators.Count, 4)
@@ -373,9 +354,6 @@ Namespace UnitTests
 
         <Test()>
         Public Sub InitialiseCombinedAlternatorMapFromDefault()
-
-            'Arrange
-            Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
 
             'Act
             Dim target = CType( AlternatorReader.ReadMap("TestFiles/CombinedAlternatorDefaultsTest.aalt"), CombinedAlternator)

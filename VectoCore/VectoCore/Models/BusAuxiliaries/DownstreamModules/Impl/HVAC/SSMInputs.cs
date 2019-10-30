@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
@@ -15,11 +11,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 	public class SSMInputs : ISSMInputs, ISSMBoundaryConditions, IEnvironmentalConditions, IACSystem, IVentilation,
 		IAuxHeater, ISSMBusParameters
 	{
-		private ITechlistBenefitLines _technologies;
+		private IFuelProperties HeatingFuel;
 
-		private FuelData.Entry HeatingFuel;
-
-		public SSMInputs(IVehicleData vehicle, string source, FuelData.Entry? heatingFuel = null)
+		public SSMInputs(IVehicleData vehicle, string source, IFuelProperties heatingFuel = null)
 		{
 			Vehicle = vehicle;
 			Source = source;
@@ -305,12 +299,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 
 		// C53 - "Continous/2-stage/3-stage/4-stage
-		public string CompressorType { get; set; }
+		public ACCompressorType CompressorType { get; set; }
 
 		// mechanical/electrical
 		public string CompressorTypeDerived
 		{
-			get { return CompressorType == "Continuous" ? "Electrical" : "Mechanical"; }
+			get { return CompressorType == ACCompressorType.Continuous ? "Electrical" : "Mechanical"; }
 		}
 
 		// C54 -  ( KW )
@@ -320,18 +314,22 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public double COP
 		{
 			get {
-				var cop = 3.5D;
+				var cop = 3.5;
 
-				if ((CompressorType != null)) {
-					cop = CompressorType.ToLower() == "3-stage" ? cop * 1.02 : cop;
-					cop = CompressorType.ToLower() == "4-stage" ? cop * 1.02 : cop;
-					cop = CompressorType.ToLower() == "continuous"
-						? BusFloorType == FloorType.LowFloor
+				switch (CompressorType) {
+					case ACCompressorType.TwoStage: break;
+					case ACCompressorType.ThreeStage: 
+					case ACCompressorType.FourStage:
+						cop = cop * 1.02;
+						break;
+					case ACCompressorType.Continuous:
+						cop = BusFloorType == FloorType.LowFloor
 							? cop * 1.04
-							: cop * 1.06
-						: cop;
+							: cop * 1.06;
+						break;
+					default: throw new ArgumentOutOfRangeException();
 				}
-
+				
 				return Math.Round(cop, 2);
 			}
 		}
@@ -367,101 +365,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public double CoolantHeatTransferredToAirCabinHeater { get; set; }
 
 
-		//private void SetDefaults()
-		//{
-		//	// BUS Parameterisation
-		//	// ********************
-		//	Vehicle = new VehicleData() {
-		//		ModelName = "DummyBus",
-		//		PassengerCount = 47.0,
-		//		FloorType = FloorType.HighFloor, // "raised floor",
-		//		DoubleDecker = false,
-		//		Length = 10.655.SI<Meter>(),
-		//		Width = 2.55.SI<Meter>(),
-		//		Height = 2.275.SI<Meter>(),
-		//	};
-
-		//	// BP_BusFloorSurfaceArea  : Calculated
-		//	// BP_BusSurfaceArea : Calculated
-		//	// BP_BusWindowSurface    : Calculated
-		//	// BP_BusVolume : Calculated
-
-		//	// BOUNDRY CONDITIONS
-		//	// ******************
-
-		//	GFactor = 0.95D;
-
-		//	// BC_SolarClouding As Double :Calculated
-		//	// BC_HeatPerPassengerIntoCabinW  :Calculated
-		//	//PassengerBoundaryTemperature = 12.0.DegCelsiusToKelvin();
-
-		//	// BC_PassengerDensityLowFloor :Calculated
-		//	// BC_PassengerDensitySemiLowFloor :Calculated
-		//	// BC_PassengerDensityRaisedFloor :Calculated
-		//	// BC_CalculatedPassengerNumber  :Calculated
-		//	// BC_UValues :Calculated
-		//	HeatingBoundaryTemperature = 18.0.DegCelsiusToKelvin();
-		//	CoolingBoundaryTemperature = 23.0.DegCelsiusToKelvin();
-
-		//	// BC_CoolingBoundaryTemperature : ReadOnly Static
-		//	HighVentilation = 20.0.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
-		//	LowVentilation = 7.0.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
-
-		//	// BC_High  :Calculated
-		//	// BC_Low  :Calculated
-		//	// BC_HighVentPower  :Calculated
-		//	// BC_LowVentPower  :Calculated
-		//	SpecificVentilationPower = 0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast<JoulePerCubicMeter>();
-
-		//	// BC_COP :Calculated
-		//	AuxHeaterEfficiency = 0.84D;
-		//	//GCVDieselOrHeatingOil = 11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.Kilo.Gramm).Cast<JoulePerKilogramm>();
-
-		//	// BC_WindowAreaPerUnitBusLength   :Calculated 
-		//	// BC_FrontRearWindowArea  :Calculated
-		//	//MaxTemperatureDeltaForLowFloorBusses = 3.0.SI<Kelvin>();
-		//	//MaxPossibleBenefitFromTechnologyList = 0.5D;
-
-		//	// Environmental Conditions
-		//	// ************************
-		//	//EnviromentalTemperature = 25.0.DegCelsiusToKelvin();
-		//	//Solar = 400.0.SI<WattPerSquareMeter>();
-		//	//EnviromentalConditions_BatchEnabled = true;
-		//	//EnviromentalConditions_BatchFile = "DefaultClimatic.aenv";
-
-		//	// AC SYSTEM
-		//	// *********
-		//	CompressorType = "2-stage";
-		//	CompressorCapacity = 18.0.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-
-		//	// VENTILATION
-		//	// ***********
-		//	VentilationOnDuringHeating = true;
-		//	VentilationWhenBothHeatingAndACInactive = true;
-		//	VentilationDuringAC = true;
-		//	VentilationFlowSettingWhenHeatingAndACInactive = VentilationLevel.High; //"high";
-		//	VentilationDuringHeating = VentilationLevel.High; //"high";
-		//	VentilationDuringCooling = VentilationLevel.High; //"high";
-
-		//	// AUX HEATER
-		//	// **********
-		//	FuelFiredHeaterPower = 30.0.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-		//	FuelEnergyToHeatToCoolant = 0.2;
-		//	CoolantHeatTransferredToAirCabinHeater = 0.75;
-		//	//EngineWasteHeatkW = 0.SI<Watt>();
-		//}
-
 		#region Implementation of ISSMInputs
 
 		public ISSMBusParameters BusParameters
 		{
 			get { return this; }
-		}
-
-		public ITechlistBenefitLines Technologies
-		{
-			get { return _technologies; }
-			set { _technologies = value; }
 		}
 
 		public ISSMBoundaryConditions BoundaryConditions
@@ -488,6 +396,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		{
 			get { return this; }
 		}
+
+		public ISSMTechnologies Technologies { get; set; }
+
 
 		#endregion
 	}

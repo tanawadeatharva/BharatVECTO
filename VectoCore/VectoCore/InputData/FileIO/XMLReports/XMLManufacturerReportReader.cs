@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using TUGraz.VectoCommon.Hashing;
-using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
 

@@ -30,7 +30,6 @@
 */
 
 using System;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Configuration

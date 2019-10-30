@@ -203,6 +203,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = SetCommonCombustionEngineData(engine, vehicle.TankSystem);
 			retVal.IdleSpeed = VectoMath.Max(mode.IdleSpeed, vehicle.EngineIdleSpeed);
 
+			
+
 			retVal.Fuels = new List<CombustionEngineFuelData>();
 			foreach (var fuel in mode.Fuels) {
 				retVal.Fuels.Add(new CombustionEngineFuelData() {
@@ -604,7 +606,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public ISSMInputs CreateSSMModelParameters(IVehicleData vehicleData, FuelData.Entry heatingFuel)
+		public ISSMInputs CreateSSMModelParameters(IVehicleData vehicleData, IFuelProperties heatingFuel)
 		{
 			return new SSMInputs(vehicleData, null, heatingFuel) {
 				Technologies = DeclarationData.BusAuxiliaries.SSMTechnologyList,
@@ -619,7 +621,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				LowVentilation = Constants.BusAuxiliaries.SteadyStateModel.LowVentilation,
 				SpecificVentilationPower = Constants.BusAuxiliaries.SteadyStateModel.SpecificVentilationPower,
 				// TODO! MQ 2019-19-29 Compressor Type and CompressorCapacity from input data?
-				CompressorType = "2-stage",
+				CompressorType = ACCompressorType.TwoStage, // "2-stage",
 				CompressorCapacity = 18.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 
 				AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency,

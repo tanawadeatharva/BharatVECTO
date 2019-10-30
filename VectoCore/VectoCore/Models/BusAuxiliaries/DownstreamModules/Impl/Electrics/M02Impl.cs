@@ -1,7 +1,5 @@
 ﻿using System;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
@@ -16,7 +14,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public M02Impl(
 			IM0_1_AverageElectricLoadDemand m0_1, IM0_NonSmart_AlternatorsSetEfficiency m0, double altPulleyEfficiency,
-			Volt powerNetVoltage, ISignals signals)
+			Volt powerNetVoltage)
 		{
 			if (m0_1 == null) {
 				throw new ArgumentException("Electrical Consumer List must be supplied");

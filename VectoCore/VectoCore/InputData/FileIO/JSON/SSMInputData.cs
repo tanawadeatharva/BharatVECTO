@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -19,7 +18,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return retVal;
 		}
 
-		public static ISSMInputs ReadFile(string fileName, IVehicleData vehicleData, IEnvironmentalConditionsMap env, ITechlistBenefitLines technologies)
+		public static ISSMInputs ReadFile(string fileName, IVehicleData vehicleData, IEnvironmentalConditionsMap env, ISSMTechnologies technologies)
 		{
 			var json = JSONInputDataFactory.ReadFile(fileName);
 			var body = (JObject)json["Body"];
@@ -57,7 +56,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				genInput.GetEx<double>("EC_Solar").SI<WattPerSquareMeter>(), 1.0);
 			//retVal.EnviromentalConditions_BatchFile = genInput.GetEx<string>("EC_EnviromentalConditions_BatchFile");
 			//retVal.BatchMode = genInput.GetEx<bool>("EC_EnviromentalConditions_BatchEnabled");
-			retVal.CompressorType = genInput.GetEx<string>("AC_CompressorType");
+			retVal.CompressorType = ACCompressorTypeExtensions.ParseEnum(genInput.GetEx<string>("AC_CompressorType"));
 			retVal.CompressorCapacity = genInput.GetEx<double>("AC_CompressorCapacitykW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 			retVal.VentilationOnDuringHeating = genInput.GetEx<bool>("VEN_VentilationOnDuringHeating");
 			retVal.VentilationWhenBothHeatingAndACInactive = genInput.GetEx<bool>("VEN_VentilationWhenBothHeatingAndACInactive");

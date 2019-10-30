@@ -111,7 +111,6 @@ Public Class Utils
                 .SmartAirCompression = False,
                 .SmartRegeneration = False  
                 },
-            .HvacUserInputsConfig = New HVACUserInputsConfig(),
             .SSMInputs = New SSMInputs(vehicleData, Nothing, heatingFuel) With {
                 .Technologies = DeclarationData.BusAuxiliaries.SSMTechnologyList,
                 .DefaultConditions = New EnvironmentalConditionMapEntry(25.0.DegCelsiusToKelvin(), 400.SI(Of WattPerSquareMeter), 1.0),
@@ -121,7 +120,7 @@ Public Class Utils
                 .HighVentilation = 20.SI(Unit.SI.Per.Hour).Cast(Of PerSecond),
                 .LowVentilation = 7.SI(Unit.SI.Per.Hour).Cast(Of PerSecond),
                 .SpecificVentilationPower = 0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast(Of JoulePerCubicMeter),
-                .CompressorType = "2-stage",
+                .CompressorType = ACCompressorType.TwoStage, 
                 .CompressorCapacity = 18.si(Unit.SI.kilo.watt).Cast(of Watt),
                 .AuxHeaterEfficiency =  0.84,
                 .FuelFiredHeaterPower = 30.SI(Unit.SI.kilo.watt).Cast(Of Watt),
@@ -131,7 +130,7 @@ Public Class Utils
             },
             .VehicleData = vehicleData,
             .Signals = signals,
-            .ActuationsMap = PneumaticActuationsMapReader.Read("TestFiles/testPneumaticActuationsMap_GOODMAP.apac"),
+            .ActuationsMap = ActuationsMapReader.Read("TestFiles/testPneumaticActuationsMap_GOODMAP.apac"),
             .Cycle = "TESTCYCLE"
             }
         Return retVal

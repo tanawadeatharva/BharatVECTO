@@ -9,7 +9,6 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
-using System.Collections.Generic;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 
@@ -31,32 +30,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 		public ConsumerTechnology Doors { get; set; }
 		public Meter KneelingHeightMillimeters { get; set; }
 
-		// PneumaticActuationsMap
-		//public Dictionary<ActuationsKey, int> ActuationsMap { get; set; }
-
 		public bool RetarderBrake { get; set; }
 		public bool SmartAirCompression { get; set; }
 		public bool SmartRegeneration { get; set; }
-
-		//public PneumaticUserInputsConfig()
-		//{
-		//	if (setToDefaults)
-		//		SetPropertiesToDefaults();
-		//}
-
-		//public void SetPropertiesToDefaults()
-		//{
-		//	//CompressorMap = string.Empty;
-		//	CompressorGearRatio = 1.0;
-		//	CompressorGearEfficiency = 0.97;
-		//	AdBlueDosing = ConsumerTechnology.Pneumatic; // "Pneumatic";
-		//	AirSuspensionControl = ConsumerTechnology.Mechanical; // "Mechanically";
-		//	Doors = ConsumerTechnology.Pneumatic; // "Pneumatic";
-		//	KneelingHeightMillimeters = 70.SI(Unit.SI.Milli.Meter).Cast<Meter>();
-		//	ActuationsMap = null;
-		//	RetarderBrake = true;
-		//	SmartAirCompression = false;
-		//	SmartRegeneration = false;
-		//}
 	}
 }

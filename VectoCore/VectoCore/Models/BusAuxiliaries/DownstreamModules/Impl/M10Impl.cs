@@ -1,7 +1,5 @@
 ﻿using System;
-using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -11,21 +9,20 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected Kilogram _averageLoadsFuelConsumptionInterpolatedForPneumatics;
 		protected Kilogram _fuelConsumptionSmartPneumaticsAndAverageElectricalPowerDemand;
 
-		protected IM3_AveragePneumaticLoadDemand M3;
+		protected readonly IM3_AveragePneumaticLoadDemand M3;
 
-		protected IM9 M9;
+		protected readonly IM9 M9;
 			//'Not Currently used but there for ease of refactoring in future.
-		protected ISignals Signals;
-
+		
 		//'Aggregators
 		protected NormLiter _AverageAirConsumedLitre;
 
 		
-		public M10Impl(IM3_AveragePneumaticLoadDemand m3, IM9 m9, ISignals signals)
+		public M10Impl(IM3_AveragePneumaticLoadDemand m3, IM9 m9)
 		{
 			M3 = m3;
 			M9 = m9;
-			Signals = signals;
+			
 			_AverageAirConsumedLitre = 0.SI<NormLiter>();
 		}
 
@@ -97,7 +94,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 
 		public void CycleStep(Second stepTimeInSeconds)
 		{
-			_AverageAirConsumedLitre += double.IsNaN(M3.AverageAirConsumed().Value()) ? 0.SI<NormLiter>() : M3.AverageAirConsumed() * stepTimeInSeconds;
+			_AverageAirConsumedLitre += double.IsNaN(M3.AverageAirConsumed().Value())
+				? 0.SI<NormLiter>()
+				: M3.AverageAirConsumed() * stepTimeInSeconds;
 		}
 
 		#endregion

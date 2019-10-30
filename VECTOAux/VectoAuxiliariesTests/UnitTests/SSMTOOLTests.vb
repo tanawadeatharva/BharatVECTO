@@ -25,7 +25,7 @@ Namespace UnitTests
 
             Dim src As SSMTOOL = DirectCast(source, SSMTOOL)
 
-            Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+            Dim newItem As ISSMTechnology = New SSMTechnology()
             newItem.BusFloorType = src.SSMInputs.BusParameters.BusFloorType
 
 
@@ -53,8 +53,7 @@ Namespace UnitTests
 
             Dim feedback As String = String.Empty
 
-            CType( src.TechList, SSMTechList).Clear()
-            Assert.IsTrue(CType( src.TechList, SSMTechList).Add(newItem, feedback))
+            CType(src.TechList, SSMTechList).TechLines = New List(Of ISSMTechnology)({newItem})
         End Sub
 
         <OneTimeSetUp>
@@ -93,7 +92,8 @@ Namespace UnitTests
                 '******************
                 Assert.AreEqual(0.95R, target.BoundaryConditions.GFactor)
                 Assert.AreEqual(0.8R, target.BoundaryConditions.SolarClouding(20.0.DegCelsiusToKelvin()))
-                Assert.AreEqual(80, target.BoundaryConditions.HeatPerPassengerIntoCabin(20.0.DegCelsiusToKelvin()).Value())
+                Assert.AreEqual(80,
+                                target.BoundaryConditions.HeatPerPassengerIntoCabin(20.0.DegCelsiusToKelvin()).Value())
                 'Assert.AreEqual(12, target.BoundaryConditions.PassengerBoundaryTemperature.AsDegCelsius)
                 Assert.AreEqual(3.0R, target.BusParameters.PassengerDensityLowFloor.Value())
                 Assert.AreEqual(2.2R, target.BusParameters.PassengerDensitySemiLowFloor.Value())
@@ -110,7 +110,7 @@ Namespace UnitTests
                 Assert.AreEqual(242.3, Math.Round(target.BoundaryConditions.LowVentPower.Value(), 2))
                 Assert.AreEqual(0.56R, target.BoundaryConditions.SpecificVentilationPower.Value()/3600)
                 Assert.AreEqual(0.84, target.BoundaryConditions.AuxHeaterEfficiency)
-                Assert.AreEqual(42700.0 / 3600.0, target.BoundaryConditions.GCVDieselOrHeatingOil.Value()/3600.0/1000.0)
+                Assert.AreEqual(42700.0/3600.0, target.BoundaryConditions.GCVDieselOrHeatingOil.Value()/3600.0/1000.0)
                 'Assert.AreEqual(11.8, target.BoundaryConditions.GCVDieselOrHeatingOil.Value()/3600.0/1000.0)
                 Assert.AreEqual(1.5R, target.BoundaryConditions.WindowAreaPerUnitBusLength.Value())
                 Assert.AreEqual(5, target.BoundaryConditions.FrontRearWindowArea.Value())
@@ -130,7 +130,7 @@ Namespace UnitTests
             If section = "AC-System" Then
                 'AC-SYSTEM
                 '*********
-                Assert.AreEqual("2-stage", target.ACSystem.CompressorType)
+                Assert.AreEqual(ACCompressorType.TwoStage, target.ACSystem.CompressorType)
                 Assert.AreEqual(18, target.ACSystem.CompressorCapacity.Value()/1000.0)
                 Assert.AreEqual(3.5, target.ACSystem.COP)
             End If
@@ -163,7 +163,7 @@ Namespace UnitTests
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
-            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechList).Items
+            target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechList).Items
 
 
             Assert.IsTrue(target.TechLines.Count > 0)
@@ -176,9 +176,9 @@ Namespace UnitTests
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
-            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListALLON).Items
+            target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListALLON).Items
 
-            For Each entry As ITechListBenefitLine In target.TechLines
+            For Each entry As ISSMTechnology In target.TechLines
                 entry.OnVehicle = True
             Next
 
@@ -204,7 +204,7 @@ Namespace UnitTests
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
-            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST).Items
+            target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
             'Assert.IsTrue(target.Initialise())
 
@@ -218,9 +218,9 @@ Namespace UnitTests
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
-            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST).Items
+            target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+            Dim newItem As ISSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -245,9 +245,8 @@ Namespace UnitTests
             newItem.ActiveVC = True
             'newItem.LineType = TechLineType.Normal
 
-            Dim feedback As String = String.Empty
 
-            Assert.istrue(CType(target, SSMTechList).Add(newItem, feedback))
+            CType(target, SSMTechList).TechLines = New List(Of ISSMTechnology)({newItem})
 
 
             Assert.IsTrue(target.TechLines.Count = 1)
@@ -260,9 +259,9 @@ Namespace UnitTests
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
-            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST).Items
+            target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+            Dim newItem As ISSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -289,8 +288,8 @@ Namespace UnitTests
 
             Dim feedback As String = String.Empty
 
-            Assert.istrue(CType(target, SSMTechList).Add(newItem, feedback))
-            Assert.isFalse(CType(target, SSMTechList).Add(newItem, feedback))
+            CType(target, SSMTechList).TechLines = New List(Of ISSMTechnology)({newItem})
+            CType(target, SSMTechList).TechLines = New List(Of ISSMTechnology)({newItem})
 
             Assert.IsTrue(target.TechLines.Count = 1)
         End Sub
@@ -302,9 +301,9 @@ Namespace UnitTests
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
-            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST).Items
+            target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+            Dim newItem As ISSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -331,9 +330,9 @@ Namespace UnitTests
 
             Dim feedback As String = String.Empty
 
-            Assert.IsTrue(CType(target, SSMTechList).Add(newItem, feedback))
+            CType(target, SSMTechList).TechLines = New List(Of ISSMTechnology)({newItem})
             Assert.IsTrue(target.TechLines.Count = 1)
-            CType(target, SSMTechList).Clear()
+            CType(target, SSMTechList).TechLines = New List(Of ISSMTechnology)()
             Assert.IsTrue(target.TechLines.Count = 0)
         End Sub
 
@@ -344,9 +343,9 @@ Namespace UnitTests
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
-            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST).Items
+            target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+            Dim newItem As ISSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -371,10 +370,8 @@ Namespace UnitTests
             newItem.ActiveVC = True
             'newItem.LineType = TechLineType.Normal
 
-            Dim feedback As String = String.Empty
-
             'Add
-            Assert.IsTrue(CType(target, SSMTechList).Add(newItem, feedback))
+            CType(target, SSMTechList).TechLines = New List(Of ISSMTechnology)({newItem})
 
             'Modify
             newItem.LowFloorC = 0.99
@@ -388,9 +385,9 @@ Namespace UnitTests
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
-            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST).Items
+            target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+            Dim newItem As ISSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -415,11 +412,9 @@ Namespace UnitTests
             newItem.ActiveVC = True
             'newItem.LineType = TechLineType.Normal
 
-            Dim feedback As String = String.Empty
-
-            Assert.IsTrue(CType(target, SSMTechList).Add(newItem, feedback))
+            CType(target, SSMTechList).TechLines = New List(Of ISSMTechnology)({newItem})
             Assert.IsTrue(target.TechLines.Count = 1)
-            Assert.IsTrue(CType(target, SSMTechList).Delete(newItem, feedback))
+            CType(target, SSMTechList).TechLines = New List(Of ISSMTechnology)()
             Assert.IsTrue(target.TechLines.Count = 0)
         End Sub
 
@@ -430,9 +425,9 @@ Namespace UnitTests
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
-            target.TechLines = HVACTechBenefitsReader.ReadFromFile(GOODTechListEMPTYLIST).Items
+            target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ITechListBenefitLine = New TechListBenefitLine()
+            Dim newItem As ISSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -457,9 +452,7 @@ Namespace UnitTests
             newItem.ActiveVC = True
             'newItem.LineType = TechLineType.Normal
 
-            Dim feedback As String = String.Empty
-
-            Assert.IsFalse(CType(target, SSMTechList).Delete(newItem, feedback))
+            CType(target, SSMTechList).TechLines = New List(Of ISSMTechnology)()
         End Sub
 
         'TechListLineTests
@@ -468,7 +461,7 @@ Namespace UnitTests
 
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
-            Dim ttl As ITechListBenefitLine = New TechListBenefitLine()
+            Dim ttl As ISSMTechnology = New SSMTechnology()
             ttl.BusFloorType = gen.BusParameters.BusFloorType
 
             Assert.IsNotNull(ttl)
@@ -479,10 +472,10 @@ Namespace UnitTests
 
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
-            Dim ttl1 As ITechListBenefitLine = New TechListBenefitLine()
+            Dim ttl1 As ISSMTechnology = New SSMTechnology()
             ttl1.BusFloorType = gen.BusParameters.BusFloorType
 
-            Dim ttl2 As ITechListBenefitLine = New TechListBenefitLine()
+            Dim ttl2 As ISSMTechnology = New SSMTechnology()
             ttl2.BusFloorType = gen.BusParameters.BusFloorType
 
             Assert.IsTrue(ttl1.IsEqualTo(ttl2))
@@ -510,10 +503,10 @@ Namespace UnitTests
 
             Dim gen As ISSMInputs = New SSMInputs(Utils.GetDefaultVehicleData(), Nothing)
 
-            Dim ttl1 As ITechListBenefitLine = New TechListBenefitLine()
+            Dim ttl1 As ISSMTechnology = New SSMTechnology()
             ttl1.BusFloorType = gen.BusParameters.BusFloorType
 
-            Dim ttl2 As ITechListBenefitLine = New TechListBenefitLine()
+            Dim ttl2 As ISSMTechnology = New SSMTechnology()
             ttl2.BusFloorType = gen.BusParameters.BusFloorType
 
             Select Case prop
@@ -568,8 +561,9 @@ Namespace UnitTests
             Dim success As Boolean
 
             Dim dao = New DeclarationDataAdapter()
-            Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(), FuelData.Diesel))
-           
+            Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(),
+                                                                             FuelData.Diesel))
+
             success = BusAuxWriter.SaveSSMConfig(target.SSMInputs, filePath)
             'success = target.Save(filePath)
             Assert.IsTrue(success)
@@ -582,7 +576,7 @@ Namespace UnitTests
             'Retreive
             'success = target.Load(filePath)
             Try
-                target = New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+                target = New SSMTOOL(SSMInputData.ReadFile(filePath, utils.GetDefaultVehicleData(),
                                                            DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions,
                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
             Catch
@@ -607,11 +601,11 @@ Namespace UnitTests
             '                                                               DefaultEnvironmentalConditions,
             '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
             '', New HVACConstants())
-            Dim ssmTool2 As SSMTOOL =  New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-                'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-                '                                                        DeclarationData.BusAuxiliaries.
-                '                                                           DefaultEnvironmentalConditions,
-                '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
+            Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+            '                                                        DeclarationData.BusAuxiliaries.
+            '                                                           DefaultEnvironmentalConditions,
+            '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
             ', New HVACConstants())
 
 
@@ -624,11 +618,11 @@ Namespace UnitTests
             Const filePath As String = "SSMTOOLTestSaveRetreive.json"
 
 
-            Dim ssmTool1 As SSMTOOL =  New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-                'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-                '                                                        DeclarationData.BusAuxiliaries.
-                '                                                           DefaultEnvironmentalConditions,
-                '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
+            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+            '                                                        DeclarationData.BusAuxiliaries.
+            '                                                           DefaultEnvironmentalConditions,
+            '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
             ' New HVACConstants())
 
             'Alter somthing
@@ -637,10 +631,10 @@ Namespace UnitTests
                 99.0.DegCelsiusToKelvin()
 
             Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-                'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-                '                                                        DeclarationData.BusAuxiliaries.
-                '                                                           DefaultEnvironmentalConditions,
-                '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
+            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+            '                                                        DeclarationData.BusAuxiliaries.
+            '                                                           DefaultEnvironmentalConditions,
+            '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
             ', New HVACConstants())
 
 
@@ -654,7 +648,7 @@ Namespace UnitTests
             Const filePath As String = "SSMTOOLTestSaveRetreive.json"
 
 
-            Dim ssmTool1 As SSMTOOL =  New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
             'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
             '                                                            DeclarationData.BusAuxiliaries.
             '                                                               DefaultEnvironmentalConditions,
@@ -680,7 +674,7 @@ Namespace UnitTests
             '                                                            DeclarationData.BusAuxiliaries.
             '                                                               DefaultEnvironmentalConditions,
             '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
-            Dim ssmTool2 As SSMTOOL =  New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+            Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
             'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
             '                                                            DeclarationData.BusAuxiliaries.
             '                                                               DefaultEnvironmentalConditions,
@@ -698,12 +692,12 @@ Namespace UnitTests
             Const filePath As String = "SSMTOOLTestSaveRetreive.json"
 
 
-            Dim ssmTool1 As SSMTOOL =  New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
             'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
             '                                                            DeclarationData.BusAuxiliaries.
             '                                                               DefaultEnvironmentalConditions,
             '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
-            Dim ssmTool2 As SSMTOOL =  New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+            Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
             'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
             '                                                            DeclarationData.BusAuxiliaries.
             '                                                               DefaultEnvironmentalConditions,
@@ -722,12 +716,12 @@ Namespace UnitTests
             Const filePath As String = "SSMTOOLTestSaveRetreive.json"
 
 
-            Dim ssmTool1 As SSMTOOL =  New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-                'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-                '                                                        DeclarationData.BusAuxiliaries.
-                '                                                           DefaultEnvironmentalConditions,
-                '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList))
-            Dim ssmTool2 As SSMTOOL =  New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+            '                                                        DeclarationData.BusAuxiliaries.
+            '                                                           DefaultEnvironmentalConditions,
+            '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList))
+            Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
             'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
             '                                                            DeclarationData.BusAuxiliaries.
             '                                                               DefaultEnvironmentalConditions,
@@ -749,7 +743,7 @@ Namespace UnitTests
             Const filePath As String = "SSMTOOLTestSaveRetreive.json"
 
 
-            Dim ssmTool1 As SSMTOOL =  New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
             'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
             '                                                            DeclarationData.BusAuxiliaries.
             '                                                               DefaultEnvironmentalConditions,

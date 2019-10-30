@@ -31,15 +31,14 @@
 
 using System;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -199,7 +198,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		// TODO: MQ 2019-07-30
-		protected override double WHTCCorrectionFactor (FuelData.Entry fuel)
+		protected override double WHTCCorrectionFactor (IFuelProperties fuel)
 		{
 			var selected = ModelData.Fuels.First(x => x.FuelData.FuelType == fuel.FuelType);
 			

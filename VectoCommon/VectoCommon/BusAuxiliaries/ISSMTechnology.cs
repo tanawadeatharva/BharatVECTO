@@ -2,14 +2,14 @@
 
 namespace TUGraz.VectoCommon.BusAuxiliaries {
 
-	public interface ITechlistBenefitLines
+	public interface ISSMTechnologies
 	{
-		IReadOnlyList<ITechListBenefitLine> Items { get; }
+		IReadOnlyList<ISSMTechnology> Items { get; }
 
 		string Source { get; }
 	}
 
-	public interface ITechListBenefitLine
+	public interface ISSMTechnology
 	{
 		FloorType BusFloorType { set; }
 
@@ -39,8 +39,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 		double VC { get; }
 		double C { get; }
 
-		void CloneFrom(ITechListBenefitLine source);
-
-		bool IsEqualTo(ITechListBenefitLine source);
+		bool IsEqualTo(ISSMTechnology source);
 	}
 }

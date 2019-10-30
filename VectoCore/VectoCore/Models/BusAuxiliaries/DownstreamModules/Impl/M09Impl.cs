@@ -1,7 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -25,13 +24,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 
 		#endregion
 
-		protected IM1_AverageHVACLoadDemand M1;
-		protected IM4_AirCompressor M4;
-		protected IM6 M6;
-		protected IM8 M8;
-		protected IFuelConsumptionMap FMAP;
-		protected IPneumaticsAuxilliariesConfig PSAC;
-		protected ISignals Signals;
+		protected readonly IM1_AverageHVACLoadDemand M1;
+		protected readonly IM4_AirCompressor M4;
+		protected readonly IM6 M6;
+		protected readonly IM8 M8;
+		protected readonly IFuelConsumptionMap FMAP;
+		protected readonly IPneumaticsAuxilliariesConfig PSAC;
+		protected readonly ISignals Signals;
 
 		public M09Impl(IM1_AverageHVACLoadDemand m1, IM4_AirCompressor m4, IM6 m6, IM8 m8, IFuelConsumptionMap fmap, IPneumaticsAuxilliariesConfig psac, ISignals signals)
 		{

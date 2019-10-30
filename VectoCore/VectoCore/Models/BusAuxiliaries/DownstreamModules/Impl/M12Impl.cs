@@ -1,5 +1,4 @@
-﻿using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
@@ -8,19 +7,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 {
 	public class M12Impl : AbstractModule, IM12
 	{
-		protected IM11 M11;
-		protected IM10 M10;
-		protected ISignals Signals;
+		protected readonly IM11 M11;
+		protected readonly IM10 M10;
 
 		protected Kilogram _fuelconsumptionwithsmartElectricsandAveragePneumaticPowerDemand;
 		protected Kilogram _baseFuelConsumptionWithTrueAuxiliaryLoads;
 		protected double _stopStartCorrection;
 
-		public M12Impl(IM10 m10, IM11 m11, ISignals signals)
+		public M12Impl(IM10 m10, IM11 m11)
 		{
 			M10 = m10;
 			M11 = m11;
-			Signals = signals;
 		}
 
 		private class Point

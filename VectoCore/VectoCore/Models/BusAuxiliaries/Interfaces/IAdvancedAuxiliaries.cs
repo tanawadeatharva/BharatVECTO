@@ -122,9 +122,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		/// Initialises AAUX Environment ( Begin Processs )
 		/// </summary>
 		/// <param name="auxcConfig"></param>
+		/// <param name="fuelProperties"></param>
 		/// <returns></returns>
 		/// <remarks></remarks>
-		bool RunStart(IAuxiliaryConfig auxcConfig);
+		bool RunStart(IAuxiliaryConfig auxcConfig, IFuelProperties fuelProperties);
 
 		/// <summary>
 		/// Any Termination Which Needs to be done ( Model depenent )

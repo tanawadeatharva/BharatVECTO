@@ -1,6 +1,5 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -11,10 +10,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected Watt _smartElectricalAlternatorPowerGenAtCrank;
 		protected bool _compressorFlag;
 
-		protected IM1_AverageHVACLoadDemand _m1;
-		protected IM6 _m6;
-		protected IM7 _m7;
-		protected ISignals _signals;
+		protected readonly IM1_AverageHVACLoadDemand _m1;
+		protected readonly IM6 _m6;
+		protected readonly IM7 _m7;
+		protected readonly ISignals _signals;
 
 		public M08Impl(IM1_AverageHVACLoadDemand m1, IM6 m6, IM7 m7, ISignals signals)
 		{

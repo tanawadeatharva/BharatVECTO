@@ -15,14 +15,14 @@ Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Elec
 Public Class frmCombinedAlternators
     Private combinedAlt As CombinedAlternator
     Private originalAlt As CombinedAlternator
-    Private altSignals As ICombinedAlternatorSignals
+    
     Protected gbColor As System.Drawing.Color = Color.LightGreen
     Private UserHitCancel As Boolean = False
     Private UserHitSave As Boolean = False
     Private aaltPath As String = ""
 
     'Constructor(s)
-    Public Sub New(aaltPath As String, altSignals As ICombinedAlternatorSignals)
+    Public Sub New(aaltPath As String)
 
         ' This call is required by the designer.
         InitializeComponent()

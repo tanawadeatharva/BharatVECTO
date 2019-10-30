@@ -9,7 +9,6 @@ using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.FileIO.JSON
@@ -29,14 +28,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var ec = LoadElectricalConfig((JObject)data["ElectricalUserInputsConfig"], baseDir);
 			var pac = LoadPneumaticsAuxConfig((JObject)data["PneumaticAuxillariesConfig"], baseDir);
 			var puc = LoadPneumaticUserConfig((JObject)data["PneumaticUserInputsConfig"], baseDir);
-			var hvac = LoadHVAC((JObject)data["HvacUserInputsConfig"], baseDir);
 			var env = string.IsNullOrWhiteSpace(data["EnvironmentalConditions"]?.ToString())
 				? DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions
 				: EnvironmentalContidionsMapReader.ReadFile(data["EnvironmentalConditions"].ToString());
 			var techList = string.IsNullOrWhiteSpace(data["SSMTechologies"]?.ToString())
 				? DeclarationData.BusAuxiliaries.SSMTechnologyList
-				: HVACTechBenefitsReader.ReadFromFile(data["SSMTechologies"].ToString());
-			var actuationsMap = PneumaticActuationsMapReader.Read(Path.Combine(baseDir, data.GetEx<string>("ActuationsMap")));
+				: SSMTechnologiesReader.ReadFromFile(data["SSMTechologies"].ToString());
+			var actuationsMap = ActuationsMapReader.Read(Path.Combine(baseDir, data.GetEx<string>("ActuationsMap")));
 			var ssm = string.IsNullOrWhiteSpace(data["SSMFilePath"]?.ToString()) ?
 				new SSMInputs(vehicleData, "", FuelData.Diesel) {
 					EnvironmentalConditionsMap =  env,
@@ -49,7 +47,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				ElectricalUserInputsConfig = ec,
 				PneumaticAuxillariesConfig  = pac,
 				PneumaticUserInputsConfig  = puc,
-				HvacUserInputsConfig = hvac,
 				SSMInputs = ssm,
 				ActuationsMap = actuationsMap,
 				VehicleData = vehicleData
@@ -160,16 +157,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			pneumaticUserInputsConfig.SmartAirCompression = puData.GetEx<bool>("SmartAirCompression");
 			pneumaticUserInputsConfig.SmartRegeneration = puData.GetEx<bool>("SmartRegeneration");
 			return pneumaticUserInputsConfig;
-		}
-
-		private static IHVACUserInputsConfig LoadHVAC(JObject hvac, string baseDir)
-		{
-			var hvacUserInputsConfig = new HVACUserInputsConfig();
-
-			//hvacUserInputsConfig.SSMFilePath = hvac.GetEx<string>("SSMFilePath");
-			//hvacUserInputsConfig.BusDatabasePath = hvac.GetEx<string>("BusDatabasePath");
-			//hvacUserInputsConfig.SSMDisabled = hvac.GetEx<bool>("SSMDisabled");
-			return hvacUserInputsConfig;
 		}
 	}
 }

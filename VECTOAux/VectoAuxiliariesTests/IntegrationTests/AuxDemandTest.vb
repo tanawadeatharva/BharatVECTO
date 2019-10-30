@@ -6,6 +6,7 @@ Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Legacy
+Imports TUGraz.VectoCore.Models.Declaration
 
 Namespace IntegrationTests
     <TestFixture>
@@ -31,10 +32,7 @@ Namespace IntegrationTests
             'aux.VectoInputs.Cycle = "Coach"
             'aux.VectoInputs.VehicleWeightKG = vehicleWeight.SI(Of Kilogram)()
             'aux.VectoInputs.FuelDensity = 832.SI(Of KilogramPerCubicMeter)()
-            Dim fuelMap As cMAP = New cMAP()
-            fuelMap.FilePath = engineFCMapFilePath
-            fuelMap.ReadFile(False)
-            fuelMap.Triangulate()
+            Dim fuelMap = FuelConsumptionMapReader.ReadFromFile(engineFCMapFilePath)
 
             'aux.VectoInputs.FuelMap = fuelMap
 
@@ -44,7 +42,7 @@ Namespace IntegrationTests
 
             dim auxConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, Utils.GetDefaultVehicleData(vehicleWeight.SI(Of Kilogram)))
             CType(auxConfig, AuxiliaryConfig).Cycle = "Coach"
-            aux.Initialise(auxConfig) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
+            aux.Initialise(auxConfig, FuelData.Diesel) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 
             aux.Signals.ClutchEngaged = True
             aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()  'kW
@@ -79,10 +77,7 @@ Namespace IntegrationTests
             'aux.VectoInputs.Cycle = "Coach"
             'aux.VectoInputs.VehicleWeightKG = 12000.SI(Of Kilogram)()
             'aux.VectoInputs.FuelDensity = 832.SI(Of KilogramPerCubicMeter)()
-            Dim fuelMap As cMAP = New cMAP()
-            fuelMap.FilePath = engineFCMapFilePath
-            fuelMap.ReadFile(False)
-            fuelMap.Triangulate()
+            Dim fuelMap = FuelConsumptionMapReader.ReadFromFile(engineFCMapFilePath)
 
             'aux.VectoInputs.FuelMap = fuelMap
 
@@ -94,7 +89,7 @@ Namespace IntegrationTests
             CType(auxCfg, AuxiliaryConfig).Cycle = "Coach"
             CType(auxCfg, AuxiliaryConfig).FuelMap = fuelMap
 
-            CType(aux, AdvancedAuxiliaries).Initialise(auxCfg) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
+            CType(aux, AdvancedAuxiliaries).Initialise(auxCfg, FuelData.Diesel) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 
             aux.Signals.ClutchEngaged = True
             aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)() 'kW

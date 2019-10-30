@@ -170,16 +170,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 
 		// Base Values
-		public Watt BaseHeatingW_Mechanical
-		{
-			get { return 0.SI<Watt>(); }
-		}
-
-		public Watt BaseHeatingW_ElectricalCoolingHeating
-		{
-			get { return 0.SI<Watt>(); }
-		}
-
+		
 		public Watt BaseHeatingW_ElectricalVentilation(Kelvin environmentalTemperature, WattPerSquareMeter solar)
 		{
 			
@@ -248,7 +239,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			return environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
 				? 0.SI<Watt>()
-				: gen.ACSystem.CompressorTypeDerived.ToLower() == "electrical"
+				: gen.ACSystem.CompressorType.IsElectrical()
 					? 0.SI<Watt>()
 					: run1TotalW > 0 && run2TotalW > 0
 						? VectoMath.Min(run1TotalW, run2TotalW)
@@ -271,7 +262,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
 			return environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
 				? 0.SI<Watt>()
-				: gen.ACSystem.CompressorTypeDerived.ToLower() == "electrical"
+				: gen.ACSystem.CompressorType.IsElectrical()
 					? run1TotalW > 0 && run2TotalW > 0
 						? VectoMath.Min(run1TotalW, run2TotalW)
 						: 0.SI<Watt>()
@@ -304,21 +295,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 						? gen.BoundaryConditions.LowVentPower
 						: 0.SI<Watt>()
 				: 0.SI<Watt>();
-		}
-
-		public Watt BaseCoolingW_FuelFiredHeating
-		{
-			get { return 0.SI<Watt>(); }
-		}
-
-		public Watt BaseVentilationW_Mechanical
-		{
-			get { return 0.SI<Watt>(); }
-		}
-
-		public Watt BaseVentilationW_ElectricalCoolingHeating
-		{
-			get { return 0.SI<Watt>(); }
 		}
 
 		public Watt BaseVentilationW_ElectricalVentilation(Kelvin environmentalTemperature, WattPerSquareMeter solar)
@@ -354,22 +330,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			
 		}
 
-		public Watt BaseVentilationW_FuelFiredHeating
-		{
-			get { return 0.SI<Watt>(); }
-		}
-
+		
 		// Adjusted Values
-		public double TechListAdjustedHeatingW_Mechanical
-		{
-			get { return default(Double); }
-		}
-
-		public double TechListAdjustedHeatingW_ElectricalCoolingHeating
-		{
-			get { return default(Double); }
-		}
-
+		
 		public double TechListAdjustedHeatingW_ElectricalVentilation
 		{
 			get {
@@ -424,14 +387,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				//			Math.Max(If(gen.AC_CompressorType.ToLower() = "mechanical", tl.CValueVariation, 0),
 				//					-gen.BC_MaxPossibleBenefitFromTechnologyList))
 
-				result = (gen.ACSystem.CompressorType.ToLower() == "mechanical"
+				result = (gen.ACSystem.CompressorType.IsMechanical()
 							? tl.CValueVariation
 							: 0) > 0
 					? Math.Min(
-						gen.ACSystem.CompressorType.ToLower() == "mechanical" ? tl.CValueVariation : 0,
+						gen.ACSystem.CompressorType.IsMechanical() ? tl.CValueVariation : 0,
 						gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList)
 					: Math.Max(
-						gen.ACSystem.CompressorType.ToLower() == "mechanical" ? tl.CValueVariation : 0,
+						gen.ACSystem.CompressorType.IsMechanical() ? tl.CValueVariation : 0,
 						-gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList);
 
 				return result;
@@ -451,14 +414,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim C43 As Double   =  gen.BC_MaxPossibleBenefitFromTechnologyList
 				// Dim C53 As string   =  gen.AC_CompressorType
 
-				result = gen.ACSystem.CompressorType.ToLower() == "mechanical"
+				result = gen.ACSystem.CompressorType.IsMechanical()
 					? 0
 					: tl.CValueVariation > 0
 						? Math.Min(
-							gen.ACSystem.CompressorType.ToLower() == "mechanical" ? 0 : tl.CValueVariation,
+							gen.ACSystem.CompressorType.IsMechanical() ? 0 : tl.CValueVariation,
 							gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList)
 						: Math.Max(
-							gen.ACSystem.CompressorType.ToLower() == "mechanical" ? 0 : tl.CValueVariation,
+							gen.ACSystem.CompressorType.IsMechanical() ? 0 : tl.CValueVariation,
 							-gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList);
 
 				return result;
@@ -482,20 +445,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			}
 		}
 
-		public double TechListAdjustedCoolingW_FuelFiredHeating
-		{
-			get { return 0; }
-		}
-
-		public double TechListAdjustedVentilationW_Mechanical
-		{
-			get { return default(Double); }
-		}
-
-		public double TechListAdjustedVentilationW_ElectricalCoolingHeating
-		{
-			get { return default(Double); }
-		}
+		
 
 		public double TechListAdjustedVentilationW_ElectricalVentilation
 		{
@@ -513,12 +463,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 					: Math.Max(tl.VVValueVariation, -gen.MaxPossibleBenefitFromTechnologyList);
 			}
 		}
-
-		public double TechListAdjustedVentilationW_FuelFiredHeating
-		{
-			get { return 0; }
-		}
-
 
 		// Provides Diagnostic Information for the user which can be displayed on the form.
 		// Based on the inputs generated, can be used to cross reference the Excel Model with the

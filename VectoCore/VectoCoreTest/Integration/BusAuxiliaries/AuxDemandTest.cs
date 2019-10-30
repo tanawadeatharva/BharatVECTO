@@ -44,6 +44,7 @@ using System.IO;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {

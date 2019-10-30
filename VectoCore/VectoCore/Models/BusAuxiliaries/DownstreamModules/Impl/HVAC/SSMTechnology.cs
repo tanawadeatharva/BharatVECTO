@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using TUGraz.VectoCommon.BusAuxiliaries;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
-using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
@@ -10,24 +8,24 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 	// Or PDF Model Document which articulates the same spreadsheet functionality
 	// But within the context of the Vecto interpretation of the same.
 
-	public class TechBenefitLines : ITechlistBenefitLines
+	public class TechBenefitLines : ISSMTechnologies
 	{
 		#region Implementation of ITechlistBenefitLines
 
-		public TechBenefitLines(IReadOnlyList<ITechListBenefitLine> items, string source)
+		public TechBenefitLines(IReadOnlyList<ISSMTechnology> items, string source)
 		{
 			Items = items;
 			Source = source;
 		}
 
-		public IReadOnlyList<ITechListBenefitLine> Items { get; }
+		public IReadOnlyList<ISSMTechnology> Items { get; }
 
 		public string Source { get; }
 
 		#endregion
 	}
 
-	public class TechListBenefitLine : ITechListBenefitLine
+	public class SSMTechnology : ISSMTechnology
 	{
 		//private float _h, _vh, _vv, _vc, _c;
 		public FloorType BusFloorType { protected get; set; }
@@ -160,39 +158,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			}
 		}
 
-		public TechListBenefitLine() { }
+		public SSMTechnology() { }
 
 		
 
-		public TechListBenefitLine(
-			string category, string benefitName, double lowFloorH, double lowFloorV,
-			double lowFloorC, double semiLowFloorH, double semiLowFloorV, double semiLowFloorC, double raisedFloorH,
-			double raisedFloorV, double raisedFloorC, bool onVehicle, bool activeVH, bool activeVV,
-			bool activeVC
-		)
-		{
-			//BusFloorType = geninputs;
-			//Units = units;
-			Category = category;
-			BenefitName = benefitName;
-			LowFloorH = lowFloorH;
-			LowFloorV = lowFloorV;
-			LowFloorC = lowFloorC;
-			SemiLowFloorH = semiLowFloorH;
-			SemiLowFloorV = semiLowFloorV;
-			SemiLowFloorC = semiLowFloorC;
-			RaisedFloorH = raisedFloorH;
-			RaisedFloorV = raisedFloorV;
-			RaisedFloorC = raisedFloorC;
-			OnVehicle = onVehicle;
-			//LineType = lineType;
-			ActiveVH = activeVH;
-			ActiveVV = activeVV;
-			ActiveVC = activeVC;
-		}
-
 		// Operator Overloads
-		public static bool operator ==(TechListBenefitLine op1, TechListBenefitLine op2)
+		public static bool operator ==(SSMTechnology op1, SSMTechnology op2)
 		{
 			if ((op1.Category == op2.Category && op1.BenefitName == op2.BenefitName && op1.ActiveVC == op2.ActiveVC &&
 				op1.ActiveVH == op2.ActiveVH && op1.ActiveVV == op2.ActiveVV && /*op1.LineType == op2.LineType &&*/
@@ -207,7 +178,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			return false;
 		}
 
-		public static bool operator !=(TechListBenefitLine op1, TechListBenefitLine op2)
+		public static bool operator !=(SSMTechnology op1, SSMTechnology op2)
 		{
 			if ((op1.Category != op2.Category || op1.BenefitName != op2.BenefitName || op1.ActiveVC != op2.ActiveVC ||
 				op1.ActiveVH != op2.ActiveVH || op1.ActiveVV != op2.ActiveVV || /*op1.LineType != op2.LineType ||*/
@@ -224,7 +195,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		#region Equality members
 
-		protected bool Equals(TechListBenefitLine other)
+		protected bool Equals(SSMTechnology other)
 		{
 			return Equals(BusFloorType, other.BusFloorType) && /*string.Equals(Units, other.Units) &&*/
 					string.Equals(Category, other.Category) && string.Equals(BenefitName, other.BenefitName) &&
@@ -248,7 +219,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				return false;
 			}
 
-			return Equals((TechListBenefitLine)obj);
+			return Equals((SSMTechnology)obj);
 		}
 
 		public override int GetHashCode()
@@ -278,33 +249,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		#endregion
 
-		public void CloneFrom(ITechListBenefitLine source)
+		public bool IsEqualTo(ISSMTechnology source)
 		{
-			//this.Units = source.Units;
-			Category = source.Category;
-			BenefitName = source.BenefitName;
-			LowFloorH = source.LowFloorH;
-			LowFloorV = source.LowFloorV;
-			LowFloorC = source.LowFloorC;
-
-			SemiLowFloorH = source.SemiLowFloorH;
-			SemiLowFloorV = source.SemiLowFloorV;
-			SemiLowFloorC = source.SemiLowFloorC;
-
-			RaisedFloorH = source.RaisedFloorH;
-			RaisedFloorV = source.RaisedFloorV;
-			RaisedFloorC = source.RaisedFloorC;
-
-			OnVehicle = source.OnVehicle;
-			ActiveVH = source.ActiveVH;
-			ActiveVV = source.ActiveVV;
-			ActiveVC = source.ActiveVC;
-			//LineType = source.LineType;
-		}
-
-		public bool IsEqualTo(ITechListBenefitLine source)
-		{
-			var mySource = (TechListBenefitLine)source;
+			var mySource = (SSMTechnology)source;
 			if (ReferenceEquals(mySource, null)) {
 				return false;
 			}

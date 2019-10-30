@@ -4,7 +4,6 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
@@ -40,7 +39,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			}
 		}
 
-		private double GetDoorActuationTimeFraction(IPneumaticActuationsMap actuations, string cycle)
+		private double GetDoorActuationTimeFraction(IActuationsMap actuations, string cycle)
 
 		{
 			var actuationsKey = new ActuationsKey(Constants.BusAuxiliaries.BrakeAndDoorsActuationKey , cycle);

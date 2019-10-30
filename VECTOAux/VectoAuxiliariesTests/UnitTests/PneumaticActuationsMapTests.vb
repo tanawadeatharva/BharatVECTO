@@ -41,7 +41,7 @@ Namespace Pneumatics
         <Test()>
         Public Sub CreateNewTest()
 
-            Dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_GOODMAP)
+            Dim target = ActuationsMapReader.Read(cstrPneumaticActuationsMapPath_GOODMAP)
             Assert.IsNotNull(target)
         End Sub
 
@@ -49,7 +49,7 @@ Namespace Pneumatics
         <Test()>
         Public Sub InitialiseGoodMapTest()
 
-            Dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_GOODMAP)
+            Dim target = ActuationsMapReader.Read(cstrPneumaticActuationsMapPath_GOODMAP)
             'target.Initialise()
         End Sub
 
@@ -58,7 +58,7 @@ Namespace Pneumatics
         Public Sub InitialiseWrongNumberOfColumnTest()
 
             Assert.That(Sub()
-                dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INCORRECTCOLUMNS)
+                dim target = ActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INCORRECTCOLUMNS)
             End Sub, Throws.InstanceOf (Of VectoException))
         End Sub
 
@@ -66,7 +66,7 @@ Namespace Pneumatics
         Public Sub InvalidIntegerTest()
 
             Assert.That(Sub()
-                dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INVALIDINTEGERVALUE)
+                dim target = ActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INVALIDINTEGERVALUE)
             End Sub, Throws.InstanceOf (Of FormatException))
         End Sub
 
@@ -74,7 +74,7 @@ Namespace Pneumatics
         Public Sub DuplicateKeyTest()
 
             Assert.That(Sub()
-                dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_DUPLICATEKEY)
+                dim target = ActuationsMapReader.Read(cstrPneumaticActuationsMapPath_DUPLICATEKEY)
             End Sub, Throws.InstanceOf (Of VectoException),
                         "Duplicate entries in pneumatic actuations map! Brakes / Urban")
         End Sub
@@ -83,7 +83,7 @@ Namespace Pneumatics
         Public Sub EmptyConsumerNameTest()
 
             Assert.That(Sub()
-                dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INVALIDCONSUMERNAME)
+                dim target = ActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INVALIDCONSUMERNAME)
             End Sub, Throws.InstanceOf (Of ArgumentException))
         End Sub
 
@@ -91,7 +91,7 @@ Namespace Pneumatics
         Public Sub EmptyCycleNameTest()
 
             Assert.That(Sub()
-                Dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INVALIDCYCLENAME)
+                Dim target = ActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INVALIDCYCLENAME)
             End Sub, Throws.InstanceOf (Of ArgumentException))
         End Sub
 
@@ -113,7 +113,7 @@ Namespace Pneumatics
         <TestCase("Kneeling", "Coach", 0)>
         Public Sub ValueLookupTest(key As String, cycle As String, expected As Integer)
 
-            Dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_GOODMAP)
+            Dim target = ActuationsMapReader.Read(cstrPneumaticActuationsMapPath_GOODMAP)
 
             'target.Initialise()
             Dim actual As Integer

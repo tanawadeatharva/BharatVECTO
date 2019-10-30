@@ -39,16 +39,12 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
-using IPneumaticUserInputsConfig = TUGraz.VectoCommon.BusAuxiliaries.IPneumaticUserInputsConfig;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -133,9 +129,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//private static AuxiliaryConfig busAuxConfig = null;
 			private static IElectricalConsumerList elUserConfig;
 
-			private static IPneumaticActuationsMap actuationsMap;
+			private static IActuationsMap actuationsMap;
 			//private static PneumaticsAuxilliariesConfig pneumaticAuxConfig;
-			private static ITechlistBenefitLines ssmTechnologies;
+			private static ISSMTechnologies ssmTechnologies;
 
 
 			//public static ISSMInputs SSMDefaultValues
@@ -147,10 +143,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//	}
 			//}
 
-			public static ITechlistBenefitLines SSMTechnologyList
+			public static ISSMTechnologies SSMTechnologyList
 			{
 				get {
-					return ssmTechnologies ?? (ssmTechnologies = HVACTechBenefitsReader.ReadFromStream(
+					return ssmTechnologies ?? (ssmTechnologies = SSMTechnologiesReader.ReadFromStream(
 								RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.SSMTechList.csv")));
 				}
 			}
@@ -172,10 +168,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 
-			public static IPneumaticActuationsMap ActuationsMap
+			public static IActuationsMap ActuationsMap
 			{
 				get {
-					return actuationsMap ?? (actuationsMap = PneumaticActuationsMapReader.ReadStream(
+					return actuationsMap ?? (actuationsMap = ActuationsMapReader.ReadStream(
 									RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultActuationsMap.APAC")));
 				}
 			}

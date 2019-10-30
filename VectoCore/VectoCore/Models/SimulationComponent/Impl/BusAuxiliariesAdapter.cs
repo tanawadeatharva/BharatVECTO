@@ -30,14 +30,12 @@
 */
 
 using System;
-using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -57,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         protected IAdvancedAuxiliaries Auxiliaries;
         private readonly FuelConsumptionAdapter _fcMapAdapter;
 
-        public BusAuxiliariesAdapter(IDataBus container, IAuxiliaryConfig auxiliaryConfig, string cycleName, Kilogram vehicleWeight,
+        public BusAuxiliariesAdapter(IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, string cycleName, Kilogram vehicleWeight,
             FuelConsumptionMap fcMap, PerSecond engineIdleSpeed, IAuxPort additionalAux = null)
         {
             //	mAAUX_Global.advancedAuxModel.Signals.DeclarationMode = Cfg.DeclMode
@@ -90,7 +88,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// call initialize  _after_ setting the cycle time to get the correct consumtions
 
-			tmpAux.Initialise(auxiliaryConfig);
+			tmpAux.Initialise(auxiliaryConfig, container.RunData.EngineData.Fuels.First().FuelData);
 
 
             Auxiliaries = tmpAux;
@@ -279,13 +277,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         {
             protected internal FuelConsumptionMap FcMap;
 
-            public bool AllowExtrapolation { get; set; }
+			public bool AllowExtrapolation { get; set; }
 
             public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity)
             {
                 return FcMap.GetFuelConsumption(torque, angularVelocity, AllowExtrapolation).Value;
             }
-        }
+
+		}
 
         public class BusAuxState
         {

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Text;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
-using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
@@ -17,8 +15,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		public SSMRun(ISSMTOOL ssm, int runNbr)
 		{
-			if (runNbr != 1 && runNbr != 2)
+			if (runNbr != 1 && runNbr != 2) {
 				throw new ArgumentException("Run number must be either 1 or 2");
+			}
 
 			runNumber = runNbr;
 			ssmTOOL = ssm;
@@ -28,8 +27,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		
 		public Kelvin TCalc(Kelvin enviromentalTemperature)
 		{
-			
-
 				// C24 = BC_HeatingBoundaryTemperature
 				// C25 = BC_CoolingBoundary Temperature
 				// C6  = BP_BusFloorType
@@ -76,10 +73,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		public Watt FuelW(Kelvin enviromentalTemperature, WattPerSquareMeter solarFactor)
 		{
-			
 				// =IF(AND(N79<0,N79<(C60*-1)),N79-(C60*-1),0)*1000
-
-				var gen = ssmTOOL.SSMInputs.AuxHeater;
 
 				// Dim N79  as Double =  TotalKW
 				// Dim C60  As Double = gen.AH_EngineWasteHeatkW
@@ -95,7 +89,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			
 				// =IF(IF(AND((N79*(1-$J$89))<0,(N79*(1-$J$89))<(C60*-1)),(N79*(1-$J$89))-(C60*-1),0)*1000<0,IF(AND((N79*(1-$J$89))<0,(N79*(1-$J$89))<(C60*-1)),(N79*(1-$J$89))-(C60*-1),0)*1000,0)
 
-				var gen = ssmTOOL.SSMInputs.AuxHeater;
 				var TLFFH = ssmTOOL.Calculate.TechListAdjustedHeatingW_FuelFiredHeating;
 				// Dim C60 As Double = gen.AH_EngineWasteHeatkW
 				// Dim N79 As Double = Me.TotalKW
@@ -112,30 +105,5 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 					: 0.SI<Watt>();
 			
 		}
-
-		// Provides Diagnostic Information
-		// To be utilised by the User.
-		//public override string ToString()
-		//{
-		//	var sb = new StringBuilder();
-
-		//	var  vbTab = "\t";
-		//	var temp = ssmTOOL.SSMInputs.EnvironmentalConditions.EnviromentalTemperature;
-		//	sb.AppendLine(string.Format("Run : {0}", runNumber));
-		//	sb.AppendLine(string.Format("************************************"));
-		//	sb.AppendLine(string.Format("HVAC OP         " + vbTab + ": {0}", HVACOperation(temp)));
-		//	sb.AppendLine(string.Format("TCALC           " + vbTab + ": {0}", TCalc(temp)));
-		//	sb.AppendLine(string.Format("Tempurature D   " + vbTab + ": {0}", (temp - TCalc(temp))));
-		//	sb.AppendLine(string.Format("QWall           " + vbTab + ": {0}", QWall(temp)));
-		//	sb.AppendLine(string.Format("WattsPerPass    " + vbTab + ": {0}", WattsPerPass));
-		//	sb.AppendLine(string.Format("Solar           " + vbTab + ": {0}", Solar));
-		//	sb.AppendLine(string.Format("TotalW          " + vbTab + ": {0}", TotalW(temp)));
-		//	sb.AppendLine(string.Format("TotalKW         " + vbTab + ": {0}", TotalW(temp).Value() * 1000));
-		//	sb.AppendLine(string.Format("Fuel W          " + vbTab + ": {0}", FuelW(temp)));
-		//	sb.AppendLine(string.Format("Fuel Tech Adj   " + vbTab + ": {0}", TechListAmendedFuelW(temp)));
-
-
-		//	return sb.ToString();
-		//}
 	}
 }

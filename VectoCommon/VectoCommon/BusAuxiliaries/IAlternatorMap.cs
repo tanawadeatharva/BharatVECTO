@@ -20,10 +20,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.El
 		/// 	Returns the alternator efficiency at given rpm
 		/// 	</summary>
 		/// 	<param name="rpm">alternator rotation speed</param>
-		/// <param name="amps"></param>
+		/// <param name="currentDemand"></param>
 		/// <returns>Single</returns>
 		/// 	<remarks></remarks>
-		double GetEfficiency(PerSecond rpm, Ampere amps);
+		double GetEfficiency(PerSecond rpm, Ampere currentDemand);
 
 		string Source { get; }
 	}

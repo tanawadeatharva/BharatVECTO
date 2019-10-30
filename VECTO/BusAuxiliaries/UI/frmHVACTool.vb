@@ -19,19 +19,19 @@ Public Class frmHVACTool
 	Private captureDiagnostics As Boolean
 	Private busDatabasePath As String
 	Private ahsmFilePath As String
-	Private buses As IBusDatabase
+	'Private buses As IBusDatabase
 	Private ssmTOOL As SSMTOOL
 	Private originalssmTOOL As SSMTOOL
 	Private TabColors As Dictionary(Of TabPage, Color) = New Dictionary(Of TabPage, Color)()
-	Private editTechLine As ITechListBenefitLine = New TechListBenefitLine()
-	Private gvTechListBinding As BindingList(Of ITechListBenefitLine)
+	Private editTechLine As ISSMTechnology = New SSMTechnology()
+	Private gvTechListBinding As BindingList(Of ISSMTechnology)
 	Private DefaultCategories As String() = {"Cooling", "Heating", "Insulation", "Ventiliation"}
 	Private vectoFile As String = String.Empty
 	Private UserHitCancel As Boolean = False
 	Private UserHitSave As Boolean = False
 	Private IsAddingBus As Boolean = False
 	Private IsUpdatingBus As Boolean = False
-	Private busesList As BindingList(Of IBus)
+	'Private busesList As BindingList(Of IBus)
 
 	'Helpers
 	Public Sub UpdateButtonText()
@@ -58,7 +58,7 @@ Public Class frmHVACTool
 
 		Dim _
 			gvTechListBinding As _
-				New BindingList(Of ITechListBenefitLine)(
+				New BindingList(Of ISSMTechnology)(
 					ssmTOOL.TechList.TechLines.OrderBy(Function(o) o.Category).ThenBy(Function(t) t.BenefitName).ToList())
 		Me.gvTechBenefitLines.DataSource = gvTechListBinding
 	End Sub
@@ -1116,9 +1116,9 @@ Public Class frmHVACTool
 				BindGrid()
 
 				'find new row
-				Dim ol As List(Of ITechListBenefitLine) =
+				Dim ol As List(Of ISSMTechnology) =
 						ssmTOOL.TechList.TechLines.OrderBy(Function(x) x.Category).ThenBy(Function(tb) tb.BenefitName).ToList()
-				Dim item As ITechListBenefitLine =
+				Dim item As ISSMTechnology =
 						ol.First(
 							Function(x) _
 									x.Category = GetTechLineFromPanel().Category AndAlso x.BenefitName = GetTechLineFromPanel().BenefitName)
@@ -1188,14 +1188,14 @@ Public Class frmHVACTool
 		ElseIf "Add".Equals(btnNewBus.Tag) Then
 
 			If Validate_GeneralInputsBPEdit() Then
-				Dim newBus As IBus = New Bus(busesList.Count + 1, txtEditBusModel.Text, cmbEditFloorType.Text,
-											cmbEditEngineType.Text, Double.Parse(txtEditBusLength.Text, CultureInfo.InvariantCulture),
-											Double.Parse(txtEditBusWidth.Text, CultureInfo.InvariantCulture),
-											Double.Parse(txtEditBusHeight.Text, CultureInfo.InvariantCulture),
-											Convert.ToInt32(txtEditBusPassengers.Text), chkEditIsDoubleDecker.Checked)
+				'Dim newBus As IBus = New Bus(busesList.Count + 1, txtEditBusModel.Text, cmbEditFloorType.Text,
+				'							cmbEditEngineType.Text, Double.Parse(txtEditBusLength.Text, CultureInfo.InvariantCulture),
+				'							Double.Parse(txtEditBusWidth.Text, CultureInfo.InvariantCulture),
+				'							Double.Parse(txtEditBusHeight.Text, CultureInfo.InvariantCulture),
+				'							Convert.ToInt32(txtEditBusPassengers.Text), chkEditIsDoubleDecker.Checked)
 
-				buses.AddBus(newBus)
-				busesList.Add(newBus)
+				'buses.AddBus(newBus)
+				'busesList.Add(newBus)
 
 				'cboBuses.Enabled = True
 				btnUpdateBusDatabase.Enabled = True
@@ -1218,11 +1218,11 @@ Public Class frmHVACTool
 
 	Private Sub btnUpdateBusDatabase_Click(sender As Object, e As EventArgs) Handles btnUpdateBusDatabase.Click
 
-		If buses.Save(busDatabasePath) Then
-			MessageBox.Show("Buses database file saved successfully")
-		Else
+		'If buses.Save(busDatabasePath) Then
+		'	MessageBox.Show("Buses database file saved successfully")
+		'Else
 			MessageBox.Show("Failed to save buses database file")
-		End If
+		'End If
 	End Sub
 
 	'Private Sub btnEditBus_Click(sender As Object, e As EventArgs) Handles btnEditBus.Click
@@ -1330,7 +1330,7 @@ Public Class frmHVACTool
 	'TechList Helpers
 	Private Sub FillTechLineEditPanel(index As Integer)
 
-		Dim techline As ITechListBenefitLine
+		Dim techline As ISSMTechnology
 		Dim benefitName, category As Object
 		benefitName = gvTechBenefitLines.Rows(index).Cells("BenefitName").Value
 		category = gvTechBenefitLines.Rows(index).Cells("Category").Value
@@ -1357,9 +1357,9 @@ Public Class frmHVACTool
 		chkOnVehicle.Checked = techline.OnVehicle
 	End Sub
 
-	Private Function GetTechLineFromPanel() As ITechListBenefitLine
+	Private Function GetTechLineFromPanel() As ISSMTechnology
 
-		Dim tl As ITechListBenefitLine = New TechListBenefitLine()
+		Dim tl As ISSMTechnology = New SSMTechnology()
 	    tl.BusFloorType = ssmTOOL.SSMInputs.BusParameters.BusFloorType
 
 		tl.Category = StrConv(cboCategory.Text, vbProperCase)

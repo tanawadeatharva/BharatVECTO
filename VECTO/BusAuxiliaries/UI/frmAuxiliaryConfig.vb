@@ -333,10 +333,10 @@ Public Class frmAuxiliaryConfig
             ErrorProvider.SetError(txtActuationsMap, String.Empty)
         End If
         'Test File is valid
-        Dim actuations As IPneumaticActuationsMAP
+        Dim actuations As IActuationsMap
         Try
 
-            actuations = PneumaticActuationsMapReader.Read(FilePathUtils.ResolveFilePath(aauxPath, txtActuationsMap.Text))
+            actuations = ActuationsMapReader.Read(FilePathUtils.ResolveFilePath(aauxPath, txtActuationsMap.Text))
             'actuations.Initialise()
             ErrorProvider.SetError(txtActuationsMap, String.Empty)
         Catch ex As Exception
@@ -480,14 +480,14 @@ Public Class frmAuxiliaryConfig
         Dim message As String = ""
 
         'Validate abdb -  Bus Database 
-        Dim abdbFile As String = FilePathUtils.ResolveFilePath(aauxPath, txtBusDatabaseFilePath.Text)
-        Dim bdb As New BusDatabase()
-        If bdb.Initialise(abdbFile) Then
-            ErrorProvider.SetError(txtBusDatabaseFilePath, String.Empty)
-        Else
-            result = False
-            ErrorProvider.SetError(Me.txtBusDatabaseFilePath, "Please choose a valid Steady State Model File (*.ABDB")
-        End If
+        'Dim abdbFile As String = FilePathUtils.ResolveFilePath(aauxPath, txtBusDatabaseFilePath.Text)
+        'Dim bdb As New BusDatabase()
+        'If bdb.Initialise(abdbFile) Then
+        '    ErrorProvider.SetError(txtBusDatabaseFilePath, String.Empty)
+        'Else
+        '    result = False
+        '    ErrorProvider.SetError(Me.txtBusDatabaseFilePath, "Please choose a valid Steady State Model File (*.ABDB")
+        'End If
 
 
         'Try ahsm - HVac Steady State Model
@@ -905,7 +905,7 @@ Public Class frmAuxiliaryConfig
 
         If fileExists OrElse newFile Then
 
-            Using frm As New frmCombinedAlternators(absoluteAALTPath, New CombinedAlternatorSignals)
+            Using frm As New frmCombinedAlternators(absoluteAALTPath)
                 'If Dialog result is OK, then take action else bail
                 If frm.ShowDialog() = Windows.Forms.DialogResult.OK Then
                     If suppliedAALTPath.Contains(":\") AndAlso Not String.IsNullOrEmpty(aauxPath) Then
@@ -990,13 +990,13 @@ Public Class frmAuxiliaryConfig
             txtBusDatabaseFilePath.Focus()
             txtBusDatabaseFilePath.Text = GetRelativePath(fbAux.Files(0), Path.GetDirectoryName(auxFile))
 
-            Dim busDB As New BusDatabase()
+            'Dim busDB As New BusDatabase()
 
-            If Not busDB.Initialise(FilePathUtils.ResolveFilePath(aauxPath, txtBusDatabaseFilePath.Text)) Then
+            'If Not busDB.Initialise(FilePathUtils.ResolveFilePath(aauxPath, txtBusDatabaseFilePath.Text)) Then
 
-                MessageBox.Show("Unable to load")
+            '    MessageBox.Show("Unable to load")
 
-            End If
+            'End If
 
             Validate_HVAC()
         End If
@@ -1077,7 +1077,7 @@ Public Class frmAuxiliaryConfig
                     Return
                 End If
             End Using
-            BindingContext(auxConfig.HvacUserInputsConfig).EndCurrentEdit()
+            'BindingContext(auxConfig.HvacUserInputsConfig).EndCurrentEdit()
             Validate_HVAC()
 
         End If
@@ -1441,10 +1441,10 @@ Public Class frmAuxiliaryConfig
         cboAdBlueDosing.DataBindings.Add("Text", auxConfig.PneumaticUserInputsConfig, "AdBlueDosing")
         cboDoors.DataBindings.Add("Text", auxConfig.PneumaticUserInputsConfig, "Doors")
 
-        txtSSMFilePath.DataBindings.Add("Text", auxConfig.HvacUserInputsConfig, "SSMFilePath")
-        txtBusDatabaseFilePath.DataBindings.Add("Text", auxConfig.HvacUserInputsConfig, "BusDatabasePath")
-        chkDisableHVAC.DataBindings.Add("Checked", auxConfig.HvacUserInputsConfig, "SSMDisabled", False,
-                                        DataSourceUpdateMode.OnPropertyChanged)
+        'txtSSMFilePath.DataBindings.Add("Text", auxConfig.HvacUserInputsConfig, "SSMFilePath")
+        'txtBusDatabaseFilePath.DataBindings.Add("Text", auxConfig.HvacUserInputsConfig, "BusDatabasePath")
+        'chkDisableHVAC.DataBindings.Add("Checked", auxConfig.HvacUserInputsConfig, "SSMDisabled", False,
+                                        'DataSourceUpdateMode.OnPropertyChanged)
 
         SetSmartCardEmabledStatus()
     End Sub

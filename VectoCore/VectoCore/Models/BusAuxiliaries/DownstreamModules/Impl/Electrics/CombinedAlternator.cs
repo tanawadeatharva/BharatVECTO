@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,7 +7,6 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Util;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
@@ -16,7 +14,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 	{
 		public List<IAlternator> Alternators { get; set; } = new List<IAlternator>();
 		
-		private ICombinedAlternatorSignals altSignals;
 		private ISignals Signals;
 		private double AverageAlternatorsEfficiency;
 
@@ -26,7 +23,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			Source = source;
 			Signals = signals;
 
-			altSignals = new CombinedAlternatorSignals();
+			
 
 			Initialise(alternatorData);
 
@@ -54,21 +51,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public string Source { get; }
 
 		// Interface Implementation
-		public double GetEfficiency(PerSecond CrankRPM, Ampere Amps)
+		public double GetEfficiency(PerSecond crankSpeed, Ampere currentDemand)
 		{
-			altSignals.CrankRPM = CrankRPM;
-			altSignals.CurrentDemandAmps = (Amps.Value() / (double)Alternators.Count).SI<Ampere>();
-
-			;
-
-			//if (Signals == null/* || Signals.RunningCalc*/) { 
-				// If running calc cycle get efficiency from interpolation function
-				var alternatorMapValues = Alternators.Average(a => a.Efficiency) / 100.0;
-			//} else {
-			//	// If running Pre calc cycle get an average of inputs
 			
-			//	alternatorMapValues = AverageAlternatorsEfficiency;
-			//}
+			var currentDemandSingle = (currentDemand.Value() / Alternators.Count).SI<Ampere>();
+
+			var alternatorMapValues = Alternators.Average(a => a.GetEfficiency(crankSpeed, currentDemandSingle)) / 100.0;
 
 			if (alternatorMapValues <= 0) {
 				alternatorMapValues = 0.01;
@@ -85,24 +73,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			Alternators.Clear();
 			
 			foreach (var alt in map.GroupBy(g => g.AlternatorName)) {
-				Alternators.Add(new Alternator(altSignals, alt.ToList()));
+				Alternators.Add(new Alternator(alt.ToList()));
 			}
 		}
 
 		
-
-		//event Interfaces.AuxiliaryEventEventHandler IAuxiliaryEvent.AuxiliaryEvent
-		//{
-		//	add {
-		//		//throw new NotImplementedException();
-		//	}
-
-		//	remove {
-		//		//throw new NotImplementedException();
-		//	}
-		//}
-
-		
+	
 		// Grid Management
 		private bool AddNewAlternator(List<ICombinedAlternatorMapRow> list, ref string feeback)
 		{
@@ -115,7 +91,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				return false;
 			}
 
-			IAlternator alternator = new Alternator(altSignals, list.ToList());
+			IAlternator alternator = new Alternator(list.ToList());
 
 			Alternators.Add(alternator);
 
@@ -196,8 +172,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			}
 
 			// Add Model Source
-			sb.AppendLine("[MODELSOURCE]");
-			sb.Append(ToString());
+			sb.AppendLine("# [MODELSOURCE]");
+			sb.Append(ToString().Split(new [] {Environment.NewLine}, StringSplitOptions.None).Select(x => "# " + x));
 
 			// Write the stream cotnents to a new file named "AllTxtFiles.txt" 
 			using (var outfile = new StreamWriter(aaltPath)) {
@@ -245,26 +221,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 					sb.AppendLine(a1 + vbTab + e1 + vbTab + a2 + vbTab + e2 + vbTab + a3 + vbTab + e3 + vbTab);
 				}
 			}
-
-			// sb.AppendLine("")
-			// sb.AppendLine("********* COMBINED EFFICIENCY VALUES **************")
-			// sb.AppendLine("")
-			// sb.AppendLine(vbTab + "RPM VALUES")
-			// sb.AppendLine("AMPS" + vbTab + "500" + vbTab + "1500" + vbTab + "2500" + vbTab + "3500" + vbTab + "4500" + vbTab + "5500" + vbTab + "6500" + vbTab + "7500")
-			// For a As Single = 1 To Alternators.Count * 50
-
-			// sb.Append(a.ToString("0") + vbTab)
-			// For Each r As Single In {500, 1500, 2500, 3500, 4500, 5500, 6500, 7500}
-
-			// Dim eff As Single = GetEfficiency(r, a).Efficiency
-
-			// sb.Append(eff.ToString("0.000") + vbTab)
-
-			// Next
-			// sb.AppendLine("")
-
-			// Next
-
 
 			return sb.ToString();
 		}

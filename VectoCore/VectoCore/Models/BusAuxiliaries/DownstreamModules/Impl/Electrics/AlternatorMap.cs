@@ -11,9 +11,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
@@ -149,15 +147,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		private void GetMapRanges()
 		{
-			;/* 
-Input: 
-
-			_yRange = (From coords As MapPoint In _map Order By coords.Y Select coords.Y Distinct).ToList()
- */
-			;/* 
-Input: 
-			_xRange = (From coords As MapPoint In _map Order By coords.x Select coords.x Distinct).ToList()
- */
 			_yRange = _map.Select(x => x.Y).Distinct().OrderBy(x => x).ToList();
 			_xRange = _map.Select(x => x.X).Distinct().OrderBy(x => x).ToList();
 
@@ -239,9 +228,9 @@ Input:
 		}
 
 		// Get Alternator Efficiency
-		public double GetEfficiency(PerSecond rpm, Ampere amps)
+		public double GetEfficiency(PerSecond rpm, Ampere currentDemand)
 		{
-			return GetValue(rpm, amps);
+			return GetValue(rpm, currentDemand);
 		}
 
 		

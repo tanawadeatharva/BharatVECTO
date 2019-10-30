@@ -16,14 +16,11 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public class SmartResult : IComparable<SmartResult>
 	{
-		public Ampere Amps { get; set; }
-		public Ampere SmartAmps { get; set; }
+		public Ampere Amps { get;  }
+		public Ampere SmartAmps { get;  }
 
 		// Constructors
-		public SmartResult()
-		{
-		}
-
+		
 		public SmartResult(Ampere amps, Ampere smartAmps)
 		{
 			Amps = amps;

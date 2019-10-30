@@ -22,10 +22,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 
 		ISSMInputs SSMInputs { get; }
 
-		IPneumaticActuationsMap ActuationsMap { get; }
-
-		// Hvac
-		IHVACUserInputsConfig HvacUserInputsConfig { get;  }
+		IActuationsMap ActuationsMap { get; }
 
 		bool ConfigValuesAreTheSameAs(IAuxiliaryConfig other);
 

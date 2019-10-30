@@ -1,6 +1,5 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -14,7 +13,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 
 		protected IM5_SmartAlternatorSetGeneration _m5;
 		protected IM6 _m6;
-		protected ISignals _signals;
+		protected readonly ISignals _signals;
 
 		public M07Impl(IM5_SmartAlternatorSetGeneration m5, IM6 m6, ISignals signals)
 		{

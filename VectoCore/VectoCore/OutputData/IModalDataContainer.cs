@@ -33,7 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// <returns></returns>
 		object this[ModalResultField key] { get; set; }
 
-		object this[ModalResultField key, FuelData.Entry fuel] { get; set; }
+		object this[ModalResultField key, IFuelProperties fuel] { get; set; }
 
 		/// <summary>
 		/// Indexer for auxiliary fields of the DataWriter.
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// </summary>
 		void CommitSimulationStep();
 
-		IList<FuelData.Entry> FuelData { get; }
+		IList<IFuelProperties> FuelData { get; }
 
 		VectoRun.Status RunStatus { get; }
 
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.OutputData
 		/// </summary>
 		void FinishSimulation();
 
-		string GetColumnName(FuelData.Entry fuelData, ModalResultField mrf);
+		string GetColumnName(IFuelProperties fuelData, ModalResultField mrf);
 	}
 
 	public static class ModalDataContainerExtensions
@@ -348,12 +348,12 @@ namespace TUGraz.VectoCore.OutputData
 		}
 
 		
-		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, FuelData.Entry fuelData)
+		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
 		{
 			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf)) / data.Duration();
 		}
 
-		public static KilogramPerMeter FuelConsumptionPerMeter(this IModalDataContainer data, ModalResultField mrf, FuelData.Entry fuelData)
+		public static KilogramPerMeter FuelConsumptionPerMeter(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
 		{
 			var distance = data.Distance();
 			if (distance == null || distance.IsEqual(0)) {
@@ -363,7 +363,7 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf)) / distance;
 		}
 
-		public static Kilogram TotalFuelConsumption(this IModalDataContainer data, ModalResultField mrf, FuelData.Entry fuelData)
+		public static Kilogram TotalFuelConsumption(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
 		{
 			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf));
 		}
