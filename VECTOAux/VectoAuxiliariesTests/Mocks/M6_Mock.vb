@@ -10,13 +10,13 @@ Public Class M6_Mock
 
 	Public Property _AveragePowerDemandAtCrankFromPneumatics As Watt
 	Public Property _AvgPowerDemandAtCrankFromElectricsIncHVAC As Watt
-	Public Property _OverrunFlag As Integer
+	Public Property _OverrunFlag As Boolean
 	Public Property _SmartElecAndPneumaticAirCompPowerGenAtCrank As Watt
 	Public Property _SmartElecAndPneumaticAltPowerGenAtCrank As Watt
-	Public Property _SmartElecAndPneumaticsCompressorFlag As Integer
+	Public Property _SmartElecAndPneumaticsCompressorFlag As Boolean
 	Public Property _SmartElecOnlyAltPowerGenAtCrank As Watt
 	Public Property _SmartPneumaticOnlyAirCompPowerGenAtCrank As Watt
-	Public Property _SmartPneumaticsOnlyCompressorFlag As Integer
+	Public Property _SmartPneumaticsOnlyCompressorFlag As Boolean
 
 
 	Public ReadOnly Property AveragePowerDemandAtCrankFromPneumatics As Watt _

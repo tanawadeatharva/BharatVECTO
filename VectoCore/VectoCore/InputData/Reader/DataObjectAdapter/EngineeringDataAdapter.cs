@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -496,13 +497,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return null;
 		}
 
-		public AdvancedAuxData CreateAdvancedAuxData(IAuxiliariesEngineeringInputData auxInputData)
+		public IAuxiliaryConfig CreateAdvancedAuxData(IAuxiliariesEngineeringInputData auxInputData)
 		{
-			return new AdvancedAuxData() {
-				AdvancedAuxiliaryFilePath = auxInputData.AdvancedAuxiliaryFilePath,
-				AuxiliaryAssembly = auxInputData.AuxiliaryAssembly,
-				AuxiliaryVersion = auxInputData.AuxiliaryVersion
-			};
+			return null;
 		}
 	}
 }

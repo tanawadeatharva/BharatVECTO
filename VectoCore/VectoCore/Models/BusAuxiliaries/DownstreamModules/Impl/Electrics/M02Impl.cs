@@ -10,15 +10,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 	public class M02Impl : AbstractModule, IM2_AverageElectricalLoadDemand
 	{
 		private Volt _powerNetVoltage;
-		private IElectricalConsumerList _electricalConsumers;
+		private IM0_1_AverageElectricLoadDemand _m0_1;
 		private IM0_NonSmart_AlternatorsSetEfficiency _module0;
 		private double _alternatorPulleyEffiency;
 
 		public M02Impl(
-			IElectricalConsumerList electricalConsumers, IM0_NonSmart_AlternatorsSetEfficiency m0, double altPulleyEfficiency,
+			IM0_1_AverageElectricLoadDemand m0_1, IM0_NonSmart_AlternatorsSetEfficiency m0, double altPulleyEfficiency,
 			Volt powerNetVoltage, ISignals signals)
 		{
-			if (electricalConsumers == null) {
+			if (m0_1 == null) {
 				throw new ArgumentException("Electrical Consumer List must be supplied");
 			}
 			if (m0 == null) {
@@ -32,27 +32,22 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			}
 
 			_powerNetVoltage = powerNetVoltage;
-			_electricalConsumers = electricalConsumers;
+			_m0_1 = m0_1;
 			_module0 = m0;
 			_alternatorPulleyEffiency = altPulleyEfficiency;
 		}
 
 		#region Implementation of IM2_AverageElectricalLoadDemand
 
-		public Watt GetAveragePowerDemandAtAlternator()
-		{
-			return _powerNetVoltage * _electricalConsumers.GetTotalAverageDemandAmps(false);
-		}
-
 		public Watt GetAveragePowerAtCrankFromElectrics()
 		{
-			var ElectricalPowerDemandsWatts = GetAveragePowerDemandAtAlternator();
+			var electricalPowerDemandsWatts = _powerNetVoltage * _m0_1.GetTotalAverageDemandAmpsIncludingBaseLoad;
 			var alternatorsEfficiency = _module0.AlternatorsEfficiency;
-			var ElectricalPowerDemandsWattsDividedByAlternatorEfficiency =
-				ElectricalPowerDemandsWatts * (1 / alternatorsEfficiency);
+			var electricalPowerDemandsWattsDividedByAlternatorEfficiency =
+				electricalPowerDemandsWatts * (1 / alternatorsEfficiency);
 
 			var averagePowerDemandAtCrankFromElectricsWatts =
-				ElectricalPowerDemandsWattsDividedByAlternatorEfficiency * (1 / _alternatorPulleyEffiency);
+				electricalPowerDemandsWattsDividedByAlternatorEfficiency * (1 / _alternatorPulleyEffiency);
 
 			return averagePowerDemandAtCrankFromElectricsWatts;
 		}

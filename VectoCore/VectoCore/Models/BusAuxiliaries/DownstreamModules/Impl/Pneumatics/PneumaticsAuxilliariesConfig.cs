@@ -10,56 +10,57 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 {
 	public class PneumaticsAuxilliariesConfig : IPneumaticsAuxilliariesConfig
 	{
-		public double AdBlueNIperMinute { get; set; }
+		public NormLiterPerSecond AdBlueNIperMinute { get; set; }
 
-		public double AirControlledSuspensionNIperMinute { get; set; }
+		public NormLiterPerSecond AirControlledSuspensionNIperMinute { get; set; }
 
-		public double BrakingNoRetarderNIperKG { get; set; }
+		public NormLiterPerKilogram BrakingNoRetarderNIperKG { get; set; }
 
-		public double BrakingWithRetarderNIperKG { get; set; }
+		public NormLiterPerKilogram BrakingWithRetarderNIperKG { get; set; }
 
-		public double BreakingPerKneelingNIperKGinMM { get; set; }
+		public NormLiterPerKilogramMeter BreakingPerKneelingNIperKGinMM { get; set; }
 
-		public double DeadVolBlowOutsPerLitresperHour { get; set; }
+		public PerSecond DeadVolBlowOutsPerLitresperHour { get; set; }
 
-		public double DeadVolumeLitres { get; set; }
+		public NormLiter DeadVolumeLitres { get; set; }
 
 		public double NonSmartRegenFractionTotalAirDemand { get; set; }
 
 		public double OverrunUtilisationForCompressionFraction { get; set; }
 
-		public double PerDoorOpeningNI { get; set; }
+		public NormLiter PerDoorOpeningNI { get; set; }
 
-		public double PerStopBrakeActuationNIperKG { get; set; }
+		public NormLiterPerKilogram PerStopBrakeActuationNIperKG { get; set; }
 
 		public double SmartRegenFractionTotalAirDemand { get; set; }
 
 
-		public PneumaticsAuxilliariesConfig(bool setToDefaults = false)
-		{
-			if (setToDefaults)
-				SetDefaults();
-		}
+		//public PneumaticsAuxilliariesConfig()
+		//{
+		//	//if (setToDefaults)
+		//	//	SetDefaults();
+		//}
 
-		public void SetDefaults()
-		{
-			AdBlueNIperMinute = 21.25;
-			AirControlledSuspensionNIperMinute = 15;
-			BrakingNoRetarderNIperKG = 0.00081;
-			BrakingWithRetarderNIperKG = 0.0006;
-			BreakingPerKneelingNIperKGinMM = 0.000066;
-			DeadVolBlowOutsPerLitresperHour = 24;
-			DeadVolumeLitres = 30;
-			NonSmartRegenFractionTotalAirDemand = 0.26;
-			OverrunUtilisationForCompressionFraction = 0.97;
-			PerDoorOpeningNI = 12.7;
-			PerStopBrakeActuationNIperKG = 0.00064;
-			SmartRegenFractionTotalAirDemand = 0.12;
-		}
+		//public void SetDefaults()
+		//{
+		//	AdBlueNIperMinute = 21.25.SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
+		//	AirControlledSuspensionNIperMinute = 15.SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
+		//	BrakingNoRetarderNIperKG = 0.00081.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
+		//	BrakingWithRetarderNIperKG = 0.0006.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
+		//	BreakingPerKneelingNIperKGinMM = 0.000066.SI(Unit.SI.Liter.Per.Kilo.Gramm.Meter).Cast<NormLiterPerKilogramMeter>();
+		//	DeadVolBlowOutsPerLitresperHour = 24.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
+		//	DeadVolumeLitres = 30.SI<NormLiter>();
+		//	NonSmartRegenFractionTotalAirDemand = 0.26;
+		//	OverrunUtilisationForCompressionFraction = 0.97;
+		//	PerDoorOpeningNI = 12.7.SI<NormLiter>();
+		//	PerStopBrakeActuationNIperKG = 0.00064.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
+		//	SmartRegenFractionTotalAirDemand = 0.12;
+		//}
 	}
 }

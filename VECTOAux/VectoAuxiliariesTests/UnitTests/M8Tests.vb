@@ -1,6 +1,7 @@
 ﻿
 Imports NUnit.Framework
 Imports Moq
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -60,8 +61,8 @@ Namespace UnitTests
 			m7MOCK.Setup(Function(x) x.SmartPneumaticOnlyAuxAirCompPowerGenAtCrank).Returns(IP5.SI(Of Watt))
 			m6Mock.Setup(Function(x) x.AvgPowerDemandAtCrankFromElectricsIncHVAC).Returns(IP6.SI(Of Watt))
 			m6Mock.Setup(Function(x) x.AveragePowerDemandAtCrankFromPneumatics).Returns(IP7.SI(Of Watt))
-			m6Mock.Setup(Function(x) x.SmartElecAndPneumaticsCompressorFlag).Returns(IP8)
-			m6Mock.Setup(Function(x) x.SmartPneumaticsOnlyCompressorFlag).Returns(IP9)
+			m6Mock.Setup(Function(x) x.SmartElecAndPneumaticsCompressorFlag).Returns(IP8 <> 0)
+			m6Mock.Setup(Function(x) x.SmartPneumaticsOnlyCompressorFlag).Returns(IP9 <> 0)
 			sigsMock.Setup(Function(x) x.SmartPneumatics).Returns(IP10)
 			sigsMock.Setup(Function(x) x.SmartElectrics).Returns(IP11)
 
@@ -106,8 +107,8 @@ Namespace UnitTests
 			m7MOCK.Setup(Function(x) x.SmartPneumaticOnlyAuxAirCompPowerGenAtCrank).Returns(IP5.SI(Of Watt))
 			m6Mock.Setup(Function(x) x.AvgPowerDemandAtCrankFromElectricsIncHVAC).Returns(IP6.SI(Of Watt))
 			m6Mock.Setup(Function(x) x.AveragePowerDemandAtCrankFromPneumatics).Returns(IP7.SI(Of Watt))
-			m6Mock.Setup(Function(x) x.SmartElecAndPneumaticsCompressorFlag).Returns(IP8)
-			m6Mock.Setup(Function(x) x.SmartPneumaticsOnlyCompressorFlag).Returns(IP9)
+			m6Mock.Setup(Function(x) x.SmartElecAndPneumaticsCompressorFlag).Returns(IP8 <> 0)
+			m6Mock.Setup(Function(x) x.SmartPneumaticsOnlyCompressorFlag).Returns(IP9 <> 0)
 			sigsMock.Setup(Function(x) x.SmartPneumatics).Returns(IP10)
 			sigsMock.Setup(Function(x) x.SmartElectrics).Returns(IP11)
 			sigsMock.Setup(Function(x) x.EngineStopped).Returns(IP12)

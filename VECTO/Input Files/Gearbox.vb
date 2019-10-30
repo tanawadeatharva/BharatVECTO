@@ -121,7 +121,7 @@ Public Class Gearbox
 
         Try
             Dim writer As JSONFileWriter = JSONFileWriter.Instance
-            writer.SaveGearbox(Me, Me, Me, Me, _filePath)
+            writer.SaveGearbox(Me, Me, Me, Me, _filePath, Cfg.DeclMode)
         Catch ex As Exception
             MsgBox("failed to write Gearbox file: " + ex.Message)
             Return False

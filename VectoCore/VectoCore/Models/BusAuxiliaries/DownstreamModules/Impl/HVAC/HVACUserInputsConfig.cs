@@ -15,19 +15,19 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
 	public class HVACUserInputsConfig : IHVACUserInputsConfig
 	{
-
-		// Constructor
-		public HVACUserInputsConfig(string ssmFilePath, string busDatabasePath, bool isDisabled)
+		public HVACUserInputsConfig()
 		{
-			SSMFilePath = ssmFilePath;
-			BusDatabasePath = busDatabasePath;
-			SSMDisabled = isDisabled;
+			HVACConstants = new HVACConstants();
 		}
 
-		public string SSMFilePath { get; set; }
+		//public ISSMInputs SSMInputs { get; internal set; }
 
-		public string BusDatabasePath { get; set; }
+		public IHVACConstants HVACConstants { get; }
 
-		public bool SSMDisabled { get; set; }
+		//public string SSMFilePath { get; set; }
+
+		//public string BusDatabasePath { get; set; }
+
+		//public bool SSMDisabled { get; set; }
 	}
 }

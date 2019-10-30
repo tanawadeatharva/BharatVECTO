@@ -1,4 +1,6 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 
@@ -54,7 +56,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 
 			var vc1 = sum12 > 0;
 			var sum14 = vc1 ? _m4.GetPowerCompressorOff() : 0.SI<Watt>();
-			var sum15 = vc2 ? _m4.GetPowerCompressorOn() * _signals.PneumaticOverrunUtilisation : 0.SI<Watt>();
+			var sum15 = vc2
+				? _m4.GetPowerCompressorOn() * Constants.BusAuxiliaries.PneumaticUserConfig.PneumaticOverrunUtilisation
+				: 0.SI<Watt>();
 			var sum16 = sum14 + sum15;
 
 			var sum6 = sum4 - _m4.GetPowerCompressorOff() + _m3.GetAveragePowerDemandAtCrankFromPneumatics();
@@ -67,7 +71,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			var vc3 = sum13 > 0;
 			var vc4 = sum13 < 0 || sum13.IsEqual(0);
 			var sum17 = vc3 ? _m4.GetPowerCompressorOff() : 0.SI<Watt>();
-			var sum18 = vc4 ? _m4.GetPowerCompressorOn() * _signals.PneumaticOverrunUtilisation : 0.SI<Watt>();
+			var sum18 = vc4
+				? _m4.GetPowerCompressorOn() * Constants.BusAuxiliaries.PneumaticUserConfig.PneumaticOverrunUtilisation
+				: 0.SI<Watt>();
 			var sum19 = sum17 + sum18;
 
 			_overrunFlag = vc0;

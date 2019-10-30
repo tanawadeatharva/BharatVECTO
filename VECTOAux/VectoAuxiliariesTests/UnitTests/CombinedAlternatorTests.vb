@@ -4,8 +4,10 @@ Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
 Imports System.IO
 Imports Newtonsoft.Json
+Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
+Imports TUGraz.VectoCore.Models.Declaration
 
 Namespace UnitTests
 
@@ -242,7 +244,7 @@ Namespace UnitTests
 
 
             'Act
-            Dim alt As New CombinedAlternator(COMBINEDALT_GOODMAP)
+            Dim alt As CombinedAlternator = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
 
 
 
@@ -271,7 +273,7 @@ Namespace UnitTests
             'Arrange
 
             'Act
-            Dim alt As New CombinedAlternator(COMBINEDALT_GOODMAP)
+            Dim alt As CombinedAlternator = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
 
 
             Dim idx As Integer
@@ -299,7 +301,7 @@ Namespace UnitTests
 
 
             'Act
-            Dim alt As New CombinedAlternator(COMBINEDALT_GOODMAP)
+            Dim alt As CombinedAlternator = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
 
 
             Dim idx As Integer
@@ -326,7 +328,7 @@ Namespace UnitTests
 
 
             'Act
-            Dim alt As New CombinedAlternator(COMBINEDALT_GOODMAP)
+            Dim alt As CombinedAlternator = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
 
 
             Dim idx As Integer
@@ -357,7 +359,7 @@ Namespace UnitTests
 
 
             'Act
-            Dim target As New CombinedAlternator(COMBINEDALT_GOODMAP)
+            Dim target As CombinedAlternator = CType(AlternatorReader.ReadMap(COMBINEDALT_GOODMAP), CombinedAlternator)
 
 
 
@@ -376,7 +378,7 @@ Namespace UnitTests
             Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals
 
             'Act
-            Dim target As New CombinedAlternator("123.aalt")
+            Dim target = CType( AlternatorReader.ReadMap("TestFiles/CombinedAlternatorDefaultsTest.aalt"), CombinedAlternator)
 
             'Assert
             Assert.AreEqual(target.Alternators.Count, 2)
@@ -390,14 +392,11 @@ Namespace UnitTests
 
             '  Dim signals As ICombinedAlternatorSignals = New CombinedAlternatorSignals() With {.CrankRPM=1750, .CurrentDemandAmps=170}
 
-            Dim ca As New CombinedAlternator("abc.aalt")
+            Dim ca  = CType( AlternatorReader.ReadMap("TestFiles/CombinedAlternatorDefaultsTest.aalt"), CombinedAlternator)
 
-            ca.Initialise()
+            Dim actual As double = ca.GetEfficiency(1750.RPMtoRad(), 170.SI(Of Ampere))
 
-
-            Dim actual As AlternatorMapValues = ca.GetEfficiency(1750.RPMtoRad(), 170.SI(Of Ampere))
-
-            Assert.AreEqual(0.684354842F, actual.Efficiency)
+            Assert.AreEqual(0.684354842, actual, 1e-6)
 
 
         End Sub
@@ -406,9 +405,7 @@ Namespace UnitTests
         Public Sub Performance()
 
 
-            Dim ca As New CombinedAlternator("abc.aalt")
-
-            ca.Initialise()
+            Dim ca  = CType( AlternatorReader.ReadMap("TestFiles/CombinedAlternatorDefaultsTest.aalt"), CombinedAlternator)
 
             Dim startDT As DateTime = DateTime.Now
             Dim endDateDT As DateTime
@@ -427,11 +424,11 @@ Namespace UnitTests
                 crank = rand.Next(0, 0)
                 demand = rand.Next(0, 0)
 
-                Dim actual As AlternatorMapValues = ca.GetEfficiency(crank.RPMtoRad(), demand.SI(Of Ampere))
+                Dim actual As double = ca.GetEfficiency(crank.RPMtoRad(), demand.SI(Of Ampere))
 
-                If actual.Efficiency < min Then min = actual.Efficiency
+                If actual < min Then min = actual
 
-                If actual.Efficiency > max Then max = actual.Efficiency
+                If actual > max Then max = actual
 
             Next
 
@@ -447,8 +444,8 @@ Namespace UnitTests
         Public Sub AlternatorsAreEqual()
 
 
-            Dim ca As ICombinedAlternator = New CombinedAlternator("abc.aalt")
-            Dim original As ICombinedAlternator = New CombinedAlternator("abc.aalt")
+            Dim ca As ICombinedAlternator = CType( AlternatorReader.ReadMap("TestFiles/testCombinedAlternatorMap.aalt"), ICombinedAlternator)
+            Dim original As ICombinedAlternator = CType(AlternatorReader.ReadMap("TestFiles/testCombinedAlternatorMap.aalt"), ICombinedAlternator)
 
             Assert.IsTrue(ca.IsEqualTo(original))
 
@@ -458,8 +455,8 @@ Namespace UnitTests
         Public Sub AlternatorsUnequalName()
 
 
-            Dim ca As New CombinedAlternator("abc.aalt")
-            Dim original As New CombinedAlternator("abc.aalt")
+            Dim ca As ICombinedAlternator = CType( AlternatorReader.ReadMap("TestFiles/testCombinedAlternatorMap.aalt"), ICombinedAlternator)
+            Dim original As ICombinedAlternator = CType(AlternatorReader.ReadMap("TestFiles/testCombinedAlternatorMap.aalt"), ICombinedAlternator)
 
             ca.Alternators(0).AlternatorName = "ZCZZCZCZCZCXXXYYY"
 
@@ -471,8 +468,8 @@ Namespace UnitTests
         Public Sub AlternatorsUnequalPulley()
 
 
-            Dim ca As New CombinedAlternator("abc.aalt")
-            Dim original As New CombinedAlternator("abc.aalt")
+            Dim ca As ICombinedAlternator = CType( AlternatorReader.ReadMap("TestFiles/testCombinedAlternatorMap.aalt"), ICombinedAlternator)
+            Dim original As ICombinedAlternator = CType(AlternatorReader.ReadMap("TestFiles/testCombinedAlternatorMap.aalt"), ICombinedAlternator)
 
             ca.Alternators(0).PulleyRatio = 9
 
@@ -499,8 +496,8 @@ Namespace UnitTests
         Public Sub AlternatorsUnequalEfficiency()
 
 
-            Dim ca As New CombinedAlternator("abc.aalt")
-            Dim original As New CombinedAlternator("abc.aalt")
+            Dim ca As ICombinedAlternator = CType( AlternatorReader.ReadMap("TestFiles/testCombinedAlternatorMap.aalt"), ICombinedAlternator)
+            Dim original As ICombinedAlternator = CType(AlternatorReader.ReadMap("TestFiles/testCombinedAlternatorMap.aalt"), ICombinedAlternator)
 
             ca.Alternators(0).InputTable2000(1).Eff = 0.99999
 

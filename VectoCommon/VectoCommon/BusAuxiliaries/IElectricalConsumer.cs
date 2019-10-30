@@ -16,16 +16,15 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IElectricalConsumer : INotifyPropertyChanged
 	{
-		string Category { get; set; }
-		string ConsumerName { get; set; }
-		bool BaseVehicle { get; set; }
-		Ampere NominalConsumptionAmps { get; set; }
-		double PhaseIdle_TractionOn { get; set; }
+		string Category { get;  }
+		string ConsumerName { get;  }
+		bool BaseVehicle { get;  }
+		Ampere NominalConsumptionAmps { get;  }
+		double PhaseIdle_TractionOn { get;  }
 		int NumberInActualVehicle { get; set; }
-		Volt PowerNetVoltage { get; set; }
-		Ampere AvgConsumptionAmps { get; set; }
-		string Info { get; set; }
-		Ampere TotalAvgConumptionAmps(double PhaseIdle_TractionOnBasedOnCycle = 0.0);
-		Watt TotalAvgConsumptionInWatts(double PhaseIdle_TractionOnBasedOnCycle = 0.0);
+		Volt PowerNetVoltage { get;  }
+		string Info { get;  }
+		Ampere TotalAvgConumptionAmps { get; }
+		
 	}
 }

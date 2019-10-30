@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
@@ -101,7 +102,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				GearboxData = gearboxData,
 				EngineData = engineData,
 				SimulationType = SimulationType.DistanceCycle,
-				Cycle = cycleData
+				Cycle = cycleData,
+				AdvancedAux = BusAuxiliaryInputData.ReadBusAuxiliaries(AdvancedAuxFile, vehicleData)
 			};
 			container.RunData = runData;
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
@@ -114,7 +116,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new Clutch(container, engineData))
 				.AddComponent(engine);
 
-			var aux = new BusAuxiliariesAdapter(container, AdvancedAuxFile, "Coach",
+			var aux = new BusAuxiliariesAdapter(container, runData.AdvancedAux, "Coach",
 				vehicleData.TotalVehicleWeight, engineData.Fuels.First().ConsumptionMap, engineData.IdleSpeed);
 
 			engine.Connect(aux.Port());

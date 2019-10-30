@@ -12,7 +12,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 	{
 		protected Ampere _getHVACElectricalPowerDemandAmps;
 		protected double _alternatorsEfficiency;
-		protected IElectricalConsumerList _electricalConsumersList;
 		protected IAlternatorMap _alternatorEfficiencyMap;
 		protected Volt _powernetVoltage;
 		protected ISignals _signals;
@@ -20,12 +19,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		protected Watt _ElectricalPowerW;
 		protected Watt _MechanicalPowerW;
 		protected KilogramPerSecond _FuelingLPerH;
+		private IM0_1_AverageElectricLoadDemand _m0_1;
 
 		public M00Impl(
-			IElectricalConsumerList electricalConsumers, IAlternatorMap alternatorEfficiencyMap, Volt powernetVoltage,
+			IM0_1_AverageElectricLoadDemand m0_1, IAlternatorMap alternatorEfficiencyMap, Volt powernetVoltage,
 			ISignals signals, ISSMTOOL ssmHvac)
 		{
-			if (electricalConsumers == null) {
+			if (m0_1 == null) {
 				throw new ArgumentException("No ElectricalConsumersList Supplied");
 			}
 
@@ -41,8 +41,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				throw new ArgumentException("No Signals reference was supplied.");
 			}
 
-			_electricalConsumersList = electricalConsumers;
-
+			_m0_1 = m0_1;
+			
 			_alternatorEfficiencyMap = alternatorEfficiencyMap;
 
 			_powernetVoltage = powernetVoltage;
@@ -68,9 +68,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public double AlternatorsEfficiency
 		{
 			get {
-				var baseCurrentDemandAmps = _electricalConsumersList.GetTotalAverageDemandAmps(false);
+				var baseCurrentDemandAmps = _m0_1.GetTotalAverageDemandAmpsIncludingBaseLoad; // _electricalConsumersList.GetTotalAverageDemandAmps(false);
 				var totalDemandAmps = baseCurrentDemandAmps + GetHVACElectricalPowerDemandAmps;
-				return _alternatorEfficiencyMap.GetEfficiency(_signals.EngineSpeed, totalDemandAmps).Efficiency;
+				return _alternatorEfficiencyMap.GetEfficiency(_signals.EngineSpeed, totalDemandAmps);
 			}
 		}
 

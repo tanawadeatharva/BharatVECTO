@@ -231,6 +231,11 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return new ConvertedSI(sec.Value() / 60.0, "min");
 		}
+
+		public static ConvertedSI ConvertToNlPerMin(this NormLiterPerSecond nlps)
+		{
+			return new ConvertedSI(nlps.Value() * 60.0, "Nl/min");
+		}
 	}
 }
 

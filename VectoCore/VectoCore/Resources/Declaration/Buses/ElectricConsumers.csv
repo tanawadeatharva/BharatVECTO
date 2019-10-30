@@ -1,6 +1,6 @@
 ﻿Category                    , Consumer                                                , Base Vehicle , Nominal Amps , PhaseIdle/TractionOn , Num in Vehicle , Info
 Veh Electronics & Engine    , Controllers Valves etc.                                 , 1            , 25.0         , 1.0                  , 1              ,
-Doors                       , Doors per vehicle                                       , 0            , 3.0          , 0.096339             , 3              ,
+Doors                       , Doors per vehicle                                       , 0            , 3.0          , 0.0                  , 3              ,
 Vehicle basic equipment     , Radio City                                              , 0            , 2.0          , 0.8                  , 1              ,
 Vehicle basic equipment     , Radio Intercity                                         , 0            , 5.0          , 0.8                  , 0              ,
 Vehicle basic equipment     , Radio/Audio Tourism                                     , 0            , 9.0          , 0.8                  , 0              ,

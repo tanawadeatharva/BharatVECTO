@@ -1,10 +1,10 @@
 ﻿Imports NUnit.Framework
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 Imports VectoAuxiliariesTests.Mocks
 
 
@@ -67,22 +67,24 @@ Namespace UnitTests
 			Assert.IsNotNull(target)
 		End Sub
 
+        ''
+        ''@QUAM 20191017: These tests are not really useful. FailingMockCompressor always throwns exeption on initialize, M04Impl.Initialize only initializes compressor map...
+        ''
+		'<TestCase()>
+		'Public Sub InitialiseTest()
+		'	Dim map As ICompressorMap = GetNonFailingCompressorMapMock()
+		'	_signals.EngineSpeed = 100.RPMtoRad()
+		'	Dim target As IM4_AirCompressor = New M04Impl(map, 2, 0.8, _signals)
+		'	Assert.IsTrue(target.Initialise())
+		'End Sub
 
-		<TestCase()>
-		Public Sub InitialiseTest()
-			Dim map As ICompressorMap = GetNonFailingCompressorMapMock()
-			_signals.EngineSpeed = 100.RPMtoRad()
-			Dim target As IM4_AirCompressor = New M04Impl(map, 2, 0.8, _signals)
-			Assert.IsTrue(target.Initialise())
-		End Sub
-
-        <TestCase()>
-        Public Sub InitialiseInvalidMapTest()
-			Dim map As ICompressorMap = GetFailingCompressorMapMock()
-			_signals.EngineSpeed = 100.RPMtoRad()
-			Dim target As IM4_AirCompressor = New M04Impl(map, 2, 0.8, _signals)
-            Assert.That(Sub() target.Initialise(), Throws.InstanceOf(Of System.ArgumentException))
-        End Sub
+  '      <TestCase()>
+  '      Public Sub InitialiseInvalidMapTest()
+		'	Dim map As ICompressorMap = GetFailingCompressorMapMock()
+		'	_signals.EngineSpeed = 100.RPMtoRad()
+		'	Dim target As IM4_AirCompressor = New M04Impl(map, 2, 0.8, _signals)
+  '          Assert.That(Sub() target.Initialise(), Throws.InstanceOf(Of System.ArgumentException))
+  '      End Sub
 
 		<TestCase()>
 		Public Sub GetEfficiencyTest()
@@ -94,9 +96,9 @@ Namespace UnitTests
 		<TestCase()>
 		Public Sub SetEfficiencyTest()
 			Dim comp As IM4_AirCompressor = GetGoodCompressor()
-			Dim target As Single = 0.3
+			Dim target As Double = 0.3
 			comp.PulleyGearEfficiency = target
-			Dim actual As Single = comp.PulleyGearEfficiency
+			Dim actual As Double = comp.PulleyGearEfficiency
 			Assert.AreEqual(target, actual)
 		End Sub
 
@@ -119,9 +121,9 @@ Namespace UnitTests
 		<TestCase()>
 		Public Sub SetRatioTest()
 			Dim comp As IM4_AirCompressor = GetGoodCompressor()
-			Dim target As Single = 3
+			Dim target As Double = 3
 			comp.PulleyGearRatio = target
-			Dim actual As Single = comp.PulleyGearRatio
+			Dim actual As Double = comp.PulleyGearRatio
 			Assert.AreEqual(target, actual)
 		End Sub
 
@@ -173,9 +175,9 @@ Namespace UnitTests
 
 			Dim comp As IM4_AirCompressor = GetGoodCompressor()
 
-			Dim expected As Single = 0.01
+			Dim expected As Double = 0.01.SI(Unit.SI.Watt.Per.Liter.Per.Hour).Value()
 			Dim actual As SI = comp.GetAveragePowerDemandPerCompressorUnitFlowRate
-			Assert.AreEqual(actual.Value(), expected, 0.001)
+			Assert.AreEqual(expected, actual.Value(), 0.001)
 		End Sub
 	End Class
 End Namespace

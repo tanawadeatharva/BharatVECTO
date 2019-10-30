@@ -16,20 +16,18 @@ Namespace Mocks
 			failing = isFailing
 		End Sub
 
-		Public Function Initialise() As Boolean Implements IAlternatorMap.Initialise
-			If failing Then
-				Throw New ArgumentException
-			Else
-				Return True
-			End If
+
+		Public Function GetEfficiency(rpm1 As PerSecond, amps1 As Ampere) As double Implements IAlternatorMap.GetEfficiency
+			Return 0.0
 		End Function
 
-		Public Function GetEfficiency(rpm1 As PerSecond, amps1 As Ampere) As AlternatorMapValues Implements IAlternatorMap.GetEfficiency
-			Return New AlternatorMapValues()
-		End Function
+        public ReadOnly property Source As String Implements IAlternatorMap.Source
+        get
+            Return ""
+                End Get
+        End Property
 
-
-		Public Event IAuxiliaryEvent_AuxiliaryEvent As AuxiliaryEventEventHandler Implements IAuxiliaryEvent.AuxiliaryEvent
+		'Public Event IAuxiliaryEvent_AuxiliaryEvent As AuxiliaryEventEventHandler Implements IAuxiliaryEvent.AuxiliaryEvent
 	End Class
 
 End Namespace

@@ -1,4 +1,6 @@
-﻿using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
+﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
@@ -7,6 +9,23 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 	// Used by SSMTOOL Class, refer to original spreadsheet model
 	// Or PDF Model Document which articulates the same spreadsheet functionality
 	// But within the context of the Vecto interpretation of the same.
+
+	public class TechBenefitLines : ITechlistBenefitLines
+	{
+		#region Implementation of ITechlistBenefitLines
+
+		public TechBenefitLines(IReadOnlyList<ITechListBenefitLine> items, string source)
+		{
+			Items = items;
+			Source = source;
+		}
+
+		public IReadOnlyList<ITechListBenefitLine> Items { get; }
+
+		public string Source { get; }
+
+		#endregion
+	}
 
 	public class TechListBenefitLine : ITechListBenefitLine
 	{

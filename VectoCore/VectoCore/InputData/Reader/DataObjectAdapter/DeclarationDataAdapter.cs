@@ -32,12 +32,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -600,6 +602,39 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						mission.CrossWindCorrectionParameters, aerodynamicDragArea, segment.VehicleHeight),
 					CrossWindCorrectionMode.DeclarationModeCorrection)
 			};
+		}
+
+		public ISSMInputs CreateSSMModelParameters(IVehicleData vehicleData, FuelData.Entry heatingFuel)
+		{
+			return new SSMInputs(vehicleData, null, heatingFuel) {
+				Technologies = DeclarationData.BusAuxiliaries.SSMTechnologyList,
+				DefaultConditions = new EnvironmentalConditionMapEntry(
+					Constants.BusAuxiliaries.SteadyStateModel.DefaultTemperature,
+					Constants.BusAuxiliaries.SteadyStateModel.DefaultSolar,
+					1.0),
+				EnvironmentalConditionsMap = DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions,
+				HeatingBoundaryTemperature = Constants.BusAuxiliaries.SteadyStateModel.HeatingBoundaryTemperature,
+				CoolingBoundaryTemperature = Constants.BusAuxiliaries.SteadyStateModel.CoolingBoundaryTemperature,
+				HighVentilation = Constants.BusAuxiliaries.SteadyStateModel.HighVentilation,
+				LowVentilation = Constants.BusAuxiliaries.SteadyStateModel.LowVentilation,
+				SpecificVentilationPower = Constants.BusAuxiliaries.SteadyStateModel.SpecificVentilationPower,
+				// TODO! MQ 2019-19-29 Compressor Type and CompressorCapacity from input data?
+				CompressorType = "2-stage",
+				CompressorCapacity = 18.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+
+				AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency,
+				FuelFiredHeaterPower = Constants.BusAuxiliaries.SteadyStateModel.FuelFiredHeaterPower,
+				FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,
+				CoolantHeatTransferredToAirCabinHeater = Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
+				GFactor = Constants.BusAuxiliaries.SteadyStateModel.GFactor,
+				VentilationOnDuringHeating =  true,
+				VentilationWhenBothHeatingAndACInactive = true,
+				VentilationDuringAC = true,
+				VentilationDuringHeating = VentilationLevel.High,
+				VentilationDuringCooling = VentilationLevel.High,
+				VentilationFlowSettingWhenHeatingAndACInactive = VentilationLevel.High,
+				MaxPossibleBenefitFromTechnologyList = Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList,
+		};
 		}
 	}
 }

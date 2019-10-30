@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
@@ -21,7 +22,6 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Util;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries {
@@ -36,21 +36,21 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 	/// ''' <remarks></remarks>
 	public class AdvancedAuxiliaries : IAdvancedAuxiliaries
 	{
-		protected internal AuxiliaryConfig auxConfig;
+		protected internal IAuxiliaryConfig auxConfig;
 
 		// Supporting classes which may generate event messages
-		private ICompressorMap compressorMap;
+		//private ICompressorMap compressorMap;
 
 		private SSMTOOL ssmTool;
 		private SSMTOOL ssmToolModule14;
 
-		private IAlternatorMap alternatorMap;
-		public IPneumaticActuationsMAP actuationsMap;
+		//private IAlternatorMap alternatorMap;
+
 		private IFuelConsumptionMap fuelMap;
 
 		// Classes which compose the model.
 		private IM0_NonSmart_AlternatorsSetEfficiency M0;
-		private IM0_5_SmartAlternatorSetEfficiency M05;
+		private IM0_5_SmartAlternatorSetEfficiency M0_5;
 		private IM1_AverageHVACLoadDemand M1;
 		private IM2_AverageElectricalLoadDemand M2;
 		private IM3_AveragePneumaticLoadDemand M3;
@@ -66,9 +66,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 		private IM13 M13;
 		private IM14 M14;
 
-		private string vectoDirectory;
+		//private string vectoDirectory;
 
-		private HVACConstants hvacConstants;
+		private IHVACConstants hvacConstants;
 
 		// Event Handler top level bubble.
 		// Public Sub VectoEventHandler(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) _
@@ -83,46 +83,42 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 
 		public void VectoEventHandler(ref object sender, string message, AdvancedAuxiliaryMessageType messageType)
 		{
-			if (Signals.AuxiliaryEventReportingLevel <= messageType) {
+			//if (Signals.AuxiliaryEventReportingLevel <= messageType) {
 				AuxiliaryEvent?.Invoke(ref sender, message, messageType);
-			}
+			//}
 		}
 
 		// Constructor
 		public AdvancedAuxiliaries()
 		{
-			VectoInputs = new VectoInputs();
+			//VectoInputs = new VectoInputs();
 			Signals = new Signals();
 		}
 
 	
 
 		// Initialise Model
-		public void Initialise(string IAuxPath, string vectoFilePath)
+		public void Initialise(IAuxiliaryConfig auxCfg /*string IAuxPath, string vectoFilePath*/)
 		{
-			string auxPath;
-			vectoDirectory = FilePathUtils.fPATH(vectoFilePath);
+			//var vectoDirectory = ""; // FilePathUtils.fPATH(vectoFilePath);
 
-			auxPath = FilePathUtils.ResolveFilePath(vectoDirectory, IAuxPath);
+			//var auxPath = FilePathUtils.ResolveFilePath(vectoDirectory, IAuxPath);
 
-			hvacConstants = new HVACConstants(VectoInputs.FuelDensity);
+			hvacConstants = auxCfg.HvacUserInputsConfig.HVACConstants;
 
 			Signals.CurrentCycleTimeInSeconds = 0;
-			auxConfig = new AuxiliaryConfig(auxPath);
+			auxConfig = auxCfg; //new AuxiliaryConfig(auxPath);
 
 			// Pass some signals from config to Signals. ( These are stored in the configuration but shared in the signal distribution around modules )
 			Signals.SmartElectrics = auxConfig.ElectricalUserInputsConfig.SmartElectrical;
-			Signals.StoredEnergyEfficiency = auxConfig.ElectricalUserInputsConfig.StoredEnergyEfficiency;
+			//Signals.StoredEnergyEfficiency = auxConfig.ElectricalUserInputsConfig.StoredEnergyEfficiency;
 			Signals.SmartPneumatics = auxConfig.PneumaticUserInputsConfig.SmartAirCompression;
-			Signals.PneumaticOverrunUtilisation = auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction;
+			//Signals.PneumaticOverrunUtilisation = auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction;
 
-			alternatorMap = new CombinedAlternator(FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.ElectricalUserInputsConfig.AlternatorMap), Signals);
-
-			actuationsMap = new PneumaticActuationsMap(FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.PneumaticUserInputsConfig.ActuationsMap));
-
-			compressorMap = new CompressorMap(FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.PneumaticUserInputsConfig.CompressorMap));
-			compressorMap.Initialise();
-
+			var alternatorMap = auxConfig.ElectricalUserInputsConfig.AlternatorMap;
+			var actuationsMap = auxConfig.ActuationsMap;
+			var compressorMap = auxConfig.PneumaticUserInputsConfig.CompressorMap;
+			
 			// fuelMap = New cMAP()
 			// fuelMap.FilePath = FilePathUtils.ResolveFilePath(vectoDirectory, VectoInputs.FuelMap)
 			// If Not fuelMap.ReadFile() Then
@@ -130,40 +126,47 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 			// Return
 			// End If
 			// fuelMap.Triangulate()
-			fuelMap = VectoInputs.FuelMap;
+			fuelMap = auxCfg.FuelMap;
 
-			auxConfig.ElectricalUserInputsConfig.ElectricalConsumers.DoorDutyCycleFraction = GetDoorActuationTimeFraction();
-
+			
 			// SSM HVAC
-			var ssmPath = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath);
-			var BusDatabase = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.BusDatabasePath);
-			ssmTool = new SSMTOOL(ssmPath, hvacConstants, auxConfig.HvacUserInputsConfig.SSMDisabled);
+			//var ssmPath = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath);
+			//var BusDatabase = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.BusDatabasePath);
+			ssmTool = new SSMTOOL(auxConfig.SSMInputs);
 
 			// This duplicate SSM is being created for use in M14 as its properties will be dynamically changed at that point
 			// to honour EngineWaste Heat Usage in Fueling calculations.
-			ssmToolModule14 = new SSMTOOL(ssmPath, hvacConstants, auxConfig.HvacUserInputsConfig.SSMDisabled);
+			ssmToolModule14 = new SSMTOOL(auxCfg.SSMInputs);
+			
+			//if ((ssmTool.Load(ssmPath) == false || ssmToolModule14.Load(ssmPath) == false))
+				//throw new Exception(string.Format("Unable to load the ssmTOOL with file {0}", ssmPath));
+			
+			var m0_1 = new M0_1Impl(auxConfig);
+
+			M0 = new M00Impl(m0_1, alternatorMap, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, Signals, ssmTool);
 
 
-			if ((ssmTool.Load(ssmPath) == false || ssmToolModule14.Load(ssmPath) == false))
-				throw new Exception(string.Format("Unable to load the ssmTOOL with file {0}", ssmPath));
+			var M0_5tmp = new M0_5Impl(
+				M0, m0_1, alternatorMap,
+				auxConfig.ElectricalUserInputsConfig.ResultCardIdle, auxConfig.ElectricalUserInputsConfig.ResultCardTraction,
+				auxConfig.ElectricalUserInputsConfig.ResultCardOverrun, Signals);
+			M0_5 = M0_5tmp;
+
+			M1 = new M01Impl(
+				M0, auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
+				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
+				Signals, ssmTool);
 
 
-			M0 = new M00Impl(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers, alternatorMap, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, Signals, ssmTool);
+			M2 = new M02Impl(m0_1, M0,
+				auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
+				Signals);
 
-
-			IM0_5_SmartAlternatorSetEfficiency M05tmp = new M0_5Impl(M0, auxConfig.ElectricalUserInputsConfig.ElectricalConsumers, alternatorMap, auxConfig.ElectricalUserInputsConfig.ResultCardIdle, auxConfig.ElectricalUserInputsConfig.ResultCardTraction, auxConfig.ElectricalUserInputsConfig.ResultCardOverrun, Signals);
-			M05 = M05tmp;
-
-			M1 = new M01Impl(M0, auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency, auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, Signals, ssmTool);
-
-
-			M2 = new M02Impl(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers, M0, auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, Signals);
-
-
-			M3 = new M03Impl(auxConfig.PneumaticUserInputsConfig, auxConfig.PneumaticAuxillariesConfig, actuationsMap, compressorMap, VectoInputs.VehicleWeightKG, VectoInputs.Cycle, Signals);
+			
+			M3 = new M03Impl(auxConfig, compressorMap, actuationsMap, Signals);
 
 			M4 = new M04Impl(compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio, auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
-			M5 = new M05Impl(M05tmp, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency);
+			M5 = new M05Impl(M0_5tmp, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency);
 			M6 = new M06Impl(M1, M2, M3, M4, M5, Signals);
 			M7 = new M07Impl(M5, M6, Signals);
 			M8 = new M08Impl(M1, M6, M7, Signals);
@@ -175,14 +178,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 			M14 = new M14Impl(M13, ssmToolModule14, hvacConstants, Signals);
 
 			//compressorMap.AuxiliaryEvent += VectoEventHandler;
-			alternatorMap.AuxiliaryEvent += VectoEventHandler;
-			ssmTool.Message += VectoEventHandler;
-			ssmToolModule14.Message += VectoEventHandler;
+			//alternatorMap.AuxiliaryEvent += VectoEventHandler;
+			//ssmTool.Message += VectoEventHandler;
+			//ssmToolModule14.Message += VectoEventHandler;
 		}
 
-
+		
 		public ISignals Signals { get; set; }
-		public IVectoInputs VectoInputs { get; set; }
+		//public IVectoInputs VectoInputs { get; set; }
 
 		public event AuxiliaryEventEventHandler AuxiliaryEvent;
 
@@ -214,8 +217,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 
 				Signals.CurrentCycleTimeInSeconds += seconds.Value();
 			} catch (Exception ex) {
-				MessageBox.Show("Exception: " + ex.Message + " Stack Trace: " + ex.StackTrace);
-				return false;
+				//MessageBox.Show("Exception: " + ex.Message + " Stack Trace: " + ex.StackTrace);
+				throw ex;
 			}
 
 
@@ -229,10 +232,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 			}
 		}
 
-		public bool RunStart(string auxFilePath, string vectoFilePath)
+		public bool RunStart(IAuxiliaryConfig auxCfg)
 		{
 			try {
-				Initialise(auxFilePath, vectoFilePath);
+				Initialise(auxCfg);
 			} catch (Exception ) {
 				return false;
 			}
@@ -247,7 +250,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 
 		public void ResetCalculations()
 		{
-			var modules = new List<IAbstractModule>() { M0, M05, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14 };
+			var modules = new List<IAbstractModule>() { M0, M0_5, M1, M2, M3, M4, M5, M6, M7, M8, M9, M10, M11, M12, M13, M14 };
 			foreach (var moduel in modules)
 				moduel.ResetCalculations();
 		}
@@ -289,18 +292,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 
 
 		// Helpers
-		private double GetDoorActuationTimeFraction()
-		{
-			var actuationsMap = new PneumaticActuationsMap(FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.PneumaticUserInputsConfig.ActuationsMap));
-			var actuationsKey = new ActuationsKey("Park brake + 2 doors", VectoInputs.Cycle);
-
-			var numActuations = actuationsMap.GetNumActuations(actuationsKey);
-			var secondsPerActuation = auxConfig.ElectricalUserInputsConfig.DoorActuationTimeSecond;
-
-			var doorDutyCycleFraction = (numActuations * secondsPerActuation) / (double)Signals.TotalCycleTimeSeconds;
-
-			return doorDutyCycleFraction;
-		}
+		
 
 		public bool ValidateAAUXFile(string filePath, ref string message)
 		{
@@ -321,42 +313,42 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 		public Ampere AA_SmartIdleCurrent_Amps
 		{
 			get {
-				return M05.SmartIdleCurrent;
+				return M0_5.SmartIdleCurrent;
 			}
 		}
 
 		public double AA_SmartIdleAlternatorsEfficiency
 		{
 			get {
-				return M05.AlternatorsEfficiencyIdleResultCard;
+				return M0_5.AlternatorsEfficiencyIdleResultCard;
 			}
 		}
 
 		public Ampere AA_SmartTractionCurrent_Amps
 		{
 			get {
-				return M05.SmartTractionCurrent;
+				return M0_5.SmartTractionCurrent;
 			}
 		}
 
 		public double AA_SmartTractionAlternatorEfficiency
 		{
 			get {
-				return M05.AlternatorsEfficiencyTractionOnResultCard;
+				return M0_5.AlternatorsEfficiencyTractionOnResultCard;
 			}
 		}
 
 		public Ampere AA_SmartOverrunCurrent_Amps
 		{
 			get {
-				return M05.SmartOverrunCurrent;
+				return M0_5.SmartOverrunCurrent;
 			}
 		}
 
 		public double AA_SmartOverrunAlternatorEfficiency
 		{
 			get {
-				return M05.AlternatorsEfficiencyOverrunResultCard;
+				return M0_5.AlternatorsEfficiencyOverrunResultCard;
 			}
 		}
 

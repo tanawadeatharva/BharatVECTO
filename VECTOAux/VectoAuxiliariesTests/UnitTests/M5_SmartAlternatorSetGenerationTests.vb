@@ -3,13 +3,17 @@ Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
-Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Reader.ComponentData
+Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 
 Namespace UnitTests
 	<TestFixture()>
@@ -38,11 +42,14 @@ Namespace UnitTests
 			Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
 			'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
 
-			Dim ssm As ISSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
+            Dim auxConfig = Utils.GetAuxTestConfig()
+		    
+			Dim ssm As ISSMTOOL = New SSMTOOL(auxConfig.SSMInputs)
+                'New SSMTOOL(SSMInputData.ReadFile(_SSMMAP, DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions, DeclarationData.BusAuxiliaries.SSMTechnologyList)) ', New HVACConstants())
 
-		    CType(ssm.SSMInputs,SSMInputs)._vehicle.Height = 0.SI(of Meter)
+		    
 
-			ssm.Load(_SSMMAP)
+			'ssm.Load(_SSMMAP)
 
 
 			Return ssm
@@ -52,14 +59,18 @@ Namespace UnitTests
 
 			_signals.EngineSpeed = 2000.RPMtoRad()
 
-			Dim elecConsumers As New ElectricalConsumerList(_powerNetVoltage, 0.096, True)
+			Dim elecConsumers  = DeclarationData.BusAuxiliaries.DefaultElectricConsumerList
 
-			Dim alternatoMap As New AlternatorMap(_altMap)
-			alternatoMap.Initialise()
-			Dim _
+			Dim alternatoMap   = AlternatorReader.ReadMap(_altMap)
+			
+            Dim auxConfig = Utils.GetAuxTestConfig()
+		    CType(CType(auxConfig.SSMInputs,SSMInputs).Vehicle, VehicleData).Height = 0.SI(of Meter)
+
+            Dim m0_1 = New M0_1Impl(auxConfig)
+            Dim _
 				m0 As _
-					New M00Impl(elecConsumers, alternatoMap, _powerNetVoltage, _signals,
-															GetSSM())
+					New M00Impl(m0_1, alternatoMap, _powerNetVoltage, _signals,
+                                New SSMTOOL(auxConfig.SSMInputs))
 
 			'Results Cards
 			Dim readings = New List(Of SmartResult)
@@ -73,7 +84,7 @@ Namespace UnitTests
 			Dim signals As ISignals = New Signals
 			signals.EngineSpeed = 2000.RPMtoRad()
 
-			_m05 = New M0_5Impl(m0, elecConsumers, alternatoMap, idleResult, tractionResult,
+			_m05 = New M0_5Impl(m0, m0_1, alternatoMap, idleResult, tractionResult,
 														overrunResult, signals)
 		End Sub
 

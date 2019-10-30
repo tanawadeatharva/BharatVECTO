@@ -127,7 +127,7 @@ Public Class VectoJob
 
         Try
             Dim writer As JSONFileWriter = JSONFileWriter.Instance
-            writer.SaveJob(Me, _sFilePath)
+            writer.SaveJob(Me, _sFilePath, cfg.DeclMode)
         Catch ex As Exception
             MsgBox("Failed to save Job file: " + ex.Message)
             Return False

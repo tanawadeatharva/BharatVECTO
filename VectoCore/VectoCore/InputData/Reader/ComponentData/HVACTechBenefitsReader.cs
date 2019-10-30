@@ -2,6 +2,7 @@
 using System.Data;
 using System.IO;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
@@ -21,17 +22,17 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			Fields.ActiveVC, Fields.ActiveVH, Fields.ActiveVV
 		};
 
-		public static List<ITechListBenefitLine> ReadFromFile(string fileName)
+		public static ITechlistBenefitLines ReadFromFile(string fileName)
 		{
-			return Create(VectoCSVFile.Read(fileName));
+			return Create(VectoCSVFile.Read(fileName), fileName);
 		}
 
-		public static List<ITechListBenefitLine> ReadFromStream(Stream str)
+		public static ITechlistBenefitLines ReadFromStream(Stream str)
 		{
-			return Create(VectoCSVFile.ReadStream(str));
+			return Create(VectoCSVFile.ReadStream(str), null);
 		}
 
-		public static List<ITechListBenefitLine> Create(DataTable data)
+		public static ITechlistBenefitLines Create(DataTable data, string fileName)
 		{
 			if (!HeaderIsValid(data.Columns)) {
 				throw new VectoException("invalid header for techlist file. expected: {0} got: {1}",
@@ -45,22 +46,22 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				{
 					Category = row.Field<string>(Fields.Category),
 					BenefitName = row.Field<string>(Fields.BenefitName),
-					LowFloorH = row.Field<string>(Fields.LowFloorH).ToDouble(),
-					LowFloorC = row.Field<string>(Fields.LowFloorC).ToDouble(),
-					LowFloorV = row.Field<string>(Fields.LowFloorV).ToDouble(),
-					SemiLowFloorH = row.Field<string>(Fields.SemiLowFloorH).ToDouble(),
-					SemiLowFloorC = row.Field<string>(Fields.SemiLowFloorC).ToDouble(),
-					SemiLowFloorV = row.Field<string>(Fields.SemiLowFloorV).ToDouble(),
-					RaisedFloorH = row.Field<string>(Fields.RaisedFloorH).ToDouble(),
-					RaisedFloorC = row.Field<string>(Fields.RaisedFloorC).ToDouble(),
-					RaisedFloorV = row.Field<string>(Fields.RaisedFloorV).ToDouble(),
-					ActiveVH = row.Field<string>(Fields.ActiveVH).ToBoolean(),
-					ActiveVV = row.Field<string>(Fields.ActiveVV).ToBoolean(),
-					ActiveVC = row.Field<string>(Fields.ActiveVC).ToBoolean(),
+					LowFloorH = row.ParseDouble(Fields.LowFloorH),
+					LowFloorC = row.ParseDouble(Fields.LowFloorC),
+					LowFloorV = row.ParseDouble(Fields.LowFloorV),
+					SemiLowFloorH = row.ParseDouble(Fields.SemiLowFloorH),
+					SemiLowFloorC = row.ParseDouble(Fields.SemiLowFloorC),
+					SemiLowFloorV = row.ParseDouble(Fields.SemiLowFloorV),
+					RaisedFloorH = row.ParseDouble(Fields.RaisedFloorH),
+					RaisedFloorC = row.ParseDouble(Fields.RaisedFloorC),
+					RaisedFloorV = row.ParseDouble(Fields.RaisedFloorV),
+					ActiveVH = row.ParseBoolean(Fields.ActiveVH),
+					ActiveVV = row.ParseBoolean(Fields.ActiveVV),
+					ActiveVC = row.ParseBoolean(Fields.ActiveVC),
 				});
 			}
 
-			return retVal;
+			return new TechBenefitLines(retVal, fileName);
 		}
 
 		protected static bool HeaderIsValid(DataColumnCollection columns)

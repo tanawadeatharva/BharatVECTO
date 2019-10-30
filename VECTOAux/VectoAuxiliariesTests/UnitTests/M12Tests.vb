@@ -1,6 +1,7 @@
 ﻿
 Imports NUnit.Framework
 Imports Moq
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -30,7 +31,7 @@ Namespace UnitTests
 			Dim sgnlsMock As New Mock(Of ISignals)
 
 
-			sgnlsMock.Setup(Function(x) x.StoredEnergyEfficiency).Returns(0.935)
+			'sgnlsMock.Setup(Function(x) x.StoredEnergyEfficiency).Returns(0.935)
 
 			m11Mock.Setup(Function(x) x.TotalCycleFuelConsumptionZeroElectricalLoad).Returns((IP2 / 1000).SI(Of Kilogram))
 			m11Mock.Setup(Function(x) x.SmartElectricalTotalCycleEletricalEnergyGenerated).Returns(IP3.SI(Of Joule))

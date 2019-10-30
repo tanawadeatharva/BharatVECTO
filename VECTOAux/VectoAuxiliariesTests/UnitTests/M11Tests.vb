@@ -1,6 +1,7 @@
 ﻿
 Imports NUnit.Framework
 Imports Moq
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -42,7 +43,7 @@ Namespace UnitTests
 			Dim fmap As New MockFuel50PC
 
 
-			m6Mock.Setup(Function(x) x.OverrunFlag).Returns(IP1)
+			m6Mock.Setup(Function(x) x.OverrunFlag).Returns(IP1 <> 0)
 			m8Mock.Setup(Function(x) x.SmartElectricalAlternatorPowerGenAtCrank).Returns(IP2.SI(Of Watt))
 			m6Mock.Setup(Function(x) x.AvgPowerDemandAtCrankFromElectricsIncHVAC).Returns(IP3.SI(Of Watt))
 			sgnlsMock.Setup(Function(x) x.EngineDrivelineTorque).Returns(IP4.SI(Of NewtonMeter))
@@ -99,7 +100,7 @@ Namespace UnitTests
 			Dim sgnlsMock As New Mock(Of ISignals)
 			Dim fmap As New MockFuel50PC
 
-			m6Mock.Setup(Function(x) x.OverrunFlag).Returns(IP1)
+			m6Mock.Setup(Function(x) x.OverrunFlag).Returns(IP1 <> 0)
 			m8Mock.Setup(Function(x) x.SmartElectricalAlternatorPowerGenAtCrank).Returns(IP2.SI(Of Watt))
 			m6Mock.Setup(Function(x) x.AvgPowerDemandAtCrankFromElectricsIncHVAC).Returns(IP3.SI(Of Watt))
 			sgnlsMock.Setup(Function(x) x.EngineDrivelineTorque).Returns(IP4.SI(Of NewtonMeter))

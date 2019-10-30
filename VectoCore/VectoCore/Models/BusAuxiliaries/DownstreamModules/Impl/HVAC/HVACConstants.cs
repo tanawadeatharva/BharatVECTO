@@ -10,8 +10,8 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 using Newtonsoft.Json;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 {
@@ -24,6 +24,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		public HVACConstants()
 		{
+			// TODO:!! MQ 2019-10-21: Use Fuel config from VECTO Declaration Data!
+
 			_fuelDensity = 835; // .SI(Of KilogramPerCubicMeter)()
 		}
 

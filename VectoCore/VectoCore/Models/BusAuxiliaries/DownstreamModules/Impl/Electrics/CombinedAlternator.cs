@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
@@ -13,85 +14,25 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 {
 	public class CombinedAlternator : IAlternatorMap, ICombinedAlternator
 	{
-		private List<ICombinedAlternatorMapRow> map = new List<ICombinedAlternatorMapRow>();
 		public List<IAlternator> Alternators { get; set; } = new List<IAlternator>();
-		private List<IAlternator> OriginalAlternators = new List<IAlternator>();
-		private string FilePath;
+		
 		private ICombinedAlternatorSignals altSignals;
 		private ISignals Signals;
-		private AlternatorMapValues AverageAlternatorsEfficiency;
-
-		// Interface Implementation
-		public AlternatorMapValues GetEfficiency(PerSecond CrankRPM, Ampere Amps)
-		{
-			altSignals.CrankRPM = CrankRPM;
-			altSignals.CurrentDemandAmps = (Amps.Value() / (double)Alternators.Count).SI<Ampere>();
-
-			AlternatorMapValues alternatorMapValues; /* TODO Change to default(_) if this is not a reference type */;
-
-			if (Signals == null || Signals.RunningCalc)
-				// If running calc cycle get efficiency from interpolation function
-				alternatorMapValues = new AlternatorMapValues(Convert.ToSingle(Alternators.Average(a => a.Efficiency) / (double)100));
-			else
-				// If running Pre calc cycle get an average of inputs
-				alternatorMapValues = AverageAlternatorsEfficiency;
-
-			if (alternatorMapValues.Efficiency <= 0)
-				alternatorMapValues = new AlternatorMapValues(0.01);
-
-			return alternatorMapValues;
-		}
-
-		public bool Initialise()
-		{
-
-			// From the map we construct this CombinedAlternator object and original CombinedAlternator Object
-
-			Alternators.Clear();
-			OriginalAlternators.Clear();
-
-
-			foreach (var alt in map.GroupBy(g => g.AlternatorName)) {
-				var altName = alt.First().AlternatorName;
-				var pulleyRatio = alt.First().PulleyRatio;
-
-
-				IAlternator alternator = new Alternator(altSignals, alt.ToList());
-
-				Alternators.Add(alternator);
-			}
-
-			return true;
-		}
+		private double AverageAlternatorsEfficiency;
 
 		// Constructors
-		public CombinedAlternator(string filePath, ISignals signals = null/* TODO Change to default(_) if this is not a reference type */)
+		public CombinedAlternator(IList<ICombinedAlternatorMapRow> alternatorData, string source, ISignals signals = null)
 		{
-			var feedback = string.Empty;
-			this.Signals = signals;
+			Source = source;
+			Signals = signals;
 
-			if (!FilePathUtils.ValidateFilePath(filePath, ".aalt", ref feedback))
-				throw new ArgumentException(string.Format("Combined Alternator requires a valid .AALT filename. : {0}", feedback));
-			else
-				this.FilePath = filePath;
+			altSignals = new CombinedAlternatorSignals();
 
-
-			this.altSignals = new CombinedAlternatorSignals();
-
-
-			// IF file exists then read it otherwise create a default.
-
-			if (File.Exists(filePath) && InitialiseMap(filePath))
-				Initialise();
-			else {
-				// Create Default Map
-				CreateDefaultMap();
-				Initialise();
-			}
+			Initialise(alternatorData);
 
 			// Calculate alternators average which is used only in the pre-run
 			var efficiencySum = 0.0;
-			
+
 			foreach (var alt in Alternators) {
 				efficiencySum += alt.InputTable2000.ElementAt(1).Eff;
 				efficiencySum += alt.InputTable2000.ElementAt(2).Eff;
@@ -107,50 +48,61 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			}
 
 			var efficiencyAverage = efficiencySum / (Alternators.Count * 9);
-			AverageAlternatorsEfficiency = new AlternatorMapValues(efficiencyAverage / 100);
+			AverageAlternatorsEfficiency = efficiencyAverage / 100.0;
 		}
 
-		event Interfaces.AuxiliaryEventEventHandler IAuxiliaryEvent.AuxiliaryEvent
+		public string Source { get; }
+
+		// Interface Implementation
+		public double GetEfficiency(PerSecond CrankRPM, Ampere Amps)
 		{
-			add {
-				//throw new NotImplementedException();
+			altSignals.CrankRPM = CrankRPM;
+			altSignals.CurrentDemandAmps = (Amps.Value() / (double)Alternators.Count).SI<Ampere>();
+
+			;
+
+			//if (Signals == null/* || Signals.RunningCalc*/) { 
+				// If running calc cycle get efficiency from interpolation function
+				var alternatorMapValues = Alternators.Average(a => a.Efficiency) / 100.0;
+			//} else {
+			//	// If running Pre calc cycle get an average of inputs
+			
+			//	alternatorMapValues = AverageAlternatorsEfficiency;
+			//}
+
+			if (alternatorMapValues <= 0) {
+				alternatorMapValues = 0.01;
 			}
 
-			remove {
-				//throw new NotImplementedException();
+			return alternatorMapValues;
+		}
+
+		protected void Initialise(IList<ICombinedAlternatorMapRow> map)
+		{
+
+			// From the map we construct this CombinedAlternator object and original CombinedAlternator Object
+
+			Alternators.Clear();
+			
+			foreach (var alt in map.GroupBy(g => g.AlternatorName)) {
+				Alternators.Add(new Alternator(altSignals, alt.ToList()));
 			}
 		}
 
-		// Helpers
-		private void CreateDefaultMap()
-		{
-			map.Clear();
+		
 
-			map.Add(new CombinedAlternatorMapRow("Alt1", 2000.RPMtoRad(), 10.SI<Ampere>(), 62, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 2000.RPMtoRad(), 27.SI<Ampere>(), 70, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 2000.RPMtoRad(), 53.SI<Ampere>(), 30, 3.6));
+		//event Interfaces.AuxiliaryEventEventHandler IAuxiliaryEvent.AuxiliaryEvent
+		//{
+		//	add {
+		//		//throw new NotImplementedException();
+		//	}
 
-			map.Add(new CombinedAlternatorMapRow("Alt1", 4000.RPMtoRad(), 10.SI<Ampere>(), 64, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 4000.RPMtoRad(), 63.SI<Ampere>(), 74, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 4000.RPMtoRad(), 125.SI<Ampere>(), 68, 3.6));
+		//	remove {
+		//		//throw new NotImplementedException();
+		//	}
+		//}
 
-			map.Add(new CombinedAlternatorMapRow("Alt1", 6000.RPMtoRad(), 10.SI<Ampere>(), 53, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 6000.RPMtoRad(), 68.SI<Ampere>(), 70, 3.6));
-			map.Add(new CombinedAlternatorMapRow("Alt1", 6000.RPMtoRad(), 136.SI<Ampere>(), 62, 3.6));
-
-			map.Add(new CombinedAlternatorMapRow("Alt2", 2000.RPMtoRad(), 10.SI<Ampere>(), 62, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 2000.RPMtoRad(), 27.SI<Ampere>(), 70, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 2000.RPMtoRad(), 53.SI<Ampere>(), 30, 3));
-
-			map.Add(new CombinedAlternatorMapRow("Alt2", 4000.RPMtoRad(), 10.SI<Ampere>(), 64, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 4000.RPMtoRad(), 63.SI<Ampere>(), 74, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 4000.RPMtoRad(), 125.SI<Ampere>(), 68, 3));
-
-			map.Add(new CombinedAlternatorMapRow("Alt2", 6000.RPMtoRad(), 10.SI<Ampere>(), 53, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 6000.RPMtoRad(), 68.SI<Ampere>(), 70, 3));
-			map.Add(new CombinedAlternatorMapRow("Alt2", 6000.RPMtoRad(), 136.SI<Ampere>(), 62, 3));
-		}													
-
+		
 		// Grid Management
 		private bool AddNewAlternator(List<ICombinedAlternatorMapRow> list, ref string feeback)
 		{
@@ -255,61 +207,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			return true;
 		}
 
-		private bool Load()
-		{
-			if (!InitialiseMap(FilePath))
-				return false;
+		
 
-
-			return true;
-		}
-
-		// Initialises the map, only valid when loadingUI for first time in edit mode or always in operational mode.
-		private bool InitialiseMap(string filePath)
-		{
-			//var returnValue = false;
-
-			if (File.Exists(filePath)) {
-				using (var sr = new StreamReader(filePath)) {
-					// get array og lines fron csv
-					var lines = sr.ReadToEnd().Split(new[] { Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
-
-					// Must have at least 2 entries in map to make it usable [dont forget the header row]
-					if (lines.Count() < 10) {
-						throw new ArgumentException("Insufficient rows in csv to build a usable map");
-					}
-
-					map = new List<ICombinedAlternatorMapRow>();
-
-					var firstline = true;
-
-					foreach (var line in lines) {
-						if (!firstline) {
-
-							// Advanced Alternator Source Check.
-							if (line.Contains("[MODELSOURCE"))
-								break;
-
-							// split the line
-							var elements = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-							// 3 entries per line required
-							if ((elements.Length != 5))
-								throw new ArgumentException("Incorrect number of values in csv file");
-							// add values to map
-
-							map.Add(new CombinedAlternatorMapRow(elements[0], elements[1].ToDouble().RPMtoRad(), elements[2].ToDouble().SI<Ampere>(), float.Parse(elements[3], CultureInfo.InvariantCulture), elements[4].ToDouble()));
-						} else {
-							firstline = false;
-						}
-					}
-				}
-				return true;
-			}
-
-			throw new ArgumentException("Supplied input file does not exist");
-
-			//return returnValue;
-		}
 
 		// Can be used to send messages to Vecto.
 		//public event AuxiliaryEventEventHandler AuxiliaryEvent;
@@ -382,7 +281,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			foreach (var alt in this.Alternators) {
 
 				// Can we find the same alternatorName in other
-				if (other.Alternators.Where(f => f.AlternatorName == alt.AlternatorName).Count() != 1)
+				if (other.Alternators.Count(f => f.AlternatorName == alt.AlternatorName) != 1)
 					return false;
 
 				// get the alternator to compare and compare it.
@@ -391,6 +290,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			}
 
 			return true;
+		}
+
+		public override bool Equals(object other)
+		{
+			var myOther = other as CombinedAlternator;
+			return myOther != null && IsEqualTo(myOther);
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
 		}
 	}
 }

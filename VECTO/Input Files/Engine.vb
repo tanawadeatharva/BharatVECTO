@@ -150,7 +150,7 @@ Public Class Engine
 
 		Try
 			Dim writer As JSONFileWriter = New JSONFileWriter()
-			writer.SaveEngine(Me, _filePath)
+			writer.SaveEngine(Me, _filePath, cfg.DeclMode)
 
 		Catch ex As Exception
 			MsgBox("Faled to write Engine file: " + ex.Message)

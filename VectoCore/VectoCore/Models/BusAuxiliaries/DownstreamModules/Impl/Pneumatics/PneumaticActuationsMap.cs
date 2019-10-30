@@ -11,81 +11,31 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem;
+using TUGraz.VectoCommon.BusAuxiliaries;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 {
-	public class PneumaticActuationsMap : IPneumaticActuationsMAP
+	public class PneumaticActuationsMap : IPneumaticActuationsMap
 	{
-		private Dictionary<ActuationsKey, int> map;
-		private string filePath;
+		private Dictionary<ActuationsKey, int> _map;
 
+		public PneumaticActuationsMap(Dictionary<ActuationsKey, int> map, string source)
+		{
+			_map = map;
+			Source = source;
+		}
 
 		public int GetNumActuations(ActuationsKey key)
 		{
-			if (map == null || !map.ContainsKey(key))
-				throw new ArgumentException(string.Format("Pneumatic Actuations map does not contain the key '{0}'.", key.CycleName + ":" + key.ConsumerName));
+			if (_map == null || !_map.ContainsKey(key))
+				throw new ArgumentException(string.Format("Pneumatic Actuations map does not contain the key '{0} / {1}'.", key.ConsumerName, key.CycleName));
 
-			return map[key];
+			return _map[key];
 		}
 
-
-		public PneumaticActuationsMap(string filePath)
-		{
-			this.filePath = filePath;
-
-			if (filePath.Trim().Length == 0)
-				throw new ArgumentException("A filename for the Pneumatic Actuations Map has not been supplied");
-
-			Initialise();
-		}
-
-		public bool Initialise()
-		{
-			ActuationsKey newKey;
-			int numActuations;
-
-			if (File.Exists(filePath)) {
-				using (var sr = new StreamReader(filePath)) {
-					// get array of lines from csv
-					var lines = sr.ReadToEnd().Split(new [] { Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
-
-					// Must have at least 2 entries in map to make it usable [dont forget the header row]
-					if (lines.Length < 3)
-						throw new ArgumentException("Pneumatic Actuations Map does not have sufficient rows in file to build a usable map");
-
-					map = new Dictionary<ActuationsKey, int>();
-					var firstline = true;
-
-					foreach (var line in lines) {
-						if (!firstline) {
-							// split the line
-							var elements = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-							// 3 entries per line required
-							if ((elements.Length != 3))
-								throw new ArgumentException("Pneumatic Actuations Map has Incorrect number of values in file");
-
-							// add values to map
+		public string Source { get; }
 
 
-							if (!int.TryParse(elements[2], out numActuations))
-								throw new ArgumentException("Pneumatic Actuations Map Contains Non Integer values in actuations column");
-
-							// Should throw exception if ConsumerName or CycleName are empty.
-							newKey = new ActuationsKey(elements[0].ToString(), elements[1].ToString());
-
-							map.Add(newKey, int.Parse(elements[2], CultureInfo.InvariantCulture));
-						} else
-							firstline = false;
-					}
-				}
-			} else
-				throw new ArgumentException(string.Format(" Pneumatic Acutations map '{0}' supplied  does not exist", filePath));
-
-			// If we get here then all should be well and we can return a True value of success.
-			return true;
-		}
+		
 	}
 }

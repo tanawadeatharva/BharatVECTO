@@ -1,4 +1,6 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 
@@ -31,7 +33,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		{
 			var p1 = new Point { X = 0.SI<Joule>(), Y = M11.TotalCycleFuelConsumptionZeroElectricalLoad };
 			var p2 = new Point {
-				X = M11.SmartElectricalTotalCycleEletricalEnergyGenerated * Signals.StoredEnergyEfficiency,
+				X = M11.SmartElectricalTotalCycleEletricalEnergyGenerated * Constants.BusAuxiliaries.ElectricSystem.StoredEnergyEfficiency,
 				Y = M11.TotalCycleFuelConsumptionSmartElectricalLoad
 			};
 

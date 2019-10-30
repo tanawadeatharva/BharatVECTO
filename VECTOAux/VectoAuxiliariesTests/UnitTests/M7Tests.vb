@@ -1,5 +1,6 @@
 ﻿
 Imports NUnit.Framework
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -16,7 +17,7 @@ Namespace UnitTests
 		Public Sub New()
 
 			M5 = New M5_Mock(100, 110, 120)
-			M6 = New M6_Mock(100, 0, 0, 110, 120, 0, 130, 140, 150)
+			M6 = New M6_Mock(100, 0, false, 110, 120, false, 130, 140, True)
 			Signals = New Signals()
 		End Sub
 
@@ -70,7 +71,7 @@ Namespace UnitTests
 			M5._AlternatorsGenerationPowerAtCrankTractionOnWatts = IP1.SI(Of Watt)()
 			M5._AlternatorsGenerationPowerAtCrankIdleWatts = IP2.SI(Of Watt)()
 			Signals.Idle = IP3
-			M6._OverrunFlag = IP4
+			M6._OverrunFlag = IP4 <> 0
 			Signals.ClutchEngaged = IP5
 			Signals.InNeutral = IP6
 			Signals.EngineSpeed = 0.RPMtoRad()

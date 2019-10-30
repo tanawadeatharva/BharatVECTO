@@ -3,10 +3,11 @@
 Imports System.Collections.Generic
 Imports System.Drawing
 Imports System.Windows.Forms
-Imports VectoAuxiliaries.Electrics
 Imports System.ComponentModel
 Imports System.Linq
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
@@ -29,8 +30,8 @@ Public Class frmCombinedAlternators
         ' Add any initialization after the InitializeComponent() call.
         Me.aaltpath = aaltPath
 
-        combinedAlt = New CombinedAlternator(aaltPath)
-        originalAlt = New CombinedAlternator(aaltPath)
+        combinedAlt = CType ( AlternatorReader.ReadMap(aaltPath), CombinedAlternator)
+        originalAlt = CType(AlternatorReader.ReadMap(aaltPath), CombinedAlternator)
 
         SetupControls()
         BindGrid()

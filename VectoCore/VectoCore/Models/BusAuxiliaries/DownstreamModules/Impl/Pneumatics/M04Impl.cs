@@ -1,8 +1,8 @@
 ﻿using System;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 {
@@ -57,15 +57,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			}
 		}
 
-		public bool Initialise()
-		{
-			return _map.Initialise();
-		}
-
 		public NormLiterPerSecond GetFlowRate()
 		{
-			var compressorRpm = _signals.EngineSpeed.AsRPM * PulleyGearRatio;
-			return _map.GetFlowRate(compressorRpm) / 60;
+			return _map.Interpolate(_signals.EngineSpeed * PulleyGearRatio).FlowRate;
 		}
 
 		public Watt GetPowerCompressorOff()
@@ -85,17 +79,18 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			return powerOn - powerOff;
 		}
 
-		public SI GetAveragePowerDemandPerCompressorUnitFlowRate()
+		public JoulePerNormLiter GetAveragePowerDemandPerCompressorUnitFlowRate()
 		{
-			return _map.GetAveragePowerDemandPerCompressorUnitFlowRate().SI();
+			return _map.GetAveragePowerDemandPerCompressorUnitFlowRate();
 		}
 
 		#endregion
 
 		private Watt GetCompressorPower(bool compressorOn)
 		{
-			var compressorRpm = _signals.EngineSpeed.AsRPM * PulleyGearRatio;
-			return compressorOn ? _map.GetPowerCompressorOn(compressorRpm) : _map.GetPowerCompressorOff(compressorRpm);
+			
+			var rslt = _map.Interpolate(_signals.EngineSpeed * PulleyGearRatio);
+			return compressorOn ? rslt.PowerOn : rslt.PowerOff;
 		}
 	}
 }

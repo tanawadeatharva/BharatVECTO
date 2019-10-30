@@ -1,21 +1,36 @@
 ﻿
 Imports NUnit.Framework
 Imports System.IO
+Imports TUGraz.VectoCommon.BusAuxiliaries
+Imports TUGraz.VectoCommon.Exceptions
+Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 
 Namespace Pneumatics
-
-
     <TestFixture()>
     Public Class PneumaticActuationsMapTests
+        Public _
+            Const cstrPneumaticActuationsMapPath_GOODMAP As String = "TestFiles\testPneumaticActuationsMap_GOODMAP.apac"
 
-        Public Const cstrPneumaticActuationsMapPath_GOODMAP As String = "TestFiles\testPneumaticActuationsMap_GOODMAP.apac"
-        Public Const cstrPneumaticActuationsMapPath_INCORRECTCOLUMNS As String = "TestFiles\testPneumaticActuationsMap_INCORRECTCOLUMNS.apac"
-        Public Const cstrPneumaticActuationsMapPath_INVALIDINTEGERVALUE As String = "TestFiles\testPneumaticActuationsMap_INVALIDINTEGERVALUE.apac"
-        Public Const cstrPneumaticActuationsMapPath_DUPLICATEKEY As String = "TestFiles\testPneumaticActuationsMap_DUPLICATEKEY.apac"
-        Public Const cstrPneumaticActuationsMapPath_INVALIDCONSUMERNAME As String = "TestFiles\testPneumaticActuationsMap_INVALIDCONSUMERNAME.apac"
-        Public Const cstrPneumaticActuationsMapPath_INVALIDCYCLENAME As String = "TestFiles\testPneumaticActuationsMap_INVALIDCYCLENAME.apac"
+        Public _
+            Const cstrPneumaticActuationsMapPath_INCORRECTCOLUMNS As String =
+            "TestFiles\testPneumaticActuationsMap_INCORRECTCOLUMNS.apac"
+
+        Public _
+            Const cstrPneumaticActuationsMapPath_INVALIDINTEGERVALUE As String =
+            "TestFiles\testPneumaticActuationsMap_INVALIDINTEGERVALUE.apac"
+
+        Public _
+            Const cstrPneumaticActuationsMapPath_DUPLICATEKEY As String =
+            "TestFiles\testPneumaticActuationsMap_DUPLICATEKEY.apac"
+
+        Public _
+            Const cstrPneumaticActuationsMapPath_INVALIDCONSUMERNAME As String =
+            "TestFiles\testPneumaticActuationsMap_INVALIDCONSUMERNAME.apac"
+
+        Public _
+            Const cstrPneumaticActuationsMapPath_INVALIDCYCLENAME As String =
+            "TestFiles\testPneumaticActuationsMap_INVALIDCYCLENAME.apac"
 
 
         <OneTimeSetUp>
@@ -26,55 +41,58 @@ Namespace Pneumatics
         <Test()>
         Public Sub CreateNewTest()
 
-            Dim target As New PneumaticActuationsMAP(cstrPneumaticActuationsMapPath_GOODMAP)
+            Dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_GOODMAP)
             Assert.IsNotNull(target)
-
         End Sub
 
 
         <Test()>
         Public Sub InitialiseGoodMapTest()
 
-            Dim target As New PneumaticActuationsMAP(cstrPneumaticActuationsMapPath_GOODMAP)
-            target.Initialise()
+            Dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_GOODMAP)
+            'target.Initialise()
         End Sub
 
 
         <TestCase()>
         Public Sub InitialiseWrongNumberOfColumnTest()
-            Dim target As PneumaticActuationsMAP
-            Assert.That(Sub() target = New PneumaticActuationsMAP(cstrPneumaticActuationsMapPath_INCORRECTCOLUMNS), Throws.InstanceOf(Of ArgumentException))
+
+            Assert.That(Sub()
+                dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INCORRECTCOLUMNS)
+            End Sub, Throws.InstanceOf (Of VectoException))
         End Sub
 
         <Test()>
         Public Sub InvalidIntegerTest()
 
-            Dim target As PneumaticActuationsMAP
-            Assert.That(Sub() target = New PneumaticActuationsMAP(cstrPneumaticActuationsMapPath_INVALIDINTEGERVALUE), Throws.InstanceOf(Of ArgumentException))
-
+            Assert.That(Sub()
+                dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INVALIDINTEGERVALUE)
+            End Sub, Throws.InstanceOf (Of FormatException))
         End Sub
 
         <Test()>
         Public Sub DuplicateKeyTest()
 
-            Dim target As PneumaticActuationsMAP
-
-            Assert.That(Sub() target = New PneumaticActuationsMAP(cstrPneumaticActuationsMapPath_DUPLICATEKEY), Throws.InstanceOf(Of ArgumentException))
-
+            Assert.That(Sub()
+                dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_DUPLICATEKEY)
+            End Sub, Throws.InstanceOf (Of VectoException),
+                        "Duplicate entries in pneumatic actuations map! Brakes / Urban")
         End Sub
 
         <Test()>
         Public Sub EmptyConsumerNameTest()
 
-            Dim target As PneumaticActuationsMAP
-            Assert.That(Sub() target = New PneumaticActuationsMAP(cstrPneumaticActuationsMapPath_DUPLICATEKEY), Throws.InstanceOf(Of ArgumentException))
+            Assert.That(Sub()
+                dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INVALIDCONSUMERNAME)
+            End Sub, Throws.InstanceOf (Of ArgumentException))
         End Sub
 
         <Test()>
         Public Sub EmptyCycleNameTest()
 
-            Dim target As PneumaticActuationsMAP
-            Assert.That(Sub() target = New PneumaticActuationsMAP(cstrPneumaticActuationsMapPath_INVALIDCYCLENAME), Throws.InstanceOf(Of ArgumentException))
+            Assert.That(Sub()
+                Dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INVALIDCYCLENAME)
+            End Sub, Throws.InstanceOf (Of ArgumentException))
         End Sub
 
         <Test()>
@@ -95,9 +113,9 @@ Namespace Pneumatics
         <TestCase("Kneeling", "Coach", 0)>
         Public Sub ValueLookupTest(key As String, cycle As String, expected As Integer)
 
-            Dim target As New PneumaticActuationsMAP(cstrPneumaticActuationsMapPath_GOODMAP)
+            Dim target = PneumaticActuationsMapReader.Read(cstrPneumaticActuationsMapPath_GOODMAP)
 
-            target.Initialise()
+            'target.Initialise()
             Dim actual As Integer
 
             Try
@@ -106,15 +124,8 @@ Namespace Pneumatics
 
             End Try
             Assert.AreEqual(expected, actual)
-
         End Sub
-
-
     End Class
-
-
-
-
 End Namespace
 
 

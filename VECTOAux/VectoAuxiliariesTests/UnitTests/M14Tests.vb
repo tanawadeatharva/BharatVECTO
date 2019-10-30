@@ -1,8 +1,10 @@
 ﻿
 
+Imports System.IO
 Imports VectoAuxiliaries.Hvac
 Imports NUnit.Framework
 Imports Moq
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -18,85 +20,92 @@ Namespace UnitTests
 	Public Class SSMToolMock
 		Implements ISSMTOOL
 
-		Public Property Calculate As ISSMCalculate Implements ISSMTOOL.Calculate
-		Public Property SSMDisabled As Boolean Implements ISSMTOOL.SSMDisabled
-		Public Property HVACConstants As IHVACConstants Implements ISSMTOOL.HVACConstants
+        Public Property Calculate As ISSMCalculate Implements ISSMTOOL.Calculate
+        Public Property SSMDisabled As Boolean Implements ISSMTOOL.SSMDisabled
+        Public Property HVACConstants As IHVACConstants Implements ISSMTOOL.HVACConstants
 
-		'Public Sub Clone(from As ISSMTOOL) Implements ISSMTOOL.Clone
-		'End Sub
+        'Public Sub Clone(from As ISSMTOOL) Implements ISSMTOOL.Clone
+        'End Sub
 
-		Public ReadOnly Property ElectricalWAdjusted As Watt Implements ISSMTOOL.ElectricalWAdjusted
-			Get
-				Throw New NotImplementedException
-			End Get
-		End Property
+        Public ReadOnly Property ElectricalWAdjusted As Watt Implements ISSMTOOL.ElectricalWAdjusted
+            Get
+                Throw New NotImplementedException
+            End Get
+        End Property
 
-		Public ReadOnly Property ElectricalWBase As Watt Implements ISSMTOOL.ElectricalWBase
-			Get
-				Throw New NotImplementedException
-			End Get
-		End Property
+        Public ReadOnly Property ElectricalWBase As Watt Implements ISSMTOOL.ElectricalWBase
+            Get
+                Throw New NotImplementedException
+            End Get
+        End Property
 
-		Public ReadOnly Property FuelPerHBase As KilogramPerSecond Implements ISSMTOOL.FuelPerHBase
-			Get
-				Throw New NotImplementedException
-			End Get
-		End Property
+        Public ReadOnly Property FuelPerHBase As KilogramPerSecond Implements ISSMTOOL.FuelPerHBase
+            Get
+                Throw New NotImplementedException
+            End Get
+        End Property
 
-		Public ReadOnly Property FuelPerHBaseAdjusted As KilogramPerSecond Implements ISSMTOOL.FuelPerHBaseAdjusted
-			Get
-				Throw New NotImplementedException
-			End Get
-		End Property
+        Public ReadOnly Property FuelPerHBaseAdjusted As KilogramPerSecond Implements ISSMTOOL.FuelPerHBaseAdjusted
+            Get
+                Throw New NotImplementedException
+            End Get
+        End Property
 
-		Public Function FuelPerHBaseAsjusted(AverageUseableEngineWasteHeatKW As Watt) As KilogramPerSecond _
-		    Implements ISSMTOOL.FuelPerHBaseAsjusted
+        Public ReadOnly Property EngineWasteHeatkW As Watt Implements ISSMTOOL.EngineWasteHeatkW
 
-			Return (0.5 * (AverageUseableEngineWasteHeatKW.Value() * 0.835).SI(Unit.SI.Liter.Per.Hour).Value()).SI(of KilogramPerSecond)
-		End Function
 
-		Public Property SSMInputs As ISSMInputs Implements ISSMTOOL.SSMInputs
+        Public Function FuelPerHBaseAsjusted(AverageUseableEngineWasteHeatKW As Watt) As KilogramPerSecond Implements ISSMTOOL.FuelPerHBaseAsjusted
 
-			Get
-				Return New SSMInputs()
-			End Get
-			Set(value As ISSMInputs)
-			End Set
-		End Property
+            Return (0.5*(AverageUseableEngineWasteHeatKW.Value()*0.835).SI(Unit.SI.Liter.Per.Hour).Value()).SI (of KilogramPerSecond)
+        End Function
 
-		Public Function IsEqualTo(source As ISSMTOOL) As Boolean Implements ISSMTOOL.IsEqualTo
-			Throw New NotImplementedException
-		End Function
+        Public Property SSMInputs As ISSMInputs Implements ISSMTOOL.SSMInputs
 
-		Public Function Load(filePath As String) As Boolean Implements ISSMTOOL.Load
-			Throw New NotImplementedException
-		End Function
+            Get
+                Return Utils.GetAuxTestConfig().SSMInputs
+            End Get
+            Set(value As ISSMInputs)
+            End Set
+        End Property
 
-		Public ReadOnly Property MechanicalWBase As Watt Implements ISSMTOOL.MechanicalWBase
-			Get
-				Throw New NotImplementedException
-			End Get
-		End Property
+        Public Function IsEqualTo(source As ISSMTOOL) As Boolean Implements ISSMTOOL.IsEqualTo
+            Throw New NotImplementedException
+        End Function
 
-		Public ReadOnly Property MechanicalWBaseAdjusted As Watt Implements ISSMTOOL.MechanicalWBaseAdjusted
-			Get
-				Throw New NotImplementedException
-			End Get
-		End Property
+        'Public Function Load(filePath As String) As Boolean Implements ISSMTOOL.Load
+        '	Throw New NotImplementedException
+        'End Function
 
-		Public Function Save(filePath As String) As Boolean Implements ISSMTOOL.Save
-			Throw New NotImplementedException
-		End Function
+        Public ReadOnly Property MechanicalWBase As Watt Implements ISSMTOOL.MechanicalWBase
+            Get
+                Throw New NotImplementedException
+            End Get
+        End Property
 
-		Public Property TechList As ISSMTechList Implements ISSMTOOL.TechList
+        Public ReadOnly Property MechanicalWBaseAdjusted As Watt Implements ISSMTOOL.MechanicalWBaseAdjusted
+            Get
+                Throw New NotImplementedException
+            End Get
+        End Property
 
-		Public Event Message(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) _
-			Implements ISSMTOOL.Message
+        'Public Function Save(filePath As String) As Boolean Implements ISSMTOOL.Save
+        '	Throw New NotImplementedException
+        'End Function
+
+        Public Property TechList As ISSMTechList Implements ISSMTOOL.TechList
+
+        Public Event Message(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) Implements ISSMTOOL.Message
 	End Class
 
 
 	<TestFixture()>
 	Public Class M14Tests
+
+        <OneTimeSetUp>
+        Public Sub RunBeforeAnyTests()
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+        End Sub
+
 		<Test()>
 		Public Sub ValuesTest()
 

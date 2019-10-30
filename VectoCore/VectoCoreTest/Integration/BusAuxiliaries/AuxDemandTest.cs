@@ -41,6 +41,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using System.IO;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
@@ -143,7 +145,16 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 				IdleSpeed = 560.SI<PerSecond>()
 			};
 			vehicle.RunData = new VectoRunData() {
-				EngineData = modelData
+				EngineData = modelData,
+				VehicleData = new VehicleData() {
+					Length = 10.655.SI< Meter>(),
+					Width = 2.55.SI<Meter>(),
+					Height = 2.275.SI< Meter>(),
+					FloorType = FloorType.HighFloor,
+					PassengerCount = 47,
+					DoubleDecker = false,
+					CurbWeight = vehicleWeight.SI<Kilogram>()
+				}
 			};
 			var engine = new CombustionEngine(vehicle, modelData);
 			//new Vehicle(vehicle, new VehicleData());
@@ -151,7 +162,8 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var gbx = new MockGearbox(vehicle) { Gear = 1 };
 			var brakes = new MockBrakes(vehicle);
 			var veh = new MockVehicle(vehicle) { MyVehicleSpeed = 50.KMPHtoMeterPerSecond() };
-			var busAux = new BusAuxiliariesAdapter(vehicle, auxFilePath, "Coach", vehicleWeight.SI<Kilogram>(),
+			var auxConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, vehicle.RunData.VehicleData);
+			var busAux = new BusAuxiliariesAdapter(vehicle, auxConfig, "Coach", vehicle.RunData.VehicleData.TotalVehicleWeight,
 				fcMap, modelData.IdleSpeed);
 			return busAux;
 		}

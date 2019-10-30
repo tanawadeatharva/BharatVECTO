@@ -9,10 +9,15 @@
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		string SSMFilePath { get; set; }
+		//string SSMFilePath { get; set; }
 
-		string BusDatabasePath { get; set; }
+		//string BusDatabasePath { get; set; }
 
-		bool SSMDisabled { get; set; }
+		//bool SSMDisabled { get; set; }
+
+		//ISSMInputs SSMInputs { get; }
+
+		IHVACConstants HVACConstants { get; }
+
 	}
 }

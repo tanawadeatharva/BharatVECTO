@@ -7,13 +7,13 @@ Public Class M4_Mock
 	Implements IM4_AirCompressor
 
 
-	Public Property _AveragePowerDemandPerCompressorUnitFlowRate As SI
+	Public Property _AveragePowerDemandPerCompressorUnitFlowRate As JoulePerNormLiter
 	Public Property _FlowRate As NormLiterPerSecond
 	Public Property _PowerCompressorOff As Watt
 	Public Property _PowerCompressorOn As Watt
 	Public Property _PowerDifference As Watt
 
-	Public Function GetAveragePowerDemandPerCompressorUnitFlowRate() As SI Implements IM4_AirCompressor.GetAveragePowerDemandPerCompressorUnitFlowRate
+	Public Function GetAveragePowerDemandPerCompressorUnitFlowRate() As JoulePerNormLiter Implements IM4_AirCompressor.GetAveragePowerDemandPerCompressorUnitFlowRate
 		Return _AveragePowerDemandPerCompressorUnitFlowRate
 	End Function
 
@@ -44,7 +44,7 @@ Public Class M4_Mock
 				   PowerCompressorOn As Double, _
 				   PowerDifference As Double)
 
-		_AveragePowerDemandPerCompressorUnitFlowRate = AveragePowerDemandPerCompressorUnitFlowRate.SI()
+		_AveragePowerDemandPerCompressorUnitFlowRate = AveragePowerDemandPerCompressorUnitFlowRate.SI(Unit.SI.Watt.Hour.Per.Liter).Cast(Of JoulePerNormLiter)
 		_FlowRate = FlowRate.SI(Of NormLiterPerSecond)()
 		_PowerCompressorOff = PowerCompressorOff.SI(Of Watt)()
 		_PowerCompressorOn = PowerCompressorOn.SI(Of Watt)()
@@ -54,9 +54,7 @@ Public Class M4_Mock
 
 
 	'Non Essential 
-	Public Function Initialise() As Boolean Implements IM4_AirCompressor.Initialise
-		Return True
-	End Function
+	
 
 	Public Property PulleyGearEfficiency As Double Implements IM4_AirCompressor.PulleyGearEfficiency
 	Public Property PulleyGearRatio As Double Implements IM4_AirCompressor.PulleyGearRatio

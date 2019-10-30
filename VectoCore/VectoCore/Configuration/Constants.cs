@@ -30,6 +30,7 @@
 */
 
 using System;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Configuration
@@ -67,6 +68,105 @@ namespace TUGraz.VectoCore.Configuration
 				public const string ElectricSystem = "Electric System";
 				public const string HeatingVentilationAirCondition = "HVAC";
 				public const string PneumaticSystem = "Pneumatic System";
+			}
+		}
+
+		public static class BusAuxiliaries
+		{
+			public const string BrakeAndDoorsActuationKey = "Park brake + 2 doors";
+			public const string CycleTimeActuationKey = "CycleTime";
+
+			public static class SteadyStateModel
+			{
+				public static readonly Kelvin PassengerBoundaryTemperature = 17.0.DegCelsiusToKelvin();
+				public const double SolarCloudingLow = 0.65;
+				public const double SolarCloudingHigh = 0.8;
+				public static readonly Watt HeatPerPassengerIntoCabinLow = 50.SI<Watt>();
+				public static readonly Watt HeatPerPassengerIntoCabinHigh = 80.SI<Watt>();
+
+				public static readonly Kelvin MaxTemperatureDeltaForLowFloorBusses = 3.SI<Kelvin>();
+				public const double MaxPossibleBenefitFromTechnologyList = 0.5;
+
+				public static readonly Kelvin HeatingBoundaryTemperature = 18.0.DegCelsiusToKelvin();
+				public static readonly Kelvin CoolingBoundaryTemperature = 23.0.DegCelsiusToKelvin();
+
+				public static readonly PerSecond HighVentilation = 20.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
+				public static readonly PerSecond LowVentilation = 7.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
+
+				public const double AuxHeaterEfficiency = 0.84;
+
+				public static readonly Watt FuelFiredHeaterPower = 30.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+
+				public static readonly JoulePerCubicMeter SpecificVentilationPower =
+					0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast<JoulePerCubicMeter>();
+
+				public const double GFactor = 0.95;
+
+				public static readonly Kelvin DefaultTemperature = 25.0.DegCelsiusToKelvin();
+				public static readonly WattPerSquareMeter DefaultSolar = 400.SI<WattPerSquareMeter>();
+			}
+
+			public static class ElectricSystem
+			{
+				public static readonly Volt PowernetVoltage = 28.3.SI<Volt>();
+
+				public const double StoredEnergyEfficiency = 0.935;
+			}
+
+			public static class ElectricalConsumers
+			{
+				public const string DoorsPerVehicleConsumer = "Doors per vehicle";
+				public static readonly Second DoorActuationTimeSecond = 4.SI<Second>();
+			}
+
+			public static class PneumaticAuxDemands
+			{
+				public static readonly NormLiterPerSecond AdBlueNIperMinute =
+					21.25.SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
+
+				public static readonly NormLiterPerSecond AirControlledSuspensionNIperMinute =
+					15.SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
+
+				public static readonly NormLiterPerKilogram BrakingNoRetarderNIperKG =
+					0.00081.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
+
+				public static readonly NormLiterPerKilogram BrakingWithRetarderNIperKG =
+					0.0006.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
+
+				public static readonly NormLiterPerKilogramMeter BreakingPerKneelingNIperKGinMM =
+					0.000066.SI(Unit.SI.Liter.Per.Kilo.Gramm.Milli.Meter).Cast<NormLiterPerKilogramMeter>();
+
+				public static readonly PerSecond DeadVolBlowOutsPerLitresperHour = 24.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
+				public static readonly NormLiter DeadVolumeLitres = 30.SI<NormLiter>();
+				public static readonly double NonSmartRegenFractionTotalAirDemand = 0.26;
+				public static readonly double OverrunUtilisationForCompressionFraction = 0.97;
+				public static readonly NormLiter PerDoorOpeningNI = 12.7.SI<NormLiter>();
+
+				public static readonly NormLiterPerKilogram PerStopBrakeActuationNIperKG =
+					0.00064.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
+
+				public static readonly double SmartRegenFractionTotalAirDemand = 0.12;
+			}
+
+			public static class PneumaticUserConfig
+			{
+				public const double CompressorGearRatio = 1.0;
+				public const double CompressorGearEfficiency = 0.97;
+
+				public const double PneumaticOverrunUtilisation = 0.97;
+				//public const ConsumerTechnology AdBlueDosing = ConsumerTechnology.Pneumatic; // "Pneumatic";
+				//public const ConsumerTechnology AirSuspensionControl = ConsumerTechnology.Mechanical; // "Mechanically";
+				//public const ConsumerTechnology Doors = ConsumerTechnology.Pneumatic; // "Pneumatic";
+				//public static readonly Meter KneelingHeightMillimeters = 70.SI(Unit.SI.Milli.Meter).Cast<Meter>();
+				//public IPneumaticActuationsMap ActuationsMap = null;
+				//public const bool RetarderBrake = true;
+				//public const bool SmartAirCompression = false;
+				//public const bool SmartRegeneration = false;
+			}
+
+			public static class Heater {
+				public const double CoolantHeatTransferredToAirCabinHeater = 0.75;
+				public const double FuelEnergyToHeatToCoolant = 0.2;
 			}
 		}
 

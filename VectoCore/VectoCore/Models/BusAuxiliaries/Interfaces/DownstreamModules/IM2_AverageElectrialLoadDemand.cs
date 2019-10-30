@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 {
 	public interface IM2_AverageElectricalLoadDemand : IAbstractModule
 	{
-		Watt GetAveragePowerDemandAtAlternator();
+		//Watt GetAveragePowerDemandAtAlternator();
 		Watt GetAveragePowerAtCrankFromElectrics();
 	}
 }

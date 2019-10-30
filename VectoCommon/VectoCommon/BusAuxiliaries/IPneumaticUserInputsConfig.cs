@@ -1,17 +1,29 @@
-﻿namespace TUGraz.VectoCommon.BusAuxiliaries
+﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
+
+namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IPneumaticUserInputsConfig
 	{
-		string CompressorMap { get; set; }
-		double CompressorGearEfficiency { get; set; }
-		double CompressorGearRatio { get; set; }
-		string ActuationsMap { get; set; }
-		bool SmartAirCompression { get; set; }
-		bool SmartRegeneration { get; set; }
-		bool RetarderBrake { get; set; }
-		double KneelingHeightMillimeters { get; set; }
-		string AirSuspensionControl { get; set; } // mechanical or electrical
-		string AdBlueDosing { get; set; } // pnmeumatic or electric
-		string Doors { get; set; } // pneumatic or electric
+		ICompressorMap CompressorMap { get;  }
+		double CompressorGearEfficiency { get;  }
+		double CompressorGearRatio { get;  }
+		//Dictionary<ActuationsKey, int> ActuationsMap { get;  }
+		bool SmartAirCompression { get;  }
+		bool SmartRegeneration { get;  }
+		bool RetarderBrake { get;  }
+		Meter KneelingHeightMillimeters { get;  }
+		ConsumerTechnology AirSuspensionControl { get;  } // mechanical or electrical
+		ConsumerTechnology AdBlueDosing { get;  } // pnmeumatic or electric
+		ConsumerTechnology Doors { get;  } // pneumatic or electric
+	}
+
+	public enum ConsumerTechnology
+	{
+		Unknown,
+		Mechanically,
+		Electrically,
+		Pneumatic,
 	}
 }

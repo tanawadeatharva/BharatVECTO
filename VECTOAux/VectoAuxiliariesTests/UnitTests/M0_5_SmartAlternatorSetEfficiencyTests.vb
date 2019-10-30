@@ -1,141 +1,142 @@
 ﻿Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.BusAuxiliaries
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Reader.ComponentData
+Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
+Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 
 
 Namespace UnitTests
+    <TestFixture()>
+    Public Class M0_5_SmartAlternatorSetEfficiencyTests
+        Private target As IM0_5_SmartAlternatorSetEfficiency
+        Private signals As Signals = New Signals
 
-
-	<TestFixture()>
-	Public Class M0_5_SmartAlternatorSetEfficiencyTests
-		Private target As IM0_5_SmartAlternatorSetEfficiency
-		Private signals = New Signals
-
-		Public Sub New()
-
-			
-		End Sub
+        Public Sub New()
+        End Sub
 
         <OneTimeSetUp>
-        Sub RunBeforeAnyTests()    
+        Sub RunBeforeAnyTests()
             Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
 
             Initialise()
         end Sub
 
-		Private Function GetSSM() As ISSMTOOL
+        Private Function GetSSM() As ISSMTOOL
 
 
-			Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
-			'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
+            Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
+            'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
 
-			Dim ssm As ISSMTOOL = New SSMTOOL(_SSMMAP, New HVACConstants())
-		    CType(ssm.SSMInputs, SSMInputs)._vehicle.Height = 0.SI(of Meter)
-
-			ssm.Load(_SSMMAP)
-
-
-			Return ssm
-		End Function
-
-		Private Sub Initialise()
+            dim ssmInput As ISSMInputs = SSMInputData.ReadFile(_SSMMAP, utils.GetDefaultVehicleData(), Nothing,
+                                                               DeclarationData.BusAuxiliaries.SSMTechnologyList)
+            CType(CType(ssmInput, SSMInputs).Vehicle, VehicleData).Height = 0.SI (Of Meter)
+            Dim ssm As ISSMTOOL = New SSMTOOL(ssmInput)
 
 
-			Dim ssm As ISSMTOOL = GetSSM()
-			Dim elecConsumers As New ElectricalConsumerList(26.3.SI(of Volt), 0.096, True)
-
-			'Dim  hvacMap As New HVACMap("testFiles\TestHvacMap.csv")
-			'hvacMap.Initialise()
-			Dim alternatoMap As New AlternatorMap("testFiles\testAlternatormap.aalt")
-			alternatoMap.Initialise()
-
-			Dim signals = New Signals()
-			signals.EngineSpeed = 2000.RPMtoRad()
-
-			Dim m0 As New M00Impl(elecConsumers, alternatoMap, 26.3.SI(Of Volt), signals, ssm)
-
-			'Results Cards
-			Dim readings = New List(Of SmartResult)
-			readings.Add(New SmartResult(10.SI(of Ampere), 8.SI(of Ampere)))
-			readings.Add(New SmartResult(70.SI(of Ampere), 63.SI(of Ampere)))
-
-			Dim idleResult As New ResultCard(readings)
-			Dim tractionResult As New ResultCard(readings)
-			Dim overrunResult As New ResultCard(readings)
+            'ssm.Load(_SSMMAP)
 
 
-			signals.EngineSpeed = 2000.RPMtoRad()
-			target = New M0_5Impl(m0, elecConsumers, alternatoMap, idleResult, tractionResult,
-															overrunResult, signals)
-		End Sub
+            Return ssm
+        End Function
 
-		<Test()>
-		Public Sub CreateNewTest()
-			Initialise()
-			Assert.IsNotNull(target)
-		End Sub
-
-		<Test()>
-		Public Sub SmartIdleCurrentTest()
-			Initialise()
-			Assert.IsNotNull(target)
-		End Sub
-
-		<Test()>
-		Public Sub SmartTractionCurrentTest()
-			Initialise()
-			Assert.IsNotNull(target)
-		End Sub
-
-		<Test()>
-		Public Sub SmartOverrunCurrentTest()
-			Initialise()
-			Assert.IsNotNull(target)
-		End Sub
-
-		<Test()>
-		Public Sub AlternatorsEfficiencyIdle2000rpmTest()
-			Initialise()
-
-			Dim expected As Double = 0.6308339
-			Dim actual As Double = target.AlternatorsEfficiencyIdleResultCard()
-
-			Assert.AreEqual(expected, actual, 0.000001)
-		End Sub
+  
+        Private Sub Initialise()
 
 
-		<Test()>
-		Public Sub AlternatorsEfficiencyTraction2000rpmTest()
-			Initialise()
+            Dim ssm As ISSMTOOL = GetSSM()
+           
+           
+            Dim auxConfig = Utils.GetAuxTestConfig()
+            'Dim  hvacMap As New HVACMap("testFiles\TestHvacMap.csv")
+            'hvacMap.Initialise()
+            dim m01 = New M0_1Impl(auxConfig)
+            Dim m0 As New M00Impl(m01, auxConfig.ElectricalUserInputsConfig.AlternatorMap, 26.3.SI (Of Volt), auxConfig.Signals, ssm)
 
-			Dim expected As Double = 0.6308339
-			Dim actual As Double = target.AlternatorsEfficiencyTractionOnResultCard()
+            'Results Cards
+            Dim readings = New List(Of SmartResult)
+            readings.Add(New SmartResult(10.SI (of Ampere), 8.SI (of Ampere)))
+            readings.Add(New SmartResult(70.SI (of Ampere), 63.SI (of Ampere)))
 
-			Assert.AreEqual(expected, actual, 0.000001)
-		End Sub
+            Dim idleResult As New ResultCard(readings)
+            Dim tractionResult As New ResultCard(readings)
+            Dim overrunResult As New ResultCard(readings)
 
 
-		<Test()>
-		Public Sub AlternatorsEfficiencyOverrun2000rpmTest()
-			Initialise()
+            
+            target = New M0_5Impl(m0, m01, auxConfig.ElectricalUserInputsConfig.AlternatorMap, idleResult, tractionResult,
+                                  overrunResult, auxConfig.Signals)
+        End Sub
 
-			Dim expected As Double = 0.6308339
-			Dim actual As Double = target.AlternatorsEfficiencyOverrunResultCard()
+        <Test()>
+        Public Sub CreateNewTest()
+            Initialise()
+            Assert.IsNotNull(target)
+        End Sub
 
-			Assert.AreEqual(expected, actual, 0.000001)
-		End Sub
+        <Test()>
+        Public Sub SmartIdleCurrentTest()
+            Initialise()
+            Assert.IsNotNull(target)
+        End Sub
 
-       
-	End Class
+        <Test()>
+        Public Sub SmartTractionCurrentTest()
+            Initialise()
+            Assert.IsNotNull(target)
+        End Sub
+
+        <Test()>
+        Public Sub SmartOverrunCurrentTest()
+            Initialise()
+            Assert.IsNotNull(target)
+        End Sub
+
+        <Test()>
+        Public Sub AlternatorsEfficiencyIdle2000rpmTest()
+            Initialise()
+
+            Dim expected As Double = 0.6308339
+            Dim actual As Double = target.AlternatorsEfficiencyIdleResultCard()
+
+            Assert.AreEqual(expected, actual, 0.000001)
+        End Sub
+
+
+        <Test()>
+        Public Sub AlternatorsEfficiencyTraction2000rpmTest()
+            Initialise()
+
+            Dim expected As Double = 0.6308339
+            Dim actual As Double = target.AlternatorsEfficiencyTractionOnResultCard()
+
+            Assert.AreEqual(expected, actual, 0.000001)
+        End Sub
+
+
+        <Test()>
+        Public Sub AlternatorsEfficiencyOverrun2000rpmTest()
+            Initialise()
+
+            Dim expected As Double = 0.6308339
+            Dim actual As Double = target.AlternatorsEfficiencyOverrunResultCard()
+
+            Assert.AreEqual(expected, actual, 0.000001)
+        End Sub
+    End Class
 End Namespace
 
 

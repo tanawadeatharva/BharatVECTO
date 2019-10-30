@@ -10,6 +10,7 @@
       "FuelMap": "testFuelGoodMap.vmap",
       "FuelDensity": 0.832
     },
+    "ActuationsMap": "testPneumaticActuationsMap.APAC",
     "ElectricalUserInputsConfig": {
       "$type":
         "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricsUserInputsConfig, BusAuxiliaries",
@@ -22,7 +23,7 @@
             "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricalConsumer, BusAuxiliaries",
           "BaseVehicle": false,
           "Category": "Doors",
-          "ConsumerName": "Doors per Door",
+          "ConsumerName": "Doors per vehicle",
           "NominalConsumptionAmps": 3.0,
           "NumberInActualVehicle": 3,
           "PhaseIdle_TractionOn": 0.096339,
@@ -295,31 +296,6 @@
       "PerStopBrakeActuationNIperKG": 0.00064,
       "SmartRegenFractionTotalAirDemand": 0.12
     },
-    "HvacUserInputsConfig": {
-      "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.HVAC.HVACUserInputsConfig, BusAuxiliaries",
-      "SSMFilePath": "testHVACssm.AHSM",
-      "BusDatabasePath": "BusDatabase.abdb",
-      "SSMDisabled": false
-    },
-    "Signals": {
-      "$type": "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Signals, AdvancedAuxiliaryInterfaces",
-      "ClutchEngaged": false,
-      "EngineDrivelinePower": 0.0,
-      "EngineDrivelineTorque": 0.0,
-      "EngineMotoringPower": 0.0,
-      "EngineSpeed": 2000,
-      "SmartElectrics": false,
-      "SmartPneumatics": false,
-      "TotalCycleTimeSeconds": 3114,
-      "CurrentCycleTimeInSeconds": 0,
-      "PreExistingAuxPower": 0.0,
-      "Idle": false,
-      "InNeutral": false,
-      "AuxiliaryEventReportingLevel": 0,
-      "EngineStopped": false,
-      "DeclarationMode": false,
-      "WHTC": 1.0,
-      "EngineIdleSpeed": 0.0
-    }
+    "SSMFilePath": "testHVACssm.AHSM"
   }
 }

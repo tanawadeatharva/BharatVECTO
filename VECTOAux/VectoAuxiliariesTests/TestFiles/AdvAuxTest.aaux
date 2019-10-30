@@ -10,6 +10,7 @@
       "FuelMap": "testFuelGoodMap.vmap",
       "FuelDensity": 0.832
     },
+    "ActuationsMap":  "testPneumaticActuationsMap.APAC", 
     "ElectricalUserInputsConfig": {
       "$type":
         "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricsUserInputsConfig, BusAuxiliaries",

@@ -1,0 +1,175 @@
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Newtonsoft.Json.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.BusAuxiliaries;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
+using TUGraz.VectoCore.Models.Declaration;
+
+namespace TUGraz.VectoCore.InputData.FileIO.JSON
+{
+	public static class BusAuxiliaryInputData
+	{
+		public static IAuxiliaryConfig ReadBusAuxiliaries(string filename, IVehicleData vehicleData)
+		{
+			var json = JSONInputDataFactory.ReadFile(filename);
+			var body = (JObject)json["Body"];
+
+			return LoadValues(body, Path.GetDirectoryName(filename), vehicleData);
+		}
+
+		private static AuxiliaryConfig LoadValues(JObject data, string baseDir, IVehicleData vehicleData)
+		{
+			var ec = LoadElectricalConfig((JObject)data["ElectricalUserInputsConfig"], baseDir);
+			var pac = LoadPneumaticsAuxConfig((JObject)data["PneumaticAuxillariesConfig"], baseDir);
+			var puc = LoadPneumaticUserConfig((JObject)data["PneumaticUserInputsConfig"], baseDir);
+			var hvac = LoadHVAC((JObject)data["HvacUserInputsConfig"], baseDir);
+			var env = string.IsNullOrWhiteSpace(data["EnvironmentalConditions"]?.ToString())
+				? DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions
+				: EnvironmentalContidionsMapReader.ReadFile(data["EnvironmentalConditions"].ToString());
+			var techList = string.IsNullOrWhiteSpace(data["SSMTechologies"]?.ToString())
+				? DeclarationData.BusAuxiliaries.SSMTechnologyList
+				: HVACTechBenefitsReader.ReadFromFile(data["SSMTechologies"].ToString());
+			var actuationsMap = PneumaticActuationsMapReader.Read(Path.Combine(baseDir, data.GetEx<string>("ActuationsMap")));
+			var ssm = string.IsNullOrWhiteSpace(data["SSMFilePath"]?.ToString()) ?
+				new SSMInputs(vehicleData, "", FuelData.Diesel) {
+					EnvironmentalConditionsMap =  env,
+					Technologies = techList
+				}
+				: SSMInputData.ReadFile(
+				Path.Combine(baseDir, data["SSMFilePath"].ToString()), vehicleData, env,
+				techList);
+			return new AuxiliaryConfig( ) {
+				ElectricalUserInputsConfig = ec,
+				PneumaticAuxillariesConfig  = pac,
+				PneumaticUserInputsConfig  = puc,
+				HvacUserInputsConfig = hvac,
+				SSMInputs = ssm,
+				ActuationsMap = actuationsMap,
+				VehicleData = vehicleData
+			};
+		}
+
+		private static IElectricsUserInputsConfig LoadElectricalConfig(JObject elData, string baseDir)
+		{
+			var electricalUserInputsConfig = new ElectricsUserInputsConfig();
+
+			// AlternatorGearEfficiency
+			electricalUserInputsConfig.AlternatorGearEfficiency = elData.GetEx<double>("AlternatorGearEfficiency");
+
+			// AlternatorMap
+			electricalUserInputsConfig.AlternatorMap = AlternatorReader.ReadMap(Path.Combine(baseDir , elData.GetEx("AlternatorMap").Value<string>()));
+
+			// DoorActuationTimeSecond
+			electricalUserInputsConfig.DoorActuationTimeSecond = elData.GetEx<double>("DoorActuationTimeSecond").SI<Second>();
+
+			// Electrical Consumer list
+			//electricalUserInputsConfig.ElectricalConsumers.Items.Clear();
+			var consumers = new List<IElectricalConsumer>();
+			foreach (var consumer in elData["ElectricalConsumers"]) {
+				var newConsumer = new ElectricalConsumer(
+					consumer.GetEx<bool>("BaseVehicle"), consumer.GetEx<string>("Category"), consumer.GetEx<string>("ConsumerName"),
+					consumer.GetEx<double>("NominalConsumptionAmps").SI<Ampere>(),
+					consumer.GetEx<double>("PhaseIdle_TractionOn"), consumer.GetEx<double>("PowerNetVoltage").SI<Volt>(),
+					consumer.GetEx<int>("NumberInActualVehicle"),
+					consumer.GetEx<string>("Info"));
+				consumers.Add(newConsumer);
+			}
+
+			electricalUserInputsConfig.ElectricalConsumers = new ElectricalConsumerList(consumers);
+
+			// PowerNetVoltage
+			electricalUserInputsConfig.PowerNetVoltage = elData.GetEx<double>("PowerNetVoltage").SI<Volt>();
+
+			// ResultCardIdle
+
+			electricalUserInputsConfig.ResultCardIdle = new ResultCard(
+				elData["ResultCardIdle"].Select(
+					result => new SmartResult(
+						result.GetEx<double>("Amps").SI<Ampere>(), result.GetEx<double>("SmartAmps").SI<Ampere>())).ToList());
+
+			// ResultCardOverrun
+			electricalUserInputsConfig.ResultCardOverrun = new ResultCard(
+				elData["ResultCardOverrun"].Select(
+					result => new SmartResult(
+						result.GetEx<double>("Amps").SI<Ampere>(), result.GetEx<double>("SmartAmps").SI<Ampere>())).ToList());
+
+			// ResultCardTraction
+			electricalUserInputsConfig.ResultCardTraction = new ResultCard(
+				elData["ResultCardTraction"].Select(
+					result => new SmartResult(
+						result.GetEx<double>("Amps").SI<Ampere>(), result.GetEx<double>("SmartAmps").SI<Ampere>())).ToList());
+
+			// SmartElectrical
+			electricalUserInputsConfig.SmartElectrical = elData.GetEx<bool>("SmartElectrical");
+			return electricalUserInputsConfig;
+		}
+
+		private static IPneumaticsAuxilliariesConfig LoadPneumaticsAuxConfig(JObject paData, string baseDir)
+		{
+			var pneumaticAuxillariesConfig = new PneumaticsAuxilliariesConfig();
+			pneumaticAuxillariesConfig.AdBlueNIperMinute =
+				paData.GetEx<double>("AdBlueNIperMinute").SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
+			pneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute =
+				paData.GetEx<double>("AirControlledSuspensionNIperMinute").SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
+			pneumaticAuxillariesConfig.BrakingNoRetarderNIperKG = paData
+				.GetEx<double>("BrakingNoRetarderNIperKG").SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
+			pneumaticAuxillariesConfig.BrakingWithRetarderNIperKG = paData
+				.GetEx<double>("BrakingWithRetarderNIperKG").SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
+			pneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM = paData
+				.GetEx<double>("BreakingPerKneelingNIperKGinMM").SI(Unit.SI.Liter.Per.Kilo.Gramm.Milli.Meter)
+				.Cast<NormLiterPerKilogramMeter>();
+			pneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour =
+				paData.GetEx<double>("DeadVolBlowOutsPerLitresperHour").SI(Unit.SI.Per.Hour).Cast<PerSecond>();
+			pneumaticAuxillariesConfig.DeadVolumeLitres = paData.GetEx<double>("DeadVolumeLitres").SI<NormLiter>();
+			pneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand =
+				paData.GetEx<double>("NonSmartRegenFractionTotalAirDemand");
+			pneumaticAuxillariesConfig.PerDoorOpeningNI = paData.GetEx<double>("PerDoorOpeningNI").SI<NormLiter>();
+			pneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG = paData
+				.GetEx<double>("PerStopBrakeActuationNIperKG").SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
+			pneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand =
+				paData.GetEx<double>("SmartRegenFractionTotalAirDemand");
+			pneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction =
+				paData.GetEx<double>("OverrunUtilisationForCompressionFraction");
+			return pneumaticAuxillariesConfig;
+		}
+
+		private static IPneumaticUserInputsConfig LoadPneumaticUserConfig(JObject puData, string baseDir)
+		{
+			var pneumaticUserInputsConfig = new PneumaticUserInputsConfig();
+			//pneumaticUserInputsConfig.ActuationsMap = PneumaticActuationsMapReader.Read(Path.Combine(baseDir, puData.GetEx<string>("ActuationsMap")));
+			pneumaticUserInputsConfig.AdBlueDosing = puData.GetEx<string>("AdBlueDosing").ParseEnum<ConsumerTechnology>();
+			pneumaticUserInputsConfig.AirSuspensionControl =
+				puData.GetEx<string>("AirSuspensionControl").ParseEnum<ConsumerTechnology>();
+			pneumaticUserInputsConfig.CompressorGearEfficiency = puData.GetEx<double>("CompressorGearEfficiency");
+			pneumaticUserInputsConfig.CompressorGearRatio = puData.GetEx<double>("CompressorGearRatio");
+			var file = puData.GetEx<string>("CompressorMap");
+			if (!string.IsNullOrWhiteSpace(file)) {
+				pneumaticUserInputsConfig.CompressorMap = CompressorMapReader.ReadFile(Path.Combine(baseDir, file));
+			}
+			pneumaticUserInputsConfig.Doors = puData.GetEx<string>("Doors").ParseEnum<ConsumerTechnology>();
+			pneumaticUserInputsConfig.KneelingHeightMillimeters =
+				puData.GetEx<double>("KneelingHeightMillimeters").SI(Unit.SI.Milli.Meter).Cast<Meter>();
+			pneumaticUserInputsConfig.RetarderBrake = puData.GetEx<bool>("RetarderBrake");
+			pneumaticUserInputsConfig.SmartAirCompression = puData.GetEx<bool>("SmartAirCompression");
+			pneumaticUserInputsConfig.SmartRegeneration = puData.GetEx<bool>("SmartRegeneration");
+			return pneumaticUserInputsConfig;
+		}
+
+		private static IHVACUserInputsConfig LoadHVAC(JObject hvac, string baseDir)
+		{
+			var hvacUserInputsConfig = new HVACUserInputsConfig();
+
+			//hvacUserInputsConfig.SSMFilePath = hvac.GetEx<string>("SSMFilePath");
+			//hvacUserInputsConfig.BusDatabasePath = hvac.GetEx<string>("BusDatabasePath");
+			//hvacUserInputsConfig.SSMDisabled = hvac.GetEx<bool>("SSMDisabled");
+			return hvacUserInputsConfig;
+		}
+	}
+}

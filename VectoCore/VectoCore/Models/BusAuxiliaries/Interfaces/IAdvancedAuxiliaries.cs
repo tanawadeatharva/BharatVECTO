@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		/// <value></value>
 		/// <returns></returns>
 		/// <remarks></remarks>
-		IVectoInputs VectoInputs { get; set; }
+		//IVectoInputs VectoInputs { get; set; }
 
 		/// <summary>
 		/// Signals From Vecto 
@@ -121,11 +121,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		/// <summary>
 		/// Initialises AAUX Environment ( Begin Processs )
 		/// </summary>
-		/// <param name="auxFilePath"></param>
-		/// <param name="vectoFilePath"></param>
+		/// <param name="auxcConfig"></param>
 		/// <returns></returns>
 		/// <remarks></remarks>
-		bool RunStart(string auxFilePath, string vectoFilePath);
+		bool RunStart(IAuxiliaryConfig auxcConfig);
 
 		/// <summary>
 		/// Any Termination Which Needs to be done ( Model depenent )

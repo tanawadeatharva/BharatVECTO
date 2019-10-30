@@ -16,13 +16,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IResultCard
 	{
-		/// <summary>
-		/// 	Returns a List of (SmartResult )
-		/// 	</summary>
-		/// 	<value></value>
-		/// 	<returns></returns>
-		/// 	<remarks></remarks>
-		List<SmartResult> Results { get; }
 
 		/// <summary>
 		/// 	Returns the Smart Current (A)

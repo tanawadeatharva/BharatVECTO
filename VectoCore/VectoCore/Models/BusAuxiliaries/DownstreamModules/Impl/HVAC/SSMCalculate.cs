@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 
@@ -11,14 +12,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		private ISSMTOOL ssmTOOL;
 
 		private ISSMRun Run1; // { get; set; }
-		private ISSMRun Run2 { get; set; }
+		private ISSMRun Run2; // { get; set; }
 
 		// Constructor
 		public SSMCalculate(ISSMTOOL ssmTool)
 		{
 			ssmTOOL = ssmTool;
-			Run1 = new SSMRun(this.ssmTOOL, 1);
-			Run2 = new SSMRun(this.ssmTOOL, 2);
+			Run1 = new SSMRun(ssmTOOL, 1);
+			Run2 = new SSMRun(ssmTOOL, 2);
 		}
 
 
@@ -28,18 +29,19 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			get {
 				var ElectricalWBaseWeightedAverage = 0.SI<Watt>();
 				var ec = ssmTOOL.SSMInputs.EnvironmentalConditions;
-				var EC_EnviromentalTemperatureBefore = ec.EnviromentalTemperature;
-				var EC_SolarBefore = ec.Solar;
+				
 
 				// If batch mode is disabled use the EC_EnviromentalTemperature and EC_Solar variables. 
 				// Else if batch is enable calculate the ElectricalWBase for each input in the AENV file and then calculate the weighted average
-				if (!ec.EnviromentalConditions_BatchEnabled)
-					ElectricalWBaseWeightedAverage = CalculateElectricalWBase(ssmTOOL.SSMInputs, ec.EnviromentalTemperature, ec.Solar, 1);
+				if (!ec.BatchMode)
+					ElectricalWBaseWeightedAverage = CalculateElectricalWBase(
+						ssmTOOL.SSMInputs, ec.DefaultConditions);
 				else {
 					foreach (var envCondition in ec.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						ElectricalWBaseWeightedAverage += CalculateElectricalWBase(ssmTOOL.SSMInputs, envCondition.GetTemperature(), envCondition.GetSolar(), envCondition.GetNormalisedWeighting(ec.EnvironmentalConditionsMap.GetEnvironmentalConditions()));
-					ec.EnviromentalTemperature = EC_EnviromentalTemperatureBefore;
-					ec.Solar = EC_SolarBefore;
+						ElectricalWBaseWeightedAverage += CalculateElectricalWBase(
+							ssmTOOL.SSMInputs, envCondition);
+
+					
 				}
 
 				return ElectricalWBaseWeightedAverage;
@@ -51,18 +53,19 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			get {
 				var MechanicalWBaseWeightedAverage = 0.SI<Watt>();
 				var ec = ssmTOOL.SSMInputs.EnvironmentalConditions;
-				var EC_EnviromentalTemperatureBefore = ec.EnviromentalTemperature;
-				var EC_SolarBefore = ec.Solar;
+				
 
 				// If batch mode is disabled use the EC_EnviromentalTemperature and EC_Solar variables. 
 				// Else if batch is enable calculate the MechanicalWBase for each input in the AENV file and then calculate the weighted average
-				if (!ec.EnviromentalConditions_BatchEnabled)
-					MechanicalWBaseWeightedAverage = CalculateMechanicalWBase(ssmTOOL.SSMInputs, ec.EnviromentalTemperature, ec.Solar, 1);
+				if (!ec.BatchMode)
+					MechanicalWBaseWeightedAverage = CalculateMechanicalWBase(
+						ssmTOOL.SSMInputs, ec.DefaultConditions);
 				else {
 					foreach (var envCondition in ec.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						MechanicalWBaseWeightedAverage += CalculateMechanicalWBase(ssmTOOL.SSMInputs, envCondition.GetTemperature(), envCondition.GetSolar(), envCondition.GetNormalisedWeighting(ec.EnvironmentalConditionsMap.GetEnvironmentalConditions()));
-					ec.EnviromentalTemperature = EC_EnviromentalTemperatureBefore;
-					ec.Solar = EC_SolarBefore;
+						MechanicalWBaseWeightedAverage += CalculateMechanicalWBase(
+							ssmTOOL.SSMInputs, envCondition);
+
+					
 				}
 
 				return MechanicalWBaseWeightedAverage;
@@ -74,18 +77,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			get {
 				var FuelLPerHBaseWeightedAverage = 0.0.SI<KilogramPerSecond>();
 				var ec = ssmTOOL.SSMInputs.EnvironmentalConditions;
-				var EC_EnviromentalTemperatureBefore = ec.EnviromentalTemperature;
-				var EC_SolarBefore = ec.Solar;
+				
 
 				// If batch mode is disabled use the EC_EnviromentalTemperature and EC_Solar variables. 
 				// Else if batch is enable calculate the FuelLPerHBase for each input in the AENV file and then calculate the weighted average
-				if (!ec.EnviromentalConditions_BatchEnabled)
-					FuelLPerHBaseWeightedAverage = CalculateFuelLPerHBase(ssmTOOL.SSMInputs, ec.EnviromentalTemperature, ec.Solar, 1);
+				if (!ec.BatchMode)
+					FuelLPerHBaseWeightedAverage = CalculateFuelLPerHBase(ssmTOOL.SSMInputs, ec.DefaultConditions);
 				else {
 					foreach (var envCondition in ec.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						FuelLPerHBaseWeightedAverage += CalculateFuelLPerHBase(ssmTOOL.SSMInputs, envCondition.GetTemperature(), envCondition.GetSolar(), envCondition.GetNormalisedWeighting(ec.EnvironmentalConditionsMap.GetEnvironmentalConditions()));
-					ec.EnviromentalTemperature = EC_EnviromentalTemperatureBefore;
-					ec.Solar = EC_SolarBefore;
+						FuelLPerHBaseWeightedAverage += CalculateFuelLPerHBase(ssmTOOL.SSMInputs, envCondition);
+
+					
 				}
 
 				return FuelLPerHBaseWeightedAverage;
@@ -99,18 +101,18 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				var ElectricalWAdjustedAverage = 0.0.SI<Watt>();
 				var ec = ssmTOOL.SSMInputs.EnvironmentalConditions;
 				var tl = ssmTOOL.TechList;
-				var EC_EnviromentalTemperatureBefore = ec.EnviromentalTemperature;
-				var EC_SolarBefore = ec.Solar;
+				
 
 				// If batch mode is disabled use the EC_EnviromentalTemperature and EC_Solar variables. 
 				// Else if batch is enable calculate the ElectricalWAdjusted for each input in the AENV file and then calculate the weighted average
-				if (!ec.EnviromentalConditions_BatchEnabled)
-					ElectricalWAdjustedAverage = CalculateElectricalWAdjusted(ssmTOOL.SSMInputs, tl, ec.EnviromentalTemperature, ec.Solar, 1);
+				if (!ec.BatchMode)
+					ElectricalWAdjustedAverage = CalculateElectricalWAdjusted(
+						ssmTOOL.SSMInputs, tl, ec.DefaultConditions);
 				else {
 					foreach (var envCondition in ec.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						ElectricalWAdjustedAverage += CalculateElectricalWAdjusted(ssmTOOL.SSMInputs, tl, envCondition.GetTemperature(), envCondition.GetSolar(), envCondition.GetNormalisedWeighting(ec.EnvironmentalConditionsMap.GetEnvironmentalConditions()));
-					ec.EnviromentalTemperature = EC_EnviromentalTemperatureBefore;
-					ec.Solar = EC_SolarBefore;
+						ElectricalWAdjustedAverage += CalculateElectricalWAdjusted(ssmTOOL.SSMInputs, tl, envCondition);
+
+					
 				}
 
 				return ElectricalWAdjustedAverage;
@@ -123,18 +125,18 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				var MechanicalWBaseAdjustedAverage = 0.0.SI<Watt>();
 				var ec = ssmTOOL.SSMInputs.EnvironmentalConditions;
 				var tl = ssmTOOL.TechList;
-				var EC_EnviromentalTemperatureBefore = ec.EnviromentalTemperature;
-				var EC_SolarBefore = ec.Solar;
+				
 
 				// If batch mode is disabled use the EC_EnviromentalTemperature and EC_Solar variables. 
 				// Else if batch is enable calculate the MechanicalWBaseAdjusted for each input in the AENV file and then calculate the weighted average
-			if (!ec.EnviromentalConditions_BatchEnabled)
-					MechanicalWBaseAdjustedAverage = CalculateMechanicalWBaseAdjusted(ssmTOOL.SSMInputs, tl, ec.EnviromentalTemperature, ec.Solar, 1);
+				if (!ec.BatchMode)
+					MechanicalWBaseAdjustedAverage = CalculateMechanicalWBaseAdjusted(
+						ssmTOOL.SSMInputs, tl, ec.DefaultConditions);
 				else {
 					foreach (var envCondition in ec.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						MechanicalWBaseAdjustedAverage += CalculateMechanicalWBaseAdjusted(ssmTOOL.SSMInputs, tl, envCondition.GetTemperature(), envCondition.GetSolar(), envCondition.GetNormalisedWeighting(ec.EnvironmentalConditionsMap.GetEnvironmentalConditions()));
-					ec.EnviromentalTemperature = EC_EnviromentalTemperatureBefore;
-					ec.Solar = EC_SolarBefore;
+						MechanicalWBaseAdjustedAverage += CalculateMechanicalWBaseAdjusted(ssmTOOL.SSMInputs, tl, envCondition);
+
+					
 				}
 
 				return MechanicalWBaseAdjustedAverage;
@@ -147,18 +149,19 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				var FuelLPerHBaseAdjustedAverage = 0.0.SI<KilogramPerSecond>();
 				var gen = ssmTOOL.SSMInputs.EnvironmentalConditions;
 				var tl = ssmTOOL.TechList;
-				var EC_EnviromentalTemperatureBefore = gen.EnviromentalTemperature;
-				var EC_SolarBefore = gen.Solar;
+				
 
 				// If batch mode is disabled use the EC_EnviromentalTemperature and EC_Solar variables. 
 				// Else if batch is enable calculate the FuelLPerHBaseAdjusted for each input in the AENV file and then calculate the weighted average
-				if (!gen.EnviromentalConditions_BatchEnabled)
-					FuelLPerHBaseAdjustedAverage = CalculateFuelLPerHBaseAdjusted(ssmTOOL.SSMInputs, tl, gen.EnviromentalTemperature, gen.Solar, 1);
+				if (!gen.BatchMode)
+					FuelLPerHBaseAdjustedAverage = CalculateFuelLPerHBaseAdjusted(
+						ssmTOOL.SSMInputs, tl, gen.DefaultConditions);
 				else {
 					foreach (var envCondition in gen.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						FuelLPerHBaseAdjustedAverage += CalculateFuelLPerHBaseAdjusted(ssmTOOL.SSMInputs, tl, envCondition.GetTemperature(), envCondition.GetSolar(), envCondition.GetNormalisedWeighting(gen.EnvironmentalConditionsMap.GetEnvironmentalConditions()));
-					gen.EnviromentalTemperature = EC_EnviromentalTemperatureBefore;
-					gen.Solar = EC_SolarBefore;
+						FuelLPerHBaseAdjustedAverage += CalculateFuelLPerHBaseAdjusted(
+							ssmTOOL.SSMInputs, tl, envCondition);
+
+					
 				}
 
 				return FuelLPerHBaseAdjustedAverage;
@@ -166,26 +169,20 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 
-
-
 		// Base Values
 		public Watt BaseHeatingW_Mechanical
 		{
-			get {
-				return 0.SI<Watt>();
-			}
+			get { return 0.SI<Watt>(); }
 		}
 
 		public Watt BaseHeatingW_ElectricalCoolingHeating
 		{
-			get {
-				return 0.SI<Watt>();
-			}
+			get { return 0.SI<Watt>(); }
 		}
 
-		public Watt BaseHeatingW_ElectricalVentilation
+		public Watt BaseHeatingW_ElectricalVentilation(Kelvin environmentalTemperature, WattPerSquareMeter solar)
 		{
-			get {
+			
 				// =IF(AND(M89<0,M90<0),IF(AND(C62="yes",C66="high"),C33,IF(AND(C62="yes",C66="low"),C34,0)),0)
 
 				var ventilation = ssmTOOL.SSMInputs.Ventilation;
@@ -198,22 +195,24 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim M89 = Me.Run1.TotalW
 				// Dim M90 = Me.Run2.TotalW
 
-				var res = Run1.TotalW < 0 && Run2.TotalW < 0
-					? ventilation.VentilationOnDuringHeating && ventilation.VentilationDuringHeating.ToLower() == "high"
+				var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
+				var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
+
+				var res = run1TotalW < 0 && run2TotalW < 0
+					? ventilation.VentilationOnDuringHeating && ventilation.VentilationDuringHeating == VentilationLevel.High
 						? bc.HighVentPower
-						: ventilation.VentilationOnDuringHeating && ventilation.VentilationDuringHeating.ToLower() == "low"
+						: ventilation.VentilationOnDuringHeating && ventilation.VentilationDuringHeating ==VentilationLevel.Low
 							? bc.LowVentPower
 							: 0.SI<Watt>()
 					: 0.SI<Watt>();
 
-
 				return res;
-			}
+			
 		}
 
-		public Watt BaseHeatingW_FuelFiredHeating
+		public Watt BaseHeatingW_FuelFiredHeating(Kelvin environmentalTemperature, WattPerSquareMeter solar)
 		{
-			get {
+			
 				// =IF(AND(M89<0,M90<0),VLOOKUP(MAX(M89:M90),M89:O90,3),0)
 
 				// Dim M89 = Me.Run1.TotalW
@@ -221,111 +220,110 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// VLOOKUP(MAX(M89:M90),M89:O90  => VLOOKUP ( lookupValue, tableArray, colIndex, rangeLookup )
 
 				// If both Run TotalW values are >=0 then return FuelW from Run with largest TotalW value, else return 0
-				if ((Run1.TotalW < 0 && Run2.TotalW < 0)) {
-					return Run1.TotalW > Run2.TotalW ? Run1.FuelW : Run2.FuelW;
+				var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
+				var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
+
+				if ((run1TotalW < 0 && run2TotalW < 0)) {
+					return run1TotalW > run2TotalW ? Run1.FuelW(environmentalTemperature, solar) : Run2.FuelW(environmentalTemperature, solar);
 				}
 
 				return 0.SI<Watt>();
-			}
+			
 		}
 
-		public Watt BaseCoolingW_Mechanical
+		protected Watt BaseCoolingW_Mechanical(Kelvin environmentalTemperature, WattPerSquareMeter solar)
 		{
-			get {
-				// =IF(C46<C28,0,IF(C53="electrical", 0, IF(AND(M89>0,M90>0),MIN(M89:M90),0)))
+			// =IF(C46<C28,0,IF(C53="electrical", 0, IF(AND(M89>0,M90>0),MIN(M89:M90),0)))
 
-				var gen = ssmTOOL.SSMInputs;
+			var gen = ssmTOOL.SSMInputs;
 
-				// Dim C46 = gen.EC_EnviromentalTemperature
-				// Dim C28 = gen.BC_TemperatureCoolingTurnsOff
-				// Dim C53 = gen.AC_CompressorTypeDerived
-				// Dim M89 = Run1.TotalW
-				// Dim M90 = Run2.TotalW
+			// Dim C46 = gen.EC_EnviromentalTemperature
+			// Dim C28 = gen.BC_TemperatureCoolingTurnsOff
+			// Dim C53 = gen.AC_CompressorTypeDerived
+			// Dim M89 = Run1.TotalW
+			// Dim M90 = Run2.TotalW
 
-				return gen.EnvironmentalConditions.EnviromentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
+			var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
+			var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
+
+			return environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
+				? 0.SI<Watt>()
+				: gen.ACSystem.CompressorTypeDerived.ToLower() == "electrical"
 					? 0.SI<Watt>()
-					: gen.ACSystem.CompressorTypeDerived.ToLower() == "electrical"
-						? 0.SI<Watt>()
-						: Run1.TotalW > 0 && Run2.TotalW > 0
-							? VectoMath.Min(Run1.TotalW, Run2.TotalW)
-							: 0.SI<Watt>();
-			}
-		}
-
-		public Watt BaseCoolingW_ElectricalCoolingHeating
-		{
-			get {
-				// =IF(C46<C28,0,IF(C53="electrical",IF(AND(M89>0,M90>0),MIN(M89:M90),0),0))
-
-				var gen = ssmTOOL.SSMInputs;
-
-				// Dim C46 = gen.EC_EnviromentalTemperature
-				// Dim C28 = gen.BC_TemperatureCoolingTurnsOff
-				// Dim C53 = gen.AC_CompressorTypeDerived
-				// Dim M89 = Run1.TotalW
-				// Dim M90 = Run2.TotalW
-
-				return gen.EnvironmentalConditions.EnviromentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
-					? 0.SI<Watt>()
-					: gen.ACSystem.CompressorTypeDerived.ToLower() == "electrical"
-						? Run1.TotalW > 0 && Run2.TotalW > 0
-							? VectoMath.Min(Run1.TotalW, Run2.TotalW)
-							: 0.SI<Watt>()
+					: run1TotalW > 0 && run2TotalW > 0
+						? VectoMath.Min(run1TotalW, run2TotalW)
 						: 0.SI<Watt>();
-
-			}
 		}
 
-		public Watt BaseCoolingW_ElectricalVentilation
+		protected Watt BaseCoolingW_ElectricalCoolingHeating(Kelvin environmentalTemperature, WattPerSquareMeter solar)
 		{
-			get {
-				// =IF(AND(C46>=C28,M89>0,M90>0),IF(AND(C64="yes",C67="high"),C33,IF(AND(C64="yes",C67="low"),C34,0)),0)
+			// =IF(C46<C28,0,IF(C53="electrical",IF(AND(M89>0,M90>0),MIN(M89:M90),0),0))
 
-				var gen = ssmTOOL.SSMInputs;
+			var gen = ssmTOOL.SSMInputs;
 
-				// Dim C46 = gen.EC_EnviromentalTemperature
-				// Dim C28 = gen.BC_TemperatureCoolingTurnsOff
-				// Dim M89 = Run1.TotalW
-				// Dim M90 = Run2.TotalW
-				// Dim C64 = gen.VEN_VentilationDuringAC
-				// Dim C67 = gen.VEN_VentilationDuringCooling
-				// Dim C33 = gen.BC_HighVentPower
-				// Dim C34 = gen.BC_LowVentPower
+			// Dim C46 = gen.EC_EnviromentalTemperature
+			// Dim C28 = gen.BC_TemperatureCoolingTurnsOff
+			// Dim C53 = gen.AC_CompressorTypeDerived
+			// Dim M89 = Run1.TotalW
+			// Dim M90 = Run2.TotalW
 
-				return gen.EnvironmentalConditions.EnviromentalTemperature >= gen.BoundaryConditions.TemperatureCoolingTurnsOff && Run1.TotalW > 0 && Run2.TotalW > 0
-					? gen.Ventilation.VentilationDuringAC && gen.Ventilation.VentilationDuringCooling.ToLower() == "high"
-						? gen.BoundaryConditions.HighVentPower
-						: gen.Ventilation.VentilationDuringAC && gen.Ventilation.VentilationDuringCooling.ToLower() == "low"
-							? gen.BoundaryConditions.LowVentPower
-							: 0.SI<Watt>()
+			var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
+			var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
+			return environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
+				? 0.SI<Watt>()
+				: gen.ACSystem.CompressorTypeDerived.ToLower() == "electrical"
+					? run1TotalW > 0 && run2TotalW > 0
+						? VectoMath.Min(run1TotalW, run2TotalW)
+						: 0.SI<Watt>()
 					: 0.SI<Watt>();
-			}
+		}
+
+		protected Watt BaseCoolingW_ElectricalVentilation(Kelvin environmentalTemperature, WattPerSquareMeter solar)
+		{
+			// =IF(AND(C46>=C28,M89>0,M90>0),IF(AND(C64="yes",C67="high"),C33,IF(AND(C64="yes",C67="low"),C34,0)),0)
+
+			var gen = ssmTOOL.SSMInputs;
+
+			// Dim C46 = gen.EC_EnviromentalTemperature
+			// Dim C28 = gen.BC_TemperatureCoolingTurnsOff
+			// Dim M89 = Run1.TotalW
+			// Dim M90 = Run2.TotalW
+			// Dim C64 = gen.VEN_VentilationDuringAC
+			// Dim C67 = gen.VEN_VentilationDuringCooling
+			// Dim C33 = gen.BC_HighVentPower
+			// Dim C34 = gen.BC_LowVentPower
+
+			var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
+			var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
+
+			return environmentalTemperature >= gen.BoundaryConditions.TemperatureCoolingTurnsOff && run1TotalW > 0 &&
+					run2TotalW > 0
+				? gen.Ventilation.VentilationDuringAC && gen.Ventilation.VentilationDuringCooling == VentilationLevel.High
+					? gen.BoundaryConditions.HighVentPower
+					: gen.Ventilation.VentilationDuringAC && gen.Ventilation.VentilationDuringCooling == VentilationLevel.Low
+						? gen.BoundaryConditions.LowVentPower
+						: 0.SI<Watt>()
+				: 0.SI<Watt>();
 		}
 
 		public Watt BaseCoolingW_FuelFiredHeating
 		{
-			get {
-				return 0.SI<Watt>();
-			}
+			get { return 0.SI<Watt>(); }
 		}
 
 		public Watt BaseVentilationW_Mechanical
 		{
-			get {
-				return 0.SI<Watt>();
-			}
+			get { return 0.SI<Watt>(); }
 		}
 
 		public Watt BaseVentilationW_ElectricalCoolingHeating
 		{
-			get {
-				return 0.SI<Watt>();
-			}
+			get { return 0.SI<Watt>(); }
 		}
 
-		public Watt BaseVentilationW_ElectricalVentilation
+		public Watt BaseVentilationW_ElectricalVentilation(Kelvin environmentalTemperature, WattPerSquareMeter solar)
 		{
-			get {
+			
 				// =IF(OR(AND(C46<C28,M89>0,M90>0),AND(M89>0,M90<0)),IF(AND(C63="yes",C65="high"),C33,IF(AND(C63="yes",C65="low"),C34,0)),0)
 
 				var gen = ssmTOOL.SSMInputs;
@@ -339,39 +337,37 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim C33 = gen.BC_HighVentPower
 				// Dim C34 = gen.BC_LowVentPower
 
-				return (gen.EnvironmentalConditions.EnviromentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff && Run1.TotalW > 0 && Run2.TotalW > 0) ||
-						(Run1.TotalW > 0 && Run2.TotalW < 0)
+				var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
+				var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
+
+				return (environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff &&
+						run1TotalW > 0 && run2TotalW > 0) ||
+						(run1TotalW > 0 && run2TotalW < 0)
 					? gen.Ventilation.VentilationWhenBothHeatingAndACInactive &&
-					gen.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive.ToLower() == "high"
+					gen.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive == VentilationLevel.High
 						? gen.BoundaryConditions.HighVentPower
 						: gen.Ventilation.VentilationWhenBothHeatingAndACInactive &&
-						gen.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive.ToLower() == "low"
+						gen.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive == VentilationLevel.Low
 							? gen.BoundaryConditions.LowVentPower
 							: 0.SI<Watt>()
 					: 0.SI<Watt>();
-			}
+			
 		}
 
 		public Watt BaseVentilationW_FuelFiredHeating
 		{
-			get {
-				return 0.SI<Watt>();
-			}
+			get { return 0.SI<Watt>(); }
 		}
 
 		// Adjusted Values
 		public double TechListAdjustedHeatingW_Mechanical
 		{
-			get {
-				return default(Double);
-			}
+			get { return default(Double); }
 		}
 
 		public double TechListAdjustedHeatingW_ElectricalCoolingHeating
 		{
-			get {
-				return default(Double);
-			}
+			get { return default(Double); }
 		}
 
 		public double TechListAdjustedHeatingW_ElectricalVentilation
@@ -385,8 +381,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim C43 As Double   =  gen.BC_MaxPossibleBenefitFromTechnologyList
 				// Dim TLO92 As Double = tl.VHValueVariation
 
-
-				return tl.VHValueVariation > 0 ? Math.Min(tl.VHValueVariation, bc.MaxPossibleBenefitFromTechnologyList) : Math.Max(tl.VHValueVariation, -bc.MaxPossibleBenefitFromTechnologyList);
+				return tl.VHValueVariation > 0
+					? Math.Min(tl.VHValueVariation, bc.MaxPossibleBenefitFromTechnologyList)
+					: Math.Max(tl.VHValueVariation, -bc.MaxPossibleBenefitFromTechnologyList);
 			}
 		}
 
@@ -402,7 +399,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim C43 As Double   =  gen.BC_MaxPossibleBenefitFromTechnologyList
 				// Dim TLN92 As Double =  tl.HValueVariation
 
-
 				return tl.HValueVariation > 0
 					? Math.Min(tl.HValueVariation, bc.MaxPossibleBenefitFromTechnologyList)
 					: Math.Max(tl.HValueVariation, -bc.MaxPossibleBenefitFromTechnologyList);
@@ -417,6 +413,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				var gen = ssmTOOL.SSMInputs;
 				var tl = ssmTOOL.TechList;
 				double result;
+
 				// Dim TLR92 As Double =  tl.CValueVariation 'TECH LIST INPUT'!R92
 				// Dim C43 As Double   =  gen.BC_MaxPossibleBenefitFromTechnologyList
 				// Dim C53 As string   =  gen.AC_CompressorType
@@ -428,14 +425,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				//					-gen.BC_MaxPossibleBenefitFromTechnologyList))
 
 				result = (gen.ACSystem.CompressorType.ToLower() == "mechanical"
-					? tl.CValueVariation
-					: 0) > 0
-						? Math.Min(
-							gen.ACSystem.CompressorType.ToLower() == "mechanical" ? tl.CValueVariation : 0,
-							gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList)
-						: Math.Max(
-							gen.ACSystem.CompressorType.ToLower() == "mechanical" ? tl.CValueVariation : 0,
-							-gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList);
+							? tl.CValueVariation
+							: 0) > 0
+					? Math.Min(
+						gen.ACSystem.CompressorType.ToLower() == "mechanical" ? tl.CValueVariation : 0,
+						gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList)
+					: Math.Max(
+						gen.ACSystem.CompressorType.ToLower() == "mechanical" ? tl.CValueVariation : 0,
+						-gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList);
 
 				return result;
 			}
@@ -487,23 +484,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		public double TechListAdjustedCoolingW_FuelFiredHeating
 		{
-			get {
-				return 0;
-			}
+			get { return 0; }
 		}
 
 		public double TechListAdjustedVentilationW_Mechanical
 		{
-			get {
-				return default(Double);
-			}
+			get { return default(Double); }
 		}
 
 		public double TechListAdjustedVentilationW_ElectricalCoolingHeating
 		{
-			get {
-				return default(Double);
-			}
+			get { return default(Double); }
 		}
 
 		public double TechListAdjustedVentilationW_ElectricalVentilation
@@ -517,7 +508,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim TLP92 As Double =  tl.VVValueVariation  'TECH LIST INPUT'!P92
 				// Dim C43 As Double   =  gen.BC_MaxPossibleBenefitFromTechnologyList
 
-
 				return tl.VVValueVariation > 0
 					? Math.Min(tl.VVValueVariation, gen.MaxPossibleBenefitFromTechnologyList)
 					: Math.Max(tl.VVValueVariation, -gen.MaxPossibleBenefitFromTechnologyList);
@@ -526,9 +516,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		public double TechListAdjustedVentilationW_FuelFiredHeating
 		{
-			get {
-				return 0;
-			}
+			get { return 0; }
 		}
 
 
@@ -550,9 +538,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var firstValuePos = nameLength + catLength + unitLength + 2;
 			string cat;
 			string name;
-			
-			sb.AppendLine(string.Format(new string(' ', firstValuePos) + "H{0}VH{0}VV{0}VC{0}C{0}", vbTab));
 
+			sb.AppendLine(string.Format(new string(' ', firstValuePos) + "H{0}VH{0}VV{0}VC{0}C{0}", vbTab));
 
 			foreach (var line in ssmTOOL.TechList.TechLines) {
 				{
@@ -561,10 +548,16 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 					var extraNameSpaces = nameLength - withBlock.BenefitName.Length;
 					var extraCatSpaces = catLength - withBlock.Category.Length;
 
-					cat = line.Category.Substring(0, Math.Min(line.Category.Length, catLength)) + new string(' ', extraCatSpaces < 0 ? 0 : extraCatSpaces).Replace(" ", ".");
-					name = line.BenefitName.Substring(0, Math.Min(line.BenefitName.Length, nameLength)) + new string(' ', extraNameSpaces < 0 ? 0 : extraNameSpaces).Replace(" ", ".");
+					cat = line.Category.Substring(0, Math.Min(line.Category.Length, catLength)) +
+						new string(' ', extraCatSpaces < 0 ? 0 : extraCatSpaces).Replace(" ", ".");
+					name = line.BenefitName.Substring(0, Math.Min(line.BenefitName.Length, nameLength)) +
+							new string(' ', extraNameSpaces < 0 ? 0 : extraNameSpaces).Replace(" ", ".");
 
-					sb.AppendLine(string.Format( cat + name + " {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.H.ToString("0.000"), withBlock.VH.ToString("0.000"), withBlock.VV.ToString("0.000"), withBlock.VC.ToString("0.000"), withBlock.C.ToString("0.000")));
+					sb.AppendLine(
+						string.Format(
+							cat + name + " {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.H.ToString("0.000"),
+							withBlock.VH.ToString("0.000"), withBlock.VV.ToString("0.000"), withBlock.VC.ToString("0.000"),
+							withBlock.C.ToString("0.000")));
 				}
 			}
 
@@ -575,42 +568,74 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			{
 				var withBlock = ssmTOOL.TechList;
 				sb.AppendLine(vbTab + vbTab + "H" + vbTab + "VH" + vbTab + "VV" + vbTab + "VC" + vbTab + "C");
-				sb.AppendLine(string.Format("Base Var %   {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.HValueVariation.ToString("0.000"), withBlock.VHValueVariation.ToString("0.000"), withBlock.VVValueVariation.ToString("0.000"), withBlock.VCValueVariation.ToString("0.000"), withBlock.CValueVariation.ToString("0.000")));
+				sb.AppendLine(
+					string.Format(
+						"Base Var %   {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.HValueVariation.ToString("0.000"),
+						withBlock.VHValueVariation.ToString("0.000"), withBlock.VVValueVariation.ToString("0.000"),
+						withBlock.VCValueVariation.ToString("0.000"), withBlock.CValueVariation.ToString("0.000")));
 			}
-
 
 			// Runs
 			sb.AppendLine(Run1.ToString());
 			sb.AppendLine(Run2.ToString());
 
-			// Staging Calcs
-			sb.AppendLine("Staging Base Values");
-			sb.AppendLine("*******************");
-			sb.AppendLine(vbTab + vbTab + vbTab + "Mechanical" + vbTab + "Elec Cool/Heat" + vbTab + "Elec Vent" + vbTab + "Fuel Fired Heating");
+			//// Staging Calcs
+			//sb.AppendLine("Staging Base Values");
+			//sb.AppendLine("*******************");
+			//sb.AppendLine(
+			//	vbTab + vbTab + vbTab + "Mechanical" + vbTab + "Elec Cool/Heat" + vbTab + "Elec Vent" + vbTab +
+			//	"Fuel Fired Heating");
 
-			sb.AppendLine(string.Format("Heating   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, BaseHeatingW_Mechanical.Value().ToString("0.00"), BaseHeatingW_ElectricalCoolingHeating.Value().ToString("0.00"), BaseHeatingW_ElectricalVentilation.Value().ToString("0.00"), BaseHeatingW_FuelFiredHeating.Value().ToString("0.00")));
-			sb.AppendLine(string.Format("Cooling   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, BaseCoolingW_Mechanical.Value().ToString("0.00"), BaseCoolingW_ElectricalCoolingHeating.Value().ToString("0.00"), BaseCoolingW_ElectricalVentilation.Value().ToString("0.00"), BaseCoolingW_FuelFiredHeating.Value().ToString("0.00")));
-			sb.AppendLine(string.Format("Ventilate {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, BaseVentilationW_Mechanical.Value().ToString("0.00"), BaseVentilationW_ElectricalCoolingHeating.Value().ToString("0.00"), BaseVentilationW_ElectricalVentilation.Value().ToString("0.00"), BaseVentilationW_FuelFiredHeating.Value().ToString("0.00")));
+			//sb.AppendLine(
+			//	string.Format(
+			//		"Heating   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, BaseHeatingW_Mechanical.Value().ToString("0.00"),
+			//		BaseHeatingW_ElectricalCoolingHeating.Value().ToString("0.00"),
+			//		BaseHeatingW_ElectricalVentilation.Value().ToString("0.00"),
+			//		BaseHeatingW_FuelFiredHeating.Value().ToString("0.00")));
+			//sb.AppendLine(
+			//	string.Format(
+			//		"Cooling   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, BaseCoolingW_Mechanical.Value().ToString("0.00"),
+			//		BaseCoolingW_ElectricalCoolingHeating.Value().ToString("0.00"),
+			//		BaseCoolingW_ElectricalVentilation.Value().ToString("0.00"),
+			//		BaseCoolingW_FuelFiredHeating.Value().ToString("0.00")));
+			//sb.AppendLine(
+			//	string.Format(
+			//		"Ventilate {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, BaseVentilationW_Mechanical.Value().ToString("0.00"),
+			//		BaseVentilationW_ElectricalCoolingHeating.Value().ToString("0.00"),
+			//		BaseVentilationW_ElectricalVentilation.Value().ToString("0.00"),
+			//		BaseVentilationW_FuelFiredHeating.Value().ToString("0.00")));
 
-			sb.AppendLine("");
-			sb.AppendLine("Staging Adjusted Values");
-			sb.AppendLine("***********************");
+			//sb.AppendLine("");
+			//sb.AppendLine("Staging Adjusted Values");
+			//sb.AppendLine("***********************");
 
-			sb.AppendLine(string.Format("Heating   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, TechListAdjustedHeatingW_Mechanical.ToString("0.00"), TechListAdjustedHeatingW_ElectricalCoolingHeating.ToString("0.00"), TechListAdjustedHeatingW_ElectricalVentilation.ToString("0.00"), TechListAdjustedHeatingW_FuelFiredHeating.ToString("0.00")));
-			sb.AppendLine(string.Format("Cooling   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, TechListAdjustedCoolingW_Mechanical.ToString("0.00"), TechListAdjustedCoolingW_ElectricalCoolingHeating.ToString("0.00"), TechListAdjustedCoolingW_ElectricalVentilation.ToString("0.00"), TechListAdjustedCoolingW_FuelFiredHeating.ToString("0.00")));
-			sb.AppendLine(string.Format("Ventilate {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, TechListAdjustedVentilationW_Mechanical.ToString("0.00"), TechListAdjustedVentilationW_ElectricalCoolingHeating.ToString("0.00"), TechListAdjustedVentilationW_ElectricalVentilation.ToString("0.00"), TechListAdjustedVentilationW_FuelFiredHeating.ToString("0.00")));
-
+			//sb.AppendLine(
+			//	string.Format(
+			//		"Heating   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, TechListAdjustedHeatingW_Mechanical.ToString("0.00"),
+			//		TechListAdjustedHeatingW_ElectricalCoolingHeating.ToString("0.00"),
+			//		TechListAdjustedHeatingW_ElectricalVentilation.ToString("0.00"),
+			//		TechListAdjustedHeatingW_FuelFiredHeating.ToString("0.00")));
+			//sb.AppendLine(
+			//	string.Format(
+			//		"Cooling   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, TechListAdjustedCoolingW_Mechanical.ToString("0.00"),
+			//		TechListAdjustedCoolingW_ElectricalCoolingHeating.ToString("0.00"),
+			//		TechListAdjustedCoolingW_ElectricalVentilation.ToString("0.00"),
+			//		TechListAdjustedCoolingW_FuelFiredHeating.ToString("0.00")));
+			//sb.AppendLine(
+			//	string.Format(
+			//		"Ventilate {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, TechListAdjustedVentilationW_Mechanical.ToString("0.00"),
+			//		TechListAdjustedVentilationW_ElectricalCoolingHeating.ToString("0.00"),
+			//		TechListAdjustedVentilationW_ElectricalVentilation.ToString("0.00"),
+			//		TechListAdjustedVentilationW_FuelFiredHeating.ToString("0.00")));
 
 			return sb.ToString();
 		}
 
-		private Watt CalculateElectricalWBase(ISSMInputs genInputs, Kelvin EnviromentalTemperature, WattPerSquareMeter Solar, double Weight)
+		private Watt CalculateElectricalWBase(ISSMInputs genInputs, IEnvironmentalConditionsMapEntry env)
 		{
-
 			// MIN(SUM(H94),C54*1000)/C59+SUM(I93:I95)
 
-			genInputs.EnvironmentalConditions.EnviromentalTemperature = EnviromentalTemperature;
-			genInputs.EnvironmentalConditions.Solar = Solar;
+			
 
 			// Dim H94 = BaseCoolingW_ElectricalCoolingHeating
 			// Dim C54 = genInputs.AC_CompressorCapacitykW
@@ -619,38 +644,38 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			// Dim I94 = BaseCoolingW_ElectricalVentilation
 			// Dim I95 = BaseVentilationW_ElectricalVentilation
 
-			var ElectricalWBaseCurrentResult =
-				VectoMath.Min(BaseCoolingW_ElectricalCoolingHeating, genInputs.ACSystem.CompressorCapacity) /
-				genInputs.ACSystem.COP + BaseHeatingW_ElectricalVentilation + BaseCoolingW_ElectricalVentilation +
-				BaseVentilationW_ElectricalVentilation;
+			
 
-			return ElectricalWBaseCurrentResult * Weight;
+			var electricalWBaseCurrentResult =
+				VectoMath.Min(
+					BaseCoolingW_ElectricalCoolingHeating(env.Temperature, env.Solar), genInputs.ACSystem.CompressorCapacity) /
+				genInputs.ACSystem.COP + BaseHeatingW_ElectricalVentilation(env.Temperature, env.Solar) +
+				BaseCoolingW_ElectricalVentilation(env.Temperature, env.Solar) +
+				BaseVentilationW_ElectricalVentilation(env.Temperature, env.Solar);
+
+			return electricalWBaseCurrentResult * env.Weighting;
 		}
 
-		private Watt CalculateMechanicalWBase(ISSMInputs genInputs, Kelvin EnviromentalTemperature, WattPerSquareMeter Solar, double Weight)
+		private Watt CalculateMechanicalWBase(ISSMInputs genInputs, IEnvironmentalConditionsMapEntry env)
 		{
-
 			// =MIN(F94,C54*1000)/C59
 
-			genInputs.EnvironmentalConditions.EnviromentalTemperature = EnviromentalTemperature;
-			genInputs.EnvironmentalConditions.Solar = Solar;
+
 
 			// Dim F94 = BaseCoolingW_Mechanical
 			// Dim C54 = genInputs.AC_CompressorCapacitykW
 			// Dim C59 = genInputs.AC_COP 
 
-			var MechanicalWBaseCurrentResult = VectoMath.Min(BaseCoolingW_Mechanical, genInputs.ACSystem.CompressorCapacity) / genInputs.ACSystem.COP;
+			var MechanicalWBaseCurrentResult = VectoMath.Min(
+													BaseCoolingW_Mechanical(env.Temperature, env.Solar), genInputs.ACSystem.CompressorCapacity) /
+												genInputs.ACSystem.COP;
 
-			return MechanicalWBaseCurrentResult * Weight;
+			return MechanicalWBaseCurrentResult * env.Weighting;
 		}
 
-		private KilogramPerSecond CalculateFuelLPerHBase(ISSMInputs genInputs, Kelvin EnviromentalTemperature, WattPerSquareMeter Solar, double Weight)
+		private KilogramPerSecond CalculateFuelLPerHBase(ISSMInputs genInputs, IEnvironmentalConditionsMapEntry env)
 		{
-
 			// =(MIN(ABS(J93/1000),C71)/C37)*(1/(C39*C38))
-
-			genInputs.EnvironmentalConditions.EnviromentalTemperature = EnviromentalTemperature;
-			genInputs.EnvironmentalConditions.Solar = Solar;
 
 			// Dim J93 = BaseHeatingW_FuelFiredHeating
 			// Dim C71 = genInputs.AH_FuelFiredHeaterkW
@@ -658,63 +683,56 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			// Dim C39 = ssmTOOL.HVACConstants.FuelDensity
 			// Dim C38 = genInputs.BC_GCVDieselOrHeatingOil
 
-			var FuelLPerHBaseCurrentResult =
-				VectoMath.Min(VectoMath.Abs(BaseHeatingW_FuelFiredHeating).Value().SI<Watt>(), genInputs.AuxHeater.FuelFiredHeaterkW) /
-				genInputs.BoundaryConditions.AuxHeaterEfficiency / (genInputs.BoundaryConditions.GCVDieselOrHeatingOil /* * ssmTOOL.HVACConstants.FuelDensity */);
+			var fuelLPerHBaseCurrentResult =
+				VectoMath.Min(
+					VectoMath.Abs(BaseHeatingW_FuelFiredHeating(env.Temperature, env.Solar)).Value().SI<Watt>(), genInputs.AuxHeater.FuelFiredHeaterPower) /
+				genInputs.BoundaryConditions.AuxHeaterEfficiency /
+				(genInputs.BoundaryConditions.GCVDieselOrHeatingOil /* * ssmTOOL.HVACConstants.FuelDensity */);
 
-			return FuelLPerHBaseCurrentResult * Weight;
+			return fuelLPerHBaseCurrentResult * env.Weighting;
 		}
 
-		private Watt CalculateElectricalWAdjusted(ISSMInputs genInputs, ISSMTechList tecList, Kelvin EnviromentalTemperature, WattPerSquareMeter Solar, double Weight)
+		private Watt CalculateElectricalWAdjusted(
+			ISSMInputs genInputs, ISSMTechList tecList, IEnvironmentalConditionsMapEntry env)
 		{
-
 			// =(MIN((H94*(1-H100)),C54*1000)/C59)+(I93*(1-I99))+(I94*(1-I100))+(I95*(1-I101))
 
-			genInputs.EnvironmentalConditions.EnviromentalTemperature = EnviromentalTemperature;
-			genInputs.EnvironmentalConditions.Solar = Solar;
-
-			var H94 = BaseCoolingW_ElectricalCoolingHeating;
+			var H94 = BaseCoolingW_ElectricalCoolingHeating(env.Temperature, env.Solar);
 			var H100 = TechListAdjustedCoolingW_ElectricalCoolingHeating;
 			var C54 = genInputs.ACSystem.CompressorCapacity;
 			var C59 = genInputs.ACSystem.COP;
 
-			var I93 = BaseHeatingW_ElectricalVentilation;
-			var I94 = BaseCoolingW_ElectricalVentilation;
-			var I95 = BaseVentilationW_ElectricalVentilation;
+			var I93 = BaseHeatingW_ElectricalVentilation(env.Temperature, env.Solar);
+			var I94 = BaseCoolingW_ElectricalVentilation(env.Temperature, env.Solar);
+			var I95 = BaseVentilationW_ElectricalVentilation(env.Temperature, env.Solar);
 			var I99 = TechListAdjustedHeatingW_ElectricalVentilation;
 			var I100 = TechListAdjustedCoolingW_ElectricalVentilation;
 			var I101 = TechListAdjustedVentilationW_ElectricalVentilation;
 
-			var ElectricalWAdjusted = (VectoMath.Min((H94 * (1 - H100)), C54) / C59) + (I93 * (1 - I99)) + (I94 * (1 - I100)) + (I95 * (1 - I101));
+			var ElectricalWAdjusted = (VectoMath.Min((H94 * (1 - H100)), C54) / C59) + (I93 * (1 - I99)) + (I94 * (1 - I100)) +
+									(I95 * (1 - I101));
 
-			return ElectricalWAdjusted * Weight;
+			return ElectricalWAdjusted * env.Weighting;
 		}
 
-		private Watt CalculateMechanicalWBaseAdjusted(ISSMInputs genInputs, ISSMTechList tecList, Kelvin EnviromentalTemperature, WattPerSquareMeter Solar, double Weight)
+		private Watt CalculateMechanicalWBaseAdjusted(ISSMInputs genInputs, ISSMTechList tecList, IEnvironmentalConditionsMapEntry env)
 		{
-
 			// =(MIN((F94*(1-F100)),C54*1000)/C59)
 
-			genInputs.EnvironmentalConditions.EnviromentalTemperature = EnviromentalTemperature;
-			genInputs.EnvironmentalConditions.Solar = Solar;
-
-			var F94 = BaseCoolingW_Mechanical;
+			var F94 = BaseCoolingW_Mechanical(env.Temperature, env.Solar);
 			var F100 = TechListAdjustedCoolingW_Mechanical;
 			var C54 = genInputs.ACSystem.CompressorCapacity;
 			var C59 = genInputs.ACSystem.COP;
 
 			var MechanicalWBaseAdjusted = (VectoMath.Min((F94 * (1 - F100)), C54) / C59);
 
-			return MechanicalWBaseAdjusted * Weight;
+			return MechanicalWBaseAdjusted * env.Weighting;
 		}
 
-		private KilogramPerSecond CalculateFuelLPerHBaseAdjusted(ISSMInputs genInputs, ISSMTechList tecList, Kelvin EnviromentalTemperature, WattPerSquareMeter Solar, double Weight)
+		private KilogramPerSecond CalculateFuelLPerHBaseAdjusted(
+			ISSMInputs genInputs, ISSMTechList tecList, IEnvironmentalConditionsMapEntry env)
 		{
-
 			// =MIN(ABS(IF(AND(M89<0,M90<0),VLOOKUP(MAX(M89:M90),M89:P90,4),0)/1000),C71)/C37*(1/(C39*C38))
-
-			genInputs.EnvironmentalConditions.EnviromentalTemperature = EnviromentalTemperature;
-			genInputs.EnvironmentalConditions.Solar = Solar;
 
 			// Dim M89 = Run1.TotalW
 			// Dim M90 = genInputs.BC_GCVDieselOrHeatingOil
@@ -723,17 +741,25 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			// Dim C38 = genInputs.BC_GCVDieselOrHeatingOil
 			// Dim C39 = ssmTOOL.HVACConstants.FuelDensity
 
+
+			var run1TotalW = Run1.TotalW(env.Temperature, env.Solar);
+			var run2TotalW = Run2.TotalW(env.Temperature, env.Solar);
+
 			var result = 0.SI<Watt>();
 
-			if (Run1.TotalW < 0 && Run2.TotalW < 0) {
-				result = VectoMath.Abs(Run1.TotalW > Run2.TotalW ? Run1.TechListAmendedFuelW : Run2.TechListAmendedFuelW).Value().SI<Watt>();
+			if (run1TotalW < 0 && run2TotalW < 0) {
+				result = VectoMath
+					.Abs(
+						run1TotalW > run2TotalW
+							? Run1.TechListAmendedFuelW(env.Temperature, env.Solar)
+							: Run2.TechListAmendedFuelW(env.Temperature, env.Solar)).Value().SI<Watt>();
 			}
 
-			var FuelLPerHBaseAdjusted = VectoMath.Min(result, genInputs.AuxHeater.FuelFiredHeaterkW) /
+			var fuelLPerHBaseAdjusted = VectoMath.Min(result, genInputs.AuxHeater.FuelFiredHeaterPower) /
 										genInputs.BoundaryConditions.AuxHeaterEfficiency /
 										(genInputs.BoundaryConditions.GCVDieselOrHeatingOil /* * ssmTOOL.HVACConstants.FuelDensity*/);
 
-			return FuelLPerHBaseAdjusted * Weight;
+			return fuelLPerHBaseAdjusted * env.Weighting;
 		}
 	}
 }

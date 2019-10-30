@@ -12,25 +12,34 @@
 namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public interface IAuxiliaryConfig
 	{
-		// Vecto
-		IVectoInputs VectoInputs { get; set; }
-
 		// Electrical
-		IElectricsUserInputsConfig ElectricalUserInputsConfig { get; set; }
+		IElectricsUserInputsConfig ElectricalUserInputsConfig { get;  }
 
 
 		// Pneumatics
-		IPneumaticUserInputsConfig PneumaticUserInputsConfig { get; set; }
-		IPneumaticsAuxilliariesConfig PneumaticAuxillariesConfig { get; set; }
+		IPneumaticUserInputsConfig PneumaticUserInputsConfig { get;  }
+		IPneumaticsAuxilliariesConfig PneumaticAuxillariesConfig { get;  }
+
+		ISSMInputs SSMInputs { get; }
+
+		IPneumaticActuationsMap ActuationsMap { get; }
 
 		// Hvac
-		IHVACUserInputsConfig HvacUserInputsConfig { get; set; }
+		IHVACUserInputsConfig HvacUserInputsConfig { get;  }
 
 		bool ConfigValuesAreTheSameAs(IAuxiliaryConfig other);
 
 
+		string Cycle { get; }
+
+		IVehicleData VehicleData { get; }
+
+		IFuelConsumptionMap FuelMap { get; }
+
+		ISignals Signals { get; }
+
 		// Persistance Functions
-		bool Save(string filePath);
-		bool Load(string filePath);
-	}
+			//bool Save(string filePath);
+			//bool Load(string filePath);
+		}
 }

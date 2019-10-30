@@ -19,41 +19,41 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 
 		// BaseValues
 		// - Heating
-		Watt BaseHeatingW_Mechanical { get; }
-		Watt BaseHeatingW_ElectricalCoolingHeating { get; }
-		Watt BaseHeatingW_ElectricalVentilation { get; }
-		Watt BaseHeatingW_FuelFiredHeating { get; }
+		//Watt BaseHeatingW_Mechanical { get; }
+		//Watt BaseHeatingW_ElectricalCoolingHeating { get; }
+		//Watt BaseHeatingW_ElectricalVentilation { get; }
+		//Watt BaseHeatingW_FuelFiredHeating { get; }
 
 		// Cooling                                                    
-		Watt BaseCoolingW_Mechanical { get; }
-		Watt BaseCoolingW_ElectricalCoolingHeating { get; }
-		Watt BaseCoolingW_ElectricalVentilation { get; }
-		Watt BaseCoolingW_FuelFiredHeating { get; }
+		//Watt BaseCoolingW_Mechanical { get; }
+		//Watt BaseCoolingW_ElectricalCoolingHeating { get; }
+		//Watt BaseCoolingW_ElectricalVentilation { get; }
+		//Watt BaseCoolingW_FuelFiredHeating { get; }
 
 		// Cooling
-		Watt BaseVentilationW_Mechanical { get; }
-		Watt BaseVentilationW_ElectricalCoolingHeating { get; }
-		Watt BaseVentilationW_ElectricalVentilation { get; }
-		Watt BaseVentilationW_FuelFiredHeating { get; }
+		//Watt BaseVentilationW_Mechanical { get; }
+		//Watt BaseVentilationW_ElectricalCoolingHeating { get; }
+		//Watt BaseVentilationW_ElectricalVentilation { get; }
+		//Watt BaseVentilationW_FuelFiredHeating { get; }
 
 
 		// TechListBenefits
 		// - Heating
-		double TechListAdjustedHeatingW_Mechanical { get; }
-		double TechListAdjustedHeatingW_ElectricalCoolingHeating { get; }
-		double TechListAdjustedHeatingW_ElectricalVentilation { get; }
+		//double TechListAdjustedHeatingW_Mechanical { get; }
+		//double TechListAdjustedHeatingW_ElectricalCoolingHeating { get; }
+		//double TechListAdjustedHeatingW_ElectricalVentilation { get; }
 		double TechListAdjustedHeatingW_FuelFiredHeating { get; }
 
 		// Cooling          TechListAdjusted                                      
-		double TechListAdjustedCoolingW_Mechanical { get; }
-		double TechListAdjustedCoolingW_ElectricalCoolingHeating { get; }
-		double TechListAdjustedCoolingW_ElectricalVentilation { get; }
-		double TechListAdjustedCoolingW_FuelFiredHeating { get; }
+		//double TechListAdjustedCoolingW_Mechanical { get; }
+		//double TechListAdjustedCoolingW_ElectricalCoolingHeating { get; }
+		//double TechListAdjustedCoolingW_ElectricalVentilation { get; }
+		//double TechListAdjustedCoolingW_FuelFiredHeating { get; }
 
 		// Cooling          TechListAdjusted
-		double TechListAdjustedVentilationW_Mechanical { get; }
-		double TechListAdjustedVentilationW_ElectricalCoolingHeating { get; }
-		double TechListAdjustedVentilationW_ElectricalVentilation { get; }
-		double TechListAdjustedVentilationW_FuelFiredHeating { get; }
+		//double TechListAdjustedVentilationW_Mechanical { get; }
+		//double TechListAdjustedVentilationW_ElectricalCoolingHeating { get; }
+		//double TechListAdjustedVentilationW_ElectricalVentilation { get; }
+		//double TechListAdjustedVentilationW_FuelFiredHeating { get; }
 	}
 }

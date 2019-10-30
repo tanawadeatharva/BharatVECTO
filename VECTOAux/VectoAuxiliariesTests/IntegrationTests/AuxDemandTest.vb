@@ -1,6 +1,8 @@
 ﻿Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Legacy
@@ -26,21 +28,23 @@ Namespace IntegrationTests
 
             Dim aux As AdvancedAuxiliaries = New AdvancedAuxiliaries
 
-            aux.VectoInputs.Cycle = "Coach"
-            aux.VectoInputs.VehicleWeightKG = vehicleWeight.SI(Of Kilogram)()
-            aux.VectoInputs.FuelDensity = 832.SI(Of KilogramPerCubicMeter)()
+            'aux.VectoInputs.Cycle = "Coach"
+            'aux.VectoInputs.VehicleWeightKG = vehicleWeight.SI(Of Kilogram)()
+            'aux.VectoInputs.FuelDensity = 832.SI(Of KilogramPerCubicMeter)()
             Dim fuelMap As cMAP = New cMAP()
             fuelMap.FilePath = engineFCMapFilePath
             fuelMap.ReadFile(False)
             fuelMap.Triangulate()
 
-            aux.VectoInputs.FuelMap = fuelMap
+            'aux.VectoInputs.FuelMap = fuelMap
 
 
-            aux.Signals.TotalCycleTimeSeconds = 15000
+            'aux.Signals.TotalCycleTimeSeconds = 15000
             aux.Signals.EngineIdleSpeed = 560.RPMtoRad()
 
-            aux.Initialise(Path.GetFileName(auxFilePath), Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
+            dim auxConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, Utils.GetDefaultVehicleData(vehicleWeight.SI(Of Kilogram)))
+            CType(auxConfig, AuxiliaryConfig).Cycle = "Coach"
+            aux.Initialise(auxConfig) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 
             aux.Signals.ClutchEngaged = True
             aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()  'kW
@@ -51,7 +55,7 @@ Namespace IntegrationTests
             aux.Signals.PreExistingAuxPower = (6.1 * 1000).SI(Of Watt)()
             aux.Signals.Idle = False
             aux.Signals.InNeutral = False
-            aux.Signals.RunningCalc = True
+            'aux.Signals.RunningCalc = True
             aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()        'kW
 
             Dim power As Watt = aux.AuxiliaryPowerAtCrankWatts()
@@ -72,21 +76,25 @@ Namespace IntegrationTests
 
             Dim aux As IAdvancedAuxiliaries = New AdvancedAuxiliaries
 
-            aux.VectoInputs.Cycle = "Coach"
-            aux.VectoInputs.VehicleWeightKG = 12000.SI(Of Kilogram)()
-            aux.VectoInputs.FuelDensity = 832.SI(Of KilogramPerCubicMeter)()
+            'aux.VectoInputs.Cycle = "Coach"
+            'aux.VectoInputs.VehicleWeightKG = 12000.SI(Of Kilogram)()
+            'aux.VectoInputs.FuelDensity = 832.SI(Of KilogramPerCubicMeter)()
             Dim fuelMap As cMAP = New cMAP()
             fuelMap.FilePath = engineFCMapFilePath
             fuelMap.ReadFile(False)
             fuelMap.Triangulate()
 
-            aux.VectoInputs.FuelMap = fuelMap
+            'aux.VectoInputs.FuelMap = fuelMap
 
 
-            aux.Signals.TotalCycleTimeSeconds = 15000
+            'aux.Signals.TotalCycleTimeSeconds = 15000
             aux.Signals.EngineIdleSpeed = 560.RPMtoRad()
 
-            CType(aux, AdvancedAuxiliaries).Initialise(Path.GetFileName(auxFilePath), Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
+            Dim auxCfg = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, Utils.GetDefaultVehicleData(12000.SI(Of Kilogram)()))
+            CType(auxCfg, AuxiliaryConfig).Cycle = "Coach"
+            CType(auxCfg, AuxiliaryConfig).FuelMap = fuelMap
+
+            CType(aux, AdvancedAuxiliaries).Initialise(auxCfg) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 
             aux.Signals.ClutchEngaged = True
             aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)() 'kW
@@ -97,7 +105,7 @@ Namespace IntegrationTests
             aux.Signals.PreExistingAuxPower = 0.SI(Of Watt)()
             aux.Signals.Idle = False
             aux.Signals.InNeutral = False
-            aux.Signals.RunningCalc = True
+            'aux.Signals.RunningCalc = True
             aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()       'kW
 
             Dim msg As String = String.Empty

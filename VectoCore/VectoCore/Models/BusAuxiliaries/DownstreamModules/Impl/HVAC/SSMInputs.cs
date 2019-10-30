@@ -1,5 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -10,80 +15,63 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 	public class SSMInputs : ISSMInputs, ISSMBoundaryConditions, IEnvironmentalConditions, IACSystem, IVentilation,
 		IAuxHeater, ISSMBusParameters
 	{
-		private string _EC_EnviromentalConditions_BatchFile;
-		private IEnvironmentalConditionsMap _EC_EnvironmentalConditionsMap;
+		private ITechlistBenefitLines _technologies;
 
-		protected internal VehicleData _vehicle;
+		private FuelData.Entry HeatingFuel;
 
-		private string _vectoDir;
-
-
-		//public IssmInputs(bool initialiseDefaults = false, string vectoDir = "")
-		//{
-		//	_vectoDir = vectoDir;
-		//	BP_BusModel = "";
-		//	BP_BusFloorType = "";
-		//	EC_EnviromentalConditions_BatchFile = "";
-		//	AC_CompressorType = "";
-		//	VEN_VentilationDuringCooling = "";
-		//	VEN_VentilationDuringHeating = "";
-		//	VEN_VentilationFlowSettingWhenHeatingAndACInactive = "";
-		//	if (initialiseDefaults)
-		//		SetDefaults();
-		//}
-
-		public SSMInputs(string vectoDir = "")
+		public SSMInputs(IVehicleData vehicle, string source, FuelData.Entry? heatingFuel = null)
 		{
-			_vectoDir = vectoDir;
-			SetDefaults();
+			Vehicle = vehicle;
+			Source = source;
+			HeatingFuel = heatingFuel ?? FuelData.Diesel;
 		}
 
-		public SSMInputs(VehicleData vehicle)
-		{
-			_vehicle = vehicle;
-		}
+		public string Source { get; }
 
+		public IVehicleData Vehicle { get; }
+
+		public bool SSMDisabled { get; set; }
 
 		// C4/D4
 		public string BusModel
 		{
-			get { return _vehicle.ModelName; }
+			get { return Vehicle.ModelName; }
 		}
 
 		// C5/D5
 		public double NumberOfPassengers
 		{
-			get { return _vehicle.PassengerCount; }
+			get { return Vehicle.PassengerCount; }
 		}
 
 		// C6/D6
 		public FloorType BusFloorType
 		{
-			get { return _vehicle.FloorType; }
+			get { return Vehicle.FloorType; }
 		}
 
 		// C10/D10
 		public bool DoubleDecker
 		{
-			get { return _vehicle.DoubleDecker; }
+			get { return Vehicle.DoubleDecker; }
 		}
 
 		// D12/C12 - ( M )
 		public Meter BusLength
 		{
-			get { return _vehicle.Length; }
+			get { return Vehicle.Length; }
 		}
 
 		// D13/C13 - ( M )
 		public Meter BusWidth
 		{
-			get { return _vehicle.Width; }
+			get { return Vehicle.Width; }
 		}
 
 		// D14/C14 - ( M )
 		public Meter BusHeight
 		{
-			get { return _vehicle.Height; }
+			get { return Vehicle.Height; }
 		}
 
 
@@ -132,26 +120,30 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		// C17
 		public double GFactor { get; set; }
 
+		//PassengerBoundaryTemperature = 17
+
 		// C18            
-		public double SolarClouding
+		public double SolarClouding(Kelvin enviromentalTemperature)
 		{
-			get {
+			
 				// =IF(C46<17,0.65,0.8)
-				return EnviromentalTemperature < 17 ? 0.65 : 0.8;
-			}
+				return  enviromentalTemperature < Constants.BusAuxiliaries.SteadyStateModel.PassengerBoundaryTemperature
+					? Constants.BusAuxiliaries.SteadyStateModel.SolarCloudingLow
+					: Constants.BusAuxiliaries.SteadyStateModel.SolarCloudingHigh;
+			
 		}
 
 		// C19 - ( W )
-		public Watt HeatPerPassengerIntoCabin
+		public Watt HeatPerPassengerIntoCabin(Kelvin enviromentalTemperature)
 		{
-			get {
 				// =IF(C46<17,50,80)
-				return (EnviromentalTemperature < 17 ? 50 : 80).SI<Watt>();
-			}
+				return enviromentalTemperature < Constants.BusAuxiliaries.SteadyStateModel.PassengerBoundaryTemperature
+					? Constants.BusAuxiliaries.SteadyStateModel.HeatPerPassengerIntoCabinLow
+					: Constants.BusAuxiliaries.SteadyStateModel.HeatPerPassengerIntoCabinHigh;	
 		}
 
 		// C20 - ( oC )
-		public Kelvin PassengerBoundaryTemperature { get; set; }
+		//public Kelvin PassengerBoundaryTemperature { get; set; }
 
 		// C21 - ( Passenger/Metre Squared )
 		public PerSquareMeter PassengerDensityLowFloor
@@ -265,7 +257,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public double AuxHeaterEfficiency { get; set; }
 
 		// C38 - ( KW/HKG )
-		public JoulePerKilogramm GCVDieselOrHeatingOil { get; set; }
+		public JoulePerKilogramm GCVDieselOrHeatingOil { get { return HeatingFuel.LowerHeatingValueVecto; } }
 
 		// C40 - ( M2/M )
 		public SquareMeterPerMeter WindowAreaPerUnitBusLength
@@ -286,34 +278,30 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		// C42 - ( K )
-		public Kelvin MaxTemperatureDeltaForLowFloorBusses { get; set; }
+		public Kelvin MaxTemperatureDeltaForLowFloorBusses
+		{
+			get { return Constants.BusAuxiliaries.SteadyStateModel.MaxTemperatureDeltaForLowFloorBusses; }
+		}
 
 		// C43 - ( Fraction )
 		public double MaxPossibleBenefitFromTechnologyList { get; set; }
 
 
 		// C46 - ( oC )
-		public Kelvin EnviromentalTemperature { get; set; }
+		//public Kelvin EnviromentalTemperature { get; set; }
 
 		// C47 - ( W/M3 )
-		public WattPerSquareMeter Solar { get; set; }
+		//public WattPerSquareMeter Solar { get; set; }
+
+		public IEnvironmentalConditionsMapEntry DefaultConditions { get; set; }
 
 		// ( EC_EnviromentalTemperature and  EC_Solar) (Batch Mode)
-		public IEnvironmentalConditionsMap EnvironmentalConditionsMap
-		{
-			get { return _EC_EnvironmentalConditionsMap; }
-		}
+		public IEnvironmentalConditionsMap EnvironmentalConditionsMap { get; set; }
 
-		public string EnviromentalConditions_BatchFile
+		public bool BatchMode
 		{
-			get { return _EC_EnviromentalConditions_BatchFile; }
-			set {
-				_EC_EnvironmentalConditionsMap = new EnvironmentalConditionsMap(value, _vectoDir);
-				_EC_EnviromentalConditions_BatchFile = value;
-			}
+			get { return EnvironmentalConditionsMap != null && EnvironmentalConditionsMap.GetEnvironmentalConditions().Any(); }
 		}
-
-		public bool EnviromentalConditions_BatchEnabled { get; set; }
 
 
 		// C53 - "Continous/2-stage/3-stage/4-stage
@@ -359,115 +347,121 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public bool VentilationDuringAC { get; set; }
 
 		// C65 - String high/low
-		public string VentilationFlowSettingWhenHeatingAndACInactive { get; set; }
+		public VentilationLevel VentilationFlowSettingWhenHeatingAndACInactive { get; set; }
 
 		// C66 - String high/low
-		public string VentilationDuringHeating { get; set; }
+		public VentilationLevel VentilationDuringHeating { get; set; }
 
 		// C67 - String high/low                                               
-		public string VentilationDuringCooling { get; set; }
+		public VentilationLevel VentilationDuringCooling { get; set; }
 
 
 		// C70 - ( KW )
-		public Watt EngineWasteHeatkW { get; set; }
+		//public Watt EngineWasteHeatkW { get; set; }
 
 		// C71 - ( KW )
-		public Watt FuelFiredHeaterkW { get; set; }
+		public Watt FuelFiredHeaterPower { get; set; }
 
 		public double FuelEnergyToHeatToCoolant { get; set; }
 
 		public double CoolantHeatTransferredToAirCabinHeater { get; set; }
 
 
-		private void SetDefaults()
-		{
-			// BUS Parameterisation
-			// ********************
-			_vehicle = new VehicleData() {
-				ModelName = "DummyBus",
-				PassengerCount = 47.0,
-				FloorType = FloorType.HighFloor, // "raised floor",
-				DoubleDecker = false,
-				Length = 10.655.SI<Meter>(),
-				Width = 2.55.SI<Meter>(),
-				Height = 2.275.SI<Meter>(),
-			};
+		//private void SetDefaults()
+		//{
+		//	// BUS Parameterisation
+		//	// ********************
+		//	Vehicle = new VehicleData() {
+		//		ModelName = "DummyBus",
+		//		PassengerCount = 47.0,
+		//		FloorType = FloorType.HighFloor, // "raised floor",
+		//		DoubleDecker = false,
+		//		Length = 10.655.SI<Meter>(),
+		//		Width = 2.55.SI<Meter>(),
+		//		Height = 2.275.SI<Meter>(),
+		//	};
 
-			// BP_BusFloorSurfaceArea  : Calculated
-			// BP_BusSurfaceArea : Calculated
-			// BP_BusWindowSurface    : Calculated
-			// BP_BusVolume : Calculated
+		//	// BP_BusFloorSurfaceArea  : Calculated
+		//	// BP_BusSurfaceArea : Calculated
+		//	// BP_BusWindowSurface    : Calculated
+		//	// BP_BusVolume : Calculated
 
-			// BOUNDRY CONDITIONS
-			// ******************
+		//	// BOUNDRY CONDITIONS
+		//	// ******************
 
-			GFactor = 0.95D;
+		//	GFactor = 0.95D;
 
-			// BC_SolarClouding As Double :Calculated
-			// BC_HeatPerPassengerIntoCabinW  :Calculated
-			PassengerBoundaryTemperature = 12.0.DegCelsiusToKelvin();
+		//	// BC_SolarClouding As Double :Calculated
+		//	// BC_HeatPerPassengerIntoCabinW  :Calculated
+		//	//PassengerBoundaryTemperature = 12.0.DegCelsiusToKelvin();
 
-			// BC_PassengerDensityLowFloor :Calculated
-			// BC_PassengerDensitySemiLowFloor :Calculated
-			// BC_PassengerDensityRaisedFloor :Calculated
-			// BC_CalculatedPassengerNumber  :Calculated
-			// BC_UValues :Calculated
-			HeatingBoundaryTemperature = 18.0.DegCelsiusToKelvin();
-			CoolingBoundaryTemperature = 23.0.DegCelsiusToKelvin();
+		//	// BC_PassengerDensityLowFloor :Calculated
+		//	// BC_PassengerDensitySemiLowFloor :Calculated
+		//	// BC_PassengerDensityRaisedFloor :Calculated
+		//	// BC_CalculatedPassengerNumber  :Calculated
+		//	// BC_UValues :Calculated
+		//	HeatingBoundaryTemperature = 18.0.DegCelsiusToKelvin();
+		//	CoolingBoundaryTemperature = 23.0.DegCelsiusToKelvin();
 
-			// BC_CoolingBoundaryTemperature : ReadOnly Static
-			HighVentilation = 20.0.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
-			LowVentilation = 7.0.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
+		//	// BC_CoolingBoundaryTemperature : ReadOnly Static
+		//	HighVentilation = 20.0.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
+		//	LowVentilation = 7.0.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
 
-			// BC_High  :Calculated
-			// BC_Low  :Calculated
-			// BC_HighVentPower  :Calculated
-			// BC_LowVentPower  :Calculated
-			SpecificVentilationPower = 0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast<JoulePerCubicMeter>();
+		//	// BC_High  :Calculated
+		//	// BC_Low  :Calculated
+		//	// BC_HighVentPower  :Calculated
+		//	// BC_LowVentPower  :Calculated
+		//	SpecificVentilationPower = 0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast<JoulePerCubicMeter>();
 
-			// BC_COP :Calculated
-			AuxHeaterEfficiency = 0.84D;
-			GCVDieselOrHeatingOil = 11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.Kilo.Gramm).Cast<JoulePerKilogramm>();
+		//	// BC_COP :Calculated
+		//	AuxHeaterEfficiency = 0.84D;
+		//	//GCVDieselOrHeatingOil = 11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.Kilo.Gramm).Cast<JoulePerKilogramm>();
 
-			// BC_WindowAreaPerUnitBusLength   :Calculated 
-			// BC_FrontRearWindowArea  :Calculated
-			MaxTemperatureDeltaForLowFloorBusses = 3.0.SI<Kelvin>();
-			MaxPossibleBenefitFromTechnologyList = 0.5D;
+		//	// BC_WindowAreaPerUnitBusLength   :Calculated 
+		//	// BC_FrontRearWindowArea  :Calculated
+		//	//MaxTemperatureDeltaForLowFloorBusses = 3.0.SI<Kelvin>();
+		//	//MaxPossibleBenefitFromTechnologyList = 0.5D;
 
-			// Environmental Conditions
-			// ************************
-			EnviromentalTemperature = 25.0.DegCelsiusToKelvin();
-			Solar = 400.0.SI<WattPerSquareMeter>();
-			EnviromentalConditions_BatchEnabled = true;
-			EnviromentalConditions_BatchFile = "DefaultClimatic.aenv";
+		//	// Environmental Conditions
+		//	// ************************
+		//	//EnviromentalTemperature = 25.0.DegCelsiusToKelvin();
+		//	//Solar = 400.0.SI<WattPerSquareMeter>();
+		//	//EnviromentalConditions_BatchEnabled = true;
+		//	//EnviromentalConditions_BatchFile = "DefaultClimatic.aenv";
 
-			// AC SYSTEM
-			// *********
-			CompressorType = "2-stage";
-			CompressorCapacity = 18.0.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+		//	// AC SYSTEM
+		//	// *********
+		//	CompressorType = "2-stage";
+		//	CompressorCapacity = 18.0.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 
-			// VENTILATION
-			// ***********
-			VentilationOnDuringHeating = true;
-			VentilationWhenBothHeatingAndACInactive = true;
-			VentilationDuringAC = true;
-			VentilationFlowSettingWhenHeatingAndACInactive = "high";
-			VentilationDuringHeating = "high";
-			VentilationDuringCooling = "high";
+		//	// VENTILATION
+		//	// ***********
+		//	VentilationOnDuringHeating = true;
+		//	VentilationWhenBothHeatingAndACInactive = true;
+		//	VentilationDuringAC = true;
+		//	VentilationFlowSettingWhenHeatingAndACInactive = VentilationLevel.High; //"high";
+		//	VentilationDuringHeating = VentilationLevel.High; //"high";
+		//	VentilationDuringCooling = VentilationLevel.High; //"high";
 
-			// AUX HEATER
-			// **********
-			FuelFiredHeaterkW = 30.0.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-			FuelEnergyToHeatToCoolant = 0.2;
-			CoolantHeatTransferredToAirCabinHeater = 0.75;
-			EngineWasteHeatkW = 0.SI<Watt>();
-		}
+		//	// AUX HEATER
+		//	// **********
+		//	FuelFiredHeaterPower = 30.0.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
+		//	FuelEnergyToHeatToCoolant = 0.2;
+		//	CoolantHeatTransferredToAirCabinHeater = 0.75;
+		//	//EngineWasteHeatkW = 0.SI<Watt>();
+		//}
 
 		#region Implementation of ISSMInputs
 
 		public ISSMBusParameters BusParameters
 		{
 			get { return this; }
+		}
+
+		public ITechlistBenefitLines Technologies
+		{
+			get { return _technologies; }
+			set { _technologies = value; }
 		}
 
 		public ISSMBoundaryConditions BoundaryConditions

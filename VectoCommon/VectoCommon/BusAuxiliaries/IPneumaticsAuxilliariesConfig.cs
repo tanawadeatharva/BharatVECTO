@@ -1,17 +1,20 @@
-﻿namespace TUGraz.VectoCommon.BusAuxiliaries {
+﻿using TUGraz.VectoCommon.Utils;
+
+namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public interface IPneumaticsAuxilliariesConfig
 	{
-		double OverrunUtilisationForCompressionFraction { get; set; }
-		double BrakingWithRetarderNIperKG { get; set; }
-		double BrakingNoRetarderNIperKG { get; set; }
-		double BreakingPerKneelingNIperKGinMM { get; set; }
-		double PerDoorOpeningNI { get; set; }
-		double PerStopBrakeActuationNIperKG { get; set; }
-		double AirControlledSuspensionNIperMinute { get; set; }
-		double AdBlueNIperMinute { get; set; }
-		double NonSmartRegenFractionTotalAirDemand { get; set; }
-		double SmartRegenFractionTotalAirDemand { get; set; }
-		double DeadVolumeLitres { get; set; }
-		double DeadVolBlowOutsPerLitresperHour { get; set; }
+		double OverrunUtilisationForCompressionFraction { get;  }
+		NormLiterPerKilogram BrakingWithRetarderNIperKG { get;  }
+		NormLiterPerKilogram BrakingNoRetarderNIperKG { get;  }
+		NormLiterPerKilogramMeter BreakingPerKneelingNIperKGinMM { get;  }
+		NormLiter PerDoorOpeningNI { get;  }
+		NormLiterPerKilogram PerStopBrakeActuationNIperKG { get;  }
+		NormLiterPerSecond AirControlledSuspensionNIperMinute { get;  }
+		NormLiterPerSecond AdBlueNIperMinute { get;  }
+		double NonSmartRegenFractionTotalAirDemand { get;  }
+		double SmartRegenFractionTotalAirDemand { get;  }
+		NormLiter DeadVolumeLitres { get;  }
+		// Nl / Nl / h => 1/h
+		PerSecond DeadVolBlowOutsPerLitresperHour { get;  }
 	}
 }

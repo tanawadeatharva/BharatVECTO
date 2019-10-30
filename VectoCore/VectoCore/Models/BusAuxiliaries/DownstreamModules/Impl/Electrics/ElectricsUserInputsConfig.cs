@@ -13,18 +13,19 @@ using System.Collections.Generic;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
 	public class ElectricsUserInputsConfig : IElectricsUserInputsConfig
 	{
 		public Volt PowerNetVoltage { get; set; }
-		public string AlternatorMap { get; set; }
+		public IAlternatorMap AlternatorMap { get; set; }
 		public double AlternatorGearEfficiency { get; set; }
 
 		public IElectricalConsumerList ElectricalConsumers { get; set; }
 
-		public double DoorActuationTimeSecond { get; set; }
+		public Second DoorActuationTimeSecond { get; set; }
 		public double StoredEnergyEfficiency { get; set; }
 
 		public IResultCard ResultCardIdle { get; set; }
@@ -33,23 +34,24 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public bool SmartElectrical { get; set; }
 
-		public ElectricsUserInputsConfig(bool setToDefaults = false, VectoInputs vectoInputs = null/* TODO Change to default(_) if this is not a reference type */)
-		{
-			if (setToDefaults)
-				SetPropertiesToDefaults(vectoInputs);
-		}
+		
+		//public ElectricsUserInputsConfig(bool setToDefaults = false, VectoInputs vectoInputs = null/* TODO Change to default(_) if this is not a reference type */)
+		//{
+		//	if (setToDefaults)
+		//		SetPropertiesToDefaults(vectoInputs);
+		//}
 
-		public void SetPropertiesToDefaults(VectoInputs vectoInputs)
-		{
-			DoorActuationTimeSecond = 4;
-			StoredEnergyEfficiency = 0.935;
-			AlternatorGearEfficiency = 0.92;
-			PowerNetVoltage = vectoInputs.PowerNetVoltage;
-			ResultCardIdle = new ResultCard(new List<SmartResult>());
-			ResultCardOverrun = new ResultCard(new List<SmartResult>());
-			ResultCardTraction = new ResultCard(new List<SmartResult>());
-			SmartElectrical = false;
-			AlternatorMap = string.Empty;
-		}
+		//public void SetPropertiesToDefaults()
+		//{
+		//	DoorActuationTimeSecond = 4.SI<Second>();
+		//	StoredEnergyEfficiency = 0.935;
+		//	AlternatorGearEfficiency = 0.92;
+		//	//PowerNetVoltage = vectoInputs.PowerNetVoltage;
+		//	ResultCardIdle = new ResultCard(new List<SmartResult>());
+		//	ResultCardOverrun = new ResultCard(new List<SmartResult>());
+		//	ResultCardTraction = new ResultCard(new List<SmartResult>());
+		//	SmartElectrical = false;
+		//	AlternatorMap = new List<ICombinedAlternatorMapRow>();
+		//}
 	}
 }

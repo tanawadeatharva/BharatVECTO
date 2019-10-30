@@ -1,6 +1,7 @@
 ﻿
 Imports NUnit.Framework
 Imports Moq
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
@@ -48,7 +49,7 @@ Namespace UnitTests
 			Signals.Setup(Function(x) x.SmartElectrics).Returns(IP5)
 			Signals.Setup(Function(x) x.WHTC).Returns(IP7)
 			Signals.Setup(Function(x) x.DeclarationMode).Returns(IP8)
-			Signals.Setup(Function(x) x.TotalCycleTimeSeconds).Returns(3114)
+			'Signals.Setup(Function(x) x.TotalCycleTimeSeconds).Returns(3114)
 			Signals.Setup(Function(x) x.CurrentCycleTimeInSeconds).Returns(3114)
 
 			'Act

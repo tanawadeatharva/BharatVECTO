@@ -5,10 +5,14 @@ Imports System.Drawing
 Imports System.Globalization
 Imports System.IO
 Imports System.Linq
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Util
+Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.OutputData.FileIO
 
 Public Class frmHVACTool
 	'Fields
@@ -96,20 +100,20 @@ Public Class frmHVACTool
 		Me.busDatabasePath = busDatabasePath
 		Me.ahsmFilePath = ahsmFilePath
 
-		ssmTOOL = New SSMTOOL(ahsmFilePath, New HVACConstants, False, useDefaults)
-		originalssmTOOL = New SSMTOOL(ahsmFilePath, New HVACConstants, False, useDefaults)
+		ssmTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFilePath, Nothing, DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions, DeclarationData.BusAuxiliaries.SSMTechnologyList)) ' , New HVACConstants, False, useDefaults)
+		originalssmTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFilePath, Nothing, DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions, DeclarationData.BusAuxiliaries.SSMTechnologyList))  ' ahsmFilePath, New HVACConstants, False, useDefaults)
 
-		If IO.File.Exists(ahsmFilePath) Then
-			If ssmTOOL.Load(ahsmFilePath) AndAlso originalssmTOOL.Load(ahsmFilePath) Then
-				Timer1.Enabled = True
-			Else
-				MessageBox.Show(
-					"The file format for the Steady State Model (.AHSM) was corrupted or is an alpha version. Please refer to the documentation or help to discover more.")
-				Timer1.Enabled = False
-			End If
-		Else
+		'If IO.File.Exists(ahsmFilePath) Then
+		'	If ssmTOOL.Load(ahsmFilePath) AndAlso originalssmTOOL.Load(ahsmFilePath) Then
+		'		Timer1.Enabled = True
+		'	Else
+		'		MessageBox.Show(
+		'			"The file format for the Steady State Model (.AHSM) was corrupted or is an alpha version. Please refer to the documentation or help to discover more.")
+		'		Timer1.Enabled = False
+		'	End If
+		'Else
 			Timer1.Enabled = True
-		End If
+		'End If
 
 		'setupBuses()
 		setupControls()
@@ -223,9 +227,9 @@ Public Class frmHVACTool
 		cboUnits.DataSource = {"Fraction"}
 		cboLineType.DataSource = {"Normal", "ActiveVentilation"}
 
-		txtEC_EnvironmentConditionsFilePath.Tag = ssmTOOL.SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile
-		txtEC_EnvironmentConditionsFilePath.Text = GetRelativePath(ssmTOOL.SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile,
-															Path.GetDirectoryName(vectoFile))
+		'txtEC_EnvironmentConditionsFilePath.Tag = ssmTOOL.SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile
+		'txtEC_EnvironmentConditionsFilePath.Text = GetRelativePath(ssmTOOL.SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile,
+		'													Path.GetDirectoryName(vectoFile))
 		txtEC_EnvironmentConditionsFilePath.ReadOnly = True
 		btnEnvironmentConditionsSource.Enabled = False
 		btnOpenAenv.Enabled = False
@@ -721,10 +725,10 @@ Public Class frmHVACTool
 						"Please enter a number ( Coolant Heat Transfered To Air CabinHeater )", result)
 
 		Try
-			Dim environmentalConditionsMap As IEnvironmentalConditionsMap =
-					New EnvironmentalConditionsMap(CType(txtEC_EnvironmentConditionsFilePath.Tag, String), Path.GetDirectoryName(vectoFile))
+			'Dim environmentalConditionsMap As IEnvironmentalConditionsMap =
+			'		New EnvironmentalConditionsMap(CType(txtEC_EnvironmentConditionsFilePath.Tag, String), Path.GetDirectoryName(vectoFile))
 			ErrorProvider1.SetError(txtEC_EnvironmentConditionsFilePath, String.Empty)
-			ssmTOOL.SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile = CType(txtEC_EnvironmentConditionsFilePath.Tag, String)
+			'ssmTOOL.SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile = CType(txtEC_EnvironmentConditionsFilePath.Tag, String)
 		Catch ex As Exception
 			ErrorProvider1.SetError(txtEC_EnvironmentConditionsFilePath,
 									"Error : The environment conditions file is invalid or cannot be found, please select a valid aenv file.")
@@ -975,7 +979,7 @@ Public Class frmHVACTool
 		'UserHitSave
 		If UserHitSave Then
 			DialogResult = Windows.Forms.DialogResult.Cancel
-			If Not ssmTOOL.Save(ahsmFilePath) Then
+			If Not BusAuxWriter.SaveSSMConfig(ssmTOOL.SSMInputs, ahsmFilePath) Then
 				MessageBox.Show("Unable to save file, aborting.")
 				e.Cancel = True
 			End If
@@ -998,7 +1002,7 @@ Public Class frmHVACTool
 				Case DialogResult.Yes
 					'save 
 
-					If Not ssmTOOL.Save(ahsmFilePath) Then
+					If Not BusAuxWriter.SaveSSMConfig(ssmTOOL.SSMInputs, ahsmFilePath) Then
 						e.Cancel = True
 					End If
 
@@ -1064,17 +1068,17 @@ Public Class frmHVACTool
 					Dim dr As DialogResult = MessageBox.Show(String.Format("Do you want to delete benefit '{0}' ?", benefit), "",
 															MessageBoxButtons.YesNo)
 					If dr = Windows.Forms.DialogResult.Yes Then
-						If ssmTOOL.TechList.Delete(New TechListBenefitLine With {.BenefitName = benefit, .Category = category}, feedback) _
-							Then
-							BindGrid()
-						End If
+						'If ssmTOOL.TechList.Delete(New TechListBenefitLine With {.BenefitName = benefit, .Category = category}, feedback) _
+						'	Then
+						'	BindGrid()
+						'End If
 					End If
 
 				Case "OnVehicle"
 					Dim onVehicle As Boolean = Not CType(gvTechBenefitLines.Rows(e.RowIndex).Cells(e.ColumnIndex).Value, Boolean)
 
-					Dim fi As ITechListBenefitLine = ssmTOOL.TechList.Find(category, benefit)
-					fi.OnVehicle = onVehicle
+					'Dim fi As ITechListBenefitLine = ssmTOOL.TechList.Find(category, benefit)
+					'fi.OnVehicle = onVehicle
 					' ssmTOOL.TechList.TechLines.First( Function(x)  x.BenefitName= benefit AndAlso x.Category=category).OnVehicle=onVehicle  
 					' BindGrid 
 					gvTechBenefitLines.Refresh()
@@ -1104,9 +1108,9 @@ Public Class frmHVACTool
 
 		If txtIndex.Text.Trim.Length = 0 Then
 			'This is an Add
-			If Not ssmTOOL.TechList.Add(GetTechLineFromPanel(), feedback) Then
-				MessageBox.Show(feedback)
-			Else
+			'If Not ssmTOOL.TechList.Add(GetTechLineFromPanel(), feedback) Then
+			'	MessageBox.Show(feedback)
+			'Else
 
 
 				BindGrid()
@@ -1126,18 +1130,18 @@ Public Class frmHVACTool
 
 				UpdateButtonText()
 
-			End If
+			'End If
 
 		Else
 			'This is an update
-			If Not ssmTOOL.TechList.Modify(editTechLine, GetTechLineFromPanel(), feedback) Then
-				MessageBox.Show(feedback)
-			Else
-				gvTechBenefitLines.Refresh()
-				ClearEditPanel()
-				UpdateButtonText()
+			'If Not ssmTOOL.TechList.Modify(editTechLine, GetTechLineFromPanel(), feedback) Then
+			'	MessageBox.Show(feedback)
+			'Else
+			'	gvTechBenefitLines.Refresh()
+			'	ClearEditPanel()
+			'	UpdateButtonText()
 
-			End If
+			'End If
 
 		End If
 	End Sub

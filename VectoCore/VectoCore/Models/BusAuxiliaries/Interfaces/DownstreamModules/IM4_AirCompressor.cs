@@ -32,13 +32,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		/// 	<remarks></remarks>
 		double PulleyGearEfficiency { get; set; }
 
-		/// <summary>
-		/// 	Initialises the AirCompressor Class
-		/// 	</summary>
-		/// 	<returns></returns>
-		/// 	<remarks></remarks>
-		bool Initialise();
-
+		
 		/// <summary>
 		/// 	Returns the flow rate [litres/second] of compressor for the given engine rpm
 		/// 	</summary>
@@ -72,6 +66,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		/// 	</summary>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		SI GetAveragePowerDemandPerCompressorUnitFlowRate();
+		JoulePerNormLiter GetAveragePowerDemandPerCompressorUnitFlowRate();
 	}
 }

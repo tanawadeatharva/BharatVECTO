@@ -49,8 +49,8 @@ Namespace UnitTests
 			sgnlsMock.Setup(Function(x) x.EngineSpeed).Returns(IP6.RPMtoRad())
 			sgnlsMock.Setup(Function(x) x.PreExistingAuxPower).Returns(0.SI(Of Watt))
 			m4Mock.Setup(Function(x) x.GetFlowRate).Returns(IP7.SI(Of NormLiterPerSecond))
-			m6Mock.Setup(Function(x) x.OverrunFlag).Returns(IP8)
-			m8Mock.Setup(Function(x) x.CompressorFlag).Returns(IP9)
+			m6Mock.Setup(Function(x) x.OverrunFlag).Returns(IP8 <> 0)
+			m8Mock.Setup(Function(x) x.CompressorFlag).Returns(IP9 <> 0)
 			psac.Setup(Function(x) x.OverrunUtilisationForCompressionFraction).Returns(IP10)
 			sgnlsMock.Setup(Function(x) x.EngineStopped).Returns(IP11)
 
@@ -103,8 +103,8 @@ Namespace UnitTests
 			sgnlsMock.Setup(Function(x) x.EngineSpeed).Returns(IP6.RPMtoRad())
 			sgnlsMock.Setup(Function(x) x.PreExistingAuxPower).Returns(0.SI(Of Watt))
 			m4Mock.Setup(Function(x) x.GetFlowRate).Returns(IP7.SI(Of NormLiterPerSecond))
-			m6Mock.Setup(Function(x) x.OverrunFlag).Returns(IP8)
-			m8Mock.Setup(Function(x) x.CompressorFlag).Returns(IP9)
+			m6Mock.Setup(Function(x) x.OverrunFlag).Returns(IP8 <> 0)
+			m8Mock.Setup(Function(x) x.CompressorFlag).Returns(IP9 <> 0)
 			psac.Setup(Function(x) x.OverrunUtilisationForCompressionFraction).Returns(IP10)
 			sgnlsMock.Setup(Function(x) x.EngineStopped).Returns(IP11)
 

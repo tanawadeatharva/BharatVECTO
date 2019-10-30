@@ -22,40 +22,40 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		List<IElectricalConsumer> Items { get; }
+		IReadOnlyList<IElectricalConsumer> Items { get; }
 
-		/// <summary>
-		/// 	Add New Electrical Consumer
-		/// 	</summary>
-		/// 	<param name="consumer"></param>
-		/// 	<remarks></remarks>
-		void AddConsumer(IElectricalConsumer consumer);
+		///// <summary>
+		///// 	Add New Electrical Consumer
+		///// 	</summary>
+		///// 	<param name="consumer"></param>
+		///// 	<remarks></remarks>
+		//void AddConsumer(IElectricalConsumer consumer);
 
-		/// <summary>
-		/// 	Remove Electrical Consumer
-		/// 	</summary>
-		/// 	<param name="consumer"></param>
-		/// 	<remarks></remarks>
-		void RemoveConsumer(IElectricalConsumer consumer);
+		///// <summary>
+		///// 	Remove Electrical Consumer
+		///// 	</summary>
+		///// 	<param name="consumer"></param>
+		///// 	<remarks></remarks>
+		//void RemoveConsumer(IElectricalConsumer consumer);
 
-		/// <summary>
-		/// 	Get Total Average Demand In Amps 
-		/// 	</summary>
-		/// 	<param name="excludeOnBase">Exclude those on base vehicle</param>
-		/// 	<returns></returns>
-		/// 	<remarks></remarks>
-		Ampere GetTotalAverageDemandAmps(bool excludeOnBase);
+		///// <summary>
+		///// 	Get Total Average Demand In Amps 
+		///// 	</summary>
+		///// 	<param name="excludeOnBase">Exclude those on base vehicle</param>
+		///// 	<returns></returns>
+		///// 	<remarks></remarks>
+		//Ampere GetTotalAverageDemandAmps(bool excludeOnBase);
 
-		/// <summary>
-		/// 	Door Actuation Time Fraction ( Total Time Spent Operational during cycle )
-		/// 	</summary>
-		/// 	<value></value>
-		/// 	<returns></returns>
-		/// 	<remarks></remarks>
-		double DoorDutyCycleFraction { get; set; }
+		///// <summary>
+		///// 	Door Actuation Time Fraction ( Total Time Spent Operational during cycle )
+		///// 	</summary>
+		///// 	<value></value>
+		///// 	<returns></returns>
+		///// 	<remarks></remarks>
+		//double DoorDutyCycleFraction { get; set; }
 
 		// Merge Info data from ElectricalConsumer in a Default set into live set
 		// This is required because the info is stored in the AAUX file and we do not want to use a persistance stored version.
-		void MergeInfoData();
+		//void MergeInfoData();
 	}
 }

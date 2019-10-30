@@ -9,6 +9,7 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
@@ -36,7 +37,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		}
 
 		public bool SmartPneumatics { get; set; }
-		public int TotalCycleTimeSeconds { get; set; }
 		public double CurrentCycleTimeInSeconds { get; set; }
 		public Watt PreExistingAuxPower { get; set; }
 		public bool Idle { get; set; }
@@ -58,9 +58,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		}
 
 		public PerSecond EngineIdleSpeed { get; set; }
-		public double PneumaticOverrunUtilisation { get; set; }
-		public double StoredEnergyEfficiency { get; set; }
-		public bool RunningCalc { get; set; }
 		public Watt InternalEnginePower { get; set; }
 	}
 }

@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 {
 	public class ResultCard : IResultCard
 	{
-		private List<SmartResult> _results;
+		private readonly List<SmartResult> _results;
 
 		// Constructor
 		public ResultCard(List<SmartResult> results)
@@ -27,20 +27,22 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			if (results == null)
 				throw new ArgumentException("A list of smart results must be supplied.");
 
-			_results = results;
+			_results = results.OrderBy(x => x.Amps).ToList();
 		}
 
 
 		// Public class outputs
-		public List<SmartResult> Results
+		public IReadOnlyList<SmartResult> Results
 		{
 			get { return _results; }
 		}
 
 		public Ampere GetSmartCurrentResult(Ampere Amps)
 		{
-			if (_results.Count < 2)
+			// TODO: MQ 2019-10-29 - keep this?
+			if (_results.Count < 2) {
 				return 10.SI<Ampere>();
+			}
 
 			return GetOrInterpolate(Amps);
 		}
@@ -55,6 +57,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		///         ''' <remarks></remarks>
 		private Ampere GetOrInterpolate(Ampere amps)
 		{
+			// TODO: MQ 2019-10-29 - simplify?
 			Ampere pre;
 			Ampere post;
 			Ampere dAmps;
@@ -165,6 +168,23 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 															select da).First().SmartAmps;
 
 			return smartAmps;
+		}
+
+		public override bool Equals(object other)
+		{
+			var myOther = other as ResultCard;
+
+			if (_results.Count != myOther?._results.Count) {
+				return false;
+			}
+
+			return _results.Zip(myOther.Results, Tuple.Create).All(
+				tuple => tuple.Item1.Amps.IsEqual(tuple.Item2.Amps) && tuple.Item1.SmartAmps.IsEqual(tuple.Item2.SmartAmps));
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
 		}
 	}
 }

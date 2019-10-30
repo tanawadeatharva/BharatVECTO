@@ -37,7 +37,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
-using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -58,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         protected IAdvancedAuxiliaries Auxiliaries;
         private readonly FuelConsumptionAdapter _fcMapAdapter;
 
-        public BusAuxiliariesAdapter(IDataBus container, string aauxFile, string cycleName, Kilogram vehicleWeight,
+        public BusAuxiliariesAdapter(IDataBus container, IAuxiliaryConfig auxiliaryConfig, string cycleName, Kilogram vehicleWeight,
             FuelConsumptionMap fcMap, PerSecond engineIdleSpeed, IAuxPort additionalAux = null)
         {
             //	mAAUX_Global.advancedAuxModel.Signals.DeclarationMode = Cfg.DeclMode
@@ -69,27 +68,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             AdditionalAux = additionalAux;
 
             DataBus = container;
-            var tmpAux = new AdvancedAuxiliaries {
-                VectoInputs = {
-                    Cycle = DetermineCycle(cycleName),
-                    VehicleWeightKG = vehicleWeight
-                }
-            };
 
-            _fcMapAdapter = new FuelConsumptionAdapter() { FcMap = fcMap };
-            tmpAux.VectoInputs.FuelMap = _fcMapAdapter;
+			var tmpAux = new AdvancedAuxiliaries();
+				//    VectoInputs = {
+				//        Cycle = DetermineCycle(cycleName),
+				//        VehicleWeightKG = vehicleWeight
+				//    }
+				//};
+
+			_fcMapAdapter = new FuelConsumptionAdapter() { FcMap = fcMap };
+            //tmpAux.VectoInputs.FuelMap = _fcMapAdapter;
             // TODO: MQ 2019-07-30: how to handle fuel in aaux?
-            tmpAux.VectoInputs.FuelDensity = FuelData.Instance().Lookup((container as IVehicleContainer).RunData.EngineData.Fuels.First().FuelData.FuelType).FuelDensity;
+            //tmpAux.VectoInputs.FuelDensity = FuelData.Instance().Lookup((container as IVehicleContainer).RunData.EngineData.Fuels.First().FuelData.FuelType).FuelDensity;
 
             //'Set Signals
             tmpAux.Signals.EngineIdleSpeed = engineIdleSpeed;
-            tmpAux.Initialise(Path.GetFileName(aauxFile), Path.GetDirectoryName(Path.GetFullPath(aauxFile)) + @"\");
+           
+            //tmpAux.Signals.TotalCycleTimeSeconds =
+            //    auxiliaryConfig.ActuationsMap.GetNumActuations(new ActuationsKey("CycleTime", tmpAux.VectoInputs.Cycle));
+			;
 
-            tmpAux.Signals.TotalCycleTimeSeconds =
-                tmpAux.actuationsMap.GetNumActuations(new ActuationsKey("CycleTime", tmpAux.VectoInputs.Cycle));
+			// call initialize  _after_ setting the cycle time to get the correct consumtions
 
-            // call initialize again _after_ setting the cycle time to get the correct consumtions
-            tmpAux.Initialise(Path.GetFileName(aauxFile), Path.GetDirectoryName(Path.GetFullPath(aauxFile)) + @"\");
+			tmpAux.Initialise(auxiliaryConfig);
 
 
             Auxiliaries = tmpAux;
@@ -266,7 +267,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             //mAAUX_Global.PreExistingAuxPower;
             Auxiliaries.Signals.Idle = DataBus.VehicleStopped;
             Auxiliaries.Signals.InNeutral = DataBus.Gear == 0;
-            Auxiliaries.Signals.RunningCalc = true;
+            //Auxiliaries.Signals.RunningCalc = true;
 
             //mAAUX_Global.Internal_Engine_Power;
             //'Power coming out of Advanced Model is in Watts.

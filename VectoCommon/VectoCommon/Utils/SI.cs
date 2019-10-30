@@ -30,6 +30,7 @@
 */
 
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -394,6 +395,37 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
+	public class NormLiterPerKilogram : SIBase<NormLiterPerKilogram>
+	{
+		private static readonly int[] Units = { -1, 3, 0, 0, 0, 0, 0 };
+
+		//[DebuggerHidden]
+		private NormLiterPerKilogram(double val) : base(val , 0.001, Units) { }
+
+		public override string UnitString { get { return "Nl/kg"; } }
+
+		public static NormLiter operator *(NormLiterPerKilogram nlpkg, Kilogram kg)
+		{
+			return SIBase<NormLiter>.Create(nlpkg.Val * kg.Value());
+		}
+	}
+
+	
+	public class NormLiterPerKilogramMeter : SIBase<NormLiterPerKilogramMeter>
+	{
+		private static readonly int[] Units = { -1, 2, 0, 0, 0, 0, 0 };
+
+		//[DebuggerHidden]
+		private NormLiterPerKilogramMeter(double val) : base(val , 0.001, Units) { }
+
+		public override string UnitString { get { return "Nl/kgm"; } }
+
+		public static NormLiterPerKilogram operator *(NormLiterPerKilogramMeter nlpkgm, Meter m)
+		{
+			return SIBase<NormLiterPerKilogram>.Create(nlpkgm.Val * m.Value());
+		}
+	}
+
 	/// <summary>
 	/// 
 	/// </summary>
@@ -669,6 +701,12 @@ namespace TUGraz.VectoCommon.Utils
 		{
 			return SIBase<KilogramPerSecond>.Create(watt.Val / jpkg.Value());
 		}
+
+		[DebuggerHidden]
+		public static JoulePerNormLiter operator /(Watt watt, NormLiterPerSecond nlps)
+		{
+			return SIBase<JoulePerNormLiter>.Create(watt.Val / nlps.Value());
+		}
 	}
 
 	/// <summary>
@@ -705,10 +743,28 @@ namespace TUGraz.VectoCommon.Utils
 		}
 	}
 
+	public class JoulePerNormLiter : SIBase<JoulePerNormLiter>
+	{
+		private static readonly int[] Units = { 1, -1, -2, 0, 0, 0, 0 };
+
+		[DebuggerHidden]
+		private JoulePerNormLiter(double val) : base(val, Units) { }
+
+		public override string UnitString
+		{
+			get { return "J/Nl"; }
+		}
+
+		public static Watt operator *(JoulePerNormLiter jpnl, NormLiterPerSecond nlps)
+		{
+			return SIBase<Watt>.Create(jpnl.Val * nlps.Value());
+		}
+	}
+
 	/// <summary>
-	/// SI Class for Joule / kg.
-	/// </summary>
-	public class JoulePerKilogramm : SIBase<JoulePerKilogramm>
+		/// SI Class for Joule / kg.
+		/// </summary>
+		public class JoulePerKilogramm : SIBase<JoulePerKilogramm>
 	{
 		private static readonly int[] Units = { 0, 2, -2, 0, 0, 0, 0 };
 

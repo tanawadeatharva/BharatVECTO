@@ -10,32 +10,33 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Imports System.Collections.Generic
-Imports VectoAuxiliaries.Electrics
-Imports VectoAuxiliaries.Pneumatics
 Imports System.ComponentModel
 Imports System.Windows.Forms
 Imports System.Drawing
-Imports VectoAuxiliaries.Hvac
 Imports System.IO
 Imports System.Linq
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.InputData.FileIO.JSON
+Imports TUGraz.VectoCore.InputData.Impl
+Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
-Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.PneumaticSystem
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Util
+Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.OutputData.FileIO
 
 
 Public Class frmAuxiliaryConfig
 
 #Region "Fields"
 
-    Public auxConfig As AuxiliaryConfig
-    Public originalConfig As AuxiliaryConfig ' required to test if the form is dirty
+    Public auxConfig As IAuxiliaryConfig
+    Public originalConfig As IAuxiliaryConfig ' required to test if the form is dirty
     Private TabColors As Dictionary(Of TabPage, Color) = New Dictionary(Of TabPage, Color)()
     Private processing As Boolean = False
     Private SecondsIntoCycle As Integer = 0
@@ -81,8 +82,8 @@ Public Class frmAuxiliaryConfig
 
         Try
 
-            auxConfig = New AuxiliaryConfig(auxFile)
-            originalConfig = New AuxiliaryConfig(FilePathUtils.ResolveFilePath(aauxPath, auxFile))
+            auxConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFile, Nothing) ' New AuxiliaryConfig(auxFile)
+            originalConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFile, Nothing) 
 
         Catch ex As Exception
 
@@ -298,8 +299,8 @@ Public Class frmAuxiliaryConfig
         Dim comp As ICompressorMap
         Try
 
-            comp = New CompressorMap(FilePathUtils.ResolveFilePath(aauxPath, txtCompressorMap.Text))
-            comp.Initialise()
+            comp = CompressorMapReader.ReadFile(FilePathUtils.ResolveFilePath(aauxPath, txtCompressorMap.Text))
+            'comp.Initialise()
             ErrorProvider.SetError(txtCompressorMap, String.Empty)
         Catch ex As Exception
             ErrorProvider.SetError(txtCompressorMap,
@@ -332,11 +333,11 @@ Public Class frmAuxiliaryConfig
             ErrorProvider.SetError(txtActuationsMap, String.Empty)
         End If
         'Test File is valid
-        Dim actuations As PneumaticActuationsMAP
+        Dim actuations As IPneumaticActuationsMAP
         Try
 
-            actuations = New PneumaticActuationsMAP(FilePathUtils.ResolveFilePath(aauxPath, txtActuationsMap.Text))
-            actuations.Initialise()
+            actuations = PneumaticActuationsMapReader.Read(FilePathUtils.ResolveFilePath(aauxPath, txtActuationsMap.Text))
+            'actuations.Initialise()
             ErrorProvider.SetError(txtActuationsMap, String.Empty)
         Catch ex As Exception
             ErrorProvider.SetError(txtActuationsMap,
@@ -424,9 +425,8 @@ Public Class frmAuxiliaryConfig
         End If
 
         'Test File is valid
-        Dim alt As ICombinedAlternator
         Try
-            alt = New CombinedAlternator(FilePathUtils.ResolveFilePath(aauxPath, txtAlternatorMapPath.Text))
+            Dim alt As IAlternatorMap = AlternatorReader.ReadMap(FilePathUtils.ResolveFilePath(aauxPath, txtAlternatorMapPath.Text))
             ErrorProvider.SetError(txtAlternatorMapPath, String.Empty)
         Catch ex As Exception
             ErrorProvider.SetError(txtAlternatorMapPath,
@@ -494,14 +494,14 @@ Public Class frmAuxiliaryConfig
         Try
 
             Dim ahsmFile As String = FilePathUtils.ResolveFilePath(aauxPath, txtSSMFilePath.Text)
-            Dim ssmTool As SSMTOOL = New SSMTOOL(ahsmFile, New HVACConstants, False)
+            Dim ssmTool As SSMTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFile, Nothing, Nothing, DeclarationData.BusAuxiliaries.SSMTechnologyList)) ', New HVACConstants, False)
 
-            If ssmTool.Load(ahsmFile) Then
-                ErrorProvider.SetError(txtSSMFilePath, String.Empty)
-            Else
-                result = False
-                ErrorProvider.SetError(txtSSMFilePath, "Please choose a valid Steady State Model File (*.AHSM")
-            End If
+            'If ssmTool.Load(ahsmFile) Then
+            '    ErrorProvider.SetError(txtSSMFilePath, String.Empty)
+            'Else
+            '    result = False
+            '    ErrorProvider.SetError(txtSSMFilePath, "Please choose a valid Steady State Model File (*.AHSM")
+            'End If
 
         Catch ex As Exception
             'Just in case
@@ -569,7 +569,7 @@ Public Class frmAuxiliaryConfig
 
         'Merge Info data from ElectricalConsumer in a Default set into live set
         'This is required because the info is stored in the AAUX file and we do not want to use a persistance stored version.
-        auxConfig.ElectricalUserInputsConfig.ElectricalConsumers.MergeInfoData()
+        'auxConfig.ElectricalUserInputsConfig.ElectricalConsumers.MergeInfoData()
     End Sub
 
     Private Sub frmAuxiliaryConfig_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
@@ -787,7 +787,7 @@ Public Class frmAuxiliaryConfig
 
         If SaveFile() Then
 
-            originalConfig.AssumeValuesOfOther(auxConfig)
+            'originalConfig.AssumeValuesOfOther(auxConfig)
             Me.Close()
 
 
@@ -806,7 +806,7 @@ Public Class frmAuxiliaryConfig
             End If
         End If
 
-        result = auxConfig.Save(FilePathUtils.ResolveFilePath(aauxPath, auxFile))
+        result = BusAuxWriter.SaveAuxConfig(auxConfig, FilePathUtils.ResolveFilePath(aauxPath, auxFile)) ' auxConfig.Save(FilePathUtils.ResolveFilePath(aauxPath, auxFile))
 
         If Not result Then MessageBox.Show(String.Format("Unable to Save the file '{0}'", auxFile))
 
@@ -821,13 +821,13 @@ Public Class frmAuxiliaryConfig
         'Release existing databindings
         UnbindAllControls(Me)
 
-        result = auxConfig.Load(FilePathUtils.ResolveFilePath(aauxPath, auxFile))
+        auxConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(FilePathUtils.ResolveFilePath(aauxPath, auxFile), Nothing)
 
-        If Not result Then
-            MessageBox.Show(String.Format("Unable to load the file '{0}'", auxFile))
-        Else
+        'If Not result Then
+        '    MessageBox.Show(String.Format("Unable to load the file '{0}'", auxFile))
+        'Else
             CreateBindings()
-        End If
+        'End If
 
         Return result
     End Function
@@ -871,7 +871,7 @@ Public Class frmAuxiliaryConfig
         If fileExists Then
             Try
                 Dim aaltFile As String = FilePathUtils.ResolveFilePath(aauxPath, absoluteAALTPath)
-                Dim combinedAlt As ICombinedAlternator = New CombinedAlternator(aaltFile)
+                Dim combinedAlt As IAlternatorMap =  AlternatorReader.ReadMap(aaltFile)
             Catch ex As Exception
                 MessageBox.Show("The supplied .AALT File was invalid, aborting.")
                 Return
@@ -1031,8 +1031,8 @@ Public Class frmAuxiliaryConfig
             'is file valid Try ahsm - HVac Steady State Model
             Try
                 Dim ahsmFile As String = FilePathUtils.ResolveFilePath(aauxPath, absoluteSSMPath)
-                Dim ssmTool As SSMTOOL = New SSMTOOL(ahsmFile, New HVACConstants, False)
-                ssmTool.Load(ahsmFile)
+                Dim ssmTool As SSMTOOL = new SSMTOOL(SSMInputData.ReadFile(ahsmFile, Nothing, Nothing, DeclarationData.BusAuxiliaries.SSMTechnologyList)) ' New SSMTOOL(ahsmFile, New HVACConstants, False)
+                'ssmTool.Load(ahsmFile)
             Catch ex As Exception
                 MessageBox.Show("The supplied AHSM File was invalid, aborting.")
                 Return
@@ -1354,7 +1354,7 @@ Public Class frmAuxiliaryConfig
         txtPowernetVoltage.DataBindings.Add(bVoltage)
         'txtVehicleWeightKG.DataBindings.Add("Text", auxConfig.VectoInputs, "VehicleWeightKG")
         'cboCycle.DataBindings.Add("Text", auxConfig.VectoInputs, "Cycle")
-        txtFuelMap.DataBindings.Add("Text", auxConfig.VectoInputs, "FuelMap")
+        'txtFuelMap.DataBindings.Add("Text", auxConfig.VectoInputs, "FuelMap")
 
         'Electricals General
         txtAlternatorMapPath.DataBindings.Add("Text", auxConfig.ElectricalUserInputsConfig, "AlternatorMap")
@@ -1367,7 +1367,7 @@ Public Class frmAuxiliaryConfig
 
         'Electrical ConsumablesGrid
         electricalConsumerBinding =
-            New BindingList(Of IElectricalConsumer)(auxConfig.ElectricalUserInputsConfig.ElectricalConsumers.Items)
+            New BindingList(Of IElectricalConsumer)(CType (auxConfig.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(Of IElectricalConsumer)))
         gvElectricalConsumables.DataSource = electricalConsumerBinding
         AddHandler gvElectricalConsumables.CellFormatting, New DataGridViewCellFormattingEventHandler(AddressOf SIToText)
 
@@ -1376,7 +1376,7 @@ Public Class frmAuxiliaryConfig
 
         'IDLE
         Dim idleBinding As BindingList(Of SmartResult)
-        idleBinding = New BindingList(Of SmartResult)(auxConfig.ElectricalUserInputsConfig.ResultCardIdle.Results)
+        'idleBinding = New BindingList(Of SmartResult)(CType( auxConfig.ElectricalUserInputsConfig.ResultCardIdle.Results, List(Of SmartResult)))
         idleBinding.AllowNew = True
         idleBinding.AllowRemove = True
         gvResultsCardIdle.DataSource = idleBinding
@@ -1385,7 +1385,7 @@ Public Class frmAuxiliaryConfig
 
         'TRACTION
         Dim tractionBinding As BindingList(Of SmartResult)
-        tractionBinding = New BindingList(Of SmartResult)(auxConfig.ElectricalUserInputsConfig.ResultCardTraction.Results)
+        'tractionBinding = New BindingList(Of SmartResult)(CType(auxConfig.ElectricalUserInputsConfig.ResultCardTraction.Results, List(Of SmartResult)))
         tractionBinding.AllowNew = True
         tractionBinding.AllowRemove = True
         gvResultsCardTraction.DataSource = tractionBinding
@@ -1394,7 +1394,7 @@ Public Class frmAuxiliaryConfig
 
         'OVERRUN
         Dim overrunBinding As BindingList(Of SmartResult)
-        overrunBinding = New BindingList(Of SmartResult)(auxConfig.ElectricalUserInputsConfig.ResultCardOverrun.Results)
+        'overrunBinding = New BindingList(Of SmartResult)(CType(auxConfig.ElectricalUserInputsConfig.ResultCardOverrun.Results, List(Of SmartResult)))
         overrunBinding.AllowNew = True
         overrunBinding.AllowRemove = True
         gvResultsCardOverrun.DataSource = overrunBinding

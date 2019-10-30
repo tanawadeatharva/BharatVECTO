@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public struct Entry
 		{
-			public Entry(FuelType type, TankSystem? tankSystem, KilogramPerCubicMeter density, double weight, JoulePerKilogramm heatingValueVecto, JoulePerKilogramm heatingValueAnnex) : this()
+			public Entry(FuelType type, TankSystem? tankSystem, KilogramPerCubicMeter density, double weight, JoulePerKilogramm heatingValueVecto, JoulePerKilogramm heatingValueAnnex)
 			{
 				FuelType = type;
 				TankSystem = tankSystem;

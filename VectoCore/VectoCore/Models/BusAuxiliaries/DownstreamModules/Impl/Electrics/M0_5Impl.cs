@@ -16,20 +16,20 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		protected Ampere _smartOverrunCurrent;
 		protected double _alternatorsEfficiencyOverrunResultCard;
 		protected IM0_NonSmart_AlternatorsSetEfficiency _m0;
-		protected IElectricalConsumerList _electricalConsumables;
 		protected IAlternatorMap _alternatorMap;
 		protected IResultCard _resultCardIdle;
 		protected IResultCard _resultCardTraction;
 		protected IResultCard _resultCardOverrun;
 		protected ISignals _signals;
+		private IM0_1_AverageElectricLoadDemand _m0_1;
 
-		public M0_5Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, IElectricalConsumerList electricalConsumables, IAlternatorMap alternatorMap, IResultCard resultCardIdle, IResultCard resultCardTraction, IResultCard resultCardOverrun, ISignals signals)
+		public M0_5Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, IM0_1_AverageElectricLoadDemand m0_1, IAlternatorMap alternatorMap, IResultCard resultCardIdle, IResultCard resultCardTraction, IResultCard resultCardOverrun, ISignals signals)
 		{
 			//'Sanity Check on supplied arguments, throw an argument exception
 			if (m0 == null) {
 				throw new ArgumentException("Module 0 must be supplied");}
 
-			if (electricalConsumables == null) {
+			if (m0_1 == null) {
 				throw new ArgumentException("ElectricalConsumablesList must be supplied even if empty");
 			}
 			if (alternatorMap ==null) {throw new ArgumentException("Must supply a valid alternator map");
@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 			//'Assignments to private variables.
 			_m0 = m0;
-			_electricalConsumables = electricalConsumables;
+			_m0_1 = m0_1;
 			_alternatorMap = alternatorMap;
 			_resultCardIdle = resultCardIdle;
 			_resultCardTraction = resultCardTraction;
@@ -63,7 +63,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		private Ampere HvacPlusNonBaseCurrents()
 		{
 			//'Stored Energy Efficience removed from V8.0 21/4/15 by Mike Preston  //tb
-			return _m0.GetHVACElectricalPowerDemandAmps + _electricalConsumables.GetTotalAverageDemandAmps(true);  //'/ElectricConstants.StoredEnergyEfficiency)
+			return _m0.GetHVACElectricalPowerDemandAmps + _m0_1.GetTotalAverageDemandAmpsWithoutBaseLoad;
+			//_electricalConsumables.GetTotalAverageDemandAmps(true);  //'/ElectricConstants.StoredEnergyEfficiency)
 		}
 
 		public Ampere SmartIdleCurrent
@@ -78,7 +79,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public double AlternatorsEfficiencyIdleResultCard
 		{
-			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartIdleCurrent).Efficiency; }
+			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartIdleCurrent); }
 		}
 
 		public Ampere SmartTractionCurrent
@@ -88,7 +89,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public double AlternatorsEfficiencyTractionOnResultCard
 		{
-			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartTractionCurrent).Efficiency; }
+			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartTractionCurrent); }
 		}
 
 		public Ampere SmartOverrunCurrent
@@ -98,7 +99,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public double AlternatorsEfficiencyOverrunResultCard
 		{
-			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartOverrunCurrent).Efficiency; }
+			get { return _alternatorMap.GetEfficiency(_signals.EngineSpeed, SmartOverrunCurrent); }
 		}
 
 		#endregion

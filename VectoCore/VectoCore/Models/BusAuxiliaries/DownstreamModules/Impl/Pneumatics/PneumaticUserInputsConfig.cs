@@ -9,52 +9,54 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
+using System.Collections.Generic;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 {
 	public class PneumaticUserInputsConfig : IPneumaticUserInputsConfig
 	{
-		public string CompressorMap { get; set; }
+		public ICompressorMap CompressorMap { get; set; }
 		public double CompressorGearRatio { get; set; }
 		public double CompressorGearEfficiency { get; set; }
 
 		// pnmeumatic or electric
-		public string AdBlueDosing { get; set; }
+		public ConsumerTechnology AdBlueDosing { get; set; }
 
 		// mechanical or electrical
-		public string AirSuspensionControl { get; set; }
+		public ConsumerTechnology AirSuspensionControl { get; set; }
 
 		// pneumatic or electric
-		public string Doors { get; set; }
-		public double KneelingHeightMillimeters { get; set; }
+		public ConsumerTechnology Doors { get; set; }
+		public Meter KneelingHeightMillimeters { get; set; }
 
 		// PneumaticActuationsMap
-		public string ActuationsMap { get; set; }
+		//public Dictionary<ActuationsKey, int> ActuationsMap { get; set; }
 
 		public bool RetarderBrake { get; set; }
 		public bool SmartAirCompression { get; set; }
 		public bool SmartRegeneration { get; set; }
 
-		public PneumaticUserInputsConfig(bool setToDefaults = false)
-		{
-			if (setToDefaults)
-				SetPropertiesToDefaults();
-		}
+		//public PneumaticUserInputsConfig()
+		//{
+		//	if (setToDefaults)
+		//		SetPropertiesToDefaults();
+		//}
 
-		public void SetPropertiesToDefaults()
-		{
-			CompressorMap = string.Empty;
-			CompressorGearRatio = 1.0;
-			CompressorGearEfficiency = 0.97;
-			AdBlueDosing = "Pneumatic";
-			AirSuspensionControl = "Mechanically";
-			Doors = "Pneumatic";
-			KneelingHeightMillimeters = 70;
-			ActuationsMap = null;
-			RetarderBrake = true;
-			SmartAirCompression = false;
-			SmartRegeneration = false;
-		}
+		//public void SetPropertiesToDefaults()
+		//{
+		//	//CompressorMap = string.Empty;
+		//	CompressorGearRatio = 1.0;
+		//	CompressorGearEfficiency = 0.97;
+		//	AdBlueDosing = ConsumerTechnology.Pneumatic; // "Pneumatic";
+		//	AirSuspensionControl = ConsumerTechnology.Mechanical; // "Mechanically";
+		//	Doors = ConsumerTechnology.Pneumatic; // "Pneumatic";
+		//	KneelingHeightMillimeters = 70.SI(Unit.SI.Milli.Meter).Cast<Meter>();
+		//	ActuationsMap = null;
+		//	RetarderBrake = true;
+		//	SmartAirCompression = false;
+		//	SmartRegeneration = false;
+		//}
 	}
 }

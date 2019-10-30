@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -78,7 +79,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ValidateObject]
 		public IEnumerable<AuxData> Aux { get; internal set; }
 
-		public AdvancedAuxData AdvancedAux { get; internal set; }
+		public IAuxiliaryConfig AdvancedAux { get; internal set; }
 
 		[ValidateObject]
 		public RetarderData Retarder { get; internal set; }

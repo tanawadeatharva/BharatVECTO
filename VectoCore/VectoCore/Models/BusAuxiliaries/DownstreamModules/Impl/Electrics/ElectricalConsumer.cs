@@ -34,9 +34,40 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		private Volt _PowerNetVoltage;
 		private string _Info;
 
-		// Calculated
-		public Ampere AvgConsumptionAmps { get; set; }
+		// Constructor
+		public ElectricalConsumer(
+			bool baseVehicle, string category, string consumerName, Ampere nominalConsumptionAmps, double phaseIdleTractionOn,
+			Volt powerNetVoltage, int numberInVehicle, string info)
+		{
+			// Illegal Value Check.
+			if (category.Trim().Length == 0)
+				throw new ArgumentException("Category Name cannot be empty");
+			if (consumerName.Trim().Length == 0)
+				throw new ArgumentException("ConsumerName Name cannot be empty");
+			if (phaseIdleTractionOn < ElectricConstants.PhaseIdleTractionOnMin |
+				phaseIdleTractionOn > ElectricConstants.PhaseIdleTractionMax)
+				throw new ArgumentException("PhaseIdle_TractionOn must have a value between 0 and 1");
+			if (nominalConsumptionAmps < ElectricConstants.NonminalConsumerConsumptionAmpsMin |
+				nominalConsumptionAmps > ElectricConstants.NominalConsumptionAmpsMax)
+				throw new ArgumentException("NominalConsumptionAmps must have a value between 0 and 100");
+			if (powerNetVoltage < ElectricConstants.PowenetVoltageMin | powerNetVoltage > ElectricConstants.PowenetVoltageMax)
+				throw new ArgumentException("PowerNetVoltage must have a value between 6 and 48");
+			if (numberInVehicle < 0)
+				throw new ArgumentException("Cannot have less than 0 consumers in the vehicle");
 
+			// Good, now assign.
+			BaseVehicle = baseVehicle;
+			Category = category;
+			ConsumerName = consumerName;
+			NominalConsumptionAmps = nominalConsumptionAmps;
+			PhaseIdle_TractionOn = phaseIdleTractionOn;
+			PowerNetVoltage = powerNetVoltage;
+			NumberInActualVehicle = numberInVehicle;
+			Info = info;
+			
+		}
+
+		
 		// Properties
 		public bool BaseVehicle
 		{
@@ -112,52 +143,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 
 		// Public class outputs
-		public Ampere TotalAvgConumptionAmps(double PhaseIdle_TractionOnBasedOnCycle = default(Double))
+		public Ampere TotalAvgConumptionAmps
 		{
-			if (ConsumerName == "Doors per Door") {
-				return NominalConsumptionAmps * (NumberInActualVehicle * PhaseIdle_TractionOnBasedOnCycle);
-			}
-
-			return NominalConsumptionAmps* (NumberInActualVehicle * PhaseIdle_TractionOn);
+			get { return NominalConsumptionAmps * (NumberInActualVehicle * PhaseIdle_TractionOn); }
 		}
 
-		public Watt TotalAvgConsumptionInWatts(double PhaseIdle_TractionOnBasedOnCycle = 0.0)
-		{
-			return TotalAvgConumptionAmps(PhaseIdle_TractionOnBasedOnCycle) * PowerNetVoltage;
-		}
-
-		// Constructor
-		public ElectricalConsumer(
-			bool baseVehicle, string category, string consumerName, Ampere nominalConsumptionAmps, double phaseIdleTractionOn,
-			Volt powerNetVoltage, int numberInVehicle, string info)
-		{
-			// Illegal Value Check.
-			if (category.Trim().Length == 0)
-				throw new ArgumentException("Category Name cannot be empty");
-			if (consumerName.Trim().Length == 0)
-				throw new ArgumentException("ConsumerName Name cannot be empty");
-			if (phaseIdleTractionOn < ElectricConstants.PhaseIdleTractionOnMin |
-				phaseIdleTractionOn > ElectricConstants.PhaseIdleTractionMax)
-				throw new ArgumentException("PhaseIdle_TractionOn must have a value between 0 and 1");
-			if (nominalConsumptionAmps < ElectricConstants.NonminalConsumerConsumptionAmpsMin |
-				nominalConsumptionAmps > ElectricConstants.NominalConsumptionAmpsMax)
-				throw new ArgumentException("NominalConsumptionAmps must have a value between 0 and 100");
-			if (powerNetVoltage < ElectricConstants.PowenetVoltageMin | powerNetVoltage > ElectricConstants.PowenetVoltageMax)
-				throw new ArgumentException("PowerNetVoltage must have a value between 6 and 48");
-			if (numberInVehicle < 0)
-				throw new ArgumentException("Cannot have less than 0 consumers in the vehicle");
-
-			// Good, now assign.
-			BaseVehicle = baseVehicle;
-			Category = category;
-			ConsumerName = consumerName;
-			NominalConsumptionAmps = nominalConsumptionAmps;
-			PhaseIdle_TractionOn = phaseIdleTractionOn;
-			PowerNetVoltage = powerNetVoltage;
-			NumberInActualVehicle = numberInVehicle;
-			Info = info;
-			AvgConsumptionAmps = 0.SI<Ampere>();
-		}
+		
 
 		// Comparison Overrides
 		public override bool Equals(object obj)

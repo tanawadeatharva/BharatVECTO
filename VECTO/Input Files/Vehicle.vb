@@ -224,7 +224,7 @@ Public Class Vehicle
 
 		Try
 			Dim writer As JSONFileWriter = JSONFileWriter.Instance
-			writer.SaveVehicle(Me, Me, Me, Me, Me, _filePath)
+			writer.SaveVehicle(Me, Me, Me, Me, Me, _filePath, Cfg.DeclMode)
 		Catch ex As Exception
 			MsgBox("Failed to save Vehicle file: " + ex.Message)
 			Return False

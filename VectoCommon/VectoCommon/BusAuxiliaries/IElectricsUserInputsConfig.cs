@@ -10,8 +10,9 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 
-using TUGraz.VectoCommon.Utils;
 
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IElectricsUserInputsConfig
@@ -22,7 +23,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		Volt PowerNetVoltage { get; set; }
+		Volt PowerNetVoltage { get; }
 
 		/// <summary>
 		/// 	The Path for the Alternator map
@@ -30,7 +31,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		string AlternatorMap { get; set; }
+		//IList<ICombinedAlternatorMapRow> AlternatorMap { get; }
+		IAlternatorMap AlternatorMap { get; }
 
 		/// <summary>
 		/// 	Alternator Gear Efficiency
@@ -38,7 +40,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		double AlternatorGearEfficiency { get; set; }
+		double AlternatorGearEfficiency { get;  }
 
 		/// <summary>
 		/// 	List of Electrical Consumers
@@ -46,7 +48,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		IElectricalConsumerList ElectricalConsumers { get; set; }
+		IElectricalConsumerList ElectricalConsumers { get; }
 
 		/// <summary>
 		/// 	Door Actuation Time In Seconds ( Time Taken to Open/Close the door )
@@ -54,7 +56,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		double DoorActuationTimeSecond { get; set; }
+		Second DoorActuationTimeSecond { get; }
 
 		/// <summary>
 		/// 	Result Card Taken During Idle.
@@ -62,7 +64,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		IResultCard ResultCardIdle { get; set; }
+		IResultCard ResultCardIdle { get; }
 
 		/// <summary>
 		/// 	Result Card Taken During Traction
@@ -70,7 +72,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		IResultCard ResultCardTraction { get; set; }
+		IResultCard ResultCardTraction { get; }
 
 		/// <summary>
 		/// 	Result Card Taken During Overrun
@@ -78,7 +80,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		IResultCard ResultCardOverrun { get; set; }
+		IResultCard ResultCardOverrun { get; }
 
 		/// <summary>
 		/// 	Smart Electrical System
@@ -86,7 +88,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns>True For Smart Electrical Systems/ False For non Smart.</returns>
 		/// 	<remarks></remarks>
-		bool SmartElectrical { get; set; }
+		bool SmartElectrical { get; }
 
 		/// <summary>
 		/// 	Stored Energy Efficiency
@@ -94,6 +96,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<value></value>
 		/// 	<returns>Stored Energy Efficiency</returns>
 		/// 	<remarks></remarks>
-		double StoredEnergyEfficiency { get; set; }
+		double StoredEnergyEfficiency { get; }
 	}
 }

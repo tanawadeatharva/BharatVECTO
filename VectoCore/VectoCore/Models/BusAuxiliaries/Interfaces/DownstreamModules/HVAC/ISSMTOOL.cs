@@ -1,12 +1,13 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC {
 	public interface ISSMTOOL
 	{
-		ISSMInputs SSMInputs { get; set; }
-		ISSMTechList TechList { get; set; }
-		ISSMCalculate Calculate { get; set; }
-		bool SSMDisabled { get; set; }
+		ISSMInputs SSMInputs { get;  }
+		ISSMTechList TechList { get;  }
+		ISSMCalculate Calculate { get;  }
+		bool SSMDisabled { get; }
 		IHVACConstants HVACConstants { get; set; }
 
 		Watt ElectricalWBase { get; } // Watt
@@ -17,11 +18,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 		Watt MechanicalWBaseAdjusted { get; } // Watt
 		KilogramPerSecond FuelPerHBaseAdjusted { get; } // LiterPerHour
 
+		Watt EngineWasteHeatkW { get; }
+
 		//void Clone(ISSMTOOL from);
 
-		bool Load(string filePath);
+		//bool Load(string filePath);
 
-		bool Save(string filePath);
+		//bool Save(string filePath);
 
 		bool IsEqualTo(ISSMTOOL source);
 
