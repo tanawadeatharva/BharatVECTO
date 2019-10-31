@@ -29,10 +29,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected readonly IM6 M6;
 		protected readonly IM8 M8;
 		protected readonly IFuelConsumptionMap FMAP;
-		protected readonly IPneumaticsAuxilliariesConfig PSAC;
+		protected readonly IPneumaticsConsumersDemand PSAC;
 		protected readonly ISignals Signals;
 
-		public M09Impl(IM1_AverageHVACLoadDemand m1, IM4_AirCompressor m4, IM6 m6, IM8 m8, IFuelConsumptionMap fmap, IPneumaticsAuxilliariesConfig psac, ISignals signals)
+		public M09Impl(IM1_AverageHVACLoadDemand m1, IM4_AirCompressor m4, IM6 m6, IM8 m8, IFuelConsumptionMap fmap, IPneumaticsConsumersDemand psac, ISignals signals)
 		{
 			M1 = m1;
 			M4 = m4;

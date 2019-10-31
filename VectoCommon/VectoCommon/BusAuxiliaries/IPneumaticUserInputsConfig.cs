@@ -9,10 +9,9 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		ICompressorMap CompressorMap { get;  }
 		double CompressorGearEfficiency { get;  }
 		double CompressorGearRatio { get;  }
-		//Dictionary<ActuationsKey, int> ActuationsMap { get;  }
 		bool SmartAirCompression { get;  }
 		bool SmartRegeneration { get;  }
-		bool RetarderBrake { get;  }
+		//bool RetarderBrake { get;  }
 		Meter KneelingHeightMillimeters { get;  }
 		ConsumerTechnology AirSuspensionControl { get;  } // mechanical or electrical
 		ConsumerTechnology AdBlueDosing { get;  } // pnmeumatic or electric

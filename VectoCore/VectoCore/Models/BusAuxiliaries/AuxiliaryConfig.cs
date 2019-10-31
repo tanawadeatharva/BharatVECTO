@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 		// Pneumatics
 		public IPneumaticUserInputsConfig PneumaticUserInputsConfig { get; internal set; }
 
-		public IPneumaticsAuxilliariesConfig PneumaticAuxillariesConfig { get; internal set; }
+		public IPneumaticsConsumersDemand PneumaticAuxillariesConfig { get; internal set; }
 
 		public ISSMInputs SSMInputs { get; internal set; }
 
@@ -113,40 +113,40 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 
 		private bool ComparePneumaticAuxiliariesConfig(IAuxiliaryConfig other)
 		{
-			if (PneumaticAuxillariesConfig.AdBlueNIperMinute != other.PneumaticAuxillariesConfig.AdBlueNIperMinute) {
+			if (PneumaticAuxillariesConfig.AdBlueInjection != other.PneumaticAuxillariesConfig.AdBlueInjection) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute !=
-				other.PneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute) {
+			if (PneumaticAuxillariesConfig.AirControlledSuspension !=
+				other.PneumaticAuxillariesConfig.AirControlledSuspension) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.BrakingNoRetarderNIperKG != other.PneumaticAuxillariesConfig.BrakingNoRetarderNIperKG) {
+			if (PneumaticAuxillariesConfig.Braking != other.PneumaticAuxillariesConfig.Braking) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG !=
-				other.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG) {
+			//if (PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG !=
+			//	other.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG) {
+			//	return false;
+			//}
+			if (PneumaticAuxillariesConfig.BreakingWithKneeling !=
+				other.PneumaticAuxillariesConfig.BreakingWithKneeling) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM !=
-				other.PneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM) {
+			if (PneumaticAuxillariesConfig.DeadVolBlowOuts !=
+				other.PneumaticAuxillariesConfig.DeadVolBlowOuts) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour !=
-				other.PneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour) {
-				return false;
-			}
-			if (PneumaticAuxillariesConfig.DeadVolumeLitres != other.PneumaticAuxillariesConfig.DeadVolumeLitres) {
+			if (PneumaticAuxillariesConfig.DeadVolume != other.PneumaticAuxillariesConfig.DeadVolume) {
 				return false;
 			}
 			if (PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand !=
 				other.PneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.PerDoorOpeningNI != other.PneumaticAuxillariesConfig.PerDoorOpeningNI) {
+			if (PneumaticAuxillariesConfig.DoorOpening != other.PneumaticAuxillariesConfig.DoorOpening) {
 				return false;
 			}
-			if (PneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG !=
-				other.PneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG) {
+			if (PneumaticAuxillariesConfig.StopBrakeActuation !=
+				other.PneumaticAuxillariesConfig.StopBrakeActuation) {
 				return false;
 			}
 			if (PneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand !=
@@ -165,26 +165,36 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 		{
 			//if (PneumaticUserInputsConfig.ActuationsMap != other.PneumaticUserInputsConfig.ActuationsMap)
 			//	return false;
-			if (PneumaticUserInputsConfig.AdBlueDosing != other.PneumaticUserInputsConfig.AdBlueDosing)
+			if (PneumaticUserInputsConfig.AdBlueDosing != other.PneumaticUserInputsConfig.AdBlueDosing) {
 				return false;
-			if (PneumaticUserInputsConfig.AirSuspensionControl != other.PneumaticUserInputsConfig.AirSuspensionControl)
+			}
+			if (PneumaticUserInputsConfig.AirSuspensionControl != other.PneumaticUserInputsConfig.AirSuspensionControl) {
 				return false;
-			if (PneumaticUserInputsConfig.CompressorGearEfficiency != other.PneumaticUserInputsConfig.CompressorGearEfficiency)
+			}
+			if (PneumaticUserInputsConfig.CompressorGearEfficiency != other.PneumaticUserInputsConfig.CompressorGearEfficiency) {
 				return false;
-			if (PneumaticUserInputsConfig.CompressorGearRatio != other.PneumaticUserInputsConfig.CompressorGearRatio)
+			}
+			if (PneumaticUserInputsConfig.CompressorGearRatio != other.PneumaticUserInputsConfig.CompressorGearRatio) {
 				return false;
-			if (PneumaticUserInputsConfig.CompressorMap != other.PneumaticUserInputsConfig.CompressorMap)
+			}
+			if (PneumaticUserInputsConfig.CompressorMap != other.PneumaticUserInputsConfig.CompressorMap) {
 				return false;
-			if (PneumaticUserInputsConfig.Doors != other.PneumaticUserInputsConfig.Doors)
+			}
+			if (PneumaticUserInputsConfig.Doors != other.PneumaticUserInputsConfig.Doors) {
 				return false;
-			if (PneumaticUserInputsConfig.KneelingHeightMillimeters != other.PneumaticUserInputsConfig.KneelingHeightMillimeters)
+			}
+			if (PneumaticUserInputsConfig.KneelingHeightMillimeters != other.PneumaticUserInputsConfig.KneelingHeightMillimeters) {
 				return false;
-			if (PneumaticUserInputsConfig.RetarderBrake != other.PneumaticUserInputsConfig.RetarderBrake)
+			}
+
+			//if (PneumaticUserInputsConfig.RetarderBrake != other.PneumaticUserInputsConfig.RetarderBrake)
+			//	return false;
+			if (PneumaticUserInputsConfig.SmartAirCompression != other.PneumaticUserInputsConfig.SmartAirCompression) {
 				return false;
-			if (PneumaticUserInputsConfig.SmartAirCompression != other.PneumaticUserInputsConfig.SmartAirCompression)
+			}
+			if (PneumaticUserInputsConfig.SmartRegeneration != other.PneumaticUserInputsConfig.SmartRegeneration) {
 				return false;
-			if (PneumaticUserInputsConfig.SmartRegeneration != other.PneumaticUserInputsConfig.SmartRegeneration)
-				return false;
+			}
 
 			return true;
 		}
@@ -192,12 +202,16 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 
 		public bool ConfigValuesAreTheSameAs(IAuxiliaryConfig other)
 		{
-			if (!CompareElectricalConfiguration(other))
+			if (!CompareElectricalConfiguration(other)) {
 				return false;
-			if (!ComparePneumaticAuxiliariesConfig(other))
+			}
+			if (!ComparePneumaticAuxiliariesConfig(other)) {
 				return false;
-			if (!ComparePneumaticUserConfig(other))
+			}
+			if (!ComparePneumaticUserConfig(other)) {
 				return false;
+			}
+
 			//if (!CompareHVACConfig(other))
 			//	return false;
 

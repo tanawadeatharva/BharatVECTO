@@ -108,27 +108,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return electricalUserInputsConfig;
 		}
 
-		private static IPneumaticsAuxilliariesConfig LoadPneumaticsAuxConfig(JObject paData, string baseDir)
+		private static IPneumaticsConsumersDemand LoadPneumaticsAuxConfig(JObject paData, string baseDir)
 		{
-			var pneumaticAuxillariesConfig = new PneumaticsAuxilliariesConfig();
-			pneumaticAuxillariesConfig.AdBlueNIperMinute =
+			var pneumaticAuxillariesConfig = new PneumaticsConsumersDemand();
+			pneumaticAuxillariesConfig.AdBlueInjection =
 				paData.GetEx<double>("AdBlueNIperMinute").SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
-			pneumaticAuxillariesConfig.AirControlledSuspensionNIperMinute =
+			pneumaticAuxillariesConfig.AirControlledSuspension =
 				paData.GetEx<double>("AirControlledSuspensionNIperMinute").SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
-			pneumaticAuxillariesConfig.BrakingNoRetarderNIperKG = paData
-				.GetEx<double>("BrakingNoRetarderNIperKG").SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
-			pneumaticAuxillariesConfig.BrakingWithRetarderNIperKG = paData
-				.GetEx<double>("BrakingWithRetarderNIperKG").SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
-			pneumaticAuxillariesConfig.BreakingPerKneelingNIperKGinMM = paData
+			pneumaticAuxillariesConfig.Braking = paData
+				.GetEx<double>("BrakingNIperKG").SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
+			//pneumaticAuxillariesConfig.BrakingWithRetarderNIperKG = paData
+				//.GetEx<double>("BrakingWithRetarderNIperKG").SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
+			pneumaticAuxillariesConfig.BreakingWithKneeling = paData
 				.GetEx<double>("BreakingPerKneelingNIperKGinMM").SI(Unit.SI.Liter.Per.Kilo.Gramm.Milli.Meter)
 				.Cast<NormLiterPerKilogramMeter>();
-			pneumaticAuxillariesConfig.DeadVolBlowOutsPerLitresperHour =
+			pneumaticAuxillariesConfig.DeadVolBlowOuts =
 				paData.GetEx<double>("DeadVolBlowOutsPerLitresperHour").SI(Unit.SI.Per.Hour).Cast<PerSecond>();
-			pneumaticAuxillariesConfig.DeadVolumeLitres = paData.GetEx<double>("DeadVolumeLitres").SI<NormLiter>();
+			pneumaticAuxillariesConfig.DeadVolume = paData.GetEx<double>("DeadVolumeLitres").SI<NormLiter>();
 			pneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand =
 				paData.GetEx<double>("NonSmartRegenFractionTotalAirDemand");
-			pneumaticAuxillariesConfig.PerDoorOpeningNI = paData.GetEx<double>("PerDoorOpeningNI").SI<NormLiter>();
-			pneumaticAuxillariesConfig.PerStopBrakeActuationNIperKG = paData
+			pneumaticAuxillariesConfig.DoorOpening = paData.GetEx<double>("PerDoorOpeningNI").SI<NormLiter>();
+			pneumaticAuxillariesConfig.StopBrakeActuation = paData
 				.GetEx<double>("PerStopBrakeActuationNIperKG").SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
 			pneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand =
 				paData.GetEx<double>("SmartRegenFractionTotalAirDemand");
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			pneumaticUserInputsConfig.Doors = puData.GetEx<string>("Doors").ParseEnum<ConsumerTechnology>();
 			pneumaticUserInputsConfig.KneelingHeightMillimeters =
 				puData.GetEx<double>("KneelingHeightMillimeters").SI(Unit.SI.Milli.Meter).Cast<Meter>();
-			pneumaticUserInputsConfig.RetarderBrake = puData.GetEx<bool>("RetarderBrake");
+			//pneumaticUserInputsConfig.RetarderBrake = puData.GetEx<bool>("RetarderBrake");
 			pneumaticUserInputsConfig.SmartAirCompression = puData.GetEx<bool>("SmartAirCompression");
 			pneumaticUserInputsConfig.SmartRegeneration = puData.GetEx<bool>("SmartRegeneration");
 			return pneumaticUserInputsConfig;

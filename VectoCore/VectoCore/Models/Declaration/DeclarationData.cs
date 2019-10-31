@@ -176,26 +176,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static IPneumaticsAuxilliariesConfig DefaultPneumaticAuxConfig
-			{
-				get {
-					return new PneumaticsAuxilliariesConfig() {
-						AdBlueNIperMinute = Constants.BusAuxiliaries.PneumaticAuxDemands.AdBlueNIperMinute,
-						AirControlledSuspensionNIperMinute = Constants.BusAuxiliaries.PneumaticAuxDemands.AirControlledSuspensionNIperMinute,
-						BrakingNoRetarderNIperKG = Constants.BusAuxiliaries.PneumaticAuxDemands.BrakingNoRetarderNIperKG,
-						BrakingWithRetarderNIperKG = Constants.BusAuxiliaries.PneumaticAuxDemands.BrakingWithRetarderNIperKG,
-						BreakingPerKneelingNIperKGinMM = Constants.BusAuxiliaries.PneumaticAuxDemands.BreakingPerKneelingNIperKGinMM,
-						DeadVolBlowOutsPerLitresperHour = Constants.BusAuxiliaries.PneumaticAuxDemands.DeadVolBlowOutsPerLitresperHour,
-						DeadVolumeLitres = Constants.BusAuxiliaries.PneumaticAuxDemands.DeadVolumeLitres,
-						NonSmartRegenFractionTotalAirDemand = Constants.BusAuxiliaries.PneumaticAuxDemands.NonSmartRegenFractionTotalAirDemand,
-						SmartRegenFractionTotalAirDemand = Constants.BusAuxiliaries.PneumaticAuxDemands.SmartRegenFractionTotalAirDemand,
-						OverrunUtilisationForCompressionFraction = Constants.BusAuxiliaries.PneumaticAuxDemands.OverrunUtilisationForCompressionFraction,
-						PerDoorOpeningNI = Constants.BusAuxiliaries.PneumaticAuxDemands.PerDoorOpeningNI,
-						PerStopBrakeActuationNIperKG = Constants.BusAuxiliaries.PneumaticAuxDemands.PerStopBrakeActuationNIperKG,
-					};
-				}
-			}
-
+			
 			//public static IPneumaticUserInputsConfig DefaultPneumaticUserConfig { get; }
 
 			public static IHVACUserInputsConfig DefaultHVACUserConfig { get; }

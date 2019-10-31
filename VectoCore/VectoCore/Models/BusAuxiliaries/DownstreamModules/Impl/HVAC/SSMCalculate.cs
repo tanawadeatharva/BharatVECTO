@@ -375,8 +375,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 				var gen = ssmTOOL.SSMInputs;
 				var tl = ssmTOOL.TechList;
-				double result;
-
+				
 				// Dim TLR92 As Double =  tl.CValueVariation 'TECH LIST INPUT'!R92
 				// Dim C43 As Double   =  gen.BC_MaxPossibleBenefitFromTechnologyList
 				// Dim C53 As string   =  gen.AC_CompressorType
@@ -387,17 +386,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				//			Math.Max(If(gen.AC_CompressorType.ToLower() = "mechanical", tl.CValueVariation, 0),
 				//					-gen.BC_MaxPossibleBenefitFromTechnologyList))
 
-				result = (gen.ACSystem.CompressorType.IsMechanical()
-							? tl.CValueVariation
-							: 0) > 0
-					? Math.Min(
-						gen.ACSystem.CompressorType.IsMechanical() ? tl.CValueVariation : 0,
-						gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList)
-					: Math.Max(
-						gen.ACSystem.CompressorType.IsMechanical() ? tl.CValueVariation : 0,
-						-gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList);
+				if (gen.ACSystem.CompressorType.IsElectrical()) {
+					return 0;
+				}
 
-				return result;
+				return tl.CValueVariation.LimitTo(
+					-gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList,
+					gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList);
 			}
 		}
 
@@ -408,23 +403,18 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 				var gen = ssmTOOL.SSMInputs;
 				var tl = ssmTOOL.TechList;
-				double result;
-
+				
 				// Dim TLR92 As Double =  tl.CValueVariation 'TECH LIST INPUT'!R92
 				// Dim C43 As Double   =  gen.BC_MaxPossibleBenefitFromTechnologyList
 				// Dim C53 As string   =  gen.AC_CompressorType
 
-				result = gen.ACSystem.CompressorType.IsMechanical()
-					? 0
-					: tl.CValueVariation > 0
-						? Math.Min(
-							gen.ACSystem.CompressorType.IsMechanical() ? 0 : tl.CValueVariation,
-							gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList)
-						: Math.Max(
-							gen.ACSystem.CompressorType.IsMechanical() ? 0 : tl.CValueVariation,
-							-gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList);
+				if (gen.ACSystem.CompressorType.IsMechanical()) {
+					return 0;
+				}
 
-				return result;
+				return tl.CValueVariation.LimitTo(
+					-gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList,
+					gen.BoundaryConditions.MaxPossibleBenefitFromTechnologyList);
 			}
 		}
 
@@ -523,55 +513,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			sb.AppendLine(Run1.ToString());
 			sb.AppendLine(Run2.ToString());
 
-			//// Staging Calcs
-			//sb.AppendLine("Staging Base Values");
-			//sb.AppendLine("*******************");
-			//sb.AppendLine(
-			//	vbTab + vbTab + vbTab + "Mechanical" + vbTab + "Elec Cool/Heat" + vbTab + "Elec Vent" + vbTab +
-			//	"Fuel Fired Heating");
-
-			//sb.AppendLine(
-			//	string.Format(
-			//		"Heating   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, BaseHeatingW_Mechanical.Value().ToString("0.00"),
-			//		BaseHeatingW_ElectricalCoolingHeating.Value().ToString("0.00"),
-			//		BaseHeatingW_ElectricalVentilation.Value().ToString("0.00"),
-			//		BaseHeatingW_FuelFiredHeating.Value().ToString("0.00")));
-			//sb.AppendLine(
-			//	string.Format(
-			//		"Cooling   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, BaseCoolingW_Mechanical.Value().ToString("0.00"),
-			//		BaseCoolingW_ElectricalCoolingHeating.Value().ToString("0.00"),
-			//		BaseCoolingW_ElectricalVentilation.Value().ToString("0.00"),
-			//		BaseCoolingW_FuelFiredHeating.Value().ToString("0.00")));
-			//sb.AppendLine(
-			//	string.Format(
-			//		"Ventilate {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, BaseVentilationW_Mechanical.Value().ToString("0.00"),
-			//		BaseVentilationW_ElectricalCoolingHeating.Value().ToString("0.00"),
-			//		BaseVentilationW_ElectricalVentilation.Value().ToString("0.00"),
-			//		BaseVentilationW_FuelFiredHeating.Value().ToString("0.00")));
-
-			//sb.AppendLine("");
-			//sb.AppendLine("Staging Adjusted Values");
-			//sb.AppendLine("***********************");
-
-			//sb.AppendLine(
-			//	string.Format(
-			//		"Heating   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, TechListAdjustedHeatingW_Mechanical.ToString("0.00"),
-			//		TechListAdjustedHeatingW_ElectricalCoolingHeating.ToString("0.00"),
-			//		TechListAdjustedHeatingW_ElectricalVentilation.ToString("0.00"),
-			//		TechListAdjustedHeatingW_FuelFiredHeating.ToString("0.00")));
-			//sb.AppendLine(
-			//	string.Format(
-			//		"Cooling   {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, TechListAdjustedCoolingW_Mechanical.ToString("0.00"),
-			//		TechListAdjustedCoolingW_ElectricalCoolingHeating.ToString("0.00"),
-			//		TechListAdjustedCoolingW_ElectricalVentilation.ToString("0.00"),
-			//		TechListAdjustedCoolingW_FuelFiredHeating.ToString("0.00")));
-			//sb.AppendLine(
-			//	string.Format(
-			//		"Ventilate {0}{1}{0}{2}{0}{3}{0}{4}", vbTab + vbTab, TechListAdjustedVentilationW_Mechanical.ToString("0.00"),
-			//		TechListAdjustedVentilationW_ElectricalCoolingHeating.ToString("0.00"),
-			//		TechListAdjustedVentilationW_ElectricalVentilation.ToString("0.00"),
-			//		TechListAdjustedVentilationW_FuelFiredHeating.ToString("0.00")));
-
+			
 			return sb.ToString();
 		}
 

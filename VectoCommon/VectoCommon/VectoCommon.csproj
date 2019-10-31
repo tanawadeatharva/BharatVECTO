@@ -67,7 +67,7 @@
     <Compile Include="BusAuxiliaries\IHVACConstants.cs" />
     <Compile Include="BusAuxiliaries\IHVACUserInputsConfig.cs" />
     <Compile Include="BusAuxiliaries\IActuationsMap.cs" />
-    <Compile Include="BusAuxiliaries\IPneumaticsAuxilliariesConfig.cs" />
+    <Compile Include="BusAuxiliaries\IPneumaticsConsumersDemand.cs" />
     <Compile Include="BusAuxiliaries\IPneumaticUserInputsConfig.cs" />
     <Compile Include="BusAuxiliaries\IResultCard.cs" />
     <Compile Include="BusAuxiliaries\ISignals.cs" />

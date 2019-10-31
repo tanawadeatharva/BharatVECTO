@@ -144,27 +144,27 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			puData["CompressorMap"] = pneumaticUserCfg.CompressorMap == null ? "" : JSONFileWriter.GetRelativePath(pneumaticUserCfg.CompressorMap.Source, auxPath);
 			puData["Doors"] = pneumaticUserCfg.Doors;
 			puData["KneelingHeightMillimeters"] = pneumaticUserCfg.KneelingHeightMillimeters.ConvertToMilliMeter().Value;
-			puData["RetarderBrake"] = pneumaticUserCfg.RetarderBrake;
+			//puData["RetarderBrake"] = pneumaticUserCfg.RetarderBrake;
 			puData["SmartAirCompression"] = pneumaticUserCfg.SmartAirCompression;
 			puData["SmartRegeneration"] = pneumaticUserCfg.SmartRegeneration;
 
 			return puData;
 		}
 
-		protected static Dictionary<string, object> SavePneumaticAuxconfig(IPneumaticsAuxilliariesConfig pneumaticAuxCfg)
+		protected static Dictionary<string, object> SavePneumaticAuxconfig(IPneumaticsConsumersDemand pneumaticAuxCfg)
 		{
 			var paData = new Dictionary<string, object>();
 
-			paData["AdBlueNIperMinute"] = pneumaticAuxCfg.AdBlueNIperMinute.ConvertToNlPerMin().Value;
-			paData["AirControlledSuspensionNIperMinute"] = pneumaticAuxCfg.AirControlledSuspensionNIperMinute.ConvertToNlPerMin().Value;
-			paData["BrakingNoRetarderNIperKG"] = pneumaticAuxCfg.BrakingNoRetarderNIperKG.Value();
-			paData["BrakingWithRetarderNIperKG"] = pneumaticAuxCfg.BrakingWithRetarderNIperKG.Value();
-			paData["BreakingPerKneelingNIperKGinMM"] = pneumaticAuxCfg.BreakingPerKneelingNIperKGinMM.Value() / 1000;
-			paData["DeadVolBlowOutsPerLitresperHour"] = pneumaticAuxCfg.DeadVolBlowOutsPerLitresperHour.ConvertToPerHour().Value;
-			paData["DeadVolumeLitres"] = pneumaticAuxCfg.DeadVolumeLitres.Cast<CubicMeter>().ConvertToCubicDeziMeter().Value;
+			paData["AdBlueNIperMinute"] = pneumaticAuxCfg.AdBlueInjection.ConvertToNlPerMin().Value;
+			paData["AirControlledSuspensionNIperMinute"] = pneumaticAuxCfg.AirControlledSuspension.ConvertToNlPerMin().Value;
+			paData["BrakingNIperKG"] = pneumaticAuxCfg.Braking.Value();
+			//paData["BrakingWithRetarderNIperKG"] = pneumaticAuxCfg.BrakingWithRetarderNIperKG.Value();
+			paData["BreakingPerKneelingNIperKGinMM"] = pneumaticAuxCfg.BreakingWithKneeling.Value() / 1000;
+			paData["DeadVolBlowOutsPerLitresperHour"] = pneumaticAuxCfg.DeadVolBlowOuts.ConvertToPerHour().Value;
+			paData["DeadVolumeLitres"] = pneumaticAuxCfg.DeadVolume.Cast<CubicMeter>().ConvertToCubicDeziMeter().Value;
 			paData["NonSmartRegenFractionTotalAirDemand"] = pneumaticAuxCfg.NonSmartRegenFractionTotalAirDemand;
-			paData["PerDoorOpeningNI"] = pneumaticAuxCfg.PerDoorOpeningNI.Cast<CubicMeter>().ConvertToCubicDeziMeter().Value;
-			paData["PerStopBrakeActuationNIperKG"] = pneumaticAuxCfg.PerStopBrakeActuationNIperKG.Value();
+			paData["PerDoorOpeningNI"] = pneumaticAuxCfg.DoorOpening.Cast<CubicMeter>().ConvertToCubicDeziMeter().Value;
+			paData["PerStopBrakeActuationNIperKG"] = pneumaticAuxCfg.StopBrakeActuation.Value();
 			paData["SmartRegenFractionTotalAirDemand"] = pneumaticAuxCfg.SmartRegenFractionTotalAirDemand;
 			paData["OverrunUtilisationForCompressionFraction"] =
 				pneumaticAuxCfg.OverrunUtilisationForCompressionFraction;

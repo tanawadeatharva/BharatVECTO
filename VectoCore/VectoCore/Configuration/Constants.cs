@@ -138,33 +138,34 @@ namespace TUGraz.VectoCore.Configuration
 				public static readonly Second DoorActuationTimeSecond = 4.SI<Second>();
 			}
 
-			public static class PneumaticAuxDemands
+			public static class PneumaticConsumersDemands
 			{
-				public static readonly NormLiterPerSecond AdBlueNIperMinute =
+				public static readonly NormLiterPerSecond AdBlueInjection =
 					21.25.SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
 
-				public static readonly NormLiterPerSecond AirControlledSuspensionNIperMinute =
+				public static readonly NormLiterPerSecond AirControlledSuspension =
 					15.SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>();
 
-				public static readonly NormLiterPerKilogram BrakingNoRetarderNIperKG =
+				public static readonly NormLiterPerKilogram BrakingNoRetarder =
 					0.00081.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
 
-				public static readonly NormLiterPerKilogram BrakingWithRetarderNIperKG =
+				public static readonly NormLiterPerKilogram BrakingWithRetarder =
 					0.0006.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
 
-				public static readonly NormLiterPerKilogramMeter BreakingPerKneelingNIperKGinMM =
+				public static readonly NormLiterPerKilogramMeter BreakingAndKneeling =
 					0.000066.SI(Unit.SI.Liter.Per.Kilo.Gramm.Milli.Meter).Cast<NormLiterPerKilogramMeter>();
 
-				public static readonly PerSecond DeadVolBlowOutsPerLitresperHour = 24.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
-				public static readonly NormLiter DeadVolumeLitres = 30.SI<NormLiter>();
+				// Nl (blowout) / Nl (DeadVolume) / h -> 1/s
+				public static readonly PerSecond DeadVolBlowOuts = 24.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
+				public static readonly NormLiter DeadVolume = 30.SI<NormLiter>();
 				public static readonly double NonSmartRegenFractionTotalAirDemand = 0.26;
+				public static readonly double SmartRegenFractionTotalAirDemand = 0.12;
 				public static readonly double OverrunUtilisationForCompressionFraction = 0.97;
-				public static readonly NormLiter PerDoorOpeningNI = 12.7.SI<NormLiter>();
+				public static readonly NormLiter DoorOpening = 12.7.SI<NormLiter>();
 
-				public static readonly NormLiterPerKilogram PerStopBrakeActuationNIperKG =
+				public static readonly NormLiterPerKilogram StopBrakeActuation =
 					0.00064.SI(Unit.SI.Liter.Per.Kilo.Gramm).Cast<NormLiterPerKilogram>();
 
-				public static readonly double SmartRegenFractionTotalAirDemand = 0.12;
 			}
 
 			public static class PneumaticUserConfig

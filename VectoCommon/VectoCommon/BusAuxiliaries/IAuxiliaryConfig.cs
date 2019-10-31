@@ -18,7 +18,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 
 		// Pneumatics
 		IPneumaticUserInputsConfig PneumaticUserInputsConfig { get;  }
-		IPneumaticsAuxilliariesConfig PneumaticAuxillariesConfig { get;  }
+		IPneumaticsConsumersDemand PneumaticAuxillariesConfig { get;  }
 
 		ISSMInputs SSMInputs { get; }
 

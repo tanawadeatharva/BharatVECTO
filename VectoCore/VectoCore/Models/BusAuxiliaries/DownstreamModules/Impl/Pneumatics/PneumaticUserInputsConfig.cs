@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 		public ConsumerTechnology Doors { get; set; }
 		public Meter KneelingHeightMillimeters { get; set; }
 
-		public bool RetarderBrake { get; set; }
+		//public bool RetarderBrake { get; set; }
 		public bool SmartAirCompression { get; set; }
 		public bool SmartRegeneration { get; set; }
 	}

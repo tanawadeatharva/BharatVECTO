@@ -14,29 +14,28 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 {
-	public class PneumaticsAuxilliariesConfig : IPneumaticsAuxilliariesConfig
+	public class PneumaticsConsumersDemand : IPneumaticsConsumersDemand
 	{
-		public NormLiterPerSecond AdBlueNIperMinute { get; set; }
+		public NormLiterPerSecond AdBlueInjection { get; set; }
 
-		public NormLiterPerSecond AirControlledSuspensionNIperMinute { get; set; }
+		public NormLiterPerSecond AirControlledSuspension { get; set; }
 
-		public NormLiterPerKilogram BrakingNoRetarderNIperKG { get; set; }
+		public NormLiterPerKilogram Braking { get; set; }
 
-		public NormLiterPerKilogram BrakingWithRetarderNIperKG { get; set; }
+		public NormLiterPerKilogramMeter BreakingWithKneeling { get; set; }
 
-		public NormLiterPerKilogramMeter BreakingPerKneelingNIperKGinMM { get; set; }
+		// Nl/Nl/h => 1/s
+		public PerSecond DeadVolBlowOuts { get; set; }
 
-		public PerSecond DeadVolBlowOutsPerLitresperHour { get; set; }
-
-		public NormLiter DeadVolumeLitres { get; set; }
+		public NormLiter DeadVolume { get; set; }
 
 		public double NonSmartRegenFractionTotalAirDemand { get; set; }
 
 		public double OverrunUtilisationForCompressionFraction { get; set; }
 
-		public NormLiter PerDoorOpeningNI { get; set; }
+		public NormLiter DoorOpening { get; set; }
 
-		public NormLiterPerKilogram PerStopBrakeActuationNIperKG { get; set; }
+		public NormLiterPerKilogram StopBrakeActuation { get; set; }
 
 		public double SmartRegenFractionTotalAirDemand { get; set; }
 

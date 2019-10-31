@@ -308,7 +308,7 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\M03Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\M04Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\ActuationsMap.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\PneumaticsAuxilliariesConfig.cs" />
+    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\PneumaticsConsumersDemand.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\PneumaticUserInputsConfig.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\AltUserInput.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\IAlternator.cs" />

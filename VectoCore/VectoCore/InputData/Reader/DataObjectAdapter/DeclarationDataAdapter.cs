@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -70,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				MinSpeed = DeclarationData.Driver.OverSpeed.MinSpeed,
 				OverSpeed = DeclarationData.Driver.OverSpeed.AllowedOverSpeed,
 			};
-			
+
 			var retVal = new DriverData {
 				LookAheadCoasting = lookAheadData,
 				OverSpeed = overspeedData,
@@ -80,8 +81,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					UtilityFactor = DeclarationData.Driver.EngineStopStart.UtilityFactor,
 				},
 				EcoRoll = new DriverData.EcoRollData() {
-					UnderspeedThreshold =  DeclarationData.Driver.EcoRoll.UnderspeedThreshold,
-					MinSpeed =  DeclarationData.Driver.EcoRoll.MinSpeed,
+					UnderspeedThreshold = DeclarationData.Driver.EcoRoll.UnderspeedThreshold,
+					MinSpeed = DeclarationData.Driver.EcoRoll.MinSpeed,
 					ActivationPhaseDuration = DeclarationData.Driver.EcoRoll.ActivationDelay,
 					AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
 					AccelerationUpperLimit = DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
@@ -124,11 +125,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.VocationalVehicle = data.VocationalVehicle;
 			retVal.ADAS = CreateADAS(data.ADAS);
+
 			// eco-roll is not allowed for MT transmissions!
 			if (retVal.ADAS.EcoRoll != EcoRollType.None && data.Components.GearboxInputData.Type == GearboxType.MT) {
 				retVal.ADAS.EcoRoll = EcoRollType.None;
 			}
-			if (retVal.ADAS.EcoRoll == EcoRollType.WithEngineStop && data.Components.GearboxInputData.Type.AutomaticTransmission()) {
+			if (retVal.ADAS.EcoRoll == EcoRollType.WithEngineStop &&
+				data.Components.GearboxInputData.Type.AutomaticTransmission()) {
 				retVal.ADAS.EcoRoll = EcoRollType.WithoutEngineStop;
 			}
 
@@ -174,7 +177,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		
 
 		private VehicleData CreateExemptedVehicleData(IVehicleDeclarationInputData data)
 		{
@@ -191,7 +193,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		internal CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData mode, Mission mission)
+		internal CombustionEngineData CreateEngineData(
+			IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData mode, Mission mission)
 		{
 			var engine = vehicle.Components.EngineInputData;
 			var gearbox = vehicle.Components.GearboxInputData;
@@ -203,22 +206,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = SetCommonCombustionEngineData(engine, vehicle.TankSystem);
 			retVal.IdleSpeed = VectoMath.Max(mode.IdleSpeed, vehicle.EngineIdleSpeed);
 
-			
-
 			retVal.Fuels = new List<CombustionEngineFuelData>();
 			foreach (var fuel in mode.Fuels) {
-				retVal.Fuels.Add(new CombustionEngineFuelData() {
-					WHTCUrban = fuel.WHTCUrban,
-					WHTCRural = fuel.WHTCRural,
-					WHTCMotorway = fuel.WHTCMotorway,
-					ColdHotCorrectionFactor = fuel.ColdHotBalancingFactor,
-					CorrectionFactorRegPer = fuel.CorrectionFactorRegPer,
-					FuelData = DeclarationData.FuelData.Lookup(fuel.FuelType, vehicle.TankSystem),
-					ConsumptionMap = FuelConsumptionMapReader.Create(fuel.FuelConsumptionMap),
-					FuelConsumptionCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
-					mission.MissionType.GetNonEMSMissionType(), fuel.WHTCRural, fuel.WHTCUrban,
-					fuel.WHTCMotorway) * fuel.ColdHotBalancingFactor * fuel.CorrectionFactorRegPer,
-			});
+				retVal.Fuels.Add(
+					new CombustionEngineFuelData() {
+						WHTCUrban = fuel.WHTCUrban,
+						WHTCRural = fuel.WHTCRural,
+						WHTCMotorway = fuel.WHTCMotorway,
+						ColdHotCorrectionFactor = fuel.ColdHotBalancingFactor,
+						CorrectionFactorRegPer = fuel.CorrectionFactorRegPer,
+						FuelData = DeclarationData.FuelData.Lookup(fuel.FuelType, vehicle.TankSystem),
+						ConsumptionMap = FuelConsumptionMapReader.Create(fuel.FuelConsumptionMap),
+						FuelConsumptionCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
+															mission.MissionType.GetNonEMSMissionType(), fuel.WHTCRural, fuel.WHTCUrban,
+															fuel.WHTCMotorway) * fuel.ColdHotBalancingFactor * fuel.CorrectionFactorRegPer,
+					});
 			}
 
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement, gearbox.Type);
@@ -240,8 +242,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var whr = CreateWHRData(mode.WasteHeatRecoveryData);
 			if (whr != null) {
 				whr.WHRCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
-														mission.MissionType.GetNonEMSMissionType(), whr.CFRural, whr.CFUrban,
-														whr.CFMotorway) * whr.CFColdHot * whr.CFRegPer;
+											mission.MissionType.GetNonEMSMissionType(), whr.CFRural, whr.CFUrban,
+											whr.CFMotorway) * whr.CFColdHot * whr.CFRegPer;
 			}
 			retVal.WHRData = whr;
 
@@ -620,6 +622,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				HighVentilation = Constants.BusAuxiliaries.SteadyStateModel.HighVentilation,
 				LowVentilation = Constants.BusAuxiliaries.SteadyStateModel.LowVentilation,
 				SpecificVentilationPower = Constants.BusAuxiliaries.SteadyStateModel.SpecificVentilationPower,
+
 				// TODO! MQ 2019-19-29 Compressor Type and CompressorCapacity from input data?
 				CompressorType = ACCompressorType.TwoStage, // "2-stage",
 				CompressorCapacity = 18.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
@@ -629,14 +632,34 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,
 				CoolantHeatTransferredToAirCabinHeater = Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
 				GFactor = Constants.BusAuxiliaries.SteadyStateModel.GFactor,
-				VentilationOnDuringHeating =  true,
+				VentilationOnDuringHeating = true,
 				VentilationWhenBothHeatingAndACInactive = true,
 				VentilationDuringAC = true,
 				VentilationDuringHeating = VentilationLevel.High,
 				VentilationDuringCooling = VentilationLevel.High,
 				VentilationFlowSettingWhenHeatingAndACInactive = VentilationLevel.High,
-				MaxPossibleBenefitFromTechnologyList = Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList,
-		};
+				MaxPossibleBenefitFromTechnologyList =
+					Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList,
+			};
+		}
+
+		public IPneumaticsConsumersDemand CreatePneumaticAuxConfig(RetarderType retarderType)
+		{
+			return new PneumaticsConsumersDemand() {
+				AdBlueInjection = Constants.BusAuxiliaries.PneumaticConsumersDemands.AdBlueInjection,
+				AirControlledSuspension = Constants.BusAuxiliaries.PneumaticConsumersDemands.AirControlledSuspension,
+				Braking = retarderType == RetarderType.None ?
+					Constants.BusAuxiliaries.PneumaticConsumersDemands.BrakingNoRetarder : 
+					Constants.BusAuxiliaries.PneumaticConsumersDemands.BrakingWithRetarder,
+				BreakingWithKneeling = Constants.BusAuxiliaries.PneumaticConsumersDemands.BreakingAndKneeling,
+				DeadVolBlowOuts = Constants.BusAuxiliaries.PneumaticConsumersDemands.DeadVolBlowOuts,
+				DeadVolume = Constants.BusAuxiliaries.PneumaticConsumersDemands.DeadVolume,
+				NonSmartRegenFractionTotalAirDemand = Constants.BusAuxiliaries.PneumaticConsumersDemands.NonSmartRegenFractionTotalAirDemand,
+				SmartRegenFractionTotalAirDemand = Constants.BusAuxiliaries.PneumaticConsumersDemands.SmartRegenFractionTotalAirDemand,
+				OverrunUtilisationForCompressionFraction = Constants.BusAuxiliaries.PneumaticConsumersDemands.OverrunUtilisationForCompressionFraction,
+				DoorOpening = Constants.BusAuxiliaries.PneumaticConsumersDemands.DoorOpening,
+				StopBrakeActuation = Constants.BusAuxiliaries.PneumaticConsumersDemands.StopBrakeActuation,
+			};
 		}
 	}
 }

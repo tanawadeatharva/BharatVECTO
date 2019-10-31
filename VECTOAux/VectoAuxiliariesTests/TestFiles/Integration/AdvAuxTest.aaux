@@ -276,7 +276,6 @@
       "Doors": "Pneumatic",
       "KneelingHeightMillimeters": 80.0,
       "ActuationsMap": "testPneumaticActuationsMap.APAC",
-      "RetarderBrake": true,
       "SmartAirCompression": true,
       "SmartRegeneration": true
     },
@@ -285,8 +284,7 @@
         "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics.PneumaticsAuxilliariesConfig, BusAuxiliaries",
       "AdBlueNIperMinute": 21.25,
       "AirControlledSuspensionNIperMinute": 15.0,
-      "BrakingNoRetarderNIperKG": 0.00081,
-      "BrakingWithRetarderNIperKG": 0.0006,
+      "BrakingNIperKG": 0.0006,
       "BreakingPerKneelingNIperKGinMM": 6.6E-05,
       "DeadVolBlowOutsPerLitresperHour": 24.0,
       "DeadVolumeLitres": 30.0,

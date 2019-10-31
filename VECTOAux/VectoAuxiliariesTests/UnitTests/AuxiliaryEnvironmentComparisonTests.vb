@@ -490,7 +490,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).AdBlueNIperMinute += 1.SI(Of NormLiterPerSecond)
+			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).AdBlueInjection += 1.SI(Of NormLiterPerSecond)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -506,7 +506,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).AirControlledSuspensionNIperMinute += 1.SI(of NormLiterPerSecond)
+		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).AirControlledSuspension += 1.SI(of NormLiterPerSecond)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -522,7 +522,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).BrakingNoRetarderNIperKG += 1.SI(of NormLiterPerKilogram)
+		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).Braking += 1.SI(of NormLiterPerKilogram)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -530,21 +530,21 @@ Namespace UnitTests
 			Assert.AreEqual(False, compareResult)
 		End Sub
 
-		<Test()>
-		<Category("PneumaticAuxiliariesConfig")>
-		Public Sub PneumaticsAuxuiliaryConfig_BrakingWithRetarderNIperKG_Enequal()
+		'<Test()>
+		'<Category("PneumaticAuxiliariesConfig")>
+		'Public Sub PneumaticsAuxuiliaryConfig_BrakingWithRetarderNIperKG_Enequal()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).BrakingWithRetarderNIperKG += 1.SI(Of NormLiterPerKilogram)
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).BrakingWithRetarderNIperKG += 1.SI(Of NormLiterPerKilogram)
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
 		<Test()>
 		<Category("PneumaticAuxiliariesConfig")>
@@ -554,7 +554,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).BreakingPerKneelingNIperKGinMM += 1.SI(Of NormLiterPerKilogramMeter)
+		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).BreakingWithKneeling += 1.SI(Of NormLiterPerKilogramMeter)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -570,7 +570,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).DeadVolBlowOutsPerLitresperHour += 1.SI(Of PerSecond)
+		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DeadVolBlowOuts += 1.SI(Of PerSecond)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -586,7 +586,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).DeadVolumeLitres += 1.SI(of NormLiter)
+		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DeadVolume += 1.SI(of NormLiter)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -602,7 +602,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).NonSmartRegenFractionTotalAirDemand += 1
+		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).NonSmartRegenFractionTotalAirDemand += 1
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -618,7 +618,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).OverrunUtilisationForCompressionFraction += 1
+		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).OverrunUtilisationForCompressionFraction += 1
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -634,7 +634,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).PerDoorOpeningNI += 1.SI(Of NormLiter)
+		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DoorOpening += 1.SI(Of NormLiter)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -650,7 +650,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).PerStopBrakeActuationNIperKG += 1.SI(of NormLiterPerKilogram)
+		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).StopBrakeActuation += 1.SI(of NormLiterPerKilogram)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -666,7 +666,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsAuxilliariesConfig).SmartRegenFractionTotalAirDemand += 1
+		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).SmartRegenFractionTotalAirDemand += 1
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -812,20 +812,20 @@ Namespace UnitTests
 			Assert.AreEqual(False, compareResult)
 		End Sub
 
-		<Test()>
-		<Category("PneumaticUserInputsConfig")>
-		Public Sub PneumaticUserInputsConfig_RetarderBrake_Enequal()
+		'<Test()>
+		'<Category("PneumaticUserInputsConfig")>
+		'Public Sub PneumaticUserInputsConfig_RetarderBrake_Enequal()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).RetarderBrake = Not auxNow.PneumaticUserInputsConfig.RetarderBrake
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'    CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).RetarderBrake = Not auxNow.PneumaticUserInputsConfig.RetarderBrake
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
 		<Test()>
 		<Category("PneumaticUserInputsConfig")>

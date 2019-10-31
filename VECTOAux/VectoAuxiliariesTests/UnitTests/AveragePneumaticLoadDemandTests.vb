@@ -2,20 +2,23 @@
 Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.BusAuxiliaries
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
+Imports TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.Declaration
+Imports TUGraz.VectoCore.Models.Simulation.Data
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 
 Namespace UnitTests
     <TestFixture>
     Public Class M3_AveragePneumaticLoadDemandTests
         Private _pneumaticUserInputsConfig As IPneumaticUserInputsConfig
-        Private _pneumaticAuxillariesConfig As IPneumaticsAuxilliariesConfig
+        Private _pneumaticAuxillariesConfig As IPneumaticsConsumersDemand
         Private _actuationsMap As IActuationsMap
         Private _pneumaticsCompressorFlowRateMap As ICompressorMap
         Private _vehicleMassKG As Single = 16500
@@ -47,7 +50,7 @@ Namespace UnitTests
             _defaultInputConfig.CompressorGearRatio = 1.3
             _defaultInputConfig.CompressorGearEfficiency = 0.8
             _defaultInputConfig.SmartRegeneration = True
-            _defaultInputConfig.RetarderBrake = True
+            '_defaultInputConfig.RetarderBrake = True
             _defaultInputConfig.KneelingHeightMillimeters = 80.SI(Unit.SI.Milli.Meter).Cast (of Meter)
             _defaultInputConfig.AirSuspensionControl = ConsumerTechnology.Electrically ' "Electrically"
             _defaultInputConfig.AdBlueDosing = ConsumerTechnology.Pneumatic ' "Pneumatic"
@@ -68,8 +71,7 @@ Namespace UnitTests
             psUserInputsConfig.Doors = ConsumerTechnology.Pneumatic  '"Pneumatic"
             psUserInputsConfig.AdBlueDosing = ConsumerTechnology.Pneumatic  ' "Pneumatic"
 
-
-            Dim psAuxConfig = DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig
+            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
                                         
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
@@ -91,8 +93,7 @@ Namespace UnitTests
 
             initialise()
 
-            Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
-                                    PneumaticsAuxilliariesConfig)
+            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
@@ -118,8 +119,7 @@ Namespace UnitTests
 
             initialise()
 
-            Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
-                                    PneumaticsAuxilliariesConfig)
+            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
 
@@ -149,8 +149,7 @@ Namespace UnitTests
 
             _defaultInputConfig.CompressorGearEfficiency = 0.8
 
-            Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
-                                    PneumaticsAuxilliariesConfig)
+            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
@@ -174,8 +173,7 @@ Namespace UnitTests
 
             initialise()
 
-            Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
-                                    PneumaticsAuxilliariesConfig)
+            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
@@ -206,8 +204,7 @@ Namespace UnitTests
 
             _defaultInputConfig.SmartRegeneration = False
 
-            Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
-                                    PneumaticsAuxilliariesConfig)
+            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
@@ -234,10 +231,9 @@ Namespace UnitTests
 
             initialise()
 
-            _defaultInputConfig.RetarderBrake = False
-
-            Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
-                                    PneumaticsAuxilliariesConfig)
+            '_defaultInputConfig.RetarderBrake = False
+           
+            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.None)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
@@ -266,8 +262,7 @@ Namespace UnitTests
 
             _defaultInputConfig.KneelingHeightMillimeters = 100.SI(Unit.si.Milli.Meter).Cast (Of Meter)
 
-            Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
-                                    PneumaticsAuxilliariesConfig)
+            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
@@ -293,8 +288,7 @@ Namespace UnitTests
 
             _defaultInputConfig.AirSuspensionControl = ConsumerTechnology.Mechanically
 
-            Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
-                                    PneumaticsAuxilliariesConfig)
+            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
@@ -322,8 +316,7 @@ Namespace UnitTests
 
             _defaultInputConfig.AdBlueDosing = ConsumerTechnology.Pneumatic
 
-            Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
-                                    PneumaticsAuxilliariesConfig)
+            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
@@ -352,8 +345,7 @@ Namespace UnitTests
 
             _defaultInputConfig.Doors = ConsumerTechnology.Electrically
 
-            Dim psAuxConfig = CType(DeclarationData.BusAuxiliaries.DefaultPneumaticAuxConfig,
-                                    PneumaticsAuxilliariesConfig)
+            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
 
@@ -373,7 +365,7 @@ Namespace UnitTests
             Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
         End Sub
 
-        Private Function GetAuxConfig(psAuxConfig As PneumaticsAuxilliariesConfig) As IAuxiliaryConfig
+        Private Function GetAuxConfig(psAuxConfig As IPneumaticsConsumersDemand) As IAuxiliaryConfig
 
             Return New AuxiliaryConfig() with {
                 .PneumaticAuxillariesConfig = psAuxConfig,
