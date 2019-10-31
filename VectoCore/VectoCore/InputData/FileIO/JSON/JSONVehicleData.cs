@@ -155,10 +155,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		    get { return Body.GetEx<double>(JsonKeys.Vehicle_DynamicTyreRadius).SI(Unit.SI.Milli.Meter).Cast<Meter>(); }
 		}
 
+		public virtual bool LowEntry { get; set; }
+
 		public virtual Meter Height
 		{
 			get { return Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>(); }
 		}
+
+		public virtual Meter Length { get { return null; } }
+		public virtual Meter Width { get { return null; } }
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{
@@ -310,6 +315,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
+		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries { get { return null; } }
+
 		IAxlesDeclarationInputData IVehicleComponentsDeclaration.AxleWheels
 		{
 			get { return this; }
@@ -331,6 +338,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual Watt MaxNetPower1 { get { return null; } }
 
 		public virtual Watt MaxNetPower2 { get { return null; } }
+		public virtual string RegisteredClass { get { return string.Empty; } }
+		public virtual int NuberOfPassengersUpperDeck { get { return 0; } }
+		public virtual int NumberOfPassengersLowerDeck { get { return 0; } }
+		public virtual VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

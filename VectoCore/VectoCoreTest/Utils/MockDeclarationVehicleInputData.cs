@@ -41,6 +41,14 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool DualFuelVehicle { get; }
 		public Watt MaxNetPower1 { get; }
 		public Watt MaxNetPower2 { get; }
+		public string RegisteredClass { get; set; }
+		public int NuberOfPassengersUpperDeck { get; set; }
+		public int NumberOfPassengersLowerDeck { get; set; }
+		public VehicleCode VehicleCode { get; set; }
+		public bool LowEntry { get; set; }
+		public Meter Height { get; set; }
+		public Meter Length { get; set; }
+		public Meter Width { get; set; }
 		public IVehicleComponentsDeclaration Components { get { return this; } }
 
 		#endregion
@@ -57,6 +65,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public IRetarderInputData RetarderInputData { get; set; }
 		public IPTOTransmissionInputData PTOTransmissionInputData { get; set; }
 		public IAxlesDeclarationInputData AxleWheels { get; set; }
+		public IBusAuxiliariesDeclarationData BusAuxiliaries { get; set; }
 
 		#endregion
 	}
@@ -84,8 +93,15 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Kilogram CurbMassExtra { get; }
 		public Kilogram Loading { get; }
 		public Meter DynamicTyreRadius { get; }
+		public bool LowEntry { get; set; }
 		public Meter Height { get; }
+		public Meter Length { get; set; }
+		public Meter Width { get; set; }
 		public Watt MaxNetPower2 { get; }
+		public string RegisteredClass { get; set; }
+		public int NuberOfPassengersUpperDeck { get; set; }
+		public int NumberOfPassengersLowerDeck { get; set; }
+		public VehicleCode VehicleCode { get; set; }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

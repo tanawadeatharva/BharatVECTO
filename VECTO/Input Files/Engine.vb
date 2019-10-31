@@ -608,10 +608,18 @@ Public Class DummyVehicle
 	Public ReadOnly Property DualFuelVehicle As Boolean Implements IVehicleDeclarationInputData.DualFuelVehicle
 	Public ReadOnly Property MaxNetPower1 As Watt Implements IVehicleDeclarationInputData.MaxNetPower1
 	Public ReadOnly Property MaxNetPower2 As Watt Implements IVehicleDeclarationInputData.MaxNetPower2
+    Public ReadOnly Property RegisteredClass As String Implements IVehicleDeclarationInputData.RegisteredClass
+    Public ReadOnly Property NuberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NuberOfPassengersUpperDeck
+    Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
+    Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode
+    Public ReadOnly Property LowEntry As Boolean Implements IVehicleDeclarationInputData.LowEntry
+    Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
     Public ReadOnly Property CurbMassExtra As Kilogram Implements IVehicleEngineeringInputData.CurbMassExtra
     Public ReadOnly Property Loading As Kilogram Implements IVehicleEngineeringInputData.Loading
     Public ReadOnly Property DynamicTyreRadius As Meter Implements IVehicleEngineeringInputData.DynamicTyreRadius
     Public ReadOnly Property Height As Meter Implements IVehicleEngineeringInputData.Height
+    Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
+    Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
 
     Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
 	get
@@ -639,6 +647,7 @@ Public Class DummyVehicle
     Public ReadOnly Property PTOTransmissionInputData As IPTOTransmissionInputData Implements IVehicleComponentsDeclaration.PTOTransmissionInputData
     Public ReadOnly Property IVehicleComponentsEngineering_AxleWheels As IAxlesEngineeringInputData Implements IVehicleComponentsEngineering.AxleWheels
     Public ReadOnly Property AxleWheels As IAxlesDeclarationInputData Implements IVehicleComponentsDeclaration.AxleWheels
+    Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries
 End Class
 
 

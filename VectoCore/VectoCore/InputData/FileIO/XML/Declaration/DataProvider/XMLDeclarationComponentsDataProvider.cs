@@ -89,6 +89,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return _axleWheels ?? (_axleWheels = ComponentReader.AxlesDeclarationInputData); }
 		}
 
+		public virtual IBusAuxiliariesDeclarationData BusAuxiliaries { get { return null; } }
+
 		#endregion
 
 		#region Implementation of IXMLVehicleComponentsDeclaration

@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.NetworkInformation;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -156,6 +157,21 @@ namespace TUGraz.VectoCommon.InputData
 
 		Watt MaxNetPower2 { get; }
 
+		string RegisteredClass { get; }
+
+		int NuberOfPassengersUpperDeck { get; }
+
+		int NumberOfPassengersLowerDeck { get; }
+
+		VehicleCode VehicleCode { get; }
+		bool LowEntry { get; }
+
+		Meter Height { get; }
+
+		Meter Length { get; }
+
+		Meter Width { get; }
+
 		// components
 
 		IVehicleComponentsDeclaration Components { get; }
@@ -184,6 +200,8 @@ namespace TUGraz.VectoCommon.InputData
 		IPTOTransmissionInputData PTOTransmissionInputData { get; }
 
 		IAxlesDeclarationInputData AxleWheels { get; }
+
+		IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
 
 	}
 
@@ -635,5 +653,101 @@ namespace TUGraz.VectoCommon.InputData
 		int Gear { get; }
 
 		NewtonMeter MaxTorque { get; }
+	}
+
+	public interface IBusAuxiliariesDeclarationData
+	{
+		string FanTechnology { get; }
+
+		IList<string> SteeringPumpTechnology { get; }
+
+		IElectricSupplyDeclarationData ElectricSupply { get; }
+
+		IElectricConsumersDeclarationData ElectricConsumers { get; }
+
+		IPneumaticSupplyDeclarationData PneumaticSupply { get; }
+
+		IPneumaticConsumersDeclarationData PneumaticConsumers { get; }
+
+		IHVACBusAuxiliariesDeclarationData HVACAux { get; }
+	}
+
+	public interface IElectricSupplyDeclarationData
+	{
+		IList<IAlternatorDeclarationInputData> Alternators { get; }
+		
+		IResultCardDeclarationInputData ResultCards { get; }
+	}
+
+	public interface IElectricConsumersDeclarationData
+	{
+		bool InteriorLightsLED { get; }
+
+		bool DayrunninglightsLED { get; }
+
+		bool PositionlightsLED { get; }
+
+		bool HeadlightsLED { get; }
+
+		bool BrakelightsLED { get; }
+
+		bool SmartElectrics { get; }
+	}
+
+	public interface IAlternatorDeclarationInputData
+	{
+		string Technology { get; }
+
+		double Ratio { get; }
+	}
+
+	public interface IResultCardDeclarationInputData
+	{
+		IList<IResultCardEntry> Idle { get; }
+		IList<IResultCardEntry> Traction { get; }
+		IList<IResultCardEntry> Overrun { get; }
+	}
+
+	public interface IResultCardEntry
+	{
+		Ampere Current { get; }
+
+		Ampere SmartCurrent { get; }
+	}
+
+	public interface IPneumaticSupplyDeclarationData
+	{
+		double Ratio { get; }
+
+		string CompressorSize { get; }
+	}
+
+	public interface IPneumaticConsumersDeclarationData
+	{
+		ConsumerTechnology AirsuspensionControl { get; }
+		ConsumerTechnology AdBlueDosing { get; }
+		ConsumerTechnology DoorDriveTechnology { get; }
+	}
+
+	public interface IHVACBusAuxiliariesDeclarationData
+	{
+		int SystemConfiguration { get; }
+
+		ACCompressorType CompressorType { get; }
+
+		string AuxHeaterPower { get; }
+
+		bool DoubleGlasing { get; }
+
+		bool HeatPump { get; }
+
+		bool AdjustableCoolantThermostat { get; }
+
+		bool AdjustableAuxiliaryHeater { get; }
+
+		bool EngineWasteGasHeatExchanger { get; }
+
+		bool SeparateAirDistributionDucts { get; }
+
 	}
 }

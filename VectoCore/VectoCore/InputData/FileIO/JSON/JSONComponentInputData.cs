@@ -205,15 +205,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return _axleWheelsDecl; }
 		}
 
+		public IBusAuxiliariesDeclarationData BusAuxiliaries { get { return null; } }
+
 		public Meter DynamicTyreRadius
 		{
 			get { return VehicleData.DynamicTyreRadius; }
 		}
 
+		public bool LowEntry { get; set; }
+
 		public Meter Height
 		{
 			get { return VehicleData.Height; }
 		}
+
+		public Meter Length { get { return null; } }
+		public Meter Width { get { return null; } }
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{
@@ -375,6 +382,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return null; }
 		}
+
+		public string RegisteredClass { get { return string.Empty; } }
+		public int NuberOfPassengersUpperDeck { get { return 0; } }
+		public int NumberOfPassengersLowerDeck { get { return 0; } }
+		public VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

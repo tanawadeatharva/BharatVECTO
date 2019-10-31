@@ -121,22 +121,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		}
 
 
-		//private Dictionary<string,object > SaveHVACUserConfig()
-		//{
-		//	var hvac = new Dictionary<string, object>();
-
-		//	hvac["SSMFilePath"] = HvacUserInputsConfig.SSMFilePath;
-		//	hvac["BusDatabasePath"] = HvacUserInputsConfig.BusDatabasePath;
-		//	hvac["SSMDisabled"] = HvacUserInputsConfig.SSMDisabled;
-
-		//	return hvac;
-		//}
-
 		private static Dictionary<string, object> SavePneumaticUserConfig(IPneumaticUserInputsConfig pneumaticUserCfg, string auxPath)
 		{
 			var puData = new Dictionary<string, object>();
 
-			//puData["ActuationsMap"] = pneumaticUserCfg.ActuationsMap;
 			puData["AdBlueDosing"] = pneumaticUserCfg.AdBlueDosing;
 			puData["AirSuspensionControl"] = pneumaticUserCfg.AirSuspensionControl.ToString();
 			puData["CompressorGearEfficiency"] = pneumaticUserCfg.CompressorGearEfficiency;
@@ -158,7 +146,6 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			paData["AdBlueNIperMinute"] = pneumaticAuxCfg.AdBlueInjection.ConvertToNlPerMin().Value;
 			paData["AirControlledSuspensionNIperMinute"] = pneumaticAuxCfg.AirControlledSuspension.ConvertToNlPerMin().Value;
 			paData["BrakingNIperKG"] = pneumaticAuxCfg.Braking.Value();
-			//paData["BrakingWithRetarderNIperKG"] = pneumaticAuxCfg.BrakingWithRetarderNIperKG.Value();
 			paData["BreakingPerKneelingNIperKGinMM"] = pneumaticAuxCfg.BreakingWithKneeling.Value() / 1000;
 			paData["DeadVolBlowOutsPerLitresperHour"] = pneumaticAuxCfg.DeadVolBlowOuts.ConvertToPerHour().Value;
 			paData["DeadVolumeLitres"] = pneumaticAuxCfg.DeadVolume.Cast<CubicMeter>().ConvertToCubicDeziMeter().Value;
@@ -177,25 +164,15 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		public static bool SaveSSMConfig(ISSMInputs ssmInput, string filePath)
 		{
 			var returnValue = true;
-			//var settings = new JsonSerializerSettings();
-			//settings.TypeNameHandling = TypeNameHandling.Objects;
-
-			// JSON METHOD
 			try {
-				//var output = JsonConvert.SerializeObject(this, Formatting.Indented, settings);
-
-				//File.WriteAllText(FilePath, output);
-
 				var body = new Dictionary<string, object>();
 				body["SSMDisabled"] = ssmInput.SSMDisabled;
 				body["SSMInputs"] = SaveGenInputs(ssmInput);
 				body["TechList"] = SaveTechlist(ssmInput);
 
-
 				JSONInputDataFactory.WriteFile(JToken.FromObject(new Dictionary<string, object>() { { "Header", "AHSM" }, { "Body", body } }), filePath);
 
 			} catch (Exception) {
-
 				// Nothing to do except return false.
 				returnValue = false;
 			}
@@ -208,7 +185,6 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			var retVal = new Dictionary<string, object>();
 
 			retVal["BC_GFactor"] = ssmInputs.BoundaryConditions.GFactor;
-			//retVal["BC_PassengerBoundaryTemperature"] = ssmInputs.BoundaryConditions.PassengerBoundaryTemperature.AsDegCelsius;
 			retVal["BC_HeatingBoundaryTemperature"] = ssmInputs.BoundaryConditions.HeatingBoundaryTemperature.AsDegCelsius;
 			retVal["BC_CoolingBoundaryTemperature"] = ssmInputs.BoundaryConditions.CoolingBoundaryTemperature.AsDegCelsius;
 			retVal["BC_HighVentilation"] = ssmInputs.BoundaryConditions.HighVentilation.ConvertToPerHour().Value;
@@ -220,8 +196,6 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			retVal["BC_MaxPossibleBenefitFromTechnologyList"] = ssmInputs.BoundaryConditions.MaxPossibleBenefitFromTechnologyList;
 			retVal["EC_EnviromentalTemperature"] = ssmInputs.EnvironmentalConditions.DefaultConditions.Temperature.AsDegCelsius;
 			retVal["EC_Solar"] = ssmInputs.EnvironmentalConditions.DefaultConditions.Solar.Value();
-			//retVal["EC_EnviromentalConditions_BatchFile"] = ssmInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile;
-			//retVal["EC_EnviromentalConditions_BatchEnabled"] = ssmInputs.EnvironmentalConditions.EnviromentalConditions_BatchEnabled;
 			retVal["AC_CompressorType"] = ssmInputs.ACSystem.CompressorType.ToString();
 			retVal["AC_CompressorCapacitykW"] = ssmInputs.ACSystem.CompressorCapacity.ConvertToKiloWatt().Value;
 			retVal["VEN_VentilationOnDuringHeating"] = ssmInputs.Ventilation.VentilationOnDuringHeating;
@@ -230,7 +204,6 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			retVal["VEN_VentilationFlowSettingWhenHeatingAndACInactive"] = ssmInputs.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive;
 			retVal["VEN_VentilationDuringHeating"] = ssmInputs.Ventilation.VentilationDuringHeating;
 			retVal["VEN_VentilationDuringCooling"] = ssmInputs.Ventilation.VentilationDuringCooling;
-			//retVal["AH_EngineWasteHeatkW"] = ssmInputs.AuxHeater.EngineWasteHeatkW.ConvertToKiloWatt().Value;
 			retVal["AH_FuelFiredHeaterkW"] = ssmInputs.AuxHeater.FuelFiredHeaterPower.ConvertToKiloWatt().Value;
 			retVal["AH_FuelEnergyToHeatToCoolant"] = ssmInputs.AuxHeater.FuelEnergyToHeatToCoolant;
 			retVal["AH_CoolantHeatTransferredToAirCabinHeater"] = ssmInputs.AuxHeater.CoolantHeatTransferredToAirCabinHeater;
@@ -244,7 +217,6 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 			foreach (var line in ssmInputs.Technologies.Items) {
 				var tmp = new Dictionary<string, object>();
-				//tmp["Units"] = line.Units;
 				tmp["Category"] = line.Category;
 				tmp["BenefitName"] = line.BenefitName;
 				tmp["LowFloorH"] = line.LowFloorH;
@@ -260,7 +232,6 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				tmp["ActiveVH"] = line.ActiveVH;
 				tmp["ActiveVV"] = line.ActiveVV;
 				tmp["ActiveVC"] = line.ActiveVC;
-				//tmp["LineType"] = line.LineType;
 				retVal.Add(tmp);
 			}
 

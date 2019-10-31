@@ -790,6 +790,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <EmbeddedResource Include="Resources\Declaration\Buses\DefaultActuationsMap.APAC" />
+    <EmbeddedResource Include="Resources\Declaration\Buses\DEFAULT_1-Cylinder_1-Stage_393ccm.ACMP" />
+    <EmbeddedResource Include="Resources\Declaration\Buses\DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP" />
+    <EmbeddedResource Include="Resources\Declaration\Buses\DEFAULT_2-Cylinder_2-Stage_398ccm.ACMP" />
+    <EmbeddedResource Include="Resources\Declaration\Buses\DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>

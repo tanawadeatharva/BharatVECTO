@@ -267,6 +267,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
+		public virtual string RegisteredClass { get { return string.Empty; } }
+		public virtual int NuberOfPassengersUpperDeck { get { return 0; } }
+		public virtual int NumberOfPassengersLowerDeck { get { return 0; } }
+		public virtual VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
+		public virtual bool LowEntry { get { return false; } }
+		public virtual Meter Height { get { return null; } }
+		public virtual Meter Length { get { return null; } }
+		public virtual Meter Width { get { return null; } }
+
 		public virtual IVehicleComponentsDeclaration Components
 		{
 			get { return _components ?? (_components = ComponentReader.ComponentInputData); }

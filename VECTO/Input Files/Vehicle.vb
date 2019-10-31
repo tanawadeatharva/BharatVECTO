@@ -406,13 +406,19 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property Height As Meter Implements IVehicleEngineeringInputData.Height
+    Public ReadOnly Property LowEntry As Boolean Implements IVehicleDeclarationInputData.LowEntry
+    Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
+
+    Public ReadOnly Property Height As Meter Implements IVehicleEngineeringInputData.Height
 		Get
 			Return VehicleHeight.SI(Of Meter)()
 		End Get
 	End Property
 
-	Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
+    Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
+    Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
+
+    Public ReadOnly Property IVehicleEngineeringInputData_Components As IVehicleComponentsEngineering Implements IVehicleEngineeringInputData.Components
 	get
 			Return me
 	End Get
@@ -680,7 +686,9 @@ Public Class Vehicle
 	End Get
 	End Property
 
-	Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
+    Public ReadOnly Property BusAuxiliaries As IBusAuxiliariesDeclarationData Implements IVehicleComponentsDeclaration.BusAuxiliaries
+
+    Public ReadOnly Property VocationalVehicle As Boolean Implements IVehicleDeclarationInputData.VocationalVehicle
 	get
 			Return DeclarationData.Vehicle.VocationalVehicleDefault
 	End Get
@@ -740,7 +748,12 @@ Public Class Vehicle
 	End Get
 	End Property
 
-	Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
+    Public ReadOnly Property RegisteredClass As String Implements IVehicleDeclarationInputData.RegisteredClass
+    Public ReadOnly Property NuberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NuberOfPassengersUpperDeck
+    Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
+    Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode
+
+    Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
 	get
 			Return Me
 	End Get
