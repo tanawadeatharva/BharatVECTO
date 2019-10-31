@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		///  <value></value>
 		///  <returns></returns>
 		///  <remarks></remarks>
-		Ampere GetHVACElectricalPowerDemandAmps { get; }
+		Ampere GetHVACElectricalCurrentDemand { get; }
 
 		/// <summary>
 		///  Gets Alternator Efficiency (0-1)

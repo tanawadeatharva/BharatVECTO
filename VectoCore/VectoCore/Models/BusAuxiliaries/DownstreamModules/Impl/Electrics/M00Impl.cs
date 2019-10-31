@@ -1,6 +1,7 @@
 ﻿using System;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
@@ -26,7 +27,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				throw new ArgumentException("No Alternator Efficiency Map Supplied");
 			}
 
-			if (powernetVoltage < ElectricConstants.PowenetVoltageMin || powernetVoltage > ElectricConstants.PowenetVoltageMax) {
+			if (powernetVoltage < Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMin || powernetVoltage > Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMax) {
 				throw new ArgumentException("Powernet Voltage out of range");
 			}
 
@@ -47,7 +48,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		#region Implementation of IM0_NonSmart_AlternatorsSetEfficiency
 
-		public Ampere GetHVACElectricalPowerDemandAmps
+		public Ampere GetHVACElectricalCurrentDemand
 		{
 			get { return _ElectricalPowerW / _powernetVoltage; }
 		}
@@ -56,7 +57,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		{
 			get {
 				var baseCurrentDemandAmps = _m0_1.GetTotalAverageDemandAmpsIncludingBaseLoad; // _electricalConsumersList.GetTotalAverageDemandAmps(false);
-				var totalDemandAmps = baseCurrentDemandAmps + GetHVACElectricalPowerDemandAmps;
+				var totalDemandAmps = baseCurrentDemandAmps + GetHVACElectricalCurrentDemand;
 				return _alternatorEfficiencyMap.GetEfficiency(_signals.EngineSpeed, totalDemandAmps);
 			}
 		}

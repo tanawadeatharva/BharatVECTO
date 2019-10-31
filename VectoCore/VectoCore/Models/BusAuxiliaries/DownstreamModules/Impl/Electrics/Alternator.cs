@@ -12,6 +12,30 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 	{
 		//private ICombinedAlternatorSignals signals;
 
+		// Constructors
+
+		public Alternator(List<ICombinedAlternatorMapRow> inputs)
+		{
+			AlternatorName = inputs.First().AlternatorName;
+			PulleyRatio = inputs.First().PulleyRatio;
+
+			var values2k = inputs.Where(x => x.RPM.AsRPM.IsEqual(2000))
+								.Select(x => new KeyValuePair<Ampere, double>(x.Amps, x.Efficiency))
+								.ToDictionary(x => x.Key, x => x.Value);
+			var values4k = inputs.Where(x => x.RPM.AsRPM.IsEqual(4000))
+								.Select(x => new KeyValuePair<Ampere, double>(x.Amps, x.Efficiency))
+								.ToDictionary(x => x.Key, x => x.Value);
+			var values6k = inputs.Where(x => x.RPM.AsRPM.IsEqual(6000))
+								.Select(x => new KeyValuePair<Ampere, double>(x.Amps, x.Efficiency))
+								.ToDictionary(x => x.Key, x => x.Value);
+
+			BuildInputTable(values2k, InputTable2000);
+			BuildInputTable(values4k, InputTable4000);
+			BuildInputTable(values6k, InputTable6000);
+
+			CreateRangeTable();
+		}
+
 		// D6
 		public string AlternatorName { get; set; }
 
@@ -51,30 +75,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		}
 
 
-		// Constructors
-		public Alternator() { }
-
-		public Alternator(List<ICombinedAlternatorMapRow> inputs)
-		{
-			AlternatorName = inputs.First().AlternatorName;
-			PulleyRatio = inputs.First().PulleyRatio;
-
-			var values2k = inputs.Where(x => x.RPM.AsRPM.IsEqual(2000))
-														.Select(x => new KeyValuePair<Ampere, double>(x.Amps, x.Efficiency))
-														.ToDictionary(x => x.Key, x => x.Value);
-			var values4k = inputs.Where(x => x.RPM.AsRPM.IsEqual(4000))
-														.Select(x => new KeyValuePair<Ampere, double>(x.Amps, x.Efficiency))
-														.ToDictionary(x => x.Key, x => x.Value);
-			var values6k = inputs.Where(x => x.RPM.AsRPM.IsEqual(6000))
-														.Select(x => new KeyValuePair<Ampere, double>(x.Amps, x.Efficiency))
-														.ToDictionary(x => x.Key, x => x.Value);
-
-			BuildInputTable(values2k, InputTable2000);
-			BuildInputTable(values4k, InputTable4000);
-			BuildInputTable(values6k, InputTable6000);
-
-			CreateRangeTable();
-		}
+		
 
 		public static double Iterpolate<T>(List<AltUserInput<T>> values, T x) where T:SI
 		{
@@ -90,7 +91,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				return values.First(f => f.Amps == highestX).Eff;
 
 			// On Bounds check
-			if (values.Where(w => w.Amps == x).Count() == 1)
+			if (values.Count(w => w.Amps == x) == 1)
 				return values.First(w => w.Amps == x).Eff;
 
 			// OK, we need to interpolate.

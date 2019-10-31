@@ -23,8 +23,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			Source = source;
 			Signals = signals;
 
-			
-
 			Initialise(alternatorData);
 
 			// Calculate alternators average which is used only in the pre-run
@@ -99,42 +97,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			return true;
 		}
 
-		public bool AddAlternator(List<ICombinedAlternatorMapRow> rows, ref string feedback)
-		{
-			if (!AddNewAlternator(rows, ref feedback)) {
-				feedback = string.Format("Unable to add new alternator : {0}", feedback);
-				return false;
-			}
 
-			return true;
-		}
-
-		public bool DeleteAlternator(string alternatorName, ref string feedback, bool CountValidation)
-		{
-
-			// Is this the last alternator, if so deny the user the right to remove it.
-			if (CountValidation && Alternators.Count < 2) {
-				feedback = "There must be at least one alternator remaining, operation aborted.";
-				return false;
-			}
-
-			if (Alternators.All(w => w.AlternatorName != alternatorName)) {
-				feedback = "This alternator does not exist";
-				return false;
-			}
-
-			var altToRemove = Alternators.First(w => w.AlternatorName == alternatorName);
-			var numAlternators = Alternators.Count;
-
-			Alternators.Remove(altToRemove);
-
-			if (Alternators.Count == numAlternators - 1) {
-				return true;
-			}
-
-			feedback = string.Format("The alternator {0} could not be removed : {1}", alternatorName, feedback);
-			return false;
-		}
 		
 
 		public bool Save(string aaltPath)
@@ -142,7 +105,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			var sb = new StringBuilder();
 			
 			// write headers  
-			sb.AppendLine("[AlternatorName],[RPM],[Amps],[Efficiency],[PulleyRatio]");
+			sb.AppendLine("AlternatorName,RPM,Amps,Efficiency,PulleyRatio");
 
 			// write details
 			foreach (var alt in Alternators.OrderBy(o => o.AlternatorName)) {

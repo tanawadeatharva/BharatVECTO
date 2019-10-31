@@ -21,27 +21,27 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		/// 	</summary>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		Watt AveragePowerDemandAtCrankFromHVACMechanicalsWatts();
+		Watt AveragePowerDemandAtCrankFromHVACMechanicals();
 
 		/// <summary>
 		/// 	Average Power Demand At Alternator From HVAC Electrics (W)
 		/// 	</summary>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		Watt AveragePowerDemandAtAlternatorFromHVACElectricsWatts();
+		Watt AveragePowerDemandAtAlternatorFromHVACElectrics();
 
 		/// <summary>
 		/// 	Average Power Demand At Crank From HVAC Electrics  (W)
 		/// 	</summary>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		Watt AveragePowerDemandAtCrankFromHVACElectricsWatts();
+		Watt AveragePowerDemandAtCrankFromHVACElectrics();
 
 		/// <summary>
 		/// 	HVAC Fueling   (L/H)
 		/// 	</summary>
 		/// 	<returns>Litres Per Hour</returns>
 		/// 	<remarks></remarks>
-		KilogramPerSecond HVACFuelingLitresPerHour();
+		KilogramPerSecond HVACFueling();
 	}
 }

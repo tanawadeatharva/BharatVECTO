@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 				throw new DivideByZeroException("Engine speed is zero and cannot be used as a divisor.");
 			}
 
-			var s1 = M6.AvgPowerDemandAtCrankFromElectricsIncHVAC + M1.AveragePowerDemandAtCrankFromHVACMechanicalsWatts();
+			var s1 = M6.AvgPowerDemandAtCrankFromElectricsIncHVAC + M1.AveragePowerDemandAtCrankFromHVACMechanicals();
 			var s2 = M4.GetPowerCompressorOn() / S0(Signals.EngineSpeed);
 			var s3 = M4.GetPowerCompressorOff() / S0(Signals.EngineSpeed);
 			var s4 = s1 / S0(Signals.EngineSpeed);

@@ -2,6 +2,7 @@
 
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
+Imports TUGraz.VectoCore.Configuration
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
@@ -47,7 +48,7 @@ Namespace UnitTests
 		<Test()>
 		Public Sub ToLow_PhaseIdleTractionOn_ThrowsArgumentException()
 			Dim target As ElectricalConsumer
-			Assert.That(Sub() target = New ElectricalConsumer(False, "", "Doors per Door", 20.SI(of Ampere), ElectricConstants.PhaseIdleTractionOnMin - 1,
+			Assert.That(Sub() target = New ElectricalConsumer(False, "", "Doors per Door", 20.SI(of Ampere), Constants.BusAuxiliaries.ElectricConstants.PhaseIdleTractionOnMin - 1,
 											26.3.SI(of Volt), 1, ""), Throws.InstanceOf(Of ArgumentException))
 
 		End Sub
@@ -55,7 +56,7 @@ Namespace UnitTests
 		<Test()>
 		Public Sub ToHigh_PhaseIdleTractionOn_ThrowsArgumentException()
 			Dim target As ElectricalConsumer
-			Assert.That(Sub() target = New ElectricalConsumer(False, "", "Doors per Door", 20.SI(of Ampere), ElectricConstants.PhaseIdleTractionMax + 1,
+			Assert.That(Sub() target = New ElectricalConsumer(False, "", "Doors per Door", 20.SI(of Ampere), Constants.BusAuxiliaries.ElectricConstants.PhaseIdleTractionMax + 1,
 											26.3.SI(of Volt), 1, ""), Throws.InstanceOf(Of ArgumentException))
 		End Sub
 
@@ -71,7 +72,7 @@ Namespace UnitTests
 		Public Sub ToLowPowerNetVoltageTest_ThrowsArgumentException()
 			Dim target As ElectricalConsumer
 			Assert.That(Sub() target = New ElectricalConsumer(False, "", "Doors per Door", 20.SI(of Ampere), 0.5,
-											(ElectricConstants.PowenetVoltageMin - 1).SI(of Volt), 1, ""), Throws.InstanceOf(Of ArgumentException))
+											(Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMin - 1).SI(of Volt), 1, ""), Throws.InstanceOf(Of ArgumentException))
 
 		End Sub
 
@@ -80,7 +81,7 @@ Namespace UnitTests
 		Public Sub ToHighPowerNetVoltageTest_ThrowsArgumentException()
 			Dim target As ElectricalConsumer
 			Assert.That(Sub() target = New ElectricalConsumer(False, "", "Doors per Door", 20.SI(of Ampere), 0.5,
-											(ElectricConstants.PowenetVoltageMax + 1).SI(of Volt), 1, ""), Throws.InstanceOf(Of ArgumentException))
+											(Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMax + 1).SI(of Volt), 1, ""), Throws.InstanceOf(Of ArgumentException))
 
 		End Sub
 	End Class

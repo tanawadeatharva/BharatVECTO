@@ -37,12 +37,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 		public IFuelConsumptionMap FuelMap { get; internal set; }
 
 		// Vecto Signals
-		[JsonIgnore]
 		public ISignals Signals { get; internal set; }
 
 		// Constructors
-		//public AuxiliaryConfig() /*: this("EMPTY")*/ { }
-
 		
 		
 		private bool CompareElectricalConfiguration(IAuxiliaryConfig other)

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
 // Copyright 2017 European Union.
@@ -40,20 +41,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			Volt powerNetVoltage, int numberInVehicle, string info)
 		{
 			// Illegal Value Check.
-			if (category.Trim().Length == 0)
-				throw new ArgumentException("Category Name cannot be empty");
-			if (consumerName.Trim().Length == 0)
-				throw new ArgumentException("ConsumerName Name cannot be empty");
-			if (phaseIdleTractionOn < ElectricConstants.PhaseIdleTractionOnMin |
-				phaseIdleTractionOn > ElectricConstants.PhaseIdleTractionMax)
-				throw new ArgumentException("PhaseIdle_TractionOn must have a value between 0 and 1");
-			if (nominalConsumptionAmps < ElectricConstants.NonminalConsumerConsumptionAmpsMin |
-				nominalConsumptionAmps > ElectricConstants.NominalConsumptionAmpsMax)
-				throw new ArgumentException("NominalConsumptionAmps must have a value between 0 and 100");
-			if (powerNetVoltage < ElectricConstants.PowenetVoltageMin | powerNetVoltage > ElectricConstants.PowenetVoltageMax)
-				throw new ArgumentException("PowerNetVoltage must have a value between 6 and 48");
-			if (numberInVehicle < 0)
-				throw new ArgumentException("Cannot have less than 0 consumers in the vehicle");
+			ValidateInput(category, consumerName, nominalConsumptionAmps, phaseIdleTractionOn, powerNetVoltage, numberInVehicle);
 
 			// Good, now assign.
 			BaseVehicle = baseVehicle;
@@ -67,7 +55,46 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			
 		}
 
-		
+		protected void ValidateInput(
+			string category, string consumerName, Ampere nominalConsumptionAmps, double phaseIdleTractionOn, Volt powerNetVoltage,
+			int numberInVehicle)
+		{
+			if (category.Trim().Length == 0) {
+				throw new ArgumentException("Category Name cannot be empty");
+			}
+			if (consumerName.Trim().Length == 0) {
+				throw new ArgumentException("ConsumerName Name cannot be empty");
+			}
+			if (phaseIdleTractionOn < Constants.BusAuxiliaries.ElectricConstants.PhaseIdleTractionOnMin |
+				phaseIdleTractionOn > Constants.BusAuxiliaries.ElectricConstants.PhaseIdleTractionMax) {
+				throw new ArgumentException(
+					string.Format(
+						"PhaseIdle_TractionOn must have a value between {0} and {1}",
+						Constants.BusAuxiliaries.ElectricConstants.PhaseIdleTractionOnMin,
+						Constants.BusAuxiliaries.ElectricConstants.PhaseIdleTractionMax));
+			}
+			if (nominalConsumptionAmps < Constants.BusAuxiliaries.ElectricConstants.NonminalConsumerConsumptionAmpsMin |
+				nominalConsumptionAmps > Constants.BusAuxiliaries.ElectricConstants.NominalConsumptionAmpsMax) {
+				throw new ArgumentException(
+					string.Format(
+						"NominalConsumptionAmps must have a value between {0} and {1}",
+						Constants.BusAuxiliaries.ElectricConstants.NonminalConsumerConsumptionAmpsMin,
+						Constants.BusAuxiliaries.ElectricConstants.NominalConsumptionAmpsMax));
+			}
+			if (powerNetVoltage < Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMin |
+				powerNetVoltage > Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMax) {
+				throw new ArgumentException(
+					string.Format(
+						"PowerNetVoltage must have a value between {0} and {1}",
+						Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMin,
+						Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMax));
+			}
+			if (numberInVehicle < 0) {
+				throw new ArgumentException("Cannot have less than 0 consumers in the vehicle");
+			}
+		}
+
+
 		// Properties
 		public bool BaseVehicle
 		{

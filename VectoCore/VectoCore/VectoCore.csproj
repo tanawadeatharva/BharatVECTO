@@ -311,11 +311,8 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\PneumaticsAuxilliariesConfig.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Pneumatics\PneumaticUserInputsConfig.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\AltUserInput.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\ElectricConstants.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\IAlternator.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\ICombinedAlternator.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\ICombinedAlternatorSignals.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\Class1.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMCalculate.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMRun.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\HVAC\ISSMTOOL.cs" />
@@ -824,9 +821,7 @@
       <Name>VectoHashing</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\PneumaticSystem\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

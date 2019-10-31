@@ -313,12 +313,12 @@ Public Class frmCombinedAlternators
                     Dim dr As DialogResult = MessageBox.Show(String.Format("Do you want to delete  '{0}' ?", alternatorName), "",
                                                             MessageBoxButtons.YesNo)
                     If dr = Windows.Forms.DialogResult.Yes Then
-                        If combinedAlt.DeleteAlternator(alternatorName, feedback, True) Then
-                            BindGrid()
-                        Else
+                        'If combinedAlt.DeleteAlternator(alternatorName, feedback, True) Then
+                        '    BindGrid()
+                        'Else
                             MessageBox.Show(feedback)
 
-                        End If
+                        'End If
 
                     End If
 
@@ -390,16 +390,16 @@ Public Class frmCombinedAlternators
 
         If txtIndex.Text.Trim.Length = 0 Then
             'This is an Add
-            If Not combinedAlt.AddAlternator(GetAlternatorFromPanel(), feedback) Then
+            'If Not combinedAlt.AddAlternator(GetAlternatorFromPanel(), feedback) Then
                 MessageBox.Show(feedback)
-            Else
+            'Else
 
 
-                BindGrid()
+            '    BindGrid()
 
-                UpdateButtonText()
+            '    UpdateButtonText()
 
-            End If
+            'End If
 
         Else
 
@@ -419,17 +419,17 @@ Public Class frmCombinedAlternators
 
             'This is an update so delete the one being updated
 
-            If _
-                combinedAlt.DeleteAlternator(altName, feedback, False) AndAlso
-                combinedAlt.AddAlternator(GetAlternatorFromPanel(), feedback) Then
+            'If _
+            '    combinedAlt.DeleteAlternator(altName, feedback, False) AndAlso
+            '    combinedAlt.AddAlternator(GetAlternatorFromPanel(), feedback) Then
 
-                BindGrid()
-                ClearEditPanel()
-                UpdateButtonText()
+            '    BindGrid()
+            '    ClearEditPanel()
+            '    UpdateButtonText()
 
-            Else
+            'Else
                 MessageBox.Show(feedback)
-            End If
+            'End If
 
         End If
     End Sub

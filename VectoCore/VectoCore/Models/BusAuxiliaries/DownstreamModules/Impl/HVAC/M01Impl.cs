@@ -1,5 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC;
@@ -23,10 +24,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				throw new ArgumentException("Module0 as supplied is null");
 			}
 
-			if (altGearEfficiency < ElectricConstants.AlternatorPulleyEfficiencyMin ||
-				altGearEfficiency > ElectricConstants.AlternatorPulleyEfficiencyMax) {
+			if (altGearEfficiency < Constants.BusAuxiliaries.ElectricConstants.AlternatorPulleyEfficiencyMin ||
+				altGearEfficiency > Constants.BusAuxiliaries.ElectricConstants.AlternatorPulleyEfficiencyMax) {
 				throw new ArgumentException(string.Format("Gear efficiency must be between {0} and {1}",
-						ElectricConstants.AlternatorPulleyEfficiencyMin, ElectricConstants.AlternatorPulleyEfficiencyMax));
+						Constants.BusAuxiliaries.ElectricConstants.AlternatorPulleyEfficiencyMin, Constants.BusAuxiliaries.ElectricConstants.AlternatorPulleyEfficiencyMax));
 			}
 			
 			
@@ -53,22 +54,22 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		#region Implementation of IM1_AverageHVACLoadDemand
 
-		public Watt AveragePowerDemandAtCrankFromHVACMechanicalsWatts()
+		public Watt AveragePowerDemandAtCrankFromHVACMechanicals()
 		{
 			return _MechanicalPowerW * (1 / _compressorGearEfficiency);
 		}
 
-		public Watt AveragePowerDemandAtAlternatorFromHVACElectricsWatts()
+		public Watt AveragePowerDemandAtAlternatorFromHVACElectrics()
 		{
 			return _ElectricalPowerW;
 		}
 
-		public Watt AveragePowerDemandAtCrankFromHVACElectricsWatts()
+		public Watt AveragePowerDemandAtCrankFromHVACElectrics()
 		{
 			return _ElectricalPowerW * (1 / _m0.AlternatorsEfficiency / _alternatorGearEfficiency);
 		}
 
-		public KilogramPerSecond HVACFuelingLitresPerHour()
+		public KilogramPerSecond HVACFueling()
 		{
 			return _FuelingLPerH;
 		}

@@ -130,7 +130,7 @@ Namespace UnitTests
             Dim actual As Ampere
             Dim expected As Single = 0
 
-            actual = target.GetHVACElectricalPowerDemandAmps()
+            actual = target.GetHVACElectricalCurrentDemand()
 
             Assert.AreEqual(expected, actual.Value(), 0.001)
         End Sub

@@ -379,14 +379,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 		public Watt AA_AveragePowerDemandCrankHVACMechanicals
 		{
 			get {
-				return M1.AveragePowerDemandAtCrankFromHVACMechanicalsWatts();
+				return M1.AveragePowerDemandAtCrankFromHVACMechanicals();
 			}
 		}
 
 		public Watt AA_AveragePowerDemandCrankHVACElectricals
 		{
 			get {
-				return M1.AveragePowerDemandAtCrankFromHVACElectricsWatts();
+				return M1.AveragePowerDemandAtCrankFromHVACElectrics();
 			}
 		}
 

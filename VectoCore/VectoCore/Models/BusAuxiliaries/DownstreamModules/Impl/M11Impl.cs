@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 
 			AG6 += (M6.AvgPowerDemandAtCrankFromElectricsIncHVAC * stepTimeInSeconds);
 
-			var sum2 = M3.GetAveragePowerDemandAtCrankFromPneumatics() + M1.AveragePowerDemandAtCrankFromHVACMechanicalsWatts();
+			var sum2 = M3.GetAveragePowerDemandAtCrankFromPneumatics() + M1.AveragePowerDemandAtCrankFromHVACMechanicals();
 			var sum3 = M8.SmartElectricalAlternatorPowerGenAtCrank / Sum0(Signals.EngineSpeed);
 			var sum4 = sum2 / Sum0(Signals.EngineSpeed);
 			var sum9 = Signals.EngineDrivelineTorque +

@@ -54,7 +54,7 @@ Namespace UnitTests
 			Dim m7MOCK = New Mock(Of IM7)()
 			Dim sigsMock = New Mock(Of ISignals)()
 
-			m1MOCK.Setup(Function(x) x.AveragePowerDemandAtCrankFromHVACMechanicalsWatts).Returns(IP1.SI(Of Watt))
+			m1MOCK.Setup(Function(x) x.AveragePowerDemandAtCrankFromHVACMechanicals).Returns(IP1.SI(Of Watt))
 			m7MOCK.Setup(Function(x) x.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank()).Returns(IP2.SI(Of Watt))
 			m7MOCK.Setup(Function(x) x.SmartElectricalAndPneumaticAuxAirCompPowerGenAtCrank()).Returns(IP3.SI(Of Watt))
 			m7MOCK.Setup(Function(x) x.SmartElectricalOnlyAuxAltPowerGenAtCrank()).Returns(IP4.SI(Of Watt))
@@ -100,7 +100,7 @@ Namespace UnitTests
 			Dim m7MOCK = New Mock(Of IM7)()
 			Dim sigsMock = New Mock(Of ISignals)()
 
-			m1MOCK.Setup(Function(x) x.AveragePowerDemandAtCrankFromHVACMechanicalsWatts).Returns(IP1.SI(Of Watt))
+			m1MOCK.Setup(Function(x) x.AveragePowerDemandAtCrankFromHVACMechanicals).Returns(IP1.SI(Of Watt))
 			m7MOCK.Setup(Function(x) x.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank()).Returns(IP2.SI(Of Watt))
 			m7MOCK.Setup(Function(x) x.SmartElectricalAndPneumaticAuxAirCompPowerGenAtCrank()).Returns(IP3.SI(Of Watt))
 			m7MOCK.Setup(Function(x) x.SmartElectricalOnlyAuxAltPowerGenAtCrank()).Returns(IP4.SI(Of Watt))

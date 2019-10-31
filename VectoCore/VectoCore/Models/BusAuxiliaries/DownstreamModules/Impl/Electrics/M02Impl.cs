@@ -1,5 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
@@ -25,7 +26,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			if (altPulleyEfficiency.IsEqual(0) || altPulleyEfficiency > 1) {
 				throw new ArgumentException("Alternator Gear efficiency out of range.");
 			}
-			if (powerNetVoltage < ElectricConstants.PowenetVoltageMin || powerNetVoltage > ElectricConstants.PowenetVoltageMax) {
+			if (powerNetVoltage < Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMin || powerNetVoltage > Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMax) {
 				throw new ArgumentException("Powernet Voltage out of known range.");
 			}
 

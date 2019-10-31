@@ -20,12 +20,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 
 		Watt EngineWasteHeatkW { get; }
 
-		//void Clone(ISSMTOOL from);
-
-		//bool Load(string filePath);
-
-		//bool Save(string filePath);
-
+		
 		bool IsEqualTo(ISSMTOOL source);
 
 		/// <summary>

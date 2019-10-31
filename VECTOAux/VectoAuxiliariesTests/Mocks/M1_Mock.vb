@@ -13,23 +13,23 @@ Public Class M1_Mock
 	Public _AveragePowerDemandAtCrankFromHVACMechanicalsWatts As Watt
 	Public _HVACFuelingLitresPerHour As KilogramPerSecond
 
-	Public Function AveragePowerDemandAtAlternatorFromHVACElectricsWatts() As Watt _
-		Implements IM1_AverageHVACLoadDemand.AveragePowerDemandAtAlternatorFromHVACElectricsWatts
+	Public Function AveragePowerDemandAtAlternatorFromHVACElectrics() As Watt _
+		Implements IM1_AverageHVACLoadDemand.AveragePowerDemandAtAlternatorFromHVACElectrics
 		Return _AveragePowerDemandAtAlternatorFromHVACElectricsWatts
 	End Function
 
-	Public Function AveragePowerDemandAtCrankFromHVACElectricsWatts() As Watt _
-		Implements IM1_AverageHVACLoadDemand.AveragePowerDemandAtCrankFromHVACElectricsWatts
+	Public Function AveragePowerDemandAtCrankFromHVACElectrics() As Watt _
+		Implements IM1_AverageHVACLoadDemand.AveragePowerDemandAtCrankFromHVACElectrics
 		Return _AveragePowerDemandAtCrankFromHVACElectricsWatts
 	End Function
 
-	Public Function AveragePowerDemandAtCrankFromHVACMechanicalsWatts() As Watt _
-		Implements IM1_AverageHVACLoadDemand.AveragePowerDemandAtCrankFromHVACMechanicalsWatts
+	Public Function AveragePowerDemandAtCrankFromHVACMechanicals() As Watt _
+		Implements IM1_AverageHVACLoadDemand.AveragePowerDemandAtCrankFromHVACMechanicals
 		Return _AveragePowerDemandAtCrankFromHVACMechanicalsWatts
 	End Function
 
-	Public Function HVACFuelingLitresPerHour() As KilogramPerSecond _
-	    Implements IM1_AverageHVACLoadDemand.HVACFuelingLitresPerHour
+	Public Function HVACFueling() As KilogramPerSecond _
+	    Implements IM1_AverageHVACLoadDemand.HVACFueling
 		Return _HVACFuelingLitresPerHour
 	End Function
 

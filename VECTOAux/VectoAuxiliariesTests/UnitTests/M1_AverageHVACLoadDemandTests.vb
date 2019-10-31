@@ -92,7 +92,7 @@ Namespace UnitTests
 
             Dim target As IM1_AverageHVACLoadDemand = GETM1Instance()
             Dim expected As Single = 1580.276
-            Dim actual As Watt = target.AveragePowerDemandAtCrankFromHVACMechanicalsWatts
+            Dim actual As Watt = target.AveragePowerDemandAtCrankFromHVACMechanicals
 
             Assert.AreEqual(expected, actual.Value(), 0.001)
         End Sub
@@ -103,7 +103,7 @@ Namespace UnitTests
 
             Dim target As IM1_AverageHVACLoadDemand = GETM1Instance()
             Dim expected As Single = 0
-            Dim actual As Watt = target.AveragePowerDemandAtCrankFromHVACElectricsWatts
+            Dim actual As Watt = target.AveragePowerDemandAtCrankFromHVACElectrics
 
             Assert.AreEqual(expected, actual.Value(), 0.001)
         End Sub
@@ -114,7 +114,7 @@ Namespace UnitTests
 
             Dim target As IM1_AverageHVACLoadDemand = GETM1Instance()
             Dim expected As Single = 0
-            Dim actual As Watt = target.AveragePowerDemandAtAlternatorFromHVACElectricsWatts
+            Dim actual As Watt = target.AveragePowerDemandAtAlternatorFromHVACElectrics
 
             Assert.AreEqual(expected, actual.Value(), 0.001)
         End Sub
@@ -125,7 +125,7 @@ Namespace UnitTests
 
             Dim target As IM1_AverageHVACLoadDemand = GETM1Instance()
             Dim expected As Single = 0
-            Dim actual As KilogramPerSecond = target.HVACFuelingLitresPerHour()
+            Dim actual As KilogramPerSecond = target.HVACFueling()
 
             Assert.AreEqual(expected, actual.Value(), 0.001)
         End Sub
