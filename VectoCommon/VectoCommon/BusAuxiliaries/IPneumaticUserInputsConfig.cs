@@ -23,6 +23,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		Unknown,
 		Mechanically,
 		Electrically,
-		Pneumatic,
+		Pneumatically,
 	}
 }

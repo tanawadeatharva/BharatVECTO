@@ -130,9 +130,9 @@ Public Class Utils
                 .PneumaticUserInputsConfig = New PneumaticUserInputsConfig() With {
                 .CompressorGearRatio = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearRatio,
                 .CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
-                .AdBlueDosing = ConsumerTechnology.Pneumatic,
+                .AdBlueDosing = ConsumerTechnology.Pneumatically,
                 .AirSuspensionControl = ConsumerTechnology.Mechanically,
-                .Doors = ConsumerTechnology.Pneumatic,
+                .Doors = ConsumerTechnology.Pneumatically,
                 .KneelingHeightMillimeters = 70.SI(Unit.SI.Milli.Meter).Cast (Of Meter), 
                 .SmartAirCompression = False,
                 .SmartRegeneration = False  

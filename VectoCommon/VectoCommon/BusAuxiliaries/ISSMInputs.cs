@@ -115,6 +115,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 	public enum ACCompressorType
 	{
+		Unknown,
 		TwoStage,
 		ThreeStage,
 		FourStage,

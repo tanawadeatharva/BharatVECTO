@@ -38,9 +38,10 @@ namespace TUGraz.VectoCommon.Models
 		Unknown,
 		RigidTruck,
 		Tractor,
-		CityBus,
-		InterurbanBus,
-		Coach
+		//CityBus,
+		//InterurbanBus,
+		//Coach
+		HeavyBusPrimaryVehicle
 	}
 
 	public static class VehicleCategoryHelper
@@ -52,12 +53,14 @@ namespace TUGraz.VectoCommon.Models
 					return "Rigid Truck";
 				case VehicleCategory.Tractor:
 					return "Tractor";
-				case VehicleCategory.CityBus:
-					return "City Bus";
-				case VehicleCategory.InterurbanBus:
-					return "Interurban Bus";
-				case VehicleCategory.Coach:
-					return "Coach";
+				//case VehicleCategory.CityBus:
+				//	return "City Bus";
+				//case VehicleCategory.InterurbanBus:
+				//	return "Interurban Bus";
+				//case VehicleCategory.Coach:
+				//	return "Coach";
+				case VehicleCategory.HeavyBusPrimaryVehicle:
+					return "Heavy Bus, Primary Vehicle";
 				default:
 					return category.ToString();
 			}
@@ -70,12 +73,14 @@ namespace TUGraz.VectoCommon.Models
 					return "Rigid Truck";
 				case VehicleCategory.Tractor:
 					return "Semitrailer Truck";
-				case VehicleCategory.CityBus:
-					return "Citybus";
-				case VehicleCategory.InterurbanBus:
-					return "Interurban Bus";
-				case VehicleCategory.Coach:
-					return "Coach";
+				//case VehicleCategory.CityBus:
+				//	return "Citybus";
+				//case VehicleCategory.InterurbanBus:
+				//	return "Interurban Bus";
+				//case VehicleCategory.Coach:
+				//	return "Coach";
+				case VehicleCategory.HeavyBusPrimaryVehicle:
+					return "Heavy Bus, Primary Vehicle";
 				default:
 					return category.ToString();
 			}
@@ -84,13 +89,13 @@ namespace TUGraz.VectoCommon.Models
 		public static string ToXMLFormat(this VehicleCategory vehicleCategory)
 		{
 			switch (vehicleCategory) {
-				case VehicleCategory.Coach:
+				//case VehicleCategory.Coach:
 				case VehicleCategory.Tractor:
 					return vehicleCategory.ToString();
-				case VehicleCategory.CityBus:
-					return "City Bus";
-				case VehicleCategory.InterurbanBus:
-					return "Interurban Bus";
+				//case VehicleCategory.CityBus:
+				//	return "City Bus";
+				//case VehicleCategory.InterurbanBus:
+				//	return "Interurban Bus";
 				case VehicleCategory.RigidTruck:
 					return "Rigid Lorry";
 				default:
@@ -104,9 +109,10 @@ namespace TUGraz.VectoCommon.Models
 				case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
 					return true;
-				case VehicleCategory.CityBus:
-				case VehicleCategory.InterurbanBus:
-				case VehicleCategory.Coach:
+				//case VehicleCategory.CityBus:
+				//case VehicleCategory.InterurbanBus:
+				//case VehicleCategory.Coach:
+				case VehicleCategory.HeavyBusPrimaryVehicle:
 					return false;
 				default:
 					throw new ArgumentOutOfRangeException("VehicleCategory", category, null);

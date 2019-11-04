@@ -677,6 +677,8 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IAlternatorDeclarationInputData> Alternators { get; }
 		
 		IResultCardDeclarationInputData ResultCards { get; }
+
+		bool SmartElectrics { get; }
 	}
 
 	public interface IElectricConsumersDeclarationData
@@ -691,7 +693,6 @@ namespace TUGraz.VectoCommon.InputData
 
 		bool BrakelightsLED { get; }
 
-		bool SmartElectrics { get; }
 	}
 
 	public interface IAlternatorDeclarationInputData
@@ -727,6 +728,8 @@ namespace TUGraz.VectoCommon.InputData
 		ConsumerTechnology AirsuspensionControl { get; }
 		ConsumerTechnology AdBlueDosing { get; }
 		ConsumerTechnology DoorDriveTechnology { get; }
+
+		Meter EntranceHeight { get; }
 	}
 
 	public interface IHVACBusAuxiliariesDeclarationData

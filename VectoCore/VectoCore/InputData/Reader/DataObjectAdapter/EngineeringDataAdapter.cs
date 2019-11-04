@@ -148,9 +148,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			switch (vehicleCategory) {
 				case VehicleCategory.RigidTruck: return numAxles > axles.NumAxles() ? "RigidTrailer" : "RigidSolo";
 				case VehicleCategory.Tractor: return "TractorSemitrailer";
-				case VehicleCategory.CityBus:
-				case VehicleCategory.InterurbanBus:
-				case VehicleCategory.Coach: return "CoachBus";
+				//case VehicleCategory.CityBus:
+				//case VehicleCategory.InterurbanBus:
+				//case VehicleCategory.Coach: return "CoachBus";
 				default: throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
 			}
 		}

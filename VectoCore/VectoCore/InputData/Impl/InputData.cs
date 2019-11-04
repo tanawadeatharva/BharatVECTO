@@ -184,4 +184,36 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public int Gear { get; internal set; }
 		public NewtonMeter MaxTorque { get; internal set; }
 	}
+
+	public class AlternatorInputData : IAlternatorDeclarationInputData
+	{
+		public AlternatorInputData(string technology, double ratio)
+		{
+			Technology = technology;
+			Ratio = ratio;
+		}
+
+		#region Implementation of IAlternatorDeclarationInputData
+
+		public virtual string Technology { get; }
+		public virtual double Ratio { get; }
+
+		#endregion
+	}
+
+	public class ResultCardEntry : IResultCardEntry
+	{
+		public ResultCardEntry(Ampere current, Ampere smartCurrent)
+		{
+			Current = current;
+			SmartCurrent = smartCurrent;
+		}
+
+		#region Implementation of IResultCardEntry
+
+		public virtual Ampere Current { get; }
+		public virtual Ampere SmartCurrent { get; }
+
+		#endregion
+	}
 }
