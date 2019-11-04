@@ -33,6 +33,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using System.IO;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -280,7 +281,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
 				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
 				(IGearshiftEngineeringInputData)inputProvider, 2.1,
-				0.5.SI<Meter>(), VehicleCategory.InterurbanBus, (ITorqueConverterEngineeringInputData)inputProvider);
+				0.5.SI<Meter>(), VehicleCategory.HeavyBusPrimaryVehicle, (ITorqueConverterEngineeringInputData)inputProvider);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
 			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
@@ -308,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
 				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
 				(IGearshiftEngineeringInputData)inputProvider, 2.1,
-				0.5.SI<Meter>(), VehicleCategory.InterurbanBus, (ITorqueConverterEngineeringInputData)inputProvider);
+				0.5.SI<Meter>(), VehicleCategory.HeavyBusPrimaryVehicle, (ITorqueConverterEngineeringInputData)inputProvider);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
 			Assert.IsFalse(gbxData.Gears[1].HasLockedGear);
@@ -348,6 +349,42 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				angleGear["Type"].Value<string>().ParseEnum<AngledriveType>());
 			Assert.AreEqual(3.5, angleGear["Ratio"].Value<double>());
 			Assert.AreEqual("AngleGear.vtlm", angleGear["LossMap"].Value<string>());
+		}
+
+
+		[TestCase]
+		public void JSON_Read_HeavyBus()
+		{
+			var inputProvider = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(@"TestData\Generic Vehicles\Engineering Mode\HeavyBusPrimary\HeavyBusPrimary_DECL.vecto");
+			var busAux = inputProvider.JobInputData.Vehicle.Components.BusAuxiliaries;
+
+			Assert.AreEqual("Electrically driven - Electronically controlled", busAux.FanTechnology);
+
+			Assert.AreEqual(1, busAux.SteeringPumpTechnology.Count);
+			Assert.AreEqual("Dual displacement with mech. control", busAux.SteeringPumpTechnology[0]);
+
+
+			Assert.AreEqual(1, busAux.ElectricSupply.Alternators.Count);
+			Assert.AreEqual("standard alternator", busAux.ElectricSupply.Alternators[0].Technology);
+			Assert.AreEqual(1, busAux.ElectricSupply.Alternators[0].Ratio);
+			Assert.AreEqual(false, busAux.ElectricSupply.SmartElectrics);
+
+			Assert.AreEqual(3, busAux.ElectricSupply.ResultCards.Idle.Count);
+			Assert.AreEqual(0, busAux.ElectricSupply.ResultCards.Idle[0].Current.Value());
+			Assert.AreEqual(20, busAux.ElectricSupply.ResultCards.Idle[1].Current.Value());
+			Assert.AreEqual(50, busAux.ElectricSupply.ResultCards.Idle[2].Current.Value());
+			Assert.AreEqual(0, busAux.ElectricSupply.ResultCards.Idle[0].SmartCurrent.Value());
+			Assert.AreEqual(25, busAux.ElectricSupply.ResultCards.Idle[1].SmartCurrent.Value());
+			Assert.AreEqual(60, busAux.ElectricSupply.ResultCards.Idle[2].SmartCurrent.Value());
+
+			Assert.AreEqual("", busAux.PneumaticSupply.CompressorSize);
+			Assert.AreEqual(1.0, busAux.PneumaticSupply.Ratio);
+
+			Assert.AreEqual(ConsumerTechnology.Mechanically, busAux.PneumaticConsumers.AirsuspensionControl);
+			Assert.AreEqual(ConsumerTechnology.Pneumatically, busAux.PneumaticConsumers.AdBlueDosing);
+
+			Assert.AreEqual(true, busAux.HVACAux.AdjustableCoolantThermostat);
+			Assert.AreEqual(true, busAux.HVACAux.EngineWasteGasHeatExchanger);
 		}
 	}
 
