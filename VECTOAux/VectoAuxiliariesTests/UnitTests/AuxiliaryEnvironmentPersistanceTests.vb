@@ -1,4 +1,5 @@
-﻿Imports System.Text
+﻿Imports System.IO
+Imports System.Text
 Imports NUnit.Framework
 Imports NUnit
 Imports VectoAuxiliaries
@@ -16,6 +17,10 @@ Public Class AuxiliaryPersistanceTests
     'We load the previously saved config into the Emptu Aux
     'We then compare the two Aux's, if they are the same persistance has worked and they are the same.
     
+    <OneTimeSetUp>
+    Public Sub RunBeforeAnyTests()
+        Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+    End Sub
 
      Public Sub SaveDefaultFile()
 

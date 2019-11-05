@@ -1,4 +1,5 @@
-﻿Imports NUnit.Framework
+﻿Imports System.IO
+Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
 Imports VectoAuxiliaries
 Imports VectoAuxiliaries.Electrics
@@ -19,13 +20,20 @@ Namespace UnitTests
 
 
 		Private m0 As IM0_NonSmart_AlternatorsSetEfficiency
-		Private alternatorMap As IAlternatorMap = New AlternatorMap(_GOODMAP)
+		Private alternatorMap As IAlternatorMap 
 		Private alternatorGearEfficiency As Single = 0.8
 		Private compressorGrearEfficiency As Single = 0.8
 
+        <OneTimeSetUp>
+        Public Sub RunBeforeAnyTests()
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+        End Sub
 
 		Public Sub New()
 
+		    Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+
+            alternatorMap = New AlternatorMap(_GOODMAP)
 			alternatorMap.Initialise()
 
 			ssm.Load(_SSMMAP)
