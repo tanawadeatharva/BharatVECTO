@@ -59,6 +59,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected PTOData PTOTransmissionData;
 		protected List<VectoRunData.AuxData> AuxVTP;
 		protected Segment Segment;
+		protected bool allowVocational;
 		protected DeclarationDataAdapter Dao;
 		protected Exception InitException;
 
@@ -71,6 +72,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			JobInputData = job;
 			Report = report;
+			allowVocational = true;
 			try {
 				Initialize();
 				if (Report != null) {
@@ -87,7 +89,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				VehicleData =
 					Dao.CreateVehicleData(
 						JobInputData.Vehicle, Segment.Missions.First(),
-						Segment.Missions.First().Loadings.First().Value),
+						Segment.Missions.First().Loadings.First().Value, allowVocational),
 				AirdragData = AirdragData,
 				EngineData = EngineData,
 				GearboxData = GearboxData,
@@ -111,17 +113,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			Dao = new DeclarationDataAdapter();
 			var vehicle = JobInputData.Vehicle;
-			Segment = DeclarationData.Segments.Lookup(
-				vehicle.VehicleCategory,
-				vehicle.AxleConfiguration,
-				vehicle.GrossVehicleMassRating,
-				vehicle.CurbMassChassis,
-				vehicle.VocationalVehicle);
+			try {
+				Segment = DeclarationData.Segments.Lookup(
+					vehicle.VehicleCategory,
+					vehicle.AxleConfiguration,
+					vehicle.GrossVehicleMassRating,
+					vehicle.CurbMassChassis,
+					vehicle.VocationalVehicle);
+			} catch (VectoException) {
+				allowVocational = false;
+				Segment = DeclarationData.Segments.Lookup(
+					vehicle.VehicleCategory,
+					vehicle.AxleConfiguration,
+					vehicle.GrossVehicleMassRating,
+					vehicle.CurbMassChassis,
+					false);
+			}
 			Driverdata = Dao.CreateDriverData();
 			Driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(Segment.AccelerationFile);
 			var tempVehicle = Dao.CreateVehicleData(
 				vehicle, Segment.Missions.First(),
-				Segment.Missions.First().Loadings.First().Value);
+				Segment.Missions.First().Loadings.First().Value, allowVocational);
 			AirdragData = Dao.CreateAirdragData(
 				vehicle.Components.AirdragInputData,
 				Segment.Missions.First(), Segment);
@@ -226,7 +238,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				AngledriveData = AngledriveData,
 				VehicleData = Dao.CreateVehicleData(
 					JobInputData.Vehicle, mission,
-					loading),
+					loading, allowVocational),
 				AirdragData = AirdragData,
 				DriverData = null,
 				AdvancedAux = null,

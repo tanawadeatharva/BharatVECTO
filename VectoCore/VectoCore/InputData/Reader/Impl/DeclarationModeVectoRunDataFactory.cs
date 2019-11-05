@@ -59,6 +59,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected IDeclarationReport Report;
 		private DeclarationDataAdapter _dao;
 		private Segment _segment;
+		private bool allowVocational;
 		private DriverData _driverdata;
 		private AirdragData _airdragData;
 		private CombustionEngineData _engineData;
@@ -74,7 +75,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			InputDataProvider = dataProvider;
 			Report = report;
-
+			allowVocational = true;
 			try {
 				Initialize();
 				if (Report != null) {
@@ -92,11 +93,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			if (vehicle.ExemptedVehicle) {
 				return;
 			}
-			_segment = GetVehicleClassification(vehicle.VehicleCategory,
-				vehicle.AxleConfiguration,
-				vehicle.GrossVehicleMassRating,
-				vehicle.CurbMassChassis,
-				vehicle.VocationalVehicle);
+
+			try {
+				_segment = GetVehicleClassification(
+					vehicle.VehicleCategory,
+					vehicle.AxleConfiguration,
+					vehicle.GrossVehicleMassRating,
+					vehicle.CurbMassChassis,
+					vehicle.VocationalVehicle);
+			} catch (VectoException) {
+				allowVocational = false;
+				_segment = GetVehicleClassification(
+					vehicle.VehicleCategory,
+					vehicle.AxleConfiguration,
+					vehicle.GrossVehicleMassRating,
+					vehicle.CurbMassChassis,
+					false);
+			}
 			if (!_segment.Found) {
 				throw new VectoException(
 					"no segment found for vehicle configruation: vehicle category: {0}, axle configuration: {1}, GVMR: {2}",
@@ -106,7 +119,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_driverdata = _dao.CreateDriverData();
 			_driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(_segment.AccelerationFile);
 			var tempVehicle = _dao.CreateVehicleData(vehicle, _segment.Missions.First(),
-				_segment.Missions.First().Loadings.First().Value);
+				_segment.Missions.First().Loadings.First().Value, allowVocational);
 			_airdragData = _dao.CreateAirdragData(vehicle.Components.AirdragInputData,
 				_segment.Missions.First(), _segment);
 			_engineData = _dao.CreateEngineData(vehicle.Components.EngineInputData,
@@ -130,7 +143,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
 				powertrainConfig = new VectoRunData() {
 					Exempted = true,
-					VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null),
+					VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null, allowVocational),
 					InputDataHash = InputDataProvider.XMLHash
 				};
 			} else {
@@ -138,7 +151,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					VehicleData =
 						_dao.CreateVehicleData(
 							InputDataProvider.JobInputData.Vehicle, _segment.Missions.First(),
-							_segment.Missions.First().Loadings.First().Value),
+							_segment.Missions.First().Loadings.First().Value, allowVocational),
 					AirdragData = _airdragData,
 					EngineData = _engineData,
 					GearboxData = _gearboxData,
@@ -168,7 +181,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						Exempted = true,
 						Report = Report,
 						Mission = new Mission() { MissionType = MissionType.ExemptedMission},
-						VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null),
+						VehicleData = _dao.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null, allowVocational),
 						InputDataHash = InputDataProvider.XMLHash
 					};
 			} else {
@@ -201,7 +214,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var simulationRunData = new VectoRunData {
 						Loading = loading.Key,
 						VehicleDesignSpeed = _segment.DesignSpeed,
-						VehicleData = _dao.CreateVehicleData(vehicle, mission, loading.Value),
+						VehicleData = _dao.CreateVehicleData(vehicle, mission, loading.Value, allowVocational),
 						AirdragData = _dao.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment),
 						EngineData = _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
 						GearboxData = _gearboxData,

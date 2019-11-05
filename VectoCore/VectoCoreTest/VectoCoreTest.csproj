@@ -117,6 +117,7 @@
     <Compile Include="Integration\TorqueLimitsTest.cs" />
     <Compile Include="Integration\XMLReportTest.cs" />
     <Compile Include="Models\Declaration\AirdragDefaultValuesTest.cs" />
+    <Compile Include="Models\Declaration\DataAdapter\DeclarationAdapterCreateVocationalVehicleTest.cs" />
     <Compile Include="Models\Declaration\DataAdapter\DeclarationAdapterTestHelper.cs" />
     <Compile Include="Models\Declaration\DataAdapter\DeclarationDataAdapterTest_Class5.cs" />
     <Compile Include="Models\Declaration\DataAdapter\DeclarationDataAdapterTest_Class2.cs" />

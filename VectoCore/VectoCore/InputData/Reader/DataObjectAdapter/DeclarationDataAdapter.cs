@@ -79,18 +79,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
+		internal VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading, bool allowVocational)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("VehicleData");
 			}
 			return data.ExemptedVehicle
 				? CreateExemptedVehicleData(data)
-				: CreateNonExemptedVehicleData(data, mission, loading);
+				: CreateNonExemptedVehicleData(data, mission, loading, allowVocational);
 		}
 
 		private VehicleData CreateNonExemptedVehicleData(
-			IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
+			IVehicleDeclarationInputData data, Mission mission, Kilogram loading, bool allowVocational)
 		{
 			var retVal = SetCommonVehicleData(data);
 			retVal.AxleConfiguration = data.AxleConfiguration;
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					.Average();
 			retVal.CargoVolume = mission.MissionType != MissionType.Construction ? mission.TotalCargoVolume : 0.SI<CubicMeter>();
 
-			retVal.VocationalVehicle = data.VocationalVehicle;
+			retVal.VocationalVehicle = allowVocational && data.VocationalVehicle;
 			retVal.ADAS = CreateADAS(data.ADAS);
 
 			var axles = data.Components.AxleWheels.AxlesDeclaration;
