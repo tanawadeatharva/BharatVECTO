@@ -1,4 +1,5 @@
 ﻿
+Imports System.IO
 Imports VectoAuxiliaries.Pneumatics
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.Utils
@@ -24,6 +25,10 @@ Namespace UnitTests
 		Private _defaultInputConfig As IPneumaticUserInputsConfig
 		Private _Signals As ISignals = New Signals
 
+        <OneTimeSetUp>
+        Public Sub RunBeforeAnyTests()
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+        End Sub
 
 		'Constructors
 		Public Sub New()

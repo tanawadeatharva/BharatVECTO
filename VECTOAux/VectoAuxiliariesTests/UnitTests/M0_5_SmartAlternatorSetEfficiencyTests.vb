@@ -1,4 +1,5 @@
-﻿Imports VectoAuxiliaries.Electrics
+﻿Imports System.IO
+Imports VectoAuxiliaries.Electrics
 Imports VectoAuxiliaries.Hvac
 Imports VectoAuxiliaries
 Imports NUnit.Framework
@@ -8,10 +9,15 @@ Namespace UnitTests
 	<TestFixture()>
 	Public Class M0_5_SmartAlternatorSetEfficiencyTests
 		Private target As M0_5_SmartAlternatorSetEfficiency
-		Private signals = New Signals
+		'Private signals = New Signals
+
+        <OneTimeSetUp>
+        Public Sub RunBeforeAnyTests()
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+        End Sub
 
 		Public Sub New()
-
+		    Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
 			Initialise()
 		End Sub
 
