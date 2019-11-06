@@ -1,4 +1,5 @@
-﻿Imports NUnit.Framework
+﻿Imports System.IO
+Imports NUnit.Framework
 Imports VectoAuxiliaries.Pneumatics
 Imports VectoAuxiliariesTests.Mocks
 Imports VectoAuxiliaries
@@ -12,6 +13,11 @@ Namespace UnitTests
 		Private Const GOODTechListALLON As String = "TestFiles\testSSMTechBenefitsALLON.csv"
 		Private Const GOODTechListALLOFF As String = "TestFiles\testSSMTechBenefitsALLOFF.csv"
 		Private Const GOODTechListEMPTYLIST As String = "TestFiles\testSSMTechBenefitsEMPTYLIST.csv"
+
+        <OneTimeSetUp>
+        Public Sub RunBeforeAnyTests()
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+        End Sub
 
 		'Helpers
 		Private Sub AddDefaultTechLine(source As ISSMTOOL)

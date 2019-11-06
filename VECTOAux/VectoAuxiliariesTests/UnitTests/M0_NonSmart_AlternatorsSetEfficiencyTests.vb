@@ -73,7 +73,7 @@ Namespace UnitTests
 
         <Test()>
         Public Sub EfficiencyValueTest()
-            Dim target As M0_NonSmart_AlternatorsSetEfficiency = New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers,
+            Dim target  = New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers,
                                                                                                         alternatorMap, powernetVoltage, signals, GetSSM())
 
             Dim actual As Single = target.AlternatorsEfficiency
