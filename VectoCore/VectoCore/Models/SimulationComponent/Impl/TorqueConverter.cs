@@ -323,7 +323,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var operatingPointList = ModelData.FindOperatingPoint(outTorque, outAngularVelocity, DataBus.EngineIdleSpeed);
 			if (operatingPointList.Count == 0) {
 				Log.Debug("TorqueConverter: Failed to find torque converter operating point, fallback: creeping");
-				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed * 1.001, outAngularVelocity);
+				var tqOperatingPoint = ModelData.FindOperatingPoint(DataBus.EngineIdleSpeed * 1.00, outAngularVelocity);
 
 				var engineResponse = (ResponseDryRun)
 					NextComponent.Request(absTime, dt, tqOperatingPoint.InTorque, tqOperatingPoint.InAngularVelocity, true);
