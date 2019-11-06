@@ -879,7 +879,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var segment = DeclarationData.Segments.Lookup(
 				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis,
 				false);
-			var vehicleData = dao.CreateVehicleData(inputData.JobInputData.Vehicle, segment.Missions.First(), 0.SI<Kilogram>());
+			var vehicleData = dao.CreateVehicleData(inputData.JobInputData.Vehicle, segment.Missions.First(), 0.SI<Kilogram>(), true);
 			var rdyn = vehicleData.DynamicTyreRadius;
 
 			var shiftPolygons = new List<ShiftPolygon>();
