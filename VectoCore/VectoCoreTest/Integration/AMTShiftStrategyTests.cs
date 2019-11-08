@@ -29,6 +29,15 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		}
 
+
+		[TestCase()]
+		public void VECTO_EffShift()
+		{
+			var jobName =
+				@"E:\QUAM\tmp\1a_EffShift_high-engine-rev_UD-cycle_LH-tractor_model\vecto_tractor_4x2_overdr_EffShift-def.vecto";
+			RunJob_DeclSingle(jobName, 9);
+		}
+
 		[TestCase(@"E:\QUAM\tmp\AMT_ShiftStrategyNeu\VOLVO_AxleLossMapExtrapolation\Class5_TUG_Vehicle_VOLVO.xml", 5)]
 		public void RunJob_DeclSingle(string jobName, int runIdx)
 		{

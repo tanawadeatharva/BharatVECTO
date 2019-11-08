@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>
 	{
-		private readonly IShiftStrategy _strategy;
+		protected internal readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
 		private IIdleController _idleController;
 		protected bool RequestAfterGearshift;

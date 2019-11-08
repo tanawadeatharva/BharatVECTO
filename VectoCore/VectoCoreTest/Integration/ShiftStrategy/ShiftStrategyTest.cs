@@ -40,10 +40,14 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
+using System.Collections.Generic;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 
 namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 {
@@ -104,5 +108,51 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 			GraphWriter.Write(modFile);
 		}
 
+		[TestCase()]
+		public void TestGearshiftTrigger()
+		{
+			var amtTestcase = @"E:\QUAM\tmp\AT_Vdrop\AMT_normal\MB_Citaro_G_MP156_ZF_Sort.vecto";
+			var atTestcase = @"E:\QUAM\tmp\AT_Vdrop\AT_normal\MB_Citaro_G_MP156_ZF_Sort.vecto";
+
+
+			var relativeJobPath = amtTestcase;
+			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(relativeJobPath), "tmp", Path.GetFileName(relativeJobPath)));
+			var inputData =  JSONInputDataFactory.ReadJsonJob(relativeJobPath);
+			var factory = new SimulatorFactory(ExecutionMode.Engineering, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new MockSumWriter());
+			var runs = factory.SimulationRuns().ToArray();
+			var run = runs[0];
+
+			var container = run.GetContainer() as VehicleContainer;
+			var vehicle = container?.Vehicle as Vehicle;
+
+			Assert.NotNull(container);
+			Assert.NotNull(vehicle);
+
+			foreach (var preprocessor in container.Preprocessors) {
+				preprocessor.RunPreprocessing();
+			}
+
+			var decision = new List<Tuple<double, bool>>();
+			for (var v = 10.0; v < 20; v += 0.1) {
+				vehicle.Initialize(v.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+				container.AbsTime = 0.SI<Second>();
+				(container.Gearbox as Gearbox).Gear = 2;
+				//(container.Gearbox as ATGearbox)._strategy.NextGear.Gear = 0;
+				(container.Driver as Driver).DrivingAction = DrivingAction.Accelerate;
+				(container.Driver as Driver).DriverBehavior = DrivingBehavior.Accelerating;
+				var response = vehicle.Request(
+					0.SI<Second>(), 0.5.SI<Second>(), 0.5.SI<MeterPerSquareSecond>(), 0.SI<Radian>(), false);
+				decision.Add(Tuple.Create(v, response is ResponseGearShift /* || (container.Gearbox as ATGearbox)._strategy.NextGear.Gear > 2) */));
+			}
+
+			foreach (var tuple in decision) {
+				Console.WriteLine("{0}: {1}", tuple.Item1, tuple.Item2 ? "1" : "0");
+			}
+		}
 	}
 }

@@ -405,6 +405,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public double? RatioEarlyDownshiftFC { get { return null; } }
 		public int? AllowedGearRangeFC { get { return null; } }
 
+		public PerSecond MinEngineSpeedPostUpshift { get { return null; } }
+
 		public double? VeloictyDropFactor
 		{
 			get { return null; }

@@ -601,6 +601,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				AllowedGearRangeFC = gbxType.AutomaticTransmission() ? DeclarationData.GearboxTCU.AllowedGearRangeFCAT : DeclarationData.GearboxTCU.AllowedGearRangeFCAMT,
 				VelocityDropFactor = DeclarationData.GearboxTCU.VelocityDropFactor,
 				AccelerationFactor = DeclarationData.GearboxTCU.AccelerationFactor,
+				MinEngineSpeedPostUpshift = 0.RPMtoRad(),
 			};
 
 			return retVal;

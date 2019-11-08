@@ -460,6 +460,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				AllowedGearRangeFC = gsInputData.AllowedGearRangeFC ?? (gbxType.AutomaticTransmission() ? DeclarationData.GearboxTCU.AllowedGearRangeFCAT : DeclarationData.GearboxTCU.AllowedGearRangeFCAMT),
 				VelocityDropFactor = gsInputData.VeloictyDropFactor ?? DeclarationData.GearboxTCU.VelocityDropFactor,
 				AccelerationFactor = gsInputData.AccelerationFactor ?? DeclarationData.GearboxTCU.AccelerationFactor,
+				MinEngineSpeedPostUpshift = gsInputData.MinEngineSpeedPostUpshift ?? 0.RPMtoRad(),
 
 				// voith gs parameters
 

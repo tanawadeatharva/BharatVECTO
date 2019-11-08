@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 			TorqueConverterLocked = tcLocked;
 		}
 
-		public uint Gear { get; private set; }
+		public uint Gear { get; protected internal set; }
 		public bool TorqueConverterLocked { get; private set; }
     }
 }

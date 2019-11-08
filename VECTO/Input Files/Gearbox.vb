@@ -607,6 +607,12 @@ Public Class Gearbox
         End Get
     End Property
 
+    public readonly Property MinEngineSpeedPostUpshift as PerSecond Implements IGearshiftEngineeringInputData.MinEngineSpeedPostUpshift
+    get
+            Return Nothing
+    End Get
+    End Property
+
     Public Overridable ReadOnly Property LoadStageShiftLines As TableData Implements IGearshiftEngineeringInputData.LoadStageShiftLines
 		Get
 			Return Nothing

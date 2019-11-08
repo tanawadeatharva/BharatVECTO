@@ -285,6 +285,7 @@ namespace TUGraz.VectoCommon.InputData
 		TableData LoadStageShiftLines { get; }
 		IList<double> LoadStageThresoldsUp { get; }
 		IList<double> LoadStageThresoldsDown { get; }
+		PerSecond MinEngineSpeedPostUpshift { get; }
 	}
 
 	public interface ITorqueConverterEngineeringShiftParameterInputData

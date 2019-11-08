@@ -290,6 +290,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public PerSecond MinEngineSpeedPostUpshift
+		{
+			get {
+				if (Body["MinEngineSpeedPostUpshift"] == null) {
+					return null;
+				}
+
+				return Body.GetEx<double>("MinEngineSpeedPostUpshift").RPMtoRad();
+			}
+		}
+
 		public TableData LoadStageShiftLines
 		{
 			get {

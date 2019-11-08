@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private SimplePowertrainContainer TestContainer;
 		private Gearbox TestContainerGbx;
 
-		//protected readonly VelocityRollingLookup VelocityDropData;
+		protected readonly VelocityRollingLookup VelocityDropData;
 		private AccelerationCurveData accCurve;
 
 		private Kilogram vehicleMass;
@@ -56,12 +56,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// register pre-processors
-			//var maxG = runData.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
-			//var grad = Convert.ToInt32(maxG / 2) * 2;
+			var maxG = runData.Cycle.Entries.Max(x => Math.Abs(x.RoadGradientPercent.Value())) + 1;
+			var grad = Convert.ToInt32(maxG / 2) * 2;
+			if (grad == 0) {
+				grad = 2;
+			}
 
-			//VelocityDropData = new VelocityRollingLookup();
-			//dataBus.AddPreprocessor(
-			//	new VelocitySpeedGearshiftPreprocessor(VelocityDropData, runData.GearboxData.TractionInterruption, TestContainer, -grad, grad, 2));
+			VelocityDropData = new VelocityRollingLookup();
+			dataBus.AddPreprocessor(
+				new VelocitySpeedGearshiftPreprocessor(VelocityDropData, runData.GearboxData.TractionInterruption, TestContainer, -grad, grad, 2));
 
 			if (shiftStrategyParameters.AllowedGearRangeFC > 2 || shiftStrategyParameters.AllowedGearRangeFC < 1) {
 				Log.Warn("Gear-range for FC-based gearshift must be either 1 or 2!");
@@ -80,11 +83,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var fcUpshiftPossible = true;
 
-			//var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleSpeed, DataBus.RoadGradient);
-			//var vDrop = DataBus.VehicleSpeed - estimatedVelocityPostShift;
-			//var vehicleSpeedForGearRating = DataBus.VehicleSpeed - vDrop * shiftStrategyParameters.VelocityDropFactor;
+			var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleSpeed, DataBus.RoadGradient ?? 0.SI<Radian>());
+			var vDrop = DataBus.VehicleSpeed - estimatedVelocityPostShift;
+			var vehicleSpeedPostShift = DataBus.VehicleSpeed - vDrop * shiftStrategyParameters.VelocityDropFactor;
 
-			var totalTransmissionRatio = DataBus.EngineSpeed / DataBus.VehicleSpeed;
+			//var totalTransmissionRatio = DataBus.EngineSpeed / DataBus.VehicleSpeed;
+			var totalTransmissionRatio = outAngularVelocity / DataBus.VehicleSpeed;
 
 			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 				var tryNextGear = (uint)(currentGear + i);
@@ -96,7 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				fcUpshiftPossible = true;
 
-				//var response = RequestDryRunWithGear(absTime, dt, vehicleSpeedForGearRating, DataBus.DriverAcceleration, tryNextGear);
+				//var response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, DataBus.DriverAcceleration, tryNextGear);
 				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, tryNextGear);
 
 				var inAngularVelocity = ModelData.Gears[tryNextGear].Ratio * outAngularVelocity;
@@ -108,6 +112,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
+				var estimatedEngineSpeed = (vehicleSpeedPostShift * (totalTransmissionRatio * ModelData.Gears[tryNextGear].Ratio)).Cast<PerSecond>();
+				if (estimatedEngineSpeed.IsSmaller(shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
+					continue;
+				}
+
+				var pNextGearMax = DataBus.EngineStationaryFullPower(estimatedEngineSpeed);
+
+				if (!response.EnginePowerRequest.IsSmaller(pNextGearMax)) {
+					continue;
+				}
+
 				var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
 				var reserve = 1 - response.EnginePowerRequest / fullLoadPower;
 
@@ -116,7 +131,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (reserve < ModelData.TorqueReserve /* && reserve > -0.1*/) {
 					//var acc = EstimateAcceleration(outAngularVelocity, outTorque);
 
-					//var estimatedEngineSpeed = DataBus.VehicleSpeed * (totalTransmissionRatio / ModelData.Gears[currentGear].Ratio * ModelData.Gears[tryNextGear].Ratio);
 					var accelerationFactor = outAngularVelocity * ModelData.Gears[currentGear].Ratio < fld[0].NTq98hSpeed
 						? 1.0
 						: VectoMath.Interpolate(
@@ -127,7 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 					//var minAcc = VectoMath.Min(DataBus.DriverAcceleration, accCurve.Lookup(DataBus.VehicleSpeed).Acceleration * accelerationFactor);
 					//var minAcc = DataBus.DriverAcceleration * accelerationFactor;
-					//response = RequestDryRunWithGear(absTime, dt, vehicleSpeedForGearRating, minAcc, tryNextGear);
+					//response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, minAcc, tryNextGear);
 					var accelerationTorque = vehicleMass * DataBus.DriverAcceleration * DataBus.VehicleSpeed / outAngularVelocity;
 					var reducedTorque = outTorque - accelerationTorque * (1 - accelerationFactor);
 
@@ -265,12 +279,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						responseCurrent.EngineTorqueDemand.LimitTo(
 							fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
 							fld[currentGear].FullLoadStationaryTorque(responseCurrent.EngineSpeed))
-						, responseCurrent.EngineSpeed).Value;
+						, responseCurrent.EngineSpeed, true).Value;
 				}
 				var fcNext = fcMap.GetFuelConsumption(
 					response.EngineTorqueDemand.LimitTo(
 						fld[tryNextGear].DragLoadStationaryTorque(response.EngineSpeed),
-						fld[tryNextGear].FullLoadStationaryTorque(response.EngineSpeed)), response.EngineSpeed).Value;
+						fld[tryNextGear].FullLoadStationaryTorque(response.EngineSpeed)), response.EngineSpeed, true).Value;
 
 				if (!fcNext.IsSmaller(fcCurrent * shiftStrategyParameters.RatingFactorCurrentGear) ||
 					!fcNext.IsSmaller(minFc)) {
