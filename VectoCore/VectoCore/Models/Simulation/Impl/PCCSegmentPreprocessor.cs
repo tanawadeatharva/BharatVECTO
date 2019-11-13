@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			var engineDrag = runData.EngineData.FullLoadCurves[0].FullLoadEntries
 									.Average(x => (x.EngineSpeed * x.TorqueDrag).Value()).SI<Watt>();
 
-			var slopeEngineDrag = runData.VehicleData.ADAS.EcoRoll == EcoRollType.WithEngineStop
+			var slopeEngineDrag = runData.VehicleData.ADAS.EcoRoll != EcoRollType.None
 				? 0
 				: (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleWeight).Value();
 
