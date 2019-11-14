@@ -30,6 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private AccelerationCurveData accCurve;
 
 		private Kilogram vehicleMass;
+		protected internal ResponseDryRun minFCResponse;
 
 		public AMTShiftStrategyOptimized(VectoRunData runData, IVehicleContainer dataBus) : base(runData, dataBus)
 		{
@@ -79,6 +80,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var minFcGear = currentGear;
 			var minFc = double.MaxValue;
+			minFCResponse = null;
 			KilogramPerSecond fcCurrent = null;
 
 			var fcUpshiftPossible = true;
@@ -87,8 +89,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var vDrop = DataBus.VehicleSpeed - estimatedVelocityPostShift;
 			var vehicleSpeedPostShift = DataBus.VehicleSpeed - vDrop * shiftStrategyParameters.VelocityDropFactor;
 
-			//var totalTransmissionRatio = DataBus.EngineSpeed / DataBus.VehicleSpeed;
-			var totalTransmissionRatio = outAngularVelocity / DataBus.VehicleSpeed;
+			var totalTransmissionRatio = DataBus.EngineSpeed / DataBus.VehicleSpeed;
+			//var totalTransmissionRatio = outAngularVelocity / DataBus.VehicleSpeed;
 
 			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 				var tryNextGear = (uint)(currentGear + i);
@@ -112,7 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				var estimatedEngineSpeed = (vehicleSpeedPostShift * (totalTransmissionRatio * ModelData.Gears[tryNextGear].Ratio)).Cast<PerSecond>();
+				var estimatedEngineSpeed = (vehicleSpeedPostShift * (totalTransmissionRatio / ModelData.Gears[currentGear].Ratio * ModelData.Gears[tryNextGear].Ratio)).Cast<PerSecond>();
 				if (estimatedEngineSpeed.IsSmaller(shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
 					continue;
 				}
@@ -187,6 +189,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				minFcGear = tryNextGear;
 				minFc = fcNext.Value();
+				minFCResponse = response;
 			}
 
 			if (currentGear != minFcGear) {
