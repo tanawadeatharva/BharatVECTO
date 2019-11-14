@@ -301,6 +301,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public Second ATLookAheadTime
+		{
+			get {
+				if (Body["ATLookAheadTime"] == null) {
+					return null;
+				}
+
+				return Body.GetEx<double>("ATLookAheadTime").SI<Second>();
+			}
+		}
+
 		public TableData LoadStageShiftLines
 		{
 			get {

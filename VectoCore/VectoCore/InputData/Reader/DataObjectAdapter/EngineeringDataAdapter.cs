@@ -461,6 +461,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				VelocityDropFactor = gsInputData.VeloictyDropFactor ?? DeclarationData.GearboxTCU.VelocityDropFactor,
 				AccelerationFactor = gsInputData.AccelerationFactor ?? DeclarationData.GearboxTCU.AccelerationFactor,
 				MinEngineSpeedPostUpshift = gsInputData.MinEngineSpeedPostUpshift ?? 0.RPMtoRad(),
+				ATLookAheadTime = gsInputData.ATLookAheadTime ?? DeclarationData.Gearbox.PowershiftShiftTime,
 
 				// voith gs parameters
 

@@ -119,6 +119,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public double? VeloictyDropFactor { get { return null; } }
 
 		public PerSecond MinEngineSpeedPostUpshift { get { return null; } }
+		public Second ATLookAheadTime { get { return null; } }
 
 		public double? AccelerationFactor
 		{

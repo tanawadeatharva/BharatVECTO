@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// The shift strategy.
 		/// </summary>
-		private readonly IShiftStrategy _strategy;
+		internal readonly IShiftStrategy _strategy;
 
 		/// <summary>
 		/// Time when a gearbox shift engages a new gear (shift is finished). Is set when shifting is needed.
@@ -368,7 +368,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return new ResponseGearShift {
 						Source = this,
 						SimulationInterval = ModelData.TractionInterruption,
-						GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0
+						GearboxPowerRequest = outTorque * (PreviousState.OutAngularVelocity + outAngularVelocity) / 2.0,
+						EngineSpeed = response.EngineSpeed,
+						EngineTorqueDemand = response.EngineTorqueDemand,
+						EngineTorqueDemandTotal = response.EngineTorqueDemandTotal,
+						EnginePowerRequest = response.EnginePowerRequest
 					};
 				}
 			}

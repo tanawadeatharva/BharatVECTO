@@ -137,8 +137,8 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 				preprocessor.RunPreprocessing();
 			}
 
-			var decision = new List<Tuple<double, bool>>();
-			for (var v = 10.0; v < 20; v += 0.1) {
+			var decision = new List<Tuple<double, IResponse, ResponseDryRun>>();
+			for (var v = 15.0; v < 20; v += 0.1) {
 				vehicle.Initialize(v.KMPHtoMeterPerSecond(), 0.SI<Radian>());
 				container.AbsTime = 0.SI<Second>();
 				(container.Gearbox as Gearbox).Gear = 2;
@@ -147,11 +147,27 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 				(container.Driver as Driver).DriverBehavior = DrivingBehavior.Accelerating;
 				var response = vehicle.Request(
 					0.SI<Second>(), 0.5.SI<Second>(), 0.5.SI<MeterPerSquareSecond>(), 0.SI<Radian>(), false);
-				decision.Add(Tuple.Create(v, response is ResponseGearShift /* || (container.Gearbox as ATGearbox)._strategy.NextGear.Gear > 2) */));
+				decision.Add(Tuple.Create(v, response, ((container.Gearbox as Gearbox)._strategy as AMTShiftStrategyOptimized).minFCResponse));
 			}
 
 			foreach (var tuple in decision) {
-				Console.WriteLine("{0}: {1}", tuple.Item1, tuple.Item2 ? "1" : "0");
+				var r = tuple.Item2;
+				var s = tuple.Item3;
+				var fc = r.EngineSpeed != null
+					? container.RunData.EngineData.ConsumptionMap.GetFuelConsumption(r.EngineTorqueDemandTotal, r.EngineSpeed).Value
+								.ConvertToGrammPerHour().Value
+					: 0;
+				var fc2 = s?.EngineSpeed != null
+					? container.RunData.EngineData.ConsumptionMap.GetFuelConsumption(s.EngineTorqueDemandTotal, s.EngineSpeed).Value
+								.ConvertToGrammPerHour().Value
+					: 0;
+				Console.WriteLine(
+					"{0}; {1}; {2}; {3}; {4}; {5}; {6}; {7}", tuple.Item1, tuple.Item2 is ResponseGearShift ? "1" : "0",
+					r.EngineSpeed?.AsRPM ?? 0,
+					r.EngineTorqueDemand?.Value() ?? 0, fc,
+					s?.EngineSpeed?.AsRPM ?? 0,
+					s?.EngineTorqueDemand?.Value() ?? 0, fc2
+					);
 			}
 		}
 	}

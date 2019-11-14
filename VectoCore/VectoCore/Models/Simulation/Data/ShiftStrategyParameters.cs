@@ -66,5 +66,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data {
 		public IEnumerable<Tuple<double, double>> LoadstageThresholds { get; set; }
 
 		public PerSecond MinEngineSpeedPostUpshift { get; set; }
+		public Second ATLookAheadTime { get; set; }
 	}
 }
