@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -16,6 +17,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.OutputData;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -32,6 +34,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly List<GearshiftPosition> GearList;
 
 		private Kilogram vehicleMass;
+		private Kilogram MinMass;
+		private Kilogram MaxMass;
+
+		private List<SchmittTrigger> LoadStageSteps = new List<SchmittTrigger>();
+		private ShiftLineSet UpshiftLineTCLocked = new ShiftLineSet();
+
+		public const double DownhillSlope = -5;
+		public const double UphillSlope = 5;
 
 		public new static string Name
 		{
@@ -47,6 +57,58 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			fld = runData.EngineData.FullLoadCurves;
 			vehicleMass = runData.VehicleData.TotalVehicleMass;
 			shiftStrategyParameters = runData.GearshiftParameters;
+
+			MinMass = runData.VehicleData.MinimumVehicleMass;
+			MaxMass = runData.VehicleData.MaximumVehicleMass;
+
+			var LoadStageThresoldsUp = "19.7;36.34;53.01;69.68;86.35";
+			var LoadStageThresoldsDown = "13.7;30.34;47.01;63.68;80.35";
+			foreach (var entry in LoadStageThresoldsUp.Split(';').Select(x => x.ToDouble()).Zip(LoadStageThresoldsDown.Split(';').Select(x => x.ToDouble()), Tuple.Create)) {
+				LoadStageSteps.Add(new SchmittTrigger(entry));
+			}
+
+			var slopeDh = VectoMath.InclinationToAngle(DownhillSlope / 100.0);
+			var slopeLevel = VectoMath.InclinationToAngle(0);
+			var slopeUh = VectoMath.InclinationToAngle(UphillSlope / 100.0);
+
+			var sl1 = new ShiftLines();
+			sl1.entriesAMin.Add(Tuple.Create(slopeDh, 650.RPMtoRad()));
+			sl1.entriesAMin.Add(Tuple.Create(slopeLevel, 680.RPMtoRad()));
+			sl1.entriesAMin.Add(Tuple.Create(slopeUh, 725.RPMtoRad()));
+			sl1.entriesAMax.Add(Tuple.Create(slopeDh, 650.RPMtoRad()));
+			sl1.entriesAMax.Add(Tuple.Create(slopeLevel, 680.RPMtoRad()));
+			sl1.entriesAMax.Add(Tuple.Create(slopeUh, 725.RPMtoRad()));
+			UpshiftLineTCLocked.LoadStages[1] = sl1;
+			UpshiftLineTCLocked.LoadStages[2] = sl1;
+			UpshiftLineTCLocked.LoadStages[3] = sl1;
+
+			var sl4 = new ShiftLines();
+			sl4.entriesAMin.Add(Tuple.Create(slopeDh, 650.RPMtoRad()));
+			sl4.entriesAMin.Add(Tuple.Create(slopeLevel, 680.RPMtoRad()));
+			sl4.entriesAMin.Add(Tuple.Create(slopeUh, 725.RPMtoRad()));
+			sl4.entriesAMax.Add(Tuple.Create(slopeDh, 670.RPMtoRad()));
+			sl4.entriesAMax.Add(Tuple.Create(slopeLevel, 700.RPMtoRad()));
+			sl4.entriesAMax.Add(Tuple.Create(slopeUh, 745.RPMtoRad()));
+			UpshiftLineTCLocked.LoadStages[4] = sl4;
+
+			var sl5 = new ShiftLines();
+			sl5.entriesAMin.Add(Tuple.Create(slopeDh, 660.RPMtoRad()));
+			sl5.entriesAMin.Add(Tuple.Create(slopeLevel, 690.RPMtoRad()));
+			sl5.entriesAMin.Add(Tuple.Create(slopeUh, 735.RPMtoRad()));
+			sl5.entriesAMax.Add(Tuple.Create(slopeDh, 680.RPMtoRad()));
+			sl5.entriesAMax.Add(Tuple.Create(slopeLevel, 710.RPMtoRad()));
+			sl5.entriesAMax.Add(Tuple.Create(slopeUh, 755.RPMtoRad()));
+			UpshiftLineTCLocked.LoadStages[5] = sl5;
+
+			var sl6 = new ShiftLines();
+			sl6.entriesAMin.Add(Tuple.Create(slopeDh, 670.RPMtoRad()));
+			sl6.entriesAMin.Add(Tuple.Create(slopeLevel, 700.RPMtoRad()));
+			sl6.entriesAMin.Add(Tuple.Create(slopeUh, 745.RPMtoRad()));
+			sl6.entriesAMax.Add(Tuple.Create(slopeDh, 690.RPMtoRad()));
+			sl6.entriesAMax.Add(Tuple.Create(slopeLevel, 720.RPMtoRad()));
+			sl6.entriesAMax.Add(Tuple.Create(slopeUh, 765.RPMtoRad()));
+			UpshiftLineTCLocked.LoadStages[6] = sl6;
+
 			if (shiftStrategyParameters == null) {
 				throw new VectoException("Parameters for shift strategy missing!");
 			}
@@ -93,9 +155,69 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Overrides of ATShiftStrategy
 
-		protected override bool? CheckEarlyUpshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter origInTorque,
-			PerSecond origInAngularVelocity, uint currentGear, Second lastShiftTime)
+		protected override bool? CheckEarlyUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter origInTorque, PerSecond origInAngularVelocity, uint currentGear, Second lastShiftTime, IResponse response)
+		{
+			var current = new GearshiftPosition(currentGear, _gearbox.TorqueConverterLocked);
+			var currentIdx = GearList.IndexOf(current);
+			var next = GearList[currentIdx + 1];
+
+			if (current.Gear == next.Gear && current.TorqueConverterLocked != next.TorqueConverterLocked) {
+				return CheckUpshiftFromTC(absTime, dt, outTorque, outAngularVelocity, origInTorque, origInAngularVelocity, currentGear, lastShiftTime, response);
+			}
+
+			return CheckEarlyUpshiftFromLocked(
+				absTime, dt, outTorque, outAngularVelocity, origInTorque, origInAngularVelocity, currentGear, lastShiftTime, response);
+		}
+
+		private bool? CheckUpshiftFromTC(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond origInAngularVelocity, uint currentGear, Second lastShiftTime, IResponse response)
+		{
+			var accPower = EstimateAccelerrationPower(outAngularVelocity, outTorque);
+
+			var _accMin = (accPower / DataBus.VehicleSpeed / (MaxMass + DataBus.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
+			var _accMax = (accPower / DataBus.VehicleSpeed / (MinMass + DataBus.ReducedMassWheels)).Cast<MeterPerSquareSecond>();
+
+			var engineLoadPercent = inTorque / response.EngineDynamicFullLoadTorque;
+			var _loadStage = GetLoadStage(engineLoadPercent);
+
+			var shiftSpeed = UpshiftLineTCLocked.LookupShiftSpeed(
+				_loadStage, DataBus.RoadGradient, DataBus.DriverAcceleration, _accMin, _accMax);
+			var shiftSpeedGbxOut = shiftSpeed / ModelData.Gears[currentGear].Ratio;
+			if (outAngularVelocity > shiftSpeedGbxOut) {
+				Upshift(absTime, currentGear);
+				return true;
+			}
+
+			return false;
+		}
+
+		protected Watt EstimateAccelerrationPower(PerSecond gbxOutSpeed, NewtonMeter gbxOutTorque)
+		{
+			var vehicleSpeed = DataBus.VehicleSpeed;
+			var avgSlope =
+			((DataBus.CycleLookAhead(Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Altitude -
+			DataBus.Altitude) / Constants.SimulationSettings.GearboxLookaheadForAccelerationEstimation).Value().SI<Radian>();
+
+			var airDragLoss = DataBus.AirDragResistance(vehicleSpeed, vehicleSpeed) * DataBus.VehicleSpeed;
+			var rollResistanceLoss = DataBus.RollingResistance(avgSlope) * DataBus.VehicleSpeed;
+
+			//DataBus.GearboxLoss();
+			var slopeLoss = DataBus.SlopeResistance(avgSlope) * DataBus.VehicleSpeed;
+			var axleLoss = DataBus.AxlegearLoss();
+
+			return gbxOutSpeed * gbxOutTorque - axleLoss - airDragLoss - rollResistanceLoss - slopeLoss;
+		}
+
+		private int GetLoadStage(double engineLoadPercent)
+		{
+			var sum = 1;
+			foreach (var entry in LoadStageSteps) {
+				sum += entry.GetOutput(engineLoadPercent * 100);
+			}
+
+			return sum;
+		}
+
+		protected bool? CheckEarlyUpshiftFromLocked(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter origInTorque, PerSecond origInAngularVelocity, uint currentGear, Second lastShiftTime, IResponse response1)
 		{
 			if (outAngularVelocity.IsEqual(0)) {
 				return null;
@@ -108,8 +230,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var current = new GearshiftPosition(currentGear, _gearbox.TorqueConverterLocked);
 			var currentIdx = GearList.IndexOf(current);
 
-			var vDrop = DataBus.DriverAcceleration * DeclarationData.Gearbox.PowershiftShiftTime;
-			var vehicleSpeedPostShift = DataBus.VehicleSpeed + vDrop * shiftStrategyParameters.VelocityDropFactor;
+			var vDrop = DataBus.DriverAcceleration * shiftStrategyParameters.ATLookAheadTime;
+			var vehicleSpeedPostShift = (DataBus.VehicleSpeed + vDrop * shiftStrategyParameters.VelocityDropFactor).LimitTo(0.KMPHtoMeterPerSecond(), DataBus.CycleData.LeftSample.VehicleTargetSpeed);
 
 			for (var i = 1; i <=  shiftStrategyParameters.AllowedGearRangeFC; i++) {
 
@@ -129,7 +251,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				var inAngularVelocity = ModelData.Gears[next.Gear].Ratio * outAngularVelocity;
-				var totalTransmissionRatio = inAngularVelocity / DataBus.VehicleSpeed;
+				var totalTransmissionRatio = inAngularVelocity / (DataBus.VehicleSpeed + DataBus.DriverAcceleration * dt);
 				var estimatedEngineSpeed = (vehicleSpeedPostShift * totalTransmissionRatio).Cast<PerSecond>();
 				if (estimatedEngineSpeed.IsSmaller(shiftStrategyParameters.MinEngineSpeedPostUpshift)) {
 					continue;
@@ -137,7 +259,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var pNextGearMax = DataBus.EngineStationaryFullPower(estimatedEngineSpeed);
 				
-				var response = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, next);
+				var outAngularVelocityEst = (outAngularVelocity* vehicleSpeedPostShift / (DataBus.VehicleSpeed + DataBus.DriverAcceleration * dt)).Cast<PerSecond>() ;
+				var outTorqueEst = outTorque * outAngularVelocity / outAngularVelocityEst;
+
+				var response = RequestDryRunWithGear(absTime, dt, outTorqueEst, outAngularVelocityEst, next);
 				//var response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, DataBus.DriverAcceleration, next);
 
 				if (!response.EnginePowerRequest.IsSmaller(pNextGearMax)) {
@@ -219,9 +344,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		
 
-		protected override bool? CheckEarlyDownshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter origInTorque,
-			PerSecond origInAngularVelocity, uint currentGear, Second lastShiftTime)
+		protected override bool? CheckEarlyDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter origInTorque, PerSecond origInAngularVelocity, uint currentGear, Second lastShiftTime, IResponse response1)
 		{
 			var minFcGear = new GearshiftPosition(currentGear, _gearbox.TorqueConverterLocked); 
 			var minFc = double.MaxValue;

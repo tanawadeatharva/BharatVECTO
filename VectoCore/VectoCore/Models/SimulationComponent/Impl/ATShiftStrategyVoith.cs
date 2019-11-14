@@ -192,9 +192,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected override bool CheckUpshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+		protected override bool CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
 			if (!shiftTimeReached) {
@@ -239,9 +237,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected override bool CheckDownshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque,
-			PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+		protected override bool CheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
 			if (!shiftTimeReached) {

@@ -172,13 +172,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// UPSHIFT --------------------------------------------------------
 			if (CheckUpshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear,
-				lastShiftTime)) {
+				lastShiftTime, response)) {
 				return true;
 			}
 
 			// DOWNSHIFT ------------------------------------------------------
 			if (CheckDownshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear,
-				lastShiftTime)) {
+				lastShiftTime, response)) {
 				return true;
 			}
 
@@ -220,8 +220,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
-		protected virtual bool CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+		protected virtual bool CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
 			if (!shiftTimeReached) {
@@ -248,7 +247,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (gear < ModelData.Gears.Keys.Max()) {
 				var earlyUpshift = CheckEarlyUpshift(
-					absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime);
+					absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime, response);
 				if (earlyUpshift.HasValue) {
 					return earlyUpshift.Value;
 				}
@@ -257,7 +256,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return false;
 		}
 
-		protected virtual bool? CheckEarlyUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+		protected virtual bool? CheckEarlyUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
 			return null;
 		}
@@ -371,8 +370,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		[SuppressMessage("ReSharper", "UnusedParameter.Local")]
-		protected virtual bool CheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+		protected virtual bool CheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
 			var shiftTimeReached = (absTime - lastShiftTime).IsGreaterOrEqual(ModelData.ShiftTime);
 
@@ -403,7 +401,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (shiftTimeReached &&  gear > 1 || (gear == 1 && _gearbox.TorqueConverterLocked)) {
 				var earlyDownshift = CheckEarlyDownshift(
-					absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime);
+					absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, lastShiftTime, response);
 				if (earlyDownshift.HasValue) {
 					return earlyDownshift.Value;
 				}
@@ -412,7 +410,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return false;
 		}
 
-		protected virtual bool? CheckEarlyDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
+		protected virtual bool? CheckEarlyDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime, IResponse response)
 		{
 			return null;
 		}
