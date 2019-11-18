@@ -349,6 +349,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var beforeVLow = distance.IsSmaller(PCCSegments.Current.DistanceMinSpeed);
 				var speedSufficientUseCase2 = vehicleSpeed.IsGreaterOrEqual(
 					VectoMath.Max(targetVelocity - Driver.DriverData.PCC.UnderSpeed, Driver.DriverData.PCC.MinSpeed));
+				var speedBelowTargetspeed = vehicleSpeed.IsSmallerOrEqual(targetVelocity - 1.KMPHtoMeterPerSecond());
 				var currentEnergyHigherThanEndUseCase2 =
 					currentEnergy.IsGreaterOrEqual(endEnergyUseCase2 + energyCoastingEndUseCase2);
 
@@ -359,7 +360,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					currentEnergyHigherThanMin) {
 					PCCState = PCCStates.UseCase1;
 				}
-				if (PCCState == PCCStates.WithinSegment && speedSufficientUseCase2 && beyondVLow &&
+				if (PCCState == PCCStates.WithinSegment && speedSufficientUseCase2 && speedBelowTargetspeed && beyondVLow &&
 					currentEnergyHigherThanEndUseCase2) {
 					PCCState = PCCStates.UseCase2;
 				}
