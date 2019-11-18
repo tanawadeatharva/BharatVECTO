@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return true;
 			}
 			// Emergency Upshift: if higher than engine rated speed
-			if (inAngularVelocity.IsGreaterOrEqual(VectoMath.Min(ModelData.Gears[gear].MaxSpeed, DataBus.EngineRatedSpeed))) {
+			if (inAngularVelocity.IsGreaterOrEqual(VectoMath.Min(ModelData.Gears[gear].MaxSpeed, DataBus.EngineN95hSpeed))) {
 				// check if upshift is possible
 				if (!ModelData.Gears.ContainsKey(gear + 1)) {
 					return false;
