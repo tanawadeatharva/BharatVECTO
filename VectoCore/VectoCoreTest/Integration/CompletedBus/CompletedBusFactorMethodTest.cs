@@ -6,17 +6,22 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Ninject;
 using Ninject.Planning.Bindings.Resolvers;
 using NUnit.Framework;
+using TUGraz.VECTO;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
@@ -53,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			PrimaryBusSegment();
 			CompletedBusSegment();
 		}
-		
+
 		private void PrimaryBusSegment()
 		{
 			var category = VehicleCategory.HeavyBusPrimaryVehicle;
@@ -61,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var floorType = FloorType.HighFloor;
 			var articulated = false;
 			var doubleDecker = true;
-			
+
 			primarySegment = DeclarationData.PrimaryBusSegments.Lookup(category, axleConfiguration, articulated, floorType, doubleDecker);
 		}
 
@@ -85,7 +90,8 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var writer = new FileOutputWriter(Path.Combine(Path.GetDirectoryName(relativeJobPath), Path.GetFileName(relativeJobPath)));
 			var inputData = JSONInputDataFactory.ReadJsonJob(relativeJobPath);
 
-			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer)
+			{
 				WriteModalResults = true,
 				//ActualModalData = true,
 				Validate = false
@@ -100,12 +106,17 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			SetRelatedVehicleParts(runs);
 
 			var index = 0;
-			for (int i = 0; i < relatedRuns.Count; i++) {
+			for (int i = 0; i < relatedRuns.Count; i++)
+			{
 				AssertVehicleData(relatedRuns[i], ref index);
 				AssertAirdragData(relatedRuns[i]);
-				//AssertEngineData(relatedRuns[i]);
+				AssertEngineData(relatedRuns[i]);
+				AssertGearbox(relatedRuns[i]);
+				AssertTorqueConverter(relatedRuns[i]);
+				AssertAxlegearData(relatedRuns[i]);
+				AssertAngledriveData(relatedRuns[i]);
 			}
-			
+
 		}
 
 		#region Vehicle Data Asserts
@@ -123,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			Assert.AreEqual(0, genericVehicleData.BodyAndTrailerMass.Value());
 			Assert.AreEqual(genericVehicleData.BodyAndTrailerMass, specificVehicleData.BodyAndTrailerMass);
-			
+
 			AssertLoading(genericVehicleData.Loading, specificVehicleData.Loading, ref index);
 
 			Assert.AreEqual(0.4992, genericVehicleData.DynamicTyreRadius.Value(), 1e-0);
@@ -136,13 +147,14 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		private void AssertLoading(Kilogram genericLoading, Kilogram specificLoading, ref int index)
 		{
-			switch (index) {
+			switch (index)
+			{
 				case 0:
 					Assert.AreEqual(5051.2950, genericLoading.Value(), 1e-0);
 					Assert.AreEqual(2309.4738, specificLoading.Value(), 1e-0);//lowLoading
 					break;
 				case 1:
-					Assert.AreEqual(5051.2950, genericLoading.Value(),1e-0);
+					Assert.AreEqual(5051.2950, genericLoading.Value(), 1e-0);
 					Assert.AreEqual(2130, specificLoading.Value(), 1e-0);
 					break;
 				case 2:
@@ -208,7 +220,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		{
 			var genericAirdragData = relatedRun.VectoRunDataGenericBody.AirdragData;
 			var specificAirdragData = relatedRun.VectoRunDataSpezificBody.AirdragData;
-			
+
 			var genericDragArea = 5.2.SI<SquareMeter>();
 			var specificDragArea = 6.34.SI<SquareMeter>();
 
@@ -217,12 +229,12 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			var genericCrosswind = GetCrosswindCorrection("CoachBus", genericDragArea, genericVehicleHeight);
 			var specificCrosswind = GetCrosswindCorrection("CoachBus", specificDragArea, specificVehicleHeight);
-			
+
 			var genericValueExpected = genericCrosswind.AverageAirDragPowerLoss(20.KMPHtoMeterPerSecond(),
 				21.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
 
 			var currentGenericValue = genericAirdragData.CrossWindCorrectionCurve.AverageAirDragPowerLoss(
-				20.KMPHtoMeterPerSecond(),21.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
+				20.KMPHtoMeterPerSecond(), 21.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
 
 			var expectedSpecificValue = specificCrosswind.AverageAirDragPowerLoss(21.KMPHtoMeterPerSecond(),
 				22.KMPHtoMeterPerSecond(), Physics.AirDensity).Value();
@@ -236,11 +248,11 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 			Assert.AreEqual(genericValueExpected, currentGenericValue);
 			Assert.AreEqual(expectedSpecificValue, currentSpecificValue);
-			
-			Assert.AreEqual(genericDragArea,  genericAirdragData.DeclaredAirdragArea);
+
+			Assert.AreEqual(genericDragArea, genericAirdragData.DeclaredAirdragArea);
 			Assert.AreEqual(genericDragArea, genericAirdragData.CrossWindCorrectionCurve.AirDragArea);
-			Assert.AreEqual(specificDragArea,  specificAirdragData.DeclaredAirdragArea);
-			Assert.AreEqual(specificDragArea,  specificAirdragData.CrossWindCorrectionCurve.AirDragArea);
+			Assert.AreEqual(specificDragArea, specificAirdragData.DeclaredAirdragArea);
+			Assert.AreEqual(specificDragArea, specificAirdragData.CrossWindCorrectionCurve.AirDragArea);
 		}
 
 
@@ -253,35 +265,245 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 			var genericEngine = relatedRun.VectoRunDataGenericBody.EngineData;
 			var specificEngine = relatedRun.VectoRunDataSpezificBody.EngineData;
 
-			
+			Assert.AreEqual(1, genericEngine.FullLoadCurves.Count);
+			AssertFullLoadAndDragCurve(genericEngine.FullLoadCurves[0].FullLoadEntries);
+			AssertFullLoadAndDragCurve(specificEngine.FullLoadCurves[0].FullLoadEntries);
+
+			Assert.AreEqual(700 * Constants.RPMToRad, genericEngine.IdleSpeed.Value(), 1e-9);
+			Assert.AreEqual(genericEngine.IdleSpeed, specificEngine.IdleSpeed);
+
+			Assert.AreEqual(8.SI<CubicMeter>().Value() * 1E-6, genericEngine.Displacement.Value());
+			Assert.AreEqual(genericEngine.Displacement, specificEngine.Displacement);
+
+			Assert.AreEqual(
+				DeclarationData.Engine.TorqueConverterInertia +
+				DeclarationData.Engine.EngineBaseInertia +
+				DeclarationData.Engine.EngineDisplacementInertia * genericEngine.Displacement, genericEngine.Inertia);
+			Assert.AreEqual(genericEngine.Inertia, specificEngine.Inertia);
+
+			Assert.AreEqual(WHRType.None, genericEngine.WHRType);
+			Assert.AreEqual(genericEngine.WHRType, specificEngine.WHRType);
+
+			Assert.AreEqual(null, genericEngine.ElectricalWHR);
+			Assert.AreEqual(genericEngine.ElectricalWHR, specificEngine.ElectricalWHR);
+
+			Assert.AreEqual(null, genericEngine.MechanicalWHR);
+			Assert.AreEqual(genericEngine.MechanicalWHR, specificEngine.MechanicalWHR);
+
+			Assert.AreEqual(1, genericEngine.Fuels.Count);
+			Assert.AreEqual(genericEngine.Fuels.Count, specificEngine.Fuels.Count);
+
+			AssertFuel(genericEngine.Fuels[0]);
+			AssertFuel(specificEngine.Fuels[0]);
+		}
+
+
+		private void AssertFullLoadAndDragCurve(List<EngineFullLoadCurve.FullLoadCurveEntry> entries)
+		{
+			Assert.AreEqual(12, entries.Count);
+			AssertFullLoadAndDragCurveEntry(600.00, 546.02, -39.66, entries[0]);
+			AssertFullLoadAndDragCurveEntry(800.00, 760.78, -48.83, entries[1]);
+			AssertFullLoadAndDragCurveEntry(1000.00, 973.29, -56.44, entries[2]);
+			AssertFullLoadAndDragCurveEntry(1200.00, 1092.03, -67.29, entries[3]);
+			AssertFullLoadAndDragCurveEntry(1400.00, 1092.03, -77.58, entries[4]);
+			AssertFullLoadAndDragCurveEntry(1600.00, 1092.03, -87.88, entries[5]);
+			AssertFullLoadAndDragCurveEntry(1800.00, 1022.52, -94.11, entries[6]);
+			AssertFullLoadAndDragCurveEntry(2000.00, 944.17, -100.76, entries[7]);
+			AssertFullLoadAndDragCurveEntry(2200.00, 868.12, -113.36, entries[8]);
+			AssertFullLoadAndDragCurveEntry(2400.00, 741.99, -122.60, entries[9]);
+			AssertFullLoadAndDragCurveEntry(2500.00, 647.29, -126.66, entries[10]);
+			AssertFullLoadAndDragCurveEntry(2600.00, 0.00, -132.07, entries[11]);
+		}
+
+		private void AssertFullLoadAndDragCurveEntry(double engineSpeed, double maxTorque, double dragTorque,
+			EngineFullLoadCurve.FullLoadCurveEntry entry)
+		{
+			Assert.AreEqual(engineSpeed * Constants.RPMToRad, entry.EngineSpeed.Value(), 1e-9);
+			Assert.AreEqual(maxTorque.SI<NewtonMeter>(), entry.TorqueFullLoad);
+			Assert.AreEqual(dragTorque.SI<NewtonMeter>(), entry.TorqueDrag);
+		}
+
+		private void AssertFuel(CombustionEngineFuelData fuel)
+		{
+			Assert.AreEqual(1, fuel.WHTCMotorway);
+			Assert.AreEqual(1, fuel.WHTCRural);
+			Assert.AreEqual(1, fuel.WHTCUrban);
+			Assert.AreEqual(1, fuel.ColdHotCorrectionFactor);
+			Assert.AreEqual(1, fuel.CorrectionFactorRegPer);
+
+			//fuel.ConsumptionMap ???
+		}
+
+		#endregion
+
+		#region Gearbox Asserts
+
+		private void AssertGearbox(RelatedRun relatedRun)
+		{
+			var genericGearbox = relatedRun.VectoRunDataGenericBody.GearboxData;
+			var specificGearbox = relatedRun.VectoRunDataSpezificBody.GearboxData;
+
+			Assert.AreEqual(0, genericGearbox.Inertia.Value());
+			Assert.AreEqual(genericGearbox.Inertia, specificGearbox.Inertia);
+
+			Assert.AreEqual(0.0.SI<Second>(), genericGearbox.TractionInterruption);
+			Assert.AreEqual(specificGearbox.TractionInterruption, genericGearbox.TractionInterruption);
+
+			Assert.AreEqual(6, genericGearbox.Gears.Count);
+			Assert.AreEqual(genericGearbox.Gears.Count, specificGearbox.Gears.Count);
+
+			AssertGearShiftParameters(relatedRun);
+			AssertGears(genericGearbox.Gears.Values.ToList());
+			AssertGears(specificGearbox.Gears.Values.ToList());
+			AssertGearsLossmap(
+				genericGearbox.Gears.Values.ToList(), specificGearbox.Gears.Values.ToList());
+		}
+
+		private void AssertGears(IList<GearData> gears)
+		{
+			AssertGear(3.364, 1900.SI<NewtonMeter>(), 262, gears[0]);
+			AssertGear(1.909, 1900.SI<NewtonMeter>(), 262, gears[1]);
+			AssertGear(1.421, null, 262, gears[2]);
+			AssertGear(1.000, null, 262, gears[3]);
+			AssertGear(0.720, null, 262, gears[4]);
+			AssertGear(0.615, null, 262, gears[5]);
+		}
+
+		private void AssertGear(double ratio, NewtonMeter maxTorque, double maxSpeed, GearData gear)
+		{
+			Assert.AreEqual(ratio, gear.Ratio);
+			Assert.AreEqual(maxTorque, gear.MaxTorque);
+			Assert.AreEqual(maxSpeed, gear.MaxSpeed.AsRPM);
+		}
+
+		private void AssertGearsLossmap(IList<GearData> genericGearData, IList<GearData> specificGearData)
+		{
+			Assert.AreEqual(6, genericGearData.Count);
+			Assert.AreEqual(genericGearData.Count, specificGearData.Count);
+			for (int i = 0; i < genericGearData.Count; i++) {
+				Assert.IsNotNull(genericGearData[i].LossMap);
+				Assert.AreEqual(genericGearData[i].LossMap, specificGearData[i].LossMap);
+			}
+		}
+
+		private void AssertGearShiftParameters(RelatedRun relatedRun)
+		{
+			Assert.AreEqual(relatedRun.VectoRunDataGenericBody.ShiftStrategy, relatedRun.VectoRunDataSpezificBody.ShiftStrategy);
+		}
+
+
+		#endregion
+
+		#region Torque Converter Asserts
+
+		private void AssertTorqueConverter(RelatedRun relatedRun)
+		{
+			var genericTorqueConverterData= relatedRun.VectoRunDataGenericBody.GearboxData.TorqueConverterData;
+			var specificTorqueConverterData = relatedRun.VectoRunDataSpezificBody.GearboxData.TorqueConverterData;
+
+			Assert.AreEqual(1000.RPMtoRad(), genericTorqueConverterData.ReferenceSpeed);
+			Assert.AreEqual(genericTorqueConverterData.ReferenceSpeed, specificTorqueConverterData.ReferenceSpeed);
+
+			Assert.AreEqual(DeclarationData.TorqueConverter.MaxInputSpeed, genericTorqueConverterData.TorqueConverterSpeedLimit);
+			Assert.AreEqual(genericTorqueConverterData.TorqueConverterSpeedLimit, specificTorqueConverterData.TorqueConverterSpeedLimit);
+
+			Assert.AreEqual(0.1.SI<MeterPerSquareSecond>(), genericTorqueConverterData.CCUpshiftMinAcceleration);
+			Assert.AreEqual(0.1.SI<MeterPerSquareSecond>(), genericTorqueConverterData.CLUpshiftMinAcceleration);
+
+			Assert.AreEqual(genericTorqueConverterData.CCUpshiftMinAcceleration, specificTorqueConverterData.CCUpshiftMinAcceleration);
+			Assert.AreEqual(genericTorqueConverterData.CLUpshiftMinAcceleration, specificTorqueConverterData.CLUpshiftMinAcceleration);
+
+			Assert.AreEqual(genericTorqueConverterData.TorqueConverterEntries, specificTorqueConverterData.TorqueConverterEntries);
+		}
+
+
+		#endregion
+
+		#region Axlegear Data Asserts
+
+		private void AssertAxlegearData(RelatedRun relatedRun)
+		{
+			var genericAxlegearData = relatedRun.VectoRunDataGenericBody.AxleGearData;
+			var specificAxlegearData = relatedRun.VectoRunDataSpezificBody.AxleGearData;
+
+			Assert.AreEqual(6.500, genericAxlegearData.AxleGear.Ratio);
+			Assert.AreEqual(genericAxlegearData.AxleGear.Ratio, specificAxlegearData.AxleGear.Ratio);
+
+			Assert.AreEqual(AxleLineType.SinglePortalAxle, genericAxlegearData.LineType);
+			Assert.AreEqual(genericAxlegearData.LineType, specificAxlegearData.LineType);
+
+			Assert.IsNotNull(genericAxlegearData.AxleGear.LossMap);
+			AssertAxlegearLossMap(genericAxlegearData.AxleGear.LossMap);
+			Assert.AreEqual(genericAxlegearData.AxleGear.LossMap, specificAxlegearData.AxleGear.LossMap);
+		}
+
+		private void AssertAxlegearLossMap(TransmissionLossMap lossMap)
+		{
+			Assert.AreEqual(12, lossMap._entries.Count);
+
+			AssertLossmapEntry(0, -1491.6797, 46.7818, lossMap._entries[0]);
+			AssertLossmapEntry(0, -22.2920, 16.1695, lossMap._entries[1]);
+			AssertLossmapEntry(0, 54.6311, 16.1695, lossMap._entries[2]);
+			AssertLossmapEntry(0, 1585.2433, 46.7818, lossMap._entries[3]);
+			AssertLossmapEntry(325, -1491.6797, 46.7818, lossMap._entries[4]);
+			AssertLossmapEntry(325, -22.2920, 16.1695, lossMap._entries[5]);
+			AssertLossmapEntry(325, 54.6311, 16.1695, lossMap._entries[6]);
+			AssertLossmapEntry(325, 1585.2433, 46.7818, lossMap._entries[7]);
+			AssertLossmapEntry(32500, -1110.9105, 427.5510, lossMap._entries[8]);
+			AssertLossmapEntry(32500, 358.4772, 396.9388, lossMap._entries[9]);
+			AssertLossmapEntry(32500, 435.4003, 396.9388, lossMap._entries[10]);
+			AssertLossmapEntry(32500, 1966.0126, 427.5510, lossMap._entries[11]);
 
 		}
 
+		private void AssertLossmapEntry(double inputSpeed, double inputTorque, double torqueLoss,
+			TransmissionLossMap.GearLossMapEntry entry)
+		{
+			Assert.AreEqual(inputSpeed.RPMtoRad(), entry.InputSpeed);
+			Assert.AreEqual(inputTorque, entry.InputTorque.Value(),1e-4);
+			Assert.AreEqual(torqueLoss, entry.TorqueLoss.Value(), 1e-4);
+		}
+
+		#endregion
+
+
+		#region Angledrive Data Asserts
+
+		private void AssertAngledriveData(RelatedRun relatedRun)
+		{
+			var genericAngledriveData = relatedRun.VectoRunDataGenericBody.AngledriveData;
+			var specificAngledriveData = relatedRun.VectoRunDataSpezificBody.AngledriveData;
+
+			Assert.AreEqual(null, genericAngledriveData);
+			Assert.AreEqual(genericAngledriveData, specificAngledriveData);
+		}
 
 
 		#endregion
 
 
-		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
+			private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
 		{
-		  return new CrosswindCorrectionCdxALookup(
-				aerodynamicDragArea,
-				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(
-					crossWindCorrectionParams,
-					aerodynamicDragArea,
-					vehicleHeight),
-				CrossWindCorrectionMode.DeclarationModeCorrection);
+			return new CrosswindCorrectionCdxALookup(
+				  aerodynamicDragArea,
+				  DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(
+					  crossWindCorrectionParams,
+					  aerodynamicDragArea,
+					  vehicleHeight),
+				  CrossWindCorrectionMode.DeclarationModeCorrection);
 		}
 
 
 
 		private void SetRelatedVehicleParts(List<VectoRunData> runs)
 		{
-			for (int i = 0; i < runs.Count; i++) {
-				var relatedRun = new RelatedRun {
+			for (int i = 0; i < runs.Count; i++)
+			{
+				var relatedRun = new RelatedRun
+				{
 					VectoRunDataSpezificBody = runs[i],
-					VectoRunDataGenericBody = runs[i+1]
+					VectoRunDataGenericBody = runs[i + 1]
 				};
 				relatedRuns.Add(relatedRun);
 				i++;

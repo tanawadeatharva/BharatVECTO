@@ -350,5 +350,22 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const string VectoEngineeringInputNS = "urn:tugraz:ivt:VectoAPI:EngineeringInput:v" + XSDEngineeringVersion;
 		}
+
+		public static class GenericLossMapSettings
+		{
+			public const double OutputSpeedStart = 50;
+			public const double OutputSpeedEnd = 5000;
+			public const double OutputTorqueStart = 250;
+			public const double OutputTorqueEnd = 10000;
+
+			public const double IAxl = 6.5;
+			public const double Efficiency = 0.98;
+
+			public const double T0 = 52.5;
+			public const double T1 = 15;
+			public const double Td_n = 150;
+
+			public const double FactorAngleDrive = 0.75;
+		}
 	}
 }

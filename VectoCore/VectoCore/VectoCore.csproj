@@ -896,6 +896,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\CompletedBusSegmentationTable.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_CI_Normed.vmap" />
+    <EmbeddedResource Include="Resources\Declaration\GenericBusData\EngineConsumptionMap_PI_Normed.vmap" />
+    <EmbeddedResource Include="Resources\Declaration\GenericBusData\GenericTorqueConverter.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-AxleFactor.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-Axles_Bus.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-Factors_Bus.csv" />
@@ -934,6 +937,7 @@
       <Name>VectoHashing</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
