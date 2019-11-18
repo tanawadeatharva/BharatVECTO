@@ -233,6 +233,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var vDrop = DataBus.DriverAcceleration * shiftStrategyParameters.ATLookAheadTime;
 			var vehicleSpeedPostShift = (DataBus.VehicleSpeed + vDrop * shiftStrategyParameters.VelocityDropFactor).LimitTo(0.KMPHtoMeterPerSecond(), DataBus.CycleData.LeftSample.VehicleTargetSpeed);
 
+			var outAngularVelocityEst = (outAngularVelocity * vehicleSpeedPostShift / (DataBus.VehicleSpeed + DataBus.DriverAcceleration * dt)).Cast<PerSecond>();
+			var outTorqueEst = outTorque * outAngularVelocity / outAngularVelocityEst;
+
 			for (var i = 1; i <=  shiftStrategyParameters.AllowedGearRangeFC; i++) {
 
 				if (currentIdx + i >= GearList.Count) {
@@ -259,9 +262,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var pNextGearMax = DataBus.EngineStationaryFullPower(estimatedEngineSpeed);
 				
-				var outAngularVelocityEst = (outAngularVelocity* vehicleSpeedPostShift / (DataBus.VehicleSpeed + DataBus.DriverAcceleration * dt)).Cast<PerSecond>() ;
-				var outTorqueEst = outTorque * outAngularVelocity / outAngularVelocityEst;
-
 				var response = RequestDryRunWithGear(absTime, dt, outTorqueEst, outAngularVelocityEst, next);
 				//var response = RequestDryRunWithGear(absTime, dt, vehicleSpeedPostShift, DataBus.DriverAcceleration, next);
 
@@ -306,7 +306,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (fcCurrent == null) {
 					//var responseCurrent = RequestDryRunWithGear(
 					//	absTime, dt, vehicleSpeedForGearRating, DataBus.DriverAcceleration, current);
-					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, current);
+					//var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorque, outAngularVelocity, current);
+					var responseCurrent = RequestDryRunWithGear(absTime, dt, outTorqueEst, outAngularVelocityEst, current);
 					var tqCurrent = responseCurrent.EngineTorqueDemand.LimitTo(
 						fld[currentGear].DragLoadStationaryTorque(responseCurrent.EngineSpeed),
 						fld[currentGear].FullLoadStationaryTorque(responseCurrent.EngineSpeed));
