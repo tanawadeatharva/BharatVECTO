@@ -183,9 +183,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 
 			foreach (var gear in gearboxData.Gears) {
+				var maxEngineSpeed = VectoMath.Min(engineData.FullLoadCurves[gear.Key].RatedSpeed, gear.Value.MaxSpeed);
 				for (var angularVelocity = engineData.IdleSpeed;
-					angularVelocity < engineData.FullLoadCurves[gear.Key].RatedSpeed;
-					angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurves[gear.Key].RatedSpeed - engineData.IdleSpeed) / 10.0) {
+					angularVelocity < maxEngineSpeed;
+					angularVelocity += 2.0 / 3.0 * (maxEngineSpeed - engineData.IdleSpeed) / 10.0) {
 					if (!gear.Value.HasLockedGear) {
 						continue;
 					}
