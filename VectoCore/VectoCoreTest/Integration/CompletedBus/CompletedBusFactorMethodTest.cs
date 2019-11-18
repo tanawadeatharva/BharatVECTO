@@ -115,6 +115,10 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 				AssertTorqueConverter(relatedRuns[i]);
 				AssertAxlegearData(relatedRuns[i]);
 				AssertAngledriveData(relatedRuns[i]);
+				AssertAngledriveData(relatedRuns[i]);
+				AssertAuxiliaryData(relatedRuns[i]);
+				AssertElectricalUserInputConfig(relatedRuns[i]);
+				AssertPneumaticUserInputsConfig(relatedRuns[i]);
 			}
 
 		}
@@ -465,8 +469,7 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 		}
 
 		#endregion
-
-
+		
 		#region Angledrive Data Asserts
 
 		private void AssertAngledriveData(RelatedRun relatedRun)
@@ -481,8 +484,111 @@ namespace TUGraz.VectoCore.Tests.Integration.CompletedBus
 
 		#endregion
 
+		#region Auxiliary Data Asserts
 
-			private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
+		private void AssertAuxiliaryData(RelatedRun relatedRun)
+		{
+			var genericAuxiliaryData = relatedRun.VectoRunDataGenericBody.Aux;
+			var specificAuxiliaryData = relatedRun.VectoRunDataSpezificBody.Aux;
+
+			Assert.AreEqual(2, genericAuxiliaryData.Count());
+			Assert.AreEqual("Hydraulic driven - Constant displacement pump", genericAuxiliaryData.First().Technology.First());
+			Assert.AreEqual("Variable displacement elec. controlled", genericAuxiliaryData.Last().Technology.First());
+
+			Assert.AreEqual("Hydraulic driven - Constant displacement pump", specificAuxiliaryData.First().Technology.First());
+			Assert.AreEqual("Variable displacement elec. controlled", specificAuxiliaryData.Last().Technology.First());
+		}
+
+		#endregion
+
+		#region Bus Auxiliary Electrical UserInput Config Asserts
+
+		private void AssertElectricalUserInputConfig(RelatedRun relatedRun)
+		{
+			var genericElectric = 
+				relatedRun.VectoRunDataGenericBody.BusAuxiliaries.ElectricalUserInputsConfig;
+			var specificElectric =
+				relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.ElectricalUserInputsConfig;
+			
+			Assert.AreEqual(false, genericElectric.SmartElectrical);
+			Assert.AreEqual(genericElectric.SmartElectrical, specificElectric.SmartElectrical);
+
+			Assert.AreEqual(null, genericElectric.MaxAlternatorPower);
+			Assert.AreEqual(genericElectric.MaxAlternatorPower, specificElectric.MaxAlternatorPower);
+
+			Assert.AreEqual(null, genericElectric.ElectricStorageCapacity);
+			Assert.AreEqual(genericElectric.ElectricStorageCapacity, specificElectric.ElectricStorageCapacity);
+
+			Assert.AreEqual(0.7 ,genericElectric.AlternatorMap.GetEfficiency(0.RPMtoRad(),0.0.SI<Ampere>()));
+			Assert.AreEqual(genericElectric.AlternatorMap, specificElectric.AlternatorMap); 
+
+			Assert.AreEqual(Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency, genericElectric.AlternatorGearEfficiency);
+			Assert.AreEqual(genericElectric.AlternatorGearEfficiency, specificElectric.AlternatorGearEfficiency);
+
+			Assert.AreEqual(Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond, genericElectric.DoorActuationTimeSecond);
+			Assert.AreEqual(genericElectric.DoorActuationTimeSecond, specificElectric.DoorActuationTimeSecond);
+
+			//ToDo Test AverageCurrentDemandInclBaseLoad & AverageCurrentDemandWithoutBaseLoad
+			//Assert.AreEqual(0, genericElectric.AverageCurrentDemandInclBaseLoad);
+			//Assert.AreEqual(0, genericElectric.AverageCurrentDemandWithoutBaseLoad);
+
+			//Assert.AreEqual(0, specificElectric.AverageCurrentDemandInclBaseLoad);
+			//Assert.AreEqual(0, specificElectric.AverageCurrentDemandWithoutBaseLoad);
+
+			Assert.AreEqual(null, genericElectric.ResultCardIdle);
+			Assert.AreEqual( genericElectric.ResultCardIdle, specificElectric.ResultCardIdle);
+
+			Assert.AreEqual(null, genericElectric.ResultCardTraction);
+			Assert.AreEqual(genericElectric.ResultCardTraction, specificElectric.ResultCardTraction);
+
+			Assert.AreEqual(null, genericElectric.ResultCardOverrun);
+			Assert.AreEqual(genericElectric.ResultCardOverrun, specificElectric.ResultCardOverrun);
+		}
+
+
+
+		#endregion Asserts
+
+		#region Pneumatic User Inputs Config Asserts
+
+		private void AssertPneumaticUserInputsConfig(RelatedRun relatedRun)
+		{
+			var genericPneumaticUI = relatedRun.VectoRunDataGenericBody.BusAuxiliaries.PneumaticUserInputsConfig;
+			var specificPneumaticUI = relatedRun.VectoRunDataSpezificBody.BusAuxiliaries.PneumaticUserInputsConfig;
+
+			Assert.IsNotNull(genericPneumaticUI.CompressorMap);
+			Assert.AreEqual(genericPneumaticUI.CompressorMap, specificPneumaticUI.CompressorMap);
+
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency, genericPneumaticUI.CompressorGearEfficiency);
+			Assert.AreEqual(genericPneumaticUI.CompressorGearEfficiency, specificPneumaticUI.CompressorGearEfficiency);
+
+			Assert.AreEqual(1.0, genericPneumaticUI.CompressorGearRatio);
+			Assert.AreEqual(genericPneumaticUI.CompressorGearRatio, specificPneumaticUI.CompressorGearRatio);
+
+			Assert.AreEqual(false, genericPneumaticUI.SmartAirCompression);
+			Assert.AreEqual(genericPneumaticUI.SmartAirCompression, specificPneumaticUI.SmartAirCompression);
+
+			Assert.AreEqual(false, genericPneumaticUI.SmartRegeneration);
+			Assert.AreEqual(genericPneumaticUI.SmartRegeneration, specificPneumaticUI.SmartRegeneration);
+
+			Assert.AreEqual(Constants.BusAuxiliaries.PneumaticUserConfig.DefaultKneelingHeight, genericPneumaticUI.KneelingHeight);
+			Assert.AreEqual(VectoMath.Max(0.SI<Meter>(), 0.120.SI<Meter>() - Constants.BusParameters.EntranceHeight), specificPneumaticUI.KneelingHeight);
+
+			Assert.AreEqual(ConsumerTechnology.Electrically, genericPneumaticUI.AirSuspensionControl);
+			Assert.AreEqual(genericPneumaticUI.AirSuspensionControl, specificPneumaticUI.AirSuspensionControl);
+
+			Assert.AreEqual(ConsumerTechnology.Pneumatically, genericPneumaticUI.AdBlueDosing);
+			Assert.AreEqual(genericPneumaticUI.AdBlueDosing, specificPneumaticUI.AdBlueDosing);
+
+			Assert.AreEqual(ConsumerTechnology.Pneumatically, genericPneumaticUI.Doors);
+			Assert.AreEqual(ConsumerTechnology.Pneumatically, specificPneumaticUI.Doors);
+		}
+		
+		#endregion
+
+
+
+		private CrosswindCorrectionCdxALookup GetCrosswindCorrection(string crossWindCorrectionParams,
 			SquareMeter aerodynamicDragArea, Meter vehicleHeight)
 		{
 			return new CrosswindCorrectionCdxALookup(

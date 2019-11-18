@@ -1,12 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.BusAuxiliaries;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -34,6 +42,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected GearboxData _gearboxData;
 		protected RetarderData _retarderData;
 		protected PTOData _ptoTransmissionData;
+
+		protected IAlternatorMap _alternatorMap;
+		protected ICompressorMap _compressorMap;
+
 
 		protected CombustionEngineData _combustionEngineData;
 
@@ -87,6 +99,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			if (vehicle.ExemptedVehicle) {
 				return;
 			}
+			 
+			
+
 
 			_segment = GetSegment(vehicle, primaryVehicle.AxleConfiguration);
 			//_driverdata = DataAdapterCompleted.CreateDriverData();
@@ -133,6 +148,14 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			_gearshiftData = DataAdapterPrimary.CreateGearshiftData(
 				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), _combustionEngineData.IdleSpeed);
 
+
+			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
+
+			_alternatorMap = new SimpleAlternator(
+				DataAdapterPrimary.CalculateAlternatorEfficiency(primaryBusAuxiliaries.ElectricSupply.Alternators));
+
+			_compressorMap = DataAdapterPrimary.GetCompressorMap(primaryBusAuxiliaries.PneumaticSupply.CompressorSize,
+				primaryBusAuxiliaries.PneumaticSupply.Clutch);
 
 		}
 
@@ -246,8 +269,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			simulationRunData.AxleGearData = _axlegearData;
 			simulationRunData.AngledriveData = _angledriveData;
 			simulationRunData.GearshiftParameters = _gearshiftData;
+
+			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
 			
+			simulationRunData.Aux = DataAdapterPrimary.CreateAuxiliaryData(primaryVehicle.Components.AuxiliaryInputData,
+				primaryBusAuxiliaries, mission.MissionType, _segment.VehicleClass, 
+				completedVehicle.Length);
+
+
+			var auxiliaryConfig = new AuxiliaryConfig {
+				ElectricalUserInputsConfig = DataAdapterCompleted.CreateElectricsUserInputsConfig(
+					primaryBusAuxiliaries, completedVehicle, mission, _alternatorMap),
+
+				PneumaticUserInputsConfig = DataAdapterCompleted.CreatePneumaticUserInputsConfig(
+					primaryBusAuxiliaries, completedVehicle, _compressorMap)
+			};
+			
+			simulationRunData.BusAuxiliaries = auxiliaryConfig;
+
 			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
+
+			
 
 
 			return simulationRunData;
@@ -307,6 +349,23 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			simulationRunData.AxleGearData = _axlegearData;
 			simulationRunData.AngledriveData = _angledriveData;
 			simulationRunData.GearshiftParameters = _gearshiftData;
+			
+			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
+
+			simulationRunData.Aux = DataAdapterPrimary.CreateAuxiliaryData(primaryVehicle.Components.AuxiliaryInputData,
+				primaryBusAuxiliaries, mission.MissionType, _segment.VehicleClass,
+				completedVehicle.Length);
+
+			var auxiliaryConfig = new AuxiliaryConfig {
+				ElectricalUserInputsConfig = DataAdapterPrimary.CreateElectricalUserInputsConfig(
+					primaryVehicle, _alternatorMap, mission),
+
+				PneumaticUserInputsConfig = DataAdapterPrimary.CreatePneumaticUserInputsConfig(
+					primaryBusAuxiliaries, _compressorMap)
+			};
+
+			simulationRunData.BusAuxiliaries = auxiliaryConfig;
+
 
 			simulationRunData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
 

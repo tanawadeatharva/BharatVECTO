@@ -12,8 +12,10 @@ using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -31,7 +33,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		#region Overrides of DeclarationDataAdapterTruck
 
 		//Generic
-
+		
 		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData pifVehicle, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
 		{
 			var vehicleData = new VehicleData
@@ -50,11 +52,90 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				EcoRoll = pifVehicle.ADAS.EcoRoll,
 				PredictiveCruiseControl = pifVehicle.ADAS.PredictiveCruiseControl
 			};
-
+			
 			vehicleData.ADAS = adas;
 
 			return vehicleData;
 		}
+
+		private List<Axle> GetAxles(IList<IAxleDeclarationInputData> axleWheels, double[] axlesDistribution)
+		{
+			var axles = new List<Axle>();
+			for (int i = 0; i < axleWheels.Count; i++)
+			{
+				var axle = new Axle
+				{
+					WheelsDimension = axleWheels[i].Tyre.Dimension,
+					Inertia = DeclarationData.Wheels
+						.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).Inertia,
+					TyreTestLoad = axleWheels[i].Tyre.TyreTestLoad,
+					AxleWeightShare = axlesDistribution[i],
+					TwinTyres = axleWheels[i].TwinTyres,
+					AxleType = axleWheels[i].AxleType
+				};
+				axles.Add(axle);
+			}
+
+			return axles;
+		}
+
+		private Meter GetDynamicTyreRadius(IList<IAxleDeclarationInputData> axleWheels)
+		{
+			Meter dynamicTyreRadius = null;
+
+			for (int i = 0; i < axleWheels.Count; i++)
+			{
+				if (axleWheels[i].AxleType == AxleType.VehicleDriven)
+				{
+					dynamicTyreRadius = DeclarationData.Wheels.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).DynamicTyreRadius;
+					break;
+				}
+			}
+
+			return dynamicTyreRadius;
+		}
+
+
+		public ElectricsUserInputsConfig CreateElectricalUserInputsConfig(IVehicleDeclarationInputData primaryVehicle,
+			IAlternatorMap alternatorMap, Mission mission)
+		{
+			var primaryBusAuxiliaries = primaryVehicle.Components.BusAuxiliaries;
+
+			var actions = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(mission.MissionType);
+			var currentDemand = CalculateAverageCurrent(mission, primaryVehicle, actions);
+
+			var electricsUI = new ElectricsUserInputsConfig {
+				SmartElectrical = primaryBusAuxiliaries.ElectricSupply.SmartElectrics,
+				MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.MaxAlternatorPower,
+				ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorageCapacity,
+				AlternatorMap = alternatorMap,
+				AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
+				AverageCurrentDemandInclBaseLoad = currentDemand.Item1,
+				AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2,
+				DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond
+			};
+
+			return electricsUI;
+		}
+		
+		public PneumaticUserInputsConfig CreatePneumaticUserInputsConfig(IBusAuxiliariesDeclarationData primaryBusAuxiliaries,
+			ICompressorMap compressorMap)
+		{
+			var pneumaticUI = new PneumaticUserInputsConfig {
+				CompressorMap = compressorMap,
+				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
+				CompressorGearRatio = primaryBusAuxiliaries.PneumaticSupply.Ratio,
+				SmartAirCompression = primaryBusAuxiliaries.PneumaticSupply.SmartAirCompression,
+				SmartRegeneration = primaryBusAuxiliaries.PneumaticSupply.SmartRegeneration,
+				KneelingHeight =Constants.BusAuxiliaries.PneumaticUserConfig.DefaultKneelingHeight,
+				AirSuspensionControl = primaryBusAuxiliaries.PneumaticConsumers.AirsuspensionControl,
+				AdBlueDosing = primaryBusAuxiliaries.PneumaticConsumers.AdBlueDosing,
+				Doors = ConsumerTechnology.Pneumatically
+			};
+
+			return pneumaticUI;
+		}
+
 
 		public override AirdragData CreateAirdragData(IAirdragDeclarationInputData airdragInputData, Mission mission,
 			Segment segment)
@@ -113,42 +194,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 
 
-		private List<Axle> GetAxles(IList<IAxleDeclarationInputData> axleWheels, double[] axlesDistribution)
-		{
-			var axles = new List<Axle>();
-			for (int i = 0; i < axleWheels.Count; i++)
-			{
-				var axle = new Axle
-				{
-					WheelsDimension = axleWheels[i].Tyre.Dimension,
-					Inertia = DeclarationData.Wheels
-						.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).Inertia,
-					TyreTestLoad = axleWheels[i].Tyre.TyreTestLoad,
-					AxleWeightShare = axlesDistribution[i],
-					TwinTyres = axleWheels[i].TwinTyres,
-					AxleType = axleWheels[i].AxleType
-				};
-				axles.Add(axle);
-			}
 
-			return axles;
-		}
-
-		private Meter GetDynamicTyreRadius(IList<IAxleDeclarationInputData> axleWheels)
-		{
-			Meter dynamicTyreRadius = null;
-
-			for (int i = 0; i < axleWheels.Count; i++)
-			{
-				if (axleWheels[i].AxleType == AxleType.VehicleDriven)
-				{
-					dynamicTyreRadius = DeclarationData.Wheels.Lookup(axleWheels[i].Tyre.Dimension.RemoveWhitespace()).DynamicTyreRadius;
-					break;
-				}
-			}
-
-			return dynamicTyreRadius;
-		}
 
 		#endregion
 
@@ -198,7 +244,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		protected virtual double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
+		public virtual double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
 		{
 			var sum = 0.0;
 			foreach (var entry in alternators)
@@ -291,7 +337,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		protected virtual ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
+		public virtual ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
 		{
 			var resource = "";
 			switch (compressorSize)

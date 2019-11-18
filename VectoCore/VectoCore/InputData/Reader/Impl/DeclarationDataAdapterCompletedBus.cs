@@ -1,12 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
+using TUGraz.VectoCore.Models.BusAuxiliaries;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
@@ -89,15 +96,162 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			return vehicleData;
 		}
 
+		public ElectricsUserInputsConfig CreateElectricsUserInputsConfig(IBusAuxiliariesDeclarationData primaryBusAuxiliaries,
+			IVehicleDeclarationInputData completedVehicle, Mission mission, IAlternatorMap alternatorMap)
+		{
+			var actions = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(mission.MissionType);
+			var currentDemand = CalculateAverageCurrent(mission, completedVehicle, actions);
+
+			var electricUI = new ElectricsUserInputsConfig {
+				SmartElectrical = primaryBusAuxiliaries.ElectricSupply.SmartElectrics,
+				MaxAlternatorPower = primaryBusAuxiliaries.ElectricSupply.MaxAlternatorPower,
+				ElectricStorageCapacity = primaryBusAuxiliaries.ElectricSupply.ElectricStorageCapacity,
+				AlternatorMap = alternatorMap,
+				AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
+				AverageCurrentDemandInclBaseLoad = currentDemand.Item1,
+				AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2,
+				DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
+			};
+			
+			return electricUI;
+		}
+
+		public PneumaticUserInputsConfig CreatePneumaticUserInputsConfig(IBusAuxiliariesDeclarationData primaryBusAuxiliaries,
+			IVehicleDeclarationInputData completedVehicle, ICompressorMap compressorMap)
+		{
+			var pneumaticUI = new PneumaticUserInputsConfig {
+				CompressorMap = compressorMap,
+				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
+				CompressorGearRatio = primaryBusAuxiliaries.PneumaticSupply.Ratio,
+				SmartAirCompression = primaryBusAuxiliaries.PneumaticSupply.SmartAirCompression,
+				SmartRegeneration = primaryBusAuxiliaries.PneumaticSupply.SmartRegeneration,
+				KneelingHeight = VectoMath.Max(0.SI<Meter>(),
+					completedVehicle.EntranceHeight - Constants.BusParameters.EntranceHeight),
+				AirSuspensionControl = primaryBusAuxiliaries.PneumaticConsumers.AirsuspensionControl,
+				AdBlueDosing = primaryBusAuxiliaries.PneumaticConsumers.AdBlueDosing,
+				Doors = completedVehicle.Components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology
+			};
+
+			return pneumaticUI;
+
+		}
+
+
+
+		public PneumaticUserInputsConfig SetPneumaticUserInputsConfig(PneumaticUserInputsConfig pneumaticUserInputsConfig,
+			IVehicleDeclarationInputData completedVehicle)
+		{
+
+			pneumaticUserInputsConfig.KneelingHeight = VectoMath.Max(0.SI<Meter>(), 
+				completedVehicle.EntranceHeight - Constants.BusParameters.EntranceHeight);
+			pneumaticUserInputsConfig.Doors =
+				completedVehicle.Components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology;
+
+			return pneumaticUserInputsConfig;
+		}
+
+
+
+
 		public IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(
 			IAuxiliariesDeclarationInputData auxiliaryInputData, IBusAuxiliariesDeclarationData mergedBusAux,
 			MissionType mission, VehicleClass vehicleClass, Meter vehicleLength)
 		{
 			throw new System.NotImplementedException();
 		}
+
+		#region Avarage Current Demand Calculation
+
+
+		private Tuple<Ampere, Ampere> CalculateAverageCurrent( Mission mission, IVehicleDeclarationInputData vehicleData,
+			IActuations actuations)
+		{
+			var avgInclBase = 0.SI<Ampere>();
+			var avgWithoutBase = 0.SI<Ampere>();
+			var doorDutyCycleFraction =
+				(actuations.ParkBrakeAndDoors * Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond) /
+				actuations.CycleTime;
+			var busAux = vehicleData.Components.BusAuxiliaries;
+			var electricDoors = false;
+			var floorType = GetFloorType(vehicleData.VehicleCode);
+
+			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items)
+			{
+				var nbr = GetNumberOfElectricalConsumersInVehicle(consumer.NumberInActualVehicle, mission,
+					vehicleData.Length, floorType);
+
+				var dutyCycle = electricDoors && consumer.ConsumerName.Equals(
+									Constants.BusAuxiliaries.ElectricalConsumers.DoorsPerVehicleConsumer,
+									StringComparison.CurrentCultureIgnoreCase)
+					? doorDutyCycleFraction
+					: consumer.PhaseIdleTractionOn;
+
+				var current = consumer.NominalCurrent(mission.MissionType) * dutyCycle * nbr;
+				if (consumer.Bonus && !VehicleHasElectricalConsumer(consumer.ConsumerName, busAux))
+				{
+					current = 0.SI<Ampere>();
+				}
+
+				avgInclBase += current;
+				if (!consumer.BaseVehicle)
+				{
+					avgWithoutBase += current;
+				}
+			}
+
+			return Tuple.Create(avgInclBase, avgWithoutBase);
+		}
 		
+		private bool VehicleHasElectricalConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
+		{
+			if (consumerName == "Day running lights LED bonus" && busAux.ElectricConsumers.DayrunninglightsLED)
+				return true;
+			if (consumerName == "Position lights LED bonus" && busAux.ElectricConsumers.PositionlightsLED)
+				return true;
+			if (consumerName == "Brake lights LED bonus" && busAux.ElectricConsumers.BrakelightsLED)
+				return true;
+			if (consumerName == "Interior lights LED bonus" && busAux.ElectricConsumers.InteriorLightsLED)
+				return true;
+			if (consumerName == "Headlights LED bonus" && busAux.ElectricConsumers.HeadlightsLED)
+				return true;
+
+			return false;
+		}
+		
+		private double GetNumberOfElectricalConsumersInVehicle(string nbr, Mission mission, Meter vehicleLength, FloorType floorType)
+		{
+			if ("f_IntLight(L_CoC)".Equals(nbr, StringComparison.InvariantCultureIgnoreCase))
+			{
+				var busParams = mission.BusParameter;
+				return DeclarationData.BusAuxiliaries.CalculateLengthInteriorLights(
+						vehicleLength, busParams.DoubleDecker, floorType, busParams.NumberPassengersLowerDeck)
+					.Value();
+			}
+
+			return nbr.ToDouble();
+		}
+
+		private FloorType GetFloorType(VehicleCode vehicleCode)
+		{
+			switch (vehicleCode)
+			{
+				case VehicleCode.CA:
+				case VehicleCode.CB:
+				case VehicleCode.CC:
+				case VehicleCode.CD:
+					return FloorType.HighFloor;
+				default:
+					return FloorType.LowFloor;
+			}
+		}
+
+		#endregion
+
+
+
+
 		#region Vehicle Data Getter
-		
+
 		private List<Axle> GetAxles(IList<IAxleDeclarationInputData> axleWheels, double[] axlesDistribution)
 		{
 			var axles = new List<Axle>();

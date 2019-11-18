@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		#region Overrides of DeclarationDataAdapterPrimaryBus
 
-		protected override double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
+		public override double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
 		{
 			var sum = 0.0;
 			foreach (var entry in alternators) {
