@@ -1,5 +1,23 @@
 #Changelog
 
+**VECTO 3.3.5**
+
+***Build 1783 (2019-11-19) RELEASE CANDIDATE***
+
+- Improvement
+    * [VECTO-1194] - Handling input parameter 'vocational' for groups other than 4, 5, 9, 10
+    * [VECTO-1147] - Updating declaration mode cycles values in user manual 
+    * [VECTO-1207] - run VECTO in 64bit mode by default
+
+- Bugfixes
+    * [VECTO-1074] - Vecto Calculation Aborts with Interpolation Error
+    * [VECTO-1159] - Simulation Abort in UrbanDelivery LowLoading
+    * [VECTO-1189] - Error in delaunay triangulation invariant violated
+    * [VECTO-1209] - Unexpected Response Response Overload
+    * [VECTO-1211] - Simulation Abort Urban Delivery Ref Load
+    * [VECTO-1214] - Validation of input data fails when gearbox speed limits are applied
+
+
 **VECTO 3.3.4**
 
 ***Build 1716 (2019-09-13) OFFICIAL RELEASE***
