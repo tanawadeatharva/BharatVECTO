@@ -19,7 +19,6 @@ Namespace UnitTests
         Private alternatorMap As IAlternatorMap
         Private signals As Signals = New Signals
         Private powernetVoltage As Volt = 26.3.SI(Of Volt)()
-        Private ssm As IHVACSteadyStateModel = New HVACSteadyStateModel(100, 100, 100)
 
         Private Function GetSSM() As ISSMTOOL
 
@@ -74,7 +73,7 @@ Namespace UnitTests
 
         <Test()>
         Public Sub EfficiencyValueTest()
-            Dim target As M0_NonSmart_AlternatorsSetEfficiency = New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers,
+            Dim target  = New M0_NonSmart_AlternatorsSetEfficiency(elecConsumers,
                                                                                                         alternatorMap, powernetVoltage, signals, GetSSM())
 
             Dim actual As Single = target.AlternatorsEfficiency

@@ -183,9 +183,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			}
 
 			foreach (var gear in gearboxData.Gears) {
+				var maxEngineSpeed = VectoMath.Min(engineData.FullLoadCurves[gear.Key].RatedSpeed, gear.Value.MaxSpeed);
 				for (var angularVelocity = engineData.IdleSpeed;
-					angularVelocity < engineData.FullLoadCurves[gear.Key].RatedSpeed;
-					angularVelocity += 2.0 / 3.0 * (engineData.FullLoadCurves[gear.Key].RatedSpeed - engineData.IdleSpeed) / 10.0) {
+					angularVelocity < maxEngineSpeed;
+					angularVelocity += 2.0 / 3.0 * (maxEngineSpeed - engineData.IdleSpeed) / 10.0) {
 					if (!gear.Value.HasLockedGear) {
 						continue;
 					}
@@ -209,39 +210,43 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			return null;
 		}
 
-		private static ValidationResult CheckLossMapsEntries(KeyValuePair<uint, GearData> gear, PerSecond angularVelocity,
+		private static ValidationResult CheckLossMapsEntries(KeyValuePair<uint, GearData> gear, PerSecond engineSpeed,
 			NewtonMeter inTorque, AngledriveData angledriveData, AxleGearData axleGearData, MeterPerSecond velocity)
 		{
 			var hasAngleDrive = angledriveData != null && angledriveData.Angledrive != null;
 			var angledriveRatio = hasAngleDrive && angledriveData.Type == AngledriveType.SeparateAngledrive
 				? angledriveData.Angledrive.Ratio
 				: 1.0;
-			NewtonMeter angledriveTorque;
-			try {
-				angledriveTorque = gear.Value.LossMap.GetOutTorque(angularVelocity, inTorque);
-			} catch (VectoException) {
+
+			var tqLoss = gear.Value.LossMap.GetTorqueLoss(engineSpeed / gear.Value.Ratio, inTorque * gear.Value.Ratio);
+			if (tqLoss.Extrapolated) {
 				return new ValidationResult(
 					string.Format("Interpolation of Gear-{0}-LossMap failed with torque={1} and angularSpeed={2}", gear.Key,
-						inTorque, angularVelocity.ConvertToRoundsPerMinute()));
+								inTorque, engineSpeed.ConvertToRoundsPerMinute()));
+
 			}
+			var angledriveTorque = (inTorque - tqLoss.Value) / gear.Value.Ratio;
+
+
 			var axlegearTorque = angledriveTorque;
-			try {
-				if (hasAngleDrive) {
-					axlegearTorque = angledriveData.Angledrive.LossMap.GetOutTorque(angularVelocity / gear.Value.Ratio,
-						angledriveTorque);
+			if (hasAngleDrive) {
+				var anglTqLoss = angledriveData.Angledrive.LossMap.GetTorqueLoss(
+					engineSpeed / gear.Value.Ratio / angledriveRatio,
+					angledriveTorque * angledriveRatio);
+				if (anglTqLoss.Extrapolated) {
+					return new ValidationResult(
+						string.Format(
+							"Interpolation of Angledrive-LossMap failed with torque={0} and angularSpeed={1}",
+							angledriveTorque, (engineSpeed / gear.Value.Ratio).ConvertToRoundsPerMinute()));
 				}
-			} catch (VectoException) {
-				return new ValidationResult(
-					string.Format("Interpolation of Angledrive-LossMap failed with torque={0} and angularSpeed={1}",
-						angledriveTorque, (angularVelocity / gear.Value.Ratio).ConvertToRoundsPerMinute()));
 			}
 
 			if (axleGearData != null) {
-				var axleAngularVelocity = angularVelocity / gear.Value.Ratio / angledriveRatio;
-				try {
-					axleGearData.AxleGear.LossMap.GetOutTorque(axleAngularVelocity, axlegearTorque);
-				} catch (VectoException) {
-					return
+				var axleAngularVelocity = engineSpeed / gear.Value.Ratio / angledriveRatio / axleGearData.AxleGear.Ratio;
+				
+				var axlTqLoss = axleGearData.AxleGear.LossMap.GetTorqueLoss(axleAngularVelocity, axlegearTorque * axleGearData.AxleGear.Ratio);
+				if (axlTqLoss.Extrapolated) { 
+				return
 						new ValidationResult(
 							string.Format(
 								"Interpolation of AxleGear-LossMap failed with torque={0} and angularSpeed={1} (gear={2}, velocity={3})",
