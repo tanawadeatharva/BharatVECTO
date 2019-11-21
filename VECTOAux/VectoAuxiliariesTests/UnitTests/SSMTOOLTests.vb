@@ -71,7 +71,7 @@ Namespace UnitTests
         <TestCase("AuxHeater")>
         Public Sub InstantiateDefaultSSMGenInputsTest(section As String)
 
-            Dim dao = New declarationDataAdapter()
+            Dim dao = New DeclarationDataAdapterTruck()
             Dim target As ISSMInputs = dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(), FuelData.Diesel)
 
             If section = "BusParameterisation" Then
@@ -560,7 +560,7 @@ Namespace UnitTests
             Const filePath As String = "SSMTOOLTestSaveRetreive.json"
             Dim success As Boolean
 
-            Dim dao = New DeclarationDataAdapter()
+            Dim dao = New DeclarationDataAdapterTruck()
             Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(),
                                                                              FuelData.Diesel))
 

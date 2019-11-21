@@ -83,7 +83,7 @@ Public Class VehicleForm
 		CbAxleConfig.ValueMember = "Value"
 		CbAxleConfig.DisplayMember = "Label"
 		If (cfg.DeclMode) Then
-			CbAxleConfig.DataSource = DeclarationData.Segments.GetAxleConfigurations() _
+			CbAxleConfig.DataSource = DeclarationData.TruckSegments.GetAxleConfigurations() _
 				.Cast(Of AxleConfiguration) _
 				.Select(Function(category) New With {Key .Value = category, .Label = category.GetName()}).ToList()
 		else
@@ -150,7 +150,7 @@ Public Class VehicleForm
 		_hdVclass = "-"
 		Dim s0 As Segment = Nothing
 		Try
-			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
+			s0 = DeclarationData.TruckSegments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
 
 		Catch
 			' no segment found - ignore
@@ -179,7 +179,7 @@ Public Class VehicleForm
 
 		Dim s0 As Segment = Nothing
 		Try
-			s0 = DeclarationData.Segments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
+			s0 = DeclarationData.TruckSegments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
 		Catch
 			' no segment found - ignore
 		End Try

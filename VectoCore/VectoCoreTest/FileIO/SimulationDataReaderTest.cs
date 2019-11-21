@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			if (declarationProvider == null) {
 				throw new VectoException("Failed to cas to Engineering InputDataProvider");
 			}
-			var reader = new DeclarationModeVectoRunDataFactory(declarationProvider, null);
+			var reader = new DeclarationModeTruckVectoRunDataFactory(declarationProvider, null);
 			//reader.SetJobFile(DeclarationJob);
 
 			var runData = reader.NextRun().First();

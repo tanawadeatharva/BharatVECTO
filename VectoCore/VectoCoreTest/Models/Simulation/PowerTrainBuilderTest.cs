@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			if (provider == null) {
 				throw new VectoException("Failed to cast to Declaration InputDataProvider");
 			}
-			var reader = new DeclarationModeVectoRunDataFactory(provider, null);
+			var reader = new DeclarationModeTruckVectoRunDataFactory(provider, null);
 
 			if (!shouldFail) {
 				var runData = reader.NextRun().First();

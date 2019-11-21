@@ -53,8 +53,8 @@ Namespace UnitTests
             '_defaultInputConfig.RetarderBrake = True
             _defaultInputConfig.KneelingHeightMillimeters = 80.SI(Unit.SI.Milli.Meter).Cast (of Meter)
             _defaultInputConfig.AirSuspensionControl = ConsumerTechnology.Electrically ' "Electrically"
-            _defaultInputConfig.AdBlueDosing = ConsumerTechnology.Pneumatic ' "Pneumatic"
-            _defaultInputConfig.Doors = ConsumerTechnology.Pneumatic ' "Pneumatic"
+            _defaultInputConfig.AdBlueDosing = ConsumerTechnology.Pneumatically ' "Pneumatic"
+            _defaultInputConfig.Doors = ConsumerTechnology.Pneumatically ' "Pneumatic"
             _defaultInputConfig.SmartAirCompression = True
 
             '_Signals.TotalCycleTimeSeconds = 3114
@@ -68,10 +68,10 @@ Namespace UnitTests
 
             Dim psUserInputsConfig = New PneumaticUserInputsConfig()
             psUserInputsConfig.AirSuspensionControl = ConsumerTechnology.Mechanically  ' "Mechanically"
-            psUserInputsConfig.Doors = ConsumerTechnology.Pneumatic  '"Pneumatic"
-            psUserInputsConfig.AdBlueDosing = ConsumerTechnology.Pneumatic  ' "Pneumatic"
+            psUserInputsConfig.Doors = ConsumerTechnology.Pneumatically  '"Pneumatic"
+            psUserInputsConfig.AdBlueDosing = ConsumerTechnology.Pneumatically  ' "Pneumatic"
 
-            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
+            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
                                         
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
@@ -93,7 +93,7 @@ Namespace UnitTests
 
             initialise()
 
-            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
+            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
@@ -119,7 +119,7 @@ Namespace UnitTests
 
             initialise()
 
-            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
+            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
 
@@ -149,7 +149,7 @@ Namespace UnitTests
 
             _defaultInputConfig.CompressorGearEfficiency = 0.8
 
-            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
+            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
@@ -173,7 +173,7 @@ Namespace UnitTests
 
             initialise()
 
-            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
+            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
@@ -204,7 +204,7 @@ Namespace UnitTests
 
             _defaultInputConfig.SmartRegeneration = False
 
-            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
+            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
 
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
@@ -233,7 +233,7 @@ Namespace UnitTests
 
             '_defaultInputConfig.RetarderBrake = False
            
-            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.None)
+            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.None)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
@@ -262,7 +262,7 @@ Namespace UnitTests
 
             _defaultInputConfig.KneelingHeightMillimeters = 100.SI(Unit.si.Milli.Meter).Cast (Of Meter)
 
-            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
+            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
@@ -288,7 +288,7 @@ Namespace UnitTests
 
             _defaultInputConfig.AirSuspensionControl = ConsumerTechnology.Mechanically
 
-            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
+            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
@@ -314,9 +314,9 @@ Namespace UnitTests
 
             initialise()
 
-            _defaultInputConfig.AdBlueDosing = ConsumerTechnology.Pneumatic
+            _defaultInputConfig.AdBlueDosing = ConsumerTechnology.Pneumatically
 
-            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
+            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
@@ -345,7 +345,7 @@ Namespace UnitTests
 
             _defaultInputConfig.Doors = ConsumerTechnology.Electrically
 
-            Dim psAuxConfig = New DeclarationDataAdapter().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
+            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
 

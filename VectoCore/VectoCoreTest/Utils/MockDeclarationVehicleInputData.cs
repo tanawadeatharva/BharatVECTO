@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -45,7 +46,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public int NuberOfPassengersUpperDeck { get; set; }
 		public int NumberOfPassengersLowerDeck { get; set; }
 		public VehicleCode VehicleCode { get; set; }
-		public bool LowEntry { get; set; }
+		public FloorType FloorType { get; }
+		public bool Articulated { get; }
 		public Meter Height { get; set; }
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
@@ -93,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Kilogram CurbMassExtra { get; }
 		public Kilogram Loading { get; }
 		public Meter DynamicTyreRadius { get; }
-		public bool LowEntry { get; set; }
+		public bool Articulated { get; }
 		public Meter Height { get; }
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
@@ -102,6 +104,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public int NuberOfPassengersUpperDeck { get; set; }
 		public int NumberOfPassengersLowerDeck { get; set; }
 		public VehicleCode VehicleCode { get; set; }
+		public FloorType FloorType { get; }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

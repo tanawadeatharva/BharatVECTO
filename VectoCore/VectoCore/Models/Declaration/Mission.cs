@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -46,45 +47,60 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 	public class Mission
 	{
-		public MissionType MissionType;
-		public string CrossWindCorrectionParameters;
-		public double[] AxleWeightDistribution;
+		public Kilogram CurbMass { get; internal set; }
+		public MissionType MissionType { get; internal set; }
+		public string CrossWindCorrectionParameters { get; internal set; }
+		public double[] AxleWeightDistribution { get; internal set; }
 
-		public Kilogram BodyCurbWeight;
+		public Kilogram BodyCurbWeight { get; internal set; }
 
-		public Stream CycleFile;
+		public Stream CycleFile { get; internal set; }
 
-		public IList<MissionTrailer> Trailer;
+		public IList<MissionTrailer> Trailer { get; internal set; }
 
-		public Kilogram MinLoad;
-		public Kilogram LowLoad;
-		public Kilogram RefLoad;
-		public Kilogram MaxLoad;
+		public Kilogram MinLoad { get; internal set; }
+		public Kilogram LowLoad { get; internal set; }
+		public Kilogram RefLoad { get; internal set; }
+		public Kilogram MaxLoad { get; internal set; }
 
-		public SquareMeter DefaultCDxA;
+		public Kilogram MaxPayload { get; internal set; }
 
-		public CubicMeter TotalCargoVolume;
+		public SquareMeter DefaultCDxA { get; internal set; }
+
+		public CubicMeter TotalCargoVolume { get; internal set; }
+
+		public Meter VehicleHeight { get; internal set; }
+
+		public Meter VehicleWidth { get; internal set; }
+
+		public Meter VehicleLength { get; internal set; }
 
 		public Dictionary<LoadingType, Kilogram> Loadings
 		{
 			get {
-				return new Dictionary<LoadingType, Kilogram> {
+				return new Dictionary<LoadingType, Kilogram>
+				{
+					{LoadingType.EmptyLoading, MinLoad },
 					{ LoadingType.LowLoading, LowLoad },
 					{ LoadingType.ReferenceLoad, RefLoad },
-				};
+					{LoadingType.FullLoading, MaxLoad }
+				}.Where(x => x.Value != null).ToDictionary(x => x.Key, x => x.Value);
 			}
 		}
+
+		public double NumberPassengersLowerDeck { get; internal set; }
+		public double NumberPassengersUpperDeck { get; internal set; }
 	}
 
 	public class MissionTrailer
 	{
-		public TrailerType TrailerType;
-		public Kilogram TrailerCurbWeight;
-		public Kilogram TrailerGrossVehicleWeight;
-		public List<Wheels.Entry> TrailerWheels;
-		public double TrailerAxleWeightShare;
-		public SquareMeter DeltaCdA;
-		public CubicMeter CargoVolume;
+		public TrailerType TrailerType { get; internal set; }
+		public Kilogram TrailerCurbWeight { get; internal set; }
+		public Kilogram TrailerGrossVehicleWeight { get; internal set; }
+		public List<Wheels.Entry> TrailerWheels { get; internal set; }
+		public double TrailerAxleWeightShare { get; internal set; }
+		public SquareMeter DeltaCdA { get; internal set; }
+		public CubicMeter CargoVolume { get; internal set; }
 	}
 
 	public enum TrailerType

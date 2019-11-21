@@ -644,7 +644,7 @@ namespace TUGraz.VectoCore.Tests.XML
 		public void TestVehicleCategoryTypes()
 		{
 			var vehicleCategories = GetEnumOptions("VehicleCategoryDeclarationType", "1.0");
-			var allowedCategories = DeclarationData.Segments.GetVehicleCategories();
+			var allowedCategories = DeclarationData.TruckSegments.GetVehicleCategories();
 			foreach (var vehicleCategory in vehicleCategories) {
 				if (vehicleCategory.Equals("Rigid Truck")) {
 					continue; // Rigid Truck has been renamed to Rigid Lorry. The XML contains this entry for backward compatibility (separate testcase)
@@ -835,7 +835,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 				var gbxType = inputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Type;
 				Assert.AreEqual(gearboxType, gbxType.ToXMLFormat());
-				Assert.IsTrue(DeclarationDataAdapter.SupportedGearboxTypes.Contains(gbxType));
+				Assert.IsTrue(DeclarationDataAdapterTruck.SupportedGearboxTypes.Contains(gbxType));
 			}
 		}
 

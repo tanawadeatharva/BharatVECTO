@@ -96,7 +96,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (dataProvider is IDeclarationInputDataProvider) {
 				var declDataProvider = dataProvider as IDeclarationInputDataProvider;
 				var report = declarationReport ?? new XMLDeclarationReport(ModWriter);
-				DataReader = new DeclarationModeVectoRunDataFactory(declDataProvider, report);
+				DataReader = declDataProvider.JobInputData.Vehicle.VehicleCategory.IsTruck()
+					? (IVectoRunDataFactory)new DeclarationModeTruckVectoRunDataFactory(declDataProvider, report)
+					: new DeclarationModeBusVectoRunDataFactory(declDataProvider, report);
 				return;
 			}
 			throw new VectoException("Unknown InputData for Declaration Mode!");
@@ -274,3 +276,4 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 	}
 }
+

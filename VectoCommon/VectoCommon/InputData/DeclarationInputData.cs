@@ -164,7 +164,9 @@ namespace TUGraz.VectoCommon.InputData
 		int NumberOfPassengersLowerDeck { get; }
 
 		VehicleCode VehicleCode { get; }
-		bool LowEntry { get; }
+		FloorType FloorType { get; }
+
+		bool Articulated { get; }
 
 		Meter Height { get; }
 

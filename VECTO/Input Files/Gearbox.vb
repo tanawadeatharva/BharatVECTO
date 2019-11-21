@@ -211,7 +211,7 @@ Public Class Gearbox
                 vehiclecategory = vehiclecategory.RigidTruck
             End Try
             If mode = ExecutionMode.Declaration Then
-                Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
+                Dim doa As DeclarationDataAdapterTruck = New DeclarationDataAdapterTruck()
 
                 Try
                     engine = doa.CreateEngineData(inputData.JobInputData.Vehicle, inputData.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First(), New Mission() With {.MissionType = MissionType.LongHaul})

@@ -14,6 +14,7 @@ Imports System.IO
 Imports System.Linq
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Exceptions
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
@@ -210,7 +211,7 @@ Public Class Engine
 
 		Try
 			If mode = ExecutionMode.Declaration Then
-				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
+				Dim doa As DeclarationDataAdapterTruck = New DeclarationDataAdapterTruck()
 				Dim dummyGearboxData As IGearboxDeclarationInputData = New Gearbox() With {
 						.Type = GearboxType.AMT,
 						.MaxTorque = New List(Of String),
@@ -612,7 +613,8 @@ Public Class DummyVehicle
     Public ReadOnly Property NuberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NuberOfPassengersUpperDeck
     Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
     Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode
-    Public ReadOnly Property LowEntry As Boolean Implements IVehicleDeclarationInputData.LowEntry
+    Public ReadOnly Property FloorType As FloorType Implements IVehicleDeclarationInputData.FloorType
+    Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
     Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
     Public ReadOnly Property CurbMassExtra As Kilogram Implements IVehicleEngineeringInputData.CurbMassExtra
     Public ReadOnly Property Loading As Kilogram Implements IVehicleEngineeringInputData.Loading

@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -212,15 +213,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.DynamicTyreRadius; }
 		}
 
-		public bool LowEntry { get; set; }
+		
+		public bool Articulated { get { return VehicleData.Articulated; } }
 
 		public Meter Height
 		{
 			get { return VehicleData.Height; }
 		}
 
-		public Meter Length { get { return null; } }
-		public Meter Width { get { return null; } }
+		public Meter Length { get { return VehicleData.Length; } }
+		public Meter Width { get { return VehicleData.Width; } }
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{
@@ -387,6 +389,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public int NuberOfPassengersUpperDeck { get { return 0; } }
 		public int NumberOfPassengersLowerDeck { get { return 0; } }
 		public VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
+		public FloorType FloorType { get { return VehicleData.FloorType; } }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

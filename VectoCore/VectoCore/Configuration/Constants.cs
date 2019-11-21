@@ -190,6 +190,13 @@ namespace TUGraz.VectoCore.Configuration
 			}
 		}
 
+		public static class BusParameters
+		{
+			public static readonly Meter DriverCompartmentLength = 1.2.SI<Meter>();
+			public static readonly Kilogram PassengerWeightLow = 68.SI<Kilogram>();
+			public static readonly Kilogram PassengerWeightHigh = 71.SI<Kilogram>();
+		}
+
 		public static class FileExtensions
 		{
 			public const string PDFReport = ".pdf";
@@ -281,6 +288,20 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly MeterPerSecond HighwaySpeedThreshold = 70.KMPHtoMeterPerSecond();
 			public static readonly MeterPerSecond RuralSpeedThreshold = 50.KMPHtoMeterPerSecond();
+
+			public static class CrosswindCorrection
+			{
+				public const int MinVehicleSpeed = 60; // km/h
+				public const int MaxVehicleSpeed = 130; // km/h
+				public const int VehicleSpeedStep = 5; // km/h
+
+				public const int MaxAlpha = 180; // degree
+				public const int AlphaStep = 5; // degree
+
+				public const int MinHeight = 5; // percent
+				public const int MaxHeight = 100; // percent
+				public const int HeightStep = 10; // percent
+			}
 		}
 
 		public static class XML

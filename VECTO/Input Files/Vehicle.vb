@@ -15,6 +15,7 @@ Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
 Imports TUGraz.VECTO.Input_Files
+Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
@@ -108,8 +109,8 @@ Public Class Vehicle
 
 		Try
 			If mode = ExecutionMode.Declaration Then
-				Dim doa As DeclarationDataAdapter = New DeclarationDataAdapter()
-				Dim segment As Segment = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
+				Dim doa As DeclarationDataAdapterTruck = New DeclarationDataAdapterTruck()
+				Dim segment As Segment = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, false)
 				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
 													segment.Missions.First().Loadings.First().Value)
@@ -406,8 +407,9 @@ Public Class Vehicle
 		End Get
 	End Property
 
-    Public ReadOnly Property LowEntry As Boolean Implements IVehicleDeclarationInputData.LowEntry
     Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
+
+    Public ReadOnly Property Articulated As Boolean Implements IVehicleDeclarationInputData.Articulated
 
     Public ReadOnly Property Height As Meter Implements IVehicleEngineeringInputData.Height
 		Get
@@ -752,6 +754,7 @@ Public Class Vehicle
     Public ReadOnly Property NuberOfPassengersUpperDeck As Integer Implements IVehicleDeclarationInputData.NuberOfPassengersUpperDeck
     Public ReadOnly Property NumberOfPassengersLowerDeck As Integer Implements IVehicleDeclarationInputData.NumberOfPassengersLowerDeck
     Public ReadOnly Property VehicleCode As VehicleCode Implements IVehicleDeclarationInputData.VehicleCode
+    Public ReadOnly Property FloorType As FloorType Implements IVehicleDeclarationInputData.FloorType
 
     Public ReadOnly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
 	get

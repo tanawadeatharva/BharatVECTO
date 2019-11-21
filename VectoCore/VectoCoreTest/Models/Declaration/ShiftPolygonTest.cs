@@ -447,7 +447,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				},
 			};
 
-			var dao = new DeclarationDataAdapter();
+			var dao = new DeclarationDataAdapterTruck();
 			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
 			var engineInput = new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile);
 			var vehicle = new MockDeclarationVehicleInputData() {
@@ -499,7 +499,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				new Point(123.0457, 2530),
 			};
 
-			var dao = new DeclarationDataAdapter();
+			var dao = new DeclarationDataAdapterTruck();
 			var gearboxData = new JSONGearboxDataV5(JSONInputDataFactory.ReadFile(gearboxFile), gearboxFile);
 			var engineInput = new JSONEngineDataV3(JSONInputDataFactory.ReadFile(engineFile), engineFile);
 			var vehicle = new MockDeclarationVehicleInputData() {
@@ -617,7 +617,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var gearboxData = job.JobInputData.Vehicle.Components.GearboxInputData;
 			var idlespeed = VectoMath.Max(
 				job.JobInputData.Vehicle.EngineIdleSpeed, job.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First().IdleSpeed);
-			var dao = new DeclarationDataAdapter();
+			var dao = new DeclarationDataAdapterTruck();
 			var engineData = dao.CreateEngineData(job.JobInputData.Vehicle, job.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First(), new Mission() {MissionType = MissionType.LongHaul});
 			var axlegearRatio = job.JobInputData.Vehicle.Components.AxleGearInputData.Ratio;
 			var rdyn = job.JobInputData.Vehicle.Components.AxleWheels.AxlesDeclaration.Where(x => x.AxleType == AxleType.VehicleDriven)
@@ -871,7 +871,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void ComputeShiftPolygonXML(string xmlJob)
 		{
 			var inputData = xmlInputReader.CreateDeclaration(xmlJob);
-			var dao = new DeclarationDataAdapter();
+			var dao = new DeclarationDataAdapterTruck();
 
 			var gearboxData = inputData.JobInputData.Vehicle.Components.GearboxInputData;
 			var engineData = dao.CreateEngineData(inputData.JobInputData.Vehicle, inputData.JobInputData.Vehicle.Components.EngineInputData.EngineModes.First(), new Mission() {MissionType = MissionType.LongHaul});
@@ -880,7 +880,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			var axlegearRatio = inputData.JobInputData.Vehicle.Components.AxleGearInputData.Ratio;
 			var vehicle = inputData.JobInputData.Vehicle;
-			var segment = DeclarationData.Segments.Lookup(
+			var segment = DeclarationData.TruckSegments.Lookup(
 				vehicle.VehicleCategory, vehicle.AxleConfiguration, vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis,
 				false);
 			var vehicleData = dao.CreateVehicleData(inputData.JobInputData.Vehicle, segment.Missions.First(), 0.SI<Kilogram>());

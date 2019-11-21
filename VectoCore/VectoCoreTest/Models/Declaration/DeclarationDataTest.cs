@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			double expected)
 		{
 			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
+				DeclarationDataAdapterTruck.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
 					height.SI<Meter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
@@ -224,7 +224,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindGetDeclarationAirResistance(string parameterSet, double cdxa0, double height)
 		{
 			var curve =
-				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(parameterSet, cdxa0.SI<SquareMeter>(), height.SI<Meter>());
+				DeclarationDataAdapterTruck.GetDeclarationAirResistanceCurve(parameterSet, cdxa0.SI<SquareMeter>(), height.SI<Meter>());
 
 			AssertHelper.AreRelativeEqual(60.KMPHtoMeterPerSecond(), curve[1].Velocity);
 			AssertHelper.AreRelativeEqual(7.0418009.SI<SquareMeter>(), curve[1].EffectiveCrossSectionArea);
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph, double height)
 		{
 			var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				DeclarationDataAdapter.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
+				DeclarationDataAdapterTruck.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
 					height.SI<Meter>()),
 				CrossWindCorrectionMode.DeclarationModeCorrection);
 
@@ -558,7 +558,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X2(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-				DeclarationData.Segments.Lookup(
+				DeclarationData.TruckSegments.Lookup(
 					VehicleCategory.RigidTruck,
 					AxleConfiguration.AxleConfig_4x2,
 					weight.SI<Kilogram>(),
@@ -576,7 +576,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentWeightOutOfRange4X4(double weight)
 		{
 			AssertHelper.Exception<VectoException>(() =>
-				DeclarationData.Segments.Lookup(
+				DeclarationData.TruckSegments.Lookup(
 					VehicleCategory.RigidTruck,
 					AxleConfiguration.AxleConfig_4x4,
 					weight.SI<Kilogram>(),
@@ -634,7 +634,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentLookupTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
 			double curbWeight, bool vocational, VehicleClass expectedClass)
 		{
-			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
+			var segment = DeclarationData.TruckSegments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
 				curbWeight.SI<Kilogram>(), vocational);
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
 		}
@@ -657,7 +657,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentDesignSpeedTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
 			double curbWeight, bool vocational, VehicleClass expectedClass, double speed)
 		{
-			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
+			var segment = DeclarationData.TruckSegments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
 				curbWeight.SI<Kilogram>(), vocational);
 
 			Assert.AreEqual(speed.KMPHtoMeterPerSecond(), segment.DesignSpeed);
@@ -693,7 +693,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentLookupBodyTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
 			double curbWeight, bool vocational, VehicleClass expectedClass, int? expectedBodyWeight, int? expectedTrailerWeight)
 		{
-			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
+			var segment = DeclarationData.TruckSegments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
 				curbWeight.SI<Kilogram>(), vocational);
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
 
@@ -754,10 +754,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void SegmentLookupHeightTest(VehicleCategory category, AxleConfiguration axleConfiguration, double grossWeight,
 			double curbWeight, bool vocational, VehicleClass expectedClass, double expectedHeight)
 		{
-			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
+			var segment = DeclarationData.TruckSegments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
 				curbWeight.SI<Kilogram>(), vocational);
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
-			AssertHelper.AreRelativeEqual(expectedHeight, segment.VehicleHeight);
+			AssertHelper.AreRelativeEqual(expectedHeight, segment.Missions.First().VehicleHeight);
 		}
 
 		[Test,
@@ -800,7 +800,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			double grossWeight,
 			double curbWeight, bool vocational, VehicleClass expectedClass, double[] expectedCargoVolume)
 		{
-			var segment = DeclarationData.Segments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
+			var segment = DeclarationData.TruckSegments.Lookup(category, axleConfiguration, grossWeight.SI<Kilogram>(),
 				curbWeight.SI<Kilogram>(), vocational);
 			Assert.AreEqual(expectedClass, segment.VehicleClass);
 			Assert.AreEqual(expectedCargoVolume.Length, segment.Missions.Length);
@@ -822,7 +822,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 5850.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
@@ -895,7 +895,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 9500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
@@ -968,7 +968,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 5850.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class3, segment.VehicleClass);
@@ -1021,7 +1021,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 7500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class4, segment.VehicleClass);
@@ -1109,7 +1109,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 7500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, true);
 
 			Assert.AreEqual(VehicleClass.Class4, segment.VehicleClass);
@@ -1165,7 +1165,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 7500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class5, segment.VehicleClass);
@@ -1253,7 +1253,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 7500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, true);
 
 			Assert.AreEqual(VehicleClass.Class5, segment.VehicleClass);
@@ -1293,7 +1293,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 7500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class9, segment.VehicleClass);
@@ -1399,7 +1399,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 7500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, true);
 
 			Assert.AreEqual(VehicleClass.Class9, segment.VehicleClass);
@@ -1456,7 +1456,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 7500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class10, segment.VehicleClass);
@@ -1546,7 +1546,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 7500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, true);
 
 			Assert.AreEqual(VehicleClass.Class10, segment.VehicleClass);
@@ -1587,7 +1587,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 7500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class11, segment.VehicleClass);
@@ -1708,7 +1708,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 7500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class12, segment.VehicleClass);
@@ -1815,7 +1815,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				CurbWeight = 7500.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.Segments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+			var segment = DeclarationData.TruckSegments.Lookup(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight, false);
 
 			Assert.AreEqual(VehicleClass.Class16, segment.VehicleClass);
@@ -1912,7 +1912,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var dataProvider =
 				JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\12t Delivery Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeVectoRunDataFactory(dataProvider, null);
+			var dataReader = new DeclarationModeTruckVectoRunDataFactory(dataProvider, null);
 
 			var runs = dataReader.NextRun().ToList();
 			Assert.AreEqual(6, runs.Count);
@@ -1936,7 +1936,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var dataProvider =
 				JSONInputDataFactory.ReadJsonJob(
 					@"TestData\Jobs\Class4_40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeVectoRunDataFactory(dataProvider, null);
+			var dataReader = new DeclarationModeTruckVectoRunDataFactory(dataProvider, null);
 
 			var runs = dataReader.NextRun().ToList();
 			Assert.AreEqual(8, runs.Count);
@@ -1960,7 +1960,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var dataProvider =
 				JSONInputDataFactory.ReadJsonJob(@"TestData\Jobs\40t_Long_Haul_Truck.vecto") as IDeclarationInputDataProvider;
-			var dataReader = new DeclarationModeVectoRunDataFactory(dataProvider, null);
+			var dataReader = new DeclarationModeTruckVectoRunDataFactory(dataProvider, null);
 
 			var runs = dataReader.NextRun().ToList();
 

@@ -674,7 +674,7 @@ Public Class VectoVTPJobForm
 
         Dim s0 As Segment = Nothing
         Try
-            s0 = DeclarationData.Segments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass,
+            s0 = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration, maxMass,
                                                  0.SI (Of Kilogram),
                                                  False)
         Catch

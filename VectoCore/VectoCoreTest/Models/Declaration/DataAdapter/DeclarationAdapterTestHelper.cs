@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration.DataAdapter
 		public static VectoRunData[] CreateVectoRunData(string file)
 		{
 			var inputData = (IDeclarationInputDataProvider)JSONInputDataFactory.ReadJsonJob(file);
-			var dataReader = new DeclarationModeVectoRunDataFactory(inputData, null);
+			var dataReader = new DeclarationModeTruckVectoRunDataFactory(inputData, null);
 			var runData = dataReader.NextRun().ToArray();
 			return runData;
 		}

@@ -58,6 +58,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
+		#region Overrides of JSONVehicleDataV7
+
+		public override bool Articulated
+		{
+			get { return Body.GetEx<bool>("Articulated"); }
+		}
+
+		#endregion
+
 		#endregion
 
 		#region Implementation of IBusAuxiliariesDeclarationData
@@ -205,6 +214,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#endregion
 	}
 
+	// ###################################################################
+	// ###################################################################
+
 	public class JSONVehicleDataV8 : JSONVehicleDataV7
 	{
 		public JSONVehicleDataV8(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
@@ -235,6 +247,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 	}
+
+	// ###################################################################
+	// ###################################################################
 
 
 	public class JSONVehicleDataV7 : JSONFile, IVehicleEngineeringInputData, IRetarderInputData, IAngledriveInputData,
@@ -329,7 +344,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>(JsonKeys.Vehicle_DynamicTyreRadius).SI(Unit.SI.Milli.Meter).Cast<Meter>(); }
 		}
 
-		public virtual bool LowEntry { get; set; }
+		public virtual bool Articulated { get { return false; } }
 
 		public virtual Meter Height
 		{
@@ -573,6 +588,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return VehicleCode.NOT_APPLICABLE; }
 		}
+
+		public virtual FloorType FloorType { get { return FloorType.Unknown; } }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

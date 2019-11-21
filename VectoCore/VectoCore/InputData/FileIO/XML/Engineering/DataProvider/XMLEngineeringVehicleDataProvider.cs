@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -167,7 +168,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		public virtual int NuberOfPassengersUpperDeck { get { return 0; } }
 		public virtual int NumberOfPassengersLowerDeck { get { return 0; } }
 		public virtual VehicleCode VehicleCode { get { return VehicleCode.NOT_APPLICABLE; } }
-		public virtual bool LowEntry { get { return false; } }
+		public virtual FloorType FloorType { get { return FloorType.Unknown; } }
+		public virtual bool Articulated { get { return false; } }
+		
 
 		public virtual Meter Width { get { return null; } }
 

@@ -269,6 +269,10 @@
     <Compile Include="InputData\Reader\ComponentData\EnvironmentalContidionsMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\SSMTechnologiesReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\ActuationsMapReader.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterPrimaryBus.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\IDeclarationDataAdapter.cs" />
+    <Compile Include="InputData\Reader\Impl\AbstractDeclarationVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationModeBusVectoRunDataFactory.cs" />
     <Compile Include="Models\BusAuxiliaries\AdvancedAuxiliaries.cs" />
     <Compile Include="Models\BusAuxiliaries\AuxiliaryConfig.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\AbstractModule.cs" />
@@ -338,6 +342,7 @@
     <Compile Include="Models\BusAuxiliaries\Interfaces\IM12.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\Signals.cs" />
     <Compile Include="Models\BusAuxiliaries\Util\FilePathUtils.cs" />
+    <Compile Include="Models\Declaration\BusSegments.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />
     <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
@@ -401,11 +406,11 @@
     <Compile Include="InputData\Reader\ComponentData\TorqueConverterDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\TransmissionLossMapReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\AbstractSimulationDataAdapter.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapter.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterTruck.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\EngineeringDataAdapter.cs" />
     <Compile Include="InputData\Reader\ComponentData\DrivingCycleDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\FullLoadCurveReader.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationModeVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationModeTruckVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DrivingCycleProxy.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
@@ -469,7 +474,7 @@
     <Compile Include="Models\Declaration\Payloads.cs" />
     <Compile Include="Models\Declaration\PneumaticSystem.cs" />
     <Compile Include="Models\Declaration\PT1.cs" />
-    <Compile Include="Models\Declaration\Segments.cs" />
+    <Compile Include="Models\Declaration\TruckSegments.cs" />
     <Compile Include="Models\Declaration\StandardBodies.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
     <Compile Include="Models\Declaration\VehicleClass.cs" />
@@ -794,6 +799,8 @@
     <EmbeddedResource Include="Resources\Declaration\Buses\DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP" />
     <EmbeddedResource Include="Resources\Declaration\Buses\DEFAULT_2-Cylinder_2-Stage_398ccm.ACMP" />
     <EmbeddedResource Include="Resources\Declaration\Buses\DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP" />
+    <EmbeddedResource Include="Resources\Declaration\HeavyBusSegmentationTable.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VACC\Bus.vacc" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>

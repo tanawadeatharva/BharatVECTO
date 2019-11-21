@@ -30,6 +30,8 @@
 */
 
 using System;
+using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -108,6 +110,30 @@ namespace TUGraz.VectoCore.Models.Declaration
 				//	return "";
 				default:
 					throw new ArgumentOutOfRangeException("MissionType", self, null);
+			}
+		}
+
+		public static Kilogram GetAveragePassengerMass(this MissionType self)
+		{
+			switch (self) {
+				case MissionType.LongHaul:
+				case MissionType.LongHaulEMS: 
+				case MissionType.RegionalDelivery: 
+				case MissionType.RegionalDeliveryEMS: 
+				case MissionType.UrbanDelivery: 
+				case MissionType.MunicipalUtility: 
+				case MissionType.Construction:
+				case MissionType.VerificationTest: 
+				case MissionType.ExemptedMission:
+					return 0.SI<Kilogram>();
+				case MissionType.HeavyUrban: 
+				case MissionType.Urban: 
+				case MissionType.Suburban: 
+					return Constants.BusParameters.PassengerWeightLow;
+				case MissionType.Interurban: 
+				case MissionType.Coach:
+					return Constants.BusParameters.PassengerWeightHigh;
+				default: throw new ArgumentOutOfRangeException(nameof(self), self, null);
 			}
 		}
 	}
