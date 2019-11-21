@@ -46,11 +46,11 @@ namespace TUGraz.VectoCore.Models.Declaration {
 		{
 			var rows = _segmentTable.AsEnumerable().Where(
 				r => {
-					var productionState = r.Field<string>("productionstage").ToInt(0);
+					var productionStage = r.Field<string>("productionstage").ToInt(0);
 					var articulatedStr = r.Field<string>("articulated");
 					var articulatedB = articulatedStr == "-" ? (bool?)null : int.Parse(articulatedStr) != 0;
 					var numAxles = r.Field<string>("numaxles").ToInt(0);
-					return productionState == 1 &&
+					return productionStage == 1 &&
 							(!articulatedB.HasValue || articulatedB == articulated) &&
 							axleConfiguration.NumAxles() == numAxles;
 				}).ToList();
