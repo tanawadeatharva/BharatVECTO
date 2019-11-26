@@ -271,13 +271,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 				if (tcuData.ATLookAheadTime != null) {
 					ATLookAheadTime = tcuData.ATLookAheadTime;
 				}
-				if (LoadStageThresoldsDown != null && LoadStageThresoldsDown.Length > 0) {
-					LoadStageThresoldsDown = tcuData.LoadStageThresoldsDown.ToArray();
+				if (tcuData.LoadStageThresholdsDown != null && LoadStageThresoldsDown.Length > 0) {
+					LoadStageThresoldsDown = tcuData.LoadStageThresholdsDown.ToArray();
 				}
-				if (LoadStageThresholdsUp != null && LoadStageThresholdsUp.Length > 0) {
-					LoadStageThresholdsUp = tcuData.LoadStageThresoldsUp.ToArray();
+				if (tcuData.LoadStageThresholdsUp != null && LoadStageThresholdsUp.Length > 0) {
+					LoadStageThresholdsUp = tcuData.LoadStageThresholdsUp.ToArray();
 				}
-				if (ShiftSpeedsTCToLocked != null && ShiftSpeedsTCToLocked.Length > 0) {
+				if (tcuData.ShiftSpeedsTCToLocked != null && ShiftSpeedsTCToLocked.Length > 0) {
 					ShiftSpeedsTCToLocked = tcuData.ShiftSpeedsTCToLocked;
 				}
 				if (tcuData.MinEngineSpeedPostUpshift != null) {

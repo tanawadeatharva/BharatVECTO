@@ -631,13 +631,13 @@ Public Class Gearbox
 		End Get
 	End Property
 
-	Public Overridable ReadOnly Property LoadStageThresoldsUp As IList(Of Double) Implements IGearshiftEngineeringInputData.LoadStageThresoldsUp
+	Public Overridable ReadOnly Property LoadStageThresholdsUp As IList(Of Double) Implements IGearshiftEngineeringInputData.LoadStageThresholdsUp
 		Get
 			Return Nothing
 		End Get
 	End Property
 
-	Public Overridable ReadOnly Property LoadStageThresoldsDown As IList(Of Double) Implements IGearshiftEngineeringInputData.LoadStageThresoldsDown
+	Public Overridable ReadOnly Property LoadStageThresholdsDown As IList(Of Double) Implements IGearshiftEngineeringInputData.LoadStageThresholdsDown
 		Get
 			Return Nothing
 		End Get

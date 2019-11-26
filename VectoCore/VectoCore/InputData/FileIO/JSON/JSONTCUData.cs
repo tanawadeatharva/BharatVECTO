@@ -344,14 +344,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		public IList<double> LoadStageThresoldsUp
+		public IList<double> LoadStageThresholdsUp
 		{
 			get {
 				return (Body["LoadStageThresoldsUp"]?.ToString())?.Split(';').Select(x => x.ToDouble(0)).ToList();
 			}
 		}
 
-		public IList<double> LoadStageThresoldsDown
+		public IList<double> LoadStageThresholdsDown
 		{
 			get {
 				return (Body["LoadStageThresoldsDown"]?.ToString())?.Split(';').Select(x => x.ToDouble(0)).ToList();

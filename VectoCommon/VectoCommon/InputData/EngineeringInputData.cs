@@ -283,8 +283,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		// Voith GS Parameters
 		TableData LoadStageShiftLines { get; }
-		IList<double> LoadStageThresoldsUp { get; }
-		IList<double> LoadStageThresoldsDown { get; }
+		IList<double> LoadStageThresholdsUp { get; }
+		IList<double> LoadStageThresholdsDown { get; }
 		PerSecond MinEngineSpeedPostUpshift { get; }
 
 		Second ATLookAheadTime { get; }

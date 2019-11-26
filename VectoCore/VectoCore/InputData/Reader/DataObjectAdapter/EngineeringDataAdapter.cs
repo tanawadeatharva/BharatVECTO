@@ -464,15 +464,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				MinEngineSpeedPostUpshift = gsInputData.MinEngineSpeedPostUpshift ?? DeclarationData.GearboxTCU.MinEngineSpeedPostUpshift,
 				ATLookAheadTime = gsInputData.ATLookAheadTime ?? DeclarationData.GearboxTCU.ATLookAheadTime,
 
-				LoadStageThresoldsDown = gsInputData.LoadStageThresoldsDown?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresoldsDown,
-				LoadStageThresoldsUp = gsInputData.LoadStageThresoldsUp?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresholdsUp,
+				LoadStageThresoldsDown = gsInputData.LoadStageThresholdsDown?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresoldsDown,
+				LoadStageThresoldsUp = gsInputData.LoadStageThresholdsUp?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresholdsUp,
 				ShiftSpeedsTCToLocked = gsInputData.ShiftSpeedsTCToLocked ?? DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked,
 
 				// voith gs parameters
 
 				GearshiftLines = gsInputData.LoadStageShiftLines,
 
-				LoadstageThresholds = gsInputData.LoadStageThresoldsUp != null && gsInputData.LoadStageThresoldsDown != null ? gsInputData.LoadStageThresoldsUp.Zip(gsInputData.LoadStageThresoldsDown, Tuple.Create) : null
+				LoadstageThresholds = gsInputData.LoadStageThresholdsUp != null && gsInputData.LoadStageThresholdsDown != null ? gsInputData.LoadStageThresholdsUp.Zip(gsInputData.LoadStageThresholdsDown, Tuple.Create) : null
 			};
 
 			return retVal;

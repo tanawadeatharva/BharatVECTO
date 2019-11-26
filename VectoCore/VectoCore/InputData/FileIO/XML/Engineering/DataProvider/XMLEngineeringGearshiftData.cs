@@ -128,8 +128,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		}
 
 		public virtual TableData LoadStageShiftLines { get { return null; } }
-		public virtual IList<double> LoadStageThresoldsUp { get { return null; } }
-		public virtual IList<double> LoadStageThresoldsDown { get { return null; } }
+		public virtual IList<double> LoadStageThresholdsUp { get { return null; } }
+		public virtual IList<double> LoadStageThresholdsDown { get { return null; } }
 
 		public virtual Second PowershiftShiftTime
 		{

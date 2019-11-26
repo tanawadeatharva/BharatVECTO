@@ -420,8 +420,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public TableData LoadStageShiftLines { get { return null; } }
-		public IList<double> LoadStageThresoldsUp { get { return null; } }
-		public IList<double> LoadStageThresoldsDown { get { return null; } }
+		public IList<double> LoadStageThresholdsUp { get { return null; } }
+		public IList<double> LoadStageThresholdsDown { get { return null; } }
 
 		public Second PowershiftShiftTime
 		{
