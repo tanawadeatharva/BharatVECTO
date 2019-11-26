@@ -463,6 +463,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				MinEngineSpeedPostUpshift = gsInputData.MinEngineSpeedPostUpshift ?? 0.RPMtoRad(),
 				ATLookAheadTime = gsInputData.ATLookAheadTime ?? DeclarationData.Gearbox.PowershiftShiftTime,
 
+				LoadStageThresoldsDown = gsInputData.LoadStageThresoldsDown?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresoldsDown,
+				LoadStageThresoldsUp = gsInputData.LoadStageThresoldsUp?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresholdsUp,
+				ShiftSpeedsTCToLocked = gsInputData.ShiftSpeedsTCToLocked ?? DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked,
+
 				// voith gs parameters
 
 				GearshiftLines = gsInputData.LoadStageShiftLines,

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
@@ -312,6 +313,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public double[][] ShiftSpeedsTCToLocked
+		{
+			get {
+				if (Body["ShiftSpeedsTCLockup"] == null) {
+					return null;
+				}
+
+				var retVal = new List<double[]>();
+				foreach (var entry in Body["ShiftSpeedsTCLockup"]) {
+					if (!(entry is JArray)) {
+						throw new VectoException("Array expected");
+					}
+
+					retVal.Add(entry.Select(shiftSpeed => shiftSpeed.Value<double>()).ToArray());
+				}
+
+				return retVal.ToArray();
+			}
+		}
+
 		public TableData LoadStageShiftLines
 		{
 			get {
@@ -325,13 +346,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IList<double> LoadStageThresoldsUp
 		{
-			get { return (Body["LoadStageThresoldsUp"]?.ToString() ?? "").Split(';').Select(x => x.ToDouble(0)).ToList(); }
+			get {
+				return (Body["LoadStageThresoldsUp"]?.ToString())?.Split(';').Select(x => x.ToDouble(0)).ToList();
+			}
 		}
 
 		public IList<double> LoadStageThresoldsDown
 		{
 			get {
-				return (Body["LoadStageThresoldsDown"]?.ToString() ?? "").Split(';').Select(x => x.ToDouble(0)).ToList();
+				return (Body["LoadStageThresoldsDown"]?.ToString())?.Split(';').Select(x => x.ToDouble(0)).ToList();
 			}
 		}
 

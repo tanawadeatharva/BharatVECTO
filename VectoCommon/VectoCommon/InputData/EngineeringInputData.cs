@@ -288,6 +288,7 @@ namespace TUGraz.VectoCommon.InputData
 		PerSecond MinEngineSpeedPostUpshift { get; }
 
 		Second ATLookAheadTime { get; }
+		double[][] ShiftSpeedsTCToLocked { get; }
 	}
 
 	public interface ITorqueConverterEngineeringShiftParameterInputData

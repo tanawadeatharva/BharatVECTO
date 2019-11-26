@@ -619,6 +619,12 @@ Public Class Gearbox
     End Get
     End Property
 
+    Public ReadOnly Property ShiftSpeedsTCToLocked As Double()() Implements IGearshiftEngineeringInputData.ShiftSpeedsTCToLocked
+    get
+            return Nothing
+    End Get
+    End Property
+
     Public Overridable ReadOnly Property LoadStageShiftLines As TableData Implements IGearshiftEngineeringInputData.LoadStageShiftLines
 		Get
 			Return Nothing
