@@ -451,13 +451,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (string.IsNullOrWhiteSpace(shiftStrategy)) {
 				switch (runData.GearboxData.Type) {
 					case GearboxType.AMT:
-						//return new AMTShiftStrategyOptimized(runData, container);
-						return new AMTShiftStrategy(runData, container);
+						return new AMTShiftStrategyOptimized(runData, container);
+						//return new AMTShiftStrategy(runData, container);
 					case GearboxType.MT:
 						return new MTShiftStrategy(runData, container);
 					case GearboxType.ATPowerSplit:
 					case GearboxType.ATSerial:
-						return new ATShiftStrategy(runData, container);
+						return new ATShiftStrategyOptimized(runData, container);
+						//return new ATShiftStrategy(runData, container);
 					default:
 						throw new ArgumentOutOfRangeException("GearboxType", string.Format("Unknown Gearbox Type {0}", runData.GearboxData.Type.ToString()));
 				}
