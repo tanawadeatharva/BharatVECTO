@@ -118,6 +118,7 @@
     <Compile Include="Integration\TorqueLimitsTest.cs" />
     <Compile Include="Integration\XMLReportTest.cs" />
     <Compile Include="Models\Declaration\AirdragDefaultValuesTest.cs" />
+    <Compile Include="Models\Declaration\BusFactoryTest.cs" />
     <Compile Include="Models\Declaration\DataAdapter\DeclarationAdapterTestHelper.cs" />
     <Compile Include="Models\Declaration\DataAdapter\DeclarationDataAdapterTest_Class5.cs" />
     <Compile Include="Models\Declaration\DataAdapter\DeclarationDataAdapterTest_Class2.cs" />
@@ -3098,6 +3099,36 @@
     <Content Include="TestData\XML\EngineeringJob\SampleJobEngineering1.1.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-1_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-2_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-3_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x2_vehicle-class-9_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_6x4_vehicle-class-11_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\GroupTest\Rigid Truck_8x4_vehicle-class-16_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_4x2_vehicle-class-5_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x2_vehicle-class-10_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\GroupTest\Tractor_6x4_vehicle-class-12_EURO6_2018.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion1.0\Tractor_4x2_vehicle-class-5_5_t_0.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -3198,6 +3229,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleDualModeDualFuel.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBus.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\Tractor_4x2_vehicle-class-5_5_t_0.xml">

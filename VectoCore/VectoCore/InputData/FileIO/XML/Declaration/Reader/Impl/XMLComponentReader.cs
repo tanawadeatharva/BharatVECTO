@@ -87,6 +87,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			}
 		}
 
+		public virtual IBusAuxiliariesDeclarationData BusAuxiliariesInputData { get { return null; } }
+
 		public virtual ITransmissionInputData CreateGear(XmlNode gearNode)
 		{
 			var version = XMLHelper.GetXsdType(gearNode.SchemaInfo.SchemaType);
@@ -286,5 +288,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public XMLComponentReaderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
 			vehicle, componentsNode) { }
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLComponentReaderV26 : XMLComponentReaderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		protected IBusAuxiliariesDeclarationData _busAuxInputData;
+
+
+		public XMLComponentReaderV26(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
+			vehicle, componentsNode) { }
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData { get { return  _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator)); } }
+
+		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
+		{
+			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
+		}
 	}
 }

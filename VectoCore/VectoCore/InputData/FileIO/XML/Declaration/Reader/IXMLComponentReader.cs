@@ -17,6 +17,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader
 		IAxlesDeclarationInputData AxlesDeclarationInputData { get; }
 
 		ITorqueConverterDeclarationInputData TorqueConverterInputData { get; }
+
+		IBusAuxiliariesDeclarationData BusAuxiliariesInputData { get; }
 	}
 
 	public interface IXMLAxlesReader

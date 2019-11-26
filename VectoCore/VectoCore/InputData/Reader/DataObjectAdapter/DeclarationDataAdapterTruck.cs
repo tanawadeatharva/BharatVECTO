@@ -420,9 +420,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(
-			IAuxiliariesDeclarationInputData auxInputData,
-			MissionType mission, VehicleClass hvdClass)
+		public virtual IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData, MissionType mission, VehicleClass hvdClass, Meter vehicleLength)
 		{
 			if (!auxInputData.SavedInDeclarationMode) {
 				WarnDeclarationMode("AuxiliariesData");

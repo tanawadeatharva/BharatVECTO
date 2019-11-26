@@ -131,4 +131,35 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return NAMESPACE_URI; }
 		}
 	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationComponentsDataProviderV26 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new const string XSD_TYPE = "VehicleComponentsType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		private IBusAuxiliariesDeclarationData _busAuxiliaries;
+
+		public XMLDeclarationComponentsDataProviderV26(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile)
+		{ }
+
+
+		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
+		{
+			get { return null; }
+		}
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries { get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); } }
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
 }

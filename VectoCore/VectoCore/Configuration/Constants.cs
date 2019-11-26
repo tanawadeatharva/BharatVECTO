@@ -195,6 +195,17 @@ namespace TUGraz.VectoCore.Configuration
 			public static readonly Meter DriverCompartmentLength = 1.2.SI<Meter>();
 			public static readonly Kilogram PassengerWeightLow = 68.SI<Kilogram>();
 			public static readonly Kilogram PassengerWeightHigh = 71.SI<Kilogram>();
+
+			public static class Auxiliaries
+			{
+				public static class SteeringPump
+				{
+					public static readonly SI TubingLoss = 52000.SI(Unit.SI.Kilo.Gramm.Per.Square.Second.Square.Meter);
+					public static readonly Meter LengthBonus = 1.2.SI<Meter>();
+					public static readonly SI VolumeFlow = 16.SI(Unit.SI.Cubic.Dezi.Meter.Per.Minute);
+
+				}
+			}
 		}
 
 		public static class FileExtensions

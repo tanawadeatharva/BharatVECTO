@@ -145,6 +145,7 @@
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLResource.cs" />
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLType.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLAuxiliaryDeclarationDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationBusAuxiliariesDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationADASDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAirdragDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAngledriveDataProvider.cs" />
@@ -167,6 +168,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAxleDeclarationInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAxleGearInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAxlesDeclarationInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLBusAuxiliariesDeclarationData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLDeclarationJobInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLEngineDeclarationInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLGearboxDeclarationInputData.cs" />
@@ -180,6 +182,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV21InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV22InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV23InjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV26InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\AbstractComponentReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLADASReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLComponentReader.cs" />
@@ -343,6 +346,7 @@
     <Compile Include="Models\BusAuxiliaries\Interfaces\Signals.cs" />
     <Compile Include="Models\BusAuxiliaries\Util\FilePathUtils.cs" />
     <Compile Include="Models\Declaration\BusSegments.cs" />
+    <Compile Include="Models\Declaration\SteeringPumpBus.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />
     <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
@@ -801,6 +805,18 @@
     <EmbeddedResource Include="Resources\Declaration\Buses\DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP" />
     <EmbeddedResource Include="Resources\Declaration\HeavyBusSegmentationTable.csv" />
     <EmbeddedResource Include="Resources\Declaration\VACC\Bus.vacc" />
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.4_Tyre.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.5_Gearbox.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.6_Buses.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Axles.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-AxleFactor.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-TubingFactor.csv" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>

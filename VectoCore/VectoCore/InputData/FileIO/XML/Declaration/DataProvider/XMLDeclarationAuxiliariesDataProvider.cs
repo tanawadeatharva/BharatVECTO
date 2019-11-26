@@ -73,13 +73,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		static XMLDeclarationAuxiliariesDataProviderV20()
-		{
-			NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
-		}
-
 		public XMLDeclarationAuxiliariesDataProviderV20(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
 			vehicle, componentNode, sourceFile) { }
 	}
+
+	// ---------------------------------------------------------------------------------------
 }

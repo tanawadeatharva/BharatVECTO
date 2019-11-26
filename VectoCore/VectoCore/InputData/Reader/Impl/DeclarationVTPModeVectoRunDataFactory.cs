@@ -96,8 +96,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				Aux =
 					Dao.CreateAuxiliaryData(
 						JobInputData.Vehicle.Components.AuxiliaryInputData,
+						JobInputData.Vehicle.Components.BusAuxiliaries,
 						Segment.Missions.First().MissionType,
-						Segment.VehicleClass),
+						Segment.VehicleClass, JobInputData.Vehicle.Length),
 			};
 			powertrainConfig.VehicleData.VehicleClass = Segment.VehicleClass;
 			Report.InputDataHash = JobInputData.VectoJobHash;
@@ -164,7 +165,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			runData.Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString());
 			runData.DriverData = Driverdata;
 			runData.Aux = Dao.CreateAuxiliaryData(
-				JobInputData.Vehicle.Components.AuxiliaryInputData, mission.MissionType, Segment.VehicleClass);
+				JobInputData.Vehicle.Components.AuxiliaryInputData, JobInputData.Vehicle.Components.BusAuxiliaries, mission.MissionType, Segment.VehicleClass, JobInputData.Vehicle.Length);
 			runData.ExecutionMode = ExecutionMode.Declaration;
 			runData.SimulationType = SimulationType.DistanceCycle;
 			runData.Mission = mission;
@@ -240,21 +241,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected virtual List<VectoRunData.AuxData> CreateVTPAuxData(IVehicleDeclarationInputData vehicle)
 		{
 			var auxRD = Dao.CreateAuxiliaryData(
-								vehicle.Components.AuxiliaryInputData, MissionType.RegionalDelivery, Segment.VehicleClass)
+								vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.RegionalDelivery, Segment.VehicleClass, vehicle.Length)
 							.ToList();
 			foreach (var entry in auxRD) {
 				entry.MissionType = MissionType.RegionalDelivery;
 			}
 
 			var auxLH = Dao.CreateAuxiliaryData(
-								vehicle.Components.AuxiliaryInputData, MissionType.LongHaul, Segment.VehicleClass)
+								vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.LongHaul, Segment.VehicleClass, vehicle.Length)
 							.ToList();
 			foreach (var entry in auxLH) {
 				entry.MissionType = MissionType.LongHaul;
 			}
 
 			var auxUD = Dao.CreateAuxiliaryData(
-								vehicle.Components.AuxiliaryInputData, MissionType.UrbanDelivery, Segment.VehicleClass)
+								vehicle.Components.AuxiliaryInputData, vehicle.Components.BusAuxiliaries, MissionType.UrbanDelivery, Segment.VehicleClass, vehicle.Length)
 							.ToList();
 			foreach (var entry in auxUD) {
 				entry.MissionType = MissionType.UrbanDelivery;

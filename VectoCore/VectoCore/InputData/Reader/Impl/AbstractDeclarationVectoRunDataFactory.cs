@@ -98,19 +98,20 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		{
 			VectoRunData powertrainConfig;
 			List<List<FuelData.Entry>> fuels;
-			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
+			var vehicle = InputDataProvider.JobInputData.Vehicle;
+			if (vehicle.ExemptedVehicle) {
 				powertrainConfig = new VectoRunData() {
 					Exempted = true,
-					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null),
+					VehicleData = DataAdapter.CreateVehicleData(vehicle, null, null),
 					InputDataHash = InputDataProvider.XMLHash
 				};
 				fuels = new List<List<FuelData.Entry>>();
 			} else {
-				var vehicle = InputDataProvider.JobInputData.Vehicle;
+				
 				powertrainConfig = new VectoRunData() {
 					VehicleData =
 						DataAdapter.CreateVehicleData(
-							InputDataProvider.JobInputData.Vehicle, _segment.Missions.First(),
+							vehicle, _segment.Missions.First(),
 							_segment.Missions.First().Loadings.First().Value),
 					AirdragData = _airdragData,
 					EngineData = DataAdapter.CreateEngineData(vehicle, vehicle.Components.EngineInputData.EngineModes[0], _segment.Missions.First()),
@@ -119,9 +120,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 					Retarder = _retarderData,
 					Aux =
 						DataAdapter.CreateAuxiliaryData(
-							InputDataProvider.JobInputData.Vehicle.Components.AuxiliaryInputData,
+							vehicle.Components.AuxiliaryInputData,
+							vehicle.Components.BusAuxiliaries,
 							_segment.Missions.First().MissionType,
-							_segment.VehicleClass),
+							_segment.VehicleClass,vehicle.Length ?? _segment.Missions.First().VehicleLength),
 					PTO = _ptoTransmissionData,
 					InputDataHash = InputDataProvider.XMLHash
 				};

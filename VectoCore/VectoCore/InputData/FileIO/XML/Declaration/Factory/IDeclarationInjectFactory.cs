@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 
@@ -65,6 +66,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Factory
 		IXMLAuxiliaryDeclarationInputData CreateAuxiliaryData(string version, XmlNode auxNode, IXMLDeclarationVehicleData vehicle);
 
 		IXMLAdvancedDriverAssistantSystemDeclarationInputData CreateADASData(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
+
+		IXMLBusAuxiliariesDeclarationData CreateBusAuxiliaires(string version, IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile);
 
 
 		// ---------------------------------------------------------------------------------------------

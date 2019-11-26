@@ -1128,4 +1128,13 @@
   <data name="DriverModel_EngineStopStartParameters" xml:space="preserve">
     <value>EngineStopStartParameters</value>
   </data>
+  <data name="TPMLM" xml:space="preserve">
+    <value>TechnicalPermissibleMaximumLadenMass</value>
+  </data>
+  <data name="ManufacturerPrimaryVehicle" xml:space="preserve">
+    <value>ManufacturerPrimaryVehicle</value>
+  </data>
+  <data name="ManufacturerAddressPrimaryVehicle" xml:space="preserve">
+    <value>ManufacturerAddressPrimaryVehicle</value>
+  </data>
 </root>

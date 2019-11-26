@@ -1546,6 +1546,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ManufacturerAddressPrimaryVehicle.
+        /// </summary>
+        public static string ManufacturerAddressPrimaryVehicle {
+            get {
+                return ResourceManager.GetString("ManufacturerAddressPrimaryVehicle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ManufacturerPrimaryVehicle.
+        /// </summary>
+        public static string ManufacturerPrimaryVehicle {
+            get {
+                return ResourceManager.GetString("ManufacturerPrimaryVehicle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cycle.
         /// </summary>
         public static string Missions_Cycle {
@@ -2298,6 +2316,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string TorqueConverterDataMapping_InputTorqueRef_Attr {
             get {
                 return ResourceManager.GetString("TorqueConverterDataMapping_InputTorqueRef_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TechnicalPermissibleMaximumLadenMass.
+        /// </summary>
+        public static string TPMLM {
+            get {
+                return ResourceManager.GetString("TPMLM", resourceCulture);
             }
         }
         

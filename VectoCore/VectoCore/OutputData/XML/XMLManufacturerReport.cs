@@ -283,6 +283,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 			};
 			var retVal = new XElement(tns + XMLNames.Component_Auxiliaries);
 			foreach (var auxId in auxList) {
+				if (!auxData.ContainsKey(auxId.Key())) {
+					continue;
+				}
+
 				foreach (var entry in auxData[auxId.Key()].Technology) {
 					retVal.Add(new XElement(tns + GetTagName(auxId), entry));
 				}

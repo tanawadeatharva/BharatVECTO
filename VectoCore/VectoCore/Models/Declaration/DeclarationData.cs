@@ -76,6 +76,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly PneumaticSystem PneumaticSystem = new PneumaticSystem();
 		public static readonly SteeringPump SteeringPump = new SteeringPump();
+		public static readonly SteeringPumpBus SteeringPumpBus = new SteeringPumpBus();
 		public static readonly WHTCCorrection WHTCCorrection = new WHTCCorrection();
 		public static readonly AirDrag AirDrag = new AirDrag();
 		public static readonly StandardBodies StandardBodies = new StandardBodies();

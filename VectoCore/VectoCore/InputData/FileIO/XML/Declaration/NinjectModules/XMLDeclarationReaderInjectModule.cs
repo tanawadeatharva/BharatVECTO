@@ -20,6 +20,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 				new XMLDeclarationInputDataV21InjectModule(),
 				new XMLDeclarationInputDataV22InjectModule(),
 				new XMLDeclarationInputDataV23InjectModule(),
+				new XMLDeclarationInputDataV26InjectModule(),
 			});
 
 			#endregion
