@@ -602,7 +602,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				VelocityDropFactor = DeclarationData.GearboxTCU.VelocityDropFactor,
 				AccelerationFactor = DeclarationData.GearboxTCU.AccelerationFactor,
 				MinEngineSpeedPostUpshift = 0.RPMtoRad(),
-				ATLookAheadTime = DeclarationData.Gearbox.PowershiftShiftTime,
+				ATLookAheadTime = DeclarationData.GearboxTCU.ATLookAheadTime,
 
 				LoadStageThresoldsUp = DeclarationData.GearboxTCU.LoadStageThresholdsUp,
 				LoadStageThresoldsDown = DeclarationData.GearboxTCU.LoadStageThresoldsDown,

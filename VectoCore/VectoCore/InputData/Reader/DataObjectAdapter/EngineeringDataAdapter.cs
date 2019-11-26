@@ -428,9 +428,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 														DeclarationData.GearboxTCU.CurrentCardanPowerThresholdPropulsion,
 				TargetSpeedDeviationFactor = gsInputData.TargetSpeedDeviationFactor ?? DeclarationData.GearboxTCU.TargetSpeedDeviationFactor,
 				EngineSpeedHighDriveOffFactor = gsInputData.EngineSpeedHighDriveOffFactor ?? DeclarationData.GearboxTCU.EngineSpeedHighDriveOffFactor,
-				RatingFactorCurrentGear = gsInputData.RatingFactorCurrentGear ?? (gbxType.AutomaticTransmission()
-					? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
-					: DeclarationData.GearboxTCU.RatingFactorCurrentGear),
 				AccelerationReserveLookup = AccelerationReserveLookupReader.Create(gsInputData.AccelerationReserveLookup) ??
 											AccelerationReserveLookupReader.ReadFromStream(
 												RessourceHelper.ReadStream(
@@ -455,13 +452,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 										DeclarationData.DeclarationDataResourcePrefix + ".GearshiftParameters.ShareEngineSpeedHigh.csv")
 								),
 				//---------------
+				RatingFactorCurrentGear = gsInputData.RatingFactorCurrentGear ?? (gbxType.AutomaticTransmission()
+											? DeclarationData.GearboxTCU.RatingFactorCurrentGearAT
+											: DeclarationData.GearboxTCU.RatingFactorCurrentGear),
+
 				RatioEarlyUpshiftFC = (gsInputData.RatioEarlyUpshiftFC ?? DeclarationData.GearboxTCU.RatioEarlyUpshiftFC) / axleRatio,
 				RatioEarlyDownshiftFC = (gsInputData.RatioEarlyDownshiftFC ?? DeclarationData.GearboxTCU.RatioEarlyDownshiftFC) / axleRatio,
 				AllowedGearRangeFC = gsInputData.AllowedGearRangeFC ?? (gbxType.AutomaticTransmission() ? DeclarationData.GearboxTCU.AllowedGearRangeFCAT : DeclarationData.GearboxTCU.AllowedGearRangeFCAMT),
 				VelocityDropFactor = gsInputData.VeloictyDropFactor ?? DeclarationData.GearboxTCU.VelocityDropFactor,
 				AccelerationFactor = gsInputData.AccelerationFactor ?? DeclarationData.GearboxTCU.AccelerationFactor,
-				MinEngineSpeedPostUpshift = gsInputData.MinEngineSpeedPostUpshift ?? 0.RPMtoRad(),
-				ATLookAheadTime = gsInputData.ATLookAheadTime ?? DeclarationData.Gearbox.PowershiftShiftTime,
+				MinEngineSpeedPostUpshift = gsInputData.MinEngineSpeedPostUpshift ?? DeclarationData.GearboxTCU.MinEngineSpeedPostUpshift,
+				ATLookAheadTime = gsInputData.ATLookAheadTime ?? DeclarationData.GearboxTCU.ATLookAheadTime,
 
 				LoadStageThresoldsDown = gsInputData.LoadStageThresoldsDown?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresoldsDown,
 				LoadStageThresoldsUp = gsInputData.LoadStageThresoldsUp?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresholdsUp,

@@ -32,11 +32,14 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -201,23 +204,27 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public const double TargetSpeedDeviationFactor = 0.1;
 
-			public const double RatingFactorCurrentGear = 0.97;
-			public const double RatingFactorCurrentGearAT = 0.97;
+			public static double RatingFactorCurrentGear = 0.97;
+			public static double RatingFactorCurrentGearAT = 0.97;
 
 			public static readonly MeterPerSquareSecond DriverAccelerationThresholdLow = 0.1.SI<MeterPerSquareSecond>();
 			public static double VelocityDropFactor = 1.0;
 			public static double AccelerationFactor = 0.5;
 
-			public const double RatioEarlyUpshiftFC = 24;
-			public const double RatioEarlyDownshiftFC = 24;
+			public static double RatioEarlyUpshiftFC = 24;
+			public static double RatioEarlyDownshiftFC = 24;
 
-			public const int AllowedGearRangeFCAMT = 2;
-			public const int AllowedGearRangeFCAT = 1;
+			public static int AllowedGearRangeFCAMT = 2;
+			public static int AllowedGearRangeFCAT = 1;
 
-			public static readonly double[] LoadStageThresholdsUp = new[] { 19.7, 36.34, 53.01, 69.68, 86.35 };
-			public static readonly double[] LoadStageThresoldsDown = new[] { 13.7, 30.34, 47.01, 63.68, 80.35 };
+			public static PerSecond MinEngineSpeedPostUpshift = 0.RPMtoRad();
 
-			public static readonly double[][] ShiftSpeedsTCToLocked = new[] {
+			public static Second ATLookAheadTime = Gearbox.PowershiftShiftTime;
+
+			public static double[] LoadStageThresholdsUp = { 19.7, 36.34, 53.01, 69.68, 86.35 };
+			public static double[] LoadStageThresoldsDown = { 13.7, 30.34, 47.01, 63.68, 80.35 };
+
+			public static double[][] ShiftSpeedsTCToLocked = {
 				new[] { 650.0, 680, 725, 650, 680, 725 },
 				new[] { 650.0, 680, 725, 650, 680, 725 },
 				new[] { 650.0, 680, 725, 650, 680, 725 },
@@ -228,6 +235,60 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public const double DownhillSlope = -5;
 			public const double UphillSlope = 5;
+
+			public static string DefaultShiftStrategy = "";
+
+
+			// TODO: MQ 2019-11-26 remove, once the parameters are fixed! make fields above read-only or const
+			static GearboxTCU()
+			{
+				var expectedFile = @"Declaration\EffShiftParameters.vtcu";
+				if (!File.Exists(expectedFile)) {
+					return;
+				}
+
+				var tcuData = JSONInputDataFactory.ReadShiftParameters(expectedFile, true);
+				if (tcuData.RatingFactorCurrentGear.HasValue) {
+					RatingFactorCurrentGear = tcuData.RatingFactorCurrentGear.Value;
+					RatingFactorCurrentGearAT = tcuData.RatingFactorCurrentGear.Value;
+				}
+				if (tcuData.RatioEarlyDownshiftFC.HasValue) {
+					RatioEarlyDownshiftFC = tcuData.RatioEarlyDownshiftFC.Value;
+				}
+				if (tcuData.RatioEarlyUpshiftFC.HasValue) {
+					RatioEarlyUpshiftFC = tcuData.RatioEarlyUpshiftFC.Value;
+				}
+				if (tcuData.AllowedGearRangeFC.HasValue) {
+					AllowedGearRangeFCAMT = tcuData.AllowedGearRangeFC.Value;
+					AllowedGearRangeFCAT = tcuData.AllowedGearRangeFC.Value;
+				}
+				if (tcuData.VeloictyDropFactor.HasValue) {
+					VelocityDropFactor = tcuData.VeloictyDropFactor.Value;
+				}
+				if (tcuData.AccelerationFactor.HasValue) {
+					AccelerationFactor = tcuData.AccelerationFactor.Value;
+				}
+				if (tcuData.ATLookAheadTime != null) {
+					ATLookAheadTime = tcuData.ATLookAheadTime;
+				}
+				if (LoadStageThresoldsDown != null && LoadStageThresoldsDown.Length > 0) {
+					LoadStageThresoldsDown = tcuData.LoadStageThresoldsDown.ToArray();
+				}
+				if (LoadStageThresholdsUp != null && LoadStageThresholdsUp.Length > 0) {
+					LoadStageThresholdsUp = tcuData.LoadStageThresoldsUp.ToArray();
+				}
+				if (ShiftSpeedsTCToLocked != null && ShiftSpeedsTCToLocked.Length > 0) {
+					ShiftSpeedsTCToLocked = tcuData.ShiftSpeedsTCToLocked;
+				}
+				if (tcuData.MinEngineSpeedPostUpshift != null) {
+					MinEngineSpeedPostUpshift = tcuData.MinEngineSpeedPostUpshift;
+				}
+				var tmp = tcuData as JSONFile;
+				if (tmp != null && tmp.Body["ShiftStrategy"] != null) {
+					DefaultShiftStrategy = tmp.Body["ShiftStrategy"].Value<string>();
+				}
+			}
+
 		}
 
 		public static class Gearbox

@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected readonly string Version;
 
-		protected readonly JObject Body;
+		protected internal readonly JObject Body;
 
 		protected JSONFile(JObject data, string filename, bool tolerateMissing = false)
 		{
