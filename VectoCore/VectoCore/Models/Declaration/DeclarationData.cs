@@ -242,6 +242,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			// TODO: MQ 2019-11-26 remove, once the parameters are fixed! make fields above read-only or const
 			static GearboxTCU()
 			{
+#if RELEASE_CANDIDATE
 				var expectedFile = @"Declaration\EffShiftParameters.vtcu";
 				if (!File.Exists(expectedFile)) {
 					return;
@@ -287,8 +288,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				if (tmp != null && tmp.Body["ShiftStrategy"] != null) {
 					DefaultShiftStrategy = tmp.Body["ShiftStrategy"].Value<string>();
 				}
-			}
-
+#endif
+			}	
 		}
 
 		public static class Gearbox
