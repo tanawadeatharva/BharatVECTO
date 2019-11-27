@@ -130,14 +130,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.VocationalVehicle = data.VocationalVehicle;
 			retVal.ADAS = CreateADAS(data.ADAS);
-			// eco-roll is not allowed for MT transmissions!
-			if (retVal.ADAS.EcoRoll != EcoRollType.None && data.Components.GearboxInputData.Type == GearboxType.MT) {
-				retVal.ADAS.EcoRoll = EcoRollType.None;
-			}
-			if (retVal.ADAS.EcoRoll == EcoRollType.WithEngineStop && data.Components.GearboxInputData.Type.AutomaticTransmission()) {
-				retVal.ADAS.EcoRoll = EcoRollType.WithoutEngineStop;
-			}
-
+			
 			var axles = data.Components.AxleWheels.AxlesDeclaration;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException(

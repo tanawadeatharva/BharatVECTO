@@ -275,7 +275,9 @@ Public Class JSONFileWriter
         body("EngineStopStart") = vehicle.ADAS.EngineStopStart
         body("EcoRoll") = vehicle.ADAS.EcoRoll.ToString()
         body("PredictiveCruiseControl") = vehicle.ADAS.PredictiveCruiseControl.ToString()
-
+        if ( vehicle.ADAS.ATEcoRollReleaseLockupClutch.HasValue) then
+            body("ATEcoRollReleaseLockupClutch") = vehicle.ADAS.ATEcoRollReleaseLockupClutch
+        End If 
         If (Not IsNothing(airdrag.AirDragArea)) Then
             body("CdA") = airdrag.AirDragArea.Value()
         End If

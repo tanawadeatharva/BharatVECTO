@@ -46,6 +46,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		public string ID;
 		public bool AllowedForAT;
+		public bool AllowedForAMT;
+		public bool AllowedForMT;
 	}
 	public sealed class ADASCombinations : LookupData<bool, EcoRollType, PredictiveCruiseControlType, ADASCombination>
 	{
@@ -59,7 +61,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var entry = _combinations.First(
 					x => x.EngineStopStart == enginestopstart && x.EcoRoll == ecoRoll &&
 						x.PCCType == pcc);
-				return new ADASCombination { ID = entry.ADASCombination, AllowedForAT = entry.AllowedForAT };
+				return new ADASCombination {
+					ID = entry.ADASCombination,
+					AllowedForAT = entry.AllowedForAT,
+					AllowedForMT = entry.AllowedForMT,
+					AllowedForAMT = entry.AllowedForAMT
+				};
 			} catch (Exception) {
 				throw new VectoException(string.Format(ErrorMessage, enginestopstart, ecoRoll, pcc));
 			}
@@ -87,6 +94,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					PCCType = PredictiveCruiseControlTypeHelper.Parse(row.Field<string>("predictivecruisecontrol")),
 					ADASCombination = row.Field<string>("adascombination"),
 					AllowedForAT = row.ParseBoolean("allowedat"),
+					AllowedForAMT = row.ParseBoolean("allowedamt"),
+					AllowedForMT = row.ParseBoolean("allowedmt")
 				});
 			}
 		}
@@ -99,7 +108,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public EcoRollType EcoRoll;
 			public PredictiveCruiseControlType PCCType;
 			public string ADASCombination;
+			public bool AllowedForAMT;
 			public bool AllowedForAT;
+			public bool AllowedForMT;
 		}
 
 		public ADASCombination Lookup(IAdvancedDriverAssistantSystemDeclarationInputData adas, GearboxType gbxType)
@@ -108,6 +119,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 				adas.EngineStopStart, adas.EcoRoll, adas.PredictiveCruiseControl);
 			if (gbxType.AutomaticTransmission() && !entry.AllowedForAT) {
 				throw new VectoException("ADAS combination {0} not allowed for AT transmissions", entry.ID);
+			}
+
+			if (gbxType.ManualTransmission() && !entry.AllowedForMT) {
+				throw new VectoException("ADAS combination {0} not allowed for MT transmissions", entry.ID);
+			}
+
+			if (gbxType == GearboxType.AMT && !entry.AllowedForAMT) {
+				throw new VectoException("ADAS combination {0} not allowed for AMT transmissions", entry.ID);
 			}
 
 			return entry;
@@ -121,6 +140,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 				throw new VectoException("ADAS combination {0} not allowed for AT transmissions", entry.ID);
 			}
 
+			if (gbxType.ManualTransmission() && !entry.AllowedForMT) {
+				throw new VectoException("ADAS combination {0} not allowed for MT transmissions", entry.ID);
+			}
+
+			if (gbxType == GearboxType.AMT && !entry.AllowedForAMT) {
+				throw new VectoException("ADAS combination {0} not allowed for AMT transmissions", entry.ID);
+			}
 			return entry;
 		}
 	}
