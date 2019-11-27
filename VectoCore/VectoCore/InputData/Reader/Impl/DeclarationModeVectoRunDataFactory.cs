@@ -185,6 +185,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 
+			// lookup adas combination here to check if it is an allowed combination...
+			var adasCombination = DeclarationData.ADASCombinations.Lookup(vehicle.ADAS, InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Type);
+
 			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;
 
