@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public override bool? ATEcoRollReleaseLockupClutch
 		{
 			get {
-				var node = GetNode("ATEcoRollReleaseLockupClutch", required:false);
+				var node = GetNode(XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, required:false);
 				if (node == null) {
 					return null;
 				}

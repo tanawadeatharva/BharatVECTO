@@ -79,6 +79,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 		public const double LossMapExtrapolationFactor = 6;
 
+		public static readonly ADASCombinations ADASCombinations = new ADASCombinations();
+
 		public static readonly WeightingGroups WeightingGroup = new WeightingGroups();
 		public static readonly WeightingFactors WeightingFactors = new WeightingFactors();
 
