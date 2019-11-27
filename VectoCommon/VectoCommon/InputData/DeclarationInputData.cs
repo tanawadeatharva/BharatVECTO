@@ -204,6 +204,8 @@ namespace TUGraz.VectoCommon.InputData
 		EcoRollType EcoRoll { get; }
 
 		PredictiveCruiseControlType PredictiveCruiseControl { get; }
+
+		bool? ATEcoRollReleaseLockupClutch { get; }
 	}
 
 	public enum PredictiveCruiseControlType

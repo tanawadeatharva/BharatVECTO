@@ -99,6 +99,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[SIRange(0.5, 1)]
 		public Second PowershiftShiftTime { get; internal set; }
 
+		public bool ATEcoRollReleaseLockupClutch { get; internal set; }
+
+
 		// ReSharper disable once UnusedMember.Global -- used via Validation
 		public static ValidationResult ValidateGearboxData(GearboxData gearboxData, ValidationContext validationContext)
 		{

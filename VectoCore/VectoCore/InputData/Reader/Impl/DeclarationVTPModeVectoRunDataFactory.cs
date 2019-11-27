@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			GearboxData = Dao.CreateGearboxData(
 				vehicle.Components.GearboxInputData, EngineData,
 				AxlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData);
+				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
 			RetarderData = Dao.CreateRetarderData(vehicle.Components.RetarderInputData);
 
 			PTOTransmissionData =

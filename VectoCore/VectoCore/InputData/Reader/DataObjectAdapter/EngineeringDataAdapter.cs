@@ -260,13 +260,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal GearboxData CreateGearboxData(
 			IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData,
 			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory,
-			ITorqueConverterEngineeringInputData torqueConverter)
+			ITorqueConverterEngineeringInputData torqueConverter, bool? atEcoRollReleaseLockupClutch)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
 			}
 
 			var retVal = SetCommonGearboxData(gearbox);
+
+			if (retVal.Type.AutomaticTransmission() && !atEcoRollReleaseLockupClutch.HasValue) {
+				throw new VectoException("Parameter ATEcoRollReleaseLockupClutch required for AT gearbox");
+			}
+			retVal.ATEcoRollReleaseLockupClutch = retVal.Type.AutomaticTransmission() ? atEcoRollReleaseLockupClutch.Value : false;
 
 			//var gears = gearbox.Gears;
 			if (gearbox.Gears.Count < 2) {

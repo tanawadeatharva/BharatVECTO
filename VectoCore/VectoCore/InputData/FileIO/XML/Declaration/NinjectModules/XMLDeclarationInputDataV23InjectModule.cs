@@ -12,6 +12,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 		{
 			Bind<IXMLEngineDeclarationInputData>().To<XMLDeclarationEngineDataProviderV23>()
 												.Named(XMLDeclarationEngineDataProviderV23.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
+				.To<XMLDeclarationADASDataProviderV23>().Named(XMLDeclarationADASDataProviderV23.QUALIFIED_XSD_TYPE);
 		}
 
 		#endregion
