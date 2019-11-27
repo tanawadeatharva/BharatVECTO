@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 	// ---------------------------------------------------------------------------------------
 
-	public class XMLADASReaderV23 : XMLADASReaderV10
+	public class XMLADASReaderV23 : XMLADASReaderV21
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
 

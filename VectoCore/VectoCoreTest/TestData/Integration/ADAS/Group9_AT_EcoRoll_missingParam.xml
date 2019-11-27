@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.0"
-	xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
-	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" 
-	xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" 
-	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
-	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
-	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3"
-	xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_DEV_ADAS\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
-	<v2.0:Vehicle id="VEH-class9_AT_EcoRoll"  xsi:type="VehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1">
+<tns:VectoInputDeclaration schemaVersion="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v1.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationInput:v1.0 https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoInput.xsd">
+  <Vehicle id="VEH-class9_AT_EcoRoll">
     <Manufacturer>TUG Generic</Manufacturer>
     <ManufacturerAddress>N.A.</ManufacturerAddress>
     <Model>N.A.</Model>
@@ -23,23 +14,22 @@
     <IdlingSpeed>600</IdlingSpeed>
     <RetarderType>None</RetarderType>
     <AngledriveType>None</AngledriveType>
-    <v2.1:PTO xsi:type="PTOType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+    <PTO>
       <PTOShaftsGearWheels>none</PTOShaftsGearWheels>
       <PTOOtherElements>none</PTOOtherElements>
-    </v2.1:PTO>
+    </PTO>
 		<ZeroEmissionVehicle>false</ZeroEmissionVehicle>
 		<VocationalVehicle>false</VocationalVehicle>
 		<SleeperCab>false</SleeperCab>
-		<v2.1:ADAS xsi:type="v2.3:AdvancedDriverAssistantSystemsType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3">
+		<ADAS>
 			<EngineStopStart>false</EngineStopStart>
 			<EcoRollWithoutEngineStop>true</EcoRollWithoutEngineStop>
 			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
-			<ATEcoRollReleaseLockupClutch>false</ATEcoRollReleaseLockupClutch>
-		</v2.1:ADAS>
-    <Components xsi:type="v2.0:VehicleComponentsType">
-      <Engine xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="EngineComponentDeclarationType">
-        <Data id="ENG-Generic220kW7.7lEngine" xsi:type="EngineDataDeclarationType">
+		</ADAS>
+    <Components>
+      <Engine>
+        <Data id="ENG-Generic220kW7.7lEngine">
           <Manufacturer>TUG Generic</Manufacturer>
           <Model>Generic 220kW 7.7l Engine</Model>
           <CertificationNumber>ENG-Generic 220kW 7.7l Engine</CertificationNumber>
@@ -242,8 +232,8 @@
           </Reference>
         </Signature>
       </Engine>
-      <Gearbox xsi:type="GearboxComponentDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-        <Data id="GBX-APT-SGenericTqMax1200" xsi:type="v2.0:GearboxDataDeclarationType">
+      <Gearbox>
+        <Data id="GBX-APT-SGenericTqMax1200">
           <Manufacturer>TUG Generic</Manufacturer>
           <Model>APT-S Generic TqMax1200</Model>
           <CertificationNumber>GBX-APT-S Generic TqMax1200</CertificationNumber>
@@ -251,7 +241,7 @@
           <AppVersion>VectoCore</AppVersion>
           <TransmissionType>APT-S</TransmissionType>
           <MainCertificationMethod>Standard values</MainCertificationMethod>
-          <Gears xsi:type="GearsDeclarationType">
+          <Gears>
             <Gear number="1">
               <Ratio>3.490</Ratio>
               <TorqueLossMap>
@@ -1170,9 +1160,8 @@
             <DigestValue></DigestValue>
           </Reference>
         </Signature>
-        </Gearbox>
-        <TorqueConverter xsi:type="TorqueConverterComponentDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-          <Data id="TC-APT-SGenericTqMax1200" xsi:type="v2.0:TorqueConverterDataDeclarationType">
+        <TorqueConverter>
+          <Data id="TC-APT-SGenericTqMax1200">
             <Manufacturer>TUG Generic</Manufacturer>
             <Model>APT-S Generic TqMax1200</Model>
             <CertificationNumber>N/A</CertificationNumber>
@@ -1220,8 +1209,9 @@
             </Reference>
           </Signature>
         </TorqueConverter>
-      <Axlegear xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxlegearComponentDeclarationType">
-        <v2.0:Data id="AXLGEAR-6.500" xsi:type="v1.0:AxlegearDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
+      </Gearbox>
+      <Axlegear>
+        <Data id="AXLGEAR-6.500">
           <Manufacturer>TUG Generic</Manufacturer>
           <Model>N.A.</Model>
           <CertificationNumber>AXLGEAR-6.500</CertificationNumber>
@@ -2002,7 +1992,7 @@
             <Entry inputSpeed="3250.00" inputTorque="-7643.77" torqueLoss="259.16" />
             <Entry inputSpeed="3250.00" inputTorque="-7960.98" torqueLoss="268.68" />
           </TorqueLossMap>
-        </v2.0:Data>
+        </Data>
         <Signature>
           <Reference URI="#AXLGEAR-6.500" xmlns="http://www.w3.org/2000/09/xmldsig#">
             <Transforms>
@@ -2014,15 +2004,15 @@
           </Reference>
         </Signature>
       </Axlegear>
-      <AxleWheels xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AxleWheelsComponentDeclarationType">
-        <Data xsi:type="AxleWheelsDataDeclarationType">
+      <AxleWheels>
+        <Data>
           <Axles>
-            <Axle axleNumber="1" xsi:type="AxleDataDeclarationType">
+            <Axle axleNumber="1">
               <AxleType>VehicleNonDriven</AxleType>
               <TwinTyres>false</TwinTyres>
               <Steered>true</Steered>
               <Tyre>
-                <Data id="TYRE-315_70R22.5" xsi:type="v2.0:TyreDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
+                <Data id="TYRE-315_70R22.5">
                   <Manufacturer>TUG Generic</Manufacturer>
                   <Model>315/70 R22.5</Model>
                   <CertificationNumber>TYRE-315/70 R22.5</CertificationNumber>
@@ -2044,12 +2034,12 @@
                 </Signature>
               </Tyre>
             </Axle>
-            <Axle axleNumber="2" xsi:type="AxleDataDeclarationType">
+            <Axle axleNumber="2">
               <AxleType>VehicleDriven</AxleType>
               <TwinTyres>true</TwinTyres>
               <Steered>false</Steered>
               <Tyre>
-                <v2.0:Data id="TYRE-315_70R22.5" xsi:type="v1.0:TyreDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
+                <Data id="TYRE-315_70R22.5">
                   <Manufacturer>TUG Generic</Manufacturer>
                   <Model>315/70 R22.5</Model>
                   <CertificationNumber>TYRE-315/70 R22.5</CertificationNumber>
@@ -2058,7 +2048,7 @@
                   <Dimension>315/70 R22.5</Dimension>
                   <RRCDeclared>0.0055</RRCDeclared>
                   <FzISO>33350</FzISO>
-                </v2.0:Data>
+                </Data>
                 <Signature>
                   <Reference URI="#TYRE-315_70R22.5" xmlns="http://www.w3.org/2000/09/xmldsig#">
                     <Transforms>
@@ -2071,12 +2061,12 @@
                 </Signature>
               </Tyre>
             </Axle>
-            <Axle axleNumber="3" xsi:type="AxleDataDeclarationType">
+            <Axle axleNumber="3">
               <AxleType>VehicleNonDriven</AxleType>
               <TwinTyres>false</TwinTyres>
               <Steered>false</Steered>
               <Tyre>
-                <v2.0:Data id="TYRE-315_70R22.5" xsi:type="v1.0:TyreDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
+                <Data id="TYRE-315_70R22.5">
                   <Manufacturer>TUG Generic</Manufacturer>
                   <Model>315/70 R22.5</Model>
                   <CertificationNumber>TYRE-315/70 R22.5</CertificationNumber>
@@ -2085,7 +2075,7 @@
                   <Dimension>315/70 R22.5</Dimension>
                   <RRCDeclared>0.0055</RRCDeclared>
                   <FzISO>33350</FzISO>
-                </v2.0:Data>
+                </Data>
                 <Signature>
                   <Reference URI="#TYRE-315_70R22.5" xmlns="http://www.w3.org/2000/09/xmldsig#">
                     <Transforms>
@@ -2101,8 +2091,8 @@
           </Axles>
         </Data>
       </AxleWheels>
-      <Auxiliaries xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AuxiliariesComponentDeclarationType">
-        <Data xsi:type="AuxiliariesDataDeclarationType">
+      <Auxiliaries>
+        <Data>
           <Fan>
             <Technology>Belt driven or driven via transm. - Electronically controlled visco clutch</Technology>
           </Fan>
@@ -2120,8 +2110,8 @@
           </HVAC>
         </Data>
       </Auxiliaries>
-      <AirDrag xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:type="AirDragComponentDeclarationType">
-        <Data id="Airdrag-N.A." xsi:type="AirDragDataDeclarationType">
+      <AirDrag>
+        <Data id="Airdrag-N.A.">
           <Manufacturer>TUG Generic</Manufacturer>
           <Model>N.A.</Model>
           <CertificationNumber>N.A.</CertificationNumber>
@@ -2143,5 +2133,5 @@
         </Signature>
       </AirDrag>
     </Components>
-  </v2.0:Vehicle>
+  </Vehicle>
 </tns:VectoInputDeclaration>

@@ -1988,7 +1988,60 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			CollectionAssert.AreEqual(withSTT1, runs[9].VehicleData.AxleData.Select(a => a.Inertia.Value()));
 		}
 
-		
+
+		[TestCase(false, false, false, PredictiveCruiseControlType.None, "0"),
+		TestCase(true, false, false, PredictiveCruiseControlType.None, "1"),
+		TestCase(true, false, false, PredictiveCruiseControlType.Option_1_2_3, "7/2"),
+		TestCase(true, true, false, PredictiveCruiseControlType.Option_1_2, "10/1")]
+		public void TestADASCombinationLookup(bool engineStopStart, bool ecoRollWOEngineStop, bool ecoRollWEngineStop, PredictiveCruiseControlType pcc,
+	string expectedADASGroup)
+		{
+			var adas = DeclarationData.ADASCombinations.Lookup(engineStopStart, EcorollTypeHelper.Get(ecoRollWOEngineStop, ecoRollWEngineStop), pcc);
+			Assert.AreEqual(adas.ID, expectedADASGroup);
+		}
+
+		[TestCase(true, true, true, PredictiveCruiseControlType.Option_1_2),
+		TestCase(true, true, true, PredictiveCruiseControlType.None)]
+		public void TestInvalidADASCombinationLookup(
+			bool engineStopStart, bool ecoRollWOEngineStop, bool ecoRollWEngineStop, PredictiveCruiseControlType pcc)
+		{
+			AssertHelper.Exception<VectoException>(() => {
+				DeclarationData.ADASCombinations.Lookup(engineStopStart, EcorollTypeHelper.Get(ecoRollWOEngineStop, ecoRollWEngineStop), pcc);
+			});
+		}
+
+		[TestCase(false, false, true, PredictiveCruiseControlType.None ),
+		TestCase(true, false, true, PredictiveCruiseControlType.None),
+		TestCase(false, false, true, PredictiveCruiseControlType.Option_1_2),
+		TestCase(false, false, true, PredictiveCruiseControlType.Option_1_2_3),
+		TestCase(true, false, true, PredictiveCruiseControlType.Option_1_2),
+		TestCase(true, false, true, PredictiveCruiseControlType.Option_1_2_3),
+			]
+		public void TestInvalidATADASCombinationLookup(bool engineStopStart, bool ecoRollWOEngineStop, bool ecoRollWEngineStop, PredictiveCruiseControlType pcc)
+		{
+			var adas = new ADASMock() {
+				EngineStopStart =  engineStopStart,
+				EcoRoll = EcorollTypeHelper.Get(ecoRollWOEngineStop, ecoRollWEngineStop),
+				PredictiveCruiseControl = pcc
+			};
+			AssertHelper.Exception<VectoException>(() => {
+				DeclarationData.ADASCombinations.Lookup(adas, GearboxType.ATSerial);
+			});
+		}
+
+		class ADASMock : IAdvancedDriverAssistantSystemDeclarationInputData
+		{
+			#region Implementation of IAdvancedDriverAssistantSystemDeclarationInputData
+
+			public bool EngineStopStart { get; set; }
+			public EcoRollType EcoRoll { get; set; }
+			public PredictiveCruiseControlType PredictiveCruiseControl { get; set; }
+			public bool? ATEcoRollReleaseLockupClutch { get; set; }
+
+			#endregion
+		}
+
+
 		[
 			TestCase("Diesel CI", null, 1.0),
 			TestCase("Ethanol CI", null, 1.011811),

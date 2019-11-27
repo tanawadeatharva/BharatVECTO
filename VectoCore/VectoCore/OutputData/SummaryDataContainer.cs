@@ -352,7 +352,7 @@ namespace TUGraz.VectoCore.OutputData
 						typeof(string)),
 					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem), typeof(string)),
 					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem), typeof(string)),
-					//Tuple.Create(ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
+					Tuple.Create(ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
 					Tuple.Create(PTO_TECHNOLOGY, typeof(string)),
 
 					//Tuple.Create(PTO_OTHER_ELEMENTS, typeof(string)),

@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual double Progress
 		{
-			get { return CyclePort.Progress; }
+			get { return CyclePort.Progress * (PostProcessingDone ? 1.0 : 0.99); }
 		}
 
 		protected VectoRun(IVehicleContainer container)
@@ -92,6 +92,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			RunIdentifier = Interlocked.Increment(ref _runIdCounter);
 			Container.RunStatus = Status.Pending;
 			CyclePort = container.GetCycleOutPort();
+			PostProcessingDone = false;
 		}
 
 		public IVehicleContainer GetContainer()
@@ -140,6 +141,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					// calculate vehicleline correction here in local thread context because writing sum-data and report afterwards is synchronized
 					var cf = GetContainer().ModalData.VehicleLineCorrectionFactor(fuel.FuelData);
 				}
+
+				PostProcessingDone = true;
 			} catch (VectoSimulationException vse) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(vse);
@@ -189,6 +192,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			Log.Info("VectoJob finished.");
 		}
+
+		public bool PostProcessingDone { get; protected set; }
 
 		public void Cancel()
 		{
