@@ -136,6 +136,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						Container.AbsTime = AbsTime;
 					}
 				} while (response is ResponseSuccess);
+				foreach (var fuel in GetContainer().RunData.EngineData.Fuels) {
+					// calculate vehicleline correction here in local thread context because writing sum-data and report afterwards is synchronized
+					var cf = GetContainer().ModalData.VehicleLineCorrectionFactor(fuel.FuelData);
+				}
 			} catch (VectoSimulationException vse) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(vse);
