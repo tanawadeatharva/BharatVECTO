@@ -384,9 +384,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	((targetAltitude - vehicleAltitude) / (actionEntry.Distance - Driver.DataBus.Distance))
 			//	.Value().SI<Radian>());
 			var rollResistanceForce = Driver.DataBus.RollingResistance(dataBus.RoadGradient);
-			var engineDragLoss = ADAS.EcoRoll == EcoRollType.None
-				? Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed)
-				: 0.SI<Watt>();
+			var engineDragLoss = 0.SI<Watt>();
+			if (dataBus.GearboxType.AutomaticTransmission()) {
+				if (ADAS.EcoRoll == EcoRollType.None && ATEcoRollReleaseLockupClutch) {
+					engineDragLoss = Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed);
+				}
+			} else {
+				if (ADAS.EcoRoll == EcoRollType.None) {
+					engineDragLoss = Driver.DataBus.EngineDragPower(Driver.DataBus.EngineSpeed);
+				}
+			}
+
 			var gearboxLoss = Driver.DataBus.GearboxLoss();
 			var axleLoss = Driver.DataBus.AxlegearLoss();
 
@@ -413,7 +421,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var forces = dBus.SlopeResistance(dBus.RoadGradient) + dBus.RollingResistance(dBus.RoadGradient) +
 						dBus.AirDragResistance(dBus.VehicleSpeed, dBus.VehicleSpeed);
 
-			if (dBus.GearboxType.AutomaticTransmission() && !ATEcoRollReleaseLockupClutch && dBus.VehicleSpeed.IsGreater(0)) {
+			if (dBus.GearboxType.AutomaticTransmission() && ATEcoRollReleaseLockupClutch && dBus.VehicleSpeed.IsGreater(0)) {
 				// for AT transmissions consider engine drag losses during eco-roll events
 				forces -= dBus.EngineDragPower(dBus.EngineSpeed) / dBus.VehicleSpeed;
 				forces += (dBus.GearboxLoss() + dBus.AxlegearLoss()) / dBus.VehicleSpeed;

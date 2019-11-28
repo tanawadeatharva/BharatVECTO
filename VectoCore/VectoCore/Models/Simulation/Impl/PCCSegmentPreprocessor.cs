@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -35,9 +36,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			var engineDrag = runData.EngineData.FullLoadCurves[0].FullLoadEntries
 									.Average(x => (x.EngineSpeed * x.TorqueDrag).Value()).SI<Watt>();
 
-			var slopeEngineDrag = runData.VehicleData.ADAS.EcoRoll != EcoRollType.None
-				? 0
-				: (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleWeight).Value();
+			var slopeEngineDrag = 0.0;
+			if (runData.GearboxData.Type.AutomaticTransmission()) {
+				if (runData.VehicleData.ADAS.EcoRoll != EcoRollType.None && runData.GearboxData.ATEcoRollReleaseLockupClutch) {
+					slopeEngineDrag = (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleWeight).Value();
+				}
+			} else {
+				if (runData.VehicleData.ADAS.EcoRoll != EcoRollType.None) {
+					slopeEngineDrag = (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleWeight).Value();
+				}
+			}
+			
+			//runData.VehicleData.ADAS.EcoRoll != EcoRollType.None
+			//	? 0
+			//	: (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleWeight).Value();
 
 			PCCSegment pccSegment = null;
 			var targetspeedChanged = 0.SI<Meter>();
