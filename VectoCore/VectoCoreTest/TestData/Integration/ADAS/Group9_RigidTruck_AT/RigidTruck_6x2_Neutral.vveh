@@ -19,7 +19,8 @@
     "CdCorrFile": "",
     "EngineStopStart":  false,
     "EcoRoll": "WithoutEngineStop",
-    "PredictiveCruiseControl":  "none",  
+    "PredictiveCruiseControl": "none",  
+    "ATEcoRollReleaseLockupClutch": false, 
     "Retarder": {
       "Type": "None",
       "Ratio": 1.0,

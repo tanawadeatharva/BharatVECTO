@@ -81,6 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected EcoRoll EcoRollState;
 		protected PCCSegments PCCSegments;
 		protected internal PCCStates PCCState = PCCStates.OutsideSegment;
+		protected bool ATEcoRollReleaseLockupClutch;
 
 
 		public DefaultDriverStrategy(IVehicleContainer container = null)
@@ -95,6 +96,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EngineStopStart = false,
 				PredictiveCruiseControl = PredictiveCruiseControlType.None,
 			};
+			ATEcoRollReleaseLockupClutch = data.GearboxData.ATEcoRollReleaseLockupClutch;
 
 			EcoRollState = new EcoRoll() {
 				State = Impl.EcoRollStates.EcoRollOff,
@@ -256,6 +258,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dataBus = Driver.DataBus;
 			var vehicleSpeed = dataBus.VehicleSpeed;
 
+			if (dataBus.Distance > 38000) {
+				Console.WriteLine("here!");
+			}
+
 			UpdatePCCState(targetVelocity);
 
 			switch (PCCState) {
@@ -407,7 +413,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var forces = dBus.SlopeResistance(dBus.RoadGradient) + dBus.RollingResistance(dBus.RoadGradient) +
 						dBus.AirDragResistance(dBus.VehicleSpeed, dBus.VehicleSpeed);
 
-			if (dBus.GearboxType.AutomaticTransmission() && dBus.VehicleSpeed.IsGreater(0)) {
+			if (dBus.GearboxType.AutomaticTransmission() && !ATEcoRollReleaseLockupClutch && dBus.VehicleSpeed.IsGreater(0)) {
 				// for AT transmissions consider engine drag losses during eco-roll events
 				forces -= dBus.EngineDragPower(dBus.EngineSpeed) / dBus.VehicleSpeed;
 				forces += (dBus.GearboxLoss() + dBus.AxlegearLoss()) / dBus.VehicleSpeed;
@@ -416,8 +422,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Driver.DriverData.EcoRoll.AccelerationLowerLimit, Driver.DriverData.EcoRoll.AccelerationUpperLimit);
 			var accelerationPedalIdle = EcoRollState.AcceleratorPedalIdle;
 			var brakeActive = !EcoRollState.PreviousBrakePower.IsEqual(0);
+			var vehcleSpeedBelowMax = dBus.VehicleSpeed <=
+									dBus.CycleData.LeftSample.VehicleTargetSpeed + GetOverspeed() - 2.KMPHtoMeterPerSecond();
 
-			EcoRollState.AllConditionsMet = vehicleSpeedAboveLowerThreshold && slopeNegative && accelerationWithinLimits &&
+			EcoRollState.AllConditionsMet = vehicleSpeedAboveLowerThreshold && vehcleSpeedBelowMax && slopeNegative && accelerationWithinLimits &&
 											accelerationPedalIdle && !brakeActive;
 
 			EcoRollState.Gear = dBus.Gear;

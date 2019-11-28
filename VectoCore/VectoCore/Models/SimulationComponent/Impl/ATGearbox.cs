@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool ClutchClosed(Second absTime)
 		{
 			return absTime.IsGreater(DataBus.AbsTime) ||
-					!(CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted));
+					!(CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted || (DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)));
 		}
 
 		public override bool DisengageGearbox { get; set; }
@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var loop = false;
 			SetPowershiftLossEnergy(absTime, dt, outTorque, outAngularVelocity);
 			do {
-				if (CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted)) {
+				if (CurrentState.Disengaged || (DataBus.DriverBehavior == DrivingBehavior.Halted) || (DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)) {
 					// only when vehicle is halted or close before halting
 					retVal = RequestDisengaged(absTime, dt, outTorque, outAngularVelocity, dryRun);
 				} else {
@@ -326,7 +326,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.InAngularVelocity);
 			}
 
-			if (!CurrentState.TorqueConverterLocked || DisengageGearbox) {
+			if (!CurrentState.TorqueConverterLocked || (DisengageGearbox && ModelData.ATEcoRollReleaseLockupClutch)) {
 				var response = TorqueConverter.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 				if (response is ResponseGearShift) {
 					//RequestAfterGearshift = false;
@@ -406,8 +406,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var avgInAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			var avgOutAngularSpeed = (PreviousState.OutAngularVelocity + CurrentState.OutAngularVelocity) / 2.0;
 
-			container[ModalResultField.Gear] =  CurrentState.Disengaged || DataBus.VehicleStopped ? 0 : Gear;
-			container[ModalResultField.TC_Locked] = !DisengageGearbox && CurrentState.TorqueConverterLocked;
+			container[ModalResultField.Gear] = CurrentState.Disengaged || DataBus.VehicleStopped ||
+												(DisengageGearbox && !ModelData.ATEcoRollReleaseLockupClutch)
+				? 0
+				: Gear;
+			container[ModalResultField.TC_Locked] = !(DisengageGearbox && ModelData.ATEcoRollReleaseLockupClutch) && CurrentState.TorqueConverterLocked;
 			container[ModalResultField.P_gbx_loss] = CurrentState.InTorque * avgInAngularSpeed -
 													CurrentState.OutTorque * avgOutAngularSpeed;
 			container[ModalResultField.P_gbx_inertia] = CurrentState.InertiaTorqueLossOut * avgOutAngularSpeed;

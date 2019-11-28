@@ -761,7 +761,10 @@
     <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\Axle_i6-5.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng.vecto">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_TC.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\Class_9_RigidTruck_AT_Eng_Neutral.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\DriveDhSl1.2.vdri">
@@ -821,7 +824,10 @@
     <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\Gear_6_i=0-65.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\RigidTruck_6x2.vveh">
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\RigidTruck_6x2_Neutral.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\RigidTruck_6x2_TC.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\ADAS\Group9_RigidTruck_AT\TorqueConverter_Serial_TqMax1200.vtcc">

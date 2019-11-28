@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "EngineOnlyMode": false,
-    "VehicleFile": "RigidTruck_6x2.vveh",
+    "VehicleFile": "RigidTruck_6x2_TC.vveh",
     "EngineFile": "Engine_220kW.veng",
     "GearboxFile": "APT-S Generic TqMax1200.vgbx",
     "AuxiliaryAssembly": "Classic",
