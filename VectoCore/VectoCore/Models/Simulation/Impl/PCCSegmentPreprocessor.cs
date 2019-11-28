@@ -76,11 +76,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 				var slope = VectoMath.InclinationToAngle(
 					(tuple.Item2.Altitude - tuple.Item1.Altitude) / (tuple.Item2.Distance - tuple.Item1.Distance));
 
-				if (pccSegment == null && slope < minSlope &&
-					(tuple.Item1.Distance - targetspeedChanged).IsGreater(PCCDriverData.PreviewDistanceUseCase1)) {
+				if (pccSegment == null && slope < minSlope) {
 					pccSegment = new PCCSegment() {
 						DistanceMinSpeed = tuple.Item1.Distance,
-						StartDistance = tuple.Item1.Distance - PCCDriverData.PreviewDistanceUseCase1,
+						StartDistance = tuple.Item1.Distance - VectoMath.Min(tuple.Item1.Distance - targetspeedChanged, PCCDriverData.PreviewDistanceUseCase1), // PCCDriverData.PreviewDistanceUseCase1,
 						TargetSpeed = tuple.Item1.VehicleTargetSpeed,
 						Altitude = tuple.Item1.Altitude,
 						EnergyMinSpeed = (runData.VehicleData.TotalVehicleWeight * Physics.GravityAccelleration * tuple.Item1.Altitude)
