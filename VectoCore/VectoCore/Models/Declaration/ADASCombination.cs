@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				throw new VectoException("ADAS combination {0} not allowed for AT transmissions", entry.ID);
 			}
 
-			if (gbxType.ManualTransmission() && !entry.AllowedForMT) {
+			if (gbxType == GearboxType.MT && !entry.AllowedForMT) {
 				throw new VectoException("ADAS combination {0} not allowed for MT transmissions", entry.ID);
 			}
 
@@ -140,7 +140,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				throw new VectoException("ADAS combination {0} not allowed for AT transmissions", entry.ID);
 			}
 
-			if (gbxType.ManualTransmission() && !entry.AllowedForMT) {
+			if (gbxType == GearboxType.MT && !entry.AllowedForMT) {
 				throw new VectoException("ADAS combination {0} not allowed for MT transmissions", entry.ID);
 			}
 
