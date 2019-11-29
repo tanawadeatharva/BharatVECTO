@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				vehicle, vehicle.Components.EngineInputData.EngineModes[0], _segment.Missions.First());
 			_gearboxData = _dao.CreateGearboxData(vehicle.Components.GearboxInputData, tmpEngine,
 				_axlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData);
+				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
 			_retarderData = _dao.CreateRetarderData(vehicle.Components.RetarderInputData);
 
 			_ptoTransmissionData = _dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
@@ -184,6 +184,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		{
 			
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
+
+			// lookup adas combination here to check if it is an allowed combination...
+			var adasCombination = DeclarationData.ADASCombinations.Lookup(vehicle.ADAS, InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.Type);
 
 			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;

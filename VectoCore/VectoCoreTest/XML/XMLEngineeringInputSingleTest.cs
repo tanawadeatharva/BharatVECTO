@@ -898,6 +898,33 @@ namespace TUGraz.VectoCore.Tests.XML
 
 
 		[TestCase]
+		public void TestXMLInputEngineeringVersion1_0_DriverModelParameters()
+		{
+			var inputDataProvider = XMLInputReader.CreateEngineering(EngineeringSampleFile_10_Full);
+
+			Assert.NotNull(inputDataProvider);
+
+			var ecoRollData = inputDataProvider.DriverInputData.EcoRollData;
+			Assert.AreEqual(2.34, ecoRollData.ActivationDelay.Value());
+			Assert.AreEqual(50.56, ecoRollData.MinSpeed.AsKmph);
+			Assert.AreEqual(5.75, ecoRollData.UnderspeedThreshold.AsKmph);
+
+			var pccData = inputDataProvider.DriverInputData.PCCData;
+			Assert.AreEqual(80.76, pccData.PCCEnabledSpeed.AsKmph);
+			Assert.AreEqual(50.43, pccData.MinSpeed.AsKmph);
+			Assert.AreEqual(8.32, pccData.Underspeed.AsKmph);
+			Assert.AreEqual(5.74, pccData.OverspeedUseCase3.AsKmph);
+			Assert.AreEqual(1500.73, pccData.PreviewDistanceUseCase1.Value());
+			Assert.AreEqual(1000.24, pccData.PreviewDistanceUseCase2.Value());
+
+			var essData = inputDataProvider.DriverInputData.EngineStopStartData;
+			Assert.AreEqual(2.01, essData.ActivationDelay.Value());
+			Assert.AreEqual(120.23, essData.MaxEngineOffTimespan.Value());
+			Assert.AreEqual(0.834, essData.UtilityFactor);
+		}
+
+
+		[TestCase]
 		public void TestXMLInputEngineeringVersion1_0TestExtensions()
 		{
 			// load overrides of test xml types

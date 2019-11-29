@@ -79,6 +79,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
 		public const double LossMapExtrapolationFactor = 6;
 
+		public static readonly ADASCombinations ADASCombinations = new ADASCombinations();
+
 		public static readonly WeightingGroups WeightingGroup = new WeightingGroups();
 		public static readonly WeightingFactors WeightingFactors = new WeightingFactors();
 
@@ -150,6 +152,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public static readonly MeterPerSquareSecond AccelerationUpperLimit = 0.1.SI<MeterPerSquareSecond>();
 			}
 
+
+			public static class PCC
+			{
+				public static readonly MeterPerSecond PCCEnableSpeed = 80.KMPHtoMeterPerSecond();
+				public static readonly MeterPerSecond MinSpeed = 50.KMPHtoMeterPerSecond();
+				public static readonly Meter PreviewDistanceUseCase1 = 1500.SI<Meter>();
+				public static readonly Meter PreviewDistanceUseCase2 = 1000.SI<Meter>();
+				public static readonly MeterPerSecond Underspeed = 8.KMPHtoMeterPerSecond();
+				public static readonly MeterPerSecond OverspeedUseCase3 = 5.KMPHtoMeterPerSecond();
+			}
 		}
 
 		public static class Trailer

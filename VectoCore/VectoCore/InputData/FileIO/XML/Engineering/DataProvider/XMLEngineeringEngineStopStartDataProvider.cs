@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider {
 	{
 		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
 
-		public const string XSD_TYPE = "EngineStopStartEngineeringType";
+		public const string XSD_TYPE = "EngineStartStopParametersEngineeringType";
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider {
 
 		public virtual Second MaxEngineOffTimespan
 		{
-			get { return GetDouble("MaxEngineStopStartTimespan", DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.Value()).SI<Second>(); }
+			get { return GetDouble("MaxEngineOffTime", DeclarationData.Driver.EngineStopStart.MaxEngineOffTimespan.Value()).SI<Second>(); }
 		}
 
 		public virtual double UtilityFactor

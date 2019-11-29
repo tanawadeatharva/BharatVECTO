@@ -402,6 +402,8 @@ Public Class VehicleForm
 	    cbPcc.SelectedValue = vehicle.ADAS.PredictiveCruiseControl
 	    cbEcoRoll.SelectedValue = vehicle.ADAS.EcoRoll
 	    cbEngineStopStart.Checked = vehicle.ADAS.EngineStopStart
+        cbAtEcoRollReleaseLockupClutch.Checked = If(vehicle.ADAS.ATEcoRollReleaseLockupClutch , false)
+
 		if (vehicle.SavedInDeclarationMode) then
 			Dim declVehicle as IVehicleDeclarationInputData = vehicle
 			
@@ -539,6 +541,7 @@ Public Class VehicleForm
 		veh.EcoRollType = CType(cbEcoRoll.SelectedValue, EcoRollType)
 		veh.PCC = CType(cbPcc.SelectedValue, PredictiveCruiseControlType)
 		veh.EngineStop = cbEngineStopStart.Checked
+        veh.EcoRollReleaseLockupClutch = cbAtEcoRollReleaseLockupClutch.Checked
 
 		veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, nothing), TankSystem?)
 
@@ -961,5 +964,9 @@ Public Class VehicleForm
 	Private Sub tbVehIdlingSpeed_TextChanged(sender As Object, e As EventArgs) Handles tbVehIdlingSpeed.TextChanged
 
 	End Sub
+
+    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles cbAtEcoRollReleaseLockupClutch.CheckedChanged
+
+    End Sub
 End Class
 

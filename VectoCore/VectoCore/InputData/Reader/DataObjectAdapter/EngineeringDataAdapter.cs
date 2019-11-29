@@ -89,9 +89,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					PredictiveCruiseControl = PredictiveCruiseControlType.None
 				}: 
 				new VehicleData.ADASData {
-				EngineStopStart = adas.EngineStopStart,
-				EcoRoll = adas.EcoRoll,
-				PredictiveCruiseControl = adas.PredictiveCruiseControl
+					EngineStopStart = adas.EngineStopStart,
+					EcoRoll = adas.EcoRoll,
+					PredictiveCruiseControl = adas.PredictiveCruiseControl
 			};
 		}
 
@@ -260,13 +260,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal GearboxData CreateGearboxData(
 			IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData,
 			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory,
-			ITorqueConverterEngineeringInputData torqueConverter)
+			ITorqueConverterEngineeringInputData torqueConverter, bool? atEcoRollReleaseLockupClutch)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
 			}
 
 			var retVal = SetCommonGearboxData(gearbox);
+
+			if (retVal.Type.AutomaticTransmission() && !atEcoRollReleaseLockupClutch.HasValue) {
+				throw new VectoException("Parameter ATEcoRollReleaseLockupClutch required for AT gearbox");
+			}
+			retVal.ATEcoRollReleaseLockupClutch = retVal.Type.AutomaticTransmission() ? atEcoRollReleaseLockupClutch.Value : false;
 
 			//var gears = gearbox.Gears;
 			if (gearbox.Gears.Count < 2) {
@@ -468,7 +473,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					MinSpeed = driver.EcoRollData?.MinSpeed ?? DeclarationData.Driver.EcoRoll.MinSpeed,
 					ActivationPhaseDuration = driver.EcoRollData?.ActivationDelay ?? DeclarationData.Driver.EcoRoll.ActivationDelay,
 					AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
-					AccelerationUpperLimit = 0.15.SI<MeterPerSquareSecond>(), // DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
+					AccelerationUpperLimit = driver.EcoRollData?.AccelerationUpperLimit ?? DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
+				},
+				PCC = new DriverData.PCCData() {
+					PCCEnableSpeed = driver.PCCData?.PCCEnabledSpeed ?? DeclarationData.Driver.PCC.PCCEnableSpeed,
+					MinSpeed = driver.PCCData?.MinSpeed ?? DeclarationData.Driver.PCC.MinSpeed,
+					PreviewDistanceUseCase1 = driver.PCCData?.PreviewDistanceUseCase1 ?? DeclarationData.Driver.PCC.PreviewDistanceUseCase1,
+					PreviewDistanceUseCase2 = driver.PCCData?.PreviewDistanceUseCase2 ?? DeclarationData.Driver.PCC.PreviewDistanceUseCase2,
+					UnderSpeed = driver.PCCData?.Underspeed ?? DeclarationData.Driver.PCC.Underspeed,
+					OverspeedUseCase3 = driver.PCCData?.OverspeedUseCase3 ?? DeclarationData.Driver.PCC.OverspeedUseCase3
 				}
 			};
 			return retVal;

@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// restore data table before assertions
 			modContainer.Data = modData;
 			var fuel = modContainer.FuelData.First();
-			var distance = modContainer.Distance();
+			var distance = modContainer.Distance;
 			var fcFinal = modContainer.FuelConsumptionPerMeter(ModalResultField.FCFinal, fuel);
 			var fcVolumePerMeter = fuel.FuelDensity == null ? null :
 				(fcFinal / fuel.FuelDensity)

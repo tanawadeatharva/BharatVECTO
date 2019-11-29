@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.OutputData
 		public const string DECLARED_FZISO_AXLE3 = "Declared FzISO axle 3 [N]";
 		public const string DECLARED_RRC_AXLE4 = "Declared RRC axle 4 [-]";
 		public const string DECLARED_FZISO_AXLE4 = "Declared FzISO axle 4 [N]";
-		//public const string ADAS_TECHNOLOGY_COMBINATION = "ADAS technology combination [-]";
+		public const string ADAS_TECHNOLOGY_COMBINATION = "ADAS technology combination [-]";
 
 		public const string PTO_TECHNOLOGY = "PTOShaftsGearWheels";
 
@@ -352,7 +352,7 @@ namespace TUGraz.VectoCore.OutputData
 						typeof(string)),
 					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem), typeof(string)),
 					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem), typeof(string)),
-					//Tuple.Create(ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
+					Tuple.Create(ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
 					Tuple.Create(PTO_TECHNOLOGY, typeof(string)),
 
 					//Tuple.Create(PTO_OTHER_ELEMENTS, typeof(string)),
@@ -476,10 +476,10 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[VEHICLE_FUEL_TYPE] = string.Join(", ", modData.FuelData.Select(x => x.GetLabel()));
 
-			var totalTime = modData.Duration();
+			var totalTime = modData.Duration;
 			row[TIME] = (ConvertedSI)totalTime;
 
-			var distance = modData.Distance();
+			var distance = modData.Distance;
 			if (distance != null) {
 				row[DISTANCE] = distance.ConvertToKiloMeter();
 			}
@@ -529,8 +529,8 @@ namespace TUGraz.VectoCore.OutputData
 			var workWHREl = modData.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
 			var workWhrMech = - workWHREl / DeclarationData.AlternaterEfficiency;
 
-			var distance = modData.Distance();
-			var duration = modData.Duration();
+			var distance = modData.Distance;
+			var duration = modData.Duration;
 
 			var kilogramCO2PerMeter = 0.SI<KilogramPerMeter>();
 
@@ -567,17 +567,11 @@ namespace TUGraz.VectoCore.OutputData
 
 				var fcModSum = modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel);
 
-				double k, d, r;
-				VectoMath.LeastSquaresFitting(
-					modData.GetValues(
-						x => x.Field<bool>(ModalResultField.IgnitionOn.GetName())
-							? new Point(
-								x.Field<SI>(ModalResultField.P_eng_fcmap.GetName()).Value(), x.Field<SI>(modData.GetColumnName(fuel, ModalResultField.FCFinal)).Value())
-							: null).Where(x => x != null && x.Y > 0),
-					out k, out d, out r);
-
-				var correction = k.SI<KilogramPerWattSecond>();
-
+				var correction = 0.SI<KilogramPerWattSecond>();
+				if (!workWhrMech.IsEqual(0) || !workESS.IsEqual(0)) { 
+					correction = modData.VehicleLineCorrectionFactor(fuel);
+				}
+				
 				row[FcCol(K_VEHLINE, suffix)] = correction.ConvertToGramPerKiloWattHour();
 
 				var fcWHRCorr = fcModSum + correction * workWhrMech;
@@ -779,7 +773,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		private void WriteFullPowertrain(VectoRunData runData, DataRow row)
 		{
-			WriteVehicleData(runData.VehicleData, row);
+			WriteVehicleData(runData.VehicleData, runData.GearboxData.Type, row);
 
 			row[PTO_TECHNOLOGY] = runData.PTO?.TransmissionType ?? "";
 
@@ -801,7 +795,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		}
 
-		private static void WriteVehicleData(VehicleData data, DataRow row)
+		private static void WriteVehicleData(VehicleData data, GearboxType gbxType, DataRow row)
 		{
 			row[VEHICLE_MANUFACTURER] = data.Manufacturer;
 			row[VIN_NUMBER] = data.VIN;
@@ -825,7 +819,7 @@ namespace TUGraz.VectoCore.OutputData
 
 			row[R_DYN] = (ConvertedSI)data.DynamicTyreRadius;
 
-			//row[ADAS_TECHNOLOGY_COMBINATION] = data.ADAS != null ? DeclarationData.ADASCombinations.Lookup(data.ADAS).ID : "";
+			row[ADAS_TECHNOLOGY_COMBINATION] = data.ADAS != null ? DeclarationData.ADASCombinations.Lookup(data.ADAS, gbxType).ID : "";
 		}
 
 		private static void WriteAirdragData(AirdragData data, DataRow row)

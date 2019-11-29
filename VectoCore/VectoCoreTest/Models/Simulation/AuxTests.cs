@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				modData[ModalResultField.dist] = i.SI<Meter>();
 				modData[ModalResultField.P_eng_out] = 0.SI<Watt>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
-				modData[ModalResultField.IgnitionOn] = false;
+				modData[ModalResultField.ICEOn] = false;
 				container.CommitSimulationStep(t, dt);
 				t += dt;
 			}

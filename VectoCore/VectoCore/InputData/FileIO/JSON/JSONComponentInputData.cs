@@ -216,6 +216,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return VehicleData.Height; }
 		}
 
+		public bool? ATEcoRollReleaseLockupClutch { get { return VehicleData.ADAS.ATEcoRollReleaseLockupClutch; } }
+
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{
 			get { return this; }

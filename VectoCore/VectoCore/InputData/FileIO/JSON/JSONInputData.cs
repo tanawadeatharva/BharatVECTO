@@ -67,7 +67,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected JSONFile(JObject data, string filename, bool tolerateMissing = false)
 		{
 			var header = (JObject)data.GetEx(JsonKeys.JsonHeader);
-			Version = header[JsonKeys.JsonHeader_FileVersion] != null ? header.GetEx<string>(JsonKeys.JsonHeader_FileVersion) : string.Empty;
+			Version = header[JsonKeys.JsonHeader_FileVersion] != null
+				? header.GetEx<string>(JsonKeys.JsonHeader_FileVersion)
+				: string.Empty;
 			Body = (JObject)data.GetEx(JsonKeys.JsonBody);
 			_sourceFile = Path.GetFullPath(filename);
 			TolerateMissing = tolerateMissing;
@@ -77,7 +79,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public DataSource DataSource
 		{
-			get { return new DataSource { SourceType = DataSourceType.JSONFile, SourceFile = _sourceFile, SourceVersion = Version }; }
+			get {
+				return new DataSource { SourceType = DataSourceType.JSONFile, SourceFile = _sourceFile, SourceVersion = Version };
+			}
 		}
 
 		public string Source
@@ -167,6 +171,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public virtual IEcoRollEngineeringInputData EcoRollData
+		{
+			get { return null; }
+		}
+
+		public virtual IPCCEngineeringInputData PCCData
 		{
 			get { return null; }
 		}
@@ -516,7 +525,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
-		
 		#endregion
 
 		#region IAuxiliariesEngineeringInputData
@@ -695,8 +703,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			VectoJobHash = VectoHash.Load(
 				Path.Combine(Path.GetFullPath(BasePath), Body["DeclarationVehicle"].Value<string>()));
-			VectoManufacturerReportHash = Body["ManufacturerRecord"] != null ? VectoHash.Load(
-				Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>())) : null;
+			VectoManufacturerReportHash = Body["ManufacturerRecord"] != null
+				? VectoHash.Load(
+					Path.Combine(Path.GetFullPath(BasePath), Body["ManufacturerRecord"].Value<string>()))
+				: null;
 
 			var kernel = new StandardKernel(new VectoNinjectModule());
 			_inputReader = kernel.Get<IXMLInputDataReader>();
@@ -729,7 +739,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<double>("Mileage").SI(Unit.SI.Kilo.Meter).Cast<Meter>(); }
 		}
 
-		string IManufacturerReport.Source { get { return Body["ManufacturerRecord"].Value<string>(); } }
+		string IManufacturerReport.Source
+		{
+			get { return Body["ManufacturerRecord"].Value<string>(); }
+		}
 
 		public IList<ICycleData> Cycles
 		{
@@ -825,7 +838,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			try {
 				_jobDigest = new DigestData(xmlDoc.SelectSingleNode("//*[local-name()='InputDataSignature']"));
 			} catch (Exception) {
-				_jobDigest = new DigestData("", new string[] {},"","" );
+				_jobDigest = new DigestData("", new string[] { }, "", "");
 			}
 		}
 	}
@@ -833,14 +846,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 	public class JSONInputDataV5 : JSONInputDataV4
 	{
-		public JSONInputDataV5(JObject data, string filename, bool tolerateMissing = false) : base(data, filename, tolerateMissing) { }
+		protected IEngineStopStartEngineeringInputData engineStopStartData;
+		protected IEcoRollEngineeringInputData ecoRollData;
+		protected IPCCEngineeringInputData pccData;
+
+		public JSONInputDataV5(JObject data, string filename, bool tolerateMissing = false) : base(
+			data, filename, tolerateMissing) { }
 
 		#region Overrides of JSONInputDataV2
 
 		public override IEngineStopStartEngineeringInputData EngineStopStartData
 		{
 			get {
-				return new EngineStopStartInputData {
+				return engineStopStartData ?? (engineStopStartData = new EngineStopStartInputData {
 					MaxEngineOffTimespan = Body["EngineStopStartMaxOffTimespan"] == null
 						? null
 						: Body.GetEx<double>("EngineStopStartMaxOffTimespan").SI<Second>(),
@@ -850,41 +868,59 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					ActivationDelay = Body["EngineStopStartAtVehicleStopThreshold"] == null
 						? null
 						: Body.GetEx<double>("EngineStopStartAtVehicleStopThreshold").SI<Second>()
-				};
+				});
 			}
 		}
 
-		
+
 		public override IEcoRollEngineeringInputData EcoRollData
 		{
-			get { return new EcoRollInputData {
-				UnderspeedThreshold = Body["EcoRollUnderspeedThreshold"] == null
-					? null
-					: Body.GetEx<double>("EcoRollUnderspeedThreshold").KMPHtoMeterPerSecond(),
-				MinSpeed = Body["EcoRollMinSpeed"] == null
-					? null
-					: Body.GetEx<double>("EcoRollMinSpeed").KMPHtoMeterPerSecond(),
-				ActivationDelay = Body["EcoRollActivationDelay"] == null
-					? null
-					: Body.GetEx<double>("EcoRollActivationDelay").SI<Second>()
-			}; }
+			get {
+				return ecoRollData ?? (ecoRollData = new EcoRollInputData {
+					UnderspeedThreshold = Body["EcoRollUnderspeedThreshold"] == null
+						? null
+						: Body.GetEx<double>("EcoRollUnderspeedThreshold").KMPHtoMeterPerSecond(),
+					MinSpeed = Body["EcoRollMinSpeed"] == null
+						? null
+						: Body.GetEx<double>("EcoRollMinSpeed").KMPHtoMeterPerSecond(),
+					ActivationDelay = Body["EcoRollActivationDelay"] == null
+						? null
+						: Body.GetEx<double>("EcoRollActivationDelay").SI<Second>(),
+					AccelerationUpperLimit = Body["EcoRollMaxAcceleration"] == null? null : Body.GetEx<double>("EcoRollMaxAcceleration").SI<MeterPerSquareSecond>()
+				});
+			}
+		}
+
+		public override IPCCEngineeringInputData PCCData
+		{
+			get { return pccData ?? (pccData = new PCCInputData() {
+				PCCEnabledSpeed = Body["PCCEnableSpeed"] == null ? null : Body.GetEx<double>("PCCEnableSpeed").KMPHtoMeterPerSecond(),
+				MinSpeed = Body["PCCMinSpeed"] == null ? null : Body.GetEx<double>("PCCMinSpeed").KMPHtoMeterPerSecond(),
+				Underspeed = Body["PCCUnderspeed"] == null ? null : Body.GetEx<double>("PCCUnderspeed").KMPHtoMeterPerSecond(),
+				OverspeedUseCase3 = Body["PCCOverspeed"] == null ? null : Body.GetEx<double>("PCCOverspeed").KMPHtoMeterPerSecond(),
+				PreviewDistanceUseCase1 = Body["PCCPreviewDistanceUC1"] == null ? null : Body.GetEx<double>("PCCPreviewDistanceUC1").SI<Meter>(),
+				PreviewDistanceUseCase2 = Body["PCCPreviewDistanceUC2"] == null ? null : Body.GetEx<double>("PCCPreviewDistanceUC2").SI<Meter>()
+			}); }
 		}
 
 		#endregion
-
 	}
 
-	public class EcoRollInputData : IEcoRollEngineeringInputData {
+	public class EcoRollInputData : IEcoRollEngineeringInputData
+	{
 		#region Implementation of IEcoRollEngineeringInputData
 
 		public MeterPerSecond MinSpeed { get; set; }
 		public Second ActivationDelay { get; set; }
 		public MeterPerSecond UnderspeedThreshold { get; set; }
 
+		public MeterPerSquareSecond AccelerationUpperLimit { get; set; }
+
 		#endregion
 	}
 
-	public class EngineStopStartInputData : IEngineStopStartEngineeringInputData {
+	public class EngineStopStartInputData : IEngineStopStartEngineeringInputData
+	{
 		#region Implementation of IEngineStopStartEngineeringInputData
 
 		public Second ActivationDelay { get; set; }
@@ -892,6 +928,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public Second MaxEngineOffTimespan { get; set; }
 
 		public double UtilityFactor { get; set; }
+
+		#endregion
+	}
+
+	public class PCCInputData : IPCCEngineeringInputData
+	{
+		#region Implementation of IPCCEngineeringInputData
+
+		public MeterPerSecond PCCEnabledSpeed { get; set; }
+		public MeterPerSecond MinSpeed { get; set; }
+		public Meter PreviewDistanceUseCase1 { get; set; }
+		public Meter PreviewDistanceUseCase2 { get; set; }
+		public MeterPerSecond Underspeed { get; set; }
+		public MeterPerSecond OverspeedUseCase3 { get; set; }
 
 		#endregion
 	}

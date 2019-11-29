@@ -138,6 +138,9 @@ Partial Class VehicleForm
         Me.Label18 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.GroupBox9 = New System.Windows.Forms.GroupBox()
+        Me.cbTankSystem = New System.Windows.Forms.ComboBox()
+        Me.Label23 = New System.Windows.Forms.Label()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.lvTorqueLimits = New System.Windows.Forms.ListView()
         Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
@@ -154,9 +157,7 @@ Partial Class VehicleForm
         Me.lblPCC = New System.Windows.Forms.Label()
         Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
-        Me.GroupBox9 = New System.Windows.Forms.GroupBox()
-        Me.Label23 = New System.Windows.Forms.Label()
-        Me.cbTankSystem = New System.Windows.Forms.ComboBox()
+        Me.cbAtEcoRollReleaseLockupClutch = New System.Windows.Forms.CheckBox()
         Me.GroupBox6.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.GroupBox7.SuspendLayout
@@ -181,10 +182,10 @@ Partial Class VehicleForm
         Me.GroupBox4.SuspendLayout
         Me.Panel1.SuspendLayout
         Me.TabPage2.SuspendLayout
+        Me.GroupBox9.SuspendLayout
         Me.TabPage3.SuspendLayout
         Me.tpADAS.SuspendLayout
         Me.GroupBox5.SuspendLayout
-        Me.GroupBox9.SuspendLayout
         Me.SuspendLayout
         '
         'Label1
@@ -1146,6 +1147,35 @@ Partial Class VehicleForm
         Me.TabPage2.Text = "Powertrain"
         Me.TabPage2.UseVisualStyleBackColor = true
         '
+        'GroupBox9
+        '
+        Me.GroupBox9.Controls.Add(Me.cbTankSystem)
+        Me.GroupBox9.Controls.Add(Me.Label23)
+        Me.GroupBox9.Location = New System.Drawing.Point(306, 7)
+        Me.GroupBox9.Name = "GroupBox9"
+        Me.GroupBox9.Size = New System.Drawing.Size(264, 63)
+        Me.GroupBox9.TabIndex = 5
+        Me.GroupBox9.TabStop = false
+        Me.GroupBox9.Text = "Tank System"
+        '
+        'cbTankSystem
+        '
+        Me.cbTankSystem.FormattingEnabled = true
+        Me.cbTankSystem.Location = New System.Drawing.Point(9, 33)
+        Me.cbTankSystem.Name = "cbTankSystem"
+        Me.cbTankSystem.Size = New System.Drawing.Size(247, 21)
+        Me.cbTankSystem.TabIndex = 1
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = true
+        Me.Label23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.Label23.Location = New System.Drawing.Point(6, 16)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(187, 13)
+        Me.Label23.TabIndex = 0
+        Me.Label23.Text = "Only applicable for NG engines!"
+        '
         'TabPage3
         '
         Me.TabPage3.Controls.Add(Me.lvTorqueLimits)
@@ -1226,6 +1256,7 @@ Partial Class VehicleForm
         '
         'GroupBox5
         '
+        Me.GroupBox5.Controls.Add(Me.cbAtEcoRollReleaseLockupClutch)
         Me.GroupBox5.Controls.Add(Me.cbPcc)
         Me.GroupBox5.Controls.Add(Me.cbEcoRoll)
         Me.GroupBox5.Controls.Add(Me.Label22)
@@ -1300,34 +1331,15 @@ Partial Class VehicleForm
         Me.Label21.TabIndex = 42
         Me.Label21.Text = "Maximum Laden Mass"
         '
-        'GroupBox9
+        'cbAtEcoRollReleaseLockupClutch
         '
-        Me.GroupBox9.Controls.Add(Me.cbTankSystem)
-        Me.GroupBox9.Controls.Add(Me.Label23)
-        Me.GroupBox9.Location = New System.Drawing.Point(306, 7)
-        Me.GroupBox9.Name = "GroupBox9"
-        Me.GroupBox9.Size = New System.Drawing.Size(264, 63)
-        Me.GroupBox9.TabIndex = 5
-        Me.GroupBox9.TabStop = false
-        Me.GroupBox9.Text = "Tank System"
-        '
-        'Label23
-        '
-        Me.Label23.AutoSize = true
-        Me.Label23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.Label23.Location = New System.Drawing.Point(6, 16)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(187, 13)
-        Me.Label23.TabIndex = 0
-        Me.Label23.Text = "Only applicable for NG engines!"
-        '
-        'cbTankSystem
-        '
-        Me.cbTankSystem.FormattingEnabled = true
-        Me.cbTankSystem.Location = New System.Drawing.Point(9, 33)
-        Me.cbTankSystem.Name = "cbTankSystem"
-        Me.cbTankSystem.Size = New System.Drawing.Size(247, 21)
-        Me.cbTankSystem.TabIndex = 1
+        Me.cbAtEcoRollReleaseLockupClutch.AutoSize = true
+        Me.cbAtEcoRollReleaseLockupClutch.Location = New System.Drawing.Point(265, 19)
+        Me.cbAtEcoRollReleaseLockupClutch.Name = "cbAtEcoRollReleaseLockupClutch"
+        Me.cbAtEcoRollReleaseLockupClutch.Size = New System.Drawing.Size(243, 17)
+        Me.cbAtEcoRollReleaseLockupClutch.TabIndex = 9
+        Me.cbAtEcoRollReleaseLockupClutch.Text = "AT Gearbox: Eco-Roll Release Lockup Clutch"
+        Me.cbAtEcoRollReleaseLockupClutch.UseVisualStyleBackColor = true
         '
         'VehicleForm
         '
@@ -1394,13 +1406,13 @@ Partial Class VehicleForm
         Me.Panel1.ResumeLayout(false)
         Me.Panel1.PerformLayout
         Me.TabPage2.ResumeLayout(false)
+        Me.GroupBox9.ResumeLayout(false)
+        Me.GroupBox9.PerformLayout
         Me.TabPage3.ResumeLayout(false)
         Me.TabPage3.PerformLayout
         Me.tpADAS.ResumeLayout(false)
         Me.GroupBox5.ResumeLayout(false)
         Me.GroupBox5.PerformLayout
-        Me.GroupBox9.ResumeLayout(false)
-        Me.GroupBox9.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1528,4 +1540,5 @@ End Sub
     Friend WithEvents GroupBox9 As GroupBox
     Friend WithEvents cbTankSystem As ComboBox
     Friend WithEvents Label23 As Label
+    Friend WithEvents cbAtEcoRollReleaseLockupClutch As CheckBox
 End Class

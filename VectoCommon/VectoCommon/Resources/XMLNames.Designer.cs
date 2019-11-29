@@ -2536,6 +2536,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ATEcoRollReleaseLockupClutch.
+        /// </summary>
+        public static string Vehicle_ADAS_ATEcoRollReleaseLockupClutch {
+            get {
+                return ResourceManager.GetString("Vehicle_ADAS_ATEcoRollReleaseLockupClutch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EcoRoll.
         /// </summary>
         public static string Vehicle_ADAS_EcoRoll {

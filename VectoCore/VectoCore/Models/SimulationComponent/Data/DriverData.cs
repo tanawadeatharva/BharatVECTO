@@ -50,6 +50,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, ValidateObject] public EcoRollData EcoRoll;
 
+		public PCCData PCC;
+
 		public static bool ParseDriverMode(string mode)
 		{
 			if (mode == null) {
@@ -114,6 +116,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			[Required, Range(0.0, 1.0)] public double UtilityFactor;
 
+		}
+
+		public class PCCData
+		{
+			public MeterPerSecond MinSpeed;
+
+			public Meter PreviewDistanceUseCase1;
+
+			public Meter PreviewDistanceUseCase2;
+
+			public MeterPerSecond UnderSpeed;
+
+			public MeterPerSecond PCCEnableSpeed;
+
+			public MeterPerSecond OverspeedUseCase3;
 		}
 	}
 }

@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.FCMap] = 1e-4.SI<KilogramPerSecond>();
 				modData[ModalResultField.FCFinal] = 1e-4.SI<KilogramPerSecond>();
-				modData[ModalResultField.IgnitionOn] = false;
+				modData[ModalResultField.ICEOn] = false;
 				modData[ModalResultField.altitude] = 0.SI<Meter>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
 				modData[ModalResultField.P_eng_out] = (i % 2 == 0 ? 1 : -1) * 3000.SI<Watt>();
@@ -111,8 +111,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var sumData = VectoCSVFile.Read("testsumcalc_fixed.vsum", false, true);
 
 			// duration: 500s, distance: 500m
-			Assert.AreEqual(500, modData.Duration().Value());
-			Assert.AreEqual(500, modData.Distance().Value());
+			Assert.AreEqual(500, modData.Duration.Value());
+			Assert.AreEqual(500, modData.Distance.Value());
 
 			// 3kW * 500s => to kWh
 			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("E_air [kWh]"), 1e-3);
@@ -162,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 				modData[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
 				modData[ModalResultField.FCFinal] = 0.SI<KilogramPerSecond>();
-				modData[ModalResultField.IgnitionOn] = false;
+				modData[ModalResultField.ICEOn] = false;
 				modData.CommitSimulationStep();
 			}
 

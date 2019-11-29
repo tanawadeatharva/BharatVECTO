@@ -57,15 +57,20 @@ namespace TUGraz.VectoCore.OutputData
 		private Exception SimException;
 
 		protected internal readonly Dictionary<FuelData.Entry, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<FuelData.Entry, Dictionary<ModalResultField, DataColumn>>();
+		private Second _duration;
+		private Meter _distance;
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
 			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, ModalResultField.FCAAUX,
 			ModalResultField.FCEngineStopStart,  ModalResultField.FCFinal
 		};
 
-		public int JobRunId { get; private set; }
-		public string RunName { get; private set; }
-		public string CycleName { get; private set; }
+		private readonly Dictionary<String, SI> _timeIntegrals = new Dictionary<string, SI>();
+		private readonly Dictionary<FuelType, KilogramPerWattSecond> _vehicleLine = new Dictionary<FuelType, KilogramPerWattSecond>();
+
+		public int JobRunId { get; }
+		public string RunName { get; }
+		public string CycleName { get; }
 		public string RunSuffix { get; private set; }
 
 		public bool WriteModalResults { get; set; }
@@ -141,6 +146,42 @@ namespace TUGraz.VectoCore.OutputData
 			WriteAdvancedAux = false;
 		}
 
+		public void Reset()
+		{
+			Data.Rows.Clear();
+			CurrentRow = Data.NewRow();
+			ClearAggregateResults();
+		}
+
+		public Second Duration
+		{
+			get { return _duration ?? (_duration = CalcDuration()); }
+		}
+
+		public Meter Distance
+		{
+			get { return _distance ?? (_distance = CalcDistance()); }
+		}
+
+		public KilogramPerWattSecond VehicleLineCorrectionFactor(FuelData.Entry fuel)
+		{
+			if (_vehicleLine.ContainsKey(fuel.FuelType)) {
+				return _vehicleLine[fuel.FuelType];
+			}
+
+			double k, d, r;
+			VectoMath.LeastSquaresFitting(
+				GetValues(
+					x => x.Field<bool>(ModalResultField.ICEOn.GetName())
+						? new Point(
+							x.Field<SI>(ModalResultField.P_eng_fcmap.GetName()).Value(),
+							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
+						: null).Where(x => x != null && x.Y > 0),
+				out k, out d, out r);
+			_vehicleLine[fuel.FuelType] = k.SI<KilogramPerWattSecond>();
+
+			return _vehicleLine[fuel.FuelType];
+		}
 
 		public bool HasTorqueConverter { get; set; }
 
@@ -148,6 +189,42 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			Data.Rows.Add(CurrentRow);
 			CurrentRow = Data.NewRow();
+			ClearAggregateResults();
+		}
+
+		protected virtual void ClearAggregateResults()
+		{
+			_duration = null;
+			_distance = null;
+			_timeIntegrals.Clear();
+		}
+
+		protected virtual Second CalcDuration()
+		{
+			var time = GetValues<Second>(ModalResultField.time).ToList();
+			var dt = GetValues<Second>(ModalResultField.simulationInterval).ToList();
+			if (time.Count == 1) {
+				return time.First();
+			}
+			return time.Last() - time.First() + dt.First() / 2 + dt.Last() / 2;
+		}
+
+		protected virtual Meter CalcDistance()
+		{
+			var max = GetValues<Meter>(ModalResultField.dist).LastOrDefault() ?? 0.SI<Meter>();
+			var first = GetValues(
+				r => new {
+					dist = r.Field<Meter>(ModalResultField.dist.GetName()),
+					vact = r.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
+					acc = r.Field<MeterPerSquareSecond>(ModalResultField.acc.GetName()),
+					dt = r.Field<Second>(ModalResultField.simulationInterval.GetName())
+				}).First();
+			var min = 0.SI<Meter>();
+			if (first != null && first.vact != null && first.acc != null && first.dt != null) {
+				min = first.dist - first.vact * first.dt - first.acc * first.dt * first.dt / 2.0;
+			}
+
+			return max == null || min == null ? null : max - min;
 		}
 
 		public IList<FuelData.Entry> FuelData
@@ -171,9 +248,10 @@ namespace TUGraz.VectoCore.OutputData
 										}.Select(x => x.GetName()))
 									.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
 
-#if TRACE
+//#if TRACE
 			strCols = strCols.Concat(_additionalColumns);
-#endif
+			strCols = strCols.Concat(new[] { ModalResultField.ICEOn }.Select(x => x.GetName()));
+//#endif
 			if (WriteModalResults) {
 				var filteredData = Data;
 				foreach (var filter in _filters) {
@@ -310,6 +388,7 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn,
 					});
 			}
+			dataColumns.Add(ModalResultField.altitude);
 			return dataColumns;
 		}
 
@@ -325,11 +404,15 @@ namespace TUGraz.VectoCore.OutputData
 
 		public T TimeIntegral<T>(ModalResultField field, Func<SI, bool> filter = null) where T : SIBase<T>
 		{
+
 			return TimeIntegral<T>(field.GetName(), filter);
 		}
 
 		public T TimeIntegral<T>(string field, Func<SI, bool> filter = null) where T : SIBase<T>
 		{
+			if (filter == null && _timeIntegrals.ContainsKey(field)) {
+				return (T)_timeIntegrals[field];
+			}
 			var result = 0.0;
 			var idx = Data.Columns.IndexOf(field);
 			for (var i = 0; i < Data.Rows.Count; i++) {
@@ -342,7 +425,12 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 
-			return result.SI<T>();
+			var retVal = result.SI<T>();
+			;
+			if (filter == null) {
+				_timeIntegrals[field] = retVal;
+			}
+			return retVal;
 		}
 
 		public IEnumerable<T> GetValues<T>(ModalResultField key)

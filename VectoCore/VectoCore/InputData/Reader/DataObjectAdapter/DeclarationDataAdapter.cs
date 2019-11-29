@@ -83,6 +83,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					ActivationPhaseDuration = DeclarationData.Driver.EcoRoll.ActivationDelay,
 					AccelerationLowerLimit = DeclarationData.Driver.EcoRoll.AccelerationLowerLimit,
 					AccelerationUpperLimit = DeclarationData.Driver.EcoRoll.AccelerationUpperLimit,
+				},
+				PCC = new DriverData.PCCData() {
+					PCCEnableSpeed = DeclarationData.Driver.PCC.PCCEnableSpeed,
+					MinSpeed = DeclarationData.Driver.PCC.MinSpeed,
+					PreviewDistanceUseCase1 = DeclarationData.Driver.PCC.PreviewDistanceUseCase1,
+					PreviewDistanceUseCase2 = DeclarationData.Driver.PCC.PreviewDistanceUseCase2,
+					UnderSpeed =  DeclarationData.Driver.PCC.Underspeed,
+					OverspeedUseCase3 = DeclarationData.Driver.PCC.OverspeedUseCase3
 				}
 			};
 			return retVal;
@@ -122,14 +130,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.VocationalVehicle = data.VocationalVehicle;
 			retVal.ADAS = CreateADAS(data.ADAS);
-			// eco-roll is not allowed for MT transmissions!
-			if (retVal.ADAS.EcoRoll != EcoRollType.None && data.Components.GearboxInputData.Type == GearboxType.MT) {
-				retVal.ADAS.EcoRoll = EcoRollType.None;
-			}
-			if (retVal.ADAS.EcoRoll == EcoRollType.WithEngineStop && data.Components.GearboxInputData.Type.AutomaticTransmission()) {
-				retVal.ADAS.EcoRoll = EcoRollType.WithoutEngineStop;
-			}
-
+			
 			var axles = data.Components.AxleWheels.AxlesDeclaration;
 			if (axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException(
@@ -297,12 +298,17 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		internal GearboxData CreateGearboxData(
 			IGearboxDeclarationInputData gearbox, CombustionEngineData engine, double axlegearRatio, Meter dynamicTyreRadius,
-			VehicleCategory vehicleCategory, ITorqueConverterDeclarationInputData torqueConverter)
+			VehicleCategory vehicleCategory, ITorqueConverterDeclarationInputData torqueConverter, bool? atEcoRollReleaseLockupClutch)
 		{
 			if (!gearbox.SavedInDeclarationMode) {
 				WarnDeclarationMode("GearboxData");
 			}
 			var retVal = SetCommonGearboxData(gearbox);
+
+			if (retVal.Type.AutomaticTransmission() && !atEcoRollReleaseLockupClutch.HasValue) {
+				throw new VectoException("Input parameter ATEcoRollReleaseLockupClutch required for AT transmission");
+			}
+			retVal.ATEcoRollReleaseLockupClutch = retVal.Type.AutomaticTransmission() ? atEcoRollReleaseLockupClutch.Value : false;
 
 			if (!SupportedGearboxTypes.Contains(gearbox.Type)) {
 				throw new VectoSimulationException("Unsupported gearbox type: {0}!", retVal.Type);

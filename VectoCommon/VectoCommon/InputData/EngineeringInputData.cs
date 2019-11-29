@@ -352,7 +352,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		IEngineStopStartEngineeringInputData EngineStopStartData { get; }
 
-		IEcoRollEngineeringInputData EcoRollData { get; }	
+		IEcoRollEngineeringInputData EcoRollData { get; }
+		IPCCEngineeringInputData PCCData { get; }
 	}
 
 	public interface IEcoRollEngineeringInputData
@@ -362,6 +363,23 @@ namespace TUGraz.VectoCommon.InputData
 		Second ActivationDelay { get; }
 
 		MeterPerSecond UnderspeedThreshold { get; }
+
+		MeterPerSquareSecond AccelerationUpperLimit { get; }
+	}
+
+	public interface IPCCEngineeringInputData
+	{
+		MeterPerSecond PCCEnabledSpeed { get; }
+
+		MeterPerSecond MinSpeed { get; }
+
+		Meter PreviewDistanceUseCase1 { get; }
+
+		Meter PreviewDistanceUseCase2 { get; }
+
+		MeterPerSecond Underspeed { get; }
+
+		MeterPerSecond OverspeedUseCase3 { get; }
 	}
 
 	public interface IOverSpeedEngineeringInputData : IOverSpeedEcoRollDeclarationInputData

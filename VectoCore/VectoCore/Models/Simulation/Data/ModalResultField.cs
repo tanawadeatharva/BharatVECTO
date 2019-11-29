@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), "simulation_interval", "dt [s]")] simulationInterval,
 
 
-		[ModalResultField(typeof(bool), "Ignition On")] IgnitionOn,
+		[ModalResultField(typeof(bool), "ICE On")] ICEOn,
 
 		[ModalResultField(typeof(SI), caption: "P_ice_start [kW]", outputFactor: 1e-3)] P_ice_start,
 

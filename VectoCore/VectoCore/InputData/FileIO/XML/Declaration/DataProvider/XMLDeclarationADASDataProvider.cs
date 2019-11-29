@@ -55,6 +55,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return PredictiveCruiseControlTypeHelper.Parse(GetString(XMLNames.Vehicle_ADAS_PCC)); }
 		}
 
+		public virtual bool? ATEcoRollReleaseLockupClutch { get { return null; } }
+
 		#endregion
 	}
 
@@ -75,6 +77,45 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationADASDataProviderV21(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
 			: base(vehicle, componentNode, sourceFile) { }
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationADASDataProviderV23 : XMLDeclarationADASDataProviderV21
+	{
+		/*
+		 * new field added in version 2.3
+		 */
+
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V23;
+
+		public new const string XSD_TYPE = "AdvancedDriverAssistantSystemsType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationADASDataProviderV23(IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile)
+			: base(vehicle, componentNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationADASDataProviderV10
+
+		public override bool? ATEcoRollReleaseLockupClutch
+		{
+			get {
+				var node = GetNode(XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, required:false);
+				if (node == null) {
+					return null;
+				}
+
+				return XmlConvert.ToBoolean(node.InnerText);
+			}
+		}
+
+		#endregion
 
 		protected override XNamespace SchemaNamespace
 		{
