@@ -120,6 +120,9 @@ Partial Class VectoJobForm
         Me.Label22 = New System.Windows.Forms.Label()
         Me.tbPCCUnderspeed = New System.Windows.Forms.TextBox()
         Me.gbEcoRoll = New System.Windows.Forms.GroupBox()
+        Me.Label44 = New System.Windows.Forms.Label()
+        Me.Label45 = New System.Windows.Forms.Label()
+        Me.tbEcoRollMaxAcc = New System.Windows.Forms.TextBox()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.tbEcoRollUnderspeed = New System.Windows.Forms.TextBox()
@@ -166,9 +169,6 @@ Partial Class VectoJobForm
         Me.TbMass = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
-        Me.Label44 = New System.Windows.Forms.Label()
-        Me.Label45 = New System.Windows.Forms.Label()
-        Me.tbEcoRollMaxAcc = New System.Windows.Forms.TextBox()
         Me.TabPgGen.SuspendLayout
         Me.GrCycles.SuspendLayout
         Me.GrAux.SuspendLayout
@@ -1154,30 +1154,58 @@ Partial Class VectoJobForm
         Me.gbEcoRoll.TabStop = false
         Me.gbEcoRoll.Text = "Eco-Roll"
         '
+        'Label44
+        '
+        Me.Label44.AutoSize = true
+        Me.Label44.Location = New System.Drawing.Point(305, 75)
+        Me.Label44.Name = "Label44"
+        Me.Label44.Size = New System.Drawing.Size(34, 13)
+        Me.Label44.TabIndex = 19
+        Me.Label44.Text = "[m/s²]"
+        '
+        'Label45
+        '
+        Me.Label45.AutoSize = true
+        Me.Label45.Location = New System.Drawing.Point(7, 75)
+        Me.Label45.Name = "Label45"
+        Me.Label45.Size = New System.Drawing.Size(125, 13)
+        Me.Label45.TabIndex = 17
+        Me.Label45.Text = "Upper Acceleration Limit:"
+        '
+        'tbEcoRollMaxAcc
+        '
+        Me.tbEcoRollMaxAcc.Location = New System.Drawing.Point(247, 72)
+        Me.tbEcoRollMaxAcc.Name = "tbEcoRollMaxAcc"
+        Me.tbEcoRollMaxAcc.Size = New System.Drawing.Size(52, 20)
+        Me.tbEcoRollMaxAcc.TabIndex = 18
+        '
         'Label29
         '
         Me.Label29.AutoSize = true
-        Me.Label29.Location = New System.Drawing.Point(305, 74)
+        Me.Label29.Location = New System.Drawing.Point(305, 100)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(38, 13)
         Me.Label29.TabIndex = 16
         Me.Label29.Text = "[km/h]"
+        Me.Label29.Visible = false
         '
         'Label30
         '
         Me.Label30.AutoSize = true
-        Me.Label30.Location = New System.Drawing.Point(7, 74)
+        Me.Label30.Location = New System.Drawing.Point(7, 100)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(114, 13)
         Me.Label30.TabIndex = 14
         Me.Label30.Text = "Underspeed threshold:"
+        Me.Label30.Visible = false
         '
         'tbEcoRollUnderspeed
         '
-        Me.tbEcoRollUnderspeed.Location = New System.Drawing.Point(247, 71)
+        Me.tbEcoRollUnderspeed.Location = New System.Drawing.Point(247, 97)
         Me.tbEcoRollUnderspeed.Name = "tbEcoRollUnderspeed"
         Me.tbEcoRollUnderspeed.Size = New System.Drawing.Size(52, 20)
         Me.tbEcoRollUnderspeed.TabIndex = 15
+        Me.tbEcoRollUnderspeed.Visible = false
         '
         'Label27
         '
@@ -1545,31 +1573,6 @@ Partial Class VectoJobForm
         Me.lblEngineCharacteristics.Name = "lblEngineCharacteristics"
         Me.lblEngineCharacteristics.Size = New System.Drawing.Size(0, 13)
         Me.lblEngineCharacteristics.TabIndex = 37
-        '
-        'Label44
-        '
-        Me.Label44.AutoSize = true
-        Me.Label44.Location = New System.Drawing.Point(305, 100)
-        Me.Label44.Name = "Label44"
-        Me.Label44.Size = New System.Drawing.Size(34, 13)
-        Me.Label44.TabIndex = 19
-        Me.Label44.Text = "[m/s²]"
-        '
-        'Label45
-        '
-        Me.Label45.AutoSize = true
-        Me.Label45.Location = New System.Drawing.Point(7, 100)
-        Me.Label45.Name = "Label45"
-        Me.Label45.Size = New System.Drawing.Size(125, 13)
-        Me.Label45.TabIndex = 17
-        Me.Label45.Text = "Upper Acceleration Limit:"
-        '
-        'tbEcoRollMaxAcc
-        '
-        Me.tbEcoRollMaxAcc.Location = New System.Drawing.Point(247, 97)
-        Me.tbEcoRollMaxAcc.Name = "tbEcoRollMaxAcc"
-        Me.tbEcoRollMaxAcc.Size = New System.Drawing.Size(52, 20)
-        Me.tbEcoRollMaxAcc.TabIndex = 18
         '
         'VectoJobForm
         '

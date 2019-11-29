@@ -1555,6 +1555,18 @@ lbDlog:
 
 	Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
 	End Sub
+
+    Private Sub Label45_Click(sender As Object, e As EventArgs) Handles Label45.Click
+
+    End Sub
+
+    Private Sub tbEcoRollMaxAcc_TextChanged(sender As Object, e As EventArgs) Handles tbEcoRollMaxAcc.TextChanged
+
+    End Sub
+
+    Private Sub Label44_Click(sender As Object, e As EventArgs) Handles Label44.Click
+
+    End Sub
 End Class
 
 
