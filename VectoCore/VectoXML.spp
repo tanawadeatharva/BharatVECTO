@@ -69,6 +69,8 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.1.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.2.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.3_DF.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.4_Tyre.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.2.5_Gearbox.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationDefinitions.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoDeclarationJob.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoInput.1.0.xsd" HomeFolder="Yes"/>

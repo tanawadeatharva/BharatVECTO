@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
+<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3_DF" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3_DF" elementFormDefault="qualified" attributeFormDefault="unqualified" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2" schemaLocation="VectoDeclarationDefinitions.2.2.xsd"/>
+	<xs:complexType name="EngineDataDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="v1.0:AbstractCombustionEngineDataDeclarationType">
+				<xs:sequence>
+					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
+						<xs:annotation>
+							<xs:documentation>P200</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Model" type="v1.0:ModelType">
+						<xs:annotation>
+							<xs:documentation>P201</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+						<xs:annotation>
+							<xs:documentation>P261</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+						<xs:annotation>
+							<xs:documentation>P203</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="AppVersion" type="v1.0:AppVersionType">
+						<xs:annotation>
+							<xs:documentation>P204</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Displacement" type="v1.0:EngineDisplacementType" nillable="false">
+						<xs:annotation>
+							<xs:documentation>P061 - [cm³]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RatedSpeed" type="v1.0:EngineDeclaredSpeedType">
+						<xs:annotation>
+							<xs:documentation>P249 - [1/min]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="RatedPower" type="v1.0:EngineRatedPower">
+						<xs:annotation>
+							<xs:documentation>P250 - [W]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="MaxEngineTorque" type="v1.0:EngineMaxTorque">
+						<xs:annotation>
+							<xs:documentation>P259 - [Nm]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="WHRType" type="tns:WHRTypeType"/>
+					<xs:element name="Mode" type="tns:EngineFuelModeType" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="FuelConsumptionEntryType">
+		<xs:attribute name="engineSpeed" type="v1.0:EngineSpeedType" use="required">
+			<xs:annotation>
+				<xs:documentation>P072 - [1/min]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="torque" type="v1.0:EngineFuelConsumptionMapTorqueType" use="required">
+			<xs:annotation>
+				<xs:documentation>P073 - [Nm]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="fuelConsumption" type="v1.0:EngineFuelConsumptionMapFuelConsumptionType" use="required">
+			<xs:annotation>
+				<xs:documentation>P074 - [g/h]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="electricPower" type="v1.0:Double2">
+			<xs:annotation>
+				<xs:documentation>Pxxx - [W]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="mechanicalPower" type="v1.0:Double2">
+			<xs:annotation>
+				<xs:documentation>Pxxx - [W]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="EngineFuelModeType">
+		<xs:sequence>
+			<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType">
+				<xs:annotation>
+					<xs:documentation>P063 - [1/min]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FullLoadAndDragCurve">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Entry" type="v1.0:FullLoadAndDragCurveEntryType" minOccurs="2" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Fuel" type="tns:EngineFuelType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EngineFuelType">
+		<xs:sequence>
+			<xs:element name="WHTCUrban" type="v1.0:EngineWHTCType">
+				<xs:annotation>
+					<xs:documentation>P109 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WHTCRural" type="v1.0:EngineWHTCType">
+				<xs:annotation>
+					<xs:documentation>P110 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WHTCMotorway" type="v1.0:EngineWHTCType">
+				<xs:annotation>
+					<xs:documentation>P111 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BFColdHot" type="v1.0:EngineColdHotBalancingFactorType">
+				<xs:annotation>
+					<xs:documentation>P159 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CFRegPer" type="v1.0:EngineCFRegPerType">
+				<xs:annotation>
+					<xs:documentation>P192 [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CFNCV" type="v1.0:EngineNCVCFType">
+				<xs:annotation>
+					<xs:documentation>P260 - [-]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="WHRCorrectionFactors" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Electrical" type="tns:WHRCorrectionFactorsType" minOccurs="0"/>
+						<xs:element name="Mechanical" type="tns:WHRCorrectionFactorsType" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="FuelConsumptionMap">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Entry" type="tns:FuelConsumptionEntryType" minOccurs="4" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="type" type="v1.0:FuelTypeType" use="required">
+			<xs:annotation>
+				<xs:documentation>P193 [enum]</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="WHRCorrectionFactorsType">
+		<xs:sequence>
+			<xs:element name="Urban">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Rural">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Motorway">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="BFColdHot">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="CFRegPer">
+				<xs:simpleType>
+					<xs:restriction base="v1.0:Double4">
+						<xs:minExclusive value="0.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="WHRTypeType">
+		<xs:sequence>
+			<xs:element name="MechanicalOutputICE" type="xs:boolean"/>
+			<xs:element name="MechanicalOutputDrivetrain" type="xs:boolean"/>
+			<xs:element name="ElectricalOutput" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -49,19 +49,46 @@
 												<xs:element name="WasteHeatRecovery" minOccurs="0">
 													<xs:complexType>
 														<xs:sequence>
-															<xs:element name="WHRCorrection">
-																<xs:simpleType>
-																	<xs:restriction base="xs:double">
-																		<xs:minExclusive value="0"/>
-																	</xs:restriction>
-																</xs:simpleType>
-															</xs:element>
-															<xs:element name="WHRMap">
+															<xs:element name="Electrical" minOccurs="0">
 																<xs:complexType>
-																	<xs:choice>
-																		<xs:element name="Entry" type="tns:WHREngryEngineeringType" minOccurs="4" maxOccurs="unbounded"/>
-																		<xs:element name="Resource" type="ve1.0:ExtResourceEngineeringType"/>
-																	</xs:choice>
+																	<xs:sequence>
+																		<xs:element name="WHRCorrection">
+																			<xs:simpleType>
+																				<xs:restriction base="xs:double">
+																					<xs:minExclusive value="0"/>
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="WHRMap">
+																			<xs:complexType>
+																				<xs:choice>
+																					<xs:element name="Entry" type="tns:WHREngryEngineeringType" minOccurs="4" maxOccurs="unbounded"/>
+																					<xs:element name="Resource" type="ve1.0:ExtResourceEngineeringType"/>
+																				</xs:choice>
+																			</xs:complexType>
+																		</xs:element>
+																	</xs:sequence>
+																</xs:complexType>
+															</xs:element>
+															<xs:element name="Mechanical" minOccurs="0">
+																<xs:complexType>
+																	<xs:sequence>
+																		<xs:element name="WHRCorrection">
+																			<xs:simpleType>
+																				<xs:restriction base="xs:double">
+																					<xs:minExclusive value="0"/>
+																				</xs:restriction>
+																			</xs:simpleType>
+																		</xs:element>
+																		<xs:element name="WHRMap">
+																			<xs:complexType>
+																				<xs:choice>
+																					<xs:element name="Entry" type="tns:WHREngryEngineeringType" minOccurs="4" maxOccurs="unbounded"/>
+																					<xs:element name="Resource" type="ve1.0:ExtResourceEngineeringType"/>
+																				</xs:choice>
+																			</xs:complexType>
+																		</xs:element>
+																	</xs:sequence>
 																</xs:complexType>
 															</xs:element>
 														</xs:sequence>
@@ -109,12 +136,11 @@
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:simpleType name="WHRTypeType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="none"/>
-			<xs:enumeration value="mechanical only"/>
-			<xs:enumeration value="electrical only"/>
-			<xs:enumeration value="mechanical and electrical"/>
-		</xs:restriction>
-	</xs:simpleType>
+	<xs:complexType name="WHRTypeType">
+		<xs:sequence>
+			<xs:element name="MechanicalOutputICE" type="xs:boolean"/>
+			<xs:element name="MechanicalOutputDrivetrain" type="xs:boolean"/>
+			<xs:element name="ElectricalOutput" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>
