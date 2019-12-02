@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					var fcSum = data.TimeIntegral<Kilogram>(col);
 
 					var correction = 0.SI<KilogramPerWattSecond>();
-					if (!(workWhrMech + workESS).IsEqual(0)) {
+					if (!(workWHR + workESS).IsEqual(0)) {
 						correction = data.VehicleLineCorrectionFactor(entry);
 					}
 					var fcTotalcorr = fcSum + correction * (workESS + workWHR);
