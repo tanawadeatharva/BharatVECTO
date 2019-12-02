@@ -32,10 +32,8 @@
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Xml;
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoHashing;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 

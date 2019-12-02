@@ -1,5 +1,4 @@
 using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Interfaces;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Reader

@@ -35,7 +35,6 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Algorithms

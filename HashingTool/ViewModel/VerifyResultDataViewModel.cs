@@ -29,17 +29,14 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
 using HashingTool.Helper;
 using HashingTool.ViewModel.UserControl;
-using TUGraz.VectoHashing;
 
 namespace HashingTool.ViewModel
 {

@@ -3,7 +3,6 @@ using System.Linq;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;

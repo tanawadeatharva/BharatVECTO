@@ -30,7 +30,6 @@
 */
 
 using System.Collections.Generic;
-using System.Linq;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoHashing;

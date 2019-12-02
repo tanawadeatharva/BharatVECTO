@@ -31,7 +31,6 @@
 
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
@@ -45,9 +44,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 using System.IO;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable NotAccessedVariable

@@ -38,8 +38,6 @@ using System.Xml.Schema;
 using System.Xml.XPath;
 using TUGraz.IVT.VectoXML.Writer;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;

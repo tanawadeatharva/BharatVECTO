@@ -29,24 +29,10 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
-using System;
 using System.IO;
-using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
 using Ninject;
 using NUnit.Framework;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.OutputData;
-using TUGraz.VectoCore.OutputData.FileIO;
-using TUGraz.VectoCore.Tests.Models.Simulation;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.Declaration
 {

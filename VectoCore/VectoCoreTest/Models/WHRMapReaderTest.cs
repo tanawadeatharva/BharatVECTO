@@ -1,10 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Xml;
-using System.Xml.XPath;
 using Ninject;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;

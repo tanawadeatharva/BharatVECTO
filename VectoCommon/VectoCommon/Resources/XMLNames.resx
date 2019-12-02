@@ -1130,6 +1130,7 @@
   </data>
   <data name="Vehicle_ADAS_ATEcoRollReleaseLockupClutch" xml:space="preserve">
     <value>ATEcoRollReleaseLockupClutch</value>
+  </data>
   <data name="Engine_WHRCorrectionFactors_Electrical" xml:space="preserve">
     <value>Electrical</value>
   </data>
