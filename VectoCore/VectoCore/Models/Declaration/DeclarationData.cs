@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly StandardBodies StandardBodies = new StandardBodies();
 		public static readonly Payloads Payloads = new Payloads();
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
-		public static MeterPerSecond CycleSpeedLimit;
+		//public static MeterPerSecond CycleSpeedLimit;
 		public const double LossMapExtrapolationFactor = 6;
 
 		public static readonly ADASCombinations ADASCombinations = new ADASCombinations();
@@ -172,7 +172,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Trailer
 		{
-			public static double RollResistanceCoefficient = 0.0055;
+			public static readonly double RollResistanceCoefficient = 0.0055;
 			public const double TyreTestLoad = 37500;
 
 			public const bool TwinTyres = false;

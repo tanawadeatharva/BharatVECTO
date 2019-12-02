@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.OutputData
 //#if TRACE
 			strCols = strCols.Concat(_additionalColumns);
 			strCols = strCols.Concat(new[] { ModalResultField.ICEOn }.Select(x => x.GetName()));
-			dataColumns.Add(ModalResultField.altitude);
+			//dataColumns.Add(ModalResultField.altitude);
 //#endif
 			if (WriteModalResults) {
 				var filteredData = Data;

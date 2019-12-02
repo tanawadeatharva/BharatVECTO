@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
 				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
 				(IGearshiftEngineeringInputData)inputProvider, 2.1,
-				0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, false);
+				0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
 			// interpreted as gearbox with first and second gear using TC (due to gear ratios)
@@ -199,7 +199,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
 				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
 				(IGearshiftEngineeringInputData)inputProvider, 2.1,
-				0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, false);
+				0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
 			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
 				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
 				(IGearshiftEngineeringInputData)inputProvider, 2.1,
-				0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, false);
+				0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
 			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
 				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
 				(IGearshiftEngineeringInputData)inputProvider, 2.1,
-				0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null,false);
+				0.5.SI<Meter>(), VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
 			Assert.IsFalse(gbxData.Gears[1].HasLockedGear);
@@ -280,7 +280,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
 				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
 				(IGearshiftEngineeringInputData)inputProvider, 2.1,
-				0.5.SI<Meter>(), VehicleCategory.InterurbanBus, (ITorqueConverterEngineeringInputData)inputProvider, null, false);
+				0.5.SI<Meter>(), VehicleCategory.InterurbanBus, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
 			Assert.IsTrue(gbxData.Gears[1].HasLockedGear);
@@ -308,7 +308,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			var gbxData = new EngineeringDataAdapter().CreateGearboxData(inputProvider,
 				MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
 				(IGearshiftEngineeringInputData)inputProvider, 2.1,
-				0.5.SI<Meter>(), VehicleCategory.InterurbanBus, (ITorqueConverterEngineeringInputData)inputProvider, null, false);
+				0.5.SI<Meter>(), VehicleCategory.InterurbanBus, (ITorqueConverterEngineeringInputData)inputProvider, null, null);
 			Assert.AreEqual(ratios.Length, gbxData.Gears.Count);
 
 			Assert.IsFalse(gbxData.Gears[1].HasLockedGear);

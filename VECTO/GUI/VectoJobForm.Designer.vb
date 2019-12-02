@@ -205,7 +205,6 @@ Partial Class VectoJobForm
         Me.GrLAC.SuspendLayout
         Me.pnLookAheadCoasting.SuspendLayout
         Me.GroupBox1.SuspendLayout
-        Me.GroupBox2.SuspendLayout
         Me.PnEcoRoll.SuspendLayout
         Me.StatusStrip1.SuspendLayout
         Me.ToolStrip1.SuspendLayout
@@ -1859,4 +1858,9 @@ End Sub
     Friend WithEvents Label44 As Label
     Friend WithEvents Label45 As Label
     Friend WithEvents tbEcoRollMaxAcc As TextBox
+    Friend WithEvents TbShiftStrategyParams As TextBox
+    Friend WithEvents BtnShiftParamsForm As Button
+    Friend WithEvents BtnShiftStrategyParams As Button
+    Friend WithEvents GroupBox3 As GroupBox
+    Friend WithEvents cbGearshiftStrategy As ComboBox
 End Class

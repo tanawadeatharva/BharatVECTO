@@ -154,11 +154,11 @@ namespace TUGraz.VectoCore.Tests.Integration.ShiftStrategy
 				var r = tuple.Item2;
 				var s = tuple.Item3;
 				var fc = r.EngineSpeed != null
-					? container.RunData.EngineData.ConsumptionMap.GetFuelConsumption(r.EngineTorqueDemandTotal, r.EngineSpeed).Value
+					? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(r.EngineTorqueDemandTotal, r.EngineSpeed).Value
 								.ConvertToGrammPerHour().Value
 					: 0;
 				var fc2 = s?.EngineSpeed != null
-					? container.RunData.EngineData.ConsumptionMap.GetFuelConsumption(s.EngineTorqueDemandTotal, s.EngineSpeed).Value
+					? container.RunData.EngineData.Fuels.First().ConsumptionMap.GetFuelConsumption(s.EngineTorqueDemandTotal, s.EngineSpeed).Value
 								.ConvertToGrammPerHour().Value
 					: 0;
 				Console.WriteLine(

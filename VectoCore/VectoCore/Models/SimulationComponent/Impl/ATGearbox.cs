@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			if (_strategy!= null && CurrentState.Disengaged) {
+			if (CurrentState.Disengaged) {
 				Gear = _strategy?.InitGear(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, outTorque,
 					outAngularVelocity) ?? 1;
 			}

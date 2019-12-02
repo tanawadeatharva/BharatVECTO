@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal GearboxData CreateGearboxData(
 			IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData,
 			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory,
-			ITorqueConverterEngineeringInputData torqueConverter, IShiftStrategy shiftStrategy, bool? atEcoRollReleaseLockupClutch)
+			ITorqueConverterEngineeringInputData torqueConverter, IShiftStrategy shiftStrategy, IAdvancedDriverAssistantSystemsEngineering adas)
 		{
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
@@ -271,10 +271,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			var retVal = SetCommonGearboxData(gearbox);
 
-			if (retVal.Type.AutomaticTransmission() && !atEcoRollReleaseLockupClutch.HasValue) {
+			if (adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission() && !adas.ATEcoRollReleaseLockupClutch.HasValue) {
 				throw new VectoException("Parameter ATEcoRollReleaseLockupClutch required for AT gearbox");
 			}
-			retVal.ATEcoRollReleaseLockupClutch = retVal.Type.AutomaticTransmission() ? atEcoRollReleaseLockupClutch.Value : false;
+			retVal.ATEcoRollReleaseLockupClutch = adas != null && adas.EcoRoll != EcoRollType.None && retVal.Type.AutomaticTransmission() ? adas.ATEcoRollReleaseLockupClutch.Value : false;
 
 			//var gears = gearbox.Gears;
 			if (gearbox.Gears.Count < 2) {

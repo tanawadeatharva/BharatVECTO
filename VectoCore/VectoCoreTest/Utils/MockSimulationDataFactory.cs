@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				};
 				var engineData = dao.CreateEngineData(vehicleInput, engineInput.EngineModes.First(), mission);//(engineInput, null, gearboxInput, new List<ITorqueLimitInputData>());
 				return dao.CreateGearboxData(gearboxInput, engineData, ((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
-					VehicleCategory.RigidTruck, (ITorqueConverterDeclarationInputData)gearboxInput, null, false);
+					VehicleCategory.RigidTruck, (ITorqueConverterDeclarationInputData)gearboxInput, null, null);
 			} else {
 				var dao = new EngineeringDataAdapter();
 				var runData = new MockEngineeringVehicleInputData() {
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var engineData = dao.CreateEngineData(runData, engineInput.EngineModes.First());
 				return dao.CreateGearboxData(gearboxInput, engineData, (IGearshiftEngineeringInputData)gearboxInput, 
 					((IAxleGearInputData)gearboxInput).Ratio, 0.5.SI<Meter>(),
-					VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)gearboxInput, null, false);
+					VehicleCategory.RigidTruck, (ITorqueConverterEngineeringInputData)gearboxInput, null, null);
 			}
 		}
 

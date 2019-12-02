@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			};
 			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
 			var gearboxData = dao.CreateGearboxData(vehicle.Components.GearboxInputData, engineData, InputDataProvider.DriverInputData.GearshiftInputData, axlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius,tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, tmpStrategy, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
+				tempVehicle.DynamicTyreRadius,tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, tmpStrategy, vehicle.ADAS);
 					var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==
 											CrossWindCorrectionMode.VAirBetaLookupTable;
 					var angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);

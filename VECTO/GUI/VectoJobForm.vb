@@ -1583,8 +1583,7 @@ lbDlog:
         End If
     End Sub
 
-    End Sub
-
+    
     Private Sub Label44_Click(sender As Object, e As EventArgs) Handles Label44.Click
 
     End Sub

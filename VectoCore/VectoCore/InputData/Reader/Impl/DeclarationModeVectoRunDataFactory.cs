@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				vehicle, vehicle.Components.EngineInputData.EngineModes[0], _segment.Missions.First());
 			_gearboxData = _dao.CreateGearboxData(vehicle.Components.GearboxInputData, tmpEngine,
 				_axlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, tmpStrategy, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
+				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, tmpStrategy, vehicle.ADAS);
 			_retarderData = _dao.CreateRetarderData(vehicle.Components.RetarderInputData);
 
 			_ptoTransmissionData = _dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
