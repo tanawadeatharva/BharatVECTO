@@ -142,14 +142,17 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var accPos = data.GetValues(
 				x => new {
-					a = x.Field<MeterPerSquareSecond>((int)ModalResultField.acc),
-					dt = x.Field<Second>((int)ModalResultField.simulationInterval),
-					dv = x.Field<MeterPerSecond>((int)ModalResultField.v_targ) -
-						x.Field<MeterPerSecond>((int)ModalResultField.v_act),
-						driverStatus = x.Field<int>((int)ModalResultField.drivingBehavior)
+					a = x.Field<MeterPerSquareSecond>(ModalResultField.acc.GetName()).DefaultIfNull(0),
+					dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()).DefaultIfNull(0),
+					dv = x.Field<MeterPerSecond>(ModalResultField.v_targ.GetName()).DefaultIfNull(0) -
+						x.Field<MeterPerSecond>(ModalResultField.v_act.GetName()).DefaultIfNull(0),
+						driverStatus = x.Field<int>(ModalResultField.drivingBehavior.GetName())
 				}).Where(x => x.driverStatus == 2 && x.dv > 0).ToArray();
-			var duration = accPos.Sum(x => x.dt);
-			var accSum = accPos.Sum(x => x.a * x.dt);
+			var duration = accPos.Sum(x => x.dt).DefaultIfNull(0);
+			var accSum = accPos.Sum(x => x.a * x.dt).DefaultIfNull(0);
+			if (duration.IsEqual(0, 1e-12) && accSum.IsEqual(0, 1e-12)) {
+				return 0.SI<MeterPerSquareSecond>();
+			}
 			return accSum / duration;
 		}
 
