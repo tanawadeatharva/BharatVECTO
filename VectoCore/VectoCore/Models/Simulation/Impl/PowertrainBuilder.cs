@@ -454,23 +454,29 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (string.IsNullOrWhiteSpace(shiftStrategy)) {
 				switch (runData.GearboxData.Type) {
 					case GearboxType.AMT:
+						runData.ShiftStrategy = AMTShiftStrategyOptimized.Name;
 						return new AMTShiftStrategyOptimized(runData, container);
 						//return new AMTShiftStrategy(runData, container);
 					case GearboxType.MT:
+						runData.ShiftStrategy = MTShiftStrategy.Name;
 						return new MTShiftStrategy(runData, container);
 					case GearboxType.ATPowerSplit:
 					case GearboxType.ATSerial:
+						runData.ShiftStrategy = ATShiftStrategyOptimized.Name;
 						return new ATShiftStrategyOptimized(runData, container);
 						//return new ATShiftStrategy(runData, container);
 					default:
 						throw new ArgumentOutOfRangeException("GearboxType", string.Format("Unknown Gearbox Type {0}", runData.GearboxData.Type.ToString()));
 				}
+
 			}
 
 			var selected = ShiftStrategies.FirstOrDefault(x => x.Item1.Contains(runData.GearboxData.Type) && x.Item2.Equals(shiftStrategy, StringComparison.InvariantCultureIgnoreCase));
 			if (selected == null) {
 				throw new ArgumentOutOfRangeException("ShiftStrategy", string.Format("Unknown Shiftstrategy {0} for Gearbox Type {1}", shiftStrategy, runData.GearboxData.Type.ToString()));
 			}
+
+			runData.ShiftStrategy = selected.Item3;
 			return selected.Item4(runData, container);
 		}
 
