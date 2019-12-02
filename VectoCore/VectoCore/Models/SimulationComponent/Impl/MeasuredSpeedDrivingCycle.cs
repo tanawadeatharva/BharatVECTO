@@ -384,6 +384,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
+		public SpeedChangeEntry LastTargetspeedChange { get { return null; } }
+
 		public void FinishSimulation()
 		{
 			Data.Finish();

@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.OutputData
 				var entry = new T();
 				entry.FuelData = runData.EngineData.Fuels.Select(x => x.FuelData).ToList();
 				entry.Payload = runData.VehicleData.Loading;
-				entry.TotalVehicleWeight = runData.VehicleData.TotalVehicleWeight;
+				entry.TotalVehicleWeight = runData.VehicleData.TotalVehicleMass;
 				entry.CargoVolume = runData.VehicleData.CargoVolume;
 
 				missions[mission.MissionType].ResultEntry[loading] = entry;

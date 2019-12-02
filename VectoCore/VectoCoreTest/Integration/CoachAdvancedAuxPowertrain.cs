@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(engine);
 
 			var aux = new BusAuxiliariesAdapter(container, AdvancedAuxFile, "Coach",
-				vehicleData.TotalVehicleWeight, engineData.Fuels.First().ConsumptionMap, engineData.IdleSpeed);
+				vehicleData.TotalVehicleMass, engineData.Fuels.First().ConsumptionMap, engineData.IdleSpeed);
 
 			engine.Connect(aux.Port());
 
@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return new VehicleData {
 				AirDensity = DeclarationData.AirDensity,
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
-				CurbWeight = 15700.SI<Kilogram>(),
+				CurbMass = 15700.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,

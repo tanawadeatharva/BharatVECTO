@@ -412,7 +412,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				AirDensity = DeclarationData.AirDensity,
-				CurbWeight = 15700.SI<Kilogram>(),
+				CurbMass = 15700.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,

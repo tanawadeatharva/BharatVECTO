@@ -28,6 +28,9 @@ Partial Class VectoJobForm
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(VectoJobForm))
         Me.TabPgGen = New System.Windows.Forms.TabPage()
+        Me.TbShiftStrategyParams = New System.Windows.Forms.TextBox()
+        Me.BtnShiftParamsForm = New System.Windows.Forms.Button()
+        Me.BtnShiftStrategyParams = New System.Windows.Forms.Button()
         Me.GrCycles = New System.Windows.Forms.GroupBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.LvCycles = New System.Windows.Forms.ListView()
@@ -190,10 +193,34 @@ Partial Class VectoJobForm
         Me.CmOpenFile.SuspendLayout
         CType(Me.PicVehicle,System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.cbGearshiftStrategy = New System.Windows.Forms.ComboBox()
+        Me.TabPgGen.SuspendLayout
+        Me.GrCycles.SuspendLayout
+        Me.GrAux.SuspendLayout
+        CType(Me.picAuxInfo,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.TabControl1.SuspendLayout
+        Me.TabPgDriver.SuspendLayout
+        Me.GrVACC.SuspendLayout
+        Me.GrLAC.SuspendLayout
+        Me.pnLookAheadCoasting.SuspendLayout
+        Me.GroupBox1.SuspendLayout
+        Me.GroupBox2.SuspendLayout
+        Me.PnEcoRoll.SuspendLayout
+        Me.StatusStrip1.SuspendLayout
+        Me.ToolStrip1.SuspendLayout
+        CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.CmOpenFile.SuspendLayout
+        CType(Me.PicVehicle,System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.PicBox,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.GroupBox3.SuspendLayout
         Me.SuspendLayout
         '
         'TabPgGen
         '
+        Me.TabPgGen.Controls.Add(Me.TbShiftStrategyParams)
+        Me.TabPgGen.Controls.Add(Me.BtnShiftParamsForm)
+        Me.TabPgGen.Controls.Add(Me.BtnShiftStrategyParams)
         Me.TabPgGen.Controls.Add(Me.GrCycles)
         Me.TabPgGen.Controls.Add(Me.GrAux)
         Me.TabPgGen.Controls.Add(Me.TbGBX)
@@ -208,10 +235,40 @@ Partial Class VectoJobForm
         Me.TabPgGen.Location = New System.Drawing.Point(4, 22)
         Me.TabPgGen.Name = "TabPgGen"
         Me.TabPgGen.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgGen.Size = New System.Drawing.Size(527, 487)
+        Me.TabPgGen.Size = New System.Drawing.Size(527, 512)
         Me.TabPgGen.TabIndex = 0
         Me.TabPgGen.Text = "General"
         Me.TabPgGen.UseVisualStyleBackColor = true
+        '
+        'TbShiftStrategyParams
+        '
+        Me.TbShiftStrategyParams.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.TbShiftStrategyParams.Location = New System.Drawing.Point(85, 87)
+        Me.TbShiftStrategyParams.Name = "TbShiftStrategyParams"
+        Me.TbShiftStrategyParams.Size = New System.Drawing.Size(411, 20)
+        Me.TbShiftStrategyParams.TabIndex = 12
+        '
+        'BtnShiftParamsForm
+        '
+        Me.BtnShiftParamsForm.Location = New System.Drawing.Point(7, 87)
+        Me.BtnShiftParamsForm.Name = "BtnShiftParamsForm"
+        Me.BtnShiftParamsForm.Size = New System.Drawing.Size(72, 21)
+        Me.BtnShiftParamsForm.TabIndex = 11
+        Me.BtnShiftParamsForm.TabStop = false
+        Me.BtnShiftParamsForm.Text = "Shift Parameters"
+        Me.BtnShiftParamsForm.UseVisualStyleBackColor = true
+        '
+        'BtnShiftStrategyParams
+        '
+        Me.BtnShiftStrategyParams.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.BtnShiftStrategyParams.Image = CType(resources.GetObject("BtnShiftStrategyParams.Image"),System.Drawing.Image)
+        Me.BtnShiftStrategyParams.Location = New System.Drawing.Point(497, 85)
+        Me.BtnShiftStrategyParams.Name = "BtnShiftStrategyParams"
+        Me.BtnShiftStrategyParams.Size = New System.Drawing.Size(24, 24)
+        Me.BtnShiftStrategyParams.TabIndex = 13
+        Me.BtnShiftStrategyParams.TabStop = false
+        Me.BtnShiftStrategyParams.UseVisualStyleBackColor = true
         '
         'GrCycles
         '
@@ -221,7 +278,7 @@ Partial Class VectoJobForm
         Me.GrCycles.Controls.Add(Me.LvCycles)
         Me.GrCycles.Controls.Add(Me.BtDRIrem)
         Me.GrCycles.Controls.Add(Me.BtDRIadd)
-        Me.GrCycles.Location = New System.Drawing.Point(6, 338)
+        Me.GrCycles.Location = New System.Drawing.Point(5, 368)
         Me.GrCycles.Name = "GrCycles"
         Me.GrCycles.Size = New System.Drawing.Size(515, 138)
         Me.GrCycles.TabIndex = 10
@@ -304,7 +361,7 @@ Partial Class VectoJobForm
         Me.GrAux.Controls.Add(Me.LvAux)
         Me.GrAux.Controls.Add(Me.ButAuxRem)
         Me.GrAux.Controls.Add(Me.ButAuxAdd)
-        Me.GrAux.Location = New System.Drawing.Point(6, 87)
+        Me.GrAux.Location = New System.Drawing.Point(5, 117)
         Me.GrAux.Name = "GrAux"
         Me.GrAux.Size = New System.Drawing.Size(515, 245)
         Me.GrAux.TabIndex = 9
@@ -565,19 +622,20 @@ Partial Class VectoJobForm
         Me.TabControl1.Location = New System.Drawing.Point(1, 107)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(535, 513)
+        Me.TabControl1.Size = New System.Drawing.Size(535, 538)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 0
         '
         'TabPgDriver
         '
+        Me.TabPgDriver.Controls.Add(Me.GroupBox3)
         Me.TabPgDriver.Controls.Add(Me.GrVACC)
         Me.TabPgDriver.Controls.Add(Me.GrLAC)
         Me.TabPgDriver.Controls.Add(Me.GroupBox1)
         Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
         Me.TabPgDriver.Name = "TabPgDriver"
         Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgDriver.Size = New System.Drawing.Size(527, 487)
+        Me.TabPgDriver.Size = New System.Drawing.Size(527, 512)
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver Model"
         Me.TabPgDriver.UseVisualStyleBackColor = true
@@ -1343,7 +1401,7 @@ Partial Class VectoJobForm
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 624)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 692)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(944, 22)
         Me.StatusStrip1.SizingGrip = false
@@ -1359,7 +1417,7 @@ Partial Class VectoJobForm
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(778, 597)
+        Me.ButOK.Location = New System.Drawing.Point(778, 665)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 0
@@ -1370,7 +1428,7 @@ Partial Class VectoJobForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(859, 597)
+        Me.ButCancel.Location = New System.Drawing.Point(859, 665)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 1
@@ -1574,13 +1632,31 @@ Partial Class VectoJobForm
         Me.lblEngineCharacteristics.Size = New System.Drawing.Size(0, 13)
         Me.lblEngineCharacteristics.TabIndex = 37
         '
+        'GroupBox3
+        '
+        Me.GroupBox3.Controls.Add(Me.cbGearshiftStrategy)
+        Me.GroupBox3.Location = New System.Drawing.Point(9, 347)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(514, 50)
+        Me.GroupBox3.TabIndex = 4
+        Me.GroupBox3.TabStop = false
+        Me.GroupBox3.Text = "Gearshift Strategy"
+        '
+        'cbGearshiftStrategy
+        '
+        Me.cbGearshiftStrategy.FormattingEnabled = true
+        Me.cbGearshiftStrategy.Location = New System.Drawing.Point(6, 19)
+        Me.cbGearshiftStrategy.Name = "cbGearshiftStrategy"
+        Me.cbGearshiftStrategy.Size = New System.Drawing.Size(270, 21)
+        Me.cbGearshiftStrategy.TabIndex = 0
+        '
         'VectoJobForm
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(944, 646)
+        Me.ClientSize = New System.Drawing.Size(944, 714)
         Me.Controls.Add(Me.lblEngineCharacteristics)
         Me.Controls.Add(Me.TbHVCclass)
         Me.Controls.Add(Me.TbMass)

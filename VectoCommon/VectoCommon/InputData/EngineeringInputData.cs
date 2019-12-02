@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -52,6 +53,7 @@ namespace TUGraz.VectoCommon.InputData
 		bool EngineOnlyMode { get; }
 
 		IEngineEngineeringInputData EngineOnly { get; }
+
 	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
@@ -247,6 +249,46 @@ namespace TUGraz.VectoCommon.InputData
 		Second UpshiftAfterDownshiftDelay { get; }
 
 		MeterPerSquareSecond UpshiftMinAcceleration { get; }
+
+		// ACEA/Scania GS Parameters
+		Second GearResidenceTime { get; }
+		double? DnT99LHMin1 { get; }
+		double? DnT99LHMin2 { get; }
+		int? AllowedGearRangeUp { get; }
+		int? AllowedGearRangeDown { get; }
+		Second LookBackInterval { get; }
+		Watt AvgCardanPowerThresholdPropulsion { get; }
+		Watt CurrCardanPowerThresholdPropulsion { get; }
+		double? TargetSpeedDeviationFactor { get; }
+		double? EngineSpeedHighDriveOffFactor { get; }
+		double? RatingFactorCurrentGear { get; }
+		TableData AccelerationReserveLookup { get; }
+		TableData ShareTorque99L { get; }
+		TableData PredictionDurationLookup { get; }
+		TableData ShareIdleLow { get; }
+		TableData ShareEngineHigh { get; }
+		string Source { get; }
+		Second DriverAccelerationLookBackInterval { get; }
+		MeterPerSquareSecond DriverAccelerationThresholdLow { get; }
+
+		// FC-Based GS parameters
+		double? RatioEarlyUpshiftFC { get; }
+		double? RatioEarlyDownshiftFC { get; }
+
+		int? AllowedGearRangeFC { get; }
+
+		double? VeloictyDropFactor { get; }
+
+		double? AccelerationFactor { get; }
+
+		// Voith GS Parameters
+		TableData LoadStageShiftLines { get; }
+		IList<double> LoadStageThresholdsUp { get; }
+		IList<double> LoadStageThresholdsDown { get; }
+		PerSecond MinEngineSpeedPostUpshift { get; }
+
+		Second ATLookAheadTime { get; }
+		double[][] ShiftSpeedsTCToLocked { get; }
 	}
 
 	public interface ITorqueConverterEngineeringShiftParameterInputData
@@ -480,4 +522,5 @@ namespace TUGraz.VectoCommon.InputData
 
 		DataSource DataSource { get; }
 	}
+
 }

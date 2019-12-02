@@ -38,6 +38,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.Simulation
@@ -57,6 +58,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 
 		VectoRun.Status RunStatus { get; set; }
 
+		
+
 		/// <summary>
 		/// Adds a component to the vehicle container.
 		/// </summary>
@@ -74,8 +77,9 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// <param name="exception"></param>
 		void FinishSimulationRun(Exception exception = null);
 
+		void StartSimulationRun();
+
 		IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns { get; }
 		void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor);
-		void StartSimulationRun();
 	}
 }

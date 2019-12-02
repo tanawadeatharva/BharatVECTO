@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
     "CreatedBy": "",
-    "Date": "2017-07-03T14:47:43.6586880Z",
+    "Date": "2019-07-08T07:47:39.1584304Z",
     "AppVersion": "3",
-    "FileVersion": 3
+    "FileVersion": 4
   },
   "Body": {
     "SavedInDeclMode": true,
@@ -11,6 +11,7 @@
     "VehicleFile": "Class5_Tractor.vveh",
     "EngineFile": "Engine_325kW_12.7l.veng",
     "GearboxFile": "AMT_12.vgbx",
+    "ShiftStrategy": "TUGraz.VectoCore.Models.SimulationComponent.Impl.AMTShiftStrategyOptimized",
     "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
@@ -54,7 +55,7 @@
     "OverSpeedEcoRoll": {
       "Mode": "Overspeed",
       "MinSpeed": 50.0,
-      "OverSpeed": 5.0,
+      "OverSpeed": 2.5,
       "UnderSpeed": 5.0
     }
   }

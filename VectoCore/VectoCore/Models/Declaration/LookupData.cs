@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -56,7 +57,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected static DataTable ReadCsvResource(string resourceId)
 		{
+#if USE_EXTENAL_DECLARATION_DATA
+			return
+				VectoCSVFile.Read(Path.Combine("Declaration",
+					resourceId.Replace(DeclarationData.DeclarationDataResourcePrefix + ".", "")));
+#else
 			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
+#endif
 		}
 
 		protected static void NormalizeTable(DataTable table)

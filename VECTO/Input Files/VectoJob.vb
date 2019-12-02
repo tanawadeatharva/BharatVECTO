@@ -48,6 +48,7 @@ Public Class VectoJob
     Private ReadOnly _vehicleFile As SubPath
     Private ReadOnly _engineFile As SubPath
     Private ReadOnly _gearboxFile As SubPath
+    Private ReadOnly _tcuFile As SubPath
 
     Private ReadOnly _lacDfTargetSpeedFile As SubPath
     Private ReadOnly _lacDfVelocityDropFile as SubPath
@@ -72,6 +73,7 @@ Public Class VectoJob
 
     Public LookAheadMinSpeed As Double
     Public EngineStopStartActivationThreshold As Double
+    Private _shiftStrategy As String
     public EngineOffTimeLimit As double
     public EngineStStUtilityFactor As Double
 
@@ -111,6 +113,7 @@ Public Class VectoJob
         _vehicleFile = New SubPath
         _engineFile = New SubPath
         _gearboxFile = New SubPath
+        _tcuFile = new SubPath
         _lacDfTargetSpeedFile = New SubPath()
         _lacDfVelocityDropFile = New SubPath()
 
@@ -204,6 +207,19 @@ Public Class VectoJob
         End Set
     End Property
 
+    Public Property PathShiftParams(Optional ByVal original As Boolean = False) As String
+        Get
+            If original Then
+                Return _tcuFile.OriginalPath
+            Else
+                Return _tcuFile.FullPath
+            End If
+        End Get
+        Set(value As String)
+            _tcuFile.Init(_myPath, value)
+        End Set
+    End Property
+    
 
     Public ReadOnly Property IDriverDeclarationInputData_SavedInDeclarationMode As Boolean _
         Implements IDriverDeclarationInputData.SavedInDeclarationMode
@@ -273,9 +289,9 @@ Public Class VectoJob
         End Get
     End Property
 
-    Public ReadOnly Property GearshiftInputData As IGearshiftEngineeringInputData Implements IDriverEngineeringInputData.GearshiftInputData
-        get
-            Return TryCast( New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.GearboxInputData, IGearshiftEngineeringInputData)
+    Public ReadOnly Property IDriverEngineeringInputData_GearshiftInputData As IGearshiftEngineeringInputData Implements IDriverEngineeringInputData.GearshiftInputData
+        Get
+            return new JSONComponentInputData(_tcuFile.FullPath, Me).DriverInputData.GearshiftInputData
         End Get
     End Property
 
@@ -548,6 +564,13 @@ Public Class VectoJob
         End Get
     End Property
 
+    'Public ReadOnly Property GearshiftInputData As IGearshiftEngineeringInputData Implements IDriverEngineeringInputData.GearshiftInputData
+    '    get
+    '        Return TryCast( New JSONComponentInputData(_gearboxFile.FullPath, Me).JobInputData.Vehicle.Components.GearboxInputData, IGearshiftEngineeringInputData)
+    '    End Get
+    'End Property
+
+
     Public ReadOnly Property XMLHash As XElement Implements IDeclarationInputDataProvider.XMLHash
         Get
             Return Nothing
@@ -622,6 +645,15 @@ Public Class VectoJob
         Get
             Return Path.GetFileNameWithoutExtension(FilePath)
         End Get
+    End Property
+
+    Public Property ShiftStrategy As String Implements IDeclarationJobInputData.ShiftStrategy
+    Get
+            Return _shiftStrategy
+    End Get
+        set (value as string)
+            _shiftStrategy = value
+        End set
     End Property
 
     Public Property AuxPAdd As Double

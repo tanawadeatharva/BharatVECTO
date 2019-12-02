@@ -208,6 +208,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string NUM_AXLES_NON_DRIVEN = "Number axles vehicle non-driven [-]";
 		public const string NUM_AXLES_TRAILER = "Number axles trailer [-]";
 
+		public const string TCU_MODEL = "ShiftStrategy";
+
 		public const string VEHICLE_FUEL_TYPE = "Vehicle fuel type [-]";
 		public const string AIRDRAG_MODEL = "AirDrag model [-]";
 		public const string SLEEPER_CAB = "Sleeper cab [-]";
@@ -249,6 +251,8 @@ namespace TUGraz.VectoCore.OutputData
 		public const string AVERAGE_AXLEGEAR_EFFICIENCY = "Average axlegear efficiency [%]";
 		public const string AIRDRAG_CERTIFICATION_NUMBER = "AirDrag certification number";
 		public const string AIRDRAG_CERTIFICATION_METHOD = "AirDrag certification option";
+
+		public const string AVERAGE_POS_ACC = "a_avg_acc";
 
 		protected readonly string[] fcColumns = {
 			FCMAP_H, FCMAP_KM,
@@ -352,6 +356,7 @@ namespace TUGraz.VectoCore.OutputData
 						typeof(string)),
 					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.PneumaticSystem), typeof(string)),
 					Tuple.Create(string.Format(AUX_TECH_FORMAT, Constants.Auxiliaries.IDs.ElectricSystem), typeof(string)),
+				Tuple.Create(TCU_MODEL, typeof(string)),
 					Tuple.Create(ADAS_TECHNOLOGY_COMBINATION, typeof(string)),
 					Tuple.Create(PTO_TECHNOLOGY, typeof(string)),
 
@@ -377,7 +382,8 @@ namespace TUGraz.VectoCore.OutputData
 					E_WHR_EL, E_AUX_ESS_MECH, E_ICE_START, NUM_ICE_STARTS, 
 					ACC, ACC_POS, ACC_NEG, ACC_TIMESHARE, DEC_TIMESHARE, CRUISE_TIMESHARE,
 					MAX_SPEED, MAX_ACCELERATION, MAX_DECELERATION, AVG_ENGINE_SPEED, MAX_ENGINE_SPEED, NUM_GEARSHIFTS,
-					STOP_TIMESHARE, ENGINE_FULL_LOAD_TIME_SHARE, COASTING_TIME_SHARE, BRAKING_TIME_SHARE
+					STOP_TIMESHARE, ENGINE_FULL_LOAD_TIME_SHARE, COASTING_TIME_SHARE, BRAKING_TIME_SHARE,
+					AVERAGE_POS_ACC
 				}.Select(x => new DataColumn(x, typeof(ConvertedSI))).ToArray());
 
 			Table.Columns.AddRange(
@@ -682,6 +688,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[MAX_DECELERATION] = (ConvertedSI)modData.MaxDeceleration();
 			row[AVG_ENGINE_SPEED] = (ConvertedSI)modData.AvgEngineSpeed().AsRPM.SI<Scalar>();
 			row[MAX_ENGINE_SPEED] = (ConvertedSI)modData.MaxEngineSpeed().AsRPM.SI<Scalar>();
+			row[AVERAGE_POS_ACC] = (ConvertedSI)modData.AverageAccelerationBelowTargetSpeed();
 			if (accTimeShare != null && decTimeShare != null && cruiseTimeShare != null) {
 				var shareSum = accTimeShare + decTimeShare + cruiseTimeShare + stopTimeShare;
 				if (!shareSum.IsEqual(100, 1e-2)) {
@@ -775,6 +782,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			WriteVehicleData(runData.VehicleData, runData.GearboxData.Type, row);
 
+			row[TCU_MODEL] = runData.ShiftStrategy;
 			row[PTO_TECHNOLOGY] = runData.PTO?.TransmissionType ?? "";
 
 			WriteEngineData(runData.EngineData, row);
@@ -802,13 +810,13 @@ namespace TUGraz.VectoCore.OutputData
 			row[VEHICLE_MODEL] = data.ModelName;
 
 			row[HDV_CO2_VEHICLE_CLASS] = data.VehicleClass.GetClassNumber();
-			row[CURB_MASS] = (ConvertedSI)data.CurbWeight;
+			row[CURB_MASS] = (ConvertedSI)data.CurbMass;
 
 			// - (data.BodyAndTrailerWeight ?? 0.SI<Kilogram>());
 			row[LOADING] = (ConvertedSI)data.Loading;
 			row[CARGO_VOLUME] = (ConvertedSI)data.CargoVolume;
 
-			row[TOTAL_VEHICLE_MASS] = (ConvertedSI)data.TotalVehicleWeight;
+			row[TOTAL_VEHICLE_MASS] = (ConvertedSI)data.TotalVehicleMass;
 
 			row[SLEEPER_CAB] = data.SleeperCab ? "yes" : "no";
 

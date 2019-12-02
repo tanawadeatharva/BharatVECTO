@@ -5,6 +5,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl {
@@ -39,11 +40,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			var slopeEngineDrag = 0.0;
 			if (runData.GearboxData.Type.AutomaticTransmission()) {
 				if (runData.VehicleData.ADAS.EcoRoll != EcoRollType.None && runData.GearboxData.ATEcoRollReleaseLockupClutch) {
-					slopeEngineDrag = (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleWeight).Value();
+					slopeEngineDrag = (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleMass).Value();
 				}
 			} else {
 				if (runData.VehicleData.ADAS.EcoRoll != EcoRollType.None) {
-					slopeEngineDrag = (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleWeight).Value();
+					slopeEngineDrag = (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleMass).Value();
 				}
 			}
 			
@@ -94,9 +95,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 						StartDistance = tuple.Item1.Distance - VectoMath.Min(tuple.Item1.Distance - targetspeedChanged, PCCDriverData.PreviewDistanceUseCase1), // PCCDriverData.PreviewDistanceUseCase1,
 						TargetSpeed = tuple.Item1.VehicleTargetSpeed,
 						Altitude = tuple.Item1.Altitude,
-						EnergyMinSpeed = (runData.VehicleData.TotalVehicleWeight * Physics.GravityAccelleration * tuple.Item1.Altitude)
+						EnergyMinSpeed = (runData.VehicleData.TotalVehicleMass * Physics.GravityAccelleration * tuple.Item1.Altitude)
 										.Cast<Joule>() +
-										runData.VehicleData.TotalVehicleWeight * (tuple.Item1.VehicleTargetSpeed - PCCDriverData.UnderSpeed) *
+										runData.VehicleData.TotalVehicleMass * (tuple.Item1.VehicleTargetSpeed - PCCDriverData.UnderSpeed) *
 										(tuple.Item1.VehicleTargetSpeed - PCCDriverData.UnderSpeed) / 2,
 					};
 				}
@@ -104,8 +105,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 				if (pccSegment != null && slope > minSlope) {
 					pccSegment.EndDistance = tuple.Item1.Distance;
 					pccSegment.EnergyEnd =
-						(runData.VehicleData.TotalVehicleWeight * Physics.GravityAccelleration * tuple.Item1.Altitude).Cast<Joule>() +
-						runData.VehicleData.TotalVehicleWeight * tuple.Item1.VehicleTargetSpeed *
+						(runData.VehicleData.TotalVehicleMass * Physics.GravityAccelleration * tuple.Item1.Altitude).Cast<Joule>() +
+						runData.VehicleData.TotalVehicleMass * tuple.Item1.VehicleTargetSpeed *
 						tuple.Item1.VehicleTargetSpeed / 2;
 					PCCSegments.Segments.Add(pccSegment);
 					pccSegment = null;

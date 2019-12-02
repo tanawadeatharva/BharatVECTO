@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		protected readonly string Version;
 
-		protected readonly JObject Body;
+		protected internal readonly JObject Body;
 
 		protected JSONFile(JObject data, string filename, bool tolerateMissing = false)
 		{
@@ -163,7 +163,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IGearboxEngineeringInputData Gearbox { get; internal set; }
 
-		public IGearshiftEngineeringInputData GearshiftInputData { get; internal set; }
+		public virtual IGearshiftEngineeringInputData GearshiftInputData { get; internal set; }
 
 		public virtual IEngineStopStartEngineeringInputData EngineStopStartData
 		{
@@ -319,6 +319,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
+		
 		#endregion
 
 		#region IJobInputData
@@ -381,6 +382,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual string JobName
 		{
 			get { return _jobname; }
+		}
+
+		public string ShiftStrategy
+		{
+			get {
+				if (Body["ShiftStrategy"] == null) {
+					return "";
+				}
+
+				return Body.GetEx<string>("ShiftStrategy");
+			}
 		}
 
 		#endregion
@@ -689,6 +701,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	{
 		public JSONInputDataV4(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) { }
+
+		public override IGearshiftEngineeringInputData GearshiftInputData { get { return Body["TCU"] == null ? null : JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false); } }
 	}
 
 	public class JSONVTPInputDataV4 : JSONFile, IVTPEngineeringInputDataProvider, IVTPEngineeringJobInputData,

@@ -220,7 +220,7 @@ Public Class Gearbox
                 End Try
 
                 axlegearData = doa.CreateAxleGearData(gearbox)
-                gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, gearbox, false)
+				gearboxData = doa.CreateGearboxData(gearbox, engine, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, gearbox, Nothing, false)
             Else
                 Dim doa As EngineeringDataAdapter = New EngineeringDataAdapter()
                 Try
@@ -230,7 +230,7 @@ Public Class Gearbox
                 End Try
 
                 axlegearData = doa.CreateAxleGearData(gearbox)
-                gearboxData = doa.CreateGearboxData(gearbox, engine, gearbox, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, gearbox, false)
+                gearboxData = doa.CreateGearboxData(gearbox, engine, gearbox, axlegearData.AxleGear.Ratio, rdyn, vehiclecategory, gearbox, Nothing, false)
             End If
 
             Dim result As IList(Of ValidationResult) =
@@ -457,6 +457,186 @@ Public Class Gearbox
         Implements IGearshiftEngineeringInputData.UpshiftAfterDownshiftDelay
         Get
             Return UpshiftAfterDownshift.SI(Of Second)()
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property GearResidenceTime As Second Implements IGearshiftEngineeringInputData.GearResidenceTime
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property DnT99LHMin1 As Double? Implements IGearshiftEngineeringInputData.DnT99LHMin1
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property DnT99LHMin2 As Double? Implements IGearshiftEngineeringInputData.DnT99LHMin2
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property AllowedGearRangeUp As Integer? Implements IGearshiftEngineeringInputData.AllowedGearRangeUp
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property AllowedGearRangeDown As Integer? Implements IGearshiftEngineeringInputData.AllowedGearRangeDown
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property LookBackInterval As Second Implements IGearshiftEngineeringInputData.LookBackInterval
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property AvgCardanPowerThresholdPropulsion As Watt Implements IGearshiftEngineeringInputData.AvgCardanPowerThresholdPropulsion
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property CurrCardanPowerThresholdPropulsion As Watt Implements IGearshiftEngineeringInputData.CurrCardanPowerThresholdPropulsion
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property TargetSpeedDeviationFactor As Double? Implements IGearshiftEngineeringInputData.TargetSpeedDeviationFactor
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property EngineSpeedHighDriveOffFactor As Double? Implements IGearshiftEngineeringInputData.EngineSpeedHighDriveOffFactor
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property RatingFactorCurrentGear As Double? Implements IGearshiftEngineeringInputData.RatingFactorCurrentGear
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property AccelerationReserveLookup As TableData Implements IGearshiftEngineeringInputData.AccelerationReserveLookup
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property ShareTorque99L As TableData Implements IGearshiftEngineeringInputData.ShareTorque99L
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property PredictionDurationLookup As TableData Implements IGearshiftEngineeringInputData.PredictionDurationLookup
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property ShareIdleLow As TableData Implements IGearshiftEngineeringInputData.ShareIdleLow
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property ShareEngineHigh As TableData Implements IGearshiftEngineeringInputData.ShareEngineHigh
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property Source As String Implements IGearshiftEngineeringInputData.Source
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property DriverAccelerationLookBackInterval As Second Implements IGearshiftEngineeringInputData.DriverAccelerationLookBackInterval
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property DriverAccelerationThresholdLow As MeterPerSquareSecond Implements IGearshiftEngineeringInputData.DriverAccelerationThresholdLow
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property RatioEarlyUpshiftFC As Double? Implements IGearshiftEngineeringInputData.RatioEarlyUpshiftFC
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property RatioEarlyDownshiftFC As Double? Implements IGearshiftEngineeringInputData.RatioEarlyDownshiftFC
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+    Public ReadOnly Property AllowedGearRangeFC As Integer? Implements IGearshiftEngineeringInputData.AllowedGearRangeFC
+    get
+            Return Nothing
+    End Get
+    End Property
+
+    Public ReadOnly Property VeloictyDropFactor As Double? Implements IGearshiftEngineeringInputData.VeloictyDropFactor
+        Get
+            Return Nothing
+        End Get
+    End Property
+
+    Public ReadOnly Property AccelerationFactor As Double? Implements IGearshiftEngineeringInputData.AccelerationFactor
+        Get
+            Return Nothing
+        End Get
+    End Property
+
+    public readonly Property MinEngineSpeedPostUpshift as PerSecond Implements IGearshiftEngineeringInputData.MinEngineSpeedPostUpshift
+    get
+            Return Nothing
+    End Get
+    End Property
+
+    Public ReadOnly Property ATLookAheadTime As Second Implements IGearshiftEngineeringInputData.ATLookAheadTime
+    get
+            return Nothing
+    End Get
+    End Property
+
+    Public ReadOnly Property ShiftSpeedsTCToLocked As Double()() Implements IGearshiftEngineeringInputData.ShiftSpeedsTCToLocked
+    get
+            return Nothing
+    End Get
+    End Property
+
+    Public Overridable ReadOnly Property LoadStageShiftLines As TableData Implements IGearshiftEngineeringInputData.LoadStageShiftLines
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property LoadStageThresholdsUp As IList(Of Double) Implements IGearshiftEngineeringInputData.LoadStageThresholdsUp
+		Get
+			Return Nothing
+		End Get
+	End Property
+
+	Public Overridable ReadOnly Property LoadStageThresholdsDown As IList(Of Double) Implements IGearshiftEngineeringInputData.LoadStageThresholdsDown
+		Get
+			Return Nothing
         End Get
     End Property
 

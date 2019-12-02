@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				GearboxData = gearboxData,
 				EngineData = new CombustionEngineData() { Inertia = 5.SI<KilogramSquareMeter>() }
 			};
-			gbx = new ATGearbox(container, new ATShiftStrategy(gearboxData, container), runData);
+			gbx = new ATGearbox(container, new ATShiftStrategy(runData, container), runData);
 			gbx.Connect(engine);
 			gbx.IdleController = new MockIdleController();
 

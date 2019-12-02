@@ -354,6 +354,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			DrivingCycle?.FinishSimulation();
 		}
 
+		
 		public void FinishSimulation()
 		{
 			throw new NotImplementedException();
@@ -431,7 +432,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public DrivingBehavior DriverBehavior
 		{
-			get { return Driver != null ? Driver.DriverBehavior : DrivingBehavior.Driving; }
+			get { return Driver?.DriverBehavior ?? DrivingBehavior.Driving; }
 		}
 
 		public DrivingAction DrivingAction
@@ -447,6 +448,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Radian RoadGradient
 		{
 			get { return DrivingCycle.RoadGradient; }
+		}
+
+		public SpeedChangeEntry LastTargetspeedChange
+		{
+			get { return DrivingCycle.LastTargetspeedChange; }
 		}
 
 		public Meter CycleStartDistance
@@ -466,7 +472,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public bool PTOActive
 		{
-			get { return DrivingCycle.PTOActive; }
+			get { return DrivingCycle?.PTOActive ?? false; }
 		}
 
 		public DrivingCycleData.DrivingCycleEntry CycleLookAhead(Meter distance)
@@ -482,6 +488,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Watt AxlegearLoss()
 		{
 			return Axlegear.AxlegearLoss();
+		}
+
+		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand
+		{
+			get { return Axlegear.CurrentAxleDemand; }
 		}
 
 		public Kilogram ReducedMassWheels

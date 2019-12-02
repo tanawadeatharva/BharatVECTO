@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var vehicleData = new VehicleData {
 				DynamicTyreRadius = 0.85.SI<Meter>(),
 				Loading = 0.SI<Kilogram>(),
-				CurbWeight = 2000.SI<Kilogram>(),
+				CurbMass = 2000.SI<Kilogram>(),
 				AxleData =
 					new List<Axle> {
 						new Axle {
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var vehicleData = new VehicleData {
 				DynamicTyreRadius = 0.85.SI<Meter>(),
 				Loading = 0.SI<Kilogram>(),
-				CurbWeight = 2000.SI<Kilogram>(),
+				CurbMass = 2000.SI<Kilogram>(),
 				AxleData =
 					new List<Axle> {
 						new Axle {

@@ -115,7 +115,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public VTPData VTPData { get; set; }
 
+		public ShiftStrategyParameters GearshiftParameters { get; set; }
 		public bool Exempted { get; set; }
+
+		public string ShiftStrategy { get; set; }
 
 		public class AuxData
 		{

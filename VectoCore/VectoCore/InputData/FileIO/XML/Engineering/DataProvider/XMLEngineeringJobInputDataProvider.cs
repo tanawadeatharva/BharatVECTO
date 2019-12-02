@@ -50,6 +50,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return _engineOnly ?? (_engineOnly = Reader.CreateEngineOnly); }
 		}
 
+		public string ShiftStrategy { get { return null; } }
+
 		public virtual bool EngineOnlyMode { get; }
 
 

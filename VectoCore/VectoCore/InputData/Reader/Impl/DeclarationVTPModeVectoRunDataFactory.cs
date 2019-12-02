@@ -41,7 +41,9 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
@@ -132,10 +134,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				new Mission() { MissionType = MissionType.LongHaul });
 			AxlegearData = Dao.CreateAxleGearData(vehicle.Components.AxleGearInputData);
 			AngledriveData = Dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
+
 			GearboxData = Dao.CreateGearboxData(
 				vehicle.Components.GearboxInputData, EngineData,
 				AxlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
+				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, null, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
 			RetarderData = Dao.CreateRetarderData(vehicle.Components.RetarderInputData);
 
 			PTOTransmissionData =

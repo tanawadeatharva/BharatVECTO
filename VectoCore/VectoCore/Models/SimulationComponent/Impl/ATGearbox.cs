@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class ATGearbox : AbstractGearbox<ATGearbox.ATGearboxState>
 	{
-		private readonly IShiftStrategy _strategy;
+		protected internal readonly IShiftStrategy _strategy;
 		protected internal readonly TorqueConverter TorqueConverter;
 		private IIdleController _idleController;
 		protected bool RequestAfterGearshift;
@@ -80,6 +80,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				_idleController = value;
 				_idleController.RequestPort = NextComponent;
+			}
+		}
+
+		public bool ShiftToLocked
+		{
+			get {
+				return PreviousState.Gear == 1 && !PreviousState.TorqueConverterLocked && Gear == PreviousState.Gear &&
+						TorqueConverterLocked;
 			}
 		}
 
@@ -121,8 +129,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override IResponse Initialize(NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
 			if (_strategy!= null && CurrentState.Disengaged) {
-				Gear = _strategy.InitGear(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, outTorque,
-					outAngularVelocity);
+				Gear = _strategy?.InitGear(0.SI<Second>(), Constants.SimulationSettings.TargetTimeInterval, outTorque,
+					outAngularVelocity) ?? 1;
 			}
 			var inAngularVelocity = 0.SI<PerSecond>();
 			var inTorque = 0.SI<NewtonMeter>();
@@ -211,6 +219,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IterationStatistics.Increment(this, "Requests");
 
 			Log.Debug("AT-Gearbox Power Request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
+
+			_strategy?.Request(absTime, dt, outTorque, outAngularVelocity);
 
 			var driveOffSpeed = DataBus.VehicleStopped && outAngularVelocity > 0;
 			var driveOffTorque = CurrentState.Disengaged && outTorque.IsGreater(0, 1e-1);
@@ -334,9 +344,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return response;
 			}
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
-			if (!dryRun && retVal is ResponseSuccess &&
+			if (!dryRun && retVal is ResponseSuccess && _strategy != null &&
 				_strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, Gear,
-					LastShift)) {
+					LastShift, retVal)) {
 				retVal = new ResponseGearShift { Source = this };
 				//RequestAfterGearshift = false;
 			}
@@ -418,6 +428,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_gbx_shift_loss] = CurrentState.PowershiftLoss.DefaultIfNull(0) * avgInAngularSpeed;
 			container[ModalResultField.n_gbx_out_avg] = avgOutAngularSpeed;
 			container[ModalResultField.T_gbx_out] = CurrentState.OutTorque;
+
+			_strategy?.WriteModalResults(container);
 		}
 
 		protected override void DoCommitSimulationStep()

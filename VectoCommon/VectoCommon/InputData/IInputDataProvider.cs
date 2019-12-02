@@ -52,6 +52,7 @@ namespace TUGraz.VectoCommon.InputData
 		IEngineeringJobInputData JobInputData { get; }
 
 		IDriverEngineeringInputData DriverInputData { get; }
+
 	}
 
 }

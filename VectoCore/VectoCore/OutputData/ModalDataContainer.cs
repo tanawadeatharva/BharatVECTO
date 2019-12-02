@@ -248,9 +248,11 @@ namespace TUGraz.VectoCore.OutputData
 										}.Select(x => x.GetName()))
 									.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
 
+			// TODO: 2018-11-20: Disable additional columns after testing gearshifting!
 //#if TRACE
 			strCols = strCols.Concat(_additionalColumns);
 			strCols = strCols.Concat(new[] { ModalResultField.ICEOn }.Select(x => x.GetName()));
+			dataColumns.Add(ModalResultField.altitude);
 //#endif
 			if (WriteModalResults) {
 				var filteredData = Data;
@@ -271,7 +273,7 @@ namespace TUGraz.VectoCore.OutputData
 			_addReportResult(this);
 		}
 
-		private IEnumerable<ModalResultField> GetOutputColumns()
+		private IList<ModalResultField> GetOutputColumns()
 		{
 			var dataColumns = new List<ModalResultField> { ModalResultField.time };
 

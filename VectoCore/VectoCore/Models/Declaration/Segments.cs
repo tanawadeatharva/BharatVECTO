@@ -32,11 +32,15 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader;
+using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -132,7 +136,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var errorMessage = string.Format(ErrorMessage, vehicleCategory, axleConfiguration.GetName(),
 					grossVehicleMassRating);
 				Log.Fatal(errorMessage);
-				throw new VectoException(errorMessage, e); 
+				throw new VectoException(errorMessage, e);
 			}
 			return row;
 		}
@@ -180,7 +184,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var body = GetBody(row, missionType);
 				var trailers = GetTrailers(row, missionType);
 
-				var maxGVW = missionType.IsEMS()? Constants.SimulationSettings.MaximumGrossVehicleWeightEMS : Constants.SimulationSettings.MaximumGrossVehicleWeight;
+				var maxGVW = missionType.IsEMS()? Constants.SimulationSettings.MaximumGrossVehicleMassEMS : Constants.SimulationSettings.MaximumGrossVehicleMass;
 				
 				// limit gvw to MaxGVW (40t)
 				var gvw = VectoMath.Min(
@@ -200,10 +204,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var mission = new Mission {
 					MissionType = missionType,
 					CrossWindCorrectionParameters = row.Field<string>("crosswindcorrection" + GetMissionSuffix(missionType, true)),
-					CycleFile =
-						RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
-													missionType.ToString().Replace("EMS", "") +
-													Constants.FileExtensions.CycleFile),
+#if USE_EXTENAL_DECLARATION_DATA
+					CycleFile = File.OpenRead(Path.Combine("DeclarationMissions", missionType.ToString().Replace("EMS", "") + ".vdri")),
+#else
+					CycleFile = RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".MissionCycles." +
+												missionType.ToString().Replace("EMS", "") +
+												Constants.FileExtensions.CycleFile),
+#endif
 					AxleWeightDistribution = GetAxleWeightDistribution(row, missionType),
 					BodyCurbWeight = body.CurbWeight,
 					Trailer = trailers,
@@ -302,7 +309,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var trailerPayload = trailers.Sum(
 					t => DeclarationData.GetPayloadForTrailerWeight(t.TrailerGrossVehicleWeight, t.TrailerCurbWeight, lowLoading))
 					.DefaultIfNull(0);
-					return vehiclePayload + trailerPayload;
+				return vehiclePayload + trailerPayload;
 			}
 			return refLoadValue.SI<Kilogram>();
 		}
@@ -329,7 +336,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			var axleDistribution = row.Field<string>("truckaxles" + GetMissionSuffix(missionType));
 			if (string.IsNullOrWhiteSpace(axleDistribution)) {
-				return new double[]{};
+				return new double[] { };
 			}
 			return axleDistribution.Split('/').ToDouble().Select(x => x / 100.0).ToArray();
 		}

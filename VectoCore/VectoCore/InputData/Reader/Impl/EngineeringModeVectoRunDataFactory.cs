@@ -36,7 +36,9 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
@@ -74,10 +76,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					var tempVehicle = dao.CreateVehicleData(vehicle);
 
 					var axlegearData = dao.CreateAxleGearData(vehicle.Components.AxleGearInputData);
-					var gearboxData = dao.CreateGearboxData(
-						vehicle.Components.GearboxInputData, engineData, InputDataProvider.DriverInputData.GearshiftInputData,
-						axlegearData.AxleGear.Ratio, tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory,
-						vehicle.Components.TorqueConverterInputData, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
+			var tmpRunData = new VectoRunData() {
+				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
+				GearboxData = new GearboxData() {
+					Type = vehicle.Components.GearboxInputData.Type,
+				}
+			};
+			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
+			var gearboxData = dao.CreateGearboxData(vehicle.Components.GearboxInputData, engineData, InputDataProvider.DriverInputData.GearshiftInputData, axlegearData.AxleGear.Ratio,
+				tempVehicle.DynamicTyreRadius,tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, tmpStrategy, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
 					var crossWindRequired = vehicle.Components.AirdragInputData.CrossWindCorrectionMode ==
 											CrossWindCorrectionMode.VAirBetaLookupTable;
 					var angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
@@ -102,7 +109,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						PTO = ptoTransmissionData,
 						Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 						ExecutionMode = ExecutionMode.Engineering,
-						SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel
+					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
+					GearshiftParameters = dao.CreateGearshiftData(gearboxData.Type, InputDataProvider.DriverInputData.GearshiftInputData, axlegearData.AxleGear.Ratio * (angledriveData?.Angledrive.Ratio ?? 1.0)),
+					ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
 					};
 				}
 			}

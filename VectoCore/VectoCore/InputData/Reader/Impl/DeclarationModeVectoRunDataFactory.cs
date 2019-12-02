@@ -40,7 +40,9 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -68,6 +70,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		private PTOData _ptoTransmissionData;
 		private PTOData _municipalPtoTransmissionData;
 		private Exception InitException;
+		private ShiftStrategyParameters _gearshiftData;
 
 		internal DeclarationModeVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report)
 		{
@@ -110,18 +113,28 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				_segment.Missions.First(), _segment);
 			_axlegearData = _dao.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
 			_angledriveData = _dao.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
+			var tmpRunData = new VectoRunData() {
+				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
+				GearboxData = new GearboxData() {
+					Type = vehicle.Components.GearboxInputData.Type,
+				}
+			};
+			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
 			var tmpEngine = _dao.CreateEngineData(
 				vehicle, vehicle.Components.EngineInputData.EngineModes[0], _segment.Missions.First());
 			_gearboxData = _dao.CreateGearboxData(vehicle.Components.GearboxInputData, tmpEngine,
 				_axlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
+				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, tmpStrategy, vehicle.ADAS.ATEcoRollReleaseLockupClutch);
 			_retarderData = _dao.CreateRetarderData(vehicle.Components.RetarderInputData);
 
 			_ptoTransmissionData = _dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
 			_municipalPtoTransmissionData = CreateDefaultPTOData();
+
+			_gearshiftData = _dao.CreateGearshiftData(_gearboxData.Type, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0));
 		}
 
+		
 		private void InitializeReport()
 		{
 			VectoRunData powertrainConfig;
@@ -233,7 +246,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 								? _municipalPtoTransmissionData
 								: _ptoTransmissionData,
 							InputDataHash = InputDataProvider.XMLHash,
-							SimulationType = SimulationType.DistanceCycle
+							SimulationType = SimulationType.DistanceCycle,
+						GearshiftParameters = _gearshiftData,
+						ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
 						};
 						simulationRunData.EngineData.FuelMode = modeIdx;
 						simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;

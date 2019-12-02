@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public void Finish(VectoRun.Status runStatus, Exception exception = null) {}
-
+		
 		public bool WriteModalResults { get; set; }
 
 		public IEnumerable<T> GetValues<T>(ModalResultField key)
