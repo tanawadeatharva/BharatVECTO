@@ -525,7 +525,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		IList<IEngineFuelDelcarationInputData> Fuels { get; }
 
-		IWHRData WasteHeatRecoveryData { get; }
+		IWHRData WasteHeatRecoveryDataElectrical { get; }
+
+		IWHRData WasteHeatRecoveryDataMechanical { get; }
 
 	}
 
@@ -543,7 +545,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		double EngineeringCorrectionFactor { get; }
 
-		TableData GeneratedElectricPower { get; }
+		TableData GeneratedPower { get; }
 
 	}
 

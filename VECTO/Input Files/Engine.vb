@@ -29,7 +29,7 @@ Imports TUGraz.VectoCore.Utils
 ''' <remarks></remarks>
 <CustomValidation(GetType(Engine), "ValidateEngine")>
 Public Class Engine
-	Implements IEngineEngineeringInputData, IEngineDeclarationInputData, IEngineModeDeclarationInputData, IWHRData, IEngineModeEngineeringInputData
+	Implements IEngineEngineeringInputData, IEngineDeclarationInputData, IEngineModeDeclarationInputData, IEngineModeEngineeringInputData
 
 	''' <summary>
 	''' Current format version
@@ -88,15 +88,13 @@ Public Class Engine
 	Public maxTorqueInput As NewtonMeter
 
     public WHRTypeInput As WHRType
-    Public WHRUrbanInput as Double
-    public WHRRuralInput As Double
-    public WHRMotorwayInput As Double
-    public WHRColdHotInput As Double
-    public WHRRegPerInput As Double
-    public WHREngineeringInput As Double
+    
 
     Public PrimaryEngineFuel As EngineFuel
     Public SecondaryEngineFuel as EngineFuel
+
+    public ElectricalWHRData As WHRData
+    public MechanicalWHRData As WHRData
 
     public DualFuelInput As Boolean
 
@@ -341,10 +339,16 @@ Public Class Engine
 	End Get
 	End Property
 
-    Public ReadOnly Property WasteHeatRecoveryData As IWHRData Implements IEngineModeDeclarationInputData.WasteHeatRecoveryData
+    Public ReadOnly Property WasteHeatRecoveryDataElectrical As IWHRData Implements IEngineModeDeclarationInputData.WasteHeatRecoveryDataElectrical
     Get
-            Return Me
+            Return ElectricalWHRData
     End Get
+    End Property
+
+    Public ReadOnly Property WasteHeatRecoveryDataMechanical As IWHRData Implements IEngineModeDeclarationInputData.WasteHeatRecoveryDataMechanical
+        Get
+            Return MechanicalWHRData
+        End Get
     End Property
 
     Public ReadOnly Property RatedPowerDeclared As Watt Implements IEngineDeclarationInputData.RatedPowerDeclared
@@ -398,45 +402,66 @@ Public Class Engine
 
 #End Region
 
+    
+End Class
+
+Public Class WHRData
+
+    Implements IWHRData
+
+    Public WHRUrbanInput as Double
+    public WHRRuralInput As Double
+    public WHRMotorwayInput As Double
+    public WHRColdHotInput As Double
+    public WHRRegPerInput As Double
+    public WHREngineeringInput As Double
+
+    protected EngineData As Engine
+
+    public Sub New(engineDatar As Engine)
+        EngineData = engineDatar
+    End Sub
+
     Public ReadOnly Property UrbanCorrectionFactor As Double Implements IWHRData.UrbanCorrectionFactor
-    Get
+        Get
             Return WHRUrbanInput
-    End Get
+        End Get
     End Property
     Public ReadOnly Property RuralCorrectionFactor As Double Implements IWHRData.RuralCorrectionFactor
-    Get
+        Get
             Return WHRRuralInput
-    End Get
+        End Get
     End Property
     Public ReadOnly Property MotorwayCorrectionFactor As Double Implements IWHRData.MotorwayCorrectionFactor
-    get
+        get
             Return WHRMotorwayInput
-    End Get
+        End Get
     End Property
     Public ReadOnly Property BFColdHot As Double Implements IWHRData.BFColdHot
-    Get
+        Get
             Return WHRColdHotInput
-    End Get
+        End Get
     End Property
     Public ReadOnly Property CFRegPer As Double Implements IWHRData.CFRegPer
-    get
+        get
             Return WHRRegPerInput
-    End Get
+        End Get
     End Property
 
     Public ReadOnly Property EngineeringCorrectionFactor As Double Implements IWHRData.EngineeringCorrectionFactor
-    Get
+        Get
             Return WHREngineeringInput
-    End Get
+        End Get
     End Property
 
-    Public ReadOnly Property GeneratedElectricPower As TableData Implements IWHRData.GeneratedElectricPower
-    get
-        If Not File.Exists(PrimaryEngineFuel._fuelConsumptionMapPath.FullPath) Then _
-            Throw New VectoException("FuelConsumptionMap is missing or invalid")
-        Return VectoCSVFile.Read(PrimaryEngineFuel._fuelConsumptionMapPath.FullPath)
-    End Get
+    Public ReadOnly Property GeneratedPower As TableData Implements IWHRData.GeneratedPower
+        get
+            If Not File.Exists(EngineData.PrimaryEngineFuel._fuelConsumptionMapPath.FullPath) Then _
+                Throw New VectoException("FuelConsumptionMap is missing or invalid")
+            Return VectoCSVFile.Read(EngineData.PrimaryEngineFuel._fuelConsumptionMapPath.FullPath)
+        End Get
     End Property
+
 End Class
 
 Public Class EngineFuel

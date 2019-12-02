@@ -1087,6 +1087,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to mechanicalPower.
+        /// </summary>
+        public static string Engine_FuelConsumptionMap_WHRMechPower_Attr {
+            get {
+                return ResourceManager.GetString("Engine_FuelConsumptionMap_WHRMechPower_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mode.
         /// </summary>
         public static string Engine_FuelModes {
@@ -1227,6 +1236,24 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Engine_WHRCorrectionFactors_CFRegPer {
             get {
                 return ResourceManager.GetString("Engine_WHRCorrectionFactors_CFRegPer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Electrical.
+        /// </summary>
+        public static string Engine_WHRCorrectionFactors_Electrical {
+            get {
+                return ResourceManager.GetString("Engine_WHRCorrectionFactors_Electrical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mechanical.
+        /// </summary>
+        public static string Engine_WHRCorrectionFactors_Mechanical {
+            get {
+                return ResourceManager.GetString("Engine_WHRCorrectionFactors_Mechanical", resourceCulture);
             }
         }
         

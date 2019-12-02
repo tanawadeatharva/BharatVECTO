@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -144,7 +145,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 				var workESS = data.WorkAuxiliariesDuringEngineStop() + data.WorkEngineStart();
 				var workWHRel = data.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
-				var workWhrMech = -workWHRel / DeclarationData.AlternaterEfficiency;
+				var workWHRelMech = -workWHRel / DeclarationData.AlternaterEfficiency;
+
+				var workWHRmech = -data.TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
+
+				var workWHR = workWHRelMech + workWHRmech;
 
 				FuelConsumptionFinal = new Dictionary<FuelType, Kilogram>();
 				CO2Total = 0.SI<Kilogram>();
@@ -158,7 +163,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					if (!(workWhrMech + workESS).IsEqual(0)) {
 						correction = data.VehicleLineCorrectionFactor(entry);
 					}
-					var fcTotalcorr = fcSum + correction * (workESS + workWhrMech);
+					var fcTotalcorr = fcSum + correction * (workESS + workWHR);
 					FuelConsumptionFinal[entry.FuelType] = fcTotalcorr;
 					CO2Total += fcTotalcorr * entry.CO2PerFuelWeight;
 					EnergyConsumptionTotal += fcTotalcorr * entry.LowerHeatingValueVecto;

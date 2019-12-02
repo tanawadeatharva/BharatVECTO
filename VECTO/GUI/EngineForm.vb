@@ -39,6 +39,8 @@ Public Class EngineForm
 
     Private _contextMenuFiles As String()
     Private SecondFuelTab As TabPage
+    private MechanicalWhrTab as TabPage
+    private ElectricalWhrTab as TabPage
 
 
 
@@ -56,11 +58,19 @@ Public Class EngineForm
 		PnWhtcDeclaration.Enabled = Cfg.DeclMode
 		PnWhtcEngineering.Enabled = Not Cfg.DeclMode
 
-		pnWHRDeclaration.Enabled = Cfg.DeclMode
-		pnWhrEngineering.Enabled = Not Cfg.DeclMode
+		pnElWHRDeclaration.Enabled = Cfg.DeclMode
+		pnElWhrEngineering.Enabled = Not Cfg.DeclMode
+
+	    pnMechWHRDeclaration.Enabled = Cfg.DeclMode
+	    pnMechWhrEngineering.Enabled = Not Cfg.DeclMode
 
         pnWhtcFuel2.Enabled = cfg.DeclMode
         pnEngCFFuel2.Enabled = not cfg.DeclMode
+
+	    ElectricalWhrTab = tbWHR.TabPages(1)
+	    MechanicalWhrTab = tbWHR.TabPages(2)
+	    tbWHR.TabPages.Remove(ElectricalWhrTab)
+	    tbWHR.TabPages.Remove(MechanicalWhrTab)
 
 		cbFuelType.Items.Clear()
 		cbFuelType.ValueMember = "Value"
@@ -76,15 +86,12 @@ Public Class EngineForm
 			[Enum].GetValues(GetType(FuelType)).Cast (Of FuelType).Select(
 				Function(type) New With {Key .Value = type, .Label = type.GetLabel()}).ToList()
 
-		cbWHRType.Items.Clear()
-		cbWHRType.ValueMember = "Value"
-		cbWHRType.DisplayMember = "Label"
-		cbWHRType.DataSource = [Enum].GetValues(GetType(WHRType)).cast(Of WHRType).select(Function(type) new With {Key .Value = type, .Label = type.GetLabel()}).ToList()
-
 		_changed = False
 
         SecondFuelTab = tbDualFuel.TabPages(1)
         tbDualFuel.TabPages.Remove(SecondFuelTab)
+
+        
 
 		NewEngine()
 	End Sub
@@ -186,13 +193,19 @@ Public Class EngineForm
 		TbWHTCrural.Text = ""
 		TbWHTCmw.Text = ""
 
-		tbWHREngineering.Text = ""
-		tbWHRColdHot.Text = ""
-		tbWHRRegPer.Text = ""
-		tbWHRRural.Text = ""
-		tbWHRUrban.Text = ""
-		tbWHRMotorway.Text = ""
+		tbElWHREngineering.Text = ""
+		tbElWHRColdHot.Text = ""
+		tbElWHRRegPer.Text = ""
+		tbElWHRRural.Text = ""
+		tbElWHRUrban.Text = ""
+		tbElWHRMotorway.Text = ""
 
+	    tbMechWHREngineering.Text = ""
+	    tbMechWHRBFColdHot.Text = ""
+	    tbMechWHRRegPerCF.Text = ""
+	    tbMechWHRRural.Text = ""
+	    tbMechWHRUrban.Text = ""
+	    tbMechWHRMotorway.Text = ""
 		DeclInit()
 
 		_engFile = ""
@@ -276,21 +289,39 @@ Public Class EngineForm
 		    End If
 		End If
 
-
-		cbWHRType.SelectedValue = engine.WHRType
-		gbWHR.Enabled = engine.WHRType.IsElectrical()
+        cbMechWHRInMap.Checked = (engine.WHRType and WHRType.MechanicalOutputICE) <> 0
+	    cbMechWHRNotConnectedCrankshaft.Checked = (engine.WHRType and WHRType.MechanicalOutputDrivetrain) <> 0
+	    cbElWHR.Checked = (engine.WHRType and WHRType.ElectricalOutput) <> 0
+        
 		If (engine.WHRType.IsElectrical()) Then
-			Dim whr As IWHRData = enginemode.Wasteheatrecoverydata
+			Dim whr As IWHRData = enginemode.WasteHeatRecoveryDataElectrical
 			If (Cfg.DeclMode) then
-				tbWHRRural.Text = whr.RuralCorrectionFactor.ToGUIFormat()
-				tbWHRUrban.Text = whr.UrbanCorrectionFactor.ToGUIFormat()
-				tbWHRMotorway.Text = whr.MotorwayCorrectionFactor.ToGUIFormat()
-				tbWHRColdHot.Text = whr.BFColdHot.ToGUIFormat()
-				tbWHRRegPer.Text = whr.CFRegPer.ToGUIFormat()
+				tbElWHRRural.Text = whr.RuralCorrectionFactor.ToGUIFormat()
+				tbElWHRUrban.Text = whr.UrbanCorrectionFactor.ToGUIFormat()
+				tbElWHRMotorway.Text = whr.MotorwayCorrectionFactor.ToGUIFormat()
+				tbElWHRColdHot.Text = whr.BFColdHot.ToGUIFormat()
+				tbElWHRRegPer.Text = whr.CFRegPer.ToGUIFormat()
 			Else
-				tbWHREngineering.Text = whr.EngineeringCorrectionFactor.ToGUIFormat() 
+				tbElWHREngineering.Text = whr.EngineeringCorrectionFactor.ToGUIFormat() 
 			end if
 		End If
+
+	    If (engine.WHRType and WHRType.MechanicalOutputDrivetrain) <> 0 Then
+	        Dim whr As IWHRData = enginemode.WasteHeatRecoveryDataMechanical
+	        If (Cfg.DeclMode) then
+	            tbMechWHRRural.Text = whr.RuralCorrectionFactor.ToGUIFormat()
+	            tbMechWHRUrban.Text = whr.UrbanCorrectionFactor.ToGUIFormat()
+	            tbMechWHRMotorway.Text = whr.MotorwayCorrectionFactor.ToGUIFormat()
+	            tbMechWHRBFColdHot.Text = whr.BFColdHot.ToGUIFormat()
+	            tbMechWHRRegPerCF.Text = whr.CFRegPer.ToGUIFormat()
+	        Else
+	            tbMechWHREngineering.Text = whr.EngineeringCorrectionFactor.ToGUIFormat() 
+	        end if
+        Else 
+            if (tbWHR.TabPages.Count > 1) then
+                tbWHR.TabPages.Remove(tbMechanicalWHR)
+            End If
+	    End If
 
 		DeclInit()
 
@@ -352,13 +383,26 @@ Public Class EngineForm
             engine.SecondaryEngineFuel.FuelTypeInput = CType(cbFuelType2.SelectedValue, FuelType)
         End If
 
-        engine.WHRTypeInput = CType(cbWHRType.SelectedValue, WHRType)
-		engine.WHRUrbanInput = tbWHRUrban.Text.ToDouble(0)
-		engine.WHRRuralInput = tbWHRRural.Text.ToDouble(0)
-		engine.WHRMotorwayInput = tbWHRMotorway.Text.ToDouble(0)
-		engine.WHRColdHotInput = tbWHRColdHot.Text.ToDouble(0)
-		engine.WHRRegPerInput = tbWHRRegPer.Text.ToDouble(0)
-		engine.WHREngineeringInput = tbWHREngineering.Text.ToDouble(0)
+        engine.WHRTypeInput = GetWHRSelection()
+        if (engine.WHRType.IsElectrical()) then
+            engine.ElectricalWHRData = new WHRData(engine)
+            engine.ElectricalWHRData.WHRUrbanInput = tbElWHRUrban.Text.ToDouble(0)
+		    engine.ElectricalWHRData.WHRRuralInput = tbElWHRRural.Text.ToDouble(0)
+		    engine.ElectricalWHRData.WHRMotorwayInput = tbElWHRMotorway.Text.ToDouble(0)
+		    engine.ElectricalWHRData.WHRColdHotInput = tbElWHRColdHot.Text.ToDouble(0)
+		    engine.ElectricalWHRData.WHRRegPerInput = tbElWHRRegPer.Text.ToDouble(0)
+		    engine.ElectricalWHRData.WHREngineeringInput = tbElWHREngineering.Text.ToDouble(0)
+        End If
+
+        if (engine.WHRType and WHRType.MechanicalOutputDrivetrain) <> 0
+            engine.MechanicalWHRData = new WHRData(engine)
+            engine.MechanicalWHRData.WHRUrbanInput = tbMechWHRUrban.Text.ToDouble(0)
+            engine.MechanicalWHRData.WHRRuralInput = tbMechWHRRural.Text.ToDouble(0)
+            engine.MechanicalWHRData.WHRMotorwayInput = tbMechWHRMotorway.Text.ToDouble(0)
+            engine.MechanicalWHRData.WHRColdHotInput = tbMechWHRBFColdHot.Text.ToDouble(0)
+            engine.MechanicalWHRData.WHRRegPerInput = tbMechWHRRegPerCF.Text.ToDouble(0)
+            engine.MechanicalWHRData.WHREngineeringInput = tbMechWHREngineering.Text.ToDouble(0)
+        End If
 
 		engine.ratedPowerInput = (tbRatedPower.Text.ToDouble(0)*1000).SI (Of Watt)()
 		engine.ratedSpeedInput = tbRatedSpeed.Text.ToDouble(0).RPMtoRad()
@@ -665,10 +709,6 @@ Public Class EngineForm
 		End If
 	End Sub
 
-	Private Sub cbWHRType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbWHRType.SelectedIndexChanged
-		gbWHR.Enabled = CType(CType(sender, ComboBox).SelectedValue, WHRType).IsElectrical()
-	End Sub
-
 	Private Sub btMapFuel2_Click(sender As Object, e As EventArgs) Handles btMapFuel2.Click
 		If FuelConsumptionMapFileBrowser.OpenDialog(FileRepl(tbMapFuel2.Text, GetPath(_engFile))) Then _
 			tbMapFuel2.Text = GetFilenameWithoutDirectory(FuelConsumptionMapFileBrowser.Files(0), GetPath(_engFile))
@@ -689,13 +729,53 @@ Public Class EngineForm
 
     Private Sub cbDuaFuel_CheckedChanged(sender As Object, e As EventArgs) Handles cbDualFuel.CheckedChanged
         If (cbDualFuel.Checked) Then
-            If (tbDualFuel.TabPages.Count < 2) then
+            If (not tbDualFuel.TabPages.Contains(SecondFuelTab)) then
                 tbDualFuel.TabPages.Add(SecondFuelTab)
             End If
         Else 
-            If (tbDualFuel.TabPages.Count > 1) then
+            If (tbDualFuel.TabPages.Contains(SecondFuelTab)) then
                 tbDualFuel.TabPages.Remove(SecondFuelTab)
             End If
         End If
     End Sub
+
+    Private Sub cbMechWHRNotConnectedCrankshaft_CheckedChanged(sender As Object, e As EventArgs) Handles cbMechWHRNotConnectedCrankshaft.CheckedChanged
+       UpdateWHRTabs()
+    End Sub
+
+    Private Sub cbElWHR_CheckedChanged(sender As Object, e As EventArgs) Handles cbElWHR.CheckedChanged
+        UpdateWHRTabs()
+    End Sub
+
+    Private Sub UpdateWHRTabs()
+        dim whrType as WHRType = GetWHRSelection()
+       
+
+        tbWHR.TabPages.Remove(tbElectricalWHR)
+        tbWHR.TabPages.Remove(tbMechanicalWHR)
+        if ( whrtype and WHRType.MechanicalOutputDrivetrain) <> 0 Then
+            if (not tbWHR.TabPages.Contains(tbMechanicalWHR)) then
+                tbWHR.TabPages.Add(MechanicalWhrTab)
+            End If
+        End If
+        If (whrtype and WHRType.ElectricalOutput) <> 0 Then
+            if (Not tbWHR.TabPages.Contains(tbElectricalWHR)) then
+                tbWHR.TabPages.Add(ElectricalWhrTab)
+            End If
+        End If
+    End Sub
+
+    private Function GetWHRSelection() As WHRType
+        dim whrType as WHRType = WHRType.None
+        if (cbMechWHRInMap.Checked)
+            whrType = whrType or whrType.MechanicalOutputICE
+        End If
+        if (cbMechWHRNotConnectedCrankshaft.Checked)
+            whrType = whrType or whrType.MechanicalOutputDrivetrain
+        End If
+        if (cbElWHR.Checked)
+            whrType = whrType or whrType.ElectricalOutput
+        End If
+        return whrType
+    End Function
 End Class

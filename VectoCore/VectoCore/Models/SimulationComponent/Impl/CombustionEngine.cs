@@ -35,6 +35,7 @@ using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -396,22 +397,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
 			container[ModalResultField.ICEOn] = CurrentState.IgnitionOn;
 
-			var pWHRelMap = 0.SI<Watt>();
-			var pWHRelCorr = 0.SI<Watt>();
-			if (ModelData.WHRData != null) {
-				var whrPwr = ModelData.WHRData.WHRMap.GetWHRPower(
-					CurrentState.EngineTorque, avgEngineSpeed, DataBus.ExecutionMode != ExecutionMode.Declaration);
-				if (DataBus.ExecutionMode != ExecutionMode.Declaration && whrPwr.Extrapolated) {
-					Log.Warn(
-						"Electric WHR power was extrapolated: range for WHR-Map is not sufficient: n: {0}, torque: {1}",
-						avgEngineSpeed.Value(), CurrentState.EngineTorque.Value());
-				}
-				pWHRelMap = whrPwr.ElectricPower;
-				pWHRelCorr = pWHRelMap * ModelData.WHRData.WHRCorrectionFactor;
-			} 
-
-			container[ModalResultField.P_WHR_el_map] = pWHRelMap;
-			container[ModalResultField.P_WHR_el_corr] = pWHRelCorr;
+			WriteWHRPower(container, avgEngineSpeed, CurrentState.EngineTorque);
 
 			foreach (var fuel in ModelData.Fuels) {
 				var result = fuel.ConsumptionMap.GetFuelConsumption(
@@ -447,6 +433,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
 				container[ModalResultField.FCEngineStopStart, fuel.FuelData] = fcFinal;
 				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
+			}
+		}
+
+		protected virtual void WriteWHRPower(IModalDataContainer container, PerSecond engineSpeed, NewtonMeter engineTorque)
+		{
+			var pWHRelMap = 0.SI<Watt>();
+			var pWHRelCorr = 0.SI<Watt>();
+			var pWHRmechMap = 0.SI<Watt>();
+			var pWHRmechCorr = 0.SI<Watt>();
+			GetWHRPower(ModelData.ElectricalWHR, engineSpeed, engineTorque, ref pWHRelMap, ref pWHRelCorr);
+			GetWHRPower(ModelData.MechanicalWHR, engineSpeed, engineTorque, ref pWHRmechMap, ref pWHRmechCorr);
+			
+			container[ModalResultField.P_WHR_el_map] = pWHRelMap;
+			container[ModalResultField.P_WHR_el_corr] = pWHRelCorr;
+
+			container[ModalResultField.P_WHR_mech_map] = pWHRmechMap;
+			container[ModalResultField.P_WHR_mech_corr] = pWHRmechCorr;
+		}
+
+		protected virtual void GetWHRPower(WHRData whr, PerSecond engineSpeed, NewtonMeter engineTorque, ref Watt pWHRelMap, ref Watt pWHRelCorr)
+		{
+			if (whr != null) {
+				var whrPwrEl = whr.WHRMap.GetWHRPower(
+					engineTorque, engineSpeed, DataBus.ExecutionMode != ExecutionMode.Declaration);
+				if (DataBus.ExecutionMode != ExecutionMode.Declaration && whrPwrEl.Extrapolated) {
+					Log.Warn(
+						"Electric WHR power was extrapolated: range for WHR-Map is not sufficient: n: {0}, torque: {1}",
+						engineSpeed.Value(), engineTorque.Value());
+				}
+				if (whrPwrEl.GeneratedPower != null) {
+					pWHRelMap = whrPwrEl.GeneratedPower;
+					pWHRelCorr = pWHRelMap * whr.WHRCorrectionFactor;
+				}
 			}
 		}
 

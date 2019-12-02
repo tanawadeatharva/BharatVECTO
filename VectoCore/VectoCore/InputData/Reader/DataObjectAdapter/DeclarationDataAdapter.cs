@@ -236,31 +236,37 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.FullLoadCurves = fullLoadCurves;
 
-			var whr = CreateWHRData(mode.WasteHeatRecoveryData);
-			if (whr != null) {
-				whr.WHRCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
-														mission.MissionType.GetNonEMSMissionType(), whr.CFRural, whr.CFUrban,
-														whr.CFMotorway) * whr.CFColdHot * whr.CFRegPer;
+			retVal.WHRType = engine.WHRType;
+			if ((retVal.WHRType & WHRType.ElectricalOutput) != 0) {
+				retVal.ElectricalWHR = CreateWHRData(
+					mode.WasteHeatRecoveryDataElectrical, mission.MissionType, WHRType.ElectricalOutput);
 			}
-			retVal.WHRData = whr;
+			if ((retVal.WHRType & WHRType.MechanicalOutputDrivetrain) != 0) {
+				retVal.MechanicalWHR = CreateWHRData(
+					mode.WasteHeatRecoveryDataMechanical, mission.MissionType, WHRType.MechanicalOutputDrivetrain);
+			}
 
 			return retVal;
 		}
 
-		private static WHRData CreateWHRData(IWHRData whrInputData)
+		private static WHRData CreateWHRData(IWHRData whrInputData, MissionType missionType, WHRType type)
 		{
-			if (whrInputData == null || whrInputData.GeneratedElectricPower == null) {
+			if (whrInputData == null || whrInputData.GeneratedPower == null) {
 				return null;
 			}
 
-			return new WHRData() {
+			var whr = new WHRData() {
 				CFUrban = whrInputData.UrbanCorrectionFactor,
 				CFRural = whrInputData.RuralCorrectionFactor,
 				CFMotorway = whrInputData.MotorwayCorrectionFactor,
 				CFColdHot = whrInputData.BFColdHot,
 				CFRegPer = whrInputData.CFRegPer,
-				WHRMap = WHRPowerReader.Create(whrInputData.GeneratedElectricPower)
+				WHRMap = WHRPowerReader.Create(whrInputData.GeneratedPower, type)
 			};
+			whr.WHRCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
+										missionType.GetNonEMSMissionType(), whr.CFRural, whr.CFUrban,
+										whr.CFMotorway) * whr.CFColdHot * whr.CFRegPer;
+			return whr;
 		}
 
 		private static NewtonMeter VehMaxTorque(
