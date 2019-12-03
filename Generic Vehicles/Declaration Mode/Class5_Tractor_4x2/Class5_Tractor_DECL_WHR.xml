@@ -257,6 +257,15 @@
 							<BFColdHot>1.0000</BFColdHot>
 							<CFRegPer>1.0000</CFRegPer>
 							<CFNCV>1.0000</CFNCV>
+							<WHRCorrectionFactors>
+								<Mechanical>
+									<Urban>1.0000</Urban>
+									<Rural>1.0000</Rural>
+									<Motorway>1.0000</Motorway>
+									<BFColdHot>1.0000</BFColdHot>
+									<CFRegPer>1.0000</CFRegPer>
+								</Mechanical>
+							</WHRCorrectionFactors>
 							<FuelConsumptionMap>
 								<Entry engineSpeed="500.00" torque="-235.50" fuelConsumption="0.00" electricPower="200.00"/>
 								<Entry engineSpeed="500.00" torque="-135.50" fuelConsumption="0.00" electricPower="200.00"/>

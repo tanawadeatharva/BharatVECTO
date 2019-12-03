@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		private static WHRData CreateWHRData(IWHRData whrInputData, MissionType missionType, WHRType type)
 		{
 			if (whrInputData == null || whrInputData.GeneratedPower == null) {
-				return null;
+				throw new VectoException("Missing WHR Data");
 			}
 
 			var whr = new WHRData() {
