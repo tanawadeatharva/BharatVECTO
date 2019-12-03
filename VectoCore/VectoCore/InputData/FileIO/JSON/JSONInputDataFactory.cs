@@ -139,8 +139,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			switch (version) {
 				case 1:
 					return new JSONTCUDataV1(json, filename, tolerateMissing);
+				case 6:
+					return new JSONGearboxDataV6(json, filename, tolerateMissing);
 				default:
-					throw new VectoException("Engine-File: Unsupported FileVersion. Got {0}", version);
+					throw new VectoException("GearshiftParameter-File: Unsupported FileVersion. Got {0}", version);
 			}
 		}
 	}
