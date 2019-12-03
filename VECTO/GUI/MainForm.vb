@@ -979,7 +979,9 @@ Imports TUGraz.VectoCore.Utils
                             Case XMLNames.VectoInputEngineering
                                 input = xmlInputReader.CreateEngineering(jobFile)
                             Case XMLNames.VectoInputDeclaration
-                                input = xmlInputReader.CreateDeclaration(XmlReader.Create(jobFile))
+                                Using reader As XmlReader = XmlReader.Create(jobFile)
+                                input = xmlInputReader.CreateDeclaration(reader)
+                                End Using
                         End Select
                 End Select
 
