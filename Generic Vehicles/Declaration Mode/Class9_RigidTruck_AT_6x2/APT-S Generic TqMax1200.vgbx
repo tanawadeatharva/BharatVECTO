@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": "",
-    "Date": "2017-06-28T08:04:09.4161407Z",
+    "Date": "2019-12-03T16:14:26.9110070Z",
     "AppVersion": "3",
     "FileVersion": 6
   },
@@ -58,11 +58,11 @@
         "MaxSpeed": ""
       }
     ],
-    "TqReserve": 20.0,
-    "ShiftTime": 1.5,
+    "TqReserve": 0.0,
+    "ShiftTime": 2.0,
     "StartTqReserve": 20.0,
-    "StartSpeed": 1.3,
-    "StartAcc": 0.6,
+    "StartSpeed": 2.22222222222222,
+    "StartAcc": 0.8,
     "GearboxType": "ATSerial",
     "TorqueConverter": {
       "Enabled": true,
@@ -74,8 +74,8 @@
       "CLUpshiftMinAcceleration": 0.0,
       "CCUpshiftMinAcceleration": 0.0
     },
-    "DownshiftAfterUpshiftDelay": 10.0,
-    "UpshiftAfterDownshiftDelay": 10.0,
+    "DownshiftAfterUpshiftDelay": 6.0,
+    "UpshiftAfterDownshiftDelay": 6.0,
     "UpshiftMinAcceleration": 0.1,
     "PowershiftShiftTime": 0.8
   }

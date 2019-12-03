@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
-    "CreatedBy": " ()",
-    "Date": "2017-05-19T08:19:13.4575457Z",
+    "CreatedBy": "",
+    "Date": "2019-12-03T16:13:52.1680515Z",
     "AppVersion": "3",
     "FileVersion": 6
   },
@@ -100,17 +100,17 @@
         "MaxSpeed": ""
       }
     ],
-    "TqReserve": 20.0,
-    "ShiftTime": 1.5,
+    "TqReserve": 0.0,
+    "ShiftTime": 2.0,
     "StartTqReserve": 20.0,
-    "StartSpeed": 1.3,
-    "StartAcc": 0.6,
+    "StartSpeed": 2.22222222222222,
+    "StartAcc": 0.8,
     "GearboxType": "AMT",
     "TorqueConverter": {
       "Enabled": false
     },
-    "DownshiftAfterUpshiftDelay": 10.0,
-    "UpshiftAfterDownshiftDelay": 10.0,
+    "DownshiftAfterUpshiftDelay": 6.0,
+    "UpshiftAfterDownshiftDelay": 6.0,
     "UpshiftMinAcceleration": 0.1,
     "PowershiftShiftTime": 0.8
   }
