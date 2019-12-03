@@ -577,10 +577,7 @@ namespace TUGraz.VectoCore.OutputData
 
 				var fcModSum = modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel);
 
-				var correction = 0.SI<KilogramPerWattSecond>();
-				if (!workWhr.IsEqual(0) || !workESS.IsEqual(0)) { 
-					correction = modData.VehicleLineCorrectionFactor(fuel);
-				}
+				var correction = modData.VehicleLineCorrectionFactor(fuel);
 				
 				row[FcCol(K_VEHLINE, suffix)] = correction.ConvertToGramPerKiloWattHour();
 
