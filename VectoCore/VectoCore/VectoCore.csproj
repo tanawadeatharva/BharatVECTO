@@ -740,9 +740,6 @@
     <EmbeddedResource Include="Resources\Declaration\ADAS\ADAS_Combinations.csv" />
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.3_DEV.xsd">
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.5_Gearbox.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>

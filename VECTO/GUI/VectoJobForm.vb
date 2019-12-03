@@ -566,10 +566,12 @@ Public Class VectoJobForm
 
         '-------------------------------------------------------------
 
-        cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(inputData.JobInputData.Vehicle.Components.GearboxInputData.Type).Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
+        cbGearshiftStrategy.DataSource = PowertrainBuilder.GetRegisteredShiftStrategies(inputData.JobInputData.Vehicle.Components.GearboxInputData.Type) _
+            .Concat({ Tuple.Create("", "Not specified - use default")}) _
+            .Select(Function(entry) New With {.Value = entry.Item1, .Label = entry.Item2}).ToList()
         cbGearshiftStrategy.DisplayMember = "Label"
         cbGearshiftStrategy.ValueMember = "Value"
-        if (inputData.JobInputData.ShiftStrategy <> Nothing) then
+        if (not inputData.JobInputData.ShiftStrategy is Nothing) then
             cbGearshiftStrategy.SelectedValue = inputData.JobInputData.ShiftStrategy
         end if
 

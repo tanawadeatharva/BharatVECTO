@@ -702,7 +702,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public JSONInputDataV4(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) { }
 
-		public override IGearshiftEngineeringInputData GearshiftInputData { get { return Body["TCU"] == null ? null : JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false); } }
+		public override IGearshiftEngineeringInputData GearshiftInputData { get {
+			return Body["TCU"] == null
+				? null
+				: JSONInputDataFactory.ReadShiftParameters(Path.Combine(BasePath, Body.GetEx<string>("TCU")), false);
+		} }
 	}
 
 	public class JSONVTPInputDataV4 : JSONFile, IVTPEngineeringInputDataProvider, IVTPEngineeringJobInputData,
