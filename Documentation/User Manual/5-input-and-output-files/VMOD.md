@@ -86,17 +86,18 @@ $P_{avg} = \frac{1}{simulation interval} \int{P(t) dt}$.
 | n_TC_out          |   [rpm]   |   Torque converter operating point:  output speed    |  
 | T_TC_in           |   [Nm]    |   Torque converter operating point:  input torque    |    
 | n_TC_in           |   [rpm]   |   Torque converter operating point:  input speed    |     
-| FC-Map			|	[g/h]	|	Fuel consumption interpolated from FC map. |
-| FC-NCVc			|	[g/h]	|	Fuel consumption corrected for different NCV values in VECTO and VECTO Engine (FC-NCVc = FC-Map * LowerHeatingValueVectoEngine(fuel) / LowerHeatingValueVecto(fuel) ) |
-| FC-WHTCc			|	[g/h]	|	Fuel consumption after [WHTC Correction](#engine-fuel-consumption-calculation) (FC-WHTCc = FC-NCVc * WHTCCorrectionFactor(cycle, fuel) ) |
-| FC-AAUX			|	[g/h]	|	Fuel consumption computed by the AAUX module considering smart auxiliaries. (FC-AAUX = FC-WHTCc if the AAUX model is not used, otherwise the fuel consumption as calculated by the AAUX model) |
-| FC-ESS			|	[g/h]	|	Fuel consumption considering engine stop/start not always activated. (FC-ESS = FC-AAUX if the engie is on, FC-ESS = FC(P_aux) * (1 - engine stop/start utility factor) if the combustion engine is off - see [Engine Stop/Start](#advanced-driver-assistant-systems-eco-roll-engine-stopstart) |
-| FC-Final_mod		|	[g/h]	|	Instantaneous final fuel consumption value after all applicable corrections. (FC-Final_mod = FC-ESS) |
+| FC-Map<\_FuelName>			|	[g/h]	|	Fuel consumption interpolated from FC map. |
+| FC-NCVc<\_FuelName>			|	[g/h]	|	Fuel consumption corrected for different NCV values in VECTO and VECTO Engine (FC-NCVc = FC-Map * LowerHeatingValueVectoEngine(fuel) / LowerHeatingValueVecto(fuel) ) |
+| FC-WHTCc<\_FuelName>			|	[g/h]	|	Fuel consumption after [WHTC Correction](#engine-fuel-consumption-calculation) (FC-WHTCc = FC-NCVc * WHTCCorrectionFactor(cycle, fuel) ) |
+| FC-AAUX<\_FuelName>			|	[g/h]	|	Fuel consumption computed by the AAUX module considering smart auxiliaries. (FC-AAUX = FC-WHTCc if the AAUX model is not used, otherwise the fuel consumption as calculated by the AAUX model) |
+| FC-ESS<\_FuelName>			|	[g/h]	|	Fuel consumption considering engine stop/start not always activated. (FC-ESS = FC-AAUX if the engie is on, FC-ESS = FC(P_aux) * (1 - engine stop/start utility factor) if the combustion engine is off - see [Engine Stop/Start](#advanced-driver-assistant-systems-eco-roll-engine-stopstart) |
+| FC-Final_mod<\_FuelName>		|	[g/h]	|	Instantaneous final fuel consumption value after all applicable corrections. (FC-Final_mod = FC-ESS) |
 | EcoRollConditionsMet |        |   0 if the conditions for switching to eco-roll are _not_ met, 1 if the conditions for eco-roll are met - eco roll is activated after the activation delay (2s in declaration mode) |   
 | PCCSegment        |           |   1 if a PCC segment was identified in the pre-processing (gradient below threshold where vehicle accelerates on its own without engine power), 0 otherwise |
 | PCCState          |           |   0: not inside PCC segment, 1: inside PCC segment, 2: PCC use-case 1 active, 3: PCC use-case 2 active |
 | ICE On            |           |   0 if the combustion engine is switched off (either during stand-still or eco-roll), 1 otherwise |
 
+**Note:** The fuel name is only added to the fuel-consumption signals in case of dual-fuel engines.
 
 P_eng_FCmap = T_eng_fcmap * n_eng_avg
 

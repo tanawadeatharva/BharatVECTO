@@ -77,6 +77,8 @@ In Engineering Mode the energy demand of all auxiliaries is assumed to be drawn 
 
 Eco-roll is a driver assistant system that automatically decouples the internal combustion engine from the power train during specific downhill driving conditions with low negative slopes. The aim is to save fuel during such phases. VECTO supports eco-roll without engine stop/start and eco-roll with engine stop/start. In the former case, the combustion engine is idling during eco-roll phases while in the latter case the combustion engine is turned off during eco-roll events. For vehicles having eco-roll with engine stop/start the fuel consumption is corrected for the engine stop/start events and the auxiliary power demand during engine-off phases.
 
+In case of AT gearboxes eco-roll can either be performed by shifting to neutral, i.e., disengaging the gearbox, or opening the torque converter lockup clutch. Which option is supported by the transmission needs to be specified in the vehicle configuration.
+
 <div class="declaration">
 **Auxiliary energy demand**
 
