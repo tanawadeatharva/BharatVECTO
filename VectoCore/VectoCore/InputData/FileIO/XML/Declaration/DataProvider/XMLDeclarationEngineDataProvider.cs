@@ -300,9 +300,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					return WHRData ?? (WHRData = ReadWHRData(
 								GetNodes(
 									new[] {
-										XMLNames.Engine_FuelModes_Fuel, XMLNames.Engine_WHRCorrectionFactors,
+										XMLNames.Engine_WHRCorrectionFactors,
 										XMLNames.Engine_WHRCorrectionFactors_Electrical
-									}),
+									}, GetNode(XMLNames.Engine_FuelModes_Fuel)),
 								XMLNames.Engine_FuelConsumptionMap_WHRElPower_Attr)
 							);
 				}
@@ -314,9 +314,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					return WHRData ?? (WHRData = ReadWHRData(
 								GetNodes(
 									new[] {
-										XMLNames.Engine_FuelModes_Fuel, XMLNames.Engine_WHRCorrectionFactors,
+										XMLNames.Engine_WHRCorrectionFactors,
 										XMLNames.Engine_WHRCorrectionFactors_Mechanical
-									}),
+									}, GetNode(XMLNames.Engine_FuelModes_Fuel)),
 								XMLNames.Engine_FuelConsumptionMap_WHRMechPower_Attr));
 				}
 			}
@@ -327,25 +327,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			{
 				var whrPwrNodes = GetNodes(
 						new[] {
-							XMLNames.Engine_FuelModes_Fuel, XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry
-						})
-					.Cast<XmlNode>().All(x => x.Attributes?[fcMapAttr] == null);
-				if (correctionFactorNodes.Count == 0) {
-					if (whrPwrNodes) {
-						Warn("WHR correction factors provided but no {0} power defined - ignoring WHR.", fcMapAttr);
+							XMLNames.Engine_FuelConsumptionMap, XMLNames.Engine_FuelConsumptionMap_Entry
+						}, GetNode(XMLNames.Engine_FuelModes_Fuel))
+					.Cast<XmlNode>().All(x => x.Attributes?[fcMapAttr] != null);
+				if (correctionFactorNodes.Count > 0) {
+					if (!whrPwrNodes) {
+						throw new VectoXMLException("WHR correction factors provided but no {0} power defined.", fcMapAttr);
+
 					}
-					return new XMLDeclarationWHRData();
+					//return new XMLDeclarationWHRData();
 				}
 
 				if (correctionFactorNodes.Count > 1) {
-					throw new VectoException("WHRData (correction factors) can only be defined for one fuel!");
+					throw new VectoXMLException("WHRData (correction factors) can only be defined for one fuel!");
 				}
 
 				if (whrPwrNodes) {
 					if (correctionFactorNodes.Count == 0) {
-						Warn("WHR electric power provided but no correction factors found - ignoring WHR.");
+						throw new VectoXMLException("WHR electric power provided but no correction factors found.");
 					}
-					return new XMLDeclarationWHRData();
+					//return new XMLDeclarationWHRData();
 				}
 
 				var fuelNodes = GetNodes(XMLNames.Engine_FuelModes_Fuel);
