@@ -1,9 +1,0 @@
-﻿Technology                             , fullyelectric , Heavy Urban , Urban , Suburban , Interurban , Coach
-Fixed displacement                     , 0             , 1.00        , 1.00  , 1.00     , 1.00       , 1.00
-Fixed displacement with elec. control  , 0             , 0.95        , 0.95  , 0.95     , 0.95       , 0.95
-Dual displacement with mech. control   , 0             , 0.85        , 0.85  , 0.85     , 0.85       , 0.85
-Dual displacement with elec. control   , 0             , 0.80        , 0.80  , 0.80     , 0.80       , 0.80
-Variable displacement mech. controlled , 0             , 0.75        , 0.75  , 0.75     , 0.75       , 0.75
-Variable displacement elec. controlled , 0             , 0.60        , 0.60  , 0.60     , 0.60       , 0.60
-Electric driven pump                   , 1             , 0.25        , 0.25  , 0.25     , 0.25       , 0.25
-Full electric steering gear            , 1             , 0.00        , 0.00  , 0.00     , 0.00       , 0.00

@@ -11,9 +11,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 	{
 		private readonly SteeringPumpBaseLine _baseLine = new SteeringPumpBaseLine();
 
-		private readonly SteeringTubingFactors _tubingFactors = new SteeringTubingFactors();
-
-		private readonly SteeringAxleFactors _axleFactors = new SteeringAxleFactors();
+		private readonly SteeringPumpFactors _technologyFactors = new SteeringPumpFactors();
 
 		public Watt LookupMechanicalPowerDemand(MissionType mission, IList<string> technologies, Meter vehicleLength)
 		{
@@ -30,18 +28,18 @@ namespace TUGraz.VectoCore.Models.Declaration {
 			var powerDemand = 0.SI<Watt>();
 
 			for (var i = 0; i < technologies.Count; i++) {
-				var techLookup = _tubingFactors.Lookup(technologies[i], mission);
-				if (techLookup.Value.Item1 != electrical) {
+				var techLookup = _technologyFactors.Lookup(technologies[i], mission);
+				if (techLookup.FullyElectric != electrical) {
 					continue;
 				}
 				var baseDemand = _baseLine.Lookup(mission, i + 1).Value;
 				var powerDemandTubing = (Constants.BusParameters.Auxiliaries.SteeringPump.TubingLoss * 2 *
 										(vehicleLength - Constants.BusParameters.Auxiliaries.SteeringPump.LengthBonus) *
 										Constants.BusParameters.Auxiliaries.SteeringPump.VolumeFlow).Cast<Watt>();
-				var tubingFactor = i == 0 ? techLookup.Value.Item2 : 1.0;
-				var axleFactor = i == 0 ? 1.0 : _axleFactors.Lookup(technologies[i], mission).Value;
+				var tubingFactor = i == 0 ? techLookup.TubingFactor : 0.0;
+				var axleFactor = i == 0 ? 1.0 : techLookup.AxleFactor;
 
-				powerDemand += (baseDemand + powerDemandTubing) * tubingFactor * axleFactor;
+				powerDemand += baseDemand * axleFactor + powerDemandTubing * tubingFactor;
 			}
 
 			return powerDemand;
@@ -51,7 +49,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 
 		public string[] GetTechnologies()
 		{
-			return _tubingFactors.GetTechnologies();
+			return _technologyFactors.GetTechnologies();
 		}
 
 		#endregion
@@ -80,23 +78,28 @@ namespace TUGraz.VectoCore.Models.Declaration {
 			#endregion
 		}
 
-		private sealed class SteeringTubingFactors : LookupData<string, MissionType, LookupValues<Tuple<bool, double>>>, IDeclarationAuxiliaryTable
+		private sealed class SteeringPumpFactors : LookupData<string, MissionType, SteeringPumpTechnologyEntry>, IDeclarationAuxiliaryTable
 		{
 			#region Overrides of LookupData
 
-			protected override string ResourceId { get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.SP-TubingFactor.csv"; } }
+			protected override string ResourceId { get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.SP-Factors.csv"; } }
 			protected override string ErrorMessage { get { return "Auxiliary Lookup Error: No value found for Steering Pump. Mission: '{0}', HDVClass: '{1}'"; } }
 			protected override void ParseData(DataTable table)
 			{
+				var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().Where(
+					m => m.IsDeclarationMission() && m != MissionType.ExemptedMission &&
+						table.Columns.Contains("tubing-" + m.ToString())).ToList();
+
 				foreach (DataRow row in table.Rows) {
 					var axleNumber = row.Field<string>("technology");
-					foreach (DataColumn col in table.Columns) {
-						if (col.Caption == "technology" || col.Caption == "fullyelectric" || string.IsNullOrWhiteSpace(row.Field<string>(col.Caption))) {
-							continue;
-						}
 
-						Data[Tuple.Create(axleNumber, col.Caption.ParseEnum<MissionType>())] =
-							new LookupValues<Tuple<bool,double>> { Value = Tuple.Create(!row.Field<string>("fullyelectric").Equals("0"), row.ParseDouble(col.Caption)) };
+					foreach(var mission in missionTypes) {
+						Data[Tuple.Create(axleNumber, mission)] =
+							 new SteeringPumpTechnologyEntry() {
+									FullyElectric = !row.Field<string>("fullyelectric").Equals("0"),
+									TubingFactor = row.ParseDouble("tubing-"+mission.ToString().ToLower()),
+									AxleFactor = row.ParseDouble("axle-"+mission.ToString().ToLower())
+							};
 					}
 				}
 			}
@@ -113,29 +116,14 @@ namespace TUGraz.VectoCore.Models.Declaration {
 			#endregion
 		}
 
-		private sealed class SteeringAxleFactors : LookupData<string, MissionType, LookupValues<double>>
+		public struct SteeringPumpTechnologyEntry
 		{
-			#region Overrides of LookupData
+			public double TubingFactor { get; set; }
+			public double AxleFactor { get; set; }
 
-			protected override string ResourceId { get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.SP-AxleFactor.csv"; } }
-			protected override string ErrorMessage { get { return "Auxiliary Lookup Error: No value found for Steering Pump. Mission: '{0}', HDVClass: '{1}'"; } }
-			protected override void ParseData(DataTable table)
-			{
-				foreach (DataRow row in table.Rows) {
-					var axleNumber = row.Field<string>("technology");
-					foreach (DataColumn col in table.Columns) {
-						if (col.Caption == "technology" || string.IsNullOrWhiteSpace(row.Field<string>(col.Caption))) {
-							continue;
-						}
-
-						Data[Tuple.Create(axleNumber, col.Caption.ParseEnum<MissionType>())] =
-							new LookupValues<double> { Value = row.ParseDouble(col.Caption) };
-					}
-				}
-			}
-
-			#endregion
+			public bool FullyElectric { get; set; }
 		}
+		
 
 		private struct LookupValues<T>
 		{
