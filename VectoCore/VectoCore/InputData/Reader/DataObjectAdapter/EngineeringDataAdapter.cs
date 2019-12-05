@@ -527,7 +527,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public ShiftStrategyParameters CreateGearshiftData(GearboxType gbxType, IGearshiftEngineeringInputData gsInputData, double axleRatio)
+		public ShiftStrategyParameters CreateGearshiftData(GearboxType gbxType, IGearshiftEngineeringInputData gsInputData, double axleRatio, PerSecond engineIdlingSpeed)
 		{
 			if (gsInputData == null) {
 				return null;
@@ -588,7 +588,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				LoadStageThresoldsDown = gsInputData.LoadStageThresholdsDown?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresoldsDown,
 				LoadStageThresoldsUp = gsInputData.LoadStageThresholdsUp?.ToArray() ?? DeclarationData.GearboxTCU.LoadStageThresholdsUp,
-				ShiftSpeedsTCToLocked = gsInputData.ShiftSpeedsTCToLocked ?? DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked,
+				ShiftSpeedsTCToLocked = (gsInputData.ShiftSpeedsTCToLocked ?? DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked).Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
 
 				// voith gs parameters
 

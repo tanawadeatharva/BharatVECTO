@@ -240,12 +240,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static double[] LoadStageThresoldsDown = { 13.7, 30.34, 47.01, 63.68, 80.35 };
 
 			public static double[][] ShiftSpeedsTCToLocked = {
-				new[] { 650.0, 680, 725, 650, 680, 725 },
-				new[] { 650.0, 680, 725, 650, 680, 725 },
-				new[] { 650.0, 680, 725, 650, 680, 725 },
-				new[] { 650.0, 680, 725, 670, 700, 745 },
-				new[] { 660.0, 690, 735, 680, 710, 755 },
-				new[] { 670.0, 700, 745, 690, 720, 755 },
+				new[] { 50.0,  80, 125,  50,  80, 125 },
+				new[] { 50.0,  80, 125,  50,  80, 125 },
+				new[] { 50.0,  80, 125,  50,  80, 125 },
+				new[] { 50.0,  80, 125,  70, 100, 145 },
+				new[] { 60.0,  90, 135,  80, 110, 155 },
+				new[] { 70.0, 100, 145,  90, 120, 155 },
 			};
 
 			public const double DownhillSlope = -5;

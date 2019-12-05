@@ -618,7 +618,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public ShiftStrategyParameters CreateGearshiftData(GearboxType gbxType, double axleRatio)
+		public ShiftStrategyParameters CreateGearshiftData(GearboxType gbxType, double axleRatio, PerSecond engineIdlingSpeed)
 		{
 			var retVal = new ShiftStrategyParameters {
 				StartVelocity = DeclarationData.GearboxTCU.StartSpeed,
@@ -668,7 +668,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				LoadStageThresoldsUp = DeclarationData.GearboxTCU.LoadStageThresholdsUp,
 				LoadStageThresoldsDown = DeclarationData.GearboxTCU.LoadStageThresoldsDown,
-				ShiftSpeedsTCToLocked = DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked,
+				ShiftSpeedsTCToLocked = DeclarationData.GearboxTCU.ShiftSpeedsTCToLocked.Select(x => x.Select(y => y + engineIdlingSpeed.AsRPM).ToArray()).ToArray(),
 			};
 
 			return retVal;
