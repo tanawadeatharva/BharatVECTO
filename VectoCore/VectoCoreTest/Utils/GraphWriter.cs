@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				for (var i = 0; i < Yfields.Length; i++) {
 					var yfield = Yfields[i];
-					var y = LoadData(modDataV3, yfield.GetName());
+					var y = LoadData(modDataV3, yfield.GetShortCaption());
 
 					var chartArea = AddChartArea(chart, yfield.ToString(), xfield.GetCaption(), maxX, minX,
 						yfield.GetCaption(), yfield == ModalResultField.Gear);
@@ -119,14 +119,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 					var legend = CreateLegend(chart, yfield.ToString());
 
 					if (yfield == ModalResultField.v_act) {
-						var y3 = LoadData(modDataV3, ModalResultField.v_targ.GetName());
+						var y3 = LoadData(modDataV3, ModalResultField.v_targ.GetShortCaption());
 						var series3 = CreateSeries("v_target", legend, chartArea, chart, Color.Green, x, y3);
 					}
 
 					if ((Yfields.Contains(ModalResultField.altitude) && yfield == ModalResultField.altitude) || 
 						(!Yfields.Contains(ModalResultField.altitude) && yfield == ModalResultField.v_act)) {
 						
-						var grad = LoadData(modDataV3, ModalResultField.grad.GetName());
+						var grad = LoadData(modDataV3, ModalResultField.grad.GetShortCaption());
 
 						chartArea.AxisY2.Enabled = AxisEnabled.True;
 						chartArea.AxisY2.Title = "gradient [%]";
@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						}
 					}
 					if (PlotIgnitionState && yfield == ModalResultField.P_eng_out) {
-						var ignition = LoadData(modDataV3, ModalResultField.ICEOn.GetName());
+						var ignition = LoadData(modDataV3, ModalResultField.ICEOn.GetShortCaption());
 
 						chartArea.AxisY2.Enabled = AxisEnabled.True;
 						chartArea.AxisY2.Title = "Engine On [0/1]";
@@ -362,8 +362,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			chart.Titles.Add(title);
 		}
 
-		private static double[] LoadData(DataTable modDataV3, string field)
+		private static double[] LoadData(DataTable modDataV3, string fieldA)
 		{
+			var field = string.Format(fieldA, "");
 			return modDataV3.Rows.Cast<DataRow>()
 				.Select(v => v.Field<string>(field).Length == 0
 					? double.NaN
