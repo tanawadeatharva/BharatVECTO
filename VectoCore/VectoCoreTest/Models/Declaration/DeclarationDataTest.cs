@@ -240,12 +240,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertHelper.AreRelativeEqual(105.KMPHtoMeterPerSecond(), curve[10].Velocity);
 			AssertHelper.AreRelativeEqual(6.33112792.SI<SquareMeter>(), curve[10].EffectiveCrossSectionArea);
 
-			Assert.Greater(20, curve.Count);
+			Assert.IsTrue(curve.Count >= 20);
 		}
 
 		[
 			TestCase("TractorSemitrailer", 6.46, -0.1, 3.0),
-			TestCase("TractorSemitrailer", 6.46, 130.1, 3.0),
+			TestCase("TractorSemitrailer", 6.46, 200.1, 3.0),
 		]
 		public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph, double height)
 		{
