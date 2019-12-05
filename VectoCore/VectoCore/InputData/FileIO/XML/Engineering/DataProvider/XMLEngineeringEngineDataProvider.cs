@@ -315,6 +315,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			
 		}
 
+		public override WHRType WHRType
+		{
+			get {
+				var retVal = WHRType.None;
+				if (XmlConvert.ToBoolean(GetString("MechanicalOutputICE"))) {
+					retVal |= WHRType.MechanicalOutputICE;
+				}
+				if (XmlConvert.ToBoolean(GetString("MechanicalOutputDrivetrain"))) {
+					retVal |= WHRType.MechanicalOutputDrivetrain;
+				}
+				if (XmlConvert.ToBoolean(GetString("ElectricalOutput"))) {
+					retVal |= WHRType.ElectricalOutput;
+				}
+
+				return retVal;
+			}
+		}
+
 		#endregion
 
 

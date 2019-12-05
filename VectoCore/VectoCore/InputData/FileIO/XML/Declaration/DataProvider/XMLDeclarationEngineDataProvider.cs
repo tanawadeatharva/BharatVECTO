@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 					.Cast<XmlNode>().All(x => x.Attributes?[fcMapAttr] != null);
 				if (correctionFactorNodes.Count > 0) {
 					if (!whrPwrNodes) {
-						throw new VectoXMLException("WHR correction factors provided but no {0} power defined.", fcMapAttr);
+						throw new VectoXMLException("WHR correction factors provided but {0} missing for some entries.", fcMapAttr);
 
 					}
 					//return new XMLDeclarationWHRData();

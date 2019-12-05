@@ -156,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			outPort.Initialize(50.SI<NewtonMeter>(), 2550.RPMtoRad());
 			outPort.Request(0.SI<Second>(), 0.SI<Second>(), 50.SI<NewtonMeter>(), 2550.RPMtoRad());
 			AssertHelper.Exception<VectoException>(() => retarder.CommitSimulationStep(new MockModalDataContainer()),
-				"Retarder LossMap data was extrapolated in Declaration mode: range for loss map is not sufficient: n:2550 (min:0, max:2300), ratio:2");
+				"Retarder LossMap data was extrapolated in Declaration mode: range for loss map is not sufficient: n:5100 (min:0, max:2300), ratio:2");
 		}
 
 		[TestCase]

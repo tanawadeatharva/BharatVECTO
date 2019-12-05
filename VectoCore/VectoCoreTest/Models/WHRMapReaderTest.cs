@@ -127,9 +127,10 @@ namespace TUGraz.VectoCore.Tests.Models
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			
 			var dao = new DeclarationModeVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			var runs = dao.NextRun().ToArray();
-
-			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR == null));
+			AssertHelper.Exception<VectoXMLException>(
+				() => {
+					var runs = dao.NextRun().ToArray();
+				}, "WHR electric power provided but no correction factors found.");
 		}
 
 		[TestCase()]
@@ -150,9 +151,10 @@ namespace TUGraz.VectoCore.Tests.Models
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 
 			var dao = new DeclarationModeVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			var runs = dao.NextRun().ToArray();
-
-			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR == null));
+			AssertHelper.Exception<VectoXMLException>(
+				() => {
+					var runs = dao.NextRun().ToArray();
+				}, "WHR correction factors provided but electricPower missing for some entries.");
 		}
 
 		[TestCase()]
@@ -174,10 +176,10 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			AssertHelper.Exception<VectoException>(
+			AssertHelper.Exception<VectoXMLException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
-				}, "WHRData has to be provided for every entry in the FC-Map! n: 560.00, T: 400.00");
+				}, "WHR correction factors provided but electricPower missing for some entries.");
 		}
 
 		[TestCase()]
@@ -209,10 +211,9 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			AssertHelper.Exception<VectoException>(
-				() => {
-					var runs = dao.NextRun().ToArray();
-				}, "WHRData (correction factors) can only be defined for one fuel!");
+			var runs = dao.NextRun().ToArray();
+			
+			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR?.WHRMap != null));
 		}
 
 		[TestCase()]
@@ -260,10 +261,10 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			AssertHelper.Exception<VectoException>(
+			AssertHelper.Exception<VectoXMLException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
-				}, "Correction Factors and WHR-Map have to be defined for the same fuel!");
+				}, "WHR correction factors provided but electricPower missing for some entries.");
 		}
 
 		[TestCase()]
@@ -285,10 +286,10 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			AssertHelper.Exception<VectoException>(
+			AssertHelper.Exception<VectoXMLException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
-				}, "WHRData has to be provided for every entry in the FC-Map! n: 560.00, T: 400.00");
+				}, "WHR correction factors provided but electricPower missing for some entries.");
 		}
 
 		[TestCase()]
@@ -306,9 +307,9 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			var runs = dao.NextRun().ToArray();
-
-			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR == null));
+			//var runs = dao.NextRun().ToArray();
+			AssertHelper.Exception<VectoXMLException>(() => { var tmp = dao.NextRun().ToArray(); });
+			
 		}
 
 		[TestCase()]
@@ -329,9 +330,9 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			var runs = dao.NextRun().ToArray();
-
-			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR == null));
+			//var runs = dao.NextRun().ToArray();
+			//Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR == null));
+			AssertHelper.Exception<VectoXMLException>(() => { var tmp = dao.NextRun().ToArray(); });
 		}
 
 

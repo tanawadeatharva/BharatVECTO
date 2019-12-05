@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
@@ -123,6 +124,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				GearshiftParameters = new ShiftStrategyParameters() {
 					GearshiftLines = data,
 					LoadstageThresholds = loadStageThresoldsUp.Zip(loadStageThresoldsDown, Tuple.Create)
+				},
+				GearboxData = new GearboxData() {
+					Gears = new Dictionary<uint, GearData>() {
+						{1, new GearData() },
+						{2,new GearData() }
+					}
 				}
 			};
 			return runData;
