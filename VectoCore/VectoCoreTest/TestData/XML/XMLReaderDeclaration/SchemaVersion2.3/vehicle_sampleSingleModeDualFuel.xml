@@ -5,9 +5,9 @@
 	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0"
 	xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0"
 	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
-	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3_DF"
+	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3"
 	xmlns:di="http://www.w3.org/2000/09/xmldsig#"
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_FurtherDev\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd"
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_DEV_ADAS\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd"
 	>
 	<Vehicle id="VEH-1234567890" xsi:type="VehicleDeclarationType">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
@@ -35,7 +35,7 @@
 		</TorqueLimits>
 		<Components xsi:type="VehicleComponentsType">
 			<Engine>
-				<v2.0:Data id="ENG-gooZah3D" xsi:type="v2.3:EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.3_DF">
+				<v2.0:Data id="ENG-gooZah3D" xsi:type="v2.3:EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3">
 					<Manufacturer>Generic Engine Manufacturer</Manufacturer>
 					<Model>Generic 40t Long Haul Truck Engine</Model>
 					<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>
@@ -45,7 +45,11 @@
 					<RatedSpeed>2200</RatedSpeed>
 					<RatedPower>380000</RatedPower>
 					<MaxEngineTorque>2300</MaxEngineTorque>
-					<WHRType>none</WHRType>
+					<WHRType>
+						<MechanicalOutputICE>false</MechanicalOutputICE>
+						<MechanicalOutputDrivetrain>false</MechanicalOutputDrivetrain>
+						<ElectricalOutput>false</ElectricalOutput>
+					</WHRType>
 					<Mode>
 						<IdlingSpeed>560</IdlingSpeed>
 						<FullLoadAndDragCurve>
@@ -326,7 +330,7 @@
 					<AppVersion>3.0.1</AppVersion>
 					<TransmissionType>AMT</TransmissionType>
 					<MainCertificationMethod>Standard values</MainCertificationMethod>
-					<Gears>
+					<Gears xsi:type="GearsDeclarationType">
 						<Gear number="1">
 							<Ratio>14.930</Ratio>
 							<MaxTorque>1900</MaxTorque>
