@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected bool ATEcoRollReleaseLockupClutch;
 
 
-		public DefaultDriverStrategy(IVehicleContainer container = null)
+		public DefaultDriverStrategy(IVehicleContainer container)
 		{
 			DrivingModes.Add(DrivingMode.DrivingModeDrive, new DriverModeDrive() { DriverStrategy = this });
 			DrivingModes.Add(DrivingMode.DrivingModeBrake, new DriverModeBrake() { DriverStrategy = this });
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EngineStopStart = false,
 				PredictiveCruiseControl = PredictiveCruiseControlType.None,
 			};
-			ATEcoRollReleaseLockupClutch = data.GearboxData.ATEcoRollReleaseLockupClutch;
+			ATEcoRollReleaseLockupClutch = data?.GearboxData?.ATEcoRollReleaseLockupClutch ?? false;
 
 			EcoRollState = new EcoRoll() {
 				State = Impl.EcoRollStates.EcoRollOff,

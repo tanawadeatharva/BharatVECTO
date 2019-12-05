@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.OutputData
 									.Concat(
 										new[] {
 											ModalResultField.P_WHR_el_map, ModalResultField.P_WHR_el_corr, ModalResultField.P_WHR_mech_map, ModalResultField.P_WHR_mech_corr, ModalResultField.P_aux_ice_off,
-											ModalResultField.P_ice_start
+											ModalResultField.P_ice_start//, ModalResultField.altitude
 										}.Select(x => x.GetName()))
 									.Concat(FuelColumns.SelectMany(kv => kv.Value.Select(kv2 => kv2.Value.ColumnName)));
 

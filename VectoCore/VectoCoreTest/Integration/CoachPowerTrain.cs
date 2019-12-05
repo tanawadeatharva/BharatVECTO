@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 
 			container.RunData = runData;
-			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
