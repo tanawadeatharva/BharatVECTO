@@ -11,7 +11,8 @@
     "VehicleFile": "Class5_Tractor_PCC123EcoSS.vveh",
     "EngineFile": "Engine_325kW_12.7l.veng",
     "GearboxFile": "AMT_12.vgbx",
-    "AuxiliaryAssembly": "Classic",
+    "TCU": "AMT_12.vgbx",
+        "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
    "Aux": [
@@ -32,7 +33,7 @@
     "OverSpeedEcoRoll": {
       "Mode": "Overspeed",
       "MinSpeed": 50.0,
-      "OverSpeed": 2.5,
+      "OverSpeed": 2.5
     },
     "Cycles": [
       "CrestCoast1.vdri",
@@ -46,7 +47,7 @@
       "Group5Eng_CaseG.vdri",
       "Group5Eng_CaseH.vdri",
       "Group5Eng_CaseI.vdri",
-      "Group5Eng_CaseJ.vdri",
+      "Group5Eng_CaseJ.vdri"
     ]
   }
 }

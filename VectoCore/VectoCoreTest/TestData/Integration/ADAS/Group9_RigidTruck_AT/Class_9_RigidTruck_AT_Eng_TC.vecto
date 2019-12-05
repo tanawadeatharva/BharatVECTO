@@ -11,7 +11,8 @@
     "VehicleFile": "RigidTruck_6x2_TC.vveh",
     "EngineFile": "Engine_220kW.veng",
     "GearboxFile": "APT-S Generic TqMax1200.vgbx",
-    "AuxiliaryAssembly": "Classic",
+    "TCU": "APT-S Generic TqMax1200.vgbx",
+        "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
     "Aux": [ ],
@@ -47,7 +48,7 @@
       "DriveDHSl1.9_TS--.vdri",
       "DriveDHSl1.9_TS-.vdri",
       "DriveDHSl1.9_TS+.vdri",
-      "DriveDHSl1.9_TS++.vdri",
+      "DriveDHSl1.9_TS++.vdri"
     ]
   }
 }
