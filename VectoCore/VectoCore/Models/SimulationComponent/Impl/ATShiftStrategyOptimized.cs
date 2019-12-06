@@ -123,6 +123,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// initialize vehicle so that vehicleStopped of the testcontainer is false (required for test-runs)
+			TestContainerGbx.Gear = 2;
 			TestContainer.VehiclePort.Initialize(10.KMPHtoMeterPerSecond(), 0.SI<Radian>());
 
 			if (runData.Cycle.CycleType == CycleType.MeasuredSpeed) {
