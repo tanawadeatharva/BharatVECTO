@@ -33,19 +33,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 
-		[TestCase(Class9Decl, 0),
-		TestCase(@"E:\QUAM\Downloads\2018-07-13_Prototype-TCU-VECTO_R2016a\a_input_Data\Cl-5_tractor_directdr_axle_2p53.xml", 0),
-		TestCase(@"E:\QUAM\Downloads\2018-07-13_Prototype-TCU-VECTO_R2016a\a_input_Data\Cl-5_tractor_directdr_axle_2p53.xml", 1),
-		TestCase(@"E:\QUAM\Downloads\2018-07-13_Prototype-TCU-VECTO_R2016a\a_input_Data\Cl-5_tractor_directdr_axle_2p53.xml", 4)
-		]
-		public void TestSShiftStrategyV2(string jobFile, int i)
-		{
-			RunJob_DeclSingle(jobFile, i);
-		}
-
 		[TestCase(@"TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor_ENG_TCU.vecto"),
-		TestCase(@"TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor_ENG_FC.vecto"),
-			TestCase(@"TestData\Integration\ShiftStrategyV2\FC-Based_AT_TUG\MB_Citaro_G_MP156_ZF_Sort.vecto", 2)]
+		TestCase(@"TestData\Integration\ShiftStrategyV2\Class5_Tractor_4x2\Class5_Tractor_ENG_FC.vecto")]
 		public void TestShiftStrategyEngineering(string jobFile, int runIdx = 0)
 		{
 			var relativeJobPath = jobFile;

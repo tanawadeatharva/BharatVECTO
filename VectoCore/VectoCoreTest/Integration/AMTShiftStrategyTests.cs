@@ -37,7 +37,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 			RunJob_DeclSingle(jobName, 9);
 		}
 
-		[TestCase(@"E:\QUAM\tmp\AMT_ShiftStrategyNeu\VOLVO_AxleLossMapExtrapolation\Class5_TUG_Vehicle_VOLVO.xml", 5)]
 		public void RunJob_DeclSingle(string jobName, int runIdx)
 		{
 			var relativeJobPath = jobName;
@@ -60,7 +59,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 
-		[TestCase(@"E:\QUAM\tmp\AMT_ShiftStrategyNeu\VOLVO_AxleLossMapExtrapolation\Class5_TUG_Vehicle_VOLVO.xml")]
 		public void RunJob_DeclAll(string jobName)
 		{
 			var relativeJobPath = jobName;
