@@ -43,6 +43,7 @@
       "RegionalDelivery.vdri",
       "UrbanDelivery.vdri",
       "Urban.vdri",
-      "InterUrban.vdri"    ]
+      "InterUrban.vdri"
+    ]
   }
 }
