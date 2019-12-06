@@ -558,8 +558,8 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var overspeed = driverDataProvider.OverSpeedData;
 			Assert.IsTrue(overspeed.Enabled);
-			Assert.AreEqual(50, overspeed.MinSpeed.AsKmph, 1e-6);
-			Assert.AreEqual(5, overspeed.OverSpeed.AsKmph, 1e-6);
+			Assert.AreEqual(52, overspeed.MinSpeed.AsKmph, 1e-6);
+			Assert.AreEqual(2.6, overspeed.OverSpeed.AsKmph, 1e-6);
 
 			var driverAcc = driverDataProvider.AccelerationCurve.AccelerationCurve;
 			Assert.AreEqual(2, driverAcc.Rows.Count);
@@ -580,7 +580,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(0.211, shiftStrategy.StartAcceleration.Value(), 1e-6);
 			Assert.AreEqual(0.212, shiftStrategy.StartTorqueReserve, 1e-6);
 
-			Assert.AreEqual(0.811, gearboxData.PowershiftShiftTime.Value(), 1e-6);
+			//Assert.AreEqual(0.811, gearboxData.PowershiftShiftTime.Value(), 1e-6); // only available for AT gearboxes
 
 			var tcShiftStrategy = inputDataProvider.DriverInputData.GearshiftInputData;
 			
@@ -690,6 +690,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			//angledrivelosses.ReplaceSelf(new XElement(XMLNames.AngleDrive_Efficiency, "0.9124").ToString());
 			aux.InnerXml =
 				new XElement(XMLNames.Auxiliaries_Auxiliary, new XAttribute(XMLNames.Auxiliaries_Auxiliary_ID_Attr, "const"),
+					new XAttribute(XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance") + "type", "AuxiliaryEntryEngineeringType"),
 					new XElement(XMLNames.Auxiliaries_Auxiliary_ConstantAuxLoad, "5000")).ToString();
 
 			//var modified = XmlReader.Create(new StringReader(nav.OuterXml));
