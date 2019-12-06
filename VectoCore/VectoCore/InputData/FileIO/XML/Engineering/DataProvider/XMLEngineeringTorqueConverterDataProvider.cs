@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.Impl
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.ENGINEERING_DEFINITONS_NAMESPACE_V10;
 
-		public new const string XSD_TYPE = "TorqueConverterComponentEngineeringType";
+		public new const string XSD_TYPE = "TorqueConverterDataEngineeringType";
 
 		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, XSD_TYPE);
 
