@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			@"TestData\Generic Vehicles\Declaration Mode\Class9_RigidTruck_6x2\Class9_RigidTruck_DECL.vecto";
 
 		public const string Class9DeclAT =
-			@"E:\QUAM\Workspace\VECTO_DEV_ADAS\VectoCore\VectoCoreTest\TestData\Integration\ADAS\Group9_AT_PCC.xml";
+			@"TestData\Integration\ADAS\Group9_AT_PCC.xml";
 
 		public const string Class5Eng = @"TestData\Integration\ADAS\Group5PCCEng\Class5_Tractor_ENG.vecto";
 
