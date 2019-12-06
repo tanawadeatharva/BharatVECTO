@@ -76,7 +76,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly AirDrag AirDrag = new AirDrag();
 		public static readonly StandardBodies StandardBodies = new StandardBodies();
 		public static readonly Payloads Payloads = new Payloads();
+
 		public static readonly PTOTransmission PTOTransmission = new PTOTransmission();
+
 		//public static MeterPerSecond CycleSpeedLimit;
 		public const double LossMapExtrapolationFactor = 6;
 
@@ -240,12 +242,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static double[] LoadStageThresoldsDown = { 13.7, 30.34, 47.01, 63.68, 80.35 };
 
 			public static double[][] ShiftSpeedsTCToLocked = {
-				new[] { 50.0,  80, 125,  50,  80, 125 },
-				new[] { 50.0,  80, 125,  50,  80, 125 },
-				new[] { 50.0,  80, 125,  50,  80, 125 },
-				new[] { 50.0,  80, 125,  70, 100, 145 },
-				new[] { 60.0,  90, 135,  80, 110, 155 },
-				new[] { 70.0, 100, 145,  90, 120, 155 },
+				new[] { 50.0, 80, 125, 50, 80, 125 },
+				new[] { 50.0, 80, 125, 50, 80, 125 },
+				new[] { 50.0, 80, 125, 50, 80, 125 },
+				new[] { 50.0, 80, 125, 70, 100, 145 },
+				new[] { 60.0, 90, 135, 80, 110, 155 },
+				new[] { 70.0, 100, 145, 90, 120, 155 },
 			};
 
 			public const double DownhillSlope = -5;
@@ -304,7 +306,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					DefaultShiftStrategy = tmp.Body["ShiftStrategy"].Value<string>();
 				}
 #endif
-			}	
+			}
 		}
 
 		public static class Gearbox
@@ -387,22 +389,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 								new Point(fldEntry.EngineSpeed.Value(), fldEntry.TorqueFullLoad.Value() * ShiftPolygonEngineFldMargin))
 						.ToList();
 					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxDragTorque * 1.1, p2.X.SI<PerSecond>()));
-					if (downShiftPoints.Min(x => x.X) > p2.X) {
+					if (downShiftPoints.Count == 0) {
+						// coarse grid points in FLD
 						downShift.Add(
 							new ShiftPolygon.ShiftPolygonEntry(
 								fullLoadCurve.FullLoadStationaryTorque(p2.X.SI<PerSecond>()) * ShiftPolygonEngineFldMargin,
 								p2.X.SI<PerSecond>()));
-					}
-					downShift.AddRange(
-						downShiftPoints.Select(
-							x => new ShiftPolygon.ShiftPolygonEntry(x.Y.SI<NewtonMeter>() * 0.98, x.X.SI<PerSecond>())));
-					if (downShiftPoints.Max(x => x.X) < p3.X) {
 						downShift.Add(
 							new ShiftPolygon.ShiftPolygonEntry(
 								fullLoadCurve.FullLoadStationaryTorque(p3.X.SI<PerSecond>()) * ShiftPolygonEngineFldMargin,
 								p3.X.SI<PerSecond>()));
-					}
+					} else {
+						if (downShiftPoints.Min(x => x.X) > p2.X) {
+							downShift.Add(
+								new ShiftPolygon.ShiftPolygonEntry(
+									fullLoadCurve.FullLoadStationaryTorque(p2.X.SI<PerSecond>()) * ShiftPolygonEngineFldMargin,
+									p2.X.SI<PerSecond>()));
+						}
 
+						downShift.AddRange(
+							downShiftPoints.Select(
+								x => new ShiftPolygon.ShiftPolygonEntry(
+									x.Y.SI<NewtonMeter>() * ShiftPolygonEngineFldMargin, x.X.SI<PerSecond>())));
+						if (downShiftPoints.Max(x => x.X) < p3.X) {
+							downShift.Add(
+								new ShiftPolygon.ShiftPolygonEntry(
+									fullLoadCurve.FullLoadStationaryTorque(p3.X.SI<PerSecond>()) * ShiftPolygonEngineFldMargin,
+									p3.X.SI<PerSecond>()));
+						}
+					}
 					downShift.Add(new ShiftPolygon.ShiftPolygonEntry(fullLoadCurve.MaxTorque * 1.1, p3.X.SI<PerSecond>()));
 				}
 				var upShift = new List<ShiftPolygon.ShiftPolygonEntry>();
