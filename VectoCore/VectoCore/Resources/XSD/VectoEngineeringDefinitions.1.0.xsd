@@ -818,11 +818,6 @@
 					<xs:element name="StartSpeed" type="tns:GearboxStartSpeedType" minOccurs="0"/>
 					<xs:element name="StartAcceleration" type="tns:GearboxStartAccelerationType" minOccurs="0"/>
 					<xs:element name="StartTorqueReserve" type="tns:GearboxStartTorqueReserveType" minOccurs="0"/>
-					<xs:element name="PowershiftShiftTime" type="tns:PowershiftShiftTimeType" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>P188 - [s]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 					<xs:element name="PowershiftInertiaFactor" type="tns:PowershiftInertiaFactorType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P189 - [-]</xs:documentation>
