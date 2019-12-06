@@ -4,7 +4,7 @@
 	xmlns:tns="urn:tugraz:ivt:VectoAPI:EngineeringInput:v1.0"
 	xmlns:vdecdef="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/XSD/VectoEngineeringJob.xsd">
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:EngineeringInput E:\QUAM\Workspace\VECTO_DEV_ADAS\VectoCore\VectoCore\Resources\XSD/VectoEngineeringJob.xsd">
 	<EngineOnlyMode>false</EngineOnlyMode>
 	<Vehicle id="VEH-1234567890">
 		<Manufacturer>Generic Truck Manufacturer</Manufacturer>
@@ -3490,8 +3490,8 @@
 		</LookAheadCoasting>
 		<Overspeed xsi:type="OverspeedEngineeringType">
 			<Enabled>true</Enabled>
-			<MinSpeed>50</MinSpeed>
-			<AllowedOverspeed>2.5</AllowedOverspeed>
+			<MinSpeed>52</MinSpeed>
+			<AllowedOverspeed>2.6</AllowedOverspeed>
 		</Overspeed>
 		<DriverAccelerationCurve xsi:type="DriverAccelerationCurveEngineeringType">
 			<Entry vehicleSpeed="0" maxAcceleration="1" maxDeceleration="-1"/>
@@ -3506,7 +3506,6 @@
 			<StartSpeed>2.11</StartSpeed>
 			<StartAcceleration>0.211</StartAcceleration>
 			<StartTorqueReserve>0.212</StartTorqueReserve>
-			<PowershiftShiftTime>0.811</PowershiftShiftTime>
 			<CLUpshiftMinAcceleration>0.133</CLUpshiftMinAcceleration>
 			<CCUpshiftMinAcceleration>0.134</CCUpshiftMinAcceleration>
 		</ShiftStrategyParameters>
