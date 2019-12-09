@@ -45,25 +45,14 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
 
-			if (!headerValid) {
-				if (data.SourceType == DataSourceType.CSVFile && data.Columns.Count < 4) {
-					throw new VectoException("FC-Map has to contain at least 4 columns when WHR is used");
+			if (!headerValid && (type == WHRType.ElectricalOutput || type == WHRType.MechanicalOutputDrivetrain)) {
+				
+					throw new VectoException("expected column headers: {0}", string.Join(", ", whrColumn));
 				}
 
+			if (!headerValid) { 
 				data.Columns[0].ColumnName = Fields.EngineSpeed;
 				data.Columns[1].ColumnName = Fields.Torque;
-
-				// column with idx==2 is fuel consumption in csv files
-				if (type == WHRType.ElectricalOutput) {
-					data.Columns[3].ColumnName = Fields.ElectricPower;
-				}
-				if (type == WHRType.MechanicalOutputDrivetrain) {
-					if (data.Columns.Count > 3) {
-						data.Columns[4].ColumnName = Fields.MechanicalPower;
-					} else {
-						data.Columns[3].ColumnName = Fields.MechanicalPower;
-					}
-				}
 			}
 
 			var delaunayMap = new DelaunayMap(type.IsElectrical() ? "WHRMapEl" : "WHRMapMech");

@@ -1,4 +1,4 @@
-engine speed [rpm] , torque [Nm] , fuel consumption [g/h] , whr power electrical [W]
+engine speed [rpm] , torque [Nm] , fuel consumption [g/h] , whr power electric [W]
 600                , -250        , 0                      , 250
 600                , -150        , 0                      , 250
 600                , 0           , 1459                   , 250
