@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// <summary>
 	/// Interface for the ShiftStrategy. Decides when to shift and which gear to take.
 	/// </summary>
-	public interface IShiftStrategy
+	public interface IShiftStrategy : IShiftPolygonCalculator
 	{
 		/// <summary>
 		/// Checks if a shift operation is required.
@@ -102,6 +102,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		void WriteModalResults(IModalDataContainer container);
 
+		
+	}
+
+	public interface IShiftPolygonCalculator
+	{
 		ShiftPolygon ComputeDeclarationShiftPolygon(
 			GearboxType gearboxType, int i, EngineFullLoadCurve engineDataFullLoadCurve,
 			IList<ITransmissionInputData> gearboxGears, CombustionEngineData engineData, double axlegearRatio,

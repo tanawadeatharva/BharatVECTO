@@ -261,11 +261,23 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		internal GearboxData CreateGearboxData(
-			IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData,
-			double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory,
-			ITorqueConverterEngineeringInputData torqueConverter, IShiftStrategy shiftStrategy, IAdvancedDriverAssistantSystemsEngineering adas)
+		internal GearboxData CreateGearboxData(IEngineeringInputDataProvider inputData, VectoRunData runData, IShiftPolygonCalculator shiftPolygonCalc)
+			//IGearboxEngineeringInputData gearbox, CombustionEngineData engineData, IGearshiftEngineeringInputData gearshiftData,
+			//double axlegearRatio, Meter dynamicTyreRadius, VehicleCategory vehicleCategory,
+			//ITorqueConverterEngineeringInputData torqueConverter, IShiftPolygonCalculator shiftPolygonCalc, IAdvancedDriverAssistantSystemDeclarationInputData adas)
 		{
+			var vehicle = inputData.JobInputData.Vehicle;
+			var gearbox = vehicle.Components.GearboxInputData;
+			var torqueConverter = vehicle.Components.TorqueConverterInputData;
+
+			var adas = vehicle.ADAS;
+			var gearshiftData = inputData.DriverInputData.GearshiftInputData;
+
+			var engineData = runData.EngineData;
+			var axlegearRatio = runData.AxleGearData.AxleGear.Ratio;
+			var dynamicTyreRadius = runData.VehicleData.DynamicTyreRadius;
+			var vehicleCategory = runData.VehicleData.VehicleCategory;
+
 			if (gearbox.SavedInDeclarationMode) {
 				WarnEngineeringMode("GearboxData");
 			}
@@ -301,8 +313,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				var shiftPolygon = gear.ShiftPolygon != null && gear.ShiftPolygon.SourceType != DataSourceType.Missing
 					? ShiftPolygonReader.Create(gear.ShiftPolygon)
-					: shiftStrategy != null
-						? shiftStrategy.ComputeDeclarationShiftPolygon(
+					: shiftPolygonCalc != null
+						? shiftPolygonCalc.ComputeDeclarationShiftPolygon(
 							gearbox.Type, (int)i, engineData.FullLoadCurves[i + 1], gearbox.Gears,
 							engineData,
 							axlegearRatio, dynamicTyreRadius)

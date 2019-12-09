@@ -218,6 +218,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="default.runsettings" />
+    <None Include="TestData\Components\AT_GBX\GearLossMap.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\AT_GBX\GearboxSerial8Spd.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Components\GearshiftLinesVoith.vgsv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

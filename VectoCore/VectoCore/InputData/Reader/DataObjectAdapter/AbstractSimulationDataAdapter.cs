@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return new VehicleData.ADASData {
 				EngineStopStart = adas.EngineStopStart,
 				EcoRoll = adas.EcoRoll,
-				PredictiveCruiseControl = adas.PredictiveCruiseControl
+				PredictiveCruiseControl = adas.PredictiveCruiseControl,
 			};
 		}
 

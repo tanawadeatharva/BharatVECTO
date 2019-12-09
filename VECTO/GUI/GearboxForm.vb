@@ -933,7 +933,7 @@ Public Class GearboxForm
                 .Type = CType(CbGStype.SelectedValue, GearboxType)
             }
         }
-        Dim tmpStrategy as IShiftStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData))
+        Dim tmpStrategy as IShiftPolygonCalculator = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData))
             
 
         Dim shiftLines As ShiftPolygon = tmpStrategy.ComputeDeclarationShiftPolygon(

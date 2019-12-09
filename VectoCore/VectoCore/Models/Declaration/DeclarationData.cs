@@ -233,6 +233,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static int AllowedGearRangeFCAMT = 2;
 			public static int AllowedGearRangeFCAT = 1;
+			public static int AllowedGearRangeFCATSkipGear = 2;
+			public static int ATSkipGearsThreshold = 6;
 
 			public static PerSecond MinEngineSpeedPostUpshift = 0.RPMtoRad();
 

@@ -789,7 +789,7 @@
 				<xs:documentation>P196 - [-]</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="maxTorque" type="v1.0:TorqueLimitEntryMaxTorqueType" use="required">
+		<xs:attribute name="maxTorque" type="tns:TorqueLimitEntryMaxTorqueType" use="required">
 			<xs:annotation>
 				<xs:documentation>P197 - [Nm]</xs:documentation>
 			</xs:annotation>
@@ -1004,4 +1004,9 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:simpleType name="TorqueLimitEntryMaxTorqueType">
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>

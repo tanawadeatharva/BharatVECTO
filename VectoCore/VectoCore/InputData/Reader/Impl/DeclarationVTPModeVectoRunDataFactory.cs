@@ -104,8 +104,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Report.InputDataHash = JobInputData.VectoJobHash;
 			Report.ManufacturerRecord = JobInputData.ManufacturerReportInputData;
 			Report.ManufacturerRecordHash = JobInputData.VectoManufacturerReportHash;
-			var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem)).ToList())
-										.ToList();
+			var fuels = JobInputData.Vehicle.Components.EngineInputData.EngineModes.Select(
+										x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, JobInputData.Vehicle.TankSystem))
+											.ToList())
+									.ToList();
 			Report.InitializeReport(powertrainConfig, fuels);
 		}
 
@@ -135,16 +137,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			AngledriveData = Dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 
 			GearboxData = Dao.CreateGearboxData(
-				vehicle.Components.GearboxInputData, EngineData,
-				AxlegearData.AxleGear.Ratio,
-				tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData, null, vehicle.ADAS);
+				vehicle, new VectoRunData() { EngineData = EngineData, AxleGearData = AxlegearData, VehicleData = tempVehicle },
+				null);
 			RetarderData = Dao.CreateRetarderData(vehicle.Components.RetarderInputData);
 
 			PTOTransmissionData =
 				Dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
 			GearshiftData = Dao.CreateGearshiftData(
-				GearboxData.Type, AxlegearData.AxleGear.Ratio * (AngledriveData?.Angledrive.Ratio ?? 1.0), EngineData.IdleSpeed);
+				GearboxData, AxlegearData.AxleGear.Ratio * (AngledriveData?.Angledrive.Ratio ?? 1.0), EngineData.IdleSpeed);
 
 			AuxVTP = CreateVTPAuxData(vehicle);
 		}
@@ -162,6 +163,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			if (mission == null) {
 				throw new VectoException("Mission {0} not found in segmentation matrix", DeclarationData.VTPMode.SelectedMission);
 			}
+
 			var loading = mission.Loadings.FirstOrDefault(l => l.Key == DeclarationData.VTPMode.SelectedLoading);
 			var runData = CreateVectoRunData(Segment, mission, loading.Value);
 			runData.ModFileSuffix = loading.Key.ToString();
@@ -175,13 +177,13 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			runData.Mission = mission;
 			runData.Loading = loading.Key;
 			yield return runData;
-				
-			
+
 			// simulate the Measured cycle
 			var vtpCycle = JobInputData.Cycles.FirstOrDefault();
 			if (vtpCycle == null) {
 				throw new VectoException("no VTP-Cycle provided!");
 			}
+
 			var drivingCycle = DrivingCycleDataReader.ReadFromDataTable(vtpCycle.CycleData, vtpCycle.Name, false);
 
 			// Loading is not relevant as we use P_wheel
@@ -194,6 +196,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			vtpRunData.Mission = new Mission() {
 				MissionType = MissionType.VerificationTest
 			};
+
 			//var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
 			//var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
 			var mileageCorrection = GetMileagecorrectionFactor(JobInputData.Mileage);
@@ -201,7 +204,6 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				CorrectionFactor = mileageCorrection,
 			};
 			yield return vtpRunData;
-			
 		}
 
 		protected virtual AuxFanData GetFanData()
