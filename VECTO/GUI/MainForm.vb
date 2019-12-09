@@ -157,7 +157,7 @@ Imports TUGraz.VectoCore.Utils
         FullLoadCurveFileBrowser.Extensions = New String() {"vfld"}
         EngineFileBrowser.Extensions = New String() {"veng"}
         GearboxFileBrowser.Extensions = New String() {"vgbx"}
-        TCUFileBrowser.Extensions = New String() {"vtcu"}
+        TCUFileBrowser.Extensions = New String() {"vtcu", "vgbx"}
         DriverAccelerationFileBrowser.Extensions = New String() {"vacc"}
         AuxFileBrowser.Extensions = New String() {"vaux"}
         GearboxShiftPolygonFileBrowser.Extensions = New String() {"vgbs"}
