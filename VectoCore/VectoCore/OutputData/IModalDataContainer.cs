@@ -114,6 +114,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		Meter Distance { get; }
 		KilogramPerWattSecond VehicleLineCorrectionFactor(FuelData.Entry fuel);
+		void CalculateAggregateValues();
 	}
 
 	public static class ModalDataContainerExtensions

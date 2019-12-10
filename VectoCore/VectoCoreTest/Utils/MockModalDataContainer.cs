@@ -238,6 +238,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return 0.SI<KilogramPerWattSecond>();
 		}
 
+		public void CalculateAggregateValues()
+		{
+			
+		}
+
 		public string RunName { get; set; }
 		public string CycleName { get; set; }
 		public string RunSuffix { get; set; }

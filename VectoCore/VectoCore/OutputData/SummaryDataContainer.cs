@@ -456,11 +456,17 @@ namespace TUGraz.VectoCore.OutputData
 		/// Writes the result of one run into the summary data container.
 		/// </summary>
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		public virtual void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData)
+		protected DataRow GetResultRow(IModalDataContainer modData, VectoRunData runData)
 		{
 			UpdateTableColumns(modData.FuelData, runData.EngineData.MultipleEngineFuelModes);
 			var row = Table.NewRow();
 			Table.Rows.Add(row);
+			return row;
+		}
+
+		public virtual void Write(IModalDataContainer modData, int jobNr, int runNr, VectoRunData runData)
+		{
+			var row = GetResultRow(modData, runData);
 
 			row[SORT] = jobNr * 1000 + runNr;
 			row[JOB] = string.Format("{0}-{1}", jobNr, runNr); //ReplaceNotAllowedCharacters(current);

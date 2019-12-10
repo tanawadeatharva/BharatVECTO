@@ -183,6 +183,48 @@ namespace TUGraz.VectoCore.OutputData
 			return _vehicleLine[fuel.FuelType];
 		}
 
+		public void CalculateAggregateValues()
+		{
+			var duration = Duration;
+			var distance = Distance;
+			if (distance != null && duration != null && !duration.IsEqual(0)) {
+				var speed = distance / duration;
+			}
+
+			foreach (var fuel in FuelColumns.Keys) {
+				VehicleLineCorrectionFactor(fuel);
+				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
+				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCNCVc));
+				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCWHTCc));
+				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCAAUX));
+				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
+				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCEngineStopStart));
+				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCFinal));
+				
+			}
+			TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
+			TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
+			TimeIntegral<WattSecond>(ModalResultField.P_aux_ice_off);
+			TimeIntegral<WattSecond>(ModalResultField.P_ice_start);
+
+			TimeIntegral<WattSecond>(ModalResultField.P_clutch_loss);
+			TimeIntegral<WattSecond>(ModalResultField.P_gbx_shift_loss);
+			TimeIntegral<WattSecond>(ModalResultField.P_gbx_loss);
+			TimeIntegral<WattSecond>(ModalResultField.P_wheel_in);
+			TimeIntegral<WattSecond>(ModalResultField.P_axle_loss);
+			TimeIntegral<WattSecond>(ModalResultField.P_ret_loss);
+			TimeIntegral<WattSecond>(ModalResultField.P_angle_loss);
+			TimeIntegral<WattSecond>(ModalResultField.P_TC_loss);
+			TimeIntegral<WattSecond>(ModalResultField.P_brake_loss);
+			TimeIntegral<WattSecond>(ModalResultField.P_wheel_inertia);
+			TimeIntegral<WattSecond>(ModalResultField.P_veh_inertia);
+			TimeIntegral<WattSecond>(ModalResultField.P_aux);
+			TimeIntegral<WattSecond>(ModalResultField.P_slope);
+			TimeIntegral<WattSecond>(ModalResultField.P_roll);
+			TimeIntegral<WattSecond>(ModalResultField.P_air);
+
+		}
+
 		public bool HasTorqueConverter { get; set; }
 
 		public void CommitSimulationStep()
