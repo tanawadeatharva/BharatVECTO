@@ -47,9 +47,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IterationStatistics.StartIteration();
 
 			// estimate distance to be traveled within the next TargetTimeInterval
-			var ds = Container.VehicleSpeed.IsEqual(0)
+			var ds = Container.VehicleSpeed.IsEqual(0.KMPHtoMeterPerSecond(), 0.01.SI<MeterPerSecond>())
 				? Constants.SimulationSettings.DriveOffDistance
-				: Constants.SimulationSettings.TargetTimeInterval * Container.VehicleSpeed;
+				: VectoMath.Max(
+				Constants.SimulationSettings.TargetTimeInterval * Container.VehicleSpeed,
+					Constants.SimulationSettings.DriveOffDistance);
 
 			var loopCount = 0;
 			IResponse response;
