@@ -32,11 +32,14 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -261,7 +264,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			// TODO: MQ 2019-11-26 remove, once the parameters are fixed! make fields above read-only or const
 			static GearboxTCU()
 			{
-#if RELEASE_CANDIDATE
+//#if RELEASE_CANDIDATE
 				var expectedFile = @"Declaration\EffShiftParameters.vtcu";
 				if (!File.Exists(expectedFile)) {
 					return;
@@ -307,7 +310,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				if (tmp != null && tmp.Body["ShiftStrategy"] != null) {
 					DefaultShiftStrategy = tmp.Body["ShiftStrategy"].Value<string>();
 				}
-#endif
+//#endif
 			}
 		}
 
