@@ -8,7 +8,8 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.Simulation.Impl {
+namespace TUGraz.VectoCore.Models.Simulation.Impl
+{
 	public class PCCSegmentPreprocessor : ISimulationPreprocessor
 	{
 		protected SimplePowertrainContainer Container;
@@ -39,15 +40,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 
 			var slopeEngineDrag = 0.0;
 			if (runData.GearboxData.Type.AutomaticTransmission()) {
-				if (runData.VehicleData.ADAS.EcoRoll != EcoRollType.None && runData.GearboxData.ATEcoRollReleaseLockupClutch) {
+				if ((runData.VehicleData.ADAS.EcoRoll != EcoRollType.None && runData.GearboxData.ATEcoRollReleaseLockupClutch) ||
+					runData.VehicleData.ADAS.EcoRoll == EcoRollType.None) {
 					slopeEngineDrag = (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleMass).Value();
 				}
 			} else {
-				if (runData.VehicleData.ADAS.EcoRoll != EcoRollType.None) {
+				if (runData.VehicleData.ADAS.EcoRoll == EcoRollType.None) {
 					slopeEngineDrag = (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleMass).Value();
 				}
 			}
-			
+
 			//runData.VehicleData.ADAS.EcoRoll != EcoRollType.None
 			//	? 0
 			//	: (engineDrag / Physics.GravityAccelleration / runData.VehicleData.TotalVehicleWeight).Value();
@@ -65,6 +67,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 					pccSegment = null;
 					continue;
 				}
+
 				if (tuple.Item1.Distance.IsEqual(tuple.Item2.Distance)) {
 					// can't calculate avg slope if difference between two entries is 0
 					continue;
@@ -92,7 +95,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 				if (pccSegment == null && slope < minSlope) {
 					pccSegment = new PCCSegment() {
 						DistanceMinSpeed = tuple.Item1.Distance,
-						StartDistance = tuple.Item1.Distance - VectoMath.Min(tuple.Item1.Distance - targetspeedChanged, PCCDriverData.PreviewDistanceUseCase1), // PCCDriverData.PreviewDistanceUseCase1,
+						StartDistance =
+							tuple.Item1.Distance - VectoMath.Min(
+								tuple.Item1.Distance - targetspeedChanged,
+								PCCDriverData.PreviewDistanceUseCase1), // PCCDriverData.PreviewDistanceUseCase1,
 						TargetSpeed = tuple.Item1.VehicleTargetSpeed,
 						Altitude = tuple.Item1.Altitude,
 						EnergyMinSpeed = (runData.VehicleData.TotalVehicleMass * Physics.GravityAccelleration * tuple.Item1.Altitude)
