@@ -657,8 +657,8 @@ Public Class VectoJobForm
 
 		'SAVE
 		If Not vectoJob.SaveFile Then
-			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
-			Return False
+            MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
+            Return False
 		End If
 
 		VectoFile = file
@@ -1343,10 +1343,10 @@ lbDlog:
 
 		End If
 
-		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, HDVclass.ToInt()), False) _
-		'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
+        PicVehicle.Image = ConvPicPath(HDVclass, False) _
+        'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
-		TbHVCclass.Text = String.Format("HDV Group {0}", HDVclass)
+        TbHVCclass.Text = String.Format("HDV Group {0}", HDVclass)
 		TbVehCat.Text = vehicle.VehicleCategory.GetCategoryName()	'ConvVehCat(VEH0.VehCat, True)
 		TbMass.Text = (vehicle.GrossVehicleMassRating.Value() / 1000) & " t"
 		TbAxleConf.Text = vehicle.AxleConfiguration.GetName()	'ConvAxleConf(VEH0.AxleConf)

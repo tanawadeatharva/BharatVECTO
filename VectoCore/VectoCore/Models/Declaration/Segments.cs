@@ -67,6 +67,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public override Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational)
 		{
+
 			return Lookup(vehicleCategory, axleConfiguration, grossVehicleMassRating, curbWeight, vocational, false);
 		}
 
@@ -84,23 +85,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational, bool considerInvalid)
 		{
-
-			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational, considerInvalid);
+			
+            var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational, considerInvalid);
 			if (row == null) {
 				return new Segment() { Found = false };
 			}
 
-			var segment = new Segment {
+            var segment = new Segment {
 				Found = true,
 			    GrossVehicleWeightMin = row.ParseDouble("tpmlm_min").SI(Unit.SI.Ton).Cast<Kilogram>(),
 			    GrossVehicleWeightMax = row.ParseDouble("tpmlm_max").SI(Unit.SI.Ton).Cast<Kilogram>(),
 				VehicleCategory = vehicleCategory,
 				AxleConfiguration = axleConfiguration,
 				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvgroup")),
+
 				AccelerationFile =
 					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 												row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(ref grossVehicleMassRating, curbWeight, row),
+
+
+				
+
 				VehicleHeight = LookupHeight(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational),
 				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 				GrossVehicleMassRating = grossVehicleMassRating,
@@ -117,7 +123,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				row = _segmentTable.AsEnumerable().First(r => {
 					var isValid = r.Field<string>("valid");
 					var isVocational = r.Field<string>("vocational").ToBoolean();
-					var category = r.Field<string>("vehiclecategory");
+
+                    var category = r.Field<string>("vehiclecategory");
 					var axleConf = r.Field<string>("axleconf.");
 				    var massMin = r.ParseDouble("tpmlm_min").SI(Unit.SI.Ton);
 				    var massMax = r.ParseDouble("tpmlm_max").SI(Unit.SI.Ton);
@@ -297,7 +304,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			var refLoadValue = payloadStr.ToDouble(double.NaN);
 			if (double.IsNaN(refLoadValue)) {
-				var vehiclePayload = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, payloadStr)
+				//var testvehiclePayload = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, payloadStr);
+
+                var vehiclePayload = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, payloadStr)
 					.LimitTo(0.SI<Kilogram>(), grossVehicleWeight - vehicleWeight);
 				var trailerPayload = trailers.Sum(
 					t => DeclarationData.GetPayloadForTrailerWeight(t.TrailerGrossVehicleWeight, t.TrailerCurbWeight, lowLoading))

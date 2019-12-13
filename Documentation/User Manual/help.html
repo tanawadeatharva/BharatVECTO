@@ -4474,7 +4474,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <p>The FC map is used to interpolate the base fuel consumption before corrections are applied. For details see <a href="#engine-fuel-consumption-calculation">Fuel Consumption Calculation</a>. The file uses the <a href="#csv">VECTO CSV format</a>.</p>
 <ul>
 <li>Filetype: .vmap</li>
-<li>Header: <strong>engine speed [rpm], torque [Nm], fuel consumption [g/h]</strong>, <em>whr power [W]</em> (required only if an electric WHR system is installed)</li>
+<li>Header: <strong>engine speed [rpm], torque [Nm], fuel consumption [g/h]</strong>, <em>whr power [W]</em> (required only if an electric WHR system is used)</li>
 <li>Requires at least 3 data entries</li>
 <li>The map must cover the full engine range between full load and motoring curve.</li>
 </ul>
@@ -5387,16 +5387,11 @@ CycleTime,UnknownCycleName,3600</code></pre>
 <h3>Declaration Mode Cycles</h3>
 <p>In Declaration Mode driving cycles are automatically chosen depending on vehicle category and cannot be changed by the user. These predefined cycles are of type target-speed, distance-based.</p>
 <ul>
-<li>Coach: 275km</li>
-<li>Construction: 21km</li>
-<li>Heavy Urban: 30km</li>
-<li>Inter Urban: 123km</li>
+<li>Construction: 100km</li>
 <li>Long Haul: 100km</li>
-<li>Municipal Utility: 10km</li>
-<li>Regional Delivery: 26km</li>
-<li>Sub Urban: 23km</li>
-<li>Urban: 40km</li>
-<li>Urban Delivery: 28km</li>
+<li>Municipal Utility: 11.25km</li>
+<li>Regional Delivery: 100km</li>
+<li>Urban Delivery: 100km</li>
 </ul>
 </div>
 <div id="verification-test-cycle" class="section level3">

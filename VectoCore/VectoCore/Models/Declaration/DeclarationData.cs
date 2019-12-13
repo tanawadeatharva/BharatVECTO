@@ -65,7 +65,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static readonly PT1 PT1 = new PT1();
 		public static readonly FuelData FuelData = FuelData.Instance();
 		public static readonly ElectricSystem ElectricSystem = new ElectricSystem();
-		public static readonly Fan Fan = new Fan();
+		public static readonly Fan Fan=new Fan();
+				
 
 		public static readonly HeatingVentilationAirConditioning HeatingVentilationAirConditioning =
 			new HeatingVentilationAirConditioning();

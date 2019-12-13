@@ -522,6 +522,11 @@
     <Compile Include="Utils\XMLValidator.cs" />
     <Compile Include="Utils\XPathHelper.cs" />
     <Compile Include="Ninject\VectoNinjectModule.cs" />
+    <Compile Include="VersionNumber1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>VersionNumber.t4</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -697,6 +702,7 @@
     <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.1.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\VAUX\Fan-Tech-Medium.csv" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>
@@ -719,24 +725,23 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\VectoCommon\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
-      <Project>{b4b9bd2f-fd8f-4bb8-82fa-e2154d2c7fbd}</Project>
-      <Name>AdvancedAuxiliaryInterfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\VECTOAux\VectoAuxiliaries\VectoAuxiliaries.vbproj">
       <Project>{fdeee460-0b8a-4ef6-8d9e-72f203a50f65}</Project>
       <Name>VectoAuxiliaries</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\VectoCommon\AdvancedAuxiliaryInterfaces\AdvancedAuxiliaryInterfaces.vbproj">
+      <Project>{b4b9bd2f-fd8f-4bb8-82fa-e2154d2c7fbd}</Project>
+      <Name>AdvancedAuxiliaryInterfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\VectoCommon\VectoCommon\VectoCommon.csproj">
       <Project>{79a066ad-69a9-4223-90f6-6ed5d2d084f4}</Project>
       <Name>VectoCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\VectoCommon\VectoHashing\VectoHashing.csproj">
-      <Project>{B673E12F-D323-4C4C-8805-9915B2C72D3D}</Project>
+      <Project>{b673e12f-d323-4c4c-8805-9915b2c72d3d}</Project>
       <Name>VectoHashing</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

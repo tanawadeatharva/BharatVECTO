@@ -161,8 +161,8 @@ Public Class VehicleForm
 
 
 		TbHDVclass.Text = _hdVclass
-		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, _hdVclass.ToInt()), False)
-	End Sub
+        PicVehicle.Image = ConvPicPath(_hdVclass, False)
+    End Sub
 
 
 	'Set generic values for Declaration mode
@@ -544,8 +544,8 @@ Public Class VehicleForm
 
 		'---------------------------------------------------------------------------------
 		If Not veh.SaveFile Then
-			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
-			Return False
+            MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
+            Return False
 		End If
 
 		If AutoSendTo Then

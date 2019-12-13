@@ -365,8 +365,8 @@ Public Class EngineForm
 		engine.maxTorqueInput = tbMaxTorque.Text.ToDouble(0).SI (Of NewtonMeter)()
 
 		If Not engine.SaveFile Then
-			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
-			Return False
+            MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
+            Return False
 		End If
 
 		If AutoSendTo Then

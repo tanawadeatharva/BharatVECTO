@@ -40,26 +40,30 @@ Module MainModule
 		Return retVal
 	End Function
 
-	Public Function ConvPicPath(hdVclass As Integer, isLongHaul As Boolean) As Bitmap
-		Select Case hdVclass
-			Case 1, 2, 3, 6, 7
-				Return My.Resources._4x2r
-			Case 4
-				If isLongHaul Then Return My.Resources._4x2rt
-				Return My.Resources._4x2r
-			Case 5, 8
-				Return My.Resources._4x2tt
-			Case 9, 11, 13
-				If isLongHaul Then Return My.Resources._6x2rt
-				Return My.Resources._6x2r
-			Case 10, 12, 14
-				Return My.Resources._6x2tt
-			Case Else
-				Return My.Resources.Undef
-		End Select
-	End Function
+    Public Function ConvPicPath(hdVclass As String, isLongHaul As Boolean) As Bitmap
 
-	Public Function GetRelativePath(filePath As String, basePath As String) As String
+        Select Case hdVclass
+            Case "ML2r", "ML2van", "ML3r", "ML3van", "ML4r", "ML4van", "ML4van", "1s"
+                Return My.Resources.Undef
+
+            Case "1", "2", "3", "6", "7"
+                Return My.Resources._4x2r
+            Case "4"
+                If isLongHaul Then Return My.Resources._4x2rt
+                Return My.Resources._4x2r
+            Case "5", "8"
+                Return My.Resources._4x2tt
+            Case "9", "11", "13"
+                If isLongHaul Then Return My.Resources._6x2rt
+                Return My.Resources._6x2r
+            Case "10", "12", "14"
+                Return My.Resources._6x2tt
+            Case Else
+                Return My.Resources.Undef
+        End Select
+    End Function
+
+    Public Function GetRelativePath(filePath As String, basePath As String) As String
 		If (String.IsNullOrEmpty(filePath)) then
 			Return ""
 		End If

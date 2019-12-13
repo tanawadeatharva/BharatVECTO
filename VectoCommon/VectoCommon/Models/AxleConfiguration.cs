@@ -39,7 +39,8 @@ namespace TUGraz.VectoCommon.Models
 	public enum AxleConfiguration
 	{
 		AxleConfig_4x2,
-		AxleConfig_4x4,
+        AxleConfig_4x2F,
+        AxleConfig_4x4,
 		AxleConfig_6x2,
 		AxleConfig_6x4,
 		AxleConfig_6x6,

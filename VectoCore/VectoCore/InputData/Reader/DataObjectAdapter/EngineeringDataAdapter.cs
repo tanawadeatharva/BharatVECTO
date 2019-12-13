@@ -43,6 +43,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -144,7 +145,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		private string GetAirdragParameterSet(VehicleCategory vehicleCategory, AxleConfiguration axles, int numAxles)
 		{
+			//TODO: check if is i
 			switch (vehicleCategory) {
+				case VehicleCategory.Van:
+					return "MediumLorriesVan";
 				case VehicleCategory.RigidTruck: return numAxles > axles.NumAxles() ? "RigidTrailer" : "RigidSolo";
 				case VehicleCategory.Tractor: return "TractorSemitrailer";
 				case VehicleCategory.CityBus:
@@ -201,9 +205,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.FullLoadCurves = fullLoadCurves;
 
-			var whr = CreateWHRData(engineMode.WasteHeatRecoveryData);
-			if (whr != null) {
-				whr.WHRCorrectionFactor = engineMode.WasteHeatRecoveryData.EngineeringCorrectionFactor;
+			WHRData whr = null;
+			if (engine.WHRType != WHRType.None) {
+
+				whr = CreateWHRData(engineMode.WasteHeatRecoveryData);
+				if (whr != null) {
+					whr.WHRCorrectionFactor = engineMode.WasteHeatRecoveryData.EngineeringCorrectionFactor;
+				}
 			}
 
 			retVal.WHRType = engine.WHRType;

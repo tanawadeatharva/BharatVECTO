@@ -233,14 +233,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.FullLoadCurves = fullLoadCurves;
 
-			var whr = CreateWHRData(mode.WasteHeatRecoveryData);
+			/*var whr = CreateWHRData(mode.WasteHeatRecoveryData);
 			if (whr != null) {
 				whr.WHRCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(
 														mission.MissionType.GetNonEMSMissionType(), whr.CFRural, whr.CFUrban,
 														whr.CFMotorway) * whr.CFColdHot * whr.CFRegPer;
 			}
 			retVal.WHRData = whr;
-
+			*/
 			return retVal;
 		}
 
@@ -444,7 +444,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				mission = mission.GetNonEMSMissionType();
 				switch (auxType) {
 					case AuxiliaryType.Fan:
-						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology.FirstOrDefault()).PowerDemand;
+						aux.PowerDemand = DeclarationData.Fan.Lookup(hvdClass, mission, auxData.Technology.FirstOrDefault()).PowerDemand;
 						aux.ID = Constants.Auxiliaries.IDs.Fan;
 						break;
 					case AuxiliaryType.SteeringPump:

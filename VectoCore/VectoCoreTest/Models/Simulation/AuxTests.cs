@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var mission = MissionType.LongHaul;
 
 			aux.AddConstant("FAN",
-				DeclarationData.Fan.Lookup(MissionType.LongHaul, "Hydraulic driven - Constant displacement pump").PowerDemand);
+				DeclarationData.Fan.Lookup(hdvClass,MissionType.LongHaul, "Hydraulic driven - Constant displacement pump").PowerDemand);
 			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, "Medium Supply 1-stage").PowerDemand);
 			aux.AddConstant("STP",
 				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass,

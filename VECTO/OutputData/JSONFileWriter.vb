@@ -48,34 +48,34 @@ Public Class JSONFileWriter
 
         Dim fuels As List(Of Object) = New List(Of Object)()
 
-	    For Each fuel As IEngineFuelEngineeringInputData In eng.EngineModes.First().Fuels
-	        Dim entry as Dictionary(Of string, object) = New Dictionary(Of String,Object)()
-	        entry.Add("WHTC-Urban", fuel.WHTCUrban)
-	        entry.Add("WHTC-Rural", fuel.WHTCRural)
-	        entry.Add("WHTC-Motorway", fuel.WHTCMotorway)
-	        entry.Add("WHTC-Engineering", fuel.WHTCEngineering)
-	        entry.Add("ColdHotBalancingFactor", fuel.ColdHotBalancingFactor)
-	        entry.Add("CFRegPer", fuel.CorrectionFactorRegPer)
-	        entry.Add("FuelMap", GetRelativePath(fuel.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
-	        entry.Add("FuelType", fuel.FuelType.ToString())
+        For Each fuel As IEngineFuelEngineeringInputData In eng.EngineModes.First().Fuels
+            Dim entry As Dictionary(Of String, Object) = New Dictionary(Of String, Object)()
+            entry.Add("WHTC-Urban", fuel.WHTCUrban)
+            entry.Add("WHTC-Rural", fuel.WHTCRural)
+            entry.Add("WHTC-Motorway", fuel.WHTCMotorway)
+            entry.Add("WHTC-Engineering", fuel.WHTCEngineering)
+            entry.Add("ColdHotBalancingFactor", fuel.ColdHotBalancingFactor)
+            entry.Add("CFRegPer", fuel.CorrectionFactorRegPer)
+            entry.Add("FuelMap", GetRelativePath(fuel.FuelConsumptionMap.Source, Path.GetDirectoryName(filename)))
+            entry.Add("FuelType", fuel.FuelType.ToString())
 
             fuels.Add(entry)
-	    Next
+        Next
 
         body.Add("Fuels", fuels)
-	   
-		body.Add("RatedPower", eng.RatedPowerDeclared.Value())
-		body.Add("RatedSpeed", eng.RatedSpeedDeclared.AsRPM)
-		body.Add("MaxTorque", eng.MaxTorqueDeclared.Value())
-		
 
-		body.Add("FullLoadCurve", GetRelativePath(eng.EngineModes.First().FullLoadCurve.Source, Path.GetDirectoryName(filename)))
+        body.Add("RatedPower", eng.RatedPowerDeclared.Value())
+        body.Add("RatedSpeed", eng.RatedSpeedDeclared.AsRPM)
+        body.Add("MaxTorque", eng.MaxTorqueDeclared.Value())
 
 
-        body.add("WHRType", eng.WHRType.ToString())
+        body.Add("FullLoadCurve", GetRelativePath(eng.EngineModes.First().FullLoadCurve.Source, Path.GetDirectoryName(filename)))
 
-        If (eng.WHRType.IsElectrical()) then
-            Dim whr As Dictionary(Of String, Object) = New Dictionary(Of String,Object)
+
+        body.Add("WHRType", eng.WHRType.ToString())
+
+        If (eng.WHRType.IsElectrical()) Then
+            Dim whr As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
             Dim whrInput As IWHRData = eng.EngineModes.First().WasteHeatRecoveryData
             whr.Add("Urban", whrInput.UrbanCorrectionFactor)
             whr.Add("Rural", whrInput.RuralCorrectionFactor)
@@ -86,270 +86,270 @@ Public Class JSONFileWriter
             body.Add("WHRCorrectionFactors", whr)
         End If
 
-	    WriteFile(header, body, filename)
-	End Sub
+        WriteFile(header, body, filename)
+    End Sub
 
-	Protected Function GetHeader(fileVersion As Integer) As Dictionary(Of String, Object)
-		Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+    Protected Function GetHeader(fileVersion As Integer) As Dictionary(Of String, Object)
+        Dim header As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
-		header.Add("CreatedBy", "")
-		header.Add("Date", Now.ToUniversalTime().ToString("o"))
-		header.Add("AppVersion", VECTOvers)
-		header.Add("FileVersion", fileVersion)
-		Return header
-	End Function
+        header.Add("CreatedBy", "")
+        header.Add("Date", Now.ToUniversalTime().ToString("o"))
+        header.Add("AppVersion", VECTOvers)
+        header.Add("FileVersion", fileVersion)
+        Return header
+    End Function
 
-	Public Sub SaveGearbox(gbx As IGearboxEngineeringInputData, axl As IAxleGearInputData, torqueConverter As ITorqueConverterEngineeringInputData, gshift As IGearshiftEngineeringInputData, filename As String) _
-		Implements IOutputFileWriter.SaveGearbox
+    Public Sub SaveGearbox(gbx As IGearboxEngineeringInputData, axl As IAxleGearInputData, torqueConverter As ITorqueConverterEngineeringInputData, gshift As IGearshiftEngineeringInputData, filename As String) _
+        Implements IOutputFileWriter.SaveGearbox
 
-		'Header
-		Dim header As Dictionary(Of String, Object) = GetHeader(GearboxFormatVersion)
+        'Header
+        Dim header As Dictionary(Of String, Object) = GetHeader(GearboxFormatVersion)
 
 
-		'Body
-		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+        'Body
+        Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
-		body.Add(JsonKeys.SavedInDeclMode, Cfg.DeclMode)
-		body.Add(JsonKeys.Gearbox_ModelName, gbx.Model)
-		body.Add(JsonKeys.Gearbox_Inertia, gbx.Inertia.Value())
-		body.Add(JsonKeys.Gearbox_TractionInterruption, gbx.TractionInterruption.Value())
+        body.Add(JsonKeys.SavedInDeclMode, Cfg.DeclMode)
+        body.Add(JsonKeys.Gearbox_ModelName, gbx.Model)
+        body.Add(JsonKeys.Gearbox_Inertia, gbx.Inertia.Value())
+        body.Add(JsonKeys.Gearbox_TractionInterruption, gbx.TractionInterruption.Value())
 
-		Dim ls As New List(Of Dictionary(Of String, Object))
-		Dim axlgDict As New Dictionary(Of String, Object)
-		axlgDict.Add(JsonKeys.Gearbox_Gear_Ratio, axl.Ratio)
-		If axl.LossMap Is Nothing Then
-			axlgDict.Add(JsonKeys.Gearbox_Gear_Efficiency, axl.Efficiency)
-		Else
-			axlgDict.Add(JsonKeys.Gearbox_Gear_LossMapFile, GetRelativePath(axl.LossMap.Source, Path.GetDirectoryName(filename)))
-		End If
-		ls.Add(axlgDict)
+        Dim ls As New List(Of Dictionary(Of String, Object))
+        Dim axlgDict As New Dictionary(Of String, Object)
+        axlgDict.Add(JsonKeys.Gearbox_Gear_Ratio, axl.Ratio)
+        If axl.LossMap Is Nothing Then
+            axlgDict.Add(JsonKeys.Gearbox_Gear_Efficiency, axl.Efficiency)
+        Else
+            axlgDict.Add(JsonKeys.Gearbox_Gear_LossMapFile, GetRelativePath(axl.LossMap.Source, Path.GetDirectoryName(filename)))
+        End If
+        ls.Add(axlgDict)
 
-		For Each gear As ITransmissionInputData In gbx.Gears
-			Dim gearDict As New Dictionary(Of String, Object)
-			gearDict.Add(JsonKeys.Gearbox_Gear_Ratio, gear.Ratio)
-			If gear.LossMap Is Nothing Then
-				gearDict.Add(JsonKeys.Gearbox_Gear_Efficiency, gear.Efficiency)
-			Else
-				gearDict.Add(JsonKeys.Gearbox_Gear_LossMapFile,
-							GetRelativePath(gear.LossMap.Source, Path.GetDirectoryName(filename)))
-			End If
-			gearDict.Add(JsonKeys.Gearbox_Gear_ShiftPolygonFile, If _
-							(Not gbx.SavedInDeclarationMode AndAlso Not gear.ShiftPolygon Is Nothing,
-							GetRelativePath(gear.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
-			gearDict.Add("MaxTorque", If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.Value().ToString()))
-			gearDict.Add("MaxSpeed", If(gear.MaxInputSpeed Is Nothing, "", gear.MaxInputSpeed.AsRPM.ToString()))
+        For Each gear As ITransmissionInputData In gbx.Gears
+            Dim gearDict As New Dictionary(Of String, Object)
+            gearDict.Add(JsonKeys.Gearbox_Gear_Ratio, gear.Ratio)
+            If gear.LossMap Is Nothing Then
+                gearDict.Add(JsonKeys.Gearbox_Gear_Efficiency, gear.Efficiency)
+            Else
+                gearDict.Add(JsonKeys.Gearbox_Gear_LossMapFile,
+                            GetRelativePath(gear.LossMap.Source, Path.GetDirectoryName(filename)))
+            End If
+            gearDict.Add(JsonKeys.Gearbox_Gear_ShiftPolygonFile, If _
+                            (Not gbx.SavedInDeclarationMode AndAlso Not gear.ShiftPolygon Is Nothing,
+                            GetRelativePath(gear.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
+            gearDict.Add("MaxTorque", If(gear.MaxTorque Is Nothing, "", gear.MaxTorque.Value().ToString()))
+            gearDict.Add("MaxSpeed", If(gear.MaxInputSpeed Is Nothing, "", gear.MaxInputSpeed.AsRPM.ToString()))
 
-			ls.Add(gearDict)
-		Next
-		body.Add(JsonKeys.Gearbox_Gears, ls)
-		body.Add(JsonKeys.Gearbox_TorqueReserve, gshift.TorqueReserve*100)
-		body.Add(JsonKeys.Gearbox_ShiftTime, gshift.MinTimeBetweenGearshift.Value())
-		body.Add(JsonKeys.Gearbox_StartTorqueReserve, gshift.StartTorqueReserve*100)
-		body.Add(JsonKeys.Gearbox_StartSpeed, gshift.StartSpeed.Value())
-		body.Add(JsonKeys.Gearbox_StartAcceleration, gshift.StartAcceleration.Value())
-		body.Add(JsonKeys.Gearbox_GearboxType, gbx.Type.ToString())
+            ls.Add(gearDict)
+        Next
+        body.Add(JsonKeys.Gearbox_Gears, ls)
+        body.Add(JsonKeys.Gearbox_TorqueReserve, gshift.TorqueReserve * 100)
+        body.Add(JsonKeys.Gearbox_ShiftTime, gshift.MinTimeBetweenGearshift.Value())
+        body.Add(JsonKeys.Gearbox_StartTorqueReserve, gshift.StartTorqueReserve * 100)
+        body.Add(JsonKeys.Gearbox_StartSpeed, gshift.StartSpeed.Value())
+        body.Add(JsonKeys.Gearbox_StartAcceleration, gshift.StartAcceleration.Value())
+        body.Add(JsonKeys.Gearbox_GearboxType, gbx.Type.ToString())
 
-		
-		Dim torqueConverterDict As New Dictionary(Of String, Object)
-		torqueConverterDict.Add("Enabled", Not torqueConverter Is Nothing AndAlso gbx.Type.AutomaticTransmission())
-		If gbx.Type.AutomaticTransmission() AndAlso Not torqueConverter Is Nothing Then
-			torqueConverterDict.Add("File", GetRelativePath(torqueConverter.TCData.Source, Path.GetDirectoryName(filename)))
-			torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_ReferenceRPM, torqueConverter.ReferenceRPM.AsRPM)
-			torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_Inertia, torqueConverter.Inertia.Value())
-			torqueConverterDict.Add("MaxTCSpeed", torqueConverter.MaxInputSpeed.AsRPM)
-			torqueConverterDict.Add("ShiftPolygon",
-									If (Not gbx.SavedInDeclarationMode AndAlso Not torqueConverter.ShiftPolygon Is Nothing,
-										GetRelativePath(torqueConverter.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
-			torqueConverterDict.Add("CLUpshiftMinAcceleration", gshift.CLUpshiftMinAcceleration.Value())
-			torqueConverterDict.Add("CCUpshiftMinAcceleration", gshift.CCUpshiftMinAcceleration.Value())
-		End If
-		body.Add(JsonKeys.Gearbox_TorqueConverter, torqueConverterDict)
 
-		body.Add("DownshiftAfterUpshiftDelay", gshift.DownshiftAfterUpshiftDelay.Value())
-		body.Add("UpshiftAfterDownshiftDelay", gshift.UpshiftAfterDownshiftDelay.Value())
-		body.Add("UpshiftMinAcceleration", gshift.UpshiftMinAcceleration.Value())
+        Dim torqueConverterDict As New Dictionary(Of String, Object)
+        torqueConverterDict.Add("Enabled", Not torqueConverter Is Nothing AndAlso gbx.Type.AutomaticTransmission())
+        If gbx.Type.AutomaticTransmission() AndAlso Not torqueConverter Is Nothing Then
+            torqueConverterDict.Add("File", GetRelativePath(torqueConverter.TCData.Source, Path.GetDirectoryName(filename)))
+            torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_ReferenceRPM, torqueConverter.ReferenceRPM.AsRPM)
+            torqueConverterDict.Add(JsonKeys.Gearbox_TorqueConverter_Inertia, torqueConverter.Inertia.Value())
+            torqueConverterDict.Add("MaxTCSpeed", torqueConverter.MaxInputSpeed.AsRPM)
+            torqueConverterDict.Add("ShiftPolygon",
+                                    If(Not gbx.SavedInDeclarationMode AndAlso Not torqueConverter.ShiftPolygon Is Nothing,
+                                        GetRelativePath(torqueConverter.ShiftPolygon.Source, Path.GetDirectoryName(filename)), ""))
+            torqueConverterDict.Add("CLUpshiftMinAcceleration", gshift.CLUpshiftMinAcceleration.Value())
+            torqueConverterDict.Add("CCUpshiftMinAcceleration", gshift.CCUpshiftMinAcceleration.Value())
+        End If
+        body.Add(JsonKeys.Gearbox_TorqueConverter, torqueConverterDict)
 
-		body.Add("PowershiftShiftTime", gbx.PowershiftShiftTime.Value())
+        body.Add("DownshiftAfterUpshiftDelay", gshift.DownshiftAfterUpshiftDelay.Value())
+        body.Add("UpshiftAfterDownshiftDelay", gshift.UpshiftAfterDownshiftDelay.Value())
+        body.Add("UpshiftMinAcceleration", gshift.UpshiftMinAcceleration.Value())
 
-		WriteFile(header, body, filename)
-	End Sub
+        body.Add("PowershiftShiftTime", gbx.PowershiftShiftTime.Value())
 
-	Public Sub SaveVehicle(vehicle As IVehicleEngineeringInputData, airdrag As IAirdragEngineeringInputData,
-							retarder As IRetarderInputData,
-							pto As IPTOTransmissionInputData, angledrive As IAngledriveInputData, filename As String) _
-		Implements IOutputFileWriter.SaveVehicle
-		Dim basePath As String = Path.GetDirectoryName(filename)
+        WriteFile(header, body, filename)
+    End Sub
 
-		'Header
-		Dim header As Dictionary(Of String, Object) = GetHeader(VehicleFormatVersion)
+    Public Sub SaveVehicle(vehicle As IVehicleEngineeringInputData, airdrag As IAirdragEngineeringInputData,
+                            retarder As IRetarderInputData,
+                            pto As IPTOTransmissionInputData, angledrive As IAngledriveInputData, filename As String) _
+        Implements IOutputFileWriter.SaveVehicle
+        Dim basePath As String = Path.GetDirectoryName(filename)
 
-		'Body
-		Dim retarderOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object)()
-		If retarder Is Nothing Then
-			retarderOut.Add("Type", RetarderType.None.GetName())
-		Else
-			retarderOut.Add("Type", retarder.Type.GetName())
-			retarderOut.Add("Ratio", retarder.Ratio)
-			retarderOut.Add("File",
-							If _
-								(retarder.Type.IsDedicatedComponent AndAlso Not retarder.LossMap Is Nothing,
-								GetRelativePath(retarder.LossMap.Source, basePath), ""))
-		End If
+        'Header
+        Dim header As Dictionary(Of String, Object) = GetHeader(VehicleFormatVersion)
 
-		Dim ptoOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-		If pto Is Nothing Then
-			ptoOut.Add("Type", "None")
-		Else
-			ptoOut.Add("Type", pto.PTOTransmissionType)
-			ptoOut.Add("LossMap",
-						If _
-						(pto.PTOTransmissionType <> "None" AndAlso Not pto.PTOLossMap Is Nothing,
-						GetRelativePath(pto.PTOLossMap.Source, basePath), ""))
-			ptoOut.Add("Cycle",
-						If _
-						(pto.PTOTransmissionType <> "None" AndAlso Not pto.PTOCycle Is Nothing,
-						GetRelativePath(pto.PTOCycle.Source, basePath), ""))
-		End If
+        'Body
+        Dim retarderOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object)()
+        If retarder Is Nothing Then
+            retarderOut.Add("Type", RetarderType.None.GetName())
+        Else
+            retarderOut.Add("Type", retarder.Type.GetName())
+            retarderOut.Add("Ratio", retarder.Ratio)
+            retarderOut.Add("File",
+                            If _
+                                (retarder.Type.IsDedicatedComponent AndAlso Not retarder.LossMap Is Nothing,
+                                GetRelativePath(retarder.LossMap.Source, basePath), ""))
+        End If
 
-		Dim angledriveOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
-				{"Type", angledrive.Type.ToString()},
-				{"Ratio", angledrive.Ratio},
-				{"LossMap",
-				If _
-				(angledrive.Type = AngledriveType.SeparateAngledrive AndAlso Not angledrive.LossMap Is Nothing,
-				GetRelativePath(angledrive.LossMap.Source, basePath), "")}}
+        Dim ptoOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+        If pto Is Nothing Then
+            ptoOut.Add("Type", "None")
+        Else
+            ptoOut.Add("Type", pto.PTOTransmissionType)
+            ptoOut.Add("LossMap",
+                        If _
+                        (pto.PTOTransmissionType <> "None" AndAlso Not pto.PTOLossMap Is Nothing,
+                        GetRelativePath(pto.PTOLossMap.Source, basePath), ""))
+            ptoOut.Add("Cycle",
+                        If _
+                        (pto.PTOTransmissionType <> "None" AndAlso Not pto.PTOCycle Is Nothing,
+                        GetRelativePath(pto.PTOCycle.Source, basePath), ""))
+        End If
 
-		Dim torqueLimits As Dictionary(Of String, String) = New Dictionary(Of String, String)
-		For Each entry As ITorqueLimitInputData In vehicle.TorqueLimits
-			torqueLimits.Add(entry.Gear().ToString(), entry.MaxTorque.Value().ToString())
-		Next
+        Dim angledriveOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
+                {"Type", angledrive.Type.ToString()},
+                {"Ratio", angledrive.Ratio},
+                {"LossMap",
+                If _
+                (angledrive.Type = AngledriveType.SeparateAngledrive AndAlso Not angledrive.LossMap Is Nothing,
+                GetRelativePath(angledrive.LossMap.Source, basePath), "")}}
 
-		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
-				{"SavedInDeclMode", Cfg.DeclMode},
-				{"VehCat", vehicle.VehicleCategory.ToString()},
-				{"LegislativeClass", vehicle.LegislativeClass.ToString()},
-				{"CurbWeight", vehicle.CurbMassChassis.Value()},
-				{"CurbWeightExtra", vehicle.CurbMassExtra.Value()},
-				{"Loading", vehicle.Loading.Value()},
-				{"MassMax", vehicle.GrossVehicleMassRating.ConvertToTon().Value},
-				{"rdyn", vehicle.DynamicTyreRadius.ConvertToMilliMeter().Value},
-				{"CdCorrMode", airdrag.CrossWindCorrectionMode.GetName()},
-				{"CdCorrFile",
-				If((airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse
-					airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.VAirBetaLookupTable) AndAlso
-					Not airdrag.CrosswindCorrectionMap Is Nothing, GetRelativePath(airdrag.CrosswindCorrectionMap.Source, basePath),
-					"")
-				},
-				{"Retarder", retarderOut},
-				{"Angledrive", angledriveOut},
-				{"PTO", ptoOut},
-				{"TorqueLimits", torqueLimits},
-				{"IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM},
-				{"AxleConfig", New Dictionary(Of String, Object) From {
-				{"Type", vehicle.AxleConfiguration.GetName()},
-				{"Axles", From axle In vehicle.Components.AxleWheels.AxlesEngineering Select New Dictionary(Of String, Object) From {
-				{"Inertia", axle.Tyre.Inertia.Value()},
-				{"Wheels", axle.Tyre.Dimension},
-				{"AxleWeightShare", axle.AxleWeightShare},
-				{"TwinTyres", axle.TwinTyres},
-				{"RRCISO", axle.Tyre.RollResistanceCoefficient},
-				{"FzISO", axle.Tyre.TyreTestLoad.Value()},
-				{"Type", axle.AxleType.ToString()}                                                                                         
-				}}}}}
-		If (vehicle.TankSystem.HasValue) Then
-			body("TankSystem") = vehicle.TankSystem.Value.ToString()
-		End If
-		
-		body("EngineStopStart") = vehicle.ADAS.EngineStopStart
-		body("EcoRoll") = vehicle.ADAS.EcoRoll.ToString()
-		body("PredictiveCruiseControl") = vehicle.ADAS.PredictiveCruiseControl.ToString()
-		
-		If (Not IsNothing(airdrag.AirDragArea)) Then
-			body("CdA") = airdrag.AirDragArea.Value()
-		End If
-		If (Not IsNothing(vehicle.Height)) Then
-			body("VehicleHeight") = vehicle.Height.Value()
-		End If
-		WriteFile(header, body, filename)
-	End Sub
+        Dim torqueLimits As Dictionary(Of String, String) = New Dictionary(Of String, String)
+        For Each entry As ITorqueLimitInputData In vehicle.TorqueLimits
+            torqueLimits.Add(entry.Gear().ToString(), entry.MaxTorque.Value().ToString())
+        Next
 
-	Public Sub SaveJob(input As IEngineeringInputDataProvider, filename As String) _
-		Implements IOutputFileWriter.SaveJob
-		Dim basePath As String = Path.GetDirectoryName(filename)
-		'Header
-		Dim header As Dictionary(Of String, Object) = GetHeader(VectoJobFormatVersion)
+        Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
+                {"SavedInDeclMode", Cfg.DeclMode},
+                {"VehCat", vehicle.VehicleCategory.ToString()},
+                {"LegislativeClass", vehicle.LegislativeClass.ToString()},
+                {"CurbWeight", vehicle.CurbMassChassis.Value()},
+                {"CurbWeightExtra", vehicle.CurbMassExtra.Value()},
+                {"Loading", vehicle.Loading.Value()},
+                {"MassMax", vehicle.GrossVehicleMassRating.ConvertToTon().Value},
+                {"rdyn", vehicle.DynamicTyreRadius.ConvertToMilliMeter().Value},
+                {"CdCorrMode", airdrag.CrossWindCorrectionMode.GetName()},
+                {"CdCorrFile",
+                If((airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependentCorrectionFactor OrElse
+                    airdrag.CrossWindCorrectionMode = CrossWindCorrectionMode.VAirBetaLookupTable) AndAlso
+                    Not airdrag.CrosswindCorrectionMap Is Nothing, GetRelativePath(airdrag.CrosswindCorrectionMap.Source, basePath),
+                    "")
+                },
+                {"Retarder", retarderOut},
+                {"Angledrive", angledriveOut},
+                {"PTO", ptoOut},
+                {"TorqueLimits", torqueLimits},
+                {"IdlingSpeed", vehicle.EngineIdleSpeed.AsRPM},
+                {"AxleConfig", New Dictionary(Of String, Object) From {
+                {"Type", vehicle.AxleConfiguration.GetName()},
+                {"Axles", From axle In vehicle.Components.AxleWheels.AxlesEngineering Select New Dictionary(Of String, Object) From {
+                {"Inertia", axle.Tyre.Inertia.Value()},
+                {"Wheels", axle.Tyre.Dimension},
+                {"AxleWeightShare", axle.AxleWeightShare},
+                {"TwinTyres", axle.TwinTyres},
+                {"RRCISO", axle.Tyre.RollResistanceCoefficient},
+                {"FzISO", axle.Tyre.TyreTestLoad.Value()},
+                {"Type", axle.AxleType.ToString()}
+                }}}}}
+        If (vehicle.TankSystem.HasValue) Then
+            body("TankSystem") = vehicle.TankSystem.Value.ToString()
+        End If
 
-		'Body
-		Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+        body("EngineStopStart") = vehicle.ADAS.EngineStopStart
+        body("EcoRoll") = vehicle.ADAS.EcoRoll.ToString()
+        body("PredictiveCruiseControl") = vehicle.ADAS.PredictiveCruiseControl.ToString()
 
-		'SavedInDeclMode = Cfg.DeclMode
+        If (Not IsNothing(airdrag.AirDragArea)) Then
+            body("CdA") = airdrag.AirDragArea.Value()
+        End If
+        If (Not IsNothing(vehicle.Height)) Then
+            body("VehicleHeight") = vehicle.Height.Value()
+        End If
+        WriteFile(header, body, filename)
+    End Sub
 
-		Dim job As IEngineeringJobInputData = input.JobInputData()
+    Public Sub SaveJob(input As IEngineeringInputDataProvider, filename As String) _
+        Implements IOutputFileWriter.SaveJob
+        Dim basePath As String = Path.GetDirectoryName(filename)
+        'Header
+        Dim header As Dictionary(Of String, Object) = GetHeader(VectoJobFormatVersion)
 
-		body.Add("SavedInDeclMode", job.SavedInDeclarationMode)
-		body.Add("EngineOnlyMode", job.EngineOnlyMode)
+        'Body
+        Dim body As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
 
-		If job.EngineOnlyMode Then
-			body.Add("EngineFile", GetRelativePath(job.EngineOnly.DataSource.SourceFile, basePath))
-			body.Add("Cycles",
-					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
-			WriteFile(header, body, filename)
-			Return
-		End If
+        'SavedInDeclMode = Cfg.DeclMode
 
-		'Main Files
-		body.Add("VehicleFile", GetRelativePath(job.Vehicle.DataSource.SourceFile, basePath))
-		body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, basePath))
-		body.Add("GearboxFile", GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, basePath))
+        Dim job As IEngineeringJobInputData = input.JobInputData()
 
-		
-		Dim aux As IAuxiliariesEngineeringInputData = job.Vehicle.Components.AuxiliaryInputData
-		'AA-TB
-		'ADVANCED AUXILIARIES 
-		body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.GetName())
-		body.Add("AuxiliaryVersion", aux.AuxiliaryVersion)
-		body.Add("AdvancedAuxiliaryFilePath", GetRelativePath(aux.AdvancedAuxiliaryFilePath, basePath))
+        body.Add("SavedInDeclMode", job.SavedInDeclarationMode)
+        body.Add("EngineOnlyMode", job.EngineOnlyMode)
 
-		Dim pAdd As Double = 0.0
-		Dim auxList As List(Of Object) = New List(Of Object)
-		For Each auxEntry As IAuxiliaryEngineeringInputData In aux.Auxiliaries
-			If auxEntry.AuxiliaryType = AuxiliaryDemandType.Constant Then
-				pAdd += auxEntry.ConstantPowerDemand.Value()
-				Continue For
-			End If
-			Dim auxOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
-			Dim engineeringAuxEntry As IAuxiliaryDeclarationInputData = TryCast(auxEntry, IAuxiliaryDeclarationInputData)
-			If Not job.SavedInDeclarationMode Then
-				auxOut.Add("ID", auxEntry.ID)
-				auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name())
-				auxOut.Add("Path", GetRelativePath(auxEntry.DemandMap.Source, basePath))
-				auxOut.Add("Technology", New String() {})
-			Else
-				auxOut.Add("ID", auxEntry.ID)
-				auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name())
-				auxOut.Add("Technology", engineeringAuxEntry.Technology)
-			End If
-			auxList.Add(auxOut)
-		Next
+        If job.EngineOnlyMode Then
+            body.Add("EngineFile", GetRelativePath(job.EngineOnly.DataSource.SourceFile, basePath))
+            body.Add("Cycles",
+                    job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
+            WriteFile(header, body, filename)
+            Return
+        End If
 
-		body.Add("Aux", auxList)
-		If Not job.SavedInDeclarationMode Then
-			body.Add("Padd", pAdd)
-		End If
-	   
-		Dim driver As IDriverEngineeringInputData =  input.DriverInputData
-		
-		If Not job.SavedInDeclarationMode Then
-			body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath))
-		    body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value())
+        'Main Files
+        body.Add("VehicleFile", GetRelativePath(job.Vehicle.DataSource.SourceFile, basePath))
+        body.Add("EngineFile", GetRelativePath(input.JobInputData.Vehicle.Components.EngineInputData.DataSource.SourceFile, basePath))
+        body.Add("GearboxFile", GetRelativePath(input.JobInputData.Vehicle.Components.GearboxInputData.DataSource.SourceFile, basePath))
+
+
+        Dim aux As IAuxiliariesEngineeringInputData = job.Vehicle.Components.AuxiliaryInputData
+        'AA-TB
+        'ADVANCED AUXILIARIES 
+        body.Add("AuxiliaryAssembly", aux.AuxiliaryAssembly.GetName())
+        body.Add("AuxiliaryVersion", aux.AuxiliaryVersion)
+        body.Add("AdvancedAuxiliaryFilePath", GetRelativePath(aux.AdvancedAuxiliaryFilePath, basePath))
+
+        Dim pAdd As Double = 0.0
+        Dim auxList As List(Of Object) = New List(Of Object)
+        For Each auxEntry As IAuxiliaryEngineeringInputData In aux.Auxiliaries
+            If auxEntry.AuxiliaryType = AuxiliaryDemandType.Constant Then
+                pAdd += auxEntry.ConstantPowerDemand.Value()
+                Continue For
+            End If
+            Dim auxOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object)
+            Dim engineeringAuxEntry As IAuxiliaryDeclarationInputData = TryCast(auxEntry, IAuxiliaryDeclarationInputData)
+            If Not job.SavedInDeclarationMode Then
+                auxOut.Add("ID", auxEntry.ID)
+                auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name())
+                auxOut.Add("Path", GetRelativePath(auxEntry.DemandMap.Source, basePath))
+                auxOut.Add("Technology", New String() {})
+            Else
+                auxOut.Add("ID", auxEntry.ID)
+                auxOut.Add("Type", AuxiliaryTypeHelper.ParseKey(auxEntry.ID).Name())
+                auxOut.Add("Technology", engineeringAuxEntry.Technology)
+            End If
+            auxList.Add(auxOut)
+        Next
+
+        body.Add("Aux", auxList)
+        If Not job.SavedInDeclarationMode Then
+            body.Add("Padd", pAdd)
+        End If
+
+        Dim driver As IDriverEngineeringInputData = input.DriverInputData
+
+        If Not job.SavedInDeclarationMode Then
+            body.Add("VACC", GetRelativePath(driver.AccelerationCurve.AccelerationCurve.Source, basePath))
+            body.Add("EngineStopStartAtVehicleStopThreshold", driver.EngineStopStartData.ActivationDelay.Value())
             body.Add("EngineStopStartMaxOffTimespan", driver.EngineStopStartData.MaxEngineOffTimespan.Value())
             body.Add("EngineStopStartUtilityFactor", driver.EngineStopStartData.UtilityFactor)
 
-            body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed)
-		    body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay)
-		    body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold)
+            body.Add("EcoRollMinSpeed", driver.EcoRollData.MinSpeed.AsKmph)
+            body.Add("EcoRollActivationDelay", driver.EcoRollData.ActivationDelay.Value())
+            body.Add("EcoRollUnderspeedThreshold", driver.EcoRollData.UnderspeedThreshold.AsKmph)
 
-		End If
+        End If
 		'body.Add("StartStop", New Dictionary(Of String, Object) From {
 		'			{"Enabled", driver.StartStop.Enabled},
 		'			{"MaxSpeed", driver.StartStop.MaxSpeed.AsKmph},
