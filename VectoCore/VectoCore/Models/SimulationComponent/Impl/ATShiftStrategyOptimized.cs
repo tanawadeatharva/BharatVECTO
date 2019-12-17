@@ -236,6 +236,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return null;
 			}
 
+			if (DataBus.DriverAcceleration < 0) {
+				return null;
+			}
+
+
 			var minFcGear = new GearshiftPosition(currentGear, _gearbox.TorqueConverterLocked);
 			var minFc = double.MaxValue;
 			var fcCurrent = double.NaN;

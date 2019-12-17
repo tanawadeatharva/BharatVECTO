@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// UPSHIFT - Special rule for 1C -> 2C
 				if (!_gearbox.TorqueConverterLocked && ModelData.Gears.ContainsKey(gear + 1) &&
 					ModelData.Gears[gear + 1].HasTorqueConverter && outAngularVelocity.IsGreater(0)) {
-					var result = CheckUpshiftTcTc(absTime, dt, outTorque, outAngularVelocity, gear, currentGear);
+					var result = CheckUpshiftTcTc(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, currentGear, response);
 					if (result.HasValue) {
 						return result.Value;
 					}
