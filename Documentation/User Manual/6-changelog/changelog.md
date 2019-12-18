@@ -2,6 +2,11 @@
 
 **VECTO 3.3.5**
 
+***Build 1812 (2019-12-18) OFFICIAL RELEASE***
+
+- Bugfixes
+    * [VECTO-1220] - Simulation Abort Urban Delivery RefLoad
+
 ***Build 1783 (2019-11-19) RELEASE CANDIDATE***
 
 - Improvement
