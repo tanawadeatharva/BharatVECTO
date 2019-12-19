@@ -239,7 +239,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (DataBus.DriverAcceleration < 0) {
 				return null;
 			}
-
+			if (response1.EngineTorqueDemand.IsSmaller(0.7 * fld[currentGear].DragLoadStationaryTorque(response1.EngineSpeed))) {
+				return null;
+			}
 
 			var minFcGear = new GearshiftPosition(currentGear, _gearbox.TorqueConverterLocked);
 			var minFc = double.MaxValue;
@@ -377,6 +379,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter origInTorque,
 			PerSecond origInAngularVelocity, uint currentGear, Second lastShiftTime, IResponse response1)
 		{
+			if (response1.EngineTorqueDemand.IsSmaller(0.7 * fld[currentGear].DragLoadStationaryTorque(response1.EngineSpeed))) {
+				return null;
+			}
+
 			var minFcGear = new GearshiftPosition(currentGear, _gearbox.TorqueConverterLocked);
 			var minFc = double.MaxValue;
 			var fcCurrent = double.NaN;
