@@ -257,10 +257,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var dataBus = Driver.DataBus;
 			var vehicleSpeed = dataBus.VehicleSpeed;
 
-			if (dataBus.Distance > 38000) {
-				Console.WriteLine("here!");
-			}
-
 			UpdatePCCState(targetVelocity);
 
 			switch (PCCState) {
