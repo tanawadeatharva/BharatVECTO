@@ -707,17 +707,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 					last ? new List<ShiftPolygon.ShiftPolygonEntry>() : upshift.ToList());
 			}
 
-			public static IEnumerable<TorqueConverterEntry> GetTorqueConverterDragCurve(double ratio)
+			public static IEnumerable<TorqueConverterEntry> GetTorqueConverterDragCurve(double ratio, TorqueConverterEntry first, TorqueConverterEntry last)
 			{
-				var resourceId = DeclarationDataResourcePrefix + ".TorqueConverter.csv";
-				var data = VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId), source: resourceId);
-				var characteristicTorque = (from DataRow row in data.Rows
-											select
-												new TorqueConverterEntry() {
-													SpeedRatio = row.ParseDouble(TorqueConverterDataReader.Fields.SpeedRatio),
-													Torque = row.ParseDouble(TorqueConverterDataReader.Fields.CharacteristicTorque).SI<NewtonMeter>(),
-													TorqueRatio = row.ParseDouble(TorqueConverterDataReader.Fields.TorqueRatio)
-												}).ToArray();
+				var characteristicTorque = new[] {
+					new TorqueConverterEntry() {
+						SpeedRatio = 1,
+						TorqueRatio = last.TorqueRatio * 0.99,
+						Torque = 0.SI<NewtonMeter>()
+					},
+					new TorqueConverterEntry(
+					) {
+						SpeedRatio = 5,
+						TorqueRatio = 0.9,
+						Torque =  -4 * first.Torque
+					},
+				};
 				foreach (var torqueConverterEntry in characteristicTorque) {
 					torqueConverterEntry.SpeedRatio = torqueConverterEntry.SpeedRatio * ratio;
 					torqueConverterEntry.TorqueRatio = torqueConverterEntry.TorqueRatio / ratio;
