@@ -259,6 +259,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double UphillSlope = 5;
 
 			public static string DefaultShiftStrategy = "";
+			public const double DragMarginFactor = 0.7;
 
 
 			// TODO: MQ 2019-11-26 remove, once the parameters are fixed! make fields above read-only or const

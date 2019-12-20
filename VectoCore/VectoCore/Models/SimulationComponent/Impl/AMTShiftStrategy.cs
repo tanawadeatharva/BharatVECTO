@@ -203,12 +203,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return false;
 			}
 
-			_nextGear = CheckDownshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear);
+			_nextGear = CheckDownshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, response);
 			if (_nextGear != gear) {
 				return true;
 			}
 
-			_nextGear = CheckUpshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear);
+			_nextGear = CheckUpshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, gear, response);
 
 			//if ((ModelData.Gears[_nextGear].Ratio * outAngularVelocity - DataBus.EngineIdleSpeed) /
 			//	(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) <
@@ -219,8 +219,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _nextGear != gear;
 		}
 
-		protected virtual uint CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear)
+		protected virtual uint CheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear, IResponse response)
 		{
 			// if the driver's intention is _not_ to accelerate or drive along then don't upshift
 			if (DataBus.DriverBehavior != DrivingBehavior.Accelerating && DataBus.DriverBehavior != DrivingBehavior.Driving) {
@@ -229,7 +228,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if ((absTime - _gearbox.LastDownshift).IsSmaller(_gearbox.ModelData.UpshiftAfterDownshiftDelay)) {
 				return currentGear;
 			}
-			var nextGear = DoCheckUpshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, currentGear);
+			var nextGear = DoCheckUpshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, currentGear, response);
 			if (nextGear == currentGear) {
 				return nextGear;
 			}
@@ -252,17 +251,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return nextGear;
 		}
 
-		protected virtual uint CheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear)
+		protected virtual uint CheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear, IResponse response)
 		{
 			if ((absTime - _gearbox.LastUpshift).IsSmaller(_gearbox.ModelData.DownshiftAfterUpshiftDelay)) {
 				return currentGear;
 			}
-			return DoCheckDownshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, currentGear);
+			return DoCheckDownshift(absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, currentGear, response);
 		}
 
-		protected virtual uint DoCheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear)
+		protected virtual uint DoCheckUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear, IResponse response1)
 		{
 			// upshift
 			if (IsAboveUpShiftCurve(currentGear, inTorque, inAngularVelocity)) {
@@ -292,12 +289,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// early up shift to higher gear ---------------------------------------
 			if (EarlyShiftUp && currentGear < ModelData.Gears.Count) {
-				currentGear = CheckEarlyUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
+				currentGear = CheckEarlyUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear, response1);
 			}
 			return currentGear;
 		}
 
-		protected virtual uint CheckEarlyUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear)
+		protected virtual uint CheckEarlyUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear, IResponse response1)
 		{
 			// try if next gear would provide enough torque reserve
 			var tryNextGear = currentGear + 1;
@@ -321,7 +318,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		
 		protected virtual uint DoCheckDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear)
+			NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear, IResponse response)
 		{
 			// down shift
 			if (IsBelowDownShiftCurve(currentGear, inTorque, inAngularVelocity)) {

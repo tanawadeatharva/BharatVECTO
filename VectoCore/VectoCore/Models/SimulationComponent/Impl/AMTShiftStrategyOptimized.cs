@@ -75,8 +75,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region Overrides of AMTShiftStrategy
 
-		protected override uint CheckEarlyUpshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear)
+		protected override uint CheckEarlyUpshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear, IResponse response1)
 		{
 			var minFcGear = currentGear;
 			var minFc = double.MaxValue;
@@ -84,6 +83,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var fcCurrent = double.NaN;
 
 			var fcUpshiftPossible = true;
+
+			if (response1.EngineTorqueDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear].DragLoadStationaryTorque(response1.EngineSpeed))) {
+				return currentGear;
+			}
 
 			var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleSpeed, DataBus.RoadGradient ?? 0.SI<Radian>());
 			var vDrop = DataBus.VehicleSpeed - estimatedVelocityPostShift;
@@ -186,7 +189,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return fcUpshiftPossible
 				? currentGear
-				: base.CheckEarlyUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
+				: base.CheckEarlyUpshift(absTime, dt, outTorque, outAngularVelocity, currentGear, response1);
 		}
 
 		private double GetFCRating(PerSecond engineSpeed, NewtonMeter tqCurrent)
@@ -207,23 +210,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 		protected override uint DoCheckDownshift(
 			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
-			NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear)
+			NewtonMeter inTorque, PerSecond inAngularVelocity, uint currentGear, IResponse response)
 		{
 			var nextGear = base.DoCheckDownshift(
-				absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, currentGear);
+				absTime, dt, outTorque, outAngularVelocity, inTorque, inAngularVelocity, currentGear, response);
 
 			if (nextGear == currentGear && currentGear > ModelData.Gears.Keys.Min()) {
-				nextGear = CheckEarlyDownshift(absTime, dt, outTorque, outAngularVelocity, currentGear);
+				nextGear = CheckEarlyDownshift(absTime, dt, outTorque, outAngularVelocity, currentGear, response);
 			}
 			return nextGear;
 		}
 
-		protected virtual uint CheckEarlyDownshift(
-			Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear)
+		protected virtual uint CheckEarlyDownshift(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity, uint currentGear, IResponse response1)
 		{
 			var minFcGear = currentGear;
 			var minFc = double.MaxValue;
 			var fcCurrent = double.NaN;
+
+			if (response1.EngineTorqueDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear].DragLoadStationaryTorque(response1.EngineSpeed))) {
+				return currentGear;
+			}
 
 			for (var i = 1; i <= shiftStrategyParameters.AllowedGearRangeFC; i++) {
 				var tryNextGear = (uint)(currentGear - i);
