@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -68,7 +70,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						(runData.AngledriveData?.Angledrive.Ratio ?? 1.0);
 
 			var tmp = new List<Entry>();
+
+			var maxSpeed = GetVehicleMaxSpeed(runData);
 			foreach (var speed in Speeds) {
+				if (speed > maxSpeed) {
+					continue;
+				}
 				var gearForSpeed = runData.GearboxData.Gears.FirstOrDefault(
 					x => (speed * ratio * x.Value.Ratio).IsBetween(
 						runData.EngineData.IdleSpeed, runData.EngineData.FullLoadCurves[0].RatedSpeed)).Key;
@@ -92,6 +99,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			return tmp.ToArray();
+		}
+
+		private static MeterPerSecond GetVehicleMaxSpeed(VectoRunData runData)
+		{
+			var axleGearData = runData.AxleGearData;
+			var angledriveData = runData.AngledriveData;
+			var hasAngleDrive = angledriveData != null && angledriveData.Angledrive != null;
+			var angledriveRatio = hasAngleDrive && angledriveData.Type == AngledriveType.SeparateAngledrive
+				? angledriveData.Angledrive.Ratio
+				: 1.0;
+			var axlegearRatio = axleGearData != null ? axleGearData.AxleGear.Ratio : 1.0;
+			var dynamicTyreRadius = runData.VehicleData != null ? runData.VehicleData.DynamicTyreRadius : 0.0.SI<Meter>();
+
+			var vehicleMaxSpeed = runData.EngineData.FullLoadCurves[0].N95hSpeed /
+								runData.GearboxData.Gears[runData.GearboxData.Gears.Keys.Max()].Ratio / axlegearRatio /
+								angledriveRatio * dynamicTyreRadius;
+
+			var maxSpeed = VectoMath.Min(
+				vehicleMaxSpeed,
+				(runData.VehicleDesignSpeed ?? 90.KMPHtoMeterPerSecond()) +
+				(runData.DriverData?.OverSpeed?.OverSpeed ?? 0.KMPHtoMeterPerSecond()));
+			return maxSpeed;
 		}
 
 		public IList<MeterPerSecond> Speeds { get; }
