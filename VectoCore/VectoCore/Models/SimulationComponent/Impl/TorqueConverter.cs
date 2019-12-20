@@ -217,13 +217,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					engineResponse.DragPower - engineResponse.AuxiliariesPowerDemand,
 					DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
 				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineN95hSpeed);
-				var lowerInputSpeed = VectoMath.Max(DataBus.EngineIdleSpeed * 1.001, 0.8 * DataBus.EngineSpeed);
+				var lowerInputSpeed = DataBus.EngineIdleSpeed * 1.001; // VectoMath.Max(DataBus.EngineIdleSpeed * 1.001, 0.8 * DataBus.EngineSpeed);
 				var corrected = false;
-				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
+				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed, 1e-2)) {
 					operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
 					corrected = true;
 				}
-				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed * 1.001)) {
+				if (operatingPoint.InAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed * 1.001, 1e-2)) {
 					operatingPoint = ModelData.FindOperatingPoint(lowerInputSpeed, outAngularVelocity);
 					corrected = true;
 				}
