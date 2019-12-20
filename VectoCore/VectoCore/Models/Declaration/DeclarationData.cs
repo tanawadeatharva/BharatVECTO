@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				new[] {  90.0, 120, 165,  90, 120, 165 },
 				new[] {  90.0, 120, 165, 110, 140, 185 },
 				new[] { 100.0, 130, 175, 120, 150, 195 },
-				new[] { 110.0, 140, 185, 130, 160, 195 },
+				new[] { 110.0, 140, 185, 130, 160, 205 },
 			};
 
 			public const double DownhillSlope = -5;
