@@ -26,11 +26,6 @@
 							<xs:documentation>P239</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="LegislativeClass" type="v1.0:LegislativeClassDeclarationType">
-						<xs:annotation>
-							<xs:documentation>P251 - enum</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 					<xs:element name="VehicleCategory" type="tns:VehicleCategoryDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P036 - enum</xs:documentation>

@@ -8,8 +8,7 @@
 	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1"
 	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0"
 	xmlns:di="http://www.w3.org/2000/09/xmldsig#"
-	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd
-urn:tugraz:ivt:VectoAPI:DeclarationDefinitions E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.xsd">
+	xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
 
 <v2.0:Vehicle id="VEH-1234567890" xsi:type="v2.6:HeavyBusPrimaryVehicleDeclarationType"  xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
 		<ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
@@ -17,7 +16,6 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions E:\QUAM\Workspace\VECTO_DEV_Buses
 		<Model>Generic Model</Model>
 		<VIN>VEH-1234567890</VIN>
 		<Date>2017-02-15T11:00:00Z</Date>
-		<LegislativeClass>N3</LegislativeClass>
 		<VehicleCategory>Bus</VehicleCategory>
 		<AxleConfiguration>4x2</AxleConfiguration>
 		<TechnicalPermissibleMaximumLadenMass>25000</TechnicalPermissibleMaximumLadenMass>

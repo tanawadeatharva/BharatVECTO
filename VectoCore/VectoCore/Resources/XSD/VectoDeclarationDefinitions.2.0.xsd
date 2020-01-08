@@ -7,7 +7,7 @@
 	<xs:complexType name="AbstractAuxiliaryDataDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractAxleDataDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractAxleWheelsComponentDeclarationType" abstract="true"/>
-	<xs:complexType name="AbstractAxleWheelsDataDeclarationType"/>
+	<xs:complexType name="AbstractAxleWheelsDataDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractGearEntryType" abstract="true"/>
 	<xs:complexType name="AbstractGearsDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractPTODataType" abstract="true"/>
