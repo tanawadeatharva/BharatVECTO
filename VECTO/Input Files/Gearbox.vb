@@ -256,7 +256,7 @@ Public Class Gearbox
                                                        .JobInputData =
                                                        New MockJobInputData() _
                                                        With { _
-                                                       .Vehicle =
+                                                       .IEngineeringJobInputData_Vehicle =
                                                        New MockEngineeringVehicle() _
                                                        With { .GearboxInputData = gearbox,
                                                        .TorqueConverterInputData = gearbox}}                                    
