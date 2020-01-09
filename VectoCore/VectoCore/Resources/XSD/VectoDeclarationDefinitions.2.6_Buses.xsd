@@ -5,112 +5,157 @@
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" schemaLocation="VectoDeclarationDefinitions.2.1.xsd"/>
+	<xs:complexType name="AbstractCompletedVehicleAuxiliaryDataDeclarationType" abstract="true"/>
+	<xs:complexType name="AbstractCompletedVehicleComponentsDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractPrimaryVehicleAuxiliaryDataDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractPrimaryVehicleComponentsDeclarationType" abstract="true"/>
-	<xs:complexType name="AuxiliariesComponentHeavyBusDeclarationType">
+	<xs:complexType name="CompletedVehicleAuxiliariesComponentDeclarationType">
 		<xs:sequence>
-			<xs:element name="Data" type="tns:AbstractPrimaryVehicleAuxiliaryDataDeclarationType"/>
+			<xs:element name="Data" type="tns:AbstractCompletedVehicleAuxiliaryDataDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="CompletedVehicleDeclarationType">
+	<xs:complexType name="CompletedVehicleAuxiliaryDataDeclarationType">
 		<xs:complexContent>
-			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
+			<xs:extension base="tns:AbstractCompletedVehicleAuxiliaryDataDeclarationType">
 				<xs:sequence>
-					<xs:element name="ManufacturerCompletedVehicle"/>
-					<xs:element name="ManufacturerAddressCompletedVehicle"/>
-					<xs:element name="Model"/>
-					<xs:element name="VIN"/>
-					<xs:element name="Date"/>
-					<xs:element name="LegislativeClass"/>
-					<xs:element name="CurbMassChassis"/>
-					<xs:element name="TechnicalPermissibleMaximumLadenMass"/>
-					<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0"/>
-					<xs:element name="RegisteredClass"/>
-					<xs:element name="VehicleCode"/>
-					<xs:element name="RegisteredPassengers">
+					<xs:element name="ElectricSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="LowerDeck"/>
-								<xs:element name="UpperDeck"/>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="LowEntry"/>
-					<xs:element name="HeightIntegratedBod"/>
-					<xs:element name="VehicleLength"/>
-					<xs:element name="VehicleWidth"/>
-					<xs:element name="EntranceHeight"/>
-					<xs:element name="Components">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType"/>
-								<xs:element name="Auxiliaries">
+								<xs:element name="AlternatorTechnology" minOccurs="0" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>PXXX</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="tns:AlternatorTechnologyType">
+												<xs:attribute name="ratio" type="v1.0:Double3" use="required"/>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="LEDLights">
 									<xs:complexType>
 										<xs:sequence>
-											<xs:element name="Data">
-												<xs:complexType>
-													<xs:sequence>
-														<xs:element name="ElectricSystem">
-															<xs:complexType>
-																<xs:sequence>
-																	<xs:element name="AlternatorTechnology" minOccurs="0" maxOccurs="unbounded">
-																		<xs:annotation>
-																			<xs:documentation>PXXX</xs:documentation>
-																		</xs:annotation>
-																		<xs:complexType>
-																			<xs:simpleContent>
-																				<xs:extension base="xs:string">
-																					<xs:attribute name="ratio" type="v1.0:Double3" use="required"/>
-																				</xs:extension>
-																			</xs:simpleContent>
-																		</xs:complexType>
-																	</xs:element>
-																	<xs:element name="LEDLights">
-																		<xs:complexType>
-																			<xs:sequence>
-																				<xs:element name="Dayrunninglights" type="xs:boolean"/>
-																				<xs:element name="Headlights" type="xs:boolean"/>
-																				<xs:element name="Positionlights" type="xs:boolean"/>
-																				<xs:element name="Brakelights" type="xs:boolean"/>
-																				<xs:element name="Interiorlights" type="xs:boolean"/>
-																			</xs:sequence>
-																		</xs:complexType>
-																	</xs:element>
-																</xs:sequence>
-															</xs:complexType>
-														</xs:element>
-														<xs:element name="HVAC">
-															<xs:complexType>
-																<xs:sequence>
-																	<xs:element name="SystemConfiguration" type="xs:int"/>
-																	<xs:element name="CompressorType">
-																		<xs:complexType>
-																			<xs:sequence>
-																				<xs:element name="DriverAC" type="tns:HVACTechnology"/>
-																				<xs:element name="PassengerAC" type="tns:HVACTechnology"/>
-																			</xs:sequence>
-																		</xs:complexType>
-																	</xs:element>
-																	<xs:element name="AuxiliaryHeaterPower" type="xs:int"/>
-																	<xs:element name="DoubleGlasing" type="xs:boolean"/>
-																	<xs:element name="HeatPump" type="xs:boolean"/>
-																	<xs:element name="AdjustableAuxiliaryHeater" type="xs:boolean"/>
-																	<xs:element name="SeparateAirDistributionDucts" type="xs:boolean"/>
-																</xs:sequence>
-															</xs:complexType>
-														</xs:element>
-													</xs:sequence>
-												</xs:complexType>
-											</xs:element>
+											<xs:element name="Dayrunninglights" type="xs:boolean"/>
+											<xs:element name="Headlights" type="xs:boolean"/>
+											<xs:element name="Positionlights" type="xs:boolean"/>
+											<xs:element name="Brakelights" type="xs:boolean"/>
+											<xs:element name="Interiorlights" type="xs:boolean"/>
 										</xs:sequence>
 									</xs:complexType>
 								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
+					<xs:element name="HVAC">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="SystemConfiguration">
+									<xs:simpleType>
+										<xs:restriction base="xs:int">
+											<xs:minInclusive value="1"/>
+											<xs:maxInclusive value="9"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="CompressorType">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="DriverAC" type="tns:HVACTechnology"/>
+											<xs:element name="PassengerAC" type="tns:HVACTechnology"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="AuxiliaryHeaterPower">
+									<xs:simpleType>
+										<xs:restriction base="xs:int">
+											<xs:minInclusive value="0"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="DoubleGlasing" type="xs:boolean"/>
+								<xs:element name="HeatPump" type="xs:boolean"/>
+								<xs:element name="AdjustableAuxiliaryHeater" type="xs:boolean"/>
+								<xs:element name="SeparateAirDistributionDucts" type="xs:boolean"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CompletedVehicleComponentsDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="tns:AbstractCompletedVehicleComponentsDeclarationType">
+				<xs:sequence>
+					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType"/>
+					<xs:element name="Auxiliaries" type="tns:CompletedVehicleAuxiliariesComponentDeclarationType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CompletedVehicleDeclarationType">
+		<xs:complexContent>
+			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
+				<xs:sequence>
+					<xs:element name="ManufacturerCompletedVehicle" type="v1.0:ManufacturerType"/>
+					<xs:element name="ManufacturerAddressCompletedVehicle" type="v1.0:ManufacturerAddressType"/>
+					<xs:element name="Model" type="v1.0:ModelType"/>
+					<xs:element name="VIN" type="v1.0:VINType"/>
+					<xs:element name="Date" type="v1.0:DateTimeWithTimezone"/>
+					<xs:element name="LegislativeClass" type="tns:LegislativeClassDeclarationType"/>
+					<xs:element name="RegisteredClass">
+						<xs:simpleType>
+							<xs:restriction base="tns:RegisteredClassType">
+								<xs:enumeration value="I"/>
+								<xs:enumeration value="II"/>
+								<xs:enumeration value="III"/>
+								<xs:enumeration value="A"/>
+								<xs:enumeration value="B"/>
+								<xs:enumeration value="I+II"/>
+								<xs:enumeration value="II+III"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="VehicleCode" type="tns:VehicleCodeType"/>
+					<xs:element name="CurbMassChassis" type="v1.0:VehicleCurbMassChassisType"/>
+					<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType"/>
+					<xs:element name="NgTankSystem" type="v1.0:NgTankSystemType" minOccurs="0"/>
+					<xs:element name="RegisteredPassengers">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="LowerDeck">
+									<xs:simpleType>
+										<xs:restriction base="xs:int">
+											<xs:minInclusive value="0"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="UpperDeck">
+									<xs:simpleType>
+										<xs:restriction base="xs:int">
+											<xs:minInclusive value="0"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="LowEntry" type="xs:boolean"/>
+					<xs:element name="HeightIntegratedBody" type="v1.0:Double3"/>
+					<xs:element name="VehicleLength" type="v1.0:Double3"/>
+					<xs:element name="VehicleWidth" type="v1.0:Double3"/>
+					<xs:element name="EntranceHeight" type="v1.0:Double3"/>
+					<xs:element name="DoorDriveTechnology" type="tns:DoorDriveTechnologyType"/>
+					<xs:element name="Components" type="tns:AbstractCompletedVehicleComponentsDeclarationType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PrimaryVehicleAuxiliariesComponentDeclarationType">
+		<xs:sequence>
+			<xs:element name="Data" type="tns:AbstractPrimaryVehicleAuxiliaryDataDeclarationType"/>
+		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PrimaryVehicleAuxiliaryDataDeclarationType">
 		<xs:complexContent>
@@ -161,7 +206,7 @@
 									</xs:annotation>
 									<xs:complexType>
 										<xs:simpleContent>
-											<xs:extension base="xs:string">
+											<xs:extension base="tns:AlternatorTechnologyType">
 												<xs:attribute name="ratio" type="v1.0:Double3" use="required"/>
 											</xs:extension>
 										</xs:simpleContent>
@@ -208,7 +253,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="PrimaryVehicleComponentsType">
+	<xs:complexType name="PrimaryVehicleComponentsDeclarationType">
 		<xs:complexContent>
 			<xs:extension base="tns:AbstractPrimaryVehicleComponentsDeclarationType">
 				<xs:sequence>
@@ -219,7 +264,7 @@
 					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
 					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
 					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentHeavyBusDeclarationType"/>
+					<xs:element name="Auxiliaries" type="tns:PrimaryVehicleAuxiliariesComponentDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -288,6 +333,12 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:simpleType name="AlternatorTechnologyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Sample Alternator Technology 1"/>
+			<xs:enumeration value="Sample Alternator Technology 2"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="AuxFanTechnologyType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Crankshaft mounted - Electronically controlled visco clutch"/>
@@ -327,8 +378,15 @@
 			<xs:enumeration value="Full electric steering gear"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="DoorDriveTechnologyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="electric"/>
+			<xs:enumeration value="pneumatic"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="HVACTechnology">
 		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
 			<xs:enumeration value="sample tech 1"/>
 			<xs:enumeration value="sample tech 2"/>
 		</xs:restriction>
@@ -352,6 +410,23 @@
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="Bus"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RegisteredClassType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="VehicleCodeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CA"/>
+			<xs:enumeration value="CB"/>
+			<xs:enumeration value="CC"/>
+			<xs:enumeration value="CD"/>
+			<xs:enumeration value="CE"/>
+			<xs:enumeration value="CF"/>
+			<xs:enumeration value="CG"/>
+			<xs:enumeration value="CH"/>
+			<xs:enumeration value="CI"/>
+			<xs:enumeration value="CJ"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>
