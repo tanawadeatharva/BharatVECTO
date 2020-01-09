@@ -34,7 +34,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var techList = string.IsNullOrWhiteSpace(data["SSMTechologies"]?.ToString())
 				? DeclarationData.BusAuxiliaries.SSMTechnologyList
 				: SSMTechnologiesReader.ReadFromFile(data["SSMTechologies"].ToString());
-			var actuationsMap = ActuationsMapReader.Read(Path.Combine(baseDir, data.GetEx<string>("ActuationsMap")));
+			var actuations = new Actuations() {
+				Braking = data["Actuations"]?.GetEx<int>("Brakes") ?? 0,
+				ParkBrakeAndDoors = data["Actuations"]?.GetEx<int>("Park brake + 2 doors") ?? 0,
+				Kneeling = data["Actuations"]?.GetEx<int>("Kneeling") ?? 0,
+				CycleTime = (data["Actiations"]?.GetEx<int>("CycleTime") ?? 3600).SI<Second>()
+			};
+				//ActuationsMapReader.Read(Path.Combine(baseDir, data.GetEx<string>("ActuationsMap")));
 			var ssm = string.IsNullOrWhiteSpace(data["SSMFilePath"]?.ToString()) ?
 				new SSMInputs(vehicleData, "", FuelData.Diesel) {
 					EnvironmentalConditionsMap =  env,
@@ -48,7 +54,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				PneumaticAuxillariesConfig  = pac,
 				PneumaticUserInputsConfig  = puc,
 				SSMInputs = ssm,
-				ActuationsMap = actuationsMap,
+				Actuations = actuations,
 				VehicleData = vehicleData
 			};
 		}

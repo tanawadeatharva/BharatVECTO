@@ -33,10 +33,13 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				body["SSMTechologies"] = string.IsNullOrWhiteSpace(auxCfg.SSMInputs.Technologies.Source)
 					? ""
 					: JSONFileWriter.GetRelativePath(auxCfg.SSMInputs.Technologies.Source, basePath);
-				body["ActuationsMap"] = string.IsNullOrWhiteSpace(auxCfg.ActuationsMap.Source)
-					? ""
-					: JSONFileWriter.GetRelativePath(auxCfg.ActuationsMap.Source, basePath);
-
+				body["Actuations"] = new Dictionary<string, object>() {
+					{"Brakes", auxCfg.Actuations.Braking },
+					{"Park brake + 2 doors", auxCfg.Actuations.ParkBrakeAndDoors },
+					{"Kneeling", auxCfg.Actuations.Kneeling },
+					{"CycleTime", auxCfg.Actuations.CycleTime.Value() }
+				};
+				
 				JSONInputDataFactory.WriteFile(JToken.FromObject(new Dictionary<string, object>() { { "Header", "AAUX" }, { "Body", body } }), auxFile);
 			} catch (Exception) {
 				returnValue = false;

@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public M0_1Impl(IAuxiliaryConfig config) { 
 			Consumer = config.ElectricalUserInputsConfig.ElectricalConsumers;
 			
-			var doorDutyCycleFraction = GetDoorActuationTimeFraction(config.ActuationsMap, config.Cycle);
+			var doorDutyCycleFraction = (config.Actuations.ParkBrakeAndDoors * Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond) / config.Actuations.CycleTime; ;
 
 			GetTotalAverageDemandAmpsIncludingBaseLoad = Consumer.Items.Sum(
 				x => x.ConsumerName == Constants.BusAuxiliaries.ElectricalConsumers.DoorsPerVehicleConsumer
@@ -26,6 +26,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				x => x.ConsumerName == Constants.BusAuxiliaries.ElectricalConsumers.DoorsPerVehicleConsumer
 					? x.NumberInActualVehicle * x.NominalConsumptionAmps * doorDutyCycleFraction
 					: x.TotalAvgConumptionAmps);
+
+			// just for debugging linq expression above
 			var sum = 0.0;
 			foreach (var x in Consumer.Items) {
 				if (x.BaseVehicle) {
@@ -37,20 +39,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				Debug.WriteLine(current);
 				sum += current.Value();
 			}
-		}
-
-		private double GetDoorActuationTimeFraction(IActuationsMap actuations, string cycle)
-
-		{
-			var actuationsKey = new ActuationsKey(Constants.BusAuxiliaries.BrakeAndDoorsActuationKey , cycle);
-
-			var numActuations = actuations.GetNumActuations(actuationsKey);
-			var secondsPerActuation = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond;
-
-			actuationsKey = new ActuationsKey(Constants.BusAuxiliaries.CycleTimeActuationKey, cycle);
-			var doorDutyCycleFraction = (numActuations * secondsPerActuation) / actuations.GetNumActuations(actuationsKey).SI<Second>();
-
-			return doorDutyCycleFraction;
 		}
 
 		public Ampere GetTotalAverageDemandAmpsIncludingBaseLoad { get; }

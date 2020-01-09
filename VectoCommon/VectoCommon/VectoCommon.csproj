@@ -50,9 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BusAuxiliaries\ActuationsKey.cs" />
+    <Compile Include="BusAuxiliaries\BusHVACSystemConfiguration.cs" />
     <Compile Include="BusAuxiliaries\CompressorMapValues.cs" />
     <Compile Include="BusAuxiliaries\FloorType.cs" />
+    <Compile Include="BusAuxiliaries\IActuations.cs" />
     <Compile Include="BusAuxiliaries\IAlternatorMap.cs" />
     <Compile Include="BusAuxiliaries\IAuxiliaryConfig.cs" />
     <Compile Include="BusAuxiliaries\ICombinedAlternatorMapRow.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Models\IResponse.cs" />
     <Compile Include="Models\LegislativeClass.cs" />
     <Compile Include="Models\LoggingObject.cs" />
+    <Compile Include="Models\MissionType.cs" />
     <Compile Include="Models\OperatingPoint.cs" />
     <Compile Include="Models\RetarderType.cs" />
     <Compile Include="Models\SimulationType.cs" />

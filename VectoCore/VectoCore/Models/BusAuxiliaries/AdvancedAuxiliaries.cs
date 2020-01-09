@@ -93,7 +93,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 			//Signals.PneumaticOverrunUtilisation = auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction;
 
 			var alternatorMap = auxConfig.ElectricalUserInputsConfig.AlternatorMap;
-			var actuationsMap = auxConfig.ActuationsMap;
 			var compressorMap = auxConfig.PneumaticUserInputsConfig.CompressorMap;
 			
 			// fuelMap = New cMAP()
@@ -138,7 +137,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 				auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage);
 
 			
-			M3 = new M03Impl(auxConfig, compressorMap, actuationsMap, Signals);
+			M3 = new M03Impl(auxConfig, compressorMap, auxCfg.Actuations, Signals);
 
 			M4 = new M04Impl(compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio, auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
 			M5 = new M05Impl(M0_5tmp, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency);

@@ -159,8 +159,12 @@ Public Class Utils
                 },
                 .VehicleData = vehicleData,
                 .Signals = signals,
-                .ActuationsMap = ActuationsMapReader.Read("TestFiles/testPneumaticActuationsMap_GOODMAP.apac"),
-                .Cycle = "TESTCYCLE"
+                .Actuations = New Actuations() With {
+                    .Braking = 153,
+                    .ParkBrakeAndDoors = 24,
+                    .Kneeling = 25,
+                    .CycleTime = 1000.SI(of Second)()
+                 }
                 }
         Return retVal
     End Function

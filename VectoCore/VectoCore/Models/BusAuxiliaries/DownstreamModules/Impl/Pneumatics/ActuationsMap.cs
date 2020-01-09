@@ -12,30 +12,29 @@
 using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 {
 	public class ActuationsMap : IActuationsMap
 	{
-		private Dictionary<ActuationsKey, int> _map;
+		private Dictionary<MissionType, IActuations> _map;
 
-		public ActuationsMap(Dictionary<ActuationsKey, int> map, string source)
+		public ActuationsMap(Dictionary<MissionType, IActuations> map)
 		{
 			_map = map;
-			Source = source;
+			
 		}
 
-		public int GetNumActuations(ActuationsKey key)
+
+		#region Implementation of IActuationsMap
+
+		public IActuations Lookup(MissionType missionType)
 		{
-			if (_map == null || !_map.ContainsKey(key))
-				throw new ArgumentException(string.Format("Pneumatic Actuations map does not contain the key '{0} / {1}'.", key.ConsumerName, key.CycleName));
-
-			return _map[key];
+			return _map[missionType.GetNonEMSMissionType()];
 		}
 
-		public string Source { get; }
-
-
-		
+		#endregion
 	}
 }

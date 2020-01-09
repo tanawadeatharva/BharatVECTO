@@ -6,14 +6,16 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 {
 	public static class ActuationsMapReader
 	{
-		public static readonly string[] Header = new[] { Fields.ConsumerName, Fields.CycleName, Fields.Actuations };
+		public static readonly string[] Header = new[] { Fields.CycleName, Fields.Braking, Fields.ParkBrakeAndDoors, Fields.Kneeling, Fields.CycleTime };
 
 		public static IActuationsMap Read(string fileName)
 		{
@@ -33,16 +35,22 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
 
-			var retVal = new Dictionary<ActuationsKey, int>();
+			var retVal = new Dictionary<MissionType, IActuations>();
 			foreach (DataRow row in data.Rows) {
-				var key = new ActuationsKey(row.Field<string>(Fields.ConsumerName), row.Field<string>(Fields.CycleName));
+				var key = row.Field<string>(Fields.CycleName).ParseEnum<MissionType>();
 				if (retVal.ContainsKey(key)) {
-					throw new VectoException("Duplicate entries in pneumatic actuations map! {0} / {1}", key.ConsumerName, key.CycleName);
+					throw new VectoException("Duplicate entries in actuations map! {0} / {1}", key.ToXMLFormat());
 				}
 
-				retVal[key] = row.Field<string>(Fields.Actuations).ToInt();
+				var entry = new Actuations() {
+					Braking = row.Field<string>(Fields.Braking).ToInt(),
+					ParkBrakeAndDoors = row.Field<string>(Fields.ParkBrakeAndDoors).ToInt(),
+					Kneeling = row.Field<string>(Fields.Kneeling).ToInt(),
+					CycleTime = row.Field<string>(Fields.CycleTime).ToInt().SI<Second>(),
+				};
+				retVal[key] = entry;
 			}
-			return new ActuationsMap(retVal, source);
+			return new ActuationsMap(retVal);
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection cols)
@@ -52,9 +60,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 
 		public class Fields
 		{
-			public const string ConsumerName = "ConsumerName";
 			public const string CycleName = "CycleName";
-			public const string Actuations = "Actuations";
+			public const string Braking = "Brakes";
+			public const string ParkBrakeAndDoors = "Park brake + 2 doors";
+			public const string Kneeling = "Kneeling";
+			public const string CycleTime = "CycleTime";
 		}
 
 	}

@@ -9,6 +9,8 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
+using TUGraz.VectoCore.Models.BusAuxiliaries;
+
 namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public interface IAuxiliaryConfig
 	{
@@ -22,12 +24,10 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 
 		ISSMInputs SSMInputs { get; }
 
-		IActuationsMap ActuationsMap { get; }
+		IActuations Actuations { get; }
 
 		bool ConfigValuesAreTheSameAs(IAuxiliaryConfig other);
 
-
-		string Cycle { get; }
 
 		IVehicleData VehicleData { get; }
 

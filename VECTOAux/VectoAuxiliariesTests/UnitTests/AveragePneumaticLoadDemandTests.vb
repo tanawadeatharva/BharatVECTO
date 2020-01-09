@@ -71,8 +71,7 @@ Namespace UnitTests
             psUserInputsConfig.Doors = ConsumerTechnology.Pneumatically  '"Pneumatic"
             psUserInputsConfig.AdBlueDosing = ConsumerTechnology.Pneumatically  ' "Pneumatic"
 
-            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
-            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
+            Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
                                         
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
@@ -82,7 +81,7 @@ Namespace UnitTests
 
             Dim _
                 target As _
-                    New M03Impl(auxCfg, psCompressorMap, psActuationsMap, _Signals)
+                    New M03Impl(auxCfg, psCompressorMap, auxCfg.Actuations, _Signals)
 
 
             Assert.IsNotNull(target)
@@ -93,9 +92,7 @@ Namespace UnitTests
 
             initialise()
 
-            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
-            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
-
+            Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
 
@@ -106,7 +103,7 @@ Namespace UnitTests
            
             Dim _
                 target As _
-                    New M03Impl(auxConfig, psCompressorMap, psActuationsMap, _Signals)
+                    New M03Impl(auxConfig, psCompressorMap, auxConfig.Actuations, _Signals)
 
             Dim expected As Double = 7947.684
             Dim actual As NormLiter = target.TotalAirDemand
@@ -119,10 +116,7 @@ Namespace UnitTests
 
             initialise()
 
-            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
-            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
-
-
+            Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psCompressorMap =CompressorMapReader.ReadFile(_compressorMapPath)
                        
 
@@ -133,7 +127,7 @@ Namespace UnitTests
 
             Dim _
                 target As _
-                    New M03Impl(auxConfig, psCompressorMap, psActuationsMap, _Signals)
+                    New M03Impl(auxConfig, psCompressorMap, auxConfig.Actuations, _Signals)
 
             Dim expected As Single = 5832.091
             Dim actual As Watt = target.GetAveragePowerDemandAtCrankFromPneumatics()
@@ -149,9 +143,7 @@ Namespace UnitTests
 
             _defaultInputConfig.CompressorGearEfficiency = 0.8
 
-            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
-            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
-
+            Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
 
@@ -161,7 +153,7 @@ Namespace UnitTests
 
             Dim _
                 target As _
-                    New M03Impl(auxConfig, psCompressorMap, psActuationsMap, _Signals)
+                    New M03Impl(auxConfig, psCompressorMap, auxConfig.Actuations, _Signals)
 
             Dim expected As Single = 5832.091
 
@@ -173,9 +165,7 @@ Namespace UnitTests
 
             initialise()
 
-            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
-            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
-
+            Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
 
@@ -186,11 +176,11 @@ Namespace UnitTests
 
             Dim _
                 target As _
-                    New M03Impl(auxConfig, psCompressorMap, psActuationsMap, _Signals)
+                    New M03Impl(auxConfig, psCompressorMap, auxConfig.Actuations, _Signals)
 
 
-            Dim expected As Double = 7947.55127/
-                                     psActuationsMap.GetNumActuations(New ActuationsKey("CycleTime", "Urban")) _
+            Dim expected As Double = 7947.55127/ auxConfig.Actuations.CycleTime.Value()
+                                    
             ' _Signals.TotalCycleTimeSeconds
 
             Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
@@ -204,9 +194,7 @@ Namespace UnitTests
 
             _defaultInputConfig.SmartRegeneration = False
 
-            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
-            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
-
+            Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
 
@@ -217,9 +205,9 @@ Namespace UnitTests
 
             Dim _
                 target As _
-                    New M03Impl(auxConfig, psCompressorMap, psActuationsMap, _Signals)
+                    New M03Impl(auxConfig, psCompressorMap, auxConfig.Actuations, _Signals)
 
-            Dim expected As Double = 8863.378/psActuationsMap.GetNumActuations(New ActuationsKey("CycleTime", "Urban")) _
+            Dim expected As Double = 8863.378/auxConfig.Actuations.CycleTime.Value() _
             ' _Signals.TotalCycleTimeSeconds
 
             Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
@@ -233,8 +221,7 @@ Namespace UnitTests
 
             '_defaultInputConfig.RetarderBrake = False
            
-            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.None)
-            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
+            Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.None)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
 
@@ -245,9 +232,9 @@ Namespace UnitTests
 
             Dim _
                 target As _
-                    New M03Impl(auxConfig, psCompressorMap, psActuationsMap, _Signals)
+                    New M03Impl(auxConfig, psCompressorMap, auxConfig.Actuations, _Signals)
 
-            Dim expected As Double = 8541.45/psActuationsMap.GetNumActuations(New ActuationsKey( "CycleTime","Urban")) _
+            Dim expected As Double = 8541.45/auxConfig.Actuations.CycleTime.Value() _
             ' _Signals.TotalCycleTimeSeconds
 
 
@@ -262,8 +249,7 @@ Namespace UnitTests
 
             _defaultInputConfig.KneelingHeightMillimeters = 100.SI(Unit.si.Milli.Meter).Cast (Of Meter)
 
-            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
-            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
+            Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                        
 
@@ -273,9 +259,9 @@ Namespace UnitTests
 
             Dim _
                 target As _
-                    New M03Impl(auxConfig, psCompressorMap, psActuationsMap, _Signals)
+                    New M03Impl(auxConfig, psCompressorMap, auxConfig.Actuations, _Signals)
 
-            Dim expected As Double = 8557.524/ psActuationsMap.GetNumActuations(New ActuationsKey("CycleTime", "Urban")) ' _Signals.TotalCycleTimeSeconds
+            Dim expected As Double = 8557.524/ auxConfig.Actuations.CycleTime.Value() ' _Signals.TotalCycleTimeSeconds
 
             Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
         End Sub
@@ -288,8 +274,7 @@ Namespace UnitTests
 
             _defaultInputConfig.AirSuspensionControl = ConsumerTechnology.Mechanically
 
-            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
-            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
+            Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
 
@@ -300,9 +285,9 @@ Namespace UnitTests
 
             Dim _
                 target As _
-                    New M03Impl(auxConfig, psCompressorMap, psActuationsMap, _Signals)
+                    New M03Impl(auxConfig, psCompressorMap, auxConfig.Actuations, _Signals)
 
-            Dim expected As Double = 8726.1840/psActuationsMap.GetNumActuations(New ActuationsKey("CycleTime", "Urban")) _
+            Dim expected As Double = 8726.1840/auxConfig.Actuations.CycleTime.Value() _
             ' _Signals.TotalCycleTimeSeconds
 
             Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
@@ -316,8 +301,7 @@ Namespace UnitTests
 
             _defaultInputConfig.AdBlueDosing = ConsumerTechnology.Pneumatically
 
-            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
-            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
+            Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
                                         
 
@@ -328,10 +312,9 @@ Namespace UnitTests
 
             Dim _
                 target As _
-                    New M03Impl(auxConfig, psCompressorMap, psActuationsMap, _Signals)
+                    New M03Impl(auxConfig, psCompressorMap, auxConfig.Actuations, _Signals)
 
-            Dim expected As Double = 7947.68457/
-                                     psActuationsMap.GetNumActuations(New ActuationsKey("CycleTime","Urban")) _
+            Dim expected As Double = 7947.68457/auxConfig.Actuations.CycleTime.Value() _
             ' _Signals.TotalCycleTimeSeconds
 
             Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
@@ -345,8 +328,7 @@ Namespace UnitTests
 
             _defaultInputConfig.Doors = ConsumerTechnology.Electrically
 
-            Dim psAuxConfig = New DeclarationDataAdapterTruck().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
-            Dim psActuationsMap = ActuationsMapReader.Read(_actuationsMapPath)
+            Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
 
             Dim auxConfig As IAuxiliaryConfig = GetAuxConfig(psAuxConfig)
@@ -356,10 +338,9 @@ Namespace UnitTests
 
             Dim _
                 target As _
-                    New M03Impl(auxConfig, psCompressorMap, psActuationsMap, _Signals)
+                    New M03Impl(auxConfig, psCompressorMap, auxConfig.Actuations, _Signals)
 
-            Dim expected As Double = 6880.88428/
-                                     psActuationsMap.GetNumActuations(New ActuationsKey("CycleTime","Urban")) _
+            Dim expected As Double = 6880.88428/auxConfig.Actuations.CycleTime.Value() _
             ' _Signals.TotalCycleTimeSeconds
 
             Assert.AreEqual(expected, target.AverageAirConsumed().Value(), 0.001)
@@ -373,7 +354,12 @@ Namespace UnitTests
                 .VehicleData = New VehicleData() with {
                     .CurbWeight = _vehicleMassKG.SI(of Kilogram)
                     },
-                .Cycle = "Urban"
+                .Actuations = New Actuations() With {
+                .Braking = 153,
+                .ParkBrakeAndDoors = 75,
+                .Kneeling = 25,
+                .CycleTime = 3114.SI(Of Second)    
+            }
                 }
         End Function
     End Class

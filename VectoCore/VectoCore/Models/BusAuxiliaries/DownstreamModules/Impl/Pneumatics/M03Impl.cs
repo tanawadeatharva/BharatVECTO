@@ -9,28 +9,23 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 	{
 		protected IPneumaticUserInputsConfig _pneumaticUserInputsConfig;
 		protected IPneumaticsConsumersDemand _pneumaticAuxillariesConfig;
-		protected IActuationsMap ActuationsMap;
+		protected IActuations Actuations;
 		protected ICompressorMap _pneumaticsCompressorFlowRateMap;
 		protected Kilogram _vehicleMassKG;
-		protected string _cycleName;
 		protected ISignals _signals;
 		protected NormLiter _totalAirDemand;
-		private Second totalCycleTimeSeconds;
-
+		
 
 		//public M03Impl(IPneumaticUserInputsConfig pneumaticsUserInputConfig, IPneumaticsAuxilliariesConfig pneumaticsAuxillariesConfig, IPneumaticActuationsMap pneumaticsActuationsMap, ICompressorMap pneumaticsCompressorFlowRateMap, Kilogram vehicleMassKG, string cycleName, ISignals signals)
-		public M03Impl(IAuxiliaryConfig auxConfig, ICompressorMap compressorMap, IActuationsMap actuationsMap, ISignals signals)
+		public M03Impl(IAuxiliaryConfig auxConfig, ICompressorMap compressorMap, IActuations actuations, ISignals signals)
 		{
 			_pneumaticUserInputsConfig = auxConfig.PneumaticUserInputsConfig;
 			_pneumaticAuxillariesConfig = auxConfig.PneumaticAuxillariesConfig;
-			ActuationsMap = actuationsMap;
+			Actuations = actuations;
 			_pneumaticsCompressorFlowRateMap = compressorMap;
 			_vehicleMassKG = auxConfig.VehicleData.TotalVehicleWeight;
-			_cycleName = auxConfig.Cycle;
+			
 			_signals = signals;
-
-			totalCycleTimeSeconds = ActuationsMap
-				.GetNumActuations(new ActuationsKey(Constants.BusAuxiliaries.CycleTimeActuationKey, auxConfig.Cycle)).SI<Second>();
 
 			//'Calculate the Total Required Air Delivery Rate L / S
 			_totalAirDemand = TotalAirDemandCalculation();
@@ -43,14 +38,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 
 			//'* * Breaks * *
-			double numActuationsPerCycle = ActuationsMap.GetNumActuations(new ActuationsKey("Brakes", _cycleName));
+			double numActuationsPerCycle = Actuations.Braking;
 			//'=IF(K10 = "yes", IF(COUNTBLANK(F33), G33, F33), IF(COUNTBLANK(F34), G34, F34)) * K16
 			var airConsumptionPerActuation =  _pneumaticAuxillariesConfig.Braking * _vehicleMassKG;
 			var breaks = numActuationsPerCycle * airConsumptionPerActuation ;
 
 			//'* * ParkBrakesBreakplus2Doors * *Park break +2 doors
-			numActuationsPerCycle =
-				ActuationsMap.GetNumActuations(new ActuationsKey(Constants.BusAuxiliaries.BrakeAndDoorsActuationKey, _cycleName));
+			numActuationsPerCycle = Actuations.ParkBrakeAndDoors;
 			//'=SUM(IF(K14 = "electric", 0, IF(COUNTBLANK(F36), G36, F36)), PRODUCT(K16 * IF(COUNTBLANK(F37), G37, F37)))
 			airConsumptionPerActuation = _pneumaticUserInputsConfig.Doors == ConsumerTechnology.Electrically
 				? 0.SI<NormLiter>()
@@ -59,7 +53,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			var parkBrakesplus2Doors = (numActuationsPerCycle * airConsumptionPerActuation);
 
 			//'* * Kneeling * *
-			numActuationsPerCycle = ActuationsMap.GetNumActuations(new ActuationsKey("Kneeling", _cycleName));
+			numActuationsPerCycle = Actuations.Kneeling;
 			//'=IF(COUNTBLANK(F35), G35, F35) * K11 * K16
 			airConsumptionPerActuation = _pneumaticAuxillariesConfig.BreakingWithKneeling *
 										_pneumaticUserInputsConfig.KneelingHeightMillimeters * _vehicleMassKG;
@@ -69,7 +63,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			//	'=IF(K13 = "electric", 0, G39 * F54) - Supplied Spreadsheet
 			var adBlue = _pneumaticUserInputsConfig.AdBlueDosing == ConsumerTechnology.Electrically
 				? 0.SI<NormLiter>()
-				: _pneumaticAuxillariesConfig.AdBlueInjection * totalCycleTimeSeconds;
+				: _pneumaticAuxillariesConfig.AdBlueInjection * Actuations.CycleTime;
 
 			//'* * Regeneration * *
 			//	'=SUM(R6: R9) * IF(K9 = "yes", IF(COUNTBLANK(F41), G41, F41), IF(COUNTBLANK(F40), G40, F40)) - Supplied SpreadSheet
@@ -84,13 +78,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			//numActuationsPerCycle =;
 			airConsumptionPerActuation = _pneumaticAuxillariesConfig.DeadVolume;
 			var deadVolBlowOuts = (airConsumptionPerActuation * _pneumaticAuxillariesConfig.DeadVolBlowOuts *
-								totalCycleTimeSeconds).Cast<NormLiter>();
+									Actuations.CycleTime).Cast<NormLiter>();
 
 			//'* * AirSuspension * *
 			//	'=IF(K12 = "electrically", 0, G38 * F54) - Suplied Spreadsheet
 			var airSuspension = _pneumaticUserInputsConfig.AirSuspensionControl == ConsumerTechnology.Electrically
 				? 0.SI<NormLiter>()
-				: _pneumaticAuxillariesConfig.AirControlledSuspension * totalCycleTimeSeconds;
+				: _pneumaticAuxillariesConfig.AirControlledSuspension * Actuations.CycleTime;
 
 			//'* * Total Air Demand**
 			var totalAirDemand = breaks + parkBrakesplus2Doors + kneeling + adBlue + regeneration + deadVolBlowOuts +
@@ -108,7 +102,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			var cmp = _pneumaticsCompressorFlowRateMap.Interpolate(
 				_signals.EngineSpeed * _pneumaticUserInputsConfig.CompressorGearRatio);
 
-			var sum1 = _totalAirDemand / totalCycleTimeSeconds;
+			var sum1 = _totalAirDemand / Actuations.CycleTime;
 			var sum6 = cmp.FlowRate;
 			
 			var sum7 = cmp.PowerOn - cmp.PowerOff;
@@ -121,7 +115,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 		public NormLiterPerSecond AverageAirConsumed()
 		{
-			var sum1 = _totalAirDemand / totalCycleTimeSeconds;
+			var sum1 = _totalAirDemand / Actuations.CycleTime;
 			return sum1;
 		}
 
