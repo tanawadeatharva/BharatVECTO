@@ -97,6 +97,7 @@ In Engineering Mode the energy demand of all auxiliaries is assumed to be drawn 
   - **Minimum speed:** minimum vehicle speed to allow eco-roll to be activated
   - **Activation delay:** delay between the point in time when all conditions for an eco-roll event are fulfilled until eco-roll is activated
   - **Underspeed threshold:** Threshold below the target speed to disable eco-roll 
+  - **AT EcoRoll Release Lockup Clutch:** Required only for AT transmissions. If set to true, the lockup clutch is released during eco-roll events and the gear is engaged. If set to false, the gearbox switches to neutral.
 
 <div class="declaration">
   - Minimum speed: 60 km/h

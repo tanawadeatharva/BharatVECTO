@@ -10,8 +10,8 @@ The shift strategy is on a first level based on gearshift lines for upshift and 
 The points P1 to P4 are calculated according as follows:
 
   * P1 (upshift line)	$n_1 = n_{idle} * 1.1 / T_1 = 0$
-  * P2 (upshift line)	$n_2 = n_{idle} * 1.1  / T_2=T_{98 @ n2}$   
-  * P3 (upshift line)	$n_3 = n_{T99,low}  / T_3=T_{99 low}$
+  * P2 (upshift line)	$n_2 = n_{idle} * 1.1  / T_2 = 0.98 * T_{@ n2}$   
+  * P3 (upshift line)	$n_3 = n_{T99,low}  / T_3 = T_{99 low}$
   * n4 (downshift line) $n_4 = n_{P98,high}$ / (vertical line)
   * n5 (left boundary for engine speed range with reduced target acceleration demand in next gear) $n_4 = n_{T98,high}$ / 	(vertical line)
 

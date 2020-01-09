@@ -102,7 +102,7 @@ For up-shifts from a torque converter gear ("C") to a locked gear ("L") the esti
 
 The search algorithm for the next gear is as follows:
 
-  $FC_{gear} = min⁡(FC_{gear + i})   \forall i \in \textrm{Allowed gear range}
+  $FC_{gear} = min⁡(FC_{gear + i})   \forall i \in \textrm{Allowed gear range}$
 
 Additionally the candidate gear has to fulfil the boundary conditions below for an efficiency upshift.  
 
@@ -150,11 +150,11 @@ Matrix with target post-shift engine speed offset above idling speed (values in 
 
 | engine load stage|a_max, slope +5% | a_max, slope 0% | a_max, slope -5% | a_min, slope +5% | a_min, slope 0% | a_min, slope -5% |
 |------------------|-----------|----------|-----------|------------|----------|------------|
-| 1                |  50       |  80      | 125       |  50        |  80      | 125        |
-| 2                |  50       |  80      | 125       |  50        |  80      | 125        |
-| 3                |  50       |  80      | 125       |  50        |  80      | 125        |
-| 4                |  50       |  80      | 125       |  70        | 100      | 145        |
-| 5                |  60       |  90      | 135       |  80        | 110      | 155        |
-| 6                |  70       | 100      | 145       |  90        | 120      | 165        |
+| 1                |  90       | 120      | 165       |  90        | 120      | 165        |
+| 2                |  90       | 120      | 165       |  90        | 120      | 165        |
+| 3                |  90       | 120      | 165       |  90        | 120      | 165        |
+| 4                |  90       | 120      | 165       |  110       | 140      | 185        |
+| 5                |  100      | 130      | 175       |  120       | 150      | 195        |
+| 6                |  110      | 140      | 185       |  130       | 160      | 205        |
 
 
