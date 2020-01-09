@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				EngineData = engineData,
 				SimulationType = SimulationType.DistanceCycle,
 				Cycle = cycleData,
-				AdvancedAux = BusAuxiliaryInputData.ReadBusAuxiliaries(AdvancedAuxFile, vehicleData)
+				BusAuxiliaries = BusAuxiliaryInputData.ReadBusAuxiliaries(AdvancedAuxFile, vehicleData)
 			};
 			container.RunData = runData;
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new Clutch(container, engineData))
 				.AddComponent(engine);
 
-			var aux = new BusAuxiliariesAdapter(container, runData.AdvancedAux, "Coach",
+			var aux = new BusAuxiliariesAdapter(container, runData.BusAuxiliaries, "Coach",
 				vehicleData.TotalVehicleWeight, engineData.Fuels.First().ConsumptionMap, engineData.IdleSpeed);
 
 			engine.Connect(aux.Port());

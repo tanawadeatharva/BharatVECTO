@@ -231,7 +231,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					loading),
 				AirdragData = AirdragData,
 				DriverData = null,
-				AdvancedAux = null,
+				BusAuxiliaries = null,
 				Retarder = RetarderData,
 				PTO = PTOTransmissionData,
 				Report = Report,

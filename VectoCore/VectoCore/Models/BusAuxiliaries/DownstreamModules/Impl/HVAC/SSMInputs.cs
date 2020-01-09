@@ -203,46 +203,46 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		// C29 - ( L/H )  --- !! 1/h
-		public PerSecond HighVentilation { get; set; }
+		public PerSecond VentilationRate { get; set; }
 
 		// C30 - ( L/H )   --- !! 1/h
-		public PerSecond LowVentilation { get; set; }
+		//public PerSecond LowVentilation { get; set; }
 
 		// C31 - ( M3/H )
-		public CubicMeterPerSecond HighVolumeExchange
+		public CubicMeterPerSecond VolumeExchange
 		{
 			get {
 				// =D11*C29
-				return BusVolume * HighVentilation;
+				return BusVolume * VentilationRate;
 			}
 		}
 
 		// C32 - ( M3/H )
-		public CubicMeterPerSecond LowVolumeExchange
-		{
-			get {
-				// =C30*D11
-				return BusVolume * LowVentilation;
-			}
-		}
+		//public CubicMeterPerSecond LowVolumeExchange
+		//{
+		//	get {
+		//		// =C30*D11
+		//		return BusVolume * LowVentilation;
+		//	}
+		//}
 
 		// C33 - ( W )
-		public Watt HighVentPower
+		public Watt VentPower
 		{
 			get {
 				// =C31*C35
-				return HighVolumeExchange * SpecificVentilationPower;
+				return VolumeExchange * SpecificVentilationPower;
 			}
 		}
 
 		// C34 - ( W )
-		public Watt LowVentPower
-		{
-			get {
-				// =C32*C35
-				return LowVolumeExchange * SpecificVentilationPower;
-			}
-		}
+		//public Watt LowVentPower
+		//{
+		//	get {
+		//		// =C32*C35
+		//		return LowVolumeExchange * SpecificVentilationPower;
+		//	}
+		//}
 
 		// C35 - ( Wh/M3 )
 		public JoulePerCubicMeter SpecificVentilationPower { get; set; }
@@ -299,16 +299,16 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 
 		// C53 - "Continous/2-stage/3-stage/4-stage
-		public ACCompressorType CompressorType { get; set; }
+		public ACCompressorType HVACCompressorType { get; set; }
 
 		// mechanical/electrical
 		public string CompressorTypeDerived
 		{
-			get { return CompressorType == ACCompressorType.Continuous ? "Electrical" : "Mechanical"; }
+			get { return HVACCompressorType == ACCompressorType.Continuous ? "Electrical" : "Mechanical"; }
 		}
 
 		// C54 -  ( KW )
-		public Watt CompressorCapacity { get; set; }
+		public Watt HVACMaxCoolingPower { get; set; }
 
 		// C59
 		public double COP
@@ -316,7 +316,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			get {
 				var cop = 3.5;
 
-				switch (CompressorType) {
+				switch (HVACCompressorType) {
 					case ACCompressorType.TwoStage: break;
 					case ACCompressorType.ThreeStage: 
 					case ACCompressorType.FourStage:
@@ -345,13 +345,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public bool VentilationDuringAC { get; set; }
 
 		// C65 - String high/low
-		public VentilationLevel VentilationFlowSettingWhenHeatingAndACInactive { get; set; }
+		//public VentilationLevel VentilationFlowSettingWhenHeatingAndACInactive { get; set; }
 
-		// C66 - String high/low
-		public VentilationLevel VentilationDuringHeating { get; set; }
+		//// C66 - String high/low
+		//public VentilationLevel VentilationDuringHeating { get; set; }
 
-		// C67 - String high/low                                               
-		public VentilationLevel VentilationDuringCooling { get; set; }
+		//// C67 - String high/low                                               
+		//public VentilationLevel VentilationDuringCooling { get; set; }
 
 
 		// C70 - ( KW )

@@ -189,12 +189,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
 				var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
 
-				var res = run1TotalW < 0 && run2TotalW < 0
-					? ventilation.VentilationOnDuringHeating && ventilation.VentilationDuringHeating == VentilationLevel.High
-						? bc.HighVentPower
-						: ventilation.VentilationOnDuringHeating && ventilation.VentilationDuringHeating ==VentilationLevel.Low
-							? bc.LowVentPower
-							: 0.SI<Watt>()
+				var res = run1TotalW < 0 && run2TotalW < 0 && ventilation.VentilationOnDuringHeating
+					? bc.VentPower
 					: 0.SI<Watt>();
 
 				return res;
@@ -239,7 +235,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			return environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
 				? 0.SI<Watt>()
-				: gen.ACSystem.CompressorType.IsElectrical()
+				: gen.ACSystem.HVACCompressorType.IsElectrical()
 					? 0.SI<Watt>()
 					: run1TotalW > 0 && run2TotalW > 0
 						? VectoMath.Min(run1TotalW, run2TotalW)
@@ -262,7 +258,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
 			return environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff
 				? 0.SI<Watt>()
-				: gen.ACSystem.CompressorType.IsElectrical()
+				: gen.ACSystem.HVACCompressorType.IsElectrical()
 					? run1TotalW > 0 && run2TotalW > 0
 						? VectoMath.Min(run1TotalW, run2TotalW)
 						: 0.SI<Watt>()
@@ -288,12 +284,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
 
 			return environmentalTemperature >= gen.BoundaryConditions.TemperatureCoolingTurnsOff && run1TotalW > 0 &&
-					run2TotalW > 0
-				? gen.Ventilation.VentilationDuringAC && gen.Ventilation.VentilationDuringCooling == VentilationLevel.High
-					? gen.BoundaryConditions.HighVentPower
-					: gen.Ventilation.VentilationDuringAC && gen.Ventilation.VentilationDuringCooling == VentilationLevel.Low
-						? gen.BoundaryConditions.LowVentPower
-						: 0.SI<Watt>()
+					run2TotalW > 0 && gen.Ventilation.VentilationDuringAC
+				?  gen.BoundaryConditions.VentPower
 				: 0.SI<Watt>();
 		}
 
@@ -319,13 +311,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				return (environmentalTemperature < gen.BoundaryConditions.TemperatureCoolingTurnsOff &&
 						run1TotalW > 0 && run2TotalW > 0) ||
 						(run1TotalW > 0 && run2TotalW < 0)
-					? gen.Ventilation.VentilationWhenBothHeatingAndACInactive &&
-					gen.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive == VentilationLevel.High
-						? gen.BoundaryConditions.HighVentPower
-						: gen.Ventilation.VentilationWhenBothHeatingAndACInactive &&
-						gen.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive == VentilationLevel.Low
-							? gen.BoundaryConditions.LowVentPower
-							: 0.SI<Watt>()
+					? gen.Ventilation.VentilationWhenBothHeatingAndACInactive
+						? gen.BoundaryConditions.VentPower
+						: 0.SI<Watt>()
 					: 0.SI<Watt>();
 			
 		}
@@ -386,7 +374,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				//			Math.Max(If(gen.AC_CompressorType.ToLower() = "mechanical", tl.CValueVariation, 0),
 				//					-gen.BC_MaxPossibleBenefitFromTechnologyList))
 
-				if (gen.ACSystem.CompressorType.IsElectrical()) {
+				if (gen.ACSystem.HVACCompressorType.IsElectrical()) {
 					return 0;
 				}
 
@@ -408,7 +396,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim C43 As Double   =  gen.BC_MaxPossibleBenefitFromTechnologyList
 				// Dim C53 As string   =  gen.AC_CompressorType
 
-				if (gen.ACSystem.CompressorType.IsMechanical()) {
+				if (gen.ACSystem.HVACCompressorType.IsMechanical()) {
 					return 0;
 				}
 
@@ -534,7 +522,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			var electricalWBaseCurrentResult =
 				VectoMath.Min(
-					BaseCoolingW_ElectricalCoolingHeating(env.Temperature, env.Solar), genInputs.ACSystem.CompressorCapacity) /
+					BaseCoolingW_ElectricalCoolingHeating(env.Temperature, env.Solar), genInputs.ACSystem.HVACMaxCoolingPower) /
 				genInputs.ACSystem.COP + BaseHeatingW_ElectricalVentilation(env.Temperature, env.Solar) +
 				BaseCoolingW_ElectricalVentilation(env.Temperature, env.Solar) +
 				BaseVentilationW_ElectricalVentilation(env.Temperature, env.Solar);
@@ -553,7 +541,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			// Dim C59 = genInputs.AC_COP 
 
 			var MechanicalWBaseCurrentResult = VectoMath.Min(
-													BaseCoolingW_Mechanical(env.Temperature, env.Solar), genInputs.ACSystem.CompressorCapacity) /
+													BaseCoolingW_Mechanical(env.Temperature, env.Solar), genInputs.ACSystem.HVACMaxCoolingPower) /
 												genInputs.ACSystem.COP;
 
 			return MechanicalWBaseCurrentResult * env.Weighting;
@@ -585,7 +573,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			var H94 = BaseCoolingW_ElectricalCoolingHeating(env.Temperature, env.Solar);
 			var H100 = TechListAdjustedCoolingW_ElectricalCoolingHeating;
-			var C54 = genInputs.ACSystem.CompressorCapacity;
+			var C54 = genInputs.ACSystem.HVACMaxCoolingPower;
 			var C59 = genInputs.ACSystem.COP;
 
 			var I93 = BaseHeatingW_ElectricalVentilation(env.Temperature, env.Solar);
@@ -607,7 +595,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			var F94 = BaseCoolingW_Mechanical(env.Temperature, env.Solar);
 			var F100 = TechListAdjustedCoolingW_Mechanical;
-			var C54 = genInputs.ACSystem.CompressorCapacity;
+			var C54 = genInputs.ACSystem.HVACMaxCoolingPower;
 			var C59 = genInputs.ACSystem.COP;
 
 			var MechanicalWBaseAdjusted = (VectoMath.Min((F94 * (1 - F100)), C54) / C59);

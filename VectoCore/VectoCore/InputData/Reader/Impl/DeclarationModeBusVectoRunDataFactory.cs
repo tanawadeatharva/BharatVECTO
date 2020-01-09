@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 							AxleGearData = _axlegearData,
 							AngledriveData = _angledriveData,
 							Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData,
-							vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass, vehicle.Length ?? mission.VehicleLength),
+								vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass, vehicle.Length ?? mission.VehicleLength),
 							Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 							Retarder = _retarderData,
 							DriverData = _driverdata,
@@ -95,6 +95,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 						};
 						simulationRunData.EngineData.FuelMode = modeIdx;
 						simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
+						simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(InputDataProvider.JobInputData.Vehicle, simulationRunData);
+							
 						yield return simulationRunData;
 					}
 				}

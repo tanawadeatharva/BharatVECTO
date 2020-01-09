@@ -12,6 +12,7 @@
 using System;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 	[Serializable()]
@@ -28,10 +29,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 
 		public ISSMInputs SSMInputs { get; internal set; }
 
-		public IActuationsMap ActuationsMap { get; internal set; }
+		//public IActuationsMap ActuationsMap { get; internal set; }
+		public IActuations Actuations { get; internal set; }
 
-		public string Cycle { get; internal set; }
-
+		
 		public IVehicleData VehicleData { get; internal set; }
 	
 		public IFuelConsumptionMap FuelMap { get; internal set; }
@@ -235,4 +236,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 		}
 
 	}
+
+	
 }

@@ -72,9 +72,6 @@ namespace TUGraz.VectoCore.Configuration
 
 		public static class BusAuxiliaries
 		{
-			public const string BrakeAndDoorsActuationKey = "Park brake + 2 doors";
-			public const string CycleTimeActuationKey = "CycleTime";
-
 			public static class SteadyStateModel
 			{
 				public static readonly Kelvin PassengerBoundaryTemperature = 17.0.DegCelsiusToKelvin();

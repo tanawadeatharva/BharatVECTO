@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					addReportResult: _mode == ExecutionMode.Declaration ? addReportResult : null,
 					writeEngineOnly: _engineOnlyMode,
 					filter: GetModDataFilter(data)) {
-					WriteAdvancedAux = data.AdvancedAux != null,
+					WriteAdvancedAux = data.BusAuxiliaries != null,
 					WriteModalResults = _mode != ExecutionMode.Declaration || WriteModalResults
 				};
 

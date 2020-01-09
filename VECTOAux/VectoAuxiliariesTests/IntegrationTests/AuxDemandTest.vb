@@ -41,7 +41,7 @@ Namespace IntegrationTests
             aux.Signals.EngineIdleSpeed = 560.RPMtoRad()
 
             dim auxConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, Utils.GetDefaultVehicleData(vehicleWeight.SI(Of Kilogram)))
-            CType(auxConfig, AuxiliaryConfig).Cycle = "Coach"
+            
             aux.Initialise(auxConfig, FuelData.Diesel) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 
             aux.Signals.ClutchEngaged = True
@@ -86,7 +86,6 @@ Namespace IntegrationTests
             aux.Signals.EngineIdleSpeed = 560.RPMtoRad()
 
             Dim auxCfg = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, Utils.GetDefaultVehicleData(12000.SI(Of Kilogram)()))
-            CType(auxCfg, AuxiliaryConfig).Cycle = "Coach"
             CType(auxCfg, AuxiliaryConfig).FuelMap = fuelMap
 
             CType(aux, AdvancedAuxiliaries).Initialise(auxCfg, FuelData.Diesel) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")

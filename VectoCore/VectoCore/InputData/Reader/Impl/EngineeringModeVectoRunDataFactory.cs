@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 						AirdragData = dao.CreateAirdragData(vehicle.Components.AirdragInputData, vehicle),
 						DriverData = driver,
 						Aux = dao.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData),
-						AdvancedAux = dao.CreateAdvancedAuxData(vehicle.Components.AuxiliaryInputData),
+						BusAuxiliaries = dao.CreateAdvancedAuxData(vehicle.Components.AuxiliaryInputData),
 						Retarder = dao.CreateRetarderData(vehicle.Components.RetarderInputData),
 						PTO = ptoTransmissionData,
 						Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),

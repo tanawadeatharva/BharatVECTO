@@ -71,7 +71,7 @@ Namespace UnitTests
         <TestCase("AuxHeater")>
         Public Sub InstantiateDefaultSSMGenInputsTest(section As String)
 
-            Dim dao = New DeclarationDataAdapterTruck()
+            Dim dao = New DeclarationDataAdapterPrimaryBus()
             Dim target As ISSMInputs = dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(), FuelData.Diesel)
 
             If section = "BusParameterisation" Then
@@ -102,12 +102,12 @@ Namespace UnitTests
                 Assert.AreEqual(3.0R, target.BoundaryConditions.UValue.Value())
                 Assert.AreEqual(18, target.BoundaryConditions.HeatingBoundaryTemperature.AsDegCelsius)
                 Assert.AreEqual(23, target.BoundaryConditions.CoolingBoundaryTemperature.AsDegCelsius)
-                Assert.AreEqual(20, target.BoundaryConditions.HighVentilation.Value()*3600)
-                Assert.AreEqual(7, target.BoundaryConditions.LowVentilation.Value()*3600)
-                Assert.AreEqual(1236.25, Math.Round(target.BoundaryConditions.HighVolumeExchange.Value()*3600, 2))
-                Assert.AreEqual(432.69, Math.Round(target.BoundaryConditions.LowVolumeExchange.Value()*3600, 2))
-                Assert.AreEqual(692.3, Math.Round(target.BoundaryConditions.HighVentPower.Value(), 2))
-                Assert.AreEqual(242.3, Math.Round(target.BoundaryConditions.LowVentPower.Value(), 2))
+                Assert.AreEqual(20, target.BoundaryConditions.VentilationRate.Value()*3600)
+                'Assert.AreEqual(7, target.BoundaryConditions.LowVentilation.Value()*3600)
+                Assert.AreEqual(1236.25, Math.Round(target.BoundaryConditions.VolumeExchange.Value()*3600, 2))
+                'Assert.AreEqual(432.69, Math.Round(target.BoundaryConditions.LowVolumeExchange.Value()*3600, 2))
+                Assert.AreEqual(692.3, Math.Round(target.BoundaryConditions.VentPower.Value(), 2))
+                'Assert.AreEqual(242.3, Math.Round(target.BoundaryConditions.LowVentPower.Value(), 2))
                 Assert.AreEqual(0.56R, target.BoundaryConditions.SpecificVentilationPower.Value()/3600)
                 Assert.AreEqual(0.84, target.BoundaryConditions.AuxHeaterEfficiency)
                 Assert.AreEqual(42700.0/3600.0, target.BoundaryConditions.GCVDieselOrHeatingOil.Value()/3600.0/1000.0)
@@ -130,8 +130,8 @@ Namespace UnitTests
             If section = "AC-System" Then
                 'AC-SYSTEM
                 '*********
-                Assert.AreEqual(ACCompressorType.TwoStage, target.ACSystem.CompressorType)
-                Assert.AreEqual(18, target.ACSystem.CompressorCapacity.Value()/1000.0)
+                Assert.AreEqual(ACCompressorType.TwoStage, target.ACSystem.HVACCompressorType)
+                Assert.AreEqual(18, target.ACSystem.HVACMaxCoolingPower.Value()/1000.0)
                 Assert.AreEqual(3.5, target.ACSystem.COP)
             End If
 
@@ -141,9 +141,9 @@ Namespace UnitTests
                 Assert.Areequal(True, target.Ventilation.VentilationOnDuringHeating)
                 Assert.Areequal(True, target.Ventilation.VentilationWhenBothHeatingAndACInactive)
                 Assert.Areequal(True, target.Ventilation.VentilationDuringAC)
-                Assert.Areequal(VentilationLevel.High, target.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive)
-                Assert.Areequal(VentilationLevel.High, target.Ventilation.VentilationDuringHeating)
-                Assert.AreEqual(VentilationLevel.High, target.Ventilation.VentilationDuringCooling)
+                'Assert.Areequal(VentilationLevel.High, target.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive)
+                'Assert.Areequal(VentilationLevel.High, target.Ventilation.VentilationDuringHeating)
+                'Assert.AreEqual(VentilationLevel.High, target.Ventilation.VentilationDuringCooling)
 
             End If
 
@@ -560,7 +560,7 @@ Namespace UnitTests
             Const filePath As String = "SSMTOOLTestSaveRetreive.json"
             Dim success As Boolean
 
-            Dim dao = New DeclarationDataAdapterTruck()
+            Dim dao = New DeclarationDataAdapterPrimaryBus()
             Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(),
                                                                              FuelData.Diesel))
 
@@ -569,9 +569,9 @@ Namespace UnitTests
             Assert.IsTrue(success)
 
             'change something
-            CType(target.SSMInputs.BoundaryConditions, SSMInputs).HighVentilation = 202.202.SI (Of PerSecond)
+            CType(target.SSMInputs.BoundaryConditions, SSMInputs).VentilationRate = 202.202.SI (Of PerSecond)
 
-            Assert.AreEqual(202.202, target.SSMInputs.BoundaryConditions.HighVentilation.Value(), 1e-3)
+            Assert.AreEqual(202.202, target.SSMInputs.BoundaryConditions.VentilationRate.Value(), 1e-3)
 
             'Retreive
             'success = target.Load(filePath)
@@ -584,7 +584,7 @@ Namespace UnitTests
             end try
             Assert.IsTrue(success)
 
-            Assert.AreEqual(20.SI(Unit.SI.Per.Hour).Value(), target.SSMInputs.BoundaryConditions.HighVentilation.Value(),
+            Assert.AreEqual(20.SI(Unit.SI.Per.Hour).Value(), target.SSMInputs.BoundaryConditions.VentilationRate.Value(),
                             1e-3)
         End Sub
 

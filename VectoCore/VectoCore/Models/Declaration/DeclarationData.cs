@@ -40,6 +40,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -178,19 +179,27 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			
-			//public static IPneumaticUserInputsConfig DefaultPneumaticUserConfig { get; }
+			public static void SetHVACParameters(SSMInputs ssmInputs, BusHVACSystemConfiguration hvacSystemConfig)
+			{
+				switch (hvacSystemConfig) {
+					case BusHVACSystemConfiguration.Unknown: break;
+					case BusHVACSystemConfiguration.Configuration1: 
+					case BusHVACSystemConfiguration.Configuration2:
+						ssmInputs.VentilationRate = Constants.BusAuxiliaries.SteadyStateModel.LowVentilation;
+						break;
+					case BusHVACSystemConfiguration.Configuration3: 
+					case BusHVACSystemConfiguration.Configuration4: 
+					case BusHVACSystemConfiguration.Configuration5: 
+					case BusHVACSystemConfiguration.Configuration6: 
+					case BusHVACSystemConfiguration.Configuration7: 
+					case BusHVACSystemConfiguration.Configuration8: 
+					case BusHVACSystemConfiguration.Configuration9:
+						ssmInputs.VentilationRate = Constants.BusAuxiliaries.SteadyStateModel.HighVentilation;
+						break;
+					default: throw new ArgumentOutOfRangeException(nameof(hvacSystemConfig), hvacSystemConfig, null);
+				}
+			}
 
-			public static IHVACUserInputsConfig DefaultHVACUserConfig { get; }
-
-			//public static IAuxiliaryConfig DefaultAuxiliaryConfig 
-			//{
-			//	get {
-			//		return busAuxConfig ?? (busAuxConfig = new AuxiliaryConfig(
-			//					DefaultElectricUserConfig, DefaultPneumaticAuxConfig, DefaultPneumaticUserConfig, DefaultHVACUserConfig,
-			//					SSMDefaultValues));
-			//	}
-			//}
 		}
 
 		public static class Driver

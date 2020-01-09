@@ -59,12 +59,9 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		Kelvin HeatingBoundaryTemperature { get; }
 		Kelvin CoolingBoundaryTemperature { get; }
 		Kelvin TemperatureCoolingTurnsOff { get; }
-		PerSecond HighVentilation { get; }
-		PerSecond LowVentilation { get; }
-		CubicMeterPerSecond HighVolumeExchange { get; }
-		CubicMeterPerSecond LowVolumeExchange { get; }
-		Watt HighVentPower { get; }
-		Watt LowVentPower { get; }
+		PerSecond VentilationRate { get; }
+		CubicMeterPerSecond VolumeExchange { get; }
+		Watt VentPower { get; }
 		JoulePerCubicMeter SpecificVentilationPower { get; }
 		double AuxHeaterEfficiency { get; }
 		JoulePerKilogramm GCVDieselOrHeatingOil { get; }
@@ -90,8 +87,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	public interface IACSystem
 	{
 		// AC-system				            
-		ACCompressorType CompressorType { get; }
-		Watt CompressorCapacity { get; }
+		ACCompressorType HVACCompressorType { get; }
+		Watt HVACMaxCoolingPower { get; }
 		double COP { get; }
 	}
 
@@ -102,9 +99,10 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 		bool VentilationWhenBothHeatingAndACInactive { get; }
 		bool VentilationDuringAC { get; set; }
-		VentilationLevel VentilationFlowSettingWhenHeatingAndACInactive { get; }
-		VentilationLevel VentilationDuringHeating { get; }
-		VentilationLevel VentilationDuringCooling { get; }
+
+		//VentilationLevel VentilationFlowSettingWhenHeatingAndACInactive { get; }
+		//VentilationLevel VentilationDuringHeating { get; }
+		//VentilationLevel VentilationDuringCooling { get; }
 	}
 
 	public enum VentilationLevel
