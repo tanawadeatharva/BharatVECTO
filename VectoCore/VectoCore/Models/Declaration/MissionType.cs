@@ -30,29 +30,12 @@
 */
 
 using System;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public enum MissionType
-	{
-		LongHaul,
-		LongHaulEMS,
-		RegionalDelivery,
-		RegionalDeliveryEMS,
-		UrbanDelivery,
-		MunicipalUtility,
-		Construction,
-		HeavyUrban,
-		Urban,
-		Suburban,
-		Interurban,
-		Coach,
-		VerificationTest,
-		ExemptedMission
-	}
-
 	public static class MissionTypeHelper
 	{
 		public static string GetName(this MissionType self)

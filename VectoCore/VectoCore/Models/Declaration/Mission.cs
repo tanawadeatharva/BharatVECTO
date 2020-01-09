@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
