@@ -2518,7 +2518,7 @@ ToDo: -0.00
 			<xs:enumeration value="8.5 R17.5"/>
 			<xs:enumeration value="8 R17.5"/>
 			<xs:enumeration value="LT265/75 R16"/>
-			<xs:enumeration value="385/55 R19.5"/>	
+			<xs:enumeration value="385/55 R19.5"/>
 			<xs:enumeration value="24 R21"/>
 			<xs:enumeration value="205/70 R15C"/>
 			<xs:enumeration value="215/70 R15C"/>

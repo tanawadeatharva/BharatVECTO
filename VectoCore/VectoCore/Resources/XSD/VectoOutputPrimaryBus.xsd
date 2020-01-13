@@ -59,6 +59,11 @@
 			<xs:element name="Data" type="AbstractAngledriveDataPIFType"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="AuxiliariesPIFType">
+		<xs:sequence>
+			<xs:element name="Data" type="v2.6:AbstractPrimaryVehicleAuxiliaryDataDeclarationType"/>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="AxlegearDataPIFType">
 		<xs:complexContent>
 			<xs:extension base="AbstractAxlegearDataPIFType">
@@ -639,9 +644,4 @@
 			<xs:enumeration value="km/h"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:complexType name="AuxiliariesPIFType">
-		<xs:sequence>
-			<xs:element name="Data" type="v2.6:AbstractAuxiliaryDataHeavyBusDeclarationType"/>
-		</xs:sequence>
-	</xs:complexType>
 </xs:schema>
