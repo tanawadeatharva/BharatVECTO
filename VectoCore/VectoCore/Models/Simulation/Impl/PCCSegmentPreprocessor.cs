@@ -64,6 +64,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				if (!tuple.Item1.VehicleTargetSpeed.IsGreaterOrEqual(PCCDriverData.PCCEnableSpeed)) {
 					// only consider pcc segments where the target speed is at least the pcc-enable speed
+					targetspeedChanged = tuple.Item2.Distance;
 					pccSegment = null;
 					continue;
 				}
@@ -97,7 +98,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						DistanceMinSpeed = tuple.Item1.Distance,
 						StartDistance =
 							tuple.Item1.Distance - VectoMath.Min(
-								tuple.Item1.Distance - targetspeedChanged,
+								tuple.Item1.Distance - targetspeedChanged - 1.SI<Meter>(),
 								PCCDriverData.PreviewDistanceUseCase1), // PCCDriverData.PreviewDistanceUseCase1,
 						TargetSpeed = tuple.Item1.VehicleTargetSpeed,
 						Altitude = tuple.Item1.Altitude,
