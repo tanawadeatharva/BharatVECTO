@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCommon.Utils;
+﻿using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 	public class Actuations : IActuations

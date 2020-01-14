@@ -95,36 +95,36 @@ Namespace Pneumatics
             End Sub, Throws.InstanceOf (Of ArgumentException))
         End Sub
 
-        <Test()>
-        <TestCase("Brakes", "Heavy urban", 191)>
-        <TestCase("Brakes", "Urban", 153)>
-        <TestCase("Brakes", "Suburban", 49)>
-        <TestCase("Brakes", "Interurban", 190)>
-        <TestCase("Brakes", "Coach", 27)>
-        <TestCase("Park brake + 2 doors", "Heavy urban", 82)>
-        <TestCase("Park brake + 2 doors", "Urban", 75)>
-        <TestCase("Park brake + 2 doors", "Suburban", 25)>
-        <TestCase("Park brake + 2 doors", "Interurban", 9)>
-        <TestCase("Park brake + 2 doors", "Coach", 6)>
-        <TestCase("Kneeling", "Heavy urban", 27)>
-        <TestCase("Kneeling", "Urban", 25)>
-        <TestCase("Kneeling", "Suburban", 6)>
-        <TestCase("Kneeling", "Interurban", 0)>
-        <TestCase("Kneeling", "Coach", 0)>
-        Public Sub ValueLookupTest(key As String, cycle As String, expected As Integer)
+        '<Test()>
+        '<TestCase("Brakes", "Heavy urban", 191)>
+        '<TestCase("Brakes", "Urban", 153)>
+        '<TestCase("Brakes", "Suburban", 49)>
+        '<TestCase("Brakes", "Interurban", 190)>
+        '<TestCase("Brakes", "Coach", 27)>
+        '<TestCase("Park brake + 2 doors", "Heavy urban", 82)>
+        '<TestCase("Park brake + 2 doors", "Urban", 75)>
+        '<TestCase("Park brake + 2 doors", "Suburban", 25)>
+        '<TestCase("Park brake + 2 doors", "Interurban", 9)>
+        '<TestCase("Park brake + 2 doors", "Coach", 6)>
+        '<TestCase("Kneeling", "Heavy urban", 27)>
+        '<TestCase("Kneeling", "Urban", 25)>
+        '<TestCase("Kneeling", "Suburban", 6)>
+        '<TestCase("Kneeling", "Interurban", 0)>
+        '<TestCase("Kneeling", "Coach", 0)>
+        'Public Sub ValueLookupTest(key As String, cycle As String, expected As Integer)
 
-            Dim target = ActuationsMapReader.Read(cstrPneumaticActuationsMapPath_GOODMAP)
+        '    Dim target = ActuationsMapReader.Read(cstrPneumaticActuationsMapPath_GOODMAP)
 
-            'target.Initialise()
-            Dim actual As Integer
+        '    'target.Initialise()
+        '    Dim actual As Integer
 
-            Try
-                actual = target.GetNumActuations(New ActuationsKey(key, cycle))
-            Catch ex As Exception
+        '    Try
+        '        actual = target.GetNumActuations(New ActuationsKey(key, cycle))
+        '    Catch ex As Exception
 
-            End Try
-            Assert.AreEqual(expected, actual)
-        End Sub
+        '    End Try
+        '    Assert.AreEqual(expected, actual)
+        'End Sub
     End Class
 End Namespace
 

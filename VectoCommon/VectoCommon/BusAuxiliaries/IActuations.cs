@@ -1,6 +1,6 @@
 ﻿using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Models.BusAuxiliaries
+namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IActuations
 	{
