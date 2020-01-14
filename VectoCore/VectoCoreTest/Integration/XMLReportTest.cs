@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
-			var xmlReport = new XMLDeclarationReport(null, writer);
+			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Integration
         {
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
             var writer = new FileOutputWriter(jobfile);
-            var xmlReport = new XMLDeclarationReport(null, writer);
+            var xmlReport = new XMLDeclarationReport(writer);
             var sumData = new SummaryDataContainer(writer);
             var jobContainer = new JobContainer(sumData);
 
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
-			var xmlReport = new XMLDeclarationReport(null, writer);
+			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 
@@ -249,7 +249,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 					var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 
 					var writer = new FileOutputWriter(jobfile);
-					var xmlReport = new XMLDeclarationReport(null, writer);
+					var xmlReport = new XMLDeclarationReport(writer);
 					var sumData = new SummaryDataContainer(writer);
 					var jobContainer = new JobContainer(sumData);
 
@@ -281,7 +281,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
-			var xmlReport = new XMLDeclarationReport(null, writer);
+			var xmlReport = new XMLDeclarationReport(writer);
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 

@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
 
-		public void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
+		public virtual void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
 			var exempted = modelData.Exempted;
 			VehiclePart.Add(
@@ -82,8 +82,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
-				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleWeight, XMLNames.Unit_t, 1)),
-				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbWeight, XMLNames.Unit_kg)),
+				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleMass, XMLNames.Unit_t, 1)),
+				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbMass, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 				new XElement(tns + XMLNames.Vehicle_HybridElectricHDV, modelData.VehicleData.HybridElectricHDV),
 				new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle),
@@ -409,7 +409,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					XmlConvert.ToString(DateTime.Now, XmlDateTimeSerializationMode.Utc)));
 		}
 
-		public void GenerateReport()
+		public virtual void GenerateReport()
 		{
 			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 			var retVal = new XDocument();
@@ -440,6 +440,6 @@ namespace TUGraz.VectoCore.OutputData.XML
 			Report = h.AddHash();
 		}
 
-		public XDocument Report { get; private set; }
+		public virtual XDocument Report { get; private set; }
 	}
 }

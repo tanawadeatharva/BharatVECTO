@@ -21,12 +21,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		public IInputDataProvider Create(string filename)
 		{
-			return ReadXmlDoc(XmlReader.Create(filename), filename);
+			using (var reader = XmlReader.Create(filename)) {
+				return ReadXmlDoc(reader, filename);
+			}
 		}
 
 		public IInputDataProvider Create(Stream inputData)
 		{
-			return ReadXmlDoc(XmlReader.Create(inputData), null);
+			using (var reader = XmlReader.Create(inputData)) {
+				return ReadXmlDoc(reader, null);
+			}
 		}
 
 		public IInputDataProvider Create(XmlReader inputData)
@@ -36,13 +40,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		public IEngineeringInputDataProvider CreateEngineering(string filename)
 		{
-			return DoCreateEngineering(XmlReader.Create(filename), filename);
+			using (var reader = XmlReader.Create(filename)) {
+				return DoCreateEngineering(reader, filename);
+			}
 		}
 
 
 		public IEngineeringInputDataProvider CreateEngineering(Stream inputData)
 		{
-			return DoCreateEngineering(XmlReader.Create(inputData), null);
+			using (var reader = XmlReader.Create(inputData)) {
+				return DoCreateEngineering(reader, null);
+			}
 		}
 
 		public IEngineeringInputDataProvider CreateEngineering(XmlReader inputData)
@@ -53,7 +61,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 
 		public IDeclarationInputDataProvider CreateDeclaration(string filename)
 		{
-			return DoCreateDeclaration(XmlReader.Create(filename), filename);
+			using (var reader = XmlReader.Create(filename)) {
+				return DoCreateDeclaration(reader, filename);
+			}
 		}
 
 		public IDeclarationInputDataProvider CreateDeclaration(XmlReader inputData)

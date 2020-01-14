@@ -37,9 +37,7 @@ using System.Xml;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
-using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
-using TUGraz.VectoHashing;
 using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace HashingTool.ViewModel.UserControl

@@ -139,7 +139,7 @@ namespace TUGraz.VectoCore.OutputData
 				var entry = new T();
 				entry.FuelData = runData.EngineData.Fuels.Select(x => x.FuelData).ToList();
 				entry.Payload = runData.VehicleData.Loading;
-				entry.TotalVehicleWeight = runData.VehicleData.TotalVehicleWeight;
+				entry.TotalVehicleWeight = runData.VehicleData.TotalVehicleMass;
 				entry.CargoVolume = runData.VehicleData.CargoVolume;
 
 				missions[mission.MissionType].ResultEntry[loading] = entry;
@@ -149,6 +149,15 @@ namespace TUGraz.VectoCore.OutputData
 
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
+		protected void WriteResults()
+		{
+			_resultCount--;
+			if (_resultCount == 0) {
+				DoWriteReport();
+				Flc = null;
+			}
+		}
+
 		public void AddResult(LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData,
 			IModalDataContainer modData)
 		{
@@ -161,16 +170,13 @@ namespace TUGraz.VectoCore.OutputData
 			if (mission.MissionType != MissionType.ExemptedMission && !Missions[fuelMode][mission.MissionType].ResultEntry.ContainsKey(loadingType)) {
 				throw new VectoException("Unknown loading type {0} for mission {1}", loadingType, mission.MissionType);
 			}
-			_resultCount--;
+			
 
 			if (mission.MissionType != MissionType.ExemptedMission) {
 				DoAddResult(Missions[fuelMode][mission.MissionType].ResultEntry[loadingType], runData, modData);
 			}
 
-			if (_resultCount == 0) {
-				DoWriteReport();
-				Flc = null;
-			}
+			WriteResults();
 		}
 
 		/// <summary>

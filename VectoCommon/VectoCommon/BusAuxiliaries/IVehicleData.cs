@@ -6,7 +6,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 		string ModelName { get; }
 		double PassengerCount { get; }
 
-		Kilogram TotalVehicleWeight { get; }
+		Kilogram TotalVehicleMass { get; }
 		FloorType FloorType { get; }
 		bool DoubleDecker { get; }
 		Meter Length { get; }

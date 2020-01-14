@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;BETA_RELEASE</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
@@ -76,7 +76,8 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>CERTIFICATION_RELEASE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
@@ -140,6 +141,7 @@
     <Compile Include="InputData\FileIO\JSON\IJSONVehicleComponents.cs" />
     <Compile Include="InputData\FileIO\JSON\JSONComponentInputData.cs" />
     <Compile Include="InputData\FileIO\JSON\JsonExtensionMethods.cs" />
+    <Compile Include="InputData\FileIO\JSON\JSONTCUData.cs" />
     <Compile Include="InputData\FileIO\JSON\SSMInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\AbstractCommonComponentType.cs" />
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLResource.cs" />
@@ -217,6 +219,7 @@
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringJobInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringOverspeed.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringPCCInputDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringRetarderDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringTorqueConverterDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\DataProvider\XMLEngineeringVehicleComponentsDataProvider.cs" />
@@ -238,6 +241,7 @@
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringGearshiftData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringJobInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringPCCInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringVehicleComponentsData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringVehicleData.cs" />
     <Compile Include="InputData\FileIO\XML\Engineering\Interfaces\IXMLEngineeringEngineStopStartData.cs" />
@@ -266,6 +270,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="Models\Declaration\ADASCombination.cs" />
     <Compile Include="InputData\Reader\ComponentData\AlternatorReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\CompressorMapReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\ElectricConsumerReader.cs" />
@@ -352,6 +357,9 @@
     <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Impl\StopStartCombustionEngine.cs" />
     <Compile Include="Models\Simulation\DataBus\IEngineControl.cs" />
+    <Compile Include="Models\Simulation\Impl\PCCEcoRollEngineStopPreprocessor.cs" />
+    <Compile Include="Models\Simulation\Impl\PCCSegmentPreprocessor.cs" />
+    <Compile Include="Models\Simulation\ISimulationPreprocessor.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactory.cs" />
     <Compile Include="Models\Simulation\ISimulatorFactoryFactory.cs" />
     <Compile Include="Models\Simulation\SimulationFactoryNinjectModule.cs" />
@@ -422,6 +430,17 @@
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\EngineOnlyVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\ComponentData\ShiftPolygonReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShiftStrategyInterfaces.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShareTorque99lLookup.cs" />
+    <Compile Include="InputData\Reader\ShiftStrategy\ShareTorque99lLookupReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\AccelerationReserveLookup.cs" />
+    <Compile Include="InputData\Reader\ShiftStrategy\AccelerationReserveLookupReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\EngineSpeedHighFactorLookup.cs" />
+    <Compile Include="InputData\Reader\ShiftStrategy\EngineSpeedHighLookupReader.cs" />
+    <Compile Include="InputData\Reader\ShiftStrategy\LookupDataReader.cs" />
+    <Compile Include="InputData\Reader\ShiftStrategy\PredictionDurationLookupReader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\ShareIdleLowLookup.cs" />
+    <Compile Include="InputData\Reader\ShiftStrategy\ShareIdleLowReader.cs" />
     <Compile Include="Models\Declaration\AuxDemandEntry.cs" />
     <Compile Include="Models\Declaration\AuxiliaryTypeHelper.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
@@ -438,16 +457,33 @@
     <Compile Include="Models\SimulationComponent\Data\AngledriveData.cs" />
     <Compile Include="InputData\Reader\ComponentData\FuelConsumptionMapReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\PredictionDurationLookup.cs" />
     <Compile Include="Models\SimulationComponent\ILossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\PTOLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AbstractGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategyOptimized.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AMTShiftStrategyACEA.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ShiftStrategy\AverageAccelerationTorqueLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategyOptimized.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ATShiftStrategyVoith.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AverageAccelerationTorquePreprocessor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\BaseShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CycleTorqueConverter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DrivingCycleEnumerator.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineFanAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\EngineSpeedDriveOffPreprocessor.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\GearRating.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxCardanTorqueLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxCardanTorquePreprocessor.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxGradabilityLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MaxGradabilityPreprocessor.cs" />
+    <Compile Include="Utils\SchmittTrigger.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\SimplePowertrainContainer.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TorqueConverterWrapper.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\VelocityRollingLookup.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\VelocitySpeedGearshiftPreprocessor.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MeasuredSpeedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\PTOCycleController.cs" />
@@ -458,6 +494,7 @@
     <Compile Include="Models\Simulation\Data\ModalResultField.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringVTPModeVectoRunDataFactory.cs" />
     <Compile Include="Models\SimulationComponent\Impl\VTPCycle.cs" />
+    <Compile Include="Models\Simulation\Data\ShiftStrategyParameters.cs" />
     <Compile Include="Models\Simulation\Impl\ExemptedRun.cs" />
     <Compile Include="OutputData\XML\XMLMonitoringReport.cs" />
     <Compile Include="OutputData\XML\XMLVTPReport.cs" />
@@ -470,6 +507,7 @@
     <Compile Include="OutputData\XML\XMLDeclarationReport.cs" />
     <Compile Include="OutputData\XML\XMLDeclarationWriter.cs" />
     <Compile Include="OutputData\XML\XMLManufacturerReport.cs" />
+    <Compile Include="Utils\Interpolate2D.cs" />
     <Compile Include="Utils\DataIntegrityHelper.cs" />
     <Compile Include="Utils\MeanShiftClustering.cs" />
     <Compile Include="Utils\ProviderExtensions.cs" />
@@ -661,7 +699,6 @@
     <EmbeddedResource Include="Resources\Declaration\Payloads.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Axles.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\PTO-tech.csv" />
-    <EmbeddedResource Include="Resources\Declaration\TorqueConverter.csv" />
     <EmbeddedResource Include="Resources\XSD\ParameterDocumentation.xsd">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -713,6 +750,11 @@
     <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.6.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\PredictionTimeLookup.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\AccelerationReserveLookup.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareEngineSpeedHigh.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareIdleLow.csv" />
+    <EmbeddedResource Include="Resources\Declaration\GearshiftParameters\ShareTq99L.csv" />
     <EmbeddedResource Include="Resources\XSD\VectoOutputManufacturer.0.7.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -788,6 +830,9 @@
     <EmbeddedResource Include="Resources\XSD\VectoEngineeringDefinitions.1.1.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\ADAS\ADAS_Combinations.csv" />
+    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.3_DEV.xsd">
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Declaration\Buses\ElectricConsumers.csv" />
     <EmbeddedResource Include="Resources\Declaration\Buses\SSMTechList.csv" />
     <EmbeddedResource Include="Resources\Declaration\Buses\SSMDefaults.AHSM" />
@@ -809,9 +854,6 @@
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.ACMP" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP" />
-    <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.3_DEV.xsd">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>

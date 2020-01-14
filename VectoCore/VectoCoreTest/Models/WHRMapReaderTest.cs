@@ -1,16 +1,15 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Xml;
-using System.Xml.XPath;
 using Ninject;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -39,21 +38,64 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 		[TestCase]
-		public void TestWHRMapCSVData()
+		public void TestWHRMapCSVDataElectric()
 		{
 
-			var data = "engine speed, torque, fuel consumption, whr power \n" +
+			var data = "engine speed, torque, fuel consumption, whr power electric\n" +
 						"600, -100, 0, 100\n" +
 						"600, 500, 200, 400\n" +
 						"2400, -100, 0, 100\n" +
 						"2400, 500, 200, 400";
 
-			var whrMap = WHRPowerReader.Create(VectoCSVFile.ReadStream(data.ToStream()));
+			var whrMap = WHRPowerReader.Create(VectoCSVFile.ReadStream(data.ToStream()), WHRType.ElectricalOutput);
 			var result = whrMap.GetWHRPower(500.SI<NewtonMeter>(), 600.RPMtoRad(), true);
 
 			Assert.IsFalse(result.Extrapolated);
-			Assert.AreEqual(400, result.ElectricPower.Value());
+			Assert.AreEqual(400, result.GeneratedPower.Value());
 		}
+
+		[TestCase]
+		public void TestWHRMapCSVDataMechanical()
+		{
+
+			var data = "engine speed, torque, fuel consumption, whr power mechanical\n" +
+						"600, -100, 0, 100\n" +
+						"600, 500, 200, 400\n" +
+						"2400, -100, 0, 100\n" +
+						"2400, 500, 200, 400";
+
+			var whrMap = WHRPowerReader.Create(VectoCSVFile.ReadStream(data.ToStream()), WHRType.MechanicalOutputDrivetrain);
+			var result = whrMap.GetWHRPower(500.SI<NewtonMeter>(), 600.RPMtoRad(), true);
+
+			Assert.IsFalse(result.Extrapolated);
+			Assert.AreEqual(400, result.GeneratedPower.Value());
+		}
+
+
+		[TestCase]
+		public void TestWHRMapCSVDataElectricAndMechanical()
+		{
+
+			var data = "engine speed, torque, fuel consumption, whr power electric, whr power mechanical\n" +
+						" 600, -100,   0,  50, 100\n" +
+						" 600,  500, 200, 200, 400\n" +
+						"2400, -100,   0, 100, 100\n" +
+						"2400,  500, 200, 200, 400";
+
+			var whrMapEl = WHRPowerReader.Create(VectoCSVFile.ReadStream(data.ToStream()), WHRType.ElectricalOutput);
+			var resultEl = whrMapEl.GetWHRPower(500.SI<NewtonMeter>(), 600.RPMtoRad(), true);
+
+			Assert.IsFalse(resultEl.Extrapolated);
+			Assert.AreEqual(200, resultEl.GeneratedPower.Value());
+
+			var whrMapMech = WHRPowerReader.Create(VectoCSVFile.ReadStream(data.ToStream()), WHRType.MechanicalOutputDrivetrain);
+			var resultMech = whrMapMech.GetWHRPower(500.SI<NewtonMeter>(), 600.RPMtoRad(), true);
+
+			Assert.IsFalse(resultMech.Extrapolated);
+			Assert.AreEqual(400, resultMech.GeneratedPower.Value());
+
+		}
+
 
 		[TestCase()]
 		public void ReadXMLSingleFuelEngWithWHR()
@@ -65,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var runs = dao.NextRun().ToArray();
 			Assert.AreEqual(10, runs.Length);
 
-			Assert.IsTrue(runs.All(x => x.EngineData.WHRData?.WHRMap != null));
+			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR?.WHRMap != null));
 		}
 
 
@@ -85,9 +127,10 @@ namespace TUGraz.VectoCore.Tests.Models
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			
 			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			var runs = dao.NextRun().ToArray();
-
-			Assert.IsTrue(runs.All(x => x.EngineData.WHRData == null));
+			AssertHelper.Exception<VectoXMLException>(
+				() => {
+					var runs = dao.NextRun().ToArray();
+				}, "WHR electric power provided but no correction factors found.");
 		}
 
 		[TestCase()]
@@ -108,9 +151,10 @@ namespace TUGraz.VectoCore.Tests.Models
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 
 			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			var runs = dao.NextRun().ToArray();
-
-			Assert.IsTrue(runs.All(x => x.EngineData.WHRData == null));
+			AssertHelper.Exception<VectoXMLException>(
+				() => {
+					var runs = dao.NextRun().ToArray();
+				}, "WHR correction factors provided but electricPower missing for some entries.");
 		}
 
 		[TestCase()]
@@ -132,10 +176,10 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			AssertHelper.Exception<VectoException>(
+			AssertHelper.Exception<VectoXMLException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
-				}, "WHRData has to be provided for every entry in the FC-Map! n: 560.00, T: 400.00");
+				}, "WHR correction factors provided but electricPower missing for some entries.");
 		}
 
 		[TestCase()]
@@ -148,7 +192,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var runs = dao.NextRun().ToArray();
 			Assert.AreEqual(10, runs.Length);
 
-			Assert.IsTrue(runs.All(x => x.EngineData.WHRData?.WHRMap != null));
+			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR?.WHRMap != null));
 		}
 
 		[TestCase()]
@@ -167,10 +211,9 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			AssertHelper.Exception<VectoException>(
-				() => {
-					var runs = dao.NextRun().ToArray();
-				}, "WHRData (correction factors) can only be defined for one fuel!");
+			var runs = dao.NextRun().ToArray();
+			
+			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR?.WHRMap != null));
 		}
 
 		[TestCase()]
@@ -193,7 +236,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			AssertHelper.Exception<VectoException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
-				}, "WHRData (electric power) can only be defined for one fuel!");
+				}, "WHRData (electricPower) can only be defined for one fuel!");
 		}
 
 		[TestCase()]
@@ -218,10 +261,10 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			AssertHelper.Exception<VectoException>(
+			AssertHelper.Exception<VectoXMLException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
-				}, "Correction Factors and WHR-Map have to be defined for the same fuel!");
+				}, "WHR correction factors provided but electricPower missing for some entries.");
 		}
 
 		[TestCase()]
@@ -243,10 +286,10 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			AssertHelper.Exception<VectoException>(
+			AssertHelper.Exception<VectoXMLException>(
 				() => {
 					var runs = dao.NextRun().ToArray();
-				}, "WHRData has to be provided for every entry in the FC-Map! n: 560.00, T: 400.00");
+				}, "WHR correction factors provided but electricPower missing for some entries.");
 		}
 
 		[TestCase()]
@@ -264,9 +307,9 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			var runs = dao.NextRun().ToArray();
-
-			Assert.IsTrue(runs.All(x => x.EngineData.WHRData == null));
+			//var runs = dao.NextRun().ToArray();
+			AssertHelper.Exception<VectoXMLException>(() => { var tmp = dao.NextRun().ToArray(); });
+			
 		}
 
 		[TestCase()]
@@ -287,9 +330,9 @@ namespace TUGraz.VectoCore.Tests.Models
 			var modified = XmlReader.Create(new StringReader(nav.OuterXml));
 			var inputDataProvider = xmlInputReader.CreateDeclaration(modified);
 			var dao = new DeclarationModeTruckVectoRunDataFactory(inputDataProvider, new NullDeclarationReport());
-			var runs = dao.NextRun().ToArray();
-
-			Assert.IsTrue(runs.All(x => x.EngineData.WHRData == null));
+			//var runs = dao.NextRun().ToArray();
+			//Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR == null));
+			AssertHelper.Exception<VectoXMLException>(() => { var tmp = dao.NextRun().ToArray(); });
 		}
 
 
@@ -302,7 +345,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var runs = dao.NextRun().ToArray();
 			Assert.AreEqual(1, runs.Length);
 
-			Assert.IsTrue(runs.All(x => x.EngineData.WHRData?.WHRMap != null));
+			Assert.IsTrue(runs.All(x => x.EngineData.ElectricalWHR?.WHRMap != null));
 		}
 	}
 }

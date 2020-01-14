@@ -39,7 +39,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
@@ -263,12 +262,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.IsTrue(jobContainer.Runs.All(r => r.Success), string.Concat(jobContainer.Runs.Select(r => r.ExecException)));
 			var view = new DataView(sumData.Table, "", SummaryDataContainer.SORT, DataViewRowState.CurrentRows).ToTable();
 			Console.WriteLine(string.Join("; ", view.AsEnumerable().Select(x => x[string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble())));
-			Assert.AreEqual(201.39195, view.Rows[0][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(239.50432, view.Rows[1][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(170.18354, view.Rows[2][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(183.06159, view.Rows[3][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(224.78226, view.Rows[4][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
-			Assert.AreEqual(255.02202, view.Rows[5][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(201.36198, view.Rows[0][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(239.27755, view.Rows[1][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(169.73973, view.Rows[2][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(182.82455, view.Rows[3][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(220.11800, view.Rows[4][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
+			Assert.AreEqual(251.10194, view.Rows[5][string.Format(SummaryDataContainer.FCMAP_KM, "")].ToString().ToDouble(), 1e-3);
 		}
 
 		[TestCase(EngineSpeedLimitJobATDecl)]

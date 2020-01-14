@@ -31,11 +31,9 @@
 
 using System;
 using System.Collections.Generic;
-using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -176,6 +174,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new System.NotImplementedException();
 		}
 
+		public SpeedChangeEntry LastTargetspeedChange { get; set; }
+
 		public bool VehicleStopped { get; set; }
 
 		public DrivingBehavior DriverBehavior { get; set; }
@@ -223,6 +223,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void FinishSimulation() {}
 
 		public void FinishSimulationRun(Exception e) {}
+		public void StartSimulationRun()
+		{ }
 
 		public Watt SetAxlegearLoss
 		{
@@ -233,6 +235,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return _axlegearLoss;
 		}
+
+		public Tuple<PerSecond, NewtonMeter> CurrentAxleDemand { get; }
 
 		public Kilogram ReducedMassWheels { get; set; }
 
@@ -247,5 +251,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public bool DisengageGearbox { get; set; }
 
 		#endregion
+
+		public IEnumerable<ISimulationPreprocessor> GetPreprocessingRuns { get { return new ISimulationPreprocessor[] { }; } }
+		public void AddPreprocessor(ISimulationPreprocessor simulationPreprocessor)
+		{
+			throw new NotImplementedException();
+		}
+
+		
 	}
 }

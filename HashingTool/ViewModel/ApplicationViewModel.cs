@@ -31,13 +31,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
 using System.Windows.Input;
-using HashingTool.Views;
 
 namespace HashingTool.ViewModel
 {

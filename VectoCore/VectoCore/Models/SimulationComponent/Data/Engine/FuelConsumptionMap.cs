@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			bool allowExtrapolation = false)
 		{
 			var result = new FuelConsumptionResult();
-			// delaunay map needs is initialised with rpm, therefore the angularVelocity has to be converted.
+			
 			var value = _fuelMap.Interpolate(torque, angularVelocity);
 			if (value.HasValue) {
 			    result.Value = value.Value.SI(Unit.SI.Kilo.Gramm.Per.Second).Cast<KilogramPerSecond>();
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		#region Implementation of IFuelConsumptionMap
 
-		public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond angularVelocity)
+		public KilogramPerSecond GetFuelConsumptionValue(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			return GetFuelConsumption(torque, angularVelocity, true).Value;
 		}

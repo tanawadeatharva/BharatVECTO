@@ -65,6 +65,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<bool>("Articulated"); }
 		}
 
+		public override bool? ATEcoRollReleaseLockupClutch {  get {
+			return Body["ATEcoRollReleaseLockupClutch"]?.Value<bool>();
+		} }
 		#endregion
 
 		#endregion
@@ -349,6 +352,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public virtual Meter Height
 		{
 			get { return Body["VehicleHeight"] == null ? null : Body.GetEx<double>("VehicleHeight").SI<Meter>(); }
+		}
+
+		public virtual bool? ATEcoRollReleaseLockupClutch
+		{
+			get { return null; }
 		}
 
 		public virtual Meter Length

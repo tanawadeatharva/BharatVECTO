@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public virtual double Progress
 		{
-			get { return CyclePort.Progress; }
+			get { return CyclePort.Progress * (PostProcessingDone ? 1.0 : 0.99) * (WritingResultsDone ? 1.0 : 0.99); }
 		}
 
 		protected VectoRun(IVehicleContainer container)
@@ -92,6 +92,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			RunIdentifier = Interlocked.Increment(ref _runIdCounter);
 			Container.RunStatus = Status.Pending;
 			CyclePort = container.GetCycleOutPort();
+			PostProcessingDone = false;
+			WritingResultsDone = false;
 		}
 
 		public IVehicleContainer GetContainer()
@@ -106,6 +108,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			var debug = new DebugData();
 
+			Log.Info("VectoJob preprocessing.");
+
+			foreach (var preprocessing in Container.GetPreprocessingRuns) {
+				preprocessing.RunPreprocessing();
+			}
+
+
+			Container.StartSimulationRun();
 			Log.Info("VectoJob started running.");
 
 			Container.AbsTime = AbsTime;
@@ -128,6 +138,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						Container.AbsTime = AbsTime;
 					}
 				} while (response is ResponseSuccess);
+				if (!GetContainer().RunData.Exempted) {
+					foreach (var fuel in GetContainer().RunData.EngineData.Fuels) {
+						// calculate vehicleline correction here in local thread context because writing sum-data and report afterwards is synchronized
+						//var cf = GetContainer().ModalData.VehicleLineCorrectionFactor(fuel.FuelData);
+						GetContainer().ModalData.CalculateAggregateValues();
+					}
+				}
+
+				PostProcessingDone = true;
 			} catch (VectoSimulationException vse) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(vse);
@@ -165,8 +184,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.FinishSimulationRun(ex);
 				throw ex;
 			}
-			Container.RunStatus = Progress < 1 ? Status.Aborted : Status.Success;
+			Container.RunStatus = CyclePort.Progress < 1 ? Status.Aborted : Status.Success;
 			Container.FinishSimulationRun();
+			WritingResultsDone = true;
 			if (Progress.IsSmaller(1, 1e-9)) {
 				throw new VectoSimulationException(
 					"{5} ({6} {7}) Progress: {8} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}",
@@ -174,9 +194,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					RunSuffix, Progress);
 			}
 			IterationStatistics.FinishSimulation(RunName + CycleName + RunSuffix + RunIdentifier);
-
 			Log.Info("VectoJob finished.");
 		}
+
+		public bool PostProcessingDone { get; protected set; }
+
+		public bool WritingResultsDone { get; protected set; }
 
 		public void Cancel()
 		{

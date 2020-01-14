@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			_pneumaticAuxillariesConfig = auxConfig.PneumaticAuxillariesConfig;
 			Actuations = actuations;
 			_pneumaticsCompressorFlowRateMap = compressorMap;
-			_vehicleMassKG = auxConfig.VehicleData.TotalVehicleWeight;
+			_vehicleMassKG = auxConfig.VehicleData.TotalVehicleMass;
 			
 			_signals = signals;
 

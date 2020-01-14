@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": " ()",
-    "Date": "2016-10-13T08:57:41.1155961Z",
+    "CreatedBy": "",
+    "Date": "2019-12-03T16:40:56.1296740Z",
     "AppVersion": "3",
-    "FileVersion": 3
+    "FileVersion": 5
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -11,11 +11,25 @@
     "Displacement": "7700",
     "IdlingSpeed": 600.0,
     "Inertia": 3.789,
+    "Fuels": [
+      {
+        "WHTC-Urban": 0.0,
+        "WHTC-Rural": 0.0,
+        "WHTC-Motorway": 0.0,
+        "WHTC-Engineering": 1.0,
+        "ColdHotBalancingFactor": 0.0,
+        "CFRegPer": 1.0,
+        "FuelMap": "250kW.vmap",
+        "FuelType": "DieselCI"
+      }
+    ],
+    "RatedPower": 0.0,
+    "RatedSpeed": 0.0,
+    "MaxTorque": 0.0,
     "FullLoadCurve": "250kW.vfld",
-    "FuelMap": "250kW.vmap",
-    "WHTC-Urban": 0.0,
-    "WHTC-Rural": 0.0,
-    "WHTC-Motorway": 0.0,
-    "ColdHotBalancingFactor": 0.0
+    "WHRType": [
+      "None"
+    ],
+    "WHRCorrectionFactors": {}
   }
 }

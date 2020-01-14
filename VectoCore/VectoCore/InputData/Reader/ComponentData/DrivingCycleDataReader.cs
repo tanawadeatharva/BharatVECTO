@@ -344,6 +344,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			public const string EngineTorque = "Me";
 			public const string TorqueConverterActive = "tc_active";
 			public const string PTOActive = "PTO";
+			public const string Highway = "HW";
 		}
 
 		#region DataParser
@@ -433,7 +434,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 						crossWindRequired ? row.ParseDouble(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond() : null,
 					WindYawAngle = crossWindRequired ? row.ParseDoubleOrGetDefault(Fields.WindYawAngle) : 0,
 					AuxiliarySupplyPower = row.GetAuxiliaries(),
-					PTOActive = table.Columns.Contains(Fields.PTOActive) && row.Field<string>(Fields.PTOActive) == "1"
+					PTOActive = table.Columns.Contains(Fields.PTOActive) && row.Field<string>(Fields.PTOActive) == "1",
+					Highway = table.Columns.Contains(Fields.Highway) && row.Field<string>(Fields.Highway) == "1"
 				});
 			}
 
@@ -453,7 +455,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					Fields.RoadGradient,
 					Fields.AirSpeedRelativeToVehicle,
 					Fields.WindYawAngle,
-					Fields.PTOActive
+					Fields.PTOActive,
+					Fields.Highway,
 				};
 
 				const bool allowAux = true;

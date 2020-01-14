@@ -95,11 +95,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			var s7 = s4 + s5;
 			var s8 = s4 + s6;
 
-			var int1 = FMAP.GetFuelConsumption(s7, Signals.EngineSpeed);
+			var int1 = FMAP.GetFuelConsumptionValue(s7, Signals.EngineSpeed);
 			int1 = int1 > 0 && !double.IsNaN(int1.Value()) ? int1 : 0.SI<KilogramPerSecond>();
 			var s11 = int1;
 
-			var int2 = FMAP.GetFuelConsumption(s8, Signals.EngineSpeed);
+			var int2 = FMAP.GetFuelConsumptionValue(s8, Signals.EngineSpeed);
 			int2 = int2 > 0 && !double.IsNaN(int2.Value()) ? int2 : 0.SI<KilogramPerSecond>();
 			var s12 = int2;
 

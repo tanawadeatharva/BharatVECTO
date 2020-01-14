@@ -149,5 +149,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var value = json.GetEx(JsonKeys.JsonHeader).GetEx<string>(JsonKeys.JsonHeader_FileVersion);
 			return (int)double.Parse(value.Trim('"'));
 		}
+
+		public static IGearshiftEngineeringInputData ReadShiftParameters(string filename, bool tolerateMissing)
+		{
+			var json = ReadFile(filename);
+			var version = ReadVersion(json);
+			switch (version) {
+				case 1:
+					return new JSONTCUDataV1(json, filename, tolerateMissing);
+				case 6:
+					return new JSONGearboxDataV6(json, filename, tolerateMissing);
+				default:
+					throw new VectoException("GearshiftParameter-File: Unsupported FileVersion. Got {0}", version);
+			}
+		}
 	}
 }

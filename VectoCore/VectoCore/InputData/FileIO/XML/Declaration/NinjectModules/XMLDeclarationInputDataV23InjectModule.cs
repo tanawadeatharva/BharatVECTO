@@ -1,6 +1,8 @@
 ﻿using Ninject.Modules;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 {
@@ -12,6 +14,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules
 		{
 			Bind<IXMLEngineDeclarationInputData>().To<XMLDeclarationEngineDataProviderV23>()
 												.Named(XMLDeclarationEngineDataProviderV23.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLAdvancedDriverAssistantSystemDeclarationInputData>()
+				.To<XMLDeclarationADASDataProviderV23>().Named(XMLDeclarationADASDataProviderV23.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLADASReader>()
+				.To<XMLADASReaderV23>().Named(XMLADASReaderV23.QUALIFIED_XSD_TYPE);
 		}
 
 		#endregion

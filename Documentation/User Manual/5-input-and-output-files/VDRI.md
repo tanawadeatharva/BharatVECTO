@@ -20,16 +20,11 @@ The basic file format is [Vecto-CSV](#csv) and the file type ending is ".vdri". 
 ###Declaration Mode Cycles
 In Declaration Mode driving cycles are automatically chosen depending on vehicle category and cannot be changed by the user. These predefined cycles are of type target-speed, distance-based.
 
-- Coach: 275km
-- Construction: 21km
-- Heavy Urban: 30km
-- Inter Urban: 123km
+- Construction: 100km
 - Long Haul: 100km
-- Municipal Utility: 10km
-- Regional Delivery: 26km
-- Sub Urban: 23km
-- Urban: 40km
-- Urban Delivery: 28km
+- Municipal Utility: 11.25km
+- Regional Delivery: 100km
+- Urban Delivery: 100km
 
 ###Verification Test Cycle
 This kind of cycle is used for simulating vehicles defined in declaration mode (xml) on a real driving cycle.
@@ -85,12 +80,13 @@ Units are optional and are enclosed in [square-brackets] after the header-column
 |-------------|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **s**       | [m]    | Traveled distance. Must always be increasing.                                                                                                                                                                                                                                                        |
 | **v**       | [km/h] | The target vehicle velocity.  Must be >= 0 km/h.                                                                                                                                                                                                                                                     |
-| **stop**    | [s]    | Stopping Time. Defines the time span the vehicle is standing still (time the vehicle spending in a stop phase). After this time, the vehicle tries to accelerate to \<v>. If during a stop phase the PTO cycle is activated, it is recommended to use at least 2 seconds of stop time (which gets split up: first half before the PTO cycle, second half after the PTO cycle).                                                                                                                            |
+| **stop**    | [s]    | Stopping Time. Defines the time span the vehicle is standing still (time the vehicle spending in a stop phase). After this time, the vehicle tries to accelerate to \<v>. If during a stop phase the PTO cycle is activated, it is recommended to use at least 2 seconds of stop time (which gets split up: first half before the PTO cycle, second half after the PTO cycle). |
 | *Padd*      | [kW]   | Additional auxiliary power demand. This power demand will be directly added to the engine power in addition to possible other auxiliaries. Must be >= 0 kW.                                                                                                                                          |
 | *grad*      | [%]    | The road gradient.                                                                                                                                                                                                                                                                                   |
-| *PTO*       | [0/1]  | "0"=disabled or "1"=enabled. If at a vehicle stop (defined by target velocity=0) "1" is specified, the PTO cycle as specified in the *.vptoc–File is simulated. This is described in the [PTO Simulation Model](#pto)  The PTO activation is added to the simulation time in the middle of the stopping time as defined by the cycle parameter "stop". The PTO Cycle can be specified in the [**Vehicle Editor**](#vehicle-editor). When PTO is activated it is recommended to use at least 2 seconds as stop time.                                                                                                                                                                                                                                                                                                     |
-| *vair_res*  | [km/h] | Air speed relative to vehicle for cross wind correction. Only required if [**Cross Wind Correction**](#vehicle-cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                       |
-| *vair_beta* | [°]    | Wind Yaw Angle for cross wind correction. Only required if [**Cross Wind Correction**](#vehicle-cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                                      |
+| *HW*        | [0/1]  | Marks highway sections (1) of the driving cycle. Predictive cruise control is only enabled on highway parts of the cycle                                                                                                                                                                             |
+| *PTO*       | [0/1]  | "0"=disabled or "1"=enabled. If at a vehicle stop (defined by target velocity=0) "1" is specified, the PTO cycle as specified in the *.vptoc–File is simulated. This is described in the [PTO Simulation Model](#pto)  The PTO activation is added to the simulation time in the middle of the stopping time as defined by the cycle parameter "stop". The PTO Cycle can be specified in the [**Vehicle Editor**](#vehicle-editor). When PTO is activated it is recommended to use at least 2 seconds as stop time.  |
+| *vair_res*  | [km/h] | Air speed relative to vehicle for cross wind correction. Only required if [**Cross Wind Correction**](#vehicle-cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                               |
+| *vair_beta* | [°]    | Wind Yaw Angle for cross wind correction. Only required if [**Cross Wind Correction**](#vehicle-cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                              |
 | *Aux_ID*    | [kW]   | Auxiliary Supply Power. Can be defined multiple times with different Identifiers. The supply power input for each auxiliary defined in the [.vecto file](#job-file) with the corresponding ID. ID's are not case sensitive and must only contain letters and numbers [a-z,A-Z,0-9]. Must be >= 0 kW. |
 
 
@@ -118,8 +114,8 @@ Units are optional and are enclosed in [square-brackets] after the header-column
 | **v**       | [km/h] | The actual velocity of the vehicle. Must be >= 0 km/h.                                                                                                                                                                                                                                                 |
 | *Padd*      | [kW]   | Additional auxiliary power demand. This power demand will be directly added to the engine power in addition to possible other auxiliaries. Must be >= 0 kW.                                                                                                                                            |
 | *grad*      | [%]    | The road gradient.                                                                                                                                                                                                                                                                                     |
-| *vair_res*  | [km/h] | Air speed relative to vehicle for cross wind correction. Only required if [**Cross Wind Correction**](#vehicle-cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                         |
-| *vair_beta* | [°]    | Wind Yaw Angle for cross wind correction. Only required if [**Cross Wind Correction**](#vehicle-cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                                        |
+| *vair_res*  | [km/h] | Air speed relative to vehicle for cross wind correction. Only required if [**Cross Wind Correction**](#vehicle-cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                 |
+| *vair_beta* | [°]    | Wind Yaw Angle for cross wind correction. Only required if [**Cross Wind Correction**](#vehicle-cross-wind-correction) is set to **Vair & Beta Input**.                                                                                                                                                |
 | *Aux_ID*    | [kW]   | Auxiliary Supply Power. Can be defined multiple times with different Identifiers. The supply power input for each auxiliary defined in the [.vecto file](#job-editor) with the corresponding ID. ID's are not case sensitive and must only contain letters and numbers [a-z,A-Z,0-9]. Must be >= 0 kW. |
 
 **Example:**

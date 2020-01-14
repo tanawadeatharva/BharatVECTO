@@ -58,13 +58,13 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
 
-		public XMLDeclarationReport(IDeclarationInputDataProvider dataProvider, IReportWriter writer = null) : base(writer)
+		public XMLDeclarationReport(IReportWriter writer = null, bool writePIF = false) : base(writer)
 		{
 			_manufacturerReport = new XMLManufacturerReport();
 			_customerReport = new XMLCustomerReport();
 			_monitoringReport = new XMLMonitoringReport(_manufacturerReport);
-			if (dataProvider != null && dataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
-				_primaryReport = new XMLPrimaryVehicleReport(dataProvider);
+			if (writePIF) {
+				_primaryReport = new XMLPrimaryVehicleReport();
 			}
 		}
 
@@ -151,11 +151,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 				EngineSpeedDrivingAvg = (entriesDriving.Sum(x => (x.nEng * x.dt).Value()) / drivingTime.Value()).SI<PerSecond>();
 				EngineSpeedDrivingMin = entriesDriving.Min(x => x.nEng);
 				EngineSpeedDrivingMax = entriesDriving.Max(x => x.nEng);
-				Distance = data.Distance();
+				Distance = data.Distance;
 
 				var workESS = data.WorkAuxiliariesDuringEngineStop() + data.WorkEngineStart();
 				var workWHRel = data.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
-				var workWhrMech = -workWHRel / DeclarationData.AlternaterEfficiency;
+				var workWHRelMech = -workWHRel / DeclarationData.AlternaterEfficiency;
+
+				var workWHRmech = -data.TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
+
+				var workWHR = workWHRelMech + workWHRmech;
 
 				FuelConsumptionFinal = new Dictionary<FuelType, Kilogram>();
 				CO2Total = 0.SI<Kilogram>();
@@ -164,20 +168,17 @@ namespace TUGraz.VectoCore.OutputData.XML
 				foreach (var entry in data.FuelData) {
 					var col = data.GetColumnName(entry, ModalResultField.FCFinal);
 					var fcSum = data.TimeIntegral<Kilogram>(col);
-					//FuelConsumptionTotal[entry.FuelType] = fcSum;
-					double k, d, s;
-					VectoMath.LeastSquaresFitting(
-						data.GetValues(
-							x => x.Field<bool>(ModalResultField.IgnitionOn.GetName()) ? new Point(
-								x.Field<SI>(ModalResultField.P_eng_fcmap.GetName()).Value(), x.Field<SI>(data.GetColumnName(entry, ModalResultField.FCFinal)).Value()) : null).Where(x => x != null && x.Y > 0),
-						out k, out d, out s);
-					var correction = k.SI<KilogramPerWattSecond>();
-					var fcTotalcorr = fcSum + correction * (workESS + workWhrMech);
+
+					var correction = 0.SI<KilogramPerWattSecond>();
+					if (!(workWHR + workESS).IsEqual(0)) {
+						correction = data.VehicleLineCorrectionFactor(entry);
+					}
+					var fcTotalcorr = fcSum + correction * (workESS + workWHR);
 					FuelConsumptionFinal[entry.FuelType] = fcTotalcorr;
 					CO2Total += fcTotalcorr * entry.CO2PerFuelWeight;
 					EnergyConsumptionTotal += fcTotalcorr * entry.LowerHeatingValueVecto;
 				}
-				
+
 				var gbxOutSignal = runData.Retarder.Type == RetarderType.TransmissionOutputRetarder
 					? ModalResultField.P_retarder_in
 					: (runData.AngledriveData == null ? ModalResultField.P_axle_in : ModalResultField.P_angle_in);
@@ -210,6 +211,11 @@ namespace TUGraz.VectoCore.OutputData.XML
 			get { return _monitoringReport.Report; }
 		}
 
+		public XDocument PrimaryVehicleReport
+		{
+			get { return _primaryReport?.Report; }
+		}
+
 
 		protected override void DoAddResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
@@ -229,11 +235,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 			_manufacturerReport.GenerateReport();
 			var fullReportHash = GetSignature(_manufacturerReport.Report);
 			_customerReport.GenerateReport(fullReportHash);
+			_primaryReport?.GenerateReport(fullReportHash);
 
 			if (Writer != null) {
 				Writer.WriteReport(ReportType.DeclarationReportCustomerXML, _customerReport.Report);
 				Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, _manufacturerReport.Report);
 				Writer.WriteReport(ReportType.DeclarationReportMonitoringXML, _monitoringReport.Report);
+				if (_primaryReport != null) {
+					Writer.WriteReport(ReportType.DeclarationReportPrimaryVehicleXML, _primaryReport.Report);
+				}
 			}
 		}
 
@@ -255,6 +265,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				: DeclarationData.WeightingFactors.Lookup(weightingGroup);
 			_manufacturerReport.Initialize(modelData, fuelModes);
 			_customerReport.Initialize(modelData, fuelModes);
+			_primaryReport?.Initialize(modelData, fuelModes);
 			_monitoringReport.Initialize(modelData);
 		}
 

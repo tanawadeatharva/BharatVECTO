@@ -61,40 +61,40 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[Category("Integration")]
 		[TestCase(FuelType.DieselCI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0,
-			0.000219921110821829, 0.000219921110821829, 26.3063529691184, 0.000688353076872326, 9390.63143209212,
+			0.000219912706926502, 0.000219912706926502, 26.3053477184811, 0.000688326772679951, 9390.27258576163,
 			TestName = "Diesel LH Low"),
 		TestCase(FuelType.EthanolCI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 0,
-			0.000219921110821829, 0.000222518604256733, 27.1364151532601, 0.000402758673704687, 5651.97254812102,
+			0.000219912706926502, 0.000222510101102798, 27.1353781832681, 0.000402743282996065, 5651.75656801107,
 			TestName = "Ethanol/CI LH Low"),
 
 		TestCase(FuelType.DieselCI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.000254735249582656, 0.000254735249582656, 30.4707236342891, 0.000797321331193715, 10877.1951571794,
+			0.000254681238692732, 0.000254681238692732, 30.464263001523, 0.000797152277108253, 10874.8888921797,
 			TestName = "Diesel LH Ref"),
 		TestCase(FuelType.EthanolCI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.000254735249582656, 0.000257743933632844, 31.4321870283957, 0.000466516519875449, 6546.69591427425,
+			0.000254681238692732, 0.000257689284819024, 31.4255225389053, 0.000466417605522433, 6545.3078344032,
 			TestName = "Ethanol/CI LH Ref"),
 		TestCase(FuelType.EthanolPI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.000254735249582656, 0.00025299644241827, 32.1878425468536, 0.000531292529078366, 7412.7957628553,
+			0.000254681238692732, 0.000252942800203362, 32.1810178375779, 0.000531179880427061, 7411.22404595852,
 			TestName = "Ethanol/PI LH Ref"),
 		TestCase(FuelType.PetrolPI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.000254735249582656, 0.000254735249582656, 34.0555146500878, 0.000774395158731276, 10571.5128576802,
+			0.000254681238692732, 0.000254681238692732, 34.0482939428787, 0.000774230965625907, 10569.2714057484,
 			TestName = "Petrol/PI LH Ref"),
 		TestCase(FuelType.LPGPI, null,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.000254735249582656, 0.000254735249582656, null, 0.000769300453739622, 11717.8214808022,
+			0.000254681238692732, 0.000254681238692732, null, 0.000769137340852052, 11715.3369798657,
 			TestName = "LPG/PI LH Ref"),
 		TestCase(FuelType.NGPI, TankSystem.Liquefied,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.000254735249582656, 0.000233982887091198, null, 0.000648132597242618, 11488.5597561778,
+			0.000254681238692732, 0.000233933276273773, null, 0.000647995175278351, 11486.1238650422,
 			TestName = "LNG/PI LH Ref"),
 		TestCase(FuelType.NGPI, TankSystem.Compressed,
 			@"TestData\Integration\DeclarationMode\Class2_RigidTruck_4x2\Class2_RigidTruck_DECL.vecto", 1,
-			0.000254735249582656, 0.000239344994920373, null, 0.000643838036335802, 11488.5597561779,
+			0.000254681238692732, 0.000239294247188382, null, 0.000643701524936747, 11486.1238650423,
 			TestName = "CNG/PI LH Ref"),
 			]
 		public void TestFuelTypesCO2(FuelType fuelType, TankSystem? tankSystem, string jobName, int runIdx, 
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			// restore data table before assertions
 			modContainer.Data = modData;
 			var fuel = modContainer.FuelData.First();
-			var distance = modContainer.Distance();
+			var distance = modContainer.Distance;
 			var fcFinal = modContainer.FuelConsumptionPerMeter(ModalResultField.FCFinal, fuel);
 			var fcVolumePerMeter = fuel.FuelDensity == null ? null :
 				(fcFinal / fuel.FuelDensity)

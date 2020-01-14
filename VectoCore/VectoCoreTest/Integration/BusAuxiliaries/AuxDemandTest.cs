@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		    Assert.AreEqual(162.4654.SI(Unit.SI.Gramm).Value(), ((SI)modalData[ModalResultField.AA_TotalCycleFC_Grams]).Value(), 0.0001);
 		}
 
-		public static BusAuxiliariesAdapter CreateBusAuxAdapterForTesting(double vehicleWeight, out MockDriver driver)
+		public static BusAuxiliariesAdapter CreateBusAuxAdapterForTesting(double vehicleMass, out MockDriver driver)
 		{
 			var auxFilePath = @"TestData\Integration\BusAuxiliaries\AdvAuxTest.aaux";
 			var engineFLDFilePath = @"TestData\Integration\BusAuxiliaries\24t Coach.vfld";
@@ -154,7 +154,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 					FloorType = FloorType.HighFloor,
 					PassengerCount = 47,
 					DoubleDecker = false,
-					CurbWeight = vehicleWeight.SI<Kilogram>()
+					CurbMass = vehicleMass.SI<Kilogram>()
 				}
 			};
 			var engine = new CombustionEngine(vehicle, modelData);
@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var brakes = new MockBrakes(vehicle);
 			var veh = new MockVehicle(vehicle) { MyVehicleSpeed = 50.KMPHtoMeterPerSecond() };
 			var auxConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, vehicle.RunData.VehicleData);
-			var busAux = new BusAuxiliariesAdapter(vehicle, auxConfig, "Coach", vehicle.RunData.VehicleData.TotalVehicleWeight,
+			var busAux = new BusAuxiliariesAdapter(vehicle, auxConfig, "Coach", vehicle.RunData.VehicleData.TotalVehicleMass,
 				fcMap, modelData.IdleSpeed);
 			return busAux;
 		}

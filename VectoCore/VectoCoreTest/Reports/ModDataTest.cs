@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var totalTime = 50.SI<Second>();
 			var expected = initalSpeed * totalTime + acc / 2.0 * totalTime * totalTime;
 
-			Assert.AreEqual(expected.Value(), modData.Distance().Value(), 1e-6);
+			Assert.AreEqual(expected.Value(), modData.Distance.Value(), 1e-6);
 		}
 
 

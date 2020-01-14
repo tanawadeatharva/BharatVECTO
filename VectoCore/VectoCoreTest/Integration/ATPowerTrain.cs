@@ -35,8 +35,6 @@ using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -114,13 +112,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
-			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			var tmp = cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airdragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
 				.AddComponent(new AxleGear(container, axleGearData))
 				.AddComponent(new DummyRetarder(container))
-				.AddComponent(new ATGearbox(container, new ATShiftStrategy(gearboxData, container), runData))
+				.AddComponent(new ATGearbox(container, new ATShiftStrategy(runData, container), runData))
 				.AddComponent(engine);
 
 			var aux = new EngineAuxiliary(container);
@@ -209,7 +207,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			return new VehicleData {
 				AirDensity = DeclarationData.AirDensity,
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				CurbWeight = 11500.SI<Kilogram>(),
+				CurbMass = 11500.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.465.SI<Meter>(),
 				AxleData = axles,

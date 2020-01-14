@@ -141,7 +141,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants>CERTIFICATION_RELEASE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|x86'">
     <DefineTrace>true</DefineTrace>
@@ -312,6 +313,8 @@
     <Compile Include="File Browser\FileBrowserFavoritesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Input Files\MockComponents.vb" />
+    <Compile Include="Input Files\MockVehicleInputData.vb" />
     <Compile Include="Input Files\VectoEPTPJob.vb" />
     <Compile Include="Input Files\VectoJob.vb" />
     <Compile Include="Input Files\Vehicle.vb" />
@@ -553,7 +556,7 @@
       <Name>VectoCommon</Name>
     </ProjectReference>
     <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj">
-      <Project>{cd36938a-add9-4c65-96da-b397cdeea90a}</Project>
+      <Project>{CD36938A-ADD9-4C65-96DA-B397CDEEA90A}</Project>
       <Name>VectoCore</Name>
     </ProjectReference>
   </ItemGroup>

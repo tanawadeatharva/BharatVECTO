@@ -36,12 +36,8 @@ using System.Xml;
 using Ninject;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
@@ -65,10 +61,10 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase(null, 1.0, 45.542369, TestName = "Engine CF - NONE"),
-		TestCase("CFRegPer", 1.2, 45.542369 * 1.2, TestName = "Engine CF - CFRegPer"),
-		TestCase("BFColdHot", 1.2, 45.542369 * 1.2, TestName = "Engine CF - BFColdHod"),
-		TestCase("CFNCV", 1.2, 45.542369, TestName = "Engine CF - CFNCV")  // has no influence - only for documentation purpose
+		[TestCase(null, 1.0, 45.554068, TestName = "Engine CF - NONE"),
+		TestCase("CFRegPer", 1.2, 45.554068 * 1.2, TestName = "Engine CF - CFRegPer"),
+		TestCase("BFColdHot", 1.2, 45.554068 * 1.2, TestName = "Engine CF - BFColdHod"),
+		TestCase("CFNCV", 1.2, 45.554068, TestName = "Engine CF - CFNCV")  // has no influence - only for documentation purpose
 			]
 		public void TestEngineCorrectionFactors(string correctionFactor, double value, double expectedFc)
 		{

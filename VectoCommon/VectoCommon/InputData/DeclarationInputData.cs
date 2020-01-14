@@ -32,12 +32,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.NetworkInformation;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
+
 
 namespace TUGraz.VectoCommon.InputData
 {
@@ -48,6 +48,9 @@ namespace TUGraz.VectoCommon.InputData
 		IVehicleDeclarationInputData Vehicle { get; }
 
 		string JobName { get; }
+
+		string ShiftStrategy { get; }
+
 	}
 
 	public interface IComponentInputData
@@ -224,6 +227,8 @@ namespace TUGraz.VectoCommon.InputData
 		EcoRollType EcoRoll { get; }
 
 		PredictiveCruiseControlType PredictiveCruiseControl { get; }
+
+		bool? ATEcoRollReleaseLockupClutch { get; }
 	}
 
 	public enum PredictiveCruiseControlType
@@ -540,7 +545,9 @@ namespace TUGraz.VectoCommon.InputData
 
 		IList<IEngineFuelDelcarationInputData> Fuels { get; }
 
-		IWHRData WasteHeatRecoveryData { get; }
+		IWHRData WasteHeatRecoveryDataElectrical { get; }
+
+		IWHRData WasteHeatRecoveryDataMechanical { get; }
 
 	}
 
@@ -558,7 +565,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		double EngineeringCorrectionFactor { get; }
 
-		TableData GeneratedElectricPower { get; }
+		TableData GeneratedPower { get; }
 
 	}
 

@@ -58,8 +58,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				//CertificationNumber = data.CertificationNumber,
 				DigestValueInput = data.DigestValue != null ? data.DigestValue.DigestValue : "",
 				VehicleCategory = data.VehicleCategory,
-				CurbWeight = data.CurbMassChassis,
-				GrossVehicleWeight = data.GrossVehicleMassRating,
+				CurbMass = data.CurbMassChassis,
+				GrossVehicleMass = data.GrossVehicleMassRating,
 				AirDensity = Physics.AirDensity,
 			};
 
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return new VehicleData.ADASData {
 				EngineStopStart = adas.EngineStopStart,
 				EcoRoll = adas.EcoRoll,
-				PredictiveCruiseControl = adas.PredictiveCruiseControl
+				PredictiveCruiseControl = adas.PredictiveCruiseControl,
 			};
 		}
 

@@ -1617,7 +1617,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns></returns>
 		public bool IsBetween(SI lower, SI upper)
 		{
-			return lower <= Val && Val <= upper;
+			return VectoMath.Min(lower, upper) <= Val && Val <= VectoMath.Max(lower, upper);
 		}
 
 		/// <summary>
@@ -1628,7 +1628,7 @@ namespace TUGraz.VectoCommon.Utils
 		/// <returns></returns>
 		public bool IsBetween(double lower, double upper)
 		{
-			return lower <= Val && Val <= upper;
+			return Math.Min(lower, upper) <= Val && Val <= Math.Max(lower, upper);
 		}
 
 		#endregion

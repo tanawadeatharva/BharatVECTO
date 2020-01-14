@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONComponentInputData : IEngineeringInputDataProvider, IDeclarationInputDataProvider,
 		IEngineeringJobInputData, IVehicleEngineeringInputData, IAdvancedDriverAssistantSystemDeclarationInputData,
-		IAdvancedDriverAssistantSystemsEngineering, IVehicleComponentsDeclaration, IVehicleComponentsEngineering
+		IAdvancedDriverAssistantSystemsEngineering, IVehicleComponentsDeclaration, IVehicleComponentsEngineering, IDriverEngineeringInputData
 	{
 		protected IGearboxEngineeringInputData Gearbox;
 		protected IAxleGearInputData AxleGear;
@@ -57,6 +57,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		protected IRetarderInputData Retarder;
 		protected IPTOTransmissionInputData PTOTransmission;
 		private IAirdragEngineeringInputData AirdragData;
+		protected IGearshiftEngineeringInputData GearshiftData;
 		private string _filename;
 		private IAxlesDeclarationInputData _axleWheelsDecl;
 		private IAxlesEngineeringInputData _axleWheelsEng;
@@ -76,6 +77,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				case Constants.FileExtensions.GearboxDataFile:
 					tmp = JSONInputDataFactory.ReadGearbox(filename, tolerateMissing);
 					break;
+				case Constants.FileExtensions.GearshiftDataFile:
+					tmp = JSONInputDataFactory.ReadShiftParameters(filename, tolerateMissing);
+					break;
 			}
 
 			tmp.Switch()
@@ -88,6 +92,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				.If<ITorqueConverterEngineeringInputData>(c => TorqueConverterData = c)
 				.If<IAngledriveInputData>(c => Angledrive = c)
 				.If<IPTOTransmissionInputData>(c => PTOTransmission = c)
+				.If<IGearshiftEngineeringInputData>(c => GearshiftData = c)
 				.If<IAxlesDeclarationInputData>(c => _axleWheelsDecl = c)
 				.If<IAxlesEngineeringInputData>(c => _axleWheelsEng = c);
 			;
@@ -113,10 +118,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public IDriverEngineeringInputData DriverInputData
 		{
-			get { return null; }
+			get { return this; }
 		}
 
+		public IOverSpeedEngineeringInputData OverSpeedData { get; }
+		public IDriverAccelerationData AccelerationCurve { get; }
+		public ILookaheadCoastingInputData Lookahead { get; }
+		public IGearshiftEngineeringInputData GearshiftInputData { get { return GearshiftData; } }
+		public IEngineStopStartEngineeringInputData EngineStopStartData { get; }
+		public IEcoRollEngineeringInputData EcoRollData { get; }
+		public IPCCEngineeringInputData PCCData { get; }
+
 		public DataSource DataSource
+
 		{
 			get { return new DataSource { SourceType = DataSourceType.JSONFile, SourceFile = _filename }; }
 		}
@@ -152,6 +166,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 
 		public string JobName
+		{
+			get { return ""; }
+		}
+
+		public string ShiftStrategy
 		{
 			get { return ""; }
 		}
@@ -220,6 +239,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return VehicleData.Height; }
 		}
+
+		public bool? ATEcoRollReleaseLockupClutch { get { return VehicleData.ADAS.ATEcoRollReleaseLockupClutch; } }
 
 		public Meter Length { get { return VehicleData.Length; } }
 		public Meter Width { get { return VehicleData.Width; } }

@@ -781,6 +781,12 @@ Public Class Vehicle
 	End Get
 	End Property
 
+    Public ReadOnly Property ATEcoRollReleaseLockupClutch As Boolean? Implements IAdvancedDriverAssistantSystemDeclarationInputData.ATEcoRollReleaseLockupClutch
+    get
+            Return EcoRollReleaseLockupClutch
+    End Get
+    End Property
+
     Public ReadOnly Property IAdvancedDriverAssistantSystemsEngineering_DataSource As DataSource Implements IAdvancedDriverAssistantSystemsEngineering.DataSource
         get
             Return New DataSource() With {.SourceType = DataSourceType.JSONFile}
@@ -794,5 +800,6 @@ Public Class Vehicle
 	End Get
 	End Property
 
-    
+    Public Property EcoRollReleaseLockupClutch As Boolean
+
 End Class

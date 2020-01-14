@@ -34,7 +34,6 @@ using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
@@ -118,6 +117,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return new List<DrivingCycleData.DrivingCycleEntry>();
 		}
+
+		public SpeedChangeEntry LastTargetspeedChange { get; set; }
 
 		public void FinishSimulation() {}
 	}

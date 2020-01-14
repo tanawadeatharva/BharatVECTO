@@ -4,6 +4,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter {
@@ -17,8 +18,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter {
 		CombustionEngineData CreateEngineData(IVehicleDeclarationInputData vehicle, IEngineModeDeclarationInputData engineMode, Mission mission);
 
 		GearboxData CreateGearboxData(
-			IGearboxDeclarationInputData gearboxData, CombustionEngineData engineData, double axleGearRatio, Meter rDyn,
-			VehicleCategory vehicleCategory, ITorqueConverterDeclarationInputData torqueConverterData);
+			IVehicleDeclarationInputData inputData, VectoRunData runData,
+			IShiftPolygonCalculator shiftPolygonCalc);
+
+		ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed);
 
 		RetarderData CreateRetarderData(IRetarderInputData retarderData);
 		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);

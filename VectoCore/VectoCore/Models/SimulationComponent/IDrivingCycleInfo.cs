@@ -66,6 +66,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
 		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time);
 
+		SpeedChangeEntry LastTargetspeedChange { get; }
+
 		void FinishSimulation();
+	}
+
+	public class SpeedChangeEntry
+	{
+		public MeterPerSecond PreviousTargetSpeed;
+		public MeterPerSecond NewTargetSpeed;
+		public Meter Distance;
+		public Second AbsTime;
+		public Meter Altitude;
+
 	}
 }

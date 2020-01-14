@@ -32,6 +32,7 @@ Public Module FileBrowserModule
 
 	Public EngineFileBrowser As FileBrowser
 	Public GearboxFileBrowser As FileBrowser
+    Public TCUFileBrowser As FileBrowser
 	Public DriverAccelerationFileBrowser As FileBrowser
 	Public DriverDecisionFactorTargetSpeedFileBrowser As FileBrowser
 	Public DriverDecisionFactorVelocityDropFileBrowser As FileBrowser

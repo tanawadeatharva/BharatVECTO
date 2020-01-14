@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected readonly IDriverStrategy DriverStrategy;
 		
-		public DrivingAction DrivingAction { get; private set; }
+		public DrivingAction DrivingAction { get; protected internal set; }
 
 		public Driver(IVehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
 		{
@@ -964,7 +964,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public Meter ComputeDecelerationDistance(MeterPerSecond targetSpeed)
 		{
-			return DriverData.AccelerationCurve.ComputeAccelerationDistance(DataBus.VehicleSpeed, targetSpeed);
+			return DriverData.AccelerationCurve.ComputeDecelerationDistance(DataBus.VehicleSpeed, targetSpeed);
 		}
 
 		/// <summary>
@@ -1025,7 +1025,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		
 		protected override void DoCommitSimulationStep()
 		{
-			if (!(CurrentState.Response is ResponseSuccess)) {
+			if (CurrentState.Response != null && !(CurrentState.Response is ResponseSuccess)) {
 				throw new VectoSimulationException("Previous request did not succeed!");
 			}
 			CurrentState.Response = null;

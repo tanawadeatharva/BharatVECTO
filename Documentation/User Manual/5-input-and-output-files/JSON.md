@@ -7,3 +7,4 @@ Following files use JSON:
 * [Vehicle](#vehicle-file-.vveh)
 * [Engine](#engine-file-.veng)
 * [Gearbox](#gearbox-file-.vgbx)
+* [Shift Parameters](#gearshift-parameters-file)

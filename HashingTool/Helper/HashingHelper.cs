@@ -30,10 +30,8 @@
 */
 
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml;
-using HashingTool.ViewModel;
 using HashingTool.ViewModel.UserControl;
 using TUGraz.VectoCommon.Hashing;
 using TUGraz.VectoCommon.Resources;

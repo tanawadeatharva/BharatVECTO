@@ -11,6 +11,7 @@
     "VehicleFile": "Class5_Tractor.vveh",
     "EngineFile": "Engine_325kW_12.7l.veng",
     "GearboxFile": "AMT_12.vgbx",
+    "TCU": "AMT_12.vgbx",
     "AuxiliaryAssembly": "Classic",
     "AuxiliaryVersion": "CLASSIC",
     "AdvancedAuxiliaryFilePath": "",
@@ -38,7 +39,7 @@
     "OverSpeedEcoRoll": {
       "Mode": "Overspeed",
       "MinSpeed": 50.0,
-      "OverSpeed": 2.5,
+      "OverSpeed": 2.5
     },
     "Cycles": [
       "DriveDHSl1.1.vdri",
@@ -50,7 +51,7 @@
       "DriveDHSl1.1_TS--.vdri",
       "DriveDHSl1.1_TS-.vdri",
       "DriveDHSl1.1_TS+.vdri",
-      "DriveDHSl1.1_TS++.vdri",
+      "DriveDHSl1.1_TS++.vdri"
     ]
   }
 }

@@ -55,6 +55,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return Vehicle.Identifier; }
 		}
 
+		public virtual string ShiftStrategy { get { return null; } }
+
 		#endregion
 
 		#region Implementation of IXMLDeclarationJobInputData

@@ -1,7 +1,7 @@
 ##Job Editor
 
 
-![](pics/VECTO-Editor.png)
+![](pics/JobForm_General.png)
 
 
 ###Description
@@ -10,7 +10,8 @@ The [job file (.vecto)](#job-file) includes all informations to run a VECTO calc
 
 -   Filepath to the [Vehicle File (.vveh)](#vehicle-editor) which defines the not-engine/gearbox-related vehicle parameters
 -   Filepath to the [Engine File (.veng)](#engine-editor) which includes full load curve(s) and the fuel consumption map
--   Filepath ot the [Gearbox File (.vgbx)](#gearbox-editor) which defines gear ratios and transmission losses
+-   Filepath to the [Gearbox File (.vgbx)](#gearbox-editor) which defines gear ratios and transmission losses
+-   Filepath to the [Gearshift Parameters File (.vtcu)](#gearshift-parameters-file) which allows to override parameters of the [Effshift Gearshift Strategy](#gear-shift-model). The gearshift parameters cannot be edited via the graphical user interface. In case the default parameters shall be used either an empty .vtcu file ([see .vtcy](#gearshift-parameters-file)) or the gearbox file (.vgbx) can be provided. An example .vtcu file is provided [here](#gearshift-parameters-file)
 -   Auxiliaries
 -   Driver Assist parameters
 -   Driving Cycles (only in Engineering Mode)
@@ -75,7 +76,7 @@ Cycles
 
 ###Driver Assist Tab
 
-![](pics/VECTO-Editor-DriverAssist.png)
+![](pics/JobForm_DriverModel.png)
 
 
 In this tab the driver assistance functions are enabled and parameterised.
@@ -89,6 +90,12 @@ Look-Ahead Coasting
 Acceleration Limiting
 :	See [Acceleration Limiting](#driver-acceleration-limiting) for details.
 
+
+###ADAS Parameters
+
+![](pics/JobForm_ADASParams.png)
+
+In this tab certain general parameters for the advanced driver assistant system model can be set. Which ADAS feature is available can be selected in the vehicle itself, in Engineering Mode parameters like minimum activation speed, activation delay, or allowed overspeed can be adjusted. In Declaration Mode all parameters are fixed.
 
 ###Chart Area
 

@@ -7,6 +7,5 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 		IEngineeringJobInputData JobData { get; }
 
 		IDriverEngineeringInputData DriverModel { get; }
-
 	}
 }

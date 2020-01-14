@@ -92,21 +92,41 @@ public class JSONFileWriter : IOutputFileWriter
 		body.Add(
 			"FullLoadCurve", GetRelativePath(eng.EngineModes.First().FullLoadCurve.Source, Path.GetDirectoryName(filename)));
 
-		body.Add("WHRType", eng.WHRType.ToString());
+		var whrtypes = new List<string>();
+		if ((eng.WHRType & WHRType.ElectricalOutput) != 0) {
+			whrtypes.Add(WHRType.ElectricalOutput.ToString());
+		}
+		if ((eng.WHRType & WHRType.MechanicalOutputDrivetrain) != 0) {
+			whrtypes.Add(WHRType.MechanicalOutputDrivetrain.ToString());
+		}
+		if ((eng.WHRType & WHRType.MechanicalOutputICE) != 0) {
+			whrtypes.Add(WHRType.MechanicalOutputICE.ToString());
+		}
+		
+		body.Add("WHRType", whrtypes.Count > 0 ? whrtypes : new[] {WHRType.None.ToString()}.ToList());
 
-		if ((eng.WHRType.IsElectrical())) {
-			var whr = new Dictionary<string, object>();
-			var whrInput = eng.EngineModes.First().WasteHeatRecoveryData;
-			whr.Add("Urban", whrInput.UrbanCorrectionFactor);
-			whr.Add("Rural", whrInput.RuralCorrectionFactor);
-			whr.Add("Motorway", whrInput.MotorwayCorrectionFactor);
-			whr.Add("ColdHotBalancingFactor", whrInput.BFColdHot);
-			whr.Add("CFRegPer", whrInput.CFRegPer);
-			whr.Add("EngineeringCorrectionFactor", whrInput.EngineeringCorrectionFactor);
-			body.Add("WHRCorrectionFactors", whr);
+		var whrCF = new Dictionary<string, object>();
+		if ((eng.WHRType & WHRType.ElectricalOutput) != 0) {
+			whrCF.Add("Electrical", GetWhr(eng.EngineModes.First().WasteHeatRecoveryDataElectrical));
+		}
+		if ((eng.WHRType & WHRType.MechanicalOutputICE) != 0) {
+			whrCF.Add("Mechanical", GetWhr(eng.EngineModes.First().WasteHeatRecoveryDataMechanical));
 		}
 
+		body.Add("WHRCorrectionFactors", whrCF);
 		WriteFile(header, body, filename);
+	}
+
+	private Dictionary<string, object> GetWhr(IWHRData whrInput)
+	{
+		return new Dictionary<string, object> {
+			{ "Urban", whrInput.UrbanCorrectionFactor },
+			{ "Rural", whrInput.RuralCorrectionFactor },
+			{ "Motorway", whrInput.MotorwayCorrectionFactor },
+			{ "ColdHotBalancingFactor", whrInput.BFColdHot },
+			{ "CFRegPer", whrInput.CFRegPer },
+			{ "EngineeringCorrectionFactor", whrInput.EngineeringCorrectionFactor }
+		};
 	}
 
 	protected Dictionary<string, object> GetHeader(int fileVersion)

@@ -30,7 +30,6 @@
 */
 
 using System;
-using System.Globalization;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -42,7 +41,6 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 using System.IO;
@@ -223,7 +221,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				GearboxData = gearboxData,
 				EngineData = new CombustionEngineData() { Inertia = 5.SI<KilogramSquareMeter>() }
 			};
-			gbx = new ATGearbox(container, new ATShiftStrategy(gearboxData, container), runData);
+			gbx = new ATGearbox(container, new ATShiftStrategy(runData, container), runData);
 			gbx.Connect(engine);
 			gbx.IdleController = new MockIdleController();
 

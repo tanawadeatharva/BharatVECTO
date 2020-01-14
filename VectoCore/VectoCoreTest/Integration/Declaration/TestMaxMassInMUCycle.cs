@@ -36,7 +36,6 @@ using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
-using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
@@ -77,8 +76,8 @@ namespace TUGraz.VectoCore.Tests.Integration.Declaration
 
 			var muRefLoadData = jobContainer.Runs.Last().Run.GetContainer().RunData;
 			Assert.AreEqual(2700, muRefLoadData.VehicleData.Loading.Value());
-			Assert.AreEqual(6000, muRefLoadData.VehicleData.BodyAndTrailerWeight.Value());
-			Assert.AreEqual(18000, muRefLoadData.VehicleData.TotalVehicleWeight.Value());
+			Assert.AreEqual(6000, muRefLoadData.VehicleData.BodyAndTrailerMass.Value());
+			Assert.AreEqual(18000, muRefLoadData.VehicleData.TotalVehicleMass.Value());
 
 		}
 	}

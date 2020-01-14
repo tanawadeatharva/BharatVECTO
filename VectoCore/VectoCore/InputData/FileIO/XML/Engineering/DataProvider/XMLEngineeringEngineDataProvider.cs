@@ -165,10 +165,17 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return new[] { this }.Cast<IEngineFuelDelcarationInputData>().ToList(); }
 		}
 
-		public virtual IWHRData WasteHeatRecoveryData
+		public virtual IWHRData WasteHeatRecoveryDataElectrical
 		{
 			get { return null; }
 		}
+
+
+		public virtual IWHRData WasteHeatRecoveryDataMechanical
+		{
+			get { return null; }
+		}
+
 
 		public virtual Watt RatedPowerDeclared
 		{
@@ -308,6 +315,24 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			
 		}
 
+		public override WHRType WHRType
+		{
+			get {
+				var retVal = WHRType.None;
+				if (XmlConvert.ToBoolean(GetString("MechanicalOutputICE"))) {
+					retVal |= WHRType.MechanicalOutputICE;
+				}
+				if (XmlConvert.ToBoolean(GetString("MechanicalOutputDrivetrain"))) {
+					retVal |= WHRType.MechanicalOutputDrivetrain;
+				}
+				if (XmlConvert.ToBoolean(GetString("ElectricalOutput"))) {
+					retVal |= WHRType.ElectricalOutput;
+				}
+
+				return retVal;
+			}
+		}
+
 		#endregion
 
 
@@ -347,9 +372,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				get { return (_fuels ?? (_fuels = ReadFuels())).Cast<IEngineFuelDelcarationInputData>().ToList(); }
 			}
 
-			public virtual IWHRData WasteHeatRecoveryData
+			public virtual IWHRData WasteHeatRecoveryDataElectrical
 			{
-				get { return WHRData ?? (WHRData = ReadWHRData()); }
+				get { return WHRData ?? (WHRData = ReadWHRData("Electrical")); }
+			}
+
+			public virtual IWHRData WasteHeatRecoveryDataMechanical
+			{
+				get { return WHRData ?? (WHRData = ReadWHRData("Mechanical")); }
 			}
 
 			#endregion
@@ -359,11 +389,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 				return GetNodes(XMLNames.Engine_FuelModes_Fuel).Cast<XmlNode>().Select(x => new XMLEngineFuel(x, Source)).Cast<IEngineFuelEngineeringInputData>().ToList();
 			}
 
-			protected virtual IWHRData ReadWHRData()
+			protected virtual IWHRData ReadWHRData(string typeNode)
 			{
 				var fuelNode = GetNodes(XMLNames.Engine_FuelModes_Fuel).Cast<XmlNode>().First();
-				var whrNode = GetNode("WasteHeatRecovery", fuelNode);
-				return new XMLWHRData(whrNode, Source);
+				var whrNode = GetNode(new [] { "WasteHeatRecovery", typeNode}, fuelNode);
+				return new XMLEngineeringWHRData(whrNode, Source);
 			}
 		}
 
@@ -420,11 +450,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			#endregion
 		}
 
-		internal class XMLWHRData : AbstractXMLType, IWHRData
+		internal class XMLEngineeringWHRData : AbstractXMLType, IWHRData
 		{
 			protected DataSource Source;
 
-			public XMLWHRData(XmlNode baseNode, DataSource source) : base (baseNode)
+			public XMLEngineeringWHRData(XmlNode baseNode, DataSource source) : base (baseNode)
 			{
 				Source = source;
 			}
@@ -439,7 +469,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			public virtual double CFRegPer { get { return 1; } }
 			public virtual double EngineeringCorrectionFactor { get { return GetDouble(XMLNames.Engine_WHRCorrectionFactor); } }
 
-			public virtual TableData GeneratedElectricPower
+			public virtual TableData GeneratedPower
 			{
 				get {
 					return XMLHelper.ReadEntriesOrResource(

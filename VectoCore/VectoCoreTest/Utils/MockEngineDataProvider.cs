@@ -30,7 +30,6 @@
 */
 
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -75,7 +74,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return new[] { this }.Cast<IEngineFuelDelcarationInputData>().ToList(); }
 		}
 
-		public IWHRData WasteHeatRecoveryData { get; }
+		public IWHRData WasteHeatRecoveryDataElectrical { get; }
+
+		public IWHRData WasteHeatRecoveryDataMechanical { get; }
 
 		public Watt RatedPowerDeclared { get; set; }
 		public PerSecond RatedSpeedDeclared { get; set; }

@@ -116,7 +116,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public VTPData VTPData { get; set; }
 
+		public ShiftStrategyParameters GearshiftParameters { get; set; }
 		public bool Exempted { get; set; }
+
+		public string ShiftStrategy { get; set; }
+		public MeterPerSecond VehicleDesignSpeed { get; internal set; }
 
 		public class AuxData
 		{
@@ -158,7 +162,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private static ValidationResult CheckPowertrainLossMapsSize(VectoRunData runData, GearboxData gearboxData,
 			CombustionEngineData engineData)
 		{
-			var maxSpeed = 95.KMPHtoMeterPerSecond();
 			var axleGearData = runData.AxleGearData;
 			var angledriveData = runData.AngledriveData;
 			var hasAngleDrive = angledriveData != null && angledriveData.Angledrive != null;
@@ -167,6 +170,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				: 1.0;
 			var axlegearRatio = axleGearData != null ? axleGearData.AxleGear.Ratio : 1.0;
 			var dynamicTyreRadius = runData.VehicleData != null ? runData.VehicleData.DynamicTyreRadius : 0.0.SI<Meter>();
+
+			var vehicleMaxSpeed = runData.EngineData.FullLoadCurves[0].N95hSpeed /
+								runData.GearboxData.Gears[runData.GearboxData.Gears.Keys.Max()].Ratio / axlegearRatio /
+								angledriveRatio * dynamicTyreRadius;
+			var maxSpeed = VectoMath.Min(vehicleMaxSpeed, (runData.VehicleDesignSpeed ?? 90.KMPHtoMeterPerSecond()) + (runData.DriverData?.OverSpeed?.OverSpeed ?? 0.KMPHtoMeterPerSecond()));
 
 			if (gearboxData.Gears.Count + 1 != engineData.FullLoadCurves.Count) {
 				return

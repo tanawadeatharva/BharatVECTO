@@ -52,6 +52,7 @@ Imports TUGraz.VectoCore.InputData.FileIO.XML
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 Imports TUGraz.VectoCore.InputData.FileIO.XML.Engineering
 Imports TUGraz.VectoCore.Models.Simulation
+Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.OutputData
 Imports TUGraz.VectoCore.OutputData.FileIO
 Imports TUGraz.VectoCore.Utils
@@ -126,6 +127,7 @@ Imports TUGraz.VectoCore.Utils
         FullLoadCurveFileBrowser = New FileBrowser("vfld")
         EngineFileBrowser = New FileBrowser("veng")
         GearboxFileBrowser = New FileBrowser("vgbx")
+        TCUFileBrowser = New FileBrowser("vtcu")
         DriverAccelerationFileBrowser = New FileBrowser("vacc")
         AuxFileBrowser = New FileBrowser("vaux")
         GearboxShiftPolygonFileBrowser = New FileBrowser("vgbs")
@@ -155,6 +157,7 @@ Imports TUGraz.VectoCore.Utils
         FullLoadCurveFileBrowser.Extensions = New String() {"vfld"}
         EngineFileBrowser.Extensions = New String() {"veng"}
         GearboxFileBrowser.Extensions = New String() {"vgbx"}
+        TCUFileBrowser.Extensions = New String() {"vtcu", "vgbx"}
         DriverAccelerationFileBrowser.Extensions = New String() {"vacc"}
         AuxFileBrowser.Extensions = New String() {"vaux"}
         GearboxShiftPolygonFileBrowser.Extensions = New String() {"vgbs"}
@@ -976,7 +979,9 @@ Imports TUGraz.VectoCore.Utils
                             Case XMLNames.VectoInputEngineering
                                 input = xmlInputReader.CreateEngineering(jobFile)
                             Case XMLNames.VectoInputDeclaration
-                                input = xmlInputReader.CreateDeclaration(XmlReader.Create(jobFile))
+                                Using reader As XmlReader = XmlReader.Create(jobFile)
+                                input = xmlInputReader.CreateDeclaration(reader)
+                                End Using
                         End Select
                 End Select
 

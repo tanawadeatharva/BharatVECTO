@@ -37,7 +37,6 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
@@ -102,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				AirdragData = airDragData
 			};
 
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -169,7 +168,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 
 			var cyclePort = cycle.OutPort();
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -248,7 +247,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var cyclePort = cycle.OutPort();
-			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy()))
+			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))
 				.AddComponent(new Vehicle(container, vehicleData, airDragData))
 				.AddComponent(new Wheels(container, vehicleData.DynamicTyreRadius, vehicleData.WheelsInertia))
 				.AddComponent(new Brakes(container))
@@ -418,7 +417,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
 				AirDensity = DeclarationData.AirDensity,
-				CurbWeight = 15700.SI<Kilogram>(),
+				CurbMass = 15700.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
 				AxleData = axles,

@@ -109,6 +109,13 @@ namespace TUGraz.VectoCore.OutputData
 		void FinishSimulation();
 
 		string GetColumnName(IFuelProperties fuelData, ModalResultField mrf);
+		void Reset();
+
+		Second Duration { get; }
+
+		Meter Distance { get; }
+		KilogramPerWattSecond VehicleLineCorrectionFactor(IFuelProperties fuel);
+		void CalculateAggregateValues();
 	}
 
 	public static class ModalDataContainerExtensions
@@ -122,29 +129,32 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			return data.GetValues<T>(field).Min();
 		}
-
-		/// <summary>
-		/// Returns a default value if the SI object is null.
-		/// </summary>
-		/// <typeparam name="T">The SI Type.</typeparam>
-		/// <param name="self">The SI Instance.</param>
-		/// <param name="defaultValue">The default value.</param>
-		/// <returns>If self is null, the default value as SI-Type is returned. Otherwise self is returned.</returns>
-		/// <code>
-		/// NewtonMeter t = null;
-		/// var x = t.DefaultIfNull(0);
-		/// </code>
-		public static T DefaultIfNull<T>(this T self, double defaultValue) where T : SIBase<T>
-		{
-			return self ?? defaultValue.SI<T>();
-		}
-
+		
 		public static MeterPerSquareSecond AccelerationsPositive(this IModalDataContainer data)
 		{
 			return data.GetValues<MeterPerSquareSecond>(ModalResultField.acc)
 				.Where(x => x > 0.125)
 				.DefaultIfEmpty(0.SI<MeterPerSquareSecond>())
 				.Average();
+		}
+
+
+		public static MeterPerSquareSecond AverageAccelerationBelowTargetSpeed(this IModalDataContainer data)
+		{
+			var accPos = data.GetValues(
+				x => new {
+					a = x.Field<MeterPerSquareSecond>(ModalResultField.acc.GetName()).DefaultIfNull(0),
+					dt = x.Field<Second>(ModalResultField.simulationInterval.GetName()).DefaultIfNull(0),
+					dv = x.Field<MeterPerSecond>(ModalResultField.v_targ.GetName()).DefaultIfNull(0) -
+						x.Field<MeterPerSecond>(ModalResultField.v_act.GetName()).DefaultIfNull(0),
+						driverStatus = x.Field<int>(ModalResultField.drivingBehavior.GetName())
+				}).Where(x => x.driverStatus == 2 && x.dv > 0).ToArray();
+			var duration = accPos.Sum(x => x.dt).DefaultIfNull(0);
+			var accSum = accPos.Sum(x => x.a * x.dt).DefaultIfNull(0);
+			if (duration.IsEqual(0, 1e-12) && accSum.IsEqual(0, 1e-12)) {
+				return 0.SI<MeterPerSquareSecond>();
+			}
+			return accSum / duration;
 		}
 
 		public static MeterPerSquareSecond AccelerationsNegative(this IModalDataContainer data)
@@ -162,7 +172,7 @@ namespace TUGraz.VectoCore.OutputData
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			})
 				.Sum(x => x.a > 0.125 ? x.dt : 0.SI<Second>()).DefaultIfNull(0);
-			return 100 * (accelerationTimeShare / data.Duration()).Cast<Scalar>();
+			return 100 * (accelerationTimeShare / data.Duration).Cast<Scalar>();
 		}
 
 		public static Scalar DecelerationTimeShare(this IModalDataContainer data)
@@ -172,7 +182,7 @@ namespace TUGraz.VectoCore.OutputData
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			})
 				.Sum(x => x.a < -0.125 ? x.dt : 0.SI<Second>()).DefaultIfNull(0);
-			return 100 * (decelerationTimeShare / data.Duration()).Cast<Scalar>();
+			return 100 * (decelerationTimeShare / data.Duration).Cast<Scalar>();
 		}
 
 		public static Scalar CruiseTimeShare(this IModalDataContainer data)
@@ -184,7 +194,7 @@ namespace TUGraz.VectoCore.OutputData
 			})
 				.Sum(x => x.v >= 0.1.KMPHtoMeterPerSecond() && x.a.IsBetween(-0.125, 0.125) ? x.dt : 0.SI<Second>())
 				.DefaultIfNull(0);
-			return 100 * (cruiseTime / data.Duration()).Cast<Scalar>();
+			return 100 * (cruiseTime / data.Duration).Cast<Scalar>();
 		}
 
 		public static Scalar StopTimeShare(this IModalDataContainer data)
@@ -194,12 +204,12 @@ namespace TUGraz.VectoCore.OutputData
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			})
 				.Sum(x => x.v < 0.1.KMPHtoMeterPerSecond() ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
-			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
+			return 100 * (stopTime / data.Duration).Cast<Scalar>();
 		}
 
 		public static MeterPerSquareSecond AccelerationAverage(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<MeterPerSecond>(ModalResultField.acc) / data.Duration();
+			return data.TimeIntegral<MeterPerSecond>(ModalResultField.acc) / data.Duration;
 		}
 
 		public static Meter AltitudeDelta(this IModalDataContainer data)
@@ -262,34 +272,6 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_TC_loss);
 		}
 
-		public static Second Duration(this IModalDataContainer data)
-		{
-			var time = data.GetValues<Second>(ModalResultField.time).ToList();
-			var dt = data.GetValues<Second>(ModalResultField.simulationInterval).ToList();
-			if (time.Count == 1) {
-				return time.First();
-			}
-			return time.Max() - time.Min() + dt.First() / 2 + dt.Last() / 2;
-		}
-
-		public static Meter Distance(this IModalDataContainer data)
-		{
-			var max = data.GetValues<Meter>(ModalResultField.dist).LastOrDefault() ?? 0.SI<Meter>();
-			var first = data.GetValues(
-				r => new {
-					dist = r.Field<Meter>(ModalResultField.dist.GetName()),
-					vact = r.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
-					acc = r.Field<MeterPerSquareSecond>(ModalResultField.acc.GetName()),
-					dt = r.Field<Second>(ModalResultField.simulationInterval.GetName())
-				}).First();
-			var min = 0.SI<Meter>();
-			if (first != null && first.vact != null && first.acc != null && first.dt != null) {
-				min = first.dist - first.vact * first.dt - first.acc * first.dt * first.dt / 2.0;
-			}
-			
-			return max == null || min == null ? null : max - min;
-		}
-
 		public static WattSecond WorkTotalMechanicalBrake(this IModalDataContainer data)
 		{
 			return data.TimeIntegral<WattSecond>(ModalResultField.P_brake_loss);
@@ -344,18 +326,18 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static Watt PowerWheelPositive(this IModalDataContainer data)
 		{
-			return data.WorkWheelsPos() / data.Duration();
+			return data.WorkWheelsPos() / data.Duration;
 		}
 
 		
 		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
 		{
-			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf)) / data.Duration();
+			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf)) / data.Duration;
 		}
 
 		public static KilogramPerMeter FuelConsumptionPerMeter(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
 		{
-			var distance = data.Distance();
+			var distance = data.Distance;
 			if (distance == null || distance.IsEqual(0)) {
 				return null;
 			}
@@ -376,15 +358,15 @@ namespace TUGraz.VectoCore.OutputData
 				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
 				.Where(v => v.Value > 0).ToList();
 			if (values.Any()) {
-				return values.Sum(v => v.Value) / Duration(data);
+				return values.Sum(v => v.Value) / data.Duration;
 			}
 			return 0.SI<Watt>();
 		}
 
 		public static MeterPerSecond Speed(this IModalDataContainer data)
 		{
-			var distance = Distance(data);
-			var duration = Duration(data);
+			var distance = data.Distance;
+			var duration = data.Duration;
 			if (distance == null || duration == null || duration.IsEqual(0)) {
 				return null;
 			}
@@ -429,7 +411,7 @@ namespace TUGraz.VectoCore.OutputData
 		{
 			var integral = data.GetValues(x => x.Field<PerSecond>(ModalResultField.n_eng_avg.GetName()).Value() *
 												x.Field<Second>(ModalResultField.simulationInterval.GetName()).Value()).Sum();
-			return (integral / Duration(data).Value()).SI<PerSecond>();
+			return (integral / data.Duration.Value()).SI<PerSecond>();
 		}
 
 		public static PerSecond MaxEngineSpeed(this IModalDataContainer data)
@@ -444,7 +426,7 @@ namespace TUGraz.VectoCore.OutputData
 				tEng = x.Field<NewtonMeter>(ModalResultField.T_eng_fcmap.GetName()).DefaultIfNull(0),
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			}).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
-			return 100 * sum / Duration(data);
+			return 100 * sum / data.Duration;
 		}
 
 		/// <summary>
@@ -489,7 +471,7 @@ namespace TUGraz.VectoCore.OutputData
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			})
 				.Sum(x => x.DrivingBehavior == DrivingBehavior.Coasting ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
-			return 100 * sum / Duration(data);
+			return 100 * sum / data.Duration;
 		}
 
 		public static Scalar BrakingTimeShare(this IModalDataContainer data)
@@ -499,7 +481,7 @@ namespace TUGraz.VectoCore.OutputData
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			})
 				.Sum(x => x.DrivingBehavior == DrivingBehavior.Braking ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
-			return 100 * sum / Duration(data);
+			return 100 * sum / data.Duration;
 		}
 
 		public static Dictionary<uint, Scalar> TimeSharePerGear(this IModalDataContainer data, uint gearCount)
@@ -518,7 +500,7 @@ namespace TUGraz.VectoCore.OutputData
 				retVal[entry.Gear] += entry.dt.Value();
 			}
 
-			var duration = Duration(data).Value();
+			var duration = data.Duration.Value();
 			for (uint i = 0; i <= gearCount; i++) {
 				retVal[i] = 100 * retVal[i] / duration;
 			}
@@ -527,7 +509,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static int NumICEStarts(this IModalDataContainer data)
 		{
-			return data.GetValues(x => x.Field<bool>((int)ModalResultField.IgnitionOn)).Pairwise((x, y) => !x && y ? 1 : 0).Sum();
+			return data.GetValues(x => x.Field<bool>((int)ModalResultField.ICEOn)).Pairwise((x, y) => !x && y ? 1 : 0).Sum();
 		}
 	}
 }

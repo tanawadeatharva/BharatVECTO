@@ -37,7 +37,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Impl;
-using TUGraz.VectoCore.InputData.Reader;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -113,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				modData[ModalResultField.dist] = i.SI<Meter>();
 				modData[ModalResultField.P_eng_out] = 0.SI<Watt>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
-				modData[ModalResultField.IgnitionOn] = false;
+				modData[ModalResultField.ICEOn] = false;
 				container.CommitSimulationStep(t, dt);
 				t += dt;
 			}

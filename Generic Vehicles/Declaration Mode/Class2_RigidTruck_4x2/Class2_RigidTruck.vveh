@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
     "CreatedBy": "",
-    "Date": "2017-07-03T14:47:21.4326880Z",
+    "Date": "2019-12-03T15:35:14.9008310Z",
     "AppVersion": "3",
-    "FileVersion": 7
+    "FileVersion": 8
   },
   "Body": {
     "SavedInDeclMode": true,
@@ -56,6 +56,12 @@
         }
       ]
     },
-    "CdA": 4.83
+    "TankSystem": "Compressed",
+    "EngineStopStart": false,
+    "EcoRoll": "None",
+    "PredictiveCruiseControl": "None",
+    "ATEcoRollReleaseLockupClutch": false,
+    "CdA": 4.83,
+    "VehicleHeight": 0.0
   }
 }

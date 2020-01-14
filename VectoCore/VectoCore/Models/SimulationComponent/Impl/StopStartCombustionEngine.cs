@@ -108,22 +108,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.Tq_full] = 0.SI<NewtonMeter>();
 			container[ModalResultField.Tq_drag] = 0.SI<NewtonMeter>();
 
-			container[ModalResultField.IgnitionOn] = CurrentState.IgnitionOn;
-			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
+			container[ModalResultField.ICEOn] = CurrentState.IgnitionOn;
+			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>()) * EngineStopStartUtilityFactor;
+
 
 			var auxDemand = EngineAux.PowerDemandEngineOn(ModelData.IdleSpeed) / ModelData.IdleSpeed;
 
-			var pWHRelMap = 0.SI<Watt>();
-			var pWHRelCorr = 0.SI<Watt>();
-
-			if (ModelData.WHRData != null) {
-				var whrPwr = ModelData.WHRData.WHRMap.GetWHRPower(auxDemand, ModelData.IdleSpeed, DataBus.ExecutionMode != ExecutionMode.Declaration);
-
-				pWHRelMap = whrPwr.ElectricPower * (1 - EngineStopStartUtilityFactor);
-				pWHRelCorr = pWHRelMap * ModelData.WHRData.WHRCorrectionFactor;
-			}
-			container[ModalResultField.P_WHR_el_map] = pWHRelMap;
-			container[ModalResultField.P_WHR_el_corr] = pWHRelCorr;
+			WriteWHRPower(container, ModelData.IdleSpeed, auxDemand);
 
 			foreach (var fuel in ModelData.Fuels) {
 				var fc = 0.SI<KilogramPerSecond>();
@@ -140,7 +131,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				}
 
 				
-				var result = fuel.ConsumptionMap.GetFuelConsumption(auxDemand, ModelData.IdleSpeed);
+				var result = fuel.ConsumptionMap.GetFuelConsumptionValue(auxDemand, ModelData.IdleSpeed);
 
 				var fcESS = result.Value() * (1 - EngineStopStartUtilityFactor);
 				var fcFinal = fcESS;

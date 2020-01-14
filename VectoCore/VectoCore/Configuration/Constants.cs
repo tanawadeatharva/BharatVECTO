@@ -222,6 +222,8 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const string GearboxDataFile = ".vgbx";
 
+			public const string GearshiftDataFile = ".vtcu";
+
 			public const string CycleFile = ".vdri";
 
 			public const string DriverAccelerationCurve = ".vacc";
@@ -291,8 +293,8 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly Meter GearboxLookaheadForAccelerationEstimation = 100.SI<Meter>();
 
-			public static readonly Kilogram MaximumGrossVehicleWeight = 40000.SI<Kilogram>();
-			public static readonly Kilogram MaximumGrossVehicleWeightEMS = 60000.SI<Kilogram>();
+			public static readonly Kilogram MaximumGrossVehicleMass = 40000.SI<Kilogram>();
+			public static readonly Kilogram MaximumGrossVehicleMassEMS = 60000.SI<Kilogram>();
 
 			public static readonly MeterPerSecond HighwaySpeedThreshold = 70.KMPHtoMeterPerSecond();
 			public static readonly MeterPerSecond RuralSpeedThreshold = 50.KMPHtoMeterPerSecond();

@@ -50,8 +50,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 	internal class MockModalDataContainer : IModalDataContainer
 	{
 		protected Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>> FuelColumns = new Dictionary<IFuelProperties, Dictionary<ModalResultField, DataColumn>>();
+		private Second _duration;
+		private Meter _distance;
 
-		
+
 		public MockModalDataContainer()
 		{
 			Data = new ModalResults();
@@ -154,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public void Finish(VectoRun.Status runStatus, Exception exception = null) {}
-
+		
 		public bool WriteModalResults { get; set; }
 
 		public IEnumerable<T> GetValues<T>(ModalResultField key)
@@ -215,6 +217,31 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 
 			return FuelColumns[fuelData][mrf].ColumnName;
+		}
+
+		public void Reset()
+		{
+			
+		}
+
+		public Second Duration
+		{
+			get { return _duration; }
+		}
+
+		public Meter Distance
+		{
+			get { return _distance; }
+		}
+
+		public KilogramPerWattSecond VehicleLineCorrectionFactor(IFuelProperties fuel)
+		{
+			return 0.SI<KilogramPerWattSecond>();
+		}
+
+		public void CalculateAggregateValues()
+		{
+			
 		}
 
 		public string RunName { get; set; }

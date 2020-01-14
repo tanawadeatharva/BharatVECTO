@@ -202,5 +202,9 @@ Coverage/
 Documentation/VehiclesReleaseComparisonDeclarationMode/*.vmod
 Documentation/VehiclesReleaseComparisonDeclarationMode/*.vsum
 
+HashingTool/TestData/
 DISTR/
 [0-9][0-9][0-9][0-9]_[0-9][0-9]_[0-9][0-9]-VECTO-*.zip
+EPTP/
+201*-VECTO-*.zip
+Documentation/VehiclesReleaseComparisonDeclarationMode/tmp/

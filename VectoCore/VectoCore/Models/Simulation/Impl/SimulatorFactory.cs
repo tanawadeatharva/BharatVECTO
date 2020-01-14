@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			if (dataProvider is IDeclarationInputDataProvider) {
 				var declDataProvider = dataProvider as IDeclarationInputDataProvider;
-				var report = declarationReport ?? new XMLDeclarationReport(declDataProvider, ModWriter);
+				var report = declarationReport ?? new XMLDeclarationReport(ModWriter, declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);
 				DataReader = declDataProvider.JobInputData.Vehicle.VehicleCategory.IsTruck()
 					? (IVectoRunDataFactory)new DeclarationModeTruckVectoRunDataFactory(declDataProvider, report)
 					: new DeclarationModeBusVectoRunDataFactory(declDataProvider, report);

@@ -118,6 +118,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	public class JSONGearboxDataV5 : JSONFile, IGearboxEngineeringInputData, IAxleGearInputData,
 		ITorqueConverterEngineeringInputData, IGearshiftEngineeringInputData
 	{
+
 		public JSONGearboxDataV5(JObject data, string filename, bool tolerateMissing = false)
 			: base(data, filename, tolerateMissing) {}
 
@@ -381,6 +382,46 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 					: Body.GetEx<double>("UpshiftMinAcceleration").SI<MeterPerSquareSecond>();
 			}
 		}
+
+		public Second GearResidenceTime { get { return null; } }
+		public double? DnT99LHMin1 { get { return null; } }
+		public double? DnT99LHMin2 { get { return null; } }
+		public int? AllowedGearRangeUp { get { return null; } }
+		public int? AllowedGearRangeDown { get { return null; } }
+		public Second LookBackInterval { get { return null; } }
+		public Watt AvgCardanPowerThresholdPropulsion { get { return null; } }
+		public Watt CurrCardanPowerThresholdPropulsion { get { return null; } }
+		public double? TargetSpeedDeviationFactor { get { return null; } }
+		public double? EngineSpeedHighDriveOffFactor { get { return null; } }
+		public double? RatingFactorCurrentGear { get { return null; } }
+		public TableData AccelerationReserveLookup { get { return null; } }
+		public TableData ShareTorque99L { get { return null; } }
+		public TableData PredictionDurationLookup { get { return null; } }
+		public TableData ShareIdleLow { get { return null; } }
+		public TableData ShareEngineHigh { get { return null; } }
+		public Second DriverAccelerationLookBackInterval { get { return null; } }
+		public MeterPerSquareSecond DriverAccelerationThresholdLow { get { return null; } }
+		public double? RatioEarlyUpshiftFC { get { return null; } }
+		public double? RatioEarlyDownshiftFC { get { return null; } }
+		public int? AllowedGearRangeFC { get { return null; } }
+
+		public PerSecond MinEngineSpeedPostUpshift { get { return null; } }
+		public Second ATLookAheadTime { get { return null; } }
+		public double[][] ShiftSpeedsTCToLocked { get { return null; } }
+
+		public double? VeloictyDropFactor
+		{
+			get { return null; }
+		}
+
+		public double? AccelerationFactor
+		{
+			get { return null; }
+		}
+
+		public TableData LoadStageShiftLines { get { return null; } }
+		public IList<double> LoadStageThresholdsUp { get { return null; } }
+		public IList<double> LoadStageThresholdsDown { get { return null; } }
 
 		public Second PowershiftShiftTime
 		{

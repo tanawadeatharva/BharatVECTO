@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
 		{
 			var retVal = base.CreateVehicleData(data, mission, loading);
-			retVal.CurbWeight = mission.CurbMass;
+			retVal.CurbMass = mission.CurbMass;
 			return retVal;
 		}
 

@@ -117,17 +117,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 						(Signals.PreExistingAuxPower / Sum0(Signals.EngineSpeed));
 			var sum5 = sum4 + sum9;
 			var sum6 = sum3 + sum5;
-			var intrp1 = FMAP.GetFuelConsumption(sum6, Signals.EngineSpeed);
+			var intrp1 = FMAP.GetFuelConsumptionValue(sum6, Signals.EngineSpeed);
 			intrp1 = !double.IsNaN(intrp1.Value()) && intrp1 > 0 ? intrp1 : 0.SI<KilogramPerSecond>();
 			var sum7 = intrp1;
 
-			var intrp2 = FMAP.GetFuelConsumption(sum5, Signals.EngineSpeed);
+			var intrp2 = FMAP.GetFuelConsumptionValue(sum5, Signals.EngineSpeed);
 			intrp2 = !double.IsNaN(intrp2.Value()) && intrp2 > 0 ? intrp2 : 0.SI<KilogramPerSecond>();
 			var sum8 = intrp2;
 
 			var sum10 = M6.AvgPowerDemandAtCrankFromElectricsIncHVAC / Sum0(Signals.EngineSpeed);
 			var sum11 = sum5 + sum10;
-			var intrp3 = FMAP.GetFuelConsumption(sum11, Signals.EngineSpeed);
+			var intrp3 = FMAP.GetFuelConsumptionValue(sum11, Signals.EngineSpeed);
 			intrp3 = !double.IsNaN(intrp3.Value()) && intrp3 > 0 ? intrp3 : 0.SI<KilogramPerSecond>();
 			var sum12 = intrp3;
 

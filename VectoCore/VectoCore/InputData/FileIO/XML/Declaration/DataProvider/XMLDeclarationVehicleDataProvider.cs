@@ -387,6 +387,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				get { return PredictiveCruiseControlType.None; }
 			}
 
+			public bool? ATEcoRollReleaseLockupClutch { get { return null; } }
+
 			#endregion
 		}
 	}
@@ -619,4 +621,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 	}
+
+	
 }

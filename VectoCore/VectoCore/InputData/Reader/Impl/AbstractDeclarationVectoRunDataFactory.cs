@@ -6,7 +6,9 @@ using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.Utils;
 
@@ -33,6 +35,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		protected PTOData _ptoTransmissionData;
 		protected PTOData _municipalPtoTransmissionData;
 		//protected Exception InitException;
+		protected ShiftStrategyParameters _gearshiftData;
 
 		protected AbstractDeclarationVectoRunDataFactory(
 			IDeclarationInputDataProvider dataProvider, IDeclarationReport report)
@@ -79,16 +82,27 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 												_segment.Missions.First(), _segment);
 			_axlegearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
 			_angledriveData = DataAdapter.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
+			var tmpRunData = new VectoRunData() {
+				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,
+				GearboxData =  new GearboxData() {
+					Type = vehicle.Components.GearboxInputData.Type,
+				}
+			};
+			var tmpStrategy = PowertrainBuilder.GetShiftStrategy(tmpRunData, new SimplePowertrainContainer(tmpRunData));
 			var tmpEngine = DataAdapter.CreateEngineData(
 				vehicle, vehicle.Components.EngineInputData.EngineModes[0], _segment.Missions.First());
-			_gearboxData = DataAdapter.CreateGearboxData(vehicle.Components.GearboxInputData, tmpEngine,
-												_axlegearData.AxleGear.Ratio,
-												tempVehicle.DynamicTyreRadius, tempVehicle.VehicleCategory, vehicle.Components.TorqueConverterInputData);
+			_gearboxData = DataAdapter.CreateGearboxData(
+				vehicle, new VectoRunData() { EngineData = tmpEngine, AxleGearData = _axlegearData, VehicleData = tempVehicle },
+				tmpStrategy);
+				
 			_retarderData = DataAdapter.CreateRetarderData(vehicle.Components.RetarderInputData);
 
 			_ptoTransmissionData = DataAdapter.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
 			_municipalPtoTransmissionData = CreateDefaultPTOData();
+			_gearshiftData = DataAdapter.CreateGearshiftData(
+				_gearboxData, _axlegearData.AxleGear.Ratio * (_angledriveData?.Angledrive.Ratio ?? 1.0), tmpEngine.IdleSpeed);
+
 		}
 
 		protected abstract Segment GetSegment(IVehicleDeclarationInputData vehicle);
