@@ -35,6 +35,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public enum VehicleClass
 	{
+		Unknown,
         ClassML2r,
         ClassML2van,
         ClassML3r,
@@ -79,7 +80,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static string GetClassNumber(this VehicleClass hdvClass)
 		{
-			return hdvClass.ToString().Substring(Prefix.Length);
+			return hdvClass == VehicleClass.Unknown ? "-" : hdvClass.ToString().Substring(Prefix.Length);
 		}
 
 		public static bool IsMediumLorry(VehicleClass vehicleClass)

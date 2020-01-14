@@ -98,15 +98,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VehicleCategory = vehicleCategory,
 				AxleConfiguration = axleConfiguration,
 				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvgroup")),
-
 				AccelerationFile =
 					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
 												row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(ref grossVehicleMassRating, curbWeight, row),
-
-
-				
-
 				VehicleHeight = LookupHeight(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational),
 				DesignSpeed = row.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 				GrossVehicleMassRating = grossVehicleMassRating,
@@ -123,8 +118,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				row = _segmentTable.AsEnumerable().First(r => {
 					var isValid = r.Field<string>("valid");
 					var isVocational = r.Field<string>("vocational").ToBoolean();
-
-                    var category = r.Field<string>("vehiclecategory");
+					var category = r.Field<string>("vehiclecategory");
 					var axleConf = r.Field<string>("axleconf.");
 				    var massMin = r.ParseDouble("tpmlm_min").SI(Unit.SI.Ton);
 				    var massMax = r.ParseDouble("tpmlm_max").SI(Unit.SI.Ton);
@@ -303,17 +297,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 			IEnumerable<MissionTrailer> trailers, bool lowLoading)
 		{
 			var refLoadValue = payloadStr.ToDouble(double.NaN);
-			if (double.IsNaN(refLoadValue)) {
-				//var testvehiclePayload = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, payloadStr);
-
-                var vehiclePayload = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, payloadStr)
-					.LimitTo(0.SI<Kilogram>(), grossVehicleWeight - vehicleWeight);
-				var trailerPayload = trailers.Sum(
-					t => DeclarationData.GetPayloadForTrailerWeight(t.TrailerGrossVehicleWeight, t.TrailerCurbWeight, lowLoading))
-					.DefaultIfNull(0);
-					return vehiclePayload + trailerPayload;
+			if (!double.IsNaN(refLoadValue)) {
+				return refLoadValue.SI<Kilogram>();
 			}
-			return refLoadValue.SI<Kilogram>();
+
+			var vehiclePayload = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, payloadStr)
+												.LimitTo(0.SI<Kilogram>(), grossVehicleWeight - vehicleWeight);
+			var trailerPayload = trailers.Sum(
+											t => DeclarationData.GetPayloadForTrailerWeight(t.TrailerGrossVehicleWeight, t.TrailerCurbWeight, lowLoading))
+										.DefaultIfNull(0);
+			return vehiclePayload + trailerPayload;
 		}
 
 		/// <summary>

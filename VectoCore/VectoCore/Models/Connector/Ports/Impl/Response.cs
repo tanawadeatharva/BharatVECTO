@@ -112,9 +112,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	{
 		public Second DeltaT { get; set; }
 
-		public ResponseFailTimeInterval()
-		{
-		}
 	}
 
 	public class ResponseDrivingCycleDistanceExceeded : AbstractResponse

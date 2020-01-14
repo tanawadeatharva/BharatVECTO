@@ -1303,7 +1303,7 @@ lbDlog:
 	End Sub
 
 	Private Sub UpdateVehiclePic()
-		Dim HDVclass As String
+		Dim HDVclass As VehicleClass = VehicleClass.Unknown
 
 		Dim vehicle As IVehicleEngineeringInputData = Nothing
 
@@ -1328,10 +1328,8 @@ lbDlog:
 												False)
 		Catch
 		End Try
-		If Not s0.Found Then
-			HDVclass = "-"
-		Else
-			HDVclass = s0.VehicleClass.GetClassNumber()
+		If s0.Found Then
+			HDVclass = s0.VehicleClass
 
 			If Cfg.DeclMode Then
 				LvCycles.Items.Clear()
