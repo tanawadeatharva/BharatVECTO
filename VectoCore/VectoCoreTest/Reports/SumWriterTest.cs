@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 			var jobfile = @"Testdata\XML\XMLReaderDeclaration\vecto_vehicle-sample.xml";
 			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
 			var writer = new FileOutputWriter(jobfile);
-			var xmlReport = new XMLDeclarationReport(writer);
+			var xmlReport = new XMLDeclarationReport(null, writer);
 			var sumData = new SummaryDataContainer(writer);
 			var jobContainer = new JobContainer(sumData);
 

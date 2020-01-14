@@ -37,6 +37,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
@@ -52,8 +53,20 @@ namespace TUGraz.VectoCore.OutputData.XML
 		private readonly XMLCustomerReport _customerReport;
 		private readonly XMLMonitoringReport _monitoringReport;
 
+		private XMLPrimaryVehicleReport _primaryReport;
+
 
 		private IDictionary<Tuple<MissionType, LoadingType>, double> _weightingFactors;
+
+		public XMLDeclarationReport(IDeclarationInputDataProvider dataProvider, IReportWriter writer = null) : base(writer)
+		{
+			_manufacturerReport = new XMLManufacturerReport();
+			_customerReport = new XMLCustomerReport();
+			_monitoringReport = new XMLMonitoringReport(_manufacturerReport);
+			if (dataProvider != null && dataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
+				_primaryReport = new XMLPrimaryVehicleReport(dataProvider);
+			}
+		}
 
 		public class ResultEntry : IResultEntry
 		{
@@ -180,12 +193,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			}
 		}
 
-		public XMLDeclarationReport(IReportWriter writer = null) : base(writer)
-		{
-			_manufacturerReport = new XMLManufacturerReport();
-			_customerReport = new XMLCustomerReport();
-			_monitoringReport = new XMLMonitoringReport(_manufacturerReport);
-		}
+		
 
 		public XDocument FullReport
 		{

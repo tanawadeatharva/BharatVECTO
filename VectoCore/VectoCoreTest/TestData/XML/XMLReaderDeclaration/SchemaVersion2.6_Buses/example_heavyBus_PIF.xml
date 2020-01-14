@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoOutputPrimaryVehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation" xmlns:tns="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:pif="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation" xmlns:pbus="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryBusInformation:HeavyBus:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryVehicleInformation.xsd
+<tns:VectoOutputPrimaryVehicle 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation" 
+	xmlns:tns="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation" 
+	xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" 
+	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
+	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
+	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
+	xmlns:pif="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation" 
+	xmlns:pbus="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryBusInformation:HeavyBus:v0.1" 
+	xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
+
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryVehicleInformation.xsd
 urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryBusInformation:HeavyBus:v0.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryBus.xsd
 urn:tugraz:ivt:VectoAPI:DeclarationDefinitions E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.xsd
 urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.2.1.xsd">
+
 	<tns:Data id="PIFHB-VEH-1234567890" xsi:type="pbus:PrimaryVehicleHeavyBusDataType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryBusInformation:HeavyBus:v0.1">
 	
 		<Vehicle xsi:type="VehiclePIFType">
@@ -215,7 +228,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 					</v2.0:Data>
 				</AxleWheels>
 				<Auxiliaries>
-					<pbus:Data xsi:type="v2.6:AuxiliaryDataHeavyBusDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
+					<pbus:Data xsi:type="PrimaryVehicleAuxiliaryDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
 						<Fan>
 							<Technology>Hydraulic driven - Constant displacement pump</Technology>
 						</Fan>
@@ -223,11 +236,12 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 							<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 						</SteeringPump>
 						<ElectricSystem>
-							<AlternatorTechnology ratio="1.000">Standard technology - LED headlights, all</AlternatorTechnology>
+							<AlternatorTechnology ratio="1.000">Sample Alternator Technology 1</AlternatorTechnology>
 							<SmartElectrics>false</SmartElectrics>
 							<ResultCards/>
 						</ElectricSystem>
 						<PneumaticSystem>
+							<SizeOfAirSupply>500</SizeOfAirSupply>
 							<AirsuspensionControl>mechanically</AirsuspensionControl>
 							<AdBlueDosing>true</AdBlueDosing>
 							<DoorDriveTechnology>pneumatic</DoorDriveTechnology>
