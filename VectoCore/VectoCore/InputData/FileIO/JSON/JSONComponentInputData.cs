@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
@@ -143,7 +144,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		public bool SavedInDeclarationMode { get; private set; }
 		public string Manufacturer { get; private set; }
 		public string Model { get; private set; }
-		public string Date { get; private set; }
+		public DateTime Date { get; private set; }
 		public CertificationMethod CertificationMethod { get; private set; }
 		public string CertificationNumber { get; private set; }
 		public DigestData DigestValue { get; private set; }
@@ -241,6 +242,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 
 		public bool? ATEcoRollReleaseLockupClutch { get { return VehicleData.ADAS.ATEcoRollReleaseLockupClutch; } }
+		public XmlNode XMLSource { get { return null; } }
 
 		public Meter Length { get { return VehicleData.Length; } }
 		public Meter Width { get { return VehicleData.Width; } }

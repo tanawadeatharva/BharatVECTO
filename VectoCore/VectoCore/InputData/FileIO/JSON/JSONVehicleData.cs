@@ -33,6 +33,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
@@ -358,6 +360,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return null; }
 		}
+
+		public virtual XmlNode XMLSource { get { return null; } }
 
 		public virtual Meter Length
 		{
@@ -839,9 +843,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Constants.NOT_AVailABLE; }
 		}
 
-		public virtual string Date
+		public virtual DateTime Date
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return DateTime.MinValue; }
 		}
 
 		public CertificationMethod CertificationMethod

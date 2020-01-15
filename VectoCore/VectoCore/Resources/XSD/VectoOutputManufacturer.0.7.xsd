@@ -881,24 +881,20 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="VectoOutputManufacturerType">
-		<xs:complexContent>
-			<xs:extension base="common:AbstractVectoOutputManufacturerType">
-				<xs:sequence>
-					<xs:element name="Data">
-						<xs:complexType>
-							<xs:complexContent>
-								<xs:extension base="VectoOutputDataType"/>
-							</xs:complexContent>
-						</xs:complexType>
-					</xs:element>
-					<xs:element name="Signature" type="vdecdef:SignatureType">
-						<xs:annotation>
-							<xs:documentation>I.3.1.4 / #73</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
+		<xs:sequence>
+			<xs:element name="Data">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="VectoOutputDataType"/>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Signature" type="vdecdef:SignatureType">
+				<xs:annotation>
+					<xs:documentation>I.3.1.4 / #73</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
 	</xs:complexType>
 	<xs:simpleType name="PercentType">
 		<xs:restriction base="xs:string">

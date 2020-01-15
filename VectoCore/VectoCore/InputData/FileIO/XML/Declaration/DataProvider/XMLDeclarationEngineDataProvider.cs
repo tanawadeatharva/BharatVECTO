@@ -261,13 +261,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get {
 				var retVal = WHRType.None;
-				if (XmlConvert.ToBoolean(GetString("MechanicalOutputICE"))) {
+				if (XmlConvert.ToBoolean(GetString(XMLNames.Engine_WHR_MechanicalOutputICE))) {
 					retVal |= WHRType.MechanicalOutputICE;
 				}
-				if (XmlConvert.ToBoolean(GetString("MechanicalOutputDrivetrain"))) {
+				if (XmlConvert.ToBoolean(GetString(XMLNames.Engine_WHR_MechanicalOutputIDrivetrain))) {
 					retVal |= WHRType.MechanicalOutputDrivetrain;
 				}
-				if (XmlConvert.ToBoolean(GetString("ElectricalOutput"))) {
+				if (XmlConvert.ToBoolean(GetString(XMLNames.Engine_WHR_ElectricalOutput))) {
 					retVal |= WHRType.ElectricalOutput;
 				}
 

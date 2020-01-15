@@ -49,9 +49,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	public class XMLDeclarationReport : DeclarationReport<XMLDeclarationReport.ResultEntry>
 	{
-		private readonly XMLManufacturerReport _manufacturerReport;
-		private readonly XMLCustomerReport _customerReport;
-		private readonly XMLMonitoringReport _monitoringReport;
+		private IXMLManufacturerReport _manufacturerReport;
+		private XMLCustomerReport _customerReport;
+		private XMLMonitoringReport _monitoringReport;
 
 		private XMLPrimaryVehicleReport _primaryReport;
 
@@ -60,12 +60,12 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public XMLDeclarationReport(IReportWriter writer = null, bool writePIF = false) : base(writer)
 		{
-			_manufacturerReport = new XMLManufacturerReport();
-			_customerReport = new XMLCustomerReport();
-			_monitoringReport = new XMLMonitoringReport(_manufacturerReport);
-			if (writePIF) {
-				_primaryReport = new XMLPrimaryVehicleReport();
-			}
+			//_manufacturerReport = new XMLManufacturerReport();
+			//_customerReport = new XMLCustomerReport();
+			//_monitoringReport = new XMLMonitoringReport(_manufacturerReport);
+			//if (writePIF) {
+			//	_primaryReport = new XMLPrimaryVehicleReport();
+			//}
 		}
 
 		public class ResultEntry : IResultEntry
@@ -263,10 +263,30 @@ namespace TUGraz.VectoCore.OutputData.XML
 			_weightingFactors = weightingGroup == WeightingGroup.Unknown
 				? ZeroWeighting
 				: DeclarationData.WeightingFactors.Lookup(weightingGroup);
+
+			InstantiateReports(modelData);
+
 			_manufacturerReport.Initialize(modelData, fuelModes);
 			_customerReport.Initialize(modelData, fuelModes);
 			_primaryReport?.Initialize(modelData, fuelModes);
 			_monitoringReport.Initialize(modelData);
+		}
+
+		private void InstantiateReports(VectoRunData modelData)
+		{
+			if (modelData.Exempted) {
+				_manufacturerReport = new XMLManufacturerReportExemptedTruck();
+			} else {
+				if (modelData.VehicleData.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
+					_manufacturerReport = new XMLManufacturerReportPrimaryBus();
+					_primaryReport = new XMLPrimaryVehicleReport();
+				} else {
+					_manufacturerReport = new XMLManufacturerReportTruck();
+				}
+			}
+			_customerReport = new XMLCustomerReport();
+			_monitoringReport = new XMLMonitoringReport(_manufacturerReport);
+
 		}
 
 		private static IDictionary<Tuple<MissionType, LoadingType>, double> ZeroWeighting

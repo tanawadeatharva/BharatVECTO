@@ -12,7 +12,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		bool SmartAirCompression { get;  }
 		bool SmartRegeneration { get;  }
 		//bool RetarderBrake { get;  }
-		Meter KneelingHeightMillimeters { get;  }
+		Meter KneelingHeight { get;  }
 		ConsumerTechnology AirSuspensionControl { get;  } // mechanical or electrical
 		ConsumerTechnology AdBlueDosing { get;  } // pnmeumatic or electric
 		ConsumerTechnology Doors { get;  } // pneumatic or electric

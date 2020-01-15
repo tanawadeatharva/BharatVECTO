@@ -16,7 +16,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryBusInformation:HeavyBus:v0.1 E:
 urn:tugraz:ivt:VectoAPI:DeclarationDefinitions E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.xsd
 urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.2.1.xsd">
 
-	<tns:Data id="PIFHB-VEH-1234567890" xsi:type="pbus:PrimaryVehicleHeavyBusDataType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryBusInformation:HeavyBus:v0.1">
+	<tns:Data id="PIFHB-VEH-1234567890" xsi:type="PrimaryVehicleHeavyBusDataType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryBusInformation:HeavyBus:v0.1">
 	
 		<Vehicle xsi:type="VehiclePIFType">
 			<ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
@@ -43,9 +43,9 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 				<Entry gear="1" maxTorque="2500"/>
 				<Entry gear="12" maxTorque="1900"/>
 			</pbus:TorqueLimits>
-			<Components xsi:type="pbus:VehicleComponentsPIFType">
+			<Components xsi:type="VehicleComponentsPIFType">
 				<Engine>
-					<Data xsi:type="pbus:EngineDataPIFType">
+					<Data xsi:type="EngineDataPIFType">
 						<Manufacturer>Generic Engine Manufacturer</Manufacturer>
 						<Model>Generic 40t Long Haul Truck Engine</Model>
 						<CertificationNumber>e12*0815/8051*2017/05E0000*00</CertificationNumber>

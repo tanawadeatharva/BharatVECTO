@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -13,7 +14,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool SavedInDeclarationMode { get; }
 		public string Manufacturer { get; }
 		public string Model { get; }
-		public string Date { get; }
+		public DateTime Date { get; }
 		public CertificationMethod CertificationMethod { get; }
 		public string CertificationNumber { get; }
 		public DigestData DigestValue { get; }
@@ -83,7 +84,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public bool SavedInDeclarationMode { get; }
 		public string Manufacturer { get; }
 		public string Model { get; }
-		public string Date { get; }
+		public DateTime Date { get; }
 		public CertificationMethod CertificationMethod { get; }
 		public string CertificationNumber { get; }
 		public DigestData DigestValue { get; }

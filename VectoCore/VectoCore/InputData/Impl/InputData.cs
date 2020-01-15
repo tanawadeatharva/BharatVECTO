@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -131,7 +132,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public string Model { get; internal set; }
 
-		public string Date { get; internal set; }
+		public DateTime Date { get; internal set; }
 
 		public CertificationMethod CertificationMethod { get; internal set; }
 

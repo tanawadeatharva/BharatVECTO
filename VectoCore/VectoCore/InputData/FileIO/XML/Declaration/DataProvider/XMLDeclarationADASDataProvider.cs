@@ -55,6 +55,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public virtual bool? ATEcoRollReleaseLockupClutch { get { return null; } }
+		public virtual XmlNode XMLSource { get { return BaseNode; } }
 
 		#endregion
 	}

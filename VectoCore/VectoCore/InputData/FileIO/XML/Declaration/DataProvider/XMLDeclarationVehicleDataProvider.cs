@@ -388,6 +388,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 
 			public bool? ATEcoRollReleaseLockupClutch { get { return null; } }
+			public XmlNode XMLSource { get { return null; } }
 
 			#endregion
 		}
@@ -411,6 +412,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public XMLDeclarationVehicleDataProviderV21(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) :
 			base(jobData, xmlNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		
+		#endregion
 
 		public override VehicleCategory VehicleCategory
 		{
@@ -594,8 +600,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#endregion
 
+
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
+		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
+		{
+			get { return ADASReader.ADASInputData; }
+		}
 
 		public override XmlElement PTONode { get { return null; } }
 

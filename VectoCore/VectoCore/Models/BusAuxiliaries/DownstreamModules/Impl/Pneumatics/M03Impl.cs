@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 			numActuationsPerCycle = Actuations.Kneeling;
 			//'=IF(COUNTBLANK(F35), G35, F35) * K11 * K16
 			airConsumptionPerActuation = _pneumaticAuxillariesConfig.BreakingWithKneeling *
-										_pneumaticUserInputsConfig.KneelingHeightMillimeters * _vehicleMassKG;
+										_pneumaticUserInputsConfig.KneelingHeight * _vehicleMassKG;
 			var kneeling = (numActuationsPerCycle * airConsumptionPerActuation);
 
 			//'* * AdBlue * *

@@ -2,6 +2,7 @@
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
@@ -106,7 +107,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		}
 
 		protected abstract Segment GetSegment(IVehicleDeclarationInputData vehicle);
-		
+
+		protected abstract VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Kilogram> loading);
 
 		protected virtual void InitializeReport()
 		{
@@ -114,34 +116,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			List<List<FuelData.Entry>> fuels;
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 			if (vehicle.ExemptedVehicle) {
-				powertrainConfig = new VectoRunData() {
-					Exempted = true,
-					VehicleData = DataAdapter.CreateVehicleData(vehicle, null, null),
-					InputDataHash = InputDataProvider.XMLHash
-				};
+				powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Kilogram>());
 				fuels = new List<List<FuelData.Entry>>();
 			} else {
-				
-				powertrainConfig = new VectoRunData() {
-					VehicleData =
-						DataAdapter.CreateVehicleData(
-							vehicle, _segment.Missions.First(),
-							_segment.Missions.First().Loadings.First().Value),
-					AirdragData = _airdragData,
-					EngineData = DataAdapter.CreateEngineData(vehicle, vehicle.Components.EngineInputData.EngineModes[0], _segment.Missions.First()),
-					GearboxData = _gearboxData,
-					AxleGearData = _axlegearData,
-					Retarder = _retarderData,
-					Aux =
-						DataAdapter.CreateAuxiliaryData(
-							vehicle.Components.AuxiliaryInputData,
-							vehicle.Components.BusAuxiliaries,
-							_segment.Missions.First().MissionType,
-							_segment.VehicleClass,vehicle.Length ?? _segment.Missions.First().VehicleLength),
-					PTO = _ptoTransmissionData,
-					InputDataHash = InputDataProvider.XMLHash
-				};
-				powertrainConfig.VehicleData.VehicleClass = _segment.VehicleClass;
+				powertrainConfig = CreateVectoRunData(
+					vehicle, 0, _segment.Missions.First(), _segment.Missions.First().Loadings.First());
 				fuels = vehicle.Components.EngineInputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, vehicle.TankSystem)).ToList())
 								.ToList();
 			}

@@ -266,9 +266,9 @@ Public Class Engine
 		End Get
 	End Property
 
-	Public ReadOnly Property [Date] As String Implements IComponentInputData.[Date]
+	Public ReadOnly Property [Date] As DateTime Implements IComponentInputData.[Date]
 		Get
-			Return Now.ToUniversalTime().ToString("o")
+			Return Now.ToUniversalTime()
 		End Get
 	End Property
 
@@ -601,7 +601,7 @@ Public Class DummyVehicle
 	Public  Property SavedInDeclarationMode As Boolean Implements IComponentInputData.SavedInDeclarationMode
 	Public  Property Manufacturer As String Implements IComponentInputData.Manufacturer
 	Public  Property Model As String Implements IComponentInputData.Model
-	Public  Property [Date] As String Implements IComponentInputData.[Date]
+	Public  Property [Date] As DateTime Implements IComponentInputData.[Date]
 	Public  Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 	Public  Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 	Public  Property DigestValue As DigestData Implements IComponentInputData.DigestValue

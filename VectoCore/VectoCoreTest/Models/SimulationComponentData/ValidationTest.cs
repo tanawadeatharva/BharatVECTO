@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -632,7 +633,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public string Manufacturer { get; set; }
 		public string Model { get; set; }
 		public string Creator { get; set; }
-		public string Date { get; set; }
+		public DateTime Date { get; set; }
 		public string TechnicalReportId { get; set; }
 
 		public CertificationMethod CertificationMethod

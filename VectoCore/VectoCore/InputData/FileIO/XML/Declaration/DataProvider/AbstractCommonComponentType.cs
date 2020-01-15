@@ -1,3 +1,4 @@
+using System;
 using System.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -25,9 +26,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 			get { return GetString(XMLNames.Component_Model); }
 		}
 
-		public virtual string Date
+		public virtual DateTime Date
 		{
-			get { return GetString(XMLNames.Component_Date); }
+			get { return XmlConvert.ToDateTime(GetString(XMLNames.Component_Date), XmlDateTimeSerializationMode.Utc); }
 		}
 
 		public virtual CertificationMethod CertificationMethod

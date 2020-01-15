@@ -1204,6 +1204,33 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ElectricalOutput.
+        /// </summary>
+        public static string Engine_WHR_ElectricalOutput {
+            get {
+                return ResourceManager.GetString("Engine_WHR_ElectricalOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MechanicalOutputICE.
+        /// </summary>
+        public static string Engine_WHR_MechanicalOutputICE {
+            get {
+                return ResourceManager.GetString("Engine_WHR_MechanicalOutputICE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MechanicalOutputDrivetrain.
+        /// </summary>
+        public static string Engine_WHR_MechanicalOutputIDrivetrain {
+            get {
+                return ResourceManager.GetString("Engine_WHR_MechanicalOutputIDrivetrain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WHRCorrection.
         /// </summary>
         public static string Engine_WHRCorrectionFactor {
@@ -2550,6 +2577,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string VectoManufacturerReport {
             get {
                 return ResourceManager.GetString("VectoManufacturerReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VectoOutputPrimaryVehicle.
+        /// </summary>
+        public static string VectoPrimaryVehicleReport {
+            get {
+                return ResourceManager.GetString("VectoPrimaryVehicleReport", resourceCulture);
             }
         }
         

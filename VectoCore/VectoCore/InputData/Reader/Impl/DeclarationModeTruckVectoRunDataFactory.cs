@@ -86,13 +86,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			//}
 
 			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
-				yield return new VectoRunData {
-						Exempted = true,
-						Report = Report,
-						Mission = new Mission() { MissionType = MissionType.ExemptedMission},
-						VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null),
-						InputDataHash = InputDataProvider.XMLHash
-					};
+				yield return CreateVectoRunData(InputDataProvider.JobInputData.Vehicle, 0, null, new KeyValuePair<LoadingType, Kilogram>());
 			} else {
 				foreach (var vectoRunData in VectoRunDataTruckNonExempted()) {
 					yield return vectoRunData;
@@ -104,66 +98,85 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		private IEnumerable<VectoRunData> VectoRunDataTruckNonExempted()
 		{
-			
 			var vehicle = InputDataProvider.JobInputData.Vehicle;
 
 			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;
 
-			//foreach (var engineMode in engineModes) {
 			for(var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
-				var engineMode = engineModes[modeIdx];
+				
 				foreach (var mission in _segment.Missions) {
 					if (mission.MissionType.IsEMS() &&
 						engine.RatedPowerDeclared.IsSmaller(DeclarationData.MinEnginePowerForEMS)) {
 						continue;
 					}
-
-					DrivingCycleData cycle;
-					lock (CyclesCacheLock) {
-						if (CyclesCache.ContainsKey(mission.MissionType)) {
-							cycle = CyclesCache[mission.MissionType];
-						} else {
-							cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-							CyclesCache.Add(mission.MissionType, cycle);
-						}
-					}
 					foreach (var loading in mission.Loadings) {
-						var simulationRunData = new VectoRunData {
-							Loading = loading.Key,
-							VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading.Value),
-							AirdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment),
-							EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission), // _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
-							GearboxData = _gearboxData,
-							AxleGearData = _axlegearData,
-							AngledriveData = _angledriveData,
-							Aux = DataAdapter.CreateAuxiliaryData(
-								vehicle.Components.AuxiliaryInputData,
-								vehicle.Components.BusAuxiliaries, mission.MissionType,
-								_segment.VehicleClass, vehicle.Length),
-							Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
-							Retarder = _retarderData,
-							DriverData = _driverdata,
-							ExecutionMode = ExecutionMode.Declaration,
-							JobName = InputDataProvider.JobInputData.JobName,
-							ModFileSuffix = (engineModes.Count > 1 ? string.Format("_EngineMode{0}_", modeIdx) : "") + loading.Key.ToString(),
-							Report = Report,
-							Mission = mission,
-							PTO = mission.MissionType == MissionType.MunicipalUtility
-								? _municipalPtoTransmissionData
-								: _ptoTransmissionData,
-							InputDataHash = InputDataProvider.XMLHash,
-							SimulationType = SimulationType.DistanceCycle,
-							GearshiftParameters = _gearshiftData,
-							ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
-						};
-						simulationRunData.EngineData.FuelMode = modeIdx;
-						simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
+						var simulationRunData = CreateVectoRunData(vehicle, modeIdx, mission, loading);
 						yield return simulationRunData;
 					}
 				}
 			}
 		}
+
+
+		protected override VectoRunData CreateVectoRunData(
+			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+		{
+			if (InputDataProvider.JobInputData.Vehicle.ExemptedVehicle) {
+				return new VectoRunData {
+					Exempted = true,
+					Report = Report,
+					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
+					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null),
+					InputDataHash = InputDataProvider.XMLHash
+				};
+			}
+
+			var engine = InputDataProvider.JobInputData.Vehicle.Components.EngineInputData;
+			var engineModes = engine.EngineModes;
+			var engineMode = engineModes[modeIdx];
+			DrivingCycleData cycle;
+			lock (CyclesCacheLock) {
+				if (CyclesCache.ContainsKey(mission.MissionType)) {
+					cycle = CyclesCache[mission.MissionType];
+				} else {
+					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
+					CyclesCache.Add(mission.MissionType, cycle);
+				}
+			}
+			var simulationRunData = new VectoRunData {
+				Loading = loading.Key,
+				VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading.Value),
+				AirdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment),
+				EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission), // _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
+				GearboxData = _gearboxData,
+				AxleGearData = _axlegearData,
+				AngledriveData = _angledriveData,
+				Aux = DataAdapter.CreateAuxiliaryData(
+					vehicle.Components.AuxiliaryInputData,
+					vehicle.Components.BusAuxiliaries, mission.MissionType,
+					_segment.VehicleClass, vehicle.Length),
+				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+				Retarder = _retarderData,
+				DriverData = _driverdata,
+				ExecutionMode = ExecutionMode.Declaration,
+				JobName = InputDataProvider.JobInputData.JobName,
+				ModFileSuffix = (engineModes.Count > 1 ? string.Format("_EngineMode{0}_", modeIdx) : "") + loading.Key.ToString(),
+				Report = Report,
+				Mission = mission,
+				PTO = mission.MissionType == MissionType.MunicipalUtility
+					? _municipalPtoTransmissionData
+					: _ptoTransmissionData,
+				InputDataHash = InputDataProvider.XMLHash,
+				SimulationType = SimulationType.DistanceCycle,
+				GearshiftParameters = _gearshiftData,
+				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
+			};
+			simulationRunData.EngineData.FuelMode = modeIdx;
+			simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
+			return simulationRunData;
+		}
+
 
 	}
 }

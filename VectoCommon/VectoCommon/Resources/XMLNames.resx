@@ -1149,4 +1149,16 @@
   <data name="Engine_FuelConsumptionMap_WHRMechPower_Attr" xml:space="preserve">
     <value>mechanicalPower</value>
   </data>
+  <data name="Engine_WHR_MechanicalOutputICE" xml:space="preserve">
+    <value>MechanicalOutputICE</value>
+  </data>
+  <data name="Engine_WHR_MechanicalOutputIDrivetrain" xml:space="preserve">
+    <value>MechanicalOutputDrivetrain</value>
+  </data>
+  <data name="Engine_WHR_ElectricalOutput" xml:space="preserve">
+    <value>ElectricalOutput</value>
+  </data>
+  <data name="VectoPrimaryVehicleReport" xml:space="preserve">
+    <value>VectoOutputPrimaryVehicle</value>
+  </data>
 </root>

@@ -365,6 +365,7 @@
     <Compile Include="Models\Simulation\SimulationFactoryNinjectModule.cs" />
     <Compile Include="OutputData\FileIO\BusAuxWriter.cs" />
     <Compile Include="OutputData\FileIO\JSONFileWriter.cs" />
+    <Compile Include="OutputData\XML\AbstractXMLManufacturerReport.cs" />
     <Compile Include="OutputData\XML\Engineering\Factory\EngineeringWriterFactory.cs" />
     <Compile Include="OutputData\XML\Engineering\Factory\IEngineeringWriterInjectFactory.cs" />
     <Compile Include="OutputData\XML\Engineering\Interfaces\IXMLEngineeringComponentWriter.cs" />
@@ -399,6 +400,8 @@
     <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriter.cs" />
     <Compile Include="OutputData\XML\Engineering\XMLEngineeringWriterInjectModule.cs" />
     <Compile Include="OutputData\XML\Engineering\XMLWriterMapping.cs" />
+    <Compile Include="OutputData\XML\XMLManufacturerReportExemptedTruck.cs" />
+    <Compile Include="OutputData\XML\XMLManufacturerReportPrimaryBus.cs" />
     <Compile Include="OutputData\XML\XMLPrimaryVehicleReport.cs" />
     <Compile Include="Utils\Ninject\UseFirstArgumentAsInstanceProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationReaderInjectModule.cs" />
@@ -854,6 +857,18 @@
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.ACMP" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP" />
+    <EmbeddedResource Include="Resources\XSD\VectoOutputPrimaryBus.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputPrimaryVehicleInformation.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoVTPReport.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\XSD\VectoOutputDefinitions.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>

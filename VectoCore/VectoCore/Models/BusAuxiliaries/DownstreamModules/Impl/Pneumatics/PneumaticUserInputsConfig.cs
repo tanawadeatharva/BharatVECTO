@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 
 		// pneumatic or electric
 		public ConsumerTechnology Doors { get; set; }
-		public Meter KneelingHeightMillimeters { get; set; }
+		public Meter KneelingHeight { get; set; }
 
 		//public bool RetarderBrake { get; set; }
 		public bool SmartAirCompression { get; set; }

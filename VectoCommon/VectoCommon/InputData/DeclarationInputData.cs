@@ -32,6 +32,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -63,7 +65,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		string Model { get; }
 
-		string Date { get; }
+		DateTime Date { get; }
 
 		CertificationMethod CertificationMethod { get; }
 
@@ -229,6 +231,7 @@ namespace TUGraz.VectoCommon.InputData
 		PredictiveCruiseControlType PredictiveCruiseControl { get; }
 
 		bool? ATEcoRollReleaseLockupClutch { get; }
+		XmlNode XMLSource { get; }
 	}
 
 	public enum PredictiveCruiseControlType
@@ -666,6 +669,8 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IBusAuxiliariesDeclarationData
 	{
+		XmlNode XMLSource { get; }
+
 		string FanTechnology { get; }
 
 		IList<string> SteeringPumpTechnology { get; }

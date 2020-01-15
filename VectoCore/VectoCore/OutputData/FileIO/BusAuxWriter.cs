@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			puData["CompressorGearRatio"] = pneumaticUserCfg.CompressorGearRatio;
 			puData["CompressorMap"] = pneumaticUserCfg.CompressorMap == null ? "" : JSONFileWriter.GetRelativePath(pneumaticUserCfg.CompressorMap.Source, auxPath);
 			puData["Doors"] = pneumaticUserCfg.Doors;
-			puData["KneelingHeightMillimeters"] = pneumaticUserCfg.KneelingHeightMillimeters.ConvertToMilliMeter().Value;
+			puData["KneelingHeightMillimeters"] = pneumaticUserCfg.KneelingHeight.ConvertToMilliMeter().Value;
 			//puData["RetarderBrake"] = pneumaticUserCfg.RetarderBrake;
 			puData["SmartAirCompression"] = pneumaticUserCfg.SmartAirCompression;
 			puData["SmartRegeneration"] = pneumaticUserCfg.SmartRegeneration;

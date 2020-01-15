@@ -1,7 +1,9 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
@@ -27,9 +29,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return GetString(XMLNames.Component_Model); }
 		}
 
-		public string Date
+		public DateTime Date
 		{
-			get { return GetString(XMLNames.Component_Date); }
+			get { return XmlConvert.ToDateTime(GetString(XMLNames.Component_Date), XmlDateTimeSerializationMode.Utc); }
 		}
 
 		public virtual CertificationMethod CertificationMethod
@@ -39,7 +41,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 
 		public virtual string CertificationNumber
 		{
-			get { return "N.A."; }
+			get { return Constants.NOT_AVailABLE; }
 		}
 
 		public virtual DigestData DigestValue

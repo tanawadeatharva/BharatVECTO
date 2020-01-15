@@ -33,6 +33,7 @@ using NUnit.Framework;
 using System;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -2036,6 +2037,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			public EcoRollType EcoRoll { get; set; }
 			public PredictiveCruiseControlType PredictiveCruiseControl { get; set; }
 			public bool? ATEcoRollReleaseLockupClutch { get; set; }
+			public XmlNode XMLSource { get; }
 
 			#endregion
 		}

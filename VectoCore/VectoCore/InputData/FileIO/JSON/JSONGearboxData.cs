@@ -522,9 +522,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<string>(JsonKeys.Gearbox_ModelName); }
 		}
 
-		public string Date
+		public DateTime Date
 		{
-			get { return Constants.NOT_AVailABLE; }
+			get { return DateTime.MinValue; }
 		}
 
 		public CertificationMethod CertificationMethod

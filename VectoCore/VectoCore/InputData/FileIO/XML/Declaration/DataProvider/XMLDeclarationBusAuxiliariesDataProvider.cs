@@ -22,6 +22,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 
 		#region Implementation of IBusAuxiliariesDeclarationData
 
+		public XmlNode XMLSource { get { return BaseNode; } }
+
 		public string FanTechnology
 		{
 			get { return GetNode(new[] { "Fan", XMLNames.Auxiliaries_Auxiliary_Technology }).InnerText; }

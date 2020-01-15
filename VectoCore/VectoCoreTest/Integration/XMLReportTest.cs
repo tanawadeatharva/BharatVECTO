@@ -320,5 +320,31 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Assert.AreEqual(mrfCifDigest, mrfCifDigestData.DigestValue);
 
 		}
+
+		[TestCase]
+		public void TestXMLPrimaryVehicleReportTest()
+		{
+			var jobfile = @"Testdata\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses/vecto_vehicle-primary_heavyBus.xml";
+			var dataProvider = xmlInputReader.CreateDeclaration(jobfile);
+			var writer = new FileOutputWriter(jobfile);
+			var xmlReport = new XMLDeclarationReport(writer);
+			var sumData = new SummaryDataContainer(writer);
+			var jobContainer = new JobContainer(sumData);
+
+			if (File.Exists(writer.SumFileName)) {
+				File.Delete(writer.SumFileName);
+			}
+
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, writer, xmlReport) {
+				WriteModalResults = false,
+				Validate = false,
+			};
+			jobContainer.AddRuns(runsFactory);
+
+			// no need to run the simulation, we only check whether the meta-data is correct, no results are considered
+			//jobContainer.Execute();
+			//jobContainer.WaitFinished();
+			xmlReport.DoWriteReport();
+		}
 	}
 }

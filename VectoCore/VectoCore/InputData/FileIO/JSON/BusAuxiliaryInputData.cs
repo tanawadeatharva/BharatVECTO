@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				pneumaticUserInputsConfig.CompressorMap = CompressorMapReader.ReadFile(Path.Combine(baseDir, file));
 			}
 			pneumaticUserInputsConfig.Doors = puData.GetEx<string>("Doors").ParseEnum<ConsumerTechnology>();
-			pneumaticUserInputsConfig.KneelingHeightMillimeters =
+			pneumaticUserInputsConfig.KneelingHeight =
 				puData.GetEx<double>("KneelingHeightMillimeters").SI(Unit.SI.Milli.Meter).Cast<Meter>();
 			//pneumaticUserInputsConfig.RetarderBrake = puData.GetEx<bool>("RetarderBrake");
 			pneumaticUserInputsConfig.SmartAirCompression = puData.GetEx<bool>("SmartAirCompression");

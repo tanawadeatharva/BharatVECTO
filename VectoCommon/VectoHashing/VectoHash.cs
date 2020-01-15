@@ -302,6 +302,9 @@ namespace TUGraz.VectoHashing
 			if (Document.DocumentElement.LocalName.Equals("VectoCustomerInformation")) {
 				return VectoComponents.VectoCustomerInformation;
 			}
+			if (Document.DocumentElement.LocalName.Equals("VectoOutputPrimaryVehicle")) {
+				return VectoComponents.VectoPrimaryVehicleInformation;
+			}
 			throw new Exception("unknown document structure! neither input data nor output data format");
 		}
 

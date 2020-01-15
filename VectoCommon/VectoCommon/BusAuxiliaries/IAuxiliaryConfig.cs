@@ -9,11 +9,15 @@
 // 
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
+using System.Xml.Linq;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 
 namespace TUGraz.VectoCommon.BusAuxiliaries {
 	public interface IAuxiliaryConfig
 	{
+		IBusAuxiliariesDeclarationData InputData { get; }
+
 		// Electrical
 		IElectricsUserInputsConfig ElectricalUserInputsConfig { get;  }
 

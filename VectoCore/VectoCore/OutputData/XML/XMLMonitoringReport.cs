@@ -50,14 +50,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public const string NAMESPACE_BASE_URI = "urn:tugraz:ivt:VectoAPI:MonitoringOutput";
 
-		private readonly XMLManufacturerReport _manufacturerReport;
+		private readonly IXMLManufacturerReport _manufacturerReport;
 
 		protected XNamespace tns;
 		protected XNamespace di;
 		private XElement _additionalFields;
 
 
-		public XMLMonitoringReport(XMLManufacturerReport manufacturerReport)
+		public XMLMonitoringReport(IXMLManufacturerReport manufacturerReport)
 		{
 			di = "http://www.w3.org/2000/09/xmldsig#";
 			tns = NAMESPACE_BASE_URI + ":v" + CURRENT_SCHEMA_VERSION;
@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					LogManager.GetLogger(typeof(XMLMonitoringReport).FullName).Warn("XML Validation of manufacturer record failed! errors: {0}", string.Join(System.Environment.NewLine, errors));
 				}
 
-				var mrfType = GetXMLType(mrf.Root) ?? new XmlQualifiedName("urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:AbstractVectoOutputManufacturerType");
+				var mrfType = mrf.Root?.GetSchemaInfo()?.SchemaType?.QualifiedName ?? new XmlQualifiedName("urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:AbstractVectoOutputManufacturerType");
 
 				var retVal = GenerateReport();
 				var prefix = "mrf" + mrfType.Namespace.Split(':').Last();

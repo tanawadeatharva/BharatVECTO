@@ -30,6 +30,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = base.CreateVehicleData(data, mission, loading);
 			retVal.CurbMass = mission.CurbMass;
+			retVal.Length = mission.VehicleLength;
+			retVal.Width = mission.VehicleWidth;
+			retVal.Height = mission.VehicleHeight;
 			return retVal;
 		}
 
@@ -72,6 +75,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = new AuxiliaryConfig();
 
+			retVal.InputData = vehicleData.Components.BusAuxiliaries;
 			retVal.ElectricalUserInputsConfig = GetElectricalUserConfig(vehicleData);
 			retVal.PneumaticUserInputsConfig = GetPneumaticUserConfig(vehicleData);
 			retVal.PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type);
@@ -86,12 +90,26 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		private IElectricsUserInputsConfig GetElectricalUserConfig(IVehicleDeclarationInputData vehicleData)
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
+			return new ElectricsUserInputsConfig() {
+				SmartElectrical = false,
+				ElectricalConsumers = new ElectricalConsumerList(new List<IElectricalConsumer>()),
+				AlternatorMap = new AlternatorMap(new List<ICombinedAlternatorMapRow>() {new CombinedAlternatorMapRow("test", 1000.RPMtoRad(), 10.SI<Ampere>(), 0.8, 1.0)  }, ""),
+				PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
+				ResultCardIdle = new ResultCard(new List<SmartResult>()),
+				ResultCardOverrun = new ResultCard(new List<SmartResult>()),
+				ResultCardTraction = new ResultCard(new List<SmartResult>()),
+				AlternatorGearEfficiency = 0.9,
+			};
 		}
 
 		private IPneumaticUserInputsConfig GetPneumaticUserConfig(IVehicleDeclarationInputData vehicleData)
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
+			return new PneumaticUserInputsConfig() {
+				SmartRegeneration = false,
+				KneelingHeight = 0.SI<Meter>()
+			};
 		}
 
 		public virtual ISSMInputs CreateSSMModelParameters(IVehicleData vehicleData, IFuelProperties heatingFuel)

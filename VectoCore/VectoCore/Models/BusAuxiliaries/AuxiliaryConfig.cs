@@ -12,12 +12,14 @@
 using System;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries {
-	[Serializable()]
+	
 	public class AuxiliaryConfig : IAuxiliaryConfig
 	{
+		public IBusAuxiliariesDeclarationData InputData { get; internal set; }
 		
 		// Electrical
 		public IElectricsUserInputsConfig ElectricalUserInputsConfig { get; internal set; }
@@ -184,7 +186,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 			if (PneumaticUserInputsConfig.Doors != other.PneumaticUserInputsConfig.Doors) {
 				return false;
 			}
-			if (PneumaticUserInputsConfig.KneelingHeightMillimeters != other.PneumaticUserInputsConfig.KneelingHeightMillimeters) {
+			if (PneumaticUserInputsConfig.KneelingHeight != other.PneumaticUserInputsConfig.KneelingHeight) {
 				return false;
 			}
 

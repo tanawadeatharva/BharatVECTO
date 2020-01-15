@@ -14,6 +14,7 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
+Imports System.Xml
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.InputData
@@ -285,9 +286,9 @@ Public Class Vehicle
 	End Property
 
 
-	Public ReadOnly Property [Date] As String Implements IComponentInputData.[Date]
+	Public ReadOnly Property [Date] As DateTime Implements IComponentInputData.[Date]
 		Get
-			Return Now.ToUniversalTime().ToString("o")
+			Return Now.ToUniversalTime()
 		End Get
 	End Property
 
@@ -786,6 +787,8 @@ Public Class Vehicle
             Return EcoRollReleaseLockupClutch
     End Get
     End Property
+
+    Public ReadOnly Property XMLSource As XmlNode Implements IAdvancedDriverAssistantSystemDeclarationInputData.XMLSource
 
     Public ReadOnly Property IAdvancedDriverAssistantSystemsEngineering_DataSource As DataSource Implements IAdvancedDriverAssistantSystemsEngineering.DataSource
         get

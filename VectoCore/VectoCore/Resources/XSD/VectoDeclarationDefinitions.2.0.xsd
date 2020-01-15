@@ -11,7 +11,7 @@
 	<xs:complexType name="AbstractGearEntryType" abstract="true"/>
 	<xs:complexType name="AbstractGearsDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractPTODataType" abstract="true"/>
-	<xs:complexType name="AbstractTorqueLimitsType"/>
+	<xs:complexType name="AbstractTorqueLimitsType" abstract="true"/>
 	<xs:complexType name="AbstractVehicleComponentsDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractVehicleDeclarationType" abstract="true">
 		<xs:complexContent>

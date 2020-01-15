@@ -2,6 +2,7 @@
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.InputData.Reader.DataObjectAdapter;
 using TUGraz.VectoCore.Models.Declaration;
@@ -59,49 +60,57 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			var engineModes = engine.EngineModes;
 
 			for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
-				var engineMode = engineModes[modeIdx];
 				foreach (var mission in _segment.Missions) {
-					DrivingCycleData cycle;
-					lock (CyclesCacheLock) {
-						if (CyclesCache.ContainsKey(mission.MissionType)) {
-							cycle = CyclesCache[mission.MissionType];
-						} else {
-							cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
-							CyclesCache.Add(mission.MissionType, cycle);
-						}
-					}
-
 					foreach (var loading in mission.Loadings) {
-						var simulationRunData = new VectoRunData {
-							Loading = loading.Key,
-							VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading.Value),
-							AirdragData = _dao.CreateAirdragData(mission),
-							EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission),
-							GearboxData = _gearboxData,
-							AxleGearData = _axlegearData,
-							AngledriveData = _angledriveData,
-							Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData,
-								vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass, vehicle.Length ?? mission.VehicleLength),
-							Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
-							Retarder = _retarderData,
-							DriverData = _driverdata,
-							ExecutionMode = ExecutionMode.Declaration,
-							JobName = InputDataProvider.JobInputData.JobName,
-							ModFileSuffix = (engineModes.Count > 1 ? string.Format("_EngineMode{0}_", modeIdx) : "") + loading.Key.ToString(),
-							Report = Report,
-							Mission = mission,
-							InputDataHash = InputDataProvider.XMLHash,
-							SimulationType = SimulationType.DistanceCycle
-						};
-						simulationRunData.EngineData.FuelMode = modeIdx;
-						simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
-						simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(InputDataProvider.JobInputData.Vehicle, simulationRunData);
-							
+						var simulationRunData = CreateVectoRunData(vehicle, modeIdx, mission, loading);							
 						yield return simulationRunData;
 					}
 				}
 			}
 		}
 
+
+		protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+		{
+			var engine = vehicle.Components.EngineInputData;
+			var engineModes = engine.EngineModes;
+			var engineMode = engineModes[modeIdx];
+			DrivingCycleData cycle;
+			lock (CyclesCacheLock) {
+				if (CyclesCache.ContainsKey(mission.MissionType)) {
+					cycle = CyclesCache[mission.MissionType];
+				} else {
+					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased, "", false);
+					CyclesCache.Add(mission.MissionType, cycle);
+				}
+			}
+			var simulationRunData  = new VectoRunData {
+				Loading = loading.Key,
+				VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading.Value),
+				AirdragData = _dao.CreateAirdragData(mission),
+				EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission),
+				GearboxData = _gearboxData,
+				AxleGearData = _axlegearData,
+				AngledriveData = _angledriveData,
+				Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData,
+													vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass, vehicle.Length ?? mission.VehicleLength),
+				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
+				Retarder = _retarderData,
+				DriverData = _driverdata,
+				ExecutionMode = ExecutionMode.Declaration,
+				JobName = InputDataProvider.JobInputData.JobName,
+				ModFileSuffix = (engineModes.Count > 1 ? string.Format("_EngineMode{0}_", modeIdx) : "") + loading.Key.ToString(),
+				Report = Report,
+				Mission = mission,
+				InputDataHash = InputDataProvider.XMLHash,
+				SimulationType = SimulationType.DistanceCycle,
+				GearshiftParameters = _gearshiftData,
+				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy
+			};
+			simulationRunData.EngineData.FuelMode = modeIdx;
+			simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
+			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(InputDataProvider.JobInputData.Vehicle, simulationRunData);
+			return simulationRunData;
+		}
 	}
 }
