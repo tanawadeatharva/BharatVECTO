@@ -99,7 +99,7 @@ Public Class EngineForm
 		Dim jobFile As String = VectoJobForm.VectoFile
 		If Not jobFile Is Nothing AndAlso File.Exists(jobFile) Then
 
-			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile), 
+			Dim inputData As IEngineeringInputDataProvider = TryCast(JSONInputDataFactory.ReadJsonJob(jobFile, true), 
 																	 IEngineeringInputDataProvider)
 			If (not inputData Is Nothing) Then
 				Dim gbx as IGearboxDeclarationInputData = inputData.JobInputData.Vehicle.Components.GearboxInputData
