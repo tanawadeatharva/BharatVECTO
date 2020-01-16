@@ -78,7 +78,7 @@ namespace TUGraz.VectoCommon.Hashing
 				case VectoComponents.VectoCustomerInformation:
 					return "VectoCustomerInformation";
 				case VectoComponents.VectoPrimaryVehicleInformation:
-					return "VectoPrimaryVehicleInformation";
+					return "VectoOutputPrimaryVehicle";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
 			}
@@ -111,6 +111,18 @@ namespace TUGraz.VectoCommon.Hashing
 					return "PIF-";
 				default:
 					throw new ArgumentOutOfRangeException("VectoComponents", component, null);
+			}
+		}
+
+		public static bool IsReport(this VectoComponents component)
+		{
+			switch (component) {
+				case VectoComponents.VectoCustomerInformation:
+				case VectoComponents.VectoOutput:
+				case VectoComponents.VectoPrimaryVehicleInformation:
+					return true;
+				default:
+					return false;
 			}
 		}
 	}

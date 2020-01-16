@@ -72,6 +72,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public PerSecond MaxSpeed { get; internal set; }
 
+		public NewtonMeter MaxTorque { get; internal set; }
+
 		public ShiftPolygon TorqueConverterShiftPolygon { get; set; }
 
 		// ReSharper disable once UnusedMember.Global -- used via validation

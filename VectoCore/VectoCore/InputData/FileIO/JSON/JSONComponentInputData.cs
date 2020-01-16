@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		private string _filename;
 		private IAxlesDeclarationInputData _axleWheelsDecl;
 		private IAxlesEngineeringInputData _axleWheelsEng;
-
+		
 
 		public JSONComponentInputData(string filename, IJSONVehicleComponents job, bool tolerateMissing = false)
 		{
@@ -135,6 +135,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return new DataSource { SourceType = DataSourceType.JSONFile, SourceFile = _filename }; }
 		}
+
+		public string AppVersion {  get { return "VECTO-JSON"; } }
 
 		public string Source
 		{
@@ -250,6 +252,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{
 			get { return this; }
+		}
+
+		XmlNode IVehicleDeclarationInputData.XMLSource
+		{
+			get { return null; }
 		}
 
 		IAdvancedDriverAssistantSystemsEngineering IVehicleEngineeringInputData.ADAS

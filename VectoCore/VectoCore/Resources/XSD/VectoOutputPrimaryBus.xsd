@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
-<xs:schema xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryBusInformation:HeavyBus:v0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:common="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:pif="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryBusInformation:HeavyBus:v0.1" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<xs:import namespace="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation" schemaLocation="VectoOutputPrimaryVehicleInformation.xsd"/>
+<xs:schema xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:common="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:pif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" schemaLocation="VectoOutputPrimaryVehicleInformation.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
@@ -29,7 +29,12 @@
 							<xs:documentation>P221</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+					<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P258 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P265</xs:documentation>
 						</xs:annotation>
@@ -45,11 +50,6 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="Ratio"/>
-					<xs:element name="CertificationMethod" type="v1.0:AngledriveCertificationOptionType">
-						<xs:annotation>
-							<xs:documentation>P258 - [-]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -78,7 +78,12 @@
 							<xs:documentation>P216</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+					<xs:element name="CertificationMethod" type="v1.0:AxlegearCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P256 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P264</xs:documentation>
 						</xs:annotation>
@@ -95,11 +100,6 @@
 					</xs:element>
 					<xs:element name="LineType"/>
 					<xs:element name="Ratio"/>
-					<xs:element name="CertificationMethod" type="v1.0:AxlegearCertificationOptionType">
-						<xs:annotation>
-							<xs:documentation>P256 - [-]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -373,7 +373,12 @@
 							<xs:documentation>P206</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType">
+					<xs:element name="MainCertificationMethod" type="v1.0:GearboxCertificationOptionType">
+						<xs:annotation>
+							<xs:documentation>P254 - [-]</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="CertificationNumber" type="v1.0:CertificationNumberType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation>P262</xs:documentation>
 						</xs:annotation>
@@ -389,11 +394,6 @@
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="TransmissionType"/>
-					<xs:element name="MainCertificationMethod" type="v1.0:GearboxCertificationOptionType">
-						<xs:annotation>
-							<xs:documentation>P254 - [-]</xs:documentation>
-						</xs:annotation>
-					</xs:element>
 					<xs:element name="Gears" type="AbstractTransmissionGearsPIFType"/>
 				</xs:sequence>
 			</xs:extension>

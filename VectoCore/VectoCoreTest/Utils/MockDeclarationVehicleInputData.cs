@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
@@ -15,6 +16,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string Manufacturer { get; }
 		public string Model { get; }
 		public DateTime Date { get; }
+		public string AppVersion { get { return "Mock-Class"; } }
 		public CertificationMethod CertificationMethod { get; }
 		public string CertificationNumber { get; }
 		public DigestData DigestValue { get; }
@@ -53,6 +55,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
 		public IVehicleComponentsDeclaration Components { get { return this; } }
+		public XmlNode XMLSource { get; }
 
 		#endregion
 
@@ -85,6 +88,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public string Manufacturer { get; }
 		public string Model { get; }
 		public DateTime Date { get; }
+		public string AppVersion { get { return "Mock-Class"; } }
 		public CertificationMethod CertificationMethod { get; }
 		public string CertificationNumber { get; }
 		public DigestData DigestValue { get; }
@@ -111,6 +115,8 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		{
 			get { return _components; }
 		}
+
+		public XmlNode XMLSource { get; }
 
 		public IVehicleComponentsEngineering Components { get { return this; } }
 		public string Identifier { get; }

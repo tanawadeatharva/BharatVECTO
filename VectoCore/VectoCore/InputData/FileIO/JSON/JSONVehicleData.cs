@@ -378,6 +378,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return this; }
 		}
 
+		XmlNode IVehicleDeclarationInputData.XMLSource
+		{
+			get { return null; }
+		}
+
 		IAdvancedDriverAssistantSystemsEngineering IVehicleEngineeringInputData.ADAS
 		{
 			get { return this; }
@@ -429,6 +434,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 								SourceVersion = Version,
 							},
 							Source = Source,
+							AppVersion = AppVersion,
 							Inertia = axle.GetEx<double>(JsonKeys.Vehicle_Axles_Inertia).SI<KilogramSquareMeter>(),
 							Dimension = axle.GetEx<string>(JsonKeys.Vehicle_Axles_Wheels),
 							RollResistanceCoefficient = axle.GetEx<double>(JsonKeys.Vehicle_Axles_RollResistanceCoefficient),

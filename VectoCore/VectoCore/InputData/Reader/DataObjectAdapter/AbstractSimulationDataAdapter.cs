@@ -51,6 +51,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal VehicleData SetCommonVehicleData(IVehicleDeclarationInputData data)
 		{
 			var retVal = new VehicleData {
+				InputData = data,
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
@@ -133,6 +134,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal CombustionEngineData SetCommonCombustionEngineData(IEngineDeclarationInputData data, TankSystem? tankSystem)
 		{
 			var retVal = new CombustionEngineData {
+				InputData = data,
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
@@ -156,6 +158,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal GearboxData SetCommonGearboxData(IGearboxDeclarationInputData data)
 		{
 			return new GearboxData {
+				InputData = data,
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
@@ -222,6 +225,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		internal AxleGearData SetCommonAxleGearData(IAxleGearInputData data)
 		{
 			return new AxleGearData {
+				InputData = data,
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				Manufacturer = data.Manufacturer,
 				ModelName = data.Model,
@@ -251,6 +255,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 						return null;
 					case AngledriveType.SeparateAngledrive:
 						var angledriveData = new AngledriveData {
+							InputData = data,
 							SavedInDeclarationMode = data.SavedInDeclarationMode,
 							Manufacturer = data.Manufacturer,
 							ModelName = data.Model,

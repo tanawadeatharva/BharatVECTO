@@ -1,5 +1,6 @@
 using System;
 using System.Xml;
+using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
@@ -31,6 +32,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 			get { return XmlConvert.ToDateTime(GetString(XMLNames.Component_Date), XmlDateTimeSerializationMode.Utc); }
 		}
 
+		public virtual string AppVersion
+		{
+			get { return GetString(XMLNames.Component_AppVersion); }
+		}
+
 		public virtual CertificationMethod CertificationMethod
 		{
 			get {
@@ -48,5 +54,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 		{
 			get { return new DigestData(GetNode(XMLNames.DI_Signature, required:false)); }
 		}
+
+		public virtual XmlNode XMLSource { get { return BaseNode; } }
 	}
 }

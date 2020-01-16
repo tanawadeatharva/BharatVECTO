@@ -50,6 +50,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public string Model { get; set; }
 		public string Creator { get; set; }
 		public DateTime Date { get; set; }
+		public string AppVersion { get { return "Mock-Class"; } }
 		public string TechnicalReportId { get; set; }
 		public CertificationMethod CertificationMethod { get{return CertificationMethod.NotCertified;} }
 		public string CertificationNumber { get; set; }

@@ -242,7 +242,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public IAdvancedDriverAssistantSystemDeclarationInputData InputData { get; internal set; }
 		}
 
-#region "Bus Parameters"
+		public IVehicleDeclarationInputData InputData { get; internal set; }
+
+
+		#region "Bus Parameters"
 		public double PassengerCount { get; internal set; }
 
 		public FloorType FloorType { get; internal set; }

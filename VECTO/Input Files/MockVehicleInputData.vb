@@ -1,4 +1,5 @@
 ﻿Imports System.Collections.Generic
+Imports System.Xml
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Models
@@ -11,6 +12,7 @@ Public Class MockVehicleInputData
     Public Property Manufacturer As String Implements IComponentInputData.Manufacturer
     Public Property Model As String Implements IComponentInputData.Model
     Public Property [Date] As DateTime Implements IComponentInputData.[Date]
+    Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
     Public Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
     Public Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
     Public Property DigestValue As DigestData Implements IComponentInputData.DigestValue
@@ -47,4 +49,5 @@ Public Class MockVehicleInputData
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
     Public Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
+    Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
 End Class

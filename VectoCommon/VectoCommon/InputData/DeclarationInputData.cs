@@ -67,6 +67,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		DateTime Date { get; }
 
+		String AppVersion { get; }
+
 		CertificationMethod CertificationMethod { get; }
 
 		string CertificationNumber { get; }
@@ -182,7 +184,7 @@ namespace TUGraz.VectoCommon.InputData
 		// components
 
 		IVehicleComponentsDeclaration Components { get; }
-
+		XmlNode XMLSource { get; }
 	}
 
 	public interface IVehicleComponentsDeclaration
@@ -220,6 +222,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		IList<IAxleDeclarationInputData> AxlesDeclaration { get; }
+
+		XmlNode XMLSource { get; }
 	}
 
 	public interface IAdvancedDriverAssistantSystemDeclarationInputData
@@ -529,6 +533,7 @@ namespace TUGraz.VectoCommon.InputData
 		IList<IEngineModeDeclarationInputData> EngineModes { get; }
 
 		WHRType WHRType{ get; }
+		
 	}
 
 	public interface IEngineModeDeclarationInputData

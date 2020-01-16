@@ -32,6 +32,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
@@ -71,6 +72,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, ValidateObject]
 		public List<CombustionEngineFuelData> Fuels { get; internal set; }
+
+		public IEngineDeclarationInputData InputData { get; set; }
 
 		public WHRData ElectricalWHR;
 

@@ -12,6 +12,7 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
+Imports System.Xml
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.InputData
@@ -357,6 +358,12 @@ Public Class Gearbox
     Public ReadOnly Property [Date] As DateTime Implements IComponentInputData.[Date]
         Get
             Return Now.ToUniversalTime()
+        End Get
+    End Property
+
+    Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
+        get
+            Return "VECTO-GUI"
         End Get
     End Property
 
@@ -784,6 +791,7 @@ Public Class MockEngineeringVehicle
     Public Property Manufacturer As String Implements IComponentInputData.Manufacturer
     Public Property Model As String Implements IComponentInputData.Model
     Public Property [Date] As DateTime Implements IComponentInputData.[Date]
+    Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
     Public Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
     Public Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
     Public Property DigestValue As DigestData Implements IComponentInputData.DigestValue
@@ -834,6 +842,7 @@ Public Class MockEngineeringVehicle
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
     Public Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
+    Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
 
     Public Property AirdragInputData As IAirdragEngineeringInputData _
         Implements IVehicleComponentsEngineering.AirdragInputData

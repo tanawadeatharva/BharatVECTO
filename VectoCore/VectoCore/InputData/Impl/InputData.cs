@@ -133,6 +133,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		public string Model { get; internal set; }
 
 		public DateTime Date { get; internal set; }
+		public string AppVersion { get; internal set; }
 
 		public CertificationMethod CertificationMethod { get; internal set; }
 

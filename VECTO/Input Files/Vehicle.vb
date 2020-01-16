@@ -292,7 +292,13 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+    Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
+        get
+            Return "VECTO-GUI"
+        End Get
+    End Property
+
+    Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 		Get
 			Return CertificationMethod.NotCertified
 		End Get
@@ -763,7 +769,9 @@ Public Class Vehicle
 	End Get
 	End Property
 
-	Public ReadOnly Property EngineStopStart As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EngineStopStart
+    Public ReadOnly Property IVehicleDeclarationInputData_XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
+
+    Public ReadOnly Property EngineStopStart As Boolean Implements IAdvancedDriverAssistantSystemDeclarationInputData.EngineStopStart
 	get
 			return EngineStop
 	End Get
@@ -805,4 +813,5 @@ Public Class Vehicle
 
     Public Property EcoRollReleaseLockupClutch As Boolean
 
+    Public ReadOnly Property IAxlesDeclarationInputData_XMLSource As XmlNode Implements IAxlesDeclarationInputData.XMLSource
 End Class

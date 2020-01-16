@@ -367,6 +367,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				var gearData = new GearData {
 					ShiftPolygon = shiftPolygon,
 					MaxSpeed = gear.MaxInputSpeed,
+					MaxTorque = gear.MaxTorque,
 					Ratio = gear.Ratio,
 					LossMap = lossMap,
 				};

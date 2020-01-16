@@ -35,6 +35,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -100,6 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public Second PowershiftShiftTime { get; internal set; }
 
 		public bool ATEcoRollReleaseLockupClutch { get; internal set; }
+		public IGearboxDeclarationInputData InputData { get; internal set; }
 
 
 		// ReSharper disable once UnusedMember.Global -- used via Validation

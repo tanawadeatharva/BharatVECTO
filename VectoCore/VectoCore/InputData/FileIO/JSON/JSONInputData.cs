@@ -94,6 +94,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx(JsonKeys.SavedInDeclMode).Value<bool>(); }
 		}
 
+		public string AppVersion { get { return "VECTO-JSON"; } }
+
 		internal string BasePath
 		{
 			get { return Path.GetDirectoryName(_sourceFile); }

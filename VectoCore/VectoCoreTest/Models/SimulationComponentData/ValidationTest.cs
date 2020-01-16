@@ -634,6 +634,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public string Model { get; set; }
 		public string Creator { get; set; }
 		public DateTime Date { get; set; }
+		public string AppVersion { get; set; }
 		public string TechnicalReportId { get; set; }
 
 		public CertificationMethod CertificationMethod

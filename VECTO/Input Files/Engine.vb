@@ -12,6 +12,7 @@ Imports System.Collections.Generic
 Imports System.ComponentModel.DataAnnotations
 Imports System.IO
 Imports System.Linq
+Imports System.Xml
 Imports Newtonsoft.Json.Linq
 Imports TUGraz.VECTO.Input_Files
 Imports TUGraz.VectoCommon.BusAuxiliaries
@@ -272,7 +273,13 @@ Public Class Engine
 		End Get
 	End Property
 
-	Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+    Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
+    get
+            Return "VECTO-GUI"
+    End Get
+    End Property
+
+    Public ReadOnly Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 		Get
 			Return CertificationMethod.NotCertified
 		End Get
@@ -602,7 +609,8 @@ Public Class DummyVehicle
 	Public  Property Manufacturer As String Implements IComponentInputData.Manufacturer
 	Public  Property Model As String Implements IComponentInputData.Model
 	Public  Property [Date] As DateTime Implements IComponentInputData.[Date]
-	Public  Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
+    Public ReadOnly Property AppVersion As String Implements IComponentInputData.AppVersion
+    Public  Property CertificationMethod As CertificationMethod Implements IComponentInputData.CertificationMethod
 	Public  Property CertificationNumber As String Implements IComponentInputData.CertificationNumber
 	Public  Property DigestValue As DigestData Implements IComponentInputData.DigestValue
 	Public  Property Identifier As String Implements IVehicleDeclarationInputData.Identifier
@@ -655,7 +663,9 @@ Public Class DummyVehicle
 	End Get
 	End Property
 
-	Public  Property AirdragInputData As IAirdragDeclarationInputData Implements IVehicleComponentsDeclaration.AirdragInputData
+    Public ReadOnly Property XMLSource As XmlNode Implements IVehicleDeclarationInputData.XMLSource
+
+    Public  Property AirdragInputData As IAirdragDeclarationInputData Implements IVehicleComponentsDeclaration.AirdragInputData
     Public  Property IVehicleComponentsEngineering_GearboxInputData As IGearboxEngineeringInputData Implements IVehicleComponentsEngineering.GearboxInputData
     Public  Property IVehicleComponentsEngineering_AirdragInputData As IAirdragEngineeringInputData Implements IVehicleComponentsEngineering.AirdragInputData
     Public Property GearboxInputData As IGearboxDeclarationInputData Implements IVehicleComponentsDeclaration.GearboxInputData

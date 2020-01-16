@@ -34,6 +34,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return XmlConvert.ToDateTime(GetString(XMLNames.Component_Date), XmlDateTimeSerializationMode.Utc); }
 		}
 
+		public virtual string AppVersion
+		{
+			get { return GetString(XMLNames.Component_AppVersion); }
+		}
+
 		public virtual CertificationMethod CertificationMethod
 		{
 			get { return CertificationMethod.NotCertified; }
@@ -48,5 +53,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		{
 			get { return null; }
 		}
+
+		public virtual XmlNode XMLSource { get { return BaseNode; } }
 	}
 }
