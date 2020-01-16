@@ -256,7 +256,7 @@ namespace TUGraz.VectoHashing
 				node.Attributes.Append(attr);
 			}
 
-			query = component == VectoComponents.VectoCustomerInformation || component == VectoComponents.VectoOutput
+			query = component.IsReport()
 				? string.Format("*/*[local-name()='Data']/*[local-name()='ApplicationInformation']/*[local-name()='Date']")
 				: string.Format("*/*[local-name()='{0}']/*/*[local-name()='Date']", component.XMLElementName());
 			var dateNode = Document.SelectSingleNode(query);
