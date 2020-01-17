@@ -1161,4 +1161,13 @@
   <data name="VectoPrimaryVehicleReport" xml:space="preserve">
     <value>VectoOutputPrimaryVehicle</value>
   </data>
+  <data name="Vehicle_TPMLM" xml:space="preserve">
+    <value>TechnicalPermissibleMaximumLadenMass</value>
+  </data>
+  <data name="Gearbox_DifferentialIncluded" xml:space="preserve">
+    <value>DifferentialIncluded</value>
+  </data>
+  <data name="Gearbox_AxlegearRatio" xml:space="preserve">
+    <value>AxlegearRatio</value>
+  </data>
 </root>

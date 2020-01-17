@@ -52,7 +52,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
-	public class DeclarationDataAdapterTruck : AbstractSimulationDataAdapter, IDeclarationDataAdapter
+	
+	public class DeclarationDataAdapterHeavyLorry : AbstractSimulationDataAdapter, IDeclarationDataAdapter
 	{
 		public static readonly GearboxType[] SupportedGearboxTypes =
 			{ GearboxType.MT, GearboxType.AMT, GearboxType.ATPowerSplit, GearboxType.ATSerial };
@@ -519,6 +520,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
+		public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
+		{
+			return new AxleGearData() {
+				AxleGear = new TransmissionData() {
+					Ratio = gbxData.AxlegearRatio,
+					LossMap = TransmissionLossMapReader.Create(1.0, gbxData.AxlegearRatio, "Axlegear")
+				}
+			};
+		}
+
 		private void WarnDeclarationMode(string inputData)
 		{
 			Log.Warn("{0} not in Declaration Mode!", inputData);
@@ -596,7 +607,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public virtual PTOData CreatePTOTransmissionData(IPTOTransmissionInputData pto)
 		{
-			if (pto.PTOTransmissionType != "None") {
+			if (pto != null && pto.PTOTransmissionType != "None") {
 				return new PTOData {
 					TransmissionType = pto.PTOTransmissionType,
 					LossMap = PTOIdleLossMapReader.GetZeroLossMap(),

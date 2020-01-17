@@ -436,6 +436,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 	}
 
+	// ---------------------------------------------------------------------------------------
+
 	public class XMLDeclarationExemptedVehicleDataProviderV22 : XMLDeclarationVehicleDataProviderV20
 	{
 		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V21;
@@ -576,6 +578,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
+	// ---------------------------------------------------------------------------------------
+
 
 	public class XMLDeclarationPrimaryBusVehicleDataProviderV26 : XMLDeclarationVehicleDataProviderV20
 	{
@@ -616,7 +620,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override Kilogram CurbMassChassis { get { return null; } }
 
-		public override Kilogram GrossVehicleMassRating { get { return GetDouble(XMLNames.TPMLM).SI<Kilogram>(); } }
+		public override Kilogram GrossVehicleMassRating { get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); } }
 
 		
 		#endregion
@@ -633,5 +637,44 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
-	
+	public class XMLDeclarationMediumLorryVehicleDataProviderV26 : XMLDeclarationVehicleDataProviderV21
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new const string XSD_TYPE = "VehicleMediumLorryDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationMediumLorryVehicleDataProviderV26(IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile) { }
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override bool SleeperCab { get { return false; } }
+
+		public override bool VocationalVehicle { get { return false; } }
+
+		public override IPTOTransmissionInputData PTOTransmissionInputData { get { return null; } }
+
+		public override XmlElement PTONode { get { return null; } }
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override Kilogram GrossVehicleMassRating { get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); } }
+
+		#endregion
+
+		#endregion
+
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+	}
 }

@@ -423,11 +423,11 @@
     <Compile Include="InputData\Reader\ComponentData\TorqueConverterDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\TransmissionLossMapReader.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\AbstractSimulationDataAdapter.cs" />
-    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterTruck.cs" />
+    <Compile Include="InputData\Reader\DataObjectAdapter\DeclarationDataAdapterHeavyLorry.cs" />
     <Compile Include="InputData\Reader\DataObjectAdapter\EngineeringDataAdapter.cs" />
     <Compile Include="InputData\Reader\ComponentData\DrivingCycleDataReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\FullLoadCurveReader.cs" />
-    <Compile Include="InputData\Reader\Impl\DeclarationModeTruckVectoRunDataFactory.cs" />
+    <Compile Include="InputData\Reader\Impl\DeclarationModeHeavyLorryVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationVTPModeVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DrivingCycleProxy.cs" />
     <Compile Include="InputData\Reader\Impl\EngineeringModeVectoRunDataFactory.cs" />

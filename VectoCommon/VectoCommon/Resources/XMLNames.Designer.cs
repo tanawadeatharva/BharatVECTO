@@ -1456,6 +1456,24 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AxlegearRatio.
+        /// </summary>
+        public static string Gearbox_AxlegearRatio {
+            get {
+                return ResourceManager.GetString("Gearbox_AxlegearRatio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DifferentialIncluded.
+        /// </summary>
+        public static string Gearbox_DifferentialIncluded {
+            get {
+                return ResourceManager.GetString("Gearbox_DifferentialIncluded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Efficiency.
         /// </summary>
         public static string Gearbox_Gear_Efficiency {
@@ -3135,6 +3153,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Vehicle_TorqueLimits_Entry_MaxTorque_Attr {
             get {
                 return ResourceManager.GetString("Vehicle_TorqueLimits_Entry_MaxTorque_Attr", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TechnicalPermissibleMaximumLadenMass.
+        /// </summary>
+        public static string Vehicle_TPMLM {
+            get {
+                return ResourceManager.GetString("Vehicle_TPMLM", resourceCulture);
             }
         }
         

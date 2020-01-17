@@ -104,6 +104,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			}
 		}
 
+		public virtual bool DifferentialIncluded { get { return false; } }
+		public virtual double AxlegearRatio { get { return double.NaN; } }
+
 
 		public IXMLGearboxReader Reader { protected get; set; }
 

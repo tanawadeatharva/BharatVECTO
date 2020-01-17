@@ -26,5 +26,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter {
 		RetarderData CreateRetarderData(IRetarderInputData retarderData);
 		PTOData CreatePTOTransmissionData(IPTOTransmissionInputData ptoData);
 		IList<VectoRunData.AuxData> CreateAuxiliaryData(IAuxiliariesDeclarationInputData auxData, IBusAuxiliariesDeclarationData busAuxData, MissionType missionType, VehicleClass vehicleClass, Meter vehicleLength);
+		AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData);
 	}
 }

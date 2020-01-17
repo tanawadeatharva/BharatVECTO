@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
 			vehicle.ADASReader = vehicle.ADASNode == null ? null : GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader); //null;
-			vehicle.PTOReader = GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
+			vehicle.PTOReader = vehicle.PTONode == null ? null : GetReader(vehicle, vehicle.PTONode, Factory.CreatePTOReader);
 
 			return vehicle;
 		}

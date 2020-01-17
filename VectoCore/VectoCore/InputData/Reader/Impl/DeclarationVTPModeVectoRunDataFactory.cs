@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 		protected PTOData PTOTransmissionData;
 		protected List<VectoRunData.AuxData> AuxVTP;
 		protected Segment Segment;
-		protected DeclarationDataAdapterTruck Dao;
+		protected DeclarationDataAdapterHeavyLorry Dao;
 		protected Exception InitException;
 
 		public IVTPReport Report;
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 
 		protected void Initialize()
 		{
-			Dao = new DeclarationDataAdapterTruck();
+			Dao = new DeclarationDataAdapterHeavyLorry();
 			var vehicle = JobInputData.Vehicle;
 			Segment = DeclarationData.TruckSegments.Lookup(
 				vehicle.VehicleCategory,

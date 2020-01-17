@@ -22,8 +22,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules {
 			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationBusAuxiliariesDataProviderV26>()
 													.Named(XMLDeclarationBusAuxiliariesDataProviderV26.QUALIFIED_XSD_TYPE);
 
+
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationMediumLorryVehicleDataProviderV26>()
+											.Named(XMLDeclarationMediumLorryVehicleDataProviderV26.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationComponentsDataProviderNoAxlegearV26>()
+													.Named(XMLComponentReaderNoAxlegearV26.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLGearboxDeclarationInputData>().To<XMLDeclarationGearboxDataProviderV26>()
+													.Named(XMLDeclarationGearboxDataProviderV26.QUALIFIED_XSD_TYPE);
+
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV26>().Named(XMLComponentReaderV26.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLComponentReader>().To<XMLComponentReaderNoAxlegearV26>().Named(XMLComponentReaderNoAxlegearV26.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLGearboxReader>().To<XMLGearboxReaderV26>().Named(XMLGearboxReaderV26.QUALIFIED_XSD_TYPE);
 		}
 
 		#endregion

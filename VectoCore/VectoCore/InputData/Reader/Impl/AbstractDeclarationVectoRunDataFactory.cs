@@ -81,7 +81,11 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 													_segment.Missions.First().Loadings.First().Value);
 			_airdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData,
 												_segment.Missions.First(), _segment);
-			_axlegearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
+			if (InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.DifferentialIncluded) {
+				_axlegearData = DataAdapter.CreateDummyAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData);
+			} else { 
+				_axlegearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
+			} 
 			_angledriveData = DataAdapter.CreateAngledriveData(InputDataProvider.JobInputData.Vehicle.Components.AngledriveInputData);
 			var tmpRunData = new VectoRunData() {
 				ShiftStrategy = InputDataProvider.JobInputData.ShiftStrategy,

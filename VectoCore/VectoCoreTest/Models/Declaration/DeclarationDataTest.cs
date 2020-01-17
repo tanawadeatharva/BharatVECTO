@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             double expected)
         {
             var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				DeclarationDataAdapterTruck.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
+				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
                     height.SI<Meter>()),
                 CrossWindCorrectionMode.DeclarationModeCorrection);
 
@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         public void CrossWindGetDeclarationAirResistance(string parameterSet, double cdxa0, double height)
         {
             var curve =
-				DeclarationDataAdapterTruck.GetDeclarationAirResistanceCurve(parameterSet, cdxa0.SI<SquareMeter>(), height.SI<Meter>());
+				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(parameterSet, cdxa0.SI<SquareMeter>(), height.SI<Meter>());
 
             AssertHelper.AreRelativeEqual(60.KMPHtoMeterPerSecond(), curve[1].Velocity);
             AssertHelper.AreRelativeEqual(7.0418009.SI<SquareMeter>(), curve[1].EffectiveCrossSectionArea);
@@ -264,7 +264,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         public void CrossWindCorrectionExceptionTest(string parameterSet, double crossSectionArea, double kmph, double height)
         {
             var crossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(crossSectionArea.SI<SquareMeter>(),
-				DeclarationDataAdapterTruck.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
+				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(parameterSet, crossSectionArea.SI<SquareMeter>(),
                     height.SI<Meter>()),
                 CrossWindCorrectionMode.DeclarationModeCorrection);
 

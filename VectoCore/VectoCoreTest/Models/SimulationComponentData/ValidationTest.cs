@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				WHTCRural = 1.1,
 				WHTCUrban = 1.1
 			};
-			var dao = new DeclarationDataAdapterTruck();
+			var dao = new DeclarationDataAdapterHeavyLorry();
 
 			var dummyGearbox = new DummyGearboxData() {
 				Type = GearboxType.AMT,
@@ -646,6 +646,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public DigestData DigestValue { get; set; }
 		public GearboxType Type { get; set; }
 		public IList<ITransmissionInputData> Gears { get; set; }
+		public bool DifferentialIncluded { get; }
+		public double AxlegearRatio { get; }
 
 		public KilogramSquareMeter Inertia { get; set; }
 		public Second TractionInterruption { get; set; }

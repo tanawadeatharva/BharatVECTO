@@ -437,6 +437,8 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		IList<ITransmissionInputData> Gears { get; }
 
+		bool DifferentialIncluded { get; }
+		double AxlegearRatio { get; }
 	}
 
 

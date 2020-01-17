@@ -216,7 +216,7 @@ Public Class Gearbox
                 vehiclecategory = vehiclecategory.RigidTruck
             End Try
             If mode = ExecutionMode.Declaration Then
-                Dim doa As DeclarationDataAdapterTruck = New DeclarationDataAdapterTruck()
+                Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
 
                 Try
                     engine = doa.CreateEngineData(inputData.JobInputData.Vehicle,
@@ -429,6 +429,9 @@ Public Class Gearbox
             Return ls
         End Get
     End Property
+
+    Public ReadOnly Property DifferentialIncluded As Boolean Implements IGearboxDeclarationInputData.DifferentialIncluded
+    Public ReadOnly Property AxlegearRatio As Double Implements IGearboxDeclarationInputData.AxlegearRatio
 
     Public ReadOnly Property ReferenceRPM As PerSecond Implements ITorqueConverterEngineeringInputData.ReferenceRPM
         Get

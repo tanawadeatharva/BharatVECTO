@@ -199,6 +199,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 					<TransmissionType>AMT</TransmissionType>
 					<MainCertificationMethod>Standard values</MainCertificationMethod>
 					<DifferentialIncluded>true</DifferentialIncluded>
+					<AxlegearRatio>2.600</AxlegearRatio>
 					<v2.6:Gears xsi:type="v2.0:GearsDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 						<Gear number="1">
 							<Ratio>14.930</Ratio>

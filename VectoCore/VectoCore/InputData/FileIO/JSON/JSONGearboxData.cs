@@ -249,6 +249,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			}
 		}
 
+		public bool DifferentialIncluded { get { return false; } }
+		public double AxlegearRatio { get { return double.NaN; } }
+
 		private TransmissionInputData CreateTorqueConverterGear(int gearNr, JToken gear, JToken nextGear)
 		{
 			var ratio = gear.GetEx<double>(JsonKeys.Gearbox_Gear_Ratio);

@@ -45,9 +45,10 @@ using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.InputData.Reader.Impl
 {
+
 	public class DeclarationModeTruckVectoRunDataFactory : AbstractDeclarationVectoRunDataFactory
 	{
-		DeclarationDataAdapterTruck _dao = new DeclarationDataAdapterTruck();
+		DeclarationDataAdapterHeavyLorry _dao = new DeclarationDataAdapterHeavyLorry();
 
 		internal DeclarationModeTruckVectoRunDataFactory(
 			IDeclarationInputDataProvider dataProvider, IDeclarationReport report) : base(dataProvider, report)

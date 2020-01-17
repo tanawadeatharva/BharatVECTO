@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
 			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.46.SI<SquareMeter>(),
-				DeclarationDataAdapterTruck.GetDeclarationAirResistanceCurve("TractorSemitrailer",
+				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve("TractorSemitrailer",
 					6.46.SI<SquareMeter>(), height.SI<Meter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 			var vehicle = new Vehicle(container, vehicleData,airdragData);
 
@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicleData = MockSimulationDataFactory.CreateVehicleDataFromFile(VehicleDataFileTruck);
 			var airdragData = MockSimulationDataFactory.CreateAirdragDataFromFile(VehicleDataFileTruck);
 			airdragData.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(6.2985.SI<SquareMeter>(),
-				DeclarationDataAdapterTruck.GetDeclarationAirResistanceCurve("TractorSemitrailer",
+				DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve("TractorSemitrailer",
 					6.2985.SI<SquareMeter>(), 3.SI<Meter>()), CrossWindCorrectionMode.DeclarationModeCorrection);
 
 			var vehicle = new Vehicle(container, vehicleData,airdragData);

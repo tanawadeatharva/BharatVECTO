@@ -210,7 +210,7 @@ Public Class Engine
 
 		Try
 			If mode = ExecutionMode.Declaration Then
-				Dim doa As DeclarationDataAdapterTruck = New DeclarationDataAdapterTruck()
+				Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
 				Dim dummyGearboxData As IGearboxDeclarationInputData = New Gearbox() With {
 						.Type = GearboxType.AMT,
 						.MaxTorque = New List(Of String),

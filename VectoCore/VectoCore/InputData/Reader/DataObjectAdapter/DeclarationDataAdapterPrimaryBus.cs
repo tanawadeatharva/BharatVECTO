@@ -17,7 +17,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
-	public class DeclarationDataAdapterPrimaryBus : DeclarationDataAdapterTruck
+	public class DeclarationDataAdapterPrimaryBus : DeclarationDataAdapterHeavyLorry
 	{
 		public AirdragData CreateAirdragData(Mission mission)
 		{

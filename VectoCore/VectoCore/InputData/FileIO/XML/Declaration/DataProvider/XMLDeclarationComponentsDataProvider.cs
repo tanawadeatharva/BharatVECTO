@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
@@ -156,6 +157,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		}
 
 		public override IBusAuxiliariesDeclarationData BusAuxiliaries { get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); } }
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationComponentsDataProviderNoAxlegearV26 : XMLDeclarationComponentsDataProviderV10
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V20;
+
+		public new const string XSD_TYPE = "VehicleComponentsNoAxlegearType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationComponentsDataProviderNoAxlegearV26(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile)
+		{ }
+
+		#region Overrides of XMLDeclarationComponentsDataProviderV10
+
+		public override IAxleGearInputData AxleGearInputData { get {
+			return null;
+				//throw new NotSupportedException("No Axlegeardata available"); 
+			} }
+
+		#endregion
 
 		protected override XNamespace SchemaNamespace
 		{

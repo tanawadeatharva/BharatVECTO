@@ -110,7 +110,7 @@ Public Class Vehicle
 
 		Try
 			If mode = ExecutionMode.Declaration Then
-				Dim doa As DeclarationDataAdapterTruck = New DeclarationDataAdapterTruck()
+				Dim doa As DeclarationDataAdapterHeavyLorry = New DeclarationDataAdapterHeavyLorry()
 				Dim segment As Segment = DeclarationData.TruckSegments.Lookup(vehicle.VehicleCategory, vehicle.AxleConfiguration,
 																		vehicle.GrossVehicleMassRating, vehicle.CurbMassChassis, false)
 				vehicleData = doa.CreateVehicleData(vehicle, segment.Missions.First(),
