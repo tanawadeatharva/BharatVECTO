@@ -49,7 +49,7 @@ Public Class JSONFileWriter
 		Dim fuels As List(Of Object) = New List(Of Object)()
 
         For Each fuel As IEngineFuelEngineeringInputData In eng.EngineModes.First().Fuels
-            Dim entry as Dictionary(Of string, object) = New Dictionary(Of String,Object)()
+            Dim entry As Dictionary(Of String, Object) = New Dictionary(Of String, Object)()
             entry.Add("WHTC-Urban", fuel.WHTCUrban)
             entry.Add("WHTC-Rural", fuel.WHTCRural)
             entry.Add("WHTC-Motorway", fuel.WHTCMotorway)

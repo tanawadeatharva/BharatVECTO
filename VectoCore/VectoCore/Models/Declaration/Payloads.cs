@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Kilogram Lookup10Percent(Kilogram grossVehicleWeight)
 		{
-			var section = Data.GetSection(d => d.Key > grossVehicleWeight);
+            var section = Data.GetSection(d => d.Key < grossVehicleWeight);
 			return VectoMath.Interpolate(section.Item1.Key, section.Item2.Key,
 				section.Item1.Value.Payload10Percent, section.Item2.Value.Payload10Percent,
 				grossVehicleWeight);
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Kilogram Lookup50Percent(Kilogram grossVehicleWeight)
 		{
-			var section = Data.GetSection(d => d.Key > grossVehicleWeight);
+			var section = Data.GetSection(d => d.Key < grossVehicleWeight);
 			return VectoMath.Interpolate(section.Item1.Key, section.Item2.Key,
 				section.Item1.Value.Payload50Percent, section.Item2.Value.Payload50Percent,
 				grossVehicleWeight);
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Kilogram Lookup75Percent(Kilogram grossVehicleWeight)
 		{
-			var section = Data.GetSection(d => d.Key > grossVehicleWeight);
+			var section = Data.GetSection(d => d.Key < grossVehicleWeight);
 			return VectoMath.Interpolate(section.Item1.Key, section.Item2.Key,
 				section.Item1.Value.Payload75Percent, section.Item2.Value.Payload75Percent,
 				grossVehicleWeight);

@@ -29,6 +29,7 @@
 *   Martin Rexeis, rexeis@ivt.tugraz.at, IVT, Graz University of Technology
 */
 
+using System;
 using System.Linq;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
@@ -121,6 +122,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	public class ResponseFailTimeInterval : AbstractResponse
 	{
 		public Second DeltaT { get; set; }
+
 	}
 
 	public class ResponseDrivingCycleDistanceExceeded : AbstractResponse

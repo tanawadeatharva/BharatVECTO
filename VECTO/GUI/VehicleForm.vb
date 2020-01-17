@@ -42,7 +42,7 @@ Public Class VehicleForm
 	End Enum
 
 	Private _axlDlog As VehicleAxleDialog
-	Private _hdVclass As String
+	Private _hdVclass As VehicleClass
 	Private _vehFile As String
 	Private _changed As Boolean = False
 	Private _cmFiles As String()
@@ -147,7 +147,7 @@ Public Class VehicleForm
 		Dim axlC As AxleConfiguration = CType(CbAxleConfig.SelectedValue, AxleConfiguration)
 		Dim maxMass As Kilogram = (TbMassMass.Text.ToDouble() * 1000).SI(Of Kilogram)()
 
-		_hdVclass = "-"
+		_hdVclass = VehicleClass.Unknown
 		Dim s0 As Segment = Nothing
 		Try
 			s0 = DeclarationData.TruckSegments.Lookup(vehC, axlC, maxMass, 0.SI(Of Kilogram), False)
@@ -156,13 +156,13 @@ Public Class VehicleForm
 			' no segment found - ignore
 		End Try
 		If s0.Found Then
-			_hdVclass = s0.VehicleClass.GetClassNumber()
+			_hdVclass = s0.VehicleClass
 		End If
 
 
-		TbHDVclass.Text = _hdVclass
-		PicVehicle.Image = ConvPicPath(If(Not s0.Found, -1, _hdVclass.ToInt()), False)
-	End Sub
+		TbHDVclass.Text = _hdVclass.GetClassNumber()
+        PicVehicle.Image = ConvPicPath(_hdVclass, False)
+    End Sub
 
 
 	'Set generic values for Declaration mode
@@ -184,7 +184,7 @@ Public Class VehicleForm
 			' no segment found - ignore
 		End Try
 		If s0.Found Then
-			_hdVclass = s0.VehicleClass.GetClassNumber()
+			_hdVclass = s0.VehicleClass
 			Dim axleCount As Integer = s0.Missions(0).AxleWeightDistribution.Count()
 			Dim i0 As Integer = LvRRC.Items.Count
 
@@ -205,7 +205,7 @@ Public Class VehicleForm
 
 		Else
 			'PnAll.Enabled = False
-			_hdVclass = "-"
+			_hdVclass = VehicleClass.Unknown
 		End If
 
 		TbMassExtra.Text = "-"
@@ -547,8 +547,8 @@ Public Class VehicleForm
 
 		'---------------------------------------------------------------------------------
 		If Not veh.SaveFile Then
-			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
-			Return False
+            MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
+            Return False
 		End If
 
 		If AutoSendTo Then

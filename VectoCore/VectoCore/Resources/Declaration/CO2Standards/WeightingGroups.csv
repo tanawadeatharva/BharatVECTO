@@ -1,4 +1,18 @@
 Vehicle Group , Cabin Type , Engine Rated Power Min [kw] , Engine Rated Power Max [kW] , Weighting Group
+ML2r          , DayCab     , 0                           , 999999                      , ML2r
+ML2r          , SleeperCab , 0                           , 999999                      , ML2r
+ML2van        , DayCab     , 0                           , 999999                      , ML2van
+ML2van        , SleeperCab , 0                           , 999999                      , ML2van
+ML3r          , DayCab     , 0                           , 999999                      , ML3r
+ML3r          , SleeperCab , 0                           , 999999                      , ML3r
+ML3van        , DayCab     , 0                           , 999999                      , ML3van
+ML3van        , SleeperCab , 0                           , 999999                      , ML3van
+ML4r          , DayCab     , 0                           , 999999                      , ML4r
+ML4r          , SleeperCab , 0                           , 999999                      , ML4r
+ML4van        , DayCab     , 0                           , 999999                      , ML4van
+ML4van        , SleeperCab , 0                           , 999999                      , ML4van
+1s            , DayCab     , 0                           , 999999                      , 1s
+1s            , SleeperCab , 0                           , 999999                      , 1s
 1             , DayCab     , 0                           , 999999                      , 1
 1             , SleeperCab , 0                           , 999999                      , 1
 2             , DayCab     , 0                           , 999999                      , 2

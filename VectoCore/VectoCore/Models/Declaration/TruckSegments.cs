@@ -67,6 +67,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational)
 		{
+
 			return Lookup(vehicleCategory, axleConfiguration, grossVehicleMassRating, curbWeight, vocational, false);
 		}
 
@@ -86,13 +87,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational, bool considerInvalid)
 		{
-			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational, considerInvalid);
+            var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational, considerInvalid);
 			if (row == null) {
 				return new Segment() { Found = false };
 			}
 
 			var vehicleHeight = LookupHeight(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational);
-			var segment = new Segment {
+            var segment = new Segment {
 				Found = true,
 				GrossVehicleWeightMin = row.ParseDouble("tpmlm_min").SI(Unit.SI.Ton).Cast<Kilogram>(),
 				GrossVehicleWeightMax = row.ParseDouble("tpmlm_max").SI(Unit.SI.Ton).Cast<Kilogram>(),
@@ -314,18 +315,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 			IEnumerable<MissionTrailer> trailers, bool lowLoading)
 		{
 			var refLoadValue = payloadStr.ToDouble(double.NaN);
-			if (double.IsNaN(refLoadValue)) {
-				var vehiclePayload = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, payloadStr)
+			if (!double.IsNaN(refLoadValue)) {
+				return refLoadValue.SI<Kilogram>();
+			}
+
+			var vehiclePayload = DeclarationData.GetPayloadForGrossVehicleWeight(grossVehicleWeight, payloadStr)
 													.LimitTo(0.SI<Kilogram>(), grossVehicleWeight - vehicleWeight);
-				var trailerPayload = trailers.Sum(
+			var trailerPayload = trailers.Sum(
 												t => DeclarationData.GetPayloadForTrailerWeight(
 													t.TrailerGrossVehicleWeight, t.TrailerCurbWeight, lowLoading))
 											.DefaultIfNull(0);
 				return vehiclePayload + trailerPayload;
-			}
-
-			return refLoadValue.SI<Kilogram>();
 		}
+
 
 		/// <summary>
 		/// Checks if a trailer should be used for the current missionType.

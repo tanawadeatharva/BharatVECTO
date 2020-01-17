@@ -35,7 +35,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public enum VehicleClass
 	{
-		Class0,
+		Unknown,
+        ClassML2r,
+        ClassML2van,
+        ClassML3r,
+        ClassML3van,
+        ClassML4r,
+        ClassML4van,
+		Class1s,
+        Class0,
 		Class1,
 		Class2,
 		Class3,
@@ -58,7 +66,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		ClassPB43,
 		ClassPB44,
 		ClassPB45
-	}
+    }
 
 	public static class VehicleClassHelper
 	{
@@ -71,7 +79,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static string GetClassNumber(this VehicleClass hdvClass)
 		{
-			return hdvClass.ToString().Substring(Prefix.Length);
+			return hdvClass == VehicleClass.Unknown ? "-" : hdvClass.ToString().Substring(Prefix.Length);
+		}
+
+		public static bool IsMediumLorry(VehicleClass vehicleClass)
+		{
+			switch (vehicleClass) {
+				case VehicleClass.ClassML2r:
+				case VehicleClass.ClassML2van:
+				case VehicleClass.ClassML3r:
+				case VehicleClass.ClassML3van:
+				case VehicleClass.ClassML4r:
+				case VehicleClass.ClassML4van:
+					return true;
+				default:
+					return false;
+			}
 		}
 	}
 }

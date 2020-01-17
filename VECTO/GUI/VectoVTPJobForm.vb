@@ -306,7 +306,7 @@ Public Class VectoVTPJobForm
 
         'SAVE
         If Not vectoJob.SaveFile Then
-            MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
+            MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
             Return False
         End If
 
@@ -650,7 +650,7 @@ Public Class VectoVTPJobForm
     End Sub
 
     Private Sub UpdateVehiclePic()
-        Dim HDVclass As String
+        Dim HDVclass As VehicleClass = VehicleClass.Unknown
 
         Dim vehicle As IVehicleDeclarationInputData = Nothing
 
@@ -679,13 +679,11 @@ Public Class VectoVTPJobForm
                                                  False)
         Catch
         End Try
-        If Not s0.Found Then
-            HDVclass = "-"
-        Else
-            HDVclass = s0.VehicleClass.GetClassNumber()
+        If s0.Found Then
+           HDVclass = s0.VehicleClass
         End If
 
-        PicVehicle.Image = ConvPicPath(If(Not s0.Found, - 1, HDVclass.ToInt()), False) _
+        PicVehicle.Image = ConvPicPath(HDVclass, False) _
         'Image.FromFile(cDeclaration.ConvPicPath(HDVclass, False))
 
         TbHVCclass.Text = String.Format("HDV Group {0}", HDVclass)

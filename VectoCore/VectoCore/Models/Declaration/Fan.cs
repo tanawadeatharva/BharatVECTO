@@ -39,54 +39,98 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public sealed class Fan : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable
+
+	public class Fan : IDeclarationAuxiliaryTable
 	{
-		private readonly List<string> FullyElectricFanTechnologies = new List<string>();
-
-		protected override string ResourceId
+		readonly FanMediumLorries fanMediumLorries=new FanMediumLorries();
+		readonly FanHeavyLorries fanHeavyLorries=new FanHeavyLorries();
+		
+		public AuxDemandEntry Lookup(VehicleClass vehicleClass, MissionType mission, string technology = null)
 		{
-			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech.csv"; }
+			return VehicleClassHelper.IsMediumLorry(vehicleClass) ? fanMediumLorries.Lookup(mission, technology) : fanHeavyLorries.Lookup(mission, technology);
 		}
 
-		protected override string ErrorMessage
-		{
-			get { return "Auxiliary Lookup Error: No value found for Fan. Mission: '{0}', Technology: '{1}'"; }
-		}
 
-		protected override void ParseData(DataTable table)
-		{
-			foreach (DataRow row in table.Rows) {
-				var name = row.Field<string>("technology");
-				var electric = row.ParseBoolean("fullyelectric");
-				if (electric) {
-					FullyElectricFanTechnologies.Add(name);
-				}
-				foreach (DataColumn col in table.Columns) {
-					if (col.Caption != "technology" && col.Caption != "fullyelectric") {
-						Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = new AuxDemandEntry {
-							PowerDemand = row.ParseDouble(col).SI<Watt>(),
-						};
-					}
-				}
-			}
-		}
-
-		public override AuxDemandEntry Lookup(MissionType mission, string technology = null)
-		{
-			if (string.IsNullOrWhiteSpace(technology)) {
-				technology = "Crankshaft mounted - Electronically controlled visco clutch";
-			}
-			return base.Lookup(mission, technology);
-		}
-
+		//protected override string ResourceId { get; }
 		public string[] FullyElectricTechnologies()
 		{
-			return FullyElectricFanTechnologies.ToArray();
+			return fanHeavyLorries.FullyElectricTechnologies();
 		}
 
 		public string[] GetTechnologies()
 		{
-			return Data.Keys.Select(x => x.Item2).Distinct().ToArray();
-		}
+			return fanHeavyLorries.GetTechnologies();
+        }
 	}
+
+	public abstract class AbstractFan : LookupData<MissionType, string, AuxDemandEntry>, IDeclarationAuxiliaryTable
+    {
+        private readonly List<string> FullyElectricFanTechnologies = new List<string>();
+
+        protected override string ErrorMessage
+        {
+            get { return "Auxiliary Lookup Error: No value found for Fan. Mission: '{0}', Technology: '{1}'"; }
+        }
+
+        protected override void ParseData(DataTable table)
+        {
+            foreach (DataRow row in table.Rows)
+            {
+                var name = row.Field<string>("technology");
+                var electric = row.ParseBoolean("fullyelectric");
+                if (electric)
+                {
+                    FullyElectricFanTechnologies.Add(name);
+                }
+                foreach (DataColumn col in table.Columns)
+                {
+                    if (col.Caption != "technology" && col.Caption != "fullyelectric")
+                    {
+                        Data[Tuple.Create(col.Caption.ParseEnum<MissionType>(), name)] = new AuxDemandEntry
+                        {
+                            PowerDemand = row.ParseDouble(col).SI<Watt>(),
+                        };
+                    }
+                }
+            }
+        }
+
+        public override AuxDemandEntry Lookup(MissionType mission, string technology = null)
+        {
+			if (string.IsNullOrWhiteSpace(technology))
+            {
+                technology = "Crankshaft mounted - Electronically controlled visco clutch";
+            }
+            return base.Lookup(mission, technology);
+        }
+
+
+
+        public string[] FullyElectricTechnologies()
+        {
+            return FullyElectricFanTechnologies.ToArray();
+        }
+
+        public string[] GetTechnologies()
+        {
+            return Data.Keys.Select(x => x.Item2).Distinct().ToArray();
+        }
+    }
+
+
+	public sealed class FanMediumLorries : AbstractFan
+    {
+		protected override string ResourceId
+		{
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech-Medium.csv"; }
+		}
+    }
+
+	public sealed class FanHeavyLorries : AbstractFan
+    {
+		protected override string ResourceId
+		{
+			get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUX.Fan-Tech.csv"; }
+		}
+    }
 }

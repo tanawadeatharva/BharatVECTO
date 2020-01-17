@@ -380,7 +380,7 @@ Public Class GearboxForm
 
 
         If Not gearbox.SaveFile Then
-            MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
+            MsgBox("Cannot save to " & file, MsgBoxStyle.Critical)
             Return False
         End If
 

@@ -1,4 +1,12 @@
 Technology , HDV Group , Long haul , Regional delivery , Urban delivery , Municipal utility , Construction
+None       , ML2r      , 0         , 0                 , 0              , 0                 , 0
+None       , ML2van    , 0         , 0                 , 0              , 0                 , 0
+None       , ML3r      , 0         , 0                 , 0              , 0                 , 0
+None       , ML3van    , 0         , 0                 , 0              , 0                 , 0
+None       , ML4r      , 0         , 0                 , 0              , 0                 , 0
+None       , ML4van    , 0         , 0                 , 0              , 0                 , 0
+#          ,           ,           ,                   ,                ,                   ,
+None       , 1s        , 0         , 0                 , 0              , 0                 , 0
 None       , 1         , 0         , 0                 , 0              , 0                 , 0
 None       , 2         , 0         , 0                 , 0              , 0                 , 0
 None       , 3         , 0         , 0                 , 0              , 0                 , 0
@@ -6,10 +14,18 @@ None       , 4         , 0         , 0                 , 0              , 0     
 None       , 5         , 0         , 0                 , 0              , 0                 , 0
 None       , 9         , 0         , 0                 , 0              , 0                 , 0
 None       , 10        , 0         , 0                 , 0              , 0                 , 0
-None       , 11        , 0         , 0                 , 0              , 0                 , 0  
+None       , 11        , 0         , 0                 , 0              , 0                 , 0
 None       , 12        , 0         , 0                 , 0              , 0                 , 0
 None       , 16        , 0         , 0                 , 0              , 0                 , 0
-#
+#          ,           ,           ,                   ,                ,                   ,
+Default    , ML2r      ,           , 150               , 150            ,                   ,
+Default    , ML2van    ,           , 150               , 150            ,                   ,
+Default    , ML3r      ,           , 150               , 150            ,                   ,
+Default    , ML3van    ,           , 150               , 150            ,                   ,
+Default    , ML4r      ,           , 150               , 150            ,                   ,
+Default    , ML4van    ,           , 150               , 150            ,                   ,
+#          ,           ,           ,                   ,                ,                   ,
+Default    , 1s        ,           , 150               , 150            ,                   ,
 Default    , 1         ,           , 150               , 150            ,                   ,
 Default    , 2         , 200       , 200               , 150            ,                   ,
 Default    , 3         ,           , 200               , 150            ,                   ,

@@ -36,6 +36,7 @@ namespace TUGraz.VectoCommon.Models
 	public enum VehicleCategory
 	{
 		Unknown,
+        Van,
 		RigidTruck,
 		Tractor,
 		//CityBus,
@@ -49,7 +50,9 @@ namespace TUGraz.VectoCommon.Models
 		public static string GetLabel(this VehicleCategory category)
 		{
 			switch (category) {
-				case VehicleCategory.RigidTruck:
+                case VehicleCategory.Van:
+                    return "Van";
+                case VehicleCategory.RigidTruck:
 					return "Rigid Truck";
 				case VehicleCategory.Tractor:
 					return "Tractor";
@@ -69,7 +72,9 @@ namespace TUGraz.VectoCommon.Models
 		public static string GetCategoryName(this VehicleCategory category)
 		{
 			switch (category) {
-				case VehicleCategory.RigidTruck:
+                case VehicleCategory.Van:
+                    return "Van";
+                case VehicleCategory.RigidTruck:
 					return "Rigid Truck";
 				case VehicleCategory.Tractor:
 					return "Semitrailer Truck";
@@ -108,7 +113,8 @@ namespace TUGraz.VectoCommon.Models
 		public static bool IsTruck(this VehicleCategory category)
 		{
 			switch (category) {
-				case VehicleCategory.RigidTruck:
+                case VehicleCategory.Van:
+                case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
 					return true;
 				//case VehicleCategory.CityBus:
