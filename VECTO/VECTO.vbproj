@@ -461,7 +461,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="My Project\app.manifest">
       <SubType>Designer</SubType>
     </None>
@@ -552,16 +551,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj">
-      <Project>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</Project>
-      <Name>VectoCommon</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj">
-      <Project>{CD36938A-ADD9-4C65-96DA-B397CDEEA90A}</Project>
-      <Name>VectoCore</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Libraries\vectolic.dll" />
     <None Include="Resources\Up.bmp" />
     <None Include="Resources\up-directory.png" />
@@ -588,7 +577,16 @@
     <Content Include="Resources\up.ico" />
     <Content Include="Resources\up.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\VectoCommon\VectoCommon\VectoCommon.csproj">
+      <Project>{79A066AD-69A9-4223-90F6-6ED5D2D084F4}</Project>
+      <Name>VectoCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VectoCore\VectoCore\VectoCore.csproj">
+      <Project>{CD36938A-ADD9-4C65-96DA-B397CDEEA90A}</Project>
+      <Name>VectoCore</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>

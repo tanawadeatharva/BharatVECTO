@@ -70,7 +70,7 @@ Public Class Utils
 
     Public Shared Function GetDefaultVehicleData(optional vehicleWeight As Kilogram = Nothing) as VehicleData
         Return New VehicleData With {
-            .CurbWeight = If(vehicleWeight, 0.si (of Kilogram)),
+            .CurbMass = If(vehicleWeight, 0.si (of Kilogram)),
             .Length = 10.655.SI (Of Meter)(),
             .Width = 2.55.SI (Of Meter)(),
             .Height = 2.275.SI (of Meter)(),
@@ -133,7 +133,7 @@ Public Class Utils
                 .AdBlueDosing = ConsumerTechnology.Pneumatically,
                 .AirSuspensionControl = ConsumerTechnology.Mechanically,
                 .Doors = ConsumerTechnology.Pneumatically,
-                .KneelingHeightMillimeters = 70.SI(Unit.SI.Milli.Meter).Cast (Of Meter), 
+                .KneelingHeight = 70.SI(Unit.SI.Milli.Meter).Cast (Of Meter), 
                 .SmartAirCompression = False,
                 .SmartRegeneration = False  
                 },

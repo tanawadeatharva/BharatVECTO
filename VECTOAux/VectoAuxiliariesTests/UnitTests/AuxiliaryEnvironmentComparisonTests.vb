@@ -805,7 +805,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).KneelingHeightMillimeters += 1.SI(Of Meter)
+		    CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).KneelingHeight += 1.SI(Of Meter)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)

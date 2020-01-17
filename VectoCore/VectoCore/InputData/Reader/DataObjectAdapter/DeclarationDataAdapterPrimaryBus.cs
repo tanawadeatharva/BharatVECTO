@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public override IList<VectoRunData.AuxData> CreateAuxiliaryData(
 			IAuxiliariesDeclarationInputData auxInputData, IBusAuxiliariesDeclarationData busAuxData, MissionType mission,
-			VehicleClass hvdClass, Meter vehicleLength)
+			VehicleClass hdvClass, Meter vehicleLength)
 		{
 			if (auxInputData != null) {
 				throw new VectoException("Only BusAuxiliaries can be provided as input!");
@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					DemandType = AuxiliaryDemandType.Constant,
 					Technology = new List<string>() { busAuxData.FanTechnology },
 					ID = Constants.Auxiliaries.IDs.Fan,
-					PowerDemand = DeclarationData.Fan.Lookup(mission, busAuxData.FanTechnology).PowerDemand
+					PowerDemand = DeclarationData.Fan.Lookup(hdvClass, mission, busAuxData.FanTechnology).PowerDemand
 				});
 			retVal.Add(
 				new VectoRunData.AuxData() {

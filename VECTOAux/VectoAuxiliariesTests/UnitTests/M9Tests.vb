@@ -93,7 +93,7 @@ Namespace UnitTests
 			Dim sgnlsMock As New Mock(Of ISignals)
 			Dim psac As New Mock(Of IPneumaticsConsumersDemand)
 
-			fMapMock.Setup(Function(x) x.GetFuelConsumption(1.SI(Of NewtonMeter), 1.RPMtoRad())).Returns(
+			fMapMock.Setup(Function(x) x.GetFuelConsumptionValue(1.SI(Of NewtonMeter), 1.RPMtoRad())).Returns(
 				(-1 / 1000).SI(Of KilogramPerSecond)())
 			m6Mock.Setup(Function(x) x.AvgPowerDemandAtCrankFromElectricsIncHVAC).Returns(IP1.SI(Of Watt))
 			m1Mock.Setup(Function(x) x.AveragePowerDemandAtCrankFromHVACMechanicals).Returns(IP2.SI(Of Watt))

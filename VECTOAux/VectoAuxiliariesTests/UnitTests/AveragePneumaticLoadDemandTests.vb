@@ -51,7 +51,7 @@ Namespace UnitTests
             _defaultInputConfig.CompressorGearEfficiency = 0.8
             _defaultInputConfig.SmartRegeneration = True
             '_defaultInputConfig.RetarderBrake = True
-            _defaultInputConfig.KneelingHeightMillimeters = 80.SI(Unit.SI.Milli.Meter).Cast (of Meter)
+            _defaultInputConfig.KneelingHeight = 80.SI(Unit.SI.Milli.Meter).Cast (of Meter)
             _defaultInputConfig.AirSuspensionControl = ConsumerTechnology.Electrically ' "Electrically"
             _defaultInputConfig.AdBlueDosing = ConsumerTechnology.Pneumatically ' "Pneumatic"
             _defaultInputConfig.Doors = ConsumerTechnology.Pneumatically ' "Pneumatic"
@@ -247,7 +247,7 @@ Namespace UnitTests
 
             initialise()
 
-            _defaultInputConfig.KneelingHeightMillimeters = 100.SI(Unit.si.Milli.Meter).Cast (Of Meter)
+            _defaultInputConfig.KneelingHeight = 100.SI(Unit.si.Milli.Meter).Cast (Of Meter)
 
             Dim psAuxConfig = New DeclarationDataAdapterPrimaryBus().CreatePneumaticAuxConfig(RetarderType.LossesIncludedInTransmission)
             Dim psCompressorMap = CompressorMapReader.ReadFile(_compressorMapPath)
@@ -352,7 +352,7 @@ Namespace UnitTests
                 .PneumaticAuxillariesConfig = psAuxConfig,
                 .PneumaticUserInputsConfig = _defaultInputConfig,
                 .VehicleData = New VehicleData() with {
-                    .CurbWeight = _vehicleMassKG.SI(of Kilogram)
+                    .CurbMass = _vehicleMassKG.SI(of Kilogram)
                     },
                 .Actuations = New Actuations() With {
                 .Braking = 153,
