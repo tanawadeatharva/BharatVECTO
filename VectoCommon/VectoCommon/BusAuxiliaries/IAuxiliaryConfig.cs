@@ -11,6 +11,7 @@
 
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 
 namespace TUGraz.VectoCommon.BusAuxiliaries {

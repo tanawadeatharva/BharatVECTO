@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
@@ -22,38 +25,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 	/// 	''' Described a consumer of Alternator electrical power
 	/// 	''' </summary>
 	/// 	''' <remarks></remarks>
-	public class ElectricalConsumer : IElectricalConsumer
+	public class ElectricalConsumer // : IElectricalConsumer
 	{
 		// Fields
-		private bool _BaseVehicle;
 
-		private string _Category;
-		private string _ConsumerName;
-		private Ampere _NominalConsumptionAmps;
-		private int _NumberInActualVehicle;
-		private double _PhaseIdle_TractionOn;
-		private Volt _PowerNetVoltage;
-		private string _Info;
+		//private Volt _PowerNetVoltage;
+		private readonly Dictionary<MissionType, Ampere> _missions = new Dictionary<MissionType, Ampere>();
 
-		// Constructor
-		public ElectricalConsumer(
-			bool baseVehicle, string category, string consumerName, Ampere nominalConsumptionAmps, double phaseIdleTractionOn,
-			Volt powerNetVoltage, int numberInVehicle, string info)
-		{
-			// Illegal Value Check.
-			ValidateInput(category, consumerName, nominalConsumptionAmps, phaseIdleTractionOn, powerNetVoltage, numberInVehicle);
-
-			// Good, now assign.
-			BaseVehicle = baseVehicle;
-			Category = category;
-			ConsumerName = consumerName;
-			NominalConsumptionAmps = nominalConsumptionAmps;
-			PhaseIdle_TractionOn = phaseIdleTractionOn;
-			PowerNetVoltage = powerNetVoltage;
-			NumberInActualVehicle = numberInVehicle;
-			Info = info;
-			
-		}
 
 		protected void ValidateInput(
 			string category, string consumerName, Ampere nominalConsumptionAmps, double phaseIdleTractionOn, Volt powerNetVoltage,
@@ -96,111 +74,78 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 
 		// Properties
-		public bool BaseVehicle
-		{
-			get { return _BaseVehicle; }
-			set {
-				_BaseVehicle = value;
-				NotifyPropertyChanged("BaseVehicle");
-			}
-		}
 
-		public string Category
-		{
-			get { return _Category; }
-			set {
-				_Category = value;
-				NotifyPropertyChanged("Category");
-			}
-		}
+		public bool BaseVehicle { get; set; }
 
-		public string ConsumerName
-		{
-			get { return _ConsumerName; }
-			set {
-				_ConsumerName = value;
-				NotifyPropertyChanged("ConsumerName");
-			}
-		}
+		public string Category { get; set; }
 
-		public Ampere NominalConsumptionAmps
-		{
-			get { return _NominalConsumptionAmps; }
-			set {
-				_NominalConsumptionAmps = value;
-				NotifyPropertyChanged("NominalConsumptionAmps");
-			}
-		}
+		public string ConsumerName { get; set; }
 
-		public int NumberInActualVehicle
-		{
-			get { return _NumberInActualVehicle; }
-			set {
-				_NumberInActualVehicle = value;
-				NotifyPropertyChanged("NumberInActualVehicle");
-			}
-		}
+		public string NumberInActualVehicle { get; set; }
 
-		public double PhaseIdle_TractionOn
-		{
-			get { return _PhaseIdle_TractionOn; }
-			set {
-				_PhaseIdle_TractionOn = value;
-				NotifyPropertyChanged("PhaseIdle_TractionOn");
-			}
-		}
+		public double PhaseIdleTractionOn { get; set; }
+		public bool Bonus { get; set; }
 
-		public Volt PowerNetVoltage
-		{
-			get { return _PowerNetVoltage; }
-			set {
-				_PowerNetVoltage = value;
-				NotifyPropertyChanged("PowerNetVoltage");
-			}
-		}
+		//public Volt PowerNetVoltage
+		//{
+		//	get { return _PowerNetVoltage; }
+		//	set {
+		//		_PowerNetVoltage = value;
+		//		NotifyPropertyChanged("PowerNetVoltage");
+		//	}
+		//}
 
-		public string Info
-		{
-			get { return _Info; }
-			set {
-				_Info = value;
-				NotifyPropertyChanged("Info");
-			}
-		}
-
-
+		
 		// Public class outputs
-		public Ampere TotalAvgConumptionAmps
-		{
-			get { return NominalConsumptionAmps * (NumberInActualVehicle * PhaseIdle_TractionOn); }
-		}
+		//public Ampere TotalAvgConumptionAmps
+		//{
+		//	get { return NominalConsumptionAmps * (NumberInActualVehicle * PhaseIdle_TractionOn); }
+		//}
 
 		
 
 		// Comparison Overrides
-		public override bool Equals(object obj)
+		//public override bool Equals(object obj)
+		//{
+		//	if (obj == null || GetType() != obj.GetType()) {
+		//		return false;
+		//	}
+
+		//	var other = (IElectricalConsumer)obj;
+
+		//	return ConsumerName == other.ConsumerName;
+		//}
+
+		//[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+		//public override int GetHashCode()
+		//{
+		//	return 0;
+		//}
+
+
+		//public event PropertyChangedEventHandler PropertyChanged;
+
+		//private void NotifyPropertyChanged(string p)
+		//{
+		//	PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(p));
+		//}
+
+		public Ampere this[MissionType mission]
 		{
-			if (obj == null || GetType() != obj.GetType()) {
-				return false;
+			get {
+				if (_missions.ContainsKey(mission)) {
+					return _missions[mission];
+				}
+
+				return 0.SI<Ampere>();
 			}
+			set {
+				if (_missions.ContainsKey(mission)) {
+					throw new VectoException("key {0} already exists!", mission.ToString());
+				}
 
-			var other = (IElectricalConsumer)obj;
-
-			return ConsumerName == other.ConsumerName;
-		}
-
-		[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-		public override int GetHashCode()
-		{
-			return 0;
-		}
-
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void NotifyPropertyChanged(string p)
-		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(p));
+				_missions[mission] = value;
+			}
 		}
 	}
 }

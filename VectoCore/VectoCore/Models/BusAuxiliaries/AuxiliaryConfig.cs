@@ -62,28 +62,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 				return false;
 			}
 
-			// Consumer list
-			if (ElectricalUserInputsConfig.ElectricalConsumers.Items.Count !=
-				other.ElectricalUserInputsConfig.ElectricalConsumers.Items.Count) {
+			if (ElectricalUserInputsConfig.AverageCurrentDemandInclBaseLoad !=
+				other.ElectricalUserInputsConfig.AverageCurrentDemandInclBaseLoad) {
 				return false;
 			}
 
-			int i;
-			for (i = 0; i < ElectricalUserInputsConfig.ElectricalConsumers.Items.Count; i++) {
-				IElectricalConsumer thisConsumer, otherConsumer;
-				thisConsumer = ElectricalUserInputsConfig.ElectricalConsumers.Items[i];
-				otherConsumer = other.ElectricalUserInputsConfig.ElectricalConsumers.Items[i];
-
-				if (
-					//thisConsumer.AvgConsumptionAmps != otherConsumer.AvgConsumptionAmps ||
-					thisConsumer.BaseVehicle != otherConsumer.BaseVehicle || thisConsumer.Category != otherConsumer.Category ||
-					thisConsumer.ConsumerName != otherConsumer.ConsumerName ||
-					thisConsumer.NominalConsumptionAmps != otherConsumer.NominalConsumptionAmps ||
-					thisConsumer.NumberInActualVehicle != otherConsumer.NumberInActualVehicle ||
-					thisConsumer.PhaseIdle_TractionOn != otherConsumer.PhaseIdle_TractionOn) 
-				{
-					return false;
-				}
+			if (ElectricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad !=
+				other.ElectricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad) {
+				return false;
 			}
 
 			// PowerNetVoltage

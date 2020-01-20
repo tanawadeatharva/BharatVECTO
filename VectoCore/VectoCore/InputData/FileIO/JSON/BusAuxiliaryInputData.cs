@@ -72,23 +72,13 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			// DoorActuationTimeSecond
 			electricalUserInputsConfig.DoorActuationTimeSecond = elData.GetEx<double>("DoorActuationTimeSecond").SI<Second>();
 
-			// Electrical Consumer list
-			//electricalUserInputsConfig.ElectricalConsumers.Items.Clear();
-			var consumers = new List<IElectricalConsumer>();
-			foreach (var consumer in elData["ElectricalConsumers"]) {
-				var newConsumer = new ElectricalConsumer(
-					consumer.GetEx<bool>("BaseVehicle"), consumer.GetEx<string>("Category"), consumer.GetEx<string>("ConsumerName"),
-					consumer.GetEx<double>("NominalConsumptionAmps").SI<Ampere>(),
-					consumer.GetEx<double>("PhaseIdle_TractionOn"), consumer.GetEx<double>("PowerNetVoltage").SI<Volt>(),
-					consumer.GetEx<int>("NumberInActualVehicle"),
-					consumer.GetEx<string>("Info"));
-				consumers.Add(newConsumer);
-			}
-
-			electricalUserInputsConfig.ElectricalConsumers = new ElectricalConsumerList(consumers);
+			electricalUserInputsConfig.AverageCurrentDemandInclBaseLoad = elData["ElectricalConsumers"]
+				.GetEx<double>("AverageCurrentDemandInclBaseLoad").SI<Ampere>();
+			electricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad = elData["ElectricalConsumers"]
+				.GetEx<double>("AverageCurrentDemandWithoutBaseLoad").SI<Ampere>();
 
 			// PowerNetVoltage
-			electricalUserInputsConfig.PowerNetVoltage = elData.GetEx<double>("PowerNetVoltage").SI<Volt>();
+			//electricalUserInputsConfig.PowerNetVoltage = elData.GetEx<double>("PowerNetVoltage").SI<Volt>();
 
 			// ResultCardIdle
 

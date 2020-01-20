@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		private Ampere HvacPlusNonBaseCurrents()
 		{
-			return _m0.GetHVACElectricalCurrentDemand + _m0_1.GetTotalAverageDemandAmpsWithoutBaseLoad;
+			return _m0.GetHVACElectricalCurrentDemand + _m0_1.TotalAverageDemandAmpsWithoutBaseLoad;
 		}
 
 		public Ampere SmartIdleCurrent

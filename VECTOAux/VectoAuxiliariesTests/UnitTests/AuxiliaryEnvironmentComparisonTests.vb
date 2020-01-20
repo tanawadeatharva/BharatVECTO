@@ -17,16 +17,16 @@ Namespace UnitTests
 	Public Class AuxiliaryComparisonTests
 
 
-        <OneTimeSetUp>
-        Sub RunBeforeAnyTests()
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
-        end Sub
+		<OneTimeSetUp>
+		Sub RunBeforeAnyTests()
+			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
+		end Sub
 
-        shared Function GetDefaultAuxiliaryConfig() As IAuxiliaryConfig
-            Dim retVal As IAuxiliaryConfig = Utils.GetAuxTestConfig()
+		shared Function GetDefaultAuxiliaryConfig() As IAuxiliaryConfig
+			Dim retVal As IAuxiliaryConfig = Utils.GetAuxTestConfig()
 
-            Return retVal
-        End Function
+			Return retVal
+		End Function
 
 		<Test()>
 		Public Sub BasicEqualCompareTest()
@@ -42,9 +42,9 @@ Namespace UnitTests
 			Assert.AreEqual(True, compareResult)
 		End Sub
 
-       
+	   
 
-        <Test()>
+		<Test()>
 		Public Sub BasicUnequalTest()
 
 			'Arrange
@@ -104,7 +104,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.ElectricalUserInputsConfig, ElectricsUserInputsConfig).DoorActuationTimeSecond += 1.SI(Of Second)
+			CType (auxNow.ElectricalUserInputsConfig, ElectricsUserInputsConfig).DoorActuationTimeSecond += 1.SI(Of Second)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -112,21 +112,21 @@ Namespace UnitTests
 			Assert.AreEqual(False, compareResult)
 		End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Consumers_Unequal_Count_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Consumers_Unequal_Count_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer)).RemoveAt(0)
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer)).RemoveAt(0)
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
 		'<Test()>
 		'<Category("ElectricalUserConfig")>
@@ -144,106 +144,106 @@ Namespace UnitTests
 		'	Assert.AreEqual(False, compareResult)
 		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_Consumers_BaseVehicle_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_Consumers_BaseVehicle_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-		    CType(CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer))(0), ElectricalConsumer).BaseVehicle =
-				Not auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).BaseVehicle
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer))(0), ElectricalConsumer).BaseVehicle =
+		'		Not auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).BaseVehicle
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_Consumers_Category_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_Consumers_Category_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			Dim cat As String = auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).Category
-		    CType(CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer))(0), ElectricalConsumer).Category = cat & "x"
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	Dim cat As String = auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).Category
+		'	CType(CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer))(0), ElectricalConsumer).Category = cat & "x"
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_Consumers_ConsumerName_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_Consumers_ConsumerName_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			Dim cname As String = auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).ConsumerName
-		    CType(CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer))(0), ElectricalConsumer).ConsumerName = cname & "x"
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	Dim cname As String = auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).ConsumerName
+		'	CType(CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer))(0), ElectricalConsumer).ConsumerName = cname & "x"
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_Consumers_NominalConsumptionAmps_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_Consumers_NominalConsumptionAmps_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-		    CType(CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer))(0), ElectricalConsumer).NominalConsumptionAmps += 1.SI(of Ampere)
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer))(0), ElectricalConsumer).NominalConsumptionAmps += 1.SI(of Ampere)
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_Consumers_NumberInActualVehicle_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_Consumers_NumberInActualVehicle_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			Dim cname As Single = auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).NumberInActualVehicle
-			auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).NumberInActualVehicle += 1
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	Dim cname As Single = auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).NumberInActualVehicle
+		'	auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).NumberInActualVehicle += 1
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_Consumers_PhaseIdle_TractionOn_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_Consumers_PhaseIdle_TractionOn_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			Dim cname As Double = auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).PhaseIdle_TractionOn
-		    CType(CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer))(0), ElectricalConsumer).PhaseIdle_TractionOn += 1
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	Dim cname As Double = auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items(0).PhaseIdle_TractionOn
+		'	CType(CType(auxNow.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(of IElectricalConsumer))(0), ElectricalConsumer).PhaseIdle_TractionOn += 1
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
 		<Test()>
 		<Category("ElectricalUserConfig")>
@@ -269,7 +269,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -285,7 +285,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -301,8 +301,8 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -318,8 +318,8 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -335,8 +335,8 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 51.SI(of Ampere)))
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 51.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -352,8 +352,8 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(51.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(51.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -369,8 +369,8 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -386,8 +386,8 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -403,8 +403,8 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 48.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 48.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -420,8 +420,8 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -437,8 +437,8 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
-		    CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -454,7 +454,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage += 1.SI(of Volt)
+			CType (auxNow.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage += 1.SI(of Volt)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -470,7 +470,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.ElectricalUserInputsConfig, ElectricsUserInputsConfig).SmartElectrical = Not auxNow.ElectricalUserInputsConfig.SmartElectrical
+			CType (auxNow.ElectricalUserInputsConfig, ElectricsUserInputsConfig).SmartElectrical = Not auxNow.ElectricalUserInputsConfig.SmartElectrical
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -506,7 +506,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).AirControlledSuspension += 1.SI(of NormLiterPerSecond)
+			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).AirControlledSuspension += 1.SI(of NormLiterPerSecond)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -522,7 +522,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).Braking += 1.SI(of NormLiterPerKilogram)
+			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).Braking += 1.SI(of NormLiterPerKilogram)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -554,7 +554,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).BreakingWithKneeling += 1.SI(Of NormLiterPerKilogramMeter)
+			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).BreakingWithKneeling += 1.SI(Of NormLiterPerKilogramMeter)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -570,7 +570,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DeadVolBlowOuts += 1.SI(Of PerSecond)
+			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DeadVolBlowOuts += 1.SI(Of PerSecond)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -586,7 +586,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DeadVolume += 1.SI(of NormLiter)
+			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DeadVolume += 1.SI(of NormLiter)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -602,7 +602,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).NonSmartRegenFractionTotalAirDemand += 1
+			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).NonSmartRegenFractionTotalAirDemand += 1
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -618,7 +618,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).OverrunUtilisationForCompressionFraction += 1
+			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).OverrunUtilisationForCompressionFraction += 1
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -634,7 +634,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DoorOpening += 1.SI(Of NormLiter)
+			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).DoorOpening += 1.SI(Of NormLiter)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -650,7 +650,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).StopBrakeActuation += 1.SI(of NormLiterPerKilogram)
+			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).StopBrakeActuation += 1.SI(of NormLiterPerKilogram)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -666,7 +666,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).SmartRegenFractionTotalAirDemand += 1
+			CType (auxNow.PneumaticAuxillariesConfig, PneumaticsConsumersDemand).SmartRegenFractionTotalAirDemand += 1
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -719,7 +719,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).AirSuspensionControl = ConsumerTechnology.Unknown ' auxNow.PneumaticUserInputsConfig.AirSuspensionControl & "x"
+			CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).AirSuspensionControl = ConsumerTechnology.Unknown ' auxNow.PneumaticUserInputsConfig.AirSuspensionControl & "x"
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -735,7 +735,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).CompressorGearEfficiency =
+			CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).CompressorGearEfficiency =
 				If _
 					(auxNow.PneumaticUserInputsConfig.CompressorGearEfficiency - 0.1 < 0, 0,
 					auxNow.PneumaticUserInputsConfig.CompressorGearEfficiency - 0.1)
@@ -755,7 +755,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).CompressorGearRatio += 1
+			CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).CompressorGearRatio += 1
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -788,7 +788,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).Doors = ConsumerTechnology.Unknown ' auxNow.PneumaticUserInputsConfig.Doors & "x"
+			CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).Doors = ConsumerTechnology.Unknown ' auxNow.PneumaticUserInputsConfig.Doors & "x"
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -805,7 +805,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).KneelingHeight += 1.SI(Of Meter)
+			CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).KneelingHeight += 1.SI(Of Meter)
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -835,7 +835,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).SmartAirCompression = Not auxNow.PneumaticUserInputsConfig.SmartAirCompression
+			CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).SmartAirCompression = Not auxNow.PneumaticUserInputsConfig.SmartAirCompression
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
@@ -852,7 +852,7 @@ Namespace UnitTests
 			Dim auxFresh = GetDefaultAuxiliaryConfig()
 			Dim auxNow = GetDefaultAuxiliaryConfig()
 			Dim compareResult As Boolean
-		    CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).SmartRegeneration = Not auxNow.PneumaticUserInputsConfig.SmartRegeneration
+			CType (auxNow.PneumaticUserInputsConfig, PneumaticUserInputsConfig).SmartRegeneration = Not auxNow.PneumaticUserInputsConfig.SmartRegeneration
 
 			'Act
 			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)

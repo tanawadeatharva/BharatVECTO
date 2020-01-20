@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			};
 			simulationRunData.EngineData.FuelMode = modeIdx;
 			simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
-			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(InputDataProvider.JobInputData.Vehicle, simulationRunData);
+			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(mission, InputDataProvider.JobInputData.Vehicle, simulationRunData);
 			return simulationRunData;
 		}
 	}

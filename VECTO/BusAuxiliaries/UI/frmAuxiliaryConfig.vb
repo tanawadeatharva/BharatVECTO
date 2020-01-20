@@ -45,7 +45,7 @@ Public Class frmAuxiliaryConfig
     Private auxFile As String
     Private cmFilesList As String()
     Private SaveClicked As Boolean
-    Private electricalConsumerBinding As New BindingList(Of IElectricalConsumer)
+    'Private electricalConsumerBinding As New BindingList(Of IElectricalConsumer)
 
 
 #End Region
@@ -1366,9 +1366,9 @@ Public Class frmAuxiliaryConfig
 
 
         'Electrical ConsumablesGrid
-        electricalConsumerBinding =
-            New BindingList(Of IElectricalConsumer)(CType (auxConfig.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(Of IElectricalConsumer)))
-        gvElectricalConsumables.DataSource = electricalConsumerBinding
+        'electricalConsumerBinding =
+        '    New BindingList(Of IElectricalConsumer)(CType (auxConfig.ElectricalUserInputsConfig.ElectricalConsumers.Items, List(Of IElectricalConsumer)))
+        'gvElectricalConsumables.DataSource = electricalConsumerBinding
         AddHandler gvElectricalConsumables.CellFormatting, New DataGridViewCellFormattingEventHandler(AddressOf SIToText)
 
 
@@ -1476,7 +1476,7 @@ Public Class frmAuxiliaryConfig
             gvResultsCardTraction.BackgroundColor = Color.Gray
             gvResultsCardOverrun.BackgroundColor = Color.Gray
 
-            electricalConsumerBinding.Single(Function(c) c.Category = "Veh Electronics &Engine").NumberInActualVehicle = 0
+            'electricalConsumerBinding.Single(Function(c) c.Category = "Veh Electronics &Engine").NumberInActualVehicle = 0
         Else
 
             gvResultsCardIdle.Enabled = False
@@ -1488,7 +1488,7 @@ Public Class frmAuxiliaryConfig
             gvResultsCardTraction.BackgroundColor = Color.White
             gvResultsCardOverrun.BackgroundColor = Color.White
 
-            electricalConsumerBinding.Single(Function(c) c.Category = "Veh Electronics &Engine").NumberInActualVehicle = 1
+            'electricalConsumerBinding.Single(Function(c) c.Category = "Veh Electronics &Engine").NumberInActualVehicle = 1
         End If
     End Sub
 

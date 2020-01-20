@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public double AlternatorsEfficiency
 		{
 			get {
-				var baseCurrentDemandAmps = _m0_1.GetTotalAverageDemandAmpsIncludingBaseLoad; // _electricalConsumersList.GetTotalAverageDemandAmps(false);
+				var baseCurrentDemandAmps = _m0_1.TotalAverageDemandAmpsIncludingBaseLoad; // _electricalConsumersList.GetTotalAverageDemandAmps(false);
 				var totalDemandAmps = baseCurrentDemandAmps + GetHVACElectricalCurrentDemand;
 				return _alternatorEfficiencyMap.GetEfficiency(_signals.EngineSpeed, totalDemandAmps);
 			}

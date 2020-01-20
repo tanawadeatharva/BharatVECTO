@@ -62,23 +62,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 			// Electrical Consumer list
 
-			var elConsumers = new List<object>();
-			foreach (var entry in electricalUserCfg.ElectricalConsumers.Items) {
-				var newConsumer = new Dictionary<string, object>();
-
-				newConsumer["BaseVehicle"] = entry.BaseVehicle;
-				newConsumer["Category"] = entry.Category;
-				newConsumer["ConsumerName"] = entry.ConsumerName;
-				newConsumer["NominalConsumptionAmps"] = entry.NominalConsumptionAmps.Value();
-				newConsumer["PhaseIdle_TractionOn"] = entry.PhaseIdle_TractionOn;
-				newConsumer["PowerNetVoltage"] = entry.PowerNetVoltage.Value();
-				newConsumer["NumberInActualVehicle"] = entry.NumberInActualVehicle;
-				newConsumer["Info"] = entry.Info;
-
-				elConsumers.Add(newConsumer);
-			}
-
-			elData["ElectricalConsumers"] = elConsumers;
+			elData["ElectricalConsumers"] = new Dictionary<string, object>() {
+				{"AverageCurrentDemandInclBaseLoad", electricalUserCfg.AverageCurrentDemandInclBaseLoad.Value() },
+				{"AverageCurrentDemandWithoutBaseLoad", electricalUserCfg.AverageCurrentDemandWithoutBaseLoad.Value() }
+			};
 
 			// PowerNetVoltage
 			elData["PowerNetVoltage"] = electricalUserCfg.PowerNetVoltage.Value();

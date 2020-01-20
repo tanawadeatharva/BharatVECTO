@@ -15,20 +15,20 @@ using TUGraz.VectoCommon.BusAuxiliaries;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
-	public class ElectricalConsumerList : IElectricalConsumerList
+	public class ElectricalConsumerList // : IElectricalConsumerList
 	{
-		private readonly List<IElectricalConsumer> _items;
+		private readonly List<ElectricalConsumer> _items;
 		//private Volt _powernetVoltage;
 		
 		// Constructor
-		public ElectricalConsumerList(List<IElectricalConsumer> consumer)
+		public ElectricalConsumerList(List<ElectricalConsumer> consumer)
 		{
 			_items = consumer;
 		}
 
 		// Interface implementation
 		
-		public IReadOnlyList<IElectricalConsumer> Items
+		public IReadOnlyList<ElectricalConsumer> Items
 		{
 			get {
 				return _items;

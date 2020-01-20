@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Utils;
 
@@ -15,16 +16,15 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 	public static class ElectricConsumerReader
 	{
 		public static readonly string[] Header = new[] {
-			Fields.Category, Fields.Consumer, Fields.BaseVehicle, Fields.NominalAmps, Fields.PhaseIdle, Fields.NuminVehicle,
-			Fields.Info
+			Fields.Category, Fields.Consumer, Fields.BaseVehicle, Fields.PhaseIdle, Fields.NuminVehicle
 		};
 
-		public static IElectricalConsumerList ReadStream(Stream str)
+		public static ElectricalConsumerList ReadStream(Stream str)
 		{
 			return Create(VectoCSVFile.ReadStream(str));
 		}
 
-		public static IElectricalConsumerList Create(TableData data)
+		public static ElectricalConsumerList Create(TableData data)
 		{
 			if (!HeaderValid(data.Columns)) {
 				throw new VectoException("Invalid header. Expected: {0}, got: {1}",
@@ -32,18 +32,22 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 			}
 
-			var retVal = new List<IElectricalConsumer>();
+			var retVal = new List<ElectricalConsumer>();
 			foreach (DataRow row in data.Rows) {
-				retVal.Add(new ElectricalConsumer(
-					row.ParseBoolean(Fields.BaseVehicle),
-					row.Field<string>(Fields.Category),
-					row.Field<string>(Fields.Consumer),
-					row.ParseDouble(Fields.NominalAmps).SI<Ampere>(),
-					row.ParseDouble(Fields.PhaseIdle),
-					Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
-					0,
-					row.Field<string>(Fields.Info)
-					));
+				var consumer = new ElectricalConsumer() {
+					Category =row.Field<string>(Fields.Category),
+					ConsumerName = row.Field<string>(Fields.Consumer),
+					BaseVehicle = row.ParseBoolean(Fields.BaseVehicle),
+					Bonus = row.ParseBoolean(Fields.Bonus),
+					PhaseIdleTractionOn = row.ParseDouble(Fields.PhaseIdle),
+					NumberInActualVehicle = row.Field<string>(Fields.NuminVehicle)
+				};
+				foreach (var mission in EnumHelper.GetValues<MissionType>()) {
+					if (data.Columns.Contains(mission.ToString())) {
+						consumer[mission] = row.ParseDouble(mission.ToString()).SI<Ampere>();
+					}
+				}
+				retVal.Add(consumer);
 			}
 
 			return new ElectricalConsumerList( retVal);
@@ -59,10 +63,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			public const string Category = "Category";
 			public const string Consumer = "Consumer";
 			public const string BaseVehicle = "Base Vehicle";
-			public const string NominalAmps = "Nominal Amps";
-			public const string PhaseIdle = "PhaseIdle/TractionOn";
-			public const string NuminVehicle = "Num in Vehicle";
-			public const string Info = "Info";
+			public const string Bonus = "Bonus";
+			//public const string NominalAmps = "Nominal Amps";
+			public const string PhaseIdle = "PhaseIdle";
+			public const string NuminVehicle = "Number in Vehicle";
+			//public const string Info = "Info";
 
 		}
 	}

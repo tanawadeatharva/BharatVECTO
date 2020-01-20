@@ -43,6 +43,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -139,7 +140,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			private static IEnvironmentalConditionsMap envMap = null;
 
 			//private static AuxiliaryConfig busAuxConfig = null;
-			private static IElectricalConsumerList elUserConfig;
+			private static ElectricalConsumerList elUserConfig;
 
 			private static IActuationsMap actuationsMap;
 			//private static PneumaticsAuxilliariesConfig pneumaticAuxConfig;
@@ -171,7 +172,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static IElectricalConsumerList DefaultElectricConsumerList
+			public static ElectricalConsumerList DefaultElectricConsumerList
 			{
 				get {
 					return elUserConfig ?? (elUserConfig = ElectricConsumerReader.ReadStream(
@@ -209,6 +210,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
+			public static Meter CalculateLengthInteriorLights(Meter vehicleLength, bool doubleDecker, FloorType floorType, int numPassLowFloor)
+			{
+				if (floorType == FloorType.LowFloor) {
+					return doubleDecker ? 2 * vehicleLength : vehicleLength;
+				}
+
+				if (floorType == FloorType.HighFloor) {
+					if (doubleDecker) {
+						return numPassLowFloor > 6 ? 1.5 * vehicleLength : vehicleLength + 2.4.SI<Meter>();
+					}
+
+					return vehicleLength;
+				}
+				throw new VectoException("Internal Length for floorType {0} {1} not defined", floorType.ToString(), doubleDecker ? "DD" : "SD");
+			}
 		}
 
 		public static class Driver

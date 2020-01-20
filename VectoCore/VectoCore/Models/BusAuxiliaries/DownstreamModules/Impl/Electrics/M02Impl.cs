@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public Watt GetAveragePowerAtCrankFromElectrics()
 		{
-			var electricalPowerDemandsWatts = _powerNetVoltage * _m0_1.GetTotalAverageDemandAmpsIncludingBaseLoad;
+			var electricalPowerDemandsWatts = _powerNetVoltage * _m0_1.TotalAverageDemandAmpsIncludingBaseLoad;
 			var alternatorsEfficiency = _module0.AlternatorsEfficiency;
 			var electricalPowerDemandsWattsDividedByAlternatorEfficiency =
 				electricalPowerDemandsWatts * (1 / alternatorsEfficiency);

@@ -21,8 +21,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public IAlternatorMap AlternatorMap { get; set; }
 		public double AlternatorGearEfficiency { get; set; }
 
-		public IElectricalConsumerList ElectricalConsumers { get; set; }
-
 		public Second DoorActuationTimeSecond { get; set; }
 		public double StoredEnergyEfficiency { get; set; }
 
@@ -32,5 +30,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public bool SmartElectrical { get; set; }
 
+		public Ampere AverageCurrentDemandInclBaseLoad { get; set; }
+		
+		public Ampere AverageCurrentDemandWithoutBaseLoad { get; set; }
+
 	}
+
 }

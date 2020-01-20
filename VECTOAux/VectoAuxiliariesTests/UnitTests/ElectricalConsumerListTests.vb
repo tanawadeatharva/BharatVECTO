@@ -21,50 +21,50 @@ Public Class ElectricalConsumerListTests
         Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory)
     End Sub
 
-	<Test()>
-	Public Sub CreateNewTest()
+	'<Test()>
+	'Public Sub CreateNewTest()
 
-		Dim target As ElectricalConsumerList = new ElectricalConsumerList(New List(Of IElectricalConsumer)()) '(26.3.SI(of Volt), 0.096, True)
+	'	Dim target As ElectricalConsumerList = new ElectricalConsumerList(New List(Of IElectricalConsumer)()) '(26.3.SI(of Volt), 0.096, True)
 
-		Assert.IsNotNull(target)
-	End Sub
+	'	Assert.IsNotNull(target)
+	'End Sub
 
 
-	<Test()>
-	Public Sub SumAllConsumersTest()
+	'<Test()>
+	'Public Sub SumAllConsumersTest()
 
-        Dim auxconfig = Utils.GetAuxTestConfig()
-        Dim TestConsumerList = auxconfig.ElectricalUserInputsConfig.ElectricalConsumers
-		TestConsumerList.Items.First(Function(item) item.ConsumerName = "Controllers,Valves etc").NumberInActualVehicle = 1
+ '       Dim auxconfig = Utils.GetAuxTestConfig()
+ '       Dim TestConsumerList = auxconfig.ElectricalUserInputsConfig.ElectricalConsumers
+	'	TestConsumerList.Items.First(Function(item) item.ConsumerName = "Controllers,Valves etc").NumberInActualVehicle = 1
 
-		'Dim actual As Ampere = TestConsumerList.GetTotalAverageDemandAmps(False)
+	'	'Dim actual As Ampere = TestConsumerList.GetTotalAverageDemandAmps(False)
 
-        Dim m0_1 = New M0_1Impl(auxconfig)
-        dim actual As Ampere = m0_1.GetTotalAverageDemandAmpsIncludingBaseLoad
+ '       Dim m0_1 = New M0_1Impl(auxconfig)
+ '       dim actual As Ampere = m0_1.TotalAverageDemandAmpsIncludingBaseLoad
 
-		TestConsumerList.Items.First(Function(item) item.ConsumerName = "Controllers,Valves etc").NumberInActualVehicle = 0
+	'	TestConsumerList.Items.First(Function(item) item.ConsumerName = "Controllers,Valves etc").NumberInActualVehicle = 0
 
-		Dim expected = 60.63
+	'	Dim expected = 60.63
 
-		Assert.AreEqual(expected, actual.Value(), 0.01)
-	End Sub
+	'	Assert.AreEqual(expected, actual.Value(), 0.01)
+	'End Sub
 
-	<Test()>
-	Public Sub SumNonExcludedConsumersTest()
+	'<Test()>
+	'Public Sub SumNonExcludedConsumersTest()
 
-	    Dim auxconfig = Utils.GetAuxTestConfig()
-	    Dim TestConsumerList = auxconfig.ElectricalUserInputsConfig.ElectricalConsumers
+	'    Dim auxconfig = Utils.GetAuxTestConfig()
+	'    Dim TestConsumerList = auxconfig.ElectricalUserInputsConfig.ElectricalConsumers
 
-        TestConsumerList.Items.First(Function(item) item.ConsumerName = "Controllers,Valves etc").NumberInActualVehicle = 1
-		'Dim actual As Ampere = TestConsumerList.GetTotalAverageDemandAmps(True)
-	    Dim m0_1 = New M0_1Impl(auxconfig)
-	    dim actual As Ampere = m0_1.GetTotalAverageDemandAmpsWithoutBaseLoad
+ '       TestConsumerList.Items.First(Function(item) item.ConsumerName = "Controllers,Valves etc").NumberInActualVehicle = 1
+	'	'Dim actual As Ampere = TestConsumerList.GetTotalAverageDemandAmps(True)
+	'    Dim m0_1 = New M0_1Impl(auxconfig)
+	'    dim actual As Ampere = m0_1.TotalAverageDemandAmpsWithoutBaseLoad
 
-		TestConsumerList.Items.First(Function(item) item.ConsumerName = "Controllers,Valves etc").NumberInActualVehicle = 0
-		Dim expected = 35.63
+	'	TestConsumerList.Items.First(Function(item) item.ConsumerName = "Controllers,Valves etc").NumberInActualVehicle = 0
+	'	Dim expected = 35.63
 
-        Assert.AreEqual(expected, actual.Value(), 0.01)
-	End Sub
+ '       Assert.AreEqual(expected, actual.Value(), 0.01)
+	'End Sub
 
 
     '<Test()>

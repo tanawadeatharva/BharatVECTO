@@ -12,61 +12,38 @@ Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 
 Public Class Utils
-    public shared function GetElectricConsumers As IElectricalConsumerList
-        Dim _powernetVoltage = 26.3.SI (Of Volt)
-        Dim list As List(Of IElectricalConsumer) = New List(Of IElectricalConsumer)()
-        list.add(New ElectricalConsumer(False, "Doors", "Doors per vehicle", 3.0.SI (Of Ampere), 0.096339,
-                                        _powernetVoltage, 3, ""))
-        list.add(New ElectricalConsumer(True, "Veh Electronics &Engine", "Controllers,Valves etc",
-                                        25.0.SI (Of Ampere), 1.0, _powernetVoltage, 1, ""))
-        list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio City", 2.0.SI (Of Ampere), 0.8,
-                                        _powernetVoltage, 1, ""))
-        list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio Intercity", 5.0.SI (Of Ampere),
-                                        0.8, _powernetVoltage, 0, ""))
-        list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio/Audio Tourism",
-                                        9.0.SI (Of Ampere), 0.8,
-                                        _powernetVoltage, 0, ""))
-        list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Fridge", 4.0.SI (Of Ampere), 0.5,
-                                        _powernetVoltage, 0, ""))
-        list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Kitchen Standard",
-                                        67.0.SI (Of Ampere), 0.05, _powernetVoltage, 0, ""))
-        list.add(New ElectricalConsumer(False, "Vehicle basic equipment",
-                                        "Interior lights City/ Intercity + Doorlights [Should be 1/m]",
-                                        1.0.SI (Of Ampere), 0.7,
-                                        _powernetVoltage, 12, "1 Per metre length of bus"))
-        list.add(New ElectricalConsumer(False, "Vehicle basic equipment",
-                                        "LED Interior lights ceiling city/Intercity + door [Should be 1/m]",
-                                        0.6.SI (Of Ampere), 0.7,
-                                        _powernetVoltage, 0, "1 Per metre length of bus"))
-        list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Interior lights Tourism + reading [1/m]",
-                                        1.1.SI (Of Ampere), 0.7, _powernetVoltage, 0, "1 Per metre length of bus"))
-        list.add(New ElectricalConsumer(False, "Vehicle basic equipment",
-                                        "LED Interior lights ceiling Tourism + LED reading [Should be 1/m]",
-                                        0.66.SI (Of Ampere), 0.7,
-                                        _powernetVoltage, 0, "1 Per metre length of bus"))
-        list.add(New ElectricalConsumer(False, "Customer Specific Equipment", "External Displays Font/Side/Rear",
-                                        2.65017667844523.SI (Of Ampere), 1.0, _powernetVoltage, 4, ""))
-        list.add(New ElectricalConsumer(False, "Customer Specific Equipment",
-                                        "Internal display per unit ( front side rear)",
-                                        1.06007067137809.SI (Of Ampere), 1.0, _powernetVoltage, 1, ""))
-        list.add(New ElectricalConsumer(False, "Customer Specific Equipment",
-                                        "CityBus Ref EBSF Table4 Devices ITS No Displays", 9.3.SI (Of Ampere), 1.0,
-                                        _powernetVoltage, 1, ""))
-        list.add(New ElectricalConsumer(False, "Lights", "Exterior Lights BULB", 7.4.SI (Of Ampere), 1.0,
-                                        _powernetVoltage, 1, ""))
-        list.add(New ElectricalConsumer(False, "Lights", "Day running lights LED bonus", - 0.723.SI (Of Ampere), 1.0,
-                                        _powernetVoltage, 1, ""))
-        list.add(New ElectricalConsumer(False, "Lights", "Antifog rear lights LED bonus", - 0.17.SI (Of Ampere), 1.0,
-                                        _powernetVoltage, 1, ""))
-        list.add(New ElectricalConsumer(False, "Lights", "Position lights LED bonus", - 1.2.SI (Of Ampere), 1.0,
-                                        _powernetVoltage, 1, ""))
-        list.add(New ElectricalConsumer(False, "Lights", "Direction lights LED bonus", - 0.3.SI (Of Ampere), 1.0,
-                                        _powernetVoltage, 1, ""))
-        list.add(New ElectricalConsumer(False, "Lights", "Brake Lights LED bonus", - 1.2.SI (Of Ampere), 1.0,
-                                        _powernetVoltage, 1, ""))
+    'public shared function GetElectricConsumers As IElectricalConsumerList
+    '    Dim _powernetVoltage = 26.3.SI (Of Volt)
+    '    Dim list As List(Of IElectricalConsumer) = New List(Of IElectricalConsumer)()
+    '    list.add(New ElectricalConsumer(False, "Doors", "Doors per vehicle", 0.096339, 3))
+    '    list.add(New ElectricalConsumer(True, "Veh Electronics &Engine", "Controllers,Valves etc", 1.0, 1))
+    '    list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio City", 0.8, 1))
+    '    list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio Intercity",
+    '                                    0.8, 0))
+    '    list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Radio/Audio Tourism", 0.8, 0))
+    '    list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Fridge", 0.5, 0))
+    '    list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Kitchen Standard", 0.05, 0))
+    '    list.add(New ElectricalConsumer(False, "Vehicle basic equipment",
+    '                                    "Interior lights City/ Intercity + Doorlights [Should be 1/m]", 0.7, 12))
+    '    list.add(New ElectricalConsumer(False, "Vehicle basic equipment",
+    '                                    "LED Interior lights ceiling city/Intercity + door [Should be 1/m]", 0.7, 0))
+    '    list.add(New ElectricalConsumer(False, "Vehicle basic equipment", "Interior lights Tourism + reading [1/m]", 0.7, 0))
+    '    list.add(New ElectricalConsumer(False, "Vehicle basic equipment",
+    '                                    "LED Interior lights ceiling Tourism + LED reading [Should be 1/m]", 0.7, 0))
+    '    list.add(New ElectricalConsumer(False, "Customer Specific Equipment", "External Displays Font/Side/Rear", 1.0, 4))
+    '    list.add(New ElectricalConsumer(False, "Customer Specific Equipment",
+    '                                    "Internal display per unit ( front side rear)", 1.0, 1))
+    '    list.add(New ElectricalConsumer(False, "Customer Specific Equipment",
+    '                                    "CityBus Ref EBSF Table4 Devices ITS No Displays", 1.0, 1))
+    '    list.add(New ElectricalConsumer(False, "Lights", "Exterior Lights BULB", 1.0, 1))
+    '    list.add(New ElectricalConsumer(False, "Lights", "Day running lights LED bonus", 1.0, 1))
+    '    list.add(New ElectricalConsumer(False, "Lights", "Antifog rear lights LED bonus", 1.0, 1))
+    '    list.add(New ElectricalConsumer(False, "Lights", "Position lights LED bonus", 1.0, 1))
+    '    list.add(New ElectricalConsumer(False, "Lights", "Direction lights LED bonus", 1.0, 1))
+    '    list.add(New ElectricalConsumer(False, "Lights", "Brake Lights LED bonus", 1.0, 1))
 
-        Return New ElectricalConsumerList(list)
-    End function
+    '    Return New ElectricalConsumerList(list)
+    'End function
 
     Public Shared Function GetDefaultVehicleData(optional vehicleWeight As Kilogram = Nothing) as VehicleData
         Return New VehicleData With {
@@ -118,7 +95,8 @@ Public Class Utils
 
         Dim retval = New AuxiliaryConfig() With {
                 .ElectricalUserInputsConfig = New ElectricsUserInputsConfig() With {
-                .ElectricalConsumers = GetElectricConsumers(),
+                .AverageCurrentDemandInclBaseLoad = 0.SI(Of Ampere),
+                .AverageCurrentDemandWithoutBaseLoad = 0.SI(of Ampere),
                 .ResultCardIdle = New ResultCard(New List(Of SmartResult)()),
                 .ResultCardTraction = New ResultCard(New List(Of SmartResult)()),
                 .ResultCardOverrun = New ResultCard(New List(Of SmartResult)()),

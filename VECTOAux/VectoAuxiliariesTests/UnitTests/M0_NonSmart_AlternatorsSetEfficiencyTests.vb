@@ -23,7 +23,7 @@ Namespace UnitTests
         Private Const cstrHVACMapLocation As String = "TestFiles\TestHvacMap.csv"
         Private Const cstrAlternatorMap As String = "TestFiles\testAlternatorMap.aalt"
 
-        Private elecConsumers As IElectricalConsumerList
+        'Private elecConsumers As IElectricalConsumerList
 
         Private alternatorMap As IAlternatorMap
         Private signals As Signals = New Signals
@@ -51,11 +51,10 @@ Namespace UnitTests
 
             'Setup consumers and HVAC ( 1 Consumer in Test Category )
 
-            Dim list = New List(Of IElectricalConsumer)()
-            Dim consumer = New ElectricalConsumer(False, "TEST", "CONSUMER1", 20.SI (Of Ampere), 0.5,
-                                                  26.3.SI (Of Volt), 1, "")
-            list.Add(consumer)
-            elecConsumers = CType(New ElectricalConsumerList(list), IElectricalConsumerList)
+            'Dim list = New List(Of IElectricalConsumer)()
+            'Dim consumer = New ElectricalConsumer(False, "TEST", "CONSUMER1", 0.5, 1)
+            'list.Add(consumer)
+            'elecConsumers = CType(New ElectricalConsumerList(list), IElectricalConsumerList)
 
             'Alternator Map
             alternatorMap = AlternatorReader.ReadMap(cstrAlternatorMap)
@@ -104,7 +103,9 @@ Namespace UnitTests
 
             Dim auxConfig = utils.GetAuxTestConfig()
 
-            CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).ElectricalConsumers = elecConsumers
+            'CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).ElectricalConsumers = elecConsumers
+            CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AverageCurrentDemandInclBaseLoad = 0.5.SI(Of Ampere)
+            CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AverageCurrentDemandInclBaseLoad = 0.5.SI(Of Ampere)
             CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
 
             Dim m01 As IM0_1_AverageElectricLoadDemand = New M0_1Impl(auxConfig)
