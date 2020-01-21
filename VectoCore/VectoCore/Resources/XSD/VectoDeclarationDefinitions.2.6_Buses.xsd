@@ -266,7 +266,33 @@
 									</xs:complexType>
 								</xs:element>
 								<xs:element name="SmartElectrics" type="xs:boolean"/>
-								<xs:element name="ResultCards"/>
+								<xs:element name="ResultCards" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Idle">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="Traction">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+											<xs:element name="Overrun">
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -487,8 +513,7 @@
 	</xs:complexType>
 	<xs:simpleType name="AlternatorTechnologyType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="Sample Alternator Technology 1"/>
-			<xs:enumeration value="Sample Alternator Technology 2"/>
+			<xs:enumeration value="default"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="AuxFanTechnologyType">
@@ -539,8 +564,10 @@
 	<xs:simpleType name="HVACTechnology">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="none"/>
-			<xs:enumeration value="sample tech 1"/>
-			<xs:enumeration value="sample tech 2"/>
+			<xs:enumeration value="2-stage"/>
+			<xs:enumeration value="3-stage"/>
+			<xs:enumeration value="4-stage"/>
+			<xs:enumeration value="continuous"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="LegislativeClassDeclarationType">
@@ -581,4 +608,8 @@
 			<xs:enumeration value="CJ"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:complexType name="ResultCardEntryType">
+		<xs:attribute name="current" use="required"/>
+		<xs:attribute name="smartCurrent" use="required"/>
+	</xs:complexType>
 </xs:schema>
