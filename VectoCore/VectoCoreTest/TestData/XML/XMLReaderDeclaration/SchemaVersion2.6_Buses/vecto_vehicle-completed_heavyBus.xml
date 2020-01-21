@@ -47,7 +47,7 @@
 			<Auxiliaries>
 				<Data xsi:type="CompletedVehicleAuxiliaryDataDeclarationType">
 					<ElectricSystem>
-						<AlternatorTechnology ratio="1.000">Sample Alternator Technology 1</AlternatorTechnology>
+						<AlternatorTechnology ratio="1.000">default</AlternatorTechnology>
 						<LEDLights>
 							<Dayrunninglights>false</Dayrunninglights>
 							<Headlights>false</Headlights>
@@ -59,8 +59,8 @@
 					<HVAC>
 						<SystemConfiguration>7</SystemConfiguration>
 						<CompressorType>
-							<DriverAC>sample tech 2</DriverAC>
-							<PassengerAC>sample tech 1</PassengerAC>
+							<DriverAC>2-stage</DriverAC>
+							<PassengerAC>4-stage</PassengerAC>
 						</CompressorType>
 						<AuxiliaryHeaterPower>0</AuxiliaryHeaterPower>
 						<DoubleGlasing>true</DoubleGlasing>
