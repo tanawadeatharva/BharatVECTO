@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 using System.Xml.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
@@ -150,6 +151,42 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{ }
 
 
+		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
+		{
+			get { return null; }
+		}
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries { get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); } }
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+
+	public class XMLDeclarationCompleteBusComponentsDataProviderV26 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new const string XSD_TYPE = "CompletedVehicleComponentsDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		private IBusAuxiliariesDeclarationData _busAuxiliaries;
+
+		public XMLDeclarationCompleteBusComponentsDataProviderV26(
+			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(
+			vehicle, componentNode, sourceFile)
+		{ }
+
+		IGearboxDeclarationInputData IVehicleComponentsDeclaration.GearboxInputData
+		{
+			get { return null; }
+		}
+		
 		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
 		{
 			get { return null; }

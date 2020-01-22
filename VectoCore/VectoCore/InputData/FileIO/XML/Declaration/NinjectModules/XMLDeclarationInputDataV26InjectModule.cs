@@ -15,14 +15,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.NinjectModules {
 			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationPrimaryBusVehicleDataProviderV26>()
 												.Named(XMLDeclarationPrimaryBusVehicleDataProviderV26.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLDeclarationVehicleData>().To<XMLDeclarationCompletedBusDataProviderV26>()
+												.Named(XMLDeclarationCompletedBusDataProviderV26.QUALIFIED_XSD_TYPE);
+
 
 			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationPrimaryBusComponentsDataProviderV26>()
 													.Named(XMLDeclarationPrimaryBusComponentsDataProviderV26.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLVehicleComponentsDeclaration>().To<XMLDeclarationCompleteBusComponentsDataProviderV26>()
+													.Named(XMLDeclarationCompleteBusComponentsDataProviderV26.QUALIFIED_XSD_TYPE);
+
+
 			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationBusAuxiliariesDataProviderV26>()
 													.Named(XMLDeclarationBusAuxiliariesDataProviderV26.QUALIFIED_XSD_TYPE);
 
+			Bind<IXMLBusAuxiliariesDeclarationData>().To<XMLDeclarationCompleteBusAuxiliariesDataProviderV26>()
+													.Named(XMLDeclarationCompleteBusAuxiliariesDataProviderV26.QUALIFIED_XSD_TYPE);
+
+
 			Bind<IXMLComponentReader>().To<XMLComponentReaderV26>().Named(XMLComponentReaderV26.QUALIFIED_XSD_TYPE);
+
+			Bind<IXMLComponentReader>().To<XMLComponentReaderV26>().Named(XMLComponentReaderV26.QUALIFIED_COMPLETE_XSD_TYPE);
 
 		}
 

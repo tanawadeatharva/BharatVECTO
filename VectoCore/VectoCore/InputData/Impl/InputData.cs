@@ -31,9 +31,11 @@
 
 using System;
 using System.Collections.Generic;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Declaration;
 
 namespace TUGraz.VectoCore.InputData.Impl
 {
@@ -218,4 +220,54 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		#endregion
 	}
+
+	public class ElectricConsumersDeclarationData : IElectricConsumersDeclarationData
+	{
+		public bool InteriorLightsLED { get; internal set; }
+		public bool DayrunninglightsLED { get; internal set; }
+		public bool PositionlightsLED { get; internal set; }
+		public bool HeadlightsLED { get; internal set; }
+		public bool BrakelightsLED { get; internal set; }
+	}
+
+	public class ElectricSupplyDeclarationData : IElectricSupplyDeclarationData
+	{
+		public IList<IAlternatorDeclarationInputData> Alternators { get; internal set; }
+		public IResultCardDeclarationInputData ResultCards { get; internal set; }
+		public bool SmartElectrics { get; internal set; }
+	}
+
+
+	public class HVACBusAuxiliariesDeclarationData : IHVACBusAuxiliariesDeclarationData
+	{
+		public bool AdjustableAuxiliaryHeater { get; internal set; }
+
+		public bool AdjustableCoolantThermostat { get; internal set; }
+
+		public int AuxHeaterPower { get; internal set; }
+
+		public ICompressorType CompressorType { get; internal set; }
+		
+		public bool DoubleGlasing { get; internal set; }
+
+		public bool EngineWasteGasHeatExchanger { get; internal set; }
+
+		public bool HeatPump { get; internal set; }
+
+		public bool SeparateAirDistributionDucts { get; internal set; }
+
+		public int SystemConfiguration { get; internal set; }
+	}
+
+	public class CompressorType : ICompressorType
+	{
+		public string DriverAC { get; }
+		public string PassengerAC { get; }
+		public CompressorType(string driverAC, string passengerAC)
+		{
+			DriverAC = driverAC;
+			PassengerAC = passengerAC;
+		}
+	}
+
 }

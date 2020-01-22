@@ -38,6 +38,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader;
 using TUGraz.VectoCore.InputData.Impl;
@@ -633,5 +634,94 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		#endregion
 	}
 
-	
+
+	public class XMLDeclarationCompletedBusDataProviderV26 : XMLDeclarationVehicleDataProviderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
+
+		public new const string XSD_TYPE = "CompletedVehicleDeclarationType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationCompletedBusDataProviderV26(
+			IXMLDeclarationJobInputData jobData, XmlNode xmlNode, string sourceFile) : base(jobData, xmlNode, sourceFile)
+		{
+			SourceType = DataSourceType.XMLEmbedded;
+		}
+
+
+		#region Overrides of AbstractCommonComponentType
+
+		public override string Manufacturer { get { return GetString(XMLNames.ManufacturerCompletedVehicle); } }
+
+		public override string ManufacturerAddress { get { return GetString(XMLNames.ManufacturerAddressCompletedVehicle); } }
+
+		#endregion
+
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override string RegisteredClass { get { return GetString(XMLNames.Vehicle_RegisteredClass); } }
+
+		public override VehicleCode VehicleCode { get { return GetString(XMLNames.Vehicle_VehicleCode).ParseEnum<VehicleCode>(); } }
+
+		//TechnicalPermissibleMaximumLadenMass
+		public override Kilogram GrossVehicleMassRating { get { return GetDouble(XMLNames.TPMLM).SI<Kilogram>(); } }
+
+		public override TankSystem? TankSystem
+		{
+			get
+			{
+				return GetString(XMLNames.Vehicle_NgTankSystem).ParseEnum<TankSystem>();
+			}
+		}
+
+		public override int NumberOfPassengersLowerDeck
+		{
+			get
+			{
+				var node = GetNode(XMLNames.Bus_LowerDeck);
+				return XmlConvert.ToInt32(node.InnerText);
+			}
+		}
+
+		public override int NuberOfPassengersUpperDeck
+		{
+			get
+			{
+				var node = GetNode(XMLNames.Bus_UpperDeck);
+				return XmlConvert.ToInt32(node.InnerText);
+			}
+		}
+
+		//HeightIntegratedBody
+		public override Meter Height { get { return GetDouble(XMLNames.Bus_HeighIntegratedBody).SI<Meter>(); }}
+
+		//VehicleLength
+		public override Meter Length { get { return GetDouble(XMLNames.Bus_VehicleLength).SI<Meter>(); } }
+
+		//VehicleWidth
+		public override Meter Width { get { return GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>(); } }
+
+		#endregion
+
+		public bool LowEntry { get { return GetBool(XMLNames.Bus_LowEntry); } }
+
+		public Meter EntranceHeight { get { return GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>(); } }
+
+		public string DoorDriveTechnology { get { return GetString(XMLNames.Bus_DoorDriveTechnology); } }
+
+
+		#region Overrides of AbstractXMLResource
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+	}
 }

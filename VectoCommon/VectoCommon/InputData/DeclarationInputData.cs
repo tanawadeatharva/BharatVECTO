@@ -755,9 +755,9 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		int SystemConfiguration { get; }
 
-		ACCompressorType CompressorType { get; }
+		ICompressorType CompressorType { get; }
 
-		string AuxHeaterPower { get; }
+		int AuxHeaterPower { get; }
 
 		bool DoubleGlasing { get; }
 
@@ -770,6 +770,12 @@ namespace TUGraz.VectoCommon.InputData
 		bool EngineWasteGasHeatExchanger { get; }
 
 		bool SeparateAirDistributionDucts { get; }
-
 	}
+
+	public interface ICompressorType
+	{
+		string DriverAC { get; }
+		string PassengerAC { get; }
+	}
+
 }
