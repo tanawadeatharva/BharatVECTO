@@ -81,7 +81,7 @@ Public Class Utils
             }
     End function
 
-    public Shared Function GetAuxTestConfig(Optional retarder As boolean = true) as IAuxiliaryConfig
+    public Shared Function GetAuxTestConfig(Optional retarder As boolean = true) as AuxiliaryConfig
 
         Dim signals = New Signals()
         signals.EngineSpeed = 2000.RPMtoRad()

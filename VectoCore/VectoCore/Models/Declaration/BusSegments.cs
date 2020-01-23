@@ -8,12 +8,13 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.Declaration {
+namespace TUGraz.VectoCore.Models.Declaration
+{
 	public sealed class BusSegments : LookupData<VehicleCategory, AxleConfiguration, bool, FloorType, bool, bool, Segment>
 	{
 		private DataTable _segmentTable;
 
-		
+
 		#region Overrides of LookupData
 
 		protected override string ResourceId
@@ -21,28 +22,34 @@ namespace TUGraz.VectoCore.Models.Declaration {
 			get { return DeclarationData.DeclarationDataResourcePrefix + ".HeavyBusSegmentationTable.csv"; }
 		}
 
-		protected override string ErrorMessage {
+		protected override string ErrorMessage
+		{
 			get {
 				return
 					"ERROR: Could not find the declaration segment for vehicle. Category: {0}, AxleConfiguration: {1}, GrossVehicleWeight: {2}";
 			}
 		}
+
 		protected override void ParseData(DataTable table)
 		{
 			_segmentTable = table.Copy();
 		}
 
-		public override Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration, bool articulated, FloorType entrance, bool doubleDecker, bool primaryVehicle)
+		public override Segment Lookup(
+			VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration, bool articulated, FloorType entrance,
+			bool doubleDecker, bool primaryVehicle)
 		{
 			if (primaryVehicle) {
 				return LookupPrimaryVehicle(vehicleCategory, axleConfiguration, articulated);
 			}
+
 			throw new NotImplementedException("Completed Vechiles not implemented");
 		}
 
 		#endregion
 
-		private Segment LookupPrimaryVehicle(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration, bool articulated)
+		private Segment LookupPrimaryVehicle(
+			VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration, bool articulated)
 		{
 			var rows = _segmentTable.AsEnumerable().Where(
 				r => {
@@ -55,8 +62,9 @@ namespace TUGraz.VectoCore.Models.Declaration {
 							axleConfiguration.NumAxles() == numAxles;
 				}).ToList();
 			if (rows.Count == 0) {
-				return new Segment() {Found = false};
+				return new Segment() { Found = false };
 			}
+
 			var firstRow = rows.First();
 			var segment = new Segment {
 				Found = true,
@@ -66,8 +74,9 @@ namespace TUGraz.VectoCore.Models.Declaration {
 				AxleConfiguration = axleConfiguration,
 				VehicleClass = VehicleClassHelper.Parse(firstRow.Field<string>("hdvsupergroup")),
 				AccelerationFile =
-					RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
-												firstRow.Field<string>(".vaccfile")),
+					RessourceHelper.ReadStream(
+						DeclarationData.DeclarationDataResourcePrefix + ".VACC." +
+						firstRow.Field<string>(".vaccfile")),
 				Missions = CreateMissions(rows),
 				DesignSpeed = firstRow.ParseDouble("designspeed").KMPHtoMeterPerSecond(),
 			};
@@ -87,6 +96,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 					if (string.IsNullOrWhiteSpace(row.Field<string>(missionType.ToString()))) {
 						continue;
 					}
+
 					var busArea = (row.ParseDouble("length").SI<Meter>() - Constants.BusParameters.DriverCompartmentLength) *
 								row.ParseDouble("width").SI<Meter>();
 					var passengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>();
@@ -102,8 +112,6 @@ namespace TUGraz.VectoCore.Models.Declaration {
 								Constants.FileExtensions.CycleFile),
 						AxleWeightDistribution = GetAxleWeightDistribution(row),
 						CurbMass = row.ParseDouble("curbmass").SI<Kilogram>(),
-						NumberPassengersLowerDeck = row.ParseDouble("passengerslowerdeck"),
-						NumberPassengersUpperDeck = row.ParseDouble("passengersupperdeck"),
 						BodyCurbWeight = 0.SI<Kilogram>(),
 						Trailer = new List<MissionTrailer>(),
 						MinLoad = null,
@@ -111,16 +119,40 @@ namespace TUGraz.VectoCore.Models.Declaration {
 						LowLoad = refLoad * 0.2,
 						RefLoad = refLoad,
 						VehicleHeight = row.ParseDouble("height").SI<Meter>(),
-						VehicleLength = row.ParseDouble("length").SI<Meter>(),
-						VehicleWidth = row.ParseDouble("width").SI<Meter>(),
 						TotalCargoVolume = 0.SI<CubicMeter>(),
-						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>()
+						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
+						BusParameter = new BusParameters() {
+							VehicleLength = row.ParseDouble("length").SI<Meter>(),
+							VehicleWidth = row.ParseDouble("width").SI<Meter>(),
+							NumberPassengersLowerDeck = row.ParseDouble("passengerslowerdeck"),
+							NumberPassengersUpperDeck = row.ParseDouble("passengersupperdeck"),
+							DoubleDecker = row.ParseBoolean("doubledecker"),
+							FloorType = GetFloorType(row.Field<string>("floortype")),
+							HVACConfiguration = BusHVACSystemConfigurationHelper.Parse(row.Field<string>("hvaccompressortype")),
+							HVACAuxHeaterPower = row.ParseDouble("hvacauxheater").SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+							HVACCompressorType = ACCompressorTypeExtensions.ParseEnum(row.Field<string>("hvaccompressortype")),
+							HVACDoubleGlasing = row.ParseBoolean("hvacdoubleglasing"),
+							HVACHeatpump = row.ParseBoolean("hvacheatpump"),
+							HVACAdjustableAuxHeater = row.ParseBoolean("hvacadjustableauxiliaryheater"),
+							HVACSeparateAirDistributionDucts = row.ParseBoolean("hvacseparateairdistributionducts")
+						}
 					};
 					missions.Add(mission);
 				}
 			}
 
 			return missions.ToArray();
+		}
+
+		private FloorType GetFloorType(string field)
+		{
+			switch (field) {
+				case "high": return FloorType.HighFloor;
+				case "low": return FloorType.LowFloor;
+				case "semilowfloor":
+				case "semilow": return FloorType.SemiLowFloor;
+				default: return FloorType.Unknown;
+			}
 		}
 
 		private static double[] GetAxleWeightDistribution(DataRow row)

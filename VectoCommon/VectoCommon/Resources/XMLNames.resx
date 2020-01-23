@@ -1170,4 +1170,49 @@
   <data name="Gearbox_AxlegearRatio" xml:space="preserve">
     <value>AxlegearRatio</value>
   </data>
+  <data name="BusAux_ElectricSystem" xml:space="preserve">
+    <value>ElectricSystem</value>
+  </data>
+  <data name="BusAux_ElectricSystem_ResultCards" xml:space="preserve">
+    <value>ResultCards</value>
+  </data>
+  <data name="BusAux_ResultCard_Traction" xml:space="preserve">
+    <value>Traction</value>
+  </data>
+  <data name="BusAux_ResultCard_Overrun" xml:space="preserve">
+    <value>Overrun</value>
+  </data>
+  <data name="BusAux_ResultCard_Idle" xml:space="preserve">
+    <value>Idle</value>
+  </data>
+  <data name="BusAux_ResultCard_Entry" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="ResultCard_Entry_SmartCurrent_Attr" xml:space="preserve">
+    <value>smartCurrent</value>
+  </data>
+  <data name="ResultCard_Entry_CurrentAttr" xml:space="preserve">
+    <value>current</value>
+  </data>
+  <data name="BusAux_ElectricSystem_SmartElectrics" xml:space="preserve">
+    <value>SmartElectrics</value>
+  </data>
+  <data name="BusAux_ElectricSystem_AlternatorTechnology" xml:space="preserve">
+    <value>AlternatorTechnology</value>
+  </data>
+  <data name="BusAux_ElectricSystem_Alternator_Ratio_Attr" xml:space="preserve">
+    <value>ratio</value>
+  </data>
+  <data name="BusAux_PneumaticSystem" xml:space="preserve">
+    <value>PneumaticSystem</value>
+  </data>
+  <data name="BusAux_PneumaticSystem_AirsuspensionControl" xml:space="preserve">
+    <value>AirsuspensionControl</value>
+  </data>
+  <data name="BusAux_PneumaticSystem_AdBlueDosing" xml:space="preserve">
+    <value>AdBlueDosing</value>
+  </data>
+  <data name="BusAux_PneumaticSystem_DoorDriveTechnology" xml:space="preserve">
+    <value>DoorDriveTechnology</value>
+  </data>
 </root>

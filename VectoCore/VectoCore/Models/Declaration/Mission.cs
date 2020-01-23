@@ -33,6 +33,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 
@@ -91,6 +92,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public double NumberPassengersLowerDeck { get; internal set; }
 		public double NumberPassengersUpperDeck { get; internal set; }
+		public bool DoubleDecker { get; set; }
+		public FloorType FloorType { get; set; }
 	}
 
 	public class MissionTrailer

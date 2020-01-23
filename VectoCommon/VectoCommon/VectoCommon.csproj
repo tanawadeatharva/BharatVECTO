@@ -58,8 +58,6 @@
     <Compile Include="BusAuxiliaries\IAuxiliaryConfig.cs" />
     <Compile Include="BusAuxiliaries\ICombinedAlternatorMapRow.cs" />
     <Compile Include="BusAuxiliaries\ICompressorMap.cs" />
-    <Compile Include="BusAuxiliaries\IElectricalConsumer.cs" />
-    <Compile Include="BusAuxiliaries\IElectricalConsumerList.cs" />
     <Compile Include="BusAuxiliaries\IElectricsUserInputsConfig.cs" />
     <Compile Include="BusAuxiliaries\IEnvironmentalConditionsMapEntry.cs" />
     <Compile Include="BusAuxiliaries\IEnvironmentalConditionsMap.cs" />

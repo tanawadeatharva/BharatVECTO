@@ -278,6 +278,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public virtual Meter Height { get { return null; } }
 		public virtual Meter Length { get { return null; } }
 		public virtual Meter Width { get { return null; } }
+		public virtual Meter EntranceHeight { get { return null; } }
 
 		public virtual IVehicleComponentsDeclaration Components
 		{
@@ -622,7 +623,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override Kilogram GrossVehicleMassRating { get { return GetDouble(XMLNames.Vehicle_TPMLM).SI<Kilogram>(); } }
 
-		
+		public override Meter EntranceHeight { get { return null; } }
+
+
 		#endregion
 
 		#region Overrides of AbstractXMLResource

@@ -656,6 +656,7 @@ Public Class DummyVehicle
     Public ReadOnly Property IVehicleDeclarationInputData_Height As Meter Implements IVehicleDeclarationInputData.Height
     Public ReadOnly Property Length As Meter Implements IVehicleDeclarationInputData.Length
     Public ReadOnly Property Width As Meter Implements IVehicleDeclarationInputData.Width
+    Public ReadOnly Property EntranceHeight As Meter Implements IVehicleDeclarationInputData.EntranceHeight
 
     Public readonly Property Components As IVehicleComponentsDeclaration Implements IVehicleDeclarationInputData.Components
 	get

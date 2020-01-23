@@ -63,22 +63,20 @@ Namespace UnitTests
             Dim auxConfig = Utils.GetAuxTestConfig()
             'Dim  hvacMap As New HVACMap("testFiles\TestHvacMap.csv")
             'hvacMap.Initialise()
-            dim m01 = New M0_1Impl(auxConfig)
-            Dim m0 As New M00Impl(m01, auxConfig.ElectricalUserInputsConfig.AlternatorMap, 26.3.SI (Of Volt), auxConfig.Signals, ssm)
+            CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = 26.3.SI (Of Volt)
+            Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, auxConfig.Signals, ssm)
 
             'Results Cards
             Dim readings = New List(Of SmartResult)
             readings.Add(New SmartResult(10.SI (of Ampere), 8.SI (of Ampere)))
             readings.Add(New SmartResult(70.SI (of Ampere), 63.SI (of Ampere)))
 
-            Dim idleResult As New ResultCard(readings)
-            Dim tractionResult As New ResultCard(readings)
-            Dim overrunResult As New ResultCard(readings)
-
+            CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).ResultCardIdle = New ResultCard(readings)
+            CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).ResultCardTraction = New ResultCard(readings)
+            CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).ResultCardOverrun = New ResultCard(readings)
 
             
-            target = New M0_5Impl(m0, m01, auxConfig.ElectricalUserInputsConfig.AlternatorMap, idleResult, tractionResult,
-                                  overrunResult, auxConfig.Signals)
+            target = New M0_5Impl(m0, auxConfig.ElectricalUserInputsConfig, auxConfig.Signals)
         End Sub
 
         <Test()>

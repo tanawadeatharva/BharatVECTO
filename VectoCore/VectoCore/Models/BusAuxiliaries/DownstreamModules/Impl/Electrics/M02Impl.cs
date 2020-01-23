@@ -1,4 +1,5 @@
 ﻿using System;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
@@ -9,17 +10,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 	public class M02Impl : AbstractModule, IM2_AverageElectricalLoadDemand
 	{
 		private Volt _powerNetVoltage;
-		private IM0_1_AverageElectricLoadDemand _m0_1;
+		
 		private IM0_NonSmart_AlternatorsSetEfficiency _module0;
 		private double _alternatorPulleyEffiency;
+		private Ampere _totalAverageDemandAmpsIncludingBaseLoad;
 
-		public M02Impl(
-			IM0_1_AverageElectricLoadDemand m0_1, IM0_NonSmart_AlternatorsSetEfficiency m0, double altPulleyEfficiency,
-			Volt powerNetVoltage)
+		public M02Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, IElectricsUserInputsConfig electricConfig)
 		{
-			if (m0_1 == null) {
-				throw new ArgumentException("Electrical Consumer List must be supplied");
-			}
+			var altPulleyEfficiency = electricConfig.AlternatorGearEfficiency;
+			var powerNetVoltage = electricConfig.PowerNetVoltage;
 			if (m0 == null) {
 				throw new ArgumentException("Must supply module 0");
 			}
@@ -31,7 +30,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			}
 
 			_powerNetVoltage = powerNetVoltage;
-			_m0_1 = m0_1;
+			_totalAverageDemandAmpsIncludingBaseLoad = electricConfig.AverageCurrentDemandInclBaseLoad;			
 			_module0 = m0;
 			_alternatorPulleyEffiency = altPulleyEfficiency;
 		}
@@ -40,7 +39,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public Watt GetAveragePowerAtCrankFromElectrics()
 		{
-			var electricalPowerDemandsWatts = _powerNetVoltage * _m0_1.TotalAverageDemandAmpsIncludingBaseLoad;
+			var electricalPowerDemandsWatts = _powerNetVoltage * _totalAverageDemandAmpsIncludingBaseLoad;
 			var alternatorsEfficiency = _module0.AlternatorsEfficiency;
 			var electricalPowerDemandsWattsDividedByAlternatorEfficiency =
 				electricalPowerDemandsWatts * (1 / alternatorsEfficiency);

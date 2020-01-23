@@ -270,6 +270,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\SimpleAlternator.cs" />
     <Compile Include="Models\Declaration\ADASCombination.cs" />
     <Compile Include="InputData\Reader\ComponentData\AlternatorReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\CompressorMapReader.cs" />
@@ -292,11 +293,9 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\ElectricalConsumer.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\ElectricalConsumerList.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\ElectricsUserInputsConfig.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM0_1_AverageElectricLoadDemand.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M00Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M02Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M05Impl.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M0_1Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M0_5Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\ResultCard.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\EnvironmentalConditionMapEntry.cs" />
@@ -351,6 +350,7 @@
     <Compile Include="Models\BusAuxiliaries\Interfaces\IM12.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\Signals.cs" />
     <Compile Include="Models\BusAuxiliaries\Util\FilePathUtils.cs" />
+    <Compile Include="Models\Declaration\BusAlternatorTechnologies.cs" />
     <Compile Include="Models\Declaration\BusSegments.cs" />
     <Compile Include="Models\Declaration\SteeringPumpBus.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />
@@ -843,6 +843,7 @@
     <EmbeddedResource Include="Resources\Declaration\Buses\DefaultClimatic.aenv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\Buses\AlternatorTechnologies.csv" />
     <None Include="Resources\Declaration\Buses\DefaultBusAuxCfg.aaux">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

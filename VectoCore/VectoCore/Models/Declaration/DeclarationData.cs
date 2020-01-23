@@ -156,6 +156,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//	}
 			//}
 
+			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();
+
 			public static ISSMTechnologies SSMTechnologyList
 			{
 				get {
@@ -210,7 +212,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static Meter CalculateLengthInteriorLights(Meter vehicleLength, bool doubleDecker, FloorType floorType, int numPassLowFloor)
+			public static Meter CalculateLengthInteriorLights(Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
 			{
 				if (floorType == FloorType.LowFloor) {
 					return doubleDecker ? 2 * vehicleLength : vehicleLength;

@@ -248,6 +248,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public Meter Length { get { return VehicleData.Length; } }
 		public Meter Width { get { return VehicleData.Width; } }
+		public Meter EntranceHeight { get { return null; } }
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{

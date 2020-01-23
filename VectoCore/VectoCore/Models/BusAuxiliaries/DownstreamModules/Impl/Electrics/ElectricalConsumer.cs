@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
+using TUGraz.VectoCore.Models.Declaration;
 
 // Copyright 2017 European Union.
 // Licensed under the EUPL (the 'Licence');
@@ -130,15 +131,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		//	PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(p));
 		//}
 
+		public Ampere NominalCurrent(MissionType mission)
+		{
+			return _missions.ContainsKey(mission) ? _missions[mission] : 0.SI<Ampere>();
+		}
+
 		public Ampere this[MissionType mission]
 		{
-			get {
-				if (_missions.ContainsKey(mission)) {
-					return _missions[mission];
-				}
-
-				return 0.SI<Ampere>();
-			}
 			set {
 				if (_missions.ContainsKey(mission)) {
 					throw new VectoException("key {0} already exists!", mission.ToString());
@@ -147,5 +146,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				_missions[mission] = value;
 			}
 		}
+
+		
 	}
 }

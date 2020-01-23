@@ -14,14 +14,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		protected Volt _powernetVoltage;
 		protected ISignals _signals;
 		protected Watt _ElectricalPowerW;
-		private IM0_1_AverageElectricLoadDemand _m0_1;
 
-		public M00Impl(IM0_1_AverageElectricLoadDemand m0_1, IAlternatorMap alternatorEfficiencyMap, Volt powernetVoltage,
-			ISignals signals, ISSMTOOL ssmHvac)
+		private Ampere _totalAverageDemandAmpsIncludingBaseLoad;
+
+		//private IM0_1_AverageElectricLoadDemand _m0_1;
+
+		public M00Impl(IElectricsUserInputsConfig electricConfig, ISignals signals, ISSMTOOL ssmHvac)
 		{
-			if (m0_1 == null) {
-				throw new ArgumentException("No ElectricalConsumersList Supplied");
-			}
+			var alternatorEfficiencyMap = electricConfig.AlternatorMap;
+			var powernetVoltage = electricConfig.PowerNetVoltage;
 
 			if (alternatorEfficiencyMap == null) {
 				throw new ArgumentException("No Alternator Efficiency Map Supplied");
@@ -35,12 +36,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 				throw new ArgumentException("No Signals reference was supplied.");
 			}
 
-			_m0_1 = m0_1;
-			
 			_alternatorEfficiencyMap = alternatorEfficiencyMap;
 
 			_powernetVoltage = powernetVoltage;
 
+			_totalAverageDemandAmpsIncludingBaseLoad = electricConfig.AverageCurrentDemandInclBaseLoad;
 			_signals = signals;
 
 			_ElectricalPowerW = ssmHvac.ElectricalWAdjusted;
@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public double AlternatorsEfficiency
 		{
 			get {
-				var baseCurrentDemandAmps = _m0_1.TotalAverageDemandAmpsIncludingBaseLoad; // _electricalConsumersList.GetTotalAverageDemandAmps(false);
+				var baseCurrentDemandAmps = _totalAverageDemandAmpsIncludingBaseLoad; // _electricalConsumersList.GetTotalAverageDemandAmps(false);
 				var totalDemandAmps = baseCurrentDemandAmps + GetHVACElectricalCurrentDemand;
 				return _alternatorEfficiencyMap.GetEfficiency(_signals.EngineSpeed, totalDemandAmps);
 			}

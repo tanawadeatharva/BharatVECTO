@@ -117,15 +117,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 			//if ((ssmTool.Load(ssmPath) == false || ssmToolModule14.Load(ssmPath) == false))
 				//throw new Exception(string.Format("Unable to load the ssmTOOL with file {0}", ssmPath));
 			
-			var m0_1 = new M0_1Impl(auxConfig);
-
-			M0 = new M00Impl(m0_1, alternatorMap, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage, Signals, ssmTool);
+			
+			M0 = new M00Impl(auxConfig.ElectricalUserInputsConfig, Signals, ssmTool);
 
 
 			var M0_5tmp = new M0_5Impl(
-				M0, m0_1, alternatorMap,
-				auxConfig.ElectricalUserInputsConfig.ResultCardIdle, auxConfig.ElectricalUserInputsConfig.ResultCardTraction,
-				auxConfig.ElectricalUserInputsConfig.ResultCardOverrun, Signals);
+				M0, auxConfig.ElectricalUserInputsConfig, Signals);
 			M0_5 = M0_5tmp;
 
 			M1 = new M01Impl(
@@ -133,8 +130,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, ssmTool);
 
 
-			M2 = new M02Impl(m0_1, M0,
-				auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage);
+			M2 = new M02Impl(M0, auxConfig.ElectricalUserInputsConfig);
 
 			
 			M3 = new M03Impl(auxConfig, compressorMap, auxCfg.Actuations, Signals);

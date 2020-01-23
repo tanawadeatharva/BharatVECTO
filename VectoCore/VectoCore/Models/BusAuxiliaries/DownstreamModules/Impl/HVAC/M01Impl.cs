@@ -43,7 +43,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			_m0 = m0;
 			_alternatorGearEfficiency = altGearEfficiency;
 			
-
 			_compressorGearEfficiency = compressorGearEfficiency;
 			
 			_ElectricalPowerW = ssm.ElectricalWAdjusted;

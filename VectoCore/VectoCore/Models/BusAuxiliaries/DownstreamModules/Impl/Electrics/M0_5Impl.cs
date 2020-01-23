@@ -20,17 +20,22 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		protected IResultCard _resultCardTraction;
 		protected IResultCard _resultCardOverrun;
 		protected ISignals _signals;
-		private IM0_1_AverageElectricLoadDemand _m0_1;
 
-		public M0_5Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, IM0_1_AverageElectricLoadDemand m0_1, IAlternatorMap alternatorMap, IResultCard resultCardIdle, IResultCard resultCardTraction, IResultCard resultCardOverrun, ISignals signals)
+		private Ampere _totalAverageDemandAmpsWithoutBaseLoad;
+
+		//private IM0_1_AverageElectricLoadDemand _m0_1;
+
+		public M0_5Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, IElectricsUserInputsConfig electricConfig, ISignals signals)
 		{
+			var alternatorMap = electricConfig.AlternatorMap;
+			var resultCardIdle = electricConfig.ResultCardIdle;
+			var resultCardTraction = electricConfig.ResultCardTraction;
+			var resultCardOverrun = electricConfig.ResultCardOverrun;
+
 			//'Sanity Check on supplied arguments, throw an argument exception
 			if (m0 == null) {
 				throw new ArgumentException("Module 0 must be supplied");}
 
-			if (m0_1 == null) {
-				throw new ArgumentException("ElectricalConsumablesList must be supplied even if empty");
-			}
 			if (alternatorMap ==null) {throw new ArgumentException("Must supply a valid alternator map");
 			}
 			if (resultCardIdle == null) {
@@ -49,8 +54,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 			//'Assignments to private variables.
 			_m0 = m0;
-			_m0_1 = m0_1;
 			_alternatorMap = alternatorMap;
+			_totalAverageDemandAmpsWithoutBaseLoad = electricConfig.AverageCurrentDemandWithoutBaseLoad;
 			_resultCardIdle = resultCardIdle;
 			_resultCardTraction = resultCardTraction;
 			_resultCardOverrun = resultCardOverrun;
@@ -61,7 +66,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		private Ampere HvacPlusNonBaseCurrents()
 		{
-			return _m0.GetHVACElectricalCurrentDemand + _m0_1.TotalAverageDemandAmpsWithoutBaseLoad;
+			return _m0.GetHVACElectricalCurrentDemand + _totalAverageDemandAmpsWithoutBaseLoad;
 		}
 
 		public Ampere SmartIdleCurrent

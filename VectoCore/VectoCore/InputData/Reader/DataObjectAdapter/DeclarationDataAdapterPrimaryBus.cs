@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.BusAuxiliaries;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
@@ -14,6 +15,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
@@ -71,7 +73,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		#endregion
 
-		public IAuxiliaryConfig CreateBusAuxiliariesData(Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData)
+		public IAuxiliaryConfig CreateBusAuxiliariesData(
+			Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData)
 		{
 			var actuations = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(runData.Mission.MissionType);
 
@@ -86,19 +89,57 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				FuelMap = runData.EngineData.Fuels.First().ConsumptionMap
 			};
 
-
-
 			return retVal;
 		}
 
-		private IElectricsUserInputsConfig GetElectricalUserConfig(Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
+		private IElectricsUserInputsConfig GetElectricalUserConfig(
+			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
+		{
+			var currentDemand = CalculateAverageCurrent(mission, vehicleData, actuations);
+			var busAux = vehicleData.Components.BusAuxiliaries;
+
+			return new ElectricsUserInputsConfig() {
+				SmartElectrical = busAux.ElectricSupply.SmartElectrics,
+				AverageCurrentDemandInclBaseLoad = currentDemand.Item1,
+				AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2,
+				AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)),
+				PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
+				ResultCardIdle = busAux.ElectricSupply.ResultCards != null
+					? new ResultCard(
+						busAux.ElectricSupply.ResultCards.Idle.Select(x => new SmartResult(x.Current, x.SmartCurrent)).ToList())
+					: (IResultCard)new DummyResultCard(),
+				ResultCardOverrun = busAux.ElectricSupply.ResultCards != null
+					? new ResultCard(
+						busAux.ElectricSupply.ResultCards.Overrun.Select(x => new SmartResult(x.Current, x.SmartCurrent)).ToList())
+					: (IResultCard)new DummyResultCard(),
+				ResultCardTraction = busAux.ElectricSupply.ResultCards != null
+					? new ResultCard(
+						busAux.ElectricSupply.ResultCards.Traction.Select(x => new SmartResult(x.Current, x.SmartCurrent)).ToList())
+					: (IResultCard) new DummyResultCard(),
+				AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
+			};
+		}
+
+		private double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
+		{
+			var sum = 0.0;
+			foreach (var entry in alternators) {
+				sum += DeclarationData.BusAuxiliaries.AlternatorTechnologies.Lookup(entry.Technology);
+			}
+
+			return sum / alternators.Count;
+		}
+
+		private Tuple<Ampere, Ampere> CalculateAverageCurrent(
+			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
 		{
 			var avgInclBase = 0.SI<Ampere>();
 			var avgWithoutBase = 0.SI<Ampere>();
 			var doorDutyCycleFraction =
 				(actuations.ParkBrakeAndDoors * Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond) /
 				actuations.CycleTime;
-			var electricDoors = vehicleData.Components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology ==
+			var busAux = vehicleData.Components.BusAuxiliaries;
+			var electricDoors = busAux.PneumaticConsumers.DoorDriveTechnology ==
 								ConsumerTechnology.Electrically;
 			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
 				var nbr = CalcNumberInVehicle(consumer.NumberInActualVehicle, mission);
@@ -109,7 +150,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					: consumer.PhaseIdleTractionOn;
 
 				var current = consumer.NominalCurrent(mission.MissionType) * dutyCycle * nbr;
-				if (consumer.Bonus && !VehicleHasConsumer(consumer.ConsumerName, vehicleData.Components.BusAuxiliaries)) {
+				if (consumer.Bonus && !VehicleHasConsumer(consumer.ConsumerName, busAux)) {
 					current = 0.SI<Ampere>();
 				}
 
@@ -119,29 +160,21 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 
-
-			return new ElectricsUserInputsConfig() {
-				SmartElectrical = false,
-				AverageCurrentDemandInclBaseLoad = avgInclBase,
-				AverageCurrentDemandWithoutBaseLoad = avgWithoutBase,
-				AlternatorMap = new AlternatorMap(new List<ICombinedAlternatorMapRow>() {new CombinedAlternatorMapRow("test", 1000.RPMtoRad(), 10.SI<Ampere>(), 0.8, 1.0)  }, ""),
-				PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
-				ResultCardIdle = new ResultCard(new List<SmartResult>()),
-				ResultCardOverrun = new ResultCard(new List<SmartResult>()),
-				ResultCardTraction = new ResultCard(new List<SmartResult>()),
-				AlternatorGearEfficiency = 0.9,
-			};
+			return Tuple.Create(avgInclBase, avgWithoutBase);
 		}
 
 		private bool VehicleHasConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
 		{
 			switch (consumerName) {
-				case "Interior lights LED bonus": return busAux.ElectricConsumers.InteriorLightsLED;
-				case "Day running lights LED bonus": return busAux.ElectricConsumers.DayrunninglightsLED;
-				case "Position lights LED bonus": return busAux.ElectricConsumers.PositionlightsLED;
-				case "Brake lights LED bonus": return busAux.ElectricConsumers.BrakelightsLED;
-				case "Headlights LED bonus": return busAux.ElectricConsumers.HeadlightsLED;
-				default: return false;
+				case "Day running lights LED bonus":
+				case "Position lights LED bonus":
+				case "Brake lights LED bonus":
+					return false;
+				case "Interior lights LED bonus": 
+				case "Headlights LED bonus":
+					return true;
+				default:
+					return false;
 			}
 		}
 
@@ -151,16 +184,58 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				return DeclarationData.BusAuxiliaries.CalculateLengthInteriorLights(
 					mission.VehicleLength, mission.DoubleDecker, mission.FloorType, mission.NumberPassengersLowerDeck).Value();
 			}
+
 			return nbr.ToDouble();
 		}
 
 		private IPneumaticUserInputsConfig GetPneumaticUserConfig(IVehicleDeclarationInputData vehicleData)
 		{
+			var busAux = vehicleData.Components.BusAuxiliaries;
 			//throw new NotImplementedException();
 			return new PneumaticUserInputsConfig() {
-				SmartRegeneration = false,
-				KneelingHeight = 0.SI<Meter>()
+				KneelingHeight = 0.SI<Meter>(),
+				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
+				CompressorGearRatio = busAux.PneumaticSupply.Ratio,
+				CompressorMap = GetCompressorMap(busAux.PneumaticSupply.CompressorSize),
+				SmartAirCompression = busAux.PneumaticSupply.SmartAirCompression,
+				SmartRegeneration = busAux.PneumaticSupply.SmartRegeneration,
 			};
+		}
+
+		private ICompressorMap GetCompressorMap(string compressorSize)
+		{
+			var resource = "";
+			switch (compressorSize) {
+				case "Small":
+				case "Small + visco clutch":
+				case "Small + mech. clutch":
+					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.ACMP";
+					break;
+				case "Medium Supply 1-stage":
+				case "Medium Supply 1-stage + visco clutch":
+				case "Medium Supply 1-stage + mech. clutch":
+					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.ACMP";
+					break;
+				case "Medium Supply 2-stage":
+				case "Medium Supply 2-stage + visco clutch":
+				case "Medium Supply 2-stage + mech. clutch":
+					resource = "DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP";
+					break;
+				case "Large Supply 1-stage":
+				case "Large Supply 1-stage + visco clutch":
+				case "Large Supply 1-stage + mech. clutch":
+					resource = "DEFAULT_2-Cylinder_2-Stage_398ccm.ACMP";
+					break;
+				case "Large Supply 2-stage":
+				case "Large Supply 2-stage + visco clutch":
+				case "Large Supply 2-stage + mech. clutch":
+					resource = "DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP";
+					break;
+				default: throw new ArgumentException(string.Format("unkown compressor size {0}"), compressorSize);
+			}
+
+			return CompressorMapReader.ReadStream(
+				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBuses." + resource));
 		}
 
 		public virtual ISSMInputs CreateSSMModelParameters(IVehicleData vehicleData, IFuelProperties heatingFuel)
@@ -191,6 +266,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				VentilationOnDuringHeating = true,
 				VentilationWhenBothHeatingAndACInactive = true,
 				VentilationDuringAC = true,
+
 				//VentilationDuringHeating = VentilationLevel.High,
 				//VentilationDuringCooling = VentilationLevel.High,
 				//VentilationFlowSettingWhenHeatingAndACInactive = VentilationLevel.High,
@@ -208,15 +284,18 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return new PneumaticsConsumersDemand() {
 				AdBlueInjection = Constants.BusAuxiliaries.PneumaticConsumersDemands.AdBlueInjection,
 				AirControlledSuspension = Constants.BusAuxiliaries.PneumaticConsumersDemands.AirControlledSuspension,
-				Braking = retarderType == RetarderType.None ?
-					Constants.BusAuxiliaries.PneumaticConsumersDemands.BrakingNoRetarder :
-					Constants.BusAuxiliaries.PneumaticConsumersDemands.BrakingWithRetarder,
+				Braking = retarderType == RetarderType.None
+					? Constants.BusAuxiliaries.PneumaticConsumersDemands.BrakingNoRetarder
+					: Constants.BusAuxiliaries.PneumaticConsumersDemands.BrakingWithRetarder,
 				BreakingWithKneeling = Constants.BusAuxiliaries.PneumaticConsumersDemands.BreakingAndKneeling,
 				DeadVolBlowOuts = Constants.BusAuxiliaries.PneumaticConsumersDemands.DeadVolBlowOuts,
 				DeadVolume = Constants.BusAuxiliaries.PneumaticConsumersDemands.DeadVolume,
-				NonSmartRegenFractionTotalAirDemand = Constants.BusAuxiliaries.PneumaticConsumersDemands.NonSmartRegenFractionTotalAirDemand,
-				SmartRegenFractionTotalAirDemand = Constants.BusAuxiliaries.PneumaticConsumersDemands.SmartRegenFractionTotalAirDemand,
-				OverrunUtilisationForCompressionFraction = Constants.BusAuxiliaries.PneumaticConsumersDemands.OverrunUtilisationForCompressionFraction,
+				NonSmartRegenFractionTotalAirDemand =
+					Constants.BusAuxiliaries.PneumaticConsumersDemands.NonSmartRegenFractionTotalAirDemand,
+				SmartRegenFractionTotalAirDemand =
+					Constants.BusAuxiliaries.PneumaticConsumersDemands.SmartRegenFractionTotalAirDemand,
+				OverrunUtilisationForCompressionFraction =
+					Constants.BusAuxiliaries.PneumaticConsumersDemands.OverrunUtilisationForCompressionFraction,
 				DoorOpening = Constants.BusAuxiliaries.PneumaticConsumersDemands.DoorOpening,
 				StopBrakeActuation = Constants.BusAuxiliaries.PneumaticConsumersDemands.StopBrakeActuation,
 			};

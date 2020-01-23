@@ -9,6 +9,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
@@ -43,8 +44,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					NumberInActualVehicle = row.Field<string>(Fields.NuminVehicle)
 				};
 				foreach (var mission in EnumHelper.GetValues<MissionType>()) {
-					if (data.Columns.Contains(mission.ToString())) {
-						consumer[mission] = row.ParseDouble(mission.ToString()).SI<Ampere>();
+					if (data.Columns.Contains(mission.ToXMLFormat())) {
+						consumer[mission] = row.ParseDouble(mission.ToXMLFormat()).SI<Ampere>();
 					}
 				}
 				retVal.Add(consumer);

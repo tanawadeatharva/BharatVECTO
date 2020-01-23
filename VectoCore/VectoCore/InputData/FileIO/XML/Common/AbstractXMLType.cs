@@ -21,9 +21,19 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 			return GetNode(nodeName, BaseNode, required:false) != null;
 		}
 
+		protected bool ElementExists(string[] nodePath)
+		{
+			return GetNode(nodePath, BaseNode, required: false) != null;
+		}
+
+
 		protected string GetString(string nodeName, XmlNode basenode = null, bool required = true)
 		{
 			return GetNode(nodeName, basenode, required)?.InnerText;
+		}
+		protected string GetString(string[] nodePath, XmlNode basenode = null, bool required = true)
+		{
+			return GetNode(nodePath, basenode, required)?.InnerText;
 		}
 
 		protected double GetDouble(string nodeName, double? fallbackValue = null)
@@ -51,6 +61,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Common {
 		protected bool GetBool(string nodeName)
 		{
 			return XmlConvert.ToBoolean(GetNode(nodeName).InnerText);
+		}
+
+		protected bool GetBool(string[] nodePath)
+		{
+			return XmlConvert.ToBoolean(GetNode(nodePath).InnerText);
 		}
 
 		protected XmlNode GetNode(string[] nodeName, XmlNode baseNode = null, bool required = true)

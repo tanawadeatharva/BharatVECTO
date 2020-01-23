@@ -173,6 +173,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 		
 
 		public virtual Meter Width { get { return null; } }
+		public virtual Meter EntranceHeight { get { return null; } }
 
 		IVehicleComponentsDeclaration IVehicleDeclarationInputData.Components
 		{

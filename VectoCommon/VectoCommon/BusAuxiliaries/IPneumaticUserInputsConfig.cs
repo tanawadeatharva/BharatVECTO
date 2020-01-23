@@ -6,16 +6,19 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface IPneumaticUserInputsConfig
 	{
-		ICompressorMap CompressorMap { get;  }
-		double CompressorGearEfficiency { get;  }
-		double CompressorGearRatio { get;  }
-		bool SmartAirCompression { get;  }
-		bool SmartRegeneration { get;  }
+		ICompressorMap CompressorMap { get; }
+		double CompressorGearEfficiency { get; }
+		double CompressorGearRatio { get; }
+		bool SmartAirCompression { get; }
+
+		bool SmartRegeneration { get; }
+
 		//bool RetarderBrake { get;  }
-		Meter KneelingHeight { get;  }
-		ConsumerTechnology AirSuspensionControl { get;  } // mechanical or electrical
-		ConsumerTechnology AdBlueDosing { get;  } // pnmeumatic or electric
-		ConsumerTechnology Doors { get;  } // pneumatic or electric
+		Meter KneelingHeight { get; }
+
+		ConsumerTechnology AirSuspensionControl { get; } // mechanical or electrical
+		ConsumerTechnology AdBlueDosing { get; } // pnmeumatic or electric
+		ConsumerTechnology Doors { get; } // pneumatic or electric
 	}
 
 	public enum ConsumerTechnology
@@ -24,5 +27,26 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		Mechanically,
 		Electrically,
 		Pneumatically,
+	}
+
+	public static class ConsumerTechnologyHelper
+	{
+		public static ConsumerTechnology Parse(string technology)
+		{
+			switch (technology.ToLowerInvariant()) {
+				case "mechanically":
+				case "mechanic":
+					return ConsumerTechnology.Mechanically;
+				case "electrically":
+				case "electric":
+				case "electronically":
+					return ConsumerTechnology.Electrically;
+				case "pneumatically":
+				case "pneumatic":
+					return ConsumerTechnology.Pneumatically;
+				default:
+					return ConsumerTechnology.Unknown;
+			}
+		}
 	}
 }

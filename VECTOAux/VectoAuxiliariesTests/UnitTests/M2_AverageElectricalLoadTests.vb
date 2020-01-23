@@ -58,14 +58,16 @@ Namespace UnitTests
 
 			Dim altMap As IAlternatorMap = AlternatorReader.ReadMap( "testfiles\testAlternatorMap.aalt")
 			'altMap.Initialise()
+		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = 26.3.SI(Of Volt)
+		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =altMap
+		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorGearEfficiency = 0.8
 
-		    Dim m01 As IM0_1_AverageElectricLoadDemand = New M0_1Impl(auxConfig)
-			Dim m0 As New M00Impl(m01, altMap, 26.3.SI(Of Volt), signals, New SSMTOOL(auxConfig.SSMInputs))
+			Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, New SSMTOOL(auxConfig.SSMInputs))
 
 			'Get Consumers.
 
 
-			Return New M02Impl(m01, m0, 0.8, 26.3.SI(Of Volt))
+			Return New M02Impl(m0, auxConfig.ElectricalUserInputsConfig)
 		End Function
 
 #End Region

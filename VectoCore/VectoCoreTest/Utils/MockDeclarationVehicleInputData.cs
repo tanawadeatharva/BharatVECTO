@@ -54,6 +54,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter Height { get; set; }
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
+		public Meter EntranceHeight { get; }
 		public IVehicleComponentsDeclaration Components { get { return this; } }
 		public XmlNode XMLSource { get; }
 
@@ -104,6 +105,7 @@ namespace TUGraz.VectoCore.Tests.Utils {
 		public Meter Height { get; }
 		public Meter Length { get; set; }
 		public Meter Width { get; set; }
+		public Meter EntranceHeight { get; }
 		public Watt MaxNetPower2 { get; }
 		public string RegisteredClass { get; set; }
 		public int NuberOfPassengersUpperDeck { get; set; }

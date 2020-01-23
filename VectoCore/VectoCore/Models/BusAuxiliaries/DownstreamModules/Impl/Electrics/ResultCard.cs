@@ -17,6 +17,18 @@ using TUGraz.VectoCommon.Utils;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics
 {
+	public class DummyResultCard : IResultCard
+	{
+		#region Implementation of IResultCard
+
+		public Ampere GetSmartCurrentResult(Ampere amps)
+		{
+			return 0.SI<Ampere>();
+		}
+
+		#endregion
+	}
+
 	public class ResultCard : IResultCard
 	{
 		private readonly List<SmartResult> _results;
@@ -24,9 +36,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		// Constructor
 		public ResultCard(List<SmartResult> results)
 		{
-			if (results == null)
+			if (results == null) {
 				throw new ArgumentException("A list of smart results must be supplied.");
+			}
 
+			if (results.Count < 2) {
+				throw new ArgumentException("At least two smart result entries must be provided.");
+			}
 			_results = results.OrderBy(x => x.Amps).ToList();
 		}
 
@@ -39,11 +55,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public Ampere GetSmartCurrentResult(Ampere Amps)
 		{
-			// TODO: MQ 2019-10-29 - keep this?
-			if (_results.Count < 2) {
-				return 10.SI<Ampere>();
-			}
-
 			return GetOrInterpolate(Amps);
 		}
 
@@ -57,8 +68,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		///         ''' <remarks></remarks>
 		private Ampere GetOrInterpolate(Ampere amps)
 		{
-			// TODO: MQ 2019-10-29 - simplify?
-
 			var s = _results.GetSection(x => amps > x.Amps);
 			return VectoMath.Interpolate(s.Item1.Amps, s.Item2.Amps, s.Item1.SmartAmps, s.Item2.SmartAmps, amps);
 

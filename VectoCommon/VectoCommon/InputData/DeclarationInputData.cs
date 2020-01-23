@@ -181,6 +181,8 @@ namespace TUGraz.VectoCommon.InputData
 
 		Meter Width { get; }
 
+		Meter EntranceHeight { get; }
+
 		// components
 
 		IVehicleComponentsDeclaration Components { get; }
@@ -742,6 +744,10 @@ namespace TUGraz.VectoCommon.InputData
 		double Ratio { get; }
 
 		string CompressorSize { get; }
+
+		bool SmartAirCompression { get; }
+
+		bool SmartRegeneration { get; }
 	}
 
 	public interface IPneumaticConsumersDeclarationData
@@ -750,7 +756,6 @@ namespace TUGraz.VectoCommon.InputData
 		ConsumerTechnology AdBlueDosing { get; }
 		ConsumerTechnology DoorDriveTechnology { get; }
 
-		Meter EntranceHeight { get; }
 	}
 
 	public interface IHVACBusAuxiliariesDeclarationData

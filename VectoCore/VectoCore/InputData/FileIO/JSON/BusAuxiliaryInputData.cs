@@ -72,6 +72,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			// DoorActuationTimeSecond
 			electricalUserInputsConfig.DoorActuationTimeSecond = elData.GetEx<double>("DoorActuationTimeSecond").SI<Second>();
 
+
 			electricalUserInputsConfig.AverageCurrentDemandInclBaseLoad = elData["ElectricalConsumers"]
 				.GetEx<double>("AverageCurrentDemandInclBaseLoad").SI<Ampere>();
 			electricalUserInputsConfig.AverageCurrentDemandWithoutBaseLoad = elData["ElectricalConsumers"]

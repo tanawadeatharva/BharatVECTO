@@ -164,13 +164,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		}
 		public virtual ConsumerTechnology DoorDriveTechnology { get { return ConsumerTechnology.Unknown; } }
 
-		public virtual Meter EntranceHeight
-		{
-			get {
-				return null;
-			}
-		}
-
+		
 		#endregion
 
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
@@ -372,6 +366,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get { return null; }
 		}
+
+		public virtual Meter EntranceHeight { get { return null; } }
 
 		IVehicleComponentsEngineering IVehicleEngineeringInputData.Components
 		{

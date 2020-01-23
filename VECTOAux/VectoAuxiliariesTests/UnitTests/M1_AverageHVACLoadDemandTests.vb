@@ -58,9 +58,10 @@ Namespace UnitTests
             For Each entry As ISSMTechnology In ssm.TechList.TechLines
                 entry.OnVehicle = True
             Next
-            Dim m01 As IM0_1_AverageElectricLoadDemand = New M0_1Impl(auxConfig)
+            CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = powernetVoltage
+            CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
 
-            m0 = New M00Impl(m01,alternatorMap, powernetVoltage, signals, ssm)
+            m0 = New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, ssm)
         End Sub
 
         Private Function GETM1Instance() As IM1_AverageHVACLoadDemand

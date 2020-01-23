@@ -65,11 +65,10 @@ Namespace UnitTests
 			
             Dim auxConfig = Utils.GetAuxTestConfig()
 		    CType(CType(auxConfig.SSMInputs,SSMInputs).Vehicle, VehicleData).Height = 0.SI(of Meter)
+		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = _powerNetVoltage
+		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap = alternatoMap
 
-            Dim m0_1 = New M0_1Impl(auxConfig)
-            Dim _
-				m0 As _
-					New M00Impl(m0_1, alternatoMap, _powerNetVoltage, _signals,
+            Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, _signals,
                                 New SSMTOOL(auxConfig.SSMInputs))
 
 			'Results Cards
@@ -77,15 +76,14 @@ Namespace UnitTests
 			readings.Add(New SmartResult(10.SI(Of Ampere), 8.SI(Of Ampere)))
 			readings.Add(New SmartResult(70.SI(Of Ampere), 63.SI(Of Ampere)))
 
-			Dim idleResult As New ResultCard(readings)
-			Dim tractionResult As New ResultCard(readings)
-			Dim overrunResult As New ResultCard(readings)
+		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).ResultCardIdle = New ResultCard(readings)
+		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).ResultCardTraction = New ResultCard(readings)
+		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).ResultCardOverrun = New ResultCard(readings)
 
 			Dim signals As ISignals = New Signals
 			signals.EngineSpeed = 2000.RPMtoRad()
 
-			_m05 = New M0_5Impl(m0, m0_1, alternatoMap, idleResult, tractionResult,
-														overrunResult, signals)
+			_m05 = New M0_5Impl(m0, auxConfig.ElectricalUserInputsConfig, signals)
 		End Sub
 
 		<TestCase()>
