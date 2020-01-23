@@ -149,6 +149,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return Body["Aux"]?["PneumaticSupply"]?.GetEx<string>("CompressorSize");
 		} }
 
+		public bool SmartAirCompression { get; }
+		public bool SmartRegeneration { get; }
+
 		#endregion
 
 		#region Implementation of IPneumaticConsumersDeclarationData

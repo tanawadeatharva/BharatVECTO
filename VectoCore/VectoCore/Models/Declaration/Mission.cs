@@ -67,16 +67,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Kilogram MaxPayload { get; internal set; }
 
+		public Meter VehicleHeight { get; internal set; }
+
 		public SquareMeter DefaultCDxA { get; internal set; }
 
 		public CubicMeter TotalCargoVolume { get; internal set; }
-
-		public Meter VehicleHeight { get; internal set; }
-
-		public Meter VehicleWidth { get; internal set; }
-
-		public Meter VehicleLength { get; internal set; }
-
+		
 		public Dictionary<LoadingType, Kilogram> Loadings
 		{
 			get {
@@ -90,10 +86,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+		public BusParameters BusParameter { get; internal set; }
+	}
+
+	public class BusParameters
+	{
+
+		public Meter VehicleWidth { get; internal set; }
+
+		public Meter VehicleLength { get; internal set; }
+
 		public double NumberPassengersLowerDeck { get; internal set; }
+
 		public double NumberPassengersUpperDeck { get; internal set; }
-		public bool DoubleDecker { get; set; }
-		public FloorType FloorType { get; set; }
+
+		public bool DoubleDecker { get; internal set; }
+
+		public FloorType FloorType { get; internal set; }
+
+		// #### HVAC Model Parameters
+
+		public BusHVACSystemConfiguration HVACConfiguration { get; internal set; }
+
+		public Watt HVACAuxHeaterPower { get; internal set; }
+
+		public ACCompressorType HVACCompressorType { get; internal set; }
+
+		public bool HVACDoubleGlasing { get; internal set; }
+
+		public bool HVACHeatpump { get; internal set; }
+		public bool HVACAdjustableAuxHeater { get; internal set; }
+
+		public bool HVACSeparateAirDistributionDucts { get; internal set; }
 	}
 
 	public class MissionTrailer

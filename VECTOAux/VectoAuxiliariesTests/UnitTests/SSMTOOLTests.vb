@@ -71,8 +71,16 @@ Namespace UnitTests
         <TestCase("AuxHeater")>
         Public Sub InstantiateDefaultSSMGenInputsTest(section As String)
 
+            Dim mission As New Mission With{ 
+                .BusParameter = New BusParameters() with {
+                .HVACCompressorType = ACCompressorType.TwoStage,
+                .HVACAuxHeaterPower = 18e3.SI(Of Watt),
+                .HVACConfiguration = BusHVACSystemConfiguration.Configuration6
+            }
+            }
+
             Dim dao = New DeclarationDataAdapterPrimaryBus()
-            Dim target As ISSMInputs = dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(), FuelData.Diesel)
+            Dim target As ISSMInputs = dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(), mission, FuelData.Diesel)
 
             If section = "BusParameterisation" Then
                 'BUS Parameterisation
@@ -560,8 +568,17 @@ Namespace UnitTests
             Const filePath As String = "SSMTOOLTestSaveRetreive.json"
             Dim success As Boolean
 
+            
+            Dim mission As New Mission With{ 
+                    .BusParameter = New BusParameters() with {
+                    .HVACCompressorType = ACCompressorType.TwoStage,
+                    .HVACAuxHeaterPower = 18e3.SI(Of Watt),
+                    .HVACConfiguration = BusHVACSystemConfiguration.Configuration6
+                    }
+                    }
+
             Dim dao = New DeclarationDataAdapterPrimaryBus()
-            Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(),
+            Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(), mission,
                                                                              FuelData.Diesel))
 
             success = BusAuxWriter.SaveSSMConfig(target.SSMInputs, filePath)

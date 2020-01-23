@@ -106,6 +106,8 @@ namespace TUGraz.VectoCore.Configuration
 			{
 				public static readonly Volt PowernetVoltage = 28.3.SI<Volt>();
 
+				public const double AlternatorGearEfficiency = 0.92;
+
 				public const double StoredEnergyEfficiency = 0.935;
 			}
 
@@ -167,6 +169,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static class PneumaticUserConfig
 			{
+				public static readonly Meter DefaultKneelingHeight = 80.SI(Unit.SI.Milli.Meter).Cast<Meter>();
 				public const double CompressorGearRatio = 1.0;
 				public const double CompressorGearEfficiency = 0.97;
 

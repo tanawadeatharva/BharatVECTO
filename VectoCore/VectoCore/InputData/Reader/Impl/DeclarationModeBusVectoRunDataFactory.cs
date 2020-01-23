@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				AxleGearData = _axlegearData,
 				AngledriveData = _angledriveData,
 				Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData,
-													vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass, vehicle.Length ?? mission.VehicleLength),
+													vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass, vehicle.Length ?? mission.BusParameter.VehicleLength),
 				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 				Retarder = _retarderData,
 				DriverData = _driverdata,

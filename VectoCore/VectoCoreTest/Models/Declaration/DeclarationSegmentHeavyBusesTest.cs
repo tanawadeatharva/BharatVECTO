@@ -597,8 +597,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			Assert.AreEqual(missionType, m.MissionType);
 			Assert.AreEqual(cdxA, m.DefaultCDxA.Value(), 1e-9);
-			Assert.AreEqual(length, m.VehicleLength.Value(), 1e-9);
-			Assert.AreEqual(width, m.VehicleWidth.Value(), 1e-9);
+			Assert.AreEqual(length, m.BusParameter.VehicleLength.Value(), 1e-9);
+			Assert.AreEqual(width, m.BusParameter.VehicleWidth.Value(), 1e-9);
 			Assert.AreEqual(height, m.VehicleHeight.Value(), 1e-9);
 			Assert.AreEqual(curbMass, m.CurbMass.Value(), 1e-9);
 			Assert.AreEqual(refLoad, m.RefLoad.Value(), 1e-9);

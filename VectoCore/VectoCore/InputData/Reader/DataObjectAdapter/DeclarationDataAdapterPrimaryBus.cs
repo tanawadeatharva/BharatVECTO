@@ -32,8 +32,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var retVal = base.CreateVehicleData(data, mission, loading);
 			retVal.CurbMass = mission.CurbMass;
-			retVal.Length = mission.VehicleLength;
-			retVal.Width = mission.VehicleWidth;
+			retVal.Length = mission.BusParameter.VehicleLength;
+			retVal.Width = mission.BusParameter.VehicleWidth;
 			retVal.Height = mission.VehicleHeight;
 			return retVal;
 		}
@@ -81,10 +81,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var retVal = new AuxiliaryConfig {
 				InputData = vehicleData.Components.BusAuxiliaries,
 				ElectricalUserInputsConfig = GetElectricalUserConfig(mission, vehicleData, actuations),
-				PneumaticUserInputsConfig = GetPneumaticUserConfig(vehicleData),
+				PneumaticUserInputsConfig = GetPneumaticUserConfig(vehicleData, mission),
 				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
 				Actuations = actuations,
-				SSMInputs = CreateSSMModelParameters(runData.VehicleData, FuelData.Diesel),
+				SSMInputs = CreateSSMModelParameters(runData.VehicleData, mission, FuelData.Diesel),
 				VehicleData = runData.VehicleData,
 				FuelMap = runData.EngineData.Fuels.First().ConsumptionMap
 			};
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				ResultCardTraction = busAux.ElectricSupply.ResultCards != null
 					? new ResultCard(
 						busAux.ElectricSupply.ResultCards.Traction.Select(x => new SmartResult(x.Current, x.SmartCurrent)).ToList())
-					: (IResultCard) new DummyResultCard(),
+					: (IResultCard)new DummyResultCard(),
 				AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
 			};
 		}
@@ -168,32 +168,33 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			switch (consumerName) {
 				case "Day running lights LED bonus":
 				case "Position lights LED bonus":
-				case "Brake lights LED bonus":
-					return false;
-				case "Interior lights LED bonus": 
-				case "Headlights LED bonus":
-					return true;
-				default:
-					return false;
+				case "Brake lights LED bonus": return false;
+				case "Interior lights LED bonus":
+				case "Headlights LED bonus": return true;
+				default: return false;
 			}
 		}
 
 		private double CalcNumberInVehicle(string nbr, Mission mission)
 		{
 			if ("f_IntLight(L_CoC)".Equals(nbr, StringComparison.InvariantCultureIgnoreCase)) {
+				var busParams = mission.BusParameter;
 				return DeclarationData.BusAuxiliaries.CalculateLengthInteriorLights(
-					mission.VehicleLength, mission.DoubleDecker, mission.FloorType, mission.NumberPassengersLowerDeck).Value();
+					busParams.VehicleLength, busParams.DoubleDecker, busParams.FloorType, busParams.NumberPassengersLowerDeck).Value();
 			}
 
 			return nbr.ToDouble();
 		}
 
-		private IPneumaticUserInputsConfig GetPneumaticUserConfig(IVehicleDeclarationInputData vehicleData)
+		private IPneumaticUserInputsConfig GetPneumaticUserConfig(IVehicleDeclarationInputData vehicleData, Mission mission)
 		{
 			var busAux = vehicleData.Components.BusAuxiliaries;
+
 			//throw new NotImplementedException();
 			return new PneumaticUserInputsConfig() {
-				KneelingHeight = 0.SI<Meter>(),
+				KneelingHeight = mission.BusParameter.FloorType == FloorType.LowFloor
+					? Constants.BusAuxiliaries.PneumaticUserConfig.DefaultKneelingHeight
+					: 0.SI<Meter>(),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
 				CompressorGearRatio = busAux.PneumaticSupply.Ratio,
 				CompressorMap = GetCompressorMap(busAux.PneumaticSupply.CompressorSize),
@@ -238,7 +239,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBuses." + resource));
 		}
 
-		public virtual ISSMInputs CreateSSMModelParameters(IVehicleData vehicleData, IFuelProperties heatingFuel)
+		public virtual ISSMInputs CreateSSMModelParameters(IVehicleData vehicleData, Mission mission, IFuelProperties heatingFuel)
 		{
 			var retVal = new SSMInputs(vehicleData, null, heatingFuel) {
 				Technologies = DeclarationData.BusAuxiliaries.SSMTechnologyList,
@@ -255,11 +256,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				SpecificVentilationPower = Constants.BusAuxiliaries.SteadyStateModel.SpecificVentilationPower,
 
 				// TODO! MQ 2019-19-29 Compressor Type and CompressorCapacity from input data?
-				HVACCompressorType = ACCompressorType.TwoStage, // "2-stage",
 				HVACMaxCoolingPower = 18.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+				HVACCompressorType = mission.BusParameter.HVACCompressorType,
 
 				AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency,
-				FuelFiredHeaterPower = Constants.BusAuxiliaries.SteadyStateModel.FuelFiredHeaterPower,
+				FuelFiredHeaterPower = mission.BusParameter.HVACAuxHeaterPower,
 				FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,
 				CoolantHeatTransferredToAirCabinHeater = Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
 				GFactor = Constants.BusAuxiliaries.SteadyStateModel.GFactor,
@@ -272,9 +273,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				//VentilationFlowSettingWhenHeatingAndACInactive = VentilationLevel.High,
 				MaxPossibleBenefitFromTechnologyList =
 					Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList,
+
 			};
 
-			DeclarationData.BusAuxiliaries.SetHVACParameters(retVal, BusHVACSystemConfiguration.Configuration6);
+			DeclarationData.BusAuxiliaries.SetHVACParameters(retVal, mission.BusParameter.HVACConfiguration);
 
 			return retVal;
 		}

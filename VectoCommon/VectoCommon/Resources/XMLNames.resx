@@ -1215,4 +1215,16 @@
   <data name="BusAux_PneumaticSystem_DoorDriveTechnology" xml:space="preserve">
     <value>DoorDriveTechnology</value>
   </data>
+  <data name="BusAux_PneumaticSystem_CompressorRatio" xml:space="preserve">
+    <value>CompressorRatio</value>
+  </data>
+  <data name="BusAux_PneumaticSystem_CompressorSize" xml:space="preserve">
+    <value>SizeOfAirSupply</value>
+  </data>
+  <data name="BusAux_PneumaticSystem_SmartcompressionSystem" xml:space="preserve">
+    <value>SmartCompressionSystem</value>
+  </data>
+  <data name="BusAux_PneumaticSystem_SmartRegenerationSystem" xml:space="preserve">
+    <value>SmartRegenerationSystem</value>
+  </data>
 </root>

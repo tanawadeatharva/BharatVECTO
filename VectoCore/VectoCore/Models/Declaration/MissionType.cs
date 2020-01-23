@@ -91,6 +91,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return "Interurban";
 				case MissionType.Coach:
 					return "Coach";
+				case MissionType.VerificationTest:
+					return "Verirication Test";
+				case MissionType.ExemptedMission:
+					return "Exempted";
 				default:
 					throw new ArgumentOutOfRangeException("MissionType", self, null);
 			}
