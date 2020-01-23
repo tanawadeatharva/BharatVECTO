@@ -3268,22 +3268,26 @@
 						<SmartElectrics>false</SmartElectrics>
 						<ResultCards>
 							<Idle>
-								<Entry current="0" smartCurrent="0"/>
-								<Entry current="100" smartCurrent="120"/>
+								<Entry current="0.00" smartCurrent="0.00"/>
+								<Entry current="100.00" smartCurrent="120.00"/>
 							</Idle>
 							<Traction>
-								<Entry current="0" smartCurrent="1"/>
-								<Entry current="100" smartCurrent="120"/>
+								<Entry current="0.00" smartCurrent="1.00"/>
+								<Entry current="100.00" smartCurrent="120.00"/>
 							</Traction>
 							<Overrun>
-								<Entry current="0" smartCurrent="0"/>
-								<Entry current="100" smartCurrent="120"/>
+								<Entry current="0.00" smartCurrent="0.00"/>
+								<Entry current="100.00" smartCurrent="120.00"/>
 							</Overrun>
 						</ResultCards>
 					</ElectricSystem>
 					<PneumaticSystem>
-						<SizeOfAirSupply>500</SizeOfAirSupply>
-						<AirsuspensionControl>mechanically</AirsuspensionControl>
+						<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
+						<Clutch>none</Clutch>
+						<CompressorRatio>1.000</CompressorRatio>
+						<SmartCompressionSystem>false</SmartCompressionSystem>
+						<SmartRegenerationSystem>false</SmartRegenerationSystem>
+						<AirsuspensionControl>electronically</AirsuspensionControl>
 						<AdBlueDosing>true</AdBlueDosing>
 						<DoorDriveTechnology>pneumatic</DoorDriveTechnology>
 					</PneumaticSystem>

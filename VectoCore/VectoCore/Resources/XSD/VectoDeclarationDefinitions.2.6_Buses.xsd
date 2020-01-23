@@ -299,7 +299,11 @@
 					<xs:element name="PneumaticSystem">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="SizeOfAirSupply" type="xs:string"/>
+								<xs:element name="SizeOfAirSupply" type="tns:PneumaticSystemTechnologyType"/>
+								<xs:element name="Clutch" type="tns:PneumaticSystemClutchTypeType"/>
+								<xs:element name="CompressorRatio" type="v1.0:Double3"/>
+								<xs:element name="SmartCompressionSystem" type="xs:boolean"/>
+								<xs:element name="SmartRegenerationSystem" type="xs:boolean"/>
 								<xs:element name="AirsuspensionControl">
 									<xs:simpleType>
 										<xs:restriction base="xs:string">
@@ -609,7 +613,23 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="ResultCardEntryType">
-		<xs:attribute name="current" use="required"/>
-		<xs:attribute name="smartCurrent" use="required"/>
+		<xs:attribute name="current" type="v1.0:Double2" use="required"/>
+		<xs:attribute name="smartCurrent" type="v1.0:Double2" use="required"/>
 	</xs:complexType>
+	<xs:simpleType name="PneumaticSystemTechnologyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Small"/>
+			<xs:enumeration value="Medium Supply 1-stage"/>
+			<xs:enumeration value="Medium Supply 2-stage"/>
+			<xs:enumeration value="Large Supply 1-stage"/>
+			<xs:enumeration value="Large Supply 2-stage"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PneumaticSystemClutchTypeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="visco"/>
+			<xs:enumeration value="mechanically"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>
