@@ -255,8 +255,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				//LowVentilation = Constants.BusAuxiliaries.SteadyStateModel.LowVentilation,
 				SpecificVentilationPower = Constants.BusAuxiliaries.SteadyStateModel.SpecificVentilationPower,
 
-				// TODO! MQ 2019-19-29 Compressor Type and CompressorCapacity from input data?
-				HVACMaxCoolingPower = 18.SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
+				HVACMaxCoolingPower = CalculateMaxCoolingPower(vehicleData, mission),
 				HVACCompressorType = mission.BusParameter.HVACCompressorType,
 
 				AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency,
@@ -279,6 +278,26 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			DeclarationData.BusAuxiliaries.SetHVACParameters(retVal, mission.BusParameter.HVACConfiguration);
 
 			return retVal;
+		}
+
+		private Watt CalculateMaxCoolingPower(IVehicleData vehicleData, Mission mission)
+		{
+			var busParams = mission.BusParameter;
+
+			var length = DeclarationData.BusAuxiliaries.CalculateInternalLength(
+				busParams.VehicleLength, busParams.DoubleDecker, busParams.FloorType,
+				busParams.NumberPassengersLowerDeck);
+			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.VehicleHeight);
+			var volume = length * height * busParams.VehicleWidth;
+
+			// todo: subtract driver compartment from passenger compartment for certain configurations.
+
+			var driver = DeclarationData.BusAuxiliaries.HVACMaxCoolingPower.DriverMaxCoolingPower(
+				busParams.HVACConfiguration, mission.MissionType);
+			var passenger = DeclarationData.BusAuxiliaries.HVACMaxCoolingPower.PassengerMaxCoolingPower(
+				busParams.HVACConfiguration, mission.MissionType, volume);
+
+			return driver + passenger;
 		}
 
 		public virtual IPneumaticsConsumersDemand CreatePneumaticAuxConfig(RetarderType retarderType)

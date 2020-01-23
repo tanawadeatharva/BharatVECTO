@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			foreach (DataRow row in data.Rows) {
 				var key = row.Field<string>(Fields.CycleName).ParseEnum<MissionType>();
 				if (retVal.ContainsKey(key)) {
-					throw new VectoException("Duplicate entries in actuations map! {0} / {1}", key.ToXMLFormat());
+					throw new VectoException("Duplicate entries in actuations map! {0} / {1}", key.GetLabel());
 				}
 
 				var entry = new Actuations() {

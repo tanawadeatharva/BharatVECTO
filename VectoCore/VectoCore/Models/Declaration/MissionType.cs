@@ -64,6 +64,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return self;
 		}
 
+		public static string GetLabel(this MissionType self)
+		{
+			return self.ToXMLFormat();
+		}
+
 		public static string ToXMLFormat(this MissionType self)
 		{
 			switch (self) {

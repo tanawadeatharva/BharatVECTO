@@ -44,8 +44,8 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					NumberInActualVehicle = row.Field<string>(Fields.NuminVehicle)
 				};
 				foreach (var mission in EnumHelper.GetValues<MissionType>()) {
-					if (data.Columns.Contains(mission.ToXMLFormat())) {
-						consumer[mission] = row.ParseDouble(mission.ToXMLFormat()).SI<Ampere>();
+					if (data.Columns.Contains(mission.GetLabel())) {
+						consumer[mission] = row.ParseDouble(mission.GetLabel()).SI<Ampere>();
 					}
 				}
 				retVal.Add(consumer);

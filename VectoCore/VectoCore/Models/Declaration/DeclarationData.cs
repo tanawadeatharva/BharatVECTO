@@ -157,6 +157,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//}
 
 			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();
+			private static HVACCoolingPower hvacMaxCoolingPower;
 
 			public static ISSMTechnologies SSMTechnologyList
 			{
@@ -191,6 +192,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
+			public static HVACCoolingPower HVACMaxCoolingPower
+			{
+				get { return hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower()); }
+			}
+
 			public static void SetHVACParameters(SSMInputs ssmInputs, BusHVACSystemConfiguration hvacSystemConfig)
 			{
 				switch (hvacSystemConfig) {
@@ -212,8 +218,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}
 			}
 
-			public static Meter CalculateLengthInteriorLights(Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
+			public static Meter CalculateLengthInteriorLights(
+				Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
 			{
+				return CalculateInternalLength(vehicleLength, doubleDecker, floorType, numPassLowFloor);
+			}
+
+			public static Meter CalculateInternalLength(Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
+				{
 				if (floorType == FloorType.LowFloor) {
 					return doubleDecker ? 2 * vehicleLength : vehicleLength;
 				}
@@ -226,6 +238,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 					return vehicleLength;
 				}
 				throw new VectoException("Internal Length for floorType {0} {1} not defined", floorType.ToString(), doubleDecker ? "DD" : "SD");
+			}
+
+			public static Meter CalculateInternalHeight(Meter vehicleHeight)
+			{
+				// MQ: 2020-01-23 TODO! how to calculate?
+				return 1.8.SI<Meter>();
 			}
 		}
 

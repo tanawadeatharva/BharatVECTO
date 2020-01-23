@@ -636,6 +636,11 @@ namespace TUGraz.VectoCommon.Utils
 		{ }
 
 		public override string UnitString { get { return "W/m^3"; } }
+
+		public static Watt operator *(WattPerCubicMeter wpcm, CubicMeter cm)
+		{
+			return SIBase<Watt>.Create(wpcm.Val * cm.Value());
+		}
 	}
 
 	/// <summary>

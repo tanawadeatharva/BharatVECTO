@@ -352,6 +352,7 @@
     <Compile Include="Models\BusAuxiliaries\Util\FilePathUtils.cs" />
     <Compile Include="Models\Declaration\BusAlternatorTechnologies.cs" />
     <Compile Include="Models\Declaration\BusSegments.cs" />
+    <Compile Include="Models\Declaration\HVACCoolingPower.cs" />
     <Compile Include="Models\Declaration\SteeringPumpBus.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\WHRPowerMap.cs" />
     <Compile Include="InputData\Reader\ComponentData\WHRPowerReader.cs" />
@@ -871,6 +872,8 @@
     <EmbeddedResource Include="Resources\XSD\VectoOutputDefinitions.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Resources\Declaration\Buses\HVACCoolingPowerDriver.csv" />
+    <None Include="Resources\Declaration\Buses\HVACCoolingPowerPassenger.csv" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>
