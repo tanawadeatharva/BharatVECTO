@@ -97,10 +97,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 						continue;
 					}
 
-					var busArea = (row.ParseDouble("length").SI<Meter>() - Constants.BusParameters.DriverCompartmentLength) *
-								row.ParseDouble("width").SI<Meter>();
+					var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(row.ParseDouble("length").SI<Meter>(),
+								row.ParseDouble("width").SI<Meter>());
 					var passengerDensity = row.ParseDouble(missionType.ToString()).SI<PerSquareMeter>();
-					var passengerCount = (busArea * passengerDensity).Value();
+					var passengerCount = busFloorArea * passengerDensity; // weight of driver is included in curb mass
 					var refLoad = passengerCount * missionType.GetAveragePassengerMass();
 					var mission = new Mission {
 						MissionType = missionType,
@@ -126,6 +126,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							VehicleWidth = row.ParseDouble("width").SI<Meter>(),
 							NumberPassengersLowerDeck = row.ParseDouble("passengerslowerdeck"),
 							NumberPassengersUpperDeck = row.ParseDouble("passengersupperdeck"),
+							PassengerDensity = passengerDensity,
 							DoubleDecker = row.ParseBoolean("doubledecker"),
 							FloorType = GetFloorType(row.Field<string>("floortype")),
 							HVACConfiguration = BusHVACSystemConfigurationHelper.Parse(row.Field<string>("hvaccompressortype")),

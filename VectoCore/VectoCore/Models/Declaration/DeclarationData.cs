@@ -197,14 +197,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 				get { return hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower()); }
 			}
 
-			public static void SetHVACParameters(SSMInputs ssmInputs, BusHVACSystemConfiguration hvacSystemConfig)
+			public static PerSecond VentilationRate(BusHVACSystemConfiguration hvacSystemConfig)
 			{
+
 				switch (hvacSystemConfig) {
-					case BusHVACSystemConfiguration.Unknown: break;
+					
 					case BusHVACSystemConfiguration.Configuration1: 
 					case BusHVACSystemConfiguration.Configuration2:
-						ssmInputs.VentilationRate = Constants.BusAuxiliaries.SteadyStateModel.LowVentilation;
-						break;
+						return Constants.BusAuxiliaries.SteadyStateModel.LowVentilation;
+						
 					case BusHVACSystemConfiguration.Configuration3: 
 					case BusHVACSystemConfiguration.Configuration4: 
 					case BusHVACSystemConfiguration.Configuration5: 
@@ -212,17 +213,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case BusHVACSystemConfiguration.Configuration7: 
 					case BusHVACSystemConfiguration.Configuration8: 
 					case BusHVACSystemConfiguration.Configuration9:
-						ssmInputs.VentilationRate = Constants.BusAuxiliaries.SteadyStateModel.HighVentilation;
-						break;
+						return Constants.BusAuxiliaries.SteadyStateModel.HighVentilation;
+						
 					default: throw new ArgumentOutOfRangeException(nameof(hvacSystemConfig), hvacSystemConfig, null);
 				}
 			}
 
-			public static Meter CalculateLengthInteriorLights(
-				Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
+			public static SquareMeter CalculateBusFloorSurfaceArea(Meter busLength, Meter busWidth)
 			{
-				return CalculateInternalLength(vehicleLength, doubleDecker, floorType, numPassLowFloor);
+				return (busLength - Constants.BusParameters.DriverCompartmentLength) * busWidth;
 			}
+
+			 
 
 			public static Meter CalculateInternalLength(Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
 				{
@@ -240,10 +242,49 @@ namespace TUGraz.VectoCore.Models.Declaration
 				throw new VectoException("Internal Length for floorType {0} {1} not defined", floorType.ToString(), doubleDecker ? "DD" : "SD");
 			}
 
+			public static Meter CalculateLengthInteriorLights(
+				Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)
+			{
+				return CalculateInternalLength(vehicleLength, doubleDecker, floorType, numPassLowFloor);
+			}
+
 			public static Meter CalculateInternalHeight(Meter vehicleHeight)
 			{
 				// MQ: 2020-01-23 TODO! how to calculate?
 				return 1.8.SI<Meter>();
+			}
+
+			public static Meter WindowHeight(bool doubleDecker)
+			{
+				return doubleDecker
+					? Constants.BusParameters.WindowHeightDoubleDecker
+					: Constants.BusParameters.WindowHeightSingleDecker;
+			}
+
+			public static SquareMeter FrontAndRearWindowArea(bool doubleDecker)
+			{
+				return doubleDecker
+					? Constants.BusParameters.FrontAndRearWindowAreaDoubleDecker
+					: Constants.BusParameters.FrontAndRearWindowAreaSingleDecker;
+			}
+
+			public static WattPerKelvinSquareMeter UValue(FloorType floorType)
+			{
+				switch (floorType) {
+					case FloorType.LowFloor:
+						return 4.SI<WattPerKelvinSquareMeter>();
+					case FloorType.SemiLowFloor:
+						return 3.5.SI<WattPerKelvinSquareMeter>();
+					case FloorType.HighFloor:
+						return 3.SI<WattPerKelvinSquareMeter>();
+					default: throw new ArgumentOutOfRangeException(nameof(floorType), floorType, null);
+				}
+			}
+
+			public static double CalculateCOP(Watt coolingPwrDriver, ACCompressorType comprTypeDriver, Watt coolingPwrPass, ACCompressorType comprTypePass, FloorType floorType)
+			{
+				return (coolingPwrDriver * comprTypeDriver.COP(floorType) + coolingPwrPass * comprTypePass.COP(floorType)) /
+						(coolingPwrDriver + coolingPwrPass);
 			}
 		}
 

@@ -13,101 +13,99 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 	{
 		private IFuelProperties HeatingFuel;
 
-		public SSMInputs(IVehicleData vehicle, string source, IFuelProperties heatingFuel = null)
+		public SSMInputs(string source, IFuelProperties heatingFuel = null)
 		{
-			Vehicle = vehicle;
 			Source = source;
 			HeatingFuel = heatingFuel ?? FuelData.Diesel;
 		}
 
 		public string Source { get; }
 
-		public IVehicleData Vehicle { get; }
+		//public IVehicleData Vehicle { get; }
 
 		public bool SSMDisabled { get; set; }
 
 		// C4/D4
-		public string BusModel
-		{
-			get { return Vehicle.ModelName; }
-		}
+		//public string BusModel
+		//{
+		//	get { return Vehicle.ModelName; }
+		//}
 
 		// C5/D5
 		public double NumberOfPassengers
 		{
-			get { return Vehicle.PassengerCount; }
+			get;
+			internal set;
+
+			//get { return Vehicle.PassengerCount; }
 		}
 
 		// C6/D6
-		public FloorType BusFloorType
-		{
-			get { return Vehicle.FloorType; }
-		}
+		public FloorType BusFloorType { get; internal set; }
 
 		// C10/D10
-		public bool DoubleDecker
-		{
-			get { return Vehicle.DoubleDecker; }
-		}
+		//public bool DoubleDecker
+		//{
+		//	get { return Vehicle.DoubleDecker; }
+		//}
 
 		// D12/C12 - ( M )
-		public Meter BusLength
-		{
-			get { return Vehicle.Length; }
-		}
+		//public Meter BusLength
+		//{
+		//	get { return Vehicle.Length; }
+		//}
 
-		// D13/C13 - ( M )
-		public Meter BusWidth
-		{
-			get { return Vehicle.Width; }
-		}
+		//// D13/C13 - ( M )
+		//public Meter BusWidth
+		//{
+		//	get { return Vehicle.Width; }
+		//}
 
-		// D14/C14 - ( M )
-		public Meter BusHeight
-		{
-			get { return Vehicle.Height; }
-		}
+		//// D14/C14 - ( M )
+		//public Meter BusHeight
+		//{
+		//	get { return Vehicle.Height; }
+		//}
 
 
 		// D7/C7 - ( M/2 )
-		public SquareMeter BusFloorSurfaceArea
-		{
-			get {
-				// =IF(AND(C6="low floor",C13<=2.55,C13>=2.5),(2.55*(C12-1.2)),((C12-1.2)*C13))
-				if (BusFloorType == FloorType.LowFloor && BusWidth <= 2.55 && BusWidth >= 2.5) {
-					return 2.55.SI<Meter>() * (BusLength - 1.2.SI<Meter>());
-				}
+		//public SquareMeter BusFloorSurfaceArea
+		//{
+		//	get {
+		//		// =IF(AND(C6="low floor",C13<=2.55,C13>=2.5),(2.55*(C12-1.2)),((C12-1.2)*C13))
+		//		if (BusFloorType == FloorType.LowFloor && BusWidth <= 2.55 && BusWidth >= 2.5) {
+		//			return 2.55.SI<Meter>() * (BusLength - 1.2.SI<Meter>());
+		//		}
 
-				return ((BusLength - 1.2.SI<Meter>()) * BusWidth);
-			}
-		}
+		//		return ((BusLength - 1.2.SI<Meter>()) * BusWidth);
+		//	}
+		//}
 
 		// D8/C8 - ( M/2 )
 		public SquareMeter BusSurfaceArea
 		{
-			get {
-				// 2 * (C12*C13 + C12*C14 + C13*C14)
-				return 2 * ((BusLength * BusWidth) + (BusLength * BusHeight) + (BusWidth * BusHeight));
-			}
+			get;
+			 internal set;
+
+			//get {
+			//	// 2 * (C12*C13 + C12*C14 + C13*C14)
+			//	return 2 * ((BusLength * BusWidth) + (BusLength * BusHeight) + (BusWidth * BusHeight));
+			//}
 		}
 
 		// D9/C9 - ( M/2 )
-		public SquareMeter BusWindowSurface
-		{
-			get {
-				// =(C40*C12)+C41
-				return (WindowAreaPerUnitBusLength * BusLength) + FrontRearWindowArea;
-			}
-		}
+		public SquareMeter BusWindowSurface { get; internal set; }
 
 
 		// D11/C11 - ( M/3 )
 		public CubicMeter BusVolume
 		{
-			get {
-				// =(C12*C13*C14)
-				return BusLength * BusWidth * BusHeight;
-			}
+			get; internal set;
+
+			//get {
+			//	// =(C12*C13*C14)
+			//	return BusLength * BusWidth * BusHeight;
+			//}
 		}
 
 
@@ -140,54 +138,57 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		//public Kelvin PassengerBoundaryTemperature { get; set; }
 
 		// C21 - ( Passenger/Metre Squared )
-		public PerSquareMeter PassengerDensityLowFloor
-		{
-			get {
-				// =IF($C$10="No",3,3.7)
-				return (DoubleDecker ? 3.7 : 3).SI<PerSquareMeter>();
-			}
-		}
+		//public PerSquareMeter PassengerDensityLowFloor
+		//{
+		//	get {
+		//		// =IF($C$10="No",3,3.7)
+		//		return (DoubleDecker ? 3.7 : 3).SI<PerSquareMeter>();
+		//	}
+		//}
 
-		// C22 - ( Passenger/Metre Squared )
-		public PerSquareMeter PassengerDensitySemiLowFloor
-		{
-			get {
-				// =IF($C$10="No",2.2,3)
-				return (DoubleDecker ? 3 : 2.2).SI<PerSquareMeter>();
-			}
-		}
+		//// C22 - ( Passenger/Metre Squared )
+		//public PerSquareMeter PassengerDensitySemiLowFloor
+		//{
+		//	get {
+		//		// =IF($C$10="No",2.2,3)
+		//		return (DoubleDecker ? 3 : 2.2).SI<PerSquareMeter>();
+		//	}
+		//}
 
-		// C23 - ( Passenger/Metre Squared )
-		public PerSquareMeter PassengerDensityRaisedFloor
-		{
-			get {
-				// =IF($C$10="No",1.4,2)
-				return (DoubleDecker ? 2 : 1.4).SI<PerSquareMeter>();
-			}
-		}
+		//// C23 - ( Passenger/Metre Squared )
+		//public PerSquareMeter PassengerDensityRaisedFloor
+		//{
+		//	get {
+		//		// =IF($C$10="No",1.4,2)
+		//		return (DoubleDecker ? 2 : 1.4).SI<PerSquareMeter>();
+		//	}
+		//}
 
-		// C24               
-		public double CalculatedPassengerNumber
-		{
-			get {
-				// =ROUND(IF($D$5<IF(D6="low floor",C21,IF(D6="semi low floor",C22,C23))*D7,$D$5,IF(D6="low floor",C21,IF(D6="semi low floor",C22,C23))*D7),0)
-				var tmp = (BusFloorType == FloorType.LowFloor
-							? PassengerDensityLowFloor
-							: BusFloorType == FloorType.SemiLowFloor
-								? PassengerDensitySemiLowFloor
-								: PassengerDensityRaisedFloor) * BusFloorSurfaceArea;
-				return Math.Round(NumberOfPassengers < tmp ? NumberOfPassengers : tmp.Value(), 0);
-			}
-		}
+		//// C24               
+		//public double CalculatedPassengerNumber
+		//{
+		//	get {
+		//		// =ROUND(IF($D$5<IF(D6="low floor",C21,IF(D6="semi low floor",C22,C23))*D7,$D$5,IF(D6="low floor",C21,IF(D6="semi low floor",C22,C23))*D7),0)
+		//		var tmp = (BusFloorType == FloorType.LowFloor
+		//					? PassengerDensityLowFloor
+		//					: BusFloorType == FloorType.SemiLowFloor
+		//						? PassengerDensitySemiLowFloor
+		//						: PassengerDensityRaisedFloor) * BusFloorSurfaceArea;
+		//		return Math.Round(NumberOfPassengers < tmp ? NumberOfPassengers : tmp.Value(), 0);
+		//	}
+		//}
 
 		// C25 - ( W/K/M3 )
 		public WattPerKelvinSquareMeter UValue
 		{
-			get {
-				// =IF(D6="low floor",4,IF(D6="semi low floor",3.5,3))
-				return (BusFloorType == FloorType.LowFloor ? 4 : BusFloorType == FloorType.SemiLowFloor ? 3.5 : 3)
-					.SI<WattPerKelvinSquareMeter>();
-			}
+			get;
+			internal set;
+
+			//get {
+			//	// =IF(D6="low floor",4,IF(D6="semi low floor",3.5,3))
+			//	return (BusFloorType == FloorType.LowFloor ? 4 : BusFloorType == FloorType.SemiLowFloor ? 3.5 : 3)
+			//		.SI<WattPerKelvinSquareMeter>();
+			//}
 		}
 
 		// C26 - ( oC )
@@ -254,22 +255,22 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public JoulePerKilogramm GCVDieselOrHeatingOil { get { return HeatingFuel.LowerHeatingValueVecto; } }
 
 		// C40 - ( M2/M )
-		public SquareMeterPerMeter WindowAreaPerUnitBusLength
-		{
-			get {
-				// =IF($C$10="No",1.5,2.5)
-				return (DoubleDecker ? 2.5 : 1.5).SI<SquareMeterPerMeter>();
-			}
-		}
+		//public SquareMeterPerMeter WindowAreaPerUnitBusLength
+		//{
+		//	get {
+		//		// =IF($C$10="No",1.5,2.5)
+		//		return (DoubleDecker ? 2.5 : 1.5).SI<SquareMeterPerMeter>();
+		//	}
+		//}
 
-		// C41 - ( M/2 )
-		public SquareMeter FrontRearWindowArea
-		{
-			get {
-				// =IF($C$10="No",5,8)
-				return (DoubleDecker ? 8 : 5).SI<SquareMeter>();
-			}
-		}
+		//// C41 - ( M/2 )
+		//public SquareMeter FrontRearWindowArea
+		//{
+		//	get {
+		//		// =IF($C$10="No",5,8)
+		//		return (DoubleDecker ? 8 : 5).SI<SquareMeter>();
+		//	}
+		//}
 
 		// C42 - ( K )
 		public Kelvin MaxTemperatureDeltaForLowFloorBusses
@@ -311,28 +312,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public Watt HVACMaxCoolingPower { get; set; }
 
 		// C59
-		public double COP
-		{
-			get {
-				var cop = 3.5;
-
-				switch (HVACCompressorType) {
-					case ACCompressorType.TwoStage: break;
-					case ACCompressorType.ThreeStage: 
-					case ACCompressorType.FourStage:
-						cop = cop * 1.02;
-						break;
-					case ACCompressorType.Continuous:
-						cop = BusFloorType == FloorType.LowFloor
-							? cop * 1.04
-							: cop * 1.06;
-						break;
-					default: throw new ArgumentOutOfRangeException();
-				}
-				
-				return Math.Round(cop, 2);
-			}
-		}
+		public double COP { get; set; }
 
 
 		// C62 - Boolean Yes/No

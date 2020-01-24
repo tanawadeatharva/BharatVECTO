@@ -115,7 +115,7 @@ Public Class Utils
                 .SmartAirCompression = False,
                 .SmartRegeneration = False  
                 },
-                .SSMInputs = New SSMInputs(vehicleData, Nothing, heatingFuel) With {
+                .SSMInputs = New SSMInputs(Nothing, heatingFuel) With {
                 .Technologies = DeclarationData.BusAuxiliaries.SSMTechnologyList,
                 .DefaultConditions =
                 New EnvironmentalConditionMapEntry(25.0.DegCelsiusToKelvin(), 400.SI (Of WattPerSquareMeter), 1.0),

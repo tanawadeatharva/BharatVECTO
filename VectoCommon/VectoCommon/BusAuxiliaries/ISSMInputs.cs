@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TUGraz.VectoCommon.Utils;
 
 
@@ -27,24 +28,24 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	public interface ISSMBusParameters
 	{
 		// Bus Parameterisation	
-		string BusModel { get; }
+		//string BusModel { get; }
 
 		double NumberOfPassengers { get; }
 		FloorType BusFloorType { get; }
-		bool DoubleDecker { get; }
-		Meter BusLength { get; }
-		Meter BusWidth { get; }
-		Meter BusHeight { get; }
+		//bool DoubleDecker { get; }
+		//Meter BusLength { get; }
+		//Meter BusWidth { get; }
+		//Meter BusHeight { get; }
 
-		SquareMeter BusFloorSurfaceArea { get; }
+		//SquareMeter BusFloorSurfaceArea { get; }
 		SquareMeter BusWindowSurface { get; }
 		SquareMeter BusSurfaceArea { get; }
-		CubicMeter BusVolume { get; }
+		//CubicMeter BusVolume { get; }
 
-		PerSquareMeter PassengerDensityLowFloor { get; }
-		PerSquareMeter PassengerDensitySemiLowFloor { get; }
-		PerSquareMeter PassengerDensityRaisedFloor { get; }
-		double CalculatedPassengerNumber { get; }
+		//PerSquareMeter PassengerDensityLowFloor { get; }
+		//PerSquareMeter PassengerDensitySemiLowFloor { get; }
+		//PerSquareMeter PassengerDensityRaisedFloor { get; }
+		//double CalculatedPassengerNumber { get; }
 	}
 
 	public interface ISSMBoundaryConditions
@@ -65,8 +66,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		JoulePerCubicMeter SpecificVentilationPower { get; }
 		double AuxHeaterEfficiency { get; }
 		JoulePerKilogramm GCVDieselOrHeatingOil { get; }
-		SquareMeterPerMeter WindowAreaPerUnitBusLength { get; }
-		SquareMeter FrontRearWindowArea { get; }
+		//SquareMeterPerMeter WindowAreaPerUnitBusLength { get; }
+		//SquareMeter FrontRearWindowArea { get; }
 		Kelvin MaxTemperatureDeltaForLowFloorBusses { get; }
 		double MaxPossibleBenefitFromTechnologyList { get; }
 	}
@@ -105,15 +106,11 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		//VentilationLevel VentilationDuringCooling { get; }
 	}
 
-	public enum VentilationLevel
-	{
-		Low,
-		High
-	}
-
+	
 	public enum ACCompressorType
 	{
 		Unknown,
+		None,
 		TwoStage,
 		ThreeStage,
 		FourStage,
@@ -150,6 +147,27 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		public static bool IsMechanical(this ACCompressorType type)
 		{
 			return type != ACCompressorType.Continuous;
+		}
+
+		public static double COP(this ACCompressorType type, FloorType floortype)
+		{
+			var cop = 3.5;
+
+			switch (type) {
+				case ACCompressorType.None:
+				case ACCompressorType.Unknown:
+					return 0;
+				case ACCompressorType.TwoStage:
+					return cop;
+				case ACCompressorType.ThreeStage:
+				case ACCompressorType.FourStage:
+					return cop * 1.02;
+				case ACCompressorType.Continuous:
+					return floortype == FloorType.LowFloor
+						? cop * 1.04
+						: cop * 1.06;
+				default: throw new ArgumentOutOfRangeException();
+			}
 		}
 	}
 

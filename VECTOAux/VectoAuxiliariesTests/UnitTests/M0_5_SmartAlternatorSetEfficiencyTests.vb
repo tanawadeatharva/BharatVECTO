@@ -43,7 +43,7 @@ Namespace UnitTests
 
             dim ssmInput As ISSMInputs = SSMInputData.ReadFile(_SSMMAP, utils.GetDefaultVehicleData(), Nothing,
                                                                DeclarationData.BusAuxiliaries.SSMTechnologyList)
-            CType(CType(ssmInput, SSMInputs).Vehicle, VehicleData).Height = 0.SI (Of Meter)
+            'CType(CType(ssmInput, SSMInputs).Vehicle, VehicleData).Height = 0.SI (Of Meter)
             Dim ssm As ISSMTOOL = New SSMTOOL(ssmInput)
 
 

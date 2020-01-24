@@ -486,6 +486,11 @@ namespace TUGraz.VectoCommon.Utils
 
 		[DebuggerHidden]
 		private SquareMeter(double value) : base(value, Units) { }
+
+		public static double operator *(SquareMeter sqm, PerSquareMeter psqm)
+		{
+			return sqm.Val * psqm.Value();
+		}
 	}
 
 	/// <summary>

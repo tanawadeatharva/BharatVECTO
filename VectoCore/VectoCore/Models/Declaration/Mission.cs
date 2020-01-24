@@ -118,6 +118,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public bool HVACAdjustableAuxHeater { get; internal set; }
 
 		public bool HVACSeparateAirDistributionDucts { get; internal set; }
+		public PerSquareMeter PassengerDensity { get;  internal set; }
 	}
 
 	public class MissionTrailer

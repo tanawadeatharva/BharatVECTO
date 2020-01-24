@@ -34,7 +34,7 @@ Namespace UnitTests
 			'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
 
 			Dim ssm As ISSMTOOL = New SSMTOOL(SSMInputData.ReadFile(_SSMMAP, Utils.GetDefaultVehicleData(), Nothing, DeclarationData.BusAuxiliaries.SSMTechnologyList))
-		    CType(CType(ssm.SSMInputs, SSMInputs).Vehicle, VehicleData).Height = 0.SI(of Meter)
+		    'CType(CType(ssm.SSMInputs, SSMInputs).Vehicle, VehicleData).Height = 0.SI(of Meter)
 
 			'ssm.Load(_SSMMAP)
 
@@ -54,7 +54,7 @@ Namespace UnitTests
 			signals.EngineSpeed = 2000.RPMtoRad()
 
             Dim auxConfig = Utils.GetAuxTestConfig()
-            CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height = 0.SI(of Meter)
+            'CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height = 0.SI(of Meter)
 
 			Dim altMap As IAlternatorMap = AlternatorReader.ReadMap( "testfiles\testAlternatorMap.aalt")
 			'altMap.Initialise()

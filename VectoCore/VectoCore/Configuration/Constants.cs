@@ -196,6 +196,13 @@ namespace TUGraz.VectoCore.Configuration
 			public static readonly Kilogram PassengerWeightLow = 68.SI<Kilogram>();
 			public static readonly Kilogram PassengerWeightHigh = 71.SI<Kilogram>();
 
+			public static readonly Meter WindowHeightSingleDecker = 1.5.SI<Meter>();
+			public static readonly Meter WindowHeightDoubleDecker = 2.5.SI<Meter>();
+
+			public static readonly SquareMeter FrontAndRearWindowAreaSingleDecker = 5.SI<SquareMeter>();
+			public static readonly SquareMeter FrontAndRearWindowAreaDoubleDecker = 8.SI<SquareMeter>();
+
+
 			public static class Auxiliaries
 			{
 				public static class SteeringPump

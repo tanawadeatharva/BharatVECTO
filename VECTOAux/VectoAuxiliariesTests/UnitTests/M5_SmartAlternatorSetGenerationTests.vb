@@ -64,7 +64,7 @@ Namespace UnitTests
 			Dim alternatoMap   = AlternatorReader.ReadMap(_altMap)
 			
             Dim auxConfig = Utils.GetAuxTestConfig()
-		    CType(CType(auxConfig.SSMInputs,SSMInputs).Vehicle, VehicleData).Height = 0.SI(of Meter)
+		    'CType(CType(auxConfig.SSMInputs,SSMInputs).Vehicle, VehicleData).Height = 0.SI(of Meter)
 		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = _powerNetVoltage
 		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap = alternatoMap
 

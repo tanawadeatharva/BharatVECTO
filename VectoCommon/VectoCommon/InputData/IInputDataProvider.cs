@@ -45,6 +45,7 @@ namespace TUGraz.VectoCommon.InputData
 		XElement XMLHash { get; }
 	}
 
+
 	public interface IEngineeringInputDataProvider : IInputDataProvider
 	{
 		IEngineeringJobInputData JobInputData { get; }

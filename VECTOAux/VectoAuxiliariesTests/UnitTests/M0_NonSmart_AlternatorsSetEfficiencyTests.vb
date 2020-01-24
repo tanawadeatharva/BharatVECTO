@@ -37,7 +37,7 @@ Namespace UnitTests
 
             Dim ssm As SSMTOOL = New SSMTOOL(auxconfig.SSMInputs) _
             ', New HVACConstants())
-            CType(CType(ssm.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
+            'CType(CType(ssm.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
             'ssm.Load(_SSMMAP)
 
             Return ssm
@@ -70,7 +70,7 @@ Namespace UnitTests
         Public Sub CreateNewTest()
 
             Dim auxConfig = utils.GetAuxTestConfig()
-            CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
+            'CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = powernetVoltage
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
 
@@ -84,7 +84,7 @@ Namespace UnitTests
 
             Dim target As IM0_NonSmart_AlternatorsSetEfficiency
             Dim auxConfig = utils.GetAuxTestConfig()
-            CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
+            'CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = powernetVoltage
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
 
@@ -96,7 +96,7 @@ Namespace UnitTests
         Public Sub CreateNew_MissingAlternatorMap_ThrowArgumentExceptionTest()
             Dim target As IM0_NonSmart_AlternatorsSetEfficiency
             Dim auxConfig = utils.GetAuxTestConfig()
-            CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
+            'CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = powernetVoltage
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap = Nothing
 
@@ -112,7 +112,7 @@ Namespace UnitTests
             'CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).ElectricalConsumers = elecConsumers
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AverageCurrentDemandInclBaseLoad = 0.5.SI(Of Ampere)
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AverageCurrentDemandInclBaseLoad = 0.5.SI(Of Ampere)
-            CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
+            'CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
 
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = powernetVoltage
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
@@ -130,7 +130,7 @@ Namespace UnitTests
         <Test()>
         Public Sub HVAC_PowerDemandAmpsTest()
             Dim auxConfig = utils.GetAuxTestConfig()
-            CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
+            'CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = powernetVoltage
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
 

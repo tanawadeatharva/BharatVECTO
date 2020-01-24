@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			};
 				//ActuationsMapReader.Read(Path.Combine(baseDir, data.GetEx<string>("ActuationsMap")));
 			var ssm = string.IsNullOrWhiteSpace(data["SSMFilePath"]?.ToString()) ?
-				new SSMInputs(vehicleData, "", FuelData.Diesel) {
+				new SSMInputs("", FuelData.Diesel) {
 					EnvironmentalConditionsMap =  env,
 					Technologies = techList
 				}

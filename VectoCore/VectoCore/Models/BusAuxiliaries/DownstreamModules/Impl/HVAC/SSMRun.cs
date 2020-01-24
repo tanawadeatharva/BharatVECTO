@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			var qWall = (enviromentalTemperature - TCalc(enviromentalTemperature)) * gen.BusParameters.BusSurfaceArea *
 						gen.BoundaryConditions.UValue;
-			var wattsPerPass = Math.Min(gen.BusParameters.NumberOfPassengers, gen.BusParameters.CalculatedPassengerNumber) *
+			var wattsPerPass = gen.BusParameters.NumberOfPassengers *
 					gen.BoundaryConditions.HeatPerPassengerIntoCabin(enviromentalTemperature);
 			var solar = solarFactor * gen.BusParameters.BusWindowSurface *
 						gen.BoundaryConditions.GFactor * gen.BoundaryConditions.SolarClouding(enviromentalTemperature) * 0.25;
