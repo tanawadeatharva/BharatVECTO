@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				tmp["RaisedFloorH"] = line.RaisedFloorH;
 				tmp["RaisedFloorV"] = line.RaisedFloorV;
 				tmp["RaisedFloorC"] = line.RaisedFloorC;
-				tmp["OnVehicle"] = line.OnVehicle;
+				//tmp["OnVehicle"] = line.OnVehicle;
 				tmp["ActiveVH"] = line.ActiveVH;
 				tmp["ActiveVV"] = line.ActiveVV;
 				tmp["ActiveVC"] = line.ActiveVC;

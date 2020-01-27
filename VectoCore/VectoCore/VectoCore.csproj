@@ -872,8 +872,8 @@
     <EmbeddedResource Include="Resources\XSD\VectoOutputDefinitions.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="Resources\Declaration\Buses\HVACCoolingPowerDriver.csv" />
-    <None Include="Resources\Declaration\Buses\HVACCoolingPowerPassenger.csv" />
+    <EmbeddedResource Include="Resources\Declaration\Buses\HVACCoolingPowerDriver.csv" />
+    <EmbeddedResource Include="Resources\Declaration\Buses\HVACCoolingPowerPassenger.csv" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>

@@ -1354,12 +1354,12 @@ Public Class frmHVACTool
 		chkActiveVH.Checked = techline.ActiveVH
 		chkActiveVV.Checked = techline.ActiveVV
 		chkActiveVC.Checked = techline.ActiveVC
-		chkOnVehicle.Checked = techline.OnVehicle
+		'chkOnVehicle.Checked = techline.OnVehicle
 	End Sub
 
 	Private Function GetTechLineFromPanel() As ISSMTechnology
 
-		Dim tl As ISSMTechnology = New SSMTechnology()
+		Dim tl As SSMTechnology = New SSMTechnology()
 	    tl.BusFloorType = ssmTOOL.SSMInputs.BusParameters.BusFloorType
 
 		tl.Category = StrConv(cboCategory.Text, vbProperCase)
@@ -1377,7 +1377,7 @@ Public Class frmHVACTool
 		tl.ActiveVH = chkActiveVH.Checked
 		tl.ActiveVV = chkActiveVV.Checked
 		tl.ActiveVC = chkActiveVC.Checked
-		tl.OnVehicle = chkOnVehicle.Checked
+		'tl.OnVehicle = chkOnVehicle.Checked
 
 
 		Return tl

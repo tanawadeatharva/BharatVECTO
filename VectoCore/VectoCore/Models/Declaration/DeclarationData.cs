@@ -283,6 +283,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static double CalculateCOP(Watt coolingPwrDriver, ACCompressorType comprTypeDriver, Watt coolingPwrPass, ACCompressorType comprTypePass, FloorType floorType)
 			{
+				if (coolingPwrDriver.IsGreater(0) && comprTypeDriver == ACCompressorType.None) {
+					comprTypeDriver = comprTypePass;
+				}
 				return (coolingPwrDriver * comprTypeDriver.COP(floorType) + coolingPwrPass * comprTypePass.COP(floorType)) /
 						(coolingPwrDriver + coolingPwrPass);
 			}

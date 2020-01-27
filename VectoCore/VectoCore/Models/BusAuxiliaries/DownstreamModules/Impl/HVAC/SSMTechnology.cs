@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public double RaisedFloorV { get; set; }
 		public double RaisedFloorC { get; set; }
 
-		public bool OnVehicle { get; set; }
+		public bool OnVehicle { get { return true; } }
 		public bool ActiveVH { get; set; }
 		public bool ActiveVV { get; set; }
 		public bool ActiveVC { get; set; }

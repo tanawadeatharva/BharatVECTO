@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 							PassengerDensity = passengerDensity,
 							DoubleDecker = row.ParseBoolean("doubledecker"),
 							FloorType = GetFloorType(row.Field<string>("floortype")),
-							HVACConfiguration = BusHVACSystemConfigurationHelper.Parse(row.Field<string>("hvaccompressortype")),
+							HVACConfiguration = BusHVACSystemConfigurationHelper.Parse(row.Field<string>("hvacsystemconfiguration")),
 							HVACAuxHeaterPower = row.ParseDouble("hvacauxheater").SI(Unit.SI.Kilo.Watt).Cast<Watt>(),
 							HVACCompressorType = ACCompressorTypeExtensions.ParseEnum(row.Field<string>("hvaccompressortype")),
 							HVACDoubleGlasing = row.ParseBoolean("hvacdoubleglasing"),

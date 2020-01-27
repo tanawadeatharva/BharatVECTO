@@ -172,9 +172,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
-		public virtual int SystemConfiguration { get; set; }
-		public virtual ACCompressorType CompressorType { get { return ACCompressorType.Unknown; } }
-		public virtual string AuxHeaterPower { get { return null; } }
+		public virtual BusHVACSystemConfiguration SystemConfiguration { get; set; }
+		public virtual ACCompressorType CompressorTypeDriver { get { return ACCompressorType.Unknown; } }
+		public virtual ACCompressorType CompressorTypePassenger { get { return ACCompressorType.Unknown; } }
+		public virtual Watt AuxHeaterPower { get { return null; } }
 		public virtual bool DoubleGlasing { get { return false; } }
 		public virtual bool HeatPump { get { return false; } }
 		public virtual bool AdjustableCoolantThermostat { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("AdjustableCoolantThermostat") ?? false; } }

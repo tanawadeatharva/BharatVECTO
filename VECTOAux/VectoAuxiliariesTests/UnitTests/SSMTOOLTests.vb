@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.BusAuxiliaries
+Imports TUGraz.VectoCommon.InputData
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
@@ -25,7 +26,7 @@ Namespace UnitTests
 
             Dim src As SSMTOOL = DirectCast(source, SSMTOOL)
 
-            Dim newItem As ISSMTechnology = New SSMTechnology()
+            Dim newItem As SSMTechnology = New SSMTechnology()
             newItem.BusFloorType = src.SSMInputs.BusParameters.BusFloorType
 
 
@@ -45,7 +46,7 @@ Namespace UnitTests
             newItem.RaisedFloorV = 0.1
             newItem.RaisedFloorC = 0.1
 
-            newItem.OnVehicle = True
+            'newItem.OnVehicle = True
             newItem.ActiveVH = True
             newItem.ActiveVV = True
             newItem.ActiveVC = True
@@ -79,8 +80,10 @@ Namespace UnitTests
             }
             }
 
+            Dim auxInput as IBusAuxiliariesDeclarationData = nothing
+
             Dim dao = New DeclarationDataAdapterPrimaryBus()
-            Dim target As ISSMInputs = dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(), mission, FuelData.Diesel)
+            Dim target As ISSMInputs = dao.CreateSSMModelParameters(auxInput, Utils.GetDefaultVehicleData(), mission, FuelData.Diesel)
 
             If section = "BusParameterisation" Then
                 'BUS Parameterisation
@@ -187,7 +190,7 @@ Namespace UnitTests
             target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListALLON).Items
 
             For Each entry As ISSMTechnology In target.TechLines
-                entry.OnVehicle = True
+                'entry.OnVehicle = True
             Next
 
             Assert.IsTrue(target.TechLines.Count > 0)
@@ -228,7 +231,7 @@ Namespace UnitTests
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ISSMTechnology = New SSMTechnology()
+            Dim newItem As SSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -247,7 +250,7 @@ Namespace UnitTests
             newItem.RaisedFloorV = 0.1
             newItem.RaisedFloorC = 0.1
 
-            newItem.OnVehicle = True
+            'newItem.OnVehicle = True
             newItem.ActiveVH = True
             newItem.ActiveVV = True
             newItem.ActiveVC = True
@@ -269,7 +272,7 @@ Namespace UnitTests
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ISSMTechnology = New SSMTechnology()
+            Dim newItem As SSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -288,7 +291,7 @@ Namespace UnitTests
             newItem.RaisedFloorV = 0.1
             newItem.RaisedFloorC = 0.1
 
-            newItem.OnVehicle = True
+            'newItem.OnVehicle = True
             newItem.ActiveVH = True
             newItem.ActiveVV = True
             newItem.ActiveVC = True
@@ -311,7 +314,7 @@ Namespace UnitTests
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ISSMTechnology = New SSMTechnology()
+            Dim newItem As SSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -330,7 +333,7 @@ Namespace UnitTests
             newItem.RaisedFloorV = 0.1
             newItem.RaisedFloorC = 0.1
 
-            newItem.OnVehicle = True
+            'newItem.OnVehicle = True
             newItem.ActiveVH = True
             newItem.ActiveVV = True
             newItem.ActiveVC = True
@@ -353,7 +356,7 @@ Namespace UnitTests
             Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ISSMTechnology = New SSMTechnology()
+            Dim newItem As SSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -372,7 +375,7 @@ Namespace UnitTests
             newItem.RaisedFloorV = 0.1
             newItem.RaisedFloorC = 0.1
 
-            newItem.OnVehicle = True
+            'newItem.OnVehicle = True
             newItem.ActiveVH = True
             newItem.ActiveVV = True
             newItem.ActiveVC = True
@@ -392,10 +395,10 @@ Namespace UnitTests
 
             Dim gen As ISSMInputs = New SSMInputs(Nothing)
 
-            Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
+            Dim target As SSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ISSMTechnology = New SSMTechnology()
+            Dim newItem As SSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -414,7 +417,7 @@ Namespace UnitTests
             newItem.RaisedFloorV = 0.1
             newItem.RaisedFloorC = 0.1
 
-            newItem.OnVehicle = True
+            'newItem.OnVehicle = True
             newItem.ActiveVH = True
             newItem.ActiveVV = True
             newItem.ActiveVC = True
@@ -432,10 +435,10 @@ Namespace UnitTests
 
             Dim gen As ISSMInputs = New SSMInputs(Nothing)
 
-            Dim target As ISSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
+            Dim target As SSMTechList = New SSMTechList(gen.BusParameters.BusFloorType)
             target.TechLines = SSMTechnologiesReader.ReadFromFile(GOODTechListEMPTYLIST).Items
 
-            Dim newItem As ISSMTechnology = New SSMTechnology()
+            Dim newItem As SSMTechnology = New SSMTechnology()
             newItem.BusFloorType = gen.BusParameters.BusFloorType
 
             'newItem.Units = "fraction"
@@ -454,7 +457,7 @@ Namespace UnitTests
             newItem.RaisedFloorV = 0.1
             newItem.RaisedFloorC = 0.1
 
-            newItem.OnVehicle = True
+            'newItem.OnVehicle = True
             newItem.ActiveVH = True
             newItem.ActiveVV = True
             newItem.ActiveVC = True
@@ -511,10 +514,10 @@ Namespace UnitTests
 
             Dim gen As ISSMInputs = New SSMInputs(Nothing)
 
-            Dim ttl1 As ISSMTechnology = New SSMTechnology()
+            Dim ttl1 As SSMTechnology = New SSMTechnology()
             ttl1.BusFloorType = gen.BusParameters.BusFloorType
 
-            Dim ttl2 As ISSMTechnology = New SSMTechnology()
+            Dim ttl2 As SSMTechnology = New SSMTechnology()
             ttl2.BusFloorType = gen.BusParameters.BusFloorType
 
             Select Case prop
@@ -553,7 +556,7 @@ Namespace UnitTests
                     'Case "Units"
                     '	ttl2.Units = "NONE"
                 Case "OnVehicle"
-                    ttl2.OnVehicle = True
+                    'ttl2.OnVehicle = True
 
             End Select
 
@@ -577,8 +580,10 @@ Namespace UnitTests
                     }
                     }
 
+            Dim auxInput as IBusAuxiliariesDeclarationData = nothing
+
             Dim dao = New DeclarationDataAdapterPrimaryBus()
-            Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(Utils.GetDefaultVehicleData(), mission,
+            Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(auxInput, Utils.GetDefaultVehicleData(), mission,
                                                                              FuelData.Diesel))
 
             success = BusAuxWriter.SaveSSMConfig(target.SSMInputs, filePath)
@@ -749,7 +754,7 @@ Namespace UnitTests
             AddDefaultTechLine(ssmTool2)
 
             'Make Unequal
-            ssmTool2.TechList.TechLines(0).BenefitName = "Doobie"
+            CType(ssmTool2.TechList.TechLines(0), SSMTechnology).BenefitName = "Doobie"
 
             Assert.IsFalse(ssmTool1.IsEqualTo(ssmTool2))
         End Sub
@@ -776,7 +781,7 @@ Namespace UnitTests
             AddDefaultTechLine(ssmTool2)
 
             'Make Unequal
-            ssmTool2.TechList.TechLines(0).ActiveVV = False
+            CType(ssmTool2.TechList.TechLines(0), SSMTechnology).ActiveVV = False
 
             Assert.IsFalse(ssmTool1.IsEqualTo(ssmTool2))
         End Sub

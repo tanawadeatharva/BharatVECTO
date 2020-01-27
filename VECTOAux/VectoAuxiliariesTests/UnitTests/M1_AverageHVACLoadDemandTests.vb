@@ -56,7 +56,7 @@ Namespace UnitTests
 
             'ssm.Load(_SSMMAP)
             For Each entry As ISSMTechnology In ssm.TechList.TechLines
-                entry.OnVehicle = True
+                'entry.OnVehicle = True
             Next
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = powernetVoltage
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
@@ -69,7 +69,7 @@ Namespace UnitTests
             'ssm.Load(_SSMMAP)
 
             For Each entry As ISSMTechnology In ssm.TechList.TechLines
-                entry.OnVehicle = true
+                'entry.OnVehicle = true
             next
 
             Return New M01Impl(m0, alternatorGearEfficiency,

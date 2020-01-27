@@ -4,12 +4,13 @@ using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration {
 	public class HVACCoolingPower
 	{
-		private static HVACLookup DriverCoolingPower = new HVACLookup(".Buses.HVACCoolingPowerDriver");
-		private static HVACLookup PassengerCoolingPower = new HVACLookup(".Buses.HVACCoolingPowerPassenger");
+		private static HVACLookup DriverCoolingPower = new HVACLookup(".Buses.HVACCoolingPowerDriver.csv");
+		private static HVACLookup PassengerCoolingPower = new HVACLookup(".Buses.HVACCoolingPowerPassenger.csv");
 
 		public Watt DriverMaxCoolingPower(BusHVACSystemConfiguration configuration, MissionType mission)
 		{
@@ -26,6 +27,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 			public HVACLookup(string resource)
 			{
 				ResourceId = DeclarationData.DeclarationDataResourcePrefix + resource;
+				ReadData();
 			}
 
 			#region Overrides of LookupData
@@ -40,7 +42,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 				foreach (DataRow row in table.Rows) {
 					foreach (var missionType in missionTypes) {
 						Data.Add(Tuple.Create(BusHVACSystemConfigurationHelper.Parse(row.Field<string>("configuration")), 
-							missionType), row.Field<double>(missionType.GetLabel()) * 1000);
+							missionType), row.ParseDouble(missionType.ToString()) * 1000);
 					}
 				}
 			}

@@ -13,25 +13,25 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 	{
 		FloorType BusFloorType { set; }
 
-		string Category { get; set; }
-		string BenefitName { get; set; }
+		string Category { get;  }
+		string BenefitName { get;  }
 
-		double LowFloorH { get; set; }
-		double LowFloorV { get; set; }
-		double LowFloorC { get; set; }
+		double LowFloorH { get;  }
+		double LowFloorV { get;  }
+		double LowFloorC { get;  }
 
-		double SemiLowFloorH { get; set; }
-		double SemiLowFloorV { get; set; }
-		double SemiLowFloorC { get; set; }
+		double SemiLowFloorH { get;  }
+		double SemiLowFloorV { get;  }
+		double SemiLowFloorC { get;  }
 
-		double RaisedFloorH { get; set; }
-		double RaisedFloorV { get; set; }
-		double RaisedFloorC { get; set; }
+		double RaisedFloorH { get;  }
+		double RaisedFloorV { get;  }
+		double RaisedFloorC { get;  }
 
-		bool OnVehicle { get; set; }
-		bool ActiveVH { get; set; }
-		bool ActiveVV { get; set; }
-		bool ActiveVC { get; set; }
+		//bool OnVehicle { get; set; }
+		bool ActiveVH { get;  }
+		bool ActiveVV { get;  }
+		bool ActiveVC { get;  }
 
 		double H { get; }
 		double VH { get; }

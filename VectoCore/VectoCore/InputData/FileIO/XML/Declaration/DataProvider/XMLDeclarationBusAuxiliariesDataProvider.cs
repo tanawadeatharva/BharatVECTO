@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV26 : AbstractXMLType, IXMLBusAuxiliariesDeclarationData,
 		IElectricSupplyDeclarationData, IResultCardDeclarationInputData, IPneumaticConsumersDeclarationData,
-		IPneumaticSupplyDeclarationData
+		IPneumaticSupplyDeclarationData, IHVACBusAuxiliariesDeclarationData
 	{
 		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
 
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return this; }
 		}
 
-		public IHVACBusAuxiliariesDeclarationData HVACAux { get; }
+		public IHVACBusAuxiliariesDeclarationData HVACAux { get { return this; } }
 
 		#endregion
 
@@ -208,6 +208,21 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 				return GetBool(new[] { XMLNames.BusAux_PneumaticSystem, XMLNames.BusAux_PneumaticSystem_SmartRegenerationSystem });
 			}
 		}
+
+		#endregion
+
+		#region Implementation of IHVACBusAuxiliariesDeclarationData
+
+		public BusHVACSystemConfiguration SystemConfiguration { get { return BusHVACSystemConfiguration.Unknown; } }
+		public ACCompressorType CompressorTypeDriver { get { return ACCompressorType.None; } }
+		public ACCompressorType CompressorTypePassenger { get { return ACCompressorType.None; } }
+		public Watt AuxHeaterPower { get { return 0.SI<Watt>(); } }
+		public bool DoubleGlasing { get { return false; } }
+		public bool HeatPump { get { return false; } }
+		public bool AdjustableCoolantThermostat { get { return GetBool(new[] { "HVAC", "AdjustableCoolantThermostat" }); } }
+		public bool AdjustableAuxiliaryHeater { get { return false; } }
+		public bool EngineWasteGasHeatExchanger { get { return GetBool(new[] { "HVAC", "EngineWasteGasHeatExchanger" }); } }
+		public bool SeparateAirDistributionDucts { get { return false; } }
 
 		#endregion
 	}

@@ -84,7 +84,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				PneumaticUserInputsConfig = GetPneumaticUserConfig(vehicleData, mission),
 				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
 				Actuations = actuations,
-				SSMInputs = CreateSSMModelParameters(runData.VehicleData, mission, FuelData.Diesel),
+				SSMInputs = CreateSSMModelParameters(
+					vehicleData.Components.BusAuxiliaries, runData.VehicleData, mission, FuelData.Diesel),
 				VehicleData = runData.VehicleData,
 				FuelMap = runData.EngineData.Fuels.First().ConsumptionMap
 			};
@@ -237,20 +238,22 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 
 			return CompressorMapReader.ReadStream(
-				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBuses." + resource));
+				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource));
 		}
 
 		public virtual ISSMInputs CreateSSMModelParameters(
-			IVehicleData vehicleData, Mission mission, IFuelProperties heatingFuel)
+			IBusAuxiliariesDeclarationData busAuxInputData, IVehicleData vehicleData, Mission mission,
+			IFuelProperties heatingFuel)
 		{
 			var busParams = mission.BusParameter;
 
 			var hvacBusLength = busParams.HVACConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength
 				: busParams.VehicleLength;
+			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.VehicleHeight);
 			var coolingPower = CalculateMaxCoolingPower(vehicleData, mission);
 			var retVal = new SSMInputs(null, heatingFuel) {
-				Technologies = DeclarationData.BusAuxiliaries.SSMTechnologyList,
+				Technologies = GetSSMTechnologyBenefits(busAuxInputData),
 				DefaultConditions = new EnvironmentalConditionMapEntry(
 					Constants.BusAuxiliaries.SteadyStateModel.DefaultTemperature,
 					Constants.BusAuxiliaries.SteadyStateModel.DefaultSolar,
@@ -259,8 +262,6 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				HeatingBoundaryTemperature = Constants.BusAuxiliaries.SteadyStateModel.HeatingBoundaryTemperature,
 				CoolingBoundaryTemperature = Constants.BusAuxiliaries.SteadyStateModel.CoolingBoundaryTemperature,
 
-				//HighVentilation = Constants.BusAuxiliaries.SteadyStateModel.HighVentilation,
-				//LowVentilation = Constants.BusAuxiliaries.SteadyStateModel.LowVentilation,
 				SpecificVentilationPower = Constants.BusAuxiliaries.SteadyStateModel.SpecificVentilationPower,
 
 				AuxHeaterEfficiency = Constants.BusAuxiliaries.SteadyStateModel.AuxHeaterEfficiency,
@@ -268,13 +269,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				FuelEnergyToHeatToCoolant = Constants.BusAuxiliaries.Heater.FuelEnergyToHeatToCoolant,
 				CoolantHeatTransferredToAirCabinHeater = Constants.BusAuxiliaries.Heater.CoolantHeatTransferredToAirCabinHeater,
 				GFactor = Constants.BusAuxiliaries.SteadyStateModel.GFactor,
+
 				VentilationOnDuringHeating = true,
 				VentilationWhenBothHeatingAndACInactive = true,
 				VentilationDuringAC = true,
 
-				//VentilationDuringHeating = VentilationLevel.High,
-				//VentilationDuringCooling = VentilationLevel.High,
-				//VentilationFlowSettingWhenHeatingAndACInactive = VentilationLevel.High,
 				MaxPossibleBenefitFromTechnologyList =
 					Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList,
 
@@ -282,7 +281,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 									DeclarationData.BusAuxiliaries.FrontAndRearWindowArea(busParams.DoubleDecker),
 				BusSurfaceArea = 2 * (hvacBusLength * busParams.VehicleWidth + hvacBusLength * mission.VehicleHeight +
 									busParams.VehicleWidth * mission.VehicleHeight),
-				BusVolume = hvacBusLength * busParams.VehicleWidth * mission.VehicleHeight,
+				BusVolume = hvacBusLength * busParams.VehicleWidth * hvacBusheight,
 
 				UValue = DeclarationData.BusAuxiliaries.UValue(busParams.FloorType),
 				NumberOfPassengers =
@@ -301,6 +300,27 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			return retVal;
 		}
+
+		private ISSMTechnologies GetSSMTechnologyBenefits(IBusAuxiliariesDeclarationData inputData)
+		{
+			var benefits = DeclarationData.BusAuxiliaries.SSMTechnologyList;
+
+			var onVehicle = new List<ISSMTechnology>();
+			foreach (var item in benefits.Items) {
+				if (item.BenefitName.Equals("Adjustable coolant thermostat", StringComparison.InvariantCultureIgnoreCase) &&
+					inputData.HVACAux.AdjustableCoolantThermostat) {
+					onVehicle.Add(item);
+				}
+
+				if (item.BenefitName.Equals("Engine waste gas heat exchanger", StringComparison.InvariantCultureIgnoreCase) &&
+					inputData.HVACAux.EngineWasteGasHeatExchanger) {
+					onVehicle.Add(item);
+				}
+			}
+
+			return new TechBenefitLines(onVehicle, "DeclarationDefaults");
+		}
+
 
 		private Tuple<Watt, Watt> CalculateMaxCoolingPower(IVehicleData vehicleData, Mission mission)
 		{

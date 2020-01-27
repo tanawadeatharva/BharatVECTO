@@ -99,7 +99,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		bool VentilationOnDuringHeating { get; }
 
 		bool VentilationWhenBothHeatingAndACInactive { get; }
-		bool VentilationDuringAC { get; set; }
+		bool VentilationDuringAC { get;  }
 
 		//VentilationLevel VentilationFlowSettingWhenHeatingAndACInactive { get; }
 		//VentilationLevel VentilationDuringHeating { get; }

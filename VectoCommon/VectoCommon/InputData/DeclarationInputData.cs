@@ -760,11 +760,12 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IHVACBusAuxiliariesDeclarationData
 	{
-		int SystemConfiguration { get; }
+		BusHVACSystemConfiguration SystemConfiguration { get; }
 
-		ACCompressorType CompressorType { get; }
+		ACCompressorType CompressorTypeDriver { get; }
+		ACCompressorType CompressorTypePassenger { get; }
 
-		string AuxHeaterPower { get; }
+		Watt AuxHeaterPower { get; }
 
 		bool DoubleGlasing { get; }
 
