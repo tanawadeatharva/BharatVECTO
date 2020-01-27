@@ -11,7 +11,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 		ISSMBusParameters BusParameters { get; }
 
-		ISSMTechnologies Technologies { get; }
+		ISSMTechnologyBenefits Technologies { get; }
 
 		ISSMBoundaryConditions BoundaryConditions { get; }
 

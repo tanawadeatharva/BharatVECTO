@@ -253,7 +253,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.VehicleHeight);
 			var coolingPower = CalculateMaxCoolingPower(vehicleData, mission);
 			var retVal = new SSMInputs(null, heatingFuel) {
-				Technologies = GetSSMTechnologyBenefits(busAuxInputData),
+				SSMDisabled = false,
+				Technologies = GetSSMTechnologyBenefits(busAuxInputData, mission.BusParameter.FloorType),
 				DefaultConditions = new EnvironmentalConditionMapEntry(
 					Constants.BusAuxiliaries.SteadyStateModel.DefaultTemperature,
 					Constants.BusAuxiliaries.SteadyStateModel.DefaultSolar,
@@ -301,12 +302,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private ISSMTechnologies GetSSMTechnologyBenefits(IBusAuxiliariesDeclarationData inputData)
+		private ISSMTechnologyBenefits GetSSMTechnologyBenefits(IBusAuxiliariesDeclarationData inputData, FloorType floorType)
 		{
-			var benefits = DeclarationData.BusAuxiliaries.SSMTechnologyList;
-
-			var onVehicle = new List<ISSMTechnology>();
-			foreach (var item in benefits.Items) {
+			var onVehicle = new List<SSMTechnology>();
+			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList) {
 				if (item.BenefitName.Equals("Adjustable coolant thermostat", StringComparison.InvariantCultureIgnoreCase) &&
 					inputData.HVACAux.AdjustableCoolantThermostat) {
 					onVehicle.Add(item);
@@ -318,7 +317,34 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 
-			return new TechBenefitLines(onVehicle, "DeclarationDefaults");
+			var retVal = new TechnologyBenefits();  
+
+			switch (floorType) {
+				case FloorType.LowFloor:
+					retVal.CValueVariation = onVehicle.Sum(x => x.LowFloorC);
+					retVal.HValueVariation = onVehicle.Sum(x => x.LowFloorH);
+					retVal.VCValueVariation = onVehicle.Sum(x => x.ActiveVC ? x.LowFloorV : 0);
+					retVal.VHValueVariation = onVehicle.Sum(x => x.ActiveVH ? x.LowFloorV : 0);
+					retVal.VVValueVariation = onVehicle.Sum(x => x.ActiveVV ? x.LowFloorV : 0);
+					break;
+				case FloorType.HighFloor:
+					retVal.CValueVariation = onVehicle.Sum(x => x.RaisedFloorC);
+					retVal.HValueVariation = onVehicle.Sum(x => x.RaisedFloorH);
+					retVal.VCValueVariation = onVehicle.Sum(x => x.ActiveVC ? x.RaisedFloorV : 0);
+					retVal.VHValueVariation = onVehicle.Sum(x => x.ActiveVH ? x.RaisedFloorV : 0);
+					retVal.VVValueVariation = onVehicle.Sum(x => x.ActiveVV ? x.RaisedFloorV : 0);
+					break;
+				case FloorType.SemiLowFloor:
+					retVal.CValueVariation = onVehicle.Sum(x => x.SemiLowFloorC);
+					retVal.HValueVariation = onVehicle.Sum(x => x.SemiLowFloorH);
+					retVal.VCValueVariation = onVehicle.Sum(x => x.ActiveVC ? x.SemiLowFloorV : 0);
+					retVal.VHValueVariation = onVehicle.Sum(x => x.ActiveVH ? x.SemiLowFloorV : 0);
+					retVal.VVValueVariation = onVehicle.Sum(x => x.ActiveVV ? x.SemiLowFloorV : 0);
+					break;
+			}
+			
+
+			return retVal;
 		}
 
 

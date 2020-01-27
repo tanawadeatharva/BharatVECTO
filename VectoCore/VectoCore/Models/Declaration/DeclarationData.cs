@@ -144,7 +144,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			private static IActuationsMap actuationsMap;
 			//private static PneumaticsAuxilliariesConfig pneumaticAuxConfig;
-			private static ISSMTechnologies ssmTechnologies;
+			private static List<SSMTechnology> ssmTechnologies;
 
 
 			//public static ISSMInputs SSMDefaultValues
@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static BusAlternatorTechnologies AlternatorTechnologies = new BusAlternatorTechnologies();
 			private static HVACCoolingPower hvacMaxCoolingPower;
 
-			public static ISSMTechnologies SSMTechnologyList
+			public static List<SSMTechnology> SSMTechnologyList
 			{
 				get {
 					return ssmTechnologies ?? (ssmTechnologies = SSMTechnologiesReader.ReadFromStream(

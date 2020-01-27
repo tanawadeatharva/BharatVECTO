@@ -458,30 +458,30 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			var catLength = 15;
 			var unitLength = 15;
 			var firstValuePos = nameLength + catLength + unitLength + 2;
-			string cat;
-			string name;
+			//string cat;
+			//string name;
 
 			sb.AppendLine(string.Format(new string(' ', firstValuePos) + "H{0}VH{0}VV{0}VC{0}C{0}", vbTab));
 
-			foreach (var line in ssmTOOL.TechList.TechLines) {
-				{
-					var withBlock = line;
+			//foreach (var line in ssmTOOL.TechList.TechLines) {
+			//	{
+			//		var withBlock = line;
 
-					var extraNameSpaces = nameLength - withBlock.BenefitName.Length;
-					var extraCatSpaces = catLength - withBlock.Category.Length;
+			//		var extraNameSpaces = nameLength - withBlock.BenefitName.Length;
+			//		var extraCatSpaces = catLength - withBlock.Category.Length;
 
-					cat = line.Category.Substring(0, Math.Min(line.Category.Length, catLength)) +
-						new string(' ', extraCatSpaces < 0 ? 0 : extraCatSpaces).Replace(" ", ".");
-					name = line.BenefitName.Substring(0, Math.Min(line.BenefitName.Length, nameLength)) +
-							new string(' ', extraNameSpaces < 0 ? 0 : extraNameSpaces).Replace(" ", ".");
+			//		cat = line.Category.Substring(0, Math.Min(line.Category.Length, catLength)) +
+			//			new string(' ', extraCatSpaces < 0 ? 0 : extraCatSpaces).Replace(" ", ".");
+			//		name = line.BenefitName.Substring(0, Math.Min(line.BenefitName.Length, nameLength)) +
+			//				new string(' ', extraNameSpaces < 0 ? 0 : extraNameSpaces).Replace(" ", ".");
 
-					sb.AppendLine(
-						string.Format(
-							cat + name + " {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.H.ToString("0.000"),
-							withBlock.VH.ToString("0.000"), withBlock.VV.ToString("0.000"), withBlock.VC.ToString("0.000"),
-							withBlock.C.ToString("0.000")));
-				}
-			}
+			//		sb.AppendLine(
+			//			string.Format(
+			//				cat + name + " {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.H.ToString("0.000"),
+			//				withBlock.VH.ToString("0.000"), withBlock.VV.ToString("0.000"), withBlock.VC.ToString("0.000"),
+			//				withBlock.C.ToString("0.000")));
+			//	}
+			//}
 
 			sb.AppendLine("");
 			sb.AppendLine("TechList Totals");
@@ -567,7 +567,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		private Watt CalculateElectricalWAdjusted(
-			ISSMInputs genInputs, ISSMTechList tecList, IEnvironmentalConditionsMapEntry env)
+			ISSMInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
 		{
 			// =(MIN((H94*(1-H100)),C54*1000)/C59)+(I93*(1-I99))+(I94*(1-I100))+(I95*(1-I101))
 
@@ -589,7 +589,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			return ElectricalWAdjusted * env.Weighting;
 		}
 
-		private Watt CalculateMechanicalWBaseAdjusted(ISSMInputs genInputs, ISSMTechList tecList, IEnvironmentalConditionsMapEntry env)
+		private Watt CalculateMechanicalWBaseAdjusted(ISSMInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
 		{
 			// =(MIN((F94*(1-F100)),C54*1000)/C59)
 
@@ -604,7 +604,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		private KilogramPerSecond CalculateFuelLPerHBaseAdjusted(
-			ISSMInputs genInputs, ISSMTechList tecList, IEnvironmentalConditionsMapEntry env)
+			ISSMInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
 		{
 			// =MIN(ABS(IF(AND(M89<0,M90<0),VLOOKUP(MAX(M89:M90),M89:P90,4),0)/1000),C71)/C37*(1/(C39*C38))
 

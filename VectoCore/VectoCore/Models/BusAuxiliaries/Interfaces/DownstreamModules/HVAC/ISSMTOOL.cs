@@ -5,7 +5,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 	public interface ISSMTOOL
 	{
 		ISSMInputs SSMInputs { get;  }
-		ISSMTechList TechList { get;  }
+		ISSMTechnologyBenefits TechList { get;  }
 		ISSMCalculate Calculate { get;  }
 		bool SSMDisabled { get; }
 		IHVACConstants HVACConstants { get; set; }
@@ -20,8 +20,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 
 		Watt EngineWasteHeatkW { get; }
 
-		
-		bool IsEqualTo(ISSMTOOL source);
 
 		/// <summary>
 		/// This alters the waste heat and returns an adjusted fueling value

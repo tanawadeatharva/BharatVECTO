@@ -93,6 +93,16 @@ Public Class Utils
                                                                11.8.SI(Unit.SI.Kilo.Watt.Hour.Per.kilo.Gramm).Cast _
                                                                   (Of JoulePerKilogramm))
 
+        Dim techBenefits = New TechnologyBenefits
+        For Each item As SSMTechnology  In DeclarationData.BusAuxiliaries.SSMTechnologyList
+            techBenefits.CValueVariation +=  item.RaisedFloorC
+            techBenefits.HValueVariation += item.RaisedFloorH
+            techBenefits.VCValueVariation += If(item.ActiveVC, item.RaisedFloorV, 0)
+            techBenefits.VHValueVariation += if (item.ActiveVH, item.RaisedFloorV, 0)
+            techBenefits.VVValueVariation += If (item.ActiveVV, item.RaisedFloorV, 0)
+
+        Next
+
         Dim retval = New AuxiliaryConfig() With {
                 .ElectricalUserInputsConfig = New ElectricsUserInputsConfig() With {
                 .AverageCurrentDemandInclBaseLoad = 0.SI(Of Ampere),
@@ -116,7 +126,7 @@ Public Class Utils
                 .SmartRegeneration = False  
                 },
                 .SSMInputs = New SSMInputs(Nothing, heatingFuel) With {
-                .Technologies = DeclarationData.BusAuxiliaries.SSMTechnologyList,
+                .Technologies = techBenefits,
                 .DefaultConditions =
                 New EnvironmentalConditionMapEntry(25.0.DegCelsiusToKelvin(), 400.SI (Of WattPerSquareMeter), 1.0),
                 .EnvironmentalConditionsMap = DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions,

@@ -23,8 +23,8 @@ Public Class frmHVACTool
 	Private ssmTOOL As SSMTOOL
 	Private originalssmTOOL As SSMTOOL
 	Private TabColors As Dictionary(Of TabPage, Color) = New Dictionary(Of TabPage, Color)()
-	Private editTechLine As ISSMTechnology = New SSMTechnology()
-	Private gvTechListBinding As BindingList(Of ISSMTechnology)
+	Private editTechLine As SSMTechnology = New SSMTechnology()
+	Private gvTechListBinding As BindingList(Of SSMTechnology)
 	Private DefaultCategories As String() = {"Cooling", "Heating", "Insulation", "Ventiliation"}
 	Private vectoFile As String = String.Empty
 	Private UserHitCancel As Boolean = False
@@ -56,36 +56,36 @@ Public Class frmHVACTool
 
 	Private Sub BindGrid()
 
-		Dim _
-			gvTechListBinding As _
-				New BindingList(Of ISSMTechnology)(
-					ssmTOOL.TechList.TechLines.OrderBy(Function(o) o.Category).ThenBy(Function(t) t.BenefitName).ToList())
-		Me.gvTechBenefitLines.DataSource = gvTechListBinding
+		'Dim _
+		'	gvTechListBinding As _
+		'		New BindingList(Of ISSMTechnology)(
+		'			ssmTOOL.TechList.TechLines.OrderBy(Function(o) o.Category).ThenBy(Function(t) t.BenefitName).ToList())
+		'Me.gvTechBenefitLines.DataSource = gvTechListBinding
 	End Sub
 
 	Private Function GetCategories() As List(Of String)
 
-		If Not ssmTOOL Is Nothing AndAlso Not ssmTOOL.TechList Is Nothing AndAlso ssmTOOL.TechList.TechLines.Count > 0 Then
+        'If Not ssmTOOL Is Nothing AndAlso Not ssmTOOL.TechList Is Nothing AndAlso ssmTOOL.TechList.TechLines.Count > 0 Then
 
-			'Fuse Lists          
-			Dim fusedList As List(Of String) = DefaultCategories.ToList()
+        '	'Fuse Lists          
+        '	Dim fusedList As List(Of String) = DefaultCategories.ToList()
 
-			For Each s As String In ssmTOOL.TechList.TechLines.Select(Function(sel) sel.Category)
+        '	For Each s As String In ssmTOOL.TechList.TechLines.Select(Function(sel) sel.Category)
 
-				If Not fusedList.Contains(s) Then
-					fusedList.Add(s)
-				End If
+        '		If Not fusedList.Contains(s) Then
+        '			fusedList.Add(s)
+        '		End If
 
-			Next
+        '	Next
 
-			Return fusedList.OrderBy(Function(o) o.ToString()).ToList()
+        '	Return fusedList.OrderBy(Function(o) o.ToString()).ToList()
 
-		Else
+        'Else
 
-			Return New List(Of String)(DefaultCategories)
+        Return New List(Of String)(DefaultCategories)
 
-		End If
-	End Function
+        'End If
+    End Function
 
 	'Constructors
 	Public Sub New(busDatabasePath As String, ahsmFilePath As String, vectoFilePath As String,
@@ -100,8 +100,8 @@ Public Class frmHVACTool
 		Me.busDatabasePath = busDatabasePath
 		Me.ahsmFilePath = ahsmFilePath
 
-		ssmTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFilePath, Nothing, DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions, DeclarationData.BusAuxiliaries.SSMTechnologyList)) ' , New HVACConstants, False, useDefaults)
-		originalssmTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFilePath, Nothing, DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions, DeclarationData.BusAuxiliaries.SSMTechnologyList))  ' ahsmFilePath, New HVACConstants, False, useDefaults)
+		ssmTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFilePath, Nothing, DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions)) ' , New HVACConstants, False, useDefaults)
+		originalssmTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFilePath, Nothing, DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions))  ' ahsmFilePath, New HVACConstants, False, useDefaults)
 
 		'If IO.File.Exists(ahsmFilePath) Then
 		'	If ssmTOOL.Load(ahsmFilePath) AndAlso originalssmTOOL.Load(ahsmFilePath) Then
@@ -990,37 +990,37 @@ Public Class frmHVACTool
 
 
 		'This must be a close box event. If nothing changed, then bail, otherwise ask user if they wanna save
-		If Not ssmTOOL.IsEqualTo(originalssmTOOL) Then
+		'If Not ssmTOOL.IsEqualTo(originalssmTOOL) Then
 
-			result =
-				(MessageBox.Show("Would you like to save changes before closing?", "Save Changes", MessageBoxButtons.YesNoCancel,
-								MessageBoxIcon.Question))
-
-
-			Select Case result
-
-				Case DialogResult.Yes
-					'save 
-
-					If Not BusAuxWriter.SaveSSMConfig(ssmTOOL.SSMInputs, ahsmFilePath) Then
-						e.Cancel = True
-					End If
-
-				Case DialogResult.No
-					'just allow the form to close
-					'without saving
-					Me.DialogResult = Windows.Forms.DialogResult.Cancel
+		'	result =
+		'		(MessageBox.Show("Would you like to save changes before closing?", "Save Changes", MessageBoxButtons.YesNoCancel,
+		'						MessageBoxIcon.Question))
 
 
-				Case DialogResult.Cancel
-					'cancel the close
-					e.Cancel = True
-					Me.DialogResult = Windows.Forms.DialogResult.Cancel
+		'	Select Case result
+
+		'		Case DialogResult.Yes
+		'			'save 
+
+		'			If Not BusAuxWriter.SaveSSMConfig(ssmTOOL.SSMInputs, ahsmFilePath) Then
+		'				e.Cancel = True
+		'			End If
+
+		'		Case DialogResult.No
+		'			'just allow the form to close
+		'			'without saving
+		'			Me.DialogResult = Windows.Forms.DialogResult.Cancel
 
 
-			End Select
+		'		Case DialogResult.Cancel
+		'			'cancel the close
+		'			e.Cancel = True
+		'			Me.DialogResult = Windows.Forms.DialogResult.Cancel
 
-		End If
+
+		'	End Select
+
+		'End If
 
 		UserHitCancel = False
 		UserHitSave = False
@@ -1039,7 +1039,7 @@ Public Class frmHVACTool
 		category = CType(gvTechBenefitLines.Rows(row).Cells("Category").Value, String)
 
 
-		editTechLine = ssmTOOL.TechList.TechLines.First(Function(f) f.BenefitName = benefitName AndAlso f.Category = category)
+		'editTechLine = ssmTOOL.TechList.TechLines.First(Function(f) f.BenefitName = benefitName AndAlso f.Category = category)
 
 		FillTechLineEditPanel(row)
 
@@ -1116,15 +1116,15 @@ Public Class frmHVACTool
 				BindGrid()
 
 				'find new row
-				Dim ol As List(Of ISSMTechnology) =
-						ssmTOOL.TechList.TechLines.OrderBy(Function(x) x.Category).ThenBy(Function(tb) tb.BenefitName).ToList()
-				Dim item As ISSMTechnology =
-						ol.First(
-							Function(x) _
-									x.Category = GetTechLineFromPanel().Category AndAlso x.BenefitName = GetTechLineFromPanel().BenefitName)
-				Dim idx As Integer = ol.IndexOf(item)
+				'Dim ol As List(Of ISSMTechnology) =
+				'		ssmTOOL.TechList.TechLines.OrderBy(Function(x) x.Category).ThenBy(Function(tb) tb.BenefitName).ToList()
+				'Dim item As ISSMTechnology =
+				'		ol.First(
+				'			Function(x) _
+				'					x.Category = GetTechLineFromPanel().Category AndAlso x.BenefitName = GetTechLineFromPanel().BenefitName)
+				'Dim idx As Integer = ol.IndexOf(item)
 
-				gvTechBenefitLines.FirstDisplayedScrollingRowIndex = idx
+				'gvTechBenefitLines.FirstDisplayedScrollingRowIndex = idx
 
 				cboCategory.DataSource = GetCategories()
 
@@ -1330,13 +1330,13 @@ Public Class frmHVACTool
 	'TechList Helpers
 	Private Sub FillTechLineEditPanel(index As Integer)
 
-		Dim techline As ISSMTechnology
+		Dim techline As SSMTechnology
 		Dim benefitName, category As Object
 		benefitName = gvTechBenefitLines.Rows(index).Cells("BenefitName").Value
 		category = gvTechBenefitLines.Rows(index).Cells("Category").Value
 
-		techline =
-			ssmTOOL.TechList.TechLines.First(Function(f) f.BenefitName.Equals(benefitName) AndAlso f.Category.Equals(category))
+		'techline =
+		'	ssmTOOL.TechList.TechLines.First(Function(f) f.BenefitName.Equals(benefitName) AndAlso f.Category.Equals(category))
 
 		txtIndex.Text = index.ToString()
 		cboCategory.Text = techline.Category
@@ -1357,10 +1357,10 @@ Public Class frmHVACTool
 		'chkOnVehicle.Checked = techline.OnVehicle
 	End Sub
 
-	Private Function GetTechLineFromPanel() As ISSMTechnology
+	Private Function GetTechLineFromPanel() As SSMTechnology
 
 		Dim tl As SSMTechnology = New SSMTechnology()
-	    tl.BusFloorType = ssmTOOL.SSMInputs.BusParameters.BusFloorType
+	    'tl.BusFloorType = ssmTOOL.SSMInputs.BusParameters.BusFloorType
 
 		tl.Category = StrConv(cboCategory.Text, vbProperCase)
 		tl.BenefitName = txtBenefitName.Text

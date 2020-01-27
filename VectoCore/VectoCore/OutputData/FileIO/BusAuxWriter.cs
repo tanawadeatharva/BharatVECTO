@@ -30,9 +30,16 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				body["EnvironmentalConditions"] = string.IsNullOrWhiteSpace(auxCfg.SSMInputs.EnvironmentalConditions.Source)
 					? ""
 					: JSONFileWriter.GetRelativePath(auxCfg.SSMInputs.EnvironmentalConditions.Source, basePath);
-				body["SSMTechologies"] = string.IsNullOrWhiteSpace(auxCfg.SSMInputs.Technologies.Source)
-					? ""
-					: JSONFileWriter.GetRelativePath(auxCfg.SSMInputs.Technologies.Source, basePath);
+				body["SSMTechologyBenefits"] = new Dictionary<string, object>() {
+					{ "Heating", auxCfg.SSMInputs.Technologies.HValueVariation},
+					{ "Cooling", auxCfg.SSMInputs.Technologies.CValueVariation },
+					{ "Ventilation", auxCfg.SSMInputs.Technologies.VVValueVariation },
+					{ "VentilationHeating", auxCfg.SSMInputs.Technologies.VHValueVariation},
+					{ "VentilationCooling", auxCfg.SSMInputs.Technologies.VCValueVariation}
+				};
+					//string.IsNullOrWhiteSpace(auxCfg.SSMInputs.Technologies.Source)
+					//? ""
+					//: JSONFileWriter.GetRelativePath(auxCfg.SSMInputs.Technologies.Source, basePath);
 				body["Actuations"] = new Dictionary<string, object>() {
 					{"Brakes", auxCfg.Actuations.Braking },
 					{"Park brake + 2 doors", auxCfg.Actuations.ParkBrakeAndDoors },
@@ -158,7 +165,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				var body = new Dictionary<string, object>();
 				body["SSMDisabled"] = ssmInput.SSMDisabled;
 				body["SSMInputs"] = SaveGenInputs(ssmInput);
-				body["TechList"] = SaveTechlist(ssmInput);
+				//body["TechList"] = SaveTechlist(ssmInput);
 
 				JSONInputDataFactory.WriteFile(JToken.FromObject(new Dictionary<string, object>() { { "Header", "AHSM" }, { "Body", body } }), filePath);
 
@@ -200,83 +207,5 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 			return retVal;
 		}
-
-		private static List<object> SaveTechlist(ISSMInputs ssmInputs)
-		{
-			var retVal = new List<object>();
-
-			foreach (var line in ssmInputs.Technologies.Items) {
-				var tmp = new Dictionary<string, object>();
-				tmp["Category"] = line.Category;
-				tmp["BenefitName"] = line.BenefitName;
-				tmp["LowFloorH"] = line.LowFloorH;
-				tmp["LowFloorV"] = line.LowFloorV;
-				tmp["LowFloorC"] = line.LowFloorC;
-				tmp["SemiLowFloorH"] = line.SemiLowFloorH;
-				tmp["SemiLowFloorV"] = line.SemiLowFloorV;
-				tmp["SemiLowFloorC"] = line.SemiLowFloorC;
-				tmp["RaisedFloorH"] = line.RaisedFloorH;
-				tmp["RaisedFloorV"] = line.RaisedFloorV;
-				tmp["RaisedFloorC"] = line.RaisedFloorC;
-				//tmp["OnVehicle"] = line.OnVehicle;
-				tmp["ActiveVH"] = line.ActiveVH;
-				tmp["ActiveVV"] = line.ActiveVV;
-				tmp["ActiveVC"] = line.ActiveVC;
-				retVal.Add(tmp);
-			}
-
-			return retVal;
-		}
-
-		//public bool Load(string filePath)
-		//{
-		//	var returnValue = true;
-
-		//	try {
-		//		var json = JSONInputDataFactory.ReadFile(filePath);
-		//		var body = (JObject)json["Body"];
-
-		//		SSMDisabled = body.GetEx<bool>("SSMDisabled");
-		//		LoadGenInputs((JObject)body["SSMInputs"]);
-		//	} catch (Exception) {
-
-		//		// Nothing to do except return false.
-
-		//		returnValue = false;
-		//	}
-
-		//	return returnValue;
-		//}
-
-		//private void LoadGenInputs(JObject genInput)
-		//{
-		//	SSMInputs.BoundaryConditions.GFactor = genInput.GetEx<double>("BC_GFactor");
-		//	SSMInputs.BoundaryConditions.PassengerBoundaryTemperature = genInput.GetEx<double>("BC_PassengerBoundaryTemperature").DegCelsiusToKelvin();
-		//	SSMInputs.BoundaryConditions.HeatingBoundaryTemperature = genInput.GetEx<double>("BC_HeatingBoundaryTemperature").DegCelsiusToKelvin();
-		//	SSMInputs.BoundaryConditions.CoolingBoundaryTemperature = genInput.GetEx<double>("BC_CoolingBoundaryTemperature").DegCelsiusToKelvin();
-		//	SSMInputs.BoundaryConditions.HighVentilation = genInput.GetEx<double>("BC_HighVentilation").SI(Unit.SI.Per.Hour).Cast<PerSecond>();
-		//	SSMInputs.BoundaryConditions.LowVentilation = genInput.GetEx<double>("BC_lowVentilation").SI(Unit.SI.Per.Hour).Cast<PerSecond>();
-		//	SSMInputs.BoundaryConditions.SpecificVentilationPower = genInput.GetEx<double>("BC_SpecificVentilationPower").SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast<JoulePerCubicMeter>();
-		//	SSMInputs.BoundaryConditions.AuxHeaterEfficiency = genInput.GetEx<double>("BC_AuxHeaterEfficiency");
-		//	SSMInputs.BoundaryConditions.GCVDieselOrHeatingOil = genInput.GetEx<double>("BC_GCVDieselOrHeatingOil").SI(Unit.SI.Kilo.Watt.Hour.Per.Kilo.Gramm).Cast<JoulePerKilogramm>();
-		//	SSMInputs.BoundaryConditions.MaxTemperatureDeltaForLowFloorBusses = genInput.GetEx<double>("BC_MaxTemperatureDeltaForLowFloorBusses").SI<Kelvin>();
-		//	SSMInputs.BoundaryConditions.MaxPossibleBenefitFromTechnologyList = genInput.GetEx<double>("BC_MaxPossibleBenefitFromTechnologyList");
-		//	SSMInputs.EnvironmentalConditions.EnviromentalTemperature = genInput.GetEx<double>("EC_EnviromentalTemperature").DegCelsiusToKelvin();
-		//	SSMInputs.EnvironmentalConditions.Solar = genInput.GetEx<double>("EC_Solar").SI<WattPerSquareMeter>();
-		//	SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchFile = genInput.GetEx<string>("EC_EnviromentalConditions_BatchFile");
-		//	SSMInputs.EnvironmentalConditions.EnviromentalConditions_BatchEnabled = genInput.GetEx<bool>("EC_EnviromentalConditions_BatchEnabled");
-		//	SSMInputs.ACSystem.CompressorType = genInput.GetEx<string>("AC_CompressorType");
-		//	SSMInputs.ACSystem.CompressorCapacity = genInput.GetEx<double>("AC_CompressorCapacitykW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-		//	SSMInputs.Ventilation.VentilationOnDuringHeating = genInput.GetEx<bool>("VEN_VentilationOnDuringHeating");
-		//	SSMInputs.Ventilation.VentilationWhenBothHeatingAndACInactive = genInput.GetEx<bool>("VEN_VentilationWhenBothHeatingAndACInactive");
-		//	SSMInputs.Ventilation.VentilationDuringAC = genInput.GetEx<bool>("VEN_VentilationDuringAC");
-		//	SSMInputs.Ventilation.VentilationFlowSettingWhenHeatingAndACInactive = genInput.GetEx<string>("VEN_VentilationFlowSettingWhenHeatingAndACInactive");
-		//	SSMInputs.Ventilation.VentilationDuringHeating = genInput.GetEx<string>("VEN_VentilationDuringHeating");
-		//	SSMInputs.Ventilation.VentilationDuringCooling = genInput.GetEx<string>("VEN_VentilationDuringCooling");
-		//	SSMInputs.AuxHeater.EngineWasteHeatkW = genInput.GetEx<double>("AH_EngineWasteHeatkW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-		//	SSMInputs.AuxHeater.FuelFiredHeaterkW = genInput.GetEx<double>("AH_FuelFiredHeaterkW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
-		//	SSMInputs.AuxHeater.FuelEnergyToHeatToCoolant = genInput.GetEx<double>("AH_FuelEnergyToHeatToCoolant");
-		//	SSMInputs.AuxHeater.CoolantHeatTransferredToAirCabinHeater = genInput.GetEx<double>("AH_CoolantHeatTransferredToAirCabinHeater");
-		//}
 	}
 }

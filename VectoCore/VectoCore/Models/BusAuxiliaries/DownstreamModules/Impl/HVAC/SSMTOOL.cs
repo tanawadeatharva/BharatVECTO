@@ -18,9 +18,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public SSMTOOL(ISSMInputs ssmInput)
 		{
 
-			SSMInputs = ssmInput; //new SSMInputs(Path.GetDirectoryName(filePath));
-			TechList = new SSMTechList(SSMInputs.BusParameters.BusFloorType);
-			TechList.TechLines = ssmInput.Technologies.Items;
+			SSMInputs = ssmInput; 
+			TechList = ssmInput.Technologies;
 
 			Calculate = new SSMCalculate(this);
 			EngineWasteHeatkW = 0.SI<Watt>();
@@ -30,7 +29,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		public ISSMBoundaryConditions BoundaryConditions { get; set; }
 
-		public ISSMTechList TechList { get; set; }
+		public ISSMTechnologyBenefits TechList { get; set; }
 		public ISSMCalculate Calculate { get; set; }
 		public bool SSMDisabled { get { return SSMInputs.SSMDisabled; } }
 		public IHVACConstants HVACConstants { get; set; }
@@ -92,82 +91,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		public Watt EngineWasteHeatkW { get; protected set; }
 		
-		// Persistance Functions
 		
-
-		// Comparison
-		public bool IsEqualTo(ISSMTOOL source)
-		{
-
-			// In this methods we only want to compare the non Static , non readonly public properties of 
-			// The class's General, User Inputs and  Tech Benefit members.
-
-			return compareGenUserInputs(source) && compareTechListBenefitLines(source);
-		}
-
-		private bool compareGenUserInputs(ISSMTOOL source)
-		{
-			var src = (SSMTOOL)source;
-
-			var properties = SSMInputs.GetType().GetProperties();
-
-			foreach (var prop in properties) {
-
-				// If Not prop.GetAccessors.IsReadOnly Then
-				if (prop.CanWrite) {
-					var v1 = prop.GetValue(SSMInputs, null);
-					var v2 = prop.GetValue(src.SSMInputs, null);
-					if (v1 == null ^ v2 == null) {
-						return false;
-					}
-					if (v1 != null && !v1.Equals(v2)) {
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-
-		private bool compareTechListBenefitLines(ISSMTOOL source)
-		{
-			var src = (SSMTOOL)source;
-
-			// Equal numbers of lines check
-			if (TechList.TechLines.Count != src.TechList.TechLines.Count)
-				return false;
-
-			foreach (var tl in TechList.TechLines.OrderBy(o => o.Category).ThenBy(n => n.BenefitName)) {
-
-				// First Check line exists in other
-				if (src.TechList.TechLines.Where(w => w.BenefitName == tl.BenefitName && w.Category == tl.Category).Count() != 1)
-					return false;
-				else {
-
-					// check are equal
-
-					var testLine = src.TechList.TechLines.First(w => w.BenefitName == tl.BenefitName && w.Category == tl.Category);
-
-					if (!testLine.IsEqualTo(tl))
-						return false;
-				}
-			}
-
-			// All Looks OK
-			return true;
-		}
-
-		// Overrides
-		public override string ToString()
-		{
-			var sb = new StringBuilder();
-
-			sb.AppendLine(Calculate.ToString());
-
-
-			return sb.ToString();
-		}
-
+		
 		// Dynamicly Get Fuel having re-adjusted Engine Heat Waste, this was originally supposed to be Solid State. Late adjustment request 24/3/2015
 		public KilogramPerSecond FuelPerHBaseAsjusted(Watt AverageUseableEngineWasteHeatKW)
 		{

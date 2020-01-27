@@ -71,8 +71,7 @@
     <Compile Include="BusAuxiliaries\IResultCard.cs" />
     <Compile Include="BusAuxiliaries\ISignals.cs" />
     <Compile Include="BusAuxiliaries\ISSMInputs.cs" />
-    <Compile Include="BusAuxiliaries\ISSMTechList.cs" />
-    <Compile Include="BusAuxiliaries\ISSMTechnology.cs" />
+    <Compile Include="BusAuxiliaries\ISSMTechnologyBenefits.cs" />
     <Compile Include="BusAuxiliaries\IVehicleData.cs" />
     <Compile Include="BusAuxiliaries\SmartResult.cs" />
     <Compile Include="Hashing\IVectoHash.cs" />

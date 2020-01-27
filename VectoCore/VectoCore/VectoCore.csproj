@@ -271,6 +271,7 @@
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\SimpleAlternator.cs" />
+    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\TechnologyBenefits.cs" />
     <Compile Include="Models\Declaration\ADASCombination.cs" />
     <Compile Include="InputData\Reader\ComponentData\AlternatorReader.cs" />
     <Compile Include="InputData\Reader\ComponentData\CompressorMapReader.cs" />
@@ -304,9 +305,8 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMCalculate.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMInputs.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMRun.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTechList.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTOOL.cs" />
-    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTechnology.cs" />
+    <Compile Include="Models\Declaration\SSMTechnology.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M06Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M07Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M08Impl.cs" />

@@ -27,7 +27,6 @@ Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Util
-Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.OutputData.FileIO
 
 
@@ -494,7 +493,7 @@ Public Class frmAuxiliaryConfig
         Try
 
             Dim ahsmFile As String = FilePathUtils.ResolveFilePath(aauxPath, txtSSMFilePath.Text)
-            Dim ssmTool As SSMTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFile, Nothing, Nothing, DeclarationData.BusAuxiliaries.SSMTechnologyList)) ', New HVACConstants, False)
+            Dim ssmTool As SSMTOOL = New SSMTOOL(SSMInputData.ReadFile(ahsmFile, Nothing, Nothing)) ', New HVACConstants, False)
 
             'If ssmTool.Load(ahsmFile) Then
             '    ErrorProvider.SetError(txtSSMFilePath, String.Empty)
@@ -1031,7 +1030,7 @@ Public Class frmAuxiliaryConfig
             'is file valid Try ahsm - HVac Steady State Model
             Try
                 Dim ahsmFile As String = FilePathUtils.ResolveFilePath(aauxPath, absoluteSSMPath)
-                Dim ssmTool As SSMTOOL = new SSMTOOL(SSMInputData.ReadFile(ahsmFile, Nothing, Nothing, DeclarationData.BusAuxiliaries.SSMTechnologyList)) ' New SSMTOOL(ahsmFile, New HVACConstants, False)
+                Dim ssmTool As SSMTOOL = new SSMTOOL(SSMInputData.ReadFile(ahsmFile, Nothing, Nothing)) ' New SSMTOOL(ahsmFile, New HVACConstants, False)
                 'ssmTool.Load(ahsmFile)
             Catch ex As Exception
                 MessageBox.Show("The supplied AHSM File was invalid, aborting.")

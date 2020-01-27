@@ -70,9 +70,9 @@ Namespace UnitTests
             End Set
         End Property
 
-        Public Function IsEqualTo(source As ISSMTOOL) As Boolean Implements ISSMTOOL.IsEqualTo
-            Throw New NotImplementedException
-        End Function
+        'Public Function IsEqualTo(source As ISSMTOOL) As Boolean Implements ISSMTOOL.IsEqualTo
+        '    Throw New NotImplementedException
+        'End Function
 
         'Public Function Load(filePath As String) As Boolean Implements ISSMTOOL.Load
         '	Throw New NotImplementedException
@@ -94,9 +94,8 @@ Namespace UnitTests
         '	Throw New NotImplementedException
         'End Function
 
-        Public Property TechList As ISSMTechList Implements ISSMTOOL.TechList
+        Public Property TechList As ISSMTechnologyBenefits Implements ISSMTOOL.TechList
 
-        Public Event Message(ByRef sender As Object, message As String, messageType As AdvancedAuxiliaryMessageType) Implements ISSMTOOL.Message
 	End Class
 
 

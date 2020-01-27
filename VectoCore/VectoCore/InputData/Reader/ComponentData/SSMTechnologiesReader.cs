@@ -5,6 +5,7 @@ using System.Linq;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.InputData.Reader.ComponentData
@@ -20,17 +21,17 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			Fields.ActiveVC, Fields.ActiveVH, Fields.ActiveVV
 		};
 
-		public static ISSMTechnologies ReadFromFile(string fileName)
+		public static List<SSMTechnology> ReadFromFile(string fileName)
 		{
 			return Create(VectoCSVFile.Read(fileName), fileName);
 		}
 
-		public static ISSMTechnologies ReadFromStream(Stream str)
+		public static List<SSMTechnology> ReadFromStream(Stream str)
 		{
 			return Create(VectoCSVFile.ReadStream(str), null);
 		}
 
-		public static ISSMTechnologies Create(DataTable data, string fileName)
+		public static List<SSMTechnology> Create(DataTable data, string fileName)
 		{
 			if (!HeaderIsValid(data.Columns)) {
 				throw new VectoException("invalid header for techlist file. expected: {0} got: {1}",
@@ -38,7 +39,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					);
 			}
 
-			var retVal = new List<ISSMTechnology>();
+			var retVal = new List<SSMTechnology>();
 			foreach (DataRow row in data.Rows) {
 				retVal.Add(new SSMTechnology()
 				{
@@ -59,7 +60,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 				});
 			}
 
-			return new TechBenefitLines(retVal, fileName);
+			return retVal;
 		}
 
 		protected static bool HeaderIsValid(DataColumnCollection columns)

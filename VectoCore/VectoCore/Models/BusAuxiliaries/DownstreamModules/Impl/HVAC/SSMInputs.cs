@@ -377,7 +377,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			get { return this; }
 		}
 
-		public ISSMTechnologies Technologies { get; set; }
+		public ISSMTechnologyBenefits Technologies { get; set; }
 
 
 		#endregion

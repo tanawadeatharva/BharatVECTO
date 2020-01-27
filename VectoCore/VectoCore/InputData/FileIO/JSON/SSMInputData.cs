@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			return retVal;
 		}
 
-		public static ISSMInputs ReadFile(string fileName, IVehicleData vehicleData, IEnvironmentalConditionsMap env, ISSMTechnologies technologies)
+		public static ISSMInputs ReadFile(string fileName, IVehicleData vehicleData, IEnvironmentalConditionsMap env)
 		{
 			var json = JSONInputDataFactory.ReadFile(fileName);
 			var body = (JObject)json["Body"];
@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var retVal = Create(body, vehicleData, fileName);
 
 			retVal.EnvironmentalConditionsMap = env;
-			retVal.Technologies = technologies;
+			//retVal.Technologies = technologies;
 
 			return retVal;
 		}
@@ -68,6 +68,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			retVal.FuelFiredHeaterPower = genInput.GetEx<double>("AH_FuelFiredHeaterkW").SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 			retVal.FuelEnergyToHeatToCoolant = genInput.GetEx<double>("AH_FuelEnergyToHeatToCoolant");
 			retVal.CoolantHeatTransferredToAirCabinHeater = genInput.GetEx<double>("AH_CoolantHeatTransferredToAirCabinHeater");
+
+			retVal.Technologies = new TechnologyBenefits() {
+				// TODO: MQ 2020-01-27 read from file!
+				//CValueVariation = 
+			};
 
 			return retVal;
 		}

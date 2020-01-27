@@ -31,9 +31,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var env = string.IsNullOrWhiteSpace(data["EnvironmentalConditions"]?.ToString())
 				? DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions
 				: EnvironmentalContidionsMapReader.ReadFile(data["EnvironmentalConditions"].ToString());
-			var techList = string.IsNullOrWhiteSpace(data["SSMTechologies"]?.ToString())
-				? DeclarationData.BusAuxiliaries.SSMTechnologyList
-				: SSMTechnologiesReader.ReadFromFile(data["SSMTechologies"].ToString());
+			//var techList = string.IsNullOrWhiteSpace(data["SSMTechologies"]?.ToString())
+			//	? DeclarationData.BusAuxiliaries.SSMTechnologyList
+			//	: SSMTechnologiesReader.ReadFromFile(data["SSMTechologies"].ToString());
 			var actuations = new Actuations() {
 				Braking = data["Actuations"]?.GetEx<int>("Brakes") ?? 0,
 				ParkBrakeAndDoors = data["Actuations"]?.GetEx<int>("Park brake + 2 doors") ?? 0,
@@ -44,11 +44,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var ssm = string.IsNullOrWhiteSpace(data["SSMFilePath"]?.ToString()) ?
 				new SSMInputs("", FuelData.Diesel) {
 					EnvironmentalConditionsMap =  env,
-					Technologies = techList
+					Technologies = new TechnologyBenefits()
 				}
 				: SSMInputData.ReadFile(
-				Path.Combine(baseDir, data["SSMFilePath"].ToString()), vehicleData, env,
-				techList);
+				Path.Combine(baseDir, data["SSMFilePath"].ToString()), vehicleData, env);
 			return new AuxiliaryConfig( ) {
 				ElectricalUserInputsConfig = ec,
 				PneumaticAuxillariesConfig  = pac,

@@ -4,7 +4,6 @@ Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 
-Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
@@ -15,7 +14,6 @@ Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HVAC
-Imports TUGraz.VectoCore.Models.Declaration
 Imports TUGraz.VectoCore.Models.SimulationComponent.Data
 
 
@@ -41,8 +39,7 @@ Namespace UnitTests
             Const _SSMMAP As String = "TestFiles\ssm.Ahsm"
             'Const _BusDatabase As String ="TestFiles\BusDatabase.abdb
 
-            dim ssmInput As ISSMInputs = SSMInputData.ReadFile(_SSMMAP, utils.GetDefaultVehicleData(), Nothing,
-                                                               DeclarationData.BusAuxiliaries.SSMTechnologyList)
+            dim ssmInput As ISSMInputs = SSMInputData.ReadFile(_SSMMAP, utils.GetDefaultVehicleData(), Nothing)
             'CType(CType(ssmInput, SSMInputs).Vehicle, VehicleData).Height = 0.SI (Of Meter)
             Dim ssm As ISSMTOOL = New SSMTOOL(ssmInput)
 
