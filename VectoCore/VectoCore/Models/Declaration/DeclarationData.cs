@@ -197,7 +197,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				get { return hvacMaxCoolingPower ?? (hvacMaxCoolingPower = new HVACCoolingPower()); }
 			}
 
-			public static PerSecond VentilationRate(BusHVACSystemConfiguration hvacSystemConfig)
+			public static PerSecond VentilationRate(BusHVACSystemConfiguration hvacSystemConfig, bool heating)
 			{
 
 				switch (hvacSystemConfig) {
@@ -213,7 +213,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 					case BusHVACSystemConfiguration.Configuration7: 
 					case BusHVACSystemConfiguration.Configuration8: 
 					case BusHVACSystemConfiguration.Configuration9:
-						return Constants.BusAuxiliaries.SteadyStateModel.HighVentilation;
+						return heating
+							? Constants.BusAuxiliaries.SteadyStateModel.HighVentilationHeating
+							: Constants.BusAuxiliaries.SteadyStateModel.HighVentilation;
 						
 					default: throw new ArgumentOutOfRangeException(nameof(hvacSystemConfig), hvacSystemConfig, null);
 				}

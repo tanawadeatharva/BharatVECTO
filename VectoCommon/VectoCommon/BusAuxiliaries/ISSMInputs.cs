@@ -7,7 +7,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface ISSMInputs
 	{
-		
 		ISSMBusParameters BusParameters { get; }
 
 		ISSMTechnologyBenefits Technologies { get; }
@@ -40,19 +39,27 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		double SolarClouding(Kelvin envTemp);
 
 		Watt HeatPerPassengerIntoCabin(Kelvin envTemp);
+
 		WattPerKelvinSquareMeter UValue { get; }
+
 		Kelvin HeatingBoundaryTemperature { get; }
+
 		Kelvin CoolingBoundaryTemperature { get; }
+
 		Kelvin TemperatureCoolingTurnsOff { get; }
+
 		PerSecond VentilationRate { get; }
-		CubicMeterPerSecond VolumeExchange { get; }
-		Watt VentPower { get; }
+
+		Watt VentPower(bool heating);
+
 		JoulePerCubicMeter SpecificVentilationPower { get; }
+
 		double AuxHeaterEfficiency { get; }
+
 		JoulePerKilogramm GCVDieselOrHeatingOil { get; }
-		//SquareMeterPerMeter WindowAreaPerUnitBusLength { get; }
-		//SquareMeter FrontRearWindowArea { get; }
+
 		Kelvin MaxTemperatureDeltaForLowFloorBusses { get; }
+
 		double MaxPossibleBenefitFromTechnologyList { get; }
 	}
 
@@ -71,7 +78,9 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	{
 		// AC-system				            
 		ACCompressorType HVACCompressorType { get; }
+
 		Watt HVACMaxCoolingPower { get; }
+
 		double COP { get; }
 	}
 
@@ -81,14 +90,11 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		bool VentilationOnDuringHeating { get; }
 
 		bool VentilationWhenBothHeatingAndACInactive { get; }
-		bool VentilationDuringAC { get;  }
 
-		//VentilationLevel VentilationFlowSettingWhenHeatingAndACInactive { get; }
-		//VentilationLevel VentilationDuringHeating { get; }
-		//VentilationLevel VentilationDuringCooling { get; }
+		bool VentilationDuringAC { get; }
 	}
 
-	
+
 	public enum ACCompressorType
 	{
 		Unknown,
@@ -137,13 +143,10 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 			switch (type) {
 				case ACCompressorType.None:
-				case ACCompressorType.Unknown:
-					return 0;
-				case ACCompressorType.TwoStage:
-					return cop;
+				case ACCompressorType.Unknown: return 0;
+				case ACCompressorType.TwoStage: return cop;
 				case ACCompressorType.ThreeStage:
-				case ACCompressorType.FourStage:
-					return cop * 1.02;
+				case ACCompressorType.FourStage: return cop * 1.02;
 				case ACCompressorType.Continuous:
 					return floortype == FloorType.LowFloor
 						? cop * 1.04

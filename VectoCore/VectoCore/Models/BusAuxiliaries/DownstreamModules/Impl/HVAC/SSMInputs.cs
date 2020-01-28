@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 	public class SSMInputs : ISSMInputs, ISSMBoundaryConditions, IEnvironmentalConditions, IACSystem, IVentilation,
 		IAuxHeater, ISSMBusParameters
 	{
-		private IFuelProperties HeatingFuel;
+		private readonly IFuelProperties HeatingFuel;
 
 		public SSMInputs(string source, IFuelProperties heatingFuel = null)
 		{
@@ -21,168 +21,45 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		public string Source { get; }
 
-		//public IVehicleData Vehicle { get; }
-
-
 		// C5/D5
-		public double NumberOfPassengers
-		{
-			get;
-			internal set;
-
-			//get { return Vehicle.PassengerCount; }
-		}
+		public double NumberOfPassengers { get; internal set; }
 
 		// C6/D6
 		public FloorType BusFloorType { get; internal set; }
 
-		// C10/D10
-		//public bool DoubleDecker
-		//{
-		//	get { return Vehicle.DoubleDecker; }
-		//}
-
-		// D12/C12 - ( M )
-		//public Meter BusLength
-		//{
-		//	get { return Vehicle.Length; }
-		//}
-
-		//// D13/C13 - ( M )
-		//public Meter BusWidth
-		//{
-		//	get { return Vehicle.Width; }
-		//}
-
-		//// D14/C14 - ( M )
-		//public Meter BusHeight
-		//{
-		//	get { return Vehicle.Height; }
-		//}
-
-
-		// D7/C7 - ( M/2 )
-		//public SquareMeter BusFloorSurfaceArea
-		//{
-		//	get {
-		//		// =IF(AND(C6="low floor",C13<=2.55,C13>=2.5),(2.55*(C12-1.2)),((C12-1.2)*C13))
-		//		if (BusFloorType == FloorType.LowFloor && BusWidth <= 2.55 && BusWidth >= 2.5) {
-		//			return 2.55.SI<Meter>() * (BusLength - 1.2.SI<Meter>());
-		//		}
-
-		//		return ((BusLength - 1.2.SI<Meter>()) * BusWidth);
-		//	}
-		//}
-
 		// D8/C8 - ( M/2 )
-		public SquareMeter BusSurfaceArea
-		{
-			get;
-			 internal set;
-
-			//get {
-			//	// 2 * (C12*C13 + C12*C14 + C13*C14)
-			//	return 2 * ((BusLength * BusWidth) + (BusLength * BusHeight) + (BusWidth * BusHeight));
-			//}
-		}
+		public SquareMeter BusSurfaceArea { get; internal set; }
 
 		// D9/C9 - ( M/2 )
 		public SquareMeter BusWindowSurface { get; internal set; }
 
-
 		// D11/C11 - ( M/3 )
-		public CubicMeter BusVolume
-		{
-			get; internal set;
-
-			//get {
-			//	// =(C12*C13*C14)
-			//	return BusLength * BusWidth * BusHeight;
-			//}
-		}
-
+		public CubicMeter BusVolume { get; internal set; }
 
 		// C17
 		public double GFactor { get; set; }
 
-		//PassengerBoundaryTemperature = 17
-
 		// C18            
 		public double SolarClouding(Kelvin enviromentalTemperature)
 		{
-			
-				// =IF(C46<17,0.65,0.8)
-				return  enviromentalTemperature < Constants.BusAuxiliaries.SteadyStateModel.PassengerBoundaryTemperature
-					? Constants.BusAuxiliaries.SteadyStateModel.SolarCloudingLow
-					: Constants.BusAuxiliaries.SteadyStateModel.SolarCloudingHigh;
-			
+			// =IF(C46<17,0.65,0.8)
+			return enviromentalTemperature < Constants.BusAuxiliaries.SteadyStateModel.PassengerBoundaryTemperature
+				? Constants.BusAuxiliaries.SteadyStateModel.SolarCloudingLow
+				: Constants.BusAuxiliaries.SteadyStateModel.SolarCloudingHigh;
 		}
 
 		// C19 - ( W )
 		public Watt HeatPerPassengerIntoCabin(Kelvin enviromentalTemperature)
 		{
-				// =IF(C46<17,50,80)
-				return enviromentalTemperature < Constants.BusAuxiliaries.SteadyStateModel.PassengerBoundaryTemperature
-					? Constants.BusAuxiliaries.SteadyStateModel.HeatPerPassengerIntoCabinLow
-					: Constants.BusAuxiliaries.SteadyStateModel.HeatPerPassengerIntoCabinHigh;	
+			// =IF(C46<17,50,80)
+			return enviromentalTemperature < Constants.BusAuxiliaries.SteadyStateModel.PassengerBoundaryTemperature
+				? Constants.BusAuxiliaries.SteadyStateModel.HeatPerPassengerIntoCabinLow
+				: Constants.BusAuxiliaries.SteadyStateModel.HeatPerPassengerIntoCabinHigh;
 		}
 
-		// C20 - ( oC )
-		//public Kelvin PassengerBoundaryTemperature { get; set; }
-
-		// C21 - ( Passenger/Metre Squared )
-		//public PerSquareMeter PassengerDensityLowFloor
-		//{
-		//	get {
-		//		// =IF($C$10="No",3,3.7)
-		//		return (DoubleDecker ? 3.7 : 3).SI<PerSquareMeter>();
-		//	}
-		//}
-
-		//// C22 - ( Passenger/Metre Squared )
-		//public PerSquareMeter PassengerDensitySemiLowFloor
-		//{
-		//	get {
-		//		// =IF($C$10="No",2.2,3)
-		//		return (DoubleDecker ? 3 : 2.2).SI<PerSquareMeter>();
-		//	}
-		//}
-
-		//// C23 - ( Passenger/Metre Squared )
-		//public PerSquareMeter PassengerDensityRaisedFloor
-		//{
-		//	get {
-		//		// =IF($C$10="No",1.4,2)
-		//		return (DoubleDecker ? 2 : 1.4).SI<PerSquareMeter>();
-		//	}
-		//}
-
-		//// C24               
-		//public double CalculatedPassengerNumber
-		//{
-		//	get {
-		//		// =ROUND(IF($D$5<IF(D6="low floor",C21,IF(D6="semi low floor",C22,C23))*D7,$D$5,IF(D6="low floor",C21,IF(D6="semi low floor",C22,C23))*D7),0)
-		//		var tmp = (BusFloorType == FloorType.LowFloor
-		//					? PassengerDensityLowFloor
-		//					: BusFloorType == FloorType.SemiLowFloor
-		//						? PassengerDensitySemiLowFloor
-		//						: PassengerDensityRaisedFloor) * BusFloorSurfaceArea;
-		//		return Math.Round(NumberOfPassengers < tmp ? NumberOfPassengers : tmp.Value(), 0);
-		//	}
-		//}
 
 		// C25 - ( W/K/M3 )
-		public WattPerKelvinSquareMeter UValue
-		{
-			get;
-			internal set;
-
-			//get {
-			//	// =IF(D6="low floor",4,IF(D6="semi low floor",3.5,3))
-			//	return (BusFloorType == FloorType.LowFloor ? 4 : BusFloorType == FloorType.SemiLowFloor ? 3.5 : 3)
-			//		.SI<WattPerKelvinSquareMeter>();
-			//}
-		}
+		public WattPerKelvinSquareMeter UValue { get; internal set; }
 
 		// C26 - ( oC )
 		public Kelvin HeatingBoundaryTemperature { get; set; }
@@ -199,44 +76,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		// C29 - ( L/H )  --- !! 1/h
 		public PerSecond VentilationRate { get; set; }
 
-		// C30 - ( L/H )   --- !! 1/h
-		//public PerSecond LowVentilation { get; set; }
-
-		// C31 - ( M3/H )
-		public CubicMeterPerSecond VolumeExchange
-		{
-			get {
-				// =D11*C29
-				return BusVolume * VentilationRate;
-			}
-		}
-
-		// C32 - ( M3/H )
-		//public CubicMeterPerSecond LowVolumeExchange
-		//{
-		//	get {
-		//		// =C30*D11
-		//		return BusVolume * LowVentilation;
-		//	}
-		//}
+		public PerSecond VentilationRateHeating { get; internal set; }
 
 		// C33 - ( W )
-		public Watt VentPower
+		public Watt VentPower(bool heating)
 		{
-			get {
-				// =C31*C35
-				return VolumeExchange * SpecificVentilationPower;
-			}
+			// =C31*C35
+			return BusVolume * (heating ? VentilationRateHeating : VentilationRate) * SpecificVentilationPower;
 		}
-
-		// C34 - ( W )
-		//public Watt LowVentPower
-		//{
-		//	get {
-		//		// =C32*C35
-		//		return LowVolumeExchange * SpecificVentilationPower;
-		//	}
-		//}
 
 		// C35 - ( Wh/M3 )
 		public JoulePerCubicMeter SpecificVentilationPower { get; set; }
@@ -245,25 +92,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		public double AuxHeaterEfficiency { get; set; }
 
 		// C38 - ( KW/HKG )
-		public JoulePerKilogramm GCVDieselOrHeatingOil { get { return HeatingFuel.LowerHeatingValueVecto; } }
-
-		// C40 - ( M2/M )
-		//public SquareMeterPerMeter WindowAreaPerUnitBusLength
-		//{
-		//	get {
-		//		// =IF($C$10="No",1.5,2.5)
-		//		return (DoubleDecker ? 2.5 : 1.5).SI<SquareMeterPerMeter>();
-		//	}
-		//}
-
-		//// C41 - ( M/2 )
-		//public SquareMeter FrontRearWindowArea
-		//{
-		//	get {
-		//		// =IF($C$10="No",5,8)
-		//		return (DoubleDecker ? 8 : 5).SI<SquareMeter>();
-		//	}
-		//}
+		public JoulePerKilogramm GCVDieselOrHeatingOil
+		{
+			get { return HeatingFuel.LowerHeatingValueVecto; }
+		}
 
 		// C42 - ( K )
 		public Kelvin MaxTemperatureDeltaForLowFloorBusses
@@ -274,12 +106,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		// C43 - ( Fraction )
 		public double MaxPossibleBenefitFromTechnologyList { get; set; }
 
-
-		// C46 - ( oC )
-		//public Kelvin EnviromentalTemperature { get; set; }
-
-		// C47 - ( W/M3 )
-		//public WattPerSquareMeter Solar { get; set; }
 
 		public IEnvironmentalConditionsMapEntry DefaultConditions { get; set; }
 
@@ -316,19 +142,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		// C64 - Boolean Yes/No
 		public bool VentilationDuringAC { get; set; }
-
-		// C65 - String high/low
-		//public VentilationLevel VentilationFlowSettingWhenHeatingAndACInactive { get; set; }
-
-		//// C66 - String high/low
-		//public VentilationLevel VentilationDuringHeating { get; set; }
-
-		//// C67 - String high/low                                               
-		//public VentilationLevel VentilationDuringCooling { get; set; }
-
-
-		// C70 - ( KW )
-		//public Watt EngineWasteHeatkW { get; set; }
 
 		// C71 - ( KW )
 		public Watt FuelFiredHeaterPower { get; set; }
@@ -371,7 +184,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		}
 
 		public ISSMTechnologyBenefits Technologies { get; set; }
-
 
 		#endregion
 	}

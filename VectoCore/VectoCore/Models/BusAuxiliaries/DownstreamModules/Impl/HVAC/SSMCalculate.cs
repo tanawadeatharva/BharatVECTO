@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
 
 				var res = run1TotalW < 0 && run2TotalW < 0 && ventilation.VentilationOnDuringHeating
-					? bc.VentPower
+					? bc.VentPower(true)
 					: 0.SI<Watt>();
 
 				return res;
@@ -285,7 +285,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 			return environmentalTemperature >= gen.BoundaryConditions.TemperatureCoolingTurnsOff && run1TotalW > 0 &&
 					run2TotalW > 0 && gen.Ventilation.VentilationDuringAC
-				?  gen.BoundaryConditions.VentPower
+				?  gen.BoundaryConditions.VentPower(false)
 				: 0.SI<Watt>();
 		}
 
@@ -312,7 +312,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 						run1TotalW > 0 && run2TotalW > 0) ||
 						(run1TotalW > 0 && run2TotalW < 0)
 					? gen.Ventilation.VentilationWhenBothHeatingAndACInactive
-						? gen.BoundaryConditions.VentPower
+						? gen.BoundaryConditions.VentPower(false)
 						: 0.SI<Watt>()
 					: 0.SI<Watt>();
 			
@@ -440,69 +440,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 					? Math.Min(tl.VVValueVariation, gen.MaxPossibleBenefitFromTechnologyList)
 					: Math.Max(tl.VVValueVariation, -gen.MaxPossibleBenefitFromTechnologyList);
 			}
-		}
-
-		// Provides Diagnostic Information for the user which can be displayed on the form.
-		// Based on the inputs generated, can be used to cross reference the Excel Model with the
-		// Outputs generated here.
-		public override string ToString()
-		{
-			var sb = new StringBuilder();
-			var vbTab = "\t";
-
-			sb.AppendLine("");
-			sb.AppendLine("TechList Detail");
-			sb.AppendLine("***********************");
-
-			var nameLength = 40;
-			var catLength = 15;
-			var unitLength = 15;
-			var firstValuePos = nameLength + catLength + unitLength + 2;
-			//string cat;
-			//string name;
-
-			sb.AppendLine(string.Format(new string(' ', firstValuePos) + "H{0}VH{0}VV{0}VC{0}C{0}", vbTab));
-
-			//foreach (var line in ssmTOOL.TechList.TechLines) {
-			//	{
-			//		var withBlock = line;
-
-			//		var extraNameSpaces = nameLength - withBlock.BenefitName.Length;
-			//		var extraCatSpaces = catLength - withBlock.Category.Length;
-
-			//		cat = line.Category.Substring(0, Math.Min(line.Category.Length, catLength)) +
-			//			new string(' ', extraCatSpaces < 0 ? 0 : extraCatSpaces).Replace(" ", ".");
-			//		name = line.BenefitName.Substring(0, Math.Min(line.BenefitName.Length, nameLength)) +
-			//				new string(' ', extraNameSpaces < 0 ? 0 : extraNameSpaces).Replace(" ", ".");
-
-			//		sb.AppendLine(
-			//			string.Format(
-			//				cat + name + " {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.H.ToString("0.000"),
-			//				withBlock.VH.ToString("0.000"), withBlock.VV.ToString("0.000"), withBlock.VC.ToString("0.000"),
-			//				withBlock.C.ToString("0.000")));
-			//	}
-			//}
-
-			sb.AppendLine("");
-			sb.AppendLine("TechList Totals");
-			sb.AppendLine("***********************");
-
-			{
-				var withBlock = ssmTOOL.TechList;
-				sb.AppendLine(vbTab + vbTab + "H" + vbTab + "VH" + vbTab + "VV" + vbTab + "VC" + vbTab + "C");
-				sb.AppendLine(
-					string.Format(
-						"Base Var %   {0}{1}{0}{2}{0}{3}{0}{4}{0}{5}", vbTab, withBlock.HValueVariation.ToString("0.000"),
-						withBlock.VHValueVariation.ToString("0.000"), withBlock.VVValueVariation.ToString("0.000"),
-						withBlock.VCValueVariation.ToString("0.000"), withBlock.CValueVariation.ToString("0.000")));
-			}
-
-			// Runs
-			sb.AppendLine(Run1.ToString());
-			sb.AppendLine(Run2.ToString());
-
-			
-			return sb.ToString();
 		}
 
 		private Watt CalculateElectricalWBase(ISSMInputs genInputs, IEnvironmentalConditionsMapEntry env)

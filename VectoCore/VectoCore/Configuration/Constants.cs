@@ -87,11 +87,10 @@ namespace TUGraz.VectoCore.Configuration
 				public static readonly Kelvin CoolingBoundaryTemperature = 23.0.DegCelsiusToKelvin();
 
 				public static readonly PerSecond HighVentilation = 20.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
+				public static readonly PerSecond HighVentilationHeating = 10.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
 				public static readonly PerSecond LowVentilation = 7.SI(Unit.SI.Per.Hour).Cast<PerSecond>();
 
 				public const double AuxHeaterEfficiency = 0.84;
-
-				public static readonly Watt FuelFiredHeaterPower = 30.SI(Unit.SI.Kilo.Watt).Cast<Watt>();
 
 				public static readonly JoulePerCubicMeter SpecificVentilationPower =
 					0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast<JoulePerCubicMeter>();

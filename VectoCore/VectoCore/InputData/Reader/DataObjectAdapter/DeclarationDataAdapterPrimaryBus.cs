@@ -255,6 +255,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.BusParameter.FloorType, mission.BusParameter.DoubleDecker, busParams.BodyHeight);
 			var coolingPower = CalculateMaxCoolingPower(mission);
 			var retVal = new SSMInputs(null, heatingFuel) {
+				BusFloorType = busParams.FloorType,
 				Technologies = GetSSMTechnologyBenefits(busAuxInputData, mission.BusParameter.FloorType),
 				DefaultConditions = new EnvironmentalConditionMapEntry(
 					Constants.BusAuxiliaries.SteadyStateModel.DefaultTemperature,
@@ -289,7 +290,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				NumberOfPassengers =
 					DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(hvacBusLength, busParams.VehicleWidth) *
 					busParams.PassengerDensity + 1, // add driver for 'heat input'
-				VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration),
+				VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration, false),
+				VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration, true),
 
 				HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2,
 				HVACCompressorType = busParams.HVACCompressorType, // use passenger compartment
