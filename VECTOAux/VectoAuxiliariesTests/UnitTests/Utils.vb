@@ -107,12 +107,13 @@ Public Class Utils
                 .ElectricalUserInputsConfig = New ElectricsUserInputsConfig() With {
                 .AverageCurrentDemandInclBaseLoad = 0.SI(Of Ampere),
                 .AverageCurrentDemandWithoutBaseLoad = 0.SI(of Ampere),
-                .ResultCardIdle = New ResultCard(New List(Of SmartResult)()),
-                .ResultCardTraction = New ResultCard(New List(Of SmartResult)()),
-                .ResultCardOverrun = New ResultCard(New List(Of SmartResult)()),
+                .ResultCardIdle = New DummyResultCard(), ' New ResultCard(New List(Of SmartResult)()),
+                .ResultCardTraction = New DummyResultCard(), 'New ResultCard(New List(Of SmartResult)()),
+                .ResultCardOverrun = New DummyResultCard(), 'New ResultCard(New List(Of SmartResult)()),
                 .AlternatorMap = AlternatorReader.ReadMap("TestFiles\testAlternatormap.aalt"),
                 .DoorActuationTimeSecond = Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond,
-                .PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage
+                .PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
+                .SmartElectrical = false
                 },
                 .PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(retarder),
                 .PneumaticUserInputsConfig = New PneumaticUserInputsConfig() With {
@@ -123,16 +124,21 @@ Public Class Utils
                 .Doors = ConsumerTechnology.Pneumatically,
                 .KneelingHeight = 70.SI(Unit.SI.Milli.Meter).Cast (Of Meter), 
                 .SmartAirCompression = False,
-                .SmartRegeneration = False  
+                .SmartRegeneration = False 
                 },
                 .SSMInputs = New SSMInputs(Nothing, heatingFuel) With {
                 .Technologies = techBenefits,
+                .BusFloorType = FloorType.HighFloor,
+                .BusSurfaceArea = 0.SI(Of SquareMeter),
+                .BusVolume = 0.SI(Of CubicMeter),
+                .BusWindowSurface = 0.SI(of SquareMeter),
+                .VentilationRate = 20.SI(Unit.SI.Per.Hour).Cast (Of PerSecond),
+                .VentilationRateHeating = 20.SI(Unit.SI.Per.Hour).Cast (Of PerSecond),
                 .DefaultConditions =
                 New EnvironmentalConditionMapEntry(25.0.DegCelsiusToKelvin(), 400.SI (Of WattPerSquareMeter), 1.0),
                 .EnvironmentalConditionsMap = DeclarationData.BusAuxiliaries.DefaultEnvironmentalConditions,
                 .HeatingBoundaryTemperature = 18.0.DegCelsiusToKelvin(),
                 .CoolingBoundaryTemperature = 23.0.DegCelsiusToKelvin(),
-                .VentilationRate = 20.SI(Unit.SI.Per.Hour).Cast (Of PerSecond),
                 .SpecificVentilationPower = 0.56.SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast (Of JoulePerCubicMeter),
                 .HVACCompressorType = ACCompressorType.TwoStage, 
                 .HVACMaxCoolingPower = 18.si(Unit.SI.kilo.watt).Cast (of Watt),

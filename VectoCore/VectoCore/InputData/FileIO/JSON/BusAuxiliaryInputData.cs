@@ -80,27 +80,35 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			// PowerNetVoltage
 			//electricalUserInputsConfig.PowerNetVoltage = elData.GetEx<double>("PowerNetVoltage").SI<Volt>();
 
-			// ResultCardIdle
-
-			electricalUserInputsConfig.ResultCardIdle = new ResultCard(
-				elData["ResultCardIdle"].Select(
-					result => new SmartResult(
-						result.GetEx<double>("Amps").SI<Ampere>(), result.GetEx<double>("SmartAmps").SI<Ampere>())).ToList());
-
-			// ResultCardOverrun
-			electricalUserInputsConfig.ResultCardOverrun = new ResultCard(
-				elData["ResultCardOverrun"].Select(
-					result => new SmartResult(
-						result.GetEx<double>("Amps").SI<Ampere>(), result.GetEx<double>("SmartAmps").SI<Ampere>())).ToList());
-
-			// ResultCardTraction
-			electricalUserInputsConfig.ResultCardTraction = new ResultCard(
-				elData["ResultCardTraction"].Select(
-					result => new SmartResult(
-						result.GetEx<double>("Amps").SI<Ampere>(), result.GetEx<double>("SmartAmps").SI<Ampere>())).ToList());
 
 			// SmartElectrical
 			electricalUserInputsConfig.SmartElectrical = elData.GetEx<bool>("SmartElectrical");
+
+			// ResultCardIdle
+
+			electricalUserInputsConfig.ResultCardIdle = electricalUserInputsConfig.SmartElectrical
+				? new ResultCard(
+					elData["ResultCardIdle"].Select(
+						result => new SmartResult(
+							result.GetEx<double>("Amps").SI<Ampere>(), result.GetEx<double>("SmartAmps").SI<Ampere>())).ToList())
+				: (IResultCard)new DummyResultCard();
+
+			// ResultCardOverrun
+			electricalUserInputsConfig.ResultCardOverrun = electricalUserInputsConfig.SmartElectrical
+				? new ResultCard(
+					elData["ResultCardOverrun"].Select(
+						result => new SmartResult(
+							result.GetEx<double>("Amps").SI<Ampere>(), result.GetEx<double>("SmartAmps").SI<Ampere>())).ToList())
+				: (IResultCard)new DummyResultCard();
+
+			// ResultCardTraction
+			electricalUserInputsConfig.ResultCardTraction = electricalUserInputsConfig.SmartElectrical
+				? new ResultCard(
+					elData["ResultCardTraction"].Select(
+						result => new SmartResult(
+							result.GetEx<double>("Amps").SI<Ampere>(), result.GetEx<double>("SmartAmps").SI<Ampere>())).ToList())
+				: (IResultCard)new DummyResultCard();
+
 			return electricalUserInputsConfig;
 		}
 
@@ -137,16 +145,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			var pneumaticUserInputsConfig = new PneumaticUserInputsConfig();
 			//pneumaticUserInputsConfig.ActuationsMap = PneumaticActuationsMapReader.Read(Path.Combine(baseDir, puData.GetEx<string>("ActuationsMap")));
-			pneumaticUserInputsConfig.AdBlueDosing = puData.GetEx<string>("AdBlueDosing").ParseEnum<ConsumerTechnology>();
+			pneumaticUserInputsConfig.AdBlueDosing = ConsumerTechnologyHelper.Parse(puData.GetEx<string>("AdBlueDosing"));
 			pneumaticUserInputsConfig.AirSuspensionControl =
-				puData.GetEx<string>("AirSuspensionControl").ParseEnum<ConsumerTechnology>();
+				ConsumerTechnologyHelper.Parse(puData.GetEx<string>("AirSuspensionControl"));
 			pneumaticUserInputsConfig.CompressorGearEfficiency = puData.GetEx<double>("CompressorGearEfficiency");
 			pneumaticUserInputsConfig.CompressorGearRatio = puData.GetEx<double>("CompressorGearRatio");
 			var file = puData.GetEx<string>("CompressorMap");
 			if (!string.IsNullOrWhiteSpace(file)) {
 				pneumaticUserInputsConfig.CompressorMap = CompressorMapReader.ReadFile(Path.Combine(baseDir, file));
 			}
-			pneumaticUserInputsConfig.Doors = puData.GetEx<string>("Doors").ParseEnum<ConsumerTechnology>();
+			pneumaticUserInputsConfig.Doors = ConsumerTechnologyHelper.Parse(puData.GetEx<string>("Doors"));
 			pneumaticUserInputsConfig.KneelingHeight =
 				puData.GetEx<double>("KneelingHeightMillimeters").SI(Unit.SI.Milli.Meter).Cast<Meter>();
 			//pneumaticUserInputsConfig.RetarderBrake = puData.GetEx<bool>("RetarderBrake");

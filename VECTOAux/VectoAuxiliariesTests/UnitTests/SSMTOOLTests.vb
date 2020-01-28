@@ -609,181 +609,181 @@ Namespace UnitTests
                             1e-3)
         End Sub
 
-        'SSMInputs Comparison
-        <Test()>
-        Public Sub SSMTOOL_COMPARISON_GENINPUTS_EQUAL()
+        'SSMInputs Comparison -- MQ: 2020-01-28: testcases no longer needed - ssminputdata and ssmtool is not used to 'edit' ssm data
+        '<Test()>
+        'Public Sub SSMTOOL_COMPARISON_GENINPUTS_EQUAL()
 
-            Const filePath As String = "SSMTOOLTestSaveRetreive.json"
-
-
-            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            '    New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                            DeclarationData.BusAuxiliaries.
-            '                                                               DefaultEnvironmentalConditions,
-            '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
-            '', New HVACConstants())
-            Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                        DeclarationData.BusAuxiliaries.
-            '                                                           DefaultEnvironmentalConditions,
-            '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
-            ', New HVACConstants())
+        '    Const filePath As String = "SSMTOOLTestSaveRetreive.json"
 
 
-            'Assert.IsTrue(ssmTool1.IsEqualTo(ssmTool2))
-        End Sub
-
-        <Test()>
-        Public Sub SSMTOOL_COMPARISON_GENINPUTS_UNEQUAL()
-
-            Const filePath As String = "SSMTOOLTestSaveRetreive.json"
-
-
-            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                        DeclarationData.BusAuxiliaries.
-            '                                                           DefaultEnvironmentalConditions,
-            '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
-            ' New HVACConstants())
-
-            'Alter somthing
-            'CType(ssmTool1.genInputs, IssmInputs)._vehicle.Length = 11.SI(Of Meter)
-            CType(ssmTool1.SSMInputs, SSMInputs).CoolingBoundaryTemperature =
-                99.0.DegCelsiusToKelvin()
-
-            Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                        DeclarationData.BusAuxiliaries.
-            '                                                           DefaultEnvironmentalConditions,
-            '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
-            ', New HVACConstants())
+        '    Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    '    New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                            DeclarationData.BusAuxiliaries.
+        '    '                                                               DefaultEnvironmentalConditions,
+        '    '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
+        '    '', New HVACConstants())
+        '    Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                        DeclarationData.BusAuxiliaries.
+        '    '                                                           DefaultEnvironmentalConditions,
+        '    '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
+        '    ', New HVACConstants())
 
 
-            'Assert.IsFalse(ssmTool1.IsEqualTo(ssmTool2))
-        End Sub
+        '    'Assert.IsTrue(ssmTool1.IsEqualTo(ssmTool2))
+        'End Sub
 
-        'TechListBenefitLine Comparison
-        <Test()>
-        Public Sub SSMTOOL_COMPARISON_TECHLIST_EQUAL()
+        '<Test()>
+        'Public Sub SSMTOOL_COMPARISON_GENINPUTS_UNEQUAL()
 
-            Const filePath As String = "SSMTOOLTestSaveRetreive.json"
-
-
-            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                            DeclarationData.BusAuxiliaries.
-            '                                                               DefaultEnvironmentalConditions,
-            '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
-            Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                            DeclarationData.BusAuxiliaries.
-            '                                                               DefaultEnvironmentalConditions,
-            '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
+        '    Const filePath As String = "SSMTOOLTestSaveRetreive.json"
 
 
-            'Assert.IsTrue(ssmTool1.IsEqualTo(ssmTool2))
-        End Sub
+        '    Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                        DeclarationData.BusAuxiliaries.
+        '    '                                                           DefaultEnvironmentalConditions,
+        '    '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
+        '    ' New HVACConstants())
 
-        <Test()>
-        Public Sub SSMTOOL_COMPARISON_TECHLIST_EMPTYLISTS_UNEQUALCOUNT()
+        '    'Alter somthing
+        '    'CType(ssmTool1.genInputs, IssmInputs)._vehicle.Length = 11.SI(Of Meter)
+        '    CType(ssmTool1.SSMInputs, SSMInputs).CoolingBoundaryTemperature =
+        '        99.0.DegCelsiusToKelvin()
 
-            Const filePath As String = "SSMTOOLTestSaveRetreive.json"
-
-
-            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                            DeclarationData.BusAuxiliaries.
-            '                                                               DefaultEnvironmentalConditions,
-            '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
-            Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                            DeclarationData.BusAuxiliaries.
-            '                                                               DefaultEnvironmentalConditions,
-            '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
-
-            'Change something on techlist
-            AddDefaultTechLine(ssmTool1)
-
-            'Assert.IsFalse(ssmTool1.IsEqualTo(ssmTool2))
-        End Sub
-
-        <Test()>
-        Public Sub SSMTOOL_COMPARISON_TECHLIST_IDENTICAL_EQUAL()
-
-            Const filePath As String = "SSMTOOLTestSaveRetreive.json"
+        '    Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                        DeclarationData.BusAuxiliaries.
+        '    '                                                           DefaultEnvironmentalConditions,
+        '    '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList)) _
+        '    ', New HVACConstants())
 
 
-            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                            DeclarationData.BusAuxiliaries.
-            '                                                               DefaultEnvironmentalConditions,
-            '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
-            Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                            DeclarationData.BusAuxiliaries.
-            '                                                               DefaultEnvironmentalConditions,
-            '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
+        '    'Assert.IsFalse(ssmTool1.IsEqualTo(ssmTool2))
+        'End Sub
 
-            'Change something on techlist
-            AddDefaultTechLine(ssmTool1)
-            AddDefaultTechLine(ssmTool2)
+        ''TechListBenefitLine Comparison
+        '<Test()>
+        'Public Sub SSMTOOL_COMPARISON_TECHLIST_EQUAL()
 
-            'Assert.IsTrue(ssmTool1.IsEqualTo(ssmTool2))
-        End Sub
-
-        <Test()>
-        Public Sub SSMTOOL_COMPARISON_TECHLIST_IDENTICAL_SINGLEKeyValueDifference()
-
-            Const filePath As String = "SSMTOOLTestSaveRetreive.json"
+        '    Const filePath As String = "SSMTOOLTestSaveRetreive.json"
 
 
-            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                        DeclarationData.BusAuxiliaries.
-            '                                                           DefaultEnvironmentalConditions,
-            '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList))
-            Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                            DeclarationData.BusAuxiliaries.
-            '                                                               DefaultEnvironmentalConditions,
-            '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
-
-            'Change something on techlist
-            AddDefaultTechLine(ssmTool1)
-            AddDefaultTechLine(ssmTool2)
-
-            'Make Unequal
-            'CType(ssmTool2.TechList.TechLines(0), SSMTechnology).BenefitName = "Doobie"
-
-            'Assert.IsFalse(ssmTool1.IsEqualTo(ssmTool2))
-        End Sub
-
-        <Test()>
-        Public Sub SSMTOOL_COMPARISON_TECHLIST_IDENTICAL_SINGLEValueDifference()
-
-            Const filePath As String = "SSMTOOLTestSaveRetreive.json"
+        '    Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                            DeclarationData.BusAuxiliaries.
+        '    '                                                               DefaultEnvironmentalConditions,
+        '    '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
+        '    Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                            DeclarationData.BusAuxiliaries.
+        '    '                                                               DefaultEnvironmentalConditions,
+        '    '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
 
 
-            Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                            DeclarationData.BusAuxiliaries.
-            '                                                               DefaultEnvironmentalConditions,
-            '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
-            Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
-            'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
-            '                                                            DeclarationData.BusAuxiliaries.
-            '                                                               DefaultEnvironmentalConditions,
-            '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
+        '    'Assert.IsTrue(ssmTool1.IsEqualTo(ssmTool2))
+        'End Sub
 
-            'Change something on techlist
-            AddDefaultTechLine(ssmTool1)
-            AddDefaultTechLine(ssmTool2)
+        '<Test()>
+        'Public Sub SSMTOOL_COMPARISON_TECHLIST_EMPTYLISTS_UNEQUALCOUNT()
 
-            'Make Unequal
-            'CType(ssmTool2.TechList.TechLines(0), SSMTechnology).ActiveVV = False
+        '    Const filePath As String = "SSMTOOLTestSaveRetreive.json"
 
-            'Assert.IsFalse(ssmTool1.IsEqualTo(ssmTool2))
-        End Sub
+
+        '    Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                            DeclarationData.BusAuxiliaries.
+        '    '                                                               DefaultEnvironmentalConditions,
+        '    '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
+        '    Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                            DeclarationData.BusAuxiliaries.
+        '    '                                                               DefaultEnvironmentalConditions,
+        '    '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
+
+        '    'Change something on techlist
+        '    AddDefaultTechLine(ssmTool1)
+
+        '    'Assert.IsFalse(ssmTool1.IsEqualTo(ssmTool2))
+        'End Sub
+
+        '<Test()>
+        'Public Sub SSMTOOL_COMPARISON_TECHLIST_IDENTICAL_EQUAL()
+
+        '    Const filePath As String = "SSMTOOLTestSaveRetreive.json"
+
+
+        '    Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                            DeclarationData.BusAuxiliaries.
+        '    '                                                               DefaultEnvironmentalConditions,
+        '    '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
+        '    Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                            DeclarationData.BusAuxiliaries.
+        '    '                                                               DefaultEnvironmentalConditions,
+        '    '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
+
+        '    'Change something on techlist
+        '    AddDefaultTechLine(ssmTool1)
+        '    AddDefaultTechLine(ssmTool2)
+
+        '    'Assert.IsTrue(ssmTool1.IsEqualTo(ssmTool2))
+        'End Sub
+
+        '<Test()>
+        'Public Sub SSMTOOL_COMPARISON_TECHLIST_IDENTICAL_SINGLEKeyValueDifference()
+
+        '    Const filePath As String = "SSMTOOLTestSaveRetreive.json"
+
+
+        '    Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                        DeclarationData.BusAuxiliaries.
+        '    '                                                           DefaultEnvironmentalConditions,
+        '    '                                                        DeclarationData.BusAuxiliaries.SSMTechnologyList))
+        '    Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                            DeclarationData.BusAuxiliaries.
+        '    '                                                               DefaultEnvironmentalConditions,
+        '    '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
+
+        '    'Change something on techlist
+        '    AddDefaultTechLine(ssmTool1)
+        '    AddDefaultTechLine(ssmTool2)
+
+        '    'Make Unequal
+        '    'CType(ssmTool2.TechList.TechLines(0), SSMTechnology).BenefitName = "Doobie"
+
+        '    'Assert.IsFalse(ssmTool1.IsEqualTo(ssmTool2))
+        'End Sub
+
+        '<Test()>
+        'Public Sub SSMTOOL_COMPARISON_TECHLIST_IDENTICAL_SINGLEValueDifference()
+
+        '    Const filePath As String = "SSMTOOLTestSaveRetreive.json"
+
+
+        '    Dim ssmTool1 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                            DeclarationData.BusAuxiliaries.
+        '    '                                                               DefaultEnvironmentalConditions,
+        '    '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
+        '    Dim ssmTool2 As SSMTOOL = New SSMTOOL(Utils.GetAuxTestConfig().SSMInputs)
+        '    'New SSMTOOL(SSMInputData.ReadFile(filePath,utils.GetDefaultVehicleData(),
+        '    '                                                            DeclarationData.BusAuxiliaries.
+        '    '                                                               DefaultEnvironmentalConditions,
+        '    '                                                            DeclarationData.BusAuxiliaries.SSMTechnologyList))
+
+        '    'Change something on techlist
+        '    AddDefaultTechLine(ssmTool1)
+        '    AddDefaultTechLine(ssmTool2)
+
+        '    'Make Unequal
+        '    'CType(ssmTool2.TechList.TechLines(0), SSMTechnology).ActiveVV = False
+
+        '    'Assert.IsFalse(ssmTool1.IsEqualTo(ssmTool2))
+        'End Sub
     End Class
 End Namespace
 
