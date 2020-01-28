@@ -83,7 +83,7 @@ Namespace UnitTests
             Dim auxInput as IBusAuxiliariesDeclarationData = nothing
 
             Dim dao = New DeclarationDataAdapterPrimaryBus()
-            Dim target As ISSMInputs = dao.CreateSSMModelParameters(auxInput, Utils.GetDefaultVehicleData(), mission, FuelData.Diesel)
+            Dim target As ISSMInputs = dao.CreateSSMModelParameters(auxInput, mission, FuelData.Diesel)
 
             If section = "BusParameterisation" Then
                 'BUS Parameterisation
@@ -583,7 +583,7 @@ Namespace UnitTests
             Dim auxInput as IBusAuxiliariesDeclarationData = nothing
 
             Dim dao = New DeclarationDataAdapterPrimaryBus()
-            Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(auxInput, Utils.GetDefaultVehicleData(), mission,
+            Dim target As SSMTOOL = New SSMTOOL(dao.CreateSSMModelParameters(auxInput, mission,
                                                                              FuelData.Diesel))
 
             success = BusAuxWriter.SaveSSMConfig(target.SSMInputs, filePath)

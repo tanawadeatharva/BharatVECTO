@@ -7,8 +7,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 {
 	public interface ISSMInputs
 	{
-		bool SSMDisabled { get; }
-
+		
 		ISSMBusParameters BusParameters { get; }
 
 		ISSMTechnologyBenefits Technologies { get; }
@@ -27,25 +26,10 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 	public interface ISSMBusParameters
 	{
-		// Bus Parameterisation	
-		//string BusModel { get; }
-
 		double NumberOfPassengers { get; }
 		FloorType BusFloorType { get; }
-		//bool DoubleDecker { get; }
-		//Meter BusLength { get; }
-		//Meter BusWidth { get; }
-		//Meter BusHeight { get; }
-
-		//SquareMeter BusFloorSurfaceArea { get; }
 		SquareMeter BusWindowSurface { get; }
 		SquareMeter BusSurfaceArea { get; }
-		//CubicMeter BusVolume { get; }
-
-		//PerSquareMeter PassengerDensityLowFloor { get; }
-		//PerSquareMeter PassengerDensitySemiLowFloor { get; }
-		//PerSquareMeter PassengerDensityRaisedFloor { get; }
-		//double CalculatedPassengerNumber { get; }
 	}
 
 	public interface ISSMBoundaryConditions
@@ -75,11 +59,9 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 	public interface IEnvironmentalConditions
 	{
 		// EnviromentalConditions				
-
 		IEnvironmentalConditionsMapEntry DefaultConditions { get; }
 
 		IEnvironmentalConditionsMap EnvironmentalConditionsMap { get; }
-		//string EnviromentalConditions_BatchFile { get; }
 		bool BatchMode { get; }
 
 		string Source { get; }
@@ -173,9 +155,6 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 	public interface IAuxHeater
 	{
-		// Aux. Heater				
-		//Watt EngineWasteHeatkW { get; }
-
 		Watt FuelFiredHeaterPower { get; }
 		double FuelEnergyToHeatToCoolant { get; }
 		double CoolantHeatTransferredToAirCabinHeater { get; }

@@ -7,7 +7,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 		ISSMInputs SSMInputs { get;  }
 		ISSMTechnologyBenefits TechList { get;  }
 		ISSMCalculate Calculate { get;  }
-		bool SSMDisabled { get; }
 		IHVACConstants HVACConstants { get; set; }
 
 		Watt ElectricalWBase { get; } // Watt
@@ -28,8 +27,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 		/// <returns></returns>
 		/// <remarks></remarks>
 		KilogramPerSecond FuelPerHBaseAsjusted(Watt AverageUseableEngineWasteHeatKW);
-
-		event MessageEventHandler Message;
 
 	}
 

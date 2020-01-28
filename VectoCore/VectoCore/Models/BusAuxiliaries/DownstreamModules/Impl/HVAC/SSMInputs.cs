@@ -23,13 +23,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		//public IVehicleData Vehicle { get; }
 
-		public bool SSMDisabled { get; set; }
-
-		// C4/D4
-		//public string BusModel
-		//{
-		//	get { return Vehicle.ModelName; }
-		//}
 
 		// C5/D5
 		public double NumberOfPassengers

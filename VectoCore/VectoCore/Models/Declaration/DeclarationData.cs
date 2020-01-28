@@ -248,10 +248,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return CalculateInternalLength(vehicleLength, doubleDecker, floorType, numPassLowFloor);
 			}
 
-			public static Meter CalculateInternalHeight(Meter vehicleHeight)
+			public static Meter CalculateInternalHeight(FloorType floorType, bool doubleDecker, Meter vehicleHeight)
 			{
-				// MQ: 2020-01-23 TODO! how to calculate?
-				return 1.8.SI<Meter>();
+				if (doubleDecker) {
+					return Constants.BusParameters.InternalHeightDoubleDecker;
+				}
+
+				switch (floorType) {
+					case FloorType.LowFloor:
+						return vehicleHeight;
+					case FloorType.HighFloor:
+						return vehicleHeight - Constants.BusParameters.HeightLuggageCompartment;
+				}
+
+				throw new VectoException("Internal height for vehicle type '{0}' {1} not defined", floorType.ToString(), doubleDecker ? "double decker" : "single decker");
 			}
 
 			public static Meter WindowHeight(bool doubleDecker)

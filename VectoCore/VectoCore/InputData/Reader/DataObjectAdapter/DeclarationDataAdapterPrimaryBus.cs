@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
 				Actuations = actuations,
 				SSMInputs = CreateSSMModelParameters(
-					vehicleData.Components.BusAuxiliaries, runData.VehicleData, mission, FuelData.Diesel),
+					vehicleData.Components.BusAuxiliaries, mission, FuelData.Diesel),
 				VehicleData = runData.VehicleData,
 				FuelMap = runData.EngineData.Fuels.First().ConsumptionMap
 			};
@@ -105,6 +105,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				AverageCurrentDemandWithoutBaseLoad = currentDemand.Item2,
 				AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)),
 				PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
+				StoredEnergyEfficiency = Constants.BusAuxiliaries.ElectricSystem.StoredEnergyEfficiency,
 				ResultCardIdle = busAux.ElectricSupply.ResultCards != null
 					? new ResultCard(
 						busAux.ElectricSupply.ResultCards.Idle.Select(x => new SmartResult(x.Current, x.SmartCurrent)).ToList())
@@ -202,6 +203,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				CompressorMap = GetCompressorMap(busAux.PneumaticSupply.CompressorSize),
 				SmartAirCompression = busAux.PneumaticSupply.SmartAirCompression,
 				SmartRegeneration = busAux.PneumaticSupply.SmartRegeneration,
+				AdBlueDosing = busAux.PneumaticConsumers.AdBlueDosing,
+				Doors = ConsumerTechnology.Pneumatically,
+				AirSuspensionControl = busAux.PneumaticConsumers.AirsuspensionControl,
 			};
 		}
 
@@ -241,19 +245,16 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource));
 		}
 
-		public virtual ISSMInputs CreateSSMModelParameters(
-			IBusAuxiliariesDeclarationData busAuxInputData, IVehicleData vehicleData, Mission mission,
-			IFuelProperties heatingFuel)
+		public virtual ISSMInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel)
 		{
 			var busParams = mission.BusParameter;
 
 			var hvacBusLength = busParams.HVACConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength
 				: busParams.VehicleLength;
-			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.VehicleHeight);
-			var coolingPower = CalculateMaxCoolingPower(vehicleData, mission);
+			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.BusParameter.FloorType, mission.BusParameter.DoubleDecker, busParams.BodyHeight);
+			var coolingPower = CalculateMaxCoolingPower(mission);
 			var retVal = new SSMInputs(null, heatingFuel) {
-				SSMDisabled = false,
 				Technologies = GetSSMTechnologyBenefits(busAuxInputData, mission.BusParameter.FloorType),
 				DefaultConditions = new EnvironmentalConditionMapEntry(
 					Constants.BusAuxiliaries.SteadyStateModel.DefaultTemperature,
@@ -280,8 +281,8 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 				BusWindowSurface = DeclarationData.BusAuxiliaries.WindowHeight(busParams.DoubleDecker) * hvacBusLength +
 									DeclarationData.BusAuxiliaries.FrontAndRearWindowArea(busParams.DoubleDecker),
-				BusSurfaceArea = 2 * (hvacBusLength * busParams.VehicleWidth + hvacBusLength * mission.VehicleHeight +
-									busParams.VehicleWidth * mission.VehicleHeight),
+				BusSurfaceArea = 2 * (hvacBusLength * busParams.VehicleWidth + hvacBusLength * busParams.BodyHeight +
+									busParams.VehicleWidth * busParams.BodyHeight),
 				BusVolume = hvacBusLength * busParams.VehicleWidth * hvacBusheight,
 
 				UValue = DeclarationData.BusAuxiliaries.UValue(busParams.FloorType),
@@ -291,7 +292,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration),
 
 				HVACMaxCoolingPower = coolingPower.Item1 + coolingPower.Item2,
-				HVACCompressorType = busParams.HVACCompressorType,
+				HVACCompressorType = busParams.HVACCompressorType, // use passenger compartment
 				COP = DeclarationData.BusAuxiliaries.CalculateCOP(
 					coolingPower.Item1, ACCompressorType.None, coolingPower.Item2, busParams.HVACCompressorType,
 					busParams.FloorType),
@@ -348,17 +349,15 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		}
 
 
-		private Tuple<Watt, Watt> CalculateMaxCoolingPower(IVehicleData vehicleData, Mission mission)
+		private Tuple<Watt, Watt> CalculateMaxCoolingPower(Mission mission)
 		{
 			var busParams = mission.BusParameter;
 
 			var length = DeclarationData.BusAuxiliaries.CalculateInternalLength(
 				busParams.VehicleLength, busParams.DoubleDecker, busParams.FloorType,
 				busParams.NumberPassengersLowerDeck);
-			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(mission.VehicleHeight);
+			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(busParams.FloorType, busParams.DoubleDecker, busParams.BodyHeight);
 			var volume = length * height * busParams.VehicleWidth;
-
-			// todo: subtract driver compartment from passenger compartment for certain configurations.
 
 			var driver = DeclarationData.BusAuxiliaries.HVACMaxCoolingPower.DriverMaxCoolingPower(
 				busParams.HVACConfiguration, mission.MissionType);

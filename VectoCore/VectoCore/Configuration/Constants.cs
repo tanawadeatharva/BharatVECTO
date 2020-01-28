@@ -174,14 +174,6 @@ namespace TUGraz.VectoCore.Configuration
 				public const double CompressorGearEfficiency = 0.97;
 
 				public const double PneumaticOverrunUtilisation = 0.97;
-				//public const ConsumerTechnology AdBlueDosing = ConsumerTechnology.Pneumatic; // "Pneumatic";
-				//public const ConsumerTechnology AirSuspensionControl = ConsumerTechnology.Mechanical; // "Mechanically";
-				//public const ConsumerTechnology Doors = ConsumerTechnology.Pneumatic; // "Pneumatic";
-				//public static readonly Meter KneelingHeightMillimeters = 70.SI(Unit.SI.Milli.Meter).Cast<Meter>();
-				//public IPneumaticActuationsMap ActuationsMap = null;
-				//public const bool RetarderBrake = true;
-				//public const bool SmartAirCompression = false;
-				//public const bool SmartRegeneration = false;
 			}
 
 			public static class Heater {
@@ -193,6 +185,7 @@ namespace TUGraz.VectoCore.Configuration
 		public static class BusParameters
 		{
 			public static readonly Meter DriverCompartmentLength = 1.2.SI<Meter>();
+
 			public static readonly Kilogram PassengerWeightLow = 68.SI<Kilogram>();
 			public static readonly Kilogram PassengerWeightHigh = 71.SI<Kilogram>();
 
@@ -202,6 +195,8 @@ namespace TUGraz.VectoCore.Configuration
 			public static readonly SquareMeter FrontAndRearWindowAreaSingleDecker = 5.SI<SquareMeter>();
 			public static readonly SquareMeter FrontAndRearWindowAreaDoubleDecker = 8.SI<SquareMeter>();
 
+			public static readonly Meter InternalHeightDoubleDecker = 1.8.SI<Meter>();
+			public static readonly Meter HeightLuggageCompartment = 0.5.SI<Meter>();
 
 			public static class Auxiliaries
 			{

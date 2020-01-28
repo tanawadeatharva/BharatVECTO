@@ -36,7 +36,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var genInput = ((JObject)body["SSMInputs"]);
 
 			var retVal = new SSMInputs(fileName);
-			retVal.SSMDisabled = body.GetEx<bool>("SSMDisabled");
 			
 			retVal.GFactor = genInput.GetEx<double>("BC_GFactor");
 			//retVal.PassengerBoundaryTemperature = genInput.GetEx<double>("BC_PassengerBoundaryTemperature").DegCelsiusToKelvin();

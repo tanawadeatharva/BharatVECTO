@@ -40,10 +40,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				}
 
 				return gen.BusParameters.BusFloorType == FloorType.LowFloor
-					? (enviromentalTemperature - gen.BoundaryConditions.CoolingBoundaryTemperature) <
-					gen.BoundaryConditions.MaxTemperatureDeltaForLowFloorBusses
-						? gen.BoundaryConditions.CoolingBoundaryTemperature
-						: enviromentalTemperature - 3.SI<Kelvin>()
+					? VectoMath.Max(gen.BoundaryConditions.CoolingBoundaryTemperature, enviromentalTemperature - gen.BoundaryConditions.MaxTemperatureDeltaForLowFloorBusses)
 					: gen.BoundaryConditions.CoolingBoundaryTemperature;
 			
 		}

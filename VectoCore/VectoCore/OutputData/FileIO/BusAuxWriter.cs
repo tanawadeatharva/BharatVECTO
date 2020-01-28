@@ -163,7 +163,6 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			var returnValue = true;
 			try {
 				var body = new Dictionary<string, object>();
-				body["SSMDisabled"] = ssmInput.SSMDisabled;
 				body["SSMInputs"] = SaveGenInputs(ssmInput);
 				//body["TechList"] = SaveTechlist(ssmInput);
 

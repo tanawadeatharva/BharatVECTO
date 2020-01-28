@@ -96,6 +96,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Meter VehicleLength { get; internal set; }
 
+		public Meter BodyHeight { get; internal set; }
+
 		public double NumberPassengersLowerDeck { get; internal set; }
 
 		public double NumberPassengersUpperDeck { get; internal set; }

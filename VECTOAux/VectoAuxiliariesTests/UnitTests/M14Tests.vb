@@ -23,7 +23,6 @@ Namespace UnitTests
 		Implements ISSMTOOL
 
         Public Property Calculate As ISSMCalculate Implements ISSMTOOL.Calculate
-        Public Property SSMDisabled As Boolean Implements ISSMTOOL.SSMDisabled
         Public Property HVACConstants As IHVACConstants Implements ISSMTOOL.HVACConstants
 
         'Public Sub Clone(from As ISSMTOOL) Implements ISSMTOOL.Clone
