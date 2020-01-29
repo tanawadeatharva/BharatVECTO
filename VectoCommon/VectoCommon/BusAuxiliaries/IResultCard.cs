@@ -24,5 +24,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<returns></returns>
 		/// 	<remarks>Defaults to 10 Amps if no readings present</remarks>
 		Ampere GetSmartCurrentResult(Ampere amps);
+
+		Dictionary<Ampere, Ampere> Entries { get; }
 	}
 }

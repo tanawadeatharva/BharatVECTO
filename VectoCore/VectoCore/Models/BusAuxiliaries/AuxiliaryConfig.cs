@@ -10,17 +10,18 @@
 // See the LICENSE.txt for the specific language governing permissions and limitations.
 
 using System;
+using System.Linq;
 using Newtonsoft.Json;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Models.BusAuxiliaries {
-	
+namespace TUGraz.VectoCore.Models.BusAuxiliaries
+{
 	public class AuxiliaryConfig : IAuxiliaryConfig
 	{
 		public IBusAuxiliariesDeclarationData InputData { get; internal set; }
-		
+
 		// Electrical
 		public IElectricsUserInputsConfig ElectricalUserInputsConfig { get; internal set; }
 
@@ -34,21 +35,22 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 		//public IActuationsMap ActuationsMap { get; internal set; }
 		public IActuations Actuations { get; internal set; }
 
-		
+
 		public IVehicleData VehicleData { get; internal set; }
-	
+
 		public IFuelConsumptionMap FuelMap { get; internal set; }
 
 		// Vecto Signals
 		public ISignals Signals { get; internal set; }
 
 		// Constructors
-		
-		
+
+
 		private bool CompareElectricalConfiguration(IAuxiliaryConfig other)
 		{
 			// AlternatorGearEfficiency
-			if (ElectricalUserInputsConfig.AlternatorGearEfficiency != other.ElectricalUserInputsConfig.AlternatorGearEfficiency) {
+			if (ElectricalUserInputsConfig.AlternatorGearEfficiency !=
+				other.ElectricalUserInputsConfig.AlternatorGearEfficiency) {
 				return false;
 			}
 
@@ -77,18 +79,29 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 				return false;
 			}
 
-			// ResultCardIdle
-			if (!ElectricalUserInputsConfig.ResultCardIdle.Equals(other.ElectricalUserInputsConfig.ResultCardIdle)) {
-				return false;
-			}
+			try {
+				// ResultCardIdle
+				if (ElectricalUserInputsConfig.ResultCardIdle.Entries
+											.ZipAll(other.ElectricalUserInputsConfig.ResultCardIdle.Entries, Tuple.Create).Any(
+												t => !t.Item1.Key.IsEqual(t.Item2.Key) || !t.Item1.Value.IsEqual(t.Item2.Value))) {
+					return false;
+				}
 
-			// ResultCardOverrun
-			if (!ElectricalUserInputsConfig.ResultCardOverrun.Equals(other.ElectricalUserInputsConfig.ResultCardOverrun)) {
-				return false;
-			}
+				// ResultCardOverrun
+				if (ElectricalUserInputsConfig.ResultCardOverrun.Entries
+											.ZipAll(other.ElectricalUserInputsConfig.ResultCardOverrun.Entries, Tuple.Create).Any(
+												t => !t.Item1.Key.IsEqual(t.Item2.Key) || !t.Item1.Value.IsEqual(t.Item2.Value))) {
+					return false;
+				}
 
-			// ResultCardTraction
-			if (!ElectricalUserInputsConfig.ResultCardTraction.Equals(other.ElectricalUserInputsConfig.ResultCardTraction)) {
+				// ResultCardTraction
+				if (ElectricalUserInputsConfig.ResultCardTraction.Entries
+											.ZipAll(other.ElectricalUserInputsConfig.ResultCardTraction.Entries, Tuple.Create).Any(
+												t => !t.Item1.Key.IsEqual(t.Item2.Key) || !t.Item1.Value.IsEqual(t.Item2.Value))) {
+					return false;
+				}
+			} catch (Exception) {
+				// zipall may throw an exeption...
 				return false;
 			}
 
@@ -112,6 +125,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 			if (PneumaticAuxillariesConfig.Braking != other.PneumaticAuxillariesConfig.Braking) {
 				return false;
 			}
+
 			//if (PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG !=
 			//	other.PneumaticAuxillariesConfig.BrakingWithRetarderNIperKG) {
 			//	return false;
@@ -222,8 +236,5 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries {
 		{
 			return base.GetHashCode();
 		}
-
 	}
-
-	
 }

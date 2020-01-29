@@ -309,13 +309,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var onVehicle = new List<SSMTechnology>();
 			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList) {
-				if (item.BenefitName.Equals("Adjustable coolant thermostat", StringComparison.InvariantCultureIgnoreCase) &&
-					inputData.HVACAux.AdjustableCoolantThermostat) {
+				if ("Adjustable coolant thermostat".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(inputData?.HVACAux.AdjustableCoolantThermostat ?? false)) {
 					onVehicle.Add(item);
 				}
 
-				if (item.BenefitName.Equals("Engine waste gas heat exchanger", StringComparison.InvariantCultureIgnoreCase) &&
-					inputData.HVACAux.EngineWasteGasHeatExchanger) {
+				if ("Engine waste gas heat exchanger".Equals(item.BenefitName, StringComparison.InvariantCultureIgnoreCase) &&
+					(inputData?.HVACAux.EngineWasteGasHeatExchanger ?? false)) {
 					onVehicle.Add(item);
 				}
 			}
