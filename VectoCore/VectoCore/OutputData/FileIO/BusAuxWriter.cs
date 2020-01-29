@@ -79,10 +79,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 			// ResultCardIdle
 			var resultCard = new List<object>();
-			foreach (var result in ((ResultCard)electricalUserCfg.ResultCardIdle).Results) {
+			foreach (var result in electricalUserCfg.ResultCardIdle.Entries) {
 				resultCard.Add(new Dictionary<string, object>() {
-					{ "Amps",  result.Amps.Value()},
-					{"SmartAmps",result.SmartAmps.Value() }
+					{ "Amps",  result.Key.Value()},
+					{"SmartAmps",result.Value.Value() }
 				});
 			}
 
@@ -91,10 +91,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 			// ResultCardOverrun
 			resultCard.Clear();
-			foreach (var result in ((ResultCard)electricalUserCfg.ResultCardOverrun).Results) {
+			foreach (var result in electricalUserCfg.ResultCardOverrun.Entries) {
 				resultCard.Add(new Dictionary<string, object>() {
-					{ "Amps",  result.Amps.Value()},
-					{"SmartAmps",result.SmartAmps.Value() }
+					{ "Amps",  result.Key.Value()},
+					{"SmartAmps",result.Value.Value() }
 				});
 			}
 
@@ -102,10 +102,10 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 
 			// ResultCardTraction
 			resultCard.Clear();
-			foreach (var result in ((ResultCard)electricalUserCfg.ResultCardTraction).Results) {
+			foreach (var result in electricalUserCfg.ResultCardTraction.Entries) {
 				resultCard.Add(new Dictionary<string, object>() {
-					{ "Amps",  result.Amps.Value()},
-					{"SmartAmps",result.SmartAmps.Value() }
+					{ "Amps",  result.Key.Value()},
+					{"SmartAmps",result.Value.Value() }
 				});
 			}
 

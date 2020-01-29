@@ -51,6 +51,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			retVal.BusWindowSurface = genInput.GetEx<double>("BC_BusWindowSurfaceArea").SI<SquareMeter>();
 			retVal.BusVolume = genInput.GetEx<double>("BC_BusVolume").SI<CubicMeter>();
 			retVal.UValue = genInput.GetEx<double>("BC_UValue").SI<WattPerKelvinSquareMeter>();
+			retVal.NumberOfPassengers = genInput.GetEx<double>("BC_PassengerCount");
 			retVal.COP = genInput.GetEx<double>("BC_COP");
 			//retVal.GCVDieselOrHeatingOil = genInput.GetEx<double>("BC_GCVDieselOrHeatingOil").SI(Unit.SI.Kilo.Watt.Hour.Per.Kilo.Gramm).Cast<JoulePerKilogramm>();
 																										//retVal.MaxTemperatureDeltaForLowFloorBusses = genInput.GetEx<double>("BC_MaxTemperatureDeltaForLowFloorBusses").SI<Kelvin>();

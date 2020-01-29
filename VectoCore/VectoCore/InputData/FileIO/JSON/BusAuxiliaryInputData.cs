@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				.GetEx<double>("AverageCurrentDemandWithoutBaseLoad").SI<Ampere>();
 
 			// PowerNetVoltage
-			//electricalUserInputsConfig.PowerNetVoltage = elData.GetEx<double>("PowerNetVoltage").SI<Volt>();
+			electricalUserInputsConfig.PowerNetVoltage = elData.GetEx<double>("PowerNetVoltage").SI<Volt>();
 
 
 			// SmartElectrical

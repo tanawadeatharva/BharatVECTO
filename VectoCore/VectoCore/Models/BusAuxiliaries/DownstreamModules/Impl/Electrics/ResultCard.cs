@@ -26,6 +26,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			return 0.SI<Ampere>();
 		}
 
+		public Dictionary<Ampere, Ampere> Entries { get { return new Dictionary<Ampere, Ampere>();} }
+
 		#endregion
 	}
 
@@ -56,6 +58,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public Ampere GetSmartCurrentResult(Ampere Amps)
 		{
 			return GetOrInterpolate(Amps);
+		}
+
+		public Dictionary<Ampere, Ampere> Entries
+		{
+			get { return _results.ToDictionary(x => x.Amps, x => x.SmartAmps); }
 		}
 
 
