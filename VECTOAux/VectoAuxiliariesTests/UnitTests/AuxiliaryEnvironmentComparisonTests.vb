@@ -245,206 +245,206 @@ Namespace UnitTests
 		'	Assert.AreEqual(False, compareResult)
 		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardIdle_UnequalCount_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardIdle_UnequalCount_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType(auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType(auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardTraction_UnequalCount_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardTraction_UnequalCount_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardOverrun_UnequalCount_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardOverrun_UnequalCount_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardIdle_AMPS_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardIdle_AMPS_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardIdle_UnEqualAMPS_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardIdle_UnEqualAMPS_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardIdle_UnEqualSMARTAMPS_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardIdle_UnEqualSMARTAMPS_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 51.SI(of Ampere)))
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 51.SI(of Ampere)))
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardIdle, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardTraction_AMPS_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardTraction_AMPS_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(51.SI(of Ampere), 49.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(51.SI(of Ampere), 49.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardTraction_UnEqualAMPS_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardTraction_UnEqualAMPS_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardTraction_UnEqualSMARTAMPS_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardTraction_UnEqualSMARTAMPS_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardTraction, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardOverrun_AMPS_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardOverrun_AMPS_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 48.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 48.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardOverrun_UnEqualAMPS_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardOverrun_UnEqualAMPS_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(50.SI(of Ampere), 49.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
-		<Test()>
-		<Category("ElectricalUserConfig")>
-		Public Sub ElectricalUserConfig_Unequal_ResultCardOverrun_UnEqualSMARTAMPS_UnequalTest()
+		'<Test()>
+		'<Category("ElectricalUserConfig")>
+		'Public Sub ElectricalUserConfig_Unequal_ResultCardOverrun_UnEqualSMARTAMPS_UnequalTest()
 
-			'Arrange
-			Dim auxFresh = GetDefaultAuxiliaryConfig()
-			Dim auxNow = GetDefaultAuxiliaryConfig()
-			Dim compareResult As Boolean
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
-			CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
+		'	'Arrange
+		'	Dim auxFresh = GetDefaultAuxiliaryConfig()
+		'	Dim auxNow = GetDefaultAuxiliaryConfig()
+		'	Dim compareResult As Boolean
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 49.SI(of Ampere)))
+		'	CType(CType (auxNow.ElectricalUserInputsConfig.ResultCardOverrun, ResultCard).Results, List(of SmartResult)).Add(New SmartResult(49.SI(of Ampere), 50.SI(of Ampere)))
 
-			'Act
-			compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
+		'	'Act
+		'	compareResult = auxFresh.ConfigValuesAreTheSameAs(auxNow)
 
-			Assert.AreEqual(False, compareResult)
-		End Sub
+		'	Assert.AreEqual(False, compareResult)
+		'End Sub
 
 		<Test()>
 		<Category("ElectricalUserConfig")>

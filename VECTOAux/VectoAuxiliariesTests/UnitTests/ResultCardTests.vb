@@ -172,9 +172,11 @@ Public Class ResultCardTests
 		Dim resultSet As New List(Of SmartResult)
 
 		Dim expected As Single = 10
-		Dim actual As Ampere = (New ResultCard(resultSet)).GetSmartCurrentResult(10.SI(Of Ampere))
+        Assert.That(Sub()
+                          Dim actual As Ampere = (New ResultCard(resultSet)).GetSmartCurrentResult(10.SI(Of Ampere))
+                      End Sub, Throws.InstanceOf(Of ArgumentException))
 
-		Assert.AreEqual(expected, actual.Value(), 0.001)
+		'Assert.AreEqual(expected, actual.Value(), 0.001)
 	End Sub
 End Class
 

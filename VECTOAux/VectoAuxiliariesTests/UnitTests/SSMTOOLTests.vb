@@ -2,6 +2,7 @@
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.InputData
+Imports TUGraz.VectoCommon.Models
 Imports TUGraz.VectoCommon.Utils
 Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
@@ -75,9 +76,16 @@ Namespace UnitTests
             Dim mission As New Mission With{ 
                 .BusParameter = New BusParameters() with {
                 .HVACCompressorType = ACCompressorType.TwoStage,
-                .HVACAuxHeaterPower = 18e3.SI(Of Watt),
-                .HVACConfiguration = BusHVACSystemConfiguration.Configuration6
-            }
+                .HVACAuxHeaterPower = 30e3.SI(Of Watt),
+                .HVACConfiguration = BusHVACSystemConfiguration.Configuration6,
+                .FloorType = FloorType.HighFloor,
+                .DoubleDecker = False,
+                .VehicleWidth = 2.55.SI(Of Meter),
+                .VehicleLength = 10.655.SI(Of meter),
+                .BodyHeight = 2.275.SI(Of Meter),
+                .PassengerDensity = 3.SI(Of PerSquareMeter)
+            },
+            .MissionType = MissionType.Urban
             }
 
             Dim auxInput as IBusAuxiliariesDeclarationData = nothing
@@ -88,7 +96,7 @@ Namespace UnitTests
             If section = "BusParameterisation" Then
                 'BUS Parameterisation
                 '********************
-                Assert.AreEqual(47, target.BusParameters.NumberOfPassengers)
+                Assert.AreEqual(73.33075, target.BusParameters.NumberOfPassengers, 1e-3)
                 Assert.AreEqual(FloorType.HighFloor, target.BusParameters.BusFloorType)
                 'Assert.AreEqual(24.1102486R, target.BusParameters.BusFloorSurfaceArea.Value(), 2)
                 Assert.AreEqual(114.42325R, target.BusParameters.BusSurfaceArea.Value())
@@ -117,7 +125,7 @@ Namespace UnitTests
                 'Assert.AreEqual(7, target.BoundaryConditions.LowVentilation.Value()*3600)
                 'Assert.AreEqual(1236.25, Math.Round(target.BoundaryConditions.VolumeExchange.Value()*3600, 2))
                 'Assert.AreEqual(432.69, Math.Round(target.BoundaryConditions.LowVolumeExchange.Value()*3600, 2))
-                Assert.AreEqual(692.3, Math.Round(target.BoundaryConditions.VentPower(False).Value(), 2))
+                Assert.AreEqual(540.14, Math.Round(target.BoundaryConditions.VentPower(False).Value(), 2))
                 'Assert.AreEqual(242.3, Math.Round(target.BoundaryConditions.LowVentPower.Value(), 2))
                 Assert.AreEqual(0.56R, target.BoundaryConditions.SpecificVentilationPower.Value()/3600)
                 Assert.AreEqual(0.84, target.BoundaryConditions.AuxHeaterEfficiency)
@@ -142,7 +150,7 @@ Namespace UnitTests
                 'AC-SYSTEM
                 '*********
                 Assert.AreEqual(ACCompressorType.TwoStage, target.ACSystem.HVACCompressorType)
-                Assert.AreEqual(18, target.ACSystem.HVACMaxCoolingPower.Value()/1000.0)
+                Assert.AreEqual(24.155, target.ACSystem.HVACMaxCoolingPower.Value()/1000.0)
                 Assert.AreEqual(3.5, target.ACSystem.COP)
             End If
 

@@ -105,8 +105,8 @@ Public Class Utils
 
         Dim retval = New AuxiliaryConfig() With {
                 .ElectricalUserInputsConfig = New ElectricsUserInputsConfig() With {
-                .AverageCurrentDemandInclBaseLoad = 0.SI(Of Ampere),
-                .AverageCurrentDemandWithoutBaseLoad = 0.SI(of Ampere),
+                .AverageCurrentDemandInclBaseLoad = 60.631777385159026.SI(Of Ampere),
+                .AverageCurrentDemandWithoutBaseLoad = 35.631777385159026.SI(of Ampere),
                 .ResultCardIdle = New DummyResultCard(), ' New ResultCard(New List(Of SmartResult)()),
                 .ResultCardTraction = New DummyResultCard(), 'New ResultCard(New List(Of SmartResult)()),
                 .ResultCardOverrun = New DummyResultCard(), 'New ResultCard(New List(Of SmartResult)()),
@@ -132,6 +132,8 @@ Public Class Utils
                 .BusSurfaceArea = 0.SI(Of SquareMeter),
                 .BusVolume = 0.SI(Of CubicMeter),
                 .BusWindowSurface = 0.SI(of SquareMeter),
+                .UValue = 3.SI(Of WattPerKelvinSquareMeter),
+                .COP = 3.5,
                 .VentilationRate = 20.SI(Unit.SI.Per.Hour).Cast (Of PerSecond),
                 .VentilationRateHeating = 20.SI(Unit.SI.Per.Hour).Cast (Of PerSecond),
                 .DefaultConditions =

@@ -84,7 +84,7 @@ Namespace Pneumatics
 
             Assert.That(Sub()
                 dim target = ActuationsMapReader.Read(cstrPneumaticActuationsMapPath_INVALIDCONSUMERNAME)
-            End Sub, Throws.InstanceOf (Of ArgumentException))
+            End Sub, Throws.InstanceOf (Of VectoException))
         End Sub
 
         <Test()>

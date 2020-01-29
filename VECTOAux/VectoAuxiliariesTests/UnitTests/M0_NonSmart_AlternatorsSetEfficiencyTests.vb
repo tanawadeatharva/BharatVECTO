@@ -79,18 +79,18 @@ Namespace UnitTests
             Assert.IsNotNull(target)
         End Sub
 
-        <Test()>
-        Public Sub CreateNew_MissingElecConsumers_ThrowArgumentExceptionTest()
+        '<Test()>
+        'Public Sub CreateNew_MissingElecConsumers_ThrowArgumentExceptionTest()
 
-            Dim target As IM0_NonSmart_AlternatorsSetEfficiency
-            Dim auxConfig = utils.GetAuxTestConfig()
-            'CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
-            CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = powernetVoltage
-            CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
+        '    Dim target As IM0_NonSmart_AlternatorsSetEfficiency
+        '    Dim auxConfig = utils.GetAuxTestConfig()
+        '    'CType(CType(auxConfig.SSMInputs, SSMInputs).Vehicle, VehicleData).Height=  0.SI (Of Meter)
+        '    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = powernetVoltage
+        '    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
 
-            Assert.That(Sub() target = New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, New SSMTOOL(auxconfig.SSMInputs)),
-                        Throws.InstanceOf (Of ArgumentException))
-        End Sub
+        '    Assert.That(Sub() target = New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, New SSMTOOL(auxconfig.SSMInputs)),
+        '                Throws.InstanceOf (Of ArgumentException))
+        'End Sub
 
         <Test()>
         Public Sub CreateNew_MissingAlternatorMap_ThrowArgumentExceptionTest()

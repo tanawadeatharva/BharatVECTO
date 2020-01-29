@@ -1,9 +1,7 @@
 {
   "Header": "AAUX",
   "Body": {
-    "$type": "TUGraz.VectoCore.BusAuxiliaries.AuxiliaryConfig, BusAuxiliaries",
     "VectoInputs": {
-      "$type": "TUGraz.VectoCore.BusAuxiliaries.Interfaces.VectoInputs, BusAuxiliaries",
       "Cycle": "Urban",
       "VehicleWeightKG": 16500.0,
       "PowerNetVoltage": 28.3,
@@ -12,14 +10,12 @@
     },
     "ActuationsMap": "testPneumaticActuationsMap.APAC",
     "ElectricalUserInputsConfig": {
-      "$type":
-        "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Electrics.ElectricsUserInputsConfig, BusAuxiliaries",
       "PowerNetVoltage": 28.3,
       "AlternatorMap": "testCombAlternatorMap_1Alt.AALT",
       "AlternatorGearEfficiency": 0.92,
       "ElectricalConsumers": {
-        "AverageCurrentDemandInclBaseLoad": 50,
-        "AverageCurrentDemandWithoutBaseLoad": 25.0
+        "AverageCurrentDemandInclBaseLoad": 60.631777385159026,
+        "AverageCurrentDemandWithoutBaseLoad": 35.631777385159026
       },
       "DoorActuationTimeSecond": 4,
       "ResultCardIdle": [],
@@ -28,8 +24,6 @@
       "SmartElectrical": false
     },
     "PneumaticUserInputsConfig": {
-      "$type":
-        "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics.PneumaticUserInputsConfig, BusAuxiliaries",
       "CompressorMap": "DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP",
       "CompressorGearRatio": 1.0,
       "CompressorGearEfficiency": 0.8,
@@ -42,8 +36,6 @@
       "SmartRegeneration": true
     },
     "PneumaticAuxillariesConfig": {
-      "$type":
-        "TUGraz.VectoCore.BusAuxiliaries.DownstreamModules.Impl.Pneumatics.PneumaticsAuxilliariesConfig, BusAuxiliaries",
       "AdBlueNIperMinute": 21.25,
       "AirControlledSuspensionNIperMinute": 15.0,
       "BrakingNIperKG": 0.0006,
