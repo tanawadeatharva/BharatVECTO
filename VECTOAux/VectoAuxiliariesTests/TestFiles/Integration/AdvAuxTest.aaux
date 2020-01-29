@@ -1,20 +1,18 @@
 {
   "Header": "AAUX",
   "Body": {
-    "VectoInputs": {
-      "Cycle": "Urban",
-      "VehicleWeightKG": 16500.0,
-      "PowerNetVoltage": 28.3,
-      "FuelMap": "testFuelGoodMap.vmap",
-      "FuelDensity": 0.832
+   "Actuations": {
+      "Brakes": 27,
+      "CycleTime": 15000,
+      "Kneeling": 0,
+      "Park brake + 2 doors": 6
     },
-    "ActuationsMap": "testPneumaticActuationsMap.APAC",
     "ElectricalUserInputsConfig": {
       "PowerNetVoltage": 28.3,
       "AlternatorMap": "testCombAlternatorMap_1Alt.AALT",
       "AlternatorGearEfficiency": 0.92,
       "ElectricalConsumers": {
-        "AverageCurrentDemandInclBaseLoad": 60.631777385159026,
+        "AverageCurrentDemandInclBaseLoad": 59.782177,
         "AverageCurrentDemandWithoutBaseLoad": 35.631777385159026
       },
       "DoorActuationTimeSecond": 4,

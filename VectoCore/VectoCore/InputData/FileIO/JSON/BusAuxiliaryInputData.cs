@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 				Braking = data["Actuations"]?.GetEx<int>("Brakes") ?? 0,
 				ParkBrakeAndDoors = data["Actuations"]?.GetEx<int>("Park brake + 2 doors") ?? 0,
 				Kneeling = data["Actuations"]?.GetEx<int>("Kneeling") ?? 0,
-				CycleTime = (data["Actiations"]?.GetEx<int>("CycleTime") ?? 3600).SI<Second>()
+				CycleTime = (data["Actuations"]?.GetEx<int>("CycleTime") ?? 3600).SI<Second>()
 			};
 				//ActuationsMapReader.Read(Path.Combine(baseDir, data.GetEx<string>("ActuationsMap")));
 			var ssm = string.IsNullOrWhiteSpace(data["SSMFilePath"]?.ToString()) ?
