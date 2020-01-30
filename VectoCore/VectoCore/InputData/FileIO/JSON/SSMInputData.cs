@@ -78,10 +78,16 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			retVal.FuelEnergyToHeatToCoolant = genInput.GetEx<double>("AH_FuelEnergyToHeatToCoolant");
 			retVal.CoolantHeatTransferredToAirCabinHeater = genInput.GetEx<double>("AH_CoolantHeatTransferredToAirCabinHeater");
 
-			retVal.Technologies = new TechnologyBenefits() {
-				// TODO: MQ 2020-01-27 read from file!
-				//CValueVariation = 
-			};
+			var benefits = body["SSMTechologyBenefits"];
+			retVal.Technologies = benefits != null
+				? new TechnologyBenefits() {
+					CValueVariation = benefits.GetEx<double>("Cooling"),
+					HValueVariation = benefits.GetEx<double>("Heating"),
+					VVValueVariation = benefits.GetEx<double>("Ventilation"),
+					VHValueVariation = benefits.GetEx<double>("VentilationHeating"),
+					VCValueVariation = benefits.GetEx<double>("VentilationCooling")
+				}
+				: new TechnologyBenefits();
 
 			return retVal;
 		}

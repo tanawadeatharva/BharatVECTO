@@ -30,13 +30,7 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 				body["EnvironmentalConditions"] = string.IsNullOrWhiteSpace(auxCfg.SSMInputs.EnvironmentalConditions.Source)
 					? ""
 					: JSONFileWriter.GetRelativePath(auxCfg.SSMInputs.EnvironmentalConditions.Source, basePath);
-				body["SSMTechologyBenefits"] = new Dictionary<string, object>() {
-					{ "Heating", auxCfg.SSMInputs.Technologies.HValueVariation},
-					{ "Cooling", auxCfg.SSMInputs.Technologies.CValueVariation },
-					{ "Ventilation", auxCfg.SSMInputs.Technologies.VVValueVariation },
-					{ "VentilationHeating", auxCfg.SSMInputs.Technologies.VHValueVariation},
-					{ "VentilationCooling", auxCfg.SSMInputs.Technologies.VCValueVariation}
-				};
+				
 					//string.IsNullOrWhiteSpace(auxCfg.SSMInputs.Technologies.Source)
 					//? ""
 					//: JSONFileWriter.GetRelativePath(auxCfg.SSMInputs.Technologies.Source, basePath);
@@ -164,6 +158,13 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			try {
 				var body = new Dictionary<string, object>();
 				body["SSMInputs"] = SaveGenInputs(ssmInput);
+				body["SSMTechologyBenefits"] = new Dictionary<string, object>() {
+					{ "Heating", ssmInput.Technologies.HValueVariation},
+					{ "Cooling", ssmInput.Technologies.CValueVariation },
+					{ "Ventilation", ssmInput.Technologies.VVValueVariation },
+					{ "VentilationHeating", ssmInput.Technologies.VHValueVariation},
+					{ "VentilationCooling", ssmInput.Technologies.VCValueVariation}
+				};
 				//body["TechList"] = SaveTechlist(ssmInput);
 
 				JSONInputDataFactory.WriteFile(JToken.FromObject(new Dictionary<string, object>() { { "Header", "AHSM" }, { "Body", body } }), filePath);
