@@ -399,28 +399,27 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="TransmissionGearPIFType">
+		<xs:sequence>
+			<xs:element name="Ratio"/>
+			<xs:element name="MaxTorque" type="v1.0:GearboxGearMaxTorqueType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P157 - [Nm]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MaxSpeed" type="v1.0:GearboxGearMaxSpeedType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P194 - [1/min]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="number" use="required"/>
+	</xs:complexType>
 	<xs:complexType name="TransmissionGearsPIFType">
 		<xs:complexContent>
 			<xs:extension base="AbstractTransmissionGearsPIFType">
 				<xs:sequence>
-					<xs:element name="Gear" maxOccurs="unbounded">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Ratio"/>
-								<xs:element name="MaxTorque" type="v1.0:GearboxGearMaxTorqueType" minOccurs="0">
-									<xs:annotation>
-										<xs:documentation>P157 - [Nm]</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-								<xs:element name="MaxSpeed" type="v1.0:GearboxGearMaxSpeedType" minOccurs="0">
-									<xs:annotation>
-										<xs:documentation>P194 - [1/min]</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-							<xs:attribute name="number" use="required"/>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Gear" type="TransmissionGearPIFType" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
