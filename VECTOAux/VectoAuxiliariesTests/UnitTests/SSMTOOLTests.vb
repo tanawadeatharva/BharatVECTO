@@ -150,7 +150,7 @@ Namespace UnitTests
                 'AC-SYSTEM
                 '*********
                 Assert.AreEqual(ACCompressorType.TwoStage, target.ACSystem.HVACCompressorType)
-                Assert.AreEqual(24.155, target.ACSystem.HVACMaxCoolingPower.Value()/1000.0)
+                Assert.AreEqual(15.5567, target.ACSystem.HVACMaxCoolingPower.Value()/1000.0, 1e-3)
                 Assert.AreEqual(3.5, target.ACSystem.COP)
             End If
 
