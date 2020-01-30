@@ -23,7 +23,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public Ampere GetSmartCurrentResult(Ampere amps)
 		{
-			return 0.SI<Ampere>();
+			// MQ: mimic weird behavior of original resultcard implementation - return 10Amps in case less than 2 entries are provided...
+			return 10.SI<Ampere>();
 		}
 
 		public Dictionary<Ampere, Ampere> Entries { get { return new Dictionary<Ampere, Ampere>();} }
