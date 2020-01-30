@@ -581,10 +581,17 @@ Namespace UnitTests
 
             
             Dim mission As New Mission With{ 
-                    .BusParameter = New BusParameters() with {
+                .MissionType = MissionType.HeavyUrban,
+                .BusParameter = New BusParameters() with {
                     .HVACCompressorType = ACCompressorType.TwoStage,
                     .HVACAuxHeaterPower = 18e3.SI(Of Watt),
-                    .HVACConfiguration = BusHVACSystemConfiguration.Configuration6
+                    .HVACConfiguration = BusHVACSystemConfiguration.Configuration6,
+                    .FloorType = FloorType.HighFloor,
+                    .DoubleDecker = false,
+                    .BodyHeight = 2.7.SI(of Meter),
+                    .VehicleWidth = 2.55.SI(Of Meter),
+                    .VehicleLength = 12.SI(Of Meter),
+                    .PassengerDensity = 3.SI(Of PerSquareMeter)
                     }
                     }
 

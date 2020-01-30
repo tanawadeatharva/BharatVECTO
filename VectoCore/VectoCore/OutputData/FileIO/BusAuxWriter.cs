@@ -122,12 +122,12 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 		{
 			var puData = new Dictionary<string, object>();
 
-			puData["AdBlueDosing"] = pneumaticUserCfg.AdBlueDosing;
+			puData["AdBlueDosing"] = pneumaticUserCfg.AdBlueDosing.ToString();
 			puData["AirSuspensionControl"] = pneumaticUserCfg.AirSuspensionControl.ToString();
 			puData["CompressorGearEfficiency"] = pneumaticUserCfg.CompressorGearEfficiency;
 			puData["CompressorGearRatio"] = pneumaticUserCfg.CompressorGearRatio;
 			puData["CompressorMap"] = pneumaticUserCfg.CompressorMap == null ? "" : JSONFileWriter.GetRelativePath(pneumaticUserCfg.CompressorMap.Source, auxPath);
-			puData["Doors"] = pneumaticUserCfg.Doors;
+			puData["Doors"] = pneumaticUserCfg.Doors.ToString();
 			puData["KneelingHeightMillimeters"] = pneumaticUserCfg.KneelingHeight.ConvertToMilliMeter().Value;
 			//puData["RetarderBrake"] = pneumaticUserCfg.RetarderBrake;
 			puData["SmartAirCompression"] = pneumaticUserCfg.SmartAirCompression;
@@ -184,16 +184,26 @@ namespace TUGraz.VectoCore.OutputData.FileIO
 			retVal["BC_HeatingBoundaryTemperature"] = ssmInputs.BoundaryConditions.HeatingBoundaryTemperature.AsDegCelsius;
 			retVal["BC_CoolingBoundaryTemperature"] = ssmInputs.BoundaryConditions.CoolingBoundaryTemperature.AsDegCelsius;
 			retVal["BC_VentilationRate"] = ssmInputs.BoundaryConditions.VentilationRate.ConvertToPerHour().Value;
+			retVal["BC_VentilationRateHeating"] = ssmInputs.BoundaryConditions.VentilationRateHeating.ConvertToPerHour().Value;
 			//retVal["BC_lowVentilation"] = ssmInputs.BoundaryConditions.LowVentilation.ConvertToPerHour().Value;
 			retVal["BC_SpecificVentilationPower"] = ssmInputs.BoundaryConditions.SpecificVentilationPower.ConvertToWattHourPerCubicMeter().Value;
 			retVal["BC_AuxHeaterEfficiency"] = ssmInputs.BoundaryConditions.AuxHeaterEfficiency;
 			retVal["BC_GCVDieselOrHeatingOil"] = ssmInputs.BoundaryConditions.GCVDieselOrHeatingOil.ConvertToKiloWattHourPerKilogramm().Value;
 			retVal["BC_MaxTemperatureDeltaForLowFloorBusses"] = ssmInputs.BoundaryConditions.MaxTemperatureDeltaForLowFloorBusses.AsDegCelsius;
 			retVal["BC_MaxPossibleBenefitFromTechnologyList"] = ssmInputs.BoundaryConditions.MaxPossibleBenefitFromTechnologyList;
+			retVal["BC_UValue"] = ssmInputs.BoundaryConditions.UValue.Value();
+
+			retVal["BP_FloorType"] = ssmInputs.BusParameters.BusFloorType.ToString();
+			retVal["BP_BusSurfaceArea"] = ssmInputs.BusParameters.BusSurfaceArea.Value();
+			retVal["BP_BusWindowSurfaceArea"] = ssmInputs.BusParameters.BusWindowSurface.Value();
+			retVal["BP_BusVolume"] = ssmInputs.BusParameters.BusVolume.Value();
+			retVal["BP_PassengerCount"] = ssmInputs.BusParameters.NumberOfPassengers;
+
 			retVal["EC_EnviromentalTemperature"] = ssmInputs.EnvironmentalConditions.DefaultConditions.Temperature.AsDegCelsius;
 			retVal["EC_Solar"] = ssmInputs.EnvironmentalConditions.DefaultConditions.Solar.Value();
 			retVal["AC_CompressorType"] = ssmInputs.ACSystem.HVACCompressorType.ToString();
 			retVal["AC_CompressorCapacitykW"] = ssmInputs.ACSystem.HVACMaxCoolingPower.ConvertToKiloWatt().Value;
+			retVal["AC_COP"] = ssmInputs.ACSystem.COP;
 			retVal["VEN_VentilationOnDuringHeating"] = ssmInputs.Ventilation.VentilationOnDuringHeating;
 			retVal["VEN_VentilationWhenBothHeatingAndACInactive"] = ssmInputs.Ventilation.VentilationWhenBothHeatingAndACInactive;
 			retVal["VEN_VentilationDuringAC"] = ssmInputs.Ventilation.VentilationDuringAC;

@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						return vehicleHeight - Constants.BusParameters.HeightLuggageCompartment;
 				}
 
-				throw new VectoException("Internal height for vehicle type '{0}' {1} not defined", floorType.ToString(), doubleDecker ? "double decker" : "single decker");
+				throw new VectoException("Internal height for vehicle floor type '{0}' {1} not defined", floorType.ToString(), doubleDecker ? "double decker" : "single decker");
 			}
 
 			public static Meter WindowHeight(bool doubleDecker)

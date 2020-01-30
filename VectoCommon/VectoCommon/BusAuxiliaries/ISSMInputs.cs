@@ -29,6 +29,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		FloorType BusFloorType { get; }
 		SquareMeter BusWindowSurface { get; }
 		SquareMeter BusSurfaceArea { get; }
+		CubicMeter BusVolume { get; }
 	}
 
 	public interface ISSMBoundaryConditions
@@ -49,6 +50,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		Kelvin TemperatureCoolingTurnsOff { get; }
 
 		PerSecond VentilationRate { get; }
+		
+		PerSecond VentilationRateHeating { get; }
 
 		Watt VentPower(bool heating);
 

@@ -46,16 +46,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			//retVal.LowVentilation = genInput.GetEx<double>("BC_lowVentilation").SI(Unit.SI.Per.Hour).Cast<PerSecond>();
 			retVal.SpecificVentilationPower = genInput.GetEx<double>("BC_SpecificVentilationPower").SI(Unit.SI.Watt.Hour.Per.Cubic.Meter).Cast<JoulePerCubicMeter>();
 			retVal.AuxHeaterEfficiency = genInput.GetEx<double>("BC_AuxHeaterEfficiency");
-			retVal.BusFloorType = genInput.GetEx<string>("BC_FloorType").ParseEnum<FloorType>();
-			retVal.BusSurfaceArea = genInput.GetEx<double>("BC_BusSurfaceArea").SI<SquareMeter>();
-			retVal.BusWindowSurface = genInput.GetEx<double>("BC_BusWindowSurfaceArea").SI<SquareMeter>();
-			retVal.BusVolume = genInput.GetEx<double>("BC_BusVolume").SI<CubicMeter>();
 			retVal.UValue = genInput.GetEx<double>("BC_UValue").SI<WattPerKelvinSquareMeter>();
-			retVal.NumberOfPassengers = genInput.GetEx<double>("BC_PassengerCount");
-			retVal.COP = genInput.GetEx<double>("BC_COP");
+			retVal.COP = genInput.GetEx<double>("AC_COP");
 			//retVal.GCVDieselOrHeatingOil = genInput.GetEx<double>("BC_GCVDieselOrHeatingOil").SI(Unit.SI.Kilo.Watt.Hour.Per.Kilo.Gramm).Cast<JoulePerKilogramm>();
 																										//retVal.MaxTemperatureDeltaForLowFloorBusses = genInput.GetEx<double>("BC_MaxTemperatureDeltaForLowFloorBusses").SI<Kelvin>();
 			retVal.MaxPossibleBenefitFromTechnologyList = genInput.GetEx<double>("BC_MaxPossibleBenefitFromTechnologyList");
+
+			retVal.BusFloorType = genInput.GetEx<string>("BP_FloorType").ParseEnum<FloorType>();
+			retVal.BusSurfaceArea = genInput.GetEx<double>("BP_BusSurfaceArea").SI<SquareMeter>();
+			retVal.BusWindowSurface = genInput.GetEx<double>("BP_BusWindowSurfaceArea").SI<SquareMeter>();
+			retVal.BusVolume = genInput.GetEx<double>("BP_BusVolume").SI<CubicMeter>();
+			retVal.NumberOfPassengers = genInput.GetEx<double>("BP_PassengerCount");
+
 			//retVal.EnviromentalTemperature = genInput.GetEx<double>("EC_EnviromentalTemperature").DegCelsiusToKelvin();
 			//retVal.Solar = genInput.GetEx<double>("EC_Solar").SI<WattPerSquareMeter>();
 			retVal.DefaultConditions = new EnvironmentalConditionMapEntry(

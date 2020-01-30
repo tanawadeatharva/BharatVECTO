@@ -70,8 +70,7 @@ Namespace UnitTests
         Public Sub Persistance_LoadThroughInstantiationPlusConfigFile_Test()
 
             'Arrange
-            Dim expected As boolean = true
-            Dim actual As Boolean = False
+            
             Dim auxDefault As IAuxiliaryConfig
             Dim auxTest As IAuxiliaryConfig = AuxiliaryComparisonTests.GetDefaultAuxiliaryConfig()
 
@@ -79,9 +78,9 @@ Namespace UnitTests
             SaveDefaultFile()
             auxDefault = BusAuxiliaryInputData.ReadBusAuxiliaries("TestFiles\auxiliaryConfigKEEP.json",
                                                                   Utils.GetDefaultVehicleData())
-            actual = auxTest.ConfigValuesAreTheSameAs(auxDefault)
+            Dim areEqual = auxTest.ConfigValuesAreTheSameAs(auxDefault)
             'Assert
-            Assert.AreEqual(expected, actual)
+            Assert.IsTrue(areEqual)
         End Sub
     End Class
 End Namespace
