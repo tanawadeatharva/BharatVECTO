@@ -59,6 +59,20 @@
 			<xs:element name="Data" type="AbstractAngledriveDataPIFType"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="ApplicationInformationPIFType">
+		<xs:sequence>
+			<xs:element name="SimulationToolVersion" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>II.2.5</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+				<xs:annotation>
+					<xs:documentation>II.2.5</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="AuxiliariesPIFType">
 		<xs:sequence>
 			<xs:element name="Data" type="v2.6:AbstractPrimaryVehicleAuxiliaryDataDeclarationType"/>
@@ -241,22 +255,7 @@
 					<xs:element name="Vehicle" type="AbstractVehiclePIFType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="ResultsPIFType"/>
-					<xs:element name="ApplicationInformation">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="SimulationToolVersion" type="xs:string">
-									<xs:annotation>
-										<xs:documentation>II.2.5</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
-									<xs:annotation>
-										<xs:documentation>II.2.5</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="ApplicationInformation" type="ApplicationInformationPIFType"/>
 				</xs:sequence>
 				<xs:attribute name="id" use="required"/>
 			</xs:extension>
