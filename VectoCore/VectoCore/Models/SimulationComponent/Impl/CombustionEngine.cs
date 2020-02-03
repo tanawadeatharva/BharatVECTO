@@ -381,7 +381,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DataBus.ExecutionMode == ExecutionMode.Engineering ? 20.RPMtoRad() : 1e-3.RPMtoRad())) {
 				Log.Warn("EngineSpeed below idling speed! n_eng_avg: {0}, n_idle: {1}", avgEngineSpeed.AsRPM, EngineIdleSpeed.AsRPM);
 			}
-			container[ModalResultField.P_eng_fcmap] = CurrentState.EngineTorque * avgEngineSpeed;
+			container[ModalResultField.P_ice_fcmap] = CurrentState.EngineTorque * avgEngineSpeed;
 			container[ModalResultField.P_ice_out] = container[ModalResultField.P_ice_out] is DBNull
 				? CurrentState.EngineTorqueOut * avgEngineSpeed
 				: container[ModalResultField.P_ice_out];
@@ -391,7 +391,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.T_ice_fcmap] = CurrentState.EngineTorque;
 
 			container[ModalResultField.P_ice_full] = CurrentState.DynamicFullLoadTorque * avgEngineSpeed;
-			container[ModalResultField.P_eng_full_stat] = CurrentState.StationaryFullLoadTorque * avgEngineSpeed;
+			container[ModalResultField.P_ice_full_stat] = CurrentState.StationaryFullLoadTorque * avgEngineSpeed;
 			container[ModalResultField.P_ice_drag] = CurrentState.FullDragTorque * avgEngineSpeed;
 			container[ModalResultField.T_ice_full] = CurrentState.DynamicFullLoadTorque;
 			container[ModalResultField.T_ice_drag] = CurrentState.FullDragTorque;
@@ -420,19 +420,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var fcNCVcorr = fc * fuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
 
 				var fcWHTC = fcNCVcorr * WHTCCorrectionFactor(fuel.FuelData);
-				var fcAAUX = fcWHTC;
+				//var fcAAUX = fcWHTC;
 				var advancedAux = EngineAux as BusAuxiliariesAdapter;
 				if (advancedAux != null) {
 					advancedAux.DoWriteModalResults(container);
-					fcAAUX = advancedAux.AAuxFuelConsumption;
+					//fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
-				var fcFinal = fcAAUX;
+				var fcFinal = fcWHTC; // fcAAUX;
 
 				container[ModalResultField.FCMap, fuelData] = fc;
 				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
 				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
-				container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
-				container[ModalResultField.FCEngineStopStart, fuel.FuelData] = fcFinal;
+				//container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
+				container[ModalResultField.FCICEStopStart, fuel.FuelData] = fcFinal;
 				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
 			}
 		}

@@ -12,8 +12,8 @@
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 
-namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
-
+namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
+{
 	//public delegate void AuxiliaryEventEventHandler(ref object sender, string message, AdvancedAuxiliaryMessageType messageType);
 
 	public interface IBusAuxiliaries
@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		//event AuxiliaryEventEventHandler AuxiliaryEvent;
 
 		// Information
-		bool Running { get; }
+		//bool Running { get; }
 
 		string AuxiliaryName { get; }
 		string AuxiliaryVersion { get; }
@@ -64,7 +64,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		///// <returns></returns>
 		///// <remarks></remarks>
 		//Liter TotalFuelLITRES { get; }
-
 		/// <summary>
 		/// Total Power Demans At Crank From Auxuliaries (W)
 		/// </summary>
@@ -81,7 +80,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		/// <returns></returns>
 		/// <remarks></remarks>
 		//IVectoInputs VectoInputs { get; set; }
-
 		/// <summary>
 		/// Signals From Vecto 
 		/// </summary>
@@ -90,19 +88,23 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		/// <remarks></remarks>
 		ISignals Signals { get; set; }
 
+		Watt HVACElectricalPowerConsumer { get; }
+
+		Watt ElectricPowerConsumer { get; }
+
 		Watt ElectricPowerConsumerSum { get; }
 		Watt ElectricPowerGenerated { get; }
-		NormLiter PSDemandConsumer { get;  }
+		Watt ElectricPowerDemandMech { get; }
+		NormLiter PSDemandConsumer { get; }
 		NormLiter PSAirGenerated { get; }
 		NormLiter PSAirGeneratedAlwaysOn { get; }
 		NormLiter PSAirGeneratedDrag { get; }
-		Watt PSPowerDemandAirGenerated { get;  }
-		Watt PSPowerCompressorAlwaysOn { get;  }
-		Watt PSPowerCompressorDragOnly { get;  }
+		Watt PSPowerDemandAirGenerated { get; }
+		Watt PSPowerCompressorAlwaysOn { get; }
+		Watt PSPowerCompressorDragOnly { get; }
 		Watt HVACMechanicalPowerConsumer { get; }
 		Watt HVACMechanicalPowerGenerated { get; }
 
-		Watt HVACElectricalPowerConsumer { get; }
 
 		///// <summary>
 		///// Configure Auxuliaries ( Launches Config Form )

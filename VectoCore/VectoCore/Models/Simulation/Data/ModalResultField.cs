@@ -126,15 +126,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		[ModalResultField(typeof(SI), name: "FC-WHTCc", caption: "FC-WHTCc{0} [g/h]", outputFactor: 3600 * 1000)] FCWHTCc,
 
-		/// <summary>
-		/// [g/h] Fuel consumption after smart auxiliary correction.
-		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-AAUX", caption: "FC-AAUX{0} [g/h]", outputFactor: 3600 * 1000)] FCAAUX,
+		///// <summary>
+		///// [g/h] Fuel consumption after smart auxiliary correction.
+		///// </summary>
+		//[ModalResultField(typeof(SI), name: "FC-AAUX", caption: "FC-AAUX{0} [g/h]", outputFactor: 3600 * 1000)] FCAAUX,
 
 		/// <summary>
 		/// [g/h] Fuel consumption after correction for ADAS technologies. (Based on FC-AAUXc.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-ESS", caption: "FC-ESS{0} [g/h]", outputFactor: 3600 * 1000)] FCEngineStopStart,
+		[ModalResultField(typeof(SI), name: "FC-ESS", caption: "FC-ESS{0} [g/h]", outputFactor: 3600 * 1000)] FCICEStopStart,
 
 		/// <summary>
 		/// [g/h] Fuel consumption after WHTC Correction. (Based on FC-ADAS.)
@@ -250,9 +250,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "P_trac [kW]", outputFactor: 1e-3)] P_trac,
 
-		[ModalResultField(typeof(SI), caption: "P_eng_fcmap [kW]", outputFactor: 1e-3)] P_eng_fcmap,
+		[ModalResultField(typeof(SI), caption: "P_ice_fcmap [kW]", outputFactor: 1e-3)] P_ice_fcmap,
 
-		[ModalResultField(typeof(SI), caption: "P_eng_full_stat [kW]", outputFactor: 1e-3)] P_eng_full_stat,
+		[ModalResultField(typeof(SI), caption: "P_ice_full_stat [kW]", outputFactor: 1e-3)] P_ice_full_stat,
 
 		/// <summary>
 		///     [kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
@@ -260,18 +260,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), caption: "P_aux_{0} [kW]", outputFactor: 1e-3)] P_aux_,
 
 		/// Bus Aux Data
+		[ModalResultField(typeof(SI), caption: "P_busAux_ES_HVAC [kW]", outputFactor: 1e-3)] P_busAux_ES_HVAC,
 
-		[ModalResultField(typeof(SI), caption: "P_busAux_el_consumer_sum [kW]", outputFactor: 1e-3)] P_busAux_ES_consumer_sum,
+		[ModalResultField(typeof(SI), caption: "P_busAux_ES_other [kW]", outputFactor: 1e-3)] P_busAux_ES_other,
 
-		[ModalResultField(typeof(SI), caption: "P_busAux_el_gen [kW]", outputFactor: 1e-3)] P_busAux_ES_generated,
+		[ModalResultField(typeof(SI), caption: "P_busAux_ES_consumer_sum [kW]", outputFactor: 1e-3)] P_busAux_ES_consumer_sum,
 
-		[ModalResultField(typeof(SI), caption: "Nl_busAux_consumer [Nl]")] Nl_busAux_consumer,
+		[ModalResultField(typeof(SI), caption: "P_busAux_ES_gen [kW]", outputFactor: 1e-3)] P_busAux_ES_generated,
 
-		[ModalResultField(typeof(SI), caption: "Nl_busAux_gen [Nl]")] Nl_busAux_generated,
+		[ModalResultField(typeof(SI), caption: "P_busAux_ES_mech [kW]", outputFactor: 1e-3)] P_busAux_ES_sum_mech,
 
-		[ModalResultField(typeof(SI), caption: "Nl_busAux_gen_max [Nl]")] Nl_busAux_generated_alwaysOn,
+		[ModalResultField(typeof(SI), caption: "Nl_busAux_consumer [Nl]")] Nl_busAux_PS_consumer,
 
-		[ModalResultField(typeof(SI), caption: "Nl_busAux_gen_drag [Nl]")] Nl_busAux_generated_dragOnly,
+		[ModalResultField(typeof(SI), caption: "Nl_busAux_gen [Nl]")] Nl_busAux_PS_generated,
+
+		[ModalResultField(typeof(SI), caption: "Nl_busAux_gen_max [Nl]")] Nl_busAux_PS_generated_alwaysOn,
+
+		[ModalResultField(typeof(SI), caption: "Nl_busAux_gen_drag [Nl]")] Nl_busAux_PS_generated_dragOnly,
 
 		[ModalResultField(typeof(SI), caption: "P_busAux_PS_gen [kW]", outputFactor: 1e-3)] P_busAux_PS_generated,
 

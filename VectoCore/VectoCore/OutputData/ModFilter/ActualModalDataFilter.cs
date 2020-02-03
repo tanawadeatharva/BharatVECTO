@@ -97,10 +97,10 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 
 				SetConstantValues(current, start, end,
 					ModalResultField.P_ice_full,
-					ModalResultField.P_eng_full_stat,
+					ModalResultField.P_ice_full_stat,
 					ModalResultField.P_ice_out,
 					ModalResultField.P_ice_drag,
-					ModalResultField.P_eng_fcmap,
+					ModalResultField.P_ice_fcmap,
 					ModalResultField.P_clutch_out,
 					ModalResultField.P_clutch_loss,
 					ModalResultField.P_aux,
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.OutputData.ModFilter
 				SetConstantValues(current, start, end,
 					ModalResultField.FCMap,
 					ModalResultField.FCNCVc,
-					ModalResultField.FCAAUX,
+					//ModalResultField.FCAAUX,
 					ModalResultField.FCWHTCc,
 					ModalResultField.FCFinal);
 

@@ -62,8 +62,8 @@ namespace TUGraz.VectoCore.OutputData
 		private Meter _distance;
 
 		public static readonly IList<ModalResultField> FuelConsumptionSignals = new[] {
-			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, ModalResultField.FCAAUX,
-			ModalResultField.FCEngineStopStart,  ModalResultField.FCFinal
+			ModalResultField.FCMap, ModalResultField.FCNCVc, ModalResultField.FCWHTCc, // ModalResultField.FCAAUX,
+			ModalResultField.FCICEStopStart,  ModalResultField.FCFinal
 		};
 
 		private readonly Dictionary<String, SI> _timeIntegrals = new Dictionary<string, SI>();
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.OutputData
 				GetValues(
 					x => x.Field<bool>(ModalResultField.ICEOn.GetName())
 						? new Point(
-							x.Field<SI>(ModalResultField.P_eng_fcmap.GetName()).Value(),
+							x.Field<SI>(ModalResultField.P_ice_fcmap.GetName()).Value(),
 							x.Field<SI>(GetColumnName(fuel, ModalResultField.FCFinal)).Value())
 						: null).Where(x => x != null && x.Y > 0),
 				out k, out d, out r);
@@ -197,9 +197,9 @@ namespace TUGraz.VectoCore.OutputData
 				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
 				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCNCVc));
 				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCWHTCc));
-				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCAAUX));
+				//TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCAAUX));
 				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCMap));
-				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCEngineStopStart));
+				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCICEStopStart));
 				TimeIntegral<Kilogram>(GetColumnName(fuel, ModalResultField.FCFinal));
 				
 			}
@@ -346,9 +346,9 @@ namespace TUGraz.VectoCore.OutputData
 					ModalResultField.T_ice_fcmap,
 					ModalResultField.T_ice_full,
 					ModalResultField.T_ice_drag,
-					ModalResultField.P_eng_fcmap,
+					ModalResultField.P_ice_fcmap,
 					ModalResultField.P_ice_full,
-					ModalResultField.P_eng_full_stat,
+					ModalResultField.P_ice_full_stat,
 					ModalResultField.P_ice_drag,
 					ModalResultField.P_ice_inertia,
 					ModalResultField.P_ice_out,
@@ -396,7 +396,25 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.n_gbx_out_avg,
 						ModalResultField.T_gbx_out
 					});
-
+				if (WriteAdvancedAux) {
+					dataColumns.AddRange(
+						new[] {
+							ModalResultField.P_busAux_ES_HVAC,
+							ModalResultField.P_busAux_ES_other,
+							ModalResultField.P_busAux_ES_consumer_sum,
+							ModalResultField.P_busAux_ES_sum_mech,
+							ModalResultField.P_busAux_ES_generated,
+							ModalResultField.P_busAux_HVACmech_consumer,
+							ModalResultField.P_busAux_HVACmech_gen,
+							ModalResultField.Nl_busAux_PS_consumer,
+							ModalResultField.Nl_busAux_PS_generated,
+							ModalResultField.Nl_busAux_PS_generated_alwaysOn,
+							ModalResultField.Nl_busAux_PS_generated_dragOnly,
+							ModalResultField.P_busAux_PS_generated,
+							ModalResultField.P_busAux_PS_generated_alwaysOn,
+							ModalResultField.P_busAux_PS_generated_dragOnly,
+						});
+				}
 				if (HasTorqueConverter) {
 					dataColumns.AddRange(
 						new[] {

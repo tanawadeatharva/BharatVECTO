@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase()]
 		public void CreateRunDataPrimaryBus()
 		{
-			var runIdx = 0;
+			var runIdx = 2;
 			var jobFile = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBus.xml";
 
 			var writer = new FileOutputWriter(jobFile);
@@ -44,12 +44,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 			var jobContainer = new JobContainer(new MockSumWriter());
 
-			//var runs = factory.SimulationRuns().ToArray();
-			//jobContainer.AddRun(runs[runIdx]);
-			//runs[runIdx].Run();
+			var runs = factory.SimulationRuns().ToArray();
+			jobContainer.AddRun(runs[runIdx]);
+			runs[runIdx].Run();
 
-			var run = factory.SimulationRuns().First();
-			run.Run();
+			//var run = factory.SimulationRuns().First();
+			//run.Run();
 
 			//Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
 		}

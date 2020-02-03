@@ -429,8 +429,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static IGearbox GetGearbox(IVehicleContainer container, VectoRunData runData)
 		{
-			IShiftStrategy strategy;
-			strategy = GetShiftStrategy(runData, container);
+			var strategy = GetShiftStrategy(runData, container);
 			switch (runData.GearboxData.Type) {
 				case GearboxType.AMT:
 				case GearboxType.MT:

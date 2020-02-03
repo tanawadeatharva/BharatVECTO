@@ -306,12 +306,12 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond TotalEngineWorkPositive(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_eng_fcmap, x => x > 0);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_ice_fcmap, x => x > 0);
 		}
 
 		public static WattSecond TotalEngineWorkNegative(this IModalDataContainer data)
 		{
-			return data.TimeIntegral<WattSecond>(ModalResultField.P_eng_fcmap, x => x < 0);
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_ice_fcmap, x => x < 0);
 		}
 
 		public static WattSecond WorkAuxiliariesDuringEngineStop(this IModalDataContainer data)
@@ -354,7 +354,7 @@ namespace TUGraz.VectoCore.OutputData
 		public static Watt TotalPowerEnginePositiveAverage(this IModalDataContainer data)
 		{
 			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
-			var values = data.GetValues<Watt>(ModalResultField.P_eng_fcmap)
+			var values = data.GetValues<Watt>(ModalResultField.P_ice_fcmap)
 				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
 				.Where(v => v.Value > 0).ToList();
 			if (values.Any()) {

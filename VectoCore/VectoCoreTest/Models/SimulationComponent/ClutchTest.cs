@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
-			container[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_fcmap] = 0.SI<Watt>();
 			container[ModalResultField.P_ice_out] = 0.SI<Watt>();
 			container[ModalResultField.P_ice_inertia] = 0.SI<Watt>();
 
@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container[ModalResultField.FCMap] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCNCVc] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCWHTCc] = 0.SI<KilogramPerSecond>();
-			container[ModalResultField.FCAAUX] = 0.SI<KilogramPerSecond>();
+			//container[ModalResultField.FCAAUX] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCFinal] = 0.SI<KilogramPerSecond>();
 		}
 

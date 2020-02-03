@@ -320,7 +320,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container.CommitSimulationStep(absTime, dt);
 			var row = dataWriter.Data.Rows.Cast<DataRow>().Last();
 			Assert.AreEqual(100530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_ice_out.GetName()]).Value());
-			Assert.AreEqual(105530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_eng_fcmap.GetName()]).Value());
+			Assert.AreEqual(105530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_ice_fcmap.GetName()]).Value());
 			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux.GetName()]);
 			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n_ice_avg.GetName()]);
 

@@ -94,9 +94,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 
 		public void CycleStep(Second stepTimeInSeconds)
 		{
-			_AverageAirConsumedLitre += double.IsNaN(M3.AverageAirConsumed().Value())
+			_AverageAirConsumedLitre += double.IsNaN(M3.AverageAirConsumed.Value())
 				? 0.SI<NormLiter>()
-				: M3.AverageAirConsumed() * stepTimeInSeconds;
+				: M3.AverageAirConsumed * stepTimeInSeconds;
 		}
 
 		#endregion

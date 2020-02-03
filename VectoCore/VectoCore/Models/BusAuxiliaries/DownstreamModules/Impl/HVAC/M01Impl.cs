@@ -48,9 +48,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		#region Implementation of IM1_AverageHVACLoadDemand
 
-		public Watt AveragePowerDemandAtCrankFromHVACMechanicals()
+		public Watt AveragePowerDemandAtCrankFromHVACMechanicals
 		{
-			return _MechanicalPower * (1 / _compressorGearEfficiency);
+			get { return _MechanicalPower * (1 / _compressorGearEfficiency); }
 		}
 
 		public Watt AveragePowerDemandAtAlternatorFromHVACElectrics
@@ -58,9 +58,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			get { return _ElectricalPower; }
 		}
 
-		public Watt AveragePowerDemandAtCrankFromHVACElectrics()
+		public Watt AveragePowerDemandAtCrankFromHVACElectrics
 		{
-			return _ElectricalPower * (1 / _m0.AlternatorsEfficiency / _alternatorGearEfficiency);
+			get { return _ElectricalPower * (1 / _m0.AlternatorsEfficiency / _alternatorGearEfficiency); }
 		}
 
 		//public KilogramPerSecond HVACFueling()

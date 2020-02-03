@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 	{
 		Watt GetAveragePowerDemandAtCrankFromPneumatics();
 
-		NormLiterPerSecond AverageAirConsumed();
+		NormLiterPerSecond AverageAirConsumed { get; }
 
 		NormLiter TotalAirDemand { get; }
 	}

@@ -494,7 +494,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 					time, distance);
 
 				// check P_eng_FCmap = T_eng_fcmap * n_eng
-				var pEngFcmap = (SI)row[ModalResultField.P_eng_fcmap.GetName()];
+				var pEngFcmap = (SI)row[ModalResultField.P_ice_fcmap.GetName()];
 				Assert.AreEqual(pEngFcmap.Value(), (tqEngFcmap * nEngFcMap).Value(), 1E-3, "time: {0}  distance: {1}", time,
 					distance);
 
@@ -666,7 +666,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 					time, distance);
 
 				// check P_eng_FCmap = T_eng_fcmap * n_eng
-				var pEngFcmap = (SI)row[ModalResultField.P_eng_fcmap.GetName()];
+				var pEngFcmap = (SI)row[ModalResultField.P_ice_fcmap.GetName()];
 				Assert.AreEqual(pEngFcmap.Value(), (tqEngFcmap * nEngFcMap).Value(), 1E-3, "time: {0}  distance: {1}", time,
 					distance);
 

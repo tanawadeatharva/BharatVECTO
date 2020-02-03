@@ -227,6 +227,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var minFc = double.MaxValue;
 			var fcCurrent = double.NaN;
 
+			var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleSpeed, DataBus.RoadGradient ?? 0.SI<Radian>());
+			if (estimatedVelocityPostShift.IsSmaller(0)) {
+				return currentGear;
+			}
+
 			if (response1.EngineTorqueDemand.IsSmaller(DeclarationData.GearboxTCU.DragMarginFactor * fld[currentGear].DragLoadStationaryTorque(response1.EngineSpeed))) {
 				return currentGear;
 			}

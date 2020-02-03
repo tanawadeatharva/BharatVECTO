@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
 				modData[ModalResultField.P_ice_out] = (i % 2 == 0 ? 1 : -1) * 3000.SI<Watt>();
 
-				modData[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
+				modData[ModalResultField.P_ice_fcmap] = 0.SI<Watt>();
 
 				modData.CommitSimulationStep();
 			}
@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
 				modData[ModalResultField.P_ice_out] = (i % 2 == 0 ? 1 : -1) * powerDemand[i % powerDemand.Length];
 
-				modData[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
+				modData[ModalResultField.P_ice_fcmap] = 0.SI<Watt>();
 				modData[ModalResultField.FCFinal] = 0.SI<KilogramPerSecond>();
 				modData[ModalResultField.ICEOn] = false;
 				modData.CommitSimulationStep();

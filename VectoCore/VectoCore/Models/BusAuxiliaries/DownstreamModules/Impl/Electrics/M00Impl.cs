@@ -15,7 +15,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		protected ISignals _signals;
 		protected Watt _ElectricalPowerW;
 
-		private Ampere _totalAverageDemandAmpsIncludingBaseLoad;
+		//private Ampere _totalAverageDemandAmpsIncludingBaseLoad;
+		private Ampere _totalDemandAmps;
 
 		//private IM0_1_AverageElectricLoadDemand _m0_1;
 
@@ -40,10 +41,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 			_powernetVoltage = powernetVoltage;
 
-			_totalAverageDemandAmpsIncludingBaseLoad = electricConfig.AverageCurrentDemandInclBaseLoad;
 			_signals = signals;
 
 			_ElectricalPowerW = electricalPowerHVAC;
+			_totalDemandAmps = electricConfig.AverageCurrentDemandInclBaseLoad + GetHVACElectricalCurrentDemand;
 		}
 
 		#region Implementation of IM0_NonSmart_AlternatorsSetEfficiency
@@ -56,9 +57,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public double AlternatorsEfficiency
 		{
 			get {
-				var baseCurrentDemandAmps = _totalAverageDemandAmpsIncludingBaseLoad; // _electricalConsumersList.GetTotalAverageDemandAmps(false);
-				var totalDemandAmps = baseCurrentDemandAmps + GetHVACElectricalCurrentDemand;
-				return _alternatorEfficiencyMap.GetEfficiency(_signals.EngineSpeed, totalDemandAmps);
+				
+				return _alternatorEfficiencyMap.GetEfficiency(_signals.EngineSpeed, _totalDemandAmps);
 			}
 		}
 

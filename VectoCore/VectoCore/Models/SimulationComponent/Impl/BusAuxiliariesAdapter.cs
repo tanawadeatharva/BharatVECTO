@@ -171,16 +171,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             //CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
             container[ModalResultField.P_aux] = CurrentState.PowerDemand;
 
+			container[ModalResultField.P_busAux_ES_HVAC] = Auxiliaries.HVACElectricalPowerConsumer;
+			container[ModalResultField.P_busAux_ES_other] = Auxiliaries.ElectricPowerConsumer;
 			container[ModalResultField.P_busAux_ES_consumer_sum] = Auxiliaries.ElectricPowerConsumerSum;
 			container[ModalResultField.P_busAux_ES_generated] = Auxiliaries.ElectricPowerGenerated;
+			container[ModalResultField.P_busAux_ES_sum_mech] = Auxiliaries.ElectricPowerDemandMech;
 
-			container[ModalResultField.Nl_busAux_consumer] = Auxiliaries.PSDemandConsumer;
-			container[ModalResultField.Nl_busAux_generated] = Auxiliaries.PSAirGenerated;
-			container[ModalResultField.Nl_busAux_generated_alwaysOn] = Auxiliaries.PSAirGeneratedAlwaysOn;
-			container[ModalResultField.Nl_busAux_generated_dragOnly] = Auxiliaries.PSAirGeneratedDrag;
+			container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
+			container[ModalResultField.Nl_busAux_PS_generated] = Auxiliaries.PSAirGenerated;
+			container[ModalResultField.Nl_busAux_PS_generated_alwaysOn] = Auxiliaries.PSAirGeneratedAlwaysOn;
+			container[ModalResultField.Nl_busAux_PS_generated_dragOnly] = Auxiliaries.PSAirGeneratedDrag;
 			container[ModalResultField.P_busAux_PS_generated] = Auxiliaries.PSPowerDemandAirGenerated;
 			container[ModalResultField.P_busAux_PS_generated_alwaysOn] = Auxiliaries.PSPowerCompressorAlwaysOn;
 			container[ModalResultField.P_busAux_PS_generated_dragOnly] = Auxiliaries.PSPowerCompressorDragOnly;
+
 			container[ModalResultField.P_busAux_HVACmech_consumer] = Auxiliaries.HVACMechanicalPowerConsumer;
 			container[ModalResultField.P_busAux_HVACmech_gen] = Auxiliaries.HVACMechanicalPowerGenerated;
 
@@ -239,10 +243,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             CurrentState = new BusAuxState();
         }
 
-        protected internal KilogramPerSecond AAuxFuelConsumption
-        {
-            get { return (CurrentState.TotalFuelConsumption - PreviousState.TotalFuelConsumption) / CurrentState.dt; }
-        }
+        //protected internal KilogramPerSecond AAuxFuelConsumption
+        //{
+        //    get { return (CurrentState.TotalFuelConsumption - PreviousState.TotalFuelConsumption) / CurrentState.dt; }
+        //}
 
         private Watt GetBusAuxPowerDemand(Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
             PerSecond angularSpeed, bool dryRun = false)

@@ -36,7 +36,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 
 		IVehicleData VehicleData { get; }
 
-		IFuelConsumptionMap FuelMap { get; }
+		//IFuelConsumptionMap FuelMap { get; }
 
 		ISignals Signals { get; }
 

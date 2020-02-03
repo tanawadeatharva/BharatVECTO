@@ -352,14 +352,14 @@ namespace TUGraz.VectoCore.OutputData
 				row[FcCol(Fields.FCWHTCC_KM, suffix)] =
 					modData.FuelConsumptionPerMeter(ModalResultField.FCWHTCc, fuel)?.ConvertToGrammPerKiloMeter();
 
-				row[FcCol(Fields.FCAAUX_H, suffix)] =
-					modData.FuelConsumptionPerSecond(ModalResultField.FCAAUX, fuel)?.ConvertToGrammPerHour();
-				row[FcCol(Fields.FCAAUX_KM, suffix)] =
-					modData.FuelConsumptionPerMeter(ModalResultField.FCAAUX, fuel)?.ConvertToGrammPerKiloMeter();
+				//row[FcCol(Fields.FCAAUX_H, suffix)] =
+				//	modData.FuelConsumptionPerSecond(ModalResultField.FCAAUX, fuel)?.ConvertToGrammPerHour();
+				//row[FcCol(Fields.FCAAUX_KM, suffix)] =
+				//	modData.FuelConsumptionPerMeter(ModalResultField.FCAAUX, fuel)?.ConvertToGrammPerKiloMeter();
 
-				row[FcCol(Fields.FCESS_H, suffix)] = modData.FuelConsumptionPerSecond(ModalResultField.FCEngineStopStart, fuel)
+				row[FcCol(Fields.FCESS_H, suffix)] = modData.FuelConsumptionPerSecond(ModalResultField.FCICEStopStart, fuel)
 													?.ConvertToGrammPerHour();
-				row[FcCol(Fields.FCESS_KM, suffix)] = modData.FuelConsumptionPerMeter(ModalResultField.FCEngineStopStart, fuel)
+				row[FcCol(Fields.FCESS_KM, suffix)] = modData.FuelConsumptionPerMeter(ModalResultField.FCICEStopStart, fuel)
 													?.ConvertToGrammPerKiloMeter();
 
 				var fcModSum = modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel);
@@ -492,7 +492,7 @@ namespace TUGraz.VectoCore.OutputData
 			foreach (var fuel in modData.FuelData) {
 				eFC += modData.TimeIntegral<Kilogram>(modData.GetColumnName(fuel, ModalResultField.FCFinal)) * fuel.LowerHeatingValueVecto;
 			}
-			var eIcePos = modData.TimeIntegral<WattSecond>(ModalResultField.P_eng_fcmap, x => x > 0);
+			var eIcePos = modData.TimeIntegral<WattSecond>(ModalResultField.P_ice_fcmap, x => x > 0);
 			row[Fields.AVERAGE_ENGINE_EFFICIENCY] = eFC.IsEqual(0, 1e-9) ? 0 : (eIcePos / eFC).Value();
 
 			if (runData.SimulationType == SimulationType.EngineOnly) {

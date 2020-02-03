@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		protected virtual void DoWriteEngineOffResults(IModalDataContainer container)
 		{
-			container[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_fcmap] = 0.SI<Watt>();
 			container[ModalResultField.P_ice_out] = 0.SI<Watt>();
 			container[ModalResultField.P_ice_inertia] = 0.SI<Watt>();
 
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.T_ice_fcmap] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.P_ice_full] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_full_stat] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_full_stat] = 0.SI<Watt>();
 			container[ModalResultField.P_ice_drag] = 0.SI<Watt>();
 			container[ModalResultField.T_ice_full] = 0.SI<NewtonMeter>();
 			container[ModalResultField.T_ice_drag] = 0.SI<NewtonMeter>();
@@ -121,12 +121,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				var fcNCVcorr = fc * fuel.FuelData.HeatingValueCorrection; // TODO: wird fcNCVcorr
 
 				var fcWHTC = fcNCVcorr * WHTCCorrectionFactor(fuel.FuelData);
-				var fcAAUX = fcWHTC;
+				//var fcAAUX = fcWHTC;
 				var advancedAux = EngineAux as BusAuxiliariesAdapter;
 				if (advancedAux != null) {
-					throw new VectoException("Engine Stop/Start with advanced auxiliaries not supported!");
-
-					//advancedAux.DoWriteModalResults(container);
+					//throw new VectoException("Engine Stop/Start with advanced auxiliaries not supported!");
+					advancedAux.DoWriteModalResults(container);
 					//fcAAUX = advancedAux.AAuxFuelConsumption;
 				}
 
@@ -139,8 +138,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				container[ModalResultField.FCMap, fuel.FuelData] = fc;
 				container[ModalResultField.FCNCVc, fuel.FuelData] = fcNCVcorr;
 				container[ModalResultField.FCWHTCc, fuel.FuelData] = fcWHTC;
-				container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
-				container[ModalResultField.FCEngineStopStart, fuel.FuelData] = fcESS;
+				//container[ModalResultField.FCAAUX, fuel.FuelData] = fcAAUX;
+				container[ModalResultField.FCICEStopStart, fuel.FuelData] = fcESS;
 				container[ModalResultField.FCFinal, fuel.FuelData] = fcFinal;
 			}
 		}
