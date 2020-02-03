@@ -17,5 +17,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 	{
 		
 		Watt GetAveragePowerAtCrankFromElectrics();
+		Watt AveragePowerDemandAtAlternatorFromElectrics { get; }
 	}
 }

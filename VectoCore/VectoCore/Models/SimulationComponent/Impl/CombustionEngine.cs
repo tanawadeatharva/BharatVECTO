@@ -382,19 +382,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Warn("EngineSpeed below idling speed! n_eng_avg: {0}, n_idle: {1}", avgEngineSpeed.AsRPM, EngineIdleSpeed.AsRPM);
 			}
 			container[ModalResultField.P_eng_fcmap] = CurrentState.EngineTorque * avgEngineSpeed;
-			container[ModalResultField.P_eng_out] = container[ModalResultField.P_eng_out] is DBNull
+			container[ModalResultField.P_ice_out] = container[ModalResultField.P_ice_out] is DBNull
 				? CurrentState.EngineTorqueOut * avgEngineSpeed
-				: container[ModalResultField.P_eng_out];
-			container[ModalResultField.P_eng_inertia] = CurrentState.InertiaTorqueLoss * avgEngineSpeed;
+				: container[ModalResultField.P_ice_out];
+			container[ModalResultField.P_ice_inertia] = CurrentState.InertiaTorqueLoss * avgEngineSpeed;
 
-			container[ModalResultField.n_eng_avg] = avgEngineSpeed;
-			container[ModalResultField.T_eng_fcmap] = CurrentState.EngineTorque;
+			container[ModalResultField.n_ice_avg] = avgEngineSpeed;
+			container[ModalResultField.T_ice_fcmap] = CurrentState.EngineTorque;
 
-			container[ModalResultField.P_eng_full] = CurrentState.DynamicFullLoadTorque * avgEngineSpeed;
+			container[ModalResultField.P_ice_full] = CurrentState.DynamicFullLoadTorque * avgEngineSpeed;
 			container[ModalResultField.P_eng_full_stat] = CurrentState.StationaryFullLoadTorque * avgEngineSpeed;
-			container[ModalResultField.P_eng_drag] = CurrentState.FullDragTorque * avgEngineSpeed;
-			container[ModalResultField.Tq_full] = CurrentState.DynamicFullLoadTorque;
-			container[ModalResultField.Tq_drag] = CurrentState.FullDragTorque;
+			container[ModalResultField.P_ice_drag] = CurrentState.FullDragTorque * avgEngineSpeed;
+			container[ModalResultField.T_ice_full] = CurrentState.DynamicFullLoadTorque;
+			container[ModalResultField.T_ice_drag] = CurrentState.FullDragTorque;
 			container[ModalResultField.ICEOn] = CurrentState.IgnitionOn;
 
 			WriteWHRPower(container, avgEngineSpeed, CurrentState.EngineTorque);

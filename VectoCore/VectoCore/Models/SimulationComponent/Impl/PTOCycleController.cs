@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			base.DoWriteModalResults(container);
 			container[Constants.Auxiliaries.IDs.PTOConsumer] = CurrentState.InTorque *
 																(PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2;
-			container[ModalResultField.P_eng_out] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_out] = 0.SI<Watt>();
 		}
 	}
 }

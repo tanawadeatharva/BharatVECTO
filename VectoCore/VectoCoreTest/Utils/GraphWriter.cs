@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 							//seriesAction.YAxisType = AxisType;
 						}
 					}
-					if (PlotIgnitionState && yfield == ModalResultField.P_eng_out) {
+					if (PlotIgnitionState && yfield == ModalResultField.P_ice_out) {
 						var ignition = LoadData(modDataV3, ModalResultField.ICEOn.GetShortCaption());
 
 						chartArea.AxisY2.Enabled = AxisEnabled.True;
@@ -215,11 +215,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		private static string TranslateFieldname(ModalResultField modalResultField)
 		{
 			switch (modalResultField) {
-				case ModalResultField.n_eng_avg:
+				case ModalResultField.n_ice_avg:
 					return "n";
-				case ModalResultField.P_eng_out:
+				case ModalResultField.P_ice_out:
 					return "Pe_eng";
-				case ModalResultField.T_eng_fcmap:
+				case ModalResultField.T_ice_fcmap:
 					return "Tq_eng";
 				case ModalResultField.P_aux:
 					return "Paux";
@@ -275,8 +275,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			//var xfields = new[] { ModalResultField.dist };
 			var xfield = ModalResultField.dist;
 			var yfields = new[] {
-				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_eng_avg, ModalResultField.Gear,
-				ModalResultField.P_eng_out, ModalResultField.T_eng_fcmap, ModalResultField.FCMap
+				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n_ice_avg, ModalResultField.Gear,
+				ModalResultField.P_ice_out, ModalResultField.T_ice_fcmap, ModalResultField.FCMap
 			};
 
 			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Length);

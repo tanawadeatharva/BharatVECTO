@@ -184,16 +184,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		protected override void DoWriteModalResults(IModalDataContainer container)
 		{
 			container[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_out] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_inertia] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_out] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_inertia] = 0.SI<Watt>();
 
-			container[ModalResultField.n_eng_avg] = 0.SI<PerSecond>();
-			container[ModalResultField.T_eng_fcmap] = 0.SI<NewtonMeter>();
+			container[ModalResultField.n_ice_avg] = 0.SI<PerSecond>();
+			container[ModalResultField.T_ice_fcmap] = 0.SI<NewtonMeter>();
 
-			container[ModalResultField.P_eng_full] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_drag] = 0.SI<Watt>();
-			container[ModalResultField.Tq_full] = 0.SI<NewtonMeter>();
-			container[ModalResultField.Tq_drag] = 0.SI<NewtonMeter>();
+			container[ModalResultField.P_ice_full] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_drag] = 0.SI<Watt>();
+			container[ModalResultField.T_ice_full] = 0.SI<NewtonMeter>();
+			container[ModalResultField.T_ice_drag] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.FCMap] = 0.SI<KilogramPerSecond>();
 			container[ModalResultField.FCNCVc] = 0.SI<KilogramPerSecond>();

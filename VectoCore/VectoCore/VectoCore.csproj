@@ -284,7 +284,7 @@
     <Compile Include="InputData\Reader\Impl\AbstractDeclarationVectoRunDataFactory.cs" />
     <Compile Include="InputData\Reader\Impl\DeclarationModeBusVectoRunDataFactory.cs" />
     <Compile Include="Models\BusAuxiliaries\Actuations.cs" />
-    <Compile Include="Models\BusAuxiliaries\AdvancedAuxiliaries.cs" />
+    <Compile Include="Models\BusAuxiliaries\BusAuxiliaries.cs" />
     <Compile Include="Models\BusAuxiliaries\AuxiliaryConfig.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\AbstractModule.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\AlternatorMap.cs" />
@@ -345,7 +345,7 @@
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM8.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\IM9.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\Enumerations.cs" />
-    <Compile Include="Models\BusAuxiliaries\Interfaces\IAdvancedAuxiliaries.cs" />
+    <Compile Include="Models\BusAuxiliaries\Interfaces\IBusAuxiliaries.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\IAuxiliaryEvent.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\IM12.cs" />
     <Compile Include="Models\BusAuxiliaries\Interfaces\Signals.cs" />

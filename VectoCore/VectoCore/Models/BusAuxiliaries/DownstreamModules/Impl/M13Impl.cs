@@ -15,13 +15,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected readonly ISignals Signals;
 
 		private Kilogram _whtcTotalCycleFuelConsumptionGrams;
+		private bool _smartPneumatics;
+		private bool _smartElectrics;
 
-		public M13Impl(IM10 m10, IM11 m11, IM12 m12, ISignals signals)
+		public M13Impl(IAuxiliaryConfig auxCfg, IM10 m10, IM11 m11, IM12 m12, ISignals signals)
 		{
 			M10 = m10;
 			M11 = m11;
 			M12 = m12;
 			Signals = signals;
+			_smartElectrics = auxCfg.ElectricalUserInputsConfig.SmartElectrical;
+			_smartPneumatics = auxCfg.PneumaticUserInputsConfig.SmartAirCompression;
 		}
 
 		protected override void DoCalculate()
@@ -34,10 +38,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			var sum6 = M12.BaseFuelConsumptionWithTrueAuxiliaryLoads - sum4;
 			var sum7 = M12.BaseFuelConsumptionWithTrueAuxiliaryLoads - sum5;
 			var sum8 = -sum4 + sum7;
-			var sw1 = Signals.SmartPneumatics? sum8: sum6;
-			var sw2 = Signals.SmartPneumatics ? sum3 : M12.BaseFuelConsumptionWithTrueAuxiliaryLoads;
-			var sw3 = Signals.SmartElectrics? sw1: sw2;
-			var sw4 = Signals.DeclarationMode ? Signals.WHTC : 1;
+			var sw1 = _smartPneumatics? sum8: sum6;
+			var sw2 = _smartPneumatics ? sum3 : M12.BaseFuelConsumptionWithTrueAuxiliaryLoads;
+			var sw3 = _smartElectrics? sw1: sw2;
+			var sw4 =  Signals.WHTC;
 			var sum9 = sw4 * sw3;
 
 			_whtcTotalCycleFuelConsumptionGrams = sum9;

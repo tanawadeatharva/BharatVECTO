@@ -69,7 +69,7 @@ Namespace UnitTests
 		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap = alternatoMap
 
             Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, _signals,
-                                New SSMTOOL(auxConfig.SSMInputs))
+                                New SSMTOOL(auxConfig.SSMInputs).ElectricalWAdjusted)
 
 			'Results Cards
 			Dim readings = New List(Of SmartResult)

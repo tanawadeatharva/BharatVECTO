@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			run.Run.Run();
 
 			modContainer.Data = modData;
-			Assert.IsTrue(modContainer.Min<PerSecond>(ModalResultField.n_eng_avg).IsGreaterOrEqual(VehicleEngineIdleSpeed));
+			Assert.IsTrue(modContainer.Min<PerSecond>(ModalResultField.n_ice_avg).IsGreaterOrEqual(VehicleEngineIdleSpeed));
 
 
 			//jobContainer.Execute();

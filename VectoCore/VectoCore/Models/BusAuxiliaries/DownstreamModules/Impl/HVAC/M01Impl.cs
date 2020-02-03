@@ -13,11 +13,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 		protected Double _alternatorGearEfficiency;
 		protected Double _compressorGearEfficiency;
 		
-		protected Watt _ElectricalPowerW;
-		protected Watt _MechanicalPowerW;
-		protected KilogramPerSecond _FuelingLPerH;
+		protected Watt _ElectricalPower;
+		protected Watt _MechanicalPower;
+		//protected KilogramPerSecond _FuelingLPerH;
 
-		public M01Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, double altGearEfficiency, double compressorGearEfficiency, ISSMTOOL ssm)
+		public M01Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, double altGearEfficiency, double compressorGearEfficiency, Watt electricalPowerHVAC , Watt mechanicalPowerHVAC)
 		{
 			//'Sanity Check - Illegal operations without all params.
 			if (m0 == null) {
@@ -30,11 +30,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 						Constants.BusAuxiliaries.ElectricConstants.AlternatorPulleyEfficiencyMin, Constants.BusAuxiliaries.ElectricConstants.AlternatorPulleyEfficiencyMax));
 			}
 			
-			
-			if (ssm == null ) {
-				throw new ArgumentException("Steady State model was not supplied");
-			}
-
 			if (compressorGearEfficiency <= 0 || altGearEfficiency > 1) {
 				throw new ArgumentException(String.Format("Compressor Gear efficiency must be between {0} and {1}", 0, 1));
 			}
@@ -45,9 +40,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			
 			_compressorGearEfficiency = compressorGearEfficiency;
 			
-			_ElectricalPowerW = ssm.ElectricalWAdjusted;
-			_MechanicalPowerW = ssm.MechanicalWBaseAdjusted;
-			_FuelingLPerH = ssm.FuelPerHBaseAdjusted; // ' SI(Of LiterPerHour)()
+			_ElectricalPower = electricalPowerHVAC;
+			_MechanicalPower = mechanicalPowerHVAC;
+			//_FuelingLPerH = ssm.FuelPerHBaseAdjusted; // ' SI(Of LiterPerHour)()
 
 		}
 
@@ -55,23 +50,23 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 
 		public Watt AveragePowerDemandAtCrankFromHVACMechanicals()
 		{
-			return _MechanicalPowerW * (1 / _compressorGearEfficiency);
+			return _MechanicalPower * (1 / _compressorGearEfficiency);
 		}
 
-		public Watt AveragePowerDemandAtAlternatorFromHVACElectrics()
+		public Watt AveragePowerDemandAtAlternatorFromHVACElectrics
 		{
-			return _ElectricalPowerW;
+			get { return _ElectricalPower; }
 		}
 
 		public Watt AveragePowerDemandAtCrankFromHVACElectrics()
 		{
-			return _ElectricalPowerW * (1 / _m0.AlternatorsEfficiency / _alternatorGearEfficiency);
+			return _ElectricalPower * (1 / _m0.AlternatorsEfficiency / _alternatorGearEfficiency);
 		}
 
-		public KilogramPerSecond HVACFueling()
-		{
-			return _FuelingLPerH;
-		}
+		//public KilogramPerSecond HVACFueling()
+		//{
+		//	return _FuelingLPerH;
+		//}
 
 		#endregion
 	}

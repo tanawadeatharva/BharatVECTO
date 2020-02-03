@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 	public class M02Impl : AbstractModule, IM2_AverageElectricalLoadDemand
 	{
 		private Volt _powerNetVoltage;
-		
+
 		private IM0_NonSmart_AlternatorsSetEfficiency _module0;
 		private double _alternatorPulleyEffiency;
 		private Ampere _totalAverageDemandAmpsIncludingBaseLoad;
@@ -25,12 +25,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			if (altPulleyEfficiency.IsEqual(0) || altPulleyEfficiency > 1) {
 				throw new ArgumentException("Alternator Gear efficiency out of range.");
 			}
-			if (powerNetVoltage < Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMin || powerNetVoltage > Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMax) {
+			if (powerNetVoltage < Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMin ||
+				powerNetVoltage > Constants.BusAuxiliaries.ElectricConstants.PowenetVoltageMax) {
 				throw new ArgumentException("Powernet Voltage out of known range.");
 			}
 
 			_powerNetVoltage = powerNetVoltage;
-			_totalAverageDemandAmpsIncludingBaseLoad = electricConfig.AverageCurrentDemandInclBaseLoad;			
+			_totalAverageDemandAmpsIncludingBaseLoad = electricConfig.AverageCurrentDemandInclBaseLoad;
 			_module0 = m0;
 			_alternatorPulleyEffiency = altPulleyEfficiency;
 		}
@@ -39,15 +40,19 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		public Watt GetAveragePowerAtCrankFromElectrics()
 		{
-			var electricalPowerDemandsWatts = _powerNetVoltage * _totalAverageDemandAmpsIncludingBaseLoad;
 			var alternatorsEfficiency = _module0.AlternatorsEfficiency;
 			var electricalPowerDemandsWattsDividedByAlternatorEfficiency =
-				electricalPowerDemandsWatts * (1 / alternatorsEfficiency);
+				AveragePowerDemandAtAlternatorFromElectrics * (1 / alternatorsEfficiency);
 
 			var averagePowerDemandAtCrankFromElectricsWatts =
 				electricalPowerDemandsWattsDividedByAlternatorEfficiency * (1 / _alternatorPulleyEffiency);
 
 			return averagePowerDemandAtCrankFromElectricsWatts;
+		}
+
+		public Watt AveragePowerDemandAtAlternatorFromElectrics
+		{
+			get { return _powerNetVoltage * _totalAverageDemandAmpsIncludingBaseLoad; }
 		}
 
 		#endregion

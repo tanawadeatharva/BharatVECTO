@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		/// 	</summary>
 		/// 	<returns></returns>
 		/// 	<remarks></remarks>
-		Watt AveragePowerDemandAtAlternatorFromHVACElectrics();
+		Watt AveragePowerDemandAtAlternatorFromHVACElectrics { get; }
 
 		/// <summary>
 		/// 	Average Power Demand At Crank From HVAC Electrics  (W)
@@ -37,11 +37,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		/// 	<remarks></remarks>
 		Watt AveragePowerDemandAtCrankFromHVACElectrics();
 
-		/// <summary>
-		/// 	HVAC Fueling   (L/H)
-		/// 	</summary>
-		/// 	<returns>Litres Per Hour</returns>
-		/// 	<remarks></remarks>
-		KilogramPerSecond HVACFueling();
+		///// <summary>
+		///// 	HVAC Fueling   (L/H)
+		///// 	</summary>
+		///// 	<returns>Litres Per Hour</returns>
+		///// 	<remarks></remarks>
+		//KilogramPerSecond HVACFueling();
 	}
 }

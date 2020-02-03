@@ -61,7 +61,7 @@ Namespace UnitTests
 		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =altMap
 		    CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorGearEfficiency = 0.8
 
-			Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, New SSMTOOL(auxConfig.SSMInputs))
+			Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, New SSMTOOL(auxConfig.SSMInputs).ElectricalWAdjusted)
 
 			'Get Consumers.
 

@@ -96,17 +96,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 		protected virtual void DoWriteEngineOffResults(IModalDataContainer container)
 		{
 			container[ModalResultField.P_eng_fcmap] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_out] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_inertia] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_out] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_inertia] = 0.SI<Watt>();
 
-			container[ModalResultField.n_eng_avg] = 0.RPMtoRad();
-			container[ModalResultField.T_eng_fcmap] = 0.SI<NewtonMeter>();
+			container[ModalResultField.n_ice_avg] = 0.RPMtoRad();
+			container[ModalResultField.T_ice_fcmap] = 0.SI<NewtonMeter>();
 
-			container[ModalResultField.P_eng_full] = 0.SI<Watt>();
+			container[ModalResultField.P_ice_full] = 0.SI<Watt>();
 			container[ModalResultField.P_eng_full_stat] = 0.SI<Watt>();
-			container[ModalResultField.P_eng_drag] = 0.SI<Watt>();
-			container[ModalResultField.Tq_full] = 0.SI<NewtonMeter>();
-			container[ModalResultField.Tq_drag] = 0.SI<NewtonMeter>();
+			container[ModalResultField.P_ice_drag] = 0.SI<Watt>();
+			container[ModalResultField.T_ice_full] = 0.SI<NewtonMeter>();
+			container[ModalResultField.T_ice_drag] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.ICEOn] = CurrentState.IgnitionOn;
 			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>()) * EngineStopStartUtilityFactor;

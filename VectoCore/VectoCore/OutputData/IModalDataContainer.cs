@@ -222,7 +222,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static WattSecond PowerAccelerations(this IModalDataContainer data)
 		{
-			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.P_eng_inertia);
+			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.P_ice_inertia);
 			var paGearbox = data.TimeIntegral<WattSecond>(ModalResultField.P_gbx_inertia);
 			return paEngine + paGearbox;
 		}
@@ -409,21 +409,21 @@ namespace TUGraz.VectoCore.OutputData
 
 		public static PerSecond AvgEngineSpeed(this IModalDataContainer data)
 		{
-			var integral = data.GetValues(x => x.Field<PerSecond>(ModalResultField.n_eng_avg.GetName()).Value() *
+			var integral = data.GetValues(x => x.Field<PerSecond>(ModalResultField.n_ice_avg.GetName()).Value() *
 												x.Field<Second>(ModalResultField.simulationInterval.GetName()).Value()).Sum();
 			return (integral / data.Duration.Value()).SI<PerSecond>();
 		}
 
 		public static PerSecond MaxEngineSpeed(this IModalDataContainer data)
 		{
-			return data.Max<PerSecond>(ModalResultField.n_eng_avg);
+			return data.Max<PerSecond>(ModalResultField.n_ice_avg);
 		}
 
 		public static Scalar EngineMaxLoadTimeShare(this IModalDataContainer data)
 		{
 			var sum = data.GetValues(x => new {
-				tMax = x.Field<NewtonMeter>(ModalResultField.Tq_full.GetName()).DefaultIfNull(-1),
-				tEng = x.Field<NewtonMeter>(ModalResultField.T_eng_fcmap.GetName()).DefaultIfNull(0),
+				tMax = x.Field<NewtonMeter>(ModalResultField.T_ice_full.GetName()).DefaultIfNull(-1),
+				tEng = x.Field<NewtonMeter>(ModalResultField.T_ice_fcmap.GetName()).DefaultIfNull(0),
 				dt = x.Field<Second>(ModalResultField.simulationInterval.GetName())
 			}).Sum(x => x.tMax.IsEqual(x.tEng, 5.SI<NewtonMeter>()) ? x.dt : 0.SI<Second>()) ?? 0.SI<Second>();
 			return 100 * sum / data.Duration;

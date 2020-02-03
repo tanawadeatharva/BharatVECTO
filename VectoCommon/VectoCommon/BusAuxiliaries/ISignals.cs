@@ -44,7 +44,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 		/// <value></value>
 		/// <returns></returns>
 		/// <remarks>Should be true if fitted to the vehicle - AAUX Input</remarks>
-		bool SmartElectrics { get; set; }
+		//bool SmartElectrics { get; set; }
 
 		/// <summary>
 		/// Clucth Engaged
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 		/// <value></value>
 		/// <returns></returns>
 		/// <remarks>should be true if fitted to the vehicle- AAux Config Input</remarks>
-		bool SmartPneumatics { get; set; }
+		//bool SmartPneumatics { get; set; }
 
 		/// <summary>
 		/// Total Cycle Time In Seconds
@@ -166,5 +166,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 		/// <returns></returns>
 		/// <remarks></remarks>
 		Watt InternalEnginePower { get; set; }
+
+		Second SimulationInterval { get; set; }
 	}
 }

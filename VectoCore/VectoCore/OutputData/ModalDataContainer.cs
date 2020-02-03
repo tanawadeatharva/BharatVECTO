@@ -342,16 +342,16 @@ namespace TUGraz.VectoCore.OutputData
 			}
 			dataColumns.AddRange(
 				new[] {
-					ModalResultField.n_eng_avg,
-					ModalResultField.T_eng_fcmap,
-					ModalResultField.Tq_full,
-					ModalResultField.Tq_drag,
+					ModalResultField.n_ice_avg,
+					ModalResultField.T_ice_fcmap,
+					ModalResultField.T_ice_full,
+					ModalResultField.T_ice_drag,
 					ModalResultField.P_eng_fcmap,
-					ModalResultField.P_eng_full,
+					ModalResultField.P_ice_full,
 					ModalResultField.P_eng_full_stat,
-					ModalResultField.P_eng_drag,
-					ModalResultField.P_eng_inertia,
-					ModalResultField.P_eng_out,
+					ModalResultField.P_ice_drag,
+					ModalResultField.P_ice_inertia,
+					ModalResultField.P_ice_out,
 				});
 			if (HasTorqueConverter) {
 				dataColumns.AddRange(
@@ -410,28 +410,28 @@ namespace TUGraz.VectoCore.OutputData
 				}
 			}
 			if (!_writeEngineOnly && WriteAdvancedAux) {
-				dataColumns.AddRange(
-					new[] {
-						ModalResultField.AA_NonSmartAlternatorsEfficiency,
-						ModalResultField.AA_SmartIdleCurrent_Amps,
-						ModalResultField.AA_SmartIdleAlternatorsEfficiency,
-						ModalResultField.AA_SmartTractionCurrent_Amps,
-						ModalResultField.AA_SmartTractionAlternatorEfficiency,
-						ModalResultField.AA_SmartOverrunCurrent_Amps,
-						ModalResultField.AA_SmartOverrunAlternatorEfficiency,
-						ModalResultField.AA_CompressorFlowRate_LitrePerSec,
-						ModalResultField.AA_OverrunFlag,
-						ModalResultField.AA_EngineIdleFlag,
-						ModalResultField.AA_CompressorFlag,
-						ModalResultField.AA_TotalCycleFC_Grams,
-						//ModalResultField.AA_TotalCycleFC_Litres,
-						ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals,
-						ModalResultField.AA_AveragePowerDemandCrankHVACElectricals,
-						ModalResultField.AA_AveragePowerDemandCrankElectrics,
-						ModalResultField.AA_AveragePowerDemandCrankPneumatics,
-						ModalResultField.AA_TotalCycleFuelConsumptionCompressorOff,
-						ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn,
-					});
+				//dataColumns.AddRange(
+				//	new[] {
+				//		ModalResultField.AA_NonSmartAlternatorsEfficiency,
+				//		ModalResultField.AA_SmartIdleCurrent_Amps,
+				//		ModalResultField.AA_SmartIdleAlternatorsEfficiency,
+				//		ModalResultField.AA_SmartTractionCurrent_Amps,
+				//		ModalResultField.AA_SmartTractionAlternatorEfficiency,
+				//		ModalResultField.AA_SmartOverrunCurrent_Amps,
+				//		ModalResultField.AA_SmartOverrunAlternatorEfficiency,
+				//		ModalResultField.AA_CompressorFlowRate_LitrePerSec,
+				//		ModalResultField.BusAux_OverrunFlag,
+				//		ModalResultField.AA_EngineIdleFlag,
+				//		ModalResultField.AA_CompressorFlag,
+				//		ModalResultField.AA_TotalCycleFC_Grams,
+				//		//ModalResultField.AA_TotalCycleFC_Litres,
+				//		ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals,
+				//		ModalResultField.AA_AveragePowerDemandCrankHVACElectricals,
+				//		ModalResultField.AA_AveragePowerDemandCrankElectrics,
+				//		ModalResultField.AA_AveragePowerDemandCrankPneumatics,
+				//		ModalResultField.AA_TotalCycleFuelConsumptionCompressorOff,
+				//		ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn,
+				//	});
 			}
 			dataColumns.Add(ModalResultField.altitude);
 			return dataColumns;

@@ -61,7 +61,7 @@ Namespace UnitTests
             'Dim  hvacMap As New HVACMap("testFiles\TestHvacMap.csv")
             'hvacMap.Initialise()
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = 26.3.SI (Of Volt)
-            Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, auxConfig.Signals, ssm)
+            Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, auxConfig.Signals, ssm.ElectricalWAdjusted)
 
             'Results Cards
             Dim readings = New List(Of SmartResult)

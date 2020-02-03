@@ -11,6 +11,19 @@ Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 Namespace UnitTests
 	<TestFixture()>
 	Public Class M8Tests
+
+        Private Function GetAuxConfigDummy(smartElectrics As Boolean, smartPneumatics As Boolean) As IAuxiliaryConfig
+            Dim auxCfg As New Mock(Of IAuxiliaryConfig)
+            Dim elecCfg = New Mock(Of IElectricsUserInputsConfig)
+            elecCfg.Setup(Function(x) x.SmartElectrical).Returns(smartElectrics)
+            Dim psconfig = New Mock(Of IPneumaticUserInputsConfig)
+            psconfig.Setup(Function(x) x.SmartAirCompression).Returns(smartPneumatics)
+            auxCfg.Setup(Function(x) x.ElectricalUserInputsConfig).Returns(elecCfg.Object)
+            auxCfg.Setup(Function(x) x.PneumaticUserInputsConfig).Returns(psconfig.Object)
+
+            return auxCfg.Object
+        End Function
+
 		<TestCase()>
 		Public Sub CreateInstanceTest()
 
@@ -21,7 +34,7 @@ Namespace UnitTests
 			Dim sigsMock = New Mock(Of ISignals)()
 
 			'Act
-			Dim target As IM8 = New M08Impl(m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
+			Dim target As IM8 = New M08Impl(GetAuxConfigDummy(false, False), m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
 
 			'Assert
 			Assert.IsNotNull(target)
@@ -63,11 +76,11 @@ Namespace UnitTests
 			m6Mock.Setup(Function(x) x.AveragePowerDemandAtCrankFromPneumatics).Returns(IP7.SI(Of Watt))
 			m6Mock.Setup(Function(x) x.SmartElecAndPneumaticsCompressorFlag).Returns(IP8 <> 0)
 			m6Mock.Setup(Function(x) x.SmartPneumaticsOnlyCompressorFlag).Returns(IP9 <> 0)
-			sigsMock.Setup(Function(x) x.SmartPneumatics).Returns(IP10)
-			sigsMock.Setup(Function(x) x.SmartElectrics).Returns(IP11)
+			'sigsMock.Setup(Function(x) x.SmartPneumatics).Returns(IP10)
+			'sigsMock.Setup(Function(x) x.SmartElectrics).Returns(IP11)
 
 			'Act
-			Dim target As IM8 = New M08Impl(m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
+			Dim target As IM8 = New M08Impl(GetAuxConfigDummy(IP11, IP10), m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
 
 			'Assert
 			Assert.AreEqual(OUT1, target.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries.Value(), 0.001)
@@ -109,13 +122,13 @@ Namespace UnitTests
 			m6Mock.Setup(Function(x) x.AveragePowerDemandAtCrankFromPneumatics).Returns(IP7.SI(Of Watt))
 			m6Mock.Setup(Function(x) x.SmartElecAndPneumaticsCompressorFlag).Returns(IP8 <> 0)
 			m6Mock.Setup(Function(x) x.SmartPneumaticsOnlyCompressorFlag).Returns(IP9 <> 0)
-			sigsMock.Setup(Function(x) x.SmartPneumatics).Returns(IP10)
-			sigsMock.Setup(Function(x) x.SmartElectrics).Returns(IP11)
+			'sigsMock.Setup(Function(x) x.SmartPneumatics).Returns(IP10)
+			'sigsMock.Setup(Function(x) x.SmartElectrics).Returns(IP11)
 			sigsMock.Setup(Function(x) x.EngineStopped).Returns(IP12)
 
 
 			'Act
-			Dim target As IM8 = New M08Impl(m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
+			Dim target As IM8 = New M08Impl(GetAuxConfigDummy(IP11, IP10), m1MOCK.Object, m6Mock.Object, m7MOCK.Object, sigsMock.Object)
 
 			'Assert
 			Assert.AreEqual(OUT1, target.AuxPowerAtCrankFromElectricalHVACAndPneumaticsAncillaries.Value(), 0.001)

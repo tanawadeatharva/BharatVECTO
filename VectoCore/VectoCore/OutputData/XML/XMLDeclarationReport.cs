@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					r => new {
 						dt = r.Field<Second>(ModalResultField.simulationInterval.GetName()),
 						v = r.Field<MeterPerSecond>(ModalResultField.v_act.GetName()),
-						nEng = r.Field<PerSecond>(ModalResultField.n_eng_avg.GetName())
+						nEng = r.Field<PerSecond>(ModalResultField.n_ice_avg.GetName())
 					}).Where(x => x.v.IsGreater(0)).ToArray();
 				var drivingTime = entriesDriving.Sum(x => x.dt);
 

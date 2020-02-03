@@ -17,8 +17,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 	{
 
 		// Backing variables
-		private double _WHTCCorretion = 1;
-		private bool _smartElectrics;
 
 		public bool ClutchEngaged { get; set; }
 		public Watt EngineDrivelinePower { get; set; }
@@ -26,15 +24,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		public Watt EngineMotoringPower { get; set; }
 		public PerSecond EngineSpeed { get; set; }
 
-		public bool SmartElectrics
-		{
-			get {
-				return _smartElectrics;
-			}
-			set {
-				_smartElectrics = value;
-			}
-		}
+		public bool SmartElectrics { get; set; }
 
 		public bool SmartPneumatics { get; set; }
 		public double CurrentCycleTimeInSeconds { get; set; }
@@ -42,22 +32,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		public bool Idle { get; set; }
 		public bool InNeutral { get; set; }
 
-		public AdvancedAuxiliaryMessageType AuxiliaryEventReportingLevel { get; set; }
-
 		public bool EngineStopped { get; set; }
 		public bool DeclarationMode { get; set; }
 
-		public double WHTC
-		{
-			set {
-				_WHTCCorretion = value;
-			}
-			get {
-				return _WHTCCorretion;
-			}
-		}
+		public double WHTC { set; get; } = 1;
 
 		public PerSecond EngineIdleSpeed { get; set; }
 		public Watt InternalEnginePower { get; set; }
+		public Second SimulationInterval { get; set; }
 	}
 }

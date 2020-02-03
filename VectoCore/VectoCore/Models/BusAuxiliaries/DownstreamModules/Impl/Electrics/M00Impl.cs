@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 
 		//private IM0_1_AverageElectricLoadDemand _m0_1;
 
-		public M00Impl(IElectricsUserInputsConfig electricConfig, ISignals signals, ISSMTOOL ssmHvac)
+		public M00Impl(IElectricsUserInputsConfig electricConfig, ISignals signals, Watt electricalPowerHVAC)
 		{
 			var alternatorEfficiencyMap = electricConfig.AlternatorMap;
 			var powernetVoltage = electricConfig.PowerNetVoltage;
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 			_totalAverageDemandAmpsIncludingBaseLoad = electricConfig.AverageCurrentDemandInclBaseLoad;
 			_signals = signals;
 
-			_ElectricalPowerW = ssmHvac.ElectricalWAdjusted;
+			_ElectricalPowerW = electricalPowerHVAC;
 		}
 
 		#region Implementation of IM0_NonSmart_AlternatorsSetEfficiency

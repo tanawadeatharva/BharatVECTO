@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Request(absTime, dt, Formulas.PowerToTorque(2329.973.SI<Watt>(), engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
-			AssertHelper.AreRelativeEqual(1152.40304, ((SI)dataWriter[ModalResultField.P_eng_inertia]).Value());
+			AssertHelper.AreRelativeEqual(1152.40304, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value());
 
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI<Watt>(), engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
-			Assert.AreEqual(7108.32, ((SI)dataWriter[ModalResultField.P_eng_inertia]).Value(), 0.001);
+			Assert.AreEqual(7108.32, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value(), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
@@ -153,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Request(absTime, dt, Formulas.PowerToTorque(1351.656.SI<Watt>(), engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
-			Assert.AreEqual(-7108.32, ((SI)dataWriter[ModalResultField.P_eng_inertia]).Value(), 0.001);
+			Assert.AreEqual(-7108.32, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value(), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
 
 			VectoCSVFile.Write(@"test1.csv", dataWriter.Data, true);
@@ -208,7 +208,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				modalData[ModalResultField.simulationInterval] = dt;
 				engine.CommitSimulationStep(modalData);
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
-				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_eng_full]).Value(), 0.1,
+				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_ice_full]).Value(), 0.1,
 					string.Format("Load in timestep {0}", t));
 				modalData.CommitSimulationStep();
 			}
@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				modalData[ModalResultField.simulationInterval] = dt;
 				engine.CommitSimulationStep(modalData);
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
-				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_eng_full]).Value(), 0.1,
+				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_ice_full]).Value(), 0.1,
 					string.Format("Load in timestep {0}", t));
 				modalData.CommitSimulationStep();
 			}
@@ -319,10 +319,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			container.CommitSimulationStep(absTime, dt);
 			var row = dataWriter.Data.Rows.Cast<DataRow>().Last();
-			Assert.AreEqual(100530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_eng_out.GetName()]).Value());
+			Assert.AreEqual(100530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_ice_out.GetName()]).Value());
 			Assert.AreEqual(105530.96491487339.SI<Watt>().Value(), ((SI)row[ModalResultField.P_eng_fcmap.GetName()]).Value());
 			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux.GetName()]);
-			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n_eng_avg.GetName()]);
+			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n_ice_avg.GetName()]);
 
 			absTime += dt;
 
@@ -337,9 +337,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container.CommitSimulationStep(absTime, dt);
 			row = dataWriter.Data.Rows.Cast<DataRow>().Last();
 
-			Assert.AreEqual(0.SI<Watt>(), row[ModalResultField.P_eng_out.GetName()]);
+			Assert.AreEqual(0.SI<Watt>(), row[ModalResultField.P_ice_out.GetName()]);
 			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.P_aux.GetName()]);
-			Assert.AreEqual(680.RPMtoRad(), row[ModalResultField.n_eng_avg.GetName()]);
+			Assert.AreEqual(680.RPMtoRad(), row[ModalResultField.n_ice_avg.GetName()]);
 		}
 
 		[TestCase]

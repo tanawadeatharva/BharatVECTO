@@ -100,16 +100,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			//SSMInputs.AuxHeater.EngineWasteHeatkW = AverageUseableEngineWasteHeatKW;
 			EngineWasteHeatkW = AverageUseableEngineWasteHeatKW;
 
-			var fba = FuelPerHBaseAdjusted;
+			var fba = Calculate.FuelPerHBaseAdjusted;
 
 			// Dim FuelFiredWarning As Boolean = fba * SSMInputs.BC_AuxHeaterEfficiency * HVACConstants.FuelDensity * SSMInputs.BC_GCVDieselOrHeatingOil * 1000 > (AverageUseableEngineWasteHeatKW + SSMInputs.AH_FuelFiredHeaterkW)
-
 			// If Not FuelFiredHeaterInsufficientWarned AndAlso FuelFiredWarning Then
-
 			// FuelFiredHeaterInsufficientWarned = True
-
 			// OnMessage(Me, " HVAC SSM : Fuel fired heater insufficient for heating requirements, run continues assuming it was sufficient.", AdvancedAuxiliaryMessageType.Warning)
-
 			// End If
 
 			return fba;

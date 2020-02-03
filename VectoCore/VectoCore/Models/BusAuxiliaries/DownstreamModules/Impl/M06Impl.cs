@@ -23,10 +23,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected IM4_AirCompressor _m4;
 		protected IM5_SmartAlternatorSetGeneration _m5;
 		protected ISignals _signals;
+		private bool _smartElectrics;
 
-		public M06Impl(
-			IM1_AverageHVACLoadDemand m1, IM2_AverageElectricalLoadDemand m2, IM3_AveragePneumaticLoadDemand m3,
-			IM4_AirCompressor m4, IM5_SmartAlternatorSetGeneration m5, ISignals signals)
+		public M06Impl(IElectricsUserInputsConfig electricConfig, IM1_AverageHVACLoadDemand m1, IM2_AverageElectricalLoadDemand m2, IM3_AveragePneumaticLoadDemand m3, IM4_AirCompressor m4, IM5_SmartAlternatorSetGeneration m5, ISignals signals)
 		{
 			_m1 = m1;
 			_m2 = m2;
@@ -34,12 +33,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			_m4 = m4;
 			_m5 = m5;
 			_signals = signals;
+			_smartElectrics = electricConfig.SmartElectrical;
 		}
 
 		protected override void DoCalculate()
 		{
 			var sum1 = _m1.AveragePowerDemandAtCrankFromHVACElectrics() + _m2.GetAveragePowerAtCrankFromElectrics();
-			var sw1 = _signals.SmartElectrics ? _m5.AlternatorsGenerationPowerAtCrankTractionOn() : sum1;
+			var sw1 = _smartElectrics ? _m5.AlternatorsGenerationPowerAtCrankTractionOn() : sum1;
 			var sum2 = _m1.AveragePowerDemandAtCrankFromHVACMechanicals() + sw1 +
 						_m3.GetAveragePowerDemandAtCrankFromPneumatics();
 			var sum3 = _signals.EngineMotoringPower + _signals.InternalEnginePower + sum2;

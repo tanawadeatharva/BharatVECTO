@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         protected internal readonly IAuxPort AdditionalAux;
 
-        protected IAdvancedAuxiliaries Auxiliaries;
+        protected IBusAuxiliaries Auxiliaries;
         private readonly FuelConsumptionAdapter _fcMapAdapter;
 
         public BusAuxiliariesAdapter(IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, string cycleName, Kilogram vehicleWeight,
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             DataBus = container;
 
-			var tmpAux = new AdvancedAuxiliaries();
+			var tmpAux = new BusAuxiliaries.BusAuxiliaries();
 				//    VectoInputs = {
 				//        Cycle = DetermineCycle(cycleName),
 				//        VehicleWeightKG = vehicleWeight
@@ -165,59 +165,73 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _fcMapAdapter.AllowExtrapolation = true;
             // cycleStep has to be called here and not in DoCommit, write is called before Commit!
             var message = String.Empty;
-            Auxiliaries.CycleStep(CurrentState.dt, ref message);
+            Auxiliaries.CycleStep(CurrentState.dt);
             Log.Warn(message);
 
-            CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
+            //CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
             container[ModalResultField.P_aux] = CurrentState.PowerDemand;
 
-            container[ModalResultField.AA_NonSmartAlternatorsEfficiency] = Auxiliaries.AA_NonSmartAlternatorsEfficiency;
-            if (Auxiliaries.AA_SmartIdleCurrent_Amps != null) {
-                container[ModalResultField.AA_SmartIdleCurrent_Amps] = Auxiliaries.AA_SmartIdleCurrent_Amps;
-            }
-            container[ModalResultField.AA_SmartIdleAlternatorsEfficiency] = Auxiliaries.AA_SmartIdleAlternatorsEfficiency;
-            if (Auxiliaries.AA_SmartTractionCurrent_Amps != null) {
-                container[ModalResultField.AA_SmartTractionCurrent_Amps] =
-                    Auxiliaries.AA_SmartTractionCurrent_Amps;
-            }
-            container[ModalResultField.AA_SmartTractionAlternatorEfficiency] = Auxiliaries.AA_SmartTractionAlternatorEfficiency;
-            if (Auxiliaries.AA_SmartOverrunCurrent_Amps != null) {
-                container[ModalResultField.AA_SmartOverrunCurrent_Amps] = Auxiliaries.AA_SmartOverrunCurrent_Amps;
-            }
-            container[ModalResultField.AA_SmartOverrunAlternatorEfficiency] = Auxiliaries.AA_SmartOverrunAlternatorEfficiency;
-            if (Auxiliaries.AA_CompressorFlowRate_LitrePerSec != null) {
-                container[ModalResultField.AA_CompressorFlowRate_LitrePerSec] =
-                    Auxiliaries.AA_CompressorFlowRate_LitrePerSec;
-            }
-            container[ModalResultField.AA_OverrunFlag] = Auxiliaries.AA_OverrunFlag;
-            container[ModalResultField.AA_EngineIdleFlag] = Auxiliaries.AA_EngineIdleFlag;
-            container[ModalResultField.AA_CompressorFlag] = Auxiliaries.AA_CompressorFlag;
-            if (Auxiliaries.AA_TotalCycleFC_Grams != null) {
-                container[ModalResultField.AA_TotalCycleFC_Grams] = Auxiliaries.AA_TotalCycleFC_Grams;
-            }
-            if (Auxiliaries.AA_AveragePowerDemandCrankHVACMechanicals != null) {
-                container[ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals] =
-                    Auxiliaries.AA_AveragePowerDemandCrankHVACMechanicals;
-            }
-            if (Auxiliaries.AA_AveragePowerDemandCrankHVACElectricals != null) {
-                container[ModalResultField.AA_AveragePowerDemandCrankHVACElectricals] =
-                    Auxiliaries.AA_AveragePowerDemandCrankHVACElectricals;
-            }
-            if (Auxiliaries.AA_AveragePowerDemandCrankElectrics != null) {
-                container[ModalResultField.AA_AveragePowerDemandCrankElectrics] =
-                    Auxiliaries.AA_AveragePowerDemandCrankElectrics;
-            }
-            if (Auxiliaries.AA_AveragePowerDemandCrankPneumatics != null) {
-                container[ModalResultField.AA_AveragePowerDemandCrankPneumatics] =
-                    Auxiliaries.AA_AveragePowerDemandCrankPneumatics;
-            }
-            if (Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOff != null) {
-                container[ModalResultField.AA_TotalCycleFuelConsumptionCompressorOff] =
-                    Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOff;
-            }
-            container[ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn] =
-                Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOn;
-        }
+			container[ModalResultField.P_busAux_ES_consumer_sum] = Auxiliaries.ElectricPowerConsumerSum;
+			container[ModalResultField.P_busAux_ES_generated] = Auxiliaries.ElectricPowerGenerated;
+
+			container[ModalResultField.Nl_busAux_consumer] = Auxiliaries.PSDemandConsumer;
+			container[ModalResultField.Nl_busAux_generated] = Auxiliaries.PSAirGenerated;
+			container[ModalResultField.Nl_busAux_generated_alwaysOn] = Auxiliaries.PSAirGeneratedAlwaysOn;
+			container[ModalResultField.Nl_busAux_generated_dragOnly] = Auxiliaries.PSAirGeneratedDrag;
+			container[ModalResultField.P_busAux_PS_generated] = Auxiliaries.PSPowerDemandAirGenerated;
+			container[ModalResultField.P_busAux_PS_generated_alwaysOn] = Auxiliaries.PSPowerCompressorAlwaysOn;
+			container[ModalResultField.P_busAux_PS_generated_dragOnly] = Auxiliaries.PSPowerCompressorDragOnly;
+			container[ModalResultField.P_busAux_HVACmech_consumer] = Auxiliaries.HVACMechanicalPowerConsumer;
+			container[ModalResultField.P_busAux_HVACmech_gen] = Auxiliaries.HVACMechanicalPowerGenerated;
+
+
+			//container[ModalResultField.AA_NonSmartAlternatorsEfficiency] = Auxiliaries.AA_NonSmartAlternatorsEfficiency;
+			//if (Auxiliaries.AA_SmartIdleCurrent_Amps != null) {
+			//    container[ModalResultField.AA_SmartIdleCurrent_Amps] = Auxiliaries.AA_SmartIdleCurrent_Amps;
+			//}
+			//container[ModalResultField.AA_SmartIdleAlternatorsEfficiency] = Auxiliaries.AA_SmartIdleAlternatorsEfficiency;
+			//if (Auxiliaries.AA_SmartTractionCurrent_Amps != null) {
+			//    container[ModalResultField.AA_SmartTractionCurrent_Amps] =
+			//        Auxiliaries.AA_SmartTractionCurrent_Amps;
+			//}
+			//container[ModalResultField.AA_SmartTractionAlternatorEfficiency] = Auxiliaries.AA_SmartTractionAlternatorEfficiency;
+			//if (Auxiliaries.AA_SmartOverrunCurrent_Amps != null) {
+			//    container[ModalResultField.AA_SmartOverrunCurrent_Amps] = Auxiliaries.AA_SmartOverrunCurrent_Amps;
+			//}
+			//container[ModalResultField.AA_SmartOverrunAlternatorEfficiency] = Auxiliaries.AA_SmartOverrunAlternatorEfficiency;
+			//if (Auxiliaries.AA_CompressorFlowRate_LitrePerSec != null) {
+			//    container[ModalResultField.AA_CompressorFlowRate_LitrePerSec] =
+			//        Auxiliaries.AA_CompressorFlowRate_LitrePerSec;
+			//}
+			//container[ModalResultField.BusAux_OverrunFlag] = Auxiliaries.AA_OverrunFlag;
+			//container[ModalResultField.AA_EngineIdleFlag] = Auxiliaries.AA_EngineIdleFlag;
+			//container[ModalResultField.AA_CompressorFlag] = Auxiliaries.AA_CompressorFlag;
+			//if (Auxiliaries.AA_TotalCycleFC_Grams != null) {
+			//    container[ModalResultField.AA_TotalCycleFC_Grams] = Auxiliaries.AA_TotalCycleFC_Grams;
+			//}
+			//if (Auxiliaries.AA_AveragePowerDemandCrankHVACMechanicals != null) {
+			//    container[ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals] =
+			//        Auxiliaries.AA_AveragePowerDemandCrankHVACMechanicals;
+			//}
+			//if (Auxiliaries.AA_AveragePowerDemandCrankHVACElectricals != null) {
+			//    container[ModalResultField.AA_AveragePowerDemandCrankHVACElectricals] =
+			//        Auxiliaries.AA_AveragePowerDemandCrankHVACElectricals;
+			//}
+			//if (Auxiliaries.AA_AveragePowerDemandCrankElectrics != null) {
+			//    container[ModalResultField.AA_AveragePowerDemandCrankElectrics] =
+			//        Auxiliaries.AA_AveragePowerDemandCrankElectrics;
+			//}
+			//if (Auxiliaries.AA_AveragePowerDemandCrankPneumatics != null) {
+			//    container[ModalResultField.AA_AveragePowerDemandCrankPneumatics] =
+			//        Auxiliaries.AA_AveragePowerDemandCrankPneumatics;
+			//}
+			//if (Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOff != null) {
+			//    container[ModalResultField.AA_TotalCycleFuelConsumptionCompressorOff] =
+			//        Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOff;
+			//}
+			//container[ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn] =
+			//    Auxiliaries.AA_TotalCycleFuelConsumptionCompressorOn;
+		}
 
         protected internal void DoCommitSimulationStep()
         {
@@ -237,6 +251,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             _fcMapAdapter.AllowExtrapolation = true;
 
+			Auxiliaries.Signals.SimulationInterval = dt;
             Auxiliaries.Signals.ClutchEngaged = DataBus.ClutchClosed(absTime);
             Auxiliaries.Signals.EngineDrivelinePower = torquePowerTrain * angularSpeed;
             Auxiliaries.Signals.EngineDrivelineTorque = torquePowerTrain;
@@ -249,6 +264,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 // set internal_engine_power to a large value (*10) so that there's excessive power for smart aux (alreadin during search operating point)
                 //(float)DataBus.EngineDragPower(angularSpeed).Value() / 100;
             } else {
+				// Toodo: change to driveraction 
                 if (DataBus.DriverBehavior != DrivingBehavior.Braking) {
                     Auxiliaries.Signals.InternalEnginePower = 0.SI<Watt>();
                     //(float)((0.9 * torqueEngine * angularSpeed - DataBus.BrakePower) / 1000).Value();

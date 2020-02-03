@@ -15,7 +15,9 @@ Public Class M2_Mock
 		Return _GetAveragePowerAtCrankFromElectrics
 	End Function
 
-	'Public Function GetAveragePowerDemandAtAlternator() As Watt _
+    Public ReadOnly Property AveragePowerDemandAtAlternatorFromElectrics As Watt Implements IM2_AverageElectricalLoadDemand.AveragePowerDemandAtAlternatorFromElectrics
+
+    'Public Function GetAveragePowerDemandAtAlternator() As Watt _
 	'	Implements IM2_AverageElectricalLoadDemand.GetAveragePowerDemandAtAlternator
 	'	Return _GetAveragePowerDemandAtAlternator
 	'End Function

@@ -61,7 +61,7 @@ Namespace UnitTests
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = powernetVoltage
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).AlternatorMap =alternatorMap
 
-            m0 = New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, ssm)
+            m0 = New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, ssm.ElectricalWAdjusted)
         End Sub
 
         Private Function GETM1Instance() As IM1_AverageHVACLoadDemand
@@ -74,7 +74,7 @@ Namespace UnitTests
 
             Return New M01Impl(m0, alternatorGearEfficiency,
                                compressorGrearEfficiency,
-                               ssm)
+                               ssm.ElectricalWAdjusted, ssm.MechanicalWBaseAdjusted)
         End Function
 
 
@@ -120,16 +120,16 @@ Namespace UnitTests
             Assert.AreEqual(expected, actual.Value(), 0.001)
         End Sub
 
-        <Test()>
-        Public Sub HVACFuelingLitresPerHourTest()
+        '<Test()>
+        'Public Sub HVACFuelingLitresPerHourTest()
 
 
-            Dim target As IM1_AverageHVACLoadDemand = GETM1Instance()
-            Dim expected As Single = 0
-            Dim actual As KilogramPerSecond = target.HVACFueling()
+        '    Dim target As IM1_AverageHVACLoadDemand = GETM1Instance()
+        '    Dim expected As Single = 0
+        '    Dim actual As KilogramPerSecond = target.HVACFueling()
 
-            Assert.AreEqual(expected, actual.Value(), 0.001)
-        End Sub
+        '    Assert.AreEqual(expected, actual.Value(), 0.001)
+        'End Sub
     End Class
 End Namespace
 

@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			for (var i = 0; i < 11; i++) {
 				aux.TorqueDemand(t, dt, torque, torque, speed);
 				modData[ModalResultField.dist] = i.SI<Meter>();
-				modData[ModalResultField.P_eng_out] = 0.SI<Watt>();
+				modData[ModalResultField.P_ice_out] = 0.SI<Watt>();
 				modData[ModalResultField.acc] = 0.SI<MeterPerSquareSecond>();
 				modData[ModalResultField.ICEOn] = false;
 				container.CommitSimulationStep(t, dt);

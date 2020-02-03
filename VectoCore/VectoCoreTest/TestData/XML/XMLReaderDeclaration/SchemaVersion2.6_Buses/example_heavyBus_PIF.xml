@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:VectoOutputPrimaryVehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:pif="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation" xmlns:pbus="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryVehicleInformation.xsd urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryBus.xsd urn:tugraz:ivt:VectoAPI:DeclarationDefinitions E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.xsd urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.2.1.xsd">
-	<!-- 
+<tns:VectoOutputPrimaryVehicle 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" 
+	xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" 
+	xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" 
+	xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" 
+	xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" 
+	xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" 
+	xmlns:pif="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation" 
+	xmlns:pbus="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" 
+	xmlns:di="http://www.w3.org/2000/09/xmldsig#" 
+
+xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryVehicleInformation.xsd urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryBus.xsd urn:tugraz:ivt:VectoAPI:DeclarationDefinitions E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.xsd urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.2.1.xsd">
+
+<!-- 
 xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryVehicleInformation.xsd urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoOutputPrimaryBus.xsd"
--->
+--> 
 	<tns:Data id="PIFHB-VEH-1234567890" xsi:type="pbus:PrimaryVehicleHeavyBusDataType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1">
+	
 		<Vehicle xsi:type="VehiclePIFType">
 			<ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
 			<ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
@@ -224,21 +238,20 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 						<ElectricSystem>
 							<AlternatorTechnology ratio="1.000">default</AlternatorTechnology>
 							<SmartElectrics>false</SmartElectrics>
-							<ResultCards>
-								<Idle>
-									<Entry current="0.00" smartCurrent="0.00"/>
-									<Entry current="100.00" smartCurrent="120.00"/>
-								</Idle>
-								<Traction>
-									<Entry current="0.00" smartCurrent="0.00"/>
-									<Entry current="100.00" smartCurrent="120.00"/>
-								</Traction>
-								<Overrun>
-									<Entry current="0.00" smartCurrent="0.00"/>
-									<Entry current="100.00" smartCurrent="120.00"/>
-								</Overrun>
-							</ResultCards>
-						</ElectricSystem>
+<ResultCards>
+	<Idle>
+		<Entry current="0.00" smartCurrent="0.00"/>
+		<Entry current="100.00" smartCurrent="120.00"/>
+	</Idle>
+	<Traction>
+		<Entry current="0.00" smartCurrent="0.00"/>
+		<Entry current="100.00" smartCurrent="120.00"/>
+	</Traction>
+	<Overrun>
+		<Entry current="0.00" smartCurrent="0.00"/>
+		<Entry current="100.00" smartCurrent="120.00"/>
+	</Overrun>
+</ResultCards>						</ElectricSystem>
 						<PneumaticSystem>
 							<SizeOfAirSupply>Small</SizeOfAirSupply>
 							<Clutch>none</Clutch>
@@ -270,7 +283,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 		<Results>
 			<Status>success</Status>
 			<Result status="success">
-				<VehicleGroup>P31SD</VehicleGroup>
+			<VehicleGroup>P31SD</VehicleGroup>
 				<Mission>Regional Delivery</Mission>
 				<SimulationParameters>
 					<TotalVehicleMass unit="kg">8810</TotalVehicleMass>
@@ -372,13 +385,13 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 		</ApplicationInformation>
 	</tns:Data>
 	<Signature>
-		<di:Reference URI="#PIFHB-VEH-1234567890">
-			<di:Transforms>
-				<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
-				<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-			</di:Transforms>
-			<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
-			<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
-		</di:Reference>
+	<di:Reference URI="#PIFHB-VEH-1234567890">
+		<di:Transforms>
+					<di:Transform Algorithm="urn:vecto:xml:2017:canonicalization"/>
+					<di:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+				</di:Transforms>
+				<di:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+				<di:DigestValue>4TkUGQTX8tevHOU9Cj9uyCFuI/aqcEYlo/gyVjVQmv0=</di:DigestValue>
+	</di:Reference>
 	</Signature>
 </tns:VectoOutputPrimaryVehicle>
