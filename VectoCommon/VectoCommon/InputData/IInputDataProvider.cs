@@ -53,4 +53,16 @@ namespace TUGraz.VectoCommon.InputData
 
 	}
 
+	public interface IPrimaryVehicleInputDataProvider : IInputDataProvider
+	{
+		IVehicleDeclarationInputData Vehicle { get; }
+
+		DigestData ResultDataHash { get; }
+
+		IResultsInputData ResultsInputData { get; }
+
+		IApplicationInformation ApplicationInformation { get; }
+
+		DigestData ManufacturerHash { get; }
+	}
 }

@@ -41,6 +41,7 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 
 
+
 namespace TUGraz.VectoCommon.InputData
 {
 	public interface IDeclarationJobInputData
@@ -737,9 +738,14 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface IPneumaticSupplyDeclarationData
 	{
+		string Clutch { get; }
 		double Ratio { get; }
 
 		string CompressorSize { get; }
+
+		bool SmartAirCompression { get; }
+
+		bool SmartRegeneration { get; }
 	}
 
 	public interface IPneumaticConsumersDeclarationData
@@ -747,8 +753,6 @@ namespace TUGraz.VectoCommon.InputData
 		ConsumerTechnology AirsuspensionControl { get; }
 		ConsumerTechnology AdBlueDosing { get; }
 		ConsumerTechnology DoorDriveTechnology { get; }
-
-		Meter EntranceHeight { get; }
 	}
 
 	public interface IHVACBusAuxiliariesDeclarationData
@@ -778,4 +782,37 @@ namespace TUGraz.VectoCommon.InputData
 		string PassengerAC { get; }
 	}
 
+	public interface IResultsInputData
+	{
+		string Status { get; }
+
+		IList<IResult> Results { get; }
+	}
+
+
+	public interface IResult
+	{
+		string ResultStatus { get; }
+
+		string VehicleGroup { get; }
+
+		string Mission { get; }
+
+		ISimulationParameter SimulationParameter { get; }
+	}
+
+	public interface ISimulationParameter
+	{
+		Kilogram TotalVehicleMass { get; } 
+		Kilogram Payload { get; } 
+		int PassengerCount { get; }
+		string FuelMode { get; }
+	}
+	
+
+	public interface IApplicationInformation
+	{
+		string SimulationToolVersion { get; }
+		DateTime Date { get; }
+	}
 }

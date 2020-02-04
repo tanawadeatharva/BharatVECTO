@@ -207,6 +207,9 @@
   <data name="Component_Gearbox" xml:space="preserve">
     <value>Gearbox</value>
   </data>
+  <data name="Component_Transmission" xml:space="preserve">
+    <value>Transmission</value>
+  </data>
   <data name="Gearbox_TransmissionType" xml:space="preserve">
     <value>TransmissionType</value>
   </data>
@@ -1242,4 +1245,60 @@
   <data name="Bus_PassengerAC" xml:space="preserve">
     <value>PassengerAC</value>
   </data>
+  <data name="Bus_ResultCards" xml:space="preserve">
+    <value>ResultCards</value>
+  </data>
+  <data name="Tag_Vehicle" xml:space="preserve">
+    <value>Vehicle</value>
+  </data>
+  <data name="Bus_AdjustableCoolantThermostat" xml:space="preserve">
+    <value>AdjustableCoolantThermostat</value>
+  </data>
+  <data name="Bus_EngineWasteGasHeatExchanger" xml:space="preserve">
+    <value>EngineWasteGasHeatExchanger</value>
+  </data>
+  <data name="Bus_SizeOfAirSupply" xml:space="preserve">
+    <value>SizeOfAirSupply</value>
+  </data>
+  <data name="Bus_CompressorRatio" xml:space="preserve">
+    <value>CompressorRatio</value>
+  </data>
+  <data name="Bus_SmartCompressionSystem" xml:space="preserve">
+    <value>SmartCompressionSystem</value>
+  </data>
+  <data name="Bus_SmartRegenerationSystem" xml:space="preserve">
+    <value>SmartRegenerationSystem</value>
+  </data>
+  <data name="Bus_AirsuspensionControl" xml:space="preserve">
+    <value>AirsuspensionControl</value>
+  </data>
+  <data name="Bus_AdBlueDosing" xml:space="preserve">
+    <value>AdBlueDosing</value>
+  </data>
+  <data name="Bus_DoorDriveTechnology" xml:space="preserve">
+    <value>DoorDriveTechnology</value>
+  </data>
+  <data name="Vehicle_Clutch" xml:space="preserve">
+    <value>Clutch</value>
+  </data>
+  <data name="Tag_ApplicationInformation" xml:space="preserve">
+    <value>ApplicationInformation</value>
+  </data>
+  <data name="Tag_ResultDataSignatureNode" xml:space="preserve">
+    <value>ResultDataSignature</value>
+  </data>
+  <data name="Bus_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Bus_PassengerCount" xml:space="preserve">
+    <value>PassengerCount</value>
+  </data>
+  <data name="Result_Status" xml:space="preserve">
+    <value>status</value>
+  </data>
+  <data name="Bus_Smart_Electrics" xml:space="preserve">
+    <value>SmartElectrics</value>
+  </data>
+
+
 </root>

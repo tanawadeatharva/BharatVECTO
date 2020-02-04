@@ -31,11 +31,14 @@
 
 using System.Xml;
 using System.Xml.Linq;
+using Castle.Components.DictionaryAdapter.Xml;
 using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCore.InputData.FileIO.XML.Common;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Interfaces;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
+using XmlDocumentType = System.Xml.XmlDocumentType;
 
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 {
@@ -100,6 +103,108 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration
 
 		public XMLDeclarationInputDataProviderV20(XmlDocument xmlDoc, string fileName) : base(xmlDoc, fileName) { }
 
+
+	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLPrimaryVehicleBusInputDataV01 : AbstractXMLResource, IXMLPrimaryVehicleBusInputData
+	{
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_NAMESPACE;
+
+		public const string XSD_TYPE = "PrimaryVehicleHeavyBusType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		
+		protected readonly XmlDocument Document;
+		protected IDeclarationJobInputData JobData;
+
+		private IVehicleDeclarationInputData _vehicle;
+		private IApplicationInformation _applicationInformation;
+		private IResultsInputData _resultsInputData;
+		
+
+		public XMLPrimaryVehicleBusInputDataV01(XmlDocument xmlDoc, string fileName) : base(xmlDoc, fileName)
+		{
+			Document = xmlDoc;
+			SourceType = DataSourceType.XMLFile;
+		}
+
+
+		#region IPrimaryVehicleInputDataProvider interface
+
+		public IVehicleDeclarationInputData Vehicle
+		{
+			get { return _vehicle ?? (_vehicle = Reader.JobData.Vehicle); }
+		}
+
+		public DigestData ResultDataHash
+		{
+			get { return Reader.GetDigestData(GetNode(XMLNames.Tag_ResultDataSignatureNode)); }
+		}
+
+		public IApplicationInformation ApplicationInformation
+		{
+			get { return _applicationInformation ?? (_applicationInformation = Reader.ApplicationInformation); }
+		}
+
+		public DigestData ManufacturerHash
+		{
+			get { return Reader.GetDigestData(Document.LastChild.LastChild); }
+		}
+
+		public IResultsInputData ResultsInputData
+		{
+			get { return _resultsInputData ?? (_resultsInputData = Reader.ResultsInputData); }
+		}
+
+		#endregion
+
+
+
+		#region IXMLPrimaryVehicleBusInputData interface 
+
+		public IXMLDeclarationPrimaryVehicleBusInputDataReader Reader { protected get; set; }
+
+		public XmlNode ResultsNode
+		{
+			get { return GetNode(XMLNames.Report_Results); }
+		}
+
+		public XmlNode ApplicationInformationNode
+		{
+			get { return GetNode(XMLNames.Tag_ApplicationInformation); }
+		}
+
+		#endregion
+
+
+		#region AbstractXMLResource class
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+
+		public override DataSource DataSource
+		{
+			get { return new DataSource { SourceFile = SourceFile, SourceVersion = "", SourceType = SourceType }; }
+		}
+
+		protected override DataSourceType SourceType { get; }
+
+		#endregion
+
+		public virtual IDeclarationJobInputData JobInputData
+		{
+			get { return JobData ?? (JobData = Reader.JobData); }
+		}
 		
 	}
+
+
+
+
+
 }

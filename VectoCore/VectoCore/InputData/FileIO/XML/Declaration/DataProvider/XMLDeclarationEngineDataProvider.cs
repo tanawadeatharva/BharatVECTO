@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			public virtual FuelType FuelType
 			{
 				get {
-					var value = GetString(XMLNames.Engine_FuelType);
+					var value = GetString(XMLNames.Engine_FuelType).Replace(" ","");
 					if ("LPG".Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
 						return FuelType.LPGPI;
 					}
@@ -466,6 +466,36 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 
 			#endregion
+		}
+	}
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLDeclarationPrimaryVehicleBusEngineDataProviderV01 : XMLDeclarationEngineDataProviderV23
+	{
+
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+
+		public new const string XSD_TYPE = "EngineDataPIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE =
+			XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		public XMLDeclarationPrimaryVehicleBusEngineDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+			string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+		
+		public override IList<IEngineModeDeclarationInputData> EngineModes
+		{
+			get
+			{
+				return _engineModes ??
+						(_engineModes = new List<IEngineModeDeclarationInputData>() { new XMLSingleFuelEngineMode(BaseNode) });
+			}
+		}
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
 		}
 	}
 }

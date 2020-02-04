@@ -205,6 +205,14 @@ namespace TUGraz.VectoCore.InputData.Impl
 		#endregion
 	}
 
+	public class ResultCardDeclarationInputData : IResultCardDeclarationInputData
+	{
+		public IList<IResultCardEntry> Idle { get; internal set; }
+		public IList<IResultCardEntry> Traction { get; internal set; }
+		public IList<IResultCardEntry> Overrun { get; internal set; }
+	}
+
+
 	public class ResultCardEntry : IResultCardEntry
 	{
 		public ResultCardEntry(Ampere current, Ampere smartCurrent)
@@ -270,4 +278,50 @@ namespace TUGraz.VectoCore.InputData.Impl
 		}
 	}
 
+	public class PneumaticConsumersDeclarationData : IPneumaticConsumersDeclarationData
+	{
+		public ConsumerTechnology AirsuspensionControl { get; internal set; }
+		public ConsumerTechnology AdBlueDosing { get; internal set; }
+		public ConsumerTechnology DoorDriveTechnology { get; internal set; }
+	}
+
+
+	public class PneumaticSupplyDeclarationData : IPneumaticSupplyDeclarationData
+	{
+		public string Clutch { get; internal set; }
+		public double Ratio { get; internal set; }
+		public string CompressorSize { get; internal set; }
+		public bool SmartAirCompression { get; internal set; }
+		public bool SmartRegeneration { get; internal set; }
+	}
+
+
+	public class ResultInputData : IResultsInputData
+	{
+		public string Status { get; internal set; }
+
+		public IList<IResult> Results { get; internal set; }
+	}
+	
+	public class Result : IResult
+	{
+		public string ResultStatus { get; internal set; }
+		public string VehicleGroup { get; internal set; }
+		public string Mission { get; internal set; }
+		public ISimulationParameter SimulationParameter { get; internal set; }
+	}
+
+	public class SimulationParameter : ISimulationParameter
+	{
+		public Kilogram TotalVehicleMass { get; internal set; }
+		public Kilogram Payload { get; internal set; }
+		public int PassengerCount { get; internal set; }
+		public string FuelMode { get; internal set; }
+	}
+
+	public class ApplicationInformation : IApplicationInformation
+	{
+		public string SimulationToolVersion { get; internal set; }
+		public DateTime Date { get; internal set; }
+	}
 }

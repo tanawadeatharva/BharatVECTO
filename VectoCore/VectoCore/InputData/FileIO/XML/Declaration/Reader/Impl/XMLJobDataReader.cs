@@ -106,4 +106,45 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 			return vehicle;
 		}
 	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+	public class XMLJobDataPrimaryVehicleReaderV01 : AbstractComponentReader, IXMLJobDataReader
+	{
+
+		public static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+
+		public const string XSD_TYPE = "PrimaryVehicleHeavyBusDataType";
+
+		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+
+		[Inject]
+		public IDeclarationInjectFactory Factory { protected get; set; }
+
+		protected IVehicleDeclarationInputData _vehicle;
+
+		private readonly IXMLPrimaryVehicleBusJobInputData _primaryBusJobData;
+		
+		public XMLJobDataPrimaryVehicleReaderV01(IXMLPrimaryVehicleBusJobInputData busJobData, XmlNode jobNode) 
+			: base(busJobData, jobNode)
+		{
+			_primaryBusJobData = busJobData;
+		}
+		
+		public IVehicleDeclarationInputData CreateVehicle
+		{
+			get { return _vehicle ?? (_vehicle = CreateComponent(XMLNames.Component_Vehicle, VehicleCreator)); }
+		}
+
+		protected IVehicleDeclarationInputData VehicleCreator(string version, XmlNode vehicleNode, string sourceFile)
+		{
+			var vehicle = Factory.CreatePrimaryVehicleData(version, _primaryBusJobData, vehicleNode, sourceFile);
+			vehicle.ComponentReader = GetReader(vehicle, vehicle.ComponentNode, Factory.CreateComponentReader);
+			vehicle.ADASReader = GetReader(vehicle, vehicle.ADASNode, Factory.CreateADASReader);
+			
+			return vehicle;
+		}
+	}
 }

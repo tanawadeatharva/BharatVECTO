@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.Remoting.Messaging;
+using System.Windows.Forms.VisualStyles;
 using System.Xml;
 using System.Xml.Linq;
 using Ninject;
@@ -48,7 +50,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public XMLComponentReaderV10(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
 			vehicle, componentsNode)
 		{
-			if (componentsNode == null) {
+			if (componentsNode == null)
+			{
 				throw new VectoException("component node must not be null!");
 			}
 
@@ -64,22 +67,26 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public virtual IAirdragDeclarationInputData AirdragInputData
 		{
-			get {
+			get
+			{
 				return _airdragInputData ?? (_airdragInputData = CreateComponent(XMLNames.Component_AirDrag, AirdragCreator, true));
 			}
 		}
 
 		public virtual IGearboxDeclarationInputData GearboxInputData
 		{
-			get {
+			get
+			{
 				return _gearboxInputData ?? (_gearboxInputData = CreateComponent(XMLNames.Component_Gearbox, GearboxCreator));
 			}
 		}
 
 		public virtual ITorqueConverterDeclarationInputData TorqueConverterInputData
 		{
-			get {
-				if (_torqueConverterInputData == null && BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.Component_TorqueConverter)) == null) {
+			get
+			{
+				if (_torqueConverterInputData == null && BaseNode.SelectSingleNode(XMLHelper.QueryLocalName(XMLNames.Component_TorqueConverter)) == null)
+				{
 					return null;
 				}
 				return _torqueConverterInputData ?? (_torqueConverterInputData = CreateComponent(
@@ -92,9 +99,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public virtual ITransmissionInputData CreateGear(XmlNode gearNode)
 		{
 			var version = XMLHelper.GetXsdType(gearNode.SchemaInfo.SchemaType);
-			try {
+			try
+			{
 				return Factory.CreateGearData(version, gearNode, ParentComponent.DataSource.SourceFile);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				var gearNumber = gearNode.Attributes?.GetNamedItem(XMLNames.Gearbox_Gear_GearNumber_Attr).InnerText;
 				throw new VectoException(
 					"Unsupported XML Version! Node: {0} Gear: {1} Version: {2}", e, gearNode.LocalName, gearNumber, version);
@@ -104,9 +114,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public virtual IAuxiliaryDeclarationInputData CreateAuxiliary(XmlNode auxNode)
 		{
 			var version = XMLHelper.GetXsdType(auxNode.ParentNode.ParentNode.SchemaInfo.SchemaType);
-			try {
+			try
+			{
 				return Factory.CreateAuxiliaryData(version, auxNode, Vehicle);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				throw new VectoException("Unsupported XML version! Node: {0} version: {1}", e, auxNode.LocalName, version);
 			}
 		}
@@ -114,11 +127,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		public virtual IAxleDeclarationInputData CreateAxle(XmlNode axleNode)
 		{
 			var version = XMLHelper.GetXsdType(axleNode.SchemaInfo.SchemaType);
-			try {
+			try
+			{
 				var axle = Factory.CreateAxleData(version, Vehicle, axleNode, (Vehicle as IXMLResource).DataSource.SourceFile);
 				axle.Reader = Factory.CreateAxleReader(version, Vehicle, axleNode);
 				return axle;
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				var axleNumber = axleNode.Attributes?.GetNamedItem(XMLNames.AxleWheels_Axles_Axle_AxleNumber_Attr).InnerText;
 				throw new VectoException(
 					"Unsupported XML Version! Node: {0} Axle: {1} Version: {2}", e, axleNode.LocalName, axleNumber, version);
@@ -128,7 +144,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public virtual IAxleGearInputData AxleGearInputData
 		{
-			get {
+			get
+			{
 				return _axlegearInputData ?? (_axlegearInputData = CreateComponent(XMLNames.Component_Axlegear, AxlegearCreator));
 			}
 		}
@@ -136,7 +153,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public virtual IAngledriveInputData AngledriveInputData
 		{
-			get {
+			get
+			{
 				return _angledriveInputData ??
 						(_angledriveInputData = CreateComponent(XMLNames.Component_Angledrive, AngledriveCreator, true));
 			}
@@ -150,7 +168,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public virtual IAuxiliariesDeclarationInputData AuxiliaryData
 		{
-			get {
+			get
+			{
 				return _auxiliaryInputData ??
 						(_auxiliaryInputData = CreateComponent(XMLNames.Component_Auxiliaries, AuxiliaryCreator));
 			}
@@ -159,7 +178,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public virtual IRetarderInputData RetarderInputData
 		{
-			get {
+			get
+			{
 				return _retarderInputData ??
 						(_retarderInputData = CreateComponent(XMLNames.Component_Retarder, RetarderCreator, true));
 			}
@@ -168,7 +188,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public virtual IAxlesDeclarationInputData AxlesDeclarationInputData
 		{
-			get {
+			get
+			{
 				return _axlesInputData ?? (_axlesInputData = CreateComponent(XMLNames.Component_AxleWheels, AxleWheelsCreator));
 			}
 		}
@@ -183,7 +204,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected virtual IAirdragDeclarationInputData AirdragCreator(
 			string version, XmlNode componentNode, string sourceFile)
 		{
-			if (version == null) {
+			if (version == null)
+			{
 				return new XMLDeclarationAirdragDataProviderV10(Vehicle, null, sourceFile);
 			}
 
@@ -201,7 +223,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 		protected virtual ITorqueConverterDeclarationInputData TorqueConverterCreator(
 			string version, XmlNode componentNode, string sourceFile)
 		{
-			if (version == null) {
+			if (version == null)
+			{
 				return new XMLDeclarationTorqueConverterDataProviderV10(Vehicle, componentNode, sourceFile);
 			}
 
@@ -215,7 +238,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected virtual IAngledriveInputData AngledriveCreator(string version, XmlNode componentNode, string sourceFile)
 		{
-			if (version == null) {
+			if (version == null)
+			{
 				return new XMLDeclarationAngledriveDataProviderV10(Vehicle, componentNode, sourceFile);
 			}
 
@@ -229,7 +253,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		protected virtual IRetarderInputData RetarderCreator(string version, XmlNode componentNode, string sourceFile)
 		{
-			if (version == null) {
+			if (version == null)
+			{
 				return new XMLDeclarationRetarderDataProviderV10(Vehicle, componentNode, sourceFile);
 			}
 
@@ -287,7 +312,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 
 		public XMLComponentReaderV20(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
-			vehicle, componentsNode) { }
+			vehicle, componentsNode)
+		{ }
 	}
 
 	// ---------------------------------------------------------------------------------------
@@ -301,15 +327,72 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl
 
 		public const string COMPLETE_XSD_TYPE = "CompletedVehicleComponentsDeclarationType";
 		public static readonly string QUALIFIED_COMPLETE_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, COMPLETE_XSD_TYPE);
-		
+
 
 		protected IBusAuxiliariesDeclarationData _busAuxInputData;
 
 
 		public XMLComponentReaderV26(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode) : base(
-			vehicle, componentsNode) { }
+			vehicle, componentsNode)
+		{ }
 
-		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData { get { return  _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator)); } }
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData { get { return _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator)); } }
+
+		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
+		{
+			return Factory.CreateBusAuxiliaires(version, Vehicle, componentNode, sourceFile);
+		}
+	}
+
+
+	public class XMLPrimaryVehicleBusComponentReaderV01 : XMLComponentReaderV20
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+
+		public new const string XSD_TYPE = "VehicleComponentsPIFType";
+		public new const string GEARBOX_READER_TYPE = "TransmissionDataPIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+		public new static readonly string GEARBOX_READER_QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI, GEARBOX_READER_TYPE);
+
+		protected IBusAuxiliariesDeclarationData _busAuxInputData;
+
+
+		public XMLPrimaryVehicleBusComponentReaderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentsNode)
+			: base(vehicle, componentsNode) { }
+
+		public override IGearboxDeclarationInputData GearboxInputData
+		{
+			get
+			{
+				return _gearboxInputData ?? (_gearboxInputData = CreateComponent(XMLNames.Component_Transmission, GearboxCreator));
+			}
+		}
+		
+		public override IRetarderInputData RetarderInputData
+		{
+			get { return null; }
+		}
+		
+		public override ITorqueConverterDeclarationInputData TorqueConverterInputData
+		{
+			get { return null; }
+		}
+		
+		public override IAirdragDeclarationInputData AirdragInputData
+		{
+			get { return null; }
+		}
+		
+		public override IAuxiliariesDeclarationInputData AuxiliaryData
+		{
+			get { return null; }
+		}
+		
+		public override IBusAuxiliariesDeclarationData BusAuxiliariesInputData
+		{
+			get { return _busAuxInputData ?? (_busAuxInputData = CreateComponent(XMLNames.Component_Auxiliaries, BusAuxCreator)); }
+		}
 
 		protected virtual IBusAuxiliariesDeclarationData BusAuxCreator(string version, XmlNode componentNode, string sourceFile)
 		{

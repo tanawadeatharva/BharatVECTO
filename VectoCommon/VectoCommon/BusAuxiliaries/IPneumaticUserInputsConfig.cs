@@ -25,4 +25,26 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		Electrically,
 		Pneumatically,
 	}
+
+	public static class ConsumerTechnologyHelper
+	{
+		public static ConsumerTechnology Parse(string technology)
+		{
+			switch (technology.ToLowerInvariant())
+			{
+				case "mechanically":
+				case "mechanic":
+					return ConsumerTechnology.Mechanically;
+				case "electrically":
+				case "electric":
+				case "electronically":
+					return ConsumerTechnology.Electrically;
+				case "pneumatically":
+				case "pneumatic":
+					return ConsumerTechnology.Pneumatically;
+				default:
+					return ConsumerTechnology.Unknown;
+			}
+		}
+	}
 }

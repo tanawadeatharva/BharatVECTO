@@ -213,6 +213,7 @@
     <Compile Include="XML\XMLEngineeringInputRefTest.cs" />
     <Compile Include="XML\XMLEngineeringInputSingleTest.cs" />
     <Compile Include="XML\XMLReportTest.cs" />
+    <Compile Include="XML\XMLPrimaryVehicleBusReaderTest.cs" />
     <Compile Include="XML\XMLWritingTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -3582,7 +3583,9 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.3\vehicle_sampleDualModeDualFuel.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\example_heavyBus_PIF.xml" />
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\example_heavyBus_PIF.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-completed_heavyBus.xml" />
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBus.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

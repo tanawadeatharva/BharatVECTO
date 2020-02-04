@@ -199,4 +199,53 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return NAMESPACE_URI; }
 		}
 	}
+
+
+	// ---------------------------------------------------------------------------------------
+
+
+	public class XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01 : XMLDeclarationComponentsDataProviderV10, IXMLVehicleComponentsDeclaration
+	{
+		public new static readonly XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_PRIMARY_BUS_VEHICLE_URI_V01;
+
+		public new const string XSD_TYPE = "VehicleComponentsPIFType";
+
+		public new static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
+
+		private IBusAuxiliariesDeclarationData _busAuxiliaries;
+
+		
+		public XMLDeclarationComponentsPrimaryVehicleBusDataProviderV01(IXMLDeclarationVehicleData vehicle, XmlNode componentNode,
+			string sourceFile) : base(vehicle, componentNode, sourceFile) { }
+
+		IRetarderInputData IVehicleComponentsDeclaration.RetarderInputData
+		{
+			get { return null; }
+		}
+
+		ITorqueConverterDeclarationInputData IVehicleComponentsDeclaration.TorqueConverterInputData
+		{
+			get { return null; }
+		}
+		
+		IAirdragDeclarationInputData IVehicleComponentsDeclaration.AirdragInputData
+		{
+			get { return null; }
+		}
+		
+		IAuxiliariesDeclarationInputData IVehicleComponentsDeclaration.AuxiliaryInputData
+		{
+			get { return null; }
+		}
+
+		public override IBusAuxiliariesDeclarationData BusAuxiliaries
+		{
+			get { return _busAuxiliaries ?? (_busAuxiliaries = ComponentReader.BusAuxiliariesInputData); }
+		}
+
+		protected override XNamespace SchemaNamespace
+		{
+			get { return NAMESPACE_URI; }
+		}
+	}
 }

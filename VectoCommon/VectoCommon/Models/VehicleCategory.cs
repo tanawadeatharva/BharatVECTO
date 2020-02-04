@@ -120,5 +120,19 @@ namespace TUGraz.VectoCommon.Models
 					throw new ArgumentOutOfRangeException("VehicleCategory", category, null);
 			}
 		}
+
+		public static VehicleCategory Parse(string vehicleCategory)
+		{
+			switch (vehicleCategory) {
+				case "Bus":
+					return VehicleCategory.HeavyBusPrimaryVehicle;
+				case "Tractor":
+					return VehicleCategory.Tractor;
+				case "Rigid Lorry":
+					return VehicleCategory.RigidTruck;
+				default:
+					return VehicleCategory.Unknown;
+			}
+		}
 	}
 }

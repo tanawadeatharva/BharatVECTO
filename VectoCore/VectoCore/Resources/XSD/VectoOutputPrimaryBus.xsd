@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
-<xs:schema xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:common="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:pif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" schemaLocation="VectoOutputPrimaryVehicleInformation.xsd"/>
+<xs:schema xmlns="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.3="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:common="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" xmlns:pif="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation" xmlns:out="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationOutputDefinitions" schemaLocation="VectoOutputDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions" schemaLocation="VectoDeclarationDefinitions.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" schemaLocation="VectoDeclarationDefinitions.2.0.xsd"/>
@@ -57,6 +57,20 @@
 	<xs:complexType name="AngledrivePIFType">
 		<xs:sequence>
 			<xs:element name="Data" type="AbstractAngledriveDataPIFType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ApplicationInformationPIFType">
+		<xs:sequence>
+			<xs:element name="SimulationToolVersion" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>II.2.5</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
+				<xs:annotation>
+					<xs:documentation>II.2.5</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AuxiliariesPIFType">
@@ -236,27 +250,12 @@
 	</xs:complexType>
 	<xs:complexType name="PrimaryVehicleHeavyBusDataType">
 		<xs:complexContent>
-			<xs:extension base="pif:AbstractPrimaryVehicleDataPIFType">
+			<xs:extension base="out:AbstractPrimaryVehicleDataPIFType">
 				<xs:sequence>
 					<xs:element name="Vehicle" type="AbstractVehiclePIFType"/>
 					<xs:element name="ResultDataSignature" type="v1.0:SignatureType"/>
 					<xs:element name="Results" type="ResultsPIFType"/>
-					<xs:element name="ApplicationInformation">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="SimulationToolVersion" type="xs:string">
-									<xs:annotation>
-										<xs:documentation>II.2.5</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-								<xs:element name="Date" type="v1.0:DateTimeWithTimezone">
-									<xs:annotation>
-										<xs:documentation>II.2.5</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="ApplicationInformation" type="ApplicationInformationPIFType"/>
 				</xs:sequence>
 				<xs:attribute name="id" use="required"/>
 			</xs:extension>
@@ -399,28 +398,27 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="TransmissionGearPIFType">
+		<xs:sequence>
+			<xs:element name="Ratio"/>
+			<xs:element name="MaxTorque" type="v1.0:GearboxGearMaxTorqueType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P157 - [Nm]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="MaxSpeed" type="v1.0:GearboxGearMaxSpeedType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>P194 - [1/min]</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="number" use="required"/>
+	</xs:complexType>
 	<xs:complexType name="TransmissionGearsPIFType">
 		<xs:complexContent>
 			<xs:extension base="AbstractTransmissionGearsPIFType">
 				<xs:sequence>
-					<xs:element name="Gear" maxOccurs="unbounded">
-						<xs:complexType>
-							<xs:sequence>
-								<xs:element name="Ratio"/>
-								<xs:element name="MaxTorque" type="v1.0:GearboxGearMaxTorqueType" minOccurs="0">
-									<xs:annotation>
-										<xs:documentation>P157 - [Nm]</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-								<xs:element name="MaxSpeed" type="v1.0:GearboxGearMaxSpeedType" minOccurs="0">
-									<xs:annotation>
-										<xs:documentation>P194 - [1/min]</xs:documentation>
-									</xs:annotation>
-								</xs:element>
-							</xs:sequence>
-							<xs:attribute name="number" use="required"/>
-						</xs:complexType>
-					</xs:element>
+					<xs:element name="Gear" type="TransmissionGearPIFType" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
