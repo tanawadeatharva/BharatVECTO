@@ -761,9 +761,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public bool LowEntry { get { return GetBool(XMLNames.Bus_LowEntry); } }
 
-		public Meter EntranceHeight { get { return GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>(); } }
+		public override Meter EntranceHeight { get { return GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>(); } }
 
-		public string DoorDriveTechnology { get { return GetString(XMLNames.Bus_DoorDriveTechnology); } }
+		public virtual string DoorDriveTechnology { get { return GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology); } }
 
 
 		#region Overrides of AbstractXMLResource
@@ -898,6 +898,8 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 		public IXMLComponentReader ComponentReader { get; set; }
+
+		public Meter EntranceHeight { get; }
 
 		public IVehicleComponentsDeclaration Components
 		{

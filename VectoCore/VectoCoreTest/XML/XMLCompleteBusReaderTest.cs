@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Ninject;
 using NUnit.Framework;
+using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VECTO;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Models;
@@ -103,9 +104,9 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			var havacAux = components.BusAuxiliaries.HVACAux;
 			Assert.IsNotNull(havacAux);
-			Assert.AreEqual(7, havacAux.SystemConfiguration);
-			Assert.AreEqual("2-stage", havacAux.CompressorType.DriverAC);
-			Assert.AreEqual("3-stage", havacAux.CompressorType.PassengerAC);
+			Assert.AreEqual(BusHVACSystemConfiguration.Configuration7, havacAux.SystemConfiguration);
+			Assert.AreEqual(ACCompressorType.TwoStage, havacAux.CompressorTypeDriver);
+			Assert.AreEqual(ACCompressorType.FourStage, havacAux.CompressorTypePassenger);
 			Assert.AreEqual(0.SI<Watt>(), havacAux.AuxHeaterPower);
 			Assert.IsTrue(havacAux.DoubleGlasing);
 			Assert.IsFalse(havacAux.HeatPump);

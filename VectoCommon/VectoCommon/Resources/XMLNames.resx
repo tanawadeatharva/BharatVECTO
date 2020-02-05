@@ -1257,9 +1257,6 @@
   <data name="Bus_EntranceHeight" xml:space="preserve">
     <value>EntranceHeight</value>
   </data>
-  <data name="Bus_DoorDriveTechnology" xml:space="preserve">
-    <value>DoorDriveTechnology</value>
-  </data>
   <data name="Bus_LowerDeck" xml:space="preserve">
     <value>LowerDeck</value>
   </data>
@@ -1340,9 +1337,6 @@
   </data>
   <data name="Bus_AdBlueDosing" xml:space="preserve">
     <value>AdBlueDosing</value>
-  </data>
-  <data name="Bus_DoorDriveTechnology" xml:space="preserve">
-    <value>DoorDriveTechnology</value>
   </data>
   <data name="Vehicle_Clutch" xml:space="preserve">
     <value>Clutch</value>

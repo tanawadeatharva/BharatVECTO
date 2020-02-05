@@ -224,20 +224,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 						<ElectricSystem>
 							<AlternatorTechnology ratio="1.000">default</AlternatorTechnology>
 							<SmartElectrics>false</SmartElectrics>
-							<ResultCards>
-								<Idle>
-									<Entry current="0.00" smartCurrent="0.00"/>
-									<Entry current="100.00" smartCurrent="120.00"/>
-								</Idle>
-								<Traction>
-									<Entry current="0.00" smartCurrent="0.00"/>
-									<Entry current="100.00" smartCurrent="120.00"/>
-								</Traction>
-								<Overrun>
-									<Entry current="0.00" smartCurrent="0.00"/>
-									<Entry current="100.00" smartCurrent="120.00"/>
-								</Overrun>
-							</ResultCards>
+							<MaxAlternatorPower>10000</MaxAlternatorPower>
+							<ElectricStorageCapacity>800</ElectricStorageCapacity>
+							</ElectricSystem>
 						<PneumaticSystem>
 							<SizeOfAirSupply>Small</SizeOfAirSupply>
 							<Clutch>none</Clutch>
