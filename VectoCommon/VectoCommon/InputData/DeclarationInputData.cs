@@ -728,20 +728,7 @@ namespace TUGraz.VectoCommon.InputData
 		double Ratio { get; }
 	}
 
-	public interface IResultCardDeclarationInputData
-	{
-		IList<IResultCardEntry> Idle { get; }
-		IList<IResultCardEntry> Traction { get; }
-		IList<IResultCardEntry> Overrun { get; }
-	}
-
-	public interface IResultCardEntry
-	{
-		Ampere Current { get; }
-
-		Ampere SmartCurrent { get; }
-	}
-
+	
 	public interface IPneumaticSupplyDeclarationData
 	{
 		string Clutch { get; }
@@ -783,12 +770,7 @@ namespace TUGraz.VectoCommon.InputData
 		bool SeparateAirDistributionDucts { get; }
 	}
 
-	public interface ICompressorType
-	{
-		string DriverAC { get; }
-		string PassengerAC { get; }
-	}
-
+	
 	public interface IResultsInputData
 	{
 		string Status { get; }
