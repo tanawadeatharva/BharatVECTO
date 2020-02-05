@@ -61,7 +61,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 			}
 		}
 
-		public IElectricConsumersDeclarationData ElectricConsumers { get; }
+		public IElectricConsumersDeclarationData ElectricConsumers
+		{
+			get { return null; }
+		}
 
 		public IPneumaticSupplyDeclarationData PneumaticSupply
 		{
@@ -85,7 +88,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 					AdBlueDosing = GetBool(XMLNames.Bus_AdBlueDosing) ? ConsumerTechnology.Pneumatically : ConsumerTechnology.Electrically,
 					DoorDriveTechnology = ConsumerTechnologyHelper.Parse(GetString(XMLNames.Bus_DoorDriveTechnology))
 				};
-
 			}
 		}
 
@@ -233,9 +235,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider {
 			{
 				var hvac = new HVACBusAuxiliariesDeclarationData
 				{
-					SystemConfiguration = XmlConvert.ToInt32(GetString(XMLNames.Bus_SystemConfiguration)),
-					CompressorType = new CompressorType( GetString(XMLNames.Bus_DriverAC), GetString(XMLNames.Bus_PassengerAC)),
-					AuxHeaterPower = XmlConvert.ToInt32(GetString(XMLNames.Bus_AuxiliaryHeaterPower)),
+					SystemConfiguration = GetString(XMLNames.Bus_SystemConfiguration).ToInt(),
+					CompressorType = new CompressorType(GetString(XMLNames.Bus_DriverAC), GetString(XMLNames.Bus_PassengerAC)),
+					AuxHeaterPower = GetString(XMLNames.Bus_AuxiliaryHeaterPower).ToDouble().SI<Watt>(),
 					DoubleGlasing = GetBool(XMLNames.Bus_DoubleGlasing),
 					HeatPump = GetBool(XMLNames.Bus_HeatPump),
 					AdjustableAuxiliaryHeater = GetBool(XMLNames.Bus_AdjustableAuxiliaryHeater),

@@ -99,14 +99,14 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.IsNotNull(electricSupl.Alternators);
 			Assert.AreEqual(1, electricSupl.Alternators.Count);
 			Assert.AreEqual(1.000, electricSupl.Alternators.First().Ratio);
-			Assert.AreEqual("Sample Alternator Technology 1", electricSupl.Alternators.First().Technology);
+			Assert.AreEqual("default", electricSupl.Alternators.First().Technology);
 
 			var havacAux = components.BusAuxiliaries.HVACAux;
 			Assert.IsNotNull(havacAux);
 			Assert.AreEqual(7, havacAux.SystemConfiguration);
-			Assert.AreEqual("sample tech 2", havacAux.CompressorType.DriverAC);
-			Assert.AreEqual("sample tech 1", havacAux.CompressorType.PassengerAC);
-			Assert.AreEqual(0, havacAux.AuxHeaterPower);
+			Assert.AreEqual("2-stage", havacAux.CompressorType.DriverAC);
+			Assert.AreEqual("3-stage", havacAux.CompressorType.PassengerAC);
+			Assert.AreEqual(0.SI<Watt>(), havacAux.AuxHeaterPower);
 			Assert.IsTrue(havacAux.DoubleGlasing);
 			Assert.IsFalse(havacAux.HeatPump);
 			Assert.IsTrue(havacAux.AdjustableAuxiliaryHeater);

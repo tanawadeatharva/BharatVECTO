@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 		public bool AdjustableCoolantThermostat { get; internal set; }
 
-		public int AuxHeaterPower { get; internal set; }
+		public Watt AuxHeaterPower { get; internal set; }
 
 		public ICompressorType CompressorType { get; internal set; }
 		

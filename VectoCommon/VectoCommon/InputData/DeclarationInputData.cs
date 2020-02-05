@@ -761,7 +761,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		ICompressorType CompressorType { get; }
 
-		int AuxHeaterPower { get; }
+		Watt AuxHeaterPower { get; }
 
 		bool DoubleGlasing { get; }
 

@@ -31,6 +31,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Windows.Forms.VisualStyles;
 using System.Xml;
 using System.Xml.Linq;
@@ -705,6 +706,18 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		//VehicleWidth
 		public override Meter Width { get { return GetDouble(XMLNames.Bus_VehicleWidth).SI<Meter>(); } }
 
+		public override XmlElement PTONode
+		{
+			get
+			{
+				if (ExemptedVehicle)
+				{
+					return null;
+				}
+				return _ptoNode ?? (_ptoNode = GetNode(XMLNames.Vehicle_PTO, required: false) as XmlElement);
+			}
+		}
+		
 		#endregion
 
 		public bool LowEntry { get { return GetBool(XMLNames.Bus_LowEntry); } }

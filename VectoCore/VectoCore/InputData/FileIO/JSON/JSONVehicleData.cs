@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		public virtual int SystemConfiguration { get; set; }
 		public virtual ICompressorType CompressorType { get { return null; } }
-		public virtual int  AuxHeaterPower { get; set; }
+		public virtual Watt AuxHeaterPower { get; set; }
 		public virtual bool DoubleGlasing { get { return false; } }
 		public virtual bool HeatPump { get { return false; } }
 		public virtual bool AdjustableCoolantThermostat { get { return Body["Aux"]?["HVAC"]?.GetEx<bool>("AdjustableCoolantThermostat") ?? false; } }
