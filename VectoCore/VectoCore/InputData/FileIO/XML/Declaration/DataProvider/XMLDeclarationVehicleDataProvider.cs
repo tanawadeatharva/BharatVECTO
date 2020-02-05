@@ -708,14 +708,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public override XmlElement PTONode
 		{
-			get
-			{
-				if (ExemptedVehicle)
-				{
-					return null;
-				}
-				return _ptoNode ?? (_ptoNode = GetNode(XMLNames.Vehicle_PTO, required: false) as XmlElement);
-			}
+			get { return null; }
 		}
 		
 		#endregion
