@@ -105,11 +105,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 				throw new VectoException("unknown xml file! {0}", xmlDoc.DocumentElement.LocalName);
 			}
 
+
+
 			new XMLValidator(xmlDoc, null, XMLValidator.CallBackExceptionOnError).ValidateXML(documentType.Value);
 
-			switch (documentType.Value) {
+			switch (documentType.Value)
+			{
 				case XmlDocumentType.DeclarationJobData: return ReadDeclarationJob(xmlDoc, source);
 				case XmlDocumentType.EngineeringJobData: return ReadEngineeringJob(xmlDoc, source);
+				case XmlDocumentType.PrimaryVehicleBusOutputData: return ReadPrimaryVehicleDeclarationJob(xmlDoc, source);
 				case XmlDocumentType.EngineeringComponentData:
 				case XmlDocumentType.DeclarationComponentData:
 				case XmlDocumentType.ManufacturerReport:
@@ -139,5 +143,20 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML
 				throw new VectoException("Failed to read Declaration job version {0}", e, versionNumber);
 			}
 		}
+
+		private IPrimaryVehicleInputDataProvider ReadPrimaryVehicleDeclarationJob(XmlDocument xmlDoc, string source)
+		{
+			var versionNumber = XMLHelper.GetXsdType(xmlDoc.DocumentElement?.SchemaInfo.SchemaType);
+			try {
+				var input = DeclarationFactory.CreatePrimaryVehicleBusInputProvider(versionNumber, xmlDoc, source);
+				input.Reader = DeclarationFactory.CreatePrimaryVehicleBusInputReader(versionNumber, input, xmlDoc.DocumentElement);
+				return input;
+			}
+			catch (Exception e) {
+				throw new VectoException("Failed to read Declaration job version {0}", e, versionNumber);
+			}
+		}
+
+
 	}
 }

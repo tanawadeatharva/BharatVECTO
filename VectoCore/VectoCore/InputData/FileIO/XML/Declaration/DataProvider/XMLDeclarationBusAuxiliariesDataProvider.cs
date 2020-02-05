@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
+using TUGraz.VectoCommon.BusAuxiliaries;
+using Castle.Core.Internal;
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Resources;
@@ -23,7 +27,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		public static readonly string QUALIFIED_XSD_TYPE = XMLHelper.CombineNamespace(NAMESPACE_URI.NamespaceName, XSD_TYPE);
 
-		public XMLDeclarationPrimaryBusAuxiliariesDataProviderV26(
+		private const string RATIO_ATTRIBUTE = "ratio";
+		private const string CURRENT_ATTRIBUTE = "current";
+		private const string SMART_CURRENT_ATTRIBUTE = "smartCurrent";
+		private const string IDLE_NODE_NAME = "Idle";
+		private const string TRANSACTION_NODE_NAME = "Traction";
+		private const string OVERRUN_NODE_NAME = "Overrun";
+		
+
+		public XMLDeclarationBusAuxiliariesDataProviderV26(
 			IXMLDeclarationVehicleData vehicle, XmlNode componentNode, string sourceFile) : base(componentNode) { }
 
 		#region Implementation of IBusAuxiliariesDeclarationData
@@ -215,6 +227,33 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		public bool SeparateAirDistributionDucts
 		{
 			get { return false; }
+		}
+					BrakelightsLED = GetBool(XMLNames.Bus_Brakelights),
+					InteriorLightsLED = GetBool(XMLNames.Bus_Interiorlights)
+				};
+			}
+		}
+
+		public IPneumaticSupplyDeclarationData PneumaticSupply { get { return null; } }
+	
+		public IPneumaticConsumersDeclarationData PneumaticConsumers { get { return null;} }
+
+		public IHVACBusAuxiliariesDeclarationData HVACAux
+		{
+			get
+			{
+				var hvac = new HVACBusAuxiliariesDeclarationData
+				{
+					SystemConfiguration = GetString(XMLNames.Bus_SystemConfiguration).ToInt(),
+					CompressorType = new CompressorType(GetString(XMLNames.Bus_DriverAC), GetString(XMLNames.Bus_PassengerAC)),
+					AuxHeaterPower = GetString(XMLNames.Bus_AuxiliaryHeaterPower).ToDouble().SI<Watt>(),
+					DoubleGlasing = GetBool(XMLNames.Bus_DoubleGlasing),
+					HeatPump = GetBool(XMLNames.Bus_HeatPump),
+					AdjustableAuxiliaryHeater = GetBool(XMLNames.Bus_AdjustableAuxiliaryHeater),
+					SeparateAirDistributionDucts = GetBool(XMLNames.Bus_SeparateAirDistributionDucts)
+				};
+				return hvac;
+			}
 		}
 
 		#endregion

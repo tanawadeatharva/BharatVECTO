@@ -147,6 +147,7 @@
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLResource.cs" />
     <Compile Include="InputData\FileIO\XML\Common\AbstractXMLType.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLAuxiliaryDeclarationDataProvider.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationPrimaryVehicleBusApplicationInformationDataProviderV01.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationBusAuxiliariesDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationADASDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationAirdragDataProvider.cs" />
@@ -164,8 +165,10 @@
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationTorqueConverterDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationTyreDataProvider.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLGearData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\DataProvider\XMLDeclarationPrimaryVehicleBusResultsInputDataProviderV01.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAirdragDeclarationInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAngledriveInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLApplicationInformationData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAuxiliariesDeclarationInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAxleDeclarationInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLAxleGearInputData.cs" />
@@ -176,6 +179,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLGearboxDeclarationInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLGearData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLPTOTransmissionInputData.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLResultsInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLRetarderInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLTorqueConverterDeclarationInputData.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Interfaces\IXMLTyreDeclarationInputData.cs" />
@@ -185,6 +189,7 @@
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV22InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV23InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationInputDataV26InjectModule.cs" />
+    <Compile Include="InputData\FileIO\XML\Declaration\NinjectModules\XMLDeclarationPrimaryVehicleBusV01InjectModule.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\AbstractComponentReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLADASReader.cs" />
     <Compile Include="InputData\FileIO\XML\Declaration\Reader\Impl\XMLComponentReader.cs" />

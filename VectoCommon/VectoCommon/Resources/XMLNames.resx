@@ -207,6 +207,9 @@
   <data name="Component_Gearbox" xml:space="preserve">
     <value>Gearbox</value>
   </data>
+  <data name="Component_Transmission" xml:space="preserve">
+    <value>Transmission</value>
+  </data>
   <data name="Gearbox_TransmissionType" xml:space="preserve">
     <value>TransmissionType</value>
   </data>
@@ -1226,5 +1229,140 @@
   </data>
   <data name="BusAux_PneumaticSystem_SmartRegenerationSystem" xml:space="preserve">
     <value>SmartRegenerationSystem</value>
+  </data>
+  <data name="ManufacturerCompletedVehicle" xml:space="preserve">
+    <value>ManufacturerCompletedVehicle</value>
+  </data>
+  <data name="ManufacturerAddressCompletedVehicle" xml:space="preserve">
+    <value>ManufacturerAddressCompletedVehicle</value>
+  </data>
+  <data name="Vehicle_RegisteredClass" xml:space="preserve">
+    <value>RegisteredClass</value>
+  </data>
+  <data name="Vehicle_VehicleCode" xml:space="preserve">
+    <value>VehicleCode</value>
+  </data>
+  <data name="Bus_LowEntry" xml:space="preserve">
+    <value>LowEntry</value>
+  </data>
+  <data name="Bus_HeighIntegratedBody" xml:space="preserve">
+    <value>HeightIntegratedBody</value>
+  </data>
+  <data name="Bus_VehicleLength" xml:space="preserve">
+    <value>VehicleLength</value>
+  </data>
+  <data name="Bus_VehicleWidth" xml:space="preserve">
+    <value>VehicleWidth</value>
+  </data>
+  <data name="Bus_EntranceHeight" xml:space="preserve">
+    <value>EntranceHeight</value>
+  </data>
+  <data name="Bus_DoorDriveTechnology" xml:space="preserve">
+    <value>DoorDriveTechnology</value>
+  </data>
+  <data name="Bus_LowerDeck" xml:space="preserve">
+    <value>LowerDeck</value>
+  </data>
+  <data name="Bus_UpperDeck" xml:space="preserve">
+    <value>UpperDeck</value>
+  </data>
+  <data name="Bus_Dayrunninglights" xml:space="preserve">
+    <value>Dayrunninglights</value>
+  </data>
+  <data name="Bus_Headlights" xml:space="preserve">
+    <value>Headlights</value>
+  </data>
+  <data name="Bus_Positionlights" xml:space="preserve">
+    <value>Positionlights</value>
+  </data>
+  <data name="Bus_Brakelights" xml:space="preserve">
+    <value>Brakelights</value>
+  </data>
+  <data name="Bus_Interiorlights" xml:space="preserve">
+    <value>Interiorlights</value>
+  </data>
+  <data name="Bus_AlternatorTechnology" xml:space="preserve">
+    <value>AlternatorTechnology</value>
+  </data>
+  <data name="Bus_SystemConfiguration" xml:space="preserve">
+    <value>SystemConfiguration</value>
+  </data>
+  <data name="Bus_AuxiliaryHeaterPower" xml:space="preserve">
+    <value>AuxiliaryHeaterPower</value>
+  </data>
+  <data name="Bus_DoubleGlasing" xml:space="preserve">
+    <value>DoubleGlasing</value>
+  </data>
+  <data name="Bus_HeatPump" xml:space="preserve">
+    <value>HeatPump</value>
+  </data>
+  <data name="Bus_AdjustableAuxiliaryHeater" xml:space="preserve">
+    <value>AdjustableAuxiliaryHeater</value>
+  </data>
+  <data name="Bus_SeparateAirDistributionDucts" xml:space="preserve">
+    <value>SeparateAirDistributionDucts</value>
+  </data>
+  <data name="Bus_CompressorType" xml:space="preserve">
+    <value>CompressorType</value>
+  </data>
+  <data name="Bus_DriverAC" xml:space="preserve">
+    <value>DriverAC</value>
+  </data>
+  <data name="Bus_PassengerAC" xml:space="preserve">
+    <value>PassengerAC</value>
+  </data>
+  <data name="Bus_ResultCards" xml:space="preserve">
+    <value>ResultCards</value>
+  </data>
+  <data name="Tag_Vehicle" xml:space="preserve">
+    <value>Vehicle</value>
+  </data>
+  <data name="Bus_AdjustableCoolantThermostat" xml:space="preserve">
+    <value>AdjustableCoolantThermostat</value>
+  </data>
+  <data name="Bus_EngineWasteGasHeatExchanger" xml:space="preserve">
+    <value>EngineWasteGasHeatExchanger</value>
+  </data>
+  <data name="Bus_SizeOfAirSupply" xml:space="preserve">
+    <value>SizeOfAirSupply</value>
+  </data>
+  <data name="Bus_CompressorRatio" xml:space="preserve">
+    <value>CompressorRatio</value>
+  </data>
+  <data name="Bus_SmartCompressionSystem" xml:space="preserve">
+    <value>SmartCompressionSystem</value>
+  </data>
+  <data name="Bus_SmartRegenerationSystem" xml:space="preserve">
+    <value>SmartRegenerationSystem</value>
+  </data>
+  <data name="Bus_AirsuspensionControl" xml:space="preserve">
+    <value>AirsuspensionControl</value>
+  </data>
+  <data name="Bus_AdBlueDosing" xml:space="preserve">
+    <value>AdBlueDosing</value>
+  </data>
+  <data name="Bus_DoorDriveTechnology" xml:space="preserve">
+    <value>DoorDriveTechnology</value>
+  </data>
+  <data name="Vehicle_Clutch" xml:space="preserve">
+    <value>Clutch</value>
+  </data>
+  <data name="Tag_ApplicationInformation" xml:space="preserve">
+    <value>ApplicationInformation</value>
+  </data>
+  <data name="Tag_ResultDataSignatureNode" xml:space="preserve">
+    <value>ResultDataSignature</value>
+  </data>
+  <data name="Bus_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Bus_PassengerCount" xml:space="preserve">
+    <value>PassengerCount</value>
+  </data>
+  <data name="Result_Status" xml:space="preserve">
+    <value>status</value>
+  </data>
+  <data name="Bus_Smart_Electrics" xml:space="preserve">
+    <value>SmartElectrics</value>
   </data>
 </root>

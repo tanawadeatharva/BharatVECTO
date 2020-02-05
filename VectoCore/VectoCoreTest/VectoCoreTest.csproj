@@ -210,11 +210,13 @@
     <Compile Include="Utils\MockModalDataContainer.cs" />
     <Compile Include="Utils\DoubleExtensionMethodTest.cs" />
     <Compile Include="Utils\VectoMathTest.cs" />
+    <Compile Include="XML\XMLCompleteBusReaderTest.cs" />
     <Compile Include="XML\XMLDeclarationInputTest.cs" />
     <Compile Include="XML\XMLDeclarationReaderVersionsTest.cs" />
     <Compile Include="XML\XMLEngineeringInputRefTest.cs" />
     <Compile Include="XML\XMLEngineeringInputSingleTest.cs" />
     <Compile Include="XML\XMLReportTest.cs" />
+    <Compile Include="XML\XMLPrimaryVehicleBusReaderTest.cs" />
     <Compile Include="XML\XMLWritingTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -3587,8 +3589,15 @@
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-medium_lorry.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\example_heavyBus_PIF.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-completed_heavyBus.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBus.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\XML\XMLReaderDeclaration\Tractor_4x2_vehicle-class-5_5_t_0.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
