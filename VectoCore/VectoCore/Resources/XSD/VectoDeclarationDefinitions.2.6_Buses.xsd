@@ -266,33 +266,22 @@
 									</xs:complexType>
 								</xs:element>
 								<xs:element name="SmartElectrics" type="xs:boolean"/>
-								<xs:element name="ResultCards" minOccurs="0">
-									<xs:complexType>
-										<xs:sequence>
-											<xs:element name="Idle">
-												<xs:complexType>
-													<xs:sequence>
-														<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
-													</xs:sequence>
-												</xs:complexType>
-											</xs:element>
-											<xs:element name="Traction">
-												<xs:complexType>
-													<xs:sequence>
-														<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
-													</xs:sequence>
-												</xs:complexType>
-											</xs:element>
-											<xs:element name="Overrun">
-												<xs:complexType>
-													<xs:sequence>
-														<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
-													</xs:sequence>
-												</xs:complexType>
-											</xs:element>
-										</xs:sequence>
-									</xs:complexType>
-								</xs:element>
+								<xs:sequence minOccurs="0">
+									<xs:element name="MaxAlternatorPower">
+										<xs:simpleType>
+											<xs:restriction base="xs:int">
+												<xs:minExclusive value="0"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="ElectricStorageCapacity">
+										<xs:simpleType>
+											<xs:restriction base="xs:int">
+												<xs:minExclusive value="0"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -632,4 +621,29 @@
 			<xs:enumeration value="mechanically"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:complexType name="ResultCardsType">
+		<xs:sequence>
+			<xs:element name="Idle">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Traction">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Overrun">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

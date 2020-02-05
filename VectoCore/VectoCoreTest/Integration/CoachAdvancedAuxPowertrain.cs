@@ -115,8 +115,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				.AddComponent(new Clutch(container, engineData))
 				.AddComponent(engine);
 
-			var aux = new BusAuxiliariesAdapter(container, runData.BusAuxiliaries, "Coach",
-				vehicleData.TotalVehicleMass, engineData.Fuels.First().ConsumptionMap, engineData.IdleSpeed);
+			var aux = new BusAuxiliariesAdapter(container, runData.BusAuxiliaries);
 
 			engine.Connect(aux.Port());
 

@@ -106,18 +106,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				AlternatorMap = new SimpleAlternator(CalculateAlternatorEfficiency(busAux.ElectricSupply.Alternators)),
 				PowerNetVoltage = Constants.BusAuxiliaries.ElectricSystem.PowernetVoltage,
 				StoredEnergyEfficiency = Constants.BusAuxiliaries.ElectricSystem.StoredEnergyEfficiency,
-				ResultCardIdle = busAux.ElectricSupply.ResultCards != null
-					? new ResultCard(
-						busAux.ElectricSupply.ResultCards.Idle.Select(x => new SmartResult(x.Current, x.SmartCurrent)).ToList())
-					: (IResultCard)new DummyResultCard(),
-				ResultCardOverrun = busAux.ElectricSupply.ResultCards != null
-					? new ResultCard(
-						busAux.ElectricSupply.ResultCards.Overrun.Select(x => new SmartResult(x.Current, x.SmartCurrent)).ToList())
-					: (IResultCard)new DummyResultCard(),
-				ResultCardTraction = busAux.ElectricSupply.ResultCards != null
-					? new ResultCard(
-						busAux.ElectricSupply.ResultCards.Traction.Select(x => new SmartResult(x.Current, x.SmartCurrent)).ToList())
-					: (IResultCard)new DummyResultCard(),
+				ResultCardIdle = new DummyResultCard(),
+				ResultCardOverrun = new DummyResultCard(),
+				ResultCardTraction = new DummyResultCard(),
 				AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
 			};
 		}

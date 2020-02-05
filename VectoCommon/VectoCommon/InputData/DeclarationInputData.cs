@@ -699,9 +699,11 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		IList<IAlternatorDeclarationInputData> Alternators { get; }
 		
-		IResultCardDeclarationInputData ResultCards { get; }
-
 		bool SmartElectrics { get; }
+
+		Watt MaxAlternatorPower { get; }
+
+		WattSecond ElectricStorageCapacity { get; }
 	}
 
 	public interface IElectricConsumersDeclarationData

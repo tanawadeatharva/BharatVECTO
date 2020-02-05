@@ -22,21 +22,21 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 		/// <remarks>Vecto Input</remarks>
 		Watt PreExistingAuxPower { get; set; }
 
-		/// <summary>
-		/// Engine Motoring Power (KW)
-		/// </summary>
-		/// <value></value>
-		/// <returns></returns>
-		/// <remarks>Vecto Input</remarks>
-		Watt EngineMotoringPower { get; set; }
+		///// <summary>
+		///// Engine Motoring Power (KW)
+		///// </summary>
+		///// <value></value>
+		///// <returns></returns>
+		///// <remarks>Vecto Input</remarks>
+		//Watt EngineMotoringPower { get; set; }
 
-		/// <summary>
-		/// Engine Driveline Power (KW)
-		/// </summary>
-		/// <value></value>
-		/// <returns></returns>
-		/// <remarks></remarks>
-		Watt EngineDrivelinePower { get; set; }
+		///// <summary>
+		///// Engine Driveline Power (KW)
+		///// </summary>
+		///// <value></value>
+		///// <returns></returns>
+		///// <remarks></remarks>
+		//Watt EngineDrivelinePower { get; set; }
 
 		/// <summary>
 		/// Smart Electrics
@@ -134,13 +134,13 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 		/// <remarks>'Vecto Input</remarks>
 		double WHTC { get; set; }
 
-		/// <summary>
-		/// Declaration Mode
-		/// </summary>
-		/// <value></value>
-		/// <returns></returns>
-		/// <remarks>Vecto Input - Used to decide if to apply WHTC/Possiblye other things in future</remarks>
-		bool DeclarationMode { get; set; }
+		///// <summary>
+		///// Declaration Mode
+		///// </summary>
+		///// <value></value>
+		///// <returns></returns>
+		///// <remarks>Vecto Input - Used to decide if to apply WHTC/Possiblye other things in future</remarks>
+		//bool DeclarationMode { get; set; }
 
 		/// <summary>
 		/// Engine Idle Speed ( Associated with the vehicle bein tested )
@@ -159,14 +159,9 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 		///// <remarks></remarks>
 		//bool RunningCalc { get; set; }
 
-		/// <summary>
-		/// Running Calc
-		/// </summary>
-		/// <value></value>
-		/// <returns></returns>
-		/// <remarks></remarks>
-		Watt InternalEnginePower { get; set; }
+		//Watt InternalEnginePower { get; set; }
 
 		Second SimulationInterval { get; set; }
+		Watt ExcessiveDragPower { get; set; }
 	}
 }

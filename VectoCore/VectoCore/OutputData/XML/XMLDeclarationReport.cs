@@ -312,6 +312,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 						{ Tuple.Create(MissionType.HeavyUrban, LoadingType.ReferenceLoad), 0 },
 						{ Tuple.Create(MissionType.Urban, LoadingType.LowLoading), 0 },
 						{ Tuple.Create(MissionType.Urban, LoadingType.ReferenceLoad), 0 },
+						{ Tuple.Create(MissionType.Suburban, LoadingType.LowLoading), 0 },
+						{ Tuple.Create(MissionType.Suburban, LoadingType.ReferenceLoad), 0 },
 						{ Tuple.Create(MissionType.Interurban, LoadingType.LowLoading), 0 },
 						{ Tuple.Create(MissionType.Interurban, LoadingType.ReferenceLoad), 0 },
 						{ Tuple.Create(MissionType.Coach, LoadingType.LowLoading), 0 },

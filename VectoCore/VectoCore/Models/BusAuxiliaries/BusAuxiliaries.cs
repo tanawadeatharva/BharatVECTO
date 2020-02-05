@@ -67,31 +67,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			Signals = new Signals();
 		}
 		
-		public void Initialise(
-			IAuxiliaryConfig auxCfg, IFuelProperties fuelProperties /*string IAuxPath, string vectoFilePath*/)
+		public void Initialise(IAuxiliaryConfig auxCfg)
 		{
 			Signals.CurrentCycleTimeInSeconds = 0;
 			auxConfig = auxCfg; //new AuxiliaryConfig(auxPath);
 
-			// Pass some signals from config to Signals. ( These are stored in the configuration but shared in the signal distribution around modules )
-			//Signals.SmartElectrics = auxConfig.ElectricalUserInputsConfig.SmartElectrical;
-
-			//Signals.StoredEnergyEfficiency = auxConfig.ElectricalUserInputsConfig.StoredEnergyEfficiency;
-			//Signals.SmartPneumatics = auxConfig.PneumaticUserInputsConfig.SmartAirCompression;
-
-			//Signals.PneumaticOverrunUtilisation = auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction;
-
-			//var alternatorMap = auxConfig.ElectricalUserInputsConfig.AlternatorMap;
 			var compressorMap = auxConfig.PneumaticUserInputsConfig.CompressorMap;
-
-			// fuelMap = New cMAP()
-			// fuelMap.FilePath = FilePathUtils.ResolveFilePath(vectoDirectory, VectoInputs.FuelMap)
-			// If Not fuelMap.ReadFile() Then
-			// MessageBox.Show("Unable to read fuel map, aborting.")
-			// Return
-			// End If
-			// fuelMap.Triangulate()
-			//fuelMap = auxCfg.FuelMap;
 
 			// SSM HVAC
 			//var ssmPath = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath);

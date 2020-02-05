@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestCase()]
 		public void CreateRunDataPrimaryBus()
 		{
-			var runIdx = 2;
+			var runIdx = 4;
 			var jobFile = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBus.xml";
 
 			var writer = new FileOutputWriter(jobFile);

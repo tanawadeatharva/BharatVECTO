@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 {
 	public class JSONVehicleDataV9 : JSONVehicleDataV7, IBusAuxiliariesDeclarationData, IElectricSupplyDeclarationData,
 		IElectricConsumersDeclarationData, IPneumaticSupplyDeclarationData, IPneumaticConsumersDeclarationData,
-		IHVACBusAuxiliariesDeclarationData, IResultCardDeclarationInputData
+		IHVACBusAuxiliariesDeclarationData
 	{
 		public JSONVehicleDataV9(JObject data, string fileName, IJSONVehicleComponents job, bool tolerateMissing = false) :
 			base(data, fileName, job, tolerateMissing) { }
@@ -67,9 +67,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return Body.GetEx<bool>("Articulated"); }
 		}
 
-		public override bool? ATEcoRollReleaseLockupClutch {  get {
-			return Body["ATEcoRollReleaseLockupClutch"]?.Value<bool>();
-		} }
+		public override bool? ATEcoRollReleaseLockupClutch
+		{
+			get { return Body["ATEcoRollReleaseLockupClutch"]?.Value<bool>(); }
+		}
+
 		#endregion
 
 		#endregion
@@ -119,26 +121,54 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get {
 				return Body["Aux"]?["ElectricSupply"]?["Alternators"]
-					.Select(x => new AlternatorInputData(x.GetEx<string>("Technology"), x.GetEx<double>("Ratio")))
-					.Cast<IAlternatorDeclarationInputData>().ToList() ?? new List<IAlternatorDeclarationInputData>();
+							.Select(x => new AlternatorInputData(x.GetEx<string>("Technology"), x.GetEx<double>("Ratio")))
+							.Cast<IAlternatorDeclarationInputData>().ToList() ?? new List<IAlternatorDeclarationInputData>();
 			}
-		}
-
-		public virtual IResultCardDeclarationInputData ResultCards
-		{
-			get { return Body["Aux"]?["ElectricSupply"]?["ResultCards"] != null ? this : null; }
 		}
 
 		#endregion
 
 		#region Implementation of IElectricConsumersDeclarationData
 
-		public virtual bool InteriorLightsLED { get { return false; } }
-		public virtual bool DayrunninglightsLED { get { return false; } }
-		public virtual bool PositionlightsLED { get { return false; } }
-		public virtual bool HeadlightsLED { get { return false; } }
-		public virtual bool BrakelightsLED { get { return false; } }
-		public virtual bool SmartElectrics { get { return Body["Aux"]?["ElectricSupply"]?.GetEx<bool>("SmartElectrics") ?? false; } }
+		public virtual bool InteriorLightsLED
+		{
+			get { return false; }
+		}
+
+		public virtual bool DayrunninglightsLED
+		{
+			get { return false; }
+		}
+
+		public virtual bool PositionlightsLED
+		{
+			get { return false; }
+		}
+
+		public virtual bool HeadlightsLED
+		{
+			get { return false; }
+		}
+
+		public virtual bool BrakelightsLED
+		{
+			get { return false; }
+		}
+
+		public virtual bool SmartElectrics
+		{
+			get { return Body["Aux"]?["ElectricSupply"]?.GetEx<bool>("SmartElectrics") ?? false; }
+		}
+
+		public Watt MaxAlternatorPower
+		{
+			get { return Body["Aux"]?["ElectricSupply"]?.GetEx<double>("MaxAlternatorPower").SI<Watt>() ?? null; }
+		}
+
+		public WattSecond ElectricStorageCapacity
+		{
+			get { return Body["Aux"]?["ElectricSupply"]?.GetEx<double>("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>() ?? null; }
+		}
 
 		#endregion
 
@@ -185,36 +215,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 
-		#region Implementation of IResultCardDeclarationInputData
-
-		public virtual IList<IResultCardEntry> Idle
-		{
-			get {
-				return Body["Aux"]?["ElectricSupply"]?["ResultCards"]?["Idle"]
-					.Select(x => new ResultCardEntry(x.GetEx<double>("Current").SI<Ampere>(), x.GetEx<double>("SmartCurrent").SI<Ampere>()))
-					.Cast<IResultCardEntry>().ToList() ?? new List<IResultCardEntry>();
-			}
-		}
-
-		public virtual IList<IResultCardEntry> Traction
-		{
-			get {
-				return Body["Aux"]?["ElectricSupply"]?["ResultCards"]?["Traction"]
-							.Select(x => new ResultCardEntry(x.GetEx<double>("Current").SI<Ampere>(), x.GetEx<double>("SmartCurrent").SI<Ampere>()))
-							.Cast<IResultCardEntry>().ToList() ?? new List<IResultCardEntry>();
-			}
-		}
-
-		public virtual IList<IResultCardEntry> Overrun
-		{
-			get {
-				return Body["Aux"]?["ElectricSupply"]?["ResultCards"]?["Overrun"]
-							.Select(x => new ResultCardEntry(x.GetEx<double>("Current").SI<Ampere>(), x.GetEx<double>("SmartCurrent").SI<Ampere>()))
-							.Cast<IResultCardEntry>().ToList() ?? new List<IResultCardEntry>();
-			}
-		}
-
-		#endregion
 	}
 
 	// ###################################################################

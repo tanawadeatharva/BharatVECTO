@@ -7,89 +7,91 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 {
 	public class M03Impl : AbstractModule, IM3_AveragePneumaticLoadDemand
 	{
-		protected IPneumaticUserInputsConfig _pneumaticUserInputsConfig;
-		protected IPneumaticsConsumersDemand _pneumaticAuxillariesConfig;
 		protected ICompressorMap _pneumaticsCompressorFlowRateMap;
-		protected Kilogram _vehicleMassKG;
 		protected ISignals _signals;
+		protected double _compressorGearEfficiency;
+		protected double _compressorGearRatio;
 
 
 		//public M03Impl(IPneumaticUserInputsConfig pneumaticsUserInputConfig, IPneumaticsAuxilliariesConfig pneumaticsAuxillariesConfig, IPneumaticActuationsMap pneumaticsActuationsMap, ICompressorMap pneumaticsCompressorFlowRateMap, Kilogram vehicleMassKG, string cycleName, ISignals signals)
 		public M03Impl(IAuxiliaryConfig auxConfig, ICompressorMap compressorMap, IActuations actuations, ISignals signals)
 		{
-			_pneumaticUserInputsConfig = auxConfig.PneumaticUserInputsConfig;
-			_pneumaticAuxillariesConfig = auxConfig.PneumaticAuxillariesConfig;
 			_pneumaticsCompressorFlowRateMap = compressorMap;
-			_vehicleMassKG = auxConfig.VehicleData.TotalVehicleMass;
-			
+			_compressorGearEfficiency = auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency;
+			_compressorGearRatio = auxConfig.PneumaticUserInputsConfig.CompressorGearRatio;
+
 			_signals = signals;
 
 			//'Calculate the Total Required Air Delivery Rate L / S
-			TotalAirDemand = TotalAirDemandCalculation(actuations);
+			TotalAirDemand = TotalAirDemandCalculation(auxConfig, actuations);
 			AverageAirConsumed = TotalAirDemand / actuations.CycleTime;
 		}
 
 
-		public NormLiter TotalAirDemandCalculation(IActuations actuations)
+		public static NormLiter TotalAirDemandCalculation(IAuxiliaryConfig auxConfig, IActuations actuations)
 		{
+			var psUserConfig = auxConfig.PneumaticUserInputsConfig;
+			var psAuxconfig = auxConfig.PneumaticAuxillariesConfig;
+			var vehicleMass = auxConfig.VehicleData.TotalVehicleMass;
+
 			//'* * Breaks * *
-			var airConsumptionPerActuation =  _pneumaticAuxillariesConfig.Braking * _vehicleMassKG;
-			var breaks = actuations.Braking * airConsumptionPerActuation ;
+			var airConsumptionPerActuation = psAuxconfig.Braking * vehicleMass;
+			var breaks = actuations.Braking * airConsumptionPerActuation;
 
 			//'* * ParkBrakesBreakplus2Doors * *Park break +2 doors
-			airConsumptionPerActuation = _pneumaticUserInputsConfig.Doors == ConsumerTechnology.Electrically
+			airConsumptionPerActuation = psUserConfig.Doors == ConsumerTechnology.Electrically
 				? 0.SI<NormLiter>()
-				: _pneumaticAuxillariesConfig.DoorOpening;
-			airConsumptionPerActuation += _pneumaticAuxillariesConfig.StopBrakeActuation * _vehicleMassKG;
-			var parkBrakesplus2Doors = (actuations.ParkBrakeAndDoors * airConsumptionPerActuation);
+				: psAuxconfig.DoorOpening;
+			airConsumptionPerActuation += psAuxconfig.StopBrakeActuation * vehicleMass;
+			var parkBrakesplus2Doors = actuations.ParkBrakeAndDoors * airConsumptionPerActuation;
 
 			//'* * Kneeling * *
-			airConsumptionPerActuation = _pneumaticAuxillariesConfig.BreakingWithKneeling *
-										_pneumaticUserInputsConfig.KneelingHeight * _vehicleMassKG;
-			var kneeling = (actuations.Kneeling * airConsumptionPerActuation);
+			airConsumptionPerActuation = psAuxconfig.BreakingWithKneeling *
+										psUserConfig.KneelingHeight * vehicleMass;
+			var kneeling = actuations.Kneeling * airConsumptionPerActuation;
 
 			//'* * AdBlue * *
-			var adBlue = _pneumaticUserInputsConfig.AdBlueDosing == ConsumerTechnology.Electrically
+			var adBlue = psUserConfig.AdBlueDosing == ConsumerTechnology.Electrically
 				? 0.SI<NormLiter>()
-				: _pneumaticAuxillariesConfig.AdBlueInjection * actuations.CycleTime;
+				: psAuxconfig.AdBlueInjection * actuations.CycleTime;
 
 			//'* * Regeneration * *
 			var regeneration = breaks + parkBrakesplus2Doors + kneeling + adBlue;
-			var regenFraction = _pneumaticUserInputsConfig.SmartRegeneration
-				? _pneumaticAuxillariesConfig.SmartRegenFractionTotalAirDemand
-				: _pneumaticAuxillariesConfig.NonSmartRegenFractionTotalAirDemand;
+			var regenFraction = psUserConfig.SmartRegeneration
+				? psAuxconfig.SmartRegenFractionTotalAirDemand
+				: psAuxconfig.NonSmartRegenFractionTotalAirDemand;
 			regeneration = regeneration * regenFraction;
 
 			//'* * DeadVolBlowOuts * *
-			airConsumptionPerActuation = _pneumaticAuxillariesConfig.DeadVolume;
-			var deadVolBlowOuts = (airConsumptionPerActuation * _pneumaticAuxillariesConfig.DeadVolBlowOuts *
+			airConsumptionPerActuation = psAuxconfig.DeadVolume;
+			var deadVolBlowOuts = (airConsumptionPerActuation * psAuxconfig.DeadVolBlowOuts *
 									actuations.CycleTime).Cast<NormLiter>();
 
 			//'* * AirSuspension * *
-			var airSuspension = _pneumaticUserInputsConfig.AirSuspensionControl == ConsumerTechnology.Electrically
+			var airSuspension = psUserConfig.AirSuspensionControl == ConsumerTechnology.Electrically
 				? 0.SI<NormLiter>()
-				: _pneumaticAuxillariesConfig.AirControlledSuspension * actuations.CycleTime;
+				: psAuxconfig.AirControlledSuspension * actuations.CycleTime;
 
 			//'* * Total Air Demand**
 			var totalAirDemand = breaks + parkBrakesplus2Doors + kneeling + adBlue + regeneration + deadVolBlowOuts +
 								airSuspension;
-			
+
 			return totalAirDemand;
 		}
 
-		
+
 		#region Implementation of IM3_AveragePneumaticLoadDemand
 
 		public Watt GetAveragePowerDemandAtCrankFromPneumatics()
 		{
 			var cmp = _pneumaticsCompressorFlowRateMap.Interpolate(
-				_signals.EngineSpeed * _pneumaticUserInputsConfig.CompressorGearRatio);
+				_signals.EngineSpeed * _compressorGearRatio);
 
 			var sum6 = cmp.FlowRate;
 			var sum7 = cmp.PowerOn - cmp.PowerOff;
-			var sum2 = (sum7 / sum6 * AverageAirConsumed); // ' Watt / Nl/s * Nl/s = Watt
+			var sum2 = sum7 / sum6 * AverageAirConsumed; // ' Watt / Nl/s * Nl/s = Watt
 			var sum3 = sum2 + cmp.PowerOff;
-			var sum4 = sum3 * (1 / _pneumaticUserInputsConfig.CompressorGearEfficiency);
+			var sum4 = sum3 * (1 / _compressorGearEfficiency);
 			return sum4;
 		}
 

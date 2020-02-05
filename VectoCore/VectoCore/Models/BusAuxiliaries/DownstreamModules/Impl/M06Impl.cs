@@ -39,11 +39,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected override void DoCalculate()
 		{
 			var sum1 = _m1.AveragePowerDemandAtCrankFromHVACElectrics + _m2.GetAveragePowerAtCrankFromElectrics();
-			var sw1 = _smartElectrics ? _m5.AlternatorsGenerationPowerAtCrankTractionOn() : sum1;
+			var sw1 = _smartElectrics
+				? _m5.AlternatorsGenerationPowerAtCrankTractionOn()
+				: sum1;
 			var sum2 = _m1.AveragePowerDemandAtCrankFromHVACMechanicals + sw1 +
 						_m3.GetAveragePowerDemandAtCrankFromPneumatics();
-			var sum3 = _signals.EngineMotoringPower + _signals.InternalEnginePower + sum2;
-			var vc0 = sum3 <= 0;
+			//var sum3 = _signals.EngineMotoringPower + _signals.InternalEnginePower + sum2;
+			var sum3 = _signals.ExcessiveDragPower + sum2;
+			//VC0: prinzipiell reserve vorhanden - unter schleppkurve mit durchschnittlichen aux
+			var vc0 = sum3.IsSmallerOrEqual(0); //sum3 <= 0;
 
 			var sum4 = sum3 - sw1 - _m3.GetAveragePowerDemandAtCrankFromPneumatics() + _m4.GetPowerCompressorOff();
 			var sum5 = vc0 ? sum4 : 0.SI<Watt>();
@@ -51,8 +55,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			var max1 = sum5 > sum10 ? sum5 : sum10;
 			var sum11 = sum5 - max1;
 			var sum12 = _m4.GetPowerDifference() + sum11;
+
+			// VC2: Smart Compressor Overrun and Smart Electrics overrun
 			var vc2 = sum12 < 0 || sum12.IsEqual(0);
 
+			// VC1: Pneumatics Compressor Off and Smart Electrics
+			//      compressor off power can be provided
+			//      smart alternator can be provided (max possible)
 			var vc1 = sum12 > 0;
 			var sum14 = vc1 ? _m4.GetPowerCompressorOff() : 0.SI<Watt>();
 			var sum15 = vc2
@@ -67,7 +76,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			var sum8 = sum4 + sw1;
 			var sum9 = vc0 ? sum8 : 0.SI<Watt>();
 			var sum13 = sum9 + _m4.GetPowerDifference();
+
+			// VC3: Pneumatics compressor off, average elctric power (no overrun)
 			var vc3 = sum13 > 0;
+
+			// VC4: smart compressor overrun and average electrics (no overrun)
 			var vc4 = sum13 < 0 || sum13.IsEqual(0);
 			var sum17 = vc3 ? _m4.GetPowerCompressorOff() : 0.SI<Watt>();
 			var sum18 = vc4

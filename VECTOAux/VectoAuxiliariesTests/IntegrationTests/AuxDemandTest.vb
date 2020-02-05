@@ -5,7 +5,6 @@ Imports TUGraz.VectoCore.InputData.FileIO.JSON
 Imports TUGraz.VectoCore.InputData.Reader.ComponentData
 Imports TUGraz.VectoCore.Models.BusAuxiliaries
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
-Imports TUGraz.VectoCore.Models.Declaration
 
 Namespace IntegrationTests
     <TestFixture>
@@ -41,19 +40,23 @@ Namespace IntegrationTests
 
             dim auxConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, Utils.GetDefaultVehicleData(vehicleWeight.SI(Of Kilogram)))
             
-            aux.Initialise(auxConfig, FuelData.Diesel) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
+            aux.Initialise(auxConfig) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 
             aux.Signals.ClutchEngaged = True
-            aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()  'kW
+            'aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()  'kW
             aux.Signals.EngineSpeed = engineSpeed.RPMtoRad() 'rpm
             aux.Signals.EngineDrivelineTorque = (driveLinePower * 1000).SI(Of Watt)() / (engineSpeed.RPMtoRad())
-            aux.Signals.EngineMotoringPower = (24 * 1000).SI(Of Watt)()     'kW - has to be positive
+            'aux.Signals.EngineMotoringPower = (24 * 1000).SI(Of Watt)()     'kW - has to be positive
+            Dim engineMotoringPower = (24 * 1000).SI(Of Watt)()     'kW - has to be positive
 
             aux.Signals.PreExistingAuxPower = (6.1 * 1000).SI(Of Watt)()
             aux.Signals.Idle = False
             aux.Signals.InNeutral = False
             'aux.Signals.RunningCalc = True
-            aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()        'kW
+            'aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()        'kW
+            Dim internalEnginePower = (internalPower * 1000).SI(Of Watt)()        'kW
+
+            aux.Signals.ExcessiveDragPower = engineMotoringPower + internalEnginePower
 
             Dim power As Watt = aux.AuxiliaryPowerAtCrankWatts()
 
@@ -87,21 +90,24 @@ Namespace IntegrationTests
             Dim auxCfg = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, Utils.GetDefaultVehicleData(12000.SI(Of Kilogram)()))
             CType(auxCfg, AuxiliaryConfig).FuelMap = fuelMap
 
-            CType(aux, BusAuxiliaries).Initialise(auxCfg, FuelData.Diesel) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
+            CType(aux, BusAuxiliaries).Initialise(auxCfg) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 
             aux.Signals.ClutchEngaged = True
-            aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)() 'kW
+            'aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)() 'kW
             aux.Signals.EngineSpeed = engineSpeed.RPMtoRad() 'rpm
             aux.Signals.EngineDrivelineTorque = (driveLinePower * 1000).SI(Of Watt)() / (1256.RPMtoRad())
-            aux.Signals.EngineMotoringPower = (24 * 1000).SI(Of Watt)()    'kW - has to be positive
+            'aux.Signals.EngineMotoringPower = (24 * 1000).SI(Of Watt)()    'kW - has to be positive
+            Dim engineMotoringPower = (24 * 1000).SI(Of Watt)()    'kW - has to be positive
 
             aux.Signals.PreExistingAuxPower = 0.SI(Of Watt)()
             aux.Signals.Idle = False
             aux.Signals.InNeutral = False
             'aux.Signals.RunningCalc = True
-            aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()       'kW
+            'aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()       'kW
+            Dim internalEnginePower = (internalPower * 1000).SI(Of Watt)()       'kW
+            aux.Signals.ExcessiveDragPower = engineMotoringPower + internalEnginePower
 
-            Dim msg As String = String.Empty
+            'Dim msg As String = String.Empty
             For i As Integer = 0 To 9
                 aux.ResetCalculations()
                 Assert.AreEqual(6087.0317, aux.AuxiliaryPowerAtCrankWatts().Value(), 0.001)
@@ -111,9 +117,11 @@ Namespace IntegrationTests
 
             'Assert.AreEqual(79.303.SI(Unit.SI.Gramm).Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
 
-            aux.Signals.EngineDrivelinePower = (-15 * 1000).SI(Of Watt)()
-            aux.Signals.EngineDrivelineTorque = aux.Signals.EngineDrivelinePower / (1256.RPMtoRad())
-            aux.Signals.InternalEnginePower = (-50 * 1000).SI(Of Watt)()
+            'aux.Signals.EngineDrivelinePower = (-15 * 1000).SI(Of Watt)()
+            aux.Signals.EngineDrivelineTorque =  (-15 * 1000).SI(Of Watt)() / (1256.RPMtoRad())
+            'aux.Signals.InternalEnginePower = (-50 * 1000).SI(Of Watt)()
+            internalEnginePower = (-50 * 1000).SI(Of Watt)()
+            aux.Signals.ExcessiveDragPower = engineMotoringPower + internalEnginePower
 
             For i As Integer = 0 To 9
                 aux.ResetCalculations()
@@ -124,9 +132,11 @@ Namespace IntegrationTests
 
             'Assert.AreEqual(82.5783.SI(Unit.SI.Gramm).Value(), aux.AA_TotalCycleFC_Grams().Value(), 0.0001)
 
-            aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()
-            aux.Signals.EngineDrivelineTorque = aux.Signals.EngineDrivelinePower / (1256.RPMtoRad())
-            aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()       'kW
+            'aux.Signals.EngineDrivelinePower = (driveLinePower * 1000).SI(Of Watt)()
+            aux.Signals.EngineDrivelineTorque = (driveLinePower * 1000).SI(Of Watt)() / (1256.RPMtoRad())
+            'aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()       'kW
+            internalEnginePower = (internalPower * 1000).SI(Of Watt)()       'kW
+            aux.Signals.ExcessiveDragPower = engineMotoringPower + internalEnginePower
 
             For i As Integer = 0 To 9
                 aux.ResetCalculations()

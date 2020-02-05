@@ -15,7 +15,6 @@ using TUGraz.VectoCommon.Utils;
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 	public class Signals : ISignals
 	{
-
 		// Backing variables
 
 		public bool ClutchEngaged { get; set; }
@@ -23,22 +22,20 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces {
 		public NewtonMeter EngineDrivelineTorque { get; set; }
 		public Watt EngineMotoringPower { get; set; }
 		public PerSecond EngineSpeed { get; set; }
-
-		public bool SmartElectrics { get; set; }
-
-		public bool SmartPneumatics { get; set; }
+		
 		public double CurrentCycleTimeInSeconds { get; set; }
 		public Watt PreExistingAuxPower { get; set; }
 		public bool Idle { get; set; }
 		public bool InNeutral { get; set; }
 
 		public bool EngineStopped { get; set; }
-		public bool DeclarationMode { get; set; }
+		//public bool DeclarationMode { get; set; }
 
 		public double WHTC { set; get; } = 1;
 
 		public PerSecond EngineIdleSpeed { get; set; }
 		public Watt InternalEnginePower { get; set; }
 		public Second SimulationInterval { get; set; }
+		public Watt ExcessiveDragPower { get; set; }
 	}
 }

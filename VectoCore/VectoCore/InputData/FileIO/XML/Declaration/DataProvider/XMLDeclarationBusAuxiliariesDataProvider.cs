@@ -14,7 +14,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 {
 	public class XMLDeclarationPrimaryBusAuxiliariesDataProviderV26 : AbstractXMLType, IXMLBusAuxiliariesDeclarationData,
-		IElectricSupplyDeclarationData, IResultCardDeclarationInputData, IPneumaticConsumersDeclarationData,
+		IElectricSupplyDeclarationData, IPneumaticConsumersDeclarationData,
 		IPneumaticSupplyDeclarationData, IHVACBusAuxiliariesDeclarationData
 	{
 		public static XNamespace NAMESPACE_URI = XMLDefinitions.DECLARATION_DEFINITIONS_NAMESPACE_URI_V26;
@@ -66,7 +66,10 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return this; }
 		}
 
-		public IHVACBusAuxiliariesDeclarationData HVACAux { get { return this; } }
+		public IHVACBusAuxiliariesDeclarationData HVACAux
+		{
+			get { return this; }
+		}
 
 		#endregion
 
@@ -83,76 +86,27 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			}
 		}
 
-		public IResultCardDeclarationInputData ResultCards
-		{
-			get {
-				return ElementExists(new[] { XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_ResultCards })
-					? this
-					: null;
-			}
-		}
-
 		public bool SmartElectrics
 		{
 			get { return GetBool(new[] { XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_SmartElectrics }); }
 		}
 
-		#endregion
-
-		#region Implementation of IResultCardDeclarationInputData
-
-		public IList<IResultCardEntry> Idle
+		public Watt MaxAlternatorPower
 		{
-			get {
-				return GetNodes(
-						new[] {
-							XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_ResultCards, XMLNames.BusAux_ResultCard_Idle,
-							XMLNames.BusAux_ResultCard_Entry
-						})
-					.Cast<XmlNode>().Select(
-						x => new ResultCardEntry(
-							GetAttribute(x, XMLNames.ResultCard_Entry_CurrentAttr).ToDouble().SI<Ampere>(),
-							GetAttribute(x, XMLNames.ResultCard_Entry_SmartCurrent_Attr).ToDouble().SI<Ampere>()))
-					.Cast<IResultCardEntry>()
-					.ToList();
-			}
+			get { return ElementExists("MaxAlternatorPower") ? GetDouble("MaxAlternatorPower").SI<Watt>() : null; }
 		}
 
-		public IList<IResultCardEntry> Traction
+		public WattSecond ElectricStorageCapacity
 		{
 			get {
-				return GetNodes(
-						new[] {
-							XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_ResultCards, XMLNames.BusAux_ResultCard_Traction,
-							XMLNames.BusAux_ResultCard_Entry
-						})
-					.Cast<XmlNode>().Select(
-						x => new ResultCardEntry(
-							GetAttribute(x, XMLNames.ResultCard_Entry_CurrentAttr).ToDouble().SI<Ampere>(),
-							GetAttribute(x, XMLNames.ResultCard_Entry_SmartCurrent_Attr).ToDouble().SI<Ampere>()))
-					.Cast<IResultCardEntry>()
-					.ToList();
-			}
-		}
-
-		public IList<IResultCardEntry> Overrun
-		{
-			get {
-				return GetNodes(
-						new[] {
-							XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_ResultCards, XMLNames.BusAux_ResultCard_Overrun,
-							XMLNames.BusAux_ResultCard_Entry
-						})
-					.Cast<XmlNode>().Select(
-						x => new ResultCardEntry(
-							GetAttribute(x, XMLNames.ResultCard_Entry_CurrentAttr).ToDouble().SI<Ampere>(),
-							GetAttribute(x, XMLNames.ResultCard_Entry_SmartCurrent_Attr).ToDouble().SI<Ampere>()))
-					.Cast<IResultCardEntry>()
-					.ToList();
+				return ElementExists("ElectricStorageCapacity")
+					? GetDouble("ElectricStorageCapacity").SI(Unit.SI.Watt.Hour).Cast<WattSecond>()
+					: null;
 			}
 		}
 
 		#endregion
+
 
 		#region Implementation of IPneumaticConsumersDeclarationData
 
@@ -213,16 +167,55 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 
 		#region Implementation of IHVACBusAuxiliariesDeclarationData
 
-		public BusHVACSystemConfiguration SystemConfiguration { get { return BusHVACSystemConfiguration.Unknown; } }
-		public ACCompressorType CompressorTypeDriver { get { return ACCompressorType.None; } }
-		public ACCompressorType CompressorTypePassenger { get { return ACCompressorType.None; } }
-		public Watt AuxHeaterPower { get { return 0.SI<Watt>(); } }
-		public bool DoubleGlasing { get { return false; } }
-		public bool HeatPump { get { return false; } }
-		public bool AdjustableCoolantThermostat { get { return GetBool(new[] { "HVAC", "AdjustableCoolantThermostat" }); } }
-		public bool AdjustableAuxiliaryHeater { get { return false; } }
-		public bool EngineWasteGasHeatExchanger { get { return GetBool(new[] { "HVAC", "EngineWasteGasHeatExchanger" }); } }
-		public bool SeparateAirDistributionDucts { get { return false; } }
+		public BusHVACSystemConfiguration SystemConfiguration
+		{
+			get { return BusHVACSystemConfiguration.Unknown; }
+		}
+
+		public ACCompressorType CompressorTypeDriver
+		{
+			get { return ACCompressorType.None; }
+		}
+
+		public ACCompressorType CompressorTypePassenger
+		{
+			get { return ACCompressorType.None; }
+		}
+
+		public Watt AuxHeaterPower
+		{
+			get { return 0.SI<Watt>(); }
+		}
+
+		public bool DoubleGlasing
+		{
+			get { return false; }
+		}
+
+		public bool HeatPump
+		{
+			get { return false; }
+		}
+
+		public bool AdjustableCoolantThermostat
+		{
+			get { return GetBool(new[] { "HVAC", "AdjustableCoolantThermostat" }); }
+		}
+
+		public bool AdjustableAuxiliaryHeater
+		{
+			get { return false; }
+		}
+
+		public bool EngineWasteGasHeatExchanger
+		{
+			get { return GetBool(new[] { "HVAC", "EngineWasteGasHeatExchanger" }); }
+		}
+
+		public bool SeparateAirDistributionDucts
+		{
+			get { return false; }
+		}
 
 		#endregion
 	}

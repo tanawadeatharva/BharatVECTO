@@ -164,8 +164,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var brakes = new MockBrakes(vehicle);
 			var veh = new MockVehicle(vehicle) { MyVehicleSpeed = 50.KMPHtoMeterPerSecond() };
 			var auxConfig = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, vehicle.RunData.VehicleData);
-			var busAux = new BusAuxiliariesAdapter(vehicle, auxConfig, "Coach", vehicle.RunData.VehicleData.TotalVehicleMass,
-				fcMap, modelData.IdleSpeed);
+			var busAux = new BusAuxiliariesAdapter(vehicle, auxConfig);
 			return busAux;
 		}
 	}
