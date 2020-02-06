@@ -205,14 +205,7 @@ namespace TUGraz.VectoCore.InputData.Impl
 		#endregion
 	}
 
-	public class ResultCardDeclarationInputData : IResultCardDeclarationInputData
-	{
-		public IList<IResultCardEntry> Idle { get; internal set; }
-		public IList<IResultCardEntry> Traction { get; internal set; }
-		public IList<IResultCardEntry> Overrun { get; internal set; }
-	}
-
-
+	
 	public class ResultInputData : IResultsInputData
 	{
 		public string Status { get; internal set; }

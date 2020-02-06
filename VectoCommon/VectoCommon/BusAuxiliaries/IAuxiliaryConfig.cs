@@ -38,7 +38,7 @@ namespace TUGraz.VectoCommon.BusAuxiliaries {
 
 		//IFuelConsumptionMap FuelMap { get; }
 
-		ISignals Signals { get; }
+		//ISignals Signals { get; }
 
 		// Persistance Functions
 			//bool Save(string filePath);

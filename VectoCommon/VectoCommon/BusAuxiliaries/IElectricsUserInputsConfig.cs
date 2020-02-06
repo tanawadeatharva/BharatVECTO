@@ -93,5 +93,9 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 		/// 	<returns>Stored Energy Efficiency</returns>
 		/// 	<remarks></remarks>
 		double StoredEnergyEfficiency { get; }
+
+		Watt MaxAlternatorPower { get; }
+
+		WattSecond ElectricStorageCapacity { get; }
 	}
 }

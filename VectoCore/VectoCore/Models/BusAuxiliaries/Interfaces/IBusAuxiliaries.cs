@@ -11,6 +11,7 @@
 
 using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 {
@@ -104,6 +105,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 		Watt PSPowerCompressorDragOnly { get; }
 		Watt HVACMechanicalPowerConsumer { get; }
 		Watt HVACMechanicalPowerGenerated { get; }
+		double BatterySOC { get; }
 
 
 		///// <summary>

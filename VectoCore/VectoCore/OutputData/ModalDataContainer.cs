@@ -404,6 +404,7 @@ namespace TUGraz.VectoCore.OutputData
 							ModalResultField.P_busAux_ES_consumer_sum,
 							ModalResultField.P_busAux_ES_sum_mech,
 							ModalResultField.P_busAux_ES_generated,
+							ModalResultField.BatterySOC,
 							ModalResultField.P_busAux_HVACmech_consumer,
 							ModalResultField.P_busAux_HVACmech_gen,
 							ModalResultField.Nl_busAux_PS_consumer,

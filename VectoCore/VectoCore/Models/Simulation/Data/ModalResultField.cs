@@ -288,6 +288,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		[ModalResultField(typeof(SI), caption: "P_busAux_HVACmech_gen [kW]", outputFactor: 1e-3)] P_busAux_HVACmech_gen,
 
+		[ModalResultField(typeof(double), caption:"Battery SoC")] BatterySOC,
+
+
 		/// <summary>
 		///		[-]  true/false  indicate whether torque converter is locked or not (only applicable for gears with TC)
 		/// </summary>
@@ -364,7 +367,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof(SI), "P_WHR_el [kW]", outputFactor:1e-3)] P_WHR_el_map,
 		[ModalResultField(typeof(SI), "P_WHR_el_corr [kW]", outputFactor: 1e-3)] P_WHR_el_corr,
 		[ModalResultField(typeof(SI), "P_WHR_mech [kW]", outputFactor: 1e-3)] P_WHR_mech_map,
-		[ModalResultField(typeof(SI), "P_WHR_mech_corr [kW]", outputFactor: 1e-3)] P_WHR_mech_corr
+		[ModalResultField(typeof(SI), "P_WHR_mech_corr [kW]", outputFactor: 1e-3)] P_WHR_mech_corr,
 	}
 
 	[AttributeUsage(AttributeTargets.Field)]

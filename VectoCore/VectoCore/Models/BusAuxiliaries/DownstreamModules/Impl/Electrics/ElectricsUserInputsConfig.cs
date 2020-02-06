@@ -33,7 +33,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electric
 		public Ampere AverageCurrentDemandInclBaseLoad { get; set; }
 		
 		public Ampere AverageCurrentDemandWithoutBaseLoad { get; set; }
-
+		public Watt MaxAlternatorPower { get; set; }
+		public WattSecond ElectricStorageCapacity { get; set; }
 	}
 
 }

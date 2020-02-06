@@ -1,6 +1,7 @@
 ﻿using TUGraz.VectoCommon.BusAuxiliaries;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 {
@@ -14,22 +15,40 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 		protected IM5_SmartAlternatorSetGeneration _m5;
 		protected IM6 _m6;
 		protected readonly ISignals _signals;
+		private ISimpleBattery _bat;
+		private IM2_AverageElectricalLoadDemand _m2;
+		private IM1_AverageHVACLoadDemand _m1;
+		private IM0_NonSmart_AlternatorsSetEfficiency _m0;
+		private double _alternatorGearEfficiency;
 
-		public M07Impl(IM5_SmartAlternatorSetGeneration m5, IM6 m6, ISignals signals)
+		public M07Impl(IM0_NonSmart_AlternatorsSetEfficiency m0, IM1_AverageHVACLoadDemand m1, IM2_AverageElectricalLoadDemand m2, IM5_SmartAlternatorSetGeneration m5, IM6 m6, ISimpleBattery bat, double alternatorGearEfficiency, ISignals signals)
 		{
 			_m5 = m5;
 			_m6 = m6;
 			_signals = signals;
+			_bat = bat;
+			_m0 = m0;
+			_m1 = m1;
+			_m2 = m2;
+			_alternatorGearEfficiency = alternatorGearEfficiency;
 		}
 
 		protected override void DoCalculate()
 		{
-			var idle = _signals.EngineSpeed <= _signals.EngineIdleSpeed &&
-						(!_signals.ClutchEngaged || _signals.InNeutral);
+			//var idle = _signals.EngineSpeed <= _signals.EngineIdleSpeed &&
+			//			(!_signals.ClutchEngaged || _signals.InNeutral);
 
-			var sw1 = idle
-				? _m5.AlternatorsGenerationPowerAtCrankIdle()
-				: _m5.AlternatorsGenerationPowerAtCrankTractionOn();
+			//var sw1 = idle
+			//	? _m5.AlternatorsGenerationPowerAtCrankIdle()
+			//	: _m5.AlternatorsGenerationPowerAtCrankTractionOn();
+
+			var maxBatPower = _bat.SOC * _bat.Capacity / _signals.SimulationInterval;
+			var elConsumerPower = _m1.AveragePowerDemandAtAlternatorFromHVACElectrics +
+								_m2.AveragePowerDemandAtAlternatorFromElectrics;
+
+			var sw1 = maxBatPower > elConsumerPower
+				? 0.SI<Watt>()
+				: (elConsumerPower - maxBatPower) / _m0.AlternatorsEfficiency / _alternatorGearEfficiency;
 
 			var c1 = _m6.OverrunFlag && _signals.ClutchEngaged && _signals.InNeutral == false;
 			var sw2 = c1 ? _m6.SmartElecAndPneumaticAltPowerGenAtCrank : sw1;

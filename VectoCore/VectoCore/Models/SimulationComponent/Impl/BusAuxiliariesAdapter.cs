@@ -160,6 +160,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_busAux_ES_generated] = Auxiliaries.ElectricPowerGenerated;
 			container[ModalResultField.P_busAux_ES_sum_mech] = Auxiliaries.ElectricPowerDemandMech;
 
+			container[ModalResultField.BatterySOC] = Auxiliaries.BatterySOC * 100.0;
+
 			container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
 			container[ModalResultField.Nl_busAux_PS_generated] = Auxiliaries.PSAirGenerated;
 			container[ModalResultField.Nl_busAux_PS_generated_alwaysOn] = Auxiliaries.PSAirGeneratedAlwaysOn;

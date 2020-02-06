@@ -965,4 +965,40 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 	}
+
+
+	public class JSONInputDataSingleBusV6 : JSONFile, ISingleBusInputDataProvider
+	{
+		private readonly IXMLInputDataReader _xmlInputReader;
+
+		public JSONInputDataSingleBusV6(JObject data, string filename, bool tolerateMissing = false) : base(
+			data, filename, tolerateMissing)
+		{
+			var kernel = new StandardKernel(new VectoNinjectModule());
+			_xmlInputReader = kernel.Get<IXMLInputDataReader>();
+
+			var primaryInputData = Path.Combine(BasePath,  Body.GetEx<string>("PrimaryVehicle"));
+			var completedInputData = Path.Combine(BasePath,  Body.GetEx<string>("CompletedVehicle"));
+
+			PrimaryVehicle = CreateReader(primaryInputData);
+			CompletedVehidle = CreateReader(completedInputData);
+		}
+
+		private IVehicleDeclarationInputData CreateReader(string vehicleFileName)
+		{
+			if (Path.GetExtension(vehicleFileName) != ".xml") {
+				throw new VectoException("unsupported vehicle file format {0}", vehicleFileName);
+			}
+
+			return _xmlInputReader.CreateDeclaration(vehicleFileName).JobInputData.Vehicle;
+
+		}
+
+		#region Implementation of ISingleBusInputDataProvider
+
+		public IVehicleDeclarationInputData PrimaryVehicle { get; }
+		public IVehicleDeclarationInputData CompletedVehidle { get; }
+
+		#endregion
+	}
 }

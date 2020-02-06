@@ -275,6 +275,9 @@
     <Compile Include="InputData\FileIO\XML\Declaration\IXMLDeclarationInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\IXMLInputDataReader.cs" />
     <Compile Include="InputData\FileIO\XML\XMLInputDataNinjectModule.cs" />
+    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\SimpleBattery.cs" />
+    <Compile Include="Models\BusAuxiliaries\Interfaces\DownstreamModules\Electrics\ISimpleBattery.cs" />
+    <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\M05Impl_P0.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\Electrics\SimpleAlternator.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\TechnologyBenefits.cs" />
     <Compile Include="Models\Declaration\ADASCombination.cs" />

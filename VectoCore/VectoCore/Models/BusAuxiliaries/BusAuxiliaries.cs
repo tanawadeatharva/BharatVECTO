@@ -19,6 +19,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumatics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
+using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Util;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries
@@ -54,6 +55,9 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		private IM6 M6;
 		private IM7 M7;
 		private IM8 M8;
+
+		private ISimpleBattery ElectricStorage;
+
 		//private IM9 M9;
 		//private IM10 M10;
 		//private IM11 M11;
@@ -79,8 +83,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			//var BusDatabase = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.BusDatabasePath);
 			var ssmTool = new SSMTOOL(auxConfig.SSMInputs);
 			
+			ElectricStorage = new SimpleBattery(auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity);
 
 			M0 = new M00Impl(auxConfig.ElectricalUserInputsConfig, Signals, ssmTool.ElectricalWAdjusted);
+
 
 			M0_5 = new M0_5Impl(
 				M0, auxConfig.ElectricalUserInputsConfig, Signals);
@@ -95,11 +101,13 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			M4 = new M04Impl(
 				compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
 				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
-			M5 = new M05Impl(
-				M0_5, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
-				auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency);
+			//M5 = new M05Impl(
+			//	M0_5, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
+			//	auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency);
+			M5 = new M05Impl_P0(M0, M1, M2, ElectricStorage, auxCfg.ElectricalUserInputsConfig, Signals);
 			M6 = new M06Impl(auxCfg.ElectricalUserInputsConfig, M1, M2, M3, M4, M5, Signals);
-			M7 = new M07Impl(M5, M6, Signals);
+			M7 = new M07Impl(
+				M0, M1, M2, M5, M6, ElectricStorage, auxCfg.ElectricalUserInputsConfig.AlternatorGearEfficiency, Signals);
 			M8 = new M08Impl(auxConfig, M1, M6, M7, Signals);
 
 			//M9 = new M09Impl(M1, M4, M6, M8, fuelMap, auxConfig.PneumaticAuxillariesConfig, Signals);
@@ -142,16 +150,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		public Watt ElectricPowerGenerated
 		{
 			get {
-				if (!auxConfig.ElectricalUserInputsConfig.SmartElectrical) {
-					return ElectricPowerConsumerSum;
+				if (auxConfig.ElectricalUserInputsConfig.SmartElectrical) {
+					var retVal = auxConfig.PneumaticUserInputsConfig.SmartAirCompression
+						? M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
+						: M7.SmartElectricalOnlyAuxAltPowerGenAtCrank;
+					return retVal * M0.AlternatorsEfficiency * auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency;
 				}
 
-				var inIdle = Signals.Idle && (!Signals.ClutchEngaged || Signals.InNeutral);
-				return
-					(M6.OverrunFlag && Signals.ClutchEngaged && !Signals.InNeutral ? M6.SmartElecOnlyAltPowerGenAtCrank : 0.SI<Watt>())
-					+ (inIdle ? M5.AlternatorsGenerationPowerAtCrankIdle() : M5.AlternatorsGenerationPowerAtCrankTractionOn()) *
-					auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency *
-					auxConfig.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(Signals.EngineSpeed, 0.SI<Ampere>());
+				return M1.AveragePowerDemandAtAlternatorFromHVACElectrics + M2.AveragePowerDemandAtAlternatorFromElectrics;
 			}
 		}
 
@@ -225,7 +231,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			get { return M1.AveragePowerDemandAtCrankFromHVACMechanicals; }
 		}
 
-		
+		public double BatterySOC { get { return ElectricStorage.SOC; } }
+
 
 		public string AuxiliaryName
 		{
@@ -249,6 +256,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 				//M9.CycleStep(seconds);
 				//M10.CycleStep(seconds);
 				//M11.CycleStep(seconds);
+				var generatedElPower =
+					(auxConfig.ElectricalUserInputsConfig.SmartElectrical && auxConfig.PneumaticUserInputsConfig.SmartAirCompression
+						? M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
+						: M7.SmartElectricalOnlyAuxAltPowerGenAtCrank) * M0.AlternatorsEfficiency *
+					auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency;
+				ElectricStorage.Request(generatedElPower - ElectricPowerConsumerSum, seconds);
 
 				Signals.CurrentCycleTimeInSeconds += seconds.Value();
 			} catch (Exception ex) {
