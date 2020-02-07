@@ -967,7 +967,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 	}
 
 
-	public class JSONInputDataSingleBusV6 : JSONFile, ISingleBusInputDataProvider
+	public class JSONInputDataSingleBusV6 : JSONFile, ISingleBusInputDataProvider, IDeclarationJobInputData
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
 
@@ -981,7 +981,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			var completedInputData = Path.Combine(BasePath,  Body.GetEx<string>("CompletedVehicle"));
 
 			PrimaryVehicle = CreateReader(primaryInputData);
-			CompletedVehidle = CreateReader(completedInputData);
+			CompletedVehicle = CreateReader(completedInputData);
+
+			JobName = CompletedVehicle.VIN;
 		}
 
 		private IVehicleDeclarationInputData CreateReader(string vehicleFileName)
@@ -997,7 +999,22 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		#region Implementation of ISingleBusInputDataProvider
 
 		public IVehicleDeclarationInputData PrimaryVehicle { get; }
-		public IVehicleDeclarationInputData CompletedVehidle { get; }
+		public IVehicleDeclarationInputData CompletedVehicle { get; }
+
+		#endregion
+
+		#region Implementation of IDeclarationInputDataProvider
+
+		public IDeclarationJobInputData JobInputData { get { return this; } }
+		public XElement XMLHash { get { return new XElement(XMLNames.DI_Signature); } }
+
+		#endregion
+
+		#region Implementation of IDeclarationJobInputData
+
+		public IVehicleDeclarationInputData Vehicle { get { return PrimaryVehicle; } }
+		public string JobName { get; }
+		public string ShiftStrategy { get { return ""; } }
 
 		#endregion
 	}

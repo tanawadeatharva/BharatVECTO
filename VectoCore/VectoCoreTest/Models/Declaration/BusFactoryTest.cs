@@ -51,7 +51,31 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			//var run = factory.SimulationRuns().First();
 			//run.Run();
 
-			//Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+		}
+
+		[TestCase()]
+		public void CreateRunSingleBus()
+		{
+			var jobFile =
+				@"TestData\Integration\Buses\SingleBus.vecto";
+			var runIdx = 4;
+			var writer = new FileOutputWriter(jobFile);
+			var inputData = Path.GetExtension(jobFile) == ".xml"
+				? xmlInputReader.CreateDeclaration(jobFile)
+				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
+				: JSONInputDataFactory.ReadJsonJob(jobFile);
+			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
+				WriteModalResults = true,
+				//ActualModalData = true,
+				Validate = false
+			};
+			var jobContainer = new JobContainer(new MockSumWriter());
+
+			var runs = factory.SimulationRuns().ToArray();
+			jobContainer.AddRun(runs[runIdx]);
+			runs[runIdx].Run();
+			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
 		}
 	}
 }

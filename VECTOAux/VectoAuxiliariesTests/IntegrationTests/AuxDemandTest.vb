@@ -88,7 +88,7 @@ Namespace IntegrationTests
             aux.Signals.EngineIdleSpeed = 560.RPMtoRad()
 
             Dim auxCfg = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, Utils.GetDefaultVehicleData(12000.SI(Of Kilogram)()))
-            CType(auxCfg, AuxiliaryConfig).FuelMap = fuelMap
+            'CType(auxCfg, AuxiliaryConfig).FuelMap = fuelMap
 
             CType(aux, BusAuxiliaries).Initialise(auxCfg) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 

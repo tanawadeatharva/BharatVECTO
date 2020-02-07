@@ -20,6 +20,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 		public DeclarationModeSingleBusVectoRunDataFactory(ISingleBusInputDataProvider singleBusInputData, IDeclarationReport report) : base(singleBusInputData, report)
 		{
 			_singleBusInputData = singleBusInputData;
+			_dao.SingleBusInputData = singleBusInputData;
 		}
 
 		#region Implementation of IVectoRunDataFactory
@@ -43,7 +44,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			}
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
-				VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading.Value),
+				VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading),
 				AirdragData = _dao.CreateAirdragData(_singleBusInputData.CompletedVehicle.Components.AirdragInputData, mission, new Segment()),
 				EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission),
 				GearboxData = _gearboxData,
@@ -66,7 +67,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl {
 			};
 			simulationRunData.EngineData.FuelMode = modeIdx;
 			simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
-			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(mission, _singleBusInputData.PrimaryVehicle, _singleBusInputData.CompletedVehicle, simulationRunData);
+			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(mission, _singleBusInputData.PrimaryVehicle, simulationRunData);
 			return simulationRunData;
 		}
 	}

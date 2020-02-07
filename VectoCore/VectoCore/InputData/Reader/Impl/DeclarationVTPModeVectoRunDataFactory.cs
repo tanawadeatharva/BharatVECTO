@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				VehicleData =
 					Dao.CreateVehicleData(
 						JobInputData.Vehicle, Segment.Missions.First(),
-						Segment.Missions.First().Loadings.First().Value),
+						Segment.Missions.First().Loadings.First()),
 				AirdragData = AirdragData,
 				EngineData = EngineData,
 				GearboxData = GearboxData,
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			Driverdata.AccelerationCurve = AccelerationCurveReader.ReadFromStream(Segment.AccelerationFile);
 			var tempVehicle = Dao.CreateVehicleData(
 				vehicle, Segment.Missions.First(),
-				Segment.Missions.First().Loadings.First().Value);
+				Segment.Missions.First().Loadings.First());
 			AirdragData = Dao.CreateAirdragData(
 				vehicle.Components.AirdragInputData,
 				Segment.Missions.First(), Segment);
@@ -236,7 +236,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				AngledriveData = AngledriveData,
 				VehicleData = Dao.CreateVehicleData(
 					JobInputData.Vehicle, mission,
-					loading),
+					new KeyValuePair<LoadingType, Kilogram>(LoadingType.ReferenceLoad, loading)),
 				AirdragData = AirdragData,
 				DriverData = null,
 				BusAuxiliaries = null,

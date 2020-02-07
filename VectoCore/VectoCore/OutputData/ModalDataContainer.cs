@@ -410,7 +410,7 @@ namespace TUGraz.VectoCore.OutputData
 							ModalResultField.Nl_busAux_PS_consumer,
 							ModalResultField.Nl_busAux_PS_generated,
 							ModalResultField.Nl_busAux_PS_generated_alwaysOn,
-							ModalResultField.Nl_busAux_PS_generated_dragOnly,
+							//ModalResultField.Nl_busAux_PS_generated_dragOnly,
 							ModalResultField.P_busAux_PS_generated,
 							ModalResultField.P_busAux_PS_generated_alwaysOn,
 							ModalResultField.P_busAux_PS_generated_dragOnly,

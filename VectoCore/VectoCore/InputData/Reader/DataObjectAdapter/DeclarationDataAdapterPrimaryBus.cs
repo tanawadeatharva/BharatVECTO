@@ -28,13 +28,13 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		#region Overrides of DeclarationDataAdapterTruck
 
-		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
+		public override VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
 		{
 			var retVal = base.CreateVehicleData(data, mission, loading);
 			retVal.CurbMass = mission.CurbMass;
-			retVal.Length = mission.BusParameter.VehicleLength;
-			retVal.Width = mission.BusParameter.VehicleWidth;
-			retVal.Height = mission.VehicleHeight;
+			//retVal.Length = mission.BusParameter.VehicleLength;
+			//retVal.Width = mission.BusParameter.VehicleWidth;
+			//retVal.Height = mission.VehicleHeight;
 			return retVal;
 		}
 
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		#endregion
 
-		public IAuxiliaryConfig CreateBusAuxiliariesData(
+		public virtual IAuxiliaryConfig CreateBusAuxiliariesData(
 			Mission mission, IVehicleDeclarationInputData vehicleData, VectoRunData runData)
 		{
 			var actuations = DeclarationData.BusAuxiliaries.ActuationsMap.Lookup(runData.Mission.MissionType);
@@ -87,13 +87,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				SSMInputs = CreateSSMModelParameters(
 					vehicleData.Components.BusAuxiliaries, mission, FuelData.Diesel),
 				VehicleData = runData.VehicleData,
-				FuelMap = runData.EngineData.Fuels.First().ConsumptionMap
 			};
 
 			return retVal;
 		}
 
-		private IElectricsUserInputsConfig GetElectricalUserConfig(
+		protected virtual ElectricsUserInputsConfig GetElectricalUserConfig(
 			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
 		{
 			var currentDemand = CalculateAverageCurrent(mission, vehicleData, actuations);
@@ -115,7 +114,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		private double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
+		protected virtual double CalculateAlternatorEfficiency(IList<IAlternatorDeclarationInputData> alternators)
 		{
 			var sum = 0.0;
 			foreach (var entry in alternators) {
@@ -125,7 +124,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return sum / alternators.Count;
 		}
 
-		private Tuple<Ampere, Ampere> CalculateAverageCurrent(
+		protected virtual Tuple<Ampere, Ampere> CalculateAverageCurrent(
 			Mission mission, IVehicleDeclarationInputData vehicleData, IActuations actuations)
 		{
 			var avgInclBase = 0.SI<Ampere>();
@@ -134,10 +133,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				(actuations.ParkBrakeAndDoors * Constants.BusAuxiliaries.ElectricalConsumers.DoorActuationTimeSecond) /
 				actuations.CycleTime;
 			var busAux = vehicleData.Components.BusAuxiliaries;
-			var electricDoors = busAux.PneumaticConsumers.DoorDriveTechnology ==
-								ConsumerTechnology.Electrically;
+			var electricDoors = false;
 			foreach (var consumer in DeclarationData.BusAuxiliaries.DefaultElectricConsumerList.Items) {
-				var nbr = CalcNumberInVehicle(consumer.NumberInActualVehicle, mission);
+				var nbr = GetNumberOfElectricalConsumersInVehicle(consumer.NumberInActualVehicle, mission);
 				var dutyCycle = electricDoors && consumer.ConsumerName.Equals(
 									Constants.BusAuxiliaries.ElectricalConsumers.DoorsPerVehicleConsumer,
 									StringComparison.CurrentCultureIgnoreCase)
@@ -145,7 +143,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					: consumer.PhaseIdleTractionOn;
 
 				var current = consumer.NominalCurrent(mission.MissionType) * dutyCycle * nbr;
-				if (consumer.Bonus && !VehicleHasConsumer(consumer.ConsumerName, busAux)) {
+				if (consumer.Bonus && !VehicleHasElectricalConsumer(consumer.ConsumerName, busAux)) {
 					current = 0.SI<Ampere>();
 				}
 
@@ -158,7 +156,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return Tuple.Create(avgInclBase, avgWithoutBase);
 		}
 
-		private bool VehicleHasConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
+		protected virtual bool VehicleHasElectricalConsumer(string consumerName, IBusAuxiliariesDeclarationData busAux)
 		{
 			switch (consumerName) {
 				case "Day running lights LED bonus":
@@ -170,7 +168,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			}
 		}
 
-		private double CalcNumberInVehicle(string nbr, Mission mission)
+		protected virtual double GetNumberOfElectricalConsumersInVehicle(string nbr, Mission mission)
 		{
 			if ("f_IntLight(L_CoC)".Equals(nbr, StringComparison.InvariantCultureIgnoreCase)) {
 				var busParams = mission.BusParameter;
@@ -182,7 +180,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return nbr.ToDouble();
 		}
 
-		private IPneumaticUserInputsConfig GetPneumaticUserConfig(IVehicleDeclarationInputData vehicleData, Mission mission)
+		protected virtual PneumaticUserInputsConfig GetPneumaticUserConfig(IVehicleDeclarationInputData vehicleData, Mission mission)
 		{
 			var busAux = vehicleData.Components.BusAuxiliaries;
 
@@ -202,7 +200,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		private ICompressorMap GetCompressorMap(string compressorSize)
+		protected virtual ICompressorMap GetCompressorMap(string compressorSize)
 		{
 			var resource = "";
 			switch (compressorSize) {
@@ -298,7 +296,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		private ISSMTechnologyBenefits GetSSMTechnologyBenefits(IBusAuxiliariesDeclarationData inputData, FloorType floorType)
+		protected virtual TechnologyBenefits GetSSMTechnologyBenefits(IBusAuxiliariesDeclarationData inputData, FloorType floorType)
 		{
 			var onVehicle = new List<SSMTechnology>();
 			foreach (var item in DeclarationData.BusAuxiliaries.SSMTechnologyList) {
@@ -313,7 +311,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				}
 			}
 
-			var retVal = new TechnologyBenefits();  
+			return SelectBenefitForFloorType(floorType, onVehicle);
+		}
+
+		protected virtual TechnologyBenefits SelectBenefitForFloorType(FloorType floorType, List<SSMTechnology> onVehicle)
+		{
+			var retVal = new TechnologyBenefits();
 
 			switch (floorType) {
 				case FloorType.LowFloor:
@@ -338,13 +341,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					retVal.VVValueVariation = onVehicle.Sum(x => x.ActiveVV ? x.SemiLowFloorV : 0);
 					break;
 			}
-			
 
 			return retVal;
 		}
 
 
-		private Tuple<Watt, Watt> CalculateMaxCoolingPower(Mission mission)
+		protected virtual Tuple<Watt, Watt> CalculateMaxCoolingPower(Mission mission)
 		{
 			var busParams = mission.BusParameter;
 
@@ -362,7 +364,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return Tuple.Create(driver, passenger);
 		}
 
-		public virtual IPneumaticsConsumersDemand CreatePneumaticAuxConfig(RetarderType retarderType)
+		protected internal virtual IPneumaticsConsumersDemand CreatePneumaticAuxConfig(RetarderType retarderType)
 		{
 			return new PneumaticsConsumersDemand() {
 				AdBlueInjection = Constants.BusAuxiliaries.PneumaticConsumersDemands.AdBlueInjection,

@@ -46,7 +46,7 @@ Namespace UnitTests
 
             dim auxConfig = Utils.GetAuxTestConfig()
             dim vehicle = auxConfig.VehicleData
-            CType(vehicle, VehicleData).Height = 0.SI (of Meter)
+            'CType(vehicle, VehicleData).Height = 0.SI (of Meter)
             Dim ssmInput = SSMInputData.ReadFile(_SSMMAP, vehicle, Nothing)
             ssm = New SSMTOOL(ssmInput)
             

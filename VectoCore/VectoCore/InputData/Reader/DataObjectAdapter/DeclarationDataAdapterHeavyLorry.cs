@@ -101,14 +101,14 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
+		public virtual VehicleData CreateVehicleData(IVehicleDeclarationInputData data, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
 		{
 			if (!data.SavedInDeclarationMode) {
 				WarnDeclarationMode("VehicleData");
 			}
 			return data.ExemptedVehicle
 				? CreateExemptedVehicleData(data)
-				: CreateNonExemptedVehicleData(data, mission, loading);
+				: CreateNonExemptedVehicleData(data, mission, loading.Value);
 		}
 
 		protected virtual VehicleData CreateNonExemptedVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
@@ -308,7 +308,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return null;
 		}
 
-		public GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
+		public virtual GearboxData CreateGearboxData(IVehicleDeclarationInputData inputData, VectoRunData runData,
 			IShiftPolygonCalculator shiftPolygonCalc)
 		{
 			var gearbox = inputData.Components.GearboxInputData;
@@ -657,7 +657,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		public ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
+		public virtual ShiftStrategyParameters CreateGearshiftData(GearboxData gbx, double axleRatio, PerSecond engineIdlingSpeed)
 		{
 			var retVal = new ShiftStrategyParameters {
 				StartVelocity = DeclarationData.GearboxTCU.StartSpeed,

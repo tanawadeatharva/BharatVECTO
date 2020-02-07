@@ -235,7 +235,6 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 							<SmartRegenerationSystem>false</SmartRegenerationSystem>
 							<AirsuspensionControl>mechanically</AirsuspensionControl>
 							<AdBlueDosing>true</AdBlueDosing>
-							<DoorDriveTechnology>pneumatic</DoorDriveTechnology>
 						</PneumaticSystem>
 						<HVAC>
 							<AdjustableCoolantThermostat>true</AdjustableCoolantThermostat>

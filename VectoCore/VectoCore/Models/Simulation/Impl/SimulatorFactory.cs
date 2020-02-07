@@ -93,6 +93,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				DataReader = new DeclarationVTPModeVectoRunDataFactory(vtpProvider, report);
 				return;
 			}
+
+			if (dataProvider is ISingleBusInputDataProvider) {
+				var singleBus = dataProvider as ISingleBusInputDataProvider;
+				var report = declarationReport ?? new XMLDeclarationReport(ModWriter, false);
+				DataReader = new DeclarationModeSingleBusVectoRunDataFactory(singleBus, report);
+				return;
+			}
 			if (dataProvider is IDeclarationInputDataProvider) {
 				var declDataProvider = dataProvider as IDeclarationInputDataProvider;
 				var report = declarationReport ?? new XMLDeclarationReport(ModWriter, declDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle);

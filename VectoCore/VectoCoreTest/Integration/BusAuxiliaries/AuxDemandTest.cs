@@ -148,12 +148,12 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			vehicle.RunData = new VectoRunData() {
 				EngineData = modelData,
 				VehicleData = new VehicleData() {
-					Length = 10.655.SI< Meter>(),
-					Width = 2.55.SI<Meter>(),
-					Height = 2.275.SI< Meter>(),
-					FloorType = FloorType.HighFloor,
-					PassengerCount = 47,
-					DoubleDecker = false,
+					//Length = 10.655.SI< Meter>(),
+					//Width = 2.55.SI<Meter>(),
+					//Height = 2.275.SI< Meter>(),
+					//FloorType = FloorType.HighFloor,
+					//PassengerCount = 47,
+					//DoubleDecker = false,
 					CurbMass = vehicleMass.SI<Kilogram>()
 				}
 			};

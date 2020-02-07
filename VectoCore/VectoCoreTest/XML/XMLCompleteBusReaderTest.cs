@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.That(() => vehicle.TankSystem, Throws.InstanceOf<VectoException>());
 			Assert.AreEqual(50, vehicle.NumberOfPassengersLowerDeck);
 			Assert.AreEqual(0, vehicle.NuberOfPassengersUpperDeck);
-			Assert.IsTrue(((XMLDeclarationCompletedBusDataProviderV26)vehicle).LowEntry);
+			Assert.AreEqual(FloorType.LowFloor, vehicle.FloorType);
 			Assert.AreEqual(2.700, vehicle.Height.Value());
 			Assert.AreEqual(11.830, vehicle.Length.Value());
 			Assert.AreEqual(2.550, vehicle.Width.Value());

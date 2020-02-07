@@ -1,4 +1,5 @@
 ﻿
+Imports Moq
 Imports NUnit.Framework
 Imports TUGraz.VectoCommon.BusAuxiliaries
 Imports TUGraz.VectoCommon.Utils
@@ -6,6 +7,7 @@ Imports TUGraz.VectoCore.BusAuxiliaries.Interfaces.DownstreamModules
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
+Imports TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics
 
 Namespace UnitTests
 	<TestFixture()>
@@ -13,17 +15,34 @@ Namespace UnitTests
 		Private M5 As M5_Mock
 		Private M6 As M6_Mock
 		Private Signals As ISignals
+        Private M0 As Mock(Of IM0_NonSmart_AlternatorsSetEfficiency)
+        Private M1 As Mock(Of IM1_AverageHVACLoadDemand)
+        Private M2 As Mock(Of IM2_AverageElectricalLoadDemand)
+        Private Bat As Mock(Of ISimpleBattery)
 
-		Public Sub New()
+        Public Sub New()
 
-			M5 = New M5_Mock(100, 110, 120)
+            M0 = New Mock(Of IM0_NonSmart_AlternatorsSetEfficiency)
+            M0.Setup(Function(x) x.AlternatorsEfficiency).Returns(0.7)
+
+            M1 = New Mock(Of IM1_AverageHVACLoadDemand)
+            M1.Setup(Function(x) x.AveragePowerDemandAtAlternatorFromHVACElectrics).Returns(500.SI(Of Watt))
+
+            M2 = New Mock(Of IM2_AverageElectricalLoadDemand)
+            M2.Setup(Function(x) x.AveragePowerDemandAtAlternatorFromElectrics).Returns(500.SI(Of Watt))
+
+            bat = New Mock(of ISimpleBattery)
+            bat.Setup(Function(x) x.SOC).Returns(0.9)
+            bat.Setup(Function(x) x.Capacity).Returns(400.SI(Unit.SI.Watt.Hour).Cast(Of WattSecond))
+
+            M5 = New M5_Mock(100, 110, 120)
 			M6 = New M6_Mock(100, 0, false, 110, 120, false, 130, 140, True)
 			Signals = New Signals()
 		End Sub
 
 		<TestCase()>
 		Public Sub CreateNew_M7InstanceTest()
-			Dim target As IM7 = New M07Impl(M5, M6, Signals)
+			Dim target As IM7 = New M07Impl(M0.Object, M1.Object, M2.Object, M5, M6, bat.Object, 0.92, Signals)
 			Assert.IsNotNull(target)
 		End Sub
 
@@ -84,7 +103,7 @@ Namespace UnitTests
 
 
 			'Create Instance of M7 from 
-			Dim target As IM7 = New M07Impl(M5, M6, Signals)
+			Dim target As IM7 = New M07Impl(M0.Object, M1.Object, M2.Object, M5, M6, bat.Object, 0.92, Signals)
 
 			Dim OP1act As Double = target.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank().Value()
 			Dim OP2act As Double = target.SmartElectricalAndPneumaticAuxAirCompPowerGenAtCrank().Value()
