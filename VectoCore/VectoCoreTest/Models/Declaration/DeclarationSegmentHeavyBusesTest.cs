@@ -105,14 +105,15 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var missions = new[]
 				{ MissionType.HeavyUrban, MissionType.Urban, MissionType.Suburban, MissionType.Interurban, MissionType.Coach };
 
-			for (var i = 0; i < 3; i++) {
+			for (var i = 0; i < 3; i++)
+			{
 				AssertMission(
 					segment.Missions[i],
 					missionType: missions[i],
 					cdxA: 4.9,
 					length: 12,
 					width: 2.55,
-					height: 2.7,
+					height: 2.8,
 					curbMass: 10000,
 					refLoad: 5618.16,
 					lowLoad: 1123.632,
@@ -124,12 +125,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					segment.Missions[i],
 					missionType: missions[i % 3],
 					cdxA: 6.2,
-					length: 12,
+					length: 10.5,
 					width: 2.55,
-					height: 3.7,
+					height: 3.8,
 					curbMass: 10000,
-					refLoad: 6929.064,
-					lowLoad: 1385.8128,
+					refLoad: 5966.694,
+					lowLoad: 1193.3388,
 					axleWeightDistribution: new[] { 0.375, 0.625 }
 				);
 			}
@@ -140,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cdxA: 4.6,
 				length: 12,
 				width: 2.55,
-				height: 3.0,
+				height: 3.15,
 				curbMass: 10000,
 				refLoad: 4301.748,
 				lowLoad: 860.3496,
@@ -152,7 +153,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cdxA: 4.6,
 				length: 12,
 				width: 2.55,
-				height: 3.0,
+				height: 3.15,
 				curbMass: 10000,
 				refLoad: 2737.476,
 				lowLoad: 547.4952,
@@ -163,24 +164,24 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
 					cdxA: 5.2,
-					length: 12,
+					length: 10.5,
 					width: 2.55,
-					height: 3.9,
+					height: 3.7,
 					curbMass: 10000,
-					refLoad: 5866.02,
-					lowLoad: 1173.204,
+					refLoad: 5051.295,
+					lowLoad: 1010.259,
 					axleWeightDistribution: new[] { 0.375, 0.625 }
 				);
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
 				cdxA: 5.2,
-				length: 12,
+				length: 10.5,
 				width: 2.55,
-				height: 3.9,
+				height: 3.7,
 				curbMass: 10000,
-				refLoad: 3910.68,
-				lowLoad: 782.136,
+				refLoad: 3367.53,
+				lowLoad: 673.506,
 				axleWeightDistribution: new[] { 0.375, 0.625 }
 			);
 
@@ -211,12 +212,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					segment.Missions[i],
 					missionType: missions[i],
 					cdxA: 5.0,
-					length: 14,
+					length: 14.2,
 					width: 2.55,
-					height: 2.7,
+					height: 2.8,
 					curbMass: 12000,
-					refLoad: 6658.56,
-					lowLoad: 1331.712,
+					refLoad: 6762.6,
+					lowLoad: 1352.52,
 					axleWeightDistribution: new[] { 0.273, 0.454, 0.273 }
 				);
 			}
@@ -225,12 +226,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					segment.Missions[i],
 					missionType: missions[i % 3],
 					cdxA: 6.3,
-					length: 14,
+					length: 13.5,
 					width: 2.55,
-					height: 3.7,
+					height: 3.8,
 					curbMass: 12000,
-					refLoad: 8212.224,
-					lowLoad: 1642.4448,
+					refLoad: 7891.434,
+					lowLoad: 1578.2868,
 					axleWeightDistribution: new[] { 0.273, 0.454, 0.273 }
 				);
 			}
@@ -239,24 +240,24 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
 				cdxA: 4.7,
-				length: 14,
+				length: 13.8,
 				width: 2.55,
-				height: 3.0,
+				height: 3.15,
 				curbMass: 12000,
-				refLoad: 5098.368,
-				lowLoad: 1019.6736,
+				refLoad: 5018.706,
+				lowLoad: 1003.7412,
 				axleWeightDistribution: new[] { 0.273, 0.454, 0.273 }
 			);
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
 				cdxA: 4.7,
-				length: 14,
+				length: 13.8,
 				width: 2.55,
-				height: 3.0,
+				height: 3.15,
 				curbMass: 12000,
-				refLoad: 3244.416,
-				lowLoad: 648.8832,
+				refLoad: 3193.722,
+				lowLoad: 638.7444,
 				axleWeightDistribution: new[] { 0.273, 0.454, 0.273 }
 			);
 
@@ -266,7 +267,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					cdxA: 5.3,
 					length: 14,
 					width: 2.55,
-					height: 3.9,
+					height: 3.7,
 					curbMass: 12000,
 					refLoad: 6952.32,
 					lowLoad: 1390.464,
@@ -278,7 +279,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cdxA: 5.3,
 				length: 14,
 				width: 2.55,
-				height: 3.9,
+				height: 3.7,
 				curbMass: 12000,
 				refLoad: 4634.88,
 				lowLoad: 926.976,
@@ -312,12 +313,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					segment.Missions[i],
 					missionType: missions[i],
 					cdxA: 5.1,
-					length: 18,
+					length: 18.2,
 					width: 2.55,
-					height: 2.7,
+					height: 2.8,
 					curbMass: 12000,
-					refLoad: 8739.36,
-					lowLoad: 1747.872,
+					refLoad: 8843.4,
+					lowLoad: 1768.68,
 					axleWeightDistribution: new[] { 0.243, 0.352, 0.405 }
 				);
 			}
@@ -326,12 +327,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					segment.Missions[i],
 					missionType: missions[i % 3],
 					cdxA: 6.4,
-					length: 18,
+					length: 18.2,
 					width: 2.55,
-					height: 3.7,
+					height: 3.8,
 					curbMass: 12000,
-					refLoad: 10778.544,
-					lowLoad: 2155.7088,
+					refLoad: 10906.86,
+					lowLoad: 2181.372,
 					axleWeightDistribution: new[] { 0.243, 0.352, 0.405 }
 				);
 			}
@@ -340,24 +341,24 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
 				cdxA: 4.8,
-				length: 18,
+				length: 18.2,
 				width: 2.55,
-				height: 3.0,
+				height: 3.15,
 				curbMass: 12000,
-				refLoad: 6691.608,
-				lowLoad: 1338.3216,
+				refLoad: 6771.27,
+				lowLoad: 1354.254,
 				axleWeightDistribution: new[] { 0.243, 0.352, 0.405 }
 			);
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
 				cdxA: 4.8,
-				length: 18,
+				length: 18.2,
 				width: 2.55,
-				height: 3.0,
+				height: 3.15,
 				curbMass: 12000,
-				refLoad: 4258.296,
-				lowLoad: 851.6592,
+				refLoad: 4308.99,
+				lowLoad: 861.798,
 				axleWeightDistribution: new[] { 0.243, 0.352, 0.405 }
 			);
 
@@ -365,24 +366,24 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
 					cdxA: 5.4,
-					length: 18,
+					length: 18.2,
 					width: 2.55,
-					height: 3.9,
+					height: 3.7,
 					curbMass: 12000,
-					refLoad: 9124.92,
-					lowLoad: 1824.984,
+					refLoad: 9233.55,
+					lowLoad: 1846.71,
 					axleWeightDistribution: new[] { 0.243, 0.352, 0.405 }
 				);
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
 				cdxA: 5.4,
-				length: 18,
+				length: 18.2,
 				width: 2.55,
-				height: 3.9,
+				height: 3.7,
 				curbMass: 12000,
-				refLoad: 6083.28,
-				lowLoad: 1216.656,
+				refLoad: 6155.7,
+				lowLoad: 1231.14,
 				axleWeightDistribution: new[] { 0.243, 0.352, 0.405 }
 			);
 
@@ -415,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					cdxA: 5.1,
 					length: 15,
 					width: 2.55,
-					height: 2.7,
+					height: 2.8,
 					curbMass: 14000,
 					refLoad: 7178.76,
 					lowLoad: 1435.752,
@@ -429,7 +430,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					cdxA: 6.4,
 					length: 15,
 					width: 2.55,
-					height: 3.7,
+					height: 3.8,
 					curbMass: 14000,
 					refLoad: 8853.804,
 					lowLoad: 1770.7608,
@@ -443,7 +444,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cdxA: 4.8,
 				length: 15,
 				width: 2.55,
-				height: 3.0,
+				height: 3.15,
 				curbMass: 14000,
 				refLoad: 5496.6780,
 				lowLoad: 1099.3356,
@@ -455,7 +456,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cdxA: 4.8,
 				length: 15,
 				width: 2.55,
-				height: 3.0,
+				height: 3.15,
 				curbMass: 14000,
 				refLoad: 3497.886,
 				lowLoad: 699.5772,
@@ -468,7 +469,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					cdxA: 5.4,
 					length: 15,
 					width: 2.55,
-					height: 3.9,
+					height: 3.7,
 					curbMass: 14000,
 					refLoad: 7495.47,
 					lowLoad: 1499.094,
@@ -480,7 +481,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				cdxA: 5.4,
 				length: 15,
 				width: 2.55,
-				height: 3.9,
+				height: 3.7,
 				curbMass: 14000,
 				refLoad: 4996.98,
 				lowLoad: 999.396,
@@ -514,12 +515,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					segment.Missions[i],
 					missionType: missions[i],
 					cdxA: 5.2,
-					length: 20,
+					length: 21,
 					width: 2.55,
-					height: 2.7,
+					height: 2.6,
 					curbMass: 14000,
-					refLoad: 9779.76,
-					lowLoad: 1955.952,
+					refLoad: 10299.96,
+					lowLoad: 2059.992,
 					axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 }
 				);
 			}
@@ -528,12 +529,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					segment.Missions[i],
 					missionType: missions[i % 3],
 					cdxA: 6.5,
-					length: 20,
+					length: 21,
 					width: 2.55,
-					height: 3.7,
+					height: 3.8,
 					curbMass: 14000,
-					refLoad: 12061.704,
-					lowLoad: 2412.3408,
+					refLoad: 12703.284,
+					lowLoad: 2540.6568,
 					axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 }
 				);
 			}
@@ -542,24 +543,24 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				segment.Missions[6],
 				missionType: MissionType.Interurban,
 				cdxA: 4.9,
-				length: 20,
+				length: 21,
 				width: 2.55,
-				height: 3.0,
+				height: 3.15,
 				curbMass: 14000,
-				refLoad: 7488.228,
-				lowLoad: 1497.6456,
+				refLoad: 7886.538,
+				lowLoad: 1577.3076,
 				axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 }
 			);
 			AssertMission(
 				segment.Missions[7],
 				missionType: MissionType.Coach,
 				cdxA: 4.9,
-				length: 20,
+				length: 21,
 				width: 2.55,
-				height: 3.0,
+				height: 3.15,
 				curbMass: 14000,
-				refLoad: 4765.236,
-				lowLoad: 953.0472,
+				refLoad: 5018.706,
+				lowLoad: 1003.7412,
 				axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 }
 			);
 
@@ -567,24 +568,24 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					segment.Missions[8],
 					missionType: MissionType.Interurban,
 					cdxA: 5.5,
-					length: 20,
+					length: 21,
 					width: 2.55,
-					height: 3.9,
+					height: 3.7,
 					curbMass: 14000,
-					refLoad: 10211.22,
-					lowLoad: 2042.244,
+					refLoad: 10754.37,
+					lowLoad: 2150.874,
 					axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 }
 				);
 			AssertMission(
 				segment.Missions[9],
 				missionType: MissionType.Coach,
 				cdxA: 5.5,
-				length: 20,
+				length: 21,
 				width: 2.55,
-				height: 3.9,
+				height: 3.7,
 				curbMass: 14000,
-				refLoad: 6807.48,
-				lowLoad: 1361.496,
+				refLoad: 7169.58,
+				lowLoad: 1433.916,
 				axleWeightDistribution: new[] { 0.200, 0.282, 0.324, 0.194 }
 			);
 
@@ -599,7 +600,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(cdxA, m.DefaultCDxA.Value(), 1e-9);
 			Assert.AreEqual(length, m.BusParameter.VehicleLength.Value(), 1e-9);
 			Assert.AreEqual(width, m.BusParameter.VehicleWidth.Value(), 1e-9);
-			Assert.AreEqual(height, m.VehicleHeight.Value(), 1e-9);
+			Assert.AreEqual(height, m.BusParameter.BodyHeight.Value(), 1e-9);
 			Assert.AreEqual(curbMass, m.CurbMass.Value(), 1e-9);
 			Assert.AreEqual(refLoad, m.RefLoad.Value(), 1e-9);
 			Assert.AreEqual(lowLoad, m.LowLoad.Value(), 1e-9);
