@@ -32,7 +32,7 @@ Namespace UnitTests
             M2.Setup(Function(x) x.AveragePowerDemandAtAlternatorFromElectrics).Returns(500.SI(Of Watt))
 
             bat = New Mock(of ISimpleBattery)
-            bat.Setup(Function(x) x.SOC).Returns(0.9)
+            bat.Setup(Function(x) x.SOC).Returns(0.0)
             bat.Setup(Function(x) x.Capacity).Returns(400.SI(Unit.SI.Watt.Hour).Cast(Of WattSecond))
 
             M5 = New M5_Mock(100, 110, 120)
@@ -62,13 +62,13 @@ Namespace UnitTests
 		'OP3  OP3     :Smart Electrical Aux : Alternator             Power Gen @ Crank
 		'OP4  OP4     :Smart Electrical Aux : Ait Compressor         Power Gen @ Crank 
 		<Test()> _
-		<TestCase(100, 200, False, 0, False, True, 300, 400, 500, 600, 700, 200, 600, 200, 600)> _
-		<TestCase(100, 200, True, 0, False, True, 300, 400, 500, 600, 700, 200, 600, 200, 600)> _
-		<TestCase(100, 200, False, 1, True, False, 300, 400, 500, 600, 700, 300, 400, 500, 700)>
+		<TestCase(100, 200, False, false, False, True, 300, 400, 500, 600, 700, 1552.79500, 600, 1552.79500, 600)> _
+		<TestCase(100, 200, True, false, False, True, 300, 400, 500, 600, 700, 1552.79500, 600, 1552.79500, 600)> _
+		<TestCase(100, 200, False, true, True, False, 300, 400, 500, 600, 700, 300, 400, 500, 700)>
 		Public Sub InputOutputTests(ByVal IP1 As Double,
 									ByVal IP2 As Double,
 									ByVal IP3 As Boolean,
-									ByVal IP4 As Double,
+									ByVal IP4 As Boolean,
 									ByVal IP5 As Boolean,
 									ByVal IP6 As Boolean,
 									ByVal IP7 As Double,
@@ -90,11 +90,12 @@ Namespace UnitTests
 			M5._AlternatorsGenerationPowerAtCrankTractionOnWatts = IP1.SI(Of Watt)()
 			M5._AlternatorsGenerationPowerAtCrankIdleWatts = IP2.SI(Of Watt)()
 			Signals.Idle = IP3
-			M6._OverrunFlag = IP4 <> 0
+			M6._OverrunFlag = IP4 
 			Signals.ClutchEngaged = IP5
 			Signals.InNeutral = IP6
 			Signals.EngineSpeed = 0.RPMtoRad()
 			Signals.EngineIdleSpeed = 0.RPMtoRad()
+            Signals.SimulationInterval = 1.SI(of Second)
 			M6._SmartElecAndPneumaticAltPowerGenAtCrank = IP7.SI(Of Watt)()
 			M6._SmartElecAndPneumaticAirCompPowerGenAtCrank = IP8.SI(Of Watt)()
 			M6._SmartElecOnlyAltPowerGenAtCrank = IP9.SI(Of Watt)()
