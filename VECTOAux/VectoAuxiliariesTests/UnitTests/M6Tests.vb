@@ -115,6 +115,7 @@ Namespace UnitTests
 			signals.PreExistingAuxPower = (AUX * 1000).SI(Of Watt)()
 			signals.EngineDrivelinePower = (EDP * 1000).SI(Of Watt)()
 			'signals.SmartElectrics = SM
+            signals.ExcessiveDragPower = ((EMP - EDP) * 1000).SI(of Watt)
 
 
 			Dim target As New M06Impl(GetAuxConfigDummy().ElectricalUserInputsConfig, M1, M2, M3, M4, M5, signals)

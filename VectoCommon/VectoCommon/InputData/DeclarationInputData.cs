@@ -41,7 +41,6 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 
 
-
 namespace TUGraz.VectoCommon.InputData
 {
 	public interface IDeclarationJobInputData
@@ -53,13 +52,12 @@ namespace TUGraz.VectoCommon.InputData
 		string JobName { get; }
 
 		string ShiftStrategy { get; }
-
 	}
 
 	public interface IComponentInputData
 	{
 		DataSource DataSource { get; }
-		
+
 		bool SavedInDeclarationMode { get; }
 
 		string Manufacturer { get; }
@@ -191,8 +189,7 @@ namespace TUGraz.VectoCommon.InputData
 	}
 
 	public interface IVehicleComponentsDeclaration
-	{ 
-
+	{
 		IAirdragDeclarationInputData AirdragInputData { get; }
 
 		IGearboxDeclarationInputData GearboxInputData { get; }
@@ -214,7 +211,6 @@ namespace TUGraz.VectoCommon.InputData
 		IAxlesDeclarationInputData AxleWheels { get; }
 
 		IBusAuxiliariesDeclarationData BusAuxiliaries { get; }
-
 	}
 
 	public interface IAxlesDeclarationInputData
@@ -245,7 +241,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		None,
 		Option_1_2,
-		Option_1_2_3	
+		Option_1_2_3
 	}
 
 	public static class PredictiveCruiseControlTypeHelper
@@ -259,6 +255,7 @@ namespace TUGraz.VectoCommon.InputData
 			if (PredictiveCruiseControlType.None.ToString().Equals(value, StringComparison.InvariantCultureIgnoreCase)) {
 				return PredictiveCruiseControlType.None;
 			}
+
 			return (Prefix + value.Replace(SeparatorXML, SeparatorEnum)).ParseEnum<PredictiveCruiseControlType>();
 		}
 
@@ -528,7 +525,7 @@ namespace TUGraz.VectoCommon.InputData
 		/// cf. VECTO Input Parameters.xlsx
 		/// </summary>
 		CubicMeter Displacement { get; }
-		
+
 		Watt RatedPowerDeclared { get; }
 
 		PerSecond RatedSpeedDeclared { get; }
@@ -537,8 +534,7 @@ namespace TUGraz.VectoCommon.InputData
 
 		IList<IEngineModeDeclarationInputData> EngineModes { get; }
 
-		WHRType WHRType{ get; }
-		
+		WHRType WHRType { get; }
 	}
 
 	public interface IEngineModeDeclarationInputData
@@ -561,13 +557,12 @@ namespace TUGraz.VectoCommon.InputData
 		IWHRData WasteHeatRecoveryDataElectrical { get; }
 
 		IWHRData WasteHeatRecoveryDataMechanical { get; }
-
 	}
 
 	public interface IWHRData
 	{
 		double UrbanCorrectionFactor { get; }
-		
+
 		double RuralCorrectionFactor { get; }
 
 		double MotorwayCorrectionFactor { get; }
@@ -579,12 +574,10 @@ namespace TUGraz.VectoCommon.InputData
 		double EngineeringCorrectionFactor { get; }
 
 		TableData GeneratedPower { get; }
-
 	}
 
 	public interface IEngineFuelDelcarationInputData
 	{
-
 		FuelType FuelType { get; }
 
 		/// <summary>
@@ -619,7 +612,6 @@ namespace TUGraz.VectoCommon.InputData
 		/// engine speed in rpm, torque in NM, fuel consumption in g/h
 		/// </summary>
 		TableData FuelConsumptionMap { get; }
-
 	}
 
 
@@ -699,7 +691,7 @@ namespace TUGraz.VectoCommon.InputData
 	public interface IElectricSupplyDeclarationData
 	{
 		IList<IAlternatorDeclarationInputData> Alternators { get; }
-		
+
 		bool SmartElectrics { get; }
 
 		Watt MaxAlternatorPower { get; }
@@ -718,7 +710,6 @@ namespace TUGraz.VectoCommon.InputData
 		bool HeadlightsLED { get; }
 
 		bool BrakelightsLED { get; }
-
 	}
 
 	public interface IAlternatorDeclarationInputData
@@ -728,7 +719,7 @@ namespace TUGraz.VectoCommon.InputData
 		double Ratio { get; }
 	}
 
-	
+
 	public interface IPneumaticSupplyDeclarationData
 	{
 		string Clutch { get; }
@@ -770,7 +761,7 @@ namespace TUGraz.VectoCommon.InputData
 		bool SeparateAirDistributionDucts { get; }
 	}
 
-	
+
 	public interface IResultsInputData
 	{
 		string Status { get; }
@@ -792,12 +783,12 @@ namespace TUGraz.VectoCommon.InputData
 
 	public interface ISimulationParameter
 	{
-		Kilogram TotalVehicleMass { get; } 
-		Kilogram Payload { get; } 
+		Kilogram TotalVehicleMass { get; }
+		Kilogram Payload { get; }
 		int PassengerCount { get; }
 		string FuelMode { get; }
 	}
-	
+
 
 	public interface IApplicationInformation
 	{

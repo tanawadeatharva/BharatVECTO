@@ -196,6 +196,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly Meter InternalHeightDoubleDecker = 1.8.SI<Meter>();
 			public static readonly Meter HeightLuggageCompartment = 0.5.SI<Meter>();
+			public static readonly SIBase<Meter> EntranceHeight = 0.27.SI<Meter>();
 
 			public static class Auxiliaries
 			{

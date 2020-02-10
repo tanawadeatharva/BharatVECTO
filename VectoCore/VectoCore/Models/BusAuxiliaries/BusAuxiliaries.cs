@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		{
 			Signals = new Signals();
 		}
-		
+
 		public void Initialise(IAuxiliaryConfig auxCfg)
 		{
 			Signals.CurrentCycleTimeInSeconds = 0;
@@ -82,17 +82,21 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			//var ssmPath = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.SSMFilePath);
 			//var BusDatabase = FilePathUtils.ResolveFilePath(vectoDirectory, auxConfig.HvacUserInputsConfig.BusDatabasePath);
 			var ssmTool = new SSMTOOL(auxConfig.SSMInputs);
-			
-			ElectricStorage = new SimpleBattery(auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity);
+
+			ElectricStorage = new SimpleBattery(
+				auxCfg.ElectricalUserInputsConfig.SmartElectrical
+					? auxCfg.ElectricalUserInputsConfig.ElectricStorageCapacity
+					: 0.SI<WattSecond>());
 
 			M0 = new M00Impl(auxConfig.ElectricalUserInputsConfig, Signals, ssmTool.ElectricalWAdjusted);
-
 
 			M0_5 = new M0_5Impl(
 				M0, auxConfig.ElectricalUserInputsConfig, Signals);
 
-			M1 = new M01Impl(M0, auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
-				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, ssmTool.ElectricalWAdjusted, ssmTool.MechanicalWBaseAdjusted);
+			M1 = new M01Impl(
+				M0, auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency,
+				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, ssmTool.ElectricalWAdjusted,
+				ssmTool.MechanicalWBaseAdjusted);
 
 			M2 = new M02Impl(M0, auxConfig.ElectricalUserInputsConfig);
 
@@ -101,6 +105,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			M4 = new M04Impl(
 				compressorMap, auxConfig.PneumaticUserInputsConfig.CompressorGearRatio,
 				auxConfig.PneumaticUserInputsConfig.CompressorGearEfficiency, Signals);
+
 			//M5 = new M05Impl(
 			//	M0_5, auxConfig.ElectricalUserInputsConfig.PowerNetVoltage,
 			//	auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency);
@@ -144,7 +149,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 		public Watt ElectricPowerDemandMech
 		{
-			get { return M2.GetAveragePowerAtCrankFromElectrics() + M1.AveragePowerDemandAtCrankFromHVACElectrics; }
+			get {
+				if (auxConfig.ElectricalUserInputsConfig.SmartElectrical) {
+					return auxConfig.PneumaticUserInputsConfig.SmartAirCompression
+						? M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
+						: M7.SmartElectricalOnlyAuxAltPowerGenAtCrank;
+				}
+
+				return M2.GetAveragePowerAtCrankFromElectrics() + M1.AveragePowerDemandAtCrankFromHVACElectrics;
+			}
 		}
 
 		public Watt ElectricPowerGenerated
@@ -169,15 +182,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		public NormLiter PSAirGenerated
 		{
 			get {
-				if (!auxConfig.PneumaticUserInputsConfig.SmartAirCompression) {
-					return PSDemandConsumer;
+				if (M6.OverrunFlag && Signals.ClutchEngaged && !Signals.InNeutral) {
+					if (M8.CompressorFlag) {
+						return M4.GetFlowRate() *
+								auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
+								* Signals.SimulationInterval;
+					}
+
+					return 0.SI<NormLiter>();
 				}
 
-				return M6.OverrunFlag && M8.CompressorFlag && Signals.ClutchEngaged && !Signals.InNeutral
-					? M4.GetFlowRate() *
-					auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
-					* Signals.SimulationInterval
-					: PSDemandConsumer;
+				return PSDemandConsumer;
 			}
 		}
 
@@ -186,28 +201,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			get { return M4.GetFlowRate() * Signals.SimulationInterval; }
 		}
 
-		public NormLiter PSAirGeneratedDrag
-		{
-			get {
-				if (!auxConfig.PneumaticUserInputsConfig.SmartAirCompression) {
-					return 0.SI<NormLiter>();
-				}
-
-				return (M6.OverrunFlag && M8.CompressorFlag && Signals.ClutchEngaged && !Signals.InNeutral
-							? M4.GetFlowRate() *
-							auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
-							: 0.SI<NormLiterPerSecond>()) * Signals.SimulationInterval;
-			}
-		}
 
 		public Watt PSPowerDemandAirGenerated
 		{
 			get {
-				if (!auxConfig.PneumaticUserInputsConfig.SmartAirCompression) {
-					return M3.GetAveragePowerDemandAtCrankFromPneumatics();
+				if (auxConfig.PneumaticUserInputsConfig.SmartAirCompression) {
+					return auxConfig.ElectricalUserInputsConfig.SmartElectrical
+						? M7.SmartElectricalAndPneumaticAuxAirCompPowerGenAtCrank
+						: M7.SmartPneumaticOnlyAuxAirCompPowerGenAtCrank;
 				}
 
-				return M7.SmartPneumaticOnlyAuxAirCompPowerGenAtCrank;
+				return M3.GetAveragePowerDemandAtCrankFromPneumatics();
 			}
 		}
 
@@ -231,7 +235,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			get { return M1.AveragePowerDemandAtCrankFromHVACMechanicals; }
 		}
 
-		public double BatterySOC { get { return ElectricStorage.SOC; } }
+		public double BatterySOC
+		{
+			get { return ElectricStorage.SOC; }
+		}
 
 
 		public string AuxiliaryName
@@ -256,13 +263,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 				//M9.CycleStep(seconds);
 				//M10.CycleStep(seconds);
 				//M11.CycleStep(seconds);
-				var generatedElPower =
-					(auxConfig.ElectricalUserInputsConfig.SmartElectrical && auxConfig.PneumaticUserInputsConfig.SmartAirCompression
-						? M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
-						: M7.SmartElectricalOnlyAuxAltPowerGenAtCrank) * M0.AlternatorsEfficiency *
-					auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency;
-				ElectricStorage.Request(generatedElPower - ElectricPowerConsumerSum, seconds);
-
+				if (auxConfig.ElectricalUserInputsConfig.SmartElectrical) {
+					var generatedElPower =
+						(auxConfig.ElectricalUserInputsConfig.SmartElectrical && auxConfig.PneumaticUserInputsConfig.SmartAirCompression
+							? M7.SmartElectricalAndPneumaticAuxAltPowerGenAtCrank
+							: M7.SmartElectricalOnlyAuxAltPowerGenAtCrank) * M0.AlternatorsEfficiency *
+						auxConfig.ElectricalUserInputsConfig.AlternatorGearEfficiency;
+					ElectricStorage.Request(generatedElPower - ElectricPowerConsumerSum, seconds);
+				}
 				Signals.CurrentCycleTimeInSeconds += seconds.Value();
 			} catch (Exception ex) {
 				//MessageBox.Show("Exception: " + ex.Message + " Stack Trace: " + ex.StackTrace);

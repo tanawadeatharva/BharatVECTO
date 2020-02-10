@@ -55,13 +55,14 @@ Namespace UnitTests
 
 
             Dim ssm As ISSMTOOL = GetSSM()
-           
+            
+            signals.EngineSpeed = 2000.RPMtoRad()
            
             Dim auxConfig = Utils.GetAuxTestConfig()
             'Dim  hvacMap As New HVACMap("testFiles\TestHvacMap.csv")
             'hvacMap.Initialise()
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).PowerNetVoltage = 26.3.SI (Of Volt)
-            Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, auxConfig.Signals, ssm.ElectricalWAdjusted)
+            Dim m0 As New M00Impl(auxConfig.ElectricalUserInputsConfig, signals, ssm.ElectricalWAdjusted)
 
             'Results Cards
             Dim readings = New List(Of SmartResult)
@@ -73,7 +74,7 @@ Namespace UnitTests
             CType(auxConfig.ElectricalUserInputsConfig, ElectricsUserInputsConfig).ResultCardOverrun = New ResultCard(readings)
 
             
-            target = New M0_5Impl(m0, auxConfig.ElectricalUserInputsConfig, auxConfig.Signals)
+            target = New M0_5Impl(m0, auxConfig.ElectricalUserInputsConfig, signals)
         End Sub
 
         <Test()>

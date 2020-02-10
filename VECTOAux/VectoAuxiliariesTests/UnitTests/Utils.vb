@@ -47,14 +47,15 @@ Public Class Utils
 
     Public Shared Function GetDefaultVehicleData(optional vehicleWeight As Kilogram = Nothing) as VehicleData
         Return New VehicleData With {
-            .CurbMass = If(vehicleWeight, 0.si (of Kilogram)),
-            .Length = 10.655.SI (Of Meter)(),
-            .Width = 2.55.SI (Of Meter)(),
-            .Height = 2.275.SI (of Meter)(),
-            .FloorType = FloorType.HighFloor,
-            .PassengerCount = 47,
-            .DoubleDecker = False
+            .CurbMass = If(vehicleWeight, 0.si (of Kilogram))
             }
+            '.Length = 10.655.SI (Of Meter)(),
+            '.Width = 2.55.SI (Of Meter)(),
+            '.Height = 2.275.SI (of Meter)(),
+            '.FloorType = FloorType.HighFloor,
+            '.PassengerCount = 47,
+            '.DoubleDecker = False
+            '}
     End Function
 
     public shared Function CreatePneumaticAuxConfig(retarder As boolean) As IPneumaticsConsumersDemand
@@ -82,9 +83,6 @@ Public Class Utils
     End function
 
     public Shared Function GetAuxTestConfig(Optional retarder As boolean = true) as AuxiliaryConfig
-
-        Dim signals = New Signals()
-        signals.EngineSpeed = 2000.RPMtoRad()
 
         dim vehicleData = GetDefaultVehicleData()
         Dim heatingFuel As FuelData.Entry = New FuelData.Entry(FuelType.DieselCI, Nothing, Nothing, 1,
@@ -153,7 +151,6 @@ Public Class Utils
                 Constants.BusAuxiliaries.SteadyStateModel.MaxPossibleBenefitFromTechnologyList
                 },
                 .VehicleData = vehicleData,
-                .Signals = signals,
                 .Actuations = New Actuations() With {
                     .Braking = 153,
                     .ParkBrakeAndDoors = 24,

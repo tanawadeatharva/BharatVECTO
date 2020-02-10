@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces
 		NormLiter PSDemandConsumer { get; }
 		NormLiter PSAirGenerated { get; }
 		NormLiter PSAirGeneratedAlwaysOn { get; }
-		NormLiter PSAirGeneratedDrag { get; }
+		//NormLiter PSAirGeneratedDrag { get; }
 		Watt PSPowerDemandAirGenerated { get; }
 		Watt PSPowerCompressorAlwaysOn { get; }
 		Watt PSPowerCompressorDragOnly { get; }

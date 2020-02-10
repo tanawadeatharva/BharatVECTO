@@ -3265,9 +3265,7 @@
 					</SteeringPump>
 					<ElectricSystem>
 						<AlternatorTechnology ratio="1.000">default</AlternatorTechnology>
-						<SmartElectrics>true</SmartElectrics>
-						<MaxAlternatorPower>15000</MaxAlternatorPower>
-						<ElectricStorageCapacity>50</ElectricStorageCapacity>
+						<SmartElectrics>false</SmartElectrics>
 					</ElectricSystem>
 					<PneumaticSystem>
 						<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>

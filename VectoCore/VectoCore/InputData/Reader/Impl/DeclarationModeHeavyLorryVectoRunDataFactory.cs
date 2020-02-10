@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					Exempted = true,
 					Report = Report,
 					Mission = new Mission() { MissionType = MissionType.ExemptedMission },
-					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, null),
+					VehicleData = DataAdapter.CreateVehicleData(InputDataProvider.JobInputData.Vehicle, null, new KeyValuePair<LoadingType, Kilogram>(LoadingType.ReferenceLoad, 0.SI<Kilogram>())),
 					InputDataHash = InputDataProvider.XMLHash
 				};
 			}
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
-				VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading.Value),
+				VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading),
 				AirdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData, mission, _segment),
 				EngineData = DataAdapter.CreateEngineData(InputDataProvider.JobInputData.Vehicle, engineMode, mission), // _engineData.Copy(), // a copy is necessary because every run has a different correction factor!
 				GearboxData = _gearboxData,

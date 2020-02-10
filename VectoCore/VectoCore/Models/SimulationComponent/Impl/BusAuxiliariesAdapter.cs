@@ -165,7 +165,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
 			container[ModalResultField.Nl_busAux_PS_generated] = Auxiliaries.PSAirGenerated;
 			container[ModalResultField.Nl_busAux_PS_generated_alwaysOn] = Auxiliaries.PSAirGeneratedAlwaysOn;
-			container[ModalResultField.Nl_busAux_PS_generated_dragOnly] = Auxiliaries.PSAirGeneratedDrag;
+			//container[ModalResultField.Nl_busAux_PS_generated_dragOnly] = Auxiliaries.PSAirGeneratedDrag;
 			container[ModalResultField.P_busAux_PS_generated] = Auxiliaries.PSPowerDemandAirGenerated;
 			container[ModalResultField.P_busAux_PS_generated_alwaysOn] = Auxiliaries.PSPowerCompressorAlwaysOn;
 			container[ModalResultField.P_busAux_PS_generated_dragOnly] = Auxiliaries.PSPowerCompressorDragOnly;

@@ -38,10 +38,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 
 		public IVehicleData VehicleData { get; internal set; }
 
-		public IFuelConsumptionMap FuelMap { get; internal set; }
+		//public IFuelConsumptionMap FuelMap { get; internal set; }
 
 		// Vecto Signals
-		public ISignals Signals { get; internal set; }
+		//public ISignals Signals { get; internal set; }
 
 		// Constructors
 

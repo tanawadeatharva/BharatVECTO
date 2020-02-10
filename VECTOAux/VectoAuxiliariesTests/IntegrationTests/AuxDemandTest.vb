@@ -52,6 +52,7 @@ Namespace IntegrationTests
             aux.Signals.PreExistingAuxPower = (6.1 * 1000).SI(Of Watt)()
             aux.Signals.Idle = False
             aux.Signals.InNeutral = False
+            aux.Signals.SimulationInterval = 1.SI(of Second)
             'aux.Signals.RunningCalc = True
             'aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()        'kW
             Dim internalEnginePower = (internalPower * 1000).SI(Of Watt)()        'kW
@@ -88,7 +89,7 @@ Namespace IntegrationTests
             aux.Signals.EngineIdleSpeed = 560.RPMtoRad()
 
             Dim auxCfg = BusAuxiliaryInputData.ReadBusAuxiliaries(auxFilePath, Utils.GetDefaultVehicleData(12000.SI(Of Kilogram)()))
-            CType(auxCfg, AuxiliaryConfig).FuelMap = fuelMap
+            'CType(auxCfg, AuxiliaryConfig).FuelMap = fuelMap
 
             CType(aux, BusAuxiliaries).Initialise(auxCfg) ', Path.GetDirectoryName(Path.GetFullPath(auxFilePath)) + "\")
 
@@ -106,6 +107,7 @@ Namespace IntegrationTests
             'aux.Signals.InternalEnginePower = (internalPower * 1000).SI(Of Watt)()       'kW
             Dim internalEnginePower = (internalPower * 1000).SI(Of Watt)()       'kW
             aux.Signals.ExcessiveDragPower = engineMotoringPower + internalEnginePower
+            aux.Signals.SimulationInterval = 1.SI(of Second)
 
             'Dim msg As String = String.Empty
             For i As Integer = 0 To 9
