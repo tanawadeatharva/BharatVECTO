@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd">
-	<v2.0:Vehicle id="VEH-1234567890" xsi:type="PrimaryVehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
+	<v2.0:Vehicle id="VEH-PrimaryBus_SmartES-PS" xsi:type="PrimaryVehicleDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
 		<ManufacturerPrimaryVehicle>Generic Truck Manufacturer</ManufacturerPrimaryVehicle>
 		<ManufacturerAddressPrimaryVehicle>Street, ZIP City</ManufacturerAddressPrimaryVehicle>
 		<Model>Generic Model</Model>
-		<VIN>VEH-1234567890</VIN>
+		<VIN>VEH-1234567890_SmartES-PS</VIN>
 		<Date>2017-02-15T11:00:00Z</Date>
 		<VehicleCategory>Bus</VehicleCategory>
 		<AxleConfiguration>4x2</AxleConfiguration>
@@ -3265,13 +3265,15 @@
 					</SteeringPump>
 					<ElectricSystem>
 						<AlternatorTechnology ratio="1.000">default</AlternatorTechnology>
-						<SmartElectrics>false</SmartElectrics>
+						<SmartElectrics>true</SmartElectrics>
+						<MaxAlternatorPower>15000</MaxAlternatorPower>
+						<ElectricStorageCapacity>50</ElectricStorageCapacity>
 					</ElectricSystem>
 					<PneumaticSystem>
 						<SizeOfAirSupply>Large Supply 2-stage</SizeOfAirSupply>
 						<Clutch>none</Clutch>
 						<CompressorRatio>1.000</CompressorRatio>
-						<SmartCompressionSystem>false</SmartCompressionSystem>
+						<SmartCompressionSystem>true</SmartCompressionSystem>
 						<SmartRegenerationSystem>false</SmartRegenerationSystem>
 						<AirsuspensionControl>electronically</AirsuspensionControl>
 						<AdBlueDosing>true</AdBlueDosing>

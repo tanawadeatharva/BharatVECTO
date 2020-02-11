@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Tests.XML
 {
 
 	[TestFixture]
-	class XMLPrimaryVehicleBusReaderTest
+	class XMLPrimaryVehicleReportBusReaderTest
 	{
 
 		private const string vehilcePIFExample =
@@ -297,7 +297,7 @@ namespace TUGraz.VectoCore.Tests.XML
 
 			Assert.AreEqual(ConsumerTechnology.Pneumatically, consumers.AdBlueDosing);
 			Assert.AreEqual(ConsumerTechnology.Mechanically, consumers.AirsuspensionControl);
-			Assert.AreEqual(ConsumerTechnology.Pneumatically, consumers.DoorDriveTechnology);
+			//Assert.AreEqual(ConsumerTechnology.Pneumatically, consumers.DoorDriveTechnology);
 		}
 		
 		private void TestHVAC(IHVACBusAuxiliariesDeclarationData hvac)
