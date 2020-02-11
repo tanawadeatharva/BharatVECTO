@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				
 				var result = fuel.ConsumptionMap.GetFuelConsumption(auxDemand, ModelData.IdleSpeed);
 
-				var fcESS = result.Value * (1 - EngineStopStartUtilityFactor);
+				var fcESS = result.Value * (1 - EngineStopStartUtilityFactor) * fuel.FuelData.HeatingValueCorrection * WHTCCorrectionFactor(fuel.FuelData);
 				var fcFinal = fcESS;
 
 				container[ModalResultField.FCMap, fuel.FuelData] = fc;
@@ -144,6 +144,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			}
 		}
 
-		
+		protected override void WriteWHRPower(IModalDataContainer container, PerSecond engineSpeed, NewtonMeter engineTorque)
+		{
+			var pWHRelMap = 0.SI<Watt>();
+			var pWHRelCorr = 0.SI<Watt>();
+			var pWHRmechMap = 0.SI<Watt>();
+			var pWHRmechCorr = 0.SI<Watt>();
+			GetWHRPower(ModelData.ElectricalWHR, engineSpeed, engineTorque, ref pWHRelMap, ref pWHRelCorr);
+			GetWHRPower(ModelData.MechanicalWHR, engineSpeed, engineTorque, ref pWHRmechMap, ref pWHRmechCorr);
+
+			container[ModalResultField.P_WHR_el_map] = (1 - EngineStopStartUtilityFactor) * pWHRelMap;
+			container[ModalResultField.P_WHR_el_corr] = (1 - EngineStopStartUtilityFactor) * pWHRelCorr;
+
+			container[ModalResultField.P_WHR_mech_map] = (1 - EngineStopStartUtilityFactor) * pWHRmechMap;
+			container[ModalResultField.P_WHR_mech_corr] = (1 - EngineStopStartUtilityFactor) * pWHRmechCorr;
+		}
 	}
 }
