@@ -455,18 +455,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected virtual void GetWHRPower(WHRData whr, PerSecond engineSpeed, NewtonMeter engineTorque, ref Watt pWHRMap, ref Watt pWHRCorr)
 		{
-			if (whr != null) {
-				var whrPwrEl = whr.WHRMap.GetWHRPower(
-					engineTorque, engineSpeed, DataBus.ExecutionMode != ExecutionMode.Declaration);
-				if (DataBus.ExecutionMode != ExecutionMode.Declaration && whrPwrEl.Extrapolated) {
-					Log.Warn(
-						"Electric WHR power was extrapolated: range for WHR-Map is not sufficient: n: {0}, torque: {1}",
-						engineSpeed.Value(), engineTorque.Value());
-				}
-				if (whrPwrEl.GeneratedPower != null) {
-					pWHRMap = whrPwrEl.GeneratedPower;
-					pWHRCorr = pWHRMap * whr.WHRCorrectionFactor;
-				}
+			if (whr == null) {
+				return;
+			}
+
+			var whrPwr = whr.WHRMap.GetWHRPower(
+				engineTorque, engineSpeed, DataBus.ExecutionMode != ExecutionMode.Declaration);
+			if (DataBus.ExecutionMode != ExecutionMode.Declaration && whrPwr.Extrapolated) {
+				Log.Warn(
+					"WHR power was extrapolated in {2}: range for WHR-Map is not sufficient: n: {0}, torque: {1}",
+					engineSpeed.Value(), engineTorque.Value(), whr.WHRMap.Name);
+			}
+			if (whrPwr.GeneratedPower != null) {
+				pWHRMap = whrPwr.GeneratedPower;
+				pWHRCorr = pWHRMap * whr.WHRCorrectionFactor;
 			}
 		}
 

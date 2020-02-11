@@ -15,6 +15,11 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 			WHRMap = whrMap;
 		}
 
+		public string Name
+		{
+			get { return WHRMap.Name; }
+		}
+
 		public class Entry
 		{
 			[Required, SIRange(0, 5000 * Constants.RPMToRad)] public readonly PerSecond EngineSpeed;
