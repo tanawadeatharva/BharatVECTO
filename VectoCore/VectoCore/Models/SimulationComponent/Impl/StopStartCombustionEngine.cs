@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.T_ice_drag] = 0.SI<NewtonMeter>();
 
 			container[ModalResultField.ICEOn] = CurrentState.IgnitionOn;
-			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>()) * EngineStopStartUtilityFactor;
+			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
 
 
 			var auxDemand = EngineAux.PowerDemandEngineOn(ModelData.IdleSpeed) / ModelData.IdleSpeed;
@@ -130,9 +130,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 				}
 
 				
-				var result = fuel.ConsumptionMap.GetFuelConsumptionValue(auxDemand, ModelData.IdleSpeed);
+				var result = fuel.ConsumptionMap.GetFuelConsumption(auxDemand, ModelData.IdleSpeed);
 
-				var fcESS = result.Value() * (1 - EngineStopStartUtilityFactor);
+				var fcESS = result.Value * (1 - EngineStopStartUtilityFactor);
 				var fcFinal = fcESS;
 
 				container[ModalResultField.FCMap, fuel.FuelData] = fc;
