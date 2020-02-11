@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Initialize(torque, engineSpeed);
 			for (var i = 0; i < 21; i++) {
 				port.Request(absTime, dt, torque, engineSpeed);
-				engine.CommitSimulationStep(dataWriter);
+				engine.CommitSimulationStep(absTime, dt, dataWriter);
 				if (i > 0) {
 					dataWriter.CommitSimulationStep(absTime, dt);
 				}
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			engineSpeed = 644.4445.RPMtoRad();
 			port.Request(absTime, dt, Formulas.PowerToTorque(2329.973.SI<Watt>(), engineSpeed), engineSpeed);
-			engine.CommitSimulationStep(dataWriter);
+			engine.CommitSimulationStep(absTime, dt, dataWriter);
 
 			AssertHelper.AreRelativeEqual(1152.40304, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value());
 
@@ -136,14 +136,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var power = new[] { 569.3641, 4264.177 };
 			for (var i = 0; i < 2; i++) {
 				port.Request(absTime, dt, Formulas.PowerToTorque(power[i].SI<Watt>(), engineSpeed), engineSpeed);
-				engine.CommitSimulationStep(dataWriter);
+				engine.CommitSimulationStep(absTime, dt, dataWriter);
 				dataWriter.CommitSimulationStep(absTime, dt);
 				absTime += dt;
 			}
 
 			engineSpeed = 869.7512.RPMtoRad();
 			port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI<Watt>(), engineSpeed), engineSpeed);
-			engine.CommitSimulationStep(dataWriter);
+			engine.CommitSimulationStep(absTime, dt, dataWriter);
 
 			Assert.AreEqual(7108.32, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value(), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			engineSpeed = 644.4445.RPMtoRad();
 			port.Request(absTime, dt, Formulas.PowerToTorque(1351.656.SI<Watt>(), engineSpeed), engineSpeed);
-			engine.CommitSimulationStep(dataWriter);
+			engine.CommitSimulationStep(absTime, dt, dataWriter);
 
 			Assert.AreEqual(-7108.32, ((SI)dataWriter[ModalResultField.P_ice_inertia]).Value(), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			requestPort.Initialize(Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
 			for (; t < 2; t += dt) {
 				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
-				engine.CommitSimulationStep(modalData);
+				engine.CommitSimulationStep(t, dt, modalData);
 			}
 
 			var i = 0;
@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed);
 				modalData[ModalResultField.time] = t;
 				modalData[ModalResultField.simulationInterval] = dt;
-				engine.CommitSimulationStep(modalData);
+				engine.CommitSimulationStep(t, dt, modalData);
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_ice_full]).Value(), 0.1,
 					string.Format("Load in timestep {0}", t));
@@ -247,7 +247,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			requestPort.Initialize(Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
 			for (; t < 2; t += dt) {
 				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
-				engine.CommitSimulationStep(modalData);
+				engine.CommitSimulationStep(t, dt, modalData);
 			}
 
 			var i = 0;
@@ -263,7 +263,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed);
 				modalData[ModalResultField.time] = t;
 				modalData[ModalResultField.simulationInterval] = dt;
-				engine.CommitSimulationStep(modalData);
+				engine.CommitSimulationStep(t, dt, modalData);
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.P_ice_full]).Value(), 0.1,
 					string.Format("Load in timestep {0}", t));

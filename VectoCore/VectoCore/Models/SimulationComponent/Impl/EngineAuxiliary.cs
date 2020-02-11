@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return 0.SI<NewtonMeter>();
 		}
 
-		public Watt PowerDemandEngineOff()
+		public Watt PowerDemandEngineOff(Second absTime, Second dt)
 		{
 
 			var auxiliarieIgnoredDuringVehicleStop = new[] {
@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 
-				powerDemands[item.Key] = value *  (1-EngineStopStartUtilityFactor);
+				powerDemands[item.Key] = value * (1-EngineStopStartUtilityFactor);
 				if (DataBus.VehicleStopped) {
 					engineOffDemand += auxiliarieIgnoredDuringVehicleStop.Contains(item.Key)
 						? 0.SI<Watt>()
@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return engineOffDemand;  //powerDemands.Sum(kv => kv.Value); 
 		}
 
-		public Watt PowerDemandEngineOn(PerSecond engineSpeed)
+		public Watt PowerDemandEngineOn(Second time, Second simulationInterval, PerSecond engineSpeed)
 		{
 			return ComputePowerDemand(engineSpeed, true);
 		}
@@ -209,7 +209,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return powerDemands.Sum(kv => kv.Value);
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			var auxPowerDemand = 0.SI<Watt>();
 			if (CurrentState.PowerDemands != null) {

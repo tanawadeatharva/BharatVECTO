@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public PerSecond EngineN95hSpeed { get; set; }
 		public PerSecond EngineN80hSpeed { get; set; }
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			container[ModalResultField.P_ice_fcmap] = 0.SI<Watt>();
 			container[ModalResultField.P_ice_out] = 0.SI<Watt>();

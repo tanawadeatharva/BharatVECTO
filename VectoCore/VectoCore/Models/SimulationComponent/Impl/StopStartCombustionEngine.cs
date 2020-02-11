@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 			if (!dryRun) {
 				//EngineAux.TorqueDemand(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), ModelData.IdleSpeed);
-				CurrentState.AuxPowerEngineOff = EngineAux.PowerDemandEngineOff();
+				CurrentState.AuxPowerEngineOff = EngineAux.PowerDemandEngineOff(absTime, dt);
 			} else {
 				return new ResponseDryRun {
 					DeltaFullLoad = 0.SI<Watt>(),
@@ -77,23 +77,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 
 		#region Overrides of CombustionEngine
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			if (IgnitionOn) {
-				base.DoWriteModalResults(container);
+				base.DoWriteModalResults(time, simulationInterval, container);
 				var engineStart = !PreviousState.IgnitionOn && CurrentState.IgnitionOn;
 				container[ModalResultField.P_ice_start] = engineStart ? EngineStartEnergy / CurrentState.dt : 0.SI<Watt>();
 				container[ModalResultField.P_aux_ice_off] = 0.SI<Watt>();
 			} else {
 				container[ModalResultField.P_ice_start] = 0.SI<Watt>();
-				DoWriteEngineOffResults(container);
+				DoWriteEngineOffResults(time, simulationInterval, container);
 			}
 
 		}
 
 		#endregion
 
-		protected virtual void DoWriteEngineOffResults(IModalDataContainer container)
+		protected virtual void DoWriteEngineOffResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			container[ModalResultField.P_ice_fcmap] = 0.SI<Watt>();
 			container[ModalResultField.P_ice_out] = 0.SI<Watt>();
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl {
 			container[ModalResultField.P_aux_ice_off] = (CurrentState.AuxPowerEngineOff ?? 0.SI<Watt>());
 
 
-			var auxDemand = EngineAux.PowerDemandEngineOn(ModelData.IdleSpeed) / ModelData.IdleSpeed;
+			var auxDemand = EngineAux.PowerDemandEngineOn(time, simulationInterval, ModelData.IdleSpeed) / ModelData.IdleSpeed;
 
 			WriteWHRPower(container, ModelData.IdleSpeed, auxDemand);
 

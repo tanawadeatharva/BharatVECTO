@@ -304,7 +304,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			if (CurrentState == null) {
 				return;
@@ -318,7 +318,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.altitude] = CurrentState.Altitude;
 
 			if (IdleController != null) {
-				IdleController.CommitSimulationStep(container);
+				IdleController.CommitSimulationStep(time, simulationInterval, container);
 			}
 		}
 

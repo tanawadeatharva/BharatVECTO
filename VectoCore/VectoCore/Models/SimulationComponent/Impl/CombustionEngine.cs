@@ -372,7 +372,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			ValidatePowerDemand(CurrentState.EngineTorque, CurrentState.DynamicFullLoadTorque, CurrentState.FullDragTorque);
 
@@ -453,7 +453,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_WHR_mech_corr] = pWHRmechCorr;
 		}
 
-		protected virtual void GetWHRPower(WHRData whr, PerSecond engineSpeed, NewtonMeter engineTorque, ref Watt pWHRelMap, ref Watt pWHRelCorr)
+		protected virtual void GetWHRPower(WHRData whr, PerSecond engineSpeed, NewtonMeter engineTorque, ref Watt pWHRMap, ref Watt pWHRCorr)
 		{
 			if (whr != null) {
 				var whrPwrEl = whr.WHRMap.GetWHRPower(
@@ -464,8 +464,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						engineSpeed.Value(), engineTorque.Value());
 				}
 				if (whrPwrEl.GeneratedPower != null) {
-					pWHRelMap = whrPwrEl.GeneratedPower;
-					pWHRelCorr = pWHRelMap * whr.WHRCorrectionFactor;
+					pWHRMap = whrPwrEl.GeneratedPower;
+					pWHRCorr = pWHRMap * whr.WHRCorrectionFactor;
 				}
 			}
 		}

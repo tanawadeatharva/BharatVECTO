@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				ResultCardTraction = new DummyResultCard(),
 				AlternatorGearEfficiency = Constants.BusAuxiliaries.ElectricSystem.AlternatorGearEfficiency,
 				MaxAlternatorPower = busAux.ElectricSupply.MaxAlternatorPower,
-				ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorageCapacity
+				ElectricStorageCapacity = busAux.ElectricSupply.ElectricStorageCapacity ?? 0.SI<WattSecond>()
 			};
 		}
 

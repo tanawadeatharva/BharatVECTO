@@ -332,7 +332,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 			foreach (var component in _components) {
-				component.Item2.CommitSimulationStep(ModData);
+				component.Item2.CommitSimulationStep(time, simulationInterval, ModData);
 			}
 
 			if (ModData != null) {

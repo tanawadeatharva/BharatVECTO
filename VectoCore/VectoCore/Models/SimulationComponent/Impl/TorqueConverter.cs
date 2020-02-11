@@ -379,7 +379,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return operatingPointList[0];
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			if (CurrentState.OperatingPoint == null) {
 				container[ModalResultField.TorqueConverterTorqueRatio] = 1.0;

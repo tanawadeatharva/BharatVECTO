@@ -59,23 +59,28 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
 		}
 
-		[TestCase("24tCoach_EngineOnly",
+		[TestCase(
+			"24tCoach_EngineOnly",
 			@"TestData\Components\24t Coach.veng",
 			@"TestData\Cycles\Coach Engine Only.vdri",
 			@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly.vmod")]
-		[TestCase("24tCoach_EngineOnlyPaux",
+		[TestCase(
+			"24tCoach_EngineOnlyPaux",
 			@"TestData\Components\24t Coach.veng",
 			@"TestData\Cycles\Coach Engine Only Paux.vdri",
 			@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyPaux.vmod")]
-		[TestCase("24tCoach_EngineOnlyFullLoad",
+		[TestCase(
+			"24tCoach_EngineOnlyFullLoad",
 			@"TestData\Components\24t Coach.veng",
 			@"TestData\Cycles\Coach Engine Only FullLoad.vdri",
 			@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyFullLoad.vmod")]
 		public void TestEngineOnlyDrivingCycle(string testName, string engineFile, string cycleFile, string modalResultFile)
 		{
-			var data = DrivingCycleDataReader.ReadFromFile(cycleFile, CycleType.EngineOnly,
+			var data = DrivingCycleDataReader.ReadFromFile(
+				cycleFile, CycleType.EngineOnly,
 				false);
 			var vehicle = new VehicleContainer(ExecutionMode.Engineering);
+
 			// ReSharper disable once ObjectCreationAsStatement
 			new MockDrivingCycle(vehicle, data);
 			var engineData = MockSimulationDataFactory.CreateEngineDataFromFile(engineFile, 0);
@@ -93,9 +98,11 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var dt = 1.SI<Second>();
 
 			var modFile = Path.GetFileNameWithoutExtension(modalResultFile);
+
 			//Path.GetFileNameWithoutExtension(Path.GetRandomFileName()); // + ".vmod";
 			var fileWriter = new FileOutputWriter(modFile);
-			var modData = new ModalDataContainer(modFile, new[] { FuelData.Diesel }, fileWriter, true) { WriteModalResults = true };
+			var modData =
+				new ModalDataContainer(modFile, new[] { FuelData.Diesel }, fileWriter, true) { WriteModalResults = true };
 			modData.AddAuxiliary(Constants.Auxiliaries.Cycle);
 			port.Initialize(data.Entries.First().Torque, data.Entries.First().AngularVelocity);
 			foreach (var cycleEntry in data.Entries) {
@@ -103,12 +110,13 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				var response = (ResponseSuccess)port.Request(absTime, dt, cycleEntry.Torque, cycleEntry.AngularVelocity);
 				foreach (var sc in vehicle.SimulationComponents()) {
 					modData[ModalResultField.time] = absTime + dt / 2;
-					sc.CommitSimulationStep(modData);
+					sc.CommitSimulationStep(absTime, dt, modData);
 				}
 
 				modData.CommitSimulationStep();
 				absTime += dt;
 			}
+
 			modData.Finish(VectoRun.Status.Success);
 
 			ResultFileHelper.TestModFile(modalResultFile, modFile + Constants.FileExtensions.ModDataFile);
@@ -121,7 +129,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
 
-			var engine = new CombustionEngine(vehicleContainer, MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 0));
+			var engine = new CombustionEngine(
+				vehicleContainer, MockSimulationDataFactory.CreateEngineDataFromFile(EngineFile, 0));
 			var gbx = new MockGearbox(vehicleContainer) { Gear = 0 };
 
 			var absTime = 0.SI<Second>();
@@ -134,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			engine.OutPort().Request(absTime, dt, power / angularVelocity, angularVelocity);
 
 			foreach (var sc in vehicleContainer.SimulationComponents()) {
-				sc.CommitSimulationStep(dataWriter);
+				sc.CommitSimulationStep(absTime, dt, dataWriter);
 			}
 
 			Assert.IsNotNull(dataWriter.CurrentRow);

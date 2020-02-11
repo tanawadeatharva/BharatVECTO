@@ -3265,7 +3265,7 @@
 					</SteeringPump>
 					<ElectricSystem>
 						<AlternatorTechnology ratio="1.000">default</AlternatorTechnology>
-						<SmartElectrics>true</SmartElectrics>
+						<SmartElectrics>false</SmartElectrics>
 						<MaxAlternatorPower>15000</MaxAlternatorPower>
 						<ElectricStorageCapacity>50</ElectricStorageCapacity>
 					</ElectricSystem>

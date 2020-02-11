@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Request(absTime, dt, CurrentState.InTorque, CurrentState.InAngularVelocity, dryRun);
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container)
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container)
 		{
 			var avgAngularSpeed = (PreviousState.InAngularVelocity + CurrentState.InAngularVelocity) / 2.0;
 			container[ModalResultField.P_ret_loss] = (CurrentState.InTorque - CurrentState.OutTorque) * avgAngularSpeed;

@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.IsFalse(gearbox.CurrentState.TorqueLossResult.Extrapolated);
 			var modData = new MockModalDataContainer();
-			gearbox.CommitSimulationStep(modData);
+			gearbox.CommitSimulationStep(absTime, dt, modData);
 		}
 
 		private static VectoRunData GetDummyRunData(GearboxData gearboxData)
@@ -316,7 +316,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var modData = new MockModalDataContainer();
 			Assert.IsTrue(gearbox.CurrentState.TorqueLossResult.Extrapolated);
-			AssertHelper.Exception<VectoException>(() => { gearbox.CommitSimulationStep(modData); });
+			AssertHelper.Exception<VectoException>(() => { gearbox.CommitSimulationStep(absTime, dt, modData); });
 		}
 
 		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 96000, 1600, 96499.10109),
@@ -352,7 +352,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var modData = new MockModalDataContainer();
 			Assert.IsTrue(gearbox.CurrentState.TorqueLossResult.Extrapolated);
-			gearbox.CommitSimulationStep(modData);
+			gearbox.CommitSimulationStep(absTime, dt, modData);
 		}
 
 		[TestCase(GearboxDataFile, EngineDataFile, 6.38, 96000, 1600, true, 96499.10109),
@@ -388,7 +388,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.AreRelativeEqual(expectedTorque.SI<NewtonMeter>(), port.Torque, 1e-2);
 
 			var modData = new MockModalDataContainer();
-			gearbox.CommitSimulationStep(modData);
+			gearbox.CommitSimulationStep(absTime, dt, modData);
 		}
 
 		[Test]

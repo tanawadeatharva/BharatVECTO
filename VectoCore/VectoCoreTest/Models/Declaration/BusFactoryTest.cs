@@ -6,6 +6,7 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
 using TUGraz.VectoCore.Tests.Models.Simulation;
 
@@ -26,32 +27,42 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			xmlInputReader = _kernel.Get<IXMLInputDataReader>();
 		}
 
-		[TestCase()]
-		public void CreateRunDataPrimaryBus()
+		[
+		TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_nonSmart.xml", 4, TestName = "Run Primary Bus NonSmart SubUrban Low"),
+		TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_SmartPS.xml", 4, TestName = "Run Primary Bus SmartPS SubUrban Low"),
+		TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_SmartES.xml", 4, TestName = "Run Primary Bus SmartES SubUrban Low"),
+		TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_nonSmart_ESS.xml", 4, TestName = "Run Primary Bus NonSmart ESS SubUrban Low"),
+			]
+		public void CreateRunDataPrimaryBus(string jobFile, int runIdx)
 		{
-			var runIdx = 4;
-			var jobFile = @"TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-primary_heavyBus.xml";
-
 			var writer = new FileOutputWriter(jobFile);
 			var inputData = Path.GetExtension(jobFile) == ".xml"
 				? xmlInputReader.CreateDeclaration(jobFile)
 				//? new XMLDeclarationInputDataProvider(relativeJobPath, true)
 				: JSONInputDataFactory.ReadJsonJob(jobFile);
+			var sumContainer = new SummaryDataContainer(writer);
 			var factory = new SimulatorFactory(ExecutionMode.Declaration, inputData, writer) {
 				WriteModalResults = true,
+				SumData = sumContainer,
 				//ActualModalData = true,
 				Validate = false
 			};
-			var jobContainer = new JobContainer(new MockSumWriter());
+			var jobContainer = new JobContainer(sumContainer);
 
-			var runs = factory.SimulationRuns().ToArray();
-			jobContainer.AddRun(runs[runIdx]);
-			runs[runIdx].Run();
+			
+			if (runIdx >= 0) {
+				var runs = factory.SimulationRuns().ToArray();
+				jobContainer.AddRun(runs[runIdx]);
+			} else {
+				jobContainer.AddRuns(factory);
+			}
 
-			//var run = factory.SimulationRuns().First();
-			//run.Run();
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+			
 
-			Assert.IsTrue(runs[runIdx].FinishedWithoutErrors);
+			Assert.IsTrue(jobContainer.AllCompleted);
+			Assert.IsTrue(jobContainer.Runs.All(x => x.Success));
 		}
 
 		[TestCase()]

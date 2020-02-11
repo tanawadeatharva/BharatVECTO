@@ -215,8 +215,9 @@
     <Compile Include="XML\XMLDeclarationReaderVersionsTest.cs" />
     <Compile Include="XML\XMLEngineeringInputRefTest.cs" />
     <Compile Include="XML\XMLEngineeringInputSingleTest.cs" />
+    <Compile Include="XML\XMLPrimaryBusInputDataTest.cs" />
     <Compile Include="XML\XMLReportTest.cs" />
-    <Compile Include="XML\XMLPrimaryVehicleBusReaderTest.cs" />
+    <Compile Include="XML\XMLPrimaryVehicleReportBusReaderTest.cs" />
     <Compile Include="XML\XMLWritingTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -3380,7 +3381,19 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestData\Integration\Buses\vecto_vehicle-primary_heavyBus.xml">
+    <Content Include="TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_nonSmart_ESS.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_SmartES_PS.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_SmartPS.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_SmartES.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_nonSmart.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\Integration\DeclarationMode\Class4_Vocational\Rigid Truck_4x2_vehicle-class-4_EURO6_2018.xml">

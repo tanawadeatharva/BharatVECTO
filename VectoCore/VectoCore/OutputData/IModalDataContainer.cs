@@ -345,6 +345,53 @@ namespace TUGraz.VectoCore.OutputData
 			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf)) / distance;
 		}
 
+		public static NormLiter AirGenerated(this IModalDataContainer data)
+		{
+			return data.GetValues<NormLiter>(ModalResultField.Nl_busAux_PS_generated).Sum(x => x);
+		}
+
+		public static NormLiter AirConsumed(this IModalDataContainer data)
+		{
+			return data.GetValues<NormLiter>(ModalResultField.Nl_busAux_PS_consumer).Sum(x => x);
+		}
+
+		public static NormLiter AirGeneratedAlwaysOn(this IModalDataContainer data)
+		{
+			return data.GetValues<NormLiter>(ModalResultField.Nl_busAux_PS_generated_alwaysOn).Sum(x => x);
+		}
+
+		public static WattSecond EnergyPneumaticCompressorPowerOff(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_busAux_PS_generated_dragOnly);
+		}
+
+		public static WattSecond EnergyPneumaticCompressorOn(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_busAux_PS_generated);
+		}
+
+		public static WattSecond EnergyPneumaticCompressorAlwaysOn(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_busAux_PS_generated_alwaysOn);
+		}
+
+		public static WattSecond EnergyBusAuxESGenerated(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_generated);
+		}
+
+		public static WattSecond EnergyBusAuxESConsumed(this IModalDataContainer data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.P_busAux_ES_consumer_sum);
+		}
+
+		public static double DeltaSOCBusAuxBattery(this IModalDataContainer data)
+		{
+			return (data.GetValues<double>(ModalResultField.BatterySOC).First() -
+					data.GetValues<double>(ModalResultField.BatterySOC).Last()) / 100;
+		}
+
+
 		public static Kilogram TotalFuelConsumption(this IModalDataContainer data, ModalResultField mrf, IFuelProperties fuelData)
 		{
 			return data.TimeIntegral<Kilogram>(data.GetColumnName(fuelData, mrf));

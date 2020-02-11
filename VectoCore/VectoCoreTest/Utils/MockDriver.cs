@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			DrivingAction = DrivingAction.Accelerate;
 		}
 
-		protected override void DoWriteModalResults(IModalDataContainer container) {}
+		protected override void DoWriteModalResults(Second time, Second simulationInterval, IModalDataContainer container) {}
 
 		protected override void DoCommitSimulationStep() {}
 

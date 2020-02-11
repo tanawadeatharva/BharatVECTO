@@ -25,6 +25,14 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		bool OverrunFlag { get; }
 
 		/// <summary>
+		/// 	Smart Pneumatics Only CompressorFlag
+		/// 	</summary>
+		/// 	<value></value>
+		/// 	<returns>Less than Zero = No, Greater then Zero = Yes </returns>
+		/// 	<remarks></remarks>
+		bool SmartPneumaticsOnlyCompressorFlag { get; }
+
+		/// <summary>
 		/// 	Smart Elec And Pneumatics Compressor Flag
 		/// 	</summary>
 		/// 	<value></value>
@@ -80,12 +88,6 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules
 		/// 	<remarks></remarks>
 		Watt AvgPowerDemandAtCrankFromElectricsIncHVAC { get; }
 
-		/// <summary>
-		/// 	Smart Pneumatics Only CompressorFlag
-		/// 	</summary>
-		/// 	<value></value>
-		/// 	<returns>Less than Zero = No, Greater then Zero = Yes </returns>
-		/// 	<remarks></remarks>
-		bool SmartPneumaticsOnlyCompressorFlag { get; }
+		
 	}
 }

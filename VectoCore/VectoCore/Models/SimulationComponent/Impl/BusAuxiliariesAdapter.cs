@@ -49,15 +49,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected internal BusAuxState CurrentState;
 		protected internal BusAuxState PreviousState;
 
-		protected internal readonly IAuxPort AdditionalAux;
+		protected internal IAuxPort AdditionalAux;
 
 		protected IBusAuxiliaries Auxiliaries;
+
+		private double EngineStopStartUtilityFactor;
 
 		//private readonly FuelConsumptionAdapter _fcMapAdapter;
 
 		public BusAuxiliariesAdapter(
 			IVehicleContainer container, IAuxiliaryConfig auxiliaryConfig, IAuxPort additionalAux = null)
 		{
+
+			EngineStopStartUtilityFactor = container.RunData?.DriverData?.EngineStopStart?.UtilityFactor ?? double.NaN;
+
 			CurrentState = new BusAuxState();
 			PreviousState = new BusAuxState { AngularSpeed = container.EngineIdleSpeed };
 
@@ -132,14 +137,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return CurrentState.PowerDemand / avgAngularSpeed;
 		}
 
-		public Watt PowerDemandEngineOn(PerSecond engineSpeed)
+		public Watt PowerDemandEngineOn(Second time, Second simulationInterval, PerSecond engineSpeed)
 		{
-			throw new NotImplementedException();
+			return GetBusAuxPowerDemand(time, simulationInterval, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), engineSpeed, true);
 		}
 
-		public Watt PowerDemandEngineOff()
+		public Watt PowerDemandEngineOff(Second absTime, Second dt)
 		{
-			throw new NotImplementedException();
+			var conventionalAux = AdditionalAux;
+			AdditionalAux = null;
+			CurrentState.AngularSpeed = DataBus.EngineIdleSpeed;
+			CurrentState.dt = dt;
+			var busAuxPowerDemand  = GetBusAuxPowerDemand(
+				absTime, dt, 0.SI<NewtonMeter>(), 0.SI<NewtonMeter>(), DataBus.EngineIdleSpeed);
+			AdditionalAux = conventionalAux;
+
+			CurrentState.PowerDemand = ((AdditionalAux?.PowerDemandEngineOn(absTime, dt, DataBus.EngineIdleSpeed) ?? 0.SI<Watt>()) +
+										busAuxPowerDemand) * (1 - EngineStopStartUtilityFactor);
+
+			return EngineStopStartUtilityFactor * busAuxPowerDemand + AdditionalAux?.PowerDemandEngineOff(absTime, dt);
 		}
 
 
@@ -151,27 +167,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries.CycleStep(CurrentState.dt);
 			Log.Warn(message);
 
+			var essUtilityFactor = 1.0;
+			if (!DataBus.IgnitionOn) {
+				essUtilityFactor = 1 - EngineStopStartUtilityFactor;
+			}
+
 			//CurrentState.TotalFuelConsumption = Auxiliaries.TotalFuel;
 			container[ModalResultField.P_aux] = CurrentState.PowerDemand;
 
 			container[ModalResultField.P_busAux_ES_HVAC] = Auxiliaries.HVACElectricalPowerConsumer;
 			container[ModalResultField.P_busAux_ES_other] = Auxiliaries.ElectricPowerConsumer;
 			container[ModalResultField.P_busAux_ES_consumer_sum] = Auxiliaries.ElectricPowerConsumerSum;
-			container[ModalResultField.P_busAux_ES_generated] = Auxiliaries.ElectricPowerGenerated;
-			container[ModalResultField.P_busAux_ES_sum_mech] = Auxiliaries.ElectricPowerDemandMech;
+			container[ModalResultField.P_busAux_ES_sum_mech] = essUtilityFactor * Auxiliaries.ElectricPowerDemandMech;
+			container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * Auxiliaries.ElectricPowerGenerated;
 
 			container[ModalResultField.BatterySOC] = Auxiliaries.BatterySOC * 100.0;
 
 			container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
-			container[ModalResultField.Nl_busAux_PS_generated] = Auxiliaries.PSAirGenerated;
-			container[ModalResultField.Nl_busAux_PS_generated_alwaysOn] = Auxiliaries.PSAirGeneratedAlwaysOn;
+			container[ModalResultField.Nl_busAux_PS_generated] = essUtilityFactor * Auxiliaries.PSAirGenerated;
+			container[ModalResultField.Nl_busAux_PS_generated_alwaysOn] = essUtilityFactor * Auxiliaries.PSAirGeneratedAlwaysOn;
 			//container[ModalResultField.Nl_busAux_PS_generated_dragOnly] = Auxiliaries.PSAirGeneratedDrag;
-			container[ModalResultField.P_busAux_PS_generated] = Auxiliaries.PSPowerDemandAirGenerated;
-			container[ModalResultField.P_busAux_PS_generated_alwaysOn] = Auxiliaries.PSPowerCompressorAlwaysOn;
-			container[ModalResultField.P_busAux_PS_generated_dragOnly] = Auxiliaries.PSPowerCompressorDragOnly;
+			container[ModalResultField.P_busAux_PS_generated] = essUtilityFactor * Auxiliaries.PSPowerDemandAirGenerated;
+			container[ModalResultField.P_busAux_PS_generated_alwaysOn] = essUtilityFactor * Auxiliaries.PSPowerCompressorAlwaysOn;
+			container[ModalResultField.P_busAux_PS_generated_dragOnly] = essUtilityFactor * Auxiliaries.PSPowerCompressorDragOnly;
 
 			container[ModalResultField.P_busAux_HVACmech_consumer] = Auxiliaries.HVACMechanicalPowerConsumer;
-			container[ModalResultField.P_busAux_HVACmech_gen] = Auxiliaries.HVACMechanicalPowerGenerated;
+			container[ModalResultField.P_busAux_HVACmech_gen] = essUtilityFactor *  Auxiliaries.HVACMechanicalPowerGenerated;
 		}
 
 		protected internal void DoCommitSimulationStep()

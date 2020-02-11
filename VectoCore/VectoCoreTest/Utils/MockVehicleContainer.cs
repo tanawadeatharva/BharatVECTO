@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
 			foreach (var entry in Components) {
-				entry.CommitSimulationStep(ModalData);
+				entry.CommitSimulationStep(time, simulationInterval, ModalData);
 			}
 		}
 

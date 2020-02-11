@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				var auxDemand = aux.TorqueDemand(t, t, torque, torque, speed);
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand.Value());
-				cycle.CommitSimulationStep(null);
+				cycle.CommitSimulationStep(t, t, null);
 			}
 		}
 
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand.Value());
 
-				cycle.CommitSimulationStep(null);
+				cycle.CommitSimulationStep(t, t, null);
 			}
 		}
 
@@ -311,7 +311,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 				AssertHelper.AreRelativeEqual((e.SI<Watt>() / speed).Value(), auxDemand);
 
-				cycle.CommitSimulationStep(null);
+				cycle.CommitSimulationStep(t, t, null);
 			}
 		}
 
