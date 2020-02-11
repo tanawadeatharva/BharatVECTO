@@ -5,9 +5,11 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using TUGraz.IVT.VectoXML.Writer;
+using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Resources;
 using TUGraz.VectoCommon.Utils;
+using TUGraz.VectoCore.InputData.FileIO.XML.Declaration.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -233,13 +235,37 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected virtual XElement GetADAS(VehicleData.ADASData adasData)
 		{
+			if (adasData.InputData.XMLSource == null) {
+				return CreateADAS(adasData);
+			}
+
 			var ns = XNamespace.Get(adasData.InputData.XMLSource.SchemaInfo.SchemaType.QualifiedName.Namespace);
+			var type = adasData.InputData.XMLSource.SchemaInfo.SchemaType.QualifiedName.Name;
+				
 			const string adasPrefix = "adas";
 			return new XElement(
 				tns + XMLNames.Vehicle_ADAS,
 				new XAttribute(XNamespace.Xmlns + adasPrefix, ns.NamespaceName),
-				new XAttribute(xsi + "type", string.Format("{0}:{1}", adasPrefix, adasData.InputData.XMLSource.SchemaInfo.SchemaType.QualifiedName.Name)),
+				new XAttribute(xsi + "type", string.Format("{0}:{1}", adasPrefix, type)),
 				XElement.Parse(adasData.InputData.XMLSource.OuterXml).Elements()
+			);
+		}
+
+		protected virtual XElement CreateADAS(VehicleData.ADASData adasData)
+		{
+			var ns = XMLADASReaderV23.NAMESPACE_URI;
+			var type = XMLADASReaderV23.XSD_TYPE;
+
+			const string adasPrefix = "adas";
+			return new XElement(
+				tns + XMLNames.Vehicle_ADAS,
+				new XAttribute(XNamespace.Xmlns + adasPrefix, ns.NamespaceName),
+				new XAttribute(xsi + "type", string.Format("{0}:{1}", adasPrefix, type)),
+					new XElement(ns + XMLNames.Vehicle_ADAS_EngineStopStart, adasData.EngineStopStart),
+					new XElement(ns + XMLNames.Vehicle_ADAS_EcoRollWithoutEngineStop, adasData.EcoRoll.WithoutEngineStop()),
+					new XElement(ns + XMLNames.Vehicle_ADAS_EcoRollWithEngineStopStart, adasData.EcoRoll.WithEngineStop()),
+					new XElement(ns + XMLNames.Vehicle_ADAS_PCC, adasData.PredictiveCruiseControl.ToXMLFormat()),
+					new XElement(ns + XMLNames.Vehicle_ADAS_ATEcoRollReleaseLockupClutch, adasData.InputData.ATEcoRollReleaseLockupClutch ?? false)
 			);
 		}
 
