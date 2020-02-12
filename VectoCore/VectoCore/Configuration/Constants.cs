@@ -173,6 +173,9 @@ namespace TUGraz.VectoCore.Configuration
 				public const double CompressorGearEfficiency = 0.97;
 
 				public const double PneumaticOverrunUtilisation = 0.97;
+
+				public const double ViscoClutchDragCurveFactor = 1 - 0.35;
+				public const double MechanicClutchDragCurveFactor = 1 - 0.75;
 			}
 
 			public static class Heater {

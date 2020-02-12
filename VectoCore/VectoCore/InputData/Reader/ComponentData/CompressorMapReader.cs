@@ -14,17 +14,17 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 	{
 		public static readonly string[] Header = new[] { Fields.RPM, Fields.FlowRate, Fields.PowerOn, Fields.PowerOff };
 
-		public static ICompressorMap ReadFile(string filename)
+		public static ICompressorMap ReadFile(string filename, double dragCurveFactorClutch)
 		{
-			return new CompressorMap(Create(VectoCSVFile.Read(filename)), Path.GetFullPath(filename));
+			return new CompressorMap(Create(VectoCSVFile.Read(filename), dragCurveFactorClutch), Path.GetFullPath(filename));
 		}
 
-		public static ICompressorMap ReadStream(Stream stream, string source = null)
+		public static ICompressorMap ReadStream(Stream stream, double dragCurveFactorClutch, string source = null)
 		{
-			return new CompressorMap(Create(VectoCSVFile.ReadStream(stream)), source);
+			return new CompressorMap(Create(VectoCSVFile.ReadStream(stream), dragCurveFactorClutch), source);
 		}
 
-		public static IList<CompressorMapValues> Create(DataTable data)
+		public static IList<CompressorMapValues> Create(DataTable data, double dragCurveFactorClutch)
 		{
 			if (!HeaderIsValid(data.Columns)) {
 				throw new VectoException(
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.InputData.Reader.ComponentData
 					row.ParseDouble(Fields.RPM).RPMtoRad(),
 					row.ParseDouble(Fields.FlowRate).SI(Unit.SI.Liter.Per.Minute).Cast<NormLiterPerSecond>(),
 					row.ParseDouble(Fields.PowerOn).SI<Watt>(),
-					row.ParseDouble(Fields.PowerOff).SI<Watt>()
+					row.ParseDouble(Fields.PowerOff).SI<Watt>() * dragCurveFactorClutch
 					));
 			}
 			return entries;

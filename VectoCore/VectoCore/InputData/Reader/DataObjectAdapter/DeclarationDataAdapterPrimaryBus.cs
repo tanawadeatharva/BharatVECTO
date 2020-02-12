@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					: 0.SI<Meter>(),
 				CompressorGearEfficiency = Constants.BusAuxiliaries.PneumaticUserConfig.CompressorGearEfficiency,
 				CompressorGearRatio = busAux.PneumaticSupply.Ratio,
-				CompressorMap = GetCompressorMap(busAux.PneumaticSupply.CompressorSize),
+				CompressorMap = GetCompressorMap(busAux.PneumaticSupply.CompressorSize, busAux.PneumaticSupply.Clutch),
 				SmartAirCompression = busAux.PneumaticSupply.SmartAirCompression,
 				SmartRegeneration = busAux.PneumaticSupply.SmartRegeneration,
 				AdBlueDosing = busAux.PneumaticConsumers.AdBlueDosing,
@@ -200,40 +200,38 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			};
 		}
 
-		protected virtual ICompressorMap GetCompressorMap(string compressorSize)
+		protected virtual ICompressorMap GetCompressorMap(string compressorSize, string clutchType)
 		{
 			var resource = "";
 			switch (compressorSize) {
 				case "Small":
-				case "Small + visco clutch":
-				case "Small + mech. clutch":
 					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.ACMP";
 					break;
 				case "Medium Supply 1-stage":
-				case "Medium Supply 1-stage + visco clutch":
-				case "Medium Supply 1-stage + mech. clutch":
 					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.ACMP";
 					break;
 				case "Medium Supply 2-stage":
-				case "Medium Supply 2-stage + visco clutch":
-				case "Medium Supply 2-stage + mech. clutch":
 					resource = "DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP";
 					break;
 				case "Large Supply 1-stage":
-				case "Large Supply 1-stage + visco clutch":
-				case "Large Supply 1-stage + mech. clutch":
 					resource = "DEFAULT_2-Cylinder_2-Stage_398ccm.ACMP";
 					break;
 				case "Large Supply 2-stage":
-				case "Large Supply 2-stage + visco clutch":
-				case "Large Supply 2-stage + mech. clutch":
 					resource = "DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP";
 					break;
 				default: throw new ArgumentException(string.Format("unkown compressor size {0}"), compressorSize);
 			}
 
+			var dragCurveFactorClutch = 1.0;
+			switch (clutchType) {
+				case "visco": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.ViscoClutchDragCurveFactor;
+					break;
+				case "mechically": dragCurveFactorClutch = Constants.BusAuxiliaries.PneumaticUserConfig.MechanicClutchDragCurveFactor;
+					break;
+			}
+
 			return CompressorMapReader.ReadStream(
-				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource));
+				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch);
 		}
 
 		public virtual ISSMInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel)

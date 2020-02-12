@@ -10,20 +10,21 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.OutputData;
 
-namespace TUGraz.VectoCore.InputData.Reader.Impl {
+namespace TUGraz.VectoCore.InputData.Reader.Impl
+{
 	public class DeclarationModeBusVectoRunDataFactory : AbstractDeclarationVectoRunDataFactory
 	{
 		protected DeclarationDataAdapterPrimaryBus _dao = new DeclarationDataAdapterPrimaryBus();
 
 		public DeclarationModeBusVectoRunDataFactory(IDeclarationInputDataProvider dataProvider, IDeclarationReport report) :
-			base(dataProvider, report)
-		{
-			
-		}
+			base(dataProvider, report) { }
 
 		#region Overrides of AbstractDeclarationVectoRunDataFactory
 
-		protected override IDeclarationDataAdapter DataAdapter { get { return _dao; } }
+		protected override IDeclarationDataAdapter DataAdapter
+		{
+			get { return _dao; }
+		}
 
 		#endregion
 
@@ -32,13 +33,15 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			if (InputDataProvider.JobInputData.Vehicle.VehicleCategory == VehicleCategory.HeavyBusPrimaryVehicle) {
 				return VectoRunDataHeavyBusPrimary();
 			}
+
 			return new List<VectoRunData>();
 		}
 
 		protected override Segment GetSegment(IVehicleDeclarationInputData vehicle)
 		{
 			if (vehicle.VehicleCategory != VehicleCategory.HeavyBusPrimaryVehicle) {
-				throw new VectoException("Invalid vehicle category for bus factory! {0}", vehicle.VehicleCategory.GetCategoryName());
+				throw new VectoException(
+					"Invalid vehicle category for bus factory! {0}", vehicle.VehicleCategory.GetCategoryName());
 			}
 
 			var segment = DeclarationData.BusSegments.Lookup(
@@ -62,7 +65,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			for (var modeIdx = 0; modeIdx < engineModes.Count; modeIdx++) {
 				foreach (var mission in _segment.Missions) {
 					foreach (var loading in mission.Loadings) {
-						var simulationRunData = CreateVectoRunData(vehicle, modeIdx, mission, loading);							
+						var simulationRunData = CreateVectoRunData(vehicle, modeIdx, mission, loading);
 						yield return simulationRunData;
 					}
 				}
@@ -70,7 +73,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 		}
 
 
-		protected override VectoRunData CreateVectoRunData(IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
+		protected override VectoRunData CreateVectoRunData(
+			IVehicleDeclarationInputData vehicle, int modeIdx, Mission mission, KeyValuePair<LoadingType, Kilogram> loading)
 		{
 			var engine = vehicle.Components.EngineInputData;
 			var engineModes = engine.EngineModes;
@@ -84,7 +88,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 					CyclesCache.Add(mission.MissionType, cycle);
 				}
 			}
-			var simulationRunData  = new VectoRunData {
+			var simulationRunData = new VectoRunData {
 				Loading = loading.Key,
 				VehicleData = DataAdapter.CreateVehicleData(vehicle, mission, loading),
 				AirdragData = _dao.CreateAirdragData(mission),
@@ -92,8 +96,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				GearboxData = _gearboxData,
 				AxleGearData = _axlegearData,
 				AngledriveData = _angledriveData,
-				Aux = DataAdapter.CreateAuxiliaryData(vehicle.Components.AuxiliaryInputData,
-													vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass, vehicle.Length ?? mission.BusParameter.VehicleLength),
+				Aux = DataAdapter.CreateAuxiliaryData(
+					vehicle.Components.AuxiliaryInputData,
+					vehicle.Components.BusAuxiliaries, mission.MissionType, _segment.VehicleClass,
+					vehicle.Length ?? mission.BusParameter.VehicleLength),
 				Cycle = new DrivingCycleProxy(cycle, mission.MissionType.ToString()),
 				Retarder = _retarderData,
 				DriverData = _driverdata,
@@ -109,7 +115,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 			};
 			simulationRunData.EngineData.FuelMode = modeIdx;
 			simulationRunData.VehicleData.VehicleClass = _segment.VehicleClass;
-			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(mission, InputDataProvider.JobInputData.Vehicle, simulationRunData);
+			simulationRunData.BusAuxiliaries = _dao.CreateBusAuxiliariesData(
+				mission, InputDataProvider.JobInputData.Vehicle, simulationRunData);
 			return simulationRunData;
 		}
 	}

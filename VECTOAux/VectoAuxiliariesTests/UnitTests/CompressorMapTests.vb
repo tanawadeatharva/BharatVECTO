@@ -23,7 +23,7 @@ Namespace UnitTests
 
         Private Function GetInitialiseMap() As ICompressorMap
             Dim path As String = GOODMAP
-            Dim target As ICompressorMap = CompressorMapReader.ReadFile(path)
+            Dim target As ICompressorMap = CompressorMapReader.ReadFile(path, 1.0)
             'target.Initialise()
             Return target
         End Function
@@ -39,7 +39,7 @@ Namespace UnitTests
         Public Sub CreateNewCompressorMapInstanceTest()
             Dim pat As String = "test"
             Assert.That(Sub()
-                Dim target As ICompressorMap = CompressorMapReader.ReadFile(pat)
+                Dim target As ICompressorMap = CompressorMapReader.ReadFile(pat, 1.0)
             end sub, throws.instanceof(of Vectoexception))
         End Sub
 
@@ -56,7 +56,7 @@ Namespace UnitTests
             'Dim target As ICompressorMap = CompressorMapReader.ReadFile(path)
 
             Assert.That(sub() 
-                dim tmp = CompressorMapReader.ReadFile(path)
+                dim tmp = CompressorMapReader.ReadFile(path, 1.0)
             end sub, Throws.InstanceOf (of VectoException))
         End Sub
 
@@ -65,7 +65,7 @@ Namespace UnitTests
             Dim path As String = INVALIDNUMBEROFCOLUMNS
 
             Assert.That(Sub()
-                Dim target = CompressorMapReader.ReadFile(path)
+                Dim target = CompressorMapReader.ReadFile(path, 1.0)
             End Sub, Throws.InstanceOf (Of VectoException))
         End Sub
 
@@ -74,7 +74,7 @@ Namespace UnitTests
             Dim path As String = INVALIDRPMMAP
 
             Assert.That(Sub()
-                Dim target As ICompressorMap = CompressorMapReader.ReadFile(path)
+                Dim target As ICompressorMap = CompressorMapReader.ReadFile(path, 1.0)
             End Sub, Throws.InstanceOf (Of VectoException))
         End Sub
 
@@ -83,7 +83,7 @@ Namespace UnitTests
             Dim path As String = INVALIDFLOWRATEMAP
             
             Assert.That(Sub()
-                Dim target As ICompressorMap = CompressorMapReader.ReadFile(path)
+                Dim target As ICompressorMap = CompressorMapReader.ReadFile(path, 1.0)
                         End Sub, Throws.InstanceOf (Of VectoException))
         End Sub
 
@@ -92,7 +92,7 @@ Namespace UnitTests
             Dim path As String = INVALIDPOWERCOMPRESSORONMAP
             
             Assert.That(Sub()
-                Dim target As ICompressorMap = CompressorMapReader.ReadFile(path)
+                Dim target As ICompressorMap = CompressorMapReader.ReadFile(path, 1.0)
                         End Sub, Throws.InstanceOf (Of VectoException))
         End Sub
 
@@ -101,7 +101,7 @@ Namespace UnitTests
             Dim path As String = INVALIDPOWERCOMPRESSOROFFMAP
            
             Assert.That(Sub()
-                Dim target As ICompressorMap = CompressorMapReader.ReadFile(path)
+                Dim target As ICompressorMap = CompressorMapReader.ReadFile(path, 1.0)
                         End Sub, Throws.InstanceOf (Of VectoException))
         End Sub
 
@@ -110,7 +110,7 @@ Namespace UnitTests
             Dim path As String = INSSUFICIENTROWSMAP
             
             Assert.That(Sub()
-                Dim target As ICompressorMap = CompressorMapReader.ReadFile(path)
+                Dim target As ICompressorMap = CompressorMapReader.ReadFile(path, 1.0)
                         End Sub, Throws.InstanceOf (Of VectoException))
         End Sub
 
@@ -153,7 +153,7 @@ Namespace UnitTests
         <Test()>
         Public Sub InterpMiddle()
 
-            Dim target As ICompressorMap = CompressorMapReader.ReadFile(GOODMAP)
+            Dim target As ICompressorMap = CompressorMapReader.ReadFile(GOODMAP, 1.0)
             'Assert.IsTrue(target.Initialise())
 
             Dim actual = target.Interpolate(1750.RPMtoRad()).FlowRate

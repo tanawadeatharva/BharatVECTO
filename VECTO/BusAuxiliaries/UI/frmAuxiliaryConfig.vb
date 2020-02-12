@@ -298,7 +298,7 @@ Public Class frmAuxiliaryConfig
         Dim comp As ICompressorMap
         Try
 
-            comp = CompressorMapReader.ReadFile(FilePathUtils.ResolveFilePath(aauxPath, txtCompressorMap.Text))
+            comp = CompressorMapReader.ReadFile(FilePathUtils.ResolveFilePath(aauxPath, txtCompressorMap.Text), 1.0)
             'comp.Initialise()
             ErrorProvider.SetError(txtCompressorMap, String.Empty)
         Catch ex As Exception
