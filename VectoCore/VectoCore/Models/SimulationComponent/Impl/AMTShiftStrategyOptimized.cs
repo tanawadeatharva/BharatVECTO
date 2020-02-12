@@ -31,6 +31,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private Kilogram vehicleMass;
 		protected internal ResponseDryRun minFCResponse;
 
+		public static readonly MeterPerSecond MIN_SPEED_AFTER_TRACTION_INTERRUPTION = 5.KMPHtoMeterPerSecond();
+
 		public AMTShiftStrategyOptimized(VectoRunData runData, IVehicleContainer dataBus) : base(runData, dataBus)
 		{
 			if (runData.EngineData == null) {
@@ -89,6 +91,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleSpeed, DataBus.RoadGradient ?? 0.SI<Radian>());
+			if (!estimatedVelocityPostShift.IsGreater(MIN_SPEED_AFTER_TRACTION_INTERRUPTION)) {
+				return currentGear;
+			}
+
 			var vDrop = DataBus.VehicleSpeed - estimatedVelocityPostShift;
 			var vehicleSpeedPostShift = DataBus.VehicleSpeed - vDrop * shiftStrategyParameters.VelocityDropFactor;
 
@@ -228,7 +234,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var fcCurrent = double.NaN;
 
 			var estimatedVelocityPostShift = VelocityDropData.Interpolate(DataBus.VehicleSpeed, DataBus.RoadGradient ?? 0.SI<Radian>());
-			if (estimatedVelocityPostShift.IsSmaller(0)) {
+			if (!estimatedVelocityPostShift.IsGreater(MIN_SPEED_AFTER_TRACTION_INTERRUPTION)) {
 				return currentGear;
 			}
 
