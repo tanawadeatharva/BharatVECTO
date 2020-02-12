@@ -378,6 +378,7 @@
 							<xs:documentation>P037 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
+					<xs:element name="Articulated" type="xs:boolean"/>
 					<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType">
 						<xs:annotation>
 							<xs:documentation>P041 - [kg]</xs:documentation>

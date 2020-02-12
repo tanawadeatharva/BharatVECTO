@@ -682,6 +682,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return VehicleCategory.HeavyBusPrimaryVehicle; }
 		}
 
+		public override bool Articulated
+		{
+			get { return GetBool(XMLNames.Vehicle_Articulated); }
+		}
+
 		public override Kilogram CurbMassChassis
 		{
 			get { return null; }

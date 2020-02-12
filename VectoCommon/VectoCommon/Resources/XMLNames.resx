@@ -1359,4 +1359,7 @@
   <data name="Bus_Smart_Electrics" xml:space="preserve">
     <value>SmartElectrics</value>
   </data>
+  <data name="Vehicle_Articulated" xml:space="preserve">
+    <value>Articulated</value>
+  </data>
 </root>

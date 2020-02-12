@@ -3310,6 +3310,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Articulated.
+        /// </summary>
+        public static string Vehicle_Articulated {
+            get {
+                return ResourceManager.GetString("Vehicle_Articulated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AxleConfiguration.
         /// </summary>
         public static string Vehicle_AxleConfiguration {

@@ -12,6 +12,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 			<Date>2017-02-15T11:00:00Z</Date>
 			<VehicleCategory>Bus</VehicleCategory>
 			<AxleConfiguration>4x2</AxleConfiguration>
+			<Articulated>false</Articulated>
 			<TechnicalPermissibleMaximumLadenMass>25000</TechnicalPermissibleMaximumLadenMass>
 			<IdlingSpeed>600</IdlingSpeed>
 			<RetarderType>Transmission Output Retarder</RetarderType>
