@@ -57,12 +57,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			var sum12 = _m4.GetPowerDifference() + sum11;
 
 			// VC2: Smart Compressor Overrun and Smart Electrics overrun
-			var vc2 = sum12 < 0 || sum12.IsEqual(0);
+			var vc2 = sum12.IsSmallerOrEqual(0); // sum12 < 0 || sum12.IsEqual(0);
 
 			// VC1: Pneumatics Compressor Off and Smart Electrics
 			//      compressor off power can be provided
 			//      smart alternator can be provided (max possible)
-			var vc1 = sum12 > 0;
+			var vc1 = sum12.IsGreater(0); // sum12 > 0;
 			var sum14 = vc1 ? _m4.GetPowerCompressorOff() : 0.SI<Watt>();
 			var sum15 = vc2
 				? _m4.GetPowerCompressorOn() * Constants.BusAuxiliaries.PneumaticUserConfig.PneumaticOverrunUtilisation
@@ -78,10 +78,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl
 			var sum13 = sum9 + _m4.GetPowerDifference();
 
 			// VC3: Pneumatics compressor off, average elctric power (no overrun)
-			var vc3 = sum13 > 0;
+			var vc3 = sum13.IsGreater(0); //sum13 > 0;
 
 			// VC4: smart compressor overrun and average electrics (no overrun)
-			var vc4 = sum13 < 0 || sum13.IsEqual(0);
+			var vc4 = sum13.IsSmallerOrEqual(0); // sum13 < 0 || sum13.IsEqual(0);
 			var sum17 = vc3 ? _m4.GetPowerCompressorOff() : 0.SI<Watt>();
 			var sum18 = vc4
 				? _m4.GetPowerCompressorOn() * Constants.BusAuxiliaries.PneumaticUserConfig.PneumaticOverrunUtilisation
