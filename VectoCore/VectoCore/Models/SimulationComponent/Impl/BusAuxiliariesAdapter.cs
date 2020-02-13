@@ -159,13 +159,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected internal void DoWriteModalResults(IModalDataContainer container)
+		protected internal virtual void DoWriteModalResults(IModalDataContainer container)
 		{
-			//_fcMapAdapter.AllowExtrapolation = true;
+			
 			// cycleStep has to be called here and not in DoCommit, write is called before Commit!
-			var message = String.Empty;
 			Auxiliaries.CycleStep(CurrentState.dt);
-			Log.Warn(message);
 
 			var essUtilityFactor = 1.0;
 			if (!DataBus.IgnitionOn) {
@@ -195,75 +193,45 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_busAux_HVACmech_gen] = essUtilityFactor *  Auxiliaries.HVACMechanicalPowerGenerated;
 		}
 
-		protected internal void DoCommitSimulationStep()
+		protected internal virtual void DoCommitSimulationStep()
 		{
 			PreviousState = CurrentState;
 			CurrentState = new BusAuxState();
 		}
 
-		//protected internal KilogramPerSecond AAuxFuelConsumption
-		//{
-		//    get { return (CurrentState.TotalFuelConsumption - PreviousState.TotalFuelConsumption) / CurrentState.dt; }
-		//}
-
-		private Watt GetBusAuxPowerDemand(
+		protected virtual Watt GetBusAuxPowerDemand(
 			Second absTime, Second dt, NewtonMeter torquePowerTrain, NewtonMeter torqueEngine,
 			PerSecond angularSpeed, bool dryRun = false)
 		{
 			Auxiliaries.ResetCalculations();
-
-			//_fcMapAdapter.AllowExtrapolation = true;
 
 			var signals = Auxiliaries.Signals;
 
 			signals.SimulationInterval = dt;
 			signals.ClutchEngaged = DataBus.ClutchClosed(absTime);
 			signals.EngineDrivelineTorque = torquePowerTrain;
-			//Auxiliaries.Signals.EngineDrivelinePower = torquePowerTrain * angularSpeed;
-			//Auxiliaries.Signals.InternalEnginePower = torqueEngine * angularSpeed - DataBus.BrakePower;
-			//if (DataBus.DriverBehavior == DrivingBehavior.Coasting) {
-			// make sure smart aux are _not_ enabled for now
-			// set internal_engine_power a little bit lower so there is no excessive power for smart aux
-			//Auxiliaries.Signals.InternalEnginePower = 3 * torqueEngine * angularSpeed /*- DataBus.BrakePower*/;
-
-			// if smart aux should be on during coasting use the following line
-			// set internal_engine_power to a large value (*10) so that there's excessive power for smart aux (alreadin during search operating point)
-			//(float)DataBus.EngineDragPower(angularSpeed).Value() / 100;
-			//} else {
-			// Toodo: change to driveraction 
-			//if (DataBus.DriverBehavior != DrivingBehavior.Braking) {
-			//	Auxiliaries.Signals.InternalEnginePower = 0.SI<Watt>();
-
-			//	//(float)((0.9 * torqueEngine * angularSpeed - DataBus.BrakePower) / 1000).Value();
-			//} else {
-			//	// smart aux should be on during braking
-			//}
-			//}
-			//Auxiliaries.Signals.EngineMotoringPower = -DataBus.EngineDragPower(angularSpeed);
-
+			
 			signals.EngineSpeed = angularSpeed;
 			var avgAngularSpeed = (PreviousState.AngularSpeed + CurrentState.AngularSpeed) / 2;
+
+
 			signals.PreExistingAuxPower = AdditionalAux != null
 				? AdditionalAux.TorqueDemand(absTime, dt, torquePowerTrain, torqueEngine, angularSpeed, dryRun) * avgAngularSpeed
 				: 0.SI<Watt>();
 
-			//var avgEngineSpeed = (DataBus.EngineSpeed + angularSpeed) / 2.0;
 			var drivetrainPower = torquePowerTrain * avgAngularSpeed;
-
-			signals.ExcessiveDragPower = DataBus.DrivingAction == DrivingAction.Brake ?
-				drivetrainPower - (DataBus.EngineDragPower(avgAngularSpeed) - signals.PreExistingAuxPower) - DataBus.BrakePower:
-				0.SI<Watt>();
+			if (!dryRun && DataBus.DrivingAction == DrivingAction.Brake && CurrentState.ExcessiveDragPower.IsEqual(0)) {
+				CurrentState.ExcessiveDragPower = drivetrainPower -
+												(DataBus.EngineDragPower(avgAngularSpeed) - signals.PreExistingAuxPower) - DataBus.BrakePower;
+			}
+			if (!dryRun && DataBus.DrivingAction != DrivingAction.Brake) {
+				CurrentState.ExcessiveDragPower = 0.SI<Watt>();
+			}
 
 			
-
-			//mAAUX_Global.PreExistingAuxPower;
+			signals.ExcessiveDragPower = CurrentState.ExcessiveDragPower;
 			signals.Idle = DataBus.VehicleStopped;
 			signals.InNeutral = DataBus.Gear == 0;
-
-			//Auxiliaries.Signals.RunningCalc = true;
-
-			//mAAUX_Global.Internal_Engine_Power;
-			//'Power coming out of Advanced Model is in Watts.
 
 			return Auxiliaries.AuxiliaryPowerAtCrankWatts + signals.PreExistingAuxPower;
 		}
@@ -285,7 +253,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Second dt;
 			public PerSecond AngularSpeed;
 			public Watt PowerDemand;
-			public Kilogram TotalFuelConsumption = 0.SI<Kilogram>();
+			
+			public Watt ExcessiveDragPower = 0.SI<Watt>();
 		}
 	}
 }
