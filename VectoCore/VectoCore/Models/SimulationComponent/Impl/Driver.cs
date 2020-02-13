@@ -60,7 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public DriverData DriverData { get; protected set; }
 
 		protected readonly IDriverStrategy DriverStrategy;
-		
+		protected readonly bool smartBusAux;
+
 		public DrivingAction DrivingAction { get; protected internal set; }
 
 		public Driver(IVehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
@@ -69,6 +70,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DriverStrategy = strategy;
 			strategy.Driver = this;
 			DriverAcceleration = 0.SI<MeterPerSquareSecond>();
+			var busAux = container.RunData.BusAuxiliaries;
+			smartBusAux = busAux != null && (busAux.PneumaticUserInputsConfig.SmartAirCompression ||
+											busAux.ElectricalUserInputsConfig.SmartElectrical);
 		}
 
 
@@ -509,9 +513,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				operatingPoint;
 
 			DriverAcceleration = operatingPoint.Acceleration;
-			var response = previousResponse ??
-							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
-								gradient);
+			var response = !smartBusAux && previousResponse != null
+				? previousResponse
+				: NextComponent.Request(
+					absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
+					gradient);
 
 			var point = operatingPoint;
 			response.Switch().
