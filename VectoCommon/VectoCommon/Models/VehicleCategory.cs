@@ -127,6 +127,14 @@ namespace TUGraz.VectoCommon.Models
 			}
 		}
 
+		public static bool IsBus(this VehicleCategory category)
+		{
+			switch (category) {
+				case VehicleCategory.HeavyBusPrimaryVehicle: return true;
+				default: return false;
+			}
+		}
+
 		public static VehicleCategory Parse(string vehicleCategory)
 		{
 			switch (vehicleCategory) {

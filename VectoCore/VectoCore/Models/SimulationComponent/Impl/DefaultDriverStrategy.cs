@@ -89,6 +89,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DrivingModes.Add(DrivingMode.DrivingModeBrake, new DriverModeBrake() { DriverStrategy = this });
 			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 
+			VehicleCategory = container?.RunData.VehicleData.VehicleCategory ?? VehicleCategory.Unknown;
+
 			var data = container?.RunData;
 			ADAS = data?.VehicleData?.ADAS ?? new VehicleData.ADASData() {
 				EcoRoll = EcoRollType.None,
@@ -117,6 +119,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				container?.AddPreprocessor(new PCCSegmentPreprocessor(testContainer, PCCSegments, data?.DriverData.PCC));
 			}
 		}
+
+		public VehicleCategory VehicleCategory { get; set; }
 
 		public IDriverActions Driver { get; set; }
 
@@ -426,7 +430,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var accelerationPedalIdle = EcoRollState.AcceleratorPedalIdle;
 			var brakeActive = !EcoRollState.PreviousBrakePower.IsEqual(0);
 			var vehcleSpeedBelowMax = dBus.VehicleSpeed <=
-									dBus.CycleData.LeftSample.VehicleTargetSpeed + GetOverspeed() - 2.KMPHtoMeterPerSecond();
+									(ApplyOverspeed(dBus.CycleData.LeftSample.VehicleTargetSpeed) - 2.KMPHtoMeterPerSecond());
 
 			EcoRollState.AllConditionsMet = vehicleSpeedAboveLowerThreshold && vehcleSpeedBelowMax && slopeNegative && accelerationWithinLimits &&
 											accelerationPedalIdle && !brakeActive;
@@ -562,6 +566,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 		}
 
+		public MeterPerSecond ApplyOverspeed(MeterPerSecond targetSpeed)
+		{
+			return (targetSpeed + GetOverspeed()).LimitTo(
+					0.KMPHtoMeterPerSecond(), VehicleCategory.IsBus() ? Constants.BusParameters.MaxBusSpeed : 500.KMPHtoMeterPerSecond());
+			
+		}
+
 		protected internal MeterPerSecond GetOverspeed()
 		{
 			return ADAS.PredictiveCruiseControl == PredictiveCruiseControlType.Option_1_2_3 && Driver.DataBus.CycleData.LeftSample.Highway
@@ -583,7 +594,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var nextActions = new List<DrivingBehaviorEntry>();
 			foreach (var entry in lookaheadData) {
 				var nextTargetSpeed = OverspeedAllowed(entry.VehicleTargetSpeed)
-					? entry.VehicleTargetSpeed + GetOverspeed()
+					? ApplyOverspeed(entry.VehicleTargetSpeed)
 					: entry.VehicleTargetSpeed;
 				if (nextTargetSpeed >= currentSpeed) {
 					// acceleration is not relevant
@@ -689,7 +700,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return Driver.DriverData.OverSpeed.Enabled
 					&& velocity > Driver.DriverData.OverSpeed.MinSpeed
-					&& (velocity + GetOverspeed()) <
+					&& ApplyOverspeed(velocity) <
 					(Driver.DataBus.MaxVehicleSpeed ?? 500.KMPHtoMeterPerSecond());
 		}
 	}
@@ -828,8 +839,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Driver.DriverBehavior = DrivingBehavior.Driving;
 			var velocityWithOverspeed = targetVelocity;
 			if (DriverStrategy.OverspeedAllowed(targetVelocity, prohibitOverspeed)) {
-				velocityWithOverspeed += DriverStrategy.GetOverspeed();
+				velocityWithOverspeed = DriverStrategy.ApplyOverspeed(velocityWithOverspeed);
 			}
+			
 			if (DataBus.GearboxType.AutomaticTransmission() || DataBus.ClutchClosed(absTime)) {
 				for (var i = 0; i < 3; i++) {
 					var retVal = HandleRequestEngaged(
