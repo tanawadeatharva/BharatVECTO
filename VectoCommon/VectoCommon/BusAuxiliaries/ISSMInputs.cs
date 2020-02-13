@@ -15,6 +15,8 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 
 		IEnvironmentalConditions EnvironmentalConditions { get; }
 
+		double NumberOfPassengers { get; }
+
 		IACSystem ACSystem { get; }
 
 		IVentilation Ventilation { get; }

@@ -76,8 +76,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// Dim C60  As Double = gen.AH_EngineWasteHeatkW
 
 				var totalW = TotalW(enviromentalTemperature, solarFactor);
-				return (totalW < 0 && totalW < (ssmTOOL.EngineWasteHeatkW * -1))
-					? totalW - (ssmTOOL.EngineWasteHeatkW * -1)
+				return (totalW < 0 && totalW < (ssmTOOL.EngineWasteHeat * -1))
+					? totalW - (ssmTOOL.EngineWasteHeat * -1)
 					: 0.SI<Watt>();
 
 		}
@@ -89,15 +89,15 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				var TLFFH = ssmTOOL.Calculate.TechListAdjustedHeatingW_FuelFiredHeating;
 				// Dim C60 As Double = gen.AH_EngineWasteHeatkW
 				// Dim N79 As Double = Me.TotalKW
-				//Return IF(IF(((TotalKW * (1 - TLFFH)) < 0 AndAlso(TotalKW * (1 - TLFFH)) < (gen.AH_EngineWasteHeatkW * -1)), _
+				//Return IF(  IF(( (TotalKW * (1 - TLFFH)) < 0 AndAlso (TotalKW * (1 - TLFFH)) < (gen.AH_EngineWasteHeatkW * -1)), _
 				//	(TotalKW * (1 - TLFFH)) - (gen.AH_EngineWasteHeatkW * -1), 0)*1000 < 0, _
 				//IF(((TotalKW * (1 - TLFFH)) < 0 AndAlso(TotalKW * (1 - TLFFH)) < (gen.AH_EngineWasteHeatkW * -1)),(TotalKW * (1 - TLFFH)) - (gen.AH_EngineWasteHeatkW * -1),0)*1000,0)
 
-				var totalW = TotalW(enviromentalTemperature, solarFactor);
-				return (totalW * (1 - TLFFH) < 0 && totalW * (1 - TLFFH) < ssmTOOL.EngineWasteHeatkW * -1?
-							totalW * (1 - TLFFH) - ssmTOOL.EngineWasteHeatkW * -1: 0.SI<Watt>()) < 0
-					? (totalW * (1 - TLFFH) < 0 && totalW * (1 - TLFFH) < ssmTOOL.EngineWasteHeatkW * -1
-							? totalW * (1 - TLFFH) - ssmTOOL.EngineWasteHeatkW * -1
+				var totalW = TotalW(enviromentalTemperature, solarFactor) * (1 - TLFFH);
+				return (totalW  < 0 && totalW  < ssmTOOL.EngineWasteHeat * -1?
+							totalW  - ssmTOOL.EngineWasteHeat * -1: 0.SI<Watt>()) < 0
+					? (totalW  < 0 && totalW < ssmTOOL.EngineWasteHeat * -1
+							? totalW  - ssmTOOL.EngineWasteHeat * -1
 							: 0.SI<Watt>())
 					: 0.SI<Watt>();
 			

@@ -25,7 +25,7 @@ Namespace IntegrationTests
             Dim engineFCMapFilePath = "TestFiles\Integration\24t Coach.vmap"
             Dim auxFilePath = "TestFiles\Integration\AdvAuxTest.aaux"
 
-            Dim aux As BusAuxiliaries = New BusAuxiliaries
+            Dim aux As BusAuxiliaries = New BusAuxiliaries(Nothing)
 
             'aux.VectoInputs.Cycle = "Coach"
             'aux.VectoInputs.VehicleWeightKG = vehicleWeight.SI(Of Kilogram)()
@@ -75,7 +75,7 @@ Namespace IntegrationTests
             Dim engineFCMapFilePath = "TestFiles\Integration\24t Coach.vmap"
             Dim auxFilePath = "TestFiles\Integration\AdvAuxTest.aaux"
 
-            Dim aux As BusAuxiliaries = New BusAuxiliaries
+            Dim aux As BusAuxiliaries = New BusAuxiliaries(Nothing)
 
             'aux.VectoInputs.Cycle = "Coach"
             'aux.VectoInputs.VehicleWeightKG = 12000.SI(Of Kilogram)()

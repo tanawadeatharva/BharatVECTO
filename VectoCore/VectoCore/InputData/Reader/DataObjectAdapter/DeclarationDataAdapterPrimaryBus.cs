@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				PneumaticAuxillariesConfig = CreatePneumaticAuxConfig(runData.Retarder.Type),
 				Actuations = actuations,
 				SSMInputs = CreateSSMModelParameters(
-					vehicleData.Components.BusAuxiliaries, mission, FuelData.Diesel),
+					vehicleData.Components.BusAuxiliaries, mission, FuelData.Diesel, runData.Loading),
 				VehicleData = runData.VehicleData,
 			};
 
@@ -234,7 +234,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				RessourceHelper.ReadStream(DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus." + resource), dragCurveFactorClutch);
 		}
 
-		public virtual ISSMInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel)
+		public virtual ISSMInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel, LoadingType loadingType)
 		{
 			var busParams = mission.BusParameter;
 
@@ -278,7 +278,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				UValue = DeclarationData.BusAuxiliaries.UValue(busParams.FloorType),
 				NumberOfPassengers =
 					DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(hvacBusLength, busParams.VehicleWidth) *
-					busParams.PassengerDensity + 1, // add driver for 'heat input'
+					busParams.PassengerDensity * (loadingType == LoadingType.LowLoading ? mission.MissionType.GetPassengerDensityLowLoadFactor() : 1.0) + 1, // add driver for 'heat input'
 				VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration, false),
 				VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(busParams.HVACConfiguration, true),
 

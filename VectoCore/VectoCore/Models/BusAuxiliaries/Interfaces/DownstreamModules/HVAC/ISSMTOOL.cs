@@ -15,20 +15,21 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.HV
 
 		Watt ElectricalWAdjusted { get; } // Watt
 		Watt MechanicalWBaseAdjusted { get; } // Watt
-		KilogramPerSecond FuelPerHBaseAdjusted { get; } // LiterPerHour
 
-		Watt EngineWasteHeatkW { get; }
+		//KilogramPerSecond FuelPerHBaseAdjusted { get; } // LiterPerHour
+
+		Watt EngineWasteHeat { get; }
 
 
 		/// <summary>
-		/// This alters the waste heat and returns an adjusted fueling value
+		/// 
 		/// </summary>
-		/// <param name="AverageUseableEngineWasteHeatKW"></param>
+		/// <param name="averageUseableEngineWasteHeat"></param>
 		/// <returns></returns>
 		/// <remarks></remarks>
-		KilogramPerSecond FuelPerHBaseAsjusted(Watt AverageUseableEngineWasteHeatKW);
+		Watt AverageAuxHeaterPower(Watt averageUseableEngineWasteHeat);
 
 	}
 
-	public delegate void MessageEventHandler(ref object sender, string message, AdvancedAuxiliaryMessageType messageType);
+	//public delegate void MessageEventHandler(ref object sender, string message, AdvancedAuxiliaryMessageType messageType);
 }

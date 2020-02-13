@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			TechList = ssmInput.Technologies;
 
 			Calculate = new SSMCalculate(this);
-			EngineWasteHeatkW = 0.SI<Watt>();
+			EngineWasteHeat = 0.SI<Watt>();
 		}
 
 		public ISSMInputs SSMInputs { get;  }
@@ -82,25 +82,25 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			}
 		}
 
-		public KilogramPerSecond FuelPerHBaseAdjusted
-		{
-			get {
-				return Calculate.FuelPerHBaseAdjusted; // .SI(Of LiterPerHour)()
-			}
-		}
+		//public KilogramPerSecond FuelPerHBaseAdjusted
+		//{
+		//	get {
+		//		return Calculate.AverageAuxHeaterPower; // .SI(Of LiterPerHour)()
+		//	}
+		//}
 
-		public Watt EngineWasteHeatkW { get; protected set; }
+		public Watt EngineWasteHeat { get; protected set; }
 		
 		
 		
 		// Dynamicly Get Fuel having re-adjusted Engine Heat Waste, this was originally supposed to be Solid State. Late adjustment request 24/3/2015
-		public KilogramPerSecond FuelPerHBaseAsjusted(Watt AverageUseableEngineWasteHeatKW)
+		public Watt AverageAuxHeaterPower(Watt averageUseableEngineWasteHeat)
 		{
 			// Set Engine Waste Heat
 			//SSMInputs.AuxHeater.EngineWasteHeatkW = AverageUseableEngineWasteHeatKW;
-			EngineWasteHeatkW = AverageUseableEngineWasteHeatKW;
+			EngineWasteHeat = averageUseableEngineWasteHeat;
 
-			var fba = Calculate.FuelPerHBaseAdjusted;
+			var fba = Calculate.AverageAuxHeaterPower;
 
 			// Dim FuelFiredWarning As Boolean = fba * SSMInputs.BC_AuxHeaterEfficiency * HVACConstants.FuelDensity * SSMInputs.BC_GCVDieselOrHeatingOil * 1000 > (AverageUseableEngineWasteHeatKW + SSMInputs.AH_FuelFiredHeaterkW)
 			// If Not FuelFiredHeaterInsufficientWarned AndAlso FuelFiredWarning Then

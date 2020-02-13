@@ -143,10 +143,10 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			}
 		}
 
-		public KilogramPerSecond FuelPerHBaseAdjusted
+		public Watt AverageAuxHeaterPower
 		{
 			get {
-				var FuelLPerHBaseAdjustedAverage = 0.0.SI<KilogramPerSecond>();
+				var averageAuxHeaterPower = 0.0.SI<Watt>();
 				var gen = ssmTOOL.SSMInputs.EnvironmentalConditions;
 				var tl = ssmTOOL.TechList;
 				
@@ -154,17 +154,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				// If batch mode is disabled use the EC_EnviromentalTemperature and EC_Solar variables. 
 				// Else if batch is enable calculate the FuelLPerHBaseAdjusted for each input in the AENV file and then calculate the weighted average
 				if (!gen.BatchMode)
-					FuelLPerHBaseAdjustedAverage = CalculateFuelLPerHBaseAdjusted(
+					averageAuxHeaterPower = CalculateAverageAuxHeaterPower(
 						ssmTOOL.SSMInputs, tl, gen.DefaultConditions);
 				else {
 					foreach (var envCondition in gen.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						FuelLPerHBaseAdjustedAverage += CalculateFuelLPerHBaseAdjusted(
+						averageAuxHeaterPower += CalculateAverageAuxHeaterPower(
 							ssmTOOL.SSMInputs, tl, envCondition);
 
 					
 				}
 
-				return FuelLPerHBaseAdjustedAverage;
+				return averageAuxHeaterPower;
 			}
 		}
 
@@ -540,7 +540,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			return MechanicalWBaseAdjusted * env.Weighting;
 		}
 
-		private KilogramPerSecond CalculateFuelLPerHBaseAdjusted(
+		private Watt CalculateAverageAuxHeaterPower(
 			ISSMInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
 		{
 			// =MIN(ABS(IF(AND(M89<0,M90<0),VLOOKUP(MAX(M89:M90),M89:P90,4),0)/1000),C71)/C37*(1/(C39*C38))
@@ -566,11 +566,11 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 							: Run2.TechListAmendedFuelW(env.Temperature, env.Solar)).Value().SI<Watt>();
 			}
 
-			var fuelLPerHBaseAdjusted = VectoMath.Min(result, genInputs.AuxHeater.FuelFiredHeaterPower) /
-										genInputs.BoundaryConditions.AuxHeaterEfficiency /
-										(genInputs.BoundaryConditions.GCVDieselOrHeatingOil /* * ssmTOOL.HVACConstants.FuelDensity*/);
+			var auxHeaterPower = VectoMath.Min(result, genInputs.AuxHeater.FuelFiredHeaterPower) /
+										genInputs.BoundaryConditions.AuxHeaterEfficiency;
+										// / (genInputs.BoundaryConditions.GCVDieselOrHeatingOil /* * ssmTOOL.HVACConstants.FuelDensity*/);
 
-			return fuelLPerHBaseAdjusted * env.Weighting;
+			return auxHeaterPower * env.Weighting;
 		}
 	}
 }

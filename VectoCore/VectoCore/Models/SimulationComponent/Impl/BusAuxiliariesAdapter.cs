@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			DataBus = container;
 
-			var tmpAux = new BusAuxiliaries.BusAuxiliaries();
+			var tmpAux = new BusAuxiliaries.BusAuxiliaries(container.ModalData);
 
 			//'Set Signals
 			tmpAux.Signals.EngineIdleSpeed = container.EngineIdleSpeed;

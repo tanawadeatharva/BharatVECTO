@@ -29,7 +29,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		[
 			TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_nonSmart.xml", 0, TestName = "Run Primary Bus NonSmart HeavyUrban Low"),
+			TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_SmartPS.xml", -1, TestName = "Run Primary Bus SmartPS ALL"),
 
+			TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_SmartPS.xml", 0, TestName = "Run Primary Bus SmartPS HeavyUrban Low"),
+			TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_SmartPS.xml", 1, TestName = "Run Primary Bus SmartPS HeavyUrban Ref"),
+			TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_SmartPS.xml", 13, TestName = "Run Primary Bus SmartPS InterUrban Ref"),
 
 			TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_nonSmart.xml", -1, TestName = "Run Primary Bus NonSmart ALL"),
 			TestCase(@"TestData\Integration\Buses\vecto_vehicle-primary_heavyBus_SmartPS.xml", -1, TestName = "Run Primary Bus SmartPS ALL"),

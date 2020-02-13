@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using TUGraz.VectoCommon.BusAuxiliaries;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl;
 using TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Electrics;
@@ -21,6 +22,7 @@ using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Interfaces.DownstreamModules.Electrics;
 using TUGraz.VectoCore.Models.BusAuxiliaries.Util;
+using TUGraz.VectoCore.OutputData;
 
 namespace TUGraz.VectoCore.Models.BusAuxiliaries
 {
@@ -66,9 +68,22 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		//private IM14 M14;
 
 
-		public BusAuxiliaries()
+		public BusAuxiliaries(IModalDataContainer modDataContainer)
 		{
 			Signals = new Signals();
+			if (modDataContainer != null) {
+				modDataContainer.AuxHeaterDemandCalc = AuxHeaterDemandCalculation;
+			}
+		}
+
+		protected virtual Joule AuxHeaterDemandCalculation(Second cycleTime, Joule engineWasteHeatTotal)
+		{
+			if (auxConfig == null) {
+				throw new VectoException("Auxiliary configuration missing!");
+			}
+			var ssmTool = new SSMTOOL(auxConfig.SSMInputs);
+			var M14 = new M14aImpl(ssmTool);
+			return M14.AuxHeaterDemand(cycleTime, engineWasteHeatTotal);
 		}
 
 		public void Initialise(IAuxiliaryConfig auxCfg)

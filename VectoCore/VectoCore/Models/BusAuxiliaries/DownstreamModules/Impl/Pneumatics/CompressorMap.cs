@@ -98,17 +98,17 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.Pneumati
 		
 
 
-		public event MessageEventHandler Message;
+		//public event MessageEventHandler Message;
 
 		//public delegate void MessageEventHandler(ref object sender, string message, AdvancedAuxiliaryMessageType messageType);
 
-		private void OnMessage(object sender, string message, AdvancedAuxiliaryMessageType messageType)
-		{
-			if (message != null) {
-				object compressorMap = this;
-				Message?.Invoke(ref compressorMap, message, messageType);
-			}
-		}
+		//private void OnMessage(object sender, string message, AdvancedAuxiliaryMessageType messageType)
+		//{
+		//	if (message != null) {
+		//		object compressorMap = this;
+		//		Message?.Invoke(ref compressorMap, message, messageType);
+		//	}
+		//}
 
 		#region Implementation of IAuxiliaryEvent
 

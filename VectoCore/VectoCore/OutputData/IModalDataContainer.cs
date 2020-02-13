@@ -114,6 +114,9 @@ namespace TUGraz.VectoCore.OutputData
 		Second Duration { get; }
 
 		Meter Distance { get; }
+
+		Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
+
 		KilogramPerWattSecond VehicleLineCorrectionFactor(IFuelProperties fuel);
 		void CalculateAggregateValues();
 	}

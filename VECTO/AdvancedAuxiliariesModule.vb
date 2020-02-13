@@ -57,7 +57,7 @@ Module AdvancedAuxiliariesModule
 
 		'			o = Activator.CreateInstance(fileNameWoExtentsion, "VectoAuxiliaries.AdvancedAuxiliaries")
 
-					busAux = new BusAuxiliaries()
+					busAux = new BusAuxiliaries(Nothing)
 
 					Dim advancedAuxiliary As AdvancedAuxiliary = New AdvancedAuxiliary(busAux.AuxiliaryName,
 																						busAux.AuxiliaryVersion,
@@ -100,7 +100,7 @@ Module AdvancedAuxiliariesModule
 
 		Try
 			'o = Activator.CreateInstance(chosenAssembly.Value.AssemblyName, "VectoAuxiliaries.AdvancedAuxiliaries")
-			busAux = New BusAuxiliaries() ' DirectCast(o.Unwrap, IAdvancedAuxiliaries)
+			busAux = New BusAuxiliaries(Nothing) ' DirectCast(o.Unwrap, IAdvancedAuxiliaries)
 
 			Configure(filePath, vectoFilePath)
 
@@ -186,7 +186,7 @@ Module AdvancedAuxiliariesModule
 		'Open Assembly and invoke the validation using the paths supplied.
 		Try
 			'o = Activator.CreateInstance(chosenAssembly.Value.AssemblyName, "VectoAuxiliaries.AdvancedAuxiliaries")
-			busAux = New BusAuxiliaries()  ' DirectCast(o.Unwrap, IAdvancedAuxiliaries)
+			busAux = New BusAuxiliaries(Nothing)  ' DirectCast(o.Unwrap, IAdvancedAuxiliaries)
 
 			'result = busAux.ValidateAAUXFile(absoluteAAuxPath, message)
 

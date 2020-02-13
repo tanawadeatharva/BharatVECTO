@@ -164,6 +164,8 @@ namespace TUGraz.VectoCore.OutputData
 			get { return _distance ?? (_distance = CalcDistance()); }
 		}
 
+		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
+
 		public KilogramPerWattSecond VehicleLineCorrectionFactor(IFuelProperties fuel)
 		{
 			if (_vehicleLine.ContainsKey(fuel.FuelType)) {
@@ -328,8 +330,9 @@ namespace TUGraz.VectoCore.OutputData
 						ModalResultField.v_act,
 						ModalResultField.v_targ,
 						ModalResultField.acc,
-						ModalResultField.grad
-					});
+						ModalResultField.grad,
+						ModalResultField.altitude
+			});
 			}
 			if (!_writeEngineOnly) {
 				dataColumns.AddRange(
@@ -428,31 +431,9 @@ namespace TUGraz.VectoCore.OutputData
 						});
 				}
 			}
-			if (!_writeEngineOnly && WriteAdvancedAux) {
-				//dataColumns.AddRange(
-				//	new[] {
-				//		ModalResultField.AA_NonSmartAlternatorsEfficiency,
-				//		ModalResultField.AA_SmartIdleCurrent_Amps,
-				//		ModalResultField.AA_SmartIdleAlternatorsEfficiency,
-				//		ModalResultField.AA_SmartTractionCurrent_Amps,
-				//		ModalResultField.AA_SmartTractionAlternatorEfficiency,
-				//		ModalResultField.AA_SmartOverrunCurrent_Amps,
-				//		ModalResultField.AA_SmartOverrunAlternatorEfficiency,
-				//		ModalResultField.AA_CompressorFlowRate_LitrePerSec,
-				//		ModalResultField.BusAux_OverrunFlag,
-				//		ModalResultField.AA_EngineIdleFlag,
-				//		ModalResultField.AA_CompressorFlag,
-				//		ModalResultField.AA_TotalCycleFC_Grams,
-				//		//ModalResultField.AA_TotalCycleFC_Litres,
-				//		ModalResultField.AA_AveragePowerDemandCrankHVACMechanicals,
-				//		ModalResultField.AA_AveragePowerDemandCrankHVACElectricals,
-				//		ModalResultField.AA_AveragePowerDemandCrankElectrics,
-				//		ModalResultField.AA_AveragePowerDemandCrankPneumatics,
-				//		ModalResultField.AA_TotalCycleFuelConsumptionCompressorOff,
-				//		ModalResultField.AA_TotalCycleFuelConsumptionCompressorOn,
-				//	});
-			}
-			dataColumns.Add(ModalResultField.altitude);
+			//if (!_writeEngineOnly && WriteAdvancedAux) {
+				
+			//}
 			return dataColumns;
 		}
 

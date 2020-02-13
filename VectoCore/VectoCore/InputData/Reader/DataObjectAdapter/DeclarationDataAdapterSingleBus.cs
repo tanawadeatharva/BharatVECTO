@@ -120,10 +120,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			return retVal;
 		}
 
-		public override ISSMInputs CreateSSMModelParameters(
-			IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel)
+		public override ISSMInputs CreateSSMModelParameters(IBusAuxiliariesDeclarationData busAuxInputData, Mission mission, IFuelProperties heatingFuel, LoadingType loading)
 		{
-			var retVal = base.CreateSSMModelParameters(busAuxInputData, mission, heatingFuel) as SSMInputs;
+			var retVal = base.CreateSSMModelParameters(busAuxInputData, mission, heatingFuel, loading) as SSMInputs;
 			if (retVal == null) {
 				throw new VectoException("Unknonw SSMInput Instance");
 			}

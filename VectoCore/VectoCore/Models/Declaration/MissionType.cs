@@ -128,5 +128,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 				default: throw new ArgumentOutOfRangeException(nameof(self), self, null);
 			}
 		}
+
+		public static double GetPassengerDensityLowLoadFactor(this MissionType self)
+		{
+			switch (self) {
+				case MissionType.HeavyUrban:
+				case MissionType.Urban:
+				case MissionType.Suburban: return 0.2;
+				case MissionType.Interurban: return 0.3;
+				case MissionType.Coach: return 0.4;
+				default: return 0.1;
+			}
+		}
 	}
 }

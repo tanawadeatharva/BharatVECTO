@@ -234,6 +234,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			get { return _distance; }
 		}
 
+		public Func<Second, Joule, Joule> AuxHeaterDemandCalc { get; set; }
+
 		public KilogramPerWattSecond VehicleLineCorrectionFactor(IFuelProperties fuel)
 		{
 			return 0.SI<KilogramPerWattSecond>();
