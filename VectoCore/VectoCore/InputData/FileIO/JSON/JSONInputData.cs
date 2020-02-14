@@ -965,8 +965,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 
 		#endregion
 	}
-
-
+	
 	public class JSONInputDataSingleBusV6 : JSONFile, ISingleBusInputDataProvider, IDeclarationJobInputData
 	{
 		private readonly IXMLInputDataReader _xmlInputReader;
