@@ -2257,6 +2257,15 @@ namespace TUGraz.VectoCommon.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EnergyConsumption.
+        /// </summary>
+        public static string Report_Result_EnergyConsumption {
+            get {
+                return ResourceManager.GetString("Report_Result_EnergyConsumption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FuelMode.
         /// </summary>
         public static string Report_Result_FuelMode {
@@ -2460,6 +2469,15 @@ namespace TUGraz.VectoCommon.Resources {
         public static string Report_ResultEntry_MinSpeed {
             get {
                 return ResourceManager.GetString("Report_ResultEntry_MinSpeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PassengerCount.
+        /// </summary>
+        public static string Report_ResultEntry_PassengerCount {
+            get {
+                return ResourceManager.GetString("Report_ResultEntry_PassengerCount", resourceCulture);
             }
         }
         

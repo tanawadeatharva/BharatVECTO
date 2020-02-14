@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 	{
 		void Initialize(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes);
 		XDocument Report { get; }
-		void WriteResult(DeclarationReport<XMLDeclarationReport.ResultEntry>.ResultContainer<XMLDeclarationReport.ResultEntry> resultValue);
+		void WriteResult(XMLDeclarationReport.ResultEntry resultValue);
 		void GenerateReport();
 	}
 
@@ -107,41 +107,39 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 
 
-		public virtual void WriteResult(
-			DeclarationReport<XMLDeclarationReport.ResultEntry>.ResultContainer<XMLDeclarationReport.ResultEntry> entry)
+		public virtual void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
 		{
-			foreach (var resultEntry in entry.ResultEntry) {
-				_allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
+			_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
 				Results.Add(
 					new XElement(
 						tns + XMLNames.Report_Result_Result,
 						new XAttribute(
 							XMLNames.Report_Result_Status_Attr,
-							resultEntry.Value.Status == VectoRun.Status.Success ? "success" : "error"),
-						new XElement(tns + XMLNames.Report_Result_Mission, entry.Mission.ToXMLFormat()),
+							resultEntry.Status == VectoRun.Status.Success ? "success" : "error"),
+						new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
 						GetResults(resultEntry)));
-			}
+			
 		}
 
-		protected virtual object[] GetResults(KeyValuePair<LoadingType, XMLDeclarationReport.ResultEntry> resultEntry)
+		protected virtual object[] GetResults( XMLDeclarationReport.ResultEntry resultEntry)
 		{
-			switch (resultEntry.Value.Status) {
+			switch (resultEntry.Status) {
 				case VectoRun.Status.Pending:
 				case VectoRun.Status.Running:
 					return new object[] {
-						GetSimulationParameters(resultEntry.Value),
+						GetSimulationParameters(resultEntry),
 						new XElement(
 							tns + XMLNames.Report_Results_Error,
-							string.Format("Simulation not finished! Status: {0}", resultEntry.Value.Status)),
+							string.Format("Simulation not finished! Status: {0}", resultEntry.Status)),
 						new XElement(tns + XMLNames.Report_Results_ErrorDetails, ""),
 					}; // should not happen!
-				case VectoRun.Status.Success: return GetSuccessResultEntry(resultEntry.Value);
+				case VectoRun.Status.Success: return GetSuccessResultEntry(resultEntry);
 				case VectoRun.Status.Canceled:
 				case VectoRun.Status.Aborted:
 					return new object[] {
-						GetSimulationParameters(resultEntry.Value),
-						new XElement(tns + XMLNames.Report_Results_Error, resultEntry.Value.Error),
-						new XElement(tns + XMLNames.Report_Results_ErrorDetails, resultEntry.Value.StackTrace),
+						GetSimulationParameters(resultEntry),
+						new XElement(tns + XMLNames.Report_Results_Error, resultEntry.Error),
+						new XElement(tns + XMLNames.Report_Results_ErrorDetails, resultEntry.StackTrace),
 					};
 				default: throw new ArgumentOutOfRangeException();
 			}
@@ -209,6 +207,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					tns + XMLNames.Report_ResultEntry_TotalVehicleMass,
 					XMLHelper.ValueAsUnit(result.TotalVehicleWeight, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Report_ResultEntry_Payload, XMLHelper.ValueAsUnit(result.Payload, XMLNames.Unit_kg)),
+				result.PassengerCount > 0 ? new XElement(tns + "PassengerCount", result.PassengerCount.ToMinSignificantDigits(3,1)) : null,
 				new XElement(
 					tns + XMLNames.Report_Result_FuelMode,
 					result.FuelData.Count > 1 ? XMLNames.Report_Result_FuelMode_Val_Dual : XMLNames.Report_Result_FuelMode_Val_Single)

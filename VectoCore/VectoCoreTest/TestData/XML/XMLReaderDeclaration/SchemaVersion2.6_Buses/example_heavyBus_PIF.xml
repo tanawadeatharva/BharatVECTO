@@ -267,19 +267,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 					<FuelMode>single fuel mode</FuelMode>
 				</SimulationParameters>
 				<Fuel type="Diesel CI">
-					<FuelConsumption unit="g/km">210.5</FuelConsumption>
-					<FuelConsumption unit="g/t-km">228.8</FuelConsumption>
-					<FuelConsumption unit="g/m³-km">4.41</FuelConsumption>
-					<FuelConsumption unit="MJ/km">8.99</FuelConsumption>
-					<FuelConsumption unit="MJ/t-km">9.77</FuelConsumption>
-					<FuelConsumption unit="MJ/m³-km">0.188</FuelConsumption>
-					<FuelConsumption unit="l/100km">25.2</FuelConsumption>
-					<FuelConsumption unit="l/t-km">0.274</FuelConsumption>
-					<FuelConsumption unit="l/m³-km">0.00528</FuelConsumption>
+					<EnergyConsumption unit="MJ/km">8.99</EnergyConsumption>
 				</Fuel>
 				<CO2 unit="g/km">658.9</CO2>
-				<CO2 unit="g/t-km">716.2</CO2>
-				<CO2 unit="g/m³-km">13.8</CO2>
 			</Result>
 			<Result status="success">
 				<VehicleGroup>P31SD</VehicleGroup>
@@ -291,19 +281,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 					<FuelMode>single fuel mode</FuelMode>
 				</SimulationParameters>
 				<Fuel type="Diesel CI">
-					<FuelConsumption unit="g/km">231.4</FuelConsumption>
-					<FuelConsumption unit="g/t-km">50.3</FuelConsumption>
-					<FuelConsumption unit="g/m³-km">4.85</FuelConsumption>
-					<FuelConsumption unit="MJ/km">9.88</FuelConsumption>
-					<FuelConsumption unit="MJ/t-km">2.15</FuelConsumption>
-					<FuelConsumption unit="MJ/m³-km">0.207</FuelConsumption>
-					<FuelConsumption unit="l/100km">27.7</FuelConsumption>
-					<FuelConsumption unit="l/t-km">0.0602</FuelConsumption>
-					<FuelConsumption unit="l/m³-km">0.00580</FuelConsumption>
+					<EnergyConsumption unit="MJ/km">9.88</EnergyConsumption>
 				</Fuel>
 				<CO2 unit="g/km">724.4</CO2>
-				<CO2 unit="g/t-km">157.5</CO2>
-				<CO2 unit="g/m³-km">15.2</CO2>
 			</Result>
 			<Result status="success">
 				<VehicleGroup>P31DD</VehicleGroup>
@@ -315,19 +295,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 					<FuelMode>single fuel mode</FuelMode>
 				</SimulationParameters>
 				<Fuel type="Diesel CI">
-					<FuelConsumption unit="g/km">244.1</FuelConsumption>
-					<FuelConsumption unit="g/t-km">265.3</FuelConsumption>
-					<FuelConsumption unit="g/m³-km">5.12</FuelConsumption>
-					<FuelConsumption unit="MJ/km">10.4</FuelConsumption>
-					<FuelConsumption unit="MJ/t-km">11.3</FuelConsumption>
-					<FuelConsumption unit="MJ/m³-km">0.218</FuelConsumption>
-					<FuelConsumption unit="l/100km">29.2</FuelConsumption>
-					<FuelConsumption unit="l/t-km">0.317</FuelConsumption>
-					<FuelConsumption unit="l/m³-km">0.00612</FuelConsumption>
+					<EnergyConsumption unit="MJ/km">10.4</EnergyConsumption>
 				</Fuel>
 				<CO2 unit="g/km">763.9</CO2>
-				<CO2 unit="g/t-km">830.3</CO2>
-				<CO2 unit="g/m³-km">16.0</CO2>
 			</Result>
 			<Result status="success">
 				<VehicleGroup>P31DD</VehicleGroup>
@@ -339,19 +309,9 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 					<FuelMode>single fuel mode</FuelMode>
 				</SimulationParameters>
 				<Fuel type="Diesel CI">
-					<FuelConsumption unit="g/km">296.4</FuelConsumption>
-					<FuelConsumption unit="g/t-km">64.4</FuelConsumption>
-					<FuelConsumption unit="g/m³-km">6.21</FuelConsumption>
-					<FuelConsumption unit="MJ/km">12.7</FuelConsumption>
-					<FuelConsumption unit="MJ/t-km">2.75</FuelConsumption>
-					<FuelConsumption unit="MJ/m³-km">0.265</FuelConsumption>
-					<FuelConsumption unit="l/100km">35.5</FuelConsumption>
-					<FuelConsumption unit="l/t-km">0.0771</FuelConsumption>
-					<FuelConsumption unit="l/m³-km">0.00743</FuelConsumption>
+					<EnergyConsumption unit="MJ/km">12.7</EnergyConsumption>
 				</Fuel>
 				<CO2 unit="g/km">927.7</CO2>
-				<CO2 unit="g/t-km">201.7</CO2>
-				<CO2 unit="g/m³-km">19.4</CO2>
 			</Result>
 		</Results>
 		<ApplicationInformation>

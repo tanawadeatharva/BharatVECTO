@@ -51,6 +51,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoHashing;
 using NLog;
+using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using LogManager = NLog.LogManager;
 
@@ -67,7 +68,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected XElement DataIntegrityPart;
 		protected XElement TestConditionsPart;
 
-		protected XElement Results;
+		protected XElement ResultsPart;
 
 		protected XNamespace tns;
 
@@ -122,7 +123,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			GeneralPart = new XElement(tns + "General");
 			DataIntegrityPart = new XElement(tns + "DataIntegrityCheck");
 			TestConditionsPart = new XElement(tns + "TestConditions");
-			Results = new XElement(tns + "Results");
+			ResultsPart = new XElement(tns + "Results");
 
 			AddLogging();
 		}
@@ -155,7 +156,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		#region Overrides of DeclarationReport<ResultEntry>
 
-		protected override void DoAddResult(
+		protected override void DoStoreResult(
 			ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
 			entry.SetResultData(runData, modData, 0.0);
@@ -178,13 +179,21 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private void GenerateResults()
 		{
-			var vtpResult = Missions.First().Value.FirstOrDefault(x => x.Key == MissionType.VerificationTest).Value.ResultEntry
-									.FirstOrDefault().Value;
+			//var vtpResult = Missions.First().Value.FirstOrDefault(x => x.Key == MissionType.VerificationTest).Value.ResultEntry
+			//						.FirstOrDefault().Value;
+			var vtpResult = Results.OrderBy(x => x.FuelMode).FirstOrDefault(x => x.Mission == MissionType.VerificationTest);
 
 			const MissionType selectedMission = DeclarationData.VTPMode.SelectedMission;
 			const LoadingType selectedLoading = DeclarationData.VTPMode.SelectedLoading;
-			var result = Missions.First().Value.FirstOrDefault(x => x.Key == selectedMission).Value.ResultEntry
-								.FirstOrDefault(x => x.Key == selectedLoading).Value;
+			var result = Results.OrderBy(x => x.FuelMode).FirstOrDefault(x => x.Mission == selectedMission && x.LoadingType == selectedLoading);
+
+			if (vtpResult == null) {
+				throw new VectoException("no vtp result found for generating vtp report");
+			}
+			if (result == null) {
+				throw new VectoException("no corresponding simulation result found for generating vtp report");
+			}
+
 			var vtpFcMeasured = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos;
 			var vtpFcMeasuredCorr = vtpResult.VTPFcMeasured / vtpResult.VTPWorkPWheelPos * vtpResult.VTPFcCorrectionFactor;
 			var vtpFcSimulated = vtpResult.VTPFcFinalSimulated / vtpResult.VTPWorPWheelSimPos;
@@ -193,7 +202,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var declaredCO2 = result.FuelConsumptionFinal.Sum(x => x.Value) / result.Distance / result.Payload;
 			var verifiedCO2 = declaredCO2 * cVtp;
 
-			Results.Add(
+			ResultsPart.Add(
 				new XElement(tns + "Status", cVtp < 1.075 ? "Passed" : "Failed"),
 				new XElement(
 					tns + "AverageFanPower",
@@ -237,7 +246,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				),
 				new XElement(tns + "VTRatio", cVtp.ToXMLFormat(4)));
 			if (LogList.Any()) {
-				Results.Add(new XElement(tns + "Warnings", LogList.Select(x => new XElement(tns + "Warning", x))));
+				ResultsPart.Add(new XElement(tns + "Warnings", LogList.Select(x => new XElement(tns + "Warning", x))));
 			}
 		}
 
@@ -265,7 +274,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 						new XElement(VehiclePart),
 						new XElement(DataIntegrityPart),
 						new XElement(TestConditionsPart),
-						new XElement(Results),
+						new XElement(ResultsPart),
 						GetApplicationInfo()
 					)
 				)

@@ -434,6 +434,7 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="PassengerCount" type="xs:double"/>
 			<xs:element name="FuelMode">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
@@ -998,6 +999,7 @@
 			<xs:enumeration value="MJ/km"/>
 			<xs:enumeration value="MJ/t-km"/>
 			<xs:enumeration value="MJ/m³-km"/>
+			<xs:enumeration value="MJ/p-km"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="MassUnitType">

@@ -244,7 +244,7 @@
 	<xs:complexType name="FuelConsumptionType">
 		<xs:simpleContent>
 			<xs:extension base="xs:double">
-				<xs:attribute name="unit" type="FuelConsumptionUnitType" use="required"/>
+				<xs:attribute name="unit" type="EnergyConsumptionUnitType" use="required"/>
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
@@ -281,7 +281,7 @@
 					<xs:element name="Fuel" maxOccurs="unbounded">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="FuelConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
+								<xs:element name="EnergyConsumption" type="FuelConsumptionType" maxOccurs="unbounded">
 									<xs:annotation>
 										<xs:documentation>I.2.3.1 - I.2.3.12 / #69</xs:documentation>
 									</xs:annotation>
@@ -338,7 +338,7 @@
 			</xs:element>
 			<xs:element name="PassengerCount">
 				<xs:simpleType>
-					<xs:restriction base="xs:int">
+					<xs:restriction base="xs:double">
 						<xs:minExclusive value="0"/>
 					</xs:restriction>
 				</xs:simpleType>
@@ -601,19 +601,9 @@
 			<xs:enumeration value="km"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="FuelConsumptionUnitType">
+	<xs:simpleType name="EnergyConsumptionUnitType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="g/km"/>
-			<xs:enumeration value="g/t-km"/>
-			<xs:enumeration value="g/p-km"/>
-			<xs:enumeration value="g/m³-km"/>
-			<xs:enumeration value="l/100km"/>
-			<xs:enumeration value="l/t-km"/>
-			<xs:enumeration value="l/p-km"/>
-			<xs:enumeration value="l/m³-km"/>
 			<xs:enumeration value="MJ/km"/>
-			<xs:enumeration value="MJ/t-km"/>
-			<xs:enumeration value="MJ/m³-km"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="MassUnitType">
@@ -631,6 +621,11 @@
 			<xs:enumeration value="Urban Delivery"/>
 			<xs:enumeration value="Municipal Utility"/>
 			<xs:enumeration value="Construction"/>
+			<xs:enumeration value="Heavy Urban"/>
+			<xs:enumeration value="Urban"/>
+			<xs:enumeration value="Suburban"/>
+			<xs:enumeration value="Interurban"/>
+			<xs:enumeration value="Coach"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="PercentType">

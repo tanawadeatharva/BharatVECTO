@@ -75,6 +75,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 				Distance = double.MaxValue.SI<Meter>();
 			}
 
+			public MissionType Mission { get; set; }
+			public LoadingType LoadingType { get; set; }
+			public int FuelMode { get; set; }
 			public IList<IFuelProperties> FuelData { get; set; }
 
 
@@ -83,6 +86,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 			public Kilogram TotalVehicleWeight { get; set; }
 
 			public CubicMeter CargoVolume { get; set; }
+
+			public double PassengerCount { get; set; }
+			public VehicleClass VehicleClass { get; set; }
 
 			public MeterPerSecond AverageSpeed { get; private set; }
 
@@ -154,26 +160,40 @@ namespace TUGraz.VectoCore.OutputData.XML
 				Distance = data.Distance;
 
 				var workESS = data.WorkAuxiliariesDuringEngineStop() + data.WorkEngineStart();
-				var workWHRel = data.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
-				var workWHRelMech = -workWHRel / DeclarationData.AlternaterEfficiency;
+				var workWHR = WorkWHRCorrection(data);
 
-				var workWHRmech = -data.TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
-
-				var workWHR = workWHRelMech + workWHRmech;
+				var workBusAuxCorr = 0.SI<WattSecond>();
+				if (runData.BusAuxiliaries != null) {
+					workBusAuxCorr = WorkBusAuxCorrection(runData, data);
+				}
+				
 
 				FuelConsumptionFinal = new Dictionary<FuelType, Kilogram>();
 				CO2Total = 0.SI<Kilogram>();
 				EnergyConsumptionTotal = 0.SI<Joule>();
 
+				var engineWasteheatSum = data.FuelData.Aggregate(
+					0.SI<Joule>(),
+					(current, fuel) => current + data.TotalFuelConsumption(ModalResultField.FCFinal, fuel) *
+										fuel.LowerHeatingValueVecto);
+
+				var auxHeaterDemand = data.AuxHeaterDemandCalc(data.Duration, engineWasteheatSum);
+
+				var firstFuel = true;
 				foreach (var entry in data.FuelData) {
 					var col = data.GetColumnName(entry, ModalResultField.FCFinal);
 					var fcSum = data.TimeIntegral<Kilogram>(col);
 
 					var correction = 0.SI<KilogramPerWattSecond>();
-					if (!(workWHR + workESS).IsEqual(0)) {
+					if (!(workWHR + workESS + workBusAuxCorr).IsEqual(0)) {
 						correction = data.VehicleLineCorrectionFactor(entry);
 					}
-					var fcTotalcorr = fcSum + correction * (workESS + workWHR);
+					var fcAuxHtr = 0.SI<Kilogram>();
+					if (firstFuel) {
+						firstFuel = false;
+						fcAuxHtr = auxHeaterDemand / entry.LowerHeatingValueVecto;
+					}
+					var fcTotalcorr = fcSum + correction * (workESS + workWHR + workBusAuxCorr) + fcAuxHtr;
 					FuelConsumptionFinal[entry.FuelType] = fcTotalcorr;
 					CO2Total += fcTotalcorr * entry.CO2PerFuelWeight;
 					EnergyConsumptionTotal += fcTotalcorr * entry.LowerHeatingValueVecto;
@@ -191,6 +211,37 @@ namespace TUGraz.VectoCore.OutputData.XML
 				AverageAxlegearEfficiency = eAxlOut / eAxlIn;
 
 				WeightingFactor = weightingFactor;
+			}
+
+			private static WattSecond WorkWHRCorrection(IModalDataContainer data)
+			{
+				var workWHRel = data.TimeIntegral<WattSecond>(ModalResultField.P_WHR_el_corr);
+				var workWHRelMech = -workWHRel / DeclarationData.AlternaterEfficiency;
+
+				var workWHRmech = -data.TimeIntegral<WattSecond>(ModalResultField.P_WHR_mech_corr);
+
+				var workWHR = workWHRelMech + workWHRmech;
+				return workWHR;
+			}
+
+			private static WattSecond WorkBusAuxCorrection(VectoRunData runData, IModalDataContainer data)
+			{
+				var workBusAuxPSCompOff = data.EnergyPneumaticCompressorPowerOff();
+				var workBusAuxPSCompOn = data.EnergyPneumaticCompressorOn();
+				var airBusAuxPSON = data.AirGenerated();
+				var deltaAir = data.AirConsumed() - data.AirGenerated();
+
+				var kAir = (workBusAuxPSCompOn - workBusAuxPSCompOff) / (airBusAuxPSON - 0.SI<NormLiter>());
+				var workBusAuxPSCorr = (kAir * deltaAir).Cast<WattSecond>();
+
+				var workBusAuxES = data.EnergyBusAuxESConsumed() - data.EnergyBusAuxESGenerated();
+				var workBatterySOC = data.DeltaSOCBusAuxBattery() *
+									runData.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity;
+
+				var workBusAuxESMech = (workBusAuxES + workBatterySOC) /
+										runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
+										runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorGearEfficiency;
+				return workBusAuxPSCorr + workBusAuxESMech;
 			}
 		}
 
@@ -217,7 +268,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		}
 
 
-		protected override void DoAddResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
+		protected override void DoStoreResult(ResultEntry entry, VectoRunData runData, IModalDataContainer modData)
 		{
 			var factor = _weightingFactors[Tuple.Create(runData.Mission.MissionType, runData.Loading)];
 			entry.SetResultData(runData, modData, factor);
@@ -225,12 +276,20 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected internal override void DoWriteReport()
 		{
-			foreach (var fuelMode in Missions.OrderBy(f => f.Key)) {
-				foreach (var result in fuelMode.Value.OrderBy(m => m.Key)) {
-					_manufacturerReport.WriteResult(result.Value);
-					_customerReport.WriteResult(result.Value);
-				}
+			foreach (var result in OrderedResults) {
+				_manufacturerReport.WriteResult(result);
+				_customerReport.WriteResult(result);
+				if (_primaryReport != null) {
+					_primaryReport.WriteResult(result);
+				} 
 			}
+
+			//foreach (var fuelMode in Missions.OrderBy(f => f.Key)) {
+			//	foreach (var result in fuelMode.Value.OrderBy(m => m.Key)) {
+			//		_manufacturerReport.WriteResult(result.Value);
+			//		_customerReport.WriteResult(result.Value);
+			//	}
+			//}
 
 			_manufacturerReport.GenerateReport();
 			var fullReportHash = GetSignature(_manufacturerReport.Report);
@@ -240,7 +299,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 			if (Writer != null) {
 				Writer.WriteReport(ReportType.DeclarationReportCustomerXML, _customerReport.Report);
 				Writer.WriteReport(ReportType.DeclarationReportManufacturerXML, _manufacturerReport.Report);
-				Writer.WriteReport(ReportType.DeclarationReportMonitoringXML, _monitoringReport.Report);
+				//Writer.WriteReport(ReportType.DeclarationReportMonitoringXML, _monitoringReport.Report);
 				if (_primaryReport != null) {
 					Writer.WriteReport(ReportType.DeclarationReportPrimaryVehicleXML, _primaryReport.Report);
 				}
@@ -347,8 +406,14 @@ namespace TUGraz.VectoCore.OutputData.XML
 							new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/m³-km"),
 							(result.FuelConsumptionFinal[fuel.FuelType].ConvertToGramm() / result.Distance.ConvertToKiloMeter() /
 							result.CargoVolume)
-							.Value
-							().ToMinSignificantDigits(3, 1))
+							.Value().ToMinSignificantDigits(3, 1))
+						: null,
+					result.PassengerCount > 0
+						? new XElement(
+							tns + XMLNames.Report_Results_FuelConsumption,
+							new XAttribute(XMLNames.Report_Results_Unit_Attr, "g/p-km"),
+							(result.FuelConsumptionFinal[fuel.FuelType].ConvertToGramm() / result.Distance.ConvertToKiloMeter() /
+							result.PassengerCount).ToMinSignificantDigits(3, 1))
 						: null
 				);
 
@@ -376,6 +441,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 								(result.FuelConsumptionFinal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
 								result.Distance.ConvertToKiloMeter() / result.CargoVolume / 1e6).Value().ToMinSignificantDigits(3, 1)));
 					}
+					if (result.PassengerCount > 0) {
+						fcResult.Add(
+							new XElement(
+								tns + XMLNames.Report_Results_FuelConsumption,
+								new XAttribute(XMLNames.Report_Results_Unit_Attr, "MJ/p-km"),
+								(result.FuelConsumptionFinal[fuel.FuelType] * fuel.LowerHeatingValueVecto /
+								result.Distance.ConvertToKiloMeter() / result.PassengerCount / 1e6).Value().ToMinSignificantDigits(3, 1))
+						);
+					}
 				}
 				if (fuel.FuelDensity != null) {
 					fcResult.Add(
@@ -399,6 +473,15 @@ namespace TUGraz.VectoCore.OutputData.XML
 								(result.FuelConsumptionFinal[fuel.FuelType].ConvertToGramm() / fuel.FuelDensity /
 								result.Distance.ConvertToKiloMeter() /
 								result.CargoVolume).Value().ToMinSignificantDigits(3, 1)));
+					}
+					if (result.PassengerCount > 0) {
+						fcResult.Add(
+							new XElement(
+								tns + XMLNames.Report_Results_FuelConsumption,
+								new XAttribute(XMLNames.Report_Results_Unit_Attr, "l/p-km"),
+								(result.FuelConsumptionFinal[fuel.FuelType].ConvertToGramm() / fuel.FuelDensity /
+								result.Distance.ConvertToKiloMeter() / result.PassengerCount).Value().ToMinSignificantDigits(3, 1))
+						);
 					}
 				}
 				retVal.Add(fcResult);

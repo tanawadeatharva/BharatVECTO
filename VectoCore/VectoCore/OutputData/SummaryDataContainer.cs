@@ -384,8 +384,6 @@ namespace TUGraz.VectoCore.OutputData
 			var kilogramCO2PerMeter = 0.SI<KilogramPerMeter>();
 
 
-			// TODO: Correct for fuel-fired heater
-
 			var engineWasteheatSum = modData.FuelData.Aggregate(
 				0.SI<Joule>(),
 				(current, fuel) => current + modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel) *

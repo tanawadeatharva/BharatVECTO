@@ -68,10 +68,19 @@ namespace TUGraz.VectoCore.OutputData
 
 	public interface IResultEntry
 	{
+		MissionType Mission { get; set; }
+
+		LoadingType LoadingType { get; set; }
+
+		int FuelMode { get; set; }
 		IList<IFuelProperties> FuelData { get; set; }
 		Kilogram Payload { get; set; }
 		Kilogram TotalVehicleWeight { get; set; }
 		CubicMeter CargoVolume { get; set; }
+
+		double PassengerCount { get; set; }
+		VehicleClass VehicleClass { get; set; }
+
 		void SetResultData(VectoRunData runData, IModalDataContainer data, double weightingFactor);
 	}
 
@@ -93,13 +102,15 @@ namespace TUGraz.VectoCore.OutputData
 		/// </summary>
 		//protected readonly Dictionary<MissionType, ResultContainer<T>> Missions =
 		//	new Dictionary<MissionType, ResultContainer<T>>();
-		protected readonly Dictionary<int, Dictionary<MissionType, ResultContainer<T>>> Missions =
-			new Dictionary<int, Dictionary<MissionType, ResultContainer<T>>>();
+		//protected readonly Dictionary<int, Dictionary<MissionType, ResultContainer<T>>> Missions =
+		//new Dictionary<int, Dictionary<MissionType, ResultContainer<T>>>();
+
+		protected readonly List<T> Results = new List<T>();
 
 		/// <summary>
 		/// The full load curve.
 		/// </summary>
-		internal Dictionary<uint, EngineFullLoadCurve> Flc { get; set; }
+		//internal Dictionary<uint, EngineFullLoadCurve> Flc { get; set; }
 
 		///// <summary>
 		///// The declaration segment from the segment table
@@ -123,27 +134,29 @@ namespace TUGraz.VectoCore.OutputData
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void PrepareResult(LoadingType loading, Mission mission, int fuelMode, VectoRunData runData)
 		{
-			if (!Missions.ContainsKey(fuelMode)) {
-				Missions[fuelMode] = new Dictionary<MissionType, ResultContainer<T>>();
-			}
-			var missions = Missions[fuelMode];
+			//if (!Missions.ContainsKey(fuelMode)) {
+			//	Missions[fuelMode] = new Dictionary<MissionType, ResultContainer<T>>();
+			//}
+			//var missions = Missions[fuelMode];
 
-			var missionType = mission.MissionType;
-			if (!missions.ContainsKey(missionType)) {
-				missions[missionType] = new ResultContainer<T>() {
-					Mission = missionType,
-					ResultEntry = new Dictionary<LoadingType, T>(),
-				};
-			}
-			if (missionType != MissionType.ExemptedMission) {
-				var entry = new T();
-				entry.FuelData = runData.EngineData.Fuels.Select(x => x.FuelData).ToList();
-				entry.Payload = runData.VehicleData.Loading;
-				entry.TotalVehicleWeight = runData.VehicleData.TotalVehicleMass;
-				entry.CargoVolume = runData.VehicleData.CargoVolume;
+			//var missionType = mission.MissionType;
+			//if (!missions.ContainsKey(missionType)) {
+			//	missions[missionType] = new ResultContainer<T>() {
+			//		Mission = missionType,
+			//		ResultEntry = new Dictionary<LoadingType, T>(),
+			//	};
+			//}
+			//if (missionType != MissionType.ExemptedMission) {
+			//	var entry = new T();
+			//	entry.FuelData = runData.EngineData.Fuels.Select(x => x.FuelData).ToList();
+			//	entry.Payload = runData.VehicleData.Loading;
+			//	entry.TotalVehicleWeight = runData.VehicleData.TotalVehicleMass;
+			//	entry.CargoVolume = runData.VehicleData.CargoVolume;
+			//	// subtract driver!
+			//	entry.PassengerCount = runData.BusAuxiliaries?.SSMInputs.NumberOfPassengers ?? 0 - 1;
 
-				missions[mission.MissionType].ResultEntry[loading] = entry;
-			}
+			//	missions[mission.MissionType].ResultEntry[loading] = entry;
+			//}
 			_resultCount++;
 		}
 
@@ -154,39 +167,63 @@ namespace TUGraz.VectoCore.OutputData
 			_resultCount--;
 			if (_resultCount == 0) {
 				DoWriteReport();
-				Flc = null;
+				//Flc = null;
 			}
 		}
 
 		public void AddResult(LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData,
 			IModalDataContainer modData)
 		{
-			if (!Missions.ContainsKey(fuelMode)) {
-				throw new VectoException("Unknown fuel mode {0} for generating declaration report", fuelMode);
-			}
-			if (!Missions[fuelMode].ContainsKey(mission.MissionType)) {
-				throw new VectoException("Unknown mission type {0} for generating declaration report", mission.MissionType);
-			}
-			if (mission.MissionType != MissionType.ExemptedMission && !Missions[fuelMode][mission.MissionType].ResultEntry.ContainsKey(loadingType)) {
-				throw new VectoException("Unknown loading type {0} for mission {1}", loadingType, mission.MissionType);
-			}
-			
+			//if (!Missions.ContainsKey(fuelMode)) {
+			//	throw new VectoException("Unknown fuel mode {0} for generating declaration report", fuelMode);
+			//}
+			//if (!Missions[fuelMode].ContainsKey(mission.MissionType)) {
+			//	throw new VectoException("Unknown mission type {0} for generating declaration report", mission.MissionType);
+			//}
+			//if (mission.MissionType != MissionType.ExemptedMission && !Missions[fuelMode][mission.MissionType].ResultEntry.ContainsKey(loadingType)) {
+			//	throw new VectoException("Unknown loading type {0} for mission {1}", loadingType, mission.MissionType);
+			//}
+
+
+			//if (mission.MissionType != MissionType.ExemptedMission) {
+			//	DoAddResult(Missions[fuelMode][mission.MissionType].ResultEntry[loadingType], runData, modData);
+			//}
 
 			if (mission.MissionType != MissionType.ExemptedMission) {
-				DoAddResult(Missions[fuelMode][mission.MissionType].ResultEntry[loadingType], runData, modData);
+				var entry = new T();
+				entry.Mission = mission.MissionType;
+				entry.LoadingType = loadingType;
+				entry.FuelMode = fuelMode;
+				entry.FuelData = runData.EngineData.Fuels.Select(x => x.FuelData).ToList();
+				entry.Payload = runData.VehicleData.Loading;
+				entry.TotalVehicleWeight = runData.VehicleData.TotalVehicleMass;
+				entry.CargoVolume = runData.VehicleData.CargoVolume;
+				entry.VehicleClass = runData.VehicleData.VehicleClass;
+				// subtract driver!
+				entry.PassengerCount = (runData.BusAuxiliaries?.SSMInputs.NumberOfPassengers ?? 0) - 1;
+				Results.Add(entry);
+				DoStoreResult(entry, runData, modData);
 			}
 
 			WriteResults();
 		}
 
+		protected IEnumerable<T> OrderedResults
+		{
+			get {
+				return Results.OrderBy(x => x.VehicleClass).ThenBy(x => x.FuelMode).ThenBy(x => x.Mission)
+							.ThenBy(x => x.LoadingType);
+			}
+		}
+
 		/// <summary>
-		/// Adds the result of one run for the specific mission and loading. If all runs finished (given by the resultCount) the report will be written.
+		/// Adds the result of one run for the specific mission and loading. 
 		/// </summary>
 		/// <param name="entry"></param>
 		/// <param name="runData"></param>
 		/// <param name="modData">The mod data.</param>
-		[MethodImpl(MethodImplOptions.Synchronized)]
-		protected abstract void DoAddResult(T entry, VectoRunData runData, IModalDataContainer modData);
+		//[MethodImpl(MethodImplOptions.Synchronized)]
+		protected abstract void DoStoreResult(T entry, VectoRunData runData, IModalDataContainer modData);
 
 
 		protected internal abstract void DoWriteReport();

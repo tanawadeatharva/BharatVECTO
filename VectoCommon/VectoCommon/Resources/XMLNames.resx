@@ -1362,4 +1362,10 @@
   <data name="Vehicle_Articulated" xml:space="preserve">
     <value>Articulated</value>
   </data>
+  <data name="Report_ResultEntry_PassengerCount" xml:space="preserve">
+    <value>PassengerCount</value>
+  </data>
+  <data name="Report_Result_EnergyConsumption" xml:space="preserve">
+    <value>EnergyConsumption</value>
+  </data>
 </root>

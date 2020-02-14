@@ -162,35 +162,34 @@ namespace TUGraz.VectoCore.OutputData.XML
 				);
 		}
 
-		public void WriteResult(
-			DeclarationReport<XMLDeclarationReport.ResultEntry>.ResultContainer<XMLDeclarationReport.ResultEntry> entry)
+		public void WriteResult(XMLDeclarationReport.ResultEntry resultEntry)
 		{
-			foreach (var resultEntry in entry.ResultEntry) {
-				_allSuccess &= resultEntry.Value.Status == VectoRun.Status.Success;
-				if (resultEntry.Value.Status == VectoRun.Status.Success) {
-					_weightedPayload += resultEntry.Value.Payload * resultEntry.Value.WeightingFactor;
-					_weightedCo2 += resultEntry.Value.CO2Total / resultEntry.Value.Distance * resultEntry.Value.WeightingFactor;
+			//foreach (var resultEntry in entry.ResultEntry) {
+				_allSuccess &= resultEntry.Status == VectoRun.Status.Success;
+				if (resultEntry.Status == VectoRun.Status.Success) {
+					_weightedPayload += resultEntry.Payload * resultEntry.WeightingFactor;
+					_weightedCo2 += resultEntry.CO2Total / resultEntry.Distance * resultEntry.WeightingFactor;
 				}
 				Results.Add(new XElement(tns + XMLNames.Report_Result_Result,
 					new XAttribute(XMLNames.Report_Result_Status_Attr,
-						resultEntry.Value.Status == VectoRun.Status.Success ? "success" : "error"),
-					new XElement(tns + XMLNames.Report_Result_Mission, entry.Mission.ToXMLFormat()),
+						resultEntry.Status == VectoRun.Status.Success ? "success" : "error"),
+					new XElement(tns + XMLNames.Report_Result_Mission, resultEntry.Mission.ToXMLFormat()),
 					GetResults(resultEntry)));
-			}
+			//}
 		}
 
-		private object[] GetResults(KeyValuePair<LoadingType, XMLDeclarationReport.ResultEntry> resultEntry)
+		private object[] GetResults(XMLDeclarationReport.ResultEntry resultEntry)
 		{
-			switch (resultEntry.Value.Status) {
+			switch (resultEntry.Status) {
 				case VectoRun.Status.Pending:
 				case VectoRun.Status.Running:
 					return null; // should not happen!
 				case VectoRun.Status.Success:
-					return GetSuccessResultEntry(resultEntry.Value);
+					return GetSuccessResultEntry(resultEntry);
 				case VectoRun.Status.Canceled:
 				case VectoRun.Status.Aborted:
 					return new object[] {
-						new XElement(tns + "Error", resultEntry.Value.Error)
+						new XElement(tns + "Error", resultEntry.Error)
 					};
 				default:
 					throw new ArgumentOutOfRangeException();
