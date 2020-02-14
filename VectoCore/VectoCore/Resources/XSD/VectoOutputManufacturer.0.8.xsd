@@ -434,7 +434,7 @@
 					</xs:simpleContent>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="PassengerCount" type="xs:double"/>
+			<xs:element name="PassengerCount" type="xs:double" minOccurs="0"/>
 			<xs:element name="FuelMode">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">

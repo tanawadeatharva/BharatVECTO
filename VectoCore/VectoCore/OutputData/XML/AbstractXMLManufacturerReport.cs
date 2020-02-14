@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 					new XAttribute(XNamespace.Xmlns + "mrf", mrf),
 					new XAttribute(
 						xsi + "schemaLocation",
-						string.Format("{0} {1}VectoOutputManufacturer.xsd", mrf, AbstractXMLWriter.SchemaLocationBaseUrl)),
+						string.Format("{0} {1}/DEV/VectoOutputManufacturer.xsd", mrf, AbstractXMLWriter.SchemaLocationBaseUrl)),
 					new XElement(
 						mrf + XMLNames.Report_DataWrap,
 						new XAttribute(xsi + "type", "VectoOutputDataType"),

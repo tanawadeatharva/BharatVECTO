@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		protected XNamespace di = "http://www.w3.org/2000/09/xmldsig#";
 		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
-		protected XNamespace RootNS = "urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation";
+		protected XNamespace RootNS = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation";
 
 		protected XElement VehiclePart;
 
