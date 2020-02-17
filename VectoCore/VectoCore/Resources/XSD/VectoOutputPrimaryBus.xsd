@@ -555,7 +555,7 @@
 					<xs:element name="VIN" type="v1.0:VINType"/>
 					<xs:element name="Date" type="v1.0:DateTimeWithTimezone"/>
 					<xs:element name="VehicleCategory" type="v2.6:VehicleCategoryDeclarationType"/>
-					<xs:element name="AxleConfiguration" type="v1.0:VehicleAxleConfigurationDeclarationType"/>
+					<xs:element name="AxleConfiguration" type="v2.6:VehicleAxleConfigurationDeclarationType"/>
 					<xs:element name="Articulated" type="xs:boolean"/>
 					<xs:element name="TechnicalPermissibleMaximumLadenMass" type="v1.0:VehicleGrossVehicleMassType"/>
 					<xs:element name="IdlingSpeed" type="v1.0:EngineDeclaredSpeedType"/>

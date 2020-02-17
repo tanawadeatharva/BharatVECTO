@@ -373,7 +373,7 @@
 							<xs:documentation>P036 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="AxleConfiguration" type="v1.0:VehicleAxleConfigurationDeclarationType">
+					<xs:element name="AxleConfiguration" type="tns:VehicleAxleConfigurationDeclarationType">
 						<xs:annotation>
 							<xs:documentation>P037 - enum</xs:documentation>
 						</xs:annotation>
@@ -577,8 +577,42 @@
 			<xs:enumeration value="M3"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="PneumaticSystemClutchTypeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="visco"/>
+			<xs:enumeration value="mechanically"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PneumaticSystemTechnologyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Small"/>
+			<xs:enumeration value="Medium Supply 1-stage"/>
+			<xs:enumeration value="Medium Supply 2-stage"/>
+			<xs:enumeration value="Large Supply 1-stage"/>
+			<xs:enumeration value="Large Supply 2-stage"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="RegisteredClassType">
 		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="VehicleAxleConfigurationDeclarationType">
+		<xs:annotation>
+			<xs:appinfo>
+				<vectoParam:description>
+					<vectoParam:parameterId component="Vehicle">037</vectoParam:parameterId>
+					<vectoParam:unit>-</vectoParam:unit>
+				</vectoParam:description>
+			</xs:appinfo>
+			<xs:documentation>P037</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="4x2"/>
+			<xs:enumeration value="6x2"/>
+			<xs:enumeration value="6x4"/>
+			<xs:enumeration value="8x2"/>
+			<xs:enumeration value="8x4"/>
+		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="VehicleCategoryDeclarationType">
 		<xs:annotation>
@@ -608,49 +642,4 @@
 			<xs:enumeration value="CJ"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:complexType name="ResultCardEntryType">
-		<xs:attribute name="current" type="v1.0:Double2" use="required"/>
-		<xs:attribute name="smartCurrent" type="v1.0:Double2" use="required"/>
-	</xs:complexType>
-	<xs:simpleType name="PneumaticSystemTechnologyType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="Small"/>
-			<xs:enumeration value="Medium Supply 1-stage"/>
-			<xs:enumeration value="Medium Supply 2-stage"/>
-			<xs:enumeration value="Large Supply 1-stage"/>
-			<xs:enumeration value="Large Supply 2-stage"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="PneumaticSystemClutchTypeType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="none"/>
-			<xs:enumeration value="visco"/>
-			<xs:enumeration value="mechanically"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:complexType name="ResultCardsType">
-		<xs:sequence>
-			<xs:element name="Idle">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="Traction">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="Overrun">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="Entry" type="tns:ResultCardEntryType" minOccurs="2" maxOccurs="unbounded"/>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
 </xs:schema>
