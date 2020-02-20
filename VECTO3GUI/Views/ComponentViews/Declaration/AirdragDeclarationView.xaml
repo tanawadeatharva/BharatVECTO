@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="VECTO3.Views.ComponentViews.Declaration.AirdragDeclarationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:viewModel="clr-namespace:VECTO3.ViewModel"
+             xmlns:interfaces="clr-namespace:VECTO3.ViewModel.Interfaces"
+             xmlns:customControls="clr-namespace:VECTO3.Views.CustomControls"
+             xmlns:helper="clr-namespace:VECTO3.Helper"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="800">
+    <d:AirdragDeclarationView.DataContext>
+        <x:Type Type="interfaces:IAirdragViewModel"/>
+    </d:AirdragDeclarationView.DataContext>
+
+    <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left" Grid.IsSharedSizeScope="True">
+        <customControls:CheckboxParameter
+            Caption="Use Measured Values" CaptionWidthGroup="lblWidth"
+            Value="{Binding UseMeasuredValues}" UnitWidthGroup="unitWidth"
+            />
+        <customControls:CommonDeclarationComponentData 
+            Model="{Binding Model}"
+            Manufacturer="{Binding Manufacturer}"
+            Date="{Binding Date}"
+            CertificationNumber="{Binding CertificationNumber}"
+            IsEnabled="{Binding UseMeasuredValues}"/>
+        <customControls:VectoParameterControl 
+            Caption="Cd x A 0" CaptionWidthGroup="lblWidth"
+            Unit="{helper:SIUnit CdxA_0}" UnitWidthGroup="unitWidth"
+            Value="{Binding CdxA_0}" 
+            IsEnabled="{Binding UseMeasuredValues}"
+        />
+        <customControls:VectoParameterControl 
+            Caption="Transferred Cd x A 0" CaptionWidthGroup="lblWidth"
+            Unit="{helper:SIUnit TransferredCdxA}" UnitWidthGroup="unitWidth"
+            Value="{Binding TransferredCdxA}" 
+            IsEnabled="{Binding UseMeasuredValues}"
+        />
+        <customControls:VectoParameterControl 
+            Caption="DeclaredCd x A 0" CaptionWidthGroup="lblWidth"
+            Unit="{helper:SIUnit DeclaredCdxA}" UnitWidthGroup="unitWidth"
+            Value="{Binding DeclaredCdxA}" 
+            IsEnabled="{Binding UseMeasuredValues}"
+        />
+        
+        </StackPanel>
+</UserControl>

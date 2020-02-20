@@ -1,0 +1,57 @@
+﻿using System.Windows.Input;
+using Ninject;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCore.Utils;
+using VECTO3.Util;
+using VECTO3.ViewModel.Interfaces;
+
+namespace VECTO3.ViewModel.Impl
+{
+	public class EngineOnlyJobViewModel : AbstractJobViewModel, IJobEditViewModel
+	{
+		private IEngineeringInputDataProvider _inputData;
+
+		public EngineOnlyJobViewModel(IKernel kernel, IEngineeringInputDataProvider inputData)
+		{
+			Kernel = kernel;
+			InputDataProvider = inputData;
+			JobViewModel = this;
+			CreateComponentModel(Component.Engine);
+			CreateComponentModel(Component.Cycle);
+			CurrentComponent = GetComponentViewModel(Component.Engine);
+		}
+
+		
+		#region Implementation of IJobEditViewModel
+
+		public string JobFile
+		{
+			get { return _inputData.JobInputData.JobName; }
+		}
+
+		public IInputDataProvider InputDataProvider
+		{
+			get { return _inputData; }
+			set {
+				value.Switch()
+					.If<IEngineeringInputDataProvider>(
+						d => {
+							SetProperty(ref IsDeclarationMode, false);
+							SetProperty(ref _inputData, d);
+						}
+					);
+			}
+		}
+		
+		#endregion
+
+		#region Overrides of AbstractJobViewModel
+
+		protected override void DoSaveJob()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		#endregion
+	}
+}

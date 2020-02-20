@@ -1,0 +1,95 @@
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using TUGraz.VectoCommon.InputData;
+using TUGraz.VectoCommon.Models;
+using TUGraz.VectoCore.InputData.Reader.ComponentData;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Utils;
+using VECTO3.Util;
+using VECTO3.ViewModel.Adapter.Declaration;
+using VECTO3.ViewModel.Interfaces;
+
+namespace VECTO3.ViewModel.Impl {
+	public class AxlegearViewModel : AbstractComponentViewModel, IAxlegearViewModel
+	{
+		private double _ratio;
+		private AxleLineType _lineType;
+		private readonly ObservableCollection<GearLossMapEntry> _lossMap = new ObservableCollection<GearLossMapEntry>();
+		private CertificationMethod _certificationMethod;
+
+		#region Implementation of IEditComponentAxlegearViewModel
+
+		public IAxleGearInputData ModelData { get { return AdapterFactory.AxlegearDeclarationAdapter(this); } }
+
+		public CertificationMethod CertificationMethod
+		{
+			get { return _certificationMethod; }
+			set { SetProperty(ref _certificationMethod, value); }
+		}
+
+		public AllowedEntry<CertificationMethod>[] AllowedCertificationMethods
+		{
+			get
+			{
+				return null;
+				//ToDo
+				//return DeclarationData.AxlegearCertificationMethods.Select(x => AllowedEntry.Create(x, x.GetLabel())).ToArray();
+			}
+		}
+
+		public double Ratio
+		{
+			get { return _ratio; }
+			set { SetProperty(ref _ratio, value); }
+		}
+
+		public AxleLineType LineType
+		{
+			get { return _lineType; }
+			set {SetProperty(ref _lineType, value); }
+		}
+
+		public AllowedEntry<AxleLineType>[] AllowedLineTypes
+		{
+			get {
+				//ToDo
+				return null;
+				//return Enum.GetValues(typeof(AxleLineType)).Cast<AxleLineType>().Select(x => AllowedEntry.Create(x, x.GetLabel()))
+				//			.ToArray();
+			}
+		}
+
+		public ObservableCollection<GearLossMapEntry> LossMap
+		{
+			get { return _lossMap; }
+		}
+
+		#endregion
+
+		protected override void InputDataChanged()
+		{
+			JobViewModel.InputDataProvider.Switch()
+						.If<IDeclarationInputDataProvider>(d => SetValues(d.JobInputData.Vehicle.Components.AxleGearInputData))
+						.If<IEngineeringInputDataProvider>(e => SetValues(e.JobInputData.Vehicle.Components.AxleGearInputData));
+		}
+
+		private void SetValues(IAxleGearInputData axle)
+		{
+			Model = axle.Model;
+			Manufacturer = axle.Manufacturer;
+			CertificationNumber = axle.CertificationNumber;
+			CertificationMethod = axle.CertificationMethod;
+			//ToDo
+			//Date = DateTime.Parse(axle.Date);
+			LineType = axle.LineType;
+			Ratio = axle.Ratio;
+
+			//ToDo
+			//var lossMap = TransmissionLossMapReader.Create(axle.LossMap, axle.Ratio, "Axlegear").Entries.OrderBy(x => x.InputSpeed).ThenBy(x => x.InputTorque);
+			//foreach (var entry in lossMap) {
+			//	LossMap.Add(new GearLossMapEntry(entry));
+			//}
+		}
+	}
+}
