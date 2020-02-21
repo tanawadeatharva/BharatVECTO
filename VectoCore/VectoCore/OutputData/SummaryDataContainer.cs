@@ -389,7 +389,9 @@ namespace TUGraz.VectoCore.OutputData
 				(current, fuel) => current + modData.TotalFuelConsumption(ModalResultField.FCFinal, fuel) *
 									fuel.LowerHeatingValueVecto);
 
-			var auxHeaterDemand = modData.AuxHeaterDemandCalc(duration, engineWasteheatSum);
+			var auxHeaterDemand = modData.AuxHeaterDemandCalc == null
+				? 0.SI<Joule>()
+				: modData.AuxHeaterDemandCalc(duration, engineWasteheatSum);
 
 			row[Fields.E_BusAux_AuxHeater] = auxHeaterDemand.Cast<WattSecond>().ConvertToKiloWattHour();
 
@@ -668,7 +670,7 @@ namespace TUGraz.VectoCore.OutputData
 
 		private void WriteFullPowertrain(VectoRunData runData, DataRow row)
 		{
-			WriteVehicleData(runData.VehicleData, runData.GearboxData.Type, row);
+			WriteVehicleData(runData, row);
 
 			if (runData.BusAuxiliaries != null) {
 				// subtract driver!
@@ -696,13 +698,16 @@ namespace TUGraz.VectoCore.OutputData
 
 		}
 
-		private static void WriteVehicleData(VehicleData data, GearboxType gbxType, DataRow row)
+		private static void WriteVehicleData(VectoRunData runData, DataRow row)
 		{
+			var data = runData.VehicleData;
+			var gbxType = runData.GearboxData.Type;
+
 			row[Fields.VEHICLE_MANUFACTURER] = data.Manufacturer;
 			row[Fields.VIN_NUMBER] = data.VIN;
 			row[Fields.VEHICLE_MODEL] = data.ModelName;
 
-			row[Fields.HDV_CO2_VEHICLE_CLASS] = data.VehicleClass.GetClassNumber();
+			row[Fields.HDV_CO2_VEHICLE_CLASS] = runData.Mission.BusParameter?.BusGroup.GetClassNumber() ?? data.VehicleClass.GetClassNumber();
 			row[Fields.CURB_MASS] = (ConvertedSI)data.CurbMass;
 
 			// - (data.BodyAndTrailerWeight ?? 0.SI<Kilogram>());

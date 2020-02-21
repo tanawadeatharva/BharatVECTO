@@ -112,6 +112,7 @@ namespace TUGraz.VectoCommon.Models
 		{
 			switch (self) {
 				case AxleConfiguration.AxleConfig_4x2:
+				case AxleConfiguration.AxleConfig_4x2F:
 				case AxleConfiguration.AxleConfig_6x2:
 				case AxleConfiguration.AxleConfig_8x2:
 					return 1;

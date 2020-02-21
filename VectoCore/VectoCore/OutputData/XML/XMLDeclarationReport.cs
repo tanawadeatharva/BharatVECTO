@@ -177,7 +177,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 					(current, fuel) => current + data.TotalFuelConsumption(ModalResultField.FCFinal, fuel) *
 										fuel.LowerHeatingValueVecto);
 
-				var auxHeaterDemand = data.AuxHeaterDemandCalc(data.Duration, engineWasteheatSum);
+				var auxHeaterDemand = data.AuxHeaterDemandCalc == null
+					? 0.SI<Joule>()
+					: data.AuxHeaterDemandCalc(data.Duration, engineWasteheatSum);
 
 				var firstFuel = true;
 				foreach (var entry in data.FuelData) {
@@ -227,8 +229,8 @@ namespace TUGraz.VectoCore.OutputData.XML
 			private static WattSecond WorkBusAuxCorrection(VectoRunData runData, IModalDataContainer data)
 			{
 				var workBusAuxPSCompOff = data.EnergyPneumaticCompressorPowerOff();
-				var workBusAuxPSCompOn = data.EnergyPneumaticCompressorOn();
-				var airBusAuxPSON = data.AirGenerated();
+				var workBusAuxPSCompOn = data.EnergyPneumaticCompressorAlwaysOn();
+				var airBusAuxPSON = data.AirGeneratedAlwaysOn();
 				var deltaAir = data.AirConsumed() - data.AirGenerated();
 
 				var kAir = (workBusAuxPSCompOn - workBusAuxPSCompOff) / (airBusAuxPSON - 0.SI<NormLiter>());

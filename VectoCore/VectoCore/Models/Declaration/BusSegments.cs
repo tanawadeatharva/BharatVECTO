@@ -122,6 +122,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						TotalCargoVolume = 0.SI<CubicMeter>(),
 						DefaultCDxA = row.ParseDouble("cdxastandard").SI<SquareMeter>(),
 						BusParameter = new BusParameters() {
+							BusGroup = VehicleClassHelper.Parse(row.Field<string>("hdvgroup")),
 							VehicleLength = row.ParseDouble("length").SI<Meter>(),
 							VehicleWidth = row.ParseDouble("width").SI<Meter>(),
 							BodyHeight = row.ParseDouble("bodyheight").SI<Meter>(),
