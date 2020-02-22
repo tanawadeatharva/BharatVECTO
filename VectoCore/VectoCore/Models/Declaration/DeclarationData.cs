@@ -926,7 +926,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static readonly Meter RunInThreshold = 15000.SI(Unit.SI.Kilo.Meter).Cast<Meter>();
 			public const double EvolutionCoefficient = 0.98;
 
-			public const MissionType SelectedMission = MissionType.LongHaul;
+			public const MissionType SelectedMissionHeavyLorry = MissionType.LongHaul;
+			public const MissionType SelectedMissionMediumLorry = MissionType.RegionalDelivery;
 			public const LoadingType SelectedLoading = LoadingType.ReferenceLoad;
 
 			// verification of input data

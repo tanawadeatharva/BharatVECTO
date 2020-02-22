@@ -134,5 +134,32 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 
 			Assert.AreEqual(true, jobContainer.AllCompleted);
 		}
+
+		[TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto")]
+		public void RunVTPMediumLorry_Declaration(string jobFile)
+		{
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
+				ModalResults1Hz = false,
+				WriteModalResults = true,
+				ActualModalData = false,
+				Validate = false,
+			};
+
+			jobContainer.AddRuns(runsFactory);
+
+			Assert.AreEqual(2, jobContainer.Runs.Count);
+			//var i = 0;
+			//jobContainer.Runs[i].Run.Run();
+			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(true, jobContainer.AllCompleted);
+		}
 	}
 }

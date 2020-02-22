@@ -183,13 +183,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 			//						.FirstOrDefault().Value;
 			var vtpResult = Results.OrderBy(x => x.FuelMode).FirstOrDefault(x => x.Mission == MissionType.VerificationTest);
 
-			const MissionType selectedMission = DeclarationData.VTPMode.SelectedMission;
-			const LoadingType selectedLoading = DeclarationData.VTPMode.SelectedLoading;
-			var result = Results.OrderBy(x => x.FuelMode).FirstOrDefault(x => x.Mission == selectedMission && x.LoadingType == selectedLoading);
-
 			if (vtpResult == null) {
 				throw new VectoException("no vtp result found for generating vtp report");
 			}
+
+			var selectedMission = vtpResult.VehicleClass.IsMediumLorry()
+				? DeclarationData.VTPMode.SelectedMissionMediumLorry
+				: DeclarationData.VTPMode.SelectedMissionHeavyLorry;
+			const LoadingType selectedLoading = DeclarationData.VTPMode.SelectedLoading;
+			var result = Results.OrderBy(x => x.FuelMode).FirstOrDefault(x => x.Mission == selectedMission && x.LoadingType == selectedLoading);
+
 			if (result == null) {
 				throw new VectoException("no corresponding simulation result found for generating vtp report");
 			}

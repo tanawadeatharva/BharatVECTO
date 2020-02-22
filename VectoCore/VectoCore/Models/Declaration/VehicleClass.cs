@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return hdvClass == VehicleClass.Unknown ? "-" : hdvClass.ToString().Substring(Prefix.Length);
 		}
 
-		public static bool IsMediumLorry(VehicleClass vehicleClass)
+		public static bool IsMediumLorry(this VehicleClass vehicleClass)
 		{
 			switch (vehicleClass) {
 				case VehicleClass.ClassML2r:

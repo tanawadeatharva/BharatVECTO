@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		
 		public AuxDemandEntry Lookup(VehicleClass vehicleClass, MissionType mission, string technology = null)
 		{
-			return VehicleClassHelper.IsMediumLorry(vehicleClass) ? fanMediumLorries.Lookup(mission, technology) : fanHeavyLorries.Lookup(mission, technology);
+			return vehicleClass.IsMediumLorry() ? fanMediumLorries.Lookup(mission, technology) : fanHeavyLorries.Lookup(mission, technology);
 		}
 
 

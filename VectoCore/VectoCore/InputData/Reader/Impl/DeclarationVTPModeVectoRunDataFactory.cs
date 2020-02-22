@@ -134,7 +134,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			EngineData = Dao.CreateEngineData(
 				vehicle, vehicle.Components.EngineInputData.EngineModes.First(),
 				new Mission() { MissionType = MissionType.LongHaul });
-			AxlegearData = Dao.CreateAxleGearData(vehicle.Components.AxleGearInputData);
+			AxlegearData = JobInputData.Vehicle.Components.GearboxInputData.DifferentialIncluded
+				? Dao.CreateDummyAxleGearData(JobInputData.Vehicle.Components.GearboxInputData)
+				: Dao.CreateAxleGearData(vehicle.Components.AxleGearInputData);
 			AngledriveData = Dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 
 			GearboxData = Dao.CreateGearboxData(
@@ -160,9 +162,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			}
 
 			// simulate the LongHaul cycle with RefLoad
-			var mission = Segment.Missions.FirstOrDefault(m => m.MissionType == DeclarationData.VTPMode.SelectedMission);
+			var vtpMission = Segment.VehicleClass.IsMediumLorry() 
+				? DeclarationData.VTPMode.SelectedMissionMediumLorry
+				: DeclarationData.VTPMode.SelectedMissionHeavyLorry;
+			var mission = Segment.Missions.FirstOrDefault(m => m.MissionType == vtpMission);
 			if (mission == null) {
-				throw new VectoException("Mission {0} not found in segmentation matrix", DeclarationData.VTPMode.SelectedMission);
+				throw new VectoException("Mission {0} not found in segmentation matrix", DeclarationData.VTPMode.SelectedMissionHeavyLorry);
 			}
 
 			var loading = mission.Loadings.FirstOrDefault(l => l.Key == DeclarationData.VTPMode.SelectedLoading);
@@ -177,6 +182,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			runData.SimulationType = SimulationType.DistanceCycle;
 			runData.Mission = mission;
 			runData.Loading = loading.Key;
+			runData.VehicleData.VehicleClass = Segment.VehicleClass;
 			yield return runData;
 
 			// simulate the Measured cycle
@@ -197,6 +203,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			vtpRunData.Mission = new Mission() {
 				MissionType = MissionType.VerificationTest
 			};
+			vtpRunData.VehicleData.VehicleClass = Segment.VehicleClass;
 
 			//var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
 			//var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;
