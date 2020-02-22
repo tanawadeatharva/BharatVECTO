@@ -93,18 +93,16 @@ namespace TUGraz.VectoCommon.Models
 		{
 			switch (self) {
 				case AxleConfiguration.AxleConfig_4x2:
-				case AxleConfiguration.AxleConfig_4x4:
-					return 2;
+				case AxleConfiguration.AxleConfig_4x4: return 2;
 				case AxleConfiguration.AxleConfig_6x2:
 				case AxleConfiguration.AxleConfig_6x4:
-				case AxleConfiguration.AxleConfig_6x6:
-					return 3;
+				case AxleConfiguration.AxleConfig_6x6: return 3;
 				case AxleConfiguration.AxleConfig_8x2:
 				case AxleConfiguration.AxleConfig_8x4:
 				case AxleConfiguration.AxleConfig_8x6:
-				case AxleConfiguration.AxleConfig_8x8:
-					return 4;
+				case AxleConfiguration.AxleConfig_8x8: return 4;
 			}
+
 			return 0;
 		}
 
@@ -114,19 +112,21 @@ namespace TUGraz.VectoCommon.Models
 				case AxleConfiguration.AxleConfig_4x2:
 				case AxleConfiguration.AxleConfig_4x2F:
 				case AxleConfiguration.AxleConfig_6x2:
-				case AxleConfiguration.AxleConfig_8x2:
-					return 1;
+				case AxleConfiguration.AxleConfig_8x2: return 1;
 				case AxleConfiguration.AxleConfig_4x4:
 				case AxleConfiguration.AxleConfig_6x4:
-				case AxleConfiguration.AxleConfig_8x4:
-					return 2;
+				case AxleConfiguration.AxleConfig_8x4: return 2;
 				case AxleConfiguration.AxleConfig_6x6:
-				case AxleConfiguration.AxleConfig_8x6:
-					return 3;
-				case AxleConfiguration.AxleConfig_8x8:
-					return 4;
+				case AxleConfiguration.AxleConfig_8x6: return 3;
+				case AxleConfiguration.AxleConfig_8x8: return 4;
 			}
+
 			return 0;
+		}
+
+		public static bool AxlegearIncludedInGearbox(this AxleConfiguration self)
+		{
+			return self == AxleConfiguration.AxleConfig_4x2F;
 		}
 	}
 }

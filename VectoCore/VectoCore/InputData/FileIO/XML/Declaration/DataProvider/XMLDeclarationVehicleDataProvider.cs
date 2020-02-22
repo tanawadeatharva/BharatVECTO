@@ -672,6 +672,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return null; }
 		}
 
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override LegislativeClass LegislativeClass
+		{
+			get { return LegislativeClass.M3; }
+		}
+
+		#endregion
+
 		public override IPTOTransmissionInputData PTOTransmissionInputData
 		{
 			get { return null; }

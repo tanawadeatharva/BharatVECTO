@@ -77,6 +77,20 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected override XElement VehicleComponents(VectoRunData modelData, List<List<FuelData.Entry>> fuelModes)
 		{
+			if (modelData.VehicleData.AxleConfiguration.AxlegearIncludedInGearbox()) {
+				return new XElement(
+					tns + XMLNames.Vehicle_Components,
+					new XAttribute(xsi + "type", "ComponentsTruckFWDType"),
+					GetEngineDescription(modelData.EngineData, fuelModes),
+					GetGearboxDescription(modelData.GearboxData, modelData.AxleGearData),
+					GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
+					GetRetarderDescription(modelData.Retarder),
+					GetAngledriveDescription(modelData.AngledriveData),
+					GetAirDragDescription(modelData.AirdragData),
+					GetAxleWheelsDescription(modelData.VehicleData),
+					GetAuxiliariesDescription(modelData)
+				);
+			}
 			return new XElement(
 				tns + XMLNames.Vehicle_Components,
 				new XAttribute(xsi + "type", "ComponentsTruckType"),

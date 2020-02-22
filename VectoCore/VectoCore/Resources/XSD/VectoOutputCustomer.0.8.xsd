@@ -18,6 +18,30 @@
 			<xs:attribute name="schemaVersion" type="xs:decimal" use="required"/>
 		</xs:complexType>
 	</xs:element>
+	<xs:complexType name="ADASType">
+		<xs:sequence>
+			<xs:element name="EngineStopStart" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P271 / II.1.2.11</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EcoRollWithoutEngineStop" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P272 / II.1.2.12</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="EcoRollWithEngineStop" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P273 / II.1.2.13</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PredictiveCruiseControl" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>P274 / II.1.2.14</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="CO2Type">
 		<xs:simpleContent>
 			<xs:extension base="xs:double">
@@ -251,7 +275,7 @@
 			</xs:element>
 			<xs:choice>
 				<xs:sequence>
-					<xs:element name="AxleConfiguration" type="vdecdef:VehicleAxleConfigurationDeclarationType">
+					<xs:element name="AxleConfiguration" type="xs:string">
 						<xs:annotation>
 							<xs:documentation>P037 / II.1.1.3</xs:documentation>
 						</xs:annotation>
@@ -403,6 +427,11 @@
 			<xs:enumeration value="g/m³-km"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="DisplacementType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ltr"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="DistanceUnitType">
 		<xs:restriction base="xs:token">
 			<xs:enumeration value="km"/>
@@ -438,50 +467,20 @@
 			<xs:enumeration value="Construction"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="SpeedUnitType">
-		<xs:restriction base="xs:token">
-			<xs:enumeration value="km/h"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="VehicleGroupType">
-		<xs:restriction base="xs:int">
-			<xs:minInclusive value="1"/>
-			<xs:maxInclusive value="16"/>
-		</xs:restriction>
-	</xs:simpleType>
 	<xs:simpleType name="PowerUnitType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="kW"/>
 			<xs:enumeration value="W"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="DisplacementType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="ltr"/>
+	<xs:simpleType name="SpeedUnitType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="km/h"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:complexType name="ADASType">
-		<xs:sequence>
-			<xs:element name="EngineStopStart" type="xs:boolean">
-				<xs:annotation>
-					<xs:documentation>P271 / II.1.2.11</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="EcoRollWithoutEngineStop" type="xs:boolean">
-				<xs:annotation>
-					<xs:documentation>P272 / II.1.2.12</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="EcoRollWithEngineStop" type="xs:boolean">
-				<xs:annotation>
-					<xs:documentation>P273 / II.1.2.13</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="PredictiveCruiseControl" type="xs:boolean">
-				<xs:annotation>
-					<xs:documentation>P274 / II.1.2.14</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+	<xs:simpleType name="VehicleGroupType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>

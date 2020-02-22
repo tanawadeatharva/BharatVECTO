@@ -183,6 +183,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			runData.Mission = mission;
 			runData.Loading = loading.Key;
 			runData.VehicleData.VehicleClass = Segment.VehicleClass;
+			runData.VehicleData.LegislativeClass = JobInputData.Vehicle.LegislativeClass;
 			yield return runData;
 
 			// simulate the Measured cycle
@@ -204,6 +205,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				MissionType = MissionType.VerificationTest
 			};
 			vtpRunData.VehicleData.VehicleClass = Segment.VehicleClass;
+			vtpRunData.VehicleData.LegislativeClass = JobInputData.Vehicle.LegislativeClass;
 
 			//var ncvStd = DeclarationData.FuelData.Lookup(JobInputData.Vehicle.Components.EngineInputData.FuelType).LowerHeatingValueVecto;
 			//var ncvCorrection = ncvStd / JobInputData.NetCalorificValueTestFuel;

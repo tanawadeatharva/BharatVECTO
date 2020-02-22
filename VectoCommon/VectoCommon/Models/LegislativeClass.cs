@@ -35,7 +35,8 @@ namespace TUGraz.VectoCommon.Models
 	{
 		Unknown,
 		N2,
-		N3
+		N3,
+		M3
 	}
 
 	public static class LegislativeClassHelper
