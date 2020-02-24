@@ -39,9 +39,9 @@ namespace TUGraz.VectoCommon.Models
         Van,
 		RigidTruck,
 		Tractor,
-		//CityBus,
+		CityBus,
 		//InterurbanBus,
-		//Coach
+		Coach,
 		HeavyBusPrimaryVehicle
 	}
 
@@ -117,9 +117,9 @@ namespace TUGraz.VectoCommon.Models
                 case VehicleCategory.RigidTruck:
 				case VehicleCategory.Tractor:
 					return true;
-				//case VehicleCategory.CityBus:
+				case VehicleCategory.CityBus:
 				//case VehicleCategory.InterurbanBus:
-				//case VehicleCategory.Coach:
+				case VehicleCategory.Coach:
 				case VehicleCategory.HeavyBusPrimaryVehicle:
 					return false;
 				default:
@@ -130,6 +130,8 @@ namespace TUGraz.VectoCommon.Models
 		public static bool IsBus(this VehicleCategory category)
 		{
 			switch (category) {
+				case VehicleCategory.Coach:
+				case VehicleCategory.CityBus:
 				case VehicleCategory.HeavyBusPrimaryVehicle: return true;
 				default: return false;
 			}
