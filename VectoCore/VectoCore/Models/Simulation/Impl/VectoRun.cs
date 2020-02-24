@@ -184,7 +184,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.FinishSimulationRun(ex);
 				throw ex;
 			}
-			Container.RunStatus = CyclePort.Progress < 1 ? Status.Aborted : Status.Success;
+
+			Container.RunStatus = Container.RunData.Exempted
+				? Status.Success
+				: CyclePort.Progress < 1
+					? Status.Aborted
+					: Status.Success;
 			Container.FinishSimulationRun();
 			WritingResultsDone = true;
 			if (Progress.IsSmaller(1, 1e-9)) {
