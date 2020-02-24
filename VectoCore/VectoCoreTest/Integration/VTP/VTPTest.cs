@@ -30,12 +30,15 @@
 */
 
 using System.IO;
+using System.Xml;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.Integration.VTP
 {
@@ -74,7 +77,6 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			jobContainer.WaitFinished();
 
 			Assert.AreEqual(true, jobContainer.AllCompleted);
-			
 		}
 
 		[Category("LongRunning")]
@@ -104,6 +106,11 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			jobContainer.WaitFinished();
 
 			Assert.AreEqual(true, jobContainer.AllCompleted);
+
+			var vtpReport = fileWriter.XMLVTPReportName;
+			var validator = new XMLValidator(XmlReader.Create(vtpReport));
+			validator.ValidateXML(XmlDocumentType.VTPReport);
+			Assert.IsNull(validator.ValidationError);
 		}
 
 		[Category("LongRunning")]
@@ -160,6 +167,11 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			jobContainer.WaitFinished();
 
 			Assert.AreEqual(true, jobContainer.AllCompleted);
+
+			var vtpReport = fileWriter.XMLVTPReportName;
+			var validator = new XMLValidator(XmlReader.Create(vtpReport));
+			validator.ValidateXML(XmlDocumentType.VTPReport);
+			Assert.IsNull(validator.ValidationError);
 		}
 	}
 }
