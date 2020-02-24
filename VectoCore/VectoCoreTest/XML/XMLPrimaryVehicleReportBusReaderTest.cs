@@ -58,12 +58,13 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(DateTime.Parse("2017-02-15T11:00:00Z").ToUniversalTime(), vehicle.Date);
 			Assert.IsTrue(VehicleCategory.HeavyBusPrimaryVehicle == vehicle.VehicleCategory);
 			Assert.IsTrue(AxleConfiguration.AxleConfig_4x2 == vehicle.AxleConfiguration);
+			Assert.AreEqual(false, vehicle.Articulated);
 			Assert.AreEqual(25000, vehicle.GrossVehicleMassRating.Value());
 			Assert.AreEqual(600, vehicle.EngineIdleSpeed.Value());
 			Assert.AreEqual("Transmission Output Retarder", ((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).RetarderType.ToXMLFormat());
 			Assert.AreEqual(1.000, ((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).RetarderRatio);
 			Assert.AreEqual("None", ((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).AngledriveType.ToXMLFormat());
-			Assert.IsFalse(((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).ZeroEmissionVehicle);
+			Assert.IsFalse(vehicle.ZeroEmissionVehicle);
 
 			Assert.IsFalse(vehicle.ADAS.EngineStopStart);
 			Assert.IsTrue(EcoRollType.None == vehicle.ADAS.EcoRoll);
