@@ -234,7 +234,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected virtual XElement GetADAS(VehicleData.ADASData adasData)
 		{
-			if (adasData.InputData.XMLSource == null) {
+			if (adasData.InputData.XMLSource == null || XMLHelper.GetVersion(adasData.InputData.XMLSource) < 2.0) {
 				return CreateADAS(adasData);
 			}
 

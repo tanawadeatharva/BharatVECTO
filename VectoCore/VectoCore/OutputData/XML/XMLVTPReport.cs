@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 {
 	internal class XMLVTPReport : DeclarationReport<XMLVTPReport.ResultEntry>, IVTPReport
 	{
-		public const string CURRENT_SCHEMA_VERSION = "0.1";
+		public const string CURRENT_SCHEMA_VERSION = "0.2";
 
 		private const string VTPReportTartetName = "VTPReportTarget";
 
@@ -70,7 +70,9 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected XElement ResultsPart;
 
-		protected XNamespace tns;
+		protected XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+		protected XNamespace rootNS = "urn:tugraz:ivt:VectoAPI:VTPReport";
+		protected XNamespace tns = "urn:tugraz:ivt:VectoAPI:VTPReport:v" + CURRENT_SCHEMA_VERSION;
 
 		private static List<string> LogList = new List<string>();
 		private LoggingRule cycleChecksRule;
@@ -118,7 +120,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 		public XMLVTPReport(IReportWriter writer) : base(writer)
 		{
 			//di = "http://www.w3.org/2000/09/xmldsig#";
-			tns = "urn:tugraz:ivt:VectoAPI:VTPReport:v" + CURRENT_SCHEMA_VERSION;
+			
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			GeneralPart = new XElement(tns + "General");
 			DataIntegrityPart = new XElement(tns + "DataIntegrityCheck");
@@ -255,24 +257,26 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		private XDocument GenerateReport()
 		{
-			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+			
 			var retVal = new XDocument();
 			retVal.Add(
 				new XProcessingInstruction(
 					"xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
 			retVal.Add(
 				new XElement(
-					tns + "VectoVTPReport",
-					new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
+					rootNS + "VectoVTPReport",
+					//new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
 					new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 					new XAttribute("xmlns", tns),
+					new XAttribute(XNamespace.Xmlns + "tns", rootNS),
 
 					//new XAttribute(XNamespace.Xmlns + "di", di),
 					new XAttribute(
 						xsi + "schemaLocation",
-						string.Format("{0} {1}VTPReport.{2}.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl, CURRENT_SCHEMA_VERSION)),
+						string.Format("{0} {1}VTPReport.xsd", rootNS, AbstractXMLWriter.SchemaLocationBaseUrl)),
 					new XElement(
-						tns + "Data",
+						rootNS + "Data",
+						new XAttribute(xsi + "type", "VTPReportDataType"),
 						new XElement(GeneralPart),
 						new XElement(VehiclePart),
 						new XElement(DataIntegrityPart),
@@ -292,6 +296,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Component_Manufacturer, modelData.VehicleData.Manufacturer),
 				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress));
 			VehiclePart.Add(
+				new XAttribute(xsi + "type", "VehicleType"),
 				new XElement(tns + XMLNames.Component_Model, modelData.VehicleData.ModelName),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
@@ -302,20 +307,37 @@ namespace TUGraz.VectoCore.OutputData.XML
 				modelData.Retarder.Type.IsDedicatedComponent()
 					? new XElement(tns + XMLNames.Vehicle_RetarderRatio, modelData.Retarder.Ratio.ToXMLFormat(3))
 					: null,
-				new XElement(tns + XMLNames.Vehicle_PTO, modelData.PTO != null),
-				new XElement(
-					tns + XMLNames.Vehicle_Components,
-					GetEngineDescription(modelData.EngineData, fuelModes),
-					GetGearboxDescription(modelData.GearboxData),
-					GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
-					GetRetarderDescription(modelData.Retarder),
-					GetAngledriveDescription(modelData.AngledriveData),
-					GetAxlegearDescription(modelData.AxleGearData),
-					GetAirDragDescription(modelData.AirdragData),
-					GetAxleWheelsDescription(modelData.VehicleData),
-					GetAuxiliariesDescription(modelData.Aux)
-				)
-			);
+				new XElement(tns + XMLNames.Vehicle_PTO, modelData.PTO != null));
+			if (modelData.VehicleData.AxleConfiguration.AxlegearIncludedInGearbox()) {
+				VehiclePart.Add(
+					new XElement(
+						tns + XMLNames.Vehicle_Components,
+						new XAttribute(xsi + "type", "ComponentsTruckFWDType"),
+						GetEngineDescription(modelData.EngineData, fuelModes),
+						GetGearboxDescription(modelData.GearboxData, modelData.AxleGearData.AxleGear.Ratio),
+						GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
+						GetRetarderDescription(modelData.Retarder),
+						GetAngledriveDescription(modelData.AngledriveData),
+						GetAirDragDescription(modelData.AirdragData),
+						GetAxleWheelsDescription(modelData.VehicleData),
+						GetAuxiliariesDescription(modelData.Aux)
+					));
+			} else {
+				VehiclePart.Add(
+					new XElement(
+						tns + XMLNames.Vehicle_Components,
+						new XAttribute(xsi + "type", "ComponentsTruckType"),
+						GetEngineDescription(modelData.EngineData, fuelModes),
+						GetGearboxDescription(modelData.GearboxData),
+						GetTorqueConverterDescription(modelData.GearboxData.TorqueConverterData),
+						GetRetarderDescription(modelData.Retarder),
+						GetAngledriveDescription(modelData.AngledriveData),
+						GetAxlegearDescription(modelData.AxleGearData),
+						GetAirDragDescription(modelData.AirdragData),
+						GetAxleWheelsDescription(modelData.VehicleData),
+						GetAuxiliariesDescription(modelData.Aux)
+					));
+			}
 
 			if (InputDataHash == null) {
 				return;
@@ -491,6 +513,20 @@ namespace TUGraz.VectoCore.OutputData.XML
 				GetCommonDescription(gearboxData),
 				new XElement(tns + XMLNames.Gearbox_TransmissionType, gearboxData.Type.ToXMLFormat()),
 				new XElement(tns + XMLNames.Report_GetGearbox_GearsCount, gearboxData.Gears.Count),
+				new XElement(
+					tns + XMLNames.Report_Gearbox_TransmissionRatioFinalGear,
+					gearboxData.Gears.Last().Value.Ratio.ToXMLFormat(3))
+			);
+		}
+
+		private XElement GetGearboxDescription(GearboxData gearboxData, double axlegearRatio)
+		{
+			return new XElement(
+				tns + XMLNames.Component_Gearbox,
+				GetCommonDescription(gearboxData),
+				new XElement(tns + XMLNames.Gearbox_TransmissionType, gearboxData.Type.ToXMLFormat()),
+				new XElement(tns + XMLNames.Report_GetGearbox_GearsCount, gearboxData.Gears.Count),
+				new XElement(tns + XMLNames.Gearbox_AxlegearRatio, axlegearRatio.ToXMLFormat(3)),
 				new XElement(
 					tns + XMLNames.Report_Gearbox_TransmissionRatioFinalGear,
 					gearboxData.Gears.Last().Value.Ratio.ToXMLFormat(3))

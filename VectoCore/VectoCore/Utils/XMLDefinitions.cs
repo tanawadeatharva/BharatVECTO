@@ -14,8 +14,8 @@ namespace TUGraz.VectoCore.Utils
 		EngineeringComponentData = 1 << 5,
 		ManufacturerReport = 1 << 6,
 		CustomerReport = 1 << 7,
-		MonitoringReport = 1 << 8
-
+		MonitoringReport = 1 << 8,
+		VTPReport = 1 << 9
 	}
 
 	
@@ -91,6 +91,7 @@ namespace TUGraz.VectoCore.Utils
 			{XmlDocumentType.ManufacturerReport, "VectoOutputManufacturer.xsd" },
 			{XmlDocumentType.CustomerReport , "VectoOutputCustomer.xsd"},
 			{XmlDocumentType.MonitoringReport , "VectoMonitoring.xsd"},
+			{XmlDocumentType.VTPReport , "VTPReport.xsd"},
 		};
 
 		public static XNamespace DECLARATION_OUTPUT_PRIMARY_HEAVY_BUS = "urn:tugraz:ivt:VectoAPI:DeclarationOutput:PrimaryVehicleInformation:HeavyBus:v0.1";
