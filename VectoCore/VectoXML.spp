@@ -115,6 +115,8 @@
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputPrimaryBus.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VectoOutputPrimaryVehicleInformation.xsd" HomeFolder="Yes"/>
 			<File FilePath="VectoCore\Resources\XSD\VTPReport.0.1.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VTPReport.0.2.xsd" HomeFolder="Yes"/>
+			<File FilePath="VectoCore\Resources\XSD\VTPReport.xsd" HomeFolder="Yes"/>
 		</Folder>
 	</Folder>
 	<Folder FolderName="Entities" ExtStr="ent"/>
