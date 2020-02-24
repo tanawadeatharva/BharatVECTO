@@ -13,6 +13,7 @@
     "Loading": 3020.0,
     "MassMax": 11.99,
     "CdA": 4.83,
+    "VehicleHeight":  4, 
     "rdyn": 421.0,
     "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "",
