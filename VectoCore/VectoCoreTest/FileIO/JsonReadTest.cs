@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}
@@ -273,7 +273,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}
@@ -320,7 +320,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}
@@ -368,7 +368,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}
@@ -416,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}

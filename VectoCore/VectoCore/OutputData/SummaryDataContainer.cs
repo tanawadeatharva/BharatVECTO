@@ -707,7 +707,7 @@ namespace TUGraz.VectoCore.OutputData
 			row[Fields.VIN_NUMBER] = data.VIN;
 			row[Fields.VEHICLE_MODEL] = data.ModelName;
 
-			row[Fields.HDV_CO2_VEHICLE_CLASS] = runData.Mission.BusParameter?.BusGroup.GetClassNumber() ?? data.VehicleClass.GetClassNumber();
+			row[Fields.HDV_CO2_VEHICLE_CLASS] = runData.Mission?.BusParameter?.BusGroup.GetClassNumber() ?? data.VehicleClass.GetClassNumber();
 			row[Fields.CURB_MASS] = (ConvertedSI)data.CurbMass;
 
 			// - (data.BodyAndTrailerWeight ?? 0.SI<Kilogram>());
