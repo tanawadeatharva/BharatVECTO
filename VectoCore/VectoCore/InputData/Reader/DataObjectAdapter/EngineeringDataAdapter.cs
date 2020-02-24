@@ -129,9 +129,11 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					var airDragArea = airdragData.AirDragArea ??
 									DeclarationData.TruckSegments.LookupCdA(
 										data.VehicleCategory, data.AxleConfiguration, data.GrossVehicleMassRating, false);
-					var height = data.Height ?? DeclarationData.TruckSegments.LookupHeight(
-									data.VehicleCategory, data.AxleConfiguration,
-									data.GrossVehicleMassRating, false);
+					var height = data.Height ?? (data.VehicleCategory.IsTruck()
+									? DeclarationData.TruckSegments.LookupHeight(
+										data.VehicleCategory, data.AxleConfiguration,
+										data.GrossVehicleMassRating, false)
+									: 4.SI<Meter>());
 					retVal.CrossWindCorrectionCurve = new CrosswindCorrectionCdxALookup(
 						airDragArea,
 						DeclarationDataAdapterHeavyLorry.GetDeclarationAirResistanceCurve(
@@ -155,9 +157,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 					return "MediumLorriesVan";
 				case VehicleCategory.RigidTruck: return numAxles > axles.NumAxles() ? "RigidTrailer" : "RigidSolo";
 				case VehicleCategory.Tractor: return "TractorSemitrailer";
-				//case VehicleCategory.CityBus:
+				case VehicleCategory.CityBus:
 				//case VehicleCategory.InterurbanBus:
-				//case VehicleCategory.Coach: return "CoachBus";
+				case VehicleCategory.Coach: return "CoachBus";
 				default: throw new ArgumentOutOfRangeException("vehicleCategory", vehicleCategory, null);
 			}
 		}
