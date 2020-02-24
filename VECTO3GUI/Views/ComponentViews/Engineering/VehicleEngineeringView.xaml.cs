@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace VECTO3.Views.ComponentViews.Engineering
+namespace VECTO3GUI.Views.ComponentViews.Engineering
 {
 	/// <summary>
 	/// Interaction logic for EditComponentVehicleView.xaml

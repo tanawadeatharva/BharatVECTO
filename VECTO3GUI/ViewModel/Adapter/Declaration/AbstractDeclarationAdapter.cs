@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Ninject;
-using TUGraz.VectoCommon.InputData;
-using TUGraz.VectoCommon.Utils;
-using TUGraz.VectoCore.InputData.Reader;
-using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using VECTO3.ViewModel.Interfaces;
+﻿using TUGraz.VectoCommon.InputData;
+using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3.ViewModel.Adapter.Declaration
+namespace VECTO3GUI.ViewModel.Adapter.Declaration
 {
 	public abstract class AbstractDeclarationAdapter
 	{

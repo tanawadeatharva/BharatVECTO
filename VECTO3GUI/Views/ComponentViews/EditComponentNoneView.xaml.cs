@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace VECTO3.Views
+namespace VECTO3GUI.Views
 {
 	/// <summary>
 	/// Interaction logic for EditComponentNoneView.xaml

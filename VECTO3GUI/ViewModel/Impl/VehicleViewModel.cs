@@ -14,13 +14,13 @@ using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
-using VECTO3.Util;
-using VECTO3.ViewModel.Adapter;
-using VECTO3.ViewModel.Adapter.Declaration;
-using VECTO3.ViewModel.Interfaces;
-using Component = VECTO3.Util.Component;
+using VECTO3GUI.Util;
+using VECTO3GUI.ViewModel.Adapter;
+using VECTO3GUI.ViewModel.Adapter.Declaration;
+using VECTO3GUI.ViewModel.Interfaces;
+using Component = VECTO3GUI.Util.Component;
 
-namespace VECTO3.ViewModel.Impl
+namespace VECTO3GUI.ViewModel.Impl
 {
 	public class VehicleViewModel : AbstractViewModel, IVehicleViewModel
 	{
@@ -147,8 +147,7 @@ namespace VECTO3.ViewModel.Impl
 			ManufacturerAddress = vehicle.ManufacturerAddress;
 			Model = vehicle.Model;
 			VIN = vehicle.VIN;
-			//ToDo
-			//Date = DateTime.Parse(vehicle.Date);
+			Date = vehicle.Date;
 			LegislativeClass = vehicle.LegislativeClass;
 			VehicleCategory = vehicle.VehicleCategory;
 			AxleConfiguration = vehicle.AxleConfiguration;

@@ -1,9 +1,9 @@
 using System.Collections.ObjectModel;
 using TUGraz.VectoCommon.InputData;
-using VECTO3.Util;
-using VECTO3.ViewModel.Impl;
+using VECTO3GUI.Util;
+using VECTO3GUI.ViewModel.Impl;
 
-namespace VECTO3.ViewModel.Interfaces {
+namespace VECTO3GUI.ViewModel.Interfaces {
 	public interface IComponentViewModel
 	{
 		IJobEditViewModel JobViewModel { set; }

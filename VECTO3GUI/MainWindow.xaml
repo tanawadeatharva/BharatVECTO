@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VECTO3GUI"
-        xmlns:interfaces="clr-namespace:VECTO3.ViewModel.Interfaces"
+        xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
         mc:Ignorable="d"
         Title="VECTO 3" Height="515.36" Width="972.48" >
 

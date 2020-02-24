@@ -1,8 +1,8 @@
 ﻿using System;
 using Ninject;
-using VECTO3.ViewModel.Adapter;
+using VECTO3GUI.ViewModel.Adapter;
 
-namespace VECTO3.ViewModel.Impl {
+namespace VECTO3GUI.ViewModel.Impl {
 	public abstract class AbstractComponentViewModel : AbstractViewModel
 	{
 		private string _manufacturer;

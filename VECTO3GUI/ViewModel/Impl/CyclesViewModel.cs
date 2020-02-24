@@ -4,10 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
-using VECTO3.ViewModel.Interfaces;
-using Component = VECTO3.Util.Component;
+using VECTO3GUI.ViewModel.Interfaces;
+using Component = VECTO3GUI.Util.Component;
 
-namespace VECTO3.ViewModel.Impl
+namespace VECTO3GUI.ViewModel.Impl
 {
 	public class CyclesViewModel : AbstractViewModel, ICyclesViewModel
 	{

@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace VECTO3.ViewModel.Interfaces
+namespace VECTO3GUI.ViewModel.Interfaces
 {
 	public interface ICyclesViewModel : IComponentViewModel
 	{

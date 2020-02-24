@@ -1,8 +1,8 @@
 ﻿using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
-using VECTO3.Util;
+using VECTO3GUI.Util;
 
-namespace VECTO3.ViewModel.Interfaces {
+namespace VECTO3GUI.ViewModel.Interfaces {
 	public interface ITyreViewModel : IComponentViewModel, ICommonComponentParameters
 	{
 		ITyreDeclarationInputData ModelData { get; }

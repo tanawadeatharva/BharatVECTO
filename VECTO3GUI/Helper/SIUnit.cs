@@ -1,11 +1,10 @@
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 
-using SIUtils = VECTO3.Util.SIUtils;
+using SIUtils = VECTO3GUI.Util.SIUtils;
 
-namespace VECTO3.Helper {
+namespace VECTO3GUI.Helper {
 	public class SIUnit : DataContextBaseExtension
 	{
 

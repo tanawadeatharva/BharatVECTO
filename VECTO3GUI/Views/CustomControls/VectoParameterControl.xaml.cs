@@ -10,7 +10,7 @@ using System.Windows.Data;
 using TUGraz.VectoCommon.Utils;
 
 
-namespace VECTO3.Views.CustomControls
+namespace VECTO3GUI.Views.CustomControls
 {
 	/// <summary>
 	/// Interaction logic for VectoParameterControl.xaml

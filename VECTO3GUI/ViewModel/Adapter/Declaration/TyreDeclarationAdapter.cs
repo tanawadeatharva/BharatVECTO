@@ -2,10 +2,11 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
-using VECTO3.ViewModel.Adapter.Declaration;
-using VECTO3.ViewModel.Interfaces;
+using VECTO3GUI.ViewModel.Adapter.Declaration;
+using VECTO3GUI.ViewModel.Interfaces;
+using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3.ViewModel.Impl {
+namespace VECTO3GUI.ViewModel.Impl {
 	public class TyreDeclarationAdapter : AbstractDeclarationAdapter, ITyreDeclarationInputData
 	{
 		protected ITyreViewModel ViewModel;

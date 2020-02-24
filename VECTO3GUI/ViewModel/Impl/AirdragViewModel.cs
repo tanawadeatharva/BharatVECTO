@@ -2,9 +2,9 @@
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Utils;
-using VECTO3.ViewModel.Interfaces;
+using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3.ViewModel.Impl
+namespace VECTO3GUI.ViewModel.Impl
 {
 	public class AirdragViewModel : AbstractComponentViewModel, IAirdragViewModel
 	{

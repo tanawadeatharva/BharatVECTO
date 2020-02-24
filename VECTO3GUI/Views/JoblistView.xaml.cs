@@ -13,11 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using VECTO3.ViewModel;
-using VECTO3.ViewModel.Impl;
-using VECTO3.ViewModel.Interfaces;
+using VECTO3GUI.ViewModel;
+using VECTO3GUI.ViewModel.Impl;
+using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3.Views
+namespace VECTO3GUI.Views
 {
 	/// <summary>
 	/// Interaction logic for HomeView.xaml

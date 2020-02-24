@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using TUGraz.VectoCommon.Utils;
 
-namespace VECTO3.Util
+namespace VECTO3GUI.Util
 {
 	public static class SIUtils
 	{

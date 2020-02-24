@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Markup;
 
-namespace VECTO3.Helper
+namespace VECTO3GUI.Helper
 {
 	public abstract class DataContextBaseExtension : MarkupExtension
 	{

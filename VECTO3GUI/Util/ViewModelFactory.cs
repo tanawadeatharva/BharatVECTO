@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ninject;
-using VECTO3.ViewModel.Impl;
-using VECTO3.ViewModel.Interfaces;
+using VECTO3GUI.ViewModel.Interfaces;
+using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3.Util
+namespace VECTO3GUI.Util
 {
 	public static class ViewModelFactory
 	{
@@ -12,6 +11,7 @@ namespace VECTO3.Util
 		public static Dictionary<Component, Type> ComponentViewModelMapping = new Dictionary<Component, Type>()
 		{
 			{ Component.Vehicle, typeof(IVehicleViewModel)},
+			{ Component.PrimaryBusVehicle, typeof(IPrimaryVehicleBusViewModel) },
 			{ Component.Engine ,typeof(IEngineViewModel) },
 			{ Component.Gearbox ,typeof(IGearboxViewModel) },
 			{ Component.TorqueConverter ,typeof(ITorqueConverterViewModel) },

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using Ninject;
 using Ninject.Parameters;
@@ -16,10 +17,13 @@ using TUGraz.VectoCore.InputData.FileIO.XML;
 using TUGraz.VectoCore.InputData.FileIO.XML.Declaration;
 using TUGraz.VectoCore.InputData.FileIO.XML.Engineering;
 using TUGraz.VectoCore.Utils;
-using VECTO3.Util;
-using VECTO3.ViewModel.Interfaces;
+using VECTO3GUI.Util;
+using VECTO3GUI.ViewModel.Interfaces;
+using System.Collections.Generic;
+using System.Xml;
+using VECTO3GUI.ViewModel.Impl;
 
-namespace VECTO3.ViewModel.Impl
+namespace VECTO3GUI.ViewModel.Impl
 {
 	public class JoblistViewModel : ObservableObject, IJoblistViewModel
 	{
@@ -28,10 +32,13 @@ namespace VECTO3.ViewModel.Impl
 
 		public JoblistViewModel()
 		{
-			AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Declaration Mode\Class5_Tractor_4x2\Class5_Tractor_DECL.xml");
-			AddJobEntry("DummyEntry");
-			AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Declaration Mode\Class5_Tractor_4x2\Class5_Tractor_ENG.vecto");
-			AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Engineering Mode\EngineOnly\EngineOnly.vecto");
+			AddJobEntry(@"~\..\..\..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\example_heavyBus_PIF.xml");
+
+			//AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Declaration Mode\Class5_Tractor_4x2\Class5_Tractor_DECL.xml");
+			//AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Declaration Mode\Class5_Tractor_4x2\Class5_Tractor_DECL.xml");
+			//AddJobEntry("DummyEntry");
+			//AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Declaration Mode\Class5_Tractor_4x2\Class5_Tractor_ENG.vecto");
+			//AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Engineering Mode\EngineOnly\EngineOnly.vecto");
 		}
 
 		private void AddJobEntry(string jobFile)
@@ -55,18 +62,17 @@ namespace VECTO3.ViewModel.Impl
 
 		private void DoRemoveJob(object selected)
 		{
-			var list = (IList)selected;
-			var selectedEntries = list.Cast<JobEntry>().ToArray();
+			var jobEntry = selected as JobEntry;
+			if(jobEntry == null)
+				return;
 
-			foreach (var entry in selectedEntries) {
-				_jobs.Remove(entry);
-			}
+			_jobs.Remove(jobEntry);
 		}
 
 		private bool CanRemoveJob(object selected)
 		{
-			var list = (IList)selected;
-			return list.Count > 0;
+			var jobEntry = selected as JobEntry;
+			return jobEntry != null;
 		}
 
 		public ICommand MoveJobUp { get { return new RelayCommand(() => { }, () => false); } }
@@ -98,7 +104,7 @@ namespace VECTO3.ViewModel.Impl
 
 		private void DoEditJob(object selected)
 		{
-			var entry = (JobEntry)selected;
+			var entry = selected as JobEntry;
 			if (entry == null) {
 				return;
 			}
@@ -117,27 +123,47 @@ namespace VECTO3.ViewModel.Impl
 
 		private IJobEditViewModel ReadJob(string jobFile)
 		{
-			IInputDataProvider inputData = null;
-			var ext = Path.GetExtension(jobFile);
-			switch (ext) {
-				case Constants.FileExtensions.VectoJobFile:
-					inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
-					break;
-				case Constants.FileExtensions.VectoXMLDeclarationFile:
-				//ToDo
-				//case Constants.FileExtensions.VectoXMLJobFile:
-				//inputData = Kernel.Get<IXMLInputDataReader>().CreateDeclaration(jobFile);
-				//break;
-				default:
-					throw new UnsupportedFileVersionException(jobFile);
-			}
 
-			var retVal = CreateJobEditViewModel(inputData);
+			if (jobFile == null)
+				return null;
 
-			if (retVal == null) {
-				throw new Exception("Unsupported job type");
-			}
-			return retVal;
+			var xmlInputReader =  Kernel.Get<IXMLInputDataReader>();
+			var reader = XmlReader.Create(jobFile);
+			var inputDataProvider = xmlInputReader.Create(reader);
+
+
+
+			return CreatePrimaryBusVehicleViewModel(inputDataProvider);
+
+
+
+			//IInputDataProvider inputData = null;
+			//var ext = Path.GetExtension(jobFile);
+			//switch (ext) {
+			//	case Constants.FileExtensions.VectoJobFile:
+			//		inputData = JSONInputDataFactory.ReadJsonJob(jobFile);
+			//		break;
+			//	case Constants.FileExtensions.VectoXMLDeclarationFile:
+			//	//ToDo
+			//	//case Constants.FileExtensions.VectoXMLJobFile:
+			//		inputData = Kernel.Get<IXMLInputDataReader>().CreateDeclaration(jobFile);
+			//		break;
+			//	default:
+			//		throw new UnsupportedFileVersionException(jobFile);
+			//}
+
+			//var retVal = CreateJobEditViewModel(inputData);
+
+			//if (retVal == null) {
+			//	throw new Exception("Unsupported job type");
+			//}
+			//return retVal;
+		}
+
+		private IJobEditViewModel CreatePrimaryBusVehicleViewModel(IInputDataProvider inputData)
+		{
+			var declInput = inputData as IPrimaryVehicleInputDataProvider;
+			return new PrimaryVehicleBusJobViewModel(Kernel, declInput);
 		}
 
 		private IJobEditViewModel CreateJobEditViewModel(IInputDataProvider inputData)
@@ -165,8 +191,8 @@ namespace VECTO3.ViewModel.Impl
 
 		private bool CanEditJob(object selected)
 		{
-			var list = (IList)selected;
-			return list.Count == 1;
+			var jobEntry = selected as JobEntry;
+			return jobEntry != null;
 		}
 	}
 }

@@ -1,6 +1,6 @@
-﻿using VECTO3.ViewModel.Interfaces;
+﻿using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3.ViewModel.Impl {
+namespace VECTO3GUI.ViewModel.Impl {
 	internal class NoneViewModel : AbstractViewModel, INoneViewModel {
 		
 	}

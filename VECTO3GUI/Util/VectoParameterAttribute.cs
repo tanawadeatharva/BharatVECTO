@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VECTO3.Util {
+namespace VECTO3GUI.Util {
 	[AttributeUsage(AttributeTargets.Property)]
 	public class VectoParameterAttribute : Attribute
 	{

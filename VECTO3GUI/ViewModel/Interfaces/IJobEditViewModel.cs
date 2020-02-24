@@ -1,9 +1,9 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using TUGraz.VectoCommon.InputData;
-using VECTO3.Util;
+using VECTO3GUI.Util;
 
-namespace VECTO3.ViewModel.Interfaces
+namespace VECTO3GUI.ViewModel.Interfaces
 {
 	public interface IJobEditViewModel 
 	{

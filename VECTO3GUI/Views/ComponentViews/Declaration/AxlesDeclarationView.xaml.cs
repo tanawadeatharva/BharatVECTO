@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace VECTO3.Views.ComponentViews.Declaration
+namespace VECTO3GUI.Views.ComponentViews.Declaration
 {
 	/// <summary>
 	/// Interaction logic for AxlesDeclarationView.xaml

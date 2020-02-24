@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace VECTO3.Views.ComponentViews.Declaration
+namespace VECTO3GUI.Views.ComponentViews.Declaration
 {
 	/// <summary>
 	/// Interaction logic for AirdragDeclarationView.xaml

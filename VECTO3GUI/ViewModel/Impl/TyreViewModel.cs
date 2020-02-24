@@ -3,10 +3,10 @@ using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
-using VECTO3.Util;
-using VECTO3.ViewModel.Interfaces;
+using VECTO3GUI.Util;
+using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3.ViewModel.Impl
+namespace VECTO3GUI.ViewModel.Impl
 {
 	public class TyreViewModel : AbstractComponentViewModel, ITyreViewModel
 	{

@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Data;
 using TUGraz.VectoCommon.Utils;
 
 using Expression = System.Linq.Expressions.Expression;
-using SIUtils = VECTO3.Util.SIUtils;
+using SIUtils = VECTO3GUI.Util.SIUtils;
 
-namespace VECTO3.Helper
+namespace VECTO3GUI.Helper
 {
 	public class SIValueConverter : BaseConverter, IValueConverter
 	{

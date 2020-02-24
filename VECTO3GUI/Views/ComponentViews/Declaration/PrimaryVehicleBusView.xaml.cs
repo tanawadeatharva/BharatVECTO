@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace VECTO3GUI.Views.ComponentViews.Declaration
 {
 	/// <summary>
-	/// Interaction logic for AuxiliariesDeclarationView.xaml
+	/// Interaction logic for PrimaryBusVehicleView.xaml
 	/// </summary>
-	public partial class AuxiliariesDeclarationView : UserControl
+	public partial class PrimaryVehicleBusView : UserControl
 	{
-		public AuxiliariesDeclarationView()
+		public PrimaryVehicleBusView()
 		{
 			InitializeComponent();
 		}

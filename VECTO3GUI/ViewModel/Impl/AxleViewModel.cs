@@ -4,12 +4,12 @@ using Ninject;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.Models.Declaration;
-using VECTO3.Util;
-using VECTO3.ViewModel.Adapter;
-using VECTO3.ViewModel.Adapter.Declaration;
-using VECTO3.ViewModel.Impl;
+using VECTO3GUI.Util;
+using VECTO3GUI.ViewModel.Adapter;
+using VECTO3GUI.ViewModel.Adapter.Declaration;
+using VECTO3GUI.ViewModel.Impl;
 
-namespace VECTO3.ViewModel.Interfaces {
+namespace VECTO3GUI.ViewModel.Interfaces {
 	public class AxleViewModel : AbstractViewModel, IAxleViewModel
 	{
 		[Inject] public IAdapterFactory AdapterFactory { set; protected get; }

@@ -4,9 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
-using VECTO3.ViewModel.Impl;
+using VECTO3GUI.ViewModel.Impl;
 
-namespace VECTO3.ViewModel.Interfaces {
+
+namespace VECTO3GUI.ViewModel.Interfaces {
 
 	
 	public class TorqueEntry : ValidatingViewModel

@@ -1,12 +1,12 @@
-﻿<UserControl x:Class="VECTO3.Views.JoblistView"
+﻿<UserControl x:Class="VECTO3GUI.Views.JoblistView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModel="clr-namespace:VECTO3.ViewModel"
-             xmlns:helper="clr-namespace:VECTO3.Helper"
-             xmlns:impl="clr-namespace:VECTO3.ViewModel.Impl"
-             xmlns:interfaces="clr-namespace:VECTO3.ViewModel.Interfaces"
+             xmlns:viewModel="clr-namespace:VECTO3GUI.ViewModel"
+             xmlns:helper="clr-namespace:VECTO3GUI.Helper"
+             xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
+             xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <d:JoblistView.DataContext>
@@ -39,9 +39,9 @@
             </ListView.View>
         </ListView>
         <StackPanel Grid.Column="1">
-            <Button Margin="0,20,0,0" Command="{Binding EditJob}" CommandParameter="{Binding SelectedItems, ElementName=Joblisting}">Edit</Button>
+            <Button Margin="0,20,0,0" Command="{Binding EditJob}" CommandParameter="{Binding ElementName=Joblisting, Path=SelectedItem}">Edit</Button>
             <Button Margin="0,15,0,0" Command="{Binding AddJob}">Add</Button>
-            <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" CommandParameter="{Binding SelectedItems, ElementName=Joblisting}">Remove</Button>
+            <Button Margin="0,5,0,0" Command="{Binding RemoveJob}" CommandParameter="{Binding ElementName=Joblisting, Path=SelectedItem}">Remove</Button>
             <Button Margin="0,5,0,0" Command="{Binding MoveJobUp}">Up</Button>
             <Button Margin="0,5,0,0" Command="{Binding MoveJobDown}">Down</Button>
             <Button Margin="0,20,0,0" Command="{Binding StartSimulation}">Start</Button>

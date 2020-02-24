@@ -109,6 +109,8 @@
     <Compile Include="ViewModel\Impl\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\Impl\NoneViewModel.cs" />
     <Compile Include="ViewModel\Impl\ObservableObject.cs" />
+    <Compile Include="ViewModel\Impl\PrimaryVehicleBusJobViewModel.cs" />
+    <Compile Include="ViewModel\Impl\PrimaryVehicleBusViewModel.cs" />
     <Compile Include="ViewModel\Impl\RetarderViewModel.cs" />
     <Compile Include="ViewModel\Impl\TorqueConverterViewModel.cs" />
     <Compile Include="ViewModel\Impl\TyreViewModel.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="ViewModel\Interfaces\IMainView.cs" />
     <Compile Include="ViewModel\Interfaces\IMainWindowViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\INoneViewModel.cs" />
+    <Compile Include="ViewModel\Interfaces\IPrimaryVehicleBusViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IRetarderViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\ITorqueConverterViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\ITyreViewModel.cs" />
@@ -168,6 +171,9 @@
     </Compile>
     <Compile Include="Views\ComponentViews\Declaration\GearboxDeclarationView.xaml.cs">
       <DependentUpon>GearboxDeclarationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ComponentViews\Declaration\PrimaryVehicleBusView.xaml.cs">
+      <DependentUpon>PrimaryVehicleBusView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ComponentViews\Declaration\RetarderDeclarationView.xaml.cs">
       <DependentUpon>RetarderDeclarationView.xaml</DependentUpon>
@@ -304,6 +310,10 @@
     <Page Include="Views\ComponentViews\Declaration\GearboxDeclarationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ComponentViews\Declaration\PrimaryVehicleBusView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ComponentViews\Declaration\RetarderDeclarationView.xaml">
       <Generator>MSBuild:Compile</Generator>

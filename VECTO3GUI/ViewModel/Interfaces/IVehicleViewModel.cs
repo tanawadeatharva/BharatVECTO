@@ -5,9 +5,9 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
-using VECTO3.Util;
+using VECTO3GUI.Util;
 
-namespace VECTO3.ViewModel.Interfaces {
+namespace VECTO3GUI.ViewModel.Interfaces {
 	public interface IVehicleViewModel : IComponentViewModel
 	{
 		IVehicleDeclarationInputData ModelData { get; }

@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:impl="clr-namespace:VECTO3.ViewModel.Impl"
-                    xmlns:views="clr-namespace:VECTO3.Views"
-                    xmlns:engineering="clr-namespace:VECTO3.Views.ComponentViews.Engineering"
-                    xmlns:declaration="clr-namespace:VECTO3.Views.ComponentViews.Declaration"
-                    xmlns:interfaces="clr-namespace:VECTO3.ViewModel.Interfaces">
+                    xmlns:impl="clr-namespace:VECTO3GUI.ViewModel.Impl"
+                    xmlns:views="clr-namespace:VECTO3GUI.Views"
+                    xmlns:engineering="clr-namespace:VECTO3GUI.Views.ComponentViews.Engineering"
+                    xmlns:declaration="clr-namespace:VECTO3GUI.Views.ComponentViews.Declaration"
+                    xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces">
 
     <DataTemplate DataType="{x:Type impl:JoblistViewModel}">
         <views:JoblistView />
@@ -15,11 +15,19 @@
     <DataTemplate DataType="{x:Type impl:EngineOnlyJobViewModel}">
         <views:JobEditView/>
     </DataTemplate>
+    <DataTemplate DataType="{x:Type impl:PrimaryVehicleBusJobViewModel}">
+        <views:JobEditView/>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type impl:NoneViewModel}">
         <views:EditComponentNoneView/>
     </DataTemplate>
-    
-   
+
+    <DataTemplate DataType="{x:Type impl:PrimaryVehicleBusViewModel}">
+        <declaration:PrimaryVehicleBusView/>
+    </DataTemplate>
+
+
     <DataTemplate x:Key="EditAirdragDeclaration">
         <declaration:AirdragDeclarationView/>
     </DataTemplate>
@@ -163,6 +171,8 @@
             </DataTrigger>
         </DataTemplate.Triggers>
     </DataTemplate>
+
+
 
     <DataTemplate x:Key="EditVehicleDeclaration">
         <declaration:VehicleDeclarationView/>

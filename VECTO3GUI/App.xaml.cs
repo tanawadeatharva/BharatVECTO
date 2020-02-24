@@ -9,10 +9,10 @@ using Ninject;
 using Ninject.Extensions.Factory;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCore;
-using VECTO3.ViewModel.Adapter;
-using VECTO3.ViewModel.Adapter.Declaration;
-using VECTO3.ViewModel.Impl;
-using VECTO3.ViewModel.Interfaces;
+using VECTO3GUI.ViewModel.Adapter;
+using VECTO3GUI.ViewModel.Adapter.Declaration;
+using VECTO3GUI.ViewModel.Impl;
+using VECTO3GUI.ViewModel.Interfaces;
 
 namespace VECTO3GUI
 {
@@ -40,8 +40,10 @@ namespace VECTO3GUI
             container.Bind<IMainWindowViewModel>().To<MainWindowViewModel>();
             container.Bind<IJoblistViewModel>().To<JoblistViewModel>();
             container.Bind<IJobEditViewModel>().To<DeclarationJobViewModel>();
+            container.Bind<IJobEditViewModel>().To<PrimaryVehicleBusJobViewModel>();
             container.Bind<INoneViewModel>().To<NoneViewModel>();
             container.Bind<IVehicleViewModel>().To<VehicleViewModel>();
+            container.Bind<IPrimaryVehicleBusViewModel>().To<PrimaryVehicleBusViewModel>();
 
             container.Bind<IAirdragViewModel>().To<AirdragViewModel>();
             container.Bind<IAngledriveViewModel>().To<AngledriveViewModel>();

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 
-namespace VECTO3.ViewModel.Interfaces {
+namespace VECTO3GUI.ViewModel.Interfaces {
 	public interface IAxlesViewModel : IComponentViewModel
 	{
 		IList<IAxleDeclarationInputData> ModelData { get; }

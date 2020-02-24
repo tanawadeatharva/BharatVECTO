@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace VECTO3.Views.CustomControls
+namespace VECTO3GUI.Views.CustomControls
 {
 	/// <summary>
 	/// Interaction logic for CommonComponentData.xaml

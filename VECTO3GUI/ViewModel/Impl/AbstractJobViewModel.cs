@@ -4,10 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Ninject;
-using VECTO3.Util;
-using VECTO3.ViewModel.Interfaces;
+using VECTO3GUI.Util;
+using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3.ViewModel.Impl
+namespace VECTO3GUI.ViewModel.Impl
 {
 	public abstract class AbstractJobViewModel : AbstractViewModel
 	{

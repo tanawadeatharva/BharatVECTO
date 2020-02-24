@@ -1,8 +1,8 @@
 ﻿using Ninject;
-using VECTO3.ViewModel.Interfaces;
-using VECTO3.Views;
+using VECTO3GUI.ViewModel.Interfaces;
+using VECTO3GUI.Views;
 
-namespace VECTO3.ViewModel.Impl
+namespace VECTO3GUI.ViewModel.Impl
 {
 	public class MainWindowViewModel : ObservableObject, IMainWindowViewModel
 	{

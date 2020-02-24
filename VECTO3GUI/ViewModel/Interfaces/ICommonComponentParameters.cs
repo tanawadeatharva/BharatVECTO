@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VECTO3.ViewModel.Interfaces {
+namespace VECTO3GUI.ViewModel.Interfaces {
 	public interface ICommonComponentParameters
 	{
 		string Manufacturer { get; set; }

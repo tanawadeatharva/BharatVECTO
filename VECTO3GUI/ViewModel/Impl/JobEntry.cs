@@ -1,4 +1,4 @@
-namespace VECTO3.ViewModel.Impl {
+namespace VECTO3GUI.ViewModel.Impl {
 	public class JobEntry : ObservableObject
 	{
 		private bool _selected;

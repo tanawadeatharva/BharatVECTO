@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace VECTO3.Views.ComponentViews.Engineering
+namespace VECTO3GUI.Views.ComponentViews.Engineering
 {
 	/// <summary>
 	/// Interaction logic for RetarderEngineeringView.xaml

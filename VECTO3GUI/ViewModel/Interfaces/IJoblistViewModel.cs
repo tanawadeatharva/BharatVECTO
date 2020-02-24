@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using VECTO3.ViewModel.Impl;
+using VECTO3GUI.ViewModel.Impl;
 
-namespace VECTO3.ViewModel.Interfaces
+namespace VECTO3GUI.ViewModel.Interfaces
 {
 	public interface IJoblistViewModel : IMainView
 	{

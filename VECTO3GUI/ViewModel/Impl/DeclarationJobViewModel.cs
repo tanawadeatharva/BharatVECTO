@@ -20,12 +20,13 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData.XML;
 using TUGraz.VectoCore.Utils;
-using VECTO3.Util;
-using VECTO3.ViewModel.Adapter.Declaration;
-using VECTO3.ViewModel.Interfaces;
-using Component = VECTO3.Util.Component;
+using VECTO3GUI.Util;
+using VECTO3GUI.ViewModel.Adapter.Declaration;
+using VECTO3GUI.ViewModel.Impl;
+using VECTO3GUI.ViewModel.Interfaces;
+using Component = VECTO3GUI.Util.Component;
 
-namespace VECTO3.ViewModel.Impl
+namespace VECTO3GUI.ViewModel.Impl
 {
 	public class DeclarationJobViewModel : AbstractJobViewModel, IJobEditViewModel
 	{

@@ -5,10 +5,10 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using VECTO3.Util;
-using VECTO3.ViewModel.Impl;
+using VECTO3GUI.Util;
+using VECTO3GUI.ViewModel.Impl;
 
-namespace VECTO3.ViewModel.Interfaces {
+namespace VECTO3GUI.ViewModel.Interfaces {
 	public class Gear : ValidatingViewModel
 	{
 		private PerSecond _maxSpeed;

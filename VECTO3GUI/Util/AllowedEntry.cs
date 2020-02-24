@@ -1,4 +1,4 @@
-﻿namespace VECTO3.Util {
+﻿namespace VECTO3GUI.Util {
 
 	public class AllowedEntry
 	{

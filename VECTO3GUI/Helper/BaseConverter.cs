@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Markup;
 
-namespace VECTO3.Helper {
+namespace VECTO3GUI.Helper {
 	public class BaseConverter : MarkupExtension
 	{
 		#region Overrides of MarkupExtension

@@ -1,8 +1,8 @@
 ﻿using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using VECTO3.ViewModel.Impl;
+using VECTO3GUI.ViewModel.Impl;
 
-namespace VECTO3.ViewModel.Interfaces {
+namespace VECTO3GUI.ViewModel.Interfaces {
 	public class FuelConsumptionEntry : ObservableObject
 	{
 		private PerSecond _engineSpeed;

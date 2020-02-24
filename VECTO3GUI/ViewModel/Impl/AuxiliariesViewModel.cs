@@ -8,13 +8,13 @@ using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
-using VECTO3.Util;
-using VECTO3.ViewModel.Adapter;
-using VECTO3.ViewModel.Adapter.Declaration;
-using VECTO3.ViewModel.Interfaces;
-using Component = VECTO3.Util.Component;
+using VECTO3GUI.Util;
+using VECTO3GUI.ViewModel.Adapter;
+using VECTO3GUI.ViewModel.Adapter.Declaration;
+using VECTO3GUI.ViewModel.Interfaces;
+using Component = VECTO3GUI.Util.Component;
 
-namespace VECTO3.ViewModel.Impl {
+namespace VECTO3GUI.ViewModel.Impl {
 	public class AuxiliariesViewModel : AbstractViewModel, IAuxiliariesViewModel
 	{
 		[Inject] public IAdapterFactory AdapterFactory { set; protected get; }

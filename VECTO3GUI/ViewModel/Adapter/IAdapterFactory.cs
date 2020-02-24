@@ -1,8 +1,8 @@
 ﻿using TUGraz.VectoCommon.InputData;
-using VECTO3.ViewModel.Impl;
-using VECTO3.ViewModel.Interfaces;
+using VECTO3GUI.ViewModel.Impl;
+using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3.ViewModel.Adapter
+namespace VECTO3GUI.ViewModel.Adapter
 {
 	public interface IAdapterFactory
 	{

@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="VECTO3.Views.ComponentViews.Declaration.TyreDeclarationView"
+﻿<UserControl x:Class="VECTO3GUI.Views.ComponentViews.Declaration.TyreDeclarationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:interfaces="clr-namespace:VECTO3.ViewModel.Interfaces"
-             xmlns:customControls="clr-namespace:VECTO3.Views.CustomControls"
-             xmlns:helper="clr-namespace:VECTO3.Helper"
+             xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
+             xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
+             xmlns:helper="clr-namespace:VECTO3GUI.Helper"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <d:TyreDeclarationView.DataContext>

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.InputData.Impl;
-using VECTO3.ViewModel.Interfaces;
+using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3.ViewModel.Adapter.Declaration {
+namespace VECTO3GUI.ViewModel.Adapter.Declaration {
 	public class AuxiliariesDeclarationAdapter : IAuxiliariesDeclarationInputData
 	{
 		protected IAuxiliariesViewModel ViewModel;

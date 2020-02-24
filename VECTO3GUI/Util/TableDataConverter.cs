@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.InputData.Reader.ComponentData;
-using VECTO3.ViewModel.Interfaces;
+using VECTO3GUI.ViewModel.Interfaces;
 
-namespace VECTO3.Util {
+namespace VECTO3GUI.Util {
 	public static class TableDataConverter {
 
 		public static TableData Convert(IEnumerable<GearLossMapEntry> viewModelLossMap)

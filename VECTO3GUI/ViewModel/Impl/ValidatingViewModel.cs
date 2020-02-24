@@ -8,9 +8,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using VECTO3.Util;
+using VECTO3GUI.Util;
 
-namespace VECTO3.ViewModel.Impl
+namespace VECTO3GUI.ViewModel.Impl
 {
 	public class ValidatingViewModel : ObservableObject, INotifyDataErrorInfo
 	{
