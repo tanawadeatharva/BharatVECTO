@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCommon.Exceptions;
 using TUGraz.VectoCommon.Utils;
@@ -365,6 +366,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		}
 	}
 
+	[DebuggerDisplay("nu: {SpeedRatio}, mu: {TorqueRatio}, T_ref: {Torque}")]
 	public class TorqueConverterEntry
 	{
 		public double SpeedRatio;
