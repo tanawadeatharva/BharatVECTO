@@ -202,6 +202,7 @@
             <Entry engineSpeed="2400.00" torque="700.00" fuelConsumption="36716.19" />
             <Entry engineSpeed="2400.00" torque="800.00" fuelConsumption="42106.80" />
             <Entry engineSpeed="2400.00" torque="815.00" fuelConsumption="42844.11" />
+            <Entry engineSpeed="2400.00" torque="915.00" fuelConsumption="42844.11" />
             <Entry engineSpeed="2500.00" torque="-240.18" fuelConsumption="0.00" />
             <Entry engineSpeed="2500.00" torque="-140.18" fuelConsumption="0.00" />
             <Entry engineSpeed="2500.00" torque="0.00" fuelConsumption="5337.87" />
