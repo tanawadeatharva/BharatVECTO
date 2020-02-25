@@ -316,7 +316,7 @@ namespace TUGraz.VectoCore.Configuration
 				public const int VehicleSpeedStep = 5; // km/h
 
 				public const int MaxAlpha = 180; // degree
-				public const int AlphaStep = 5; // degree
+				public const int AlphaStep = 10; // degree
 
 				public const int MinHeight = 5; // percent
 				public const int MaxHeight = 100; // percent
