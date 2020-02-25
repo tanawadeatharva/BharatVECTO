@@ -79,34 +79,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Auxiliaries = tmpAux;
 		}
 
-		private static string DetermineCycle(string cycleName)
-		{
-			var cycle = cycleName.ToLower();
-
-			if (cycle.Contains("bus")) {
-				if (cycle.Contains("heavy_urban")) {
-					return "Heavy urban";
-				}
-				if (cycle.Contains("suburban")) {
-					return "Suburban";
-				}
-				if (cycle.Contains("interurban")) {
-					return "Interurban";
-				}
-				if (cycle.Contains("urban")) {
-					return "Urban";
-				}
-			}
-
-			if (cycle.Contains("coach")) {
-				return "Coach";
-			}
-
-			Logger<BusAuxiliariesAdapter>()
-				.Warn("UnServiced Cycle Name '{0}' in Pneumatics Actuations Map 0 Actuations returned", cycleName);
-			return cycleName;
-		}
-
+		
 		public IAuxPort Port()
 		{
 			return this;
