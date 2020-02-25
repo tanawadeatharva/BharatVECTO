@@ -12,4 +12,18 @@
 		CI,
 		CJ
 	}
+
+	public static class VehicleCodeHelper
+	{
+		public static string GetLabel(this VehicleCode self)
+		{
+			return self.ToString();
+		}
+
+		public static string ToXMLFormat(this VehicleCode self)
+		{
+			return self.ToString();
+		}
+	}
+
 }

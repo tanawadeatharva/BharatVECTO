@@ -7,6 +7,7 @@ using TUGraz.VectoCommon.InputData;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCommon.Utils;
 using TUGraz.VectoCore.Models.Declaration;
+using VECTO3GUI.Util;
 
 namespace VECTO3GUI.ViewModel.Interfaces
 {
@@ -40,6 +41,17 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; set; }
 
 		IList<ITorqueLimitInputData> TorqueLimits { get; set; }
+
+		#region Allowed Enties
+
+		AllowedEntry<VehicleCategory>[] AllowedVehicleCategories { get; }
+		AllowedEntry<AxleConfiguration> [] AllowedAxleConfigurations { get; }
+		AllowedEntry<RetarderType>[] AllowedRetarderTypes { get; set; }
+		AllowedEntry<AngledriveType>[] AllowedAngledriveTypes { get; set; }
+		#endregion
+
+
+
 
 
 		#endregion

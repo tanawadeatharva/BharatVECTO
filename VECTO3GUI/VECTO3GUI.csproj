@@ -99,6 +99,8 @@
     <Compile Include="ViewModel\Impl\AxlegearViewModel.cs" />
     <Compile Include="ViewModel\Impl\AxlesViewModel.cs" />
     <Compile Include="ViewModel\Impl\AxleViewModel.cs" />
+    <Compile Include="ViewModel\Impl\CompleteVehicleBusJobViewModel.cs" />
+    <Compile Include="ViewModel\Impl\CompleteVehicleBusViewModel.cs" />
     <Compile Include="ViewModel\Impl\CyclesViewModel.cs" />
     <Compile Include="ViewModel\Impl\DeclarationJobViewModel.cs" />
     <Compile Include="ViewModel\Impl\EngineOnlyJobViewModel.cs" />
@@ -127,6 +129,7 @@
     <Compile Include="ViewModel\Interfaces\IAxlesViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IAxleViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\ICommonComponentParameters.cs" />
+    <Compile Include="ViewModel\Interfaces\ICompleteVehicleBusViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IComponentViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\ICyclesViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IEngineViewModel.cs" />
@@ -162,6 +165,9 @@
     </Compile>
     <Compile Include="Views\ComponentViews\Declaration\AxlesDeclarationView.xaml.cs">
       <DependentUpon>AxlesDeclarationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ComponentViews\Declaration\CompleteVehicleBusView.xaml.cs">
+      <DependentUpon>CompleteVehicleBusView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ComponentViews\Declaration\CyclesDeclarationView.xaml.cs">
       <DependentUpon>CyclesDeclarationView.xaml</DependentUpon>
@@ -298,6 +304,10 @@
     <Page Include="Views\ComponentViews\Declaration\AxlesDeclarationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ComponentViews\Declaration\CompleteVehicleBusView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ComponentViews\Declaration\CyclesDeclarationView.xaml">
       <Generator>MSBuild:Compile</Generator>

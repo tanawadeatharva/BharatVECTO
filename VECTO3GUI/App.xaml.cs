@@ -41,9 +41,11 @@ namespace VECTO3GUI
             container.Bind<IJoblistViewModel>().To<JoblistViewModel>();
             container.Bind<IJobEditViewModel>().To<DeclarationJobViewModel>();
             container.Bind<IJobEditViewModel>().To<PrimaryVehicleBusJobViewModel>();
+            container.Bind<IJobEditViewModel>().To<CompleteVehicleBusJobViewModel>();
             container.Bind<INoneViewModel>().To<NoneViewModel>();
             container.Bind<IVehicleViewModel>().To<VehicleViewModel>();
             container.Bind<IPrimaryVehicleBusViewModel>().To<PrimaryVehicleBusViewModel>();
+            container.Bind<ICompleteVehicleBusViewModel>().To<CompleteVehicleBusViewModel>();
 
             container.Bind<IAirdragViewModel>().To<AirdragViewModel>();
             container.Bind<IAngledriveViewModel>().To<AngledriveViewModel>();

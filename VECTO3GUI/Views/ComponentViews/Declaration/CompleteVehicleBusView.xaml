@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="VECTO3GUI.Views.ComponentViews.Declaration.CompleteVehicleBusView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VECTO3GUI.Views.ComponentViews.Declaration"
+             xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
+             xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
+             xmlns:helper="clr-namespace:VECTO3GUI.Helper"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500">
+
+    <d:PrimaryVehicleBusView.DataContext>
+        <x:Type Type="interfaces:ICompleteVehicleBusViewModel" />
+    </d:PrimaryVehicleBusView.DataContext>
+
+    <Grid>
+        <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left"  Grid.IsSharedSizeScope="True">
+            <StackPanel Orientation="Vertical" DockPanel.Dock="Top" Grid.IsSharedSizeScope="True">
+
+                <customControls:VectoParameterControl
+                    Caption="Manufacturer" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding Manufacturer}" />
+                <customControls:VectoParameterControl
+                    Caption="Manufacturer Address" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding ManufacturerAddress}" />
+                <customControls:VectoParameterControl
+                    Caption="VIN" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding VIN}" />
+                <customControls:VectoParameterControl
+                    Caption="Date" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding Date}" />
+
+                <customControls:ComboParameter
+                    Caption="Legislative Class"
+                    CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding LegislativeClass}"
+                    AllowedValues="{Binding AllowedLegislativeClass}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Registered Class" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding RegisteredClass}" />
+
+                <customControls:ComboParameter
+                    Caption="Vehicle Code"
+                    CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding VehicleCode}"
+                    AllowedValues="{Binding AllowedVehicleCode}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Curb Mass Chassis" Unit="{helper:SIUnit CurbMassChassis}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding CurbMassChassis, Converter={helper:SIValueConverter}, ConverterParameter=int}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Permissible Maximum Laden Mass" Unit="{helper:SIUnit TechnicalPermissibleMaximumLadenMass}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding TechnicalPermissibleMaximumLadenMass, Converter={helper:SIValueConverter}, ConverterParameter=int}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Passengers Lower Deck" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding NumberOfPassengersLowerDeck}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Passengers Upper Deck" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding NumberOfPassengersUpperDeck}" />
+
+                <customControls:ComboParameter
+                    Caption="Floor Type"
+                    CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding FloorType}"
+                    AllowedValues="{Binding AllowedFloorType}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Height Integrated Body" Unit="{helper:SIUnit HeightIntegratedBody}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding HeightIntegratedBody, Converter={helper:SIValueConverter}, ConverterParameter=double}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Vehicle Length" Unit="{helper:SIUnit VehicleLength}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding VehicleLength, Converter={helper:SIValueConverter}, ConverterParameter=double}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Vehicle Width" Unit="{helper:SIUnit VehicleWidth}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding VehicleWidth, Converter={helper:SIValueConverter}, ConverterParameter=double}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Entrance Height" Unit="{helper:SIUnit EntranceHeight}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding EntranceHeight, Converter={helper:SIValueConverter}, ConverterParameter=double}" />
+
+
+                <customControls:VectoParameterControl
+                    Caption="Door Drive Technology" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding DoorDriveTechnology}" />
+
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

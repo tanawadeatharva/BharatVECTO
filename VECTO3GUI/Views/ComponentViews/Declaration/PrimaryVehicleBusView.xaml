@@ -32,6 +32,39 @@
                 <customControls:VectoParameterControl
                     Caption="Date" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                     Value="{Binding Date}" />
+
+                <customControls:ComboParameter
+                    Caption="Vehicle Category"
+                    CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding VehicleCategory}"
+                    AllowedValues="{Binding AllowedVehicleCategories}" />
+                <customControls:ComboParameter
+                    Caption="Axle Configuration"
+                    CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding AxleConfiguration}"
+                    AllowedValues="{Binding AllowedAxleConfigurations}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Articulated" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding Articulated}" />
+                <customControls:VectoParameterControl
+                    Caption="Technical Permissible Maximum Laden Mass" Unit="{helper:SIUnit TechnicalPermissibleMaximumLadenMass}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding TechnicalPermissibleMaximumLadenMass}" />
+                <customControls:VectoParameterControl
+                    Caption="Idling Speed" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding IdlingSpeed}" />
+
+                <customControls:ComboParameter
+                    Caption="Axle Configuration"
+                    CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding RetarderType}"
+                    AllowedValues="{Binding AllowedRetarderTypes}" />
+
+                <customControls:VectoParameterControl
+                    Caption="Retarder Ratio" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding RetarderRatio}" />
+
+
             </StackPanel>
             
             

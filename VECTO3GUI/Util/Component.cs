@@ -15,5 +15,6 @@
 		Auxiliaries,
 		BusAuxiliaries,
 		Cycle,
+		CompleteBusVehicle
 	}
 }

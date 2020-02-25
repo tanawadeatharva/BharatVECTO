@@ -11,6 +11,7 @@ namespace VECTO3GUI.Util
 		public static Dictionary<Component, Type> ComponentViewModelMapping = new Dictionary<Component, Type>()
 		{
 			{ Component.Vehicle, typeof(IVehicleViewModel)},
+			{ Component.CompleteBusVehicle, typeof(ICompleteVehicleBusViewModel)},
 			{ Component.PrimaryBusVehicle, typeof(IPrimaryVehicleBusViewModel) },
 			{ Component.Engine ,typeof(IEngineViewModel) },
 			{ Component.Gearbox ,typeof(IGearboxViewModel) },

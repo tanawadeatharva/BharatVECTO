@@ -21,6 +21,8 @@ using VECTO3GUI.Util;
 using VECTO3GUI.ViewModel.Interfaces;
 using System.Collections.Generic;
 using System.Xml;
+using System.Xml.Linq;
+using TUGraz.VectoCommon.Resources;
 using VECTO3GUI.ViewModel.Impl;
 
 namespace VECTO3GUI.ViewModel.Impl
@@ -33,6 +35,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		public JoblistViewModel()
 		{
 			AddJobEntry(@"~\..\..\..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\example_heavyBus_PIF.xml");
+			AddJobEntry(@"~\..\..\..\..\VectoCore\VectoCoreTest\TestData\XML\XMLReaderDeclaration\SchemaVersion2.6_Buses\vecto_vehicle-completed_heavyBus.xml");
 
 			//AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Declaration Mode\Class5_Tractor_4x2\Class5_Tractor_DECL.xml");
 			//AddJobEntry(@"~\..\..\..\..\Generic Vehicles\Declaration Mode\Class5_Tractor_4x2\Class5_Tractor_DECL.xml");
@@ -123,19 +126,28 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		private IJobEditViewModel ReadJob(string jobFile)
 		{
-
 			if (jobFile == null)
 				return null;
 
-			var xmlInputReader =  Kernel.Get<IXMLInputDataReader>();
-			var reader = XmlReader.Create(jobFile);
-			var inputDataProvider = xmlInputReader.Create(reader);
+			var ext = Path.GetExtension(jobFile);
+			if (ext == Constants.FileExtensions.VectoXMLDeclarationFile) {
 
+				var localName = GetLocalName(jobFile);
+				var xmlInputReader = Kernel.Get<IXMLInputDataReader>();
+				
+				using (var reader = XmlReader.Create(jobFile)) {
 
+					if (localName == XMLNames.VectoPrimaryVehicleReport) {
+						return CreatePrimaryBusVehicleViewModel(xmlInputReader.Create(reader));
+					}
+					if (localName == XMLNames.VectoInputDeclaration) {
+						return CreateCompleteBusVehicleViewModel(xmlInputReader.CreateDeclaration(reader));
+					}
+				}
+			}
 
-			return CreatePrimaryBusVehicleViewModel(inputDataProvider);
-
-
+			return null;
+			
 
 			//IInputDataProvider inputData = null;
 			//var ext = Path.GetExtension(jobFile);
@@ -160,34 +172,47 @@ namespace VECTO3GUI.ViewModel.Impl
 			//return retVal;
 		}
 
-		private IJobEditViewModel CreatePrimaryBusVehicleViewModel(IInputDataProvider inputData)
+		private string GetLocalName(string jobFilePath)
 		{
-			var declInput = inputData as IPrimaryVehicleInputDataProvider;
-			return new PrimaryVehicleBusJobViewModel(Kernel, declInput);
+			var doc = XDocument.Load(jobFilePath);
+			return doc.Root?.Name.LocalName;
 		}
 
-		private IJobEditViewModel CreateJobEditViewModel(IInputDataProvider inputData)
+		private IJobEditViewModel CreateCompleteBusVehicleViewModel(IInputDataProvider inputDataProvider)
 		{
-			IJobEditViewModel retVal = null;
-			if (inputData is JSONInputDataV2) {
-				var jsoninputData = inputData as JSONInputDataV2;
-				if (jsoninputData.SavedInDeclarationMode) {
-					retVal = new DeclarationJobViewModel(Kernel, jsoninputData);
-				} else {
-					if (jsoninputData.EngineOnlyMode) {
-						retVal = new EngineOnlyJobViewModel(Kernel, jsoninputData);
-					} else {
-						// TODO!
-					}
-				}
-			}
-			//ToDo
-			//if (inputData is XMLDeclarationInputDataProvider) {
-			//	var declInput = inputData as IDeclarationInputDataProvider;
-			//	retVal = new DeclarationJobViewModel(Kernel, declInput);
-			//}
-			return retVal;
+			var dataProvider = inputDataProvider as IDeclarationInputDataProvider;
+			return dataProvider == null ? null : new CompleteVehicleBusJobViewModel(Kernel, dataProvider);
 		}
+		
+
+		private IJobEditViewModel CreatePrimaryBusVehicleViewModel(IInputDataProvider inputData)
+		{
+			var dataProvider = inputData as IPrimaryVehicleInputDataProvider;
+			return dataProvider == null ? null : new PrimaryVehicleBusJobViewModel(Kernel, dataProvider);
+		}
+
+		//private IJobEditViewModel CreateJobEditViewModel(IInputDataProvider inputData)
+		//{
+		//	IJobEditViewModel retVal = null;
+		//	if (inputData is JSONInputDataV2) {
+		//		var jsoninputData = inputData as JSONInputDataV2;
+		//		if (jsoninputData.SavedInDeclarationMode) {
+		//			retVal = new DeclarationJobViewModel(Kernel, jsoninputData);
+		//		} else {
+		//			if (jsoninputData.EngineOnlyMode) {
+		//				retVal = new EngineOnlyJobViewModel(Kernel, jsoninputData);
+		//			} else {
+		//				// TODO!
+		//			}
+		//		}
+		//	}
+		//	//ToDo
+		//	//if (inputData is XMLDeclarationInputDataProvider) {
+		//	//	var declInput = inputData as IDeclarationInputDataProvider;
+		//	//	retVal = new DeclarationJobViewModel(Kernel, declInput);
+		//	//}
+		//	return retVal;
+		//}
 
 		private bool CanEditJob(object selected)
 		{

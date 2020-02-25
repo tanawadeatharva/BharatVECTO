@@ -15,20 +15,40 @@
     <DataTemplate DataType="{x:Type impl:EngineOnlyJobViewModel}">
         <views:JobEditView/>
     </DataTemplate>
+
+
+    <DataTemplate DataType="{x:Type impl:NoneViewModel}">
+        <views:EditComponentNoneView/>
+    </DataTemplate>
+
+    <!--New defined DataTemplates-->
     <DataTemplate DataType="{x:Type impl:PrimaryVehicleBusJobViewModel}">
         <views:JobEditView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type impl:NoneViewModel}">
-        <views:EditComponentNoneView/>
+    <DataTemplate DataType="{x:Type impl:CompleteVehicleBusJobViewModel}">
+        <views:JobEditView/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type impl:PrimaryVehicleBusViewModel}">
         <declaration:PrimaryVehicleBusView/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type impl:CompleteVehicleBusViewModel}">
+        <declaration:CompleteVehicleBusView/>
+    </DataTemplate>
 
-    <DataTemplate x:Key="EditAirdragDeclaration">
+    <DataTemplate DataType="{x:Type impl:AirdragViewModel}">
+        <declaration:AirdragDeclarationView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type impl:AuxiliariesViewModel}">
+        <declaration:AuxiliariesDeclarationView/>
+    </DataTemplate>
+
+    <!--***************************************************-->
+
+    <!--<DataTemplate x:Key="EditAirdragDeclaration">
         <declaration:AirdragDeclarationView/>
     </DataTemplate>
     <DataTemplate x:Key="EditAirdragEngineering">
@@ -44,7 +64,7 @@
                 <Setter TargetName="EditAirdrag" Property="ContentTemplate" Value="{StaticResource EditAirdragEngineering}"></Setter>
             </DataTrigger>
         </DataTemplate.Triggers>
-    </DataTemplate>
+    </DataTemplate>-->
 
     <DataTemplate x:Key="EditAngledriveDeclaration">
         <declaration:AngledriveDeclarationView/>
@@ -192,7 +212,7 @@
         </DataTemplate.Triggers>
     </DataTemplate>
 
-    <DataTemplate x:Key="EditAuxiliariesDeclaration">
+    <!--<DataTemplate x:Key="EditAuxiliariesDeclaration">
         <declaration:AuxiliariesDeclarationView/>
     </DataTemplate>
     <DataTemplate x:Key="EditAuxiliariesEngineering">
@@ -208,7 +228,7 @@
                 <Setter TargetName="EditAuxiliaries" Property="ContentTemplate" Value="{StaticResource EditAuxiliariesEngineering}"></Setter>
             </DataTrigger>
         </DataTemplate.Triggers>
-    </DataTemplate>
+    </DataTemplate>-->
 
     <DataTemplate x:Key="EditAxlesDeclaration">
         <declaration:AxlesDeclarationView/>

@@ -26,7 +26,7 @@ namespace VECTO3GUI.Util
 		public RelayCommand(Action<T> execute, Predicate<T> canExecute = null)
 		{
 			if (execute == null) {
-				throw new ArgumentNullException("execute");
+				throw new ArgumentNullException(nameof(execute));
 			}
 			_execute = execute;
 			_canExecute = canExecute;
@@ -57,7 +57,7 @@ namespace VECTO3GUI.Util
 
 
 		[DebuggerStepThrough]
-		public bool CanExecute(Object parameter)
+		public bool CanExecute(object parameter)
 		{
 			if (_canExecute == null) {
 				return true;
@@ -70,7 +70,7 @@ namespace VECTO3GUI.Util
 			}
 		}
 
-		public void Execute(Object parameter)
+		public void Execute(object parameter)
 		{
 			_execute((T)parameter);
 		}
@@ -85,7 +85,7 @@ namespace VECTO3GUI.Util
 	{
 		#region Declarations
 
-		readonly Func<Boolean> _canExecute;
+		readonly Func<bool> _canExecute;
 		readonly Action _execute;
 
 		#endregion
@@ -97,10 +97,10 @@ namespace VECTO3GUI.Util
 		/// </summary>
 		/// <param name="execute">The execution logic.</param>
 		/// <param name="canExecute">The execution status logic.</param>
-		public RelayCommand(Action execute, Func<Boolean> canExecute = null)
+		public RelayCommand(Action execute, Func<bool> canExecute = null)
 		{
 			if (execute == null) {
-				throw new ArgumentNullException("execute");
+				throw new ArgumentNullException(nameof(execute));
 			}
 			_execute = execute;
 			_canExecute = canExecute;
@@ -130,7 +130,7 @@ namespace VECTO3GUI.Util
 		}
 
 		[DebuggerStepThrough]
-		public Boolean CanExecute(Object parameter)
+		public bool CanExecute(object parameter)
 		{
 			if (_canExecute == null) {
 				return true;
@@ -143,7 +143,7 @@ namespace VECTO3GUI.Util
 			}
 		}
 
-		public void Execute(Object parameter)
+		public void Execute(object parameter)
 		{
 			_execute();
 		}
