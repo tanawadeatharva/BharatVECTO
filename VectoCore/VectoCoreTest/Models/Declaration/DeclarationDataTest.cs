@@ -254,7 +254,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             AssertHelper.AreRelativeEqual(105.KMPHtoMeterPerSecond(), curve[10].Velocity);
             AssertHelper.AreRelativeEqual(6.33112792.SI<SquareMeter>(), curve[10].EffectiveCrossSectionArea);
 
-			Assert.IsTrue(curve.Count >= 20);
+
+			Assert.AreEqual(16, curve.Count);
         }
 
         [
