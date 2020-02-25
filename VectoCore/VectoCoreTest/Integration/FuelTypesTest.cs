@@ -148,11 +148,11 @@ namespace TUGraz.VectoCore.Tests.Integration
 				fcFinal.Value(), fcVolumePerMeter?.ConvertToLiterPer100Kilometer().Value ?? double.NaN,
 				co2PerMeter?.Value(), energyPerMeter?.Value());
 
-			AssertHelper.AreRelativeEqual(expectedFCMap, modContainer.FuelConsumptionPerMeter(ModalResultField.FCMap, fuel), 1e-6);
+			AssertHelper.AreRelativeEqual(expectedFCMap, modContainer.FuelConsumptionPerMeter(ModalResultField.FCMap, fuel), 1e-3);
 			AssertHelper.AreRelativeEqual(expectedFCFinal, fcFinal, 1e-3);
-			AssertHelper.AreRelativeEqual(expectedFCperkm, fcVolumePerMeter?.ConvertToLiterPer100Kilometer().Value.SI(), 1e-6);
+			AssertHelper.AreRelativeEqual(expectedFCperkm, fcVolumePerMeter?.ConvertToLiterPer100Kilometer().Value.SI(), 1e-3);
 
-			AssertHelper.AreRelativeEqual(expectedCo2, co2PerMeter, 1e-6);
+			AssertHelper.AreRelativeEqual(expectedCo2, co2PerMeter, 1e-3);
 			AssertHelper.AreRelativeEqual(expectedMJ, energyPerMeter, 1e-3);
 		}
 	}
