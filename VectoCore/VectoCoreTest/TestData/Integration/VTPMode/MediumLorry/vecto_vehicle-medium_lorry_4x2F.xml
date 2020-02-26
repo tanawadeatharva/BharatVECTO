@@ -8,7 +8,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 		<VIN>standard values</VIN>
 		<Date>2017-09-26T15:33:45.0798047Z</Date>
 		<LegislativeClass>N2</LegislativeClass>
-		<VehicleCategory>Rigid Lorry</VehicleCategory>
+		<VehicleCategory>Van</VehicleCategory>
 		<AxleConfiguration>4x2F</AxleConfiguration>
 		<CurbMassChassis>2500</CurbMassChassis>
 		<TechnicalPermissibleMaximumLadenMass>7000</TechnicalPermissibleMaximumLadenMass>

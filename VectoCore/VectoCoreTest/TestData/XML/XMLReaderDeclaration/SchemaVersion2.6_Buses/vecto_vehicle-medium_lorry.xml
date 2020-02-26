@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd
+<tns:VectoInputDeclaration schemaVersion="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationInput:v2.0" xmlns:v2.6="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6" xmlns:v2.2="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.2" xmlns:v2.1="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1" xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:DeclarationJob E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationJob.xsd
 urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.2.1.xsd urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6 E:\QUAM\Workspace\VECTO_DEV_Buses\VectoCore\VectoCore\Resources\XSD/VectoDeclarationDefinitions.2.6_Buses.xsd">
-	<v2.0:Vehicle id="VEH-class5_Class-5_5t0" xsi:type="VehicleMediumLorryDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
+	<v2.0:Vehicle id="VEH-class5_Class-5_5t0" xsi:type="VehicleMediumLorryDeclarationType">
 		<Manufacturer>Generic Vendor</Manufacturer>
 		<ManufacturerAddress>N.A.</ManufacturerAddress>
 		<Model>class 5_Class-5_5t0</Model>
@@ -23,9 +23,9 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 			<EcoRollWithEngineStop>false</EcoRollWithEngineStop>
 			<PredictiveCruiseControl>none</PredictiveCruiseControl>
 		</v2.6:ADAS>
-		<Components xsi:type="v2.6:VehicleComponentsNoAxlegearType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
-			<v2.6:Engine xsi:type="v2.0:EngineComponentDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-				<Data id="ENG-350kW_IVT_12l" xsi:type="EngineDataDeclarationType">
+		<Components xsi:type="VehicleComponentsNoAxlegearType">
+			<Engine>
+				<v2.0:Data id="ENG-350kW_IVT_12l" xsi:type="v1.0:EngineDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0">
 					<Manufacturer>Generic Vendor</Manufacturer>
 					<Model>350kW_IVT_12l</Model>
 					<CertificationNumber>ENG-350kW_IVT_12l</CertificationNumber>
@@ -177,8 +177,8 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 						<Entry engineSpeed="2100.00" maxTorque="1019.00" dragTorque="-296.00"/>
 						<Entry engineSpeed="2200.00" maxTorque="0.00" dragTorque="-314.00"/>
 					</FullLoadAndDragCurve>
-				</Data>
-				<Signature>
+				</v2.0:Data>
+				<v2.0:Signature>
 					<Reference URI="#ENG-350kW_IVT_12l" xmlns="http://www.w3.org/2000/09/xmldsig#">
 						<Transforms>
 							<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments"/>
@@ -187,10 +187,10 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 						<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<DigestValue/>
 					</Reference>
-				</Signature>
-			</v2.6:Engine>
-			<v2.6:Gearbox xsi:type="GearboxComponentDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
-				<v2.0:Data id="GBX-GB_12-gear" xsi:type="v2.6:GearboxDataDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.6">
+				</v2.0:Signature>
+			</Engine>
+			<v2.6:Gearbox>
+				<v2.0:Data id="GBX-GB_12-gear" xsi:type="v2.6:GearboxDataDeclarationType">
 					<Manufacturer>Generic Vendor</Manufacturer>
 					<Model>GB_12-gear</Model>
 					<CertificationNumber>GBX-GB_12-gear</CertificationNumber>
@@ -383,7 +383,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 						</Gear>
 					</v2.6:Gears>
 				</v2.0:Data>
-				<Signature>
+				<v2.0:Signature>
 					<Reference URI="#GBX-GB_12-gear" xmlns="http://www.w3.org/2000/09/xmldsig#">
 						<Transforms>
 							<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithoutComments"/>
@@ -392,7 +392,7 @@ urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.1 E:\QUAM\Workspace\VECTO_DEV_
 						<DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
 						<DigestValue/>
 					</Reference>
-				</Signature>
+				</v2.0:Signature>
 			</v2.6:Gearbox>
 			<v2.6:Retarder xsi:type="v2.0:RetarderComponentDeclarationType" xmlns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0">
 				<Data id="RET-RET-generic" xsi:type="RetarderDataDeclarationType">
