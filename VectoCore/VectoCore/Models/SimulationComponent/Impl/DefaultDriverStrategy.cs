@@ -133,7 +133,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				EcoRollState.PreviousBrakePower = Driver.DataBus.BrakePower;
 				if (retVal.Source is ICombustionEngine) {
 					var success = retVal as ResponseSuccess;
-					EcoRollState.AcceleratorPedalIdle = success.DragPower.IsEqual(success.EnginePowerRequest, 10.SI<Watt>());
+					var avgEngineSpeed = (success.EngineSpeed + Driver.DataBus.EngineSpeed) / 2.0;
+					EcoRollState.AcceleratorPedalIdle = success.DragPower.IsEqual(success.EngineTorqueDemandTotal * avgEngineSpeed, 10.SI<Watt>());
 				} else {
 					EcoRollState.AcceleratorPedalIdle = false;
 				}
