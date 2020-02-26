@@ -31,7 +31,7 @@ namespace VECTO3GUI.ViewModel.Impl
 
 		public string JobFile
 		{
-			get { return "some JobFile string"; }
+			get { return string.Empty; }
 		}
 		public IInputDataProvider InputDataProvider { get; set; }
 	}

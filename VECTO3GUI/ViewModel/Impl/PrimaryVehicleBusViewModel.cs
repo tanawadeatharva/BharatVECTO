@@ -35,7 +35,11 @@ namespace VECTO3GUI.ViewModel.Impl
 		private double _retarderRatio;
 		private AngledriveType _angledriveType;
 		private bool _zeroEmissionVehicle;
-		private IAdvancedDriverAssistantSystemDeclarationInputData _adas;
+
+		private bool _engineStopStart;
+		private EcoRollType _ecoRollType;
+		private PredictiveCruiseControlType _predictiveCruiseControl;
+
 		private IList<ITorqueLimitInputData> _torqueLimits;
 
 		#endregion
@@ -121,11 +125,24 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _zeroEmissionVehicle; }
 			set { SetProperty(ref _zeroEmissionVehicle, value); }
 		}
-		public IAdvancedDriverAssistantSystemDeclarationInputData ADAS
+
+		public bool EngineStopStart
 		{
-			get { return _adas; }
-			set { SetProperty(ref _adas, value); }
+			get { return _engineStopStart;}
+			set { SetProperty(ref _engineStopStart, value); }
 		}
+		public EcoRollType EcoRoll
+		{
+			get { return _ecoRollType;}
+			set { SetProperty(ref _ecoRollType, value); }
+		}
+		public PredictiveCruiseControlType PredictiveCruiseControl
+		{
+			get { return _predictiveCruiseControl;}
+			set { SetProperty(ref _predictiveCruiseControl, value); }
+		}
+
+
 		public IList<ITorqueLimitInputData> TorqueLimits
 		{
 			get { return _torqueLimits; }
@@ -136,6 +153,8 @@ namespace VECTO3GUI.ViewModel.Impl
 		public AllowedEntry<AxleConfiguration>[] AllowedAxleConfigurations { get; set; }
 		public AllowedEntry<RetarderType>[] AllowedRetarderTypes { get; set; }
 		public AllowedEntry<AngledriveType>[] AllowedAngledriveTypes { get; set; }
+		public AllowedEntry<EcoRollType>[] AllowedEcoRollTypes { get; set; }
+		public AllowedEntry<PredictiveCruiseControlType>[] AllowedPredictiveCruiseControl { get; set; }
 
 		#endregion
 
@@ -169,7 +188,10 @@ namespace VECTO3GUI.ViewModel.Impl
 			AngledriveType = ((XMLDeclarationPrimaryVehicleBusDataProviderV01)vehicle).AngledriveType;
 
 			ZeroEmissionVehicle = vehicle.ZeroEmissionVehicle;
-			ADAS = vehicle.ADAS;
+			EngineStopStart = vehicle.ADAS.EngineStopStart;
+			EcoRoll = vehicle.ADAS.EcoRoll;
+			PredictiveCruiseControl = vehicle.ADAS.PredictiveCruiseControl;
+
 			TorqueLimits = vehicle.TorqueLimits;
 			
 			SetAllowedEntries();
@@ -189,6 +211,13 @@ namespace VECTO3GUI.ViewModel.Impl
 
 			AllowedAngledriveTypes = Enum.GetValues(typeof(AngledriveType)).Cast<AngledriveType>()
 				.Select(at => AllowedEntry.Create(at, at.GetLabel())).ToArray();
+
+			AllowedEcoRollTypes = Enum.GetValues(typeof(EcoRollType)).Cast<EcoRollType>()
+				.Select(ert => AllowedEntry.Create(ert, ert.GetName())).ToArray();
+
+			AllowedPredictiveCruiseControl = Enum.GetValues(typeof(PredictiveCruiseControlType))
+				.Cast<PredictiveCruiseControlType>()
+				.Select(pcc => AllowedEntry.Create(pcc, pcc.GetName())).ToArray();
 		}
 
 

@@ -47,15 +47,17 @@
                 <customControls:VectoParameterControl
                     Caption="Articulated" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                     Value="{Binding Articulated}" />
+
                 <customControls:VectoParameterControl
-                    Caption="Technical Permissible Maximum Laden Mass" Unit="{helper:SIUnit TechnicalPermissibleMaximumLadenMass}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding TechnicalPermissibleMaximumLadenMass}" />
+                    Caption="Permissible Maximum Laden Mass" Unit="{helper:SIUnit TechnicalPermissibleMaximumLadenMass}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding TechnicalPermissibleMaximumLadenMass, Converter={helper:SIValueConverter}, ConverterParameter=int}" />
+
                 <customControls:VectoParameterControl
-                    Caption="Idling Speed" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding IdlingSpeed}" />
+                    Caption="Idling Speed"  Unit="{helper:SIUnit IdlingSpeed}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding IdlingSpeed, Converter={helper:SIValueConverter}, ConverterParameter=int}" />
 
                 <customControls:ComboParameter
-                    Caption="Axle Configuration"
+                    Caption="Retarder Type"
                     CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                     Value="{Binding RetarderType}"
                     AllowedValues="{Binding AllowedRetarderTypes}" />
@@ -64,7 +66,39 @@
                     Caption="Retarder Ratio" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                     Value="{Binding RetarderRatio}" />
 
+                <customControls:ComboParameter
+                    Caption="Angledrive Type"
+                    CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding AngledriveType}"
+                    AllowedValues="{Binding AllowedAngledriveTypes}" />
 
+                <customControls:VectoParameterControl
+                    Caption="Zero Emission Vehicle" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding ZeroEmissionVehicle}" />
+
+                <GroupBox Header="ADAS">
+                    <StackPanel>
+                        <customControls:CheckboxParameter
+                            Caption="Engine Stop Start" CaptionWidthGroup="vehicleLbl"
+                            Value="{Binding EngineStopStart}" UnitWidthGroup="unitWidth"/>
+
+                        <customControls:ComboParameter
+                            Caption="Eco Roll"
+                            CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                            Value="{Binding EcoRoll}"
+                            AllowedValues="{Binding AllowedEcoRollTypes}" />
+
+                        <customControls:ComboParameter
+                            Caption="Predictive Cruise Control"
+                            CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                            Value="{Binding PredictiveCruiseControl}"
+                            AllowedValues="{Binding AllowedPredictiveCruiseControl}" />
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Torque Limits">
+
+                </GroupBox>
             </StackPanel>
             
             

@@ -38,7 +38,14 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		double RetarderRatio { get; set; }
 		AngledriveType AngledriveType { get; set; }
 		bool ZeroEmissionVehicle { get; set; }
-		IAdvancedDriverAssistantSystemDeclarationInputData ADAS { get; set; }
+
+		//************** ADAS **************
+		bool EngineStopStart { get; set; }
+		EcoRollType EcoRoll { get; set; }
+		PredictiveCruiseControlType PredictiveCruiseControl { get; set; }
+
+		//**********************************
+
 
 		IList<ITorqueLimitInputData> TorqueLimits { get; set; }
 
@@ -48,12 +55,11 @@ namespace VECTO3GUI.ViewModel.Interfaces
 		AllowedEntry<AxleConfiguration> [] AllowedAxleConfigurations { get; }
 		AllowedEntry<RetarderType>[] AllowedRetarderTypes { get; set; }
 		AllowedEntry<AngledriveType>[] AllowedAngledriveTypes { get; set; }
+		AllowedEntry<EcoRollType>[] AllowedEcoRollTypes { get; set; }
+		AllowedEntry<PredictiveCruiseControlType>[] AllowedPredictiveCruiseControl { get; set; }
+
 		#endregion
-
-
-
-
-
+		
 		#endregion
 
 
