@@ -309,6 +309,14 @@ namespace TUGraz.VectoCore.OutputData
 
 			WriteFuelconsumptionEntries(modData, row, vehicleLoading, cargoVolume, passengerCount, runData);
 
+			if (runData.Mission.MissionType == MissionType.VerificationTest) {
+				var fuelsWhtc = runData.EngineData.Fuels.Select(
+											fuel => modData.TimeIntegral<Kilogram>(modData.GetColumnName(fuel.FuelData, ModalResultField.FCWHTCc)) /
+													modData.TimeIntegral<Kilogram>(modData.GetColumnName(fuel.FuelData, ModalResultField.FCMap)))
+										.Select(dummy => (double)dummy).ToArray();
+				row[Fields.ENGINE_ACTUAL_CORRECTION_FACTOR] = string.Join(" / ", fuelsWhtc);
+			}
+
 			row[Fields.P_WHEEL_POS] = modData.PowerWheelPositive().ConvertToKiloWatt();
 
 			row[Fields.P_FCMAP_POS] = modData.TotalPowerEnginePositiveAverage().ConvertToKiloWatt();
