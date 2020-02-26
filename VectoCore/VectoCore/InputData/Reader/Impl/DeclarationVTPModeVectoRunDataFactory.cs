@@ -128,12 +128,17 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var tempVehicle = Dao.CreateVehicleData(
 				vehicle, Segment.Missions.First(),
 				Segment.Missions.First().Loadings.First());
+
+			var vtpMission = Segment.VehicleClass.IsMediumLorry()
+				? DeclarationData.VTPMode.SelectedMissionMediumLorry
+				: DeclarationData.VTPMode.SelectedMissionHeavyLorry;
+
 			AirdragData = Dao.CreateAirdragData(
 				vehicle.Components.AirdragInputData,
 				Segment.Missions.First(), Segment);
 			EngineData = Dao.CreateEngineData(
 				vehicle, vehicle.Components.EngineInputData.EngineModes.First(),
-				new Mission() { MissionType = MissionType.LongHaul });
+				new Mission() { MissionType = vtpMission });
 			AxlegearData = JobInputData.Vehicle.Components.GearboxInputData.DifferentialIncluded
 				? Dao.CreateDummyAxleGearData(JobInputData.Vehicle.Components.GearboxInputData)
 				: Dao.CreateAxleGearData(vehicle.Components.AxleGearInputData);
