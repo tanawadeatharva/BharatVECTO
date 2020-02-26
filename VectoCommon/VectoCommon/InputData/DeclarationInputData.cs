@@ -716,7 +716,7 @@ namespace TUGraz.VectoCommon.InputData
 	{
 		string Technology { get; }
 
-		double Ratio { get; }
+		//double Ratio { get; }
 	}
 
 
