@@ -23,21 +23,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(CompletedVehicle.Length,
 																							CompletedVehicle.Width);
-			var passengerCount = VectoMath.Min(
-				busFloorArea * mission.BusParameter.PassengerDensity,
-				CompletedVehicle.NuberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck);
-			var refLoad = passengerCount * mission.MissionType.GetAveragePassengerMass();
+			var passengerCountRef = busFloorArea * mission.BusParameter.PassengerDensity;
+			var passengerCountDecl = CompletedVehicle.NuberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck);
+			//var refLoad = passengerCount * mission.MissionType.GetAveragePassengerMass();
 			if (loading.Key != LoadingType.ReferenceLoad && loading.Key != LoadingType.LowLoading) {
 				throw new VectoException("Unhandled loading type: {0}", loading.Key);
 			}
 
-			var payload = loading.Key == LoadingType.ReferenceLoad ? refLoad : refLoad * 0.2;
+			var payload =
+			(loading.Key == LoadingType.ReferenceLoad
+				? VectoMath.Min(passengerCountRef, passengerCountDecl)
+				: passengerCountRef * mission.MissionType.GetLowLoadFactorBus()) * mission.MissionType.GetAveragePassengerMass();
 
 			var retVal = base.CreateNonExemptedVehicleData(vehicle, mission, payload);
 			retVal.CurbMass = CompletedVehicle.CurbMassChassis;
-			//retVal.Length = CompletedVehicle.Length;
-			//retVal.Width = CompletedVehicle.Width;
-			//retVal.Height = CompletedVehicle.Height;
 			return retVal;
 		}
 

@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 						Trailer = new List<MissionTrailer>(),
 						MinLoad = null,
 						MaxLoad = null,
-						LowLoad = refLoad * 0.2,
+						LowLoad = refLoad * missionType.GetLowLoadFactorBus(),
 						RefLoad = refLoad,
 						VehicleHeight = 0.SI<Meter>(), //row.ParseDouble("height").SI<Meter>(),
 						TotalCargoVolume = 0.SI<CubicMeter>(),
