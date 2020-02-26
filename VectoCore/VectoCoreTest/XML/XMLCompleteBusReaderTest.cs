@@ -95,7 +95,6 @@ namespace TUGraz.VectoCore.Tests.XML
 			var electricSupl = components.BusAuxiliaries.ElectricSupply;
 			Assert.IsNotNull(electricSupl.Alternators);
 			Assert.AreEqual(1, electricSupl.Alternators.Count);
-			Assert.AreEqual(1.000, electricSupl.Alternators.First().Ratio);
 			Assert.AreEqual("default", electricSupl.Alternators.First().Technology);
 
 			var havacAux = components.BusAuxiliaries.HVACAux;
