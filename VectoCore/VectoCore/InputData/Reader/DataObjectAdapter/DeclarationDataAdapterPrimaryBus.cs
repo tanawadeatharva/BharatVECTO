@@ -205,19 +205,19 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var resource = "";
 			switch (compressorSize) {
 				case "Small":
-					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.ACMP";
+					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
 					break;
 				case "Medium Supply 1-stage":
-					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.ACMP";
+					resource = "DEFAULT_1-Cylinder_1-Stage_393ccm.acmp";
 					break;
 				case "Medium Supply 2-stage":
-					resource = "DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP";
+					resource = "DEFAULT_2-Cylinder_1-Stage_650ccm.acmp";
 					break;
 				case "Large Supply 1-stage":
-					resource = "DEFAULT_2-Cylinder_2-Stage_398ccm.ACMP";
+					resource = "DEFAULT_2-Cylinder_2-Stage_398ccm.acmp";
 					break;
 				case "Large Supply 2-stage":
-					resource = "DEFAULT_3-Cylinder_2-Stage_598ccm.ACMP";
+					resource = "DEFAULT_3-Cylinder_2-Stage_598ccm.acmp";
 					break;
 				default: throw new ArgumentException(string.Format("unkown compressor size {0}"), compressorSize);
 			}

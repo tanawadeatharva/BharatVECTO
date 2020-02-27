@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.XML
 	{
 
 		private const string vehilcePIFExample =
-			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.6_Buses/example_heavyBus_PIF.xml";
+			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.6_Buses/PIF-heavyBus-sample.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
