@@ -223,9 +223,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static SquareMeter CalculateBusFloorSurfaceArea(Meter busLength, Meter busWidth)
 			{
-				return (busLength - Constants.BusParameters.DriverCompartmentLength) * busWidth;
+				return (busLength - Constants.BusParameters.DriverCompartmentLength) * CorrectedBusWidth(busWidth);
 			}
 
+			public static Meter CorrectedBusWidth(Meter busWidth)
+			{
+				return busWidth.IsBetween(Constants.BusParameters.VehicleWidthLow, Constants.BusParameters.VehicleWidthHigh)
+					? Constants.BusParameters.VehicleWidthHigh
+					: busWidth;
+			}
 			 
 
 			public static Meter CalculateInternalLength(Meter vehicleLength, bool doubleDecker, FloorType floorType, double numPassLowFloor)

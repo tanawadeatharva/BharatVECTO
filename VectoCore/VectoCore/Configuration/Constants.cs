@@ -203,6 +203,9 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly MeterPerSecond MaxBusSpeed = 103.KMPHtoMeterPerSecond();
 
+			public static readonly Meter VehicleWidthLow = 2.5.SI<Meter>();
+			public static readonly Meter VehicleWidthHigh = 2.55.SI<Meter>();
+
 			public static class Auxiliaries
 			{
 				public static class SteeringPump
