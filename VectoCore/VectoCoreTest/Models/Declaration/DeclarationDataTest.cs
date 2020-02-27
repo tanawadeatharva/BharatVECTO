@@ -416,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
         TestCase(VehicleClass.Class2, new[] { 200, 200, 150, -1, -1 }),
         TestCase(VehicleClass.Class3, new[] { 275, 200, 150, -1, -1 }),
         TestCase(VehicleClass.Class4, new[] { 350, 200, 150, 300, 200 }),
-        TestCase(VehicleClass.Class5, new[] { 350, 200, 150, 0, 200 }),
+        TestCase(VehicleClass.Class5, new[] { 350, 200, 150, -1, 200 }),
         TestCase(VehicleClass.Class9, new[] { 350, 200, 150, 300, 200 }),
         TestCase(VehicleClass.Class10, new[] { 350, 200, -1, -1, 200 }),
         TestCase(VehicleClass.Class11, new[] { 350, 200, -1, 300, 200 }),
