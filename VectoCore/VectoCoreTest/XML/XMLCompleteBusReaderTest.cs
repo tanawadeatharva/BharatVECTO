@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(2.700, vehicle.Height.Value());
 			Assert.AreEqual(11.830, vehicle.Length.Value());
 			Assert.AreEqual(2.550, vehicle.Width.Value());
-			Assert.AreEqual(0.120, ((XMLDeclarationCompletedBusDataProviderV26)vehicle).EntranceHeight.Value());
+			Assert.AreEqual(0.120, vehicle.EntranceHeight.Value());
 			Assert.AreEqual("pneumatic", ((XMLDeclarationCompletedBusDataProviderV26)vehicle).DoorDriveTechnology);
 	
 			var components = inputDataProvider.JobInputData.Vehicle.Components;
@@ -97,6 +97,8 @@ namespace TUGraz.VectoCore.Tests.XML
 			Assert.AreEqual(1, electricSupl.Alternators.Count);
 			Assert.AreEqual(1.000, electricSupl.Alternators.First().Ratio);
 			Assert.AreEqual("default", electricSupl.Alternators.First().Technology);
+
+			Assert.AreEqual(ConsumerTechnology.Pneumatically, components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology);
 
 			var havacAux = components.BusAuxiliaries.HVACAux;
 			Assert.IsNotNull(havacAux);
