@@ -375,8 +375,9 @@ namespace TUGraz.VectoCore.OutputData
 				workBusAuxPSCorr = (kAir * deltaAir).Cast<WattSecond>();
 
 				var workBusAuxES = modData.EnergyBusAuxESConsumed() - modData.EnergyBusAuxESGenerated();
-				var workBatterySOC = modData.DeltaSOCBusAuxBattery() *
-									runData.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity;
+				var workBatterySOC = runData.BusAuxiliaries.ElectricalUserInputsConfig.SmartElectrical
+					? modData.DeltaSOCBusAuxBattery() * runData.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
+					: 0.SI<WattSecond>();
 
 				workBusAuxESMech = (workBusAuxES + workBatterySOC) /
 										runData.BusAuxiliaries.ElectricalUserInputsConfig.AlternatorMap.GetEfficiency(0.RPMtoRad(), 0.SI<Ampere>()) /
@@ -667,8 +668,9 @@ namespace TUGraz.VectoCore.OutputData
 
 				row[Fields.E_BusAux_ES_generated] = modData.EnergyBusAuxESGenerated().ConvertToKiloWattHour();
 				row[Fields.E_BusAux_ES_consumed] = modData.EnergyBusAuxESConsumed().ConvertToKiloWattHour();
-				row[Fields.Delta_E_BusAux_Battery] =
-					(modData.DeltaSOCBusAuxBattery() * runData.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity)
+				row[Fields.Delta_E_BusAux_Battery] = (runData.BusAuxiliaries.ElectricalUserInputsConfig.SmartElectrical
+						? modData.DeltaSOCBusAuxBattery() * runData.BusAuxiliaries.ElectricalUserInputsConfig.ElectricStorageCapacity
+						: 0.SI<WattSecond>())
 					.ConvertToKiloWattHour();
 			}
 
@@ -1013,7 +1015,7 @@ namespace TUGraz.VectoCore.OutputData
 			public const string FC_BusAux_ES_CORR_H = "FC-BusAux_ES_Corr{0} [g/h]";
 			public const string FC_BusAux_ES_CORR_KM = "FC-BusAux_ES_Corr{0} [g/km]";
 			public const string FC_AUXHTR_H = "FC-BusAux_AuxHeater{0} [g/h]";
-			public const string FC_AUXHTR_KM = "FC-BusAux_AuxHeater{0} [k/km]";
+			public const string FC_AUXHTR_KM = "FC-BusAux_AuxHeater{0} [g/km]";
 			public const string FC_AUXHTR_H_CORR = "FC-BusAux_AuxHeater_Corr{0} [g/h]";
 			public const string FC_AUXHTR_KM_CORR = "FC-BusAux_AuxHeater_Corr{0} [g/km]";
 

@@ -54,6 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected IBusAuxiliaries Auxiliaries;
 
 		private double EngineStopStartUtilityFactor;
+		private bool SmartElectricSystem;
 
 		//private readonly FuelConsumptionAdapter _fcMapAdapter;
 
@@ -75,6 +76,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//'Set Signals
 			tmpAux.Signals.EngineIdleSpeed = container.EngineIdleSpeed;
 			tmpAux.Initialise(auxiliaryConfig);
+
+			SmartElectricSystem = auxiliaryConfig.ElectricalUserInputsConfig.SmartElectrical;
 
 			Auxiliaries = tmpAux;
 		}
@@ -152,7 +155,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			container[ModalResultField.P_busAux_ES_sum_mech] = essUtilityFactor * Auxiliaries.ElectricPowerDemandMech;
 			container[ModalResultField.P_busAux_ES_generated] = essUtilityFactor * Auxiliaries.ElectricPowerGenerated;
 
-			container[ModalResultField.BatterySOC] = Auxiliaries.BatterySOC * 100.0;
+			if (SmartElectricSystem) {
+				container[ModalResultField.BatterySOC] = Auxiliaries.BatterySOC * 100.0;
+			}
 
 			container[ModalResultField.Nl_busAux_PS_consumer] = Auxiliaries.PSDemandConsumer;
 			container[ModalResultField.Nl_busAux_PS_generated] = essUtilityFactor * Auxiliaries.PSAirGenerated;
