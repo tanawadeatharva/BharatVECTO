@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2016 rel. 2 sp1 (x64) (http://www.altova.com) by Helmut Eichlseder (TU Graz/Inst. f. VKM und THD) -->
 <?xml-stylesheet type="text/xsl" href="../RenderTable.xslt"?>
-<xs:schema xmlns:tns="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
+<xs:schema xmlns:v2.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vectoParam="urn:tugraz:ivt:VectoAPI:ParameterDocumentation" xmlns:di="http://www.w3.org/2000/09/xmldsig#" xmlns:v1.0="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" targetNamespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v2.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.0" xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:ParameterDocumentation ParameterDocumentation.xsd">
 	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
 	<xs:import namespace="urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:v1.0" schemaLocation="VectoDeclarationDefinitions.1.0.xsd"/>
 	<xs:complexType name="AbstractAuxiliaryDataDeclarationType" abstract="true"/>
@@ -15,13 +15,13 @@
 	<xs:complexType name="AbstractVehicleComponentsDeclarationType" abstract="true"/>
 	<xs:complexType name="AbstractVehicleDeclarationType" abstract="true">
 		<xs:complexContent>
-			<xs:extension base="tns:DeclarationPowertrainComponentType"/>
+			<xs:extension base="v2.0:DeclarationPowertrainComponentType"/>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="AirDragComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="v1.0:AbstractAirdragDataDeclarationType"/>
-			<xs:element name="Signature" type="tns:SignatureType"/>
+			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AirDragDataDeclarationType">
@@ -75,7 +75,7 @@
 	<xs:complexType name="AngledriveComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="v1.0:AbstractAngledriveDataDeclarationType"/>
-			<xs:element name="Signature" type="tns:SignatureType"/>
+			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AngledriveDataDeclarationType">
@@ -120,7 +120,7 @@
 					<xs:element name="TorqueLossMap">
 						<xs:complexType>
 							<xs:sequence minOccurs="4" maxOccurs="unbounded">
-								<xs:element name="Entry" type="tns:AngledriveLossMapEntryType"/>
+								<xs:element name="Entry" type="v2.0:AngledriveLossMapEntryType"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -147,12 +147,12 @@
 	</xs:complexType>
 	<xs:complexType name="AuxiliariesComponentDeclarationType">
 		<xs:sequence>
-			<xs:element name="Data" type="tns:AbstractAuxiliaryDataDeclarationType"/>
+			<xs:element name="Data" type="v2.0:AbstractAuxiliaryDataDeclarationType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AuxiliariesDataDeclarationType">
 		<xs:complexContent>
-			<xs:extension base="tns:AbstractAuxiliaryDataDeclarationType">
+			<xs:extension base="v2.0:AbstractAuxiliaryDataDeclarationType">
 				<xs:sequence>
 					<xs:element name="Fan">
 						<xs:complexType>
@@ -215,7 +215,7 @@
 	</xs:complexType>
 	<xs:complexType name="AxleDataDeclarationType">
 		<xs:complexContent>
-			<xs:extension base="tns:AbstractAxleDataDeclarationType">
+			<xs:extension base="v2.0:AbstractAxleDataDeclarationType">
 				<xs:sequence>
 					<xs:element name="AxleType" type="v1.0:AxleTypeDeclarationType">
 						<xs:annotation>
@@ -232,7 +232,7 @@
 							<xs:documentation>P195 - bool</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="Tyre" type="tns:TyreComponentDeclarationType"/>
+					<xs:element name="Tyre" type="v2.0:TyreComponentDeclarationType"/>
 				</xs:sequence>
 				<xs:attribute name="axleNumber" use="required">
 					<xs:simpleType>
@@ -248,7 +248,7 @@
 	<xs:complexType name="AxlegearComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="v1.0:AbstractAxlegearDataDeclarationType"/>
-			<xs:element name="Signature" type="tns:SignatureType"/>
+			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="AxlegearDataDeclarationType">
@@ -329,9 +329,9 @@
 	<xs:complexType name="AxlegearTorqueLossMapType"/>
 	<xs:complexType name="AxleWheelsComponentDeclarationType">
 		<xs:complexContent>
-			<xs:extension base="tns:AbstractAxleWheelsComponentDeclarationType">
+			<xs:extension base="v2.0:AbstractAxleWheelsComponentDeclarationType">
 				<xs:sequence>
-					<xs:element name="Data" type="tns:AbstractAxleWheelsDataDeclarationType"/>
+					<xs:element name="Data" type="v2.0:AbstractAxleWheelsDataDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -341,12 +341,12 @@
 			<xs:documentation>Axles &amp; Wheels Component</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
-			<xs:extension base="tns:AbstractAxleWheelsDataDeclarationType">
+			<xs:extension base="v2.0:AbstractAxleWheelsDataDeclarationType">
 				<xs:sequence>
 					<xs:element name="Axles">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Axle" type="tns:AbstractAxleDataDeclarationType" minOccurs="2" maxOccurs="4"/>
+								<xs:element name="Axle" type="v2.0:AbstractAxleDataDeclarationType" minOccurs="2" maxOccurs="4"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -356,13 +356,13 @@
 	</xs:complexType>
 	<xs:complexType name="DeclarationPowertrainComponentType" abstract="true">
 		<xs:complexContent>
-			<xs:extension base="tns:VectoSimulationComponent"/>
+			<xs:extension base="v2.0:VectoSimulationComponent"/>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="EngineComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="v1.0:AbstractCombustionEngineDataDeclarationType"/>
-			<xs:element name="Signature" type="tns:SignatureType"/>
+			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="EngineDataDeclarationType">
@@ -457,14 +457,14 @@
 					<xs:element name="FuelConsumptionMap">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Entry" type="tns:FuelConsumptionEntryType" minOccurs="4" maxOccurs="unbounded"/>
+								<xs:element name="Entry" type="v2.0:FuelConsumptionEntryType" minOccurs="4" maxOccurs="unbounded"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
 					<xs:element name="FullLoadAndDragCurve">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Entry" type="tns:FullLoadAndDragCurveEntryType" minOccurs="2" maxOccurs="unbounded"/>
+								<xs:element name="Entry" type="v2.0:FullLoadAndDragCurveEntryType" minOccurs="2" maxOccurs="unbounded"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -535,7 +535,7 @@
 	<xs:complexType name="GearboxComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="v1.0:AbstractTransmissionDataDeclarationType"/>
-			<xs:element name="Signature" type="tns:SignatureType"/>
+			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="GearboxDataDeclarationType">
@@ -580,14 +580,14 @@
 							<xs:documentation>P254 - [-]</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="Gears" type="tns:AbstractGearsDeclarationType"/>
+					<xs:element name="Gears" type="v2.0:AbstractGearsDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="GearDeclarationType">
 		<xs:complexContent>
-			<xs:extension base="tns:GearBaseType">
+			<xs:extension base="v2.0:GearBaseType">
 				<xs:sequence>
 					<xs:element name="MaxTorque" type="v1.0:GearboxGearMaxTorqueType" minOccurs="0">
 						<xs:annotation>
@@ -602,9 +602,9 @@
 					<xs:element name="TorqueLossMap">
 						<xs:complexType>
 							<xs:complexContent>
-								<xs:extension base="tns:TorqueLossMapType">
+								<xs:extension base="v2.0:TorqueLossMapType">
 									<xs:sequence>
-										<xs:element name="Entry" type="tns:TorqueLossMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
+										<xs:element name="Entry" type="v2.0:TorqueLossMapEntryType" minOccurs="4" maxOccurs="unbounded"/>
 									</xs:sequence>
 								</xs:extension>
 							</xs:complexContent>
@@ -616,16 +616,16 @@
 	</xs:complexType>
 	<xs:complexType name="GearsDeclarationType">
 		<xs:complexContent>
-			<xs:extension base="tns:AbstractGearsDeclarationType">
+			<xs:extension base="v2.0:AbstractGearsDeclarationType">
 				<xs:sequence>
-					<xs:element name="Gear" type="tns:GearDeclarationType" maxOccurs="99"/>
+					<xs:element name="Gear" type="v2.0:GearDeclarationType" maxOccurs="99"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="PTOType">
 		<xs:complexContent>
-			<xs:extension base="tns:AbstractPTODataType">
+			<xs:extension base="v2.0:AbstractPTODataType">
 				<xs:sequence>
 					<xs:element name="PTOShaftsGearWheels" type="v1.0:PTOShaftsGearWheelsType">
 						<xs:annotation>
@@ -644,7 +644,7 @@
 	<xs:complexType name="RetarderComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="v1.0:AbstractRetarderDataDeclarationType"/>
-			<xs:element name="Signature" type="tns:SignatureType"/>
+			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="RetarderDataDeclarationType">
@@ -687,7 +687,7 @@
 					<xs:element name="RetarderLossMap">
 						<xs:complexType>
 							<xs:sequence>
-								<xs:element name="Entry" type="tns:RetarderLossmapEntryType" minOccurs="2" maxOccurs="unbounded"/>
+								<xs:element name="Entry" type="v2.0:RetarderLossmapEntryType" minOccurs="2" maxOccurs="unbounded"/>
 							</xs:sequence>
 						</xs:complexType>
 					</xs:element>
@@ -735,7 +735,7 @@
 	<xs:complexType name="TorqueConverterComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="v1.0:AbstractTorqueConverterDataDeclarationType"/>
-			<xs:element name="Signature" type="tns:SignatureType"/>
+			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="TorqueConverterDataDeclarationType">
@@ -789,7 +789,7 @@
 				<xs:documentation>P196 - [-]</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="maxTorque" type="tns:TorqueLimitEntryMaxTorqueType" use="required">
+		<xs:attribute name="maxTorque" type="v2.0:TorqueLimitEntryMaxTorqueType" use="required">
 			<xs:annotation>
 				<xs:documentation>P197 - [Nm]</xs:documentation>
 			</xs:annotation>
@@ -797,9 +797,9 @@
 	</xs:complexType>
 	<xs:complexType name="TorqueLimitsType">
 		<xs:complexContent>
-			<xs:extension base="tns:AbstractTorqueLimitsType">
+			<xs:extension base="v2.0:AbstractTorqueLimitsType">
 				<xs:sequence maxOccurs="unbounded">
-					<xs:element name="Entry" type="tns:TorqueLimitsEntryType"/>
+					<xs:element name="Entry" type="v2.0:TorqueLimitsEntryType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -825,7 +825,7 @@
 	<xs:complexType name="TyreComponentDeclarationType">
 		<xs:sequence>
 			<xs:element name="Data" type="v1.0:AbstractTyreDataDeclarationType"/>
-			<xs:element name="Signature" type="tns:SignatureType"/>
+			<xs:element name="Signature" type="v2.0:SignatureType"/>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="TyreDataDeclarationType">
@@ -878,7 +878,7 @@
 	</xs:complexType>
 	<xs:complexType name="VectoDeclarationJobType">
 		<xs:sequence>
-			<xs:element name="Vehicle" type="tns:AbstractVehicleDeclarationType"/>
+			<xs:element name="Vehicle" type="v2.0:AbstractVehicleDeclarationType"/>
 		</xs:sequence>
 		<xs:attribute name="schemaVersion" use="required">
 			<xs:simpleType>
@@ -900,7 +900,7 @@
 	</xs:complexType>
 	<xs:complexType name="VehicleBaseType" abstract="true">
 		<xs:complexContent>
-			<xs:extension base="tns:AbstractVehicleDeclarationType">
+			<xs:extension base="v2.0:AbstractVehicleDeclarationType">
 				<xs:sequence>
 					<xs:element name="Manufacturer" type="v1.0:ManufacturerType">
 						<xs:annotation>
@@ -943,24 +943,24 @@
 	</xs:complexType>
 	<xs:complexType name="VehicleComponentsType">
 		<xs:complexContent>
-			<xs:extension base="tns:AbstractVehicleComponentsDeclarationType">
+			<xs:extension base="v2.0:AbstractVehicleComponentsDeclarationType">
 				<xs:sequence>
-					<xs:element name="Engine" type="tns:EngineComponentDeclarationType"/>
-					<xs:element name="Gearbox" type="tns:GearboxComponentDeclarationType"/>
-					<xs:element name="TorqueConverter" type="tns:TorqueConverterComponentDeclarationType" minOccurs="0"/>
-					<xs:element name="Angledrive" type="tns:AngledriveComponentDeclarationType" minOccurs="0"/>
-					<xs:element name="Retarder" type="tns:RetarderComponentDeclarationType" minOccurs="0"/>
-					<xs:element name="Axlegear" type="tns:AxlegearComponentDeclarationType"/>
-					<xs:element name="AxleWheels" type="tns:AxleWheelsComponentDeclarationType"/>
-					<xs:element name="Auxiliaries" type="tns:AuxiliariesComponentDeclarationType"/>
-					<xs:element name="AirDrag" type="tns:AirDragComponentDeclarationType" minOccurs="0"/>
+					<xs:element name="Engine" type="v2.0:EngineComponentDeclarationType"/>
+					<xs:element name="Gearbox" type="v2.0:GearboxComponentDeclarationType"/>
+					<xs:element name="TorqueConverter" type="v2.0:TorqueConverterComponentDeclarationType" minOccurs="0"/>
+					<xs:element name="Angledrive" type="v2.0:AngledriveComponentDeclarationType" minOccurs="0"/>
+					<xs:element name="Retarder" type="v2.0:RetarderComponentDeclarationType" minOccurs="0"/>
+					<xs:element name="Axlegear" type="v2.0:AxlegearComponentDeclarationType"/>
+					<xs:element name="AxleWheels" type="v2.0:AxleWheelsComponentDeclarationType"/>
+					<xs:element name="Auxiliaries" type="v2.0:AuxiliariesComponentDeclarationType"/>
+					<xs:element name="AirDrag" type="v2.0:AirDragComponentDeclarationType" minOccurs="0"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	<xs:complexType name="VehicleDeclarationType">
 		<xs:complexContent>
-			<xs:extension base="tns:VehicleBaseType">
+			<xs:extension base="v2.0:VehicleBaseType">
 				<xs:sequence>
 					<xs:element name="AxleConfiguration" type="v1.0:VehicleAxleConfigurationDeclarationType">
 						<xs:annotation>
@@ -997,9 +997,9 @@
 							<xs:documentation>P180 - enum</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="PTO" type="tns:AbstractPTODataType"/>
-					<xs:element name="TorqueLimits" type="tns:AbstractTorqueLimitsType" minOccurs="0"/>
-					<xs:element name="Components" type="tns:AbstractVehicleComponentsDeclarationType"/>
+					<xs:element name="PTO" type="v2.0:AbstractPTODataType"/>
+					<xs:element name="TorqueLimits" type="v2.0:AbstractTorqueLimitsType" minOccurs="0"/>
+					<xs:element name="Components" type="v2.0:AbstractVehicleComponentsDeclarationType"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
