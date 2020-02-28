@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 													_segment.Missions.First().Loadings.First());
 			_airdragData = DataAdapter.CreateAirdragData(vehicle.Components.AirdragInputData,
 												_segment.Missions.First(), _segment);
-			if (InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData.DifferentialIncluded) {
+			if (InputDataProvider.JobInputData.Vehicle.AxleConfiguration.AxlegearIncludedInGearbox()) {
 				_axlegearData = DataAdapter.CreateDummyAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.GearboxInputData);
 			} else { 
 				_axlegearData = DataAdapter.CreateAxleGearData(InputDataProvider.JobInputData.Vehicle.Components.AxleGearInputData);
