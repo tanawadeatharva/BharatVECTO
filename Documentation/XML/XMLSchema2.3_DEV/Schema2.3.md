@@ -1,4 +1,4 @@
-XML Schema 2.3
+XML Schema 2.3 DEV
 ===============
 
   * Introduction of a new model parameter for ADAS in combination with AT transmisisons: ATEcoRollReleaseLockupClutch
@@ -9,10 +9,25 @@ XML Schema 2.3
 
 
 ##AdvancedDriverAssistantSystemsType
+
+*Namespace:* urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3
+
+*Base Type:* v2.1:AbstractAdvancedDriverAssistantSystemsType
+
 ![](XMLSchema2.3_DEV/AdvancedDriverAssistantSystemsType.png)
 
 ##EngineDataDeclarationType
+
+*Namespace:* urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3
+
+*Base Type:* v1.0:AbstractCombustionEngineDataDeclarationType
+
 ![](XMLSchema2.3_DEV/EngineDataDeclarationType.png)
 
-##GearboxDataDeclarationType
-![](XMLSchema2.3_DEV/GearboxDataDeclarationType.png)
+##TyreDataDeclarationType
+
+*Namespace:* urn:tugraz:ivt:VectoAPI:DeclarationDefinitions:DEV:v2.3
+
+*Base Type:* v1.0:AbstractTyreDataDeclarationType
+
+![](XMLSchema2.3_DEV/TyreDataDeclarationType.png)
