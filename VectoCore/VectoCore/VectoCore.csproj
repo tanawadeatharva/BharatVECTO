@@ -865,8 +865,6 @@
     <EmbeddedResource Include="Resources\XSD\VectoDeclarationDefinitions.2.6_Buses.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Axles.csv" />
-    <EmbeddedResource Include="Resources\Declaration\VAUXBus\SP-Factors.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_1-Cylinder_1-Stage_393ccm.ACMP" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_1-Stage_650ccm.ACMP" />
     <EmbeddedResource Include="Resources\Declaration\VAUXBus\DEFAULT_2-Cylinder_2-Stage_398ccm.ACMP" />
@@ -891,6 +889,9 @@
     <EmbeddedResource Include="Resources\XSD\VTPReport.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Resources\Declaration\VAUXBus\SP-AxleFactor.csv" />
+    <None Include="Resources\Declaration\VAUXBus\SP-Axles_Bus.csv" />
+    <None Include="Resources\Declaration\VAUXBus\SP-Factors_Bus.csv" />
     <None Include="Utils\VectoVersionCore.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>VectoVersionCore.cs</LastGenOutput>

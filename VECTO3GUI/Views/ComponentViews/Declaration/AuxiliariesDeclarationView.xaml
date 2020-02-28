@@ -20,11 +20,10 @@
                 <StackPanel Orientation="Vertical">
 
                     <DataGrid AutoGenerateColumns="False" ColumnWidth="*" IsReadOnly="False" CanUserAddRows="False" VerticalAlignment="Top"
-                          HeadersVisibility="All" RowHeaderWidth="30" ItemsSource="{Binding Alternators}">
+                          HeadersVisibility="All" RowHeaderWidth="30" ItemsSource="{Binding AlternatorTechnologies}">
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Ratio" Binding="{Binding Ratio}" />
-                            <DataGridTextColumn Header="Technology" Binding="{Binding Technology}" />
+                            <DataGridTextColumn Header="Technology" Binding="{Binding }" />
                         </DataGrid.Columns>
 
                     </DataGrid>

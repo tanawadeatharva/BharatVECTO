@@ -29,7 +29,7 @@ namespace VECTO3GUI.ViewModel.Interfaces {
 
 		#region Electric System
 		
-		ObservableCollection<IAlternatorDeclarationInputData> Alternators { get; set; }
+		ObservableCollection<string> AlternatorTechnologies { get; set; }
 		bool DayrunninglightsLED { get; set; }
 		bool HeadlightsLED { get; set; }
 		bool PositionlightsLED { get; set; }

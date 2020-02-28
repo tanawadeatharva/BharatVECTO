@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Documents;
 using Castle.Core.Internal;
 using Ninject;
 using TUGraz.VectoCommon.BusAuxiliaries;
@@ -31,7 +33,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private readonly ObservableCollection<SteeringPumpEntry> _steeringPumpTechnologies = new ObservableCollection<SteeringPumpEntry>();
 		private IAxlesViewModel axlesViewModel;
 
-		private ObservableCollection<IAlternatorDeclarationInputData> _alternators;
+		private ObservableCollection<string> _alternatorTechnologies;
 		private bool _dayRunningLightsLED;
 		private bool _headlightyLED;
 		private bool _positionlightsLED;
@@ -129,11 +131,19 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _interiorLightsLED; }
 			set { SetProperty(ref _interiorLightsLED, value); }
 		}
-		public ObservableCollection<IAlternatorDeclarationInputData> Alternators
+
+		public ObservableCollection<string> AlternatorTechnologies
 		{
-			get { return _alternators; }
-			set { SetProperty(ref _alternators, value); }
+			get { return _alternatorTechnologies; }
+			set { SetProperty(ref _alternatorTechnologies, value); }
 		}
+
+
+		//public ObservableCollection<IAlternatorDeclarationInputData> Alternators
+		//{
+		//	get { return _alternators; }
+		//	set { SetProperty(ref _alternators, value); }
+		//}
 
 		public ConsumerTechnology DoorDriveTechnology
 		{
@@ -273,13 +283,10 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void SetValues(IBusAuxiliariesDeclarationData busAux)
 		{
 			if (!busAux.ElectricSupply.Alternators.IsNullOrEmpty()) {
-				Alternators = new ObservableCollection<IAlternatorDeclarationInputData>();
+				AlternatorTechnologies = new ObservableCollection<string>();
+
 				for (int i = 0; i < busAux.ElectricSupply.Alternators.Count; i++) {
-					Alternators.Add(new AlternatorDeclarationInputData
-					{
-						Ratio = busAux.ElectricSupply.Alternators[i].Ratio,
-						Technology = busAux.ElectricSupply.Alternators[i].Technology
-					});
+					AlternatorTechnologies.Add(busAux.ElectricSupply.Alternators[i].Technology);
 				}
 			}
 
