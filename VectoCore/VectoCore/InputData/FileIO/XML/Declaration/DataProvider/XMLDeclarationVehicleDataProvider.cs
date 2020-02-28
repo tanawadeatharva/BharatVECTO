@@ -878,11 +878,11 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return GetDouble(XMLNames.Bus_EntranceHeight).SI<Meter>(); }
 		}
 
-		public virtual string DoorDriveTechnology
+		public virtual ConsumerTechnology DoorDriveTechnology
 		{
-			get { return GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology); }
+			get { return ConsumerTechnologyHelper.Parse(GetString(XMLNames.BusAux_PneumaticSystem_DoorDriveTechnology)); }
 		}
-
+		
 
 		#region Overrides of AbstractXMLResource
 

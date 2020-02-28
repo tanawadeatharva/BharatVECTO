@@ -16,18 +16,22 @@
         <local:VectoParameterControl
             Grid.Row="0"
             Caption="Manufacturer" Unit=""
+            UnitWidthGroup="unitWidth"
             Value="{Binding Manufacturer}" CaptionWidthGroup="cddl"/>
         <local:VectoParameterControl 
             Grid.Row="1"
             Caption="Model" Unit=""
+            UnitWidthGroup="unitWidth"
             Value="{Binding Model}" CaptionWidthGroup="cddl"/>
         <local:VectoParameterControl 
             Grid.Row="2"
             Caption="Date" Unit=""
+            UnitWidthGroup="unitWidth"
             Value="{Binding Date}" CaptionWidthGroup="cddl"/>
         <local:VectoParameterControl 
             Grid.Row="3"
             Caption="Certification Number" Unit=""
+            UnitWidthGroup="unitWidth"
             Value="{Binding CertificationNumber}" CaptionWidthGroup="cddl"/>
     </Grid>
 </UserControl>

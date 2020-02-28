@@ -30,18 +30,16 @@ namespace VECTO3GUI.ViewModel.Interfaces
 
 		#region CompleteBusDataProviderV26
 
-		string DoorDriveTechnology { get; set; }
+		ConsumerTechnology DoorDriveTechnology { get; set; }
 
 		#endregion
 
 		#region MyRegion
 
-		AllowedEntry<LegislativeClass>[] AllowedLegislativeClass { get; set; }
-		AllowedEntry<VehicleCode>[] AllowedVehicleCode{ get; set; }
-		AllowedEntry<FloorType>[] AllowedFloorType { get; set; }
-		//public AllowedEntry<AxleConfiguration>[] AllowedAxleConfigurations { get; set; }
-		//public AllowedEntry<RetarderType>[] AllowedRetarderTypes { get; set; }
-		//public AllowedEntry<AngledriveType>[] AllowedAngledriveTypes { get; set; }
+		AllowedEntry<LegislativeClass>[] AllowedLegislativeClasses { get;}
+		AllowedEntry<VehicleCode>[] AllowedVehicleCodes{ get;}
+		AllowedEntry<FloorType>[] AllowedFloorTypes { get; }
+		AllowedEntry<ConsumerTechnology>[] AllowedConsumerTechnologies { get;}
 
 		#endregion
 

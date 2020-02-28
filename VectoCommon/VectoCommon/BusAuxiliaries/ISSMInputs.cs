@@ -132,6 +132,18 @@ namespace TUGraz.VectoCommon.BusAuxiliaries
 			}
 		}
 
+		public static string GetLabel(this ACCompressorType type)
+		{
+			switch (type)
+			{
+				case ACCompressorType.TwoStage: return "2-stage";
+				case ACCompressorType.ThreeStage: return "3-stage";
+				case ACCompressorType.FourStage: return "4-stage";
+				default: return type.ToString();
+			}
+		}
+
+
 		public static bool IsElectrical(this ACCompressorType type)
 		{
 			return type == ACCompressorType.Continuous;

@@ -35,7 +35,7 @@
                     Caption="Legislative Class"
                     CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                     Value="{Binding LegislativeClass}"
-                    AllowedValues="{Binding AllowedLegislativeClass}" />
+                    AllowedValues="{Binding AllowedLegislativeClasses}" />
 
                 <customControls:VectoParameterControl
                     Caption="Registered Class" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
@@ -45,7 +45,7 @@
                     Caption="Vehicle Code"
                     CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                     Value="{Binding VehicleCode}"
-                    AllowedValues="{Binding AllowedVehicleCode}" />
+                    AllowedValues="{Binding AllowedVehicleCodes}" />
 
                 <customControls:VectoParameterControl
                     Caption="Curb Mass Chassis" Unit="{helper:SIUnit CurbMassChassis}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
@@ -67,7 +67,7 @@
                     Caption="Floor Type"
                     CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
                     Value="{Binding FloorType}"
-                    AllowedValues="{Binding AllowedFloorType}" />
+                    AllowedValues="{Binding AllowedFloorTypes}" />
 
                 <customControls:VectoParameterControl
                     Caption="Height Integrated Body" Unit="{helper:SIUnit HeightIntegratedBody}" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
@@ -86,9 +86,11 @@
                     Value="{Binding EntranceHeight, Converter={helper:SIValueConverter}, ConverterParameter=double}" />
 
 
-                <customControls:VectoParameterControl
-                    Caption="Door Drive Technology" Unit="" CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
-                    Value="{Binding DoorDriveTechnology}" />
+                <customControls:ComboParameter
+                    Caption="Door Drive Technology"
+                    CaptionWidthGroup="vehicleLbl" UnitWidthGroup="unitWidth"
+                    Value="{Binding DoorDriveTechnology}"
+                    AllowedValues="{Binding AllowedConsumerTechnologies}" />
 
             </StackPanel>
         </StackPanel>

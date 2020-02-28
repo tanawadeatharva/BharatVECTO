@@ -69,6 +69,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\InterfacesImpl.cs" />
     <Compile Include="Util\AllowedEntry.cs" />
     <Compile Include="Util\Component.cs" />
     <Compile Include="Util\RelayCommand.cs" />

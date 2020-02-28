@@ -36,7 +36,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private Meter _vehicleLength;
 		private Meter _vehicleWidth;
 		private Meter _entranceHeight;
-		private string _doorDriveTechnology;
+		private ConsumerTechnology _doorDriveTechnology;
 		
 		#endregion
 
@@ -129,15 +129,16 @@ namespace VECTO3GUI.ViewModel.Impl
 			get { return _entranceHeight;}
 			set { SetProperty(ref _entranceHeight, value); }
 		}
-		public string DoorDriveTechnology
+		public ConsumerTechnology DoorDriveTechnology
 		{
 			get { return _doorDriveTechnology;}
 			set { SetProperty(ref _doorDriveTechnology, value); }
 		}
 
-		public AllowedEntry<LegislativeClass>[] AllowedLegislativeClass { get; set; }
-		public AllowedEntry<VehicleCode>[] AllowedVehicleCode { get; set; }
-		public AllowedEntry<FloorType>[] AllowedFloorType { get; set; }
+		public AllowedEntry<LegislativeClass>[] AllowedLegislativeClasses { get; private set; }
+		public AllowedEntry<VehicleCode>[] AllowedVehicleCodes { get; private set; }
+		public AllowedEntry<FloorType>[] AllowedFloorTypes { get; private set; }
+		public AllowedEntry<ConsumerTechnology>[] AllowedConsumerTechnologies { get; private set; }
 
 		#endregion
 
@@ -177,14 +178,17 @@ namespace VECTO3GUI.ViewModel.Impl
 		private void SetAllowedEntries()
 		{
 
-			AllowedLegislativeClass = Enum.GetValues(typeof(LegislativeClass)).Cast<LegislativeClass>()
+			AllowedLegislativeClasses = Enum.GetValues(typeof(LegislativeClass)).Cast<LegislativeClass>()
 				.Select(lc => AllowedEntry.Create(lc, lc.GetLabel())).ToArray();
 
-			AllowedVehicleCode = Enum.GetValues(typeof(VehicleCode)).Cast<VehicleCode>()
+			AllowedVehicleCodes = Enum.GetValues(typeof(VehicleCode)).Cast<VehicleCode>()
 				.Select(vc => AllowedEntry.Create(vc, vc.GetLabel())).ToArray();
 
-			AllowedFloorType = Enum.GetValues(typeof(FloorType)).Cast<FloorType>()
+			AllowedFloorTypes = Enum.GetValues(typeof(FloorType)).Cast<FloorType>()
 				.Select(ft => AllowedEntry.Create(ft, ft.GetLabel())).ToArray();
+
+			AllowedConsumerTechnologies = Enum.GetValues(typeof(ConsumerTechnology)).Cast<ConsumerTechnology>()
+				.Select(sc => AllowedEntry.Create(sc, sc.GetLabel())).ToArray();
 		}
 		
 		#endregion

@@ -12,6 +12,7 @@ namespace VECTO3GUI.ViewModel.Impl
 		private SquareMeter _transferredCdxA;
 		private SquareMeter _declaredCdxA;
 		private bool _useStandardValues;
+		private string _appVersion;
 
 		#region Implementation of IAirdragViewModel
 
@@ -43,6 +44,13 @@ namespace VECTO3GUI.ViewModel.Impl
 			set { SetProperty(ref _declaredCdxA, value); }
 		}
 
+		public string AppVersion
+		{
+			get { return _appVersion; }
+			set { SetProperty(ref _appVersion, value); }
+		}
+
+
 		#endregion
 
 		protected override void InputDataChanged()
@@ -58,13 +66,12 @@ namespace VECTO3GUI.ViewModel.Impl
 			if (airdrag == null) {
 				return;
 			}
-
+			
 			Model = airdrag.Model;
 			Manufacturer = airdrag.Manufacturer;
 			CertificationNumber = airdrag.CertificationNumber;
-			//ToDo
-			//Date = DateTime.Parse(airdrag.Date);
-
+			Date = airdrag.Date;
+			AppVersion = airdrag.AppVersion;
 			DeclaredCdxA = airdrag.AirDragArea;
 		}
 	}

@@ -5,13 +5,115 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:interfaces="clr-namespace:VECTO3GUI.ViewModel.Interfaces"
              xmlns:customControls="clr-namespace:VECTO3GUI.Views.CustomControls"
+             xmlns:helper="clr-namespace:VECTO3GUI.Helper"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="800">
     <d:EditCyclesView.DataContext>
         <x:Type Type="interfaces:IAuxiliariesViewModel"/>
     </d:EditCyclesView.DataContext>
-    <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left"  Grid.IsSharedSizeScope="True">
-        <customControls:ComboParameter 
+
+
+    <Grid>
+        <StackPanel Orientation="Vertical" Width="400" HorizontalAlignment="Left"  Grid.IsSharedSizeScope="True">
+
+            <GroupBox Header="Electric Systems">
+                <StackPanel Orientation="Vertical">
+
+                    <DataGrid AutoGenerateColumns="False" ColumnWidth="*" IsReadOnly="False" CanUserAddRows="False" VerticalAlignment="Top"
+                          HeadersVisibility="All" RowHeaderWidth="30" ItemsSource="{Binding Alternators}">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Ratio" Binding="{Binding Ratio}" />
+                            <DataGridTextColumn Header="Technology" Binding="{Binding Technology}" />
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+
+                    <customControls:CheckboxParameter
+                            Caption="Dayrunniglights LED" CaptionWidthGroup="lblWidth"
+                            Unit="" UnitWidthGroup="unitWidth"
+                            Value="{Binding DayrunninglightsLED}"/>
+
+                    <customControls:CheckboxParameter
+                            Caption="Headlights LED" CaptionWidthGroup="lblWidth"
+                            Unit="" UnitWidthGroup="unitWidth"
+                            Value="{Binding HeadlightsLED}"/>
+
+                    <customControls:CheckboxParameter
+                            Caption="Positionlights LED" CaptionWidthGroup="lblWidth"
+                            Unit="" UnitWidthGroup="unitWidth"
+                            Value="{Binding PositionlightsLED}"/>
+
+                    <customControls:CheckboxParameter
+                            Caption="Brakelights LED" CaptionWidthGroup="lblWidth"
+                            Unit="" UnitWidthGroup="unitWidth"
+                            Value="{Binding BrakelightsLED}"/>
+
+                    <customControls:CheckboxParameter
+                            Caption="Interiorlights LED" CaptionWidthGroup="lblWidth"
+                            Unit="" UnitWidthGroup="unitWidth"
+                            Value="{Binding InteriorLightsLED}"/>
+
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Pneumatic System">
+                <customControls:ComboParameter 
+                        Caption="DoorDriveTechnology" CaptionWidthGroup="lblWidth"
+                        UnitWidthGroup="unitWidth"
+                        Value="{Binding DoorDriveTechnology}"
+                        AllowedValues="{Binding AllowedConsumerTechnologies}" />
+            </GroupBox>
+
+            <GroupBox Header="HVAC">
+                <StackPanel>
+                    <customControls:ComboParameter
+                            Caption="System Configuration"
+                            CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
+                            Value="{Binding SystemConfiguration}"
+                            AllowedValues="{Binding AllowedSystemConfigurations}" />
+
+                    <customControls:ComboParameter
+                            Caption="Compressor Type Driver"
+                            CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
+                            Value="{Binding CompressorTypeDriver}"
+                            AllowedValues="{Binding AllowedDriverACCompressorTypes}" />
+
+                    <customControls:ComboParameter
+                            Caption="Compressor Type Passenger"
+                            CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
+                            Value="{Binding CompressorTypePassenger}"
+                            AllowedValues="{Binding AllowedPassengerACCompressorTypes}" />
+
+                    <customControls:VectoParameterControl
+                            Caption="Height Integrated Body" Unit="{helper:SIUnit AuxHeaterPower}" CaptionWidthGroup="lblWidth" UnitWidthGroup="unitWidth"
+                            Value="{Binding AuxHeaterPower, Converter={helper:SIValueConverter}, ConverterParameter=double}" />
+
+                    <customControls:CheckboxParameter
+                            Caption="Double Glasing" CaptionWidthGroup="lblWidth"
+                            Unit="" UnitWidthGroup="unitWidth"
+                            Value="{Binding DoubleGlasing}"/>
+
+                    <customControls:CheckboxParameter
+                            Caption="Heat Pump" CaptionWidthGroup="lblWidth"
+                            Unit="" UnitWidthGroup="unitWidth"
+                            Value="{Binding HeatPump}"/>
+
+                    <customControls:CheckboxParameter
+                            Caption="Adjustable Auxiliary Heater" CaptionWidthGroup="lblWidth"
+                            Unit="" UnitWidthGroup="unitWidth"
+                            Value="{Binding AdjustableAuxiliaryHeater}"/>
+
+                    <customControls:CheckboxParameter
+                            Caption="Separate Air Distribution Ducts" CaptionWidthGroup="lblWidth"
+                            Unit="" UnitWidthGroup="unitWidth"
+                            Value="{Binding SeparateAirDistributionDucts}"/>
+                </StackPanel>
+            </GroupBox>
+
+
+
+            <!--<customControls:ComboParameter 
             Caption="Fan Technology" CaptionWidthGroup="lblWidth"
             Value="{Binding FanTechnology}"
             AllowedValues="{Binding AllowedFanTechnologies}" />
@@ -42,6 +144,8 @@
         <customControls:ComboParameter 
             Caption="HVAC Technology" CaptionWidthGroup="lblWidth"
             Value="{Binding HVACTechnology}"
-            AllowedValues="{Binding AllowedHVACTechnologies}" />
-    </StackPanel>
+            AllowedValues="{Binding AllowedHVACTechnologies}" />-->
+
+        </StackPanel>
+    </Grid>
 </UserControl>
