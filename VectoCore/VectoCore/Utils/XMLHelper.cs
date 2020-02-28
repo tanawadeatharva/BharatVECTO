@@ -266,5 +266,12 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return string.Join(":", schemaInfoSchemaType.QualifiedName.Namespace, schemaInfoSchemaType.QualifiedName.Name);
 		}
+
+		public static double GetVersion(XmlNode node)
+		{
+			const string versionPrefix = "v";
+			var namesp = node.SchemaInfo.SchemaType.QualifiedName.Namespace;
+			return namesp.Split(':').Last(x => x.StartsWith(versionPrefix)).Replace(versionPrefix, string.Empty).ToDouble();
+		}
 	}
 }

@@ -82,7 +82,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
 			var modData = new ModalDataContainer(
 				"Coach_MinimalPowertrain_Coasting", new[] { FuelData.Diesel }, fileWriter);
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
+				RunData = new VectoRunData() {
+					VehicleData = vehicleData,
+					EngineData = engineData,
+				}
+			};
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
@@ -140,7 +145,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain_Coasting");
 			var modData = new ModalDataContainer(
 				"Coach_MinimalPowertrain_Coasting", new[] { FuelData.Diesel }, fileWriter);
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
+				RunData = new VectoRunData() {
+					VehicleData = vehicleData,
+					EngineData = engineData,
+				}
+			};
 			var mockCycle = new MockDrivingCycle(vehicleContainer, null);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy(vehicleContainer));
@@ -203,7 +213,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrain", new[] { FuelData.Diesel }, fileWriter);
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData);
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering, modData) {
+				RunData = new VectoRunData() {
+					VehicleData = vehicleData,
+					EngineData = engineData,
+				}
+			};
 
 			var cycle = new MockDrivingCycle(vehicleContainer, null);
 			var brakes = new Brakes(vehicleContainer);
@@ -248,7 +263,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void DriverAccelerationTest()
 		{
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering) {
+				RunData = new VectoRunData() {
+					VehicleData = new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck},
+				}
+			};
 			var vehicle = new MockVehicle(vehicleContainer);
 
 			var driverData = MockSimulationDataFactory.CreateDriverDataFromFile(JobFile);
@@ -318,7 +337,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestCase]
 		public void DriverDecelerationTest()
 		{
-			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering);
+			var vehicleContainer = new VehicleContainer(ExecutionMode.Engineering) {
+				RunData = new VectoRunData() {
+					VehicleData = new VehicleData() { VehicleCategory = VehicleCategory.RigidTruck }
+				}
+			};
 			var vehicle = new MockVehicle(vehicleContainer);
 			new MockEngine(vehicleContainer);
 

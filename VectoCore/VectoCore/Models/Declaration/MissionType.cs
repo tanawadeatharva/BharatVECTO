@@ -129,13 +129,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public static double GetPassengerDensityLowLoadFactor(this MissionType self)
+		public static double GetLowLoadFactorBus(this MissionType self)
 		{
 			switch (self) {
 				case MissionType.HeavyUrban:
 				case MissionType.Urban:
 				case MissionType.Suburban: return 0.2;
-				case MissionType.Interurban: return 0.3;
+				case MissionType.Interurban: 
 				case MissionType.Coach: return 0.4;
 				default: return 0.1;
 			}

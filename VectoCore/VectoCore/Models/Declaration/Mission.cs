@@ -41,10 +41,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public enum LoadingType
 	{
-		FullLoading,
-		ReferenceLoad,
-		LowLoading,
+		// sort entries with increasing payload to get results ordered by increasing payload in declaration reports
 		EmptyLoading,
+		LowLoading,
+		ReferenceLoad,
+		FullLoading,
 	}
 
 	public class Mission
@@ -121,6 +122,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public bool HVACSeparateAirDistributionDucts { get; internal set; }
 		public PerSquareMeter PassengerDensity { get;  internal set; }
+		public VehicleClass BusGroup { get; internal set; }
 	}
 
 	public class MissionTrailer

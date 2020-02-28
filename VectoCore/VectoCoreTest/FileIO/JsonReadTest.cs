@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}
@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}
@@ -273,7 +273,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}
@@ -320,7 +320,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}
@@ -368,7 +368,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}
@@ -376,7 +376,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 				}, new VectoRunData() {
 					EngineData = MockSimulationDataFactory.CreateEngineDataFromFile(@"TestData\Components\AT_GBX\Engine.veng", 0),
 					VehicleData = new VehicleData() {
-						VehicleCategory = VehicleCategory.RigidTruck,
+						VehicleCategory = VehicleCategory.HeavyBusPrimaryVehicle,
 						DynamicTyreRadius = 0.5.SI<Meter>()
 					},
 					AxleGearData = new AxleGearData() { AxleGear = new TransmissionData() { Ratio = 2.1 } }
@@ -416,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 						GearshiftInputData = (IGearshiftEngineeringInputData)inputProvider
 					},
 					JobInputData = new MockJobInputData() {
-						Vehicle = new MockEngineeringVehicleInputData() {
+						IEngineeringJobInputData_Vehicle = new MockEngineeringVehicleInputData() {
 							GearboxInputData = inputProvider,
 							TorqueConverterInputData = (ITorqueConverterEngineeringInputData)inputProvider,
 						}
@@ -490,16 +490,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(1, busAux.ElectricSupply.Alternators.Count);
 			Assert.AreEqual("standard alternator", busAux.ElectricSupply.Alternators[0].Technology);
-			Assert.AreEqual(1, busAux.ElectricSupply.Alternators[0].Ratio);
 			Assert.AreEqual(false, busAux.ElectricSupply.SmartElectrics);
-
-			//Assert.AreEqual(3, busAux.ElectricSupply.ResultCards.Idle.Count);
-			//Assert.AreEqual(0, busAux.ElectricSupply.ResultCards.Idle[0].Current.Value());
-			//Assert.AreEqual(20, busAux.ElectricSupply.ResultCards.Idle[1].Current.Value());
-			//Assert.AreEqual(50, busAux.ElectricSupply.ResultCards.Idle[2].Current.Value());
-			//Assert.AreEqual(0, busAux.ElectricSupply.ResultCards.Idle[0].SmartCurrent.Value());
-			//Assert.AreEqual(25, busAux.ElectricSupply.ResultCards.Idle[1].SmartCurrent.Value());
-			//Assert.AreEqual(60, busAux.ElectricSupply.ResultCards.Idle[2].SmartCurrent.Value());
 
 			Assert.AreEqual("", busAux.PneumaticSupply.CompressorSize);
 			Assert.AreEqual(1.0, busAux.PneumaticSupply.Ratio);

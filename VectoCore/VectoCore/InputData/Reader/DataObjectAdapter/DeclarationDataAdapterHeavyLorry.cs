@@ -114,6 +114,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		protected virtual VehicleData CreateNonExemptedVehicleData(IVehicleDeclarationInputData data, Mission mission, Kilogram loading)
 		{
 			var retVal = SetCommonVehicleData(data);
+			retVal.LegislativeClass = data.LegislativeClass;
 			retVal.AxleConfiguration = data.AxleConfiguration;
 			retVal.AirDensity = DeclarationData.AirDensity;
 			retVal.VIN = data.VIN;

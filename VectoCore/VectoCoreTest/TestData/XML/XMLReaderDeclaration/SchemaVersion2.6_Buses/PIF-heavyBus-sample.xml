@@ -223,7 +223,7 @@ xsi:schemaLocation="urn:tugraz:ivt:VectoAPI:PrimaryVehicleInformation E:\QUAM\Wo
 							<Technology axleNumber="1">Variable displacement elec. controlled</Technology>
 						</SteeringPump>
 						<ElectricSystem>
-							<AlternatorTechnology ratio="1.000">default</AlternatorTechnology>
+							<AlternatorTechnology>default</AlternatorTechnology>
 							<SmartElectrics>false</SmartElectrics>
 							<MaxAlternatorPower>10000</MaxAlternatorPower>
 							<ElectricStorageCapacity>800</ElectricStorageCapacity>

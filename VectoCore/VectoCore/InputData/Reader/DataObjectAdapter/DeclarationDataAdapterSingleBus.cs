@@ -23,21 +23,20 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 		{
 			var busFloorArea = DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(CompletedVehicle.Length,
 																							CompletedVehicle.Width);
-			var passengerCount = VectoMath.Min(
-				busFloorArea * mission.BusParameter.PassengerDensity,
-				CompletedVehicle.NuberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck);
-			var refLoad = passengerCount * mission.MissionType.GetAveragePassengerMass();
+			var passengerCountRef = busFloorArea * mission.BusParameter.PassengerDensity;
+			var passengerCountDecl = CompletedVehicle.NuberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck;
+			//var refLoad = passengerCount * mission.MissionType.GetAveragePassengerMass();
 			if (loading.Key != LoadingType.ReferenceLoad && loading.Key != LoadingType.LowLoading) {
 				throw new VectoException("Unhandled loading type: {0}", loading.Key);
 			}
 
-			var payload = loading.Key == LoadingType.ReferenceLoad ? refLoad : refLoad * 0.2;
+			var payload =
+			(loading.Key == LoadingType.ReferenceLoad
+				? VectoMath.Min(passengerCountRef, passengerCountDecl)
+				: passengerCountRef * mission.MissionType.GetLowLoadFactorBus()) * mission.MissionType.GetAveragePassengerMass();
 
 			var retVal = base.CreateNonExemptedVehicleData(vehicle, mission, payload);
 			retVal.CurbMass = CompletedVehicle.CurbMassChassis;
-			//retVal.Length = CompletedVehicle.Length;
-			//retVal.Width = CompletedVehicle.Width;
-			//retVal.Height = CompletedVehicle.Height;
 			return retVal;
 		}
 
@@ -132,6 +131,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			var hvacBusLength = busAux.HVACAux.SystemConfiguration == BusHVACSystemConfiguration.Configuration2
 				? 2 * Constants.BusParameters.DriverCompartmentLength
 				: CompletedVehicle.Length;
+			var correctedBusWidth = DeclarationData.BusAuxiliaries.CorrectedBusWidth(CompletedVehicle.Width);
 
 			var hvacBusheight = DeclarationData.BusAuxiliaries.CalculateInternalHeight(CompletedVehicle.FloorType, 
 				IsDoubleDecker, CompletedVehicle.Height);
@@ -143,12 +143,12 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 			retVal.BusWindowSurface = DeclarationData.BusAuxiliaries.WindowHeight(IsDoubleDecker) * hvacBusLength +
 									DeclarationData.BusAuxiliaries.FrontAndRearWindowArea(IsDoubleDecker);
-			retVal.BusSurfaceArea = 2 * (hvacBusLength * CompletedVehicle.Width + hvacBusLength * CompletedVehicle.Height +
-										CompletedVehicle.Width * CompletedVehicle.Height);
-			retVal.BusVolume = hvacBusLength * CompletedVehicle.Width * hvacBusheight;
+			retVal.BusSurfaceArea = 2 * (hvacBusLength * correctedBusWidth + hvacBusLength * CompletedVehicle.Height +
+										correctedBusWidth * CompletedVehicle.Height);
+			retVal.BusVolume = hvacBusLength * correctedBusWidth * hvacBusheight;
 			retVal.UValue = DeclarationData.BusAuxiliaries.UValue(CompletedVehicle.FloorType);
 			retVal.NumberOfPassengers =
-				(DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(hvacBusLength, CompletedVehicle.Width) *
+				(DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(hvacBusLength, correctedBusWidth) *
 				mission.BusParameter.PassengerDensity).LimitTo(0, CompletedVehicle.NuberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck) + 1; // add driver for 'heat input'
 			retVal.VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(busAux.HVACAux.SystemConfiguration, false);
 			retVal.VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(busAux.HVACAux.SystemConfiguration, true);
@@ -170,7 +170,7 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 				CompletedVehicle.NumberOfPassengersLowerDeck);
 			var height = DeclarationData.BusAuxiliaries.CalculateInternalHeight(CompletedVehicle.FloorType,
 																				IsDoubleDecker, CompletedVehicle.Height);
-			var volume = length * height * CompletedVehicle.Width;
+			var volume = length * height * DeclarationData.BusAuxiliaries.CorrectedBusWidth(CompletedVehicle.Width);
 
 			var hvacConfiguration = CompletedVehicle.Components.BusAuxiliaries.HVACAux.SystemConfiguration;
 

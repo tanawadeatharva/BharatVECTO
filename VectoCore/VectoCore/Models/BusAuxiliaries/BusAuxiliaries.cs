@@ -81,6 +81,7 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			if (auxConfig == null) {
 				throw new VectoException("Auxiliary configuration missing!");
 			}
+
 			var ssmTool = new SSMTOOL(auxConfig.SSMInputs);
 			var M14 = new M14aImpl(ssmTool);
 			return M14.AuxHeaterDemand(cycleTime, engineWasteHeatTotal);
@@ -197,7 +198,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 		public NormLiter PSAirGenerated
 		{
 			get {
-				if (M6.OverrunFlag && Signals.ClutchEngaged && !Signals.InNeutral) {
+				if (auxConfig.PneumaticUserInputsConfig.SmartAirCompression && M6.OverrunFlag && Signals.ClutchEngaged &&
+					!Signals.InNeutral) {
 					if (M8.CompressorFlag) {
 						return M4.GetFlowRate() *
 								auxConfig.PneumaticAuxillariesConfig.OverrunUtilisationForCompressionFraction
@@ -299,6 +301,5 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries
 			foreach (var moduel in modules)
 				moduel.ResetCalculations();
 		}
-
 	}
 }

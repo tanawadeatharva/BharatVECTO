@@ -83,7 +83,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", new[] { FuelData.Diesel }, fileWriter);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
+				RunData =  new VectoRunData() {
+					VehicleData = vehicleData,
+				}
+			};
 
 			var driver = new Driver(container, driverData, new DefaultDriverStrategy(container));
 			var engine = new CombustionEngine(container, engineData);
@@ -129,7 +133,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrain");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrain", new[] { FuelData.Diesel }, fileWriter);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
+				RunData = new VectoRunData() { VehicleData = vehicleData }
+			};
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
@@ -201,8 +207,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var fileWriter = new FileOutputWriter("Coach_MinimalPowertrainOverload");
 			var modData = new ModalDataContainer("Coach_MinimalPowertrainOverload", new[] { FuelData.Diesel }, fileWriter);
-			var container = new VehicleContainer(ExecutionMode.Engineering, modData);
-			container.RunData = new VectoRunData() { SimulationType = SimulationType.DistanceCycle };
+			var container = new VehicleContainer(ExecutionMode.Engineering, modData) {
+				RunData = new VectoRunData() {
+					SimulationType = SimulationType.DistanceCycle,
+					VehicleData = vehicleData,
+				}
+			};
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			cycle.AddComponent(new Driver(container, driverData, new DefaultDriverStrategy(container)))

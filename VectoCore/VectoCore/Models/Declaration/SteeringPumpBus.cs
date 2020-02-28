@@ -37,8 +37,8 @@ namespace TUGraz.VectoCore.Models.Declaration {
 				var powerDemandTubing = (Constants.BusParameters.Auxiliaries.SteeringPump.TubingLoss * 2 *
 										(vehicleLength - Constants.BusParameters.Auxiliaries.SteeringPump.LengthBonus) *
 										Constants.BusParameters.Auxiliaries.SteeringPump.VolumeFlow).Cast<Watt>();
-				var tubingFactor = i == 0 ? techLookup.TubingFactor : 0.0;
-				var axleFactor = i == 0 ? 1.0 : techLookup.AxleFactor;
+				var tubingFactor = techLookup.TubingFactor;
+				var axleFactor = techLookup.AxleFactor;
 
 				powerDemand += baseDemand * axleFactor + powerDemandTubing * tubingFactor;
 			}
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 		{
 			#region Overrides of LookupData
 
-			protected override string ResourceId { get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.SP-Axles.csv"; } }
+			protected override string ResourceId { get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.SP-Axles_Bus.csv"; } }
 			protected override string ErrorMessage { get { return "Auxiliary Lookup Error: No value found for Steering Pump. Mission: '{0}', HDVClass: '{1}'"; } }
 			protected override void ParseData(DataTable table)
 			{
@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.Declaration {
 		{
 			#region Overrides of LookupData
 
-			protected override string ResourceId { get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.SP-Factors.csv"; } }
+			protected override string ResourceId { get { return DeclarationData.DeclarationDataResourcePrefix + ".VAUXBus.SP-Factors_Bus.csv"; } }
 			protected override string ErrorMessage { get { return "Auxiliary Lookup Error: No value found for Steering Pump. Mission: '{0}', HDVClass: '{1}'"; } }
 			protected override void ParseData(DataTable table)
 			{

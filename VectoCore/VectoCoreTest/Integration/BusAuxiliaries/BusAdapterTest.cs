@@ -36,6 +36,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Tests.Utils;
 using System.IO;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 {
@@ -50,12 +51,12 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 
 
 		[Test]
-		[TestCase(12000, 1256, 148, 148, 6086.9321)]
-		[TestCase(12000, 1256, -48, -148, 6086.9321)]
-		[TestCase(12000, 1256, 48, -148, 6086.9321)]
-		[TestCase(12000, 800, 148, 148, 6377.0923)]
-		[TestCase(12000, 800, -48, -148, 6377.0923)]
-		[TestCase(12000, 800, 48, -148, 6377.0923)]
+		[TestCase(12000, 1256, 148, 148, 6087.03221)]
+		[TestCase(12000, 1256, -48, -148, 6087.03221)]
+		[TestCase(12000, 1256, 48, -148, 6087.03221)]
+		[TestCase(12000, 800, 148, 148, 6377.2027)]
+		[TestCase(12000, 800, -48, -148, 6377.2027)]
+		[TestCase(12000, 800, 48, -148, 6377.2027)]
 		public void TestNoSmartAuxDuringDrive(double vehicleWeight, double engineSpeedRpm, double driveLinePower,
 			double internalPower, double expectedPowerDemand)
 		{
@@ -63,6 +64,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
 
 			driver.DriverBehavior = DrivingBehavior.Driving;
+			driver.DrivingAction = DrivingAction.Accelerate;
 
 			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
 			var engineSpeed = engineSpeedRpm.RPMtoRad();
@@ -75,16 +77,16 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		}
 
 		[Test]
-		[TestCase(12000, 1256, 148, 148, 6086.9321)]
-		[TestCase(12000, 1256, -28, -27, 6086.9321)]
-		[TestCase(12000, 1256, -28, -29, 6086.9321)]
-		[TestCase(12000, 1256, -128, -28, 6086.9321)]
-		[TestCase(12000, 1256, 28, -28, 6086.9321)]
-		[TestCase(12000, 800, 148, 148, 6377.0923)]
-		[TestCase(12000, 800, -14, -13, 6377.0923)]
-		[TestCase(12000, 800, -14, -15, 6377.0923)]
-		[TestCase(12000, 800, -35, -14, 6377.0923)]
-		[TestCase(12000, 800, 35, -14, 6377.0923)]
+		[TestCase(12000, 1256, 148, 148, 6087.0322)]
+		[TestCase(12000, 1256, -28, -27, 6087.0322)]
+		[TestCase(12000, 1256, -28, -29, 6087.0322)]
+		[TestCase(12000, 1256, -128, -28, 6087.03221)]
+		[TestCase(12000, 1256, 28, -28, 6087.0322)]
+		[TestCase(12000, 800, 148, 148, 6377.2027)]
+		[TestCase(12000, 800, -14, -13, 6377.2027)]
+		[TestCase(12000, 800, -14, -15, 6377.2027)]
+		[TestCase(12000, 800, -35, -14, 6377.2027)]
+		[TestCase(12000, 800, 35, -14, 6377.2027)]
 		public void TestNoSmartAuxDuringCoasting(double vehicleWeight, double engineSpeedRpm, double driveLinePower,
 			double internalPower, double expectedPowerDemand)
 		{
@@ -95,6 +97,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
 
 			driver.DriverBehavior = DrivingBehavior.Coasting;
+			driver.DrivingAction = DrivingAction.Coast;
 
 			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
 			var engineSpeed = engineSpeedRpm.RPMtoRad();
@@ -107,10 +110,10 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 		}
 
 		[Test]
-		[TestCase(12000, 1256, -48, -148, 8954.1396)]
-		[TestCase(12000, 1256, 48, -148, 8954.1396)]
-		[TestCase(12000, 800, -48, -148, 8281.5088)]
-		[TestCase(12000, 800, 48, -148, 8281.5088)]
+		[TestCase(12000, 1256, -48, -28, 8954.1429)] // smart PS active - power demand below engine drag
+		[TestCase(12000, 1256, 48, -28, 6087.0322)] // no smart aux active - positive power demand
+		[TestCase(12000, 800, -48, -28, 8281.5129)] // smart PS active - power demand below engine drag
+		[TestCase(12000, 800, 48, -28, 6377.2027)] // no smart aux active - positive power demand
 		public void TestSmartAuxDuringBrake(double vehicleWeight, double engineSpeedRpm, double driveLinePower,
 			double internalPower, double expectedPowerDemand)
 		{
@@ -118,6 +121,7 @@ namespace TUGraz.VectoCore.Tests.Integration.BusAuxiliaries
 			var busAux = AuxDemandTest.CreateBusAuxAdapterForTesting(vehicleWeight, out driver);
 
 			driver.DriverBehavior = DrivingBehavior.Braking;
+			driver.DrivingAction = DrivingAction.Brake;
 
 			var engineDrivelinePower = (driveLinePower * 1000).SI<Watt>();
 			var engineSpeed = engineSpeedRpm.RPMtoRad();

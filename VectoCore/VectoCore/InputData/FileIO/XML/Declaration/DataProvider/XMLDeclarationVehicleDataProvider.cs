@@ -645,21 +645,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			SourceType = DataSourceType.XMLEmbedded;
 		}
 
-		#region Overrides of AbstractCommonComponentType
-
-		public override string Manufacturer
-		{
-			get { return GetString(XMLNames.ManufacturerPrimaryVehicle); }
-		}
-
-		public override string ManufacturerAddress
-		{
-			get { return GetString(XMLNames.ManufacturerAddressPrimaryVehicle); }
-		}
-
-		#endregion
-
-
+		
 		#region Overrides of XMLDeclarationVehicleDataProviderV10
 
 		public override IAdvancedDriverAssistantSystemDeclarationInputData ADAS
@@ -671,6 +657,15 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get { return null; }
 		}
+
+		#region Overrides of XMLDeclarationVehicleDataProviderV10
+
+		public override LegislativeClass LegislativeClass
+		{
+			get { return LegislativeClass.M3; }
+		}
+
+		#endregion
 
 		public override IPTOTransmissionInputData PTOTransmissionInputData
 		{
@@ -787,21 +782,6 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			SourceType = DataSourceType.XMLEmbedded;
 		}
-
-
-		#region Overrides of AbstractCommonComponentType
-
-		public override string Manufacturer
-		{
-			get { return GetString(XMLNames.ManufacturerCompletedVehicle); }
-		}
-
-		public override string ManufacturerAddress
-		{
-			get { return GetString(XMLNames.ManufacturerAddressCompletedVehicle); }
-		}
-
-		#endregion
 
 
 		#region Overrides of XMLDeclarationVehicleDataProviderV10

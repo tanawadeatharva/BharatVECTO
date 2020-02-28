@@ -61,6 +61,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 		Class15,
 		Class16,
 		Class17,
+		ClassP31SD,
+		ClassP31DD,
+		ClassP32SD,
+		ClassP32DD,
+		ClassP33SD,
+		ClassP33DD,
+		ClassP34SD,
+		ClassP34DD,
+		ClassP35SD,
+		ClassP35DD,
+		ClassP36SD,
+		ClassP36DD,
+		ClassP37SD,
+		ClassP37DD,
+		ClassP38SD,
+		ClassP38DD,
+		ClassP39SD,
+		ClassP39DD,
+		ClassP40SD,
+		ClassP40DD,
 		ClassPB41,
 		ClassPB42,
 		ClassPB43,
@@ -82,7 +102,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return hdvClass == VehicleClass.Unknown ? "-" : hdvClass.ToString().Substring(Prefix.Length);
 		}
 
-		public static bool IsMediumLorry(VehicleClass vehicleClass)
+		public static bool IsMediumLorry(this VehicleClass vehicleClass)
 		{
 			switch (vehicleClass) {
 				case VehicleClass.ClassML2r:

@@ -234,7 +234,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected virtual XElement GetADAS(VehicleData.ADASData adasData)
 		{
-			if (adasData.InputData.XMLSource == null) {
+			if (adasData.InputData.XMLSource == null || XMLHelper.GetVersion(adasData.InputData.XMLSource) < 2.0) {
 				return CreateADAS(adasData);
 			}
 
@@ -327,6 +327,21 @@ namespace TUGraz.VectoCore.OutputData.XML
 					gearboxData.Gears[gearboxData.Gears.Keys.Max()].Ratio.ToXMLFormat(3))
 			);
 		}
+
+		protected virtual XElement GetGearboxDescription(GearboxData gearboxData, AxleGearData axlegearData)
+		{
+			return new XElement(
+				tns + XMLNames.Component_Gearbox,
+				GetCommonDescription(gearboxData),
+				new XElement(tns + XMLNames.Gearbox_TransmissionType, gearboxData.Type.ToXMLFormat()),
+				new XElement(tns + XMLNames.Report_GetGearbox_GearsCount, gearboxData.Gears.Count),
+				new XElement(tns + XMLNames.Gearbox_AxlegearRatio, axlegearData.AxleGear.Ratio.ToXMLFormat(3)),
+				new XElement(
+					tns + XMLNames.Report_Gearbox_TransmissionRatioFinalGear,
+					gearboxData.Gears[gearboxData.Gears.Keys.Max()].Ratio.ToXMLFormat(3))
+			);
+		}
+
 
 		protected virtual XElement GetTorqueConverterDescription(TorqueConverterData torqueConverterData)
 		{

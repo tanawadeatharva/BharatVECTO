@@ -254,7 +254,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             AssertHelper.AreRelativeEqual(105.KMPHtoMeterPerSecond(), curve[10].Velocity);
             AssertHelper.AreRelativeEqual(6.33112792.SI<SquareMeter>(), curve[10].EffectiveCrossSectionArea);
 
-			Assert.IsTrue(curve.Count >= 20);
+
+			Assert.AreEqual(16, curve.Count);
         }
 
         [
@@ -404,28 +405,28 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             AssertHelper.Exception<VectoException>(() => DeclarationData.Fan.Lookup(vehicleClass, missionType, technology));
         }
 
-        [TestCase(VehicleClass.ClassML2r, new[] { 0, 150, 150, 0, 0 }),
-        TestCase(VehicleClass.ClassML2van, new[] { 0, 150, 150, 0, 0 }),
-        TestCase(VehicleClass.ClassML3r, new[] { 0, 150, 150, 0, 0 }),
-        TestCase(VehicleClass.ClassML3van, new[] { 0, 150, 150, 0, 0 }),
-        TestCase(VehicleClass.ClassML4r, new[] { 0, 150, 150, 0, 0 }),
-        TestCase(VehicleClass.ClassML4van, new[] { 0, 150, 150, 0, 0 }),
-		TestCase(VehicleClass.Class1s, new[] { 0, 150, 150, 0, 0 }),
-        TestCase(VehicleClass.Class1, new[] { 0, 150, 150, 0, 0 }),
-        TestCase(VehicleClass.Class2, new[] { 200, 200, 150, 0, 0 }),
-        TestCase(VehicleClass.Class3, new[] { 0, 200, 150, 0, 0 }),
+        [TestCase(VehicleClass.ClassML2r, new[] { 200, 150, 150, -1, -1 }),
+        TestCase(VehicleClass.ClassML2van, new[] { 200, 150, 150, -1, -1 }),
+        TestCase(VehicleClass.ClassML3r, new[] { 200, 150, 150, -1, -1 }),
+        TestCase(VehicleClass.ClassML3van, new[] { 200, 150, 150, -1, -1 }),
+        TestCase(VehicleClass.ClassML4r, new[] { 200, 150, 150, -1, -1 }),
+        TestCase(VehicleClass.ClassML4van, new[] { 200, 150, 150, -1, -1 }),
+		TestCase(VehicleClass.Class1s, new[] { 200, 150, 150, -1, -1 }),
+        TestCase(VehicleClass.Class1, new[] { 200, 150, 150, -1, -1 }),
+        TestCase(VehicleClass.Class2, new[] { 200, 200, 150, -1, -1 }),
+        TestCase(VehicleClass.Class3, new[] { 275, 200, 150, -1, -1 }),
         TestCase(VehicleClass.Class4, new[] { 350, 200, 150, 300, 200 }),
-        TestCase(VehicleClass.Class5, new[] { 350, 200, 150, 0, 200 }),
+        TestCase(VehicleClass.Class5, new[] { 350, 200, 150, -1, 200 }),
         TestCase(VehicleClass.Class9, new[] { 350, 200, 150, 300, 200 }),
-        TestCase(VehicleClass.Class10, new[] { 350, 200, 0, 0, 200 }),
-        TestCase(VehicleClass.Class11, new[] { 350, 200, 0, 300, 200 }),
-        TestCase(VehicleClass.Class12, new[] { 350, 200, 0, 0, 200 }),
-        TestCase(VehicleClass.Class16, new[] { 0, 0, 0, 0, 200 })]
+        TestCase(VehicleClass.Class10, new[] { 350, 200, -1, -1, 200 }),
+        TestCase(VehicleClass.Class11, new[] { 350, 200, -1, 300, 200 }),
+        TestCase(VehicleClass.Class12, new[] { 350, 200, -1, -1, 200 }),
+        TestCase(VehicleClass.Class16, new[] { -1, -1, - 1, -1, 200 })]
         public void AuxHeatingVentilationAirConditionTest_Default(VehicleClass vehicleClass, int[] expected)
         {
             for (var i = 0; i < expected.Length; i++)
             {
-                if (expected[i] > 0)
+                if (expected[i] >= 0)
                 {
                     AssertHelper.AreRelativeEqual(expected[i],
                         DeclarationData.HeatingVentilationAirConditioning.Lookup(_missions[i], "Default", vehicleClass)
@@ -595,17 +596,17 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             Assert.AreEqual(first.Value(), last.Value(), 1e-3);
         }
 
-        [TestCase(MissionType.LongHaul, VehicleClass.Class1s, "Dual displacement",
-			TestName = "Aux_SteeringPumpLookupFail( No Value )"),
-		TestCase(MissionType.LongHaul, VehicleClass.Class1, "Dual displacement",
-            TestName = "Aux_SteeringPumpLookupFail( No Value )"),
+        [TestCase(MissionType.LongHaul, VehicleClass.Class1s, 
+			TestName = "Aux_SteeringPumpLookupFail class 1s ( No Value )"),
+		TestCase(MissionType.LongHaul, VehicleClass.Class1, 
+            TestName = "Aux_SteeringPumpLookupFail class 1 ( No Value )"),
         TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, "Super displacement",
-            TestName = "Aux_SteeringPumpLookupFail( Wrong Tech )"),
+            TestName = "Aux_SteeringPumpLookupFail class 2 ( Wrong Tech )"),
         TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, "Dual displacement", "Dual displacement",
-            "Dual displacement", "Dual displacement", "Dual displacement", TestName = "Aux_SteeringPumpLookupFail( >4 Techs )"),
-        TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, TestName = "Aux_SteeringPumpLookupFail( Null Techs )"),
+            "Dual displacement", "Dual displacement", "Dual displacement", TestName = "Aux_SteeringPumpLookupFail class 2( >4 Techs )"),
+        TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, TestName = "Aux_SteeringPumpLookupFail class 2( Null Techs )"),
         TestCase(MissionType.RegionalDelivery, VehicleClass.Class2, new string[0],
-            TestName = "Aux_SteeringPumpLookupFail( 0 Techs )"),
+            TestName = "Aux_SteeringPumpLookupFail class 2 ( 0 Techs )"),
         ]
         public void Aux_SteeringPumpLookupFail(MissionType mission, VehicleClass hdvClass, params string[] tech)
         {
@@ -616,7 +617,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             TestCase(0),
             TestCase(1000),
             TestCase(3500),
-            TestCase(7500)
+            //TestCase(7500)
         ]
         public void SegmentWeightOutOfRange4X2(double weight)
         {
@@ -2015,10 +2016,10 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
             CollectionAssert.AreEqual(trailerAxleCount, m.Trailer.Select(t => t.TrailerWheels.Count));
             Assert.IsNotNull(m.CycleFile);
             Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(m.CycleFile).ReadLine()));
-            Assert.AreEqual(0.SI<Kilogram>(), m.MinLoad);
+            Assert.AreEqual(null, m.MinLoad);
             AssertHelper.AreRelativeEqual(lowLoad, m.LowLoad);
             AssertHelper.AreRelativeEqual(refLoad, m.RefLoad);
-            Assert.AreEqual(maxLoad.SI<Kilogram>(), m.MaxLoad);
+            Assert.AreEqual(maxLoad.SI<Kilogram>(), m.MaxPayload);
             CollectionAssert.AreEqual(trailerGrossVehicleWeight, m.Trailer.Select(t => t.TrailerGrossVehicleWeight.Value()));
             Assert.AreEqual(
                 VectoMath.Min(
@@ -2027,7 +2028,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
                     ems ? 60000.SI<Kilogram>() : 40000.SI<Kilogram>())
                 - m.BodyCurbWeight - m.Trailer.Sum(t => t.TrailerCurbWeight).DefaultIfNull(0) -
                 vehicleData.CurbWeight,
-                m.MaxLoad);
+                m.MaxPayload);
             Assert.AreEqual(deltaCdA.SI<SquareMeter>(),
                 m.Trailer.Sum(t => t.DeltaCdA).DefaultIfNull(0));
         }

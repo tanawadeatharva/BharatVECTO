@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.XML
 	{
 
 		private const string vehilcePIFExample =
-			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.6_Buses/example_heavyBus_PIF.xml";
+			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.6_Buses/PIF-heavyBus-sample.xml";
 
 		protected IXMLInputDataReader xmlInputReader;
 		private IKernel _kernel;
@@ -265,26 +265,7 @@ namespace TUGraz.VectoCore.Tests.XML
 			
 			Assert.AreEqual(1, auxiliaries.ElectricSupply.Alternators.Count);
 			Assert.AreEqual("default", auxiliaries.ElectricSupply.Alternators[0].Technology);
-			Assert.AreEqual(1.0000, auxiliaries.ElectricSupply.Alternators[0].Ratio);
 			Assert.AreEqual(false, auxiliaries.ElectricSupply.SmartElectrics);
-
-			//Assert.AreEqual(2, auxiliaries.ElectricSupply.ResultCards.Idle.Count);
-			//Assert.AreEqual(0.00, auxiliaries.ElectricSupply.ResultCards.Idle[0].Current.Value());
-			//Assert.AreEqual(0.00, auxiliaries.ElectricSupply.ResultCards.Idle[0].SmartCurrent.Value());
-			//Assert.AreEqual(100.00, auxiliaries.ElectricSupply.ResultCards.Idle[1].Current.Value());
-			//Assert.AreEqual(120.00, auxiliaries.ElectricSupply.ResultCards.Idle[1].SmartCurrent.Value());
-
-			//Assert.AreEqual(2, auxiliaries.ElectricSupply.ResultCards.Traction.Count);
-			//Assert.AreEqual(0.00, auxiliaries.ElectricSupply.ResultCards.Traction[0].Current.Value());
-			//Assert.AreEqual(0.00, auxiliaries.ElectricSupply.ResultCards.Traction[0].SmartCurrent.Value());
-			//Assert.AreEqual(100.00, auxiliaries.ElectricSupply.ResultCards.Traction[1].Current.Value());
-			//Assert.AreEqual(120.00, auxiliaries.ElectricSupply.ResultCards.Traction[1].SmartCurrent.Value());
-
-			//Assert.AreEqual(2, auxiliaries.ElectricSupply.ResultCards.Overrun.Count);
-			//Assert.AreEqual(0.00, auxiliaries.ElectricSupply.ResultCards.Overrun[0].Current.Value());
-			//Assert.AreEqual(0.00, auxiliaries.ElectricSupply.ResultCards.Overrun[0].SmartCurrent.Value());
-			//Assert.AreEqual(100.00, auxiliaries.ElectricSupply.ResultCards.Overrun[1].Current.Value());
-			//Assert.AreEqual(120.00, auxiliaries.ElectricSupply.ResultCards.Overrun[1].SmartCurrent.Value());
 		}
 
 		private void TestPneumaticSystem(IPneumaticSupplyDeclarationData supply,

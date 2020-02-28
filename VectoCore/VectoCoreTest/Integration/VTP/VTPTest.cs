@@ -30,12 +30,15 @@
 */
 
 using System.IO;
+using System.Xml;
 using NUnit.Framework;
 using TUGraz.VectoCommon.Models;
 using TUGraz.VectoCore.InputData.FileIO.JSON;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.OutputData;
 using TUGraz.VectoCore.OutputData.FileIO;
+using TUGraz.VectoCore.Utils;
+using XmlDocumentType = TUGraz.VectoCore.Utils.XmlDocumentType;
 
 namespace TUGraz.VectoCore.Tests.Integration.VTP
 {
@@ -74,7 +77,6 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			jobContainer.WaitFinished();
 
 			Assert.AreEqual(true, jobContainer.AllCompleted);
-			
 		}
 
 		[Category("LongRunning")]
@@ -104,6 +106,11 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			jobContainer.WaitFinished();
 
 			Assert.AreEqual(true, jobContainer.AllCompleted);
+
+			var vtpReport = fileWriter.XMLVTPReportName;
+			var validator = new XMLValidator(XmlReader.Create(vtpReport));
+			validator.ValidateXML(XmlDocumentType.VTPReport);
+			Assert.IsNull(validator.ValidationError);
 		}
 
 		[Category("LongRunning")]
@@ -133,6 +140,38 @@ namespace TUGraz.VectoCore.Tests.Integration.VTP
 			jobContainer.WaitFinished();
 
 			Assert.AreEqual(true, jobContainer.AllCompleted);
+		}
+
+		[TestCase(@"TestData\Integration\VTPMode\MediumLorry\VTP_MediumLorry.vecto")]
+		public void RunVTPMediumLorry_Declaration(string jobFile)
+		{
+			var fileWriter = new FileOutputWriter(jobFile);
+			var sumWriter = new SummaryDataContainer(fileWriter);
+			var jobContainer = new JobContainer(sumWriter);
+			var dataProvider = JSONInputDataFactory.ReadJsonJob(jobFile);
+			var runsFactory = new SimulatorFactory(ExecutionMode.Declaration, dataProvider, fileWriter) {
+				ModalResults1Hz = false,
+				WriteModalResults = true,
+				ActualModalData = false,
+				Validate = false,
+			};
+
+			jobContainer.AddRuns(runsFactory);
+
+			Assert.AreEqual(2, jobContainer.Runs.Count);
+			//var i = 0;
+			//jobContainer.Runs[i].Run.Run();
+			//Assert.IsTrue(jobContainer.Runs[i].Run.FinishedWithoutErrors);
+
+			jobContainer.Execute();
+			jobContainer.WaitFinished();
+
+			Assert.AreEqual(true, jobContainer.AllCompleted);
+
+			var vtpReport = fileWriter.XMLVTPReportName;
+			var validator = new XMLValidator(XmlReader.Create(vtpReport));
+			validator.ValidateXML(XmlDocumentType.VTPReport);
+			Assert.IsNull(validator.ValidationError);
 		}
 	}
 }

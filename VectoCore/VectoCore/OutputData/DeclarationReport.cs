@@ -63,7 +63,8 @@ namespace TUGraz.VectoCore.OutputData
 		 * called after the simulation run providing the modal data of the simulation 
 		 * for the given configuration
 		 */
-		void AddResult(LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData, IModalDataContainer modData);
+		void AddResult(
+			LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData, IModalDataContainer modData);
 	}
 
 	public interface IResultEntry
@@ -87,7 +88,7 @@ namespace TUGraz.VectoCore.OutputData
 	/// <summary>
 	/// Class for creating a declaration report.
 	/// </summary>
-	public abstract class DeclarationReport<T> : IDeclarationReport where T : IResultEntry, new() 
+	public abstract class DeclarationReport<T> : IDeclarationReport where T : IResultEntry, new()
 	{
 		public class ResultContainer<TEntry>
 		{
@@ -104,7 +105,6 @@ namespace TUGraz.VectoCore.OutputData
 		//	new Dictionary<MissionType, ResultContainer<T>>();
 		//protected readonly Dictionary<int, Dictionary<MissionType, ResultContainer<T>>> Missions =
 		//new Dictionary<int, Dictionary<MissionType, ResultContainer<T>>>();
-
 		protected readonly List<T> Results = new List<T>();
 
 		/// <summary>
@@ -116,8 +116,6 @@ namespace TUGraz.VectoCore.OutputData
 		///// The declaration segment from the segment table
 		///// </summary>
 		//internal Segment? Segment { get; set; }
-
-
 		/// <summary>
 		/// The result count determines how many results must be given before the report gets written.
 		/// </summary>
@@ -167,11 +165,13 @@ namespace TUGraz.VectoCore.OutputData
 			_resultCount--;
 			if (_resultCount == 0) {
 				DoWriteReport();
+
 				//Flc = null;
 			}
 		}
 
-		public void AddResult(LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData,
+		public void AddResult(
+			LoadingType loadingType, Mission mission, int fuelMode, VectoRunData runData,
 			IModalDataContainer modData)
 		{
 			//if (!Missions.ContainsKey(fuelMode)) {
@@ -183,7 +183,6 @@ namespace TUGraz.VectoCore.OutputData
 			//if (mission.MissionType != MissionType.ExemptedMission && !Missions[fuelMode][mission.MissionType].ResultEntry.ContainsKey(loadingType)) {
 			//	throw new VectoException("Unknown loading type {0} for mission {1}", loadingType, mission.MissionType);
 			//}
-
 
 			//if (mission.MissionType != MissionType.ExemptedMission) {
 			//	DoAddResult(Missions[fuelMode][mission.MissionType].ResultEntry[loadingType], runData, modData);
@@ -199,6 +198,7 @@ namespace TUGraz.VectoCore.OutputData
 				entry.TotalVehicleWeight = runData.VehicleData.TotalVehicleMass;
 				entry.CargoVolume = runData.VehicleData.CargoVolume;
 				entry.VehicleClass = runData.VehicleData.VehicleClass;
+
 				// subtract driver!
 				entry.PassengerCount = (runData.BusAuxiliaries?.SSMInputs.NumberOfPassengers ?? 0) - 1;
 				Results.Add(entry);

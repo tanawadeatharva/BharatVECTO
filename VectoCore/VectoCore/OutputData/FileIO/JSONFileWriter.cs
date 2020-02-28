@@ -21,6 +21,8 @@ public class JSONFileWriter : IOutputFileWriter
 
 	private const int VectoJobFormatVersion = 5;
 
+	private const int VectoVTPJobFormatVersion = 4;
+
 	private static JSONFileWriter _instance;
 
 	public const string VECTOvers = "3";
@@ -451,14 +453,14 @@ public class JSONFileWriter : IOutputFileWriter
 
 	public void SaveJob(IVTPDeclarationInputDataProvider input, string filename, bool DeclMode)
 	{
-		var header = GetHeader(VectoJobFormatVersion);
+		var header = GetHeader(VectoVTPJobFormatVersion);
 		var body = SaveVTPJob(input.JobInputData, filename, true);
 		WriteFile(header, body, filename);
 	}
 
 	public void SaveJob(IVTPEngineeringInputDataProvider input, string filename, bool DeclMode)
 	{
-		var header = GetHeader(VectoJobFormatVersion);
+		var header = GetHeader(VectoVTPJobFormatVersion);
 		var body = SaveVTPJob(input.JobInputData, filename, false);
 		WriteFile(header, body, filename);
 	}

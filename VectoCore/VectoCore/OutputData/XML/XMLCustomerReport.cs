@@ -59,8 +59,10 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		protected readonly XElement Results;
 
-		protected readonly XNamespace tns;
-		protected readonly XNamespace di;
+		protected readonly XNamespace rootNS = XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput");
+		protected readonly XNamespace tns = XNamespace.Get("urn:tugraz:ivt:VectoAPI:CustomerOutput:v" + CURRENT_SCHEMA_VERSION);
+		protected readonly XNamespace di = XNamespace.Get("http://www.w3.org/2000/09/xmldsig#");
+		protected readonly XNamespace xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
 
 		private bool _allSuccess = true;
 
@@ -71,8 +73,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public XMLCustomerReport()
 		{
-			di = "http://www.w3.org/2000/09/xmldsig#";
-			tns = "urn:tugraz:ivt:VectoAPI:CustomerOutput:v" + CURRENT_SCHEMA_VERSION;
+			
 			VehiclePart = new XElement(tns + XMLNames.Component_Vehicle);
 			Results = new XElement(tns + XMLNames.Report_Results);
 		}
@@ -86,30 +87,38 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XElement(tns + XMLNames.Component_ManufacturerAddress, modelData.VehicleData.ManufacturerAddress),
 				new XElement(tns + XMLNames.Vehicle_VIN, modelData.VehicleData.VIN),
 				new XElement(tns + XMLNames.Vehicle_LegislativeClass, modelData.VehicleData.LegislativeClass.ToXMLFormat()),
-				new XElement(tns + XMLNames.Vehicle_GrossVehicleMass, XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleMass, XMLNames.Unit_t, 1)),
-				new XElement(tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbMass, XMLNames.Unit_kg)),
+				new XElement(
+					tns + XMLNames.Vehicle_GrossVehicleMass,
+					XMLHelper.ValueAsUnit(modelData.VehicleData.GrossVehicleMass, XMLNames.Unit_t, 1)),
+				new XElement(
+					tns + XMLNames.Vehicle_CurbMassChassis, XMLHelper.ValueAsUnit(modelData.VehicleData.CurbMass, XMLNames.Unit_kg)),
 				new XElement(tns + XMLNames.Vehicle_ZeroEmissionVehicle, modelData.VehicleData.ZeroEmissionVehicle),
 				new XElement(tns + XMLNames.Vehicle_HybridElectricHDV, modelData.VehicleData.HybridElectricHDV),
-				new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle),
+				new XElement(tns + XMLNames.Vehicle_DualFuelVehicle, modelData.VehicleData.DualFuelVehicle)
+			);
 
-				exempted ? ExemptedData(modelData) : new[] {
+			if (exempted) {
+				VehiclePart.Add(new XAttribute(xsi + "type", "ExemptedVehicleType"), 
+					ExemptedData(modelData));
+				Results.Add(new XElement(tns + XMLNames.Report_ExemptedVehicle));
+			} else {
+				VehiclePart.Add(
+					new XAttribute(xsi + "type", "VehicleType"),
 					new XElement(tns + XMLNames.Vehicle_AxleConfiguration, modelData.VehicleData.AxleConfiguration.GetName()),
 					new XElement(tns + XMLNames.Report_Vehicle_VehicleGroup, modelData.VehicleData.VehicleClass.GetClassNumber()),
 					new XElement(tns + XMLNames.Vehicle_VocationalVehicle, modelData.VehicleData.VocationalVehicle),
 					new XElement(tns + XMLNames.Vehicle_SleeperCab, modelData.VehicleData.SleeperCab),
-					GetADAS(modelData.VehicleData.ADAS)
-				}.Concat(ComponentData(modelData, fuelModes))
-				);
-			if (exempted) {
-				Results.Add(new XElement(tns + XMLNames.Report_ExemptedVehicle));
+					GetADAS(modelData.VehicleData.ADAS),
+					ComponentData(modelData, fuelModes)
+					);
 			}
 			InputDataIntegrity = new XElement(tns + XMLNames.Report_InputDataSignature,
 				modelData.InputDataHash == null ? CreateDummySig() : new XElement(modelData.InputDataHash));
 		}
 
-		private XElement[] ExemptedData(VectoRunData modelData)
+		private object[] ExemptedData(VectoRunData modelData)
 		{
-			return new[] {
+			return new object[] {
 				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower1, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower1, XMLNames.Unit_W)) : null,
 				modelData.VehicleData.HybridElectricHDV ? new XElement(tns + XMLNames.Vehicle_MaxNetPower2, XMLHelper.ValueAsUnit(modelData.VehicleData.MaxNetPower2, XMLNames.Unit_W)) : null
 			};
@@ -222,7 +231,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 
 		public void GenerateReport(XElement resultSignature)
 		{
-			var xsi = XNamespace.Get("http://www.w3.org/2001/XMLSchema-instance");
+			
 			var retVal = new XDocument();
 			var results = new XElement(Results);
 			results.AddFirst(new XElement(tns + XMLNames.Report_Result_Status, _allSuccess ? "success" : "error"));
@@ -242,14 +251,16 @@ namespace TUGraz.VectoCore.OutputData.XML
 			var vehicle = new XElement(VehiclePart);
 			vehicle.Add(InputDataIntegrity);
 			retVal.Add(new XProcessingInstruction("xml-stylesheet", "href=\"https://webgate.ec.europa.eu/CITnet/svn/VECTO/trunk/Share/XML/CSS/VectoReports.css\""));
-			retVal.Add(new XElement(tns + XMLNames.VectoCustomerReport,
-				new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
+			retVal.Add(new XElement(rootNS + XMLNames.VectoCustomerReport,
+				//new XAttribute("schemaVersion", CURRENT_SCHEMA_VERSION),
 				new XAttribute(XNamespace.Xmlns + "xsi", xsi.NamespaceName),
 				new XAttribute("xmlns", tns),
+				new XAttribute(XNamespace.Xmlns + "tns", rootNS),
 				new XAttribute(XNamespace.Xmlns + "di", di),
 				new XAttribute(xsi + "schemaLocation",
-					string.Format("{0} {1}VectoOutputCustomer.{2}.xsd", tns, AbstractXMLWriter.SchemaLocationBaseUrl, CURRENT_SCHEMA_VERSION)),
-				new XElement(tns + XMLNames.Report_DataWrap,
+					string.Format("{0} {1}VectoOutputCustomer.xsd", rootNS, AbstractXMLWriter.SchemaLocationBaseUrl)),
+				new XElement(rootNS + XMLNames.Report_DataWrap,
+					new XAttribute(xsi + "type", "VectoOutputDataType"),
 					vehicle,
 					new XElement(tns + XMLNames.Report_ResultData_Signature, resultSignature),
 					results,

@@ -203,6 +203,9 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static readonly MeterPerSecond MaxBusSpeed = 103.KMPHtoMeterPerSecond();
 
+			public static readonly Meter VehicleWidthLow = 2.5.SI<Meter>();
+			public static readonly Meter VehicleWidthHigh = 2.55.SI<Meter>();
+
 			public static class Auxiliaries
 			{
 				public static class SteeringPump
@@ -316,7 +319,7 @@ namespace TUGraz.VectoCore.Configuration
 				public const int VehicleSpeedStep = 5; // km/h
 
 				public const int MaxAlpha = 180; // degree
-				public const int AlphaStep = 5; // degree
+				public const int AlphaStep = 10; // degree
 
 				public const int MinHeight = 5; // percent
 				public const int MaxHeight = 100; // percent

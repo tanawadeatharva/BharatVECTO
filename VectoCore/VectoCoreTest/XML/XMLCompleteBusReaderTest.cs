@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Tests.XML
 	public class XMLCompleteBusReaderTest
 	{
 		private const string CompleteBusExample =
-			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.6_Buses/vecto_vehicle-completed_heavyBus.xml";
+			"TestData/XML/XMLReaderDeclaration/SchemaVersion2.6_Buses/vecto_vehicle-completed_heavyBus-sample.xml";
 
 
 
@@ -95,7 +95,6 @@ namespace TUGraz.VectoCore.Tests.XML
 			var electricSupl = components.BusAuxiliaries.ElectricSupply;
 			Assert.IsNotNull(electricSupl.Alternators);
 			Assert.AreEqual(1, electricSupl.Alternators.Count);
-			Assert.AreEqual(1.000, electricSupl.Alternators.First().Ratio);
 			Assert.AreEqual("default", electricSupl.Alternators.First().Technology);
 
 			Assert.AreEqual(ConsumerTechnology.Pneumatically, components.BusAuxiliaries.PneumaticConsumers.DoorDriveTechnology);
