@@ -123,8 +123,10 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl {
 				powertrainConfig = CreateVectoRunData(vehicle, 0, null, new KeyValuePair<LoadingType, Kilogram>());
 				fuels = new List<List<FuelData.Entry>>();
 			} else {
-				powertrainConfig = CreateVectoRunData(
-					vehicle, 0, _segment.Missions.First(), _segment.Missions.First().Loadings.First());
+				powertrainConfig = _segment.Missions.Select(
+												mission => CreateVectoRunData(
+													vehicle, 0, mission, mission.Loadings.First()))
+											.FirstOrDefault(x => x != null);
 				fuels = vehicle.Components.EngineInputData.EngineModes.Select(x => x.Fuels.Select(f => DeclarationData.FuelData.Lookup(f.FuelType, vehicle.TankSystem)).ToList())
 								.ToList();
 			}
