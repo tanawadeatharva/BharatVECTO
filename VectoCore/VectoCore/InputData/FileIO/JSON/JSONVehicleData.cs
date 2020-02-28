@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 		{
 			get {
 				return Body["Aux"]?["ElectricSupply"]?["Alternators"]
-							.Select(x => new AlternatorInputData(x.GetEx<string>("Technology"), x.GetEx<double>("Ratio")))
+							.Select(x => new AlternatorInputData(x.GetEx<string>("Technology")))
 							.Cast<IAlternatorDeclarationInputData>().ToList() ?? new List<IAlternatorDeclarationInputData>();
 			}
 		}

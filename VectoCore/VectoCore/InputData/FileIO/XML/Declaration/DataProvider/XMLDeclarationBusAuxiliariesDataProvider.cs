@@ -82,9 +82,7 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 		{
 			get {
 				return GetNodes(new[] { XMLNames.BusAux_ElectricSystem, XMLNames.BusAux_ElectricSystem_AlternatorTechnology })
-					.Cast<XmlNode>().Select(
-						x => new AlternatorInputData(
-							x.InnerText, GetAttribute(x, XMLNames.BusAux_ElectricSystem_Alternator_Ratio_Attr).ToDouble()))
+					.Cast<XmlNode>().Select(x => new AlternatorInputData(x.InnerText))
 					.Cast<IAlternatorDeclarationInputData>().ToList();
 			}
 		}
