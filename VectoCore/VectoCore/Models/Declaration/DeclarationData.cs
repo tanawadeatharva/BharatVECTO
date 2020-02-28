@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			{
 				get {
 					return actuationsMap ?? (actuationsMap = ActuationsMapReader.ReadStream(
-									RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultActuationsMap.APAC")));
+									RessourceHelper.ReadStream(DeclarationDataResourcePrefix + ".Buses.DefaultActuationsMap.apac")));
 				}
 			}
 

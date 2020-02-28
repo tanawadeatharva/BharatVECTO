@@ -523,6 +523,9 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 
 		public AxleGearData CreateDummyAxleGearData(IGearboxDeclarationInputData gbxData)
 		{
+			if (double.IsNaN(gbxData.AxlegearRatio)) {
+				throw new VectoException("Axlegear ratio required in gearbox data for gearboxes with included axlegear");
+			}
 			return new AxleGearData() {
 				AxleGear = new TransmissionData() {
 					Ratio = gbxData.AxlegearRatio,

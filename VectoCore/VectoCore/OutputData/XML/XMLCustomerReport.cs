@@ -258,7 +258,7 @@ namespace TUGraz.VectoCore.OutputData.XML
 				new XAttribute(XNamespace.Xmlns + "tns", rootNS),
 				new XAttribute(XNamespace.Xmlns + "di", di),
 				new XAttribute(xsi + "schemaLocation",
-					string.Format("{0} {1}VectoOutputCustomer.xsd", rootNS, AbstractXMLWriter.SchemaLocationBaseUrl)),
+					string.Format("{0} {1}DEV/VectoOutputCustomer.xsd", rootNS, AbstractXMLWriter.SchemaLocationBaseUrl)),
 				new XElement(rootNS + XMLNames.Report_DataWrap,
 					new XAttribute(xsi + "type", "VectoOutputDataType"),
 					vehicle,

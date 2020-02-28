@@ -221,10 +221,15 @@
 							<xs:documentation>P238 / II.1.1.1</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="LegislativeClass" type="vdecdef:LegislativeClassDeclarationType">
+					<xs:element name="LegislativeClass">
 						<xs:annotation>
 							<xs:documentation>P251 / II.1.1.2</xs:documentation>
 						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
 					</xs:element>
 					<xs:element name="GrossVehicleMass">
 						<xs:annotation>
@@ -519,13 +524,7 @@
 	</xs:simpleType>
 	<xs:simpleType name="MissionTypeType">
 		<xs:restriction base="xs:token">
-			<xs:enumeration value="Long Haul EMS"/>
-			<xs:enumeration value="Long Haul"/>
-			<xs:enumeration value="Regional Delivery EMS"/>
-			<xs:enumeration value="Regional Delivery"/>
-			<xs:enumeration value="Urban Delivery"/>
-			<xs:enumeration value="Municipal Utility"/>
-			<xs:enumeration value="Construction"/>
+			<xs:minLength value="1"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="PowerUnitType">

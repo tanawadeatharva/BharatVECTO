@@ -148,8 +148,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 			retVal.BusVolume = hvacBusLength * correctedBusWidth * hvacBusheight;
 			retVal.UValue = DeclarationData.BusAuxiliaries.UValue(CompletedVehicle.FloorType);
 			retVal.NumberOfPassengers =
-				(DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(hvacBusLength, correctedBusWidth) *
-				mission.BusParameter.PassengerDensity).LimitTo(0, CompletedVehicle.NuberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck) + 1; // add driver for 'heat input'
+			(DeclarationData.BusAuxiliaries.CalculateBusFloorSurfaceArea(hvacBusLength, correctedBusWidth) *
+			mission.BusParameter.PassengerDensity *
+			(loading == LoadingType.LowLoading ? mission.MissionType.GetLowLoadFactorBus() : 1.0)).LimitTo(
+				0, CompletedVehicle.NuberOfPassengersUpperDeck + CompletedVehicle.NumberOfPassengersLowerDeck) + 1; // add driver for 'heat input'
 			retVal.VentilationRate = DeclarationData.BusAuxiliaries.VentilationRate(busAux.HVACAux.SystemConfiguration, false);
 			retVal.VentilationRateHeating = DeclarationData.BusAuxiliaries.VentilationRate(busAux.HVACAux.SystemConfiguration, true);
 

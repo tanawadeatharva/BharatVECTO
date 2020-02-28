@@ -66,6 +66,9 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				foreach (var mission in _segment.Missions) {
 					foreach (var loading in mission.Loadings) {
 						var simulationRunData = CreateVectoRunData(vehicle, modeIdx, mission, loading);
+						if (simulationRunData == null) {
+							continue;
+						}
 						yield return simulationRunData;
 					}
 				}

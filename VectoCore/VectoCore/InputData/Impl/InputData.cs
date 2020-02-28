@@ -191,17 +191,16 @@ namespace TUGraz.VectoCore.InputData.Impl
 
 	public class AlternatorInputData : IAlternatorDeclarationInputData
 	{
-		public AlternatorInputData(string technology, double ratio)
+		public AlternatorInputData(string technology)
 		{
 			Technology = technology;
-			Ratio = ratio;
+			
 		}
 
 		#region Implementation of IAlternatorDeclarationInputData
 
 		public virtual string Technology { get; }
-		public virtual double Ratio { get; }
-
+		
 		#endregion
 	}
 
