@@ -76,6 +76,21 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 			var angledriveData = dao.CreateAngledriveData(vehicle.Components.AngledriveInputData);
 			var ptoTransmissionData = dao.CreatePTOTransmissionData(vehicle.Components.PTOTransmissionInputData);
 
+			if (InputDataProvider.JobInputData.Vehicle.PTO_DriveGear.HasValue &&
+				InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed != null) {
+				driver.PTODriveMinSpeed = InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed /
+										axlegearData.AxleGear.Ratio /
+										gearboxData.Gears[InputDataProvider.JobInputData.Vehicle.PTO_DriveGear.Value].Ratio /
+										(angledriveData?.Angledrive.Ratio ?? 1.0) * vehicle.DynamicTyreRadius;
+				driver.PTODriveRoadsweepingGear = InputDataProvider.JobInputData.Vehicle.PTO_DriveGear.Value;
+				engineData.PTORoadSweepEngineSpeed = InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed;
+			}
+
+			var ptoCycleWhileDrive = InputDataProvider.JobInputData.PTOCycleWhileDrive != null
+				? DrivingCycleDataReader.ReadFromDataTable(InputDataProvider.JobInputData.PTOCycleWhileDrive, "PTO During Drive", false)
+				: null;
+
+
 			return InputDataProvider.JobInputData.Cycles.Select(cycle => {
 				var drivingCycle = CyclesCache.ContainsKey(cycle.CycleData.Source)
 					? CyclesCache[cycle.CycleData.Source]
@@ -96,7 +111,8 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 					PTO = ptoTransmissionData,
 					Cycle = new DrivingCycleProxy(drivingCycle, cycle.Name),
 					ExecutionMode = ExecutionMode.Engineering,
-					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel
+					SimulationType = SimulationType.DistanceCycle | SimulationType.MeasuredSpeedCycle | SimulationType.PWheel,
+					PTOCycleWhileDrive = ptoCycleWhileDrive
 				};
 			});
 		}

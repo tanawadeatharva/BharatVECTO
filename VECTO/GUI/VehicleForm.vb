@@ -67,6 +67,7 @@ Public Class VehicleForm
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
 		'gbPTO.Enabled = Not Cfg.DeclMode
 		pnPTO.Enabled = Not Cfg.DeclMode
+        tpRoadSweeper.Visible = Not cfg.DeclMode
 
 		CbCdMode.ValueMember = "Value"
 		CbCdMode.DisplayMember = "Label"
@@ -411,6 +412,9 @@ Public Class VehicleForm
             cbPcc.SelectedValue = PredictiveCruiseControlType.None
             cbEcoRoll.SelectedValue = EcoRollType.None
             cbEngineStopStart.Checked = False
+
+            tbPtoEngineSpeed.Text = vehicle.PTO_DriveEngineSpeed?.AsRPM.ToGUIFormat()
+            tbPtoGear.Text = if (vehicle.PTO_DriveGear.HasValue, vehicle.PTO_DriveGear.Value.ToString() ,"")
         End If
 
 		LvRRC.Items.Clear()
@@ -545,6 +549,8 @@ Public Class VehicleForm
 
         veh.VehicleTankSystem = CType(If(cbTankSystem.SelectedIndex > 0, cbTankSystem.SelectedValue, nothing), TankSystem?)
 
+        veh.GearDuringPTODrive = If(string.IsNullOrWhiteSpace(tbPtoGear.Text), nothing, CType(tbPtoGear.Text.ToInt(), UInteger?))
+        veh.EngineSpeedDuringPTODrive = if(string.IsNullOrWhiteSpace(tbPtoEngineSpeed.Text), Nothing, tbPtoEngineSpeed.Text.ToDouble().RPMtoRad())
 		'---------------------------------------------------------------------------------
 		If Not veh.SaveFile Then
 			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)

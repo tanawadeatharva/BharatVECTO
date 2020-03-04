@@ -45,6 +45,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[Required, ValidateObject] public AccelerationCurveData AccelerationCurve;
 
+		public MeterPerSecond PTODriveMinSpeed { get; set; }
+		public uint PTODriveRoadsweepingGear { get; set; }
+
 		public static DriverMode ParseDriverMode(string mode)
 		{
 			return mode.Replace("-", "").ParseEnum<DriverMode>();

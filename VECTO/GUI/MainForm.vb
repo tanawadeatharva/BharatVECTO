@@ -141,6 +141,9 @@ Imports TUGraz.VectoCore.Utils
         DriverDecisionFactorVelocityDropFileBrowser.Extensions = New String() {"csv"}
         DriverDecisionFactorTargetSpeedFileBrowser.Extensions = New String() {"csv"}
 
+        PTOSideloadCycleBrowser = New FileBrowser("PTOSideLoaderCycle")
+        PTOSideloadCycleBrowser.Extensions = new String() {"vptor"}
+
         ModalResultsFileBrowser = New FileBrowser("vmod")
 
 

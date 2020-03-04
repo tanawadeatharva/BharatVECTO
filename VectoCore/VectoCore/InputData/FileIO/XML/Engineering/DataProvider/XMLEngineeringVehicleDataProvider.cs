@@ -203,6 +203,9 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Engineering.DataProvider
 			get { return null; }
 		}
 
+		public virtual uint? PTO_DriveGear { get { return null; } }
+		public virtual PerSecond PTO_DriveEngineSpeed { get { return null; } }
+
 
 		public IAdvancedDriverAssistantSystemsEngineering ADAS
 		{

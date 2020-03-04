@@ -231,6 +231,15 @@ Public Class JSONFileWriter
 				{"FzISO", axle.Tyre.TyreTestLoad.Value()},
 				{"Type", axle.AxleType.ToString()}                                                                                         
 				}}}}}
+        
+	    if (Not cfg.DeclMode) Then
+            if (not vehicle.PTO_DriveEngineSpeed is nothing) then
+                body.Add("EngineSpeedDuringPTODrive", vehicle.PTO_DriveEngineSpeed?.AsRPM)
+            End If
+            If (vehicle.PTO_DriveGear.HasValue) then
+                body.Add("GearDuringPTODrive", vehicle.PTO_DriveGear)
+            End If
+	    End If
         If (vehicle.TankSystem.HasValue) Then
             body("TankSystem") = vehicle.TankSystem.Value.ToString()
         End If
@@ -358,6 +367,11 @@ Public Class JSONFileWriter
 			body.Add("Cycles",
 					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 		End If
+
+        if (not job.PTOCycleWhileDrive Is Nothing) Then
+            body.Add("PTOCycleDuringDrive", GetRelativePath(job.PTOCycleWhileDrive.Source, basePath))
+        End If
+
 
 		WriteFile(header, body, filename)
 	End Sub

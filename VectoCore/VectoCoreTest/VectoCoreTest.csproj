@@ -107,6 +107,7 @@
     <Compile Include="Integration\Declaration\ExemptedVehicleTest.cs" />
     <Compile Include="Integration\Declaration\VocationalVehicleTest.cs" />
     <Compile Include="Integration\Declaration\TestMaxMassInMUCycle.cs" />
+    <Compile Include="Integration\RoadSweepers\RoadSweeperTests.cs" />
     <Compile Include="Integration\VTP\VTPTest.cs" />
     <Compile Include="Integration\FuelTypesTest.cs" />
     <Compile Include="Integration\FullCycleDeclarationTest.cs">
@@ -2417,6 +2418,90 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Results\Integration\job_1-Gear-Test-dist.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\324kW.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\350kW.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\AMT_12.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Axle_4x2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO-SideLoader.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_ENG_PTO.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Engine_324kW_12.7l.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_1.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_10.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_11.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_12.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_2.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_3.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_4.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_5.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_6.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_7.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_8.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Gear_9.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\PTO-cycle.vptor">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\PTO-cycle.vptoc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\PTO-idle.vptol">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\PTO_Sideloader.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\PTO_RoadSweeper.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\PTO_Collector.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Retarder.vrlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Truck.vacc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\test.csv">

@@ -138,6 +138,9 @@ Partial Class VehicleForm
         Me.Label18 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.GroupBox9 = New System.Windows.Forms.GroupBox()
+        Me.cbTankSystem = New System.Windows.Forms.ComboBox()
+        Me.Label23 = New System.Windows.Forms.Label()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.lvTorqueLimits = New System.Windows.Forms.ListView()
         Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
@@ -154,9 +157,13 @@ Partial Class VehicleForm
         Me.lblPCC = New System.Windows.Forms.Label()
         Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
-        Me.GroupBox9 = New System.Windows.Forms.GroupBox()
-        Me.Label23 = New System.Windows.Forms.Label()
-        Me.cbTankSystem = New System.Windows.Forms.ComboBox()
+        Me.tpRoadSweeper = New System.Windows.Forms.TabPage()
+        Me.GroupBox10 = New System.Windows.Forms.GroupBox()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.tbPtoEngineSpeed = New System.Windows.Forms.TextBox()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.tbPtoGear = New System.Windows.Forms.TextBox()
         Me.GroupBox6.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.GroupBox7.SuspendLayout
@@ -181,10 +188,12 @@ Partial Class VehicleForm
         Me.GroupBox4.SuspendLayout
         Me.Panel1.SuspendLayout
         Me.TabPage2.SuspendLayout
+        Me.GroupBox9.SuspendLayout
         Me.TabPage3.SuspendLayout
         Me.tpADAS.SuspendLayout
         Me.GroupBox5.SuspendLayout
-        Me.GroupBox9.SuspendLayout
+        Me.tpRoadSweeper.SuspendLayout
+        Me.GroupBox10.SuspendLayout
         Me.SuspendLayout
         '
         'Label1
@@ -1064,6 +1073,7 @@ Partial Class VehicleForm
         Me.TabControl1.Controls.Add(Me.TabPage2)
         Me.TabControl1.Controls.Add(Me.TabPage3)
         Me.TabControl1.Controls.Add(Me.tpADAS)
+        Me.TabControl1.Controls.Add(Me.tpRoadSweeper)
         Me.TabControl1.Location = New System.Drawing.Point(6, 173)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
@@ -1145,6 +1155,35 @@ Partial Class VehicleForm
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Powertrain"
         Me.TabPage2.UseVisualStyleBackColor = true
+        '
+        'GroupBox9
+        '
+        Me.GroupBox9.Controls.Add(Me.cbTankSystem)
+        Me.GroupBox9.Controls.Add(Me.Label23)
+        Me.GroupBox9.Location = New System.Drawing.Point(306, 7)
+        Me.GroupBox9.Name = "GroupBox9"
+        Me.GroupBox9.Size = New System.Drawing.Size(264, 63)
+        Me.GroupBox9.TabIndex = 5
+        Me.GroupBox9.TabStop = false
+        Me.GroupBox9.Text = "Tank System"
+        '
+        'cbTankSystem
+        '
+        Me.cbTankSystem.FormattingEnabled = true
+        Me.cbTankSystem.Location = New System.Drawing.Point(9, 33)
+        Me.cbTankSystem.Name = "cbTankSystem"
+        Me.cbTankSystem.Size = New System.Drawing.Size(247, 21)
+        Me.cbTankSystem.TabIndex = 1
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = true
+        Me.Label23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
+        Me.Label23.Location = New System.Drawing.Point(6, 16)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(187, 13)
+        Me.Label23.TabIndex = 0
+        Me.Label23.Text = "Only applicable for NG engines!"
         '
         'TabPage3
         '
@@ -1300,34 +1339,71 @@ Partial Class VehicleForm
         Me.Label21.TabIndex = 42
         Me.Label21.Text = "Maximum Laden Mass"
         '
-        'GroupBox9
+        'tpRoadSweeper
         '
-        Me.GroupBox9.Controls.Add(Me.cbTankSystem)
-        Me.GroupBox9.Controls.Add(Me.Label23)
-        Me.GroupBox9.Location = New System.Drawing.Point(306, 7)
-        Me.GroupBox9.Name = "GroupBox9"
-        Me.GroupBox9.Size = New System.Drawing.Size(264, 63)
-        Me.GroupBox9.TabIndex = 5
-        Me.GroupBox9.TabStop = false
-        Me.GroupBox9.Text = "Tank System"
+        Me.tpRoadSweeper.Controls.Add(Me.GroupBox10)
+        Me.tpRoadSweeper.Location = New System.Drawing.Point(4, 22)
+        Me.tpRoadSweeper.Name = "tpRoadSweeper"
+        Me.tpRoadSweeper.Size = New System.Drawing.Size(579, 355)
+        Me.tpRoadSweeper.TabIndex = 4
+        Me.tpRoadSweeper.Text = "Road Sweeper"
+        Me.tpRoadSweeper.UseVisualStyleBackColor = true
         '
-        'Label23
+        'GroupBox10
         '
-        Me.Label23.AutoSize = true
-        Me.Label23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0,Byte))
-        Me.Label23.Location = New System.Drawing.Point(6, 16)
-        Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(187, 13)
-        Me.Label23.TabIndex = 0
-        Me.Label23.Text = "Only applicable for NG engines!"
+        Me.GroupBox10.Controls.Add(Me.tbPtoGear)
+        Me.GroupBox10.Controls.Add(Me.Label26)
+        Me.GroupBox10.Controls.Add(Me.tbPtoEngineSpeed)
+        Me.GroupBox10.Controls.Add(Me.Label25)
+        Me.GroupBox10.Controls.Add(Me.Label24)
+        Me.GroupBox10.Location = New System.Drawing.Point(3, 3)
+        Me.GroupBox10.Name = "GroupBox10"
+        Me.GroupBox10.Size = New System.Drawing.Size(266, 80)
+        Me.GroupBox10.TabIndex = 0
+        Me.GroupBox10.TabStop = false
+        Me.GroupBox10.Text = "Road Sweeping Settings"
         '
-        'cbTankSystem
+        'Label24
         '
-        Me.cbTankSystem.FormattingEnabled = true
-        Me.cbTankSystem.Location = New System.Drawing.Point(9, 33)
-        Me.cbTankSystem.Name = "cbTankSystem"
-        Me.cbTankSystem.Size = New System.Drawing.Size(247, 21)
-        Me.cbTankSystem.TabIndex = 1
+        Me.Label24.AutoSize = true
+        Me.Label24.Location = New System.Drawing.Point(7, 24)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(97, 13)
+        Me.Label24.TabIndex = 0
+        Me.Label24.Text = "Min. Engine Speed"
+        '
+        'Label25
+        '
+        Me.Label25.AutoSize = true
+        Me.Label25.Location = New System.Drawing.Point(7, 50)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(30, 13)
+        Me.Label25.TabIndex = 1
+        Me.Label25.Text = "Gear"
+        '
+        'tbPtoEngineSpeed
+        '
+        Me.tbPtoEngineSpeed.Location = New System.Drawing.Point(140, 21)
+        Me.tbPtoEngineSpeed.Name = "tbPtoEngineSpeed"
+        Me.tbPtoEngineSpeed.Size = New System.Drawing.Size(70, 20)
+        Me.tbPtoEngineSpeed.TabIndex = 2
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = true
+        Me.Label26.Location = New System.Drawing.Point(216, 24)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(30, 13)
+        Me.Label26.TabIndex = 4
+        Me.Label26.Text = "[rpm]"
+        Me.Label26.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'tbPtoGear
+        '
+        Me.tbPtoGear.Location = New System.Drawing.Point(140, 47)
+        Me.tbPtoGear.Name = "tbPtoGear"
+        Me.tbPtoGear.Size = New System.Drawing.Size(70, 20)
+        Me.tbPtoGear.TabIndex = 5
         '
         'VehicleForm
         '
@@ -1394,13 +1470,16 @@ Partial Class VehicleForm
         Me.Panel1.ResumeLayout(false)
         Me.Panel1.PerformLayout
         Me.TabPage2.ResumeLayout(false)
+        Me.GroupBox9.ResumeLayout(false)
+        Me.GroupBox9.PerformLayout
         Me.TabPage3.ResumeLayout(false)
         Me.TabPage3.PerformLayout
         Me.tpADAS.ResumeLayout(false)
         Me.GroupBox5.ResumeLayout(false)
         Me.GroupBox5.PerformLayout
-        Me.GroupBox9.ResumeLayout(false)
-        Me.GroupBox9.PerformLayout
+        Me.tpRoadSweeper.ResumeLayout(false)
+        Me.GroupBox10.ResumeLayout(false)
+        Me.GroupBox10.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1528,4 +1607,11 @@ End Sub
     Friend WithEvents GroupBox9 As GroupBox
     Friend WithEvents cbTankSystem As ComboBox
     Friend WithEvents Label23 As Label
+    Friend WithEvents tpRoadSweeper As TabPage
+    Friend WithEvents GroupBox10 As GroupBox
+    Friend WithEvents tbPtoGear As TextBox
+    Friend WithEvents Label26 As Label
+    Friend WithEvents tbPtoEngineSpeed As TextBox
+    Friend WithEvents Label25 As Label
+    Friend WithEvents Label24 As Label
 End Class

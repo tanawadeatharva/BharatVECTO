@@ -171,6 +171,14 @@ namespace TUGraz.VectoCore.InputData.FileIO.JSON
 			get { return null; }
 		}
 
+		public uint? PTO_DriveGear { get {
+			return Body["GearDuringPTODrive"] != null ? Body["GearDuringPTODrive"].Value<uint>() : (uint?)null;
+		} }
+
+		public PerSecond PTO_DriveEngineSpeed { get {
+			return Body["EngineSpeedDuringPTODrive"] != null ? Body.GetEx<double>("EngineSpeedDuringPTODrive").RPMtoRad() : null;
+		} }
+
 		public virtual AxleConfiguration AxleConfiguration
 		{
 			get {
