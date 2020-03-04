@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Source = this,
 				DeltaFullLoad = 10 * deltaMax,
 				DeltaDragLoad = 10 * deltaMin,
-				TorqueConverterOperatingPoint = dryOperatingPointMax
+				TorqueConverterOperatingPoint = DataBus.DrivingAction == DrivingAction.Brake ? dryOperatingPointMin : dryOperatingPointMax
 			};
 		}
 
@@ -209,7 +209,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					engineResponse.DragPower - engineResponse.AuxiliariesPowerDemand,
 					DataBus.EngineSpeed, outAngularVelocity, _engineInertia, dt, previousPower);
 				var maxInputSpeed = VectoMath.Min(ModelData.TorqueConverterSpeedLimit, DataBus.EngineN95hSpeed);
-				var lowerInputSpeed = VectoMath.Max(DataBus.EngineIdleSpeed * 1.001, 0.8 * DataBus.EngineSpeed);
+				var lowerInputSpeed = DataBus.DrivingAction == DrivingAction.Brake
+					? DataBus.EngineIdleSpeed * 1.001
+					: VectoMath.Max(DataBus.EngineIdleSpeed * 1.001, 0.8 * DataBus.EngineSpeed);
 				var corrected = false;
 				if (operatingPoint.InAngularVelocity.IsGreater(maxInputSpeed)) {
 					operatingPoint = ModelData.FindOperatingPoint(maxInputSpeed, outAngularVelocity);
