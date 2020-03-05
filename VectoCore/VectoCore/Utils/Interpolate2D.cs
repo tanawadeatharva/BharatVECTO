@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Utils
 				_data.Rows[row.Value][col.Value] = GetZValue(entry);
 			}
 			stop.Stop();
-			Console.WriteLine("setData: {0}", stop.ElapsedMilliseconds);
+			//Console.WriteLine("setData: {0}", stop.ElapsedMilliseconds);
 		}
 
 		protected abstract TKeyX GetXValue(TEntry entry);
