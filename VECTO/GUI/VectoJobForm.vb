@@ -447,10 +447,7 @@ Public Class VectoJobForm
 		'Start/Stop
 		Dim driver As IDriverEngineeringInputData = inputData.DriverInputData
 
-	    tbPtoSideloadCycle.Enabled = not cfg.DeclMode
-	    btnPtoSideloadCycle.Enabled = not cfg.DeclMode
-        btPtoSideloadCycleSelect.Enabled = not cfg.DeclMode
-		If (Cfg.DeclMode) Then
+	    If (Cfg.DeclMode) Then
 			TbDesMaxFile.Text = ""
 			'AA-TB
 			'Try and Select any previously selected Auxiliary Type
@@ -469,7 +466,6 @@ Public Class VectoJobForm
 				Catch ex As Exception
 				End Try
 			Next
-           tbPtoSideloadCycle.Text = ""
 		Else
 			'VACC
 			TbDesMaxFile.Text =
@@ -503,7 +499,6 @@ Public Class VectoJobForm
 				LvAux.Items.Add(CreateAuxListEntry(entry.ID, AuxiliaryTypeHelper.ParseKey(entry.ID).Name,
 													If(entry.DemandMap Is Nothing, "", GetRelativePath(entry.DemandMap.Source, _basePath))))
 			Next
-            tbPtoSideloadCycle.Text = If(inputData.JobInputData.PTOCycleWhileDrive Is Nothing, "", GetRelativePath (inputData.JobInputData.PTOCycleWhileDrive.Source, _basePath))
 		End If
 
 		Try
@@ -658,8 +653,6 @@ Public Class VectoJobForm
 		vectoJob.LacDfScale = tbDfCoastingScale.Text.ToDouble(0)
 		vectoJob.LacDfTargetSpeedFile = tbLacDfTargetSpeedFile.Text
 		vectoJob.LacDfVelocityDropFile = tbLacDfVelocityDropFile.Text
-
-        vectoJob.PTOCycleWhileDriveFile = tbPtoSideloadCycle.Text
 		'------------------------------------------------------------
 
 		'SAVE
@@ -1524,12 +1517,6 @@ lbDlog:
 	Private Sub LvAux_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LvAux.SelectedIndexChanged
 	End Sub
 
-    Private Sub btPtoSideloadCycleSelect_Click(sender As Object, e As EventArgs) Handles btPtoSideloadCycleSelect.Click
-        If PTOSideloadCycleBrowser.OpenDialog(FileRepl(tbPtoSideloadCycle.Text, GetPath(VectoFile))) Then
-            tbPtoSideloadCycle.Text = GetFilenameWithoutDirectory(PTOSideloadCycleBrowser.Files(0), GetPath(VectoFile))
-        End If
-
-    End Sub
 End Class
 
 

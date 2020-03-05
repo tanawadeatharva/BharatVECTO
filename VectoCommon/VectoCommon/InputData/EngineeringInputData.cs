@@ -53,8 +53,6 @@ namespace TUGraz.VectoCommon.InputData
 		bool EngineOnlyMode { get; }
 
 		IEngineEngineeringInputData EngineOnly { get; }
-
-		TableData PTOCycleWhileDrive { get; }
 	}
 
 	public interface IVehicleEngineeringInputData : IVehicleDeclarationInputData
@@ -164,7 +162,10 @@ namespace TUGraz.VectoCommon.InputData
 		/// </summary>
 		TableData PTOLossMap { get; }
 
-		TableData PTOCycle { get; }
+		TableData PTOCycleDuringStop { get; }
+
+		TableData PTOCycleWhileDriving { get; }
+
 	}
 
 	public interface IAxleEngineeringInputData : IAxleDeclarationInputData

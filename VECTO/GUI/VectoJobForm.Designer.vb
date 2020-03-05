@@ -129,9 +129,6 @@ Partial Class VectoJobForm
         Me.TbMass = New System.Windows.Forms.TextBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.lblEngineCharacteristics = New System.Windows.Forms.Label()
-        Me.tbPtoSideloadCycle = New System.Windows.Forms.TextBox()
-        Me.btnPtoSideloadCycle = New System.Windows.Forms.Button()
-        Me.btPtoSideloadCycleSelect = New System.Windows.Forms.Button()
         Me.TabPgGen.SuspendLayout
         Me.GrCycles.SuspendLayout
         Me.GrAux.SuspendLayout
@@ -154,9 +151,6 @@ Partial Class VectoJobForm
         '
         'TabPgGen
         '
-        Me.TabPgGen.Controls.Add(Me.tbPtoSideloadCycle)
-        Me.TabPgGen.Controls.Add(Me.btnPtoSideloadCycle)
-        Me.TabPgGen.Controls.Add(Me.btPtoSideloadCycleSelect)
         Me.TabPgGen.Controls.Add(Me.GrCycles)
         Me.TabPgGen.Controls.Add(Me.GrAux)
         Me.TabPgGen.Controls.Add(Me.TbGBX)
@@ -171,7 +165,7 @@ Partial Class VectoJobForm
         Me.TabPgGen.Location = New System.Drawing.Point(4, 22)
         Me.TabPgGen.Name = "TabPgGen"
         Me.TabPgGen.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgGen.Size = New System.Drawing.Size(527, 518)
+        Me.TabPgGen.Size = New System.Drawing.Size(527, 488)
         Me.TabPgGen.TabIndex = 0
         Me.TabPgGen.Text = "General"
         Me.TabPgGen.UseVisualStyleBackColor = true
@@ -184,7 +178,7 @@ Partial Class VectoJobForm
         Me.GrCycles.Controls.Add(Me.LvCycles)
         Me.GrCycles.Controls.Add(Me.BtDRIrem)
         Me.GrCycles.Controls.Add(Me.BtDRIadd)
-        Me.GrCycles.Location = New System.Drawing.Point(6, 366)
+        Me.GrCycles.Location = New System.Drawing.Point(6, 341)
         Me.GrCycles.Name = "GrCycles"
         Me.GrCycles.Size = New System.Drawing.Size(515, 138)
         Me.GrCycles.TabIndex = 10
@@ -267,7 +261,7 @@ Partial Class VectoJobForm
         Me.GrAux.Controls.Add(Me.LvAux)
         Me.GrAux.Controls.Add(Me.ButAuxRem)
         Me.GrAux.Controls.Add(Me.ButAuxAdd)
-        Me.GrAux.Location = New System.Drawing.Point(6, 116)
+        Me.GrAux.Location = New System.Drawing.Point(6, 88)
         Me.GrAux.Name = "GrAux"
         Me.GrAux.Size = New System.Drawing.Size(515, 245)
         Me.GrAux.TabIndex = 9
@@ -527,7 +521,7 @@ Partial Class VectoJobForm
         Me.TabControl1.Location = New System.Drawing.Point(1, 107)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(535, 544)
+        Me.TabControl1.Size = New System.Drawing.Size(535, 514)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 0
         '
@@ -539,7 +533,7 @@ Partial Class VectoJobForm
         Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
         Me.TabPgDriver.Name = "TabPgDriver"
         Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgDriver.Size = New System.Drawing.Size(527, 487)
+        Me.TabPgDriver.Size = New System.Drawing.Size(527, 518)
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver Model"
         Me.TabPgDriver.UseVisualStyleBackColor = true
@@ -929,7 +923,7 @@ Partial Class VectoJobForm
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 672)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 625)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(944, 22)
         Me.StatusStrip1.SizingGrip = false
@@ -939,13 +933,13 @@ Partial Class VectoJobForm
         'ToolStripStatusLabelGEN
         '
         Me.ToolStripStatusLabelGEN.Name = "ToolStripStatusLabelGEN"
-        Me.ToolStripStatusLabelGEN.Size = New System.Drawing.Size(120, 17)
+        Me.ToolStripStatusLabelGEN.Size = New System.Drawing.Size(119, 17)
         Me.ToolStripStatusLabelGEN.Text = "ToolStripStatusLabel1"
         '
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(778, 645)
+        Me.ButOK.Location = New System.Drawing.Point(778, 598)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 0
@@ -956,7 +950,7 @@ Partial Class VectoJobForm
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(859, 645)
+        Me.ButCancel.Location = New System.Drawing.Point(859, 598)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 1
@@ -1160,43 +1154,13 @@ Partial Class VectoJobForm
         Me.lblEngineCharacteristics.Size = New System.Drawing.Size(0, 13)
         Me.lblEngineCharacteristics.TabIndex = 37
         '
-        'tbPtoSideloadCycle
-        '
-        Me.tbPtoSideloadCycle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.tbPtoSideloadCycle.Location = New System.Drawing.Point(84, 87)
-        Me.tbPtoSideloadCycle.Name = "tbPtoSideloadCycle"
-        Me.tbPtoSideloadCycle.Size = New System.Drawing.Size(411, 20)
-        Me.tbPtoSideloadCycle.TabIndex = 12
-        '
-        'btnPtoSideloadCycle
-        '
-        Me.btnPtoSideloadCycle.Location = New System.Drawing.Point(6, 87)
-        Me.btnPtoSideloadCycle.Name = "btnPtoSideloadCycle"
-        Me.btnPtoSideloadCycle.Size = New System.Drawing.Size(72, 21)
-        Me.btnPtoSideloadCycle.TabIndex = 11
-        Me.btnPtoSideloadCycle.TabStop = false
-        Me.btnPtoSideloadCycle.Text = "PTO Cycle"
-        Me.btnPtoSideloadCycle.UseVisualStyleBackColor = true
-        '
-        'btPtoSideloadCycleSelect
-        '
-        Me.btPtoSideloadCycleSelect.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.btPtoSideloadCycleSelect.Image = CType(resources.GetObject("btPtoSideloadCycleSelect.Image"),System.Drawing.Image)
-        Me.btPtoSideloadCycleSelect.Location = New System.Drawing.Point(496, 85)
-        Me.btPtoSideloadCycleSelect.Name = "btPtoSideloadCycleSelect"
-        Me.btPtoSideloadCycleSelect.Size = New System.Drawing.Size(24, 24)
-        Me.btPtoSideloadCycleSelect.TabIndex = 13
-        Me.btPtoSideloadCycleSelect.TabStop = false
-        Me.btPtoSideloadCycleSelect.UseVisualStyleBackColor = true
-        '
         'VectoJobForm
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(944, 694)
+        Me.ClientSize = New System.Drawing.Size(944, 647)
         Me.Controls.Add(Me.lblEngineCharacteristics)
         Me.Controls.Add(Me.TbHVCclass)
         Me.Controls.Add(Me.TbMass)
@@ -1354,7 +1318,4 @@ End Sub
 	Friend WithEvents Label15 As System.Windows.Forms.Label
 	Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
 	Friend WithEvents lblEngineCharacteristics As System.Windows.Forms.Label
-    Friend WithEvents tbPtoSideloadCycle As TextBox
-    Friend WithEvents btnPtoSideloadCycle As Button
-    Friend WithEvents btPtoSideloadCycleSelect As Button
 End Class

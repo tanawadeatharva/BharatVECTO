@@ -322,18 +322,6 @@ Public Class VectoJob
 
 #End Region
 
-    Public Property PTOCycleWhileDriveFile(optional ByVal original As Boolean = false)  As String
-    get
-        If original Then
-            Return _ptoCycleWhileDriveFile.OriginalPath
-        Else 
-            return _ptoCycleWhileDriveFile.FullPath
-        End If
-    End Get
-        Set(value As String)
-            _ptoCycleWhileDriveFile.init(_myPath, value)
-        End Set
-    End Property
 
     ' ReSharper disable once UnusedMember.Global -- used by Validation
     Public Shared Function ValidateJob(vectoJob As VectoJob, validationContext As ValidationContext) As ValidationResult
@@ -531,13 +519,7 @@ Public Class VectoJob
         End Get
     End Property
 
-    Public ReadOnly Property PTOCycleWhileDrive As TableData Implements IEngineeringJobInputData.PTOCycleWhileDrive
-    get
-        Return If(File.Exists(PTOCycleWhileDriveFile), VectoCSVFile.Read(PTOCycleWhileDriveFile), Nothing)
-    End Get
-    End Property
-    
-
+ 
     Public ReadOnly Property IEngineeringJobInputData_EngineOnly As IEngineEngineeringInputData Implements IEngineeringJobInputData.EngineOnly
         Get
             If Not File.Exists(_engineFile.FullPath) Then Return Nothing

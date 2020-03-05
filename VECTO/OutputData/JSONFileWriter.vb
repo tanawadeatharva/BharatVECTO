@@ -182,8 +182,9 @@ Public Class JSONFileWriter
 						GetRelativePath(pto.PTOLossMap.Source, basePath), ""))
 			ptoOut.Add("Cycle",
 						If _
-						(pto.PTOTransmissionType <> "None" AndAlso Not pto.PTOCycle Is Nothing,
-						GetRelativePath(pto.PTOCycle.Source, basePath), ""))
+						(pto.PTOTransmissionType <> "None" AndAlso Not pto.PTOCycleDuringStop Is Nothing,
+						GetRelativePath(pto.PTOCycleDuringStop.Source, basePath), ""))
+            ptoOut.Add("CycleDriving", If (pto.PTOTransmissionType <> "None" AndAlso Not pto.PTOCycleWhileDriving Is Nothing, GetRelativePath(pto.PTOCycleWhileDriving.Source, basePath), ""))
 		End If
 
 		Dim angledriveOut As Dictionary(Of String, Object) = New Dictionary(Of String, Object) From {
@@ -368,12 +369,7 @@ Public Class JSONFileWriter
 					job.Cycles.Select(Function(x) GetRelativePath(x.CycleData.Source, Path.GetDirectoryName(filename))).ToArray())
 		End If
 
-        if (not job.PTOCycleWhileDrive Is Nothing) Then
-            body.Add("PTOCycleDuringDrive", GetRelativePath(job.PTOCycleWhileDrive.Source, basePath))
-        End If
-
-
-		WriteFile(header, body, filename)
+       WriteFile(header, body, filename)
 	End Sub
 
 	Public Sub SaveJob(input As IVTPDeclarationInputDataProvider, filename As String) Implements IOutputFileWriter.SaveJob

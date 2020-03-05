@@ -83,7 +83,12 @@ namespace TUGraz.VectoCore.InputData.FileIO.XML.Declaration.DataProvider
 			get { return null; }
 		}
 
-		public virtual TableData PTOCycle
+		public virtual TableData PTOCycleDuringStop
+		{
+			get { return null; }
+		}
+
+		public TableData PTOCycleWhileDriving
 		{
 			get { return null; }
 		}

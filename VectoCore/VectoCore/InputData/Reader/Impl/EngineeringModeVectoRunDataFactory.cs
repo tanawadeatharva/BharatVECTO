@@ -86,9 +86,12 @@ namespace TUGraz.VectoCore.InputData.Reader.Impl
 				engineData.PTORoadSweepEngineSpeed = InputDataProvider.JobInputData.Vehicle.PTO_DriveEngineSpeed;
 			}
 
-			var ptoCycleWhileDrive = InputDataProvider.JobInputData.PTOCycleWhileDrive != null
-				? DrivingCycleDataReader.ReadFromDataTable(InputDataProvider.JobInputData.PTOCycleWhileDrive, "PTO During Drive", false)
-				: null;
+			var ptoCycleWhileDrive =
+				InputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData.PTOCycleWhileDriving != null
+					? DrivingCycleDataReader.ReadFromDataTable(
+						InputDataProvider.JobInputData.Vehicle.Components.PTOTransmissionInputData.PTOCycleWhileDriving,
+						"PTO During Drive", false)
+					: null;
 
 
 			return InputDataProvider.JobInputData.Cycles.Select(cycle => {

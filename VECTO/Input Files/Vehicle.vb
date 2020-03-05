@@ -62,7 +62,8 @@ Public Class Vehicle
 
 	Public PtoType As String
 	Public ReadOnly PtoLossMap As SubPath
-	Public ReadOnly PtoCycle As SubPath
+	Public ReadOnly PtoCycleStandstill As SubPath
+    Public ReadOnly PtoCycleDriving As SubPath
 	Public torqueLimitsList As List(Of ITorqueLimitInputData)
 	Public VehicleidlingSpeed As PerSecond
 	Public legClass As LegislativeClass
@@ -88,7 +89,8 @@ Public Class Vehicle
 		Axles = New List(Of AxleInputData)
 		torqueLimitsList = New List(Of ITorqueLimitInputData)
 		PtoLossMap = New SubPath()
-		PtoCycle = New SubPath()
+		PtoCycleStandstill = New SubPath()
+        PtoCycleDriving = new SubPath()
 		SetDefault()
 	End Sub
 
@@ -200,7 +202,8 @@ Public Class Vehicle
 
 		PtoType = PTOTransmission.NoPTO
 		PtoLossMap.Clear()
-		PtoCycle.Clear()
+		PtoCycleStandstill.Clear()
+	    PtoCycleDriving.Clear()
 
 		Axles.Clear()
 		VehicleCategory = VehicleCategory.RigidTruck
@@ -502,24 +505,34 @@ Public Class Vehicle
 		End Get
 	End Property
 
-	Public ReadOnly Property IPTOTransmissionInputData_PTOCycle As TableData Implements IPTOTransmissionInputData.PTOCycle
+	Public ReadOnly Property PTOCycleDuringStop As TableData Implements IPTOTransmissionInputData.PTOCycleDuringStop
 		Get
-			If String.IsNullOrWhiteSpace(PtoCycle.FullPath) Then
+			If String.IsNullOrWhiteSpace(PtoCycleStandstill.FullPath) Then
 				Return Nothing
 			End If
-			Return VectoCSVFile.Read(PtoCycle.FullPath)
+			Return VectoCSVFile.Read(PtoCycleStandstill.FullPath)
 		End Get
 	End Property
 
 	Public ReadOnly Property IPTOTransmissionInputData_PTOLossMap As TableData _
 		Implements IPTOTransmissionInputData.PTOLossMap
 		Get
-			If String.IsNullOrWhiteSpace(PtoCycle.FullPath) Then
+			If String.IsNullOrWhiteSpace(PtoLossMap.FullPath) Then
 				Return Nothing
 			End If
 			Return VectoCSVFile.Read(PtoLossMap.FullPath)
 		End Get
 	End Property
+
+    Public ReadOnly Property PTOCycleWhileDriving As TableData _
+        Implements IPTOTransmissionInputData.PTOCycleWhileDriving
+        Get
+            If String.IsNullOrWhiteSpace(PtoCycleDriving.FullPath) Then
+                Return Nothing
+            End If
+            Return VectoCSVFile.Read(PtoCycleDriving.FullPath)
+        End Get
+    End Property
 
 
 	Public ReadOnly Property IDeclarationInputDataProvider_AirdragInputData As IAirdragDeclarationInputData _

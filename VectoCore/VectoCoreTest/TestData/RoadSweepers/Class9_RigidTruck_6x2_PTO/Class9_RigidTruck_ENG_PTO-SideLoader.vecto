@@ -8,7 +8,7 @@
   "Body": {
     "SavedInDeclMode": false,
     "EngineOnlyMode": false,
-    "VehicleFile": "Class9_RigidTruck.vveh",
+    "VehicleFile": "Class9_RigidTruck_Sideloader.vveh",
     "EngineFile": "Engine_324kW_12.7l.veng",
     "GearboxFile": "AMT_12.vgbx",
     "AuxiliaryAssembly": "Classic",
@@ -38,8 +38,7 @@
       "UnderSpeed": 0.0
     },
     "Cycles": [
-      "PTO_Sideloader.vdri",
-    ],
-    "PTOCycleDuringDrive": "PTO-cycle.vptor"
+      "PTO_Sideloader.vdri"
+    ]
   }
 }

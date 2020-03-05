@@ -446,7 +446,8 @@ Public Class VehicleForm
 		cbPTOType.SelectedValue = pto.PTOTransmissionType
 		tbPTOLossMap.Text =
 			If(Cfg.DeclMode OrElse pto.PTOLossMap Is Nothing, "", GetRelativePath(pto.PTOLossMap.Source, basePath))
-		tbPTOCycle.Text = If(Cfg.DeclMode OrElse pto.PTOCycle Is Nothing, "", GetRelativePath(pto.PTOCycle.Source, basePath))
+		tbPTOCycle.Text = If(Cfg.DeclMode OrElse pto.PTOCycleDuringStop Is Nothing, "", GetRelativePath(pto.PTOCycleDuringStop.Source, basePath))
+        tbPTODrive.Text = If (Cfg.DeclMode OrElse pto.PTOCycleWhileDriving Is Nothing, "", GetRelativePath(pto.PTOCycleWhileDriving.Source, basePath))
 
 		cbAngledriveType.SelectedValue = angledrive.Type
 		tbAngledriveRatio.Text = angledrive.Ratio.ToGUIFormat()
@@ -530,7 +531,8 @@ Public Class VehicleForm
 
 		veh.PtoType = CType(cbPTOType.SelectedValue, String)
 		veh.PtoLossMap.Init(GetPath(file), tbPTOLossMap.Text)
-		veh.PtoCycle.Init(GetPath(file), tbPTOCycle.Text)
+		veh.PtoCycleStandstill.Init(GetPath(file), tbPTOCycle.Text)
+	    veh.PtoCycleDriving.Init(GetPath(file), tbPTODrive.Text)
 
 		veh.MassMax = TbMassMass.Text.ToDouble(0)
 		veh.MassExtra = TbMassExtra.Text.ToDouble(0)
@@ -696,7 +698,7 @@ Public Class VehicleForm
 	Private Sub TBcw_TextChanged(sender As Object, e As EventArgs) _
 		Handles TbLoad.TextChanged, TBrdyn.TextChanged, TBcdA.TextChanged, TbCdFile.TextChanged, TbRtRatio.TextChanged,
 				cbAngledriveType.SelectedIndexChanged, TbRtPath.TextChanged, tbAngledriveLossMapPath.TextChanged,
-				tbAngledriveRatio.TextChanged, tbPTOLossMap.TextChanged
+				tbAngledriveRatio.TextChanged
 		Change()
 	End Sub
 
@@ -873,7 +875,7 @@ Public Class VehicleForm
 
 #End Region
 
-	Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOType.SelectedIndexChanged
+	Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) 
 
 		If (Cfg.DeclMode) Then
 			Exit Sub
@@ -889,15 +891,15 @@ Public Class VehicleForm
 		Change()
 	End Sub
 
-	Private Sub btPTOLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btPTOLossMapBrowse.Click
+	Private Sub btPTOLossMapBrowse_Click(sender As Object, e As EventArgs) Handles btPTOLossMapBrowse.Click 
 		If PtoLossMapFileBrowser.OpenDialog(FileRepl(tbPTOLossMap.Text, GetPath(_vehFile))) Then
 			tbPTOLossMap.Text = GetFilenameWithoutDirectory(PtoLossMapFileBrowser.Files(0), GetPath(_vehFile))
 		End If
 	End Sub
 
-	Private Sub btPTOCycle_Click(sender As Object, e As EventArgs) Handles btPTOCycle.Click
-		If PTODrivingCycleFileBrowser.OpenDialog(FileRepl(tbPTOCycle.Text, GetPath(_vehFile))) Then
-			tbPTOCycle.Text = GetFilenameWithoutDirectory(PTODrivingCycleFileBrowser.Files(0), GetPath(_vehFile))
+	Private Sub btPTOCycle_Click(sender As Object, e As EventArgs) Handles btPTOCycle.Click 
+		If PTODrivingCycleStandstillFileBrowser.OpenDialog(FileRepl(tbPTOCycle.Text, GetPath(_vehFile))) Then
+			tbPTOCycle.Text = GetFilenameWithoutDirectory(PTODrivingCycleStandstillFileBrowser.Files(0), GetPath(_vehFile))
 		End If
 	End Sub
 
@@ -970,5 +972,11 @@ Public Class VehicleForm
 	Private Sub tbVehIdlingSpeed_TextChanged(sender As Object, e As EventArgs) Handles tbVehIdlingSpeed.TextChanged
 
 	End Sub
+
+    Private Sub btPTOCycleDrive_Click(sender As Object, e As EventArgs) Handles btPTOCycleDrive.Click
+        If PTODrivingCycleDrivingFileBrowser.OpenDialog(FileRepl(tbPTODrive.Text, GetPath(_vehFile))) Then
+            tbPTODrive.Text = GetFilenameWithoutDirectory(PTODrivingCycleDrivingFileBrowser.Files(0), GetPath(_vehFile))
+        End If
+    End Sub
 End Class
 
