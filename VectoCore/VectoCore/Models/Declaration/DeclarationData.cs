@@ -70,6 +70,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static readonly TruckSegments TruckSegments = new TruckSegments();
 		public static readonly BusSegments BusSegments = new BusSegments();
+		public static readonly CompletedBusSegments CompletedBusSegments = new CompletedBusSegments();
 		public static readonly Wheels Wheels = new Wheels();
 		public static readonly PT1 PT1 = new PT1();
 		public static readonly FuelData FuelData = FuelData.Instance();

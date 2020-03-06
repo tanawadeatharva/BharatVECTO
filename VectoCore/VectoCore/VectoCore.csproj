@@ -316,6 +316,7 @@
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMInputs.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMRun.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\HVAC\SSMTOOL.cs" />
+    <Compile Include="Models\Declaration\CompletedBusSegments.cs" />
     <Compile Include="Models\Declaration\SSMTechnology.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M06Impl.cs" />
     <Compile Include="Models\BusAuxiliaries\DownstreamModules\Impl\M07Impl.cs" />
@@ -891,6 +892,7 @@
     <EmbeddedResource Include="Resources\XSD\VTPReport.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Declaration\CompletedBusSegmentationTable.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-AxleFactor.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-Axles_Bus.csv" />
     <None Include="Resources\Declaration\VAUXBus\SP-Factors_Bus.csv" />

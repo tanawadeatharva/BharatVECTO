@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return LookupPrimaryVehicle(vehicleCategory, axleConfiguration, articulated);
 			}
 
-			throw new NotImplementedException("Completed Vechiles not implemented");
+			throw new NotImplementedException("Completed Vehicles not implemented");
 		}
 
 		#endregion

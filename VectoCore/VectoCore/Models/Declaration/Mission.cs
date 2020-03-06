@@ -123,6 +123,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public bool HVACSeparateAirDistributionDucts { get; internal set; }
 		public PerSquareMeter PassengerDensity { get;  internal set; }
 		public VehicleClass BusGroup { get; internal set; }
+
+		//Completed Bus
+		public int NumberOfAxles { get; internal set; }
+		public VehicleCode VehicleCode { get; internal set; }
+		public RegistrationClass[] RegistrationClasses { get; internal set; }
+		public bool? LowEntry { get; internal set; }
+		public double  PassengersSeatsLowerDeck { get;  internal set; }
+		public string VehicleParameterGroup { get; internal set; }
+		public double PassengersHeavyUrban { get; internal set; }
+		public double PassengersUrban { get; internal set; }
+		public double PassengersSuburban { get; internal set; }
+		public double PassengersInterurban { get; internal set; }
+		public double PassengersCoach { get; internal set; }
+
+		public bool AirDragMeasurement { get; internal set; }
+
 	}
 
 	public class MissionTrailer

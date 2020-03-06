@@ -1,0 +1,12 @@
+Num Axles , Vehicle Code , Registration Classes     , Low entry , Passengers Lower Deck , Body Height , Vehicle Parameter Group , Heavy Urban , Urban , Suburban , Interurban , Coach , Air Drag Measurement , CdxA Standard
+2         , CE           , I/I+II/II/A              , 0         , -                     , -           , 31a                     , 3           , 3     , 3        ,            ,       , 0                    , 4.9
+2         , CE           , I/I+II/II/A              , 1         , -                     , -           , 31b                     , 3           , 3     , 3        ,            ,       , 0                    , 4.9
+2         , CF           , I/I+II/II/A              , -         , -                     , -           , 31c                     , 3.7         , 3.7   , 3.7      ,            ,       , 0                    , 6.2
+2         , CI           , I/I+II/II/II+III/III/A/B , -         , -                     , -           , 31d                     , 3           , 3     , 3        ,            ,       , 0                    , 5.7
+2         , CJ           , I/I+II/II/II+III/III/A/B , -         , -                     , -           , 31e                     , 3.7         , 3.7   , 3.7      ,            ,       , 0                    , 7
+2         , CA           , II                       , -         , -                     , -           , 32a                     ,             ,       ,          , 2.2        , 1.4   , 1                    , 4.6
+2         , CA           , II+III                   , -         , -                     , 3100        , 32b                     ,             ,       ,          , 2.2        , 1.4   , 1                    , 4.6
+2         , CA           , II+III                   , -         , -                     , 3100        , 32c                     ,             ,       ,          , 2.2        , 1.4   , 1                    , 4.6
+2         , CA           , III/B                    , -         , -                     , -           , 32d                     ,             ,       ,          , 2.2        , 1.4   , 1                    , 4.6
+2         , CB           , II/II+III/III/B          , -         , 6                     , -           , 32e                     ,             ,       ,          , 2.2        , 1.4   , 1                    , 5.2
+2         , CB           , II/II+III/III/B          , -         , 6                     , -           , 32f                     ,             ,       ,          , 3          , 2     , 1                    , 5.2
