@@ -2082,6 +2082,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[
+		TestCase(VehicleClass.Class1, true, 169.9, WeightingGroup.Group1),
+		TestCase(VehicleClass.Class1, false, 265, WeightingGroup.Group1),
+		TestCase(VehicleClass.Class2, true, 169.9, WeightingGroup.Group2),
+		TestCase(VehicleClass.Class2, false, 265, WeightingGroup.Group2),
+		TestCase(VehicleClass.Class3, true, 169.9, WeightingGroup.Group3),
+		TestCase(VehicleClass.Class3, false, 265, WeightingGroup.Group3),
+
+
 		TestCase(VehicleClass.Class4, true, 169.9, WeightingGroup.Group4UD),
 		TestCase(VehicleClass.Class4, false, 169.9, WeightingGroup.Group4UD),
 		TestCase(VehicleClass.Class4, false, 170, WeightingGroup.Group4RD),
@@ -2109,6 +2117,13 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		TestCase(VehicleClass.Class10, true, 169.9, WeightingGroup.Group10LH),
 		TestCase(VehicleClass.Class10, true, 264.9, WeightingGroup.Group10LH),
 		TestCase(VehicleClass.Class10, true, 265, WeightingGroup.Group10LH),
+
+		TestCase(VehicleClass.Class11, true, 169.9, WeightingGroup.Group11),
+		TestCase(VehicleClass.Class11, false, 265, WeightingGroup.Group11),
+		TestCase(VehicleClass.Class12, true, 169.9, WeightingGroup.Group12),
+		TestCase(VehicleClass.Class12, false, 265, WeightingGroup.Group12),
+		TestCase(VehicleClass.Class16, true, 169.9, WeightingGroup.Group16),
+		TestCase(VehicleClass.Class16, false, 265, WeightingGroup.Group16),
 			]
 		public void TestWeightingGroupLookup(
 			VehicleClass vehicleGroup, bool sleeperCab, double ratedPowerkWm, WeightingGroup expectedWeightingGroup)
