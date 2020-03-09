@@ -67,6 +67,7 @@ Public Class VehicleForm
 		PnWheelDiam.Enabled = Not Cfg.DeclMode
 		'gbPTO.Enabled = Not Cfg.DeclMode
 		pnPTO.Enabled = Not Cfg.DeclMode
+        gbPTODrive.Enabled = not Cfg.DeclMode
         tpRoadSweeper.Visible = Not cfg.DeclMode
 
 		CbCdMode.ValueMember = "Value"
@@ -875,7 +876,7 @@ Public Class VehicleForm
 
 #End Region
 
-	Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) 
+	Private Sub cbPTOType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbPTOType.SelectedIndexChanged 
 
 		If (Cfg.DeclMode) Then
 			Exit Sub
@@ -883,9 +884,11 @@ Public Class VehicleForm
 
 		If (cbPTOType.SelectedIndex = 0) Then
 			pnPTO.Enabled = False
+            gbPTODrive.Enabled = false
 			tbPTOLossMap.Text = ""
 		Else
 			pnPTO.Enabled = True
+            gbPTODrive.Enabled = True
 		End If
 
 		Change()

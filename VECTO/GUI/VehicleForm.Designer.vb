@@ -124,6 +124,7 @@ Partial Class VehicleForm
         Me.cbPTOType = New System.Windows.Forms.ComboBox()
         Me.tbPTOCycle = New System.Windows.Forms.TextBox()
         Me.tbPTOLossMap = New System.Windows.Forms.TextBox()
+        Me.tbPTODrive = New System.Windows.Forms.TextBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
@@ -151,12 +152,15 @@ Partial Class VehicleForm
         Me.lblPCC = New System.Windows.Forms.Label()
         Me.tpRoadSweeper = New System.Windows.Forms.TabPage()
         Me.pnPTO = New System.Windows.Forms.Panel()
+        Me.btPTOCycleDrive = New System.Windows.Forms.Button()
+        Me.Label28 = New System.Windows.Forms.Label()
         Me.btPTOCycle = New System.Windows.Forms.Button()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.btPTOLossMapBrowse = New System.Windows.Forms.Button()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.gbPTO = New System.Windows.Forms.GroupBox()
-        Me.GroupBox10 = New System.Windows.Forms.GroupBox()
+        Me.gbPTODrive = New System.Windows.Forms.GroupBox()
+        Me.Label27 = New System.Windows.Forms.Label()
         Me.tbPtoGear = New System.Windows.Forms.TextBox()
         Me.Label26 = New System.Windows.Forms.Label()
         Me.tbPtoEngineSpeed = New System.Windows.Forms.TextBox()
@@ -164,10 +168,6 @@ Partial Class VehicleForm
         Me.Label24 = New System.Windows.Forms.Label()
         Me.cbLegislativeClass = New System.Windows.Forms.ComboBox()
         Me.Label21 = New System.Windows.Forms.Label()
-        Me.Label27 = New System.Windows.Forms.Label()
-        Me.btPTOCycleDrive = New System.Windows.Forms.Button()
-        Me.Label28 = New System.Windows.Forms.Label()
-        Me.tbPTODrive = New System.Windows.Forms.TextBox()
         Me.GroupBox6.SuspendLayout
         Me.ToolStrip1.SuspendLayout
         Me.GroupBox7.SuspendLayout
@@ -197,7 +197,7 @@ Partial Class VehicleForm
         Me.tpRoadSweeper.SuspendLayout
         Me.pnPTO.SuspendLayout
         Me.gbPTO.SuspendLayout
-        Me.GroupBox10.SuspendLayout
+        Me.gbPTODrive.SuspendLayout
         Me.SuspendLayout
         '
         'Label1
@@ -1004,6 +1004,14 @@ Partial Class VehicleForm
         Me.tbPTOLossMap.TabIndex = 13
         Me.ToolTip1.SetToolTip(Me.tbPTOLossMap, "PTO Consumer Loss Map")
         '
+        'tbPTODrive
+        '
+        Me.tbPTODrive.Location = New System.Drawing.Point(6, 183)
+        Me.tbPTODrive.Name = "tbPTODrive"
+        Me.tbPTODrive.Size = New System.Drawing.Size(239, 20)
+        Me.tbPTODrive.TabIndex = 19
+        Me.ToolTip1.SetToolTip(Me.tbPTODrive, "PTO Consumer Loss Map")
+        '
         'TabControl1
         '
         Me.TabControl1.Controls.Add(Me.TabPage1)
@@ -1259,9 +1267,9 @@ Partial Class VehicleForm
         '
         'tpRoadSweeper
         '
+        Me.tpRoadSweeper.Controls.Add(Me.gbPTODrive)
         Me.tpRoadSweeper.Controls.Add(Me.pnPTO)
         Me.tpRoadSweeper.Controls.Add(Me.gbPTO)
-        Me.tpRoadSweeper.Controls.Add(Me.GroupBox10)
         Me.tpRoadSweeper.Location = New System.Drawing.Point(4, 22)
         Me.tpRoadSweeper.Name = "tpRoadSweeper"
         Me.tpRoadSweeper.Size = New System.Drawing.Size(579, 355)
@@ -1282,8 +1290,26 @@ Partial Class VehicleForm
         Me.pnPTO.Controls.Add(Me.tbPTOLossMap)
         Me.pnPTO.Location = New System.Drawing.Point(5, 73)
         Me.pnPTO.Name = "pnPTO"
-        Me.pnPTO.Size = New System.Drawing.Size(566, 168)
+        Me.pnPTO.Size = New System.Drawing.Size(566, 211)
         Me.pnPTO.TabIndex = 6
+        '
+        'btPTOCycleDrive
+        '
+        Me.btPTOCycleDrive.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
+        Me.btPTOCycleDrive.Location = New System.Drawing.Point(245, 181)
+        Me.btPTOCycleDrive.Name = "btPTOCycleDrive"
+        Me.btPTOCycleDrive.Size = New System.Drawing.Size(24, 24)
+        Me.btPTOCycleDrive.TabIndex = 20
+        Me.btPTOCycleDrive.UseVisualStyleBackColor = true
+        '
+        'Label28
+        '
+        Me.Label28.Location = New System.Drawing.Point(3, 164)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(266, 16)
+        Me.Label28.TabIndex = 21
+        Me.Label28.Text = "PTO Cycle during driving (PTO mode 3) (.vptor)"
+        Me.Label28.TextAlign = System.Drawing.ContentAlignment.BottomLeft
         '
         'btPTOCycle
         '
@@ -1331,20 +1357,30 @@ Partial Class VehicleForm
         Me.gbPTO.TabStop = false
         Me.gbPTO.Text = "PTO Design Variant"
         '
-        'GroupBox10
+        'gbPTODrive
         '
-        Me.GroupBox10.Controls.Add(Me.Label27)
-        Me.GroupBox10.Controls.Add(Me.tbPtoGear)
-        Me.GroupBox10.Controls.Add(Me.Label26)
-        Me.GroupBox10.Controls.Add(Me.tbPtoEngineSpeed)
-        Me.GroupBox10.Controls.Add(Me.Label25)
-        Me.GroupBox10.Controls.Add(Me.Label24)
-        Me.GroupBox10.Location = New System.Drawing.Point(5, 247)
-        Me.GroupBox10.Name = "GroupBox10"
-        Me.GroupBox10.Size = New System.Drawing.Size(566, 55)
-        Me.GroupBox10.TabIndex = 0
-        Me.GroupBox10.TabStop = false
-        Me.GroupBox10.Text = "Working operation settings (PTO mode 3)"
+        Me.gbPTODrive.Controls.Add(Me.Label27)
+        Me.gbPTODrive.Controls.Add(Me.tbPtoGear)
+        Me.gbPTODrive.Controls.Add(Me.Label26)
+        Me.gbPTODrive.Controls.Add(Me.tbPtoEngineSpeed)
+        Me.gbPTODrive.Controls.Add(Me.Label25)
+        Me.gbPTODrive.Controls.Add(Me.Label24)
+        Me.gbPTODrive.Location = New System.Drawing.Point(5, 172)
+        Me.gbPTODrive.Name = "gbPTODrive"
+        Me.gbPTODrive.Size = New System.Drawing.Size(566, 55)
+        Me.gbPTODrive.TabIndex = 0
+        Me.gbPTODrive.TabStop = false
+        Me.gbPTODrive.Text = "Working operation settings (PTO mode 2)"
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = true
+        Me.Label27.Location = New System.Drawing.Point(446, 24)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(20, 13)
+        Me.Label27.TabIndex = 6
+        Me.Label27.Text = "[#]"
+        Me.Label27.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'tbPtoGear
         '
@@ -1405,42 +1441,6 @@ Partial Class VehicleForm
         Me.Label21.Size = New System.Drawing.Size(112, 13)
         Me.Label21.TabIndex = 42
         Me.Label21.Text = "Maximum Laden Mass"
-        '
-        'Label27
-        '
-        Me.Label27.AutoSize = true
-        Me.Label27.Location = New System.Drawing.Point(446, 24)
-        Me.Label27.Name = "Label27"
-        Me.Label27.Size = New System.Drawing.Size(20, 13)
-        Me.Label27.TabIndex = 6
-        Me.Label27.Text = "[#]"
-        Me.Label27.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'btPTOCycleDrive
-        '
-        Me.btPTOCycleDrive.Image = Global.TUGraz.VECTO.My.Resources.Resources.Open_icon
-        Me.btPTOCycleDrive.Location = New System.Drawing.Point(245, 119)
-        Me.btPTOCycleDrive.Name = "btPTOCycleDrive"
-        Me.btPTOCycleDrive.Size = New System.Drawing.Size(24, 24)
-        Me.btPTOCycleDrive.TabIndex = 20
-        Me.btPTOCycleDrive.UseVisualStyleBackColor = true
-        '
-        'Label28
-        '
-        Me.Label28.Location = New System.Drawing.Point(3, 102)
-        Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(266, 16)
-        Me.Label28.TabIndex = 21
-        Me.Label28.Text = "PTO Cycle during driving (PTO mode 2) (.vptor)"
-        Me.Label28.TextAlign = System.Drawing.ContentAlignment.BottomLeft
-        '
-        'tbPTODrive
-        '
-        Me.tbPTODrive.Location = New System.Drawing.Point(6, 121)
-        Me.tbPTODrive.Name = "tbPTODrive"
-        Me.tbPTODrive.Size = New System.Drawing.Size(239, 20)
-        Me.tbPTODrive.TabIndex = 19
-        Me.ToolTip1.SetToolTip(Me.tbPTODrive, "PTO Consumer Loss Map")
         '
         'VehicleForm
         '
@@ -1515,8 +1515,8 @@ Partial Class VehicleForm
         Me.pnPTO.ResumeLayout(false)
         Me.pnPTO.PerformLayout
         Me.gbPTO.ResumeLayout(false)
-        Me.GroupBox10.ResumeLayout(false)
-        Me.GroupBox10.PerformLayout
+        Me.gbPTODrive.ResumeLayout(false)
+        Me.gbPTODrive.PerformLayout
         Me.ResumeLayout(false)
         Me.PerformLayout
 
@@ -1636,7 +1636,7 @@ End Sub
     Friend WithEvents cbTankSystem As ComboBox
     Friend WithEvents Label23 As Label
     Friend WithEvents tpRoadSweeper As TabPage
-    Friend WithEvents GroupBox10 As GroupBox
+    Friend WithEvents gbPTODrive As GroupBox
     Friend WithEvents tbPtoGear As TextBox
     Friend WithEvents Label26 As Label
     Friend WithEvents tbPtoEngineSpeed As TextBox
