@@ -52,12 +52,12 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			}
 		}
 
-		public KilogramPerSecond FuelPerHBase
-		{
-			get {
-				return Calculate.FuelPerHBase; // .SI(Of LiterPerHour)()
-			}
-		}
+		//public KilogramPerSecond FuelPerHBase
+		//{
+		//	get {
+		//		return Calculate.FuelPerHBase; // .SI(Of LiterPerHour)()
+		//	}
+		//}
 
 		// Adjusted Values
 		public Watt ElectricalWAdjusted

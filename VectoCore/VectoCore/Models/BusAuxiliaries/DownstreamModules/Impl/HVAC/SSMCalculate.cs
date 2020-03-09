@@ -72,27 +72,27 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			}
 		}
 
-		public KilogramPerSecond FuelPerHBase
-		{
-			get {
-				var FuelLPerHBaseWeightedAverage = 0.0.SI<KilogramPerSecond>();
-				var ec = ssmTOOL.SSMInputs.EnvironmentalConditions;
+		//public KilogramPerSecond FuelPerHBase
+		//{
+		//	get {
+		//		var FuelLPerHBaseWeightedAverage = 0.0.SI<KilogramPerSecond>();
+		//		var ec = ssmTOOL.SSMInputs.EnvironmentalConditions;
 				
 
-				// If batch mode is disabled use the EC_EnviromentalTemperature and EC_Solar variables. 
-				// Else if batch is enable calculate the FuelLPerHBase for each input in the AENV file and then calculate the weighted average
-				if (!ec.BatchMode)
-					FuelLPerHBaseWeightedAverage = CalculateFuelLPerHBase(ssmTOOL.SSMInputs, ec.DefaultConditions);
-				else {
-					foreach (var envCondition in ec.EnvironmentalConditionsMap.GetEnvironmentalConditions())
-						FuelLPerHBaseWeightedAverage += CalculateFuelLPerHBase(ssmTOOL.SSMInputs, envCondition);
+		//		// If batch mode is disabled use the EC_EnviromentalTemperature and EC_Solar variables. 
+		//		// Else if batch is enable calculate the FuelLPerHBase for each input in the AENV file and then calculate the weighted average
+		//		if (!ec.BatchMode)
+		//			FuelLPerHBaseWeightedAverage = CalculateFuelLPerHBase(ssmTOOL.SSMInputs, ec.DefaultConditions);
+		//		else {
+		//			foreach (var envCondition in ec.EnvironmentalConditionsMap.GetEnvironmentalConditions())
+		//				FuelLPerHBaseWeightedAverage += CalculateFuelLPerHBase(ssmTOOL.SSMInputs, envCondition);
 
 					
-				}
+		//		}
 
-				return FuelLPerHBaseWeightedAverage;
-			}
-		}
+		//		return FuelLPerHBaseWeightedAverage;
+		//	}
+		//}
 
 		// ADJUSTED RESULTS
 		public Watt ElectricalWAdjusted
@@ -197,26 +197,26 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			
 		}
 
-		public Watt BaseHeatingW_FuelFiredHeating(Kelvin environmentalTemperature, WattPerSquareMeter solar)
-		{
+		//public Watt BaseHeatingW_FuelFiredHeating(Kelvin environmentalTemperature, WattPerSquareMeter solar)
+		//{
 			
-				// =IF(AND(M89<0,M90<0),VLOOKUP(MAX(M89:M90),M89:O90,3),0)
+		//		// =IF(AND(M89<0,M90<0),VLOOKUP(MAX(M89:M90),M89:O90,3),0)
 
-				// Dim M89 = Me.Run1.TotalW
-				// Dim M90 = Me.Run2.TotalW
-				// VLOOKUP(MAX(M89:M90),M89:O90  => VLOOKUP ( lookupValue, tableArray, colIndex, rangeLookup )
+		//		// Dim M89 = Me.Run1.TotalW
+		//		// Dim M90 = Me.Run2.TotalW
+		//		// VLOOKUP(MAX(M89:M90),M89:O90  => VLOOKUP ( lookupValue, tableArray, colIndex, rangeLookup )
 
-				// If both Run TotalW values are >=0 then return FuelW from Run with largest TotalW value, else return 0
-				var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
-				var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
+		//		// If both Run TotalW values are >=0 then return FuelW from Run with largest TotalW value, else return 0
+		//		var run1TotalW = Run1.TotalW(environmentalTemperature, solar);
+		//		var run2TotalW = Run2.TotalW(environmentalTemperature, solar);
 
-				if ((run1TotalW < 0 && run2TotalW < 0)) {
-					return run1TotalW > run2TotalW ? Run1.FuelW(environmentalTemperature, solar) : Run2.FuelW(environmentalTemperature, solar);
-				}
+		//		if ((run1TotalW < 0 && run2TotalW < 0)) {
+		//			return run1TotalW > run2TotalW ? Run1.PowerFuelHeater(environmentalTemperature, solar) : Run2.PowerFuelHeater(environmentalTemperature, solar);
+		//		}
 
-				return 0.SI<Watt>();
+		//		return 0.SI<Watt>();
 			
-		}
+		//}
 
 		protected Watt BaseCoolingW_Mechanical(Kelvin environmentalTemperature, WattPerSquareMeter solar)
 		{
@@ -484,24 +484,24 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 			return MechanicalWBaseCurrentResult * env.Weighting;
 		}
 
-		private KilogramPerSecond CalculateFuelLPerHBase(ISSMInputs genInputs, IEnvironmentalConditionsMapEntry env)
-		{
-			// =(MIN(ABS(J93/1000),C71)/C37)*(1/(C39*C38))
+		//private KilogramPerSecond CalculateFuelLPerHBase(ISSMInputs genInputs, IEnvironmentalConditionsMapEntry env)
+		//{
+		//	// =(MIN(ABS(J93/1000),C71)/C37)*(1/(C39*C38))
 
-			// Dim J93 = BaseHeatingW_FuelFiredHeating
-			// Dim C71 = genInputs.AH_FuelFiredHeaterkW
-			// Dim C37 = genInputs.BC_AuxHeaterEfficiency
-			// Dim C39 = ssmTOOL.HVACConstants.FuelDensity
-			// Dim C38 = genInputs.BC_GCVDieselOrHeatingOil
+		//	// Dim J93 = BaseHeatingW_FuelFiredHeating
+		//	// Dim C71 = genInputs.AH_FuelFiredHeaterkW
+		//	// Dim C37 = genInputs.BC_AuxHeaterEfficiency
+		//	// Dim C39 = ssmTOOL.HVACConstants.FuelDensity
+		//	// Dim C38 = genInputs.BC_GCVDieselOrHeatingOil
 
-			var fuelLPerHBaseCurrentResult =
-				VectoMath.Min(
-					VectoMath.Abs(BaseHeatingW_FuelFiredHeating(env.Temperature, env.Solar)).Value().SI<Watt>(), genInputs.AuxHeater.FuelFiredHeaterPower) /
-				genInputs.BoundaryConditions.AuxHeaterEfficiency /
-				(genInputs.BoundaryConditions.GCVDieselOrHeatingOil /* * ssmTOOL.HVACConstants.FuelDensity */);
+		//	var fuelLPerHBaseCurrentResult =
+		//		VectoMath.Min(
+		//			VectoMath.Abs(BaseHeatingW_FuelFiredHeating(env.Temperature, env.Solar)).Value().SI<Watt>(), genInputs.AuxHeater.FuelFiredHeaterPower) /
+		//		genInputs.BoundaryConditions.AuxHeaterEfficiency /
+		//		(genInputs.BoundaryConditions.GCVDieselOrHeatingOil /* * ssmTOOL.HVACConstants.FuelDensity */);
 
-			return fuelLPerHBaseCurrentResult * env.Weighting;
-		}
+		//	return fuelLPerHBaseCurrentResult * env.Weighting;
+		//}
 
 		private Watt CalculateElectricalWAdjusted(
 			ISSMInputs genInputs, ISSMTechnologyBenefits tecList, IEnvironmentalConditionsMapEntry env)
@@ -562,8 +562,8 @@ namespace TUGraz.VectoCore.Models.BusAuxiliaries.DownstreamModules.Impl.HVAC
 				result = VectoMath
 					.Abs(
 						run1TotalW > run2TotalW
-							? Run1.TechListAmendedFuelW(env.Temperature, env.Solar)
-							: Run2.TechListAmendedFuelW(env.Temperature, env.Solar)).Value().SI<Watt>();
+							? Run1.TechListAmendedFuelHeater(env.Temperature, env.Solar)
+							: Run2.TechListAmendedFuelHeater(env.Temperature, env.Solar)).Value().SI<Watt>();
 			}
 
 			var auxHeaterPower = VectoMath.Min(result, genInputs.AuxHeater.FuelFiredHeaterPower) /

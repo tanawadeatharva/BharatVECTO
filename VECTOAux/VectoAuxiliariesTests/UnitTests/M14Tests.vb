@@ -40,11 +40,11 @@ Namespace UnitTests
             End Get
         End Property
 
-        Public ReadOnly Property FuelPerHBase As KilogramPerSecond Implements ISSMTOOL.FuelPerHBase
-            Get
-                Throw New NotImplementedException
-            End Get
-        End Property
+        'Public ReadOnly Property FuelPerHBase As KilogramPerSecond Implements ISSMTOOL.FuelPerHBase
+        '    Get
+        '        Throw New NotImplementedException
+        '    End Get
+        'End Property
 
         'Public ReadOnly Property FuelPerHBaseAdjusted As KilogramPerSecond Implements ISSMTOOL.FuelPerHBaseAdjusted
         '    Get
