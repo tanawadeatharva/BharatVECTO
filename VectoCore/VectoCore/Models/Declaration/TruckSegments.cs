@@ -87,13 +87,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight, bool vocational, bool considerInvalid)
 		{
-            var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational, considerInvalid);
+			var row = GetSegmentDataRow(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational, considerInvalid);
 			if (row == null) {
 				return new Segment() { Found = false };
 			}
 
 			var vehicleHeight = LookupHeight(vehicleCategory, axleConfiguration, grossVehicleMassRating, vocational);
-            var segment = new Segment {
+			var segment = new Segment {
 				Found = true,
 				GrossVehicleWeightMin = row.ParseDouble("tpmlm_min").SI(Unit.SI.Ton).Cast<Kilogram>(),
 				GrossVehicleWeightMax = row.ParseDouble("tpmlm_max").SI(Unit.SI.Ton).Cast<Kilogram>(),
@@ -369,7 +369,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private static MissionTrailer CreateTrailer(string trailerValue, double axleWeightShare, bool firstTrailer)
 		{
-			var trailerType = TrailterTypeHelper.Parse(trailerValue);
+			var trailerType = TrailerTypeHelper.Parse(trailerValue);
 			var trailer = DeclarationData.StandardBodies.Lookup(trailerType.ToString());
 			return new MissionTrailer {
 				TrailerType = trailerType,

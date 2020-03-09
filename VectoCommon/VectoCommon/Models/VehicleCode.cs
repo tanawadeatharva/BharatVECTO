@@ -17,7 +17,6 @@
 
 	public static class VehicleCodeHelper
 	{
-
 		public static VehicleCode Parse(string vehicleCode)
 		{
 			switch (vehicleCode)
@@ -46,8 +45,7 @@
 					return VehicleCode.NOT_APPLICABLE;
 			}
 		}
-
-
+		
 
 		public static string GetLabel(this VehicleCode self)
 		{
@@ -74,6 +72,17 @@
 				case VehicleCode.CG:
 				case VehicleCode.CC:
 					return false;
+				default:
+					return false;
+			}
+		}
+
+		public static bool IsOpenDeckBus(this VehicleCode self)
+		{
+			switch (self) {
+				case VehicleCode.CI:
+				case VehicleCode.CJ:
+					return true;
 				default:
 					return false;
 			}

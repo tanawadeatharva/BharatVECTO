@@ -127,7 +127,7 @@
     <Compile Include="Models\Declaration\DataAdapter\DeclarationDataAdapterTest_Class5.cs" />
     <Compile Include="Models\Declaration\DataAdapter\DeclarationDataAdapterTest_Class2.cs" />
     <Compile Include="Models\Declaration\DataAdapter\DeclarationDataAdapterTest_Class9.cs" />
-    <Compile Include="Models\Declaration\DeclarationSegmentCompleteBusesTest.cs" />
+    <Compile Include="Models\Declaration\DeclarationSegmentComplete2AxleBusesTest.cs" />
     <Compile Include="Models\Declaration\DeclarationSegmentHeavyBusesTest.cs" />
     <Compile Include="Models\Declaration\ShiftPolygonTest.cs" />
     <Compile Include="Models\SimulationComponentData\GearshiftLinesVoithTest.cs" />

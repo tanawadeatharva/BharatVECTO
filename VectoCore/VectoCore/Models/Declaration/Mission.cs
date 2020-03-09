@@ -86,8 +86,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				}.Where(x => x.Value != null).ToDictionary(x => x.Key, x => x.Value);
 			}
 		}
-
+		
 		public BusParameters BusParameter { get; internal set; }
+
+		public bool AirDragMeasurement { get; internal set; }
 	}
 
 	public class BusParameters
@@ -126,20 +128,54 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		//Completed Bus
 		public int NumberOfAxles { get; internal set; }
+		public bool IsArticulated { get; internal set; }
 		public VehicleCode VehicleCode { get; internal set; }
 		public RegistrationClass[] RegistrationClasses { get; internal set; }
 		public bool? LowEntry { get; internal set; }
-		public double  PassengersSeatsLowerDeck { get;  internal set; }
 		public string VehicleParameterGroup { get; internal set; }
 		public double PassengersHeavyUrban { get; internal set; }
 		public double PassengersUrban { get; internal set; }
 		public double PassengersSuburban { get; internal set; }
 		public double PassengersInterurban { get; internal set; }
 		public double PassengersCoach { get; internal set; }
-
-		public bool AirDragMeasurement { get; internal set; }
-
+		
+		public bool?  BodyHeightLowerOrEqual { get; internal set; }
+		public bool? PassengersSeatsLowerOrEqual { get; internal set; }
+		public AxleLoadDistribution AxleLoadDistribution { get;  internal set; }
+		public VehicleEquipment VehicleEquipment { get; internal set; }
 	}
+
+	public class VehicleEquipment
+	{
+		public double ExternalDisplays { get; internal set; }
+		public double InternalDisplays { get; internal set; }
+		public double Fridge { get; internal set; }
+		public double KitchenStandard { get; internal set; }
+	}
+
+	public class AxleLoadDistribution
+	{
+		public double Axle01 { get; private set; }
+		public double Axle02 { get; private set; }
+		public double Axle03 { get; private set; }
+		public double Axle04 { get; private set; }
+
+
+		public AxleLoadDistribution(string loadDistribution)
+		{
+			SetAxleLoadDistribution(loadDistribution);
+		}
+		
+		private void SetAxleLoadDistribution(string loadDistribution)
+		{
+			var splitResult = loadDistribution.Split('/');
+			Axle01 = splitResult[0].ToDouble();
+			Axle02 = splitResult[1].ToDouble();
+			Axle03 = splitResult[2].ToDouble();
+			Axle04 = splitResult[3].ToDouble();
+		}
+	}
+
 
 	public class MissionTrailer
 	{
@@ -163,7 +199,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		STT2
 	}
 
-	public static class TrailterTypeHelper
+	public static class TrailerTypeHelper
 	{
 		public static TrailerType Parse(string trailer)
 		{
