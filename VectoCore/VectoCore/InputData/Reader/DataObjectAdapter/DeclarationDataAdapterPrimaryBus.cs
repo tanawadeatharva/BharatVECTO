@@ -21,10 +21,10 @@ namespace TUGraz.VectoCore.InputData.Reader.DataObjectAdapter
 {
 	public class DeclarationDataAdapterPrimaryBus : DeclarationDataAdapterHeavyLorry
 	{
-		public AirdragData CreateAirdragData(Mission mission)
-		{
-			return DefaultAirdragData(mission);
-		}
+		//public AirdragData CreateAirdragData(Mission mission)
+		//{
+		//	return DefaultAirdragData(mission);
+		//}
 
 		#region Overrides of DeclarationDataAdapterTruck
 
