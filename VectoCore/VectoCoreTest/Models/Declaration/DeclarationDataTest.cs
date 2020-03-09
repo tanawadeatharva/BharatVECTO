@@ -2119,9 +2119,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[
-			TestCase(WeightingGroup.Group1,0.1,0.4,0,0,0.15,0.35),
-			TestCase(WeightingGroup.Group2, 0.06, 0.24, 0.06, 0.14, 0.15, 0.35),
-			TestCase(WeightingGroup.Group3, 0.1, 0.4, 0, 0, 0.15, 0.35),
+			TestCase(WeightingGroup.Group1, 0.1, 0.3, 0, 0, 0.18, 0.42),
+			TestCase(WeightingGroup.Group2, 0.125, 0.375, 0, 0, 0.15, 0.35),
+			TestCase(WeightingGroup.Group3, 0.125, 0.375, 0, 0, 0.15, 0.35),
 
 
             TestCase(WeightingGroup.Group4UD, 0, 0, 0, 0, 0.5, 0.5),
@@ -2137,9 +2137,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			TestCase(WeightingGroup.Group10RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
 			TestCase(WeightingGroup.Group10LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
 
-			TestCase(WeightingGroup.Group11, 0.11, 0.25, 0.01, 0.02, 0, 0, 0.08, 0.19, 0.09, 0.25),
-			TestCase(WeightingGroup.Group12, 0.03, 0.07, 0.16, 0.36, 0, 0, 0, 0, 0.11, 0.27),
-			TestCase(WeightingGroup.Group16, 0, 0, 0, 0, 0, 0, 0, 0, 0.3, 0.7),
+			TestCase(WeightingGroup.Group11, 0.15, 0.35, 0, 0, 0, 0, 0, 0, 0.15, 0.35),
+			TestCase(WeightingGroup.Group12, 0.21, 0.49, 0, 0, 0, 0, 0, 0, 0.09, 0.21),
+			TestCase(WeightingGroup.Group16, 0.15, 0.35, 0, 0, 0, 0, 0, 0, 0.15, 0.35),
 
         ]
 		public void TestMissionProfileWeights(
