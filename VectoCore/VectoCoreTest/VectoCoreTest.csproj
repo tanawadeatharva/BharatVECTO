@@ -2432,6 +2432,9 @@
     <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Axle_4x2.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck_SideLoader.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\RoadSweepers\Class9_RigidTruck_6x2_PTO\Class9_RigidTruck.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
