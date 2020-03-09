@@ -2119,31 +2119,30 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[
-			TestCase(WeightingGroup.Group1, 0.1, 0.3, 0, 0, 0.18, 0.42),
-			TestCase(WeightingGroup.Group2, 0.125, 0.375, 0, 0, 0.15, 0.35),
-			TestCase(WeightingGroup.Group3, 0.125, 0.375, 0, 0, 0.15, 0.35),
+			TestCase(WeightingGroup.Group1, 0, 0, 0.1, 0.3, 0.18, 0.42, TestName = "TestMissionProfileWeights Grp 1"),
+			TestCase(WeightingGroup.Group2, 0, 0, 0.125, 0.375,0.15, 0.35, TestName = "TestMissionProfileWeights Grp 2"),
+			TestCase(WeightingGroup.Group3, 0, 0, 0.125, 0.375, 0.15, 0.35, TestName = "TestMissionProfileWeights Grp 3"),
 
 
-            TestCase(WeightingGroup.Group4UD, 0, 0, 0, 0, 0.5, 0.5),
-			TestCase(WeightingGroup.Group4RD, 0.45, 0.45, 0.05, 0.05, 0, 0),
-			TestCase(WeightingGroup.Group4LH, 0.05, 0.05, 0.45, 0.45, 0, 0),
+			TestCase(WeightingGroup.Group4UD, 0, 0, 0, 0, 0.5, 0.5, TestName = "TestMissionProfileWeights Grp 4UD"),
+			TestCase(WeightingGroup.Group4RD, 0.05, 0.05, 0.45, 0.45, 0, 0, TestName = "TestMissionProfileWeights Grp 4RD"),
+			TestCase(WeightingGroup.Group4LH, 0.45, 0.45, 0.05, 0.05, 0, 0, TestName = "TestMissionProfileWeights Grp 4LH"),
 
-			TestCase(WeightingGroup.Group5RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
-			TestCase(WeightingGroup.Group5LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+			TestCase(WeightingGroup.Group5RD, 0.03, 0.07, 0.27, 0.63, 0, 0, TestName = "TestMissionProfileWeights Grp 5RD"),
+			TestCase(WeightingGroup.Group5LH, 0.27, 0.63, 0.03, 0.07, 0, 0, TestName = "TestMissionProfileWeights Grp 5LH"),
 
-			TestCase(WeightingGroup.Group9RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
-			TestCase(WeightingGroup.Group9LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+			TestCase(WeightingGroup.Group9RD, 0.03, 0.07, 0.27, 0.63, 0, 0, TestName = "TestMissionProfileWeights Grp 9RD"),
+			TestCase(WeightingGroup.Group9LH, 0.27, 0.63, 0.03, 0.07, 0, 0, TestName = "TestMissionProfileWeights Grp 9LH"),
 
-			TestCase(WeightingGroup.Group10RD, 0.27, 0.63, 0.03, 0.07, 0, 0),
-			TestCase(WeightingGroup.Group10LH, 0.03, 0.07, 0.27, 0.63, 0, 0),
+			TestCase(WeightingGroup.Group10RD, 0.03, 0.07, 0.27, 0.63, 0, 0, TestName = "TestMissionProfileWeights Grp 10RD"),
+			TestCase(WeightingGroup.Group10LH, 0.27, 0.63, 0.03, 0.07, 0, 0, TestName = "TestMissionProfileWeights Grp 10LH"),
 
-			TestCase(WeightingGroup.Group11, 0.15, 0.35, 0, 0, 0, 0, 0, 0, 0.15, 0.35),
-			TestCase(WeightingGroup.Group12, 0.21, 0.49, 0, 0, 0, 0, 0, 0, 0.09, 0.21),
-			TestCase(WeightingGroup.Group16, 0.15, 0.35, 0, 0, 0, 0, 0, 0, 0.15, 0.35),
+			TestCase(WeightingGroup.Group11, 0, 0, 0.15, 0.35, 0, 0, 0, 0, 0.15, 0.35, TestName = "TestMissionProfileWeights Grp 11"),
+			TestCase(WeightingGroup.Group12, 0, 0, 0.21, 0.49, 0, 0, 0, 0, 0.09, 0.21, TestName = "TestMissionProfileWeights Grp 12"),
+			TestCase(WeightingGroup.Group16, 0, 0, 0.15, 0.35, 0, 0, 0, 0, 0.15, 0.35, TestName = "TestMissionProfileWeights Grp 16"),
 
-        ]
-		public void TestMissionProfileWeights(
-			WeightingGroup group, double eRdLow, double eRdRef, double eLhLow, double eLhRef, double eUdLow, double eUdRef, double eMuLow=0, double eMuRef=0, double eCoLow=0, double eCoRef=0, double eLhEmsRef=0, double elhEmsLow=0, double eRdEmsLow=0, double eRdEmsRef=0)
+		]
+		public void TestMissionProfileWeights(WeightingGroup group, double eLhLow, double eLhRef, double eRdLow, double eRdRef, double eUdLow, double eUdRef, double eMuLow = 0, double eMuRef = 0, double eCoLow = 0, double eCoRef = 0, double elhEmsLow = 0, double eLhEmsRef = 0, double eRdEmsLow = 0, double eRdEmsRef = 0)
 		{
 			var factors = DeclarationData.WeightingFactors.Lookup(group);
 
