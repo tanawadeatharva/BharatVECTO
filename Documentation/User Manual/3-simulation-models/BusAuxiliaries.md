@@ -31,9 +31,9 @@ The environmental conditions map contains a list of environmental conditions (en
 
 ####Calculation of HVAC Power Demand
 
-$P_\textrm{HVAC,mech,sum} = \sum_\textrm{env} min(P_\textrm{HVAC,mech}(T_\textrm{env}, S_\textrm{env}) * (1 - \textrm{TechBenefitsMech}), P_\textrm{HVAC,max}) / \textrm{COP}$
+$P_\textrm{HVAC,mech,sum} = \sum_\textrm{env} w_\textrm{env} *  min(P_\textrm{HVAC,mech}(T_\textrm{env}, S_\textrm{env}) * (1 - \textrm{TechBenefitsMech}), P_\textrm{HVAC,max}) / \textrm{COP}$
 
-$P_\textrm{HVAC,el,sum} = \sum_\textrm{env} min(P_\textrm{HVAC,el}(T_\textrm{env}, S_\textrm{env}) * (1 - \textrm{TechBenefitsEl}), P_\textrm{HVAC,max}) / \textrm{COP} + P_\textrm{ventilation,heating}(T_\textrm{env}, S_\textrm{env}) * (1 - \textrm{TechBenefitsElHeatingVent}) + P_\textrm{ventilation,cooling}(T_\textrm{env}, S_\textrm{env}) * (1 - \textrm{TechBenefitsElCoolingVent})$
+$P_\textrm{HVAC,el,sum} = \sum_\textrm{env} w_\textrm{env} * min(P_\textrm{HVAC,el}(T_\textrm{env}, S_\textrm{env}) * (1 - \textrm{TechBenefitsEl}), P_\textrm{HVAC,max}) / \textrm{COP} + P_\textrm{ventilation,heating}(T_\textrm{env}, S_\textrm{env}) * (1 - \textrm{TechBenefitsElHeatingVent}) + P_\textrm{ventilation,cooling}(T_\textrm{env}, S_\textrm{env}) * (1 - \textrm{TechBenefitsElCoolingVent})$
 
 $P_\textrm{HVAC,mech}(T, S) = \left\{
   \begin{array}{ll}
@@ -82,7 +82,7 @@ $T_\textrm{high}(T_\textrm{env}) = \left\{\begin{array}{ll}
     \end{array}
 \right.$
 
-$P(T_\textrm{env}, S, T_\textrm{calc}) = Q_\textrm{Wall}(T_\textrm{env}, T_\textrm{calc}) + P_\textrm{Passenger}(T_\textrm{env}) + P_\textrm{Solar}(T_\textrm{env}, S)$
+$P_\textrm{HVAC}(T_\textrm{env}, S, T_\textrm{calc}) = Q_\textrm{Wall}(T_\textrm{env}, T_\textrm{calc}) + P_\textrm{Passenger}(T_\textrm{env}) + P_\textrm{Solar}(T_\textrm{env}, S)$
 
 $Q_\textrm{Wall}(T_\textrm{env}, T_\textrm{calc}) = (T_\textrm{env} - T_\textrm{calc}) * A_\textrm{BusSurface} * U$
 
@@ -157,7 +157,24 @@ $h_\textrm{internal} = \left\{\begin{array}{ll}
 $P_\textrm{HVAC,max,driver} = \textrm{Lookup}_\textrm{driver}(\textrm{HVAC Configuration}, \textrm{driving cycle})$
 
 
+**Aux Heater Power**
 
+$P_\textrm{HVACSSM,auxHtr}(\overline{P}_\textrm{ice,waste heat}) = \sum_\textrm{env} w_\textrm{env} *  P_\textrm{auxHtr}(T_\textrm{env}, S_\textrm{env}, \overline{P}_\textrm{ice,waste heat}) * 0.2 * 0.75)$
+
+
+$P_\textrm{auxHtr}(T, S, P_\textrm{wasteHeat}) = \left\{
+  \begin{array}{ll}
+    |max( P_\textrm{additionalHeating}(T, S, T_\textrm{low}, P_\textrm{wasteHeat}) , P_\textrm{additionalHeating}(T, S, T_\textrm{high}(T), P_\textrm{wasteHeat}))| & : P_\textrm{HVAC}(T, S, T_\textrm{low}) < 0 \;\textrm{and}\; P_\textrm{HVAC}(T, S, T_\textrm{high}(T)) < 0 \\
+    0 & : \textrm{otherwise}
+  \end{array}
+\right.$
+
+$P_\textrm{additionalHeating}(T, S, T_\textrm{calc}, P_\textrm{wasteHeat}) = \left\{
+    \begin{array}{ll}
+        P_\textrm{HVAC}(T, S, T_\textrm{calc}) * (1 - \textrm{TechBenefitsFuelHeater})) + P_\textrm{wasteHeat} & : P_\textrm{HVAC}(T, S, T_\textrm{calc}) * (1 - \textrm{TechBenefitsFuelHeater})) < 0 \;\textrm{and}\; P_\textrm{HVAC}(T, S, T_\textrm{calc}) * (1 - \textrm{TechBenefitsFuelHeater})) < -P_\textrm{wasteHeat} \\
+        0 & : \textrm{otherwise}
+    \end{array}
+\right.$
 
 
 ###Auxiliary Power Demand
