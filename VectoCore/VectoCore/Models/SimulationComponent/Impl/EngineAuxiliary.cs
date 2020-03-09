@@ -198,7 +198,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						}
 					}
 
-					container[Constants.Auxiliaries.IDs.PTOConsumer] = ptoConsumer;
+					if (container[Constants.Auxiliaries.IDs.PTOConsumer] == null ||
+						container[Constants.Auxiliaries.IDs.PTOConsumer] == DBNull.Value) {
+						container[Constants.Auxiliaries.IDs.PTOConsumer] = ptoConsumer;
+					}
 				}
 			}
 
